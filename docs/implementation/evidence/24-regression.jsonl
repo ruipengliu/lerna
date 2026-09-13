@@ -1,0 +1,831 @@
+{"Time":"2026-09-13T23:45:59.108909+08:00","Action":"start","Package":"lerna/authorization"}
+{"Time":"2026-09-13T23:45:59.752456+08:00","Action":"run","Package":"lerna/authorization","Test":"TestCASContentionIsBoundedAndCancellable"}
+{"Time":"2026-09-13T23:45:59.752531+08:00","Action":"output","Package":"lerna/authorization","Test":"TestCASContentionIsBoundedAndCancellable","Output":"=== RUN   TestCASContentionIsBoundedAndCancellable\n"}
+{"Time":"2026-09-13T23:45:59.75255+08:00","Action":"run","Package":"lerna/authorization","Test":"TestCASContentionIsBoundedAndCancellable/bounded"}
+{"Time":"2026-09-13T23:45:59.752559+08:00","Action":"output","Package":"lerna/authorization","Test":"TestCASContentionIsBoundedAndCancellable/bounded","Output":"=== RUN   TestCASContentionIsBoundedAndCancellable/bounded\n"}
+{"Time":"2026-09-13T23:45:59.910402+08:00","Action":"output","Package":"lerna/authorization","Test":"TestCASContentionIsBoundedAndCancellable/bounded","Output":"--- PASS: TestCASContentionIsBoundedAndCancellable/bounded (0.16s)\n"}
+{"Time":"2026-09-13T23:45:59.910452+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestCASContentionIsBoundedAndCancellable/bounded","Elapsed":0.16}
+{"Time":"2026-09-13T23:45:59.910478+08:00","Action":"run","Package":"lerna/authorization","Test":"TestCASContentionIsBoundedAndCancellable/cancelled"}
+{"Time":"2026-09-13T23:45:59.910486+08:00","Action":"output","Package":"lerna/authorization","Test":"TestCASContentionIsBoundedAndCancellable/cancelled","Output":"=== RUN   TestCASContentionIsBoundedAndCancellable/cancelled\n"}
+{"Time":"2026-09-13T23:45:59.922343+08:00","Action":"output","Package":"lerna/authorization","Test":"TestCASContentionIsBoundedAndCancellable/cancelled","Output":"--- PASS: TestCASContentionIsBoundedAndCancellable/cancelled (0.01s)\n"}
+{"Time":"2026-09-13T23:45:59.922366+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestCASContentionIsBoundedAndCancellable/cancelled","Elapsed":0.01}
+{"Time":"2026-09-13T23:45:59.922438+08:00","Action":"output","Package":"lerna/authorization","Test":"TestCASContentionIsBoundedAndCancellable","Output":"--- PASS: TestCASContentionIsBoundedAndCancellable (0.17s)\n"}
+{"Time":"2026-09-13T23:45:59.922451+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestCASContentionIsBoundedAndCancellable","Elapsed":0.17}
+{"Time":"2026-09-13T23:45:59.922467+08:00","Action":"run","Package":"lerna/authorization","Test":"TestExecutionPermitAndDataCommitTogether"}
+{"Time":"2026-09-13T23:45:59.922473+08:00","Action":"output","Package":"lerna/authorization","Test":"TestExecutionPermitAndDataCommitTogether","Output":"=== RUN   TestExecutionPermitAndDataCommitTogether\n"}
+{"Time":"2026-09-13T23:45:59.961724+08:00","Action":"output","Package":"lerna/authorization","Test":"TestExecutionPermitAndDataCommitTogether","Output":"--- PASS: TestExecutionPermitAndDataCommitTogether (0.04s)\n"}
+{"Time":"2026-09-13T23:45:59.961775+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestExecutionPermitAndDataCommitTogether","Elapsed":0.04}
+{"Time":"2026-09-13T23:45:59.961782+08:00","Action":"run","Package":"lerna/authorization","Test":"TestReservedExecutionIdentitySurvivesWindowWithoutSpendingPermit"}
+{"Time":"2026-09-13T23:45:59.961787+08:00","Action":"output","Package":"lerna/authorization","Test":"TestReservedExecutionIdentitySurvivesWindowWithoutSpendingPermit","Output":"=== RUN   TestReservedExecutionIdentitySurvivesWindowWithoutSpendingPermit\n"}
+{"Time":"2026-09-13T23:46:00.002104+08:00","Action":"output","Package":"lerna/authorization","Test":"TestReservedExecutionIdentitySurvivesWindowWithoutSpendingPermit","Output":"--- PASS: TestReservedExecutionIdentitySurvivesWindowWithoutSpendingPermit (0.04s)\n"}
+{"Time":"2026-09-13T23:46:00.002135+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestReservedExecutionIdentitySurvivesWindowWithoutSpendingPermit","Elapsed":0.04}
+{"Time":"2026-09-13T23:46:00.002153+08:00","Action":"run","Package":"lerna/authorization","Test":"TestSignedGrantIssueReplay"}
+{"Time":"2026-09-13T23:46:00.002158+08:00","Action":"output","Package":"lerna/authorization","Test":"TestSignedGrantIssueReplay","Output":"=== RUN   TestSignedGrantIssueReplay\n"}
+{"Time":"2026-09-13T23:46:00.022367+08:00","Action":"output","Package":"lerna/authorization","Test":"TestSignedGrantIssueReplay","Output":"--- PASS: TestSignedGrantIssueReplay (0.02s)\n"}
+{"Time":"2026-09-13T23:46:00.022385+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestSignedGrantIssueReplay","Elapsed":0.02}
+{"Time":"2026-09-13T23:46:00.022391+08:00","Action":"run","Package":"lerna/authorization","Test":"TestSignedGrantChecksPresenterAndCurrentPolicy"}
+{"Time":"2026-09-13T23:46:00.022394+08:00","Action":"output","Package":"lerna/authorization","Test":"TestSignedGrantChecksPresenterAndCurrentPolicy","Output":"=== RUN   TestSignedGrantChecksPresenterAndCurrentPolicy\n"}
+{"Time":"2026-09-13T23:46:00.047295+08:00","Action":"output","Package":"lerna/authorization","Test":"TestSignedGrantChecksPresenterAndCurrentPolicy","Output":"--- PASS: TestSignedGrantChecksPresenterAndCurrentPolicy (0.02s)\n"}
+{"Time":"2026-09-13T23:46:00.04731+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestSignedGrantChecksPresenterAndCurrentPolicy","Elapsed":0.02}
+{"Time":"2026-09-13T23:46:00.047317+08:00","Action":"run","Package":"lerna/authorization","Test":"TestGrantDerivationReservesSharedQuotaAndAncestorRevocation"}
+{"Time":"2026-09-13T23:46:00.04732+08:00","Action":"output","Package":"lerna/authorization","Test":"TestGrantDerivationReservesSharedQuotaAndAncestorRevocation","Output":"=== RUN   TestGrantDerivationReservesSharedQuotaAndAncestorRevocation\n"}
+{"Time":"2026-09-13T23:46:00.0817+08:00","Action":"output","Package":"lerna/authorization","Test":"TestGrantDerivationReservesSharedQuotaAndAncestorRevocation","Output":"--- PASS: TestGrantDerivationReservesSharedQuotaAndAncestorRevocation (0.03s)\n"}
+{"Time":"2026-09-13T23:46:00.081715+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestGrantDerivationReservesSharedQuotaAndAncestorRevocation","Elapsed":0.03}
+{"Time":"2026-09-13T23:46:00.081721+08:00","Action":"run","Package":"lerna/authorization","Test":"TestGrantSelfUseAndDelegationShareRemainingUnits"}
+{"Time":"2026-09-13T23:46:00.081735+08:00","Action":"output","Package":"lerna/authorization","Test":"TestGrantSelfUseAndDelegationShareRemainingUnits","Output":"=== RUN   TestGrantSelfUseAndDelegationShareRemainingUnits\n"}
+{"Time":"2026-09-13T23:46:00.114165+08:00","Action":"output","Package":"lerna/authorization","Test":"TestGrantSelfUseAndDelegationShareRemainingUnits","Output":"--- PASS: TestGrantSelfUseAndDelegationShareRemainingUnits (0.03s)\n"}
+{"Time":"2026-09-13T23:46:00.114181+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestGrantSelfUseAndDelegationShareRemainingUnits","Elapsed":0.03}
+{"Time":"2026-09-13T23:46:00.114186+08:00","Action":"run","Package":"lerna/authorization","Test":"TestMemoryAdmissionRetainsIdentityWithoutClaimingBusinessCommit"}
+{"Time":"2026-09-13T23:46:00.114189+08:00","Action":"output","Package":"lerna/authorization","Test":"TestMemoryAdmissionRetainsIdentityWithoutClaimingBusinessCommit","Output":"=== RUN   TestMemoryAdmissionRetainsIdentityWithoutClaimingBusinessCommit\n"}
+{"Time":"2026-09-13T23:46:00.167042+08:00","Action":"output","Package":"lerna/authorization","Test":"TestMemoryAdmissionRetainsIdentityWithoutClaimingBusinessCommit","Output":"--- PASS: TestMemoryAdmissionRetainsIdentityWithoutClaimingBusinessCommit (0.05s)\n"}
+{"Time":"2026-09-13T23:46:00.167115+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestMemoryAdmissionRetainsIdentityWithoutClaimingBusinessCommit","Elapsed":0.05}
+{"Time":"2026-09-13T23:46:00.167164+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeProcessProbe"}
+{"Time":"2026-09-13T23:46:00.167177+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessProbe","Output":"=== RUN   TestNodeProcessProbe\n"}
+{"Time":"2026-09-13T23:46:00.167188+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessProbe","Output":"    nodes_recovery_test.go:36: subprocess only\n"}
+{"Time":"2026-09-13T23:46:00.167214+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessProbe","Output":"--- SKIP: TestNodeProcessProbe (0.00s)\n"}
+{"Time":"2026-09-13T23:46:00.167245+08:00","Action":"skip","Package":"lerna/authorization","Test":"TestNodeProcessProbe","Elapsed":0}
+{"Time":"2026-09-13T23:46:00.167277+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeProcessRecovery"}
+{"Time":"2026-09-13T23:46:00.167283+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessRecovery","Output":"=== RUN   TestNodeProcessRecovery\n"}
+{"Time":"2026-09-13T23:46:00.16734+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/prepared"}
+{"Time":"2026-09-13T23:46:00.167344+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/prepared","Output":"=== RUN   TestNodeProcessRecovery/prepared\n"}
+{"Time":"2026-09-13T23:46:00.222795+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/prepared","Output":"--- PASS: TestNodeProcessRecovery/prepared (0.06s)\n"}
+{"Time":"2026-09-13T23:46:00.222817+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/prepared","Elapsed":0.06}
+{"Time":"2026-09-13T23:46:00.222824+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/committed"}
+{"Time":"2026-09-13T23:46:00.222828+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/committed","Output":"=== RUN   TestNodeProcessRecovery/committed\n"}
+{"Time":"2026-09-13T23:46:00.27869+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/committed","Output":"--- PASS: TestNodeProcessRecovery/committed (0.06s)\n"}
+{"Time":"2026-09-13T23:46:00.278711+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/committed","Elapsed":0.06}
+{"Time":"2026-09-13T23:46:00.278719+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessRecovery","Output":"--- PASS: TestNodeProcessRecovery (0.11s)\n"}
+{"Time":"2026-09-13T23:46:00.278747+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeProcessRecovery","Elapsed":0.11}
+{"Time":"2026-09-13T23:46:00.278765+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeEnrollmentDisableAndReplay"}
+{"Time":"2026-09-13T23:46:00.278768+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeEnrollmentDisableAndReplay","Output":"=== RUN   TestNodeEnrollmentDisableAndReplay\n"}
+{"Time":"2026-09-13T23:46:00.310251+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeEnrollmentDisableAndReplay","Output":"--- PASS: TestNodeEnrollmentDisableAndReplay (0.03s)\n"}
+{"Time":"2026-09-13T23:46:00.310272+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeEnrollmentDisableAndReplay","Elapsed":0.03}
+{"Time":"2026-09-13T23:46:00.310278+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable"}
+{"Time":"2026-09-13T23:46:00.310281+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable","Output":"=== RUN   TestRealTLSReservationRotationAndDisable\n"}
+{"Time":"2026-09-13T23:46:01.450015+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-namespace"}
+{"Time":"2026-09-13T23:46:01.450042+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-namespace","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/wrong-namespace\n"}
+{"Time":"2026-09-13T23:46:01.466043+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-namespace","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/wrong-namespace (0.02s)\n"}
+{"Time":"2026-09-13T23:46:01.466134+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-namespace","Elapsed":0.02}
+{"Time":"2026-09-13T23:46:01.466233+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-node"}
+{"Time":"2026-09-13T23:46:01.466242+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-node","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/wrong-node\n"}
+{"Time":"2026-09-13T23:46:01.482362+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-node","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/wrong-node (0.02s)\n"}
+{"Time":"2026-09-13T23:46:01.482389+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-node","Elapsed":0.02}
+{"Time":"2026-09-13T23:46:01.482398+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/unregistered-certificate"}
+{"Time":"2026-09-13T23:46:01.482402+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/unregistered-certificate","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/unregistered-certificate\n"}
+{"Time":"2026-09-13T23:46:01.498689+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/unregistered-certificate","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/unregistered-certificate (0.02s)\n"}
+{"Time":"2026-09-13T23:46:01.498714+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/unregistered-certificate","Elapsed":0.02}
+{"Time":"2026-09-13T23:46:01.498723+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-purpose"}
+{"Time":"2026-09-13T23:46:01.498727+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-purpose","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/wrong-purpose\n"}
+{"Time":"2026-09-13T23:46:01.513885+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-purpose","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/wrong-purpose (0.02s)\n"}
+{"Time":"2026-09-13T23:46:01.513906+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-purpose","Elapsed":0.02}
+{"Time":"2026-09-13T23:46:01.513913+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/expired"}
+{"Time":"2026-09-13T23:46:01.513916+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/expired","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/expired\n"}
+{"Time":"2026-09-13T23:46:01.52868+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/expired","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/expired (0.01s)\n"}
+{"Time":"2026-09-13T23:46:01.5287+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/expired","Elapsed":0.01}
+{"Time":"2026-09-13T23:46:01.528706+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/not-yet-valid"}
+{"Time":"2026-09-13T23:46:01.52871+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/not-yet-valid","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/not-yet-valid\n"}
+{"Time":"2026-09-13T23:46:01.54539+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/not-yet-valid","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/not-yet-valid (0.02s)\n"}
+{"Time":"2026-09-13T23:46:01.54542+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/not-yet-valid","Elapsed":0.02}
+{"Time":"2026-09-13T23:46:01.54544+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/untrusted-root-with-registered-leaf"}
+{"Time":"2026-09-13T23:46:01.545444+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/untrusted-root-with-registered-leaf","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/untrusted-root-with-registered-leaf\n"}
+{"Time":"2026-09-13T23:46:01.582249+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/untrusted-root-with-registered-leaf","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/untrusted-root-with-registered-leaf (0.04s)\n"}
+{"Time":"2026-09-13T23:46:01.582308+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/untrusted-root-with-registered-leaf","Elapsed":0.04}
+{"Time":"2026-09-13T23:46:01.582328+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/no-certificate-no-fallback"}
+{"Time":"2026-09-13T23:46:01.582334+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/no-certificate-no-fallback","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/no-certificate-no-fallback\n"}
+{"Time":"2026-09-13T23:46:01.598834+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/no-certificate-no-fallback","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/no-certificate-no-fallback (0.02s)\n"}
+{"Time":"2026-09-13T23:46:01.598863+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/no-certificate-no-fallback","Elapsed":0.02}
+{"Time":"2026-09-13T23:46:01.59887+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-target"}
+{"Time":"2026-09-13T23:46:01.598873+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-target","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/wrong-target\n"}
+{"Time":"2026-09-13T23:46:01.608059+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-target","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/wrong-target (0.01s)\n"}
+{"Time":"2026-09-13T23:46:01.60808+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-target","Elapsed":0.01}
+{"Time":"2026-09-13T23:46:01.8071+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable","Output":"--- PASS: TestRealTLSReservationRotationAndDisable (1.50s)\n"}
+{"Time":"2026-09-13T23:46:01.807125+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable","Elapsed":1.5}
+{"Time":"2026-09-13T23:46:01.807132+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment"}
+{"Time":"2026-09-13T23:46:01.807136+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment\n"}
+{"Time":"2026-09-13T23:46:01.818772+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/namespace"}
+{"Time":"2026-09-13T23:46:01.818791+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/namespace","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/namespace\n"}
+{"Time":"2026-09-13T23:46:01.819838+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/namespace","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/namespace (0.00s)\n"}
+{"Time":"2026-09-13T23:46:01.819847+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/namespace","Elapsed":0}
+{"Time":"2026-09-13T23:46:01.819861+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/node"}
+{"Time":"2026-09-13T23:46:01.819865+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/node","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/node\n"}
+{"Time":"2026-09-13T23:46:01.821994+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/node","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/node (0.00s)\n"}
+{"Time":"2026-09-13T23:46:01.822003+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/node","Elapsed":0}
+{"Time":"2026-09-13T23:46:01.822011+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/subjects"}
+{"Time":"2026-09-13T23:46:01.822015+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/subjects","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/subjects\n"}
+{"Time":"2026-09-13T23:46:01.823043+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/subjects","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/subjects (0.00s)\n"}
+{"Time":"2026-09-13T23:46:01.823049+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/subjects","Elapsed":0}
+{"Time":"2026-09-13T23:46:01.823058+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expiry"}
+{"Time":"2026-09-13T23:46:01.823061+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expiry","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/expiry\n"}
+{"Time":"2026-09-13T23:46:01.824082+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expiry","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/expiry (0.00s)\n"}
+{"Time":"2026-09-13T23:46:01.824088+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expiry","Elapsed":0}
+{"Time":"2026-09-13T23:46:01.824098+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expired-request"}
+{"Time":"2026-09-13T23:46:01.824101+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expired-request","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/expired-request\n"}
+{"Time":"2026-09-13T23:46:01.825122+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expired-request","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/expired-request (0.00s)\n"}
+{"Time":"2026-09-13T23:46:01.825127+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expired-request","Elapsed":0}
+{"Time":"2026-09-13T23:46:01.825136+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/oversized"}
+{"Time":"2026-09-13T23:46:01.825139+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/oversized","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/oversized\n"}
+{"Time":"2026-09-13T23:46:01.825167+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/oversized","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/oversized (0.00s)\n"}
+{"Time":"2026-09-13T23:46:01.825178+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/oversized","Elapsed":0}
+{"Time":"2026-09-13T23:46:01.825184+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/forged-proof"}
+{"Time":"2026-09-13T23:46:01.825193+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/forged-proof","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/forged-proof\n"}
+{"Time":"2026-09-13T23:46:01.827506+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/forged-proof","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/forged-proof (0.00s)\n"}
+{"Time":"2026-09-13T23:46:01.827517+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/forged-proof","Elapsed":0}
+{"Time":"2026-09-13T23:46:01.853211+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment (0.05s)\n"}
+{"Time":"2026-09-13T23:46:01.853228+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment","Elapsed":0.05}
+{"Time":"2026-09-13T23:46:01.853239+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeSigningKeyOverlapAndCurrentGrantRevocation"}
+{"Time":"2026-09-13T23:46:01.853242+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSigningKeyOverlapAndCurrentGrantRevocation","Output":"=== RUN   TestNodeSigningKeyOverlapAndCurrentGrantRevocation\n"}
+{"Time":"2026-09-13T23:46:01.893074+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSigningKeyOverlapAndCurrentGrantRevocation","Output":"--- PASS: TestNodeSigningKeyOverlapAndCurrentGrantRevocation (0.04s)\n"}
+{"Time":"2026-09-13T23:46:01.893095+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeSigningKeyOverlapAndCurrentGrantRevocation","Elapsed":0.04}
+{"Time":"2026-09-13T23:46:01.893102+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace"}
+{"Time":"2026-09-13T23:46:01.893106+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace","Output":"=== RUN   TestNodeSQLiteRecoveryAndSigningRace\n"}
+{"Time":"2026-09-13T23:46:01.89311+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/reply-lost"}
+{"Time":"2026-09-13T23:46:01.893113+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/reply-lost","Output":"=== RUN   TestNodeSQLiteRecoveryAndSigningRace/reply-lost\n"}
+{"Time":"2026-09-13T23:46:01.922166+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/reply-lost","Output":"--- PASS: TestNodeSQLiteRecoveryAndSigningRace/reply-lost (0.03s)\n"}
+{"Time":"2026-09-13T23:46:01.922187+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/reply-lost","Elapsed":0.03}
+{"Time":"2026-09-13T23:46:01.922193+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/signing-race"}
+{"Time":"2026-09-13T23:46:01.922196+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/signing-race","Output":"=== RUN   TestNodeSQLiteRecoveryAndSigningRace/signing-race\n"}
+{"Time":"2026-09-13T23:46:01.942629+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/signing-race","Output":"--- PASS: TestNodeSQLiteRecoveryAndSigningRace/signing-race (0.02s)\n"}
+{"Time":"2026-09-13T23:46:01.942646+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/signing-race","Elapsed":0.02}
+{"Time":"2026-09-13T23:46:01.942652+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace","Output":"--- PASS: TestNodeSQLiteRecoveryAndSigningRace (0.05s)\n"}
+{"Time":"2026-09-13T23:46:01.942657+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace","Elapsed":0.05}
+{"Time":"2026-09-13T23:46:01.942668+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeCertificateIssuerOverlapAndUnavailableRegistry"}
+{"Time":"2026-09-13T23:46:01.942679+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeCertificateIssuerOverlapAndUnavailableRegistry","Output":"=== RUN   TestNodeCertificateIssuerOverlapAndUnavailableRegistry\n"}
+{"Time":"2026-09-13T23:46:02.007247+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeCertificateIssuerOverlapAndUnavailableRegistry","Output":"--- PASS: TestNodeCertificateIssuerOverlapAndUnavailableRegistry (0.06s)\n"}
+{"Time":"2026-09-13T23:46:02.007266+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeCertificateIssuerOverlapAndUnavailableRegistry","Elapsed":0.06}
+{"Time":"2026-09-13T23:46:02.007272+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRebindPreservesSingleUseAndAncestorAllocation"}
+{"Time":"2026-09-13T23:46:02.007276+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRebindPreservesSingleUseAndAncestorAllocation","Output":"=== RUN   TestNodeRebindPreservesSingleUseAndAncestorAllocation\n"}
+{"Time":"2026-09-13T23:46:02.085616+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRebindPreservesSingleUseAndAncestorAllocation","Output":"--- PASS: TestNodeRebindPreservesSingleUseAndAncestorAllocation (0.08s)\n"}
+{"Time":"2026-09-13T23:46:02.085633+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRebindPreservesSingleUseAndAncestorAllocation","Elapsed":0.08}
+{"Time":"2026-09-13T23:46:02.085638+08:00","Action":"run","Package":"lerna/authorization","Test":"TestBootstrapCannotReplaceTrustAndSurvivesReopen"}
+{"Time":"2026-09-13T23:46:02.085641+08:00","Action":"output","Package":"lerna/authorization","Test":"TestBootstrapCannotReplaceTrustAndSurvivesReopen","Output":"=== RUN   TestBootstrapCannotReplaceTrustAndSurvivesReopen\n"}
+{"Time":"2026-09-13T23:46:02.098634+08:00","Action":"output","Package":"lerna/authorization","Test":"TestBootstrapCannotReplaceTrustAndSurvivesReopen","Output":"--- PASS: TestBootstrapCannotReplaceTrustAndSurvivesReopen (0.01s)\n"}
+{"Time":"2026-09-13T23:46:02.098644+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestBootstrapCannotReplaceTrustAndSurvivesReopen","Elapsed":0.01}
+{"Time":"2026-09-13T23:46:02.09865+08:00","Action":"run","Package":"lerna/authorization","Test":"TestManagementCommitIsIdempotentBeforeVersionCheck"}
+{"Time":"2026-09-13T23:46:02.098661+08:00","Action":"output","Package":"lerna/authorization","Test":"TestManagementCommitIsIdempotentBeforeVersionCheck","Output":"=== RUN   TestManagementCommitIsIdempotentBeforeVersionCheck\n"}
+{"Time":"2026-09-13T23:46:02.111539+08:00","Action":"output","Package":"lerna/authorization","Test":"TestManagementCommitIsIdempotentBeforeVersionCheck","Output":"--- PASS: TestManagementCommitIsIdempotentBeforeVersionCheck (0.01s)\n"}
+{"Time":"2026-09-13T23:46:02.111554+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestManagementCommitIsIdempotentBeforeVersionCheck","Elapsed":0.01}
+{"Time":"2026-09-13T23:46:02.11156+08:00","Action":"run","Package":"lerna/authorization","Test":"TestContinuousGrantAndHardDeny"}
+{"Time":"2026-09-13T23:46:02.111564+08:00","Action":"output","Package":"lerna/authorization","Test":"TestContinuousGrantAndHardDeny","Output":"=== RUN   TestContinuousGrantAndHardDeny\n"}
+{"Time":"2026-09-13T23:46:02.158846+08:00","Action":"output","Package":"lerna/authorization","Test":"TestContinuousGrantAndHardDeny","Output":"--- PASS: TestContinuousGrantAndHardDeny (0.05s)\n"}
+{"Time":"2026-09-13T23:46:02.158863+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestContinuousGrantAndHardDeny","Elapsed":0.05}
+{"Time":"2026-09-13T23:46:02.158871+08:00","Action":"run","Package":"lerna/authorization","Test":"TestClosedWindowCannotReviveAfterCleanup"}
+{"Time":"2026-09-13T23:46:02.158874+08:00","Action":"output","Package":"lerna/authorization","Test":"TestClosedWindowCannotReviveAfterCleanup","Output":"=== RUN   TestClosedWindowCannotReviveAfterCleanup\n"}
+{"Time":"2026-09-13T23:46:02.186445+08:00","Action":"output","Package":"lerna/authorization","Test":"TestClosedWindowCannotReviveAfterCleanup","Output":"--- PASS: TestClosedWindowCannotReviveAfterCleanup (0.03s)\n"}
+{"Time":"2026-09-13T23:46:02.186463+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestClosedWindowCannotReviveAfterCleanup","Elapsed":0.03}
+{"Time":"2026-09-13T23:46:02.186469+08:00","Action":"run","Package":"lerna/authorization","Test":"TestConcurrentMutationAndBootstrap"}
+{"Time":"2026-09-13T23:46:02.186473+08:00","Action":"output","Package":"lerna/authorization","Test":"TestConcurrentMutationAndBootstrap","Output":"=== RUN   TestConcurrentMutationAndBootstrap\n"}
+{"Time":"2026-09-13T23:46:02.206413+08:00","Action":"output","Package":"lerna/authorization","Test":"TestConcurrentMutationAndBootstrap","Output":"--- PASS: TestConcurrentMutationAndBootstrap (0.02s)\n"}
+{"Time":"2026-09-13T23:46:02.206428+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestConcurrentMutationAndBootstrap","Elapsed":0.02}
+{"Time":"2026-09-13T23:46:02.206433+08:00","Action":"run","Package":"lerna/authorization","Test":"TestEquivalentPolicySetOrderKeepsOperationIdentity"}
+{"Time":"2026-09-13T23:46:02.206437+08:00","Action":"output","Package":"lerna/authorization","Test":"TestEquivalentPolicySetOrderKeepsOperationIdentity","Output":"=== RUN   TestEquivalentPolicySetOrderKeepsOperationIdentity\n"}
+{"Time":"2026-09-13T23:46:02.217641+08:00","Action":"output","Package":"lerna/authorization","Test":"TestEquivalentPolicySetOrderKeepsOperationIdentity","Output":"--- PASS: TestEquivalentPolicySetOrderKeepsOperationIdentity (0.01s)\n"}
+{"Time":"2026-09-13T23:46:02.217668+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestEquivalentPolicySetOrderKeepsOperationIdentity","Elapsed":0.01}
+{"Time":"2026-09-13T23:46:02.217673+08:00","Action":"run","Package":"lerna/authorization","Test":"TestOperationIdentityRejectsAlternateEncoding"}
+{"Time":"2026-09-13T23:46:02.217677+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOperationIdentityRejectsAlternateEncoding","Output":"=== RUN   TestOperationIdentityRejectsAlternateEncoding\n"}
+{"Time":"2026-09-13T23:46:02.227611+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOperationIdentityRejectsAlternateEncoding","Output":"--- PASS: TestOperationIdentityRejectsAlternateEncoding (0.01s)\n"}
+{"Time":"2026-09-13T23:46:02.227623+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestOperationIdentityRejectsAlternateEncoding","Elapsed":0.01}
+{"Time":"2026-09-13T23:46:02.227628+08:00","Action":"run","Package":"lerna/authorization","Test":"TestFiniteResourceSetCannotIssueFutureSubtree"}
+{"Time":"2026-09-13T23:46:02.227631+08:00","Action":"output","Package":"lerna/authorization","Test":"TestFiniteResourceSetCannotIssueFutureSubtree","Output":"=== RUN   TestFiniteResourceSetCannotIssueFutureSubtree\n"}
+{"Time":"2026-09-13T23:46:02.25558+08:00","Action":"output","Package":"lerna/authorization","Test":"TestFiniteResourceSetCannotIssueFutureSubtree","Output":"--- PASS: TestFiniteResourceSetCannotIssueFutureSubtree (0.03s)\n"}
+{"Time":"2026-09-13T23:46:02.255621+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestFiniteResourceSetCannotIssueFutureSubtree","Elapsed":0.03}
+{"Time":"2026-09-13T23:46:02.255667+08:00","Action":"run","Package":"lerna/authorization","Test":"TestFullOperationHistoryCanBeCleanedThroughPublicAPI"}
+{"Time":"2026-09-13T23:46:02.255684+08:00","Action":"output","Package":"lerna/authorization","Test":"TestFullOperationHistoryCanBeCleanedThroughPublicAPI","Output":"=== RUN   TestFullOperationHistoryCanBeCleanedThroughPublicAPI\n"}
+{"Time":"2026-09-13T23:46:02.271961+08:00","Action":"output","Package":"lerna/authorization","Test":"TestFullOperationHistoryCanBeCleanedThroughPublicAPI","Output":"--- PASS: TestFullOperationHistoryCanBeCleanedThroughPublicAPI (0.02s)\n"}
+{"Time":"2026-09-13T23:46:02.271972+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestFullOperationHistoryCanBeCleanedThroughPublicAPI","Elapsed":0.02}
+{"Time":"2026-09-13T23:46:02.271984+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation"}
+{"Time":"2026-09-13T23:46:02.271987+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation","Output":"=== RUN   TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation\n"}
+{"Time":"2026-09-13T23:46:02.271999+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation/revocation"}
+{"Time":"2026-09-13T23:46:02.272003+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation/revocation","Output":"=== RUN   TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation/revocation\n"}
+{"Time":"2026-09-13T23:46:02.322316+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation/revocation","Output":"--- PASS: TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation/revocation (0.05s)\n"}
+{"Time":"2026-09-13T23:46:02.322335+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation/revocation","Elapsed":0.05}
+{"Time":"2026-09-13T23:46:02.322341+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation/expiry"}
+{"Time":"2026-09-13T23:46:02.322344+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation/expiry","Output":"=== RUN   TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation/expiry\n"}
+{"Time":"2026-09-13T23:46:02.362464+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation/expiry","Output":"--- PASS: TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation/expiry (0.04s)\n"}
+{"Time":"2026-09-13T23:46:02.362479+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation/expiry","Elapsed":0.04}
+{"Time":"2026-09-13T23:46:02.362486+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation","Output":"--- PASS: TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation (0.09s)\n"}
+{"Time":"2026-09-13T23:46:02.362489+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation","Elapsed":0.09}
+{"Time":"2026-09-13T23:46:02.362502+08:00","Action":"run","Package":"lerna/authorization","Test":"TestUseInvalidationSurvivesPurposeRestorationAndReopen"}
+{"Time":"2026-09-13T23:46:02.362505+08:00","Action":"output","Package":"lerna/authorization","Test":"TestUseInvalidationSurvivesPurposeRestorationAndReopen","Output":"=== RUN   TestUseInvalidationSurvivesPurposeRestorationAndReopen\n"}
+{"Time":"2026-09-13T23:46:02.487348+08:00","Action":"output","Package":"lerna/authorization","Test":"TestUseInvalidationSurvivesPurposeRestorationAndReopen","Output":"--- PASS: TestUseInvalidationSurvivesPurposeRestorationAndReopen (0.12s)\n"}
+{"Time":"2026-09-13T23:46:02.487374+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestUseInvalidationSurvivesPurposeRestorationAndReopen","Elapsed":0.12}
+{"Time":"2026-09-13T23:46:02.48738+08:00","Action":"output","Package":"lerna/authorization","Output":"PASS\n"}
+{"Time":"2026-09-13T23:46:03.498227+08:00","Action":"output","Package":"lerna/authorization","Output":"ok  \tlerna/authorization\t4.389s\n"}
+{"Time":"2026-09-13T23:46:03.498356+08:00","Action":"pass","Package":"lerna/authorization","Elapsed":4.389}
+{"Time":"2026-09-13T23:46:03.50236+08:00","Action":"start","Package":"lerna/execution"}
+{"Time":"2026-09-13T23:46:03.502412+08:00","Action":"output","Package":"lerna/execution","Output":"?   \tlerna/execution\t[no test files]\n"}
+{"Time":"2026-09-13T23:46:03.502441+08:00","Action":"skip","Package":"lerna/execution","Elapsed":0}
+{"Time":"2026-09-13T23:46:03.821151+08:00","Action":"start","Package":"lerna/sdk"}
+{"Time":"2026-09-13T23:46:04.443779+08:00","Action":"run","Package":"lerna/sdk","Test":"TestAuthorizationSDKUsesRealCommitAndRejectsNamespaceForgery"}
+{"Time":"2026-09-13T23:46:04.44384+08:00","Action":"output","Package":"lerna/sdk","Test":"TestAuthorizationSDKUsesRealCommitAndRejectsNamespaceForgery","Output":"=== RUN   TestAuthorizationSDKUsesRealCommitAndRejectsNamespaceForgery\n"}
+{"Time":"2026-09-13T23:46:04.469045+08:00","Action":"output","Package":"lerna/sdk","Test":"TestAuthorizationSDKUsesRealCommitAndRejectsNamespaceForgery","Output":"--- PASS: TestAuthorizationSDKUsesRealCommitAndRejectsNamespaceForgery (0.03s)\n"}
+{"Time":"2026-09-13T23:46:04.469071+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestAuthorizationSDKUsesRealCommitAndRejectsNamespaceForgery","Elapsed":0.03}
+{"Time":"2026-09-13T23:46:04.469083+08:00","Action":"run","Package":"lerna/sdk","Test":"TestTaskRoundTrip"}
+{"Time":"2026-09-13T23:46:04.469087+08:00","Action":"output","Package":"lerna/sdk","Test":"TestTaskRoundTrip","Output":"=== RUN   TestTaskRoundTrip\n"}
+{"Time":"2026-09-13T23:46:04.469615+08:00","Action":"output","Package":"lerna/sdk","Test":"TestTaskRoundTrip","Output":"--- PASS: TestTaskRoundTrip (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.469621+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestTaskRoundTrip","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.469638+08:00","Action":"run","Package":"lerna/sdk","Test":"TestOperationIdentitySurvivesNewMessages"}
+{"Time":"2026-09-13T23:46:04.469643+08:00","Action":"output","Package":"lerna/sdk","Test":"TestOperationIdentitySurvivesNewMessages","Output":"=== RUN   TestOperationIdentitySurvivesNewMessages\n"}
+{"Time":"2026-09-13T23:46:04.469946+08:00","Action":"output","Package":"lerna/sdk","Test":"TestOperationIdentitySurvivesNewMessages","Output":"--- PASS: TestOperationIdentitySurvivesNewMessages (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.469954+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestOperationIdentitySurvivesNewMessages","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.469958+08:00","Action":"run","Package":"lerna/sdk","Test":"TestDynamicIntentUsesSemanticEquality"}
+{"Time":"2026-09-13T23:46:04.46996+08:00","Action":"output","Package":"lerna/sdk","Test":"TestDynamicIntentUsesSemanticEquality","Output":"=== RUN   TestDynamicIntentUsesSemanticEquality\n"}
+{"Time":"2026-09-13T23:46:04.471132+08:00","Action":"output","Package":"lerna/sdk","Test":"TestDynamicIntentUsesSemanticEquality","Output":"--- PASS: TestDynamicIntentUsesSemanticEquality (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.471137+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestDynamicIntentUsesSemanticEquality","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.471141+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses"}
+{"Time":"2026-09-13T23:46:04.471143+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses","Output":"=== RUN   TestClientRejectsUncorrelatedOrUnprovenResponses\n"}
+{"Time":"2026-09-13T23:46:04.471182+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/namespace"}
+{"Time":"2026-09-13T23:46:04.471185+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/namespace","Output":"=== RUN   TestClientRejectsUncorrelatedOrUnprovenResponses/namespace\n"}
+{"Time":"2026-09-13T23:46:04.471283+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/namespace","Output":"--- PASS: TestClientRejectsUncorrelatedOrUnprovenResponses/namespace (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.471289+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/namespace","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.471313+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/operation"}
+{"Time":"2026-09-13T23:46:04.471316+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/operation","Output":"=== RUN   TestClientRejectsUncorrelatedOrUnprovenResponses/operation\n"}
+{"Time":"2026-09-13T23:46:04.471382+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/operation","Output":"--- PASS: TestClientRejectsUncorrelatedOrUnprovenResponses/operation (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.47139+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/operation","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.471399+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/message_identity"}
+{"Time":"2026-09-13T23:46:04.471402+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/message_identity","Output":"=== RUN   TestClientRejectsUncorrelatedOrUnprovenResponses/message_identity\n"}
+{"Time":"2026-09-13T23:46:04.471478+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/message_identity","Output":"--- PASS: TestClientRejectsUncorrelatedOrUnprovenResponses/message_identity (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.471487+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/message_identity","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.471494+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/evidence"}
+{"Time":"2026-09-13T23:46:04.471497+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/evidence","Output":"=== RUN   TestClientRejectsUncorrelatedOrUnprovenResponses/evidence\n"}
+{"Time":"2026-09-13T23:46:04.471578+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/evidence","Output":"--- PASS: TestClientRejectsUncorrelatedOrUnprovenResponses/evidence (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.471586+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/evidence","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.471592+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/task_namespace"}
+{"Time":"2026-09-13T23:46:04.471601+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/task_namespace","Output":"=== RUN   TestClientRejectsUncorrelatedOrUnprovenResponses/task_namespace\n"}
+{"Time":"2026-09-13T23:46:04.471678+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/task_namespace","Output":"--- PASS: TestClientRejectsUncorrelatedOrUnprovenResponses/task_namespace (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.471685+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/task_namespace","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.471694+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/missing_result"}
+{"Time":"2026-09-13T23:46:04.471696+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/missing_result","Output":"=== RUN   TestClientRejectsUncorrelatedOrUnprovenResponses/missing_result\n"}
+{"Time":"2026-09-13T23:46:04.471772+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/missing_result","Output":"--- PASS: TestClientRejectsUncorrelatedOrUnprovenResponses/missing_result (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.471779+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/missing_result","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.471785+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/reply"}
+{"Time":"2026-09-13T23:46:04.471795+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/reply","Output":"=== RUN   TestClientRejectsUncorrelatedOrUnprovenResponses/reply\n"}
+{"Time":"2026-09-13T23:46:04.47187+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/reply","Output":"--- PASS: TestClientRejectsUncorrelatedOrUnprovenResponses/reply (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.471876+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses/reply","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.471887+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses","Output":"--- PASS: TestClientRejectsUncorrelatedOrUnprovenResponses (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.471897+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientRejectsUncorrelatedOrUnprovenResponses","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.471904+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests"}
+{"Time":"2026-09-13T23:46:04.471907+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests","Output":"=== RUN   TestClientAndReceiverBothValidateRequests\n"}
+{"Time":"2026-09-13T23:46:04.471927+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/unknown_major"}
+{"Time":"2026-09-13T23:46:04.47193+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/unknown_major","Output":"=== RUN   TestClientAndReceiverBothValidateRequests/unknown_major\n"}
+{"Time":"2026-09-13T23:46:04.471968+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/unknown_major","Output":"--- PASS: TestClientAndReceiverBothValidateRequests/unknown_major (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.471976+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/unknown_major","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.471985+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/missing_presence"}
+{"Time":"2026-09-13T23:46:04.471988+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/missing_presence","Output":"=== RUN   TestClientAndReceiverBothValidateRequests/missing_presence\n"}
+{"Time":"2026-09-13T23:46:04.47208+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/missing_presence","Output":"--- PASS: TestClientAndReceiverBothValidateRequests/missing_presence (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.472087+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/missing_presence","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.472098+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/response_field_on_request"}
+{"Time":"2026-09-13T23:46:04.4721+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/response_field_on_request","Output":"=== RUN   TestClientAndReceiverBothValidateRequests/response_field_on_request\n"}
+{"Time":"2026-09-13T23:46:04.472143+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/response_field_on_request","Output":"--- PASS: TestClientAndReceiverBothValidateRequests/response_field_on_request (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.472156+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/response_field_on_request","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.472159+08:00","Action":"run","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/unknown_body"}
+{"Time":"2026-09-13T23:46:04.472161+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/unknown_body","Output":"=== RUN   TestClientAndReceiverBothValidateRequests/unknown_body\n"}
+{"Time":"2026-09-13T23:46:04.472186+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/unknown_body","Output":"--- PASS: TestClientAndReceiverBothValidateRequests/unknown_body (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.472194+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests/unknown_body","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.472204+08:00","Action":"output","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests","Output":"--- PASS: TestClientAndReceiverBothValidateRequests (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.472211+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestClientAndReceiverBothValidateRequests","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.472219+08:00","Action":"run","Package":"lerna/sdk","Test":"TestDistinctConflictResponseDoesNotReuseSuccessMessageIdentity"}
+{"Time":"2026-09-13T23:46:04.472222+08:00","Action":"output","Package":"lerna/sdk","Test":"TestDistinctConflictResponseDoesNotReuseSuccessMessageIdentity","Output":"=== RUN   TestDistinctConflictResponseDoesNotReuseSuccessMessageIdentity\n"}
+{"Time":"2026-09-13T23:46:04.472423+08:00","Action":"output","Package":"lerna/sdk","Test":"TestDistinctConflictResponseDoesNotReuseSuccessMessageIdentity","Output":"--- PASS: TestDistinctConflictResponseDoesNotReuseSuccessMessageIdentity (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.47243+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestDistinctConflictResponseDoesNotReuseSuccessMessageIdentity","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.472436+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports"}
+{"Time":"2026-09-13T23:46:04.472439+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports","Output":"=== RUN   TestMemorySDKRejectsMisleadingDeletionReports\n"}
+{"Time":"2026-09-13T23:46:04.473184+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/other-operation"}
+{"Time":"2026-09-13T23:46:04.473188+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/other-operation","Output":"=== RUN   TestMemorySDKRejectsMisleadingDeletionReports/other-operation\n"}
+{"Time":"2026-09-13T23:46:04.473295+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/other-operation","Output":"--- PASS: TestMemorySDKRejectsMisleadingDeletionReports/other-operation (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.473302+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/other-operation","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.473309+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/other-source"}
+{"Time":"2026-09-13T23:46:04.473312+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/other-source","Output":"=== RUN   TestMemorySDKRejectsMisleadingDeletionReports/other-source\n"}
+{"Time":"2026-09-13T23:46:04.473425+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/other-source","Output":"--- PASS: TestMemorySDKRejectsMisleadingDeletionReports/other-source (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.473432+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/other-source","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.473439+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/other-purpose"}
+{"Time":"2026-09-13T23:46:04.473441+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/other-purpose","Output":"=== RUN   TestMemorySDKRejectsMisleadingDeletionReports/other-purpose\n"}
+{"Time":"2026-09-13T23:46:04.473549+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/other-purpose","Output":"--- PASS: TestMemorySDKRejectsMisleadingDeletionReports/other-purpose (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.473555+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/other-purpose","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.473564+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/premature-applied"}
+{"Time":"2026-09-13T23:46:04.473567+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/premature-applied","Output":"=== RUN   TestMemorySDKRejectsMisleadingDeletionReports/premature-applied\n"}
+{"Time":"2026-09-13T23:46:04.473676+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/premature-applied","Output":"--- PASS: TestMemorySDKRejectsMisleadingDeletionReports/premature-applied (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.473683+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/premature-applied","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.473691+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/uncovered-with-progress"}
+{"Time":"2026-09-13T23:46:04.473693+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/uncovered-with-progress","Output":"=== RUN   TestMemorySDKRejectsMisleadingDeletionReports/uncovered-with-progress\n"}
+{"Time":"2026-09-13T23:46:04.473802+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/uncovered-with-progress","Output":"--- PASS: TestMemorySDKRejectsMisleadingDeletionReports/uncovered-with-progress (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.473809+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/uncovered-with-progress","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.473816+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/omitted-replicas"}
+{"Time":"2026-09-13T23:46:04.473819+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/omitted-replicas","Output":"=== RUN   TestMemorySDKRejectsMisleadingDeletionReports/omitted-replicas\n"}
+{"Time":"2026-09-13T23:46:04.47392+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/omitted-replicas","Output":"--- PASS: TestMemorySDKRejectsMisleadingDeletionReports/omitted-replicas (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.473927+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/omitted-replicas","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.473935+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/invented-completion"}
+{"Time":"2026-09-13T23:46:04.473938+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/invented-completion","Output":"=== RUN   TestMemorySDKRejectsMisleadingDeletionReports/invented-completion\n"}
+{"Time":"2026-09-13T23:46:04.474053+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/invented-completion","Output":"--- PASS: TestMemorySDKRejectsMisleadingDeletionReports/invented-completion (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.474057+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/invented-completion","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.474062+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/unknown-with-report"}
+{"Time":"2026-09-13T23:46:04.474065+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/unknown-with-report","Output":"=== RUN   TestMemorySDKRejectsMisleadingDeletionReports/unknown-with-report\n"}
+{"Time":"2026-09-13T23:46:04.47417+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/unknown-with-report","Output":"--- PASS: TestMemorySDKRejectsMisleadingDeletionReports/unknown-with-report (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.474177+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/unknown-with-report","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.474184+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/failure-with-report"}
+{"Time":"2026-09-13T23:46:04.474186+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/failure-with-report","Output":"=== RUN   TestMemorySDKRejectsMisleadingDeletionReports/failure-with-report\n"}
+{"Time":"2026-09-13T23:46:04.474285+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/failure-with-report","Output":"--- PASS: TestMemorySDKRejectsMisleadingDeletionReports/failure-with-report (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.474294+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/failure-with-report","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.474298+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/mixed-result"}
+{"Time":"2026-09-13T23:46:04.4743+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/mixed-result","Output":"=== RUN   TestMemorySDKRejectsMisleadingDeletionReports/mixed-result\n"}
+{"Time":"2026-09-13T23:46:04.474436+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/mixed-result","Output":"--- PASS: TestMemorySDKRejectsMisleadingDeletionReports/mixed-result (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.474444+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports/mixed-result","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.474455+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports","Output":"--- PASS: TestMemorySDKRejectsMisleadingDeletionReports (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.474462+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemorySDKRejectsMisleadingDeletionReports","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.474469+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses"}
+{"Time":"2026-09-13T23:46:04.474471+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses","Output":"=== RUN   TestMemoryClientRejectsMisassociatedAndExpandedReadResponses\n"}
+{"Time":"2026-09-13T23:46:04.474482+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/association"}
+{"Time":"2026-09-13T23:46:04.474485+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/association","Output":"=== RUN   TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/association\n"}
+{"Time":"2026-09-13T23:46:04.474772+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/association","Output":"--- PASS: TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/association (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.474778+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/association","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.474786+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/namespace"}
+{"Time":"2026-09-13T23:46:04.474789+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/namespace","Output":"=== RUN   TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/namespace\n"}
+{"Time":"2026-09-13T23:46:04.474895+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/namespace","Output":"--- PASS: TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/namespace (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.474945+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/namespace","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.474953+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/latest-for-history"}
+{"Time":"2026-09-13T23:46:04.474958+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/latest-for-history","Output":"=== RUN   TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/latest-for-history\n"}
+{"Time":"2026-09-13T23:46:04.475085+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/latest-for-history","Output":"--- PASS: TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/latest-for-history (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.475095+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/latest-for-history","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.475107+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/error-body"}
+{"Time":"2026-09-13T23:46:04.475111+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/error-body","Output":"=== RUN   TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/error-body\n"}
+{"Time":"2026-09-13T23:46:04.47522+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/error-body","Output":"--- PASS: TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/error-body (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.475228+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/error-body","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.475237+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/extra-results"}
+{"Time":"2026-09-13T23:46:04.475241+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/extra-results","Output":"=== RUN   TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/extra-results\n"}
+{"Time":"2026-09-13T23:46:04.475367+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/extra-results","Output":"--- PASS: TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/extra-results (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.475374+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/extra-results","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.47538+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/unknown-code"}
+{"Time":"2026-09-13T23:46:04.475383+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/unknown-code","Output":"=== RUN   TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/unknown-code\n"}
+{"Time":"2026-09-13T23:46:04.475449+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/unknown-code","Output":"--- PASS: TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/unknown-code (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.475457+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses/unknown-code","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.475474+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses","Output":"--- PASS: TestMemoryClientRejectsMisassociatedAndExpandedReadResponses (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.475482+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMisassociatedAndExpandedReadResponses","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.475488+08:00","Action":"run","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMixedRequestBeforeTransport"}
+{"Time":"2026-09-13T23:46:04.475491+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMixedRequestBeforeTransport","Output":"=== RUN   TestMemoryClientRejectsMixedRequestBeforeTransport\n"}
+{"Time":"2026-09-13T23:46:04.475615+08:00","Action":"output","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMixedRequestBeforeTransport","Output":"--- PASS: TestMemoryClientRejectsMixedRequestBeforeTransport (0.00s)\n"}
+{"Time":"2026-09-13T23:46:04.475625+08:00","Action":"pass","Package":"lerna/sdk","Test":"TestMemoryClientRejectsMixedRequestBeforeTransport","Elapsed":0}
+{"Time":"2026-09-13T23:46:04.475643+08:00","Action":"output","Package":"lerna/sdk","Output":"PASS\n"}
+{"Time":"2026-09-13T23:46:05.484602+08:00","Action":"output","Package":"lerna/sdk","Output":"ok  \tlerna/sdk\t1.663s\n"}
+{"Time":"2026-09-13T23:46:05.484699+08:00","Action":"pass","Package":"lerna/sdk","Elapsed":1.6640000000000001}
+{"Time":"2026-09-13T23:46:05.815269+08:00","Action":"start","Package":"lerna/profiles/asynccheck"}
+{"Time":"2026-09-13T23:46:06.291053+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncJobCompletesThroughDurableAssociation"}
+{"Time":"2026-09-13T23:46:06.291123+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncJobCompletesThroughDurableAssociation","Output":"=== RUN   TestAsyncJobCompletesThroughDurableAssociation\n"}
+{"Time":"2026-09-13T23:46:06.540076+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncJobCompletesThroughDurableAssociation","Output":"--- PASS: TestAsyncJobCompletesThroughDurableAssociation (0.25s)\n"}
+{"Time":"2026-09-13T23:46:06.540106+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncJobCompletesThroughDurableAssociation","Elapsed":0.25}
+{"Time":"2026-09-13T23:46:06.540113+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestCancelAcceptedIsNotStopped"}
+{"Time":"2026-09-13T23:46:06.540118+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestCancelAcceptedIsNotStopped","Output":"=== RUN   TestCancelAcceptedIsNotStopped\n"}
+{"Time":"2026-09-13T23:46:06.777343+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestCancelAcceptedIsNotStopped","Output":"--- PASS: TestCancelAcceptedIsNotStopped (0.24s)\n"}
+{"Time":"2026-09-13T23:46:06.777364+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestCancelAcceptedIsNotStopped","Elapsed":0.24}
+{"Time":"2026-09-13T23:46:06.777371+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestCompletionBeforeCancelUsesTargetTime"}
+{"Time":"2026-09-13T23:46:06.777375+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestCompletionBeforeCancelUsesTargetTime","Output":"=== RUN   TestCompletionBeforeCancelUsesTargetTime\n"}
+{"Time":"2026-09-13T23:46:07.044012+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestCompletionBeforeCancelUsesTargetTime","Output":"--- PASS: TestCompletionBeforeCancelUsesTargetTime (0.27s)\n"}
+{"Time":"2026-09-13T23:46:07.044031+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestCompletionBeforeCancelUsesTargetTime","Elapsed":0.27}
+{"Time":"2026-09-13T23:46:07.044042+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncPolicyIsFrozen"}
+{"Time":"2026-09-13T23:46:07.044046+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncPolicyIsFrozen","Output":"=== RUN   TestAsyncPolicyIsFrozen\n"}
+{"Time":"2026-09-13T23:46:07.195978+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncPolicyIsFrozen","Output":"--- PASS: TestAsyncPolicyIsFrozen (0.15s)\n"}
+{"Time":"2026-09-13T23:46:07.195997+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncPolicyIsFrozen","Elapsed":0.15}
+{"Time":"2026-09-13T23:46:07.196004+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestLateProgressDoesNotBlockOutbox"}
+{"Time":"2026-09-13T23:46:07.196007+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestLateProgressDoesNotBlockOutbox","Output":"=== RUN   TestLateProgressDoesNotBlockOutbox\n"}
+{"Time":"2026-09-13T23:46:07.465176+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestLateProgressDoesNotBlockOutbox","Output":"--- PASS: TestLateProgressDoesNotBlockOutbox (0.27s)\n"}
+{"Time":"2026-09-13T23:46:07.465202+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestLateProgressDoesNotBlockOutbox","Elapsed":0.27}
+{"Time":"2026-09-13T23:46:07.465219+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestTaskCancelBeforeStartSettlesOriginalWork"}
+{"Time":"2026-09-13T23:46:07.465223+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestTaskCancelBeforeStartSettlesOriginalWork","Output":"=== RUN   TestTaskCancelBeforeStartSettlesOriginalWork\n"}
+{"Time":"2026-09-13T23:46:07.615869+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestTaskCancelBeforeStartSettlesOriginalWork","Output":"--- PASS: TestTaskCancelBeforeStartSettlesOriginalWork (0.15s)\n"}
+{"Time":"2026-09-13T23:46:07.615888+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestTaskCancelBeforeStartSettlesOriginalWork","Elapsed":0.15}
+{"Time":"2026-09-13T23:46:07.615895+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestCancelCannotReuseExecutionPermitIdentity"}
+{"Time":"2026-09-13T23:46:07.615898+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestCancelCannotReuseExecutionPermitIdentity","Output":"=== RUN   TestCancelCannotReuseExecutionPermitIdentity\n"}
+{"Time":"2026-09-13T23:46:07.737787+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestCancelCannotReuseExecutionPermitIdentity","Output":"--- PASS: TestCancelCannotReuseExecutionPermitIdentity (0.12s)\n"}
+{"Time":"2026-09-13T23:46:07.73781+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestCancelCannotReuseExecutionPermitIdentity","Elapsed":0.12}
+{"Time":"2026-09-13T23:46:07.737816+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestRecoveryPassRotatesPastIdleAdmission"}
+{"Time":"2026-09-13T23:46:07.73782+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestRecoveryPassRotatesPastIdleAdmission","Output":"=== RUN   TestRecoveryPassRotatesPastIdleAdmission\n"}
+{"Time":"2026-09-13T23:46:08.101897+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestRecoveryPassRotatesPastIdleAdmission","Output":"--- PASS: TestRecoveryPassRotatesPastIdleAdmission (0.36s)\n"}
+{"Time":"2026-09-13T23:46:08.101917+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestRecoveryPassRotatesPastIdleAdmission","Elapsed":0.36}
+{"Time":"2026-09-13T23:46:08.101923+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestProgressUsesBoundedDriverSlot"}
+{"Time":"2026-09-13T23:46:08.101927+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestProgressUsesBoundedDriverSlot","Output":"=== RUN   TestProgressUsesBoundedDriverSlot\n"}
+{"Time":"2026-09-13T23:46:08.271121+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestProgressUsesBoundedDriverSlot","Output":"--- PASS: TestProgressUsesBoundedDriverSlot (0.17s)\n"}
+{"Time":"2026-09-13T23:46:08.271142+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestProgressUsesBoundedDriverSlot","Elapsed":0.17}
+{"Time":"2026-09-13T23:46:08.271167+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestInvokeRecoversPermitAllocatedBeforeInvocation"}
+{"Time":"2026-09-13T23:46:08.271171+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestInvokeRecoversPermitAllocatedBeforeInvocation","Output":"=== RUN   TestInvokeRecoversPermitAllocatedBeforeInvocation\n"}
+{"Time":"2026-09-13T23:46:08.387599+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestInvokeRecoversPermitAllocatedBeforeInvocation","Output":"--- PASS: TestInvokeRecoversPermitAllocatedBeforeInvocation (0.12s)\n"}
+{"Time":"2026-09-13T23:46:08.387617+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestInvokeRecoversPermitAllocatedBeforeInvocation","Elapsed":0.12}
+{"Time":"2026-09-13T23:46:08.387623+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts"}
+{"Time":"2026-09-13T23:46:08.387627+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts","Output":"=== RUN   TestAsyncContracts\n"}
+{"Time":"2026-09-13T23:46:08.38763+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/task-cancel"}
+{"Time":"2026-09-13T23:46:08.387634+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/task-cancel","Output":"=== RUN   TestAsyncContracts/task-cancel\n"}
+{"Time":"2026-09-13T23:46:08.653291+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/task-cancel","Output":"--- PASS: TestAsyncContracts/task-cancel (0.27s)\n"}
+{"Time":"2026-09-13T23:46:08.653313+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/task-cancel","Elapsed":0.27}
+{"Time":"2026-09-13T23:46:08.65332+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/cancel-before-start"}
+{"Time":"2026-09-13T23:46:08.653324+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/cancel-before-start","Output":"=== RUN   TestAsyncContracts/cancel-before-start\n"}
+{"Time":"2026-09-13T23:46:08.781719+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/cancel-before-start","Output":"--- PASS: TestAsyncContracts/cancel-before-start (0.13s)\n"}
+{"Time":"2026-09-13T23:46:08.781739+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/cancel-before-start","Elapsed":0.13}
+{"Time":"2026-09-13T23:46:08.781745+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/uncorrelated-lost-handle"}
+{"Time":"2026-09-13T23:46:08.781748+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/uncorrelated-lost-handle","Output":"=== RUN   TestAsyncContracts/uncorrelated-lost-handle\n"}
+{"Time":"2026-09-13T23:46:08.918946+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/uncorrelated-lost-handle","Output":"--- PASS: TestAsyncContracts/uncorrelated-lost-handle (0.14s)\n"}
+{"Time":"2026-09-13T23:46:08.918966+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/uncorrelated-lost-handle","Elapsed":0.14}
+{"Time":"2026-09-13T23:46:08.918973+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/correlated-lost-handle"}
+{"Time":"2026-09-13T23:46:08.918977+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/correlated-lost-handle","Output":"=== RUN   TestAsyncContracts/correlated-lost-handle\n"}
+{"Time":"2026-09-13T23:46:09.095353+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/correlated-lost-handle","Output":"--- PASS: TestAsyncContracts/correlated-lost-handle (0.18s)\n"}
+{"Time":"2026-09-13T23:46:09.09538+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/correlated-lost-handle","Elapsed":0.18}
+{"Time":"2026-09-13T23:46:09.095386+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/duplicate-progress"}
+{"Time":"2026-09-13T23:46:09.09539+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/duplicate-progress","Output":"=== RUN   TestAsyncContracts/duplicate-progress\n"}
+{"Time":"2026-09-13T23:46:09.458267+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/duplicate-progress","Output":"--- PASS: TestAsyncContracts/duplicate-progress (0.36s)\n"}
+{"Time":"2026-09-13T23:46:09.458288+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/duplicate-progress","Elapsed":0.36}
+{"Time":"2026-09-13T23:46:09.458294+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/conflicting-evidence"}
+{"Time":"2026-09-13T23:46:09.458297+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/conflicting-evidence","Output":"=== RUN   TestAsyncContracts/conflicting-evidence\n"}
+{"Time":"2026-09-13T23:46:09.741198+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/conflicting-evidence","Output":"--- PASS: TestAsyncContracts/conflicting-evidence (0.28s)\n"}
+{"Time":"2026-09-13T23:46:09.741217+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/conflicting-evidence","Elapsed":0.28}
+{"Time":"2026-09-13T23:46:09.741229+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/conflict-after-task-completed"}
+{"Time":"2026-09-13T23:46:09.741233+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/conflict-after-task-completed","Output":"=== RUN   TestAsyncContracts/conflict-after-task-completed\n"}
+{"Time":"2026-09-13T23:46:10.032669+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/conflict-after-task-completed","Output":"--- PASS: TestAsyncContracts/conflict-after-task-completed (0.29s)\n"}
+{"Time":"2026-09-13T23:46:10.03269+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/conflict-after-task-completed","Elapsed":0.29}
+{"Time":"2026-09-13T23:46:10.032698+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/forged-progress"}
+{"Time":"2026-09-13T23:46:10.032716+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/forged-progress","Output":"=== RUN   TestAsyncContracts/forged-progress\n"}
+{"Time":"2026-09-13T23:46:10.19166+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/forged-progress","Output":"--- PASS: TestAsyncContracts/forged-progress (0.16s)\n"}
+{"Time":"2026-09-13T23:46:10.191685+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/forged-progress","Elapsed":0.16}
+{"Time":"2026-09-13T23:46:10.191692+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/poll-budget"}
+{"Time":"2026-09-13T23:46:10.191696+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/poll-budget","Output":"=== RUN   TestAsyncContracts/poll-budget\n"}
+{"Time":"2026-09-13T23:46:10.428137+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/poll-budget","Output":"--- PASS: TestAsyncContracts/poll-budget (0.24s)\n"}
+{"Time":"2026-09-13T23:46:10.428157+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/poll-budget","Elapsed":0.24}
+{"Time":"2026-09-13T23:46:10.428163+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/cancel-completion-race"}
+{"Time":"2026-09-13T23:46:10.428166+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/cancel-completion-race","Output":"=== RUN   TestAsyncContracts/cancel-completion-race\n"}
+{"Time":"2026-09-13T23:46:10.655324+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/cancel-completion-race","Output":"--- PASS: TestAsyncContracts/cancel-completion-race (0.23s)\n"}
+{"Time":"2026-09-13T23:46:10.655356+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/cancel-completion-race","Elapsed":0.23}
+{"Time":"2026-09-13T23:46:10.655455+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/lost-cancel-reply"}
+{"Time":"2026-09-13T23:46:10.655462+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/lost-cancel-reply","Output":"=== RUN   TestAsyncContracts/lost-cancel-reply\n"}
+{"Time":"2026-09-13T23:46:10.879493+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/lost-cancel-reply","Output":"--- PASS: TestAsyncContracts/lost-cancel-reply (0.22s)\n"}
+{"Time":"2026-09-13T23:46:10.879514+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/lost-cancel-reply","Elapsed":0.22}
+{"Time":"2026-09-13T23:46:10.879521+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/two-coordinators"}
+{"Time":"2026-09-13T23:46:10.879525+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/two-coordinators","Output":"=== RUN   TestAsyncContracts/two-coordinators\n"}
+{"Time":"2026-09-13T23:46:11.058845+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/two-coordinators","Output":"--- PASS: TestAsyncContracts/two-coordinators (0.18s)\n"}
+{"Time":"2026-09-13T23:46:11.058874+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/two-coordinators","Elapsed":0.18}
+{"Time":"2026-09-13T23:46:11.058882+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/unsupported-cancel"}
+{"Time":"2026-09-13T23:46:11.058885+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/unsupported-cancel","Output":"=== RUN   TestAsyncContracts/unsupported-cancel\n"}
+{"Time":"2026-09-13T23:46:11.250011+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/unsupported-cancel","Output":"--- PASS: TestAsyncContracts/unsupported-cancel (0.19s)\n"}
+{"Time":"2026-09-13T23:46:11.250033+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/unsupported-cancel","Elapsed":0.19}
+{"Time":"2026-09-13T23:46:11.250039+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/expired-key"}
+{"Time":"2026-09-13T23:46:11.250043+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/expired-key","Output":"=== RUN   TestAsyncContracts/expired-key\n"}
+{"Time":"2026-09-13T23:46:11.397277+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/expired-key","Output":"--- PASS: TestAsyncContracts/expired-key (0.15s)\n"}
+{"Time":"2026-09-13T23:46:11.397297+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/expired-key","Elapsed":0.15}
+{"Time":"2026-09-13T23:46:11.397303+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/negative-coverage"}
+{"Time":"2026-09-13T23:46:11.397307+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/negative-coverage","Output":"=== RUN   TestAsyncContracts/negative-coverage\n"}
+{"Time":"2026-09-13T23:46:11.56508+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/negative-coverage","Output":"--- PASS: TestAsyncContracts/negative-coverage (0.17s)\n"}
+{"Time":"2026-09-13T23:46:11.565098+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts/negative-coverage","Elapsed":0.17}
+{"Time":"2026-09-13T23:46:11.565104+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts","Output":"--- PASS: TestAsyncContracts (3.18s)\n"}
+{"Time":"2026-09-13T23:46:11.565107+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestAsyncContracts","Elapsed":3.18}
+{"Time":"2026-09-13T23:46:11.565132+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCNegotiationAndAuthentication"}
+{"Time":"2026-09-13T23:46:11.565148+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCNegotiationAndAuthentication","Output":"=== RUN   TestGRPCNegotiationAndAuthentication\n"}
+{"Time":"2026-09-13T23:46:11.704936+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCNegotiationAndAuthentication","Output":"    grpc_contract_test.go:40: gRPC caller PID=83447 executor PID=83508 address=127.0.0.1:51397\n"}
+{"Time":"2026-09-13T23:46:11.826224+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCNegotiationAndAuthentication","Output":"    grpc_contract_test.go:102: gRPC caller PID=83447 executor PID=83509 address=127.0.0.1:51402\n"}
+{"Time":"2026-09-13T23:46:11.846167+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCNegotiationAndAuthentication","Output":"--- PASS: TestGRPCNegotiationAndAuthentication (0.28s)\n"}
+{"Time":"2026-09-13T23:46:11.846189+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCNegotiationAndAuthentication","Elapsed":0.28}
+{"Time":"2026-09-13T23:46:11.846195+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCurrentAuthorizationStopsDisclosure"}
+{"Time":"2026-09-13T23:46:11.846198+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCurrentAuthorizationStopsDisclosure","Output":"=== RUN   TestGRPCCurrentAuthorizationStopsDisclosure\n"}
+{"Time":"2026-09-13T23:46:11.987503+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCurrentAuthorizationStopsDisclosure","Output":"    grpc_contract_test.go:113: gRPC caller PID=83447 executor PID=83510 address=127.0.0.1:51404\n"}
+{"Time":"2026-09-13T23:46:12.158052+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCurrentAuthorizationStopsDisclosure","Output":"--- PASS: TestGRPCCurrentAuthorizationStopsDisclosure (0.31s)\n"}
+{"Time":"2026-09-13T23:46:12.158084+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCurrentAuthorizationStopsDisclosure","Elapsed":0.31}
+{"Time":"2026-09-13T23:46:12.158091+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance"}
+{"Time":"2026-09-13T23:46:12.158095+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance","Output":"=== RUN   TestGRPCCancelConformance\n"}
+{"Time":"2026-09-13T23:46:12.158099+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/before"}
+{"Time":"2026-09-13T23:46:12.158102+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/before","Output":"=== RUN   TestGRPCCancelConformance/before\n"}
+{"Time":"2026-09-13T23:46:12.481267+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/before","Output":"    grpc_contract_test.go:153: gRPC caller PID=83447 executor PID=83511 address=127.0.0.1:51408\n"}
+{"Time":"2026-09-13T23:46:12.732829+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/before","Output":"--- PASS: TestGRPCCancelConformance/before (0.57s)\n"}
+{"Time":"2026-09-13T23:46:12.732848+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/before","Elapsed":0.57}
+{"Time":"2026-09-13T23:46:12.732854+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/during"}
+{"Time":"2026-09-13T23:46:12.732857+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/during","Output":"=== RUN   TestGRPCCancelConformance/during\n"}
+{"Time":"2026-09-13T23:46:13.117443+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/during","Output":"    grpc_contract_test.go:153: gRPC caller PID=83447 executor PID=83512 address=127.0.0.1:51410\n"}
+{"Time":"2026-09-13T23:46:13.453598+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/during","Output":"--- PASS: TestGRPCCancelConformance/during (0.72s)\n"}
+{"Time":"2026-09-13T23:46:13.453618+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/during","Elapsed":0.72}
+{"Time":"2026-09-13T23:46:13.453624+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/completed"}
+{"Time":"2026-09-13T23:46:13.453628+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/completed","Output":"=== RUN   TestGRPCCancelConformance/completed\n"}
+{"Time":"2026-09-13T23:46:13.881659+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/completed","Output":"    grpc_contract_test.go:153: gRPC caller PID=83447 executor PID=83585 address=127.0.0.1:51414\n"}
+{"Time":"2026-09-13T23:46:14.24485+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/completed","Output":"--- PASS: TestGRPCCancelConformance/completed (0.79s)\n"}
+{"Time":"2026-09-13T23:46:14.24487+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/completed","Elapsed":0.79}
+{"Time":"2026-09-13T23:46:14.244875+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance","Output":"--- PASS: TestGRPCCancelConformance (2.09s)\n"}
+{"Time":"2026-09-13T23:46:14.244879+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance","Elapsed":2.09}
+{"Time":"2026-09-13T23:46:14.244905+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCSlowConsumerAndUnacknowledgedRecovery"}
+{"Time":"2026-09-13T23:46:14.244909+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCSlowConsumerAndUnacknowledgedRecovery","Output":"=== RUN   TestGRPCSlowConsumerAndUnacknowledgedRecovery\n"}
+{"Time":"2026-09-13T23:46:14.390331+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCSlowConsumerAndUnacknowledgedRecovery","Output":"    grpc_contract_test.go:225: gRPC caller PID=83447 executor PID=83591 address=127.0.0.1:51416\n"}
+{"Time":"2026-09-13T23:46:15.716304+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCSlowConsumerAndUnacknowledgedRecovery","Output":"    grpc_contract_test.go:254: gRPC caller PID=83447 executor PID=83610 address=127.0.0.1:51423\n"}
+{"Time":"2026-09-13T23:46:15.791559+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCSlowConsumerAndUnacknowledgedRecovery","Output":"--- PASS: TestGRPCSlowConsumerAndUnacknowledgedRecovery (1.55s)\n"}
+{"Time":"2026-09-13T23:46:15.79158+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCSlowConsumerAndUnacknowledgedRecovery","Elapsed":1.55}
+{"Time":"2026-09-13T23:46:15.791586+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams"}
+{"Time":"2026-09-13T23:46:15.79159+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"=== RUN   TestGRPCBoundedConcurrentStreams\n"}
+{"Time":"2026-09-13T23:46:15.933163+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:272: gRPC caller PID=83447 executor PID=83611 address=127.0.0.1:51425\n"}
+{"Time":"2026-09-13T23:46:17.838174+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"--- PASS: TestGRPCBoundedConcurrentStreams (2.05s)\n"}
+{"Time":"2026-09-13T23:46:17.838197+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Elapsed":2.05}
+{"Time":"2026-09-13T23:46:17.838203+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCRevocationStopsExistingSubscription"}
+{"Time":"2026-09-13T23:46:17.838206+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCRevocationStopsExistingSubscription","Output":"=== RUN   TestGRPCRevocationStopsExistingSubscription\n"}
+{"Time":"2026-09-13T23:46:17.9793+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCRevocationStopsExistingSubscription","Output":"    grpc_contract_test.go:337: gRPC caller PID=83447 executor PID=83630 address=127.0.0.1:51428\n"}
+{"Time":"2026-09-13T23:46:18.210338+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCRevocationStopsExistingSubscription","Output":"--- PASS: TestGRPCRevocationStopsExistingSubscription (0.37s)\n"}
+{"Time":"2026-09-13T23:46:18.210357+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCRevocationStopsExistingSubscription","Elapsed":0.37}
+{"Time":"2026-09-13T23:46:18.210363+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCInvocationConformance"}
+{"Time":"2026-09-13T23:46:18.210366+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCInvocationConformance","Output":"=== RUN   TestGRPCInvocationConformance\n"}
+{"Time":"2026-09-13T23:46:18.648545+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCInvocationConformance","Output":"    grpc_contract_test.go:370: gRPC caller PID=83447 executor PID=83633 address=127.0.0.1:51430\n"}
+{"Time":"2026-09-13T23:46:19.043576+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCInvocationConformance","Output":"--- PASS: TestGRPCInvocationConformance (0.83s)\n"}
+{"Time":"2026-09-13T23:46:19.043597+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCInvocationConformance","Elapsed":0.83}
+{"Time":"2026-09-13T23:46:19.043603+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCIncompleteHandshakeIsBounded"}
+{"Time":"2026-09-13T23:46:19.043607+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCIncompleteHandshakeIsBounded","Output":"=== RUN   TestGRPCIncompleteHandshakeIsBounded\n"}
+{"Time":"2026-09-13T23:46:19.185772+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCIncompleteHandshakeIsBounded","Output":"    grpc_contract_test.go:432: gRPC caller PID=83447 executor PID=83634 address=127.0.0.1:51432\n"}
+{"Time":"2026-09-13T23:46:20.324944+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCIncompleteHandshakeIsBounded","Output":"--- PASS: TestGRPCIncompleteHandshakeIsBounded (1.28s)\n"}
+{"Time":"2026-09-13T23:46:20.324973+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCIncompleteHandshakeIsBounded","Elapsed":1.28}
+{"Time":"2026-09-13T23:46:20.32498+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverProcess"}
+{"Time":"2026-09-13T23:46:20.324985+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverProcess","Output":"=== RUN   TestGRPCReceiverProcess\n"}
+{"Time":"2026-09-13T23:46:20.324989+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverProcess","Output":"    grpc_receiver_test.go:21: receiver subprocess only\n"}
+{"Time":"2026-09-13T23:46:20.325004+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverProcess","Output":"--- SKIP: TestGRPCReceiverProcess (0.00s)\n"}
+{"Time":"2026-09-13T23:46:20.325012+08:00","Action":"skip","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverProcess","Elapsed":0}
+{"Time":"2026-09-13T23:46:20.325025+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity"}
+{"Time":"2026-09-13T23:46:20.325029+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity","Output":"=== RUN   TestGRPCReceiverRestartKeepsReceiptIdentity\n"}
+{"Time":"2026-09-13T23:46:20.466867+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity","Output":"    grpc_receiver_test.go:57: gRPC caller PID=83447 executor PID=83654 address=127.0.0.1:51435\n"}
+{"Time":"2026-09-13T23:46:21.794831+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity","Output":"    grpc_receiver_test.go:87: receiver PID=83655 fresh=true revision=4\n"}
+{"Time":"2026-09-13T23:46:22.950938+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity","Output":"    grpc_receiver_test.go:87: receiver PID=83674 fresh=false revision=4\n"}
+{"Time":"2026-09-13T23:46:22.961376+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity","Output":"--- PASS: TestGRPCReceiverRestartKeepsReceiptIdentity (2.64s)\n"}
+{"Time":"2026-09-13T23:46:22.961469+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity","Elapsed":2.64}
+{"Time":"2026-09-13T23:46:22.96156+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown"}
+{"Time":"2026-09-13T23:46:22.961592+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown","Output":"=== RUN   TestGRPCMalformedMutationResponseIsUnknown\n"}
+{"Time":"2026-09-13T23:46:22.961658+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/branch"}
+{"Time":"2026-09-13T23:46:22.961676+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/branch","Output":"=== RUN   TestGRPCMalformedMutationResponseIsUnknown/branch\n"}
+{"Time":"2026-09-13T23:46:23.10911+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/branch","Output":"--- PASS: TestGRPCMalformedMutationResponseIsUnknown/branch (0.15s)\n"}
+{"Time":"2026-09-13T23:46:23.109134+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/branch","Elapsed":0.15}
+{"Time":"2026-09-13T23:46:23.109141+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/operation"}
+{"Time":"2026-09-13T23:46:23.109145+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/operation","Output":"=== RUN   TestGRPCMalformedMutationResponseIsUnknown/operation\n"}
+{"Time":"2026-09-13T23:46:23.243146+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/operation","Output":"--- PASS: TestGRPCMalformedMutationResponseIsUnknown/operation (0.13s)\n"}
+{"Time":"2026-09-13T23:46:23.24317+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/operation","Elapsed":0.13}
+{"Time":"2026-09-13T23:46:23.243177+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/revision"}
+{"Time":"2026-09-13T23:46:23.243181+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/revision","Output":"=== RUN   TestGRPCMalformedMutationResponseIsUnknown/revision\n"}
+{"Time":"2026-09-13T23:46:23.373657+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/revision","Output":"--- PASS: TestGRPCMalformedMutationResponseIsUnknown/revision (0.13s)\n"}
+{"Time":"2026-09-13T23:46:23.373681+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/revision","Elapsed":0.13}
+{"Time":"2026-09-13T23:46:23.373687+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/failure"}
+{"Time":"2026-09-13T23:46:23.373691+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/failure","Output":"=== RUN   TestGRPCMalformedMutationResponseIsUnknown/failure\n"}
+{"Time":"2026-09-13T23:46:23.498575+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/failure","Output":"--- PASS: TestGRPCMalformedMutationResponseIsUnknown/failure (0.12s)\n"}
+{"Time":"2026-09-13T23:46:23.498598+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/failure","Elapsed":0.12}
+{"Time":"2026-09-13T23:46:23.498605+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown","Output":"--- PASS: TestGRPCMalformedMutationResponseIsUnknown (0.54s)\n"}
+{"Time":"2026-09-13T23:46:23.498609+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown","Elapsed":0.54}
+{"Time":"2026-09-13T23:46:23.498614+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCServerProcess"}
+{"Time":"2026-09-13T23:46:23.498618+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCServerProcess","Output":"=== RUN   TestGRPCServerProcess\n"}
+{"Time":"2026-09-13T23:46:23.498634+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCServerProcess","Output":"    grpc_test.go:174: subprocess only\n"}
+{"Time":"2026-09-13T23:46:23.498648+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCServerProcess","Output":"--- SKIP: TestGRPCServerProcess (0.00s)\n"}
+{"Time":"2026-09-13T23:46:23.498655+08:00","Action":"skip","Package":"lerna/profiles/asynccheck","Test":"TestGRPCServerProcess","Elapsed":0}
+{"Time":"2026-09-13T23:46:23.49866+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCExecutionAndDurableResult"}
+{"Time":"2026-09-13T23:46:23.498664+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCExecutionAndDurableResult","Output":"=== RUN   TestGRPCExecutionAndDurableResult\n"}
+{"Time":"2026-09-13T23:46:23.640527+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCExecutionAndDurableResult","Output":"    grpc_test.go:295: gRPC caller PID=83447 executor PID=83680 address=127.0.0.1:51449\n"}
+{"Time":"2026-09-13T23:46:24.259248+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCExecutionAndDurableResult","Output":"    grpc_test.go:351: gRPC caller PID=83447 executor PID=83702 address=127.0.0.1:51453\n"}
+{"Time":"2026-09-13T23:46:24.383079+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCExecutionAndDurableResult","Output":"--- PASS: TestGRPCExecutionAndDurableResult (0.88s)\n"}
+{"Time":"2026-09-13T23:46:24.383108+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCExecutionAndDurableResult","Elapsed":0.88}
+{"Time":"2026-09-13T23:46:24.383116+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCLostReplyKeepsOriginalOperation"}
+{"Time":"2026-09-13T23:46:24.38312+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCLostReplyKeepsOriginalOperation","Output":"=== RUN   TestGRPCLostReplyKeepsOriginalOperation\n"}
+{"Time":"2026-09-13T23:46:24.529221+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCLostReplyKeepsOriginalOperation","Output":"    grpc_test.go:428: gRPC caller PID=83447 executor PID=83703 address=127.0.0.1:51455\n"}
+{"Time":"2026-09-13T23:46:25.792632+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCLostReplyKeepsOriginalOperation","Output":"    grpc_test.go:446: gRPC caller PID=83447 executor PID=83705 address=127.0.0.1:51462\n"}
+{"Time":"2026-09-13T23:46:25.871349+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCLostReplyKeepsOriginalOperation","Output":"--- PASS: TestGRPCLostReplyKeepsOriginalOperation (1.49s)\n"}
+{"Time":"2026-09-13T23:46:25.871377+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCLostReplyKeepsOriginalOperation","Elapsed":1.49}
+{"Time":"2026-09-13T23:46:25.871384+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestActualV11Upgrade"}
+{"Time":"2026-09-13T23:46:25.871389+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestActualV11Upgrade","Output":"=== RUN   TestActualV11Upgrade\n"}
+{"Time":"2026-09-13T23:46:25.871394+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestActualV11Upgrade/cancel-registered"}
+{"Time":"2026-09-13T23:46:25.871398+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestActualV11Upgrade/cancel-registered","Output":"=== RUN   TestActualV11Upgrade/cancel-registered\n"}
+{"Time":"2026-09-13T23:46:25.997411+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestActualV11Upgrade/cancel-registered","Output":"--- PASS: TestActualV11Upgrade/cancel-registered (0.13s)\n"}
+{"Time":"2026-09-13T23:46:25.997441+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestActualV11Upgrade/cancel-registered","Elapsed":0.13}
+{"Time":"2026-09-13T23:46:25.997449+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestActualV11Upgrade/report-saved"}
+{"Time":"2026-09-13T23:46:25.997453+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestActualV11Upgrade/report-saved","Output":"=== RUN   TestActualV11Upgrade/report-saved\n"}
+{"Time":"2026-09-13T23:46:26.141295+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestActualV11Upgrade/report-saved","Output":"--- PASS: TestActualV11Upgrade/report-saved (0.14s)\n"}
+{"Time":"2026-09-13T23:46:26.141323+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestActualV11Upgrade/report-saved","Elapsed":0.14}
+{"Time":"2026-09-13T23:46:26.141331+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestActualV11Upgrade","Output":"--- PASS: TestActualV11Upgrade (0.27s)\n"}
+{"Time":"2026-09-13T23:46:26.141348+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestActualV11Upgrade","Elapsed":0.27}
+{"Time":"2026-09-13T23:46:26.141354+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"PASS\n"}
+{"Time":"2026-09-13T23:46:27.159134+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"ok  \tlerna/profiles/asynccheck\t21.344s\n"}
+{"Time":"2026-09-13T23:46:27.159268+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Elapsed":21.344}
+{"Time":"2026-09-13T23:46:27.472686+08:00","Action":"start","Package":"lerna/profiles/executioncheck"}
+{"Time":"2026-09-13T23:46:28.094077+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestSynchronousExecutionChangesTargetOnce"}
+{"Time":"2026-09-13T23:46:28.094122+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestSynchronousExecutionChangesTargetOnce","Output":"=== RUN   TestSynchronousExecutionChangesTargetOnce\n"}
+{"Time":"2026-09-13T23:46:28.280741+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestSynchronousExecutionChangesTargetOnce","Output":"--- PASS: TestSynchronousExecutionChangesTargetOnce (0.19s)\n"}
+{"Time":"2026-09-13T23:46:28.280767+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestSynchronousExecutionChangesTargetOnce","Elapsed":0.19}
+{"Time":"2026-09-13T23:46:28.280785+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts"}
+{"Time":"2026-09-13T23:46:28.28079+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts","Output":"=== RUN   TestExecutionContracts\n"}
+{"Time":"2026-09-13T23:46:28.280796+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/sdk-sync-and-replay"}
+{"Time":"2026-09-13T23:46:28.2808+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/sdk-sync-and-replay","Output":"=== RUN   TestExecutionContracts/sdk-sync-and-replay\n"}
+{"Time":"2026-09-13T23:46:28.454898+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/sdk-sync-and-replay","Output":"--- PASS: TestExecutionContracts/sdk-sync-and-replay (0.17s)\n"}
+{"Time":"2026-09-13T23:46:28.454932+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/sdk-sync-and-replay","Elapsed":0.17}
+{"Time":"2026-09-13T23:46:28.45494+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/schema-rejected"}
+{"Time":"2026-09-13T23:46:28.454945+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/schema-rejected","Output":"=== RUN   TestExecutionContracts/schema-rejected\n"}
+{"Time":"2026-09-13T23:46:28.542565+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/schema-rejected","Output":"--- PASS: TestExecutionContracts/schema-rejected (0.09s)\n"}
+{"Time":"2026-09-13T23:46:28.542588+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/schema-rejected","Elapsed":0.09}
+{"Time":"2026-09-13T23:46:28.542595+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/version-rejected"}
+{"Time":"2026-09-13T23:46:28.542599+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/version-rejected","Output":"=== RUN   TestExecutionContracts/version-rejected\n"}
+{"Time":"2026-09-13T23:46:28.601824+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/version-rejected","Output":"--- PASS: TestExecutionContracts/version-rejected (0.06s)\n"}
+{"Time":"2026-09-13T23:46:28.601851+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/version-rejected","Elapsed":0.06}
+{"Time":"2026-09-13T23:46:28.60186+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/changed-operation"}
+{"Time":"2026-09-13T23:46:28.601864+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/changed-operation","Output":"=== RUN   TestExecutionContracts/changed-operation\n"}
+{"Time":"2026-09-13T23:46:28.700851+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/changed-operation","Output":"--- PASS: TestExecutionContracts/changed-operation (0.10s)\n"}
+{"Time":"2026-09-13T23:46:28.700874+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/changed-operation","Elapsed":0.1}
+{"Time":"2026-09-13T23:46:28.700882+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/wrong-receiver"}
+{"Time":"2026-09-13T23:46:28.700886+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/wrong-receiver","Output":"=== RUN   TestExecutionContracts/wrong-receiver\n"}
+{"Time":"2026-09-13T23:46:28.781224+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/wrong-receiver","Output":"--- PASS: TestExecutionContracts/wrong-receiver (0.08s)\n"}
+{"Time":"2026-09-13T23:46:28.781247+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/wrong-receiver","Elapsed":0.08}
+{"Time":"2026-09-13T23:46:28.781254+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/concurrent-start"}
+{"Time":"2026-09-13T23:46:28.781259+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/concurrent-start","Output":"=== RUN   TestExecutionContracts/concurrent-start\n"}
+{"Time":"2026-09-13T23:46:28.930833+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/concurrent-start","Output":"--- PASS: TestExecutionContracts/concurrent-start (0.15s)\n"}
+{"Time":"2026-09-13T23:46:28.930861+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/concurrent-start","Elapsed":0.15}
+{"Time":"2026-09-13T23:46:28.930872+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/one-action-per-generation"}
+{"Time":"2026-09-13T23:46:28.930877+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/one-action-per-generation","Output":"=== RUN   TestExecutionContracts/one-action-per-generation\n"}
+{"Time":"2026-09-13T23:46:29.142034+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/one-action-per-generation","Output":"--- PASS: TestExecutionContracts/one-action-per-generation (0.21s)\n"}
+{"Time":"2026-09-13T23:46:29.142059+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/one-action-per-generation","Elapsed":0.21}
+{"Time":"2026-09-13T23:46:29.142068+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/resource-precondition"}
+{"Time":"2026-09-13T23:46:29.142072+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/resource-precondition","Output":"=== RUN   TestExecutionContracts/resource-precondition\n"}
+{"Time":"2026-09-13T23:46:29.316179+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/resource-precondition","Output":"--- PASS: TestExecutionContracts/resource-precondition (0.17s)\n"}
+{"Time":"2026-09-13T23:46:29.316203+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/resource-precondition","Elapsed":0.17}
+{"Time":"2026-09-13T23:46:29.316211+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/pause-before-start"}
+{"Time":"2026-09-13T23:46:29.316215+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/pause-before-start","Output":"=== RUN   TestExecutionContracts/pause-before-start\n"}
+{"Time":"2026-09-13T23:46:29.442742+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/pause-before-start","Output":"--- PASS: TestExecutionContracts/pause-before-start (0.13s)\n"}
+{"Time":"2026-09-13T23:46:29.442767+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/pause-before-start","Elapsed":0.13}
+{"Time":"2026-09-13T23:46:29.442775+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/cancel-before-start"}
+{"Time":"2026-09-13T23:46:29.442779+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/cancel-before-start","Output":"=== RUN   TestExecutionContracts/cancel-before-start\n"}
+{"Time":"2026-09-13T23:46:29.569441+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/cancel-before-start","Output":"--- PASS: TestExecutionContracts/cancel-before-start (0.13s)\n"}
+{"Time":"2026-09-13T23:46:29.569463+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/cancel-before-start","Elapsed":0.13}
+{"Time":"2026-09-13T23:46:29.56947+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/update-before-start"}
+{"Time":"2026-09-13T23:46:29.569473+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/update-before-start","Output":"=== RUN   TestExecutionContracts/update-before-start\n"}
+{"Time":"2026-09-13T23:46:29.700352+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/update-before-start","Output":"--- PASS: TestExecutionContracts/update-before-start (0.13s)\n"}
+{"Time":"2026-09-13T23:46:29.70038+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/update-before-start","Elapsed":0.13}
+{"Time":"2026-09-13T23:46:29.700388+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/expired-worker"}
+{"Time":"2026-09-13T23:46:29.700393+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/expired-worker","Output":"=== RUN   TestExecutionContracts/expired-worker\n"}
+{"Time":"2026-09-13T23:46:29.814352+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/expired-worker","Output":"--- PASS: TestExecutionContracts/expired-worker (0.11s)\n"}
+{"Time":"2026-09-13T23:46:29.814378+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/expired-worker","Elapsed":0.11}
+{"Time":"2026-09-13T23:46:29.814386+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/grant-revoked"}
+{"Time":"2026-09-13T23:46:29.814392+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/grant-revoked","Output":"=== RUN   TestExecutionContracts/grant-revoked\n"}
+{"Time":"2026-09-13T23:46:29.940043+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/grant-revoked","Output":"--- PASS: TestExecutionContracts/grant-revoked (0.13s)\n"}
+{"Time":"2026-09-13T23:46:29.940066+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/grant-revoked","Elapsed":0.13}
+{"Time":"2026-09-13T23:46:29.940073+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/source-revoked"}
+{"Time":"2026-09-13T23:46:29.940078+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/source-revoked","Output":"=== RUN   TestExecutionContracts/source-revoked\n"}
+{"Time":"2026-09-13T23:46:30.048693+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/source-revoked","Output":"--- PASS: TestExecutionContracts/source-revoked (0.11s)\n"}
+{"Time":"2026-09-13T23:46:30.048724+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/source-revoked","Elapsed":0.11}
+{"Time":"2026-09-13T23:46:30.048733+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/return-lost"}
+{"Time":"2026-09-13T23:46:30.048745+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/return-lost","Output":"=== RUN   TestExecutionContracts/return-lost\n"}
+{"Time":"2026-09-13T23:46:30.224609+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/return-lost","Output":"--- PASS: TestExecutionContracts/return-lost (0.18s)\n"}
+{"Time":"2026-09-13T23:46:30.224634+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/return-lost","Elapsed":0.18}
+{"Time":"2026-09-13T23:46:30.224648+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/effect-unconfirmed"}
+{"Time":"2026-09-13T23:46:30.224652+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/effect-unconfirmed","Output":"=== RUN   TestExecutionContracts/effect-unconfirmed\n"}
+{"Time":"2026-09-13T23:46:30.367658+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/effect-unconfirmed","Output":"--- PASS: TestExecutionContracts/effect-unconfirmed (0.14s)\n"}
+{"Time":"2026-09-13T23:46:30.367685+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/effect-unconfirmed","Elapsed":0.14}
+{"Time":"2026-09-13T23:46:30.367692+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/invalid-output"}
+{"Time":"2026-09-13T23:46:30.367696+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/invalid-output","Output":"=== RUN   TestExecutionContracts/invalid-output\n"}
+{"Time":"2026-09-13T23:46:30.533004+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/invalid-output","Output":"--- PASS: TestExecutionContracts/invalid-output (0.17s)\n"}
+{"Time":"2026-09-13T23:46:30.53303+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/invalid-output","Elapsed":0.17}
+{"Time":"2026-09-13T23:46:30.533037+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/unknown-keeps-resource"}
+{"Time":"2026-09-13T23:46:30.53304+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/unknown-keeps-resource","Output":"=== RUN   TestExecutionContracts/unknown-keeps-resource\n"}
+{"Time":"2026-09-13T23:46:30.765491+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/unknown-keeps-resource","Output":"--- PASS: TestExecutionContracts/unknown-keeps-resource (0.23s)\n"}
+{"Time":"2026-09-13T23:46:30.765517+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/unknown-keeps-resource","Elapsed":0.23}
+{"Time":"2026-09-13T23:46:30.765524+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/late-effect-after-update"}
+{"Time":"2026-09-13T23:46:30.765529+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/late-effect-after-update","Output":"=== RUN   TestExecutionContracts/late-effect-after-update\n"}
+{"Time":"2026-09-13T23:46:30.947258+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/late-effect-after-update","Output":"--- PASS: TestExecutionContracts/late-effect-after-update (0.18s)\n"}
+{"Time":"2026-09-13T23:46:30.947285+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/late-effect-after-update","Elapsed":0.18}
+{"Time":"2026-09-13T23:46:30.947292+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/outbox-replay"}
+{"Time":"2026-09-13T23:46:30.947296+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/outbox-replay","Output":"=== RUN   TestExecutionContracts/outbox-replay\n"}
+{"Time":"2026-09-13T23:46:31.140984+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/outbox-replay","Output":"--- PASS: TestExecutionContracts/outbox-replay (0.19s)\n"}
+{"Time":"2026-09-13T23:46:31.14101+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/outbox-replay","Elapsed":0.19}
+{"Time":"2026-09-13T23:46:31.141021+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/query-privacy"}
+{"Time":"2026-09-13T23:46:31.141025+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/query-privacy","Output":"=== RUN   TestExecutionContracts/query-privacy\n"}
+{"Time":"2026-09-13T23:46:31.247431+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/query-privacy","Output":"--- PASS: TestExecutionContracts/query-privacy (0.11s)\n"}
+{"Time":"2026-09-13T23:46:31.247454+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts/query-privacy","Elapsed":0.11}
+{"Time":"2026-09-13T23:46:31.247461+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts","Output":"--- PASS: TestExecutionContracts (2.97s)\n"}
+{"Time":"2026-09-13T23:46:31.247466+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionContracts","Elapsed":2.97}
+{"Time":"2026-09-13T23:46:31.247471+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults"}
+{"Time":"2026-09-13T23:46:31.247475+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults","Output":"=== RUN   TestExecutionFaults\n"}
+{"Time":"2026-09-13T23:46:31.247493+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/start-commit-failed"}
+{"Time":"2026-09-13T23:46:31.247498+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/start-commit-failed","Output":"=== RUN   TestExecutionFaults/start-commit-failed\n"}
+{"Time":"2026-09-13T23:46:31.368356+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/start-commit-failed","Output":"--- PASS: TestExecutionFaults/start-commit-failed (0.12s)\n"}
+{"Time":"2026-09-13T23:46:31.36838+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/start-commit-failed","Elapsed":0.12}
+{"Time":"2026-09-13T23:46:31.368387+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/start-commit-unknown"}
+{"Time":"2026-09-13T23:46:31.368391+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/start-commit-unknown","Output":"=== RUN   TestExecutionFaults/start-commit-unknown\n"}
+{"Time":"2026-09-13T23:46:31.490714+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/start-commit-unknown","Output":"--- PASS: TestExecutionFaults/start-commit-unknown (0.12s)\n"}
+{"Time":"2026-09-13T23:46:31.490754+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/start-commit-unknown","Elapsed":0.12}
+{"Time":"2026-09-13T23:46:31.490762+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/sdk-lost-admission"}
+{"Time":"2026-09-13T23:46:31.490767+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/sdk-lost-admission","Output":"=== RUN   TestExecutionFaults/sdk-lost-admission\n"}
+{"Time":"2026-09-13T23:46:31.598264+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/sdk-lost-admission","Output":"--- PASS: TestExecutionFaults/sdk-lost-admission (0.11s)\n"}
+{"Time":"2026-09-13T23:46:31.598292+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/sdk-lost-admission","Elapsed":0.11}
+{"Time":"2026-09-13T23:46:31.5983+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/wire-unknown-field"}
+{"Time":"2026-09-13T23:46:31.598304+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/wire-unknown-field","Output":"=== RUN   TestExecutionFaults/wire-unknown-field\n"}
+{"Time":"2026-09-13T23:46:31.658042+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/wire-unknown-field","Output":"--- PASS: TestExecutionFaults/wire-unknown-field (0.06s)\n"}
+{"Time":"2026-09-13T23:46:31.658063+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/wire-unknown-field","Elapsed":0.06}
+{"Time":"2026-09-13T23:46:31.658069+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/sdk-wrong-receipt"}
+{"Time":"2026-09-13T23:46:31.658072+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/sdk-wrong-receipt","Output":"=== RUN   TestExecutionFaults/sdk-wrong-receipt\n"}
+{"Time":"2026-09-13T23:46:31.765094+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/sdk-wrong-receipt","Output":"--- PASS: TestExecutionFaults/sdk-wrong-receipt (0.11s)\n"}
+{"Time":"2026-09-13T23:46:31.765137+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/sdk-wrong-receipt","Elapsed":0.11}
+{"Time":"2026-09-13T23:46:31.765144+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/bounded-uncooperative-driver"}
+{"Time":"2026-09-13T23:46:31.765148+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/bounded-uncooperative-driver","Output":"=== RUN   TestExecutionFaults/bounded-uncooperative-driver\n"}
+{"Time":"2026-09-13T23:46:32.996823+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/bounded-uncooperative-driver","Output":"--- PASS: TestExecutionFaults/bounded-uncooperative-driver (1.23s)\n"}
+{"Time":"2026-09-13T23:46:32.996912+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/bounded-uncooperative-driver","Elapsed":1.23}
+{"Time":"2026-09-13T23:46:32.996953+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/unknown-report-then-update"}
+{"Time":"2026-09-13T23:46:32.996959+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/unknown-report-then-update","Output":"=== RUN   TestExecutionFaults/unknown-report-then-update\n"}
+{"Time":"2026-09-13T23:46:33.210932+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/unknown-report-then-update","Output":"--- PASS: TestExecutionFaults/unknown-report-then-update (0.21s)\n"}
+{"Time":"2026-09-13T23:46:33.210957+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/unknown-report-then-update","Elapsed":0.21}
+{"Time":"2026-09-13T23:46:33.210964+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/inspection-budget"}
+{"Time":"2026-09-13T23:46:33.210968+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/inspection-budget","Output":"=== RUN   TestExecutionFaults/inspection-budget\n"}
+{"Time":"2026-09-13T23:46:33.399809+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/inspection-budget","Output":"--- PASS: TestExecutionFaults/inspection-budget (0.19s)\n"}
+{"Time":"2026-09-13T23:46:33.399833+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults/inspection-budget","Elapsed":0.19}
+{"Time":"2026-09-13T23:46:33.39984+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults","Output":"--- PASS: TestExecutionFaults (2.15s)\n"}
+{"Time":"2026-09-13T23:46:33.399844+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionFaults","Elapsed":2.15}
+{"Time":"2026-09-13T23:46:33.399852+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestV09Upgrade"}
+{"Time":"2026-09-13T23:46:33.399857+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestV09Upgrade","Output":"=== RUN   TestV09Upgrade\n"}
+{"Time":"2026-09-13T23:46:33.578143+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestV09Upgrade","Output":"--- PASS: TestV09Upgrade (0.18s)\n"}
+{"Time":"2026-09-13T23:46:33.57817+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestV09Upgrade","Elapsed":0.18}
+{"Time":"2026-09-13T23:46:33.578177+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestIndependentCoordinatorsStartOnce"}
+{"Time":"2026-09-13T23:46:33.578181+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestIndependentCoordinatorsStartOnce","Output":"=== RUN   TestIndependentCoordinatorsStartOnce\n"}
+{"Time":"2026-09-13T23:46:33.745836+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestIndependentCoordinatorsStartOnce","Output":"--- PASS: TestIndependentCoordinatorsStartOnce (0.17s)\n"}
+{"Time":"2026-09-13T23:46:33.745857+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestIndependentCoordinatorsStartOnce","Elapsed":0.17}
+{"Time":"2026-09-13T23:46:33.745864+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestLateInspectorRetainsEvidence"}
+{"Time":"2026-09-13T23:46:33.745867+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLateInspectorRetainsEvidence","Output":"=== RUN   TestLateInspectorRetainsEvidence\n"}
+{"Time":"2026-09-13T23:46:34.995419+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLateInspectorRetainsEvidence","Output":"--- PASS: TestLateInspectorRetainsEvidence (1.25s)\n"}
+{"Time":"2026-09-13T23:46:34.99544+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestLateInspectorRetainsEvidence","Elapsed":1.25}
+{"Time":"2026-09-13T23:46:34.995448+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestExecutionStorageDeadline"}
+{"Time":"2026-09-13T23:46:34.995452+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionStorageDeadline","Output":"=== RUN   TestExecutionStorageDeadline\n"}
+{"Time":"2026-09-13T23:46:35.037922+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestExecutionStorageDeadline","Output":"--- PASS: TestExecutionStorageDeadline (0.04s)\n"}
+{"Time":"2026-09-13T23:46:35.037942+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestExecutionStorageDeadline","Elapsed":0.04}
+{"Time":"2026-09-13T23:46:35.037948+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestReconcileDoesNotBypassReadPermission"}
+{"Time":"2026-09-13T23:46:35.037951+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestReconcileDoesNotBypassReadPermission","Output":"=== RUN   TestReconcileDoesNotBypassReadPermission\n"}
+{"Time":"2026-09-13T23:46:35.21742+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestReconcileDoesNotBypassReadPermission","Output":"--- PASS: TestReconcileDoesNotBypassReadPermission (0.18s)\n"}
+{"Time":"2026-09-13T23:46:35.217447+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestReconcileDoesNotBypassReadPermission","Elapsed":0.18}
+{"Time":"2026-09-13T23:46:35.217461+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestContextInvalidationPreventsNewStartButPreservesStartedOperation"}
+{"Time":"2026-09-13T23:46:35.217466+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestContextInvalidationPreventsNewStartButPreservesStartedOperation","Output":"=== RUN   TestContextInvalidationPreventsNewStartButPreservesStartedOperation\n"}
+{"Time":"2026-09-13T23:46:35.384229+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestContextInvalidationPreventsNewStartButPreservesStartedOperation","Output":"--- PASS: TestContextInvalidationPreventsNewStartButPreservesStartedOperation (0.17s)\n"}
+{"Time":"2026-09-13T23:46:35.384249+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestContextInvalidationPreventsNewStartButPreservesStartedOperation","Elapsed":0.17}
+{"Time":"2026-09-13T23:46:35.384255+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestContextStartCheckHasItsOwnBoundedBudget"}
+{"Time":"2026-09-13T23:46:35.384258+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestContextStartCheckHasItsOwnBoundedBudget","Output":"=== RUN   TestContextStartCheckHasItsOwnBoundedBudget\n"}
+{"Time":"2026-09-13T23:46:36.682776+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestContextStartCheckHasItsOwnBoundedBudget","Output":"--- PASS: TestContextStartCheckHasItsOwnBoundedBudget (1.30s)\n"}
+{"Time":"2026-09-13T23:46:36.682811+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestContextStartCheckHasItsOwnBoundedBudget","Elapsed":1.3}
+{"Time":"2026-09-13T23:46:36.682819+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestActualV10ExecutionUpgrade"}
+{"Time":"2026-09-13T23:46:36.682824+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestActualV10ExecutionUpgrade","Output":"=== RUN   TestActualV10ExecutionUpgrade\n"}
+{"Time":"2026-09-13T23:46:36.792264+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestActualV10ExecutionUpgrade","Output":"--- PASS: TestActualV10ExecutionUpgrade (0.11s)\n"}
+{"Time":"2026-09-13T23:46:36.792294+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestActualV10ExecutionUpgrade","Elapsed":0.11}
+{"Time":"2026-09-13T23:46:36.792304+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries"}
+{"Time":"2026-09-13T23:46:36.792309+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries","Output":"=== RUN   TestLegacyExecutionMigrationBoundaries\n"}
+{"Time":"2026-09-13T23:46:36.792313+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/repeat"}
+{"Time":"2026-09-13T23:46:36.792316+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/repeat","Output":"=== RUN   TestLegacyExecutionMigrationBoundaries/repeat\n"}
+{"Time":"2026-09-13T23:46:36.905779+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/repeat","Output":"--- PASS: TestLegacyExecutionMigrationBoundaries/repeat (0.11s)\n"}
+{"Time":"2026-09-13T23:46:36.905795+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/repeat","Elapsed":0.11}
+{"Time":"2026-09-13T23:46:36.905802+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/crash-before"}
+{"Time":"2026-09-13T23:46:36.905805+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/crash-before","Output":"=== RUN   TestLegacyExecutionMigrationBoundaries/crash-before\n"}
+{"Time":"2026-09-13T23:46:37.074287+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/crash-before","Output":"--- PASS: TestLegacyExecutionMigrationBoundaries/crash-before (0.17s)\n"}
+{"Time":"2026-09-13T23:46:37.07431+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/crash-before","Elapsed":0.17}
+{"Time":"2026-09-13T23:46:37.074323+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/crash-after"}
+{"Time":"2026-09-13T23:46:37.074327+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/crash-after","Output":"=== RUN   TestLegacyExecutionMigrationBoundaries/crash-after\n"}
+{"Time":"2026-09-13T23:46:37.225762+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/crash-after","Output":"--- PASS: TestLegacyExecutionMigrationBoundaries/crash-after (0.15s)\n"}
+{"Time":"2026-09-13T23:46:37.225793+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/crash-after","Elapsed":0.15}
+{"Time":"2026-09-13T23:46:37.225823+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/wrong-digest"}
+{"Time":"2026-09-13T23:46:37.225834+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/wrong-digest","Output":"=== RUN   TestLegacyExecutionMigrationBoundaries/wrong-digest\n"}
+{"Time":"2026-09-13T23:46:37.304954+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/wrong-digest","Output":"--- PASS: TestLegacyExecutionMigrationBoundaries/wrong-digest (0.08s)\n"}
+{"Time":"2026-09-13T23:46:37.304975+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/wrong-digest","Elapsed":0.08}
+{"Time":"2026-09-13T23:46:37.304981+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/wrong-operation"}
+{"Time":"2026-09-13T23:46:37.30499+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/wrong-operation","Output":"=== RUN   TestLegacyExecutionMigrationBoundaries/wrong-operation\n"}
+{"Time":"2026-09-13T23:46:37.383606+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/wrong-operation","Output":"--- PASS: TestLegacyExecutionMigrationBoundaries/wrong-operation (0.08s)\n"}
+{"Time":"2026-09-13T23:46:37.383626+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/wrong-operation","Elapsed":0.08}
+{"Time":"2026-09-13T23:46:37.383633+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/wrong-subject"}
+{"Time":"2026-09-13T23:46:37.383637+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/wrong-subject","Output":"=== RUN   TestLegacyExecutionMigrationBoundaries/wrong-subject\n"}
+{"Time":"2026-09-13T23:46:37.462434+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/wrong-subject","Output":"--- PASS: TestLegacyExecutionMigrationBoundaries/wrong-subject (0.08s)\n"}
+{"Time":"2026-09-13T23:46:37.462452+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/wrong-subject","Elapsed":0.08}
+{"Time":"2026-09-13T23:46:37.462458+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/revoked-source"}
+{"Time":"2026-09-13T23:46:37.462461+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/revoked-source","Output":"=== RUN   TestLegacyExecutionMigrationBoundaries/revoked-source\n"}
+{"Time":"2026-09-13T23:46:37.539834+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/revoked-source","Output":"--- PASS: TestLegacyExecutionMigrationBoundaries/revoked-source (0.08s)\n"}
+{"Time":"2026-09-13T23:46:37.539852+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/revoked-source","Elapsed":0.08}
+{"Time":"2026-09-13T23:46:37.539859+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/already-retired"}
+{"Time":"2026-09-13T23:46:37.539862+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/already-retired","Output":"=== RUN   TestLegacyExecutionMigrationBoundaries/already-retired\n"}
+{"Time":"2026-09-13T23:46:37.621286+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/already-retired","Output":"--- PASS: TestLegacyExecutionMigrationBoundaries/already-retired (0.08s)\n"}
+{"Time":"2026-09-13T23:46:37.621312+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries/already-retired","Elapsed":0.08}
+{"Time":"2026-09-13T23:46:37.621319+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries","Output":"--- PASS: TestLegacyExecutionMigrationBoundaries (0.83s)\n"}
+{"Time":"2026-09-13T23:46:37.621328+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Test":"TestLegacyExecutionMigrationBoundaries","Elapsed":0.83}
+{"Time":"2026-09-13T23:46:37.621341+08:00","Action":"run","Package":"lerna/profiles/executioncheck","Test":"TestLegacyMigrationCrashProbe"}
+{"Time":"2026-09-13T23:46:37.621345+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyMigrationCrashProbe","Output":"=== RUN   TestLegacyMigrationCrashProbe\n"}
+{"Time":"2026-09-13T23:46:37.621387+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyMigrationCrashProbe","Output":"    upgrade10_test.go:181: actual process probe\n"}
+{"Time":"2026-09-13T23:46:37.621402+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Test":"TestLegacyMigrationCrashProbe","Output":"--- SKIP: TestLegacyMigrationCrashProbe (0.00s)\n"}
+{"Time":"2026-09-13T23:46:37.621411+08:00","Action":"skip","Package":"lerna/profiles/executioncheck","Test":"TestLegacyMigrationCrashProbe","Elapsed":0}
+{"Time":"2026-09-13T23:46:37.621434+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Output":"PASS\n"}
+{"Time":"2026-09-13T23:46:38.638134+08:00","Action":"output","Package":"lerna/profiles/executioncheck","Output":"ok  \tlerna/profiles/executioncheck\t11.165s\n"}
+{"Time":"2026-09-13T23:46:38.638239+08:00","Action":"pass","Package":"lerna/profiles/executioncheck","Elapsed":11.165}
+{"Time":"2026-09-13T23:46:38.641629+08:00","Action":"start","Package":"lerna/adapters/nodetls"}
+{"Time":"2026-09-13T23:46:38.641697+08:00","Action":"output","Package":"lerna/adapters/nodetls","Output":"?   \tlerna/adapters/nodetls\t[no test files]\n"}
+{"Time":"2026-09-13T23:46:38.641714+08:00","Action":"skip","Package":"lerna/adapters/nodetls","Elapsed":0}
+{"Time":"2026-09-13T23:46:38.875899+08:00","Action":"start","Package":"lerna/adapters/josegrant"}
+{"Time":"2026-09-13T23:46:39.403141+08:00","Action":"run","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey"}
+{"Time":"2026-09-13T23:46:39.403188+08:00","Action":"output","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey","Output":"=== RUN   TestSignerRequiresMatchingTrustedKey\n"}
+{"Time":"2026-09-13T23:46:39.403914+08:00","Action":"run","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/empty"}
+{"Time":"2026-09-13T23:46:39.40393+08:00","Action":"output","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/empty","Output":"=== RUN   TestSignerRequiresMatchingTrustedKey/empty\n"}
+{"Time":"2026-09-13T23:46:39.404113+08:00","Action":"output","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/empty","Output":"--- PASS: TestSignerRequiresMatchingTrustedKey/empty (0.00s)\n"}
+{"Time":"2026-09-13T23:46:39.404134+08:00","Action":"pass","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/empty","Elapsed":0}
+{"Time":"2026-09-13T23:46:39.404148+08:00","Action":"run","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/different-kid"}
+{"Time":"2026-09-13T23:46:39.404154+08:00","Action":"output","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/different-kid","Output":"=== RUN   TestSignerRequiresMatchingTrustedKey/different-kid\n"}
+{"Time":"2026-09-13T23:46:39.404363+08:00","Action":"output","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/different-kid","Output":"--- PASS: TestSignerRequiresMatchingTrustedKey/different-kid (0.00s)\n"}
+{"Time":"2026-09-13T23:46:39.404379+08:00","Action":"pass","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/different-kid","Elapsed":0}
+{"Time":"2026-09-13T23:46:39.40439+08:00","Action":"run","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/mismatch"}
+{"Time":"2026-09-13T23:46:39.404395+08:00","Action":"output","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/mismatch","Output":"=== RUN   TestSignerRequiresMatchingTrustedKey/mismatch\n"}
+{"Time":"2026-09-13T23:46:39.404474+08:00","Action":"output","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/mismatch","Output":"--- PASS: TestSignerRequiresMatchingTrustedKey/mismatch (0.00s)\n"}
+{"Time":"2026-09-13T23:46:39.404484+08:00","Action":"pass","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/mismatch","Elapsed":0}
+{"Time":"2026-09-13T23:46:39.4045+08:00","Action":"run","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/missing"}
+{"Time":"2026-09-13T23:46:39.404507+08:00","Action":"output","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/missing","Output":"=== RUN   TestSignerRequiresMatchingTrustedKey/missing\n"}
+{"Time":"2026-09-13T23:46:39.40455+08:00","Action":"output","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/missing","Output":"--- PASS: TestSignerRequiresMatchingTrustedKey/missing (0.00s)\n"}
+{"Time":"2026-09-13T23:46:39.404565+08:00","Action":"pass","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey/missing","Elapsed":0}
+{"Time":"2026-09-13T23:46:39.4046+08:00","Action":"output","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey","Output":"--- PASS: TestSignerRequiresMatchingTrustedKey (0.00s)\n"}
+{"Time":"2026-09-13T23:46:39.404607+08:00","Action":"pass","Package":"lerna/adapters/josegrant","Test":"TestSignerRequiresMatchingTrustedKey","Elapsed":0}
+{"Time":"2026-09-13T23:46:39.404652+08:00","Action":"output","Package":"lerna/adapters/josegrant","Output":"PASS\n"}
+{"Time":"2026-09-13T23:46:40.416469+08:00","Action":"output","Package":"lerna/adapters/josegrant","Output":"ok  \tlerna/adapters/josegrant\t1.540s\n"}
+{"Time":"2026-09-13T23:46:40.416529+08:00","Action":"pass","Package":"lerna/adapters/josegrant","Elapsed":1.541}
+{"Time":"2026-09-13T23:46:40.418129+08:00","Action":"start","Package":"lerna/adapters/executionlocal"}
+{"Time":"2026-09-13T23:46:40.418174+08:00","Action":"output","Package":"lerna/adapters/executionlocal","Output":"?   \tlerna/adapters/executionlocal\t[no test files]\n"}
+{"Time":"2026-09-13T23:46:40.418189+08:00","Action":"skip","Package":"lerna/adapters/executionlocal","Elapsed":0}
+{"Time":"2026-09-13T23:46:40.420242+08:00","Action":"start","Package":"lerna/adapters/executionrouter"}
+{"Time":"2026-09-13T23:46:40.420274+08:00","Action":"output","Package":"lerna/adapters/executionrouter","Output":"?   \tlerna/adapters/executionrouter\t[no test files]\n"}
+{"Time":"2026-09-13T23:46:40.420287+08:00","Action":"skip","Package":"lerna/adapters/executionrouter","Elapsed":0}

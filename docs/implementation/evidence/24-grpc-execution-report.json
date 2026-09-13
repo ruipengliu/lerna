@@ -1,0 +1,476 @@
+{
+  "profile": "grpc-execution-v1",
+  "status": "passed",
+  "date": "2026-09-13T23:49:12.855470+08:00",
+  "base_commit": "c3f00a4fa60a47052e73c002425aaed442cc1c5d",
+  "source_sha256": {
+    "adapters/nodetls/endpoint.go": "f3c5f543252b69ebc75006b6a2c4e2b8af4b058dd406de0ffec9ca445d43070d",
+    "go.mod": "d12c29f612ef54251faca1f472e59a2a5b87829f2af58fb14e4aa23075cd8206",
+    "go.sum": "77de3ed0aa1a1a63ac85156f47f35507ef950654aead59dde99b7eab93690828",
+    "scripts/generate.sh": "0e2a431ac5276f0250689da260cad9fa7cb5de818e4e6014eeeb646d1426f3a4",
+    "adapters/grpcbinding/client.go": "b98acd190a2c0b2ce4c63f366b7bf065d7838cca47ea1356110964528d62d5a9",
+    "adapters/grpcbinding/config.go": "64b867f7e2d508f946555348fee8c537464d37723e6e18f5c02e9fc2f848e9c6",
+    "adapters/grpcbinding/config_test.go": "7d69924c760c4b4d71ff3eee330bb6c95bc46e71acc8834c6b55a649f53303df",
+    "adapters/grpcbinding/journal.go": "b2fc31955b1005ebae40ab9ddca6ca54b47242f210e9354af4e739307547d0aa",
+    "adapters/grpcbinding/journal_test.go": "70ead589989ae26adf5d346e0f1132680384f127098c73b835fb85a8726e52ea",
+    "adapters/grpcbinding/server.go": "f1d7d5f1ac62be906ad8709ca5382875627eabbf3ed8331f702e1a4250bcd4bc",
+    "adapters/grpcbinding/stream.go": "53f6bbe7f18812c893ccc3441481ab9c46c8b772217060250d592855eddaee58",
+    "execution/remote.go": "8c47d0c481b076987434e561870dae138c73b656a78621257ace1a0b8b1b76f7",
+    "gen/harness/v1/connection.pb.go": "fda41dbc083433f5413f4182c6a51923683ecbdfdebcc856a714bdcfc9886755",
+    "gen/harness/v1/connection_grpc.pb.go": "ccdd96832a8c5cdf3931956967259cf29fc2fa15f84ca1baa8ddfa217fbaf1cb",
+    "gen/harness/v1/execution_grpc.pb.go": "8dad13fb77b9f983f003196aa89c89d3e9adfbd499d9772bbae194833e0bbb6d",
+    "profiles/asynccheck/grpc_contract_test.go": "656e88c97c40c952f8962f9c9bbaf92c683877d16c6a960a0f1bff6f54db8e3c",
+    "profiles/asynccheck/grpc_receiver_test.go": "42d8c54be81c69e969e30d6bda1c29bdaed9802bb3b595eec59caf4cacd30cc5",
+    "profiles/asynccheck/grpc_response_test.go": "ae813441f89a94fce1a7a3f141061df6f646dd16d9cfa66e527bde4c16e0c151",
+    "profiles/asynccheck/grpc_test.go": "d46cf3e73a4e7bdca0875e207750011a33605840fd066db0bdd672b8d62bb26b",
+    "proto/harness/v1/connection.proto": "bb0b482a61130436595e88469da440b318d885e16b7b3c4d625abcbed9a21cc3",
+    "scripts/verify-grpc.sh": "f77c8d0c2ddbf6fbcceef22fca420d1db7084dbc1583aa617657c54409f506f2"
+  },
+  "environment": {
+    "GOARCH": "arm64",
+    "GOOS": "darwin",
+    "GOVERSION": "go1.26.1"
+  },
+  "host": "Darwin 27.0.0",
+  "modules": [
+    {
+      "Path": "lerna"
+    },
+    {
+      "Path": "cel.dev/expr",
+      "Version": "v0.25.2"
+    },
+    {
+      "Path": "cloud.google.com/go/auth",
+      "Version": "v0.18.2"
+    },
+    {
+      "Path": "cloud.google.com/go/compute/metadata",
+      "Version": "v0.9.0"
+    },
+    {
+      "Path": "github.com/GoogleCloudPlatform/opentelemetry-operations-go/detectors/gcp",
+      "Version": "v1.33.0"
+    },
+    {
+      "Path": "github.com/cespare/xxhash/v2",
+      "Version": "v2.3.0",
+      "Sum": "h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=",
+      "GoModSum": "h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs="
+    },
+    {
+      "Path": "github.com/cncf/xds/go",
+      "Version": "v0.0.0-20260202195803-dba9d589def2"
+    },
+    {
+      "Path": "github.com/dlclark/regexp2",
+      "Version": "v1.11.0",
+      "Sum": "h1:G/nrcoOa7ZXlpoa/91N3X7mM3r8eIlMBBJZvsz/mxKI=",
+      "GoModSum": "h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8="
+    },
+    {
+      "Path": "github.com/dustin/go-humanize",
+      "Version": "v1.0.1",
+      "Sum": "h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "GoModSum": "h1:Mu1zIs6XwVuF/gI1OepvI0qD18qycQx+mFykh5fBlto="
+    },
+    {
+      "Path": "github.com/envoyproxy/go-control-plane",
+      "Version": "v0.14.0"
+    },
+    {
+      "Path": "github.com/envoyproxy/go-control-plane/envoy",
+      "Version": "v1.37.0"
+    },
+    {
+      "Path": "github.com/envoyproxy/go-control-plane/ratelimit",
+      "Version": "v0.1.0"
+    },
+    {
+      "Path": "github.com/envoyproxy/protoc-gen-validate",
+      "Version": "v1.3.3"
+    },
+    {
+      "Path": "github.com/felixge/httpsnoop",
+      "Version": "v1.0.4"
+    },
+    {
+      "Path": "github.com/go-jose/go-jose/v4",
+      "Version": "v4.1.5",
+      "Sum": "h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "GoModSum": "h1:x4oUasVrzR7071A4TnHLGSPpNOm2a21K9Kf04k1rs08="
+    },
+    {
+      "Path": "github.com/go-logr/logr",
+      "Version": "v1.4.3",
+      "Sum": "h1:CjnDlHq8ikf6E492q6eKboGOC0T8CDaOvkHCIg8idEI=",
+      "GoModSum": "h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY="
+    },
+    {
+      "Path": "github.com/go-logr/stdr",
+      "Version": "v1.2.2",
+      "Sum": "h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag=",
+      "GoModSum": "h1:mMo/vtBO5dYbehREoey6XUKy/eSumjCCveDpRre4VKE="
+    },
+    {
+      "Path": "github.com/golang/glog",
+      "Version": "v1.2.5"
+    },
+    {
+      "Path": "github.com/golang/protobuf",
+      "Version": "v1.5.4",
+      "Sum": "h1:i7eJL8qZTpSEXOPTxNKhASYpMn+8e5Q6AdndVa1dWek=",
+      "GoModSum": "h1:lnTiLA8Wa4RWRcIUkrtSVa5nRhsEGBg48fD6rSs7xps="
+    },
+    {
+      "Path": "github.com/google/go-cmp",
+      "Version": "v0.7.0",
+      "Sum": "h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=",
+      "GoModSum": "h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU="
+    },
+    {
+      "Path": "github.com/google/pprof",
+      "Version": "v0.0.0-20260802141513-ef3492d7dac3",
+      "Sum": "h1:LMLX+LgTNWpfvCBdFebv6EsYotImrt/Ppc5cXIriCSo=",
+      "GoModSum": "h1:jl5iWTm0/hd5PjEYEOuwAJ57L/CibdZfrqZ5XA5GrCk="
+    },
+    {
+      "Path": "github.com/google/s2a-go",
+      "Version": "v0.1.9"
+    },
+    {
+      "Path": "github.com/google/uuid",
+      "Version": "v1.6.0",
+      "Sum": "h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "GoModSum": "h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo="
+    },
+    {
+      "Path": "github.com/googleapis/enterprise-certificate-proxy",
+      "Version": "v0.3.11"
+    },
+    {
+      "Path": "github.com/googleapis/gax-go/v2",
+      "Version": "v2.17.0"
+    },
+    {
+      "Path": "github.com/hashicorp/golang-lru/v2",
+      "Version": "v2.0.7",
+      "Sum": "h1:a+bsQ5rvGLjzHuww6tVxozPZFVghXaHOwFs4luLUK2k=",
+      "GoModSum": "h1:QeFd9opnmA6QUJc5vARoKUSoFhyfM2/ZepoAG6RGpeM="
+    },
+    {
+      "Path": "github.com/mattn/go-isatty",
+      "Version": "v0.0.24",
+      "Sum": "h1:tGZZoVgT/KiqK1c8ocVLeDS8BSWMRd47J3Lbz7vsReI=",
+      "GoModSum": "h1:nMCL3Zebbrt45jsMDgnfIwz6ydEQApk5oEI3HqDio6A="
+    },
+    {
+      "Path": "github.com/ncruces/go-strftime",
+      "Version": "v1.0.0",
+      "Sum": "h1:HMFp8mLCTPp341M/ZnA4qaf7ZlsbTc+miZjCLOFAw7w=",
+      "GoModSum": "h1:Fwc5htZGVVkseilnfgOVb9mKy6w1naJmn9CehxcKcls="
+    },
+    {
+      "Path": "github.com/planetscale/vtprotobuf",
+      "Version": "v0.6.1-0.20240319094008-0393e58bdf10"
+    },
+    {
+      "Path": "github.com/remyoudompheng/bigfft",
+      "Version": "v0.0.0-20230129092748-24d4a6f8daec",
+      "Sum": "h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "GoModSum": "h1:qqbHyh8v60DhA7CoWK5oRCqLrMHRGoxYCSS9EjAz6Eo="
+    },
+    {
+      "Path": "github.com/santhosh-tekuri/jsonschema/v6",
+      "Version": "v6.0.3",
+      "Sum": "h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "GoModSum": "h1:JXeL+ps8p7/KNMjDQk3TCwPpBy0wYklyWTfbkIzdIFU="
+    },
+    {
+      "Path": "github.com/spiffe/go-spiffe/v2",
+      "Version": "v2.7.0"
+    },
+    {
+      "Path": "go.opentelemetry.io/auto/sdk",
+      "Version": "v1.2.1",
+      "Sum": "h1:jXsnJ4Lmnqd11kwkBV2LgLoFMZKizbCi5fNZ/ipaZ64=",
+      "GoModSum": "h1:KRTj+aOaElaLi+wW1kO/DZRXwkF4C5xPbEe3ZiIhN7Y="
+    },
+    {
+      "Path": "go.opentelemetry.io/contrib/detectors/gcp",
+      "Version": "v1.44.0"
+    },
+    {
+      "Path": "go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp",
+      "Version": "v0.61.0"
+    },
+    {
+      "Path": "go.opentelemetry.io/otel",
+      "Version": "v1.44.0",
+      "Sum": "h1:JjwHmHpA4iZ3wBxluu2fbbE7j4kqlE8jXyAyPXH7HqU=",
+      "GoModSum": "h1:BMgjTHL9WPRlRjL2oZCBTL4whCGtXch2H4BhOPIAyYc="
+    },
+    {
+      "Path": "go.opentelemetry.io/otel/metric",
+      "Version": "v1.44.0",
+      "Sum": "h1:1w0gILTcHdr3YI+ixLyjemwrVnsMURbTZFrSYCdDdmc=",
+      "GoModSum": "h1:8O7hanEPBNgEMmybD3s2VBKcgWOCsA6tzHBPODAiquo="
+    },
+    {
+      "Path": "go.opentelemetry.io/otel/sdk",
+      "Version": "v1.44.0",
+      "Sum": "h1:nHYwb9lK+fJPU/dnT6s7W7Z8itMWyqrnVfbheVYrZ58=",
+      "GoModSum": "h1:Osuydd3Se74nqjAKxid74N5eC+jfEqfTegHRnq58oK0="
+    },
+    {
+      "Path": "go.opentelemetry.io/otel/sdk/metric",
+      "Version": "v1.44.0",
+      "Sum": "h1:3LlKgI+VjbVsjNRFZJZAJ30WjXC5VkNRks6si09iEfI=",
+      "GoModSum": "h1:5B5pMARnXxKhltooO4xUuCBorl65a4EpnTalObqOigA="
+    },
+    {
+      "Path": "go.opentelemetry.io/otel/trace",
+      "Version": "v1.44.0",
+      "Sum": "h1:jxF5CsGYCe74MCRx2X4g7WsY/VBKRqqpNvXlX/6gtIk=",
+      "GoModSum": "h1:oLl1jrMQAVo6v3GAggN+1VH9VIz9iUSvW53sW1Q8PIE="
+    },
+    {
+      "Path": "golang.org/x/crypto",
+      "Version": "v0.57.0"
+    },
+    {
+      "Path": "golang.org/x/mod",
+      "Version": "v0.41.0",
+      "Sum": "h1:qJmnOUb4YB+FsEuM3HcWucdZASCPGhsX6uljO6pog0c=",
+      "GoModSum": "h1:Ek9pY8RKWXwsWvd3rQiHYtMqkjSUV+s1Rj7j4H5Ur6o="
+    },
+    {
+      "Path": "golang.org/x/net",
+      "Version": "v0.59.0",
+      "Sum": "h1:5zfYln+w5XCxwrnMMJPufRgNoXEaGxl0wo5GqPXyues=",
+      "GoModSum": "h1:2DA/G1UfVbCpQPeWTmMPGY7Cs2PkBkwu743bVX5PIVg="
+    },
+    {
+      "Path": "golang.org/x/oauth2",
+      "Version": "v0.36.0"
+    },
+    {
+      "Path": "golang.org/x/sync",
+      "Version": "v0.23.0",
+      "Sum": "h1:KameEIfc1IkluZyXWLn39Wd4tURc6GbCiISGiZm2bQk=",
+      "GoModSum": "h1:sUUOizhqBxiL6pEWpqNLUiaJn1ShEbZ6BBqskPbjZm0="
+    },
+    {
+      "Path": "golang.org/x/sys",
+      "Version": "v0.48.0",
+      "Sum": "h1:bbX/i/6MgT9BVLM9RT1thmxL04yeTAhbEz4SyadbXoo=",
+      "GoModSum": "h1:hNLxWAXmnKAxqDtdwIYC4bM9oQPEecfsnNMuSxOs3og="
+    },
+    {
+      "Path": "golang.org/x/term",
+      "Version": "v0.46.0"
+    },
+    {
+      "Path": "golang.org/x/text",
+      "Version": "v0.42.0",
+      "Sum": "h1:JbOZXgfeCPU9gacVtYliJqOhD+zhrEqK4LfdpmlUZqI=",
+      "GoModSum": "h1:ojzP1Z+2QtioaF8DTtO8K5q7JWVVYwZKenzujK0Zd0E="
+    },
+    {
+      "Path": "golang.org/x/tools",
+      "Version": "v0.49.0",
+      "Sum": "h1:3NI7VXzL9+1WZD52Dx2ttoPwD5DWrFGpl9mFZDlmisI=",
+      "GoModSum": "h1:SJNXV9DBKT0UbdttsQjbfJlAE/q+y36++zo3uL3N0Oo="
+    },
+    {
+      "Path": "gonum.org/v1/gonum",
+      "Version": "v0.17.0",
+      "Sum": "h1:VbpOemQlsSMrYmn7T2OUvQ4dqxQXU+ouZFQsZOx50z4=",
+      "GoModSum": "h1:El3tOrEuMpv2UdMrbNlKEh9vd86bmQ6vqIcDwxEOc1E="
+    },
+    {
+      "Path": "google.golang.org/genproto/googleapis/api",
+      "Version": "v0.0.0-20260526163538-3dc84a4a5aaa"
+    },
+    {
+      "Path": "google.golang.org/genproto/googleapis/rpc",
+      "Version": "v0.0.0-20260526163538-3dc84a4a5aaa",
+      "Sum": "h1:mZHHdPZl0dbGHCflZgAq/Q468DWVFcU2whhB2KAo8fk=",
+      "GoModSum": "h1:4Hqkh8ycfw05ld/3BWL7rJOSfebL2Q+DVDeRgYgxUU8="
+    },
+    {
+      "Path": "google.golang.org/grpc",
+      "Version": "v1.83.2",
+      "Sum": "h1:EManeRomTObA0BU7I8vXgg/78uE5MJ9M8B39EX2WscU=",
+      "GoModSum": "h1:YPI1hK3kDked6iHvgX3tR0y+nX/qpMFKhPgFsokw1S8="
+    },
+    {
+      "Path": "google.golang.org/grpc/cmd/protoc-gen-go-grpc",
+      "Version": "v1.6.2",
+      "Sum": "h1:rgSNvqscFZ1JgV/4wH5GOsZFSFkR2Eua9As3KIr2LlM=",
+      "GoModSum": "h1:iMEtFwDlAhjDU9L5mY6U1XLwlIId/G3h+QcBHDIvrJ8="
+    },
+    {
+      "Path": "google.golang.org/protobuf",
+      "Version": "v1.36.11",
+      "Sum": "h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "GoModSum": "h1:HTf+CrKn2C3g5S8VImy6tdcUvCska2kB7j23XfzDpco="
+    },
+    {
+      "Path": "modernc.org/cc/v4",
+      "Version": "v4.29.2",
+      "Sum": "h1:h6+9ciCnPKutf4I03CvheAvDLX7+IHlqR6Iy6J+cgd8=",
+      "GoModSum": "h1:OnovgIhbbMXMu1aISnJ0wvVD1KnW+cAUJkIrAWh+kVI="
+    },
+    {
+      "Path": "modernc.org/ccgo/v4",
+      "Version": "v4.35.0",
+      "Sum": "h1:F+TUsmw09QxLzmi3aeYYGxjAXarmZaKgj3mKQHNaA8w=",
+      "GoModSum": "h1:qrVGs9S3Sr2Ztcg9ve+kTAYMp5a3YvWjo+SoN06kJ5I="
+    },
+    {
+      "Path": "modernc.org/fileutil",
+      "Version": "v1.4.0",
+      "Sum": "h1:j6ZzNTftVS054gi281TyLjHPp6CPHr2KCxEXjEbD6SM=",
+      "GoModSum": "h1:EqdKFDxiByqxLk8ozOxObDSfcVOv/54xDs/DUHdvCUU="
+    },
+    {
+      "Path": "modernc.org/gc/v2",
+      "Version": "v2.6.5",
+      "Sum": "h1:nyqdV8q46KvTpZlsw66kWqwXRHdjIlJOhG6kxiV/9xI=",
+      "GoModSum": "h1:YgIahr1ypgfe7chRuJi2gD7DBQiKSLMPgBQe9oIiito="
+    },
+    {
+      "Path": "modernc.org/gc/v3",
+      "Version": "v3.1.5",
+      "Sum": "h1:21ldfPfRYE31Tb7B3mwAK8gy1AxP4+dKjrOQPfqakoc=",
+      "GoModSum": "h1:HFK/6AGESC7Ex+EZJhJ2Gni6cTaYpSMmU/cT9RmlfYY="
+    },
+    {
+      "Path": "modernc.org/goabi0",
+      "Version": "v0.2.0",
+      "Sum": "h1:HvEowk7LxcPd0eq6mVOAEMai46V+i7Jrj13t4AzuNks=",
+      "GoModSum": "h1:CEFRnnJhKvWT1c1JTI3Avm+tgOWbkOu5oPA8eH8LnMI="
+    },
+    {
+      "Path": "modernc.org/libc",
+      "Version": "v1.75.6",
+      "Sum": "h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "GoModSum": "h1:bO5o2ztHxBb2rjz0PgdHN0sSMw57CgxGFLZ3Qd/QpVQ="
+    },
+    {
+      "Path": "modernc.org/mathutil",
+      "Version": "v1.7.1",
+      "Sum": "h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "GoModSum": "h1:4p5IwJITfppl0G4sUEDtCr4DthTaT47/N3aT6MhfgJg="
+    },
+    {
+      "Path": "modernc.org/memory",
+      "Version": "v1.12.1",
+      "Sum": "h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "GoModSum": "h1:/JP4VbVC+K5sU2wZi9bHoq2MAkCnrt2r98UGeSK7Mjw="
+    },
+    {
+      "Path": "modernc.org/opt",
+      "Version": "v0.2.0",
+      "Sum": "h1:tGyef5ApycA7FSEOMraay9SaTk5zmbx7Tu+cJs4QKZg=",
+      "GoModSum": "h1:03fq9lsNfvkYSfxrfUhZCWPk1lm4cq4N+Bh//bEtgns="
+    },
+    {
+      "Path": "modernc.org/sortutil",
+      "Version": "v1.2.1",
+      "Sum": "h1:+xyoGf15mM3NMlPDnFqrteY07klSFxLElE2PVuWIJ7w=",
+      "GoModSum": "h1:7ZI3a3REbai7gzCLcotuw9AC4VZVpYMjDzETGsSMqJE="
+    },
+    {
+      "Path": "modernc.org/sqlite",
+      "Version": "v1.58.0",
+      "Sum": "h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0=",
+      "GoModSum": "h1:rsD2CckafgObKC4DhBlGBf+RiHxkc3hINGt1Xw32tVY="
+    },
+    {
+      "Path": "modernc.org/strutil",
+      "Version": "v1.2.1",
+      "Sum": "h1:UneZBkQA+DX2Rp35KcM69cSsNES9ly8mQWD71HKlOA0=",
+      "GoModSum": "h1:EHkiggD70koQxjVdSBM3JKM7k6L0FbGE5eymy9i3B9A="
+    },
+    {
+      "Path": "modernc.org/token",
+      "Version": "v1.1.0",
+      "Sum": "h1:Xl7Ap9dKaEs5kLoOQeQmPWevfnk/DM5qcLcYlA8ys6Y=",
+      "GoModSum": "h1:UGzOrNV1mAFSEB63lOFHIpNRUVMvYTc6yu1SMY/XTDM="
+    }
+  ],
+  "command": "PATH=<protoc-36.1-bin>:$PATH sh scripts/verify-grpc.sh",
+  "stages": {
+    "profile": "grpc-execution-v1",
+    "dependencies": "passed",
+    "generation": "passed",
+    "build": "passed",
+    "analysis": "passed",
+    "grpc": "passed",
+    "regression": "passed",
+    "execution": "passed",
+    "async": "passed",
+    "grants": "passed",
+    "exit_code": 0
+  },
+  "checks": {
+    "grpc": {
+      "top_level_passed": 14,
+      "failures": 0,
+      "raw": "24-grpc.jsonl"
+    },
+    "regression": {
+      "top_level_passed": 74,
+      "failures": 0,
+      "raw": "24-regression.jsonl"
+    },
+    "execution": {
+      "profile": "synchronous-execution-v1",
+      "status": "passed",
+      "required_passed": 35,
+      "raw": "24-execution.json"
+    },
+    "async": {
+      "profile": "async-recovery-v1",
+      "status": "passed",
+      "required_passed": 23,
+      "raw": "24-async.json"
+    },
+    "grants": {
+      "profile": "restricted-grants-v1",
+      "status": "passed",
+      "required_passed": 30,
+      "raw": "24-grants.json"
+    }
+  },
+  "supplemental": [
+    {
+      "command": "GOTOOLCHAIN=go1.26.1 go test -race ./profiles/asynccheck -run ^TestGRPCNegotiationAndAuthentication$ -count=1 -v",
+      "result": "passed",
+      "reason": "Added enrolled-peer configuration-borrowing assertion after the full run; captured in interactive tool output."
+    }
+  ],
+  "review": {
+    "standards_open": 0,
+    "spec_valid_findings": 2,
+    "spec_closed": 2,
+    "spec_withdrawn": 1,
+    "scope": "Two independent reviewers, fixed initial and final snapshots; final evidence and supplementary test reviewed by primary agent."
+  },
+  "evidence_boundaries": [
+    "Actual caller/executor TCP mTLS gRPC processes; server stdin controls fixture work only, never carries business RPC payloads.",
+    "Receiver recovery uses two different client PIDs and separate durable inbox, retaining revision and duplicate identity.",
+    "Independent durable counter checked after executor shutdown: one job and one change of three; no execution-store read substitutes for RPC results.",
+    "Fixed Go 1.26.1, grpc-go 1.83.2, protoc 36.1, protoc-gen-go-grpc 1.6.2 and protobuf 1.36.11."
+  ],
+  "limitations": [
+    "Only five named capability RPCs plus Negotiate and invocation-snapshot Exchange are enabled; no full WebSocket or complete native-service matrix.",
+    "Snapshot revisions explicitly supersede omitted intermediate progress; this is not a contiguous event-history replay API.",
+    "Finite delivery ledger retains accepted identities without automatic retirement; capacity exhaustion is explicit.",
+    "Reference host pins node certificate versions; obsolete identities fail current authentication and require trusted deployment reconfiguration.",
+    "Slow consumer evidence exercises missing PERSISTED receipts and finite stream/handshake admission, not a separately forced indefinitely blocked socket Write.",
+    "Affected race suites and three domain profiles passed; a whole-repository make verify or model-quality run was not performed. Prior ticket 23 memory-storage failure is not represented as tested by this run."
+  ]
+}

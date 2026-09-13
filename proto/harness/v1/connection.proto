@@ -1,0 +1,45 @@
+syntax = "proto3";
+package harness.v1;
+option go_package = "lerna/gen/harness/v1;harnessv1";
+import "proto/harness/v1/execution.proto";
+
+// Bootstrap v1 is independent of the selected business protocol version.
+message NegotiateRequest {
+ uint32 bootstrap = 1;
+ repeated uint32 versions = 2;
+ repeated string required = 3;
+ repeated string optional = 4;
+ string subject = 5;
+ uint32 max_message_bytes = 6;
+ uint32 pending_window = 7;
+}
+message Negotiated {
+ string configuration = 1;
+ uint32 version = 2;
+ repeated string capabilities = 3;
+ uint32 max_message_bytes = 4;
+ uint32 pending_window = 5;
+ int64 expires_unix_nano = 6;
+}
+// One Exchange subscribes to one operation. seq is the durable invocation
+// revision, not a contiguous event log. Each update is a complete snapshot:
+// skipped revisions are explicitly superseded. Final/unknown-effect evidence
+// is reliable; replaceable IN_PROGRESS observations are temporary.
+message InvocationUpdate {
+ string operation_id = 1;
+ uint64 seq = 2;
+ InvocationSnapshot snapshot = 3;
+ bool reliable = 4;
+ bool full_snapshot = 5;
+}
+message ExchangeFrame {
+ oneof body {
+  string subscribe = 1;
+  InvocationUpdate update = 2;
+  uint64 persisted = 3;
+ }
+}
+service ConnectionService {
+ rpc Negotiate(NegotiateRequest) returns (Negotiated);
+ rpc Exchange(stream ExchangeFrame) returns (stream ExchangeFrame);
+}

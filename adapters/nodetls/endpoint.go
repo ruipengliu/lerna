@@ -215,3 +215,6 @@ func (e *Endpoint) RestorePresentation(ctx context.Context, der []byte, subject,
 	}
 	return authorization.GrantPresentation{Namespace: e.namespace, Subject: subject, Audience: e.node, Presenter: node, CertificateSHA256: digest, OperationID: operation, SemanticSHA256: semantic}, nil
 }
+
+// LocalIdentity exposes the trusted deployment scope, without key material.
+func (e *Endpoint) LocalIdentity() (namespace, node string) { return e.namespace, e.node }

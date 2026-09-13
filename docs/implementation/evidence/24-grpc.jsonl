@@ -1,0 +1,121 @@
+{"Time":"2026-09-13T23:45:39.89322+08:00","Action":"start","Package":"lerna/adapters/grpcbinding"}
+{"Time":"2026-09-13T23:45:40.754616+08:00","Action":"run","Package":"lerna/adapters/grpcbinding","Test":"TestFiniteConfiguration"}
+{"Time":"2026-09-13T23:45:40.75467+08:00","Action":"output","Package":"lerna/adapters/grpcbinding","Test":"TestFiniteConfiguration","Output":"=== RUN   TestFiniteConfiguration\n"}
+{"Time":"2026-09-13T23:45:40.754716+08:00","Action":"output","Package":"lerna/adapters/grpcbinding","Test":"TestFiniteConfiguration","Output":"--- PASS: TestFiniteConfiguration (0.00s)\n"}
+{"Time":"2026-09-13T23:45:40.754722+08:00","Action":"pass","Package":"lerna/adapters/grpcbinding","Test":"TestFiniteConfiguration","Elapsed":0}
+{"Time":"2026-09-13T23:45:40.754728+08:00","Action":"run","Package":"lerna/adapters/grpcbinding","Test":"TestDurableDelivery"}
+{"Time":"2026-09-13T23:45:40.754738+08:00","Action":"output","Package":"lerna/adapters/grpcbinding","Test":"TestDurableDelivery","Output":"=== RUN   TestDurableDelivery\n"}
+{"Time":"2026-09-13T23:45:40.769741+08:00","Action":"output","Package":"lerna/adapters/grpcbinding","Test":"TestDurableDelivery","Output":"--- PASS: TestDurableDelivery (0.01s)\n"}
+{"Time":"2026-09-13T23:45:40.769768+08:00","Action":"pass","Package":"lerna/adapters/grpcbinding","Test":"TestDurableDelivery","Elapsed":0.01}
+{"Time":"2026-09-13T23:45:40.769804+08:00","Action":"output","Package":"lerna/adapters/grpcbinding","Output":"PASS\n"}
+{"Time":"2026-09-13T23:45:41.778676+08:00","Action":"output","Package":"lerna/adapters/grpcbinding","Output":"ok  \tlerna/adapters/grpcbinding\t1.885s\n"}
+{"Time":"2026-09-13T23:45:41.778827+08:00","Action":"pass","Package":"lerna/adapters/grpcbinding","Elapsed":1.8860000000000001}
+{"Time":"2026-09-13T23:45:42.418381+08:00","Action":"start","Package":"lerna/profiles/asynccheck"}
+{"Time":"2026-09-13T23:45:43.078929+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCNegotiationAndAuthentication"}
+{"Time":"2026-09-13T23:45:43.078976+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCNegotiationAndAuthentication","Output":"=== RUN   TestGRPCNegotiationAndAuthentication\n"}
+{"Time":"2026-09-13T23:45:43.236904+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCNegotiationAndAuthentication","Output":"    grpc_contract_test.go:40: gRPC caller PID=83119 executor PID=83124 address=127.0.0.1:51324\n"}
+{"Time":"2026-09-13T23:45:43.360186+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCNegotiationAndAuthentication","Output":"    grpc_contract_test.go:102: gRPC caller PID=83119 executor PID=83125 address=127.0.0.1:51329\n"}
+{"Time":"2026-09-13T23:45:43.379755+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCNegotiationAndAuthentication","Output":"--- PASS: TestGRPCNegotiationAndAuthentication (0.30s)\n"}
+{"Time":"2026-09-13T23:45:43.379785+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCNegotiationAndAuthentication","Elapsed":0.3}
+{"Time":"2026-09-13T23:45:43.379803+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCurrentAuthorizationStopsDisclosure"}
+{"Time":"2026-09-13T23:45:43.379807+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCurrentAuthorizationStopsDisclosure","Output":"=== RUN   TestGRPCCurrentAuthorizationStopsDisclosure\n"}
+{"Time":"2026-09-13T23:45:43.521857+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCurrentAuthorizationStopsDisclosure","Output":"    grpc_contract_test.go:113: gRPC caller PID=83119 executor PID=83144 address=127.0.0.1:51331\n"}
+{"Time":"2026-09-13T23:45:43.689428+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCurrentAuthorizationStopsDisclosure","Output":"--- PASS: TestGRPCCurrentAuthorizationStopsDisclosure (0.31s)\n"}
+{"Time":"2026-09-13T23:45:43.689458+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCurrentAuthorizationStopsDisclosure","Elapsed":0.31}
+{"Time":"2026-09-13T23:45:43.689684+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance"}
+{"Time":"2026-09-13T23:45:43.689693+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance","Output":"=== RUN   TestGRPCCancelConformance\n"}
+{"Time":"2026-09-13T23:45:43.689726+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/before"}
+{"Time":"2026-09-13T23:45:43.689758+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/before","Output":"=== RUN   TestGRPCCancelConformance/before\n"}
+{"Time":"2026-09-13T23:45:44.01813+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/before","Output":"    grpc_contract_test.go:153: gRPC caller PID=83119 executor PID=83145 address=127.0.0.1:51333\n"}
+{"Time":"2026-09-13T23:45:44.269781+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/before","Output":"--- PASS: TestGRPCCancelConformance/before (0.58s)\n"}
+{"Time":"2026-09-13T23:45:44.269803+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/before","Elapsed":0.58}
+{"Time":"2026-09-13T23:45:44.269823+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/during"}
+{"Time":"2026-09-13T23:45:44.269827+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/during","Output":"=== RUN   TestGRPCCancelConformance/during\n"}
+{"Time":"2026-09-13T23:45:44.652091+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/during","Output":"    grpc_contract_test.go:153: gRPC caller PID=83119 executor PID=83146 address=127.0.0.1:51335\n"}
+{"Time":"2026-09-13T23:45:44.97012+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/during","Output":"--- PASS: TestGRPCCancelConformance/during (0.70s)\n"}
+{"Time":"2026-09-13T23:45:44.970141+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/during","Elapsed":0.7}
+{"Time":"2026-09-13T23:45:44.970146+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/completed"}
+{"Time":"2026-09-13T23:45:44.97015+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/completed","Output":"=== RUN   TestGRPCCancelConformance/completed\n"}
+{"Time":"2026-09-13T23:45:45.394055+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/completed","Output":"    grpc_contract_test.go:153: gRPC caller PID=83119 executor PID=83147 address=127.0.0.1:51337\n"}
+{"Time":"2026-09-13T23:45:45.755839+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/completed","Output":"--- PASS: TestGRPCCancelConformance/completed (0.79s)\n"}
+{"Time":"2026-09-13T23:45:45.75586+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance/completed","Elapsed":0.79}
+{"Time":"2026-09-13T23:45:45.755866+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance","Output":"--- PASS: TestGRPCCancelConformance (2.07s)\n"}
+{"Time":"2026-09-13T23:45:45.755873+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCCancelConformance","Elapsed":2.07}
+{"Time":"2026-09-13T23:45:45.755904+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCSlowConsumerAndUnacknowledgedRecovery"}
+{"Time":"2026-09-13T23:45:45.755908+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCSlowConsumerAndUnacknowledgedRecovery","Output":"=== RUN   TestGRPCSlowConsumerAndUnacknowledgedRecovery\n"}
+{"Time":"2026-09-13T23:45:45.893069+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCSlowConsumerAndUnacknowledgedRecovery","Output":"    grpc_contract_test.go:225: gRPC caller PID=83119 executor PID=83166 address=127.0.0.1:51339\n"}
+{"Time":"2026-09-13T23:45:47.215062+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCSlowConsumerAndUnacknowledgedRecovery","Output":"    grpc_contract_test.go:254: gRPC caller PID=83119 executor PID=83167 address=127.0.0.1:51342\n"}
+{"Time":"2026-09-13T23:45:47.291344+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCSlowConsumerAndUnacknowledgedRecovery","Output":"--- PASS: TestGRPCSlowConsumerAndUnacknowledgedRecovery (1.54s)\n"}
+{"Time":"2026-09-13T23:45:47.291367+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCSlowConsumerAndUnacknowledgedRecovery","Elapsed":1.54}
+{"Time":"2026-09-13T23:45:47.291378+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams"}
+{"Time":"2026-09-13T23:45:47.291383+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"=== RUN   TestGRPCBoundedConcurrentStreams\n"}
+{"Time":"2026-09-13T23:45:47.429788+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:272: gRPC caller PID=83119 executor PID=83168 address=127.0.0.1:51344\n"}
+{"Time":"2026-09-13T23:45:49.432196+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"--- PASS: TestGRPCBoundedConcurrentStreams (2.14s)\n"}
+{"Time":"2026-09-13T23:45:49.432218+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Elapsed":2.14}
+{"Time":"2026-09-13T23:45:49.432224+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCRevocationStopsExistingSubscription"}
+{"Time":"2026-09-13T23:45:49.432228+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCRevocationStopsExistingSubscription","Output":"=== RUN   TestGRPCRevocationStopsExistingSubscription\n"}
+{"Time":"2026-09-13T23:45:49.57064+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCRevocationStopsExistingSubscription","Output":"    grpc_contract_test.go:337: gRPC caller PID=83119 executor PID=83187 address=127.0.0.1:51347\n"}
+{"Time":"2026-09-13T23:45:49.801542+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCRevocationStopsExistingSubscription","Output":"--- PASS: TestGRPCRevocationStopsExistingSubscription (0.37s)\n"}
+{"Time":"2026-09-13T23:45:49.801563+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCRevocationStopsExistingSubscription","Elapsed":0.37}
+{"Time":"2026-09-13T23:45:49.801594+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCInvocationConformance"}
+{"Time":"2026-09-13T23:45:49.8016+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCInvocationConformance","Output":"=== RUN   TestGRPCInvocationConformance\n"}
+{"Time":"2026-09-13T23:45:50.312261+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCInvocationConformance","Output":"    grpc_contract_test.go:370: gRPC caller PID=83119 executor PID=83233 address=127.0.0.1:51349\n"}
+{"Time":"2026-09-13T23:45:50.71306+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCInvocationConformance","Output":"--- PASS: TestGRPCInvocationConformance (0.91s)\n"}
+{"Time":"2026-09-13T23:45:50.713082+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCInvocationConformance","Elapsed":0.91}
+{"Time":"2026-09-13T23:45:50.713097+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCIncompleteHandshakeIsBounded"}
+{"Time":"2026-09-13T23:45:50.713101+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCIncompleteHandshakeIsBounded","Output":"=== RUN   TestGRPCIncompleteHandshakeIsBounded\n"}
+{"Time":"2026-09-13T23:45:50.854488+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCIncompleteHandshakeIsBounded","Output":"    grpc_contract_test.go:432: gRPC caller PID=83119 executor PID=83234 address=127.0.0.1:51353\n"}
+{"Time":"2026-09-13T23:45:51.997724+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCIncompleteHandshakeIsBounded","Output":"--- PASS: TestGRPCIncompleteHandshakeIsBounded (1.28s)\n"}
+{"Time":"2026-09-13T23:45:51.997764+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCIncompleteHandshakeIsBounded","Elapsed":1.28}
+{"Time":"2026-09-13T23:45:51.997784+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverProcess"}
+{"Time":"2026-09-13T23:45:51.997791+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverProcess","Output":"=== RUN   TestGRPCReceiverProcess\n"}
+{"Time":"2026-09-13T23:45:51.997834+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverProcess","Output":"    grpc_receiver_test.go:21: receiver subprocess only\n"}
+{"Time":"2026-09-13T23:45:51.997843+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverProcess","Output":"--- SKIP: TestGRPCReceiverProcess (0.00s)\n"}
+{"Time":"2026-09-13T23:45:51.99785+08:00","Action":"skip","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverProcess","Elapsed":0}
+{"Time":"2026-09-13T23:45:51.997873+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity"}
+{"Time":"2026-09-13T23:45:51.997879+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity","Output":"=== RUN   TestGRPCReceiverRestartKeepsReceiptIdentity\n"}
+{"Time":"2026-09-13T23:45:52.139193+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity","Output":"    grpc_receiver_test.go:57: gRPC caller PID=83119 executor PID=83260 address=127.0.0.1:51356\n"}
+{"Time":"2026-09-13T23:45:53.464951+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity","Output":"    grpc_receiver_test.go:87: receiver PID=83261 fresh=true revision=4\n"}
+{"Time":"2026-09-13T23:45:54.604898+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity","Output":"    grpc_receiver_test.go:87: receiver PID=83262 fresh=false revision=4\n"}
+{"Time":"2026-09-13T23:45:54.614625+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity","Output":"--- PASS: TestGRPCReceiverRestartKeepsReceiptIdentity (2.62s)\n"}
+{"Time":"2026-09-13T23:45:54.614703+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCReceiverRestartKeepsReceiptIdentity","Elapsed":2.62}
+{"Time":"2026-09-13T23:45:54.614818+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown"}
+{"Time":"2026-09-13T23:45:54.61483+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown","Output":"=== RUN   TestGRPCMalformedMutationResponseIsUnknown\n"}
+{"Time":"2026-09-13T23:45:54.614949+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/branch"}
+{"Time":"2026-09-13T23:45:54.61496+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/branch","Output":"=== RUN   TestGRPCMalformedMutationResponseIsUnknown/branch\n"}
+{"Time":"2026-09-13T23:45:54.766299+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/branch","Output":"--- PASS: TestGRPCMalformedMutationResponseIsUnknown/branch (0.15s)\n"}
+{"Time":"2026-09-13T23:45:54.766326+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/branch","Elapsed":0.15}
+{"Time":"2026-09-13T23:45:54.766333+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/operation"}
+{"Time":"2026-09-13T23:45:54.766342+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/operation","Output":"=== RUN   TestGRPCMalformedMutationResponseIsUnknown/operation\n"}
+{"Time":"2026-09-13T23:45:54.891993+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/operation","Output":"--- PASS: TestGRPCMalformedMutationResponseIsUnknown/operation (0.13s)\n"}
+{"Time":"2026-09-13T23:45:54.892011+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/operation","Elapsed":0.13}
+{"Time":"2026-09-13T23:45:54.892017+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/revision"}
+{"Time":"2026-09-13T23:45:54.89202+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/revision","Output":"=== RUN   TestGRPCMalformedMutationResponseIsUnknown/revision\n"}
+{"Time":"2026-09-13T23:45:55.017285+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/revision","Output":"--- PASS: TestGRPCMalformedMutationResponseIsUnknown/revision (0.13s)\n"}
+{"Time":"2026-09-13T23:45:55.017307+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/revision","Elapsed":0.13}
+{"Time":"2026-09-13T23:45:55.017313+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/failure"}
+{"Time":"2026-09-13T23:45:55.017317+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/failure","Output":"=== RUN   TestGRPCMalformedMutationResponseIsUnknown/failure\n"}
+{"Time":"2026-09-13T23:45:55.144224+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/failure","Output":"--- PASS: TestGRPCMalformedMutationResponseIsUnknown/failure (0.13s)\n"}
+{"Time":"2026-09-13T23:45:55.144243+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown/failure","Elapsed":0.13}
+{"Time":"2026-09-13T23:45:55.144248+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown","Output":"--- PASS: TestGRPCMalformedMutationResponseIsUnknown (0.53s)\n"}
+{"Time":"2026-09-13T23:45:55.144252+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCMalformedMutationResponseIsUnknown","Elapsed":0.53}
+{"Time":"2026-09-13T23:45:55.144265+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCServerProcess"}
+{"Time":"2026-09-13T23:45:55.144272+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCServerProcess","Output":"=== RUN   TestGRPCServerProcess\n"}
+{"Time":"2026-09-13T23:45:55.14429+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCServerProcess","Output":"    grpc_test.go:174: subprocess only\n"}
+{"Time":"2026-09-13T23:45:55.144305+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCServerProcess","Output":"--- SKIP: TestGRPCServerProcess (0.00s)\n"}
+{"Time":"2026-09-13T23:45:55.144313+08:00","Action":"skip","Package":"lerna/profiles/asynccheck","Test":"TestGRPCServerProcess","Elapsed":0}
+{"Time":"2026-09-13T23:45:55.144325+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCExecutionAndDurableResult"}
+{"Time":"2026-09-13T23:45:55.144328+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCExecutionAndDurableResult","Output":"=== RUN   TestGRPCExecutionAndDurableResult\n"}
+{"Time":"2026-09-13T23:45:55.284662+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCExecutionAndDurableResult","Output":"    grpc_test.go:295: gRPC caller PID=83119 executor PID=83281 address=127.0.0.1:51368\n"}
+{"Time":"2026-09-13T23:45:55.900264+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCExecutionAndDurableResult","Output":"    grpc_test.go:351: gRPC caller PID=83119 executor PID=83282 address=127.0.0.1:51370\n"}
+{"Time":"2026-09-13T23:45:56.021692+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCExecutionAndDurableResult","Output":"--- PASS: TestGRPCExecutionAndDurableResult (0.88s)\n"}
+{"Time":"2026-09-13T23:45:56.021713+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCExecutionAndDurableResult","Elapsed":0.88}
+{"Time":"2026-09-13T23:45:56.021723+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCLostReplyKeepsOriginalOperation"}
+{"Time":"2026-09-13T23:45:56.021726+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCLostReplyKeepsOriginalOperation","Output":"=== RUN   TestGRPCLostReplyKeepsOriginalOperation\n"}
+{"Time":"2026-09-13T23:45:56.162155+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCLostReplyKeepsOriginalOperation","Output":"    grpc_test.go:428: gRPC caller PID=83119 executor PID=83301 address=127.0.0.1:51372\n"}
+{"Time":"2026-09-13T23:45:57.438829+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCLostReplyKeepsOriginalOperation","Output":"    grpc_test.go:446: gRPC caller PID=83119 executor PID=83302 address=127.0.0.1:51377\n"}
+{"Time":"2026-09-13T23:45:57.518526+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCLostReplyKeepsOriginalOperation","Output":"--- PASS: TestGRPCLostReplyKeepsOriginalOperation (1.50s)\n"}
+{"Time":"2026-09-13T23:45:57.518547+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCLostReplyKeepsOriginalOperation","Elapsed":1.5}
+{"Time":"2026-09-13T23:45:57.518572+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"PASS\n"}
+{"Time":"2026-09-13T23:45:58.530373+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"ok  \tlerna/profiles/asynccheck\t16.112s\n"}
+{"Time":"2026-09-13T23:45:58.530489+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Elapsed":16.112}
