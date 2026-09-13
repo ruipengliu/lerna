@@ -7,13 +7,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"golang.org/x/sys/unix"
+	"lerna/adapters/internal/sqliteopen"
 	"lerna/extraction"
 	"lerna/memory"
-	_ "modernc.org/sqlite"
-	"net/url"
-	"os"
-	"path/filepath"
 	"sync"
 	"time"
 )
@@ -31,30 +27,10 @@ type Store struct {
 var _ extraction.CandidateStore = (*Store)(nil)
 
 func Open(path string) (*Store, error) {
-	if path == "" || path == ":memory:" {
-		return nil, memory.Invalid
-	}
-	path, err := filepath.Abs(path)
+	db, err := sqliteopen.Open(path, time.Second, memory.Invalid, memory.Unavailable)
 	if err != nil {
-		return nil, memory.Invalid
+		return nil, err
 	}
-	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|unix.O_NOFOLLOW|unix.O_NONBLOCK, 0600)
-	if err != nil {
-		return nil, memory.Unavailable
-	}
-	var st unix.Stat_t
-	err = unix.Fstat(int(f.Fd()), &st)
-	f.Close()
-	if err != nil || st.Mode&unix.S_IFMT != unix.S_IFREG || st.Mode&0777 != 0600 || st.Uid != uint32(os.Getuid()) || st.Nlink != 1 {
-		return nil, memory.Invalid
-	}
-	u := url.URL{Scheme: "file", Path: path}
-	u.RawQuery = url.Values{"_pragma": []string{"busy_timeout(1000)", "journal_mode(WAL)", "synchronous(FULL)"}}.Encode()
-	db, err := sql.Open("sqlite", u.String())
-	if err != nil {
-		return nil, memory.Unavailable
-	}
-	db.SetMaxOpenConns(1)
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 	_, err = db.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS candidate_lock(id INTEGER PRIMARY KEY CHECK(id=1),version INTEGER NOT NULL);INSERT OR IGNORE INTO candidate_lock VALUES(1,1);CREATE TABLE IF NOT EXISTS candidates(namespace TEXT NOT NULL,operation TEXT NOT NULL,document BLOB NOT NULL CHECK(length(document)<=16384),PRIMARY KEY(namespace,operation));CREATE TABLE IF NOT EXISTS retired_candidates(namespace TEXT NOT NULL,operation TEXT NOT NULL,subject TEXT NOT NULL,committed INTEGER NOT NULL CHECK(committed IN (0,1)),PRIMARY KEY(namespace,operation));`)

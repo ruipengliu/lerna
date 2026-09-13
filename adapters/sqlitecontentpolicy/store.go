@@ -5,13 +5,9 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"golang.org/x/sys/unix"
 	"lerna/adapters/contentpolicy"
+	"lerna/adapters/internal/sqliteopen"
 	"lerna/artifacts"
-	_ "modernc.org/sqlite"
-	"net/url"
-	"os"
-	"path/filepath"
 	"time"
 )
 
@@ -22,30 +18,10 @@ type Store struct{ db *sql.DB }
 var _ contentpolicy.RuleStore = (*Store)(nil)
 
 func Open(path string) (*Store, error) {
-	if path == "" || path == ":memory:" {
-		return nil, artifacts.Error("INVALID_ARGUMENT")
-	}
-	path, err := filepath.Abs(path)
+	db, err := sqliteopen.Open(path, 500*time.Millisecond, artifacts.Error("INVALID_ARGUMENT"), artifacts.Error("UNAVAILABLE"))
 	if err != nil {
-		return nil, artifacts.Error("INVALID_ARGUMENT")
+		return nil, err
 	}
-	file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|unix.O_NOFOLLOW|unix.O_NONBLOCK, 0600)
-	if err != nil {
-		return nil, artifacts.Error("UNAVAILABLE")
-	}
-	var info unix.Stat_t
-	err = unix.Fstat(int(file.Fd()), &info)
-	file.Close()
-	if err != nil || info.Mode&unix.S_IFMT != unix.S_IFREG || info.Mode&0777 != 0600 || info.Uid != uint32(os.Getuid()) || info.Nlink != 1 {
-		return nil, artifacts.Error("INVALID_ARGUMENT")
-	}
-	u := url.URL{Scheme: "file", Path: path}
-	u.RawQuery = url.Values{"_pragma": []string{"busy_timeout(500)", "journal_mode(WAL)", "synchronous(FULL)"}}.Encode()
-	db, err := sql.Open("sqlite", u.String())
-	if err != nil {
-		return nil, artifacts.Error("UNAVAILABLE")
-	}
-	db.SetMaxOpenConns(1)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	_, err = db.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS source_policy(id INTEGER PRIMARY KEY CHECK(id=1),version INTEGER NOT NULL CHECK(version>0),rules BLOB NOT NULL CHECK(length(rules)<=1048576));`)

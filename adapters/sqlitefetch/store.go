@@ -7,13 +7,9 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"encoding/json"
-	"golang.org/x/sys/unix"
+	"lerna/adapters/internal/sqliteopen"
 	"lerna/fetch"
 	"lerna/tasks"
-	_ "modernc.org/sqlite"
-	"net/url"
-	"os"
-	"path/filepath"
 	"time"
 	"unicode/utf8"
 )
@@ -25,30 +21,10 @@ type Store struct{ db *sql.DB }
 var _ fetch.AttemptStore = (*Store)(nil)
 
 func Open(path string) (*Store, error) {
-	if path == "" || path == ":memory:" {
-		return nil, fetch.Invalid
-	}
-	path, err := filepath.Abs(path)
+	db, err := sqliteopen.Open(path, time.Second, fetch.Invalid, fetch.Unavailable)
 	if err != nil {
-		return nil, fetch.Invalid
+		return nil, err
 	}
-	file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|unix.O_NOFOLLOW|unix.O_NONBLOCK, 0600)
-	if err != nil {
-		return nil, fetch.Unavailable
-	}
-	var info unix.Stat_t
-	err = unix.Fstat(int(file.Fd()), &info)
-	file.Close()
-	if err != nil || info.Mode&unix.S_IFMT != unix.S_IFREG || info.Mode&0777 != 0600 || info.Uid != uint32(os.Getuid()) || info.Nlink != 1 {
-		return nil, fetch.Invalid
-	}
-	u := url.URL{Scheme: "file", Path: path}
-	u.RawQuery = url.Values{"_pragma": []string{"busy_timeout(1000)", "journal_mode(WAL)", "synchronous(FULL)"}}.Encode()
-	db, err := sql.Open("sqlite", u.String())
-	if err != nil {
-		return nil, fetch.Unavailable
-	}
-	db.SetMaxOpenConns(1)
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 	_, err = db.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS fetch_lock(id INTEGER PRIMARY KEY CHECK(id=1),version INTEGER NOT NULL);INSERT OR IGNORE INTO fetch_lock VALUES(1,1);CREATE TABLE IF NOT EXISTS fetch_budgets(namespace TEXT NOT NULL,task TEXT NOT NULL,subject TEXT NOT NULL,limit_requests INTEGER NOT NULL,charged INTEGER NOT NULL,PRIMARY KEY(namespace,task));CREATE TABLE IF NOT EXISTS fetch_attempts(namespace TEXT NOT NULL,operation TEXT NOT NULL,intent BLOB NOT NULL CHECK(length(intent)<=4096),PRIMARY KEY(namespace,operation));CREATE TABLE IF NOT EXISTS fetch_outcomes(namespace TEXT NOT NULL,operation TEXT NOT NULL,outcome BLOB NOT NULL CHECK(length(outcome)<=1024),PRIMARY KEY(namespace,operation));`)
