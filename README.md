@@ -2,6 +2,98 @@
 
 面向通用 Agent 的端云 Harness。架构、能力目标及后续实施任务见 [架构入口](docs/architecture/README.md) 和 [实施票据](.scratch/harness-implementation/README.md)。
 
+## 架构设计
+
+内核管理持久任务，大脑提交有限提案，记忆提供受控上下文，执行返回可核对事实。以下六张图整理已确认的设计职责与目标，不表示所有模块均已实现或验收通过；实际实现进展见下方指南与实施报告。
+
+可独立打开 [详细架构图集](docs/architecture/diagrams/lerna-harness-architecture.html) 查看宽幅排版。节点表示逻辑职责，不代表独立进程或 Go 包；橙色强调主要责任，蓝色连线表示跨节点或外部交互，虚线表示反馈或恢复相关返回。
+
+### 01 / 系统总览：内核连接三大逻辑系统
+
+逻辑职责不绑定进程或端云位置。图中展示主要关系；授权、观测与版本约束适用于全部相关模块。
+
+![01 / 系统总览：内核连接三大逻辑系统](docs/architecture/diagrams/lerna-harness-overview.svg)
+
+**状态权威**：Brain 提出行动，Execution 报告事实，内核检查完成条件并决定任务状态。UI、调度器和外部 Agent 均不能直接写入任意终态。
+
+**独立替换**：核心使用 Go Interface；供应商类型、数据库连接和设备细节留在 Adapter。启动组装选择实现，核心不反向依赖启动入口。
+
+设计依据：[01-system-architecture.md](docs/architecture/01-system-architecture.md)、[02-runtime-and-state.md](docs/architecture/02-runtime-and-state.md)、[08-authorization-and-user-control.md](docs/architecture/08-authorization-and-user-control.md)。
+
+### 02 / 任务运行：从提案到可核对结果
+
+按主要处理顺序阅读。新一轮决策从最新任务快照开始；恢复直接读取持久事实，不依赖模型会话记忆。
+
+![02 / 任务运行：从提案到可核对结果](docs/architecture/diagrams/lerna-harness-runtime.svg)
+
+**原子边界**：RunStore.Load / Commit / LookupCommit / ListRecoverable 隐藏存储实现。任务变更、记录与工作一起提交；记忆写入、外部动作不纳入该事务。
+
+**不确定结果**：提交超时先 LookupCommit；动作超时先查询或观察效果。同一操作重发保持身份，相同标识配不同内容明确拒绝。
+
+**有界自主**：决策、生成、行动、并发、委派深度与期限有预算。暂停、取消与新输入由内核落实；预算耗尽仍允许必要收尾和核对。
+
+设计依据：[02-runtime-and-state.md](docs/architecture/02-runtime-and-state.md)、[06-brain-and-agent-collaboration.md](docs/architecture/06-brain-and-agent-collaboration.md)、[06-decision-admission-and-collaboration.md](docs/architecture/06-decision-admission-and-collaboration.md)、[04-recovery-state-and-failure-matrix.md](docs/architecture/04-recovery-state-and-failure-matrix.md)。
+
+### 03 / 端云协作：部署位置与任务权威分离
+
+这是允许的部署示例，不把大脑固定在云侧，也不把执行固定在端侧。记忆节点的读写与生命周期详见下一图。
+
+![03 / 端云协作：部署位置与任务权威分离](docs/architecture/diagrams/lerna-harness-edge-cloud.svg)
+
+**连接与契约**：进程内直接调用 Go Interface；同一部署侧跨进程用 gRPC；端云用 WebSocket。固定消息采用 Protobuf，动态输入输出采用 JSON Schema；原生节点连接使用 mTLS。
+
+**离线边界**：本地能力齐备且授权可本地核验时继续；依赖失联节点的步骤等待。未送达的取消、撤销或接管保持待送达状态，不能提前宣称落实。
+
+**所有权移交**：默认先停止新调度、准备目标，再封存源世代并发出激活凭据。只有目标持久化新世代才恢复；源端不能因回包超时自行重新激活。
+
+设计依据：[03-contracts-and-protocols.md](docs/architecture/03-contracts-and-protocols.md)、[04-edge-cloud-and-recovery.md](docs/architecture/04-edge-cloud-and-recovery.md)、[08-authorization-lifecycle-and-interfaces.md](docs/architecture/08-authorization-lifecycle-and-interfaces.md)。
+
+### 04 / 记忆与上下文：来源约束贯穿整个生命周期
+
+任务上下文的恢复性保存不授予跨任务复用权。云端可路由查询，但不能默认获知端侧记录标题、命中数量或原文。
+
+![04 / 记忆与上下文：来源约束贯穿整个生命周期](docs/architecture/diagrams/lerna-harness-memory.svg)
+
+**五个独立维度**：分别控制存储位置、计算位置、可发现范围、返回范围和留存再使用。原文留端时，向云模型发送摘要、向量或片段仍须获准。
+
+**修订与删除**：每个集合有唯一正式修改权威。非权威副本离线修改保存为待提交意图；重连核对原操作和基础版本，冲突不按设备时间静默覆盖。
+
+**来源失效传播**：纠正、删除与用途收紧影响副本、检索索引、摘要及已组装上下文。派生内容不能获得超出来源的用途或披露范围。
+
+设计依据：[05-memory-and-context.md](docs/architecture/05-memory-and-context.md)、[05-memory-data-and-lifecycle.md](docs/architecture/05-memory-data-and-lifecycle.md)、[05-edge-cloud-memory.md](docs/architecture/05-edge-cloud-memory.md)。
+
+### 05 / 执行架构：发现、准入与效果确认分开
+
+主路径展示一次行动的各层职责。异步查询、取消和用户接管沿原操作关联处理；目录可见性不等于执行许可。
+
+![05 / 执行架构：发现、准入与效果确认分开](docs/architecture/diagrams/lerna-harness-execution.svg)
+
+**API 与 GUI 的边界**：只有目标语义、权限、处理位置和核对条件都满足时才允许 GUI 兜底。API 权限拒绝不能绕过；API 可能已经生效时也不能用 GUI 重复变更。
+
+**专项验证**：联网问答核验实际来源、获取时间、引用支持和证据缺口；GUI 核验观察、点击、滑动、输入、返回、再次观察、中断和接管。模拟结果只证明声明的模拟范围。
+
+**质量目标**：首次调用正确率 ≥90%，有限重试任务成功率 ≥95%。检索遗漏与内部纠错如实计分；Schema 合法、HTTP 成功或修复后完成均不能改写首次正确性。
+
+设计依据：[07-tools-and-simulated-devices.md](docs/architecture/07-tools-and-simulated-devices.md)、[07-execution-contracts-and-validation.md](docs/architecture/07-execution-contracts-and-validation.md)、[11-specialized-validation-and-handoff.md](docs/architecture/11-specialized-validation-and-handoff.md)。
+
+### 06 / 扩展与自进化：版本化接入，依据评测生效
+
+发布形成新的激活版本，下一轮回到登记与激活流程。观测数据不能反向覆盖业务权威事实，回滚也不会撤销已发生的外部效果。
+
+![06 / 扩展与自进化：版本化接入，依据评测生效](docs/architecture/diagrams/lerna-harness-evolution.svg)
+
+**接入语义**：MCP 映射工具与资源，A2A 映射任务协作，Skill 加载操作知识。适配方向、可选能力和版本分别验收，协议能解析不等于行为已兼容。
+
+**隔离与权限**：同进程 Go 只接纳受信代码，独立进程本身不构成强隔离。受限运行器必须兑现文件、网络与资源限制；Skill 文本不能直接授予执行权限。
+
+**发布证据**：能力按 L1 契约、L2 参考实现、L3 替换互操作、L4 恢复治理验收。质量目标与模拟测试不能代替实际模型和专项能力的完整验收。
+
+设计依据：[09-extension-ecosystem.md](docs/architecture/09-extension-ecosystem.md)、[09-extension-contracts-and-activation.md](docs/architecture/09-extension-contracts-and-activation.md)、[10-observation-evaluation-and-evolution.md](docs/architecture/10-observation-evaluation-and-evolution.md)、[10-evaluation-contracts-and-release-gates.md](docs/architecture/10-evaluation-contracts-and-release-gates.md)。
+
+完整消息字段、错误码、故障矩阵与评测样本保留在以上设计规范中。SVG 的字体随查看环境回退，HTML 图集保留完整的页面排版。
+
+## 运行与实现进展
+
 当前可运行内容包括 **01 票的 Go SDK 契约样例**、**02 票的本地身份、策略与授权**、**03 票的持久任务接纳与查询**、**04 票的有限 Worker 运行与恢复**、**05 票的任务控制**、**06 票的受限签名授权**、**07 票的受控证据与产物**、**08 票的有界模型问答**、**09 票的补充输入与重新决策**、**10 票的同步 API 执行与效果确认**、**11 票的异步调用与未知效果恢复**、**12 票的共享资源控制**和 **13 票的千级能力目录**，尚不是完整任务运行系统。
 
 ```sh

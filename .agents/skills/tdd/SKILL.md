@@ -5,7 +5,7 @@ description: Test-driven development. Use when the user wants to build features 
 
 # Test-Driven Development
 
-TDD is the red → green loop. This skill is the reference that makes that loop produce tests worth keeping: what a good test is, where tests go, the anti-patterns, and the rules of the loop. Every section applies on every cycle: consult them before and during the loop, not after.
+TDD is the red → green loop. These rules apply throughout the work; read supporting references only when needed for the current testing decision.
 
 For domain terminology, business behavior, or architectural decisions, consult `docs/agents/domain.md`.
 
@@ -13,7 +13,7 @@ For domain terminology, business behavior, or architectural decisions, consult `
 
 Tests verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn't. A good test reads like a specification: "user can checkout with valid cart" tells you exactly what capability exists, and it survives refactors because it doesn't care about internal structure.
 
-See [tests.md](tests.md) for examples and [mocking.md](mocking.md) for mocking guidelines.
+When test design needs examples, see [tests.md](tests.md). Consult [mocking.md](mocking.md) when deciding whether or how to mock a dependency.
 
 ## Seams: where tests go
 
