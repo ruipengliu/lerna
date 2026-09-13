@@ -3,6 +3,8 @@ package fetchcheck
 import (
 	"context"
 	"fmt"
+	"lerna/answers"
+	"lerna/artifacts"
 	"lerna/fetch"
 	wire "lerna/gen/harness/v1"
 	"net/http"
@@ -55,11 +57,19 @@ func checkPreparedResearch(t *testing.T, recipient string, allowed bool) {
 	if recipient != "" {
 		configureSearchRecipient(t, ctx, h, true, allowed)
 	}
+	if recipient == "" {
+		h.inputSources = []*wire.ContentSource{{Kind: "task-goal", Key: "inline", Revision: 1}}
+	}
 	spec := researchRunSpec{AnswerModel: decisionFixtureModel{evidence: true}, Goal: "Read the provided record", Query: "supplied query", SearchEndpoint: endpoint + "/discover", Queries: 128, NetworkLimit: 2, Steps: 3}
 	if recipient != "" {
 		spec.SearchConfig = searchProviderConfig{MaxBytes: 4096, Recipient: recipient}
 	}
-	record, err := runPreparedResearch(ctx, h, spec)
+	run, err := startResearch(ctx, h, spec)
+	defer run.close()
+	if err != nil {
+		t.Fatal(err)
+	}
+	record, err := run.finish(ctx, spec.AnswerModel)
 	if recipient != "" && !allowed {
 		if err != nil || record.Answer.Status != "fetch_failed" || record.Usage.NetworkCharged != 1 || searches.Load() != 0 || pages.Load() != 0 {
 			t.Fatalf("full task disclosed query without source permission: err=%v searches=%d pages=%d", err, searches.Load(), pages.Load())
@@ -75,6 +85,49 @@ func checkPreparedResearch(t *testing.T, recipient string, allowed bool) {
 	if record.Answer.Status != "answerable" || len(record.Answer.Claims) != 1 || len(record.Answer.Claims[0].Citations) != 1 || !strings.Contains(record.Answer.Claims[0].Citations[0].Quote, "supplied by the caller") {
 		t.Fatalf("provided evidence did not reach published answer: %+v", record.Answer)
 	}
+	if recipient == "" {
+		for _, block := range record.Input.Blocks {
+			if block.Role != "external-evidence" {
+				t.Fatalf("successful discovery entered answer context: %s", block.Role)
+			}
+		}
+		ref, err := answers.ParseReference(run.complete.Task.Result)
+		if err != nil {
+			t.Fatal(err)
+		}
+		binding := artifacts.Binding{Token: h.token, Namespace: "local", Location: "local", Recipient: "local"}
+		request := &wire.ContentRequest{Method: "READ", Ref: ref, Purpose: "task", Limit: 1}
+		saved, err := h.content.Call(ctx, binding, request)
+		if err != nil {
+			t.Fatal(err)
+		}
+		found := false
+		for _, source := range saved.GetRecord().GetSpec().GetSources() {
+			if source.Kind == "web" && source.Key == "start" {
+				found = true
+			}
+		}
+		if !found {
+			t.Fatal("answer lost search source omitted from model context")
+		}
+		policy, err := h.policyStore.Load(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		rules := policy.Rules[:0]
+		for _, rule := range policy.Rules {
+			if rule.Kind != "web" || rule.Key != "start" {
+				rules = append(rules, rule)
+			}
+		}
+		if err := h.policy.Replace(rules); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := h.content.Call(ctx, binding, request); err == nil {
+			t.Fatal("answer survived revocation of omitted search source")
+		}
+	}
+
 }
 
 func TestPreparedResearchReportsSearchFailureWithoutRetry(t *testing.T) {

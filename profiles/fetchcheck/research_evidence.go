@@ -1,12 +1,9 @@
 package fetchcheck
 
 import (
-	"context"
 	"lerna/adapters/fetchcontent"
-	"lerna/adapters/fetchcontext"
 	"lerna/adapters/taskcontent"
 	"lerna/artifacts"
-	"lerna/fetch"
 	"lerna/tasks"
 )
 
@@ -32,26 +29,4 @@ func meteredResearchEvidenceAt(h *harness, port *tasks.ActionPort, run tasks.Run
 		}
 	}
 	return h.researchEvidence.WithContent(content)
-}
-
-// Compare the controlled failure artifact with the original operation facts at
-// the actual read boundary, without adding another unmetered preflight read.
-type researchFailures struct {
-	reader   fetchcontext.FailureEvidence
-	expected map[string]fetch.Outcome
-}
-
-func (r researchFailures) ReadFailure(ctx context.Context, ref string) (fetch.Outcome, error) {
-	expected, ok := r.expected[ref]
-	if !ok {
-		return fetch.Outcome{}, fetch.Invalid
-	}
-	out, err := r.reader.ReadFailure(ctx, ref)
-	if err != nil {
-		return fetch.Outcome{}, err
-	}
-	if out != expected {
-		return fetch.Outcome{}, fetch.Unavailable
-	}
-	return out, nil
 }

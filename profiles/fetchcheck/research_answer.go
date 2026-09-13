@@ -5,23 +5,12 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"lerna/adapters/fetchoutput"
-	"lerna/adapters/researchcontext"
-	"lerna/adapters/researchlineage"
-	"lerna/adapters/taskcontent"
 	"lerna/answers"
-	"lerna/artifacts"
 	"lerna/brain"
-	"lerna/fetch"
-	wire "lerna/gen/harness/v1"
 	"lerna/internal/randomid"
 	"lerna/tasks"
 	"time"
 )
-
-type researchOutcomeReader interface {
-	actionOutcome(context.Context, tasks.Qualification, string) (fetch.Outcome, bool, error)
-}
 
 func processResearchAnswer(ctx context.Context, h *harness, port *tasks.ActionPort, run tasks.RunSnapshot, model brain.Model, prior researchOutcomeReader, recovering bool) (brain.EvidenceAnswer, error) {
 	location := model.Capabilities().Location
@@ -63,112 +52,14 @@ func processResearchAnswer(ctx context.Context, h *harness, port *tasks.ActionPo
 	}
 	stopLease := keepResearchAnswerLease(ctx, generations, tasks.QualificationOf(reserved))
 	defer stopLease()
-	if reserved.Actions == nil || len(reserved.Actions.Actions) == 0 {
-		return brain.EvidenceAnswer{}, fmt.Errorf("answer phase has no settled actions")
-	}
-	// Settled outcomes are immutable. The same serial task host may reuse facts
-	// already observed during actions; a reopened host must read them again.
-	// Current Content/source authority is still checked separately at each use.
-	outcomes := make(map[string]fetch.Outcome, len(reserved.Actions.Actions))
-	for _, action := range reserved.Actions.Actions {
-		var observed fetch.Outcome
-		var known bool
-		var err error
-		if prior != nil {
-			observed, known, err = prior.actionOutcome(ctx, tasks.QualificationOf(reserved), action.OperationID)
-		} else {
-			observed, known, err = readResearchOutcome(ctx, h, port, tasks.QualificationOf(reserved), action.OperationID)
-		}
-		if err != nil {
-			return brain.EvidenceAnswer{}, err
-		}
-		if !known {
-			return brain.EvidenceAnswer{}, fmt.Errorf("missing settled action result")
-		}
-		outcomes[action.OperationID] = observed
-	}
-	original := outcomes[reserved.Actions.Actions[len(reserved.Actions.Actions)-1].OperationID]
-	search := []string{}
-	pages := []string{}
-	failures := []string{}
-	failureFacts := map[string]fetch.Outcome{}
-	for _, action := range reserved.Actions.Actions {
-		observed := outcomes[action.OperationID]
-		// Successful discovery is not page evidence. Its finite failure, however,
-		// belongs in the same governed gap path as a failed page acquisition.
-		if action.Descriptor != h.cap.Digest() && observed.Status == "acquired" {
-			search = append(search, observed.Reference)
-			continue
-		}
-		if observed.Status == "acquired" {
-			pages = append(pages, observed.Reference)
-		} else if fetch.IsFailureStatus(observed.Status) {
-			ref := reserved.ExecutionReports[action.OperationID].Reference
-			if ref == "" {
-				return brain.EvidenceAnswer{}, fmt.Errorf("missing acquisition failure artifact")
-			}
-			failures = append(failures, ref)
-			failureFacts[ref] = observed
-		} else {
-			return brain.EvidenceAnswer{}, fmt.Errorf("unresolved acquisition status")
-		}
-	}
-	if len(failures) == 0 && !h.answerFromSearch {
-		search = nil
-	}
-	if len(pages) == 0 && len(failures) == 0 && original.Status == "acquired" && reserved.Actions.Actions[len(reserved.Actions.Actions)-1].Descriptor != h.cap.Digest() {
-		pages = nil
-		search = []string{original.Reference}
-	}
-	content, err := taskcontent.New(h.content, port, tasks.QualificationOf(reserved))
-	if err != nil {
-		return brain.EvidenceAnswer{}, err
-	}
-	binding := artifacts.Binding{Token: h.token, Namespace: "local", Location: "local", Recipient: location}
-	evidence, err := meteredResearchEvidenceAt(h, port, reserved, location)
-	if err != nil {
-		return brain.EvidenceAnswer{}, err
-	}
-	access, err := fetchoutput.New(content, binding, h.clock)
-	if err != nil {
-		return brain.EvidenceAnswer{}, err
-	}
-	reader, err := h.searchEvidence(evidence)
-	if err != nil {
-		return brain.EvidenceAnswer{}, err
-	}
-	failureCapability := h.cap
-	failureCapability.Location = location
-	input, err := researchcontext.New(evidence, reader, researchFailures{reader: access.Failures(h.token, failureCapability), expected: failureFacts}, reserved.Task, location, researchcontext.References{AnswerFromSearch: h.answerFromSearch, Search: search, Pages: pages, Failures: failures})
-	if err != nil {
-		return brain.EvidenceAnswer{}, err
-	}
-	goal := &wire.ContentSource{Kind: "task-goal", Key: "inline", Revision: 1}
-	output, err := answers.NewContentAccess(content, h.policy, artifacts.Binding{Token: h.token, Namespace: "local", Location: "local", Recipient: "local"}, goal, "task", h.clock, time.Minute)
-	if err != nil {
-		return brain.EvidenceAnswer{}, err
-	}
-	dependencies := []string{}
-	for _, action := range reserved.Actions.Actions {
-		observed := outcomes[action.OperationID]
-		ref := observed.Reference
-		if observed.Status != "acquired" {
-			ref = reserved.ExecutionReports[action.OperationID].Reference
-		}
-		dependencies = append(dependencies, ref)
-	}
-	lineage, err := researchlineage.New(content, artifacts.Binding{Token: h.token, Namespace: "local", Location: "local", Recipient: "local"}, reserved.Task, "task", dependencies)
-	if err != nil {
-		return brain.EvidenceAnswer{}, err
-	}
-	output, err = output.WithLineage(lineage)
+	input, err := prepareResearchAnswerInput(ctx, h, port, reserved, location, prior)
 	if err != nil {
 		return brain.EvidenceAnswer{}, err
 	}
 	// The publication port already validates original task inputs through
 	// output. Supply the evidence context separately to avoid duplicating
 	// that same original-input observation at this boundary.
-	publication, err := answers.BindEvidencePort(generations, output, location, input)
+	publication, err := answers.BindEvidencePort(generations, input.output, location, input.evidence)
 	if err != nil {
 		return brain.EvidenceAnswer{}, err
 	}
@@ -179,8 +70,7 @@ func processResearchAnswer(ctx context.Context, h *harness, port *tasks.ActionPo
 		_, err := publication.Recover(ctx, run.Task.Ref)
 		return brain.EvidenceAnswer{}, err
 	}
-	controlledInput := researchAnswerInput{evidence: input, taskInputs: output}
-	writer, err := brain.NewEvidenceAnswer(model, controlledInput, output, generations, brain.Config{MaxInputBytes: brain.MaxInputBytes, MaxOutputBytes: outputBytes, SettlementTimeout: time.Second})
+	writer, err := brain.NewEvidenceAnswer(model, input, input.output, generations, brain.Config{MaxInputBytes: brain.MaxInputBytes, MaxOutputBytes: outputBytes, SettlementTimeout: time.Second})
 	if err != nil {
 		return brain.EvidenceAnswer{}, err
 	}
