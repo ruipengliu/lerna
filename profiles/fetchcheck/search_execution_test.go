@@ -2,10 +2,10 @@ package fetchcheck
 
 import (
 	"context"
+	"lerna/adapters/acquisitionexecution"
 	"lerna/adapters/executionlocal"
 	"lerna/adapters/fetchtask"
 	"lerna/adapters/jsonsearch"
-	"lerna/adapters/searchexecution"
 	"lerna/adapters/searchprivacy"
 	"lerna/artifacts"
 	"lerna/execution"
@@ -48,7 +48,7 @@ func TestSDKSearchPersistsOriginalDiscoveryAndChecksRecipient(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			driver, err := searchexecution.New(search, h.attempts, h.evidence, h.auth, searchexecution.Config{Guard: taskGuard, QueryGuard: privacy, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxResults: 4, MaxBytes: 1024, MaxRequests: 1, TaskLimit: 2, Timeout: time.Second})
+			driver, err := acquisitionexecution.NewSearch(search, h.attempts, h.evidence, h.auth, acquisitionexecution.SearchConfig{Config: acquisitionexecution.Config{Guard: taskGuard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: 1024, MaxRequests: 1, TaskLimit: 2, Timeout: time.Second}, QueryGuard: privacy, MaxResults: 4})
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -2,7 +2,7 @@ package fetchcheck
 
 import (
 	"context"
-	"lerna/adapters/fetchexecution"
+	"lerna/adapters/acquisitionexecution"
 	"lerna/fetch"
 	"net/http"
 	"net/http/httptest"
@@ -20,7 +20,7 @@ func TestExecutionFetchRequiresTaskGuard(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer h.destroy()
-	driver, err := fetchexecution.New(h.http, h.attempts, h.evidence, h.auth, fetchexecution.Config{Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: 1024, MaxRequests: 2, TaskLimit: 2, Timeout: time.Second})
+	driver, err := acquisitionexecution.NewPage(h.http, h.attempts, h.evidence, h.auth, acquisitionexecution.Config{Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: 1024, MaxRequests: 2, TaskLimit: 2, Timeout: time.Second})
 	if err != fetch.Invalid || driver != nil {
 		t.Fatal("execution fetch driver accepted missing task guard")
 	}

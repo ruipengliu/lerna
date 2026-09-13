@@ -3,7 +3,7 @@ package fetchcheck
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/fetchexecution"
+	"lerna/adapters/acquisitionexecution"
 	"lerna/adapters/fetchtask"
 	"lerna/execution"
 	"lerna/fetch"
@@ -38,9 +38,9 @@ func TestDriverLimitsAndIdentityWithActualCoreQualification(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	config := fetchexecution.Config{Guard: guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: 64, MaxRequests: 2, TaskLimit: 2, Timeout: time.Second}
+	config := acquisitionexecution.Config{Guard: guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: 64, MaxRequests: 2, TaskLimit: 2, Timeout: time.Second}
 	adapter, ledger, evidence := h.http, h.attempts, h.evidence
-	driver, err := fetchexecution.New(adapter, ledger, evidence, h.auth, config)
+	driver, err := acquisitionexecution.NewPage(adapter, ledger, evidence, h.auth, config)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -78,7 +78,7 @@ func TestDriverLimitsAndIdentityWithActualCoreQualification(t *testing.T) {
 	}
 	// Inspect is reconstructed without input, as Execution does after restart.
 	call.Input = nil
-	driver, err = fetchexecution.New(adapter, ledger, evidence, h.auth, config)
+	driver, err = acquisitionexecution.NewPage(adapter, ledger, evidence, h.auth, config)
 	if err != nil {
 		t.Fatal(err)
 	}

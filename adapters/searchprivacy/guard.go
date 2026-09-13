@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"context"
 	"lerna/adapters/executioncontent"
+	"lerna/adapters/taskcontent"
 	"lerna/artifacts"
 	"lerna/execution"
 	"lerna/fetch"
@@ -19,7 +20,7 @@ type InputReader interface {
 type Guard struct {
 	reader     *executioncontent.Adapter
 	content    executioncontent.Content
-	queries    ExecutionQueries
+	queries    taskcontent.ExecutionQueries
 	token      string
 	capability execution.Capability
 	recipient  string

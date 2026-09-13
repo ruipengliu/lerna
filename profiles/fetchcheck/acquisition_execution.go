@@ -2,11 +2,10 @@ package fetchcheck
 
 import (
 	"context"
+	"lerna/adapters/acquisitionexecution"
 	"lerna/adapters/executionlocal"
-	"lerna/adapters/fetchexecution"
 	"lerna/adapters/fetchqueries"
 	"lerna/adapters/fetchtask"
-	"lerna/adapters/searchexecution"
 	"lerna/adapters/searchprivacy"
 	"lerna/execution"
 	"lerna/fetch"
@@ -66,7 +65,7 @@ func bindPageExecution(h *harness, queries *tasks.ActionPort, networkLimit uint3
 	if err != nil {
 		return err
 	}
-	target, err := fetchexecution.New(h.http, h.attempts, h.evidence, h.auth, fetchexecution.Config{Guard: b.guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: int64(h.pageMaxBytes), MaxRequests: min(uint32(2), networkLimit), TaskLimit: networkLimit, Timeout: time.Second})
+	target, err := acquisitionexecution.NewPage(h.http, h.attempts, h.evidence, h.auth, acquisitionexecution.Config{Guard: b.guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: int64(h.pageMaxBytes), MaxRequests: min(uint32(2), networkLimit), TaskLimit: networkLimit, Timeout: time.Second})
 	if err != nil {
 		return err
 	}
@@ -97,7 +96,7 @@ func (s *searchAcquisition) bind(h *harness, queries *tasks.ActionPort) error {
 	}
 	// Rebinding retains the reader's verified lengths and therefore query costs.
 	privacy := s.privacy
-	var observations searchexecution.ObservationScope
+	var observations acquisitionexecution.ObservationScope
 	if b.queries != nil {
 		privacy, err = privacy.WithQueries(b.queries)
 		if err != nil {
@@ -105,7 +104,7 @@ func (s *searchAcquisition) bind(h *harness, queries *tasks.ActionPort) error {
 		}
 		observations = b.observations
 	}
-	driver, err := searchexecution.New(s.provider, h.attempts, h.evidence, h.auth, searchexecution.Config{Observations: observations, Guard: b.guard, QueryGuard: privacy, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxResults: int(s.bounds.MaxResults), MaxBytes: int64(s.bounds.MaxBytes), MaxRequests: 1, TaskLimit: s.networkLimit, Timeout: time.Duration(s.bounds.TimeoutMS) * time.Millisecond})
+	driver, err := acquisitionexecution.NewSearch(s.provider, h.attempts, h.evidence, h.auth, acquisitionexecution.SearchConfig{Config: acquisitionexecution.Config{Observations: observations, Guard: b.guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: int64(s.bounds.MaxBytes), MaxRequests: 1, TaskLimit: s.networkLimit, Timeout: time.Duration(s.bounds.TimeoutMS) * time.Millisecond}, QueryGuard: privacy, MaxResults: int(s.bounds.MaxResults)})
 	if err != nil {
 		return err
 	}

@@ -9,7 +9,7 @@ import (
 	"lerna/adapters/fetchauth"
 	"lerna/adapters/jsonsearch"
 	"lerna/adapters/replayfetch"
-	"lerna/adapters/searchcontext"
+	"lerna/adapters/researchcontext"
 	"lerna/adapters/searchprivacy"
 	"lerna/artifacts"
 	"lerna/brain"
@@ -463,7 +463,7 @@ func (a *researchActionHost) Assemble(ctx context.Context, t tasks.Task, locatio
 		if err != nil {
 			return brain.Input{}, err
 		}
-		projection, err := searchcontext.New(reader, t, location, refs)
+		projection, err := researchcontext.NewSearch(reader, t, location, refs)
 		if err != nil {
 			return brain.Input{}, err
 		}

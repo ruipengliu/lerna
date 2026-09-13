@@ -2,8 +2,8 @@ package fetchcheck
 
 import (
 	"context"
+	"lerna/adapters/acquisitionexecution"
 	"lerna/adapters/executionlocal"
-	"lerna/adapters/fetchexecution"
 	"lerna/execution"
 	"lerna/sdk"
 	"lerna/tasks"
@@ -17,8 +17,8 @@ import (
 // This test delegate reconstructs the real observation scope after Start;
 // it does not replace the driver, stored facts or returned observations.
 type resetObservationDriver struct {
-	driver *fetchexecution.Driver
-	reset  func() (*fetchexecution.Driver, error)
+	driver *acquisitionexecution.PageDriver
+	reset  func() (*acquisitionexecution.PageDriver, error)
 }
 
 func (d *resetObservationDriver) Start(ctx context.Context, c execution.Call) error {
@@ -77,7 +77,7 @@ func checkAcquisitionQueries(t *testing.T, reset, later bool) {
 		}
 		var driver execution.Driver = h.target
 		if reset {
-			driver = &resetObservationDriver{driver: h.target, reset: func() (*fetchexecution.Driver, error) {
+			driver = &resetObservationDriver{driver: h.target, reset: func() (*acquisitionexecution.PageDriver, error) {
 				next, err := acquisitionQueries(h, port, h.cap)
 				if err != nil {
 					return nil, err

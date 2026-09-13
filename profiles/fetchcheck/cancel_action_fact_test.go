@@ -3,8 +3,8 @@ package fetchcheck
 import (
 	"context"
 	"fmt"
+	"lerna/adapters/acquisitionexecution"
 	"lerna/adapters/executionlocal"
-	"lerna/adapters/fetchexecution"
 	"lerna/execution"
 	"lerna/sdk"
 	"lerna/tasks"
@@ -112,7 +112,7 @@ func checkControlledActionFact(t *testing.T, intent string, reset bool, complete
 		}
 		var driver execution.Driver = h.target
 		if reset {
-			driver = &resetObservationDriver{driver: h.target, reset: func() (*fetchexecution.Driver, error) {
+			driver = &resetObservationDriver{driver: h.target, reset: func() (*acquisitionexecution.PageDriver, error) {
 				next, err := acquisitionQueries(h, port, h.cap)
 				if err != nil {
 					return nil, err

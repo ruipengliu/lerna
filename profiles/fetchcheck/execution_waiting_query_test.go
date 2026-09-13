@@ -3,8 +3,8 @@ package fetchcheck
 import (
 	"context"
 	"encoding/json"
+	"lerna/adapters/acquisitionexecution"
 	"lerna/adapters/executionlocal"
-	"lerna/adapters/fetchexecution"
 	"lerna/adapters/fetchtask"
 	"lerna/execution"
 	"lerna/sdk"
@@ -110,7 +110,7 @@ func checkSDKWaitingRecovery(t *testing.T, stage string) {
 		if e != nil {
 			t.Fatal(e)
 		}
-		driver, e := fetchexecution.New(h.http, h.attempts, h.evidence, h.auth, fetchexecution.Config{Observations: scope, Guard: guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: 1024, MaxRequests: 2, TaskLimit: 2, Timeout: time.Second})
+		driver, e := acquisitionexecution.NewPage(h.http, h.attempts, h.evidence, h.auth, acquisitionexecution.Config{Observations: scope, Guard: guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: 1024, MaxRequests: 2, TaskLimit: 2, Timeout: time.Second})
 		if e != nil {
 			t.Fatal(e)
 		}

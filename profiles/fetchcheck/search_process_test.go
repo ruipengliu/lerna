@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"lerna/adapters/acquisitionexecution"
 	"lerna/adapters/fetchtask"
 	"lerna/adapters/jsonsearch"
-	"lerna/adapters/searchexecution"
 	"lerna/adapters/searchprivacy"
 	"lerna/artifacts"
 	"lerna/execution"
@@ -218,7 +218,7 @@ func TestSearchCrashProbe(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	driver, err := searchexecution.New(search, crashOutcome{h.attempts, saved.Mode}, h.evidence, h.auth, searchexecution.Config{Guard: guard, QueryGuard: privacy, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxResults: 4, MaxBytes: 1024, MaxRequests: 1, TaskLimit: 1, Timeout: time.Second})
+	driver, err := acquisitionexecution.NewSearch(search, crashOutcome{h.attempts, saved.Mode}, h.evidence, h.auth, acquisitionexecution.SearchConfig{Config: acquisitionexecution.Config{Guard: guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: 1024, MaxRequests: 1, TaskLimit: 1, Timeout: time.Second}, QueryGuard: privacy, MaxResults: 4})
 	if err != nil {
 		t.Fatal(err)
 	}

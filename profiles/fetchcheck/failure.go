@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"lerna/adapters/fetchcontext"
+	"lerna/adapters/researchcontext"
 	"lerna/brain"
 	"net/http"
 	"net/http/httptest"
@@ -74,7 +74,7 @@ func CheckFailure(ctx context.Context, status int) error {
 	if err != nil || json.Unmarshal(facts, &document) != nil || document.Output.Status != expected || document.Output.Reference != "" || document.Evidence.Status != expected || document.Evidence.Requests != 2 || document.Evidence.Mode != "http" || bytes.Contains(facts, []byte("private failure details")) || bytes.Contains(facts, []byte(server.URL)) {
 		return fmt.Errorf("SDK failure facts are missing or disclose response details")
 	}
-	projection, err := fetchcontext.NewWithFailures(h.evidence, h.access.Failures(h.token, h.cap), task, "local", nil, []string{visible.Reference})
+	projection, err := researchcontext.NewPagesWithFailures(h.evidence, h.access.Failures(h.token, h.cap), task, "local", nil, []string{visible.Reference})
 	if err != nil {
 		return err
 	}

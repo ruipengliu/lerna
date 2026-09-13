@@ -11,11 +11,11 @@ import (
 	"encoding/hex"
 	"encoding/pem"
 	"fmt"
+	"lerna/adapters/acquisitionexecution"
 	"lerna/adapters/contentpolicy"
 	"lerna/adapters/executionlocal"
 	"lerna/adapters/fetchauth"
 	"lerna/adapters/fetchcontent"
-	"lerna/adapters/fetchexecution"
 	"lerna/adapters/fetchoutput"
 	"lerna/adapters/fetchtask"
 	"lerna/adapters/filecontent"
@@ -76,7 +76,7 @@ type harness struct {
 	policy             *contentpolicy.Persistent
 	policyStore        *sqlitecontentpolicy.Store
 	access             *fetchoutput.Adapter
-	target             *fetchexecution.Driver
+	target             *acquisitionexecution.PageDriver
 	attempts           *sqlitefetch.Store
 	evidence           *fetchcontent.Adapter
 	evidenceConfig     fetchcontent.Config
@@ -267,7 +267,7 @@ func openWithAcquisition(ctx context.Context, root, token string, urls []string,
 	if e != nil {
 		return nil, e
 	}
-	h.target, err = fetchexecution.New(httpAdapter, h.attempts, h.evidence, h.auth, fetchexecution.Config{Guard: taskGuard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: int64(pageBytes), MaxRequests: 2, TaskLimit: 2, Timeout: time.Second})
+	h.target, err = acquisitionexecution.NewPage(httpAdapter, h.attempts, h.evidence, h.auth, acquisitionexecution.Config{Guard: taskGuard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: int64(pageBytes), MaxRequests: 2, TaskLimit: 2, Timeout: time.Second})
 	if err != nil {
 		return nil, err
 	}

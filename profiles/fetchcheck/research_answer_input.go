@@ -3,7 +3,6 @@ package fetchcheck
 import (
 	"context"
 	"fmt"
-	"lerna/adapters/fetchcontext"
 	"lerna/adapters/fetchoutput"
 	"lerna/adapters/researchcontext"
 	"lerna/adapters/researchlineage"
@@ -152,7 +151,7 @@ func prepareResearchAnswerInput(ctx context.Context, h *harness, port *tasks.Act
 // Compare the controlled failure artifact with the original operation facts at
 // the actual read boundary, without adding another unmetered preflight read.
 type researchFailures struct {
-	reader   fetchcontext.FailureEvidence
+	reader   researchcontext.FailureEvidence
 	expected map[string]fetch.Outcome
 }
 

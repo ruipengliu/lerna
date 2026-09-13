@@ -2,6 +2,14 @@
 
 状态：实施中；审查基点 `6d40e16`。原要求及 Agent Brief 见 `.scratch/harness-implementation/issues/22-search.md`。本记录不声明联网问答已实现。
 
+## Adapter 包迁移
+
+下文保留各阶段的原名称；当前代码入口已收拢：
+
+- `fetchexecution`、`searchexecution` 合入 [acquisitionexecution](../../adapters/acquisitionexecution/driver.go)，分别使用 `NewPage`、`NewSearch`，共享身份核对与结果恢复映射。搜索的披露检查和两类输入解析分别保留。
+- `fetchcontext`、`searchcontext` 合入 [researchcontext](../../adapters/researchcontext/context.go)，使用 `NewPages`、`NewPagesWithFailures`、`NewSearch` 或组合入口 `New`。各证据角色、读取次数及分组末尾复查保持。
+- `fetchqueries`、`fetchoutput`、`searchprivacy` 通过 [taskcontent.BindExecution](../../adapters/taskcontent/execution.go) 绑定原操作的查询预算；Core 继续判断权限、恢复资格和剩余额度。
+
 ## 当前实现约束
 
 - 普通 AnswerBrain 的输出为 answer/sources 两字段，ValidateAnswer 同时用于保存后的发布恢复。增加专项答案必须同步覆盖生成、保存、查询与恢复校验，不能只在模型出口接受新 JSON。

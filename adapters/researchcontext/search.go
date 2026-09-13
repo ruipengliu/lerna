@@ -1,14 +1,10 @@
-// Package searchcontext projects retained discovery responses as candidates,
-// never as acquired page evidence. It is a fact-content adapter for the existing
-// taskcontext host, which still governs decision qualification and retention.
-package searchcontext
+package researchcontext
 
 import (
 	"context"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"lerna/answers"
 	"lerna/brain"
 	"lerna/contextassembly"
 	"lerna/tasks"
@@ -17,60 +13,39 @@ import (
 	"time"
 )
 
-type Evidence interface {
+type SearchEvidence interface {
 	Read(context.Context, string) (websearch.Result, error)
 }
-type Context struct {
-	evidence  Evidence
+type SearchContext struct {
+	boundContext
+	evidence  SearchEvidence
 	refs      []string
-	facts     [32]byte
-	location  string
 	summaries bool
 }
 
-var _ brain.Context = (*Context)(nil)
+var _ brain.Context = (*SearchContext)(nil)
 
-func fingerprint(t tasks.Task) [32]byte {
-	raw, _ := json.Marshal(struct {
-		Ref                                           tasks.Ref
-		Subject, Resource, Goal, GoalRef, GuidanceRef string
-		Constraints                                   tasks.Constraints
-		Inputs                                        []string
-		Facts                                         []tasks.InputFact
-	}{t.Ref, t.Subject, t.Resource, t.Goal, t.GoalRef, t.GuidanceRef, t.Constraints, t.InputRefs, t.InputFacts})
-	return sha256.Sum256(raw)
-}
-func New(e Evidence, t tasks.Task, location string, refs []string) (*Context, error) {
-	if e == nil || t.Ref.Namespace == "" || t.Ref.TaskID == "" || t.Subject == "" || location == "" || len(location) > 256 || len(refs) < 1 || len(refs) > 8 {
+func NewSearch(e SearchEvidence, t tasks.Task, location string, refs []string) (*SearchContext, error) {
+	if e == nil {
 		return nil, contextassembly.Invalid
 	}
-	seen := map[string]bool{}
-	for _, ref := range refs {
-		id, err := answers.ParseReference(ref)
-		if err != nil || id.Namespace != t.Ref.Namespace || seen[ref] {
-			return nil, contextassembly.Invalid
-		}
-		seen[ref] = true
+	bound, err := bindContext(t, location, refs)
+	if err != nil {
+		return nil, err
 	}
-	return &Context{e, append([]string(nil), refs...), fingerprint(t), location, false}, nil
+	return &SearchContext{boundContext: bound, evidence: e, refs: append([]string(nil), refs...)}, nil
 }
 
-// NewForAnswer explicitly admits the retained provider summaries as secondary evidence.
+// NewSearchForAnswer explicitly admits the retained provider summaries as secondary evidence.
 // It never represents candidate pages as independently acquired.
-func NewForAnswer(e Evidence, t tasks.Task, location string, refs []string) (*Context, error) {
-	c, err := New(e, t, location, refs)
+func NewSearchForAnswer(e SearchEvidence, t tasks.Task, location string, refs []string) (*SearchContext, error) {
+	c, err := NewSearch(e, t, location, refs)
 	if err == nil {
 		c.summaries = true
 	}
 	return c, err
 }
-func (c *Context) check(t tasks.Task, location string) error {
-	if location != c.location || fingerprint(t) != c.facts {
-		return contextassembly.Invalidated
-	}
-	return nil
-}
-func (c *Context) Validate(ctx context.Context, t tasks.Task, location string) error {
+func (c *SearchContext) Validate(ctx context.Context, t tasks.Task, location string) error {
 	if err := c.check(t, location); err != nil {
 		return err
 	}
@@ -83,7 +58,7 @@ func (c *Context) Validate(ctx context.Context, t tasks.Task, location string) e
 	}
 	return nil
 }
-func (c *Context) Assemble(ctx context.Context, t tasks.Task, location string, limit int) (brain.Input, error) {
+func (c *SearchContext) Assemble(ctx context.Context, t tasks.Task, location string, limit int) (brain.Input, error) {
 	if err := c.check(t, location); err != nil {
 		return brain.Input{}, err
 	}
@@ -92,8 +67,7 @@ func (c *Context) Assemble(ctx context.Context, t tasks.Task, location string, l
 	}
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	constraints, _ := json.Marshal(t.Constraints)
-	out := brain.Input{Goal: t.Goal, Constraints: string(constraints)}
+	out := taskInput(t)
 	for _, ref := range c.refs {
 		discovery, err := c.evidence.Read(ctx, ref)
 		if err != nil {
@@ -132,18 +106,9 @@ func (c *Context) Assemble(ctx context.Context, t tasks.Task, location string, l
 			out.Blocks = append(out.Blocks, brain.Block{Ref: ref, Text: string(raw), Subject: t.Subject, Role: "search-candidates"})
 		}
 
-		encoded, err := json.Marshal(out)
-		if err != nil || len(encoded) > limit {
-			return brain.Input{}, contextassembly.BudgetExceeded
-		}
-	}
-	// A sole evidence read is already the final I/O boundary; projection and
-	// size checks are local. With multiple references, later reads may span a
-	// revocation of an earlier source, so revalidate the combined context.
-	if len(c.refs) > 1 {
-		if err := c.Validate(ctx, t, location); err != nil {
+		if err := checkSize(out, limit); err != nil {
 			return brain.Input{}, err
 		}
 	}
-	return out, nil
+	return finishAssembly(ctx, c, t, location, out, limit, len(c.refs))
 }

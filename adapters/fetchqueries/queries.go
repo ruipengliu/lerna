@@ -15,10 +15,6 @@ import (
 	"sync"
 )
 
-type Queries interface {
-	ChargeExecutionQuery(context.Context, tasks.ActionBinding, string) error
-}
-
 type Guard interface {
 	Check(context.Context, execution.Request) error
 }
@@ -32,12 +28,12 @@ type Scope struct {
 	evidence   *fetchcontent.Adapter
 	binding    artifacts.Binding
 	capability execution.Capability
-	queries    Queries
+	queries    taskcontent.ExecutionQueries
 }
 
 // New creates a private length table; independent observers must not prewarm
 // execution reads. Bind shares lengths and successfully committed finite facts, never body or authority.
-func New(store fetch.OutcomeStore, content fetchcontent.Content, binding artifacts.Binding, config fetchcontent.Config, capability execution.Capability, queries Queries, guard Guard) (*Scope, error) {
+func New(store fetch.OutcomeStore, content fetchcontent.Content, binding artifacts.Binding, config fetchcontent.Config, capability execution.Capability, queries taskcontent.ExecutionQueries, guard Guard) (*Scope, error) {
 	if store == nil || guard == nil || queries == nil || capability.Name == "" || capability.Version == "" || capability.Implementation == "" || capability.ImplementationVersion == "" {
 		return nil, fetch.Invalid
 	}
@@ -53,7 +49,7 @@ func (s *Scope) Bind(r execution.Request) (fetch.OutcomeStore, fetch.Evidence, e
 	if r.OperationID == "" || r.InputRef == "" || r.Qualification.Ref.Namespace != s.binding.Namespace || r.Capability != c.Name || r.Version != c.Version || r.Implementation != c.Implementation || r.ImplementationVersion != c.ImplementationVersion || r.DescriptorSHA256 != c.Digest() {
 		return nil, nil, fetch.Denied
 	}
-	budget := actionBudget{s.queries, tasks.ActionBinding{Qualification: r.Qualification, OperationID: r.OperationID, Descriptor: r.DescriptorSHA256, InputRef: r.InputRef, ResourceVersion: r.ResourceVersion, ControlVersion: r.ControlVersion}}
+	budget := taskcontent.BindExecution(s.queries, r, fetch.Denied)
 	content, err := taskcontent.New(s.content, budget, r.Qualification)
 	if err != nil {
 		return nil, nil, err
@@ -65,27 +61,15 @@ func (s *Scope) Bind(r execution.Request) (fetch.OutcomeStore, fetch.Evidence, e
 	return &outcomes{OutcomeStore: s.store, budget: budget, scope: s, request: r}, evidence, nil
 }
 
-type actionBudget struct {
-	queries Queries
-	action  tasks.ActionBinding
-}
-
-func (b actionBudget) ChargeQuery(ctx context.Context, q tasks.Qualification, key string) error {
-	if q != b.action.Qualification {
-		return fetch.Denied
-	}
-	return b.queries.ChargeExecutionQuery(ctx, b.action, key)
-}
-
 type outcomes struct {
 	scope   *Scope
 	request execution.Request
 	fetch.OutcomeStore
-	budget actionBudget
+	budget taskcontent.ExecutionBudget
 }
 
 func (s *outcomes) Outcome(ctx context.Context, namespace, operation string) (fetch.Outcome, bool, error) {
-	action := s.budget.action
+	action := s.budget.Action()
 	if namespace != action.Qualification.Ref.Namespace || operation != action.OperationID {
 		return fetch.Outcome{}, false, fetch.Denied
 	}
@@ -140,7 +124,7 @@ func (s *outcomes) controlFact(ctx context.Context, namespace, operation string,
 	if _, err := rand.Read(id[:]); err != nil {
 		return fetch.Outcome{}, false, err
 	}
-	if err := facts.ChargeExecutionFactQuery(ctx, s.budget.action, "outcome-fact/"+hex.EncodeToString(id[:])); err != nil {
+	if err := facts.ChargeExecutionFactQuery(ctx, s.budget.Action(), "outcome-fact/"+hex.EncodeToString(id[:])); err != nil {
 		return fetch.Outcome{}, false, err
 	}
 	out, known, err := s.OutcomeStore.Outcome(ctx, namespace, operation)

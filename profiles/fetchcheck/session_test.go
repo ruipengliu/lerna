@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"lerna/adapters/fetchcontext"
+	"lerna/adapters/researchcontext"
 	"lerna/adapters/sqlitecontext"
 	"lerna/adapters/taskcontext"
 	"lerna/brain"
@@ -77,7 +77,7 @@ func TestContextAssemblerUsesActualCoreDecisionAndRechecksWebEvidence(t *testing
 	if err != nil {
 		t.Fatal(err)
 	}
-	content, err := fetchcontext.New(h.evidence, baseline.Task, "local", []string{outcome.Reference})
+	content, err := researchcontext.NewPages(h.evidence, baseline.Task, "local", []string{outcome.Reference})
 	if err != nil {
 		t.Fatal(err)
 	}

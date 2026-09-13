@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"lerna/adapters/jsonsearch"
 	"lerna/adapters/researchcontext"
-	"lerna/adapters/searchcontext"
 	"lerna/fetch"
 	"lerna/websearch"
 	"net/http"
@@ -114,7 +113,7 @@ func TestJSONSearchDiscoversCandidatesThroughAuthorizedHTTP(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	projection, err := searchcontext.New(discoveryReader, task, "local", []string{original.Reference})
+	projection, err := researchcontext.NewSearch(discoveryReader, task, "local", []string{original.Reference})
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -3,7 +3,7 @@ package fetchcheck
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/fetchcontext"
+	"lerna/adapters/researchcontext"
 	"lerna/brain"
 	"net/http"
 	"net/http/httptest"
@@ -49,7 +49,7 @@ func TestAcquiredEvidenceProjectsIntoBoundedTaskContext(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	projection, err := fetchcontext.New(reader, task, "local", []string{outcome.Reference})
+	projection, err := researchcontext.NewPages(reader, task, "local", []string{outcome.Reference})
 	if err != nil {
 		t.Fatal(err)
 	}

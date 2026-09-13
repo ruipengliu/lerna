@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"lerna/adapters/fetchexecution"
+	"lerna/adapters/acquisitionexecution"
 	"lerna/adapters/fetchtask"
 	"lerna/execution"
 	"lerna/fetch"
@@ -217,7 +217,7 @@ func TestAcquisitionCrashProbe(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	driver, err := fetchexecution.New(crashFetcher{h.http, saved.Mode}, crashOutcome{h.attempts, saved.Mode}, h.evidence, h.auth, fetchexecution.Config{Guard: guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: 1024, MaxRequests: 2, TaskLimit: 2, Timeout: time.Second})
+	driver, err := acquisitionexecution.NewPage(crashFetcher{h.http, saved.Mode}, crashOutcome{h.attempts, saved.Mode}, h.evidence, h.auth, acquisitionexecution.Config{Guard: guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: 1024, MaxRequests: 2, TaskLimit: 2, Timeout: time.Second})
 	if err != nil {
 		t.Fatal(err)
 	}

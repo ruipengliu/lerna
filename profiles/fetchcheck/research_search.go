@@ -7,7 +7,7 @@ import (
 	"lerna/adapters/doubaosearch"
 	"lerna/adapters/duckduckgo"
 	"lerna/adapters/jsonsearch"
-	"lerna/adapters/searchcontext"
+	"lerna/adapters/researchcontext"
 	"lerna/fetch"
 	"lerna/tasks"
 	"strings"
@@ -19,7 +19,7 @@ type retainedSearchEvidence interface {
 
 // This reference host has a fixed action planner whose original search request
 // always admits four results. It is not an arbitrary-request evidence decoder.
-func (h *harness) searchEvidence(e retainedSearchEvidence) (searchcontext.Evidence, error) {
+func (h *harness) searchEvidence(e retainedSearchEvidence) (researchcontext.SearchEvidence, error) {
 	if h.searchFormat == "doubao" {
 		return doubaosearch.NewEvidenceReader(e, 4)
 	}

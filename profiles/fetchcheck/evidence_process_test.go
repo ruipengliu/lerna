@@ -6,7 +6,7 @@ import (
 	"errors"
 	"lerna/adapters/contentpolicy"
 	"lerna/adapters/fetchcontent"
-	"lerna/adapters/fetchcontext"
+	"lerna/adapters/researchcontext"
 	"lerna/adapters/taskcontent"
 	"lerna/answers"
 	"lerna/artifacts"
@@ -217,7 +217,7 @@ func TestEvidenceAnswerRecoversAcrossProcessExit(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				observer, err := fetchcontext.New(h.evidence, completed.Task, "local", []string{evidenceRef})
+				observer, err := researchcontext.NewPages(h.evidence, completed.Task, "local", []string{evidenceRef})
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -285,7 +285,7 @@ func TestEvidenceAnswerRecoversAcrossProcessExit(t *testing.T) {
 	}
 }
 
-func bindEvidenceProcess(ctx context.Context, h *harness, run tasks.RunSnapshot, ref string) (*fetchcontext.Context, *answers.ContentAccess, *tasks.GenerationPort, error) {
+func bindEvidenceProcess(ctx context.Context, h *harness, run tasks.RunSnapshot, ref string) (*researchcontext.PageContext, *answers.ContentAccess, *tasks.GenerationPort, error) {
 	rules := []contentpolicy.Rule{}
 	for _, source := range []*wire.ContentSource{{Kind: "web", Key: "start", Revision: 1}, {Kind: "web", Key: "final", Revision: 1}, {Kind: "task-goal", Key: "inline", Revision: 1}} {
 		rules = append(rules, contentpolicy.Rule{Kind: source.Kind, Key: source.Key, Revision: source.Revision, Actions: []string{"store", "process", "retain", "discover", "disclose", "delete"}, Purposes: []string{"task"}, Locations: []string{"local"}, RetainUntil: h.now().Add(10 * time.Minute).Unix()})
@@ -313,7 +313,7 @@ func bindEvidenceProcess(ctx context.Context, h *harness, run tasks.RunSnapshot,
 			return nil, nil, nil, err
 		}
 	}
-	input, err := fetchcontext.New(evidence, run.Task, "local", []string{ref})
+	input, err := researchcontext.NewPages(evidence, run.Task, "local", []string{ref})
 	if err != nil {
 		return nil, nil, nil, err
 	}

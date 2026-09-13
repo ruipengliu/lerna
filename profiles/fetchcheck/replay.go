@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"lerna/adapters/acquisitionexecution"
 	"lerna/adapters/executionlocal"
 	"lerna/adapters/fetchauth"
-	"lerna/adapters/fetchexecution"
 	"lerna/adapters/fetchtask"
 	"lerna/adapters/replayfetch"
 	"lerna/execution"
@@ -44,7 +44,7 @@ func CheckFixedReplay(parent context.Context) error {
 	if err != nil {
 		return err
 	}
-	driver, err := fetchexecution.New(adapter, h.attempts, h.evidence, h.auth, fetchexecution.Config{Guard: guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: 1024, MaxRequests: 1, TaskLimit: 1, Timeout: time.Second})
+	driver, err := acquisitionexecution.NewPage(adapter, h.attempts, h.evidence, h.auth, acquisitionexecution.Config{Guard: guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: 1024, MaxRequests: 1, TaskLimit: 1, Timeout: time.Second})
 	if err != nil {
 		return err
 	}

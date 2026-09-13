@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"lerna/adapters/contentpolicy"
-	"lerna/adapters/fetchcontext"
+	"lerna/adapters/researchcontext"
 	"lerna/adapters/sqlitecontext"
 	"lerna/adapters/taskcontext"
 	"lerna/answers"
@@ -88,7 +88,7 @@ func checkBrainFetch(t *testing.T, revoke, evidence bool) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	content, err := fetchcontext.New(h.evidence, baseline.Task, "local", []string{outcome.Reference})
+	content, err := researchcontext.NewPages(h.evidence, baseline.Task, "local", []string{outcome.Reference})
 	if err != nil {
 		t.Fatal(err)
 	}

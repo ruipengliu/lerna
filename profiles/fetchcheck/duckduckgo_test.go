@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"lerna/adapters/duckduckgo"
-	"lerna/adapters/searchcontext"
+	"lerna/adapters/researchcontext"
 	"lerna/fetch"
 	"lerna/websearch"
 	"net/http"
@@ -198,7 +198,7 @@ func checkSDKDuckDuckGoBudget(t *testing.T, maxBytes uint32, padding string) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	projection, err := searchcontext.New(reader, run.Task, "local", []string{outcome.Reference})
+	projection, err := researchcontext.NewSearch(reader, run.Task, "local", []string{outcome.Reference})
 	if err != nil {
 		t.Fatal(err)
 	}
