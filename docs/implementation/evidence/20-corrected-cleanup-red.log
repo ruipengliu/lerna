@@ -1,0 +1,5 @@
+--- FAIL: TestCorrectedDerivedMemoryCanBeCleanedAfterSourceInvalidation (1.18s)
+    correction_cleanup_test.go:101: corrected derived content not cleaned: {State:unknown Report:<nil>} VERSION_CONFLICT
+FAIL
+FAIL	lerna/profiles/extractioncheck	1.209s
+FAIL

@@ -1,0 +1,6 @@
+--- FAIL: TestPersonalizedInvocationSurvivesProcessExit (10.52s)
+    --- FAIL: TestPersonalizedInvocationSurvivesProcessExit/revoke (10.52s)
+        personalized_process_test.go:38: original context history changed: {Cleanup:{Event:{Ref:{Namespace: Collection: Key:} Kind: Revision:0 Position:0} Authority: Local:[] Replicas:[] Derived:[]} ContextErased:false ContextSnapshots:0 AbsentSnapshots:0 Corrections:0 TaskState: ModelCalls:0 GovernedArtifacts:0 RevokedArtifacts:0 InitialEffect:UNKNOWN OriginalIdentity:true Started:false WasStarted:false ReadAllocated:1 State:submitted OtherState:submitted ValidationError:PERMISSION_DENIED Effect:UNKNOWN Ledger:1000}
+FAIL
+FAIL	lerna/profiles/catalogcheck	10.525s
+FAIL

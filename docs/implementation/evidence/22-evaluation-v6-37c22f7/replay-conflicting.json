@@ -1,0 +1,90 @@
+{
+  "Case": "conflicting",
+  "Mode": "replay",
+  "Started": "2026-09-13T04:18:34.700590234Z",
+  "ElapsedSeconds": 9.476299142,
+  "Record": {
+    "SearchConfig": {
+      "TimeoutMS": 1000,
+      "MaxBytes": 4096,
+      "Recipient": "local"
+    },
+    "AnswerModel": {
+      "Model": "doubao-seed-2-0-lite-260428",
+      "Location": "ark-cn-beijing",
+      "Version": "ark-chat-v3-20260910-citations-v5",
+      "Text": true,
+      "Structured": true,
+      "Streaming": false,
+      "HardBounds": true,
+      "ContextTokens": 262144,
+      "InputUpper": 229376
+    },
+    "Usage": {
+      "ExecutionWaitMillis": 5000,
+      "QueryLimit": 128,
+      "OutcomeQueries": 3,
+      "ContentQueries": 66,
+      "ReservedModelRequests": 0,
+      "ReservedModelTokens": 0,
+      "ModelRequests": 3,
+      "ModelTokens": 2401,
+      "ActionQueries": 75,
+      "NetworkCharged": 3,
+      "SearchRequests": 0,
+      "PageRequests": 0
+    },
+    "Input": {
+      "Goal": "In what year did the Stoneford footbridge open?",
+      "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789273174}",
+      "Blocks": [
+        {
+          "Ref": "content:local:2bfab042282c2cbb207ceb66c07bb1ac8c862a004d28960868f41945a9d1198c:1",
+          "Text": "{\"Status\":\"acquired\",\"Body\":\"Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.\",\"RequestedURL\":\"http://127.0.0.1:45099/final\",\"FinalURL\":\"http://127.0.0.1:45099/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"253fca27cf8c832dc540277d14107bd4ed470aee517a26681b882c5870596f0f\",\"Mode\":\"fixed-replay\",\"FetchedAt\":\"2026-09-13T04:18:36.209546863Z\",\"Sources\":[\"http://127.0.0.1:45099/final\"]}",
+          "Subject": "operator",
+          "Role": "external-evidence"
+        },
+        {
+          "Ref": "content:local:e08abda1d69c8508de5c37ea0468efdfedb1040e089ebe4ab02f5d2855c21666:1",
+          "Text": "{\"Status\":\"acquired\",\"Body\":\"Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.\",\"RequestedURL\":\"http://127.0.0.1:45099/second\",\"FinalURL\":\"http://127.0.0.1:45099/second\",\"MediaType\":\"text/plain\",\"SHA256\":\"729c53be7f8c3e2ef53047755bc15df63b064c52f5146f080954ceefeae63abd\",\"Mode\":\"fixed-replay\",\"FetchedAt\":\"2026-09-13T04:18:36.519750734Z\",\"Sources\":[\"http://127.0.0.1:45099/second\"]}",
+          "Subject": "operator",
+          "Role": "external-evidence"
+        }
+      ]
+    },
+    "ModelOutput": {
+      "answer": "The two available sources provide conflicting opening years for the Stoneford footbridge, with no further information to resolve the discrepancy.",
+      "claims": [],
+      "gaps": [
+        {
+          "detail": "The 2026-01 Stoneford register states the Stoneford footbridge opened in 2001, while the 2026-02 Stoneford archive states it opened in 2003, with no explanation from either source for the differing dates.",
+          "kind": "conflicting",
+          "sources": [
+            "content:local:2bfab042282c2cbb207ceb66c07bb1ac8c862a004d28960868f41945a9d1198c:1",
+            "content:local:e08abda1d69c8508de5c37ea0468efdfedb1040e089ebe4ab02f5d2855c21666:1"
+          ]
+        }
+      ],
+      "scope": "All acquired source records include the 2026-01 edition Stoneford register and the 2026-02 edition Stoneford archive; no additional relevant source material was obtained.",
+      "status": "conflicting"
+    },
+    "Answer": {
+      "status": "conflicting",
+      "answer": "The two available sources provide conflicting opening years for the Stoneford footbridge, with no further information to resolve the discrepancy.",
+      "scope": "All acquired source records include the 2026-01 edition Stoneford register and the 2026-02 edition Stoneford archive; no additional relevant source material was obtained.",
+      "claims": [],
+      "gaps": [
+        {
+          "kind": "conflicting",
+          "detail": "The 2026-01 Stoneford register states the Stoneford footbridge opened in 2001, while the 2026-02 Stoneford archive states it opened in 2003, with no explanation from either source for the differing dates.",
+          "sources": [
+            "content:local:2bfab042282c2cbb207ceb66c07bb1ac8c862a004d28960868f41945a9d1198c:1",
+            "content:local:e08abda1d69c8508de5c37ea0468efdfedb1040e089ebe4ab02f5d2855c21666:1"
+          ]
+        }
+      ]
+    }
+  },
+  "Error": "",
+  "ExternalRequests": 1
+}

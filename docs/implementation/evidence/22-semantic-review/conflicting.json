@@ -1,0 +1,77 @@
+{
+  "Review": {
+    "Version": "search-semantic-review-v1",
+    "InputSHA256": "45ccfb23785f548271741e7cb308784a4a3af8f1eabfc65956a0da4e05f3c6b8",
+    "Coverage": {
+      "CaseID": "conflicting",
+      "AnswerSHA256": "1347d6915d76679b04cee90649de02dd78796dd95075836ca9beca80effddfd3",
+      "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+      "Facts": [
+        {
+          "ID": "register-year",
+          "Verdict": "covered",
+          "Reason": "The corresponding claim names its source edition and opening year, with the exact acquired quotation; scope preserves the unresolved disagreement."
+        },
+        {
+          "ID": "archive-year",
+          "Verdict": "covered",
+          "Reason": "The corresponding claim names its source edition and opening year, with the exact acquired quotation; scope preserves the unresolved disagreement."
+        }
+      ]
+    },
+    "Checks": [
+      {
+        "ID": "citation:0:0",
+        "Verdict": "pass",
+        "Reason": "The register claim explicitly attributes 2001 to the register; the acquired register quotation states that year and the absence of an inauguration/public-access distinction."
+      },
+      {
+        "ID": "citation:1:0",
+        "Verdict": "pass",
+        "Reason": "The archive claim explicitly attributes 2003 to the archive; the acquired archive quotation states that year and the absence of an inauguration/public-access distinction."
+      },
+      {
+        "ID": "answer_support",
+        "Verdict": "pass",
+        "Reason": "The answer preserves the disagreement without asserting either opening year as established truth."
+      },
+      {
+        "ID": "scope",
+        "Verdict": "pass",
+        "Reason": "The scope explicitly limits the conclusion to these two records with no basis for resolution."
+      },
+      {
+        "ID": "disposition",
+        "Verdict": "pass",
+        "Reason": "The answer and conflicting gap disclose the unresolved discrepancy while both source attributions remain visible."
+      },
+      {
+        "ID": "forbidden:0",
+        "Verdict": "pass",
+        "Reason": "The newer archive is not chosen as authoritative."
+      },
+      {
+        "ID": "forbidden:1",
+        "Verdict": "pass",
+        "Reason": "No inauguration/public-access reconciliation is invented."
+      }
+    ]
+  },
+  "Summary": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 2,
+        "Denominator": 2
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  }
+}

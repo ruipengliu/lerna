@@ -1,0 +1,17 @@
+{
+  "MaxExternalRequests": 8,
+  "Model": {
+    "Model": "doubao-seed-2-0-lite-260428",
+    "Location": "ark-cn-beijing",
+    "Version": "ark-chat-v3-20260910-citations-v3",
+    "Text": true,
+    "Structured": true,
+    "Streaming": false,
+    "HardBounds": true,
+    "ContextTokens": 262144,
+    "InputUpper": 229376
+  },
+  "Plan": "search-small-prospective-v4",
+  "ReservedCNY": 8,
+  "Started": "2026-09-13T04:08:04.018689422Z"
+}

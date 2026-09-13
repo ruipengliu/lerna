@@ -1,0 +1,53 @@
+{
+  "Case": "insufficient",
+  "Mode": "replay",
+  "Started": "2026-09-13T03:47:08.004231521Z",
+  "ElapsedSeconds": 9.835795466,
+  "Record": {
+    "UsageStatus": "snapshot",
+    "SearchConfig": {
+      "MaxBytes": 4096,
+      "Recipient": "local"
+    },
+    "AnswerModel": {
+      "Model": "",
+      "Location": "",
+      "Version": "",
+      "Text": false,
+      "Structured": false,
+      "Streaming": false,
+      "HardBounds": false,
+      "ContextTokens": 0,
+      "InputUpper": 0
+    },
+    "Usage": {
+      "ExecutionWaitMillis": 5000,
+      "QueryLimit": 128,
+      "OutcomeQueries": 2,
+      "ContentQueries": 42,
+      "ReservedModelRequests": 0,
+      "ReservedModelTokens": 0,
+      "ModelRequests": 3,
+      "ModelTokens": 1765,
+      "ActionQueries": 50,
+      "NetworkCharged": 2,
+      "SearchRequests": 0,
+      "PageRequests": 0
+    },
+    "Input": {
+      "Goal": "",
+      "Constraints": "",
+      "Blocks": null
+    },
+    "ModelOutput": null,
+    "Answer": {
+      "status": "",
+      "answer": "",
+      "scope": "",
+      "claims": null,
+      "gaps": null
+    }
+  },
+  "Error": "research answer decision failed: queries=50/128 action_phase=45 state=RUNNING cause=OUTPUT_INVALID",
+  "ExternalRequests": 1
+}

@@ -1,0 +1,4 @@
+# lerna/contextassembly_test [lerna/contextassembly.test]
+contextassembly/erasure_process_test.go:90:29: undefined: memorycleanup.NewContexts
+FAIL	lerna/contextassembly [build failed]
+FAIL

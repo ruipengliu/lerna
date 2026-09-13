@@ -1,0 +1,5 @@
+--- FAIL: TestRestoreCleansDeletedBodyAndReadsRetainedData (0.12s)
+    restore_reconcile_test.go:81: UNAVAILABLE
+FAIL
+FAIL	lerna/adapters/sqlitememory	0.143s
+FAIL

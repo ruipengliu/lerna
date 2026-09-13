@@ -1,0 +1,5 @@
+--- FAIL: TestContextRevocationDuringEvidenceSaveStillSettlesKnownUsage (7.22s)
+    personalized_invalidation_test.go:83: save race lost settlement: {ContextSnapshots:1 MetadataDecisions:0 MemoryBindingRestored:false Invocations:0 StartedInvocations:0 GovernedArtifacts:0 RevokedArtifacts:0 OtherState:submitted MemoryReadAllocated:1 ReadyOperations:0 DispatchedOperations:0 SelectedRecord:item StateDirectory: Case:personalized-revoke-save State:WAITING StopReason:input_invalidated FinalState:submitted Decisions:1 Operations:0 DirectorySize:1008 Corrections:0 FirstCorrect:true Ledger:1000 UsedRequests:1 UnknownRequests:0 UsedTokens:140 ReservedTokens:0 Errors:[]}
+FAIL
+FAIL	lerna/profiles/catalogcheck	7.233s
+FAIL

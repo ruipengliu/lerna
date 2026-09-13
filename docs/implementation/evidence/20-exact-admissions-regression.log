@@ -1,0 +1,4 @@
+ok  	lerna/adapters/sqlitememory	18.840s
+ok  	lerna/adapters/memorycleanup	1.483s
+ok  	lerna/adapters/memoryauth	10.694s
+ok  	lerna/profiles/extractioncheck	82.279s

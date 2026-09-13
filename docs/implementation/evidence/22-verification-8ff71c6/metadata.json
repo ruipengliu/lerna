@@ -1,0 +1,180 @@
+{
+  "code_commit": "8ff71c60caebe3648252f866e2dca9feea500946",
+  "command": "make verify",
+  "exit_code": 0,
+  "phases_passed": 28,
+  "archived_at": "2026-09-13T06:56:55.440669+00:00",
+  "vcs_modified": true,
+  "workspace_note": "Tracked tree clean during verification; private untracked evaluation directories retained. Final documentation follows verification without changing Go code or tests.",
+  "cache_note": "Unchanged package results reused through Go test cache. Catalog was executed successfully at 466c70f (1762.094s); changed fetchcheck suite reran at 8ff71c6 (409.514s). All script profile gates executed.",
+  "reports": [
+    {
+      "file": "verification-stages.json",
+      "sha256": "fd04d44b2e46dc4eb3aae32b97396fc77e82a1bd5aef409220c86477ee99ade2",
+      "profile": null,
+      "status": null,
+      "checks": 0
+    },
+    {
+      "file": "sdk-contract-report.json",
+      "sha256": "691be777e24f60ac3744d02dbc0f94f42308e66b6f57c846acda36a06554b3d1",
+      "profile": "sdk-contract-v1",
+      "status": "passed",
+      "checks": 35
+    },
+    {
+      "file": "sdk-sample.json",
+      "sha256": "a09bd7cf75234c3f46590f558ceb06466bfff1f4bc5e3dc608365ea603fdd9a1",
+      "profile": null,
+      "status": null,
+      "checks": 0
+    },
+    {
+      "file": "local-auth-report.json",
+      "sha256": "4098191e3042ccda779b7e2be23e3b7e683a7b957b8cc0466c7db225dd886ea8",
+      "profile": "local-auth-v1",
+      "status": "passed",
+      "checks": 31
+    },
+    {
+      "file": "durable-tasks-report.json",
+      "sha256": "050607c162f75d42cd921b5e676a83fc0e8000d1564e24ce4314ba0e1a693403",
+      "profile": "durable-tasks-v1",
+      "status": "passed",
+      "checks": 14
+    },
+    {
+      "file": "bounded-worker-report.json",
+      "sha256": "b9758ee5c4b1ff4fc823810799a3bcdbd33b653fcde1bf0ca49f46583ebff56b",
+      "profile": "bounded-worker-v1",
+      "status": "passed",
+      "checks": 26
+    },
+    {
+      "file": "task-control-report.json",
+      "sha256": "049bf798913c66922cbb29c7f8078fca67f3d30b2777b62cfb9ab248d8471cd2",
+      "profile": "task-control-v1",
+      "status": "passed",
+      "checks": 31
+    },
+    {
+      "file": "restricted-grants-report.json",
+      "sha256": "a89a058d293efe9344785e71648983da50d8747ae1f4ac69617965c97af0257b",
+      "profile": "restricted-grants-v1",
+      "status": "passed",
+      "checks": 30
+    },
+    {
+      "file": "controlled-content-report.json",
+      "sha256": "6dfbc3774d081faa15f0738877cb9195be3f081871cfc0cb1e4498086636fe66",
+      "profile": "controlled-content-v1",
+      "status": "passed",
+      "checks": 36
+    },
+    {
+      "file": "bounded-answer-report.json",
+      "sha256": "3cb455f29aa57350884609e2eeb8398d291231c95058b9ab5ce7a204c93d3e86",
+      "profile": "bounded-answer-v1",
+      "status": "passed",
+      "checks": 23
+    },
+    {
+      "file": "task-updates-report.json",
+      "sha256": "09053d646ffd6f442f7f66c1e6b304f9a12f7dc08784920533233af1bdad21c1",
+      "profile": "task-updates-v1",
+      "status": "passed",
+      "checks": 26
+    },
+    {
+      "file": "synchronous-execution-report.json",
+      "sha256": "0927646015ea8322d9212e250de7a745b24dc299603997c3644a050dfd8a0e88",
+      "profile": "synchronous-execution-v1",
+      "status": "passed",
+      "checks": 35
+    },
+    {
+      "file": "async-recovery-report.json",
+      "sha256": "ef876d9a51ec9e9fe210e7a206d96d18ace19d849a30485f48a90de37c4d5159",
+      "profile": "async-recovery-v1",
+      "status": "passed",
+      "checks": 23
+    },
+    {
+      "file": "resource-control-report.json",
+      "sha256": "a9c52b6040011f368823005d41323ecd91dd9f35d38ef18c3f10269e2f943b66",
+      "profile": "resource-control-v1",
+      "status": "passed",
+      "checks": 41
+    },
+    {
+      "file": "capability-catalog-report.json",
+      "sha256": "ecfd795c77c598050ed63cb375e5bfb3a3962ac548e31061f2ef0babe02b6b5d",
+      "profile": "capability-catalog-v1",
+      "status": "passed",
+      "checks": 1049
+    },
+    {
+      "file": "api-brain-report.json",
+      "sha256": "950bcdf37f7dcb2a6af4403217eb71ac7ee871081207593d6977208fb86ebea7",
+      "profile": "api-brain-v1",
+      "status": "passed",
+      "checks": 12
+    },
+    {
+      "file": "bound-credentials-report.json",
+      "sha256": "b56bf991aa6f2cf17d2a58882001299a9f949c191be80e66f92e18e52c57cdc2",
+      "profile": "bound-credentials-v1",
+      "status": "passed",
+      "checks": 21
+    },
+    {
+      "file": "credential-lifecycle-report.json",
+      "sha256": "acab432d08a1b604db4ca943766626928e9613de351666c83972d4bece2d5afc",
+      "profile": "credential-lifecycle-v1",
+      "status": "passed",
+      "checks": 24
+    },
+    {
+      "file": "long-term-memory-report.json",
+      "sha256": "697f6c4dd8c9e3a6b31bfa5fc440d3936d9305bd2660d0fa6dd3ee4c43c4eedb",
+      "profile": "long-term-memory-v1",
+      "status": "passed",
+      "checks": 23
+    },
+    {
+      "file": "personalized-context-report.json",
+      "sha256": "e2662aeee8dda47a51f681374d1d656fddd50b6d5d83bd15c748c67bb26b5421",
+      "profile": "personalized-context-v1",
+      "status": "passed",
+      "checks": 52
+    },
+    {
+      "file": "memory-deletion-report.json",
+      "sha256": "89e7c882f4fd78f0c33aa8630bddfef1caa50a471ce87ffc511da5932f794620",
+      "profile": "memory-deletion-v1",
+      "status": "passed",
+      "checks": 4
+    },
+    {
+      "file": "memory-extraction-quality-report.json",
+      "sha256": "b089bc3c3b3e202c4ad47f07ab868c96e0ba9c582c1f1f21d4e173489321575f",
+      "profile": null,
+      "status": null,
+      "checks": 0
+    },
+    {
+      "file": "fetch-local-report.json",
+      "sha256": "c329287df061e0a6d8f27dbed607a2daf4807727622e5ce23f27c50011094d76",
+      "profile": null,
+      "status": null,
+      "checks": 0
+    },
+    {
+      "file": "fetch-replay-report.json",
+      "sha256": "fc68a6ebd2b0d6842a72a81de1b1c5ec112a2c755c4374eacddccbfe4f673d33",
+      "profile": null,
+      "status": null,
+      "checks": 0
+    }
+  ]
+}

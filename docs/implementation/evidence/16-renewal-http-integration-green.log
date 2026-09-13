@@ -1,0 +1,18 @@
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/lost-response
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/unknown
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/not-occurred
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/unsafe
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/target-mismatch
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/policy-revoked
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/during-rotation
+--- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider (3.31s)
+    --- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider/lost-response (0.54s)
+    --- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider/unknown (0.74s)
+    --- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider/not-occurred (0.54s)
+    --- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider/unsafe (0.46s)
+    --- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider/target-mismatch (0.18s)
+    --- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider/policy-revoked (0.25s)
+    --- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider/during-rotation (0.59s)
+PASS
+ok  	lerna/profiles/credentialcheck	4.341s

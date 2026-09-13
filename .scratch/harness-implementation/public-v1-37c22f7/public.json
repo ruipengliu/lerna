@@ -1,0 +1,50 @@
+{
+  "ElapsedSeconds": 0.000130159,
+  "Error": "fetch invalid",
+  "ExternalRequests": 0,
+  "Record": {
+    "SearchConfig": {
+      "MaxBytes": 0,
+      "Recipient": ""
+    },
+    "AnswerModel": {
+      "Model": "",
+      "Location": "",
+      "Version": "",
+      "Text": false,
+      "Structured": false,
+      "Streaming": false,
+      "HardBounds": false,
+      "ContextTokens": 0,
+      "InputUpper": 0
+    },
+    "Usage": {
+      "ExecutionWaitMillis": 0,
+      "QueryLimit": 0,
+      "OutcomeQueries": 0,
+      "ContentQueries": 0,
+      "ReservedModelRequests": 0,
+      "ReservedModelTokens": 0,
+      "ModelRequests": 0,
+      "ModelTokens": 0,
+      "ActionQueries": 0,
+      "NetworkCharged": 0,
+      "SearchRequests": 0,
+      "PageRequests": 0
+    },
+    "Input": {
+      "Goal": "",
+      "Constraints": "",
+      "Blocks": null
+    },
+    "ModelOutput": null,
+    "Answer": {
+      "status": "",
+      "answer": "",
+      "scope": "",
+      "claims": null,
+      "gaps": null
+    }
+  },
+  "Started": "2026-09-13T04:22:08.844029893Z"
+}

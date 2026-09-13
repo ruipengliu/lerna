@@ -1,0 +1,5 @@
+# lerna/profiles/fetchcheck [lerna/profiles/fetchcheck.test]
+profiles/fetchcheck/session_test.go:93:69: undefined: contextassembly.DisabledMemories
+profiles/fetchcheck/session_test.go:120:68: undefined: contextassembly.DisabledMemories
+FAIL	lerna/profiles/fetchcheck [build failed]
+FAIL

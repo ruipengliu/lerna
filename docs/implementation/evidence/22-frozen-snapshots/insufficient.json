@@ -1,0 +1,51 @@
+{
+  "Version": "search-record-v1",
+  "CaseID": "insufficient",
+  "Mode": "loopback-http",
+  "Model": "local-protocol-fixture",
+  "SourceSHA256": "c4e872461ebd41c2ad5e3d64b8075d87bab7d12bc786f74bc9e0ae2a357dfe5c",
+  "Record": {
+    "Input": {
+      "Goal": "What was the construction cost of the Eastmere footbridge?",
+      "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":32768,\"MaxSteps\":3,\"DeadlineUnix\":1789205642}",
+      "Blocks": [
+        {
+          "Ref": "content:local:da3a5e70af32608237bfde0eccadd45ce0a4b673aec9f8bb5a54d8953a3e4275:1",
+          "Text": "{\"Status\":\"acquired\",\"Body\":\"Eastmere bridge record, edition 2026-01. The Eastmere footbridge crosses the canal. It opened in 2005. This record does not state its construction cost.\",\"RequestedURL\":\"http://127.0.0.1:45151/final\",\"FinalURL\":\"http://127.0.0.1:45151/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"b0a3917a221e8cc54a409c14a78e81b9b6358e8cb40f7e388be4b224f39dea6f\",\"Mode\":\"http\",\"FetchedAt\":\"2026-09-12T09:33:05.52941236Z\",\"Sources\":[\"http://127.0.0.1:45151/final\"]}",
+          "Subject": "operator",
+          "Role": "external-evidence"
+        }
+      ]
+    },
+    "ModelOutput": {
+      "status": "insufficient",
+      "answer": "The retrieved record does not establish the construction cost.",
+      "scope": "The retrieved Eastmere record only; this does not establish that no cost exists.",
+      "claims": [],
+      "gaps": [
+        {
+          "kind": "insufficient",
+          "detail": "The retrieved record omits the construction cost.",
+          "sources": [
+            "content:local:da3a5e70af32608237bfde0eccadd45ce0a4b673aec9f8bb5a54d8953a3e4275:1"
+          ]
+        }
+      ]
+    },
+    "Answer": {
+      "status": "insufficient",
+      "answer": "The retrieved record does not establish the construction cost.",
+      "scope": "The retrieved Eastmere record only; this does not establish that no cost exists.",
+      "claims": [],
+      "gaps": [
+        {
+          "kind": "insufficient",
+          "detail": "The retrieved record omits the construction cost.",
+          "sources": [
+            "content:local:da3a5e70af32608237bfde0eccadd45ce0a4b673aec9f8bb5a54d8953a3e4275:1"
+          ]
+        }
+      ]
+    }
+  }
+}

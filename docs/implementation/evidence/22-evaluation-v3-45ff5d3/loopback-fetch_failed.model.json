@@ -1,0 +1,32 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "What is the load limit of the Westhaven footbridge?",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789271759}",
+        "Blocks": [
+          {
+            "Ref": "content:local:474b4e3dbe8b48ad961e659790b9ce8b21860e261a035e9e5cabbda2ed10cd28:1",
+            "Text": "{\"Status\":\"denied\",\"Mode\":\"http\",\"Requests\":1}",
+            "Subject": "operator",
+            "Role": "external-evidence-gap"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 512
+    },
+    "Result": {
+      "ProviderContent": "eyJhbnN3ZXIiOiJObyB2YWxpZCBpbmZvcm1hdGlvbiBhYm91dCB0aGUgbG9hZCBsaW1pdCBvZiB0aGUgV2VzdGhhdmVuIGZvb3RicmlkZ2UgY291bGQgYmUgcmV0cmlldmVkIGFzIHRoZSBleHRlcm5hbCBldmlkZW5jZSByZXF1ZXN0IHdhcyBkZW5pZWQuIiwiY2xhaW1zIjpbXSwiZ2FwcyI6W3siZGV0YWlsIjoiVGhlIGV4dGVybmFsIGV2aWRlbmNlIHJlcXVlc3QgZm9yIFdlc3RoYXZlbiBmb290YnJpZGdlIGxvYWQgbGltaXQgaW5mb3JtYXRpb24gd2FzIGRlbmllZCwgc28gbm8gcmVsZXZhbnQgZGF0YSB3YXMgb2J0YWluZWQuIiwia2luZCI6ImZldGNoX2ZhaWxlZCIsInNvdXJjZXMiOlsiY29udGVudDpsb2NhbDo0NzRiNGUzZGJlOGI0OGFkOTYxZTY1OTc5MGI5Y2U4YjIxODYwZTI2MWEwMzVlOWU1Y2FiYmRhMmVkMTBjZDI4OjEiXX1dLCJzY29wZSI6IlRoZSBzY29wZSBpcyByZXN0cmljdGVkIHRvIGlkZW50aWZ5aW5nIHRoZSBvZmZpY2lhbCBwdWJsaXNoZWQgbG9hZCBsaW1pdCB2YWx1ZSBmb3IgdGhlIFdlc3RoYXZlbiBmb290YnJpZGdlLCBib3VuZGVkIGJ5IHRoZSBwcm92aWRlZCBjb25zdHJhaW50IHBhcmFtZXRlcnMgZm9yIG1heGltdW0gbW9kZWwgcmVxdWVzdHMsIHRva2Vucywgc3RlcHMgYW5kIHRoZSBzcGVjaWZpZWQgMjAyNi0wOS0xMiBkZWFkbGluZS4iLCJzdGF0dXMiOiJmZXRjaF9mYWlsZWQifQ==",
+      "Content": "eyJhbnN3ZXIiOiJObyB2YWxpZCBpbmZvcm1hdGlvbiBhYm91dCB0aGUgbG9hZCBsaW1pdCBvZiB0aGUgV2VzdGhhdmVuIGZvb3RicmlkZ2UgY291bGQgYmUgcmV0cmlldmVkIGFzIHRoZSBleHRlcm5hbCBldmlkZW5jZSByZXF1ZXN0IHdhcyBkZW5pZWQuIiwiY2xhaW1zIjpbXSwiZ2FwcyI6W3siZGV0YWlsIjoiVGhlIGV4dGVybmFsIGV2aWRlbmNlIHJlcXVlc3QgZm9yIFdlc3RoYXZlbiBmb290YnJpZGdlIGxvYWQgbGltaXQgaW5mb3JtYXRpb24gd2FzIGRlbmllZCwgc28gbm8gcmVsZXZhbnQgZGF0YSB3YXMgb2J0YWluZWQuIiwia2luZCI6ImZldGNoX2ZhaWxlZCIsInNvdXJjZXMiOlsiY29udGVudDpsb2NhbDo0NzRiNGUzZGJlOGI0OGFkOTYxZTY1OTc5MGI5Y2U4YjIxODYwZTI2MWEwMzVlOWU1Y2FiYmRhMmVkMTBjZDI4OjEiXX1dLCJzY29wZSI6IlRoZSBzY29wZSBpcyByZXN0cmljdGVkIHRvIGlkZW50aWZ5aW5nIHRoZSBvZmZpY2lhbCBwdWJsaXNoZWQgbG9hZCBsaW1pdCB2YWx1ZSBmb3IgdGhlIFdlc3RoYXZlbiBmb290YnJpZGdlLCBib3VuZGVkIGJ5IHRoZSBwcm92aWRlZCBjb25zdHJhaW50IHBhcmFtZXRlcnMgZm9yIG1heGltdW0gbW9kZWwgcmVxdWVzdHMsIHRva2Vucywgc3RlcHMgYW5kIHRoZSBzcGVjaWZpZWQgMjAyNi0wOS0xMiBkZWFkbGluZS4iLCJzdGF0dXMiOiJmZXRjaF9mYWlsZWQifQ==",
+      "Finish": "stop",
+      "RequestRef": "0217892717011288e05db81a26ab4b44637eb56f02aba94ebbb1f",
+      "Usage": {
+        "Known": true,
+        "Input": 717,
+        "Output": 194
+      }
+    }
+  }
+]

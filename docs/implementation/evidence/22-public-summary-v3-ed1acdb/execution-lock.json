@@ -1,0 +1,21 @@
+{
+  "plan": "search-provider-summary-v3",
+  "executor_commit": "ed1acdb4c189c78949fb5a3fde907ccfe79c5b25",
+  "config_sha256": "995e3d5ba5c4ee9c1ac23ad20d1c0025e5678cad010db59a761f0ae89d606a32",
+  "private_output": ".scratch/harness-implementation/public-summary-v3-ed1acdb",
+  "model_max_requests": 1,
+  "model_output_tokens": 4096,
+  "reserved_cny": 1,
+  "search_max_requests": 1,
+  "page_requests": 0,
+  "expected_facts": [
+    "Go is an open-source programming language",
+    "Go is statically typed"
+  ],
+  "required_scope": "Answer explicitly based on search-provider summaries, with returned source title or URL; retrieval time is not page publication time.",
+  "pass_criteria": "Actual Summary supports both necessary facts, exact summary citations, official task publication, zero page operations. Independent semantic review required.",
+  "materials_exposure": "Query and one API summary probe seen before this plan; known-material integration verification, not blind evaluation.",
+  "network_authority": "Exact provider URL plus listed public IPv4 prefixes excluding private/reserved ranges and selected public CDN IPv6 prefixes; every resolved address checked, numerical address pinned. Candidate URLs remain unauthorized.",
+  "previous_failures": "Earlier page-fetch trials remain archived under their old criteria; user explicitly replaced requirement with summary-based answering.",
+  "change": "v2 search denied, retained. DNS response limit now64; exact provider URL plus public IPv4 and selected CDN IPv6 prefixes. No candidate URL access. Same quality criteria, one request, no automatic retry."
+}

@@ -1,0 +1,30 @@
+=== RUN   TestEvidenceBrainPublishesAndRecoversGovernedAnswer
+=== RUN   TestEvidenceBrainPublishesAndRecoversGovernedAnswer/recover
+=== RUN   TestEvidenceBrainPublishesAndRecoversGovernedAnswer/revoke
+--- PASS: TestEvidenceBrainPublishesAndRecoversGovernedAnswer (7.51s)
+    --- PASS: TestEvidenceBrainPublishesAndRecoversGovernedAnswer/recover (4.86s)
+    --- PASS: TestEvidenceBrainPublishesAndRecoversGovernedAnswer/revoke (2.64s)
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/response
+    evidence_process_test.go:182: window=response child_exit=76 http=1 state=RUNNING model_used=0 model_reserved=1 tokens_reserved=2560
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/content
+    evidence_process_test.go:182: window=content child_exit=76 http=1 state=COMPLETED model_used=0 model_reserved=1 tokens_reserved=2560
+--- PASS: TestEvidenceAnswerRecoversAcrossProcessExit (2.05s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/response (0.82s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/content (1.23s)
+=== RUN   TestSearchRecoversAcrossActualProcessExit
+=== RUN   TestSearchRecoversAcrossActualProcessExit/reserved
+    search_process_test.go:175: window=reserved child_exit=75 http=0 result=UNKNOWN core_state=WAITING charged=1 source_recovered=false
+=== RUN   TestSearchRecoversAcrossActualProcessExit/response
+    search_process_test.go:175: window=response child_exit=75 http=1 result=UNKNOWN core_state=WAITING charged=1 source_recovered=false
+=== RUN   TestSearchRecoversAcrossActualProcessExit/content
+    search_process_test.go:175: window=content child_exit=75 http=1 result=SUCCESS core_state=COMPLETED charged=1 source_recovered=true
+=== RUN   TestSearchRecoversAcrossActualProcessExit/outcome
+    search_process_test.go:175: window=outcome child_exit=75 http=1 result=SUCCESS core_state=COMPLETED charged=1 source_recovered=true
+--- PASS: TestSearchRecoversAcrossActualProcessExit (3.26s)
+    --- PASS: TestSearchRecoversAcrossActualProcessExit/reserved (0.54s)
+    --- PASS: TestSearchRecoversAcrossActualProcessExit/response (0.70s)
+    --- PASS: TestSearchRecoversAcrossActualProcessExit/content (1.03s)
+    --- PASS: TestSearchRecoversAcrossActualProcessExit/outcome (1.00s)
+PASS
+ok  	lerna/profiles/fetchcheck	13.859s

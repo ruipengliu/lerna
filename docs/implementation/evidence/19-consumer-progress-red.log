@@ -1,0 +1,12 @@
+# lerna/adapters/sqlitememory_test [lerna/adapters/sqlitememory.test]
+adapters/sqlitememory/events_test.go:67:20: undefined: memory.ConsumerBinding
+adapters/sqlitememory/events_test.go:68:21: s.BindConsumer undefined (type *sqlitememory.Store has no field or method BindConsumer)
+adapters/sqlitememory/events_test.go:74:16: s.BindConsumer undefined (type *sqlitememory.Store has no field or method BindConsumer)
+adapters/sqlitememory/events_test.go:77:13: s.AckEvent undefined (type *sqlitememory.Store has no field or method AckEvent)
+adapters/sqlitememory/events_test.go:84:13: s.AckEvent undefined (type *sqlitememory.Store has no field or method AckEvent)
+adapters/sqlitememory/events_test.go:87:13: s.AckEvent undefined (type *sqlitememory.Store has no field or method AckEvent)
+adapters/sqlitememory/events_test.go:97:20: s.BindConsumer undefined (type *sqlitememory.Store has no field or method BindConsumer)
+adapters/sqlitememory/events_test.go:101:13: s.AckEvent undefined (type *sqlitememory.Store has no field or method AckEvent)
+adapters/sqlitememory/events_test.go:104:13: s.AckEvent undefined (type *sqlitememory.Store has no field or method AckEvent)
+FAIL	lerna/adapters/sqlitememory [build failed]
+FAIL

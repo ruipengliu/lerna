@@ -1,0 +1,7 @@
+# lerna/adapters/sqlitememory_test [lerna/adapters/sqlitememory.test]
+adapters/sqlitememory/source_erasure_test.go:31:20: undefined: memory.SourceErasure
+adapters/sqlitememory/source_erasure_test.go:32:15: s.EraseSource undefined (type *sqlitememory.Store has no field or method EraseSource)
+adapters/sqlitememory/source_erasure_test.go:49:64: undefined: memory.SourceErased
+adapters/sqlitememory/source_erasure_test.go:60:15: s.EraseSource undefined (type *sqlitememory.Store has no field or method EraseSource)
+FAIL	lerna/adapters/sqlitememory [build failed]
+FAIL

@@ -1,0 +1,5 @@
+--- FAIL: TestPurposeWithdrawalPermanentlyInvalidatesOnlyOriginalArtifacts (0.15s)
+    purpose_test.go:84: restored policy resurrected original artifact
+FAIL
+FAIL	lerna/artifacts	0.157s
+FAIL

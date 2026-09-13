@@ -1,0 +1,5 @@
+# lerna/profiles/catalogcheck [lerna/profiles/catalogcheck.test]
+profiles/catalogcheck/personalized_process_test.go:334:7: r.Cleanup undefined (type ActionRecoveryReport has no field or method Cleanup)
+profiles/catalogcheck/personalized_process_test.go:335:62: r.Cleanup undefined (type ActionRecoveryReport has no field or method Cleanup)
+FAIL	lerna/profiles/catalogcheck [build failed]
+FAIL

@@ -1,0 +1,56 @@
+{
+  "Review": {
+    "Version": "search-semantic-review-v1",
+    "InputSHA256": "44c96579e9af7534c252259716d23df7e0c4f697025230db218844cd65761ef5",
+    "Coverage": {
+      "CaseID": "insufficient",
+      "AnswerSHA256": "ba1c92968272346dda91822416ef2d7a5a2af2d54c55c519ec5a5688618fdb58",
+      "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+      "Facts": []
+    },
+    "Checks": [
+      {
+        "ID": "answer_support",
+        "Verdict": "pass",
+        "Reason": "The acquired Eastmere record gives no construction cost; the answer confines its negative claim to what that record establishes."
+      },
+      {
+        "ID": "scope",
+        "Verdict": "pass",
+        "Reason": "The scope explicitly says absence from this record does not establish that no cost exists."
+      },
+      {
+        "ID": "disposition",
+        "Verdict": "pass",
+        "Reason": "The answer and insufficient gap identify the missing construction cost and do not replace it with an opening year."
+      },
+      {
+        "ID": "forbidden:0",
+        "Verdict": "pass",
+        "Reason": "No construction amount is asserted."
+      },
+      {
+        "ID": "forbidden:1",
+        "Verdict": "pass",
+        "Reason": "No opening year is presented as the cost answer."
+      }
+    ]
+  },
+  "Summary": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 0,
+        "Denominator": 0
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 0,
+      "Denominator": 0
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  }
+}

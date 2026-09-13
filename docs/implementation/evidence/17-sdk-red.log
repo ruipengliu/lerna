@@ -1,0 +1,4 @@
+# lerna/adapters/memoryauth
+adapters/memoryauth/authority_test.go:11:2: package lerna/adapters/memorylocal is not in std (/usr/local/go/src/lerna/adapters/memorylocal)
+FAIL	lerna/adapters/memoryauth [setup failed]
+FAIL

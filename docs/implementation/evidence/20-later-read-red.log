@@ -1,0 +1,4 @@
+# lerna/profiles/extractioncheck [lerna/profiles/extractioncheck.test]
+profiles/extractioncheck/inference_test.go:82:17: undefined: readSavedInLaterTask
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

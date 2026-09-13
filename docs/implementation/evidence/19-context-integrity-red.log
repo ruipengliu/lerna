@@ -1,0 +1,5 @@
+--- FAIL: TestCheckpointIntegrityIsBoundAndErasedWithSnapshot (0.04s)
+    checkpoint_test.go:24: store cannot own checkpoint integrity
+FAIL
+FAIL	lerna/adapters/sqlitecontext	0.072s
+FAIL

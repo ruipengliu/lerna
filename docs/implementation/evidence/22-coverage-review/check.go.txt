@@ -1,0 +1,24 @@
+package main
+
+import (
+ "encoding/json"
+ "fmt"
+ "lerna/profiles/searchcheck"
+ "os"
+ "path/filepath"
+ "reflect"
+)
+
+// Run from repository root. This verifies existing judgments; it does not grade.
+func main() {
+ for _, id := range []string{"answerable", "conflicting", "insufficient", "fetch_failed"} {
+  raw, err := os.ReadFile(filepath.Join("docs/implementation/evidence/22-frozen-snapshots", id+".json")); must(err)
+  var source struct { Record struct { Answer json.RawMessage } }; must(json.Unmarshal(raw, &source))
+  raw, err = os.ReadFile(filepath.Join("docs/implementation/evidence/22-coverage-review", id+".json")); must(err)
+  var saved struct { Review searchcheck.CoverageReview; Summary searchcheck.CoverageSummary }; must(json.Unmarshal(raw, &saved))
+  got, err := searchcheck.SummarizeReview(source.Record.Answer, saved.Review); must(err)
+  if !reflect.DeepEqual(got, saved.Summary) { panic("summary changed") }
+  fmt.Printf("%s: %d/%d, unreviewed=%d\n", id, got.Coverage.Numerator, got.Coverage.Denominator, got.UnreviewedFacts)
+ }
+}
+func must(err error) { if err != nil { panic(err) } }

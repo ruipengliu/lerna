@@ -1,0 +1,12 @@
+# lerna/adapters/sqliteextraction_test [lerna/adapters/sqliteextraction.test]
+adapters/sqliteextraction/cleanup_progress_test.go:20:18: undefined: extraction.CleanupBinding
+adapters/sqliteextraction/cleanup_progress_test.go:21:16: s.LoadCleanupProgress undefined (type *sqliteextraction.Store has no field or method LoadCleanupProgress)
+adapters/sqliteextraction/cleanup_progress_test.go:24:13: s.AdvanceCleanupProgress undefined (type *sqliteextraction.Store has no field or method AdvanceCleanupProgress)
+adapters/sqliteextraction/cleanup_progress_test.go:35:16: s.LoadCleanupProgress undefined (type *sqliteextraction.Store has no field or method LoadCleanupProgress)
+adapters/sqliteextraction/cleanup_progress_test.go:39:13: s.AdvanceCleanupProgress undefined (type *sqliteextraction.Store has no field or method AdvanceCleanupProgress)
+adapters/sqliteextraction/cleanup_progress_test.go:44:16: s.LoadCleanupProgress undefined (type *sqliteextraction.Store has no field or method LoadCleanupProgress)
+adapters/sqliteextraction/cleanup_progress_test.go:47:13: s.AdvanceCleanupProgress undefined (type *sqliteextraction.Store has no field or method AdvanceCleanupProgress)
+adapters/sqliteextraction/cleanup_progress_test.go:50:13: s.AdvanceCleanupProgress undefined (type *sqliteextraction.Store has no field or method AdvanceCleanupProgress)
+adapters/sqliteextraction/cleanup_progress_test.go:53:15: s.LoadCleanupProgress undefined (type *sqliteextraction.Store has no field or method LoadCleanupProgress)
+FAIL	lerna/adapters/sqliteextraction [build failed]
+FAIL

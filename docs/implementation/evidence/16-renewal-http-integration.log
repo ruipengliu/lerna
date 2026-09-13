@@ -1,0 +1,21 @@
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/lost-response
+    renewal_test.go:12: CREDENTIAL_TARGET_UNAVAILABLE
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/unknown
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/not-occurred
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/unsafe
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/target-mismatch
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/policy-revoked
+=== RUN   TestLifecycleRenewalUsesIndependentHTTPProvider/during-rotation
+    renewal_test.go:12: CREDENTIAL_TARGET_UNAVAILABLE
+--- FAIL: TestLifecycleRenewalUsesIndependentHTTPProvider (3.47s)
+    --- FAIL: TestLifecycleRenewalUsesIndependentHTTPProvider/lost-response (0.57s)
+    --- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider/unknown (0.84s)
+    --- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider/not-occurred (0.59s)
+    --- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider/unsafe (0.47s)
+    --- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider/target-mismatch (0.19s)
+    --- PASS: TestLifecycleRenewalUsesIndependentHTTPProvider/policy-revoked (0.25s)
+    --- FAIL: TestLifecycleRenewalUsesIndependentHTTPProvider/during-rotation (0.57s)
+FAIL
+FAIL	lerna/profiles/credentialcheck	3.506s
+FAIL

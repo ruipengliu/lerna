@@ -1,0 +1,4 @@
+ok  	lerna/profiles/extractioncheck	6.604s
+ok  	lerna/adapters/extractionexecution	(cached)
+ok  	lerna/adapters/sqliteextraction	2.364s
+ok  	lerna/extraction	(cached)

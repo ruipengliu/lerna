@@ -1,0 +1,8 @@
+# lerna/authorization_test [lerna/authorization.test]
+authorization/use_grants_test.go:44:226: unknown field Permits in struct literal of type authorization.UseSpec
+authorization/use_grants_test.go:47:9: forged.Permits undefined (type authorization.UseSpec has no field or method Permits)
+authorization/use_grants_test.go:47:62: use.Permits undefined (type authorization.UseSpec has no field or method Permits)
+authorization/use_grants_test.go:48:9: forged.Permits undefined (type authorization.UseSpec has no field or method Permits)
+authorization/use_grants_test.go:57:8: local.Permits undefined (type authorization.UseSpec has no field or method Permits)
+FAIL	lerna/authorization [build failed]
+FAIL

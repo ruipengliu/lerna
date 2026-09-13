@@ -1,0 +1,6 @@
+--- FAIL: TestPersonalizedInvocationSurvivesProcessExit (30.58s)
+    --- FAIL: TestPersonalizedInvocationSurvivesProcessExit/revoke (30.58s)
+        personalized_process_test.go:35: CONTEXT_INVALIDATED
+FAIL
+FAIL	lerna/profiles/catalogcheck	30.614s
+FAIL

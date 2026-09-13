@@ -1,0 +1,210 @@
+ok  	lerna/profiles/fetchcheck	25.892s
+ok  	lerna/tasks	11.026s
+panic: test timed out after 10m0s
+	running tests:
+		TestCurrentMemoryControlsActualActionStart (2m29s)
+		TestCurrentMemoryControlsActualActionStart/invoked/revoke (20s)
+
+goroutine 266652 [running]:
+testing.(*M).startAlarm.func1()
+	/usr/local/go/src/testing/testing.go:2802 +0x605
+created by time.goFunc
+	/usr/local/go/src/time/sleep.go:215 +0x45
+
+goroutine 1 [chan receive, 2 minutes]:
+testing.(*T).Run(0xc0001b0008, {0x16b0cc4, 0x2a}, 0x16db8d8)
+	/usr/local/go/src/testing/testing.go:2109 +0xb3e
+testing.runTests.func1(0xc0001b0008)
+	/usr/local/go/src/testing/testing.go:2585 +0x86
+testing.tRunner(0xc0001b0008, 0xc00023bad0)
+	/usr/local/go/src/testing/testing.go:2036 +0x21d
+testing.runTests({0x16988c1, 0x5}, {0x16a5471, 0x1b}, 0xc0001a8000, {0x1e68060, 0x2b, 0x2b}, {0xc2a14ecadc3e2308, 0x8bb3b18884, ...})
+	/usr/local/go/src/testing/testing.go:2583 +0x9ea
+testing.(*M).Run(0xc00018c820)
+	/usr/local/go/src/testing/testing.go:2443 +0xf4c
+main.main()
+	_testmain.go:130 +0x165
+
+goroutine 187227 [chan receive]:
+testing.(*T).Run(0xc0006b98c8, {0xc000b47f42, 0xe}, 0xc000d490c0)
+	/usr/local/go/src/testing/testing.go:2109 +0xb3e
+lerna/profiles/catalogcheck.TestCurrentMemoryControlsActualActionStart(0xc0006b98c8)
+	/home/dev/proj/lerna/profiles/catalogcheck/personalized_invalidation_test.go:12 +0x235
+testing.tRunner(0xc0006b98c8, 0x16db8d8)
+	/usr/local/go/src/testing/testing.go:2036 +0x21d
+created by testing.(*T).Run in goroutine 1
+	/usr/local/go/src/testing/testing.go:2101 +0xb13
+
+goroutine 257144 [select]:
+database/sql.(*DB).connectionOpener(0xc0003eb2b0, {0x16edd78, 0xc00046a690})
+	/usr/local/go/src/database/sql/sql.go:1261 +0xed
+created by database/sql.OpenDB in goroutine 256057
+	/usr/local/go/src/database/sql/sql.go:841 +0x287
+
+goroutine 256932 [select]:
+database/sql.(*DB).connectionOpener(0xc000381040, {0x16edd78, 0xc00090e5a0})
+	/usr/local/go/src/database/sql/sql.go:1261 +0xed
+created by database/sql.OpenDB in goroutine 256057
+	/usr/local/go/src/database/sql/sql.go:841 +0x287
+
+goroutine 256057 [syscall]:
+syscall.Syscall6(0x4a, 0x12, 0x0, 0x0, 0x0, 0x0, 0x0)
+	/usr/local/go/src/syscall/syscall_linux.go:96 +0x45
+modernc.org/libc.___syscall_cp(0xc0005d2790, 0x4a, 0x12, 0x0, 0x0, 0x0, 0x0, 0x0)
+	/home/dev/go/pkg/mod/modernc.org/libc@v1.75.6/syscall_musl.go:25 +0x194
+modernc.org/libc.Xfsync(0xc0005d2790, 0x12)
+	/home/dev/go/pkg/mod/modernc.org/libc@v1.75.6/ccgo_linux_amd64.go:149713 +0x49
+modernc.org/sqlite/lib._full_fsync(0xc0005d2790, 0x12, 0x0?, 0x0?)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite_g_000000000001fffc.go:288 +0x33
+modernc.org/sqlite/lib._unixSync(0xc0005d2790, 0x7918ed65a0c8, 0x2)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite_g_0000000000003e80.go:20107 +0x147
+modernc.org/sqlite/lib._sqlite3OsSync(0xc0005d2790, 0x7918ed65a0c8, 0x2)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite.go:34704 +0x11f
+modernc.org/sqlite/lib._walFrames(0xc0005d2790, 0x7918ed65a028, 0x1000, 0x7918ade69060, 0x16, 0x1, 0xa)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite_g_000000000001fea8.go:17016 +0x2ed7
+modernc.org/sqlite/lib._sqlite3WalFrames(...)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite.go:38413
+modernc.org/sqlite/lib._pagerWalFrames(0xc0005d2790, 0x7918b49da828, 0x7918ade69060, 0x16, 0x1)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite_g_000000000001feab.go:10660 +0x665
+modernc.org/sqlite/lib._sqlite3PagerCommitPhaseOne(0xc0005d2790, 0x7918b49da828, 0x0, 0x0)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite_g_000000000001ffff.go:9927 +0x568
+modernc.org/sqlite/lib._sqlite3BtreeCommitPhaseOne(0xc0005d2790, 0x7918ed69cb28, 0x0)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite_g_000000000001ffff.go:6728 +0x2d2
+modernc.org/sqlite/lib._vdbeCommit(0xc0005d2790, 0x7918ed6d9828, 0x7918ae146bf8)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite_g_0000000000003e80.go:20326 +0x2a65
+modernc.org/sqlite/lib._sqlite3VdbeHalt(0xc0005d2790, 0x7918ae146bf8)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite_g_000000000001deab.go:4169 +0xd57
+modernc.org/sqlite/lib._sqlite3VdbeExec(0xc0005d2790, 0x7918ae146bf8)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite_g_0000000000000480.go:19212 +0x106dd
+modernc.org/sqlite/lib._sqlite3Step(0xc0005d2790, 0x7918ae146bf8)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite_g_000000000001deab.go:3968 +0x1ef
+modernc.org/sqlite/lib.Xsqlite3_step(0xc0005d2790, 0x7918ae146bf8)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/lib/sqlite.go:11977 +0x1cb
+modernc.org/sqlite.(*conn).step(0xc000d3e2a0, 0x7918ae146bf8)
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/conn.go:435 +0x5e
+modernc.org/sqlite.(*stmt).exec.func2(0xc000560018, {0xc0001aa190, 0x2, 0x2}, 0xc000a32040, 0xc00001833c, {0x16edde8, 0xc000642fc0})
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/stmt.go:145 +0x2af
+modernc.org/sqlite.(*stmt).exec(0xc000560018, {0x16edde8, 0xc000642fc0}, {0xc0001aa190, 0x2, 0x2})
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/stmt.go:175 +0x29c
+modernc.org/sqlite.(*conn).exec(0xc000d3e2a0, {0x16edde8, 0xc000642fc0}, {0x16bd39b, 0x54}, {0xc0001aa190, 0x2, 0x2})
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/conn.go:1077 +0x17a
+modernc.org/sqlite.(*conn).ExecContext(0xc000d3e2a0, {0x16edde8, 0xc000642fc0}, {0x16bd39b, 0x54}, {0xc0001aa190, 0x2, 0x2})
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/conn.go:1336 +0x95
+database/sql.ctxDriverExec({0x16edde8, 0xc000642fc0}, {0x7918ed8f0660, 0xc000d3e2a0}, {0x0, 0x0}, {0x16bd39b, 0x54}, {0xc0001aa190, 0x2, ...})
+	/usr/local/go/src/database/sql/ctxutil.go:31 +0xeb
+database/sql.(*DB).execDC.func2()
+	/usr/local/go/src/database/sql/sql.go:1713 +0x266
+database/sql.withLock({0x16eae80, 0xc0000fee00}, 0xc000a32678)
+	/usr/local/go/src/database/sql/sql.go:3572 +0xa3
+database/sql.(*DB).execDC(0xc000a32701?, {0x16edde8, 0xc000642fc0}, 0xc0000fee00, 0xc000a32790, {0x16bd39b, 0x54}, {0xc000a32a28, 0x2, 0x2})
+	/usr/local/go/src/database/sql/sql.go:1708 +0x405
+database/sql.(*DB).exec(0xc000381040, {0x16edde8, 0xc000642fc0}, {0x16bd39b, 0x54}, {0xc000a32a28, 0x2, 0x2}, 0x1)
+	/usr/local/go/src/database/sql/sql.go:1693 +0x15e
+database/sql.(*DB).ExecContext.func1(0x1)
+	/usr/local/go/src/database/sql/sql.go:1672 +0xd6
+database/sql.(*DB).retry(0x10300c0007ef970?, 0xc000a32910)
+	/usr/local/go/src/database/sql/sql.go:1576 +0x4b
+database/sql.(*DB).ExecContext(0xc000381040, {0x16edde8, 0xc000642fc0}, {0x16bd39b, 0x54}, {0xc000a32a28, 0x2, 0x2})
+	/usr/local/go/src/database/sql/sql.go:1671 +0x185
+lerna/adapters/sqliteauth.(*Store).Commit(_, {_, _}, _, {0xc000339650, 0xc0003396b0, {0xc000d1e200, 0x1aa8, 0x1aa8}, 0x0, ...})
+	/home/dev/proj/lerna/adapters/sqliteauth/store.go:107 +0x5d2
+lerna/authorization.(*Service).update(0xc00067c1c0, {0x16edde8, 0xc000642fc0}, 0xc000a33100)
+	/home/dev/proj/lerna/authorization/service.go:112 +0xa11
+lerna/authorization.(*Service).UpdateContent(0xc00067c1c0, {0x16edde8, 0xc000642fc0}, 0xc000af9e48)
+	/home/dev/proj/lerna/authorization/content.go:51 +0xfd
+lerna/artifacts.(*Service).update(...)
+	/home/dev/proj/lerna/artifacts/service.go:109
+lerna/artifacts.(*Service).get(0xc000804980, {0x16edde8, 0xc000642fc0}, {{0xc000a814c0, 0x40}, {0xc00002e3cb, 0xe}, {0x1698961, 0x5}, {0x1698961, ...}}, ...)
+	/home/dev/proj/lerna/artifacts/read.go:83 +0xe63
+lerna/artifacts.(*Service).Call(0xc000804980, {0x16edd78, 0xc0001ab360}, {{0xc000a814c0, 0x40}, {0xc00002e3cb, 0xe}, {0x1698961, 0x5}, {0x1698961, ...}}, ...)
+	/home/dev/proj/lerna/artifacts/service.go:204 +0x551
+lerna/adapters/executioncontent.(*Adapter).metadata(_, {_, _}, {_, _}, {_, _}, {0x0, {0xc000878030, 0x14}, ...})
+	/home/dev/proj/lerna/adapters/executioncontent/content.go:37 +0x368
+lerna/adapters/executioncontent.(*Adapter).Read(_, {_, _}, {_, _}, {_, _}, {0x0, {0xc000878030, 0x14}, ...})
+	/home/dev/proj/lerna/adapters/executioncontent/content.go:48 +0xec
+lerna/profiles/catalogcheck.(*actionHost).baseValidate(_, {_, _}, {{0x0, 0x0, 0x0}, 0x0, 0x0, 0x0, 0x0, ...}, ...)
+	/home/dev/proj/lerna/profiles/catalogcheck/action_host.go:514 +0xe3b
+lerna/profiles/catalogcheck.(*actionHost).baseAssemble(_, {_, _}, {{0x0, 0x0, 0x0}, 0x0, 0x0, 0x0, 0x0, ...}, ...)
+	/home/dev/proj/lerna/profiles/catalogcheck/action_host.go:530 +0xdc
+lerna/profiles/catalogcheck.actionBaseContext.Assemble({_}, {_, _}, {{0x0, 0x0, 0x0}, 0x0, 0x0, 0x0, 0x0, ...}, ...)
+	/home/dev/proj/lerna/profiles/catalogcheck/personalized_memory.go:438 +0xec
+lerna/adapters/taskcontext.(*Facts).Load(0xc0001c6008, {0x16edde8, 0xc0008c35e0}, {{{0xc00002e3cb, 0xe}, {0xc00070f1c0, 0x40}, 0x1}, {0x1699b91, 0x8}, ...})
+	/home/dev/proj/lerna/adapters/taskcontext/facts.go:96 +0x288
+lerna/contextassembly.(*Assembler).base(0xc0004e4680, {0x16edde8, 0xc0008c35e0}, {{{0xc00002e3cb, 0xe}, {0xc00070f1c0, 0x40}, 0x1}, {0x1699b91, 0x8}, ...})
+	/home/dev/proj/lerna/contextassembly/assembler.go:131 +0x2d6
+lerna/contextassembly.(*Assembler).release(_, {_, _}, {{{0xc00002e3cb, 0xe}, {0xc00070f1c0, 0x40}, 0x1}, {0x1699b91, 0x8}, ...}, ...)
+	/home/dev/proj/lerna/contextassembly/assembler.go:319 +0x73f
+lerna/contextassembly.(*Assembler).Validate(0xc0004e4680, {0x16edd78, 0xc0005b00a0}, {{{0xc00002e3cb, 0xe}, {0xc00070f1c0, 0x40}, 0x1}, {0x1699b91, 0x8}, ...})
+	/home/dev/proj/lerna/contextassembly/assembler.go:375 +0x675
+lerna/adapters/taskcontext.(*Session).Validate(_, {_, _}, {{0x0, 0x0, 0x0}, 0x0, 0x0, 0x0, 0x0, ...}, ...)
+	/home/dev/proj/lerna/adapters/taskcontext/session.go:76 +0x231
+lerna/profiles/catalogcheck.(*actionHost).Validate(_, {_, _}, {{0x0, 0x0, 0x0}, 0x0, 0x0, 0x0, 0x0, ...}, ...)
+	/home/dev/proj/lerna/profiles/catalogcheck/action_host.go:489 +0x12a
+lerna/brain.(*ActionBrain).decide(_, {_, _}, {0xc000a19100, 0x0, 0x0, {0x0, 0x0, 0x0}, 0x0, ...}, ...)
+	/home/dev/proj/lerna/brain/actions.go:415 +0x1df2
+lerna/brain.(*ActionBrain).Run(_, {_, _}, {{_, _}, {_, _}})
+	/home/dev/proj/lerna/brain/actions.go:284 +0x2d75
+lerna/profiles/catalogcheck.runActionCaseAt({_, _}, {_, _}, {_, _}, _, {_, _}, {0x0, ...})
+	/home/dev/proj/lerna/profiles/catalogcheck/action_host.go:257 +0x3f86
+lerna/profiles/catalogcheck.runActionCase(...)
+	/home/dev/proj/lerna/profiles/catalogcheck/action_host.go:75
+lerna/profiles/catalogcheck.RunActionCase({_, _}, {_, _}, {_, _})
+	/home/dev/proj/lerna/profiles/catalogcheck/action_host.go:66 +0x10b
+lerna/profiles/catalogcheck.TestCurrentMemoryControlsActualActionStart.func1(0xc0008b2b48)
+	/home/dev/proj/lerna/profiles/catalogcheck/personalized_invalidation_test.go:13 +0xf6
+testing.tRunner(0xc0008b2b48, 0xc000d490c0)
+	/usr/local/go/src/testing/testing.go:2036 +0x21d
+created by testing.(*T).Run in goroutine 187227
+	/usr/local/go/src/testing/testing.go:2101 +0xb13
+
+goroutine 255273 [select]:
+database/sql.(*DB).connectionOpener(0xc000674270, {0x16edd78, 0xc0008aa820})
+	/usr/local/go/src/database/sql/sql.go:1261 +0xed
+created by database/sql.OpenDB in goroutine 256057
+	/usr/local/go/src/database/sql/sql.go:841 +0x287
+
+goroutine 256065 [select]:
+database/sql.(*DB).connectionOpener(0xc0000d1d40, {0x16edd78, 0xc0000faff0})
+	/usr/local/go/src/database/sql/sql.go:1261 +0xed
+created by database/sql.OpenDB in goroutine 256057
+	/usr/local/go/src/database/sql/sql.go:841 +0x287
+
+goroutine 266651 [select]:
+modernc.org/sqlite.interruptOnDone.func1()
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/sqlite.go:93 +0xca
+created by modernc.org/sqlite.interruptOnDone in goroutine 256057
+	/home/dev/go/pkg/mod/modernc.org/sqlite@v1.58.0/sqlite.go:92 +0x1fd
+
+goroutine 256933 [select]:
+database/sql.(*DB).connectionOpener(0xc000467d40, {0x16edd78, 0xc00090ed70})
+	/usr/local/go/src/database/sql/sql.go:1261 +0xed
+created by database/sql.OpenDB in goroutine 256057
+	/usr/local/go/src/database/sql/sql.go:841 +0x287
+
+goroutine 257119 [select]:
+database/sql.(*DB).connectionOpener(0xc0003ff790, {0x16edd78, 0xc00090fe50})
+	/usr/local/go/src/database/sql/sql.go:1261 +0xed
+created by database/sql.OpenDB in goroutine 256057
+	/usr/local/go/src/database/sql/sql.go:841 +0x287
+
+goroutine 259980 [select]:
+lerna/brain.(*ActionBrain).Run.func3()
+	/home/dev/proj/lerna/brain/actions.go:126 +0x25d
+created by lerna/brain.(*ActionBrain).Run in goroutine 256057
+	/home/dev/proj/lerna/brain/actions.go:121 +0xbd0
+
+goroutine 257143 [select]:
+database/sql.(*DB).connectionOpener(0xc0006744e0, {0x16edd78, 0xc000be7db0})
+	/usr/local/go/src/database/sql/sql.go:1261 +0xed
+created by database/sql.OpenDB in goroutine 256057
+	/usr/local/go/src/database/sql/sql.go:841 +0x287
+
+goroutine 259851 [select]:
+lerna/cleanup.(*Worker).Run(0xc00086b800, {0x16edd78, 0xc00081bb80})
+	/home/dev/proj/lerna/cleanup/worker.go:111 +0x26e
+lerna/cleanup.Start.func1()
+	/home/dev/proj/lerna/cleanup/lifecycle.go:26 +0x59
+created by lerna/cleanup.Start in goroutine 256057
+	/home/dev/proj/lerna/cleanup/lifecycle.go:25 +0x2a5
+FAIL	lerna/profiles/catalogcheck	600.050s
+FAIL

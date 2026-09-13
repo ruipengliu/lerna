@@ -1,0 +1,16 @@
+Initial targeted verification (captured tool output):
+ok  	lerna/adapters/sqliteextraction	1.135s
+--- FAIL: TestSourceCleanupRecoversUndeliveredFenceAfterProcessExit (0.28s)
+    source_cleanup_test.go:59: probe did not leave actual input blob
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.612s
+FAIL
+
+Diagnosis: the default input is below Content's inline threshold. The fixture
+was changed to a valid JSON input padded beyond that threshold. The existing
+Content fence test now verifies the actual blob before testing its erasure.
+
+Targeted verification after fixture correction (captured tool output):
+ok  	lerna/adapters/sqliteextraction	1.367s
+ok  	lerna/profiles/extractioncheck	1.968s
+Command: GOTOOLCHAIN=go1.26.1 go test -race -p 1 -count=1 ./adapters/sqliteextraction ./profiles/extractioncheck -run 'TestSource(Fence|Cleanup)'

@@ -1,0 +1,5 @@
+--- FAIL: TestRegisteredChoiceFilesProduceScopedInference (0.00s)
+    choice_test.go:63: ambiguous or instruction field accepted: {"event":"1","event":"2","task":"report","format":"concise"}: <nil>
+FAIL
+FAIL	lerna/adapters/localextractionsource	0.004s
+FAIL

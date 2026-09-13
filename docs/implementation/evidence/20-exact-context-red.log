@@ -1,0 +1,5 @@
+--- FAIL: TestExactErasureKeepsOtherRevisionSnapshotsAndSurvivesReopen (0.06s)
+    exact_erasure_test.go:51: exact context cleanup: false UNAVAILABLE
+FAIL
+FAIL	lerna/contextassembly	0.065s
+FAIL

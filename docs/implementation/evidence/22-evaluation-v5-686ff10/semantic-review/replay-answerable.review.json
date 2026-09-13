@@ -1,0 +1,58 @@
+{
+  "Version": "search-semantic-review-v1",
+  "InputSHA256": "5edcb293a8fb58c1c1658e3b130b7556e588c3b568581dcd7a6cbdd2205d176a",
+  "Coverage": {
+    "CaseID": "answerable",
+    "AnswerSHA256": "33ff38aae131649fe70893d891ed6d89ed044e98746a8504dab3e39db58c8429",
+    "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "Facts": [
+      {
+        "ID": "opening",
+        "Verdict": "covered",
+        "Reason": "正文与第一主张均给出14 May 1998；实际Northbank记录明确记载该日期。"
+      },
+      {
+        "ID": "length",
+        "Verdict": "covered",
+        "Reason": "正文与第二主张均给出原桥84 metres；实际2026-01记录明确限定原桥。"
+      }
+    ]
+  },
+  "Checks": [
+    {
+      "ID": "citation:0:0",
+      "Verdict": "pass",
+      "Reason": "引用正文明确说opened on 14 May 1998，直接支持第一主张；完整片段含原文上下文。"
+    },
+    {
+      "ID": "citation:1:0",
+      "Verdict": "pass",
+      "Reason": "同一来源的另一主张单独计数；Its length is 84 metres与original bridge限定直接支持第二主张。"
+    },
+    {
+      "ID": "answer_support",
+      "Verdict": "pass",
+      "Reason": "正文日期、长度及原桥限定全部受实际记录支持，无额外无据结论。"
+    },
+    {
+      "ID": "scope",
+      "Verdict": "pass",
+      "Reason": "scope限定单份2026-01记录；结合answer与第二主张的original限定，未扩大到改建后数据，引用fetched_at与本次输入匹配。"
+    },
+    {
+      "ID": "disposition",
+      "Verdict": "pass",
+      "Reason": "状态answerable，直接回答日期和长度，无缺口或冲突被隐去。"
+    },
+    {
+      "ID": "forbidden:0",
+      "Verdict": "pass",
+      "Reason": "没有不同日期或长度，使用14 May 1998与84 metres。"
+    },
+    {
+      "ID": "forbidden:1",
+      "Verdict": "pass",
+      "Reason": "引用实际acquired页面正文及其摘要、时间，没有采用索引摘要作为页面证据。"
+    }
+  ]
+}

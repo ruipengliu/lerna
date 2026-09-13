@@ -1,0 +1,58 @@
+{
+  "Config": {
+    "SearchTimeoutMS": 3000,
+    "PageMaxBytes": 12288,
+    "Goal": "Using actually acquired httpbin pages, describe what service httpbin provides. Cite its own page text. If source pages cannot be acquired, report that limitation without treating search snippets as evidence.",
+    "Query": "httpbin.org HTTP request response service",
+    "SearchEndpoint": "https://open.feedcoopapi.com/search_api/web_search",
+    "SearchFormat": "doubao",
+    "SearchRecipient": "doubao-search-cn",
+    "SearchMaxBytes": 65536,
+    "URLs": [
+      "https://open.feedcoopapi.com/search_api/web_search",
+      "https://httpbin.org/legacy",
+      "https://www.httpbin.org/",
+      "https://httpbin.org/"
+    ],
+    "Networks": [
+      "112.90.0.0/16",
+      "163.177.0.0/16",
+      "18.205.0.0/16",
+      "18.235.0.0/16",
+      "2408:8756:2cff::/48",
+      "2408:8756:d0fe::/48",
+      "2408:8756:f09::/48",
+      "27.44.0.0/16",
+      "32.194.0.0/16",
+      "34.198.0.0/16",
+      "44.194.0.0/16",
+      "44.207.0.0/16",
+      "52.4.0.0/16",
+      "98.88.0.0/16"
+    ],
+    "AllowLoopbackHTTP": false,
+    "DiscloseTo": [
+      "doubao-search-cn",
+      "ark-cn-beijing"
+    ],
+    "MaxQueries": 128,
+    "NetworkLimit": 5,
+    "MaxSteps": 5,
+    "ModelTokens": 262144
+  },
+  "MaxExternalModelRequests": 1,
+  "Model": {
+    "Model": "doubao-seed-2-0-lite-260428",
+    "Location": "ark-cn-beijing",
+    "Version": "ark-chat-v3-20260910-citations-v5",
+    "Text": true,
+    "Structured": true,
+    "Streaming": false,
+    "HardBounds": true,
+    "ContextTokens": 262144,
+    "InputUpper": 229376
+  },
+  "Plan": "search-public-v1",
+  "ReservedCNY": 1,
+  "Started": "2026-09-13T04:23:40.566136466Z"
+}

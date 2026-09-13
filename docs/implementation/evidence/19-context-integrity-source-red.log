@@ -1,0 +1,5 @@
+--- FAIL: TestSourceCleanupErasesCheckpointIntegrity (0.07s)
+    checkpoint_cleanup_test.go:48: source cleanup retained comparison: CONTEXT_UNAVAILABLE
+FAIL
+FAIL	lerna/contextassembly	0.101s
+FAIL

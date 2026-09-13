@@ -1,0 +1,3 @@
+ok  	lerna/profiles/fetchcheck	6.179s
+ok  	lerna/adapters/httpfetch	4.289s
+ok  	lerna/adapters/sqlitefetch	1.556s

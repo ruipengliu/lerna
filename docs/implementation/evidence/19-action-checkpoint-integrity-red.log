@@ -1,0 +1,5 @@
+--- FAIL: TestActionCheckpointDoesNotDuplicateSnapshotDigests (42.92s)
+    personalized_checkpoint_test.go:34: checkpoint retained original body comparisons
+FAIL
+FAIL	lerna/profiles/catalogcheck	42.954s
+FAIL

@@ -1,0 +1,6 @@
+--- FAIL: TestCLIReportsSuccessAndUnknownProfileFailure (154.00s)
+    --- FAIL: TestCLIReportsSuccessAndUnknownProfileFailure/personalized-context-v1 (153.27s)
+        main_test.go:30: incomplete personalized profile: 33 cases
+FAIL
+FAIL	lerna/cmd/contractcheck	154.007s
+FAIL

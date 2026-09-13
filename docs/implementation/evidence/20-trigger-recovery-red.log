@@ -1,0 +1,5 @@
+# lerna/profiles/extractioncheck [lerna/profiles/extractioncheck.test]
+profiles/extractioncheck/trigger_recovery_test.go:47:18: undefined: recoveryDispatcher
+profiles/extractioncheck/trigger_recovery_test.go:81:16: undefined: recoveryDispatcher
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

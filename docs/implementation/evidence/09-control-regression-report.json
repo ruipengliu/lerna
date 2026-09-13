@@ -1,0 +1,329 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "task-control-v1",
+  "profile_version": "1",
+  "configuration": {
+    "authorization": "separate task.pause/task.cancel/task.resume/task.reconcile; current creator subject and resource; no administrator bypass",
+    "clock": "controlled 2026-09-10 with trusted watermark; local scope",
+    "control_limits": "32 operations/task; 32 observations/task; 4 disposition checks/task; poll 10ms; stop wait 30ms; IO 1s",
+    "legacy_fixture": "6395a00 runtime partition; SHA256 1e58f437139dad584501cf009e7529fea4b1ed8a462a3613386b8b7cc275898a",
+    "process_faults": "five independent child processes; exit(73); each child \u003c=10s; independent fixture source state",
+    "source": "cooperative/uncooperative scripted Brain and controlled disposition fixture; no real external actions",
+    "sqlite_driver": "modernc.org/sqlite v1.58.0",
+    "sqlite_runtime": "3.53.4",
+    "storage": "real SQLite file; WAL; synchronous=FULL; shared authorization/runtime CAS",
+    "worker_limits": "lease 1s; renew 200ms; decision 1s; IO 1s; attempts 3; concurrent 1"
+  },
+  "method": "contractcheck -profile task-control-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260910114928-cb3235853e0b",
+    "revision": "cb3235853e0bd95272ede7acf54ae588f598a5fe",
+    "dirty": "false",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "No real external API, GUI, model or cancellation reliability claim. Effect evidence is supplied by a trusted, explicitly enabled fixture source.",
+    "No remote control delivery, owner handoff, resource takeover, budget adjustment, subtask control or terminal reopening.",
+    "Go cannot kill non-cooperative in-process Brain code. Late observers are tied to bounded outstanding calls; actual stop is required for applied control.",
+    "Disposition adapters must verify their own facts and respect context deadlines. Process termination is not evidence of remote effect cancellation.",
+    "Control and disposition records have finite retained capacity. No archive, cleanup or automatic refund of uncertain target/disposition attempts.",
+    "Controlled time and process exits do not prove power-loss, hostile-host, disk-corruption or backup-rollback safety."
+  ],
+  "results": [
+    {
+      "id": "reconcile-without-execute",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "reconcile-without-execute",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cross-subject-control",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "cross-subject-control",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "authorization-control-race",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "authorization-control-race",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "disposition-timeout",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "disposition-timeout",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "legacy-upgrade",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "legacy-upgrade",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-control-reply",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "unknown-control-reply",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-observation-reply",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "unknown-observation-reply",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "script-not-effect",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "script-not-effect",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "sdk-control",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "sdk-control",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "permission-boundary",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "permission-boundary",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "version-and-identity",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "version-and-identity",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cross-domain-identity",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "cross-domain-identity",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "window-and-receipt-retention",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "window-and-receipt-retention",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "terminal-controls",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "terminal-controls",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "control-before-claim",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "control-before-claim",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "control-before-complete",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "control-before-complete",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cooperative-cancel",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "cooperative-cancel",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "uncooperative-pause",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "uncooperative-pause",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "resume-keeps-waits",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "resume-keeps-waits",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-effects",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "unknown-effects",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "prior-completion",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "prior-completion",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "source-fencing",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "source-fencing",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "finite-disposition-budget",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "finite-disposition-budget",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "control-capacity",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "control-capacity",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "storage-unavailable",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "storage-unavailable",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "pending-discovery-and-resume",
+      "evidence": "durable_control_contract",
+      "required": true,
+      "input": "pending-discovery-and-resume",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "after-start",
+      "evidence": "sqlite_control_process_recovery",
+      "required": true,
+      "input": "after-start; child exit; reopen same file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "before-control",
+      "evidence": "sqlite_control_process_recovery",
+      "required": true,
+      "input": "before-control; child exit; reopen same file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "after-control",
+      "evidence": "sqlite_control_process_recovery",
+      "required": true,
+      "input": "after-control; child exit; reopen same file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "before-settle",
+      "evidence": "sqlite_control_process_recovery",
+      "required": true,
+      "input": "before-settle; child exit; reopen same file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "settle-lost-reply",
+      "evidence": "sqlite_control_process_recovery",
+      "required": true,
+      "input": "settle-lost-reply; child exit; reopen same file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    }
+  ]
+}

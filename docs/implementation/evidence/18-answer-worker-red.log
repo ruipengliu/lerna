@@ -1,0 +1,5 @@
+go test ./profiles/answer -run ^TestPersonalizedAnswerWorkerWaits -count=1
+FAIL: related and revoke returned State=FAILED, StopReason=brain_failure; expected WAITING with INPUT_INVALIDATED / PROCESSING_DENIED.
+Both retained ModelUsedRequests=1, ModelUsedTokens=70 and had no result.
+Unrelated correction passed.
+Summary of observed failing output; generated task/content identifiers omitted.

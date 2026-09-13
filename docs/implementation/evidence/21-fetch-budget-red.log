@@ -1,0 +1,3 @@
+lerna/adapters/sqlitefetch: no non-test Go files in /home/dev/proj/lerna/adapters/sqlitefetch
+FAIL	lerna/adapters/sqlitefetch [build failed]
+FAIL

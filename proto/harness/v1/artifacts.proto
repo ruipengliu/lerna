@@ -1,0 +1,46 @@
+syntax = "proto3";
+package harness.v1;
+option go_package = "lerna/gen/harness/v1;harnessv1";
+
+message ContentSource { string kind = 1; string key = 2; uint64 revision = 3; }
+message ContentSpec {
+ string kind = 1;
+ string resource = 2;
+ string purpose = 3;
+ repeated ContentSource sources = 4;
+ int64 acquired_at = 5;
+ string media_type = 6;
+ uint64 size = 7;
+ string sha256 = 8;
+ int64 retain_until = 9;
+}
+message ContentRef { string namespace = 1; string key = 2; uint64 revision = 3; }
+message ContentRecord {
+ ContentRef ref = 1;
+ ContentSpec spec = 2;
+ uint64 lifecycle_revision = 3;
+ string state = 4;
+}
+message ContentRequest {
+ string message_id = 1;
+ string namespace = 2;
+ string method = 3;
+ string operation_id = 4;
+ ContentSpec spec = 5;
+ bytes data = 6;
+ ContentRef ref = 7;
+ uint64 offset = 8;
+ uint32 limit = 9;
+ uint64 expected_revision = 10;
+ string purpose = 11;
+}
+message ContentResponse {
+ string message_id = 1;
+ string reply_to = 2;
+ string namespace = 3;
+ ContentRecord record = 4;
+ bytes data = 5;
+ string operation_id = 6;
+ string code = 7;
+}
+service ContentService { rpc Exchange(ContentRequest) returns (ContentResponse); }

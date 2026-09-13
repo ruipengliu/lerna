@@ -1,0 +1,31 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "What was the construction cost of the Eastmere footbridge?",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789271249}",
+        "Blocks": [
+          {
+            "Ref": "content:local:7fa768ad846a6a8383bcb9a7652b0a6d2360acbbda204a9fc74efea2e85e61bb:1",
+            "Text": "{\"Status\":\"acquired\",\"Body\":\"Eastmere bridge record, edition 2026-01. The Eastmere footbridge crosses the canal. It opened in 2005. This record does not state its construction cost.\",\"RequestedURL\":\"http://127.0.0.1:44927/final\",\"FinalURL\":\"http://127.0.0.1:44927/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"b0a3917a221e8cc54a409c14a78e81b9b6358e8cb40f7e388be4b224f39dea6f\",\"Mode\":\"http\",\"FetchedAt\":\"2026-09-13T03:46:30.568631822Z\",\"Sources\":[\"http://127.0.0.1:44927/final\"]}",
+            "Subject": "operator",
+            "Role": "external-evidence"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 512
+    },
+    "Result": {
+      "Content": "eyJhbnN3ZXIiOiIiLCJjbGFpbXMiOlt7ImNpdGF0aW9ucyI6W3siZW5kIjo4NywiZmV0Y2hlZF9hdCI6IjIwMjYtMDktMTNUMDM6NDY6MzAuNTY4NjMxODIyWiIsInF1b3RlIjoiRWFzdG1lcmUgZm9vdGJyaWRnZSBjcm9zc2VzIHRoZSBjYW5hbC4gSXQgb3BlbmVkIGluIDIwMDUuIiwic2hhMjU2IjoiYjBhMzkxN2EyMjFlOGNjNTRhNDA5YzE0YTc4ZTgxYjliNjM1OGU4Y2I0MGY3ZTM4OGJlNGIyMjRmMzlkZWE2ZiIsInNvdXJjZSI6ImNvbnRlbnQ6bG9jYWw6N2ZhNzY4YWQ4NDZhNmE4MzgzYmNiOWE3NjUyYjBhNmQyMzYwYWNiYmRhMjA0YTlmYzc0ZWZlYTJlODVlNjFiYjoxIiwic3RhcnQiOjUxfV0sInRleHQiOiJUaGUgRWFzdG1lcmUgZm9vdGJyaWRnZSBjcm9zc2VzIHRoZSBjYW5hbCBhbmQgb3BlbmVkIGluIDIwMDUuIn1dLCJnYXBzIjpbeyJkZXRhaWwiOiJObyBhdmFpbGFibGUgYWNxdWlyZWQgZXZpZGVuY2UgcmVjb3JkcyB0aGUgY29uc3RydWN0aW9uIGNvc3Qgb2YgdGhlIEVhc3RtZXJlIGZvb3RicmlkZ2UsIGFuZCB0aGUgY29uc3VsdGVkIGJyaWRnZSByZWNvcmQgZXhwbGljaXRseSBzdGF0ZXMgaXQgZG9lcyBub3QgcHJvdmlkZSB0aGlzIGluZm9ybWF0aW9uLiIsImtpbmQiOiJpbnN1ZmZpY2llbnQiLCJzb3VyY2VzIjpbImNvbnRlbnQ6bG9jYWw6N2ZhNzY4YWQ4NDZhNmE4MzgzYmNiOWE3NjUyYjBhNmQyMzYwYWNiYmRhMjA0YTlmYzc0ZWZlYTJlODVlNjFiYjoxIl19XSwic2NvcGUiOiJFeGFtaW5lcyB0aGUgMjAyNi0wMSBFYXN0bWVyZSBicmlkZ2UgcmVjb3JkIGZyb20gdGhlIHN1cHBsaWVkIGV4dGVybmFsIGV2aWRlbmNlLCB3aXRoIG5vIGFkZGl0aW9uYWwgc291cmNlIGNvdmVyYWdlLiIsInN0YXR1cyI6Imluc3VmZmljaWVudCJ9",
+      "Finish": "stop",
+      "RequestRef": "021789271190855cb43b51ad7a6f2b3d703638489b11c03204d94",
+      "Usage": {
+        "Known": true,
+        "Input": 1058,
+        "Output": 369
+      }
+    }
+  }
+]

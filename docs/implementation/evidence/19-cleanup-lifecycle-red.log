@@ -1,0 +1,4 @@
+# lerna/cleanup_test [lerna/cleanup.test]
+cleanup/worker_test.go:53:26: undefined: cleanup.Start
+FAIL	lerna/cleanup [build failed]
+FAIL

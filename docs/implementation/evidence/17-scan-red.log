@@ -1,0 +1,4 @@
+# lerna/adapters/sqlitememory_test [lerna/adapters/sqlitememory.test]
+adapters/sqlitememory/store_test.go:213:19: store.Scan undefined (type *sqlitememory.Store has no field or method Scan)
+FAIL	lerna/adapters/sqlitememory [build failed]
+FAIL

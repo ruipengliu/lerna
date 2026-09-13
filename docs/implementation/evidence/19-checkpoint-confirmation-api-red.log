@@ -1,0 +1,10 @@
+# lerna/profiles/answer [lerna/profiles/answer.test]
+profiles/answer/personalized_checkpoint_test.go:96:30: p.checkpoints undefined (type *personalizedMemory has no field or method checkpoints)
+profiles/answer/personalized_checkpoint_test.go:96:65: p.checkpointBinding undefined (type *personalizedMemory has no field or method checkpointBinding)
+profiles/answer/personalized_checkpoint_test.go:106:18: p.checkpoints undefined (type *personalizedMemory has no field or method checkpoints)
+profiles/answer/personalized_checkpoint_test.go:106:53: p.checkpointBinding undefined (type *personalizedMemory has no field or method checkpointBinding)
+profiles/answer/personalized_checkpoint_test.go:109:18: p.checkpoints undefined (type *personalizedMemory has no field or method checkpoints)
+profiles/answer/personalized_checkpoint_test.go:112:25: p.checkpoints undefined (type *personalizedMemory has no field or method checkpoints)
+profiles/answer/personalized_checkpoint_test.go:112:60: p.checkpointBinding undefined (type *personalizedMemory has no field or method checkpointBinding)
+FAIL	lerna/profiles/answer [build failed]
+FAIL

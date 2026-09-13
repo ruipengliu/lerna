@@ -1,0 +1,1 @@
+go test -race ./profiles/fetchcheck -run '^(TestReferenceResearchMaterialsRunThroughOriginalTask|TestResearchAnswerRetainsEveryFailedPage|TestResearchReplayDoesNotRepeatOriginalInputValidationAtPublication|TestReferenceResearchReplayPreservesModeAndReservation|TestResearchAnswerLedgerReadsShareTaskQuota)$' -count=1 -timeout=3m

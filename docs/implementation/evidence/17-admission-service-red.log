@@ -1,0 +1,5 @@
+# lerna/memory_test [lerna/memory.test]
+memory/service_test.go:146:54: undefined: memory.AdmissionExpired
+memory/service_test.go:152:23: service.InspectOperation undefined (type *"lerna/memory".Service has no field or method InspectOperation)
+FAIL	lerna/memory [build failed]
+FAIL

@@ -1,0 +1,171 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "durable-tasks-v1",
+  "profile_version": "1",
+  "configuration": {
+    "authorization_limits": "credential 24h; grant 1h; window 1m; management retention 2m; 32 rules; 128 resources; depth 16; work 4096; evaluation 1s",
+    "clock": "controlled 2026-09-10; local trust only",
+    "sqlite_driver": "modernc.org/sqlite v1.58.0",
+    "sqlite_runtime": "3.53.4",
+    "storage": "shared authorization/runtime atomic SQLite snapshot; WAL; synchronous=FULL",
+    "task_limits": "100 tasks; page limit 10; runtime 8 MiB; combined snapshot 16 MiB",
+    "task_policy": "root resource; task.submit/task.read; purpose task; location local; creator-only reads"
+  },
+  "method": "contractcheck -profile durable-tasks-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260910105517-0eaae950f1cf",
+    "revision": "0eaae950f1cfdad4a27a852e0616135dd9f73806",
+    "dirty": "false",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "This profile verifies admission only; execution is verified separately by bounded-worker-v1. No external effects.",
+    "RunStore and runtime transaction callbacks are trusted local interfaces, never public remote APIs.",
+    "Task recovery records are retained; task cleanup and archive are unsupported. Capacity exhaustion rejects new work.",
+    "Controlled clock and process termination do not prove hostile-host, power-loss or disk-corruption resilience."
+  ],
+  "results": [
+    {
+      "id": "submit-get-reopen",
+      "evidence": "durable_task_sqlite",
+      "required": true,
+      "input": "submit-get-reopen with real SQLite and binary SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "duplicate-submission",
+      "evidence": "durable_task_sqlite",
+      "required": true,
+      "input": "duplicate-submission with real SQLite and binary SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "semantic-conflict",
+      "evidence": "durable_task_sqlite",
+      "required": true,
+      "input": "semantic-conflict with real SQLite and binary SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cross-domain-conflict",
+      "evidence": "durable_task_sqlite",
+      "required": true,
+      "input": "cross-domain-conflict with real SQLite and binary SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "current-policy-before-receipt",
+      "evidence": "durable_task_sqlite",
+      "required": true,
+      "input": "current-policy-before-receipt with real SQLite and binary SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "closed-window-cleanup-reopen",
+      "evidence": "durable_task_sqlite",
+      "required": true,
+      "input": "closed-window-cleanup-reopen with real SQLite and binary SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "bounded-recovery",
+      "evidence": "durable_task_sqlite",
+      "required": true,
+      "input": "bounded-recovery with real SQLite and binary SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "missing-constraints",
+      "evidence": "durable_task_sqlite",
+      "required": true,
+      "input": "missing-constraints with real SQLite and binary SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "forged-identity",
+      "evidence": "durable_task_sqlite",
+      "required": true,
+      "input": "forged-identity with real SQLite and binary SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cross-namespace",
+      "evidence": "durable_task_sqlite",
+      "required": true,
+      "input": "cross-namespace with real SQLite and binary SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "expired-first-admission",
+      "evidence": "durable_task_sqlite",
+      "required": true,
+      "input": "expired-first-admission with real SQLite and binary SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "before-commit",
+      "evidence": "sqlite_task_process_recovery",
+      "required": true,
+      "input": "terminate child at before-commit; reopen original file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "lost-commit-reply",
+      "evidence": "sqlite_task_process_recovery",
+      "required": true,
+      "input": "terminate child at lost-commit-reply; reopen original file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "worker-execution",
+      "evidence": "task_execution",
+      "required": false,
+      "input": "",
+      "expected": "verified separately by bounded-worker-v1",
+      "actual": "",
+      "status": "not_run"
+    }
+  ]
+}

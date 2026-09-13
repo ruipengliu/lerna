@@ -1,0 +1,14 @@
+=== RUN   TestActionCheckpointDoesNotDuplicateSnapshotDigests
+[DEBUG-22-recovery] assemble decision=2 elapsed=1.022128702s err=<nil> parent=<nil>
+[DEBUG-22-recovery] validate decision=2 elapsed=951.226552ms err=<nil> parent=<nil>
+--- PASS: TestActionCheckpointDoesNotDuplicateSnapshotDigests (44.20s)
+=== RUN   TestActionCheckpointDoesNotDuplicateSnapshotDigests
+[DEBUG-22-recovery] assemble decision=2 elapsed=997.238158ms err=<nil> parent=<nil>
+[DEBUG-22-recovery] validate decision=2 elapsed=969.494177ms err=<nil> parent=<nil>
+--- PASS: TestActionCheckpointDoesNotDuplicateSnapshotDigests (44.25s)
+=== RUN   TestActionCheckpointDoesNotDuplicateSnapshotDigests
+[DEBUG-22-recovery] assemble decision=2 elapsed=971.238177ms err=<nil> parent=<nil>
+[DEBUG-22-recovery] validate decision=2 elapsed=950.750165ms err=<nil> parent=<nil>
+--- PASS: TestActionCheckpointDoesNotDuplicateSnapshotDigests (43.16s)
+PASS
+ok  	lerna/profiles/catalogcheck	132.639s

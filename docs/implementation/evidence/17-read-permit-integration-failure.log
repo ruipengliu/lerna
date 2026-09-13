@@ -1,0 +1,5 @@
+--- FAIL: TestCurrentHarnessPolicyAndResidencyConstrainMemory (0.10s)
+    authority_test.go:125: VERSION_CONFLICT
+FAIL
+FAIL	lerna/adapters/memoryauth	0.120s
+FAIL

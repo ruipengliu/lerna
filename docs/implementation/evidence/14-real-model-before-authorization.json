@@ -1,0 +1,16 @@
+{
+  "status": "not_run",
+  "recorded_at": "2026-09-11T00:56:32.636109+00:00",
+  "implementation_revision": "167051fabadf5fe5132c313d7fac8832f141b9ea",
+  "actual_requests": 0,
+  "reason": "This ticket has no confirmed new paid-request budget. Prior ticket 08 authorization is not reused.",
+  "proposed_request_limit": 12,
+  "proposed_max_output_tokens_per_request": 1024,
+  "model": "doubao-seed-2-0-lite-260428",
+  "materials": "public simulated business data only",
+  "limitations": [
+    "No real-model success or 90%/95% quality claim.",
+    "The existing 224K input-token hard reservation cannot fit the single-step 65536-token budget; single-step Ark acceptance remains unsupported."
+  ],
+  "next_command": "go run ./cmd/apicheck -real -max-requests 12 -env-file .env"
+}

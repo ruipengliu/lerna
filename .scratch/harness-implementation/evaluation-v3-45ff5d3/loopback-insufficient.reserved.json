@@ -1,0 +1,22 @@
+{
+  "Input": {
+    "Contract": "harness_evidence_answer_v1",
+    "Input": {
+      "Goal": "What was the construction cost of the Eastmere footbridge?",
+      "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789271738}",
+      "Blocks": [
+        {
+          "Ref": "content:local:37d26a8a62e7d3f89c7f34d8af0880fd4d08c65adac3201e68ca28557a886cc0:1",
+          "Text": "{\"Status\":\"acquired\",\"Body\":\"Eastmere bridge record, edition 2026-01. The Eastmere footbridge crosses the canal. It opened in 2005. This record does not state its construction cost.\",\"RequestedURL\":\"http://127.0.0.1:46293/final\",\"FinalURL\":\"http://127.0.0.1:46293/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"b0a3917a221e8cc54a409c14a78e81b9b6358e8cb40f7e388be4b224f39dea6f\",\"Mode\":\"http\",\"FetchedAt\":\"2026-09-13T03:54:40.141051845Z\",\"Sources\":[\"http://127.0.0.1:46293/final\"]}",
+          "Subject": "operator",
+          "Role": "external-evidence"
+        }
+      ]
+    },
+    "MaxInput": 229376,
+    "MaxOutput": 512
+  },
+  "InputUpper": 229376,
+  "OutputUpper": 512,
+  "ReservedCNY": 1
+}

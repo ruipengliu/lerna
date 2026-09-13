@@ -1,0 +1,4 @@
+# lerna/adapters/localextraction
+adapters/localextraction/rules_test.go:7:2: package lerna/extraction is not in std (/usr/local/go/src/lerna/extraction)
+FAIL	lerna/adapters/localextraction [setup failed]
+FAIL

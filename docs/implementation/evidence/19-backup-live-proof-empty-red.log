@@ -1,0 +1,5 @@
+--- FAIL: TestCurrentAuthorityProofRejectsBackupReplayAndRollback (0.12s)
+    proof_test.go:177: empty collection encoding changed signature: PERMISSION_DENIED
+FAIL
+FAIL	lerna/adapters/recoveryproof	0.133s
+FAIL

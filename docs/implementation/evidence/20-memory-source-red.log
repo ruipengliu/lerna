@@ -1,0 +1,4 @@
+# lerna/adapters/localextractionsource_test [lerna/adapters/localextractionsource.test]
+adapters/localextractionsource/memory_test.go:31:34: cannot use source (variable of type *localextractionsource.Source) as memoryauth.Sources value in variable declaration: *localextractionsource.Source does not implement memoryauth.Sources (missing method Check)
+FAIL	lerna/adapters/localextractionsource [build failed]
+FAIL

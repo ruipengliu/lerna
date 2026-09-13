@@ -1,0 +1,8 @@
+--- FAIL: TestCommittedStatusSurvivesUnavailableBody (0.07s)
+    --- FAIL: TestCommittedStatusSurvivesUnavailableBody/false (0.04s)
+        service_test.go:219: status { <nil>} PERMISSION_DENIED
+    --- FAIL: TestCommittedStatusSurvivesUnavailableBody/true (0.03s)
+        service_test.go:219: status { <nil>} PERMISSION_DENIED
+FAIL
+FAIL	lerna/memory	0.080s
+FAIL

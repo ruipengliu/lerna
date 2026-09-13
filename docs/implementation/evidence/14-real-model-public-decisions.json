@@ -1,0 +1,169 @@
+[
+  {
+    "attempt": "initial_failed",
+    "input": {
+      "Goal": "Authorize the existing Purchase order record item. If necessary submit it first. Do not reject, withdraw, archive or create other records. Finish with authorized state and ledger 997.",
+      "Constraints": "Every action uses the exact candidate Ref.Digest in capability. Use record identity from the goal or a newer user reply. resource_version is the current record version; each confirmed transition increments it by one. Use dependencies for actions in one batch. Do not invent missing arguments. Return wait for missing input. Never claim completion; Core verifies the goal.",
+      "Blocks": [
+        {
+          "Ref": "business-state",
+          "Text": "{\"state\":\"draft\",\"ledger\":1000,\"version\":1}",
+          "Subject": "",
+          "Role": "state"
+        },
+        {
+          "Ref": "36fb0c3910fc042e15814e1848d28e9776591494aea4bcdc249781dea599baf3",
+          "Text": "{\"Ref\":{\"Namespace\":\"purchase_order\",\"Name\":\"purchase_order.withdraw\",\"Version\":\"1\",\"Implementation\":\"sqlite-business\",\"ImplementationVersion\":\"1\",\"Digest\":\"36fb0c3910fc042e15814e1848d28e9776591494aea4bcdc249781dea599baf3\"},\"Preconditions\":\"authorized; reversal fits ledger bounds\",\"Effects\":\"reverse authorized ordered_units units; mark withdrawn\",\"Input\":{\"$id\":\"urn:business:purchase_order.withdraw:input\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":false,\"properties\":{\"record\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-zA-Z0-9_-]+$\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\"}}",
+          "Subject": "",
+          "Role": "capability"
+        },
+        {
+          "Ref": "8359b3209147f82200c91164eaa99a7d4728a016e79c8addb853027f684d7094",
+          "Text": "{\"Ref\":{\"Namespace\":\"purchase_order\",\"Name\":\"purchase_order.submit\",\"Version\":\"1\",\"Implementation\":\"sqlite-business\",\"ImplementationVersion\":\"1\",\"Digest\":\"8359b3209147f82200c91164eaa99a7d4728a016e79c8addb853027f684d7094\"},\"Preconditions\":\"draft; vendor_verified true; ordered_units \\u003c= approved_units\",\"Effects\":\"mark submitted after business validation\",\"Input\":{\"$id\":\"urn:business:purchase_order.submit:input\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":false,\"properties\":{\"record\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-zA-Z0-9_-]+$\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\"}}",
+          "Subject": "",
+          "Role": "capability"
+        },
+        {
+          "Ref": "c56a3192fa6628da3ab3c2446c57da8450418d621dc997d9f87b90d418a13653",
+          "Text": "{\"Ref\":{\"Namespace\":\"purchase_order\",\"Name\":\"purchase_order.authorize\",\"Version\":\"1\",\"Implementation\":\"sqlite-business\",\"ImplementationVersion\":\"1\",\"Digest\":\"c56a3192fa6628da3ab3c2446c57da8450418d621dc997d9f87b90d418a13653\"},\"Preconditions\":\"submitted; sufficient units ledger capacity\",\"Effects\":\"reserve ordered_units units; mark authorized\",\"Input\":{\"$id\":\"urn:business:purchase_order.authorize:input\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":false,\"properties\":{\"record\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-zA-Z0-9_-]+$\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\"}}",
+          "Subject": "",
+          "Role": "capability"
+        },
+        {
+          "Ref": "b152741d9e747ae272b31a8d5d2b4bfa7f17ed9a4f95b520e95b40b3de13ddf2",
+          "Text": "{\"Ref\":{\"Namespace\":\"purchase_order\",\"Name\":\"purchase_order.archive\",\"Version\":\"1\",\"Implementation\":\"sqlite-business\",\"ImplementationVersion\":\"1\",\"Digest\":\"b152741d9e747ae272b31a8d5d2b4bfa7f17ed9a4f95b520e95b40b3de13ddf2\"},\"Preconditions\":\"rejected or withdrawn\",\"Effects\":\"mark archived retaining audit record\",\"Input\":{\"$id\":\"urn:business:purchase_order.archive:input\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":false,\"properties\":{\"record\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-zA-Z0-9_-]+$\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\"}}",
+          "Subject": "",
+          "Role": "capability"
+        },
+        {
+          "Ref": "85e26483556aeb2f30f870fdf5759e3210e76eee48a3b43d5910175f48189776",
+          "Text": "{\"Ref\":{\"Namespace\":\"purchase_order\",\"Name\":\"purchase_order.draft\",\"Version\":\"1\",\"Implementation\":\"sqlite-business\",\"ImplementationVersion\":\"1\",\"Digest\":\"85e26483556aeb2f30f870fdf5759e3210e76eee48a3b43d5910175f48189776\"},\"Preconditions\":\"record absent; positive ordered_units and approved_units\",\"Effects\":\"create draft retaining ordered_units, approved_units and vendor_verified\",\"Input\":{\"$id\":\"urn:business:purchase_order.draft:input\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":false,\"properties\":{\"approved_units\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"ordered_units\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"record\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-zA-Z0-9_-]+$\",\"type\":\"string\"},\"vendor_verified\":{\"type\":\"boolean\"}},\"required\":[\"record\",\"ordered_units\",\"approved_units\",\"vendor_verified\"],\"type\":\"object\"}}",
+          "Subject": "",
+          "Role": "capability"
+        },
+        {
+          "Ref": "93e6bbfa2e025251a6454105e0ec4f1722563113888aeacc689420914ae37739",
+          "Text": "{\"Ref\":{\"Namespace\":\"purchase_order\",\"Name\":\"purchase_order.reject\",\"Version\":\"1\",\"Implementation\":\"sqlite-business\",\"ImplementationVersion\":\"1\",\"Digest\":\"93e6bbfa2e025251a6454105e0ec4f1722563113888aeacc689420914ae37739\"},\"Preconditions\":\"submitted\",\"Effects\":\"mark rejected without accounting effect\",\"Input\":{\"$id\":\"urn:business:purchase_order.reject:input\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":false,\"properties\":{\"record\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-zA-Z0-9_-]+$\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\"}}",
+          "Subject": "",
+          "Role": "capability"
+        },
+        {
+          "Ref": "run-facts",
+          "Text": "{\"Reports\":null,\"Decisions\":null}",
+          "Subject": "",
+          "Role": "runtime"
+        }
+      ]
+    },
+    "result": {
+      "Content": "eyJraW5kIjoid2FpdCIsInJlYXNvbiI6IlRoZSByZXF1aXJlZCAncmVjb3JkJyBpZGVudGl0eSBmb3IgdGhlIGV4aXN0aW5nIFB1cmNoYXNlIG9yZGVyIGlzIG1pc3NpbmcgZnJvbSB0aGUgcHJvdmlkZWQgaW5mb3JtYXRpb24sIGFuZCBubyB2YWxpZCByZWNvcmQgaWRlbnRpZmllciBpcyBzdXBwbGllZCBpbiB0aGUgY3VycmVudCBpbnB1dHMgdG8gZXhlY3V0ZSBzdWJtaXQgb3IgYXV0aG9yaXplIG9wZXJhdGlvbnMuIiwiYWN0aW9ucyI6W119",
+      "Finish": "stop",
+      "RequestRef": "02178908929700953be608fb42af69c31bb7130ac66706c3574a7",
+      "Usage": {
+        "Known": true,
+        "Input": 2441,
+        "Output": 48
+      }
+    },
+    "decoded_content": {
+      "kind": "wait",
+      "reason": "The required 'record' identity for the existing Purchase order is missing from the provided information, and no valid record identifier is supplied in the current inputs to execute submit or authorize operations.",
+      "actions": []
+    }
+  },
+  {
+    "attempt": "fixed_passed",
+    "input": {
+      "Goal": "Authorize the existing Purchase order record item. If necessary submit it first. Do not reject, withdraw, archive or create other records. Finish with authorized state and ledger 997.",
+      "Constraints": "Every action uses the exact candidate Ref.Digest in capability. Use submitted input facts and record identity from the goal or a newer user reply. resource_version is the current record version; each confirmed transition increments it by one. Use dependencies for actions in one batch. Do not invent missing arguments. Return wait for missing input. Never claim completion; Core verifies the goal.",
+      "Blocks": [
+        {
+          "Ref": "business-state",
+          "Text": "{\"state\":\"draft\",\"ledger\":1000,\"version\":1}",
+          "Subject": "",
+          "Role": "state"
+        },
+        {
+          "Ref": "content:purchase_order:97739859ae1bfd2da7fb2da18ce86ffd1e6ab53e24412e8be370c346bece2325:1",
+          "Text": "{\"record\":\"item\",\"quantity\":3,\"limit\":10,\"verified\":true}",
+          "Subject": "operator",
+          "Role": "input"
+        },
+        {
+          "Ref": "36fb0c3910fc042e15814e1848d28e9776591494aea4bcdc249781dea599baf3",
+          "Text": "{\"Ref\":{\"Namespace\":\"purchase_order\",\"Name\":\"purchase_order.withdraw\",\"Version\":\"1\",\"Implementation\":\"sqlite-business\",\"ImplementationVersion\":\"1\",\"Digest\":\"36fb0c3910fc042e15814e1848d28e9776591494aea4bcdc249781dea599baf3\"},\"Preconditions\":\"authorized; reversal fits ledger bounds\",\"Effects\":\"reverse authorized ordered_units units; mark withdrawn\",\"Input\":{\"$id\":\"urn:business:purchase_order.withdraw:input\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":false,\"properties\":{\"record\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-zA-Z0-9_-]+$\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\"}}",
+          "Subject": "",
+          "Role": "capability"
+        },
+        {
+          "Ref": "8359b3209147f82200c91164eaa99a7d4728a016e79c8addb853027f684d7094",
+          "Text": "{\"Ref\":{\"Namespace\":\"purchase_order\",\"Name\":\"purchase_order.submit\",\"Version\":\"1\",\"Implementation\":\"sqlite-business\",\"ImplementationVersion\":\"1\",\"Digest\":\"8359b3209147f82200c91164eaa99a7d4728a016e79c8addb853027f684d7094\"},\"Preconditions\":\"draft; vendor_verified true; ordered_units \\u003c= approved_units\",\"Effects\":\"mark submitted after business validation\",\"Input\":{\"$id\":\"urn:business:purchase_order.submit:input\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":false,\"properties\":{\"record\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-zA-Z0-9_-]+$\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\"}}",
+          "Subject": "",
+          "Role": "capability"
+        },
+        {
+          "Ref": "c56a3192fa6628da3ab3c2446c57da8450418d621dc997d9f87b90d418a13653",
+          "Text": "{\"Ref\":{\"Namespace\":\"purchase_order\",\"Name\":\"purchase_order.authorize\",\"Version\":\"1\",\"Implementation\":\"sqlite-business\",\"ImplementationVersion\":\"1\",\"Digest\":\"c56a3192fa6628da3ab3c2446c57da8450418d621dc997d9f87b90d418a13653\"},\"Preconditions\":\"submitted; sufficient units ledger capacity\",\"Effects\":\"reserve ordered_units units; mark authorized\",\"Input\":{\"$id\":\"urn:business:purchase_order.authorize:input\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":false,\"properties\":{\"record\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-zA-Z0-9_-]+$\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\"}}",
+          "Subject": "",
+          "Role": "capability"
+        },
+        {
+          "Ref": "b152741d9e747ae272b31a8d5d2b4bfa7f17ed9a4f95b520e95b40b3de13ddf2",
+          "Text": "{\"Ref\":{\"Namespace\":\"purchase_order\",\"Name\":\"purchase_order.archive\",\"Version\":\"1\",\"Implementation\":\"sqlite-business\",\"ImplementationVersion\":\"1\",\"Digest\":\"b152741d9e747ae272b31a8d5d2b4bfa7f17ed9a4f95b520e95b40b3de13ddf2\"},\"Preconditions\":\"rejected or withdrawn\",\"Effects\":\"mark archived retaining audit record\",\"Input\":{\"$id\":\"urn:business:purchase_order.archive:input\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":false,\"properties\":{\"record\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-zA-Z0-9_-]+$\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\"}}",
+          "Subject": "",
+          "Role": "capability"
+        },
+        {
+          "Ref": "85e26483556aeb2f30f870fdf5759e3210e76eee48a3b43d5910175f48189776",
+          "Text": "{\"Ref\":{\"Namespace\":\"purchase_order\",\"Name\":\"purchase_order.draft\",\"Version\":\"1\",\"Implementation\":\"sqlite-business\",\"ImplementationVersion\":\"1\",\"Digest\":\"85e26483556aeb2f30f870fdf5759e3210e76eee48a3b43d5910175f48189776\"},\"Preconditions\":\"record absent; positive ordered_units and approved_units\",\"Effects\":\"create draft retaining ordered_units, approved_units and vendor_verified\",\"Input\":{\"$id\":\"urn:business:purchase_order.draft:input\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":false,\"properties\":{\"approved_units\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"ordered_units\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"record\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-zA-Z0-9_-]+$\",\"type\":\"string\"},\"vendor_verified\":{\"type\":\"boolean\"}},\"required\":[\"record\",\"ordered_units\",\"approved_units\",\"vendor_verified\"],\"type\":\"object\"}}",
+          "Subject": "",
+          "Role": "capability"
+        },
+        {
+          "Ref": "93e6bbfa2e025251a6454105e0ec4f1722563113888aeacc689420914ae37739",
+          "Text": "{\"Ref\":{\"Namespace\":\"purchase_order\",\"Name\":\"purchase_order.reject\",\"Version\":\"1\",\"Implementation\":\"sqlite-business\",\"ImplementationVersion\":\"1\",\"Digest\":\"93e6bbfa2e025251a6454105e0ec4f1722563113888aeacc689420914ae37739\"},\"Preconditions\":\"submitted\",\"Effects\":\"mark rejected without accounting effect\",\"Input\":{\"$id\":\"urn:business:purchase_order.reject:input\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":false,\"properties\":{\"record\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-zA-Z0-9_-]+$\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\"}}",
+          "Subject": "",
+          "Role": "capability"
+        },
+        {
+          "Ref": "run-facts",
+          "Text": "{\"Reports\":null,\"Decisions\":null}",
+          "Subject": "",
+          "Role": "runtime"
+        }
+      ]
+    },
+    "result": {
+      "Content": "eyJraW5kIjoiYWN0aW9ucyIsInJlYXNvbiI6IiIsImFjdGlvbnMiOlt7ImtleSI6InN1Ym1pdF9wbyIsImNhcGFiaWxpdHkiOiI4MzU5YjMyMDkxNDdmODIyMDBjOTExNjRlYWE5OWE3ZDQ3MjhhMDE2ZTc5YzhhZGRiODUzMDI3ZjY4NGQ3MDk0IiwiZGVwZW5kc19vbiI6W10sImFyZ3VtZW50cyI6IntcInJlY29yZFwiOlwiaXRlbVwifSIsInJlc291cmNlX3ZlcnNpb24iOjF9LHsia2V5IjoiYXV0aG9yaXplX3BvIiwiY2FwYWJpbGl0eSI6ImM1NmEzMTkyZmE2NjI4ZGEzYWIzYzI0NDZjNTdkYTg0NTA0MThkNjIxZGM5OTdkOWY4N2I5MGQ0MThhMTM2NTMiLCJkZXBlbmRzX29uIjpbInN1Ym1pdF9wbyJdLCJhcmd1bWVudHMiOiJ7XCJyZWNvcmRcIjpcIml0ZW1cIn0iLCJyZXNvdXJjZV92ZXJzaW9uIjoyfV19",
+      "Finish": "stop",
+      "RequestRef": "0217890894198513749365b55318faa75db47eb4778acb3619c3c",
+      "Usage": {
+        "Known": true,
+        "Input": 2541,
+        "Output": 198
+      }
+    },
+    "decoded_content": {
+      "kind": "actions",
+      "reason": "",
+      "actions": [
+        {
+          "key": "submit_po",
+          "capability": "8359b3209147f82200c91164eaa99a7d4728a016e79c8addb853027f684d7094",
+          "depends_on": [],
+          "arguments": "{\"record\":\"item\"}",
+          "resource_version": 1
+        },
+        {
+          "key": "authorize_po",
+          "capability": "c56a3192fa6628da3ab3c2446c57da8450418d621dc997d9f87b90d418a13653",
+          "depends_on": [
+            "submit_po"
+          ],
+          "arguments": "{\"record\":\"item\"}",
+          "resource_version": 2
+        }
+      ]
+    }
+  }
+]

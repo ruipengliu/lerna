@@ -1,0 +1,22 @@
+{
+  "Input": {
+    "Contract": "harness_evidence_answer_v1",
+    "Input": {
+      "Goal": "When did the Northbank footbridge open, and what is its length?",
+      "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789271236}",
+      "Blocks": [
+        {
+          "Ref": "content:local:7bab4d71b7460eda9e39a9eb9821c9d36967472e3dd925afc8f49546ba809f26:1",
+          "Text": "{\"Status\":\"acquired\",\"Body\":\"Northbank civic record, edition 2026-01. The Northbank footbridge opened on 14 May 1998. Its length is 84 metres. These measurements describe the original bridge.\",\"RequestedURL\":\"http://127.0.0.1:46579/final\",\"FinalURL\":\"http://127.0.0.1:46579/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"fc41fc2b3a26cdd6b5845b72c8bada0b6cba96f088d82c7749cbfe3b380f0991\",\"Mode\":\"http\",\"FetchedAt\":\"2026-09-13T03:46:17.759464807Z\",\"Sources\":[\"http://127.0.0.1:46579/final\"]}",
+          "Subject": "operator",
+          "Role": "external-evidence"
+        }
+      ]
+    },
+    "MaxInput": 229376,
+    "MaxOutput": 512
+  },
+  "InputUpper": 229376,
+  "OutputUpper": 512,
+  "ReservedCNY": 1
+}

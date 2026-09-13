@@ -1,0 +1,9 @@
+# lerna/adapters/filekeys_test [lerna/adapters/filekeys.test]
+adapters/filekeys/lifecycle_linux_test.go:64:14: source.Activate undefined (type *filekeys.Source has no field or method Activate)
+adapters/filekeys/lifecycle_linux_test.go:68:14: source.Activate undefined (type *filekeys.Source has no field or method Activate)
+adapters/filekeys/lifecycle_linux_test.go:69:14: source.Activate undefined (type *filekeys.Source has no field or method Activate)
+adapters/filekeys/lifecycle_linux_test.go:73:14: source.Retire undefined (type *filekeys.Source has no field or method Retire)
+adapters/filekeys/lifecycle_linux_test.go:74:14: source.Retire undefined (type *filekeys.Source has no field or method Retire)
+adapters/filekeys/lifecycle_linux_test.go:76:14: source.Retire undefined (type *filekeys.Source has no field or method Retire)
+FAIL	lerna/adapters/filekeys [build failed]
+FAIL

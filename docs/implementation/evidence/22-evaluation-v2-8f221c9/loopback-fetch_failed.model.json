@@ -1,0 +1,31 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "What is the load limit of the Westhaven footbridge?",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789271273}",
+        "Blocks": [
+          {
+            "Ref": "content:local:fd7f57938c697988a5f82d6166788e8cdee4b80277cd51ba2a95878b34ee5abf:1",
+            "Text": "{\"Status\":\"denied\",\"Mode\":\"http\",\"Requests\":1}",
+            "Subject": "operator",
+            "Role": "external-evidence-gap"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 512
+    },
+    "Result": {
+      "Content": "eyJhbnN3ZXIiOiIiLCJjbGFpbXMiOltdLCJnYXBzIjpbeyJkZXRhaWwiOiJBdHRlbXB0IHRvIHJldHJpZXZlIGluZm9ybWF0aW9uIGFib3V0IHRoZSBsb2FkIGxpbWl0IG9mIHRoZSBXZXN0aGF2ZW4gZm9vdGJyaWRnZSB3YXMgZGVuaWVkLCBubyByZWxldmFudCBsb2FkIGxpbWl0IGRhdGEgY291bGQgYmUgb2J0YWluZWQuIiwia2luZCI6ImZldGNoX2ZhaWxlZCIsInNvdXJjZXMiOlsiY29udGVudDpsb2NhbDpmZDdmNTc5MzhjNjk3OTg4YTVmODJkNjE2Njc4OGU4Y2RlZTRiODAyNzdjZDUxYmEyYTk1ODc4YjM0ZWU1YWJmOjEiXX1dLCJzY29wZSI6IlF1ZXJ5IHJlZ2FyZGluZyB0aGUgbG9hZCBsaW1pdCBvZiB0aGUgV2VzdGhhdmVuIGZvb3RicmlkZ2UiLCJzdGF0dXMiOiJmZXRjaF9mYWlsZWQifQ==",
+      "Finish": "stop",
+      "RequestRef": "021789271215118cb43b51ad7a6f2b3d703638489b11c032a8b5f",
+      "Usage": {
+        "Known": true,
+        "Input": 843,
+        "Output": 137
+      }
+    }
+  }
+]

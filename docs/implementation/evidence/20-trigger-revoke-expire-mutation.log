@@ -1,0 +1,7 @@
+--- FAIL: TestRevokedScanCannotSaveRetainedCandidate (0.52s)
+    trigger_dispatch_test.go:61: cancelled trigger saved successfully
+--- FAIL: TestExpiredTriggerCannotSaveRetainedCandidate (0.46s)
+    trigger_dispatch_test.go:71: cancelled trigger created save intent: <nil>
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.987s
+FAIL

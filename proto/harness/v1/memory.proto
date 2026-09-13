@@ -1,0 +1,126 @@
+syntax = "proto3";
+package harness.v1;
+option go_package = "lerna/gen/harness/v1;harnessv1";
+import "proto/harness/v1/contract.proto";
+import "proto/harness/v1/artifacts.proto";
+
+message MemoryRef { string namespace = 1; string collection = 2; string key = 3; }
+message MemorySource {
+ ContentSource ref = 1;
+ string method = 2;
+ optional string fragment = 3;
+}
+message MemoryConfidence {
+ string assessment = 1;
+ string basis = 2;
+ string method = 3;
+}
+message MemorySpec {
+ string kind = 1;
+ DynamicPayload content = 2;
+ repeated MemorySource sources = 3;
+ string about = 4;
+ string conditions = 5;
+ int64 recorded_at = 6;
+ optional int64 occurred_at = 7;
+ optional int64 valid_from = 8;
+ optional int64 valid_until = 9;
+ MemoryConfidence confidence = 10;
+ string policy_ref = 11;
+ string purpose = 12;
+ int64 retain_until = 13;
+}
+message MemoryRecord {
+ MemoryRef ref = 1;
+ uint64 revision = 2;
+ uint64 previous_revision = 3;
+ string operation_id = 4;
+ MemorySpec spec = 5;
+}
+message MemoryWrite {
+ string operation_id = 1;
+ MemoryRef ref = 2;
+ uint64 expected_revision = 3;
+ MemorySpec spec = 4;
+}
+
+message MemoryDelete {
+ string operation_id = 1;
+ MemoryRef ref = 2;
+ uint64 expected_revision = 3;
+ string purpose = 4;
+}
+
+message MemoryQuery {
+ string read_id = 1;
+ string collection = 2;
+ string purpose = 3;
+ string text = 4;
+ string kind = 5;
+ string about = 6;
+ uint32 max_results = 7;
+ // Bounds encoded record fields, excluding the bounded coverage metadata.
+ uint32 max_bytes = 8;
+}
+message MemoryGet {
+ string read_id = 1;
+ MemoryRef ref = 2;
+ uint64 revision = 3;
+ string purpose = 4;
+}
+message MemoryReadResult {
+ repeated MemoryRecord records = 1;
+ // Coverage only describes the caller's authorized range.
+ string coverage = 2;
+}
+
+message MemoryReceipt {
+ string operation_id = 1;
+ string subject = 2;
+ string semantic_sha256 = 3;
+ MemoryRef ref = 4;
+ uint64 revision = 5;
+ uint64 change_position = 6;
+}
+message MemoryOperationState { string state = 1; MemoryReceipt receipt = 2; string content_availability = 3; }
+message MemoryDeletionQuery { string operation_id = 1; MemoryRef ref = 2; string purpose = 3; }
+message MemoryCleanupProgress { string name = 1; string state = 2; uint64 position = 3; }
+message MemoryDeletionReport {
+ string authority = 1;
+ uint64 revision = 2;
+ uint64 change_position = 3;
+ repeated MemoryCleanupProgress local = 4;
+ repeated MemoryCleanupProgress replicas = 5;
+ repeated MemoryCleanupProgress derived_archives = 6;
+}
+message MemoryDeletionState {
+ string operation_id = 1;
+ MemoryRef ref = 2;
+ string purpose = 3;
+ string state = 4;
+ MemoryDeletionReport report = 5;
+}
+message MemoryRequest {
+ string message_id = 1;
+ string namespace = 2;
+ string method = 3;
+ MemoryWrite write = 4;
+ MemoryQuery query = 5;
+ MemoryGet get = 6;
+ string operation_id = 7;
+ // Presented grant; its peer binding comes from the trusted host transport.
+ string grant_material = 8;
+ MemoryDelete delete = 9;
+ MemoryDeletionQuery deletion_query = 10;
+}
+message MemoryResponse {
+ string message_id = 1;
+ string reply_to = 2;
+ string namespace = 3;
+ string code = 4;
+ MemoryReceipt receipt = 5;
+ MemoryReadResult result = 6;
+ MemoryOperationState operation = 7;
+ MemoryDeletionState deletion = 8;
+}
+service MemoryService { rpc Exchange(MemoryRequest) returns (MemoryResponse); }

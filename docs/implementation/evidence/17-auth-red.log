@@ -1,0 +1,3 @@
+lerna/adapters/memoryauth: no non-test Go files in /home/dev/proj/lerna/adapters/memoryauth
+FAIL	lerna/adapters/memoryauth [build failed]
+FAIL

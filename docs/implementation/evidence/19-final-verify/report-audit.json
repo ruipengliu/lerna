@@ -1,0 +1,151 @@
+[
+  {
+    "file": "verification-stages.json",
+    "status": null,
+    "required": 0,
+    "non_required_other_results": []
+  },
+  {
+    "file": "sdk-contract-report.json",
+    "status": "passed",
+    "required": 32,
+    "non_required_other_results": [
+      {
+        "id": "real-task-runtime",
+        "status": "not_implemented"
+      },
+      {
+        "id": "cross-process-interop",
+        "status": "not_run"
+      },
+      {
+        "id": "other-protocol-major",
+        "status": "unsupported"
+      }
+    ]
+  },
+  {
+    "file": "sdk-sample.json",
+    "status": null,
+    "required": 0,
+    "non_required_other_results": []
+  },
+  {
+    "file": "local-auth-report.json",
+    "status": "passed",
+    "required": 30,
+    "non_required_other_results": [
+      {
+        "id": "cross-node-and-single-use",
+        "status": "unsupported"
+      }
+    ]
+  },
+  {
+    "file": "durable-tasks-report.json",
+    "status": "passed",
+    "required": 13,
+    "non_required_other_results": [
+      {
+        "id": "worker-execution",
+        "status": "not_run"
+      }
+    ]
+  },
+  {
+    "file": "bounded-worker-report.json",
+    "status": "passed",
+    "required": 26,
+    "non_required_other_results": []
+  },
+  {
+    "file": "task-control-report.json",
+    "status": "passed",
+    "required": 31,
+    "non_required_other_results": []
+  },
+  {
+    "file": "restricted-grants-report.json",
+    "status": "passed",
+    "required": 30,
+    "non_required_other_results": []
+  },
+  {
+    "file": "controlled-content-report.json",
+    "status": "passed",
+    "required": 36,
+    "non_required_other_results": []
+  },
+  {
+    "file": "bounded-answer-report.json",
+    "status": "passed",
+    "required": 23,
+    "non_required_other_results": []
+  },
+  {
+    "file": "task-updates-report.json",
+    "status": "passed",
+    "required": 26,
+    "non_required_other_results": []
+  },
+  {
+    "file": "synchronous-execution-report.json",
+    "status": "passed",
+    "required": 35,
+    "non_required_other_results": []
+  },
+  {
+    "file": "async-recovery-report.json",
+    "status": "passed",
+    "required": 23,
+    "non_required_other_results": []
+  },
+  {
+    "file": "resource-control-report.json",
+    "status": "passed",
+    "required": 41,
+    "non_required_other_results": []
+  },
+  {
+    "file": "capability-catalog-report.json",
+    "status": "passed",
+    "required": 1049,
+    "non_required_other_results": []
+  },
+  {
+    "file": "api-brain-report.json",
+    "status": "passed",
+    "required": 12,
+    "non_required_other_results": []
+  },
+  {
+    "file": "bound-credentials-report.json",
+    "status": "passed",
+    "required": 21,
+    "non_required_other_results": []
+  },
+  {
+    "file": "credential-lifecycle-report.json",
+    "status": "passed",
+    "required": 24,
+    "non_required_other_results": []
+  },
+  {
+    "file": "long-term-memory-report.json",
+    "status": "passed",
+    "required": 23,
+    "non_required_other_results": []
+  },
+  {
+    "file": "personalized-context-report.json",
+    "status": "passed",
+    "required": 52,
+    "non_required_other_results": []
+  },
+  {
+    "file": "memory-deletion-report.json",
+    "status": "passed",
+    "required": 4,
+    "non_required_other_results": []
+  }
+]

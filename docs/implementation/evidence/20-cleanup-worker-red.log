@@ -1,0 +1,5 @@
+--- FAIL: TestBoundedCleanupWorkerUsesDurableProgress (0.00s)
+    save_test.go:42: unsupported save fault
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.008s
+FAIL

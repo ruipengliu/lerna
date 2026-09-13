@@ -1,0 +1,134 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	1.087s
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/catalogauth	[no test files]
+?   	lerna/adapters/cataloglocal	[no test files]
+ok  	lerna/adapters/checkpointfile	(cached)
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+ok  	lerna/adapters/contextmemory	1.024s
+?   	lerna/adapters/contextpolicy	[no test files]
+?   	lerna/adapters/credentialauth	[no test files]
+ok  	lerna/adapters/credentialbackups	(cached)
+?   	lerna/adapters/credentialexecution	[no test files]
+ok  	lerna/adapters/credentialhttp	(cached)
+?   	lerna/adapters/doubaosearch	[no test files]
+?   	lerna/adapters/duckduckgo	[no test files]
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/executionrouter	[no test files]
+ok  	lerna/adapters/extractionauth	(cached)
+?   	lerna/adapters/extractioncleanup	[no test files]
+ok  	lerna/adapters/extractionexecution	1.199s
+?   	lerna/adapters/extractioninputs	[no test files]
+ok  	lerna/adapters/extractionsourceguard	(cached)
+?   	lerna/adapters/fetchauth	[no test files]
+?   	lerna/adapters/fetchcontent	[no test files]
+?   	lerna/adapters/fetchcontext	[no test files]
+?   	lerna/adapters/fetchexecution	[no test files]
+?   	lerna/adapters/fetchoutput	[no test files]
+?   	lerna/adapters/fetchqueries	[no test files]
+?   	lerna/adapters/fetchtask	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/filekeys	(cached)
+ok  	lerna/adapters/httpfetch	4.052s
+ok  	lerna/adapters/josegrant	(cached)
+?   	lerna/adapters/jsonsearch	[no test files]
+ok  	lerna/adapters/localextraction	(cached)
+ok  	lerna/adapters/localextractionsource	(cached)
+ok  	lerna/adapters/memoryauth	10.812s
+ok  	lerna/adapters/memorycleanup	(cached)
+?   	lerna/adapters/memorylocal	[no test files]
+ok  	lerna/adapters/recoveryproof	(cached)
+?   	lerna/adapters/replayfetch	[no test files]
+?   	lerna/adapters/researchcontext	[no test files]
+?   	lerna/adapters/researchlineage	[no test files]
+?   	lerna/adapters/searchcontext	[no test files]
+?   	lerna/adapters/searchexecution	[no test files]
+?   	lerna/adapters/searchprivacy	[no test files]
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+ok  	lerna/adapters/simresource	1.095s
+ok  	lerna/adapters/simworkflow	1.086s
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/sqlitecatalog	[no test files]
+ok  	lerna/adapters/sqlitecontentpolicy	(cached)
+ok  	lerna/adapters/sqlitecontext	(cached)
+ok  	lerna/adapters/sqlitecredentials	(cached)
+ok  	lerna/adapters/sqliteextraction	(cached)
+ok  	lerna/adapters/sqlitefetch	1.432s
+ok  	lerna/adapters/sqlitememory	(cached)
+?   	lerna/adapters/taskcontent	[no test files]
+ok  	lerna/adapters/taskcontext	1.102s
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	(cached)
+ok  	lerna/authorization	(cached)
+ok  	lerna/brain	1.030s
+ok  	lerna/catalog	1.121s
+ok  	lerna/cleanup	(cached)
+?   	lerna/cmd/answercheck	[no test files]
+?   	lerna/cmd/apicheck	[no test files]
+ok  	lerna/cmd/authctl	1.446s
+?   	lerna/cmd/contextcheck	[no test files]
+ok  	lerna/cmd/contractcheck	423.938s
+ok  	lerna/cmd/credentialctl	(cached)
+?   	lerna/cmd/extractioncheck	[no test files]
+?   	lerna/cmd/fetchcheck	[no test files]
+ok  	lerna/cmd/searchcheck	22.169s
+ok  	lerna/cmd/searcheval	1.028s
+ok  	lerna/conformance	(cached)
+ok  	lerna/contextassembly	(cached)
+?   	lerna/contractfixture	[no test files]
+ok  	lerna/credentials	(cached)
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+ok  	lerna/extraction	(cached)
+?   	lerna/fetch	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/catalogwire	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/memorywire	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/memory	(cached)
+?   	lerna/memory/storecontract	[no test files]
+ok  	lerna/profiles/answer	242.886s
+ok  	lerna/profiles/asynccheck	12.890s
+ok  	lerna/profiles/catalogcheck	1762.094s
+ok  	lerna/profiles/content	(cached)
+?   	lerna/profiles/contextcheck	[no test files]
+ok  	lerna/profiles/control	5.485s
+ok  	lerna/profiles/credentialcheck	14.441s
+?   	lerna/profiles/durabletasks	[no test files]
+ok  	lerna/profiles/executioncheck	18.254s
+ok  	lerna/profiles/extractioncheck	81.805s
+--- FAIL: TestReferenceResearchMaterialsRunThroughOriginalTask (16.89s)
+    --- FAIL: TestReferenceResearchMaterialsRunThroughOriginalTask/fetch_failed (3.86s)
+        frozen_research_test.go:30: archive omitted the evidence available to the answer model
+--- FAIL: TestResearchAnswerRetainsEveryFailedPage (5.53s)
+    partial_research_test.go:47: one failed source masked the other
+--- FAIL: TestResearchReplayDoesNotRepeatOriginalInputValidationAtPublication (3.69s)
+    research_model_test.go:90: publication duplicated original-input observation: total=61 content=53 outcome=2
+--- FAIL: TestReferenceResearchReplayPreservesModeAndReservation (17.39s)
+    --- FAIL: TestReferenceResearchReplayPreservesModeAndReservation/fetch_failed (4.31s)
+        research_profile_test.go:46: fixed denial was lost
+FAIL
+FAIL	lerna/profiles/fetchcheck	413.024s
+ok  	lerna/profiles/grants	(cached)
+?   	lerna/profiles/localauth	[no test files]
+ok  	lerna/profiles/memorycheck	(cached)
+ok  	lerna/profiles/sdkcontract	(cached)
+ok  	lerna/profiles/searchcheck	1.039s
+ok  	lerna/profiles/takeover	13.800s
+ok  	lerna/profiles/updates	10.370s
+ok  	lerna/profiles/worker	3.546s
+?   	lerna/protocol	[no test files]
+ok  	lerna/schema	(cached)
+ok  	lerna/sdk	(cached)
+ok  	lerna/tasks	10.316s
+?   	lerna/websearch	[no test files]
+FAIL
+make: *** [Makefile:11: verify] Error 1

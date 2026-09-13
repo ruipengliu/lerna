@@ -1,0 +1,9 @@
+ok  	lerna/authorization	3.491s
+ok  	lerna/artifacts	3.390s
+--- FAIL: TestCurrentHarnessPolicyAndResidencyConstrainMemory (0.85s)
+    authority_test.go:237: revoked Memory disclosure blocked authorized artifact deletion: VERSION_CONFLICT
+FAIL
+FAIL	lerna/adapters/memoryauth	0.880s
+ok  	lerna/contextassembly	(cached)
+ok  	lerna/profiles/content	4.540s
+FAIL

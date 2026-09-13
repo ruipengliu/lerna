@@ -1,0 +1,5 @@
+# lerna/adapters/sqlitememory_test [lerna/adapters/sqlitememory.test]
+adapters/sqlitememory/restore_report_test.go:17:38: restored.CleanupTarget undefined (type *sqlitememory.Restore has no field or method CleanupTarget)
+adapters/sqlitememory/restore_report_test.go:53:39: restored.CleanupTarget undefined (type *sqlitememory.Restore has no field or method CleanupTarget)
+FAIL	lerna/adapters/sqlitememory [build failed]
+FAIL

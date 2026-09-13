@@ -1,0 +1,4 @@
+# lerna/profiles/fetchcheck
+profiles/fetchcheck/replay_test.go:10:2: package lerna/adapters/replayfetch is not in std (/usr/local/go/src/lerna/adapters/replayfetch)
+FAIL	lerna/profiles/fetchcheck [setup failed]
+FAIL

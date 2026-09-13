@@ -1,0 +1,27 @@
+{
+  "plan": "search-public-v3",
+  "executor_commit": "0b3eb04994768293829ffce0ad39e6ebba0a5ca4",
+  "config_sha256": "1f931a1c0559a4d358f3e779dbb770e82f000640a571ea3bd52a1c340af49db1",
+  "private_output": ".scratch/harness-implementation/public-v3-0b3eb04",
+  "max_model_requests": 1,
+  "reserved_cny": 1,
+  "max_search_requests": 1,
+  "expected_fact": "httpbin describes itself as an HTTP Request and Response service",
+  "pass_criteria": "Governed discovery, actually acquired original page, formal answer with independently supported citation. Unavailable pages do not pass.",
+  "known_risks": [
+    "httpbin.org DNS preflight failed; www.httpbin.org resolved",
+    "Provider CDN addresses may rotate outside configured prefixes",
+    "Page timeout remains 1000ms; search timeout is 3000ms"
+  ],
+  "network_authority": "Exact URLs and public /16 IPv4 or /48 IPv6 prefixes derived from host DNS preflight, fixed before execution. Search candidates grant no authority.",
+  "restrictions": [
+    "One task, no automatic retry or replacement",
+    "Known-material integration check, not general quality benchmark",
+    "Never archive private task directory or host token"
+  ],
+  "command": "/tmp/lerna-searcheval -execute -compact-evidence -public-config docs/implementation/evidence/22-public-v3-0b3eb04/config.json -out .scratch/harness-implementation/public-v3-0b3eb04",
+  "change": "User explicitly authorizes removal of fixed 512-token ceiling. One new task, output reservation 4096 tokens; original v2 truncation remains. Independent answer byte limit 8192 remains.",
+  "runner_plan": "search-public-v1",
+  "max_output_tokens": 4096,
+  "max_answer_bytes": 8192
+}

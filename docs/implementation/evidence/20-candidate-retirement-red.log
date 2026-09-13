@@ -1,0 +1,8 @@
+# lerna/adapters/sqliteextraction_test [lerna/adapters/sqliteextraction.test]
+adapters/sqliteextraction/store_test.go:56:13: s.Retire undefined (type *sqliteextraction.Store has no field or method Retire)
+adapters/sqliteextraction/store_test.go:70:18: s.Inspect undefined (type *sqliteextraction.Store has no field or method Inspect)
+adapters/sqliteextraction/store_test.go:77:13: s.Retire undefined (type *sqliteextraction.Store has no field or method Retire)
+adapters/sqliteextraction/store_test.go:80:13: s.Retire undefined (type *sqliteextraction.Store has no field or method Retire)
+adapters/sqliteextraction/store_test.go:87:17: s.Inspect undefined (type *sqliteextraction.Store has no field or method Inspect)
+FAIL	lerna/adapters/sqliteextraction [build failed]
+FAIL

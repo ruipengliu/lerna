@@ -1,0 +1,5 @@
+--- FAIL: TestCurrentAuthorityProofRejectsBackupReplayAndRollback (0.10s)
+    proof_test.go:76: backup proof replayed into a fresh recovery
+FAIL
+FAIL	lerna/adapters/recoveryproof	0.120s
+FAIL

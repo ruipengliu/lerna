@@ -1,0 +1,4 @@
+# lerna/profiles/extractioncheck_test [lerna/profiles/extractioncheck.test]
+profiles/extractioncheck/task_test.go:31:30: undefined: extractioncheck.CheckTaskPermission
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

@@ -1,0 +1,5 @@
+--- FAIL: TestNonRegularCheckpointCannotBlockMaintenance (1.00s)
+    store_test.go:43: non-regular checkpoint blocked beyond cancellation
+FAIL
+FAIL	lerna/adapters/checkpointfile	1.018s
+FAIL

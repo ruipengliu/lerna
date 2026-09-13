@@ -1,0 +1,65 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	(cached)
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/catalogauth	[no test files]
+?   	lerna/adapters/cataloglocal	[no test files]
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+?   	lerna/adapters/credentialauth	[no test files]
+ok  	lerna/adapters/credentialbackups	(cached)
+?   	lerna/adapters/credentialexecution	[no test files]
+ok  	lerna/adapters/credentialhttp	(cached)
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/executionrouter	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/filekeys	(cached)
+ok  	lerna/adapters/josegrant	(cached)
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+ok  	lerna/adapters/simresource	(cached)
+ok  	lerna/adapters/simworkflow	(cached)
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/sqlitecatalog	[no test files]
+ok  	lerna/adapters/sqlitecredentials	(cached)
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	(cached)
+ok  	lerna/authorization	(cached)
+ok  	lerna/brain	(cached)
+ok  	lerna/catalog	(cached)
+?   	lerna/cmd/answercheck	[no test files]
+?   	lerna/cmd/apicheck	[no test files]
+ok  	lerna/cmd/authctl	(cached)
+ok  	lerna/cmd/contractcheck	18.083s
+ok  	lerna/cmd/credentialctl	(cached)
+ok  	lerna/conformance	(cached)
+?   	lerna/contractfixture	[no test files]
+ok  	lerna/credentials	(cached)
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/catalogwire	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/profiles/answer	(cached)
+ok  	lerna/profiles/asynccheck	(cached)
+ok  	lerna/profiles/catalogcheck	(cached)
+ok  	lerna/profiles/content	(cached)
+ok  	lerna/profiles/control	(cached)
+ok  	lerna/profiles/credentialcheck	(cached)
+?   	lerna/profiles/durabletasks	[no test files]
+ok  	lerna/profiles/executioncheck	(cached)
+ok  	lerna/profiles/grants	(cached)
+?   	lerna/profiles/localauth	[no test files]
+ok  	lerna/profiles/sdkcontract	(cached)
+ok  	lerna/profiles/takeover	(cached)
+ok  	lerna/profiles/updates	(cached)
+ok  	lerna/profiles/worker	(cached)
+?   	lerna/protocol	[no test files]
+ok  	lerna/schema	(cached)
+ok  	lerna/sdk	(cached)
+ok  	lerna/tasks	(cached)

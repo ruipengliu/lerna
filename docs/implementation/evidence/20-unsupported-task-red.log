@@ -1,0 +1,5 @@
+--- FAIL: TestUnsupportedExtractionIsQueryableWithoutSavingCandidate (0.31s)
+    unsupported_test.go:37: unsupported extraction stayed ambiguous: UNKNOWN/UNKNOWN <nil>
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.315s
+FAIL

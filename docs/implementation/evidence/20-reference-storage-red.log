@@ -1,0 +1,6 @@
+--- FAIL: TestMemorySourceChecksCurrentFileAndEachResidencyDimension (0.00s)
+    --- FAIL: TestMemorySourceChecksCurrentFileAndEachResidencyDimension/store_reference (0.00s)
+        memory_test.go:35: PERMISSION_DENIED
+FAIL
+FAIL	lerna/adapters/localextractionsource	0.007s
+FAIL

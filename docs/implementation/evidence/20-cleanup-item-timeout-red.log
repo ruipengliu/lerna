@@ -1,0 +1,5 @@
+--- FAIL: TestCleanupWorkerBoundsOneUnavailableItem (5.78s)
+    cleanup_worker_test.go:18: failed item: {Attempts:[{Candidate:NTZiMTgyMzI4YzQyZTAwYWIzMjFhZDFlY2FkMDgwYzk3YjM2NThmZmNmYTE4NzIzOTgyZDBmMjBkMWFjMzRiZi8xL2M0MGZlYjVlMjY3Y2ZlZTUzNDBkYWVlYzE0ZjgwMjY2ODUxNjFhNWIwZTJkYzg5ZjU4ZmM4NzEyMzlmMTUzYWE.PCFfsKtWk3ihXFxE7sp2fnhXwjkjadLDCpsizY1q-WM Error:UNAVAILABLE Result:{State: Report:<nil>}}] Progress:{Version:0 After:}} UNAVAILABLE
+FAIL
+FAIL	lerna/profiles/extractioncheck	5.788s
+FAIL

@@ -1,0 +1,5 @@
+--- FAIL: TestCallerCancellationRetainsObservedRequestCount (2.23s)
+    cancel_count_test.go:62: known dispatched request lost after cancellation
+FAIL
+FAIL	lerna/profiles/fetchcheck	2.244s
+FAIL

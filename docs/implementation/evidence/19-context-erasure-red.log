@@ -1,0 +1,6 @@
+# lerna/adapters/memoryauth_test [lerna/adapters/memoryauth.test]
+adapters/memoryauth/context_erasure_test.go:20:28: undefined: contextassembly.SourceInvalidation
+adapters/memoryauth/context_erasure_test.go:21:24: store.InvalidateSource undefined (type *sqlitecontext.Store has no field or method InvalidateSource)
+adapters/memoryauth/context_erasure_test.go:31:27: reopened.InvalidateSource undefined (type *sqlitecontext.Store has no field or method InvalidateSource)
+FAIL	lerna/adapters/memoryauth [build failed]
+FAIL

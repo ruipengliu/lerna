@@ -1,0 +1,13 @@
+--- FAIL: TestExpiredEvidencePreservesAcquiredFactWithoutRefetch (0.61s)
+    expiry_test.go:58: expired evidence erased known effect or became success: {Phase:FINISHED Result:FAILURE Effect:CONFIRMED Output:[123 34 115 116 97 116 117 115 34 58 34 101 120 112 105 114 101 100 34 44 34 114 101 102 101 114 101 110 99 101 34 58 34 34 125] Evidence:[123 34 115 116 97 116 117 115 34 58 34 101 120 112 105 114 101 100 34 44 34 109 111 100 101 34 58 34 104 116 116 112 34 44 34 114 101 113 117 101 115 116 115 34 58 49 125]} <nil>
+--- FAIL: TestCorePreservesFailedAcquisitionFacts (1.63s)
+    --- FAIL: TestCorePreservesFailedAcquisitionFacts/403 (0.52s)
+        failure_test.go:17: HTTP failure task state=WAITING result=UNKNOWN effect=UNKNOWN requests=2
+    --- FAIL: TestCorePreservesFailedAcquisitionFacts/404 (0.54s)
+        failure_test.go:17: HTTP failure task state=WAITING result=UNKNOWN effect=UNKNOWN requests=2
+    --- FAIL: TestCorePreservesFailedAcquisitionFacts/410 (0.57s)
+        failure_test.go:17: HTTP failure task state=WAITING result=UNKNOWN effect=UNKNOWN requests=2
+FAIL
+FAIL	lerna/profiles/fetchcheck	24.973s
+ok  	lerna/adapters/sqlitefetch	1.604s
+FAIL

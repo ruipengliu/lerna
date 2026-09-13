@@ -1,0 +1,5 @@
+--- FAIL: TestExecutionOutputInheritsNewlyAcquiredRedirectSource (0.35s)
+    output_lineage_test.go:62: Execution wrapper discarded newly acquired source
+FAIL
+FAIL	lerna/profiles/fetchcheck	0.358s
+FAIL

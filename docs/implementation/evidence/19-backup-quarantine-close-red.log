@@ -1,0 +1,5 @@
+--- FAIL: TestRestoreWaitsForRuntimeAndExcludesOrdinaryOpen (2.07s)
+    restore_test.go:35: repeated close changed the Store contract: close /tmp/TestRestoreWaitsForRuntimeAndExcludesOrdinaryOpen2220906230/001/memory.db: file already closed
+FAIL
+FAIL	lerna/adapters/sqlitememory	2.086s
+FAIL

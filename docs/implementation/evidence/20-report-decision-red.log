@@ -1,0 +1,4 @@
+# lerna/profiles/extractioncheck [lerna/profiles/extractioncheck.test]
+profiles/extractioncheck/later_read_test.go:139:28: undefined: runReportDecision
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

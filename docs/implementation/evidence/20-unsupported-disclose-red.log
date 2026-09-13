@@ -1,0 +1,5 @@
+--- FAIL: TestUnsupportedExtractionWithholdsReasonAfterDisclosureRevocation (0.30s)
+    unsupported_test.go:19: unsupported extraction stayed ambiguous: NOT_OCCURRED/FAILURE <nil>
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.308s
+FAIL

@@ -1,0 +1,10 @@
+# lerna/adapters/sqlitefetch_test [lerna/adapters/sqlitefetch.test]
+adapters/sqlitefetch/outcome_test.go:24:28: store.Outcome undefined (type *sqlitefetch.Store has no field or method Outcome)
+adapters/sqlitefetch/outcome_test.go:27:16: undefined: fetch.Outcome
+adapters/sqlitefetch/outcome_test.go:28:17: store.Complete undefined (type *sqlitefetch.Store has no field or method Complete)
+adapters/sqlitefetch/outcome_test.go:39:27: store.Outcome undefined (type *sqlitefetch.Store has no field or method Outcome)
+adapters/sqlitefetch/outcome_test.go:43:17: store.Complete undefined (type *sqlitefetch.Store has no field or method Complete)
+adapters/sqlitefetch/outcome_test.go:48:17: store.Complete undefined (type *sqlitefetch.Store has no field or method Complete)
+adapters/sqlitefetch/outcome_test.go:52:17: store.Complete undefined (type *sqlitefetch.Store has no field or method Complete)
+FAIL	lerna/adapters/sqlitefetch [build failed]
+FAIL

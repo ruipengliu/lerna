@@ -1,0 +1,6 @@
+--- FAIL: TestReassembledInvocationSurvivesProcessExit (99.21s)
+    --- FAIL: TestReassembledInvocationSurvivesProcessExit/reassembled-invoked (51.32s)
+        personalized_process_test.go:167: CONTEXT_INVALIDATED
+FAIL
+FAIL	lerna/profiles/catalogcheck	99.247s
+FAIL

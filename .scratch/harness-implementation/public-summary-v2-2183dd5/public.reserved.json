@@ -1,0 +1,22 @@
+{
+  "Input": {
+    "Contract": "harness_evidence_answer_v1",
+    "Input": {
+      "Goal": "What is Go, and is it statically typed? Answer using only the summaries returned by Doubao search. Cite the source title or URL. No original page requests are performed; do not claim to have read the original sites.",
+      "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":1,\"DeadlineUnix\":1789275639}",
+      "Blocks": [
+        {
+          "Ref": "content:local:9bf84f4cd7073a08691db4e35eb68583a2ba1e3f83bed7762cda822e626e6a34:1",
+          "Text": "{\"Status\":\"denied\",\"Mode\":\"http\",\"Requests\":1}",
+          "Subject": "operator",
+          "Role": "external-evidence-gap"
+        }
+      ]
+    },
+    "MaxInput": 229376,
+    "MaxOutput": 4096
+  },
+  "InputUpper": 229376,
+  "OutputUpper": 4096,
+  "ReservedCNY": 1
+}

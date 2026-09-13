@@ -1,0 +1,3 @@
+ok  	lerna/profiles/fetchcheck	11.336s
+ok  	lerna/adapters/httpfetch	4.328s
+?   	lerna/adapters/fetchexecution	[no test files]

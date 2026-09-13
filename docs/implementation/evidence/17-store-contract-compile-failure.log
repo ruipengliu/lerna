@@ -1,0 +1,10 @@
+# lerna/memory/storecontract
+memory/storecontract/contract.go:111:9: too many arguments in call to close
+	have (chan struct{})
+	want ()
+FAIL	lerna/adapters/sqlitememory [build failed]
+ok  	lerna/sdk	(cached)
+ok  	lerna/adapters/memoryauth	(cached)
+?   	lerna/adapters/memorylocal	[no test files]
+ok  	lerna/memory	(cached)
+FAIL

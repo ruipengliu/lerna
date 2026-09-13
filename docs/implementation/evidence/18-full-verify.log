@@ -1,0 +1,78 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	1.030s
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/catalogauth	[no test files]
+?   	lerna/adapters/cataloglocal	[no test files]
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+ok  	lerna/adapters/contextmemory	1.025s
+?   	lerna/adapters/credentialauth	[no test files]
+ok  	lerna/adapters/credentialbackups	1.049s
+?   	lerna/adapters/credentialexecution	[no test files]
+ok  	lerna/adapters/credentialhttp	1.087s
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/executionrouter	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/filekeys	1.235s
+ok  	lerna/adapters/josegrant	1.015s
+ok  	lerna/adapters/memoryauth	8.117s
+?   	lerna/adapters/memorylocal	[no test files]
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+ok  	lerna/adapters/simresource	1.101s
+ok  	lerna/adapters/simworkflow	1.088s
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/sqlitecatalog	[no test files]
+ok  	lerna/adapters/sqlitecontext	1.115s
+ok  	lerna/adapters/sqlitecredentials	1.072s
+ok  	lerna/adapters/sqlitememory	1.498s
+ok  	lerna/adapters/taskcontext	1.070s
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	1.313s
+ok  	lerna/authorization	2.412s
+ok  	lerna/brain	1.028s
+ok  	lerna/catalog	1.132s
+?   	lerna/cmd/answercheck	[no test files]
+?   	lerna/cmd/apicheck	[no test files]
+ok  	lerna/cmd/authctl	1.577s
+?   	lerna/cmd/contextcheck	[no test files]
+ok  	lerna/cmd/contractcheck	442.229s
+ok  	lerna/cmd/credentialctl	3.258s
+ok  	lerna/conformance	1.012s
+ok  	lerna/contextassembly	1.396s
+?   	lerna/contractfixture	[no test files]
+ok  	lerna/credentials	1.630s
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/catalogwire	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/memorywire	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/memory	1.719s
+?   	lerna/memory/storecontract	[no test files]
+ok  	lerna/profiles/answer	146.754s
+ok  	lerna/profiles/asynccheck	12.939s
+ok  	lerna/profiles/catalogcheck	1349.450s
+ok  	lerna/profiles/content	3.909s
+?   	lerna/profiles/contextcheck	[no test files]
+ok  	lerna/profiles/control	5.951s
+ok  	lerna/profiles/credentialcheck	14.897s
+?   	lerna/profiles/durabletasks	[no test files]
+ok  	lerna/profiles/executioncheck	16.601s
+ok  	lerna/profiles/grants	3.181s
+?   	lerna/profiles/localauth	[no test files]
+ok  	lerna/profiles/memorycheck	7.663s
+ok  	lerna/profiles/sdkcontract	1.048s
+ok  	lerna/profiles/takeover	13.760s
+ok  	lerna/profiles/updates	9.937s
+ok  	lerna/profiles/worker	3.505s
+?   	lerna/protocol	[no test files]
+ok  	lerna/schema	1.032s
+ok  	lerna/sdk	1.108s
+ok  	lerna/tasks	10.163s

@@ -1,0 +1,26 @@
+syntax = "proto3";
+package harness.v1;
+option go_package = "lerna/gen/harness/v1;harnessv1";
+import "proto/harness/v1/contract.proto";
+message ExecutionQualification { TaskRef task=1; string owner=2; uint64 epoch=3; uint64 version=4; string work_id=5; uint64 generation=6; }
+message CapabilityInvocation { string operation_id=1; ExecutionQualification qualification=2; string capability=3; string version=4; string implementation=5; string implementation_version=6; string descriptor_sha256=7; string input_ref=8; uint64 resource_version=9; uint64 control_version=10; }
+message InvocationReceipt { string operation_id=1; uint64 revision=2; }
+message InvocationSnapshot { CapabilityInvocation invocation=1; uint64 revision=2; bool started=3; string phase=4; string result=5; string effect=6; string reference=7; uint32 checks=8; uint64 applied_revision=9; bool conflicting_evidence=10; string cancel_operation_id=11; }
+message InvokeCapability { CapabilityInvocation invocation=1; string grant_material=2; }
+message CapabilityRequest { string message_id=1; string namespace=2; oneof body { InvokeCapability invoke=10; string get_invocation=11; string reconcile=12; CancelInvocation request_cancel=13; string get_cancel=14; RequestResourceControl request_resource_control=15; ControlledResourceRef get_resource_control=16; string lookup_resource_control=17; CatalogQuery list=18; CatalogQuery search=19; CatalogRef describe=20; } }
+message CapabilityResponse { string message_id=1; string reply_to=2; string namespace=3; string evidence=4; oneof body { InvocationReceipt receipt=10; InvocationSnapshot snapshot=11; CapabilityFailure failure=12; CancellationSnapshot cancellation=13; ResourceControlSnapshot resource_control=14; ResourceControlReceipt resource_receipt=15; CatalogPage catalog_page=16; CatalogDeclaration catalog_declaration=17; } }
+message CapabilityFailure { string code=1; }
+message CancelInvocation { string operation_id=1; string invocation_id=2; }
+message CancellationSnapshot { CancelInvocation request=1; InvocationReceipt receipt=2; string progress=3; bool possibly_sent=4; }
+service CapabilityService { rpc List(CapabilityRequest) returns(CapabilityResponse); rpc Search(CapabilityRequest) returns(CapabilityResponse); rpc Describe(CapabilityRequest) returns(CapabilityResponse); rpc RequestResourceControl(CapabilityRequest) returns(CapabilityResponse); rpc GetResourceControl(CapabilityRequest) returns(CapabilityResponse); rpc LookupResourceControl(CapabilityRequest) returns(CapabilityResponse); rpc RequestCancel(CapabilityRequest) returns (CapabilityResponse); rpc GetCancel(CapabilityRequest) returns (CapabilityResponse); rpc Invoke(CapabilityRequest) returns (CapabilityResponse); rpc GetInvocation(CapabilityRequest) returns (CapabilityResponse); rpc Reconcile(CapabilityRequest) returns (CapabilityResponse); }
+
+message ControlledResourceRef { string namespace=1; string kind=2; string key=3; }
+message RequestResourceControl { string operation_id=1; ControlledResourceRef resource=2; string intent=3; uint64 expected_version=4; }
+message ResourceControlReceipt { string operation_id=1; ControlledResourceRef resource=2; uint64 version=3; }
+message ResourceControlSnapshot { ControlledResourceRef resource=1; uint64 version=2; string intent=3; string progress=4; uint64 resource_version=5; uint32 blocking=6; uint32 checks=7; string limitation=8; }
+
+message CatalogRef { string namespace=1; string name=2; string version=3; string implementation=4; string implementation_version=5; string digest=6; }
+message CatalogQuery { string text=1; string category=2; string resource_type=3; string purpose=4; string location=5; string cursor=6; repeated string required=7; uint32 limit=8; uint32 budget=9; }
+message CatalogMatch { CatalogRef ref=1; string title=2; string category=3; string resource_type=4; string reason=5; string purpose=6; string location=7; string resource=8; string preconditions=9; string effects=10; string unsupported=11; string guarantees=12; }
+message CatalogPage { repeated CatalogMatch items=1; string cursor=2; uint64 revision=3; uint64 index_revision=4; string coverage=5; repeated string limitations=6; uint32 scanned=7; uint32 schema_loads=8; }
+message CatalogDeclaration { CatalogRef ref=1; bytes declaration_json=2; }

@@ -1,0 +1,8 @@
+--- FAIL: TestTaskControlStopsNextAcquisitionHop (0.61s)
+    --- FAIL: TestTaskControlStopsNextAcquisitionHop/PAUSE (0.32s)
+        control_test.go:76: task control allowed another hop: {Status:acquired Requests:2 Reference:content:local:9935dfd786dd801db3674cb2b57fec7669889b5776e1f0c04985d1a15b5ce51b:1} known=true hits=2 result=SUCCESS err=<nil>
+    --- FAIL: TestTaskControlStopsNextAcquisitionHop/CANCEL (0.30s)
+        control_test.go:76: task control allowed another hop: {Status:acquired Requests:2 Reference:content:local:7611de187bdc8b383e2afd94c2e77885c40fb680d49e5aa7925846b4ebbef67e:1} known=true hits=2 result=SUCCESS err=<nil>
+FAIL
+FAIL	lerna/profiles/fetchcheck	0.622s
+FAIL

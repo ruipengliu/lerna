@@ -1,0 +1,4 @@
+# lerna/profiles/extractioncheck [lerna/profiles/extractioncheck.test]
+profiles/extractioncheck/report_test.go:167:2: undefined: cleanPublishedReport
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

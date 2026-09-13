@@ -1,0 +1,4 @@
+# lerna/profiles/memorycheck [lerna/profiles/memorycheck.test]
+profiles/memorycheck/deletion_test.go:9:17: undefined: CheckDeletion
+FAIL	lerna/profiles/memorycheck [build failed]
+FAIL

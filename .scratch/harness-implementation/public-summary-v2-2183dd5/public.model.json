@@ -1,0 +1,32 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "What is Go, and is it statically typed? Answer using only the summaries returned by Doubao search. Cite the source title or URL. No original page requests are performed; do not claim to have read the original sites.",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":1,\"DeadlineUnix\":1789275639}",
+        "Blocks": [
+          {
+            "Ref": "content:local:9bf84f4cd7073a08691db4e35eb68583a2ba1e3f83bed7762cda822e626e6a34:1",
+            "Text": "{\"Status\":\"denied\",\"Mode\":\"http\",\"Requests\":1}",
+            "Subject": "operator",
+            "Role": "external-evidence-gap"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 4096
+    },
+    "Result": {
+      "ProviderContent": "eyJzdGF0dXMiOiJmZXRjaF9mYWlsZWQiLCJhbnN3ZXIiOiJObyByZWxldmFudCBEb3ViYW8gc2VhcmNoIHN1bW1hcmllcyB3ZXJlIHN1Y2Nlc3NmdWxseSByZXRyaWV2ZWQsIHNvIHRoZSByZXF1aXJlZCBmYWN0cyBhYm91dCBHbyBhbmQgaXRzIHR5cGluZyBuYXR1cmUgY2Fubm90IGJlIHByb3ZpZGVkLiIsInNjb3BlIjoiQWxsIGF2YWlsYWJsZSBzb3VyY2UgZGF0YSBpcyB0aGUgcmVjb3JkZWQgSFRUUCBhY2Nlc3MgZGVuaWFsIGJsb2NrOyBubyBEb3ViYW8gc2VhcmNoIHN1bW1hcnkgY29udGVudCBvciBvcmlnaW5hbCBwYWdlIGNvbnRlbnQgd2FzIGFjcXVpcmVkLiIsImNsYWltcyI6W10sImdhcHMiOlt7ImtpbmQiOiJmZXRjaF9mYWlsZWQiLCJkZXRhaWwiOiJUaGUgZXh0ZXJuYWwgZXZpZGVuY2UgcmV0cmlldmFsIG9wZXJhdGlvbiB3YXMgZGVuaWVkLCBubyBEb3ViYW8gc2VhcmNoIHN1bW1hcmllcyBvciBwYWdlIGNvbnRlbnQgcmVsYXRlZCB0byB0aGUgcXVlcnkgY291bGQgYmUgb2J0YWluZWQuIiwic291cmNlcyI6WyJjb250ZW50OmxvY2FsOjliZjg0ZjRjZDcwNzNhMDg2OTFkYjRlMzVlYjY4NTgzYTJiYTFlM2Y4M2JlZDc3NjJjZGE4MjJlNjI2ZTZhMzQ6MSJdfV19",
+      "Content": "eyJhbnN3ZXIiOiJObyByZWxldmFudCBEb3ViYW8gc2VhcmNoIHN1bW1hcmllcyB3ZXJlIHN1Y2Nlc3NmdWxseSByZXRyaWV2ZWQsIHNvIHRoZSByZXF1aXJlZCBmYWN0cyBhYm91dCBHbyBhbmQgaXRzIHR5cGluZyBuYXR1cmUgY2Fubm90IGJlIHByb3ZpZGVkLiIsImNsYWltcyI6W10sImdhcHMiOlt7ImRldGFpbCI6IlRoZSBleHRlcm5hbCBldmlkZW5jZSByZXRyaWV2YWwgb3BlcmF0aW9uIHdhcyBkZW5pZWQsIG5vIERvdWJhbyBzZWFyY2ggc3VtbWFyaWVzIG9yIHBhZ2UgY29udGVudCByZWxhdGVkIHRvIHRoZSBxdWVyeSBjb3VsZCBiZSBvYnRhaW5lZC4iLCJraW5kIjoiZmV0Y2hfZmFpbGVkIiwic291cmNlcyI6WyJjb250ZW50OmxvY2FsOjliZjg0ZjRjZDcwNzNhMDg2OTFkYjRlMzVlYjY4NTgzYTJiYTFlM2Y4M2JlZDc3NjJjZGE4MjJlNjI2ZTZhMzQ6MSJdfV0sInNjb3BlIjoiQWxsIGF2YWlsYWJsZSBzb3VyY2UgZGF0YSBpcyB0aGUgcmVjb3JkZWQgSFRUUCBhY2Nlc3MgZGVuaWFsIGJsb2NrOyBubyBEb3ViYW8gc2VhcmNoIHN1bW1hcnkgY29udGVudCBvciBvcmlnaW5hbCBwYWdlIGNvbnRlbnQgd2FzIGFjcXVpcmVkLiIsInN0YXR1cyI6ImZldGNoX2ZhaWxlZCJ9",
+      "Finish": "stop",
+      "RequestRef": "021789275580918b2e00d42ccf2abcf2b94e8538c7e03c0d770c9",
+      "Usage": {
+        "Known": true,
+        "Input": 1076,
+        "Output": 170
+      }
+    }
+  }
+]

@@ -1,0 +1,5 @@
+--- FAIL: TestCorrectedDerivedMemoryCanBeCleanedAfterSourceInvalidation (1.01s)
+    correction_cleanup_test.go:139: exact admission cleanup: false UNAVAILABLE
+FAIL
+FAIL	lerna/profiles/extractioncheck	1.045s
+FAIL

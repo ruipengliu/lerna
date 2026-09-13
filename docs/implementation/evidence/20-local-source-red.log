@@ -1,0 +1,3 @@
+lerna/adapters/localextractionsource: no non-test Go files in /home/dev/proj/lerna/adapters/localextractionsource
+FAIL	lerna/adapters/localextractionsource [build failed]
+FAIL

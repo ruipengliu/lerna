@@ -1,0 +1,52 @@
+{
+  "ElapsedSeconds": 17.653904027,
+  "Error": "research answer decision failed: queries=105/128 action_phase=73 state=RUNNING cause=OUTPUT_TRUNCATED",
+  "ExternalRequests": 1,
+  "Record": {
+    "UsageStatus": "snapshot",
+    "SearchConfig": {
+      "TimeoutMS": 3000,
+      "MaxBytes": 65536,
+      "Recipient": "doubao-search-cn"
+    },
+    "AnswerModel": {
+      "Model": "",
+      "Location": "",
+      "Version": "",
+      "Text": false,
+      "Structured": false,
+      "Streaming": false,
+      "HardBounds": false,
+      "ContextTokens": 0,
+      "InputUpper": 0
+    },
+    "Usage": {
+      "ExecutionWaitMillis": 5000,
+      "QueryLimit": 128,
+      "OutcomeQueries": 5,
+      "ContentQueries": 94,
+      "ReservedModelRequests": 0,
+      "ReservedModelTokens": 0,
+      "ModelRequests": 3,
+      "ModelTokens": 2611,
+      "ActionQueries": 105,
+      "NetworkCharged": 5,
+      "SearchRequests": 0,
+      "PageRequests": 0
+    },
+    "Input": {
+      "Goal": "",
+      "Constraints": "",
+      "Blocks": null
+    },
+    "ModelOutput": null,
+    "Answer": {
+      "status": "",
+      "answer": "",
+      "scope": "",
+      "claims": null,
+      "gaps": null
+    }
+  },
+  "Started": "2026-09-13T04:23:40.568695026Z"
+}

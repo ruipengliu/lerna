@@ -1,0 +1,5 @@
+# lerna/adapters/memoryauth_test [lerna/adapters/memoryauth.test]
+adapters/memoryauth/deletion_test.go:51:77: unknown field Delete in struct literal of type harnessv1.MemoryRequest
+adapters/memoryauth/deletion_test.go:51:91: undefined: wire.MemoryDelete
+FAIL	lerna/adapters/memoryauth [build failed]
+FAIL

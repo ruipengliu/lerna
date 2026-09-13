@@ -1,0 +1,8 @@
+{
+  "code_baseline": "1077297",
+  "required": 1526,
+  "total": 1531,
+  "reports": 18,
+  "scope": "ticket 18 frozen verification; excludes subsequent ticket 19 implementation",
+  "real_answer_pair": "not_passed"
+}

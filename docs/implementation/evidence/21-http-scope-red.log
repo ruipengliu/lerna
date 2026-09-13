@@ -1,0 +1,6 @@
+--- FAIL: TestHTTPFetchRejectsUnconfiguredURLAndDialAddress (0.03s)
+    --- FAIL: TestHTTPFetchRejectsUnconfiguredURLAndDialAddress/address (0.01s)
+        fetch_test.go:62: denied target contacted or released: result={RequestedURL: FinalURL: MediaType: SHA256: FetchedAt:0001-01-01 00:00:00 +0000 UTC HTTPStatus:0 Requests:1 Body:[]} err=fetch unavailable received=0
+FAIL
+FAIL	lerna/adapters/httpfetch	0.035s
+FAIL

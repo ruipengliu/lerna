@@ -1,0 +1,52 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	1.018s
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/josegrant	1.012s
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+?   	lerna/adapters/simresource	[no test files]
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	1.263s
+ok  	lerna/authorization	1.986s
+ok  	lerna/brain	1.013s
+?   	lerna/cmd/answercheck	[no test files]
+ok  	lerna/cmd/authctl	1.444s
+ok  	lerna/cmd/contractcheck	17.013s
+ok  	lerna/conformance	(cached)
+?   	lerna/contractfixture	[no test files]
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/profiles/answer	5.945s
+ok  	lerna/profiles/asynccheck	12.478s
+ok  	lerna/profiles/content	3.957s
+ok  	lerna/profiles/control	5.260s
+?   	lerna/profiles/durabletasks	[no test files]
+--- FAIL: TestIndependentCoordinatorsStartOnce (0.34s)
+    concurrency_test.go:39: UNAVAILABLE
+FAIL
+FAIL	lerna/profiles/executioncheck	13.199s
+ok  	lerna/profiles/grants	3.412s
+?   	lerna/profiles/localauth	[no test files]
+ok  	lerna/profiles/sdkcontract	1.047s
+ok  	lerna/profiles/takeover	13.371s
+ok  	lerna/profiles/updates	9.766s
+ok  	lerna/profiles/worker	3.391s
+?   	lerna/protocol	[no test files]
+ok  	lerna/schema	1.029s
+ok  	lerna/sdk	1.114s
+ok  	lerna/tasks	5.810s
+FAIL
+make: *** [Makefile:11: verify] Error 1

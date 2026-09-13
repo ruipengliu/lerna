@@ -1,0 +1,15 @@
+{
+  "runtime_published": true,
+  "answer_status": "answerable",
+  "model_requests": 1,
+  "model_usage": {
+    "Known": true,
+    "Input": 8175,
+    "Output": 401
+  },
+  "query_usage": 46,
+  "network_charged": 1,
+  "search_requests": 1,
+  "page_requests": 0,
+  "semantic_quality": "pending_independent_review"
+}

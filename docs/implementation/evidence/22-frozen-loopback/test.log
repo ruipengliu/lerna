@@ -1,0 +1,46 @@
+=== RUN   TestActionBrainHandsSettledEvidenceToAnswerStage
+--- PASS: TestActionBrainHandsSettledEvidenceToAnswerStage (2.08s)
+=== RUN   TestFrozenResearchMaterialsRunThroughOriginalTask
+=== RUN   TestFrozenResearchMaterialsRunThroughOriginalTask/answerable
+    frozen_research_test.go:23: mode=loopback-http model=local-protocol-fixture sources_sha256=c4e872461ebd41c2ad5e3d64b8075d87bab7d12bc786f74bc9e0ae2a357dfe5c answer={"status":"answerable","answer":"Fixture evidence answer","scope":"Only the acquired source at its recorded time","claims":[{"text":"Fixture claim","citations":[{"source":"content:local:423dfe7d69fbb6132a22ee0f29c16eda632de071dff61f893bda894f243d7ad7:1","start":0,"end":162,"quote":"Northbank civic record, edition 2026-01. The Northbank footbridge opened on 14 May 1998. Its length is 84 metres. These measurements describe the original bridge.","sha256":"fc41fc2b3a26cdd6b5845b72c8bada0b6cba96f088d82c7749cbfe3b380f0991","fetched_at":"2026-09-12T09:27:10.538176411Z"}]}],"gaps":[]}
+=== RUN   TestFrozenResearchMaterialsRunThroughOriginalTask/insufficient
+    frozen_research_test.go:23: mode=loopback-http model=local-protocol-fixture sources_sha256=c4e872461ebd41c2ad5e3d64b8075d87bab7d12bc786f74bc9e0ae2a357dfe5c answer={"status":"insufficient","answer":"The retrieved record does not establish the construction cost.","scope":"The retrieved Eastmere record only; this does not establish that no cost exists.","claims":[],"gaps":[{"kind":"insufficient","detail":"The retrieved record omits the construction cost.","sources":["content:local:6c2e1d0bd9818c72b31bc29ba15ad92d0b7332af1a5668be6ba25c4fb641c061:1"]}]}
+=== RUN   TestFrozenResearchMaterialsRunThroughOriginalTask/conflicting
+    frozen_research_test.go:23: mode=loopback-http model=local-protocol-fixture sources_sha256=c4e872461ebd41c2ad5e3d64b8075d87bab7d12bc786f74bc9e0ae2a357dfe5c answer={"status":"conflicting","answer":"The two records give conflicting opening years; neither is established as authoritative.","scope":"These two acquired records only; no basis to resolve their disagreement.","claims":[{"text":"Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.","citations":[{"source":"content:local:e93b153217f416247ce1f3a5f7049b211a8f3186ba4332bd16e7aa85a89b1a04:1","start":0,"end":160,"quote":"Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.","sha256":"253fca27cf8c832dc540277d14107bd4ed470aee517a26681b882c5870596f0f","fetched_at":"2026-09-12T09:27:19.555276575Z"}]},{"text":"Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.","citations":[{"source":"content:local:7db226eb330360c03ca9958ae404cd9aeb694ff4ed24cca876b52e868ab800b9:1","start":0,"end":159,"quote":"Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.","sha256":"729c53be7f8c3e2ef53047755bc15df63b064c52f5146f080954ceefeae63abd","fetched_at":"2026-09-12T09:27:20.396207434Z"}]}],"gaps":[{"kind":"conflicting","detail":"The records disagree.","sources":["content:local:e93b153217f416247ce1f3a5f7049b211a8f3186ba4332bd16e7aa85a89b1a04:1","content:local:7db226eb330360c03ca9958ae404cd9aeb694ff4ed24cca876b52e868ab800b9:1"]}]}
+=== RUN   TestFrozenResearchMaterialsRunThroughOriginalTask/fetch_failed
+    frozen_research_test.go:23: mode=loopback-http model=local-protocol-fixture sources_sha256=c4e872461ebd41c2ad5e3d64b8075d87bab7d12bc786f74bc9e0ae2a357dfe5c answer={"status":"fetch_failed","answer":"The page could not be acquired; its contents remain unverified.","scope":"This acquisition attempt only.","claims":[],"gaps":[{"kind":"fetch_failed","detail":"Observed acquisition failure.","sources":["content:local:b9d1e56bf32a3d9c419264c5198504cec2b8ee16da83c32c5931280d180695c8:1"]}]}
+--- PASS: TestFrozenResearchMaterialsRunThroughOriginalTask (19.60s)
+    --- PASS: TestFrozenResearchMaterialsRunThroughOriginalTask/answerable (4.62s)
+    --- PASS: TestFrozenResearchMaterialsRunThroughOriginalTask/insufficient (4.45s)
+    --- PASS: TestFrozenResearchMaterialsRunThroughOriginalTask/conflicting (5.98s)
+    --- PASS: TestFrozenResearchMaterialsRunThroughOriginalTask/fetch_failed (4.55s)
+=== RUN   TestOneTaskSearchesThenFetchesActualCandidate
+--- PASS: TestOneTaskSearchesThenFetchesActualCandidate (4.24s)
+=== RUN   TestOneTaskReportsDeniedPageAsEvidenceGap
+--- PASS: TestOneTaskReportsDeniedPageAsEvidenceGap (4.54s)
+=== RUN   TestOneTaskRejectsUnauthorizedSearchCandidate
+--- PASS: TestOneTaskRejectsUnauthorizedSearchCandidate (4.48s)
+=== RUN   TestConcurrentResearchTasksPreserveBudgets
+=== RUN   TestConcurrentResearchTasksPreserveBudgets/a
+=== PAUSE TestConcurrentResearchTasksPreserveBudgets/a
+=== RUN   TestConcurrentResearchTasksPreserveBudgets/b
+=== PAUSE TestConcurrentResearchTasksPreserveBudgets/b
+=== RUN   TestConcurrentResearchTasksPreserveBudgets/c
+=== PAUSE TestConcurrentResearchTasksPreserveBudgets/c
+=== RUN   TestConcurrentResearchTasksPreserveBudgets/d
+=== PAUSE TestConcurrentResearchTasksPreserveBudgets/d
+=== CONT  TestConcurrentResearchTasksPreserveBudgets/a
+=== CONT  TestConcurrentResearchTasksPreserveBudgets/d
+=== CONT  TestConcurrentResearchTasksPreserveBudgets/c
+=== CONT  TestConcurrentResearchTasksPreserveBudgets/b
+--- PASS: TestConcurrentResearchTasksPreserveBudgets (0.00s)
+    --- PASS: TestConcurrentResearchTasksPreserveBudgets/d (5.79s)
+    --- PASS: TestConcurrentResearchTasksPreserveBudgets/b (5.82s)
+    --- PASS: TestConcurrentResearchTasksPreserveBudgets/a (5.84s)
+    --- PASS: TestConcurrentResearchTasksPreserveBudgets/c (5.86s)
+=== RUN   TestOneTaskReportsEmptySearchWithoutFetching
+--- PASS: TestOneTaskReportsEmptySearchWithoutFetching (2.36s)
+=== RUN   TestOneTaskPreservesBothConflictingSources
+--- PASS: TestOneTaskPreservesBothConflictingSources (5.86s)
+PASS
+ok  	lerna/profiles/fetchcheck	50.061s

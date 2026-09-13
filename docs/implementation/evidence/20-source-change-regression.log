@@ -1,0 +1,3 @@
+ok  	lerna/adapters/localextractionsource	1.035s
+ok  	lerna/adapters/extractionsourceguard	1.131s
+ok  	lerna/profiles/extractioncheck	74.469s

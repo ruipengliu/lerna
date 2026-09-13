@@ -1,0 +1,583 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	(cached)
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/catalogauth	[no test files]
+?   	lerna/adapters/cataloglocal	[no test files]
+ok  	lerna/adapters/checkpointfile	(cached)
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+ok  	lerna/adapters/contextmemory	(cached)
+?   	lerna/adapters/contextpolicy	[no test files]
+?   	lerna/adapters/credentialauth	[no test files]
+ok  	lerna/adapters/credentialbackups	(cached)
+?   	lerna/adapters/credentialexecution	[no test files]
+ok  	lerna/adapters/credentialhttp	(cached)
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/executionrouter	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/filekeys	(cached)
+ok  	lerna/adapters/josegrant	(cached)
+ok  	lerna/adapters/memoryauth	11.095s
+ok  	lerna/adapters/memorycleanup	1.445s
+?   	lerna/adapters/memorylocal	[no test files]
+ok  	lerna/adapters/recoveryproof	(cached)
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+ok  	lerna/adapters/simresource	(cached)
+ok  	lerna/adapters/simworkflow	(cached)
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/sqlitecatalog	[no test files]
+ok  	lerna/adapters/sqlitecontext	5.286s
+ok  	lerna/adapters/sqlitecredentials	(cached)
+ok  	lerna/adapters/sqlitememory	(cached)
+ok  	lerna/adapters/taskcontext	1.098s
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	(cached)
+ok  	lerna/authorization	3.025s
+ok  	lerna/brain	(cached)
+ok  	lerna/catalog	(cached)
+ok  	lerna/cleanup	(cached)
+?   	lerna/cmd/answercheck	[no test files]
+?   	lerna/cmd/apicheck	[no test files]
+ok  	lerna/cmd/authctl	(cached)
+?   	lerna/cmd/contextcheck	[no test files]
+--- FAIL: TestCLIReportsSuccessAndUnknownProfileFailure (467.30s)
+    --- FAIL: TestCLIReportsSuccessAndUnknownProfileFailure/personalized-context-v1 (445.44s)
+        main_test.go:23: exit mismatch: exit status 1
+            {
+              "status": "failed",
+              "format_version": 1,
+              "profile": "personalized-context-v1",
+              "profile_version": "1",
+              "configuration": {
+                "language": "Go",
+                "limits": "up to three decisions and two persisted corrections per personalized fixture; single-use read per selected revision; 32KiB input; bounded publication; 60s per case",
+                "models": "deterministic contract models only; no external provider calls",
+                "recovery": "actual child exit 73 before cleanup; original credentials/read identity; current worker qualification required",
+                "storage": "real SQLite authorization, Memory, context, business target; controlled file artifacts"
+              },
+              "method": "contractcheck -profile personalized-context-v1",
+              "build": {
+                "go": "go1.26.1",
+                "platform": "linux/amd64",
+                "module": "lerna@v0.0.0-20260911145757-c1ed4a074a0f+dirty",
+                "revision": "c1ed4a074a0f3c08db1ef7ad57a32c2d5d5753f1",
+                "dirty": "true",
+                "dependencies": {
+                  "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+                  "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+                  "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+                  "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+                  "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+                  "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+                  "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+                  "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+                  "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+                  "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+                  "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+                  "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+                }
+              },
+              "limitations": [
+                "This profile covers its listed implemented contracts, not complete ticket-18 acceptance or 90%/95% model quality.",
+                "Bounded action reassembly is covered below; real-model answer evaluation has not passed and is reported separately. Action recovery uses a restored deterministic fixture clock; it does not prove wall-clock worker takeover.",
+                "Reference-only is an additional trusted host storage restriction; it does not grant Memory or output rights.",
+                "Current permissions and revisions are checked across independent stores; no globally atomic revocation is claimed."
+              ],
+              "results": [
+                {
+                  "id": "answer-missing",
+                  "evidence": "actual_authorized_absence_and_answer_publication",
+                  "required": true,
+                  "input": "answer-missing",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "answer-concise",
+                  "evidence": "actual_memory_context_and_publication",
+                  "required": true,
+                  "input": "answer-concise",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "answer-detailed",
+                  "evidence": "actual_memory_context_and_publication",
+                  "required": true,
+                  "input": "answer-detailed",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "answer-inapplicable",
+                  "evidence": "actual_memory_context_and_publication",
+                  "required": true,
+                  "input": "answer-inapplicable",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-personalized-item",
+                  "evidence": "actual_memory_sdk_invocation_and_independent_target",
+                  "required": true,
+                  "input": "action-personalized-item",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-personalized-alternative",
+                  "evidence": "actual_memory_sdk_invocation_and_independent_target",
+                  "required": true,
+                  "input": "action-personalized-alternative",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-personalized-inapplicable",
+                  "evidence": "actual_memory_sdk_invocation_and_independent_target",
+                  "required": true,
+                  "input": "action-personalized-inapplicable",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-personalized-multistep",
+                  "evidence": "actual_two_decisions_with_current_business_facts_and_governed_artifacts",
+                  "required": true,
+                  "input": "action-personalized-multistep",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "answer-model-related",
+                  "evidence": "actual_memory_mutation_and_publication_boundary",
+                  "required": true,
+                  "input": "answer-model-related",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "answer-model-unrelated",
+                  "evidence": "actual_memory_mutation_and_publication_boundary",
+                  "required": true,
+                  "input": "answer-model-unrelated",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "answer-model-revoke",
+                  "evidence": "actual_memory_mutation_and_publication_boundary",
+                  "required": true,
+                  "input": "answer-model-revoke",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "answer-publication-related",
+                  "evidence": "actual_memory_mutation_and_publication_boundary",
+                  "required": true,
+                  "input": "answer-publication-related",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "answer-publication-unrelated",
+                  "evidence": "actual_memory_mutation_and_publication_boundary",
+                  "required": true,
+                  "input": "answer-publication-unrelated",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "answer-publication-revoke",
+                  "evidence": "actual_memory_mutation_and_publication_boundary",
+                  "required": true,
+                  "input": "answer-publication-revoke",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-admitted-related",
+                  "evidence": "actual_memory_mutation_and_first_start_boundary",
+                  "required": true,
+                  "input": "action-admitted-related",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-admitted-unrelated",
+                  "evidence": "actual_memory_mutation_and_first_start_boundary",
+                  "required": true,
+                  "input": "action-admitted-unrelated",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-admitted-revoke",
+                  "evidence": "actual_memory_mutation_and_first_start_boundary",
+                  "required": true,
+                  "input": "action-admitted-revoke",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-invoked-related",
+                  "evidence": "actual_memory_mutation_and_first_start_boundary",
+                  "required": true,
+                  "input": "action-invoked-related",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-invoked-unrelated",
+                  "evidence": "actual_memory_mutation_and_first_start_boundary",
+                  "required": true,
+                  "input": "action-invoked-unrelated",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-invoked-revoke",
+                  "evidence": "actual_memory_mutation_and_first_start_boundary",
+                  "required": true,
+                  "input": "action-invoked-revoke",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "process-ready",
+                  "evidence": "actual_child_exit_and_original_memory_host_recovery",
+                  "required": true,
+                  "input": "process-ready",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "process-ready-revoked",
+                  "evidence": "actual_child_exit_and_original_memory_host_recovery",
+                  "required": true,
+                  "input": "process-ready-revoked",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "process-reference",
+                  "evidence": "actual_child_exit_and_original_memory_host_recovery",
+                  "required": true,
+                  "input": "process-reference",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "process-reference-revoked",
+                  "evidence": "actual_child_exit_and_original_memory_host_recovery",
+                  "required": true,
+                  "input": "process-reference-revoked",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "process-dispatched",
+                  "evidence": "actual_child_exit_and_original_memory_host_recovery",
+                  "required": true,
+                  "input": "process-dispatched",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "process-dispatched-revoked",
+                  "evidence": "actual_child_exit_and_original_memory_host_recovery",
+                  "required": true,
+                  "input": "process-dispatched-revoked",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "process-output",
+                  "evidence": "actual_child_exit_and_original_memory_host_recovery",
+                  "required": true,
+                  "input": "process-output",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "process-output-revoked",
+                  "evidence": "actual_child_exit_and_original_memory_host_recovery",
+                  "required": true,
+                  "input": "process-output-revoked",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "process-missing",
+                  "evidence": "actual_child_exit_and_original_memory_host_recovery",
+                  "required": true,
+                  "input": "process-missing",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "process-missing-revoked",
+                  "evidence": "actual_child_exit_and_original_memory_host_recovery",
+                  "required": true,
+                  "input": "process-missing-revoked",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-process-invoked",
+                  "evidence": "actual_invocation_process_recovery_and_governed_completion",
+                  "required": true,
+                  "input": "action-process-invoked",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-process-invoked-revoked",
+                  "evidence": "actual_invocation_process_recovery_and_governed_completion",
+                  "required": true,
+                  "input": "action-process-invoked-revoked",
+                  "expected": "verified",
+                  "actual": "",
+                  "status": "failed",
+                  "error": "original context history changed"
+                },
+                {
+                  "id": "action-process-effect",
+                  "evidence": "actual_invocation_process_recovery_and_governed_completion",
+                  "required": true,
+                  "input": "action-process-effect",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-process-effect-revoked",
+                  "evidence": "actual_invocation_process_recovery_and_governed_completion",
+                  "required": true,
+                  "input": "action-process-effect-revoked",
+                  "expected": "verified",
+                  "actual": "",
+                  "status": "failed",
+                  "error": "original context history changed"
+                },
+                {
+                  "id": "action-process-second-invoked",
+                  "evidence": "actual_invocation_process_recovery_and_governed_completion",
+                  "required": true,
+                  "input": "action-process-second-invoked",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-process-second-invoked-revoked",
+                  "evidence": "actual_invocation_process_recovery_and_governed_completion",
+                  "required": true,
+                  "input": "action-process-second-invoked-revoked",
+                  "expected": "verified",
+                  "actual": "",
+                  "status": "failed",
+                  "error": "original context history changed"
+                },
+                {
+                  "id": "action-process-second-effect",
+                  "evidence": "actual_invocation_process_recovery_and_governed_completion",
+                  "required": true,
+                  "input": "action-process-second-effect",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-process-second-effect-revoked",
+                  "evidence": "actual_invocation_process_recovery_and_governed_completion",
+                  "required": true,
+                  "input": "action-process-second-effect-revoked",
+                  "expected": "verified",
+                  "actual": "",
+                  "status": "failed",
+                  "error": "original context history changed"
+                },
+                {
+                  "id": "action-settlement-related-model",
+                  "evidence": "actual_source_change_usage_settlement_and_replay",
+                  "required": true,
+                  "input": "action-settlement-related-model",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-settlement-revoke-save",
+                  "evidence": "actual_source_change_usage_settlement_and_replay",
+                  "required": true,
+                  "input": "action-settlement-revoke-save",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-settlement-related-save",
+                  "evidence": "actual_source_change_usage_settlement_and_replay",
+                  "required": true,
+                  "input": "action-settlement-related-save",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-settlement-unrelated-model",
+                  "evidence": "actual_source_change_usage_settlement_and_replay",
+                  "required": true,
+                  "input": "action-settlement-unrelated-model",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-settlement-revoke-model",
+                  "evidence": "actual_source_change_usage_settlement_and_replay",
+                  "required": true,
+                  "input": "action-settlement-revoke-model",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-reassembly-once",
+                  "evidence": "actual_fresh_revision_read_bounded_decisions_and_business_effect",
+                  "required": true,
+                  "input": "action-reassembly-once",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-reassembly-unstable",
+                  "evidence": "actual_fresh_revision_read_bounded_decisions_and_business_effect",
+                  "required": true,
+                  "input": "action-reassembly-unstable",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-reassembly-revoked",
+                  "evidence": "actual_fresh_revision_read_bounded_decisions_and_business_effect",
+                  "required": true,
+                  "input": "action-reassembly-revoked",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-reassembly-unknown",
+                  "evidence": "actual_fresh_revision_read_bounded_decisions_and_business_effect",
+                  "required": true,
+                  "input": "action-reassembly-unknown",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-process-reassembled-invoked",
+                  "evidence": "actual_reassembly_process_exit_and_original_snapshot_history",
+                  "required": true,
+                  "input": "action-process-reassembled-invoked",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-process-reassembled-effect",
+                  "evidence": "actual_reassembly_process_exit_and_original_snapshot_history",
+                  "required": true,
+                  "input": "action-process-reassembled-effect",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-process-gap-invoked",
+                  "evidence": "actual_reassembly_process_exit_and_original_snapshot_history",
+                  "required": true,
+                  "input": "action-process-gap-invoked",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-process-gap-effect",
+                  "evidence": "actual_reassembly_process_exit_and_original_snapshot_history",
+                  "required": true,
+                  "input": "action-process-gap-effect",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                },
+                {
+                  "id": "action-process-bound-failure-invoked",
+                  "evidence": "actual_reassembly_process_exit_and_original_snapshot_history",
+                  "required": true,
+                  "input": "action-process-bound-failure-invoked",
+                  "expected": "verified",
+                  "actual": "verified",
+                  "status": "passed"
+                }
+              ]
+            }
+FAIL
+FAIL	lerna/cmd/contractcheck	467.325s
+ok  	lerna/cmd/credentialctl	3.092s
+ok  	lerna/conformance	(cached)
+ok  	lerna/contextassembly	2.381s
+?   	lerna/contractfixture	[no test files]
+ok  	lerna/credentials	(cached)
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/catalogwire	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/memorywire	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/memory	1.942s
+?   	lerna/memory/storecontract	[no test files]
+make: *** [Makefile:11: verify] Terminated

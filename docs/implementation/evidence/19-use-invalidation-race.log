@@ -1,0 +1,5 @@
+ok  	lerna/authorization	4.219s
+?   	lerna/adapters/sqliteauth	[no test files]
+ok  	lerna/adapters/memoryauth	10.198s
+ok  	lerna/artifacts	3.106s
+ok  	lerna/contextassembly	2.948s

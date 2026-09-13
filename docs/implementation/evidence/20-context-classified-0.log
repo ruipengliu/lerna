@@ -1,0 +1,4 @@
+=== RUN   TestExtractedPreferenceControlsIndependentTaskOutput
+    report_test.go:88: CONTEXT_UNAVAILABLE
+--- FAIL: TestExtractedPreferenceControlsIndependentTaskOutput (9.68s)
+FAIL

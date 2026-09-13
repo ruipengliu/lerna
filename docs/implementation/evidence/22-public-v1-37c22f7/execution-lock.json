@@ -1,0 +1,23 @@
+{
+  "plan": "search-public-v1",
+  "executor_commit": "37c22f7bd0e5cd94bf79440815d7bfe9f0cb40ac",
+  "config_sha256": "b361be56e6442824cd83ccb31fbc93c3c06174e2113581c9f038b3177822f93a",
+  "private_output": ".scratch/harness-implementation/public-v1-37c22f7",
+  "max_model_requests": 1,
+  "reserved_cny": 1,
+  "max_search_requests": 1,
+  "expected_fact": "httpbin describes itself as an HTTP Request and Response service",
+  "pass_criteria": "Governed discovery, actually acquired original page, formal answer with independently supported citation. Unavailable pages do not pass.",
+  "known_risks": [
+    "httpbin.org DNS preflight failed; www.httpbin.org resolved",
+    "Provider CDN addresses may rotate outside configured prefixes",
+    "Page timeout remains 1000ms; search timeout is 3000ms"
+  ],
+  "network_authority": "Exact URLs and public /16 IPv4 or /48 IPv6 prefixes derived from host DNS preflight, fixed before execution. Search candidates grant no authority.",
+  "restrictions": [
+    "One task, no automatic retry or replacement",
+    "Known-material integration check, not general quality benchmark",
+    "Never archive private task directory or host token"
+  ],
+  "command": "/tmp/lerna-searcheval -execute -compact-evidence -public-config docs/implementation/evidence/22-public-v1-37c22f7/config.json -out .scratch/harness-implementation/public-v1-37c22f7"
+}

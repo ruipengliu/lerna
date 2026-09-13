@@ -1,0 +1,5 @@
+--- FAIL: TestInvalidatedCandidateMemoryIsActuallyDeleted (0.00s)
+    save_test.go:22: unsupported save fault
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.007s
+FAIL

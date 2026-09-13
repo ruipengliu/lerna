@@ -1,0 +1,6 @@
+--- FAIL: TestAnswerRecoveryRequiresOriginalCheckpointIntegrity (9.09s)
+    --- FAIL: TestAnswerRecoveryRequiresOriginalCheckpointIntegrity/legacy-comparison (9.09s)
+        personalized_checkpoint_test.go:121: legacy recovery left original comparison in file
+FAIL
+FAIL	lerna/profiles/answer	9.126s
+FAIL

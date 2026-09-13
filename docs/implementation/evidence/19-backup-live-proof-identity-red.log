@@ -1,0 +1,5 @@
+--- FAIL: TestCurrentAuthorityProofRejectsBackupReplayAndRollback (0.12s)
+    proof_test.go:156: signing identity allowed ambiguous UTF-8 replacement
+FAIL
+FAIL	lerna/adapters/recoveryproof	0.135s
+FAIL

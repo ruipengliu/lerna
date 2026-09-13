@@ -1,0 +1,247 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "bounded-answer-v1",
+  "profile_version": "1",
+  "configuration": {
+    "limits": "1-2 requests; 600 input + 100 output tokens per request; input 32KiB; result 8KiB; decision 45s; IO 1s; lease 10s; default model control poll 100ms; concurrency 1; retention 5min",
+    "model": "controlled-text; actual provider tested separately",
+    "storage": "SQLite + controlled files"
+  },
+  "method": "contractcheck -profile bounded-answer-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260911011652-ddc6903d7d0d",
+    "revision": "ddc6903d7d0de2029b22c29457eb8cef274e84d6",
+    "dirty": "false",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "Controlled model supplies deterministic hard bounds; no model quality claim.",
+    "Current source-policy checks precede Core CAS; separate policy authorities have finite freshness, no distributed atomic transaction.",
+    "Crash before a response retains unresolved full budget, even if a dispatch did not actually occur. No automatic refund or hidden regeneration."
+  ],
+  "results": [
+    {
+      "id": "controlled-answer",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "controlled-answer",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "private-source",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "private-source",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "source-revoked-after-response",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "source-revoked-after-response",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "input-overflow",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "input-overflow",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "malformed-output",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "malformed-output",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "encoded-output-overflow",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "encoded-output-overflow",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "repair-budget",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "repair-budget",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "truncated-output",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "truncated-output",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "foreign-source",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "foreign-source",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-usage",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "unknown-usage",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "abnormal-usage",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "abnormal-usage",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "capability-unavailable",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "capability-unavailable",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-content-save",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "unknown-content-save",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "query-after-delete",
+      "evidence": "bounded_answer_contract",
+      "required": true,
+      "input": "query-after-delete",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "pause-before-admission",
+      "evidence": "bounded_answer_race",
+      "required": true,
+      "input": "pause-before-admission",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cancel-before-admission",
+      "evidence": "bounded_answer_race",
+      "required": true,
+      "input": "cancel-before-admission",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-reservation",
+      "evidence": "bounded_answer_race",
+      "required": true,
+      "input": "unknown-reservation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "core-reply-lost",
+      "evidence": "bounded_answer_race",
+      "required": true,
+      "input": "core-reply-lost",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "budget-exhausted",
+      "evidence": "bounded_answer_race",
+      "required": true,
+      "input": "budget-exhausted",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "reserved-before-dispatch",
+      "evidence": "answer_sqlite_process_recovery",
+      "required": true,
+      "input": "reserved-before-dispatch; child exit 73; reopen original state",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "request-outcome-unknown",
+      "evidence": "answer_sqlite_process_recovery",
+      "required": true,
+      "input": "request-outcome-unknown; child exit 73; reopen original state",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "output-before-admission",
+      "evidence": "answer_sqlite_process_recovery",
+      "required": true,
+      "input": "output-before-admission; child exit 73; reopen original state",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "publication-reply-lost",
+      "evidence": "answer_sqlite_process_recovery",
+      "required": true,
+      "input": "publication-reply-lost; child exit 73; reopen original state",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    }
+  ]
+}

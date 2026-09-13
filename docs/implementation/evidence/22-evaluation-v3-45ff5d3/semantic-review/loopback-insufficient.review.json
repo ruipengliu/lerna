@@ -1,0 +1,47 @@
+{
+  "Version": "search-semantic-review-v1",
+  "InputSHA256": "f7d3cace1b93fa14ef3996912f4e4e05ccc971c9c6878b71c5be560b4787311c",
+  "Coverage": {
+    "CaseID": "insufficient",
+    "AnswerSHA256": "3ec3b8706bd89221b62abec5114e1e8d2cc063aefb01bf1ba9d92a8a39e654e9",
+    "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "Facts": []
+  },
+  "Checks": [
+    {
+      "ID": "citation:0:0",
+      "Verdict": "pass",
+      "Reason": "实际记录逐字记载crosses the canal及opened in 2005，支持背景主张。"
+    },
+    {
+      "ID": "citation:1:0",
+      "Verdict": "pass",
+      "Reason": "实际记录明确This record does not state its construction cost，支持记录未提供造价的主张。"
+    },
+    {
+      "ID": "answer_support",
+      "Verdict": "pass",
+      "Reason": "正文只说无法从所给记录确认造价，不把证据不足升级成不存在造价。"
+    },
+    {
+      "ID": "scope",
+      "Verdict": "pass",
+      "Reason": "限定单份2026-01记录；取得日期/URL若出现，与当前输入一致；没有作普遍缺失断言。"
+    },
+    {
+      "ID": "disposition",
+      "Verdict": "pass",
+      "Reason": "状态insufficient且gap引用当前记录，明确所需造价无法建立。"
+    },
+    {
+      "ID": "forbidden:0",
+      "Verdict": "pass",
+      "Reason": "全文未断言任何造价金额。"
+    },
+    {
+      "ID": "forbidden:1",
+      "Verdict": "pass",
+      "Reason": "2005只出现在背景claim，正式answer明确造价未知，没有把年份当作造价回答。"
+    }
+  ]
+}

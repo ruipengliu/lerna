@@ -1,0 +1,14 @@
+# lerna/adapters/sqlitememory_test [lerna/adapters/sqlitememory.test]
+adapters/sqlitememory/recovery_erasure_test.go:33:91: snapshot.Erased undefined (type "lerna/memory".RecoverySnapshot has no field or method Erased)
+adapters/sqlitememory/recovery_erasure_test.go:33:120: snapshot.SourceFences undefined (type "lerna/memory".RecoverySnapshot has no field or method SourceFences)
+adapters/sqlitememory/recovery_erasure_test.go:36:44: snapshot.Erased undefined (type "lerna/memory".RecoverySnapshot has no field or method Erased)
+adapters/sqlitememory/recovery_erasure_test.go:47:8: bad.Erased undefined (type "lerna/memory".RecoverySnapshot has no field or method Erased)
+adapters/sqlitememory/recovery_erasure_test.go:47:60: snapshot.Erased undefined (type "lerna/memory".RecoverySnapshot has no field or method Erased)
+adapters/sqlitememory/recovery_erasure_test.go:48:8: bad.SourceFences undefined (type "lerna/memory".RecoverySnapshot has no field or method SourceFences)
+adapters/sqlitememory/recovery_erasure_test.go:48:68: snapshot.SourceFences undefined (type "lerna/memory".RecoverySnapshot has no field or method SourceFences)
+adapters/sqlitememory/recovery_erasure_test.go:51:9: bad.Erased undefined (type "lerna/memory".RecoverySnapshot has no field or method Erased)
+adapters/sqlitememory/recovery_erasure_test.go:57:9: bad.Erased undefined (type "lerna/memory".RecoverySnapshot has no field or method Erased)
+adapters/sqlitememory/recovery_erasure_test.go:59:9: bad.SourceFences undefined (type "lerna/memory".RecoverySnapshot has no field or method SourceFences)
+adapters/sqlitememory/recovery_erasure_test.go:59:9: too many errors
+FAIL	lerna/adapters/sqlitememory [build failed]
+FAIL

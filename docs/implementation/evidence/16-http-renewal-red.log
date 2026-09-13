@@ -1,0 +1,5 @@
+# lerna/adapters/credentialhttp_test [lerna/adapters/credentialhttp.test]
+adapters/credentialhttp/renewal_test.go:56:22: undefined: credentialhttp.NewRenewal
+adapters/credentialhttp/renewal_test.go:56:48: undefined: credentialhttp.RenewalConfig
+FAIL	lerna/adapters/credentialhttp [build failed]
+FAIL

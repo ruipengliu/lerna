@@ -1,0 +1,5 @@
+--- FAIL: TestCurrentAuthorityProofRejectsBackupReplayAndRollback (0.10s)
+    proof_test.go:98: trusted external deletion floor rolled back
+FAIL
+FAIL	lerna/adapters/recoveryproof	0.117s
+FAIL

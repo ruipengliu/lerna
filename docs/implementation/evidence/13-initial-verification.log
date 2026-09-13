@@ -1,0 +1,60 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	1.018s
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/catalogauth	[no test files]
+?   	lerna/adapters/cataloglocal	[no test files]
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/executionrouter	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/josegrant	1.014s
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+ok  	lerna/adapters/simresource	1.090s
+ok  	lerna/adapters/simworkflow	1.093s
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/sqlitecatalog	[no test files]
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	1.239s
+ok  	lerna/authorization	2.205s
+ok  	lerna/brain	1.012s
+ok  	lerna/catalog	1.111s
+?   	lerna/cmd/answercheck	[no test files]
+ok  	lerna/cmd/authctl	1.498s
+ok  	lerna/cmd/contractcheck	16.362s
+ok  	lerna/conformance	(cached)
+?   	lerna/contractfixture	[no test files]
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/catalogwire	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/profiles/answer	5.928s
+--- FAIL: TestCompletionBeforeCancelUsesTargetTime (0.43s)
+    async_test.go:159: completion predates cancel; Task.State=WAITING (ephemeral fixture identities omitted)
+FAIL
+FAIL	lerna/profiles/asynccheck	10.951s
+ok  	lerna/profiles/catalogcheck	98.800s
+ok  	lerna/profiles/content	3.973s
+ok  	lerna/profiles/control	5.257s
+?   	lerna/profiles/durabletasks	[no test files]
+ok  	lerna/profiles/executioncheck	14.051s
+ok  	lerna/profiles/grants	3.084s
+?   	lerna/profiles/localauth	[no test files]
+ok  	lerna/profiles/sdkcontract	1.046s
+ok  	lerna/profiles/takeover	13.239s
+ok  	lerna/profiles/updates	10.562s
+ok  	lerna/profiles/worker	3.910s
+?   	lerna/protocol	[no test files]
+ok  	lerna/schema	1.027s
+ok  	lerna/sdk	1.116s
+ok  	lerna/tasks	6.867s
+FAIL
+make: *** [Makefile:11: verify] Error 1

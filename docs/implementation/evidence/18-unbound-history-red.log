@@ -1,0 +1,8 @@
+--- FAIL: TestUnboundFailedDecisionSurvivesProcessExit (32.01s)
+    --- FAIL: TestUnboundFailedDecisionSurvivesProcessExit/gap-invoked (16.84s)
+        personalized_process_test.go:191: incomplete decision snapshot history
+    --- FAIL: TestUnboundFailedDecisionSurvivesProcessExit/gap-effect (15.17s)
+        personalized_process_test.go:191: incomplete decision snapshot history
+FAIL
+FAIL	lerna/profiles/catalogcheck	32.016s
+FAIL

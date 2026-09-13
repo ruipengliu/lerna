@@ -1,0 +1,5 @@
+--- FAIL: TestCleanupRequestRemainsBoundToRetiredCandidateAfterReopen (0.10s)
+    cleanup_test.go:47: lost request: {OperationID:delete-original Ref:namespace:"local" collection:"personal" key:"original" ExpectedRevision:1 Purpose:assist} <nil>
+FAIL
+FAIL	lerna/adapters/sqliteextraction	0.133s
+FAIL

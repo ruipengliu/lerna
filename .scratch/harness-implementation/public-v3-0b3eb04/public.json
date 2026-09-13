@@ -1,0 +1,80 @@
+{
+  "ElapsedSeconds": 7.127802255,
+  "Error": "",
+  "ExternalRequests": 1,
+  "Record": {
+    "SearchConfig": {
+      "TimeoutMS": 3000,
+      "MaxBytes": 65536,
+      "Recipient": "doubao-search-cn"
+    },
+    "AnswerModel": {
+      "Model": "doubao-seed-2-0-lite-260428",
+      "Location": "ark-cn-beijing",
+      "Version": "ark-chat-v3-20260910-citations-v5",
+      "Text": true,
+      "Structured": true,
+      "Streaming": false,
+      "HardBounds": true,
+      "ContextTokens": 262144,
+      "InputUpper": 229376
+    },
+    "Usage": {
+      "ExecutionWaitMillis": 5000,
+      "QueryLimit": 128,
+      "OutcomeQueries": 1,
+      "ContentQueries": 33,
+      "ReservedModelRequests": 0,
+      "ReservedModelTokens": 0,
+      "ModelRequests": 2,
+      "ModelTokens": 1264,
+      "ActionQueries": 37,
+      "NetworkCharged": 1,
+      "SearchRequests": 1,
+      "PageRequests": 0
+    },
+    "Input": {
+      "Goal": "Using actually acquired httpbin pages, describe what service httpbin provides. Cite its own page text. If source pages cannot be acquired, report that limitation without treating search snippets as evidence.",
+      "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":5,\"DeadlineUnix\":1789274027}",
+      "Blocks": [
+        {
+          "Ref": "content:local:65a2a57f3406ffa1e5c3181c70861b78889e31b14db774fe33601b7543965044:1",
+          "Text": "{\"Status\":\"denied\",\"Mode\":\"http\",\"Requests\":1}",
+          "Subject": "operator",
+          "Role": "external-evidence-gap"
+        }
+      ]
+    },
+    "ModelOutput": {
+      "answer": "No httpbin pages were successfully acquired, so no description of the service httpbin provides from its own page text can be generated.",
+      "claims": [],
+      "gaps": [
+        {
+          "detail": "The target httpbin page content could not be acquired because the http access request was denied.",
+          "kind": "fetch_failed",
+          "sources": [
+            "content:local:65a2a57f3406ffa1e5c3181c70861b78889e31b14db774fe33601b7543965044:1"
+          ]
+        }
+      ],
+      "scope": "No actual httpbin pages were retrieved; the only available external evidence record indicates the http access request to fetch httpbin content was denied.",
+      "status": "fetch_failed"
+    },
+    "Answer": {
+      "status": "fetch_failed",
+      "answer": "No httpbin pages were successfully acquired, so no description of the service httpbin provides from its own page text can be generated.",
+      "scope": "No actual httpbin pages were retrieved; the only available external evidence record indicates the http access request to fetch httpbin content was denied.",
+      "claims": [],
+      "gaps": [
+        {
+          "kind": "fetch_failed",
+          "detail": "The target httpbin page content could not be acquired because the http access request was denied.",
+          "sources": [
+            "content:local:65a2a57f3406ffa1e5c3181c70861b78889e31b14db774fe33601b7543965044:1"
+          ]
+        }
+      ]
+    }
+  },
+  "Started": "2026-09-13T04:32:46.916797944Z"
+}

@@ -1,0 +1,39 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "What is the load limit of the Westhaven footbridge?",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789273184}",
+        "Blocks": [
+          {
+            "Ref": "content:local:f2e32b07b367bafc4ee7e5cdc735fd936e7a66816da07a030ef4a347652732cc:1",
+            "Text": "{\"Status\":\"discovered\",\"Candidates\":[{\"url\":\"http://127.0.0.1:45537/final\",\"title\":\"Westhaven bridge record\",\"snippet\":\"Index excerpt says 12 tonnes; this is not acquired page evidence.\"}],\"SearchedAt\":\"2026-09-13T04:18:45.140029539Z\",\"SearchURL\":\"http://127.0.0.1:45537/start?q=Westhaven+footbridge+load+limit\",\"ResponseSHA256\":\"ef9db3ba9f836c37f089ea1ccc821d24b86ab643832d558be7aeb8788a261488\",\"Mode\":\"fixed-replay\",\"Requests\":0}",
+            "Subject": "operator",
+            "Role": "search-candidates"
+          },
+          {
+            "Ref": "content:local:1e4ca779c496d4213f530510306be62b2b86ad14b952ccd6628d708c0dc9b9fe:1",
+            "Text": "{\"Status\":\"denied\",\"Mode\":\"fixed-replay\",\"Requests\":0}",
+            "Subject": "operator",
+            "Role": "external-evidence-gap"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 512
+    },
+    "Result": {
+      "ProviderContent": "eyJhbnN3ZXIiOiJObyB2ZXJpZmllZCBsb2FkIGxpbWl0IHZhbHVlIGZvciB0aGUgV2VzdGhhdmVuIGZvb3RicmlkZ2UgY291bGQgYmUgY29uZmlybWVkLCBhcyB0aGUgcmVsZXZhbnQgc291cmNlIHBhZ2Ugd2FzIG5vdCBzdWNjZXNzZnVsbHkgYWNxdWlyZWQuIiwic2NvcGUiOiJPbmx5IHNlYXJjaCBjYW5kaWRhdGUgbWV0YWRhdGEgZm9yIHRoZSBXZXN0aGF2ZW4gZm9vdGJyaWRnZSBsb2FkIGxpbWl0IHF1ZXJ5IHdhcyBvYnNlcnZlZCwgaW5jbHVkaW5nIGFuIGluZGV4IHNuaXBwZXQgdGhhdCBtZW50aW9ucyAxMiB0b25uZXMgd2hpY2ggaXMgZXhwbGljaXRseSBub3RlZCBhcyBub3QgYWNxdWlyZWQgZnVsbCBwYWdlIGV2aWRlbmNlLiBUaGUgZnVsbCBXZXN0aGF2ZW4gYnJpZGdlIHJlY29yZCBwYWdlIGF0IGh0dHA6Ly8xMjcuMC4wLjE6NDU1MzcvZmluYWwgd2FzIG5ldmVyIHN1Y2Nlc3NmdWxseSByZXRyaWV2ZWQuIiwiY2xhaW1zIjpbXSwiZ2FwcyI6W3sia2luZCI6ImZldGNoX2ZhaWxlZCIsImRldGFpbCI6IlRoZSByZXF1ZXN0IHRvIGFjY2VzcyB0aGUgV2VzdGhhdmVuIGJyaWRnZSByZWNvcmQgcGFnZSB3YXMgZGVuaWVkLCBzbyBubyBmdWxsIHBhZ2UgZXZpZGVuY2UgY29udGFpbmluZyB0aGUgY29uZmlybWVkIGxvYWQgbGltaXQgZGF0YSB3YXMgb2J0YWluZWQuIiwic291cmNlcyI6WyJjb250ZW50OmxvY2FsOjFlNGNhNzc5YzQ5NmQ0MjEzZjUzMDUxMDMwNmJlNjJiMmI4NmFkMTRiOTUyY2NkNjYyOGQ3MDhjMGRjOWI5ZmU6MSJdfV19LCJzdGF0dXMiOiJmZXRjaF9mYWlsZWQifQ==",
+      "Content": "eyJhbnN3ZXIiOiJObyB2ZXJpZmllZCBsb2FkIGxpbWl0IHZhbHVlIGZvciB0aGUgV2VzdGhhdmVuIGZvb3RicmlkZ2UgY291bGQgYmUgY29uZmlybWVkLCBhcyB0aGUgcmVsZXZhbnQgc291cmNlIHBhZ2Ugd2FzIG5vdCBzdWNjZXNzZnVsbHkgYWNxdWlyZWQuIiwic2NvcGUiOiJPbmx5IHNlYXJjaCBjYW5kaWRhdGUgbWV0YWRhdGEgZm9yIHRoZSBXZXN0aGF2ZW4gZm9vdGJyaWRnZSBsb2FkIGxpbWl0IHF1ZXJ5IHdhcyBvYnNlcnZlZCwgaW5jbHVkaW5nIGFuIGluZGV4IHNuaXBwZXQgdGhhdCBtZW50aW9ucyAxMiB0b25uZXMgd2hpY2ggaXMgZXhwbGljaXRseSBub3RlZCBhcyBub3QgYWNxdWlyZWQgZnVsbCBwYWdlIGV2aWRlbmNlLiBUaGUgZnVsbCBXZXN0aGF2ZW4gYnJpZGdlIHJlY29yZCBwYWdlIGF0IGh0dHA6Ly8xMjcuMC4wLjE6NDU1MzcvZmluYWwgd2FzIG5ldmVyIHN1Y2Nlc3NmdWxseSByZXRyaWV2ZWQuIiwiY2xhaW1zIjpbXSwiZ2FwcyI6W3sia2luZCI6ImZldGNoX2ZhaWxlZCIsImRldGFpbCI6IlRoZSByZXF1ZXN0IHRvIGFjY2VzcyB0aGUgV2VzdGhhdmVuIGJyaWRnZSByZWNvcmQgcGFnZSB3YXMgZGVuaWVkLCBzbyBubyBmdWxsIHBhZ2UgZXZpZGVuY2UgY29udGFpbmluZyB0aGUgY29uZmlybWVkIGxvYWQgbGltaXQgZGF0YSB3YXMgb2J0YWluZWQuIiwic291cmNlcyI6WyJjb250ZW50OmxvY2FsOjFlNGNhNzc5YzQ5NmQ0MjEzZjUzMDUxMDMwNmJlNjJiMmI4NmFkMTRiOTUyY2NkNjYyOGQ3MDhjMGRjOWI5ZmU6MSJdfV19LCJzdGF0dXMiOiJmZXRjaF9mYWlsZWQifQ==",
+      "Finish": "stop",
+      "RequestRef": "021789273126167fc70b79e699e1a6fcafbbefdc4fb0412716ac6",
+      "Usage": {
+        "Known": true,
+        "Input": 1177,
+        "Output": 224
+      }
+    },
+    "Error": "OUTPUT_INVALID"
+  }
+]

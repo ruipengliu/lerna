@@ -1,0 +1,29 @@
+{
+  "Version": "search-semantic-failure-review-v1",
+  "CaseID": "fetch_failed",
+  "Mode": "loopback",
+  "FormalAnswerAvailable": false,
+  "RuntimeError": "research answer decision failed: queries=53/128 action_phase=43 state=RUNNING cause=OUTPUT_INVALID",
+  "Coverage": {
+    "Numerator": 0,
+    "Denominator": 0,
+    "Status": "N/A"
+  },
+  "CitationSupport": {
+    "Numerator": 0,
+    "Denominator": 0,
+    "Status": "N/A; no formal answer"
+  },
+  "Verdict": "fail",
+  "SemanticAPIApplied": false,
+  "Reason": "fetch_failed gap.sources混入search-candidates Ref，违反失败事实来源角色契约，OUTPUT_INVALID且无正式答案。",
+  "FormalChecks": {
+    "answer_support": "not_evaluable: no formal answer",
+    "scope": "not_evaluable: no formal answer",
+    "disposition": "not_evaluable: no formal answer",
+    "forbidden:0": "not_evaluable: no formal answer",
+    "forbidden:1": "not_evaluable: no formal answer"
+  },
+  "CaseFileSHA256": "ef41c443ae6bc41b0b565bfaed4d4e6aaac3562daa578dd2c18b08331d7a489a",
+  "ModelFileSHA256": "2e0631e0aceeac935faedcc441a2bbe1c0ba422502434fdaf6b79c7df127a63a"
+}

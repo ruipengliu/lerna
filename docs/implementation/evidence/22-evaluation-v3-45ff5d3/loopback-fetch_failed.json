@@ -1,0 +1,81 @@
+{
+  "Case": "fetch_failed",
+  "Mode": "loopback",
+  "Started": "2026-09-13T03:54:59.607891862Z",
+  "ElapsedSeconds": 6.971639701,
+  "Record": {
+    "SearchConfig": {
+      "MaxBytes": 4096,
+      "Recipient": "local"
+    },
+    "AnswerModel": {
+      "Model": "doubao-seed-2-0-lite-260428",
+      "Location": "ark-cn-beijing",
+      "Version": "ark-chat-v3-20260910-citations-v2",
+      "Text": true,
+      "Structured": true,
+      "Streaming": false,
+      "HardBounds": true,
+      "ContextTokens": 262144,
+      "InputUpper": 229376
+    },
+    "Usage": {
+      "ExecutionWaitMillis": 5000,
+      "QueryLimit": 128,
+      "OutcomeQueries": 2,
+      "ContentQueries": 48,
+      "ReservedModelRequests": 0,
+      "ReservedModelTokens": 0,
+      "ModelRequests": 3,
+      "ModelTokens": 1191,
+      "ActionQueries": 56,
+      "NetworkCharged": 2,
+      "SearchRequests": 1,
+      "PageRequests": 1
+    },
+    "Input": {
+      "Goal": "What is the load limit of the Westhaven footbridge?",
+      "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789271759}",
+      "Blocks": [
+        {
+          "Ref": "content:local:474b4e3dbe8b48ad961e659790b9ce8b21860e261a035e9e5cabbda2ed10cd28:1",
+          "Text": "{\"Status\":\"denied\",\"Mode\":\"http\",\"Requests\":1}",
+          "Subject": "operator",
+          "Role": "external-evidence-gap"
+        }
+      ]
+    },
+    "ModelOutput": {
+      "answer": "No valid information about the load limit of the Westhaven footbridge could be retrieved as the external evidence request was denied.",
+      "claims": [],
+      "gaps": [
+        {
+          "detail": "The external evidence request for Westhaven footbridge load limit information was denied, so no relevant data was obtained.",
+          "kind": "fetch_failed",
+          "sources": [
+            "content:local:474b4e3dbe8b48ad961e659790b9ce8b21860e261a035e9e5cabbda2ed10cd28:1"
+          ]
+        }
+      ],
+      "scope": "The scope is restricted to identifying the official published load limit value for the Westhaven footbridge, bounded by the provided constraint parameters for maximum model requests, tokens, steps and the specified 2026-09-12 deadline.",
+      "status": "fetch_failed"
+    },
+    "Answer": {
+      "status": "fetch_failed",
+      "answer": "No valid information about the load limit of the Westhaven footbridge could be retrieved as the external evidence request was denied.",
+      "scope": "The scope is restricted to identifying the official published load limit value for the Westhaven footbridge, bounded by the provided constraint parameters for maximum model requests, tokens, steps and the specified 2026-09-12 deadline.",
+      "claims": [],
+      "gaps": [
+        {
+          "kind": "fetch_failed",
+          "detail": "The external evidence request for Westhaven footbridge load limit information was denied, so no relevant data was obtained.",
+          "sources": [
+            "content:local:474b4e3dbe8b48ad961e659790b9ce8b21860e261a035e9e5cabbda2ed10cd28:1"
+          ]
+        }
+      ]
+    }
+  },
+  "Error": "",
+  "ExternalRequests": 1
+}

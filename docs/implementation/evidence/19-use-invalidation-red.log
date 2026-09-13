@@ -1,0 +1,14 @@
+# lerna/authorization_test [lerna/authorization.test]
+authorization/uses_test.go:56:24: undefined: authorization.UseSpec
+authorization/uses_test.go:57:20: service.RegisterUse undefined (type *authorization.Service has no field or method RegisterUse)
+authorization/uses_test.go:60:20: service.RegisterUse undefined (type *authorization.Service has no field or method RegisterUse)
+authorization/uses_test.go:66:20: service.RegisterUse undefined (type *authorization.Service has no field or method RegisterUse)
+authorization/uses_test.go:84:26: service.PendingUses undefined (type *authorization.Service has no field or method PendingUses)
+authorization/uses_test.go:88:20: service.RegisterUse undefined (type *authorization.Service has no field or method RegisterUse)
+authorization/uses_test.go:93:20: service.ConfirmUseCleaned undefined (type *authorization.Service has no field or method ConfirmUseCleaned)
+authorization/uses_test.go:96:20: service.ConfirmUseCleaned undefined (type *authorization.Service has no field or method ConfirmUseCleaned)
+authorization/uses_test.go:99:27: service.PendingUses undefined (type *authorization.Service has no field or method PendingUses)
+authorization/uses_test.go:103:29: service.PendingUses undefined (type *authorization.Service has no field or method PendingUses)
+authorization/uses_test.go:103:29: too many errors
+FAIL	lerna/authorization [build failed]
+FAIL

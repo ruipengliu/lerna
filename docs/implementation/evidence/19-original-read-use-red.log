@@ -1,0 +1,6 @@
+# lerna/adapters/memoryauth_test [lerna/adapters/memoryauth.test]
+adapters/memoryauth/context_integration_test.go:145:22: permits.OriginalUse undefined (type *memoryauth.ReadPermits has no field or method OriginalUse)
+adapters/memoryauth/context_integration_test.go:151:21: permits.OriginalUse undefined (type *memoryauth.ReadPermits has no field or method OriginalUse)
+adapters/memoryauth/context_integration_test.go:171:21: permits.OriginalUse undefined (type *memoryauth.ReadPermits has no field or method OriginalUse)
+FAIL	lerna/adapters/memoryauth [build failed]
+FAIL

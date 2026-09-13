@@ -1,0 +1,321 @@
+{
+  "Profile": "frozen-loopback-v1",
+  "Mode": "loopback-http",
+  "Model": "local-protocol-fixture",
+  "SourceSHA256": "c4e872461ebd41c2ad5e3d64b8075d87bab7d12bc786f74bc9e0ae2a357dfe5c",
+  "SemanticQuality": "not_evaluated",
+  "GoVersion": "go1.26.1",
+  "Build": {
+    "vcs.modified": "true",
+    "vcs.revision": "4a0fc097edf53df3ade28e03c01cc02813266b39",
+    "vcs.time": "2026-09-12T09:34:26Z"
+  },
+  "ExternalModelRequests": 0,
+  "RuntimeVerified": true,
+  "Cases": [
+    {
+      "CaseID": "answerable",
+      "RuntimeVerified": true,
+      "Record": {
+        "Usage": {
+          "ModelRequests": 3,
+          "ModelTokens": 282,
+          "ActionQueries": 15,
+          "NetworkCharged": 2,
+          "SearchRequests": 1,
+          "PageRequests": 1
+        },
+        "Input": {
+          "Goal": "When did the Northbank footbridge open, and what is its length?",
+          "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":32768,\"MaxSteps\":3,\"DeadlineUnix\":1789206065}",
+          "Blocks": [
+            {
+              "Ref": "content:local:0edce330c0746033b41d26fb7dce1453d6644f4beb8d189a1811dd4413f5d57a:1",
+              "Text": "{\"Status\":\"acquired\",\"Body\":\"Northbank civic record, edition 2026-01. The Northbank footbridge opened on 14 May 1998. Its length is 84 metres. These measurements describe the original bridge.\",\"RequestedURL\":\"http://127.0.0.1:45793/final\",\"FinalURL\":\"http://127.0.0.1:45793/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"fc41fc2b3a26cdd6b5845b72c8bada0b6cba96f088d82c7749cbfe3b380f0991\",\"Mode\":\"http\",\"FetchedAt\":\"2026-09-12T09:40:07.036171005Z\",\"Sources\":[\"http://127.0.0.1:45793/final\"]}",
+              "Subject": "operator",
+              "Role": "external-evidence"
+            }
+          ]
+        },
+        "ModelOutput": {
+          "status": "answerable",
+          "answer": "Fixture evidence answer",
+          "scope": "Only the acquired source at its recorded time",
+          "claims": [
+            {
+              "text": "Fixture claim",
+              "citations": [
+                {
+                  "source": "content:local:0edce330c0746033b41d26fb7dce1453d6644f4beb8d189a1811dd4413f5d57a:1",
+                  "start": 0,
+                  "end": 162,
+                  "quote": "Northbank civic record, edition 2026-01. The Northbank footbridge opened on 14 May 1998. Its length is 84 metres. These measurements describe the original bridge.",
+                  "sha256": "fc41fc2b3a26cdd6b5845b72c8bada0b6cba96f088d82c7749cbfe3b380f0991",
+                  "fetched_at": "2026-09-12T09:40:07.036171005Z"
+                }
+              ]
+            }
+          ],
+          "gaps": []
+        },
+        "Answer": {
+          "status": "answerable",
+          "answer": "Fixture evidence answer",
+          "scope": "Only the acquired source at its recorded time",
+          "claims": [
+            {
+              "text": "Fixture claim",
+              "citations": [
+                {
+                  "source": "content:local:0edce330c0746033b41d26fb7dce1453d6644f4beb8d189a1811dd4413f5d57a:1",
+                  "start": 0,
+                  "end": 162,
+                  "quote": "Northbank civic record, edition 2026-01. The Northbank footbridge opened on 14 May 1998. Its length is 84 metres. These measurements describe the original bridge.",
+                  "sha256": "fc41fc2b3a26cdd6b5845b72c8bada0b6cba96f088d82c7749cbfe3b380f0991",
+                  "fetched_at": "2026-09-12T09:40:07.036171005Z"
+                }
+              ]
+            }
+          ],
+          "gaps": []
+        }
+      }
+    },
+    {
+      "CaseID": "insufficient",
+      "RuntimeVerified": true,
+      "Record": {
+        "Usage": {
+          "ModelRequests": 3,
+          "ModelTokens": 282,
+          "ActionQueries": 15,
+          "NetworkCharged": 2,
+          "SearchRequests": 1,
+          "PageRequests": 1
+        },
+        "Input": {
+          "Goal": "What was the construction cost of the Eastmere footbridge?",
+          "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":32768,\"MaxSteps\":3,\"DeadlineUnix\":1789206067}",
+          "Blocks": [
+            {
+              "Ref": "content:local:2187541c64696626b1b3f843cc111e96d235b48ec2a8630a300da5941b79eb63:1",
+              "Text": "{\"Status\":\"acquired\",\"Body\":\"Eastmere bridge record, edition 2026-01. The Eastmere footbridge crosses the canal. It opened in 2005. This record does not state its construction cost.\",\"RequestedURL\":\"http://127.0.0.1:46127/final\",\"FinalURL\":\"http://127.0.0.1:46127/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"b0a3917a221e8cc54a409c14a78e81b9b6358e8cb40f7e388be4b224f39dea6f\",\"Mode\":\"http\",\"FetchedAt\":\"2026-09-12T09:40:08.785694961Z\",\"Sources\":[\"http://127.0.0.1:46127/final\"]}",
+              "Subject": "operator",
+              "Role": "external-evidence"
+            }
+          ]
+        },
+        "ModelOutput": {
+          "status": "insufficient",
+          "answer": "The retrieved record does not establish the construction cost.",
+          "scope": "The retrieved Eastmere record only; this does not establish that no cost exists.",
+          "claims": [],
+          "gaps": [
+            {
+              "kind": "insufficient",
+              "detail": "The retrieved record omits the construction cost.",
+              "sources": [
+                "content:local:2187541c64696626b1b3f843cc111e96d235b48ec2a8630a300da5941b79eb63:1"
+              ]
+            }
+          ]
+        },
+        "Answer": {
+          "status": "insufficient",
+          "answer": "The retrieved record does not establish the construction cost.",
+          "scope": "The retrieved Eastmere record only; this does not establish that no cost exists.",
+          "claims": [],
+          "gaps": [
+            {
+              "kind": "insufficient",
+              "detail": "The retrieved record omits the construction cost.",
+              "sources": [
+                "content:local:2187541c64696626b1b3f843cc111e96d235b48ec2a8630a300da5941b79eb63:1"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "CaseID": "conflicting",
+      "RuntimeVerified": true,
+      "Record": {
+        "Usage": {
+          "ModelRequests": 3,
+          "ModelTokens": 282,
+          "ActionQueries": 16,
+          "NetworkCharged": 3,
+          "SearchRequests": 1,
+          "PageRequests": 2
+        },
+        "Input": {
+          "Goal": "In what year did the Stoneford footbridge open?",
+          "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":32768,\"MaxSteps\":3,\"DeadlineUnix\":1789206069}",
+          "Blocks": [
+            {
+              "Ref": "content:local:ece36dea6d6506d89d118243a1da7266edeb87bf5838fc353f6ba430fc580a4a:1",
+              "Text": "{\"Status\":\"acquired\",\"Body\":\"Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.\",\"RequestedURL\":\"http://127.0.0.1:44857/final\",\"FinalURL\":\"http://127.0.0.1:44857/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"253fca27cf8c832dc540277d14107bd4ed470aee517a26681b882c5870596f0f\",\"Mode\":\"http\",\"FetchedAt\":\"2026-09-12T09:40:10.617083723Z\",\"Sources\":[\"http://127.0.0.1:44857/final\"]}",
+              "Subject": "operator",
+              "Role": "external-evidence"
+            },
+            {
+              "Ref": "content:local:d2d832349cefe9bdd6b4cf195b45a8503fe17c49e19ba3bc7e085427e5497067:1",
+              "Text": "{\"Status\":\"acquired\",\"Body\":\"Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.\",\"RequestedURL\":\"http://127.0.0.1:44857/second\",\"FinalURL\":\"http://127.0.0.1:44857/second\",\"MediaType\":\"text/plain\",\"SHA256\":\"729c53be7f8c3e2ef53047755bc15df63b064c52f5146f080954ceefeae63abd\",\"Mode\":\"http\",\"FetchedAt\":\"2026-09-12T09:40:10.895187575Z\",\"Sources\":[\"http://127.0.0.1:44857/second\"]}",
+              "Subject": "operator",
+              "Role": "external-evidence"
+            }
+          ]
+        },
+        "ModelOutput": {
+          "status": "conflicting",
+          "answer": "The two records give conflicting opening years; neither is established as authoritative.",
+          "scope": "These two acquired records only; no basis to resolve their disagreement.",
+          "claims": [
+            {
+              "text": "Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.",
+              "citations": [
+                {
+                  "source": "content:local:ece36dea6d6506d89d118243a1da7266edeb87bf5838fc353f6ba430fc580a4a:1",
+                  "start": 0,
+                  "end": 160,
+                  "quote": "Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.",
+                  "sha256": "253fca27cf8c832dc540277d14107bd4ed470aee517a26681b882c5870596f0f",
+                  "fetched_at": "2026-09-12T09:40:10.617083723Z"
+                }
+              ]
+            },
+            {
+              "text": "Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.",
+              "citations": [
+                {
+                  "source": "content:local:d2d832349cefe9bdd6b4cf195b45a8503fe17c49e19ba3bc7e085427e5497067:1",
+                  "start": 0,
+                  "end": 159,
+                  "quote": "Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.",
+                  "sha256": "729c53be7f8c3e2ef53047755bc15df63b064c52f5146f080954ceefeae63abd",
+                  "fetched_at": "2026-09-12T09:40:10.895187575Z"
+                }
+              ]
+            }
+          ],
+          "gaps": [
+            {
+              "kind": "conflicting",
+              "detail": "The records disagree.",
+              "sources": [
+                "content:local:ece36dea6d6506d89d118243a1da7266edeb87bf5838fc353f6ba430fc580a4a:1",
+                "content:local:d2d832349cefe9bdd6b4cf195b45a8503fe17c49e19ba3bc7e085427e5497067:1"
+              ]
+            }
+          ]
+        },
+        "Answer": {
+          "status": "conflicting",
+          "answer": "The two records give conflicting opening years; neither is established as authoritative.",
+          "scope": "These two acquired records only; no basis to resolve their disagreement.",
+          "claims": [
+            {
+              "text": "Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.",
+              "citations": [
+                {
+                  "source": "content:local:ece36dea6d6506d89d118243a1da7266edeb87bf5838fc353f6ba430fc580a4a:1",
+                  "start": 0,
+                  "end": 160,
+                  "quote": "Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.",
+                  "sha256": "253fca27cf8c832dc540277d14107bd4ed470aee517a26681b882c5870596f0f",
+                  "fetched_at": "2026-09-12T09:40:10.617083723Z"
+                }
+              ]
+            },
+            {
+              "text": "Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.",
+              "citations": [
+                {
+                  "source": "content:local:d2d832349cefe9bdd6b4cf195b45a8503fe17c49e19ba3bc7e085427e5497067:1",
+                  "start": 0,
+                  "end": 159,
+                  "quote": "Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.",
+                  "sha256": "729c53be7f8c3e2ef53047755bc15df63b064c52f5146f080954ceefeae63abd",
+                  "fetched_at": "2026-09-12T09:40:10.895187575Z"
+                }
+              ]
+            }
+          ],
+          "gaps": [
+            {
+              "kind": "conflicting",
+              "detail": "The records disagree.",
+              "sources": [
+                "content:local:ece36dea6d6506d89d118243a1da7266edeb87bf5838fc353f6ba430fc580a4a:1",
+                "content:local:d2d832349cefe9bdd6b4cf195b45a8503fe17c49e19ba3bc7e085427e5497067:1"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "CaseID": "fetch_failed",
+      "RuntimeVerified": true,
+      "Record": {
+        "Usage": {
+          "ModelRequests": 3,
+          "ModelTokens": 282,
+          "ActionQueries": 15,
+          "NetworkCharged": 2,
+          "SearchRequests": 1,
+          "PageRequests": 1
+        },
+        "Input": {
+          "Goal": "What is the load limit of the Westhaven footbridge?",
+          "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":32768,\"MaxSteps\":3,\"DeadlineUnix\":1789206071}",
+          "Blocks": [
+            {
+              "Ref": "content:local:0a63288b7c051d7e4721e4b63c8ff0f4136bda10f67c74b3644eb5b311b9f978:1",
+              "Text": "{\"Status\":\"denied\",\"Mode\":\"http\",\"Requests\":1}",
+              "Subject": "operator",
+              "Role": "external-evidence-gap"
+            }
+          ]
+        },
+        "ModelOutput": {
+          "status": "fetch_failed",
+          "answer": "The page could not be acquired; its contents remain unverified.",
+          "scope": "This acquisition attempt only.",
+          "claims": [],
+          "gaps": [
+            {
+              "kind": "fetch_failed",
+              "detail": "Observed acquisition failure.",
+              "sources": [
+                "content:local:0a63288b7c051d7e4721e4b63c8ff0f4136bda10f67c74b3644eb5b311b9f978:1"
+              ]
+            }
+          ]
+        },
+        "Answer": {
+          "status": "fetch_failed",
+          "answer": "The page could not be acquired; its contents remain unverified.",
+          "scope": "This acquisition attempt only.",
+          "claims": [],
+          "gaps": [
+            {
+              "kind": "fetch_failed",
+              "detail": "Observed acquisition failure.",
+              "sources": [
+                "content:local:0a63288b7c051d7e4721e4b63c8ff0f4136bda10f67c74b3644eb5b311b9f978:1"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "Limitations": [
+    "Protocol models use placeholder and preselected responses; runtime success does not establish semantic quality.",
+    "No public network, real model, or fixed replay run is represented by this profile.",
+    "Only these public fictional inputs are exported; this is not a generic Content archive or authorization grant.",
+    "Temporary task stores are removed after each case; retained snapshots are offline evidence only."
+  ]
+}

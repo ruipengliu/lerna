@@ -1,0 +1,8 @@
+Command: sh scripts/verify-extraction.sh
+Exit status: 0
+Stages: build, analysis, contracts_and_processes, fixed_dataset_quality passed.
+Race test events: 126 test/subcase passes; 7 subprocess-only test skips;
+8 package passes; 2 packages without test files. No failed events.
+Quality: 14/14 exact; 6 positive outputs; 0 missing; 0 false positives.
+External model requests: 0. Whole-ticket acceptance: not_evaluated.
+Full events: 20-source-cleanup-tests.jsonl

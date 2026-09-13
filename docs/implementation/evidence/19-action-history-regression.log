@@ -1,0 +1,8 @@
+--- FAIL: TestUnboundFailedDecisionSurvivesProcessExit (82.48s)
+    --- FAIL: TestUnboundFailedDecisionSurvivesProcessExit/gap-effect (28.30s)
+        personalized_process_test.go:191: reassembled decision checkpoint: exit status 1 --- FAIL: TestPersonalizedActionCrashProbe (28.26s)
+                personalized_process_test.go:56: PERMISSION_DENIED
+            FAIL
+FAIL
+FAIL	lerna/profiles/catalogcheck	273.461s
+FAIL

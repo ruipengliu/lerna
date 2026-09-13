@@ -1,0 +1,5 @@
+# lerna/adapters/memoryauth_test [lerna/adapters/memoryauth.test]
+adapters/memoryauth/authority_test.go:109:21: undefined: memoryauth.Peer
+adapters/memoryauth/authority_test.go:110:27: undefined: memoryauth.NewReadPermits
+FAIL	lerna/adapters/memoryauth [build failed]
+FAIL

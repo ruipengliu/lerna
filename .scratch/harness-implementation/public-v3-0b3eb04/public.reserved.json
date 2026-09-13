@@ -1,0 +1,22 @@
+{
+  "Input": {
+    "Contract": "harness_evidence_answer_v1",
+    "Input": {
+      "Goal": "Using actually acquired httpbin pages, describe what service httpbin provides. Cite its own page text. If source pages cannot be acquired, report that limitation without treating search snippets as evidence.",
+      "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":5,\"DeadlineUnix\":1789274027}",
+      "Blocks": [
+        {
+          "Ref": "content:local:65a2a57f3406ffa1e5c3181c70861b78889e31b14db774fe33601b7543965044:1",
+          "Text": "{\"Status\":\"denied\",\"Mode\":\"http\",\"Requests\":1}",
+          "Subject": "operator",
+          "Role": "external-evidence-gap"
+        }
+      ]
+    },
+    "MaxInput": 229376,
+    "MaxOutput": 4096
+  },
+  "InputUpper": 229376,
+  "OutputUpper": 4096,
+  "ReservedCNY": 1
+}

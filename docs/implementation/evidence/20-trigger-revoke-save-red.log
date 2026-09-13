@@ -1,0 +1,4 @@
+# lerna/profiles/extractioncheck [lerna/profiles/extractioncheck.test]
+profiles/extractioncheck/trigger_dispatch_test.go:130:14: undefined: beforeMemorySave
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

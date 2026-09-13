@@ -1,0 +1,4 @@
+# lerna/profiles/extractioncheck [lerna/profiles/extractioncheck.test]
+profiles/extractioncheck/trigger_dispatch_test.go:63:32: undefined: extraction.NewTriggerDispatcher
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

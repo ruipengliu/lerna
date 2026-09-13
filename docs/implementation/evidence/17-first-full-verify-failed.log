@@ -1,0 +1,73 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	1.034s
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/catalogauth	[no test files]
+?   	lerna/adapters/cataloglocal	[no test files]
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+?   	lerna/adapters/credentialauth	[no test files]
+ok  	lerna/adapters/credentialbackups	(cached)
+?   	lerna/adapters/credentialexecution	[no test files]
+ok  	lerna/adapters/credentialhttp	(cached)
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/executionrouter	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/filekeys	(cached)
+ok  	lerna/adapters/josegrant	1.014s
+ok  	lerna/adapters/memoryauth	(cached)
+?   	lerna/adapters/memorylocal	[no test files]
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+ok  	lerna/adapters/simresource	1.094s
+ok  	lerna/adapters/simworkflow	1.085s
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/sqlitecatalog	[no test files]
+ok  	lerna/adapters/sqlitecredentials	(cached)
+ok  	lerna/adapters/sqlitememory	1.503s
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	1.257s
+ok  	lerna/authorization	2.591s
+ok  	lerna/brain	1.028s
+ok  	lerna/catalog	1.118s
+?   	lerna/cmd/answercheck	[no test files]
+?   	lerna/cmd/apicheck	[no test files]
+ok  	lerna/cmd/authctl	1.458s
+ok  	lerna/cmd/contractcheck	16.478s
+ok  	lerna/cmd/credentialctl	3.114s
+ok  	lerna/conformance	(cached)
+?   	lerna/contractfixture	[no test files]
+ok  	lerna/credentials	(cached)
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/catalogwire	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/memorywire	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/memory	(cached)
+?   	lerna/memory/storecontract	[no test files]
+ok  	lerna/profiles/answer	5.929s
+ok  	lerna/profiles/asynccheck	12.740s
+ok  	lerna/profiles/catalogcheck	193.140s
+ok  	lerna/profiles/content	3.989s
+ok  	lerna/profiles/control	5.287s
+ok  	lerna/profiles/credentialcheck	13.771s
+?   	lerna/profiles/durabletasks	[no test files]
+ok  	lerna/profiles/executioncheck	14.232s
+ok  	lerna/profiles/grants	3.137s
+?   	lerna/profiles/localauth	[no test files]
+ok  	lerna/profiles/memorycheck	(cached)
+ok  	lerna/profiles/sdkcontract	1.046s
+ok  	lerna/profiles/takeover	13.672s
+ok  	lerna/profiles/updates	9.762s
+ok  	lerna/profiles/worker	3.594s
+?   	lerna/protocol	[no test files]
+ok  	lerna/schema	1.033s
+ok  	lerna/sdk	(cached)
+ok  	lerna/tasks	8.526s
+make: *** [Makefile:11: verify] Error 1

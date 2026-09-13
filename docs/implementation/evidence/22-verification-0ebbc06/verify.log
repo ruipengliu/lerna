@@ -1,0 +1,119 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	1.058s
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/catalogauth	[no test files]
+?   	lerna/adapters/cataloglocal	[no test files]
+ok  	lerna/adapters/checkpointfile	1.176s
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+ok  	lerna/adapters/contextmemory	1.028s
+?   	lerna/adapters/contextpolicy	[no test files]
+?   	lerna/adapters/credentialauth	[no test files]
+ok  	lerna/adapters/credentialbackups	1.149s
+?   	lerna/adapters/credentialexecution	[no test files]
+ok  	lerna/adapters/credentialhttp	1.083s
+?   	lerna/adapters/duckduckgo	[no test files]
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/executionrouter	[no test files]
+ok  	lerna/adapters/extractionauth	2.845s
+?   	lerna/adapters/extractioncleanup	[no test files]
+ok  	lerna/adapters/extractionexecution	1.206s
+?   	lerna/adapters/extractioninputs	[no test files]
+ok  	lerna/adapters/extractionsourceguard	1.116s
+?   	lerna/adapters/fetchauth	[no test files]
+?   	lerna/adapters/fetchcontent	[no test files]
+?   	lerna/adapters/fetchcontext	[no test files]
+?   	lerna/adapters/fetchexecution	[no test files]
+?   	lerna/adapters/fetchoutput	[no test files]
+?   	lerna/adapters/fetchqueries	[no test files]
+?   	lerna/adapters/fetchtask	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/filekeys	1.267s
+ok  	lerna/adapters/httpfetch	3.466s
+ok  	lerna/adapters/josegrant	1.016s
+?   	lerna/adapters/jsonsearch	[no test files]
+ok  	lerna/adapters/localextraction	1.028s
+ok  	lerna/adapters/localextractionsource	1.033s
+ok  	lerna/adapters/memoryauth	10.803s
+ok  	lerna/adapters/memorycleanup	1.499s
+?   	lerna/adapters/memorylocal	[no test files]
+ok  	lerna/adapters/recoveryproof	1.252s
+?   	lerna/adapters/replayfetch	[no test files]
+?   	lerna/adapters/researchcontext	[no test files]
+?   	lerna/adapters/researchlineage	[no test files]
+?   	lerna/adapters/searchcontext	[no test files]
+?   	lerna/adapters/searchexecution	[no test files]
+?   	lerna/adapters/searchprivacy	[no test files]
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+ok  	lerna/adapters/simresource	1.091s
+ok  	lerna/adapters/simworkflow	1.091s
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/sqlitecatalog	[no test files]
+ok  	lerna/adapters/sqlitecontentpolicy	1.057s
+ok  	lerna/adapters/sqlitecontext	5.339s
+ok  	lerna/adapters/sqlitecredentials	1.072s
+ok  	lerna/adapters/sqliteextraction	3.607s
+ok  	lerna/adapters/sqlitefetch	1.429s
+ok  	lerna/adapters/sqlitememory	25.397s
+?   	lerna/adapters/taskcontent	[no test files]
+ok  	lerna/adapters/taskcontext	1.125s
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	4.379s
+ok  	lerna/authorization	3.260s
+ok  	lerna/brain	1.032s
+ok  	lerna/catalog	1.119s
+ok  	lerna/cleanup	1.029s
+?   	lerna/cmd/answercheck	[no test files]
+?   	lerna/cmd/apicheck	[no test files]
+ok  	lerna/cmd/authctl	1.412s
+?   	lerna/cmd/contextcheck	[no test files]
+ok  	lerna/cmd/contractcheck	420.638s
+ok  	lerna/cmd/credentialctl	3.253s
+?   	lerna/cmd/extractioncheck	[no test files]
+?   	lerna/cmd/fetchcheck	[no test files]
+ok  	lerna/cmd/searchcheck	22.258s
+ok  	lerna/conformance	1.013s
+ok  	lerna/contextassembly	2.780s
+?   	lerna/contractfixture	[no test files]
+ok  	lerna/credentials	1.643s
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+ok  	lerna/extraction	1.027s
+?   	lerna/fetch	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/catalogwire	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/memorywire	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/memory	2.197s
+?   	lerna/memory/storecontract	[no test files]
+ok  	lerna/profiles/answer	249.975s
+ok  	lerna/profiles/asynccheck	16.304s
+ok  	lerna/profiles/catalogcheck	1783.793s
+ok  	lerna/profiles/content	4.000s
+?   	lerna/profiles/contextcheck	[no test files]
+ok  	lerna/profiles/control	5.292s
+ok  	lerna/profiles/credentialcheck	14.101s
+?   	lerna/profiles/durabletasks	[no test files]
+ok  	lerna/profiles/executioncheck	19.113s
+ok  	lerna/profiles/extractioncheck	80.124s
+ok  	lerna/profiles/fetchcheck	387.689s
+ok  	lerna/profiles/grants	3.569s
+?   	lerna/profiles/localauth	[no test files]
+ok  	lerna/profiles/memorycheck	12.866s
+ok  	lerna/profiles/sdkcontract	1.048s
+ok  	lerna/profiles/searchcheck	1.037s
+ok  	lerna/profiles/takeover	13.739s
+ok  	lerna/profiles/updates	10.308s
+ok  	lerna/profiles/worker	3.551s
+?   	lerna/protocol	[no test files]
+ok  	lerna/schema	1.030s
+ok  	lerna/sdk	1.114s
+ok  	lerna/tasks	10.701s
+?   	lerna/websearch	[no test files]

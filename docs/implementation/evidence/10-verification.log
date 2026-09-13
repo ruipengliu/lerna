@@ -1,0 +1,43 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	(cached)
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/josegrant	(cached)
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	(cached)
+ok  	lerna/authorization	(cached)
+ok  	lerna/brain	(cached)
+?   	lerna/cmd/answercheck	[no test files]
+ok  	lerna/cmd/authctl	(cached)
+ok  	lerna/cmd/contractcheck	(cached)
+ok  	lerna/conformance	(cached)
+?   	lerna/contractfixture	[no test files]
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/profiles/answer	(cached)
+ok  	lerna/profiles/content	(cached)
+ok  	lerna/profiles/control	(cached)
+?   	lerna/profiles/durabletasks	[no test files]
+ok  	lerna/profiles/executioncheck	15.484s
+ok  	lerna/profiles/grants	(cached)
+?   	lerna/profiles/localauth	[no test files]
+ok  	lerna/profiles/sdkcontract	(cached)
+ok  	lerna/profiles/updates	(cached)
+ok  	lerna/profiles/worker	(cached)
+?   	lerna/protocol	[no test files]
+ok  	lerna/schema	(cached)
+ok  	lerna/sdk	(cached)
+ok  	lerna/tasks	(cached)

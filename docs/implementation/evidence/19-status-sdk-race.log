@@ -1,0 +1,4 @@
+ok  	lerna/sdk	1.132s
+ok  	lerna/adapters/memoryauth	11.722s
+?   	lerna/adapters/memorylocal	[no test files]
+?   	lerna/internal/memorywire	[no test files]

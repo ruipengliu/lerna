@@ -1,0 +1,5 @@
+# lerna/adapters/sqlitefetch_test [lerna/adapters/sqlitefetch.test]
+adapters/sqlitefetch/evidence_identity_test.go:16:5: in.EvidenceOperation undefined (type fetch.AttemptIntent has no field or method EvidenceOperation)
+adapters/sqlitefetch/evidence_identity_test.go:22:23: changed.EvidenceOperation undefined (type fetch.AttemptIntent has no field or method EvidenceOperation)
+FAIL	lerna/adapters/sqlitefetch [build failed]
+FAIL

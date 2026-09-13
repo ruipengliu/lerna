@@ -1,0 +1,5 @@
+--- FAIL: TestRetiredCandidateKeepsConfirmedExecutionFact (0.22s)
+    task_test.go:22: retired task state=WAITING effect=UNKNOWN result=UNKNOWN ref=
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.227s
+FAIL

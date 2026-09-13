@@ -1,0 +1,6 @@
+# lerna/adapters/sqlitememory_test [lerna/adapters/sqlitememory.test]
+adapters/sqlitememory/recovery_snapshot_test.go:21:18: undefined: memory.RecoveryScope
+adapters/sqlitememory/recovery_snapshot_test.go:30:23: store.RecoverySnapshot undefined (type *sqlitememory.Store has no field or method RecoverySnapshot)
+adapters/sqlitememory/recovery_snapshot_test.go:41:24: store.RecoverySnapshot undefined (type *sqlitememory.Store has no field or method RecoverySnapshot)
+FAIL	lerna/adapters/sqlitememory [build failed]
+FAIL

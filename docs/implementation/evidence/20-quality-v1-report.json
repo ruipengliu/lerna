@@ -1,0 +1,475 @@
+{
+  "dataset": "local-extraction-v1",
+  "sha256": "10bb3707efe17e44fee4cfba681423eaeed029f1babcefbfca65dd7ab953d7ce",
+  "passed": true,
+  "Correct": 6,
+  "Outputs": 6,
+  "Missing": 0,
+  "FalsePositives": 0,
+  "Exact": 14,
+  "PositiveCases": 6,
+  "NegativeCases": 8,
+  "TotalCases": 14,
+  "precision": 1,
+  "results": [
+    {
+      "id": "P1",
+      "Expected": [
+        {
+          "About": "alice",
+          "Kind": "preference",
+          "Attribute": "format",
+          "Value": "concise",
+          "Conditions": "answer",
+          "Sources": [
+            {
+              "ref": {
+                "kind": "note",
+                "key": "P1",
+                "revision": 1
+              },
+              "method": "authenticated-note",
+              "fragment": "paragraph:1"
+            }
+          ],
+          "Confidence": {
+            "assessment": "explicit",
+            "basis": "本人明确陈述",
+            "method": "local-rules-v1"
+          }
+        }
+      ],
+      "Actual": [
+        {
+          "About": "alice",
+          "Kind": "preference",
+          "Attribute": "format",
+          "Value": "concise",
+          "Conditions": "answer",
+          "Sources": [
+            {
+              "ref": {
+                "kind": "note",
+                "key": "P1",
+                "revision": 1
+              },
+              "method": "authenticated-note",
+              "fragment": "paragraph:1"
+            }
+          ],
+          "Confidence": {
+            "assessment": "explicit",
+            "basis": "本人明确陈述",
+            "method": "local-rules-v1"
+          }
+        }
+      ],
+      "reason": "",
+      "exact": true
+    },
+    {
+      "id": "P2",
+      "Expected": [
+        {
+          "About": "alice",
+          "Kind": "preference",
+          "Attribute": "format",
+          "Value": "detailed",
+          "Conditions": "answer",
+          "Sources": [
+            {
+              "ref": {
+                "kind": "note",
+                "key": "P2",
+                "revision": 1
+              },
+              "method": "authenticated-note",
+              "fragment": "paragraph:1"
+            }
+          ],
+          "Confidence": {
+            "assessment": "explicit",
+            "basis": "本人明确陈述",
+            "method": "local-rules-v1"
+          }
+        }
+      ],
+      "Actual": [
+        {
+          "About": "alice",
+          "Kind": "preference",
+          "Attribute": "format",
+          "Value": "detailed",
+          "Conditions": "answer",
+          "Sources": [
+            {
+              "ref": {
+                "kind": "note",
+                "key": "P2",
+                "revision": 1
+              },
+              "method": "authenticated-note",
+              "fragment": "paragraph:1"
+            }
+          ],
+          "Confidence": {
+            "assessment": "explicit",
+            "basis": "本人明确陈述",
+            "method": "local-rules-v1"
+          }
+        }
+      ],
+      "reason": "",
+      "exact": true
+    },
+    {
+      "id": "P3",
+      "Expected": [
+        {
+          "About": "alice",
+          "Kind": "preference",
+          "Attribute": "language",
+          "Value": "zh",
+          "Conditions": "answer",
+          "Sources": [
+            {
+              "ref": {
+                "kind": "note",
+                "key": "P3",
+                "revision": 1
+              },
+              "method": "authenticated-note",
+              "fragment": "paragraph:1"
+            }
+          ],
+          "Confidence": {
+            "assessment": "explicit",
+            "basis": "本人明确陈述",
+            "method": "local-rules-v1"
+          }
+        }
+      ],
+      "Actual": [
+        {
+          "About": "alice",
+          "Kind": "preference",
+          "Attribute": "language",
+          "Value": "zh",
+          "Conditions": "answer",
+          "Sources": [
+            {
+              "ref": {
+                "kind": "note",
+                "key": "P3",
+                "revision": 1
+              },
+              "method": "authenticated-note",
+              "fragment": "paragraph:1"
+            }
+          ],
+          "Confidence": {
+            "assessment": "explicit",
+            "basis": "本人明确陈述",
+            "method": "local-rules-v1"
+          }
+        }
+      ],
+      "reason": "",
+      "exact": true
+    },
+    {
+      "id": "P4",
+      "Expected": [
+        {
+          "About": "alice",
+          "Kind": "preference",
+          "Attribute": "language",
+          "Value": "en",
+          "Conditions": "answer",
+          "Sources": [
+            {
+              "ref": {
+                "kind": "note",
+                "key": "P4",
+                "revision": 1
+              },
+              "method": "authenticated-note",
+              "fragment": "paragraph:1"
+            }
+          ],
+          "Confidence": {
+            "assessment": "explicit",
+            "basis": "本人明确陈述",
+            "method": "local-rules-v1"
+          }
+        }
+      ],
+      "Actual": [
+        {
+          "About": "alice",
+          "Kind": "preference",
+          "Attribute": "language",
+          "Value": "en",
+          "Conditions": "answer",
+          "Sources": [
+            {
+              "ref": {
+                "kind": "note",
+                "key": "P4",
+                "revision": 1
+              },
+              "method": "authenticated-note",
+              "fragment": "paragraph:1"
+            }
+          ],
+          "Confidence": {
+            "assessment": "explicit",
+            "basis": "本人明确陈述",
+            "method": "local-rules-v1"
+          }
+        }
+      ],
+      "reason": "",
+      "exact": true
+    },
+    {
+      "id": "I1",
+      "Expected": [
+        {
+          "About": "alice",
+          "Kind": "inference",
+          "Attribute": "format",
+          "Value": "concise",
+          "Conditions": "report",
+          "Sources": [
+            {
+              "ref": {
+                "kind": "choice",
+                "key": "I1/1",
+                "revision": 1
+              },
+              "method": "observed-choice",
+              "fragment": "selection"
+            },
+            {
+              "ref": {
+                "kind": "choice",
+                "key": "I1/2",
+                "revision": 1
+              },
+              "method": "observed-choice",
+              "fragment": "selection"
+            },
+            {
+              "ref": {
+                "kind": "choice",
+                "key": "I1/3",
+                "revision": 1
+              },
+              "method": "observed-choice",
+              "fragment": "selection"
+            }
+          ],
+          "Confidence": {
+            "assessment": "tentative",
+            "basis": "三个独立且一致的报告格式选择",
+            "method": "local-rules-v1"
+          }
+        }
+      ],
+      "Actual": [
+        {
+          "About": "alice",
+          "Kind": "inference",
+          "Attribute": "format",
+          "Value": "concise",
+          "Conditions": "report",
+          "Sources": [
+            {
+              "ref": {
+                "kind": "choice",
+                "key": "I1/1",
+                "revision": 1
+              },
+              "method": "observed-choice",
+              "fragment": "selection"
+            },
+            {
+              "ref": {
+                "kind": "choice",
+                "key": "I1/2",
+                "revision": 1
+              },
+              "method": "observed-choice",
+              "fragment": "selection"
+            },
+            {
+              "ref": {
+                "kind": "choice",
+                "key": "I1/3",
+                "revision": 1
+              },
+              "method": "observed-choice",
+              "fragment": "selection"
+            }
+          ],
+          "Confidence": {
+            "assessment": "tentative",
+            "basis": "三个独立且一致的报告格式选择",
+            "method": "local-rules-v1"
+          }
+        }
+      ],
+      "reason": "",
+      "exact": true
+    },
+    {
+      "id": "I2",
+      "Expected": [
+        {
+          "About": "alice",
+          "Kind": "inference",
+          "Attribute": "format",
+          "Value": "detailed",
+          "Conditions": "report",
+          "Sources": [
+            {
+              "ref": {
+                "kind": "choice",
+                "key": "I2/1",
+                "revision": 1
+              },
+              "method": "observed-choice",
+              "fragment": "selection"
+            },
+            {
+              "ref": {
+                "kind": "choice",
+                "key": "I2/2",
+                "revision": 1
+              },
+              "method": "observed-choice",
+              "fragment": "selection"
+            },
+            {
+              "ref": {
+                "kind": "choice",
+                "key": "I2/3",
+                "revision": 1
+              },
+              "method": "observed-choice",
+              "fragment": "selection"
+            }
+          ],
+          "Confidence": {
+            "assessment": "tentative",
+            "basis": "三个独立且一致的报告格式选择",
+            "method": "local-rules-v1"
+          }
+        }
+      ],
+      "Actual": [
+        {
+          "About": "alice",
+          "Kind": "inference",
+          "Attribute": "format",
+          "Value": "detailed",
+          "Conditions": "report",
+          "Sources": [
+            {
+              "ref": {
+                "kind": "choice",
+                "key": "I2/1",
+                "revision": 1
+              },
+              "method": "observed-choice",
+              "fragment": "selection"
+            },
+            {
+              "ref": {
+                "kind": "choice",
+                "key": "I2/2",
+                "revision": 1
+              },
+              "method": "observed-choice",
+              "fragment": "selection"
+            },
+            {
+              "ref": {
+                "kind": "choice",
+                "key": "I2/3",
+                "revision": 1
+              },
+              "method": "observed-choice",
+              "fragment": "selection"
+            }
+          ],
+          "Confidence": {
+            "assessment": "tentative",
+            "basis": "三个独立且一致的报告格式选择",
+            "method": "local-rules-v1"
+          }
+        }
+      ],
+      "reason": "",
+      "exact": true
+    },
+    {
+      "id": "N1",
+      "Expected": null,
+      "Actual": null,
+      "reason": "unsupported",
+      "exact": true
+    },
+    {
+      "id": "N2",
+      "Expected": null,
+      "Actual": null,
+      "reason": "unsupported",
+      "exact": true
+    },
+    {
+      "id": "N3",
+      "Expected": null,
+      "Actual": null,
+      "reason": "unsupported",
+      "exact": true
+    },
+    {
+      "id": "N4",
+      "Expected": null,
+      "Actual": null,
+      "reason": "insufficient_evidence",
+      "exact": true
+    },
+    {
+      "id": "N5",
+      "Expected": null,
+      "Actual": null,
+      "reason": "inconsistent_evidence",
+      "exact": true
+    },
+    {
+      "id": "N6",
+      "Expected": null,
+      "Actual": null,
+      "reason": "insufficient_evidence",
+      "exact": true
+    },
+    {
+      "id": "N7",
+      "Expected": null,
+      "Actual": null,
+      "reason": "unsupported",
+      "exact": true
+    },
+    {
+      "id": "N8",
+      "Expected": null,
+      "Actual": null,
+      "reason": "unsupported",
+      "exact": true
+    }
+  ],
+  "limitations": "Fixed public synthetic corpus only; no generalized language, model, authorization or workflow quality claim."
+}

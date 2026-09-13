@@ -1,0 +1,5 @@
+--- FAIL: TestLegacyActionCheckpointMigratesWithoutReplacingWork (48.65s)
+    personalized_checkpoint_test.go:75: legacy action file retained body comparisons
+FAIL
+FAIL	lerna/profiles/catalogcheck	48.686s
+FAIL

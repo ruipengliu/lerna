@@ -1,0 +1,5 @@
+--- FAIL: TestExpiredPersonalizedRecoveryPreservesOriginalDecision (14.19s)
+    personalized_recovery_test.go:209: expired qualification prevented retired checkpoint cleanup
+FAIL
+FAIL	lerna/profiles/answer	14.223s
+FAIL

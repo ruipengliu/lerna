@@ -1,0 +1,29 @@
+{
+  "Version": "search-semantic-failure-review-v1",
+  "CaseID": "fetch_failed",
+  "Mode": "replay",
+  "FormalAnswerAvailable": false,
+  "RuntimeError": "research answer decision failed: queries=52/128 action_phase=42 state=RUNNING cause=OUTPUT_INVALID",
+  "Coverage": {
+    "Numerator": 0,
+    "Denominator": 0,
+    "Status": "N/A"
+  },
+  "CitationSupport": {
+    "Numerator": 0,
+    "Denominator": 0,
+    "Status": "N/A; no formal answer"
+  },
+  "Verdict": "fail",
+  "SemanticAPIApplied": false,
+  "Reason": "原始ProviderContent在status前多出右大括号，JSON解析失败；无正式答案，不修补或补考。",
+  "FormalChecks": {
+    "answer_support": "not_evaluable: no formal answer",
+    "scope": "not_evaluable: no formal answer",
+    "disposition": "not_evaluable: no formal answer",
+    "forbidden:0": "not_evaluable: no formal answer",
+    "forbidden:1": "not_evaluable: no formal answer"
+  },
+  "CaseFileSHA256": "bf13a31d17191a0a474c7b8884c18943736ebad69b042b54e2d0498d0cdab162",
+  "ModelFileSHA256": "beae94638ec892fff60b0a60f70a4be87db11002196680913bc956093616e9b6"
+}

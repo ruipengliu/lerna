@@ -1,0 +1,27 @@
+{
+  "Review": {
+    "CaseID": "conflicting",
+    "AnswerSHA256": "1347d6915d76679b04cee90649de02dd78796dd95075836ca9beca80effddfd3",
+    "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "Facts": [
+      {
+        "ID": "register-year",
+        "Verdict": "covered",
+        "Reason": "The corresponding claim names its source edition and opening year, with the exact acquired quotation; scope preserves the unresolved disagreement."
+      },
+      {
+        "ID": "archive-year",
+        "Verdict": "covered",
+        "Reason": "The corresponding claim names its source edition and opening year, with the exact acquired quotation; scope preserves the unresolved disagreement."
+      }
+    ]
+  },
+  "Summary": {
+    "Coverage": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedFacts": 0,
+    "CoverageReviewComplete": true
+  }
+}

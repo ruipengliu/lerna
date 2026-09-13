@@ -1,0 +1,4 @@
+ok  	lerna/memory	2.632s
+ok  	lerna/adapters/sqlitememory	3.080s
+ok  	lerna/profiles/memorycheck	10.718s
+ok  	lerna/adapters/memoryauth	12.468s

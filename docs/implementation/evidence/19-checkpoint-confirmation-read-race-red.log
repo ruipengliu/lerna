@@ -1,0 +1,5 @@
+--- FAIL: TestCheckpointConfirmationRechecksFileAfterReadingPosition (0.12s)
+    checkpoints_test.go:218: file arriving during inspection reused completion: 2 <nil>
+FAIL
+FAIL	lerna/adapters/memorycleanup	0.146s
+FAIL

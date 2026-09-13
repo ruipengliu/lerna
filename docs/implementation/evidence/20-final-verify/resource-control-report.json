@@ -1,0 +1,411 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "resource-control-v1",
+  "profile_version": "1",
+  "configuration": {
+    "binding": "binary local Capability SDK; trusted static resource scopes; add/scale/sync entries",
+    "limits": "8 scopes; 16 participants/scope; 32 descriptor partitions; 32 control ops/scope; 8 control checks; 1s IO; 3s lease; 1m window; 32 invocations/partition; 4 invocation checks; 4MiB execution store",
+    "model": "none",
+    "storage": "SQLite authority Format2 exact descriptor partitions + independent SQLite fenced target"
+  },
+  "method": "contractcheck -profile resource-control-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260912003241-0899d9fe474a+dirty",
+    "revision": "0899d9fe474a35aaad0723d561e233e0872de14c",
+    "dirty": "true",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "Simulated local API target only; no GUI, real network deployment or arbitrary third-party fencing.",
+    "Target control generation and business version are enforced atomically at every mutation; unsupported or unconfirmed fencing stays ACCEPTED.",
+    "Possibly sent controls are observed, never blindly resent; exhausted original invocation budgets remain held.",
+    "Static scope mapping is frozen before first invocation. Legacy descriptors remain separate; live remapping and authority failover are unsupported."
+  ],
+  "results": [
+    {
+      "id": "two-api-mutations",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "two-api-mutations",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "alias-replay",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "alias-replay",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cross-type-identity",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "cross-type-identity",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "admitted-before-takeover",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "admitted-before-takeover",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "inflight-fence",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "inflight-fence",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "late-start",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "late-start",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "resume-observation",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "resume-observation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "resume-replay",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "resume-replay",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "independent-resource",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "independent-resource",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unmapped-entry",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "unmapped-entry",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-target",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "unknown-target",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "lost-control-reply",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "lost-control-reply",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "control-budget",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "control-budget",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "stale-coordinator",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "stale-coordinator",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "resume-observation-race",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "resume-observation-race",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "resume-permission",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "resume-permission",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "permission-before-dispatch",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "permission-before-dispatch",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "read-permission",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "read-permission",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "task-pause",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "task-pause",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "task-cancel",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "task-cancel",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "conflicting-evidence",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "conflicting-evidence",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "fair-recovery",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "fair-recovery",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "scope-capacity",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "scope-capacity",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "mapping-conflict",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "mapping-conflict",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "atomic-control-failure",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "atomic-control-failure",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "atomic-control-unknown",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "atomic-control-unknown",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "atomic-start-failure",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "atomic-start-failure",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "atomic-start-unknown",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "atomic-start-unknown",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "simultaneous-starts",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "simultaneous-starts",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "synchronous-inflight",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "synchronous-inflight",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "late-control-result",
+      "evidence": "durable_resource_control_contract",
+      "required": true,
+      "input": "late-control-result",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "takeover-admitted",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "takeover-admitted; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "start-registered",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "start-registered; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "control-dispatched",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "control-dispatched; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "target-stopped",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "target-stopped; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "target-completed",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "target-completed; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "takeover-applied",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "takeover-applied; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "resume-observed",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "resume-observed; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "resume-dispatched",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "resume-dispatched; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "resume-committed",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "resume-committed; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "resume-applied",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "resume-applied; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "Version": "search-semantic-review-v1",
+  "InputSHA256": "2248a9f3998af0e8d7bc329b574e246c24b0121d3e6b1fc0cdd0bcbb1547edde",
+  "Coverage": {
+    "CaseID": "conflicting",
+    "AnswerSHA256": "9cc61f15116d38ebf45232e94ef29b4d3179f0618ae0c8eeed199b5ef248d999",
+    "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "Facts": [
+      {
+        "ID": "register-year",
+        "Verdict": "covered",
+        "Reason": "第一主张明确归属2026-01 Stoneford register的2001，不把它选为唯一正确年份。"
+      },
+      {
+        "ID": "archive-year",
+        "Verdict": "covered",
+        "Reason": "第二主张明确归属2026-02 Stoneford archive的2003，保留与register的冲突。"
+      }
+    ]
+  },
+  "Checks": [
+    {
+      "ID": "citation:0:0",
+      "Verdict": "pass",
+      "Reason": "register原文opened in 2001直接支持第一主张；若主张提及未区分开幕/公众通行，原文亦明确未解释。"
+    },
+    {
+      "ID": "citation:1:0",
+      "Verdict": "pass",
+      "Reason": "archive原文opened in 2003直接支持第二主张；没有将该主张错归register。"
+    },
+    {
+      "ID": "answer_support",
+      "Verdict": "pass",
+      "Reason": "正文将结果限定为所给材料的未解决冲突，不声称已找到唯一正确年份。"
+    },
+    {
+      "ID": "scope",
+      "Verdict": "pass",
+      "Reason": "明确限定两份2026版来源，未借不同版本推出某年正确，未引入未取得信息。"
+    },
+    {
+      "ID": "disposition",
+      "Verdict": "pass",
+      "Reason": "状态conflicting，两个带来源主张保留2001/2003，gap同时引用两个Ref并说明无法解决。"
+    },
+    {
+      "ID": "forbidden:0",
+      "Verdict": "pass",
+      "Reason": "没有因archive较新而选择2003。"
+    },
+    {
+      "ID": "forbidden:1",
+      "Verdict": "pass",
+      "Reason": "只说明来源未解释开幕/通行区别，没有虚构这一区别来调和两年。"
+    }
+  ]
+}

@@ -1,0 +1,366 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "controlled-content-v1",
+  "profile_version": "1",
+  "configuration": {
+    "clock": "controlled 2026-09-10; trusted local authority time",
+    "limits": "object 1MiB; inline 16B; total 2MiB; chunk 64KiB; 32 records; 64 files; batch 16; IO 1s; retention 1h",
+    "scope": "local continuous authorization; trusted source configuration; no remote binding or production memory consumers",
+    "storage": "SQLite shared content partition; owner-only root-confined files; Linux flock; no cross-store atomic transaction"
+  },
+  "method": "contractcheck -profile controlled-content-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260911161531-7b32e5a8ab1e+dirty",
+    "revision": "7b32e5a8ab1ef7392f545b8382f588b7b9fdc123",
+    "dirty": "true",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "Local continuous authorization and trusted source-policy fixture; no remote authentication, synchronization, or single-use business consumption.",
+    "Linux os.Root/flock reference adapter; 1 MiB bounded upload buffer and serialized directory operations; context cannot forcibly interrupt a stuck kernel disk syscall.",
+    "Partial-stage crash uses a fault adapter writing an actual partial staging file; other boundaries exit after real adapter/SQLite operations.",
+    "Minimal reference/policy locator metadata retained under trusted deployment policy; no external copy or physical-media erasure claim."
+  ],
+  "results": [
+    {
+      "id": "read-policy-race",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "read-policy-race",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cleanup-unavailable",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "cleanup-unavailable",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "delete-version-conflict",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "delete-version-conflict",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "retention-limit",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "retention-limit",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "processing-location",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "processing-location",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "hidden-existence",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "hidden-existence",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "capacity-reserves-deletion",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "capacity-reserves-deletion",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cancelled-call",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "cancelled-call",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "credential-existence",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "credential-existence",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "metadata-availability",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "metadata-availability",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "legacy-upgrade",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "legacy-upgrade",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "inline-reopen",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "inline-reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "large-chunks",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "large-chunks",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "metadata-not-body",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "metadata-not-body",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "read-not-store",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "read-not-store",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "placement",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "placement",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "source-intersection",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "source-intersection",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "semantic-replay",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "semantic-replay",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "delete-no-resurrection",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "delete-no-resurrection",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "missing-corrupt",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "missing-corrupt",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "bounded-input",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "bounded-input",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "root-confinement",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "root-confinement",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "expiry",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "expiry",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "parallel-publication",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "parallel-publication",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "publication-policy-race",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "publication-policy-race",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cleanup-race",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "cleanup-race",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "isolated-partition",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "isolated-partition",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cross-domain-operation",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "cross-domain-operation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "sdk-invalid-wire",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "sdk-invalid-wire",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "source-stale",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "source-stale",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-publication",
+      "evidence": "controlled_content_sqlite_files",
+      "required": true,
+      "input": "unknown-publication",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "partial-stage",
+      "evidence": "content_process_recovery",
+      "required": true,
+      "input": "partial-stage; child exit 73; reopen original SQLite and directory",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "file-ready",
+      "evidence": "content_process_recovery",
+      "required": true,
+      "input": "file-ready; child exit 73; reopen original SQLite and directory",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "publication-committed",
+      "evidence": "content_process_recovery",
+      "required": true,
+      "input": "publication-committed; child exit 73; reopen original SQLite and directory",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "delete-committed",
+      "evidence": "content_process_recovery",
+      "required": true,
+      "input": "delete-committed; child exit 73; reopen original SQLite and directory",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "body-removed",
+      "evidence": "content_process_recovery",
+      "required": true,
+      "input": "body-removed; child exit 73; reopen original SQLite and directory",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    }
+  ]
+}

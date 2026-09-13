@@ -1,0 +1,1 @@
+{"Version":1,"URLs":["https://open.feedcoopapi.com/search_api/web_search"],"Network":{"Networks":["112.0.0.0/8","113.0.0.0/8","14.0.0.0/8","163.0.0.0/8","183.0.0.0/8","222.0.0.0/8","2408:8756::/32","240e:97d::/32","27.0.0.0/8","59.0.0.0/8"],"AllowLoopbackHTTP":false}}

@@ -1,0 +1,5 @@
+--- FAIL: TestAnswerHostCleansDeletedDerivedContentAutomatically (3.62s)
+    personalized_cleanup_test.go:161: host did not clean derived object after deletion
+FAIL
+FAIL	lerna/profiles/answer	3.654s
+FAIL

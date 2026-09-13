@@ -1,0 +1,29 @@
+{
+  "Version": "search-semantic-failure-review-v1",
+  "CaseID": "fetch_failed",
+  "Mode": "replay",
+  "CaseFileSHA256": "c752beaabc17c267c85f7eb3baaf9bf89a7503f0bd9b9fb40c42edce20451201",
+  "ModelFileSHA256": "1277a9cb2a6c2fd209fc5920a703f54f1226921605b1941e67bb6b0abf5fbb01",
+  "FormalAnswerAvailable": false,
+  "RuntimeError": "research answer decision failed: queries=52/128 action_phase=42 state=RUNNING cause=OUTPUT_INVALID",
+  "Coverage": {
+    "Numerator": 0,
+    "Denominator": 0,
+    "Status": "N/A"
+  },
+  "CitationSupport": {
+    "Numerator": 0,
+    "Denominator": 0,
+    "Status": "N/A; no formal answer"
+  },
+  "Verdict": "fail",
+  "Reason": "OUTPUT_INVALID，无正式答案。原始provider生成citations为空的索引claim，不能按页面证据claim接受；原始输出不计正式答案成绩。",
+  "FormalChecks": {
+    "answer_support": "not_evaluable: no formal answer",
+    "scope": "not_evaluable: no formal answer",
+    "disposition": "not_evaluable: no formal answer",
+    "forbidden:0": "not_evaluable: no formal answer",
+    "forbidden:1": "not_evaluable: no formal answer"
+  },
+  "SemanticAPIApplied": false
+}

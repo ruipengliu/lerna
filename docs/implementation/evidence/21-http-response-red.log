@@ -1,0 +1,4 @@
+# lerna/adapters/httpfetch
+adapters/httpfetch/fetch_test.go:11:2: package lerna/fetch is not in std (/usr/local/go/src/lerna/fetch)
+FAIL	lerna/adapters/httpfetch [setup failed]
+FAIL

@@ -1,0 +1,14 @@
+# lerna/credentials_test [lerna/credentials.test]
+credentials/renewal_test.go:23:78: undefined: credentials.RenewalObservation
+credentials/renewal_test.go:24:36: undefined: credentials.RenewalObservation
+credentials/renewal_test.go:25:21: undefined: credentials.RenewalObservation
+credentials/renewal_test.go:48:20: manager.WithProvider undefined (type *credentials.Lifecycle has no field or method WithProvider)
+credentials/renewal_test.go:50:17: manager.StartRenewal undefined (type *credentials.Lifecycle has no field or method StartRenewal)
+credentials/renewal_test.go:51:21: manager.StepRenewal undefined (type *credentials.Lifecycle has no field or method StepRenewal)
+credentials/renewal_test.go:59:20: manager.WithProvider undefined (type *credentials.Lifecycle has no field or method WithProvider)
+credentials/renewal_test.go:61:23: manager.StepRenewal undefined (type *credentials.Lifecycle has no field or method StepRenewal)
+credentials/renewal_test.go:71:17: manager.StartRenewal undefined (type *credentials.Lifecycle has no field or method StartRenewal)
+credentials/renewal_test.go:73:21: manager.StepRenewal undefined (type *credentials.Lifecycle has no field or method StepRenewal)
+credentials/renewal_test.go:73:21: too many errors
+FAIL	lerna/credentials [build failed]
+FAIL

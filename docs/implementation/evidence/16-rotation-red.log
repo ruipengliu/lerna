@@ -1,0 +1,5 @@
+# lerna/credentials_test [lerna/credentials.test]
+credentials/rotation_test.go:47:28: undefined: credentials.NewLifecycle
+credentials/rotation_test.go:72:27: undefined: credentials.NewLifecycle
+FAIL	lerna/credentials [build failed]
+FAIL

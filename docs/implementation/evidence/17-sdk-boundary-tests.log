@@ -1,0 +1,5 @@
+ok  	lerna/sdk	1.136s
+ok  	lerna/adapters/memoryauth	(cached)
+?   	lerna/adapters/memorylocal	[no test files]
+ok  	lerna/memory	1.570s
+ok  	lerna/adapters/sqlitememory	1.386s

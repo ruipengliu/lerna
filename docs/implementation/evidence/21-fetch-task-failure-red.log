@@ -1,0 +1,4 @@
+# lerna/profiles/fetchcheck_test [lerna/profiles/fetchcheck.test]
+profiles/fetchcheck/failure_test.go:12:22: undefined: fetchcheck.CheckFailure
+FAIL	lerna/profiles/fetchcheck [build failed]
+FAIL

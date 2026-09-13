@@ -1,0 +1,3 @@
+ok  	lerna/adapters/httpfetch	2.968s
+?   	lerna/adapters/fetchexecution	[no test files]
+ok  	lerna/adapters/sqlitefetch	1.541s

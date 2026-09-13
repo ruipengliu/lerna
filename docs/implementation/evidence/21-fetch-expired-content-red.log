@@ -1,0 +1,5 @@
+--- FAIL: TestExpiredEvidencePreservesAcquiredFactWithoutRefetch (0.31s)
+    expiry_test.go:49: expired evidence was not distinguished: fetch unavailable
+FAIL
+FAIL	lerna/profiles/fetchcheck	0.322s
+FAIL

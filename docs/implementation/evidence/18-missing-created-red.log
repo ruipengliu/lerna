@@ -1,0 +1,5 @@
+--- FAIL: TestCurrentHarnessPolicyAndResidencyConstrainMemory (1.15s)
+    authority_test.go:237: newly present source kept missing context valid: <nil>
+FAIL
+FAIL	lerna/adapters/memoryauth	1.157s
+FAIL

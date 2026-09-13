@@ -1,0 +1,5 @@
+--- FAIL: TestHTTPFetchFollowsAuthorizedRedirectWithoutForwardingHeaders (0.02s)
+    fetch_test.go:91: redirect evidence: {RequestedURL: FinalURL: MediaType: SHA256: FetchedAt:0001-01-01 00:00:00 +0000 UTC HTTPStatus:0 Requests:1 Body:[]} fetch unavailable hits=1
+FAIL
+FAIL	lerna/adapters/httpfetch	0.028s
+FAIL

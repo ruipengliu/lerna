@@ -1,0 +1,13 @@
+go test ./profiles/answer -run ^TestPersonalizedAnswerWorkerWaits -count=1
+ok lerna/profiles/answer 6.963s
+
+go test -race ./profiles/answer -run TestPersonalizedAnswerWorkerWaits|TestCurrentMemoryControlsActualAnswerPublication -count=1
+ok lerna/profiles/answer 50.932s
+
+go test ./contextassembly ./brain ./tasks ./adapters/taskcontext ./adapters/contextmemory
+All five packages passed.
+
+go vet ./contextassembly ./profiles/answer
+go build ./...
+git diff --check
+All completed with exit code 0.

@@ -1,0 +1,5 @@
+ok  	lerna/memory	2.186s
+ok  	lerna/adapters/sqlitememory	2.283s
+ok  	lerna/adapters/memoryauth	9.762s
+?   	lerna/adapters/memorycleanup	[no test files]
+ok  	lerna/artifacts	1.827s

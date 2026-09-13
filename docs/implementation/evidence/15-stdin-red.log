@@ -1,0 +1,6 @@
+--- FAIL: TestManagementStoresAndRewrapsWithoutSecretOutput (3.13s)
+    --- FAIL: TestManagementStoresAndRewrapsWithoutSecretOutput/stalled_stdin_is_bounded_without_a_write (3.00s)
+        main_test.go:94: stalled input did not return bounded error: signal: killed
+FAIL
+FAIL	lerna/cmd/credentialctl	3.138s
+FAIL

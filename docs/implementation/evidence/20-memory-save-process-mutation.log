@@ -1,0 +1,6 @@
+--- FAIL: TestMemorySaveTaskRecoversAfterAbruptProcessExit (0.32s)
+    --- FAIL: TestMemorySaveTaskRecoversAfterAbruptProcessExit/after-commit (0.32s)
+        save_process_test.go:110: original save state: unknown want committed
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.330s
+FAIL

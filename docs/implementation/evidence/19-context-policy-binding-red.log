@@ -1,0 +1,7 @@
+# lerna/adapters/memoryauth_test [lerna/adapters/memoryauth.test]
+adapters/memoryauth/context_integration_test.go:77:28: policyAdapter.Bind undefined (type *contextpolicy.Adapter has no field or method Bind)
+adapters/memoryauth/context_integration_test.go:81:34: undefined: contextassembly.NewWithPolicy
+adapters/memoryauth/context_integration_test.go:106:43: undefined: contextassembly.NewWithPolicy
+adapters/memoryauth/context_integration_test.go:144:33: undefined: contextassembly.NewWithPolicy
+FAIL	lerna/adapters/memoryauth [build failed]
+FAIL

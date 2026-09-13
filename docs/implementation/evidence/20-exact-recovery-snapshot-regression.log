@@ -1,0 +1,3 @@
+ok  	lerna/memory	2.136s
+ok  	lerna/adapters/recoveryproof	1.235s
+ok  	lerna/adapters/sqlitememory	18.851s

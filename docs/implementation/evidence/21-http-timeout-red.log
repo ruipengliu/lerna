@@ -1,0 +1,8 @@
+--- FAIL: TestHTTPFetchDistinguishesTimeoutAndCancellation (0.11s)
+    --- FAIL: TestHTTPFetchDistinguishesTimeoutAndCancellation/timeout (0.11s)
+        fetch_test.go:157: failure reason: {RequestedURL: FinalURL: MediaType: SHA256: FetchedAt:0001-01-01 00:00:00 +0000 UTC HTTPStatus:0 Requests:1 Body:[]} err=fetch unavailable hits=1
+    --- FAIL: TestHTTPFetchDistinguishesTimeoutAndCancellation/cancel (0.00s)
+        fetch_test.go:157: failure reason: {RequestedURL: FinalURL: MediaType: SHA256: FetchedAt:0001-01-01 00:00:00 +0000 UTC HTTPStatus:0 Requests:0 Body:[]} err=fetch unavailable hits=0
+FAIL
+FAIL	lerna/adapters/httpfetch	0.119s
+FAIL

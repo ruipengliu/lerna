@@ -1,0 +1,3 @@
+lerna/profiles/fetchcheck: no non-test Go files in /home/dev/proj/lerna/profiles/fetchcheck
+FAIL	lerna/profiles/fetchcheck [build failed]
+FAIL

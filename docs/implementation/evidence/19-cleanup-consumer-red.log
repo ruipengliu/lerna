@@ -1,0 +1,4 @@
+# lerna/adapters/memoryauth
+adapters/memoryauth/deletion_consumer_test.go:14:2: package lerna/adapters/memorycleanup is not in std (/usr/local/go/src/lerna/adapters/memorycleanup)
+FAIL	lerna/adapters/memoryauth [setup failed]
+FAIL

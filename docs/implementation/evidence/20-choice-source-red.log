@@ -1,0 +1,4 @@
+# lerna/adapters/localextractionsource_test [lerna/adapters/localextractionsource.test]
+adapters/localextractionsource/choice_test.go:30:79: unknown field Encoding in struct literal of type localextractionsource.Entry
+FAIL	lerna/adapters/localextractionsource [build failed]
+FAIL

@@ -1,0 +1,32 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "Using actually acquired httpbin pages, describe what service httpbin provides. Cite its own page text. If source pages cannot be acquired, report that limitation without treating search snippets as evidence.",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":5,\"DeadlineUnix\":1789274027}",
+        "Blocks": [
+          {
+            "Ref": "content:local:65a2a57f3406ffa1e5c3181c70861b78889e31b14db774fe33601b7543965044:1",
+            "Text": "{\"Status\":\"denied\",\"Mode\":\"http\",\"Requests\":1}",
+            "Subject": "operator",
+            "Role": "external-evidence-gap"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 4096
+    },
+    "Result": {
+      "ProviderContent": "ewogICJzdGF0dXMiOiAiZmV0Y2hfZmFpbGVkIiwKICAiYW5zd2VyIjogIk5vIGh0dHBiaW4gcGFnZXMgd2VyZSBzdWNjZXNzZnVsbHkgYWNxdWlyZWQsIHNvIG5vIGRlc2NyaXB0aW9uIG9mIHRoZSBzZXJ2aWNlIGh0dHBiaW4gcHJvdmlkZXMgZnJvbSBpdHMgb3duIHBhZ2UgdGV4dCBjYW4gYmUgZ2VuZXJhdGVkLiIsCiAgInNjb3BlIjogIk5vIGFjdHVhbCBodHRwYmluIHBhZ2VzIHdlcmUgcmV0cmlldmVkOyB0aGUgb25seSBhdmFpbGFibGUgZXh0ZXJuYWwgZXZpZGVuY2UgcmVjb3JkIGluZGljYXRlcyB0aGUgaHR0cCBhY2Nlc3MgcmVxdWVzdCB0byBmZXRjaCBodHRwYmluIGNvbnRlbnQgd2FzIGRlbmllZC4iLAogICJjbGFpbXMiOiBbXSwKICAiZ2FwcyI6IFsKICAgIHsKICAgICAgImtpbmQiOiAiZmV0Y2hfZmFpbGVkIiwKICAgICAgImRldGFpbCI6ICJUaGUgdGFyZ2V0IGh0dHBiaW4gcGFnZSBjb250ZW50IGNvdWxkIG5vdCBiZSBhY3F1aXJlZCBiZWNhdXNlIHRoZSBodHRwIGFjY2VzcyByZXF1ZXN0IHdhcyBkZW5pZWQuIiwKICAgICAgInNvdXJjZXMiOiBbImNvbnRlbnQ6bG9jYWw6NjVhMmE1N2YzNDA2ZmZhMWU1YzMxODFjNzA4NjFiNzg4ODllMzFiMTRkYjc3NGZlMzM2MDFiNzU0Mzk2NTA0NDoxIl0KICAgIH0KICBdCn0=",
+      "Content": "eyJhbnN3ZXIiOiJObyBodHRwYmluIHBhZ2VzIHdlcmUgc3VjY2Vzc2Z1bGx5IGFjcXVpcmVkLCBzbyBubyBkZXNjcmlwdGlvbiBvZiB0aGUgc2VydmljZSBodHRwYmluIHByb3ZpZGVzIGZyb20gaXRzIG93biBwYWdlIHRleHQgY2FuIGJlIGdlbmVyYXRlZC4iLCJjbGFpbXMiOltdLCJnYXBzIjpbeyJkZXRhaWwiOiJUaGUgdGFyZ2V0IGh0dHBiaW4gcGFnZSBjb250ZW50IGNvdWxkIG5vdCBiZSBhY3F1aXJlZCBiZWNhdXNlIHRoZSBodHRwIGFjY2VzcyByZXF1ZXN0IHdhcyBkZW5pZWQuIiwia2luZCI6ImZldGNoX2ZhaWxlZCIsInNvdXJjZXMiOlsiY29udGVudDpsb2NhbDo2NWEyYTU3ZjM0MDZmZmExZTVjMzE4MWM3MDg2MWI3ODg4OWUzMWIxNGRiNzc0ZmUzMzYwMWI3NTQzOTY1MDQ0OjEiXX1dLCJzY29wZSI6Ik5vIGFjdHVhbCBodHRwYmluIHBhZ2VzIHdlcmUgcmV0cmlldmVkOyB0aGUgb25seSBhdmFpbGFibGUgZXh0ZXJuYWwgZXZpZGVuY2UgcmVjb3JkIGluZGljYXRlcyB0aGUgaHR0cCBhY2Nlc3MgcmVxdWVzdCB0byBmZXRjaCBodHRwYmluIGNvbnRlbnQgd2FzIGRlbmllZC4iLCJzdGF0dXMiOiJmZXRjaF9mYWlsZWQifQ==",
+      "Finish": "stop",
+      "RequestRef": "0217892739683378e05db81a26ab4b44637eb56f02aba94318c2c",
+      "Usage": {
+        "Known": true,
+        "Input": 917,
+        "Output": 207
+      }
+    }
+  }
+]

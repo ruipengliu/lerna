@@ -1,0 +1,5 @@
+--- FAIL: TestExtractedPreferenceControlsIndependentTaskOutput (0.81s)
+    preference_use_test.go:36: later task context did not receive inferred report format: CONTEXT_INVALIDATED
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.815s
+FAIL

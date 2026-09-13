@@ -1,0 +1,27 @@
+{
+  "Review": {
+    "CaseID": "answerable",
+    "AnswerSHA256": "0cd939d030c60c6f8e63b494495ef08e6eed65f10ec6f490be7c3be43a89d8a8",
+    "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "Facts": [
+      {
+        "ID": "opening",
+        "Verdict": "not_covered",
+        "Reason": "Answer and claim are placeholders; facts present only in quotation do not constitute an answer."
+      },
+      {
+        "ID": "length",
+        "Verdict": "not_covered",
+        "Reason": "Answer and claim are placeholders; facts present only in quotation do not constitute an answer."
+      }
+    ]
+  },
+  "Summary": {
+    "Coverage": {
+      "Numerator": 0,
+      "Denominator": 2
+    },
+    "UnreviewedFacts": 0,
+    "CoverageReviewComplete": true
+  }
+}

@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package harness.v1;
+option go_package = "lerna/gen/harness/v1;harnessv1";
+
+// Initial contract sample, not the complete task or connection protocol.
+message Envelope {
+  uint32 protocol_major = 1;
+  string message_id = 2;
+  optional string reply_to = 3;
+  string namespace = 4;
+  string operation_id = 5;
+  oneof body {
+    SubmitRequest request = 10;
+    SubmitResponse response = 11;
+  }
+}
+
+message DynamicPayload {
+  string type_name = 1;
+  string schema_id = 2;
+  string schema_version = 3;
+  string schema_digest = 4;
+  bytes json = 5;
+}
+
+message SubmitRequest {
+  optional string goal = 1;
+  DynamicPayload input = 2;
+}
+
+message TaskRef {
+  string namespace = 1;
+  string task_id = 2;
+}
+
+message SubmitResponse {
+  Evidence evidence = 1;
+  oneof result {
+    TaskRef task = 2;
+    Failure failure = 3;
+  }
+}
+
+enum Evidence {
+  EVIDENCE_UNSPECIFIED = 0;
+  // No durable acceptance, task execution or external effect is asserted.
+  EVIDENCE_CONTRACT_FIXTURE = 1;
+}
+
+message Failure {
+  ErrorCode code = 1;
+  string description = 2;
+}
+
+enum ErrorCode {
+  ERROR_CODE_UNSPECIFIED = 0;
+  ERROR_CODE_INVALID_ARGUMENT = 1;
+  ERROR_CODE_UNSUPPORTED_VERSION = 2;
+  ERROR_CODE_MISSING_CAPABILITY = 3;
+  ERROR_CODE_IDENTITY_CONFLICT = 4;
+}
+
+// The service descriptor is an asset only; no gRPC server is generated here.
+service TaskService {
+  rpc Submit(Envelope) returns (Envelope);
+}

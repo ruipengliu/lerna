@@ -1,0 +1,108 @@
+{
+  "plan": "search-small-prospective-v6",
+  "executor_commit": "37c22f7bd0e5cd94bf79440815d7bfe9f0cb40ac",
+  "worktree_before_lock": "tracked code clean; new plan and lock pending commit",
+  "sha256": {
+    "docs/implementation/22-prospective-evaluation.md": "44e02b9c8871a0805e3552ae88e12d31c9560e49c1f80738d63033b73016f313",
+    "profiles/searchcheck/testdata/sources-v1.json": "c4e872461ebd41c2ad5e3d64b8075d87bab7d12bc786f74bc9e0ae2a357dfe5c",
+    "profiles/searchcheck/testdata/expectations-v1.json": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "profiles/searchcheck/semantic_review.go": "869bc5e2a2449b400204c28d14861c58378090ef25a4eee036e6dc73272bbafa",
+    "profiles/searchcheck/review.go": "7f725f2f7e522fa2defb04e017c66a2fb5ec2e35417e17d65eb8d5d0d90fac2e",
+    "cmd/searcheval/main.go": "1b1acd3007fd984bcdabeb60de355eb4d53cd41785da50db00977ded10941533",
+    "go.mod": "ce830771a5128c1ed64a28960df17150ff64bde3a9af4274b7577aefb9281568",
+    "go.sum": "2aff457c0258909bcdee0461217678d16e80e427cce1e2b459c047e103b71764",
+    "docs/implementation/22-prospective-evaluation-v3.md": "c1f9149978e54ddf7e6faca28817955c18a1aef6d02ad51d4c66f66b80343688",
+    "docs/implementation/22-prospective-evaluation-v4.md": "e0393d63875b5a286fcf8d60503749f83b523d1319c0f1bbaf7e3b775f225834",
+    "docs/implementation/22-prospective-evaluation-v5.md": "a89669613d4d065563b030356f06969ee886aef0e33e5d7debea0a366e344270",
+    "docs/implementation/22-prospective-evaluation-v6.md": "6dfdbd19b5bd0a09202ac23832043bd1704e41a036c99a09ee17fe746acacaca"
+  },
+  "go": "go1.26.1 linux/amd64",
+  "model": {
+    "id": "doubao-seed-2-0-lite-260428",
+    "version": "ark-chat-v3-20260910-citations-v5",
+    "endpoint": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+    "location": "ark-cn-beijing",
+    "input_upper": 229376,
+    "context_tokens": 262144,
+    "output_max": 512,
+    "thinking": "disabled",
+    "stream": false,
+    "timeout_seconds": 20,
+    "compact_evidence": true
+  },
+  "authorization": {
+    "user_instruction": "开发验证阶段，模型费用控制在500元以下即可",
+    "total_model_budget_cny_exclusive": 500,
+    "batch_request_reservation_cny": 1,
+    "batch_reservation_cny": 8,
+    "max_external_requests": 8,
+    "note": "预留是保守管理额度，不是实际账单；保留全部请求用量，未知用量按请求上界保留。此前追加12次请求的待答复约束已被本授权替代。"
+  },
+  "order": [
+    {
+      "mode": "loopback",
+      "case": "answerable"
+    },
+    {
+      "mode": "loopback",
+      "case": "insufficient"
+    },
+    {
+      "mode": "loopback",
+      "case": "conflicting"
+    },
+    {
+      "mode": "loopback",
+      "case": "fetch_failed"
+    },
+    {
+      "mode": "replay",
+      "case": "answerable"
+    },
+    {
+      "mode": "replay",
+      "case": "insufficient"
+    },
+    {
+      "mode": "replay",
+      "case": "conflicting"
+    },
+    {
+      "mode": "replay",
+      "case": "fetch_failed"
+    }
+  ],
+  "config": {
+    "search_format": "json",
+    "max_queries": 128,
+    "model_tokens": 262144,
+    "disclose_to": [
+      "ark-cn-beijing"
+    ],
+    "case_deadline_seconds": 30,
+    "per_case_external_requests": 1,
+    "search_max_bytes": 4096
+  },
+  "commands": [
+    "go build -o /tmp/lerna-searcheval ./cmd/searcheval",
+    "ARK_API_KEY=<host injection from .env; not shell literal> /tmp/lerna-searcheval -execute -compact-evidence -out .scratch/harness-implementation/evaluation-v6-37c22f7"
+  ],
+  "private_output": ".scratch/harness-implementation/evaluation-v6-37c22f7",
+  "archive": "docs/implementation/evidence/22-evaluation-v6-37c22f7",
+  "review": "Independent spec agent reviews every archived case against frozen expectations after all generation; implementation involvement and exposure disclosed; no model self-scoring.",
+  "restrictions": [
+    "No retry or replacement case in this batch",
+    "No public search calls in this reference evaluation",
+    "Failed cases remain in denominator",
+    "Public end-to-end search is a separate prospective run"
+  ],
+  "preflight_review": {
+    "spec": "No actionable incremental findings; gap roles match unchanged validator",
+    "standards": "Oversize config finding fixed; no remaining findings",
+    "validation": [
+      "Doubao latency and recovery race passed 19.302s",
+      "CLI/Ark/Brain race passed",
+      "related vet passed"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+# lerna/profiles/fetchcheck
+profiles/fetchcheck/context_test.go:6:2: package lerna/adapters/fetchcontext is not in std (/usr/local/go/src/lerna/adapters/fetchcontext)
+FAIL	lerna/profiles/fetchcheck [setup failed]
+FAIL

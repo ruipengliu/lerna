@@ -1,0 +1,46 @@
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"lerna/profiles/fetchcheck"
+	"lerna/profiles/searchcheck"
+	"os"
+	"time"
+)
+
+func main() {
+	sources, err := searchcheck.LoadSources()
+	if err != nil {
+		panic(err)
+	}
+	type entry struct {
+		CaseID string
+		Record fetchcheck.ResearchRecord
+		Error  string `json:",omitempty"`
+	}
+	report := struct {
+		Mode, Model, SemanticQuality, SourceSHA256 string
+		Cases                                      []entry
+	}{Mode: "loopback-http-store-reopen", Model: "local-protocol-fixture", SemanticQuality: "not_evaluated", SourceSHA256: sources.SHA256}
+	failed := false
+	for _, c := range sources.Cases {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		record, err := fetchcheck.CheckFrozenResearchReopen(ctx, c.ID)
+		cancel()
+		e := entry{CaseID: c.ID, Record: record}
+		if err != nil {
+			e.Error = err.Error()
+			failed = true
+		}
+		report.Cases = append(report.Cases, e)
+	}
+	encoder := json.NewEncoder(os.Stdout)
+	encoder.SetIndent("", "  ")
+	if encoder.Encode(report) != nil {
+		os.Exit(1)
+	}
+	if failed {
+		os.Exit(1)
+	}
+}

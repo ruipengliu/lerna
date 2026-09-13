@@ -1,0 +1,37 @@
+{
+  "Version": "search-semantic-review-v1",
+  "InputSHA256": "750453810deafab6c53acf9294538c7b6359f7b9b9c5f0c9750e1e7e37212060",
+  "Coverage": {
+    "CaseID": "fetch_failed",
+    "AnswerSHA256": "277d713084809f33b655fd8059322d994d40915e90d1bd5037b13a5604a5c01c",
+    "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "Facts": []
+  },
+  "Checks": [
+    {
+      "ID": "answer_support",
+      "Verdict": "pass",
+      "Reason": "正文未建立承载力值，只报告证据未成功取得；实际external-evidence-gap记录Status=denied。"
+    },
+    {
+      "ID": "scope",
+      "Verdict": "fail",
+      "Reason": "scope仅列提问对象及任务预算/期限，没有按冻结required_scope明确索引已观察但页面正文未取得。 还把DeadlineUnix=1789271759（2026-09-13T03:55:59Z）写成2026-09-12，日期错误；official published这一额外限定也无输入依据。"
+    },
+    {
+      "ID": "disposition",
+      "Verdict": "pass",
+      "Reason": "状态fetch_failed，gap引用实际denied Ref，说明承载力数据未取得；未把服务失败当作空页面事实。"
+    },
+    {
+      "ID": "forbidden:0",
+      "Verdict": "pass",
+      "Reason": "正文、scope、claims与gap均未将12 tonnes断言为已知事实。"
+    },
+    {
+      "ID": "forbidden:1",
+      "Verdict": "pass",
+      "Reason": "claims为空，无编造页面正文或页面取得时间；回放措辞没有声称真实HTTP403。"
+    }
+  ]
+}

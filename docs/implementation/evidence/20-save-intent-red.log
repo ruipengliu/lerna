@@ -1,0 +1,11 @@
+# lerna/adapters/sqliteextraction_test [lerna/adapters/sqliteextraction.test]
+adapters/sqliteextraction/save_test.go:21:13: s.ReserveSave undefined (type *sqliteextraction.Store has no field or method ReserveSave)
+adapters/sqliteextraction/save_test.go:26:16: s.LookupSave undefined (type *sqliteextraction.Store has no field or method LookupSave)
+adapters/sqliteextraction/save_test.go:28:13: s.ReserveSave undefined (type *sqliteextraction.Store has no field or method ReserveSave)
+adapters/sqliteextraction/save_test.go:31:13: s.ReserveSave undefined (type *sqliteextraction.Store has no field or method ReserveSave)
+adapters/sqliteextraction/save_test.go:34:13: s.ReserveSave undefined (type *sqliteextraction.Store has no field or method ReserveSave)
+adapters/sqliteextraction/save_test.go:35:16: s.LookupSave undefined (type *sqliteextraction.Store has no field or method LookupSave)
+adapters/sqliteextraction/save_test.go:37:15: s.LookupSave undefined (type *sqliteextraction.Store has no field or method LookupSave)
+adapters/sqliteextraction/save_test.go:39:13: s.ReserveSave undefined (type *sqliteextraction.Store has no field or method ReserveSave)
+FAIL	lerna/adapters/sqliteextraction [build failed]
+FAIL

@@ -1,0 +1,4 @@
+# lerna/credentials
+credentials/rotation_test.go:6:1: package lerna/adapters/credentialbackups is not in std (/usr/local/go/src/lerna/adapters/credentialbackups)
+FAIL	lerna/credentials [setup failed]
+FAIL

@@ -1,0 +1,5 @@
+ok  	lerna/contextassembly	2.825s
+ok  	lerna/adapters/sqlitecontext	5.421s
+ok  	lerna/adapters/memorycleanup	1.490s
+ok  	lerna/adapters/memoryauth	10.889s
+ok  	lerna/profiles/extractioncheck	78.259s

@@ -1,0 +1,5 @@
+--- FAIL: TestRestoreReadRechecksDeletionBeforeRelease (0.12s)
+    restore_validation_test.go:136: deletion during read released old body: calls=2 err=<nil>
+FAIL
+FAIL	lerna/adapters/sqlitememory	0.140s
+FAIL

@@ -1,0 +1,171 @@
+syntax = "proto3";
+package harness.v1;
+option go_package = "lerna/gen/harness/v1;harnessv1";
+
+// Local authorization profile. Credentials travel in a trusted binding, never here.
+message ResourceSelector {
+  oneof selection {
+    string exact = 1;
+    ResourceSet set = 2;
+    string subtree = 3;
+  }
+}
+message ResourceSet { repeated string ids = 1; }
+message AuthorizationScope {
+  ResourceSelector resources = 1;
+  repeated string actions = 2;
+  repeated string purposes = 3;
+  repeated string locations = 4;
+  int64 expires_unix = 5;
+  repeated string required_constraints = 6;
+}
+message PolicyRule {
+  string id = 1;
+  AuthorizationScope scope = 2;
+  bool deny = 3;
+}
+message LocalGrant {
+  string id = 1;
+  string subject = 2;
+  AuthorizationScope scope = 3;
+  bool may_issue = 4;
+  string mode = 5; // Only "continuous" is implemented.
+}
+message RegisterPrincipal {
+  string subject = 1;
+  bytes credential_sha256 = 2;
+  int64 expires_unix = 3;
+  bool disabled = 4;
+}
+message RegisterResource { string id = 1; string parent = 2; }
+message ReplacePolicy { repeated PolicyRule rules = 1; }
+message AuthorizationCommand {
+  uint64 expected_revision = 1;
+  oneof change {
+    RegisterPrincipal register_principal = 10;
+    RegisterResource register_resource = 11;
+    ReplacePolicy replace_policy = 12;
+    LocalGrant issue_grant = 13;
+    bool close_windows = 14;
+    bool clean_records = 15;
+  }
+}
+message AuthorizationAction {
+  string resource = 1;
+  string action = 2;
+  string purpose = 3;
+  string location = 4;
+  repeated string required_constraints = 5;
+}
+message AuthorizationRequest {
+  string message_id = 1;
+  string namespace = 2;
+  string operation_id = 3;
+  oneof body {
+    AuthorizationCommand command = 10;
+    bool get_policy = 11;
+    string get_grant = 12;
+    string lookup_operation = 13;
+    AuthorizationAction evaluate = 14;
+    bool new_operation = 15;
+    GrantMutation mutate_signed_grant = 16;
+    string get_signed_grant = 17;
+    string lookup_signed_grant_operation = 18;
+  }
+}
+message AuthorizationReceipt {
+  string operation_id = 1;
+  uint64 revision = 2;
+  string result_ref = 3;
+  string evidence = 4; // "local_authorization_commit", never task execution.
+}
+message PolicyView {
+  uint64 revision = 1;
+  repeated PolicyRule rules = 2;
+}
+message AuthorizationDecision {
+  bool allowed = 1;
+  string reason = 2;
+  uint64 revision = 3;
+  int64 valid_until_unix = 4;
+  AuthorizationAction limits = 5;
+}
+message AuthorizationFailure { string code = 1; }
+message AuthorizationResponse {
+  string message_id = 1;
+  string reply_to = 2;
+  string namespace = 3;
+  oneof body {
+    AuthorizationReceipt receipt = 10;
+    PolicyView policy = 11;
+    LocalGrant grant = 12;
+    AuthorizationDecision decision = 13;
+    string operation_id = 14;
+    AuthorizationFailure failure = 15;
+    GrantRecord signed_grant = 16;
+    GrantReceipt signed_grant_receipt = 17;
+  }
+}
+service AuthorizationService {
+  rpc UpdatePolicy(AuthorizationRequest) returns (AuthorizationResponse);
+  rpc GetPolicy(AuthorizationRequest) returns (AuthorizationResponse);
+  rpc IssueGrant(AuthorizationRequest) returns (AuthorizationResponse);
+  rpc GetGrant(AuthorizationRequest) returns (AuthorizationResponse);
+  rpc MutateSignedGrant(AuthorizationRequest) returns (AuthorizationResponse);
+  rpc GetSignedGrant(AuthorizationRequest) returns (AuthorizationResponse);
+  rpc LookupSignedGrantOperation(AuthorizationRequest) returns (AuthorizationResponse);
+  rpc LookupOperation(AuthorizationRequest) returns (AuthorizationResponse);
+}
+
+// Signed grants remain in the authorization surface of task collaboration.
+message SignedGrantSpec {
+  string subject = 1;
+  string audience = 2;
+  string presenter = 3;
+  string certificate_sha256 = 4;
+  AuthorizationScope scope = 5;
+  int64 not_before = 6;
+  uint32 delegation_depth = 7;
+  uint64 units = 8;
+  string mode = 9;
+  string operation_binding = 10;
+  string semantic_sha256 = 11;
+  repeated GrantDelegateTarget delegate_targets = 12;
+}
+message GrantMutation {
+  string operation_id = 1;
+  uint64 expected_revision = 2;
+  string kind = 3; // ISSUE, DERIVE, REVOKE
+  string grant_id = 4; // Parent for DERIVE, target for REVOKE.
+  uint64 expected_grant_revision = 5;
+  SignedGrantSpec spec = 6;
+}
+message GrantRecord {
+  string id = 1;
+  string parent = 2;
+  SignedGrantSpec spec = 3;
+  uint64 revision = 4;
+  bool revoked = 5;
+  uint64 allocated = 6;
+  repeated GrantNotice notices = 7;
+  repeated string revoked_ancestors = 8; // Current read view, not immutable signed claims.
+}
+message GrantNotice {
+  string grant_id = 1;
+  string recipient = 2;
+  uint64 revision = 3;
+  bool applied = 4;
+}
+message GrantReceipt {
+  string operation_id = 1;
+  string grant_id = 2;
+  uint64 revision = 3;
+  string material = 4;
+}
+
+message GrantDelegateTarget {
+ string subject = 1;
+ string audience = 2;
+ string presenter = 3;
+ string certificate_sha256 = 4;
+}

@@ -1,0 +1,8 @@
+--- FAIL: TestCandidateStateSurvivesProcessExit (0.16s)
+    --- FAIL: TestCandidateStateSurvivesProcessExit/after-retire (0.04s)
+        process_test.go:68: wrong original effect: {Namespace:local Subject:alice OperationID:original State:retained Committed:true} <nil>
+    --- FAIL: TestCandidateStateSurvivesProcessExit/retire-before-commit (0.04s)
+        process_test.go:68: wrong original effect: {Namespace: Subject: OperationID: State: Committed:false} MEMORY_UNAVAILABLE
+FAIL
+FAIL	lerna/adapters/sqliteextraction	0.165s
+FAIL

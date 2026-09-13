@@ -1,0 +1,6 @@
+# lerna/profiles/extractioncheck [lerna/profiles/extractioncheck.test]
+profiles/extractioncheck/cleanup_worker_test.go:44:49: too many arguments in call to bindProcessCleanup
+	have (*testing.T, *harness, *sqlitememory.Store, string, *unavailableCleanupIntent)
+	want (*testing.T, *harness, *sqlitememory.Store, string)
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

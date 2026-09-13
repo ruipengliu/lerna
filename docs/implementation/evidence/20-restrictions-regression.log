@@ -1,0 +1,4 @@
+ok  	lerna/extraction	1.015s
+ok  	lerna/adapters/extractionauth	(cached)
+ok  	lerna/adapters/localextraction	1.017s
+ok  	lerna/profiles/extractioncheck	1.017s

@@ -1,0 +1,11 @@
+# lerna/adapters/sqliteextraction_test [lerna/adapters/sqliteextraction.test]
+adapters/sqliteextraction/trigger_round_test.go:25:18: undefined: extraction.TriggerRound
+adapters/sqliteextraction/trigger_round_test.go:26:13: s.ReserveTriggerRound undefined (type *sqliteextraction.Store has no field or method ReserveTriggerRound)
+adapters/sqliteextraction/trigger_round_test.go:29:13: s.ReserveTriggerRound undefined (type *sqliteextraction.Store has no field or method ReserveTriggerRound)
+adapters/sqliteextraction/trigger_round_test.go:40:16: s.GetTriggerRound undefined (type *sqliteextraction.Store has no field or method GetTriggerRound)
+adapters/sqliteextraction/trigger_round_test.go:46:13: s.ReserveTriggerRound undefined (type *sqliteextraction.Store has no field or method ReserveTriggerRound)
+adapters/sqliteextraction/trigger_round_test.go:51:13: s.ReserveTriggerRound undefined (type *sqliteextraction.Store has no field or method ReserveTriggerRound)
+adapters/sqliteextraction/trigger_round_test.go:56:13: s.ReserveTriggerRound undefined (type *sqliteextraction.Store has no field or method ReserveTriggerRound)
+adapters/sqliteextraction/trigger_round_test.go:62:13: s.ReserveTriggerRound undefined (type *sqliteextraction.Store has no field or method ReserveTriggerRound)
+FAIL	lerna/adapters/sqliteextraction [build failed]
+FAIL

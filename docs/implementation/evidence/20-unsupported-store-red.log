@@ -1,0 +1,11 @@
+# lerna/adapters/sqliteextraction_test [lerna/adapters/sqliteextraction.test]
+adapters/sqliteextraction/decline_test.go:18:175: unknown field Reason in struct literal of type extraction.CandidateState
+adapters/sqliteextraction/decline_test.go:19:13: s.Decline undefined (type *sqliteextraction.Store has no field or method Decline)
+adapters/sqliteextraction/decline_test.go:27:13: s.Decline undefined (type *sqliteextraction.Store has no field or method Decline)
+adapters/sqliteextraction/decline_test.go:29:10: changed.Reason undefined (type extraction.CandidateState has no field or method Reason)
+adapters/sqliteextraction/decline_test.go:30:13: s.Decline undefined (type *sqliteextraction.Store has no field or method Decline)
+adapters/sqliteextraction/decline_test.go:33:13: s.Decline undefined (type *sqliteextraction.Store has no field or method Decline)
+adapters/sqliteextraction/decline_test.go:36:10: changed.Reason undefined (type extraction.CandidateState has no field or method Reason)
+adapters/sqliteextraction/decline_test.go:37:13: s.Decline undefined (type *sqliteextraction.Store has no field or method Decline)
+FAIL	lerna/adapters/sqliteextraction [build failed]
+FAIL

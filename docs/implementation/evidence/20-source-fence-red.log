@@ -1,0 +1,8 @@
+# lerna/adapters/sqliteextraction_test [lerna/adapters/sqliteextraction.test]
+adapters/sqliteextraction/invalidation_test.go:29:22: undefined: extraction.SourceInvalidation
+adapters/sqliteextraction/invalidation_test.go:30:18: s.InvalidateSource undefined (type *sqliteextraction.Store has no field or method InvalidateSource)
+adapters/sqliteextraction/invalidation_test.go:53:17: s.InvalidateSource undefined (type *sqliteextraction.Store has no field or method InvalidateSource)
+adapters/sqliteextraction/invalidation_test.go:73:17: s.InvalidateSource undefined (type *sqliteextraction.Store has no field or method InvalidateSource)
+adapters/sqliteextraction/invalidation_test.go:78:16: s.InvalidateSource undefined (type *sqliteextraction.Store has no field or method InvalidateSource)
+FAIL	lerna/adapters/sqliteextraction [build failed]
+FAIL

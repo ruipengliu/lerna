@@ -1,0 +1,26 @@
+=== RUN   TestCompletedRotationRejectsLateOldKeyWrite
+--- PASS: TestCompletedRotationRejectsLateOldKeyWrite (0.33s)
+=== RUN   TestLifecycleStorageAndRecovery
+=== RUN   TestLifecycleStorageAndRecovery/repeat-operation
+=== RUN   TestLifecycleStorageAndRecovery/bad-material
+=== RUN   TestLifecycleStorageAndRecovery/activation-failure
+=== RUN   TestLifecycleStorageAndRecovery/lost-commit
+=== RUN   TestLifecycleStorageAndRecovery/missing-old-key
+=== RUN   TestLifecycleStorageAndRecovery/damaged-ciphertext
+=== RUN   TestLifecycleStorageAndRecovery/backup-retirement
+=== RUN   TestLifecycleStorageAndRecovery/archive-clone
+=== RUN   TestLifecycleStorageAndRecovery/damaged-backup
+=== RUN   TestLifecycleStorageAndRecovery/rollback-quarantine
+--- PASS: TestLifecycleStorageAndRecovery (3.13s)
+    --- PASS: TestLifecycleStorageAndRecovery/repeat-operation (0.31s)
+    --- PASS: TestLifecycleStorageAndRecovery/bad-material (0.36s)
+    --- PASS: TestLifecycleStorageAndRecovery/activation-failure (0.42s)
+    --- PASS: TestLifecycleStorageAndRecovery/lost-commit (0.26s)
+    --- PASS: TestLifecycleStorageAndRecovery/missing-old-key (0.24s)
+    --- PASS: TestLifecycleStorageAndRecovery/damaged-ciphertext (0.25s)
+    --- PASS: TestLifecycleStorageAndRecovery/backup-retirement (0.40s)
+    --- PASS: TestLifecycleStorageAndRecovery/archive-clone (0.29s)
+    --- PASS: TestLifecycleStorageAndRecovery/damaged-backup (0.31s)
+    --- PASS: TestLifecycleStorageAndRecovery/rollback-quarantine (0.27s)
+PASS
+ok  	lerna/profiles/credentialcheck	4.495s

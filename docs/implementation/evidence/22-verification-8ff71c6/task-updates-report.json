@@ -1,0 +1,276 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "task-updates-v1",
+  "profile_version": "1",
+  "configuration": {
+    "identity": "same authenticated task subject; separate input/append/revise/adjust rights",
+    "limits": "32 updates; 16 interactions; 16 input refs; reply 4096B; 16 choice values; input 32KiB; IO/stop 1s; 100ms update control; 1 model worker; 3 work attempts",
+    "model": "controlled only; no paid requests",
+    "storage": "SQLite + controlled text references; local binary SDK"
+  },
+  "method": "contractcheck -profile task-updates-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260913063707-8ff71c60caeb+dirty",
+    "revision": "8ff71c60caebe3648252f866e2dca9feea500946",
+    "dirty": "true",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.48.0 h1:bbX/i/6MgT9BVLM9RT1thmxL04yeTAhbEz4SyadbXoo=",
+      "golang.org/x/text": "v0.42.0 h1:JbOZXgfeCPU9gacVtYliJqOhD+zhrEqK4LfdpmlUZqI=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "Trusted module creates waits; no public operation can create or approve authorization interactions.",
+    "Expiry is derived from persisted deadline and trusted time; expired questions remain blocking until semantically invalidated.",
+    "Source checks have finite local freshness, not cross-authority atomicity. No UI, transport push, distributed budget recovery or real device execution.",
+    "Controlled-model and child-process evidence do not establish real-model interaction quality."
+  ],
+  "results": [
+    {
+      "id": "sdk-updated-context",
+      "evidence": "task_input_contract",
+      "required": true,
+      "input": "sdk-updated-context",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "sdk-waiting-replay",
+      "evidence": "task_input_contract",
+      "required": true,
+      "input": "sdk-waiting-replay",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "selective-invalidation",
+      "evidence": "task_input_contract",
+      "required": true,
+      "input": "selective-invalidation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "expired-interaction",
+      "evidence": "task_input_contract",
+      "required": true,
+      "input": "expired-interaction",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "budget-floor",
+      "evidence": "task_input_contract",
+      "required": true,
+      "input": "budget-floor",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "limits-preserve-pause",
+      "evidence": "task_input_contract",
+      "required": true,
+      "input": "limits-preserve-pause",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "deadline-shortened",
+      "evidence": "task_input_contract",
+      "required": true,
+      "input": "deadline-shortened",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "source-denied",
+      "evidence": "task_input_contract",
+      "required": true,
+      "input": "source-denied",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "terminal-update",
+      "evidence": "task_input_contract",
+      "required": true,
+      "input": "terminal-update",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cross-operation-identity",
+      "evidence": "task_input_contract",
+      "required": true,
+      "input": "cross-operation-identity",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "concurrent-replies",
+      "evidence": "task_input_concurrency",
+      "required": true,
+      "input": "concurrent-replies",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "reply-schema",
+      "evidence": "task_input_concurrency",
+      "required": true,
+      "input": "reply-schema",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "question-policy-revoked",
+      "evidence": "task_input_concurrency",
+      "required": true,
+      "input": "question-policy-revoked",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unrelated-update-reply-context",
+      "evidence": "task_input_concurrency",
+      "required": true,
+      "input": "unrelated-update-reply-context",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "running-goal-race",
+      "evidence": "task_input_concurrency",
+      "required": true,
+      "input": "running-goal-race",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "running-deadline",
+      "evidence": "task_input_concurrency",
+      "required": true,
+      "input": "running-deadline",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "uncooperative-generation",
+      "evidence": "task_input_concurrency",
+      "required": true,
+      "input": "uncooperative-generation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "stale-publication",
+      "evidence": "task_input_concurrency",
+      "required": true,
+      "input": "stale-publication",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "explicit-zero-and-absent",
+      "evidence": "task_input_concurrency",
+      "required": true,
+      "input": "explicit-zero-and-absent",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "version-conflict-atomic",
+      "evidence": "task_input_concurrency",
+      "required": true,
+      "input": "version-conflict-atomic",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "reply-question-association",
+      "evidence": "task_input_concurrency",
+      "required": true,
+      "input": "reply-question-association",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "v08-storage-upgrade",
+      "evidence": "old_encoder_sqlite",
+      "required": true,
+      "input": "dea600f runtime gob",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "input-committed",
+      "evidence": "task_input_process_recovery",
+      "required": true,
+      "input": "input-committed; child exit 73; reopen SQLite",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "interaction-consumed",
+      "evidence": "task_input_process_recovery",
+      "required": true,
+      "input": "interaction-consumed; child exit 73; reopen SQLite",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "generation-unknown",
+      "evidence": "task_input_process_recovery",
+      "required": true,
+      "input": "generation-unknown; child exit 73; reopen SQLite",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "limits-committed",
+      "evidence": "task_input_process_recovery",
+      "required": true,
+      "input": "limits-committed; child exit 73; reopen SQLite",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    }
+  ]
+}

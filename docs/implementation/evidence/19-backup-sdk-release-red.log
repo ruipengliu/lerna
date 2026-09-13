@@ -1,0 +1,5 @@
+--- FAIL: TestRecoveredSDKBlocksDeletionAtFinalRelease (0.61s)
+    recovery_test.go:159: final SDK release ignored deletion: validations=3 err=<nil>
+FAIL
+FAIL	lerna/profiles/memorycheck	0.639s
+FAIL

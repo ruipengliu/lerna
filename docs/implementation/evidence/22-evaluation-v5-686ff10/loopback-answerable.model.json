@@ -1,0 +1,32 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "When did the Northbank footbridge open, and what is its length?",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789272773}",
+        "Blocks": [
+          {
+            "Ref": "content:local:ebf4ffaab18d62075813f5a01972ef4167807dc1d5c0eb785404957cd313522f:1",
+            "Text": "{\"Status\":\"acquired\",\"Body\":\"Northbank civic record, edition 2026-01. The Northbank footbridge opened on 14 May 1998. Its length is 84 metres. These measurements describe the original bridge.\",\"RequestedURL\":\"http://127.0.0.1:45531/final\",\"FinalURL\":\"http://127.0.0.1:45531/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"fc41fc2b3a26cdd6b5845b72c8bada0b6cba96f088d82c7749cbfe3b380f0991\",\"Mode\":\"http\",\"FetchedAt\":\"2026-09-13T04:11:55.098281139Z\",\"Sources\":[\"http://127.0.0.1:45531/final\"]}",
+            "Subject": "operator",
+            "Role": "external-evidence"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 512
+    },
+    "Result": {
+      "ProviderContent": "eyJzdGF0dXMiOiJhbnN3ZXJhYmxlIiwiYW5zd2VyIjoiVGhlIE5vcnRoYmFuayBmb290YnJpZGdlIG9wZW5lZCBvbiAxNCBNYXkgMTk5OCwgYW5kIGl0cyBvcmlnaW5hbCBsZW5ndGggaXMgODQgbWV0cmVzLiIsInNjb3BlIjoiT25seSB0aGUgMjAyNi0wMSBlZGl0aW9uIG9mIHRoZSBOb3J0aGJhbmsgY2l2aWMgcmVjb3JkLCBhY3F1aXJlZCBhdCAyMDI2LTA5LTEzVDA0OjExOjU1LjA5ODI4MTEzOVosIHdhcyBhdmFpbGFibGUgYXMgdGhlIHNvdXJjZSBmb3IgdGhpcyBxdWVyeS4iLCJjbGFpbXMiOlt7InRleHQiOiJUaGUgTm9ydGhiYW5rIGZvb3RicmlkZ2Ugb3BlbmVkIG9uIDE0IE1heSAxOTk4LiIsImNpdGF0aW9ucyI6WzBdfSx7InRleHQiOiJUaGUgb3JpZ2luYWwgTm9ydGhiYW5rIGZvb3RicmlkZ2UgaGFzIGEgbGVuZ3RoIG9mIDg0IG1ldHJlcy4iLCJjaXRhdGlvbnMiOlswXX1dLCJnYXBzIjpbXX0=",
+      "Content": "eyJhbnN3ZXIiOiJUaGUgTm9ydGhiYW5rIGZvb3RicmlkZ2Ugb3BlbmVkIG9uIDE0IE1heSAxOTk4LCBhbmQgaXRzIG9yaWdpbmFsIGxlbmd0aCBpcyA4NCBtZXRyZXMuIiwiY2xhaW1zIjpbeyJjaXRhdGlvbnMiOlt7InNvdXJjZSI6ImNvbnRlbnQ6bG9jYWw6ZWJmNGZmYWFiMThkNjIwNzU4MTNmNWEwMTk3MmVmNDE2NzgwN2RjMWQ1YzBlYjc4NTQwNDk1N2NkMzEzNTIyZjoxIiwic3RhcnQiOjAsImVuZCI6MTYyLCJxdW90ZSI6Ik5vcnRoYmFuayBjaXZpYyByZWNvcmQsIGVkaXRpb24gMjAyNi0wMS4gVGhlIE5vcnRoYmFuayBmb290YnJpZGdlIG9wZW5lZCBvbiAxNCBNYXkgMTk5OC4gSXRzIGxlbmd0aCBpcyA4NCBtZXRyZXMuIFRoZXNlIG1lYXN1cmVtZW50cyBkZXNjcmliZSB0aGUgb3JpZ2luYWwgYnJpZGdlLiIsInNoYTI1NiI6ImZjNDFmYzJiM2EyNmNkZDZiNTg0NWI3MmM4YmFkYTBiNmNiYTk2ZjA4OGQ4MmM3NzQ5Y2JmZTNiMzgwZjA5OTEiLCJmZXRjaGVkX2F0IjoiMjAyNi0wOS0xM1QwNDoxMTo1NS4wOTgyODExMzlaIn1dLCJ0ZXh0IjoiVGhlIE5vcnRoYmFuayBmb290YnJpZGdlIG9wZW5lZCBvbiAxNCBNYXkgMTk5OC4ifSx7ImNpdGF0aW9ucyI6W3sic291cmNlIjoiY29udGVudDpsb2NhbDplYmY0ZmZhYWIxOGQ2MjA3NTgxM2Y1YTAxOTcyZWY0MTY3ODA3ZGMxZDVjMGViNzg1NDA0OTU3Y2QzMTM1MjJmOjEiLCJzdGFydCI6MCwiZW5kIjoxNjIsInF1b3RlIjoiTm9ydGhiYW5rIGNpdmljIHJlY29yZCwgZWRpdGlvbiAyMDI2LTAxLiBUaGUgTm9ydGhiYW5rIGZvb3RicmlkZ2Ugb3BlbmVkIG9uIDE0IE1heSAxOTk4LiBJdHMgbGVuZ3RoIGlzIDg0IG1ldHJlcy4gVGhlc2UgbWVhc3VyZW1lbnRzIGRlc2NyaWJlIHRoZSBvcmlnaW5hbCBicmlkZ2UuIiwic2hhMjU2IjoiZmM0MWZjMmIzYTI2Y2RkNmI1ODQ1YjcyYzhiYWRhMGI2Y2JhOTZmMDg4ZDgyYzc3NDljYmZlM2IzODBmMDk5MSIsImZldGNoZWRfYXQiOiIyMDI2LTA5LTEzVDA0OjExOjU1LjA5ODI4MTEzOVoifV0sInRleHQiOiJUaGUgb3JpZ2luYWwgTm9ydGhiYW5rIGZvb3RicmlkZ2UgaGFzIGEgbGVuZ3RoIG9mIDg0IG1ldHJlcy4ifV0sImdhcHMiOltdLCJzY29wZSI6Ik9ubHkgdGhlIDIwMjYtMDEgZWRpdGlvbiBvZiB0aGUgTm9ydGhiYW5rIGNpdmljIHJlY29yZCwgYWNxdWlyZWQgYXQgMjAyNi0wOS0xM1QwNDoxMTo1NS4wOTgyODExMzlaLCB3YXMgYXZhaWxhYmxlIGFzIHRoZSBzb3VyY2UgZm9yIHRoaXMgcXVlcnkuIiwic3RhdHVzIjoiYW5zd2VyYWJsZSJ9",
+      "Finish": "stop",
+      "RequestRef": "021789272715558b538a17431386f9d946dfdd644798a02a66a32",
+      "Usage": {
+        "Known": true,
+        "Input": 1285,
+        "Output": 158
+      }
+    }
+  }
+]

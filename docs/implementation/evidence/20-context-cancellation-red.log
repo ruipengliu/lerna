@@ -1,0 +1,5 @@
+--- FAIL: TestExtractedPreferenceControlsIndependentTaskOutput (2.76s)
+    report_test.go:91: assemble cancellation classified as permission/state: fired=true err=PERMISSION_DENIED
+FAIL
+FAIL	lerna/profiles/extractioncheck	2.768s
+FAIL

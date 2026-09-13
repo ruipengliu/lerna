@@ -1,0 +1,105 @@
+{
+  "plan": "search-small-prospective-v2",
+  "executor_commit": "8f221c9cc6c2b87dfcb24499df8864a032429607",
+  "worktree_before_lock": "tracked files clean; only this uncommitted execution lock",
+  "sha256": {
+    "docs/implementation/22-prospective-evaluation.md": "44e02b9c8871a0805e3552ae88e12d31c9560e49c1f80738d63033b73016f313",
+    "profiles/searchcheck/testdata/sources-v1.json": "c4e872461ebd41c2ad5e3d64b8075d87bab7d12bc786f74bc9e0ae2a357dfe5c",
+    "profiles/searchcheck/testdata/expectations-v1.json": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "profiles/searchcheck/semantic_review.go": "869bc5e2a2449b400204c28d14861c58378090ef25a4eee036e6dc73272bbafa",
+    "profiles/searchcheck/review.go": "7f725f2f7e522fa2defb04e017c66a2fb5ec2e35417e17d65eb8d5d0d90fac2e",
+    "cmd/searcheval/main.go": "a1deff2fe17f1e4cd4f89bda40473553cb2ca8921cc4d9ca36a157961034ed4f",
+    "go.mod": "ce830771a5128c1ed64a28960df17150ff64bde3a9af4274b7577aefb9281568",
+    "go.sum": "2aff457c0258909bcdee0461217678d16e80e427cce1e2b459c047e103b71764"
+  },
+  "go": "go1.26.1 linux/amd64",
+  "model": {
+    "id": "doubao-seed-2-0-lite-260428",
+    "version": "ark-chat-v3-20260910",
+    "endpoint": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+    "location": "ark-cn-beijing",
+    "input_upper": 229376,
+    "context_tokens": 262144,
+    "output_max": 512,
+    "thinking": "disabled",
+    "stream": false,
+    "timeout_seconds": 20
+  },
+  "authorization": {
+    "user_instruction": "开发验证阶段，模型费用控制在500元以下即可",
+    "total_model_budget_cny_exclusive": 500,
+    "batch_request_reservation_cny": 1,
+    "batch_reservation_cny": 8,
+    "max_external_requests": 8,
+    "note": "预留是保守管理额度，不是实际账单；保留全部请求用量，未知用量按请求上界保留。此前追加12次请求的待答复约束已被本授权替代。"
+  },
+  "order": [
+    {
+      "mode": "loopback",
+      "case": "answerable"
+    },
+    {
+      "mode": "loopback",
+      "case": "insufficient"
+    },
+    {
+      "mode": "loopback",
+      "case": "conflicting"
+    },
+    {
+      "mode": "loopback",
+      "case": "fetch_failed"
+    },
+    {
+      "mode": "replay",
+      "case": "answerable"
+    },
+    {
+      "mode": "replay",
+      "case": "insufficient"
+    },
+    {
+      "mode": "replay",
+      "case": "conflicting"
+    },
+    {
+      "mode": "replay",
+      "case": "fetch_failed"
+    }
+  ],
+  "config": {
+    "search_format": "json",
+    "max_queries": 128,
+    "model_tokens": 262144,
+    "disclose_to": [
+      "ark-cn-beijing"
+    ],
+    "case_deadline_seconds": 30,
+    "per_case_external_requests": 1,
+    "search_max_bytes": 4096
+  },
+  "commands": [
+    "go build -o /tmp/lerna-searcheval ./cmd/searcheval",
+    "ARK_API_KEY=<host injection from .env; not shell literal> /tmp/lerna-searcheval -execute -out .scratch/harness-implementation/evaluation-v2-8f221c9"
+  ],
+  "private_output": ".scratch/harness-implementation/evaluation-v2-8f221c9",
+  "archive": "docs/implementation/evidence/22-evaluation-v2-8f221c9",
+  "review": "Independent spec agent reviews every archived case against frozen expectations after all generation; implementation involvement and exposure disclosed; no model self-scoring.",
+  "restrictions": [
+    "No retry or replacement case in this batch",
+    "No public search calls in this reference evaluation",
+    "Failed cases remain in denominator",
+    "Public end-to-end search is a separate prospective run"
+  ],
+  "preflight_review": {
+    "spec": "All three P2 fixed: response bound, pre-request input persistence, failure usage snapshot.",
+    "standards": "Reservation directory fsync and reopened-host lifecycle fixed; nil-host snapshot returns unavailable.",
+    "validation": [
+      "runner build and vet passed",
+      "no-argument runner refuses execution",
+      "reference replacement/usage regression race 84.093s",
+      "failure and reopened failure usage race 11.983s"
+    ],
+    "price_note": "Official product page https://www.volcengine.com/product/doubao/ lists lite starting prices 0.6 CNY/million input and 3.6 output. 1 CNY/request is a conservative management reservation, not an invoice; actual usage retained. No account billing access or claim of exact historical spend."
+  }
+}

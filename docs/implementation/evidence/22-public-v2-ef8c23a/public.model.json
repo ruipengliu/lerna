@@ -1,0 +1,56 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "Using actually acquired httpbin pages, describe what service httpbin provides. Cite its own page text. If source pages cannot be acquired, report that limitation without treating search snippets as evidence.",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":5,\"DeadlineUnix\":1789273480}",
+        "Blocks": [
+          {
+            "Ref": "content:local:c82ecf59b46473bb1770d425722499108a1cf7591360c8e4fa5e387730986c62:1",
+            "Text": "{\"Status\":\"discovered\",\"Candidates\":[{\"url\":\"https://apispine.com/httpbin\",\"title\":\"Httpbin\",\"snippet\":\"rce\\nAPI Reference\\nhttps://httpbin.org/\\nHttpbin is a \\nfree and open-source HTTP request and response servi\\nce designed for testing and debugging. It provides v\\narious endpoints that reflect incoming requests, ins\"},{\"url\":\"https://httpbin.org/legacy\",\"title\":\"httpbin(1): HTTP Request \\u0026 Response Service\",\"snippet\":\" Reitz  \\u0026 Heroku.\\nBONUSPOINTS\\nnow.httpbin.org The current time, in a\\nsed.\\n/anything/:anything  Returns request data, including the URL.\\n/\\n Returns given HTTP Status code.\\n/response-headers?key=val Returns g\"},{\"url\":\"https://support.huawei.com/enterprise/en/doc/EDOC1100493124/a83e110a/reserving-source-ip-address-for-gateway-access\",\"title\":\"Application Service Mesh(ASM) 23.9.5.1 Usage Guide(for Huawei Cloud Stack 8.3.0) 02\",\"snippet\":\" image displays the source IP address. The httpbin service is an HTTP Request \\u0026 Response Service that \\ncan send requests to the httpbin image. The httpbin image will return the requests based on the specif\"},{\"url\":\"https://www.httpbin.org/\",\"title\":\"httpbin.org\",\"snippet\":\"httpbin.org\\n0.9.2\\n[ Base URL: www.httpbin.org/ ]\\nA simple HTTP Reque\\nth methods\\nStatus codes\\nGenerates responses with given status code\\nR\\nequest inspection\\nInspect the request data\\nResponse inspection\\nInspe\"}],\"SearchedAt\":\"2026-09-13T04:23:41.945075952Z\",\"SearchURL\":\"https://open.feedcoopapi.com/search_api/web_search\",\"ResponseSHA256\":\"f2ea7511e82043f4171fbcef7d5489bc7f14f1754d0597ad22ce06f7547f831b\",\"Mode\":\"http\",\"Requests\":1}",
+            "Subject": "operator",
+            "Role": "search-candidates"
+          },
+          {
+            "Ref": "content:local:01719887fff7d554b9f7818f03807bb3ca81da577548822b025887ae686cc0fd:1",
+            "Text": "{\"Status\":\"denied\",\"Mode\":\"\",\"Requests\":0}",
+            "Subject": "operator",
+            "Role": "external-evidence-gap"
+          },
+          {
+            "Ref": "content:local:dddaa81ff1787f23aa9d67a56f27a83305cf30c68afbb2201cd7c525950880df:1",
+            "Text": "{\"Status\":\"timed_out\",\"Mode\":\"http\",\"Requests\":1}",
+            "Subject": "operator",
+            "Role": "external-evidence-gap"
+          },
+          {
+            "Ref": "content:local:5b3253ae3f566e45b6a6c5198b1ccb75c90aaeb6bbf4d4367b043c4a4188e776:1",
+            "Text": "{\"Status\":\"denied\",\"Mode\":\"\",\"Requests\":0}",
+            "Subject": "operator",
+            "Role": "external-evidence-gap"
+          },
+          {
+            "Ref": "content:local:cbfcf23769009fd1e49e0590ee5cedd15487b7f6da950015b50fa56c94febc9f:1",
+            "Text": "{\"Status\":\"timed_out\",\"Mode\":\"http\",\"Requests\":1}",
+            "Subject": "operator",
+            "Role": "external-evidence-gap"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 512
+    },
+    "Result": {
+      "ProviderContent": "ewogICJzdGF0dXMiOiAiZmV0Y2hfZmFpbGVkIiwKICAiYW5zd2VyIjogIk5vIGFjdHVhbCBodHRwYmluIHNvdXJjZSBwYWdlIGNvbnRlbnQgY291bGQgYmUgc3VjY2Vzc2Z1bGx5IGFjcXVpcmVkLiBBbGwgYXR0ZW1wdHMgdG8gcmV0cmlldmUgaHR0cGJpbiBwYWdlcyByZXN1bHRlZCBpbiBhY2Nlc3MgYmVpbmcgZGVuaWVkIG9yIHRpbWluZyBvdXQsIHNvIG5vIGRlc2NyaXB0aW9uIG9mIHRoZSBzZXJ2aWNlIGZyb20gaHR0cGJpbidzIG93biBwYWdlIHRleHQgY2FuIGJlIHByb3ZpZGVkLiIsCiAgInNjb3BlIjogIk9ubHkgc2VhcmNoIGNhbmRpZGF0ZSBkaXNjb3ZlcnkgcmVjb3JkcyBmb3IgaHR0cGJpbi1yZWxhdGVkIHBhZ2VzIHdlcmUgcmV0cmlldmVkLiBObyBhY3R1YWwgZnVsbCBodHRwYmluIHBhZ2UgY29udGVudHMgd2VyZSBzdWNjZXNzZnVsbHkgYWNxdWlyZWQsIGFzIGFsbCBIVFRQIHJlcXVlc3RzIHRvIHRhcmdldCBwYWdlcyB3ZXJlIGJsb2NrZWQgb3IgdGltZWQgb3V0LiIsCiAgImNsYWltcyI6IFtdLAogICJnYXBzIjogWwogICAgewogICAgICAia2luZCI6ICJmZXRjaF9mYWlsZWQiLAogICAgICAiZGV0YWlsIjogIlBhZ2UgYWNxdWlzaXRpb24gd2FzIGV4cGxpY2l0bHkgZGVuaWVkIHdpdGggbm8gY29udGVudCByZXR1cm5lZCIsCiAgICAgICJzb3VyY2VzIjogWyJjb250ZW50OmxvY2FsOjAxNzE5ODg3ZmZmN2Q1NTRiOWY3ODE4ZjAzODA3YmIzY2E4MWRhNTc3NTQ4ODIyYjAyNTg4N2FlNjg2Y2MwZmQ6MSJdCiAgICB9LAogICAgewogICAgICAia2luZCI6ICJmZXRjaF9mYWlsZWQiLAogICAgICAiZGV0YWlsIjogIkhUVFAgcmVxdWVzdCB0byB0aGUgdGFyZ2V0IGh0dHBiaW4gcGFnZSB0aW1lZCBvdXQgYmVmb3JlIGNvbnRlbnQgY291bGQgYmUgcmV0cmlldmVkIiwKICAgICAgInNvdXJjZXMiOiBbImNvbnRlbnQ6bG9jYWw6ZGRkYWE4MWZmMTc4N2YyM2FhOWQ2N2E1NmYyN2E4MzMwNWNmMzBjNjhhZmJiMjIwMWNkN2M1MjU5NTA4ODBkZjoxIl0KICAgIH0sCiAgICB7CiAgICAgICJraW5kIjogImZldGNoX2ZhaWxlZCIsCiAgICAgICJkZXRhaWwiOiAiUGFnZSBhY3F1aXNpdGlvbiB3YXMgZXhwbGljaXRseSBkZW5pZWQgd2l0aCBubyBjb250ZW50IHJldHVybmVkIiwKICAgICAgInNvdXJjZXMiOiBbImNvbnRlbnQ6bG9jYWw6NWIzMjUzYWUzZjU2NmU0NWI2YTZjNTE5OGIxY2NiNzVjOTBhYWViNmJiZjRkNDM2N2IwNDNjNGE0MTg4ZTc3NjoxIl0KICAgIH0sCiAgICB7CiAgICAgICJraW5kIjogImZldGNoX2ZhaWxlZCIsCiAgICAgICJkZXRhaWwiOiAiSFRUUCByZXF1ZXN0IHRvIHRoZSB0YXJnZXQgaHR0cGJpbiBwYWdlIHRpbWVkIG91dCBiZWZvcmUgY29udGVudCBjb3VsZCBiZSByZXRyaWV2ZWQiLAogICAgICAic291cmNlcyI6IFsiY29udGVudDpsb2NhbDpjYmZjZjIzNzY5MDA5ZmQxZTQ5ZTA1OTBlZTVjZWRkMTU0ODdiN2Y2ZGE5NTAw",
+      "Content": "ewogICJzdGF0dXMiOiAiZmV0Y2hfZmFpbGVkIiwKICAiYW5zd2VyIjogIk5vIGFjdHVhbCBodHRwYmluIHNvdXJjZSBwYWdlIGNvbnRlbnQgY291bGQgYmUgc3VjY2Vzc2Z1bGx5IGFjcXVpcmVkLiBBbGwgYXR0ZW1wdHMgdG8gcmV0cmlldmUgaHR0cGJpbiBwYWdlcyByZXN1bHRlZCBpbiBhY2Nlc3MgYmVpbmcgZGVuaWVkIG9yIHRpbWluZyBvdXQsIHNvIG5vIGRlc2NyaXB0aW9uIG9mIHRoZSBzZXJ2aWNlIGZyb20gaHR0cGJpbidzIG93biBwYWdlIHRleHQgY2FuIGJlIHByb3ZpZGVkLiIsCiAgInNjb3BlIjogIk9ubHkgc2VhcmNoIGNhbmRpZGF0ZSBkaXNjb3ZlcnkgcmVjb3JkcyBmb3IgaHR0cGJpbi1yZWxhdGVkIHBhZ2VzIHdlcmUgcmV0cmlldmVkLiBObyBhY3R1YWwgZnVsbCBodHRwYmluIHBhZ2UgY29udGVudHMgd2VyZSBzdWNjZXNzZnVsbHkgYWNxdWlyZWQsIGFzIGFsbCBIVFRQIHJlcXVlc3RzIHRvIHRhcmdldCBwYWdlcyB3ZXJlIGJsb2NrZWQgb3IgdGltZWQgb3V0LiIsCiAgImNsYWltcyI6IFtdLAogICJnYXBzIjogWwogICAgewogICAgICAia2luZCI6ICJmZXRjaF9mYWlsZWQiLAogICAgICAiZGV0YWlsIjogIlBhZ2UgYWNxdWlzaXRpb24gd2FzIGV4cGxpY2l0bHkgZGVuaWVkIHdpdGggbm8gY29udGVudCByZXR1cm5lZCIsCiAgICAgICJzb3VyY2VzIjogWyJjb250ZW50OmxvY2FsOjAxNzE5ODg3ZmZmN2Q1NTRiOWY3ODE4ZjAzODA3YmIzY2E4MWRhNTc3NTQ4ODIyYjAyNTg4N2FlNjg2Y2MwZmQ6MSJdCiAgICB9LAogICAgewogICAgICAia2luZCI6ICJmZXRjaF9mYWlsZWQiLAogICAgICAiZGV0YWlsIjogIkhUVFAgcmVxdWVzdCB0byB0aGUgdGFyZ2V0IGh0dHBiaW4gcGFnZSB0aW1lZCBvdXQgYmVmb3JlIGNvbnRlbnQgY291bGQgYmUgcmV0cmlldmVkIiwKICAgICAgInNvdXJjZXMiOiBbImNvbnRlbnQ6bG9jYWw6ZGRkYWE4MWZmMTc4N2YyM2FhOWQ2N2E1NmYyN2E4MzMwNWNmMzBjNjhhZmJiMjIwMWNkN2M1MjU5NTA4ODBkZjoxIl0KICAgIH0sCiAgICB7CiAgICAgICJraW5kIjogImZldGNoX2ZhaWxlZCIsCiAgICAgICJkZXRhaWwiOiAiUGFnZSBhY3F1aXNpdGlvbiB3YXMgZXhwbGljaXRseSBkZW5pZWQgd2l0aCBubyBjb250ZW50IHJldHVybmVkIiwKICAgICAgInNvdXJjZXMiOiBbImNvbnRlbnQ6bG9jYWw6NWIzMjUzYWUzZjU2NmU0NWI2YTZjNTE5OGIxY2NiNzVjOTBhYWViNmJiZjRkNDM2N2IwNDNjNGE0MTg4ZTc3NjoxIl0KICAgIH0sCiAgICB7CiAgICAgICJraW5kIjogImZldGNoX2ZhaWxlZCIsCiAgICAgICJkZXRhaWwiOiAiSFRUUCByZXF1ZXN0IHRvIHRoZSB0YXJnZXQgaHR0cGJpbiBwYWdlIHRpbWVkIG91dCBiZWZvcmUgY29udGVudCBjb3VsZCBiZSByZXRyaWV2ZWQiLAogICAgICAic291cmNlcyI6IFsiY29udGVudDpsb2NhbDpjYmZjZjIzNzY5MDA5ZmQxZTQ5ZTA1OTBlZTVjZWRkMTU0ODdiN2Y2ZGE5NTAw",
+      "Finish": "length",
+      "RequestRef": "02178927342697610ac68a140479f93d63741c4458c3d481c66a8",
+      "Usage": {
+        "Known": true,
+        "Input": 1819,
+        "Output": 512
+      }
+    }
+  }
+]

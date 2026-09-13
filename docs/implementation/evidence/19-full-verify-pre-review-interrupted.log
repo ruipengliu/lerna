@@ -1,0 +1,47 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	1.028s
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/catalogauth	[no test files]
+?   	lerna/adapters/cataloglocal	[no test files]
+ok  	lerna/adapters/checkpointfile	1.074s
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+ok  	lerna/adapters/contextmemory	1.026s
+?   	lerna/adapters/contextpolicy	[no test files]
+?   	lerna/adapters/credentialauth	[no test files]
+ok  	lerna/adapters/credentialbackups	(cached)
+?   	lerna/adapters/credentialexecution	[no test files]
+ok  	lerna/adapters/credentialhttp	(cached)
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/executionrouter	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/filekeys	(cached)
+ok  	lerna/adapters/josegrant	1.015s
+ok  	lerna/adapters/memoryauth	10.658s
+?   	lerna/adapters/memorycleanup	[no test files]
+?   	lerna/adapters/memorylocal	[no test files]
+ok  	lerna/adapters/recoveryproof	1.134s
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+ok  	lerna/adapters/simresource	1.128s
+ok  	lerna/adapters/simworkflow	1.095s
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/sqlitecatalog	[no test files]
+ok  	lerna/adapters/sqlitecontext	5.329s
+ok  	lerna/adapters/sqlitecredentials	(cached)
+ok  	lerna/adapters/sqlitememory	14.248s
+ok  	lerna/adapters/taskcontext	1.093s
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	2.717s
+ok  	lerna/authorization	3.067s
+ok  	lerna/brain	1.027s
+ok  	lerna/catalog	1.123s
+ok  	lerna/cleanup	1.023s
+?   	lerna/cmd/answercheck	[no test files]
+?   	lerna/cmd/apicheck	[no test files]
+ok  	lerna/cmd/authctl	1.472s
+?   	lerna/cmd/contextcheck	[no test files]
+make: *** [Makefile:11: verify] Terminated

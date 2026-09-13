@@ -1,0 +1,60 @@
+{
+  "external_requests": 8,
+  "known_usage": {
+    "Input": 8670,
+    "Output": 2957
+  },
+  "runtime_successes": 0,
+  "cases": [
+    {
+      "mode": "loopback",
+      "case": "answerable",
+      "error": "research answer decision failed: queries=51/128 action_phase=46 state=RUNNING cause=OUTPUT_INVALID",
+      "requests": 1
+    },
+    {
+      "mode": "loopback",
+      "case": "conflicting",
+      "error": "research answer decision failed: queries=65/128 action_phase=55 state=RUNNING cause=OUTPUT_TRUNCATED",
+      "requests": 1
+    },
+    {
+      "mode": "loopback",
+      "case": "fetch_failed",
+      "error": "research answer decision failed: queries=48/128 action_phase=43 state=RUNNING cause=OUTPUT_INVALID",
+      "requests": 1
+    },
+    {
+      "mode": "loopback",
+      "case": "insufficient",
+      "error": "research answer decision failed: queries=51/128 action_phase=46 state=RUNNING cause=OUTPUT_INVALID",
+      "requests": 1
+    },
+    {
+      "mode": "replay",
+      "case": "answerable",
+      "error": "research answer decision failed: queries=50/128 action_phase=45 state=RUNNING cause=OUTPUT_INVALID",
+      "requests": 1
+    },
+    {
+      "mode": "replay",
+      "case": "conflicting",
+      "error": "research answer decision failed: queries=64/128 action_phase=54 state=RUNNING cause=OUTPUT_TRUNCATED",
+      "requests": 1
+    },
+    {
+      "mode": "replay",
+      "case": "fetch_failed",
+      "error": "research answer decision failed: queries=47/128 action_phase=42 state=RUNNING cause=OUTPUT_INVALID",
+      "requests": 1
+    },
+    {
+      "mode": "replay",
+      "case": "insufficient",
+      "error": "research answer decision failed: queries=50/128 action_phase=45 state=RUNNING cause=OUTPUT_INVALID",
+      "requests": 1
+    }
+  ],
+  "semantic_status": "pending independent review; no formal answer published",
+  "batch_reserved_cny": 8
+}

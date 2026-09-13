@@ -1,0 +1,3 @@
+ok  	lerna/profiles/executioncheck	21.278s
+ok  	lerna/profiles/fetchcheck	29.641s
+ok  	lerna/adapters/sqlitefetch	(cached)

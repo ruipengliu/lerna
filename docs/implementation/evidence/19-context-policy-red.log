@@ -1,0 +1,4 @@
+# lerna/authorization
+authorization/context_policy_test.go:11:2: package lerna/adapters/contextpolicy is not in std (/usr/local/go/src/lerna/adapters/contextpolicy)
+FAIL	lerna/authorization [setup failed]
+FAIL

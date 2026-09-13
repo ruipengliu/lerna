@@ -1,0 +1,7 @@
+# lerna/adapters/sqliteextraction_test [lerna/adapters/sqliteextraction.test]
+adapters/sqliteextraction/cleanup_list_test.go:43:18: s.ListRetiredSaves undefined (type *sqliteextraction.Store has no field or method ListRetiredSaves)
+adapters/sqliteextraction/cleanup_list_test.go:47:17: s.ListRetiredSaves undefined (type *sqliteextraction.Store has no field or method ListRetiredSaves)
+adapters/sqliteextraction/cleanup_list_test.go:52:15: s.ListRetiredSaves undefined (type *sqliteextraction.Store has no field or method ListRetiredSaves)
+adapters/sqliteextraction/cleanup_list_test.go:57:16: s.ListRetiredSaves undefined (type *sqliteextraction.Store has no field or method ListRetiredSaves)
+FAIL	lerna/adapters/sqliteextraction [build failed]
+FAIL

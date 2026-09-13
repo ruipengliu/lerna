@@ -1,0 +1,4 @@
+# lerna/adapters/sqlitememory
+adapters/sqlitememory/store_test.go:7:2: package lerna/memory/storecontract is not in std (/usr/local/go/src/lerna/memory/storecontract)
+FAIL	lerna/adapters/sqlitememory [setup failed]
+FAIL

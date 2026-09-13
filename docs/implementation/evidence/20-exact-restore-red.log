@@ -1,0 +1,12 @@
+--- FAIL: TestRestoreExactErasureKeepsIndependentRevisionWithoutHeadFallback (0.34s)
+    --- FAIL: TestRestoreExactErasureKeepsIndependentRevisionWithoutHeadFallback/historical (0.11s)
+        restore_erasure_test.go:95: exact recovery: {Scope:{Namespace: Collection:} Authority: Epoch:0 OriginPosition:0 VerifiedPosition:0 AppliedPosition:0 Retained:0 Missing:0 State:} UNAVAILABLE
+    --- FAIL: TestRestoreExactErasureKeepsIndependentRevisionWithoutHeadFallback/historical-already-erased (0.08s)
+        restore_erasure_test.go:95: exact recovery: {Scope:{Namespace: Collection:} Authority: Epoch:0 OriginPosition:0 VerifiedPosition:0 AppliedPosition:0 Retained:0 Missing:0 State:} UNAVAILABLE
+    --- FAIL: TestRestoreExactErasureKeepsIndependentRevisionWithoutHeadFallback/current (0.07s)
+        restore_erasure_test.go:95: exact recovery: {Scope:{Namespace: Collection:} Authority: Epoch:0 OriginPosition:0 VerifiedPosition:0 AppliedPosition:0 Retained:0 Missing:0 State:} UNAVAILABLE
+    --- FAIL: TestRestoreExactErasureKeepsIndependentRevisionWithoutHeadFallback/current-already-erased (0.08s)
+        restore_erasure_test.go:95: exact recovery: {Scope:{Namespace: Collection:} Authority: Epoch:0 OriginPosition:0 VerifiedPosition:0 AppliedPosition:0 Retained:0 Missing:0 State:} UNAVAILABLE
+FAIL
+FAIL	lerna/adapters/sqlitememory	0.344s
+FAIL

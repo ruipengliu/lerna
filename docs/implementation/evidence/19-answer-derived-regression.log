@@ -1,0 +1,13 @@
+--- FAIL: TestCurrentMemoryControlsActualAnswerPublication (50.83s)
+    --- FAIL: TestCurrentMemoryControlsActualAnswerPublication/model/unrelated (10.37s)
+        personalized_invalidation_test.go:18: stale publication outcome {Published:false OutputSaved:true ModelCalls:1 ReadAllocated:1 ValidationError:VERSION_CONFLICT}
+    --- FAIL: TestCurrentMemoryControlsActualAnswerPublication/publication/unrelated (10.25s)
+        personalized_invalidation_test.go:18: stale publication outcome {Published:false OutputSaved:true ModelCalls:1 ReadAllocated:1 ValidationError:VERSION_CONFLICT}
+--- FAIL: TestPersonalizedAnswerWorkerWaitsForInvalidatedContext (23.96s)
+    --- FAIL: TestPersonalizedAnswerWorkerWaitsForInvalidatedContext/related (5.70s)
+        personalized_worker_test.go:73: lost usage: [{OutputOperation:ZGE5OTI1YmFmYzk4MTMxMDI5ZWE3Yzg1NjI0ZDVjNjIxMTRlMWVhMzIwYmMzOWJhNjIxZDhhMWQ4ZDkwMzUxMy8xLzRlNTI2NGFlMWViMGY3Y2RhNjQ3ZDUxNWY2ODIwOTIzNzlkNjMwOWYwMDFiNjUxZmM5ZjQ4Y2RjOTdjYTkwZWI.5QF-yFpIysmm-BqFJwBs_gAhF08TDi5dWCxxighs-Is Worker:answer-worker Started:0 Publication:<nil> Qualification:{Ref:{Namespace:local TaskID:058eb1476b406f3ff7d0fa3066951ce762f2ae9213538c7b53b7ae1bd10f3be6} Owner:local-owner Epoch:1 Version:3 WorkID:058eb1476b406f3ff7d0fa3066951ce762f2ae9213538c7b53b7ae1bd10f3be6/initial Generation:1} Limits:{Requests:1 InputTokens:600 OutputTokens:100} Settled:true Usage:{Requests:0 UnknownRequests:0 Tokens:0}}]
+    --- FAIL: TestPersonalizedAnswerWorkerWaitsForInvalidatedContext/unrelated (11.43s)
+        personalized_worker_test.go:70: PERMISSION_DENIED
+FAIL
+FAIL	lerna/profiles/answer	221.586s
+FAIL

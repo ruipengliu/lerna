@@ -1,0 +1,8 @@
+--- FAIL: TestUnsupportedOrInsufficientEvidenceDoesNotBecomeInference (0.00s)
+    --- FAIL: TestUnsupportedOrInsufficientEvidenceDoesNotBecomeInference/duplicate-event (0.00s)
+        inference_test.go:68: unexpected inference: {Candidates:[{About:alice Kind:inference Attribute:format Value:concise Conditions:report Sources:[ref:{kind:"choice"  key:"1"  revision:1}  method:"observed-choice"  fragment:"selection" ref:{kind:"choice"  key:"2"  revision:1}  method:"observed-choice"  fragment:"selection" ref:{kind:"choice"  key:"3"  revision:1}  method:"observed-choice"  fragment:"selection"] Confidence:assessment:"tentative"  basis:"三个独立且一致的报告格式选择"  method:"local-rules-v1"}] Reason:}
+    --- FAIL: TestUnsupportedOrInsufficientEvidenceDoesNotBecomeInference/same-source-new-event (0.00s)
+        inference_test.go:68: unexpected inference: {Candidates:[{About:alice Kind:inference Attribute:format Value:concise Conditions:report Sources:[ref:{kind:"choice"  key:"1"  revision:1}  method:"observed-choice"  fragment:"selection" ref:{kind:"choice"  key:"1"  revision:2}  method:"observed-choice"  fragment:"selection" ref:{kind:"choice"  key:"3"  revision:1}  method:"observed-choice"  fragment:"selection"] Confidence:assessment:"tentative"  basis:"三个独立且一致的报告格式选择"  method:"local-rules-v1"}] Reason:}
+FAIL
+FAIL	lerna/adapters/localextraction	0.003s
+FAIL

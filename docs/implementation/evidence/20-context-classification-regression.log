@@ -1,0 +1,6 @@
+ok  	lerna/contextassembly	2.465s
+ok  	lerna/adapters/contextmemory	1.026s
+?   	lerna/adapters/contextpolicy	[no test files]
+ok  	lerna/adapters/taskcontext	1.096s
+?   	lerna/profiles/contextcheck	[no test files]
+ok  	lerna/profiles/extractioncheck	71.534s

@@ -1,0 +1,7 @@
+# lerna/adapters/sqlitememory_test [lerna/adapters/sqlitememory.test]
+adapters/sqlitememory/delete_test.go:24:21: undefined: memory.Deletion
+adapters/sqlitememory/delete_test.go:25:16: s.Delete undefined (type *sqlitememory.Store has no field or method Delete)
+adapters/sqlitememory/delete_test.go:47:19: s.Delete undefined (type *sqlitememory.Store has no field or method Delete)
+adapters/sqlitememory/delete_test.go:55:50: undefined: memory.ReplayUnavailable
+FAIL	lerna/adapters/sqlitememory [build failed]
+FAIL

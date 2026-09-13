@@ -1,0 +1,113 @@
+{
+  "Version": "search-record-v1",
+  "CaseID": "conflicting",
+  "Mode": "loopback-http",
+  "Model": "local-protocol-fixture",
+  "SourceSHA256": "c4e872461ebd41c2ad5e3d64b8075d87bab7d12bc786f74bc9e0ae2a357dfe5c",
+  "Record": {
+    "Input": {
+      "Goal": "In what year did the Stoneford footbridge open?",
+      "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":32768,\"MaxSteps\":3,\"DeadlineUnix\":1789205646}",
+      "Blocks": [
+        {
+          "Ref": "content:local:6b7c8123c8f89541693d8c905cd25b96e3815f5ca4ce453454ec60b7bddf633c:1",
+          "Text": "{\"Status\":\"acquired\",\"Body\":\"Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.\",\"RequestedURL\":\"http://127.0.0.1:46353/final\",\"FinalURL\":\"http://127.0.0.1:46353/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"253fca27cf8c832dc540277d14107bd4ed470aee517a26681b882c5870596f0f\",\"Mode\":\"http\",\"FetchedAt\":\"2026-09-12T09:33:09.967977993Z\",\"Sources\":[\"http://127.0.0.1:46353/final\"]}",
+          "Subject": "operator",
+          "Role": "external-evidence"
+        },
+        {
+          "Ref": "content:local:a67f548ae52a309e0f4bb19fbad93e1ce8e0d789d8627f8f97155dfe697d2b38:1",
+          "Text": "{\"Status\":\"acquired\",\"Body\":\"Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.\",\"RequestedURL\":\"http://127.0.0.1:46353/second\",\"FinalURL\":\"http://127.0.0.1:46353/second\",\"MediaType\":\"text/plain\",\"SHA256\":\"729c53be7f8c3e2ef53047755bc15df63b064c52f5146f080954ceefeae63abd\",\"Mode\":\"http\",\"FetchedAt\":\"2026-09-12T09:33:10.80483232Z\",\"Sources\":[\"http://127.0.0.1:46353/second\"]}",
+          "Subject": "operator",
+          "Role": "external-evidence"
+        }
+      ]
+    },
+    "ModelOutput": {
+      "status": "conflicting",
+      "answer": "The two records give conflicting opening years; neither is established as authoritative.",
+      "scope": "These two acquired records only; no basis to resolve their disagreement.",
+      "claims": [
+        {
+          "text": "Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.",
+          "citations": [
+            {
+              "source": "content:local:6b7c8123c8f89541693d8c905cd25b96e3815f5ca4ce453454ec60b7bddf633c:1",
+              "start": 0,
+              "end": 160,
+              "quote": "Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.",
+              "sha256": "253fca27cf8c832dc540277d14107bd4ed470aee517a26681b882c5870596f0f",
+              "fetched_at": "2026-09-12T09:33:09.967977993Z"
+            }
+          ]
+        },
+        {
+          "text": "Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.",
+          "citations": [
+            {
+              "source": "content:local:a67f548ae52a309e0f4bb19fbad93e1ce8e0d789d8627f8f97155dfe697d2b38:1",
+              "start": 0,
+              "end": 159,
+              "quote": "Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.",
+              "sha256": "729c53be7f8c3e2ef53047755bc15df63b064c52f5146f080954ceefeae63abd",
+              "fetched_at": "2026-09-12T09:33:10.80483232Z"
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "conflicting",
+          "detail": "The records disagree.",
+          "sources": [
+            "content:local:6b7c8123c8f89541693d8c905cd25b96e3815f5ca4ce453454ec60b7bddf633c:1",
+            "content:local:a67f548ae52a309e0f4bb19fbad93e1ce8e0d789d8627f8f97155dfe697d2b38:1"
+          ]
+        }
+      ]
+    },
+    "Answer": {
+      "status": "conflicting",
+      "answer": "The two records give conflicting opening years; neither is established as authoritative.",
+      "scope": "These two acquired records only; no basis to resolve their disagreement.",
+      "claims": [
+        {
+          "text": "Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.",
+          "citations": [
+            {
+              "source": "content:local:6b7c8123c8f89541693d8c905cd25b96e3815f5ca4ce453454ec60b7bddf633c:1",
+              "start": 0,
+              "end": 160,
+              "quote": "Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.",
+              "sha256": "253fca27cf8c832dc540277d14107bd4ed470aee517a26681b882c5870596f0f",
+              "fetched_at": "2026-09-12T09:33:09.967977993Z"
+            }
+          ]
+        },
+        {
+          "text": "Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.",
+          "citations": [
+            {
+              "source": "content:local:a67f548ae52a309e0f4bb19fbad93e1ce8e0d789d8627f8f97155dfe697d2b38:1",
+              "start": 0,
+              "end": 159,
+              "quote": "Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.",
+              "sha256": "729c53be7f8c3e2ef53047755bc15df63b064c52f5146f080954ceefeae63abd",
+              "fetched_at": "2026-09-12T09:33:10.80483232Z"
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "conflicting",
+          "detail": "The records disagree.",
+          "sources": [
+            "content:local:6b7c8123c8f89541693d8c905cd25b96e3815f5ca4ce453454ec60b7bddf633c:1",
+            "content:local:a67f548ae52a309e0f4bb19fbad93e1ce8e0d789d8627f8f97155dfe697d2b38:1"
+          ]
+        }
+      ]
+    }
+  }
+}

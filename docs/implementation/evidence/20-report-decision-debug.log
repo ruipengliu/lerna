@@ -1,0 +1,5 @@
+--- FAIL: TestObservedChoicesAutomaticallySaveTentativeInference (4.07s)
+    report_test.go:127: INVALID_ARGUMENT
+FAIL
+FAIL	lerna/profiles/extractioncheck	4.080s
+FAIL

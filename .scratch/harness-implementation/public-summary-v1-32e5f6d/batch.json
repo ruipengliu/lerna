@@ -1,0 +1,54 @@
+{
+  "Config": {
+    "SearchMaxResults": 2,
+    "AnswerFromSearch": true,
+    "AnswerOutputTokens": 4096,
+    "SearchTimeoutMS": 3000,
+    "PageMaxBytes": 1024,
+    "Goal": "What is Go, and is it statically typed? Answer using only the summaries returned by Doubao search. Cite the source title or URL. No original page requests are performed; do not claim to have read the original sites.",
+    "Query": "Go programming language official documentation",
+    "SearchEndpoint": "https://open.feedcoopapi.com/search_api/web_search",
+    "SearchFormat": "doubao",
+    "SearchRecipient": "doubao-search-cn",
+    "SearchMaxBytes": 65536,
+    "URLs": [
+      "https://open.feedcoopapi.com/search_api/web_search"
+    ],
+    "Networks": [
+      "112.0.0.0/8",
+      "113.0.0.0/8",
+      "14.0.0.0/8",
+      "163.0.0.0/8",
+      "183.0.0.0/8",
+      "222.0.0.0/8",
+      "2408:8756::/32",
+      "240e:97d::/32",
+      "27.0.0.0/8",
+      "59.0.0.0/8"
+    ],
+    "AllowLoopbackHTTP": false,
+    "DiscloseTo": [
+      "doubao-search-cn",
+      "ark-cn-beijing"
+    ],
+    "MaxQueries": 128,
+    "NetworkLimit": 1,
+    "MaxSteps": 1,
+    "ModelTokens": 262144
+  },
+  "MaxExternalModelRequests": 1,
+  "Model": {
+    "Model": "doubao-seed-2-0-lite-260428",
+    "Location": "ark-cn-beijing",
+    "Version": "ark-chat-v3-20260910-citations-v6",
+    "Text": true,
+    "Structured": true,
+    "Streaming": false,
+    "HardBounds": true,
+    "ContextTokens": 262144,
+    "InputUpper": 229376
+  },
+  "Plan": "search-public-v1",
+  "ReservedCNY": 1,
+  "Started": "2026-09-13T04:56:26.216007558Z"
+}

@@ -1,0 +1,74 @@
+{
+  "Build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@(devel)",
+    "revision": "unavailable",
+    "dirty": "unavailable",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "ExecutedAt": "2026-09-11T01:14:59.978132456Z",
+  "Status": "failed",
+  "Error": "",
+  "Endpoint": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+  "Capabilities": {
+    "Model": "doubao-seed-2-0-lite-260428",
+    "Location": "ark-cn-beijing",
+    "Version": "ark-chat-v3-20260910",
+    "Text": true,
+    "Structured": true,
+    "Streaming": false,
+    "HardBounds": true,
+    "ContextTokens": 262144,
+    "InputUpper": 229376
+  },
+  "RequestLimit": 12,
+  "Calls": [
+    {
+      "Usage": {
+        "Known": true,
+        "Input": 2441,
+        "Output": 48
+      },
+      "Finish": "stop",
+      "Error": ""
+    }
+  ],
+  "Outcome": {
+    "StateDirectory": "/tmp/catalog-profile-1110133312",
+    "Case": "multistep",
+    "State": "WAITING",
+    "StopReason": "input",
+    "FinalState": "draft",
+    "Decisions": 1,
+    "Operations": 0,
+    "DirectorySize": 1008,
+    "Corrections": 0,
+    "FirstCorrect": true,
+    "Ledger": 1000,
+    "UsedRequests": 1,
+    "UnknownRequests": 0,
+    "UsedTokens": 2489,
+    "ReservedTokens": 0,
+    "Errors": null
+  },
+  "Limitations": [
+    "One public simulated business task with a full 1008-entry catalog; not formal 90%/95% quality acceptance.",
+    "Each call reserves 224K input +1024 output tokens under the unchanged multi-step 262144-token task budget; known usage releases unused reservation. The single-step 65536-token envelope is unsupported by this binding.",
+    "Raw model input/output and SQLite state are retained in the private StateDirectory. Do not publish credentials or copy that directory into git.",
+    "Catalog search is goal/declared-namespace driven; model selects exact descriptors and action order from six authorized candidate schemas."
+  ]
+}

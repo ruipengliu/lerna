@@ -1,0 +1,5 @@
+--- FAIL: TestInapplicableExtractedPreferenceDoesNotControlTaskOutput (0.90s)
+    preference_use_test.go:15: later task context did not receive inferred report format: <nil>
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.905s
+FAIL

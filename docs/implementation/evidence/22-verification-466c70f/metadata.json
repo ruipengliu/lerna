@@ -1,0 +1,16 @@
+{
+  "code_commit": "466c70f0dd7d614fae374990f36e95a61583df4b",
+  "command": "make verify",
+  "exit_code": 2,
+  "vcs_modified": true,
+  "workspace_note": "Private untracked evaluation directories retained; documentation edited while running. No Go code or test/config changes during this verification.",
+  "catalog_seconds": 1762.094,
+  "catalog_result": "passed",
+  "fetch_result": "failed",
+  "failures": [
+    "TestReferenceResearchMaterialsRunThroughOriginalTask/fetch_failed",
+    "TestResearchAnswerRetainsEveryFailedPage",
+    "TestResearchReplayDoesNotRepeatOriginalInputValidationAtPublication",
+    "TestReferenceResearchReplayPreservesModeAndReservation/fetch_failed"
+  ]
+}

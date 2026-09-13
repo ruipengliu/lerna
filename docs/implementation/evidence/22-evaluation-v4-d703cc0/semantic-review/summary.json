@@ -1,0 +1,162 @@
+{
+  "loopback-answerable": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 2,
+        "Denominator": 2
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  },
+  "loopback-conflicting": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 2,
+        "Denominator": 2
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  },
+  "loopback-insufficient": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 0,
+        "Denominator": 0
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  },
+  "replay-answerable": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 2,
+        "Denominator": 2
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  },
+  "replay-conflicting": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 2,
+        "Denominator": 2
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  },
+  "replay-insufficient": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 0,
+        "Denominator": 0
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  },
+  "loopback-fetch_failed": {
+    "Version": "search-semantic-failure-review-v1",
+    "CaseID": "fetch_failed",
+    "Mode": "loopback",
+    "CaseFileSHA256": "2c62f8011bc599e2ff2668ee7cc36082a8e8748cbcf3279596195a81f62ae989",
+    "ModelFileSHA256": "22f0969be2237e8dddf8605dd93d9ee72afe892038a7c1e8073aa0b8cd0eee76",
+    "FormalAnswerAvailable": false,
+    "RuntimeError": "research answer decision failed: queries=53/128 action_phase=43 state=RUNNING cause=OUTPUT_INVALID",
+    "Coverage": {
+      "Numerator": 0,
+      "Denominator": 0,
+      "Status": "N/A"
+    },
+    "CitationSupport": {
+      "Numerator": 0,
+      "Denominator": 0,
+      "Status": "N/A; no formal answer"
+    },
+    "Verdict": "fail",
+    "Reason": "OUTPUT_INVALID，无正式答案。原始provider生成citations为空的索引claim，不能按页面证据claim接受；原始输出不计正式答案成绩。",
+    "FormalChecks": {
+      "answer_support": "not_evaluable: no formal answer",
+      "scope": "not_evaluable: no formal answer",
+      "disposition": "not_evaluable: no formal answer",
+      "forbidden:0": "not_evaluable: no formal answer",
+      "forbidden:1": "not_evaluable: no formal answer"
+    },
+    "SemanticAPIApplied": false
+  },
+  "replay-fetch_failed": {
+    "Version": "search-semantic-failure-review-v1",
+    "CaseID": "fetch_failed",
+    "Mode": "replay",
+    "CaseFileSHA256": "c752beaabc17c267c85f7eb3baaf9bf89a7503f0bd9b9fb40c42edce20451201",
+    "ModelFileSHA256": "1277a9cb2a6c2fd209fc5920a703f54f1226921605b1941e67bb6b0abf5fbb01",
+    "FormalAnswerAvailable": false,
+    "RuntimeError": "research answer decision failed: queries=52/128 action_phase=42 state=RUNNING cause=OUTPUT_INVALID",
+    "Coverage": {
+      "Numerator": 0,
+      "Denominator": 0,
+      "Status": "N/A"
+    },
+    "CitationSupport": {
+      "Numerator": 0,
+      "Denominator": 0,
+      "Status": "N/A; no formal answer"
+    },
+    "Verdict": "fail",
+    "Reason": "OUTPUT_INVALID，无正式答案。原始provider生成citations为空的索引claim，不能按页面证据claim接受；原始输出不计正式答案成绩。",
+    "FormalChecks": {
+      "answer_support": "not_evaluable: no formal answer",
+      "scope": "not_evaluable: no formal answer",
+      "disposition": "not_evaluable: no formal answer",
+      "forbidden:0": "not_evaluable: no formal answer",
+      "forbidden:1": "not_evaluable: no formal answer"
+    },
+    "SemanticAPIApplied": false
+  }
+}

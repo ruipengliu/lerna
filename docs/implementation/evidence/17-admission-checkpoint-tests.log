@@ -1,0 +1,8 @@
+ok  	lerna/authorization	2.862s
+ok  	lerna/tasks	9.292s
+?   	lerna/execution	[no test files]
+ok  	lerna/artifacts	1.386s
+ok  	lerna/profiles/grants	3.842s
+ok  	lerna/memory	1.644s
+ok  	lerna/adapters/memoryauth	(cached)
+ok  	lerna/adapters/sqlitememory	(cached)

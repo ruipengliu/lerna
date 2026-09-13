@@ -1,0 +1,7 @@
+# lerna/adapters/sqlitecontext_test [lerna/adapters/sqlitecontext.test]
+adapters/sqlitecontext/retirement_test.go:21:14: s.Retire undefined (type *sqlitecontext.Store has no field or method Retire)
+adapters/sqlitecontext/retirement_test.go:39:14: s.Retire undefined (type *sqlitecontext.Store has no field or method Retire)
+adapters/sqlitecontext/retirement_test.go:46:14: s.Retire undefined (type *sqlitecontext.Store has no field or method Retire)
+adapters/sqlitecontext/retirement_test.go:76:36: b.Retire undefined (type *sqlitecontext.Store has no field or method Retire)
+FAIL	lerna/adapters/sqlitecontext [build failed]
+FAIL

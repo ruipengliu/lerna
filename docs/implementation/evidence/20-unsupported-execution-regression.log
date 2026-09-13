@@ -1,0 +1,3 @@
+?   	lerna/execution	[no test files]
+ok  	lerna/adapters/extractionexecution	1.286s
+ok  	lerna/adapters/sqliteextraction	(cached)

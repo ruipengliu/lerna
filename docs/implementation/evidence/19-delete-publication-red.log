@@ -1,0 +1,8 @@
+--- FAIL: TestDeletedMemoryBlocksAnswerPublication (0.00s)
+    --- FAIL: TestDeletedMemoryBlocksAnswerPublication/model (0.00s)
+        personalized_invalidation_test.go:33: invalid mutation
+    --- FAIL: TestDeletedMemoryBlocksAnswerPublication/publication (0.00s)
+        personalized_invalidation_test.go:33: invalid mutation
+FAIL
+FAIL	lerna/profiles/answer	0.008s
+FAIL

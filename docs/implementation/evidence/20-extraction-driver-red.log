@@ -1,0 +1,3 @@
+lerna/adapters/extractionexecution: no non-test Go files in /home/dev/proj/lerna/adapters/extractionexecution
+FAIL	lerna/adapters/extractionexecution [build failed]
+FAIL

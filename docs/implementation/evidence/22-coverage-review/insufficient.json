@@ -1,0 +1,16 @@
+{
+  "Review": {
+    "CaseID": "insufficient",
+    "AnswerSHA256": "ba1c92968272346dda91822416ef2d7a5a2af2d54c55c519ec5a5688618fdb58",
+    "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "Facts": []
+  },
+  "Summary": {
+    "Coverage": {
+      "Numerator": 0,
+      "Denominator": 0
+    },
+    "UnreviewedFacts": 0,
+    "CoverageReviewComplete": true
+  }
+}

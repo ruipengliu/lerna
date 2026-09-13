@@ -1,0 +1,48 @@
+{
+  "Version": "search-semantic-review-v1",
+  "InputSHA256": "2ceafc464d9f32ead4625a37776a901d01ddcf9a78f389f19b8510f47b67dd34",
+  "Coverage": {
+    "CaseID": "conflicting",
+    "AnswerSHA256": "15fcc0290b447817d2dafb041d47836ae14b90fc54b397a5ad4e37c1d8175ce4",
+    "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "Facts": [
+      {
+        "ID": "register-year",
+        "Verdict": "covered",
+        "Reason": "正式gap.detail明确归属register的2001与archive的2003，两个实际来源Ref均保留；事实不在claims中，引用支持分母仍为0。"
+      },
+      {
+        "ID": "archive-year",
+        "Verdict": "covered",
+        "Reason": "正式gap.detail明确归属register的2001与archive的2003，两个实际来源Ref均保留；事实不在claims中，引用支持分母仍为0。"
+      }
+    ]
+  },
+  "Checks": [
+    {
+      "ID": "answer_support",
+      "Verdict": "pass",
+      "Reason": "正文将结果限定为所给材料的未解决冲突，不声称已找到唯一正确年份。"
+    },
+    {
+      "ID": "scope",
+      "Verdict": "pass",
+      "Reason": "明确限定两份2026版来源，未借不同版本推出某年正确，未引入未取得信息。"
+    },
+    {
+      "ID": "disposition",
+      "Verdict": "pass",
+      "Reason": "conflicting gap保留两个年份及其来源归属，明确所给材料不能解决；claims为空不虚增引用支持分母。"
+    },
+    {
+      "ID": "forbidden:0",
+      "Verdict": "pass",
+      "Reason": "没有因archive较新而选择2003。"
+    },
+    {
+      "ID": "forbidden:1",
+      "Verdict": "pass",
+      "Reason": "只说明来源未解释开幕/通行区别，没有虚构这一区别来调和两年。"
+    }
+  ]
+}

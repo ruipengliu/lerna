@@ -1,0 +1,58 @@
+{
+  "Review": {
+    "Version": "search-semantic-review-v1",
+    "InputSHA256": "813baf00a45245f05c24eb1afad00649570b42361c2bf983be3fc983af32b90b",
+    "Coverage": {
+      "CaseID": "fetch_failed",
+      "AnswerSHA256": "11bfebe2857a13ec2083787ca690e2d34631b06930aaa5e7ac3f207fbfd60f9a",
+      "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+      "Facts": []
+    },
+    "Checks": [
+      {
+        "ID": "answer_support",
+        "Verdict": "pass",
+        "Reason": "The input records denied acquisition without body; saying its contents remain unverified is supported by that finite failure evidence."
+      },
+      {
+        "ID": "scope",
+        "Verdict": "pass",
+        "Reason": "The scope is limited to this acquisition attempt and does not assert page contents were read."
+      },
+      {
+        "ID": "disposition",
+        "Verdict": "fail",
+        "Reason": "The generic failure wording omits the required denied reason and does not explicitly identify the load limit as the unresolved question."
+      },
+      {
+        "ID": "forbidden:0",
+        "Verdict": "pass",
+        "Reason": "The answer does not assert the index's 12 tonnes as established."
+      },
+      {
+        "ID": "forbidden:1",
+        "Verdict": "pass",
+        "Reason": "There are no page quotations, claimed page contents or invented page acquisition times."
+      }
+    ]
+  },
+  "Summary": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 0,
+        "Denominator": 0
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 0,
+      "Denominator": 0
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [
+      "disposition"
+    ],
+    "ReviewComplete": true
+  }
+}

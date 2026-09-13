@@ -1,0 +1,32 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "What was the construction cost of the Eastmere footbridge?",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789273167}",
+        "Blocks": [
+          {
+            "Ref": "content:local:ada6f917b2150ba3905e4e3ed4a2805aeef4b3f970cc453551ed27b8d4775dc2:1",
+            "Text": "{\"Status\":\"acquired\",\"Body\":\"Eastmere bridge record, edition 2026-01. The Eastmere footbridge crosses the canal. It opened in 2005. This record does not state its construction cost.\",\"RequestedURL\":\"http://127.0.0.1:45859/final\",\"FinalURL\":\"http://127.0.0.1:45859/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"b0a3917a221e8cc54a409c14a78e81b9b6358e8cb40f7e388be4b224f39dea6f\",\"Mode\":\"fixed-replay\",\"FetchedAt\":\"2026-09-13T04:18:28.635561137Z\",\"Sources\":[\"http://127.0.0.1:45859/final\"]}",
+            "Subject": "operator",
+            "Role": "external-evidence"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 512
+    },
+    "Result": {
+      "ProviderContent": "eyJhbnN3ZXIiOiJUaGUgYXZhaWxhYmxlIGFjcXVpcmVkIEVhc3RtZXJlIGJyaWRnZSByZWNvcmQgZG9lcyBub3Qgc3RhdGUgdGhlIGNvbnN0cnVjdGlvbiBjb3N0IG9mIHRoZSBFYXN0bWVyZSBmb290YnJpZGdlLCBzbyB0aGlzIGluZm9ybWF0aW9uIGNhbm5vdCBiZSBkZXRlcm1pbmVkIGZyb20gdGhlIHByb3ZpZGVkIHNvdXJjZSBtYXRlcmlhbC4iLCJzY29wZSI6Ik9ubHkgdGhlIDIwMjYtMDEgZWRpdGlvbiBFYXN0bWVyZSBicmlkZ2UgcmVjb3JkIChhY3F1aXJlZCBhdCAyMDI2LTA5LTEzVDA0OjE4OjI4LjYzNTU2MTEzN1opIHdhcyBhdmFpbGFibGUgZm9yIHJldmlldy4gTm8gb3RoZXIgc291cmNlIG1hdGVyaWFscyBwZXJ0YWluaW5nIHRvIHRoZSBFYXN0bWVyZSBmb290YnJpZGdlIHdlcmUgb2J0YWluZWQuIiwiY2xhaW1zIjpbXSwiZ2FwcyI6W3sia2luZCI6Imluc3VmZmljaWVudCIsImRldGFpbCI6IlRoZSBzaW5nbGUgYWNxdWlyZWQgRWFzdG1lcmUgYnJpZGdlIHJlY29yZCBleHBsaWNpdGx5IG5vdGVzIHRoYXQgaXQgZG9lcyBub3QgaW5jbHVkZSB0aGUgY29uc3RydWN0aW9uIGNvc3Qgb2YgdGhlIEVhc3RtZXJlIGZvb3RicmlkZ2UsIGFuZCBubyBvdGhlciByZWxldmFudCBzb3VyY2VzIGFyZSBhdmFpbGFibGUgdG8gcHJvdmlkZSB0aGlzIGluZm9ybWF0aW9uLiIsInNvdXJjZXMiOlsiY29udGVudDpsb2NhbDphZGE2ZjkxN2IyMTUwYmEzOTA1ZTRlM2VkNGEyODA1YWVlZjRiM2Y5NzBjYzQ1MzU1MWVkMjdiOGQ0Nzc1ZGMyOjEiXX1dLCJzdGF0dXMiOiJpbnN1ZmZpY2llbnQifQ==",
+      "Content": "eyJhbnN3ZXIiOiJUaGUgYXZhaWxhYmxlIGFjcXVpcmVkIEVhc3RtZXJlIGJyaWRnZSByZWNvcmQgZG9lcyBub3Qgc3RhdGUgdGhlIGNvbnN0cnVjdGlvbiBjb3N0IG9mIHRoZSBFYXN0bWVyZSBmb290YnJpZGdlLCBzbyB0aGlzIGluZm9ybWF0aW9uIGNhbm5vdCBiZSBkZXRlcm1pbmVkIGZyb20gdGhlIHByb3ZpZGVkIHNvdXJjZSBtYXRlcmlhbC4iLCJjbGFpbXMiOltdLCJnYXBzIjpbeyJkZXRhaWwiOiJUaGUgc2luZ2xlIGFjcXVpcmVkIEVhc3RtZXJlIGJyaWRnZSByZWNvcmQgZXhwbGljaXRseSBub3RlcyB0aGF0IGl0IGRvZXMgbm90IGluY2x1ZGUgdGhlIGNvbnN0cnVjdGlvbiBjb3N0IG9mIHRoZSBFYXN0bWVyZSBmb290YnJpZGdlLCBhbmQgbm8gb3RoZXIgcmVsZXZhbnQgc291cmNlcyBhcmUgYXZhaWxhYmxlIHRvIHByb3ZpZGUgdGhpcyBpbmZvcm1hdGlvbi4iLCJraW5kIjoiaW5zdWZmaWNpZW50Iiwic291cmNlcyI6WyJjb250ZW50OmxvY2FsOmFkYTZmOTE3YjIxNTBiYTM5MDVlNGUzZWQ0YTI4MDVhZWVmNGIzZjk3MGNjNDUzNTUxZWQyN2I4ZDQ3NzVkYzI6MSJdfV0sInNjb3BlIjoiT25seSB0aGUgMjAyNi0wMSBlZGl0aW9uIEVhc3RtZXJlIGJyaWRnZSByZWNvcmQgKGFjcXVpcmVkIGF0IDIwMjYtMDktMTNUMDQ6MTg6MjguNjM1NTYxMTM3Wikgd2FzIGF2YWlsYWJsZSBmb3IgcmV2aWV3LiBObyBvdGhlciBzb3VyY2UgbWF0ZXJpYWxzIHBlcnRhaW5pbmcgdG8gdGhlIEVhc3RtZXJlIGZvb3RicmlkZ2Ugd2VyZSBvYnRhaW5lZC4iLCJzdGF0dXMiOiJpbnN1ZmZpY2llbnQifQ==",
+      "Finish": "stop",
+      "RequestRef": "021789273108941fc70b79e699e1a6fcafbbefdc4fb0412fedfeb",
+      "Usage": {
+        "Known": true,
+        "Input": 1324,
+        "Output": 232
+      }
+    }
+  }
+]

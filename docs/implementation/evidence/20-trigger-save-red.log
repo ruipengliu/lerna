@@ -1,0 +1,5 @@
+# lerna/profiles/extractioncheck [lerna/profiles/extractioncheck.test]
+profiles/extractioncheck/trigger_dispatch_test.go:119:24: undefined: triggerSaver
+profiles/extractioncheck/trigger_dispatch_test.go:121:13: undefined: cancelBeforeSaving
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

@@ -1,0 +1,80 @@
+all modules verified
+ok  	lerna/adapters/arkmodel	(cached)
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/catalogauth	[no test files]
+?   	lerna/adapters/cataloglocal	[no test files]
+ok  	lerna/adapters/checkpointfile	(cached)
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+ok  	lerna/adapters/contextmemory	(cached)
+?   	lerna/adapters/contextpolicy	[no test files]
+?   	lerna/adapters/credentialauth	[no test files]
+ok  	lerna/adapters/credentialbackups	(cached)
+?   	lerna/adapters/credentialexecution	[no test files]
+ok  	lerna/adapters/credentialhttp	(cached)
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/executionrouter	[no test files]
+ok  	lerna/adapters/extractionauth	1.173s
+?   	lerna/adapters/extractioncleanup	[no test files]
+ok  	lerna/adapters/extractionexecution	1.212s
+?   	lerna/adapters/extractioninputs	[no test files]
+ok  	lerna/adapters/extractionsourceguard	1.124s
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/filekeys	(cached)
+ok  	lerna/adapters/josegrant	(cached)
+ok  	lerna/adapters/localextraction	1.027s
+ok  	lerna/adapters/localextractionsource	1.031s
+ok  	lerna/adapters/memoryauth	10.983s
+ok  	lerna/adapters/memorycleanup	(cached)
+?   	lerna/adapters/memorylocal	[no test files]
+ok  	lerna/adapters/recoveryproof	(cached)
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+ok  	lerna/adapters/simresource	(cached)
+ok  	lerna/adapters/simworkflow	(cached)
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/sqlitecatalog	[no test files]
+ok  	lerna/adapters/sqlitecontext	5.686s
+ok  	lerna/adapters/sqlitecredentials	(cached)
+ok  	lerna/adapters/sqliteextraction	3.534s
+ok  	lerna/adapters/sqlitememory	(cached)
+ok  	lerna/adapters/taskcontext	1.107s
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	(cached)
+ok  	lerna/authorization	3.256s
+ok  	lerna/brain	(cached)
+ok  	lerna/catalog	(cached)
+ok  	lerna/cleanup	(cached)
+?   	lerna/cmd/answercheck	[no test files]
+?   	lerna/cmd/apicheck	[no test files]
+ok  	lerna/cmd/authctl	(cached)
+?   	lerna/cmd/contextcheck	[no test files]
+ok  	lerna/cmd/contractcheck	(cached)
+ok  	lerna/cmd/credentialctl	(cached)
+?   	lerna/cmd/extractioncheck	[no test files]
+ok  	lerna/conformance	(cached)
+ok  	lerna/contextassembly	2.380s
+?   	lerna/contractfixture	[no test files]
+ok  	lerna/credentials	(cached)
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+ok  	lerna/extraction	1.026s
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/catalogwire	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/memorywire	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/memory	(cached)
+?   	lerna/memory/storecontract	[no test files]
+ok  	lerna/profiles/answer	218.935s
+
+Run deliberately terminated with SIGTERM, exit 143, after the review confirmed
+that corrected derived Memory cannot be cleaned. This is a partial verification
+of 813ec12 plus the quality-stage script change, NOT a complete PASS.
+The old build/verification-stages.json survived termination and had no extraction
+quality field; it belonged to the prior run and MUST NOT be used for this run.
+The script is being fixed to initialize its report and handle INT/TERM explicitly.

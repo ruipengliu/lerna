@@ -1,0 +1,39 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "What is the load limit of the Westhaven footbridge?",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789272801}",
+        "Blocks": [
+          {
+            "Ref": "content:local:fa78379b2572a0ac9f6be024dd67cb78efc3844b7569fdb4c72163a9d9ab85f8:1",
+            "Text": "{\"Status\":\"discovered\",\"Candidates\":[{\"url\":\"http://127.0.0.1:45117/final\",\"title\":\"Westhaven bridge record\",\"snippet\":\"Index excerpt says 12 tonnes; this is not acquired page evidence.\"}],\"SearchedAt\":\"2026-09-13T04:12:22.080906476Z\",\"SearchURL\":\"http://127.0.0.1:45117/start?q=Westhaven+footbridge+load+limit\",\"ResponseSHA256\":\"a121ceef19e33cccd5d376b0379b83b2b7238938341c1d5d7eb9a9d7dc4ca88b\",\"Mode\":\"http\",\"Requests\":1}",
+            "Subject": "operator",
+            "Role": "search-candidates"
+          },
+          {
+            "Ref": "content:local:ebcfb26f5bbc73847ec879709fce053b8cf0f86112720d9775e7e48f7afa2b9d:1",
+            "Text": "{\"Status\":\"denied\",\"Mode\":\"http\",\"Requests\":1}",
+            "Subject": "operator",
+            "Role": "external-evidence-gap"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 512
+    },
+    "Result": {
+      "ProviderContent": "eyJhbnN3ZXIiOiJObyB2ZXJpZmllZCBsb2FkIGxpbWl0IGZvciB0aGUgV2VzdGhhdmVuIGZvb3RicmlkZ2UgY291bGQgYmUgcmV0cmlldmVkLCBhcyB0aGUgdGFyZ2V0IFdlc3RoYXZlbiBicmlkZ2UgcmVjb3JkIHBhZ2UgY291bGQgbm90IGJlIHN1Y2Nlc3NmdWxseSBhY3F1aXJlZC4iLCJjbGFpbXMiOltdLCJnYXBzIjpbeyJkZXRhaWwiOiJUaGUgdGFyZ2V0IFdlc3RoYXZlbiBicmlkZ2UgcmVjb3JkIHBhZ2UgcmVmZXJlbmNlZCBpbiB0aGUgc2VhcmNoIGNhbmRpZGF0ZSB3YXMgbm90IGFjcXVpcmVkLCBhbmQgYWNjZXNzIHRvIGV4dGVybmFsIGV2aWRlbmNlIHdhcyBkZW5pZWQsIHNvIG5vIHZhbGlkIGxvYWQgbGltaXQgZGF0YSB3YXMgb2J0YWluZWQuIiwia2luZCI6ImZldGNoX2ZhaWxlZCIsInNvdXJjZXMiOlsiY29udGVudDpsb2NhbDpmYTc4Mzc5YjI1NzJhMGFjOWY2YmUwMjRkZDY3Y2I3OGVmYzM4NDRiNzU2OWZkYjRjNzIxNjNhOWQ5YWI4NWY4OjEiLCJjb250ZW50OmxvY2FsOmViY2ZiMjZmNWJiYzczODQ3ZWM4Nzk3MDlmY2UwNTNiOGNmMGY4NjExMjcyMGQ5Nzc1ZTdlNDhmN2FmYTJiOWQ6MSJdfV0sInNjb3BlIjoiQSBzZWFyY2ggZm9yIFdlc3RoYXZlbiBmb290YnJpZGdlIGxvYWQgbGltaXQgd2FzIGV4ZWN1dGVkIG9uIDIwMjYtMDktMTMsIHJldHVybmluZyBhIGNhbmRpZGF0ZSBpbmRleCBlbnRyeSBub3RpbmcgYW4gdW52YWxpZGF0ZWQgc25pcHBldCByZWZlcmVuY2luZyAxMiB0b25uZXMsIGJ1dCB0aGUgZnVsbCBXZXN0aGF2ZW4gYnJpZGdlIHJlY29yZCBwYWdlIGNvbnRlbnQgd2FzIG5ldmVyIHN1Y2Nlc3NmdWxseSByZXRyaWV2ZWQsIGFuZCBleHRlcm5hbCBldmlkZW5jZSBhY2Nlc3Mgd2FzIGRlbmllZC4gTm8gb3RoZXIgc291cmNlIHJlY29yZHMgd2VyZSBhdmFpbGFibGUuIiwic3RhdHVzIjoiZmV0Y2hfZmFpbGVkIn0=",
+      "Content": "eyJhbnN3ZXIiOiJObyB2ZXJpZmllZCBsb2FkIGxpbWl0IGZvciB0aGUgV2VzdGhhdmVuIGZvb3RicmlkZ2UgY291bGQgYmUgcmV0cmlldmVkLCBhcyB0aGUgdGFyZ2V0IFdlc3RoYXZlbiBicmlkZ2UgcmVjb3JkIHBhZ2UgY291bGQgbm90IGJlIHN1Y2Nlc3NmdWxseSBhY3F1aXJlZC4iLCJjbGFpbXMiOltdLCJnYXBzIjpbeyJkZXRhaWwiOiJUaGUgdGFyZ2V0IFdlc3RoYXZlbiBicmlkZ2UgcmVjb3JkIHBhZ2UgcmVmZXJlbmNlZCBpbiB0aGUgc2VhcmNoIGNhbmRpZGF0ZSB3YXMgbm90IGFjcXVpcmVkLCBhbmQgYWNjZXNzIHRvIGV4dGVybmFsIGV2aWRlbmNlIHdhcyBkZW5pZWQsIHNvIG5vIHZhbGlkIGxvYWQgbGltaXQgZGF0YSB3YXMgb2J0YWluZWQuIiwia2luZCI6ImZldGNoX2ZhaWxlZCIsInNvdXJjZXMiOlsiY29udGVudDpsb2NhbDpmYTc4Mzc5YjI1NzJhMGFjOWY2YmUwMjRkZDY3Y2I3OGVmYzM4NDRiNzU2OWZkYjRjNzIxNjNhOWQ5YWI4NWY4OjEiLCJjb250ZW50OmxvY2FsOmViY2ZiMjZmNWJiYzczODQ3ZWM4Nzk3MDlmY2UwNTNiOGNmMGY4NjExMjcyMGQ5Nzc1ZTdlNDhmN2FmYTJiOWQ6MSJdfV0sInNjb3BlIjoiQSBzZWFyY2ggZm9yIFdlc3RoYXZlbiBmb290YnJpZGdlIGxvYWQgbGltaXQgd2FzIGV4ZWN1dGVkIG9uIDIwMjYtMDktMTMsIHJldHVybmluZyBhIGNhbmRpZGF0ZSBpbmRleCBlbnRyeSBub3RpbmcgYW4gdW52YWxpZGF0ZWQgc25pcHBldCByZWZlcmVuY2luZyAxMiB0b25uZXMsIGJ1dCB0aGUgZnVsbCBXZXN0aGF2ZW4gYnJpZGdlIHJlY29yZCBwYWdlIGNvbnRlbnQgd2FzIG5ldmVyIHN1Y2Nlc3NmdWxseSByZXRyaWV2ZWQsIGFuZCBleHRlcm5hbCBldmlkZW5jZSBhY2Nlc3Mgd2FzIGRlbmllZC4gTm8gb3RoZXIgc291cmNlIHJlY29yZHMgd2VyZSBhdmFpbGFibGUuIiwic3RhdHVzIjoiZmV0Y2hfZmFpbGVkIn0=",
+      "Finish": "stop",
+      "RequestRef": "021789272743020b538a17431386f9d946dfdd644798a02d2cd9e",
+      "Usage": {
+        "Known": true,
+        "Input": 1127,
+        "Output": 294
+      }
+    },
+    "Error": "OUTPUT_INVALID"
+  }
+]

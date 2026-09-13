@@ -1,0 +1,37 @@
+{
+  "Version": "search-semantic-review-v1",
+  "InputSHA256": "255dbb69fe55a0c9e49ee709aa9b222fee09849a6986afe6f93b809428bd7ffa",
+  "Coverage": {
+    "CaseID": "insufficient",
+    "AnswerSHA256": "7d91e65a77b208b8c484b090e65280e22a7b555e04c8f7c992555f31b45ea2d9",
+    "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "Facts": []
+  },
+  "Checks": [
+    {
+      "ID": "answer_support",
+      "Verdict": "pass",
+      "Reason": "正文只说无法从所给记录确认造价，不把证据不足升级成不存在造价。"
+    },
+    {
+      "ID": "scope",
+      "Verdict": "pass",
+      "Reason": "限定单份2026-01记录；取得日期/URL若出现，与当前输入一致；没有作普遍缺失断言。"
+    },
+    {
+      "ID": "disposition",
+      "Verdict": "pass",
+      "Reason": "状态insufficient且gap引用当前记录，明确所需造价无法建立。"
+    },
+    {
+      "ID": "forbidden:0",
+      "Verdict": "pass",
+      "Reason": "全文未断言任何造价金额。"
+    },
+    {
+      "ID": "forbidden:1",
+      "Verdict": "pass",
+      "Reason": "2005只出现在背景claim，正式answer明确造价未知，没有把年份当作造价回答。"
+    }
+  ]
+}

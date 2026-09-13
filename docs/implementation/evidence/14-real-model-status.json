@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "scope": "One corrected multi-action public simulation task, not statistical quality acceptance. Initial development run failed and is retained separately.",
+  "authorized_total_requests": 12,
+  "max_output_tokens_per_request": 1024,
+  "actual_requests": 2,
+  "input_tokens": 4982,
+  "output_tokens": 246,
+  "initial": {
+    "status": "failed",
+    "source_revision_observed_before_go_run": "2ea05f3",
+    "embedded_revision": "unavailable",
+    "first_correct": false,
+    "note": "Original report incorrectly marks FirstCorrect=true for an unnecessary wait; retained unchanged. ddc6903 fixes the metric. No API effect occurred."
+  },
+  "final": {
+    "status": "passed",
+    "source_revision": "ddc6903d7d0de2029b22c29457eb8cef274e84d6",
+    "requests": 1,
+    "decisions": 1,
+    "operations": 2,
+    "final_state": "authorized",
+    "ledger": 997,
+    "corrections": 0
+  },
+  "limitations": [
+    "Single public task after development fix; no 90%/95% thousand-API quality claim.",
+    "Ark single-step 65536-token envelope remains unsupported by the existing hard input reservation; local single-step fixtures passed.",
+    "Original model evidence and SQLite state remain private; only public simulated decision inputs/outputs are published."
+  ],
+  "recorded_at": "2026-09-11T01:26:58.601074+00:00"
+}

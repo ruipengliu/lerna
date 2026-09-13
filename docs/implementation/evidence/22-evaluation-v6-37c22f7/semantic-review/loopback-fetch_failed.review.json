@@ -1,0 +1,37 @@
+{
+  "Version": "search-semantic-review-v1",
+  "InputSHA256": "363c72cf3563ad322dfd64d8641b768bff43c54eaf765c7b347231a7321d5762",
+  "Coverage": {
+    "CaseID": "fetch_failed",
+    "AnswerSHA256": "2043e47e0c9b0319698edbe80800821dfd0a25b45309567c38bafd153a34b68a",
+    "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "Facts": []
+  },
+  "Checks": [
+    {
+      "ID": "answer_support",
+      "Verdict": "pass",
+      "Reason": "正文未建立承载力值，只报告证据未成功取得；实际external-evidence-gap记录Status=denied。"
+    },
+    {
+      "ID": "scope",
+      "Verdict": "pass",
+      "Reason": "当前输入明确提供discovered索引及denied失败。scope区分仅可用的索引snippet与未取得页面，URL对应当前候选，没有将承载力断言为已建立事实或编造页面内容。"
+    },
+    {
+      "ID": "disposition",
+      "Verdict": "pass",
+      "Reason": "状态fetch_failed，gap引用实际denied Ref，说明承载力数据未取得；未把服务失败当作空页面事实。"
+    },
+    {
+      "ID": "forbidden:0",
+      "Verdict": "pass",
+      "Reason": "正文、scope、claims与gap均未将12 tonnes断言为已知事实。"
+    },
+    {
+      "ID": "forbidden:1",
+      "Verdict": "pass",
+      "Reason": "claims为空，无编造页面正文或页面取得时间；回放措辞没有声称真实HTTP403。"
+    }
+  ]
+}

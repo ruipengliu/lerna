@@ -1,0 +1,42 @@
+=== RUN   TestProcessProbe
+--- PASS: TestProcessProbe (0.00s)
+=== RUN   TestMemoryProcessRecovery
+=== RUN   TestMemoryProcessRecovery/before-commit
+=== RUN   TestMemoryProcessRecovery/after-commit
+=== RUN   TestMemoryProcessRecovery/after-reserve
+=== RUN   TestMemoryProcessRecovery/before-binding
+=== RUN   TestMemoryProcessRecovery/after-binding
+--- PASS: TestMemoryProcessRecovery (2.75s)
+    --- PASS: TestMemoryProcessRecovery/before-commit (0.54s)
+    --- PASS: TestMemoryProcessRecovery/after-commit (0.54s)
+    --- PASS: TestMemoryProcessRecovery/after-reserve (0.55s)
+    --- PASS: TestMemoryProcessRecovery/before-binding (0.58s)
+    --- PASS: TestMemoryProcessRecovery/after-binding (0.54s)
+=== RUN   TestMemoryProfileCases
+=== RUN   TestMemoryProfileCases/fact
+=== RUN   TestMemoryProfileCases/preference
+=== RUN   TestMemoryProfileCases/inference
+=== RUN   TestMemoryProfileCases/experience
+=== RUN   TestMemoryProfileCases/schema-rejection
+=== RUN   TestMemoryProfileCases/residency
+=== RUN   TestMemoryProfileCases/revocation
+=== RUN   TestMemoryProfileCases/empty-binding
+=== RUN   TestMemoryProfileCases/budget
+=== RUN   TestMemoryProfileCases/exact-history
+=== RUN   TestMemoryProfileCases/concurrent-read
+=== RUN   TestMemoryProfileCases/invalid-operation
+--- PASS: TestMemoryProfileCases (3.53s)
+    --- PASS: TestMemoryProfileCases/fact (0.34s)
+    --- PASS: TestMemoryProfileCases/preference (0.35s)
+    --- PASS: TestMemoryProfileCases/inference (0.33s)
+    --- PASS: TestMemoryProfileCases/experience (0.33s)
+    --- PASS: TestMemoryProfileCases/schema-rejection (0.12s)
+    --- PASS: TestMemoryProfileCases/residency (0.12s)
+    --- PASS: TestMemoryProfileCases/revocation (0.31s)
+    --- PASS: TestMemoryProfileCases/empty-binding (0.30s)
+    --- PASS: TestMemoryProfileCases/budget (0.30s)
+    --- PASS: TestMemoryProfileCases/exact-history (0.40s)
+    --- PASS: TestMemoryProfileCases/concurrent-read (0.48s)
+    --- PASS: TestMemoryProfileCases/invalid-operation (0.16s)
+PASS
+ok  	lerna/profiles/memorycheck	7.317s

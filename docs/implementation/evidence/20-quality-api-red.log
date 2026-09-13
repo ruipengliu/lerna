@@ -1,0 +1,3 @@
+lerna/profiles/extractioncheck: no non-test Go files in /home/dev/proj/lerna/profiles/extractioncheck
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

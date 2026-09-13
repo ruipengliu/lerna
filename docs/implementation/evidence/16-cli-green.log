@@ -1,0 +1,4 @@
+ok  	lerna/cmd/credentialctl	2.843s
+ok  	lerna/credentials	(cached)
+ok  	lerna/adapters/credentialhttp	(cached)
+ok  	lerna/profiles/credentialcheck	8.445s

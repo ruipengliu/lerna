@@ -1,0 +1,10 @@
+--- FAIL: TestRenewalReopensAndChecksOriginalOperationWithoutResending (0.28s)
+    --- FAIL: TestRenewalReopensAndChecksOriginalOperationWithoutResending/late_send_retains_original_reference (0.07s)
+        renewal_test.go:159: in-flight operation was released failed
+FAIL
+FAIL	lerna/credentials	0.281s
+--- FAIL: TestCompletedRotationRejectsLateOldKeyWrite (0.19s)
+    lifecycle_test.go:10: CREDENTIAL_INVALID
+FAIL
+FAIL	lerna/profiles/credentialcheck	0.200s
+FAIL

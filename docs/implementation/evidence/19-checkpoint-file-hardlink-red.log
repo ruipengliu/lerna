@@ -1,0 +1,5 @@
+--- FAIL: TestHardLinkedCheckpointIsNotReportedAsCleaned (0.01s)
+    store_test.go:63: untracked hard link accepted: <nil>
+FAIL
+FAIL	lerna/adapters/checkpointfile	0.029s
+FAIL

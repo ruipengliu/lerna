@@ -1,0 +1,5 @@
+--- FAIL: TestRetirementFencesCompetingCandidateCommit (0.04s)
+    concurrency_test.go:49: wrong original effect: {Namespace:local Subject:alice OperationID:competing-0 State:retired Committed:false} <nil>, commit=<nil>
+FAIL
+FAIL	lerna/adapters/sqliteextraction	0.047s
+FAIL

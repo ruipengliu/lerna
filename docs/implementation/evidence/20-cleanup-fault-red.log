@@ -1,0 +1,8 @@
+--- FAIL: TestCleanupReconcilesLostReplyAndKeepsUnknownDeletionPending (0.00s)
+    --- FAIL: TestCleanupReconcilesLostReplyAndKeepsUnknownDeletionPending/cleanup-lost-reply (0.00s)
+        save_test.go:32: unsupported save fault
+    --- FAIL: TestCleanupReconcilesLostReplyAndKeepsUnknownDeletionPending/cleanup-before-delete (0.00s)
+        save_test.go:32: unsupported save fault
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.008s
+FAIL

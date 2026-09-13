@@ -1,0 +1,38 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "In what year did the Stoneford footbridge open?",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789273174}",
+        "Blocks": [
+          {
+            "Ref": "content:local:2bfab042282c2cbb207ceb66c07bb1ac8c862a004d28960868f41945a9d1198c:1",
+            "Text": "{\"Status\":\"acquired\",\"Body\":\"Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.\",\"RequestedURL\":\"http://127.0.0.1:45099/final\",\"FinalURL\":\"http://127.0.0.1:45099/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"253fca27cf8c832dc540277d14107bd4ed470aee517a26681b882c5870596f0f\",\"Mode\":\"fixed-replay\",\"FetchedAt\":\"2026-09-13T04:18:36.209546863Z\",\"Sources\":[\"http://127.0.0.1:45099/final\"]}",
+            "Subject": "operator",
+            "Role": "external-evidence"
+          },
+          {
+            "Ref": "content:local:e08abda1d69c8508de5c37ea0468efdfedb1040e089ebe4ab02f5d2855c21666:1",
+            "Text": "{\"Status\":\"acquired\",\"Body\":\"Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.\",\"RequestedURL\":\"http://127.0.0.1:45099/second\",\"FinalURL\":\"http://127.0.0.1:45099/second\",\"MediaType\":\"text/plain\",\"SHA256\":\"729c53be7f8c3e2ef53047755bc15df63b064c52f5146f080954ceefeae63abd\",\"Mode\":\"fixed-replay\",\"FetchedAt\":\"2026-09-13T04:18:36.519750734Z\",\"Sources\":[\"http://127.0.0.1:45099/second\"]}",
+            "Subject": "operator",
+            "Role": "external-evidence"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 512
+    },
+    "Result": {
+      "ProviderContent": "eyJhbnN3ZXIiOiJUaGUgdHdvIGF2YWlsYWJsZSBzb3VyY2VzIHByb3ZpZGUgY29uZmxpY3Rpbmcgb3BlbmluZyB5ZWFycyBmb3IgdGhlIFN0b25lZm9yZCBmb290YnJpZGdlLCB3aXRoIG5vIGZ1cnRoZXIgaW5mb3JtYXRpb24gdG8gcmVzb2x2ZSB0aGUgZGlzY3JlcGFuY3kuIiwic2NvcGUiOiJBbGwgYWNxdWlyZWQgc291cmNlIHJlY29yZHMgaW5jbHVkZSB0aGUgMjAyNi0wMSBlZGl0aW9uIFN0b25lZm9yZCByZWdpc3RlciBhbmQgdGhlIDIwMjYtMDIgZWRpdGlvbiBTdG9uZWZvcmQgYXJjaGl2ZTsgbm8gYWRkaXRpb25hbCByZWxldmFudCBzb3VyY2UgbWF0ZXJpYWwgd2FzIG9idGFpbmVkLiIsImNsYWltcyI6W10sImdhcHMiOlt7ImtpbmQiOiJjb25mbGljdGluZyIsImRldGFpbCI6IlRoZSAyMDI2LTAxIFN0b25lZm9yZCByZWdpc3RlciBzdGF0ZXMgdGhlIFN0b25lZm9yZCBmb290YnJpZGdlIG9wZW5lZCBpbiAyMDAxLCB3aGlsZSB0aGUgMjAyNi0wMiBTdG9uZWZvcmQgYXJjaGl2ZSBzdGF0ZXMgaXQgb3BlbmVkIGluIDIwMDMsIHdpdGggbm8gZXhwbGFuYXRpb24gZnJvbSBlaXRoZXIgc291cmNlIGZvciB0aGUgZGlmZmVyaW5nIGRhdGVzLiIsInNvdXJjZXMiOlsiY29udGVudDpsb2NhbDoyYmZhYjA0MjI4MmMyY2JiMjA3Y2ViNjZjMDdiYjFhYzhjODYyYTAwNGQyODk2MDg2OGY0MTk0NWE5ZDExOThjOjEiLCJjb250ZW50OmxvY2FsOmUwOGFiZGExZDY5Yzg1MDhkZTVjMzdlYTA0NjhlZmRmZWRiMTA0MGUwODllYmU0YWIwMmY1ZDI4NTVjMjE2NjY6MSJdfV0sInN0YXR1cyI6ImNvbmZsaWN0aW5nIn0=",
+      "Content": "eyJhbnN3ZXIiOiJUaGUgdHdvIGF2YWlsYWJsZSBzb3VyY2VzIHByb3ZpZGUgY29uZmxpY3Rpbmcgb3BlbmluZyB5ZWFycyBmb3IgdGhlIFN0b25lZm9yZCBmb290YnJpZGdlLCB3aXRoIG5vIGZ1cnRoZXIgaW5mb3JtYXRpb24gdG8gcmVzb2x2ZSB0aGUgZGlzY3JlcGFuY3kuIiwiY2xhaW1zIjpbXSwiZ2FwcyI6W3siZGV0YWlsIjoiVGhlIDIwMjYtMDEgU3RvbmVmb3JkIHJlZ2lzdGVyIHN0YXRlcyB0aGUgU3RvbmVmb3JkIGZvb3RicmlkZ2Ugb3BlbmVkIGluIDIwMDEsIHdoaWxlIHRoZSAyMDI2LTAyIFN0b25lZm9yZCBhcmNoaXZlIHN0YXRlcyBpdCBvcGVuZWQgaW4gMjAwMywgd2l0aCBubyBleHBsYW5hdGlvbiBmcm9tIGVpdGhlciBzb3VyY2UgZm9yIHRoZSBkaWZmZXJpbmcgZGF0ZXMuIiwia2luZCI6ImNvbmZsaWN0aW5nIiwic291cmNlcyI6WyJjb250ZW50OmxvY2FsOjJiZmFiMDQyMjgyYzJjYmIyMDdjZWI2NmMwN2JiMWFjOGM4NjJhMDA0ZDI4OTYwODY4ZjQxOTQ1YTlkMTE5OGM6MSIsImNvbnRlbnQ6bG9jYWw6ZTA4YWJkYTFkNjljODUwOGRlNWMzN2VhMDQ2OGVmZGZlZGIxMDQwZTA4OWViZTRhYjAyZjVkMjg1NWMyMTY2NjoxIl19XSwic2NvcGUiOiJBbGwgYWNxdWlyZWQgc291cmNlIHJlY29yZHMgaW5jbHVkZSB0aGUgMjAyNi0wMSBlZGl0aW9uIFN0b25lZm9yZCByZWdpc3RlciBhbmQgdGhlIDIwMjYtMDIgZWRpdGlvbiBTdG9uZWZvcmQgYXJjaGl2ZTsgbm8gYWRkaXRpb25hbCByZWxldmFudCBzb3VyY2UgbWF0ZXJpYWwgd2FzIG9idGFpbmVkLiIsInN0YXR1cyI6ImNvbmZsaWN0aW5nIn0=",
+      "Finish": "stop",
+      "RequestRef": "021789273117237fc70b79e699e1a6fcafbbefdc4fb0412191b20",
+      "Usage": {
+        "Known": true,
+        "Input": 1839,
+        "Output": 282
+      }
+    }
+  }
+]

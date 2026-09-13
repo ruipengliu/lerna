@@ -1,0 +1,10 @@
+# lerna/authorization_test [lerna/authorization.test]
+authorization/memory_test.go:53:22: service.ReserveMemoryOperation undefined (type *authorization.Service has no field or method ReserveMemoryOperation)
+authorization/memory_test.go:57:22: service.ReserveMemoryOperation undefined (type *authorization.Service has no field or method ReserveMemoryOperation)
+authorization/memory_test.go:61:20: service.ReserveMemoryOperation undefined (type *authorization.Service has no field or method ReserveMemoryOperation)
+authorization/memory_test.go:83:23: service.InspectMemoryOperation undefined (type *authorization.Service has no field or method InspectMemoryOperation)
+authorization/memory_test.go:88:20: service.ReserveMemoryOperation undefined (type *authorization.Service has no field or method ReserveMemoryOperation)
+authorization/memory_test.go:91:22: service.InspectMemoryOperation undefined (type *authorization.Service has no field or method InspectMemoryOperation)
+authorization/memory_test.go:99:22: service.InspectMemoryOperation undefined (type *authorization.Service has no field or method InspectMemoryOperation)
+FAIL	lerna/authorization [build failed]
+FAIL

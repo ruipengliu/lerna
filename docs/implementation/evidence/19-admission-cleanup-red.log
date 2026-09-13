@@ -1,0 +1,9 @@
+# lerna/adapters/memoryauth_test [lerna/adapters/memoryauth.test]
+adapters/memoryauth/deletion_consumer_test.go:161:16: auth.EraseMemoryComparisons undefined (type *authorization.Service has no field or method EraseMemoryComparisons)
+adapters/memoryauth/deletion_consumer_test.go:161:69: undefined: authorization.MemoryComparison
+adapters/memoryauth/deletion_consumer_test.go:164:16: auth.EraseMemoryComparisons undefined (type *authorization.Service has no field or method EraseMemoryComparisons)
+adapters/memoryauth/deletion_consumer_test.go:164:73: undefined: authorization.MemoryComparison
+adapters/memoryauth/deletion_consumer_test.go:167:35: undefined: memorycleanup.NewAdmissions
+adapters/memoryauth/deletion_consumer_test.go:183:177: undefined: authorization.ResultOnly
+FAIL	lerna/adapters/memoryauth [build failed]
+FAIL

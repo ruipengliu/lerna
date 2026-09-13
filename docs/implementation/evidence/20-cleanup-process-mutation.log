@@ -1,0 +1,6 @@
+--- FAIL: TestCleanupRecoversOriginalDeletionAfterProcessExit (0.50s)
+    --- FAIL: TestCleanupRecoversOriginalDeletionAfterProcessExit/after-delete (0.50s)
+        cleanup_process_test.go:96: deletion: unknown want committed
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.513s
+FAIL

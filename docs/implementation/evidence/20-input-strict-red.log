@@ -1,0 +1,14 @@
+--- FAIL: TestOrdinaryExtractionRejectsAmbiguousSourceInput (0.93s)
+    --- FAIL: TestOrdinaryExtractionRejectsAmbiguousSourceInput/source-alias (0.16s)
+        input_test.go:30: ambiguous source input accepted or reached effects: <nil>
+    --- FAIL: TestOrdinaryExtractionRejectsAmbiguousSourceInput/duplicate-field (0.14s)
+        input_test.go:30: ambiguous source input accepted or reached effects: <nil>
+    --- FAIL: TestOrdinaryExtractionRejectsAmbiguousSourceInput/duplicate-root (0.28s)
+        input_test.go:30: ambiguous source input accepted or reached effects: <nil>
+    --- FAIL: TestOrdinaryExtractionRejectsAmbiguousSourceInput/duplicate-source (0.16s)
+        input_test.go:30: ambiguous source input accepted or reached effects: UNAVAILABLE
+    --- FAIL: TestOrdinaryExtractionRejectsAmbiguousSourceInput/root-alias (0.18s)
+        input_test.go:30: ambiguous source input accepted or reached effects: <nil>
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.935s
+FAIL

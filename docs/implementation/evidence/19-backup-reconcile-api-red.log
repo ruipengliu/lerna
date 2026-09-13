@@ -1,0 +1,9 @@
+# lerna/adapters/sqlitememory_test [lerna/adapters/sqlitememory.test]
+adapters/sqlitememory/restore_reconcile_test.go:69:20: undefined: memory.RecoveryBinding
+adapters/sqlitememory/restore_reconcile_test.go:79:28: restored.Reconcile undefined (type *sqlitememory.Restore has no field or method Reconcile)
+adapters/sqlitememory/restore_reconcile_test.go:86:23: restored.ReadVerified undefined (type *sqlitememory.Restore has no field or method ReadVerified)
+adapters/sqlitememory/restore_reconcile_test.go:89:23: restored.ReadVerified undefined (type *sqlitememory.Restore has no field or method ReadVerified)
+adapters/sqlitememory/restore_reconcile_test.go:106:25: restored.InspectRecovery undefined (type *sqlitememory.Restore has no field or method InspectRecovery)
+adapters/sqlitememory/restore_reconcile_test.go:110:23: restored.ReadVerified undefined (type *sqlitememory.Restore has no field or method ReadVerified)
+FAIL	lerna/adapters/sqlitememory [build failed]
+FAIL

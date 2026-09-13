@@ -1,0 +1,4 @@
+# lerna/profiles/extractioncheck_test [lerna/profiles/extractioncheck.test]
+profiles/extractioncheck/save_test.go:13:28: undefined: extractioncheck.CheckSave
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

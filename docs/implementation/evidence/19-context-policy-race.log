@@ -1,0 +1,5 @@
+ok  	lerna/authorization	4.210s
+?   	lerna/adapters/contextpolicy	[no test files]
+ok  	lerna/adapters/sqlitecontext	6.308s
+ok  	lerna/artifacts	3.618s
+ok  	lerna/adapters/memoryauth	10.758s

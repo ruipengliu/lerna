@@ -1,0 +1,5 @@
+--- FAIL: TestQueryCoverageSeparatesHiddenUnavailableAndBudget (0.05s)
+    read_test.go:106: combined coverage:"budget_exhausted" <nil>
+FAIL
+FAIL	lerna/memory	0.209s
+FAIL

@@ -1,0 +1,1 @@
+PASS: initial report replaces stale success; SIGTERM exits 143 with dependencies=failed, tests=not_run, memory_extraction_quality=not_run. Controlled command fixture only; no Go suite or actual dependencies ran.

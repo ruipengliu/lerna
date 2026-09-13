@@ -1,0 +1,8 @@
+--- FAIL: TestTriggerSubmissionRecoversAfterProcessExit (0.70s)
+    --- FAIL: TestTriggerSubmissionRecoversAfterProcessExit/before-submit (0.34s)
+        trigger_recovery_test.go:82: restart reset one-round budget: PERMISSION_DENIED
+    --- FAIL: TestTriggerSubmissionRecoversAfterProcessExit/after-submit (0.36s)
+        trigger_recovery_test.go:82: restart reset one-round budget: PERMISSION_DENIED
+FAIL
+FAIL	lerna/profiles/extractioncheck	5.271s
+FAIL

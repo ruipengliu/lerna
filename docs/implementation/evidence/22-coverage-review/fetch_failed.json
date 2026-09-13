@@ -1,0 +1,16 @@
+{
+  "Review": {
+    "CaseID": "fetch_failed",
+    "AnswerSHA256": "11bfebe2857a13ec2083787ca690e2d34631b06930aaa5e7ac3f207fbfd60f9a",
+    "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+    "Facts": []
+  },
+  "Summary": {
+    "Coverage": {
+      "Numerator": 0,
+      "Denominator": 0
+    },
+    "UnreviewedFacts": 0,
+    "CoverageReviewComplete": true
+  }
+}

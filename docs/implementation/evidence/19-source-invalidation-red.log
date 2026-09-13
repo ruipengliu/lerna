@@ -1,0 +1,7 @@
+# lerna/artifacts_test [lerna/artifacts.test]
+artifacts/invalidation_test.go:30:21: undefined: artifacts.SourceInvalidation
+artifacts/invalidation_test.go:31:24: h.content.InvalidateSource undefined (type *artifacts.Service has no field or method InvalidateSource)
+artifacts/invalidation_test.go:36:27: h.content.InvalidateSource undefined (type *artifacts.Service has no field or method InvalidateSource)
+artifacts/invalidation_test.go:54:26: h.content.InvalidateSource undefined (type *artifacts.Service has no field or method InvalidateSource)
+FAIL	lerna/artifacts [build failed]
+FAIL

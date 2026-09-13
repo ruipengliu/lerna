@@ -1,0 +1,6 @@
+# lerna/adapters/sqlitememory_test [lerna/adapters/sqlitememory.test]
+adapters/sqlitememory/restore_test.go:50:32: undefined: sqlitememory.OpenRestored
+adapters/sqlitememory/restore_test.go:69:20: undefined: memory.Quarantined
+adapters/sqlitememory/restore_test.go:73:31: undefined: sqlitememory.OpenRestored
+FAIL	lerna/adapters/sqlitememory [build failed]
+FAIL

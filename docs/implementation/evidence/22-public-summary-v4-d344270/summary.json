@@ -1,0 +1,20 @@
+{
+  "runtime_published": true,
+  "answer_status": "answerable",
+  "search_requests": 1,
+  "page_requests": 0,
+  "model_requests": 1,
+  "model_input_tokens": 6891,
+  "model_output_tokens": 482,
+  "facts": {
+    "supported": 2,
+    "total": 2
+  },
+  "citations": {
+    "exact": 4,
+    "supported": 4,
+    "total": 4
+  },
+  "semantic_quality": "passed_limited_known_material_check",
+  "full_repository_verification": "not_passed_existing_failure"
+}

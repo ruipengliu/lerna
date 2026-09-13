@@ -1,0 +1,37 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "In what year did the Stoneford footbridge open?",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789271298}",
+        "Blocks": [
+          {
+            "Ref": "content:local:bc2169b670d59337ec32e5c3037ec19555497a6343c6784e8dfaf89cc990950a:1",
+            "Text": "{\"Status\":\"acquired\",\"Body\":\"Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.\",\"RequestedURL\":\"http://127.0.0.1:46649/final\",\"FinalURL\":\"http://127.0.0.1:46649/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"253fca27cf8c832dc540277d14107bd4ed470aee517a26681b882c5870596f0f\",\"Mode\":\"fixed-replay\",\"FetchedAt\":\"2026-09-13T03:47:19.359112215Z\",\"Sources\":[\"http://127.0.0.1:46649/final\"]}",
+            "Subject": "operator",
+            "Role": "external-evidence"
+          },
+          {
+            "Ref": "content:local:aeff128612a6698e0033ad47d743fab7182a1b0c75ca929490bdb7b63b7b4305:1",
+            "Text": "{\"Status\":\"acquired\",\"Body\":\"Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.\",\"RequestedURL\":\"http://127.0.0.1:46649/second\",\"FinalURL\":\"http://127.0.0.1:46649/second\",\"MediaType\":\"text/plain\",\"SHA256\":\"729c53be7f8c3e2ef53047755bc15df63b064c52f5146f080954ceefeae63abd\",\"Mode\":\"fixed-replay\",\"FetchedAt\":\"2026-09-13T03:47:19.618750347Z\",\"Sources\":[\"http://127.0.0.1:46649/second\"]}",
+            "Subject": "operator",
+            "Role": "external-evidence"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 512
+    },
+    "Result": {
+      "Content": "eyJzdGF0dXMiOiJjb25mbGljdGluZyIsImFuc3dlciI6IiIsInNjb3BlIjoiU3RvbmVmb3JkIGZvb3RicmlkZ2Ugb3BlbmluZyB5ZWFyLCBiYXNlZCBvbiAyMDI2LTAxIGFuZCAyMDI2LTAyIGFyY2hpdmFsIHJlZ2lzdGVyIHNvdXJjZXMgd2l0aCBubyBhZGRpdGlvbmFsIHRpbWUgb3IgY29udGVudCBjb25zdHJhaW50cy4iLCJjbGFpbXMiOlt7InRleHQiOiJPbmUgYXJjaGl2YWwgcmVjb3JkIHN0YXRlcyB0aGUgU3RvbmVmb3JkIGZvb3RicmlkZ2Ugb3BlbmVkIGluIDIwMDEsIHdpdGggbm8gZXhwbGFuYXRpb24gb2YgYSBkaXN0aW5jdGlvbiBiZXR3ZWVuIGluYXVndXJhdGlvbiBhbmQgcHVibGljIGFjY2Vzcy4iLCJjaXRhdGlvbnMiOlt7InNvdXJjZSI6ImNvbnRlbnQ6bG9jYWw6YmMyMTY5YjY3MGQ1OTMzN2VjMzJlNWMzMDM3ZWMxOTU1NTQ5N2E2MzQzYzY3ODRlOGRmYWY4OWNjOTkwOTUwYToxIiwic3RhcnQiOjMzLCJlbmQiOjc2LCJxdW90ZSI6IlRoZSBTdG9uZWZvcmQgZm9vdGJyaWRnZSBvcGVuZWQgaW4gMjAwMS4gVGhlIGVudHJ5IGRvZXMgbm90IGV4cGxhaW4gYW55IGRpc3RpbmN0aW9uIGJldHdlZW4gaW5hdWd1cmF0aW9uIGFuZCBwdWJsaWMgYWNjZXNzLiIsInNoYTI1NiI6IjI1M2ZjYTI3Y2Y4YzgzMmRjNTQwMjc3ZDE0MTA3YmQ0ZWQ0NzBhZWU1MTdhMjY2ODFiODgyYzU4NzA1OTZmMGYiLCJmZXRjaGVkX2F0IjoiMjAyNi0wOS0xM1QwMzo0NzoxOS4zNTkxMTIyMTVaIn1dfSx7InRleHQiOiJBIHNlY29uZCBhcmNoaXZhbCByZWNvcmQgc3RhdGVzIHRoZSBTdG9uZWZvcmQgZm9vdGJyaWRnZSBvcGVuZWQgaW4gMjAwMywgd2l0aCBubyBleHBsYW5hdGlvbiBvZiBhIGRpc3RpbmN0aW9uIGJldHdlZW4gaW5hdWd1cmF0aW9uIGFuZCBwdWJsaWMgYWNjZXNzLiIsImNpdGF0aW9ucyI6W3sic291cmNlIjoiY29udGVudDpsb2NhbDphZWZmMTI4NjEyYTY2OThlMDAzM2FkNDdkNzQzZmFiNzE4MmExYjBjNzVjYTkyOTQ5MGJkYjdiNjNiN2I0MzA1OjEiLCJzdGFydCI6MzMsImVuZCI6NzYsInF1b3RlIjoiVGhlIFN0b25lZm9yZCBmb290YnJpZGdlIG9wZW5lZCBpbiAyMDAzLiBUaGUgZW50cnkgZG9lcyBub3QgZXhwbGFpbiBhbnkgZGlzdGluY3Rpb24gYmV0d2VlbiBpbmF1Z3VyYXRpb24gYW5kIHB1YmxpYyBhY2Nlc3MuIiwic2hhMjU2IjoiNzI5YzUzYmU3ZjhjM2UyZWY1MzA0Nzc1NWJjMTVkZjYzYjA2NGM1MmY1MTQ2ZjA4MDk1NGNlZWZlYWU2M2FiZCIsImZldGNoZWRfYXQiOiIyMDI2LTA5LTEzVA==",
+      "Finish": "length",
+      "RequestRef": "021789271240019cb43b51ad7a6f2b3d703638489b11c032b7a8f",
+      "Usage": {
+        "Known": true,
+        "Input": 1368,
+        "Output": 512
+      }
+    }
+  }
+]

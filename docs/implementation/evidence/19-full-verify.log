@@ -1,0 +1,83 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	(cached)
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/catalogauth	[no test files]
+?   	lerna/adapters/cataloglocal	[no test files]
+ok  	lerna/adapters/checkpointfile	(cached)
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+ok  	lerna/adapters/contextmemory	(cached)
+?   	lerna/adapters/contextpolicy	[no test files]
+?   	lerna/adapters/credentialauth	[no test files]
+ok  	lerna/adapters/credentialbackups	(cached)
+?   	lerna/adapters/credentialexecution	[no test files]
+ok  	lerna/adapters/credentialhttp	(cached)
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/executionrouter	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/filekeys	(cached)
+ok  	lerna/adapters/josegrant	(cached)
+ok  	lerna/adapters/memoryauth	12.329s
+ok  	lerna/adapters/memorycleanup	(cached)
+?   	lerna/adapters/memorylocal	[no test files]
+ok  	lerna/adapters/recoveryproof	(cached)
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+ok  	lerna/adapters/simresource	(cached)
+ok  	lerna/adapters/simworkflow	(cached)
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/sqlitecatalog	[no test files]
+ok  	lerna/adapters/sqlitecontext	(cached)
+ok  	lerna/adapters/sqlitecredentials	(cached)
+ok  	lerna/adapters/sqlitememory	(cached)
+ok  	lerna/adapters/taskcontext	(cached)
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	2.705s
+ok  	lerna/authorization	(cached)
+ok  	lerna/brain	(cached)
+ok  	lerna/catalog	(cached)
+ok  	lerna/cleanup	(cached)
+?   	lerna/cmd/answercheck	[no test files]
+?   	lerna/cmd/apicheck	[no test files]
+ok  	lerna/cmd/authctl	(cached)
+?   	lerna/cmd/contextcheck	[no test files]
+ok  	lerna/cmd/contractcheck	474.353s
+ok  	lerna/cmd/credentialctl	3.104s
+ok  	lerna/conformance	1.013s
+ok  	lerna/contextassembly	2.402s
+?   	lerna/contractfixture	[no test files]
+ok  	lerna/credentials	1.626s
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/catalogwire	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/memorywire	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/memory	1.944s
+?   	lerna/memory/storecontract	[no test files]
+ok  	lerna/profiles/answer	221.586s
+ok  	lerna/profiles/asynccheck	12.989s
+ok  	lerna/profiles/catalogcheck	1974.111s
+ok  	lerna/profiles/content	4.810s
+?   	lerna/profiles/contextcheck	[no test files]
+ok  	lerna/profiles/control	7.966s
+ok  	lerna/profiles/credentialcheck	14.564s
+?   	lerna/profiles/durabletasks	[no test files]
+ok  	lerna/profiles/executioncheck	18.414s
+ok  	lerna/profiles/grants	3.151s
+?   	lerna/profiles/localauth	[no test files]
+ok  	lerna/profiles/memorycheck	12.277s
+ok  	lerna/profiles/sdkcontract	1.048s
+ok  	lerna/profiles/takeover	13.918s
+ok  	lerna/profiles/updates	10.377s
+ok  	lerna/profiles/worker	3.463s
+?   	lerna/protocol	[no test files]
+ok  	lerna/schema	1.031s
+ok  	lerna/sdk	1.100s
+ok  	lerna/tasks	8.941s

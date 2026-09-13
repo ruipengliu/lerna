@@ -1,0 +1,325 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "local-auth-v1",
+  "profile_version": "1",
+  "configuration": {
+    "clock": "controlled test clock anchored at 2026-09-10T00:00:00Z; no remote-time claim",
+    "credential_ttl": "24h",
+    "evaluation_limits": "32 rules; 128 resources; depth 16; work 4096 (budget case:32); elapsed 1s",
+    "grant_max_ttl": "1h",
+    "receipt_retention": "2m",
+    "sqlite_driver": "modernc.org/sqlite v1.58.0",
+    "sqlite_runtime": "3.53.4",
+    "storage": "SQLite file; WAL; synchronous=FULL; isolated snapshots with compare-and-swap commit",
+    "window_ttl": "1m"
+  },
+  "method": "contractcheck -profile local-auth-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260910032530-ea82bcfbc6e0",
+    "revision": "ea82bcfbc6e0d02c44702ae0732f7c150d763a9e",
+    "dirty": "false",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "Local identity and authority only; credentials stay in a trusted in-process binding.",
+    "Controlled clock tests do not prove hostile-host or remote offline time integrity.",
+    "Crash probes terminate separate processes at commit boundaries using disposable databases; no power-loss or filesystem-corruption claim.",
+    "No cross-node signatures, delegation chains, single-use consumption, task control, browser login or real task execution."
+  ],
+  "results": [
+    {
+      "id": "bootstrap-reopen",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "bootstrap-reopen on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "missing-configuration",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "missing-configuration on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "continuous-use",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "continuous-use on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cross-subject",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "cross-subject on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "forged-identity",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "forged-identity on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cross-namespace",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "cross-namespace on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "outside-resource",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "outside-resource on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "outside-action",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "outside-action on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "outside-purpose",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "outside-purpose on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "outside-location",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "outside-location on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "hard-deny",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "hard-deny on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "grant-expiry",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "grant-expiry on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "time-rollback",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "time-rollback on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-constraint",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "unknown-constraint on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "disabled-principal",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "disabled-principal on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unsupported-single-use",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "unsupported-single-use on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "execution-is-not-issuance",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "execution-is-not-issuance on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "issuer-containment",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "issuer-containment on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "selector-set",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "selector-set on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unregistered-tree",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "unregistered-tree on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "evaluation-budget",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "evaluation-budget on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "idempotency-and-conflict",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "idempotency-and-conflict on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "current-auth-before-receipt",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "current-auth-before-receipt on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "tampered-window",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "tampered-window on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "window-cleanup",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "window-cleanup on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "concurrent-revision",
+      "evidence": "local_authorization_sqlite",
+      "required": true,
+      "input": "concurrent-revision on an isolated SQLite file",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "before-commit",
+      "evidence": "sqlite_process_recovery",
+      "required": true,
+      "input": "terminate child at before-commit; reopen database in parent and verify through SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "lost-commit-reply",
+      "evidence": "sqlite_process_recovery",
+      "required": true,
+      "input": "terminate child at lost-commit-reply; reopen database in parent and verify through SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "before-cleanup",
+      "evidence": "sqlite_process_recovery",
+      "required": true,
+      "input": "terminate child at before-cleanup; reopen database in parent and verify through SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "after-cleanup",
+      "evidence": "sqlite_process_recovery",
+      "required": true,
+      "input": "terminate child at after-cleanup; reopen database in parent and verify through SDK",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cross-node-and-single-use",
+      "evidence": "distributed_authorization",
+      "required": false,
+      "input": "requires subsequent grant and node tickets",
+      "expected": "separate verified profile",
+      "actual": "",
+      "status": "unsupported"
+    }
+  ]
+}

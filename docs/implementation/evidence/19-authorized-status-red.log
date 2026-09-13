@@ -1,0 +1,10 @@
+# lerna/adapters/memoryauth_test [lerna/adapters/memoryauth.test]
+adapters/memoryauth/authority_test.go:319:30: service.WithDeletionReporter undefined (type *"lerna/memory".Service has no field or method WithDeletionReporter)
+adapters/memoryauth/deletion_test.go:67:18: undefined: memory.DeletionStatusRequest
+adapters/memoryauth/deletion_test.go:68:23: service.DeletionStatus undefined (type *"lerna/memory".Service has no field or method DeletionStatus)
+adapters/memoryauth/deletion_test.go:74:20: service.DeletionStatus undefined (type *"lerna/memory".Service has no field or method DeletionStatus)
+adapters/memoryauth/deletion_test.go:79:20: service.DeletionStatus undefined (type *"lerna/memory".Service has no field or method DeletionStatus)
+adapters/memoryauth/deletion_test.go:84:20: service.DeletionStatus undefined (type *"lerna/memory".Service has no field or method DeletionStatus)
+adapters/memoryauth/deletion_test.go:108:20: service.DeletionStatus undefined (type *"lerna/memory".Service has no field or method DeletionStatus)
+FAIL	lerna/adapters/memoryauth [build failed]
+FAIL

@@ -1,0 +1,5 @@
+--- FAIL: TestCompletionBeforeCancelUsesTargetTime (0.46s)
+    async_test.go:159: completion predates cancel; Task.State=WAITING (ephemeral fixture identities omitted)
+FAIL
+FAIL	lerna/profiles/asynccheck	17.351s
+FAIL

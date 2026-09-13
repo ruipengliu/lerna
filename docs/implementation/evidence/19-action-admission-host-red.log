@@ -1,0 +1,5 @@
+--- FAIL: TestActionHostAutomaticallyErasesDeletedMemoryComparison (27.59s)
+    personalized_invalidation_test.go:179: original comparison cleanup not confirmed: &{Event:{Ref:{Namespace:purchase_order Collection:personal Key:record-choice} Kind:deleted Revision:2 Position:2} Authority:committed Local:[{Name:admission-comparisons State:pending Position:0}] Replicas:[{Name:unregistered State:not_covered Position:0}] Derived:[{Name:artifacts State:applied Position:2}]} false
+FAIL
+FAIL	lerna/profiles/catalogcheck	27.626s
+FAIL

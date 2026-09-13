@@ -1,0 +1,5 @@
+# lerna/adapters/httpfetch_test [lerna/adapters/httpfetch.test]
+adapters/httpfetch/content_test.go:143:28: undefined: fetch.NewAcquirer
+adapters/httpfetch/content_test.go:159:27: undefined: fetch.NewAcquirer
+FAIL	lerna/adapters/httpfetch [build failed]
+FAIL

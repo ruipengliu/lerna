@@ -1,0 +1,51 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "memory-deletion-v1",
+  "profile_version": "1",
+  "configuration": {
+    "cleanup": "fixed admission-comparisons consumer; source events applied in order before durable acknowledgment",
+    "data": "public synthetic preference; simulated trusted clock; no real model calls",
+    "entry": "Memory SDK DELETE, LOOKUP and DELETION_STATUS over authenticated local Protobuf transport",
+    "limits": "30s case; 5s calls; 16-event cleanup batches; 512 stored identities; no external services",
+    "storage": "real independent SQLite Memory and authorization stores, reopened after cleanup"
+  },
+  "method": "contractcheck -profile memory-deletion-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260911111923-7b57bee227ef+dirty",
+    "revision": "7b57bee227ef4ef765ffd0d9a7e29aaef2e7fc73",
+    "dirty": "true",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "This profile currently covers local deletion, original receipt minimization and admission-comparison cleanup only; it is not full ticket 19 acceptance.",
+    "The local applied target means admission-comparisons only, not all local payloads. Replicas and derived/archive targets remain explicitly not_covered.",
+    "Reopening databases here proves persisted progress, not old-backup freshness or quarantine. This case does not exercise a process crash."
+  ],
+  "results": [
+    {
+      "id": "sdk-delete-status-cleanup-reopen",
+      "evidence": "actual_sdk_authority_sqlite_consumer_and_reopen",
+      "required": true,
+      "input": "create/read/delete/replay/cleanup/reopen/status",
+      "expected": "authority=committed;admission-comparisons=applied@2;replicas=not_covered;derived=not_covered",
+      "actual": "authority=committed;admission-comparisons=applied@2;replicas=not_covered;derived=not_covered",
+      "status": "passed"
+    }
+  ]
+}

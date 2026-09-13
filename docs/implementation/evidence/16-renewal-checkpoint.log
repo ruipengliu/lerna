@@ -1,0 +1,7 @@
+ok  	lerna/cmd/credentialctl	3.436s
+ok  	lerna/credentials	(cached)
+ok  	lerna/adapters/credentialhttp	1.122s
+ok  	lerna/profiles/credentialcheck	8.717s
+ok  	lerna/adapters/sqlitecredentials	(cached)
+ok  	lerna/adapters/credentialbackups	(cached)
+ok  	lerna/adapters/filekeys	(cached)

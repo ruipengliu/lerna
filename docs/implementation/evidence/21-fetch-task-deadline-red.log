@@ -1,0 +1,8 @@
+--- FAIL: TestCoreDeadlineStopsAcquisitionBeforeLeaseAndHTTPTimeout (0.53s)
+    --- FAIL: TestCoreDeadlineStopsAcquisitionBeforeLeaseAndHTTPTimeout/redirect (0.25s)
+        deadline_test.go:62: deadline facts: {Status:denied Requests:1 Reference:} known=true requests=1 result=FAILURE err=<nil>
+    --- FAIL: TestCoreDeadlineStopsAcquisitionBeforeLeaseAndHTTPTimeout/waiting (0.29s)
+        deadline_test.go:62: deadline facts: {Status:denied Requests:1 Reference:} known=true requests=1 result=FAILURE err=<nil>
+FAIL
+FAIL	lerna/profiles/fetchcheck	0.544s
+FAIL

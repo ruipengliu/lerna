@@ -1,0 +1,5 @@
+--- FAIL: TestAnswerHostCleansDeletedContextAutomatically (3.66s)
+    personalized_cleanup_test.go:58: host did not consume deletion cleanup
+FAIL
+FAIL	lerna/profiles/answer	3.669s
+FAIL

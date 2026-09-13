@@ -1,0 +1,5 @@
+--- FAIL: TestInvalidatedModelDecisionSettlesWithoutDisclosingOldContext (6.43s)
+    personalized_invalidation_test.go:42: PERMISSION_DENIED
+FAIL
+FAIL	lerna/profiles/catalogcheck	6.440s
+FAIL

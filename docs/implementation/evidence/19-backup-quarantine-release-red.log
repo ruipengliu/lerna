@@ -1,0 +1,5 @@
+--- FAIL: TestRestoredBackupCannotOpenWithoutCurrentAuthority (0.10s)
+    restore_test.go:159: old backup released the deleted body
+FAIL
+FAIL	lerna/adapters/sqlitememory	0.121s
+FAIL

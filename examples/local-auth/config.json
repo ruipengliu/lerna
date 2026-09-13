@@ -1,0 +1,11 @@
+{
+  "credential_ttl": "24h",
+  "grant_ttl": "1h",
+  "window_ttl": "1m",
+  "receipt_retention": "2m",
+  "max_rules": 32,
+  "max_resources": 128,
+  "max_depth": 16,
+  "max_work": 4096,
+  "evaluation_timeout": "1s"
+}

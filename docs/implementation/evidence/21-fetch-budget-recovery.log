@@ -1,0 +1,4 @@
+?   	lerna/fetch	[no test files]
+ok  	lerna/adapters/sqlitefetch	1.209s
+ok  	lerna/adapters/httpfetch	2.363s
+?   	lerna/adapters/fetchauth	[no test files]

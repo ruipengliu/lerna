@@ -1,0 +1,5 @@
+--- FAIL: TestRecoveryIsRequiredByDeletionProfile (0.00s)
+    recovery_profile_test.go:22: deletion profile omits backup recovery
+FAIL
+FAIL	lerna/profiles/memorycheck	0.010s
+FAIL

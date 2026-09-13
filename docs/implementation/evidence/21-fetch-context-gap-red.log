@@ -1,0 +1,5 @@
+# lerna/profiles/fetchcheck [lerna/profiles/fetchcheck.test]
+profiles/fetchcheck/failure.go:77:34: undefined: fetchcontext.NewWithFailures
+profiles/fetchcheck/failure.go:77:71: h.access.Failures undefined (type *fetchoutput.Adapter has no field or method Failures)
+FAIL	lerna/profiles/fetchcheck [build failed]
+FAIL

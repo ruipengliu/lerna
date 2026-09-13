@@ -1,0 +1,5 @@
+--- FAIL: TestHTTPTraceCannotObserveCredentialHeader (0.14s)
+    checks_test.go:43: credential escaped through HTTP tracing
+FAIL
+FAIL	lerna/profiles/credentialcheck	0.151s
+FAIL

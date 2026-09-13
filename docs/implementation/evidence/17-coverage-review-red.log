@@ -1,0 +1,8 @@
+--- FAIL: TestCoverageReplayRechecksExcludedSources (0.08s)
+    --- FAIL: TestCoverageReplayRechecksExcludedSources/offline (0.04s)
+        read_test.go:136: revoked coverage coverage:"partial_unavailable" <nil>
+    --- FAIL: TestCoverageReplayRechecksExcludedSources/visible (0.04s)
+        read_test.go:136: revoked coverage coverage:"budget_exhausted" <nil>
+FAIL
+FAIL	lerna/memory	0.088s
+FAIL

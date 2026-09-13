@@ -1,0 +1,5 @@
+# lerna/adapters/localextraction_test [lerna/adapters/localextraction.test]
+adapters/localextraction/inference_test.go:14:224: unknown field Choice in struct literal of type extraction.Material
+adapters/localextraction/inference_test.go:14:244: undefined: extraction.Choice
+FAIL	lerna/adapters/localextraction [build failed]
+FAIL

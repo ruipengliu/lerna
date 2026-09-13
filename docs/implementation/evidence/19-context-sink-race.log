@@ -1,0 +1,4 @@
+ok  	lerna/contextassembly	1.838s
+ok  	lerna/adapters/sqlitecontext	(cached)
+ok  	lerna/adapters/memoryauth	9.584s
+?   	lerna/adapters/memorycleanup	[no test files]

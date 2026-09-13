@@ -1,0 +1,4 @@
+# lerna/profiles/extractioncheck [lerna/profiles/extractioncheck.test]
+profiles/extractioncheck/unsupported_process_test.go:70:48: undefined: unsupportedCrashDriver
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

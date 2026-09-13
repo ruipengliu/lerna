@@ -1,0 +1,6 @@
+=== RUN   TestExtractedPreferenceControlsIndependentTaskOutput
+[DEBUG-c20] validate stage=scope elapsed=2.292µs context=<nil> error=PERMISSION_DENIED
+[DEBUG-c20] validate stage=retention elapsed=536.605005ms context=context deadline exceeded error=CONTEXT_UNAVAILABLE
+    report_test.go:88: CONTEXT_UNAVAILABLE
+--- FAIL: TestExtractedPreferenceControlsIndependentTaskOutput (9.67s)
+FAIL

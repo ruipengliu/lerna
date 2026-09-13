@@ -1,0 +1,27 @@
+{
+  "Profile": "local-task-v1",
+  "Implementation": "httpfetch-v1",
+  "Location": "local",
+  "GoVersion": "go1.26.1",
+  "Build": {},
+  "ExternalModelRequests": 0,
+  "Passed": true,
+  "Checks": [
+    {
+      "Name": "core-sdk-actual-http-and-replay",
+      "Passed": true
+    },
+    {
+      "Name": "http-denied-original-budget",
+      "Passed": true
+    },
+    {
+      "Name": "http-unavailable-original-budget",
+      "Passed": true
+    },
+    {
+      "Name": "http-expired-original-budget",
+      "Passed": true
+    }
+  ]
+}

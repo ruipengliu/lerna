@@ -1,0 +1,14 @@
+=== RUN   TestLifecycleRealProcessInterruption
+=== RUN   TestLifecycleRealProcessInterruption/after-prepare
+=== RUN   TestLifecycleRealProcessInterruption/before-activate
+=== RUN   TestLifecycleRealProcessInterruption/after-activate
+=== RUN   TestLifecycleRealProcessInterruption/before-row
+=== RUN   TestLifecycleRealProcessInterruption/after-row
+--- PASS: TestLifecycleRealProcessInterruption (2.65s)
+    --- PASS: TestLifecycleRealProcessInterruption/after-prepare (0.61s)
+    --- PASS: TestLifecycleRealProcessInterruption/before-activate (0.55s)
+    --- PASS: TestLifecycleRealProcessInterruption/after-activate (0.50s)
+    --- PASS: TestLifecycleRealProcessInterruption/before-row (0.51s)
+    --- PASS: TestLifecycleRealProcessInterruption/after-row (0.48s)
+PASS
+ok  	lerna/profiles/credentialcheck	3.679s

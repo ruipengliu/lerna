@@ -1,0 +1,12 @@
+--- FAIL: TestReassembledInvocationSurvivesProcessExit (0.01s)
+    --- FAIL: TestReassembledInvocationSurvivesProcessExit/reassembled-invoked (0.01s)
+        personalized_process_test.go:159: reassembled decision checkpoint: exit status 1 --- FAIL: TestPersonalizedActionCrashProbe (0.00s)
+                personalized_process_test.go:52: unknown checkpoint point
+            FAIL
+    --- FAIL: TestReassembledInvocationSurvivesProcessExit/reassembled-effect (0.01s)
+        personalized_process_test.go:159: reassembled decision checkpoint: exit status 1 --- FAIL: TestPersonalizedActionCrashProbe (0.00s)
+                personalized_process_test.go:52: unknown checkpoint point
+            FAIL
+FAIL
+FAIL	lerna/profiles/catalogcheck	0.022s
+FAIL

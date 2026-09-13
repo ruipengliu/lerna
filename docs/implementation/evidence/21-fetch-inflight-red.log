@@ -1,0 +1,8 @@
+--- FAIL: TestTaskControlInterruptsInFlightAcquisition (2.40s)
+    --- FAIL: TestTaskControlInterruptsInFlightAcquisition/PAUSE (1.21s)
+        inflight_test.go:80: task control did not interrupt acquisition: {Status: Requests:0 Reference:} known=false hits=1 result=UNKNOWN err=<nil>
+    --- FAIL: TestTaskControlInterruptsInFlightAcquisition/CANCEL (1.19s)
+        inflight_test.go:80: task control did not interrupt acquisition: {Status: Requests:0 Reference:} known=false hits=1 result=UNKNOWN err=<nil>
+FAIL
+FAIL	lerna/profiles/fetchcheck	2.408s
+FAIL

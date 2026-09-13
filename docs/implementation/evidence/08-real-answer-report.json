@@ -1,0 +1,100 @@
+{
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260910105517-0eaae950f1cf",
+    "revision": "0eaae950f1cfdad4a27a852e0616135dd9f73806",
+    "dirty": "false",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "executed_at": "2026-09-10T10:55:46.639049539Z",
+  "state_directory": "/home/dev/proj/lerna/build/real-answer-686371509",
+  "input_fixture": "Public test fact: the reference project has three systems: Memory, Brain, Execution.",
+  "profile": "real-answer-v1",
+  "status": "passed",
+  "endpoint": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+  "capabilities": {
+    "Model": "doubao-seed-2-0-lite-260428",
+    "Location": "ark-cn-beijing",
+    "Version": "ark-chat-v3-20260910",
+    "Text": true,
+    "Structured": true,
+    "Streaming": false,
+    "HardBounds": true,
+    "ContextTokens": 262144,
+    "InputUpper": 229376
+  },
+  "limits": {
+    "Requests": 1,
+    "InputTokens": 229376,
+    "OutputTokens": 512
+  },
+  "actual_requests": 1,
+  "last_usage": {
+    "Known": true,
+    "Input": 398,
+    "Output": 85
+  },
+  "finish": "stop",
+  "task": {
+    "ModelUsedRequests": 1,
+    "ModelReservedRequests": 0,
+    "ModelUsedTokens": 483,
+    "ModelReservedTokens": 0,
+    "Ref": {
+      "Namespace": "local",
+      "TaskID": "18f49f5335d48e0cbc6e6ea257bac98fd50f2f4ddf6e8dd35123a3ada10ef5e3"
+    },
+    "Goal": "List the three systems exactly as named in the supplied public fact, and cite its reference.",
+    "InputRefs": [
+      "content:local:37e7bb39dd6725d160ddadeaac9dd23cfd76151d80af387e1c70c9f4a243ef69:1"
+    ],
+    "Constraints": {
+      "ModelRequests": 1,
+      "ModelTokens": 229888,
+      "MaxSteps": 3,
+      "DeadlineUnix": 1789038046
+    },
+    "State": "COMPLETED",
+    "Subject": "operator",
+    "Resource": "root",
+    "Owner": "local-owner",
+    "OwnerEpoch": 1,
+    "Version": 4,
+    "Attempts": 1,
+    "Result": "content:local:4c6630d5e85e9cb925e48dc00414382b5b205877707bd5e97c77298d788ddd72:1",
+    "StopReason": "",
+    "Control": {
+      "Intent": "",
+      "Progress": "",
+      "OperationID": "",
+      "AcceptedAt": 0
+    },
+    "WaitingReasons": null
+  },
+  "answer": {
+    "answer": "The three systems named in the supplied public fact are Memory, Brain, and Execution.",
+    "sources": [
+      "content:local:37e7bb39dd6725d160ddadeaac9dd23cfd76151d80af387e1c70c9f4a243ef69:1"
+    ]
+  },
+  "availability": "available",
+  "delivered": false,
+  "method": "answercheck -env-file .env (one generation; public fixed materials)",
+  "limitations": [
+    "One public simple-answer check; not a general accuracy or API-selection benchmark.",
+    "Input reservation uses the pinned provider input maximum, including protocol overhead; actual usage settles after response. No monetary-price guarantee.",
+    "Completed task is Core admission; availability is current authorized read; no UI delivery acknowledgement.",
+    "State directory contains local credentials and SQLite evidence; keep private, do not commit."
+  ]
+}

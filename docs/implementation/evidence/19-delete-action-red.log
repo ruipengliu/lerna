@@ -1,0 +1,8 @@
+--- FAIL: TestDeletedMemoryBlocksFirstActionStart (22.65s)
+    --- FAIL: TestDeletedMemoryBlocksFirstActionStart/admitted (9.23s)
+        personalized_invalidation_test.go:138: deleted source started an effect or replaced identity: {ContextSnapshots:1 MetadataDecisions:0 SettlementReplayVerified:false MemoryBindingRestored:false Invocations:1 StartedInvocations:1 GovernedArtifacts:4 RevokedArtifacts:4 OtherState:submitted MemoryReadAllocated:1 ReadyOperations:0 DispatchedOperations:0 SelectedRecord:item StateDirectory: Case:personalized-delete-admitted State:COMPLETED StopReason: FinalState:authorized Decisions:1 Operations:1 DirectorySize:1008 Corrections:0 FirstCorrect:true Ledger:997 UsedRequests:1 UnknownRequests:0 UsedTokens:140 ReservedTokens:0 Errors:[]}
+    --- FAIL: TestDeletedMemoryBlocksFirstActionStart/invoked (13.42s)
+        personalized_invalidation_test.go:138: deleted source started an effect or replaced identity: {ContextSnapshots:1 MetadataDecisions:0 SettlementReplayVerified:false MemoryBindingRestored:false Invocations:1 StartedInvocations:1 GovernedArtifacts:4 RevokedArtifacts:4 OtherState:submitted MemoryReadAllocated:1 ReadyOperations:0 DispatchedOperations:0 SelectedRecord:item StateDirectory: Case:personalized-delete-invoked State:COMPLETED StopReason: FinalState:authorized Decisions:1 Operations:1 DirectorySize:1008 Corrections:0 FirstCorrect:true Ledger:997 UsedRequests:1 UnknownRequests:0 UsedTokens:140 ReservedTokens:0 Errors:[]}
+FAIL
+FAIL	lerna/profiles/catalogcheck	22.657s
+FAIL

@@ -1,0 +1,25 @@
+{
+  "version": "search-small-v1",
+  "fictional": true,
+  "cases": [
+    {
+      "id": "answerable", "question": "When did the Northbank footbridge open, and what is its length?", "query": "Northbank footbridge opening length",
+      "pages": [{"key": "northbank-record", "title": "Northbank civic record", "snippet": "Find bridge history and dimensions in the civic record.", "status": 200, "body": "Northbank civic record, edition 2026-01. The Northbank footbridge opened on 14 May 1998. Its length is 84 metres. These measurements describe the original bridge."}]
+    },
+    {
+      "id": "insufficient", "question": "What was the construction cost of the Eastmere footbridge?", "query": "Eastmere footbridge construction cost",
+      "pages": [{"key": "eastmere-record", "title": "Eastmere bridge record", "snippet": "General description; consult the record for available facts.", "status": 200, "body": "Eastmere bridge record, edition 2026-01. The Eastmere footbridge crosses the canal. It opened in 2005. This record does not state its construction cost."}]
+    },
+    {
+      "id": "conflicting", "question": "In what year did the Stoneford footbridge open?", "query": "Stoneford footbridge opening year",
+      "pages": [
+        {"key": "stoneford-register", "title": "Stoneford register", "snippet": "Opening history in the register.", "status": 200, "body": "Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access."},
+        {"key": "stoneford-archive", "title": "Stoneford archive", "snippet": "Opening history in the archive.", "status": 200, "body": "Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access."}
+      ]
+    },
+    {
+      "id": "fetch_failed", "question": "What is the load limit of the Westhaven footbridge?", "query": "Westhaven footbridge load limit",
+      "pages": [{"key": "westhaven-record", "title": "Westhaven bridge record", "snippet": "Index excerpt says 12 tonnes; this is not acquired page evidence.", "status": 403, "body": ""}]
+    }
+  ]
+}

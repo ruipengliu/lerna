@@ -1,0 +1,10 @@
+# lerna/adapters/sqlitememory_test [lerna/adapters/sqlitememory.test]
+adapters/sqlitememory/deletion_status_test.go:30:26: undefined: memory.NewDeletionReporter
+adapters/sqlitememory/deletion_status_test.go:30:61: undefined: memory.CleanupTarget
+adapters/sqlitememory/deletion_status_test.go:30:112: undefined: memory.DerivedCleanup
+adapters/sqlitememory/deletion_status_test.go:39:16: s.InspectConsumer undefined (type *sqlitememory.Store has no field or method InspectConsumer)
+adapters/sqlitememory/deletion_status_test.go:62:25: undefined: memory.NewDeletionReporter
+adapters/sqlitememory/deletion_status_test.go:62:60: undefined: memory.CleanupTarget
+adapters/sqlitememory/deletion_status_test.go:62:111: undefined: memory.DerivedCleanup
+FAIL	lerna/adapters/sqlitememory [build failed]
+FAIL

@@ -1,0 +1,317 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "restricted-grants-v1",
+  "profile_version": "1",
+  "configuration": {
+    "clock": "controlled 2026-09-10; trusted authority time; no remote offline mode",
+    "identity": "locally authenticated administrator; verified fixture certificate; pinned signing key",
+    "jose": "github.com/go-jose/go-jose/v4 v4.1.5; ES256; compact JWS; harness-grant+jwt;v=1",
+    "limits": "TTL 1h; IO 1s; depth 4; 64 grants; 64 use reservations; 128 operations including reserved revocation space; 16 delegate targets; 32768-byte material; units \u003c=1000000",
+    "process_faults": "five child exit(73) boundaries; \u003c=10s each",
+    "sqlite_runtime": "3.53.4",
+    "storage": "real SQLite; WAL/FULL; shared authorization/runtime CAS"
+  },
+  "method": "contractcheck -profile restricted-grants-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260910132247-054deb75cd0e",
+    "revision": "054deb75cd0e0f311fd2637de59301b1ab5efec8",
+    "dirty": "false",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "No real mTLS transport, node enrollment, remote synchronization or offline freshness guarantee.",
+    "Signature encoding is cross-checked using independent Go crypto/ecdsa; certificates are locally generated and chain-verified fixtures, not real device evidence.",
+    "UsePermit allocates quota before delivery; a separate SQLite fixture commits a simulated effect with consumption. Production business consumers are not implemented.",
+    "Recipient confirmation is a trusted adapter seam, not an untrusted RPC or proof from a transport acknowledgement.",
+    "No automatic quota refunds, record cleanup, key rotation or second durable backend. Lost usage remains allocated.",
+    "Host key sources, clock and storage are trusted. This does not prove safety against compromised hosts, power loss or restored stale backups."
+  ],
+  "results": [
+    {
+      "id": "legacy-storage-upgrade",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "legacy-storage-upgrade",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "sign-revoke-race",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "sign-revoke-race",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "parallel-derive",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "parallel-derive",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "parent-resource-scope",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "parent-resource-scope",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "signer-configuration",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "signer-configuration",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "management-permissions",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "management-permissions",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "time-rollback",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "time-rollback",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "sdk-replay",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "sdk-replay",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "presenter-binding",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "presenter-binding",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "independent-jose",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "independent-jose",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "strict-material",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "strict-material",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "claim-times",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "claim-times",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "policy-recheck",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "policy-recheck",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "delegation-attenuation",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "delegation-attenuation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "quota-sharing",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "quota-sharing",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "single-operation",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "single-operation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "ancestor-revocation",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "ancestor-revocation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "recipient-applied",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "recipient-applied",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-issue",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "unknown-issue",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "sign-policy-race",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "sign-policy-race",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "parallel-allocation",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "parallel-allocation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "key-unavailable",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "key-unavailable",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "legacy-local-grant",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "legacy-local-grant",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cross-domain-identity",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "cross-domain-identity",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "finite-capacity",
+      "evidence": "restricted_grant_contract",
+      "required": true,
+      "input": "finite-capacity",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "signed-before-commit",
+      "evidence": "sqlite_grant_process_recovery",
+      "required": true,
+      "input": "signed-before-commit",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "grant-committed",
+      "evidence": "sqlite_grant_process_recovery",
+      "required": true,
+      "input": "grant-committed",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "allocation-committed",
+      "evidence": "sqlite_grant_process_recovery",
+      "required": true,
+      "input": "allocation-committed",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "revoke-committed",
+      "evidence": "sqlite_grant_process_recovery",
+      "required": true,
+      "input": "revoke-committed",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "application-committed",
+      "evidence": "sqlite_grant_process_recovery",
+      "required": true,
+      "input": "application-committed",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	1.019s
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/josegrant	1.015s
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	1.296s
+ok  	lerna/authorization	2.088s
+ok  	lerna/brain	1.015s
+?   	lerna/cmd/answercheck	[no test files]
+ok  	lerna/cmd/authctl	1.483s
+ok  	lerna/cmd/contractcheck	16.209s
+ok  	lerna/conformance	(cached)
+?   	lerna/contractfixture	[no test files]
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/profiles/answer	5.698s
+ok  	lerna/profiles/asynccheck	11.227s
+ok  	lerna/profiles/content	3.832s
+ok  	lerna/profiles/control	5.245s
+?   	lerna/profiles/durabletasks	[no test files]
+ok  	lerna/profiles/executioncheck	13.696s
+ok  	lerna/profiles/grants	3.056s
+?   	lerna/profiles/localauth	[no test files]
+ok  	lerna/profiles/sdkcontract	1.045s
+ok  	lerna/profiles/updates	9.368s
+ok  	lerna/profiles/worker	3.353s
+?   	lerna/protocol	[no test files]
+ok  	lerna/schema	1.030s
+ok  	lerna/sdk	1.090s
+ok  	lerna/tasks	5.674s

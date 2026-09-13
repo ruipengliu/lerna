@@ -1,0 +1,5 @@
+--- FAIL: TestRecoverySupportsHistoryBeyondRetainedBodyCapacity (3.26s)
+    recovery_history_test.go:39: valid accumulated history prevented recovery: CAPACITY_EXCEEDED
+FAIL
+FAIL	lerna/adapters/sqlitememory	3.281s
+FAIL

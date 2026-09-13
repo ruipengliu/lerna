@@ -1,0 +1,5 @@
+--- FAIL: TestActionHostAutomaticallyCleansDeletedArtifacts (26.24s)
+    personalized_invalidation_test.go:166: derived cleanup not confirmed: &{Event:{Ref:{Namespace:purchase_order Collection:personal Key:record-choice} Kind:deleted Revision:2 Position:2} Authority:committed Local:[{Name:unregistered State:not_covered Position:0}] Replicas:[{Name:unregistered State:not_covered Position:0}] Derived:[{Name:artifacts State:pending Position:0}]}
+FAIL
+FAIL	lerna/profiles/catalogcheck	26.274s
+FAIL

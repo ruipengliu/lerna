@@ -1,0 +1,3 @@
+lerna/adapters/extractionauth: no non-test Go files in /home/dev/proj/lerna/adapters/extractionauth
+FAIL	lerna/adapters/extractionauth [build failed]
+FAIL

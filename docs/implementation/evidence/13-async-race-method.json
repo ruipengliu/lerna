@@ -1,0 +1,8 @@
+{
+  "reproduction_command": "go test -race ./profiles/asynccheck -run '^TestCompletionBeforeCancelUsesTargetTime$' -count=30",
+  "reproduction": "failed; same symptom as initial full verification",
+  "fixed_command": "go test -race ./profiles/asynccheck -run '^TestCompletionBeforeCancelUsesTargetTime$' -count=60",
+  "fixed": "passed",
+  "cause": "Cancellation completion notification preceded release of the single execution slot; immediate reconciliation could observe the occupied slot.",
+  "fix": "Release the slot before delivering completion; preserve the known response when its timeout and completion notifications race."
+}

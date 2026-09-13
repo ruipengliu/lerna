@@ -1,0 +1,8 @@
+--- FAIL: TestDeletedMemoryBlocksAnswerPublication (10.12s)
+    --- FAIL: TestDeletedMemoryBlocksAnswerPublication/model (3.77s)
+        personalized_invalidation_test.go:33: PERMISSION_DENIED
+    --- FAIL: TestDeletedMemoryBlocksAnswerPublication/publication (6.35s)
+        personalized_invalidation_test.go:33: PERMISSION_DENIED
+FAIL
+FAIL	lerna/profiles/answer	10.154s
+FAIL

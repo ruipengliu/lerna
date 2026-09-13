@@ -1,0 +1,10 @@
+{
+  "code_commit": "466c70f0dd7d614fae374990f36e95a61583df4b",
+  "command": "go test -race ./profiles/catalogcheck -run '^TestActionCheckpointDoesNotDuplicateSnapshotDigests$' -count=3 -timeout=5m -v",
+  "instrumentation": "Temporary stage timing/error/parent-context diagnostics in adapters/taskcontext/session.go; removed before make verify. No timeout or business rule changes.",
+  "exit_code": 0,
+  "cases_passed": 3,
+  "elapsed_seconds": 132.639,
+  "root_cause_confirmed": false,
+  "historical_failures_superseded": false
+}

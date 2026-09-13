@@ -1,0 +1,79 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "memory-deletion-v1",
+  "profile_version": "1",
+  "configuration": {
+    "cleanup": "bounded cleanup worker sweeps fixed admission-comparisons consumer; events applied before durable acknowledgment",
+    "data": "public synthetic preference; simulated trusted clock; no real model calls",
+    "entry": "Memory SDK DELETE, LOOKUP, DELETION_STATUS and recovered QUERY/GET over authenticated local Protobuf transport",
+    "limits": "30s case; 5s service calls; 16-event cleanup batches; 512 retained revisions plus tombstones; 512 disclosure bindings; 512 operations per proof page; no external services",
+    "recovery": "explicit private SQLite backup quarantine; current source and independently pinned Ed25519 authority, epoch, scope and minimum position; signed proof v2",
+    "storage": "real independent SQLite Memory and authorization stores, reopened after cleanup"
+  },
+  "method": "contractcheck -profile memory-deletion-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260912031940-f0a863834dcd+dirty",
+    "revision": "f0a863834dcd4c406bcafec22f4b829826bb72de",
+    "dirty": "true",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "This profile covers local deletion, original receipt minimization, read release races, admission-comparison cleanup and governed backup recovery; it is not full ticket 19 acceptance.",
+    "The local applied target means admission-comparisons only, not all local payloads. Replicas and derived/archive targets remain explicitly not_covered.",
+    "The backup case uses actual pre-deletion data and a live current source with independently pinned trust; restart is orderly. Process-crash recovery is tested separately and is not claimed by this profile."
+  ],
+  "results": [
+    {
+      "id": "sdk-delete-status-cleanup-reopen",
+      "evidence": "actual_sdk_authority_sqlite_consumer_and_reopen",
+      "required": true,
+      "input": "create/read/delete/replay/cleanup/reopen/status",
+      "expected": "authority=committed;admission-comparisons=applied@2;replicas=not_covered;derived=not_covered",
+      "actual": "authority=committed;admission-comparisons=applied@2;replicas=not_covered;derived=not_covered",
+      "status": "passed"
+    },
+    {
+      "id": "deletion-after-record-load",
+      "evidence": "actual_sdk_signed_read_and_delete_at_store_read_boundary",
+      "required": true,
+      "input": "original query bound; real record loaded; source deleted before release",
+      "expected": "old body denied; original query binding retained",
+      "actual": "old body denied; original query binding retained",
+      "status": "passed"
+    },
+    {
+      "id": "deletion-of-coverage-witness",
+      "evidence": "actual_sdk_signed_read_and_deleted_budget_witness",
+      "required": true,
+      "input": "zero body query; loaded budget witness deleted before disclosure",
+      "expected": "stale coverage denied; original query binding retained",
+      "actual": "stale coverage denied; original query binding retained",
+      "status": "passed"
+    },
+    {
+      "id": "sdk-backup-recovery-governance",
+      "evidence": "actual_pre_delete_backup_live_authority_proofs_sdk_residency_revocation_and_reopen",
+      "required": true,
+      "input": "copy real database; delete at current source; reconcile; query; enforce residency; reopen; revoke",
+      "expected": "backup=sanitized@3;retained=1;missing=0;runtime=quarantined;current-policy=enforced;backup-report=applied@3;other-targets=not_covered",
+      "actual": "backup=sanitized@3;retained=1;missing=0;runtime=quarantined;current-policy=enforced;backup-report=applied@3;other-targets=not_covered",
+      "status": "passed"
+    }
+  ]
+}

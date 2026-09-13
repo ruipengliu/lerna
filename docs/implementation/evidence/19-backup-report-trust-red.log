@@ -1,0 +1,5 @@
+--- FAIL: TestRestoreCleanupReportRequiresActualBoundCleanup (0.13s)
+    restore_report_test.go:61: changed trust reused prior completion: <nil>
+FAIL
+FAIL	lerna/adapters/sqlitememory	0.144s
+FAIL

@@ -1,0 +1,7 @@
+ok  	lerna/extraction	1.028s
+ok  	lerna/adapters/sqliteextraction	3.991s
+--- FAIL: TestExtractedPreferenceControlsIndependentTaskOutput (6.39s)
+    report_test.go:88: PERMISSION_DENIED
+FAIL
+FAIL	lerna/profiles/extractioncheck	67.594s
+FAIL

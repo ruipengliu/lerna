@@ -1,0 +1,4 @@
+ok  	lerna/memory	2.234s
+ok  	lerna/adapters/memoryauth	11.789s
+?   	lerna/adapters/memorylocal	[no test files]
+ok  	lerna/sdk	1.143s

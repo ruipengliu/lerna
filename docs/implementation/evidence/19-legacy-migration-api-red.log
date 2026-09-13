@@ -1,0 +1,5 @@
+# lerna/profiles/executioncheck [lerna/profiles/executioncheck.test]
+profiles/executioncheck/upgrade10_test.go:65:26: undefined: artifacts.LegacyUse
+profiles/executioncheck/upgrade10_test.go:73:26: reopened.content.MigrateLegacyUse undefined (type *artifacts.Service has no field or method MigrateLegacyUse)
+FAIL	lerna/profiles/executioncheck [build failed]
+FAIL

@@ -1,0 +1,103 @@
+package extractioncheck
+
+import (
+	"context"
+	"google.golang.org/protobuf/proto"
+	"lerna/adapters/executionlocal"
+	"lerna/adapters/memoryauth"
+	"lerna/authorization"
+	"lerna/extraction"
+	wire "lerna/gen/harness/v1"
+	"lerna/memory"
+	"lerna/schema"
+	"lerna/sdk"
+	"testing"
+	"time"
+)
+
+func TestCorrectedDerivedMemoryCanBeCleanedAfterSourceInvalidation(t *testing.T) {
+	ctx := context.Background()
+	h, err := fresh(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer h.destroy()
+	store, saver := bindProcessSave(t, h, "")
+	h.client = sdk.NewCapabilityClient(executionlocal.Bind(h.exec, "local"), "local")
+	r, grant, err := h.request(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = h.client.Invoke(ctx, r, grant); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = h.exec.Run(ctx, r.OperationID); err != nil {
+		t.Fatal(err)
+	}
+	if err = h.exec.Drain(ctx, 16); err != nil {
+		t.Fatal(err)
+	}
+	saved, err := saver.Inspect(ctx, r.OperationID)
+	if err != nil || saved.State != "committed" || saved.Receipt == nil {
+		t.Fatalf("save: %+v %v", saved, err)
+	}
+	intent, err := h.candidates.LookupSave(ctx, "local", "operator", r.OperationID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	snapshot, err := h.db.Load(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	scope := proto.Clone(snapshot.State.Rules[0].Scope).(*wire.AuthorizationScope)
+	scope.Actions = append(scope.Actions, "memory.correct")
+	for _, command := range []*wire.AuthorizationCommand{
+		{Change: &wire.AuthorizationCommand_ReplacePolicy{ReplacePolicy: &wire.ReplacePolicy{Rules: []*wire.PolicyRule{{Id: "correct-control", Scope: scope}}}}},
+		{Change: &wire.AuthorizationCommand_IssueGrant{IssueGrant: &wire.LocalGrant{Id: "correct-control", Subject: "operator", Scope: scope, Mode: "continuous"}}},
+	} {
+		snapshot, err = h.db.Load(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		command.ExpectedRevision = snapshot.State.Revision
+		op, e := h.operation(ctx)
+		if e != nil {
+			t.Fatal(e)
+		}
+		if _, e = h.auth.Execute(ctx, h.token, authorization.Mutation{Namespace: "local", OperationID: op, Command: command}); e != nil {
+			t.Fatal(e)
+		}
+	}
+	d := extraction.SavedSchema()
+	schemas, err := schema.New([]schema.Resource{d})
+	if err != nil {
+		t.Fatal(err)
+	}
+	policy, err := memoryauth.New(h.auth, h.source, []memoryauth.Collection{{Namespace: "local", Name: "personal", Resource: "root", PolicyRef: "local-extracted", Purpose: "task", Storage: []string{"local"}, Processing: []string{"local"}, Recipients: []string{"local"}, Schemas: map[string]string{d.Type: schema.Digest(d.Document)}}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	service, err := memory.New(store, policy, schemas, h.clock, memory.Config{Location: "local", Timeout: time.Second})
+	if err != nil {
+		t.Fatal(err)
+	}
+	b := memory.Binding{Token: h.token, Namespace: "local", Subject: "operator", Location: "local", Recipient: "local"}
+	correction := proto.Clone(intent.Request).(*wire.MemoryWrite)
+	correction.OperationId, err = h.operation(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	correction.ExpectedRevision = saved.Receipt.Revision
+	corrected, err := service.Correct(ctx, b, correction)
+	if err != nil || corrected.Revision != 2 {
+		t.Fatalf("real correction: %+v %v", corrected, err)
+	}
+	if n, e := h.candidates.InvalidateSource(ctx, extraction.SourceInvalidation{Namespace: "local", Kind: "note", Key: "one", ThroughRevision: 1}); e != nil || n != 1 {
+		t.Fatalf("source invalidation: %d %v", n, e)
+	}
+	cleaner := bindProcessCleanup(t, h, store, "")
+	result, err := cleaner.Clean(ctx, r.OperationID)
+	if err != nil || result.State != "committed" {
+		t.Fatalf("corrected derived content not cleaned: %+v %v", result, err)
+	}
+}

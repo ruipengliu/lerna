@@ -1,0 +1,37 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	1.024s
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/josegrant	1.020s
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	1.328s
+ok  	lerna/authorization	2.111s
+ok  	lerna/brain	1.028s
+?   	lerna/cmd/answercheck	[no test files]
+ok  	lerna/cmd/authctl	1.669s
+ok  	lerna/cmd/contractcheck	21.412s
+ok  	lerna/conformance	(cached)
+?   	lerna/contractfixture	[no test files]
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/profiles/answer	6.890s
+ok  	lerna/profiles/content	4.602s
+ok  	lerna/profiles/control	6.057s
+?   	lerna/profiles/durabletasks	[no test files]
+ok  	lerna/profiles/grants	3.573s
+?   	lerna/profiles/localauth	[no test files]
+ok  	lerna/profiles/sdkcontract	1.058s
+ok  	lerna/profiles/updates	11.105s
+ok  	lerna/profiles/worker	3.661s
+?   	lerna/protocol	[no test files]
+ok  	lerna/schema	1.033s
+ok  	lerna/sdk	1.143s
+ok  	lerna/tasks	6.473s

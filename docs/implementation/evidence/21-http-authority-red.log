@@ -1,0 +1,8 @@
+--- FAIL: TestHTTPFetchRechecksAuthorityBeforeRedirectAndRelease (0.16s)
+    --- FAIL: TestHTTPFetchRechecksAuthorityBeforeRedirectAndRelease/redirect (0.10s)
+        authorization_test.go:106: revoked source leaked: {RequestedURL:http://127.0.0.1:45257/start FinalURL:http://127.0.0.1:45257/final MediaType:text/plain SHA256:15cd2014503fe413647aca72edc87f90540d20d84edff37e4ad8855a64edb494 FetchedAt:2026-09-12 01:40:09.976377298 +0000 UTC HTTPStatus:200 Requests:2 Body:[109 117 115 116 32 110 111 116 32 114 101 108 101 97 115 101]} err=<nil> hits=2
+    --- FAIL: TestHTTPFetchRechecksAuthorityBeforeRedirectAndRelease/release (0.06s)
+        authorization_test.go:106: revoked source leaked: {RequestedURL:http://127.0.0.1:45765/start FinalURL:http://127.0.0.1:45765/start MediaType:text/plain SHA256:15cd2014503fe413647aca72edc87f90540d20d84edff37e4ad8855a64edb494 FetchedAt:2026-09-12 01:40:10.035918829 +0000 UTC HTTPStatus:200 Requests:1 Body:[109 117 115 116 32 110 111 116 32 114 101 108 101 97 115 101]} err=<nil> hits=1
+FAIL
+FAIL	lerna/adapters/httpfetch	0.166s
+FAIL

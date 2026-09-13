@@ -1,0 +1,7 @@
+--- FAIL: TestActionModelReceivesAuthorizedTaskInput (1.65s)
+    action_test.go:97: model could not use submitted input: {StateDirectory: Case:multistep State:WAITING StopReason:budget FinalState:draft Decisions:3 Operations:0 DirectorySize:1008 Corrections:2 FirstCorrect:false Ledger:1000 UsedRequests:0 UnknownRequests:3 UsedTokens:0 ReservedTokens:27648 Errors:[MODEL_UNAVAILABLE MODEL_UNAVAILABLE MODEL_UNAVAILABLE]} <nil>
+--- FAIL: TestUnnecessaryModelWaitIsNotFirstCorrect (0.90s)
+    action_test.go:101: unnecessary wait counted correct: {StateDirectory: Case:multistep State:WAITING StopReason:input FinalState:draft Decisions:1 Operations:0 DirectorySize:1008 Corrections:0 FirstCorrect:true Ledger:1000 UsedRequests:1 UnknownRequests:0 UsedTokens:140 ReservedTokens:0 Errors:[]} <nil>
+FAIL
+FAIL	lerna/profiles/catalogcheck	2.558s
+FAIL

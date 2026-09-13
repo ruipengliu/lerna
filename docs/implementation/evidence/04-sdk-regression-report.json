@@ -1,0 +1,361 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "sdk-contract-v1",
+  "profile_version": "1",
+  "configuration": {
+    "max_json_bytes": "1048576",
+    "max_json_depth": "64",
+    "max_message_bytes": "2097152",
+    "numeric_token_limit": "128 characters; exponent [-308,308]",
+    "protocol_major": "1",
+    "sample_schema_digest": "sha256:e18b4a956865bee8fc2ccdce22e062779e59e8a7fedca0f4c0e4a60170dd622b",
+    "schema_dialect": "https://json-schema.org/draft/2020-12/schema",
+    "toolchain_target": "go1.26.1; protoc 36.1; protoc-gen-go v1.36.11",
+    "topology": "single process; fresh in-memory contract fixture per case"
+  },
+  "method": "contractcheck -profile sdk-contract-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260910052352-eff59e3ae73c",
+    "revision": "eff59e3ae73cca40074e3dd043c7ee3816750cdb",
+    "dirty": "false",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "Contract fixture evidence only; no durable acceptance, authorization, task execution or external effects.",
+    "No real gRPC/WebSocket, device, model, MCP/A2A or multi-language interop validation.",
+    "Generation and compilation evidence is recorded by scripts/verify.sh separately; this runner does not claim to execute either.",
+    "Only the sample protocol subset and registered dynamic schema are supported; this is not full M1 qualification."
+  ],
+  "results": [
+    {
+      "id": "sdk-roundtrip",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "sample task through SDK and binary Protobuf transport",
+      "expected": "correlated fixture task",
+      "actual": "correlated fixture task",
+      "status": "passed"
+    },
+    {
+      "id": "same-message",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "same-message after accepted sample request",
+      "expected": "identity semantics preserved",
+      "actual": "identity semantics preserved",
+      "status": "passed"
+    },
+    {
+      "id": "same-operation-new-message",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "same-operation-new-message after accepted sample request",
+      "expected": "identity semantics preserved",
+      "actual": "identity semantics preserved",
+      "status": "passed"
+    },
+    {
+      "id": "new-operation",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "new-operation after accepted sample request",
+      "expected": "identity semantics preserved",
+      "actual": "identity semantics preserved",
+      "status": "passed"
+    },
+    {
+      "id": "intent-conflict",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "intent-conflict after accepted sample request",
+      "expected": "identity semantics preserved",
+      "actual": "identity semantics preserved",
+      "status": "passed"
+    },
+    {
+      "id": "message-conflict",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "message-conflict after accepted sample request",
+      "expected": "identity semantics preserved",
+      "actual": "identity semantics preserved",
+      "status": "passed"
+    },
+    {
+      "id": "semantic-json-equivalence",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "semantic-json-equivalence after accepted sample request",
+      "expected": "identity semantics preserved",
+      "actual": "identity semantics preserved",
+      "status": "passed"
+    },
+    {
+      "id": "namespace-isolation",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "namespace-isolation after accepted sample request",
+      "expected": "identity semantics preserved",
+      "actual": "identity semantics preserved",
+      "status": "passed"
+    },
+    {
+      "id": "valid-null-and-large",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":1,\\\"large\\\":\\\"9007199254740993\\\",\\\"note\\\":null,\\\"when\\\":\\\"2026-09-10T08:00:00Z\\\"}\"",
+      "expected": "accepted",
+      "actual": "accepted",
+      "status": "passed"
+    },
+    {
+      "id": "valid-missing-optional",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":0}\"",
+      "expected": "accepted",
+      "actual": "accepted",
+      "status": "passed"
+    },
+    {
+      "id": "duplicate-key",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":1,\\\"count\\\":2}\"",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "escaped-duplicate-key",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":1,\\\"co\\\\u0075nt\\\":2}\"",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "nested-duplicate-key",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":1,\\\"note\\\":{\\\"a\\\":1,\\\"a\\\":2}}\"",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "missing-required",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{}\"",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "null-required",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":null}\"",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "unsafe-integer",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":9007199254740992}\"",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "unrounded-fraction",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":1.00000000000000001}\"",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "large-as-number",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":1,\\\"large\\\":9007199254740993}\"",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "invalid-time",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":1,\\\"when\\\":\\\"2026-02-30T08:00:00Z\\\"}\"",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "missing-timezone",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":1,\\\"when\\\":\\\"2026-09-10T08:00:00\\\"}\"",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "trailing-json",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":1} {}\"",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "invalid-utf8",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "JSON bytes: \"{\\\"count\\\":1,\\\"note\\\":\\\"\\xff\\\"}\"",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-type",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "sample payload with mismatched type",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-schema-id",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "sample payload with mismatched schema-id",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-schema-version",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "sample payload with mismatched schema-version",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-schema-digest",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "sample payload with mismatched schema-digest",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "unregistered-reference",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "schema referring to unregistered HTTPS resource",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "invalid-envelope-goal-absent",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "goal-absent",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "invalid-envelope-reply-to-present",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "reply-to-present",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "invalid-envelope-unknown-body",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "unknown-body",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "invalid-envelope-version",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "version",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "invalid-envelope-oversized",
+      "evidence": "contract_fixture",
+      "required": true,
+      "input": "oversized",
+      "expected": "rejected",
+      "actual": "rejected",
+      "status": "passed"
+    },
+    {
+      "id": "real-task-runtime",
+      "evidence": "real_runtime",
+      "required": false,
+      "input": "requires subsequent implementation tickets",
+      "expected": "real task evidence",
+      "actual": "",
+      "status": "not_implemented"
+    },
+    {
+      "id": "cross-process-interop",
+      "evidence": "real_transport",
+      "required": false,
+      "input": "gRPC/WebSocket bindings",
+      "expected": "equivalent observed behavior",
+      "actual": "",
+      "status": "not_run"
+    },
+    {
+      "id": "other-protocol-major",
+      "evidence": "compatibility",
+      "required": false,
+      "input": "unimplemented protocol versions",
+      "expected": "separate version profile",
+      "actual": "",
+      "status": "unsupported"
+    }
+  ]
+}

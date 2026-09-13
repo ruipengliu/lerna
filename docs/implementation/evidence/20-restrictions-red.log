@@ -1,0 +1,9 @@
+# lerna/extraction_test [lerna/extraction.test]
+extraction/restrictions_test.go:11:18: undefined: extraction.Restrictions
+extraction/restrictions_test.go:12:18: undefined: extraction.Restrictions
+extraction/restrictions_test.go:13:25: undefined: extraction.IntersectRestrictions
+extraction/restrictions_test.go:13:65: undefined: extraction.Restrictions
+extraction/restrictions_test.go:25:25: undefined: extraction.IntersectRestrictions
+extraction/restrictions_test.go:25:65: undefined: extraction.Restrictions
+FAIL	lerna/extraction [build failed]
+FAIL

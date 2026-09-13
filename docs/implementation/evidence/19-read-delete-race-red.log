@@ -1,0 +1,5 @@
+--- FAIL: TestDeletionAfterRecordLoadBlocksOriginalQuery (0.28s)
+    deletion_read_test.go:10: deleted body escaped original query: <nil>
+FAIL
+FAIL	lerna/profiles/memorycheck	0.292s
+FAIL

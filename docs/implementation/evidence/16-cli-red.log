@@ -1,0 +1,5 @@
+--- FAIL: TestManagementStoresAndRewrapsWithoutSecretOutput (0.10s)
+    main_test.go:73: CREDENTIAL_INVALID
+FAIL
+FAIL	lerna/cmd/credentialctl	0.101s
+FAIL

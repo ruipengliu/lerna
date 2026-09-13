@@ -1,0 +1,14 @@
+=== RUN   TestMemoryProcessRecovery
+=== RUN   TestMemoryProcessRecovery/before-commit
+=== RUN   TestMemoryProcessRecovery/after-commit
+=== RUN   TestMemoryProcessRecovery/after-reserve
+=== RUN   TestMemoryProcessRecovery/before-binding
+=== RUN   TestMemoryProcessRecovery/after-binding
+--- PASS: TestMemoryProcessRecovery (2.79s)
+    --- PASS: TestMemoryProcessRecovery/before-commit (0.55s)
+    --- PASS: TestMemoryProcessRecovery/after-commit (0.55s)
+    --- PASS: TestMemoryProcessRecovery/after-reserve (0.57s)
+    --- PASS: TestMemoryProcessRecovery/before-binding (0.59s)
+    --- PASS: TestMemoryProcessRecovery/after-binding (0.53s)
+PASS
+ok  	lerna/profiles/memorycheck	3.822s

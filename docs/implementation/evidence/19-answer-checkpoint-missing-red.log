@@ -1,0 +1,5 @@
+--- FAIL: TestAnswerRecoveryRequiresOriginalCheckpointIntegrity (9.10s)
+    personalized_checkpoint_test.go:95: recovery invented missing checkpoint integrity
+FAIL
+FAIL	lerna/profiles/answer	9.143s
+FAIL

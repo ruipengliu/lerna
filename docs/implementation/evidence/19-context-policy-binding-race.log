@@ -1,0 +1,5 @@
+ok  	lerna/contextassembly	2.618s
+ok  	lerna/adapters/contextmemory	1.030s
+?   	lerna/adapters/contextpolicy	[no test files]
+ok  	lerna/adapters/memoryauth	11.654s
+ok  	lerna/authorization	3.715s

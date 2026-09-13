@@ -1,0 +1,4 @@
+# lerna/profiles/memorycheck
+profiles/memorycheck/cleanup_worker_test.go:6:2: package lerna/cleanup is not in std (/usr/local/go/src/lerna/cleanup)
+FAIL	lerna/profiles/memorycheck [setup failed]
+FAIL

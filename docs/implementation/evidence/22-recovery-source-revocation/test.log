@@ -1,0 +1,27 @@
+=== RUN   TestAnswerInheritsAcquiredSourceAbsentFromOriginalInput
+--- PASS: TestAnswerInheritsAcquiredSourceAbsentFromOriginalInput (0.73s)
+=== RUN   TestEvidenceBrainPublishesAndRecoversGovernedAnswer
+=== RUN   TestEvidenceBrainPublishesAndRecoversGovernedAnswer/recover
+=== RUN   TestEvidenceBrainPublishesAndRecoversGovernedAnswer/revoke
+--- PASS: TestEvidenceBrainPublishesAndRecoversGovernedAnswer (7.54s)
+    --- PASS: TestEvidenceBrainPublishesAndRecoversGovernedAnswer/recover (4.82s)
+    --- PASS: TestEvidenceBrainPublishesAndRecoversGovernedAnswer/revoke (2.72s)
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/response
+    evidence_process_test.go:230: same_task=false revoked_then_restored=false window=response child_exit=76 http=1 state=RUNNING model_used=0 model_reserved=1 tokens_reserved=2560
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/content
+    evidence_process_test.go:230: same_task=false revoked_then_restored=false window=content child_exit=76 http=1 state=COMPLETED model_used=0 model_reserved=1 tokens_reserved=2560
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/action_response
+    evidence_process_test.go:230: same_task=true revoked_then_restored=false window=response child_exit=76 http=1 state=RUNNING model_used=1 model_reserved=1 tokens_reserved=2560
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/action_content
+    evidence_process_test.go:230: same_task=true revoked_then_restored=false window=content child_exit=76 http=1 state=COMPLETED model_used=1 model_reserved=1 tokens_reserved=2560
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/action_content_revoked
+    evidence_process_test.go:230: same_task=true revoked_then_restored=true window=content child_exit=76 http=1 state=COMPLETED model_used=1 model_reserved=1 tokens_reserved=2560
+--- PASS: TestEvidenceAnswerRecoversAcrossProcessExit (7.83s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/response (0.84s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/content (1.19s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/action_response (1.65s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/action_content (2.06s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/action_content_revoked (2.08s)
+PASS
+ok  	lerna/profiles/fetchcheck	17.140s

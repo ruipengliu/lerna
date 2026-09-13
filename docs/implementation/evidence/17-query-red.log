@@ -1,0 +1,6 @@
+# lerna/memory_test [lerna/memory.test]
+memory/read_test.go:13:74: undefined: memory.ReadIntent
+memory/read_test.go:19:77: undefined: memory.ReadIntent
+memory/read_test.go:29:22: undefined: memory.NewReader
+FAIL	lerna/memory [build failed]
+FAIL

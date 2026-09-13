@@ -1,0 +1,5 @@
+--- FAIL: TestAnswerHostErasesDeletedMemoryAdmissionComparison (3.46s)
+    personalized_cleanup_test.go:234: OUTCOME_UNKNOWN
+FAIL
+FAIL	lerna/profiles/answer	3.490s
+FAIL

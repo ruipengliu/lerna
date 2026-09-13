@@ -1,0 +1,251 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "long-term-memory-v1",
+  "profile_version": "1",
+  "configuration": {
+    "authorization": "current Harness policy + Grant; P-256 JWS single-use reads; fixed trusted collection and source policy",
+    "clock": "fixed simulated trusted clock; no user data, external model or network provider",
+    "entry": "native Protobuf Memory SDK over in-process trusted Transport",
+    "limits": "512 revisions and disclosures; 16KiB document; 512-row snapshot; 32 results; 65536 encoded record bytes; 5s service calls; 10s child timeout",
+    "storage": "real independent SQLite authorization and memory stores, WAL/FULL; shared replaceable Store contract"
+  },
+  "method": "contractcheck -profile long-term-memory-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260911161531-7b32e5a8ab1e+dirty",
+    "revision": "7b32e5a8ab1ef7392f545b8382f588b7b9fdc123",
+    "dirty": "true",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "This profile proves the listed local reference behaviors, not semantic retrieval quality, personalization effects, remote synchronization or deletion propagation.",
+    "Peer metadata is simulated trusted transport input; this profile does not prove TLS enrollment or network protocol bindings.",
+    "Source rules are trusted local configuration, not live external source discovery; source-unavailability and SDK-malformation checks also have separate package tests.",
+    "Shared Store checks alone do not prove durability; five separate real process exits exercise authorization, commit and disclosure recovery.",
+    "Restoring an old whole authority/database requires trusted quarantine; this profile does not automatically prove snapshot freshness."
+  ],
+  "results": [
+    {
+      "id": "fact",
+      "evidence": "real_sdk_sqlite_and_signed_authority",
+      "required": true,
+      "input": "fact",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "preference",
+      "evidence": "real_sdk_sqlite_and_signed_authority",
+      "required": true,
+      "input": "preference",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "inference",
+      "evidence": "real_sdk_sqlite_and_signed_authority",
+      "required": true,
+      "input": "inference",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "experience",
+      "evidence": "real_sdk_sqlite_and_signed_authority",
+      "required": true,
+      "input": "experience",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "schema-rejection",
+      "evidence": "real_sdk_sqlite_and_signed_authority",
+      "required": true,
+      "input": "schema-rejection",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "residency",
+      "evidence": "real_sdk_sqlite_and_signed_authority",
+      "required": true,
+      "input": "residency",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "revocation",
+      "evidence": "real_sdk_sqlite_and_signed_authority",
+      "required": true,
+      "input": "revocation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "empty-binding",
+      "evidence": "real_sdk_sqlite_and_signed_authority",
+      "required": true,
+      "input": "empty-binding",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "budget",
+      "evidence": "real_sdk_sqlite_and_signed_authority",
+      "required": true,
+      "input": "budget",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "exact-history",
+      "evidence": "real_sdk_sqlite_and_signed_authority",
+      "required": true,
+      "input": "exact-history",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "concurrent-read",
+      "evidence": "real_sdk_sqlite_and_signed_authority",
+      "required": true,
+      "input": "concurrent-read",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "invalid-operation",
+      "evidence": "real_sdk_sqlite_and_signed_authority",
+      "required": true,
+      "input": "invalid-operation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "store-atomic-history",
+      "evidence": "shared_store_contract_on_sqlite",
+      "required": true,
+      "input": "store-atomic-history",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "store-live-revisions",
+      "evidence": "shared_store_contract_on_sqlite",
+      "required": true,
+      "input": "store-live-revisions",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "store-original-identity",
+      "evidence": "shared_store_contract_on_sqlite",
+      "required": true,
+      "input": "store-original-identity",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "store-concurrent-correction",
+      "evidence": "shared_store_contract_on_sqlite",
+      "required": true,
+      "input": "store-concurrent-correction",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "store-fixed-disclosure",
+      "evidence": "shared_store_contract_on_sqlite",
+      "required": true,
+      "input": "store-fixed-disclosure",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "store-cancelled-commit",
+      "evidence": "shared_store_contract_on_sqlite",
+      "required": true,
+      "input": "store-cancelled-commit",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "process-before-commit",
+      "evidence": "actual_child_exit_and_reopened_databases",
+      "required": true,
+      "input": "process-before-commit",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "process-after-commit",
+      "evidence": "actual_child_exit_and_reopened_databases",
+      "required": true,
+      "input": "process-after-commit",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "process-after-reserve",
+      "evidence": "actual_child_exit_and_reopened_databases",
+      "required": true,
+      "input": "process-after-reserve",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "process-before-binding",
+      "evidence": "actual_child_exit_and_reopened_databases",
+      "required": true,
+      "input": "process-before-binding",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "process-after-binding",
+      "evidence": "actual_child_exit_and_reopened_databases",
+      "required": true,
+      "input": "process-after-binding",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    }
+  ]
+}

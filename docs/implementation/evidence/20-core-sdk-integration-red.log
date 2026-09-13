@@ -1,0 +1,5 @@
+--- FAIL: TestCoreAndCapabilitySDKExecuteLocalExtraction (0.22s)
+    task_test.go:14: extraction task state=WAITING effect=UNKNOWN result=UNKNOWN
+FAIL
+FAIL	lerna/profiles/extractioncheck	0.229s
+FAIL

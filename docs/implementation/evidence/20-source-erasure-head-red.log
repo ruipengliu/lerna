@@ -1,0 +1,5 @@
+--- FAIL: TestErasingCurrentRevisionDoesNotExposeAnOlderIndependentBody (0.07s)
+    source_erasure_test.go:99: stale delete used remaining body as head: <nil>
+FAIL
+FAIL	lerna/adapters/sqlitememory	0.075s
+FAIL

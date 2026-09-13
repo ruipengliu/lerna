@@ -1,0 +1,28 @@
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/response
+    evidence_process_test.go:283: same_task=false revoked_then_restored=false window=response child_exit=76 http=1 state=RUNNING model_used=0 model_reserved=1 tokens_reserved=2560
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/content
+    evidence_process_test.go:283: same_task=false revoked_then_restored=false window=content child_exit=76 http=1 state=COMPLETED model_used=0 model_reserved=1 tokens_reserved=2560
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/action_response
+    evidence_process_test.go:281: queries_before_child=7 before_recovery=13 after_recovery=14 limit=32
+    evidence_process_test.go:283: same_task=true revoked_then_restored=false window=response child_exit=76 http=1 state=RUNNING model_used=1 model_reserved=1 tokens_reserved=2560
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/action_content
+    evidence_process_test.go:281: queries_before_child=7 before_recovery=16 after_recovery=27 limit=32
+    evidence_process_test.go:283: same_task=true revoked_then_restored=false window=content child_exit=76 http=1 state=COMPLETED model_used=1 model_reserved=1 tokens_reserved=2560
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/action_content_revoked
+    evidence_process_test.go:281: queries_before_child=7 before_recovery=16 after_recovery=28 limit=32
+    evidence_process_test.go:283: same_task=true revoked_then_restored=true window=content child_exit=76 http=1 state=COMPLETED model_used=1 model_reserved=1 tokens_reserved=2560
+=== RUN   TestEvidenceAnswerRecoversAcrossProcessExit/action_content_budget_exhausted
+    evidence_process_test.go:281: queries_before_child=7 before_recovery=32 after_recovery=32 limit=32
+    evidence_process_test.go:283: same_task=true revoked_then_restored=false window=content child_exit=76 http=1 state=RUNNING model_used=1 model_reserved=1 tokens_reserved=2560
+--- PASS: TestEvidenceAnswerRecoversAcrossProcessExit (11.08s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/response (0.90s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/content (1.29s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/action_response (1.78s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/action_content (2.23s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/action_content_revoked (2.47s)
+    --- PASS: TestEvidenceAnswerRecoversAcrossProcessExit/action_content_budget_exhausted (2.41s)
+=== RUN   TestResearchContentQueriesRetainFailedReadsAndReopenBudget
+--- PASS: TestResearchContentQueriesRetainFailedReadsAndReopenBudget (2.11s)
+PASS
+ok  	lerna/profiles/fetchcheck	14.228s

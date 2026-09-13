@@ -1,0 +1,7 @@
+ok  	lerna/adapters/httpfetch	3.761s
+--- FAIL: TestCoreAndSDKAcquireActualHTTPEvidence (0.33s)
+    task_test.go:14: PERMISSION_DENIED
+FAIL
+FAIL	lerna/profiles/fetchcheck	0.361s
+ok  	lerna/adapters/sqlitefetch	1.554s
+FAIL

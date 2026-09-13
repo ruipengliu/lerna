@@ -1,0 +1,106 @@
+sh scripts/verify.sh
+all modules verified
+ok  	lerna/adapters/arkmodel	(cached)
+?   	lerna/adapters/authlocal	[no test files]
+?   	lerna/adapters/catalogauth	[no test files]
+?   	lerna/adapters/cataloglocal	[no test files]
+ok  	lerna/adapters/checkpointfile	(cached)
+?   	lerna/adapters/contentlocal	[no test files]
+?   	lerna/adapters/contentpolicy	[no test files]
+ok  	lerna/adapters/contextmemory	(cached)
+?   	lerna/adapters/contextpolicy	[no test files]
+?   	lerna/adapters/credentialauth	[no test files]
+ok  	lerna/adapters/credentialbackups	(cached)
+?   	lerna/adapters/credentialexecution	[no test files]
+ok  	lerna/adapters/credentialhttp	(cached)
+?   	lerna/adapters/executioncontent	[no test files]
+?   	lerna/adapters/executionlocal	[no test files]
+?   	lerna/adapters/executionrouter	[no test files]
+ok  	lerna/adapters/extractionauth	(cached)
+?   	lerna/adapters/extractioncleanup	[no test files]
+ok  	lerna/adapters/extractionexecution	(cached)
+?   	lerna/adapters/extractioninputs	[no test files]
+ok  	lerna/adapters/extractionsourceguard	(cached)
+?   	lerna/adapters/fetchauth	[no test files]
+?   	lerna/adapters/fetchcontent	[no test files]
+?   	lerna/adapters/fetchcontext	[no test files]
+?   	lerna/adapters/fetchexecution	[no test files]
+?   	lerna/adapters/fetchoutput	[no test files]
+?   	lerna/adapters/fetchtask	[no test files]
+?   	lerna/adapters/filecontent	[no test files]
+ok  	lerna/adapters/filekeys	(cached)
+ok  	lerna/adapters/httpfetch	3.632s
+ok  	lerna/adapters/josegrant	(cached)
+ok  	lerna/adapters/localextraction	(cached)
+ok  	lerna/adapters/localextractionsource	(cached)
+ok  	lerna/adapters/memoryauth	11.438s
+ok  	lerna/adapters/memorycleanup	(cached)
+?   	lerna/adapters/memorylocal	[no test files]
+ok  	lerna/adapters/recoveryproof	(cached)
+?   	lerna/adapters/replayfetch	[no test files]
+?   	lerna/adapters/simapi	[no test files]
+?   	lerna/adapters/simjob	[no test files]
+ok  	lerna/adapters/simresource	(cached)
+ok  	lerna/adapters/simworkflow	(cached)
+?   	lerna/adapters/sqliteauth	[no test files]
+?   	lerna/adapters/sqlitecatalog	[no test files]
+ok  	lerna/adapters/sqlitecontext	5.500s
+ok  	lerna/adapters/sqlitecredentials	(cached)
+ok  	lerna/adapters/sqliteextraction	(cached)
+ok  	lerna/adapters/sqlitefetch	1.519s
+ok  	lerna/adapters/sqlitememory	(cached)
+ok  	lerna/adapters/taskcontext	1.106s
+?   	lerna/adapters/tasklocal	[no test files]
+?   	lerna/answers	[no test files]
+ok  	lerna/artifacts	(cached)
+ok  	lerna/authorization	3.156s
+ok  	lerna/brain	(cached)
+ok  	lerna/catalog	(cached)
+ok  	lerna/cleanup	(cached)
+?   	lerna/cmd/answercheck	[no test files]
+?   	lerna/cmd/apicheck	[no test files]
+ok  	lerna/cmd/authctl	(cached)
+?   	lerna/cmd/contextcheck	[no test files]
+ok  	lerna/cmd/contractcheck	(cached)
+ok  	lerna/cmd/credentialctl	(cached)
+?   	lerna/cmd/extractioncheck	[no test files]
+?   	lerna/cmd/fetchcheck	[no test files]
+ok  	lerna/conformance	(cached)
+ok  	lerna/contextassembly	2.731s
+?   	lerna/contractfixture	[no test files]
+ok  	lerna/credentials	(cached)
+?   	lerna/examples/sdk	[no test files]
+?   	lerna/execution	[no test files]
+ok  	lerna/extraction	(cached)
+?   	lerna/fetch	[no test files]
+?   	lerna/gen/harness/v1	[no test files]
+?   	lerna/internal/catalogwire	[no test files]
+?   	lerna/internal/executionwire	[no test files]
+?   	lerna/internal/jsonvalue	[no test files]
+?   	lerna/internal/memorywire	[no test files]
+?   	lerna/internal/randomid	[no test files]
+?   	lerna/internal/taskwire	[no test files]
+ok  	lerna/memory	(cached)
+?   	lerna/memory/storecontract	[no test files]
+ok  	lerna/profiles/answer	219.947s
+ok  	lerna/profiles/asynccheck	13.290s
+ok  	lerna/profiles/catalogcheck	1982.279s
+ok  	lerna/profiles/content	(cached)
+?   	lerna/profiles/contextcheck	[no test files]
+ok  	lerna/profiles/control	5.420s
+ok  	lerna/profiles/credentialcheck	14.338s
+?   	lerna/profiles/durabletasks	[no test files]
+ok  	lerna/profiles/executioncheck	18.425s
+ok  	lerna/profiles/extractioncheck	81.128s
+ok  	lerna/profiles/fetchcheck	28.276s
+ok  	lerna/profiles/grants	(cached)
+?   	lerna/profiles/localauth	[no test files]
+ok  	lerna/profiles/memorycheck	(cached)
+ok  	lerna/profiles/sdkcontract	(cached)
+ok  	lerna/profiles/takeover	14.451s
+ok  	lerna/profiles/updates	10.338s
+ok  	lerna/profiles/worker	3.500s
+?   	lerna/protocol	[no test files]
+ok  	lerna/schema	(cached)
+ok  	lerna/sdk	(cached)
+ok  	lerna/tasks	8.810s

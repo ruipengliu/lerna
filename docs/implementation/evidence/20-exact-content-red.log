@@ -1,0 +1,5 @@
+--- FAIL: TestExactMemoryErasureCleansOnlyMatchingArtifactRevision (0.11s)
+    exact_invalidation_test.go:75: exact artifact cleanup: false UNAVAILABLE
+FAIL
+FAIL	lerna/artifacts	0.116s
+FAIL

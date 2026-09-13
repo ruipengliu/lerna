@@ -1,0 +1,10 @@
+--- FAIL: TestCorePreservesFailedAcquisitionFacts (2.61s)
+    --- FAIL: TestCorePreservesFailedAcquisitionFacts/403 (0.91s)
+        failure_test.go:17: SDK lost failure facts reference
+    --- FAIL: TestCorePreservesFailedAcquisitionFacts/404 (0.97s)
+        failure_test.go:17: SDK lost failure facts reference
+    --- FAIL: TestCorePreservesFailedAcquisitionFacts/410 (0.73s)
+        failure_test.go:17: SDK lost failure facts reference
+FAIL
+FAIL	lerna/profiles/fetchcheck	2.624s
+FAIL

@@ -1,0 +1,10 @@
+# lerna/memory_test [lerna/memory.test]
+memory/service_test.go:22:57: undefined: memory.Binding
+memory/service_test.go:24:17: undefined: memory.Denied
+memory/service_test.go:28:37: undefined: memory.Service
+memory/service_test.go:28:88: undefined: memory.Binding
+memory/service_test.go:41:23: undefined: memory.New
+memory/service_test.go:41:72: undefined: memory.Config
+memory/service_test.go:46:40: undefined: memory.Binding
+FAIL	lerna/memory [build failed]
+FAIL

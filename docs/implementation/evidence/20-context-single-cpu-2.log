@@ -1,0 +1,7 @@
+=== RUN   TestExtractedPreferenceControlsIndependentTaskOutput
+    report_test.go:88: PERMISSION_DENIED
+--- FAIL: TestExtractedPreferenceControlsIndependentTaskOutput (9.68s)
+=== RUN   TestExtractedPreferenceControlsIndependentTaskOutput
+    report_test.go:88: PERMISSION_DENIED
+--- FAIL: TestExtractedPreferenceControlsIndependentTaskOutput (9.54s)
+FAIL

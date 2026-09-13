@@ -1,0 +1,24 @@
+package main
+
+import (
+ "encoding/json"
+ "fmt"
+ "lerna/profiles/searchcheck"
+ "os"
+ "path/filepath"
+ "reflect"
+)
+
+// Run at repository root. Rechecks saved judgments, never generates or grades.
+func main() {
+ for _, id := range []string{"answerable", "conflicting", "insufficient", "fetch_failed"} {
+  raw, err := os.ReadFile(filepath.Join("docs/implementation/evidence/22-frozen-snapshots", id+".json")); must(err)
+  var source struct { Record struct { Answer, Input json.RawMessage } }; must(json.Unmarshal(raw, &source))
+  raw, err = os.ReadFile(filepath.Join("docs/implementation/evidence/22-semantic-review", id+".json")); must(err)
+  var saved struct { Review searchcheck.SemanticReview; Summary searchcheck.SemanticSummary }; must(json.Unmarshal(raw, &saved))
+  got, err := searchcheck.SummarizeSemanticReview(source.Record.Answer, source.Record.Input, saved.Review); must(err)
+  if !reflect.DeepEqual(got, saved.Summary) { panic("summary changed") }
+  fmt.Printf("%s: support=%d/%d coverage=%d/%d complete=%v failed=%v\n", id, got.CitationSupport.Numerator, got.CitationSupport.Denominator, got.Coverage.Coverage.Numerator, got.Coverage.Coverage.Denominator, got.ReviewComplete, got.FailedChecks)
+ }
+}
+func must(err error) { if err != nil { panic(err) } }

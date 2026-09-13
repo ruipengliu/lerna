@@ -1,0 +1,10 @@
+--- FAIL: TestSupportedExplicitPreferences (0.00s)
+    --- FAIL: TestSupportedExplicitPreferences/detailed (0.00s)
+        rules_test.go:50: candidate: {Candidates:[] Reason:unsupported}
+    --- FAIL: TestSupportedExplicitPreferences/zh (0.00s)
+        rules_test.go:50: candidate: {Candidates:[] Reason:unsupported}
+    --- FAIL: TestSupportedExplicitPreferences/en (0.00s)
+        rules_test.go:50: candidate: {Candidates:[] Reason:unsupported}
+FAIL
+FAIL	lerna/adapters/localextraction	0.003s
+FAIL

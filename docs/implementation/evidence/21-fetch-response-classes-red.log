@@ -1,0 +1,4 @@
+# lerna/adapters/httpfetch_test [lerna/adapters/httpfetch.test]
+adapters/httpfetch/response_test.go:22:49: undefined: fetch.Expired
+FAIL	lerna/adapters/httpfetch [build failed]
+FAIL

@@ -1,0 +1,10 @@
+{
+  "version": "search-small-expectations-v1",
+  "not_model_input": true,
+  "cases": [
+    {"id":"answerable","status":"answerable","required_facts":[{"id":"opening","meaning":"Northbank opened on 14 May 1998","sources":["northbank-record"],"supporting_quote":"opened on 14 May 1998"},{"id":"length","meaning":"The original bridge is 84 metres long","sources":["northbank-record"],"supporting_quote":"Its length is 84 metres"}],"required_scope":"Original bridge as described by the 2026-01 record, with actual acquisition time traceable","forbidden":["Different opening date or length","Treating the index snippet as page evidence"]},
+    {"id":"insufficient","status":"insufficient","required_facts":[],"required_disposition":"State that the retrieved record does not establish construction cost; do not invent a cost or conclude that no cost exists","required_scope":"Limitation of the retrieved record, not a universal absence claim","forbidden":["Any asserted construction amount","Presenting the opening year as an answer to the cost question"]},
+    {"id":"conflicting","status":"conflicting","required_facts":[{"id":"register-year","meaning":"The register claims 2001","sources":["stoneford-register"],"supporting_quote":"opened in 2001"},{"id":"archive-year","meaning":"The archive claims 2003","sources":["stoneford-archive"],"supporting_quote":"opened in 2003"}],"required_disposition":"Explain the unresolved conflict and preserve both source attributions","required_scope":"Different editions do not establish which opening year is correct","forbidden":["Choosing 2003 merely because its source is newer","Inventing inauguration versus public-access reconciliation"]},
+    {"id":"fetch_failed","status":"fetch_failed","required_facts":[],"required_disposition":"Report that the candidate page was denied and the load limit remains unverified","required_scope":"The search index was observed but page contents were not acquired","forbidden":["Assert 12 tonnes as established","Invent page text or acquisition time for the denied page"]}
+  ]
+}

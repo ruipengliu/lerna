@@ -1,0 +1,142 @@
+{
+  "loopback-answerable": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 2,
+        "Denominator": 2
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  },
+  "loopback-conflicting": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 2,
+        "Denominator": 2
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  },
+  "loopback-fetch_failed": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 0,
+        "Denominator": 0
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 0,
+      "Denominator": 0
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [
+      "scope"
+    ],
+    "ReviewComplete": true
+  },
+  "loopback-insufficient": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 0,
+        "Denominator": 0
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  },
+  "replay-answerable": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 2,
+        "Denominator": 2
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  },
+  "replay-conflicting": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 2,
+        "Denominator": 2
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  },
+  "replay-fetch_failed": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 0,
+        "Denominator": 0
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 0,
+      "Denominator": 0
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [
+      "scope"
+    ],
+    "ReviewComplete": true
+  },
+  "replay-insufficient": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 0,
+        "Denominator": 0
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 2,
+      "Denominator": 2
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [],
+    "ReviewComplete": true
+  }
+}

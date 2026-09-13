@@ -1,0 +1,177 @@
+{
+  "ElapsedSeconds": 12.874902231,
+  "Error": "",
+  "ExternalRequests": 1,
+  "Record": {
+    "SearchConfig": {
+      "MaxResults": 2,
+      "TimeoutMS": 3000,
+      "MaxBytes": 65536,
+      "Recipient": "doubao-search-cn"
+    },
+    "AnswerModel": {
+      "Model": "doubao-seed-2-0-lite-260428",
+      "Location": "ark-cn-beijing",
+      "Version": "ark-chat-v3-20260910-citations-v8",
+      "Text": true,
+      "Structured": true,
+      "Streaming": false,
+      "HardBounds": true,
+      "ContextTokens": 262144,
+      "InputUpper": 229376
+    },
+    "Usage": {
+      "ExecutionWaitMillis": 5000,
+      "QueryLimit": 128,
+      "OutcomeQueries": 1,
+      "ContentQueries": 45,
+      "ReservedModelRequests": 0,
+      "ReservedModelTokens": 0,
+      "ModelRequests": 2,
+      "ModelTokens": 7513,
+      "ActionQueries": 49,
+      "NetworkCharged": 1,
+      "SearchRequests": 1,
+      "PageRequests": 0
+    },
+    "Input": {
+      "Goal": "What is Go, and is it statically typed? Answer using only the summaries returned by Doubao search. Cite the source title or URL. No original page requests are performed; do not claim to have read the original sites.",
+      "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":1,\"DeadlineUnix\":1789275970}",
+      "Blocks": [
+        {
+          "Ref": "content:local:75fc38ac50eb64a3beddde31157c4e206bb5f94bb187b5813df390b936b41a57:1#summary-0",
+          "Text": "{\"Body\":\"Documentation\\nThe Go programming language is an open source project to make programmers more productive.\\nGo is expressive, concise, clean, and efficient. Its concurrency mechanisms make it easy to write programs that get the most out of multicore and networked machines, while its novel type system enables flexible and modular program construction. Go compiles quickly to machine code yet has the convenience of garbage collection and the power of run-time reflection. It's a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language.\\nGetting Started\\nInstalling Go\\nInstructions for downloading and installing Go.\\nTutorial: Getting started\\nA brief Hello, World tutorial to get started. Learn a bit about Go code, tools, packages, and modules.\\nTutorial: Create a module\\nA tutorial of short topics introducing functions, error handling, arrays, maps, unit testing, and compiling.\\nTutorial: Getting started with multi-module workspaces\\nIntroduces the basics of creating and using multi-module workspaces in Go. Multi-module workspaces are useful for making changes across multiple modules.\\nTutorial: Developing a RESTful API with Go and Gin\\nIntroduces the basics of writing a RESTful web service API with Go and the Gin Web Framework.\\nTutorial: Getting started with generics\\nWith generics, you can declare and use functions or types that are written to work with any of a set of types provided by calling code.\\nTutorial: Getting started with fuzzing\\nFuzzing can generate inputs to your tests that can catch edge cases and security issues that you may have missed.\\nWriting Web Applications\\nBuilding a simple web application.\\nHow to write Go code\\nThis doc explains how to develop a simple set of Go packages inside a module, and it shows how to use the go command to build and test packages.\\nA Tour of Go\\nAn interactive introduction to Go in four sections. The first section covers basic syntax and data structures; the second discusses methods and interfaces; the third is about Generics; and the fourth introduces Go's concurrency primitives. Each section concludes with a few exercises so you can practice what you've learned. You can take the tour online or install it locally with:\\n$ go install golang.org/x/website/tour@latest\\nThis will place the tour binary in your GOPATH 's bin  directory.\\nUsing and understanding Go\\nEffective Go\\nA document that gives tips for writing clear, idiomatic Go code. A must read for any new Go programmer. It augments the tour and the language specification, both of which should be read first.\\nFrequently Asked Questions (FAQ)\\nAnswers to common questions about Go.\\nEditor plugins and IDEs\\nA document that summarizes commonly used editor plugins and IDEs with Go support.\\nDiagnostics\\nSummarizes tools and methodologies to diagnose problems in Go programs.\\nA Guide to the Go Garbage Collector\\nA document that describes how Go manages memory, and how to make the most of it.\\nManaging dependencies\\nWhen your code uses external packages, those packages (distributed as modules) become dependencies.\\nFuzzing\\nMain documentation page for Go fuzzing.\\nCoverage for Go applications\\nMain documentation page for coverage testing of Go applications.\\nProfile-guided optimization\\nMain documentation page for profile-guided optimization (PGO) of Go applications.\\nencoding/json/v2 Migration Guide\\nGuide for safe step-by-step migration from encoding/json to encoding/json/v2.\\nReferences\\nPackage Documentation\\nThe documentation for the Go standard library.\\nCommand Documentation\\nThe documentation for the Go tools.\\nLanguage Specification\\nThe official Go Language specification.\\nGo Modules Reference\\nA detailed reference manual for Go's dependency management system.\\ngo.mod file reference\\nReference for the directives included in a go.mod file.\\nThe Go Memory Model\\nA document that specifies the conditions under which reads of a variable in one goroutine can be guaranteed to observe values produced by writes to the same variable in a different goroutine.\\nContribution Guide\\nContributing to Go.\\nRelease History\\nA summary of the changes between Go releases.\\nAccessing databases\\nTutorial: Accessing a relational database\\nIntroduces the basics of accessing a relational database using Go and the database/sql package in the standard library.\\nAccessing relational databases\\nAn overview of Go's data access features.\\nOpening a database handle\\nYou use the Go database handle to execute database operations. Once you open a handle with database connection properties, the handle represents a connection pool it manages on your behalf.\\nExecuting SQL statements that don't return data\\nFor SQL operations that might change the database, including SQL INSERT, UPDATE , and DELETE, you use Exec methods.\\nQuerying for data\\nFor SELECT statements that return data from a query, using the Query  or QueryRow  method.\\nUsing prepared statements\\nDefining a prepared statement for repeated use can help your code run a bit faster by avoiding the overhead of re-creating the statement each time your code performs the database operation.\\nExecuting transactions\\nsql.Tx exports methods representing transaction-specific semantics, including Commit  and Rollback, as well as methods you use to perform common database operations.\\nCanceling in-progress database operations\\nUsing context.Context, you can have your application's function calls and services stop working early and return an error when their processing is no longer needed.\\nManaging connections\\nFor some advanced programs, you might need to tune connection pool parameters or work with connections explicitly.\\nAvoiding SQL injection risk\\nYou can avoid an SQL injection risk by providing SQL parameter values as sql  package function arguments\\nDeveloping modules\\nDeveloping and publishing modules\\nYou can collect related packages into modules, then publish the modules for other developers to use. This topic gives an overview of developing and publishing modules.\\nModule release and versioning workflow\\nWhe\",\"CandidateIndex\":0,\"EvidenceKind\":\"search-summary\",\"FetchedAt\":\"2026-09-13T05:05:11.548427248Z\",\"Mode\":\"http\",\"ResponseRef\":\"content:local:75fc38ac50eb64a3beddde31157c4e206bb5f94bb187b5813df390b936b41a57:1\",\"ResponseSHA256\":\"dffb1c45e04d069eb3439cef7218e30ed2a6c77f1de78b67c440dbb5b3a124b5\",\"SHA256\":\"39d09fdb49b369b7b0181e1c95ab77d80aeec65021833b251cf67f2b8c04b663\",\"SearchURL\":\"https://open.feedcoopapi.com/search_api/web_search\",\"SourceURL\":\"https://go.dev/doc/?sck=1777981618030_17779815474264\",\"Status\":\"acquired\",\"Title\":\"Documentation - The Go Programming Language\"}",
+          "Subject": "operator",
+          "Role": "external-search-evidence"
+        },
+        {
+          "Ref": "content:local:75fc38ac50eb64a3beddde31157c4e206bb5f94bb187b5813df390b936b41a57:1#summary-1",
+          "Text": "{\"Body\":\"Skip to Main Content\\nWhy Goarrow_drop_down\\nPress Enter to activate/deactivate dropdown\\nCase Studies\\nCommon problems companies solve with Go\\nUse Cases\\nStories about how and why companies use Go\\nSecurity\\nHow Go can help keep you secure by default\\nLearn\\nPress Enter to activate/deactivate dropdown\\nDocsarrow_drop_down\\nPress Enter to activate/deactivate dropdown\\nGo Spec\\nThe official Go language specification\\nGo User Manual\\nA complete introduction to building software with Go\\nStandard library\\nReference documentation for Go's standard library\\nRelease Notes\\nLearn what's new in each Go release\\nEffective Go\\nTips for writing clear, performant, and idiomatic Go code\\nPackages\\nPress Enter to activate/deactivate dropdown\\nCommunityarrow_drop_down\\nPress Enter to activate/deactivate dropdown\\nRecorded Talks\\nVideos from prior events\\nMeetupsopen_in_new\\nMeet other local Go developers\\nConferencesopen_in_new\\nLearn and network with Go developers from around the world\\nGo blog\\nThe Go project's official blog.\\nGo project\\nGet help and stay informed from Go\\nGet connected\\nWhy Gonavigate_next\\nnavigate_beforeWhy Go\\nCase Studies\\nUse Cases\\nSecurity\\nLearn\\nDocsnavigate_next\\nnavigate_beforeDocs\\nGo Spec\\nGo User Manual\\nStandard library\\nRelease Notes\\nEffective Go\\nPackages\\nCommunitynavigate_next\\nnavigate_beforeCommunity\\nRecorded Talks\\nMeetupsopen_in_new\\nConferencesopen_in_new\\nGo blog\\nGo project\\nGet connected\\nText fileblog/go-brand/Go-Logo/copyright.txt\\n1All content within this zip file is Copyright 2018 The Go Authors. All rights reserved.\\nView as plain text\\nWhy GoUse CasesCase Studies\\nGet StartedPlaygroundTourStack OverflowHelp\\nPackagesStandard LibraryAbout Go Packages\\nAboutDownloadBlogIssue TrackerRelease NotesBrand GuidelinesCode of Conduct\\nConnectTwitterGitHubSlackr/golangMeetupGolang Weekly\\nOpens in new window.\\nCopyright\\nTerms of Service\\nPrivacy Policy\\nReport an Issue\\ngo.dev uses cookies from Google to deliver and enhance the quality of its services and to analyze traffic.Learn more.\\n\",\"CandidateIndex\":1,\"EvidenceKind\":\"search-summary\",\"FetchedAt\":\"2026-09-13T05:05:11.548427248Z\",\"Mode\":\"http\",\"ResponseRef\":\"content:local:75fc38ac50eb64a3beddde31157c4e206bb5f94bb187b5813df390b936b41a57:1\",\"ResponseSHA256\":\"dffb1c45e04d069eb3439cef7218e30ed2a6c77f1de78b67c440dbb5b3a124b5\",\"SHA256\":\"8b8021a38dc950a7c7ff99c046385e9e9eb3ad0a334da97aba866b43aa14cbdd\",\"SearchURL\":\"https://open.feedcoopapi.com/search_api/web_search\",\"SourceURL\":\"https://go.dev/blog/go-brand/Go-Logo/copyright.txt\",\"Status\":\"acquired\",\"Title\":\"- The Go Programming Language\"}",
+          "Subject": "operator",
+          "Role": "external-search-evidence"
+        }
+      ]
+    },
+    "ModelOutput": {
+      "answer": "Based on the returned Doubao search summaries: Go is an open source programming language designed to make programmers more productive. It is expressive, concise, clean, and efficient, with concurrency mechanisms that make it easy to write programs that leverage multicore and networked machines, and a novel type system that enables flexible and modular program construction. It compiles quickly to machine code, includes garbage collection, and supports run-time reflection. Go is a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language.",
+      "claims": [
+        {
+          "citations": [
+            {
+              "source": "content:local:75fc38ac50eb64a3beddde31157c4e206bb5f94bb187b5813df390b936b41a57:1#summary-0",
+              "start": 0,
+              "end": 919,
+              "quote": "Documentation\nThe Go programming language is an open source project to make programmers more productive.\nGo is expressive, concise, clean, and efficient. Its concurrency mechanisms make it easy to write programs that get the most out of multicore and networked machines, while its novel type system enables flexible and modular program construction. Go compiles quickly to machine code yet has the convenience of garbage collection and the power of run-time reflection. It's a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language.\nGetting Started\nInstalling Go\nInstructions for downloading and installing Go.\nTutorial: Getting started\nA brief Hello, World tutorial to get started. Learn a bit about Go code, tools, packages, and modules.\nTutorial: Create a module\nA tutorial of short topics introducing functions, error handling, arrays, maps, unit testing, and compiling.",
+              "sha256": "39d09fdb49b369b7b0181e1c95ab77d80aeec65021833b251cf67f2b8c04b663",
+              "fetched_at": "2026-09-13T05:05:11.548427248Z"
+            }
+          ],
+          "text": "The Go programming language is an open source project to make programmers more productive, as stated in the 'Documentation - The Go Programming Language' search summary."
+        },
+        {
+          "citations": [
+            {
+              "source": "content:local:75fc38ac50eb64a3beddde31157c4e206bb5f94bb187b5813df390b936b41a57:1#summary-0",
+              "start": 0,
+              "end": 919,
+              "quote": "Documentation\nThe Go programming language is an open source project to make programmers more productive.\nGo is expressive, concise, clean, and efficient. Its concurrency mechanisms make it easy to write programs that get the most out of multicore and networked machines, while its novel type system enables flexible and modular program construction. Go compiles quickly to machine code yet has the convenience of garbage collection and the power of run-time reflection. It's a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language.\nGetting Started\nInstalling Go\nInstructions for downloading and installing Go.\nTutorial: Getting started\nA brief Hello, World tutorial to get started. Learn a bit about Go code, tools, packages, and modules.\nTutorial: Create a module\nA tutorial of short topics introducing functions, error handling, arrays, maps, unit testing, and compiling.",
+              "sha256": "39d09fdb49b369b7b0181e1c95ab77d80aeec65021833b251cf67f2b8c04b663",
+              "fetched_at": "2026-09-13T05:05:11.548427248Z"
+            }
+          ],
+          "text": "Go is expressive, concise, clean, and efficient, with concurrency mechanisms that simplify writing programs optimized for multicore and networked machines, and a novel type system that enables flexible and modular program construction, as stated in the 'Documentation - The Go Programming Language' search summary."
+        },
+        {
+          "citations": [
+            {
+              "source": "content:local:75fc38ac50eb64a3beddde31157c4e206bb5f94bb187b5813df390b936b41a57:1#summary-0",
+              "start": 0,
+              "end": 919,
+              "quote": "Documentation\nThe Go programming language is an open source project to make programmers more productive.\nGo is expressive, concise, clean, and efficient. Its concurrency mechanisms make it easy to write programs that get the most out of multicore and networked machines, while its novel type system enables flexible and modular program construction. Go compiles quickly to machine code yet has the convenience of garbage collection and the power of run-time reflection. It's a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language.\nGetting Started\nInstalling Go\nInstructions for downloading and installing Go.\nTutorial: Getting started\nA brief Hello, World tutorial to get started. Learn a bit about Go code, tools, packages, and modules.\nTutorial: Create a module\nA tutorial of short topics introducing functions, error handling, arrays, maps, unit testing, and compiling.",
+              "sha256": "39d09fdb49b369b7b0181e1c95ab77d80aeec65021833b251cf67f2b8c04b663",
+              "fetched_at": "2026-09-13T05:05:11.548427248Z"
+            }
+          ],
+          "text": "Go compiles quickly to machine code yet offers the convenience of garbage collection and the power of run-time reflection, as stated in the 'Documentation - The Go Programming Language' search summary."
+        },
+        {
+          "citations": [
+            {
+              "source": "content:local:75fc38ac50eb64a3beddde31157c4e206bb5f94bb187b5813df390b936b41a57:1#summary-0",
+              "start": 0,
+              "end": 919,
+              "quote": "Documentation\nThe Go programming language is an open source project to make programmers more productive.\nGo is expressive, concise, clean, and efficient. Its concurrency mechanisms make it easy to write programs that get the most out of multicore and networked machines, while its novel type system enables flexible and modular program construction. Go compiles quickly to machine code yet has the convenience of garbage collection and the power of run-time reflection. It's a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language.\nGetting Started\nInstalling Go\nInstructions for downloading and installing Go.\nTutorial: Getting started\nA brief Hello, World tutorial to get started. Learn a bit about Go code, tools, packages, and modules.\nTutorial: Create a module\nA tutorial of short topics introducing functions, error handling, arrays, maps, unit testing, and compiling.",
+              "sha256": "39d09fdb49b369b7b0181e1c95ab77d80aeec65021833b251cf67f2b8c04b663",
+              "fetched_at": "2026-09-13T05:05:11.548427248Z"
+            }
+          ],
+          "text": "Go is a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language, as stated in the 'Documentation - The Go Programming Language' search summary."
+        }
+      ],
+      "gaps": [],
+      "scope": "Available acquired evidence includes two external search summaries from the Go Programming Language documentation pages: 'Documentation - The Go Programming Language' (SourceURL: https://go.dev/doc/?sck=1777981618030_17779815474264) and the secondary go.dev brand page summary. No full original page content was fetched, only the provided search-provider summaries are used.",
+      "status": "answerable"
+    },
+    "Answer": {
+      "status": "answerable",
+      "answer": "Based on the returned Doubao search summaries: Go is an open source programming language designed to make programmers more productive. It is expressive, concise, clean, and efficient, with concurrency mechanisms that make it easy to write programs that leverage multicore and networked machines, and a novel type system that enables flexible and modular program construction. It compiles quickly to machine code, includes garbage collection, and supports run-time reflection. Go is a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language.",
+      "scope": "Available acquired evidence includes two external search summaries from the Go Programming Language documentation pages: 'Documentation - The Go Programming Language' (SourceURL: https://go.dev/doc/?sck=1777981618030_17779815474264) and the secondary go.dev brand page summary. No full original page content was fetched, only the provided search-provider summaries are used.",
+      "claims": [
+        {
+          "text": "The Go programming language is an open source project to make programmers more productive, as stated in the 'Documentation - The Go Programming Language' search summary.",
+          "citations": [
+            {
+              "source": "content:local:75fc38ac50eb64a3beddde31157c4e206bb5f94bb187b5813df390b936b41a57:1#summary-0",
+              "start": 0,
+              "end": 919,
+              "quote": "Documentation\nThe Go programming language is an open source project to make programmers more productive.\nGo is expressive, concise, clean, and efficient. Its concurrency mechanisms make it easy to write programs that get the most out of multicore and networked machines, while its novel type system enables flexible and modular program construction. Go compiles quickly to machine code yet has the convenience of garbage collection and the power of run-time reflection. It's a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language.\nGetting Started\nInstalling Go\nInstructions for downloading and installing Go.\nTutorial: Getting started\nA brief Hello, World tutorial to get started. Learn a bit about Go code, tools, packages, and modules.\nTutorial: Create a module\nA tutorial of short topics introducing functions, error handling, arrays, maps, unit testing, and compiling.",
+              "sha256": "39d09fdb49b369b7b0181e1c95ab77d80aeec65021833b251cf67f2b8c04b663",
+              "fetched_at": "2026-09-13T05:05:11.548427248Z"
+            }
+          ]
+        },
+        {
+          "text": "Go is expressive, concise, clean, and efficient, with concurrency mechanisms that simplify writing programs optimized for multicore and networked machines, and a novel type system that enables flexible and modular program construction, as stated in the 'Documentation - The Go Programming Language' search summary.",
+          "citations": [
+            {
+              "source": "content:local:75fc38ac50eb64a3beddde31157c4e206bb5f94bb187b5813df390b936b41a57:1#summary-0",
+              "start": 0,
+              "end": 919,
+              "quote": "Documentation\nThe Go programming language is an open source project to make programmers more productive.\nGo is expressive, concise, clean, and efficient. Its concurrency mechanisms make it easy to write programs that get the most out of multicore and networked machines, while its novel type system enables flexible and modular program construction. Go compiles quickly to machine code yet has the convenience of garbage collection and the power of run-time reflection. It's a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language.\nGetting Started\nInstalling Go\nInstructions for downloading and installing Go.\nTutorial: Getting started\nA brief Hello, World tutorial to get started. Learn a bit about Go code, tools, packages, and modules.\nTutorial: Create a module\nA tutorial of short topics introducing functions, error handling, arrays, maps, unit testing, and compiling.",
+              "sha256": "39d09fdb49b369b7b0181e1c95ab77d80aeec65021833b251cf67f2b8c04b663",
+              "fetched_at": "2026-09-13T05:05:11.548427248Z"
+            }
+          ]
+        },
+        {
+          "text": "Go compiles quickly to machine code yet offers the convenience of garbage collection and the power of run-time reflection, as stated in the 'Documentation - The Go Programming Language' search summary.",
+          "citations": [
+            {
+              "source": "content:local:75fc38ac50eb64a3beddde31157c4e206bb5f94bb187b5813df390b936b41a57:1#summary-0",
+              "start": 0,
+              "end": 919,
+              "quote": "Documentation\nThe Go programming language is an open source project to make programmers more productive.\nGo is expressive, concise, clean, and efficient. Its concurrency mechanisms make it easy to write programs that get the most out of multicore and networked machines, while its novel type system enables flexible and modular program construction. Go compiles quickly to machine code yet has the convenience of garbage collection and the power of run-time reflection. It's a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language.\nGetting Started\nInstalling Go\nInstructions for downloading and installing Go.\nTutorial: Getting started\nA brief Hello, World tutorial to get started. Learn a bit about Go code, tools, packages, and modules.\nTutorial: Create a module\nA tutorial of short topics introducing functions, error handling, arrays, maps, unit testing, and compiling.",
+              "sha256": "39d09fdb49b369b7b0181e1c95ab77d80aeec65021833b251cf67f2b8c04b663",
+              "fetched_at": "2026-09-13T05:05:11.548427248Z"
+            }
+          ]
+        },
+        {
+          "text": "Go is a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language, as stated in the 'Documentation - The Go Programming Language' search summary.",
+          "citations": [
+            {
+              "source": "content:local:75fc38ac50eb64a3beddde31157c4e206bb5f94bb187b5813df390b936b41a57:1#summary-0",
+              "start": 0,
+              "end": 919,
+              "quote": "Documentation\nThe Go programming language is an open source project to make programmers more productive.\nGo is expressive, concise, clean, and efficient. Its concurrency mechanisms make it easy to write programs that get the most out of multicore and networked machines, while its novel type system enables flexible and modular program construction. Go compiles quickly to machine code yet has the convenience of garbage collection and the power of run-time reflection. It's a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language.\nGetting Started\nInstalling Go\nInstructions for downloading and installing Go.\nTutorial: Getting started\nA brief Hello, World tutorial to get started. Learn a bit about Go code, tools, packages, and modules.\nTutorial: Create a module\nA tutorial of short topics introducing functions, error handling, arrays, maps, unit testing, and compiling.",
+              "sha256": "39d09fdb49b369b7b0181e1c95ab77d80aeec65021833b251cf67f2b8c04b663",
+              "fetched_at": "2026-09-13T05:05:11.548427248Z"
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    }
+  },
+  "Started": "2026-09-13T05:05:10.245671297Z"
+}

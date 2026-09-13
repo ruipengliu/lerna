@@ -1,0 +1,12 @@
+# lerna/adapters/sqlitememory_test [lerna/adapters/sqlitememory.test]
+adapters/sqlitememory/store_test.go:144:22: undefined: memory.ReadBinding
+adapters/sqlitememory/store_test.go:144:214: undefined: memory.VersionRef
+adapters/sqlitememory/store_test.go:145:20: store.BindRead undefined (type *sqlitememory.Store has no field or method BindRead)
+adapters/sqlitememory/store_test.go:165:20: store.BindRead undefined (type *sqlitememory.Store has no field or method BindRead)
+adapters/sqlitememory/store_test.go:169:23: store.LookupRead undefined (type *sqlitememory.Store has no field or method LookupRead)
+adapters/sqlitememory/store_test.go:174:18: store.BindRead undefined (type *sqlitememory.Store has no field or method BindRead)
+adapters/sqlitememory/store_test.go:177:18: undefined: memory.ReadBinding
+adapters/sqlitememory/store_test.go:178:18: store.BindRead undefined (type *sqlitememory.Store has no field or method BindRead)
+adapters/sqlitememory/store_test.go:182:21: store.BindRead undefined (type *sqlitememory.Store has no field or method BindRead)
+FAIL	lerna/adapters/sqlitememory [build failed]
+FAIL

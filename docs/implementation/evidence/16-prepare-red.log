@@ -1,0 +1,5 @@
+# lerna/adapters/filekeys_test [lerna/adapters/filekeys.test]
+adapters/filekeys/lifecycle_linux_test.go:19:23: source.Prepare undefined (type *filekeys.Source has no field or method Prepare)
+adapters/filekeys/lifecycle_linux_test.go:28:20: source.Prepare undefined (type *filekeys.Source has no field or method Prepare)
+FAIL	lerna/adapters/filekeys [build failed]
+FAIL

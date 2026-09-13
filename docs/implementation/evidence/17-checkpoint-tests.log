@@ -1,0 +1,3 @@
+ok  	lerna/memory	1.203s
+ok  	lerna/adapters/sqlitememory	(cached)
+ok  	lerna/adapters/memoryauth	(cached)

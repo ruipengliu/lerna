@@ -1,0 +1,5 @@
+--- FAIL: TestReplacementPreservesOriginalIdentityAndRejectsStaleWriter (0.00s)
+    store_test.go:28: checkpoint file unavailable
+FAIL
+FAIL	lerna/adapters/checkpointfile	0.015s
+FAIL

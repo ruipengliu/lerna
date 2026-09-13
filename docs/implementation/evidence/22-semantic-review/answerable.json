@@ -1,0 +1,77 @@
+{
+  "Review": {
+    "Version": "search-semantic-review-v1",
+    "InputSHA256": "9783e81d3d5c582b2156f0686e3c5bfe80efdcbe119e31b0fe66edfb2046370b",
+    "Coverage": {
+      "CaseID": "answerable",
+      "AnswerSHA256": "0cd939d030c60c6f8e63b494495ef08e6eed65f10ec6f490be7c3be43a89d8a8",
+      "ExpectationsSHA256": "5a171025c1fc7db9b82b82ae6e6cfbbe93a80bdaf6f2f6a6f6f0c3a2b2def3a9",
+      "Facts": [
+        {
+          "ID": "opening",
+          "Verdict": "not_covered",
+          "Reason": "Answer and claim are placeholders; facts present only in quotation do not constitute an answer."
+        },
+        {
+          "ID": "length",
+          "Verdict": "not_covered",
+          "Reason": "Answer and claim are placeholders; facts present only in quotation do not constitute an answer."
+        }
+      ]
+    },
+    "Checks": [
+      {
+        "ID": "citation:0:0",
+        "Verdict": "fail",
+        "Reason": "The acquired quotation states a bridge date and length; it does not substantiate the placeholder text 'Fixture claim'."
+      },
+      {
+        "ID": "answer_support",
+        "Verdict": "fail",
+        "Reason": "The answer is only 'Fixture evidence answer', with no evidence-grounded response to the question."
+      },
+      {
+        "ID": "scope",
+        "Verdict": "fail",
+        "Reason": "The generic acquired-source/time statement does not identify the original bridge and 2026-01 record scope required by the rubric."
+      },
+      {
+        "ID": "disposition",
+        "Verdict": "fail",
+        "Reason": "The answerable label is present but the answer does not supply either requested fact."
+      },
+      {
+        "ID": "forbidden:0",
+        "Verdict": "pass",
+        "Reason": "No different opening date or bridge length is asserted; omission is separately recorded as failed coverage."
+      },
+      {
+        "ID": "forbidden:1",
+        "Verdict": "pass",
+        "Reason": "The sole citation matches the acquired page body, not a search index snippet."
+      }
+    ]
+  },
+  "Summary": {
+    "Coverage": {
+      "Coverage": {
+        "Numerator": 0,
+        "Denominator": 2
+      },
+      "UnreviewedFacts": 0,
+      "CoverageReviewComplete": true
+    },
+    "CitationSupport": {
+      "Numerator": 0,
+      "Denominator": 1
+    },
+    "UnreviewedChecks": 0,
+    "FailedChecks": [
+      "citation:0:0",
+      "answer_support",
+      "scope",
+      "disposition"
+    ],
+    "ReviewComplete": true
+  }
+}

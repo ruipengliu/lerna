@@ -1,0 +1,5 @@
+--- FAIL: TestCurrentHarnessPolicyAndResidencyConstrainMemory (0.07s)
+    authority_test.go:109: known unavailable source PERMISSION_DENIED
+FAIL
+FAIL	lerna/adapters/memoryauth	0.073s
+FAIL

@@ -1,0 +1,5 @@
+--- FAIL: TestActionHostAutomaticallyCleansDeletedContext (10.14s)
+    personalized_invalidation_test.go:153: CONTEXT_UNAVAILABLE
+FAIL
+FAIL	lerna/profiles/catalogcheck	10.150s
+FAIL

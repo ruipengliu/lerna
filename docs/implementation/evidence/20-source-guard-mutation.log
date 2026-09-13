@@ -1,0 +1,5 @@
+--- FAIL: TestRestoredProviderCannotReleaseInvalidatedSourceToMemoryOrExtraction (0.04s)
+    guard_test.go:72: restored extraction release: <nil>
+FAIL
+FAIL	lerna/adapters/extractionsourceguard	0.053s
+FAIL

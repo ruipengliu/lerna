@@ -1,0 +1,8 @@
+# lerna/adapters/sqlitememory_test [lerna/adapters/sqlitememory.test]
+adapters/sqlitememory/events_test.go:42:19: s.ReadEvents undefined (type *sqlitememory.Store has no field or method ReadEvents)
+adapters/sqlitememory/events_test.go:46:26: undefined: memory.SourceEvent
+adapters/sqlitememory/events_test.go:49:17: s.ReadEvents undefined (type *sqlitememory.Store has no field or method ReadEvents)
+adapters/sqlitememory/events_test.go:50:56: undefined: memory.SourceEvent
+adapters/sqlitememory/events_test.go:53:18: s.ReadEvents undefined (type *sqlitememory.Store has no field or method ReadEvents)
+FAIL	lerna/adapters/sqlitememory [build failed]
+FAIL

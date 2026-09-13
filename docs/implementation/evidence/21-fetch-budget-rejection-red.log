@@ -1,0 +1,5 @@
+--- FAIL: TestOriginalFetchReservationSurvivesReopenWithoutResettingTaskBudget (0.05s)
+    budget_test.go:48: budget rejection was not retained as a finite outcome
+FAIL
+FAIL	lerna/adapters/sqlitefetch	0.054s
+FAIL

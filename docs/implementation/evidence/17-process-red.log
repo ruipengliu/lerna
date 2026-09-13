@@ -1,0 +1,5 @@
+# lerna/profiles/memorycheck [lerna/profiles/memorycheck.test]
+profiles/memorycheck/checks_test.go:11:11: undefined: RunProbe
+profiles/memorycheck/checks_test.go:19:12: undefined: ProcessCheck
+FAIL	lerna/profiles/memorycheck [build failed]
+FAIL

@@ -1,0 +1,9 @@
+=== RUN   TestActualV10ExecutionUpgrade
+[DEBUG-19-save] metadata=PERMISSION_DENIED
+    upgrade10_test.go:67: [DEBUG-19-upgrade] before drain version=2 update=0 q={Ref:{Namespace:local TaskID:069de92693d854d277536c1621f8ce357aefb9bbed62aed6f374b6b21dbda458} Owner:owner Epoch:1 Version:2 WorkID:069de92693d854d277536c1621f8ce357aefb9bbed62aed6f374b6b21dbda458/initial Generation:1} map=map[] reports=map[] now=1788998400 deadline=1788998700 err=<nil>
+    upgrade10_test.go:81: [DEBUG-19-upgrade] after drain reports=map[NGRjODExMjhmNDNjNzM1ZjhiMjMwNGU1Y2EwNDJjYjhkMjg2OTVkZmIyYmZkNmQ3MjU2ZTViNzM1NWNlMDY4MC8xLzc1N2MxMjQyNGY1ZDI5YjU2OTU1YjhkMWM1MzM2ZjMyNmUwMjNjMzNlMzAwNDU0N2RjMTgzMGY0ZWI4ZmJmM2Y.Qxp6IcW-Ol_4s1fiUD7-soMav6cZsNpt_nj3qgHbndQ:{CompletedAt:0 PreStart:false Conflict:false OperationID:NGRjODExMjhmNDNjNzM1ZjhiMjMwNGU1Y2EwNDJjYjhkMjg2OTVkZmIyYmZkNmQ3MjU2ZTViNzM1NWNlMDY4MC8xLzc1N2MxMjQyNGY1ZDI5YjU2OTU1YjhkMWM1MzM2ZjMyNmUwMjNjMzNlMzAwNDU0N2RjMTgzMGY0ZWI4ZmJmM2Y.Qxp6IcW-Ol_4s1fiUD7-soMav6cZsNpt_nj3qgHbndQ Qualification:{Ref:{Namespace:local TaskID:069de92693d854d277536c1621f8ce357aefb9bbed62aed6f374b6b21dbda458} Owner:owner Epoch:1 Version:2 WorkID:069de92693d854d277536c1621f8ce357aefb9bbed62aed6f374b6b21dbda458/initial Generation:1} Revision:3 Phase:FINISHED Result:FAILURE Effect:CONFIRMED Reference:}] invocation phase=FINISHED result=FAILURE effect=CONFIRMED err=<nil>
+    upgrade10_test.go:84: {[] 0 0 0 0 {local 069de92693d854d277536c1621f8ce357aefb9bbed62aed6f374b6b21dbda458} Add three to the controlled counter   [content:local:1cd273cc8d9c901f65b5374e8a256b6b67b3a670be703a0bcd6e8b9248d6052d:1] {0 0 3 1788998700} QUEUED operator root owner 1 3 1   {   0} []} <nil>
+--- FAIL: TestActualV10ExecutionUpgrade (0.22s)
+FAIL
+FAIL	lerna/profiles/executioncheck	0.251s
+FAIL

@@ -1,0 +1,12 @@
+--- FAIL: TestReassembledInvocationSurvivesProcessExit (89.32s)
+    --- FAIL: TestReassembledInvocationSurvivesProcessExit/reassembled-invoked (44.15s)
+        personalized_process_test.go:163: reassembled decision checkpoint: exit status 1 --- FAIL: TestPersonalizedActionCrashProbe (44.11s)
+                personalized_process_test.go:56: context failure was not metadata-only
+            FAIL
+    --- FAIL: TestReassembledInvocationSurvivesProcessExit/reassembled-effect (45.17s)
+        personalized_process_test.go:163: reassembled decision checkpoint: exit status 1 --- FAIL: TestPersonalizedActionCrashProbe (45.13s)
+                personalized_process_test.go:58: probe returned without exiting
+            FAIL
+FAIL
+FAIL	lerna/profiles/catalogcheck	161.898s
+FAIL

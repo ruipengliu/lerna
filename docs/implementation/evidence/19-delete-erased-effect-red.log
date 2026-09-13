@@ -1,0 +1,4 @@
+# lerna/profiles/catalogcheck [lerna/profiles/catalogcheck.test]
+profiles/catalogcheck/personalized_process_test.go:331:8: r.ContextErased undefined (type ActionRecoveryReport has no field or method ContextErased)
+FAIL	lerna/profiles/catalogcheck [build failed]
+FAIL

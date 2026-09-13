@@ -1,0 +1,5 @@
+--- FAIL: TestAnswerCheckpointDoesNotDuplicateSnapshotDigest (3.26s)
+    personalized_checkpoint_test.go:34: checkpoint duplicated snapshot comparison
+FAIL
+FAIL	lerna/profiles/answer	3.292s
+FAIL

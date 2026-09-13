@@ -1,0 +1,32 @@
+=== RUN   TestAcquisitionRecoversAcrossActualProcessExit
+=== RUN   TestAcquisitionRecoversAcrossActualProcessExit/reserved
+=== RUN   TestAcquisitionRecoversAcrossActualProcessExit/response
+=== RUN   TestAcquisitionRecoversAcrossActualProcessExit/content
+=== RUN   TestAcquisitionRecoversAcrossActualProcessExit/outcome
+--- PASS: TestAcquisitionRecoversAcrossActualProcessExit (2.87s)
+    --- PASS: TestAcquisitionRecoversAcrossActualProcessExit/reserved (0.53s)
+    --- PASS: TestAcquisitionRecoversAcrossActualProcessExit/response (0.66s)
+    --- PASS: TestAcquisitionRecoversAcrossActualProcessExit/content (0.84s)
+    --- PASS: TestAcquisitionRecoversAcrossActualProcessExit/outcome (0.85s)
+=== RUN   TestSDKSearchPersistsOriginalDiscoveryAndChecksRecipient
+=== RUN   TestSDKSearchPersistsOriginalDiscoveryAndChecksRecipient/local
+=== RUN   TestSDKSearchPersistsOriginalDiscoveryAndChecksRecipient/remote-search
+--- PASS: TestSDKSearchPersistsOriginalDiscoveryAndChecksRecipient (1.23s)
+    --- PASS: TestSDKSearchPersistsOriginalDiscoveryAndChecksRecipient/local (0.81s)
+    --- PASS: TestSDKSearchPersistsOriginalDiscoveryAndChecksRecipient/remote-search (0.42s)
+=== RUN   TestSearchRecoversAcrossActualProcessExit
+=== RUN   TestSearchRecoversAcrossActualProcessExit/reserved
+    search_process_test.go:175: window=reserved child_exit=75 http=0 result=UNKNOWN core_state=WAITING charged=1 source_recovered=false
+=== RUN   TestSearchRecoversAcrossActualProcessExit/response
+    search_process_test.go:175: window=response child_exit=75 http=1 result=UNKNOWN core_state=WAITING charged=1 source_recovered=false
+=== RUN   TestSearchRecoversAcrossActualProcessExit/content
+    search_process_test.go:175: window=content child_exit=75 http=1 result=SUCCESS core_state=COMPLETED charged=1 source_recovered=true
+=== RUN   TestSearchRecoversAcrossActualProcessExit/outcome
+    search_process_test.go:175: window=outcome child_exit=75 http=1 result=SUCCESS core_state=COMPLETED charged=1 source_recovered=true
+--- PASS: TestSearchRecoversAcrossActualProcessExit (3.33s)
+    --- PASS: TestSearchRecoversAcrossActualProcessExit/reserved (0.54s)
+    --- PASS: TestSearchRecoversAcrossActualProcessExit/response (0.76s)
+    --- PASS: TestSearchRecoversAcrossActualProcessExit/content (1.02s)
+    --- PASS: TestSearchRecoversAcrossActualProcessExit/outcome (1.01s)
+PASS
+ok  	lerna/profiles/fetchcheck	8.462s

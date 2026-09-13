@@ -1,0 +1,6 @@
+# lerna/adapters/memoryauth_test [lerna/adapters/memoryauth.test]
+adapters/memoryauth/deletion_test.go:72:62: unknown field DeletionQuery in struct literal of type harnessv1.MemoryRequest
+adapters/memoryauth/deletion_test.go:72:83: undefined: wire.MemoryDeletionQuery
+adapters/memoryauth/deletion_test.go:74:28: wireStatus.GetDeletion undefined (type *harnessv1.MemoryResponse has no field or method GetDeletion)
+FAIL	lerna/adapters/memoryauth [build failed]
+FAIL

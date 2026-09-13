@@ -1,0 +1,3 @@
+lerna/adapters/sqliteextraction: no non-test Go files in /home/dev/proj/lerna/adapters/sqliteextraction
+FAIL	lerna/adapters/sqliteextraction [build failed]
+FAIL

@@ -1,0 +1,38 @@
+[
+  {
+    "Input": {
+      "Contract": "harness_evidence_answer_v1",
+      "Input": {
+        "Goal": "In what year did the Stoneford footbridge open?",
+        "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789272598}",
+        "Blocks": [
+          {
+            "Ref": "content:local:d7d4ec57c927f458df89b4c8fd7e3a70de9055981c28fa75f1e0af5f98f6aa21:1",
+            "Text": "{\"Status\":\"acquired\",\"Body\":\"Stoneford register, edition 2026-01. The Stoneford footbridge opened in 2001. The entry does not explain any distinction between inauguration and public access.\",\"RequestedURL\":\"http://127.0.0.1:45821/final\",\"FinalURL\":\"http://127.0.0.1:45821/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"253fca27cf8c832dc540277d14107bd4ed470aee517a26681b882c5870596f0f\",\"Mode\":\"fixed-replay\",\"FetchedAt\":\"2026-09-13T04:08:59.869589266Z\",\"Sources\":[\"http://127.0.0.1:45821/final\"]}",
+            "Subject": "operator",
+            "Role": "external-evidence"
+          },
+          {
+            "Ref": "content:local:4f8485cfe01b250aed37ab6a112c455385e71965fb2291c311685e8545e17141:1",
+            "Text": "{\"Status\":\"acquired\",\"Body\":\"Stoneford archive, edition 2026-02. The Stoneford footbridge opened in 2003. The entry does not explain any distinction between inauguration and public access.\",\"RequestedURL\":\"http://127.0.0.1:45821/second\",\"FinalURL\":\"http://127.0.0.1:45821/second\",\"MediaType\":\"text/plain\",\"SHA256\":\"729c53be7f8c3e2ef53047755bc15df63b064c52f5146f080954ceefeae63abd\",\"Mode\":\"fixed-replay\",\"FetchedAt\":\"2026-09-13T04:09:00.232857416Z\",\"Sources\":[\"http://127.0.0.1:45821/second\"]}",
+            "Subject": "operator",
+            "Role": "external-evidence"
+          }
+        ]
+      },
+      "MaxInput": 229376,
+      "MaxOutput": 512
+    },
+    "Result": {
+      "ProviderContent": "eyJhbnN3ZXIiOiJUaGUgYXZhaWxhYmxlIHNvdXJjZXMgcHJvdmlkZSBjb25mbGljdGluZyBvcGVuaW5nIHllYXIgaW5mb3JtYXRpb24gZm9yIHRoZSBTdG9uZWZvcmQgZm9vdGJyaWRnZSwgd2l0aCBubyBhdXRob3JpdGF0aXZlIHJlc29sdXRpb24gcHJvdmlkZWQgaW4gdGhlIGFjcXVpcmVkIHJlY29yZHMuIiwiY2xhaW1zIjpbeyJjaXRhdGlvbnMiOlswXSwidGV4dCI6IlRoZSAyMDI2LTAxIGVkaXRpb24gb2YgdGhlIFN0b25lZm9yZCByZWdpc3RlciBzdGF0ZXMgdGhhdCB0aGUgU3RvbmVmb3JkIGZvb3RicmlkZ2Ugb3BlbmVkIGluIDIwMDEsIGFuZCBkb2VzIG5vdCBleHBsYWluIGFueSBkaXN0aW5jdGlvbiBiZXR3ZWVuIGluYXVndXJhdGlvbiBhbmQgcHVibGljIGFjY2Vzcy4ifSx7ImNpdGF0aW9ucyI6WzFdLCJ0ZXh0IjoiVGhlIDIwMjYtMDIgZWRpdGlvbiBvZiB0aGUgU3RvbmVmb3JkIGFyY2hpdmUgc3RhdGVzIHRoYXQgdGhlIFN0b25lZm9yZCBmb290YnJpZGdlIG9wZW5lZCBpbiAyMDAzLCBhbmQgZG9lcyBub3QgZXhwbGFpbiBhbnkgZGlzdGluY3Rpb24gYmV0d2VlbiBpbmF1Z3VyYXRpb24gYW5kIHB1YmxpYyBhY2Nlc3MuIn1dLCJnYXBzIjpbeyJkZXRhaWwiOiJUaGUgdHdvIGFjcXVpcmVkIGV4dGVybmFsIGV2aWRlbmNlIHNvdXJjZXMgcmVwb3J0IGRpZmZlcmVudCBvcGVuaW5nIHllYXJzIGZvciB0aGUgU3RvbmVmb3JkIGZvb3RicmlkZ2UgKDIwMDEgdnMgMjAwMyksIHdpdGggbm8gcHJvdmlkZWQgZGV0YWlscyB0byByZWNvbmNpbGUgdGhlIGRpc2NyZXBhbmN5IHN1Y2ggYXMgYSBub3RlZCBkaWZmZXJlbmNlIGJldHdlZW4gaW5hdWd1cmF0aW9uIGNlcmVtb25pZXMgYW5kIGZ1bGwgcHVibGljIGFjY2VzcyBkYXRlcyB0byBjbGFyaWZ5IHdoaWNoIHZhbHVlIGNvcnJlc3BvbmRzIHRvIHRoZSByZXF1ZXN0ZWQgb3BlbmluZyB5ZWFyLiIsImtpbmQiOiJjb25mbGljdGluZyIsInNvdXJjZXMiOlsiY29udGVudDpsb2NhbDpkN2Q0ZWM1N2M5MjdmNDU4ZGY4OWI0YzhmZDdlM2E3MGRlOTA1NTk4MWMyOGZhNzVmMWUwYWY1Zjk4ZjZhYTIxOjEiLCJjb250ZW50OmxvY2FsOjRmODQ4NWNmZTAxYjI1MGFlZDM3YWI2YTExMmM0NTUzODVlNzE5NjVmYjIyOTFjMzExNjg1ZTg1NDVlMTcxNDE6MSJdfV0sInNjb3BlIjoiU3VjY2Vzc2Z1bGx5IGFjcXVpcmVkIHR3byByZWxldmFudCB0ZXh0IHJlY29yZHM6IHRoZSAyMDI2LTAxIFN0b25lZm9yZCByZWdpc3RlciBhbmQgdGhlIDIwMjYtMDIgU3RvbmVmb3JkIGFyY2hpdmUuIE5vIGFkZGl0aW9uYWwgZXh0ZXJuYWwgZXZpZGVuY2Ugc291cmNlcyBmb3IgdGhlIFN0b25lZm9yZCBmb290YnJpZGdlIG9wZW5pbmcgeWVhciB3ZXJlIHJlcXVlc3RlZCBvciBhY3F1aXJlZC4iLCJzdGF0dXMiOiJjb25mbGljdGluZyJ9",
+      "Content": "eyJhbnN3ZXIiOiJUaGUgYXZhaWxhYmxlIHNvdXJjZXMgcHJvdmlkZSBjb25mbGljdGluZyBvcGVuaW5nIHllYXIgaW5mb3JtYXRpb24gZm9yIHRoZSBTdG9uZWZvcmQgZm9vdGJyaWRnZSwgd2l0aCBubyBhdXRob3JpdGF0aXZlIHJlc29sdXRpb24gcHJvdmlkZWQgaW4gdGhlIGFjcXVpcmVkIHJlY29yZHMuIiwiY2xhaW1zIjpbeyJjaXRhdGlvbnMiOlt7InNvdXJjZSI6ImNvbnRlbnQ6bG9jYWw6ZDdkNGVjNTdjOTI3ZjQ1OGRmODliNGM4ZmQ3ZTNhNzBkZTkwNTU5ODFjMjhmYTc1ZjFlMGFmNWY5OGY2YWEyMToxIiwic3RhcnQiOjAsImVuZCI6MTYwLCJxdW90ZSI6IlN0b25lZm9yZCByZWdpc3RlciwgZWRpdGlvbiAyMDI2LTAxLiBUaGUgU3RvbmVmb3JkIGZvb3RicmlkZ2Ugb3BlbmVkIGluIDIwMDEuIFRoZSBlbnRyeSBkb2VzIG5vdCBleHBsYWluIGFueSBkaXN0aW5jdGlvbiBiZXR3ZWVuIGluYXVndXJhdGlvbiBhbmQgcHVibGljIGFjY2Vzcy4iLCJzaGEyNTYiOiIyNTNmY2EyN2NmOGM4MzJkYzU0MDI3N2QxNDEwN2JkNGVkNDcwYWVlNTE3YTI2NjgxYjg4MmM1ODcwNTk2ZjBmIiwiZmV0Y2hlZF9hdCI6IjIwMjYtMDktMTNUMDQ6MDg6NTkuODY5NTg5MjY2WiJ9XSwidGV4dCI6IlRoZSAyMDI2LTAxIGVkaXRpb24gb2YgdGhlIFN0b25lZm9yZCByZWdpc3RlciBzdGF0ZXMgdGhhdCB0aGUgU3RvbmVmb3JkIGZvb3RicmlkZ2Ugb3BlbmVkIGluIDIwMDEsIGFuZCBkb2VzIG5vdCBleHBsYWluIGFueSBkaXN0aW5jdGlvbiBiZXR3ZWVuIGluYXVndXJhdGlvbiBhbmQgcHVibGljIGFjY2Vzcy4ifSx7ImNpdGF0aW9ucyI6W3sic291cmNlIjoiY29udGVudDpsb2NhbDo0Zjg0ODVjZmUwMWIyNTBhZWQzN2FiNmExMTJjNDU1Mzg1ZTcxOTY1ZmIyMjkxYzMxMTY4NWU4NTQ1ZTE3MTQxOjEiLCJzdGFydCI6MCwiZW5kIjoxNTksInF1b3RlIjoiU3RvbmVmb3JkIGFyY2hpdmUsIGVkaXRpb24gMjAyNi0wMi4gVGhlIFN0b25lZm9yZCBmb290YnJpZGdlIG9wZW5lZCBpbiAyMDAzLiBUaGUgZW50cnkgZG9lcyBub3QgZXhwbGFpbiBhbnkgZGlzdGluY3Rpb24gYmV0d2VlbiBpbmF1Z3VyYXRpb24gYW5kIHB1YmxpYyBhY2Nlc3MuIiwic2hhMjU2IjoiNzI5YzUzYmU3ZjhjM2UyZWY1MzA0Nzc1NWJjMTVkZjYzYjA2NGM1MmY1MTQ2ZjA4MDk1NGNlZWZlYWU2M2FiZCIsImZldGNoZWRfYXQiOiIyMDI2LTA5LTEzVDA0OjA5OjAwLjIzMjg1NzQxNloifV0sInRleHQiOiJUaGUgMjAyNi0wMiBlZGl0aW9uIG9mIHRoZSBTdG9uZWZvcmQgYXJjaGl2ZSBzdGF0ZXMgdGhhdCB0aGUgU3RvbmVmb3JkIGZvb3RicmlkZ2Ugb3BlbmVkIGluIDIwMDMsIGFuZCBkb2VzIG5vdCBleHBsYWluIGFueSBkaXN0aW5jdGlvbiBiZXR3ZWVuIGluYXVndXJhdGlvbiBhbmQgcHVibGljIGFjY2Vzcy4ifV0sImdhcHMiOlt7ImRldGFpbCI6IlRoZSB0d28gYWNxdWlyZWQgZXh0ZXJuYWwgZXZpZGVuY2Ugc291cmNlcyByZXBvcnQgZGlmZmVyZW50IG9wZW5pbmcgeWVhcnMgZm9yIHRoZSBTdG9uZWZvcmQgZm9vdGJyaWRnZSAoMjAwMSB2cyAyMDAzKSwgd2l0aCBubyBwcm92aWRlZCBkZXRhaWxzIHRvIHJlY29uY2lsZSB0aGUgZGlzY3JlcGFuY3kgc3VjaCBhcyBhIG5vdGVkIGRpZmZlcmVuY2UgYmV0d2VlbiBpbmF1Z3VyYXRpb24gY2VyZW1vbmllcyBhbmQgZnVsbCBwdWJsaWMgYWNjZXNzIGRhdGVzIHRvIGNsYXJpZnkgd2hpY2ggdmFsdWUgY29ycmVzcG9uZHMgdG8gdGhlIHJlcXVlc3RlZCBvcGVuaW5nIHllYXIuIiwia2luZCI6ImNvbmZsaWN0aW5nIiwic291cmNlcyI6WyJjb250ZW50OmxvY2FsOmQ3ZDRlYzU3YzkyN2Y0NThkZjg5YjRjOGZkN2UzYTcwZGU5MDU1OTgxYzI4ZmE3NWYxZTBhZjVmOThmNmFhMjE6MSIsImNvbnRlbnQ6bG9jYWw6NGY4NDg1Y2ZlMDFiMjUwYWVkMzdhYjZhMTEyYzQ1NTM4NWU3MTk2NWZiMjI5MWMzMTE2ODVlODU0NWUxNzE0MToxIl19XSwic2NvcGUiOiJTdWNjZXNzZnVsbHkgYWNxdWlyZWQgdHdvIHJlbGV2YW50IHRleHQgcmVjb3JkczogdGhlIDIwMjYtMDEgU3RvbmVmb3JkIHJlZ2lzdGVyIGFuZCB0aGUgMjAyNi0wMiBTdG9uZWZvcmQgYXJjaGl2ZS4gTm8gYWRkaXRpb25hbCBleHRlcm5hbCBldmlkZW5jZSBzb3VyY2VzIGZvciB0aGUgU3RvbmVmb3JkIGZvb3RicmlkZ2Ugb3BlbmluZyB5ZWFyIHdlcmUgcmVxdWVzdGVkIG9yIGFjcXVpcmVkLiIsInN0YXR1cyI6ImNvbmZsaWN0aW5nIn0=",
+      "Finish": "stop",
+      "RequestRef": "021789272540872e47635ed4409d744027d1eb06218e836ba5265",
+      "Usage": {
+        "Known": true,
+        "Input": 1752,
+        "Output": 399
+      }
+    }
+  }
+]

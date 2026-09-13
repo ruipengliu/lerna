@@ -1,0 +1,10 @@
+# lerna/profiles/extractioncheck [lerna/profiles/extractioncheck.test]
+profiles/extractioncheck/trigger_test.go:28:30: undefined: extraction.NewTriggerRegistry
+profiles/extractioncheck/trigger_test.go:32:21: undefined: extraction.TriggerSpec
+profiles/extractioncheck/trigger_test.go:32:112: undefined: extraction.SourceScope
+profiles/extractioncheck/trigger_test.go:36:27: h.candidates.GetTrigger undefined (type *sqliteextraction.Store has no field or method GetTrigger)
+profiles/extractioncheck/trigger_test.go:65:20: other.GetTrigger undefined (type *sqliteextraction.Store has no field or method GetTrigger)
+profiles/extractioncheck/trigger_test.go:77:17: other.CancelTrigger undefined (type *sqliteextraction.Store has no field or method CancelTrigger)
+profiles/extractioncheck/trigger_test.go:83:26: h.candidates.GetTrigger undefined (type *sqliteextraction.Store has no field or method GetTrigger)
+FAIL	lerna/profiles/extractioncheck [build failed]
+FAIL

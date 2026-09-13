@@ -1,0 +1,358 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "synchronous-execution-v1",
+  "profile_version": "1",
+  "configuration": {
+    "binding": "local binary Capability SDK; fixed authenticated host, subject and Worker; no network identity claim",
+    "capability": "counter.add@1 / sqlite-counter@1; exact JSON Schema 2020-12; exclusive versioned target",
+    "limits": "32 operations; 8 reports/op; 64 outbox items; 4 inspections/op; 1 local Driver slot; one operation per budgeted worker generation; 3 task attempts; 1s IO/Driver; input 32KiB, output/evidence each 8KiB",
+    "model": "none",
+    "storage": "SQLite authority with separate execution/task/content partitions; independent SQLite target + file content"
+  },
+  "method": "contractcheck -profile synchronous-execution-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260912003241-0899d9fe474a+dirty",
+    "revision": "0899d9fe474a35aaad0723d561e233e0872de14c",
+    "dirty": "true",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "Only exclusively controlled local simulated targets; no shared-resource takeover or arbitrary external exactly-once.",
+    "Missing target operation remains UNKNOWN, even after a crash before actual dispatch. No automatic Start resend or quota refund.",
+    "Local host supplies peer binding; no actual mTLS/gRPC/WebSocket deployment or real business API/model call.",
+    "Late effects are retained; source/permission failures may make evidence unavailable without undoing the effect. Cross-authority content freshness is finite."
+  ],
+  "results": [
+    {
+      "id": "sdk-sync-and-replay",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "sdk-sync-and-replay",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "schema-rejected",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "schema-rejected",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "version-rejected",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "version-rejected",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "changed-operation",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "changed-operation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "wrong-receiver",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "wrong-receiver",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "concurrent-start",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "concurrent-start",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "one-action-per-generation",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "one-action-per-generation",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "resource-precondition",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "resource-precondition",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "pause-before-start",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "pause-before-start",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cancel-before-start",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "cancel-before-start",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "update-before-start",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "update-before-start",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "expired-worker",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "expired-worker",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "grant-revoked",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "grant-revoked",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "source-revoked",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "source-revoked",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "return-lost",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "return-lost",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "effect-unconfirmed",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "effect-unconfirmed",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "invalid-output",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "invalid-output",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-keeps-resource",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "unknown-keeps-resource",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "late-effect-after-update",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "late-effect-after-update",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "outbox-replay",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "outbox-replay",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "query-privacy",
+      "evidence": "synchronous_execution_contract",
+      "required": true,
+      "input": "query-privacy",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "start-commit-failed",
+      "evidence": "execution_fault_boundary",
+      "required": true,
+      "input": "start-commit-failed",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "start-commit-unknown",
+      "evidence": "execution_fault_boundary",
+      "required": true,
+      "input": "start-commit-unknown",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "sdk-lost-admission",
+      "evidence": "execution_fault_boundary",
+      "required": true,
+      "input": "sdk-lost-admission",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "wire-unknown-field",
+      "evidence": "execution_fault_boundary",
+      "required": true,
+      "input": "wire-unknown-field",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "sdk-wrong-receipt",
+      "evidence": "execution_fault_boundary",
+      "required": true,
+      "input": "sdk-wrong-receipt",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "bounded-uncooperative-driver",
+      "evidence": "execution_fault_boundary",
+      "required": true,
+      "input": "bounded-uncooperative-driver",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unknown-report-then-update",
+      "evidence": "execution_fault_boundary",
+      "required": true,
+      "input": "unknown-report-then-update",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "inspection-budget",
+      "evidence": "execution_fault_boundary",
+      "required": true,
+      "input": "inspection-budget",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "v09-runtime-upgrade",
+      "evidence": "old_encoder_partition_upgrade",
+      "required": true,
+      "input": "19a323b runtime gob",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "admitted-reply-lost",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "admitted-reply-lost; exit 73; reopen authority and target",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "start-registered",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "start-registered; exit 73; reopen authority and target",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "target-committed",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "target-committed; exit 73; reopen authority and target",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "report-outbox",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "report-outbox; exit 73; reopen authority and target",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "core-applied",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "core-applied; exit 73; reopen authority and target",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    }
+  ]
+}

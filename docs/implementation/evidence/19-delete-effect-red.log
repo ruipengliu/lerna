@@ -1,0 +1,4 @@
+# lerna/profiles/catalogcheck [lerna/profiles/catalogcheck.test]
+profiles/catalogcheck/personalized_process_test.go:327:12: undefined: RestorePersonalizedInvocationAfterDeletion
+FAIL	lerna/profiles/catalogcheck [build failed]
+FAIL

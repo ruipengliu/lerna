@@ -1,0 +1,23 @@
+{
+  "Profile": "public-https-v1",
+  "Implementation": "httpfetch-v1",
+  "Location": "local",
+  "GoVersion": "go1.26.1",
+  "Build": {},
+  "ExternalModelRequests": 0,
+  "Passed": false,
+  "Public": {
+    "Mode": "public-network",
+    "Source": "https://example.com/",
+    "Status": "unavailable",
+    "StartedAt": "2026-09-12T02:31:32.846421675Z",
+    "MaxBytes": 16384,
+    "MaxRequests": 1,
+    "TimeoutMillis": 5000,
+    "AllowedNetworks": null,
+    "Requests": 0,
+    "FetchedAt": "0001-01-01T00:00:00Z",
+    "Bytes": 0,
+    "ControlledRoundTrip": false
+  }
+}

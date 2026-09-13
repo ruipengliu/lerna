@@ -1,0 +1,58 @@
+{
+  "external_requests": 8,
+  "known_usage": {
+    "Input": 10578,
+    "Output": 2262
+  },
+  "runtime_successes": 6,
+  "cases": [
+    {
+      "mode": "loopback",
+      "case": "answerable",
+      "error": "",
+      "requests": 1
+    },
+    {
+      "mode": "loopback",
+      "case": "conflicting",
+      "error": "",
+      "requests": 1
+    },
+    {
+      "mode": "loopback",
+      "case": "fetch_failed",
+      "error": "research answer decision failed: queries=53/128 action_phase=43 state=RUNNING cause=OUTPUT_INVALID",
+      "requests": 1
+    },
+    {
+      "mode": "loopback",
+      "case": "insufficient",
+      "error": "",
+      "requests": 1
+    },
+    {
+      "mode": "replay",
+      "case": "answerable",
+      "error": "",
+      "requests": 1
+    },
+    {
+      "mode": "replay",
+      "case": "conflicting",
+      "error": "",
+      "requests": 1
+    },
+    {
+      "mode": "replay",
+      "case": "fetch_failed",
+      "error": "research answer decision failed: queries=52/128 action_phase=42 state=RUNNING cause=OUTPUT_INVALID",
+      "requests": 1
+    },
+    {
+      "mode": "replay",
+      "case": "insufficient",
+      "error": "",
+      "requests": 1
+    }
+  ]
+}

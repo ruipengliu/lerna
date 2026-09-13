@@ -1,0 +1,18 @@
+{
+  "source": "adapters/simworkflow/definitions.csv",
+  "csv_sha256": "c72592b771d7095e40bc02cf6416777edd877134639e1f39e1a42a9aafabe9ef",
+  "business_types": 168,
+  "categories": 28,
+  "operations_per_type": [
+    "draft",
+    "submit",
+    "authorize",
+    "reject",
+    "withdraw",
+    "archive"
+  ],
+  "api_contracts": 1008,
+  "duplicate_business_types": 0,
+  "duplicate_business_rule_signatures": [],
+  "counting_boundary": "Business type and state/effect operation, excluding aliases, versions and deployment instances. Static definition audit; actual execution is reported separately."
+}

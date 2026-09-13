@@ -1,0 +1,6 @@
+# lerna/adapters/sqliteextraction_test [lerna/adapters/sqliteextraction.test]
+adapters/sqliteextraction/invocation_test.go:20:4: r.InvocationSHA256 undefined (type extraction.CandidateRecord has no field or method InvocationSHA256)
+adapters/sqliteextraction/invocation_test.go:25:10: altered.InvocationSHA256 undefined (type extraction.CandidateRecord has no field or method InvocationSHA256)
+adapters/sqliteextraction/invocation_test.go:41:25: state.InvocationSHA256 undefined (type extraction.CandidateState has no field or method InvocationSHA256)
+FAIL	lerna/adapters/sqliteextraction [build failed]
+FAIL

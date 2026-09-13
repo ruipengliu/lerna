@@ -1,0 +1,53 @@
+{
+  "Case": "conflicting",
+  "Mode": "loopback",
+  "Started": "2026-09-13T03:46:39.665942943Z",
+  "ElapsedSeconds": 13.743814112999999,
+  "Record": {
+    "UsageStatus": "snapshot",
+    "SearchConfig": {
+      "MaxBytes": 4096,
+      "Recipient": "local"
+    },
+    "AnswerModel": {
+      "Model": "",
+      "Location": "",
+      "Version": "",
+      "Text": false,
+      "Structured": false,
+      "Streaming": false,
+      "HardBounds": false,
+      "ContextTokens": 0,
+      "InputUpper": 0
+    },
+    "Usage": {
+      "ExecutionWaitMillis": 5000,
+      "QueryLimit": 128,
+      "OutcomeQueries": 3,
+      "ContentQueries": 56,
+      "ReservedModelRequests": 0,
+      "ReservedModelTokens": 0,
+      "ModelRequests": 3,
+      "ModelTokens": 2158,
+      "ActionQueries": 65,
+      "NetworkCharged": 3,
+      "SearchRequests": 1,
+      "PageRequests": 2
+    },
+    "Input": {
+      "Goal": "",
+      "Constraints": "",
+      "Blocks": null
+    },
+    "ModelOutput": null,
+    "Answer": {
+      "status": "",
+      "answer": "",
+      "scope": "",
+      "claims": null,
+      "gaps": null
+    }
+  },
+  "Error": "research answer decision failed: queries=65/128 action_phase=55 state=RUNNING cause=OUTPUT_TRUNCATED",
+  "ExternalRequests": 1
+}

@@ -1,0 +1,249 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "async-recovery-v1",
+  "profile_version": "1",
+  "configuration": {
+    "binding": "local binary Capability SDK; authenticated host progress port",
+    "limits": "32 operations/cancels; 8 reports/op; 64 outbox; 16 evidence/op; 4 inspections; 1 cancel dispatch; 1s IO; 1s polling; 3s recovery lease; 1m recovery window",
+    "model": "none",
+    "storage": "SQLite authority + independent SQLite jobs + controlled content"
+  },
+  "method": "contractcheck -profile async-recovery-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260911085441-1077297a26c0+dirty",
+    "revision": "1077297a26c0615165ae7864771dddd55658e044",
+    "dirty": "true",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=",
+      "golang.org/x/text": "v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "Private simulated target only; no shared-resource takeover, network deployment or paid service.",
+    "Unknown sends are never automatically resent; missing random handles and exhausted budgets remain unresolved.",
+    "Conflicting terminal evidence is retained and blocks further starts; no automatic conflict resolution or terminal task reopening.",
+    "Handles are bounded non-secret opaque locators in the reference target, never public protocol fields."
+  ],
+  "results": [
+    {
+      "id": "task-cancel",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "task-cancel",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cancel-before-start",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "cancel-before-start",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "uncorrelated-lost-handle",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "uncorrelated-lost-handle",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "correlated-lost-handle",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "correlated-lost-handle",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "duplicate-progress",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "duplicate-progress",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "conflicting-evidence",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "conflicting-evidence",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "conflict-after-task-completed",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "conflict-after-task-completed",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "forged-progress",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "forged-progress",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "poll-budget",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "poll-budget",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cancel-completion-race",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "cancel-completion-race",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "lost-cancel-reply",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "lost-cancel-reply",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "two-coordinators",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "two-coordinators",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "unsupported-cancel",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "unsupported-cancel",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "expired-key",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "expired-key",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "negative-coverage",
+      "evidence": "durable_async_contract",
+      "required": true,
+      "input": "negative-coverage",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "handle-lost",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "handle-lost; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "handle-saved",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "handle-saved; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "inspection-reserved",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "inspection-reserved; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cancel-accepted",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "cancel-accepted; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "cancel-registered",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "cancel-registered; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "target-cancelled",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "target-cancelled; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "report-saved",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "report-saved; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "core-applied",
+      "evidence": "independent_sqlite_process_recovery",
+      "required": true,
+      "input": "core-applied; exit 73; reopen",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    }
+  ]
+}

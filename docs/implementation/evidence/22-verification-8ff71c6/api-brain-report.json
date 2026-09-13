@@ -1,0 +1,150 @@
+{
+  "status": "passed",
+  "format_version": 1,
+  "profile": "api-brain-v1",
+  "profile_version": "1",
+  "configuration": {
+    "directory": "full 1008 API authority directory, namespace is user task constraint; six exact schemas per decision",
+    "limits": "single 4 requests/65536 tokens/3 operations/32 queries/120s; multi 12/262144/12/128/600s; batch8; correction2; model output1024; input32768 bytes; response8192 bytes",
+    "model": "deterministic fixture, no external calls",
+    "runtime": "one Task; SQLite Core, real grants, actual stateful execution APIs"
+  },
+  "method": "contractcheck -profile api-brain-v1",
+  "build": {
+    "go": "go1.26.1",
+    "platform": "linux/amd64",
+    "module": "lerna@v0.0.0-20260913063707-8ff71c60caeb+dirty",
+    "revision": "8ff71c60caebe3648252f866e2dca9feea500946",
+    "dirty": "true",
+    "dependencies": {
+      "github.com/dustin/go-humanize": "v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "github.com/go-jose/go-jose/v4": "v4.1.5 h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "github.com/google/uuid": "v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "github.com/remyoudompheng/bigfft": "v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "github.com/santhosh-tekuri/jsonschema/v6": "v6.0.3 h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "golang.org/x/sys": "v0.48.0 h1:bbX/i/6MgT9BVLM9RT1thmxL04yeTAhbEz4SyadbXoo=",
+      "golang.org/x/text": "v0.42.0 h1:JbOZXgfeCPU9gacVtYliJqOhD+zhrEqK4LfdpmlUZqI=",
+      "google.golang.org/protobuf": "v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "modernc.org/libc": "v1.75.6 h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "modernc.org/mathutil": "v1.7.1 h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "modernc.org/memory": "v1.12.1 h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "modernc.org/sqlite": "v1.58.0 h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0="
+    }
+  },
+  "limitations": [
+    "Offline strategy fixtures are not real-model accuracy evidence.",
+    "One simulated business namespace verifies the loop; no 90%/95% thousand-API quality claim.",
+    "Real Ark adapter retains 224K hard input reservation: incompatible with the single-step token envelope; no increased acceptance budget.",
+    "Catalog search uses user goal and declared target namespace, never expected capability identity; reference executes serialized dependency-ready actions."
+  ],
+  "results": [
+    {
+      "id": "single",
+      "evidence": "same_task_model_catalog_core_execution_effect",
+      "required": true,
+      "input": "single",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "multistep",
+      "evidence": "same_task_model_catalog_core_execution_effect",
+      "required": true,
+      "input": "multistep",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "batch",
+      "evidence": "same_task_model_catalog_core_execution_effect",
+      "required": true,
+      "input": "batch",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "missing",
+      "evidence": "same_task_model_catalog_core_execution_effect",
+      "required": true,
+      "input": "missing",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "invalid-then-correct",
+      "evidence": "same_task_model_catalog_core_execution_effect",
+      "required": true,
+      "input": "invalid-then-correct",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "read-only-correction",
+      "evidence": "same_task_model_catalog_core_execution_effect",
+      "required": true,
+      "input": "read-only-correction",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "wrong-write",
+      "evidence": "same_task_model_catalog_core_execution_effect",
+      "required": true,
+      "input": "wrong-write",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "no-progress",
+      "evidence": "same_task_model_catalog_core_execution_effect",
+      "required": true,
+      "input": "no-progress",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "recover-dispatch",
+      "evidence": "same_task_model_catalog_core_execution_effect",
+      "required": true,
+      "input": "recover-dispatch",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "recover-record",
+      "evidence": "same_task_model_catalog_core_execution_effect",
+      "required": true,
+      "input": "recover-record",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "revoked-record",
+      "evidence": "same_task_model_catalog_core_execution_effect",
+      "required": true,
+      "input": "revoked-record",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    },
+    {
+      "id": "missing-resume",
+      "evidence": "same_task_model_catalog_core_execution_effect",
+      "required": true,
+      "input": "missing-resume",
+      "expected": "verified",
+      "actual": "verified",
+      "status": "passed"
+    }
+  ]
+}

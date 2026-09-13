@@ -1,0 +1,110 @@
+{
+  "Case": "insufficient",
+  "Mode": "loopback",
+  "Started": "2026-09-13T04:17:51.89323239Z",
+  "ElapsedSeconds": 10.569662775,
+  "Record": {
+    "SearchConfig": {
+      "TimeoutMS": 1000,
+      "MaxBytes": 4096,
+      "Recipient": "local"
+    },
+    "AnswerModel": {
+      "Model": "doubao-seed-2-0-lite-260428",
+      "Location": "ark-cn-beijing",
+      "Version": "ark-chat-v3-20260910-citations-v5",
+      "Text": true,
+      "Structured": true,
+      "Streaming": false,
+      "HardBounds": true,
+      "ContextTokens": 262144,
+      "InputUpper": 229376
+    },
+    "Usage": {
+      "ExecutionWaitMillis": 5000,
+      "QueryLimit": 128,
+      "OutcomeQueries": 2,
+      "ContentQueries": 52,
+      "ReservedModelRequests": 0,
+      "ReservedModelTokens": 0,
+      "ModelRequests": 3,
+      "ModelTokens": 1946,
+      "ActionQueries": 60,
+      "NetworkCharged": 2,
+      "SearchRequests": 1,
+      "PageRequests": 1
+    },
+    "Input": {
+      "Goal": "What was the construction cost of the Eastmere footbridge?",
+      "Constraints": "{\"ModelRequests\":3,\"ModelTokens\":262144,\"MaxSteps\":3,\"DeadlineUnix\":1789273132}",
+      "Blocks": [
+        {
+          "Ref": "content:local:db129f3b86370042593dcbcfa499536d8d6e29c754ece6caaa7641d0a623dd47:1",
+          "Text": "{\"Status\":\"acquired\",\"Body\":\"Eastmere bridge record, edition 2026-01. The Eastmere footbridge crosses the canal. It opened in 2005. This record does not state its construction cost.\",\"RequestedURL\":\"http://127.0.0.1:45803/final\",\"FinalURL\":\"http://127.0.0.1:45803/final\",\"MediaType\":\"text/plain\",\"SHA256\":\"b0a3917a221e8cc54a409c14a78e81b9b6358e8cb40f7e388be4b224f39dea6f\",\"Mode\":\"http\",\"FetchedAt\":\"2026-09-13T04:17:53.670317462Z\",\"Sources\":[\"http://127.0.0.1:45803/final\"]}",
+          "Subject": "operator",
+          "Role": "external-evidence"
+        }
+      ]
+    },
+    "ModelOutput": {
+      "answer": "The available 2026-01 edition Eastmere bridge record does not provide any stated construction cost for the Eastmere footbridge, so the requested figure cannot be determined from the supplied evidence.",
+      "claims": [
+        {
+          "citations": [
+            {
+              "source": "content:local:db129f3b86370042593dcbcfa499536d8d6e29c754ece6caaa7641d0a623dd47:1",
+              "start": 0,
+              "end": 152,
+              "quote": "Eastmere bridge record, edition 2026-01. The Eastmere footbridge crosses the canal. It opened in 2005. This record does not state its construction cost.",
+              "sha256": "b0a3917a221e8cc54a409c14a78e81b9b6358e8cb40f7e388be4b224f39dea6f",
+              "fetched_at": "2026-09-13T04:17:53.670317462Z"
+            }
+          ],
+          "text": "The Eastmere footbridge crosses the canal and was opened in 2005."
+        }
+      ],
+      "gaps": [
+        {
+          "detail": "The single available Eastmere bridge record explicitly does not document the construction cost of the Eastmere footbridge, and no other source materials that could contain this cost data were acquired.",
+          "kind": "insufficient",
+          "sources": [
+            "content:local:db129f3b86370042593dcbcfa499536d8d6e29c754ece6caaa7641d0a623dd47:1"
+          ]
+        }
+      ],
+      "scope": "Only a single acquired 2026-01 Eastmere footbridge record (local document db129f3b86370042593dcbcfa499536d8d6e29c754ece6caaa7641d0a623dd47:1) was available for review, no additional source documents related to the bridge's construction cost were retrieved.",
+      "status": "insufficient"
+    },
+    "Answer": {
+      "status": "insufficient",
+      "answer": "The available 2026-01 edition Eastmere bridge record does not provide any stated construction cost for the Eastmere footbridge, so the requested figure cannot be determined from the supplied evidence.",
+      "scope": "Only a single acquired 2026-01 Eastmere footbridge record (local document db129f3b86370042593dcbcfa499536d8d6e29c754ece6caaa7641d0a623dd47:1) was available for review, no additional source documents related to the bridge's construction cost were retrieved.",
+      "claims": [
+        {
+          "text": "The Eastmere footbridge crosses the canal and was opened in 2005.",
+          "citations": [
+            {
+              "source": "content:local:db129f3b86370042593dcbcfa499536d8d6e29c754ece6caaa7641d0a623dd47:1",
+              "start": 0,
+              "end": 152,
+              "quote": "Eastmere bridge record, edition 2026-01. The Eastmere footbridge crosses the canal. It opened in 2005. This record does not state its construction cost.",
+              "sha256": "b0a3917a221e8cc54a409c14a78e81b9b6358e8cb40f7e388be4b224f39dea6f",
+              "fetched_at": "2026-09-13T04:17:53.670317462Z"
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "insufficient",
+          "detail": "The single available Eastmere bridge record explicitly does not document the construction cost of the Eastmere footbridge, and no other source materials that could contain this cost data were acquired.",
+          "sources": [
+            "content:local:db129f3b86370042593dcbcfa499536d8d6e29c754ece6caaa7641d0a623dd47:1"
+          ]
+        }
+      ]
+    }
+  },
+  "Error": "",
+  "ExternalRequests": 1
+}

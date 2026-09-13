@@ -1,0 +1,5 @@
+--- FAIL: TestExecutionFetchRequiresTaskGuard (0.11s)
+    driver_config_test.go:25: execution fetch driver accepted missing task guard
+FAIL
+FAIL	lerna/profiles/fetchcheck	0.119s
+FAIL
