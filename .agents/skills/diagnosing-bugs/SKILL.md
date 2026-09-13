@@ -13,11 +13,11 @@ For domain terminology, business behavior, or architectural decisions, consult `
 
 This skill has you show commands, outputs and captured artifacts. **Redact every secret first**: write `<REDACTED>` in its place. Build loops against env vars, so the credential stays in the environment rather than in what you show. Captured artifacts carry auth headers: quote only the lines that carry the signal.
 
-If the redacted output is not enough to diagnose the bug, say so and ask the user.
+If the redacted output is insufficient, ask for the missing redacted evidence and continue independent investigation.
 
 ## Phase 1: Build a feedback loop
 
-**This is the skill.** Everything else is mechanical. If you have a **tight** pass/fail signal for the bug (one that goes red on _this_ bug), you will find the cause; bisection, hypothesis-testing, and instrumentation all just consume it. If you don't have one, no amount of staring at code will save you.
+A **tight** pass/fail signal for the user's symptom distinguishes causes and verifies fixes. Use code inspection and redacted logs to guide its construction.
 
 Spend disproportionate effort here. **Be aggressive. Be creative. Refuse to give up.**
 
@@ -52,7 +52,7 @@ The goal is not a clean repro but a **higher reproduction rate**. Loop the trigg
 
 ### When you genuinely cannot build a loop
 
-Stop and say so explicitly. List what you tried. Ask the user for: (a) access to whatever environment reproduces it, (b) a redacted captured artifact (HAR file, log dump, core dump, screen recording with timestamps), or (c) permission to add temporary production instrumentation. Do **not** proceed to hypothesise without a loop.
+List what you tried and the missing evidence. Ask for the specific environment access or redacted artifact needed; obtain authorization before adding temporary production instrumentation. Continue independent code/log inspection and hypothesis formation while waiting. Label untested hypotheses as unverified and pause only steps that depend on missing evidence or authorization.
 
 ### Completion criterion: a tight loop that goes red
 
@@ -63,7 +63,7 @@ Phase 1 is done when the loop is **tight** and **red-capable**: you can name **o
 - [ ] **Fast**: seconds, not minutes.
 - [ ] **Agent-runnable**: you can run it unattended; a human in the loop only via `scripts/hitl-loop.template.sh`.
 
-If you catch yourself reading code to build a theory before this command exists, **stop: jumping straight to a hypothesis is the exact failure this skill prevents.** No red-capable command, no Phase 2.
+The loop is required to validate a fix; code inspection and provisional hypotheses can proceed while you build it.
 
 ## Phase 2: Reproduce + minimise
 
@@ -83,11 +83,11 @@ Why bother: a minimal repro shrinks the hypothesis space in Phase 3 (fewer movin
 
 Done when **every remaining element is load-bearing**: removing any one of them makes the loop go green.
 
-Do not proceed until you have reproduced **and** minimised.
+A pending repro or minimisation blocks only the checks that depend on it.
 
 ## Phase 3: Hypothesise
 
-Generate **3–5 ranked hypotheses** before testing any of them. Single-hypothesis generation anchors on the first plausible idea.
+Start with hypotheses supported by the available evidence, ranked by likelihood. Add alternatives when evidence leaves meaningful competing explanations.
 
 Each hypothesis must be **falsifiable**: state the prediction it makes.
 
