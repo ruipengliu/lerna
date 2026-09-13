@@ -69,7 +69,7 @@ func checkHandoffPolicy(t *testing.T, reopen, goalOnly bool) {
 		}
 	}
 	model := &alternativeEvidenceModel{location: "local"}
-	_, answerErr := finishResearchAnswer(ctx, h, port, run, model, false)
+	_, answerErr := processResearchAnswer(ctx, h, port, run, model, nil, false)
 	after, err := h.policy.Revision(ctx, at)
 	if err != nil {
 		t.Fatal(err)

@@ -183,7 +183,7 @@ func checkRuntimeSavedAnswer(t *testing.T, mode string) {
 		model.cancel = stop
 		model.cancelResult = true
 	}
-	_, err = publishResearchAnswer(writeCtx, h, port, run, model, false, false, nil)
+	_, err = processResearchAnswer(writeCtx, h, port, run, model, nil, false)
 	stop()
 	if err == nil || fault.saved != (mode != "response") || model.calls != 1 {
 		t.Fatalf("saved-output window not reached: %v", err)

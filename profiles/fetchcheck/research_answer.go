@@ -19,19 +19,11 @@ import (
 	"time"
 )
 
-func finishResearchAnswer(ctx context.Context, h *harness, port *tasks.ActionPort, run tasks.RunSnapshot, model brain.Model, missingCost bool) (brain.EvidenceAnswer, error) {
-	return publishResearchAnswer(ctx, h, port, run, model, missingCost, true, nil)
-}
-
 type researchOutcomeReader interface {
 	actionOutcome(context.Context, tasks.Qualification, string) (fetch.Outcome, bool, error)
 }
 
-func publishResearchAnswer(ctx context.Context, h *harness, port *tasks.ActionPort, run tasks.RunSnapshot, model brain.Model, missingCost, verifyFixture bool, prior researchOutcomeReader) (brain.EvidenceAnswer, error) {
-	return processResearchAnswer(ctx, h, port, run, model, missingCost, verifyFixture, prior, false)
-}
-
-func processResearchAnswer(ctx context.Context, h *harness, port *tasks.ActionPort, run tasks.RunSnapshot, model brain.Model, missingCost, verifyFixture bool, prior researchOutcomeReader, recovering bool) (brain.EvidenceAnswer, error) {
+func processResearchAnswer(ctx context.Context, h *harness, port *tasks.ActionPort, run tasks.RunSnapshot, model brain.Model, prior researchOutcomeReader, recovering bool) (brain.EvidenceAnswer, error) {
 	location := model.Capabilities().Location
 	inputTokens := max(uint64(2048), model.Capabilities().InputUpper)
 	outputTokens := researchOutputLimit(h.answerOutputTokens)
@@ -96,10 +88,6 @@ func processResearchAnswer(ctx context.Context, h *harness, port *tasks.ActionPo
 		outcomes[action.OperationID] = observed
 	}
 	original := outcomes[reserved.Actions.Actions[len(reserved.Actions.Actions)-1].OperationID]
-	expectedStatus := "answerable"
-	if missingCost {
-		expectedStatus = "insufficient"
-	}
 	search := []string{}
 	pages := []string{}
 	failures := []string{}
@@ -125,17 +113,10 @@ func processResearchAnswer(ctx context.Context, h *harness, port *tasks.ActionPo
 			return brain.EvidenceAnswer{}, fmt.Errorf("unresolved acquisition status")
 		}
 	}
-	if len(pages) > 1 {
-		expectedStatus = "conflicting"
-	}
-	if len(failures) > 0 {
-		expectedStatus = "fetch_failed"
-	}
 	if len(failures) == 0 && !h.answerFromSearch {
 		search = nil
 	}
 	if len(pages) == 0 && len(failures) == 0 && original.Status == "acquired" && reserved.Actions.Actions[len(reserved.Actions.Actions)-1].Descriptor != h.cap.Digest() {
-		expectedStatus = "insufficient"
 		pages = nil
 		search = []string{original.Reference}
 	}
@@ -231,44 +212,6 @@ func processResearchAnswer(ctx context.Context, h *harness, port *tasks.ActionPo
 	var actual brain.EvidenceAnswer
 	if err != nil || json.Unmarshal(raw, &actual) != nil {
 		return brain.EvidenceAnswer{}, fmt.Errorf("published answer lost observed outcome")
-	}
-	if complete.ExecutionReports[complete.Actions.Actions[0].OperationID].Reference == "" {
-		return brain.EvidenceAnswer{}, fmt.Errorf("lost original execution report")
-	}
-	if !verifyFixture {
-		return actual, nil
-	}
-	if actual.Status != expectedStatus {
-		return brain.EvidenceAnswer{}, fmt.Errorf("published answer lost observed outcome")
-	}
-	if expectedStatus == "conflicting" {
-		if len(actual.Claims) != 2 || len(actual.Gaps) != 1 || len(actual.Gaps[0].Sources) != 2 {
-			return brain.EvidenceAnswer{}, fmt.Errorf("answer discarded a conflicting source")
-		}
-		for i, claim := range actual.Claims {
-			if len(claim.Citations) != 1 || claim.Citations[0].Source != pages[i] {
-				return brain.EvidenceAnswer{}, fmt.Errorf("conflict citation changed")
-			}
-		}
-	}
-	if expectedStatus == "insufficient" {
-		refs := search
-		if missingCost {
-			refs = pages
-		}
-		if len(refs) != 1 || len(actual.Claims) != 0 || len(actual.Gaps) != 1 || len(actual.Gaps[0].Sources) != 1 || actual.Gaps[0].Sources[0] != refs[0] {
-			return brain.EvidenceAnswer{}, fmt.Errorf("insufficient evidence became an asserted answer or lost its source")
-		}
-	}
-	if expectedStatus == "fetch_failed" {
-		if len(pages) == 0 && len(actual.Claims) != 0 || len(actual.Gaps) != 1 || len(actual.Gaps[0].Sources) != len(failures) {
-			return brain.EvidenceAnswer{}, fmt.Errorf("failed page became a claim or lost a failure source")
-		}
-		for i, ref := range failures {
-			if actual.Gaps[0].Sources[i] != ref {
-				return brain.EvidenceAnswer{}, fmt.Errorf("answer replaced a failure source")
-			}
-		}
 	}
 	if complete.ExecutionReports[complete.Actions.Actions[0].OperationID].Reference == "" {
 		return brain.EvidenceAnswer{}, fmt.Errorf("lost original execution report")

@@ -195,8 +195,11 @@ func TestActionBrainHandsSettledEvidenceToAnswerStage(t *testing.T) {
 
 func finishActionAnswer(t *testing.T, h *harness, port *tasks.ActionPort, run tasks.RunSnapshot) {
 	t.Helper()
-	_, err := finishResearchAnswer(context.Background(), h, port, run, decisionFixtureModel{evidence: true}, false)
+	answer, err := processResearchAnswer(context.Background(), h, port, run, decisionFixtureModel{evidence: true}, nil, false)
 	if err != nil {
 		t.Fatal(err)
+	}
+	if answer.Status != "answerable" {
+		t.Fatalf("unexpected fixture answer: %+v", answer)
 	}
 }

@@ -1,13 +1,13 @@
 ---
 name: diagnosing-bugs
-description: Diagnosis loop for hard bugs and performance regressions. Use when the user says "diagnose"/"debug this", or reports something broken/throwing/failing/slow.
+description: Diagnose bugs through a reproducible feedback loop. Use for explicit debugging requests, hard bugs, or performance regressions.
 ---
 
 # Diagnosing Bugs
 
 A discipline for hard bugs. Skip phases only when explicitly justified.
 
-When exploring the codebase, read `CONTEXT.md` (if it exists) to get a clear mental model of the relevant modules, and check ADRs in the area you're touching.
+For domain terminology, business behavior, or architectural decisions, consult `docs/agents/domain.md`.
 
 ## Redact
 

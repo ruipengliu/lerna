@@ -63,7 +63,7 @@ func ResumeResearch(ctx context.Context, root string, model brain.Model, credent
 	if err != nil {
 		return answers.View{}, err
 	}
-	if _, err := processResearchAnswer(ctx, h, port, run, model, false, false, nil, len(run.Generations) != 0); err != nil {
+	if _, err := processResearchAnswer(ctx, h, port, run, model, nil, len(run.Generations) != 0); err != nil {
 		return answers.View{}, err
 	}
 	return query()

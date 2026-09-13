@@ -55,7 +55,7 @@ func checkPreparedResearch(t *testing.T, recipient string, allowed bool) {
 	if recipient != "" {
 		configureSearchRecipient(t, ctx, h, true, allowed)
 	}
-	spec := researchRunSpec{Goal: "Read the provided record", Query: "supplied query", SearchEndpoint: endpoint + "/discover", Queries: 128, NetworkLimit: 2, Steps: 3}
+	spec := researchRunSpec{AnswerModel: decisionFixtureModel{evidence: true}, Goal: "Read the provided record", Query: "supplied query", SearchEndpoint: endpoint + "/discover", Queries: 128, NetworkLimit: 2, Steps: 3}
 	if recipient != "" {
 		spec.SearchConfig = searchProviderConfig{MaxBytes: 4096, Recipient: recipient}
 	}
@@ -92,12 +92,34 @@ func TestPreparedResearchReportsSearchFailureWithoutRetry(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer h.destroy()
-	record, err := runPreparedResearch(ctx, h, researchRunSpec{Goal: "Find evidence", Query: "query", SearchEndpoint: server.URL + "/discover", Queries: 128, NetworkLimit: 2, Steps: 3})
+	record, err := runPreparedResearch(ctx, h, researchRunSpec{AnswerModel: decisionFixtureModel{evidence: true}, Goal: "Find evidence", Query: "query", SearchEndpoint: server.URL + "/discover", Queries: 128, NetworkLimit: 2, Steps: 3})
 	if err != nil {
 		t.Fatal(err)
 	}
 	if hits.Load() != 1 || record.Usage.SearchRequests != 1 || record.Usage.PageRequests != 0 || record.Usage.NetworkCharged != 1 || record.Usage.ModelRequests != 2 || record.Answer.Status != "fetch_failed" || len(record.Answer.Claims) != 0 || len(record.Answer.Gaps) != 1 {
 		t.Fatalf("known search failure was retried or lost: hits=%d record=%+v", hits.Load(), record)
+	}
+}
+
+func TestResearchVerificationRejectsMismatchedObservations(t *testing.T) {
+	ctx := context.Background()
+	var searches, pages atomic.Int32
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		searches.Add(1)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(`{"results":[]}`))
+	}))
+	defer server.Close()
+	h, err := fresh(ctx, []string{server.URL + "/discover?q=query", server.URL + "/unused"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer h.destroy()
+	record, err := checkPreparedResearchRun(ctx, h, researchRunSpec{Goal: "Find evidence", Query: "query", SearchEndpoint: server.URL + "/discover", Queries: 128, NetworkLimit: 2, Steps: 3}, "empty_search", nil, false, &researchVerification{
+		actions: 1, decisions: 1, searchRequests: 2, searchHits: &searches, pageHits: &pages,
+	})
+	if err == nil || !strings.HasPrefix(err.Error(), "search-fetch loop:") || record.UsageStatus != "snapshot" || record.Usage.SearchRequests != 1 || record.Usage.NetworkCharged != 1 || record.Usage.ModelRequests != 1 {
+		t.Fatalf("verification accepted mismatched counts or lost original usage: %+v err=%v", record, err)
 	}
 }
 
@@ -122,7 +144,7 @@ func TestPreparedResearchEnforcesConfiguredNetwork(t *testing.T) {
 			}
 			defer h.close()
 			h.inputSources = []*wire.ContentSource{{Kind: "task-goal", Key: "inline", Revision: 1}}
-			record, err := runPreparedResearch(ctx, h, researchRunSpec{Goal: "Find evidence", Query: "query", SearchEndpoint: server.URL + "/discover", Queries: 128, NetworkLimit: 2, Steps: 3, Reopen: true})
+			record, err := checkPreparedResearchRun(ctx, h, researchRunSpec{Goal: "Find evidence", Query: "query", SearchEndpoint: server.URL + "/discover", Queries: 128, NetworkLimit: 2, Steps: 3}, "", nil, true, nil)
 			if err != nil {
 				t.Fatal(err)
 			}
