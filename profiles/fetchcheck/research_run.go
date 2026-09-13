@@ -6,16 +6,11 @@ import (
 	"fmt"
 	"lerna/adapters/catalogauth"
 	"lerna/adapters/contentpolicy"
-	"lerna/adapters/executionlocal"
-	"lerna/adapters/fetchexecution"
-	"lerna/adapters/fetchtask"
 	"lerna/adapters/sqlitecatalog"
 	"lerna/brain"
 	"lerna/catalog"
-	"lerna/execution"
 	"lerna/fetch"
 	"lerna/internal/randomid"
-	"lerna/sdk"
 	"lerna/tasks"
 	"path/filepath"
 	"strings"
@@ -98,39 +93,12 @@ func startResearch(ctx context.Context, h *harness, spec researchRunSpec) (*rese
 	if err != nil {
 		return r, err
 	}
-	content, err := h.access.WithQueries(port)
-	if err != nil {
+	if err := bindPageExecution(h, port, networkLimit); err != nil {
 		return r, err
 	}
-	scope, err := acquisitionQueries(h, port, h.cap)
-	if err != nil {
-		return r, err
-	}
-	guard, err := fetchtask.New(h.auth, h.work, h.core, h.token)
-	if err != nil {
-		return r, err
-	}
-	h.target, err = fetchexecution.New(h.http, h.attempts, h.evidence, h.auth, fetchexecution.Config{Guard: guard, Token: h.token, Namespace: "local", Subject: "operator", Capability: h.cap, MaxBytes: int64(h.pageMaxBytes), MaxRequests: min(uint32(2), networkLimit), TaskLimit: networkLimit, Timeout: time.Second})
-	if err != nil {
-		return r, err
-	}
-	h.target, err = h.target.WithObservations(scope)
-	if err != nil {
-		return r, err
-	}
-	h.exec, err = execution.New(h.grants, h.work, content, h.target, h.binding, h.cap, config(), h.operation)
-	if err != nil {
-		return r, err
-	}
-	h.client = sdk.NewCapabilityClient(executionlocal.Bind(h.exec, "local"), "local")
 	searchHost, err := bindConfiguredSearchHost(h, spec.SearchEndpoint, networkLimit, port, searchConfig)
 	if err != nil {
 		return r, err
-	}
-	for _, service := range []*execution.Service{h.exec, searchHost.h.exec} {
-		if err := h.lifetime.track(service); err != nil {
-			return r, err
-		}
 	}
 	source := catalog.Source{Kind: "capability", Key: "fetch", Revision: 1}
 	rules := []contentpolicy.Rule{}

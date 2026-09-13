@@ -6,23 +6,17 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"lerna/adapters/executionlocal"
 	"lerna/adapters/fetchauth"
-	"lerna/adapters/fetchqueries"
-	"lerna/adapters/fetchtask"
 	"lerna/adapters/jsonsearch"
 	"lerna/adapters/replayfetch"
 	"lerna/adapters/searchcontext"
-	"lerna/adapters/searchexecution"
 	"lerna/adapters/searchprivacy"
 	"lerna/artifacts"
 	"lerna/brain"
 	"lerna/catalog"
-	"lerna/execution"
 	"lerna/fetch"
 	"lerna/profiles/searchcheck"
 	"lerna/schema"
-	"lerna/sdk"
 	"lerna/tasks"
 	"lerna/websearch"
 	"net/http"
@@ -387,55 +381,15 @@ func bindSearchProviderConfig(h *harness, search websearch.Searcher, networkLimi
 		doc := copy.cap.Input.Document
 		copy.cap.Input.Document = []byte(fmt.Sprintf(`%s,"$comment":%s}`, doc[:len(doc)-1], annotation))
 	}
-	guard, err := fetchtask.New(h.auth, h.work, h.core, h.token)
-	if err != nil {
-		return nil, err
-	}
 	privacy, err := searchprivacy.New(h.content, artifacts.Binding{Token: h.token, Namespace: "local", Location: "local", Recipient: "local"}, h.clock, copy.cap, bounds.Recipient)
 	if err != nil {
 		return nil, err
 	}
-	if queries != nil {
-		privacy, err = privacy.WithQueries(queries)
-		if err != nil {
-			return nil, err
-		}
-	}
-	var observations searchexecution.ObservationScope
-	if queries != nil {
-		observations, err = acquisitionQueries(h, queries, copy.cap)
-		if err != nil {
-			return nil, err
-		}
-	}
-	driverConfig := searchexecution.Config{Observations: observations, Guard: guard, QueryGuard: privacy, Token: h.token, Namespace: "local", Subject: "operator", Capability: copy.cap, MaxResults: int(bounds.MaxResults), MaxBytes: int64(bounds.MaxBytes), MaxRequests: 1, TaskLimit: networkLimit, Timeout: time.Duration(bounds.TimeoutMS) * time.Millisecond}
-	driver, err := searchexecution.New(search, h.attempts, h.evidence, h.auth, driverConfig)
-	if err != nil {
+	driver := &searchAcquisition{provider: search, privacy: privacy, bounds: bounds, networkLimit: networkLimit}
+	if err := driver.bind(&copy, queries); err != nil {
 		return nil, err
 	}
-	var content execution.Content = h.access
-	if queries != nil {
-		content, err = h.access.WithQueries(queries)
-		if err != nil {
-			return nil, err
-		}
-	}
-	copy.exec, err = execution.New(h.grants, h.work, content, driver, h.binding, copy.cap, config(), h.operation)
-	if err != nil {
-		return nil, err
-	}
-	copy.client = sdk.NewCapabilityClient(executionlocal.Bind(copy.exec, "local"), "local")
-	return &fetchActionHost{h: &copy, recoveryDriver: func(scope *fetchqueries.Scope, guard *fetchtask.Guard, queries *tasks.ActionPort) (execution.Driver, error) {
-		cfg := driverConfig
-		cfg.Observations = scope
-		cfg.Guard = guard
-		currentPrivacy, err := privacy.WithQueries(queries)
-		if err != nil {
-			return nil, err
-		}
-		cfg.QueryGuard = currentPrivacy
-		return searchexecution.New(search, h.attempts, h.evidence, h.auth, cfg)
-	}}, nil
+	return &fetchActionHost{h: &copy, searchDriver: driver}, nil
 }
 
 type researchActionHost struct {

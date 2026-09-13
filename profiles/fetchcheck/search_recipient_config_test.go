@@ -5,12 +5,29 @@ import (
 	"google.golang.org/protobuf/proto"
 	"lerna/adapters/jsonsearch"
 	"lerna/authorization"
+	"lerna/fetch"
 	wire "lerna/gen/harness/v1"
 	"net/http"
 	"net/http/httptest"
 	"sync/atomic"
 	"testing"
 )
+
+func TestSearchAssemblyRejectsClosedHost(t *testing.T) {
+	ctx := context.Background()
+	h, err := fresh(ctx, []string{"http://127.0.0.1/search?q=public", "http://127.0.0.1/unused"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer h.destroy()
+	if _, err := bindSearchActionHost(h, "http://127.0.0.1/search", 1, nil); err != nil {
+		t.Fatal(err)
+	}
+	h.close()
+	if host, err := bindSearchActionHost(h, "http://127.0.0.1/search", 1, nil); err != fetch.Unavailable || host != nil {
+		t.Fatalf("closed host accepted new execution: host=%v err=%v", host, err)
+	}
+}
 
 func TestSearchProviderConfigChecksRecipientAuthorities(t *testing.T) {
 	for _, c := range []struct {

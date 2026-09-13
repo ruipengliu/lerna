@@ -3,9 +3,6 @@ package fetchcheck
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/executionlocal"
-	"lerna/adapters/fetchqueries"
-	"lerna/adapters/fetchtask"
 	"lerna/adapters/taskcontent"
 	"lerna/authorization"
 	"lerna/brain"
@@ -14,7 +11,6 @@ import (
 	"lerna/fetch"
 	wire "lerna/gen/harness/v1"
 	"lerna/schema"
-	"lerna/sdk"
 	"lerna/tasks"
 	"slices"
 )
@@ -22,12 +18,12 @@ import (
 // This host is a bounded reference assembly, not an alternate execution loop.
 // ActionBrain owns decisions; Core admits actions; SDK/Execution performs HTTP.
 type fetchActionHost struct {
-	recoveryDriver func(*fetchqueries.Scope, *fetchtask.Guard, *tasks.ActionPort) (execution.Driver, error)
-	h              *harness
-	directory      *catalog.Service
-	lastError      error
-	answerNext     bool
-	queries        *tasks.ActionPort
+	searchDriver *searchAcquisition
+	h            *harness
+	directory    *catalog.Service
+	lastError    error
+	answerNext   bool
+	queries      *tasks.ActionPort
 }
 
 func (a *fetchActionHost) Validate(ctx context.Context, t tasks.Task, location string) error {
@@ -194,50 +190,11 @@ func (a *fetchActionHost) Execute(ctx context.Context, t tasks.Task, x tasks.Act
 	return a.h.exec.Drain(ctx, 16)
 }
 func (a *fetchActionHost) Recover(ctx context.Context, t tasks.Task, x tasks.Action) error {
-	current, err := a.h.core.Load(ctx, t.Ref)
+	recovery, err := a.recoveryExecution(ctx, t)
 	if err != nil {
 		return err
 	}
-	if current.Task.Version != t.Version || current.Task.Owner != t.Owner || current.Task.OwnerEpoch != t.OwnerEpoch {
-		return fetch.Denied
-	}
-	recovery := *a.h
-	recovery.work = a.h.work.WithActionRecovery(tasks.QualificationOf(current))
-	if current.Actions == nil {
-		return fetch.Denied
-	}
-	port, err := recovery.work.Actions(current.Actions.Limits)
-	if err != nil {
-		return err
-	}
-	scope, err := acquisitionQueries(&recovery, port, recovery.cap)
-	if err != nil {
-		return err
-	}
-	guard, err := fetchtask.New(recovery.auth, recovery.work, recovery.core, recovery.token)
-	if err != nil {
-		return err
-	}
-	var driver execution.Driver
-	if a.recoveryDriver != nil {
-		driver, err = a.recoveryDriver(scope, guard, port)
-	} else {
-		driver, err = recovery.target.WithRecovery(scope, guard)
-	}
-	if err != nil {
-		return err
-	}
-	content, err := recovery.access.WithQueries(port)
-	if err != nil {
-		return err
-	}
-	service, err := execution.New(recovery.grants, recovery.work, content, driver, recovery.binding, recovery.cap, config(), recovery.operation)
-	if err != nil {
-		return err
-	}
-	if err := recovery.lifetime.track(service); err != nil {
-		return err
-	}
+	service := recovery.exec
 	request := execution.Request{OperationID: x.OperationID, Qualification: x.Qualification, Capability: recovery.cap.Name, Version: recovery.cap.Version, Implementation: recovery.cap.Implementation, ImplementationVersion: recovery.cap.ImplementationVersion, DescriptorSHA256: x.Descriptor, InputRef: x.InputRef, ResourceVersion: x.ResourceVersion, ControlVersion: x.ControlVersion}
 	_, admitted, err := service.LookupAdmission(ctx, request)
 	if err != nil {
@@ -248,8 +205,7 @@ func (a *fetchActionHost) Recover(ctx context.Context, t tasks.Task, x tasks.Act
 		if err != nil {
 			return err
 		}
-		client := sdk.NewCapabilityClient(executionlocal.Bind(service, "local"), "local")
-		if _, err := client.Invoke(ctx, request, grant); err != nil {
+		if _, err := recovery.client.Invoke(ctx, request, grant); err != nil {
 			return err
 		}
 	}
