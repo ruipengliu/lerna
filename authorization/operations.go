@@ -38,6 +38,14 @@ func (s *Service) NewOperation(ctx context.Context, token string) (string, error
 	return out, err
 }
 func windowOf(st *State, id string) (uint64, error) {
+	if st.Nodes != nil {
+		if _, ok := st.Nodes.Operations[id]; ok {
+			return 0, fail(IdentityConflict)
+		}
+	}
+	return parseOperationWindow(st, id)
+}
+func parseOperationWindow(st *State, id string) (uint64, error) {
 	if len(id) > 512 {
 		return 0, fail(Invalid)
 	}

@@ -30,7 +30,8 @@ func (g *GrantAuthority) ConfirmApplied(ctx context.Context, p GrantPresentation
 		bound := false
 		for target, entry := range st.Signed.Grants {
 			v := entry.Record.Spec
-			if g.descends(st, target, id) && v.Subject == p.Subject && v.Audience == p.Audience && v.Presenter == p.Presenter && v.CertificateSha256 == p.CertificateSHA256 {
+			certificate, err := grantCertificate(st, v, now)
+			if err == nil && g.descends(st, target, id) && v.Subject == p.Subject && v.Audience == p.Audience && v.Presenter == p.Presenter && certificate == p.CertificateSHA256 {
 				bound = true
 			}
 		}

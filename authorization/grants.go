@@ -100,6 +100,23 @@ func (g *GrantAuthority) manage(st *State, p Principal, in *wire.GrantMutation, 
 }
 func (g *GrantAuthority) validate(st *State, in *wire.GrantMutation, now time.Time) error {
 	v := in.Spec
+	if in.Kind == "REBIND" {
+		if in.Spec != nil {
+			return fail(Invalid)
+		}
+		entry, ok := st.Signed.Grants[in.GrantId]
+		if !ok {
+			return fail(NotFound)
+		}
+		if entry.Record.Revision != in.ExpectedGrantRevision {
+			return fail(Conflict)
+		}
+		if err := g.chain(st, in.GrantId, now); err != nil {
+			return err
+		}
+		_, err := grantCertificate(st, entry.Record.Spec, now)
+		return err
+	}
 	if in.Kind == "REVOKE" {
 		if v != nil {
 			return fail(Invalid)
@@ -251,7 +268,7 @@ func (g *GrantAuthority) Mutate(ctx context.Context, token string, input *wire.G
 		if st.Revision != in.ExpectedRevision {
 			return fail(Conflict)
 		}
-		if len(st.Signed.Operations) >= 2*g.config.MaxRecords || (in.Kind != "REVOKE" && len(st.Signed.Grants) >= g.config.MaxRecords) {
+		if len(st.Signed.Operations) >= 2*g.config.MaxRecords || (in.Kind != "REVOKE" && in.Kind != "REBIND" && len(st.Signed.Grants) >= g.config.MaxRecords) {
 			return fail(Unavailable)
 		}
 		return g.validate(st, in, now)
@@ -267,11 +284,21 @@ func (g *GrantAuthority) Mutate(ctx context.Context, token string, input *wire.G
 		if in.Kind == "REVOKE" {
 			return nil
 		}
-		spec, err := protojson.Marshal(in.Spec)
+		signSpec := in.Spec
+		grantID, revision, parent := id, st.Revision+1, in.GrantId
+		if in.Kind == "REBIND" {
+			entry := st.Signed.Grants[in.GrantId].Record
+			signSpec, grantID, revision, parent = entry.Spec, entry.Id, entry.Revision, entry.Parent
+		}
+		certificate, err := grantCertificate(st, signSpec, now)
+		if err != nil {
+			return err
+		}
+		spec, err := protojson.Marshal(signSpec)
 		if err != nil {
 			return fail(Invalid)
 		}
-		claims = grantClaims{Issuer: g.config.Issuer, Subject: in.Spec.Subject, Audience: in.Spec.Audience, Issued: now.Unix(), NotBefore: in.Spec.NotBefore, Expires: in.Spec.Scope.ExpiresUnix, Confirmation: map[string]string{"x5t#S256": in.Spec.CertificateSha256}, Namespace: st.Namespace, GrantID: id, Revision: st.Revision + 1, Parent: in.GrantId, Spec: spec}
+		claims = grantClaims{Issuer: g.config.Issuer, Subject: signSpec.Subject, Audience: signSpec.Audience, Issued: now.Unix(), NotBefore: signSpec.NotBefore, Expires: signSpec.Scope.ExpiresUnix, Confirmation: map[string]string{"x5t#S256": certificate}, Namespace: st.Namespace, GrantID: grantID, Revision: revision, Parent: parent, Spec: spec}
 		return nil
 	})
 	if err != nil {
@@ -322,6 +349,8 @@ func (g *GrantAuthority) Mutate(ctx context.Context, token string, input *wire.G
 				}
 			}
 			st.Signed.Grants[id] = entry
+		} else if in.Kind == "REBIND" {
+			id = in.GrantId
 		} else {
 			record := &wire.GrantRecord{Id: id, Parent: in.GrantId, Spec: in.Spec, Revision: st.Revision, Notices: []*wire.GrantNotice{{GrantId: id, Recipient: in.Spec.Audience, Revision: st.Revision}}}
 			st.Signed.Grants[id] = GrantEntry{Record: record, Creator: subject}

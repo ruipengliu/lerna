@@ -1,0 +1,132 @@
+{
+  "profile": "node-enrollment-v1",
+  "recorded_at_utc": "2026-09-13T13:55:13.107593+00:00",
+  "base_revision": "4641c348a1c0af7c037b4241ed63e3aa17ceeaae",
+  "candidate": "uncommitted source identified by sha256; implementation commit contains this report",
+  "environment": {
+    "GOARCH": "arm64",
+    "GOOS": "darwin",
+    "GOVERSION": "go1.26.1"
+  },
+  "commands": [
+    "sh scripts/verify-enrollment.sh",
+    "PATH=\"$PWD/.tools/protoc-36.1/bin:$PATH\" sh scripts/generate.sh",
+    "GOTOOLCHAIN=go1.26.1 go build -mod=readonly ./...",
+    "GOTOOLCHAIN=go1.26.1 go vet -mod=readonly ./...",
+    "GOTOOLCHAIN=go1.26.1 go test -mod=readonly -p 1 -race -count=1 -timeout=2m ./authorization -run 'TestNode|TestRealTLS' -json (final TLS configuration and negative cases)"
+  ],
+  "status": {
+    "profile": "node-enrollment-v1",
+    "nodes": "passed",
+    "regression": "failed",
+    "restricted_grants": "passed",
+    "local_auth": "passed",
+    "exit_code": 1
+  },
+  "checks": {
+    "nodes": {
+      "passed_top_level_tests": 8,
+      "failures": [],
+      "skipped_tests": [
+        "TestNodeProcessProbe"
+      ]
+    },
+    "regression": {
+      "passed_top_level_tests": 38,
+      "failures": [
+        {
+          "package": "lerna/adapters/memoryauth",
+          "test": "TestCurrentHarnessPolicyAndResidencyConstrainMemory",
+          "elapsed": 0.05
+        },
+        {
+          "package": "lerna/adapters/memoryauth",
+          "test": null,
+          "elapsed": 0.735
+        }
+      ],
+      "skipped_tests": [
+        "TestNodeProcessProbe"
+      ]
+    },
+    "grants": {
+      "status": "passed",
+      "required_passed": 30,
+      "required_failed": 0
+    },
+    "local-auth": {
+      "status": "passed",
+      "required_passed": 30,
+      "required_failed": 0
+    }
+  },
+  "generation": "passed with protoc 36.1 and protoc-gen-go v1.36.11",
+  "build": "passed",
+  "vet": "passed",
+  "source_sha256": {
+    "adapters/josegrant/jose.go": "f8cf7d8ae230cd7841c14abe777eeddf446c208f6e9db4b97f53d1d2ef9c52b6",
+    "adapters/josegrant/rotation.go": "316abda9b99c1728c78489d7f6399ec4c8a4e07a8f58981eb5873ac8d84722cd",
+    "adapters/nodetls/certificates.go": "cee0766d7f065f20bda40d9ef2a5dd93376fb081a4efb9089732d62b641dee97",
+    "adapters/nodetls/endpoint.go": "747fd6d04d0e100f8e0eddeeb7ca3cbe333936645f3608e096280c92b4efa07e",
+    "authorization/execution.go": "af5a78fdf9131fa4a078c5f78239337073b016b584b59c55815c79fa6f8f9cff",
+    "authorization/grant_chain.go": "9b867f5e11d273946a753a22d51ddb15139c5b31c350dbbe2003dfb9bad173b4",
+    "authorization/grant_notifications.go": "ab7980799594bfae5ce2557e2e453310abce560d2492124eda179563782b9e80",
+    "authorization/grant_reservations.go": "5843bdfee022055e9ddd28b1f45a448b6c4e26139f036b95e9100077f4c77999",
+    "authorization/grant_verify.go": "ae6056f32bca50e9db9116d12ba1d0921ea48423c7bd62ced3cfd64508f7ce69",
+    "authorization/grants.go": "ea8ae0efd8c5724e0b523df25d0b08487c39cee4f3282a0ccf4916d489ae6f30",
+    "authorization/grants_test.go": "bb793a7c80ac9302c7c0214192ab01a690e1c15bac530317a05a26aafa3d08cf",
+    "authorization/node_content_test.go": "92e089bd1898c5bf90a73e85d3441e40384cc72c05002275679c42807fc49bd0",
+    "authorization/node_grants.go": "c0383b4dee28f7c7768b205a054f72ee025ebec38aecb50423ff49f67d03727b",
+    "authorization/node_presentations.go": "7491af38a36fcc4c95f68d4532cf181e6a89244e88275d3059f17b81e1fe29bf",
+    "authorization/nodes.go": "21ba76ab417ca7e46dd3b73cb3ba381e742321d968fa4eafff9d38551e736f1f",
+    "authorization/nodes_recovery_test.go": "d23977df0e6c4310ec07f99da2a1c873fec0e600437c5b4986484790baa1656c",
+    "authorization/nodes_test.go": "f89c3e9d6fbe037064e637621fe60cbb8be6f08d195bc72b240ee6755ff82c13",
+    "authorization/operations.go": "49dfedab02816721aab13d676e307fc6ec3f895a1f4b207038353a1eadb08887",
+    "authorization/state.go": "ff14f9b29769fa97e4047663b63c562a3d25a057fc81d82990183eaf95a5eda1",
+    "authorization/use_grants.go": "e57f9d99df7e6506caf5bf0e21961da51bee8b4bdf59a83b933cac83ebb064a0",
+    "gen/harness/v1/authorization.pb.go": "87747c308bf26c9ce550bb31ab0fa5b80c2aa822020c51ec7ebe3863005a91b7",
+    "proto/harness/v1/authorization.proto": "99c11db0c3685d7e27ea59f9ec964b869c293bea4095ec84a541621a527448f6",
+    "scripts/verify-enrollment.sh": "0c19eca14323f3c49e4c2849257753f147c13b95b2d9de97bec8c1d32f3176d5"
+  },
+  "raw_evidence": {
+    "nodes.jsonl": "23-nodes.jsonl",
+    "regression.jsonl": "23-regression.jsonl",
+    "grants.json": "23-grants.json",
+    "local-auth.json": "23-local-auth.json"
+  },
+  "configuration": {
+    "node_certificate_ttl_seconds": 3600,
+    "join_request_ttl_seconds": 60,
+    "node_io_timeout_seconds": 1,
+    "max_nodes": 16,
+    "max_node_operations": [
+      64,
+      128
+    ],
+    "tls": "1.3 only; directly issued leaf; explicit URI identity",
+    "http_verification_host": {
+      "max_connections": 4,
+      "read_header_timeout_seconds": 1,
+      "read_write_timeout_seconds": 2,
+      "idle_timeout_seconds": 1,
+      "max_header_bytes": 4096
+    },
+    "store": "real SQLite WAL/FULL, CAS; node private keys in separate owner-only directories",
+    "clock": "controlled authority time; real sockets and real child processes",
+    "signing": "P-256 X.509; ES256 grants; distinct issuer and grant key trust maps"
+  },
+  "baseline_failure": {
+    "test": "lerna/adapters/memoryauth.TestCurrentHarnessPolicyAndResidencyConstrainMemory",
+    "current_result": "UNAVAILABLE at authority_test.go:143 opening sqlitememory",
+    "unmodified_HEAD_result": "same failure at same location on isolated git archive of base_revision",
+    "diagnostic": "Instrumented only the throwaway baseline copy: openStore CREATE TABLE returned database is locked (5) (SQLITE_BUSY). No memory storage source changed in this task.",
+    "baseline_command": "GOTOOLCHAIN=go1.26.1 go -C build/enrollment-baseline test -mod=readonly ./adapters/memoryauth -run TestCurrentHarnessPolicyAndResidencyConstrainMemory -count=1"
+  },
+  "limitations": [
+    "Overall verification runner exits 1 because the baseline memory regression fails; do not report an all-regressions pass.",
+    "Business recovery uses reopened independent SQLite handle and reconstructed authorities; management recovery separately uses actual child exit(73) before commit and after commit.",
+    "HTTP is only a bounded TLS verification host, not a new production protocol; full gRPC/WebSocket bindings remain tickets 24/25.",
+    "No global immediate revocation, remote replica freshness, indefinite offline validity, hostile-host protection or stale-backup rollback resistance.",
+    "Reservation is not claimed as actual business consumption. Actual immutable governed content READ is verified separately."
+  ]
+}

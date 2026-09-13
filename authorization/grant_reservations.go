@@ -38,14 +38,26 @@ func (g *GrantAuthority) ReserveUse(ctx context.Context, material string, p Gran
 		return UsePermit{}, fail(Invalid)
 	}
 	digest := sha256.Sum256(encoded)
-	in := UsePermit{p.Namespace, record.Id, p.Subject, p.Audience, p.Presenter, p.CertificateSHA256, p.OperationID, p.SemanticSHA256, hex.EncodeToString(digest[:]), units}
+	in := UsePermit{p.Namespace, record.Id, p.Subject, p.Audience, p.Presenter, record.Spec.CertificateSha256, p.OperationID, p.SemanticSHA256, hex.EncodeToString(digest[:]), units}
 	var out UsePermit
 	err = g.service.update(ctx, func(st *State, now time.Time) error {
 		if err := g.journal(st); err != nil {
 			return err
 		}
+		certificate, err := grantCertificate(st, record.Spec, now)
+		if err != nil {
+			return err
+		}
+		if certificate != p.CertificateSHA256 {
+			return fail(Denied)
+		}
 		if err := g.chain(st, record.Id, now); err != nil {
 			return err
+		}
+		if st.Nodes != nil {
+			if _, ok := st.Nodes.Operations[p.OperationID]; ok {
+				return fail(IdentityConflict)
+			}
 		}
 		// Shared namespace operation identity: a changed grant/receiver cannot spend
 		// the same logical operation again. Management identities remain separate.
@@ -115,7 +127,7 @@ func (g *GrantAuthority) LookupUse(ctx context.Context, p GrantPresentation) (Us
 		if !ok {
 			return fail(NotFound)
 		}
-		if !old.matches(p) {
+		if !permitMatches(st, now, old, p) {
 			return fail(Denied)
 		}
 		out = old

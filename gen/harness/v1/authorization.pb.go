@@ -1575,8 +1575,8 @@ type GrantMutation struct {
 	state                 protoimpl.MessageState `protogen:"open.v1"`
 	OperationId           string                 `protobuf:"bytes,1,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
 	ExpectedRevision      uint64                 `protobuf:"varint,2,opt,name=expected_revision,json=expectedRevision,proto3" json:"expected_revision,omitempty"`
-	Kind                  string                 `protobuf:"bytes,3,opt,name=kind,proto3" json:"kind,omitempty"`                      // ISSUE, DERIVE, REVOKE
-	GrantId               string                 `protobuf:"bytes,4,opt,name=grant_id,json=grantId,proto3" json:"grant_id,omitempty"` // Parent for DERIVE, target for REVOKE.
+	Kind                  string                 `protobuf:"bytes,3,opt,name=kind,proto3" json:"kind,omitempty"`                      // ISSUE, DERIVE, REVOKE, REBIND (re-sign immutable grant for current node certificate).
+	GrantId               string                 `protobuf:"bytes,4,opt,name=grant_id,json=grantId,proto3" json:"grant_id,omitempty"` // Parent for DERIVE, target for REVOKE or REBIND.
 	ExpectedGrantRevision uint64                 `protobuf:"varint,5,opt,name=expected_grant_revision,json=expectedGrantRevision,proto3" json:"expected_grant_revision,omitempty"`
 	Spec                  *SignedGrantSpec       `protobuf:"bytes,6,opt,name=spec,proto3" json:"spec,omitempty"`
 	unknownFields         protoimpl.UnknownFields

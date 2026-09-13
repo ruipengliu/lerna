@@ -43,7 +43,7 @@ func (g *GrantAuthority) Verify(ctx context.Context, material string, p GrantPre
 	if protojson.Unmarshal(claims.Spec, spec) != nil {
 		return nil, fail(Unsupported)
 	}
-	if claims.Issuer != g.config.Issuer || claims.Namespace != p.Namespace || claims.Subject != p.Subject || claims.Audience != p.Audience || spec.Subject != p.Subject || spec.Audience != p.Audience || spec.Presenter != p.Presenter || spec.CertificateSha256 != p.CertificateSHA256 || len(claims.Confirmation) != 1 || claims.Confirmation["x5t#S256"] != p.CertificateSHA256 || claims.Issued <= 0 || claims.NotBefore != spec.NotBefore || spec.Scope == nil || claims.Expires != spec.Scope.ExpiresUnix || claims.Issued >= claims.Expires {
+	if claims.Issuer != g.config.Issuer || claims.Namespace != p.Namespace || claims.Subject != p.Subject || claims.Audience != p.Audience || spec.Subject != p.Subject || spec.Audience != p.Audience || spec.Presenter != p.Presenter || len(claims.Confirmation) != 1 || claims.Confirmation["x5t#S256"] != p.CertificateSHA256 || claims.Issued <= 0 || claims.NotBefore != spec.NotBefore || spec.Scope == nil || claims.Expires != spec.Scope.ExpiresUnix || claims.Issued >= claims.Expires {
 		return nil, fail(Denied)
 	}
 	if spec.Mode == "single" && (spec.OperationBinding != p.OperationID || spec.SemanticSha256 != p.SemanticSHA256) {
@@ -51,6 +51,13 @@ func (g *GrantAuthority) Verify(ctx context.Context, material string, p GrantPre
 	}
 	var out *wire.GrantRecord
 	err = g.service.update(ctx, func(st *State, now time.Time) error {
+		certificate, err := grantCertificate(st, spec, now)
+		if err != nil {
+			return err
+		}
+		if certificate != p.CertificateSHA256 {
+			return fail(Denied)
+		}
 		if st.Namespace != p.Namespace {
 			return fail(Denied)
 		}

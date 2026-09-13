@@ -21,6 +21,7 @@ type grantClock struct{ now time.Time }
 func (c *grantClock) Now() (time.Time, error) { return c.now, nil }
 
 type grantFixture struct {
+	path   string
 	s      *authorization.Service
 	g      *authorization.GrantAuthority
 	db     *sqliteauth.Store
@@ -34,7 +35,8 @@ type grantFixture struct {
 func newGrantFixture(t *testing.T) *grantFixture {
 	t.Helper()
 	ctx := context.Background()
-	db, err := sqliteauth.Open(filepath.Join(t.TempDir(), "auth.db"))
+	path := filepath.Join(t.TempDir(), "auth.db")
+	db, err := sqliteauth.Open(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -70,7 +72,7 @@ func newGrantFixture(t *testing.T) *grantFixture {
 	if err != nil {
 		t.Fatal(err)
 	}
-	return &grantFixture{s, g, db, token, c, &wire.SignedGrantSpec{Subject: "admin", Audience: "receiver", Presenter: "node", CertificateSha256: base64.RawURLEncoding.EncodeToString(make([]byte, 32)), Scope: scope, NotBefore: c.now.Unix(), DelegationDepth: 2, Units: 8, Mode: "continuous"}, cfg, crypto}
+	return &grantFixture{path, s, g, db, token, c, &wire.SignedGrantSpec{Subject: "admin", Audience: "receiver", Presenter: "node", CertificateSha256: base64.RawURLEncoding.EncodeToString(make([]byte, 32)), Scope: scope, NotBefore: c.now.Unix(), DelegationDepth: 2, Units: 8, Mode: "continuous"}, cfg, crypto}
 }
 func (f *grantFixture) request(t *testing.T, kind string, revision uint64) *wire.GrantMutation {
 	t.Helper()

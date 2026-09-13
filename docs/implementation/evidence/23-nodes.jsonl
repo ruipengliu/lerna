@@ -1,0 +1,121 @@
+{"Time":"2026-09-13T21:56:56.057398+08:00","Action":"start","Package":"lerna/authorization"}
+{"Time":"2026-09-13T21:56:56.917777+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeProcessProbe"}
+{"Time":"2026-09-13T21:56:56.917821+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessProbe","Output":"=== RUN   TestNodeProcessProbe\n"}
+{"Time":"2026-09-13T21:56:56.91788+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessProbe","Output":"    nodes_recovery_test.go:36: subprocess only\n"}
+{"Time":"2026-09-13T21:56:56.917906+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessProbe","Output":"--- SKIP: TestNodeProcessProbe (0.00s)\n"}
+{"Time":"2026-09-13T21:56:56.917914+08:00","Action":"skip","Package":"lerna/authorization","Test":"TestNodeProcessProbe","Elapsed":0}
+{"Time":"2026-09-13T21:56:56.917922+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeProcessRecovery"}
+{"Time":"2026-09-13T21:56:56.917927+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessRecovery","Output":"=== RUN   TestNodeProcessRecovery\n"}
+{"Time":"2026-09-13T21:56:56.917951+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/prepared"}
+{"Time":"2026-09-13T21:56:56.917958+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/prepared","Output":"=== RUN   TestNodeProcessRecovery/prepared\n"}
+{"Time":"2026-09-13T21:56:56.981508+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/prepared","Output":"--- PASS: TestNodeProcessRecovery/prepared (0.06s)\n"}
+{"Time":"2026-09-13T21:56:56.981532+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/prepared","Elapsed":0.06}
+{"Time":"2026-09-13T21:56:56.98156+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/committed"}
+{"Time":"2026-09-13T21:56:56.981569+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/committed","Output":"=== RUN   TestNodeProcessRecovery/committed\n"}
+{"Time":"2026-09-13T21:56:57.035337+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/committed","Output":"--- PASS: TestNodeProcessRecovery/committed (0.05s)\n"}
+{"Time":"2026-09-13T21:56:57.035359+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeProcessRecovery/committed","Elapsed":0.05}
+{"Time":"2026-09-13T21:56:57.035365+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeProcessRecovery","Output":"--- PASS: TestNodeProcessRecovery (0.12s)\n"}
+{"Time":"2026-09-13T21:56:57.035379+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeProcessRecovery","Elapsed":0.12}
+{"Time":"2026-09-13T21:56:57.035408+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeEnrollmentDisableAndReplay"}
+{"Time":"2026-09-13T21:56:57.035412+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeEnrollmentDisableAndReplay","Output":"=== RUN   TestNodeEnrollmentDisableAndReplay\n"}
+{"Time":"2026-09-13T21:56:57.067592+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeEnrollmentDisableAndReplay","Output":"--- PASS: TestNodeEnrollmentDisableAndReplay (0.03s)\n"}
+{"Time":"2026-09-13T21:56:57.067609+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeEnrollmentDisableAndReplay","Elapsed":0.03}
+{"Time":"2026-09-13T21:56:57.067642+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable"}
+{"Time":"2026-09-13T21:56:57.06765+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable","Output":"=== RUN   TestRealTLSReservationRotationAndDisable\n"}
+{"Time":"2026-09-13T21:56:58.204694+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-namespace"}
+{"Time":"2026-09-13T21:56:58.204722+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-namespace","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/wrong-namespace\n"}
+{"Time":"2026-09-13T21:56:58.221139+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-namespace","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/wrong-namespace (0.02s)\n"}
+{"Time":"2026-09-13T21:56:58.221165+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-namespace","Elapsed":0.02}
+{"Time":"2026-09-13T21:56:58.221177+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-node"}
+{"Time":"2026-09-13T21:56:58.221182+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-node","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/wrong-node\n"}
+{"Time":"2026-09-13T21:56:58.237979+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-node","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/wrong-node (0.02s)\n"}
+{"Time":"2026-09-13T21:56:58.238057+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-node","Elapsed":0.02}
+{"Time":"2026-09-13T21:56:58.238084+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/unregistered-certificate"}
+{"Time":"2026-09-13T21:56:58.238089+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/unregistered-certificate","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/unregistered-certificate\n"}
+{"Time":"2026-09-13T21:56:58.254782+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/unregistered-certificate","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/unregistered-certificate (0.02s)\n"}
+{"Time":"2026-09-13T21:56:58.25481+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/unregistered-certificate","Elapsed":0.02}
+{"Time":"2026-09-13T21:56:58.254837+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-purpose"}
+{"Time":"2026-09-13T21:56:58.254842+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-purpose","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/wrong-purpose\n"}
+{"Time":"2026-09-13T21:56:58.270692+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-purpose","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/wrong-purpose (0.02s)\n"}
+{"Time":"2026-09-13T21:56:58.270714+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-purpose","Elapsed":0.02}
+{"Time":"2026-09-13T21:56:58.270747+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/expired"}
+{"Time":"2026-09-13T21:56:58.270751+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/expired","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/expired\n"}
+{"Time":"2026-09-13T21:56:58.285925+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/expired","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/expired (0.02s)\n"}
+{"Time":"2026-09-13T21:56:58.285943+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/expired","Elapsed":0.02}
+{"Time":"2026-09-13T21:56:58.285964+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/not-yet-valid"}
+{"Time":"2026-09-13T21:56:58.285968+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/not-yet-valid","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/not-yet-valid\n"}
+{"Time":"2026-09-13T21:56:58.300626+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/not-yet-valid","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/not-yet-valid (0.01s)\n"}
+{"Time":"2026-09-13T21:56:58.300651+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/not-yet-valid","Elapsed":0.01}
+{"Time":"2026-09-13T21:56:58.30068+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/untrusted-root-with-registered-leaf"}
+{"Time":"2026-09-13T21:56:58.300685+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/untrusted-root-with-registered-leaf","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/untrusted-root-with-registered-leaf\n"}
+{"Time":"2026-09-13T21:56:58.325743+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/untrusted-root-with-registered-leaf","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/untrusted-root-with-registered-leaf (0.03s)\n"}
+{"Time":"2026-09-13T21:56:58.325763+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/untrusted-root-with-registered-leaf","Elapsed":0.03}
+{"Time":"2026-09-13T21:56:58.325795+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/no-certificate-no-fallback"}
+{"Time":"2026-09-13T21:56:58.3258+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/no-certificate-no-fallback","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/no-certificate-no-fallback\n"}
+{"Time":"2026-09-13T21:56:58.340172+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/no-certificate-no-fallback","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/no-certificate-no-fallback (0.01s)\n"}
+{"Time":"2026-09-13T21:56:58.340189+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/no-certificate-no-fallback","Elapsed":0.01}
+{"Time":"2026-09-13T21:56:58.34022+08:00","Action":"run","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-target"}
+{"Time":"2026-09-13T21:56:58.340224+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-target","Output":"=== RUN   TestRealTLSReservationRotationAndDisable/wrong-target\n"}
+{"Time":"2026-09-13T21:56:58.349315+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-target","Output":"--- PASS: TestRealTLSReservationRotationAndDisable/wrong-target (0.01s)\n"}
+{"Time":"2026-09-13T21:56:58.34933+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable/wrong-target","Elapsed":0.01}
+{"Time":"2026-09-13T21:56:58.553853+08:00","Action":"output","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable","Output":"--- PASS: TestRealTLSReservationRotationAndDisable (1.49s)\n"}
+{"Time":"2026-09-13T21:56:58.553873+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestRealTLSReservationRotationAndDisable","Elapsed":1.49}
+{"Time":"2026-09-13T21:56:58.553894+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment"}
+{"Time":"2026-09-13T21:56:58.553898+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment\n"}
+{"Time":"2026-09-13T21:56:58.565307+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/namespace"}
+{"Time":"2026-09-13T21:56:58.565329+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/namespace","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/namespace\n"}
+{"Time":"2026-09-13T21:56:58.566431+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/namespace","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/namespace (0.00s)\n"}
+{"Time":"2026-09-13T21:56:58.566438+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/namespace","Elapsed":0}
+{"Time":"2026-09-13T21:56:58.566444+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/node"}
+{"Time":"2026-09-13T21:56:58.566448+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/node","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/node\n"}
+{"Time":"2026-09-13T21:56:58.568561+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/node","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/node (0.00s)\n"}
+{"Time":"2026-09-13T21:56:58.568574+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/node","Elapsed":0}
+{"Time":"2026-09-13T21:56:58.568581+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/subjects"}
+{"Time":"2026-09-13T21:56:58.568585+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/subjects","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/subjects\n"}
+{"Time":"2026-09-13T21:56:58.570265+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/subjects","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/subjects (0.00s)\n"}
+{"Time":"2026-09-13T21:56:58.57028+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/subjects","Elapsed":0}
+{"Time":"2026-09-13T21:56:58.570285+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expiry"}
+{"Time":"2026-09-13T21:56:58.570288+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expiry","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/expiry\n"}
+{"Time":"2026-09-13T21:56:58.571341+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expiry","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/expiry (0.00s)\n"}
+{"Time":"2026-09-13T21:56:58.571349+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expiry","Elapsed":0}
+{"Time":"2026-09-13T21:56:58.571365+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expired-request"}
+{"Time":"2026-09-13T21:56:58.57137+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expired-request","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/expired-request\n"}
+{"Time":"2026-09-13T21:56:58.572374+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expired-request","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/expired-request (0.00s)\n"}
+{"Time":"2026-09-13T21:56:58.572381+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/expired-request","Elapsed":0}
+{"Time":"2026-09-13T21:56:58.572395+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/oversized"}
+{"Time":"2026-09-13T21:56:58.572399+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/oversized","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/oversized\n"}
+{"Time":"2026-09-13T21:56:58.572423+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/oversized","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/oversized (0.00s)\n"}
+{"Time":"2026-09-13T21:56:58.572436+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/oversized","Elapsed":0}
+{"Time":"2026-09-13T21:56:58.57244+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/forged-proof"}
+{"Time":"2026-09-13T21:56:58.572442+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/forged-proof","Output":"=== RUN   TestNodeRequestValidationAndReEnrollment/forged-proof\n"}
+{"Time":"2026-09-13T21:56:58.574617+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/forged-proof","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment/forged-proof (0.00s)\n"}
+{"Time":"2026-09-13T21:56:58.574622+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment/forged-proof","Elapsed":0}
+{"Time":"2026-09-13T21:56:58.600821+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment","Output":"--- PASS: TestNodeRequestValidationAndReEnrollment (0.05s)\n"}
+{"Time":"2026-09-13T21:56:58.600842+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRequestValidationAndReEnrollment","Elapsed":0.05}
+{"Time":"2026-09-13T21:56:58.600848+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeSigningKeyOverlapAndCurrentGrantRevocation"}
+{"Time":"2026-09-13T21:56:58.600852+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSigningKeyOverlapAndCurrentGrantRevocation","Output":"=== RUN   TestNodeSigningKeyOverlapAndCurrentGrantRevocation\n"}
+{"Time":"2026-09-13T21:56:58.640353+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSigningKeyOverlapAndCurrentGrantRevocation","Output":"--- PASS: TestNodeSigningKeyOverlapAndCurrentGrantRevocation (0.04s)\n"}
+{"Time":"2026-09-13T21:56:58.640374+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeSigningKeyOverlapAndCurrentGrantRevocation","Elapsed":0.04}
+{"Time":"2026-09-13T21:56:58.640381+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace"}
+{"Time":"2026-09-13T21:56:58.640385+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace","Output":"=== RUN   TestNodeSQLiteRecoveryAndSigningRace\n"}
+{"Time":"2026-09-13T21:56:58.640405+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/reply-lost"}
+{"Time":"2026-09-13T21:56:58.640409+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/reply-lost","Output":"=== RUN   TestNodeSQLiteRecoveryAndSigningRace/reply-lost\n"}
+{"Time":"2026-09-13T21:56:58.670132+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/reply-lost","Output":"--- PASS: TestNodeSQLiteRecoveryAndSigningRace/reply-lost (0.03s)\n"}
+{"Time":"2026-09-13T21:56:58.670155+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/reply-lost","Elapsed":0.03}
+{"Time":"2026-09-13T21:56:58.670162+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/signing-race"}
+{"Time":"2026-09-13T21:56:58.670166+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/signing-race","Output":"=== RUN   TestNodeSQLiteRecoveryAndSigningRace/signing-race\n"}
+{"Time":"2026-09-13T21:56:58.690622+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/signing-race","Output":"--- PASS: TestNodeSQLiteRecoveryAndSigningRace/signing-race (0.02s)\n"}
+{"Time":"2026-09-13T21:56:58.69064+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace/signing-race","Elapsed":0.02}
+{"Time":"2026-09-13T21:56:58.690652+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace","Output":"--- PASS: TestNodeSQLiteRecoveryAndSigningRace (0.05s)\n"}
+{"Time":"2026-09-13T21:56:58.690656+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeSQLiteRecoveryAndSigningRace","Elapsed":0.05}
+{"Time":"2026-09-13T21:56:58.69066+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeCertificateIssuerOverlapAndUnavailableRegistry"}
+{"Time":"2026-09-13T21:56:58.690663+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeCertificateIssuerOverlapAndUnavailableRegistry","Output":"=== RUN   TestNodeCertificateIssuerOverlapAndUnavailableRegistry\n"}
+{"Time":"2026-09-13T21:56:58.756284+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeCertificateIssuerOverlapAndUnavailableRegistry","Output":"--- PASS: TestNodeCertificateIssuerOverlapAndUnavailableRegistry (0.07s)\n"}
+{"Time":"2026-09-13T21:56:58.756303+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeCertificateIssuerOverlapAndUnavailableRegistry","Elapsed":0.07}
+{"Time":"2026-09-13T21:56:58.756309+08:00","Action":"run","Package":"lerna/authorization","Test":"TestNodeRebindPreservesSingleUseAndAncestorAllocation"}
+{"Time":"2026-09-13T21:56:58.756313+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRebindPreservesSingleUseAndAncestorAllocation","Output":"=== RUN   TestNodeRebindPreservesSingleUseAndAncestorAllocation\n"}
+{"Time":"2026-09-13T21:56:58.835281+08:00","Action":"output","Package":"lerna/authorization","Test":"TestNodeRebindPreservesSingleUseAndAncestorAllocation","Output":"--- PASS: TestNodeRebindPreservesSingleUseAndAncestorAllocation (0.08s)\n"}
+{"Time":"2026-09-13T21:56:58.835309+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestNodeRebindPreservesSingleUseAndAncestorAllocation","Elapsed":0.08}
+{"Time":"2026-09-13T21:56:58.835556+08:00","Action":"output","Package":"lerna/authorization","Output":"PASS\n"}
+{"Time":"2026-09-13T21:56:59.840698+08:00","Action":"output","Package":"lerna/authorization","Output":"ok  \tlerna/authorization\t3.783s\n"}
+{"Time":"2026-09-13T21:56:59.840759+08:00","Action":"pass","Package":"lerna/authorization","Elapsed":3.783}

@@ -12,11 +12,15 @@ import (
 	"lerna/internal/jsonvalue"
 	"math/big"
 	"strings"
+	"time"
 )
 
 const Type = "harness-grant+jwt;v=1"
 
 type Adapter struct {
+	clock  authorization.Clock
+	until  map[string]time.Time
+	kid    string
 	signer jose.Signer
 	keys   map[string]*ecdsa.PublicKey
 }
@@ -53,10 +57,10 @@ func New(kid string, private *ecdsa.PrivateKey, trusted map[string]*ecdsa.Public
 		return invalid()
 	}
 
-	return &Adapter{signer, keys}, nil
+	return &Adapter{signer: signer, keys: keys}, nil
 }
 func (a *Adapter) Sign(ctx context.Context, payload []byte) (string, error) {
-	if err := ctx.Err(); err != nil {
+	if err := a.current(ctx, a.kid); err != nil {
 		return "", err
 	}
 	signed, err := a.signer.Sign(payload)
@@ -99,6 +103,9 @@ func (a *Adapter) Verify(ctx context.Context, material string) ([]byte, error) {
 	kid, ok := obj["kid"].(string)
 	if !ok {
 		return denied()
+	}
+	if err := a.current(ctx, kid); err != nil {
+		return nil, err
 	}
 	key := a.keys[kid]
 	if key == nil {

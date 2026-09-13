@@ -55,6 +55,10 @@ func (s *Service) usePermitsAllowed(st *State, entry UseRecord, now time.Time, b
 				return false, fail(Unavailable)
 			}
 			boundary(record.Spec.Scope.ExpiresUnix)
+			if st.Nodes != nil {
+				boundary(st.Nodes.Records[record.Spec.Presenter].Expires)
+				boundary(st.Nodes.Records[record.Spec.Audience].Expires)
+			}
 			for _, principal := range st.Principals {
 				if principal.Subject == record.Spec.Subject {
 					boundary(principal.Expires)

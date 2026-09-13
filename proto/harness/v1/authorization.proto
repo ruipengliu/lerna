@@ -135,8 +135,8 @@ message SignedGrantSpec {
 message GrantMutation {
   string operation_id = 1;
   uint64 expected_revision = 2;
-  string kind = 3; // ISSUE, DERIVE, REVOKE
-  string grant_id = 4; // Parent for DERIVE, target for REVOKE.
+  string kind = 3; // ISSUE, DERIVE, REVOKE, REBIND (re-sign immutable grant for current node certificate).
+  string grant_id = 4; // Parent for DERIVE, target for REVOKE or REBIND.
   uint64 expected_grant_revision = 5;
   SignedGrantSpec spec = 6;
 }

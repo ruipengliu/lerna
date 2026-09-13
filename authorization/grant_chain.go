@@ -16,6 +16,9 @@ func (g *GrantAuthority) chain(st *State, id string, now time.Time) error {
 			return fail(Denied)
 		}
 		spec := e.Record.Spec
+		if _, err := grantCertificate(st, spec, now); err != nil {
+			return err
+		}
 		active := false
 		for _, p := range st.Principals {
 			if p.Subject == spec.Subject && !p.Disabled && p.Expires > now.Unix() {

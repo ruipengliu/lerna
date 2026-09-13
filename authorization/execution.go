@@ -90,7 +90,7 @@ func (t *executionTransaction) ExecutionOperation(id, subject string, claim bool
 func (t *executionTransaction) ValidateUse(use UsePermit, p GrantPresentation, a *wire.AuthorizationAction) error {
 	st := t.state
 	g := t.grant
-	if a == nil || !known(a) || st.Namespace != p.Namespace || !use.matches(p) || use.Units != 1 || st.Signed == nil || st.Signed.Uses[p.OperationID] != use {
+	if a == nil || !known(a) || st.Namespace != p.Namespace || !permitMatches(st, t.now, use, p) || use.Units != 1 || st.Signed == nil || st.Signed.Uses[p.OperationID] != use {
 		return fail(Denied)
 	}
 	bytes, e := proto.MarshalOptions{Deterministic: true}.Marshal(a)
@@ -106,7 +106,7 @@ func (t *executionTransaction) ValidateUse(use UsePermit, p GrantPresentation, a
 	}
 	entry := st.Signed.Grants[use.GrantID]
 	spec := entry.Record.Spec
-	if spec.Subject != p.Subject || spec.Audience != p.Audience || spec.Presenter != p.Presenter || spec.CertificateSha256 != p.CertificateSHA256 || t.now.Unix() < spec.NotBefore {
+	if spec.Subject != p.Subject || spec.Audience != p.Audience || spec.Presenter != p.Presenter || !permitMatches(st, t.now, use, p) || t.now.Unix() < spec.NotBefore {
 		return fail(Denied)
 	}
 	b := g.service.newBudget()
