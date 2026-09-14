@@ -17,6 +17,10 @@ import (
 // allow hook. Domain services retain their own authorization and credentials.
 // All supplied services must honor context cancellation.
 type Binding struct {
+	Journal *Journal
+	// Retain checks permission and source policy for persisting this request,
+	// including its node-bound grant material. Required for reliable delivery.
+	Retain    func(context.Context, authorization.GrantPresentation, *wire.CapabilityRequest) error
 	Peer      authorization.GrantPresentation
 	Catalog   cataloglocal.Catalog
 	Execution *execution.Service

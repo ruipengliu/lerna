@@ -1,0 +1,213 @@
+{"Time":"2026-09-14T14:16:40.644896+08:00","Action":"start","Package":"lerna/authorization"}
+{"Time":"2026-09-14T14:16:41.385435+08:00","Action":"run","Package":"lerna/authorization","Test":"TestDeliveryAndRuntimeCommitTogetherAfterReopen"}
+{"Time":"2026-09-14T14:16:41.385501+08:00","Action":"output","Package":"lerna/authorization","Test":"TestDeliveryAndRuntimeCommitTogetherAfterReopen","Output":"=== RUN   TestDeliveryAndRuntimeCommitTogetherAfterReopen\n"}
+{"Time":"2026-09-14T14:16:41.408227+08:00","Action":"output","Package":"lerna/authorization","Test":"TestDeliveryAndRuntimeCommitTogetherAfterReopen","Output":"--- PASS: TestDeliveryAndRuntimeCommitTogetherAfterReopen (0.02s)\n"}
+{"Time":"2026-09-14T14:16:41.40825+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestDeliveryAndRuntimeCommitTogetherAfterReopen","Elapsed":0.02}
+{"Time":"2026-09-14T14:16:41.408392+08:00","Action":"output","Package":"lerna/authorization","Output":"PASS\n"}
+{"Time":"2026-09-14T14:16:42.423233+08:00","Action":"output","Package":"lerna/authorization","Output":"ok  \tlerna/authorization\t1.778s\n"}
+{"Time":"2026-09-14T14:16:42.423347+08:00","Action":"pass","Package":"lerna/authorization","Elapsed":1.778}
+{"Time":"2026-09-14T14:16:43.009154+08:00","Action":"start","Package":"lerna/adapters/wsbinding"}
+{"Time":"2026-09-14T14:16:43.553525+08:00","Action":"run","Package":"lerna/adapters/wsbinding","Test":"TestReliableInboxPrefixSurvivesReopen"}
+{"Time":"2026-09-14T14:16:43.553578+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Test":"TestReliableInboxPrefixSurvivesReopen","Output":"=== RUN   TestReliableInboxPrefixSurvivesReopen\n"}
+{"Time":"2026-09-14T14:16:43.579146+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Test":"TestReliableInboxPrefixSurvivesReopen","Output":"--- PASS: TestReliableInboxPrefixSurvivesReopen (0.03s)\n"}
+{"Time":"2026-09-14T14:16:43.579169+08:00","Action":"pass","Package":"lerna/adapters/wsbinding","Test":"TestReliableInboxPrefixSurvivesReopen","Elapsed":0.03}
+{"Time":"2026-09-14T14:16:43.579179+08:00","Action":"run","Package":"lerna/adapters/wsbinding","Test":"TestReliableOutboxAndReplyAreAtomic"}
+{"Time":"2026-09-14T14:16:43.579183+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Test":"TestReliableOutboxAndReplyAreAtomic","Output":"=== RUN   TestReliableOutboxAndReplyAreAtomic\n"}
+{"Time":"2026-09-14T14:16:43.602362+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Test":"TestReliableOutboxAndReplyAreAtomic","Output":"--- PASS: TestReliableOutboxAndReplyAreAtomic (0.02s)\n"}
+{"Time":"2026-09-14T14:16:43.602372+08:00","Action":"pass","Package":"lerna/adapters/wsbinding","Test":"TestReliableOutboxAndReplyAreAtomic","Elapsed":0.02}
+{"Time":"2026-09-14T14:16:43.602393+08:00","Action":"run","Package":"lerna/adapters/wsbinding","Test":"TestReliableExpiryClosesStreamAndRetainsOperation"}
+{"Time":"2026-09-14T14:16:43.602397+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Test":"TestReliableExpiryClosesStreamAndRetainsOperation","Output":"=== RUN   TestReliableExpiryClosesStreamAndRetainsOperation\n"}
+{"Time":"2026-09-14T14:16:43.622095+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Test":"TestReliableExpiryClosesStreamAndRetainsOperation","Output":"--- PASS: TestReliableExpiryClosesStreamAndRetainsOperation (0.02s)\n"}
+{"Time":"2026-09-14T14:16:43.622105+08:00","Action":"pass","Package":"lerna/adapters/wsbinding","Test":"TestReliableExpiryClosesStreamAndRetainsOperation","Elapsed":0.02}
+{"Time":"2026-09-14T14:16:43.62213+08:00","Action":"run","Package":"lerna/adapters/wsbinding","Test":"TestReliableCapacityAndAcknowledgementBounds"}
+{"Time":"2026-09-14T14:16:43.622135+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Test":"TestReliableCapacityAndAcknowledgementBounds","Output":"=== RUN   TestReliableCapacityAndAcknowledgementBounds\n"}
+{"Time":"2026-09-14T14:16:43.655963+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Test":"TestReliableCapacityAndAcknowledgementBounds","Output":"--- PASS: TestReliableCapacityAndAcknowledgementBounds (0.03s)\n"}
+{"Time":"2026-09-14T14:16:43.65599+08:00","Action":"pass","Package":"lerna/adapters/wsbinding","Test":"TestReliableCapacityAndAcknowledgementBounds","Elapsed":0.03}
+{"Time":"2026-09-14T14:16:43.655995+08:00","Action":"run","Package":"lerna/adapters/wsbinding","Test":"TestReliableDeniedPayloadDoesNotBlockFollowingPosition"}
+{"Time":"2026-09-14T14:16:43.655998+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Test":"TestReliableDeniedPayloadDoesNotBlockFollowingPosition","Output":"=== RUN   TestReliableDeniedPayloadDoesNotBlockFollowingPosition\n"}
+{"Time":"2026-09-14T14:16:43.676427+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Test":"TestReliableDeniedPayloadDoesNotBlockFollowingPosition","Output":"--- PASS: TestReliableDeniedPayloadDoesNotBlockFollowingPosition (0.02s)\n"}
+{"Time":"2026-09-14T14:16:43.676439+08:00","Action":"pass","Package":"lerna/adapters/wsbinding","Test":"TestReliableDeniedPayloadDoesNotBlockFollowingPosition","Elapsed":0.02}
+{"Time":"2026-09-14T14:16:43.67646+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Output":"PASS\n"}
+{"Time":"2026-09-14T14:16:44.692857+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Output":"ok  \tlerna/adapters/wsbinding\t1.684s\n"}
+{"Time":"2026-09-14T14:16:44.692973+08:00","Action":"pass","Package":"lerna/adapters/wsbinding","Elapsed":1.6840000000000002}
+{"Time":"2026-09-14T14:16:45.47249+08:00","Action":"start","Package":"lerna/profiles/asynccheck"}
+{"Time":"2026-09-14T14:16:46.032855+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcess"}
+{"Time":"2026-09-14T14:16:46.032903+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcess","Output":"=== RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:46.032961+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcess","Output":"    ws_reliable_process_test.go:25: subprocess only\n"}
+{"Time":"2026-09-14T14:16:46.032979+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcess","Output":"--- SKIP: TestWSReliableProcess (0.00s)\n"}
+{"Time":"2026-09-14T14:16:46.032991+08:00","Action":"skip","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcess","Elapsed":0}
+{"Time":"2026-09-14T14:16:46.033+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery"}
+{"Time":"2026-09-14T14:16:46.033004+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery","Output":"=== RUN   TestWSReliableProcessRecovery\n"}
+{"Time":"2026-09-14T14:16:46.033042+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox"}
+{"Time":"2026-09-14T14:16:46.033051+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"=== RUN   TestWSReliableProcessRecovery/inbox\n"}
+{"Time":"2026-09-14T14:16:46.367971+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:159: role=cloud PID=67161\n"}
+{"Time":"2026-09-14T14:16:46.393735+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:46.411663+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:165: ADDRESS 127.0.0.1:55049\n"}
+{"Time":"2026-09-14T14:16:46.413483+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:159: role=edge PID=67162\n"}
+{"Time":"2026-09-14T14:16:47.028833+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:165: CRASH inbox\n"}
+{"Time":"2026-09-14T14:16:47.030378+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:47.038487+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:165: DISCONNECTED\n"}
+{"Time":"2026-09-14T14:16:48.062636+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:159: role=cloud PID=67181\n"}
+{"Time":"2026-09-14T14:16:48.105191+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:48.1303+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:165: ADDRESS 127.0.0.1:55051\n"}
+{"Time":"2026-09-14T14:16:48.132087+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:159: role=edge PID=67182\n"}
+{"Time":"2026-09-14T14:16:48.157637+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:49.037517+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:165: RESULT\n"}
+{"Time":"2026-09-14T14:16:50.201756+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"    ws_reliable_process_test.go:165: EFFECT 1\n"}
+{"Time":"2026-09-14T14:16:51.231045+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Output":"--- PASS: TestWSReliableProcessRecovery/inbox (5.20s)\n"}
+{"Time":"2026-09-14T14:16:51.231264+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/inbox","Elapsed":5.2}
+{"Time":"2026-09-14T14:16:51.231597+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff"}
+{"Time":"2026-09-14T14:16:51.23162+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"=== RUN   TestWSReliableProcessRecovery/handoff\n"}
+{"Time":"2026-09-14T14:16:51.583793+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:159: role=cloud PID=67219\n"}
+{"Time":"2026-09-14T14:16:51.60898+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:51.626719+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:165: ADDRESS 127.0.0.1:55053\n"}
+{"Time":"2026-09-14T14:16:51.628665+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:159: role=edge PID=67220\n"}
+{"Time":"2026-09-14T14:16:52.304916+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:165: CRASH handoff\n"}
+{"Time":"2026-09-14T14:16:52.306818+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:52.332846+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:165: DISCONNECTED\n"}
+{"Time":"2026-09-14T14:16:53.355625+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:159: role=cloud PID=67221\n"}
+{"Time":"2026-09-14T14:16:53.403651+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:53.43081+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:165: ADDRESS 127.0.0.1:55055\n"}
+{"Time":"2026-09-14T14:16:53.432769+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:159: role=edge PID=67222\n"}
+{"Time":"2026-09-14T14:16:53.458641+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:54.249694+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:165: RESULT\n"}
+{"Time":"2026-09-14T14:16:55.425238+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"    ws_reliable_process_test.go:165: EFFECT 1\n"}
+{"Time":"2026-09-14T14:16:56.449533+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Output":"--- PASS: TestWSReliableProcessRecovery/handoff (5.22s)\n"}
+{"Time":"2026-09-14T14:16:56.449611+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/handoff","Elapsed":5.22}
+{"Time":"2026-09-14T14:16:56.449689+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect"}
+{"Time":"2026-09-14T14:16:56.449699+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"=== RUN   TestWSReliableProcessRecovery/effect\n"}
+{"Time":"2026-09-14T14:16:56.790859+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:159: role=cloud PID=67261\n"}
+{"Time":"2026-09-14T14:16:56.815838+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:56.833418+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:165: ADDRESS 127.0.0.1:55057\n"}
+{"Time":"2026-09-14T14:16:56.835239+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:159: role=edge PID=67262\n"}
+{"Time":"2026-09-14T14:16:57.62797+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:165: CRASH effect\n"}
+{"Time":"2026-09-14T14:16:57.629587+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:57.654883+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:165: DISCONNECTED\n"}
+{"Time":"2026-09-14T14:16:58.679774+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:159: role=cloud PID=67281\n"}
+{"Time":"2026-09-14T14:16:58.722023+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:58.749597+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:165: ADDRESS 127.0.0.1:55059\n"}
+{"Time":"2026-09-14T14:16:58.75149+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:159: role=edge PID=67282\n"}
+{"Time":"2026-09-14T14:16:58.77695+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:16:59.575424+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:165: RESULT\n"}
+{"Time":"2026-09-14T14:17:00.681836+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"    ws_reliable_process_test.go:165: EFFECT 1\n"}
+{"Time":"2026-09-14T14:17:01.707091+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Output":"--- PASS: TestWSReliableProcessRecovery/effect (5.26s)\n"}
+{"Time":"2026-09-14T14:17:01.707223+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/effect","Elapsed":5.26}
+{"Time":"2026-09-14T14:17:01.707428+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox"}
+{"Time":"2026-09-14T14:17:01.707442+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"=== RUN   TestWSReliableProcessRecovery/reverse-inbox\n"}
+{"Time":"2026-09-14T14:17:02.05958+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:159: role=edge PID=67321\n"}
+{"Time":"2026-09-14T14:17:02.084672+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:17:02.102297+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:165: ADDRESS 127.0.0.1:55061\n"}
+{"Time":"2026-09-14T14:17:02.104117+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:159: role=cloud PID=67322\n"}
+{"Time":"2026-09-14T14:17:02.730349+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:165: CRASH inbox\n"}
+{"Time":"2026-09-14T14:17:02.731887+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:17:02.745443+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:165: DISCONNECTED\n"}
+{"Time":"2026-09-14T14:17:03.768814+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:159: role=edge PID=67323\n"}
+{"Time":"2026-09-14T14:17:03.811595+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:17:03.838415+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:165: ADDRESS 127.0.0.1:55063\n"}
+{"Time":"2026-09-14T14:17:03.84047+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:159: role=cloud PID=67324\n"}
+{"Time":"2026-09-14T14:17:03.866693+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:17:04.685961+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:165: RESULT\n"}
+{"Time":"2026-09-14T14:17:05.853289+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"    ws_reliable_process_test.go:165: EFFECT 1\n"}
+{"Time":"2026-09-14T14:17:06.881089+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Output":"--- PASS: TestWSReliableProcessRecovery/reverse-inbox (5.17s)\n"}
+{"Time":"2026-09-14T14:17:06.88117+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-inbox","Elapsed":5.17}
+{"Time":"2026-09-14T14:17:06.881458+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff"}
+{"Time":"2026-09-14T14:17:06.881494+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"=== RUN   TestWSReliableProcessRecovery/reverse-handoff\n"}
+{"Time":"2026-09-14T14:17:07.230676+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:159: role=edge PID=67363\n"}
+{"Time":"2026-09-14T14:17:07.255504+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:17:07.273375+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:165: ADDRESS 127.0.0.1:55066\n"}
+{"Time":"2026-09-14T14:17:07.275216+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:159: role=cloud PID=67364\n"}
+{"Time":"2026-09-14T14:17:07.956231+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:165: CRASH handoff\n"}
+{"Time":"2026-09-14T14:17:07.957763+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:17:07.980779+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:165: DISCONNECTED\n"}
+{"Time":"2026-09-14T14:17:09.003448+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:159: role=edge PID=67383\n"}
+{"Time":"2026-09-14T14:17:09.044418+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:17:09.07169+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:165: ADDRESS 127.0.0.1:55068\n"}
+{"Time":"2026-09-14T14:17:09.073692+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:159: role=cloud PID=67384\n"}
+{"Time":"2026-09-14T14:17:09.099616+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:17:09.906037+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:165: RESULT\n"}
+{"Time":"2026-09-14T14:17:11.088213+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"    ws_reliable_process_test.go:165: EFFECT 1\n"}
+{"Time":"2026-09-14T14:17:12.112168+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Output":"--- PASS: TestWSReliableProcessRecovery/reverse-handoff (5.23s)\n"}
+{"Time":"2026-09-14T14:17:12.112283+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-handoff","Elapsed":5.23}
+{"Time":"2026-09-14T14:17:12.112511+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect"}
+{"Time":"2026-09-14T14:17:12.112533+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"=== RUN   TestWSReliableProcessRecovery/reverse-effect\n"}
+{"Time":"2026-09-14T14:17:12.465164+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:159: role=edge PID=67407\n"}
+{"Time":"2026-09-14T14:17:12.490123+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:17:12.508233+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:165: ADDRESS 127.0.0.1:55071\n"}
+{"Time":"2026-09-14T14:17:12.510055+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:159: role=cloud PID=67408\n"}
+{"Time":"2026-09-14T14:17:13.269006+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:165: CRASH effect\n"}
+{"Time":"2026-09-14T14:17:13.270521+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:17:13.27482+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:165: DISCONNECTED\n"}
+{"Time":"2026-09-14T14:17:14.301806+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:159: role=edge PID=67427\n"}
+{"Time":"2026-09-14T14:17:14.344013+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:17:14.372512+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:165: ADDRESS 127.0.0.1:55073\n"}
+{"Time":"2026-09-14T14:17:14.374451+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:159: role=cloud PID=67428\n"}
+{"Time":"2026-09-14T14:17:14.399879+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:165: === RUN   TestWSReliableProcess\n"}
+{"Time":"2026-09-14T14:17:15.207172+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:165: RESULT\n"}
+{"Time":"2026-09-14T14:17:16.313041+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"    ws_reliable_process_test.go:165: EFFECT 1\n"}
+{"Time":"2026-09-14T14:17:17.338331+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Output":"--- PASS: TestWSReliableProcessRecovery/reverse-effect (5.23s)\n"}
+{"Time":"2026-09-14T14:17:17.338393+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery/reverse-effect","Elapsed":5.23}
+{"Time":"2026-09-14T14:17:17.338452+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery","Output":"--- PASS: TestWSReliableProcessRecovery (31.31s)\n"}
+{"Time":"2026-09-14T14:17:17.338535+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableProcessRecovery","Elapsed":31.31}
+{"Time":"2026-09-14T14:17:17.338693+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableInboxWriteFailureHasNoReceipt"}
+{"Time":"2026-09-14T14:17:17.338701+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableInboxWriteFailureHasNoReceipt","Output":"=== RUN   TestWSReliableInboxWriteFailureHasNoReceipt\n"}
+{"Time":"2026-09-14T14:17:18.78794+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableInboxWriteFailureHasNoReceipt","Output":"--- PASS: TestWSReliableInboxWriteFailureHasNoReceipt (1.45s)\n"}
+{"Time":"2026-09-14T14:17:18.787961+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableInboxWriteFailureHasNoReceipt","Elapsed":1.45}
+{"Time":"2026-09-14T14:17:18.787967+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableInvocation"}
+{"Time":"2026-09-14T14:17:18.787971+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableInvocation","Output":"=== RUN   TestWSReliableInvocation\n"}
+{"Time":"2026-09-14T14:17:20.388951+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableInvocation","Output":"--- PASS: TestWSReliableInvocation (1.60s)\n"}
+{"Time":"2026-09-14T14:17:20.388971+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableInvocation","Elapsed":1.6}
+{"Time":"2026-09-14T14:17:20.388978+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableReconnectFencesOldConnection"}
+{"Time":"2026-09-14T14:17:20.388981+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableReconnectFencesOldConnection","Output":"=== RUN   TestWSReliableReconnectFencesOldConnection\n"}
+{"Time":"2026-09-14T14:17:21.650141+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableReconnectFencesOldConnection","Output":"--- PASS: TestWSReliableReconnectFencesOldConnection (1.26s)\n"}
+{"Time":"2026-09-14T14:17:21.65016+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableReconnectFencesOldConnection","Elapsed":1.26}
+{"Time":"2026-09-14T14:17:21.650166+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableRunStoreConsumption"}
+{"Time":"2026-09-14T14:17:21.65017+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableRunStoreConsumption","Output":"=== RUN   TestWSReliableRunStoreConsumption\n"}
+{"Time":"2026-09-14T14:17:21.883064+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableRunStoreConsumption","Output":"--- PASS: TestWSReliableRunStoreConsumption (0.23s)\n"}
+{"Time":"2026-09-14T14:17:21.883106+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableRunStoreConsumption","Elapsed":0.23}
+{"Time":"2026-09-14T14:17:21.883112+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableExpiredCursorUsesOriginalSnapshot"}
+{"Time":"2026-09-14T14:17:21.883115+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableExpiredCursorUsesOriginalSnapshot","Output":"=== RUN   TestWSReliableExpiredCursorUsesOriginalSnapshot\n"}
+{"Time":"2026-09-14T14:17:24.520954+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableExpiredCursorUsesOriginalSnapshot","Output":"--- PASS: TestWSReliableExpiredCursorUsesOriginalSnapshot (2.64s)\n"}
+{"Time":"2026-09-14T14:17:24.520983+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableExpiredCursorUsesOriginalSnapshot","Elapsed":2.64}
+{"Time":"2026-09-14T14:17:24.520992+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableWindowAndIdentityBoundaries"}
+{"Time":"2026-09-14T14:17:24.520996+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableWindowAndIdentityBoundaries","Output":"=== RUN   TestWSReliableWindowAndIdentityBoundaries\n"}
+{"Time":"2026-09-14T14:17:30.754089+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableWindowAndIdentityBoundaries","Output":"--- PASS: TestWSReliableWindowAndIdentityBoundaries (6.23s)\n"}
+{"Time":"2026-09-14T14:17:30.754111+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableWindowAndIdentityBoundaries","Elapsed":6.23}
+{"Time":"2026-09-14T14:17:30.754117+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation"}
+{"Time":"2026-09-14T14:17:30.75412+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation","Output":"=== RUN   TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation\n"}
+{"Time":"2026-09-14T14:17:30.754142+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation/before-persist"}
+{"Time":"2026-09-14T14:17:30.754151+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation/before-persist","Output":"=== RUN   TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation/before-persist\n"}
+{"Time":"2026-09-14T14:17:33.24291+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation/before-persist","Output":"--- PASS: TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation/before-persist (2.49s)\n"}
+{"Time":"2026-09-14T14:17:33.24293+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation/before-persist","Elapsed":2.49}
+{"Time":"2026-09-14T14:17:33.242937+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation/after-persist"}
+{"Time":"2026-09-14T14:17:33.24294+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation/after-persist","Output":"=== RUN   TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation/after-persist\n"}
+{"Time":"2026-09-14T14:17:35.719633+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation/after-persist","Output":"--- PASS: TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation/after-persist (2.48s)\n"}
+{"Time":"2026-09-14T14:17:35.719652+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation/after-persist","Elapsed":2.48}
+{"Time":"2026-09-14T14:17:35.71966+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation","Output":"--- PASS: TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation (4.97s)\n"}
+{"Time":"2026-09-14T14:17:35.71967+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableDeniedObjectDoesNotBlockHealthyInvocation","Elapsed":4.97}
+{"Time":"2026-09-14T14:17:35.719677+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T14:17:35.71968+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n"}
+{"Time":"2026-09-14T14:17:38.597016+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- PASS: TestWSReliableNonterminalRecoveryKeepsUpdating (2.88s)\n"}
+{"Time":"2026-09-14T14:17:38.597035+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":2.88}
+{"Time":"2026-09-14T14:17:38.59705+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedDisclosureDenialKeepsHealthyMessage"}
+{"Time":"2026-09-14T14:17:38.597055+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedDisclosureDenialKeepsHealthyMessage","Output":"=== RUN   TestWSReliableQueuedDisclosureDenialKeepsHealthyMessage\n"}
+{"Time":"2026-09-14T14:17:40.76577+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedDisclosureDenialKeepsHealthyMessage","Output":"--- PASS: TestWSReliableQueuedDisclosureDenialKeepsHealthyMessage (2.17s)\n"}
+{"Time":"2026-09-14T14:17:40.765791+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedDisclosureDenialKeepsHealthyMessage","Elapsed":2.17}
+{"Time":"2026-09-14T14:17:40.765798+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease"}
+{"Time":"2026-09-14T14:17:40.765801+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease","Output":"=== RUN   TestWSReliableQueuedControlsAndExpiredLease\n"}
+{"Time":"2026-09-14T14:17:40.765812+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease/PAUSE"}
+{"Time":"2026-09-14T14:17:40.765815+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease/PAUSE","Output":"=== RUN   TestWSReliableQueuedControlsAndExpiredLease/PAUSE\n"}
+{"Time":"2026-09-14T14:17:43.19982+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease/PAUSE","Output":"--- PASS: TestWSReliableQueuedControlsAndExpiredLease/PAUSE (2.43s)\n"}
+{"Time":"2026-09-14T14:17:43.199841+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease/PAUSE","Elapsed":2.43}
+{"Time":"2026-09-14T14:17:43.199849+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease/CANCEL"}
+{"Time":"2026-09-14T14:17:43.199852+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease/CANCEL","Output":"=== RUN   TestWSReliableQueuedControlsAndExpiredLease/CANCEL\n"}
+{"Time":"2026-09-14T14:17:45.87955+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease/CANCEL","Output":"--- PASS: TestWSReliableQueuedControlsAndExpiredLease/CANCEL (2.68s)\n"}
+{"Time":"2026-09-14T14:17:45.879617+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease/CANCEL","Elapsed":2.68}
+{"Time":"2026-09-14T14:17:45.879632+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease/EXPIRED_LEASE"}
+{"Time":"2026-09-14T14:17:45.879645+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease/EXPIRED_LEASE","Output":"=== RUN   TestWSReliableQueuedControlsAndExpiredLease/EXPIRED_LEASE\n"}
+{"Time":"2026-09-14T14:17:48.465133+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease/EXPIRED_LEASE","Output":"--- PASS: TestWSReliableQueuedControlsAndExpiredLease/EXPIRED_LEASE (2.59s)\n"}
+{"Time":"2026-09-14T14:17:48.465153+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease/EXPIRED_LEASE","Elapsed":2.59}
+{"Time":"2026-09-14T14:17:48.465161+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease","Output":"--- PASS: TestWSReliableQueuedControlsAndExpiredLease (7.70s)\n"}
+{"Time":"2026-09-14T14:17:48.465166+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableQueuedControlsAndExpiredLease","Elapsed":7.7}
+{"Time":"2026-09-14T14:17:48.465184+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"PASS\n"}
+{"Time":"2026-09-14T14:17:49.484644+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"ok  \tlerna/profiles/asynccheck\t64.012s\n"}
+{"Time":"2026-09-14T14:17:49.484706+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Elapsed":64.012}

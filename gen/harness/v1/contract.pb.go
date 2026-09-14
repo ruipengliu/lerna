@@ -145,6 +145,8 @@ type Envelope struct {
 	//	*Envelope_Control
 	//	*Envelope_Chunk
 	//	*Envelope_Extension
+	//	*Envelope_Reliable
+	//	*Envelope_Cursor
 	//	*Envelope_Request
 	//	*Envelope_Response
 	Body          isEnvelope_Body `protobuf_oneof:"body"`
@@ -326,6 +328,24 @@ func (x *Envelope) GetExtension() *DynamicPayload {
 	return nil
 }
 
+func (x *Envelope) GetReliable() *WSReliable {
+	if x != nil {
+		if x, ok := x.Body.(*Envelope_Reliable); ok {
+			return x.Reliable
+		}
+	}
+	return nil
+}
+
+func (x *Envelope) GetCursor() *WSCursor {
+	if x != nil {
+		if x, ok := x.Body.(*Envelope_Cursor); ok {
+			return x.Cursor
+		}
+	}
+	return nil
+}
+
 func (x *Envelope) GetRequest() *SubmitRequest {
 	if x != nil {
 		if x, ok := x.Body.(*Envelope_Request); ok {
@@ -384,6 +404,14 @@ type Envelope_Extension struct {
 	Extension *DynamicPayload `protobuf:"bytes,28,opt,name=extension,proto3,oneof"`
 }
 
+type Envelope_Reliable struct {
+	Reliable *WSReliable `protobuf:"bytes,29,opt,name=reliable,proto3,oneof"`
+}
+
+type Envelope_Cursor struct {
+	Cursor *WSCursor `protobuf:"bytes,30,opt,name=cursor,proto3,oneof"`
+}
+
 type Envelope_Request struct {
 	Request *SubmitRequest `protobuf:"bytes,10,opt,name=request,proto3,oneof"`
 }
@@ -409,6 +437,10 @@ func (*Envelope_Control) isEnvelope_Body() {}
 func (*Envelope_Chunk) isEnvelope_Body() {}
 
 func (*Envelope_Extension) isEnvelope_Body() {}
+
+func (*Envelope_Reliable) isEnvelope_Body() {}
+
+func (*Envelope_Cursor) isEnvelope_Body() {}
 
 func (*Envelope_Request) isEnvelope_Body() {}
 
@@ -689,7 +721,7 @@ var File_proto_harness_v1_contract_proto protoreflect.FileDescriptor
 const file_proto_harness_v1_contract_proto_rawDesc = "" +
 	"\n" +
 	"\x1fproto/harness/v1/contract.proto\x12\n" +
-	"harness.v1\x1a proto/harness/v1/execution.proto\x1a proto/harness/v1/websocket.proto\x1a\x1dproto/harness/v1/common.proto\"\xfa\x06\n" +
+	"harness.v1\x1a proto/harness/v1/execution.proto\x1a proto/harness/v1/websocket.proto\x1a\x1dproto/harness/v1/common.proto\"\xe0\a\n" +
 	"\bEnvelope\x12%\n" +
 	"\x0eprotocol_major\x18\x01 \x01(\rR\rprotocolMajor\x12\x1d\n" +
 	"\n" +
@@ -708,7 +740,9 @@ const file_proto_harness_v1_contract_proto_rawDesc = "" +
 	"\bprogress\x18\x19 \x01(\v2\x1e.harness.v1.CapabilityResponseH\x00R\bprogress\x121\n" +
 	"\acontrol\x18\x1a \x01(\v2\x15.harness.v1.WSControlH\x00R\acontrol\x12+\n" +
 	"\x05chunk\x18\x1b \x01(\v2\x13.harness.v1.WSChunkH\x00R\x05chunk\x12:\n" +
-	"\textension\x18\x1c \x01(\v2\x1a.harness.v1.DynamicPayloadH\x00R\textension\x125\n" +
+	"\textension\x18\x1c \x01(\v2\x1a.harness.v1.DynamicPayloadH\x00R\textension\x124\n" +
+	"\breliable\x18\x1d \x01(\v2\x16.harness.v1.WSReliableH\x00R\breliable\x12.\n" +
+	"\x06cursor\x18\x1e \x01(\v2\x14.harness.v1.WSCursorH\x00R\x06cursor\x125\n" +
 	"\arequest\x18\n" +
 	" \x01(\v2\x19.harness.v1.SubmitRequestH\x00R\arequest\x128\n" +
 	"\bresponse\x18\v \x01(\v2\x1a.harness.v1.SubmitResponseH\x00R\bresponseB\x06\n" +
@@ -773,7 +807,9 @@ var file_proto_harness_v1_contract_proto_goTypes = []any{
 	(*WSSubscription)(nil),     // 11: harness.v1.WSSubscription
 	(*WSControl)(nil),          // 12: harness.v1.WSControl
 	(*WSChunk)(nil),            // 13: harness.v1.WSChunk
-	(*TaskRef)(nil),            // 14: harness.v1.TaskRef
+	(*WSReliable)(nil),         // 14: harness.v1.WSReliable
+	(*WSCursor)(nil),           // 15: harness.v1.WSCursor
+	(*TaskRef)(nil),            // 16: harness.v1.TaskRef
 }
 var file_proto_harness_v1_contract_proto_depIdxs = []int32{
 	7,  // 0: harness.v1.Envelope.hello:type_name -> harness.v1.WSHello
@@ -785,20 +821,22 @@ var file_proto_harness_v1_contract_proto_depIdxs = []int32{
 	12, // 6: harness.v1.Envelope.control:type_name -> harness.v1.WSControl
 	13, // 7: harness.v1.Envelope.chunk:type_name -> harness.v1.WSChunk
 	3,  // 8: harness.v1.Envelope.extension:type_name -> harness.v1.DynamicPayload
-	4,  // 9: harness.v1.Envelope.request:type_name -> harness.v1.SubmitRequest
-	5,  // 10: harness.v1.Envelope.response:type_name -> harness.v1.SubmitResponse
-	3,  // 11: harness.v1.SubmitRequest.input:type_name -> harness.v1.DynamicPayload
-	0,  // 12: harness.v1.SubmitResponse.evidence:type_name -> harness.v1.Evidence
-	14, // 13: harness.v1.SubmitResponse.task:type_name -> harness.v1.TaskRef
-	6,  // 14: harness.v1.SubmitResponse.failure:type_name -> harness.v1.Failure
-	1,  // 15: harness.v1.Failure.code:type_name -> harness.v1.ErrorCode
-	2,  // 16: harness.v1.TaskService.Submit:input_type -> harness.v1.Envelope
-	2,  // 17: harness.v1.TaskService.Submit:output_type -> harness.v1.Envelope
-	17, // [17:18] is the sub-list for method output_type
-	16, // [16:17] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	14, // 9: harness.v1.Envelope.reliable:type_name -> harness.v1.WSReliable
+	15, // 10: harness.v1.Envelope.cursor:type_name -> harness.v1.WSCursor
+	4,  // 11: harness.v1.Envelope.request:type_name -> harness.v1.SubmitRequest
+	5,  // 12: harness.v1.Envelope.response:type_name -> harness.v1.SubmitResponse
+	3,  // 13: harness.v1.SubmitRequest.input:type_name -> harness.v1.DynamicPayload
+	0,  // 14: harness.v1.SubmitResponse.evidence:type_name -> harness.v1.Evidence
+	16, // 15: harness.v1.SubmitResponse.task:type_name -> harness.v1.TaskRef
+	6,  // 16: harness.v1.SubmitResponse.failure:type_name -> harness.v1.Failure
+	1,  // 17: harness.v1.Failure.code:type_name -> harness.v1.ErrorCode
+	2,  // 18: harness.v1.TaskService.Submit:input_type -> harness.v1.Envelope
+	2,  // 19: harness.v1.TaskService.Submit:output_type -> harness.v1.Envelope
+	19, // [19:20] is the sub-list for method output_type
+	18, // [18:19] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_proto_harness_v1_contract_proto_init() }
@@ -819,6 +857,8 @@ func file_proto_harness_v1_contract_proto_init() {
 		(*Envelope_Control)(nil),
 		(*Envelope_Chunk)(nil),
 		(*Envelope_Extension)(nil),
+		(*Envelope_Reliable)(nil),
+		(*Envelope_Cursor)(nil),
 		(*Envelope_Request)(nil),
 		(*Envelope_Response)(nil),
 	}

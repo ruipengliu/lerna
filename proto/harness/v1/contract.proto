@@ -27,6 +27,8 @@ message Envelope {
     WSControl control = 26;
     WSChunk chunk = 27;
     DynamicPayload extension = 28;
+    WSReliable reliable = 29;
+    WSCursor cursor = 30;
     SubmitRequest request = 10;
     SubmitResponse response = 11;
   }

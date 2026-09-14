@@ -20,7 +20,7 @@ import (
 	"time"
 )
 
-var supported = []string{"catalog.read.v1", "invocation.read.v1", "progress.v1", "chunks.v1"}
+var supported = []string{"catalog.read.v1", "invocation.read.v1", "progress.v1", "chunks.v1", "reliable.v1"}
 
 const subprotocol = "harness.bootstrap.v1"
 
@@ -243,6 +243,9 @@ func (h Host) start(parent context.Context, c *websocket.Conn, state tls.Connect
 	if b == nil || b.Peer != presented || b.Disclose == nil {
 		return nil, failure(authorization.Denied)
 	}
+	if slices.Contains(selected, "reliable.v1") && (b.Journal == nil || b.Execution == nil || b.Retain == nil) {
+		return nil, failure(authorization.Unsupported)
+	}
 	if server {
 		if err = send(); err != nil {
 			return nil, err
@@ -277,5 +280,12 @@ func (h Host) start(parent context.Context, c *websocket.Conn, state tls.Connect
 			return nil, err
 		}
 	}
-	return newPeer(c, h, cfg, state, server, target, presented, selected), nil
+	var journal *Journal
+	if slices.Contains(selected, "reliable.v1") {
+		journal, err = b.Journal.Claim(parent)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return newPeer(c, h, cfg, state, server, target, presented, selected, journal), nil
 }

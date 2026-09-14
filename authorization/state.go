@@ -80,6 +80,7 @@ type State struct {
 	ContentOperations     map[string]string
 	Signed                *GrantJournal
 	RuntimeData           []byte            // Trusted local runtime partition; retained independently of management receipts.
+	DeliveryData          []byte            // Reliable delivery shares the runtime atomic commit.
 	RuntimeOperations     map[string]string // operation_id -> original subject; no cleanup while runtime recovery is needed.
 	Format                int
 	Namespace, Authority  string

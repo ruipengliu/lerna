@@ -57,6 +57,13 @@ func (p *WorkPort) GuardExecution(tx authorization.RuntimeTransaction, q Qualifi
 	})
 }
 func (p *WorkPort) ConsumeExecution(ctx context.Context, in ExecutionReport) error {
+	return p.service.store.UpdateRuntime(ctx, func(tx authorization.RuntimeTransaction) error { return p.ConsumeExecutionIn(tx, in) })
+}
+
+// ConsumeExecutionIn applies a trusted execution report inside the caller's
+// runtime transaction, allowing reliable consumption and its reply to commit
+// with the task. It performs no external I/O.
+func (p *WorkPort) ConsumeExecutionIn(tx authorization.RuntimeTransaction, in ExecutionReport) error {
 	if in.OperationID == "" || in.Revision < 1 || in.Revision > 32 || len(in.Reference) > 256 {
 		return failure(authorization.Invalid)
 	}
@@ -72,7 +79,7 @@ func (p *WorkPort) ConsumeExecution(ctx context.Context, in ExecutionReport) err
 	if in.Effect == "CONFIRMED" && (in.Phase != "FINISHED" || (in.Result == "SUCCESS" && in.Reference == "")) {
 		return failure(authorization.Invalid)
 	}
-	return p.service.transaction(ctx, func(j *journal, tx authorization.RuntimeTransaction) error {
+	return p.service.runtime(tx, func(j *journal, tx authorization.RuntimeTransaction) error {
 		q := in.Qualification
 		r, ok := j.Runs[q.Ref.TaskID]
 		if !ok || q.Ref.Namespace != p.service.config.Namespace {

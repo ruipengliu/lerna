@@ -49,13 +49,16 @@ type Peer struct {
 	receiving                   map[string]*Subscription
 	publishing                  map[string]subscription
 	control, outgoing, incoming chan *wire.Envelope
-	sendSeq                     [6]uint64
-	recvSeq                     [6]uint64
+	journal                     *Journal
+	reliableReady               bool
+	reliableSent                uint64
+	sendSeq                     [7]uint64
+	recvSeq                     [7]uint64
 }
 
-func newPeer(c *websocket.Conn, h Host, cfg Config, state tls.ConnectionState, server bool, target string, p authorization.GrantPresentation, caps []string) *Peer {
+func newPeer(c *websocket.Conn, h Host, cfg Config, state tls.ConnectionState, server bool, target string, p authorization.GrantPresentation, caps []string, journal *Journal) *Peer {
 	ctx, cancel := context.WithTimeout(context.Background(), cfg.Lifetime)
-	v := &Peer{conn: c, host: h, config: cfg, state: state, server: server, target: target, identity: p, capabilities: caps, ctx: ctx, cancel: cancel, pending: map[string]pending{}, receiving: map[string]*Subscription{}, publishing: map[string]subscription{}, control: make(chan *wire.Envelope, cfg.Window), outgoing: make(chan *wire.Envelope, cfg.Window), incoming: make(chan *wire.Envelope, cfg.Window)}
+	v := &Peer{journal: journal, conn: c, host: h, config: cfg, state: state, server: server, target: target, identity: p, capabilities: caps, ctx: ctx, cancel: cancel, pending: map[string]pending{}, receiving: map[string]*Subscription{}, publishing: map[string]subscription{}, control: make(chan *wire.Envelope, cfg.Window), outgoing: make(chan *wire.Envelope, cfg.Window), incoming: make(chan *wire.Envelope, cfg.Window)}
 	// Control-frame handlers use the same finite write deadline as data writes.
 	c.SetPingHandler(func(s string) error {
 		return c.WriteControl(websocket.PongMessage, []byte(s), time.Now().Add(cfg.Timeout))
@@ -63,6 +66,9 @@ func newPeer(c *websocket.Conn, h Host, cfg Config, state tls.ConnectionState, s
 	go func() { <-ctx.Done(); c.Close() }()
 	go v.readLoop()
 	go v.writeLoop()
+	if journal != nil {
+		go v.recoveryLoop()
+	}
 	return v
 }
 func (p *Peer) Close()                { p.stop(context.Canceled) }
@@ -105,6 +111,17 @@ func (p *Peer) current(ctx context.Context) (*Binding, error) {
 	if b == nil || b.Peer != v || b.Disclose == nil {
 		return nil, failure(authorization.Denied)
 	}
+	if p.journal != nil {
+		if b.Journal == nil || b.Journal.authority != p.journal.authority || b.Journal.peer != p.journal.peer {
+			return nil, failure(authorization.Denied)
+		}
+		if err := p.journal.checkSession(ctx); err != nil {
+			return nil, err
+		}
+		copy := *b
+		copy.Journal = p.journal
+		b = &copy
+	}
 	return b, nil
 }
 func (p *Peer) enqueue(q chan *wire.Envelope, e *wire.Envelope) error {
@@ -128,7 +145,8 @@ func (p *Peer) Exchange(ctx context.Context, raw []byte) ([]byte, error) {
 	if proto.Unmarshal(raw, r) != nil || !taskwire.Known(r.ProtoReflect()) || r.MessageId == "" || len(r.MessageId) > 128 || r.Namespace != p.identity.Namespace {
 		return nil, failure(authorization.Invalid)
 	}
-	if method(r) == "" || !slices.Contains(p.capabilities, method(r)) {
+	reliable := r.GetInvoke() != nil && slices.Contains(p.capabilities, "reliable.v1")
+	if !reliable && (method(r) == "" || !slices.Contains(p.capabilities, method(r))) {
 		return nil, failure(authorization.Unsupported)
 	}
 	ch := make(chan *wire.CapabilityResponse, 1)
@@ -144,7 +162,26 @@ func (p *Peer) Exchange(ctx context.Context, raw []byte) ([]byte, error) {
 	p.pending[r.MessageId] = pending{r, ch}
 	p.mu.Unlock()
 	defer func() { p.mu.Lock(); delete(p.pending, r.MessageId); p.mu.Unlock() }()
-	if err := p.enqueue(p.outgoing, &wire.Envelope{MessageId: r.MessageId, Body: &wire.Envelope_Query{Query: r}}); err != nil {
+	if reliable {
+		b, err := p.reliableJournal(ctx)
+		if err != nil {
+			return nil, err
+		}
+		if err = b.Disclose(ctx, p.identity, r); err != nil {
+			return nil, err
+		}
+		if err = b.Retain(ctx, p.identity, r); err != nil {
+			return nil, err
+		}
+		if _, err = b.Journal.Prepare(ctx, r); err != nil {
+			return nil, err
+		}
+		if out, err := p.Result(ctx, r.MessageId); err == nil {
+			return proto.Marshal(out)
+		} else if !authorization.Is(err, authorization.NotFound) {
+			return nil, err
+		}
+	} else if err := p.enqueue(p.outgoing, &wire.Envelope{MessageId: r.MessageId, Body: &wire.Envelope_Query{Query: r}}); err != nil {
 		return nil, err
 	}
 	ctx, cancel := context.WithTimeout(ctx, p.config.Timeout)
@@ -241,7 +278,7 @@ func (s *Subscription) Close() {
 
 func stream(e *wire.Envelope) (uint32, string) {
 	switch e.Body.(type) {
-	case *wire.Envelope_Control, *wire.Envelope_Subscription:
+	case *wire.Envelope_Control, *wire.Envelope_Subscription, *wire.Envelope_Cursor:
 		return 1, "control"
 	case *wire.Envelope_Query:
 		return 2, "query"
@@ -253,6 +290,8 @@ func stream(e *wire.Envelope) (uint32, string) {
 		return 5, "content"
 	case *wire.Envelope_Extension:
 		return 2, "query"
+	case *wire.Envelope_Reliable:
+		return 6, "reliable"
 	}
 	return 0, ""
 }
@@ -286,7 +325,19 @@ func (p *Peer) sendChecked(e *wire.Envelope, request *wire.CapabilityRequest) er
 			return err
 		}
 		if request != nil {
-			return b.Disclose(ctx, p.identity, request)
+			if err := b.Disclose(ctx, p.identity, request); err != nil {
+				return err
+			}
+			if m := e.GetReliable(); m != nil && m.Response != nil && m.Response.GetFailure() == nil && request.GetInvoke() != nil {
+				if b.Execution == nil {
+					return failure(authorization.Unsupported)
+				}
+				if err := b.Execution.MatchPeer(p.identity); err != nil {
+					return err
+				}
+				_, err := b.Execution.ReadRemoteInvocation(ctx, request.GetInvoke().GetInvocation().GetOperationId())
+				return err
+			}
 		}
 		return nil
 	}
@@ -406,6 +457,8 @@ func (p *Peer) readLoop() {
 }
 func (p *Peer) receive(e *wire.Envelope) error {
 	switch v := e.Body.(type) {
+	case *wire.Envelope_Reliable, *wire.Envelope_Cursor:
+		return p.receiveReliable(e)
 	case *wire.Envelope_Query:
 		if e.ReplyTo != nil || v.Query.MessageId != e.MessageId || v.Query.Namespace != e.Namespace {
 			return failure(authorization.Invalid)
@@ -518,6 +571,22 @@ func (p *Peer) answer(ctx context.Context, r *wire.CapabilityRequest) *wire.Capa
 	return out
 }
 func (p *Peer) writeLoop() {
+	if slices.Contains(p.capabilities, "reliable.v1") {
+		ctx, cancel := context.WithTimeout(p.ctx, p.config.Timeout)
+		b, err := p.reliableJournal(ctx)
+		var cursor *wire.WSCursor
+		if err == nil {
+			cursor, err = b.Journal.Cursor(ctx)
+		}
+		cancel()
+		if err == nil {
+			err = p.send(&wire.Envelope{Body: &wire.Envelope_Cursor{Cursor: cursor}})
+		}
+		if err != nil {
+			p.stop(err)
+			return
+		}
+	}
 	poll := time.NewTicker(p.config.Poll)
 	defer poll.Stop()
 	heartbeat := time.NewTicker(p.config.Timeout / 3)
@@ -550,6 +619,10 @@ func (p *Peer) writeLoop() {
 		case <-heartbeat.C:
 			e = &wire.Envelope{Body: &wire.Envelope_Control{Control: &wire.WSControl{Kind: "PING"}}}
 		case <-poll.C:
+			if err := p.recoverReliable(); err != nil {
+				p.stop(err)
+				return
+			}
 			if err := p.publish(); err != nil {
 				p.stop(err)
 				return
@@ -624,6 +697,8 @@ func validAnswer(r *wire.CapabilityRequest, out *wire.CapabilityResponse, e *wir
 		return slices.Contains([]string{"UNAUTHENTICATED", "PERMISSION_DENIED", "INVALID_ARGUMENT", "UNSUPPORTED", "VERSION_CONFLICT", "IDENTITY_CONFLICT", "ADMISSION_EXPIRED", "NOT_FOUND", "TIME_UNTRUSTED", "UNAVAILABLE", "OUTCOME_UNKNOWN"}, f.Code)
 	}
 	switch r.Body.(type) {
+	case *wire.CapabilityRequest_Invoke:
+		return out.GetReceipt() != nil && out.GetReceipt().OperationId == r.GetInvoke().GetInvocation().GetOperationId() && out.GetReceipt().Revision > 0 && out.GetReceipt().Revision <= 32
 	case *wire.CapabilityRequest_List, *wire.CapabilityRequest_Search:
 		return out.GetCatalogPage() != nil
 	case *wire.CapabilityRequest_Describe:

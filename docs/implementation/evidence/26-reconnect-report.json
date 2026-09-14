@@ -1,0 +1,126 @@
+{
+  "profile": "ws-reconnect-v1",
+  "ticket": 26,
+  "date": "2026-09-14",
+  "base_commit": "7c67f00d4efc7adf12a83c61c9dad71019caa51d",
+  "candidate": "base_commit plus the SHA-256 identified source files below; documentation and evidence are not executable inputs",
+  "result": "passed",
+  "environment": {
+    "GOARCH": "arm64",
+    "GOOS": "darwin",
+    "GOVERSION": "go1.26.1"
+  },
+  "kernel": "macOS-27.0-arm64-arm-64bit",
+  "command": "./scripts/verify-reconnect.sh",
+  "stages": {
+    "profile": "ws-reconnect-v1",
+    "dependencies": "passed",
+    "generation": "passed",
+    "generated_diff": "passed",
+    "build": "passed",
+    "analysis": "passed",
+    "reconnect": "passed",
+    "regression": "passed",
+    "exit_code": 0
+  },
+  "results": {
+    "reconnect": {
+      "passed_test_events_including_subtests": 28,
+      "skipped_test_events": 1,
+      "passed_packages": [
+        "lerna/authorization",
+        "lerna/adapters/wsbinding",
+        "lerna/profiles/asynccheck"
+      ],
+      "started_at": "2026-09-14T14:16:40.644896+08:00",
+      "finished_at": "2026-09-14T14:17:49.484706+08:00"
+    },
+    "regression": {
+      "passed_test_events_including_subtests": 344,
+      "skipped_test_events": 7,
+      "passed_packages": [
+        "lerna/authorization",
+        "lerna/tasks",
+        "lerna/sdk",
+        "lerna/schema",
+        "lerna/adapters/wsbinding",
+        "lerna/adapters/grpcbinding",
+        "lerna/profiles/sdkcontract",
+        "lerna/profiles/executioncheck",
+        "lerna/profiles/asynccheck"
+      ],
+      "started_at": "2026-09-14T14:17:50.014663+08:00",
+      "finished_at": "2026-09-14T14:20:13.412398+08:00"
+    }
+  },
+  "process_scenarios": [
+    "TestWSReliableProcessRecovery/inbox",
+    "TestWSReliableProcessRecovery/handoff",
+    "TestWSReliableProcessRecovery/effect",
+    "TestWSReliableProcessRecovery/reverse-inbox",
+    "TestWSReliableProcessRecovery/reverse-handoff",
+    "TestWSReliableProcessRecovery/reverse-effect"
+  ],
+  "independent_effect_result": "Each of six scenarios restarts both real processes and asserts the original operation produced exactly one change in the independent SQLite counter. Raw logs include role PIDs, addresses, crash stage, RESULT and EFFECT 1.",
+  "topology": "Two local processes using real mTLS WebSocket and separate SQLite authority/execution storage; roles reversed in three scenarios. Target invocation materials are prepared by its authority. Worker execution uses trusted test control.",
+  "config": {
+    "journal_records": 64,
+    "journal_bytes": 262144,
+    "reorder": 8,
+    "attempts": 3,
+    "retention_seconds": 60,
+    "max_message": 65536,
+    "chunk": 1024,
+    "window": 4,
+    "connections": 4,
+    "io_timeout_seconds": 2,
+    "connection_lifetime_seconds": 60,
+    "recovery_poll_seconds": 1
+  },
+  "dependencies": "Unchanged go.mod/go.sum; full resolved module inventory is 26-modules.json. Go toolchain 1.26.1 and protoc 36.1.",
+  "source_sha256": {
+    "adapters/wsbinding/binding.go": "03b901812d5903dd26e3c118b3166f0c45cce25875ac0ea1d40272115487bc44",
+    "adapters/wsbinding/connection.go": "5fadb0674cb0e7a8e4751b8d1164d5a69a68c210b4ba78b391b02d9923b6e2bc",
+    "adapters/wsbinding/journal.go": "5a5714e2ff41a3bd5d37456a7157682ac896158a8f509863eb71451803db4fec",
+    "adapters/wsbinding/journal_test.go": "6d4c603f7798a66fa77e4e0c96949c592c71274a343296487df7ff7effd61076",
+    "adapters/wsbinding/peer.go": "cd89f6f7a76b8081944a29b48666978d9569eb2f421e3741299ed7c1bae6ae41",
+    "adapters/wsbinding/reliable.go": "554b5f970db1da893678e9f19f8f88b4cc11a0eef2f7de21c7d75f009fc3be7c",
+    "adapters/wsbinding/retirement.go": "4806fc80c028f3df3c510c42899f692fe03db138ce03ed3245be76004455e739",
+    "authorization/delivery.go": "88cd6ff65fdad31e490f05d118dfc9ee7c21a68cbfb5d454b45031cb8043305e",
+    "authorization/delivery_test.go": "e1eb53ce894cf5a1ccdd18c35d03ca403629d7c870d2ce9ecdd529eefa43836b",
+    "authorization/state.go": "8d589f1a160c3be3d240c8ae768dd8908526189f7dfa4595f62263273bf7dd9a",
+    "gen/harness/v1/contract.pb.go": "f4190fb327827214df673b9958947da4d6b4119e9fe8983a0bb549aab7329749",
+    "gen/harness/v1/websocket.pb.go": "82f2293df73aa6eee2f9a64717d991eaccc5df493baac8612692a34465910652",
+    "profiles/asynccheck/ws_reliable_process_test.go": "851069ac04fd007b2b22b79ac45ad3d6c058f8411401935480ed3f619b067347",
+    "profiles/asynccheck/ws_reliable_storage_test.go": "52130856041b06badd9acde0527413fdda70ef8c848a365ea7d58fa3c57a5def",
+    "profiles/asynccheck/ws_reliable_test.go": "dd908ec1781e286197d0cd370319e5fe3a2ce60fcaf7214e2e9fff4dfce5e0d8",
+    "proto/harness/v1/contract.proto": "e2a31418a84731e283b6c37a3276fb712e210ac354e8dc295cd9f1c96acae130",
+    "proto/harness/v1/websocket.proto": "2d0a06a5f1b0e11d8da71da833077d9e2a6e4a68aef65f4a71b523ccbcef756a",
+    "scripts/verify-reconnect.sh": "f2c354aa71274e8513d1b87d0cdd7bd370139845b839e6b1aa6b8ec607a09c84",
+    "tasks/execution.go": "131e2668bb4e0eb0d939945c08811c06fddae6a9ef69e74909c691ed00f55ae8"
+  },
+  "evidence_sha256": {
+    "docs/implementation/evidence/26-environment.json": "7265daeee4399d79cbcf96db87b634be1adf61158069b3bdd48021e313044826",
+    "docs/implementation/evidence/26-modules.json": "3a5c6e70c526276f2dd3934f29602f80d6b7ff1b42f305d6c098984fec7a2134",
+    "docs/implementation/evidence/26-status.json": "079155f4a8d6f651f0d0acc7e9eccd39ccca7d6287da948f51d14ce220a9b1bf",
+    "docs/implementation/evidence/26-dependencies.log": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
+    "docs/implementation/evidence/26-generation.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/implementation/evidence/26-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/implementation/evidence/26-analysis.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/implementation/evidence/26-reconnect.jsonl": "d841a73cf60e512d549bb469a74d97ef3a0e03cc21a050d361ae598232d5ff4c",
+    "docs/implementation/evidence/26-reconnect.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/implementation/evidence/26-regression.jsonl": "a826f6994ab27a6445e6bf044ad0f1977d9c25952cbc7f9917516f7a41fa2756",
+    "docs/implementation/evidence/26-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "review": "../26-reconnect-review.md",
+  "limits": [
+    "Local reference counter, not public WAN, production devices, or external exactly-once.",
+    "Simulated clock used for expiry and admission-window boundaries; network, process exits and storage commits are real.",
+    "Synthetic public fixtures use host Retain/Disclose callbacks; production data requires host policy.",
+    "Finite recovery queries preserve UNKNOWN on budget exhaustion; KNOWN alone does not imply a terminal effect.",
+    "Only reliable capability invocation is added; no ownership migration or complete UI/memory synchronization.",
+    "No real model evaluation or full-system acceptance.",
+    "Full go test ./... and profiles/catalogcheck were not run for this ticket; ticket 25 recorded 31 baseline catalog failures, not claimed fixed."
+  ],
+  "development_failure": "An intermediate expired-lease healthy-work fixture failed because its new grant exceeded the old policy validity. The fixture refreshes policy/scope before issuing new work; the final frozen run passes."
+}

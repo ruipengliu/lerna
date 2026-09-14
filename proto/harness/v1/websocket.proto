@@ -1,6 +1,7 @@
 syntax = "proto3";
 package harness.v1;
 option go_package = "lerna/gen/harness/v1;harnessv1";
+import "proto/harness/v1/execution.proto";
 
 // This fixed bootstrap is decoded before business protocol selection. Limits
 // have finite nonzero values; both offers are required before business traffic.
@@ -41,4 +42,21 @@ message WSChunk {
 }
 message WSControl {
  string kind = 1; // PING, PONG, CLOSED; never PERSISTED in this profile.
+}
+
+// Reliable positions are independent of connection-local Envelope.seq.
+message WSReliable {
+ uint64 generation = 1;
+ uint64 position = 2;
+ string message_id = 3;
+ CapabilityRequest request = 4;
+ CapabilityResponse response = 5;
+ // Explicit non-executing disposition when payload disclosure is denied.
+ // Matches the SHA-256 of the original WSReliable; contains no business body.
+ bytes omitted_sha256 = 6;
+}
+message WSCursor {
+ string kind = 1; // RESUME, PERSISTED, CLOSE, or EXPIRED; none imply execution.
+ uint64 generation = 2;
+ uint64 prefix = 3;
 }

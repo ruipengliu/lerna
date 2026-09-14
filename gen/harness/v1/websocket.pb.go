@@ -413,12 +413,159 @@ func (x *WSControl) GetKind() string {
 	return ""
 }
 
+// Reliable positions are independent of connection-local Envelope.seq.
+type WSReliable struct {
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Generation uint64                 `protobuf:"varint,1,opt,name=generation,proto3" json:"generation,omitempty"`
+	Position   uint64                 `protobuf:"varint,2,opt,name=position,proto3" json:"position,omitempty"`
+	MessageId  string                 `protobuf:"bytes,3,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	Request    *CapabilityRequest     `protobuf:"bytes,4,opt,name=request,proto3" json:"request,omitempty"`
+	Response   *CapabilityResponse    `protobuf:"bytes,5,opt,name=response,proto3" json:"response,omitempty"`
+	// Explicit non-executing disposition when payload disclosure is denied.
+	// Matches the SHA-256 of the original WSReliable; contains no business body.
+	OmittedSha256 []byte `protobuf:"bytes,6,opt,name=omitted_sha256,json=omittedSha256,proto3" json:"omitted_sha256,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WSReliable) Reset() {
+	*x = WSReliable{}
+	mi := &file_proto_harness_v1_websocket_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WSReliable) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WSReliable) ProtoMessage() {}
+
+func (x *WSReliable) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_harness_v1_websocket_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WSReliable.ProtoReflect.Descriptor instead.
+func (*WSReliable) Descriptor() ([]byte, []int) {
+	return file_proto_harness_v1_websocket_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *WSReliable) GetGeneration() uint64 {
+	if x != nil {
+		return x.Generation
+	}
+	return 0
+}
+
+func (x *WSReliable) GetPosition() uint64 {
+	if x != nil {
+		return x.Position
+	}
+	return 0
+}
+
+func (x *WSReliable) GetMessageId() string {
+	if x != nil {
+		return x.MessageId
+	}
+	return ""
+}
+
+func (x *WSReliable) GetRequest() *CapabilityRequest {
+	if x != nil {
+		return x.Request
+	}
+	return nil
+}
+
+func (x *WSReliable) GetResponse() *CapabilityResponse {
+	if x != nil {
+		return x.Response
+	}
+	return nil
+}
+
+func (x *WSReliable) GetOmittedSha256() []byte {
+	if x != nil {
+		return x.OmittedSha256
+	}
+	return nil
+}
+
+type WSCursor struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Kind          string                 `protobuf:"bytes,1,opt,name=kind,proto3" json:"kind,omitempty"` // RESUME, PERSISTED, CLOSE, or EXPIRED; none imply execution.
+	Generation    uint64                 `protobuf:"varint,2,opt,name=generation,proto3" json:"generation,omitempty"`
+	Prefix        uint64                 `protobuf:"varint,3,opt,name=prefix,proto3" json:"prefix,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WSCursor) Reset() {
+	*x = WSCursor{}
+	mi := &file_proto_harness_v1_websocket_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WSCursor) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WSCursor) ProtoMessage() {}
+
+func (x *WSCursor) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_harness_v1_websocket_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WSCursor.ProtoReflect.Descriptor instead.
+func (*WSCursor) Descriptor() ([]byte, []int) {
+	return file_proto_harness_v1_websocket_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *WSCursor) GetKind() string {
+	if x != nil {
+		return x.Kind
+	}
+	return ""
+}
+
+func (x *WSCursor) GetGeneration() uint64 {
+	if x != nil {
+		return x.Generation
+	}
+	return 0
+}
+
+func (x *WSCursor) GetPrefix() uint64 {
+	if x != nil {
+		return x.Prefix
+	}
+	return 0
+}
+
 var File_proto_harness_v1_websocket_proto protoreflect.FileDescriptor
 
 const file_proto_harness_v1_websocket_proto_rawDesc = "" +
 	"\n" +
 	" proto/harness/v1/websocket.proto\x12\n" +
-	"harness.v1\"\xba\x02\n" +
+	"harness.v1\x1a proto/harness/v1/execution.proto\"\xba\x02\n" +
 	"\aWSHello\x12\x1c\n" +
 	"\tbootstrap\x18\x01 \x01(\rR\tbootstrap\x12\x1a\n" +
 	"\bversions\x18\x02 \x03(\rR\bversions\x12\x1a\n" +
@@ -458,7 +605,24 @@ const file_proto_harness_v1_websocket_proto_rawDesc = "" +
 	"\x05total\x18\x03 \x01(\rR\x05total\x12\x12\n" +
 	"\x04data\x18\x04 \x01(\fR\x04data\"\x1f\n" +
 	"\tWSControl\x12\x12\n" +
-	"\x04kind\x18\x01 \x01(\tR\x04kindB Z\x1elerna/gen/harness/v1;harnessv1b\x06proto3"
+	"\x04kind\x18\x01 \x01(\tR\x04kind\"\x83\x02\n" +
+	"\n" +
+	"WSReliable\x12\x1e\n" +
+	"\n" +
+	"generation\x18\x01 \x01(\x04R\n" +
+	"generation\x12\x1a\n" +
+	"\bposition\x18\x02 \x01(\x04R\bposition\x12\x1d\n" +
+	"\n" +
+	"message_id\x18\x03 \x01(\tR\tmessageId\x127\n" +
+	"\arequest\x18\x04 \x01(\v2\x1d.harness.v1.CapabilityRequestR\arequest\x12:\n" +
+	"\bresponse\x18\x05 \x01(\v2\x1e.harness.v1.CapabilityResponseR\bresponse\x12%\n" +
+	"\x0eomitted_sha256\x18\x06 \x01(\fR\romittedSha256\"V\n" +
+	"\bWSCursor\x12\x12\n" +
+	"\x04kind\x18\x01 \x01(\tR\x04kind\x12\x1e\n" +
+	"\n" +
+	"generation\x18\x02 \x01(\x04R\n" +
+	"generation\x12\x16\n" +
+	"\x06prefix\x18\x03 \x01(\x04R\x06prefixB Z\x1elerna/gen/harness/v1;harnessv1b\x06proto3"
 
 var (
 	file_proto_harness_v1_websocket_proto_rawDescOnce sync.Once
@@ -472,20 +636,26 @@ func file_proto_harness_v1_websocket_proto_rawDescGZIP() []byte {
 	return file_proto_harness_v1_websocket_proto_rawDescData
 }
 
-var file_proto_harness_v1_websocket_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_proto_harness_v1_websocket_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_proto_harness_v1_websocket_proto_goTypes = []any{
-	(*WSHello)(nil),        // 0: harness.v1.WSHello
-	(*WSWelcome)(nil),      // 1: harness.v1.WSWelcome
-	(*WSSubscription)(nil), // 2: harness.v1.WSSubscription
-	(*WSChunk)(nil),        // 3: harness.v1.WSChunk
-	(*WSControl)(nil),      // 4: harness.v1.WSControl
+	(*WSHello)(nil),            // 0: harness.v1.WSHello
+	(*WSWelcome)(nil),          // 1: harness.v1.WSWelcome
+	(*WSSubscription)(nil),     // 2: harness.v1.WSSubscription
+	(*WSChunk)(nil),            // 3: harness.v1.WSChunk
+	(*WSControl)(nil),          // 4: harness.v1.WSControl
+	(*WSReliable)(nil),         // 5: harness.v1.WSReliable
+	(*WSCursor)(nil),           // 6: harness.v1.WSCursor
+	(*CapabilityRequest)(nil),  // 7: harness.v1.CapabilityRequest
+	(*CapabilityResponse)(nil), // 8: harness.v1.CapabilityResponse
 }
 var file_proto_harness_v1_websocket_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	7, // 0: harness.v1.WSReliable.request:type_name -> harness.v1.CapabilityRequest
+	8, // 1: harness.v1.WSReliable.response:type_name -> harness.v1.CapabilityResponse
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_proto_harness_v1_websocket_proto_init() }
@@ -493,13 +663,14 @@ func file_proto_harness_v1_websocket_proto_init() {
 	if File_proto_harness_v1_websocket_proto != nil {
 		return
 	}
+	file_proto_harness_v1_execution_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_harness_v1_websocket_proto_rawDesc), len(file_proto_harness_v1_websocket_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
