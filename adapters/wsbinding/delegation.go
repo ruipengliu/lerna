@@ -14,6 +14,7 @@ import (
 )
 
 type childRequest struct {
+	Route     *tasks.HandoffRoute
 	Method    string
 	Intent    tasks.ChildIntent
 	Reference *tasks.ChildReference
@@ -38,9 +39,19 @@ func decodeChild(raw []byte, out any) error {
 	}
 	return nil
 }
-func childQuery(ctx context.Context, c *tasks.ChildPort, raw []byte) ([]byte, error) {
+func childQuery(ctx context.Context, c *tasks.ChildPort, peer authorization.GrantPresentation, raw []byte) ([]byte, error) {
 	var in childRequest
 	if e := decodeChild(raw, &in); e != nil {
+		return nil, e
+	}
+	if in.Route != nil {
+		var e error
+		c, e = c.FollowParent(ctx, *in.Route, peer)
+		if e != nil {
+			return nil, e
+		}
+	}
+	if e := c.MatchPeer(peer); e != nil {
 		return nil, e
 	}
 	if (in.Method == "accept" && in.Reference != nil) || (in.Method != "accept" && !reflect.DeepEqual(in.Intent, tasks.ChildIntent{})) {
@@ -92,6 +103,7 @@ func childQuery(ctx context.Context, c *tasks.ChildPort, raw []byte) ([]byte, er
 }
 func (p *Peer) child(ctx context.Context, method string, in childRequest) (childReply, error) {
 	in.Method = method
+
 	var out childReply
 	id, e := authorization.NewCredential()
 	if e != nil {
@@ -167,6 +179,56 @@ func (p *Peer) Cancel(ctx context.Context, in tasks.ChildReference) (tasks.Contr
 }
 func (p *Peer) Report(ctx context.Context, in tasks.ChildReference) (tasks.ChildReport, error) {
 	v, e := p.child(ctx, "report", childRequest{Reference: &in})
+	if e != nil {
+		return tasks.ChildReport{}, e
+	}
+	if v.Report == nil {
+		return tasks.ChildReport{}, failure(authorization.Invalid)
+	}
+	return *v.Report, nil
+}
+
+// RoutedChildren uses the activated parent's proof with the existing connection.
+type RoutedChildren struct {
+	peer  *Peer
+	route tasks.HandoffRoute
+}
+
+func (p *Peer) WithParentRoute(route tasks.HandoffRoute) *RoutedChildren {
+	return &RoutedChildren{p, route}
+}
+func (p *RoutedChildren) Accept(ctx context.Context, in tasks.ChildIntent) (tasks.Task, error) {
+	v, e := p.peer.child(ctx, "accept", childRequest{Intent: in, Route: &p.route})
+	if e != nil {
+		return tasks.Task{}, e
+	}
+	if v.Task == nil {
+		return tasks.Task{}, failure(authorization.Invalid)
+	}
+	return *v.Task, nil
+}
+func (p *RoutedChildren) Lookup(ctx context.Context, in tasks.ChildReference) (tasks.Task, error) {
+	v, e := p.peer.child(ctx, "lookup", childRequest{Reference: &in, Route: &p.route})
+	if e != nil {
+		return tasks.Task{}, e
+	}
+	if v.Task == nil {
+		return tasks.Task{}, failure(authorization.Invalid)
+	}
+	return *v.Task, nil
+}
+func (p *RoutedChildren) Cancel(ctx context.Context, in tasks.ChildReference) (tasks.ControlReceipt, error) {
+	v, e := p.peer.child(ctx, "cancel", childRequest{Reference: &in, Route: &p.route})
+	if e != nil {
+		return tasks.ControlReceipt{}, e
+	}
+	if v.Cancellation == nil {
+		return tasks.ControlReceipt{}, failure(authorization.Invalid)
+	}
+	return *v.Cancellation, nil
+}
+func (p *RoutedChildren) Report(ctx context.Context, in tasks.ChildReference) (tasks.ChildReport, error) {
+	v, e := p.peer.child(ctx, "report", childRequest{Reference: &in, Route: &p.route})
 	if e != nil {
 		return tasks.ChildReport{}, e
 	}

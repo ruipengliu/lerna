@@ -118,7 +118,10 @@ func (c *ControlService) Request(ctx context.Context, token string, in ControlRe
 		if err = tx.Operation(in.OperationID, identity.Subject, false); err != nil {
 			return err
 		}
-		if delegationOperation(j, in.OperationID) {
+		if e := checkRuntimeScope(tx, in.OperationID, in.Ref); e != nil {
+			return e
+		}
+		if collaborationOperation(j, in.OperationID) {
 			return failure(authorization.IdentityConflict)
 		}
 		if _, exists := j.InputChanges[in.OperationID]; exists {

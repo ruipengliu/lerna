@@ -1,0 +1,55 @@
+{"Time":"2026-09-14T21:25:44.692437+08:00","Action":"start","Package":"lerna/profiles/asynccheck"}
+{"Time":"2026-09-14T21:25:46.145301+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams"}
+{"Time":"2026-09-14T21:25:46.145352+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"=== RUN   TestGRPCBoundedConcurrentStreams\n"}
+{"Time":"2026-09-14T21:25:46.322915+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:286: gRPC caller PID=12076 executor PID=12114 address=127.0.0.1:49308\n"}
+{"Time":"2026-09-14T21:25:48.631398+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"--- PASS: TestGRPCBoundedConcurrentStreams (2.49s)\n"}
+{"Time":"2026-09-14T21:25:48.631429+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Elapsed":2.49}
+{"Time":"2026-09-14T21:25:48.631512+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams"}
+{"Time":"2026-09-14T21:25:48.631517+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"=== RUN   TestGRPCBoundedConcurrentStreams\n"}
+{"Time":"2026-09-14T21:25:48.788617+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:286: gRPC caller PID=12076 executor PID=12183 address=127.0.0.1:49311\n"}
+{"Time":"2026-09-14T21:25:51.235178+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"--- PASS: TestGRPCBoundedConcurrentStreams (2.60s)\n"}
+{"Time":"2026-09-14T21:25:51.235207+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Elapsed":2.6}
+{"Time":"2026-09-14T21:25:51.235291+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams"}
+{"Time":"2026-09-14T21:25:51.235309+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"=== RUN   TestGRPCBoundedConcurrentStreams\n"}
+{"Time":"2026-09-14T21:25:51.403807+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:286: gRPC caller PID=12076 executor PID=12204 address=127.0.0.1:49319\n"}
+{"Time":"2026-09-14T21:25:53.855493+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"--- PASS: TestGRPCBoundedConcurrentStreams (2.62s)\n"}
+{"Time":"2026-09-14T21:25:53.855518+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Elapsed":2.62}
+{"Time":"2026-09-14T21:25:53.855612+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams"}
+{"Time":"2026-09-14T21:25:53.855617+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"=== RUN   TestGRPCBoundedConcurrentStreams\n"}
+{"Time":"2026-09-14T21:25:54.02592+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:286: gRPC caller PID=12076 executor PID=12224 address=127.0.0.1:49325\n"}
+{"Time":"2026-09-14T21:25:56.435329+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"--- PASS: TestGRPCBoundedConcurrentStreams (2.58s)\n"}
+{"Time":"2026-09-14T21:25:56.435355+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Elapsed":2.58}
+{"Time":"2026-09-14T21:25:56.435444+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams"}
+{"Time":"2026-09-14T21:25:56.435448+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"=== RUN   TestGRPCBoundedConcurrentStreams\n"}
+{"Time":"2026-09-14T21:25:56.611201+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:286: gRPC caller PID=12076 executor PID=12244 address=127.0.0.1:49333\n"}
+{"Time":"2026-09-14T21:25:58.995769+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"--- PASS: TestGRPCBoundedConcurrentStreams (2.56s)\n"}
+{"Time":"2026-09-14T21:25:58.995797+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Elapsed":2.56}
+{"Time":"2026-09-14T21:25:58.995884+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams"}
+{"Time":"2026-09-14T21:25:58.995888+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"=== RUN   TestGRPCBoundedConcurrentStreams\n"}
+{"Time":"2026-09-14T21:25:59.169331+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:286: gRPC caller PID=12076 executor PID=12284 address=127.0.0.1:49340\n"}
+{"Time":"2026-09-14T21:26:01.250291+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"--- PASS: TestGRPCBoundedConcurrentStreams (2.25s)\n"}
+{"Time":"2026-09-14T21:26:01.250313+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Elapsed":2.25}
+{"Time":"2026-09-14T21:26:01.250409+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams"}
+{"Time":"2026-09-14T21:26:01.250413+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"=== RUN   TestGRPCBoundedConcurrentStreams\n"}
+{"Time":"2026-09-14T21:26:01.419959+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:286: gRPC caller PID=12076 executor PID=12304 address=127.0.0.1:49348\n"}
+{"Time":"2026-09-14T21:26:03.590812+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"--- PASS: TestGRPCBoundedConcurrentStreams (2.34s)\n"}
+{"Time":"2026-09-14T21:26:03.590833+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Elapsed":2.34}
+{"Time":"2026-09-14T21:26:03.590934+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams"}
+{"Time":"2026-09-14T21:26:03.590942+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"=== RUN   TestGRPCBoundedConcurrentStreams\n"}
+{"Time":"2026-09-14T21:26:03.759337+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:286: gRPC caller PID=12076 executor PID=12324 address=127.0.0.1:49356\n"}
+{"Time":"2026-09-14T21:26:05.758217+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:319: EOF\n"}
+{"Time":"2026-09-14T21:26:05.763115+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"--- FAIL: TestGRPCBoundedConcurrentStreams (2.17s)\n"}
+{"Time":"2026-09-14T21:26:05.763131+08:00","Action":"fail","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Elapsed":2.17}
+{"Time":"2026-09-14T21:26:05.763295+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams"}
+{"Time":"2026-09-14T21:26:05.7633+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"=== RUN   TestGRPCBoundedConcurrentStreams\n"}
+{"Time":"2026-09-14T21:26:05.937487+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:286: gRPC caller PID=12076 executor PID=12346 address=127.0.0.1:49363\n"}
+{"Time":"2026-09-14T21:26:08.213747+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"--- PASS: TestGRPCBoundedConcurrentStreams (2.45s)\n"}
+{"Time":"2026-09-14T21:26:08.213769+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Elapsed":2.45}
+{"Time":"2026-09-14T21:26:08.213891+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams"}
+{"Time":"2026-09-14T21:26:08.213925+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"=== RUN   TestGRPCBoundedConcurrentStreams\n"}
+{"Time":"2026-09-14T21:26:08.383862+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"    grpc_contract_test.go:286: gRPC caller PID=12076 executor PID=12367 address=127.0.0.1:49370\n"}
+{"Time":"2026-09-14T21:26:10.576524+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Output":"--- PASS: TestGRPCBoundedConcurrentStreams (2.36s)\n"}
+{"Time":"2026-09-14T21:26:10.576543+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestGRPCBoundedConcurrentStreams","Elapsed":2.36}
+{"Time":"2026-09-14T21:26:10.576604+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"FAIL\n"}
+{"Time":"2026-09-14T21:26:10.577867+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"FAIL\tlerna/profiles/asynccheck\t25.885s\n"}
+{"Time":"2026-09-14T21:26:10.577877+08:00","Action":"fail","Package":"lerna/profiles/asynccheck","Elapsed":25.885}

@@ -2,6 +2,7 @@ package tasks
 
 import (
 	"context"
+	"crypto/ed25519"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -61,6 +62,8 @@ type ChildEvidence struct {
 // A delegate check must additionally authorize onward delegation.
 type ChildPolicy func(context.Context, ChildIntent, string) error
 type ChildPort struct {
+	routeKeys          map[string]ed25519.PublicKey
+	routePolicy        ParentRoutePolicy
 	peer               *authorization.GrantPresentation
 	service            *Service
 	token, parentOwner string
@@ -120,6 +123,7 @@ func (c *ChildPort) Accept(ctx context.Context, in ChildIntent) (Task, error) {
 		return Task{}, e
 	}
 	var out Task
+	var replay RunSnapshot
 	e = c.service.transaction(ctx, func(j *journal, tx authorization.RuntimeTransaction) error {
 		identity, e := tx.Authorize(c.token, c.service.config.Resource, "task.submit")
 		if e != nil {
@@ -136,6 +140,10 @@ func (c *ChildPort) Accept(ctx context.Context, in ChildIntent) (Task, error) {
 			if old.Task.Subject != identity.Subject {
 				return failure(authorization.Denied)
 			}
+			if e := c.matchParentRoute(old); e != nil {
+				return e
+			}
+			replay = old
 			out = old.Task
 			return nil
 		}
@@ -154,6 +162,12 @@ func (c *ChildPort) Accept(ctx context.Context, in ChildIntent) (Task, error) {
 		out = task
 		return nil
 	})
+	if e == nil && replay.ParentRoute != nil {
+		e = c.routePolicy(ctx, *replay.Parent, *c.peer)
+	}
+	if e != nil {
+		return Task{}, e
+	}
 	return out, e
 }
 func (c *ChildPort) lookup(ctx context.Context, in ChildReference) (RunSnapshot, error) {
@@ -171,6 +185,14 @@ func (c *ChildPort) lookup(ctx context.Context, in ChildReference) (RunSnapshot,
 	r, e := c.service.Load(ctx, ref)
 	if e != nil {
 		return r, e
+	}
+	if r.ParentRoute != nil {
+		if e := c.matchParentRoute(r); e != nil {
+			return r, e
+		}
+		if e = c.routePolicy(ctx, *r.Parent, *c.peer); e != nil {
+			return r, e
+		}
 	}
 	if r.Parent == nil || ChildReferenceOf(*r.Parent) != in {
 		return r, failure(authorization.IdentityConflict)
@@ -362,4 +384,11 @@ func validChildEvidence(e ChildEvidence) bool {
 		}
 	}
 	return true
+}
+
+func (c *ChildPort) matchParentRoute(r RunSnapshot) error {
+	if r.ParentRoute != nil && (r.Parent == nil || c.peer == nil || *c.peer != r.ParentRoute.Peer || c.routePolicy == nil) {
+		return failure(authorization.Denied)
+	}
+	return nil
 }

@@ -19,6 +19,7 @@ type RuntimeTransaction interface {
 }
 
 type runtimeTransaction struct {
+	state     *State
 	data      []byte
 	namespace string
 	now       time.Time
@@ -55,7 +56,7 @@ func (t *runtimeTransaction) Namespace() string   { return t.namespace }
 func (t *runtimeTransaction) Now() time.Time      { return t.now }
 
 func (s *Service) runtime(st *State, now time.Time) *runtimeTransaction {
-	tx := &runtimeTransaction{data: st.RuntimeData, namespace: st.Namespace, now: now}
+	tx := &runtimeTransaction{state: st, data: st.RuntimeData, namespace: st.Namespace, now: now}
 	tx.authorize = func(token, resource, action string) (Identity, error) {
 		p, err := authenticate(st, token, now)
 		if err != nil {

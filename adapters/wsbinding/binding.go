@@ -21,6 +21,8 @@ import (
 // All supplied services must honor context cancellation.
 type Binding struct {
 	Children      *tasks.ChildPort
+	Handoffs      *tasks.HandoffPort
+	HandoffWorker *tasks.WorkPort
 	Journal       *Journal
 	Authorization *authorization.OfflineView
 	// Retain checks permission and source policy for persisting this request,
@@ -35,6 +37,8 @@ type Resolve func(context.Context, authorization.GrantPresentation) (*Binding, e
 
 func method(r *wire.CapabilityRequest) string {
 	switch r.GetBody().(type) {
+	case *wire.CapabilityRequest_Handoff:
+		return "task.handoff.v1"
 	case *wire.CapabilityRequest_Delegation:
 		return "task.delegation.v1"
 	case *wire.CapabilityRequest_AuthorizationSync:
@@ -69,14 +73,20 @@ func (b *Binding) query(ctx context.Context, p authorization.GrantPresentation, 
 			return nil, err
 		}
 		out = &wire.CapabilityResponse{Body: &wire.CapabilityResponse_Snapshot{Snapshot: executionwire.Snapshot(v)}}
+	} else if method(r) == "task.handoff.v1" {
+		if b.Handoffs == nil {
+			return nil, failure(authorization.Unsupported)
+		}
+		data, e := handoffQuery(ctx, b.Handoffs, b.HandoffWorker, r.GetHandoff())
+		if e != nil {
+			return nil, e
+		}
+		out = &wire.CapabilityResponse{Body: &wire.CapabilityResponse_HandoffReply{HandoffReply: data}}
 	} else if method(r) == "task.delegation.v1" {
 		if b.Children == nil {
 			return nil, failure(authorization.Unsupported)
 		}
-		if e := b.Children.MatchPeer(p); e != nil {
-			return nil, e
-		}
-		data, e := childQuery(ctx, b.Children, r.GetDelegation())
+		data, e := childQuery(ctx, b.Children, p, r.GetDelegation())
 		if e != nil {
 			return nil, e
 		}

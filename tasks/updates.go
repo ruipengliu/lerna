@@ -163,7 +163,10 @@ func (u *UpdateService) inspect(j *journal, tx authorization.RuntimeTransaction,
 	if e = tx.Operation(op, id.Subject, false); e != nil {
 		return RunSnapshot{}, nil, e
 	}
-	if delegationOperation(j, op) {
+	if e := checkRuntimeScope(tx, op, ref); e != nil {
+		return RunSnapshot{}, nil, e
+	}
+	if collaborationOperation(j, op) {
 		return RunSnapshot{}, nil, failure(authorization.IdentityConflict)
 	}
 	if _, ok := j.Operations[op]; ok {

@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/gob"
+	"encoding/json"
 	"lerna/authorization"
 	"lerna/internal/randomid"
 	"reflect"
@@ -65,6 +66,8 @@ type CommitReceipt struct {
 	Version  uint64
 }
 type RunSnapshot struct {
+	ParentRoute                   *ParentRoute
+	ExecutionOrigins              map[string]Qualification
 	ChildReport                   *ChildReport
 	ChildReportChanges            uint32
 	ChildDispositionReportChanges uint32
@@ -118,9 +121,11 @@ type RunStore interface {
 	ListRecoverable(context.Context, RecoveryQuery) (RunPage, error)
 }
 type Service struct {
-	childPolicy ChildPolicy
-	store       RuntimeStore
-	config      Config
+	quarantined       bool
+	handoffManagement bool
+	childPolicy       ChildPolicy
+	store             RuntimeStore
+	config            Config
 }
 type commit struct {
 	WaitRequest      *WaitRequest
@@ -142,6 +147,8 @@ type operation struct {
 	Ref     Ref
 }
 type journal struct {
+	HandoffHistory    map[string]HandoffState
+	Handoffs          map[string]HandoffState
 	ClosedDelegations map[string]ChildReference
 	InputChanges      map[string]inputRecord
 	Format            int
@@ -188,8 +195,33 @@ func (s *Service) runtime(tx authorization.RuntimeTransaction, fn func(*journal,
 	if j.Controls == nil {
 		j.Controls = map[string]controlRecord{}
 	}
+	if j.HandoffHistory == nil {
+		j.HandoffHistory = map[string]HandoffState{}
+	}
+	if j.Handoffs == nil {
+		j.Handoffs = map[string]HandoffState{}
+	}
+	frozen := frozenRuns(&j)
+	var quarantinedBefore []byte
+	if s.quarantined {
+		quarantinedBefore, _ = json.Marshal(j)
+	}
 	if err := fn(&j, tx); err != nil {
 		return err
+	}
+	if s.quarantined {
+		after, _ := json.Marshal(j)
+		if !bytes.Equal(after, quarantinedBefore) {
+			return failure(authorization.Unavailable)
+		}
+	}
+	if !s.handoffManagement {
+		for id, before := range frozen {
+			b, _ := json.Marshal(j.Runs[id])
+			if string(b) != before {
+				return failure(authorization.Unavailable)
+			}
+		}
 	}
 	for _, r := range j.Runs {
 		if e := delegationInvariant(r); e != nil {
@@ -246,7 +278,10 @@ func (s *Service) Submit(ctx context.Context, token string, in Submission) (Task
 		if err := tx.Operation(in.OperationID, identity.Subject, false); err != nil {
 			return err
 		}
-		if delegationOperation(j, in.OperationID) {
+		if e := checkRuntimeScope(tx, in.OperationID, Ref{}); e != nil {
+			return e
+		}
+		if collaborationOperation(j, in.OperationID) {
 			return failure(authorization.IdentityConflict)
 		}
 		if _, ok := j.InputChanges[in.OperationID]; ok {

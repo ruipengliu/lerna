@@ -343,6 +343,9 @@ func (p *WorkPort) checkChild(ctx context.Context, ref Ref) error {
 	return p.checkChildBoundary(ctx, ref, "execute")
 }
 func (p *WorkPort) checkChildBoundary(ctx context.Context, ref Ref, boundary string) error {
+	if p.service.quarantined {
+		return failure(authorization.Unavailable)
+	}
 	if p.service.childPolicy == nil {
 		return nil
 	}

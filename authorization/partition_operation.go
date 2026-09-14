@@ -11,6 +11,15 @@ func (s *Service) partitionOperation(st *State, now time.Time, own *map[string]s
 	if _, ok := st.ExecutionOperations[id]; ok {
 		return fail(IdentityConflict)
 	}
+	if old, ok := st.ImportedRuntimeOperations[id]; ok {
+		if old != subject {
+			return fail(Denied)
+		}
+		if (*own)[id] != subject {
+			return fail(IdentityConflict)
+		}
+		return nil
+	}
 	epoch, err := windowOf(st, id)
 	if err != nil {
 		return err

@@ -221,7 +221,7 @@ func (p *DelegationPort) Admit(ctx context.Context, q Qualification, proposal De
 		}
 
 		for _, op := range append([]string{proposal.OperationID}, delegationOperations(proposal)...) {
-			if delegationOperation(j, op) {
+			if collaborationOperation(j, op) {
 				return failure(authorization.IdentityConflict)
 			}
 			if _, ok := j.Operations[op]; ok {
@@ -234,6 +234,9 @@ func (p *DelegationPort) Admit(ctx context.Context, q Qualification, proposal De
 				return failure(authorization.IdentityConflict)
 			}
 		}
+		if e = checkRuntimeScope(tx, proposal.OperationID, q.Ref); e != nil {
+			return e
+		}
 		if e = tx.Operation(proposal.OperationID, p.binding.Subject, true); e != nil {
 			return e
 		}
@@ -241,6 +244,9 @@ func (p *DelegationPort) Admit(ctx context.Context, q Qualification, proposal De
 		for _, c := range proposal.Children {
 			if c.Budget.DeadlineUnix > r.Task.Constraints.DeadlineUnix || c.Budget.DeadlineUnix <= tx.Now().Unix() {
 				return failure(authorization.Denied)
+			}
+			if e = checkRuntimeScope(tx, c.OperationID, q.Ref); e != nil {
+				return e
 			}
 			if e = tx.Operation(c.OperationID, p.binding.Subject, true); e != nil {
 				return e
@@ -300,7 +306,15 @@ func delegationOperations(p DelegationProposal) []string {
 	}
 	return v
 }
-func delegationOperation(j *journal, op string) bool {
+func collaborationOperation(j *journal, op string) bool {
+	for _, h := range j.Handoffs {
+		if h.Request.OperationID == op {
+			return true
+		}
+	}
+	if _, ok := j.HandoffHistory[op]; ok {
+		return true
+	}
 	for _, r := range j.Runs {
 		if r.Delegations != nil {
 			if r.Delegations.Proposal.OperationID == op {

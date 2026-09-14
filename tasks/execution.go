@@ -22,6 +22,9 @@ type ExecutionReport struct {
 // Each already-budgeted, effect-aware work generation may start ONE operation.
 func (p *WorkPort) GuardExecution(tx authorization.RuntimeTransaction, q Qualification, op string, consume bool) error {
 	return p.service.runtime(tx, func(j *journal, tx authorization.RuntimeTransaction) error {
+		if p.service.quarantined || handoffFrozen(j, q.Ref.TaskID) {
+			return failure(authorization.Unavailable)
+		}
 		r, ok := j.Runs[q.Ref.TaskID]
 		if !ok || q.Ref.Namespace != p.service.config.Namespace {
 			return failure(authorization.Denied)
@@ -54,6 +57,10 @@ func (p *WorkPort) GuardExecution(tx authorization.RuntimeTransaction, q Qualifi
 				return failure(authorization.Conflict)
 			}
 			w.ExecutionOperation = op
+			if r.ExecutionOrigins == nil {
+				r.ExecutionOrigins = map[string]Qualification{}
+			}
+			r.ExecutionOrigins[op] = q
 			j.Runs[q.Ref.TaskID] = r
 		}
 		return nil
@@ -95,6 +102,9 @@ func (p *WorkPort) ConsumeExecutionIn(tx authorization.RuntimeTransaction, in Ex
 		if id.Subject != p.binding.Subject || r.Task.Subject != id.Subject {
 			return failure(authorization.Denied)
 		}
+		if handoffFrozen(j, q.Ref.TaskID) {
+			return queueHandoffReport(j, r, in)
+		}
 		if old, ok := r.ExecutionReports[in.OperationID]; ok {
 			if in.Revision < old.Revision {
 				return nil
@@ -128,7 +138,7 @@ func (p *WorkPort) ConsumeExecutionIn(tx authorization.RuntimeTransaction, in Ex
 		if in.PreStart && w.ExecutionOperation == "" && originalWork == q {
 			w.ExecutionOperation = in.OperationID
 		}
-		if w.Generation == q.Generation && w.ID == q.WorkID && w.Worker == p.binding.WorkerID && w.ExecutionOperation == in.OperationID && !terminal(r.Task) {
+		if ((w.Generation == q.Generation && w.ID == q.WorkID && w.Worker == p.binding.WorkerID && w.ExecutionOperation == in.OperationID) || migratedReport(j, r, in)) && !terminal(r.Task) {
 			if in.Effect == "UNKNOWN" {
 				r.Task.State = "WAITING"
 				addWait(&r.Task, "reconciliation")

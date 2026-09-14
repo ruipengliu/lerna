@@ -1,0 +1,9 @@
+--- FAIL: TestHandoffSealedActivationAndOriginalAdmission (0.05s)
+    handoff_test.go:174: forwarded identity escaped to another handoff <nil>
+FAIL
+FAIL	lerna/tasks	1.102s
+--- FAIL: TestWSHandoffNewParentUsesExistingChild (0.37s)
+    ws_handoff_test.go:296: former parent replay exposed child INVALID_ARGUMENT
+FAIL
+FAIL	lerna/profiles/asynccheck	0.968s
+FAIL

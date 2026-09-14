@@ -1,0 +1,70 @@
+{"Time":"2026-09-14T21:19:40.300125+08:00","Action":"start","Package":"lerna/tasks"}
+{"Time":"2026-09-14T21:19:41.478697+08:00","Action":"run","Package":"lerna/tasks","Test":"TestHandoffProcessProbe"}
+{"Time":"2026-09-14T21:19:41.47878+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffProcessProbe","Output":"=== RUN   TestHandoffProcessProbe\n"}
+{"Time":"2026-09-14T21:19:41.478796+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffProcessProbe","Output":"    handoff_recovery_test.go:28: subprocess only\n"}
+{"Time":"2026-09-14T21:19:41.478823+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffProcessProbe","Output":"--- SKIP: TestHandoffProcessProbe (0.00s)\n"}
+{"Time":"2026-09-14T21:19:41.47883+08:00","Action":"skip","Package":"lerna/tasks","Test":"TestHandoffProcessProbe","Elapsed":0}
+{"Time":"2026-09-14T21:19:41.478852+08:00","Action":"run","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit"}
+{"Time":"2026-09-14T21:19:41.478858+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Output":"=== RUN   TestHandoffEveryDurableWindowSurvivesExit\n"}
+{"Time":"2026-09-14T21:19:41.623222+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Output":"    handoff_recovery_test.go:137: step=begin pid=7463 exit=80\n"}
+{"Time":"2026-09-14T21:19:41.674495+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Output":"    handoff_recovery_test.go:138: step=begin pid=7464 exit=80\n"}
+{"Time":"2026-09-14T21:19:41.738914+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Output":"    handoff_recovery_test.go:137: step=export pid=7483 exit=80\n"}
+{"Time":"2026-09-14T21:19:41.791742+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Output":"    handoff_recovery_test.go:138: step=export pid=7484 exit=80\n"}
+{"Time":"2026-09-14T21:19:41.851038+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Output":"    handoff_recovery_test.go:137: step=prepare pid=7485 exit=80\n"}
+{"Time":"2026-09-14T21:19:41.899545+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Output":"    handoff_recovery_test.go:138: step=prepare pid=7486 exit=80\n"}
+{"Time":"2026-09-14T21:19:41.96587+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Output":"    handoff_recovery_test.go:137: step=seal pid=7487 exit=80\n"}
+{"Time":"2026-09-14T21:19:42.013974+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Output":"    handoff_recovery_test.go:138: step=seal pid=7488 exit=80\n"}
+{"Time":"2026-09-14T21:19:42.07971+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Output":"    handoff_recovery_test.go:137: step=activate pid=7489 exit=80\n"}
+{"Time":"2026-09-14T21:19:42.133625+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Output":"    handoff_recovery_test.go:138: step=activate pid=7490 exit=80\n"}
+{"Time":"2026-09-14T21:19:42.163283+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Output":"--- PASS: TestHandoffEveryDurableWindowSurvivesExit (0.68s)\n"}
+{"Time":"2026-09-14T21:19:42.163306+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestHandoffEveryDurableWindowSurvivesExit","Elapsed":0.68}
+{"Time":"2026-09-14T21:19:42.163318+08:00","Action":"run","Package":"lerna/tasks","Test":"TestHandoffUnknownAndFailedCommits"}
+{"Time":"2026-09-14T21:19:42.163324+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffUnknownAndFailedCommits","Output":"=== RUN   TestHandoffUnknownAndFailedCommits\n"}
+{"Time":"2026-09-14T21:19:42.364448+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffUnknownAndFailedCommits","Output":"--- PASS: TestHandoffUnknownAndFailedCommits (0.20s)\n"}
+{"Time":"2026-09-14T21:19:42.364478+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestHandoffUnknownAndFailedCommits","Elapsed":0.2}
+{"Time":"2026-09-14T21:19:42.364484+08:00","Action":"run","Package":"lerna/tasks","Test":"TestHandoffPreparingStopsSource"}
+{"Time":"2026-09-14T21:19:42.364487+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffPreparingStopsSource","Output":"=== RUN   TestHandoffPreparingStopsSource\n"}
+{"Time":"2026-09-14T21:19:42.470797+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffPreparingStopsSource","Output":"--- PASS: TestHandoffPreparingStopsSource (0.11s)\n"}
+{"Time":"2026-09-14T21:19:42.470814+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestHandoffPreparingStopsSource","Elapsed":0.11}
+{"Time":"2026-09-14T21:19:42.47082+08:00","Action":"run","Package":"lerna/tasks","Test":"TestHandoffSealedActivationAndOriginalAdmission"}
+{"Time":"2026-09-14T21:19:42.470823+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffSealedActivationAndOriginalAdmission","Output":"=== RUN   TestHandoffSealedActivationAndOriginalAdmission\n"}
+{"Time":"2026-09-14T21:19:42.816737+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffSealedActivationAndOriginalAdmission","Output":"--- PASS: TestHandoffSealedActivationAndOriginalAdmission (0.35s)\n"}
+{"Time":"2026-09-14T21:19:42.816756+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestHandoffSealedActivationAndOriginalAdmission","Elapsed":0.35}
+{"Time":"2026-09-14T21:19:42.816762+08:00","Action":"run","Package":"lerna/tasks","Test":"TestHandoffQuarantinedBackupCannotStart"}
+{"Time":"2026-09-14T21:19:42.816766+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffQuarantinedBackupCannotStart","Output":"=== RUN   TestHandoffQuarantinedBackupCannotStart\n"}
+{"Time":"2026-09-14T21:19:42.90135+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffQuarantinedBackupCannotStart","Output":"--- PASS: TestHandoffQuarantinedBackupCannotStart (0.08s)\n"}
+{"Time":"2026-09-14T21:19:42.901367+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestHandoffQuarantinedBackupCannotStart","Elapsed":0.08}
+{"Time":"2026-09-14T21:19:42.901373+08:00","Action":"run","Package":"lerna/tasks","Test":"TestHandoffParentKeepsChildAndBudget"}
+{"Time":"2026-09-14T21:19:42.901376+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffParentKeepsChildAndBudget","Output":"=== RUN   TestHandoffParentKeepsChildAndBudget\n"}
+{"Time":"2026-09-14T21:19:43.227741+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffParentKeepsChildAndBudget","Output":"--- PASS: TestHandoffParentKeepsChildAndBudget (0.33s)\n"}
+{"Time":"2026-09-14T21:19:43.227761+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestHandoffParentKeepsChildAndBudget","Elapsed":0.33}
+{"Time":"2026-09-14T21:19:43.227768+08:00","Action":"run","Package":"lerna/tasks","Test":"TestHandoffContinuesWithPauseAndBounds"}
+{"Time":"2026-09-14T21:19:43.227771+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffContinuesWithPauseAndBounds","Output":"=== RUN   TestHandoffContinuesWithPauseAndBounds\n"}
+{"Time":"2026-09-14T21:19:43.573766+08:00","Action":"output","Package":"lerna/tasks","Test":"TestHandoffContinuesWithPauseAndBounds","Output":"--- PASS: TestHandoffContinuesWithPauseAndBounds (0.35s)\n"}
+{"Time":"2026-09-14T21:19:43.573786+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestHandoffContinuesWithPauseAndBounds","Elapsed":0.35}
+{"Time":"2026-09-14T21:19:43.573921+08:00","Action":"output","Package":"lerna/tasks","Output":"PASS\n"}
+{"Time":"2026-09-14T21:19:44.590289+08:00","Action":"output","Package":"lerna/tasks","Output":"ok  \tlerna/tasks\t4.290s\n"}
+{"Time":"2026-09-14T21:19:44.590429+08:00","Action":"pass","Package":"lerna/tasks","Elapsed":4.29}
+{"Time":"2026-09-14T21:19:46.135585+08:00","Action":"start","Package":"lerna/profiles/asynccheck"}
+{"Time":"2026-09-14T21:19:46.801402+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts"}
+{"Time":"2026-09-14T21:19:46.801481+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts","Output":"=== RUN   TestWSHandoffExecutionFenceAndLateFacts\n"}
+{"Time":"2026-09-14T21:19:46.80158+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts/not-started"}
+{"Time":"2026-09-14T21:19:46.801587+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts/not-started","Output":"=== RUN   TestWSHandoffExecutionFenceAndLateFacts/not-started\n"}
+{"Time":"2026-09-14T21:19:48.726743+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts/not-started","Output":"    ws_handoff_test.go:200: real mTLS handoff; started-before-freeze=false; target epoch=2; original operation retained\n"}
+{"Time":"2026-09-14T21:19:48.734252+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts/not-started","Output":"--- PASS: TestWSHandoffExecutionFenceAndLateFacts/not-started (1.93s)\n"}
+{"Time":"2026-09-14T21:19:48.73427+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts/not-started","Elapsed":1.93}
+{"Time":"2026-09-14T21:19:48.734282+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts/late-result"}
+{"Time":"2026-09-14T21:19:48.734287+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts/late-result","Output":"=== RUN   TestWSHandoffExecutionFenceAndLateFacts/late-result\n"}
+{"Time":"2026-09-14T21:19:52.220896+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts/late-result","Output":"    ws_handoff_test.go:200: real mTLS handoff; started-before-freeze=true; target epoch=2; original operation retained\n"}
+{"Time":"2026-09-14T21:19:52.227498+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts/late-result","Output":"--- PASS: TestWSHandoffExecutionFenceAndLateFacts/late-result (3.49s)\n"}
+{"Time":"2026-09-14T21:19:52.22751+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts/late-result","Elapsed":3.49}
+{"Time":"2026-09-14T21:19:52.227518+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts","Output":"--- PASS: TestWSHandoffExecutionFenceAndLateFacts (5.43s)\n"}
+{"Time":"2026-09-14T21:19:52.227525+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffExecutionFenceAndLateFacts","Elapsed":5.43}
+{"Time":"2026-09-14T21:19:52.227552+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffNewParentUsesExistingChild"}
+{"Time":"2026-09-14T21:19:52.227559+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffNewParentUsesExistingChild","Output":"=== RUN   TestWSHandoffNewParentUsesExistingChild\n"}
+{"Time":"2026-09-14T21:19:56.865799+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffNewParentUsesExistingChild","Output":"    ws_handoff_test.go:360: edge parent -\u003e cloud parent; exact activated-owner route; same signed leaf and child; cancellation confirmed; allocations=1\n"}
+{"Time":"2026-09-14T21:19:56.872235+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffNewParentUsesExistingChild","Output":"--- PASS: TestWSHandoffNewParentUsesExistingChild (4.64s)\n"}
+{"Time":"2026-09-14T21:19:56.872247+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSHandoffNewParentUsesExistingChild","Elapsed":4.64}
+{"Time":"2026-09-14T21:19:56.872362+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"PASS\n"}
+{"Time":"2026-09-14T21:19:57.885687+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"ok  \tlerna/profiles/asynccheck\t11.750s\n"}
+{"Time":"2026-09-14T21:19:57.885771+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Elapsed":11.75}

@@ -70,33 +70,36 @@ type OperationRecord struct {
 // State belongs to the trusted authorization storage seam, not to the public SDK.
 // Store implementations must return isolated snapshots and commit them atomically.
 type State struct {
-	Offline               *offlineState
-	Nodes                 *NodeJournal
-	Uses                  map[string]UseRecord
-	MemoryOperations      map[string]MemoryAdmission
-	ExecutionData         []byte
-	ExecutionOperations   map[string]string
-	ExecutionReservations map[string]bool // Issued for a durable proposal; not yet bound to an Invocation.
-	ContentData           []byte
-	ContentOperations     map[string]string
-	Signed                *GrantJournal
-	RuntimeData           []byte            // Trusted local runtime partition; retained independently of management receipts.
-	DeliveryData          []byte            // Reliable delivery shares the runtime atomic commit.
-	RuntimeOperations     map[string]string // operation_id -> original subject; no cleanup while runtime recovery is needed.
-	Format                int
-	Namespace, Authority  string
-	Secret                []byte
-	Config                Config
-	Principals            map[string]Principal // keyed by credential digest, never plaintext
-	Resources             map[string]string
-	Rules                 []*wire.PolicyRule
-	Grants                map[string]*wire.LocalGrant
-	Operations            map[string]OperationRecord
-	Changes               []*wire.AuthorizationReceipt
-	Revision              uint64
-	Window, ClosedThrough uint64
-	WindowExpires         int64
-	LastTime              int64
+	ImportedRuntimeWindows    map[string]RuntimeAdmission
+	RuntimeOperationScopes    map[string]string
+	ImportedRuntimeOperations map[string]string // Exact authenticated handoff admissions; never accepts other foreign IDs.
+	Offline                   *offlineState
+	Nodes                     *NodeJournal
+	Uses                      map[string]UseRecord
+	MemoryOperations          map[string]MemoryAdmission
+	ExecutionData             []byte
+	ExecutionOperations       map[string]string
+	ExecutionReservations     map[string]bool // Issued for a durable proposal; not yet bound to an Invocation.
+	ContentData               []byte
+	ContentOperations         map[string]string
+	Signed                    *GrantJournal
+	RuntimeData               []byte            // Trusted local runtime partition; retained independently of management receipts.
+	DeliveryData              []byte            // Reliable delivery shares the runtime atomic commit.
+	RuntimeOperations         map[string]string // operation_id -> original subject; no cleanup while runtime recovery is needed.
+	Format                    int
+	Namespace, Authority      string
+	Secret                    []byte
+	Config                    Config
+	Principals                map[string]Principal // keyed by credential digest, never plaintext
+	Resources                 map[string]string
+	Rules                     []*wire.PolicyRule
+	Grants                    map[string]*wire.LocalGrant
+	Operations                map[string]OperationRecord
+	Changes                   []*wire.AuthorizationReceipt
+	Revision                  uint64
+	Window, ClosedThrough     uint64
+	WindowExpires             int64
+	LastTime                  int64
 }
 type Snapshot struct {
 	Version uint64
