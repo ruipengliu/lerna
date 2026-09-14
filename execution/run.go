@@ -51,6 +51,11 @@ func (s *Service) Run(ctx context.Context, op string) (Record, error) {
 		bounded, cancel = context.WithTimeout(ctx, s.config.IOTimeout)
 		defer cancel()
 	}
+	if s.offline != nil {
+		if e = s.offline.replica.Authorize(bounded, s.binding.Presentation(r.Request), s.action("resource.change"), s.offline.read); e != nil {
+			return Record{}, e
+		}
+	}
 	started := false
 	e = s.transaction(bounded, func(j *journal, tx authorization.ExecutionTransaction) error {
 		started = false

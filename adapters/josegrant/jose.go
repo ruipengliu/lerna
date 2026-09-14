@@ -60,6 +60,9 @@ func New(kid string, private *ecdsa.PrivateKey, trusted map[string]*ecdsa.Public
 	return &Adapter{signer: signer, keys: keys}, nil
 }
 func (a *Adapter) Sign(ctx context.Context, payload []byte) (string, error) {
+	if a.signer == nil {
+		return "", &authorization.Error{Code: authorization.Denied}
+	}
 	if err := a.current(ctx, a.kid); err != nil {
 		return "", err
 	}

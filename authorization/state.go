@@ -70,6 +70,7 @@ type OperationRecord struct {
 // State belongs to the trusted authorization storage seam, not to the public SDK.
 // Store implementations must return isolated snapshots and commit them atomically.
 type State struct {
+	Offline               *offlineState
 	Nodes                 *NodeJournal
 	Uses                  map[string]UseRecord
 	MemoryOperations      map[string]MemoryAdmission

@@ -1,0 +1,5 @@
+--- FAIL: TestOfflineRevocationTimeAndPagination (0.02s)
+    offline_test.go:114: ADMISSION_EXPIRED
+FAIL
+FAIL	lerna/authorization	0.597s
+FAIL

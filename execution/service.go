@@ -13,6 +13,7 @@ import (
 )
 
 type Service struct {
+	offline    *offlineBinding
 	authority  Authority
 	core       Core
 	content    Content

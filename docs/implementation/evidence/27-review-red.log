@@ -1,0 +1,7 @@
+--- FAIL: TestOfflineAtomicApplyFailure (0.02s)
+    offline_test.go:335: undelivered revocation not pending {1 1 false} <nil>
+--- FAIL: TestSystemOfflineWallSample (0.00s)
+    offline_test.go:417: wall sample retains monotonic component, hiding wall/elapsed divergence
+FAIL
+FAIL	lerna/authorization	0.871s
+FAIL

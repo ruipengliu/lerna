@@ -1,0 +1,152 @@
+{
+  "profile": "authorization-offline-v1",
+  "ticket": 27,
+  "date": "2026-09-14",
+  "base_commit": "f507da1429300017e89101c6a1eaecf2973ec8d5",
+  "candidate": "base_commit plus the SHA-256 identified executable inputs; documentation and evidence excluded from source hashes",
+  "result": "passed",
+  "environment": {
+    "GOARCH": "arm64",
+    "GOOS": "darwin",
+    "GOVERSION": "go1.26.1"
+  },
+  "kernel": "macOS-27.0-arm64-arm-64bit",
+  "command": "./scripts/verify-offline.sh",
+  "stages": {
+    "profile": "authorization-offline-v1",
+    "dependencies": "passed",
+    "generation": "passed",
+    "generated_diff": "passed",
+    "build": "passed",
+    "analysis": "passed",
+    "offline": "passed",
+    "regression": "passed",
+    "exit_code": 0
+  },
+  "results": {
+    "offline": {
+      "passed_test_events_including_subtests": 10,
+      "skipped_test_events": 1,
+      "passed_packages": [
+        "lerna/authorization",
+        "lerna/adapters/wsbinding",
+        "lerna/profiles/asynccheck"
+      ],
+      "started_at": "2026-09-14T15:49:52.007626+08:00",
+      "finished_at": "2026-09-14T15:50:05.145936+08:00"
+    },
+    "regression": {
+      "passed_test_events_including_subtests": 359,
+      "skipped_test_events": 8,
+      "passed_packages": [
+        "lerna/authorization",
+        "lerna/tasks",
+        "lerna/sdk",
+        "lerna/schema",
+        "lerna/adapters/josegrant",
+        "lerna/adapters/wsbinding",
+        "lerna/adapters/grpcbinding",
+        "lerna/profiles/sdkcontract",
+        "lerna/profiles/executioncheck",
+        "lerna/profiles/asynccheck"
+      ],
+      "started_at": "2026-09-14T15:50:05.700998+08:00",
+      "finished_at": "2026-09-14T15:52:45.660082+08:00"
+    }
+  },
+  "source_sha256": {
+    "adapters/josegrant/jose.go": "4666ba635cf6ec5cd46fa7d8bc96e4be653c3659bc0b1d912a00df9da2e30358",
+    "adapters/josegrant/rotation.go": "575a2a11a64480f0529be972e1fed9682aaf6ecc37df62c9006fadb603487f6a",
+    "adapters/wsbinding/authorization.go": "8f223d52437803585c9fec0be4e3f1bff5ab722abbe77fb5ac25856efdcc887f",
+    "adapters/wsbinding/binding.go": "00b9b7e85ca073a293b3592042436e13a11bde033e7b97aa35ad9c2e5cfc1076",
+    "adapters/wsbinding/connection.go": "20d9202cf1bb081807aa7cc555a394da0d8d0bf668a9a4549089080f46811a23",
+    "adapters/wsbinding/peer.go": "536632d6395ac4882f0266e57beae190e879d6f349678d72e26e0eb355a04722",
+    "authorization/offline.go": "8ee88e97e1ed07a6139754aff8eba2cfc4ed5cf87854fae1dc7e7d8fd79bd929",
+    "authorization/offline_replica.go": "834b149771a62565a36965ffa5bfbe284340682497dd4030f31c5d30c5bb18dd",
+    "authorization/offline_test.go": "6a1b7d4c0a6bfd9aadcf8e592955f561f262de17653b4d9a2be3ad517dd5752d",
+    "authorization/state.go": "78f2038b7d1c5ef63bdf935b885d857e3c3b8861326f164004763ed01fc508e0",
+    "execution/offline.go": "14ba9b1f984eecc3a3a01d74ca12cf9e9e9e856403709e5f5fbfde23972cbc3e",
+    "execution/run.go": "8cefb7d7e6c934c29d442a713342553c913a075dbe76642960ca110f4f43379d",
+    "execution/service.go": "5ea4eccfb580261a9656d0fc746e2927b9212337b827ceb8d9880d69930f9b7e",
+    "gen/harness/v1/execution.pb.go": "2a27a6aa3a6a3a8332c268ac3f4e849652f0a8039d30b5ca2df445729c458a08",
+    "profiles/asynccheck/ws_offline_test.go": "929a51d4d52c2b586025cba354283e96948c21ed59deeb85c97e10109f69a02b",
+    "proto/harness/v1/execution.proto": "93ced48293b5547053c50a98a75ac0ed0c6c47a217880a343f71027b6cbf9f6f",
+    "scripts/verify-offline.sh": "10acc4538f597d231d02b495bf7a0c48993e6c56bdebf7f9b2802e30b77bd419"
+  },
+  "evidence_sha256": {
+    "docs/implementation/evidence/27-environment.json": "7265daeee4399d79cbcf96db87b634be1adf61158069b3bdd48021e313044826",
+    "docs/implementation/evidence/27-modules.json": "3a5c6e70c526276f2dd3934f29602f80d6b7ff1b42f305d6c098984fec7a2134",
+    "docs/implementation/evidence/27-status.json": "610f1681c56bc179da367abeff5b5431d6174bfc9a6520331bef3edd3bae6c3a",
+    "docs/implementation/evidence/27-dependencies.log": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
+    "docs/implementation/evidence/27-generation.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/implementation/evidence/27-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/implementation/evidence/27-analysis.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/implementation/evidence/27-offline.jsonl": "82d7e1123a79da76d78355b1ebf186deb5ec0b92fda1f3f665c508f5ec23fe8a",
+    "docs/implementation/evidence/27-offline.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/implementation/evidence/27-regression.jsonl": "c14c35ee187965def5ec18b5984bbf001ebb066ae23b3d7d4942a184098c8779",
+    "docs/implementation/evidence/27-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/implementation/evidence/27-review-red.log": "3a88ed4bd8f6b17b8390f61668fe4653c073c6f58c27d0b9e88c1991887a765e",
+    "docs/implementation/evidence/27-cursor-red.log": "179856739f94dbbe224c2e40e0eb21c673b4fbb3e973b9669d45ca659369dc45",
+    "docs/implementation/evidence/27-development-status.json": "2c5f7f63866259cf2892060d82306b39b68a3d662804863777390cf0d4d33620",
+    "docs/implementation/evidence/27-development-offline.jsonl": "57b1fb6ff45fca43e19386ad4c38167a0f8adeb8503eda5cd66831287ed402c3"
+  },
+  "dependencies": "No added module dependencies. Full resolved module inventory: 27-modules.json; Go 1.26.1 and protoc 36.1.",
+  "configuration": {
+    "view_records": 16,
+    "page_records": 1,
+    "partition_bytes": 65536,
+    "offline_window_seconds": 60,
+    "clock_uncertainty_seconds": 1,
+    "sync_io_seconds": 5,
+    "revision_retention_seconds": 60,
+    "snapshot_restart_attempts": 1,
+    "source_views_max": 16,
+    "receiver_views_max": 16,
+    "ws_message_bytes": 65536,
+    "ws_chunk_bytes": 1024,
+    "ws_queue_window": 4,
+    "ws_connections": 4,
+    "ws_io_seconds": 2,
+    "ws_lifetime_seconds": 60
+  },
+  "topology": "Actual local mTLS WebSocket with separate node SQLite stores and signing keys. Replica receives only authority public key. A receiving subprocess persists the page and exits 77 before application; the next subprocess applies it but cannot start offline. After fresh online validation the original operation completes with one independently measured SQLite counter change. Both finite-offline and online-required cases run.",
+  "coverage": {
+    "snapshot_and_apply": [
+      "TestOfflineReceiptIsNotApplication",
+      "TestOfflineRevocationTimeAndPagination",
+      "TestOfflineAtomicApplyFailure",
+      "TestWSOfflineExecution"
+    ],
+    "expiry_and_restart": [
+      "TestOfflineReceiveSurvivesRestartWithoutTimeAuthority",
+      "TestOfflineExpiredCursorAndReservedCapacity",
+      "TestWSOfflineRestartProcess"
+    ],
+    "quota_and_ancestors": [
+      "TestOfflineRecipientsShareFiniteParentQuota",
+      "TestGrantDerivationReservesSharedQuotaAndAncestorRevocation",
+      "TestGrantSelfUseAndDelegationShareRemainingUnits"
+    ],
+    "time": [
+      "TestSystemOfflineWallSample",
+      "TestOfflineRevocationTimeAndPagination"
+    ],
+    "existing_local_control_and_qualification": [
+      "TestWSReliableQueuedControlsAndExpiredLease"
+    ]
+  },
+  "review": "../27-offline-review.md",
+  "development_failures": [
+    "Expected RED tests demonstrated wall-clock monotonic contamination, missing pending revocation and incomplete expired-page reset. Raw logs retained.",
+    "Initial broad run failed the online-required test because a shadowed error retained the expected earlier disconnected denial after successful online startup. The test was corrected; the final frozen run passes."
+  ],
+  "limits": [
+    "View is a bounded exact-operation effective-policy projection, not arbitrary policy/database replication. Incremental revisions replace this whole small view.",
+    "Trusted host must reinstall the offline binding before exposing recovered execution and choose online reader versus bounded offline mode. Existing local policy and task controls remain mandatory.",
+    "Controlled clocks model authority time, deadlines, rollback and suspend-like divergence. Actual system wall-clock sampling and process-local elapsed time run; host clock changes and real device suspend experiments were not performed.",
+    "Old SQLite clone has no process-local trusted-time anchor; this does not protect against an attacker controlling the entire host environment.",
+    "Quota reservations with uncertain delivery or consumption are retained, not automatically recycled.",
+    "Reference target is a local SQLite counter, not a public WAN or external exactly-once guarantee.",
+    "No real-model evaluation, complete system acceptance, full go test ./..., or catalogcheck rerun. Ticket 25 recorded 31 catalog baseline failures, not claimed fixed."
+  ]
+}

@@ -1,7 +1,9 @@
 package wsbinding
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"google.golang.org/protobuf/proto"
 	"lerna/adapters/cataloglocal"
@@ -17,7 +19,8 @@ import (
 // allow hook. Domain services retain their own authorization and credentials.
 // All supplied services must honor context cancellation.
 type Binding struct {
-	Journal *Journal
+	Journal       *Journal
+	Authorization *authorization.OfflineView
 	// Retain checks permission and source policy for persisting this request,
 	// including its node-bound grant material. Required for reliable delivery.
 	Retain    func(context.Context, authorization.GrantPresentation, *wire.CapabilityRequest) error
@@ -30,6 +33,8 @@ type Resolve func(context.Context, authorization.GrantPresentation) (*Binding, e
 
 func method(r *wire.CapabilityRequest) string {
 	switch r.GetBody().(type) {
+	case *wire.CapabilityRequest_AuthorizationSync:
+		return "authorization.sync.v1"
 	case *wire.CapabilityRequest_List, *wire.CapabilityRequest_Search, *wire.CapabilityRequest_Describe:
 		return "catalog.read.v1"
 	case *wire.CapabilityRequest_GetInvocation:
@@ -60,6 +65,24 @@ func (b *Binding) query(ctx context.Context, p authorization.GrantPresentation, 
 			return nil, err
 		}
 		out = &wire.CapabilityResponse{Body: &wire.CapabilityResponse_Snapshot{Snapshot: executionwire.Snapshot(v)}}
+	} else if method(r) == "authorization.sync.v1" {
+		if b.Authorization == nil {
+			return nil, failure(authorization.Unsupported)
+		}
+		if err := b.Authorization.MatchRecipient(p); err != nil {
+			return nil, err
+		}
+		var q authorization.OfflineQuery
+		d := json.NewDecoder(bytes.NewReader(r.GetAuthorizationSync()))
+		d.DisallowUnknownFields()
+		if len(r.GetAuthorizationSync()) > 4096 || d.Decode(&q) != nil {
+			return nil, failure(authorization.Invalid)
+		}
+		page, err := b.Authorization.Read(ctx, q)
+		if err != nil {
+			return nil, err
+		}
+		out = &wire.CapabilityResponse{Body: &wire.CapabilityResponse_AuthorizationPage{AuthorizationPage: page}}
 	} else if method(r) == "catalog.read.v1" {
 		raw, err := proto.Marshal(r)
 		if err != nil {

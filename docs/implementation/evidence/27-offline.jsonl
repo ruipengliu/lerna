@@ -1,0 +1,76 @@
+{"Time":"2026-09-14T15:49:52.007626+08:00","Action":"start","Package":"lerna/authorization"}
+{"Time":"2026-09-14T15:49:52.993987+08:00","Action":"run","Package":"lerna/authorization","Test":"TestOfflineReceiptIsNotApplication"}
+{"Time":"2026-09-14T15:49:52.994031+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOfflineReceiptIsNotApplication","Output":"=== RUN   TestOfflineReceiptIsNotApplication\n"}
+{"Time":"2026-09-14T15:49:53.051454+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOfflineReceiptIsNotApplication","Output":"--- PASS: TestOfflineReceiptIsNotApplication (0.06s)\n"}
+{"Time":"2026-09-14T15:49:53.051471+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestOfflineReceiptIsNotApplication","Elapsed":0.06}
+{"Time":"2026-09-14T15:49:53.051485+08:00","Action":"run","Package":"lerna/authorization","Test":"TestOfflineRevocationTimeAndPagination"}
+{"Time":"2026-09-14T15:49:53.051489+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOfflineRevocationTimeAndPagination","Output":"=== RUN   TestOfflineRevocationTimeAndPagination\n"}
+{"Time":"2026-09-14T15:49:53.284226+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOfflineRevocationTimeAndPagination","Output":"--- PASS: TestOfflineRevocationTimeAndPagination (0.23s)\n"}
+{"Time":"2026-09-14T15:49:53.284241+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestOfflineRevocationTimeAndPagination","Elapsed":0.23}
+{"Time":"2026-09-14T15:49:53.284247+08:00","Action":"run","Package":"lerna/authorization","Test":"TestOfflineReceiveSurvivesRestartWithoutTimeAuthority"}
+{"Time":"2026-09-14T15:49:53.28425+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOfflineReceiveSurvivesRestartWithoutTimeAuthority","Output":"=== RUN   TestOfflineReceiveSurvivesRestartWithoutTimeAuthority\n"}
+{"Time":"2026-09-14T15:49:53.362001+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOfflineReceiveSurvivesRestartWithoutTimeAuthority","Output":"--- PASS: TestOfflineReceiveSurvivesRestartWithoutTimeAuthority (0.08s)\n"}
+{"Time":"2026-09-14T15:49:53.362015+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestOfflineReceiveSurvivesRestartWithoutTimeAuthority","Elapsed":0.08}
+{"Time":"2026-09-14T15:49:53.36203+08:00","Action":"run","Package":"lerna/authorization","Test":"TestOfflineAtomicApplyFailure"}
+{"Time":"2026-09-14T15:49:53.362035+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOfflineAtomicApplyFailure","Output":"=== RUN   TestOfflineAtomicApplyFailure\n"}
+{"Time":"2026-09-14T15:49:53.433333+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOfflineAtomicApplyFailure","Output":"--- PASS: TestOfflineAtomicApplyFailure (0.07s)\n"}
+{"Time":"2026-09-14T15:49:53.433345+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestOfflineAtomicApplyFailure","Elapsed":0.07}
+{"Time":"2026-09-14T15:49:53.43335+08:00","Action":"run","Package":"lerna/authorization","Test":"TestOfflineExpiredCursorAndReservedCapacity"}
+{"Time":"2026-09-14T15:49:53.433353+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOfflineExpiredCursorAndReservedCapacity","Output":"=== RUN   TestOfflineExpiredCursorAndReservedCapacity\n"}
+{"Time":"2026-09-14T15:49:53.531766+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOfflineExpiredCursorAndReservedCapacity","Output":"--- PASS: TestOfflineExpiredCursorAndReservedCapacity (0.10s)\n"}
+{"Time":"2026-09-14T15:49:53.531783+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestOfflineExpiredCursorAndReservedCapacity","Elapsed":0.1}
+{"Time":"2026-09-14T15:49:53.53179+08:00","Action":"run","Package":"lerna/authorization","Test":"TestSystemOfflineWallSample"}
+{"Time":"2026-09-14T15:49:53.531806+08:00","Action":"output","Package":"lerna/authorization","Test":"TestSystemOfflineWallSample","Output":"=== RUN   TestSystemOfflineWallSample\n"}
+{"Time":"2026-09-14T15:49:53.531811+08:00","Action":"output","Package":"lerna/authorization","Test":"TestSystemOfflineWallSample","Output":"--- PASS: TestSystemOfflineWallSample (0.00s)\n"}
+{"Time":"2026-09-14T15:49:53.53182+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestSystemOfflineWallSample","Elapsed":0}
+{"Time":"2026-09-14T15:49:53.531828+08:00","Action":"run","Package":"lerna/authorization","Test":"TestOfflineRecipientsShareFiniteParentQuota"}
+{"Time":"2026-09-14T15:49:53.531839+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOfflineRecipientsShareFiniteParentQuota","Output":"=== RUN   TestOfflineRecipientsShareFiniteParentQuota\n"}
+{"Time":"2026-09-14T15:49:53.688466+08:00","Action":"output","Package":"lerna/authorization","Test":"TestOfflineRecipientsShareFiniteParentQuota","Output":"--- PASS: TestOfflineRecipientsShareFiniteParentQuota (0.16s)\n"}
+{"Time":"2026-09-14T15:49:53.688484+08:00","Action":"pass","Package":"lerna/authorization","Test":"TestOfflineRecipientsShareFiniteParentQuota","Elapsed":0.16}
+{"Time":"2026-09-14T15:49:53.688586+08:00","Action":"output","Package":"lerna/authorization","Output":"PASS\n"}
+{"Time":"2026-09-14T15:49:54.705375+08:00","Action":"output","Package":"lerna/authorization","Output":"ok  \tlerna/authorization\t2.698s\n"}
+{"Time":"2026-09-14T15:49:54.705512+08:00","Action":"pass","Package":"lerna/authorization","Elapsed":2.698}
+{"Time":"2026-09-14T15:49:55.318065+08:00","Action":"start","Package":"lerna/adapters/wsbinding"}
+{"Time":"2026-09-14T15:49:55.956095+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Output":"testing: warning: no tests to run\n"}
+{"Time":"2026-09-14T15:49:55.95615+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Output":"PASS\n"}
+{"Time":"2026-09-14T15:49:56.971449+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Output":"ok  \tlerna/adapters/wsbinding\t1.653s [no tests to run]\n"}
+{"Time":"2026-09-14T15:49:56.971595+08:00","Action":"pass","Package":"lerna/adapters/wsbinding","Elapsed":1.654}
+{"Time":"2026-09-14T15:49:58.312997+08:00","Action":"start","Package":"lerna/profiles/asynccheck"}
+{"Time":"2026-09-14T15:49:58.983714+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution"}
+{"Time":"2026-09-14T15:49:58.983754+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution","Output":"=== RUN   TestWSOfflineExecution\n"}
+{"Time":"2026-09-14T15:49:58.983851+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline"}
+{"Time":"2026-09-14T15:49:58.983857+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline","Output":"=== RUN   TestWSOfflineExecution/finite-offline\n"}
+{"Time":"2026-09-14T15:49:59.881849+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline","Output":"    ws_offline_test.go:94: === RUN   TestWSOfflineRestartProcess\n"}
+{"Time":"2026-09-14T15:49:59.881877+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline","Output":"            ws_offline_test.go:180: PID=20752 RECEIVED=1 APPLIED=0 exit=77\n"}
+{"Time":"2026-09-14T15:49:59.881894+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline","Output":"        \n"}
+{"Time":"2026-09-14T15:50:00.979609+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline","Output":"    ws_offline_test.go:102: === RUN   TestWSOfflineRestartProcess\n"}
+{"Time":"2026-09-14T15:50:00.979642+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline","Output":"            ws_offline_test.go:200: PID=20753 offline restart: denied new start, independent changes=0\n"}
+{"Time":"2026-09-14T15:50:00.979652+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline","Output":"        --- PASS: TestWSOfflineRestartProcess (0.06s)\n"}
+{"Time":"2026-09-14T15:50:00.979655+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline","Output":"        PASS\n"}
+{"Time":"2026-09-14T15:50:00.979666+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline","Output":"        \n"}
+{"Time":"2026-09-14T15:50:01.398109+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline","Output":"    ws_offline_test.go:141: offline original operation YzcwNDkwNWFmN2Q4ZDkzYTg3MzU4NTRkODY0YjQ0MWVjOWZmZGIyMDYzM2ViOGQzNzMwYmM5MDQzYTQ0ZDkxOC8xLzg5ODhhYjYzZGZhNjc1OTgzNWI5NjA3NGMzN2Q5NjFlMjRmNGE1YTk4MmY4Yzg5NTM0ZDhlMDA3ZWQwM2JjNGM.Cf1pbsiZej2813u3ls9J8J81zaVpLOBD5ywAR6YS4Hg: independent effect changes=1\n"}
+{"Time":"2026-09-14T15:50:01.402944+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline","Output":"--- PASS: TestWSOfflineExecution/finite-offline (2.42s)\n"}
+{"Time":"2026-09-14T15:50:01.402956+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/finite-offline","Elapsed":2.42}
+{"Time":"2026-09-14T15:50:01.403179+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required"}
+{"Time":"2026-09-14T15:50:01.403189+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required","Output":"=== RUN   TestWSOfflineExecution/online-required\n"}
+{"Time":"2026-09-14T15:50:02.284648+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required","Output":"    ws_offline_test.go:94: === RUN   TestWSOfflineRestartProcess\n"}
+{"Time":"2026-09-14T15:50:02.284694+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required","Output":"            ws_offline_test.go:180: PID=20772 RECEIVED=1 APPLIED=0 exit=77\n"}
+{"Time":"2026-09-14T15:50:02.284699+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required","Output":"        \n"}
+{"Time":"2026-09-14T15:50:03.377206+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required","Output":"    ws_offline_test.go:102: === RUN   TestWSOfflineRestartProcess\n"}
+{"Time":"2026-09-14T15:50:03.377227+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required","Output":"            ws_offline_test.go:200: PID=20775 offline restart: denied new start, independent changes=0\n"}
+{"Time":"2026-09-14T15:50:03.377239+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required","Output":"        --- PASS: TestWSOfflineRestartProcess (0.06s)\n"}
+{"Time":"2026-09-14T15:50:03.377243+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required","Output":"        PASS\n"}
+{"Time":"2026-09-14T15:50:03.377247+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required","Output":"        \n"}
+{"Time":"2026-09-14T15:50:04.121883+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required","Output":"    ws_offline_test.go:141: offline original operation YTExMjE2MzQ2YzI0ZTE5NjVlMzJkOWE3ZmQ2ZjUyMjdmNGMxYjA4MjU2YzVmNWRiZDM4MDU3ZTU4ZTE1OWZkYi8xLzMwODUxNTBmODk1YmNjNDIzOWEzMzI1YmM5ZjdjN2EyNmIzNzIzZDE0ZTIxOGE5MGFjMjlkZTk4MzJkMGI2ZGQ.iq2ZL0rZJTxzmhnOUZOl9CYrUYnYr6mmxzIM5HKiWWw: independent effect changes=1\n"}
+{"Time":"2026-09-14T15:50:04.126936+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required","Output":"--- PASS: TestWSOfflineExecution/online-required (2.72s)\n"}
+{"Time":"2026-09-14T15:50:04.126947+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution/online-required","Elapsed":2.72}
+{"Time":"2026-09-14T15:50:04.126961+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution","Output":"--- PASS: TestWSOfflineExecution (5.14s)\n"}
+{"Time":"2026-09-14T15:50:04.126987+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineExecution","Elapsed":5.14}
+{"Time":"2026-09-14T15:50:04.12702+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineRestartProcess"}
+{"Time":"2026-09-14T15:50:04.127025+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineRestartProcess","Output":"=== RUN   TestWSOfflineRestartProcess\n"}
+{"Time":"2026-09-14T15:50:04.127048+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineRestartProcess","Output":"    ws_offline_test.go:149: subprocess only\n"}
+{"Time":"2026-09-14T15:50:04.127063+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineRestartProcess","Output":"--- SKIP: TestWSOfflineRestartProcess (0.00s)\n"}
+{"Time":"2026-09-14T15:50:04.127071+08:00","Action":"skip","Package":"lerna/profiles/asynccheck","Test":"TestWSOfflineRestartProcess","Elapsed":0}
+{"Time":"2026-09-14T15:50:04.127184+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"PASS\n"}
+{"Time":"2026-09-14T15:50:05.145805+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"ok  \tlerna/profiles/asynccheck\t6.833s\n"}
+{"Time":"2026-09-14T15:50:05.145936+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Elapsed":6.833}

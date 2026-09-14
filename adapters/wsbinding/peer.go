@@ -697,6 +697,8 @@ func validAnswer(r *wire.CapabilityRequest, out *wire.CapabilityResponse, e *wir
 		return slices.Contains([]string{"UNAUTHENTICATED", "PERMISSION_DENIED", "INVALID_ARGUMENT", "UNSUPPORTED", "VERSION_CONFLICT", "IDENTITY_CONFLICT", "ADMISSION_EXPIRED", "NOT_FOUND", "TIME_UNTRUSTED", "UNAVAILABLE", "OUTCOME_UNKNOWN"}, f.Code)
 	}
 	switch r.Body.(type) {
+	case *wire.CapabilityRequest_AuthorizationSync:
+		return out.GetAuthorizationPage() != "" && len(out.GetAuthorizationPage()) <= 32768
 	case *wire.CapabilityRequest_Invoke:
 		return out.GetReceipt() != nil && out.GetReceipt().OperationId == r.GetInvoke().GetInvocation().GetOperationId() && out.GetReceipt().Revision > 0 && out.GetReceipt().Revision <= 32
 	case *wire.CapabilityRequest_List, *wire.CapabilityRequest_Search:

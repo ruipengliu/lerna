@@ -1,0 +1,5 @@
+{
+	"GOARCH": "arm64",
+	"GOOS": "darwin",
+	"GOVERSION": "go1.26.1"
+}
