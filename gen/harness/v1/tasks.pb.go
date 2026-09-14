@@ -1727,7 +1727,7 @@ var File_proto_harness_v1_tasks_proto protoreflect.FileDescriptor
 const file_proto_harness_v1_tasks_proto_rawDesc = "" +
 	"\n" +
 	"\x1cproto/harness/v1/tasks.proto\x12\n" +
-	"harness.v1\x1a\x1fproto/harness/v1/contract.proto\x1a$proto/harness/v1/authorization.proto\"\x9d\x01\n" +
+	"harness.v1\x1a\x1dproto/harness/v1/common.proto\x1a$proto/harness/v1/authorization.proto\"\x9d\x01\n" +
 	"\x0fTaskConstraints\x12\x1b\n" +
 	"\tmax_steps\x18\x01 \x01(\rR\bmaxSteps\x12#\n" +
 	"\rdeadline_unix\x18\x02 \x01(\x03R\fdeadlineUnix\x12%\n" +
@@ -1994,7 +1994,7 @@ func file_proto_harness_v1_tasks_proto_init() {
 	if File_proto_harness_v1_tasks_proto != nil {
 		return
 	}
-	file_proto_harness_v1_contract_proto_init()
+	file_proto_harness_v1_common_proto_init()
 	file_proto_harness_v1_authorization_proto_init()
 	file_proto_harness_v1_tasks_proto_msgTypes[6].OneofWrappers = []any{
 		(*TaskRequest_Submit)(nil),

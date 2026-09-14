@@ -1,0 +1,6 @@
+=== RUN   TestWSChunkedControlOrdering
+    ws_protocol_test.go:610: control ordering: websocket: close 1006 (abnormal closure): unexpected EOF
+--- FAIL: TestWSChunkedControlOrdering (0.08s)
+FAIL
+FAIL	lerna/profiles/asynccheck	0.921s
+FAIL

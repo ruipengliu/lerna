@@ -1,7 +1,7 @@
 syntax = "proto3";
 package harness.v1;
 option go_package = "lerna/gen/harness/v1;harnessv1";
-import "proto/harness/v1/contract.proto";
+import "proto/harness/v1/common.proto";
 message ExecutionQualification { TaskRef task=1; string owner=2; uint64 epoch=3; uint64 version=4; string work_id=5; uint64 generation=6; }
 message CapabilityInvocation { string operation_id=1; ExecutionQualification qualification=2; string capability=3; string version=4; string implementation=5; string implementation_version=6; string descriptor_sha256=7; string input_ref=8; uint64 resource_version=9; uint64 control_version=10; }
 message InvocationReceipt { string operation_id=1; uint64 revision=2; }

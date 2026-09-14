@@ -1,0 +1,1 @@
+build/ws/proto-compat/consumer.proto:4:20: "harness.v1.TaskRef" seems to be defined in "proto/harness/v1/common.proto", which is not imported by "build/ws/proto-compat/consumer.proto".  To use it here, please add the necessary import.

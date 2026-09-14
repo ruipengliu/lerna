@@ -1834,7 +1834,7 @@ var File_proto_harness_v1_execution_proto protoreflect.FileDescriptor
 const file_proto_harness_v1_execution_proto_rawDesc = "" +
 	"\n" +
 	" proto/harness/v1/execution.proto\x12\n" +
-	"harness.v1\x1a\x1fproto/harness/v1/contract.proto\"\xc0\x01\n" +
+	"harness.v1\x1a\x1dproto/harness/v1/common.proto\"\xc0\x01\n" +
 	"\x16ExecutionQualification\x12'\n" +
 	"\x04task\x18\x01 \x01(\v2\x13.harness.v1.TaskRefR\x04task\x12\x14\n" +
 	"\x05owner\x18\x02 \x01(\tR\x05owner\x12\x14\n" +
@@ -2105,7 +2105,7 @@ func file_proto_harness_v1_execution_proto_init() {
 	if File_proto_harness_v1_execution_proto != nil {
 		return
 	}
-	file_proto_harness_v1_contract_proto_init()
+	file_proto_harness_v1_common_proto_init()
 	file_proto_harness_v1_execution_proto_msgTypes[5].OneofWrappers = []any{
 		(*CapabilityRequest_Invoke)(nil),
 		(*CapabilityRequest_GetInvocation)(nil),

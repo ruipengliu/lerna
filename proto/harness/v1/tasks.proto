@@ -1,7 +1,7 @@
 syntax = "proto3";
 package harness.v1;
 option go_package = "lerna/gen/harness/v1;harnessv1";
-import "proto/harness/v1/contract.proto";
+import "proto/harness/v1/common.proto";
 import "proto/harness/v1/authorization.proto";
 
 // Durable task admission. No credential, internal change_id or writable state.

@@ -1,0 +1,8 @@
+{"Time":"2026-09-14T12:25:55.569766+08:00","Action":"start","Package":"lerna/adapters/wsbinding"}
+{"Time":"2026-09-14T12:25:56.128664+08:00","Action":"run","Package":"lerna/adapters/wsbinding","Test":"TestFiniteConfiguration"}
+{"Time":"2026-09-14T12:25:56.128771+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Test":"TestFiniteConfiguration","Output":"=== RUN   TestFiniteConfiguration\n","OutputType":"frame"}
+{"Time":"2026-09-14T12:25:56.128828+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Test":"TestFiniteConfiguration","Output":"--- PASS: TestFiniteConfiguration (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T12:25:56.128835+08:00","Action":"pass","Package":"lerna/adapters/wsbinding","Test":"TestFiniteConfiguration","Elapsed":0}
+{"Time":"2026-09-14T12:25:56.128843+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-09-14T12:25:57.135426+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Output":"ok  \tlerna/adapters/wsbinding\t1.565s\n"}
+{"Time":"2026-09-14T12:25:57.135557+08:00","Action":"pass","Package":"lerna/adapters/wsbinding","Elapsed":1.5659999999999998}

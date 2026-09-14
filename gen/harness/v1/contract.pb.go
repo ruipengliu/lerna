@@ -123,7 +123,7 @@ func (ErrorCode) EnumDescriptor() ([]byte, []int) {
 	return file_proto_harness_v1_contract_proto_rawDescGZIP(), []int{1}
 }
 
-// Initial contract sample, not the complete task or connection protocol.
+// Shared sample and bounded WebSocket profile envelope.
 type Envelope struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProtocolMajor uint32                 `protobuf:"varint,1,opt,name=protocol_major,json=protocolMajor,proto3" json:"protocol_major,omitempty"`
@@ -131,8 +131,20 @@ type Envelope struct {
 	ReplyTo       *string                `protobuf:"bytes,3,opt,name=reply_to,json=replyTo,proto3,oneof" json:"reply_to,omitempty"`
 	Namespace     string                 `protobuf:"bytes,4,opt,name=namespace,proto3" json:"namespace,omitempty"`
 	OperationId   string                 `protobuf:"bytes,5,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	StreamId      uint32                 `protobuf:"varint,6,opt,name=stream_id,json=streamId,proto3" json:"stream_id,omitempty"`
+	Seq           uint64                 `protobuf:"varint,7,opt,name=seq,proto3" json:"seq,omitempty"`
+	DeliveryClass string                 `protobuf:"bytes,8,opt,name=delivery_class,json=deliveryClass,proto3" json:"delivery_class,omitempty"`
 	// Types that are valid to be assigned to Body:
 	//
+	//	*Envelope_Hello
+	//	*Envelope_Welcome
+	//	*Envelope_Query
+	//	*Envelope_Answer
+	//	*Envelope_Subscription
+	//	*Envelope_Progress
+	//	*Envelope_Control
+	//	*Envelope_Chunk
+	//	*Envelope_Extension
 	//	*Envelope_Request
 	//	*Envelope_Response
 	Body          isEnvelope_Body `protobuf_oneof:"body"`
@@ -205,9 +217,111 @@ func (x *Envelope) GetOperationId() string {
 	return ""
 }
 
+func (x *Envelope) GetStreamId() uint32 {
+	if x != nil {
+		return x.StreamId
+	}
+	return 0
+}
+
+func (x *Envelope) GetSeq() uint64 {
+	if x != nil {
+		return x.Seq
+	}
+	return 0
+}
+
+func (x *Envelope) GetDeliveryClass() string {
+	if x != nil {
+		return x.DeliveryClass
+	}
+	return ""
+}
+
 func (x *Envelope) GetBody() isEnvelope_Body {
 	if x != nil {
 		return x.Body
+	}
+	return nil
+}
+
+func (x *Envelope) GetHello() *WSHello {
+	if x != nil {
+		if x, ok := x.Body.(*Envelope_Hello); ok {
+			return x.Hello
+		}
+	}
+	return nil
+}
+
+func (x *Envelope) GetWelcome() *WSWelcome {
+	if x != nil {
+		if x, ok := x.Body.(*Envelope_Welcome); ok {
+			return x.Welcome
+		}
+	}
+	return nil
+}
+
+func (x *Envelope) GetQuery() *CapabilityRequest {
+	if x != nil {
+		if x, ok := x.Body.(*Envelope_Query); ok {
+			return x.Query
+		}
+	}
+	return nil
+}
+
+func (x *Envelope) GetAnswer() *CapabilityResponse {
+	if x != nil {
+		if x, ok := x.Body.(*Envelope_Answer); ok {
+			return x.Answer
+		}
+	}
+	return nil
+}
+
+func (x *Envelope) GetSubscription() *WSSubscription {
+	if x != nil {
+		if x, ok := x.Body.(*Envelope_Subscription); ok {
+			return x.Subscription
+		}
+	}
+	return nil
+}
+
+func (x *Envelope) GetProgress() *CapabilityResponse {
+	if x != nil {
+		if x, ok := x.Body.(*Envelope_Progress); ok {
+			return x.Progress
+		}
+	}
+	return nil
+}
+
+func (x *Envelope) GetControl() *WSControl {
+	if x != nil {
+		if x, ok := x.Body.(*Envelope_Control); ok {
+			return x.Control
+		}
+	}
+	return nil
+}
+
+func (x *Envelope) GetChunk() *WSChunk {
+	if x != nil {
+		if x, ok := x.Body.(*Envelope_Chunk); ok {
+			return x.Chunk
+		}
+	}
+	return nil
+}
+
+func (x *Envelope) GetExtension() *DynamicPayload {
+	if x != nil {
+		if x, ok := x.Body.(*Envelope_Extension); ok {
+			return x.Extension
+		}
 	}
 	return nil
 }
@@ -234,6 +348,42 @@ type isEnvelope_Body interface {
 	isEnvelope_Body()
 }
 
+type Envelope_Hello struct {
+	Hello *WSHello `protobuf:"bytes,20,opt,name=hello,proto3,oneof"`
+}
+
+type Envelope_Welcome struct {
+	Welcome *WSWelcome `protobuf:"bytes,21,opt,name=welcome,proto3,oneof"`
+}
+
+type Envelope_Query struct {
+	Query *CapabilityRequest `protobuf:"bytes,22,opt,name=query,proto3,oneof"`
+}
+
+type Envelope_Answer struct {
+	Answer *CapabilityResponse `protobuf:"bytes,23,opt,name=answer,proto3,oneof"`
+}
+
+type Envelope_Subscription struct {
+	Subscription *WSSubscription `protobuf:"bytes,24,opt,name=subscription,proto3,oneof"`
+}
+
+type Envelope_Progress struct {
+	Progress *CapabilityResponse `protobuf:"bytes,25,opt,name=progress,proto3,oneof"`
+}
+
+type Envelope_Control struct {
+	Control *WSControl `protobuf:"bytes,26,opt,name=control,proto3,oneof"`
+}
+
+type Envelope_Chunk struct {
+	Chunk *WSChunk `protobuf:"bytes,27,opt,name=chunk,proto3,oneof"`
+}
+
+type Envelope_Extension struct {
+	Extension *DynamicPayload `protobuf:"bytes,28,opt,name=extension,proto3,oneof"`
+}
+
 type Envelope_Request struct {
 	Request *SubmitRequest `protobuf:"bytes,10,opt,name=request,proto3,oneof"`
 }
@@ -241,6 +391,24 @@ type Envelope_Request struct {
 type Envelope_Response struct {
 	Response *SubmitResponse `protobuf:"bytes,11,opt,name=response,proto3,oneof"`
 }
+
+func (*Envelope_Hello) isEnvelope_Body() {}
+
+func (*Envelope_Welcome) isEnvelope_Body() {}
+
+func (*Envelope_Query) isEnvelope_Body() {}
+
+func (*Envelope_Answer) isEnvelope_Body() {}
+
+func (*Envelope_Subscription) isEnvelope_Body() {}
+
+func (*Envelope_Progress) isEnvelope_Body() {}
+
+func (*Envelope_Control) isEnvelope_Body() {}
+
+func (*Envelope_Chunk) isEnvelope_Body() {}
+
+func (*Envelope_Extension) isEnvelope_Body() {}
 
 func (*Envelope_Request) isEnvelope_Body() {}
 
@@ -374,58 +542,6 @@ func (x *SubmitRequest) GetInput() *DynamicPayload {
 	return nil
 }
 
-type TaskRef struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Namespace     string                 `protobuf:"bytes,1,opt,name=namespace,proto3" json:"namespace,omitempty"`
-	TaskId        string                 `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *TaskRef) Reset() {
-	*x = TaskRef{}
-	mi := &file_proto_harness_v1_contract_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *TaskRef) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*TaskRef) ProtoMessage() {}
-
-func (x *TaskRef) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_harness_v1_contract_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use TaskRef.ProtoReflect.Descriptor instead.
-func (*TaskRef) Descriptor() ([]byte, []int) {
-	return file_proto_harness_v1_contract_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *TaskRef) GetNamespace() string {
-	if x != nil {
-		return x.Namespace
-	}
-	return ""
-}
-
-func (x *TaskRef) GetTaskId() string {
-	if x != nil {
-		return x.TaskId
-	}
-	return ""
-}
-
 type SubmitResponse struct {
 	state    protoimpl.MessageState `protogen:"open.v1"`
 	Evidence Evidence               `protobuf:"varint,1,opt,name=evidence,proto3,enum=harness.v1.Evidence" json:"evidence,omitempty"`
@@ -440,7 +556,7 @@ type SubmitResponse struct {
 
 func (x *SubmitResponse) Reset() {
 	*x = SubmitResponse{}
-	mi := &file_proto_harness_v1_contract_proto_msgTypes[4]
+	mi := &file_proto_harness_v1_contract_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -452,7 +568,7 @@ func (x *SubmitResponse) String() string {
 func (*SubmitResponse) ProtoMessage() {}
 
 func (x *SubmitResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_harness_v1_contract_proto_msgTypes[4]
+	mi := &file_proto_harness_v1_contract_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -465,7 +581,7 @@ func (x *SubmitResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubmitResponse.ProtoReflect.Descriptor instead.
 func (*SubmitResponse) Descriptor() ([]byte, []int) {
-	return file_proto_harness_v1_contract_proto_rawDescGZIP(), []int{4}
+	return file_proto_harness_v1_contract_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *SubmitResponse) GetEvidence() Evidence {
@@ -526,7 +642,7 @@ type Failure struct {
 
 func (x *Failure) Reset() {
 	*x = Failure{}
-	mi := &file_proto_harness_v1_contract_proto_msgTypes[5]
+	mi := &file_proto_harness_v1_contract_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -538,7 +654,7 @@ func (x *Failure) String() string {
 func (*Failure) ProtoMessage() {}
 
 func (x *Failure) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_harness_v1_contract_proto_msgTypes[5]
+	mi := &file_proto_harness_v1_contract_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -551,7 +667,7 @@ func (x *Failure) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Failure.ProtoReflect.Descriptor instead.
 func (*Failure) Descriptor() ([]byte, []int) {
-	return file_proto_harness_v1_contract_proto_rawDescGZIP(), []int{5}
+	return file_proto_harness_v1_contract_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Failure) GetCode() ErrorCode {
@@ -573,14 +689,26 @@ var File_proto_harness_v1_contract_proto protoreflect.FileDescriptor
 const file_proto_harness_v1_contract_proto_rawDesc = "" +
 	"\n" +
 	"\x1fproto/harness/v1/contract.proto\x12\n" +
-	"harness.v1\"\xb7\x02\n" +
+	"harness.v1\x1a proto/harness/v1/execution.proto\x1a proto/harness/v1/websocket.proto\x1a\x1dproto/harness/v1/common.proto\"\xfa\x06\n" +
 	"\bEnvelope\x12%\n" +
 	"\x0eprotocol_major\x18\x01 \x01(\rR\rprotocolMajor\x12\x1d\n" +
 	"\n" +
 	"message_id\x18\x02 \x01(\tR\tmessageId\x12\x1e\n" +
 	"\breply_to\x18\x03 \x01(\tH\x01R\areplyTo\x88\x01\x01\x12\x1c\n" +
 	"\tnamespace\x18\x04 \x01(\tR\tnamespace\x12!\n" +
-	"\foperation_id\x18\x05 \x01(\tR\voperationId\x125\n" +
+	"\foperation_id\x18\x05 \x01(\tR\voperationId\x12\x1b\n" +
+	"\tstream_id\x18\x06 \x01(\rR\bstreamId\x12\x10\n" +
+	"\x03seq\x18\a \x01(\x04R\x03seq\x12%\n" +
+	"\x0edelivery_class\x18\b \x01(\tR\rdeliveryClass\x12+\n" +
+	"\x05hello\x18\x14 \x01(\v2\x13.harness.v1.WSHelloH\x00R\x05hello\x121\n" +
+	"\awelcome\x18\x15 \x01(\v2\x15.harness.v1.WSWelcomeH\x00R\awelcome\x125\n" +
+	"\x05query\x18\x16 \x01(\v2\x1d.harness.v1.CapabilityRequestH\x00R\x05query\x128\n" +
+	"\x06answer\x18\x17 \x01(\v2\x1e.harness.v1.CapabilityResponseH\x00R\x06answer\x12@\n" +
+	"\fsubscription\x18\x18 \x01(\v2\x1a.harness.v1.WSSubscriptionH\x00R\fsubscription\x12<\n" +
+	"\bprogress\x18\x19 \x01(\v2\x1e.harness.v1.CapabilityResponseH\x00R\bprogress\x121\n" +
+	"\acontrol\x18\x1a \x01(\v2\x15.harness.v1.WSControlH\x00R\acontrol\x12+\n" +
+	"\x05chunk\x18\x1b \x01(\v2\x13.harness.v1.WSChunkH\x00R\x05chunk\x12:\n" +
+	"\textension\x18\x1c \x01(\v2\x1a.harness.v1.DynamicPayloadH\x00R\textension\x125\n" +
 	"\arequest\x18\n" +
 	" \x01(\v2\x19.harness.v1.SubmitRequestH\x00R\arequest\x128\n" +
 	"\bresponse\x18\v \x01(\v2\x1a.harness.v1.SubmitResponseH\x00R\bresponseB\x06\n" +
@@ -595,10 +723,7 @@ const file_proto_harness_v1_contract_proto_rawDesc = "" +
 	"\rSubmitRequest\x12\x17\n" +
 	"\x04goal\x18\x01 \x01(\tH\x00R\x04goal\x88\x01\x01\x120\n" +
 	"\x05input\x18\x02 \x01(\v2\x1a.harness.v1.DynamicPayloadR\x05inputB\a\n" +
-	"\x05_goal\"@\n" +
-	"\aTaskRef\x12\x1c\n" +
-	"\tnamespace\x18\x01 \x01(\tR\tnamespace\x12\x17\n" +
-	"\atask_id\x18\x02 \x01(\tR\x06taskId\"\xa8\x01\n" +
+	"\x05_goal\"\xa8\x01\n" +
 	"\x0eSubmitResponse\x120\n" +
 	"\bevidence\x18\x01 \x01(\x0e2\x14.harness.v1.EvidenceR\bevidence\x12)\n" +
 	"\x04task\x18\x02 \x01(\v2\x13.harness.v1.TaskRefH\x00R\x04task\x12/\n" +
@@ -617,7 +742,7 @@ const file_proto_harness_v1_contract_proto_rawDesc = "" +
 	"\x1dERROR_CODE_MISSING_CAPABILITY\x10\x03\x12 \n" +
 	"\x1cERROR_CODE_IDENTITY_CONFLICT\x10\x042C\n" +
 	"\vTaskService\x124\n" +
-	"\x06Submit\x12\x14.harness.v1.Envelope\x1a\x14.harness.v1.EnvelopeB Z\x1elerna/gen/harness/v1;harnessv1b\x06proto3"
+	"\x06Submit\x12\x14.harness.v1.Envelope\x1a\x14.harness.v1.EnvelopeB Z\x1elerna/gen/harness/v1;harnessv1P\x02b\x06proto3"
 
 var (
 	file_proto_harness_v1_contract_proto_rawDescOnce sync.Once
@@ -632,32 +757,48 @@ func file_proto_harness_v1_contract_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_harness_v1_contract_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_proto_harness_v1_contract_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_proto_harness_v1_contract_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto_harness_v1_contract_proto_goTypes = []any{
-	(Evidence)(0),          // 0: harness.v1.Evidence
-	(ErrorCode)(0),         // 1: harness.v1.ErrorCode
-	(*Envelope)(nil),       // 2: harness.v1.Envelope
-	(*DynamicPayload)(nil), // 3: harness.v1.DynamicPayload
-	(*SubmitRequest)(nil),  // 4: harness.v1.SubmitRequest
-	(*TaskRef)(nil),        // 5: harness.v1.TaskRef
-	(*SubmitResponse)(nil), // 6: harness.v1.SubmitResponse
-	(*Failure)(nil),        // 7: harness.v1.Failure
+	(Evidence)(0),              // 0: harness.v1.Evidence
+	(ErrorCode)(0),             // 1: harness.v1.ErrorCode
+	(*Envelope)(nil),           // 2: harness.v1.Envelope
+	(*DynamicPayload)(nil),     // 3: harness.v1.DynamicPayload
+	(*SubmitRequest)(nil),      // 4: harness.v1.SubmitRequest
+	(*SubmitResponse)(nil),     // 5: harness.v1.SubmitResponse
+	(*Failure)(nil),            // 6: harness.v1.Failure
+	(*WSHello)(nil),            // 7: harness.v1.WSHello
+	(*WSWelcome)(nil),          // 8: harness.v1.WSWelcome
+	(*CapabilityRequest)(nil),  // 9: harness.v1.CapabilityRequest
+	(*CapabilityResponse)(nil), // 10: harness.v1.CapabilityResponse
+	(*WSSubscription)(nil),     // 11: harness.v1.WSSubscription
+	(*WSControl)(nil),          // 12: harness.v1.WSControl
+	(*WSChunk)(nil),            // 13: harness.v1.WSChunk
+	(*TaskRef)(nil),            // 14: harness.v1.TaskRef
 }
 var file_proto_harness_v1_contract_proto_depIdxs = []int32{
-	4, // 0: harness.v1.Envelope.request:type_name -> harness.v1.SubmitRequest
-	6, // 1: harness.v1.Envelope.response:type_name -> harness.v1.SubmitResponse
-	3, // 2: harness.v1.SubmitRequest.input:type_name -> harness.v1.DynamicPayload
-	0, // 3: harness.v1.SubmitResponse.evidence:type_name -> harness.v1.Evidence
-	5, // 4: harness.v1.SubmitResponse.task:type_name -> harness.v1.TaskRef
-	7, // 5: harness.v1.SubmitResponse.failure:type_name -> harness.v1.Failure
-	1, // 6: harness.v1.Failure.code:type_name -> harness.v1.ErrorCode
-	2, // 7: harness.v1.TaskService.Submit:input_type -> harness.v1.Envelope
-	2, // 8: harness.v1.TaskService.Submit:output_type -> harness.v1.Envelope
-	8, // [8:9] is the sub-list for method output_type
-	7, // [7:8] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	7,  // 0: harness.v1.Envelope.hello:type_name -> harness.v1.WSHello
+	8,  // 1: harness.v1.Envelope.welcome:type_name -> harness.v1.WSWelcome
+	9,  // 2: harness.v1.Envelope.query:type_name -> harness.v1.CapabilityRequest
+	10, // 3: harness.v1.Envelope.answer:type_name -> harness.v1.CapabilityResponse
+	11, // 4: harness.v1.Envelope.subscription:type_name -> harness.v1.WSSubscription
+	10, // 5: harness.v1.Envelope.progress:type_name -> harness.v1.CapabilityResponse
+	12, // 6: harness.v1.Envelope.control:type_name -> harness.v1.WSControl
+	13, // 7: harness.v1.Envelope.chunk:type_name -> harness.v1.WSChunk
+	3,  // 8: harness.v1.Envelope.extension:type_name -> harness.v1.DynamicPayload
+	4,  // 9: harness.v1.Envelope.request:type_name -> harness.v1.SubmitRequest
+	5,  // 10: harness.v1.Envelope.response:type_name -> harness.v1.SubmitResponse
+	3,  // 11: harness.v1.SubmitRequest.input:type_name -> harness.v1.DynamicPayload
+	0,  // 12: harness.v1.SubmitResponse.evidence:type_name -> harness.v1.Evidence
+	14, // 13: harness.v1.SubmitResponse.task:type_name -> harness.v1.TaskRef
+	6,  // 14: harness.v1.SubmitResponse.failure:type_name -> harness.v1.Failure
+	1,  // 15: harness.v1.Failure.code:type_name -> harness.v1.ErrorCode
+	2,  // 16: harness.v1.TaskService.Submit:input_type -> harness.v1.Envelope
+	2,  // 17: harness.v1.TaskService.Submit:output_type -> harness.v1.Envelope
+	17, // [17:18] is the sub-list for method output_type
+	16, // [16:17] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_proto_harness_v1_contract_proto_init() }
@@ -665,12 +806,24 @@ func file_proto_harness_v1_contract_proto_init() {
 	if File_proto_harness_v1_contract_proto != nil {
 		return
 	}
+	file_proto_harness_v1_execution_proto_init()
+	file_proto_harness_v1_websocket_proto_init()
+	file_proto_harness_v1_common_proto_init()
 	file_proto_harness_v1_contract_proto_msgTypes[0].OneofWrappers = []any{
+		(*Envelope_Hello)(nil),
+		(*Envelope_Welcome)(nil),
+		(*Envelope_Query)(nil),
+		(*Envelope_Answer)(nil),
+		(*Envelope_Subscription)(nil),
+		(*Envelope_Progress)(nil),
+		(*Envelope_Control)(nil),
+		(*Envelope_Chunk)(nil),
+		(*Envelope_Extension)(nil),
 		(*Envelope_Request)(nil),
 		(*Envelope_Response)(nil),
 	}
 	file_proto_harness_v1_contract_proto_msgTypes[2].OneofWrappers = []any{}
-	file_proto_harness_v1_contract_proto_msgTypes[4].OneofWrappers = []any{
+	file_proto_harness_v1_contract_proto_msgTypes[3].OneofWrappers = []any{
 		(*SubmitResponse_Task)(nil),
 		(*SubmitResponse_Failure)(nil),
 	}
@@ -680,7 +833,7 @@ func file_proto_harness_v1_contract_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_harness_v1_contract_proto_rawDesc), len(file_proto_harness_v1_contract_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   6,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

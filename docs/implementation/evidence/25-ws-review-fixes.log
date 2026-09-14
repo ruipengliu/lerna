@@ -1,0 +1,10 @@
+=== RUN   TestWSOutOfOrderAndLocalEquivalence
+--- PASS: TestWSOutOfOrderAndLocalEquivalence (2.06s)
+=== RUN   TestWSChunkedControlOrdering
+--- PASS: TestWSChunkedControlOrdering (0.69s)
+=== RUN   TestWSOptionalCapabilitiesDisabled
+--- PASS: TestWSOptionalCapabilitiesDisabled (0.47s)
+=== RUN   TestWSLateReplyAfterDeadline
+--- PASS: TestWSLateReplyAfterDeadline (0.45s)
+PASS
+ok  	lerna/profiles/asynccheck	5.528s

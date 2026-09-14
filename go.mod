@@ -6,6 +6,7 @@ toolchain go1.26.1
 
 require (
 	github.com/go-jose/go-jose/v4 v4.1.5
+	github.com/gorilla/websocket v1.5.3
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3
 	golang.org/x/net v0.59.0
 	golang.org/x/sys v0.48.0

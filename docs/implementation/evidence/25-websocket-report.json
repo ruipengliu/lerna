@@ -1,0 +1,987 @@
+{
+  "profile": "ws-query-v1",
+  "ticket": 25,
+  "date": "2026-09-14",
+  "base_commit": "4466a68a06b2ef34a864072e0cdc8320df260aaf",
+  "result": "implementation_verified_with_reproduced_baseline_failures",
+  "environment": {
+    "GOARCH": "arm64",
+    "GOOS": "darwin",
+    "GOVERSION": "go1.26.1"
+  },
+  "kernel": "macOS-27.0-arm64-arm-64bit",
+  "modules": [
+    {
+      "Path": "lerna",
+      "Main": true,
+      "Dir": "/Volumes/Data/proj/lerna",
+      "GoMod": "/Volumes/Data/proj/lerna/go.mod",
+      "GoVersion": "1.26.0"
+    },
+    {
+      "Path": "cel.dev/expr",
+      "Version": "v0.25.2",
+      "Time": "2026-03-12T16:46:44Z",
+      "Indirect": true
+    },
+    {
+      "Path": "cloud.google.com/go/auth",
+      "Version": "v0.18.2",
+      "Time": "2026-02-13T17:14:27Z",
+      "Indirect": true
+    },
+    {
+      "Path": "cloud.google.com/go/compute/metadata",
+      "Version": "v0.9.0",
+      "Time": "2025-09-24T19:41:55Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/GoogleCloudPlatform/opentelemetry-operations-go/detectors/gcp",
+      "Version": "v1.33.0",
+      "Time": "2026-06-04T20:21:43Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/cespare/xxhash/v2",
+      "Version": "v2.3.0",
+      "Time": "2024-04-04T20:00:10Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/cespare/xxhash/v2@v2.3.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/cespare/xxhash/v2/@v/v2.3.0.mod",
+      "GoVersion": "1.11",
+      "Sum": "h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=",
+      "GoModSum": "h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs="
+    },
+    {
+      "Path": "github.com/cncf/xds/go",
+      "Version": "v0.0.0-20260202195803-dba9d589def2",
+      "Time": "2026-02-02T19:58:03Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/dlclark/regexp2",
+      "Version": "v1.11.0",
+      "Time": "2024-02-24T02:28:33Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/dlclark/regexp2@v1.11.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/dlclark/regexp2/@v/v1.11.0.mod",
+      "GoVersion": "1.13",
+      "Sum": "h1:G/nrcoOa7ZXlpoa/91N3X7mM3r8eIlMBBJZvsz/mxKI=",
+      "GoModSum": "h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8="
+    },
+    {
+      "Path": "github.com/dustin/go-humanize",
+      "Version": "v1.0.1",
+      "Time": "2023-01-10T06:44:38Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/dustin/go-humanize@v1.0.1",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/dustin/go-humanize/@v/v1.0.1.mod",
+      "GoVersion": "1.16",
+      "Sum": "h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=",
+      "GoModSum": "h1:Mu1zIs6XwVuF/gI1OepvI0qD18qycQx+mFykh5fBlto="
+    },
+    {
+      "Path": "github.com/envoyproxy/go-control-plane",
+      "Version": "v0.14.0",
+      "Time": "2025-11-04T22:01:44Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/envoyproxy/go-control-plane/envoy",
+      "Version": "v1.37.0",
+      "Time": "2026-01-13T06:26:49Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/envoyproxy/go-control-plane/ratelimit",
+      "Version": "v0.1.0",
+      "Time": "2024-12-23T15:25:59Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/envoyproxy/protoc-gen-validate",
+      "Version": "v1.3.3",
+      "Time": "2026-02-18T16:13:16Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/felixge/httpsnoop",
+      "Version": "v1.0.4",
+      "Time": "2023-03-12T10:31:09Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/go-jose/go-jose/v4",
+      "Version": "v4.1.5",
+      "Time": "2026-09-03T18:06:52Z",
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/go-jose/go-jose/v4@v4.1.5",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/go-jose/go-jose/v4/@v/v4.1.5.mod",
+      "GoVersion": "1.24.0",
+      "Sum": "h1:RjgjO2LOtWOJKUC5wpwY9LR3B3vwVAz6JS2YHfYU6eA=",
+      "GoModSum": "h1:x4oUasVrzR7071A4TnHLGSPpNOm2a21K9Kf04k1rs08="
+    },
+    {
+      "Path": "github.com/go-logr/logr",
+      "Version": "v1.4.3",
+      "Time": "2025-05-19T04:56:57Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/go-logr/logr@v1.4.3",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/go-logr/logr/@v/v1.4.3.mod",
+      "GoVersion": "1.18",
+      "Sum": "h1:CjnDlHq8ikf6E492q6eKboGOC0T8CDaOvkHCIg8idEI=",
+      "GoModSum": "h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY="
+    },
+    {
+      "Path": "github.com/go-logr/stdr",
+      "Version": "v1.2.2",
+      "Time": "2021-12-14T08:00:35Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/go-logr/stdr@v1.2.2",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/go-logr/stdr/@v/v1.2.2.mod",
+      "GoVersion": "1.16",
+      "Sum": "h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag=",
+      "GoModSum": "h1:mMo/vtBO5dYbehREoey6XUKy/eSumjCCveDpRre4VKE="
+    },
+    {
+      "Path": "github.com/golang/glog",
+      "Version": "v1.2.5",
+      "Time": "2025-04-29T08:43:26Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/golang/protobuf",
+      "Version": "v1.5.4",
+      "Time": "2024-03-06T06:45:40Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/golang/protobuf@v1.5.4",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/golang/protobuf/@v/v1.5.4.mod",
+      "GoVersion": "1.17",
+      "Sum": "h1:i7eJL8qZTpSEXOPTxNKhASYpMn+8e5Q6AdndVa1dWek=",
+      "GoModSum": "h1:lnTiLA8Wa4RWRcIUkrtSVa5nRhsEGBg48fD6rSs7xps="
+    },
+    {
+      "Path": "github.com/google/go-cmp",
+      "Version": "v0.7.0",
+      "Time": "2025-01-14T18:15:44Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/google/go-cmp@v0.7.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/google/go-cmp/@v/v0.7.0.mod",
+      "GoVersion": "1.21",
+      "Sum": "h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=",
+      "GoModSum": "h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU="
+    },
+    {
+      "Path": "github.com/google/pprof",
+      "Version": "v0.0.0-20260802141513-ef3492d7dac3",
+      "Time": "2026-08-02T14:15:13Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/google/pprof@v0.0.0-20260802141513-ef3492d7dac3",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/google/pprof/@v/v0.0.0-20260802141513-ef3492d7dac3.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:LMLX+LgTNWpfvCBdFebv6EsYotImrt/Ppc5cXIriCSo=",
+      "GoModSum": "h1:jl5iWTm0/hd5PjEYEOuwAJ57L/CibdZfrqZ5XA5GrCk="
+    },
+    {
+      "Path": "github.com/google/s2a-go",
+      "Version": "v0.1.9",
+      "Time": "2025-01-06T17:53:46Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/google/uuid",
+      "Version": "v1.6.0",
+      "Time": "2024-01-23T18:54:04Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/google/uuid@v1.6.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/google/uuid/@v/v1.6.0.mod",
+      "Sum": "h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=",
+      "GoModSum": "h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo="
+    },
+    {
+      "Path": "github.com/googleapis/enterprise-certificate-proxy",
+      "Version": "v0.3.11",
+      "Time": "2026-01-13T07:11:36Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/googleapis/gax-go/v2",
+      "Version": "v2.17.0",
+      "Time": "2026-02-03T18:41:38Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/gorilla/websocket",
+      "Version": "v1.5.3",
+      "Time": "2024-06-14T03:18:03Z",
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/gorilla/websocket@v1.5.3",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/gorilla/websocket/@v/v1.5.3.mod",
+      "GoVersion": "1.12",
+      "Sum": "h1:saDtZ6Pbx/0u+bgYQ3q96pZgCzfhKXGPqt7kZ72aNNg=",
+      "GoModSum": "h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE="
+    },
+    {
+      "Path": "github.com/hashicorp/golang-lru/v2",
+      "Version": "v2.0.7",
+      "Time": "2023-09-21T18:26:40Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/hashicorp/golang-lru/v2@v2.0.7",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/hashicorp/golang-lru/v2/@v/v2.0.7.mod",
+      "GoVersion": "1.18",
+      "Sum": "h1:a+bsQ5rvGLjzHuww6tVxozPZFVghXaHOwFs4luLUK2k=",
+      "GoModSum": "h1:QeFd9opnmA6QUJc5vARoKUSoFhyfM2/ZepoAG6RGpeM="
+    },
+    {
+      "Path": "github.com/mattn/go-isatty",
+      "Version": "v0.0.24",
+      "Time": "2026-07-23T16:45:22Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/mattn/go-isatty@v0.0.24",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/mattn/go-isatty/@v/v0.0.24.mod",
+      "GoVersion": "1.20",
+      "Sum": "h1:tGZZoVgT/KiqK1c8ocVLeDS8BSWMRd47J3Lbz7vsReI=",
+      "GoModSum": "h1:nMCL3Zebbrt45jsMDgnfIwz6ydEQApk5oEI3HqDio6A="
+    },
+    {
+      "Path": "github.com/ncruces/go-strftime",
+      "Version": "v1.0.0",
+      "Time": "2025-10-08T11:45:18Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/ncruces/go-strftime@v1.0.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/ncruces/go-strftime/@v/v1.0.0.mod",
+      "GoVersion": "1.17",
+      "Sum": "h1:HMFp8mLCTPp341M/ZnA4qaf7ZlsbTc+miZjCLOFAw7w=",
+      "GoModSum": "h1:Fwc5htZGVVkseilnfgOVb9mKy6w1naJmn9CehxcKcls="
+    },
+    {
+      "Path": "github.com/planetscale/vtprotobuf",
+      "Version": "v0.6.1-0.20240319094008-0393e58bdf10",
+      "Time": "2024-03-19T09:40:08Z",
+      "Indirect": true
+    },
+    {
+      "Path": "github.com/remyoudompheng/bigfft",
+      "Version": "v0.0.0-20230129092748-24d4a6f8daec",
+      "Time": "2023-01-29T09:27:48Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/remyoudompheng/bigfft@v0.0.0-20230129092748-24d4a6f8daec",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/remyoudompheng/bigfft/@v/v0.0.0-20230129092748-24d4a6f8daec.mod",
+      "GoVersion": "1.12",
+      "Sum": "h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=",
+      "GoModSum": "h1:qqbHyh8v60DhA7CoWK5oRCqLrMHRGoxYCSS9EjAz6Eo="
+    },
+    {
+      "Path": "github.com/santhosh-tekuri/jsonschema/v6",
+      "Version": "v6.0.3",
+      "Time": "2026-06-28T17:38:00Z",
+      "Dir": "/Volumes/Data/go/path/pkg/mod/github.com/santhosh-tekuri/jsonschema/v6@v6.0.3",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/github.com/santhosh-tekuri/jsonschema/v6/@v/v6.0.3.mod",
+      "GoVersion": "1.21",
+      "Sum": "h1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=",
+      "GoModSum": "h1:JXeL+ps8p7/KNMjDQk3TCwPpBy0wYklyWTfbkIzdIFU="
+    },
+    {
+      "Path": "github.com/spiffe/go-spiffe/v2",
+      "Version": "v2.7.0",
+      "Time": "2026-06-03T20:07:47Z",
+      "Indirect": true
+    },
+    {
+      "Path": "go.opentelemetry.io/auto/sdk",
+      "Version": "v1.2.1",
+      "Time": "2025-09-15T16:53:44Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/go.opentelemetry.io/auto/sdk@v1.2.1",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/go.opentelemetry.io/auto/sdk/@v/v1.2.1.mod",
+      "GoVersion": "1.24.0",
+      "Sum": "h1:jXsnJ4Lmnqd11kwkBV2LgLoFMZKizbCi5fNZ/ipaZ64=",
+      "GoModSum": "h1:KRTj+aOaElaLi+wW1kO/DZRXwkF4C5xPbEe3ZiIhN7Y="
+    },
+    {
+      "Path": "go.opentelemetry.io/contrib/detectors/gcp",
+      "Version": "v1.44.0",
+      "Time": "2026-05-28T05:28:14Z",
+      "Indirect": true
+    },
+    {
+      "Path": "go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp",
+      "Version": "v0.61.0",
+      "Time": "2025-05-22T14:29:43Z",
+      "Indirect": true
+    },
+    {
+      "Path": "go.opentelemetry.io/otel",
+      "Version": "v1.44.0",
+      "Time": "2026-05-27T16:42:37Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/go.opentelemetry.io/otel@v1.44.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/go.opentelemetry.io/otel/@v/v1.44.0.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:JjwHmHpA4iZ3wBxluu2fbbE7j4kqlE8jXyAyPXH7HqU=",
+      "GoModSum": "h1:BMgjTHL9WPRlRjL2oZCBTL4whCGtXch2H4BhOPIAyYc="
+    },
+    {
+      "Path": "go.opentelemetry.io/otel/metric",
+      "Version": "v1.44.0",
+      "Time": "2026-05-27T16:42:37Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/go.opentelemetry.io/otel/metric@v1.44.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/go.opentelemetry.io/otel/metric/@v/v1.44.0.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:1w0gILTcHdr3YI+ixLyjemwrVnsMURbTZFrSYCdDdmc=",
+      "GoModSum": "h1:8O7hanEPBNgEMmybD3s2VBKcgWOCsA6tzHBPODAiquo="
+    },
+    {
+      "Path": "go.opentelemetry.io/otel/sdk",
+      "Version": "v1.44.0",
+      "Time": "2026-05-27T16:42:37Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/go.opentelemetry.io/otel/sdk@v1.44.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/go.opentelemetry.io/otel/sdk/@v/v1.44.0.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:nHYwb9lK+fJPU/dnT6s7W7Z8itMWyqrnVfbheVYrZ58=",
+      "GoModSum": "h1:Osuydd3Se74nqjAKxid74N5eC+jfEqfTegHRnq58oK0="
+    },
+    {
+      "Path": "go.opentelemetry.io/otel/sdk/metric",
+      "Version": "v1.44.0",
+      "Time": "2026-05-27T16:42:37Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/go.opentelemetry.io/otel/sdk/metric@v1.44.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/go.opentelemetry.io/otel/sdk/metric/@v/v1.44.0.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:3LlKgI+VjbVsjNRFZJZAJ30WjXC5VkNRks6si09iEfI=",
+      "GoModSum": "h1:5B5pMARnXxKhltooO4xUuCBorl65a4EpnTalObqOigA="
+    },
+    {
+      "Path": "go.opentelemetry.io/otel/trace",
+      "Version": "v1.44.0",
+      "Time": "2026-05-27T16:42:37Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/go.opentelemetry.io/otel/trace@v1.44.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/go.opentelemetry.io/otel/trace/@v/v1.44.0.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:jxF5CsGYCe74MCRx2X4g7WsY/VBKRqqpNvXlX/6gtIk=",
+      "GoModSum": "h1:oLl1jrMQAVo6v3GAggN+1VH9VIz9iUSvW53sW1Q8PIE="
+    },
+    {
+      "Path": "golang.org/x/crypto",
+      "Version": "v0.57.0",
+      "Time": "2026-09-08T18:05:01Z",
+      "Indirect": true
+    },
+    {
+      "Path": "golang.org/x/mod",
+      "Version": "v0.41.0",
+      "Time": "2026-08-24T20:56:42Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/golang.org/x/mod@v0.41.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/golang.org/x/mod/@v/v0.41.0.mod",
+      "GoVersion": "1.26.0",
+      "Sum": "h1:qJmnOUb4YB+FsEuM3HcWucdZASCPGhsX6uljO6pog0c=",
+      "GoModSum": "h1:Ek9pY8RKWXwsWvd3rQiHYtMqkjSUV+s1Rj7j4H5Ur6o="
+    },
+    {
+      "Path": "golang.org/x/net",
+      "Version": "v0.59.0",
+      "Time": "2026-09-08T19:18:02Z",
+      "Dir": "/Volumes/Data/go/path/pkg/mod/golang.org/x/net@v0.59.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/golang.org/x/net/@v/v0.59.0.mod",
+      "GoVersion": "1.26.0",
+      "Sum": "h1:5zfYln+w5XCxwrnMMJPufRgNoXEaGxl0wo5GqPXyues=",
+      "GoModSum": "h1:2DA/G1UfVbCpQPeWTmMPGY7Cs2PkBkwu743bVX5PIVg="
+    },
+    {
+      "Path": "golang.org/x/oauth2",
+      "Version": "v0.36.0",
+      "Time": "2026-02-11T19:14:10Z",
+      "Indirect": true
+    },
+    {
+      "Path": "golang.org/x/sync",
+      "Version": "v0.23.0",
+      "Time": "2026-08-31T03:04:41Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/golang.org/x/sync@v0.23.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/golang.org/x/sync/@v/v0.23.0.mod",
+      "GoVersion": "1.26.0",
+      "Sum": "h1:KameEIfc1IkluZyXWLn39Wd4tURc6GbCiISGiZm2bQk=",
+      "GoModSum": "h1:sUUOizhqBxiL6pEWpqNLUiaJn1ShEbZ6BBqskPbjZm0="
+    },
+    {
+      "Path": "golang.org/x/sys",
+      "Version": "v0.48.0",
+      "Time": "2026-08-31T19:43:43Z",
+      "Dir": "/Volumes/Data/go/path/pkg/mod/golang.org/x/sys@v0.48.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/golang.org/x/sys/@v/v0.48.0.mod",
+      "GoVersion": "1.26.0",
+      "Sum": "h1:bbX/i/6MgT9BVLM9RT1thmxL04yeTAhbEz4SyadbXoo=",
+      "GoModSum": "h1:hNLxWAXmnKAxqDtdwIYC4bM9oQPEecfsnNMuSxOs3og="
+    },
+    {
+      "Path": "golang.org/x/term",
+      "Version": "v0.46.0",
+      "Time": "2026-09-08T16:27:41Z",
+      "Indirect": true
+    },
+    {
+      "Path": "golang.org/x/text",
+      "Version": "v0.42.0",
+      "Time": "2026-09-08T16:29:55Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/golang.org/x/text@v0.42.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/golang.org/x/text/@v/v0.42.0.mod",
+      "GoVersion": "1.26.0",
+      "Sum": "h1:JbOZXgfeCPU9gacVtYliJqOhD+zhrEqK4LfdpmlUZqI=",
+      "GoModSum": "h1:ojzP1Z+2QtioaF8DTtO8K5q7JWVVYwZKenzujK0Zd0E="
+    },
+    {
+      "Path": "golang.org/x/tools",
+      "Version": "v0.49.0",
+      "Time": "2026-08-13T14:53:26Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/golang.org/x/tools@v0.49.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/golang.org/x/tools/@v/v0.49.0.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:3NI7VXzL9+1WZD52Dx2ttoPwD5DWrFGpl9mFZDlmisI=",
+      "GoModSum": "h1:SJNXV9DBKT0UbdttsQjbfJlAE/q+y36++zo3uL3N0Oo="
+    },
+    {
+      "Path": "gonum.org/v1/gonum",
+      "Version": "v0.17.0",
+      "Time": "2025-12-29T19:16:44Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/gonum.org/v1/gonum@v0.17.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/gonum.org/v1/gonum/@v/v0.17.0.mod",
+      "GoVersion": "1.24.0",
+      "Sum": "h1:VbpOemQlsSMrYmn7T2OUvQ4dqxQXU+ouZFQsZOx50z4=",
+      "GoModSum": "h1:El3tOrEuMpv2UdMrbNlKEh9vd86bmQ6vqIcDwxEOc1E="
+    },
+    {
+      "Path": "google.golang.org/genproto/googleapis/api",
+      "Version": "v0.0.0-20260526163538-3dc84a4a5aaa",
+      "Time": "2026-05-26T16:35:38Z",
+      "Indirect": true
+    },
+    {
+      "Path": "google.golang.org/genproto/googleapis/rpc",
+      "Version": "v0.0.0-20260526163538-3dc84a4a5aaa",
+      "Time": "2026-05-26T16:35:38Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260526163538-3dc84a4a5aaa",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/google.golang.org/genproto/googleapis/rpc/@v/v0.0.0-20260526163538-3dc84a4a5aaa.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:mZHHdPZl0dbGHCflZgAq/Q468DWVFcU2whhB2KAo8fk=",
+      "GoModSum": "h1:4Hqkh8ycfw05ld/3BWL7rJOSfebL2Q+DVDeRgYgxUU8="
+    },
+    {
+      "Path": "google.golang.org/grpc",
+      "Version": "v1.83.2",
+      "Time": "2026-08-25T15:47:16Z",
+      "Dir": "/Volumes/Data/go/path/pkg/mod/google.golang.org/grpc@v1.83.2",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/google.golang.org/grpc/@v/v1.83.2.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:EManeRomTObA0BU7I8vXgg/78uE5MJ9M8B39EX2WscU=",
+      "GoModSum": "h1:YPI1hK3kDked6iHvgX3tR0y+nX/qpMFKhPgFsokw1S8="
+    },
+    {
+      "Path": "google.golang.org/grpc/cmd/protoc-gen-go-grpc",
+      "Version": "v1.6.2",
+      "Time": "2026-05-07T05:07:53Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.6.2",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/google.golang.org/grpc/cmd/protoc-gen-go-grpc/@v/v1.6.2.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:rgSNvqscFZ1JgV/4wH5GOsZFSFkR2Eua9As3KIr2LlM=",
+      "GoModSum": "h1:iMEtFwDlAhjDU9L5mY6U1XLwlIId/G3h+QcBHDIvrJ8="
+    },
+    {
+      "Path": "google.golang.org/protobuf",
+      "Version": "v1.36.11",
+      "Time": "2025-12-12T08:48:31Z",
+      "Dir": "/Volumes/Data/go/path/pkg/mod/google.golang.org/protobuf@v1.36.11",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/google.golang.org/protobuf/@v/v1.36.11.mod",
+      "GoVersion": "1.23",
+      "Sum": "h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=",
+      "GoModSum": "h1:HTf+CrKn2C3g5S8VImy6tdcUvCska2kB7j23XfzDpco="
+    },
+    {
+      "Path": "modernc.org/cc/v4",
+      "Version": "v4.29.2",
+      "Time": "2026-07-28T13:57:35Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/cc/v4@v4.29.2",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/cc/v4/@v/v4.29.2.mod",
+      "GoVersion": "1.25",
+      "Sum": "h1:h6+9ciCnPKutf4I03CvheAvDLX7+IHlqR6Iy6J+cgd8=",
+      "GoModSum": "h1:OnovgIhbbMXMu1aISnJ0wvVD1KnW+cAUJkIrAWh+kVI="
+    },
+    {
+      "Path": "modernc.org/ccgo/v4",
+      "Version": "v4.35.0",
+      "Time": "2026-08-06T20:42:40Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/ccgo/v4@v4.35.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/ccgo/v4/@v/v4.35.0.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:F+TUsmw09QxLzmi3aeYYGxjAXarmZaKgj3mKQHNaA8w=",
+      "GoModSum": "h1:qrVGs9S3Sr2Ztcg9ve+kTAYMp5a3YvWjo+SoN06kJ5I="
+    },
+    {
+      "Path": "modernc.org/fileutil",
+      "Version": "v1.4.0",
+      "Time": "2026-02-18T10:24:55Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/fileutil@v1.4.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/fileutil/@v/v1.4.0.mod",
+      "GoVersion": "1.24",
+      "Sum": "h1:j6ZzNTftVS054gi281TyLjHPp6CPHr2KCxEXjEbD6SM=",
+      "GoModSum": "h1:EqdKFDxiByqxLk8ozOxObDSfcVOv/54xDs/DUHdvCUU="
+    },
+    {
+      "Path": "modernc.org/gc/v2",
+      "Version": "v2.6.5",
+      "Time": "2025-03-12T16:49:23Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/gc/v2@v2.6.5",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/gc/v2/@v/v2.6.5.mod",
+      "GoVersion": "1.21",
+      "Sum": "h1:nyqdV8q46KvTpZlsw66kWqwXRHdjIlJOhG6kxiV/9xI=",
+      "GoModSum": "h1:YgIahr1ypgfe7chRuJi2gD7DBQiKSLMPgBQe9oIiito="
+    },
+    {
+      "Path": "modernc.org/gc/v3",
+      "Version": "v3.1.5",
+      "Time": "2026-06-24T18:04:59Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/gc/v3@v3.1.5",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/gc/v3/@v/v3.1.5.mod",
+      "GoVersion": "1.23.0",
+      "Sum": "h1:21ldfPfRYE31Tb7B3mwAK8gy1AxP4+dKjrOQPfqakoc=",
+      "GoModSum": "h1:HFK/6AGESC7Ex+EZJhJ2Gni6cTaYpSMmU/cT9RmlfYY="
+    },
+    {
+      "Path": "modernc.org/goabi0",
+      "Version": "v0.2.0",
+      "Time": "2025-07-02T15:46:44Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/goabi0@v0.2.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/goabi0/@v/v0.2.0.mod",
+      "GoVersion": "1.23.0",
+      "Sum": "h1:HvEowk7LxcPd0eq6mVOAEMai46V+i7Jrj13t4AzuNks=",
+      "GoModSum": "h1:CEFRnnJhKvWT1c1JTI3Avm+tgOWbkOu5oPA8eH8LnMI="
+    },
+    {
+      "Path": "modernc.org/libc",
+      "Version": "v1.75.6",
+      "Time": "2026-08-26T11:31:25Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/libc@v1.75.6",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/libc/@v/v1.75.6.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:yKk8qo+Di4gkmvRboK8ocCqH22FiUCR6jRy2OwtCRus=",
+      "GoModSum": "h1:bO5o2ztHxBb2rjz0PgdHN0sSMw57CgxGFLZ3Qd/QpVQ="
+    },
+    {
+      "Path": "modernc.org/mathutil",
+      "Version": "v1.7.1",
+      "Time": "2024-12-26T12:13:25Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/mathutil@v1.7.1",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/mathutil/@v/v1.7.1.mod",
+      "GoVersion": "1.21",
+      "Sum": "h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=",
+      "GoModSum": "h1:4p5IwJITfppl0G4sUEDtCr4DthTaT47/N3aT6MhfgJg="
+    },
+    {
+      "Path": "modernc.org/memory",
+      "Version": "v1.12.1",
+      "Time": "2026-08-19T16:36:49Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/memory@v1.12.1",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/memory/@v/v1.12.1.mod",
+      "GoVersion": "1.23.0",
+      "Sum": "h1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=",
+      "GoModSum": "h1:/JP4VbVC+K5sU2wZi9bHoq2MAkCnrt2r98UGeSK7Mjw="
+    },
+    {
+      "Path": "modernc.org/opt",
+      "Version": "v0.2.0",
+      "Time": "2026-03-24T16:14:02Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/opt@v0.2.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/opt/@v/v0.2.0.mod",
+      "GoVersion": "1.21",
+      "Sum": "h1:tGyef5ApycA7FSEOMraay9SaTk5zmbx7Tu+cJs4QKZg=",
+      "GoModSum": "h1:03fq9lsNfvkYSfxrfUhZCWPk1lm4cq4N+Bh//bEtgns="
+    },
+    {
+      "Path": "modernc.org/sortutil",
+      "Version": "v1.2.1",
+      "Time": "2024-12-28T00:09:37Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/sortutil@v1.2.1",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/sortutil/@v/v1.2.1.mod",
+      "GoVersion": "1.21",
+      "Sum": "h1:+xyoGf15mM3NMlPDnFqrteY07klSFxLElE2PVuWIJ7w=",
+      "GoModSum": "h1:7ZI3a3REbai7gzCLcotuw9AC4VZVpYMjDzETGsSMqJE="
+    },
+    {
+      "Path": "modernc.org/sqlite",
+      "Version": "v1.58.0",
+      "Time": "2026-09-01T15:17:17Z",
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/sqlite@v1.58.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/sqlite/@v/v1.58.0.mod",
+      "GoVersion": "1.25.0",
+      "Sum": "h1:38u40/bwkfM7f0Myhosl+SEMltSDxnGdQf8o6Kjmys0=",
+      "GoModSum": "h1:rsD2CckafgObKC4DhBlGBf+RiHxkc3hINGt1Xw32tVY="
+    },
+    {
+      "Path": "modernc.org/strutil",
+      "Version": "v1.2.1",
+      "Time": "2024-12-27T20:23:31Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/strutil@v1.2.1",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/strutil/@v/v1.2.1.mod",
+      "GoVersion": "1.21",
+      "Sum": "h1:UneZBkQA+DX2Rp35KcM69cSsNES9ly8mQWD71HKlOA0=",
+      "GoModSum": "h1:EHkiggD70koQxjVdSBM3JKM7k6L0FbGE5eymy9i3B9A="
+    },
+    {
+      "Path": "modernc.org/token",
+      "Version": "v1.1.0",
+      "Time": "2022-11-13T14:28:03Z",
+      "Indirect": true,
+      "Dir": "/Volumes/Data/go/path/pkg/mod/modernc.org/token@v1.1.0",
+      "GoMod": "/Volumes/Data/go/path/pkg/mod/cache/download/modernc.org/token/@v/v1.1.0.mod",
+      "Sum": "h1:Xl7Ap9dKaEs5kLoOQeQmPWevfnk/DM5qcLcYlA8ys6Y=",
+      "GoModSum": "h1:UGzOrNV1mAFSEB63lOFHIpNRUVMvYTc6yu1SMY/XTDM="
+    }
+  ],
+  "source_sha256": {
+    "gen/harness/v1/contract.pb.go": "cedded34186016cf3543cbb47b6eb3c27e5024de5668716d8f28ed43f2097a63",
+    "gen/harness/v1/execution.pb.go": "a2caf3b7028f3276e98ddf2ec0a55d702098e551db7bfe0e5d284d915379109f",
+    "gen/harness/v1/tasks.pb.go": "3b2ff9ac5492980d100182e27f38532d703648a49ef73d3c6941e39c0e473291",
+    "go.mod": "0d28229c57f855c74e647dba0d8cd2907198ca9a9fa185ca58795b07342d99d2",
+    "go.sum": "ffb7564b84d761144f0632684b8376cc233522e7be3d4b826bb2a5a46e609642",
+    "proto/harness/v1/contract.proto": "d49a752980ac74635b018891838fdfe4f70261e8af78559c35290032712a1d2f",
+    "proto/harness/v1/execution.proto": "9180c44d459b24743ca2b9275d176aa66aa6ee32456af6c0b0ac2095db342dc4",
+    "proto/harness/v1/tasks.proto": "591157c417c2c48fbf2bfe1033cecf4427da9cd5ae9e33b8d30e7da05cbdec53",
+    "scripts/generate.sh": "62cdf4110aaff7781af0d94a0f612c829ce82c3c854ecb61a294c10d7d671cfe",
+    "adapters/wsbinding/binding.go": "09bc0bbbd91bca732294d74dccb4b9acb466bd4be6d542d4422e66024ed8dff8",
+    "adapters/wsbinding/config.go": "64a8e19481a94ed8874ee6ca635162676d8393596f9cdc06ce7e7e010db51ef8",
+    "adapters/wsbinding/config_test.go": "4aecfd21d905a30e4d8e31bab226e457ed91fc6d20197550c4bbe9094ccb5012",
+    "adapters/wsbinding/connection.go": "18bca4f6360b6365ba0dd8fcebdb502addbf55514a196371437d320b04fe4d8e",
+    "adapters/wsbinding/peer.go": "c9e9c532c615f5e8091e2181a3e91294e9d7dfa5d4470bd214f84e33aa36a4a4",
+    "gen/harness/v1/common.pb.go": "d65ab6be4eff137c7ddc3a51f6d447086153ea730f18dae4714aab35edd48bb9",
+    "gen/harness/v1/websocket.pb.go": "2382882d732000c669381e3807bffdf9fd27a8b944db94faf06fba136c8caa25",
+    "profiles/asynccheck/ws_protocol_test.go": "15ff65da8ac57cf1cb4ccdcc75acb2fe5f658a7f9ae9c4a8163c449074b3c913",
+    "profiles/asynccheck/ws_test.go": "13a7f89de6366dc4a0cea9a32b1d07e678dc2f8e8c0e269d9889b1eab9aa4342",
+    "proto/harness/v1/common.proto": "163ba0bdc0e85cae4aea9effc8a47844bdf56dd066f0b91c622fe521c017dc52",
+    "proto/harness/v1/websocket.proto": "821f398d0a33fd8f4f78cba35c8b334a70349d5fc8854fe5982d4d4403023390",
+    "scripts/verify-ws.sh": "d85979b69c9902828481e6c792d138247a7ed61c6dc3bfc9ca5509ff2975c1cd"
+  },
+  "verification": {
+    "entrypoint": "scripts/verify-ws.sh",
+    "initial_entrypoint_result": {
+      "profile": "ws-query-v1",
+      "dependencies": "passed",
+      "generation": "passed",
+      "generated_diff": "passed",
+      "build": "passed",
+      "analysis": "passed",
+      "websocket": "passed",
+      "regression": "failed",
+      "exit_code": 1
+    },
+    "final_build": "passed: go build -mod=readonly ./...",
+    "final_analysis": "passed: go vet -mod=readonly ./adapters/wsbinding ./profiles/asynccheck",
+    "final_websocket": {
+      "pass": [
+        "lerna/profiles/asynccheck.TestWSNegotiationAndIdentity",
+        "lerna/profiles/asynccheck.TestWSMalformedAndChunkBounds",
+        "lerna/profiles/asynccheck.TestWSReadOnlyAndFragmentedQuery",
+        "lerna/profiles/asynccheck.TestWSRestartAndDisabledPeer",
+        "lerna/profiles/asynccheck.TestWSAssociationAndLateReadReplies",
+        "lerna/profiles/asynccheck.TestWSConnectionExpiryAndBackpressure",
+        "lerna/profiles/asynccheck.TestWSBlockedSocketWrite",
+        "lerna/profiles/asynccheck.TestWSOutOfOrderAndLocalEquivalence",
+        "lerna/profiles/asynccheck.TestWSChunkedControlOrdering",
+        "lerna/profiles/asynccheck.TestWSOptionalCapabilitiesDisabled",
+        "lerna/profiles/asynccheck.TestWSLateReplyAfterDeadline",
+        "lerna/profiles/asynccheck.TestWSDuplexProcesses"
+      ],
+      "fail": [],
+      "skip": [
+        "lerna/profiles/asynccheck.TestWSProcess"
+      ]
+    },
+    "final_configuration": {
+      "pass": [
+        "lerna/adapters/wsbinding.TestFiniteConfiguration"
+      ],
+      "fail": [],
+      "skip": []
+    },
+    "final_affected_async_package": {
+      "pass": [
+        "lerna/profiles/asynccheck.TestAsyncJobCompletesThroughDurableAssociation",
+        "lerna/profiles/asynccheck.TestCancelAcceptedIsNotStopped",
+        "lerna/profiles/asynccheck.TestCompletionBeforeCancelUsesTargetTime",
+        "lerna/profiles/asynccheck.TestAsyncPolicyIsFrozen",
+        "lerna/profiles/asynccheck.TestLateProgressDoesNotBlockOutbox",
+        "lerna/profiles/asynccheck.TestTaskCancelBeforeStartSettlesOriginalWork",
+        "lerna/profiles/asynccheck.TestCancelCannotReuseExecutionPermitIdentity",
+        "lerna/profiles/asynccheck.TestRecoveryPassRotatesPastIdleAdmission",
+        "lerna/profiles/asynccheck.TestProgressUsesBoundedDriverSlot",
+        "lerna/profiles/asynccheck.TestInvokeRecoversPermitAllocatedBeforeInvocation",
+        "lerna/profiles/asynccheck.TestAsyncContracts",
+        "lerna/profiles/asynccheck.TestGRPCNegotiationAndAuthentication",
+        "lerna/profiles/asynccheck.TestGRPCCurrentAuthorizationStopsDisclosure",
+        "lerna/profiles/asynccheck.TestGRPCCancelConformance",
+        "lerna/profiles/asynccheck.TestGRPCSlowConsumerAndUnacknowledgedRecovery",
+        "lerna/profiles/asynccheck.TestGRPCBoundedConcurrentStreams",
+        "lerna/profiles/asynccheck.TestGRPCRevocationStopsExistingSubscription",
+        "lerna/profiles/asynccheck.TestGRPCInvocationConformance",
+        "lerna/profiles/asynccheck.TestGRPCIncompleteHandshakeIsBounded",
+        "lerna/profiles/asynccheck.TestGRPCReceiverRestartKeepsReceiptIdentity",
+        "lerna/profiles/asynccheck.TestGRPCMalformedMutationResponseIsUnknown",
+        "lerna/profiles/asynccheck.TestGRPCExecutionAndDurableResult",
+        "lerna/profiles/asynccheck.TestGRPCLostReplyKeepsOriginalOperation",
+        "lerna/profiles/asynccheck.TestActualV11Upgrade",
+        "lerna/profiles/asynccheck.TestWSNegotiationAndIdentity",
+        "lerna/profiles/asynccheck.TestWSMalformedAndChunkBounds",
+        "lerna/profiles/asynccheck.TestWSReadOnlyAndFragmentedQuery",
+        "lerna/profiles/asynccheck.TestWSRestartAndDisabledPeer",
+        "lerna/profiles/asynccheck.TestWSAssociationAndLateReadReplies",
+        "lerna/profiles/asynccheck.TestWSConnectionExpiryAndBackpressure",
+        "lerna/profiles/asynccheck.TestWSBlockedSocketWrite",
+        "lerna/profiles/asynccheck.TestWSOutOfOrderAndLocalEquivalence",
+        "lerna/profiles/asynccheck.TestWSChunkedControlOrdering",
+        "lerna/profiles/asynccheck.TestWSOptionalCapabilitiesDisabled",
+        "lerna/profiles/asynccheck.TestWSLateReplyAfterDeadline",
+        "lerna/profiles/asynccheck.TestWSDuplexProcesses"
+      ],
+      "fail": [],
+      "skip": [
+        "lerna/profiles/asynccheck.TestGRPCReceiverProcess",
+        "lerna/profiles/asynccheck.TestGRPCServerProcess",
+        "lerna/profiles/asynccheck.TestWSProcess"
+      ]
+    },
+    "broad_regression": {
+      "pass": [
+        "lerna/authorization.TestCASContentionIsBoundedAndCancellable",
+        "lerna/authorization.TestExecutionPermitAndDataCommitTogether",
+        "lerna/authorization.TestReservedExecutionIdentitySurvivesWindowWithoutSpendingPermit",
+        "lerna/authorization.TestSignedGrantIssueReplay",
+        "lerna/authorization.TestSignedGrantChecksPresenterAndCurrentPolicy",
+        "lerna/authorization.TestGrantDerivationReservesSharedQuotaAndAncestorRevocation",
+        "lerna/authorization.TestGrantSelfUseAndDelegationShareRemainingUnits",
+        "lerna/authorization.TestMemoryAdmissionRetainsIdentityWithoutClaimingBusinessCommit",
+        "lerna/authorization.TestNodeProcessRecovery",
+        "lerna/authorization.TestNodeEnrollmentDisableAndReplay",
+        "lerna/authorization.TestRealTLSReservationRotationAndDisable",
+        "lerna/authorization.TestNodeRequestValidationAndReEnrollment",
+        "lerna/authorization.TestNodeSigningKeyOverlapAndCurrentGrantRevocation",
+        "lerna/authorization.TestNodeSQLiteRecoveryAndSigningRace",
+        "lerna/authorization.TestNodeCertificateIssuerOverlapAndUnavailableRegistry",
+        "lerna/authorization.TestNodeRebindPreservesSingleUseAndAncestorAllocation",
+        "lerna/authorization.TestBootstrapCannotReplaceTrustAndSurvivesReopen",
+        "lerna/authorization.TestManagementCommitIsIdempotentBeforeVersionCheck",
+        "lerna/authorization.TestContinuousGrantAndHardDeny",
+        "lerna/authorization.TestClosedWindowCannotReviveAfterCleanup",
+        "lerna/authorization.TestConcurrentMutationAndBootstrap",
+        "lerna/authorization.TestEquivalentPolicySetOrderKeepsOperationIdentity",
+        "lerna/authorization.TestOperationIdentityRejectsAlternateEncoding",
+        "lerna/authorization.TestFiniteResourceSetCannotIssueFutureSubtree",
+        "lerna/authorization.TestFullOperationHistoryCanBeCleanedThroughPublicAPI",
+        "lerna/authorization.TestRetainedUseTracksOriginalSignedAllocationAndAncestorRevocation",
+        "lerna/authorization.TestUseInvalidationSurvivesPurposeRestorationAndReopen",
+        "lerna/catalog.TestListThenDescribeExactVersion",
+        "lerna/catalog.TestHiddenEntriesDoNotConsumeCandidateBudget",
+        "lerna/schema.TestRegisteredSchemaValidatesExactNumbersAndNullableFields",
+        "lerna/schema.TestSchemaRejectsAmbiguousAndInvalidJSON",
+        "lerna/schema.TestRegistryBindingAndOfflineReferences",
+        "lerna/sdk.TestAuthorizationSDKUsesRealCommitAndRejectsNamespaceForgery",
+        "lerna/sdk.TestTaskRoundTrip",
+        "lerna/sdk.TestOperationIdentitySurvivesNewMessages",
+        "lerna/sdk.TestDynamicIntentUsesSemanticEquality",
+        "lerna/sdk.TestClientRejectsUncorrelatedOrUnprovenResponses",
+        "lerna/sdk.TestClientAndReceiverBothValidateRequests",
+        "lerna/sdk.TestDistinctConflictResponseDoesNotReuseSuccessMessageIdentity",
+        "lerna/sdk.TestMemorySDKRejectsMisleadingDeletionReports",
+        "lerna/sdk.TestMemoryClientRejectsMisassociatedAndExpandedReadResponses",
+        "lerna/sdk.TestMemoryClientRejectsMixedRequestBeforeTransport",
+        "lerna/adapters/grpcbinding.TestFiniteConfiguration",
+        "lerna/adapters/grpcbinding.TestDurableDelivery",
+        "lerna/profiles/sdkcontract.TestSDKContractProfileProducesScopedEvidence",
+        "lerna/profiles/catalogcheck.TestBrainCompletesOneTaskThroughTwoAPIResults",
+        "lerna/profiles/catalogcheck.TestModelDisclosureRequiresCurrentCloudAuthorization",
+        "lerna/profiles/catalogcheck.TestBrainKeepsFailuresAndHonorsExplicitWaits",
+        "lerna/profiles/catalogcheck.TestActionModelReceivesAuthorizedTaskInput",
+        "lerna/profiles/catalogcheck.TestUnnecessaryModelWaitIsNotFirstCorrect",
+        "lerna/profiles/catalogcheck.TestInvalidatedAdmittedContextWaitsBeforeDispatch",
+        "lerna/profiles/catalogcheck.TestFullDirectoryExecution",
+        "lerna/profiles/catalogcheck.TestCatalogBoundaries",
+        "lerna/profiles/catalogcheck.TestCatalogRecovery",
+        "lerna/profiles/catalogcheck.TestCatalogChild",
+        "lerna/profiles/catalogcheck.TestCatalogDataPolicy"
+      ],
+      "fail": [
+        "lerna/profiles/catalogcheck.TestLegacyActionCheckpointMigratesWithoutReplacingWork",
+        "lerna/profiles/catalogcheck.TestRetiredLegacyActionCheckpointPreservesOriginalEffect",
+        "lerna/profiles/catalogcheck.TestTamperedLegacyActionComparisonCannotMigrateOrStart",
+        "lerna/profiles/catalogcheck.TestActionHostMigratesRetiredLegacyCheckpointAutomatically",
+        "lerna/profiles/catalogcheck.TestActionCheckpointDoesNotDuplicateSnapshotDigests",
+        "lerna/profiles/catalogcheck.TestCurrentMemoryControlsActualActionStart",
+        "lerna/profiles/catalogcheck.TestInvalidatedModelDecisionSettlesWithoutDisclosingOldContext",
+        "lerna/profiles/catalogcheck.TestRevokedContextPreservesUnknownModelReservation",
+        "lerna/profiles/catalogcheck.TestUnrelatedModelContextChangeRetainsOriginalDecision",
+        "lerna/profiles/catalogcheck.TestContextRevocationDuringEvidenceSaveStillSettlesKnownUsage",
+        "lerna/profiles/catalogcheck.TestSourceCorrectionDuringEvidenceSaveSettlesWithoutOldBody",
+        "lerna/profiles/catalogcheck.TestCorrectedMemoryReassemblesIntoNewAuthorizedDecision",
+        "lerna/profiles/catalogcheck.TestUnstableMemoryStopsAfterTwoPersistedReassemblies",
+        "lerna/profiles/catalogcheck.TestReassemblyCannotReplaceRevokedOrUnknownReads",
+        "lerna/profiles/catalogcheck.TestDeletedMemoryBlocksFirstActionStart",
+        "lerna/profiles/catalogcheck.TestActionHostAutomaticallyCleansDeletedContext",
+        "lerna/profiles/catalogcheck.TestActionHostAutomaticallyCleansDeletedArtifacts",
+        "lerna/profiles/catalogcheck.TestActionHostAutomaticallyErasesDeletedMemoryComparison",
+        "lerna/profiles/catalogcheck.TestPersonalizedInvocationSurvivesProcessExit",
+        "lerna/profiles/catalogcheck.TestPersonalizedEffectIsNotRepeatedAfterProcessExit",
+        "lerna/profiles/catalogcheck.TestPersonalizedTaskCompletesAfterProcessExit",
+        "lerna/profiles/catalogcheck.TestSecondPersonalizedDecisionRestoresOriginalSnapshots",
+        "lerna/profiles/catalogcheck.TestReassembledInvocationSurvivesProcessExit",
+        "lerna/profiles/catalogcheck.TestUnboundFailedDecisionSurvivesProcessExit",
+        "lerna/profiles/catalogcheck.TestTamperedGapHistoryCannotStartAction",
+        "lerna/profiles/catalogcheck.TestBoundButUnusedContextRemainsInRecoveryHistory",
+        "lerna/profiles/catalogcheck.TestDeletedMemoryPreservesOriginalEffectAfterProcessExit",
+        "lerna/profiles/catalogcheck.TestMemorySelectsActualAPIRecord",
+        "lerna/profiles/catalogcheck.TestPersonalizedActionReopensOriginalMemoryBinding",
+        "lerna/profiles/catalogcheck.TestReopenedActionMemoryRejectsRevokedOriginalRead",
+        "lerna/profiles/catalogcheck.TestPersonalizedTaskBindsEachDecisionSnapshot"
+      ],
+      "skip": [
+        "lerna/authorization.TestNodeProcessProbe",
+        "lerna/profiles/catalogcheck.TestPersonalizedActionCrashProbe"
+      ]
+    },
+    "baseline_reproduction": {
+      "pass": [],
+      "fail": [
+        "lerna/profiles/catalogcheck.TestLegacyActionCheckpointMigratesWithoutReplacingWork",
+        "lerna/profiles/catalogcheck.TestRetiredLegacyActionCheckpointPreservesOriginalEffect",
+        "lerna/profiles/catalogcheck.TestTamperedLegacyActionComparisonCannotMigrateOrStart",
+        "lerna/profiles/catalogcheck.TestActionHostMigratesRetiredLegacyCheckpointAutomatically",
+        "lerna/profiles/catalogcheck.TestActionCheckpointDoesNotDuplicateSnapshotDigests",
+        "lerna/profiles/catalogcheck.TestCurrentMemoryControlsActualActionStart",
+        "lerna/profiles/catalogcheck.TestInvalidatedModelDecisionSettlesWithoutDisclosingOldContext",
+        "lerna/profiles/catalogcheck.TestRevokedContextPreservesUnknownModelReservation",
+        "lerna/profiles/catalogcheck.TestUnrelatedModelContextChangeRetainsOriginalDecision",
+        "lerna/profiles/catalogcheck.TestContextRevocationDuringEvidenceSaveStillSettlesKnownUsage",
+        "lerna/profiles/catalogcheck.TestSourceCorrectionDuringEvidenceSaveSettlesWithoutOldBody",
+        "lerna/profiles/catalogcheck.TestCorrectedMemoryReassemblesIntoNewAuthorizedDecision",
+        "lerna/profiles/catalogcheck.TestUnstableMemoryStopsAfterTwoPersistedReassemblies",
+        "lerna/profiles/catalogcheck.TestReassemblyCannotReplaceRevokedOrUnknownReads",
+        "lerna/profiles/catalogcheck.TestDeletedMemoryBlocksFirstActionStart",
+        "lerna/profiles/catalogcheck.TestActionHostAutomaticallyCleansDeletedContext",
+        "lerna/profiles/catalogcheck.TestActionHostAutomaticallyCleansDeletedArtifacts",
+        "lerna/profiles/catalogcheck.TestActionHostAutomaticallyErasesDeletedMemoryComparison",
+        "lerna/profiles/catalogcheck.TestPersonalizedInvocationSurvivesProcessExit",
+        "lerna/profiles/catalogcheck.TestPersonalizedEffectIsNotRepeatedAfterProcessExit",
+        "lerna/profiles/catalogcheck.TestPersonalizedTaskCompletesAfterProcessExit",
+        "lerna/profiles/catalogcheck.TestSecondPersonalizedDecisionRestoresOriginalSnapshots",
+        "lerna/profiles/catalogcheck.TestReassembledInvocationSurvivesProcessExit",
+        "lerna/profiles/catalogcheck.TestUnboundFailedDecisionSurvivesProcessExit",
+        "lerna/profiles/catalogcheck.TestTamperedGapHistoryCannotStartAction",
+        "lerna/profiles/catalogcheck.TestBoundButUnusedContextRemainsInRecoveryHistory",
+        "lerna/profiles/catalogcheck.TestDeletedMemoryPreservesOriginalEffectAfterProcessExit",
+        "lerna/profiles/catalogcheck.TestMemorySelectsActualAPIRecord",
+        "lerna/profiles/catalogcheck.TestPersonalizedActionReopensOriginalMemoryBinding",
+        "lerna/profiles/catalogcheck.TestReopenedActionMemoryRejectsRevokedOriginalRead",
+        "lerna/profiles/catalogcheck.TestPersonalizedTaskBindsEachDecisionSnapshot"
+      ],
+      "skip": []
+    },
+    "baseline_same_test_and_subtest_failures": true,
+    "baseline_signature": "All 31 top-level failures (including 50 individual initialization errors) reproduce on unmodified base with initialize action memory context: UNAVAILABLE. No diagnosis of the underlying cause is claimed.",
+    "transient_build_failure": "The initial broad runner reached asynccheck while supplementary test imports were being edited, producing could not import build-output errors. After sources were frozen, the complete asynccheck race package passed (36 top-level tests). That failure remains in raw evidence and is superseded only for this package.",
+    "rerun_policy": "Initial generation comparison and module verification remain applicable; final source changes were control sequencing and additional tests, verified by final full WebSocket and asynccheck race runs plus build/affected vet. Passing unrelated packages were not repeatedly run.",
+    "final_source_compatibility": {
+      "result": "passed",
+      "probe": "A separate proto imports only contract.proto and references harness.v1.TaskRef; protoc 36.1 compiles it after the public import fix.",
+      "post_fix_race_passes": [
+        "lerna/adapters/wsbinding.TestFiniteConfiguration",
+        "lerna/sdk.TestClientRejectsUncorrelatedOrUnprovenResponses",
+        "lerna/sdk.TestClientAndReceiverBothValidateRequests",
+        "lerna/profiles/asynccheck.TestWSNegotiationAndIdentity",
+        "lerna/profiles/asynccheck.TestWSMalformedAndChunkBounds",
+        "lerna/profiles/asynccheck.TestWSReadOnlyAndFragmentedQuery",
+        "lerna/profiles/asynccheck.TestWSRestartAndDisabledPeer",
+        "lerna/profiles/asynccheck.TestWSAssociationAndLateReadReplies",
+        "lerna/profiles/asynccheck.TestWSConnectionExpiryAndBackpressure",
+        "lerna/profiles/asynccheck.TestWSBlockedSocketWrite",
+        "lerna/profiles/asynccheck.TestWSOutOfOrderAndLocalEquivalence",
+        "lerna/profiles/asynccheck.TestWSChunkedControlOrdering",
+        "lerna/profiles/asynccheck.TestWSOptionalCapabilitiesDisabled",
+        "lerna/profiles/asynccheck.TestWSLateReplyAfterDeadline",
+        "lerna/profiles/asynccheck.TestWSDuplexProcesses"
+      ]
+    },
+    "final_generation_comparison": "passed: regenerated final public-import descriptors match checked-in generated files"
+  },
+  "config": {
+    "server_connections": 4,
+    "window_per_queue_and_subscription_direction": 4,
+    "max_logical_message_bytes": 65536,
+    "chunk_payload_bytes": 1024,
+    "max_concurrent_assemblies": 4,
+    "aggregate_declared_assembly_bytes": 65536,
+    "io_and_assembly_timeout_ms": 2000,
+    "connection_lifetime_ms": 60000,
+    "poll_ms": 50,
+    "compression": false
+  },
+  "supported_methods": [
+    "List",
+    "Search",
+    "Describe",
+    "GetInvocation",
+    "Subscribe invocation full snapshots",
+    "Close subscription"
+  ],
+  "security": "Actual mTLS current node/presenter certificate and subject registration, exact host binding, existing domain authorization, mandatory destination/source disclosure guard before/after reads and before each emitted chunk. Reference deployment exposes only synthetic public state.",
+  "recovery_boundary": "No mutations, PERSISTED, durable Inbox/Outbox, reliable replay, or exactly-once consumer claim. Reconnect negotiates anew and queries the same operation.",
+  "review": {
+    "standards": {
+      "initial_actionable": 0,
+      "final_actionable": 0
+    },
+    "spec": {
+      "initial_actionable": 2,
+      "closed": 2,
+      "final_actionable": 0,
+      "additional_compatibility_review": "Passed: public import preserves legacy .proto TaskRef consumers and generated public dependency."
+    },
+    "report_reviewed_by": "primary agent; code and tests reviewed by two independent agents"
+  },
+  "limitations": [
+    "Expanded catalogcheck regression has 31 independently reproduced baseline failures; the verification entrypoint honestly exits 1 for this broader run.",
+    "Public Host/Binding are a trusted deployment API, not an arbitrary multi-tenant router. Hosts must implement real source/destination disclosure rules for their data and callbacks must honor context cancellation.",
+    "Only one same-machine edge/cloud reference topology and Go implementation; no full service matrix, second language, UI, external model or system quality qualification.",
+    "Subscriptions are replaceable complete state views; no contiguous business event history or persistent result delivery.",
+    "Already emitted bytes cannot be recalled after revocation, and control traffic may wait for one bounded service call or socket write.",
+    "Outgoing connection count is owned by the caller; Config.MaxConnections bounds the Server."
+  ],
+  "artifacts": {
+    "25-websocket.jsonl": "4c4d2abd0773f6cad80ae63c4ab574f126fb8555ad08d5846704eda8f13f2415",
+    "25-ws-config.jsonl": "3a1592ebfccd25ea57aebad8976deaa6a9df6933efd3a03f0621ee65414c6933",
+    "25-ws-async-regression.jsonl": "391e0cd1c44974f0e0ed6aeaf062269fe1b2dd06f0f59b70a750df1df2cab7a0",
+    "25-ws-broad-regression.jsonl": "c7ab169ab60adf35b70ed6b33563c154da23eb4be5dc7b8a1a0d75b039bffc62",
+    "25-ws-baseline-regression.jsonl": "0a5b8cc3ee669144cec958fb552a19f1c7c30fe3f0b215a5ef9208a49662ba4f",
+    "25-ws-control-red.log": "01c85ca0a4801f7d8556ef30f1feea6acff88576c15735fcceb12f98368da9be",
+    "25-ws-review-fixes.log": "d18c8b5b7270fdc21259eada69cfd833f64f2f542b361cf7dc5668e6a7015f15",
+    "25-ws-compatibility.jsonl": "29c5bd157becce66b7e4fbd7df191ccdc74eb60ef84110bd25f875e019e52c8f",
+    "25-ws-proto-compat-red.log": "4720d7370478acbd9ad6770a6ec8c489403642aa6937c7884310b0bced395cbb"
+  }
+}

@@ -3,14 +3,30 @@ syntax = "proto3";
 package harness.v1;
 option go_package = "lerna/gen/harness/v1;harnessv1";
 
-// Initial contract sample, not the complete task or connection protocol.
+import "proto/harness/v1/execution.proto";
+import "proto/harness/v1/websocket.proto";
+import public "proto/harness/v1/common.proto";
+
+// Shared sample and bounded WebSocket profile envelope.
 message Envelope {
   uint32 protocol_major = 1;
   string message_id = 2;
   optional string reply_to = 3;
   string namespace = 4;
   string operation_id = 5;
+  uint32 stream_id = 6;
+  uint64 seq = 7;
+  string delivery_class = 8;
   oneof body {
+    WSHello hello = 20;
+    WSWelcome welcome = 21;
+    CapabilityRequest query = 22;
+    CapabilityResponse answer = 23;
+    WSSubscription subscription = 24;
+    CapabilityResponse progress = 25;
+    WSControl control = 26;
+    WSChunk chunk = 27;
+    DynamicPayload extension = 28;
     SubmitRequest request = 10;
     SubmitResponse response = 11;
   }
@@ -29,10 +45,6 @@ message SubmitRequest {
   DynamicPayload input = 2;
 }
 
-message TaskRef {
-  string namespace = 1;
-  string task_id = 2;
-}
 
 message SubmitResponse {
   Evidence evidence = 1;

@@ -1,0 +1,44 @@
+syntax = "proto3";
+package harness.v1;
+option go_package = "lerna/gen/harness/v1;harnessv1";
+
+// This fixed bootstrap is decoded before business protocol selection. Limits
+// have finite nonzero values; both offers are required before business traffic.
+message WSHello {
+ uint32 bootstrap = 1;
+ repeated uint32 versions = 2;
+ repeated string required = 3;
+ repeated string optional = 4;
+ string subject = 5;
+ uint32 max_message = 6;
+ uint32 chunk = 7;
+ uint32 window = 8;
+ uint32 timeout_ms = 9;
+ uint32 lifetime_ms = 10;
+ string nonce = 11;
+}
+message WSWelcome {
+ string peer_nonce = 1;
+ uint32 version = 2;
+ repeated string capabilities = 3;
+ uint32 max_message = 4;
+ uint32 chunk = 5;
+ uint32 window = 6;
+ uint32 timeout_ms = 7;
+ uint32 lifetime_ms = 8;
+}
+message WSSubscription {
+ string operation_id = 1;
+ bool close = 2;
+}
+// Application chunks carry serialized Envelope bytes. Nested chunks and
+// bootstrap chunks are invalid. Per-assembly and aggregate budgets apply.
+message WSChunk {
+ string message_id = 1;
+ uint32 offset = 2;
+ uint32 total = 3;
+ bytes data = 4;
+}
+message WSControl {
+ string kind = 1; // PING, PONG, CLOSED; never PERSISTED in this profile.
+}
