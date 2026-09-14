@@ -86,6 +86,11 @@ type WorkChange struct {
 // Commit accepts claim, start, renew, complete and stop. The binding supplies
 // credentials and limits; neither is controlled by Brain or public task requests.
 func (p *WorkPort) Commit(ctx context.Context, c WorkChange) (RunSnapshot, error) {
+	if c.Kind == "claim" || c.Kind == "start" || c.Kind == "renew" {
+		if e := p.checkChild(ctx, c.Qualification.Ref); e != nil {
+			return RunSnapshot{}, e
+		}
+	}
 	normalized, digest := proposalIdentity(c)
 	var out RunSnapshot
 	var denied error
@@ -100,6 +105,9 @@ func (p *WorkPort) Commit(ctx context.Context, c WorkChange) (RunSnapshot, error
 			return failure(authorization.NotFound)
 		}
 		if r.Task.Subject != p.binding.Subject || q.Owner != p.service.config.Owner || q.Owner != r.Task.Owner || q.Epoch != r.Task.OwnerEpoch {
+			return failure(authorization.Denied)
+		}
+		if r.Parent != nil && p.service.childPolicy == nil {
 			return failure(authorization.Denied)
 		}
 		identity, authErr := tx.Authorize(p.binding.Token, r.Task.Resource, "task.execute")
@@ -329,4 +337,26 @@ func decisionReason(s string) bool {
 		return true
 	}
 	return false
+}
+
+func (p *WorkPort) checkChild(ctx context.Context, ref Ref) error {
+	return p.checkChildBoundary(ctx, ref, "execute")
+}
+func (p *WorkPort) checkChildBoundary(ctx context.Context, ref Ref, boundary string) error {
+	if p.service.childPolicy == nil {
+		return nil
+	}
+	bounded, cancel := context.WithTimeout(ctx, p.limits.IOTimeout)
+	defer cancel()
+	r, e := p.service.Load(bounded, ref)
+	if e != nil {
+		return e
+	}
+	if r.Parent == nil {
+		return nil
+	}
+	if p.service.childPolicy == nil {
+		return failure(authorization.Denied)
+	}
+	return p.service.childPolicy(bounded, *r.Parent, boundary)
 }

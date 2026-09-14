@@ -27,6 +27,8 @@ type Submission struct {
 	Constraints                  Constraints
 }
 type Task struct {
+	DelegatedSteps, DelegatedRequests        uint32
+	DelegatedTokens                          uint64
 	InputFacts                               []InputFact
 	ModelUsedRequests, ModelReservedRequests uint32
 	ModelUsedTokens, ModelReservedTokens     uint64
@@ -63,22 +65,28 @@ type CommitReceipt struct {
 	Version  uint64
 }
 type RunSnapshot struct {
-	Actions                 *ActionState
-	ExecutionReportVersions map[string]uint64
-	ExecutionReports        map[string]ExecutionReport
-	Interactions            []Interaction
-	UpdateVersion           uint64
-	UpdateLimits            UpdateLimits
-	Generations             []GenerationReservation
-	ControlLimits           ControlLimits
-	CheckAlreadyReserved    bool
-	DispositionChecks       int
-	CheckedAt               int64
-	Limits                  RunLimits
-	LastCommit              CommitReceipt
-	Task                    Task
-	Work                    []Work
-	Records                 []Record
+	ChildReport                   *ChildReport
+	ChildReportChanges            uint32
+	ChildDispositionReportChanges uint32
+	ParentCancelOperation         string
+	Delegations                   *DelegationState
+	Parent                        *ChildIntent
+	Actions                       *ActionState
+	ExecutionReportVersions       map[string]uint64
+	ExecutionReports              map[string]ExecutionReport
+	Interactions                  []Interaction
+	UpdateVersion                 uint64
+	UpdateLimits                  UpdateLimits
+	Generations                   []GenerationReservation
+	ControlLimits                 ControlLimits
+	CheckAlreadyReserved          bool
+	DispositionChecks             int
+	CheckedAt                     int64
+	Limits                        RunLimits
+	LastCommit                    CommitReceipt
+	Task                          Task
+	Work                          []Work
+	Records                       []Record
 }
 type RunChange struct {
 	ChangeID        string
@@ -110,8 +118,9 @@ type RunStore interface {
 	ListRecoverable(context.Context, RecoveryQuery) (RunPage, error)
 }
 type Service struct {
-	store  RuntimeStore
-	config Config
+	childPolicy ChildPolicy
+	store       RuntimeStore
+	config      Config
 }
 type commit struct {
 	WaitRequest      *WaitRequest
@@ -133,14 +142,15 @@ type operation struct {
 	Ref     Ref
 }
 type journal struct {
-	InputChanges  map[string]inputRecord
-	Format        int
-	Config        Config
-	Runs          map[string]RunSnapshot
-	Commits       map[string]map[string]commit
-	Controls      map[string]controlRecord
-	ControlLimits ControlLimits
-	Operations    map[string]operation
+	ClosedDelegations map[string]ChildReference
+	InputChanges      map[string]inputRecord
+	Format            int
+	Config            Config
+	Runs              map[string]RunSnapshot
+	Commits           map[string]map[string]commit
+	Controls          map[string]controlRecord
+	ControlLimits     ControlLimits
+	Operations        map[string]operation
 }
 
 func failure(code authorization.Code) error { return &authorization.Error{Code: code} }
@@ -148,7 +158,7 @@ func New(store RuntimeStore, c Config) (*Service, error) {
 	if store == nil || !name(c.Namespace) || !name(c.Resource) || !name(c.Owner) || c.MaxTasks < 1 || c.MaxTasks > 10000 || c.MaxPage < 1 || c.MaxPage > 1000 {
 		return nil, failure(authorization.Invalid)
 	}
-	return &Service{store, c}, nil
+	return &Service{store: store, config: c}, nil
 }
 func name(s string) bool {
 	return len(s) > 0 && len(s) <= 128 && !strings.ContainsAny(s, "\x00\r\n") && utf8.ValidString(s)
@@ -169,6 +179,9 @@ func (s *Service) runtime(tx authorization.RuntimeTransaction, fn func(*journal,
 	if j.Format != 1 || j.Config != s.config {
 		return failure(authorization.Invalid)
 	}
+	if j.ClosedDelegations == nil {
+		j.ClosedDelegations = map[string]ChildReference{}
+	}
 	if j.InputChanges == nil {
 		j.InputChanges = map[string]inputRecord{}
 	}
@@ -177,6 +190,11 @@ func (s *Service) runtime(tx authorization.RuntimeTransaction, fn func(*journal,
 	}
 	if err := fn(&j, tx); err != nil {
 		return err
+	}
+	for _, r := range j.Runs {
+		if e := delegationInvariant(r); e != nil {
+			return e
+		}
 	}
 	var data bytes.Buffer
 	if err := gob.NewEncoder(&data).Encode(j); err != nil {
@@ -227,6 +245,9 @@ func (s *Service) Submit(ctx context.Context, token string, in Submission) (Task
 		}
 		if err := tx.Operation(in.OperationID, identity.Subject, false); err != nil {
 			return err
+		}
+		if delegationOperation(j, in.OperationID) {
+			return failure(authorization.IdentityConflict)
 		}
 		if _, ok := j.InputChanges[in.OperationID]; ok {
 			return failure(authorization.IdentityConflict)

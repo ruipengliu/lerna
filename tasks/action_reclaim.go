@@ -10,6 +10,9 @@ import (
 // answered interaction. It increments the worker generation, fencing old ports;
 // immutable invocation qualifications and original model records are retained.
 func (p *ActionPort) EnsureLease(ctx context.Context, q Qualification) (RunSnapshot, error) {
+	if e := p.checkChild(ctx, q.Ref); e != nil {
+		return RunSnapshot{}, e
+	}
 	var out RunSnapshot
 	e := p.service.transaction(ctx, func(j *journal, tx authorization.RuntimeTransaction) error {
 		r, e := p.current(j, tx, q, false)

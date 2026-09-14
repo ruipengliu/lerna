@@ -123,6 +123,9 @@ func (b *AnswerBrain) Decide(ctx context.Context, in tasks.DecisionInput) (propo
 		if err != nil {
 			return proposal, err
 		}
+		if b.contract == DelegationContract {
+			return tasks.Proposal{Kind: "delegate", BaseVersion: in.Task.Version, Result: ref}, nil
+		}
 		return tasks.Proposal{Kind: "answer", BaseVersion: in.Task.Version, Complete: true, Result: ref}, nil
 	}
 	return proposal, Error("GENERATION_BUDGET_EXCEEDED")
@@ -184,6 +187,9 @@ func NewEvidenceAnswer(m Model, c Context, o Output, a Accounting, config Config
 	return b, nil
 }
 func (b *AnswerBrain) parseResult(data []byte, in Input) (any, error) {
+	if b.contract == DelegationContract {
+		return parseDelegation(data, in, b.config.MaxOutputBytes)
+	}
 	if b.contract == EvidenceAnswerContract {
 		return parseEvidenceAnswer(data, in, b.config.MaxOutputBytes)
 	}

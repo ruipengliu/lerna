@@ -1,0 +1,17 @@
+{"Time":"2026-09-14T17:59:37.86168+08:00","Action":"start","Package":"lerna/profiles/asynccheck"}
+{"Time":"2026-09-14T17:59:39.005001+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T17:59:39.005096+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T17:59:42.060933+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- PASS: TestWSReliableNonterminalRecoveryKeepsUpdating (3.06s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T17:59:42.060965+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":3.06}
+{"Time":"2026-09-14T17:59:42.060998+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T17:59:42.061004+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T17:59:45.083268+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- PASS: TestWSReliableNonterminalRecoveryKeepsUpdating (3.02s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T17:59:45.083302+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":3.02}
+{"Time":"2026-09-14T17:59:45.083332+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T17:59:45.08334+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T17:59:46.593291+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"    ws_reliable_test.go:436: context canceled\n","OutputType":"error"}
+{"Time":"2026-09-14T17:59:46.599363+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- FAIL: TestWSReliableNonterminalRecoveryKeepsUpdating (1.52s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T17:59:46.599384+08:00","Action":"fail","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":1.52}
+{"Time":"2026-09-14T17:59:46.599404+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"FAIL\n","OutputType":"frame"}
+{"Time":"2026-09-14T17:59:46.600935+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"FAIL\tlerna/profiles/asynccheck\t8.739s\n","OutputType":"frame"}
+{"Time":"2026-09-14T17:59:46.60095+08:00","Action":"fail","Package":"lerna/profiles/asynccheck","Elapsed":8.739}

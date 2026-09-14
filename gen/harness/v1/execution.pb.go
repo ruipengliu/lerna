@@ -467,6 +467,7 @@ type CapabilityRequest struct {
 	//	*CapabilityRequest_Search
 	//	*CapabilityRequest_Describe
 	//	*CapabilityRequest_AuthorizationSync
+	//	*CapabilityRequest_Delegation
 	Body          isCapabilityRequest_Body `protobuf_oneof:"body"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -631,6 +632,15 @@ func (x *CapabilityRequest) GetAuthorizationSync() []byte {
 	return nil
 }
 
+func (x *CapabilityRequest) GetDelegation() []byte {
+	if x != nil {
+		if x, ok := x.Body.(*CapabilityRequest_Delegation); ok {
+			return x.Delegation
+		}
+	}
+	return nil
+}
+
 type isCapabilityRequest_Body interface {
 	isCapabilityRequest_Body()
 }
@@ -683,6 +693,10 @@ type CapabilityRequest_AuthorizationSync struct {
 	AuthorizationSync []byte `protobuf:"bytes,21,opt,name=authorization_sync,json=authorizationSync,proto3,oneof"`
 }
 
+type CapabilityRequest_Delegation struct {
+	Delegation []byte `protobuf:"bytes,22,opt,name=delegation,proto3,oneof"`
+}
+
 func (*CapabilityRequest_Invoke) isCapabilityRequest_Body() {}
 
 func (*CapabilityRequest_GetInvocation) isCapabilityRequest_Body() {}
@@ -707,6 +721,8 @@ func (*CapabilityRequest_Describe) isCapabilityRequest_Body() {}
 
 func (*CapabilityRequest_AuthorizationSync) isCapabilityRequest_Body() {}
 
+func (*CapabilityRequest_Delegation) isCapabilityRequest_Body() {}
+
 type CapabilityResponse struct {
 	state     protoimpl.MessageState `protogen:"open.v1"`
 	MessageId string                 `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
@@ -724,6 +740,7 @@ type CapabilityResponse struct {
 	//	*CapabilityResponse_CatalogPage
 	//	*CapabilityResponse_CatalogDeclaration
 	//	*CapabilityResponse_AuthorizationPage
+	//	*CapabilityResponse_DelegationReply
 	Body          isCapabilityResponse_Body `protobuf_oneof:"body"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -875,6 +892,15 @@ func (x *CapabilityResponse) GetAuthorizationPage() string {
 	return ""
 }
 
+func (x *CapabilityResponse) GetDelegationReply() []byte {
+	if x != nil {
+		if x, ok := x.Body.(*CapabilityResponse_DelegationReply); ok {
+			return x.DelegationReply
+		}
+	}
+	return nil
+}
+
 type isCapabilityResponse_Body interface {
 	isCapabilityResponse_Body()
 }
@@ -915,6 +941,10 @@ type CapabilityResponse_AuthorizationPage struct {
 	AuthorizationPage string `protobuf:"bytes,18,opt,name=authorization_page,json=authorizationPage,proto3,oneof"`
 }
 
+type CapabilityResponse_DelegationReply struct {
+	DelegationReply []byte `protobuf:"bytes,19,opt,name=delegation_reply,json=delegationReply,proto3,oneof"`
+}
+
 func (*CapabilityResponse_Receipt) isCapabilityResponse_Body() {}
 
 func (*CapabilityResponse_Snapshot) isCapabilityResponse_Body() {}
@@ -932,6 +962,8 @@ func (*CapabilityResponse_CatalogPage) isCapabilityResponse_Body() {}
 func (*CapabilityResponse_CatalogDeclaration) isCapabilityResponse_Body() {}
 
 func (*CapabilityResponse_AuthorizationPage) isCapabilityResponse_Body() {}
+
+func (*CapabilityResponse_DelegationReply) isCapabilityResponse_Body() {}
 
 type CapabilityFailure struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1912,7 +1944,7 @@ const file_proto_harness_v1_execution_proto_rawDesc = "" +
 	"\n" +
 	"invocation\x18\x01 \x01(\v2 .harness.v1.CapabilityInvocationR\n" +
 	"invocation\x12%\n" +
-	"\x0egrant_material\x18\x02 \x01(\tR\rgrantMaterial\"\xfd\x05\n" +
+	"\x0egrant_material\x18\x02 \x01(\tR\rgrantMaterial\"\x9f\x06\n" +
 	"\x11CapabilityRequest\x12\x1d\n" +
 	"\n" +
 	"message_id\x18\x01 \x01(\tR\tmessageId\x12\x1c\n" +
@@ -1930,8 +1962,11 @@ const file_proto_harness_v1_execution_proto_rawDesc = "" +
 	"\x04list\x18\x12 \x01(\v2\x18.harness.v1.CatalogQueryH\x00R\x04list\x122\n" +
 	"\x06search\x18\x13 \x01(\v2\x18.harness.v1.CatalogQueryH\x00R\x06search\x124\n" +
 	"\bdescribe\x18\x14 \x01(\v2\x16.harness.v1.CatalogRefH\x00R\bdescribe\x12/\n" +
-	"\x12authorization_sync\x18\x15 \x01(\fH\x00R\x11authorizationSyncB\x06\n" +
-	"\x04body\"\xf1\x05\n" +
+	"\x12authorization_sync\x18\x15 \x01(\fH\x00R\x11authorizationSync\x12 \n" +
+	"\n" +
+	"delegation\x18\x16 \x01(\fH\x00R\n" +
+	"delegationB\x06\n" +
+	"\x04body\"\x9e\x06\n" +
 	"\x12CapabilityResponse\x12\x1d\n" +
 	"\n" +
 	"message_id\x18\x01 \x01(\tR\tmessageId\x12\x19\n" +
@@ -1947,7 +1982,8 @@ const file_proto_harness_v1_execution_proto_rawDesc = "" +
 	"\x10resource_receipt\x18\x0f \x01(\v2\".harness.v1.ResourceControlReceiptH\x00R\x0fresourceReceipt\x12<\n" +
 	"\fcatalog_page\x18\x10 \x01(\v2\x17.harness.v1.CatalogPageH\x00R\vcatalogPage\x12Q\n" +
 	"\x13catalog_declaration\x18\x11 \x01(\v2\x1e.harness.v1.CatalogDeclarationH\x00R\x12catalogDeclaration\x12/\n" +
-	"\x12authorization_page\x18\x12 \x01(\tH\x00R\x11authorizationPageB\x06\n" +
+	"\x12authorization_page\x18\x12 \x01(\tH\x00R\x11authorizationPage\x12+\n" +
+	"\x10delegation_reply\x18\x13 \x01(\fH\x00R\x0fdelegationReplyB\x06\n" +
 	"\x04body\"'\n" +
 	"\x11CapabilityFailure\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\"Z\n" +
@@ -2153,6 +2189,7 @@ func file_proto_harness_v1_execution_proto_init() {
 		(*CapabilityRequest_Search)(nil),
 		(*CapabilityRequest_Describe)(nil),
 		(*CapabilityRequest_AuthorizationSync)(nil),
+		(*CapabilityRequest_Delegation)(nil),
 	}
 	file_proto_harness_v1_execution_proto_msgTypes[6].OneofWrappers = []any{
 		(*CapabilityResponse_Receipt)(nil),
@@ -2164,6 +2201,7 @@ func file_proto_harness_v1_execution_proto_init() {
 		(*CapabilityResponse_CatalogPage)(nil),
 		(*CapabilityResponse_CatalogDeclaration)(nil),
 		(*CapabilityResponse_AuthorizationPage)(nil),
+		(*CapabilityResponse_DelegationReply)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

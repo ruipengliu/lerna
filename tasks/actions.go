@@ -76,6 +76,9 @@ func (p *ActionPort) current(j *journal, tx authorization.RuntimeTransaction, q 
 	if !ok || q.Ref.Namespace != p.service.config.Namespace {
 		return r, failure(authorization.Denied)
 	}
+	if r.Parent != nil && p.service.childPolicy == nil {
+		return r, failure(authorization.Denied)
+	}
 	id, e := tx.Authorize(p.binding.Token, r.Task.Resource, "task.execute")
 	if e != nil {
 		return r, e
@@ -120,6 +123,9 @@ func (p *ActionPort) Initialize(ctx context.Context, q Qualification) (RunSnapsh
 // Reserve durably spends one request before dispatch. A pending reservation is
 // returned for inspection only: callers must not dispatch it a second time.
 func (p *ActionPort) Reserve(ctx context.Context, q Qualification) (ActionDecision, error) {
+	if e := p.checkChild(ctx, q.Ref); e != nil {
+		return ActionDecision{}, e
+	}
 	var out ActionDecision
 	e := p.service.transaction(ctx, func(j *journal, tx authorization.RuntimeTransaction) error {
 		r, e := p.current(j, tx, q, true)
@@ -322,6 +328,9 @@ func (p *ActionPort) Admit(ctx context.Context, q Qualification, n uint32) (RunS
 // Next serializes the reference execution strategy while retaining the full
 // dependency graph. Repeated delivery returns exactly the same dispatch.
 func (p *ActionPort) Next(ctx context.Context, q Qualification) (Action, error) {
+	if e := p.checkChild(ctx, q.Ref); e != nil {
+		return Action{}, e
+	}
 	var out Action
 	e := p.service.transaction(ctx, func(j *journal, tx authorization.RuntimeTransaction) error {
 		r, e := p.current(j, tx, q, true)
@@ -515,6 +524,9 @@ func (p *ActionPort) KeepAlive(ctx context.Context, q Qualification) error {
 // CheckDecision verifies the live task execution authority without advancing
 // state. Context validation uses it alongside an independently read snapshot.
 func (p *ActionPort) CheckDecision(ctx context.Context, q Qualification) error {
+	if e := p.checkChild(ctx, q.Ref); e != nil {
+		return e
+	}
 	return p.service.transaction(ctx, func(j *journal, tx authorization.RuntimeTransaction) error {
 		_, e := p.current(j, tx, q, true)
 		return e

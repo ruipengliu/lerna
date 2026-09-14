@@ -1,0 +1,106 @@
+{"Time":"2026-09-14T18:08:21.305851+08:00","Action":"start","Package":"lerna/tasks"}
+{"Time":"2026-09-14T18:08:22.1984+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationBrainUsesExistingGenerationAccounting"}
+{"Time":"2026-09-14T18:08:22.198504+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationBrainUsesExistingGenerationAccounting","Output":"=== RUN   TestDelegationBrainUsesExistingGenerationAccounting\n"}
+{"Time":"2026-09-14T18:08:22.307351+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationBrainUsesExistingGenerationAccounting","Output":"    delegation_brain_test.go:106: finite scripted Brain proposal: one real Core generation reservation, 170 known tokens, one atomic child reservation\n"}
+{"Time":"2026-09-14T18:08:22.308434+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationBrainUsesExistingGenerationAccounting","Output":"--- PASS: TestDelegationBrainUsesExistingGenerationAccounting (0.11s)\n"}
+{"Time":"2026-09-14T18:08:22.308443+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationBrainUsesExistingGenerationAccounting","Elapsed":0.11}
+{"Time":"2026-09-14T18:08:22.308469+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationProcessProbe"}
+{"Time":"2026-09-14T18:08:22.308472+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationProcessProbe","Output":"=== RUN   TestDelegationProcessProbe\n"}
+{"Time":"2026-09-14T18:08:22.308498+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationProcessProbe","Output":"    delegation_recovery_test.go:27: child only\n"}
+{"Time":"2026-09-14T18:08:22.308514+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationProcessProbe","Output":"--- SKIP: TestDelegationProcessProbe (0.00s)\n"}
+{"Time":"2026-09-14T18:08:22.308523+08:00","Action":"skip","Package":"lerna/tasks","Test":"TestDelegationProcessProbe","Elapsed":0}
+{"Time":"2026-09-14T18:08:22.308534+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit"}
+{"Time":"2026-09-14T18:08:22.308544+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"=== RUN   TestDelegationParentAndChildCommitSurviveProcessExit\n"}
+{"Time":"2026-09-14T18:08:22.408938+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"    delegation_recovery_test.go:106: === RUN   TestDelegationProcessProbe\n"}
+{"Time":"2026-09-14T18:08:22.408964+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"        \n"}
+{"Time":"2026-09-14T18:08:22.456459+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"    delegation_recovery_test.go:107: === RUN   TestDelegationProcessProbe\n"}
+{"Time":"2026-09-14T18:08:22.456482+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"        \n"}
+{"Time":"2026-09-14T18:08:22.544071+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"    delegation_recovery_test.go:126: === RUN   TestDelegationProcessProbe\n"}
+{"Time":"2026-09-14T18:08:22.544094+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"            delegation_recovery_test.go:75: durable child child-fe22476a26ebd8c9dc31753aa1f97818aa5f26146247974513a6d96ad4d87834\n"}
+{"Time":"2026-09-14T18:08:22.544098+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"        \n"}
+{"Time":"2026-09-14T18:08:22.589776+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"    delegation_recovery_test.go:127: === RUN   TestDelegationProcessProbe\n"}
+{"Time":"2026-09-14T18:08:22.589799+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"            delegation_recovery_test.go:75: durable child child-fe22476a26ebd8c9dc31753aa1f97818aa5f26146247974513a6d96ad4d87834\n"}
+{"Time":"2026-09-14T18:08:22.589812+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"        \n"}
+{"Time":"2026-09-14T18:08:22.595795+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"    delegation_recovery_test.go:139: parent admission and child acceptance each survived two abrupt exits; child=child-fe22476a26ebd8c9dc31753aa1f97818aa5f26146247974513a6d96ad4d87834; reservation=2\n"}
+{"Time":"2026-09-14T18:08:22.598095+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Output":"--- PASS: TestDelegationParentAndChildCommitSurviveProcessExit (0.29s)\n"}
+{"Time":"2026-09-14T18:08:22.59811+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationParentAndChildCommitSurviveProcessExit","Elapsed":0.29}
+{"Time":"2026-09-14T18:08:22.598154+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationAdmissionAndParentCompletion"}
+{"Time":"2026-09-14T18:08:22.598161+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationAdmissionAndParentCompletion","Output":"=== RUN   TestDelegationAdmissionAndParentCompletion\n"}
+{"Time":"2026-09-14T18:08:22.676425+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationAdmissionAndParentCompletion","Output":"--- PASS: TestDelegationAdmissionAndParentCompletion (0.08s)\n"}
+{"Time":"2026-09-14T18:08:22.676449+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationAdmissionAndParentCompletion","Elapsed":0.08}
+{"Time":"2026-09-14T18:08:22.676463+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationLostAcceptanceAndIndependentVerification"}
+{"Time":"2026-09-14T18:08:22.676467+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationLostAcceptanceAndIndependentVerification","Output":"=== RUN   TestDelegationLostAcceptanceAndIndependentVerification\n"}
+{"Time":"2026-09-14T18:08:23.640462+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationLostAcceptanceAndIndependentVerification","Output":"    delegation_test.go:349: three unique children; lost reply recovered; parallel/dependent branches verified; parent retained 3 consumed child steps\n"}
+{"Time":"2026-09-14T18:08:23.643478+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationLostAcceptanceAndIndependentVerification","Output":"--- PASS: TestDelegationLostAcceptanceAndIndependentVerification (0.97s)\n"}
+{"Time":"2026-09-14T18:08:23.643497+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationLostAcceptanceAndIndependentVerification","Elapsed":0.97}
+{"Time":"2026-09-14T18:08:23.64351+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces"}
+{"Time":"2026-09-14T18:08:23.643514+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces","Output":"=== RUN   TestDelegationRejectsCyclesAndBudgetRaces\n"}
+{"Time":"2026-09-14T18:08:23.704903+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/input-limit"}
+{"Time":"2026-09-14T18:08:23.704925+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/input-limit","Output":"=== RUN   TestDelegationRejectsCyclesAndBudgetRaces/input-limit\n"}
+{"Time":"2026-09-14T18:08:23.70494+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/input-limit","Output":"--- PASS: TestDelegationRejectsCyclesAndBudgetRaces/input-limit (0.00s)\n"}
+{"Time":"2026-09-14T18:08:23.704949+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/input-limit","Elapsed":0}
+{"Time":"2026-09-14T18:08:23.704977+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/schema-limit"}
+{"Time":"2026-09-14T18:08:23.704988+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/schema-limit","Output":"=== RUN   TestDelegationRejectsCyclesAndBudgetRaces/schema-limit\n"}
+{"Time":"2026-09-14T18:08:23.705088+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/schema-limit","Output":"--- PASS: TestDelegationRejectsCyclesAndBudgetRaces/schema-limit (0.00s)\n"}
+{"Time":"2026-09-14T18:08:23.705128+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/schema-limit","Elapsed":0}
+{"Time":"2026-09-14T18:08:23.705144+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/empty-input"}
+{"Time":"2026-09-14T18:08:23.705153+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/empty-input","Output":"=== RUN   TestDelegationRejectsCyclesAndBudgetRaces/empty-input\n"}
+{"Time":"2026-09-14T18:08:23.705163+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/empty-input","Output":"--- PASS: TestDelegationRejectsCyclesAndBudgetRaces/empty-input (0.00s)\n"}
+{"Time":"2026-09-14T18:08:23.705172+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/empty-input","Elapsed":0}
+{"Time":"2026-09-14T18:08:23.705181+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/deadline-widening"}
+{"Time":"2026-09-14T18:08:23.705188+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/deadline-widening","Output":"=== RUN   TestDelegationRejectsCyclesAndBudgetRaces/deadline-widening\n"}
+{"Time":"2026-09-14T18:08:23.713827+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/deadline-widening","Output":"--- PASS: TestDelegationRejectsCyclesAndBudgetRaces/deadline-widening (0.01s)\n"}
+{"Time":"2026-09-14T18:08:23.713841+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/deadline-widening","Elapsed":0.01}
+{"Time":"2026-09-14T18:08:23.713847+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/expired"}
+{"Time":"2026-09-14T18:08:23.713851+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/expired","Output":"=== RUN   TestDelegationRejectsCyclesAndBudgetRaces/expired\n"}
+{"Time":"2026-09-14T18:08:23.722091+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/expired","Output":"--- PASS: TestDelegationRejectsCyclesAndBudgetRaces/expired (0.01s)\n"}
+{"Time":"2026-09-14T18:08:23.722103+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces/expired","Elapsed":0.01}
+{"Time":"2026-09-14T18:08:23.821509+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces","Output":"--- PASS: TestDelegationRejectsCyclesAndBudgetRaces (0.18s)\n"}
+{"Time":"2026-09-14T18:08:23.821528+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationRejectsCyclesAndBudgetRaces","Elapsed":0.18}
+{"Time":"2026-09-14T18:08:23.821535+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationCancelTombstoneAndUnknownEffects"}
+{"Time":"2026-09-14T18:08:23.821538+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationCancelTombstoneAndUnknownEffects","Output":"=== RUN   TestDelegationCancelTombstoneAndUnknownEffects\n"}
+{"Time":"2026-09-14T18:08:24.123539+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationCancelTombstoneAndUnknownEffects","Output":"--- PASS: TestDelegationCancelTombstoneAndUnknownEffects (0.30s)\n"}
+{"Time":"2026-09-14T18:08:24.123559+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationCancelTombstoneAndUnknownEffects","Elapsed":0.3}
+{"Time":"2026-09-14T18:08:24.123572+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationCancellationHasSeparateAllowance"}
+{"Time":"2026-09-14T18:08:24.123575+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationCancellationHasSeparateAllowance","Output":"=== RUN   TestDelegationCancellationHasSeparateAllowance\n"}
+{"Time":"2026-09-14T18:08:25.00595+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationCancellationHasSeparateAllowance","Output":"--- PASS: TestDelegationCancellationHasSeparateAllowance (0.88s)\n"}
+{"Time":"2026-09-14T18:08:25.005971+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationCancellationHasSeparateAllowance","Elapsed":0.88}
+{"Time":"2026-09-14T18:08:25.005979+08:00","Action":"run","Package":"lerna/tasks","Test":"TestDelegationRequiredFailureBlocksOnlyDependencies"}
+{"Time":"2026-09-14T18:08:25.005983+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRequiredFailureBlocksOnlyDependencies","Output":"=== RUN   TestDelegationRequiredFailureBlocksOnlyDependencies\n"}
+{"Time":"2026-09-14T18:08:25.759271+08:00","Action":"output","Package":"lerna/tasks","Test":"TestDelegationRequiredFailureBlocksOnlyDependencies","Output":"--- PASS: TestDelegationRequiredFailureBlocksOnlyDependencies (0.75s)\n"}
+{"Time":"2026-09-14T18:08:25.759294+08:00","Action":"pass","Package":"lerna/tasks","Test":"TestDelegationRequiredFailureBlocksOnlyDependencies","Elapsed":0.75}
+{"Time":"2026-09-14T18:08:25.759423+08:00","Action":"output","Package":"lerna/tasks","Output":"PASS\n"}
+{"Time":"2026-09-14T18:08:26.771197+08:00","Action":"output","Package":"lerna/tasks","Output":"ok  \tlerna/tasks\t5.465s\n"}
+{"Time":"2026-09-14T18:08:26.771248+08:00","Action":"pass","Package":"lerna/tasks","Elapsed":5.465}
+{"Time":"2026-09-14T18:08:27.017681+08:00","Action":"start","Package":"lerna/brain"}
+{"Time":"2026-09-14T18:08:27.413765+08:00","Action":"output","Package":"lerna/brain","Output":"testing: warning: no tests to run\n"}
+{"Time":"2026-09-14T18:08:27.41383+08:00","Action":"output","Package":"lerna/brain","Output":"PASS\n"}
+{"Time":"2026-09-14T18:08:28.421714+08:00","Action":"output","Package":"lerna/brain","Output":"ok  \tlerna/brain\t1.404s [no tests to run]\n"}
+{"Time":"2026-09-14T18:08:28.421838+08:00","Action":"pass","Package":"lerna/brain","Elapsed":1.404}
+{"Time":"2026-09-14T18:08:28.716973+08:00","Action":"start","Package":"lerna/adapters/wsbinding"}
+{"Time":"2026-09-14T18:08:29.174097+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Output":"testing: warning: no tests to run\n"}
+{"Time":"2026-09-14T18:08:29.17416+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Output":"PASS\n"}
+{"Time":"2026-09-14T18:08:30.181328+08:00","Action":"output","Package":"lerna/adapters/wsbinding","Output":"ok  \tlerna/adapters/wsbinding\t1.464s [no tests to run]\n"}
+{"Time":"2026-09-14T18:08:30.181437+08:00","Action":"pass","Package":"lerna/adapters/wsbinding","Elapsed":1.464}
+{"Time":"2026-09-14T18:08:30.541391+08:00","Action":"start","Package":"lerna/profiles/asynccheck"}
+{"Time":"2026-09-14T18:08:31.032908+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationProcess"}
+{"Time":"2026-09-14T18:08:31.03297+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationProcess","Output":"=== RUN   TestWSDelegationProcess\n"}
+{"Time":"2026-09-14T18:08:31.032995+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationProcess","Output":"    ws_delegation_test.go:37: child only\n"}
+{"Time":"2026-09-14T18:08:31.03302+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationProcess","Output":"--- SKIP: TestWSDelegationProcess (0.00s)\n"}
+{"Time":"2026-09-14T18:08:31.033026+08:00","Action":"skip","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationProcess","Elapsed":0}
+{"Time":"2026-09-14T18:08:31.033039+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart"}
+{"Time":"2026-09-14T18:08:31.033065+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart","Output":"=== RUN   TestWSDelegationSignedRestart\n"}
+{"Time":"2026-09-14T18:08:31.776787+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart","Output":"    ws_delegation_test.go:137: === RUN   TestWSDelegationProcess\n"}
+{"Time":"2026-09-14T18:08:31.776816+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart","Output":"            ws_delegation_test.go:54: accepted child=child-563ee94b96ab42de2255b1e18c1075151e689c47ffb2c016cb20d8f39aba0f37 owner=owner\n"}
+{"Time":"2026-09-14T18:08:31.776826+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart","Output":"        \n"}
+{"Time":"2026-09-14T18:08:33.783556+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart","Output":"    ws_delegation_test.go:137: === RUN   TestWSDelegationProcess\n"}
+{"Time":"2026-09-14T18:08:33.78365+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart","Output":"            ws_delegation_test.go:54: accepted child=child-563ee94b96ab42de2255b1e18c1075151e689c47ffb2c016cb20d8f39aba0f37 owner=owner\n"}
+{"Time":"2026-09-14T18:08:33.783666+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart","Output":"        --- PASS: TestWSDelegationProcess (0.97s)\n"}
+{"Time":"2026-09-14T18:08:33.783716+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart","Output":"        PASS\n"}
+{"Time":"2026-09-14T18:08:33.783733+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart","Output":"        \n"}
+{"Time":"2026-09-14T18:08:34.026469+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart","Output":"    ws_delegation_test.go:201: mTLS child handoff; abrupt client exit 78; same original child after restart; narrowed allocation=1; current revocation denied start\n"}
+{"Time":"2026-09-14T18:08:34.029769+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart","Output":"--- PASS: TestWSDelegationSignedRestart (3.00s)\n"}
+{"Time":"2026-09-14T18:08:34.029789+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSDelegationSignedRestart","Elapsed":3}
+{"Time":"2026-09-14T18:08:34.029906+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"PASS\n"}
+{"Time":"2026-09-14T18:08:35.042249+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"ok  \tlerna/profiles/asynccheck\t4.501s\n"}
+{"Time":"2026-09-14T18:08:35.042365+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Elapsed":4.501}

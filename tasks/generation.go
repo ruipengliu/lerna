@@ -57,6 +57,9 @@ func (p *GenerationPort) ReserveDecision(ctx context.Context, in RunSnapshot) (R
 		if !ok || q.Ref.Namespace != p.service.config.Namespace {
 			return failure(authorization.Denied)
 		}
+		if r.Parent != nil && p.service.childPolicy == nil {
+			return failure(authorization.Denied)
+		}
 		id, err := tx.Authorize(p.binding.Token, r.Task.Resource, "task.execute")
 		if err != nil {
 			return err
@@ -154,6 +157,9 @@ func (p *GenerationPort) Settle(ctx context.Context, q Qualification, u Generati
 // CheckDecision gates each actual request and publication using the reserved
 // decision version, live worker lease and current task control/authorization.
 func (p *GenerationPort) CheckDecision(ctx context.Context, q Qualification) error {
+	if e := p.checkChild(ctx, q.Ref); e != nil {
+		return e
+	}
 	return p.service.transaction(ctx, func(j *journal, tx authorization.RuntimeTransaction) error {
 		_, err := p.decision(j, tx, q)
 		return err
@@ -163,6 +169,9 @@ func (p *GenerationPort) decision(j *journal, tx authorization.RuntimeTransactio
 	r, ok := j.Runs[q.Ref.TaskID]
 	if !ok || q.Ref.Namespace != p.service.config.Namespace {
 		return RunSnapshot{}, failure(authorization.Denied)
+	}
+	if r.Parent != nil && p.service.childPolicy == nil {
+		return r, failure(authorization.Denied)
 	}
 	id, err := tx.Authorize(p.binding.Token, r.Task.Resource, "task.execute")
 	if err != nil {
@@ -196,6 +205,9 @@ func (p *GenerationPort) Current(ctx context.Context, ref Ref) (RunSnapshot, err
 // BeginRequest persists a single-use dispatch ordinal before leaving the process.
 // An unknown commit is never permission to dispatch. Replayed ordinals fail closed.
 func (p *GenerationPort) BeginRequest(ctx context.Context, q Qualification, ordinal uint32) error {
+	if e := p.checkChild(ctx, q.Ref); e != nil {
+		return e
+	}
 	return p.service.transaction(ctx, func(j *journal, tx authorization.RuntimeTransaction) error {
 		r, err := p.decision(j, tx, q)
 		if err != nil {

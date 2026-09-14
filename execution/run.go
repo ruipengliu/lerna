@@ -38,6 +38,9 @@ func (s *Service) Run(ctx context.Context, op string) (Record, error) {
 	if e = s.validate(data, s.cap.Input, s.config.MaxInput); e != nil {
 		return Record{}, e
 	}
+	if e = s.core.CheckExecution(bounded, r.Request.Qualification); e != nil {
+		return Record{}, e
+	}
 	if s.startGuard != nil {
 		// Context assembly has its own bounded work; it must neither inherit the
 		// spent content-read deadline nor consume the next transaction's IO time.

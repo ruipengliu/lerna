@@ -98,6 +98,7 @@ type RequestContent interface {
 	SaveFor(context.Context, string, Request, string, Capability, []byte, []byte) (string, error)
 }
 type Core interface {
+	CheckExecution(context.Context, tasks.Qualification) error
 	GuardExecution(authorization.RuntimeTransaction, tasks.Qualification, string, bool) error
 	ConsumeExecution(context.Context, tasks.ExecutionReport) error
 }

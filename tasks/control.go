@@ -118,6 +118,9 @@ func (c *ControlService) Request(ctx context.Context, token string, in ControlRe
 		if err = tx.Operation(in.OperationID, identity.Subject, false); err != nil {
 			return err
 		}
+		if delegationOperation(j, in.OperationID) {
+			return failure(authorization.IdentityConflict)
+		}
 		if _, exists := j.InputChanges[in.OperationID]; exists {
 			return failure(authorization.IdentityConflict)
 		}
@@ -204,8 +207,8 @@ func settleControl(r *RunSnapshot, tx authorization.RuntimeTransaction, token st
 	// Legacy RUNNING tasks with no recorded start boundary are conservatively
 	// treated as in flight until a source supplies disposition evidence.
 	inFlight := r.Work[0].InFlight || (r.Work[0].DecisionVersion == 0 && r.Work[0].Generation > 0 && t.State == "RUNNING")
-	if inFlight {
-		r.Work[0].InFlight = true
+	if inFlight || delegationPending(*r) {
+		r.Work[0].InFlight = inFlight
 		addWait(t, "reconciliation")
 		t.State = "WAITING"
 		t.Control.Progress = "ACCEPTED"

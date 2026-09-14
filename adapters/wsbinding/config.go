@@ -1,5 +1,5 @@
-// Package wsbinding binds read-only capability discovery and invocation views to
-// a bounded, authenticated edge/cloud WebSocket connection.
+// Package wsbinding binds capability discovery, invocation views and idempotent
+// child handoffs to a bounded, authenticated edge/cloud WebSocket connection.
 package wsbinding
 
 import (

@@ -11,6 +11,7 @@ import (
 	"lerna/execution"
 	wire "lerna/gen/harness/v1"
 	"lerna/internal/executionwire"
+	"lerna/tasks"
 )
 
 // Binding is installed by the trusted host for an exact peer certificate and
@@ -19,6 +20,7 @@ import (
 // allow hook. Domain services retain their own authorization and credentials.
 // All supplied services must honor context cancellation.
 type Binding struct {
+	Children      *tasks.ChildPort
 	Journal       *Journal
 	Authorization *authorization.OfflineView
 	// Retain checks permission and source policy for persisting this request,
@@ -33,6 +35,8 @@ type Resolve func(context.Context, authorization.GrantPresentation) (*Binding, e
 
 func method(r *wire.CapabilityRequest) string {
 	switch r.GetBody().(type) {
+	case *wire.CapabilityRequest_Delegation:
+		return "task.delegation.v1"
 	case *wire.CapabilityRequest_AuthorizationSync:
 		return "authorization.sync.v1"
 	case *wire.CapabilityRequest_List, *wire.CapabilityRequest_Search, *wire.CapabilityRequest_Describe:
@@ -65,6 +69,18 @@ func (b *Binding) query(ctx context.Context, p authorization.GrantPresentation, 
 			return nil, err
 		}
 		out = &wire.CapabilityResponse{Body: &wire.CapabilityResponse_Snapshot{Snapshot: executionwire.Snapshot(v)}}
+	} else if method(r) == "task.delegation.v1" {
+		if b.Children == nil {
+			return nil, failure(authorization.Unsupported)
+		}
+		if e := b.Children.MatchPeer(p); e != nil {
+			return nil, e
+		}
+		data, e := childQuery(ctx, b.Children, r.GetDelegation())
+		if e != nil {
+			return nil, e
+		}
+		out = &wire.CapabilityResponse{Body: &wire.CapabilityResponse_DelegationReply{DelegationReply: data}}
 	} else if method(r) == "authorization.sync.v1" {
 		if b.Authorization == nil {
 			return nil, failure(authorization.Unsupported)

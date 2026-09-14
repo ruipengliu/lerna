@@ -20,7 +20,7 @@ import (
 	"time"
 )
 
-var supported = []string{"catalog.read.v1", "invocation.read.v1", "progress.v1", "chunks.v1", "reliable.v1", "authorization.sync.v1"}
+var supported = []string{"catalog.read.v1", "invocation.read.v1", "progress.v1", "chunks.v1", "reliable.v1", "authorization.sync.v1", "task.delegation.v1"}
 
 const subprotocol = "harness.bootstrap.v1"
 

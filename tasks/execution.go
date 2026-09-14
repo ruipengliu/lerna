@@ -26,6 +26,9 @@ func (p *WorkPort) GuardExecution(tx authorization.RuntimeTransaction, q Qualifi
 		if !ok || q.Ref.Namespace != p.service.config.Namespace {
 			return failure(authorization.Denied)
 		}
+		if r.Parent != nil && p.service.childPolicy == nil {
+			return failure(authorization.Denied)
+		}
 		id, e := tx.Authorize(p.binding.Token, r.Task.Resource, "task.execute")
 		if e != nil {
 			return e
@@ -162,4 +165,10 @@ func (p *WorkPort) ConsumeExecutionIn(tx authorization.RuntimeTransaction, in Ex
 		j.Runs[q.Ref.TaskID] = r
 		return nil
 	})
+}
+
+// CheckExecution is required by the execution start path, even when the host
+// installs no optional context guard. Local transaction fencing still follows.
+func (p *WorkPort) CheckExecution(ctx context.Context, q Qualification) error {
+	return p.checkChild(ctx, q.Ref)
 }

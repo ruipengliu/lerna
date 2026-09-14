@@ -1,0 +1,45 @@
+{"Time":"2026-09-14T18:03:15.294801+08:00","Action":"start","Package":"lerna/profiles/asynccheck"}
+{"Time":"2026-09-14T18:03:16.255796+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T18:03:16.255925+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:23.169203+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"    ws_reliable_test.go:463: stale nonterminal snapshot \n","OutputType":"error"}
+{"Time":"2026-09-14T18:03:23.17534+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- FAIL: TestWSReliableNonterminalRecoveryKeepsUpdating (6.92s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:23.17536+08:00","Action":"fail","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":6.92}
+{"Time":"2026-09-14T18:03:23.175411+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T18:03:23.175426+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:26.196331+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- PASS: TestWSReliableNonterminalRecoveryKeepsUpdating (3.02s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:26.196386+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":3.02}
+{"Time":"2026-09-14T18:03:26.196432+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T18:03:26.196441+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:29.349827+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- PASS: TestWSReliableNonterminalRecoveryKeepsUpdating (3.15s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:29.349855+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":3.15}
+{"Time":"2026-09-14T18:03:29.349903+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T18:03:29.349913+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:32.467818+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- PASS: TestWSReliableNonterminalRecoveryKeepsUpdating (3.12s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:32.467849+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":3.12}
+{"Time":"2026-09-14T18:03:32.4679+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T18:03:32.467912+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:35.466161+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- PASS: TestWSReliableNonterminalRecoveryKeepsUpdating (3.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:35.466206+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":3}
+{"Time":"2026-09-14T18:03:35.466236+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T18:03:35.466267+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:38.557474+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- PASS: TestWSReliableNonterminalRecoveryKeepsUpdating (3.09s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:38.557496+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":3.09}
+{"Time":"2026-09-14T18:03:38.557548+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T18:03:38.557554+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:41.699561+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- PASS: TestWSReliableNonterminalRecoveryKeepsUpdating (3.14s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:41.699586+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":3.14}
+{"Time":"2026-09-14T18:03:41.699635+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T18:03:41.699654+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:44.695596+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- PASS: TestWSReliableNonterminalRecoveryKeepsUpdating (3.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:44.695627+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":3}
+{"Time":"2026-09-14T18:03:44.695663+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T18:03:44.695669+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:47.861679+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- PASS: TestWSReliableNonterminalRecoveryKeepsUpdating (3.17s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:47.861704+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":3.17}
+{"Time":"2026-09-14T18:03:47.861747+08:00","Action":"run","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating"}
+{"Time":"2026-09-14T18:03:47.861752+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"=== RUN   TestWSReliableNonterminalRecoveryKeepsUpdating\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:50.634092+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Output":"--- PASS: TestWSReliableNonterminalRecoveryKeepsUpdating (2.77s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:50.63413+08:00","Action":"pass","Package":"lerna/profiles/asynccheck","Test":"TestWSReliableNonterminalRecoveryKeepsUpdating","Elapsed":2.77}
+{"Time":"2026-09-14T18:03:50.634139+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"FAIL\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:50.637051+08:00","Action":"output","Package":"lerna/profiles/asynccheck","Output":"FAIL\tlerna/profiles/asynccheck\t35.342s\n","OutputType":"frame"}
+{"Time":"2026-09-14T18:03:50.637074+08:00","Action":"fail","Package":"lerna/profiles/asynccheck","Elapsed":35.342}
