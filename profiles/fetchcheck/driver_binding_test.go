@@ -3,8 +3,8 @@ package fetchcheck
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/acquisitionexecution"
-	"lerna/adapters/fetchtask"
+	acquisitionexecution "lerna/adapters/research/execution"
+	fetchtask "lerna/adapters/research/taskguard"
 	"lerna/execution"
 	"lerna/fetch"
 	"net/http"

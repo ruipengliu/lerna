@@ -2,7 +2,7 @@ package fetchcheck
 
 import (
 	"context"
-	"lerna/adapters/taskcontent"
+	taskcontent "lerna/adapters/tasks/content"
 	"lerna/answers"
 	"lerna/artifacts"
 	"lerna/fetch"

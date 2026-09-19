@@ -2,11 +2,11 @@ package fetchcheck
 
 import (
 	"context"
-	"lerna/adapters/acquisitionexecution"
-	"lerna/adapters/executionlocal"
-	"lerna/adapters/fetchtask"
-	"lerna/adapters/jsonsearch"
-	"lerna/adapters/searchprivacy"
+	executionlocal "lerna/adapters/execution/local"
+	acquisitionexecution "lerna/adapters/research/execution"
+	"lerna/adapters/research/jsonsearch"
+	"lerna/adapters/research/searchprivacy"
+	fetchtask "lerna/adapters/research/taskguard"
 	"lerna/artifacts"
 	"lerna/execution"
 	"lerna/schema"

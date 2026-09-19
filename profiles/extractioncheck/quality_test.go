@@ -3,7 +3,7 @@ package extractioncheck_test
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/localextraction"
+	localextraction "lerna/adapters/extraction/rules"
 	"lerna/profiles/extractioncheck"
 	"testing"
 )

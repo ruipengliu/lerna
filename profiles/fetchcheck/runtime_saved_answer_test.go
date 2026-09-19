@@ -3,7 +3,7 @@ package fetchcheck
 import (
 	"context"
 	"fmt"
-	"lerna/adapters/contentpolicy"
+	contentpolicy "lerna/adapters/content/policy"
 	"lerna/artifacts"
 	"lerna/brain"
 	wire "lerna/gen/harness/v1"

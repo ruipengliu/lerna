@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"lerna/adapters/grpcbinding"
+	grpcbinding "lerna/adapters/transport/grpc"
 	"lerna/authorization"
 	"lerna/execution"
 	wire "lerna/gen/harness/v1"

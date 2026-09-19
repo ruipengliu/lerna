@@ -3,7 +3,7 @@ package fetchcheck
 import (
 	"context"
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/jsonsearch"
+	"lerna/adapters/research/jsonsearch"
 	"lerna/authorization"
 	"lerna/fetch"
 	wire "lerna/gen/harness/v1"

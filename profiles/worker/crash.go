@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"lerna/adapters/sqliteauth"
+	sqliteauth "lerna/adapters/authorization/sqlite"
 	"lerna/authorization"
 	"lerna/tasks"
 	"os"

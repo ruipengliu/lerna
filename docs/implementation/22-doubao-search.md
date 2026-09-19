@@ -31,7 +31,7 @@
 
 ## 正式任务装配增量
 
-上述“正式装配待办”记录初始检查点。现在 `adapters/doubaosearch` 已实现消费方 `websearch.Searcher`，`RuntimeConfig.SearchFormat="doubao"` 选择该提供方；SearchEndpoint 使用上述端点，URLs 必须显式允许该 POST 端点及候选页面，Networks 仍独立约束实际连接地址。SearchMaxBytes 应显式配置，例如 65536；不是默认扩大所有任务预算。SearchRecipient 与 DiscloseTo 必须反映已授权的实际处理位置，不从模型或网页获取授权。
+上述“正式装配待办”记录初始检查点。现在 `adapters/research/doubaosearch` 已实现消费方 `websearch.Searcher`，`RuntimeConfig.SearchFormat="doubao"` 选择该提供方；SearchEndpoint 使用上述端点，URLs 必须显式允许该 POST 端点及候选页面，Networks 仍独立约束实际连接地址。SearchMaxBytes 应显式配置，例如 65536；不是默认扩大所有任务预算。SearchRecipient 与 DiscloseTo 必须反映已授权的实际处理位置，不从模型或网页获取授权。
 
 `RunResearch(ctx, root, cfg, model, credential)` 可传入 `SearchCredential` 函数；该函数由可信宿主读取本地搜索密钥，不进入 RuntimeConfig、持久清单或任务参数。`ResumeResearch(ctx, root, model, credential)` 对需要继续行动的任务重新提供凭证；已发布答案查询无需搜索凭证。库不读取 `.env`，调用方负责凭证配置。
 

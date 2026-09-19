@@ -4,7 +4,7 @@ import (
 	"context"
 	_ "embed"
 	"fmt"
-	"lerna/adapters/tasklocal"
+	tasklocal "lerna/adapters/tasks/local"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"
 	"lerna/sdk"

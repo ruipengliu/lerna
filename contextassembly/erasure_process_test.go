@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"lerna/adapters/memorycleanup"
-	"lerna/adapters/sqlitecontext"
+	sqlitecontext "lerna/adapters/context/sqlite"
+	memorycleanup "lerna/adapters/memory/cleanup"
 	"lerna/contextassembly"
 	"lerna/memory"
 )

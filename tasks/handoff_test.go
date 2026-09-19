@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/ed25519"
 	"crypto/rand"
-	"lerna/adapters/sqliteauth"
+	sqliteauth "lerna/adapters/authorization/sqlite"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"
 	"lerna/tasks"

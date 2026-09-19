@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/contextpolicy"
-	"lerna/adapters/sqlitecontext"
+	contextpolicy "lerna/adapters/context/policy"
+	sqlitecontext "lerna/adapters/context/sqlite"
 	"lerna/authorization"
 	"lerna/contextassembly"
 	wire "lerna/gen/harness/v1"

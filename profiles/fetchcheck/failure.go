@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"lerna/adapters/researchcontext"
+	researchcontext "lerna/adapters/research/context"
 	"lerna/brain"
 	"net/http"
 	"net/http/httptest"

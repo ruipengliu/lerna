@@ -6,9 +6,9 @@
 
 下文保留各阶段的原名称；当前代码入口已收拢：
 
-- `fetchexecution`、`searchexecution` 合入 [acquisitionexecution](../../adapters/acquisitionexecution/driver.go)，分别使用 `NewPage`、`NewSearch`，共享身份核对与结果恢复映射。搜索的披露检查和两类输入解析分别保留。
-- `fetchcontext`、`searchcontext` 合入 [researchcontext](../../adapters/researchcontext/context.go)，使用 `NewPages`、`NewPagesWithFailures`、`NewSearch` 或组合入口 `New`。各证据角色、读取次数及分组末尾复查保持。
-- `fetchqueries`、`fetchoutput`、`searchprivacy` 通过 [taskcontent.BindExecution](../../adapters/taskcontent/execution.go) 绑定原操作的查询预算；Core 继续判断权限、恢复资格和剩余额度。
+- `fetchexecution`、`searchexecution` 合入 [acquisitionexecution](../../adapters/research/execution/driver.go)，分别使用 `NewPage`、`NewSearch`，共享身份核对与结果恢复映射。搜索的披露检查和两类输入解析分别保留。
+- `fetchcontext`、`searchcontext` 合入 [researchcontext](../../adapters/research/context/context.go)，使用 `NewPages`、`NewPagesWithFailures`、`NewSearch` 或组合入口 `New`。各证据角色、读取次数及分组末尾复查保持。
+- `fetchqueries`、`fetchoutput`、`searchprivacy` 通过 [taskcontent.BindExecution](../../adapters/tasks/content/execution.go) 绑定原操作的查询预算；Core 继续判断权限、恢复资格和剩余额度。
 
 ## 当前实现约束
 
@@ -52,7 +52,7 @@ Ark Adapter 新增显式证据答案 Schema 与系统提示，包含四类状态
 
 新增本地真实 HTTP 服务测试，以明确的测试 transport 将固定端点路由到 loopback，使用 test-only 凭证，不读取 .env。测试先得到 MODEL_CONTRACT_UNSUPPORTED；接入后核对实际发送的合同名称、strict Schema、输出上限及响应用量。服务返回的不足答案通过专项校验；1025 输出 token 和未知合同都不会到达服务。
 
-`go test -race ./adapters/arkmodel ./brain` 通过（1.060/1.031 秒），`go vet ./adapters/arkmodel` 通过。该证据不代表火山远端已接受新 Schema，也不代表真实模型语义支持率；正式远端兼容性与质量仍待有界真实验收。无需为本地合同接入更新模型版本或声称新增供应商能力。
+`go test -race ./adapters/model/ark ./brain` 通过（1.060/1.031 秒），`go vet ./adapters/model/ark` 通过。该证据不代表火山远端已接受新 Schema，也不代表真实模型语义支持率；正式远端兼容性与质量仍待有界真实验收。无需为本地合同接入更新模型版本或声称新增供应商能力。
 
 ## 已实现：可替换搜索发现接口
 
@@ -358,7 +358,7 @@ TDD 起初缺少回放入口及快照字段编译失败，实现后四类回放�
 
 单页失败的已知运行计数相应为行动2+答案2=4次账本读取，总查询40；三种部分失败及新增计费用例单次通过（8.782 秒）。CLI 四类实测通过，总查询35/35/49/40、Outcome4/4/6/4，报告在 `evidence/22-answer-outcome-budget/`。原 64 条上限未提高，协议输出不代表语义质量通过。行动内部其他 Content 读取与最终计量审计等剩余工作保持。
 
-`go test -race ./adapters/sqlitefetch ./profiles/fetchcheck -run 'Test(KnownFetchOutcome|ResearchAcceptsReplaceable|ResearchReplacement|ResearchAnswer|FrozenResearch|OneTask)' -count=1` 通过（sqlitefetch 1.099 秒、fetchcheck 109.752 秒），覆盖不可替换结果、答案计费、部分失败、HTTP/回放/存储重开及原单任务路径；相关 vet/diff 检查通过。先前单页拒绝异常本次未复现，未据此声称根因已解决。22 票仍 in-progress，未运行最终全仓验收。
+`go test -race ./adapters/research/sqlite ./profiles/fetchcheck -run 'Test(KnownFetchOutcome|ResearchAcceptsReplaceable|ResearchReplacement|ResearchAnswer|FrozenResearch|OneTask)' -count=1` 通过（sqlitefetch 1.099 秒、fetchcheck 109.752 秒），覆盖不可替换结果、答案计费、部分失败、HTTP/回放/存储重开及原单任务路径；相关 vet/diff 检查通过。先前单页拒绝异常本次未复现，未据此声称根因已解决。22 票仍 in-progress，未运行最终全仓验收。
 
 ## 行动规划的搜索候选 Content 读取计费
 

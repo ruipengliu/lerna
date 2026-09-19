@@ -2,8 +2,8 @@ package content
 
 import (
 	"context"
-	"lerna/adapters/contentlocal"
-	"lerna/adapters/contentpolicy"
+	contentlocal "lerna/adapters/content/local"
+	contentpolicy "lerna/adapters/content/policy"
 	"lerna/artifacts"
 	wire "lerna/gen/harness/v1"
 	"lerna/sdk"

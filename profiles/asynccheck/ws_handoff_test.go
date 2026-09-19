@@ -5,7 +5,7 @@ import (
 	"crypto/ed25519"
 	"crypto/rand"
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/wsbinding"
+	wsbinding "lerna/adapters/transport/ws"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"
 	"lerna/tasks"

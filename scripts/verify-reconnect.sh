@@ -23,7 +23,7 @@ stage generated_diff diff -r "$reconnect_generated" gen/harness/v1 >> build/reco
 rm -r "$reconnect_generated"
 stage build go build -mod=readonly ./... > build/reconnect/build.log 2>&1
 stage analysis go vet -mod=readonly ./... > build/reconnect/analysis.log 2>&1
-stage reconnect go test -mod=readonly -p 1 -race -count=1 -timeout=3m ./authorization ./adapters/wsbinding ./profiles/asynccheck -run 'Test(Delivery|Reliable|WSReliable)' -json > build/reconnect/reconnect.jsonl 2> build/reconnect/reconnect.stderr
-stage regression go test -mod=readonly -p 1 -race -count=1 -timeout=10m ./authorization ./tasks ./execution ./sdk ./protocol ./schema ./adapters/nodetls ./adapters/sqliteauth ./adapters/wsbinding ./adapters/grpcbinding ./profiles/sdkcontract ./profiles/executioncheck ./profiles/asynccheck -json > build/reconnect/regression.jsonl 2> build/reconnect/regression.stderr
+stage reconnect go test -mod=readonly -p 1 -race -count=1 -timeout=3m ./authorization ./adapters/transport/ws ./profiles/asynccheck -run 'Test(Delivery|Reliable|WSReliable)' -json > build/reconnect/reconnect.jsonl 2> build/reconnect/reconnect.stderr
+stage regression go test -mod=readonly -p 1 -race -count=1 -timeout=10m ./authorization ./tasks ./execution ./sdk ./protocol ./schema ./adapters/transport/nodetls ./adapters/authorization/sqlite ./adapters/transport/ws ./adapters/transport/grpc ./profiles/sdkcontract ./profiles/executioncheck ./profiles/asynccheck -json > build/reconnect/regression.jsonl 2> build/reconnect/regression.stderr
 printf ',"exit_code":%s}\n' "$result" >> build/reconnect/status.json
 exit "$result"

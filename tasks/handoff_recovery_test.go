@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/ed25519"
 	"encoding/json"
-	"lerna/adapters/sqliteauth"
+	sqliteauth "lerna/adapters/authorization/sqlite"
 	"lerna/authorization"
 	"lerna/tasks"
 	"os"

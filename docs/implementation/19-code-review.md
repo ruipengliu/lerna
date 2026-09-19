@@ -6,7 +6,7 @@
 
 初次审查未发现违反 AGENTS.md、其引用规范或 CONTEXT.md 的明确硬违规。以下均为判断性维护建议，最高 P3：
 
-- **可能的 Duplicated Code**：`adapters/sqlitecontext/invalidation.go` 与 `retirement.go` 重复维护退役身份、清空主体/比较/正文和删除 checkpoint pin；建议共用私有事务函数。已提取 `retireSnapshot`，各入口保留容量检查、来源水位和提交责任；真实 SQLiteContext/MemoryCleanup 完整 race 通过。
+- **可能的 Duplicated Code**：`adapters/context/sqlite/invalidation.go` 与 `retirement.go` 重复维护退役身份、清空主体/比较/正文和删除 checkpoint pin；建议共用私有事务函数。已提取 `retireSnapshot`，各入口保留容量检查、来源水位和提交责任；真实 SQLiteContext/MemoryCleanup 完整 race 通过。
 - **可能的 Refused Bequest**：恢复视图为适配既有 QueryStore，提供三个恒返回 Quarantined 的写入/操作历史方法。建议拆分 Reader 所需接口。此项暂不扩展公共构造接口：当前 Reader 构造仍依赖 Service/QueryStore，而恢复视图明确关闭修改权威，SDK 真实测试已验证。保留这一 P3 接口改进建议，不把它描述为硬违规或数据权限缺陷。
 
 ## Spec

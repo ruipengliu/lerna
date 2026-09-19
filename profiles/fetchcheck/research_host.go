@@ -3,7 +3,7 @@ package fetchcheck
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/taskcontent"
+	taskcontent "lerna/adapters/tasks/content"
 	"lerna/authorization"
 	"lerna/brain"
 	"lerna/catalog"

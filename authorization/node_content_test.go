@@ -2,8 +2,8 @@ package authorization_test
 
 import (
 	"context"
-	"lerna/adapters/contentpolicy"
-	"lerna/adapters/filecontent"
+	filecontent "lerna/adapters/content/file"
+	contentpolicy "lerna/adapters/content/policy"
 	"lerna/artifacts"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"

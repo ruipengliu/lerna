@@ -2,8 +2,8 @@ package extractioncheck
 
 import (
 	"context"
-	"lerna/adapters/memoryauth"
-	"lerna/adapters/sqlitememory"
+	memoryauth "lerna/adapters/memory/auth"
+	sqlitememory "lerna/adapters/memory/sqlite"
 	"lerna/execution"
 	"lerna/extraction"
 	"lerna/memory"

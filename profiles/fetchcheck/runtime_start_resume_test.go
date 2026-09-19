@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"lerna/adapters/sqlitecatalog"
+	sqlitecatalog "lerna/adapters/catalog/sqlite"
 	"lerna/catalog"
 	"lerna/execution"
 	wire "lerna/gen/harness/v1"

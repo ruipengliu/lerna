@@ -15,8 +15,8 @@ Read 只读精确修订，缺失不以最新值替代。ReadChanges 按集合位
 第一个公开 Store 测试在 Memory 包不存在时失败，实施后通过。真实 SQLite 关闭重开验证记录、回执、变更位置和重复操作一致；双连接竞争纠正验证恰好一次成功、另一方版本冲突、历史修订可精确读取、缺失修订明确不可用、原身份改义拒绝、失败纠正无回执。
 
 ```sh
-go test -race ./memory ./adapters/sqlitememory
-go vet ./memory ./adapters/sqlitememory
+go test -race ./memory ./adapters/memory/sqlite
+go vet ./memory ./adapters/memory/sqlite
 ```
 
 以上定向命令通过，日志为 build/17-store-red.log、17-store-green.log、17-store-concurrency.log 和 17-store-vet.log。未运行本票完整 make verify，不用 16 票的旧全量证据宣称本候选通过。
@@ -82,7 +82,7 @@ response, err := client.Exchange(ctx, &wire.MemoryRequest{
 operationID 使用当前授权端 NewOperation 取得；QUERY/GET 另提供与 DescribeQuery/DescribeGet 摘要匹配的真实签名材料，不能把描述接口当授权。既有授权 SDK 可负责签发。可重复运行的完整 SDK 集成入口：
 
 ```sh
-go test -race ./adapters/memoryauth -run TestCurrentHarnessPolicyAndResidencyConstrainMemory -count=1 -v
+go test -race ./adapters/memory/auth -run TestCurrentHarnessPolicyAndResidencyConstrainMemory -count=1 -v
 go test -race ./sdk -run TestMemoryClient -count=1 -v
 ```
 

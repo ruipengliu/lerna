@@ -6,7 +6,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"lerna/adapters/contentpolicy"
+	contentpolicy "lerna/adapters/content/policy"
 	"lerna/authorization"
 	"lerna/brain"
 	"lerna/catalog"

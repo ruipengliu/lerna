@@ -5,7 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"lerna/adapters/simworkflow"
+	"lerna/adapters/execution/simworkflow"
 	"lerna/conformance"
 	"sync"
 )

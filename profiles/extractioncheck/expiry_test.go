@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"lerna/adapters/executionlocal"
-	"lerna/adapters/extractionexecution"
+	executionlocal "lerna/adapters/execution/local"
+	extractionexecution "lerna/adapters/extraction/execution"
 	"lerna/extraction"
 	"lerna/memory"
 	"lerna/sdk"

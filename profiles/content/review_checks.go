@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/contentlocal"
+	contentlocal "lerna/adapters/content/local"
 	"lerna/artifacts"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"

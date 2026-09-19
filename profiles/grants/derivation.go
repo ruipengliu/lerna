@@ -7,7 +7,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/josegrant"
+	"lerna/adapters/authorization/josegrant"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"
 	"sync"

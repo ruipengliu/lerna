@@ -6,7 +6,7 @@ import (
 	_ "embed"
 	"encoding/gob"
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/authlocal"
+	authlocal "lerna/adapters/authorization/local"
 	"lerna/authorization"
 	"lerna/sdk"
 	"strings"

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/extractionauth"
+	extractionauth "lerna/adapters/extraction/auth"
 	"lerna/authorization"
 	"lerna/extraction"
 	wire "lerna/gen/harness/v1"

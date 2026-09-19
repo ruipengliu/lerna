@@ -4,7 +4,7 @@
 
 ## 实现边界
 
-`adapters/duckduckgo` 实现 `websearch.Searcher`，通过注入的 `fetch.Fetcher` 执行有界请求，沿用传输层的授权与网络计量。只解析首个响应中的自然结果，输出标题、摘要、目标 URL；摘要不能替代后续页面获取的正文证据。支持 DuckDuckGo 跳转链接的目标解码，页面目标仍须单独获得获取授权。
+`adapters/research/duckduckgo` 实现 `websearch.Searcher`，通过注入的 `fetch.Fetcher` 执行有界请求，沿用传输层的授权与网络计量。只解析首个响应中的自然结果，输出标题、摘要、目标 URL；摘要不能替代后续页面获取的正文证据。支持 DuckDuckGo 跳转链接的目标解码，页面目标仍须单独获得获取授权。
 
 原始 HTML 通过已有 acquisition / Content 链路保存，恢复读取重新执行相同解析，不重新联网。EvidenceReader 的结果数量必须由装配方使用原已接受请求的 MaxResults 传入。未知 HTML、验证码与明确空结果分开处理；没有验证码求解、隐藏重试或切换入口的行为。
 
@@ -13,7 +13,7 @@
 - 真实本地 HTTP、授权、SQLite 和 Content 组件验证：首屏结果解析、原始 HTML 保留、恢复不重复搜索、撤权后禁止读取。
 - 合成 HTML 验证：明确空结果、200 验证码页面、202 验证码响应、未知页面、不安全链接。不是公网成功样本。
 - `go test -race ./profiles/fetchcheck -run '^Test(DuckDuckGo|JSONSearch|SearchRecoversAcrossActualProcessExit)' -count=1` 通过，耗时 6.376 秒。
-- `go vet ./adapters/duckduckgo ./profiles/fetchcheck` 通过。
+- `go vet ./adapters/research/duckduckgo ./profiles/fetchcheck` 通过。
 - 相对 `3215e50` 的 Standards / Spec 双轴增量审查均无可操作发现；这不是整票最终审查。
 
 本环境曾对上述公网入口发出一次公开查询诊断，返回 HTTP 202、14,260 字节 HTML，包含验证页面且没有结果链接。该诊断使用独立 HTTP 客户端，并非受控运行时验收；未保存挑战令牌到仓库。公网正向验收尚未通过。
@@ -46,6 +46,6 @@ CLI 新增 `-search-format duckduckgo-html`，仅对 reference-v2 生效，v1 �
 - CLI 全包 race 通过（24.712 秒）；相关包 go vet 通过。
 - 实际执行 `go run ./cmd/searchcheck -profile reference-loopback-v2 -search-format duckduckgo-html -case all` 退出 0，结果见 [完整参考报告](evidence/22-duckduckgo-reference/loopback.json)。SearchFormat 为 duckduckgo-html，Mode 为 loopback-http，SemanticQuality 为 not_evaluated。
 - 相对 `33ce238` 的 Standards / Spec 增量审查及回放修复复查均无可操作发现。
-- `go test -race -timeout=15m ./profiles/fetchcheck ./adapters/replayfetch -count=1` 最终通过：fetchcheck 全包 230.901 秒，replayfetch 无独立测试文件，其行为通过 fetchcheck 集成用例验证。这不等同全仓 make verify。
+- `go test -race -timeout=15m ./profiles/fetchcheck ./adapters/research/replayfetch -count=1` 最终通过：fetchcheck 全包 230.901 秒，replayfetch 无独立测试文件，其行为通过 fetchcheck 集成用例验证。这不等同全仓 make verify。
 
 剩余范围：真正公网入口和动态候选授权的运行装配、实际模型与独立语义评价、全仓验证及 22 票最终审查。本次是完整参考任务链路通过，仍不是公网问答已验收。

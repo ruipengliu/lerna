@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/sqliteauth"
+	sqliteauth "lerna/adapters/authorization/sqlite"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"
 )

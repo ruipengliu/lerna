@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"lerna/adapters/memorylocal"
-	"lerna/adapters/recoveryproof"
-	"lerna/adapters/sqlitememory"
+	memorylocal "lerna/adapters/memory/local"
+	"lerna/adapters/memory/recoveryproof"
+	sqlitememory "lerna/adapters/memory/sqlite"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"
 	"lerna/memory"

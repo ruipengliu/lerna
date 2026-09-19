@@ -3,7 +3,7 @@ package asynccheck
 import (
 	"bytes"
 	"context"
-	"lerna/adapters/wsbinding"
+	wsbinding "lerna/adapters/transport/ws"
 	"lerna/authorization"
 	"lerna/sdk"
 	"net"

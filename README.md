@@ -2,6 +2,8 @@
 
 面向通用 Agent 的端云 Harness。架构、能力目标及后续实施任务见 [架构入口](docs/architecture/README.md) 和 [实施票据](.scratch/harness-implementation/README.md)。
 
+具体实现按领域组织，目录归属与导入约定见 [Adapter 目录](adapters/README.md)。
+
 ## 架构设计
 
 内核管理持久任务，大脑提交有限提案，记忆提供受控上下文，执行返回可核对事实。以下六张图整理已确认的设计职责与目标，不表示所有模块均已实现或验收通过；实际实现进展见下方指南与实施报告。

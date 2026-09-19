@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"lerna/adapters/simworkflow"
-	"lerna/adapters/sqlitecatalog"
+	sqlitecatalog "lerna/adapters/catalog/sqlite"
+	"lerna/adapters/execution/simworkflow"
 	"lerna/authorization"
 	"lerna/catalog"
 	"lerna/execution"

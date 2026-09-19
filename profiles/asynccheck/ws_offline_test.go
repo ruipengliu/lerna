@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"lerna/adapters/josegrant"
-	"lerna/adapters/wsbinding"
+	"lerna/adapters/authorization/josegrant"
+	wsbinding "lerna/adapters/transport/ws"
 	"lerna/authorization"
 	"lerna/execution"
 	wire "lerna/gen/harness/v1"

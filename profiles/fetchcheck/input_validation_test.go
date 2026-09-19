@@ -3,7 +3,7 @@ package fetchcheck
 import (
 	"context"
 	"fmt"
-	"lerna/adapters/contentpolicy"
+	contentpolicy "lerna/adapters/content/policy"
 	"lerna/brain"
 	"net/http"
 	"net/http/httptest"

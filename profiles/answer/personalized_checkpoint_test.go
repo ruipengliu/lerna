@@ -6,7 +6,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"errors"
-	"lerna/adapters/sqlitecontext"
+	sqlitecontext "lerna/adapters/context/sqlite"
 	"lerna/brain"
 	"lerna/contextassembly"
 	"lerna/memory"

@@ -56,7 +56,7 @@
 
 ## Implementation checkpoint
 
-2026-09-11：已实现 Broker 的管理保存、精确 Driver 绑定、受限使用结果、AAD 校验和单记录重包裹接口；独立文件 KeySource 先落盘预留 nonce，用量有界，保留旧密钥。参考文件 Adapter 目前仅 Linux 提供实现，其他平台明确拒绝，可替换 KeySource。`go test -race ./credentials ./adapters/filekeys` 通过；首次受信出口测试从不存在的接口开始失败，随后实现通过。
+2026-09-11：已实现 Broker 的管理保存、精确 Driver 绑定、受限使用结果、AAD 校验和单记录重包裹接口；独立文件 KeySource 先落盘预留 nonce，用量有界，保留旧密钥。参考文件 Adapter 目前仅 Linux 提供实现，其他平台明确拒绝，可替换 KeySource。`go test -race ./credentials ./adapters/credentials/filekeys` 通过；首次受信出口测试从不存在的接口开始失败，随后实现通过。
 
 这是未完成检查点，不是本票验收：还需真实 SQLite Store、Harness Authorization 接入、固定 HTTP 目标出口和实际独立效果验证、受信管理 CLI、命名 profile、进程中断/密文替换/秘密出口完整反例、全量回归和独立双轴审查。核心测试暂用 Store/Authority 接口替身，不能代替这些剩余证据。凭证数据库回滚、密钥文件恢复边界及轮换恢复须在最终文档明确说明。
 

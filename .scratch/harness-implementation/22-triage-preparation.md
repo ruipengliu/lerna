@@ -27,6 +27,6 @@
 
 - 原票：issues/22-search.md；共享约束：spec.md。
 - 架构：docs/architecture/00-design-constraints.md、07-tools-and-simulated-devices.md、10-evaluation-contracts-and-release-gates.md、11-specialized-validation-and-handoff.md、11-milestones-and-validation.md。
-- 当前实现：brain/answer.go、answers/content.go、adapters/fetchcontext/context.go、adapters/fetchoutput/failures.go、profiles/fetchcheck。
+- 当前实现：brain/answer.go、answers/content.go、adapters/fetchcontext/context.go、adapters/research/output/failures.go、profiles/fetchcheck。
 
 预备分类建议为 enhancement；待 21 的依赖状态核实后，按既有持续授权补齐可测试的 Agent Brief 和正式状态转换。

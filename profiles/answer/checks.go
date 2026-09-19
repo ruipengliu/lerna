@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"lerna/adapters/contentpolicy"
+	contentpolicy "lerna/adapters/content/policy"
 	"lerna/answers"
 	"lerna/artifacts"
 	"lerna/brain"

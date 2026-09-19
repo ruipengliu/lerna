@@ -3,7 +3,7 @@ package authorization_test
 import (
 	"context"
 	"errors"
-	"lerna/adapters/sqliteauth"
+	sqliteauth "lerna/adapters/authorization/sqlite"
 	"lerna/authorization"
 	"path/filepath"
 	"testing"

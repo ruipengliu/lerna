@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"lerna/adapters/sqlitecontext"
+	sqlitecontext "lerna/adapters/context/sqlite"
 	"lerna/contextassembly"
 	"os"
 	"os/exec"

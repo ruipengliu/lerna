@@ -23,8 +23,8 @@ stage generated_diff diff -r "$handoff_generated" gen/harness/v1 >> build/handof
 rm -r "$handoff_generated"
 stage build go build -mod=readonly ./... > build/handoff/build.log 2>&1
 stage analysis go vet -mod=readonly ./... > build/handoff/analysis.log 2>&1
-stage handoff go test -mod=readonly -p 1 -race -count=1 -timeout=3m ./tasks ./brain ./adapters/wsbinding ./profiles/asynccheck -run 'Test(Handoff|WSHandoff)' -json > build/handoff/handoff.jsonl 2> build/handoff/handoff.stderr
-stage regression go test -mod=readonly -p 1 -race -count=1 -timeout=10m ./authorization ./tasks ./brain ./execution ./sdk ./protocol ./schema ./adapters/nodetls ./adapters/josegrant ./adapters/sqliteauth ./adapters/wsbinding ./adapters/grpcbinding ./profiles/sdkcontract ./profiles/executioncheck ./profiles/asynccheck -json > build/handoff/regression.jsonl 2> build/handoff/regression.stderr
+stage handoff go test -mod=readonly -p 1 -race -count=1 -timeout=3m ./tasks ./brain ./adapters/transport/ws ./profiles/asynccheck -run 'Test(Handoff|WSHandoff)' -json > build/handoff/handoff.jsonl 2> build/handoff/handoff.stderr
+stage regression go test -mod=readonly -p 1 -race -count=1 -timeout=10m ./authorization ./tasks ./brain ./execution ./sdk ./protocol ./schema ./adapters/transport/nodetls ./adapters/authorization/josegrant ./adapters/authorization/sqlite ./adapters/transport/ws ./adapters/transport/grpc ./profiles/sdkcontract ./profiles/executioncheck ./profiles/asynccheck -json > build/handoff/regression.jsonl 2> build/handoff/regression.stderr
 # Answer-profile failures predate this ticket. Compare the exact failing test
 # identities against the frozen pre-change commit; retain both raw failed runs.
 answer_compatibility() {

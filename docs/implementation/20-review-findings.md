@@ -6,8 +6,8 @@
 
 无明确文档规范违例。两项 Duplicated Code 启发式发现：
 
-1. `adapters/extractionexecution/trigger.go` 重复 `input.go` 的来源 JSON、字段、修订和重复来源校验，且空 kind/key 检查不一致。触发入口应复用 `sourceInput`，保留自身的登记范围、事件及来源屏障检查。
-2. `adapters/sqliteextraction/{expiry,invalidation,retirement}.go` 重复保存原操作事实、清除候选正文和缩减保存意图的原子转换。应提取使用现有事务的退役函数，各入口继续负责筛选、身份和容量检查。
+1. `adapters/extraction/execution/trigger.go` 重复 `input.go` 的来源 JSON、字段、修订和重复来源校验，且空 kind/key 检查不一致。触发入口应复用 `sourceInput`，保留自身的登记范围、事件及来源屏障检查。
+2. `adapters/extraction/sqlite/{expiry,invalidation,retirement}.go` 重复保存原操作事实、清除候选正文和缩减保存意图的原子转换。应提取使用现有事务的退役函数，各入口继续负责筛选、身份和容量检查。
 
 共 2 项启发式发现，现均关闭。触发入口已复用 sourceInput；退役转换已共用原事务内 helper，原写锁、主体筛选和容量检查保持。三个相关包 race 全套与 vet 通过，见 evidence/20-review-refactor-regression.log。原规范审查者限定复核无新增发现。
 

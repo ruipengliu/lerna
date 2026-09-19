@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/contentpolicy"
+	contentpolicy "lerna/adapters/content/policy"
 	"lerna/answers"
 	"lerna/brain"
 	wire "lerna/gen/harness/v1"

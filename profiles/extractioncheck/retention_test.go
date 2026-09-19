@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"google.golang.org/protobuf/encoding/protojson"
-	"lerna/adapters/executionlocal"
-	"lerna/adapters/extractionexecution"
+	executionlocal "lerna/adapters/execution/local"
+	extractionexecution "lerna/adapters/extraction/execution"
 	"lerna/execution"
 	wire "lerna/gen/harness/v1"
 	"lerna/memory"

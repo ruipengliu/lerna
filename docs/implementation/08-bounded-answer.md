@@ -51,7 +51,7 @@
 ## 可重复验证
 
 ```sh
-go test ./tasks ./profiles/answer ./adapters/arkmodel
+go test ./tasks ./profiles/answer ./adapters/model/ark
 go build -o build/contractcheck ./cmd/contractcheck
 ./build/contractcheck -profile bounded-answer-v1
 make verify

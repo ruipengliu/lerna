@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"google.golang.org/protobuf/proto"
 	"io"
-	"lerna/adapters/wsbinding"
+	wsbinding "lerna/adapters/transport/ws"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"
 	"lerna/internal/executionwire"

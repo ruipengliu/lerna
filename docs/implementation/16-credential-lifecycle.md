@@ -57,8 +57,8 @@ credentialctl renewal-step -config /private/config.json -operation renewal-1
 测试接口已在 Agent Brief 固定。Prepare、Activate 与 Lifecycle 起初不存在，相应测试编译失败后实现通过。当前定向命令：
 
 ```sh
-go test -race ./credentials ./adapters/credentialhttp ./adapters/credentialbackups ./adapters/filekeys ./adapters/sqlitecredentials ./profiles/credentialcheck ./cmd/credentialctl
-go vet ./credentials ./adapters/credentialhttp ./adapters/credentialbackups ./adapters/filekeys ./adapters/sqlitecredentials ./profiles/credentialcheck ./cmd/credentialctl
+go test -race ./credentials ./adapters/credentials/http ./adapters/credentials/backups ./adapters/credentials/filekeys ./adapters/credentials/sqlite ./profiles/credentialcheck ./cmd/credentialctl
+go vet ./credentials ./adapters/credentials/http ./adapters/credentials/backups ./adapters/credentials/filekeys ./adapters/credentials/sqlite ./profiles/credentialcheck ./cmd/credentialctl
 ```
 
 已通过真实 SQLite 重开、原操作恢复、已提交但回包丢失、记录 CAS 失败时进度一同回滚，以及 15 票既有秘密出口/恢复回归。新增测试通过：原备份写入完成但回包丢失，当前凭证随后更新，仍按原快照恢复；备份未处置及其他绑定的现存记录分别阻止旧密钥清理；实际文件删除、迟到写入拒绝、墓碑边界故障恢复、归档目录身份隔离。墓碑测试直接构造磁盘故障边界，未冒充真实子进程退出。内核故障测试中的接口替身只用于精确边界；新增集成测试已使用真实 Harness policy + Grant、真实凭证 SQLite 和独立有状态 HTTP 提供方数据库。八种情况通过：真实连接丢失后的续期核对、持续未知、三次发送上限、不具备安全重放契约、目标错绑、权限撤销、续期期间重加密及提供方路由变化。实际验证新令牌可使用、旧令牌拒绝，查询/发送/续期效果/后续使用次数来自独立数据库。CLI 测试另覆盖受理不发送、分步完成、受控备份处置与退役及无秘密输出。

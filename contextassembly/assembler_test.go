@@ -2,7 +2,7 @@ package contextassembly_test
 
 import (
 	"context"
-	"lerna/adapters/sqlitecontext"
+	sqlitecontext "lerna/adapters/context/sqlite"
 	"lerna/brain"
 	"lerna/contextassembly"
 	"path/filepath"

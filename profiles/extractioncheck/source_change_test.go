@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"lerna/adapters/localextractionsource"
+	localextractionsource "lerna/adapters/extraction/localsource"
 	"lerna/extraction"
 	wire "lerna/gen/harness/v1"
 	"lerna/memory"

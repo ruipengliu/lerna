@@ -1,8 +1,8 @@
 package fetchcheck
 
 import (
-	"lerna/adapters/fetchcontent"
-	"lerna/adapters/taskcontent"
+	fetchcontent "lerna/adapters/research/content"
+	taskcontent "lerna/adapters/tasks/content"
 	"lerna/artifacts"
 	"lerna/tasks"
 )

@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"lerna/adapters/extractioncleanup"
+	extractioncleanup "lerna/adapters/extraction/cleanup"
 	"lerna/answers"
 	"lerna/extraction"
 	"lerna/memory"

@@ -2,8 +2,8 @@ package extractioncheck
 
 import (
 	"context"
-	"lerna/adapters/extractionauth"
-	"lerna/adapters/sqliteextraction"
+	extractionauth "lerna/adapters/extraction/auth"
+	sqliteextraction "lerna/adapters/extraction/sqlite"
 	"lerna/authorization"
 	"lerna/extraction"
 	wire "lerna/gen/harness/v1"

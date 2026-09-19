@@ -3,8 +3,8 @@ package fetchcheck
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/contentpolicy"
-	"lerna/adapters/executioncontent"
+	contentpolicy "lerna/adapters/content/policy"
+	executioncontent "lerna/adapters/execution/content"
 	"lerna/artifacts"
 	wire "lerna/gen/harness/v1"
 	"strings"

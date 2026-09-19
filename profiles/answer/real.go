@@ -3,7 +3,7 @@ package answer
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/arkmodel"
+	arkmodel "lerna/adapters/model/ark"
 	"lerna/answers"
 	"lerna/brain"
 	"lerna/conformance"

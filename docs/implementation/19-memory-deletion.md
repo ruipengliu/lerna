@@ -10,7 +10,7 @@ Head 保留删除修订；旧正文 Read 返回不可用，Scan 不再返回该�
 
 该切片只证明受信 Store 的逻辑删除与耐久元数据。尚未证明 SQLite 空闲页/WAL/备份的正文清理，不据此报告“物理清理完成”。受控授权、删除回执协议、派生清理及备份隔离仍待实现。
 
-真实 SQLite 测试验证删除后重开、历史读取、扫描、原操作状态、变更位置及原身份拒绝复活；双连接竞争验证 Delete/Correct 只有一方提交，失败方为版本冲突。`go test -race ./adapters/sqlitememory ./memory -count=1` 通过。证据：[初始失败](evidence/19-delete-store-red.log)、[存储切片](evidence/19-delete-store-green.log)、[race](evidence/19-delete-store-race.log)。
+真实 SQLite 测试验证删除后重开、历史读取、扫描、原操作状态、变更位置及原身份拒绝复活；双连接竞争验证 Delete/Correct 只有一方提交，失败方为版本冲突。`go test -race ./adapters/memory/sqlite ./memory -count=1` 通过。证据：[初始失败](evidence/19-delete-store-red.log)、[存储切片](evidence/19-delete-store-green.log)、[race](evidence/19-delete-store-race.log)。
 
 ## 后续交付
 

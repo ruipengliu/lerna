@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"lerna/adapters/sqlitecontentpolicy"
-	"lerna/adapters/sqliteextraction"
-	"lerna/adapters/sqlitefetch"
+	sqlitecontentpolicy "lerna/adapters/content/sqlitepolicy"
+	sqliteextraction "lerna/adapters/extraction/sqlite"
+	sqlitefetch "lerna/adapters/research/sqlite"
 	"lerna/artifacts"
 	"lerna/fetch"
 	"lerna/memory"

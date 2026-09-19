@@ -3,8 +3,8 @@ package credentials_test
 import (
 	"context"
 	"errors"
-	"lerna/adapters/filekeys"
-	"lerna/adapters/sqlitecredentials"
+	"lerna/adapters/credentials/filekeys"
+	sqlitecredentials "lerna/adapters/credentials/sqlite"
 	"lerna/credentials"
 	"os"
 	"path/filepath"

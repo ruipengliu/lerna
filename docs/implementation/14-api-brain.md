@@ -7,7 +7,7 @@
 ```sh
 go run ./cmd/contractcheck -profile api-brain-v1 > build/api-brain-report.json
 go test ./tasks -run 'TestAction|TestBatchAdmission|TestUnknownAdmission|TestUnknownAction|TestWrongWrite'
-go test ./brain ./adapters/arkmodel
+go test ./brain ./adapters/model/ark
 make verify
 ```
 

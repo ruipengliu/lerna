@@ -3,9 +3,9 @@ package fetchcheck
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/acquisitionexecution"
-	"lerna/adapters/executionlocal"
-	"lerna/adapters/fetchtask"
+	executionlocal "lerna/adapters/execution/local"
+	acquisitionexecution "lerna/adapters/research/execution"
+	fetchtask "lerna/adapters/research/taskguard"
 	"lerna/execution"
 	"lerna/sdk"
 	"lerna/tasks"

@@ -3,9 +3,9 @@ package extractioncheck
 import (
 	"context"
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/contextmemory"
-	"lerna/adapters/memoryauth"
-	"lerna/adapters/sqlitememory"
+	contextmemory "lerna/adapters/context/memory"
+	memoryauth "lerna/adapters/memory/auth"
+	sqlitememory "lerna/adapters/memory/sqlite"
 	"lerna/authorization"
 	"lerna/contextassembly"
 	"lerna/extraction"

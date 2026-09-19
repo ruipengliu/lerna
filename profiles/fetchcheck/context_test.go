@@ -3,7 +3,7 @@ package fetchcheck
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/researchcontext"
+	researchcontext "lerna/adapters/research/context"
 	"lerna/brain"
 	"net/http"
 	"net/http/httptest"

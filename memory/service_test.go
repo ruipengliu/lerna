@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/sqlitememory"
+	sqlitememory "lerna/adapters/memory/sqlite"
 	wire "lerna/gen/harness/v1"
 	"lerna/memory"
 	"lerna/schema"

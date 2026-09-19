@@ -16,8 +16,8 @@ import (
 
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/authlocal"
-	"lerna/adapters/sqliteauth"
+	authlocal "lerna/adapters/authorization/local"
+	sqliteauth "lerna/adapters/authorization/sqlite"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"
 	"lerna/internal/jsonvalue"

@@ -3,8 +3,8 @@ package fetchcheck
 import (
 	"context"
 	"errors"
-	"lerna/adapters/fetchauth"
-	"lerna/adapters/httpfetch"
+	fetchauth "lerna/adapters/research/auth"
+	"lerna/adapters/research/httpfetch"
 	"lerna/fetch"
 	"net"
 	"net/netip"

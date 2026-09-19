@@ -3,7 +3,7 @@ package extractioncheck
 import (
 	"context"
 	"fmt"
-	"lerna/adapters/executionlocal"
+	executionlocal "lerna/adapters/execution/local"
 	"lerna/execution"
 	"lerna/extraction"
 	"lerna/sdk"

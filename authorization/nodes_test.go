@@ -12,8 +12,8 @@ import (
 	"golang.org/x/net/netutil"
 	"google.golang.org/protobuf/proto"
 	"io"
-	"lerna/adapters/josegrant"
-	"lerna/adapters/sqliteauth"
+	"lerna/adapters/authorization/josegrant"
+	sqliteauth "lerna/adapters/authorization/sqlite"
 	wire "lerna/gen/harness/v1"
 	"log"
 	"math/big"
@@ -28,7 +28,7 @@ import (
 	"testing"
 	"time"
 
-	"lerna/adapters/nodetls"
+	"lerna/adapters/transport/nodetls"
 	"lerna/authorization"
 )
 

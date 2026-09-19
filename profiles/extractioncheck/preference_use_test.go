@@ -2,7 +2,7 @@ package extractioncheck
 
 import (
 	"context"
-	"lerna/adapters/executionlocal"
+	executionlocal "lerna/adapters/execution/local"
 	"lerna/sdk"
 	"testing"
 )

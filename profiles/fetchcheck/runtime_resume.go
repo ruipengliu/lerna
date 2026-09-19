@@ -2,7 +2,7 @@ package fetchcheck
 
 import (
 	"context"
-	"lerna/adapters/tasklocal"
+	tasklocal "lerna/adapters/tasks/local"
 	"lerna/answers"
 	"lerna/artifacts"
 	"lerna/brain"

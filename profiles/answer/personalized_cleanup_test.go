@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
-	"lerna/adapters/contextmemory"
+	contextmemory "lerna/adapters/context/memory"
 	"lerna/authorization"
 	"lerna/brain"
 	"lerna/contextassembly"

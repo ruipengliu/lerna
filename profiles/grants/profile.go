@@ -2,7 +2,7 @@ package grants
 
 import (
 	"context"
-	"lerna/adapters/sqliteauth"
+	sqliteauth "lerna/adapters/authorization/sqlite"
 	"lerna/conformance"
 	"os"
 	"path/filepath"

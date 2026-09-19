@@ -15,9 +15,9 @@ import (
 	"testing"
 	"time"
 
-	"lerna/adapters/josegrant"
-	"lerna/adapters/nodetls"
-	"lerna/adapters/sqliteauth"
+	"lerna/adapters/authorization/josegrant"
+	sqliteauth "lerna/adapters/authorization/sqlite"
+	"lerna/adapters/transport/nodetls"
 	"lerna/authorization"
 )
 

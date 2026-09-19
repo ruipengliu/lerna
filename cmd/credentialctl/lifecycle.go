@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"lerna/adapters/credentialbackups"
-	"lerna/adapters/credentialhttp"
+	credentialbackups "lerna/adapters/credentials/backups"
+	credentialhttp "lerna/adapters/credentials/http"
 	"lerna/credentials"
 	"os"
 	"path/filepath"

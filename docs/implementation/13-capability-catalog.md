@@ -17,7 +17,7 @@ make verify
 
 ## 冻结清单与独立计数
 
-业务定义位于 `adapters/simworkflow/definitions.csv`：28 个分类、168 个业务类型。每行明确业务类型、数量字段、约束字段、验证条件、计量单位及 reserve/credit 会计方向。`definitions.go` 为每类提供六个有明确前后状态的操作；输入、输出 Schema 及描述符摘要由冻结代码确定。profile 保存定义摘要及逐 API 描述摘要，提交版本固定生成规则。
+业务定义位于 `adapters/execution/simworkflow/definitions.csv`：28 个分类、168 个业务类型。每行明确业务类型、数量字段、约束字段、验证条件、计量单位及 reserve/credit 会计方向。`definitions.go` 为每类提供六个有明确前后状态的操作；输入、输出 Schema 及描述符摘要由冻结代码确定。profile 保存定义摘要及逐 API 描述摘要，提交版本固定生成规则。
 
 计数单位是“业务类型上的操作契约”。例如采购订单的 ordered_units/approved_units/vendor_verified、休假申请的 leave_hours/leave_balance_hours/coverage_confirmed、客户发票的 receivable_cents/delivered_value_cents/tax_validated 分属不同业务类型和独立状态。它们共享工作流引擎，但使用不同业务字段、单位及效果合同。多个订单实例、同一 API 的别名、实现副本或版本都不增加 K。
 

@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"lerna/adapters/localextraction"
+	localextraction "lerna/adapters/extraction/rules"
 	"lerna/profiles/extractioncheck"
 	"os"
 	"runtime"

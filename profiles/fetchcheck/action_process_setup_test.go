@@ -3,9 +3,9 @@ package fetchcheck
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/catalogauth"
-	"lerna/adapters/contentpolicy"
-	"lerna/adapters/sqlitecatalog"
+	catalogauth "lerna/adapters/catalog/auth"
+	sqlitecatalog "lerna/adapters/catalog/sqlite"
+	contentpolicy "lerna/adapters/content/policy"
 	"lerna/brain"
 	"lerna/catalog"
 	"lerna/fetch"

@@ -3,8 +3,8 @@ package contextassembly_test
 import (
 	"context"
 	"crypto/sha256"
-	"lerna/adapters/memorycleanup"
-	"lerna/adapters/sqlitecontext"
+	sqlitecontext "lerna/adapters/context/sqlite"
+	memorycleanup "lerna/adapters/memory/cleanup"
 	"lerna/contextassembly"
 	"lerna/memory"
 	"path/filepath"

@@ -4,10 +4,10 @@
 
 | 原要求 | 证据及覆盖范围 | 当前结论 |
 | --- | --- | --- |
-| 正式 Core/Brain/Execution/SDK 获取实际响应并交付来源、时间、媒体类型、正文及摘要 | `profiles/fetchcheck/action_test.go` 从真实授权 Catalog 选择 web.fetch，经原 Core 动作与 SDK 完成 HTTP；`task_test.go`、`adapters/httpfetch/fetch_test.go`、`content_test.go` 核对实际受控响应。模型是明确命名的本地协议夹具。 | 定向通过；不作为实际模型效果证明。 |
-| 来源、用途、位置、重定向及实际连接均受当前授权约束 | `adapters/httpfetch/authorization_test.go`、`fetch_test.go` 核对 URL、数值拨号范围、跨跳授权、敏感头、总跳数；`control_test.go`、`inflight_test.go`、`deadline_test.go` 使用真实 Core 控制与期限。 | 定向通过。 |
+| 正式 Core/Brain/Execution/SDK 获取实际响应并交付来源、时间、媒体类型、正文及摘要 | `profiles/fetchcheck/action_test.go` 从真实授权 Catalog 选择 web.fetch，经原 Core 动作与 SDK 完成 HTTP；`task_test.go`、`adapters/research/httpfetch/fetch_test.go`、`content_test.go` 核对实际受控响应。模型是明确命名的本地协议夹具。 | 定向通过；不作为实际模型效果证明。 |
+| 来源、用途、位置、重定向及实际连接均受当前授权约束 | `adapters/research/httpfetch/authorization_test.go`、`fetch_test.go` 核对 URL、数值拨号范围、跨跳授权、敏感头、总跳数；`control_test.go`、`inflight_test.go`、`deadline_test.go` 使用真实 Core 控制与期限。 | 定向通过。 |
 | 尺寸、时间、跳转和任务用量有界，失败分别表达 | `response_test.go`、`failure_test.go`、`cancel_count_test.go`；SDK 可读取有限失败产物。`TestTaskFetchBudgetRejectionIsKnownThroughSDK` 核对预算拒绝终态和零新增请求；SQLite 预算并发与重开测试核对原身份。 | 定向通过；全局存储容量/提交不确定不伪称已持久成功。 |
-| 保留和披露独立受权，网页不改变授权，不自动写长期 Memory | `adapters/httpfetch/content_test.go`、`output_lineage_test.go`、`context_test.go` 与 `brain_test.go` 核对当前来源、动态来源传递及撤权；装配的 Memory 通道为显式 DisabledMemories。 | 定向通过；未声称模型抗注入质量已验收。 |
+| 保留和披露独立受权，网页不改变授权，不自动写长期 Memory | `adapters/research/httpfetch/content_test.go`、`output_lineage_test.go`、`context_test.go` 与 `brain_test.go` 核对当前来源、动态来源传递及撤权；装配的 Memory 通道为显式 DisabledMemories。 | 定向通过；未声称模型抗注入质量已验收。 |
 | Task Context 保留实际证据与缺口 | `context_test.go`、`session_test.go` 验证证据投影、真实 Core 决策、SQLite Context 重开；`failure_test.go` 验证受控失败引用的 external-evidence-gap 及撤权拒绝；`brain_test.go` 验证受控答案发布。 | 定向通过。读取失败不会被改写成可披露缺口。 |
 | 重复、取消、响应未知和实际进程退出保持原操作、原时间及预算 | `process_test.go` 的四个实际子进程退出窗口，及 SQLite 实际进程测试；`expiry_test.go` 核对证据到期、清理及撤权后不复活旧正文；原操作重放不新增请求。 | 定向通过。未知窗口仍如实未知，不静默重新获取。 |
 | 替换 Adapter，固定重放、真实网络分别标注 | `replay_test.go` 和 `fixed-replay-v1` 使用固定字节，Requests/HTTPStatus 为零，保留本地读取时间；`local-task-v1` 使用实际 loopback HTTP；`public-https-v1` 为明确公共 HTTPS 观测。 | 本地 HTTP 和重放通过；两次公共观测均 DNS resolve 失败。未取得公网成功正文。 |

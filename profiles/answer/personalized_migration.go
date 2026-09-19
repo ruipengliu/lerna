@@ -8,8 +8,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"lerna/adapters/checkpointfile"
-	"lerna/adapters/sqlitecontext"
+	"lerna/adapters/context/checkpointfile"
+	sqlitecontext "lerna/adapters/context/sqlite"
 	"lerna/contextassembly"
 )
 

@@ -3,7 +3,7 @@ package credentialcheck
 import (
 	"bytes"
 	"context"
-	"lerna/adapters/credentialauth"
+	credentialauth "lerna/adapters/credentials/auth"
 	"lerna/credentials"
 	"time"
 )

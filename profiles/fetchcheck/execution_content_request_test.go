@@ -3,7 +3,7 @@ package fetchcheck
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/executionlocal"
+	executionlocal "lerna/adapters/execution/local"
 	"lerna/execution"
 	"lerna/sdk"
 	"net/http"

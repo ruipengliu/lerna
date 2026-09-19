@@ -3,8 +3,8 @@ package fetchcheck
 import (
 	"context"
 	"fmt"
-	"lerna/adapters/executionlocal"
-	"lerna/adapters/searchprivacy"
+	executionlocal "lerna/adapters/execution/local"
+	"lerna/adapters/research/searchprivacy"
 	"lerna/artifacts"
 	"lerna/execution"
 	"lerna/sdk"

@@ -2,7 +2,7 @@ package catalog_test
 
 import (
 	"context"
-	"lerna/adapters/sqlitecatalog"
+	sqlitecatalog "lerna/adapters/catalog/sqlite"
 	"lerna/catalog"
 	"lerna/execution"
 	"lerna/schema"

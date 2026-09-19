@@ -8,7 +8,7 @@ import (
 	"os"
 	"sort"
 
-	"lerna/adapters/checkpointfile"
+	"lerna/adapters/context/checkpointfile"
 	"lerna/contextassembly"
 	"lerna/tasks"
 )

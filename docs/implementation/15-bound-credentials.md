@@ -43,7 +43,7 @@ nonce 高水位独立于凭证数据库，凭证数据库失败不回收 nonce�
 
 ```sh
 go run ./cmd/contractcheck -profile bound-credentials-v1 > build/bound-credentials-report.json
-go test -race ./credentials ./adapters/filekeys ./adapters/sqlitecredentials ./profiles/credentialcheck ./cmd/credentialctl
+go test -race ./credentials ./adapters/credentials/filekeys ./adapters/credentials/sqlite ./profiles/credentialcheck ./cmd/credentialctl
 make verify
 ```
 

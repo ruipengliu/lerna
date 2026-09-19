@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/memorylocal"
+	memorylocal "lerna/adapters/memory/local"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"
 	"lerna/memory"

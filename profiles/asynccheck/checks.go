@@ -3,7 +3,7 @@ package asynccheck
 import (
 	"context"
 	"fmt"
-	"lerna/adapters/executionlocal"
+	executionlocal "lerna/adapters/execution/local"
 	"lerna/authorization"
 	"lerna/execution"
 	"lerna/sdk"

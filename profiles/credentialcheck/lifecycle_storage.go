@@ -3,8 +3,8 @@ package credentialcheck
 import (
 	"bytes"
 	"context"
-	"lerna/adapters/credentialbackups"
-	"lerna/adapters/sqlitecredentials"
+	credentialbackups "lerna/adapters/credentials/backups"
+	sqlitecredentials "lerna/adapters/credentials/sqlite"
 	"lerna/credentials"
 	"os"
 	"path/filepath"

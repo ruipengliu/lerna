@@ -2,7 +2,7 @@ package memorycheck
 
 import (
 	"context"
-	"lerna/adapters/sqlitememory"
+	sqlitememory "lerna/adapters/memory/sqlite"
 	"lerna/conformance"
 	"lerna/memory"
 	"lerna/memory/storecontract"

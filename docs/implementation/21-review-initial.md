@@ -12,7 +12,7 @@
 
 发现 2 项代码缺陷、1 项部分实现，均待修复。
 
-1. **P1：预算耗尽被写成未知效果。** `adapters/sqlitefetch/store.go:158` 在额度不足时返回 LimitExceeded，不保存操作；`adapters/fetchexecution/driver.go:96` 随后只能返回 UNKNOWN。Execution 只采纳 Inspect，因此零联网的预算拒绝变成 UNKNOWN/WAITING。违反票据“未知和不可恢复状态如实可查询”。应持久保存原操作的零请求拒绝终态，不增加消耗或退还既有额度。
+1. **P1：预算耗尽被写成未知效果。** `adapters/research/sqlite/store.go:158` 在额度不足时返回 LimitExceeded，不保存操作；`adapters/fetchexecution/driver.go:96` 随后只能返回 UNKNOWN。Execution 只采纳 Inspect，因此零联网的预算拒绝变成 UNKNOWN/WAITING。违反票据“未知和不可恢复状态如实可查询”。应持久保存原操作的零请求拒绝终态，不增加消耗或退还既有额度。
 2. **P1：正式查询丢失具体获取失败原因。** `adapters/fetchexecution/driver.go:132` 将具体 status/requests 仅放入 Evidence；Execution 对无 Output 的失败跳过保存，快照不保留 Evidence。SDK/Core 对多种失败最终只有 FAILURE 和空引用。现有夹具直接查私有 ledger 才能区分。违反票据“超时、拒绝、过期、取消、不可访问……分别表达”及共享规格“调用者可观察的行为”。应提供受当前授权保护的有限失败事实出口，并验证 SDK 查询。
 3. **P2：Task Context 缺口路径尚未实现。** `adapters/fetchcontext/context.go:89` 遇读取失败整体返回错误，成功块固定 acquired，不能输入可披露的失败/不可恢复事实。违反票据“Task Context 使用仍保留证据来源和缺口”。应保留撤权拒绝，同时支持经过授权的有限缺口材料。
 

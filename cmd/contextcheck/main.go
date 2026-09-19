@@ -8,7 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"lerna/adapters/arkmodel"
+	arkmodel "lerna/adapters/model/ark"
 	"lerna/brain"
 	"lerna/conformance"
 	"lerna/profiles/answer"

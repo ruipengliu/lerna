@@ -3,7 +3,7 @@ package extractioncheck
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/executionlocal"
+	executionlocal "lerna/adapters/execution/local"
 	"lerna/answers"
 	"lerna/artifacts"
 	wire "lerna/gen/harness/v1"

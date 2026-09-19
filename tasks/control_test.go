@@ -3,8 +3,8 @@ package tasks_test
 import (
 	"context"
 	"errors"
-	"lerna/adapters/sqliteauth"
-	"lerna/adapters/tasklocal"
+	sqliteauth "lerna/adapters/authorization/sqlite"
+	tasklocal "lerna/adapters/tasks/local"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"
 	"lerna/sdk"

@@ -23,7 +23,7 @@ stage generated_diff diff -r "$offline_generated" gen/harness/v1 >> build/offlin
 rm -r "$offline_generated"
 stage build go build -mod=readonly ./... > build/offline/build.log 2>&1
 stage analysis go vet -mod=readonly ./... > build/offline/analysis.log 2>&1
-stage offline go test -mod=readonly -p 1 -race -count=1 -timeout=3m ./authorization ./adapters/wsbinding ./profiles/asynccheck -run 'Test(Offline|SystemOffline|WSOffline)' -json > build/offline/offline.jsonl 2> build/offline/offline.stderr
-stage regression go test -mod=readonly -p 1 -race -count=1 -timeout=10m ./authorization ./tasks ./execution ./sdk ./protocol ./schema ./adapters/nodetls ./adapters/josegrant ./adapters/sqliteauth ./adapters/wsbinding ./adapters/grpcbinding ./profiles/sdkcontract ./profiles/executioncheck ./profiles/asynccheck -json > build/offline/regression.jsonl 2> build/offline/regression.stderr
+stage offline go test -mod=readonly -p 1 -race -count=1 -timeout=3m ./authorization ./adapters/transport/ws ./profiles/asynccheck -run 'Test(Offline|SystemOffline|WSOffline)' -json > build/offline/offline.jsonl 2> build/offline/offline.stderr
+stage regression go test -mod=readonly -p 1 -race -count=1 -timeout=10m ./authorization ./tasks ./execution ./sdk ./protocol ./schema ./adapters/transport/nodetls ./adapters/authorization/josegrant ./adapters/authorization/sqlite ./adapters/transport/ws ./adapters/transport/grpc ./profiles/sdkcontract ./profiles/executioncheck ./profiles/asynccheck -json > build/offline/regression.jsonl 2> build/offline/regression.stderr
 printf ',"exit_code":%s}\n' "$result" >> build/offline/status.json
 exit "$result"

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/authlocal"
+	authlocal "lerna/adapters/authorization/local"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"
 	"lerna/sdk"

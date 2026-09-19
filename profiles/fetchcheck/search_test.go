@@ -3,8 +3,8 @@ package fetchcheck
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/jsonsearch"
-	"lerna/adapters/researchcontext"
+	researchcontext "lerna/adapters/research/context"
+	"lerna/adapters/research/jsonsearch"
 	"lerna/fetch"
 	"lerna/websearch"
 	"net/http"

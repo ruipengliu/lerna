@@ -2,7 +2,7 @@ package fetchcheck
 
 import (
 	"context"
-	"lerna/adapters/executionlocal"
+	executionlocal "lerna/adapters/execution/local"
 	"lerna/execution"
 	"lerna/fetch"
 	"lerna/sdk"

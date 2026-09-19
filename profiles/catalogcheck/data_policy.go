@@ -3,7 +3,7 @@ package catalogcheck
 import (
 	"context"
 	"fmt"
-	"lerna/adapters/contentpolicy"
+	contentpolicy "lerna/adapters/content/policy"
 	"lerna/authorization"
 	"lerna/catalog"
 	"time"

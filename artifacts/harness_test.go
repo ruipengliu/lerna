@@ -2,8 +2,8 @@ package artifacts_test
 
 import (
 	"context"
-	"lerna/adapters/filecontent"
-	"lerna/adapters/sqliteauth"
+	sqliteauth "lerna/adapters/authorization/sqlite"
+	filecontent "lerna/adapters/content/file"
 	"lerna/artifacts"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"

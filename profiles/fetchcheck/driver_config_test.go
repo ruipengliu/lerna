@@ -2,7 +2,7 @@ package fetchcheck
 
 import (
 	"context"
-	"lerna/adapters/acquisitionexecution"
+	acquisitionexecution "lerna/adapters/research/execution"
 	"lerna/fetch"
 	"net/http"
 	"net/http/httptest"

@@ -2,7 +2,7 @@ package fetchcheck
 
 import (
 	"context"
-	"lerna/adapters/executioncontent"
+	executioncontent "lerna/adapters/execution/content"
 	"lerna/answers"
 	"lerna/artifacts"
 	wire "lerna/gen/harness/v1"

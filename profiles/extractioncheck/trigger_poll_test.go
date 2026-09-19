@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"lerna/adapters/contentpolicy"
-	"lerna/adapters/extractionauth"
-	"lerna/adapters/localextractionsource"
+	contentpolicy "lerna/adapters/content/policy"
+	extractionauth "lerna/adapters/extraction/auth"
+	localextractionsource "lerna/adapters/extraction/localsource"
 	"lerna/answers"
 	"lerna/artifacts"
 	"lerna/extraction"

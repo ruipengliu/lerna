@@ -33,9 +33,9 @@ if go build -mod=readonly ./... > build/grpc/build.log 2>&1 && go build -mod=rea
 analysis=failed
 if go vet -mod=readonly ./... > build/grpc/analysis.log 2>&1; then analysis=passed; fi
 grpc=failed
-if go test -mod=readonly -p 1 -race -count=1 -timeout=3m ./adapters/grpcbinding ./profiles/asynccheck -run 'Test(Finite|DurableDelivery|GRPC)' -json > build/grpc/grpc.jsonl; then grpc=passed; fi
+if go test -mod=readonly -p 1 -race -count=1 -timeout=3m ./adapters/transport/grpc ./profiles/asynccheck -run 'Test(Finite|DurableDelivery|GRPC)' -json > build/grpc/grpc.jsonl; then grpc=passed; fi
 regression=failed
-if go test -mod=readonly -p 1 -race -count=1 -timeout=10m ./authorization ./execution ./sdk ./profiles/asynccheck ./profiles/executioncheck ./adapters/nodetls ./adapters/josegrant ./adapters/executionlocal ./adapters/executionrouter -json > build/grpc/regression.jsonl; then regression=passed; fi
+if go test -mod=readonly -p 1 -race -count=1 -timeout=10m ./authorization ./execution ./sdk ./profiles/asynccheck ./profiles/executioncheck ./adapters/transport/nodetls ./adapters/authorization/josegrant ./adapters/execution/local ./adapters/execution/router -json > build/grpc/regression.jsonl; then regression=passed; fi
 if [ "$build" = passed ]; then
  execution=failed
  if build/grpc/contractcheck -profile synchronous-execution-v1 > build/grpc/execution.json; then execution=passed; fi

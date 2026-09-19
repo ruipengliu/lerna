@@ -3,7 +3,7 @@ package fetchcheck
 import (
 	"context"
 	"fmt"
-	"lerna/adapters/taskcontent"
+	taskcontent "lerna/adapters/tasks/content"
 	"lerna/answers"
 	"lerna/artifacts"
 	"lerna/brain"

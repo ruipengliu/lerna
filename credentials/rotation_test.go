@@ -2,9 +2,9 @@ package credentials_test
 
 import (
 	"context"
-	"lerna/adapters/credentialbackups"
-	"lerna/adapters/filekeys"
-	"lerna/adapters/sqlitecredentials"
+	credentialbackups "lerna/adapters/credentials/backups"
+	"lerna/adapters/credentials/filekeys"
+	sqlitecredentials "lerna/adapters/credentials/sqlite"
 	"lerna/credentials"
 	"os"
 	"path/filepath"

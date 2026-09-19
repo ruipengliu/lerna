@@ -19,12 +19,12 @@ extraction_build=failed
 go build -mod=readonly -trimpath -o "$extraction_report_dir/extractioncheck" ./cmd/extractioncheck
 extraction_build=passed
 extraction_analysis=failed
-go vet -mod=readonly ./extraction ./adapters/extractionauth ./adapters/extractioncleanup ./adapters/extractionexecution ./adapters/extractioninputs ./adapters/extractionsourceguard ./adapters/localextraction ./adapters/localextractionsource ./adapters/sqliteextraction ./profiles/extractioncheck ./cmd/extractioncheck
+go vet -mod=readonly ./extraction ./adapters/extraction/auth ./adapters/extraction/cleanup ./adapters/extraction/execution ./adapters/extraction/inputs ./adapters/extraction/sourceguard ./adapters/extraction/rules ./adapters/extraction/localsource ./adapters/extraction/sqlite ./profiles/extractioncheck ./cmd/extractioncheck
 extraction_analysis=passed
 extraction_contracts=failed
 # Includes real Core/SDK/SQLite/file paths and subprocess crash probes. Keep
 # package disk contention bounded; individual concurrency tests remain active.
-go test -mod=readonly -p 1 -race -count=1 -timeout 45m -json ./extraction ./adapters/extractionauth ./adapters/extractioncleanup ./adapters/extractionexecution ./adapters/extractioninputs ./adapters/extractionsourceguard ./adapters/localextraction ./adapters/localextractionsource ./adapters/sqliteextraction ./profiles/extractioncheck > "$extraction_report_dir/tests.jsonl"
+go test -mod=readonly -p 1 -race -count=1 -timeout 45m -json ./extraction ./adapters/extraction/auth ./adapters/extraction/cleanup ./adapters/extraction/execution ./adapters/extraction/inputs ./adapters/extraction/sourceguard ./adapters/extraction/rules ./adapters/extraction/localsource ./adapters/extraction/sqlite ./profiles/extractioncheck > "$extraction_report_dir/tests.jsonl"
 extraction_contracts=passed
 extraction_quality=failed
 "$extraction_report_dir/extractioncheck" -profile local-rules-quality-v1 > "$extraction_report_dir/quality.json"

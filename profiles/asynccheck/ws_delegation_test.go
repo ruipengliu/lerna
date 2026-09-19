@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"google.golang.org/protobuf/proto"
-	"lerna/adapters/wsbinding"
+	wsbinding "lerna/adapters/transport/ws"
 	"lerna/authorization"
 	"lerna/execution"
 	wire "lerna/gen/harness/v1"

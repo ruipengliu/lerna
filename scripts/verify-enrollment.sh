@@ -19,7 +19,7 @@ go list -m -json all > build/enrollment/modules.json
 nodes=failed
 if go test -mod=readonly -p 1 -race -count=1 -timeout=2m ./authorization -run 'TestNode|TestRealTLS' -json > build/enrollment/nodes.jsonl; then nodes=passed; fi
 regression=failed
-if go test -mod=readonly -p 1 -race -count=1 -timeout=10m ./authorization ./adapters/nodetls ./adapters/josegrant ./adapters/authlocal ./adapters/memoryauth ./execution ./sdk -json > build/enrollment/regression.jsonl; then regression=passed; fi
+if go test -mod=readonly -p 1 -race -count=1 -timeout=10m ./authorization ./adapters/transport/nodetls ./adapters/authorization/josegrant ./adapters/authorization/local ./adapters/memory/auth ./execution ./sdk -json > build/enrollment/regression.jsonl; then regression=passed; fi
 grants=failed
 if go run -mod=readonly ./cmd/contractcheck -profile restricted-grants-v1 > build/enrollment/grants.json; then grants=passed; fi
 local_auth=failed

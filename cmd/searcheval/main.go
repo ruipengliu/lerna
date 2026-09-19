@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"lerna/adapters/arkmodel"
+	arkmodel "lerna/adapters/model/ark"
 	"lerna/brain"
 	"lerna/profiles/fetchcheck"
 	"os"

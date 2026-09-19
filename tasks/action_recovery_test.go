@@ -3,7 +3,7 @@ package tasks_test
 import (
 	"context"
 	"encoding/json"
-	"lerna/adapters/sqliteauth"
+	sqliteauth "lerna/adapters/authorization/sqlite"
 	"lerna/authorization"
 	"lerna/tasks"
 	"os"

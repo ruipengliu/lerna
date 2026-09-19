@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"lerna/adapters/authlocal"
-	"lerna/adapters/sqliteauth"
+	authlocal "lerna/adapters/authorization/local"
+	sqliteauth "lerna/adapters/authorization/sqlite"
 	"lerna/authorization"
 	wire "lerna/gen/harness/v1"
 	"lerna/sdk"

@@ -3,7 +3,7 @@ package localauth
 import (
 	"context"
 	"fmt"
-	"lerna/adapters/sqliteauth"
+	sqliteauth "lerna/adapters/authorization/sqlite"
 	"lerna/conformance"
 	"os"
 	"path/filepath"

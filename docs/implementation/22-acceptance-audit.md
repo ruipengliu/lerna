@@ -31,7 +31,7 @@ Standards：无明确规范违反；一项判断性建议——搜索与页面�
 Spec：以下三项不能由已有绿色参考测试排除。
 
 1. `profiles/fetchcheck/research_host.go` 的 Recover 直接调用原执行服务。UNKNOWN 导致任务版本变化后，是否需要显式 `WithActionRecovery` 重绑原操作的恢复资格，当前路径未见装配。应复现 UNKNOWN → 原事实已保存 → 原操作核对，不允许重搜或重置预算。
-2. `adapters/fetchqueries/queries.go` 的已提交事实缓存也检查原 RUN 资格，未命中时通过同一执行资格扣费。取消后有限结果事实能否收敛，现有 caller-cancellation 测试只检查 OutcomeStore，未覆盖启用任务查询计量后的 Inspect/正式回执。应核验有限事实恢复，同时禁止恢复正文披露或放宽旧执行资格。
+2. `adapters/research/queries/queries.go` 的已提交事实缓存也检查原 RUN 资格，未命中时通过同一执行资格扣费。取消后有限结果事实能否收敛，现有 caller-cancellation 测试只检查 OutcomeStore，未覆盖启用任务查询计量后的 Inspect/正式回执。应核验有限事实恢复，同时禁止恢复正文披露或放宽旧执行资格。
 3. `profiles/searchcheck/review.go` 只有必要事实覆盖工作表。完整小型评价仍需引用支持/覆盖分子分母、不适用项及范围、缺口、禁用结论的独立判定。
 
 前两项是待运行证实的静态发现，不能仅按审查意见修改授权边界。现有 `driver_query_test.go` 明确要求已失效执行资格不能被静默升级，此约束必须保留。

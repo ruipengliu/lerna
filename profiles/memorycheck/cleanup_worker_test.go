@@ -2,7 +2,7 @@ package memorycheck
 
 import (
 	"context"
-	"lerna/adapters/memorycleanup"
+	memorycleanup "lerna/adapters/memory/cleanup"
 	"lerna/cleanup"
 	wire "lerna/gen/harness/v1"
 	"lerna/memory"
