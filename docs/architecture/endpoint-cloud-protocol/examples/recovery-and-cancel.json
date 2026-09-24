@@ -1,0 +1,178 @@
+[
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000040b",
+    "kind": "control",
+    "type": "harness.core.resume",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000003",
+    "payload": {
+      "streams": [
+        {
+          "source": "00000000-0000-4000-8000-000000000002",
+          "target": "00000000-0000-4000-8000-000000000003",
+          "stream_id": "00000000-0000-4000-8000-000000002328",
+          "last_sent_seq": "1",
+          "known_acked_seq": "0"
+        }
+      ]
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000040c",
+    "kind": "control",
+    "type": "harness.core.resumed",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000003",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "reply_to": "00000000-0000-4000-8000-00000000040b",
+    "payload": {
+      "streams": [
+        {
+          "source": "00000000-0000-4000-8000-000000000002",
+          "target": "00000000-0000-4000-8000-000000000003",
+          "stream_id": "00000000-0000-4000-8000-000000002328",
+          "through_seq": "1",
+          "status": "reconcile_required",
+          "reason": "原操作可能已发生，先核对结果。"
+        }
+      ]
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000040d",
+    "kind": "request",
+    "type": "harness.execution.query",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000003",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000000bbd",
+      "seq": "1",
+      "retain_until": "2026-09-23T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000000c9"
+      }
+    },
+    "authorization": {
+      "grant_ref": "example-grant-for-this-user-and-endpoint"
+    },
+    "expires_at": "2026-09-22T10:10:00.000Z",
+    "payload": {
+      "target_operation_id": "00000000-0000-4000-8000-0000000000c9"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000040e",
+    "kind": "response",
+    "type": "harness.execution.query",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000003",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "reply_to": "00000000-0000-4000-8000-00000000040d",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000000bbe",
+      "seq": "1",
+      "retain_until": "2026-09-23T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000000c9"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "operation_id": "00000000-0000-4000-8000-0000000000c9",
+        "state": "finished",
+        "execution": "executed",
+        "effect": "unknown"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000040f",
+    "kind": "request",
+    "type": "harness.execution.cancel",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000003",
+    "operation_id": "00000000-0000-4000-8000-000000001f40",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000000bbf",
+      "seq": "1",
+      "retain_until": "2026-09-23T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000000c9"
+      }
+    },
+    "authorization": {
+      "grant_ref": "example-grant-for-this-user-and-endpoint"
+    },
+    "expires_at": "2026-09-22T10:10:00.000Z",
+    "payload": {
+      "target_operation_id": "00000000-0000-4000-8000-0000000000c9"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000000410",
+    "kind": "response",
+    "type": "harness.execution.cancel",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000003",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "reply_to": "00000000-0000-4000-8000-00000000040f",
+    "operation_id": "00000000-0000-4000-8000-000000001f40",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000000bc0",
+      "seq": "1",
+      "retain_until": "2026-09-23T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000000c9"
+      }
+    },
+    "payload": {
+      "status": "accepted",
+      "result": {
+        "target_operation_id": "00000000-0000-4000-8000-0000000000c9",
+        "cancel_requested": true
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000000411",
+    "kind": "event",
+    "type": "harness.execution.cancel_result",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000003",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "operation_id": "00000000-0000-4000-8000-000000001f40",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000000bbb",
+      "seq": "4",
+      "retain_until": "2026-09-23T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000000c9"
+      }
+    },
+    "payload": {
+      "target_operation_id": "00000000-0000-4000-8000-0000000000c9",
+      "state": "effects_unknown"
+    }
+  }
+]

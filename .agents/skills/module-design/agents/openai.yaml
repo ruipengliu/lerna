@@ -1,0 +1,3 @@
+interface:
+  display_name: "模块详细设计"
+  short_description: "依据系统全景图，为指定模块完成技术方案、邻接契约与验证设计"

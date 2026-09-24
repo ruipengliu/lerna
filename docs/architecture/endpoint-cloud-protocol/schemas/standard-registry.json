@@ -1,0 +1,697 @@
+{
+  "manifest_version": 1,
+  "namespace": "harness",
+  "protocol_versions": [
+    1
+  ],
+  "messages": [
+    {
+      "type": "harness.core.hello",
+      "type_version": 1,
+      "kinds": [
+        "control"
+      ],
+      "payload_schemas": {
+        "control": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/hello_control"
+      },
+      "delivery": "session",
+      "lane": "session",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.core.welcome",
+      "type_version": 1,
+      "kinds": [
+        "control"
+      ],
+      "payload_schemas": {
+        "control": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/welcome_control"
+      },
+      "delivery": "session",
+      "lane": "session",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.core.ack",
+      "type_version": 1,
+      "kinds": [
+        "control"
+      ],
+      "payload_schemas": {
+        "control": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/ack_control"
+      },
+      "delivery": "session",
+      "lane": "session",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.core.relay_stored",
+      "type_version": 1,
+      "kinds": [
+        "control"
+      ],
+      "payload_schemas": {
+        "control": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/relay_stored_control"
+      },
+      "delivery": "session",
+      "lane": "session",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.core.resume",
+      "type_version": 1,
+      "kinds": [
+        "control"
+      ],
+      "payload_schemas": {
+        "control": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/resume_control"
+      },
+      "delivery": "session",
+      "lane": "session",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.core.resumed",
+      "type_version": 1,
+      "kinds": [
+        "control"
+      ],
+      "payload_schemas": {
+        "control": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/resumed_control"
+      },
+      "delivery": "session",
+      "lane": "session",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.core.describe",
+      "type_version": 1,
+      "kinds": [
+        "control"
+      ],
+      "payload_schemas": {
+        "control": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/describe_control"
+      },
+      "delivery": "session",
+      "lane": "session",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.core.capabilities",
+      "type_version": 1,
+      "kinds": [
+        "control"
+      ],
+      "payload_schemas": {
+        "control": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/capabilities_control"
+      },
+      "delivery": "session",
+      "lane": "session",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.core.ping",
+      "type_version": 1,
+      "kinds": [
+        "control"
+      ],
+      "payload_schemas": {
+        "control": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/ping_control"
+      },
+      "delivery": "session",
+      "lane": "session",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.core.pong",
+      "type_version": 1,
+      "kinds": [
+        "control"
+      ],
+      "payload_schemas": {
+        "control": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/pong_control"
+      },
+      "delivery": "session",
+      "lane": "session",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.core.error",
+      "type_version": 1,
+      "kinds": [
+        "control"
+      ],
+      "payload_schemas": {
+        "control": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/error_control"
+      },
+      "delivery": "session",
+      "lane": "session",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.core.goodbye",
+      "type_version": 1,
+      "kinds": [
+        "control"
+      ],
+      "payload_schemas": {
+        "control": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/goodbye_control"
+      },
+      "delivery": "session",
+      "lane": "session",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.task.submit",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/submit_request",
+        "response": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/submit_response"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [
+        "task.submit"
+      ],
+      "side_effecting": true,
+      "operation_id": "required",
+      "recovery": "query_task_and_operation"
+    },
+    {
+      "type": "harness.task.query",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/query_request",
+        "response": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/query_response"
+      },
+      "delivery": "reliable",
+      "lane": "recovery",
+      "authorization_scopes": [
+        "task.query"
+      ],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "read_only"
+    },
+    {
+      "type": "harness.task.query_operation",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/query_operation_request",
+        "response": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/query_operation_response"
+      },
+      "delivery": "reliable",
+      "lane": "recovery",
+      "authorization_scopes": [
+        "task.query_operation"
+      ],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "read_only"
+    },
+    {
+      "type": "harness.task.input",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/input_request",
+        "response": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/input_response"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [
+        "task.input"
+      ],
+      "side_effecting": true,
+      "operation_id": "required",
+      "recovery": "query_input_consumption"
+    },
+    {
+      "type": "harness.task.cancel",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/cancel_request",
+        "response": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/cancel_response"
+      },
+      "delivery": "reliable",
+      "lane": "control",
+      "authorization_scopes": [
+        "task.cancel"
+      ],
+      "side_effecting": true,
+      "operation_id": "required",
+      "recovery": "query_task_and_operation"
+    },
+    {
+      "type": "harness.task.status",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/status_event"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "required",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.task.input_requested",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/input_requested_event"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "required",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.task.result",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/result_event"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "required",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.task.cancel_result",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/cancel_result_event"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "required",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.execution.invoke",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/invoke_request",
+        "response": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/invoke_response"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [
+        "execution.invoke"
+      ],
+      "side_effecting": true,
+      "operation_id": "required",
+      "recovery": "query_original_operation"
+    },
+    {
+      "type": "harness.execution.query",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/query_request",
+        "response": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/query_response"
+      },
+      "delivery": "reliable",
+      "lane": "recovery",
+      "authorization_scopes": [
+        "execution.query"
+      ],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "read_only"
+    },
+    {
+      "type": "harness.execution.cancel",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/cancel_request",
+        "response": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/cancel_response"
+      },
+      "delivery": "reliable",
+      "lane": "control",
+      "authorization_scopes": [
+        "execution.cancel"
+      ],
+      "side_effecting": true,
+      "operation_id": "required",
+      "recovery": "query_original_operation"
+    },
+    {
+      "type": "harness.execution.progress",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/progress_event"
+      },
+      "delivery": "ephemeral",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "required",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.execution.fact",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/fact_event"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "required",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.execution.result",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/result_event"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "required",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.execution.cancel_result",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/cancel_result_event"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "required",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.ui.get",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/get_request",
+        "response": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/get_response"
+      },
+      "delivery": "reliable",
+      "lane": "recovery",
+      "authorization_scopes": [
+        "ui.get"
+      ],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "read_only"
+    },
+    {
+      "type": "harness.ui.snapshot",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/snapshot_event"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.ui.delta",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/delta_event"
+      },
+      "delivery": "ephemeral",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.ui.input_requested",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/input_requested_event"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.ui.input",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/input_request",
+        "response": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/input_response"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [
+        "ui.input"
+      ],
+      "side_effecting": true,
+      "operation_id": "required",
+      "recovery": "query_ui_operation"
+    },
+    {
+      "type": "harness.ui.action",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/action_request",
+        "response": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/action_response"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [
+        "ui.action"
+      ],
+      "side_effecting": true,
+      "operation_id": "required",
+      "recovery": "query_ui_operation"
+    },
+    {
+      "type": "harness.ui.input_result",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/input_result_event"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "required",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.ui.action_result",
+      "type_version": 1,
+      "kinds": [
+        "event"
+      ],
+      "payload_schemas": {
+        "event": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/action_result_event"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [],
+      "side_effecting": false,
+      "operation_id": "required",
+      "recovery": "none"
+    },
+    {
+      "type": "harness.ui.query_operation",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/query_operation_request",
+        "response": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/query_operation_response"
+      },
+      "delivery": "reliable",
+      "lane": "recovery",
+      "authorization_scopes": [
+        "ui.query_operation"
+      ],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "read_only"
+    },
+    {
+      "type": "harness.task.query_result",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/query_result_request",
+        "response": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/query_result_response"
+      },
+      "delivery": "reliable",
+      "lane": "recovery",
+      "authorization_scopes": [
+        "task.query"
+      ],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "read_only"
+    },
+    {
+      "type": "harness.ui.set_presentation",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/set_presentation_request",
+        "response": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/set_presentation_response"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [
+        "ui.action"
+      ],
+      "side_effecting": true,
+      "operation_id": "required",
+      "recovery": "query_surface"
+    }
+  ],
+  "extensions": [],
+  "views": [
+    {
+      "type": "harness.ui.document",
+      "version": 1,
+      "schema": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/document_view"
+    }
+  ]
+}

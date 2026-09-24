@@ -1,0 +1,421 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.invalid/protocol/v1/execution.schema.json",
+  "$defs": {
+    "invoke_request": {
+      "type": "object",
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "capability": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/name"
+        },
+        "capability_version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "arguments": {
+          "type": "object"
+        },
+        "owner_epoch": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "format": "harness-uint64"
+        }
+      },
+      "required": [
+        "capability",
+        "capability_version",
+        "arguments"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "task_id"
+            ]
+          },
+          "then": {
+            "required": [
+              "owner_epoch"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "owner_epoch"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "invoke_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "accepted"
+            },
+            "result": {
+              "type": "object",
+              "properties": {
+                "recorded": {
+                  "const": true
+                }
+              },
+              "required": [
+                "recorded"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "rejected"
+            },
+            "error": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/error"
+            }
+          },
+          "required": [
+            "status",
+            "error"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "query_request": {
+      "type": "object",
+      "properties": {
+        "target_operation_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        }
+      },
+      "required": [
+        "target_operation_id"
+      ],
+      "additionalProperties": false
+    },
+    "query_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "type": "object",
+              "properties": {
+                "operation_id": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                },
+                "state": {
+                  "enum": [
+                    "accepted",
+                    "running",
+                    "stopped",
+                    "finished"
+                  ]
+                },
+                "execution": {
+                  "enum": [
+                    "not_started",
+                    "started",
+                    "executed",
+                    "failed",
+                    "unknown"
+                  ]
+                },
+                "effect": {
+                  "enum": [
+                    "not_applicable",
+                    "confirmed",
+                    "not_observed",
+                    "unknown"
+                  ]
+                },
+                "summary": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "artifacts": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/content"
+                  },
+                  "minItems": 0,
+                  "maxItems": 64
+                }
+              },
+              "required": [
+                "operation_id",
+                "state",
+                "execution",
+                "effect"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "rejected"
+            },
+            "error": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/error"
+            }
+          },
+          "required": [
+            "status",
+            "error"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "cancel_request": {
+      "type": "object",
+      "properties": {
+        "target_operation_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        }
+      },
+      "required": [
+        "target_operation_id"
+      ],
+      "additionalProperties": false
+    },
+    "cancel_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "accepted"
+            },
+            "result": {
+              "type": "object",
+              "properties": {
+                "target_operation_id": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                },
+                "cancel_requested": {
+                  "const": true
+                }
+              },
+              "required": [
+                "target_operation_id",
+                "cancel_requested"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "rejected"
+            },
+            "error": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/error"
+            }
+          },
+          "required": [
+            "status",
+            "error"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "progress_event": {
+      "type": "object",
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "fact_event": {
+      "type": "object",
+      "properties": {
+        "operation_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "state": {
+          "enum": [
+            "accepted",
+            "running",
+            "stopped",
+            "finished"
+          ]
+        },
+        "execution": {
+          "enum": [
+            "not_started",
+            "started",
+            "executed",
+            "failed",
+            "unknown"
+          ]
+        },
+        "effect": {
+          "enum": [
+            "not_applicable",
+            "confirmed",
+            "not_observed",
+            "unknown"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/content"
+          },
+          "minItems": 0,
+          "maxItems": 64
+        }
+      },
+      "required": [
+        "operation_id",
+        "state",
+        "execution",
+        "effect"
+      ],
+      "additionalProperties": false
+    },
+    "result_event": {
+      "type": "object",
+      "properties": {
+        "operation_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "state": {
+          "enum": [
+            "finished",
+            "stopped"
+          ]
+        },
+        "execution": {
+          "enum": [
+            "not_started",
+            "started",
+            "executed",
+            "failed",
+            "unknown"
+          ]
+        },
+        "effect": {
+          "enum": [
+            "not_applicable",
+            "confirmed",
+            "not_observed",
+            "unknown"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/content"
+          },
+          "minItems": 0,
+          "maxItems": 64
+        }
+      },
+      "required": [
+        "operation_id",
+        "state",
+        "execution",
+        "effect"
+      ],
+      "additionalProperties": false
+    },
+    "cancel_result_event": {
+      "type": "object",
+      "properties": {
+        "target_operation_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "state": {
+          "enum": [
+            "stopped",
+            "already_finished",
+            "effects_unknown"
+          ]
+        }
+      },
+      "required": [
+        "target_operation_id",
+        "state"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

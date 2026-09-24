@@ -1,0 +1,27 @@
+[
+  {
+    "schema": "https://harness.invalid/protocol/v1/http.schema.json#/$defs/connect_ticket_request",
+    "body": {
+      "endpoint_id": "00000000-0000-4000-8000-000000000001"
+    }
+  },
+  {
+    "schema": "https://harness.invalid/protocol/v1/http.schema.json#/$defs/connect_ticket_response",
+    "body": {
+      "ticket": "example-single-use-ticket",
+      "expires_at": "2026-09-22T10:01:00.000Z",
+      "websocket_url": "wss://gateway.example/harness/v1/connect",
+      "gateway_endpoint_id": "00000000-0000-4000-8000-000000000002"
+    }
+  },
+  {
+    "schema": "https://harness.invalid/protocol/v1/http.schema.json#/$defs/content_response",
+    "body": {
+      "content_id": "00000000-0000-4000-8000-0000000001f4",
+      "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+      "media_type": "image/png",
+      "size": "1024",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  }
+]

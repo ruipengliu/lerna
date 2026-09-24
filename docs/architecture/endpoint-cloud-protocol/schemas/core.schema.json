@@ -1,0 +1,388 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.invalid/protocol/v1/core.schema.json",
+  "$defs": {
+    "hello_control": {
+      "type": "object",
+      "properties": {
+        "ticket": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "protocol_versions": {
+          "type": "array",
+          "items": {
+            "const": 1
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "receive_limits": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/limits"
+        },
+        "capabilities": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/capabilities"
+        }
+      },
+      "required": [
+        "ticket",
+        "protocol_versions",
+        "receive_limits",
+        "capabilities"
+      ],
+      "additionalProperties": false
+    },
+    "welcome_control": {
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "protocol_version": {
+          "const": 1
+        },
+        "client_receive_limits": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/limits"
+        },
+        "server_receive_limits": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/limits"
+        },
+        "heartbeat_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "idle_timeout_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "capabilities": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/capabilities"
+        }
+      },
+      "required": [
+        "session_id",
+        "protocol_version",
+        "client_receive_limits",
+        "server_receive_limits",
+        "heartbeat_ms",
+        "idle_timeout_ms",
+        "capabilities"
+      ],
+      "additionalProperties": false
+    },
+    "ack_control": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "stream_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "through_seq": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})$",
+          "format": "harness-uint64"
+        }
+      },
+      "required": [
+        "source",
+        "target",
+        "stream_id",
+        "through_seq"
+      ],
+      "additionalProperties": false
+    },
+    "relay_stored_control": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "stream_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "through_seq": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})$",
+          "format": "harness-uint64"
+        }
+      },
+      "required": [
+        "source",
+        "target",
+        "stream_id",
+        "through_seq"
+      ],
+      "additionalProperties": false
+    },
+    "resume_control": {
+      "type": "object",
+      "properties": {
+        "streams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "target": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "stream_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "last_sent_seq": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]{0,19})$",
+                "format": "harness-uint64"
+              },
+              "known_acked_seq": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]{0,19})$",
+                "format": "harness-uint64"
+              }
+            },
+            "required": [
+              "source",
+              "target",
+              "stream_id",
+              "last_sent_seq",
+              "known_acked_seq"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 256
+        }
+      },
+      "required": [
+        "streams"
+      ],
+      "additionalProperties": false
+    },
+    "resumed_control": {
+      "type": "object",
+      "properties": {
+        "streams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "target": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "stream_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "through_seq": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]{0,19})$",
+                "format": "harness-uint64"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "reconcile_required",
+                  "unknown",
+                  "expired"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            },
+            "required": [
+              "source",
+              "target",
+              "stream_id",
+              "status"
+            ],
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "const": "ready"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "through_seq"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "unknown",
+                        "expired"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "not": {
+                    "required": [
+                      "through_seq"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 256
+        }
+      },
+      "required": [
+        "streams"
+      ],
+      "additionalProperties": false
+    },
+    "describe_control": {
+      "type": "object",
+      "properties": {
+        "endpoint_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        }
+      },
+      "required": [
+        "endpoint_id"
+      ],
+      "additionalProperties": false
+    },
+    "capabilities_control": {
+      "type": "object",
+      "properties": {
+        "endpoint_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$",
+          "format": "harness-uint64"
+        },
+        "receive_limits": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/limits"
+        },
+        "capabilities": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/capabilities"
+        }
+      },
+      "required": [
+        "endpoint_id",
+        "revision",
+        "receive_limits",
+        "capabilities"
+      ],
+      "additionalProperties": false
+    },
+    "ping_control": {
+      "type": "object",
+      "properties": {
+        "nonce": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        }
+      },
+      "required": [
+        "nonce"
+      ],
+      "additionalProperties": false
+    },
+    "pong_control": {
+      "type": "object",
+      "properties": {
+        "nonce": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        }
+      },
+      "required": [
+        "nonce"
+      ],
+      "additionalProperties": false
+    },
+    "error_control": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/error"
+        },
+        "for_message_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "acceptance": {
+          "enum": [
+            "not_stored",
+            "stored",
+            "unknown"
+          ]
+        }
+      },
+      "required": [
+        "error",
+        "acceptance"
+      ],
+      "additionalProperties": false
+    },
+    "goodbye_control": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "enum": [
+            "shutdown",
+            "reconnect",
+            "session_expired",
+            "protocol_error"
+          ]
+        },
+        "retry_after_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        }
+      },
+      "required": [
+        "reason"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

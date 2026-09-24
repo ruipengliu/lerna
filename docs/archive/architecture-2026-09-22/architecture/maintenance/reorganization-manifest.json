@@ -1,0 +1,140 @@
+{
+  "source_commit": "330142eaa4cb5eea35e687831263b0ae316ee988",
+  "files": [
+    {
+      "source": "docs/architecture/overview/01-purpose-and-scope.md",
+      "target": "docs/architecture/main/01-system/01-purpose-and-scope.md",
+      "source_sha256": "dbabd269f904d20bd4ff8da678e6e41538aa0cd3530cffdba6782cbb6ae027b4"
+    },
+    {
+      "source": "docs/architecture/overview/02-architecture-overview.md",
+      "target": "docs/architecture/main/01-system/02-architecture-overview.md",
+      "source_sha256": "e10419363314f0bbc65466a75ec47e0ed7eed09fc261b7db41227a5fb575cb8d"
+    },
+    {
+      "source": "docs/architecture/overview/03-component-panorama.md",
+      "target": "docs/architecture/main/01-system/03-component-panorama.md",
+      "source_sha256": "bd467973bf4a10d5de8ac0a654ffa756879842f2b43de25216c693c48d2bb835"
+    },
+    {
+      "source": "docs/architecture/overview/04-domain-and-state.md",
+      "target": "docs/architecture/main/01-system/05-domain-and-state.md",
+      "source_sha256": "76af84ed16356d7ccb4296325a7b6f18ea8cce4cb45edb8767c01917c211babd"
+    },
+    {
+      "source": "docs/architecture/overview/05-key-decisions.md",
+      "target": "docs/architecture/main/01-system/06-key-decisions.md",
+      "source_sha256": "fed696e94fd093257b4f4b5bdce0c43fcbe6a882c8b18896eeeeec8dbf0b14ef"
+    },
+    {
+      "source": "docs/architecture/guides/04-runtime-kernel.md",
+      "target": "docs/architecture/main/02-subsystems/01-runtime-kernel.md",
+      "source_sha256": "41ff9c5269c493a3b9abc736ae78c685124aa616a6905a8c225c5d4ea92239fd"
+    },
+    {
+      "source": "docs/architecture/guides/05-context-and-memory.md",
+      "target": "docs/architecture/main/02-subsystems/02-context-and-memory.md",
+      "source_sha256": "8340a5deab3f89d5b62bd69e2dd9f280300935bf073332a2d37d8470450c384f"
+    },
+    {
+      "source": "docs/architecture/guides/06-planning-and-decision.md",
+      "target": "docs/architecture/main/02-subsystems/03-planning-and-decision.md",
+      "source_sha256": "e990c672454280e01b59aacaa73772080bbd1b18e8831face9349d026421b4be"
+    },
+    {
+      "source": "docs/architecture/guides/07-tools-and-devices.md",
+      "target": "docs/architecture/main/02-subsystems/04-tools-and-devices.md",
+      "source_sha256": "d675031a7055add295ca592b44531fa60ef95037c5b6cc1e0517e2c0c694c020"
+    },
+    {
+      "source": "docs/architecture/guides/08-interaction-and-task-control.md",
+      "target": "docs/architecture/main/02-subsystems/05-interaction.md",
+      "source_sha256": "2ff8eec66503452cd418ce6b7032a38f85d0f178d3200343896a305ac71bfdd2"
+    },
+    {
+      "source": "docs/architecture/guides/09-identity-and-authorization.md",
+      "target": "docs/architecture/main/02-subsystems/06-identity-and-authorization.md",
+      "source_sha256": "e63c12034f34388df0b09702fb6c333aad66a0f23f25e1a5231906fdf25d5c5b"
+    },
+    {
+      "source": "docs/architecture/guides/10-extensions-and-protocols.md",
+      "target": "docs/architecture/main/02-subsystems/08-extensions-and-runtime.md",
+      "source_sha256": "d9fd5802c280e8a826b5e67057a840bf7cd4468c2ae1b0dbd89da60e4daa82ba"
+    },
+    {
+      "source": "docs/architecture/mechanisms/11-agent-collaboration.md",
+      "target": "docs/architecture/main/03-coordination/03-agent-collaboration.md",
+      "source_sha256": "50ff34ffe9eb06b99f619abc2ed9dbf2d053d9b35a692f51d2251a8fe46a475d"
+    },
+    {
+      "source": "docs/architecture/mechanisms/12-edge-cloud-coordination.md",
+      "target": "docs/architecture/main/03-coordination/04-edge-cloud-coordination.md",
+      "source_sha256": "9aa2a1a2055ff5a76203e31e4cfa1aec215290d44f3fcf8844ac7c910718218d"
+    },
+    {
+      "source": "docs/architecture/implementation/15-implementation-and-technology.md",
+      "target": "docs/architecture/main/04-engineering/01-implementation-and-technology.md",
+      "source_sha256": "e7296bc35679f99856a4e64189c175bd93cfeab5e627473bba574728716c3a16"
+    },
+    {
+      "source": "docs/architecture/implementation/13-deployment-and-storage.md",
+      "target": "docs/architecture/main/04-engineering/02-deployment-and-storage.md",
+      "source_sha256": "9dd72b1f1d5fcdeb8673532c44ada8364541abb2e700e77f8e700cb4a9e93167"
+    },
+    {
+      "source": "docs/architecture/mechanisms/14-reliability-and-recovery.md",
+      "target": "docs/architecture/main/04-engineering/03-reliability-and-recovery.md",
+      "source_sha256": "346322eba963b540fd8b660d504ad557f2190bebffbf59b56d61fdd1ace5a84d"
+    },
+    {
+      "source": "docs/architecture/guides/16-observation-evaluation-and-evolution.md",
+      "target": "docs/architecture/main/04-engineering/04-evaluation-and-release.md",
+      "source_sha256": "eac24d59402f32cb901fff66386f4a73853843d84082a2a35d77fe26596fcbc0"
+    },
+    {
+      "source": "docs/architecture/validation/17-roadmap-and-validation.md",
+      "target": "docs/architecture/main/04-engineering/05-roadmap-and-validation.md",
+      "source_sha256": "c77b4bf3d9ead56fe976edc76fcd00bda12cac0a0d9cfea5b88ad9e61fb6a118"
+    },
+    {
+      "source": "docs/architecture/validation/architecture-comparison.md",
+      "target": "docs/architecture/main/04-engineering/06-architecture-comparison.md",
+      "source_sha256": "bee0a2e37c0eb52fe354a9b2cb6b650852e552515398037325e9d6c4c2fe26dd"
+    },
+    {
+      "source": "docs/architecture/walkthroughs/03-task-walkthrough.md",
+      "target": "docs/architecture/examples/01-task-lifecycle.md",
+      "source_sha256": "51f55f96f54e648d551189cc8db2b730cb51692cbb65e2e9550b82c75852551c"
+    },
+    {
+      "source": "docs/architecture/walkthroughs/README.md",
+      "target": "docs/architecture/examples/README.md",
+      "source_sha256": "2bbf3d4634194988986df3e42f50ef64eb67985b0cc26c43139ed4223cd73a50"
+    },
+    {
+      "source": "docs/architecture/overview/README.md",
+      "target": "docs/architecture/main/01-system/README.md",
+      "source_sha256": "9090377f21a6147276742d558dad59f9b0fece619adb19b72753e02f75ae3648"
+    },
+    {
+      "source": "docs/architecture/guides/README.md",
+      "target": "docs/architecture/main/02-subsystems/README.md",
+      "source_sha256": "59c108c134c32c0bd38273f71eb5ad173b7505f97c83b88919a3a0ff20a5ed71"
+    },
+    {
+      "source": "docs/architecture/mechanisms/README.md",
+      "target": "docs/architecture/main/03-coordination/README.md",
+      "source_sha256": "fb178a6c25e693b01ba263539a8af8472c62d4bd88743ab87f79c9a9c8c817dd"
+    },
+    {
+      "source": "docs/architecture/implementation/README.md",
+      "target": "docs/architecture/main/04-engineering/README.md",
+      "source_sha256": "cc1eef8e01b857493d0f3109eac6d19dab88b36e9cfb16321d349eb731c84379"
+    },
+    {
+      "source": "docs/architecture/validation/README.md",
+      "target": "docs/architecture/main/04-engineering/README.md",
+      "source_sha256": "7ff7ab21ddd1c79454f35c27ac2866790127a72f4dc01b0e31f9413dc2e32b5a"
+    }
+  ]
+}

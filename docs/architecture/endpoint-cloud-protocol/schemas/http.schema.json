@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.invalid/protocol/v1/http.schema.json",
+  "$defs": {
+    "connect_ticket_request": {
+      "type": "object",
+      "properties": {
+        "endpoint_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        }
+      },
+      "required": [
+        "endpoint_id"
+      ],
+      "additionalProperties": false
+    },
+    "connect_ticket_response": {
+      "type": "object",
+      "properties": {
+        "ticket": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "expires_at": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/time"
+        },
+        "websocket_url": {
+          "type": "string",
+          "pattern": "^wss://[^/]+/harness/v1/connect$"
+        },
+        "gateway_endpoint_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        }
+      },
+      "required": [
+        "ticket",
+        "expires_at",
+        "websocket_url",
+        "gateway_endpoint_id"
+      ],
+      "additionalProperties": false
+    },
+    "content_response": {
+      "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/content"
+    },
+    "error_response": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/error"
+        }
+      },
+      "required": [
+        "error"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

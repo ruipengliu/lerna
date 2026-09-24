@@ -1,0 +1,54 @@
+{
+  "manifest_version": 1,
+  "namespace": "com.example",
+  "protocol_versions": [
+    1
+  ],
+  "messages": [
+    {
+      "type": "com.example.camera.capture",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/example-extension.schema.json#/$defs/capture_request",
+        "response": "https://harness.invalid/protocol/v1/example-extension.schema.json#/$defs/capture_response"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [
+        "device.capture"
+      ],
+      "side_effecting": true,
+      "operation_id": "required",
+      "recovery": "Query the original operation through harness.execution.query; never blindly repeat capture."
+    }
+  ],
+  "extensions": [
+    {
+      "name": "com.example.trace",
+      "version": 1,
+      "schema": "https://harness.invalid/protocol/v1/example-extension.schema.json#/$defs/trace",
+      "required": false
+    },
+    {
+      "name": "com.example.data_policy",
+      "version": 1,
+      "schema": "https://harness.invalid/protocol/v1/example-extension.schema.json#/$defs/data_policy",
+      "required": true
+    }
+  ],
+  "views": [
+    {
+      "type": "com.example.camera.preview",
+      "version": 1,
+      "schema": "https://harness.invalid/protocol/v1/example-extension.schema.json#/$defs/preview",
+      "fallback": {
+        "type": "harness.ui.document",
+        "version": 1
+      }
+    }
+  ]
+}

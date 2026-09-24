@@ -1,0 +1,3 @@
+interface:
+  display_name: "技术方案写作复盘"
+  short_description: "分析当前会话的方案写作经验，先出草稿，经用户确认后更新项目指引"

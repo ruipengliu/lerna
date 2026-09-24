@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant Core as 运行内核
+    participant Execution as 执行系统
+    participant Computer as 目标工具
+
+    Core->>Core: RunStore：状态、操作映射、工作及 Outbox
+    Core->>Execution: 交付原操作请求
+    Execution->>Execution: 持久保存 Inbox、去重与未处理项
+    Execution-->>Core: PERSISTED：消息已持久接收
+    Execution->>Execution: 接纳记录、工作与回复 Outbox 一起提交
+    Execution-->>Core: ACCEPTED：业务已接纳
+    Execution->>Computer: 启动准备持久化后执行并核对
+    Computer-->>Execution: 原操作的效果事实
+    Execution->>Execution: 效果报告与 Outbox 一起提交
+    Execution-->>Core: 回交原操作效果报告
+    Core->>Core: RunStore：事实、工作、Inbox 消费与回复 Outbox
+    Core-->>Execution: PERSISTED：结果已持久接收

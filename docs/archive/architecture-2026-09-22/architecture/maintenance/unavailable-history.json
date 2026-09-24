@@ -1,0 +1,137 @@
+[
+  {
+    "source": "docs/archive/architecture-v1/05-edge-cloud-memory.md",
+    "label": "确定上下文、记忆与同步的数据模型",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/08-memory-context.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/07-tools-and-simulated-devices.md",
+    "label": "确定多模拟设备与工具执行的验证方案",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/10-execution-devices.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/10-observation-evaluation-and-evolution.md",
+    "label": "确定观测评测与自进化的发布闭环",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/13-observation-evolution.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/10-observation-evaluation-and-evolution.md",
+    "label": "领域词汇",
+    "missing_path": "../../../CONTEXT.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/10-observation-evaluation-and-evolution.md",
+    "label": "确定能力里程碑与实施依赖",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/14-implementation-milestones.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/10-evaluation-contracts-and-release-gates.md",
+    "label": "观测评测与发布闭环决策",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/13-observation-evolution.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/08-authorization-and-user-control.md",
+    "label": "确定身份、授权与凭证的执行位置",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/11-authorization.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/08-authorization-and-user-control.md",
+    "label": "领域词汇",
+    "missing_path": "../../../CONTEXT.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/02-runtime-and-state.md",
+    "label": "确定 Go 内核模块与本地持久化 Interface",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/05-kernel-stack.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/02-runtime-and-state.md",
+    "label": "定义内部契约与外部协议映射",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/06-protocol-contracts.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/02-runtime-and-state.md",
+    "label": "确定端云任务所有权与恢复语义",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/07-edge-cloud-recovery.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/02-runtime-and-state.md",
+    "label": "确定能力里程碑与实施依赖",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/14-implementation-milestones.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/04-edge-cloud-and-recovery.md",
+    "label": "确定端云任务所有权与恢复语义",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/07-edge-cloud-recovery.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/09-extension-contracts-and-activation.md",
+    "label": "确定插件、Skill 与外部 Agent 的接入生命周期",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/12-extension-lifecycle.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/09-extension-ecosystem.md",
+    "label": "确定插件、Skill 与外部 Agent 的接入生命周期",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/12-extension-lifecycle.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/09-extension-ecosystem.md",
+    "label": "领域词汇",
+    "missing_path": "../../../CONTEXT.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/11-milestones-and-validation.md",
+    "label": "确定能力里程碑与实施依赖",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/14-implementation-milestones.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/07-execution-contracts-and-validation.md",
+    "label": "确定多模拟设备与工具执行的验证方案",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/10-execution-devices.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/05-memory-and-context.md",
+    "label": "确定上下文、记忆与同步的数据模型",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/08-memory-context.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/05-memory-data-and-lifecycle.md",
+    "label": "确定上下文、记忆与同步的数据模型",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/08-memory-context.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/03-contracts-and-protocols.md",
+    "label": "定义内部契约与外部协议映射",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/06-protocol-contracts.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/03-contracts-and-protocols.md",
+    "label": "确定端云任务所有权与恢复语义",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/07-edge-cloud-recovery.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/03-contracts-and-protocols.md",
+    "label": "确定上下文、记忆与同步的数据模型",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/08-memory-context.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/03-contracts-and-protocols.md",
+    "label": "确定身份、授权与凭证的执行位置",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/11-authorization.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/03-contracts-and-protocols.md",
+    "label": "确定插件、Skill 与外部 Agent 的接入生命周期",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/12-extension-lifecycle.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/03-contracts-and-protocols.md",
+    "label": "确定能力里程碑与实施依赖",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/14-implementation-milestones.md"
+  },
+  {
+    "source": "docs/archive/architecture-v1/06-brain-and-agent-collaboration.md",
+    "label": "确定大脑循环与多 Agent 协作方式",
+    "missing_path": "../../../.scratch/harness-technical-design/issues/09-brain-agents.md"
+  }
+]

@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.invalid/protocol/v1/envelope.schema.json",
+  "type": "object",
+  "properties": {
+    "protocol_version": {
+      "const": 1
+    },
+    "message_id": {
+      "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+    },
+    "kind": {
+      "enum": [
+        "request",
+        "response",
+        "event",
+        "control"
+      ]
+    },
+    "type": {
+      "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/name"
+    },
+    "type_version": {
+      "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uint"
+    },
+    "source": {
+      "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+    },
+    "target": {
+      "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+    },
+    "reply_to": {
+      "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+    },
+    "operation_id": {
+      "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+    },
+    "delivery": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "const": "reliable"
+            },
+            "stream_id": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+            },
+            "seq": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/seq"
+            },
+            "retain_until": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/time"
+            },
+            "scope": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/scope"
+            }
+          },
+          "required": [
+            "mode",
+            "stream_id",
+            "seq",
+            "retain_until",
+            "scope"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "const": "ephemeral"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "authorization": {
+      "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/authorization"
+    },
+    "expires_at": {
+      "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/time"
+    },
+    "payload": {
+      "type": "object"
+    },
+    "extensions": {
+      "type": "array",
+      "items": {
+        "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/extension"
+      },
+      "minItems": 1,
+      "maxItems": 32
+    }
+  },
+  "required": [
+    "protocol_version",
+    "message_id",
+    "kind",
+    "type",
+    "type_version",
+    "source",
+    "target",
+    "payload"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "control"
+          }
+        }
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "delivery"
+              ]
+            },
+            {
+              "required": [
+                "authorization"
+              ]
+            },
+            {
+              "required": [
+                "expires_at"
+              ]
+            },
+            {
+              "required": [
+                "operation_id"
+              ]
+            },
+            {
+              "required": [
+                "extensions"
+              ]
+            }
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "delivery"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "request"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "authorization",
+          "expires_at"
+        ],
+        "properties": {
+          "delivery": {
+            "properties": {
+              "mode": {
+                "const": "reliable"
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "authorization"
+              ]
+            },
+            {
+              "required": [
+                "expires_at"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "response"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "reply_to"
+        ],
+        "properties": {
+          "delivery": {
+            "properties": {
+              "mode": {
+                "const": "reliable"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "request",
+              "event"
+            ]
+          }
+        }
+      },
+      "then": {
+        "not": {
+          "required": [
+            "reply_to"
+          ]
+        }
+      }
+    }
+  ]
+}

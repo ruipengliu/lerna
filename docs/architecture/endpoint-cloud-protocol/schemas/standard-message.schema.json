@@ -1,0 +1,1235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.invalid/protocol/v1/standard-message.schema.json",
+  "allOf": [
+    {
+      "$ref": "https://harness.invalid/protocol/v1/envelope.schema.json"
+    },
+    {
+      "oneOf": [
+        {
+          "properties": {
+            "type": {
+              "const": "harness.core.hello"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "control"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/hello_control"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.core.welcome"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "control"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/welcome_control"
+            }
+          },
+          "required": [
+            "reply_to"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.core.ack"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "control"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/ack_control"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.core.relay_stored"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "control"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/relay_stored_control"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.core.resume"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "control"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/resume_control"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.core.resumed"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "control"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/resumed_control"
+            }
+          },
+          "required": [
+            "reply_to"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.core.describe"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "control"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/describe_control"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.core.capabilities"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "control"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/capabilities_control"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.core.ping"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "control"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/ping_control"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.core.pong"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "control"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/pong_control"
+            }
+          },
+          "required": [
+            "reply_to"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.core.error"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "control"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/error_control"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.core.goodbye"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "control"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/core.schema.json#/$defs/goodbye_control"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.submit"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/submit_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.submit"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/submit_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/query_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/query_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query_operation"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/query_operation_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query_operation"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/query_operation_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.input"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/input_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.input"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/input_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.cancel"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/cancel_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.cancel"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/cancel_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.status"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/status_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.input_requested"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/input_requested_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.result"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/result_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.cancel_result"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/cancel_result_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.invoke"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/invoke_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.invoke"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/invoke_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.query"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/query_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.query"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/query_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.cancel"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/cancel_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.cancel"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/cancel_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.progress"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/progress_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "ephemeral"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.fact"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/fact_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.result"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/result_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.cancel_result"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/cancel_result_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.get"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/get_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.get"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/get_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.snapshot"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/snapshot_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.delta"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/delta_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "ephemeral"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.input_requested"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/input_requested_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.input"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/input_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.input"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/input_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.action"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/action_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.action"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/action_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.input_result"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/input_result_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.action_result"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/action_result_event"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.query_operation"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/query_operation_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.query_operation"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/query_operation_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query_result"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/query_result_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query_result"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/query_result_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.set_presentation"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/set_presentation_request"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.set_presentation"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/ui.schema.json#/$defs/set_presentation_response"
+            },
+            "delivery": {
+              "properties": {
+                "mode": {
+                  "const": "reliable"
+                }
+              }
+            }
+          },
+          "required": [
+            "operation_id"
+          ]
+        }
+      ]
+    }
+  ]
+}
