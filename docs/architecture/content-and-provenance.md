@@ -2,7 +2,7 @@
 
 内容引用让执行证据、任务快照、模型输入和记忆来源指向同一份已保存字节。能取回这些字节，还需分别知道其来源、当前用途限制和保留边界。本页集中说明现有内容服务与来源适配器的交接责任，支撑 C2、C3、C7 及 V1／V2 的证据链。
 
-本页补全[HTTPS 内容通道](endpoint-cloud-protocol/transport.md#content)、[执行证据发布](capability-and-execution/execution-and-recovery.md#states)和[上下文来源绑定](task-kernel/decision-and-work.md#context)已有约束。它是现有提供方的共同专题，不新增全景图组件或独立服务；同宿主与[WSS 领域合同](#remote)承担相同责任。[全框架持有者登记与清理](#holders)已经纳入设计，来源／内容与授权分别裁决。设计明确不代表运行实现已交付。
+本页补全[HTTPS 内容通道](endpoint-communication/transport.md#content)、[执行证据发布](capability-and-execution/execution-and-recovery.md#states)和[上下文来源绑定](task-kernel/decision-and-work.md#context)已有约束。它是现有提供方的共同专题，不新增全景图组件或独立服务；同宿主与[WSS 领域合同](#remote)承担相同责任。[全框架持有者登记与清理](#holders)已经纳入设计，来源／内容与授权分别裁决。设计明确不代表运行实现已交付。
 
 <a id="ownership"></a>
 ## 1. 字节、来源与使用事实的分工
@@ -125,7 +125,7 @@ sequenceDiagram
 <a id="remote"></a>
 ## 6. 来源证明与内容管理的跨端合同
 
-来源与内容管理采用现有网关 WSS，字段见 [governance Schema](endpoint-cloud-protocol/schemas/governance.schema.json) 与 [共享精确绑定](endpoint-cloud-protocol/schemas/domain-common.schema.json)。HTTPS 仍只传字节；上传成功不登记外部持有者，也不建立领域引用的可恢复保留保证。跨端部署必须同时落实受信元数据路径与获准字节路径。NAT 后内容只有在策略允许时上传至可访问提供端；禁止云端保存／处理的原文留端侧处理，不能为了打通引用自动复制到网关或云存储。
+来源与内容管理采用现有网关 WSS，字段见 [governance Schema](endpoint-communication/schemas/governance.schema.json) 与 [共享精确绑定](endpoint-communication/schemas/domain-common.schema.json)。HTTPS 仍只传字节；上传成功不登记外部持有者，也不建立领域引用的可恢复保留保证。跨端部署必须同时落实受信元数据路径与获准字节路径。NAT 后内容只有在策略允许时上传至可访问提供端；禁止云端保存／处理的原文留端侧处理，不能为了打通引用自动复制到网关或云存储。
 
 | 消息（均为 harness.*@1） | 发起方、输出与成功含义 | 未知后的继续者 |
 | --- | --- | --- |

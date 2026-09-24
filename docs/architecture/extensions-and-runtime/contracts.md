@@ -2,7 +2,7 @@
 
 [总览](README.md) · [安装与隔离](installation-and-isolation.md) · [生命周期](lifecycle-and-recovery.md) · [验证](validation.md)
 
-本页定义本地管理契约及 [release.schema.json](../endpoint-cloud-protocol/schemas/release.schema.json) 的跨端管理映射；尚无运行 SDK 或安装器。现有目录、驱动、授权与协议声明以其所属文档为权威；跨端默认采用版本化 WSS 领域消息，制品字节沿受控 HTTPS 内容通道。
+本页定义本地管理契约及 [release.schema.json](../endpoint-communication/schemas/release.schema.json) 的跨端管理映射；尚无运行 SDK 或安装器。现有目录、驱动、授权与协议声明以其所属文档为权威；跨端默认采用版本化 WSS 领域消息，制品字节沿受控 HTTPS 内容通道。
 
 <a id="handoffs"></a>
 ## 1. 交接与成功含义
@@ -23,7 +23,7 @@
 <a id="package"></a>
 ## 2. 安装描述与依赖锁
 
-PackageDescriptor 描述可安装制品，与[协议 extension manifest](../endpoint-cloud-protocol/schemas/extension-manifest.schema.json)相互引用；后者只描述消息、附加项和视图。描述文件只提供数据，安装阶段不运行包自带脚本。首期选择独立 UTF-8 JSON 描述文件和 ZIP 制品，`digest` 为 ZIP 原始字节的 SHA-256，表示为 `sha256:` 加 64 位小写十六进制；批准记录另固定描述文件原始字节的同格式摘要。解包后固定各文件摘要并在装载时复查，不对不同 ZIP 编码做内容等价去重。格式选择是本次设计，机器可读 Schema 和打包器随 SDK 实施交付。
+PackageDescriptor 描述可安装制品，与[协议 extension manifest](../endpoint-communication/schemas/extension-manifest.schema.json)相互引用；后者只描述消息、附加项和视图。描述文件只提供数据，安装阶段不运行包自带脚本。首期选择独立 UTF-8 JSON 描述文件和 ZIP 制品，`digest` 为 ZIP 原始字节的 SHA-256，表示为 `sha256:` 加 64 位小写十六进制；批准记录另固定描述文件原始字节的同格式摘要。解包后固定各文件摘要并在装载时复查，不对不同 ZIP 编码做内容等价去重。格式选择是本次设计，机器可读 Schema 和打包器随 SDK 实施交付。
 
 | 字段组 | 约束 |
 | --- | --- |
@@ -126,7 +126,7 @@ QueryCommand 的固定接纳决定与可变进度分别保存。进度为 `pendi
 <a id="wire"></a>
 ## 6. 批准后自动执行与跨节点管理线合同
 
-[release.schema.json](../endpoint-cloud-protocol/schemas/release.schema.json)定义 OI-P1／ER-P1／ER-P2 的版本 1；[示例](../endpoint-cloud-protocol/examples/runtime-domain-flow.json)串起批准查询、逐节点准备／激活、撤回和回退。release 使用真实批准权威签发／查询的 proof_ref；事件投影不能自行增加范围、延长期限或生成新批准。
+[release.schema.json](../endpoint-communication/schemas/release.schema.json)定义 OI-P1／ER-P1／ER-P2 的版本 1；[示例](../endpoint-communication/examples/runtime-domain-flow.json)串起批准查询、逐节点准备／激活、撤回和回退。release 使用真实批准权威签发／查询的 proof_ref；事件投影不能自行增加范围、延长期限或生成新批准。
 
 `approval_id` 是独立批准操作身份，所有消息的 scope 为 operation(approval_id)，不同于逐目标 `command_id`。实际查询操作也有自己的 envelope.operation_id；每个变更命令的 envelope.operation_id 必须等于载荷 command_id。改进与扩展分别保存原交接责任，消息 ACK 只证明交付。
 

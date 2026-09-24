@@ -6,7 +6,7 @@ Harness 以任务核心保存的目标、操作和持久工作连接大脑、记
 
 设计覆盖固定本地、固定云端两种用户任务权威部署，以及三系统的独立跨端部署。受信宿主装配核心、单轮大脑、记忆、执行、授权、UI 及持久交付；内部 Agent 子任务共用唯一任务写权威。远程大脑承担原单轮调用，远程协作端点保存交接责任，不增加第二套任务裁决。调用云模型与独立远程 Brain 分别验证。
 
-跨端领域合同统一采用网关 WSS，HTTPS 承担认证、连接票据、恢复资格引导及大内容。先通过受限资格恢复身份，再按领域证据开放行为，完整路径见[跨端领域合同](endpoint-cloud-protocol/domain-profiles.md)。本地参考闭环、云核心配端侧领域、端侧核心配云领域构成最小验证集合；运行中权威迁移仍后置。
+跨端领域合同统一采用网关 WSS，HTTPS 承担认证、连接票据、恢复资格引导及大内容。先通过受限资格恢复身份，再按领域证据开放行为，完整路径见[跨端领域合同](endpoint-communication/domain-profiles.md)。本地参考闭环、云核心配端侧领域、端侧核心配云领域构成最小验证集合；运行中权威迁移仍后置。
 
 | 关键选择 | 依据与主要代价 | 当前边界 |
 | --- | --- | --- |
@@ -29,9 +29,9 @@ Harness 以任务核心保存的目标、操作和持久工作连接大脑、记
 | 1 | [贯穿设计实例](design-walkthrough.md) | 用户目标如何变成固定条件、行动证据及正式成果？异常后谁继续？ |
 | 2 | [任务内核](task-kernel/README.md) → [大脑](brain-system/README.md) → [能力与执行](capability-and-execution/README.md) | 谁提案、谁准入、谁保存与核对事实？ |
 | 3 | [身份与授权](identity-and-authorization/README.md) → [内容与来源交接](content-and-provenance.md) → [记忆](memory-system/README.md) | 一份信息何时可以读取、处理、保存和再次使用？ |
-| 4 | [应用与交互](application-and-interaction/README.md) → [端云协议](endpoint-cloud-protocol/README.md) → [协作与端云](coordination-and-cloud/README.md) | 用户意图、消息和委派怎样跨独立提交边界恢复？ |
+| 4 | [应用与交互](application-and-interaction/README.md) → [Agent 协作](agent-coordination/README.md) → [端点通信](endpoint-communication/README.md) | 用户输入和 Agent 委派分别保存什么责任，怎样共用可靠消息交付？ |
 | 5 | [扩展与运行保障](extensions-and-runtime/README.md) → [观测、评测与改进](observation-and-improvement/README.md) | 如何组装、隔离、恢复、评价和受控切换版本？ |
-| 6 | [跨端领域合同](endpoint-cloud-protocol/domain-profiles.md) → [系统验证设计](validation.md) → [决策落实与剩余依赖](open-decisions.md) | 领域如何共同恢复，哪些场景证明项目目标，哪些实现与配置仍须交付？ |
+| 6 | [跨端领域合同](endpoint-communication/domain-profiles.md) → [系统验证设计](validation.md) → [决策落实与剩余依赖](open-decisions.md) | 领域如何共同恢复，哪些场景证明项目目标，哪些实现与配置仍须交付？ |
 
 ## 3. 模块与权威文档
 
@@ -45,16 +45,20 @@ Harness 以任务核心保存的目标、操作和持久工作连接大脑、记
 | [身份与授权](identity-and-authorization/README.md) | 主体、端点、许可、单次消费、撤销与授权恢复 | 受限引导、跨端许可／来源依据及受信确认；离线仍须平台证明 |
 | [记忆系统](memory-system/README.md) | 受控查询与修改、来源、索引、失效清理与获准视图 | 远程访问、受管副本治理和成功终态的 opt-in 提取；保持单一写权威 |
 | [应用与交互](application-and-interaction/README.md) | 呈现快照、本端开闭、输入转交与受信管理 | 获准目录／订阅、中间预览和领域管理；输入不能绕过授权 |
-| [端云协议框架](endpoint-cloud-protocol/README.md) | WSS／JSON、公共信封、领域消息与可靠交接 | 未发布 v1 的领域 Schema／示例；结构、运行和互操作分层验证 |
-| [协作与端云](coordination-and-cloud/README.md) | 委派关联、消息账本、连接路由与领域恢复 | 单权威跨端内部委派、外部原生任务及普通输入交接；迁移后置 |
+| [端点通信](endpoint-communication/README.md) | 公共消息规范、可靠交付账本、连接路由与领域恢复组织 | [协议规范入口](endpoint-communication/protocol.md)支持独立实现；默认交付实现单列，结构、运行和互操作分层验证 |
+| [Agent 协作](agent-coordination/README.md) | Agent 声明、委派合同与任务映射、控制及结果／用量转交 | 单权威跨端内部委派、外部原生任务及普通输入交接；复用端点通信，迁移后置 |
 | [扩展与运行保障](extensions-and-runtime/README.md) | 启动、恢复协调、版本锁定、排空、隔离与受控回退 | 精确批准自动交接和逐节点管理；有状态在线迁移后置 |
 | [观测、评测与改进](observation-and-improvement/README.md) | 诊断、隔离评测、独立判定、候选及分批启用 | 批准后自动执行、撤回及受管评测数据；候选生成保持显式 |
 
 [内容与来源交接](content-and-provenance.md)集中解释已有内容提供方、来源权威及消费方之间的共同约束，不增加全景图模块。各模块仍保存并裁决自己的业务事实。
 
+应用与交互、Agent 协作分别维护用户交互与任务委派的领域规则，二者及其他领域共用端点通信。全景图的 `interaction` 保存渲染、界面管理和界面存储职责，`coordination` 包含协作任务端点，`communication` 包含连接适配器；连接适配器在详细设计中展开为消息交付、连接与传输。分组不限定进程或部署位置，领域接纳、消息接管和业务成功仍分别确认。
+
+协议规范入口按公共规范、所启用领域合同和机器资产组织完整的实现路径。领域外部行为以所属模块的规范定义为准，默认实现中的事务表和工作调度不自动成为互操作要求；发布时共同冻结引用的规范版本，不能用变化中的最新设计解释旧版消息。
+
 ## 4. 文档状态与维护
 
-根目录保留整体阅读入口、贯穿实例、跨模块规则、系统验证与决策／依赖索引；各模块子目录维护所属设计，`diagrams/` 保存图示，`maintenance/` 保存历史审查记录。协议的 Schema、示例与校验器集中在 `endpoint-cloud-protocol/`。
+根目录保留整体阅读入口、贯穿实例、跨模块规则、系统验证与决策／依赖索引；各模块子目录维护所属设计，`diagrams/` 保存图示，`maintenance/` 保存历史审查记录。协议的 Schema、示例与校验器集中在 `endpoint-communication/`。
 
 共同设计变化同步正文、所属契约、图示和示例；一个规则保留一个权威位置，邻接模块链接引用并说明自身缺席行为。[决策落实与剩余依赖](open-decisions.md)集中组织跨模块决定、后置范围与提供方责任，详细设计归负责模块。导航、错误链接与已明确事实的更新属于维护，不作为架构决策等待。
 

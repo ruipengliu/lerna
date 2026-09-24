@@ -77,7 +77,7 @@ V1 测答案正确性、引用支撑、获取时间与时效约束、证据缺�
 <a id="proposals"></a>
 ## 4. 已采用的跨模块合同与验证
 
-BS-P1 已采用，完整单轮协议在[远程调用](contracts-and-runtime.md#remote)定义，严格载荷见 [brain Schema](../endpoint-cloud-protocol/schemas/brain.schema.json)。远端只持有调用及回送记录，核心仍拥有唯一任务裁决权；网关 WSS 统一传输，输出内容经获准内容通道保存。相较同步 RPC 增加接纳及回送账本，但断连后可沿原调用恢复，不产生第二次生成。
+BS-P1 已采用，完整单轮协议在[远程调用](contracts-and-runtime.md#remote)定义，严格载荷见 [brain Schema](../endpoint-communication/schemas/brain.schema.json)。远端只持有调用及回送记录，核心仍拥有唯一任务裁决权；网关 WSS 统一传输，输出内容经获准内容通道保存。相较同步 RPC 增加接纳及回送账本，但断连后可沿原调用恢复，不产生第二次生成。
 
 身份 P1、执行 CE-P1／P2 和协作 CO-P1 均由各领域提供；大脑不复制其权威。来源、准确声明、用量及控制已纳入线合同，缺提供方实现时关闭相应部署，不把本地调用成功计作远程互操作。
 

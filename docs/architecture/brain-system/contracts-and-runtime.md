@@ -2,7 +2,7 @@
 
 [总览](README.md) · [决策机制](decision-policy.md) · [验证与依赖](validation.md)
 
-以下逻辑契约同时用于本地调用与已采用的[远程 Brain](#remote)；跨端字段由 [brain Schema](../endpoint-cloud-protocol/schemas/brain.schema.json)定义。既有字段含义分别引用内核、执行和身份方案；字段组中的本地补充不改变其裁决权。同进程使用类型化调用；远程默认网关 WSS，未知必需版本直接拒绝，不静默降级。
+以下逻辑契约同时用于本地调用与已采用的[远程 Brain](#remote)；跨端字段由 [brain Schema](../endpoint-communication/schemas/brain.schema.json)定义。既有字段含义分别引用内核、执行和身份方案；字段组中的本地补充不改变其裁决权。同进程使用类型化调用；远程默认网关 WSS，未知必需版本直接拒绝，不静默降级。
 
 <a id="decide"></a>
 ## 1. Brain.Decide

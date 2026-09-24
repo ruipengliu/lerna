@@ -1,8 +1,11 @@
 # 协作任务端点契约
 
-[总览](README.md) · [委派机制](delegation.md) · [消息交付](delivery-and-recovery.md) · [验收](validation.md)
+[总览](README.md) · [委派机制](delegation.md) · [消息交付](../endpoint-communication/delivery-and-recovery.md) · [验收](validation.md)
 
-本页集中定义协作端点的内部字段和 CO-P1 跨端映射；[coordination.schema.json](../endpoint-cloud-protocol/schemas/coordination.schema.json)定义严格的 v1 JSON 载荷，尚无运行 SDK。线上公共字段继续沿用[线格式](../endpoint-cloud-protocol/wire-format.md)。消息交付自身记录和接口集中在[交付设计](delivery-and-recovery.md)，避免复制其状态。
+本页集中定义协作端点的内部字段和 CO-P1 跨端映射；[coordination.schema.json](../endpoint-communication/schemas/coordination.schema.json)定义严格的 v1 JSON 载荷，尚无运行 SDK。线上公共字段继续沿用[线格式](../endpoint-communication/wire-format.md)。消息交付自身记录和接口集中在[交付设计](../endpoint-communication/delivery-and-recovery.md)，避免复制其状态。
+
+<a id="normative"></a>
+**规范阅读与权威归属**：本页第 1–4、6–7 节定义协作领域的声明、合同、接口成功含义、事实、错误及 CO-P1 映射；[委派处理链](delegation.md)集中定义这些接口的接纳、结果、预算、控制和恢复行为。两篇相关规则与对应 Schema、注册表共同构成协作互操作规范，并由[端点通信的领域索引](../endpoint-communication/domain-profiles.md)纳入独立协议阅读路径。第 5 节是满足规范的一种本地记录与事务设计，第三方可以替换内部表及存储，但必须保留相同可观察行为。发布时共同锁定上述规范正文与线契约；发布后同版本语义冻结，演进遵守[类型版本规则](../endpoint-communication/extensions.md#version)。
 
 <a id="agent"></a>
 ## 1. 已安装 Agent 声明
@@ -129,7 +132,7 @@ internal 模式第一次接管 D 时，协作端点持久分配 **child_submit_o
 <a id="wire"></a>
 ## 7. CO-P1 线合同与恢复
 
-[coordination.schema.json](../endpoint-cloud-protocol/schemas/coordination.schema.json) 与[完整示例](../endpoint-cloud-protocol/examples/runtime-domain-flow.json)定义版本 1；全部消息为 reliable，跨端采用 WSS，内容字节仍按受控内容合同读取。下表省略 `harness.coordination.` 前缀；响应继承匹配请求的 scope 和 operation_id。
+[coordination.schema.json](../endpoint-communication/schemas/coordination.schema.json) 与[完整示例](../endpoint-communication/examples/runtime-domain-flow.json)定义版本 1；全部消息为 reliable，跨端采用 WSS，内容字节仍按受控内容合同读取。下表省略 `harness.coordination.` 前缀；响应继承匹配请求的 scope 和 operation_id。
 
 | 消息 | lane／scope | 身份、提供方和恢复 |
 | --- | --- | --- |

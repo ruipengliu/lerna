@@ -35,9 +35,24 @@
 
 `ReadTask` 的 `input_requests` 最多 64 项，故同一任务同时有效输入请求也限定为 64；超限拒绝该提案，不能截断后让部分请求无法恢复。任务历史、内部操作账本分页通过内部管理接口读取，不伪装成 v1 已有字段。
 
-`ReadResult` 映射 v1 草案内建的 `task.query_result@1`，读取终态提交时固定的完整结果，与返回最新状态的 `ReadTask` 分开。先验证身份、任务访问及当前披露权限；对获准查询的任务，未终态返回 `core.precondition_failed`，结果已清理、删除或缺失恢复依据时返回 `task.result_unavailable`、`retry=never`，不以当前摘要重建原结果。其他身份或权限拒绝不泄露对象是否存在；成果引用可读不等于内容字节可读。完整语义见[正式结果恢复](../endpoint-cloud-protocol/task-and-ui.md#result-recovery)。
+新增控制与补证的完整边界见[用户控制与管理](control-and-management.md)，机器字段见 [task-control Schema](../endpoint-communication/schemas/task-control.schema.json)。控制修订与预算修订只在相应配置变化时推进，避免普通进度刷新使用户命令无谓冲突。
 
-新增控制与补证的完整边界见[用户控制与管理](control-and-management.md)，机器字段见 [task-control Schema](../endpoint-cloud-protocol/schemas/task-control.schema.json)。控制修订与预算修订只在相应配置变化时推进，避免普通进度刷新使用户命令无谓冲突。
+<a id="result-recovery"></a>
+### 正式结果查询与恢复契约
+
+本节定义 `ReadResult`／`task.query_result@1` 的规范性行为，同进程与跨端实现均须满足。正式结果在[任务终态提交](lifecycle.md#completion)时固定；按 `task_id` 返回完整原 `task.result` 载荷，包括原修订、摘要及成果引用，与返回当前状态的 `ReadTask` 分开。查询不触发重新执行，不要求原消息仍在交付窗口、UI 仍存在或调用方知道执行子操作。任务权威按独立的业务与内容保留策略保存查询依据，交付载荷清理不能删除仍须保留的正式结果。
+
+查询先验证身份、任务访问及当前披露权限，无权时不透露对象是否存在。只有获准查询后，才按以下互斥情况返回；查询不扩大保存、同步或披露权限。
+
+| 查询时的情况 | 返回事实与后续处理 |
+| --- | --- |
+| 任务尚未终结 | 返回 `core.precondition_failed`，不触发执行或生成结果 |
+| 已终态、原结果仍保留 | 返回固定原结果；迟到事实及当前 `effects_pending` 另由 `ReadTask`／`task.query` 返回，不改写原结果 |
+| 已终态、结果已按策略清理、删除或依据缺失 | 返回 `task.result_unavailable`、`retry=never`，不以当前摘要伪装完整原结果 |
+
+取得原结果后，调用方还须独立取得并核验所需引用内容。内容暂不可取、失效或无权读取时，保留原结果事实并分别报告内容获取情况，不能确认交付完整。结果不无限保留，内容提供端也不保证永久在线；完整内容确认条件见[内容交付](../endpoint-communication/message-contract.md#delivery)。
+
+某次取消的固定答复属于该取消操作，沿 `ReadCancel`／`task.query_cancel` 按[原控制答复恢复](control-and-management.md#recovery)读取，不能用正式任务结果或当前状态代替。
 
 ### 内部协作接口
 
@@ -145,14 +160,14 @@ flowchart TB
 <a id="delivery-store"></a>
 ### 消息交付存储与运行存储
 
-消息交付的持久化责任来自端云协议[“两处持久交接边界”](../endpoint-cloud-protocol/message-contract.md#handoff)。本节明确内核依赖哪些记录；消息交付模块内部的表、索引、压缩与扫描实现由该模块设计。
+消息交付的持久化责任来自端云协议[“两处持久交接边界”](../endpoint-communication/message-contract.md#handoff)。本节明确内核依赖哪些记录；消息交付模块内部的表、索引、压缩与扫描实现由该模块设计。
 
 | 记录归属 | 必须可恢复的记录 | 对外确认的含义 |
 | --- | --- | --- |
 | 消息交付的持久记录 | 发送消息与发送责任；接收消息、去重记录与业务待处理责任；流序号／回执／保留窗口依据 | 已承担消息保管和交接责任，业务可能尚未接纳 |
 | 内核运行存储 | 任务、操作、输入消费、预算、工作、处理回执与成果；待交付消息先保存在发送 Work | 业务决定及后续工作已保存，外部效果和目标接收仍待证据 |
 
-两组记录可以使用同一数据库产品，分别由各自模块管理。当前契约按两个本地提交边界恢复，不依赖跨模块全局事务；交付侧记录与恢复规则见[消息交付账本](../coordination-and-cloud/delivery-and-recovery.md)。落盘与崩溃恢复须在实现后验证，内存队列不能满足上述保证。
+两组记录可以使用同一数据库产品，分别由各自模块管理。当前契约按两个本地提交边界恢复，不依赖跨模块全局事务；交付侧记录与恢复规则见[消息交付账本](../endpoint-communication/delivery-and-recovery.md)。落盘与崩溃恢复须在实现后验证，内存队列不能满足上述保证。
 
 入站先由消息交付一起保存消息、去重及待处理责任，再调用任务核心。内核提交业务决定后确认处理；消息交付随后清除或标记该待处理项。确认丢失就重交原消息，核心凭业务回执返回原处理结果。
 
@@ -204,7 +219,7 @@ flowchart TB
 | 提交／交付是否成功不明 | 不伪装业务 rejected；按交付阶段报告 unknown／恢复缺口 | 查原提交、原操作；`core.error` 不能代替已接纳操作的持久结果 |
 | 效果未知／事实矛盾 | `execution.effect_unknown` 或任务等待摘要 | 核对原操作，不用新操作掩盖缺口 |
 
-具体线响应仍遵守[错误对象](../endpoint-cloud-protocol/wire-format.md#errors)，未知查询结果不得凭空新增查询状态枚举。
+具体线响应仍遵守[错误对象](../endpoint-communication/wire-format.md#errors)，未知查询结果不得凭空新增查询状态枚举。
 
 <a id="limits"></a>
 ## 6. 有限配置与容量边界

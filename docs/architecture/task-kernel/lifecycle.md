@@ -28,14 +28,14 @@ sequenceDiagram
     Note over D,S: 消息接收责任与业务决定分别持久提交<br/>任一交接确认丢失均复用原身份
 ```
 
-图中消息交付先保存消息、去重记录和待处理责任，任务核心随后保存业务决定及后续工作。两处提交及丢失确认后的重试规则见[消息契约的持久交接边界](../endpoint-cloud-protocol/message-contract.md#handoff)；入站、出站分别保存哪些记录见[消息交付存储与运行存储](storage-and-interfaces.md#delivery-store)。这是两个逻辑提交边界，不要求使用不同物理数据库；消息交付存储的完整表结构由其模块设计展开。
+图中消息交付先保存消息、去重记录和待处理责任，任务核心随后保存业务决定及后续工作。两处提交及丢失确认后的重试规则见[消息契约的持久交接边界](../endpoint-communication/message-contract.md#handoff)；入站、出站分别保存哪些记录见[消息交付存储与运行存储](storage-and-interfaces.md#delivery-store)。这是两个逻辑提交边界，不要求使用不同物理数据库；消息交付存储的完整表结构由其模块设计展开。
 
 同一提交操作重投返回原任务；相同标识不同意图拒绝。另一个提交操作占用已有 `task_id` 返回冲突，不创建第二个任务。接纳事务未确认时不回复 `accepted`；先查原提交回执。任务创建、首次工作和接纳答复不可出现部分成功。
 
 <a id="state"></a>
 ## 2. 任务主状态与独立维度
 
-主状态沿用[task@1 Schema](../endpoint-cloud-protocol/schemas/task.schema.json)。下图只描述任务主状态的典型转换；取消可从任一非终态发起，期限或不可恢复失败也可从任一非终态进入 `failed`，均须先满足后文收尾条件。
+主状态沿用[task@1 Schema](../endpoint-communication/schemas/task.schema.json)。下图只描述任务主状态的典型转换；取消可从任一非终态发起，期限或不可恢复失败也可从任一非终态进入 `failed`，均须先满足后文收尾条件。
 
 ```mermaid
 stateDiagram-v2
@@ -151,7 +151,7 @@ flowchart TB
 | `fail` | 已有证据证明条件不成立 | 在预算、期限和权限内修复并重新核验；不可修复才结束任务 |
 | `unknown` | 缺少证据、目标绑定有歧义或验证暂不可用 | 请求输入、补充观察或等待；耗尽可用条件后以证据不足结束，不能视作通过 |
 
-大脑提出成功的 `finish` 时引用固定条件、证据及已有验证结果。核心运行尚需执行的本地有界规则，并按[现行协议](../endpoint-cloud-protocol/task-and-ui.md#lifecycle)检查全部必需条件为 `pass`，再复核以下完成门禁；存在任一暂停原因时不提交正常完成，证据保持保存直到显式恢复。任务到期与取消仍可结束任务。需要外部验证时先走普通操作，不在本次准入中完成。条件及验证结果的最小记录见[验收契约](storage-and-interfaces.md#acceptance-contract)。
+大脑提出成功的 `finish` 时引用固定条件、证据及已有验证结果。核心运行尚需执行的本地有界规则，检查已固定的全部必需条件为 `pass`，再复核以下完成门禁；存在任一暂停原因时不提交正常完成，证据保持保存直到显式恢复。任务到期与取消仍可结束任务。需要外部验证时先走普通操作，不在本次准入中完成。条件及验证结果的最小记录见[验收契约](storage-and-interfaces.md#acceptance-contract)。
 
 | 核验项 | 成功依据 | 缺口处理 |
 | --- | --- | --- |

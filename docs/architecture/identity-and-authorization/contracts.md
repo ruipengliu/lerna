@@ -2,7 +2,7 @@
 
 [总览](README.md) · [处理机制](mechanisms.md) · [跨端合同](cross-endpoint.md) · [验证与交付](validation.md)
 
-本页是本模块字段和内部接口的权威定义。以下表格定义逻辑对象与内部接口；其可发送字段与 v1 领域类型沿[跨端合同](cross-endpoint.md)及对应 Schema。协议已有 UUID、UTC 时间、十进制 uint64 及错误编码沿用[公共字段](../endpoint-cloud-protocol/wire-format.md)；内部修订同样不得绕回。
+本页是本模块字段和内部接口的权威定义。以下表格定义逻辑对象与内部接口；其可发送字段与 v1 领域类型沿[跨端合同](cross-endpoint.md)及对应 Schema。协议已有 UUID、UTC 时间、十进制 uint64 及错误编码沿用[公共字段](../endpoint-communication/wire-format.md)；内部修订同样不得绕回。
 
 <a id="identity"></a>
 ## 1. 从登录身份到受信调用上下文

@@ -71,7 +71,7 @@ lane 只决定调度与保留容量。它既不授予管理权限，也不自动
 | 记忆与获准视图 | 精确版本访问与修改、原命令核对、固定视图切点、连续页、关闭与分项应用回执 | [记忆接口](../memory-system/contracts.md)、[同步](../memory-system/synchronization.md)、[memory.schema.json](schemas/memory.schema.json) |
 | 来源、内容与受管副本 | 当前来源证明、有限引用保留、持有者登记、关闭传播、停止使用／物理清理／残留回执 | [共同来源](../content-and-provenance.md)、[governance.schema.json](schemas/governance.schema.json) |
 | 用户交互 | 获准任务与 surface 目录、订阅、中间投影及必需预览绑定；管理操作沿所属领域裁决 | [交互接口](../application-and-interaction/contracts-and-storage.md)、[interaction.schema.json](schemas/interaction.schema.json) |
-| Agent 协作 | 原委派、单一权威下的受信子接纳、权限／预算收缩、结果用量、控制及普通外部输入交接 | [协作接口](../coordination-and-cloud/peer-contracts.md)、[coordination.schema.json](schemas/coordination.schema.json) |
+| Agent 协作 | 原委派、单一权威下的受信子接纳、权限／预算收缩、结果用量、控制及普通外部输入交接 | [协作接口](../agent-coordination/peer-contracts.md)、[coordination.schema.json](schemas/coordination.schema.json) |
 | 批准与跨节点发布 | 精确批准与活动有效依据、原管理交接、逐节点准备／激活／停用／回退及回执 | [改进合同](../observation-and-improvement/contracts.md)、[扩展合同](../extensions-and-runtime/contracts.md)、[release.schema.json](schemas/release.schema.json) |
 
 原 `task.submit` 不接受任意远程服务端配置。跨端内部子接纳由协作合同认证原 D、父预留与子配置，再由原任务权威在创建事务内采用；远端协作端点和 Brain 不成为第二个任务写者。

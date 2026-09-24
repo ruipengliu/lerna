@@ -19,8 +19,8 @@
 
 ```bash
 python3 -m venv /tmp/harness-protocol-validation
-/tmp/harness-protocol-validation/bin/pip install -r docs/architecture/endpoint-cloud-protocol/validation/requirements.txt
-/tmp/harness-protocol-validation/bin/python docs/architecture/endpoint-cloud-protocol/validation/validate.py
+/tmp/harness-protocol-validation/bin/pip install -r docs/architecture/endpoint-communication/validation/requirements.txt
+/tmp/harness-protocol-validation/bin/python docs/architecture/endpoint-communication/validation/validate.py
 ```
 
 [validate.py](validate.py) 只解析本地 Schema，不下载 `$id` 指向的资源。它是协议资产检查器，不提供客户端 SDK 或可靠传输实现。

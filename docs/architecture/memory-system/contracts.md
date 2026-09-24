@@ -2,7 +2,7 @@
 
 [总览](README.md) · [处理机制](mechanisms.md) · [同步与恢复](synchronization.md) · [验证与待决](validation.md)
 
-本页集中定义本模块的逻辑值与接口；同进程调用与[跨端 profile 1](synchronization.md#wire)共享行为，线结构见 [memory Schema](../endpoint-cloud-protocol/schemas/memory.schema.json)。所有调用沿用[可信 RequestContext](../identity-and-authorization/contracts.md#identity)。用户、行动主体、处理服务和活动 owner 从可信入口建立，不能由业务参数覆盖。ID、时间及修订的外部编码沿[公共字段](../endpoint-cloud-protocol/wire-format.md)，修订递增不环绕复用。
+本页集中定义本模块的逻辑值与接口；同进程调用与[跨端 profile 1](synchronization.md#wire)共享行为，线结构见 [memory Schema](../endpoint-communication/schemas/memory.schema.json)。所有调用沿用[可信 RequestContext](../identity-and-authorization/contracts.md#identity)。用户、行动主体、处理服务和活动 owner 从可信入口建立，不能由业务参数覆盖。ID、时间及修订的外部编码沿[公共字段](../endpoint-communication/wire-format.md)，修订递增不环绕复用。
 
 <a id="records"></a>
 ## 1. 记录、来源与策略

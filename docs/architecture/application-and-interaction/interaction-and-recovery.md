@@ -48,7 +48,7 @@ input_request.required_preview_ids 结构化列出必需预览，空集表示权
 
 渲染端接收内容时先验身份、surface、类型和结构，再按修订处理。低于缓存的快照忽略；相同修订相同内容视作重复，相同修订异内容停止套用并报告矛盾。delta 仅在 base_revision 等于本地当前修订且新修订更高时应用；已有新快照覆盖的旧 delta 可丢弃，其他缺基准情况合并成一个 ui.get 恢复请求。uint64 按整数比较，不能用字符串字典序或浮点数排序。
 
-每个 surface 同时最多一个快照拉取，更新触发可合并但有等待上限。读取失败不反复高速刷新。自定义视图按[扩展规则](../endpoint-cloud-protocol/extensions.md#views)使用提供方生成的 fallback；没有兼容模型就报告不支持，必要输入不能降成文字后宣称交互可用。
+每个 surface 同时最多一个快照拉取，更新触发可合并但有等待上限。读取失败不反复高速刷新。自定义视图按[扩展规则](../endpoint-communication/extensions.md#views)使用提供方生成的 fallback；没有兼容模型就报告不支持，必要输入不能降成文字后宣称交互可用。
 
 <a id="input"></a>
 ## 3. 输入转交、竞争和结果丢失

@@ -2,7 +2,7 @@
 
 [总览](README.md) · [本地接口](catalog-and-contracts.md) · [执行与恢复](execution-and-recovery.md) · [验证](validation.md)
 
-CE-P1／CE-P2 已采用：默认经网关 WSS 传输版本化领域消息；证据字节沿 HTTPS 内容通道，二者共同复用身份及完整来源合同。本页是跨端字段的语义定义，机器边界由 [execution Schema](../endpoint-cloud-protocol/schemas/execution.schema.json) 和 [execution-control Schema](../endpoint-cloud-protocol/schemas/execution-control.schema.json)维护。设计包含来源证明、事实修订、可信累计用量、管理及完整取消答复；运行实现与互操作证据仍待验证。
+CE-P1／CE-P2 已采用：默认经网关 WSS 传输版本化领域消息；证据字节沿 HTTPS 内容通道，二者共同复用身份及完整来源合同。本页是跨端字段的语义定义，机器边界由 [execution Schema](../endpoint-communication/schemas/execution.schema.json) 和 [execution-control Schema](../endpoint-communication/schemas/execution-control.schema.json)维护。设计包含来源证明、事实修订、可信累计用量、管理及完整取消答复；运行实现与互操作证据仍待验证。
 
 <a id="catalog"></a>
 ## 1. 精确声明与使用依据

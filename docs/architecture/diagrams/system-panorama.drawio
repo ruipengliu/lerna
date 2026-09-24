@@ -236,23 +236,29 @@
         <mxCell id="external-target-ability" parent="external-target" style="text;html=0;whiteSpace=wrap;overflow=visible;align=center;verticalAlign=top;spacing=0;fontFamily=Noto Sans CJK SC;fontSize=23;fontColor=#52677b;fontStyle=0;connectable=0;" value="网络服务 · 手机 · 电脑" vertex="1">
           <mxGeometry height="36" width="380" x="20" y="70" as="geometry" />
         </mxCell>
+        <mxCell id="communication" parent="1" style="rounded=1;arcSize=2;fillColor=#ffffff;strokeColor=#c4d6e5;strokeWidth=2;container=1;collapsible=0;recursiveResize=0;connectable=0;" value="" vertex="1">
+          <mxGeometry height="270" width="800" x="20" y="1670" as="geometry" />
+        </mxCell>
+        <mxCell id="communication-title" parent="communication" style="text;html=0;whiteSpace=wrap;overflow=visible;align=left;verticalAlign=top;spacing=0;fontFamily=Noto Sans CJK SC;fontSize=34;fontColor=#2367a3;fontStyle=1;connectable=0;" value="端点通信" vertex="1">
+          <mxGeometry height="48" width="300" x="36" y="24" as="geometry" />
+        </mxCell>
         <mxCell id="coordination" parent="1" style="rounded=1;arcSize=2;fillColor=#ffffff;strokeColor=#c4d6e5;strokeWidth=2;container=1;collapsible=0;recursiveResize=0;connectable=0;" value="" vertex="1">
-          <mxGeometry height="590" width="800" x="20" y="1670" as="geometry" />
+          <mxGeometry height="290" width="800" x="20" y="1970" as="geometry" />
         </mxCell>
-        <mxCell id="coordination-title" parent="coordination" style="text;html=0;whiteSpace=wrap;overflow=visible;align=left;verticalAlign=top;spacing=0;fontFamily=Noto Sans CJK SC;fontSize=34;fontColor=#2367a3;fontStyle=1;connectable=0;" value="协作与端云" vertex="1">
-          <mxGeometry height="48" width="194" x="36" y="24" as="geometry" />
+        <mxCell id="coordination-title" parent="coordination" style="text;html=0;whiteSpace=wrap;overflow=visible;align=left;verticalAlign=top;spacing=0;fontFamily=Noto Sans CJK SC;fontSize=34;fontColor=#2367a3;fontStyle=1;connectable=0;" value="Agent 协作" vertex="1">
+          <mxGeometry height="48" width="300" x="36" y="16" as="geometry" />
         </mxCell>
-        <mxCell id="connection" parent="coordination" style="rounded=1;arcSize=6;fillColor=#f3f8fc;strokeColor=#c4d6e5;strokeWidth=1.5;dashed=0;container=1;collapsible=0;recursiveResize=0;" value="" vertex="1">
+        <mxCell id="connection" parent="communication" style="rounded=1;arcSize=6;fillColor=#f3f8fc;strokeColor=#c4d6e5;strokeWidth=1.5;dashed=0;container=1;collapsible=0;recursiveResize=0;" value="" vertex="1">
           <mxGeometry height="116" width="690" x="40" y="120" as="geometry" />
         </mxCell>
         <mxCell id="connection-name" parent="connection" style="text;html=0;whiteSpace=wrap;overflow=visible;align=center;verticalAlign=top;spacing=0;fontFamily=Noto Sans CJK SC;fontSize=30;fontColor=#17324d;fontStyle=1;connectable=0;" value="连接适配器" vertex="1">
           <mxGeometry height="42" width="650" x="20" y="16" as="geometry" />
         </mxCell>
-        <mxCell id="connection-ability" parent="connection" style="text;html=0;whiteSpace=wrap;overflow=visible;align=center;verticalAlign=top;spacing=0;fontFamily=Noto Sans CJK SC;fontSize=23;fontColor=#52677b;fontStyle=0;connectable=0;" value="路由 · 重连 · 可靠交接" vertex="1">
+        <mxCell id="connection-ability" parent="connection" style="text;html=0;whiteSpace=wrap;overflow=visible;align=center;verticalAlign=top;spacing=0;fontFamily=Noto Sans CJK SC;fontSize=23;fontColor=#52677b;fontStyle=0;connectable=0;" value="可靠交付 · 会话路由 · 领域恢复" vertex="1">
           <mxGeometry height="36" width="650" x="20" y="70" as="geometry" />
         </mxCell>
         <mxCell id="peer-task" parent="coordination" style="rounded=1;arcSize=6;fillColor=#f3f8fc;strokeColor=#c4d6e5;strokeWidth=1.5;dashed=0;container=1;collapsible=0;recursiveResize=0;" value="" vertex="1">
-          <mxGeometry height="116" width="690" x="40" y="370" as="geometry" />
+          <mxGeometry height="116" width="690" x="40" y="70" as="geometry" />
         </mxCell>
         <mxCell id="peer-task-name" parent="peer-task" style="text;html=0;whiteSpace=wrap;overflow=visible;align=center;verticalAlign=top;spacing=0;fontFamily=Noto Sans CJK SC;fontSize=30;fontColor=#17324d;fontStyle=1;connectable=0;" value="协作任务端点" vertex="1">
           <mxGeometry height="42" width="650" x="20" y="16" as="geometry" />
@@ -260,7 +266,7 @@
         <mxCell id="peer-task-ability" parent="peer-task" style="text;html=0;whiteSpace=wrap;overflow=visible;align=center;verticalAlign=top;spacing=0;fontFamily=Noto Sans CJK SC;fontSize=23;fontColor=#52677b;fontStyle=0;connectable=0;" value="内部 Agent · 外部 Agent" vertex="1">
           <mxGeometry height="36" width="650" x="20" y="70" as="geometry" />
         </mxCell>
-        <mxCell id="coordination-capabilities" parent="1" style="rounded=1;arcSize=50;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fillColor=#edf4f8;strokeColor=none;fontFamily=Noto Sans CJK SC;fontSize=22;fontColor=#52677b;connectable=0;" value="受控委派 · 所有权移交 · 离线续跑" vertex="1">
+        <mxCell id="coordination-capabilities" parent="1" style="rounded=1;arcSize=50;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fillColor=#edf4f8;strokeColor=none;fontFamily=Noto Sans CJK SC;fontSize=22;fontColor=#52677b;connectable=0;" value="受信委派 · 固定任务权威 · 原身份恢复" vertex="1">
           <mxGeometry height="40" width="690" x="60" y="2200" as="geometry" />
         </mxCell>
         <mxCell id="extensions" parent="1" style="rounded=1;arcSize=2;fillColor=#ffffff;strokeColor=#c4d6e5;strokeWidth=2;container=1;collapsible=0;recursiveResize=0;connectable=0;" value="" vertex="1">
@@ -513,9 +519,9 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="peer-connection" edge="1" parent="1" source="peer-task" style="edgeStyle=none;rounded=1;arcSize=14;html=0;endArrow=block;endFill=1;startArrow=block;startFill=1;strokeColor=#7398b8;strokeWidth=2;dashed=1;dashPattern=7 5;jumpStyle=arc;jumpSize=14;exitX=0.34782608695652173;exitY=0.0;exitPerimeter=0;entryX=0.34782608695652173;entryY=1.0;entryPerimeter=0;fontFamily=Noto Sans CJK SC;fontSize=23;fontColor=#52677b;align=center;verticalAlign=middle;labelBackgroundColor=#ffffff;spacing=0;" target="connection" value="按需跨端">
+        <mxCell id="peer-connection" edge="1" parent="1" source="peer-task" style="edgeStyle=none;rounded=1;arcSize=14;html=0;endArrow=block;endFill=1;startArrow=block;startFill=1;strokeColor=#7398b8;strokeWidth=2;dashed=1;dashPattern=7 5;jumpStyle=arc;jumpSize=14;exitX=0.8260869565217391;exitY=0.0;exitPerimeter=0;entryX=0.8260869565217391;entryY=1.0;entryPerimeter=0;fontFamily=Noto Sans CJK SC;fontSize=23;fontColor=#52677b;align=center;verticalAlign=middle;labelBackgroundColor=#ffffff;spacing=0;" target="connection" value="按需跨端">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="135" y="5" as="offset" />
+            <mxPoint x="-80" y="30" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="bootstrap-core" edge="1" parent="1" source="bootstrap" style="edgeStyle=none;rounded=1;arcSize=14;html=0;endArrow=block;endFill=1;startArrow=none;startFill=1;strokeColor=#7398b8;strokeWidth=2;dashed=1;dashPattern=7 5;jumpStyle=arc;jumpSize=14;exitX=0.9166666666666666;exitY=0.0;exitPerimeter=0;entryX=0.08695652173913043;entryY=0.0;entryPerimeter=0;fontFamily=Noto Sans CJK SC;fontSize=23;fontColor=#52677b;align=center;verticalAlign=middle;labelBackgroundColor=#ffffff;spacing=0;" target="task-core" value="组装就绪">

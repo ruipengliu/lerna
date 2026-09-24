@@ -16,7 +16,7 @@
 | 后置能力 | 热迁移进程状态、无停顿持久格式迁移、跨节点原子发布和自动扩批；现行普通升级保持排空，安全停用不等待排空，见[采用状态](validation.md#proposals) |
 | 实际交付 | 本轮交付详细设计和验收用例；没有可运行组装器、扩展 SDK、沙箱或恢复控制器，不据此宣称 L2–L4 已通过 |
 
-连续阅读本页 → [安装、激活与隔离](installation-and-isolation.md) → [生命周期与恢复](lifecycle-and-recovery.md)。实现查阅[契约与记录](contracts.md)，验收和待决项查阅[验证设计](validation.md)。跨节点管理采用 [release 领域合同](contracts.md#wire)，与本地命令共用原身份及回执；安装包描述与已有[协议扩展声明](../endpoint-cloud-protocol/extensions.md#manifest)分别定义。
+连续阅读本页 → [安装、激活与隔离](installation-and-isolation.md) → [生命周期与恢复](lifecycle-and-recovery.md)。实现查阅[契约与记录](contracts.md)，验收和待决项查阅[验证设计](validation.md)。跨节点管理采用 [release 领域合同](contracts.md#wire)，与本地命令共用原身份及回执；安装包描述与已有[协议扩展声明](../endpoint-communication/extensions.md#manifest)分别定义。
 
 本模块直接承担 C6 的扩展接入与替换、C5 的启动和恢复保障、C7 的宿主隔离及权限边界；为 C8 提供配置与恢复记录，为 C9 落实获准产物的启用、停用和版本回退。C1–C4 的效果仍由大脑、记忆和执行验证。A1–A4 均适用；V1、V2 分别在真实内容检索和有状态模拟设备任务中验证替换、重启及未知效果恢复，不能由插件加载成功代替专项验收。
 

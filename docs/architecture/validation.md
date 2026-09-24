@@ -32,15 +32,15 @@
 | C2 记忆 | 获准偏好实际改变适用行为；纠正／禁用后不继续采用旧依据；清理结论限于受管范围 | [记忆](memory-system/validation.md)、[个性化专项](observation-and-improvement/evaluation.md) |
 | C3／V1 取证与问答 | 引用对应实际取得内容；正确性、支撑、时效、失败与冲突分别判定，呈现不丢来源 | [V1 计分与专项](observation-and-improvement/evaluation.md#metrics)、[UI-22](application-and-interaction/validation.md) |
 | C4／V2 工具与 GUI | 原操作的实际效果可核对；观察→单动作→再观察；接管优先；设备身份不混淆 | [执行](capability-and-execution/validation.md)、[UI-14](application-and-interaction/validation.md)、[独立取证](observation-and-improvement/evaluation.md) |
-| C5 运行与协作 | 接纳后责任不丢、未知不重做；暂停、恢复、取消、迟到事实和用量分别恢复；父子预算不重复占用 | [核心](task-kernel/recovery-and-validation.md#validation)、[协作矩阵](coordination-and-cloud/validation.md#tests) |
-| C6 扩展与接口 | 更换实现后同样的输入／错误／权限语义成立；缺必要能力明确拒绝，旧操作不换解释版本 | [协议](endpoint-cloud-protocol/validation/README.md)、[扩展](extensions-and-runtime/validation.md)、[UI-21](application-and-interaction/validation.md) |
+| C5 运行与协作 | 接纳后责任不丢、未知不重做；暂停、恢复、取消、迟到事实和用量分别恢复；父子预算不重复占用 | [核心](task-kernel/recovery-and-validation.md#validation)、[委派矩阵](agent-coordination/validation.md#tests)、[通信矩阵](endpoint-communication/validation.md#tests) |
+| C6 扩展与接口 | 更换实现后同样的输入／错误／权限语义成立；缺必要能力明确拒绝，旧操作不换解释版本 | [协议](endpoint-communication/validation/README.md)、[扩展](extensions-and-runtime/validation.md)、[UI-21](application-and-interaction/validation.md) |
 | C7 用户控制 | 主体和实际资源匹配；once 不多次消费；撤权、暂停、取消、接管各按自己的成功边界生效；补证不绕过验证，离线及物理清理残留如实呈现 | [身份矩阵](identity-and-authorization/validation.md)、[交互管理](application-and-interaction/interaction-and-recovery.md#management) |
 | C8 观测与评测 | 能从关联标识定位原事实；固定分母、成本及环境可追溯；日志不替代权威效果 | [观测](observation-and-improvement/observation.md)、[评测验证](observation-and-improvement/validation.md) |
 | C9 改进 | 隔离比较、受信批准、分批生效与监测分别有依据；停用与恢复旧版本分别判定 | [改进与回退](observation-and-improvement/improvement.md#monitoring)、[扩展验证](extensions-and-runtime/validation.md) |
 | A1 职责分工 | 模型不裁决许可／终态，交付不裁决效果，UI 不裁决业务消费 | [贯穿实例](design-walkthrough.md)、各模块事实归属表 |
 | A2 独立替换 | 分别替换大脑、记忆或执行，通过同一适用场景；其他模块不修改共同规则 | [模块接口](README.md#3-模块与权威文档)、上述 C1／C2／C4 用例 |
-| A3 端云部署 | 本地与两个方向的跨端配置核对固定权威、身份引导、路由、来源及恢复；使用相同领域语义 | [部署边界](coordination-and-cloud/delegation.md#placement)、[领域合同](endpoint-cloud-protocol/domain-profiles.md) |
-| A4 共同契约 | 静态结构、运行语义和不同实现互操作分别验证；不从一个层次推出另一个层次 | [协议验收分层](endpoint-cloud-protocol/validation/README.md)、[CO-23](coordination-and-cloud/validation.md#tests) |
+| A3 端云部署 | 本地与两个方向的跨端配置核对固定权威、身份引导、路由、来源及恢复；使用相同领域语义 | [委派部署边界](agent-coordination/delegation.md#placement)、[通信验收](endpoint-communication/validation.md)、[领域合同](endpoint-communication/domain-profiles.md) |
+| A4 共同契约 | 静态结构、运行语义和不同实现互操作分别验证；不从一个层次推出另一个层次 | [协议验收分层](endpoint-communication/validation/README.md)、[通信互操作](endpoint-communication/validation.md)、[CO-23](agent-coordination/validation.md#tests) |
 
 <a id="scenarios"></a>
 ## 3. 跨模块故障场景

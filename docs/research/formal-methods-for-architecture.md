@@ -6,7 +6,7 @@
 
 ## 1. 推荐先验证一个交接机制
 
-可以用形式化方法把当前方案提炼成精确的状态、动作、前提和性质，再检验这些规则是否一致。推荐先用 **TLA+ 与 TLC 检查两个提交域之间的一项持久责任交接**：发起方保存责任，接收方持久接管，确认可能丢失，任一进程可能崩溃。这个问题贯穿任务、消息、执行、委派和发布管理，范围小且直接对应本项目最重要的恢复保证。[项目交接规则](../architecture/endpoint-cloud-protocol/message-contract.md#handoff)
+可以用形式化方法把当前方案提炼成精确的状态、动作、前提和性质，再检验这些规则是否一致。推荐先用 **TLA+ 与 TLC 检查两个提交域之间的一项持久责任交接**：发起方保存责任，接收方持久接管，确认可能丢失，任一进程可能崩溃。这个问题贯穿任务、消息、执行、委派和发布管理，范围小且直接对应本项目最重要的恢复保证。[项目交接规则](../architecture/endpoint-communication/message-contract.md#handoff)
 
 Lean 不必同时引入。等某条规则稳定，确实需要对任意参数、任意长度推导作一般性证明时，再比较 Lean 或 TLAPS 的证明投入。以下取舍是结合本项目的建议，并非官方性能或工期承诺。
 
@@ -69,15 +69,15 @@ Lean 的证明脚本通常产生由内核检查的证明项，但结论始终依
 | 5 | 父子预算预留、累计用量、重复／迟到账单、最终封账 | 不双重分配或重复结算，未知费用不释放；适合 TLC 检查交错，规则稳定后可另作一般性证明 |
 | 6 | 版本引用登记、排空、撤回与清理 | 先登记保留资格才使用；新引用已封闭且原责任核清才回收；回退代码不回滚授权、预算和已发生效果 |
 
-对应现有契约：[两处持久交接](../architecture/endpoint-cloud-protocol/message-contract.md#handoff)、[派发与领取](../architecture/task-kernel/decision-and-work.md)、[取消及迟到事实](../architecture/endpoint-cloud-protocol/recovery-and-control.md#cancel)、[活动所有者](../architecture/coordination-and-cloud/delivery-and-recovery.md#recovery)、[恢复切点](../architecture/endpoint-cloud-protocol/recovery-and-control.md#resume)、[父子预算](../architecture/coordination-and-cloud/delegation.md#results)、[引用与回收](../architecture/extensions-and-runtime/contracts.md#storage)。
+对应现有契约：[两处持久交接](../architecture/endpoint-communication/message-contract.md#handoff)、[派发与领取](../architecture/task-kernel/decision-and-work.md)、[取消及迟到事实](../architecture/endpoint-communication/recovery-and-control.md#cancel)、[活动所有者](../architecture/endpoint-communication/delivery-and-recovery.md#recovery)、[恢复切点](../architecture/endpoint-communication/recovery-and-control.md#resume)、[父子预算](../architecture/agent-coordination/delegation.md#results)、[引用与回收](../architecture/extensions-and-runtime/contracts.md#storage)。
 
 ### 首个模型的关键假设
 
 首个模型保留双方各自的持久记录与易失内存，允许确认丢失、重复交接和任意持久提交前后崩溃。数据库的原子与耐久提交先作为显式存储假设；提交结果未知是调用方的知识状态，不能让实际已提交记录随调用方超时一起消失。正常链应能释放发起方责任；接收方提交后立即崩溃、确认丢失等异常则应保留至少一方的持久责任。若模型将一次发送直接等同持久接纳，这项检查没有覆盖项目问题。
 
-纳入执行后，须用不同变量表示**外部实际发生的效果**和**系统已知的执行／效果事实**。允许外部动作已经发生，但本地仍为 unknown；禁止由“没有成功记录”推导“实际未执行”。现行协议不保证任意外部动作恰好一次，模型也不能凭去重表创造这一保证。应验证的是未知时不自动重做、旧工作者不获新启动资格，以及责任与预算不被抹除。[执行恢复边界](../architecture/endpoint-cloud-protocol/recovery-and-control.md#retry)
+纳入执行后，须用不同变量表示**外部实际发生的效果**和**系统已知的执行／效果事实**。允许外部动作已经发生，但本地仍为 unknown；禁止由“没有成功记录”推导“实际未执行”。现行协议不保证任意外部动作恰好一次，模型也不能凭去重表创造这一保证。应验证的是未知时不自动重做、旧工作者不获新启动资格，以及责任与预算不被抹除。[执行恢复边界](../architecture/endpoint-communication/recovery-and-control.md#retry)
 
-活性先使用有条件命题：当权威持续可达、权限和相关前提持续有效、存储可写、资源与重试额度足够，且适用工作得到公平调度时，交接最终推进。永久断网、权限撤销或有限预算耗尽时，不要求最终成功；应另检查责任仍可查询，按既定规则停止主动消耗并保存缺口。公平性不能冒充网络最终恢复或远端停止的证据。[有限工作规则](../architecture/coordination-and-cloud/delivery-and-recovery.md#scheduling)
+活性先使用有条件命题：当权威持续可达、权限和相关前提持续有效、存储可写、资源与重试额度足够，且适用工作得到公平调度时，交接最终推进。永久断网、权限撤销或有限预算耗尽时，不要求最终成功；应另检查责任仍可查询，按既定规则停止主动消耗并保存缺口。公平性不能冒充网络最终恢复或远端停止的证据。[有限工作规则](../architecture/endpoint-communication/delivery-and-recovery.md#scheduling)
 
 ## 5. 如何关联模型、文档与实现
 

@@ -2,7 +2,7 @@
 
 [总览](README.md) · [执行与恢复](execution-and-recovery.md) · [验证与依赖](validation.md)
 
-本页定义本模块新增的逻辑接口与内部值，并由[跨端合同](remote-contracts.md)映射为已定义消息。线字段及上限由[execution Schema](../endpoint-cloud-protocol/schemas/execution.schema.json)和[公共字段](../endpoint-cloud-protocol/wire-format.md)定义；下文只说明映射和新增的本地约束。所有入口使用[可信 RequestContext](../identity-and-authorization/contracts.md#identity)，用户、行动主体和处理服务身份不能来自未经验证的参数。
+本页定义本模块新增的逻辑接口与内部值，并由[跨端合同](remote-contracts.md)映射为已定义消息。线字段及上限由[execution Schema](../endpoint-communication/schemas/execution.schema.json)和[公共字段](../endpoint-communication/wire-format.md)定义；下文只说明映射和新增的本地约束。所有入口使用[可信 RequestContext](../identity-and-authorization/contracts.md#identity)，用户、行动主体和处理服务身份不能来自未经验证的参数。
 
 <a id="catalog"></a>
 ## 1. 从登记到可调用
@@ -85,7 +85,7 @@ Invoke 的固定身份覆盖受信用户／行动主体、请求类型和版本�
 | 临时进度 | `harness.execution.progress@1` | 可丢失，不作恢复或完成依据 |
 | 目录、管理及控制恢复接口 | catalog.resolve、execution.manage／query_management、reopen_device／query_device_command | 本地逻辑调用与网关 WSS 采用同一语义；映射见[领域合同](remote-contracts.md) |
 
-expires_at、retain_until、source、authorization 等公共字段仍在原信封位置。Invoke 只返回 `accepted + recorded=true` 或拒绝；提交未知不虚构第三种业务响应。原请求和答复关联规则、作用域及 lane 由[消息契约](../endpoint-cloud-protocol/message-contract.md#identity)定义。
+expires_at、retain_until、source、authorization 等公共字段仍在原信封位置。Invoke 只返回 `accepted + recorded=true` 或拒绝；提交未知不虚构第三种业务响应。原请求和答复关联规则、作用域及 lane 由[消息契约](../endpoint-communication/message-contract.md#identity)定义。
 
 <a id="driver"></a>
 ## 4. 驱动接口与证据
@@ -140,4 +140,4 @@ expires_at、retain_until、source、authorization 等公共字段仍在原信�
 | 查询对象已清理、从未见或不能完整恢复 | 获准查询后 `core.recovery_gap`，query_operation | 保留原关联及缺口，转受信处置；错误不证明未执行，也不制造 query 的新状态 |
 | 效果无法确认 | 已知三维事实及缺口；需要错误时 `execution.effect_unknown`，query_operation | 有限核对原操作；不生成替身 |
 
-完整 retry 规则以[协议错误](../endpoint-cloud-protocol/wire-format.md#errors)为准。所有只读接口可有限重查；变更调用超时停止的是等待，不撤回事务和外部行动。
+完整 retry 规则以[协议错误](../endpoint-communication/wire-format.md#errors)为准。所有只读接口可有限重查；变更调用超时停止的是等待，不撤回事务和外部行动。

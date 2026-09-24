@@ -30,7 +30,7 @@ flowchart LR
 
 首期推荐使用 OpenTelemetry 的 span、event 和 link 表达诊断过程；本地字段先按[ObservationRecord](contracts.md#observation)适配，不绑定特定可视化后端。短调用用父子 span，跨重启或异步工作在新片段中保留原业务标识，有已验证上下文时加 link；OpenTelemetry 的 link 可连接不同 trace 的 SpanContext。[OpenTelemetry Tracing API](https://opentelemetry.io/docs/specs/otel/trace/api/#link)
 
-任务、操作、消息等业务标识始终保留各自含义。`trace_id` 只作诊断关联，不用于授权、幂等、账单或因果裁决；即使 trace 丢失仍能凭原 operation_id 定位。当前 [WSS 信封](../endpoint-cloud-protocol/wire-format.md)没有标准 trace 字段，首期用已有消息／操作标识在受信域内关联各端记录，不向 payload 或顶层添加字段。标准跨端传播需单独扩展 profile；缺失它不影响本地业务关联。
+任务、操作、消息等业务标识始终保留各自含义。`trace_id` 只作诊断关联，不用于授权、幂等、账单或因果裁决；即使 trace 丢失仍能凭原 operation_id 定位。当前 [WSS 信封](../endpoint-communication/wire-format.md)没有标准 trace 字段，首期用已有消息／操作标识在受信域内关联各端记录，不向 payload 或顶层添加字段。标准跨端传播需单独扩展 profile；缺失它不影响本地业务关联。
 
 数据出口只允许配置中的字段和接收方，不转发任意 baggage 或上下文。追踪上下文本身也可能形成关联泄露，不编码用户、资源路径、凭据或内容；W3C 对 traceparent／tracestate 同样规定不得承载个人及敏感信息。[W3C Trace Context 隐私约束](https://www.w3.org/TR/trace-context/#privacy-considerations)
 

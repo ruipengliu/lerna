@@ -107,7 +107,7 @@ O1 可能已写入但响应丢失时，协调器保留原操作及其执行记�
 
 跨执行端自动接替还需完整账本接替、旧实例隔离和原目标幂等保证，首期不支持。
 
-跨端的消息接收、业务接纳和效果确认遵守[协议持久交接](../endpoint-cloud-protocol/message-contract.md#handoff)，任务、授权和外部 API 各自提交，不形成全局事务。已采用 [CE-P1／P2](remote-contracts.md)：准确目录、受信执行依据、事实修订、可信用量、管理及完整取消答复恢复均有线合同。
+跨端的消息接收、业务接纳和效果确认遵守[协议持久交接](../endpoint-communication/message-contract.md#handoff)，任务、授权和外部 API 各自提交，不形成全局事务。已采用 [CE-P1／P2](remote-contracts.md)：准确目录、受信执行依据、事实修订、可信用量、管理及完整取消答复恢复均有线合同。
 
 ## 6. 保证索引与验证
 

@@ -4,7 +4,7 @@
 
 本方案展开[全景图](../diagrams/system-panorama.drawio)的 `authorization` 分组及其唯一组件 `authorizer`，落实“用户隔离”和“处理端复核”两项约束。图上 `coordinator ↔ authorizer` 的虚线表示执行协调器请求权限判定并取得答复；任务、记忆、连接等调用由现行正文补足，属于同一职责的展开。本轮不改变全景图分工。
 
-这是设计契约，尚无运行实现。先读本页，再沿[判定、消费与恢复](mechanisms.md)理解行为；实现时查[身份与接口](contracts.md)和[跨端授权合同](cross-endpoint.md)，评审和落地查[验证与依赖](validation.md)。依据为[项目目标](../../harness-project-goals.md)、[端云协议](../endpoint-cloud-protocol/README.md)及[任务内核](../task-kernel/README.md)，不沿用归档中的默认选型。
+这是设计契约，尚无运行实现。先读本页，再沿[判定、消费与恢复](mechanisms.md)理解行为；实现时查[身份与接口](contracts.md)和[跨端授权合同](cross-endpoint.md)，评审和落地查[验证与依赖](validation.md)。依据为[项目目标](../../harness-project-goals.md)、[端点通信协议](../endpoint-communication/protocol.md)及[任务内核](../task-kernel/README.md)，不沿用归档中的默认选型。
 
 <a id="scope"></a>
 ## 1. 范围与实施入口
@@ -59,7 +59,7 @@ flowchart TB
 | 消息交付 → 授权服务 | 恢复轮次、端点所有者、所需行为 → 当前授权切点、连续接续与缺口 | 授权服务保留快照／增量依据；交付模块汇集各领域结论后放行，处理端继续复核；缺口重建快照 |
 | 记忆／内容／观测／扩展 → 授权服务 | 资源、用途、接收方与保留需求 → 有限权限和可执行约束 | 各处理端保存资源事实并执行约束；授权服务不代替资源删除、效果核验、沙箱隔离或任务预算账本 |
 
-以上交接复用现行[可信 RequestContext](../task-kernel/storage-and-interfaces.md)、[处理端复核](../task-kernel/README.md)、[票据接入](../endpoint-cloud-protocol/transport.md#session)和[领域恢复](../endpoint-cloud-protocol/recovery-and-control.md#resume)，本次补齐身份模块侧规则。尚无详细设计的邻接模块必须按验证依赖实现其一侧，不能仅因函数可调用就宣称端到端成立。
+以上交接复用现行[可信 RequestContext](../task-kernel/storage-and-interfaces.md)、[处理端复核](../task-kernel/README.md)、[票据接入](../endpoint-communication/transport.md#session)和[领域恢复](../endpoint-communication/recovery-and-control.md#resume)，本次补齐身份模块侧规则。尚无详细设计的邻接模块必须按验证依赖实现其一侧，不能仅因函数可调用就宣称端到端成立。
 
 <a id="decisions"></a>
 ## 3. 关键选择与代价

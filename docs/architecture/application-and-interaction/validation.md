@@ -42,7 +42,7 @@ V2 先使用多个有状态模拟设备；模拟通过不代表真机支持。V1
 | 依赖／提供方 | 当前依据与缺口 | 缺少时本模块行为及验证 |
 | --- | --- | --- |
 | 受信身份、端点 owner、许可使用／授权服务与宿主 | [身份接口](../identity-and-authorization/contracts.md#interfaces)有设计，无运行实现证据 | 拒绝未绑定访问，限制新披露／转交；UI-15、17、20 验证 |
-| 消息耐久交接／连接适配器 | [交接契约](../endpoint-cloud-protocol/message-contract.md#handoff)已定义，消息账本实现尚待落实 | 同进程也须可靠记录；没有耐久接管不释放发送工作，UI-03、04 验证 |
+| 消息耐久交接／连接适配器 | [交接契约](../endpoint-communication/message-contract.md#handoff)已定义，消息账本实现尚待落实 | 同进程也须可靠记录；没有耐久接管不释放发送工作，UI-03、04 验证 |
 | 任务权威查询、完整输入及固定结果／核心 | [接口](../task-kernel/storage-and-interfaces.md)与[目录合同](contracts-and-storage.md#directory)已定义，参考实现待交付 | 仅恢复已知任务，缺完整输入不发布表单；UI-02、08、12 验证 |
 | 中间成果的可恢复投影／任务呈现来源 | [固定投影](contracts-and-storage.md#preview)补充 ReadTask，来源／保留／输入依赖均明确；提供方实现待交付 | 仅提供查询可恢复内容；缺少必需预览提供方时对应流程关闭，按 UI-24、27 验证 |
 | 内容访问、完整性、来源复核／内容及来源权威 | 协议定义引用与通道，[共同交接](../content-and-provenance.md)定义来源证明、有限保留与关闭；底层实现待验 | 不加载任意 URL，缺依据遮蔽内容，保留可披露结果事实；UI-12、17、18 验证 |

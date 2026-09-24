@@ -2,7 +2,7 @@
 
 任务内核把用户目标、大脑提案和执行事实转换为**可持久恢复的任务推进决定**。任务核心负责裁决，运行存储保存裁决及后续责任，调度器／工作者执行这些责任，上下文组装器为下一轮决策准备获准证据。外部操作的实际效果仍由执行系统核对。
 
-本方案依据[系统全景图](../diagrams/system-panorama.drawio)、[项目目标](../../harness-project-goals.md)及[端云协议](../endpoint-cloud-protocol/README.md)，规定任务内核的实现契约。新增控制、跨端目录／事实和远程大脑契约均已纳入设计；参考实现仍待交付，运行保证须通过[实现验收](recovery-and-validation.md#validation)验证。
+本方案依据[系统全景图](../diagrams/system-panorama.drawio)、[项目目标](../../harness-project-goals.md)及[端点通信协议](../endpoint-communication/protocol.md)，规定任务内核的实现契约。新增控制、跨端目录／事实和远程大脑契约均已纳入设计；参考实现仍待交付，运行保证须通过[实现验收](recovery-and-validation.md#validation)验证。
 
 正文依次阅读[生命周期](lifecycle.md)、[用户控制与管理](control-and-management.md)、[决策与工作](decision-and-work.md)、[接口与存储](storage-and-interfaces.md)和[恢复验证](recovery-and-validation.md)。
 
@@ -14,7 +14,7 @@
 | --- | --- |
 | 首期闭环 | 同用户任务与操作索引位于一个提交域；任务核心复用已有执行、授权、内容及消息交付接口 |
 | 条件具备后启用 | 离线推进须有显式有限窗口及全部许可／来源／平台依据；跨端委派实现已采用 CO-P1 的结果、预算与控制合同，并回到原固定权威接纳内部子任务；运行中换权威仍不启用 |
-| 已有邻接契约 | [消息交付](../coordination-and-cloud/delivery-and-recovery.md)、[授权与可信时间](../identity-and-authorization/mechanisms.md)、[内容与来源](../content-and-provenance.md)已有设计；实现需满足其交接保证 |
+| 已有邻接契约 | [消息交付](../endpoint-communication/delivery-and-recovery.md)、[授权与可信时间](../identity-and-authorization/mechanisms.md)、[内容与来源](../content-and-provenance.md)已有设计；实现需满足其交接保证 |
 | 用户控制与恢复 | [暂停、预算与补证](control-and-management.md)及完整取消答复查询已定义；跨端委派复用协作合同。控制权迁移与自动接替仍不启用 |
 
 先用“将指定内容保存到路径 A，再读回核验”区分三个对象：

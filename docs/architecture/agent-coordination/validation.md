@@ -1,6 +1,6 @@
 # 验证、依赖与待决范围
 
-[总览](README.md) · [协作契约](peer-contracts.md) · [委派机制](delegation.md) · [消息交付](delivery-and-recovery.md)
+[总览](README.md) · [协作契约](peer-contracts.md) · [委派机制](delegation.md) · [消息交付](../endpoint-communication/delivery-and-recovery.md)
 
 本方案交付设计、本地接口和跨端线契约；下面场景是参考实现及互操作验收要求，尚未运行。CO1–CO7 对应[模块保证](README.md#guarantees)，C／A／V 编号对应[项目目标](../../harness-project-goals.md)。
 

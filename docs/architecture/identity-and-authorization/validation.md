@@ -55,7 +55,7 @@
 <a id="proposals"></a>
 ## 3. 已采用的跨端授权合同与验收
 
-身份 P1 已采用，权威定义在[跨端授权、恢复与确认](cross-endpoint.md)。WSS 领域消息复用现有交付、源身份与网关路径；专属 HTTPS 不作为另一套授权同步路径，认证接入只提供受限引导。授权恢复、执行目录、完整来源与用户确认分别保留自己的裁决。对应 Schema 为 [identity](../endpoint-cloud-protocol/schemas/identity.schema.json) 与 [domain-common](../endpoint-cloud-protocol/schemas/domain-common.schema.json)。
+身份 P1 已采用，权威定义在[跨端授权、恢复与确认](cross-endpoint.md)。WSS 领域消息复用现有交付、源身份与网关路径；专属 HTTPS 不作为另一套授权同步路径，认证接入只提供受限引导。授权恢复、执行目录、完整来源与用户确认分别保留自己的裁决。对应 Schema 为 [identity](../endpoint-communication/schemas/identity.schema.json) 与 [domain-common](../endpoint-communication/schemas/domain-common.schema.json)。
 
 | 追加验收 | 刺激与应观察结果 |
 | --- | --- |

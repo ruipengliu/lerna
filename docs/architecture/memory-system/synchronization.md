@@ -2,7 +2,7 @@
 
 [总览](README.md) · [处理机制](mechanisms.md) · [记录与接口](contracts.md) · [验证与待决](validation.md)
 
-本页定义记忆同步的领域算法及内部交接。MS-P1 已采用，下文算法由[WSS 领域 profile 1](#wire)承载，复用[领域恢复框架](../endpoint-cloud-protocol/recovery-and-control.md#recovery-reference)、身份及完整来源证明。远程部署在这些提供方实现并验收前保持关闭。
+本页定义记忆同步的领域算法及内部交接。MS-P1 已采用，下文算法由[WSS 领域 profile 1](#wire)承载，复用[领域恢复框架](../endpoint-communication/recovery-and-control.md#recovery-reference)、身份及完整来源证明。远程部署在这些提供方实现并验收前保持关闭。
 
 <a id="views"></a>
 ## 1. 同步对象是获准视图
@@ -98,7 +98,7 @@ remove 只携带已交付对象所需最小删除关联，不携带旧正文。�
 <a id="wire"></a>
 ## 6. WSS 记忆领域 profile 1
 
-所有类型以 `harness.` 为前缀、版本 1，精确结构见 [memory Schema](../endpoint-cloud-protocol/schemas/memory.schema.json)。协议复用身份 P1 的受信主体和当前使用证明、[完整来源合同](../content-and-provenance.md#remote)及相同消息交付。许可恢复成功不代表视图可用；只取得 content_ref 也不能证明来源、字节或当前用途成立。
+所有类型以 `harness.` 为前缀、版本 1，精确结构见 [memory Schema](../endpoint-communication/schemas/memory.schema.json)。协议复用身份 P1 的受信主体和当前使用证明、[完整来源合同](../content-and-provenance.md#remote)及相同消息交付。许可恢复成功不代表视图可用；只取得 content_ref 也不能证明来源、字节或当前用途成立。
 
 | 线类型 | 对应接口与结果 | lane／scope |
 | --- | --- | --- |

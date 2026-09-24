@@ -72,7 +72,7 @@ flowchart TB
 | 受信管理入口 → 领域权威 | 原命令、精确对象／版本及真实用户依据 → 领域回执 | 领域保存业务决定，宿主查原命令或原操作；提交未知不新建命令掩盖 |
 | 渲染器 → 内容通道 | 内容引用、当前用途及披露依据 → 已验证字节／缺口 | 内容方保存获准内容，渲染端保存必要缓存／校验结果；失败可有限重取原内容，不能重新执行任务 |
 
-协议交接复用[任务及 UI 契约](../endpoint-cloud-protocol/task-and-ui.md)。本次补充投影适配器、本端日志、界面事务与恢复工作，不要求内核新增订阅或列表接口；本地管理接口详见[管理入口](interaction-and-recovery.md#management)。
+协议交接复用[任务及 UI 契约](../endpoint-communication/task-and-ui.md)。本次补充投影适配器、本端日志、界面事务与恢复工作，不要求内核新增订阅或列表接口；本地管理接口详见[管理入口](interaction-and-recovery.md#management)。
 
 <a id="decisions"></a>
 ## 3. 关键选择

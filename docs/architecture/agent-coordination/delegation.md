@@ -1,6 +1,6 @@
 # 委派、结果与任务恢复
 
-[总览](README.md) · [协作契约](peer-contracts.md) · [消息交付](delivery-and-recovery.md) · [验收](validation.md)
+[总览](README.md) · [协作契约](peer-contracts.md) · [消息交付](../endpoint-communication/delivery-and-recovery.md) · [验收](validation.md)
 
 本页沿委派 D 展开处理链，字段以[协作契约](peer-contracts.md)为准。内部 Agent 的子任务 C 与父任务 P 共用固定内核写权威；外部 Agent 保留自己的原生任务身份，仅将与 D 绑定的事实交回父核心。两类路径都不把远端连接、接纳或自行声明成功当成父任务完成。
 

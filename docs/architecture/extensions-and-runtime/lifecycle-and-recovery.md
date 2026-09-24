@@ -75,7 +75,7 @@ stateDiagram-v2
 <a id="readiness"></a>
 ## 3. 先接收已有事实，再按作用域放行
 
-启动与重连都分别处理下列行为。判定键至少含受信用户、领域作用域、行为、本轮及 owner；返回依据失效、owner 改变或连续变化入口断开时，先关闭依赖行为，再重新核对。跨端消息的最终放行仍由[消息交付的恢复轮次](../coordination-and-cloud/delivery-and-recovery.md#recovery)落实，本模块不建立另一个可覆盖它的全局 ready 标志。
+启动与重连都分别处理下列行为。判定键至少含受信用户、领域作用域、行为、本轮及 owner；返回依据失效、owner 改变或连续变化入口断开时，先关闭依赖行为，再重新核对。跨端消息的最终放行仍由[消息交付的恢复轮次](../endpoint-communication/delivery-and-recovery.md#recovery)落实，本模块不建立另一个可覆盖它的全局 ready 标志。
 
 | 行为 | 开放前最小条件 | 缺席时的行为 |
 | --- | --- | --- |
@@ -120,7 +120,7 @@ stateDiagram-v2
 
 保留量由待接纳责任需要的最坏收尾记录与处理路径估算；默认配置必须给出有限值，负载验证见[验收](validation.md)。容量不足先拒绝新接纳，已接纳控制、核对和结果不能被新工作淘汰。资源已全部耗尽时保持原责任并报告过载，不能承诺保留量足以抵御无限故障或无限输入。
 
-`task.cancel_result` 和 `execution.cancel_result` 仍使用 work lane。收尾优先级只作用于其既有队列内部，落实[交付保留容量](../coordination-and-cloud/delivery-and-recovery.md#scheduling)，不把消息改为 control lane。观测导出、批量评测及安装预检使用独立有限份额，不能占用控制／收尾保留量。
+`task.cancel_result` 和 `execution.cancel_result` 仍使用 work lane。收尾优先级只作用于其既有队列内部，落实[交付保留容量](../endpoint-communication/delivery-and-recovery.md#scheduling)，不把消息改为 control lane。观测导出、批量评测及安装预检使用独立有限份额，不能占用控制／收尾保留量。
 
 核对次数或费用耗尽由原领域保存待处理缺口及一次去重通知，恢复控制器随后停止给这项工作分配主动调用机会；被动事实接收继续按自身权限进行。恢复组件重启不会重置原耗尽状态。宿主可恢复调度或重查原记录，无权追加业务预算、清除 once 消费或命令领域把 unknown 改成 failed。
 

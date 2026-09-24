@@ -34,7 +34,7 @@ sequenceDiagram
 <a id="recovery"></a>
 ## 2. 消息、作用域与连续恢复
 
-下表类型均以 `harness.` 为前缀、`type_version=1`。请求与响应可靠交付，副作用请求的 envelope operation_id 等于 payload command_id；纯查询的请求身份不用于建立新的行动。字段由 [identity Schema](../endpoint-cloud-protocol/schemas/identity.schema.json) 固定，跨字段关系由接收器核验。
+下表类型均以 `harness.` 为前缀、`type_version=1`。请求与响应可靠交付，副作用请求的 envelope operation_id 等于 payload command_id；纯查询的请求身份不用于建立新的行动。字段由 [identity Schema](../endpoint-communication/schemas/identity.schema.json) 固定，跨字段关系由接收器核验。
 
 | 类型 | 输入／输出与持久责任 | lane／作用域 |
 | --- | --- | --- |
@@ -57,7 +57,7 @@ resolve、query_state 与恢复页用 grant_states 分别表达静态 Grant 的�
 
 `authorization.evaluate` 在准入前传递尚无操作／单元 ID 的 evaluation_intent；`begin_use` 在操作分配后传递完整 use_intent：原操作、受信 actor、处理端、真实资源、动作、用途、接收方、处理位置、有限单元和来源角色、意图摘要、完整 source_bindings 及 operation_basis。入站服务先从会话与已保存的原操作确定这些关系，再比对载荷；声明字段不产生身份。`begin_use` 在许可使用权威提交占用，返回历史 use_receipt 和本次 current_decision；两者同时满足且原 start_before 未过才允许启动。`query_use` 只恢复历史，不授予新启动资格。
 
-共享编码见 [domain-common](../endpoint-cloud-protocol/schemas/domain-common.schema.json)。source_binding 是完整平铺来源闭包的一个精确版本，含来源权威、资源、修订、字节摘要、观察时点、策略修订、用途／接收方／处理端、保留截止及当前 proof_ref。闭包不完整、超限或未知约束拒绝；证明引用必须由所指权威经受信关联核验内容摘要、版本与期限，不能只因 proof_id 形似 UUID 放行。完整来源查询归 [source.prove](../content-and-provenance.md#remote)，字节及保留归内容权威。
+共享编码见 [domain-common](../endpoint-communication/schemas/domain-common.schema.json)。source_binding 是完整平铺来源闭包的一个精确版本，含来源权威、资源、修订、字节摘要、观察时点、策略修订、用途／接收方／处理端、保留截止及当前 proof_ref。闭包不完整、超限或未知约束拒绝；证明引用必须由所指权威经受信关联核验内容摘要、版本与期限，不能只因 proof_id 形似 UUID 放行。完整来源查询归 [source.prove](../content-and-provenance.md#remote)，字节及保留归内容权威。
 
 operation_basis 固定原操作、任务控制（适用时）、预算（适用时）、来源摘要与生产者证明；身份权威验证处理服务与原行动 actor 两个主体，二者不合并。适用的控制／预算不能因为共享 Schema 字段可选而省略；无任务的一次本人管理操作才可按其动作模式不带任务控制。预算数额与约束由对应领域账本裁决，授权服务不自行增加额度。
 

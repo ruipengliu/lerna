@@ -39,7 +39,7 @@ flowchart TB
 
 ## 2. 端云重连与离线续跑
 
-连接和消息交付按[恢复协议](../endpoint-cloud-protocol/recovery-and-control.md#resume)组织恢复。内核先接收授权变化、取消和归属信息，输出本任务允许继续的工作及缺口；执行端负责原操作效果结论，UI 负责快照和待转交输入。三者结论分别保留，不能统一用最后到达状态覆盖。可靠业务消息使用内建必填的 `delivery.scope`；每条流固定一个业务作用域及 lane，交付模块核验声明与真实业务关联一致。单流缺口不阻塞无关作用域，跨作用域的业务依赖仍须由领域模块核对。
+连接和消息交付按[恢复协议](../endpoint-communication/recovery-and-control.md#resume)组织恢复。内核先接收授权变化、取消和归属信息，输出本任务允许继续的工作及缺口；执行端负责原操作效果结论，UI 负责快照和待转交输入。三者结论分别保留，不能统一用最后到达状态覆盖。可靠业务消息使用内建必填的 `delivery.scope`；每条流固定一个业务作用域及 lane，交付模块核验声明与真实业务关联一致。单流缺口不阻塞无关作用域，跨作用域的业务依赖仍须由领域模块核对。
 
 离线默认关闭；单独批准有限窗口后，推进必须同时满足当前控制权或有效子任务委派、本地能力与数据齐备、许可明确允许离线且仍有效。需要实时鉴权、无法可信判断许可到期、或依赖失联节点时保持等待。离线子任务不能因父任务失联取得父任务的控制权。
 
@@ -50,7 +50,7 @@ flowchart TB
 <a id="ownership"></a>
 ## 3. 控制权交接复用既有协议
 
-首期按[用户写权威](lifecycle.md)固定控制方，同用户的全部内核操作共用一个唯一索引。下列控制权交接是条件能力，沿用[先冻结再交接的约束](../endpoint-cloud-protocol/recovery-and-control.md#ownership)。启用前还须补齐跨权威的用户操作索引归属与去重路由；只迁移单个任务的操作记录不能阻止同一 ID 在另一个任务被接纳。接纳路由或网络路由变化都不授予新控制权。
+首期按[用户写权威](lifecycle.md)固定控制方，同用户的全部内核操作共用一个唯一索引。下列控制权交接是条件能力，沿用[先冻结再交接的约束](../endpoint-communication/recovery-and-control.md#ownership)。启用前还须补齐跨权威的用户操作索引归属与去重路由；只迁移单个任务的操作记录不能阻止同一 ID 在另一个任务被接纳。接纳路由或网络路由变化都不授予新控制权。
 
 | 阶段 | 内核必须保存的事实与行为 |
 | --- | --- |
@@ -93,8 +93,8 @@ flowchart TB
 | [完整取消答复](control-and-management.md#recovery) | 任务与执行分别查原固定结果；清理后报告缺口，不从当前状态重建 |
 | [执行目录与 CE-P1／P2](../capability-and-execution/remote-contracts.md) | 精确声明、完整来源／控制／预算依据，生产者事实修订及累计用量；缺受信依据禁新行动 |
 | [远程大脑 BS-P1](../brain-system/contracts-and-runtime.md#remote) | 原 work／attempt／领取／输入绑定，可靠接纳、原调用恢复、停止和用量回送；远端无独立任务权威 |
-| [委派合同](../coordination-and-cloud/peer-contracts.md) | 受控内部子树共用写权威；外部未提供暂停能力时单独披露，原外部预算上限不动态修改 |
-| [消息交付](../coordination-and-cloud/delivery-and-recovery.md) | 两处持久交接、原消息恢复和 work lane 收尾空间；未提供不确认相应接纳 |
+| [委派合同](../agent-coordination/peer-contracts.md) | 受控内部子树共用写权威；外部未提供暂停能力时单独披露，原外部预算上限不动态修改 |
+| [消息交付](../endpoint-communication/delivery-and-recovery.md) | 两处持久交接、原消息恢复和 work lane 收尾空间；未提供不确认相应接纳 |
 | [身份与可信时间](../identity-and-authorization/mechanisms.md) | 当前使用与来源证明；离线默认关闭，单独批准的有限窗口且本地依赖齐备才可继续 |
 | [任务验收策略](storage-and-interfaces.md#acceptance-contract) | 安装支持目标、固定验证器与版本；缺失不报告完成，补证也不能替代该提供方 |
 | [内容与来源](../content-and-provenance.md) | 精确内容、完整来源、保留与当前披露；残留清理如实未完成，不能用索引删除代表全链清理 |

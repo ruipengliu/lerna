@@ -5,7 +5,7 @@
 <a id="interfaces"></a>
 ## 1. 复用的线契约与本次内部接口
 
-所有内部入口接收宿主构造的 RequestContext，绑定用户、端点、行动主体、来源及当前许可。下表是类型化逻辑接口；跨端映射由本页领域合同定义，view 不能指定任意方法名。线字段与错误以[协议 Schema](../endpoint-cloud-protocol/schemas/ui.schema.json)及[公共信封](../endpoint-cloud-protocol/wire-format.md#envelope)为唯一权威，不复制一套同名 Schema。
+所有内部入口接收宿主构造的 RequestContext，绑定用户、端点、行动主体、来源及当前许可。下表是类型化逻辑接口；跨端映射由本页领域合同定义，view 不能指定任意方法名。线字段与错误以[协议 Schema](../endpoint-communication/schemas/ui.schema.json)及[公共信封](../endpoint-communication/wire-format.md#envelope)为唯一权威，不复制一套同名 Schema。
 
 | 逻辑接口 | 最小输入 → 输出 | 归属、映射与前提 |
 | --- | --- | --- |
@@ -72,7 +72,7 @@
 <a id="errors"></a>
 ## 4. 错误和用户可执行的下一步
 
-错误结构与 retry 完全沿[公共错误表](../endpoint-cloud-protocol/wire-format.md#errors)。下表只说明应用映射，不定义新 wire code。
+错误结构与 retry 完全沿[公共错误表](../endpoint-communication/wire-format.md#errors)。下表只说明应用映射，不定义新 wire code。
 
 | 情况 | 既有返回／本地观察 | 展示与继续者 |
 | --- | --- | --- |

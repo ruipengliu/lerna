@@ -36,7 +36,7 @@ flowchart TD
     Execute --> Release[批准交接与逐节点发布]
 ```
 
-默认领域通道已选经网关 WSS，HTTPS 承担认证、连接票据、受限恢复资格引导及大内容。完整规则见[跨端领域合同](endpoint-cloud-protocol/domain-profiles.md)。依赖远端缓存依据继续工作的离线模式默认关闭；许可、来源、控制、版本批准等适用依据均在有限窗口内成立，且平台通过验收后才可开放。全部权威及依赖在本地并可实时核验的独立部署，可以在公网断开时处理本地任务；它不借此替代原云端身份权威。
+默认领域通道已选经网关 WSS，HTTPS 承担认证、连接票据、受限恢复资格引导及大内容。完整规则见[跨端领域合同](endpoint-communication/domain-profiles.md)。依赖远端缓存依据继续工作的离线模式默认关闭；许可、来源、控制、版本批准等适用依据均在有限窗口内成立，且平台通过验收后才可开放。全部权威及依赖在本地并可实时核验的独立部署，可以在公网断开时处理本地任务；它不借此替代原云端身份权威。
 
 <a id="cross-endpoint"></a>
 ## 2. 已采用的共同依据与领域合同
@@ -46,11 +46,11 @@ flowchart TD
 | 身份 P1 | 补齐主体／owner／来源绑定、许可使用与受信确认、快照连续恢复及应用回执、离线证明；首次恢复使用独立受限资格，不依赖尚未恢复的业务许可 | [身份合同](identity-and-authorization/contracts.md)、[身份验证](identity-and-authorization/validation.md#proposals) |
 | CE-P1 | 固定准确声明、版本／摘要、当前发布与实例依据、来源、控制及预算；网关类型声明不替代可执行能力声明 | [目录与合同](capability-and-execution/catalog-and-contracts.md)、[执行验证](capability-and-execution/validation.md#proposals) |
 | CE-P2 | 执行权威按原操作提供完整事实投影、业务修订及可信累计用量；较旧修订不覆盖新事实，冲突不被新修订掩盖。硬费用保证仍依赖提供方落实 | [执行恢复](capability-and-execution/execution-and-recovery.md)、[执行验证](capability-and-execution/validation.md#proposals) |
-| 完整取消答复 | 任务与执行分别查询原取消的固定答复，区分未固定、已清理、无权和恢复缺口；不以当前效果重建过去答复 | [内核接口](task-kernel/storage-and-interfaces.md)、[协议取消](endpoint-cloud-protocol/recovery-and-control.md#cancel) |
+| 完整取消答复 | 任务与执行分别查询原取消的固定答复，区分未固定、已清理、无权和恢复缺口；不以当前效果重建过去答复 | [内核接口](task-kernel/storage-and-interfaces.md)、[协议取消](endpoint-communication/recovery-and-control.md#cancel) |
 | MS-P1 | 版本化记忆访问、修改核对与只读获准视图，固定切点和连续变化，权限／删除缺口关闭相关使用 | [记忆合同](memory-system/contracts.md)、[视图恢复](memory-system/synchronization.md) |
-| CO-P1 | 远程协作端点保存原委派与交接记录；内部子接纳回到原固定任务权威，受限配置和父预算份额进入创建事务。外部沿原生任务恢复 | [协作接口](coordination-and-cloud/peer-contracts.md)、[委派恢复](coordination-and-cloud/delegation.md) |
+| CO-P1 | 远程协作端点保存原委派与交接记录；内部子接纳回到原固定任务权威，受限配置和父预算份额进入创建事务。外部沿原生任务恢复 | [协作接口](agent-coordination/peer-contracts.md)、[委派恢复](agent-coordination/delegation.md) |
 | BS-P1 | 独立远程 Brain 接纳固定 work／attempt、输入和调用资格，提供原调用查询、取消、停止事实及用量；无独立任务生命周期或工具循环 | [大脑合同](brain-system/contracts-and-runtime.md)、[大脑验证](brain-system/validation.md#proposals) |
-| 来源与内容管理 | 精确来源当前证明、引用有限保留、原控制查询及关闭回执纳入跨端合同；HTTP 上传与远端可读取性分别判定 | [共同来源](content-and-provenance.md)、[跨端合同](endpoint-cloud-protocol/domain-profiles.md) |
+| 来源与内容管理 | 精确来源当前证明、引用有限保留、原控制查询及关闭回执纳入跨端合同；HTTP 上传与远端可读取性分别判定 | [共同来源](content-and-provenance.md)、[跨端合同](endpoint-communication/domain-profiles.md) |
 
 上述合同均须同步机器资产及异常用例。恢复资格、proof 引用和消息 ACK 分别只证明其声明的事实，不能直接开放行动、正文读取或用户批准。
 
@@ -59,12 +59,12 @@ flowchart TD
 
 | 事项 | 本轮决定、主要代价与边界 | 权威位置 |
 | --- | --- | --- |
-| 暂停／恢复 | 在动作边界阻止本任务及受控子树后续目标行动；已开始有界动作可结束，可能已派发的动作继续原身份核对。外部不支持或失联项单列，不能报告全树已停；恢复仅解除对应暂停原因 | [任务生命周期](task-kernel/lifecycle.md)、[协作控制](coordination-and-cloud/delegation.md) |
+| 暂停／恢复 | 在动作边界阻止本任务及受控子树后续目标行动；已开始有界动作可结束，可能已派发的动作继续原身份核对。外部不支持或失联项单列，不能报告全树已停；恢复仅解除对应暂停原因 | [任务生命周期](task-kernel/lifecycle.md)、[协作控制](agent-coordination/delegation.md) |
 | 暂停期间完成与输入 | 保存事实、有效输入及补证，正常完成等待显式恢复；完成先提交则保留终态。暂停不冻结期限，不阻止取消、到期和必要收尾 | [任务生命周期](task-kernel/lifecycle.md) |
 | 预算调整 | 用户可调整本方目标／收尾限额及内部份额；已消费、未知预留与未封账委派份额不得抹去。追加不解除暂停、不延长截止，终态仅可补原收尾额度；外部委派上限不原地扩大 | [决策与预算](task-kernel/decision-and-work.md)、[内核接口](task-kernel/storage-and-interfaces.md) |
 | 整体目标编辑 | 沿现行选择创建关联新任务；可复用仍获准材料，原任务取消或收尾另行处理 | [任务生命周期](task-kernel/lifecycle.md) |
 | 人工核验材料 | 接纳绑定原任务／条件的候选材料，交实际事实权威核验；材料接纳、验证通过和任务完成分别记录，人工断言不强制改变效果 | [内核接口](task-kernel/storage-and-interfaces.md)、[执行处置](capability-and-execution/validation.md#management) |
-| 外部 Agent 普通交互 | 固定原委派、外部请求及修订，分别查询本方接纳与外部应用；追加权限走受信授权流程，扩大原目标／许可上限须新委派 | [外部交互](coordination-and-cloud/delegation.md#external) |
+| 外部 Agent 普通交互 | 固定原委派、外部请求及修订，分别查询本方接纳与外部应用；追加权限走受信授权流程，扩大原目标／许可上限须新委派 | [外部交互](agent-coordination/delegation.md#external) |
 | UI-P1 | 新设备可读取获准任务／surface 分页目录并显式订阅；代价为目录披露、固定切点及订阅保留责任 | [交互合同](application-and-interaction/contracts-and-storage.md) |
 | UI-P2 | 远程管理复用所属领域的控制、授权、补证与记忆合同；UI 不产生独立权限或效果裁决 | [交互恢复](application-and-interaction/interaction-and-recovery.md#management) |
 | UI-P3 | 核心提供固定中间投影及完整来源，输入明确依赖必需预览；内容不可取或已失效时不允许按旧材料提交 | [交互恢复](application-and-interaction/interaction-and-recovery.md#projection)、[交互验证](application-and-interaction/validation.md#proposals) |
@@ -98,9 +98,9 @@ flowchart TD
 | 事项 | 本轮决定 | 重新进入设计的条件／依据 |
 | --- | --- | --- |
 | ER-P2 跨节点制品与管理回执 | 已采用逐节点准备、激活、停用与回退；允许部分成功和未知，保留原管理责任 | [扩展合同](extensions-and-runtime/contracts.md)、[扩展验证](extensions-and-runtime/validation.md#proposals)；全节点原子发布仍不承诺 |
-| CO-P2 运行中任务权威迁移 | 后置；建立用户权威时选本地或云，失联不接管 | 明确要求运行中换权威时，再落实全用户操作索引、唯一裁决、原消息身份及旧入口隔离；[CO-P2](coordination-and-cloud/validation.md#proposals) |
+| CO-P2 运行中任务权威迁移 | 后置；建立用户权威时选本地或云，失联不接管 | 明确要求运行中换权威时，再落实全用户操作索引、唯一裁决、原消息身份及旧入口隔离；[CO-P2](agent-coordination/validation.md#proposals) |
 | 跨执行端自动接替 | 后置；原端原操作核对，未知副作用不换端重做 | 有原账本迁移、旧实例隔离和物理设备唯一入口的可验需求；[执行部署](capability-and-execution/execution-and-recovery.md#deployment) |
-| 端端直连 | 后置；跨端使用已定义网关路径 | 无网关跨设备协作成为明确需求，且接入、身份及路由来源可验证；[协议范围](endpoint-cloud-protocol/README.md#scope) |
+| 端端直连 | 后置；跨端使用已定义网关路径 | 无网关跨设备协作成为明确需求，且接入、身份及路由来源可验证；[协议范围](endpoint-communication/README.md#scope) |
 | ER-P3 在线替换与格式迁移 | 后置；正常升级排空，未知效果可阻塞升级，安全停用先封闭新使用 | 明确组件及不能等待排空的需求，才设计多版本并存、格式迁移和失败恢复；[扩展替换](extensions-and-runtime/installation-and-isolation.md) |
 | 已确认账本不可恢复的数据损失 | 保留安全关闭与可解释缺口；新身份不能重做原未知操作 | 实际事故若要求放宽保证，按受影响责任另决；正常备份实施归第 7 节，[灾后恢复](extensions-and-runtime/lifecycle-and-recovery.md) |
 
@@ -120,7 +120,7 @@ flowchart TD
 | 未知模型调用的风险配额；大脑／内核 | 优先补供应方查询／终止保证；若仍要提高无可信终结后端的可用性，另决风险上限及并发／预算保证。当前未知占位和预留保留，到限停主动查询，不提供忽略未知开关 | [调用恢复](brain-system/contracts-and-runtime.md#recovery) |
 | 多模型投票／竞速、在线提示词／策略改变；大脑／改进／扩展 | 额外调用的质量收益能否覆盖成本，逐调用账务与来源如何保持；自动启用还需 OI-P1／ER-P1。当前单模型固定配置，策略修改产物只进入候选及受控发布流程 | [大脑范围与取舍](brain-system/README.md#scope) |
 | 多使用单元及长流调用；执行／身份／内核 | 逐单元许可、预算、进度、取消和恢复边界；当前一次 Invoke 只有一个有界单元，长流程由内核逐操作准入，不由驱动自动续跑 | [能力声明](capability-and-execution/catalog-and-contracts.md#declaration) |
-| 连续音视频与内容分片续传；协议／内容提供方 | 媒体会话或分片、完整性、逐段授权和恢复如何契合现有责任。当前 WSS JSON 加 HTTPS 完整内容；v1 不要求分片续传，音视频须另扩媒体通道 | [传输选择](endpoint-cloud-protocol/transport.md)、[内容通道](endpoint-cloud-protocol/transport.md#content) |
+| 连续音视频与内容分片续传；协议／内容提供方 | 媒体会话或分片、完整性、逐段授权和恢复如何契合现有责任。当前 WSS JSON 加 HTTPS 完整内容；v1 不要求分片续传，音视频须另扩媒体通道 | [传输选择](endpoint-communication/transport.md)、[内容通道](endpoint-communication/transport.md#content) |
 | 真实手机与通用不可信插件支持范围；执行／宿主 | 选择真实平台、权限／驱动和隔离保证；已有受信驱动及隔离接缝的实现归第 7 节，通用支持不能由模拟或单一平台外推。当前模拟 GUI 及受信组件按已具备条件开放 | [执行范围](capability-and-execution/README.md#scope)、[运行依赖](extensions-and-runtime/validation.md) |
 | 标准 trace 传播、跨节点评测调度、生产随机对照；观测评测 | 分别定义跨端追踪载荷及数据用途、远程评测任务／结果责任、稳定分组和完整分母；三者可独立选择。当前依关联标识诊断和隔离成对评测，不因采用追踪工具修改 WSS 信封 | [后续范围](observation-and-improvement/validation.md#proposals)、[监测边界](observation-and-improvement/improvement.md#monitoring) |
 
@@ -136,8 +136,9 @@ flowchart TD
 | 任务策略、验证器与能力包；应用策略／内核／执行 | 支持目标类型、条件绑定、验证器与版本、文件／联网／模拟 GUI 的准确声明及独立判定证据 | draft 不派发目标行动；必要验证器／证据缺失不报告完成，未知效果不重做。[内核依赖](task-kernel/recovery-and-validation.md#gaps)、[贯穿实例](design-walkthrough.md) |
 | 模型及提取／评估配置；大脑与相应能力提供方 | 具体模型、权重／服务版本、硬件、处理位置、用量及停止／查询能力、费用和质量验证；所用模型动作规范化器与受控出口 | 不支持的能力明确声明；无当前使用资格不发送，未知账务和占位不释放。[模型 profile](brain-system/contracts-and-runtime.md#model-profile)、[大脑依赖](brain-system/validation.md#dependencies) |
 | 内容、来源与记忆索引；内容／来源权威／记忆 | 耐久字节、精确来源与当前证明、保留／清理、真实连接器、索引水位及删除；公开内容的时效策略 | 来源解析器缺失不提取／保存相关外部资料；索引可降为有界扫描或 partial；必要内容不可取不完成。[共同交接](content-and-provenance.md#validation)、[记忆依赖](memory-system/validation.md#dependencies) |
-| 领域与消息账本、UI 本端耐久意图；所属领域／交付／UI | 原身份与原子交接、恢复扫描、固定回执、控制／收尾空间；纯浏览器也需可恢复本端意图，业务输入适配器须独立耐久消费 | 持久交接不足不确认接纳；仅获消息 ACK 不确认业务完成；不能只凭浏览器内存承诺重启后关闭意图。[交付存储](coordination-and-cloud/delivery-and-recovery.md)、[UI 依赖](application-and-interaction/validation.md#gaps) |
-| 本地委派与 Agent 适配器；协作／内核／Agent 提供方 | 固定受信声明、目标／结果及配置版本；受限子配置和父已预留预算份额进入 Submit 事务，原委派接纳查询、取消、结果与累计用量可核对 | 无受限配置适配就不提供可派发候选，不降级为不受限普通 Submit；外部配置缺必要保证时禁用。[协作依赖](coordination-and-cloud/validation.md#dependencies)、[子任务装配](coordination-and-cloud/peer-contracts.md#interfaces) |
+| 领域账本与 UI 本端耐久意图；所属领域／应用与交互 | 原操作与领域提交、固定回执和转交责任；纯浏览器也需可恢复本端意图，业务输入适配器须独立耐久消费 | 持久交接不足不确认业务接纳；不能只凭浏览器内存承诺重启后关闭意图。[UI 依赖](application-and-interaction/validation.md#gaps) |
+| 消息账本、会话路由与领域恢复组织；端点通信 | 原消息／流身份、两处交接、恢复轮次、旧实例隔离依据和控制／收尾容量；领域各自提供恢复裁决 | 不具备耐久保存时不确认消息接管；缺领域依据时限制对应行为，ACK 不确认业务完成。[交付实现](endpoint-communication/delivery-and-recovery.md)、[通信验收](endpoint-communication/validation.md) |
+| 本地委派与 Agent 适配器；协作／内核／Agent 提供方 | 固定受信声明、目标／结果及配置版本；受限子配置和父已预留预算份额进入 Submit 事务，原委派接纳查询、取消、结果与累计用量可核对 | 无受限配置适配就不提供可派发候选，不降级为不受限普通 Submit；外部配置缺必要保证时禁用。[协作依赖](agent-coordination/validation.md#dependencies)、[子任务装配](agent-coordination/peer-contracts.md#interfaces) |
 | 受信宿主、身份、隔离、时间与备份；运行宿主／身份／平台适配器 | 真实用户确认、资源规范化、受控出口、旧实例隔离、可信时间、防回滚及独立于旧快照的完整命令／删除尾部 | 无隔离不接替或装载相应第三方代码；离线条件不齐则关闭；旧备份只作诊断，不凭快照重新开放行动。[身份依赖](identity-and-authorization/validation.md#dependencies)、[运行依赖](extensions-and-runtime/validation.md)、[记忆恢复](memory-system/validation.md#dependencies) |
 | 扩展制品、安装与生命周期适配器；扩展／所属领域 | 将已有包编码、摘要、安装锁及管理合同落实为机器可读资产、SDK 和制品；提供原命令查询、目录发布、排空／引用证明及当前格式的回退验证；维护入口核验精确批准 | 缺批准不激活，缺生命周期适配器不开放对应恢复／升级／卸载；安装或停用回执不代表旧版已恢复。[本地契约](extensions-and-runtime/contracts.md)、[依赖与交付](extensions-and-runtime/validation.md) |
 | 评测环境、独立取证与采集；观测评测／环境提供方 | 隔离创建和原实例查询、只读真值、输入脚本、受信轨迹、固定评分、封闭及清理；生产测量另须实际版本绑定和完整样本框架 | 缺必需环境适配器不接纳相应计划；取证缺失保留覆盖缺口，不从日志猜效果。未封闭旧写入及在途责任前，不销毁或以新环境掩盖原动作。[评测依赖](observation-and-improvement/validation.md#dependencies)、[环境合同](observation-and-improvement/contracts.md#environment) |
