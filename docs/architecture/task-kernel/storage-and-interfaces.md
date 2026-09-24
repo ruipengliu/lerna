@@ -10,10 +10,14 @@
 | --- | --- | --- |
 | `Submit` | 任务 ID、目标、附件、原操作 → 接纳／拒绝 | `task.submit`；创建任务、首次工作、操作决定和响应责任一次提交 |
 | `ApplyInput` | 任务、输入请求、值、原操作 → 已消费／拒绝 | `task.input`；原子消费请求；无异步 accepted |
+| `Pause`／`Resume` | 任务、预期控制修订、原命令 → 固定控制答复／拒绝 | task.pause／resume；本人及祖先原因分别记录，原结果可恢复 |
+| `AdjustBudget` | 任务、预期预算修订、完整新限额及内部子份额 → 固定调额答复／拒绝 | task.adjust_budget；同一预算提交域裁决，不修改外部委派上限 |
+| `SubmitEvidence`／`ReadEvidence` | 条件与原操作关联的获准材料 → 接纳及固定验证答复 | task.submit_evidence／evidence_result／query_evidence；不授予强制完成资格 |
+| `ReadCancel` | 任务及原取消身份 → 完整固定答复／拒绝 | task.query_cancel；恢复不依赖消息窗口 |
 | `Cancel` | 任务、原因、取消操作 → 接纳／拒绝 | `task.cancel`；接纳表示取消决定持久，不表示远端已停止 |
-| `ReadTask` | 任务 ID → 当前快照／拒绝 | `task.query`；返回 revision、主状态、effects_pending 及有效输入请求；默认读当前权威 |
+| `ReadTask` | 任务 ID → 当前快照／拒绝 | `task.query`；返回 revision、主状态、独立 control、effects_pending 及有效输入请求；默认读当前权威 |
 | `ReadResult` | 任务 ID → 固定正式结果／拒绝 | `task.query_result@1`；只读恢复接口，返回完整原 task.result 载荷；不依赖交付窗口或 UI |
-| `ReadOperation` | 原操作 ID → 控制操作处理状态／拒绝 | `task.query_operation`；`recorded` 为责任已保存，`applied` 为对应控制处理完成，`rejected` 为拒绝；不是完整外部效果结果 |
+| `ReadOperation` | 原操作 ID → 控制操作处理状态／拒绝 | `task.query_operation`；`recorded` 为责任已保存，`applied` 为对应控制处理完成，`rejected` 为拒绝；pause／resume／adjust_budget 已 applied 时另返回固定 control_result；不是完整外部效果结果 |
 | `Observe` | 原请求的可靠响应、操作／子任务事实与来源 → 已保存／重复／冲突 | 消费执行 invoke/cancel 响应及 fact/result/cancel_result，或协作事实；只接受已绑定生产者；冲突也须持久保存后确认处理 |
 
 表中线消息省略 `harness.`。`task.status/input_requested/result` 关联创建任务的提交操作；`task.cancel_result` 关联取消操作。输入答复沿用输入操作。只读请求响应中的 `status=completed` 表示查询完成，不能解读为任务完成。
@@ -24,6 +28,7 @@
 | --- | --- | --- |
 | submit | 仅允许用于已持久登记但尚未应用的业务责任；本实现创建事务直接完成应用，不单独暴露此阶段 | 任务和首次工作已创建，不等待任务完成 |
 | input | 本实现同步消费，不单独暴露此阶段 | 原输入请求已原子消费 |
+| pause／resume／adjust_budget | 本地同步提交，不暴露中间接纳 | 原控制／预算及固定答复已共同保存；不表示远端已经物理停止 |
 | cancel | 取消决定已保存，取消操作结果尚未固定 | 本地控制处理与固定取消结果已保存；仍可为 effects_unknown，不代表效果已清楚 |
 
 明确拒绝为 `rejected`。不存在、已清理或无权查询的操作采用既有拒绝响应及安全错误信息，不发明 unknown 状态；纯消息保管也不能投影为业务 recorded。
@@ -32,6 +37,8 @@
 
 `ReadResult` 映射 v1 草案内建的 `task.query_result@1`，读取终态提交时固定的完整结果，与返回最新状态的 `ReadTask` 分开。先验证身份、任务访问及当前披露权限；对获准查询的任务，未终态返回 `core.precondition_failed`，结果已清理、删除或缺失恢复依据时返回 `task.result_unavailable`、`retry=never`，不以当前摘要重建原结果。其他身份或权限拒绝不泄露对象是否存在；成果引用可读不等于内容字节可读。完整语义见[正式结果恢复](../endpoint-cloud-protocol/task-and-ui.md#result-recovery)。
 
+新增控制与补证的完整边界见[用户控制与管理](control-and-management.md)，机器字段见 [task-control Schema](../endpoint-cloud-protocol/schemas/task-control.schema.json)。控制修订与预算修订只在相应配置变化时推进，避免普通进度刷新使用户命令无谓冲突。
+
 ### 内部协作接口
 
 以下接口定义模块间交接的最小契约；线消息采用上一节的 v1 映射。
@@ -39,7 +46,7 @@
 | 接口 | 最小输入 | 返回与失败语义 |
 | --- | --- | --- |
 | `ContextAssembler.Build` | 决策 work_id、任务一致快照、用途、内容／成本限额、固定策略版本 | 快照引用、完整 source_bindings、准确能力声明、缺口；来源集合包括派生摘要与计划的传递来源，缺少依据的内容不进入快照 |
-| `Brain.Decide` | 决策 work_id、快照、draft/fixed 验收条件及缺口、提案约束、模型配置、期限和生成预留；调用模型时附 attempt_no | 完整提案及逐调用用量；draft 只允许澄清、受信策略限定的只读取证或失败结束；返回的引用不能缩小 source_bindings |
+| `Brain.Decide`（本地／远程） | 决策 work_id、快照、draft/fixed 验收条件及缺口、提案约束、模型配置、期限和生成预留；调用模型时附 attempt_no | 完整提案及逐调用用量；draft 只允许澄清、受信策略限定的只读取证或失败结束；返回的引用不能缩小 source_bindings |
 | `Delivery.Accept` | 固定消息与交付身份 | 已耐久承担发送责任／拒绝／未知；沿原身份恢复；不返回业务成功 |
 | `Core.CheckRecovery` | 任务或操作作用域、当前授权／控制／交付核对依据 | 允许哪些消息处理、哪些行动继续受限及缺口；交付模块负责最终放行 |
 
@@ -72,7 +79,7 @@
 | 标识 | 解决的问题 | 不表示什么 |
 | --- | --- | --- |
 | `task_id`／`revision` | 一个任务及其正式状态版本；对外投影与本地短事务比较提交 | 不直接决定长时间生成的提案是否过期 |
-| `decision_revision` | 任务内部决策语义版本；提案基线与当前值比较 | 不随纯账务变化递增，也不是新增 v1 线字段 |
+| `decision_revision` | 任务内部决策语义版本；提案基线与当前值比较 | 不随纯账务变化递增；远程 Brain 以 base_decision_revision 绑定本轮基线，不加入公共信封 |
 | `owner_epoch` | 同一任务控制方的权威代次 | 不随工作者重启、网络重连递增 |
 | `work_id`／`claim_epoch` | 持久责任及一次领取资格 | 领取失效不意味着外部动作停止 |
 | `operation_id`／`message_id` | 业务意图和逻辑消息，分别去重 | 同操作可有多条消息，消息有序不代表跨操作因果 |
@@ -101,13 +108,14 @@ flowchart TB
 
 | 记录 | 必须保存的字段组 | 唯一性与恢复用途 |
 | --- | --- | --- |
-| Task | ID、提交操作／请求方、写权威、目标、约束与策略版本、验收条件集／版本／固定状态、获准计划引用（可选）、revision、decision_revision、主状态、owner/epoch/阶段、取消、期限、固定正式结果或其获准引用 | 用户写权威内 `(user, task_id)` 唯一；错投请求不得另建任务 |
+| Task | ID、提交操作／请求方、写权威、目标、约束与策略版本、验收条件集／版本／固定状态、获准计划引用（可选）、revision、decision_revision、主状态、控制修订／本人及祖先暂停、owner/epoch/阶段、取消、期限、固定正式结果或其获准引用 | 用户写权威内 `(user, task_id)` 唯一；错投请求不得另建任务 |
 | Operation | ID、种类、意图摘要及必要原文、生产者／目标、能力版本、原请求、启动期限、必要事实引用／判据／适用版本、source_bindings 引用、派发阶段、结果事实、retry_of | 同用户所有任务共用 `(user, operation_id)` 唯一索引；同 ID 不可跨任务、跨种类或更换内容 |
 | Work 公共字段 | ID、任务、类型、关联对象、状态、blockers、not_before、deadline、重试计数、claim_epoch、lease_until、处理结果 | 同一责任只建一次；每任务至多一个未结束 decide；结果与后续工作同事务保存 |
 | decide 工作载荷 | base_decision_revision、owner_epoch、生成领取、策略绑定、快照及 source_bindings、每 attempt_no 的调用准备／返回／用量关联、待准入提案及 admit_attempt、预留及准入操作映射 | 不可复用的 work_id 标识轮次；同局部动作键只能映射一个操作；关闭工作后保留迟到账单关联 |
 | 发送工作载荷 | message_id、source、target、固定消息／内容引用、source_bindings 引用、原期限、交接凭据与缺口 | dispatch/control/publish 承担发送；交接前仍须检查披露许可 |
 | InputRequest | input_request_id、用途、字段、有效期、消费操作及结果 | 同一请求至多一次消费；内容变更必须换 ID；工作 blocker 只引用它 |
-| Reservation / Usage | 目标／收尾类别、单位、limit、预留上限、调用关联、已知累计用量、未知余额 | 唯一用量项／调用累计值去重；任务关闭不抹除未结算占用 |
+| EvidenceSubmission | 原补证操作、条件／验证器版本、原操作关联、候选来源与材料、验证责任、固定验证结果 | 接纳材料、核验事实和正常完成分别保存；原结果可恢复 |
+| Reservation / Usage | 预算修订、分配来源、目标／收尾类别、保证模式、维度／整数单位及货币刻度、limit、预留上限、调用关联、已知累计用量、未知余额 | 唯一用量项／调用累计值去重；任务关闭不抹除未结算占用 |
 | 处理回执 | 原请求／事实／工作步骤键、内容绑定、结果、应用 revision、响应引用 | 可存对应记录或共用表；不作为独立业务对象，也不能只留“处理过”布尔值 |
 | Evidence / Audit | 原消息／来源、原操作、最小获准证据、验证结果及条件／成果版本、冲突与处置、用量出处 | 事实只追加必要记录，投影可更新；不默认复制敏感载荷 |
 
@@ -129,6 +137,8 @@ flowchart TB
 | 准入提案 | 核对决策版本及当前条件，再共同保存本轮结算、decide 工作 done 与结果、操作映射、预留及后续工作／输入请求／终态 | 执行调用及跨模块写入 |
 | 决策退出 | 原准入核对、decide 工作 closed、已知结算／未知预留、新轮工作及其阻塞条件 | 旧物理模型调用的实际停止，不假定随关闭完成 |
 | 准备派发 | 当前条件检查、may_have_sent、固定请求和发送责任 | 任何可能启动外部操作的调用 |
+| 暂停／恢复／调额 | 原命令、当前控制或预算、预期专属修订、决策基线、内部子份额或祖先屏障及原答复共同保存 | 对远端传播、实际停止或外部动态调额的假定 |
+| 接纳／验证补证 | 保存原材料、来源、条件绑定、验证责任；验证结束保存固定结果及事实交接 | 未接纳前宣布 verified，或把候选直接写成完成事实 |
 | 应用输入／事实 | 去重、消费／事实、投影、按分类更新两种版本、可信结算、阻塞变化、后续工作与回应 | 外部核验动作；须另登记责任 |
 | 取消／终态 | 控制屏障、资格失效、未派发工作关闭、处置工作、结果和发布 | 远端停止和用户端显示 |
 

@@ -432,6 +432,9 @@
         },
         "values": {
           "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/values"
+        },
+        "preview_receipt": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/preview_receipt"
         }
       },
       "required": [

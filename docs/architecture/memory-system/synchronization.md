@@ -2,7 +2,7 @@
 
 [总览](README.md) · [处理机制](mechanisms.md) · [记录与接口](contracts.md) · [验证与待决](validation.md)
 
-本页定义记忆同步的领域算法及内部交接。首期可用两个本地实例验证，但远程部署须先补齐 [MS-P1](validation.md#proposals) 的线 profile、完整来源解析及当前授权证明；当前 v1 只有[领域恢复框架](../endpoint-cloud-protocol/recovery-and-control.md#recovery-reference)，不能直接发送本页接口名称。
+本页定义记忆同步的领域算法及内部交接。MS-P1 已采用，下文算法由[WSS 领域 profile 1](#wire)承载，复用[领域恢复框架](../endpoint-cloud-protocol/recovery-and-control.md#recovery-reference)、身份及完整来源证明。远程部署在这些提供方实现并验收前保持关闭。
 
 <a id="views"></a>
 ## 1. 同步对象是获准视图
@@ -93,4 +93,26 @@ remove 只携带已交付对象所需最小删除关联，不携带旧正文。�
 
 离线编辑可在获准本地存储中保存“待提交意图”，也可由用户在原本地权威完成修改。副本排队不算权威接纳；上传时复用固定命令、期望修订和原期限，过期先封闭旧命令再让用户决定新意图。相同用户拥有多设备不赋予各设备独立消费单次许可或创建新权威的资格。
 
-首期不承诺离线资料随云端撤销即时擦除，也不承诺平台安全删除能力。若产品要求这种保证，应禁用该资料的离线复制。端侧限定数据缺少本地提取模型时可以保留原数据并报告能力缺席，不自动改用云模型。
+离线资料允许在原有限使用截止前存在已声明撤回延迟；已知撤回立即阻止新使用，物理清理单独等待持有者回执。设备失联或备份尚未到期时持续列出残留，不承诺即时擦除或平台介质安全删除。若产品要求这种保证，应禁用该资料的离线复制。端侧限定数据缺少本地提取模型时可以保留原数据并报告能力缺席，不自动改用云模型。
+
+<a id="wire"></a>
+## 6. WSS 记忆领域 profile 1
+
+所有类型以 `harness.` 为前缀、版本 1，精确结构见 [memory Schema](../endpoint-cloud-protocol/schemas/memory.schema.json)。协议复用身份 P1 的受信主体和当前使用证明、[完整来源合同](../content-and-provenance.md#remote)及相同消息交付。许可恢复成功不代表视图可用；只取得 content_ref 也不能证明来源、字节或当前用途成立。
+
+| 线类型 | 对应接口与结果 | lane／scope |
+| --- | --- | --- |
+| memory.search／read | 有界候选检索或固定版本读取；返回完整记录、来源、partial／缺口；分页按查询及切点绑定 | recovery；collection／查询集合，或 memory／memory_id |
+| memory.mutate | command_id、memory_id、固定意图、create／replace／restrict／delete 和受信操作依据；返回原回执及权威修订 | work；memory／memory_id |
+| memory.query_command／close_command | 查询原命令，或原子封闭尚未提交原意图；closed_without_commit 不回滚已提交修改 | recovery／control；operation／原 command_id |
+| memory.open_view | 本轮恢复、view_id／代次、范围／用途／投影及期限；固定快照清单、切点与接续责任 | control；memory／view_id |
+| memory.read_view | 原绑定／游标；固定快照或连续变化页、范围覆盖、remove 与完整性摘要 | recovery；memory／view_id |
+| memory.apply_view | 接收端持久应用水位、清单摘要及受信应用证明；权威记录确认位置 | control；memory／view_id |
+| memory.close_view／query_view_receipt | 原关闭、旧代次应用及载体清理结果可核对；view 过期仍保留未决清理事实 | control／recovery；memory／view_id |
+| memory.set_extraction_policy | 本人确认的任务类型 opt-in、策略版本及独立预算；由应用策略权威保存 | control；memory／policy_id |
+
+变更 envelope operation_id 等于 command_id；memory.mutate 顶层 memory_id 必须等于动作里的目标 ID。新建记录初始修订、替换预期修订与新修订关系由权威验证，客户端不得自行指定一条跳跃历史。restrict 只能收紧策略，delete／restrict 不要求重新获准旧正文。来源／actor／processor 与受信操作不符、闭包不完整或必要预算／控制依据缺失时拒绝。
+
+memory.open_view 创建有限持久订阅，因此不伪装纯只读 recovery 请求。快照页数、页摘要及完整清单必须全部可核验；增量页的 covered_from／covered_to 连续，并固定同一视图代次。完整来源超出消息额度时拒绝该投影或缩小页，不能删除必需来源元数据。删除／撤权通过控制路径与当前来源复核先阻止新使用，再按[持有者合同](../content-and-provenance.md#holders)结清副本及缓存。
+
+原关闭／清理 ID 从客户端原 command_id 派生为同一稳定标识，响应丢失仍可查旧代次及原命令。变更答复中 receipt 表示提交事实，视图应用 proof 表示该端已持久应用；物理清理由单独清理项确认。两端 source／target、owner、view_generation 或用途变化均需重新建立获准视图，不能给原消息换路由继续。

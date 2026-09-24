@@ -23,5 +23,63 @@
       "size": "1024",
       "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
+  },
+  {
+    "schema": "https://harness.invalid/protocol/v1/http.schema.json#/$defs/bootstrap_request",
+    "body": {
+      "endpoint_id": "00000000-0000-4000-8000-000000000001",
+      "requested_authority": "00000000-0000-4000-8000-000000000005"
+    }
+  },
+  {
+    "schema": "https://harness.invalid/protocol/v1/http.schema.json#/$defs/bootstrap_response",
+    "body": {
+      "bootstrap_grant_ref": "host-only-recovery-grant-example",
+      "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+      "endpoint_id": "00000000-0000-4000-8000-000000000001",
+      "owner_generation": "1",
+      "ledger_id": "00000000-0000-4000-8000-000000000384",
+      "expires_at": "2026-09-24T11:00:00.000Z",
+      "allowed_types": [
+        "harness.authorization.open_recovery",
+        "harness.authorization.read_recovery",
+        "harness.authorization.read_changes",
+        "harness.authorization.apply_recovery",
+        "harness.authorization.query_command"
+      ]
+    }
+  },
+  {
+    "schema": "https://harness.invalid/protocol/v1/http.schema.json#/$defs/management_grant_request",
+    "body": {
+      "endpoint_id": "00000000-0000-4000-8000-000000000001",
+      "requested_authority": "00000000-0000-4000-8000-000000000005",
+      "allowed_types": [
+        "harness.authorization.create_confirmation",
+        "harness.authorization.confirm",
+        "harness.authorization.query_confirmation",
+        "harness.authorization.revoke",
+        "harness.authorization.query_command"
+      ]
+    }
+  },
+  {
+    "schema": "https://harness.invalid/protocol/v1/http.schema.json#/$defs/management_grant_response",
+    "body": {
+      "management_grant_ref": "host-only-current-user-management-grant",
+      "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+      "endpoint_id": "00000000-0000-4000-8000-000000000001",
+      "owner_generation": "1",
+      "ledger_id": "00000000-0000-4000-8000-000000000384",
+      "expires_at": "2026-09-24T10:10:00.000Z",
+      "allowed_types": [
+        "harness.authorization.create_confirmation",
+        "harness.authorization.confirm",
+        "harness.authorization.query_confirmation",
+        "harness.authorization.revoke",
+        "harness.authorization.query_command"
+      ],
+      "recent_auth_until": "2026-09-24T10:10:00.000Z"
+    }
   }
 ]

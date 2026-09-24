@@ -1,0 +1,3157 @@
+[
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.create_confirmation",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c11",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "command_id": "00000000-0000-4000-8000-0000000c5c2e",
+      "grant": {
+        "subject_actor_id": "00000000-0000-4000-8000-0000000c5c14",
+        "source_endpoints": [
+          "00000000-0000-4000-8000-0000000c5c12"
+        ],
+        "processor_endpoints": [
+          "00000000-0000-4000-8000-0000000c5c12"
+        ],
+        "scopes": [
+          {
+            "resource_ref": "fixture://local-files/A.txt",
+            "selector_kind": "exact",
+            "resource_type": "file",
+            "actions": [
+              "file.read"
+            ],
+            "purposes": [
+              "read"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "retain_until": "2026-09-24T11:00:00.000Z",
+            "max_bytes": "8192",
+            "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+            "parameter_policy_revision": "1",
+            "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+          }
+        ],
+        "mode": "continuous",
+        "not_before": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T11:00:00.000Z",
+        "offline_allowed": true,
+        "delegation_allowed": true,
+        "policy_proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "proof_id": "00000000-0000-4000-8000-0000000c5c56",
+          "revision": "1",
+          "binding_sha256": "9f9f43e003683872826f48db257557d4f80b26a8ce644493d4cb933f2a22a709",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        }
+      },
+      "surface_id": "00000000-0000-4000-8000-0000000c5c31",
+      "input_request_id": "00000000-0000-4000-8000-0000000c5c32",
+      "display_sha256": "cd8375240359bf9d43ade5061c88e0b9a806a897dcac32ac1389cd5a2062bfc5",
+      "expires_at": "2026-09-24T11:00:00.000Z"
+    },
+    "authorization": {
+      "grant_ref": "fixture:management:registered-user"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "operation_id": "00000000-0000-4000-8000-0000000c5c2e",
+    "message_id": "00000000-0000-4000-8000-0000000c8321",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09c1",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c2e"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8322",
+    "kind": "response",
+    "type": "harness.authorization.create_confirmation",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c11",
+    "reply_to": "00000000-0000-4000-8000-0000000c8321",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09c2",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c2e"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "binding": {
+          "confirmation_id": "00000000-0000-4000-8000-0000000c5c2f",
+          "surface_id": "00000000-0000-4000-8000-0000000c5c31",
+          "input_request_id": "00000000-0000-4000-8000-0000000c5c32",
+          "display_sha256": "cd8375240359bf9d43ade5061c88e0b9a806a897dcac32ac1389cd5a2062bfc5",
+          "grant_scope_sha256": "33ff9a809f4f42272fe68bf146d2e527233900c5c1d884a167f5f01e0518494d",
+          "nonce": "fixture-single-use-confirmation-1",
+          "expires_at": "2026-09-24T11:00:00.000Z",
+          "host_endpoint": "00000000-0000-4000-8000-0000000c5c11"
+        },
+        "state": "pending"
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000c5c2e"
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.confirm",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c11",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "command_id": "00000000-0000-4000-8000-0000000c5c30",
+      "binding": {
+        "confirmation_id": "00000000-0000-4000-8000-0000000c5c2f",
+        "surface_id": "00000000-0000-4000-8000-0000000c5c31",
+        "input_request_id": "00000000-0000-4000-8000-0000000c5c32",
+        "display_sha256": "cd8375240359bf9d43ade5061c88e0b9a806a897dcac32ac1389cd5a2062bfc5",
+        "grant_scope_sha256": "33ff9a809f4f42272fe68bf146d2e527233900c5c1d884a167f5f01e0518494d",
+        "nonce": "fixture-single-use-confirmation-1",
+        "expires_at": "2026-09-24T11:00:00.000Z",
+        "host_endpoint": "00000000-0000-4000-8000-0000000c5c11"
+      },
+      "decision": "approve",
+      "user_presence_proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c11",
+        "proof_id": "00000000-0000-4000-8000-0000000c5c33",
+        "revision": "1",
+        "binding_sha256": "d836d2371d4aa1b66195bc2730775185a0ad6c5f6027ea9199a6174d533092e0",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T11:00:00.000Z"
+      }
+    },
+    "authorization": {
+      "grant_ref": "fixture:management:registered-user"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "operation_id": "00000000-0000-4000-8000-0000000c5c30",
+    "message_id": "00000000-0000-4000-8000-0000000c8323",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09c3",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c2f"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8324",
+    "kind": "response",
+    "type": "harness.authorization.confirm",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c11",
+    "reply_to": "00000000-0000-4000-8000-0000000c8323",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09c4",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c2f"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "binding": {
+          "confirmation_id": "00000000-0000-4000-8000-0000000c5c2f",
+          "surface_id": "00000000-0000-4000-8000-0000000c5c31",
+          "input_request_id": "00000000-0000-4000-8000-0000000c5c32",
+          "display_sha256": "cd8375240359bf9d43ade5061c88e0b9a806a897dcac32ac1389cd5a2062bfc5",
+          "grant_scope_sha256": "33ff9a809f4f42272fe68bf146d2e527233900c5c1d884a167f5f01e0518494d",
+          "nonce": "fixture-single-use-confirmation-1",
+          "expires_at": "2026-09-24T11:00:00.000Z",
+          "host_endpoint": "00000000-0000-4000-8000-0000000c5c11"
+        },
+        "state": "issued",
+        "grant_ref": "fixture:grant:read-A:root",
+        "command_receipt": {
+          "command_id": "00000000-0000-4000-8000-0000000c5c30",
+          "intent_sha256": "889506b592bb4a4cf696fd7e7e8674c19794a6abc37bdb3460c9d45e9bd82a43",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "state": "committed",
+          "revision": "2",
+          "result_ref": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c6018",
+            "revision": "2",
+            "binding_sha256": "889506b592bb4a4cf696fd7e7e8674c19794a6abc37bdb3460c9d45e9bd82a43",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          },
+          "gaps": []
+        }
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000c5c30"
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.query_confirmation",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c11",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "confirmation_id": "00000000-0000-4000-8000-0000000c5c2f"
+    },
+    "authorization": {
+      "grant_ref": "fixture:management:registered-user"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c8325",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09c5",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c2f"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8326",
+    "kind": "response",
+    "type": "harness.authorization.query_confirmation",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c11",
+    "reply_to": "00000000-0000-4000-8000-0000000c8325",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09c6",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c2f"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "binding": {
+          "confirmation_id": "00000000-0000-4000-8000-0000000c5c2f",
+          "surface_id": "00000000-0000-4000-8000-0000000c5c31",
+          "input_request_id": "00000000-0000-4000-8000-0000000c5c32",
+          "display_sha256": "cd8375240359bf9d43ade5061c88e0b9a806a897dcac32ac1389cd5a2062bfc5",
+          "grant_scope_sha256": "33ff9a809f4f42272fe68bf146d2e527233900c5c1d884a167f5f01e0518494d",
+          "nonce": "fixture-single-use-confirmation-1",
+          "expires_at": "2026-09-24T11:00:00.000Z",
+          "host_endpoint": "00000000-0000-4000-8000-0000000c5c11"
+        },
+        "state": "issued",
+        "grant_ref": "fixture:grant:read-A:root",
+        "command_receipt": {
+          "command_id": "00000000-0000-4000-8000-0000000c5c30",
+          "intent_sha256": "889506b592bb4a4cf696fd7e7e8674c19794a6abc37bdb3460c9d45e9bd82a43",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "state": "committed",
+          "revision": "2",
+          "result_ref": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c6018",
+            "revision": "2",
+            "binding_sha256": "889506b592bb4a4cf696fd7e7e8674c19794a6abc37bdb3460c9d45e9bd82a43",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          },
+          "gaps": []
+        }
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.resolve",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "target_grant_ref": "fixture:grant:read-A:root"
+    },
+    "authorization": {
+      "grant_ref": "fixture:authorization-client:host"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c8327",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09c7",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c13"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8328",
+    "kind": "response",
+    "type": "harness.authorization.resolve",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c8327",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09c8",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c13"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "grants": [
+          {
+            "subject_actor_id": "00000000-0000-4000-8000-0000000c5c14",
+            "source_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processor_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "scopes": [
+              {
+                "resource_ref": "fixture://local-files/A.txt",
+                "selector_kind": "exact",
+                "resource_type": "file",
+                "actions": [
+                  "file.read"
+                ],
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "max_bytes": "8192",
+                "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                "parameter_policy_revision": "1",
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+              }
+            ],
+            "mode": "continuous",
+            "not_before": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z",
+            "offline_allowed": true,
+            "delegation_allowed": true,
+            "policy_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c56",
+              "revision": "1",
+              "binding_sha256": "9f9f43e003683872826f48db257557d4f80b26a8ce644493d4cb933f2a22a709",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            },
+            "grant_ref": "fixture:grant:read-A:root",
+            "grant_version": "1",
+            "issuer_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c13",
+            "delegation_depth": 0,
+            "confirmation_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c57",
+              "revision": "1",
+              "binding_sha256": "f99fda2f7bab24363d67064ba57f2c815cf84a16d0f5fec266a92ef6ba70350c",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "grant_states": [
+          {
+            "grant_ref": "fixture:grant:read-A:root",
+            "revision": "1",
+            "state": "active",
+            "consumption": "not_applicable",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c13",
+            "applications": [
+              {
+                "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+                "applied_revision": "0",
+                "offline_use_until": "2026-09-24T10:00:00.000Z",
+                "state": "unknown"
+              }
+            ],
+            "applications_complete": false,
+            "proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c60",
+              "revision": "2",
+              "binding_sha256": "b180ec5555059825f63cf4f1b2bc16aa4b60bd2472f6e20528a2f38f5983d158",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "proof_id": "00000000-0000-4000-8000-0000000c5c34",
+          "revision": "2",
+          "binding_sha256": "a150e0c8b0eba3276ef52ced056fa4201e25d2326d297db8fd9c20f05dcce804",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "gaps": []
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.evaluate",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "target_grant_ref": "fixture:grant:read-A:root",
+      "intent": {
+        "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+        "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "resource_ref": "fixture://local-files/A.txt",
+        "action": "file.read",
+        "purpose": "read",
+        "recipient_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "processing_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+            "resource_ref": "fixture://local-files/A.txt",
+            "revision": "1",
+            "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+            "policy_revision": "1",
+            "purposes": [
+              "read"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "retain_until": "2026-09-24T11:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+              "revision": "1",
+              "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "parameter_schema_ref": "https://harness.invalid/capabilities/local.file.read/v1/arguments.schema.json",
+        "parameters": {
+          "content_id": "00000000-0000-4000-8000-0000000c5c59",
+          "provider_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+          "media_type": "application/json",
+          "size": "44",
+          "sha256": "52e2a5d898c5d5430dae55101b0a8d1b63ff67ee9544588bc5afcfc02fb51323"
+        },
+        "required_obligations": [
+          {
+            "resource_ref": "fixture://local-files/A.txt",
+            "selector_kind": "exact",
+            "resource_type": "file",
+            "actions": [
+              "file.read"
+            ],
+            "purposes": [
+              "read"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "retain_until": "2026-09-24T11:00:00.000Z",
+            "max_bytes": "8192",
+            "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+            "parameter_policy_revision": "1",
+            "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+          }
+        ],
+        "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb"
+      }
+    },
+    "authorization": {
+      "grant_ref": "fixture:authorization-client:host"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c8329",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09c9",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c13"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c832a",
+    "kind": "response",
+    "type": "harness.authorization.evaluate",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c8329",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09ca",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c13"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "decision": "allow",
+        "reason": "Current root grant permits the exact local read.",
+        "basis_revision": "2",
+        "expires_at": "2026-09-24T11:00:00.000Z",
+        "obligations": [
+          {
+            "resource_ref": "fixture://local-files/A.txt",
+            "selector_kind": "exact",
+            "resource_type": "file",
+            "actions": [
+              "file.read"
+            ],
+            "purposes": [
+              "read"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "retain_until": "2026-09-24T11:00:00.000Z",
+            "max_bytes": "8192",
+            "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+            "parameter_policy_revision": "1",
+            "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+          }
+        ],
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "proof_id": "00000000-0000-4000-8000-0000000c5c35",
+          "revision": "2",
+          "binding_sha256": "6888b06e6100099ec500ac260a982ccf97fa04cd1e8da3c16790c9520a89553f",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "gaps": []
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.begin_use",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "command_id": "00000000-0000-4000-8000-0000000c5c3a",
+      "target_grant_ref": "fixture:grant:read-A:root",
+      "intent": {
+        "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+        "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "resource_ref": "fixture://local-files/A.txt",
+        "action": "file.read",
+        "purpose": "read",
+        "recipient_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "processing_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+            "resource_ref": "fixture://local-files/A.txt",
+            "revision": "1",
+            "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+            "policy_revision": "1",
+            "purposes": [
+              "read"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "retain_until": "2026-09-24T11:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+              "revision": "1",
+              "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "parameter_schema_ref": "https://harness.invalid/capabilities/local.file.read/v1/arguments.schema.json",
+        "parameters": {
+          "content_id": "00000000-0000-4000-8000-0000000c5c59",
+          "provider_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+          "media_type": "application/json",
+          "size": "44",
+          "sha256": "52e2a5d898c5d5430dae55101b0a8d1b63ff67ee9544588bc5afcfc02fb51323"
+        },
+        "required_obligations": [
+          {
+            "resource_ref": "fixture://local-files/A.txt",
+            "selector_kind": "exact",
+            "resource_type": "file",
+            "actions": [
+              "file.read"
+            ],
+            "purposes": [
+              "read"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "retain_until": "2026-09-24T11:00:00.000Z",
+            "max_bytes": "8192",
+            "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+            "parameter_policy_revision": "1",
+            "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+          }
+        ],
+        "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+        "operation_id": "00000000-0000-4000-8000-0000000c5c1b",
+        "unit_no": "1",
+        "source_role": "input",
+        "operation_basis": {
+          "operation_id": "00000000-0000-4000-8000-0000000c5c1b",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+          "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+          "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+          "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+          "source_bindings": [
+            {
+              "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+              "resource_ref": "fixture://local-files/A.txt",
+              "revision": "1",
+              "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+              "observed_at": "2026-09-24T10:00:00.000Z",
+              "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+              "policy_revision": "1",
+              "purposes": [
+                "read"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "retain_until": "2026-09-24T11:00:00.000Z",
+              "current_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                "revision": "1",
+                "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            }
+          ],
+          "sources_sha256": "e9cda2e0c60b135230931382513be308c1134e08d46f7fb786196a282f6d0ccd",
+          "budget": {
+            "budget_id": "00000000-0000-4000-8000-0000000c5c37",
+            "purpose": "goal",
+            "mode": "hard",
+            "limits": [
+              {
+                "dimension": "calls",
+                "unit": "call",
+                "amount": "1"
+              }
+            ],
+            "reservation_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c38",
+              "revision": "1",
+              "binding_sha256": "e2871582e806e74cd9868005a1a0fe3747a5cea874b9dd2e0bc5154c61b81994",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          },
+          "control": {
+            "task_id": "00000000-0000-4000-8000-0000000c5c1a",
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "owner_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "owner_epoch": "1",
+            "control_revision": "1",
+            "control": {
+              "revision": "1",
+              "self_paused": false,
+              "paused_by": [],
+              "external_unpaused": [],
+              "effects_pending": false
+            },
+            "cancel_requested": false,
+            "proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c36",
+              "revision": "1",
+              "binding_sha256": "a17070bdab90d9cca05b4d5d1377d6bb7332b1629a6740cdaadbef9b9f7b355d",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          },
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "proof_id": "00000000-0000-4000-8000-0000000c5c39",
+            "revision": "1",
+            "binding_sha256": "8797722cc750beb6a75a0fc4856564e8986f57645e10d3538cd6c8f7ca7f38e0",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          }
+        }
+      }
+    },
+    "authorization": {
+      "grant_ref": "fixture:authorization-client:host"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "operation_id": "00000000-0000-4000-8000-0000000c5c3a",
+    "message_id": "00000000-0000-4000-8000-0000000c832b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09cb",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c1b"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c832c",
+    "kind": "response",
+    "type": "harness.authorization.begin_use",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c832b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09cc",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c1b"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "receipt": {
+          "use_receipt_id": "00000000-0000-4000-8000-0000000c5c3b",
+          "grant_ref": "fixture:grant:read-A:root",
+          "intent": {
+            "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+            "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "resource_ref": "fixture://local-files/A.txt",
+            "action": "file.read",
+            "purpose": "read",
+            "recipient_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "processing_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "source_bindings": [
+              {
+                "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                "resource_ref": "fixture://local-files/A.txt",
+                "revision": "1",
+                "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                "observed_at": "2026-09-24T10:00:00.000Z",
+                "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                "policy_revision": "1",
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "current_proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                  "revision": "1",
+                  "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              }
+            ],
+            "parameter_schema_ref": "https://harness.invalid/capabilities/local.file.read/v1/arguments.schema.json",
+            "parameters": {
+              "content_id": "00000000-0000-4000-8000-0000000c5c59",
+              "provider_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "media_type": "application/json",
+              "size": "44",
+              "sha256": "52e2a5d898c5d5430dae55101b0a8d1b63ff67ee9544588bc5afcfc02fb51323"
+            },
+            "required_obligations": [
+              {
+                "resource_ref": "fixture://local-files/A.txt",
+                "selector_kind": "exact",
+                "resource_type": "file",
+                "actions": [
+                  "file.read"
+                ],
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "max_bytes": "8192",
+                "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                "parameter_policy_revision": "1",
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+              }
+            ],
+            "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+            "operation_id": "00000000-0000-4000-8000-0000000c5c1b",
+            "unit_no": "1",
+            "source_role": "input",
+            "operation_basis": {
+              "operation_id": "00000000-0000-4000-8000-0000000c5c1b",
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+              "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+              "source_bindings": [
+                {
+                  "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                  "resource_ref": "fixture://local-files/A.txt",
+                  "revision": "1",
+                  "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                  "observed_at": "2026-09-24T10:00:00.000Z",
+                  "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                  "policy_revision": "1",
+                  "purposes": [
+                    "read"
+                  ],
+                  "recipients": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "processing_endpoints": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "retain_until": "2026-09-24T11:00:00.000Z",
+                  "current_proof": {
+                    "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                    "revision": "1",
+                    "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                    "issued_at": "2026-09-24T10:00:00.000Z",
+                    "expires_at": "2026-09-24T11:00:00.000Z"
+                  }
+                }
+              ],
+              "sources_sha256": "e9cda2e0c60b135230931382513be308c1134e08d46f7fb786196a282f6d0ccd",
+              "budget": {
+                "budget_id": "00000000-0000-4000-8000-0000000c5c37",
+                "purpose": "goal",
+                "mode": "hard",
+                "limits": [
+                  {
+                    "dimension": "calls",
+                    "unit": "call",
+                    "amount": "1"
+                  }
+                ],
+                "reservation_proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "proof_id": "00000000-0000-4000-8000-0000000c5c38",
+                  "revision": "1",
+                  "binding_sha256": "e2871582e806e74cd9868005a1a0fe3747a5cea874b9dd2e0bc5154c61b81994",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              },
+              "control": {
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a",
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "owner_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "owner_epoch": "1",
+                "control_revision": "1",
+                "control": {
+                  "revision": "1",
+                  "self_paused": false,
+                  "paused_by": [],
+                  "external_unpaused": [],
+                  "effects_pending": false
+                },
+                "cancel_requested": false,
+                "proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "proof_id": "00000000-0000-4000-8000-0000000c5c36",
+                  "revision": "1",
+                  "binding_sha256": "a17070bdab90d9cca05b4d5d1377d6bb7332b1629a6740cdaadbef9b9f7b355d",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              },
+              "proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c39",
+                "revision": "1",
+                "binding_sha256": "8797722cc750beb6a75a0fc4856564e8986f57645e10d3538cd6c8f7ca7f38e0",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            }
+          },
+          "start_before": "2026-09-24T11:00:00.000Z",
+          "authority_revision": "3",
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c5c3c",
+            "revision": "3",
+            "binding_sha256": "a78c5d4ea046183c88c6482cdd5d0c7d5273fec1de357025226a35bfc1dda543",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          }
+        },
+        "current_decision": {
+          "decision": "allow",
+          "reason": "Current root grant permits the exact local read.",
+          "basis_revision": "3",
+          "expires_at": "2026-09-24T11:00:00.000Z",
+          "obligations": [
+            {
+              "resource_ref": "fixture://local-files/A.txt",
+              "selector_kind": "exact",
+              "resource_type": "file",
+              "actions": [
+                "file.read"
+              ],
+              "purposes": [
+                "read"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "retain_until": "2026-09-24T11:00:00.000Z",
+              "max_bytes": "8192",
+              "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+              "parameter_policy_revision": "1",
+              "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+            }
+          ],
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c5c3d",
+            "revision": "3",
+            "binding_sha256": "a78c5d4ea046183c88c6482cdd5d0c7d5273fec1de357025226a35bfc1dda543",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          },
+          "gaps": []
+        }
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000c5c3a"
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.query_use",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "target_grant_ref": "fixture:grant:read-A:root",
+      "operation_id": "00000000-0000-4000-8000-0000000c5c1b",
+      "unit_no": "1",
+      "source_role": "input"
+    },
+    "authorization": {
+      "grant_ref": "fixture:authorization-client:host"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c832d",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09cd",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c1b"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c832e",
+    "kind": "response",
+    "type": "harness.authorization.query_use",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c832d",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09ce",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c1b"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "receipts": [
+          {
+            "use_receipt_id": "00000000-0000-4000-8000-0000000c5c3b",
+            "grant_ref": "fixture:grant:read-A:root",
+            "intent": {
+              "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+              "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "resource_ref": "fixture://local-files/A.txt",
+              "action": "file.read",
+              "purpose": "read",
+              "recipient_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "processing_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "source_bindings": [
+                {
+                  "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                  "resource_ref": "fixture://local-files/A.txt",
+                  "revision": "1",
+                  "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                  "observed_at": "2026-09-24T10:00:00.000Z",
+                  "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                  "policy_revision": "1",
+                  "purposes": [
+                    "read"
+                  ],
+                  "recipients": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "processing_endpoints": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "retain_until": "2026-09-24T11:00:00.000Z",
+                  "current_proof": {
+                    "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                    "revision": "1",
+                    "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                    "issued_at": "2026-09-24T10:00:00.000Z",
+                    "expires_at": "2026-09-24T11:00:00.000Z"
+                  }
+                }
+              ],
+              "parameter_schema_ref": "https://harness.invalid/capabilities/local.file.read/v1/arguments.schema.json",
+              "parameters": {
+                "content_id": "00000000-0000-4000-8000-0000000c5c59",
+                "provider_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "media_type": "application/json",
+                "size": "44",
+                "sha256": "52e2a5d898c5d5430dae55101b0a8d1b63ff67ee9544588bc5afcfc02fb51323"
+              },
+              "required_obligations": [
+                {
+                  "resource_ref": "fixture://local-files/A.txt",
+                  "selector_kind": "exact",
+                  "resource_type": "file",
+                  "actions": [
+                    "file.read"
+                  ],
+                  "purposes": [
+                    "read"
+                  ],
+                  "recipients": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "processing_endpoints": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "retain_until": "2026-09-24T11:00:00.000Z",
+                  "max_bytes": "8192",
+                  "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                  "parameter_policy_revision": "1",
+                  "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+                }
+              ],
+              "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+              "operation_id": "00000000-0000-4000-8000-0000000c5c1b",
+              "unit_no": "1",
+              "source_role": "input",
+              "operation_basis": {
+                "operation_id": "00000000-0000-4000-8000-0000000c5c1b",
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+                "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+                "source_bindings": [
+                  {
+                    "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                    "resource_ref": "fixture://local-files/A.txt",
+                    "revision": "1",
+                    "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                    "observed_at": "2026-09-24T10:00:00.000Z",
+                    "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                    "policy_revision": "1",
+                    "purposes": [
+                      "read"
+                    ],
+                    "recipients": [
+                      "00000000-0000-4000-8000-0000000c5c12"
+                    ],
+                    "processing_endpoints": [
+                      "00000000-0000-4000-8000-0000000c5c12"
+                    ],
+                    "retain_until": "2026-09-24T11:00:00.000Z",
+                    "current_proof": {
+                      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                      "revision": "1",
+                      "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                      "issued_at": "2026-09-24T10:00:00.000Z",
+                      "expires_at": "2026-09-24T11:00:00.000Z"
+                    }
+                  }
+                ],
+                "sources_sha256": "e9cda2e0c60b135230931382513be308c1134e08d46f7fb786196a282f6d0ccd",
+                "budget": {
+                  "budget_id": "00000000-0000-4000-8000-0000000c5c37",
+                  "purpose": "goal",
+                  "mode": "hard",
+                  "limits": [
+                    {
+                      "dimension": "calls",
+                      "unit": "call",
+                      "amount": "1"
+                    }
+                  ],
+                  "reservation_proof": {
+                    "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "proof_id": "00000000-0000-4000-8000-0000000c5c38",
+                    "revision": "1",
+                    "binding_sha256": "e2871582e806e74cd9868005a1a0fe3747a5cea874b9dd2e0bc5154c61b81994",
+                    "issued_at": "2026-09-24T10:00:00.000Z",
+                    "expires_at": "2026-09-24T11:00:00.000Z"
+                  }
+                },
+                "control": {
+                  "task_id": "00000000-0000-4000-8000-0000000c5c1a",
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "owner_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "owner_epoch": "1",
+                  "control_revision": "1",
+                  "control": {
+                    "revision": "1",
+                    "self_paused": false,
+                    "paused_by": [],
+                    "external_unpaused": [],
+                    "effects_pending": false
+                  },
+                  "cancel_requested": false,
+                  "proof": {
+                    "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "proof_id": "00000000-0000-4000-8000-0000000c5c36",
+                    "revision": "1",
+                    "binding_sha256": "a17070bdab90d9cca05b4d5d1377d6bb7332b1629a6740cdaadbef9b9f7b355d",
+                    "issued_at": "2026-09-24T10:00:00.000Z",
+                    "expires_at": "2026-09-24T11:00:00.000Z"
+                  }
+                },
+                "proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "proof_id": "00000000-0000-4000-8000-0000000c5c39",
+                  "revision": "1",
+                  "binding_sha256": "8797722cc750beb6a75a0fc4856564e8986f57645e10d3538cd6c8f7ca7f38e0",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              }
+            },
+            "start_before": "2026-09-24T11:00:00.000Z",
+            "authority_revision": "3",
+            "proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c3c",
+              "revision": "3",
+              "binding_sha256": "a78c5d4ea046183c88c6482cdd5d0c7d5273fec1de357025226a35bfc1dda543",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "gaps": []
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.delegate",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "command_id": "00000000-0000-4000-8000-0000000c5c3e",
+      "parent_grant_ref": "fixture:grant:read-A:root",
+      "grant": {
+        "subject_actor_id": "00000000-0000-4000-8000-0000000c5c15",
+        "source_endpoints": [
+          "00000000-0000-4000-8000-0000000c5c12"
+        ],
+        "processor_endpoints": [
+          "00000000-0000-4000-8000-0000000c5c12"
+        ],
+        "scopes": [
+          {
+            "resource_ref": "fixture://local-files/A.txt",
+            "selector_kind": "exact",
+            "resource_type": "file",
+            "actions": [
+              "file.read"
+            ],
+            "purposes": [
+              "read"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "retain_until": "2026-09-24T11:00:00.000Z",
+            "max_bytes": "4096",
+            "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+            "parameter_policy_revision": "1",
+            "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+          }
+        ],
+        "mode": "once",
+        "not_before": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T11:00:00.000Z",
+        "offline_allowed": true,
+        "delegation_allowed": false,
+        "policy_proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "proof_id": "00000000-0000-4000-8000-0000000c5c58",
+          "revision": "1",
+          "binding_sha256": "4946b0ec292244769a3eb25f67485faaaa81d4002ee6e97426c20e91876b64cd",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        }
+      },
+      "delegation_basis": {
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "proof_id": "00000000-0000-4000-8000-0000000c5c3f",
+        "revision": "1",
+        "binding_sha256": "670cd0671d1668726f06c41191ee469ef645cf109a3af15129167b39d7134dbc",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T11:00:00.000Z"
+      }
+    },
+    "authorization": {
+      "grant_ref": "fixture:authorization-client:host"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "operation_id": "00000000-0000-4000-8000-0000000c5c3e",
+    "message_id": "00000000-0000-4000-8000-0000000c832f",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09cf",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c3e"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8330",
+    "kind": "response",
+    "type": "harness.authorization.delegate",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c832f",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09d0",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c3e"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "receipt": {
+          "command_id": "00000000-0000-4000-8000-0000000c5c3e",
+          "intent_sha256": "27676db3e14b6f2231dd2cfeba5edcd5bcef8d6dec4ab942365fce1f7724a8af",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "state": "committed",
+          "revision": "4",
+          "result_ref": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c6026",
+            "revision": "4",
+            "binding_sha256": "27676db3e14b6f2231dd2cfeba5edcd5bcef8d6dec4ab942365fce1f7724a8af",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          },
+          "gaps": []
+        },
+        "grant": {
+          "subject_actor_id": "00000000-0000-4000-8000-0000000c5c15",
+          "source_endpoints": [
+            "00000000-0000-4000-8000-0000000c5c12"
+          ],
+          "processor_endpoints": [
+            "00000000-0000-4000-8000-0000000c5c12"
+          ],
+          "scopes": [
+            {
+              "resource_ref": "fixture://local-files/A.txt",
+              "selector_kind": "exact",
+              "resource_type": "file",
+              "actions": [
+                "file.read"
+              ],
+              "purposes": [
+                "read"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "retain_until": "2026-09-24T11:00:00.000Z",
+              "max_bytes": "4096",
+              "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+              "parameter_policy_revision": "1",
+              "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+            }
+          ],
+          "mode": "once",
+          "not_before": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z",
+          "offline_allowed": true,
+          "delegation_allowed": false,
+          "policy_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c5c58",
+            "revision": "1",
+            "binding_sha256": "4946b0ec292244769a3eb25f67485faaaa81d4002ee6e97426c20e91876b64cd",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          },
+          "grant_ref": "fixture:grant:read-A:offline-child",
+          "grant_version": "1",
+          "issuer_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "use_authority": "00000000-0000-4000-8000-0000000c5c12",
+          "parent_grant_ref": "fixture:grant:read-A:root",
+          "delegation_depth": 1
+        }
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000c5c3e"
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.resolve",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "target_grant_ref": "fixture:grant:read-A:offline-child"
+    },
+    "authorization": {
+      "grant_ref": "fixture:authorization-client:host"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c8331",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09d1",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c13"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8332",
+    "kind": "response",
+    "type": "harness.authorization.resolve",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c8331",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09d2",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c13"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "grants": [
+          {
+            "subject_actor_id": "00000000-0000-4000-8000-0000000c5c15",
+            "source_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processor_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "scopes": [
+              {
+                "resource_ref": "fixture://local-files/A.txt",
+                "selector_kind": "exact",
+                "resource_type": "file",
+                "actions": [
+                  "file.read"
+                ],
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "max_bytes": "4096",
+                "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                "parameter_policy_revision": "1",
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+              }
+            ],
+            "mode": "once",
+            "not_before": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z",
+            "offline_allowed": true,
+            "delegation_allowed": false,
+            "policy_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c58",
+              "revision": "1",
+              "binding_sha256": "4946b0ec292244769a3eb25f67485faaaa81d4002ee6e97426c20e91876b64cd",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            },
+            "grant_ref": "fixture:grant:read-A:offline-child",
+            "grant_version": "1",
+            "issuer_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c12",
+            "parent_grant_ref": "fixture:grant:read-A:root",
+            "delegation_depth": 1
+          },
+          {
+            "subject_actor_id": "00000000-0000-4000-8000-0000000c5c14",
+            "source_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processor_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "scopes": [
+              {
+                "resource_ref": "fixture://local-files/A.txt",
+                "selector_kind": "exact",
+                "resource_type": "file",
+                "actions": [
+                  "file.read"
+                ],
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "max_bytes": "8192",
+                "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                "parameter_policy_revision": "1",
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+              }
+            ],
+            "mode": "continuous",
+            "not_before": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z",
+            "offline_allowed": true,
+            "delegation_allowed": true,
+            "policy_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c56",
+              "revision": "1",
+              "binding_sha256": "9f9f43e003683872826f48db257557d4f80b26a8ce644493d4cb933f2a22a709",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            },
+            "grant_ref": "fixture:grant:read-A:root",
+            "grant_version": "1",
+            "issuer_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c13",
+            "delegation_depth": 0,
+            "confirmation_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c57",
+              "revision": "1",
+              "binding_sha256": "f99fda2f7bab24363d67064ba57f2c815cf84a16d0f5fec266a92ef6ba70350c",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "grant_states": [
+          {
+            "grant_ref": "fixture:grant:read-A:offline-child",
+            "revision": "1",
+            "state": "active",
+            "consumption": "unbound",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c12",
+            "applications": [
+              {
+                "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+                "applied_revision": "0",
+                "offline_use_until": "2026-09-24T10:00:00.000Z",
+                "state": "unknown"
+              }
+            ],
+            "applications_complete": false,
+            "proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c61",
+              "revision": "4",
+              "binding_sha256": "30bcb36c925cbbfe85502d41195c8115ed59cc491c290a33aee46ebf514e28af",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          },
+          {
+            "grant_ref": "fixture:grant:read-A:root",
+            "revision": "1",
+            "state": "active",
+            "consumption": "not_applicable",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c13",
+            "applications": [
+              {
+                "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+                "applied_revision": "0",
+                "offline_use_until": "2026-09-24T10:00:00.000Z",
+                "state": "unknown"
+              }
+            ],
+            "applications_complete": false,
+            "proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c60",
+              "revision": "4",
+              "binding_sha256": "b180ec5555059825f63cf4f1b2bc16aa4b60bd2472f6e20528a2f38f5983d158",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "proof_id": "00000000-0000-4000-8000-0000000c5c40",
+          "revision": "4",
+          "binding_sha256": "e7dc7de429de1e1a431da9aa6a67b96c52e9039832489039ab728288e7f387bc",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "gaps": []
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.query_state",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c11",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "collection_id": "00000000-0000-4000-8000-0000000c5c1d",
+      "limit": 64
+    },
+    "authorization": {
+      "grant_ref": "fixture:management:registered-user"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c8333",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09d3",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "collection",
+        "id": "00000000-0000-4000-8000-0000000c5c1d"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8334",
+    "kind": "response",
+    "type": "harness.authorization.query_state",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c11",
+    "reply_to": "00000000-0000-4000-8000-0000000c8333",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09d4",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "collection",
+        "id": "00000000-0000-4000-8000-0000000c5c1d"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "grants": [
+          {
+            "subject_actor_id": "00000000-0000-4000-8000-0000000c5c14",
+            "source_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processor_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "scopes": [
+              {
+                "resource_ref": "fixture://local-files/A.txt",
+                "selector_kind": "exact",
+                "resource_type": "file",
+                "actions": [
+                  "file.read"
+                ],
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "max_bytes": "8192",
+                "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                "parameter_policy_revision": "1",
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+              }
+            ],
+            "mode": "continuous",
+            "not_before": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z",
+            "offline_allowed": true,
+            "delegation_allowed": true,
+            "policy_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c56",
+              "revision": "1",
+              "binding_sha256": "9f9f43e003683872826f48db257557d4f80b26a8ce644493d4cb933f2a22a709",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            },
+            "grant_ref": "fixture:grant:read-A:root",
+            "grant_version": "1",
+            "issuer_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c13",
+            "delegation_depth": 0,
+            "confirmation_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c57",
+              "revision": "1",
+              "binding_sha256": "f99fda2f7bab24363d67064ba57f2c815cf84a16d0f5fec266a92ef6ba70350c",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          },
+          {
+            "subject_actor_id": "00000000-0000-4000-8000-0000000c5c15",
+            "source_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processor_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "scopes": [
+              {
+                "resource_ref": "fixture://local-files/A.txt",
+                "selector_kind": "exact",
+                "resource_type": "file",
+                "actions": [
+                  "file.read"
+                ],
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "max_bytes": "4096",
+                "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                "parameter_policy_revision": "1",
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+              }
+            ],
+            "mode": "once",
+            "not_before": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z",
+            "offline_allowed": true,
+            "delegation_allowed": false,
+            "policy_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c58",
+              "revision": "1",
+              "binding_sha256": "4946b0ec292244769a3eb25f67485faaaa81d4002ee6e97426c20e91876b64cd",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            },
+            "grant_ref": "fixture:grant:read-A:offline-child",
+            "grant_version": "1",
+            "issuer_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c12",
+            "parent_grant_ref": "fixture:grant:read-A:root",
+            "delegation_depth": 1
+          }
+        ],
+        "grant_states": [
+          {
+            "grant_ref": "fixture:grant:read-A:root",
+            "revision": "1",
+            "state": "active",
+            "consumption": "not_applicable",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c13",
+            "applications": [
+              {
+                "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+                "applied_revision": "0",
+                "offline_use_until": "2026-09-24T10:00:00.000Z",
+                "state": "unknown"
+              }
+            ],
+            "applications_complete": false,
+            "proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c60",
+              "revision": "4",
+              "binding_sha256": "b180ec5555059825f63cf4f1b2bc16aa4b60bd2472f6e20528a2f38f5983d158",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          },
+          {
+            "grant_ref": "fixture:grant:read-A:offline-child",
+            "revision": "1",
+            "state": "active",
+            "consumption": "unbound",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c12",
+            "applications": [
+              {
+                "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+                "applied_revision": "0",
+                "offline_use_until": "2026-09-24T10:00:00.000Z",
+                "state": "unknown"
+              }
+            ],
+            "applications_complete": false,
+            "proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c61",
+              "revision": "4",
+              "binding_sha256": "30bcb36c925cbbfe85502d41195c8115ed59cc491c290a33aee46ebf514e28af",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "principals": [
+          {
+            "principal_id": "00000000-0000-4000-8000-0000000c5c16",
+            "kind": "user",
+            "revision": "1",
+            "enabled": true
+          },
+          {
+            "principal_id": "00000000-0000-4000-8000-0000000c5c14",
+            "kind": "actor",
+            "revision": "1",
+            "enabled": true
+          },
+          {
+            "principal_id": "00000000-0000-4000-8000-0000000c5c15",
+            "kind": "actor",
+            "revision": "1",
+            "enabled": true
+          },
+          {
+            "principal_id": "00000000-0000-4000-8000-0000000c5c12",
+            "kind": "endpoint",
+            "revision": "1",
+            "enabled": true,
+            "owner_generation": "1",
+            "ledger_id": "00000000-0000-4000-8000-0000000c5c1c"
+          }
+        ],
+        "next_cursor": "fixture:state:end",
+        "complete": true,
+        "gaps": []
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.open_recovery",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "command_id": "00000000-0000-4000-8000-0000000c5c43",
+      "binding": {
+        "recovery_id": "00000000-0000-4000-8000-0000000c5c1f",
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+        "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+        "owner_generation": "1",
+        "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+        "selection_sha256": "2b8a1206ff309110d1de76fdd3f5201ac40820ec56f718656d341a6e9b037185",
+        "expires_at": "2026-09-24T11:00:00.000Z"
+      },
+      "grant_refs": [
+        "fixture:grant:read-A:root",
+        "fixture:grant:read-A:offline-child"
+      ],
+      "required_behaviors": [
+        "query",
+        "receive_fact",
+        "act",
+        "offline"
+      ]
+    },
+    "authorization": {
+      "grant_ref": "fixture:bootstrap:host-owner-1"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "operation_id": "00000000-0000-4000-8000-0000000c5c43",
+    "message_id": "00000000-0000-4000-8000-0000000c8335",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09d5",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c1f"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8336",
+    "kind": "response",
+    "type": "harness.authorization.open_recovery",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c8335",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09d6",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c1f"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "binding": {
+          "recovery_id": "00000000-0000-4000-8000-0000000c5c1f",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+          "owner_generation": "1",
+          "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+          "selection_sha256": "2b8a1206ff309110d1de76fdd3f5201ac40820ec56f718656d341a6e9b037185",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "snapshot_id": "00000000-0000-4000-8000-0000000c5c1e",
+        "cut": "5",
+        "first_cursor": "fixture:recovery:page:0",
+        "manifest_sha256": "444927bdd23af9c0ef87dca20b2d267c74e1399281581d9d460ff0904aac9cea"
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000c5c43"
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.read_recovery",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "binding": {
+        "recovery_id": "00000000-0000-4000-8000-0000000c5c1f",
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+        "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+        "owner_generation": "1",
+        "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+        "selection_sha256": "2b8a1206ff309110d1de76fdd3f5201ac40820ec56f718656d341a6e9b037185",
+        "expires_at": "2026-09-24T11:00:00.000Z"
+      },
+      "cursor": "fixture:recovery:page:0"
+    },
+    "authorization": {
+      "grant_ref": "fixture:bootstrap:host-owner-1"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c8337",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09d7",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c1f"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8338",
+    "kind": "response",
+    "type": "harness.authorization.read_recovery",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c8337",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09d8",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c1f"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "binding": {
+          "recovery_id": "00000000-0000-4000-8000-0000000c5c1f",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+          "owner_generation": "1",
+          "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+          "selection_sha256": "2b8a1206ff309110d1de76fdd3f5201ac40820ec56f718656d341a6e9b037185",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "position": {
+          "snapshot_id": "00000000-0000-4000-8000-0000000c5c1e",
+          "cut": "5",
+          "page_index": 0,
+          "page_count": 1,
+          "page_sha256": "115b252bdcb4646d405f8b2b2ba6406c5f03315f9e8395c75101f1f6e7a3f899",
+          "manifest_sha256": "444927bdd23af9c0ef87dca20b2d267c74e1399281581d9d460ff0904aac9cea"
+        },
+        "grants": [
+          {
+            "subject_actor_id": "00000000-0000-4000-8000-0000000c5c14",
+            "source_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processor_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "scopes": [
+              {
+                "resource_ref": "fixture://local-files/A.txt",
+                "selector_kind": "exact",
+                "resource_type": "file",
+                "actions": [
+                  "file.read"
+                ],
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "max_bytes": "8192",
+                "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                "parameter_policy_revision": "1",
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+              }
+            ],
+            "mode": "continuous",
+            "not_before": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z",
+            "offline_allowed": true,
+            "delegation_allowed": true,
+            "policy_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c56",
+              "revision": "1",
+              "binding_sha256": "9f9f43e003683872826f48db257557d4f80b26a8ce644493d4cb933f2a22a709",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            },
+            "grant_ref": "fixture:grant:read-A:root",
+            "grant_version": "1",
+            "issuer_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c13",
+            "delegation_depth": 0,
+            "confirmation_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c57",
+              "revision": "1",
+              "binding_sha256": "f99fda2f7bab24363d67064ba57f2c815cf84a16d0f5fec266a92ef6ba70350c",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          },
+          {
+            "subject_actor_id": "00000000-0000-4000-8000-0000000c5c15",
+            "source_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processor_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "scopes": [
+              {
+                "resource_ref": "fixture://local-files/A.txt",
+                "selector_kind": "exact",
+                "resource_type": "file",
+                "actions": [
+                  "file.read"
+                ],
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "max_bytes": "4096",
+                "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                "parameter_policy_revision": "1",
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+              }
+            ],
+            "mode": "once",
+            "not_before": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z",
+            "offline_allowed": true,
+            "delegation_allowed": false,
+            "policy_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c58",
+              "revision": "1",
+              "binding_sha256": "4946b0ec292244769a3eb25f67485faaaa81d4002ee6e97426c20e91876b64cd",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            },
+            "grant_ref": "fixture:grant:read-A:offline-child",
+            "grant_version": "1",
+            "issuer_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c12",
+            "parent_grant_ref": "fixture:grant:read-A:root",
+            "delegation_depth": 1
+          }
+        ],
+        "grant_states": [
+          {
+            "grant_ref": "fixture:grant:read-A:root",
+            "revision": "1",
+            "state": "active",
+            "consumption": "not_applicable",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c13",
+            "applications": [
+              {
+                "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+                "applied_revision": "0",
+                "offline_use_until": "2026-09-24T10:00:00.000Z",
+                "state": "unknown"
+              }
+            ],
+            "applications_complete": false,
+            "proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c60",
+              "revision": "5",
+              "binding_sha256": "b180ec5555059825f63cf4f1b2bc16aa4b60bd2472f6e20528a2f38f5983d158",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          },
+          {
+            "grant_ref": "fixture:grant:read-A:offline-child",
+            "revision": "1",
+            "state": "active",
+            "consumption": "unbound",
+            "use_authority": "00000000-0000-4000-8000-0000000c5c12",
+            "applications": [
+              {
+                "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+                "applied_revision": "0",
+                "offline_use_until": "2026-09-24T10:00:00.000Z",
+                "state": "unknown"
+              }
+            ],
+            "applications_complete": false,
+            "proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c61",
+              "revision": "5",
+              "binding_sha256": "30bcb36c925cbbfe85502d41195c8115ed59cc491c290a33aee46ebf514e28af",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "principals": [
+          {
+            "principal_id": "00000000-0000-4000-8000-0000000c5c16",
+            "kind": "user",
+            "revision": "1",
+            "enabled": true
+          },
+          {
+            "principal_id": "00000000-0000-4000-8000-0000000c5c14",
+            "kind": "actor",
+            "revision": "1",
+            "enabled": true
+          },
+          {
+            "principal_id": "00000000-0000-4000-8000-0000000c5c15",
+            "kind": "actor",
+            "revision": "1",
+            "enabled": true
+          },
+          {
+            "principal_id": "00000000-0000-4000-8000-0000000c5c12",
+            "kind": "endpoint",
+            "revision": "1",
+            "enabled": true,
+            "owner_generation": "1",
+            "ledger_id": "00000000-0000-4000-8000-0000000c5c1c"
+          }
+        ],
+        "keys": [
+          {
+            "kid": "fixture-ed25519-20260924",
+            "kty": "OKP",
+            "crv": "Ed25519",
+            "alg": "Ed25519",
+            "x": "6kpsY-KcUgq-9VB7Ey7F-ZVHdq6-vnuSQh7qaRRG0iw",
+            "not_before": "2026-09-24T10:00:00.000Z",
+            "verify_until": "2026-09-24T11:00:00.000Z",
+            "revoked": false
+          }
+        ],
+        "policy_proofs": [
+          {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c5c42",
+            "revision": "5",
+            "binding_sha256": "8ffa9cf5b0670bad882852b5760dcb0c50a7fcb7e848f8b6bd98523e42d2901f",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          }
+        ],
+        "gaps": []
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.read_changes",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "binding": {
+        "recovery_id": "00000000-0000-4000-8000-0000000c5c1f",
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+        "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+        "owner_generation": "1",
+        "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+        "selection_sha256": "2b8a1206ff309110d1de76fdd3f5201ac40820ec56f718656d341a6e9b037185",
+        "expires_at": "2026-09-24T11:00:00.000Z"
+      },
+      "from_revision": "5"
+    },
+    "authorization": {
+      "grant_ref": "fixture:bootstrap:host-owner-1"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c8339",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09d9",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c1f"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c833a",
+    "kind": "response",
+    "type": "harness.authorization.read_changes",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c8339",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09da",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c1f"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "binding": {
+          "recovery_id": "00000000-0000-4000-8000-0000000c5c1f",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+          "owner_generation": "1",
+          "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+          "selection_sha256": "2b8a1206ff309110d1de76fdd3f5201ac40820ec56f718656d341a6e9b037185",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "covered_from": "5",
+        "covered_to": "5",
+        "changes": [],
+        "next_cursor": "fixture:changes:after:5",
+        "gaps": []
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.apply_recovery",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "command_id": "00000000-0000-4000-8000-0000000c5c44",
+      "binding": {
+        "recovery_id": "00000000-0000-4000-8000-0000000c5c1f",
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+        "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+        "owner_generation": "1",
+        "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+        "selection_sha256": "2b8a1206ff309110d1de76fdd3f5201ac40820ec56f718656d341a6e9b037185",
+        "expires_at": "2026-09-24T11:00:00.000Z"
+      },
+      "snapshot_id": "00000000-0000-4000-8000-0000000c5c1e",
+      "applied_through": "5",
+      "manifest_sha256": "444927bdd23af9c0ef87dca20b2d267c74e1399281581d9d460ff0904aac9cea",
+      "local_application_proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "proof_id": "00000000-0000-4000-8000-0000000c5c45",
+        "revision": "1",
+        "binding_sha256": "68683e99199dcb5b54fa23b31d2d049a4b7e5b11c81e8efb8a25ff94ed2b7ed0",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T11:00:00.000Z"
+      }
+    },
+    "authorization": {
+      "grant_ref": "fixture:bootstrap:host-owner-1"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "operation_id": "00000000-0000-4000-8000-0000000c5c44",
+    "message_id": "00000000-0000-4000-8000-0000000c833b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09db",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c1f"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c833c",
+    "kind": "response",
+    "type": "harness.authorization.apply_recovery",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c833b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09dc",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c1f"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "receipt": {
+          "command_id": "00000000-0000-4000-8000-0000000c5c44",
+          "intent_sha256": "87f0941afd2a21cff6ec8d2bca631ca48d234afb434177fa6f0aba0358ddebfa",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "state": "committed",
+          "revision": "5",
+          "result_ref": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c602c",
+            "revision": "5",
+            "binding_sha256": "87f0941afd2a21cff6ec8d2bca631ca48d234afb434177fa6f0aba0358ddebfa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          },
+          "gaps": []
+        },
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "proof_id": "00000000-0000-4000-8000-0000000c5c46",
+          "revision": "5",
+          "binding_sha256": "87f0941afd2a21cff6ec8d2bca631ca48d234afb434177fa6f0aba0358ddebfa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        }
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000c5c44"
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.query_command",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "target_command_id": "00000000-0000-4000-8000-0000000c5c44"
+    },
+    "authorization": {
+      "grant_ref": "fixture:bootstrap:host-owner-1"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c833d",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09dd",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c44"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c833e",
+    "kind": "response",
+    "type": "harness.authorization.query_command",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c833d",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09de",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c44"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "command_id": "00000000-0000-4000-8000-0000000c5c44",
+        "intent_sha256": "87f0941afd2a21cff6ec8d2bca631ca48d234afb434177fa6f0aba0358ddebfa",
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+        "state": "committed",
+        "revision": "5",
+        "result_ref": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "proof_id": "00000000-0000-4000-8000-0000000c602c",
+          "revision": "5",
+          "binding_sha256": "87f0941afd2a21cff6ec8d2bca631ca48d234afb434177fa6f0aba0358ddebfa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "gaps": []
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.issue_offline",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "command_id": "00000000-0000-4000-8000-0000000c5c48",
+      "target_grant_ref": "fixture:grant:read-A:offline-child",
+      "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+      "owner_generation": "1",
+      "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+      "time_anchor_proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "proof_id": "00000000-0000-4000-8000-0000000c5c47",
+        "revision": "1",
+        "binding_sha256": "1defcba3eaabe09513926a657d85c9d6e250f1182030dedacb46762c5f358742",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      },
+      "requested_until": "2026-09-24T10:10:00.000Z",
+      "source_bindings": [
+        {
+          "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+          "resource_ref": "fixture://local-files/A.txt",
+          "revision": "1",
+          "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+          "observed_at": "2026-09-24T10:00:00.000Z",
+          "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+          "policy_revision": "1",
+          "purposes": [
+            "read"
+          ],
+          "recipients": [
+            "00000000-0000-4000-8000-0000000c5c12"
+          ],
+          "processing_endpoints": [
+            "00000000-0000-4000-8000-0000000c5c12"
+          ],
+          "retain_until": "2026-09-24T11:00:00.000Z",
+          "current_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+            "revision": "1",
+            "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          }
+        }
+      ]
+    },
+    "authorization": {
+      "grant_ref": "fixture:authorization-client:host"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "operation_id": "00000000-0000-4000-8000-0000000c5c48",
+    "message_id": "00000000-0000-4000-8000-0000000c833f",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09df",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c48"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8340",
+    "kind": "response",
+    "type": "harness.authorization.issue_offline",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c833f",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09e0",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c48"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "receipt": {
+          "command_id": "00000000-0000-4000-8000-0000000c5c48",
+          "intent_sha256": "56580a4af34ad5679a9d9134104509fe1e1b8291050c634d2ca541e2a5e55e9a",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "state": "committed",
+          "revision": "5",
+          "result_ref": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c6030",
+            "revision": "5",
+            "binding_sha256": "56580a4af34ad5679a9d9134104509fe1e1b8291050c634d2ca541e2a5e55e9a",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          },
+          "gaps": []
+        },
+        "compact_jws": "eyJhbGciOiJFZDI1NTE5Iiwia2lkIjoiZml4dHVyZS1lZDI1NTE5LTIwMjYwOTI0IiwidHlwIjoiaGFybmVzcy1vZmZsaW5lLWdyYW50K2p3dCJ9.eyJhbmNlc3Rvcl9ncmFudHMiOlt7ImNvbmZpcm1hdGlvbl9wcm9vZiI6eyJhdXRob3JpdHlfZW5kcG9pbnQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwYzVjMTMiLCJiaW5kaW5nX3NoYTI1NiI6ImY5OWZkYTJmN2JhYjI0MzYzZDY3MDY0YmE1N2YyYzgxNWNmODRhMTZkMGY1ZmVjMjY2YTkyZWY2YmE3MDM1MGMiLCJleHBpcmVzX2F0IjoiMjAyNi0wOS0yNFQxMTowMDowMC4wMDBaIiwiaXNzdWVkX2F0IjoiMjAyNi0wOS0yNFQxMDowMDowMC4wMDBaIiwicHJvb2ZfaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwYzVjNTciLCJyZXZpc2lvbiI6IjEifSwiZGVsZWdhdGlvbl9hbGxvd2VkIjp0cnVlLCJkZWxlZ2F0aW9uX2RlcHRoIjowLCJleHBpcmVzX2F0IjoiMjAyNi0wOS0yNFQxMTowMDowMC4wMDBaIiwiZ3JhbnRfcmVmIjoiZml4dHVyZTpncmFudDpyZWFkLUE6cm9vdCIsImdyYW50X3ZlcnNpb24iOiIxIiwiaXNzdWVyX2VuZHBvaW50IjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzEzIiwibW9kZSI6ImNvbnRpbnVvdXMiLCJub3RfYmVmb3JlIjoiMjAyNi0wOS0yNFQxMDowMDowMC4wMDBaIiwib2ZmbGluZV9hbGxvd2VkIjp0cnVlLCJwb2xpY3lfcHJvb2YiOnsiYXV0aG9yaXR5X2VuZHBvaW50IjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzEzIiwiYmluZGluZ19zaGEyNTYiOiI5ZjlmNDNlMDAzNjgzODcyODI2ZjQ4ZGIyNTc1NTdkNGY4MGIyNmE4Y2U2NDQ0OTNkNGNiOTMzZjJhMjJhNzA5IiwiZXhwaXJlc19hdCI6IjIwMjYtMDktMjRUMTE6MDA6MDAuMDAwWiIsImlzc3VlZF9hdCI6IjIwMjYtMDktMjRUMTA6MDA6MDAuMDAwWiIsInByb29mX2lkIjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzU2IiwicmV2aXNpb24iOiIxIn0sInByb2Nlc3Nvcl9lbmRwb2ludHMiOlsiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzEyIl0sInNjb3BlcyI6W3siYWN0aW9ucyI6WyJmaWxlLnJlYWQiXSwibWF4X2J5dGVzIjoiODE5MiIsInBhcmFtZXRlcl9wb2xpY3lfcmVmIjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzI2IiwicGFyYW1ldGVyX3BvbGljeV9yZXZpc2lvbiI6IjEiLCJwcm9jZXNzaW5nX2VuZHBvaW50cyI6WyIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwYzVjMTIiXSwicHVycG9zZXMiOlsicmVhZCJdLCJyZWNpcGllbnRzIjpbIjAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDBjNWMxMiJdLCJyZXNvdXJjZV9yZWYiOiJmaXh0dXJlOi8vbG9jYWwtZmlsZXMvQS50eHQiLCJyZXNvdXJjZV90eXBlIjoiZmlsZSIsInJldGFpbl91bnRpbCI6IjIwMjYtMDktMjRUMTE6MDA6MDAuMDAwWiIsInNlbGVjdG9yX2tpbmQiOiJleGFjdCIsInRhc2tfaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwYzVjMWEifV0sInNvdXJjZV9lbmRwb2ludHMiOlsiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzEyIl0sInN1YmplY3RfYWN0b3JfaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwYzVjMTQiLCJ1c2VfYXV0aG9yaXR5IjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzEzIn1dLCJhdWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwYzVjMTIiLCJhdXRob3JpemF0aW9uX3JldmlzaW9uIjoiNSIsImV4cCI6MTc5MDI0NDYwMCwiZ3JhbnQiOnsiZGVsZWdhdGlvbl9hbGxvd2VkIjpmYWxzZSwiZGVsZWdhdGlvbl9kZXB0aCI6MSwiZXhwaXJlc19hdCI6IjIwMjYtMDktMjRUMTE6MDA6MDAuMDAwWiIsImdyYW50X3JlZiI6ImZpeHR1cmU6Z3JhbnQ6cmVhZC1BOm9mZmxpbmUtY2hpbGQiLCJncmFudF92ZXJzaW9uIjoiMSIsImlzc3Vlcl9lbmRwb2ludCI6IjAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDBjNWMxMyIsIm1vZGUiOiJvbmNlIiwibm90X2JlZm9yZSI6IjIwMjYtMDktMjRUMTA6MDA6MDAuMDAwWiIsIm9mZmxpbmVfYWxsb3dlZCI6dHJ1ZSwicGFyZW50X2dyYW50X3JlZiI6ImZpeHR1cmU6Z3JhbnQ6cmVhZC1BOnJvb3QiLCJwb2xpY3lfcHJvb2YiOnsiYXV0aG9yaXR5X2VuZHBvaW50IjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzEzIiwiYmluZGluZ19zaGEyNTYiOiI0OTQ2YjBlYzI5MjI0NDc2OWEzZWIyNWY2NzQ4NWZhYWFhODFkNDAwMmVlNmU5NzQyNmMyMGU5MTg3NmI2NGNkIiwiZXhwaXJlc19hdCI6IjIwMjYtMDktMjRUMTE6MDA6MDAuMDAwWiIsImlzc3VlZF9hdCI6IjIwMjYtMDktMjRUMTA6MDA6MDAuMDAwWiIsInByb29mX2lkIjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzU4IiwicmV2aXNpb24iOiIxIn0sInByb2Nlc3Nvcl9lbmRwb2ludHMiOlsiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzEyIl0sInNjb3BlcyI6W3siYWN0aW9ucyI6WyJmaWxlLnJlYWQiXSwibWF4X2J5dGVzIjoiNDA5NiIsInBhcmFtZXRlcl9wb2xpY3lfcmVmIjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzI2IiwicGFyYW1ldGVyX3BvbGljeV9yZXZpc2lvbiI6IjEiLCJwcm9jZXNzaW5nX2VuZHBvaW50cyI6WyIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwYzVjMTIiXSwicHVycG9zZXMiOlsicmVhZCJdLCJyZWNpcGllbnRzIjpbIjAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDBjNWMxMiJdLCJyZXNvdXJjZV9yZWYiOiJmaXh0dXJlOi8vbG9jYWwtZmlsZXMvQS50eHQiLCJyZXNvdXJjZV90eXBlIjoiZmlsZSIsInJldGFpbl91bnRpbCI6IjIwMjYtMDktMjRUMTE6MDA6MDAuMDAwWiIsInNlbGVjdG9yX2tpbmQiOiJleGFjdCIsInRhc2tfaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwYzVjMWEifV0sInNvdXJjZV9lbmRwb2ludHMiOlsiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzEyIl0sInN1YmplY3RfYWN0b3JfaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwYzVjMTUiLCJ1c2VfYXV0aG9yaXR5IjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzEyIn0sImlhdCI6MTc5MDI0NDAwMCwiaXNzIjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzEzIiwianRpIjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzQ5IiwibGVkZ2VyX2lkIjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzFjIiwibmJmIjoxNzkwMjQ0MDAwLCJvd25lcl9nZW5lcmF0aW9uIjoiMSIsInBvbGljeV9yZXZpc2lvbiI6IjEiLCJwcm9maWxlX3ZlcnNpb24iOjEsInNvdXJjZV9iaW5kaW5ncyI6W3siY3VycmVudF9wcm9vZiI6eyJhdXRob3JpdHlfZW5kcG9pbnQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwYzVjMTIiLCJiaW5kaW5nX3NoYTI1NiI6IjhhNDY5OWI3MTcwYWViMGE1ZjE1NTk5YjM4MWFhMDkyZDIxNTI3ZWQ5MWFhNjAxY2JhYjQwZTZkZDljN2E5YTkiLCJleHBpcmVzX2F0IjoiMjAyNi0wOS0yNFQxMTowMDowMC4wMDBaIiwiaXNzdWVkX2F0IjoiMjAyNi0wOS0yNFQxMDowMDowMC4wMDBaIiwicHJvb2ZfaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwYzVjMjUiLCJyZXZpc2lvbiI6IjEifSwib2JzZXJ2ZWRfYXQiOiIyMDI2LTA5LTI0VDEwOjAwOjAwLjAwMFoiLCJwb2xpY3lfcmVmIjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzI0IiwicG9saWN5X3JldmlzaW9uIjoiMSIsInByb2Nlc3NpbmdfZW5kcG9pbnRzIjpbIjAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDBjNWMxMiJdLCJwdXJwb3NlcyI6WyJyZWFkIl0sInJlY2lwaWVudHMiOlsiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzEyIl0sInJlc291cmNlX3JlZiI6ImZpeHR1cmU6Ly9sb2NhbC1maWxlcy9BLnR4dCIsInJldGFpbl91bnRpbCI6IjIwMjYtMDktMjRUMTE6MDA6MDAuMDAwWiIsInJldmlzaW9uIjoiMSIsInNoYTI1NiI6ImUzNThlNmRiMDlhMGM5NTllYjZiMDExODM2ZmQ2ZTkxODRlYWViN2ExNDkyNTU2M2QzYjMwYTc5ZmMwZGQyYzMiLCJzb3VyY2VfYXV0aG9yaXR5IjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGM1YzEyIn1dLCJzb3VyY2VfZGVhZGxpbmUiOiIyMDI2LTA5LTI0VDExOjAwOjAwLjAwMFoiLCJzdWIiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwYzVjMTUiLCJ0aW1lX2FuY2hvcl9pZCI6IjAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDBjNWMyMCJ9.rhZsctYNIlzopLfloHGzWaQRf3ezXmpsMlI3LRfdCFDOvLHMy3H06Vxc6qNziei9sS1ts_ctpUaz8QiXHatOBA",
+        "claims_sha256": "858e70bdaf58fb4d4810f8ef5fe07aea9e33543fd8f3080cc8c1832a28e4e374"
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000c5c48"
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.query_command",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "target_command_id": "00000000-0000-4000-8000-0000000c5c48"
+    },
+    "authorization": {
+      "grant_ref": "fixture:authorization-client:host"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c8341",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09e1",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c48"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8342",
+    "kind": "response",
+    "type": "harness.authorization.query_command",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c8341",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09e2",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c48"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "command_id": "00000000-0000-4000-8000-0000000c5c48",
+        "intent_sha256": "56580a4af34ad5679a9d9134104509fe1e1b8291050c634d2ca541e2a5e55e9a",
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+        "state": "committed",
+        "revision": "5",
+        "result_ref": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "proof_id": "00000000-0000-4000-8000-0000000c6030",
+          "revision": "5",
+          "binding_sha256": "56580a4af34ad5679a9d9134104509fe1e1b8291050c634d2ca541e2a5e55e9a",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "gaps": []
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.revoke",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c11",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "command_id": "00000000-0000-4000-8000-0000000c5c4c",
+      "target_grant_ref": "fixture:grant:read-A:offline-child",
+      "expected_revision": "1"
+    },
+    "authorization": {
+      "grant_ref": "fixture:management:registered-user"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "operation_id": "00000000-0000-4000-8000-0000000c5c4c",
+    "message_id": "00000000-0000-4000-8000-0000000c8343",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09e3",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c4c"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8344",
+    "kind": "response",
+    "type": "harness.authorization.revoke",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c11",
+    "reply_to": "00000000-0000-4000-8000-0000000c8343",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09e4",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c4c"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "command_id": "00000000-0000-4000-8000-0000000c5c4c",
+        "intent_sha256": "59a76a9d7bfb6df074102cd3128491f08f28aed63ac367a07851c43ff865071e",
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+        "state": "committed",
+        "revision": "6",
+        "result_ref": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "proof_id": "00000000-0000-4000-8000-0000000c6034",
+          "revision": "6",
+          "binding_sha256": "59a76a9d7bfb6df074102cd3128491f08f28aed63ac367a07851c43ff865071e",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "gaps": []
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000c5c4c"
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.query_command",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c11",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "target_command_id": "00000000-0000-4000-8000-0000000c5c4c"
+    },
+    "authorization": {
+      "grant_ref": "fixture:management:registered-user"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c8345",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09e5",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c4c"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8346",
+    "kind": "response",
+    "type": "harness.authorization.query_command",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c11",
+    "reply_to": "00000000-0000-4000-8000-0000000c8345",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09e6",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000c5c4c"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "command_id": "00000000-0000-4000-8000-0000000c5c4c",
+        "intent_sha256": "59a76a9d7bfb6df074102cd3128491f08f28aed63ac367a07851c43ff865071e",
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+        "state": "committed",
+        "revision": "6",
+        "result_ref": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "proof_id": "00000000-0000-4000-8000-0000000c6034",
+          "revision": "6",
+          "binding_sha256": "59a76a9d7bfb6df074102cd3128491f08f28aed63ac367a07851c43ff865071e",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "gaps": []
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.evaluate",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "target_grant_ref": "fixture:grant:read-A:offline-child",
+      "intent": {
+        "actor_id": "00000000-0000-4000-8000-0000000c5c15",
+        "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "resource_ref": "fixture://local-files/A.txt",
+        "action": "file.read",
+        "purpose": "read",
+        "recipient_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "processing_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+            "resource_ref": "fixture://local-files/A.txt",
+            "revision": "1",
+            "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+            "policy_revision": "1",
+            "purposes": [
+              "read"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "retain_until": "2026-09-24T11:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+              "revision": "1",
+              "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "parameter_schema_ref": "https://harness.invalid/capabilities/local.file.read/v1/arguments.schema.json",
+        "parameters": {
+          "content_id": "00000000-0000-4000-8000-0000000c5c59",
+          "provider_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+          "media_type": "application/json",
+          "size": "44",
+          "sha256": "52e2a5d898c5d5430dae55101b0a8d1b63ff67ee9544588bc5afcfc02fb51323"
+        },
+        "required_obligations": [
+          {
+            "resource_ref": "fixture://local-files/A.txt",
+            "selector_kind": "exact",
+            "resource_type": "file",
+            "actions": [
+              "file.read"
+            ],
+            "purposes": [
+              "read"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "retain_until": "2026-09-24T11:00:00.000Z",
+            "max_bytes": "4096",
+            "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+            "parameter_policy_revision": "1",
+            "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+          }
+        ],
+        "intent_sha256": "61d2d22cbc9df870066a571f0ebd814522a1a5e7be090fd39b1e6e9d6a0197b8"
+      }
+    },
+    "authorization": {
+      "grant_ref": "fixture:authorization-client:host"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c8347",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09e7",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c13"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c8348",
+    "kind": "response",
+    "type": "harness.authorization.evaluate",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c8347",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09e8",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c13"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "decision": "deny",
+        "reason": "Leaf grant has been revoked; prior offline issue receipt is not a new allow.",
+        "basis_revision": "6",
+        "expires_at": "2026-09-24T11:00:00.000Z",
+        "obligations": [],
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "proof_id": "00000000-0000-4000-8000-0000000c5c4d",
+          "revision": "6",
+          "binding_sha256": "cfb4384d2cd2474a31f64f085637c36a725cb1f3cc7a7ac31d5305e408196d40",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "gaps": []
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.read_changes",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "binding": {
+        "recovery_id": "00000000-0000-4000-8000-0000000c5c1f",
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+        "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+        "owner_generation": "1",
+        "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+        "selection_sha256": "2b8a1206ff309110d1de76fdd3f5201ac40820ec56f718656d341a6e9b037185",
+        "expires_at": "2026-09-24T11:00:00.000Z"
+      },
+      "from_revision": "5",
+      "cursor": "fixture:changes:after:5"
+    },
+    "authorization": {
+      "grant_ref": "fixture:bootstrap:host-owner-1"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000c8349",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09e9",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c1f"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c834a",
+    "kind": "response",
+    "type": "harness.authorization.read_changes",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c8349",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09ea",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c1f"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "binding": {
+          "recovery_id": "00000000-0000-4000-8000-0000000c5c1f",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+          "owner_generation": "1",
+          "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+          "selection_sha256": "2b8a1206ff309110d1de76fdd3f5201ac40820ec56f718656d341a6e9b037185",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "covered_from": "5",
+        "covered_to": "6",
+        "changes": [
+          {
+            "revision": "6",
+            "kind": "grant",
+            "object_ref": "fixture:grant:read-A:offline-child",
+            "state": "revoked",
+            "proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c4e",
+              "revision": "6",
+              "binding_sha256": "59a76a9d7bfb6df074102cd3128491f08f28aed63ac367a07851c43ff865071e",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "next_cursor": "fixture:changes:after:6",
+        "gaps": []
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.apply_recovery",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "command_id": "00000000-0000-4000-8000-0000000c5c4f",
+      "binding": {
+        "recovery_id": "00000000-0000-4000-8000-0000000c5c1f",
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+        "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+        "owner_generation": "1",
+        "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+        "selection_sha256": "2b8a1206ff309110d1de76fdd3f5201ac40820ec56f718656d341a6e9b037185",
+        "expires_at": "2026-09-24T11:00:00.000Z"
+      },
+      "snapshot_id": "00000000-0000-4000-8000-0000000c5c1e",
+      "applied_through": "6",
+      "manifest_sha256": "444927bdd23af9c0ef87dca20b2d267c74e1399281581d9d460ff0904aac9cea",
+      "local_application_proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+        "proof_id": "00000000-0000-4000-8000-0000000c5c50",
+        "revision": "1",
+        "binding_sha256": "fdec0a7a60a52bd38d7124409fa54156a98e2c5e8880834d8a2c129b3c743c6d",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T11:00:00.000Z"
+      }
+    },
+    "authorization": {
+      "grant_ref": "fixture:bootstrap:host-owner-1"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "operation_id": "00000000-0000-4000-8000-0000000c5c4f",
+    "message_id": "00000000-0000-4000-8000-0000000c834b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09eb",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c1f"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000c834c",
+    "kind": "response",
+    "type": "harness.authorization.apply_recovery",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000c834b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000e09ec",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "authorization",
+        "id": "00000000-0000-4000-8000-0000000c5c1f"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "receipt": {
+          "command_id": "00000000-0000-4000-8000-0000000c5c4f",
+          "intent_sha256": "4ea5a5171202e9cf33cb27f3fb970c4df237653c6a96f5b44211fb5de621647c",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "state": "committed",
+          "revision": "6",
+          "result_ref": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c6037",
+            "revision": "6",
+            "binding_sha256": "4ea5a5171202e9cf33cb27f3fb970c4df237653c6a96f5b44211fb5de621647c",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          },
+          "gaps": []
+        },
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "proof_id": "00000000-0000-4000-8000-0000000c5c51",
+          "revision": "6",
+          "binding_sha256": "4ea5a5171202e9cf33cb27f3fb970c4df237653c6a96f5b44211fb5de621647c",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        }
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000c5c4f"
+  }
+]

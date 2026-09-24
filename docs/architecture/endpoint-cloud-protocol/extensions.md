@@ -89,7 +89,7 @@ SDK 可帮助生成和校验扩展，第三方也可依据规范独立实现。
 
 同名不同版本也属于重复。支持范围覆盖所有受该语义约束的节点：只透明转发可选追踪的中继不必安装追踪实现；若附加项禁止云端保存，负责存储的中继必须理解并执行，不能交给最终目标补救。无法确认受约束节点支持时，本次消息不能沿该路径使用此必要语义。
 
-例如示例包中的 `com.example.data_policy@1` 要求 `allow_cloud_processing=false`。发送方须选用能落实该限制的路径，处理端执行限制；Schema 只能验证字段为 false，不能证明云端没有处理数据。授权与记忆还须完成[v1 范围中列出的跨端载荷](README.md#scope)，不能仅加一个策略附加项就宣称已经支持领域同步。
+例如示例包中的 `com.example.data_policy@1` 要求 `allow_cloud_processing=false`。发送方须选用能落实该限制的路径，处理端执行限制；Schema 只能验证字段为 false，不能证明云端没有处理数据。授权与记忆还须落实[已定义的领域合同](domain-profiles.md)及当前恢复依据，不能仅加一个策略附加项就宣称领域同步已经可用。
 
 <a id="views"></a>
 ## 4. 视图降级由提供方显式生成
@@ -129,6 +129,7 @@ Markdown 使用安全展示子集，不执行内嵌脚本、原始 HTML 或任�
 | messages[].type、type_version、kinds | 类型身份及 request／response／event；第三方不能注册核心 control |
 | payload_schemas | 各 kind 的本地 Schema 引用；request 同时定义 response |
 | delivery、lane | 业务消息使用 reliable／ephemeral 及 work／control／recovery；核心会话另用 session。安装时审查，不能由单条消息自报；所有 request 都可靠交付，recovery 不引入副作用 |
+| scope_binding | 可靠消息必填 `{kind,field}`，固定请求／事件的业务对象字段；响应继承原请求。field 允许 operation_id、target 或 payload 内点分路径；处理器须验证真实关联，不能把任意字符串当恢复授权 |
 | authorization_scopes | 所需权限名称；声明本身不授予权限 |
 | side_effecting、operation_id | 副作用及操作标识要求；副作用请求必须可靠并带 operation_id |
 | recovery | 重投、查询、取消和未知效果的说明；具体行为由处理器实现及一致性用例验证 |

@@ -1,11 +1,11 @@
 # 接口、存储与部署
 
-[总览](README.md) · [输入与恢复](interaction-and-recovery.md) · [验证与待决项](validation.md)
+[总览](README.md) · [输入与恢复](interaction-and-recovery.md) · [验证与交付](validation.md)
 
 <a id="interfaces"></a>
 ## 1. 复用的线契约与本次内部接口
 
-所有内部入口接收宿主构造的 RequestContext，绑定用户、端点、行动主体、来源及当前许可。下表是类型化逻辑接口，不是新增 RPC、标准消息或可由 view 指定的方法名。线字段与错误以[协议 Schema](../endpoint-cloud-protocol/schemas/ui.schema.json)及[公共信封](../endpoint-cloud-protocol/wire-format.md#envelope)为唯一权威，不复制一套同名 Schema。
+所有内部入口接收宿主构造的 RequestContext，绑定用户、端点、行动主体、来源及当前许可。下表是类型化逻辑接口；跨端映射由本页领域合同定义，view 不能指定任意方法名。线字段与错误以[协议 Schema](../endpoint-cloud-protocol/schemas/ui.schema.json)及[公共信封](../endpoint-cloud-protocol/wire-format.md#envelope)为唯一权威，不复制一套同名 Schema。
 
 | 逻辑接口 | 最小输入 → 输出 | 归属、映射与前提 |
 | --- | --- | --- |
@@ -20,16 +20,16 @@
 | `Renderer.Apply` | 已校验的快照／追加、类型能力、本端当前意图 → 缓存更新与本地渲染结果 | 本次渲染器接缝；渲染失败不是业务拒绝，缓存可从快照重建 |
 | `UI.CheckRecovery` | 当前恢复轮次、surface／原操作、身份与领域依据 → 可查询／可转交／可呈现及缺口 | 本次本地恢复适配器，落实协议已有 UI 恢复责任；不产生线 ready 或替代交付模块最终放行 |
 
-首期宿主维护显式绑定的渲染端集合；向某端推送前复核其身份、协商能力与当前披露许可。绑定由受信启动配置／本地打开流程建立，并有有限有效期及配额。`ui.get` 本身不注册持久订阅；没有绑定时使用 ui.get 拉取，跨端动态发现与订阅 API 未定义。
+宿主维护显式绑定的渲染端集合；向某端推送前复核其身份、协商能力与当前披露许可。绑定由受信启动配置／本地打开流程建立，并有有限有效期及配额。`ui.get` 本身不注册持久订阅；目录发现与显式订阅沿[独立接口](#directory)，没有绑定时使用 ui.get 拉取。
 
-内部来源适配器锁定版本并声明：来源权威、读取方式、输入消费／查询方式、完整性判断、来源及披露约束、支持视图。默认任务适配器仅调用[核心接口](../task-kernel/storage-and-interfaces.md)，可交互模式还须绑定已安装任务策略版本，证明其请求可凭完整文本／字段直接作答；没有该装配保证就只开放只读任务展示。UI-P3 后续补输入与必需预览的结构化关联，当前不新增 wire 字段。独立 UI 的提供方由宿主安装，不能由 Agent 提交任意回调；缺少耐久消费及恢复能力则只开放展示。
+内部来源适配器锁定版本并声明：来源权威、读取方式、输入消费／查询方式、完整性判断、来源及披露约束、支持视图。任务适配器调用[核心接口](../task-kernel/storage-and-interfaces.md)及固定中间投影，验证已安装策略与 required_preview_ids；必需预览缺失时只开放相应只读展示。独立 UI 的提供方由宿主安装，不能由 Agent 提交任意回调；缺少耐久消费及恢复能力则只开放展示。
 
 只读接口超时可以在原查询预算内重查；副作用入口超时保留原命令并核对，不自动取消。停止等待或离开页面不撤销已保存责任。接口／适配器升级须锁定旧未决操作的解释版本；无法解释旧记录时禁止迁移后重派发，保留恢复缺口。
 
 <a id="records"></a>
 ## 2. 记录与唯一性
 
-以下是本模块内部记录，不添加到 v1 载荷。所有键含受信 user_id，涉及端点的键另含 endpoint_id；同一用户的 UI operation_id 在该固定 UI 权威内跨 surface／种类唯一，转交到核心的子 ID 还遵守核心全用户唯一约束。
+以下是本模块内部记录，相关领域消息只承载完成交接所需字段。所有键含受信 user_id，涉及端点的键另含 endpoint_id；同一用户的 UI operation_id 在该固定 UI 权威内跨 surface／种类唯一，转交到核心的子 ID 还遵守核心全用户唯一约束。
 
 | 记录 | 必须保存的字段组 | 唯一性与用途 |
 | --- | --- | --- |
@@ -40,7 +40,7 @@
 | Forwarding | 父 ID、子 ID、精确权威／目标、冻结请求、原期限、可能已转交标记、子处理依据 | 一父一固定子映射，随接纳共同保存；记录不会因租约或重启换 ID |
 | UIWork | 工作 ID、kind、关联对象、pending／leased／done／closed、领取代次／期限、预算、下一时间、尝试与缺口、固定发送消息／接管凭据 | 转交、刷新、发送、清理等有界工作；同一责任唯一，派发前核对领取和当前门禁 |
 | LocalIntent | 本端意图序号、surface、最新明确选择、已发送原操作及请求、已确认呈现修订、待协调标记 | 多窗口共享宿主串行入口；未决操作与最新选择分别保存 |
-| LocalCommand／TaskBinding | 提交或管理命令的固定身份／意图／截止、目标权威、已知结果、task 与 surface 关联 | 本端保存和远端接纳分开；任务索引不冒充用户全局任务目录 |
+| LocalCommand／TaskBinding | 提交或管理命令的固定身份／意图／截止、目标权威、已知结果、task 与 surface 关联 | 本端保存和远端接纳分开；本端索引与获准全局目录的固定切点分别记录 |
 | RendererCache／Draft | 用户／端点／surface、内容修订、校验结果、来源／用途／到期、草稿对应 input_request_id | 缓存可丢弃重建；草稿不是业务输入。失效、退出和清理规则单独落实 |
 
 规范意图包含种类、版本、用户及源端点绑定、目标、语义载荷、原期限与许可关联；不只比较哈希。规范化器版本固定，JSON 成员次序可忽略，数值、数组、空值及字段缺省按同版 Schema 处理。查询重投即使返回原历史成功，也先核对当前披露权。
@@ -113,8 +113,56 @@ SQLite 使用短写事务及唯一约束，`BEGIN IMMEDIATE` 提前取得写资�
 | 刷新间隔、合并等待、每轮批量、每用户并发 | 合并重复刷新，终态且无未决责任才停止常规轮询；有未决项保留有限查询工作，用户间公平轮转 |
 | 重试次数／总时长、工作租约、延后上限 | 到限留下缺口及一次通知，不延长原请求／输入期限 |
 | 可靠消息积压与存储保留 | 接纳前预留答复、转交和收尾容量；压力大时先丢临时增量，不能替可靠消息伪造成功 |
-| 控制／恢复份额 | task.cancel、原操作查询、当前开闭及本地接管保留处理容量；网络拥塞仍不承诺远程取消零延迟 |
+| 控制／恢复份额 | task.cancel／pause／resume、原操作查询、当前开闭及本地接管保留处理容量；网络拥塞仍不承诺远程取消零延迟 |
 
 观测关联 user 的受控标识、endpoint、task、surface、内容／呈现修订、父子 operation、work 与 message；记录排队、核心接纳、输入消费、快照就绪、内容验证、实际本端展示等时点及缺口原因。实际展示测量是本端遥测，未定义跨端已读回执。日志不默认包含表单值、截图、授权票据或完整任务正文。
 
 容量验证分别报告任务创建率、同时待输入量、每任务刷新次数、快照平均／峰值字节、慢端积压、SQLite 写等待、内容吞吐、控制延迟和每用户占用。测量配置、用户分布及注入故障一起保存；系统规模目标与当前单机参考能力分别报告。
+
+<a id="directory"></a>
+## 7. 跨设备目录与显式订阅
+
+UI-P1 采用固定权威目录。`harness.task.list@1` 在用户固定任务权威分页返回获准任务的 task_id、权威、任务修订、运行状态、独立控制状态、摘要与来源证明；`ui.list_surfaces@1` 在固定 UI 权威返回 surface、修订、用途与来源证明，独立 UI 可以没有 task_id。跨设备发现不创建第二个任务或界面写者；远端权威失联时只展示带观察时点的本端记录，并标明全局目录未核齐。
+
+目录请求的 collection_id 固定用户、权威、筛选范围与用途；游标绑定固定切点、范围、页序和有限期限。每页重新核验当前披露资格，资格变化使旧页／游标失效，不能凭历史快照披露已经撤权的摘要。`complete` 只表示当前获准集合已枚举，gap 不等于空目录。查询结果记录在本端 DirectorySnapshot 中，不能覆盖本端尚未交接的原命令。
+
+| 消息（harness.*@1） | 责任与恢复 |
+| --- | --- |
+| task.subscribe／ui.subscribe | 原 command_id、collection_id、对象集合、subscriber_endpoint、from_revision 与 until；权威持久保存有限订阅，subscription_id=command_id。空对象数组代表该获准 collection 全集，不能扩大集合 |
+| task.query_subscription／ui.query_subscription | 按原 collection／subscription 查询 active、closed、expired 及原期限；当前未见或历史丢失须返回 gap，不能伪造 expired |
+| task.unsubscribe／ui.unsubscribe | 原命令关闭订阅并保存回执；停止新通知不取消任务、清理内容或抹除已交接通知 |
+| task.directory_changed／ui.directory_changed | 临时通知只带 collection、subscription、revision，驱动有界拉取；不作为获准、对象存在或完整状态证明 |
+
+固定订阅属于权威管理，渲染端打开一个页面不隐式续租。服务按每用户订阅数、端点数、对象数和通知速率设有限配额；丢通知、重连、观察窗口耗尽时以目录快照恢复，定期有界刷新兜底。不得依赖 NAT 后端点提供可被直接访问的 HTTP 回调。
+
+<a id="preview"></a>
+## 8. 受控中间预览与必要输入
+
+UI-P2 采用 `harness.task.query_projection@1` 读取任务权威保存的固定中间投影。响应含 task_revision、projection_revision、预览清单和每个 input_request_id 的 required_preview_ids；预览不是正式任务成果，不改变 task.result 的最终性。预览含 content、完整来源、用途、保留截止、保留证明和 holder_id；发布前完成内容保留及[受管持有者登记](../content-and-provenance.md#holders)。
+
+核心只发布已核验的完整投影版本；同一 projection_revision 的预览及输入依赖不可修改。调用方未指定修订时读取当前版本，指定时读取原固定版本；缺失、清理或当前披露失败返回 gap，不能用后来预览填补原输入。无缺口的完整投影中，每个 required_preview_id 必须在该版本预览集中唯一出现；发生清理或披露缺口时可只保留最小输入依赖，相关输入保持禁用。输入不依赖预览时权威才可省略或置空 required_preview_ids；适配器无法证明依赖关系时停用相关输入，不自行推定为空。
+
+受信渲染宿主实际取得全部必需字节、校验 content 长度／摘要、来源与用途／期限后，保存 PreviewAcquisition，键为用户、端点、surface、输入、投影修订和 preview_id。加载提示、外部链接、HTTP 200、云端 UI manager 自己取到字节或 renderer 自报已看过均不足以产生该事实。缓存不可用或必需预览失效时，相应输入保持禁用；不依赖它的独立取消等控制仍按自身资格开放。
+
+用户经受控桥提交输入时，宿主先固定 UI operation_id，再根据上述本端记录构造 `preview_receipt`：host_endpoint、surface_id、ui_operation_id、task_id、input_request_id、projection_revision、各 preview_id 与 content_sha256、acquired_at、expires_at 及 proof。签发能力绑定已登记的受信宿主与当前用户会话，浏览器页面／生成的 renderer 不能写入证明字段或调用任意签名入口。证明摘要绑定全部字段与用户；它仅证明宿主实际取得并验证所需内容，不证明用户已阅读或理解。
+
+`ui.input.preview_receipt` 由宿主附加。云端 UI manager 独立核验真实 source、当前宿主登记、签名／受信证明、原 surface/input/task、UI operation_id、固定投影与全部必需内容摘要；将校验事实、原证明和父子转交映射与接纳共同保存。它原样转交到 `task.input.preview_receipt`，核心再次核验受信宿主和当前 UI 权威、原输入／投影绑定、期限与当前来源，不能只相信 UI accepted。必需预览非空时缺失或不符即拒绝消费；直接调用 task.input 也受同一门禁。重复输入先核对原规范意图；更换证明、预览或值不能复用已裁决的操作 ID。
+
+证明到期不抹除已经消费的事实，重投可恢复原决定；尚未消费时必须仍满足当前门禁。恢复不明的转交保留原证明、子 ID 和原截止，不能刷新证明来延长原操作。新输入意图应在核清原操作后创建。UI 快照、内容缓存和证明的控制元数据分别按数据策略保留，来源关闭先隐藏并禁用相应预览，再继续物理清理。
+
+<a id="management-wire"></a>
+## 9. 受信远程管理与补证
+
+UI-P3 的管理入口由受信宿主固定安装，按当前本人身份和领域权限调用明确类型，不允许生成的 document 提供任意方法名或参数回调。每个管理动作保存原命令、目标权威、预期修订、冻结意图、原期限与查询路径；认证刷新不改变命令身份，也不把旧拒绝重新执行。
+
+| 管理能力 | 领域入口与界面保证 |
+| --- | --- |
+| 暂停／恢复 | `task.pause`／`task.resume` 带 expected_control_revision；动作边界生效，受控子树阻止后继。已开始有界动作可结束，外部／失联逐项未知；暂停期间正常完成等显式恢复，原期限照走 |
+| 调整预算 | `task.adjust_budget` 带 expected_budget_revision、目标／收尾各维度限额与子分配预期修订；权威裁决原额度及占用，界面不能以修改显示数字替代接受回执 |
+| 人工补证 | `task.submit_evidence` 绑定 condition_id／version、target_operation_id、证据、来源及验证器版本；接纳仅保存材料。`task.evidence_result` 的 verified／invalid／unavailable 由既定验证器产生，原提交通过 `task.query_evidence` 恢复 |
+| 许可管理 | [受信确认](../identity-and-authorization/cross-endpoint.md#confirmation)与撤销、状态／原命令查询；普通输入和外部 Agent 的补充说明均不产生批准 |
+| 记忆及提取策略 | `memory.mutate`、`memory.set_extraction_policy` 及原回执查询；明确显示修改、来源及当前策略。自动提取仅对用户 opt-in 的成功任务，使用独立用户额度 |
+| 能力／设备管理 | [执行端管理合同](../capability-and-execution/remote-contracts.md)的 manage／query_management、reopen_device／query_device_command；解除隔离不使旧操作重跑 |
+| 来源及内容清理 | [治理接口](../content-and-provenance.md#holders)关闭源或持有者、查看分项停止使用期限和物理残留；内容管理沿 content.retain／query_retention／close／query_cleanup |
+
+中间预览与人工补证是独立能力：预览辅助回答或查看过程，补证只有满足既定成功条件的验证规则才影响任务判断。修改整体任务目标新建任务，不能借补证、普通输入或预算更新偷偷重写原目标。跨域管理串行发起各自命令并分别展示结果，不宣称许可撤销、任务暂停和物理删除全局原子完成。

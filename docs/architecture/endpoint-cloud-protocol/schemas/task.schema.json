@@ -135,13 +135,21 @@
                   },
                   "minItems": 0,
                   "maxItems": 64
+                },
+                "control": {
+                  "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/control"
+                },
+                "budget": {
+                  "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/budget_snapshot"
                 }
               },
               "required": [
                 "task_id",
                 "revision",
                 "state",
-                "effects_pending"
+                "effects_pending",
+                "control",
+                "budget"
               ],
               "additionalProperties": false
             }
@@ -211,6 +219,9 @@
                 },
                 "error": {
                   "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/error"
+                },
+                "control_result": {
+                  "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/control_receipt"
                 }
               },
               "required": [
@@ -258,6 +269,9 @@
         },
         "values": {
           "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/values"
+        },
+        "preview_receipt": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/preview_receipt"
         }
       },
       "required": [
@@ -429,13 +443,21 @@
           },
           "minItems": 0,
           "maxItems": 64
+        },
+        "control": {
+          "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/control"
+        },
+        "budget": {
+          "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/budget_snapshot"
         }
       },
       "required": [
         "task_id",
         "revision",
         "state",
-        "effects_pending"
+        "effects_pending",
+        "control",
+        "budget"
       ],
       "additionalProperties": false
     },

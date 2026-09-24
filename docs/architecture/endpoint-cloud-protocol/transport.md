@@ -92,11 +92,16 @@ sequenceDiagram
 
 | 消息 | 固定作用域及关联来源 |
 | --- | --- |
-| 任务请求与事件，操作查询除外；含 `task.query_result` | kind=task，id 为 `task_id`；按类型载荷或已保存的任务关联核验 |
+| 任务状态、结果、输入、控制、投影请求与事件；大脑调用 | kind=task，id 为 `task_id`；按类型载荷或已保存的任务关联核验 |
 | 执行请求与事件 | kind=operation，id 为原执行操作；调用及事实使用原 `operation_id`，查询／取消请求及取消结果使用 `target_operation_id`，不得误用取消请求自己的操作 ID |
-| UI 请求与事件，操作查询除外；含 `ui.set_presentation` | kind=surface，id 为 `surface_id`；输入消费仍核验其关联任务和输入请求，界面分流不改变业务归属 |
+| UI 内容、输入、动作及呈现请求与事件 | kind=surface，id 为 `surface_id`；输入消费仍核验其关联任务和输入请求，界面分流不改变业务归属 |
 | `task.query_operation`、`ui.query_operation` 请求 | kind=operation，id 为 `target_operation_id`；即使尚未解析出任务或界面，也可在查询权限内独立核对 |
+| 任务与 UI 目录、订阅 | kind=collection，id 为获准 collection_id；目录过滤与订阅绑定仍由处理方核对 |
+| 授权恢复、目录、记忆、内容与治理 | 按注册的 authorization／catalog／memory／content／collection 对象，使用其固定恢复、集合、内容或命令身份 |
+| 委派及发布 | kind=operation，分别使用原 D 或专用批准操作 approval_id；控制命令自有身份，不能替代被管理对象 |
 | 响应 | 通过 `reply_to` 及已保存请求继承其作用域，拒绝响应也不重新分配作用域；lane 按该类型的注册声明 |
+
+完整映射以[标准注册表](schemas/standard-registry.json)的 `scope_binding={kind,field}` 为准。field 是请求／事件的信封字段或 `payload` 内路径；响应一律继承已保存请求。字段相等只是结构关联，处理器仍核验对象确属当前用户、端点、原调用或订阅。`target` 形式的查找集合绑定经过认证的目标权威，不表示可访问该权威的全部记录。
 
 同一流不得混入另一作用域或变更 lane，重投保留原绑定及全部消息内容。缺少 `delivery.scope` 或与领域解析、流注册不一致时拒绝接纳。新流不能绕过该作用域尚未完成的恢复、业务限制或总配额。扩展消息类型同样须提供可验证的作用域解析及恢复规则，缺失时不接纳其可靠消息。
 
@@ -189,11 +194,13 @@ v1 不要求分片续传；后续 Range、分片或媒体绑定须保留相同�
 | 编码 | UTF-8、无 BOM；一个 WebSocket 文本消息对应一个 JSON 对象，使用 JSON Schema 2020-12；不接收批量数组、NDJSON 或二进制业务消息 |
 | 分片 | 传输实现组装 WebSocket 分片，大小限制作用于组装后的 UTF-8 字节数，不以单个 frame 为业务消息 |
 | 连接票据 | `POST /harness/v1/connect-tickets`；JSON 请求含 endpoint_id，响应含 ticket、expires_at、websocket_url、gateway_endpoint_id，禁止缓存 |
+| 恢复引导 | `POST /harness/v1/recovery-grants`；已认证宿主请求 endpoint_id、requested_authority，返回 bootstrap_grant_ref、权威／端点／owner／账本绑定、expires_at 与有限 allowed_types；禁止缓存 |
+| 本人管理引导 | `POST /harness/v1/management-grants`；仅当前本人强认证的受信宿主，按 endpoint_id、requested_authority 与有限 allowed_types 请求，返回本人管理资格及 recent_auth_until；不允许 Agent 代取或委派 |
 | 上传内容 | `POST /harness/v1/contents`，请求体为媒体字节；返回 content_id、提供端点、媒体类型、字节数、SHA-256 |
 | 读取内容 | `GET /harness/v1/contents/{content_id}`；按内容引用校验返回值 |
 | 内容授权 | 已认证 HTTPS 身份及 `Harness-Grant-Ref`；内容服务复核用户、读取／保存动作与用途 |
 
-登录、设备注册和票据内部格式由身份模块提供，仅持有 endpoint_id 不构成身份依据。HTTP JSON 使用 `application/json`；票据成功为 200，上传成功为 201，读取成功为 200 及声明的媒体类型。失败使用适用的 400／401／403／404／409／410／413／429／503，并返回 `{error}`；错误结构与线消息一致，404 不泄露跨用户资源。结构见 [HTTP Schema](schemas/http.schema.json)、[内容引用](schemas/common.schema.json)和 [HTTP 示例](examples/http-exchanges.json)。
+恢复引导凭据由身份权威独立校验，只开放[受限恢复路径](domain-profiles.md#2-首次授权恢复)；Agent／插件不得取得宿主资格，网关连接票据不能代替它。登录、设备注册和票据内部格式由身份模块提供，仅持有 endpoint_id 不构成身份依据。HTTP JSON 使用 `application/json`；票据、恢复及本人管理引导成功为 200，上传成功为 201，读取成功为 200 及声明的媒体类型。失败使用适用的 400／401／403／404／409／410／413／429／503，并返回 `{error}`；错误结构与线消息一致，404 不泄露跨用户资源。结构见 [HTTP Schema](schemas/http.schema.json)、[内容引用](schemas/common.schema.json)和 [HTTP 示例](examples/http-exchanges.json)。
 
 | 可配置参数 | 参考值 | 约束 |
 | --- | --- | --- |

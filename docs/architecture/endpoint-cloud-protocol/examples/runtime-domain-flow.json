@@ -1,0 +1,3347 @@
+[
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002711",
+    "kind": "request",
+    "type": "harness.coordination.resolve",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000001",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "operation_id": "00000000-0000-4000-8000-0000000002b2",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007531",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002b2"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "query_id": "00000000-0000-4000-8000-0000000002b2",
+      "agent_id": "00000000-0000-4000-8000-00000000003c",
+      "revision": "1"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002712",
+    "kind": "response",
+    "type": "harness.coordination.resolve",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-0000000002b2",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007532",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002b2"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "query_id": "00000000-0000-4000-8000-0000000002b2",
+        "binding": {
+          "agent_id": "00000000-0000-4000-8000-00000000003c",
+          "revision": "1",
+          "implementation_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "actor_id": "00000000-0000-4000-8000-00000000003e",
+          "host_endpoint": "00000000-0000-4000-8000-000000000002",
+          "task_authority": "00000000-0000-4000-8000-000000000001",
+          "mode": "internal",
+          "input_contract": "notes.input@1",
+          "result_contract": "notes.result@1",
+          "supports_pause": true,
+          "supports_input": true,
+          "supports_authorization_wait": true,
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+            "proof_id": "00000000-0000-4000-8000-00000000003f",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          }
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002711"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002713",
+    "kind": "request",
+    "type": "harness.coordination.delegate",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000001",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "operation_id": "00000000-0000-4000-8000-0000000002bc",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007533",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002bc"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002bc",
+      "parent_task_id": "00000000-0000-4000-8000-0000000002bb",
+      "parent_owner_epoch": "1",
+      "task_authority": "00000000-0000-4000-8000-000000000001",
+      "mode": "internal",
+      "agent_binding": {
+        "agent_id": "00000000-0000-4000-8000-00000000003c",
+        "revision": "1",
+        "implementation_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "actor_id": "00000000-0000-4000-8000-00000000003e",
+        "host_endpoint": "00000000-0000-4000-8000-000000000002",
+        "task_authority": "00000000-0000-4000-8000-000000000001",
+        "mode": "internal",
+        "input_contract": "notes.input@1",
+        "result_contract": "notes.result@1",
+        "supports_pause": true,
+        "supports_input": true,
+        "supports_authorization_wait": true,
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+          "proof_id": "00000000-0000-4000-8000-00000000003f",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      },
+      "goal": "取得方案甲资料并保留来源",
+      "constraints": [
+        "仅使用批准信息源"
+      ],
+      "acceptance_binding": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+        "proof_id": "00000000-0000-4000-8000-000000000040",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      },
+      "input_refs": [
+        {
+          "content_id": "00000000-0000-4000-8000-000000000041",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000001",
+          "media_type": "text/plain",
+          "size": "64",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "source_bindings": [
+        {
+          "source_authority": "00000000-0000-4000-8000-000000000001",
+          "resource_ref": "public:test-fixture",
+          "revision": "1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "observed_at": "2026-09-24T10:00:00.000Z",
+          "policy_ref": "00000000-0000-4000-8000-000000000032",
+          "policy_revision": "1",
+          "purposes": [
+            "task",
+            "evaluation",
+            "release"
+          ],
+          "recipients": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000004",
+            "00000000-0000-4000-8000-000000000005",
+            "00000000-0000-4000-8000-000000000006",
+            "00000000-0000-4000-8000-000000000007"
+          ],
+          "processing_endpoints": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000004",
+            "00000000-0000-4000-8000-000000000005",
+            "00000000-0000-4000-8000-000000000006",
+            "00000000-0000-4000-8000-000000000007"
+          ],
+          "retain_until": "2026-09-25T10:00:00.000Z",
+          "current_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+            "proof_id": "00000000-0000-4000-8000-000000000033",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          }
+        }
+      ],
+      "authorization_binding": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+        "proof_id": "00000000-0000-4000-8000-000000000042",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      },
+      "budget_allocation": {
+        "allocation_id": "00000000-0000-4000-8000-000000000034",
+        "revision": "1",
+        "owner_task_id": "00000000-0000-4000-8000-0000000002bd",
+        "amounts": [
+          {
+            "dimension": "cost",
+            "unit": "currency_minor_unit",
+            "currency": "USD",
+            "scale": 6,
+            "target_limit": "100000",
+            "cleanup_limit": "10000",
+            "mode": "hard"
+          }
+        ],
+        "mode": "hard",
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+          "proof_id": "00000000-0000-4000-8000-000000000035",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      },
+      "start_before": "2026-09-24T10:10:00.000Z",
+      "task_deadline": "2026-09-24T10:10:00.000Z",
+      "ancestry": [],
+      "max_depth": 4,
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "intent_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "child_task_id": "00000000-0000-4000-8000-0000000002bd"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002714",
+    "kind": "response",
+    "type": "harness.coordination.delegate",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-0000000002bc",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007534",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002bc"
+      }
+    },
+    "payload": {
+      "status": "accepted",
+      "result": {
+        "delegation_operation_id": "00000000-0000-4000-8000-0000000002bc",
+        "recorded": true,
+        "contract_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "snapshot": {
+          "delegation_operation_id": "00000000-0000-4000-8000-0000000002bc",
+          "revision": "1",
+          "mode": "internal",
+          "admission": "pending",
+          "task_authority": "00000000-0000-4000-8000-000000000001",
+          "control": "running",
+          "source_bindings": [
+            {
+              "source_authority": "00000000-0000-4000-8000-000000000001",
+              "resource_ref": "public:test-fixture",
+              "revision": "1",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "observed_at": "2026-09-24T10:00:00.000Z",
+              "policy_ref": "00000000-0000-4000-8000-000000000032",
+              "policy_revision": "1",
+              "purposes": [
+                "task",
+                "evaluation",
+                "release"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000004",
+                "00000000-0000-4000-8000-000000000005",
+                "00000000-0000-4000-8000-000000000006",
+                "00000000-0000-4000-8000-000000000007"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000004",
+                "00000000-0000-4000-8000-000000000005",
+                "00000000-0000-4000-8000-000000000006",
+                "00000000-0000-4000-8000-000000000007"
+              ],
+              "retain_until": "2026-09-25T10:00:00.000Z",
+              "current_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+                "proof_id": "00000000-0000-4000-8000-000000000033",
+                "revision": "1",
+                "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T10:10:00.000Z"
+              }
+            }
+          ],
+          "usage": [],
+          "gaps": [],
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+            "proof_id": "00000000-0000-4000-8000-000000000043",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          },
+          "child_task_id": "00000000-0000-4000-8000-0000000002bd",
+          "child_submit_operation_id": "00000000-0000-4000-8000-0000000002be",
+          "budget_allocation": {
+            "allocation_id": "00000000-0000-4000-8000-000000000034",
+            "revision": "1",
+            "owner_task_id": "00000000-0000-4000-8000-0000000002bd",
+            "amounts": [
+              {
+                "dimension": "cost",
+                "unit": "currency_minor_unit",
+                "currency": "USD",
+                "scale": 6,
+                "target_limit": "100000",
+                "cleanup_limit": "10000",
+                "mode": "hard"
+              }
+            ],
+            "mode": "hard",
+            "proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+              "proof_id": "00000000-0000-4000-8000-000000000035",
+              "revision": "1",
+              "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T10:10:00.000Z"
+            }
+          }
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002713"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002715",
+    "kind": "request",
+    "type": "harness.coordination.delegate",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000001",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "operation_id": "00000000-0000-4000-8000-0000000002c6",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007535",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+      "parent_task_id": "00000000-0000-4000-8000-0000000002bb",
+      "parent_owner_epoch": "1",
+      "task_authority": "00000000-0000-4000-8000-000000000001",
+      "mode": "external",
+      "agent_binding": {
+        "agent_id": "00000000-0000-4000-8000-00000000003d",
+        "revision": "1",
+        "implementation_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "actor_id": "00000000-0000-4000-8000-00000000003e",
+        "host_endpoint": "00000000-0000-4000-8000-000000000004",
+        "task_authority": "00000000-0000-4000-8000-000000000001",
+        "mode": "external",
+        "input_contract": "notes.input@1",
+        "result_contract": "notes.result@1",
+        "supports_pause": true,
+        "supports_input": true,
+        "supports_authorization_wait": true,
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+          "proof_id": "00000000-0000-4000-8000-00000000003f",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      },
+      "goal": "取得方案甲资料并保留来源",
+      "constraints": [
+        "仅使用批准信息源"
+      ],
+      "acceptance_binding": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+        "proof_id": "00000000-0000-4000-8000-000000000040",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      },
+      "input_refs": [
+        {
+          "content_id": "00000000-0000-4000-8000-000000000041",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000001",
+          "media_type": "text/plain",
+          "size": "64",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "source_bindings": [
+        {
+          "source_authority": "00000000-0000-4000-8000-000000000001",
+          "resource_ref": "public:test-fixture",
+          "revision": "1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "observed_at": "2026-09-24T10:00:00.000Z",
+          "policy_ref": "00000000-0000-4000-8000-000000000032",
+          "policy_revision": "1",
+          "purposes": [
+            "task",
+            "evaluation",
+            "release"
+          ],
+          "recipients": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000004",
+            "00000000-0000-4000-8000-000000000005",
+            "00000000-0000-4000-8000-000000000006",
+            "00000000-0000-4000-8000-000000000007"
+          ],
+          "processing_endpoints": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000004",
+            "00000000-0000-4000-8000-000000000005",
+            "00000000-0000-4000-8000-000000000006",
+            "00000000-0000-4000-8000-000000000007"
+          ],
+          "retain_until": "2026-09-25T10:00:00.000Z",
+          "current_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+            "proof_id": "00000000-0000-4000-8000-000000000033",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          }
+        }
+      ],
+      "authorization_binding": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+        "proof_id": "00000000-0000-4000-8000-000000000042",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      },
+      "budget_allocation": {
+        "allocation_id": "00000000-0000-4000-8000-000000000034",
+        "revision": "1",
+        "owner_task_id": "00000000-0000-4000-8000-0000000002bb",
+        "amounts": [
+          {
+            "dimension": "cost",
+            "unit": "currency_minor_unit",
+            "currency": "USD",
+            "scale": 6,
+            "target_limit": "100000",
+            "cleanup_limit": "10000",
+            "mode": "hard"
+          }
+        ],
+        "mode": "hard",
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+          "proof_id": "00000000-0000-4000-8000-000000000035",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      },
+      "start_before": "2026-09-24T10:10:00.000Z",
+      "task_deadline": "2026-09-24T10:10:00.000Z",
+      "ancestry": [],
+      "max_depth": 4,
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "intent_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002716",
+    "kind": "response",
+    "type": "harness.coordination.delegate",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-0000000002c6",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007536",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "payload": {
+      "status": "accepted",
+      "result": {
+        "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+        "recorded": true,
+        "contract_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "snapshot": {
+          "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+          "revision": "1",
+          "mode": "external",
+          "admission": "pending",
+          "task_authority": "00000000-0000-4000-8000-000000000001",
+          "control": "running",
+          "source_bindings": [
+            {
+              "source_authority": "00000000-0000-4000-8000-000000000001",
+              "resource_ref": "public:test-fixture",
+              "revision": "1",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "observed_at": "2026-09-24T10:00:00.000Z",
+              "policy_ref": "00000000-0000-4000-8000-000000000032",
+              "policy_revision": "1",
+              "purposes": [
+                "task",
+                "evaluation",
+                "release"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000004",
+                "00000000-0000-4000-8000-000000000005",
+                "00000000-0000-4000-8000-000000000006",
+                "00000000-0000-4000-8000-000000000007"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000004",
+                "00000000-0000-4000-8000-000000000005",
+                "00000000-0000-4000-8000-000000000006",
+                "00000000-0000-4000-8000-000000000007"
+              ],
+              "retain_until": "2026-09-25T10:00:00.000Z",
+              "current_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+                "proof_id": "00000000-0000-4000-8000-000000000033",
+                "revision": "1",
+                "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T10:10:00.000Z"
+              }
+            }
+          ],
+          "usage": [],
+          "gaps": [],
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+            "proof_id": "00000000-0000-4000-8000-000000000043",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          },
+          "foreign_binding": {
+            "service_endpoint": "00000000-0000-4000-8000-000000000004",
+            "submission_key": "00000000-0000-4000-8000-0000000002c8",
+            "native_task_ref": "native-task-42"
+          }
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002715"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002717",
+    "kind": "request",
+    "type": "harness.coordination.admit_child",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-0000000002be",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007537",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002bc"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002bc",
+      "task_authority": "00000000-0000-4000-8000-000000000001",
+      "child_task_id": "00000000-0000-4000-8000-0000000002bd",
+      "child_submit_operation_id": "00000000-0000-4000-8000-0000000002be",
+      "contract_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "parent_basis": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+        "proof_id": "00000000-0000-4000-8000-000000000044",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      },
+      "start_before": "2026-09-24T10:10:00.000Z"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002718",
+    "kind": "response",
+    "type": "harness.coordination.admit_child",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000001",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "operation_id": "00000000-0000-4000-8000-0000000002be",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007538",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002bc"
+      }
+    },
+    "payload": {
+      "status": "accepted",
+      "result": {
+        "delegation_operation_id": "00000000-0000-4000-8000-0000000002bc",
+        "task_authority": "00000000-0000-4000-8000-000000000001",
+        "child_task_id": "00000000-0000-4000-8000-0000000002bd",
+        "child_submit_operation_id": "00000000-0000-4000-8000-0000000002be",
+        "contract_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "budget_allocation": {
+          "allocation_id": "00000000-0000-4000-8000-000000000034",
+          "revision": "1",
+          "owner_task_id": "00000000-0000-4000-8000-0000000002bd",
+          "amounts": [
+            {
+              "dimension": "cost",
+              "unit": "currency_minor_unit",
+              "currency": "USD",
+              "scale": 6,
+              "target_limit": "100000",
+              "cleanup_limit": "10000",
+              "mode": "hard"
+            }
+          ],
+          "mode": "hard",
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+            "proof_id": "00000000-0000-4000-8000-000000000035",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          }
+        },
+        "admission_proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+          "proof_id": "00000000-0000-4000-8000-000000000045",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002717"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002719",
+    "kind": "request",
+    "type": "harness.coordination.query",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000001",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "operation_id": "00000000-0000-4000-8000-000000004e29",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007539",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002bc"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002bc"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000271a",
+    "kind": "response",
+    "type": "harness.coordination.query",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-000000004e29",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000000753a",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002bc"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "delegation_operation_id": "00000000-0000-4000-8000-0000000002bc",
+        "revision": "1",
+        "mode": "internal",
+        "admission": "accepted",
+        "task_authority": "00000000-0000-4000-8000-000000000001",
+        "control": "running",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-000000000001",
+            "resource_ref": "public:test-fixture",
+            "revision": "1",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-000000000032",
+            "policy_revision": "1",
+            "purposes": [
+              "task",
+              "evaluation",
+              "release"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "retain_until": "2026-09-25T10:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+              "proof_id": "00000000-0000-4000-8000-000000000033",
+              "revision": "1",
+              "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T10:10:00.000Z"
+            }
+          }
+        ],
+        "usage": [],
+        "gaps": [],
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+          "proof_id": "00000000-0000-4000-8000-000000000043",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        },
+        "child_task_id": "00000000-0000-4000-8000-0000000002bd",
+        "child_submit_operation_id": "00000000-0000-4000-8000-0000000002be",
+        "budget_allocation": {
+          "allocation_id": "00000000-0000-4000-8000-000000000034",
+          "revision": "1",
+          "owner_task_id": "00000000-0000-4000-8000-0000000002bd",
+          "amounts": [
+            {
+              "dimension": "cost",
+              "unit": "currency_minor_unit",
+              "currency": "USD",
+              "scale": 6,
+              "target_limit": "100000",
+              "cleanup_limit": "10000",
+              "mode": "hard"
+            }
+          ],
+          "mode": "hard",
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+            "proof_id": "00000000-0000-4000-8000-000000000035",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          }
+        },
+        "child_snapshot": {
+          "task_id": "00000000-0000-4000-8000-0000000002bd",
+          "revision": "1",
+          "state": "running",
+          "effects_pending": false,
+          "control": {
+            "revision": "0",
+            "self_paused": false,
+            "paused_by": [],
+            "external_unpaused": [],
+            "effects_pending": false
+          },
+          "budget": {
+            "revision": "1",
+            "amounts": [
+              {
+                "dimension": "cost",
+                "unit": "currency_minor_unit",
+                "currency": "USD",
+                "scale": 6,
+                "target_limit": "100000",
+                "cleanup_limit": "10000",
+                "mode": "hard"
+              }
+            ],
+            "balances": [
+              {
+                "dimension": "cost",
+                "unit": "currency_minor_unit",
+                "currency": "USD",
+                "scale": 6,
+                "target_settled": "1000",
+                "target_reserved": "99000",
+                "cleanup_settled": "0",
+                "cleanup_reserved": "10000"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002719"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000271b",
+    "kind": "request",
+    "type": "harness.coordination.query",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-000000004e2b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000000753b",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002bc"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002bc"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000271c",
+    "kind": "response",
+    "type": "harness.coordination.query",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000001",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "operation_id": "00000000-0000-4000-8000-000000004e2b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000000753c",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002bc"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "delegation_operation_id": "00000000-0000-4000-8000-0000000002bc",
+        "revision": "1",
+        "mode": "internal",
+        "admission": "accepted",
+        "task_authority": "00000000-0000-4000-8000-000000000001",
+        "control": "running",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-000000000001",
+            "resource_ref": "public:test-fixture",
+            "revision": "1",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-000000000032",
+            "policy_revision": "1",
+            "purposes": [
+              "task",
+              "evaluation",
+              "release"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "retain_until": "2026-09-25T10:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+              "proof_id": "00000000-0000-4000-8000-000000000033",
+              "revision": "1",
+              "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T10:10:00.000Z"
+            }
+          }
+        ],
+        "usage": [],
+        "gaps": [],
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+          "proof_id": "00000000-0000-4000-8000-000000000043",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        },
+        "child_task_id": "00000000-0000-4000-8000-0000000002bd",
+        "child_submit_operation_id": "00000000-0000-4000-8000-0000000002be",
+        "budget_allocation": {
+          "allocation_id": "00000000-0000-4000-8000-000000000034",
+          "revision": "1",
+          "owner_task_id": "00000000-0000-4000-8000-0000000002bd",
+          "amounts": [
+            {
+              "dimension": "cost",
+              "unit": "currency_minor_unit",
+              "currency": "USD",
+              "scale": 6,
+              "target_limit": "100000",
+              "cleanup_limit": "10000",
+              "mode": "hard"
+            }
+          ],
+          "mode": "hard",
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+            "proof_id": "00000000-0000-4000-8000-000000000035",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          }
+        },
+        "child_snapshot": {
+          "task_id": "00000000-0000-4000-8000-0000000002bd",
+          "revision": "1",
+          "state": "running",
+          "effects_pending": false,
+          "control": {
+            "revision": "0",
+            "self_paused": false,
+            "paused_by": [],
+            "external_unpaused": [],
+            "effects_pending": false
+          },
+          "budget": {
+            "revision": "1",
+            "amounts": [
+              {
+                "dimension": "cost",
+                "unit": "currency_minor_unit",
+                "currency": "USD",
+                "scale": 6,
+                "target_limit": "100000",
+                "cleanup_limit": "10000",
+                "mode": "hard"
+              }
+            ],
+            "balances": [
+              {
+                "dimension": "cost",
+                "unit": "currency_minor_unit",
+                "currency": "USD",
+                "scale": 6,
+                "target_settled": "1000",
+                "target_reserved": "99000",
+                "cleanup_settled": "0",
+                "cleanup_reserved": "10000"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-00000000271b"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000271d",
+    "kind": "event",
+    "type": "harness.coordination.fact",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-0000000002bc",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000000753d",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002bc"
+      }
+    },
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002bc",
+      "revision": "1",
+      "mode": "internal",
+      "admission": "accepted",
+      "task_authority": "00000000-0000-4000-8000-000000000001",
+      "control": "running",
+      "source_bindings": [
+        {
+          "source_authority": "00000000-0000-4000-8000-000000000001",
+          "resource_ref": "public:test-fixture",
+          "revision": "1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "observed_at": "2026-09-24T10:00:00.000Z",
+          "policy_ref": "00000000-0000-4000-8000-000000000032",
+          "policy_revision": "1",
+          "purposes": [
+            "task",
+            "evaluation",
+            "release"
+          ],
+          "recipients": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000004",
+            "00000000-0000-4000-8000-000000000005",
+            "00000000-0000-4000-8000-000000000006",
+            "00000000-0000-4000-8000-000000000007"
+          ],
+          "processing_endpoints": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000004",
+            "00000000-0000-4000-8000-000000000005",
+            "00000000-0000-4000-8000-000000000006",
+            "00000000-0000-4000-8000-000000000007"
+          ],
+          "retain_until": "2026-09-25T10:00:00.000Z",
+          "current_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+            "proof_id": "00000000-0000-4000-8000-000000000033",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          }
+        }
+      ],
+      "usage": [],
+      "gaps": [],
+      "proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+        "proof_id": "00000000-0000-4000-8000-000000000043",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      },
+      "child_task_id": "00000000-0000-4000-8000-0000000002bd",
+      "child_submit_operation_id": "00000000-0000-4000-8000-0000000002be",
+      "budget_allocation": {
+        "allocation_id": "00000000-0000-4000-8000-000000000034",
+        "revision": "1",
+        "owner_task_id": "00000000-0000-4000-8000-0000000002bd",
+        "amounts": [
+          {
+            "dimension": "cost",
+            "unit": "currency_minor_unit",
+            "currency": "USD",
+            "scale": 6,
+            "target_limit": "100000",
+            "cleanup_limit": "10000",
+            "mode": "hard"
+          }
+        ],
+        "mode": "hard",
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+          "proof_id": "00000000-0000-4000-8000-000000000035",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      },
+      "child_snapshot": {
+        "task_id": "00000000-0000-4000-8000-0000000002bd",
+        "revision": "1",
+        "state": "running",
+        "effects_pending": false,
+        "control": {
+          "revision": "0",
+          "self_paused": false,
+          "paused_by": [],
+          "external_unpaused": [],
+          "effects_pending": false
+        },
+        "budget": {
+          "revision": "1",
+          "amounts": [
+            {
+              "dimension": "cost",
+              "unit": "currency_minor_unit",
+              "currency": "USD",
+              "scale": 6,
+              "target_limit": "100000",
+              "cleanup_limit": "10000",
+              "mode": "hard"
+            }
+          ],
+          "balances": [
+            {
+              "dimension": "cost",
+              "unit": "currency_minor_unit",
+              "currency": "USD",
+              "scale": 6,
+              "target_settled": "1000",
+              "target_reserved": "99000",
+              "cleanup_settled": "0",
+              "cleanup_reserved": "10000"
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000271e",
+    "kind": "event",
+    "type": "harness.coordination.fact",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-0000000002c6",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000000753e",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+      "revision": "1",
+      "mode": "external",
+      "admission": "accepted",
+      "task_authority": "00000000-0000-4000-8000-000000000001",
+      "control": "running",
+      "source_bindings": [
+        {
+          "source_authority": "00000000-0000-4000-8000-000000000001",
+          "resource_ref": "public:test-fixture",
+          "revision": "1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "observed_at": "2026-09-24T10:00:00.000Z",
+          "policy_ref": "00000000-0000-4000-8000-000000000032",
+          "policy_revision": "1",
+          "purposes": [
+            "task",
+            "evaluation",
+            "release"
+          ],
+          "recipients": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000004",
+            "00000000-0000-4000-8000-000000000005",
+            "00000000-0000-4000-8000-000000000006",
+            "00000000-0000-4000-8000-000000000007"
+          ],
+          "processing_endpoints": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000004",
+            "00000000-0000-4000-8000-000000000005",
+            "00000000-0000-4000-8000-000000000006",
+            "00000000-0000-4000-8000-000000000007"
+          ],
+          "retain_until": "2026-09-25T10:00:00.000Z",
+          "current_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+            "proof_id": "00000000-0000-4000-8000-000000000033",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          }
+        }
+      ],
+      "usage": [],
+      "gaps": [],
+      "proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+        "proof_id": "00000000-0000-4000-8000-000000000043",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      },
+      "foreign_binding": {
+        "service_endpoint": "00000000-0000-4000-8000-000000000004",
+        "submission_key": "00000000-0000-4000-8000-0000000002c8",
+        "native_task_ref": "native-task-42"
+      },
+      "external_snapshot": {
+        "native_state": "running",
+        "revision": "1",
+        "effects_pending": false,
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+          "proof_id": "00000000-0000-4000-8000-00000000004b",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000271f",
+    "kind": "request",
+    "type": "harness.coordination.control",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000001",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "operation_id": "00000000-0000-4000-8000-0000000002d0",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000000753f",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+      "control_operation_id": "00000000-0000-4000-8000-0000000002d0",
+      "action": "pause",
+      "expected_revision": "1",
+      "reason": "等待用户补充保存标题",
+      "deadline": "2026-09-24T10:10:00.000Z",
+      "control_basis": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+        "proof_id": "00000000-0000-4000-8000-0000000002d3",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002720",
+    "kind": "response",
+    "type": "harness.coordination.control",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-0000000002d0",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007540",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "payload": {
+      "status": "accepted",
+      "result": {
+        "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+        "control_operation_id": "00000000-0000-4000-8000-0000000002d0",
+        "action": "pause",
+        "receipt": {
+          "command_id": "00000000-0000-4000-8000-0000000002d0",
+          "intent_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+          "state": "committed",
+          "revision": "1",
+          "result_ref": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+            "proof_id": "00000000-0000-4000-8000-0000000002d1",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          },
+          "gaps": []
+        },
+        "application": "applied",
+        "effects_pending": false,
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+          "proof_id": "00000000-0000-4000-8000-0000000002d2",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-00000000271f"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002721",
+    "kind": "request",
+    "type": "harness.coordination.query_control",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000001",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "operation_id": "00000000-0000-4000-8000-000000004e31",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007541",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+      "control_operation_id": "00000000-0000-4000-8000-0000000002d0"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002722",
+    "kind": "response",
+    "type": "harness.coordination.query_control",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-000000004e31",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007542",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+        "control_operation_id": "00000000-0000-4000-8000-0000000002d0",
+        "action": "pause",
+        "receipt": {
+          "command_id": "00000000-0000-4000-8000-0000000002d0",
+          "intent_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+          "state": "committed",
+          "revision": "1",
+          "result_ref": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+            "proof_id": "00000000-0000-4000-8000-0000000002d1",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          },
+          "gaps": []
+        },
+        "application": "applied",
+        "effects_pending": false,
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+          "proof_id": "00000000-0000-4000-8000-0000000002d2",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002721"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002723",
+    "kind": "event",
+    "type": "harness.coordination.input_requested",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-0000000002c6",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007543",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+      "parent_task_id": "00000000-0000-4000-8000-0000000002bb",
+      "foreign_binding": {
+        "service_endpoint": "00000000-0000-4000-8000-000000000004",
+        "submission_key": "00000000-0000-4000-8000-0000000002c8",
+        "native_task_ref": "native-task-42"
+      },
+      "foreign_request_id": "request-title",
+      "request_revision": "1",
+      "deadline": "2026-09-24T10:10:00.000Z",
+      "pause_proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+        "proof_id": "00000000-0000-4000-8000-0000000002d4",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      },
+      "source_bindings": [
+        {
+          "source_authority": "00000000-0000-4000-8000-000000000001",
+          "resource_ref": "public:test-fixture",
+          "revision": "1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "observed_at": "2026-09-24T10:00:00.000Z",
+          "policy_ref": "00000000-0000-4000-8000-000000000032",
+          "policy_revision": "1",
+          "purposes": [
+            "task",
+            "evaluation",
+            "release"
+          ],
+          "recipients": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000004",
+            "00000000-0000-4000-8000-000000000005",
+            "00000000-0000-4000-8000-000000000006",
+            "00000000-0000-4000-8000-000000000007"
+          ],
+          "processing_endpoints": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000004",
+            "00000000-0000-4000-8000-000000000005",
+            "00000000-0000-4000-8000-000000000006",
+            "00000000-0000-4000-8000-000000000007"
+          ],
+          "retain_until": "2026-09-25T10:00:00.000Z",
+          "current_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+            "proof_id": "00000000-0000-4000-8000-000000000033",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          }
+        }
+      ],
+      "request_kind": "ordinary",
+      "purpose": "补充笔记标题",
+      "fields": [
+        {
+          "id": "title",
+          "label": "标题",
+          "type": "text",
+          "required": true,
+          "max_length": 80
+        }
+      ]
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002724",
+    "kind": "request",
+    "type": "harness.coordination.input",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000001",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "operation_id": "00000000-0000-4000-8000-0000000002da",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007544",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+      "foreign_request_id": "request-title",
+      "request_revision": "1",
+      "input_request_id": "00000000-0000-4000-8000-0000000002db",
+      "input_command_id": "00000000-0000-4000-8000-0000000002da",
+      "values": {
+        "title": "方案甲资料"
+      },
+      "core_input_receipt": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+        "proof_id": "00000000-0000-4000-8000-0000000002dd",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      },
+      "deadline": "2026-09-24T10:10:00.000Z"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002725",
+    "kind": "response",
+    "type": "harness.coordination.input",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-0000000002da",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007545",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "payload": {
+      "status": "accepted",
+      "result": {
+        "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+        "foreign_request_id": "request-title",
+        "request_revision": "1",
+        "input_request_id": "00000000-0000-4000-8000-0000000002db",
+        "input_command_id": "00000000-0000-4000-8000-0000000002da",
+        "local_receipt": {
+          "command_id": "00000000-0000-4000-8000-0000000002da",
+          "intent_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+          "state": "committed",
+          "revision": "1",
+          "gaps": []
+        },
+        "remote_application": "applied",
+        "remote_receipt": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+          "proof_id": "00000000-0000-4000-8000-0000000002dc",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        },
+        "gaps": []
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002724"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002726",
+    "kind": "request",
+    "type": "harness.coordination.input_query",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000001",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "operation_id": "00000000-0000-4000-8000-000000004e36",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007546",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+      "input_command_id": "00000000-0000-4000-8000-0000000002da"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002727",
+    "kind": "response",
+    "type": "harness.coordination.input_query",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-000000004e36",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007547",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+        "foreign_request_id": "request-title",
+        "request_revision": "1",
+        "input_request_id": "00000000-0000-4000-8000-0000000002db",
+        "input_command_id": "00000000-0000-4000-8000-0000000002da",
+        "local_receipt": {
+          "command_id": "00000000-0000-4000-8000-0000000002da",
+          "intent_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+          "state": "committed",
+          "revision": "1",
+          "gaps": []
+        },
+        "remote_application": "applied",
+        "remote_receipt": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+          "proof_id": "00000000-0000-4000-8000-0000000002dc",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        },
+        "gaps": []
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002726"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002728",
+    "kind": "event",
+    "type": "harness.coordination.input_requested",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-0000000002c6",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007548",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+      "parent_task_id": "00000000-0000-4000-8000-0000000002bb",
+      "foreign_binding": {
+        "service_endpoint": "00000000-0000-4000-8000-000000000004",
+        "submission_key": "00000000-0000-4000-8000-0000000002c8",
+        "native_task_ref": "native-task-42"
+      },
+      "foreign_request_id": "request-read-source",
+      "request_revision": "2",
+      "deadline": "2026-09-24T10:10:00.000Z",
+      "pause_proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+        "proof_id": "00000000-0000-4000-8000-0000000002d4",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      },
+      "source_bindings": [
+        {
+          "source_authority": "00000000-0000-4000-8000-000000000001",
+          "resource_ref": "public:test-fixture",
+          "revision": "1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "observed_at": "2026-09-24T10:00:00.000Z",
+          "policy_ref": "00000000-0000-4000-8000-000000000032",
+          "policy_revision": "1",
+          "purposes": [
+            "task",
+            "evaluation",
+            "release"
+          ],
+          "recipients": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000004",
+            "00000000-0000-4000-8000-000000000005",
+            "00000000-0000-4000-8000-000000000006",
+            "00000000-0000-4000-8000-000000000007"
+          ],
+          "processing_endpoints": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000004",
+            "00000000-0000-4000-8000-000000000005",
+            "00000000-0000-4000-8000-000000000006",
+            "00000000-0000-4000-8000-000000000007"
+          ],
+          "retain_until": "2026-09-25T10:00:00.000Z",
+          "current_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+            "proof_id": "00000000-0000-4000-8000-000000000033",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          }
+        }
+      ],
+      "request_kind": "authorization",
+      "confirmation_id": "00000000-0000-4000-8000-0000000002df",
+      "intent_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "confirmation_proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+        "proof_id": "00000000-0000-4000-8000-0000000002e0",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002729",
+    "kind": "request",
+    "type": "harness.coordination.control",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000001",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "operation_id": "00000000-0000-4000-8000-0000000002e1",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007549",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+      "control_operation_id": "00000000-0000-4000-8000-0000000002e1",
+      "action": "resume",
+      "expected_revision": "2",
+      "reason": "原委派范围内的受信权限确认完成",
+      "deadline": "2026-09-24T10:10:00.000Z",
+      "control_basis": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+        "proof_id": "00000000-0000-4000-8000-0000000002e5",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      },
+      "authorization_resume": {
+        "foreign_request_id": "request-read-source",
+        "request_revision": "2",
+        "confirmation_id": "00000000-0000-4000-8000-0000000002df",
+        "intent_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "grant_ref": "delegated-source-within-original-D",
+        "grant_version": "1",
+        "grant_proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+          "proof_id": "00000000-0000-4000-8000-0000000002e2",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000272a",
+    "kind": "response",
+    "type": "harness.coordination.control",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "operation_id": "00000000-0000-4000-8000-0000000002e1",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000000754a",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000002c6"
+      }
+    },
+    "payload": {
+      "status": "accepted",
+      "result": {
+        "delegation_operation_id": "00000000-0000-4000-8000-0000000002c6",
+        "control_operation_id": "00000000-0000-4000-8000-0000000002e1",
+        "action": "resume",
+        "receipt": {
+          "command_id": "00000000-0000-4000-8000-0000000002e1",
+          "intent_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+          "state": "committed",
+          "revision": "1",
+          "result_ref": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+            "proof_id": "00000000-0000-4000-8000-0000000002e4",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          },
+          "gaps": []
+        },
+        "application": "applied",
+        "effects_pending": false,
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000002",
+          "proof_id": "00000000-0000-4000-8000-0000000002e3",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002729"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000272b",
+    "kind": "request",
+    "type": "harness.release.query_approval",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000006",
+    "target": "00000000-0000-4000-8000-000000000005",
+    "operation_id": "00000000-0000-4000-8000-000000004e3b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000000754b",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "approval_id": "00000000-0000-4000-8000-000000000320",
+      "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+      "minimum_revision": "1",
+      "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000272c",
+    "kind": "response",
+    "type": "harness.release.query_approval",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000005",
+    "target": "00000000-0000-4000-8000-000000000006",
+    "operation_id": "00000000-0000-4000-8000-000000004e3b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000000754c",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "approval_id": "00000000-0000-4000-8000-000000000320",
+        "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+        "revision": "1",
+        "state": "approved",
+        "artifact": {
+          "package_id": "00000000-0000-4000-8000-000000000321",
+          "version": "2.0.0",
+          "package_kind": "skill",
+          "content": {
+            "content_id": "00000000-0000-4000-8000-000000000322",
+            "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+            "media_type": "application/zip",
+            "size": "64",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "manifest_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "dependency_lock_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "configuration_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "source_bindings": [
+            {
+              "source_authority": "00000000-0000-4000-8000-000000000001",
+              "resource_ref": "public:test-fixture",
+              "revision": "1",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "observed_at": "2026-09-24T10:00:00.000Z",
+              "policy_ref": "00000000-0000-4000-8000-000000000032",
+              "policy_revision": "1",
+              "purposes": [
+                "task",
+                "evaluation",
+                "release"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000004",
+                "00000000-0000-4000-8000-000000000005",
+                "00000000-0000-4000-8000-000000000006",
+                "00000000-0000-4000-8000-000000000007"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000004",
+                "00000000-0000-4000-8000-000000000005",
+                "00000000-0000-4000-8000-000000000006",
+                "00000000-0000-4000-8000-000000000007"
+              ],
+              "retain_until": "2026-09-25T10:00:00.000Z",
+              "current_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+                "proof_id": "00000000-0000-4000-8000-000000000033",
+                "revision": "1",
+                "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T10:10:00.000Z"
+              }
+            }
+          ]
+        },
+        "report": {
+          "content_id": "00000000-0000-4000-8000-000000000325",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+          "media_type": "text/plain",
+          "size": "64",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "approved_targets": [
+          "00000000-0000-4000-8000-000000000006",
+          "00000000-0000-4000-8000-000000000007"
+        ],
+        "batch_id": "00000000-0000-4000-8000-000000000326",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "activate_before": "2026-09-24T10:10:00.000Z",
+        "freshness_until": "2026-09-24T10:05:00.000Z",
+        "offline_use_until": "2026-09-24T10:05:00.000Z",
+        "offline_max_seconds": 0,
+        "allowed_actions": [
+          "prepare",
+          "activate",
+          "disable",
+          "rollback"
+        ],
+        "rollback": {
+          "target_artifact": {
+            "package_id": "00000000-0000-4000-8000-000000000321",
+            "version": "1.0.0",
+            "package_kind": "skill",
+            "content": {
+              "content_id": "00000000-0000-4000-8000-000000000323",
+              "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+              "media_type": "application/zip",
+              "size": "64",
+              "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            },
+            "manifest_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "dependency_lock_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "configuration_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "source_bindings": [
+              {
+                "source_authority": "00000000-0000-4000-8000-000000000001",
+                "resource_ref": "public:test-fixture",
+                "revision": "1",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "observed_at": "2026-09-24T10:00:00.000Z",
+                "policy_ref": "00000000-0000-4000-8000-000000000032",
+                "policy_revision": "1",
+                "purposes": [
+                  "task",
+                  "evaluation",
+                  "release"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-000000000001",
+                  "00000000-0000-4000-8000-000000000002",
+                  "00000000-0000-4000-8000-000000000004",
+                  "00000000-0000-4000-8000-000000000005",
+                  "00000000-0000-4000-8000-000000000006",
+                  "00000000-0000-4000-8000-000000000007"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-000000000001",
+                  "00000000-0000-4000-8000-000000000002",
+                  "00000000-0000-4000-8000-000000000004",
+                  "00000000-0000-4000-8000-000000000005",
+                  "00000000-0000-4000-8000-000000000006",
+                  "00000000-0000-4000-8000-000000000007"
+                ],
+                "retain_until": "2026-09-25T10:00:00.000Z",
+                "current_proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+                  "proof_id": "00000000-0000-4000-8000-000000000033",
+                  "revision": "1",
+                  "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T10:10:00.000Z"
+                }
+              }
+            ]
+          },
+          "applies_to_configuration": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "readable_format_versions": [
+            "notes@1"
+          ],
+          "validation_report": {
+            "content_id": "00000000-0000-4000-8000-000000000324",
+            "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+            "media_type": "text/plain",
+            "size": "64",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "valid_until": "2026-09-24T10:10:00.000Z",
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+            "proof_id": "00000000-0000-4000-8000-000000000329",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          },
+          "on_blocked": "disable_and_report",
+          "automatic": true
+        },
+        "rollback_supported": true,
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+          "proof_id": "00000000-0000-4000-8000-000000000327",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:05:00.000Z"
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-00000000272b"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000272d",
+    "kind": "event",
+    "type": "harness.release.approval",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000005",
+    "target": "00000000-0000-4000-8000-000000000006",
+    "operation_id": "00000000-0000-4000-8000-000000000320",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000000754d",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "payload": {
+      "approval_id": "00000000-0000-4000-8000-000000000320",
+      "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+      "revision": "1",
+      "state": "approved",
+      "artifact": {
+        "package_id": "00000000-0000-4000-8000-000000000321",
+        "version": "2.0.0",
+        "package_kind": "skill",
+        "content": {
+          "content_id": "00000000-0000-4000-8000-000000000322",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+          "media_type": "application/zip",
+          "size": "64",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "manifest_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "dependency_lock_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "configuration_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-000000000001",
+            "resource_ref": "public:test-fixture",
+            "revision": "1",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-000000000032",
+            "policy_revision": "1",
+            "purposes": [
+              "task",
+              "evaluation",
+              "release"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "retain_until": "2026-09-25T10:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+              "proof_id": "00000000-0000-4000-8000-000000000033",
+              "revision": "1",
+              "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T10:10:00.000Z"
+            }
+          }
+        ]
+      },
+      "report": {
+        "content_id": "00000000-0000-4000-8000-000000000325",
+        "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+        "media_type": "text/plain",
+        "size": "64",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "approved_targets": [
+        "00000000-0000-4000-8000-000000000006",
+        "00000000-0000-4000-8000-000000000007"
+      ],
+      "batch_id": "00000000-0000-4000-8000-000000000326",
+      "issued_at": "2026-09-24T10:00:00.000Z",
+      "activate_before": "2026-09-24T10:10:00.000Z",
+      "freshness_until": "2026-09-24T10:05:00.000Z",
+      "offline_use_until": "2026-09-24T10:05:00.000Z",
+      "offline_max_seconds": 0,
+      "allowed_actions": [
+        "prepare",
+        "activate",
+        "disable",
+        "rollback"
+      ],
+      "rollback": {
+        "target_artifact": {
+          "package_id": "00000000-0000-4000-8000-000000000321",
+          "version": "1.0.0",
+          "package_kind": "skill",
+          "content": {
+            "content_id": "00000000-0000-4000-8000-000000000323",
+            "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+            "media_type": "application/zip",
+            "size": "64",
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          },
+          "manifest_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "dependency_lock_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "configuration_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "source_bindings": [
+            {
+              "source_authority": "00000000-0000-4000-8000-000000000001",
+              "resource_ref": "public:test-fixture",
+              "revision": "1",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "observed_at": "2026-09-24T10:00:00.000Z",
+              "policy_ref": "00000000-0000-4000-8000-000000000032",
+              "policy_revision": "1",
+              "purposes": [
+                "task",
+                "evaluation",
+                "release"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000004",
+                "00000000-0000-4000-8000-000000000005",
+                "00000000-0000-4000-8000-000000000006",
+                "00000000-0000-4000-8000-000000000007"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000004",
+                "00000000-0000-4000-8000-000000000005",
+                "00000000-0000-4000-8000-000000000006",
+                "00000000-0000-4000-8000-000000000007"
+              ],
+              "retain_until": "2026-09-25T10:00:00.000Z",
+              "current_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+                "proof_id": "00000000-0000-4000-8000-000000000033",
+                "revision": "1",
+                "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T10:10:00.000Z"
+              }
+            }
+          ]
+        },
+        "applies_to_configuration": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "readable_format_versions": [
+          "notes@1"
+        ],
+        "validation_report": {
+          "content_id": "00000000-0000-4000-8000-000000000324",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+          "media_type": "text/plain",
+          "size": "64",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "valid_until": "2026-09-24T10:10:00.000Z",
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+          "proof_id": "00000000-0000-4000-8000-000000000329",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        },
+        "on_blocked": "disable_and_report",
+        "automatic": true
+      },
+      "rollback_supported": true,
+      "proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+        "proof_id": "00000000-0000-4000-8000-000000000327",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:05:00.000Z"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000272e",
+    "kind": "request",
+    "type": "harness.release.apply",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000005",
+    "target": "00000000-0000-4000-8000-000000000006",
+    "operation_id": "00000000-0000-4000-8000-00000000032a",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000000754e",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "approval_id": "00000000-0000-4000-8000-000000000320",
+      "command_id": "00000000-0000-4000-8000-00000000032a",
+      "target_endpoint": "00000000-0000-4000-8000-000000000006",
+      "expected_binding_revision": "1",
+      "action": "prepare",
+      "approval_revision": "1",
+      "approval_authority": "00000000-0000-4000-8000-000000000005",
+      "approval_proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+        "proof_id": "00000000-0000-4000-8000-000000000327",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:05:00.000Z"
+      },
+      "artifact": {
+        "package_id": "00000000-0000-4000-8000-000000000321",
+        "version": "2.0.0",
+        "package_kind": "skill",
+        "content": {
+          "content_id": "00000000-0000-4000-8000-000000000322",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+          "media_type": "application/zip",
+          "size": "64",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "manifest_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "dependency_lock_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "configuration_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-000000000001",
+            "resource_ref": "public:test-fixture",
+            "revision": "1",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-000000000032",
+            "policy_revision": "1",
+            "purposes": [
+              "task",
+              "evaluation",
+              "release"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "retain_until": "2026-09-25T10:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+              "proof_id": "00000000-0000-4000-8000-000000000033",
+              "revision": "1",
+              "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T10:10:00.000Z"
+            }
+          }
+        ]
+      },
+      "batch_id": "00000000-0000-4000-8000-000000000326",
+      "deadline": "2026-09-24T10:10:00.000Z"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000000272f",
+    "kind": "response",
+    "type": "harness.release.apply",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000006",
+    "target": "00000000-0000-4000-8000-000000000005",
+    "operation_id": "00000000-0000-4000-8000-00000000032a",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000000754f",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "payload": {
+      "status": "accepted",
+      "result": {
+        "approval_id": "00000000-0000-4000-8000-000000000320",
+        "command_id": "00000000-0000-4000-8000-00000000032a",
+        "target_endpoint": "00000000-0000-4000-8000-000000000006",
+        "action": "prepare",
+        "intent_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "admission": "accepted",
+        "progress": "succeeded",
+        "approval_revision": "1",
+        "binding_revision": "1",
+        "prepared": true,
+        "new_use_closed": false,
+        "rollback_state": "not_requested",
+        "effects_pending": false,
+        "gaps": [],
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000006",
+          "proof_id": "00000000-0000-4000-8000-00000000038e",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-00000000272e"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002730",
+    "kind": "request",
+    "type": "harness.release.apply",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000005",
+    "target": "00000000-0000-4000-8000-000000000006",
+    "operation_id": "00000000-0000-4000-8000-00000000032b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007550",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "approval_id": "00000000-0000-4000-8000-000000000320",
+      "command_id": "00000000-0000-4000-8000-00000000032b",
+      "target_endpoint": "00000000-0000-4000-8000-000000000006",
+      "expected_binding_revision": "1",
+      "action": "activate",
+      "approval_revision": "1",
+      "approval_authority": "00000000-0000-4000-8000-000000000005",
+      "approval_proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+        "proof_id": "00000000-0000-4000-8000-000000000327",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:05:00.000Z"
+      },
+      "artifact": {
+        "package_id": "00000000-0000-4000-8000-000000000321",
+        "version": "2.0.0",
+        "package_kind": "skill",
+        "content": {
+          "content_id": "00000000-0000-4000-8000-000000000322",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+          "media_type": "application/zip",
+          "size": "64",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "manifest_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "dependency_lock_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "configuration_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-000000000001",
+            "resource_ref": "public:test-fixture",
+            "revision": "1",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-000000000032",
+            "policy_revision": "1",
+            "purposes": [
+              "task",
+              "evaluation",
+              "release"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "retain_until": "2026-09-25T10:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+              "proof_id": "00000000-0000-4000-8000-000000000033",
+              "revision": "1",
+              "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T10:10:00.000Z"
+            }
+          }
+        ]
+      },
+      "batch_id": "00000000-0000-4000-8000-000000000326",
+      "deadline": "2026-09-24T10:10:00.000Z"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002731",
+    "kind": "response",
+    "type": "harness.release.apply",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000006",
+    "target": "00000000-0000-4000-8000-000000000005",
+    "operation_id": "00000000-0000-4000-8000-00000000032b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007551",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "payload": {
+      "status": "accepted",
+      "result": {
+        "approval_id": "00000000-0000-4000-8000-000000000320",
+        "command_id": "00000000-0000-4000-8000-00000000032b",
+        "target_endpoint": "00000000-0000-4000-8000-000000000006",
+        "action": "activate",
+        "intent_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "admission": "accepted",
+        "progress": "succeeded",
+        "approval_revision": "1",
+        "binding_revision": "2",
+        "prepared": true,
+        "new_use_closed": false,
+        "active_artifact_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "rollback_state": "not_requested",
+        "effects_pending": false,
+        "gaps": [],
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000006",
+          "proof_id": "00000000-0000-4000-8000-00000000038f",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002730"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002732",
+    "kind": "request",
+    "type": "harness.release.query_command",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000005",
+    "target": "00000000-0000-4000-8000-000000000006",
+    "operation_id": "00000000-0000-4000-8000-000000004e42",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007552",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "approval_id": "00000000-0000-4000-8000-000000000320",
+      "command_id": "00000000-0000-4000-8000-00000000032b",
+      "target_endpoint": "00000000-0000-4000-8000-000000000006"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002733",
+    "kind": "response",
+    "type": "harness.release.query_command",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000006",
+    "target": "00000000-0000-4000-8000-000000000005",
+    "operation_id": "00000000-0000-4000-8000-000000004e42",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007553",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "approval_id": "00000000-0000-4000-8000-000000000320",
+        "command_id": "00000000-0000-4000-8000-00000000032b",
+        "target_endpoint": "00000000-0000-4000-8000-000000000006",
+        "action": "activate",
+        "intent_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "admission": "accepted",
+        "progress": "succeeded",
+        "approval_revision": "1",
+        "binding_revision": "2",
+        "prepared": true,
+        "new_use_closed": false,
+        "active_artifact_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "rollback_state": "not_requested",
+        "effects_pending": false,
+        "gaps": [],
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000006",
+          "proof_id": "00000000-0000-4000-8000-00000000038f",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002732"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002734",
+    "kind": "event",
+    "type": "harness.release.command_fact",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000006",
+    "target": "00000000-0000-4000-8000-000000000005",
+    "operation_id": "00000000-0000-4000-8000-00000000032b",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007554",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "payload": {
+      "approval_id": "00000000-0000-4000-8000-000000000320",
+      "command_id": "00000000-0000-4000-8000-00000000032b",
+      "target_endpoint": "00000000-0000-4000-8000-000000000006",
+      "action": "activate",
+      "intent_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "admission": "accepted",
+      "progress": "succeeded",
+      "approval_revision": "1",
+      "binding_revision": "2",
+      "prepared": true,
+      "new_use_closed": false,
+      "active_artifact_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "rollback_state": "not_requested",
+      "effects_pending": false,
+      "gaps": [],
+      "proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000006",
+        "proof_id": "00000000-0000-4000-8000-00000000038f",
+        "revision": "1",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002735",
+    "kind": "event",
+    "type": "harness.release.approval",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000005",
+    "target": "00000000-0000-4000-8000-000000000006",
+    "operation_id": "00000000-0000-4000-8000-000000000320",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007555",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "payload": {
+      "approval_id": "00000000-0000-4000-8000-000000000320",
+      "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+      "revision": "2",
+      "state": "withdrawn",
+      "artifact": {
+        "package_id": "00000000-0000-4000-8000-000000000321",
+        "version": "2.0.0",
+        "package_kind": "skill",
+        "content": {
+          "content_id": "00000000-0000-4000-8000-000000000322",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+          "media_type": "application/zip",
+          "size": "64",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "manifest_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "dependency_lock_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "configuration_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-000000000001",
+            "resource_ref": "public:test-fixture",
+            "revision": "1",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-000000000032",
+            "policy_revision": "1",
+            "purposes": [
+              "task",
+              "evaluation",
+              "release"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "retain_until": "2026-09-25T10:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+              "proof_id": "00000000-0000-4000-8000-000000000033",
+              "revision": "1",
+              "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T10:10:00.000Z"
+            }
+          }
+        ]
+      },
+      "report": {
+        "content_id": "00000000-0000-4000-8000-000000000325",
+        "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+        "media_type": "text/plain",
+        "size": "64",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "approved_targets": [
+        "00000000-0000-4000-8000-000000000006",
+        "00000000-0000-4000-8000-000000000007"
+      ],
+      "batch_id": "00000000-0000-4000-8000-000000000326",
+      "issued_at": "2026-09-24T10:00:00.000Z",
+      "activate_before": "2026-09-24T10:10:00.000Z",
+      "freshness_until": "2026-09-24T10:05:00.000Z",
+      "offline_use_until": "2026-09-24T10:05:00.000Z",
+      "offline_max_seconds": 0,
+      "allowed_actions": [
+        "prepare",
+        "activate",
+        "disable",
+        "rollback"
+      ],
+      "rollback": {
+        "target_artifact": {
+          "package_id": "00000000-0000-4000-8000-000000000321",
+          "version": "1.0.0",
+          "package_kind": "skill",
+          "content": {
+            "content_id": "00000000-0000-4000-8000-000000000323",
+            "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+            "media_type": "application/zip",
+            "size": "64",
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          },
+          "manifest_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "dependency_lock_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "configuration_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "source_bindings": [
+            {
+              "source_authority": "00000000-0000-4000-8000-000000000001",
+              "resource_ref": "public:test-fixture",
+              "revision": "1",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "observed_at": "2026-09-24T10:00:00.000Z",
+              "policy_ref": "00000000-0000-4000-8000-000000000032",
+              "policy_revision": "1",
+              "purposes": [
+                "task",
+                "evaluation",
+                "release"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000004",
+                "00000000-0000-4000-8000-000000000005",
+                "00000000-0000-4000-8000-000000000006",
+                "00000000-0000-4000-8000-000000000007"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000004",
+                "00000000-0000-4000-8000-000000000005",
+                "00000000-0000-4000-8000-000000000006",
+                "00000000-0000-4000-8000-000000000007"
+              ],
+              "retain_until": "2026-09-25T10:00:00.000Z",
+              "current_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+                "proof_id": "00000000-0000-4000-8000-000000000033",
+                "revision": "1",
+                "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T10:10:00.000Z"
+              }
+            }
+          ]
+        },
+        "applies_to_configuration": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "readable_format_versions": [
+          "notes@1"
+        ],
+        "validation_report": {
+          "content_id": "00000000-0000-4000-8000-000000000324",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+          "media_type": "text/plain",
+          "size": "64",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "valid_until": "2026-09-24T10:10:00.000Z",
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+          "proof_id": "00000000-0000-4000-8000-000000000329",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        },
+        "on_blocked": "disable_and_report",
+        "automatic": true
+      },
+      "rollback_supported": true,
+      "proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+        "proof_id": "00000000-0000-4000-8000-000000000328",
+        "revision": "2",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:05:00.000Z"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002736",
+    "kind": "request",
+    "type": "harness.release.disable",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000005",
+    "target": "00000000-0000-4000-8000-000000000006",
+    "operation_id": "00000000-0000-4000-8000-00000000032c",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007556",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "approval_id": "00000000-0000-4000-8000-000000000320",
+      "command_id": "00000000-0000-4000-8000-00000000032c",
+      "target_endpoint": "00000000-0000-4000-8000-000000000006",
+      "expected_binding_revision": "2",
+      "action": "disable",
+      "approval_revision": "2",
+      "approval_authority": "00000000-0000-4000-8000-000000000005",
+      "approval_proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+        "proof_id": "00000000-0000-4000-8000-000000000328",
+        "revision": "2",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:05:00.000Z"
+      },
+      "artifact": {
+        "package_id": "00000000-0000-4000-8000-000000000321",
+        "version": "2.0.0",
+        "package_kind": "skill",
+        "content": {
+          "content_id": "00000000-0000-4000-8000-000000000322",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+          "media_type": "application/zip",
+          "size": "64",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "manifest_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "dependency_lock_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "configuration_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-000000000001",
+            "resource_ref": "public:test-fixture",
+            "revision": "1",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-000000000032",
+            "policy_revision": "1",
+            "purposes": [
+              "task",
+              "evaluation",
+              "release"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "retain_until": "2026-09-25T10:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+              "proof_id": "00000000-0000-4000-8000-000000000033",
+              "revision": "1",
+              "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T10:10:00.000Z"
+            }
+          }
+        ]
+      },
+      "batch_id": "00000000-0000-4000-8000-000000000326",
+      "deadline": "2026-09-24T10:10:00.000Z"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002737",
+    "kind": "response",
+    "type": "harness.release.disable",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000006",
+    "target": "00000000-0000-4000-8000-000000000005",
+    "operation_id": "00000000-0000-4000-8000-00000000032c",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007557",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "payload": {
+      "status": "accepted",
+      "result": {
+        "approval_id": "00000000-0000-4000-8000-000000000320",
+        "command_id": "00000000-0000-4000-8000-00000000032c",
+        "target_endpoint": "00000000-0000-4000-8000-000000000006",
+        "action": "disable",
+        "intent_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "admission": "accepted",
+        "progress": "succeeded",
+        "approval_revision": "2",
+        "binding_revision": "3",
+        "prepared": true,
+        "new_use_closed": true,
+        "active_artifact_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "rollback_state": "not_requested",
+        "effects_pending": false,
+        "gaps": [],
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000006",
+          "proof_id": "00000000-0000-4000-8000-000000000390",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002736"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002738",
+    "kind": "request",
+    "type": "harness.release.apply",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000005",
+    "target": "00000000-0000-4000-8000-000000000006",
+    "operation_id": "00000000-0000-4000-8000-00000000032d",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007558",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "authorization": {
+      "grant_ref": "runtime-fixture-grant"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "approval_id": "00000000-0000-4000-8000-000000000320",
+      "command_id": "00000000-0000-4000-8000-00000000032d",
+      "target_endpoint": "00000000-0000-4000-8000-000000000006",
+      "expected_binding_revision": "3",
+      "action": "rollback",
+      "approval_revision": "2",
+      "approval_authority": "00000000-0000-4000-8000-000000000005",
+      "approval_proof": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+        "proof_id": "00000000-0000-4000-8000-000000000328",
+        "revision": "2",
+        "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T10:05:00.000Z"
+      },
+      "artifact": {
+        "package_id": "00000000-0000-4000-8000-000000000321",
+        "version": "1.0.0",
+        "package_kind": "skill",
+        "content": {
+          "content_id": "00000000-0000-4000-8000-000000000323",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+          "media_type": "application/zip",
+          "size": "64",
+          "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        },
+        "manifest_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "dependency_lock_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "configuration_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-000000000001",
+            "resource_ref": "public:test-fixture",
+            "revision": "1",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-000000000032",
+            "policy_revision": "1",
+            "purposes": [
+              "task",
+              "evaluation",
+              "release"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000004",
+              "00000000-0000-4000-8000-000000000005",
+              "00000000-0000-4000-8000-000000000006",
+              "00000000-0000-4000-8000-000000000007"
+            ],
+            "retain_until": "2026-09-25T10:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+              "proof_id": "00000000-0000-4000-8000-000000000033",
+              "revision": "1",
+              "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T10:10:00.000Z"
+            }
+          }
+        ]
+      },
+      "batch_id": "00000000-0000-4000-8000-000000000326",
+      "deadline": "2026-09-24T10:10:00.000Z",
+      "rollback_basis": {
+        "target_artifact": {
+          "package_id": "00000000-0000-4000-8000-000000000321",
+          "version": "1.0.0",
+          "package_kind": "skill",
+          "content": {
+            "content_id": "00000000-0000-4000-8000-000000000323",
+            "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+            "media_type": "application/zip",
+            "size": "64",
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          },
+          "manifest_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "dependency_lock_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "configuration_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "source_bindings": [
+            {
+              "source_authority": "00000000-0000-4000-8000-000000000001",
+              "resource_ref": "public:test-fixture",
+              "revision": "1",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "observed_at": "2026-09-24T10:00:00.000Z",
+              "policy_ref": "00000000-0000-4000-8000-000000000032",
+              "policy_revision": "1",
+              "purposes": [
+                "task",
+                "evaluation",
+                "release"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000004",
+                "00000000-0000-4000-8000-000000000005",
+                "00000000-0000-4000-8000-000000000006",
+                "00000000-0000-4000-8000-000000000007"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000004",
+                "00000000-0000-4000-8000-000000000005",
+                "00000000-0000-4000-8000-000000000006",
+                "00000000-0000-4000-8000-000000000007"
+              ],
+              "retain_until": "2026-09-25T10:00:00.000Z",
+              "current_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+                "proof_id": "00000000-0000-4000-8000-000000000033",
+                "revision": "1",
+                "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T10:10:00.000Z"
+              }
+            }
+          ]
+        },
+        "applies_to_configuration": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "readable_format_versions": [
+          "notes@1"
+        ],
+        "validation_report": {
+          "content_id": "00000000-0000-4000-8000-000000000324",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000005",
+          "media_type": "text/plain",
+          "size": "64",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "valid_until": "2026-09-24T10:10:00.000Z",
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+          "proof_id": "00000000-0000-4000-8000-000000000329",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        },
+        "on_blocked": "disable_and_report",
+        "automatic": true
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000002739",
+    "kind": "response",
+    "type": "harness.release.apply",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000006",
+    "target": "00000000-0000-4000-8000-000000000005",
+    "operation_id": "00000000-0000-4000-8000-00000000032d",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-000000007559",
+      "seq": "1",
+      "retain_until": "2026-09-25T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-000000000320"
+      }
+    },
+    "payload": {
+      "status": "accepted",
+      "result": {
+        "approval_id": "00000000-0000-4000-8000-000000000320",
+        "command_id": "00000000-0000-4000-8000-00000000032d",
+        "target_endpoint": "00000000-0000-4000-8000-000000000006",
+        "action": "rollback",
+        "intent_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "admission": "accepted",
+        "progress": "succeeded",
+        "approval_revision": "2",
+        "binding_revision": "4",
+        "prepared": true,
+        "new_use_closed": false,
+        "active_artifact_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "rollback_state": "restored",
+        "effects_pending": false,
+        "gaps": [],
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000006",
+          "proof_id": "00000000-0000-4000-8000-000000000391",
+          "revision": "1",
+          "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        }
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000002738"
+  }
+]

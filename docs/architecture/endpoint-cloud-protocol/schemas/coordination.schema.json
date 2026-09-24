@@ -1,0 +1,1227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.invalid/protocol/v1/coordination.schema.json",
+  "$defs": {
+    "agent_binding": {
+      "type": "object",
+      "properties": {
+        "agent_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "implementation_sha256": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+        },
+        "actor_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "host_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "task_authority": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "mode": {
+          "enum": [
+            "internal",
+            "external"
+          ]
+        },
+        "input_contract": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "result_contract": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "supports_pause": {
+          "type": "boolean"
+        },
+        "supports_input": {
+          "type": "boolean"
+        },
+        "supports_authorization_wait": {
+          "type": "boolean"
+        },
+        "proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        }
+      },
+      "required": [
+        "agent_id",
+        "revision",
+        "implementation_sha256",
+        "actor_id",
+        "host_endpoint",
+        "task_authority",
+        "mode",
+        "input_contract",
+        "result_contract",
+        "supports_pause",
+        "supports_input",
+        "supports_authorization_wait",
+        "proof"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "anyOf": [
+              {
+                "properties": {
+                  "supports_input": {
+                    "const": true
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "supports_authorization_wait": {
+                    "const": true
+                  }
+                }
+              }
+            ]
+          },
+          "then": {
+            "properties": {
+              "supports_pause": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "delegation_contract": {
+      "type": "object",
+      "properties": {
+        "delegation_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "parent_task_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "parent_owner_epoch": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "task_authority": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "mode": {
+          "enum": [
+            "internal",
+            "external"
+          ]
+        },
+        "child_task_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "agent_binding": {
+          "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/agent_binding"
+        },
+        "goal": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32768
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "minItems": 0,
+          "maxItems": 64
+        },
+        "acceptance_binding": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        },
+        "input_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/content"
+          },
+          "minItems": 0,
+          "maxItems": 64
+        },
+        "source_bindings": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
+        },
+        "authorization_binding": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        },
+        "budget_allocation": {
+          "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/budget_allocation"
+        },
+        "start_before": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        },
+        "task_deadline": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        },
+        "ancestry": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+          },
+          "minItems": 0,
+          "maxItems": 32
+        },
+        "max_depth": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32
+        },
+        "retain_until": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        },
+        "intent_sha256": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+        }
+      },
+      "required": [
+        "delegation_operation_id",
+        "parent_task_id",
+        "parent_owner_epoch",
+        "task_authority",
+        "mode",
+        "agent_binding",
+        "goal",
+        "constraints",
+        "acceptance_binding",
+        "input_refs",
+        "source_bindings",
+        "authorization_binding",
+        "budget_allocation",
+        "start_before",
+        "task_deadline",
+        "ancestry",
+        "max_depth",
+        "retain_until",
+        "intent_sha256"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "internal"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "child_task_id"
+            ],
+            "properties": {
+              "agent_binding": {
+                "properties": {
+                  "mode": {
+                    "const": "internal"
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "child_task_id"
+              ]
+            },
+            "properties": {
+              "agent_binding": {
+                "properties": {
+                  "mode": {
+                    "const": "external"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "foreign_binding": {
+      "type": "object",
+      "properties": {
+        "service_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "submission_key": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "native_task_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      },
+      "required": [
+        "service_endpoint",
+        "submission_key"
+      ],
+      "additionalProperties": false
+    },
+    "delegation_snapshot": {
+      "type": "object",
+      "properties": {
+        "delegation_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "mode": {
+          "enum": [
+            "internal",
+            "external"
+          ]
+        },
+        "admission": {
+          "enum": [
+            "pending",
+            "accepted",
+            "rejected"
+          ]
+        },
+        "task_authority": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "child_task_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "child_submit_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "foreign_binding": {
+          "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/foreign_binding"
+        },
+        "control": {
+          "enum": [
+            "running",
+            "pause_requested",
+            "paused",
+            "cancel_requested",
+            "closed"
+          ]
+        },
+        "result": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/content"
+        },
+        "source_bindings": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
+        },
+        "usage": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/usage_item"
+          },
+          "minItems": 0,
+          "maxItems": 64
+        },
+        "budget_allocation": {
+          "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/budget_allocation"
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/gap"
+          },
+          "minItems": 0,
+          "maxItems": 64
+        },
+        "proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        },
+        "child_snapshot": {
+          "$ref": "https://harness.invalid/protocol/v1/task.schema.json#/$defs/status_event"
+        },
+        "external_snapshot": {
+          "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/external_snapshot"
+        }
+      },
+      "required": [
+        "delegation_operation_id",
+        "revision",
+        "mode",
+        "admission",
+        "task_authority",
+        "control",
+        "source_bindings",
+        "usage",
+        "gaps",
+        "proof"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "internal"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "child_task_id",
+              "child_submit_operation_id"
+            ],
+            "not": {
+              "required": [
+                "foreign_binding"
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "foreign_binding"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "child_task_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "child_submit_operation_id"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "internal"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "external_snapshot"
+              ]
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "child_snapshot"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "internal"
+              },
+              "admission": {
+                "const": "accepted"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "child_snapshot",
+              "budget_allocation"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "external"
+              },
+              "admission": {
+                "const": "accepted"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "external_snapshot"
+            ]
+          }
+        }
+      ]
+    },
+    "external_snapshot": {
+      "type": "object",
+      "properties": {
+        "native_state": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "effects_pending": {
+          "type": "boolean"
+        },
+        "proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        }
+      },
+      "required": [
+        "native_state",
+        "revision",
+        "effects_pending",
+        "proof"
+      ],
+      "additionalProperties": false
+    },
+    "resolve_request": {
+      "type": "object",
+      "properties": {
+        "query_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "agent_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        }
+      },
+      "required": [
+        "query_id",
+        "agent_id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "resolve_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "type": "object",
+              "properties": {
+                "query_id": {
+                  "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+                },
+                "binding": {
+                  "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/agent_binding"
+                }
+              },
+              "required": [
+                "query_id",
+                "binding"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "delegate_request": {
+      "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/delegation_contract"
+    },
+    "delegate_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "accepted"
+            },
+            "result": {
+              "type": "object",
+              "properties": {
+                "delegation_operation_id": {
+                  "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+                },
+                "recorded": {
+                  "const": true
+                },
+                "contract_sha256": {
+                  "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+                },
+                "snapshot": {
+                  "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/delegation_snapshot"
+                }
+              },
+              "required": [
+                "delegation_operation_id",
+                "recorded",
+                "contract_sha256",
+                "snapshot"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "admit_child_request": {
+      "type": "object",
+      "properties": {
+        "delegation_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "task_authority": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "child_task_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "child_submit_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "contract_sha256": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+        },
+        "parent_basis": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        },
+        "start_before": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        }
+      },
+      "required": [
+        "delegation_operation_id",
+        "task_authority",
+        "child_task_id",
+        "child_submit_operation_id",
+        "contract_sha256",
+        "parent_basis",
+        "start_before"
+      ],
+      "additionalProperties": false
+    },
+    "admit_child_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "accepted"
+            },
+            "result": {
+              "type": "object",
+              "properties": {
+                "delegation_operation_id": {
+                  "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+                },
+                "task_authority": {
+                  "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+                },
+                "child_task_id": {
+                  "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+                },
+                "child_submit_operation_id": {
+                  "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+                },
+                "contract_sha256": {
+                  "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+                },
+                "budget_allocation": {
+                  "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/budget_allocation"
+                },
+                "admission_proof": {
+                  "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+                }
+              },
+              "required": [
+                "delegation_operation_id",
+                "task_authority",
+                "child_task_id",
+                "child_submit_operation_id",
+                "contract_sha256",
+                "budget_allocation",
+                "admission_proof"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "query_request": {
+      "type": "object",
+      "properties": {
+        "delegation_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        }
+      },
+      "required": [
+        "delegation_operation_id"
+      ],
+      "additionalProperties": false
+    },
+    "query_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/delegation_snapshot"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "control_request": {
+      "type": "object",
+      "properties": {
+        "delegation_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "control_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "action": {
+          "enum": [
+            "pause",
+            "resume",
+            "cancel"
+          ]
+        },
+        "expected_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "deadline": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        },
+        "control_basis": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        },
+        "authorization_resume": {
+          "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/authorization_resume"
+        }
+      },
+      "required": [
+        "delegation_operation_id",
+        "control_operation_id",
+        "action",
+        "expected_revision",
+        "reason",
+        "deadline",
+        "control_basis"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "authorization_resume"
+            ]
+          },
+          "then": {
+            "properties": {
+              "action": {
+                "const": "resume"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "authorization_resume": {
+      "type": "object",
+      "properties": {
+        "foreign_request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "request_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "confirmation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "intent_sha256": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+        },
+        "grant_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "grant_version": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "grant_proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        }
+      },
+      "required": [
+        "foreign_request_id",
+        "request_revision",
+        "confirmation_id",
+        "intent_sha256",
+        "grant_ref",
+        "grant_version",
+        "grant_proof"
+      ],
+      "additionalProperties": false
+    },
+    "control_receipt": {
+      "type": "object",
+      "properties": {
+        "delegation_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "control_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "action": {
+          "enum": [
+            "pause",
+            "resume",
+            "cancel"
+          ]
+        },
+        "receipt": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/command_receipt"
+        },
+        "application": {
+          "enum": [
+            "pending",
+            "applied",
+            "unsupported",
+            "rejected"
+          ]
+        },
+        "effects_pending": {
+          "type": "boolean"
+        },
+        "proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        }
+      },
+      "required": [
+        "delegation_operation_id",
+        "control_operation_id",
+        "action",
+        "receipt",
+        "application",
+        "effects_pending",
+        "proof"
+      ],
+      "additionalProperties": false
+    },
+    "control_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "accepted"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/control_receipt"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "query_control_request": {
+      "type": "object",
+      "properties": {
+        "delegation_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "control_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        }
+      },
+      "required": [
+        "delegation_operation_id",
+        "control_operation_id"
+      ],
+      "additionalProperties": false
+    },
+    "query_control_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/control_receipt"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "fact_event": {
+      "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/delegation_snapshot"
+    },
+    "input_requested_event": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "delegation_operation_id": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+            },
+            "parent_task_id": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+            },
+            "foreign_binding": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/foreign_binding"
+            },
+            "foreign_request_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "request_revision": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+            },
+            "deadline": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+            },
+            "pause_proof": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+            },
+            "source_bindings": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
+            },
+            "request_kind": {
+              "const": "ordinary"
+            },
+            "purpose": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048
+            },
+            "fields": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/input_request/properties/fields"
+            }
+          },
+          "required": [
+            "delegation_operation_id",
+            "parent_task_id",
+            "foreign_binding",
+            "foreign_request_id",
+            "request_revision",
+            "deadline",
+            "pause_proof",
+            "source_bindings",
+            "request_kind",
+            "purpose",
+            "fields"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "delegation_operation_id": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+            },
+            "parent_task_id": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+            },
+            "foreign_binding": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/foreign_binding"
+            },
+            "foreign_request_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "request_revision": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+            },
+            "deadline": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+            },
+            "pause_proof": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+            },
+            "source_bindings": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
+            },
+            "request_kind": {
+              "const": "authorization"
+            },
+            "confirmation_id": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+            },
+            "intent_sha256": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+            },
+            "confirmation_proof": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+            }
+          },
+          "required": [
+            "delegation_operation_id",
+            "parent_task_id",
+            "foreign_binding",
+            "foreign_request_id",
+            "request_revision",
+            "deadline",
+            "pause_proof",
+            "source_bindings",
+            "request_kind",
+            "confirmation_id",
+            "intent_sha256",
+            "confirmation_proof"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "input_request": {
+      "type": "object",
+      "properties": {
+        "delegation_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "foreign_request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "request_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "input_request_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "input_command_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "values": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/values"
+        },
+        "core_input_receipt": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        },
+        "deadline": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        }
+      },
+      "required": [
+        "delegation_operation_id",
+        "foreign_request_id",
+        "request_revision",
+        "input_request_id",
+        "input_command_id",
+        "values",
+        "core_input_receipt",
+        "deadline"
+      ],
+      "additionalProperties": false
+    },
+    "input_receipt": {
+      "type": "object",
+      "properties": {
+        "delegation_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "foreign_request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "request_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "input_request_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "input_command_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "local_receipt": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/command_receipt"
+        },
+        "remote_application": {
+          "enum": [
+            "pending",
+            "applied",
+            "rejected",
+            "expired",
+            "unavailable"
+          ]
+        },
+        "remote_receipt": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/gap"
+          },
+          "minItems": 0,
+          "maxItems": 64
+        }
+      },
+      "required": [
+        "delegation_operation_id",
+        "foreign_request_id",
+        "request_revision",
+        "input_request_id",
+        "input_command_id",
+        "local_receipt",
+        "remote_application",
+        "gaps"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "remote_application": {
+                "const": "applied"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "remote_receipt"
+            ]
+          }
+        }
+      ]
+    },
+    "input_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "accepted"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/input_receipt"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "input_query_request": {
+      "type": "object",
+      "properties": {
+        "delegation_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "input_command_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        }
+      },
+      "required": [
+        "delegation_operation_id",
+        "input_command_id"
+      ],
+      "additionalProperties": false
+    },
+    "input_query_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/input_receipt"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    }
+  }
+}

@@ -2,7 +2,7 @@
 
 [总览](README.md) · [委派机制](delegation.md) · [消息交付](delivery-and-recovery.md) · [验收](validation.md)
 
-本页集中定义协作端点的内部字段和逻辑接口，不是可发送的 v1 JSON，也不是已实现的 SDK。线上公共字段继续沿用[线格式](../endpoint-cloud-protocol/wire-format.md)；本页跨端映射属于 [CO-P1](validation.md#proposals)。消息交付自身记录和接口集中在[交付设计](delivery-and-recovery.md)，避免复制其状态。
+本页集中定义协作端点的内部字段和 CO-P1 跨端映射；[coordination.schema.json](../endpoint-cloud-protocol/schemas/coordination.schema.json)定义严格的 v1 JSON 载荷，尚无运行 SDK。线上公共字段继续沿用[线格式](../endpoint-cloud-protocol/wire-format.md)。消息交付自身记录和接口集中在[交付设计](delivery-and-recovery.md)，避免复制其状态。
 
 <a id="agent"></a>
 ## 1. 已安装 Agent 声明
@@ -35,9 +35,9 @@ internal 配置选择子任务的大脑策略及可用能力；子生命周期�
 | goal、constraints、acceptance_binding | 子目标、用户约束及受信任务策略／结果条件；父核心保留自己的验收条件，子结果不能改写父条件 |
 | input_refs、source_bindings | 必要上下文／内容及完整来源绑定；数据最小化后仍保留派生来源闭包，不共享父任务全部记忆或推理历史 |
 | authorization_binding | 父委派依据、固定子许可、子 actor／宿主、允许操作／用途及约束；由授权服务 Delegate 产生，端点只验证和使用 |
-| budget_allocation | 父预留引用、各维度整数最小单位的份额与目标／收尾划分、hard／estimated 类别；包括子代消耗，不能再次从用户总额借一份 |
+| budget_allocation | 父预留引用、各维度整数最小单位的份额与目标／收尾划分、hard／estimated 类别；包括子代消耗，不能再次从用户总额借一份。D 固定初始合同；内部父子份额可由唯一内核权威按预算管理契约原子修订并投影，CO 消息不修改原 D；外部份额上限保持固定，扩额须新受信委派 |
 | start_before、task_deadline | 最晚接纳／启动和子任务截止，均不晚于适用父期限与许可限制；截止后仍可在独立有效权限内进行有限收尾 |
-| ancestry、max_depth | 核心生成的祖先委派／任务关联及深度约束；internal 不得含 C 或形成循环，获准的外部再委派也计入原份额和深度 |
+| ancestry、max_depth | 核心生成的祖先委派／任务关联及深度约束；internal 不得含 C 或形成循环，外部再委派当前关闭，未来开放仍须计入原份额和深度 |
 | retention_binding、intent_binding | 获准查询／保存期限及规范化合同内容绑定；期限不能随重投延长，同键异意图拒绝 |
 
 子许可可以在父准入前由受信路径申请，并将原授权 command_id 固定在准入准备记录中；授权响应未知沿原命令查询，未准入不能启动子工作。已签发但未使用的许可按原期限／撤销清理，不意味着预算已分配。父准入成功后把子许可引用、D、模式对应的关联、份额及派发工作一起保存。单次许可的消费仍在相应资源处理端，不能用一次委派接纳把权限推广为所有子操作可用。
@@ -55,14 +55,15 @@ internal 模式第一次接管 D 时，协作端点持久分配 **child_submit_o
 | Peer.Delegate | RequestContext、固定合同 → recorded／rejected／提交未知 | recorded 表示合同、内部 S 或外部提交键及接纳责任已耐久保存；不是被委派方业务接纳。重试返回原记录，不创建第二工作 |
 | Peer.ReadDelegation | 原 D → 接纳状态、模式对应的关联、最新状态／用量及缺口 | 在绑定权威查询；没有记录只返回缺口，不证明从未接纳。当前状态和固定结果分开 |
 | Peer.ReadResult | 原 D → 固定成果／外部报告、证据与内容引用／尚无结果／不可用 | 内部用 ReadResult 取得原成果；外部沿原任务读原报告。正文无权或已清理时不以摘要重建，不重新执行 |
-| Peer.Cancel | 固定取消 K、目标 D、原因与期限 → recorded／rejected／未知 | 保存控制意图及固定子取消关联；停止含义另查取消结果，原取消重投不生成新尝试 |
-| Peer.ReadCancel | 原 K → 原控制接纳与固定答复／未决／不可用 | 本地协作新增的查询能力，不映射为已有 task.query_operation 的完整答复；外部端不具备时保留其缺口 |
+| Peer.Control／Cancel | 固定控制 K、目标 D、预期修订、pause／resume／cancel 和期限 → recorded／rejected／未知 | 保存原控制及内部子控制／外部控制关联；暂停阻止新行动，不宣称在途已停。恢复仍复核资格，取消不撤回效果 |
+| Peer.ReadControl／ReadCancel | 原 K → 原控制接纳与固定答复／未决／不可用 | 本地及跨端按原 K 查询固定答复，当前停止和效果另列；过期清理返回缺口，不从当前状态重建过去答复 |
+| Peer.Input／ReadInput | 原 D、外部请求版本、核心 input_request_id、原输入交接键 → 本方接纳及外部应用回执 | 与请求替换／取消串行；只接纳匹配的一次普通输入，权限确认另走身份接口 |
 | Peer.CheckRecovery | 当前轮次、D、owner、领域依据 → 允许行为及缺口 | 只提供协作领域结论；连接适配器组合适用结论，实际使用仍复核 |
 | Peer.ReadPending | 当前用户受信管理身份、过滤及分页游标 → 原 D、接纳／控制阶段、缺口版本、最后核对时间与原权威位置 | 只读视图，不因管理入口自动获得外部私密正文或其他用户信息 |
 | Peer.Recheck | 固定管理 command_id、D、预期缺口版本、当前核对权限及剩余恢复额度 → 原核对责任／拒绝／未知 | 命令回执与原对象的有限核对工作一起保存；同键异意图拒绝，无余量不扩额，不创建新任务 |
 | Core.Observe | 已绑定端点产生的委派事实 → 已保存／重复／冲突 | 复用现有核心接口；端点在核心持久确认前保留原转交责任 |
 
-子任务接纳复用核心 Submit 的创建事务。协作端点将不可变合同作为**受信服务端配置来源**，为该 C/S 固定策略、Agent、许可与预算份额引用；不是让公网 task.submit 增加任意字段。该份额只能消费父已预留部分，不另占一份根用户额度。此本地装配必须验证核心实际采用这些配置，并返回相同绑定；普通 Submit 若无法应用受限预算／策略，则视为适配器缺失，拒绝启用委派。它落实现有[内部 Agent 子任务要求](../task-kernel/decision-and-work.md)，不扩大客户端提交权限。
+子任务接纳复用核心 Submit 的创建事务。协作端点将不可变合同作为**受信服务端配置来源**，为该 C/S 固定策略、Agent、许可与预算份额引用；不是让公网 task.submit 增加任意字段。该份额只能消费父已预留部分，不另占一份根用户额度。此本地装配必须验证核心实际采用这些配置，并返回相同绑定；普通 Submit 若无法应用受限预算／策略，则视为适配器缺失，拒绝启用委派。它落实现有[内部 Agent 子任务要求](../task-kernel/decision-and-work.md)，不扩大客户端提交权限。远程端使用 `coordination.admit_child` 将原 D、C/S 和合同摘要交回固定 task_authority；权威入口从已准入 D 及受信 Agent 配置取得完整合同，核对提供方和摘要后调用同一 Submit 事务，不接受远端自行构造的父预算或策略。
 
 创建调用使用父 actor 的任务创建／委派许可，或受信服务自己的获准创建身份；子运行配置另绑定子 actor 与子许可。子资源调用由受信宿主从隔离运行实例建立子 actor 的 RequestContext，不能将父 RequestContext 与子 grant_ref 直接配对传给授权服务。外部路径同样分别验证提交发起者与外部执行主体，只有可证明的代表关系才可代行。
 
@@ -78,15 +79,15 @@ internal 模式第一次接管 D 时，协作端点持久分配 **child_submit_o
 | admission | pending／accepted／rejected 及原接纳依据；internal 的 accepted 要求子任务及首次工作已提交，external 要求可查询的原生接纳记录。明确 rejected 须证明同一接纳键已封闭、后续不能晚提交；查询暂未见保持 pending＋缺口 |
 | child_snapshot／external_snapshot | internal 保存核心原 revision、任务状态、effects_pending、等待原因；external 保存原生状态、适配器保证及未决项，不改写为 Harness Task.completed |
 | child_result／external_result | 固定结果身份、成果引用／摘要、完整来源、结果条件及验证依据；成果当前可取／获准性另查。外部原报告仅作为协作证据，父核心按父验收条件裁决，不由端点生成正式任务终态 |
-| usage | D、预算维度／用途、usage_revision、cumulative_confirmed、final、原账单来源；同修订同内容重复忽略，同修订异内容冲突，较低修订不回退已确认累计值 |
+| usage | D、allocation_id、目标／收尾 purpose 及共同 usage（来源、修订、维度、单位、整数累计 amount、final、proof）；同修订同内容重复忽略，同修订异内容冲突，较低修订不回退已确认累计值 |
 | cancellation | 原 K、目标 D、固定子取消尝试关联、控制决定及固定结果；结果区分已保存控制、未开始且已封闭、已停止／结束、停止或效果未知；不改写子任务真实效果 |
 | gap | 原对象、所缺证据、查询位置、最后已知版本、后续责任与下次条件；不把 unknown 伪装成未发生或已失败 |
 
-`usage.final=true` 只在所有该份额下的计费来源均已封闭、最终金额确定、不会再产生该份额的新费用时成立；任务完成／取消不构成最终结算。包括晚到账单和有成本收尾，尚未结清时为 false。反悔的最终账单属于契约违例，保存冲突、停止新委派并告警，不能把回退或额外费用静默摊到其他任务。提供方不能承诺最终封账时，必须声明该限制并保留未知占额。
+共同用量记录的 `value.final=true` 只在所有该份额下的计费来源均已封闭、最终金额确定、不会再产生该份额的新费用时成立；任务完成／取消不构成最终结算。包括晚到账单和有成本收尾，尚未结清时为 false。反悔的最终账单属于契约违例，保存冲突、停止新委派并告警，不能把回退或额外费用静默摊到其他任务。提供方不能承诺最终封账时，必须声明该限制并保留未知占额。
 
-同一 D／维度／用途的更高 usage_revision 也不得降低 cumulative_confirmed；final 只能从 false 变成 true。final 后不能再次增加、降低累计或改回未封账；同值确认可去重，其余保存为冲突。版本和金额的单调性分别检查，不因版本较新就信任其账单。
+同一 D／分配／维度／用途的更高 value.revision 也不得降低 value.amount.amount 的累计值；final 只能从 false 变成 true。final 后不能再次增加、降低累计或改回未封账；同值确认可去重，其余保存为冲突。版本和金额的单调性分别检查，不因版本较新就信任其账单。
 
-内部用量由绑定的内核运行账本提供有界只读投影；外部用量由固定适配器验证原账单。此投影是实现适配接口，不是 task.query 的新增字段。子代费用先归直接父委派累计，本方根预算不能再累加其叶操作。
+内部用量由绑定的内核运行账本提供有界只读投影；远程 Peer 通过发往该固定权威的 coordination.query(D) 取得，权威从 D 的 C/S 关联构造可信快照。外部用量由固定适配器验证原账单，不从 task.query 摘要猜测。子代费用先归直接父委派累计，本方根预算不能再累加其叶操作。
 
 <a id="storage"></a>
 ## 5. 协作记录与原子边界
@@ -97,7 +98,8 @@ internal 模式第一次接管 D 时，协作端点持久分配 **child_submit_o
 | --- | --- | --- |
 | Delegation | `(user, D)`；合同、意图绑定、internal 的 C/S 或 external 的提交键、接纳阶段、派发准备、控制版本、缺口 | 首次记录与接纳工作；重复返回原映射，不重新分配预算 |
 | ExternalBinding | `(user, D, adapter)`；固定外部提交键、原任务 ID、准确实现版本、原结果／账单出处 | 外部发送准备与查询责任；不可把后来另一任务绑定到同一个 D |
-| PeerControl | `(user, K)`；目标 D、固定意图、子取消尝试及原答复 | 控制接纳与取消／核对工作；同 K 不能改绑 D |
+| PeerControl | `(user, K)`；目标 D、固定控制动作、预期修订、子控制尝试及原答复 | 控制接纳与暂停／恢复／取消及核对工作；同 K 不能改绑 D |
+| PeerInput | `(user, D, foreign_request_id, request_revision)`；来源、输入模式、核心请求、当前开放状态与期限；原 input_command_id 另设唯一索引 | 请求登记与父输入投影责任一起提交；本方输入接纳与外部转交工作一起提交，远端应用回执独立保存 |
 | PeerFact | `(user, D, fact_kind, producer_key)`；原内容绑定及来源、应用／冲突状态 | 原事实与转交工作；父核心确认前不能清除责任 |
 | PeerWork | `(user, D, responsibility_key)`；类型、not_before、期限、次数、领取代次、结果及 blockers | 处理决定与后继工作／缺口；通知丢失仍可扫描 |
 | ManagementReceipt | `(user, command_id)`；Recheck 意图、原 D／缺口版本、核对工作引用及答复 | 管理决定与工作共同提交；重复命令不重置原查询计数或额度 |
@@ -123,3 +125,23 @@ internal 模式第一次接管 D 时，协作端点持久分配 **child_submit_o
 | expired／cancelled_before_start | 在能证明原接纳未准备且已封闭时拒绝新启动；已准备则继续取消／核对，不能报告未执行 |
 | result_unavailable／evidence_gap | 报告缺内容、权限或来源；父核心等待、补证或按策略结束，不重建虚假原成果 |
 | recovery_exhausted | 保存可查询缺口并结束主动轮询，获准被动事实仍可到达；管理边界见[人工处置](delegation.md#recovery) |
+
+<a id="wire"></a>
+## 7. CO-P1 线合同与恢复
+
+[coordination.schema.json](../endpoint-cloud-protocol/schemas/coordination.schema.json) 与[完整示例](../endpoint-cloud-protocol/examples/runtime-domain-flow.json)定义版本 1；全部消息为 reliable，跨端采用 WSS，内容字节仍按受控内容合同读取。下表省略 `harness.coordination.` 前缀；响应继承匹配请求的 scope 和 operation_id。
+
+| 消息 | lane／scope | 身份、提供方和恢复 |
+| --- | --- | --- |
+| resolve | recovery／operation(query_id) | 查询精确已安装 Agent 声明；query_id 是本次查询操作身份，不充当声明授权 |
+| delegate | work／operation(D) | envelope.operation_id=D，载荷固定父任务、内部 C、真实 task_authority、权限、预算及来源；同 D 异意图拒绝 |
+| admit_child | work／operation(D) | envelope.operation_id=S；目标必须为 D 固定任务权威，核对 D、C/S 和摘要后调用原子 Submit；远端不能传新目标或预算 |
+| query | recovery／operation(D) | 查询绑定 Peer 的接管事实；远程 Peer 可向固定任务权威查询原 D 的 C/S、控制、正式成果及累计用量投影，权威按原父关联鉴权；缺口明确保存 |
+| control／query_control | control／recovery，operation(D) | 控制 envelope.operation_id=K；固定 pause／resume／cancel 及预期修订。resume 可带身份已登记的 authorization_resume，只有适用原 D 的受信授权依据才解除对应权限等待；只读查询按原 K 返回固定回执及应用状态 |
+| input_requested | work／operation(D) | 可信适配器报告原外部请求／修订、暂停证明、普通字段或身份权威已登记的 confirmation_id／意图摘要；核心再生成自己的 InputRequest |
+| input／input_query | work／recovery，operation(D) | 输入 envelope.operation_id=input_command_id；核心输入回执证明 input_request_id、D 和原外部请求的绑定。Peer 保存绑定与转交责任；返回本方接纳、外部应用及原回执／缺口 |
+| fact | work／operation(D) | 端点保存后可靠转交接纳、结果、来源与用量快照；producer proof 和单调领域修订决定可采纳性，stream seq 不作业务版本 |
+
+任务结果、控制回执及输入回执保持各自有限保留期。查询不存在不能证明原提交不会迟到；超窗后查询原业务记录，已清理则给恢复缺口。接收端逐项验证 source／actor／authority 与身份 P1 的证明，完整来源继续约束结果及输入用途。Schema 只检查结构：实现还须核对意图摘要、原操作关系、许可范围、期限、预算累计、单调修订和当前撤权。
+
+内部 C/S 由同一任务权威记录，远程 Brain 使用 `harness.brain.decide/query/cancel/observation@1`；C 的实际决策和控制不会移交给 Peer。外部普通输入不得携带确认授权字段；权限事件只引用身份权威登记的确认，确认生效也不能扩大 D 的固定上限。

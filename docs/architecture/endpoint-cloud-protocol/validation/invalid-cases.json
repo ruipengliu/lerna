@@ -1,35 +1,1939 @@
 [
-  {"name":"unknown envelope field","base":"harness.task.submit","edits":[{"op":"set","path":"/user_id","value":"self-asserted-user"}]},
-  {"name":"unsupported protocol version","base":"harness.task.submit","edits":[{"op":"set","path":"/protocol_version","value":2}]},
-  {"name":"non-v4 message identity","base":"harness.task.submit","edits":[{"op":"set","path":"/message_id","value":"00000000-0000-1000-8000-000000000001"}]},
-  {"name":"missing authorization","base":"harness.task.submit","edits":[{"op":"remove","path":"/authorization"}]},
-  {"name":"effectful request without operation","base":"harness.task.submit","edits":[{"op":"remove","path":"/operation_id"}]},
-  {"name":"response without correlation","base":"harness.task.submit","kind":"response","edits":[{"op":"remove","path":"/reply_to"}]},
-  {"name":"numeric sequence instead of decimal string","base":"harness.task.submit","edits":[{"op":"set","path":"/delivery/seq","value":1}]},
-  {"name":"uint64 overflow","base":"harness.task.submit","edits":[{"op":"set","path":"/delivery/seq","value":"18446744073709551616"}]},
-  {"name":"leading zero sequence","base":"harness.task.submit","edits":[{"op":"set","path":"/delivery/seq","value":"01"}]},
-  {"name":"invalid calendar date","base":"harness.task.submit","edits":[{"op":"set","path":"/expires_at","value":"2026-02-30T10:00:00.000Z"}]},
-  {"name":"missing millisecond component","base":"harness.task.submit","edits":[{"op":"set","path":"/expires_at","value":"2026-09-22T10:00:00Z"}]},
-  {"name":"null is not omission","base":"harness.task.submit","edits":[{"op":"set","path":"/operation_id","value":null}]},
-  {"name":"task execution without authority version","base":"harness.execution.invoke","edits":[{"op":"remove","path":"/payload/owner_epoch"}]},
-  {"name":"ephemeral input request","base":"harness.ui.input","edits":[{"op":"set","path":"/delivery","value":{"mode":"ephemeral"}}]},
-  {"name":"temporary delta changes actions","base":"harness.ui.delta","kind":"event","edits":[{"op":"set","path":"/payload/changes/0/action_id","value":"silently-change-approval"}]},
-  {"name":"unsupported mandatory extension","base":"extension","edits":[{"op":"set","path":"/extensions","value":[{"name":"net.example.unknown","version":1,"required":true,"data":{}}]}]},
-  {"name":"mandatory extension downgraded","base":"extension","edits":[{"op":"set","path":"/extensions","value":[{"name":"com.example.data_policy","version":1,"required":false,"data":{"allow_cloud_processing":false}}]}]},
-  {"name":"duplicate extension name","base":"extension","edits":[{"op":"set","path":"/extensions","value":[{"name":"net.example.trace","version":1,"required":false,"data":{}},{"name":"net.example.trace","version":2,"required":false,"data":{}}]}]},
-  {"name":"duplicate JSON key","raw":"{\"a\":1,\"a\":2}"},
-  {"name":"escaped duplicate JSON key","raw":"{\"a\":1,\"\\u0061\":2}"},
-  {"name":"non-JSON NaN","raw":"{\"value\":NaN}"},
-  {"name":"unknown recovery must not invent a cursor","base":"harness.core.resumed","kind":"control","edits":[{"op":"set","path":"/payload/streams","value":[{"source":"00000000-0000-4000-8000-000000000001","target":"00000000-0000-4000-8000-000000000002","stream_id":"00000000-0000-4000-8000-000000000003","status":"unknown","through_seq":"0"}]}]},
-  {"name":"ready recovery requires a cursor","base":"harness.core.resumed","kind":"control","edits":[{"op":"set","path":"/payload/streams","value":[{"source":"00000000-0000-4000-8000-000000000001","target":"00000000-0000-4000-8000-000000000002","stream_id":"00000000-0000-4000-8000-000000000003","status":"ready"}]}]},
-  {"name":"snapshot omits recoverable input requests","base":"harness.ui.snapshot","kind":"event","type_version":1,"edits":[{"op":"remove","path":"/payload/input_requests"}]},
-  {"name":"recovered form lacks input description","base":"harness.ui.get","kind":"response","type_version":1,"edits":[{"op":"set","path":"/payload/result/input_requests","value":[]}]},
-  {"name":"recovered input omits purpose","base":"harness.ui.get","kind":"response","type_version":1,"edits":[{"op":"remove","path":"/payload/result/input_requests/0/purpose"}]},
-  {"name":"recovered form changes input requirements","base":"harness.ui.get","kind":"response","type_version":1,"edits":[{"op":"set","path":"/payload/result/view/data/blocks/0/fields/0/required","value":false}]},
-  {"name":"content snapshot changes presentation","base":"harness.ui.snapshot","kind":"event","type_version":1,"edits":[{"op":"set","path":"/payload/presentation","value":{"revision":"1","state":"open"}}]},
-  {"name":"presentation intent omits expected revision","base":"harness.ui.set_presentation","edits":[{"op":"remove","path":"/payload/expected_revision"}]},
-  {"name":"presentation intent spoofs another endpoint","base":"harness.ui.set_presentation","edits":[{"op":"set","path":"/payload/endpoint_id","value":"00000000-0000-4000-8000-000000000004"}]},
-  {"name":"current-state task query cannot carry formal artifacts","base":"harness.task.query","kind":"response","edits":[{"op":"set","path":"/payload/result/artifacts","value":[]}]},
-  {"name":"scope binding has unknown kind","base":"harness.task.submit","edits":[{"op":"set","path":"/delivery/scope/kind","value":"user"}]},
-  {"name":"reliable message missing scope","base":"harness.task.submit","edits":[{"op":"remove","path":"/delivery/scope"}]}
+  {
+    "name": "unknown envelope field",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/user_id",
+        "value": "self-asserted-user"
+      }
+    ]
+  },
+  {
+    "name": "unsupported protocol version",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/protocol_version",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "non-v4 message identity",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/message_id",
+        "value": "00000000-0000-1000-8000-000000000001"
+      }
+    ]
+  },
+  {
+    "name": "missing authorization",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/authorization"
+      }
+    ]
+  },
+  {
+    "name": "effectful request without operation",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/operation_id"
+      }
+    ]
+  },
+  {
+    "name": "response without correlation",
+    "base": "harness.task.submit",
+    "kind": "response",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/reply_to"
+      }
+    ]
+  },
+  {
+    "name": "numeric sequence instead of decimal string",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/delivery/seq",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "uint64 overflow",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/delivery/seq",
+        "value": "18446744073709551616"
+      }
+    ]
+  },
+  {
+    "name": "leading zero sequence",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/delivery/seq",
+        "value": "01"
+      }
+    ]
+  },
+  {
+    "name": "invalid calendar date",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/expires_at",
+        "value": "2026-02-30T10:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "name": "missing millisecond component",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/expires_at",
+        "value": "2026-09-22T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "name": "null is not omission",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/operation_id",
+        "value": null
+      }
+    ]
+  },
+  {
+    "name": "task execution without authority version",
+    "base": "harness.execution.invoke",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/owner_epoch"
+      }
+    ]
+  },
+  {
+    "name": "ephemeral input request",
+    "base": "harness.ui.input",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/delivery",
+        "value": {
+          "mode": "ephemeral"
+        }
+      }
+    ]
+  },
+  {
+    "name": "temporary delta changes actions",
+    "base": "harness.ui.delta",
+    "kind": "event",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/changes/0/action_id",
+        "value": "silently-change-approval"
+      }
+    ]
+  },
+  {
+    "name": "unsupported mandatory extension",
+    "base": "extension",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/extensions",
+        "value": [
+          {
+            "name": "net.example.unknown",
+            "version": 1,
+            "required": true,
+            "data": {}
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "mandatory extension downgraded",
+    "base": "extension",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/extensions",
+        "value": [
+          {
+            "name": "com.example.data_policy",
+            "version": 1,
+            "required": false,
+            "data": {
+              "allow_cloud_processing": false
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "duplicate extension name",
+    "base": "extension",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/extensions",
+        "value": [
+          {
+            "name": "net.example.trace",
+            "version": 1,
+            "required": false,
+            "data": {}
+          },
+          {
+            "name": "net.example.trace",
+            "version": 2,
+            "required": false,
+            "data": {}
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "duplicate JSON key",
+    "raw": "{\"a\":1,\"a\":2}"
+  },
+  {
+    "name": "escaped duplicate JSON key",
+    "raw": "{\"a\":1,\"\\u0061\":2}"
+  },
+  {
+    "name": "non-JSON NaN",
+    "raw": "{\"value\":NaN}"
+  },
+  {
+    "name": "unknown recovery must not invent a cursor",
+    "base": "harness.core.resumed",
+    "kind": "control",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/streams",
+        "value": [
+          {
+            "source": "00000000-0000-4000-8000-000000000001",
+            "target": "00000000-0000-4000-8000-000000000002",
+            "stream_id": "00000000-0000-4000-8000-000000000003",
+            "status": "unknown",
+            "through_seq": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ready recovery requires a cursor",
+    "base": "harness.core.resumed",
+    "kind": "control",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/streams",
+        "value": [
+          {
+            "source": "00000000-0000-4000-8000-000000000001",
+            "target": "00000000-0000-4000-8000-000000000002",
+            "stream_id": "00000000-0000-4000-8000-000000000003",
+            "status": "ready"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "snapshot omits recoverable input requests",
+    "base": "harness.ui.snapshot",
+    "kind": "event",
+    "type_version": 1,
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/input_requests"
+      }
+    ]
+  },
+  {
+    "name": "recovered form lacks input description",
+    "base": "harness.ui.get",
+    "kind": "response",
+    "type_version": 1,
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/input_requests",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "recovered input omits purpose",
+    "base": "harness.ui.get",
+    "kind": "response",
+    "type_version": 1,
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/result/input_requests/0/purpose"
+      }
+    ]
+  },
+  {
+    "name": "recovered form changes input requirements",
+    "base": "harness.ui.get",
+    "kind": "response",
+    "type_version": 1,
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/view/data/blocks/0/fields/0/required",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "content snapshot changes presentation",
+    "base": "harness.ui.snapshot",
+    "kind": "event",
+    "type_version": 1,
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/presentation",
+        "value": {
+          "revision": "1",
+          "state": "open"
+        }
+      }
+    ]
+  },
+  {
+    "name": "presentation intent omits expected revision",
+    "base": "harness.ui.set_presentation",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/expected_revision"
+      }
+    ]
+  },
+  {
+    "name": "presentation intent spoofs another endpoint",
+    "base": "harness.ui.set_presentation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/endpoint_id",
+        "value": "00000000-0000-4000-8000-000000000004"
+      }
+    ]
+  },
+  {
+    "name": "current-state task query cannot carry formal artifacts",
+    "base": "harness.task.query",
+    "kind": "response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/artifacts",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "scope binding has unknown kind",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/delivery/scope/kind",
+        "value": "user"
+      }
+    ]
+  },
+  {
+    "name": "reliable message missing scope",
+    "base": "harness.task.submit",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/delivery/scope"
+      }
+    ]
+  },
+  {
+    "name": "pause-extra-goal",
+    "message": {
+      "protocol_version": 1,
+      "message_id": "00000000-0000-4000-8000-0000000afc8d",
+      "kind": "request",
+      "type": "harness.task.pause",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-000000000001",
+      "target": "00000000-0000-4000-8000-000000000002",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000c832d",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "task",
+          "id": "00000000-0000-4000-8000-0000000ad584"
+        }
+      },
+      "payload": {
+        "task_id": "00000000-0000-4000-8000-0000000ad584",
+        "expected_control_revision": "0",
+        "goal": "replacement"
+      },
+      "operation_id": "00000000-0000-4000-8000-0000000ad5c0",
+      "authorization": {
+        "grant_ref": "fixture-grant-current-user"
+      },
+      "expires_at": "2026-09-24T11:00:00.000Z"
+    },
+    "expected": "reject",
+    "reason": "Pause cannot edit goal."
+  },
+  {
+    "name": "resume-negative-revision",
+    "message": {
+      "protocol_version": 1,
+      "message_id": "00000000-0000-4000-8000-0000000afc9b",
+      "kind": "request",
+      "type": "harness.task.resume",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-000000000001",
+      "target": "00000000-0000-4000-8000-000000000002",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000c833b",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "task",
+          "id": "00000000-0000-4000-8000-0000000ad584"
+        }
+      },
+      "payload": {
+        "task_id": "00000000-0000-4000-8000-0000000ad584",
+        "expected_control_revision": "-1"
+      },
+      "operation_id": "00000000-0000-4000-8000-0000000ad5d5",
+      "authorization": {
+        "grant_ref": "fixture-grant-current-user"
+      },
+      "expires_at": "2026-09-24T11:00:00.000Z"
+    },
+    "expected": "reject",
+    "reason": "Control revision is unsigned."
+  },
+  {
+    "name": "invoke-missing-basis",
+    "message": {
+      "protocol_version": 1,
+      "message_id": "00000000-0000-4000-8000-0000000afc8a",
+      "kind": "request",
+      "type": "harness.execution.invoke",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-000000000002",
+      "target": "00000000-0000-4000-8000-000000000003",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000c832a",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "operation",
+          "id": "00000000-0000-4000-8000-0000000ad58e"
+        }
+      },
+      "payload": {
+        "task_id": "00000000-0000-4000-8000-0000000ad584",
+        "owner_epoch": "1",
+        "capability": "local.file.read",
+        "capability_version": 1,
+        "arguments": {
+          "path": "/fixture/A"
+        }
+      },
+      "operation_id": "00000000-0000-4000-8000-0000000ad58e",
+      "authorization": {
+        "grant_ref": "fixture-grant-current-user"
+      },
+      "expires_at": "2026-09-24T11:00:00.000Z"
+    },
+    "expected": "reject",
+    "reason": "No source/control/budget bypass."
+  },
+  {
+    "name": "fact-zero-revision",
+    "message": {
+      "protocol_version": 1,
+      "message_id": "00000000-0000-4000-8000-0000000afc8c",
+      "kind": "event",
+      "type": "harness.execution.fact",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-000000000003",
+      "target": "00000000-0000-4000-8000-000000000002",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000c832c",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "operation",
+          "id": "00000000-0000-4000-8000-0000000ad58e"
+        }
+      },
+      "payload": {
+        "operation_id": "00000000-0000-4000-8000-0000000ad58e",
+        "state": "running",
+        "execution": "started",
+        "effect": "not_applicable",
+        "producer_endpoint": "00000000-0000-4000-8000-000000000003",
+        "fact_revision": "0",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-000000000003",
+            "resource_ref": "fixture://controlled-source/A",
+            "revision": "1",
+            "sha256": "00000000000000000000000000000000000000000000000000000000000aae61",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-0000000aae62",
+            "policy_revision": "1",
+            "purposes": [
+              "read",
+              "generate",
+              "verify",
+              "disclose"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000003",
+              "00000000-0000-4000-8000-000000000004"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000003",
+              "00000000-0000-4000-8000-000000000004"
+            ],
+            "retain_until": "2026-10-24T10:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+              "proof_id": "00000000-0000-4000-8000-0000000aae63",
+              "revision": "1",
+              "binding_sha256": "00000000000000000000000000000000000000000000000000000000000aae63",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "usage": []
+      },
+      "operation_id": "00000000-0000-4000-8000-0000000ad58e"
+    },
+    "expected": "reject",
+    "reason": "Authoritative fact revision is positive."
+  },
+  {
+    "name": "brain-proposal-untyped-action",
+    "message": {
+      "protocol_version": 1,
+      "message_id": "00000000-0000-4000-8000-0000000afc87",
+      "kind": "event",
+      "type": "harness.brain.observation",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-000000000004",
+      "target": "00000000-0000-4000-8000-000000000002",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000c8327",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "task",
+          "id": "00000000-0000-4000-8000-0000000ad584"
+        }
+      },
+      "payload": {
+        "task_id": "00000000-0000-4000-8000-0000000ad584",
+        "work_id": "00000000-0000-4000-8000-0000000ad599",
+        "attempt_no": 1,
+        "call_operation_id": "00000000-0000-4000-8000-0000000ad598",
+        "producer_endpoint": "00000000-0000-4000-8000-000000000004",
+        "call_revision": "1",
+        "state": "returned",
+        "physical_state": "ended",
+        "proposal": {
+          "kind": "act",
+          "actions": [
+            {
+              "kind": "run_code",
+              "action_key": "read-A",
+              "capability": "local.file.read",
+              "capability_version": 1,
+              "target_endpoint": "00000000-0000-4000-8000-000000000003",
+              "arguments": {
+                "content_id": "00000000-0000-4000-8000-0000000ad5b6",
+                "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+                "media_type": "application/json",
+                "size": "128",
+                "sha256": "00000000000000000000000000000000000000000000000000000000000ad5b6"
+              },
+              "declaration_digest": "00000000000000000000000000000000000000000000000000000000000ad5ac",
+              "evidence": [
+                {
+                  "content_id": "00000000-0000-4000-8000-0000000ad5b2",
+                  "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+                  "media_type": "application/json",
+                  "size": "128",
+                  "sha256": "00000000000000000000000000000000000000000000000000000000000ad5b2"
+                }
+              ],
+              "maximum_cost": [
+                {
+                  "dimension": "calls",
+                  "unit": "call",
+                  "target_limit": "10",
+                  "cleanup_limit": "2",
+                  "mode": "hard"
+                }
+              ]
+            }
+          ],
+          "source_bindings": [
+            {
+              "source_authority": "00000000-0000-4000-8000-000000000003",
+              "resource_ref": "fixture://controlled-source/A",
+              "revision": "1",
+              "sha256": "00000000000000000000000000000000000000000000000000000000000aae61",
+              "observed_at": "2026-09-24T10:00:00.000Z",
+              "policy_ref": "00000000-0000-4000-8000-0000000aae62",
+              "policy_revision": "1",
+              "purposes": [
+                "read",
+                "generate",
+                "verify",
+                "disclose"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000003",
+                "00000000-0000-4000-8000-000000000004"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000003",
+                "00000000-0000-4000-8000-000000000004"
+              ],
+              "retain_until": "2026-10-24T10:00:00.000Z",
+              "current_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+                "proof_id": "00000000-0000-4000-8000-0000000aae63",
+                "revision": "1",
+                "binding_sha256": "00000000000000000000000000000000000000000000000000000000000aae63",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            }
+          ]
+        },
+        "output": {
+          "content_id": "00000000-0000-4000-8000-0000000ad5b7",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+          "media_type": "application/json",
+          "size": "128",
+          "sha256": "00000000000000000000000000000000000000000000000000000000000ad5b7"
+        },
+        "usage": [],
+        "gaps": [],
+        "stop_requested": false,
+        "cancel_operations": []
+      },
+      "operation_id": "00000000-0000-4000-8000-0000000ad598"
+    },
+    "expected": "reject",
+    "reason": "Closed proposal algebra."
+  },
+  {
+    "name": "evidence-verified-without-proof",
+    "message": {
+      "protocol_version": 1,
+      "message_id": "00000000-0000-4000-8000-0000000afc96",
+      "kind": "event",
+      "type": "harness.task.evidence_result",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-000000000002",
+      "target": "00000000-0000-4000-8000-000000000001",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000c8336",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "task",
+          "id": "00000000-0000-4000-8000-0000000ad584"
+        }
+      },
+      "payload": {
+        "task_id": "00000000-0000-4000-8000-0000000ad584",
+        "evidence_operation_id": "00000000-0000-4000-8000-0000000ad5ca",
+        "condition_id": "read-A",
+        "condition_version": "1",
+        "state": "verified",
+        "verification": [],
+        "reason": "Approved producer and exact content match; task remains paused."
+      },
+      "operation_id": "00000000-0000-4000-8000-0000000ad5ca"
+    },
+    "expected": "reject",
+    "reason": "Verified evidence requires a result reference."
+  },
+  {
+    "name": "internal delegation requires child task",
+    "base": "harness.coordination.delegate",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/child_task_id"
+      }
+    ]
+  },
+  {
+    "name": "CO cannot rewrite original budget via control",
+    "base": "harness.coordination.control",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/budget_allocation",
+        "value": {
+          "allocation_id": "00000000-0000-4000-8000-000000000034",
+          "revision": "1",
+          "owner_task_id": "00000000-0000-4000-8000-0000000002bd",
+          "amounts": [
+            {
+              "dimension": "cost",
+              "unit": "currency_minor_unit",
+              "currency": "USD",
+              "scale": 6,
+              "target_limit": "100000",
+              "cleanup_limit": "10000",
+              "mode": "hard"
+            }
+          ],
+          "mode": "hard",
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+            "proof_id": "00000000-0000-4000-8000-000000000035",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "child admission requires fixed contract digest",
+    "base": "harness.coordination.admit_child",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/contract_sha256"
+      }
+    ]
+  },
+  {
+    "name": "interactive Agent must support pause",
+    "base": "harness.coordination.resolve",
+    "kind": "response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/binding/supports_pause",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "pause cannot carry authorization resume basis",
+    "base": "harness.coordination.control",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/authorization_resume",
+        "value": {
+          "foreign_request_id": "request-read-source",
+          "request_revision": "2",
+          "confirmation_id": "00000000-0000-4000-8000-0000000002df",
+          "intent_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "grant_ref": "delegated-source-within-original-D",
+          "grant_version": "1",
+          "grant_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+            "proof_id": "00000000-0000-4000-8000-0000000002e2",
+            "revision": "1",
+            "binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T10:10:00.000Z"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "ordinary input cannot act as authorization",
+    "base": "harness.coordination.input",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/confirmation_id",
+        "value": "00000000-0000-4000-8000-0000000002df"
+      }
+    ]
+  },
+  {
+    "name": "applied external input needs original receipt",
+    "base": "harness.coordination.input_query",
+    "kind": "response",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/result/remote_receipt"
+      }
+    ]
+  },
+  {
+    "name": "release cannot activate through control lane",
+    "base": "harness.release.disable",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/action",
+        "value": "activate"
+      }
+    ]
+  },
+  {
+    "name": "release activation needs approval authority",
+    "base": "harness.release.apply",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/approval_authority"
+      }
+    ]
+  },
+  {
+    "name": "rollback support needs exact recovery basis",
+    "base": "harness.release.query_approval",
+    "kind": "response",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/result/rollback"
+      }
+    ]
+  },
+  {
+    "name": "approval cannot accept unbounded offline interval",
+    "base": "harness.release.query_approval",
+    "kind": "response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/offline_max_seconds",
+        "value": -1
+      }
+    ]
+  },
+  {
+    "name": "brain observation cannot substitute another call",
+    "base": "harness.brain.observation",
+    "kind": "event",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/call_operation_id",
+        "value": "00000000-0000-4000-8000-000000009999"
+      }
+    ]
+  },
+  {
+    "name": "usage producer must match source",
+    "base": "harness.execution.usage",
+    "kind": "event",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/producer_endpoint",
+        "value": "00000000-0000-4000-8000-000000009999"
+      }
+    ]
+  },
+  {
+    "name": "child submit identity must match operation",
+    "base": "harness.coordination.admit_child",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/child_submit_operation_id",
+        "value": "00000000-0000-4000-8000-000000009999"
+      }
+    ]
+  },
+  {
+    "name": "release cannot name another endpoint",
+    "base": "harness.release.apply",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/target_endpoint",
+        "value": "00000000-0000-4000-8000-000000009999"
+      }
+    ]
+  },
+  {
+    "name": "approval source cannot be forged",
+    "base": "harness.release.approval",
+    "kind": "event",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/authority_endpoint",
+        "value": "00000000-0000-4000-8000-000000009999"
+      }
+    ]
+  },
+  {
+    "name": "task control cannot contradict pending effects",
+    "base": "harness.task.status",
+    "kind": "event",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/control/effects_pending",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "accepted child requires authority status projection",
+    "base": "harness.coordination.query",
+    "kind": "response",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/result/child_snapshot"
+      }
+    ]
+  },
+  {
+    "name": "allocation guarantee cannot exceed weakest amount",
+    "base": "harness.execution.invoke",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/basis/budget/amounts/0/mode",
+        "value": "estimated"
+      }
+    ]
+  },
+  {
+    "name": "budget balances cannot change accounting unit",
+    "base": "harness.task.status",
+    "kind": "event",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/budget/balances/0/unit",
+        "value": "token"
+      }
+    ]
+  },
+  {
+    "name": "identity-use-missing-basis",
+    "message": {
+      "protocol_version": 1,
+      "kind": "request",
+      "type": "harness.authorization.begin_use",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-0000000c5c12",
+      "target": "00000000-0000-4000-8000-0000000c5c13",
+      "payload": {
+        "command_id": "00000000-0000-4000-8000-0000000c5c3a",
+        "target_grant_ref": "fixture:grant:read-A:root",
+        "intent": {
+          "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+          "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+          "resource_ref": "fixture://local-files/A.txt",
+          "action": "file.read",
+          "purpose": "read",
+          "recipient_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+          "processing_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+          "source_bindings": [
+            {
+              "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+              "resource_ref": "fixture://local-files/A.txt",
+              "revision": "1",
+              "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+              "observed_at": "2026-09-24T10:00:00.000Z",
+              "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+              "policy_revision": "1",
+              "purposes": [
+                "read"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "retain_until": "2026-09-24T11:00:00.000Z",
+              "current_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                "revision": "1",
+                "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            }
+          ],
+          "parameter_schema_ref": "https://harness.invalid/capabilities/local.file.read/v1/arguments.schema.json",
+          "parameters": {
+            "content_id": "00000000-0000-4000-8000-0000000c5c59",
+            "provider_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "media_type": "application/json",
+            "size": "44",
+            "sha256": "52e2a5d898c5d5430dae55101b0a8d1b63ff67ee9544588bc5afcfc02fb51323"
+          },
+          "required_obligations": [
+            {
+              "resource_ref": "fixture://local-files/A.txt",
+              "selector_kind": "exact",
+              "resource_type": "file",
+              "actions": [
+                "file.read"
+              ],
+              "purposes": [
+                "read"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "retain_until": "2026-09-24T11:00:00.000Z",
+              "max_bytes": "8192",
+              "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+              "parameter_policy_revision": "1",
+              "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+            }
+          ],
+          "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+          "operation_id": "00000000-0000-4000-8000-0000000c5c1b",
+          "unit_no": "1",
+          "source_role": "input"
+        }
+      },
+      "authorization": {
+        "grant_ref": "fixture:authorization-client:host"
+      },
+      "expires_at": "2026-09-24T11:00:00.000Z",
+      "operation_id": "00000000-0000-4000-8000-0000000c5c3a",
+      "message_id": "00000000-0000-4000-8000-0000000c832b",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000e09cb",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "operation",
+          "id": "00000000-0000-4000-8000-0000000c5c1b"
+        }
+      }
+    },
+    "expected": "reject",
+    "reason": "No fixed operation basis bypass."
+  },
+  {
+    "name": "identity-confirm-without-presence",
+    "message": {
+      "protocol_version": 1,
+      "kind": "request",
+      "type": "harness.authorization.confirm",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-0000000c5c11",
+      "target": "00000000-0000-4000-8000-0000000c5c13",
+      "payload": {
+        "command_id": "00000000-0000-4000-8000-0000000c5c30",
+        "binding": {
+          "confirmation_id": "00000000-0000-4000-8000-0000000c5c2f",
+          "surface_id": "00000000-0000-4000-8000-0000000c5c31",
+          "input_request_id": "00000000-0000-4000-8000-0000000c5c32",
+          "display_sha256": "cd8375240359bf9d43ade5061c88e0b9a806a897dcac32ac1389cd5a2062bfc5",
+          "grant_scope_sha256": "33ff9a809f4f42272fe68bf146d2e527233900c5c1d884a167f5f01e0518494d",
+          "nonce": "fixture-single-use-confirmation-1",
+          "expires_at": "2026-09-24T11:00:00.000Z",
+          "host_endpoint": "00000000-0000-4000-8000-0000000c5c11"
+        },
+        "decision": "approve"
+      },
+      "authorization": {
+        "grant_ref": "fixture:management:registered-user"
+      },
+      "expires_at": "2026-09-24T11:00:00.000Z",
+      "operation_id": "00000000-0000-4000-8000-0000000c5c30",
+      "message_id": "00000000-0000-4000-8000-0000000c8323",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000e09c3",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "authorization",
+          "id": "00000000-0000-4000-8000-0000000c5c2f"
+        }
+      }
+    },
+    "expected": "reject",
+    "reason": "A renderer assertion is not a trusted confirmation."
+  },
+  {
+    "name": "identity-delegate-missing-parent",
+    "message": {
+      "protocol_version": 1,
+      "kind": "request",
+      "type": "harness.authorization.delegate",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-0000000c5c12",
+      "target": "00000000-0000-4000-8000-0000000c5c13",
+      "payload": {
+        "command_id": "00000000-0000-4000-8000-0000000c5c3e",
+        "grant": {
+          "subject_actor_id": "00000000-0000-4000-8000-0000000c5c15",
+          "source_endpoints": [
+            "00000000-0000-4000-8000-0000000c5c12"
+          ],
+          "processor_endpoints": [
+            "00000000-0000-4000-8000-0000000c5c12"
+          ],
+          "scopes": [
+            {
+              "resource_ref": "fixture://local-files/A.txt",
+              "selector_kind": "exact",
+              "resource_type": "file",
+              "actions": [
+                "file.read"
+              ],
+              "purposes": [
+                "read"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "retain_until": "2026-09-24T11:00:00.000Z",
+              "max_bytes": "4096",
+              "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+              "parameter_policy_revision": "1",
+              "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+            }
+          ],
+          "mode": "once",
+          "not_before": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z",
+          "offline_allowed": true,
+          "delegation_allowed": false,
+          "policy_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c5c58",
+            "revision": "1",
+            "binding_sha256": "4946b0ec292244769a3eb25f67485faaaa81d4002ee6e97426c20e91876b64cd",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          }
+        },
+        "delegation_basis": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+          "proof_id": "00000000-0000-4000-8000-0000000c5c3f",
+          "revision": "1",
+          "binding_sha256": "670cd0671d1668726f06c41191ee469ef645cf109a3af15129167b39d7134dbc",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        }
+      },
+      "authorization": {
+        "grant_ref": "fixture:authorization-client:host"
+      },
+      "expires_at": "2026-09-24T11:00:00.000Z",
+      "operation_id": "00000000-0000-4000-8000-0000000c5c3e",
+      "message_id": "00000000-0000-4000-8000-0000000c832f",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000e09cf",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "operation",
+          "id": "00000000-0000-4000-8000-0000000c5c3e"
+        }
+      }
+    },
+    "expected": "reject",
+    "reason": "Delegation must name its immutable parent grant."
+  },
+  {
+    "name": "identity-recovery-zero-pages",
+    "message": {
+      "protocol_version": 1,
+      "message_id": "00000000-0000-4000-8000-0000000c8338",
+      "kind": "response",
+      "type": "harness.authorization.read_recovery",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-0000000c5c13",
+      "target": "00000000-0000-4000-8000-0000000c5c12",
+      "reply_to": "00000000-0000-4000-8000-0000000c8337",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000e09d8",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "authorization",
+          "id": "00000000-0000-4000-8000-0000000c5c1f"
+        }
+      },
+      "payload": {
+        "status": "completed",
+        "result": {
+          "binding": {
+            "recovery_id": "00000000-0000-4000-8000-0000000c5c1f",
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+            "owner_generation": "1",
+            "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+            "selection_sha256": "2b8a1206ff309110d1de76fdd3f5201ac40820ec56f718656d341a6e9b037185",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          },
+          "position": {
+            "snapshot_id": "00000000-0000-4000-8000-0000000c5c1e",
+            "cut": "5",
+            "page_index": 0,
+            "page_count": 0,
+            "page_sha256": "115b252bdcb4646d405f8b2b2ba6406c5f03315f9e8395c75101f1f6e7a3f899",
+            "manifest_sha256": "444927bdd23af9c0ef87dca20b2d267c74e1399281581d9d460ff0904aac9cea"
+          },
+          "grants": [
+            {
+              "subject_actor_id": "00000000-0000-4000-8000-0000000c5c14",
+              "source_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "processor_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "scopes": [
+                {
+                  "resource_ref": "fixture://local-files/A.txt",
+                  "selector_kind": "exact",
+                  "resource_type": "file",
+                  "actions": [
+                    "file.read"
+                  ],
+                  "purposes": [
+                    "read"
+                  ],
+                  "recipients": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "processing_endpoints": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "retain_until": "2026-09-24T11:00:00.000Z",
+                  "max_bytes": "8192",
+                  "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                  "parameter_policy_revision": "1",
+                  "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+                }
+              ],
+              "mode": "continuous",
+              "not_before": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z",
+              "offline_allowed": true,
+              "delegation_allowed": true,
+              "policy_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c56",
+                "revision": "1",
+                "binding_sha256": "9f9f43e003683872826f48db257557d4f80b26a8ce644493d4cb933f2a22a709",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              },
+              "grant_ref": "fixture:grant:read-A:root",
+              "grant_version": "1",
+              "issuer_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "use_authority": "00000000-0000-4000-8000-0000000c5c13",
+              "delegation_depth": 0,
+              "confirmation_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c57",
+                "revision": "1",
+                "binding_sha256": "f99fda2f7bab24363d67064ba57f2c815cf84a16d0f5fec266a92ef6ba70350c",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            },
+            {
+              "subject_actor_id": "00000000-0000-4000-8000-0000000c5c15",
+              "source_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "processor_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "scopes": [
+                {
+                  "resource_ref": "fixture://local-files/A.txt",
+                  "selector_kind": "exact",
+                  "resource_type": "file",
+                  "actions": [
+                    "file.read"
+                  ],
+                  "purposes": [
+                    "read"
+                  ],
+                  "recipients": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "processing_endpoints": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "retain_until": "2026-09-24T11:00:00.000Z",
+                  "max_bytes": "4096",
+                  "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                  "parameter_policy_revision": "1",
+                  "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+                }
+              ],
+              "mode": "once",
+              "not_before": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z",
+              "offline_allowed": true,
+              "delegation_allowed": false,
+              "policy_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c58",
+                "revision": "1",
+                "binding_sha256": "4946b0ec292244769a3eb25f67485faaaa81d4002ee6e97426c20e91876b64cd",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              },
+              "grant_ref": "fixture:grant:read-A:offline-child",
+              "grant_version": "1",
+              "issuer_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "use_authority": "00000000-0000-4000-8000-0000000c5c12",
+              "parent_grant_ref": "fixture:grant:read-A:root",
+              "delegation_depth": 1
+            }
+          ],
+          "grant_states": [
+            {
+              "grant_ref": "fixture:grant:read-A:root",
+              "revision": "1",
+              "state": "active",
+              "consumption": "not_applicable",
+              "use_authority": "00000000-0000-4000-8000-0000000c5c13",
+              "applications": [
+                {
+                  "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+                  "applied_revision": "0",
+                  "offline_use_until": "2026-09-24T10:00:00.000Z",
+                  "state": "unknown"
+                }
+              ],
+              "applications_complete": false,
+              "proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c60",
+                "revision": "5",
+                "binding_sha256": "b180ec5555059825f63cf4f1b2bc16aa4b60bd2472f6e20528a2f38f5983d158",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            },
+            {
+              "grant_ref": "fixture:grant:read-A:offline-child",
+              "revision": "1",
+              "state": "active",
+              "consumption": "unbound",
+              "use_authority": "00000000-0000-4000-8000-0000000c5c12",
+              "applications": [
+                {
+                  "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+                  "applied_revision": "0",
+                  "offline_use_until": "2026-09-24T10:00:00.000Z",
+                  "state": "unknown"
+                }
+              ],
+              "applications_complete": false,
+              "proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c61",
+                "revision": "5",
+                "binding_sha256": "30bcb36c925cbbfe85502d41195c8115ed59cc491c290a33aee46ebf514e28af",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            }
+          ],
+          "principals": [
+            {
+              "principal_id": "00000000-0000-4000-8000-0000000c5c16",
+              "kind": "user",
+              "revision": "1",
+              "enabled": true
+            },
+            {
+              "principal_id": "00000000-0000-4000-8000-0000000c5c14",
+              "kind": "actor",
+              "revision": "1",
+              "enabled": true
+            },
+            {
+              "principal_id": "00000000-0000-4000-8000-0000000c5c15",
+              "kind": "actor",
+              "revision": "1",
+              "enabled": true
+            },
+            {
+              "principal_id": "00000000-0000-4000-8000-0000000c5c12",
+              "kind": "endpoint",
+              "revision": "1",
+              "enabled": true,
+              "owner_generation": "1",
+              "ledger_id": "00000000-0000-4000-8000-0000000c5c1c"
+            }
+          ],
+          "keys": [
+            {
+              "kid": "fixture-ed25519-20260924",
+              "kty": "OKP",
+              "crv": "Ed25519",
+              "alg": "Ed25519",
+              "x": "6kpsY-KcUgq-9VB7Ey7F-ZVHdq6-vnuSQh7qaRRG0iw",
+              "not_before": "2026-09-24T10:00:00.000Z",
+              "verify_until": "2026-09-24T11:00:00.000Z",
+              "revoked": false
+            }
+          ],
+          "policy_proofs": [
+            {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c42",
+              "revision": "5",
+              "binding_sha256": "8ffa9cf5b0670bad882852b5760dcb0c50a7fcb7e848f8b6bd98523e42d2901f",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          ],
+          "gaps": []
+        }
+      }
+    },
+    "expected": "reject",
+    "reason": "A snapshot page count must be positive."
+  },
+  {
+    "name": "identity-offline-malformed-jws",
+    "message": {
+      "protocol_version": 1,
+      "message_id": "00000000-0000-4000-8000-0000000c8340",
+      "kind": "response",
+      "type": "harness.authorization.issue_offline",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-0000000c5c13",
+      "target": "00000000-0000-4000-8000-0000000c5c12",
+      "reply_to": "00000000-0000-4000-8000-0000000c833f",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000e09e0",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "operation",
+          "id": "00000000-0000-4000-8000-0000000c5c48"
+        }
+      },
+      "payload": {
+        "status": "completed",
+        "result": {
+          "receipt": {
+            "command_id": "00000000-0000-4000-8000-0000000c5c48",
+            "intent_sha256": "56580a4af34ad5679a9d9134104509fe1e1b8291050c634d2ca541e2a5e55e9a",
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "state": "committed",
+            "revision": "5",
+            "result_ref": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "proof_id": "00000000-0000-4000-8000-0000000c6030",
+              "revision": "5",
+              "binding_sha256": "56580a4af34ad5679a9d9134104509fe1e1b8291050c634d2ca541e2a5e55e9a",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            },
+            "gaps": []
+          },
+          "compact_jws": "unsigned-placeholder",
+          "claims_sha256": "858e70bdaf58fb4d4810f8ef5fe07aea9e33543fd8f3080cc8c1832a28e4e374"
+        }
+      },
+      "operation_id": "00000000-0000-4000-8000-0000000c5c48"
+    },
+    "expected": "reject",
+    "reason": "Offline proof requires compact JWS encoding."
+  },
+  {
+    "name": "identity-offline-zero-owner",
+    "message": {
+      "protocol_version": 1,
+      "kind": "request",
+      "type": "harness.authorization.issue_offline",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-0000000c5c12",
+      "target": "00000000-0000-4000-8000-0000000c5c13",
+      "payload": {
+        "command_id": "00000000-0000-4000-8000-0000000c5c48",
+        "target_grant_ref": "fixture:grant:read-A:offline-child",
+        "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+        "owner_generation": "0",
+        "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+        "time_anchor_proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+          "proof_id": "00000000-0000-4000-8000-0000000c5c47",
+          "revision": "1",
+          "binding_sha256": "1defcba3eaabe09513926a657d85c9d6e250f1182030dedacb46762c5f358742",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z"
+        },
+        "requested_until": "2026-09-24T10:10:00.000Z",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+            "resource_ref": "fixture://local-files/A.txt",
+            "revision": "1",
+            "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+            "policy_revision": "1",
+            "purposes": [
+              "read"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-0000000c5c12"
+            ],
+            "retain_until": "2026-09-24T11:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+              "revision": "1",
+              "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "authorization": {
+        "grant_ref": "fixture:authorization-client:host"
+      },
+      "expires_at": "2026-09-24T11:00:00.000Z",
+      "operation_id": "00000000-0000-4000-8000-0000000c5c48",
+      "message_id": "00000000-0000-4000-8000-0000000c833f",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000e09df",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "operation",
+          "id": "00000000-0000-4000-8000-0000000c5c48"
+        }
+      }
+    },
+    "expected": "reject",
+    "reason": "Owner generation must be positive."
+  },
+  {
+    "name": "identity-recovery-invalid-selection-digest",
+    "message": {
+      "protocol_version": 1,
+      "kind": "request",
+      "type": "harness.authorization.open_recovery",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-0000000c5c12",
+      "target": "00000000-0000-4000-8000-0000000c5c13",
+      "payload": {
+        "command_id": "00000000-0000-4000-8000-0000000c5c43",
+        "binding": {
+          "recovery_id": "00000000-0000-4000-8000-0000000c5c1f",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+          "owner_generation": "1",
+          "ledger_id": "00000000-0000-4000-8000-0000000c5c1c",
+          "selection_sha256": "not-a-digest",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        },
+        "grant_refs": [
+          "fixture:grant:read-A:root",
+          "fixture:grant:read-A:offline-child"
+        ],
+        "required_behaviors": [
+          "query",
+          "receive_fact",
+          "act",
+          "offline"
+        ]
+      },
+      "authorization": {
+        "grant_ref": "fixture:bootstrap:host-owner-1"
+      },
+      "expires_at": "2026-09-24T11:00:00.000Z",
+      "operation_id": "00000000-0000-4000-8000-0000000c5c43",
+      "message_id": "00000000-0000-4000-8000-0000000c8335",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000e09d5",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "authorization",
+          "id": "00000000-0000-4000-8000-0000000c5c1f"
+        }
+      }
+    },
+    "expected": "reject",
+    "reason": "Recovery selection is bound to a complete digest."
+  },
+  {
+    "name": "identity-grant-unknown-mode",
+    "message": {
+      "protocol_version": 1,
+      "message_id": "00000000-0000-4000-8000-0000000c8328",
+      "kind": "response",
+      "type": "harness.authorization.resolve",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-0000000c5c13",
+      "target": "00000000-0000-4000-8000-0000000c5c12",
+      "reply_to": "00000000-0000-4000-8000-0000000c8327",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000e09c8",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "authorization",
+          "id": "00000000-0000-4000-8000-0000000c5c13"
+        }
+      },
+      "payload": {
+        "status": "completed",
+        "result": {
+          "grants": [
+            {
+              "subject_actor_id": "00000000-0000-4000-8000-0000000c5c14",
+              "source_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "processor_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "scopes": [
+                {
+                  "resource_ref": "fixture://local-files/A.txt",
+                  "selector_kind": "exact",
+                  "resource_type": "file",
+                  "actions": [
+                    "file.read"
+                  ],
+                  "purposes": [
+                    "read"
+                  ],
+                  "recipients": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "processing_endpoints": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "retain_until": "2026-09-24T11:00:00.000Z",
+                  "max_bytes": "8192",
+                  "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                  "parameter_policy_revision": "1",
+                  "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+                }
+              ],
+              "mode": "unlimited",
+              "not_before": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z",
+              "offline_allowed": true,
+              "delegation_allowed": true,
+              "policy_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c56",
+                "revision": "1",
+                "binding_sha256": "9f9f43e003683872826f48db257557d4f80b26a8ce644493d4cb933f2a22a709",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              },
+              "grant_ref": "fixture:grant:read-A:root",
+              "grant_version": "1",
+              "issuer_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+              "use_authority": "00000000-0000-4000-8000-0000000c5c13",
+              "delegation_depth": 0,
+              "confirmation_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c57",
+                "revision": "1",
+                "binding_sha256": "f99fda2f7bab24363d67064ba57f2c815cf84a16d0f5fec266a92ef6ba70350c",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            }
+          ],
+          "grant_states": [
+            {
+              "grant_ref": "fixture:grant:read-A:root",
+              "revision": "1",
+              "state": "active",
+              "consumption": "not_applicable",
+              "use_authority": "00000000-0000-4000-8000-0000000c5c13",
+              "applications": [
+                {
+                  "endpoint_id": "00000000-0000-4000-8000-0000000c5c12",
+                  "applied_revision": "0",
+                  "offline_use_until": "2026-09-24T10:00:00.000Z",
+                  "state": "unknown"
+                }
+              ],
+              "applications_complete": false,
+              "proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c60",
+                "revision": "2",
+                "binding_sha256": "b180ec5555059825f63cf4f1b2bc16aa4b60bd2472f6e20528a2f38f5983d158",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            }
+          ],
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c5c34",
+            "revision": "2",
+            "binding_sha256": "a150e0c8b0eba3276ef52ced056fa4201e25d2326d297db8fd9c20f05dcce804",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          },
+          "gaps": []
+        }
+      }
+    },
+    "expected": "reject",
+    "reason": "Only once and continuous grant modes exist."
+  },
+  {
+    "name": "memory mutation requires authority basis",
+    "base": "harness.memory.mutate",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/operation_basis"
+      }
+    ]
+  },
+  {
+    "name": "imported memory requires full source bindings",
+    "base": "harness.memory.mutate",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/mutation/record/source_bindings",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "view application requires manifest binding",
+    "base": "harness.memory.apply_view",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/manifest_sha256"
+      }
+    ]
+  },
+  {
+    "name": "view close requires generation",
+    "base": "harness.memory.close_view",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/view_generation"
+      }
+    ]
+  },
+  {
+    "name": "holder registration requires source proofs",
+    "base": "harness.governance.register_holder",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/source_proofs",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "closure receipt separates use and physical state",
+    "base": "harness.governance.apply_closure",
+    "kind": "response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/physical_state",
+        "value": "complete"
+      }
+    ]
+  },
+  {
+    "name": "content retention requires holder identity",
+    "base": "harness.content.retain",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/holder_id"
+      }
+    ]
+  },
+  {
+    "name": "memory extraction only follows completed tasks",
+    "base": "harness.memory.set_extraction_policy",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/policy/terminal_status",
+        "value": "cancelled"
+      }
+    ]
+  },
+  {
+    "name": "task directory requires independent control state",
+    "base": "harness.task.list",
+    "kind": "response",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/result/entries/0/control"
+      }
+    ]
+  },
+  {
+    "name": "standalone surface cannot claim a task authority without task",
+    "base": "harness.ui.list_surfaces",
+    "kind": "response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/entries/1/task_authority",
+        "value": "00000000-0000-4000-8000-0000000017d5"
+      }
+    ]
+  },
+  {
+    "name": "subscription request has finite expiry",
+    "base": "harness.task.subscribe",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/until"
+      }
+    ]
+  },
+  {
+    "name": "directory query cannot smuggle arbitrary callback",
+    "base": "harness.ui.subscribe",
+    "kind": "request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/callback_url",
+        "value": "https://example.invalid/callback"
+      }
+    ]
+  }
 ]

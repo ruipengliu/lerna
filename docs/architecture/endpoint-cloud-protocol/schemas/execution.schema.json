@@ -18,18 +18,23 @@
           "maximum": 2147483647
         },
         "arguments": {
-          "type": "object"
+          "type": "object",
+          "maxProperties": 64
         },
         "owner_epoch": {
           "type": "string",
           "pattern": "^[1-9][0-9]{0,19}$",
           "format": "harness-uint64"
+        },
+        "basis": {
+          "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/execution_basis"
         }
       },
       "required": [
         "capability",
         "capability_version",
-        "arguments"
+        "arguments",
+        "basis"
       ],
       "additionalProperties": false,
       "allOf": [
@@ -164,13 +169,34 @@
                   },
                   "minItems": 0,
                   "maxItems": 64
+                },
+                "producer_endpoint": {
+                  "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+                },
+                "fact_revision": {
+                  "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/seq"
+                },
+                "source_bindings": {
+                  "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
+                },
+                "usage": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/usage_item"
+                  },
+                  "minItems": 0,
+                  "maxItems": 32
                 }
               },
               "required": [
                 "operation_id",
                 "state",
                 "execution",
-                "effect"
+                "effect",
+                "producer_endpoint",
+                "fact_revision",
+                "source_bindings",
+                "usage"
               ],
               "additionalProperties": false
             }
@@ -334,13 +360,34 @@
           },
           "minItems": 0,
           "maxItems": 64
+        },
+        "producer_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "fact_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/seq"
+        },
+        "source_bindings": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
+        },
+        "usage": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/usage_item"
+          },
+          "minItems": 0,
+          "maxItems": 32
         }
       },
       "required": [
         "operation_id",
         "state",
         "execution",
-        "effect"
+        "effect",
+        "producer_endpoint",
+        "fact_revision",
+        "source_bindings",
+        "usage"
       ],
       "additionalProperties": false
     },
@@ -386,13 +433,34 @@
           },
           "minItems": 0,
           "maxItems": 64
+        },
+        "producer_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "fact_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/seq"
+        },
+        "source_bindings": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
+        },
+        "usage": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/usage_item"
+          },
+          "minItems": 0,
+          "maxItems": 32
         }
       },
       "required": [
         "operation_id",
         "state",
         "execution",
-        "effect"
+        "effect",
+        "producer_endpoint",
+        "fact_revision",
+        "source_bindings",
+        "usage"
       ],
       "additionalProperties": false
     },

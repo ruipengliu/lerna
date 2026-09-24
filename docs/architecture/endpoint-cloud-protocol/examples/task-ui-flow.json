@@ -1037,7 +1037,7 @@
     "authorization": {
       "grant_ref": "example-grant-for-this-user-and-endpoint"
     },
-    "expires_at": "2026-09-22T10:10:00.000Z",
+    "expires_at": "2026-09-24T10:10:00.000Z",
     "payload": {
       "task_id": "00000000-0000-4000-8000-000000000064",
       "goal": "在获准设备上获取截图，并请用户选择是否保存。"
@@ -1093,7 +1093,36 @@
       "task_id": "00000000-0000-4000-8000-000000000064",
       "revision": "1",
       "state": "running",
-      "effects_pending": false
+      "effects_pending": false,
+      "control": {
+        "revision": "0",
+        "self_paused": false,
+        "paused_by": [],
+        "external_unpaused": [],
+        "effects_pending": false
+      },
+      "budget": {
+        "revision": "1",
+        "amounts": [
+          {
+            "dimension": "calls",
+            "unit": "call",
+            "target_limit": "10",
+            "cleanup_limit": "2",
+            "mode": "hard"
+          }
+        ],
+        "balances": [
+          {
+            "dimension": "calls",
+            "unit": "call",
+            "target_settled": "0",
+            "target_reserved": "1",
+            "cleanup_settled": "0",
+            "cleanup_reserved": "0"
+          }
+        ]
+      }
     }
   },
   {
@@ -1153,7 +1182,7 @@
     "authorization": {
       "grant_ref": "example-current-grant"
     },
-    "expires_at": "2026-09-22T10:10:00.000Z",
+    "expires_at": "2026-09-24T10:10:00.000Z",
     "delivery": {
       "mode": "reliable",
       "stream_id": "00000000-0000-4000-8000-000000000c1c",
@@ -1216,7 +1245,7 @@
     "authorization": {
       "grant_ref": "example-grant-for-this-user-and-endpoint"
     },
-    "expires_at": "2026-09-22T10:10:00.000Z",
+    "expires_at": "2026-09-24T10:10:00.000Z",
     "payload": {
       "task_id": "00000000-0000-4000-8000-000000000064",
       "owner_epoch": "1",
@@ -1224,6 +1253,79 @@
       "capability_version": 1,
       "arguments": {
         "format": "png"
+      },
+      "basis": {
+        "declaration_digest": "00000000000000000000000000000000000000000000000000000000000ad5ac",
+        "instance_revision": "1",
+        "task_control_revision": "0",
+        "source_bindings": [
+          {
+            "source_authority": "00000000-0000-4000-8000-000000000003",
+            "resource_ref": "fixture://controlled-source/A",
+            "revision": "1",
+            "sha256": "00000000000000000000000000000000000000000000000000000000000aae61",
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "policy_ref": "00000000-0000-4000-8000-0000000aae62",
+            "policy_revision": "1",
+            "purposes": [
+              "read",
+              "generate",
+              "verify",
+              "disclose"
+            ],
+            "recipients": [
+              "00000000-0000-4000-8000-000000000001",
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000003",
+              "00000000-0000-4000-8000-000000000004"
+            ],
+            "processing_endpoints": [
+              "00000000-0000-4000-8000-000000000002",
+              "00000000-0000-4000-8000-000000000003",
+              "00000000-0000-4000-8000-000000000004"
+            ],
+            "retain_until": "2026-10-24T10:00:00.000Z",
+            "current_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+              "proof_id": "00000000-0000-4000-8000-0000000aae63",
+              "revision": "1",
+              "binding_sha256": "00000000000000000000000000000000000000000000000000000000000aae63",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            }
+          }
+        ],
+        "budget": {
+          "allocation_id": "00000000-0000-4000-8000-0000000ad5a2",
+          "revision": "1",
+          "owner_task_id": "00000000-0000-4000-8000-000000000064",
+          "amounts": [
+            {
+              "dimension": "calls",
+              "unit": "call",
+              "target_limit": "10",
+              "cleanup_limit": "2",
+              "mode": "hard"
+            }
+          ],
+          "mode": "hard",
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+            "proof_id": "00000000-0000-4000-8000-0000000ad5a3",
+            "revision": "1",
+            "binding_sha256": "00000000000000000000000000000000000000000000000000000000000ad5a3",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          }
+        },
+        "authority_proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+          "proof_id": "00000000-0000-4000-8000-0000000ad5ad",
+          "revision": "1",
+          "binding_sha256": "00000000000000000000000000000000000000000000000000000000000ad5ad",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        }
       }
     }
   },
@@ -1328,7 +1430,47 @@
           "size": "1024",
           "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         }
-      ]
+      ],
+      "producer_endpoint": "00000000-0000-4000-8000-000000000003",
+      "fact_revision": "1",
+      "source_bindings": [
+        {
+          "source_authority": "00000000-0000-4000-8000-000000000003",
+          "resource_ref": "fixture://controlled-source/A",
+          "revision": "1",
+          "sha256": "00000000000000000000000000000000000000000000000000000000000aae61",
+          "observed_at": "2026-09-24T10:00:00.000Z",
+          "policy_ref": "00000000-0000-4000-8000-0000000aae62",
+          "policy_revision": "1",
+          "purposes": [
+            "read",
+            "generate",
+            "verify",
+            "disclose"
+          ],
+          "recipients": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000003",
+            "00000000-0000-4000-8000-000000000004"
+          ],
+          "processing_endpoints": [
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000003",
+            "00000000-0000-4000-8000-000000000004"
+          ],
+          "retain_until": "2026-10-24T10:00:00.000Z",
+          "current_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+            "proof_id": "00000000-0000-4000-8000-0000000aae63",
+            "revision": "1",
+            "binding_sha256": "00000000000000000000000000000000000000000000000000000000000aae63",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          }
+        }
+      ],
+      "usage": []
     }
   },
   {
@@ -1355,6 +1497,7 @@
       "state": "finished",
       "execution": "executed",
       "effect": "confirmed",
+      "summary": "截图已生成，完整性可核对。",
       "artifacts": [
         {
           "content_id": "00000000-0000-4000-8000-0000000001f4",
@@ -1363,7 +1506,47 @@
           "size": "1024",
           "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         }
-      ]
+      ],
+      "producer_endpoint": "00000000-0000-4000-8000-000000000003",
+      "fact_revision": "1",
+      "source_bindings": [
+        {
+          "source_authority": "00000000-0000-4000-8000-000000000003",
+          "resource_ref": "fixture://controlled-source/A",
+          "revision": "1",
+          "sha256": "00000000000000000000000000000000000000000000000000000000000aae61",
+          "observed_at": "2026-09-24T10:00:00.000Z",
+          "policy_ref": "00000000-0000-4000-8000-0000000aae62",
+          "policy_revision": "1",
+          "purposes": [
+            "read",
+            "generate",
+            "verify",
+            "disclose"
+          ],
+          "recipients": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000003",
+            "00000000-0000-4000-8000-000000000004"
+          ],
+          "processing_endpoints": [
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000003",
+            "00000000-0000-4000-8000-000000000004"
+          ],
+          "retain_until": "2026-10-24T10:00:00.000Z",
+          "current_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+            "proof_id": "00000000-0000-4000-8000-0000000aae63",
+            "revision": "1",
+            "binding_sha256": "00000000000000000000000000000000000000000000000000000000000aae63",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          }
+        }
+      ],
+      "usage": []
     }
   },
   {
@@ -1391,7 +1574,7 @@
         "input_request_id": "00000000-0000-4000-8000-000000000066",
         "task_id": "00000000-0000-4000-8000-000000000064",
         "purpose": "选择是否将截图保存为本次任务成果；此回应不授予额外保存权限。",
-        "expires_at": "2026-09-22T10:10:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z",
         "fields": [
           {
             "id": "save",
@@ -1403,6 +1586,9 @@
               "不保存"
             ]
           }
+        ],
+        "required_preview_ids": [
+          "00000000-0000-4000-8000-000000004650"
         ]
       }
     }
@@ -1436,7 +1622,7 @@
           "input_request_id": "00000000-0000-4000-8000-000000000066",
           "task_id": "00000000-0000-4000-8000-000000000064",
           "purpose": "选择是否将截图保存为本次任务成果；此回应不授予额外保存权限。",
-          "expires_at": "2026-09-22T10:10:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z",
           "fields": [
             {
               "id": "save",
@@ -1448,10 +1634,168 @@
                 "不保存"
               ]
             }
+          ],
+          "required_preview_ids": [
+            "00000000-0000-4000-8000-000000004650"
           ]
         }
-      ]
+      ],
+      "control": {
+        "revision": "0",
+        "self_paused": false,
+        "paused_by": [],
+        "external_unpaused": [],
+        "effects_pending": false
+      },
+      "budget": {
+        "revision": "1",
+        "amounts": [
+          {
+            "dimension": "calls",
+            "unit": "call",
+            "target_limit": "10",
+            "cleanup_limit": "2",
+            "mode": "hard"
+          }
+        ],
+        "balances": [
+          {
+            "dimension": "calls",
+            "unit": "call",
+            "target_settled": "0",
+            "target_reserved": "1",
+            "cleanup_settled": "0",
+            "cleanup_reserved": "0"
+          }
+        ]
+      }
     }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000004651",
+    "kind": "request",
+    "type": "harness.task.query_projection",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000001",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000046b5",
+      "seq": "1",
+      "retain_until": "2026-09-23T10:00:00.000Z",
+      "scope": {
+        "kind": "task",
+        "id": "00000000-0000-4000-8000-000000000064"
+      }
+    },
+    "authorization": {
+      "grant_ref": "example-grant-for-this-user-and-endpoint"
+    },
+    "expires_at": "2026-09-24T10:10:00.000Z",
+    "payload": {
+      "task_id": "00000000-0000-4000-8000-000000000064",
+      "projection_revision": "1"
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-000000004652",
+    "kind": "response",
+    "type": "harness.task.query_projection",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000001",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000046b6",
+      "seq": "1",
+      "retain_until": "2026-09-23T10:00:00.000Z",
+      "scope": {
+        "kind": "task",
+        "id": "00000000-0000-4000-8000-000000000064"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "task_id": "00000000-0000-4000-8000-000000000064",
+        "projection_revision": "1",
+        "task_revision": "2",
+        "previews": [
+          {
+            "preview_id": "00000000-0000-4000-8000-000000004650",
+            "task_id": "00000000-0000-4000-8000-000000000064",
+            "projection_revision": "1",
+            "content": {
+              "content_id": "00000000-0000-4000-8000-0000000001f4",
+              "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+              "media_type": "image/png",
+              "size": "1024",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "purpose": "answer-input",
+            "source_bindings": [
+              {
+                "source_authority": "00000000-0000-4000-8000-000000000003",
+                "resource_ref": "fixture://controlled-source/A",
+                "revision": "1",
+                "sha256": "00000000000000000000000000000000000000000000000000000000000aae61",
+                "observed_at": "2026-09-24T10:00:00.000Z",
+                "policy_ref": "00000000-0000-4000-8000-0000000aae62",
+                "policy_revision": "1",
+                "purposes": [
+                  "read",
+                  "generate",
+                  "verify",
+                  "disclose"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-000000000001",
+                  "00000000-0000-4000-8000-000000000002",
+                  "00000000-0000-4000-8000-000000000003",
+                  "00000000-0000-4000-8000-000000000004"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-000000000002",
+                  "00000000-0000-4000-8000-000000000003",
+                  "00000000-0000-4000-8000-000000000004"
+                ],
+                "retain_until": "2026-10-24T10:00:00.000Z",
+                "current_proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+                  "proof_id": "00000000-0000-4000-8000-0000000aae63",
+                  "revision": "1",
+                  "binding_sha256": "00000000000000000000000000000000000000000000000000000000000aae63",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              }
+            ],
+            "retain_until": "2026-09-24T10:10:00.000Z",
+            "retention_proof": {
+              "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+              "proof_id": "00000000-0000-4000-8000-0000000ad5ad",
+              "revision": "1",
+              "binding_sha256": "00000000000000000000000000000000000000000000000000000000000ad5ad",
+              "issued_at": "2026-09-24T10:00:00.000Z",
+              "expires_at": "2026-09-24T11:00:00.000Z"
+            },
+            "holder_id": "00000000-0000-4000-8000-000000004653"
+          }
+        ],
+        "input_bindings": [
+          {
+            "input_request_id": "00000000-0000-4000-8000-000000000066",
+            "required_preview_ids": [
+              "00000000-0000-4000-8000-000000004650"
+            ]
+          }
+        ],
+        "gaps": []
+      }
+    },
+    "reply_to": "00000000-0000-4000-8000-000000004651"
   },
   {
     "protocol_version": 1,
@@ -1477,7 +1821,7 @@
         "input_request_id": "00000000-0000-4000-8000-000000000066",
         "task_id": "00000000-0000-4000-8000-000000000064",
         "purpose": "选择是否将截图保存为本次任务成果；此回应不授予额外保存权限。",
-        "expires_at": "2026-09-22T10:10:00.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z",
         "fields": [
           {
             "id": "save",
@@ -1489,6 +1833,9 @@
               "不保存"
             ]
           }
+        ],
+        "required_preview_ids": [
+          "00000000-0000-4000-8000-000000004650"
         ]
       }
     }
@@ -1571,7 +1918,7 @@
           "input_request_id": "00000000-0000-4000-8000-000000000066",
           "task_id": "00000000-0000-4000-8000-000000000064",
           "purpose": "选择是否将截图保存为本次任务成果；此回应不授予额外保存权限。",
-          "expires_at": "2026-09-22T10:10:00.000Z",
+          "expires_at": "2026-09-24T10:10:00.000Z",
           "fields": [
             {
               "id": "save",
@@ -1583,6 +1930,9 @@
                 "不保存"
               ]
             }
+          ],
+          "required_preview_ids": [
+            "00000000-0000-4000-8000-000000004650"
           ]
         }
       ]
@@ -1610,13 +1960,37 @@
     "authorization": {
       "grant_ref": "example-grant-for-this-user-and-endpoint"
     },
-    "expires_at": "2026-09-22T10:10:00.000Z",
+    "expires_at": "2026-09-24T10:10:00.000Z",
     "payload": {
       "surface_id": "00000000-0000-4000-8000-000000000065",
       "seen_revision": "3",
       "input_request_id": "00000000-0000-4000-8000-000000000066",
       "values": {
         "save": "不保存"
+      },
+      "preview_receipt": {
+        "host_endpoint": "00000000-0000-4000-8000-000000000001",
+        "surface_id": "00000000-0000-4000-8000-000000000065",
+        "ui_operation_id": "00000000-0000-4000-8000-0000000000ca",
+        "task_id": "00000000-0000-4000-8000-000000000064",
+        "input_request_id": "00000000-0000-4000-8000-000000000066",
+        "projection_revision": "1",
+        "previews": [
+          {
+            "preview_id": "00000000-0000-4000-8000-000000004650",
+            "content_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "acquired_at": "2026-09-24T10:00:05.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z",
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+          "proof_id": "00000000-0000-4000-8000-000000004651",
+          "revision": "1",
+          "binding_sha256": "00000000000000000000000000000000000000000000000000000000000ad5ad",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        }
       }
     }
   },
@@ -1670,12 +2044,36 @@
     "authorization": {
       "grant_ref": "example-grant-for-this-user-and-endpoint"
     },
-    "expires_at": "2026-09-22T10:10:00.000Z",
+    "expires_at": "2026-09-24T10:10:00.000Z",
     "payload": {
       "task_id": "00000000-0000-4000-8000-000000000064",
       "input_request_id": "00000000-0000-4000-8000-000000000066",
       "values": {
         "save": "不保存"
+      },
+      "preview_receipt": {
+        "host_endpoint": "00000000-0000-4000-8000-000000000001",
+        "surface_id": "00000000-0000-4000-8000-000000000065",
+        "ui_operation_id": "00000000-0000-4000-8000-0000000000ca",
+        "task_id": "00000000-0000-4000-8000-000000000064",
+        "input_request_id": "00000000-0000-4000-8000-000000000066",
+        "projection_revision": "1",
+        "previews": [
+          {
+            "preview_id": "00000000-0000-4000-8000-000000004650",
+            "content_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "acquired_at": "2026-09-24T10:00:05.000Z",
+        "expires_at": "2026-09-24T10:10:00.000Z",
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000001",
+          "proof_id": "00000000-0000-4000-8000-000000004651",
+          "revision": "1",
+          "binding_sha256": "00000000000000000000000000000000000000000000000000000000000ad5ad",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        }
       }
     }
   },
@@ -1757,7 +2155,36 @@
       "task_id": "00000000-0000-4000-8000-000000000064",
       "revision": "3",
       "state": "running",
-      "effects_pending": false
+      "effects_pending": false,
+      "control": {
+        "revision": "0",
+        "self_paused": false,
+        "paused_by": [],
+        "external_unpaused": [],
+        "effects_pending": false
+      },
+      "budget": {
+        "revision": "1",
+        "amounts": [
+          {
+            "dimension": "calls",
+            "unit": "call",
+            "target_limit": "10",
+            "cleanup_limit": "2",
+            "mode": "hard"
+          }
+        ],
+        "balances": [
+          {
+            "dimension": "calls",
+            "unit": "call",
+            "target_settled": "0",
+            "target_reserved": "1",
+            "cleanup_settled": "0",
+            "cleanup_reserved": "0"
+          }
+        ]
+      }
     }
   },
   {

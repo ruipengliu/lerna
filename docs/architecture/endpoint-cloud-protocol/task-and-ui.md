@@ -45,9 +45,9 @@ flowchart LR
 
 例如，进度刷新把内容修订从 7 推到 8，不改变本端呈现修订 2 或有效输入请求。用户随后关闭，只推进本端呈现修订；已接纳输入继续转交，业务消费后 UI 更新内容，界面仍保持关闭。`seen_revision` 表示用户看到的内容，`expected_revision` 用于条件更新本端呈现状态，两者不能互换。
 
-## 2. 条件场景：先查看截图再回应
+## 2. 先查看截图再回应
 
-首期无中间预览的同宿主链路见[整体设计推演](../design-walkthrough.md)。下面保留[截图示例](examples/task-ui-flow.json)说明另一种条件场景：用户先查看设备截图，再选择不保存为持久任务成果。运行前须落实 [UI-P3](../application-and-interaction/validation.md#proposals)，让核心提供可恢复的中间投影和输入与必需预览的结构化绑定；示例中的跨端执行还须满足[授权与执行领域依据](README.md#scope)。默认 ReadTask／ReadResult 不能提供这份执行中截图，条件不齐时依赖预览的输入保持关闭；UI 不能直接读取执行存储补齐任务事实。
+同宿主基础链路见[整体设计推演](../design-walkthrough.md)。[截图示例](examples/task-ui-flow.json)展示用户先看设备截图，再选择不保存为持久任务成果。核心通过独立中间投影合同提供固定版本、来源及输入的必需预览绑定，跨端执行还须满足[身份与执行依据](domain-profiles.md)。ReadTask／ReadResult 不替代投影读取；提供方或内容条件不齐时依赖预览的输入保持关闭，UI 不直接读取执行存储拼接任务事实。
 
 图只描述上述前提齐备后的交接。请求方兼渲染端，任务核心与 UI 管理器同端；临时截图、内容读取及呈现已获准，界面由用户[显式打开](#presentation)。图中省略握手、交付回执和开闭过程；协议消息名省略 `harness.` 前缀。静态消息能承载截图引用和输入字段，不等于中间呈现提供方已经实现。
 
@@ -122,7 +122,7 @@ sequenceDiagram
 
 `ui.action` 只提交 `surface_id`、`seen_revision` 和 `action_id`。UI 从已保存的动作记录解析意图，再按当前权限生成请求；客户端不能指定任意目标接口。表单及 `submit_input` 动作统一生成 `ui.input`，不能再通过 action 创建第二次输入操作。
 
-输入生效只说明该次回应已被业务采用。授权仍须由授权服务裁决；通用 task／UI 输入尚无授权确认的端到端证明，不能把“同意”文本或 `applied` 当作许可签发。现行受信确认入口及跨端待决边界见[身份接口](../identity-and-authorization/contracts.md#interfaces)。
+输入生效只说明该次回应已被业务采用。授权确认由身份合同绑定原确认、完整范围、受信用户意图及原签发命令；授权权威消费确认并保存许可后才能报告签发。普通“同意”文本或 `applied` 不构成批准依据，完整交接见[身份接口](../identity-and-authorization/contracts.md#interfaces)。
 
 <a id="view"></a>
 ## 4. 用完整快照恢复内容与有效交互
@@ -196,6 +196,10 @@ sequenceDiagram
 
 某次取消的固定答复是另一个操作的结果；现行查询尚不能在超出消息窗口后完整重建它，不能用正式任务结果或当前状态代替，见[取消查询缺口](recovery-and-control.md#cancel)。
 
+依赖预览的输入在共同 input_request 中列出 `required_preview_ids`。受信渲染宿主验证实际取得的内容后，为本次 `ui.input` 构造 `preview_receipt`；UI 管理器核验宿主、用户、surface、原输入及 UI 操作绑定，再随子 `task.input` 交任务核心复核。渲染器不得构造证明，内容引用或云端代取成功也不证明本端已取得。完整投影及凭据规则见[预览合同](../application-and-interaction/contracts-and-storage.md#preview)。
+
+任务暂停／恢复、预算调整和补证的完整控制结构见[内核接口](../task-kernel/storage-and-interfaces.md)及 [task-control Schema](schemas/task-control.schema.json)。`task.query` 与 `task.status` 同时携带控制投影和预算修订／余额；暂停与生命周期状态分别表达。目录订阅、可恢复中间投影由[交互合同](../application-and-interaction/contracts-and-storage.md)及 [interaction Schema](schemas/interaction.schema.json)定义，不能从 `task.query` 的成果摘要重建必需预览。其他领域类型按[领域分工](domain-profiles.md)定位；完整注册以 [standard-registry.json](schemas/standard-registry.json) 为准。
+
 <a id="catalog"></a>
 ## 7. 消息与视图查阅
 
@@ -238,8 +242,8 @@ sequenceDiagram
 
 ## 8. 示例与验证入口
 
-[task-ui-flow.json](examples/task-ui-flow.json) 展开握手、任务提交、截图、输入和最终呈现，是第 2 节条件场景的静态消息串。只有 UI-P3 和所需跨端领域依据齐备后，才将它用作运行链路；首个同宿主基线沿[整体设计推演](../design-walkthrough.md)，目前没有对应的新 JSON 消息串。端点尾号 1 为渲染端，2 为云端任务核心与 UI 管理器，3 为执行端；2 → 2 的 `task.input` 是本地可靠交接。截图能力为 `com.example.device.capture@1`，参数见[示例 Schema](schemas/example-extension.schema.json)的 `device_capture_arguments`。累计回执集中在示例末尾便于阅读，实现须按回执策略及时确认。
+[task-ui-flow.json](examples/task-ui-flow.json) 展开握手、任务提交、截图、输入和最终呈现，是第 2 节的静态消息串。核心固定投影、必需预览及实际内容可取性的实现须经运行验证；同宿主与跨端组合沿[整体设计推演](../design-walkthrough.md)，新增领域示例见[领域合同](domain-profiles.md)。端点尾号 1 为渲染端，2 为云端任务核心与 UI 管理器，3 为执行端；2 → 2 的 `task.input` 是本地可靠交接。截图能力为 `com.example.device.capture@1`，参数见[示例 Schema](schemas/example-extension.schema.json)的 `device_capture_arguments`。累计回执集中在示例末尾便于阅读，实现须按回执策略及时确认。
 
 [result-and-presentation.json](examples/result-and-presentation.json) 分别展示多端开闭与结果超窗查询：关闭的迟到答复不覆盖后来重开；原正式结果修订为 9，当前状态修订为 10，两者分别查询。所有可靠消息以 `delivery.scope` 绑定业务作用域，时间和持久记录是静态前提。
 
-运行验收重点覆盖本页的责任交接：UI 接纳前后及固定子操作前后崩溃，业务已消费但答复丢失，多端争答及过期输入，关闭后后台更新与迟到开闭答复，原结果超窗和引用内容不可取。须分别检查持久责任、原操作结果、内容及呈现修订，完整刺激与预期见[验收矩阵](validation/README.md#runtime)。Schema 和消息串只证明静态结构与关联，不能证明并发、持久恢复及实际效果；完整取消结果的超窗查询仍待补齐。
+运行验收重点覆盖本页的责任交接：UI 接纳前后及固定子操作前后崩溃，业务已消费但答复丢失，多端争答及过期输入，关闭后后台更新与迟到开闭答复，原结果超窗和引用内容不可取。须分别检查持久责任、原操作结果、内容及呈现修订，完整刺激与预期见[验收矩阵](validation/README.md#runtime)。Schema 和消息串只证明静态结构与关联，不能证明并发、持久恢复及实际效果；完整取消答复分别由 task.query_cancel 与 execution.query_cancel 查询领域原记录，不依赖旧消息仍在交付窗口。

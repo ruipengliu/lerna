@@ -1228,6 +1228,2518 @@
           "required": [
             "operation_id"
           ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.pause"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/pause_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.pause"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/pause_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.resume"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/resume_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.resume"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/resume_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.adjust_budget"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/adjust_budget_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.adjust_budget"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/adjust_budget_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.submit_evidence"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/submit_evidence_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.submit_evidence"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/submit_evidence_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.evidence_result"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/evidence_result_event"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query_evidence"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/query_evidence_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query_evidence"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/query_evidence_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query_cancel"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/query_cancel_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query_cancel"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/query_cancel_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.brain.decide"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/brain.schema.json#/$defs/decide_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.brain.decide"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/brain.schema.json#/$defs/decide_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.brain.query"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/brain.schema.json#/$defs/query_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.brain.query"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/brain.schema.json#/$defs/query_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.brain.cancel"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/brain.schema.json#/$defs/cancel_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.brain.cancel"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/brain.schema.json#/$defs/cancel_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.brain.observation"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/brain.schema.json#/$defs/observation_event"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.catalog.resolve"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/catalog_resolve_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.catalog.resolve"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/catalog_resolve_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.query_cancel"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/query_cancel_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.query_cancel"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/query_cancel_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.usage"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/usage_event"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.manage"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/manage_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.manage"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/manage_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.query_management"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/query_management_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.query_management"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/query_management_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.reopen_device"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/reopen_device_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.reopen_device"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/reopen_device_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.query_device_command"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/query_device_command_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.execution.query_device_command"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/query_device_command_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.resolve"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_resolve_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.resolve"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_resolve_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.evaluate"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_evaluate_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.evaluate"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_evaluate_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.begin_use"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_begin_use_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.begin_use"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_begin_use_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.query_use"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_query_use_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.query_use"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_query_use_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.create_confirmation"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_create_confirmation_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.create_confirmation"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_create_confirmation_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.confirm"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_confirm_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.confirm"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_confirm_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.query_confirmation"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_query_confirmation_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.query_confirmation"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_query_confirmation_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.revoke"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_revoke_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.revoke"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_revoke_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.query_command"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_query_command_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.query_command"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_query_command_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.query_state"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_query_state_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.query_state"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_query_state_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.open_recovery"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_open_recovery_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.open_recovery"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_open_recovery_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.read_recovery"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_read_recovery_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.read_recovery"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_read_recovery_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.read_changes"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_read_changes_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.read_changes"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_read_changes_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.apply_recovery"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_apply_recovery_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.apply_recovery"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_apply_recovery_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.issue_offline"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_issue_offline_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.issue_offline"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_issue_offline_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.source.prove"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/source_prove_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.source.prove"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/source_prove_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.governance.register_holder"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_register_holder_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.governance.register_holder"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_register_holder_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.governance.close_source"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_close_source_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.governance.close_source"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_close_source_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.governance.apply_closure"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_apply_closure_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.governance.apply_closure"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_apply_closure_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.governance.report_cleanup"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_report_cleanup_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.governance.report_cleanup"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_report_cleanup_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.governance.query_cleanup"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_query_cleanup_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.governance.query_cleanup"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_query_cleanup_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.content.retain"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/content_retain_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.content.retain"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/content_retain_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.content.query_retention"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/content_query_retention_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.content.query_retention"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/content_query_retention_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.content.close"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/content_close_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.content.close"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/content_close_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.content.query_cleanup"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/content_query_cleanup_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.content.query_cleanup"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/content_query_cleanup_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.search"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_search_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.search"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_search_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.read"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_read_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.read"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_read_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.mutate"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_mutate_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.mutate"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_mutate_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.query_command"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_query_command_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.query_command"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_query_command_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.close_command"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_close_command_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.close_command"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_close_command_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.open_view"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_open_view_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.open_view"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_open_view_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.read_view"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_read_view_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.read_view"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_read_view_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.apply_view"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_apply_view_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.apply_view"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_apply_view_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.close_view"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_close_view_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.close_view"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_close_view_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.query_view_receipt"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_query_view_receipt_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.query_view_receipt"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_query_view_receipt_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.set_extraction_policy"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_set_extraction_policy_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.set_extraction_policy"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_set_extraction_policy_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.list"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/task_list_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.list"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/task_list_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.subscribe"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/task_subscribe_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.subscribe"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/task_subscribe_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query_projection"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/task_query_projection_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query_projection"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/task_query_projection_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.list_surfaces"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/ui_list_surfaces_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.list_surfaces"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/ui_list_surfaces_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.subscribe"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/ui_subscribe_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.subscribe"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/ui_subscribe_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.resolve"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/resolve_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.resolve"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/resolve_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.query"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/query_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.query"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/query_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.query_control"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/query_control_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.query_control"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/query_control_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.input_query"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/input_query_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.input_query"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/input_query_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.delegate"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/delegate_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.delegate"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/delegate_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.admit_child"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/admit_child_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.admit_child"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/admit_child_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.input"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/input_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.input"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/input_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.control"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/control_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.control"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/control_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.fact"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/fact_event"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.coordination.input_requested"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/coordination.schema.json#/$defs/input_requested_event"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.release.query_approval"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/query_approval_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.release.query_approval"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/query_approval_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.release.query_command"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/query_command_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.release.query_command"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/query_command_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.release.apply"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/apply_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.release.apply"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/apply_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.release.disable"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/disable_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.release.disable"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/disable_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.release.approval"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/approval_event"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.release.command_fact"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/command_fact_event"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.delegate"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_delegate_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.delegate"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_delegate_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query_subscription"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/task_query_subscription_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.query_subscription"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/task_query_subscription_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.unsubscribe"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/task_unsubscribe_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.unsubscribe"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/task_unsubscribe_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.task.directory_changed"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/task_directory_changed_event"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.query_subscription"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/ui_query_subscription_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.query_subscription"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/ui_query_subscription_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.unsubscribe"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/ui_unsubscribe_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.unsubscribe"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/ui_unsubscribe_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.ui.directory_changed"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "event"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/interaction.schema.json#/$defs/ui_directory_changed_event"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.governance.close_holder"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_close_holder_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.governance.close_holder"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_close_holder_response"
+            }
+          }
         }
       ]
     }

@@ -79,7 +79,7 @@ sequenceDiagram
 | 临时 | mode=ephemeral | 无可靠流、序号或保留期限，仅用于注册表允许的事件 |
 | 会话控制 | 无 delivery | hello、ack、resume、ping 等按会话状态处理；业务取消使用业务消息 |
 
-`delivery.scope` 在可靠消息中必填，结构为 `{kind: task|operation|surface, id: UUIDv4}`；临时消息和会话控制没有该字段。字段须与受信业务关联及持久流绑定一致，响应继承原请求作用域；完整映射及拒绝条件见[作用域与流注册](transport.md#stream-registration)。
+`delivery.scope` 在可靠消息中必填，结构为 `{kind, id: UUIDv4}`，kind 为 `task／operation／surface／authorization／catalog／memory／collection／content`；临时消息和会话控制没有该字段。字段须与受信业务关联及持久流绑定一致，响应继承原请求作用域；完整映射及拒绝条件见[作用域与流注册](transport.md#stream-registration)。
 
 两类期限分别限制行动与消息保管，重投均不得延长：
 
@@ -146,7 +146,7 @@ sequenceDiagram
 
 ## 6. 校验入口与 Schema 归属
 
-结构校验以公共信封为入口，按已安装的 `type／type_version／kind` 选择载荷 Schema，再检查附加项与视图。各资产只定义自己负责的结构；领域消息的行为和查询边界由[任务与 UI 契约](task-and-ui.md#catalog)定义，扩展的安装与兼容规则见[扩展声明](extensions.md#manifest)。
+结构校验以公共信封为入口，按已安装的 `type／type_version／kind` 选择载荷 Schema，再检查附加项与视图。各资产只定义自己负责的结构；领域消息的行为和查询边界由[领域分工](domain-profiles.md)及[任务与 UI 契约](task-and-ui.md#catalog)定位，扩展的安装与兼容规则见[扩展声明](extensions.md#manifest)。
 
 | 资产 | 用途 |
 | --- | --- |
@@ -154,6 +154,10 @@ sequenceDiagram
 | [envelope.schema.json](schemas/envelope.schema.json) | 信封、消息类别和条件必填 |
 | [standard-message.schema.json](schemas/standard-message.schema.json) | 标准类型的封闭入口，按 type／version／kind 选择载荷 |
 | [core](schemas/core.schema.json)、[task](schemas/task.schema.json)、[execution](schemas/execution.schema.json)、[ui](schemas/ui.schema.json) | 会话及各领域载荷，当前草案统一类型版本 1 |
-| [standard-registry.json](schemas/standard-registry.json) | 类型、Schema 引用、交付类别、权限声明与恢复约定 |
+| [domain-common.schema.json](schemas/domain-common.schema.json) | 精确来源、证明引用、共享金额／用量、恢复绑定与缺口 |
+| [task-control](schemas/task-control.schema.json)、[brain](schemas/brain.schema.json)、[execution-control](schemas/execution-control.schema.json) | 控制与预算、独立大脑、准确目录及执行管理 |
+| [identity](schemas/identity.schema.json)、[memory](schemas/memory.schema.json)、[governance](schemas/governance.schema.json) | 授权使用／恢复、记忆视图、来源与受管副本 |
+| [interaction](schemas/interaction.schema.json)、[coordination](schemas/coordination.schema.json)、[release](schemas/release.schema.json) | 目录／投影、Agent 委派、批准与跨节点发布 |
+| [standard-registry.json](schemas/standard-registry.json) | 类型、Schema 引用、交付类别、作用域字段、权限声明与恢复约定 |
 
 接收与业务交接阶段继续检查身份、流、期限、权限及业务前提，再按[持久交接规则](message-contract.md#handoff)接纳或拒绝。校验命令、静态覆盖及运行验证要求见[契约校验](validation/README.md)。

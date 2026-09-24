@@ -72,6 +72,21 @@ REGISTRY = Registry().with_resources(
 )
 
 
+def check_references(value, resolver):
+    if isinstance(value, dict):
+        if "$ref" in value:
+            resolver.lookup(value["$ref"])
+        for child in value.values():
+            check_references(child, resolver)
+    elif isinstance(value, list):
+        for child in value:
+            check_references(child, resolver)
+
+
+for item in schemas:
+    check_references(item, REGISTRY.resolver(item["$id"]))
+
+
 def validate_ref(reference, value):
     Draft202012Validator(
         {"$ref": reference}, registry=REGISTRY, format_checker=FORMATS
@@ -122,16 +137,35 @@ def inspect_numbers(value):
             require(abs(value) <= 9007199254740991, "unsafe JSON integer; use decimal string")
 
 
+def check_budget_objects(value):
+    if isinstance(value, list):
+        for child in value:
+            check_budget_objects(child)
+    if not isinstance(value, dict):
+        return
+    amounts = value.get("amounts")
+    if isinstance(amounts, list) and amounts and all(isinstance(item, dict) and "target_limit" in item for item in amounts):
+        dimensions = [item["dimension"] for item in amounts]
+        require(len(set(dimensions)) == len(dimensions), "duplicate budget dimension")
+        if "balances" in value:
+            unit_key = lambda item: tuple(item.get(k) for k in ("dimension", "unit", "currency", "scale"))
+            expected = {unit_key(item) for item in amounts}
+            balances = [unit_key(item) for item in value["balances"]]
+            require(len(balances) == len(expected) and set(balances) == expected, "budget balances do not match units and dimensions")
+    for child in value.values():
+        check_budget_objects(child)
+
+
 def validate_message(message):
     inspect_numbers(message)
     validate_ref(BASE + "envelope.schema.json", message)
     descriptor = TYPES.get((message["type"], message["type_version"]))
     require(descriptor is not None, "unsupported type/version")
     require(message["kind"] in descriptor["kinds"], "unsupported kind")
+    # Validate the selected payload first so failures identify its local contract.
+    validate_ref(descriptor["payload_schemas"][message["kind"]], message["payload"])
     if message["type"].startswith("harness."):
         validate_ref(BASE + "standard-message.schema.json", message)
-    else:
-        validate_ref(descriptor["payload_schemas"][message["kind"]], message["payload"])
     if descriptor["operation_id"] == "required":
         require("operation_id" in message, "operation_id required")
     if descriptor["operation_id"] == "forbidden":
@@ -151,6 +185,7 @@ def validate_message(message):
         validate_ref(installed["schema"], extension["data"])
 
     payload = message["payload"]
+    check_budget_objects(payload)
     limit_sets = []
     if message["type"] == "harness.core.hello":
         limit_sets.append(payload["receive_limits"])
@@ -193,6 +228,60 @@ def validate_message(message):
                             require(action["input_request_id"] in requests, "action lacks recoverable input description")
     if message["type"] in {"harness.execution.fact", "harness.execution.result"}:
         require(payload["operation_id"] == message["operation_id"], "execution operation mismatch")
+    if message["type"] == "harness.task.status":
+        require(payload["control"]["effects_pending"] == payload["effects_pending"], "control effects disagree with task projection")
+    if message["type"] == "harness.task.query" and message["kind"] == "response" and payload["status"] == "completed":
+        state = payload["result"]
+        require(state["control"]["effects_pending"] == state["effects_pending"], "query control effects disagree with task projection")
+    typ = message["type"]
+    if message["kind"] != "response":
+        own_id = {
+            "harness.brain.observation": "call_operation_id",
+            "harness.task.evidence_result": "evidence_operation_id",
+            "harness.execution.usage": "target_operation_id",
+            "harness.coordination.delegate": "delegation_operation_id",
+            "harness.coordination.admit_child": "child_submit_operation_id",
+            "harness.coordination.control": "control_operation_id",
+            "harness.coordination.input": "input_command_id",
+            "harness.coordination.fact": "delegation_operation_id",
+            "harness.coordination.input_requested": "delegation_operation_id",
+            "harness.release.apply": "command_id",
+            "harness.release.disable": "command_id",
+            "harness.release.approval": "approval_id",
+            "harness.release.command_fact": "command_id",
+        }.get(typ)
+        if own_id:
+            require(payload[own_id] == message["operation_id"], "domain operation identity mismatch")
+    if message["kind"] == "event" and "producer_endpoint" in payload:
+        require(payload["producer_endpoint"] == message["source"], "fact producer differs from authenticated source")
+    if typ in {"harness.release.apply", "harness.release.disable"} and message["kind"] == "request":
+        require(payload["target_endpoint"] == message["target"], "release command targets another endpoint")
+    if typ == "harness.release.command_fact":
+        require(payload["target_endpoint"] == message["source"], "release receipt names another producer")
+    if typ == "harness.release.approval":
+        require(payload["authority_endpoint"] == message["source"], "approval fact names another authority")
+    if typ == "harness.execution.usage":
+        for item in payload["items"]:
+            require(item["allocation_id"] == payload["allocation_id"], "usage allocation mismatch")
+            require(item["value"]["source_endpoint"] == payload["producer_endpoint"], "usage producer mismatch")
+    if typ in {"harness.ui.input", "harness.task.input"} and message["kind"] == "request" and "preview_receipt" in payload:
+        receipt = payload["preview_receipt"]
+        require(receipt["input_request_id"] == payload["input_request_id"], "preview receipt input mismatch")
+        require(receipt["acquired_at"] < receipt["expires_at"], "preview receipt expires before acquisition")
+        require(receipt["proof"]["authority_endpoint"] == receipt["host_endpoint"], "preview receipt authority differs from trusted host")
+        preview_ids = [item["preview_id"] for item in receipt["previews"]]
+        require(len(set(preview_ids)) == len(preview_ids), "duplicate acquired preview")
+        if typ == "harness.ui.input":
+            require(receipt["ui_operation_id"] == message["operation_id"], "preview receipt binds another UI operation")
+            require(receipt["surface_id"] == payload["surface_id"], "preview receipt surface mismatch")
+            require(receipt["host_endpoint"] == message["source"], "preview receipt belongs to another rendering host")
+        else:
+            require(receipt["task_id"] == payload["task_id"], "preview receipt task mismatch")
+    if typ == "harness.task.query_projection" and message["kind"] == "response" and payload["status"] == "completed":
+        result = payload["result"]
+        require(len({p["preview_id"] for p in result["previews"]}) == len(result["previews"]), "duplicate projection preview")
+        for preview in result["previews"]:
+            require(preview["task_id"] == result["task_id"] and preview["projection_revision"] == result["projection_revision"], "preview belongs to another projection")
     # effects_pending also covers nonessential work. Whether pending effects can
     # alter the accepted outcome requires task evidence, absent from this envelope.
 
@@ -224,21 +313,17 @@ def message_scope(message, seen):
     """Resolve the fixed examples' scope from registered domain associations."""
     if message["kind"] == "response":
         return message_scope(seen[message["reply_to"]], seen)
-    typ, payload = message["type"], message["payload"]
-    if typ in {"harness.task.query_operation", "harness.ui.query_operation"}:
-        return ("operation", payload["target_operation_id"])
-    if typ.startswith("harness.task."):
-        return ("task", payload["task_id"])
-    if typ.startswith("harness.execution."):
-        return ("operation", payload.get("target_operation_id", message.get("operation_id")))
-    if typ.startswith("harness.ui."):
-        return ("surface", payload["surface_id"])
-    raise ValueError(f"sample has no domain scope resolver: {typ}")
+    descriptor = TYPES[(message["type"], message["type_version"])]
+    binding = descriptor["scope_binding"]
+    value = message
+    for segment in binding["field"].split("."):
+        value = value[segment]
+    return (binding["kind"], value)
 
 
 def validate_flow(messages):
     seen, streams, inputs, consumed, surfaces, ui_submissions = {}, {}, {}, {}, {}, {}
-    presentations, presentation_operations = {}, {}
+    presentations, presentation_operations, projections = {}, {}, {}
     for message in messages:
         validate_message(message)
         identity = message["message_id"]
@@ -257,6 +342,11 @@ def validate_flow(messages):
                 require(payload["result"]["operation_id"] == request["payload"]["target_operation_id"], "query returned another operation")
             if payload["status"] == "completed" and typ == "harness.task.query_result":
                 require(payload["result"]["task_id"] == request["payload"]["task_id"], "query returned another task result")
+            if payload["status"] == "completed" and isinstance(payload.get("result"), dict):
+                result = payload["result"]
+                for field in ("task_id", "surface_id", "collection_id", "memory_id", "content_id", "view_id", "delegation_operation_id", "approval_id", "command_id", "call_operation_id"):
+                    if field in request["payload"] and field in result:
+                        require(result[field] == request["payload"][field], f"response {field} differs from request")
             repeated_presentation = False
             if typ == "harness.ui.set_presentation":
                 operation = (request["source"], request["operation_id"])
@@ -317,8 +407,25 @@ def validate_flow(messages):
             require(surfaces[payload["surface_id"]] == int(payload["base_revision"]), "delta base mismatch")
             require(int(payload["revision"]) > int(payload["base_revision"]), "delta revision must advance")
             surfaces[payload["surface_id"]] = int(payload["revision"])
+        if typ == "harness.task.query_projection" and kind == "response" and payload["status"] == "completed":
+            result = payload["result"]
+            projections[result["task_id"], result["projection_revision"]] = result
         if typ in {"harness.ui.input", "harness.task.input"} and kind == "request":
-            check_values(inputs[payload["input_request_id"]], payload["values"])
+            input_request = inputs[payload["input_request_id"]]
+            check_values(input_request, payload["values"])
+            required = set(input_request.get("required_preview_ids", []))
+            if required:
+                receipt = payload["preview_receipt"]
+                require(receipt["task_id"] == input_request["task_id"], "preview receipt binds another task")
+                projection = projections[receipt["task_id"], receipt["projection_revision"]]
+                binding = next(b for b in projection["input_bindings"] if b["input_request_id"] == payload["input_request_id"])
+                require(set(binding["required_preview_ids"]) == required, "input preview requirements changed")
+                available = {p["preview_id"]: p["content"]["sha256"] for p in projection["previews"]}
+                acquired = {p["preview_id"]: p["content_sha256"] for p in receipt["previews"]}
+                require(required <= set(available) and required <= set(acquired), "required preview missing")
+                require(all(acquired[k] == available[k] for k in required), "acquired preview differs from authoritative content")
+                if typ == "harness.task.input" and receipt["ui_operation_id"] in ui_submissions:
+                    require(receipt == ui_submissions[receipt["ui_operation_id"]]["preview_receipt"], "UI forwarding changed host receipt")
             if typ == "harness.ui.input":
                 ui_submissions[message["operation_id"]] = payload
             else:
@@ -334,6 +441,11 @@ def validate_flow(messages):
                 require(payload["input_request_id"] in consumed, "UI applied before task consumption")
 
 
+domain_flows = {
+    path.stem: read(path) for path in sorted((ROOT / "examples").glob("*-domain-flow.json"))
+}
+for messages in domain_flows.values():
+    validate_flow(messages)
 flow = read(ROOT / "examples/task-ui-flow.json")
 result_flow = read(ROOT / "examples/result-and-presentation.json")
 extension_message = read(ROOT / "examples/extension-message.json")
@@ -353,6 +465,8 @@ validate_message(ready_resume)
 http_samples = read(ROOT / "examples/http-exchanges.json")
 for exchange in http_samples:
     validate_ref(exchange["schema"], exchange["body"])
+    for allowed_type in exchange["body"].get("allowed_types", []):
+        require((allowed_type, 1) in TYPES, "HTTP grant allows an unregistered standard type")
 
 
 rejected_cases = 0
@@ -372,8 +486,11 @@ for case in read(ROOT / "validation/invalid-cases.json"):
     if "raw" in case:
         expect_failure(case["name"], lambda: parse(case["raw"]))
         continue
+    if "message" in case:
+        expect_failure(case["name"], lambda: validate_message(case["message"]))
+        continue
     original = extension_message if case["base"] == "extension" else next(
-        message for message in flow + result_flow
+        message for message in flow + result_flow + [m for messages in domain_flows.values() for m in messages]
         if message["type"] == case["base"] and message["kind"] == case.get("kind", "request")
         and message["type_version"] == case.get("type_version", message["type_version"])
     )
@@ -418,6 +535,8 @@ expect_failure("scope removed midway through a stream", lambda: validate_flow(ch
 for typ in ("harness.task.status", "harness.task.result"):
     pending = deepcopy(next(message for message in flow if message["type"] == typ))
     pending["payload"].update(state="completed", effects_pending=True)
+    if "control" in pending["payload"]:
+        pending["payload"]["control"]["effects_pending"] = True
     validate_message(pending)
 
 wrong_presentation = deepcopy(result_flow)
@@ -456,6 +575,15 @@ validate_message(duplicate_inputs)
 duplicate_inputs["payload"]["result"]["input_requests"] *= 2
 expect_failure("duplicate input descriptions in a custom view", lambda: validate_message(duplicate_inputs))
 
-print(f"PASS: {len(schemas)} schemas, {len(standard['messages'])} standard type/version entries, 2 manifests, {len(flow) + len(result_flow)} linked messages, extension and optional-extension examples.")
+for label, mutation in (
+    ("required preview receipt omitted", lambda payload: payload.pop("preview_receipt")),
+    ("preview receipt names different content", lambda payload: payload["preview_receipt"]["previews"][0].update(content_sha256="f" * 64)),
+):
+    changed = deepcopy(flow)
+    submission = next(m for m in changed if m["type"] == "harness.ui.input" and m["kind"] == "request")
+    mutation(submission["payload"])
+    expect_failure(label, lambda: validate_flow(changed))
+
+print(f"PASS: {len(schemas)} schemas, {len(standard['messages'])} standard type/version entries, 2 manifests, {len(flow) + len(result_flow) + sum(len(messages) for messages in domain_flows.values())} linked messages, extension and optional-extension examples.")
 print(f"PASS: {len(recovery_samples)} recovery/cancel messages and {len(http_samples)} HTTP bodies.")
 print(f"PASS: {rejected_cases} invalid cases rejected; completed/pending regressions passed. Runtime delivery, authorization and effects are not tested.")

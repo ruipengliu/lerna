@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
   <diagram id="harness-panorama" name="组件协作全景">
     <mxGraphModel dx="3565" dy="2103" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="0" page="1" pageScale="1" pageWidth="3720" pageHeight="2380" background="#ffffff" math="0" shadow="0">
@@ -361,12 +362,12 @@
             <mxPoint x="80" y="1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="input-core" edge="1" parent="1" source="ui-manager" style="edgeStyle=none;rounded=1;arcSize=14;html=0;endArrow=block;endFill=1;startArrow=none;startFill=1;strokeColor=#2367a3;strokeWidth=3;dashed=0;dashPattern=7 5;jumpStyle=arc;jumpSize=14;exitX=1.0;exitY=0.22727272727272727;exitPerimeter=0;entryX=0.0;entryY=0.22727272727272727;entryPerimeter=0;fontFamily=Noto Sans CJK SC;fontSize=23;fontColor=#2367a3;align=center;verticalAlign=middle;labelBackgroundColor=#ffffff;spacing=0;" target="task-core" value="任务输入">
+        <mxCell id="input-core" edge="1" parent="1" source="ui-manager" style="edgeStyle=none;rounded=1;arcSize=14;html=0;endArrow=block;endFill=1;startArrow=none;startFill=1;strokeColor=#2367a3;strokeWidth=3;dashed=0;dashPattern=7 5;jumpStyle=arc;jumpSize=14;exitX=1.0;exitY=0.22727272727272727;exitPerimeter=0;entryX=0.0;entryY=0.22727272727272727;entryPerimeter=0;fontFamily=Noto Sans CJK SC;fontSize=23;fontColor=#2367a3;align=center;verticalAlign=middle;labelBackgroundColor=#ffffff;spacing=0;" target="task-core" value="控制／输入／补证">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="-62" y="-34" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="core-result" edge="1" parent="1" source="task-core" style="edgeStyle=none;rounded=1;arcSize=14;html=0;endArrow=block;endFill=1;startArrow=none;startFill=1;strokeColor=#2367a3;strokeWidth=3;dashed=0;dashPattern=7 5;jumpStyle=arc;jumpSize=14;exitX=0.0;exitY=0.7954545454545454;exitPerimeter=0;entryX=1.0;entryY=0.7954545454545454;entryPerimeter=0;fontFamily=Noto Sans CJK SC;fontSize=23;fontColor=#2367a3;align=center;verticalAlign=middle;labelBackgroundColor=#ffffff;spacing=0;" target="ui-manager" value="正式结果">
+        <mxCell id="core-result" edge="1" parent="1" source="task-core" style="edgeStyle=none;rounded=1;arcSize=14;html=0;endArrow=block;endFill=1;startArrow=none;startFill=1;strokeColor=#2367a3;strokeWidth=3;dashed=0;dashPattern=7 5;jumpStyle=arc;jumpSize=14;exitX=0.0;exitY=0.7954545454545454;exitPerimeter=0;entryX=1.0;entryY=0.7954545454545454;entryPerimeter=0;fontFamily=Noto Sans CJK SC;fontSize=23;fontColor=#2367a3;align=center;verticalAlign=middle;labelBackgroundColor=#ffffff;spacing=0;" target="ui-manager" value="任务投影／成果">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="-62" y="33" as="offset" />
           </mxGeometry>

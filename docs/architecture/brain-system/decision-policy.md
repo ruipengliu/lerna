@@ -2,7 +2,7 @@
 
 [总览](README.md) · [接口与模型运行](contracts-and-runtime.md) · [验证与依赖](validation.md)
 
-本页规定默认策略的算法与有限执行条件。内核的 [act／wait／finish](../task-kernel/decision-and-work.md#admission)、[验收规则](../task-kernel/lifecycle.md#completion)和来源规则保持权威；这里定义如何形成满足它们的候选。
+本页规定本地与远程共用的单轮策略和有限执行条件。有效暂停时核心不调度新决策；即使后续事实已满足目标也等待显式恢复，任务到期和取消独立处理。内核的 [act／wait／finish](../task-kernel/decision-and-work.md#admission)、[验收规则](../task-kernel/lifecycle.md#completion)和来源规则保持权威；这里定义如何形成满足它们的候选。
 
 <a id="evidence"></a>
 ## 1. 输入可信度与上下文利用
@@ -90,7 +90,7 @@ flowchart TD
 
 GUI 采用“观察 → 单动作 → 再观察 → 核验”的循环，各次操作单独准入和授权。点击成功只是动作事实；以保存 A.md 为例，仍需声明认可的文件或界面效果证据。用户接管后停止新的自动操作，重新开放走[执行管理入口](../capability-and-execution/validation.md#management)，大脑没有恢复设备权限。
 
-内部 Agent 的决策循环仍由其任务内核管理。父任务只根据可靠子结果推进，不能把子方接纳当作子目标完成；子结果含未知效果时也不能默认不影响父成果。自定义 Skill 不等于 Agent，长时间自主 Agent 不包装成普通工具。外部 Agent 或跨端委派缺载荷时维持禁用，见[内核缺口](../task-kernel/recovery-and-validation.md#gaps)。
+内部 Agent 的决策循环仍由其任务内核管理。父任务只根据可靠子结果推进，不能把子方接纳当作子目标完成；子结果含未知效果时也不能默认不影响父成果。自定义 Skill 不等于 Agent，长时间自主 Agent 不包装成普通工具。外部 Agent 与跨端委派沿已采用协作 profile，缺实现或必要保证时不提供可派发候选；内部子树继承暂停，不支持暂停的外部 Agent 明确单列，见[内核合同](../task-kernel/recovery-and-validation.md#gaps)。
 
 ## 5. 结果综合与用户输入
 

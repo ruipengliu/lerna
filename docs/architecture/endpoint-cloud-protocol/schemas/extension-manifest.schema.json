@@ -114,6 +114,33 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 2048
+          },
+          "scope_binding": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "task",
+                  "operation",
+                  "surface",
+                  "authorization",
+                  "catalog",
+                  "memory",
+                  "collection",
+                  "content"
+                ]
+              },
+              "field": {
+                "type": "string",
+                "pattern": "^(?:operation_id|target|payload\\.[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)*)$",
+                "maxLength": 256
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
           }
         },
         "required": [
@@ -128,7 +155,30 @@
           "operation_id",
           "recovery"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "delivery": {
+                  "const": "reliable"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "scope_binding"
+              ]
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "scope_binding"
+                ]
+              }
+            }
+          }
+        ]
       },
       "minItems": 0,
       "maxItems": 1024

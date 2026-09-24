@@ -866,7 +866,36 @@
         "revision": "10",
         "state": "completed",
         "effects_pending": false,
-        "summary": "额外核对已收尾；正式结果仍保持修订9。"
+        "summary": "额外核对已收尾；正式结果仍保持修订9。",
+        "control": {
+          "revision": "0",
+          "self_paused": false,
+          "paused_by": [],
+          "external_unpaused": [],
+          "effects_pending": false
+        },
+        "budget": {
+          "revision": "1",
+          "amounts": [
+            {
+              "dimension": "calls",
+              "unit": "call",
+              "target_limit": "10",
+              "cleanup_limit": "2",
+              "mode": "hard"
+            }
+          ],
+          "balances": [
+            {
+              "dimension": "calls",
+              "unit": "call",
+              "target_settled": "0",
+              "target_reserved": "1",
+              "cleanup_settled": "0",
+              "cleanup_reserved": "0"
+            }
+          ]
+        }
       }
     },
     "reply_to": "00000000-0000-4000-8000-000000004e36",

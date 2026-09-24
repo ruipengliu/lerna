@@ -1,0 +1,736 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.invalid/protocol/v1/execution-control.schema.json",
+  "$defs": {
+    "catalog_resolve_request": {
+      "type": "object",
+      "properties": {
+        "catalog_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "capability": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/name"
+        },
+        "capability_version": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uint"
+        },
+        "target_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        }
+      },
+      "required": [
+        "catalog_id",
+        "capability",
+        "capability_version",
+        "target_endpoint"
+      ],
+      "additionalProperties": false
+    },
+    "declaration": {
+      "type": "object",
+      "properties": {
+        "capability": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/name"
+        },
+        "capability_version": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uint"
+        },
+        "declaration_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/seq"
+        },
+        "declaration_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "provider_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "driver_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "driver_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "instance_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/seq"
+        },
+        "state": {
+          "enum": [
+            "active",
+            "draining",
+            "disabled"
+          ]
+        },
+        "arguments_schema": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/content"
+        },
+        "result_schema": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/content"
+        },
+        "evidence_schema": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/content"
+        },
+        "normalizer_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "normalizer_version": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/seq"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "minItems": 1,
+          "maxItems": 32
+        },
+        "maximum_duration_ms": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uint"
+        },
+        "maximum_request_bytes": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uint64"
+        },
+        "maximum_response_bytes": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uint64"
+        },
+        "finite_units": {
+          "const": 1
+        },
+        "effect_kind": {
+          "enum": [
+            "none",
+            "external_write"
+          ]
+        },
+        "query_guarantee": {
+          "enum": [
+            "none",
+            "saved_only",
+            "authoritative"
+          ]
+        },
+        "replay_guarantee": {
+          "enum": [
+            "none",
+            "same_key_no_extra_effect"
+          ]
+        },
+        "cancel_guarantee": {
+          "enum": [
+            "none",
+            "best_effort",
+            "confirmed_stop"
+          ]
+        },
+        "hard_budget_dimensions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "minItems": 0,
+          "maxItems": 16
+        },
+        "source_bindings": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
+        },
+        "proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        }
+      },
+      "required": [
+        "capability",
+        "capability_version",
+        "declaration_revision",
+        "declaration_digest",
+        "provider_endpoint",
+        "driver_id",
+        "driver_version",
+        "instance_revision",
+        "state",
+        "arguments_schema",
+        "result_schema",
+        "evidence_schema",
+        "normalizer_id",
+        "normalizer_version",
+        "permissions",
+        "maximum_duration_ms",
+        "maximum_request_bytes",
+        "maximum_response_bytes",
+        "finite_units",
+        "effect_kind",
+        "query_guarantee",
+        "replay_guarantee",
+        "cancel_guarantee",
+        "hard_budget_dimensions",
+        "source_bindings",
+        "proof"
+      ],
+      "additionalProperties": false
+    },
+    "catalog_resolve_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "type": "object",
+              "properties": {
+                "catalog_id": {
+                  "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+                },
+                "declaration": {
+                  "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/declaration"
+                },
+                "expires_at": {
+                  "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/time"
+                }
+              },
+              "required": [
+                "catalog_id",
+                "declaration",
+                "expires_at"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "rejected"
+            },
+            "error": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/error"
+            }
+          },
+          "required": [
+            "status",
+            "error"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "execution_basis": {
+      "type": "object",
+      "properties": {
+        "declaration_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "instance_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/seq"
+        },
+        "task_control_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uint64"
+        },
+        "source_bindings": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
+        },
+        "budget": {
+          "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/budget_allocation"
+        },
+        "authority_proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        }
+      },
+      "required": [
+        "declaration_digest",
+        "instance_revision",
+        "task_control_revision",
+        "source_bindings",
+        "budget",
+        "authority_proof"
+      ],
+      "additionalProperties": false
+    },
+    "usage_event": {
+      "type": "object",
+      "properties": {
+        "target_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "producer_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "allocation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/usage_item"
+          },
+          "minItems": 1,
+          "maxItems": 32
+        }
+      },
+      "required": [
+        "target_operation_id",
+        "producer_endpoint",
+        "allocation_id",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "query_cancel_request": {
+      "type": "object",
+      "properties": {
+        "target_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "cancel_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        }
+      },
+      "required": [
+        "target_operation_id",
+        "cancel_operation_id"
+      ],
+      "additionalProperties": false
+    },
+    "query_cancel_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "type": "object",
+              "properties": {
+                "target_operation_id": {
+                  "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+                },
+                "cancel_operation_id": {
+                  "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+                },
+                "result": {
+                  "$ref": "https://harness.invalid/protocol/v1/execution.schema.json#/$defs/cancel_result_event"
+                },
+                "retained_until": {
+                  "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/time"
+                }
+              },
+              "required": [
+                "target_operation_id",
+                "cancel_operation_id",
+                "result",
+                "retained_until"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "rejected"
+            },
+            "error": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/error"
+            }
+          },
+          "required": [
+            "status",
+            "error"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "manage_request": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "target_operation_id": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+            },
+            "expected_management_revision": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uint64"
+            },
+            "action": {
+              "const": "reconcile"
+            },
+            "max_queries": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uint"
+            },
+            "cleanup_allocation": {
+              "$ref": "https://harness.invalid/protocol/v1/task-control.schema.json#/$defs/budget_allocation"
+            }
+          },
+          "required": [
+            "target_operation_id",
+            "expected_management_revision",
+            "action",
+            "max_queries",
+            "cleanup_allocation"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "target_operation_id": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+            },
+            "expected_management_revision": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uint64"
+            },
+            "action": {
+              "const": "stop_reconciliation"
+            }
+          },
+          "required": [
+            "target_operation_id",
+            "expected_management_revision",
+            "action"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "target_operation_id": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+            },
+            "expected_management_revision": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uint64"
+            },
+            "action": {
+              "const": "submit_evidence"
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/content"
+              },
+              "minItems": 1,
+              "maxItems": 16
+            },
+            "source_bindings": {
+              "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
+            }
+          },
+          "required": [
+            "target_operation_id",
+            "expected_management_revision",
+            "action",
+            "evidence",
+            "source_bindings"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "management_receipt": {
+      "type": "object",
+      "properties": {
+        "target_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "command_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "management_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/seq"
+        },
+        "action": {
+          "enum": [
+            "reconcile",
+            "stop_reconciliation",
+            "submit_evidence"
+          ]
+        },
+        "state": {
+          "enum": [
+            "recorded",
+            "applied",
+            "rejected"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "target_operation_id",
+        "command_operation_id",
+        "management_revision",
+        "action",
+        "state",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "manage_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "accepted"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/management_receipt"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "rejected"
+            },
+            "error": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/error"
+            }
+          },
+          "required": [
+            "status",
+            "error"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "query_management_request": {
+      "type": "object",
+      "properties": {
+        "target_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "command_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        }
+      },
+      "required": [
+        "target_operation_id",
+        "command_operation_id"
+      ],
+      "additionalProperties": false
+    },
+    "query_management_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/management_receipt"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "rejected"
+            },
+            "error": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/error"
+            }
+          },
+          "required": [
+            "status",
+            "error"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "reopen_device_request": {
+      "type": "object",
+      "properties": {
+        "catalog_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "device_resource": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "expected_takeover_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uint64"
+        },
+        "observation": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/content"
+        },
+        "source_bindings": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
+        },
+        "management_proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        }
+      },
+      "required": [
+        "catalog_id",
+        "device_resource",
+        "expected_takeover_revision",
+        "observation",
+        "source_bindings",
+        "management_proof"
+      ],
+      "additionalProperties": false
+    },
+    "reopen_device_receipt": {
+      "type": "object",
+      "properties": {
+        "catalog_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "device_resource": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "command_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "takeover_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/seq"
+        },
+        "automation_open": {
+          "const": true
+        }
+      },
+      "required": [
+        "catalog_id",
+        "device_resource",
+        "command_operation_id",
+        "takeover_revision",
+        "automation_open"
+      ],
+      "additionalProperties": false
+    },
+    "reopen_device_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/reopen_device_receipt"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "rejected"
+            },
+            "error": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/error"
+            }
+          },
+          "required": [
+            "status",
+            "error"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "query_device_command_request": {
+      "type": "object",
+      "properties": {
+        "catalog_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "command_operation_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        }
+      },
+      "required": [
+        "catalog_id",
+        "command_operation_id"
+      ],
+      "additionalProperties": false
+    },
+    "query_device_command_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/execution-control.schema.json#/$defs/reopen_device_receipt"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "rejected"
+            },
+            "error": {
+              "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/error"
+            }
+          },
+          "required": [
+            "status",
+            "error"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

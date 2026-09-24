@@ -380,6 +380,14 @@
           },
           "minItems": 1,
           "maxItems": 64
+        },
+        "required_preview_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
         }
       },
       "required": [
@@ -607,7 +615,12 @@
           "enum": [
             "task",
             "operation",
-            "surface"
+            "surface",
+            "authorization",
+            "catalog",
+            "memory",
+            "collection",
+            "content"
           ]
         },
         "id": {

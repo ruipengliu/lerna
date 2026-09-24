@@ -1,0 +1,600 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.invalid/protocol/v1/release.schema.json",
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "properties": {
+        "package_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "package_kind": {
+          "enum": [
+            "skill",
+            "strategy",
+            "agent_config",
+            "plugin",
+            "kernel",
+            "component"
+          ]
+        },
+        "content": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/content"
+        },
+        "manifest_sha256": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+        },
+        "dependency_lock_sha256": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+        },
+        "configuration_sha256": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+        },
+        "source_bindings": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
+        }
+      },
+      "required": [
+        "package_id",
+        "version",
+        "package_kind",
+        "content",
+        "manifest_sha256",
+        "dependency_lock_sha256",
+        "configuration_sha256",
+        "source_bindings"
+      ],
+      "additionalProperties": false
+    },
+    "rollback_basis": {
+      "type": "object",
+      "properties": {
+        "target_artifact": {
+          "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/artifact"
+        },
+        "applies_to_configuration": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+        },
+        "readable_format_versions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "validation_report": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/content"
+        },
+        "valid_until": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        },
+        "proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        },
+        "on_blocked": {
+          "const": "disable_and_report"
+        },
+        "automatic": {
+          "const": true
+        }
+      },
+      "required": [
+        "target_artifact",
+        "applies_to_configuration",
+        "readable_format_versions",
+        "validation_report",
+        "valid_until",
+        "proof",
+        "on_blocked",
+        "automatic"
+      ],
+      "additionalProperties": false
+    },
+    "approval_snapshot": {
+      "type": "object",
+      "properties": {
+        "approval_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "authority_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "state": {
+          "enum": [
+            "approved",
+            "rejected",
+            "withdrawn"
+          ]
+        },
+        "artifact": {
+          "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/artifact"
+        },
+        "report": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/content"
+        },
+        "approved_targets": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+          },
+          "minItems": 1,
+          "maxItems": 1024
+        },
+        "batch_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "issued_at": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        },
+        "activate_before": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        },
+        "freshness_until": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        },
+        "offline_use_until": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        },
+        "offline_max_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "allowed_actions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "prepare",
+              "activate",
+              "disable",
+              "rollback"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 4
+        },
+        "rollback": {
+          "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/rollback_basis"
+        },
+        "rollback_supported": {
+          "type": "boolean"
+        },
+        "proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        }
+      },
+      "required": [
+        "approval_id",
+        "authority_endpoint",
+        "revision",
+        "state",
+        "artifact",
+        "report",
+        "approved_targets",
+        "batch_id",
+        "issued_at",
+        "activate_before",
+        "freshness_until",
+        "offline_use_until",
+        "offline_max_seconds",
+        "allowed_actions",
+        "rollback_supported",
+        "proof"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "rollback_supported": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "rollback"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "rollback"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "query_approval_request": {
+      "type": "object",
+      "properties": {
+        "approval_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "authority_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "minimum_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "binding_sha256": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+        }
+      },
+      "required": [
+        "approval_id",
+        "authority_endpoint",
+        "minimum_revision",
+        "binding_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "query_approval_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/approval_snapshot"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "approval_event": {
+      "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/approval_snapshot"
+    },
+    "apply_request": {
+      "type": "object",
+      "properties": {
+        "approval_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "command_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "target_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "expected_binding_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "action": {
+          "enum": [
+            "prepare",
+            "activate",
+            "rollback"
+          ]
+        },
+        "approval_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "approval_authority": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "approval_proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        },
+        "artifact": {
+          "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/artifact"
+        },
+        "batch_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "deadline": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        },
+        "rollback_basis": {
+          "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/rollback_basis"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        }
+      },
+      "required": [
+        "approval_id",
+        "command_id",
+        "target_endpoint",
+        "expected_binding_revision",
+        "action",
+        "approval_revision",
+        "approval_authority",
+        "approval_proof",
+        "artifact",
+        "batch_id",
+        "deadline"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "rollback"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "rollback_basis"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "rollback_basis"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "disable_request": {
+      "type": "object",
+      "properties": {
+        "approval_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "command_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "target_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "expected_binding_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "action": {
+          "const": "disable"
+        },
+        "approval_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "approval_authority": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "approval_proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        },
+        "artifact": {
+          "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/artifact"
+        },
+        "batch_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "deadline": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/timestamp"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        }
+      },
+      "required": [
+        "approval_id",
+        "command_id",
+        "target_endpoint",
+        "expected_binding_revision",
+        "action",
+        "approval_revision",
+        "approval_authority",
+        "approval_proof",
+        "artifact",
+        "batch_id",
+        "deadline"
+      ],
+      "additionalProperties": false
+    },
+    "command_snapshot": {
+      "type": "object",
+      "properties": {
+        "approval_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "command_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "target_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        },
+        "action": {
+          "enum": [
+            "prepare",
+            "activate",
+            "disable",
+            "rollback"
+          ]
+        },
+        "intent_sha256": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+        },
+        "admission": {
+          "enum": [
+            "accepted",
+            "rejected"
+          ]
+        },
+        "progress": {
+          "enum": [
+            "pending",
+            "succeeded",
+            "failed",
+            "aborted"
+          ]
+        },
+        "approval_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "binding_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/revision"
+        },
+        "prepared": {
+          "type": "boolean"
+        },
+        "new_use_closed": {
+          "type": "boolean"
+        },
+        "active_artifact_sha256": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+        },
+        "rollback_state": {
+          "enum": [
+            "not_requested",
+            "pending",
+            "restored",
+            "blocked"
+          ]
+        },
+        "effects_pending": {
+          "type": "boolean"
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/gap"
+          },
+          "minItems": 0,
+          "maxItems": 64
+        },
+        "proof": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        }
+      },
+      "required": [
+        "approval_id",
+        "command_id",
+        "target_endpoint",
+        "action",
+        "intent_sha256",
+        "admission",
+        "progress",
+        "approval_revision",
+        "prepared",
+        "new_use_closed",
+        "rollback_state",
+        "effects_pending",
+        "gaps",
+        "proof"
+      ],
+      "additionalProperties": false
+    },
+    "apply_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "accepted"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/command_snapshot"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "disable_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "accepted"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/command_snapshot"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "query_command_request": {
+      "type": "object",
+      "properties": {
+        "approval_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "command_id": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/uuid"
+        },
+        "target_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/endpoint"
+        }
+      },
+      "required": [
+        "approval_id",
+        "command_id",
+        "target_endpoint"
+      ],
+      "additionalProperties": false
+    },
+    "query_command_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/command_snapshot"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "command_fact_event": {
+      "$ref": "https://harness.invalid/protocol/v1/release.schema.json#/$defs/command_snapshot"
+    }
+  }
+}

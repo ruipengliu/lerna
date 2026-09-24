@@ -2,7 +2,7 @@
 
 [总览](README.md) · [执行与恢复](execution-and-recovery.md) · [验证与依赖](validation.md)
 
-本页定义本模块新增的逻辑接口与内部值，不是可直接发送的 JSON。现有线字段及上限由[execution Schema](../endpoint-cloud-protocol/schemas/execution.schema.json)和[公共字段](../endpoint-cloud-protocol/wire-format.md)定义；下文只说明映射和新增的本地约束。所有入口使用[可信 RequestContext](../identity-and-authorization/contracts.md#identity)，用户、行动主体和处理服务身份不能来自未经验证的参数。
+本页定义本模块新增的逻辑接口与内部值，并由[跨端合同](remote-contracts.md)映射为已定义消息。线字段及上限由[execution Schema](../endpoint-cloud-protocol/schemas/execution.schema.json)和[公共字段](../endpoint-cloud-protocol/wire-format.md)定义；下文只说明映射和新增的本地约束。所有入口使用[可信 RequestContext](../identity-and-authorization/contracts.md#identity)，用户、行动主体和处理服务身份不能来自未经验证的参数。
 
 <a id="catalog"></a>
 ## 1. 从登记到可调用
@@ -79,11 +79,11 @@ Invoke 的固定身份覆盖受信用户／行动主体、请求类型和版本�
 
 | 逻辑行为 | 现有线契约 | 未承载的内容及处理 |
 | --- | --- | --- |
-| Invoke | `harness.execution.invoke@1`；参数仅 capability、capability_version、arguments，以及同时出现的 task_id／owner_epoch | 来源、意图、实例配置和预算不加到载荷；由受信本地关联或已安装适配器取得，缺失不启动 |
-| Query／Cancel | 对应 `harness.execution.query@1`／`cancel@1`；target_operation_id 指原调用，取消有独立 operation_id | query 不是取消结果查询；完整取消答复超窗保留缺口 |
-| 事实与结果 | `fact`／`result` 使用原调用 ID；`cancel_result` 使用取消 ID；都可靠交付 | 无修订与用量字段；沿内核[保守合并](../task-kernel/decision-and-work.md#dispatch)，用量无可信通道则保留预留 |
+| Invoke | `harness.execution.invoke@1`；参数仅 capability、capability_version、arguments，以及同时出现的 task_id／owner_epoch | basis 固定声明摘要、实例修订、控制切点、完整来源、预算分配与权威证明；身份解析并复核，缺失不启动 |
+| Query／Cancel | 对应 `harness.execution.query@1`／`cancel@1`；target_operation_id 指原调用，取消有独立 operation_id | query 读取当前投影；query_cancel 按原执行／取消双重身份恢复完整固定答复 |
+| 事实与结果 | `fact`／`result` 使用原调用 ID；`cancel_result` 使用取消 ID；都可靠交付 | 携带 producer_endpoint、fact_revision、完整来源和可信累计用量；按[权威修订规则](remote-contracts.md#facts)合并 |
 | 临时进度 | `harness.execution.progress@1` | 可丢失，不作恢复或完成依据 |
-| 目录、驱动、管理及控制恢复接口 | 无新增标准消息 | 首期本地调用；跨实现传输见[待决提案](validation.md#proposals) |
+| 目录、管理及控制恢复接口 | catalog.resolve、execution.manage／query_management、reopen_device／query_device_command | 本地逻辑调用与网关 WSS 采用同一语义；映射见[领域合同](remote-contracts.md) |
 
 expires_at、retain_until、source、authorization 等公共字段仍在原信封位置。Invoke 只返回 `accepted + recorded=true` 或拒绝；提交未知不虚构第三种业务响应。原请求和答复关联规则、作用域及 lane 由[消息契约](../endpoint-cloud-protocol/message-contract.md#identity)定义。
 
@@ -127,7 +127,7 @@ expires_at、retain_until、source、authorization 等公共字段仍在原信�
 | CommitReceipt／Publication | 原提交键、意图绑定、决定及后续责任；固定消息身份、载荷和交接凭据；获准保留原结果，不依赖消息窗口 |
 | CatalogEntry | 固定声明、验证证据、实例和发布修订、登记回执；索引可重建，准确声明不得仅存在于搜索缓存 |
 
-内部修订只用于本账本条件更新和诊断，不冒充 v1 执行事实修订。发布的事实以已经保存的完整快照固定；旧消息重投不改内容，新观察产生新事实。
+执行存储在同一事务推进对外 fact_revision；资源／管理修订与用量修订各自作用域独立，不把数据库行版本或流 seq 直接当作事实顺序。发布的事实以已经保存的完整快照固定；旧消息重投不改内容，新观察产生新事实。
 
 | 内部原因 | 现有线表现 | 调用方后续行为 |
 | --- | --- | --- |

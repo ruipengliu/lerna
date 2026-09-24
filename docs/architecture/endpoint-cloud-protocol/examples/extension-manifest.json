@@ -23,7 +23,11 @@
       ],
       "side_effecting": true,
       "operation_id": "required",
-      "recovery": "Query the original operation through harness.execution.query; never blindly repeat capture."
+      "recovery": "Query the original operation through harness.execution.query; never blindly repeat capture.",
+      "scope_binding": {
+        "kind": "operation",
+        "field": "operation_id"
+      }
     }
   ],
   "extensions": [
