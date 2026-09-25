@@ -1,6 +1,6 @@
 # 传输与会话
 
-[总览](README.md) · [消息契约](message-contract.md) · [恢复条件](recovery-and-control.md#resume) · [字段查阅](wire-format.md)
+[协议规范](protocol.md) · [消息契约](message-contract.md) · [恢复条件](recovery-and-control.md#resume) · [字段查阅](wire-format.md)
 
 v1 选择 WSS／UTF-8 JSON 作为浏览器、原生端和服务端的共同消息通道，HTTPS 承载票据与大内容。当前定义的接入路径是经网关建立 WSS 会话；首期维护一种线格式和接入路径，不并行提供 Protobuf 或 SSE 降级，连续音视频另行扩展媒体通道。
 

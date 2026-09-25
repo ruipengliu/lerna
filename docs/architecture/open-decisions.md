@@ -65,9 +65,9 @@ flowchart TD
 | 整体目标编辑 | 沿现行选择创建关联新任务；可复用仍获准材料，原任务取消或收尾另行处理 | [任务生命周期](task-kernel/lifecycle.md) |
 | 人工核验材料 | 接纳绑定原任务／条件的候选材料，交实际事实权威核验；材料接纳、验证通过和任务完成分别记录，人工断言不强制改变效果 | [内核接口](task-kernel/storage-and-interfaces.md)、[执行处置](capability-and-execution/validation.md#management) |
 | 外部 Agent 普通交互 | 固定原委派、外部请求及修订，分别查询本方接纳与外部应用；追加权限走受信授权流程，扩大原目标／许可上限须新委派 | [外部交互](agent-coordination/delegation.md#external) |
-| UI-P1 | 新设备可读取获准任务／surface 分页目录并显式订阅；代价为目录披露、固定切点及订阅保留责任 | [交互合同](application-and-interaction/contracts-and-storage.md) |
-| UI-P2 | 远程管理复用所属领域的控制、授权、补证与记忆合同；UI 不产生独立权限或效果裁决 | [交互恢复](application-and-interaction/interaction-and-recovery.md#management) |
-| UI-P3 | 核心提供固定中间投影及完整来源，输入明确依赖必需预览；内容不可取或已失效时不允许按旧材料提交 | [交互恢复](application-and-interaction/interaction-and-recovery.md#projection)、[交互验证](application-and-interaction/validation.md#proposals) |
+| UI-P1 | 新设备可读取获准任务／surface 分页目录并显式订阅；代价为目录披露、固定切点及订阅保留责任 | [交互目录合同](application-and-interaction/interaction-contract.md#directory) |
+| UI-P2 | 核心提供固定中间投影及完整来源，输入明确依赖必需预览；内容不可取或已失效时不允许按旧材料提交 | [预览规范](application-and-interaction/interaction-contract.md#preview)、[交互验证](application-and-interaction/validation.md#proposals) |
+| UI-P3 | 远程管理复用所属领域的控制、授权、补证与记忆合同；UI 不产生独立权限或效果裁决 | [受信管理规范](application-and-interaction/interaction-contract.md#management) |
 
 <a id="data-cleanup"></a>
 ## 4. 已采用的数据治理与自动化
@@ -115,7 +115,7 @@ flowchart TD
 | 通用设备配对与远程自助登记；身份／接入 | 如何取得并验证设备凭据、绑定端点及活动实例、处理重复登记和撤销。当前由受信适配器安全登记；没有适配器就关闭远程自助登记，与身份 P1 的授权同步分别处理 | [登记边界](identity-and-authorization/contracts.md#identity) |
 | 账户恢复与运营人员代操作；身份 | 恢复根依据、代理范围、敏感变更及审计／撤回语义。当前管理入口限本人受信认证，Agent 和后台服务没有隐含资格 | [管理接口](identity-and-authorization/contracts.md#interfaces) |
 | 多写者记忆、界面及其权威迁移；记忆／UI | 明确是否需要共同离线编辑，再分别定义冲突合并、修改／输入消费去重及旧权威隔离；任务 CO-P2 不覆盖这些独立账本。当前各对象保持固定单一权威 | [记忆范围](memory-system/README.md#scope)、[UI 范围](application-and-interaction/README.md#scope) |
-| 任意聊天历史同步与跨端已读；UI | 历史对象、来源和保留、获准订阅、展示／已读证明分别如何定义。当前任务／surface 目录不代表完整聊天历史，实际展示仅是本端遥测 | [UI 范围](application-and-interaction/README.md#scope)、[呈现与遥测](application-and-interaction/contracts-and-storage.md) |
+| 任意聊天历史同步与跨端已读；UI | 历史对象、来源和保留、获准订阅、展示／已读证明分别如何定义。当前任务／surface 目录不代表完整聊天历史，实际展示仅是本端遥测 | [UI 范围](application-and-interaction/README.md#scope)、[呈现规范](application-and-interaction/interaction-contract.md#presentation) |
 | 语义向量检索；记忆 | 嵌入处理位置、向量存储／删除、模型／维度／版本及召回收益；当前采用本地字面候选，向量检索关闭 | [检索选择](memory-system/mechanisms.md#retrieval) |
 | 未知模型调用的风险配额；大脑／内核 | 优先补供应方查询／终止保证；若仍要提高无可信终结后端的可用性，另决风险上限及并发／预算保证。当前未知占位和预留保留，到限停主动查询，不提供忽略未知开关 | [调用恢复](brain-system/contracts-and-runtime.md#recovery) |
 | 多模型投票／竞速、在线提示词／策略改变；大脑／改进／扩展 | 额外调用的质量收益能否覆盖成本，逐调用账务与来源如何保持；自动启用还需 OI-P1／ER-P1。当前单模型固定配置，策略修改产物只进入候选及受控发布流程 | [大脑范围与取舍](brain-system/README.md#scope) |

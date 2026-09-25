@@ -1,0 +1,18 @@
+{
+  "local_links_checked": 38,
+  "source_hashes_checked": 14,
+  "log_hashes_checked": 11,
+  "issues": [],
+  "git_diff_check": "passed",
+  "mermaid": {
+    "renderer": "mmdc",
+    "version": "11.12.0",
+    "diagram_count": 1,
+    "render_exit_code": 0,
+    "visual_review": "passed: labels and arrows visible, no clipping or overlap",
+    "render_file": "formal/handoff/evidence/handoff-sequence.png",
+    "browser": "installed Google Chrome; default renderer browser missing, explicit executable selected",
+    "render_sha256": "4db4bea29c3852af3291bac3bd3688d54e59ab5fe6c3f3e755bd78a597e063d3"
+  },
+  "proof_source_forbidden_constructs_found": false
+}

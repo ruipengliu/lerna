@@ -60,7 +60,7 @@ lane 只决定调度与保留容量。它既不授予管理权限，也不自动
 
 ## 4. 领域分工与权威定义
 
-字段只在所属模块合同及对应 Schema 定义；下表用于定位交接和判断成功强度。共享的精确来源、证明引用等线值见 [domain-common.schema.json](schemas/domain-common.schema.json)。
+下表引用的领域行为属于[完整协议规范](protocol.md#domains)的一部分，发布时随同版本固定。字段只在所属模块合同及对应 Schema 定义；下表用于定位交接和判断成功强度。共享的精确来源、证明引用等线值见 [domain-common.schema.json](schemas/domain-common.schema.json)。
 
 | 领域 | 必须完成的交接 | 权威文档／资产 |
 | --- | --- | --- |
@@ -70,8 +70,8 @@ lane 只决定调度与保留容量。它既不授予管理权限，也不自动
 | 独立远程大脑 | 原 work／attempt、领取资格、固定输入与来源、原调用接纳／查询／取消、停止事实及费用回送 | [大脑调用](../brain-system/contracts-and-runtime.md)、[brain.schema.json](schemas/brain.schema.json) |
 | 记忆与获准视图 | 精确版本访问与修改、原命令核对、固定视图切点、连续页、关闭与分项应用回执 | [记忆接口](../memory-system/contracts.md)、[同步](../memory-system/synchronization.md)、[memory.schema.json](schemas/memory.schema.json) |
 | 来源、内容与受管副本 | 当前来源证明、有限引用保留、持有者登记、关闭传播、停止使用／物理清理／残留回执 | [共同来源](../content-and-provenance.md)、[governance.schema.json](schemas/governance.schema.json) |
-| 用户交互 | 获准任务与 surface 目录、订阅、中间投影及必需预览绑定；管理操作沿所属领域裁决 | [交互接口](../application-and-interaction/contracts-and-storage.md)、[interaction.schema.json](schemas/interaction.schema.json) |
-| Agent 协作 | 原委派、单一权威下的受信子接纳、权限／预算收缩、结果用量、控制及普通外部输入交接 | [协作接口](../agent-coordination/peer-contracts.md)、[coordination.schema.json](schemas/coordination.schema.json) |
+| 用户交互 | 获准任务与 surface 目录、订阅、中间投影及必需预览绑定；管理操作沿所属领域裁决 | [交互规范](../application-and-interaction/interaction-contract.md)、[目录](../application-and-interaction/interaction-contract.md#directory)／[预览](../application-and-interaction/interaction-contract.md#preview)／[管理](../application-and-interaction/interaction-contract.md#management)、[interaction.schema.json](schemas/interaction.schema.json) |
+| Agent 协作 | 原委派、单一权威下的受信子接纳、权限／预算收缩、结果用量、控制及普通外部输入交接 | [协作规范](../agent-coordination/peer-contracts.md#normative)、[coordination.schema.json](schemas/coordination.schema.json) |
 | 批准与跨节点发布 | 精确批准与活动有效依据、原管理交接、逐节点准备／激活／停用／回退及回执 | [改进合同](../observation-and-improvement/contracts.md)、[扩展合同](../extensions-and-runtime/contracts.md)、[release.schema.json](schemas/release.schema.json) |
 
 原 `task.submit` 不接受任意远程服务端配置。跨端内部子接纳由协作合同认证原 D、父预留与子配置，再由原任务权威在创建事务内采用；远端协作端点和 Brain 不成为第二个任务写者。

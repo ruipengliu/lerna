@@ -1,11 +1,11 @@
 # 接口、存储与部署
 
-[总览](README.md) · [输入与恢复](interaction-and-recovery.md) · [验证与交付](validation.md)
+[总览](README.md) · [UI 交互规范](interaction-contract.md) · [输入与恢复](interaction-and-recovery.md) · [验证与交付](validation.md)
 
 <a id="interfaces"></a>
 ## 1. 复用的线契约与本次内部接口
 
-所有内部入口接收宿主构造的 RequestContext，绑定用户、端点、行动主体、来源及当前许可。下表是类型化逻辑接口；跨端映射由本页领域合同定义，view 不能指定任意方法名。线字段与错误以[协议 Schema](../endpoint-communication/schemas/ui.schema.json)及[公共信封](../endpoint-communication/wire-format.md#envelope)为唯一权威，不复制一套同名 Schema。
+所有内部入口接收宿主构造的 RequestContext，绑定用户、端点、行动主体、来源及当前许可。下表是默认宿主的类型化逻辑接口；对外行为以[UI 交互规范](interaction-contract.md)为准，跨端编码沿[通信映射](../endpoint-communication/task-and-ui.md)，view 不能指定任意方法名。线字段与错误以[协议 Schema](../endpoint-communication/schemas/ui.schema.json)及[公共信封](../endpoint-communication/wire-format.md#envelope)为唯一权威，不复制一套同名 Schema。
 
 | 逻辑接口 | 最小输入 → 输出 | 归属、映射与前提 |
 | --- | --- | --- |
@@ -29,7 +29,7 @@
 <a id="records"></a>
 ## 2. 记录与唯一性
 
-以下是本模块内部记录，相关领域消息只承载完成交接所需字段。所有键含受信 user_id，涉及端点的键另含 endpoint_id；同一用户的 UI operation_id 在该固定 UI 权威内跨 surface／种类唯一，转交到核心的子 ID 还遵守核心全用户唯一约束。
+以下是默认实现的内部记录，相关领域消息只承载完成交接所需字段。所有键含受信 user_id，涉及端点的键另含 endpoint_id；同一用户的 UI operation_id 在该固定 UI 权威内跨 surface／种类唯一，转交到核心的子 ID 还遵守核心全用户唯一约束。
 
 | 记录 | 必须保存的字段组 | 唯一性与用途 |
 | --- | --- | --- |
@@ -50,7 +50,7 @@
 <a id="transactions"></a>
 ## 3. 本地事务与责任交接
 
-界面账本使用条件更新、唯一约束和本地事务；本端日志、UI 权威、运行存储及消息交付分别提交，即使同库产品部署也不依赖跨模块全局事务。任何网络、模型、内容读取和领域调用都在事务外执行。
+默认界面账本使用条件更新、唯一约束和本地事务；本端日志、UI 权威、运行存储及消息交付分别提交，即使同库产品部署也不依赖跨模块全局事务。任何网络、模型、内容读取和领域调用都在事务外执行。输入规范允许接纳后、首次转交前固定父子映射；下表选择与接纳同时提交，不将这一更强实现约束施加给其他协议实现。
 
 | 事务 | 共同提交的内容 | 提交后才能进行的行为 |
 | --- | --- | --- |
@@ -120,49 +120,16 @@ SQLite 使用短写事务及唯一约束，`BEGIN IMMEDIATE` 提前取得写资�
 容量验证分别报告任务创建率、同时待输入量、每任务刷新次数、快照平均／峰值字节、慢端积压、SQLite 写等待、内容吞吐、控制延迟和每用户占用。测量配置、用户分布及注入故障一起保存；系统规模目标与当前单机参考能力分别报告。
 
 <a id="directory"></a>
-## 7. 跨设备目录与显式订阅
+## 7. 目录与订阅的本地投影
 
-UI-P1 采用固定权威目录。`harness.task.list@1` 在用户固定任务权威分页返回获准任务的 task_id、权威、任务修订、运行状态、独立控制状态、摘要与来源证明；`ui.list_surfaces@1` 在固定 UI 权威返回 surface、修订、用途与来源证明，独立 UI 可以没有 task_id。跨设备发现不创建第二个任务或界面写者；远端权威失联时只展示带观察时点的本端记录，并标明全局目录未核齐。
-
-目录请求的 collection_id 固定用户、权威、筛选范围与用途；游标绑定固定切点、范围、页序和有限期限。每页重新核验当前披露资格，资格变化使旧页／游标失效，不能凭历史快照披露已经撤权的摘要。`complete` 只表示当前获准集合已枚举，gap 不等于空目录。查询结果记录在本端 DirectorySnapshot 中，不能覆盖本端尚未交接的原命令。
-
-| 消息（harness.*@1） | 责任与恢复 |
-| --- | --- |
-| task.subscribe／ui.subscribe | 原 command_id、collection_id、对象集合、subscriber_endpoint、from_revision 与 until；权威持久保存有限订阅，subscription_id=command_id。空对象数组代表该获准 collection 全集，不能扩大集合 |
-| task.query_subscription／ui.query_subscription | 按原 collection／subscription 查询 active、closed、expired 及原期限；当前未见或历史丢失须返回 gap，不能伪造 expired |
-| task.unsubscribe／ui.unsubscribe | 原命令关闭订阅并保存回执；停止新通知不取消任务、清理内容或抹除已交接通知 |
-| task.directory_changed／ui.directory_changed | 临时通知只带 collection、subscription、revision，驱动有界拉取；不作为获准、对象存在或完整状态证明 |
-
-固定订阅属于权威管理，渲染端打开一个页面不隐式续租。服务按每用户订阅数、端点数、对象数和通知速率设有限配额；丢通知、重连、观察窗口耗尽时以目录快照恢复，定期有界刷新兜底。不得依赖 NAT 后端点提供可被直接访问的 HTTP 回调。
+对外合同集中在[目录与显式订阅](interaction-contract.md#directory)。默认实现以 DirectorySnapshot 保存用户、权威、collection、固定切点、游标、已读取页、观察时点及缺口；与本端尚未交接的 LocalCommand 分开记录。通知只合并刷新工作，定期有界刷新补漏；订阅原命令及查询关联复用 LocalCommand，不因页面重建续租。
 
 <a id="preview"></a>
-## 8. 受控中间预览与必要输入
+## 8. 预览获取记录
 
-UI-P2 采用 `harness.task.query_projection@1` 读取任务权威保存的固定中间投影。响应含 task_revision、projection_revision、预览清单和每个 input_request_id 的 required_preview_ids；预览不是正式任务成果，不改变 task.result 的最终性。预览含 content、完整来源、用途、保留截止、保留证明和 holder_id；发布前完成内容保留及[受管持有者登记](../content-and-provenance.md#holders)。
-
-核心只发布已核验的完整投影版本；同一 projection_revision 的预览及输入依赖不可修改。调用方未指定修订时读取当前版本，指定时读取原固定版本；缺失、清理或当前披露失败返回 gap，不能用后来预览填补原输入。无缺口的完整投影中，每个 required_preview_id 必须在该版本预览集中唯一出现；发生清理或披露缺口时可只保留最小输入依赖，相关输入保持禁用。输入不依赖预览时权威才可省略或置空 required_preview_ids；适配器无法证明依赖关系时停用相关输入，不自行推定为空。
-
-受信渲染宿主实际取得全部必需字节、校验 content 长度／摘要、来源与用途／期限后，保存 PreviewAcquisition，键为用户、端点、surface、输入、投影修订和 preview_id。加载提示、外部链接、HTTP 200、云端 UI manager 自己取到字节或 renderer 自报已看过均不足以产生该事实。缓存不可用或必需预览失效时，相应输入保持禁用；不依赖它的独立取消等控制仍按自身资格开放。
-
-用户经受控桥提交输入时，宿主先固定 UI operation_id，再根据上述本端记录构造 `preview_receipt`：host_endpoint、surface_id、ui_operation_id、task_id、input_request_id、projection_revision、各 preview_id 与 content_sha256、acquired_at、expires_at 及 proof。签发能力绑定已登记的受信宿主与当前用户会话，浏览器页面／生成的 renderer 不能写入证明字段或调用任意签名入口。证明摘要绑定全部字段与用户；它仅证明宿主实际取得并验证所需内容，不证明用户已阅读或理解。
-
-`ui.input.preview_receipt` 由宿主附加。云端 UI manager 独立核验真实 source、当前宿主登记、签名／受信证明、原 surface/input/task、UI operation_id、固定投影与全部必需内容摘要；将校验事实、原证明和父子转交映射与接纳共同保存。它原样转交到 `task.input.preview_receipt`，核心再次核验受信宿主和当前 UI 权威、原输入／投影绑定、期限与当前来源，不能只相信 UI accepted。必需预览非空时缺失或不符即拒绝消费；直接调用 task.input 也受同一门禁。重复输入先核对原规范意图；更换证明、预览或值不能复用已裁决的操作 ID。
-
-证明到期不抹除已经消费的事实，重投可恢复原决定；尚未消费时必须仍满足当前门禁。恢复不明的转交保留原证明、子 ID 和原截止，不能刷新证明来延长原操作。新输入意图应在核清原操作后创建。UI 快照、内容缓存和证明的控制元数据分别按数据策略保留，来源关闭先隐藏并禁用相应预览，再继续物理清理。
+完整交接和证明要求见[预览规范](interaction-contract.md#preview)。默认 PreviewAcquisition 以用户、端点、surface、输入、projection_revision 和 preview_id 为键，保存内容摘要、实际取得／校验依据、来源、用途、期限和证明关联。签发入口只接受受控桥冻结的原 UI 操作，渲染器不能直接写入该记录。UI 接纳事务保存原凭据及校验事实，和父子映射共同提交；恢复继续使用原记录，不更新旧证明期限。
 
 <a id="management-wire"></a>
-## 9. 受信远程管理与补证
+## 9. 管理适配器装配
 
-UI-P3 的管理入口由受信宿主固定安装，按当前本人身份和领域权限调用明确类型，不允许生成的 document 提供任意方法名或参数回调。每个管理动作保存原命令、目标权威、预期修订、冻结意图、原期限与查询路径；认证刷新不改变命令身份，也不把旧拒绝重新执行。
-
-| 管理能力 | 领域入口与界面保证 |
-| --- | --- |
-| 暂停／恢复 | `task.pause`／`task.resume` 带 expected_control_revision；动作边界生效，受控子树阻止后继。已开始有界动作可结束，外部／失联逐项未知；暂停期间正常完成等显式恢复，原期限照走 |
-| 调整预算 | `task.adjust_budget` 带 expected_budget_revision、目标／收尾各维度限额与子分配预期修订；权威裁决原额度及占用，界面不能以修改显示数字替代接受回执 |
-| 人工补证 | `task.submit_evidence` 绑定 condition_id／version、target_operation_id、证据、来源及验证器版本；接纳仅保存材料。`task.evidence_result` 的 verified／invalid／unavailable 由既定验证器产生，原提交通过 `task.query_evidence` 恢复 |
-| 许可管理 | [受信确认](../identity-and-authorization/cross-endpoint.md#confirmation)与撤销、状态／原命令查询；普通输入和外部 Agent 的补充说明均不产生批准 |
-| 记忆及提取策略 | `memory.mutate`、`memory.set_extraction_policy` 及原回执查询；明确显示修改、来源及当前策略。自动提取仅对用户 opt-in 的成功任务，使用独立用户额度 |
-| 能力／设备管理 | [执行端管理合同](../capability-and-execution/remote-contracts.md)的 manage／query_management、reopen_device／query_device_command；解除隔离不使旧操作重跑 |
-| 来源及内容清理 | [治理接口](../content-and-provenance.md#holders)关闭源或持有者、查看分项停止使用期限和物理残留；内容管理沿 content.retain／query_retention／close／query_cleanup |
-
-中间预览与人工补证是独立能力：预览辅助回答或查看过程，补证只有满足既定成功条件的验证规则才影响任务判断。修改整体任务目标新建任务，不能借补证、普通输入或预算更新偷偷重写原目标。跨域管理串行发起各自命令并分别展示结果，不宣称许可撤销、任务暂停和物理删除全局原子完成。
+管理入口及领域消息的规范引用见[受信管理合同](interaction-contract.md#management)，默认本地控件见[管理实现](interaction-and-recovery.md#management)。每个适配器固定目标权威、命令类型、规范化版本和原命令查询入口；本端日志保存用户意图与调用关联，不承担许可签发、证据核验或设备效果裁决。相应提供方缺席时不安装可调用入口。

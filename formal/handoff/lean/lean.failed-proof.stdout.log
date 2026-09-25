@@ -1,0 +1,32 @@
+formal/handoff/lean/Handoff.lean:145:68: error: unsolved goals
+case mk.crashA.receipt_origin
+reqCap ackCap : Nat
+s : State
+released : s.aPhase = Phase.released → s.bWork = true
+responsible : ¬s.aPhase = Phase.idle → s.aPhase = Phase.pending ∨ s.bWork = true
+once : (if s.bWork = true then 1 else 0) ≤ 1
+paired : s.bAccepted = s.bWork
+count : s.bCreates = if s.bWork = true then 1 else 0
+receipt : s.bKnown = true ∨ s.ackSeen = true ∨ 0 < s.acks → s.bWork = true
+conflict : 0 < s.reqBad → s.bWork = true
+gap : s.gap = true → s.aPhase = Phase.pending
+unstable✝ : s.stable = false
+up✝ : s.aUp = true
+⊢ s.bKnown = true ∨ 0 < s.acks → s.bWork = true
+'DurableHandoff.initial_safe' depends on axioms: [propext]
+'DurableHandoff.step_preserves_safety' depends on axioms: [propext, sorryAx]
+'DurableHandoff.reachable_safe' depends on axioms: [propext, sorryAx]
+'DurableHandoff.released_has_durable_owner' depends on axioms: [propext, sorryAx]
+'DurableHandoff.responsibility_never_lost' depends on axioms: [propext, sorryAx]
+'DurableHandoff.work_created_at_most_once' depends on axioms: [propext, sorryAx]
+'DurableHandoff.acceptance_and_work_agree' depends on axioms: [propext, sorryAx]
+'DurableHandoff.acknowledgements_have_durable_origin' depends on axioms: [propext, sorryAx]
+'DurableHandoff.conflict_probes_follow_acceptance' depends on axioms: [propext, sorryAx]
+'DurableHandoff.gap_is_pending' depends on axioms: [propext, sorryAx]
+'DurableHandoff.reachable_bounds' depends on axioms: [propext, Quot.sound]
+'DurableHandoff.step_never_returns_to_idle' depends on axioms: [propext]
+'DurableHandoff.step_keeps_released' depends on axioms: [propext]
+'DurableHandoff.restart_duplicate_witness' does not depend on any axioms
+'DurableHandoff.completion_after_restart_witness' does not depend on any axioms
+'DurableHandoff.normal_completion_witness' does not depend on any axioms
+'DurableHandoff.lost_ack_recovery_witness' does not depend on any axioms

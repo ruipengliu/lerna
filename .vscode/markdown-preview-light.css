@@ -1,0 +1,55 @@
+:root,
+body,
+body.vscode-dark,
+body.vscode-light {
+  color-scheme: light !important;
+  --vscode-editor-background: #ffffff !important;
+  --vscode-editor-foreground: #1f2328 !important;
+  --vscode-textLink-foreground: #0969da !important;
+  --vscode-textLink-activeForeground: #0550ae !important;
+  --vscode-textCodeBlock-background: #f6f8fa !important;
+  --vscode-textPreformat-background: #f6f8fa !important;
+  --vscode-textPreformat-foreground: #1f2328 !important;
+  --vscode-textBlockQuote-background: #f6f8fa !important;
+  --vscode-textBlockQuote-border: #d0d7de !important;
+}
+
+body {
+  background: #ffffff !important;
+  color: #1f2328 !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #1f2328 !important;
+}
+
+a {
+  color: #0969da !important;
+}
+
+pre,
+code {
+  background-color: #f6f8fa !important;
+  color: #1f2328 !important;
+}
+
+blockquote {
+  background-color: #f6f8fa !important;
+  border-left-color: #d0d7de !important;
+  color: #57606a !important;
+}
+
+th {
+  background-color: #f6f8fa !important;
+}
+
+th,
+td,
+hr {
+  border-color: #d0d7de !important;
+}

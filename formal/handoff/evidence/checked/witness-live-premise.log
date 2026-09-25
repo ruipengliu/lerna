@@ -1,0 +1,66 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 0 and seed 1 with 1 worker on 10 cores with 1820MB heap and 64MB offheap memory [pid: 62974] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/handoff/Handoff.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Handoff
+Starting... (2026-09-25 00:21:51)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 00:21:51.
+Error: Invariant NoStablePendingBudget is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ aPhase |-> "idle",
+  bAccepted |-> FALSE,
+  bWork |-> FALSE,
+  bCreates |-> 0,
+  reqGood |-> 0,
+  reqBad |-> 0,
+  acks |-> 0,
+  ackSeen |-> FALSE,
+  aUp |-> TRUE,
+  bUp |-> TRUE,
+  bKnown |-> FALSE,
+  aRemaining |-> 1,
+  bRemaining |-> 1,
+  gap |-> FALSE,
+  stable |-> FALSE ]
+
+State 2: <SaveA line 22, col 10 to line 23, col 48 of module Handoff>
+s = [ aPhase |-> "pending",
+  bAccepted |-> FALSE,
+  bWork |-> FALSE,
+  bCreates |-> 0,
+  reqGood |-> 0,
+  reqBad |-> 0,
+  acks |-> 0,
+  ackSeen |-> FALSE,
+  aUp |-> TRUE,
+  bUp |-> TRUE,
+  bKnown |-> FALSE,
+  aRemaining |-> 1,
+  bRemaining |-> 1,
+  gap |-> FALSE,
+  stable |-> FALSE ]
+
+State 3: <Stabilize line 94, col 14 to line 94, col 60 of module Handoff>
+s = [ aPhase |-> "pending",
+  bAccepted |-> FALSE,
+  bWork |-> FALSE,
+  bCreates |-> 0,
+  reqGood |-> 0,
+  reqBad |-> 0,
+  acks |-> 0,
+  ackSeen |-> FALSE,
+  aUp |-> TRUE,
+  bUp |-> TRUE,
+  bKnown |-> FALSE,
+  aRemaining |-> 1,
+  bRemaining |-> 1,
+  gap |-> FALSE,
+  stable |-> TRUE ]
+
+9 states generated, 9 distinct states found, 6 states left on queue.
+The depth of the complete state graph search is 3.
+The average outdegree of the complete state graph is 4 (minimum is 4, the maximum 4 and the 95th percentile is 4).
+Finished in 00s at (2026-09-25 00:21:51)

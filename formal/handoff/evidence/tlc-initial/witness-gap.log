@@ -1,0 +1,83 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 0 and seed 1 with 1 worker on 10 cores with 1820MB heap and 64MB offheap memory [pid: 60590] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/handoff/Handoff.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Handoff
+Starting... (2026-09-25 00:14:08)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 00:14:08.
+Error: Invariant NoUncommittedGap is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ aPhase |-> "idle",
+  bAccepted |-> FALSE,
+  bWork |-> FALSE,
+  bCreates |-> 0,
+  reqGood |-> 0,
+  reqBad |-> 0,
+  acks |-> 0,
+  ackSeen |-> FALSE,
+  aUp |-> TRUE,
+  bUp |-> TRUE,
+  bKnown |-> FALSE,
+  aRemaining |-> 1,
+  bRemaining |-> 1,
+  gap |-> FALSE,
+  stable |-> FALSE ]
+
+State 2: <SaveA line 22, col 10 to line 23, col 48 of module Handoff>
+s = [ aPhase |-> "pending",
+  bAccepted |-> FALSE,
+  bWork |-> FALSE,
+  bCreates |-> 0,
+  reqGood |-> 0,
+  reqBad |-> 0,
+  acks |-> 0,
+  ackSeen |-> FALSE,
+  aUp |-> TRUE,
+  bUp |-> TRUE,
+  bKnown |-> FALSE,
+  aRemaining |-> 1,
+  bRemaining |-> 1,
+  gap |-> FALSE,
+  stable |-> FALSE ]
+
+State 3: <SendA line 25, col 10 to line 27, col 67 of module Handoff>
+s = [ aPhase |-> "pending",
+  bAccepted |-> FALSE,
+  bWork |-> FALSE,
+  bCreates |-> 0,
+  reqGood |-> 1,
+  reqBad |-> 0,
+  acks |-> 0,
+  ackSeen |-> FALSE,
+  aUp |-> TRUE,
+  bUp |-> TRUE,
+  bKnown |-> FALSE,
+  aRemaining |-> 0,
+  bRemaining |-> 1,
+  gap |-> FALSE,
+  stable |-> FALSE ]
+
+State 4: <DeclareGap line 74, col 15 to line 76, col 45 of module Handoff>
+s = [ aPhase |-> "pending",
+  bAccepted |-> FALSE,
+  bWork |-> FALSE,
+  bCreates |-> 0,
+  reqGood |-> 1,
+  reqBad |-> 0,
+  acks |-> 0,
+  ackSeen |-> FALSE,
+  aUp |-> TRUE,
+  bUp |-> TRUE,
+  bKnown |-> FALSE,
+  aRemaining |-> 0,
+  bRemaining |-> 1,
+  gap |-> TRUE,
+  stable |-> FALSE ]
+
+19 states generated, 14 distinct states found, 7 states left on queue.
+The depth of the complete state graph search is 4.
+The average outdegree of the complete state graph is 2 (minimum is 0, the maximum 4 and the 95th percentile is 4).
+Finished in 00s at (2026-09-25 00:14:08)

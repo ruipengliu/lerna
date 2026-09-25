@@ -1,6 +1,6 @@
 # 消息契约与可靠交接
 
-[总览](README.md) · [传输实现](transport.md) · [恢复与控制](recovery-and-control.md) · [字段查阅](wire-format.md)
+[协议规范](protocol.md) · [传输实现](transport.md) · [恢复与控制](recovery-and-control.md) · [字段查阅](wire-format.md)
 
 一次能力调用可能已被接收，业务尚未接纳；也可能已经执行，结果却在断线中丢失。本页规定消息交付与业务模块如何分别保存事实、确认交接，并在失败后继续承担原有责任。消息交付采用至少一次交付尝试并识别重复消息，业务模块核对原操作、实际效果及再次尝试的条件。
 

@@ -1,6 +1,6 @@
 # 线格式与字段查阅
 
-[总览](README.md) · [消息语义](message-contract.md) · [传输绑定](transport.md#reference) · [扩展声明](extensions.md#manifest)
+[协议规范](protocol.md) · [消息语义](message-contract.md) · [传输绑定](transport.md#reference) · [扩展声明](extensions.md#manifest)
 
 本页集中定义 v1 的公共字段与解析规则，供实现者按“信封 → 请求关联 → 交付期限 → 编码 → 错误”查阅。可靠交接的职责见[消息契约](message-contract.md)，任务、执行与 UI 的行为见[领域契约](task-and-ui.md)；结构合法之后，接收端仍须核对身份、流绑定及业务前提。
 
@@ -144,6 +144,7 @@ sequenceDiagram
 
 业务再次尝试的判定集中见[操作恢复](recovery-and-control.md#retry)。
 
+<a id="schema-ownership"></a>
 ## 6. 校验入口与 Schema 归属
 
 结构校验以公共信封为入口，按已安装的 `type／type_version／kind` 选择载荷 Schema，再检查附加项与视图。各资产只定义自己负责的结构；领域消息的行为和查询边界由[领域分工](domain-profiles.md)及[任务与 UI 契约](task-and-ui.md#catalog)定位，扩展的安装与兼容规则见[扩展声明](extensions.md#manifest)。

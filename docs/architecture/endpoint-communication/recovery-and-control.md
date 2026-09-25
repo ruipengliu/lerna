@@ -1,6 +1,6 @@
 # 恢复与控制
 
-[总览](README.md) · [可靠交接](message-contract.md#handoff) · [流恢复字段](transport.md#stream-resume)
+[协议规范](protocol.md) · [可靠交接](message-contract.md#handoff) · [流恢复字段](transport.md#stream-resume)
 
 恢复要同时解决两件事：继续承担已接纳的责任，并阻止已失效的旧行动。消息交付模块组织核对、保存缺口并按结论放行，领域模块裁决业务状态，处理端在使用资源或启动行动前落实当前限制。恢复查询和迟到事实也有自己的权限条件，不能因新行动被禁止而一并丢弃。
 

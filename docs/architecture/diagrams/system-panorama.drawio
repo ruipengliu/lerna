@@ -242,6 +242,9 @@
         <mxCell id="communication-title" parent="communication" style="text;html=0;whiteSpace=wrap;overflow=visible;align=left;verticalAlign=top;spacing=0;fontFamily=Noto Sans CJK SC;fontSize=34;fontColor=#2367a3;fontStyle=1;connectable=0;" value="端点通信" vertex="1">
           <mxGeometry height="48" width="300" x="36" y="24" as="geometry" />
         </mxCell>
+        <mxCell id="communication-scope" parent="communication" style="text;html=0;whiteSpace=wrap;overflow=visible;align=left;verticalAlign=top;spacing=0;fontFamily=Noto Sans CJK SC;fontSize=20;fontColor=#52677b;fontStyle=0;connectable=0;" value="各领域共用；图中仅展开委派跨端链路" vertex="1">
+          <mxGeometry height="28" width="690" x="40" y="80" as="geometry" />
+        </mxCell>
         <mxCell id="coordination" parent="1" style="rounded=1;arcSize=2;fillColor=#ffffff;strokeColor=#c4d6e5;strokeWidth=2;container=1;collapsible=0;recursiveResize=0;connectable=0;" value="" vertex="1">
           <mxGeometry height="290" width="800" x="20" y="1970" as="geometry" />
         </mxCell>

@@ -1,0 +1,6 @@
+states/
+evidence/work/
+*.out
+*_TTrace_*.tla
+*_TTrace_*.bin
+*_TTrace_*.cfg
