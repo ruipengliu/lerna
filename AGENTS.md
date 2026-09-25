@@ -22,3 +22,17 @@
 - 按影响范围对照图、正文、契约及示例，核对参与者、消息方向、状态与保证强度；未落实的机制明确标注。已划定交付范围时，后续能力单列；当前机制的未落实依赖及缺失时的行为在入口说明。语义审查与渲染、链接检查分别完成，静态检查和运行验证分别报告。
 - 用户指出一处问题后，归纳错误类型，检查本次范围及关联文档中的同类问题并一并修正。已有依据且在授权范围内的调整自主完成；仅对影响关键决策的缺失信息提问，并附推荐。
 - 完成标准：读者无需依赖会话，就能说明方案主线、关键取舍与限制，并据正文判断异常后的行为。交付前解决可判定的概念歧义、职责缺口和图文矛盾；纯措辞修改做局部核对。
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live as Markdown files under `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five canonical triage roles use their default strings: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, and `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+This is a single-context repo using root `CONTEXT.md` and `docs/adr/`. See `docs/agents/domain.md`.
