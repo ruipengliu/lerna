@@ -56,6 +56,223 @@
   },
   {
     "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000afcc1",
+    "kind": "request",
+    "type": "harness.brain.decide",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000002",
+    "target": "00000000-0000-4000-8000-000000000004",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000c8361",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "task",
+        "id": "00000000-0000-4000-8000-0000000ad584"
+      }
+    },
+    "payload": {
+      "task_id": "00000000-0000-4000-8000-0000000ad584",
+      "work_id": "00000000-0000-4000-8000-0000000ad5d1",
+      "attempt_no": 1,
+      "claim_epoch": "1",
+      "base_decision_revision": "1",
+      "owner_epoch": "1",
+      "input": {
+        "content_id": "00000000-0000-4000-8000-0000000ad5d3",
+        "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+        "media_type": "application/json",
+        "size": "128",
+        "sha256": "00000000000000000000000000000000000000000000000000000000000ad5d3"
+      },
+      "template_version": "1",
+      "acceptance": {
+        "mode": "fixed",
+        "conditions": [
+          {
+            "condition_id": "read-A",
+            "version": "1",
+            "validator_id": "content-match",
+            "validator_version": "1",
+            "requirement": "Observed result must match approved A.",
+            "expected_binding": {
+              "content_id": "00000000-0000-4000-8000-0000000ad5b2",
+              "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+              "media_type": "application/json",
+              "size": "128",
+              "sha256": "00000000000000000000000000000000000000000000000000000000000ad5b2"
+            },
+            "allowed_producers": [
+              "00000000-0000-4000-8000-000000000003"
+            ]
+          }
+        ],
+        "gaps": []
+      },
+      "allowed_declarations": [],
+      "source_bindings": [
+        {
+          "source_authority": "00000000-0000-4000-8000-000000000003",
+          "resource_ref": "fixture://controlled-source/A",
+          "revision": "1",
+          "sha256": "00000000000000000000000000000000000000000000000000000000000aae61",
+          "observed_at": "2026-09-24T10:00:00.000Z",
+          "policy_ref": "00000000-0000-4000-8000-0000000aae62",
+          "policy_revision": "1",
+          "purposes": [
+            "read",
+            "generate",
+            "verify",
+            "disclose"
+          ],
+          "recipients": [
+            "00000000-0000-4000-8000-000000000001",
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000003",
+            "00000000-0000-4000-8000-000000000004"
+          ],
+          "processing_endpoints": [
+            "00000000-0000-4000-8000-000000000002",
+            "00000000-0000-4000-8000-000000000003",
+            "00000000-0000-4000-8000-000000000004"
+          ],
+          "retain_until": "2026-10-24T10:00:00.000Z",
+          "current_proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+            "proof_id": "00000000-0000-4000-8000-0000000aae63",
+            "revision": "1",
+            "binding_sha256": "00000000000000000000000000000000000000000000000000000000000aae63",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          }
+        }
+      ],
+      "profile_id": "fixture-model",
+      "profile_version": "1",
+      "deadline": "2026-09-24T11:00:00.000Z",
+      "allocation": {
+        "allocation_id": "00000000-0000-4000-8000-0000000ad5d4",
+        "revision": "1",
+        "owner_task_id": "00000000-0000-4000-8000-0000000ad584",
+        "amounts": [
+          {
+            "dimension": "calls",
+            "unit": "call",
+            "target_limit": "10",
+            "cleanup_limit": "2",
+            "mode": "hard"
+          }
+        ],
+        "mode": "hard",
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+          "proof_id": "00000000-0000-4000-8000-0000000ad5a3",
+          "revision": "1",
+          "binding_sha256": "00000000000000000000000000000000000000000000000000000000000ad5a3",
+          "issued_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T11:00:00.000Z"
+        }
+      },
+      "call_qualification": {
+        "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+        "proof_id": "00000000-0000-4000-8000-0000000ad5d5",
+        "revision": "1",
+        "binding_sha256": "00000000000000000000000000000000000000000000000000000000000ad5b5",
+        "issued_at": "2026-09-24T10:00:00.000Z",
+        "expires_at": "2026-09-24T11:00:00.000Z"
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000ad5d2",
+    "authorization": {
+      "grant_ref": "fixture-grant-current-user"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000afcc2",
+    "kind": "response",
+    "type": "harness.brain.decide",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000004",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000c8362",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "task",
+        "id": "00000000-0000-4000-8000-0000000ad584"
+      }
+    },
+    "payload": {
+      "status": "accepted",
+      "result": {
+        "task_id": "00000000-0000-4000-8000-0000000ad584",
+        "work_id": "00000000-0000-4000-8000-0000000ad5d1",
+        "attempt_no": 1,
+        "recorded": true
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000ad5d2",
+    "reply_to": "00000000-0000-4000-8000-0000000afcc1"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000afcc3",
+    "kind": "event",
+    "type": "harness.brain.observation",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-000000000004",
+    "target": "00000000-0000-4000-8000-000000000002",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000c8363",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "task",
+        "id": "00000000-0000-4000-8000-0000000ad584"
+      }
+    },
+    "payload": {
+      "task_id": "00000000-0000-4000-8000-0000000ad584",
+      "work_id": "00000000-0000-4000-8000-0000000ad5d1",
+      "attempt_no": 1,
+      "call_operation_id": "00000000-0000-4000-8000-0000000ad5d2",
+      "producer_endpoint": "00000000-0000-4000-8000-000000000004",
+      "call_revision": "1",
+      "state": "returned",
+      "physical_state": "not_started",
+      "output": {
+        "content_id": "00000000-0000-4000-8000-0000000ad5d6",
+        "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+        "media_type": "application/json",
+        "size": "128",
+        "sha256": "00000000000000000000000000000000000000000000000000000000000ad5d6"
+      },
+      "usage": [],
+      "gaps": [
+        "The approved catalog declaration needed for the next read is not in this snapshot."
+      ],
+      "stop_requested": false,
+      "cancel_operations": [],
+      "context_requirements": [
+        {
+          "requirement_id": "catalog-read-A",
+          "kind": "catalog_candidates",
+          "reason": "Need an exact approved read declaration before proposing the action.",
+          "catalog_binding": "approved-local-catalog",
+          "query": "read approved local file A with authoritative result query"
+        }
+      ]
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000ad5d2"
+  },
+  {
+    "protocol_version": 1,
     "message_id": "00000000-0000-4000-8000-0000000afc83",
     "kind": "request",
     "type": "harness.catalog.resolve",
@@ -226,7 +443,7 @@
       "work_id": "00000000-0000-4000-8000-0000000ad599",
       "attempt_no": 1,
       "claim_epoch": "1",
-      "base_decision_revision": "1",
+      "base_decision_revision": "2",
       "owner_epoch": "1",
       "input": {
         "content_id": "00000000-0000-4000-8000-0000000ad5b3",

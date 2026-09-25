@@ -64,11 +64,11 @@ lane 只决定调度与保留容量。它既不授予管理权限，也不自动
 
 | 领域 | 必须完成的交接 | 权威文档／资产 |
 | --- | --- | --- |
-| 身份与授权 | 主体及 owner 绑定、许可解析、授权使用、受信确认、快照连续恢复与应用回执、离线证明 | [身份合同](../identity-and-authorization/contracts.md)、[identity.schema.json](schemas/identity.schema.json) |
+| 身份与授权 | 主体及 owner 绑定、许可解析、单项／同权威集合消费及原集合查询、受信确认、快照连续恢复与应用回执、离线证明；集合边界沿[BeginUseSet](../identity-and-authorization/mechanisms.md#use-set) | [身份合同](../identity-and-authorization/contracts.md)、[identity.schema.json](schemas/identity.schema.json) |
 | 准确目录与执行 | 不可变声明、当前发布与实例依据、原调用接纳、带业务修订的事实与可信累计用量、原取消答复及管理回执 | [执行合同](../capability-and-execution/catalog-and-contracts.md)、[execution-control.schema.json](schemas/execution-control.schema.json) |
 | 任务控制 | 暂停／恢复、预算调整、补证、原控制和取消答复查询；控制决定、子树传播与实际效果分开 | [内核接口](../task-kernel/storage-and-interfaces.md)、[task-control.schema.json](schemas/task-control.schema.json) |
 | 独立远程大脑 | 原 work／attempt、领取资格、固定输入与来源、原调用接纳／查询／取消、停止事实及费用回送 | [大脑调用](../brain-system/contracts-and-runtime.md)、[brain.schema.json](schemas/brain.schema.json) |
-| 记忆与获准视图 | 精确版本访问与修改、原命令核对、固定视图切点、连续页、关闭与分项应用回执 | [记忆接口](../memory-system/contracts.md)、[同步](../memory-system/synchronization.md)、[memory.schema.json](schemas/memory.schema.json) |
+| 记忆与获准视图 | 精确版本访问与修改、独立管理元数据枚举／当前修订检查、原命令核对、有限查询集合、固定同步切点与分项应用回执；元数据读取不要求旧正文来源可用 | [记忆接口](../memory-system/contracts.md)、[同步](../memory-system/synchronization.md)、[memory.schema.json](schemas/memory.schema.json) |
 | 来源、内容与受管副本 | 当前来源证明、有限引用保留、持有者登记、关闭传播、停止使用／物理清理／残留回执 | [共同来源](../content-and-provenance.md)、[governance.schema.json](schemas/governance.schema.json) |
 | 用户交互 | 获准任务与 surface 目录、订阅、中间投影及必需预览绑定；管理操作沿所属领域裁决 | [交互规范](../application-and-interaction/interaction-contract.md)、[目录](../application-and-interaction/interaction-contract.md#directory)／[预览](../application-and-interaction/interaction-contract.md#preview)／[管理](../application-and-interaction/interaction-contract.md#management)、[interaction.schema.json](schemas/interaction.schema.json) |
 | Agent 协作 | 原委派、单一权威下的受信子接纳、权限／预算收缩、结果用量、控制及普通外部输入交接 | [协作规范](../agent-coordination/peer-contracts.md#normative)、[coordination.schema.json](schemas/coordination.schema.json) |

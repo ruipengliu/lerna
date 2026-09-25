@@ -108,9 +108,7 @@
           "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/time"
         },
         "confidence": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
+          "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/confidence"
         },
         "source_bindings": {
           "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_bindings"
@@ -143,6 +141,39 @@
         },
         "statement_proof": {
           "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/proof_ref"
+        },
+        "type_details": {
+          "type": "object"
+        },
+        "schema_version": {
+          "const": 1
+        },
+        "content_sha256": {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/digest"
+        },
+        "review_after": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/time"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "conflict_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "conflict_policy_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
         }
       },
       "required": [
@@ -158,7 +189,10 @@
         "source_bindings",
         "policy",
         "holder_id",
-        "origin"
+        "origin",
+        "type_details",
+        "schema_version",
+        "content_sha256"
       ],
       "additionalProperties": false,
       "allOf": [
@@ -197,8 +231,92 @@
               "effect"
             ]
           }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "fact"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "type_details": {
+                "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/fact_details"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "preference"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "type_details": {
+                "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/preference_details"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "inference"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "type_details": {
+                "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/inference_details"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "experience"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "type_details": {
+                "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/experience_details"
+              }
+            }
+          }
         }
-      ]
+      ],
+      "dependentRequired": {
+        "conflict_key": [
+          "conflict_policy_version"
+        ],
+        "conflict_policy_version": [
+          "conflict_key"
+        ]
+      }
     },
     "view_binding": {
       "type": "object",
@@ -227,11 +345,16 @@
               "observed_at",
               "confidence",
               "source_bindings",
-              "policy"
+              "policy",
+              "type_details",
+              "labels",
+              "conflict_key",
+              "conflict_policy_version",
+              "review_after"
             ]
           },
           "minItems": 1,
-          "maxItems": 7
+          "maxItems": 12
         },
         "retain_until": {
           "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/time"
@@ -466,11 +589,6 @@
                 "partial": {
                   "type": "boolean"
                 },
-                "next_cursor": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 2048
-                },
                 "gaps": {
                   "type": "array",
                   "items": {
@@ -478,14 +596,40 @@
                   },
                   "minItems": 0,
                   "maxItems": 64
+                },
+                "page": {
+                  "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/query_page"
                 }
               },
               "required": [
                 "records",
                 "partial",
-                "gaps"
+                "gaps",
+                "page"
               ],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "page": {
+                        "properties": {
+                          "set_complete": {
+                            "const": false
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "partial": {
+                        "const": true
+                      }
+                    }
+                  }
+                }
+              ]
             }
           },
           "required": [
@@ -519,7 +663,6 @@
       },
       "required": [
         "memory_id",
-        "revision",
         "purpose",
         "recipient_endpoint"
       ],
@@ -1163,6 +1306,486 @@
             },
             "result": {
               "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/command_receipt"
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "confidence": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "unknown"
+            },
+            "issuer_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "basis_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "basis_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            }
+          },
+          "required": [
+            "kind",
+            "issuer_ref",
+            "basis_ref",
+            "basis_version",
+            "reason"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "graded"
+            },
+            "issuer_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "basis_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "basis_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            }
+          },
+          "required": [
+            "kind",
+            "issuer_ref",
+            "basis_ref",
+            "basis_version",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "numeric"
+            },
+            "issuer_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "basis_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "basis_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "value": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "kind",
+            "issuer_ref",
+            "basis_ref",
+            "basis_version",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "fact_details": {
+      "type": "object",
+      "properties": {
+        "statement_subject": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      },
+      "required": [
+        "statement_subject"
+      ],
+      "additionalProperties": false
+    },
+    "preference_details": {
+      "type": "object",
+      "properties": {
+        "dimension": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "dimension"
+      ],
+      "additionalProperties": false
+    },
+    "inference_details": {
+      "type": "object",
+      "properties": {
+        "method_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "uncertainty": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        }
+      },
+      "required": [
+        "method_ref",
+        "model_version",
+        "uncertainty"
+      ],
+      "additionalProperties": false
+    },
+    "experience_details": {
+      "type": "object",
+      "properties": {
+        "capability_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "capability_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "environment_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "environment_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "capability_ref",
+        "capability_version",
+        "environment_ref",
+        "environment_version"
+      ],
+      "additionalProperties": false
+    },
+    "query_page": {
+      "type": "object",
+      "properties": {
+        "query_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "cut_at": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/time"
+        },
+        "expires_at": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/time"
+        },
+        "set_complete": {
+          "type": "boolean"
+        },
+        "exhausted": {
+          "type": "boolean"
+        },
+        "next_cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "query_id",
+        "cut_at",
+        "expires_at",
+        "set_complete",
+        "exhausted"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "exhausted": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "next_cursor"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "next_cursor"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "management_metadata": {
+      "type": "object",
+      "properties": {
+        "memory_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "current_revision": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/seq"
+        },
+        "record_state": {
+          "enum": [
+            "present",
+            "deleted"
+          ]
+        },
+        "checked_at": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/time"
+        },
+        "kind": {
+          "enum": [
+            "fact",
+            "preference",
+            "inference",
+            "experience"
+          ]
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "minItems": 0,
+          "maxItems": 64
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/source_ref"
+          },
+          "minItems": 0,
+          "maxItems": 128
+        }
+      },
+      "required": [
+        "memory_id",
+        "current_revision",
+        "record_state",
+        "checked_at"
+      ],
+      "additionalProperties": false
+    },
+    "memory_list_metadata_request": {
+      "type": "object",
+      "properties": {
+        "collection_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "purpose": {
+          "const": "memory_management"
+        },
+        "recipient_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "collection_id",
+        "purpose",
+        "recipient_endpoint",
+        "limit"
+      ],
+      "additionalProperties": false
+    },
+    "memory_list_metadata_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/management_metadata"
+                  },
+                  "minItems": 0,
+                  "maxItems": 200
+                },
+                "page": {
+                  "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/query_page"
+                },
+                "partial": {
+                  "type": "boolean"
+                },
+                "gaps": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/gap"
+                  },
+                  "minItems": 0,
+                  "maxItems": 64
+                }
+              },
+              "required": [
+                "items",
+                "page",
+                "partial",
+                "gaps"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "page": {
+                        "properties": {
+                          "set_complete": {
+                            "const": false
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "partial": {
+                        "const": true
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "status",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/rejected"
+        }
+      ]
+    },
+    "memory_inspect_current_request": {
+      "type": "object",
+      "properties": {
+        "memory_id": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        },
+        "purpose": {
+          "const": "memory_management"
+        },
+        "recipient_endpoint": {
+          "$ref": "https://harness.invalid/protocol/v1/common.schema.json#/$defs/uuid"
+        }
+      },
+      "required": [
+        "memory_id",
+        "purpose",
+        "recipient_endpoint"
+      ],
+      "additionalProperties": false
+    },
+    "memory_inspect_current_response": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "completed"
+            },
+            "result": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/management_metadata"
+                  },
+                  "minItems": 0,
+                  "maxItems": 1
+                },
+                "gaps": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "https://harness.invalid/protocol/v1/domain-common.schema.json#/$defs/gap"
+                  },
+                  "minItems": 0,
+                  "maxItems": 64
+                }
+              },
+              "required": [
+                "items",
+                "gaps"
+              ],
+              "additionalProperties": false
             }
           },
           "required": [

@@ -12,15 +12,17 @@
 | 身份 | `user_id`、`authority_id`、`memory_id`；ID 创建后不变、不复用；单用户固定权威，错投不另建记录 |
 | 内容版本 | `revision`、`kind`、获准正文、内容摘要、`schema_version`；正文按 UTF-8 有界文本或固定结构保存，修订不可改写；默认正文直接进入事务库 |
 | 信息类型 | `fact`、`preference`、`inference`、`experience` 四类；fact 表示来源作出的事实陈述，不等于系统证明为真 |
-| 类型补充 | fact 带陈述对象；preference 带偏好维度；inference 带推导方法／模型版本及不确定性说明；experience 带任务／操作事实、适用能力和环境版本、结果保证类别，未知效果必须保留未知 |
+| 类型补充 | 必填 `type_details`：fact 带 `statement_subject`；preference 带 `dimension`；inference 带 `method_ref`、`model_version`、`uncertainty`；experience 带 `capability_ref`、`capability_version`、`environment_ref`、`environment_version`，另以 `source_operation_id`、可适用的 `source_task_id` 和 `effect` 关联实际事实，未知效果必须保留 unknown |
 | 时间 | `observed_at` 为来源观察时点，`recorded_at` 为权威提交时点；`valid_from`、可选 `valid_until` 限定业务适用期；`review_after` 只触发复查提示，不延长有效期；策略另给数据保留截止，不能与业务有效期互相替代 |
-| 可信度 | `confidence` 含数值或等级、给出方和依据／校准版本；未知明确写 unknown。用户声明的来源身份可信与其陈述真假分开，模型原始分数不当校准概率 |
+| 可信度 | `confidence` 为 `kind=unknown/graded/numeric` 的互斥对象，均含 `issuer_ref`、`basis_ref`、`basis_version`；unknown 只带 `reason`，graded 的 `value` 是该依据版本定义的等级，numeric 的 `value` 为 0–1 数值。无分数时保存 unknown，不编造 0 或 1；用户声明的来源身份可信与其陈述真假分开，模型原始分数不当校准概率 |
 | 适用范围 | 有限结构条件：任务类型、项目／容器、设备／应用／能力版本等；空集只在许可明确允许全用户范围时成立。未知条件按不匹配，不由模型猜测 |
 | 匹配与冲突 | 规范标签；可选 `conflict_key` 及生成它的策略版本，表示已知同维度／同范围的竞争组。没有竞争键表示未识别，不表示无矛盾；键及标签不得扩大适用或授权范围 |
 | 来源 | `source_bindings` 为受信服务验证的完整闭包；每项保存来源权威、资源 ID、精确修订／内容摘要、来源角色、获取时间、用途／接收方限制、权限及当前状态证明引用 |
 | 生成依据 | 显式输入的受信原命令／用户确认引用，或提取任务／操作、固定输入闭包、提取规则／模型版本；提供者自报来源不算受信证明 |
 | 策略 | `policy_ref` 及修订；原始数据、索引、派生记忆、返回结果四类产物分别列可存储／处理位置、允许用途／接收方、保留期限、同步字段和离线新鲜度；未声明的同步／外发禁止 |
 | 生命周期 | 当前记录指针指向最新修订；删除后指向不可复活的墓碑。是否可用于一次请求由当前修订、有效期、来源与权限共同导出，不另存笼统的 active 布尔值 |
+
+同进程和跨端保存同一个记录值：`schema_version=1`，`content_sha256` 是 UTF-8 正文摘要；`labels` 是有限规范标签，`conflict_key` 与 `conflict_policy_version` 同时出现。可信度给出方和依据、类型补充仍是受控内容，不能借这些字段返回未获准摘要；服务验证其受信关联，字段自报不建立身份。未知可信度的依据可指向固定版本的“未评估”规则；等级与数值只有在相同依据／校准版本下才能比较。scope 的线值是已安装规则定义的规范条件标识，服务负责解析，不把任意字符串当可执行谓词。
 
 用户通过管理入口直接作出的陈述在本权威建立来源根，根内容、用户身份关联、保存依据与记忆修订共同提交。该根允许独立于临时聊天正文保留的前提是用户明确允许保存这项陈述及必要来源元数据；否则不能通过复制正文规避原来源的保留限制。接入文件、任务输出和模型提取产物始终保留其真实输入闭包。
 
@@ -41,6 +43,7 @@
 | 命令 | 用户／command_id、固定意图、预期修订、期限、授权使用关联、准备／最终回执 | `committed`／`rejected`／`closed_without_commit` 结论与其依据固定；提交内容与 committed 回执同事务 |
 | 变化记录 | 用户／change_seq、记录 ID 与新修订、变更类别、最小获准数据 | 与记忆变更及维护责任同事务；同步和索引水位不能越过缺口 |
 | 维护工作 | 唯一工作键、种类、目标修订／代次、状态、领取代次、重试／期限、缺口；保留到期清理含 not_before 和截止 | 创建责任与原变更同事务；完成及后续责任同事务。索引、清理、视图交接共用此表，不另建业务调度器 |
+| 查询集合 | query_id、受信调用绑定、固定切点／排序、有限 ID 及检索修订、游标位置和原期限；不保存正文或授权快照 | 创建集合与其保留额度共同登记；位置只向前，退出／到期释放；丢失集合仅返回 cursor_expired，不改变任何业务事实 |
 | 视图／副本 | 视图绑定、快照清单／固定切点、连续页与交接责任；副本的暂存区、当前代次、应用位置 | 接收方内容、移除项及应用游标同事务；完整快照就绪才替换可见代次 |
 | 清理跟踪 | 原删除／失效命令、已封闭读取修订、各载体的清理位置／回执／缺口、备份边界 | 不随原响应或索引工作完成删除；外部未确认项保留 |
 
@@ -56,6 +59,8 @@
 | `Search` | 有限查询文本／结构过滤、任务适用条件、top_k、扫描／返回字节限额、可选游标 → `ReadResult` | 返回获准当前记录；候选不足、扫描截断、索引落后或来源缺口分别报告，不将空页解释为用户没有记忆 |
 | `Read` | 有界精确 memory_id 列表、可选期望修订 → `ReadResult` | 当前版本不匹配时报告 stale_reference；不默默换新版本继续旧意图。查看历史需管理用途和独立权限 |
 | `Revalidate` | 固定记忆引用及完整绑定、即将进行的用途／接收方 → 当前适用证明或逐项缺口 | 只复核，返回证明不等于后续模块的启动许可；需要新内容时重新 Read／Build |
+| `ListMetadata` | 管理 collection、purpose=memory_management、接收方、页限额及可选游标 → `MetadataResult` | 按固定有界 ID 集合枚举当前可管理对象；不读取正文，不要求旧来源可用；未知对象和无最小披露权对象均不出现 |
+| `InspectCurrent` | 精确 memory_id、purpose=memory_management、接收方 → 零或一项当前管理元数据及缺口 | 不要求调用方知道 revision；刷新 CAS 所需的当前修订，不授予正文或修改权限 |
 | `Mutate` | `create`／`replace`／`delete`／`restrict`，固定命令、目标、expected_revision、内容／来源或策略 → `MutationResult` | create 必须期望不存在（0）；其他动作要求当前精确修订。replace 提供完整新版本，delete 禁用并登记清理；不支持盲目 upsert |
 | `ReadCommand` | 原 command_id、当前查询权限 → 原提交事实与可查缺口 | 用于响应丢失核对，历史 committed 不是当前内容／披露许可；未见记录不证明永不提交 |
 | `CloseCommand` | 原完整命令身份及意图、当前控制权限 → 原最终结果或 closed_without_commit | 与原修改竞争同一命令键；关闭先提交则迟到原修改被拒，修改先提交则返回 committed。不能用关闭回滚已生效内容 |
@@ -72,7 +77,11 @@
 
 `MutationResult` 分别表达 `committed`（固定结果修订及提交序号）、`rejected`（确定拒绝及原因）、`unknown`（需查原键）。`ReadCommand` 返回 `prepared`、`committed`、`rejected`、`closed_without_commit`、`not_observed` 或 `recovery_gap`；其中 prepared／not_observed／recovery_gap 均不能当未生效，unknown 是调用观察结果而非持久业务状态。delete 的 committed 只证明权威逻辑禁用及清理责任已保存。
 
-管理入口提供分页查看、显示来源／类型／范围、纠正、限制用途、删除和查看清理状态，直接调用这些内部接口。它从真实用户会话建立管理权限，仍经已安装资源动作和授权链检查；Agent 无隐含本人管理资格。确认显示的对象、内容摘要与范围必须绑定原命令，普通任务输入已接纳不能代替许可签发。
+`MetadataResult` 的条目必含 `memory_id`、`current_revision`、`record_state=present/deleted` 和 `checked_at`；present 仅表示当前记录未删除，不表示内容现在可用。`kind`、`scope` 和最小 `source_refs` 仅在各字段当前可披露时出现；无权披露或来源不可达时省略，不返回正文、正文摘要、可信度说明、推断细节或来源摘要。来源引用也可能敏感，不能因具有删除权就附带返回。单项无法披露与对象未知使用相同空结果／forbidden 缺口，不泄露存在性。分页只包含获准条目，不返回隐藏 ID、数量或删除来源的解释正文。
+
+Search 与 ListMetadata 都返回 `page={query_id,cut_at,expires_at,set_complete,exhausted,next_cursor?}`；set_complete 只说明在固定范围及切点完成了可获准集合的构建，exhausted 只说明该有限集合已遍历。exhausted=false 必须有后续游标，true 则不得携带；扫描／集合截断时 set_complete=false 且 partial=true，集合遍历完也不改成完整。`partial` 表示该 query_id 截至本页累计出现的缺口；一旦为 true，后续页不能恢复为 false。只有 exhausted=true、set_complete=true 且 partial=false 才能报告该固定集合的完整遍历。游标不允许扩展查询，全部页共用原期限和总次数／字节额度，处理规则见[分页](mechanisms.md#pagination)。
+
+管理入口先用 ListMetadata／InspectCurrent 建立或刷新对象和精确修订，再为纠正或查看正文另调 Read；删除／收紧只带当前管理资格、确认目标及 expected_revision，正文和旧来源无需重新开放。显示来源／类型／范围只使用本次获准字段，其他情况显示“不可披露”，不要求用户重新读出旧内容才能删除。它提供分页查看、纠正、限制用途、删除和查看清理状态。它从真实用户会话建立管理权限，仍经已安装资源动作和授权链检查；Agent 无隐含本人管理资格。确认显示的对象、当前修订、动作及获准范围必须绑定原命令；涉及新正文的确认另绑定其内容摘要，普通任务输入已接纳不能代替许可签发。
 
 <a id="integration"></a>
 ## 4. 任务提取与能力接入

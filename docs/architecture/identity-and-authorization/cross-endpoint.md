@@ -55,6 +55,8 @@ resolve、query_state 与恢复页用 grant_states 分别表达静态 Grant 的�
 <a id="use"></a>
 ## 3. 主体、来源与有限使用
 
+同一消费权威下的一次多来源使用采用 `authorization.begin_use_set@1`，返回原集合回执及本次 `current_decision`；`authorization.query_use_set@1` 按原 command_id、authority_endpoint 和 operation_id 查询完整历史集合。前者为 work、后者为 recovery，scope 都绑定原使用 operation_id；变更请求的信封 operation_id 仍关联本次 command_id。字段由 [identity Schema](../endpoint-communication/schemas/identity.schema.json) 定义，语义以[集合消费](mechanisms.md#use-set)为准。成员、操作／处理端、受信消费权威、完整意图和共同截止须核验，不能仅校验 JSON 合法就宣称集合原子性。查询空集合附明确缺口，不能解释为原消费未提交；查询不返回当前启动许可。
+
 `authorization.evaluate` 在准入前传递尚无操作／单元 ID 的 evaluation_intent；`begin_use` 在操作分配后传递完整 use_intent：原操作、受信 actor、处理端、真实资源、动作、用途、接收方、处理位置、有限单元和来源角色、意图摘要、完整 source_bindings 及 operation_basis。入站服务先从会话与已保存的原操作确定这些关系，再比对载荷；声明字段不产生身份。`begin_use` 在许可使用权威提交占用，返回历史 use_receipt 和本次 current_decision；两者同时满足且原 start_before 未过才允许启动。`query_use` 只恢复历史，不授予新启动资格。
 
 共享编码见 [domain-common](../endpoint-communication/schemas/domain-common.schema.json)。source_binding 是完整平铺来源闭包的一个精确版本，含来源权威、资源、修订、字节摘要、观察时点、策略修订、用途／接收方／处理端、保留截止及当前 proof_ref。闭包不完整、超限或未知约束拒绝；证明引用必须由所指权威经受信关联核验内容摘要、版本与期限，不能只因 proof_id 形似 UUID 放行。完整来源查询归 [source.prove](../content-and-provenance.md#remote)，字节及保留归内容权威。

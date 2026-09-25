@@ -3740,6 +3740,134 @@
               "$ref": "https://harness.invalid/protocol/v1/governance.schema.json#/$defs/governance_close_holder_response"
             }
           }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.begin_use_set"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_begin_use_set_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.begin_use_set"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_begin_use_set_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.query_use_set"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_query_use_set_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.authorization.query_use_set"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_query_use_set_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.list_metadata"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_list_metadata_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.list_metadata"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_list_metadata_response"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.inspect_current"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "request"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_inspect_current_request"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "harness.memory.inspect_current"
+            },
+            "type_version": {
+              "const": 1
+            },
+            "kind": {
+              "const": "response"
+            },
+            "payload": {
+              "$ref": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_inspect_current_response"
+            }
+          }
         }
       ]
     }

@@ -31,7 +31,7 @@ PackageDescriptor 描述可安装制品，与[协议 extension manifest](../endp
 | `publisher_ref`、`provenance_ref` | 受信发布来源及审查链；宿主信任配置把发布者、命名空间和允许摘要关联，不能只验证下载来的自签名或自报名称 |
 | `exports` | `component`／`driver`／`skill`／`agent_config`／`protocol_handler` 及本地入口、接口版本、内容摘要；同包可有多个导出，每个单独验收。核心保留命名空间仅宿主内置注册 |
 | `dependencies` | 必需／可选依赖、允许的精确候选及接口要求；安装计划最终只选一个固定版本。可选缺席的行为必须显式声明，不能在运行时按网络搜索结果补齐 |
-| `contract_refs` | 导出所用能力声明、Schema、Skill 来源、Agent 合同、协议 manifest 及合法／非法／恢复用例的本地引用与摘要；禁止未固定的远程引用 |
+| `contract_refs` | 导出所用能力声明、Schema、Skill 来源、Agent 合同、TaskPolicy／Verifier 本地接口与格式、协议 manifest 及合法／非法／恢复用例的本地引用与摘要；禁止未固定的远程引用 |
 | `host_requirements` | 支持的平台和架构、所需宿主接口、隔离能力、可读写持久格式集合及升级限制；包自报只作验证输入 |
 | `resource_profile` | CPU、内存、进程数、临时盘、日志／IPC、调用数和字节的有限上限；网络、内容和凭据访问经宿主受控接口，声明不授予权限 |
 | `retention_requirements` | 原实现查询／取消、重投窗口、待交接结果、私有数据及最小墓碑的保留要求；不允许持久化必要恢复依据的配置不得接纳对应能力 |
@@ -55,6 +55,15 @@ installation_lock:
   dependency_versions: {org.example.content-client: "1.2.0"}
   optional_missing: []
 ```
+
+<a id="task-policy-contribution"></a>
+### 任务策略与验证器贡献
+
+TaskPolicy 和 Verifier 使用既有 `component` 导出接入[核心本地策略接口](../task-kernel/storage-and-interfaces.md#task-policy)，不增加线消息类型或公网提交字段。安装锁固定 `policy_id`、精确 `version`、`config_digest`、本地入口及接口版本，并固定关联 Verifier 的身份、版本、代码／配置摘要。相同精确绑定不能替换内容，配置变化产生新的 config_digest 和管理修订；宿主按受信目标路由选择策略，多个匹配必须有确定优先序，不交由模型挑选判据。
+
+贡献声明须包含支持的目标类别、输入及 condition 格式／版本、允许的证据格式和生产者、成果版本关联、准确能力及其保证要求，以及各本地调用的时间、输入字节、输出大小与资源上限。安装验证 `Describe`、`BindGoal`、`PlanVerification` 和 `VerifyLocal` 的接口及负例；格式相同但保证不符、验证器缺席、隐藏联网／生成或超出有限执行约束时，不启用相关目标。代码信任与隔离仍按原组件批准流程处理，普通包安装不自动获得核心信任。
+
+安装及替换只改变后续获准选择。任务接纳前，宿主按[引用登记规则](#storage)保留精确策略、验证器及配置；核心固定任务绑定并保存条件、证据与完成事实。旧任务不热切版本，排空、回收及安全撤回沿现有组件规则；扩展管理器不保存或修改任务运行事实，也不代替核心准入外部验证操作。策略接口的失败与等待语义以核心契约为准。
 
 <a id="approval"></a>
 ## 3. 启用依据与作用域

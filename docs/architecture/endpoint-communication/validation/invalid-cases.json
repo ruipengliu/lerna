@@ -1935,5 +1935,571 @@
         "value": "https://example.invalid/callback"
       }
     ]
+  },
+  {
+    "name": "empty use set",
+    "base": "harness.authorization.begin_use_set",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/members",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "mixed use set operation",
+    "base": "harness.authorization.begin_use_set",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/members/1/intent/operation_id",
+        "value": "00000000-0000-4000-8000-000000099991"
+      }
+    ]
+  },
+  {
+    "name": "mixed use set processor",
+    "base": "harness.authorization.begin_use_set",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/members/1/intent/processor_endpoint",
+        "value": "00000000-0000-4000-8000-000000099992"
+      }
+    ]
+  },
+  {
+    "name": "mixed use set authority",
+    "base": "harness.authorization.begin_use_set",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/authority_endpoint",
+        "value": "00000000-0000-4000-8000-000000099993"
+      }
+    ]
+  },
+  {
+    "name": "use set deadline mismatch",
+    "base": "harness.authorization.begin_use_set",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/receipt/receipts/1/start_before",
+        "value": "2026-09-24T10:59:00.000Z"
+      }
+    ],
+    "kind": "response"
+  },
+  {
+    "name": "memory confidence rejects old bare numeric score",
+    "base": "harness.memory.mutate",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/mutation/record/confidence",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "memory confidence requires issuer",
+    "base": "harness.memory.mutate",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/mutation/record/confidence/issuer_ref"
+      }
+    ]
+  },
+  {
+    "name": "memory confidence requires basis version",
+    "base": "harness.memory.mutate",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/mutation/record/confidence/basis_version"
+      }
+    ]
+  },
+  {
+    "name": "unknown memory confidence cannot carry score",
+    "base": "harness.memory.mutate",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/mutation/record/confidence",
+        "value": {
+          "kind": "unknown",
+          "issuer_ref": "fixture://assessor",
+          "basis_ref": "fixture://not-assessed",
+          "basis_version": "1",
+          "reason": "not assessed",
+          "value": 0.8
+        }
+      }
+    ]
+  },
+  {
+    "name": "graded memory confidence cannot carry numeric grade",
+    "base": "harness.memory.mutate",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/mutation/record/confidence/value",
+        "value": 0.8
+      }
+    ]
+  },
+  {
+    "name": "memory requires kind-specific details",
+    "base": "harness.memory.mutate",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/mutation/record/type_details"
+      }
+    ]
+  },
+  {
+    "name": "memory inference cannot use preference details",
+    "base": "harness.memory.mutate",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/mutation/record/kind",
+        "value": "inference"
+      }
+    ]
+  },
+  {
+    "name": "memory conflict key requires strategy version",
+    "base": "harness.memory.mutate",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/mutation/record/conflict_key",
+        "value": "answer-style"
+      }
+    ]
+  },
+  {
+    "name": "management metadata cannot include body",
+    "base": "harness.memory.list_metadata",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/items/0/text",
+        "value": "private body"
+      }
+    ],
+    "kind": "response"
+  },
+  {
+    "name": "management metadata cannot include source summary",
+    "base": "harness.memory.list_metadata",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/items/0/source_summary",
+        "value": "private source summary"
+      }
+    ],
+    "kind": "response"
+  },
+  {
+    "name": "management inspect cannot disclose body digest",
+    "base": "harness.memory.inspect_current",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/items/0/content_sha256",
+        "value": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "kind": "response"
+  },
+  {
+    "name": "management list cannot change purpose to content use",
+    "base": "harness.memory.list_metadata",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/purpose",
+        "value": "memory"
+      }
+    ]
+  },
+  {
+    "name": "unfinished memory page must have next cursor",
+    "base": "harness.memory.list_metadata",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/payload/result/page/next_cursor"
+      }
+    ],
+    "kind": "response"
+  },
+  {
+    "name": "finished memory page cannot have next cursor",
+    "base": "harness.memory.search",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/page/next_cursor",
+        "value": "forged-next"
+      }
+    ],
+    "kind": "response"
+  },
+  {
+    "name": "truncated memory set cannot claim full result",
+    "base": "harness.memory.search",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/result/page/set_complete",
+        "value": false
+      }
+    ],
+    "kind": "response"
+  },
+  {
+    "name": "memory management scope mismatch",
+    "base": "harness.memory.inspect_current",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/delivery/scope/id",
+        "value": "00000000-0000-4000-8000-000000000099"
+      }
+    ]
+  },
+  {
+    "name": "brain supplements cannot also propose",
+    "message": {
+      "protocol_version": 1,
+      "message_id": "00000000-0000-4000-8000-0000000afcc3",
+      "kind": "event",
+      "type": "harness.brain.observation",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-000000000004",
+      "target": "00000000-0000-4000-8000-000000000002",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000c8363",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "task",
+          "id": "00000000-0000-4000-8000-0000000ad584"
+        }
+      },
+      "payload": {
+        "task_id": "00000000-0000-4000-8000-0000000ad584",
+        "work_id": "00000000-0000-4000-8000-0000000ad5d1",
+        "attempt_no": 1,
+        "call_operation_id": "00000000-0000-4000-8000-0000000ad5d2",
+        "producer_endpoint": "00000000-0000-4000-8000-000000000004",
+        "call_revision": "1",
+        "state": "returned",
+        "physical_state": "ended",
+        "output": {
+          "content_id": "00000000-0000-4000-8000-0000000ad5d6",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+          "media_type": "application/json",
+          "size": "128",
+          "sha256": "00000000000000000000000000000000000000000000000000000000000ad5d6"
+        },
+        "usage": [],
+        "gaps": [
+          "The approved catalog declaration needed for the next read is not in this snapshot."
+        ],
+        "stop_requested": false,
+        "cancel_operations": [],
+        "context_requirements": [
+          {
+            "requirement_id": "catalog-read-A",
+            "kind": "catalog_candidates",
+            "reason": "Need an exact approved read declaration before proposing the action.",
+            "catalog_binding": "approved-local-catalog",
+            "query": "read approved local file A with authoritative result query"
+          }
+        ],
+        "proposal": {
+          "kind": "act",
+          "actions": [
+            {
+              "kind": "invoke",
+              "action_key": "read-A",
+              "capability": "local.file.read",
+              "capability_version": 1,
+              "target_endpoint": "00000000-0000-4000-8000-000000000003",
+              "arguments": {
+                "content_id": "00000000-0000-4000-8000-0000000ad5b6",
+                "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+                "media_type": "application/json",
+                "size": "128",
+                "sha256": "00000000000000000000000000000000000000000000000000000000000ad5b6"
+              },
+              "declaration_digest": "00000000000000000000000000000000000000000000000000000000000ad5ac",
+              "evidence": [
+                {
+                  "content_id": "00000000-0000-4000-8000-0000000ad5b2",
+                  "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+                  "media_type": "application/json",
+                  "size": "128",
+                  "sha256": "00000000000000000000000000000000000000000000000000000000000ad5b2"
+                }
+              ],
+              "maximum_cost": [
+                {
+                  "dimension": "calls",
+                  "unit": "call",
+                  "target_limit": "10",
+                  "cleanup_limit": "2",
+                  "mode": "hard"
+                }
+              ]
+            }
+          ],
+          "source_bindings": [
+            {
+              "source_authority": "00000000-0000-4000-8000-000000000003",
+              "resource_ref": "fixture://controlled-source/A",
+              "revision": "1",
+              "sha256": "00000000000000000000000000000000000000000000000000000000000aae61",
+              "observed_at": "2026-09-24T10:00:00.000Z",
+              "policy_ref": "00000000-0000-4000-8000-0000000aae62",
+              "policy_revision": "1",
+              "purposes": [
+                "read",
+                "generate",
+                "verify",
+                "disclose"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-000000000001",
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000003",
+                "00000000-0000-4000-8000-000000000004"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-000000000002",
+                "00000000-0000-4000-8000-000000000003",
+                "00000000-0000-4000-8000-000000000004"
+              ],
+              "retain_until": "2026-10-24T10:00:00.000Z",
+              "current_proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-000000000005",
+                "proof_id": "00000000-0000-4000-8000-0000000aae63",
+                "revision": "1",
+                "binding_sha256": "00000000000000000000000000000000000000000000000000000000000aae63",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            }
+          ]
+        }
+      },
+      "operation_id": "00000000-0000-4000-8000-0000000ad5d2"
+    }
+  },
+  {
+    "name": "brain supplement count bounded",
+    "message": {
+      "protocol_version": 1,
+      "message_id": "00000000-0000-4000-8000-0000000afcc3",
+      "kind": "event",
+      "type": "harness.brain.observation",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-000000000004",
+      "target": "00000000-0000-4000-8000-000000000002",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000c8363",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "task",
+          "id": "00000000-0000-4000-8000-0000000ad584"
+        }
+      },
+      "payload": {
+        "task_id": "00000000-0000-4000-8000-0000000ad584",
+        "work_id": "00000000-0000-4000-8000-0000000ad5d1",
+        "attempt_no": 1,
+        "call_operation_id": "00000000-0000-4000-8000-0000000ad5d2",
+        "producer_endpoint": "00000000-0000-4000-8000-000000000004",
+        "call_revision": "1",
+        "state": "returned",
+        "physical_state": "ended",
+        "output": {
+          "content_id": "00000000-0000-4000-8000-0000000ad5d6",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+          "media_type": "application/json",
+          "size": "128",
+          "sha256": "00000000000000000000000000000000000000000000000000000000000ad5d6"
+        },
+        "usage": [],
+        "gaps": [
+          "The approved catalog declaration needed for the next read is not in this snapshot."
+        ],
+        "stop_requested": false,
+        "cancel_operations": [],
+        "context_requirements": [
+          {
+            "requirement_id": "catalog-read-A",
+            "kind": "catalog_candidates",
+            "reason": "Need an exact approved read declaration before proposing the action.",
+            "catalog_binding": "approved-local-catalog",
+            "query": "read approved local file A with authoritative result query"
+          },
+          {
+            "requirement_id": "catalog-read-A",
+            "kind": "catalog_candidates",
+            "reason": "Need an exact approved read declaration before proposing the action.",
+            "catalog_binding": "approved-local-catalog",
+            "query": "read approved local file A with authoritative result query"
+          },
+          {
+            "requirement_id": "catalog-read-A",
+            "kind": "catalog_candidates",
+            "reason": "Need an exact approved read declaration before proposing the action.",
+            "catalog_binding": "approved-local-catalog",
+            "query": "read approved local file A with authoritative result query"
+          },
+          {
+            "requirement_id": "catalog-read-A",
+            "kind": "catalog_candidates",
+            "reason": "Need an exact approved read declaration before proposing the action.",
+            "catalog_binding": "approved-local-catalog",
+            "query": "read approved local file A with authoritative result query"
+          },
+          {
+            "requirement_id": "catalog-read-A",
+            "kind": "catalog_candidates",
+            "reason": "Need an exact approved read declaration before proposing the action.",
+            "catalog_binding": "approved-local-catalog",
+            "query": "read approved local file A with authoritative result query"
+          },
+          {
+            "requirement_id": "catalog-read-A",
+            "kind": "catalog_candidates",
+            "reason": "Need an exact approved read declaration before proposing the action.",
+            "catalog_binding": "approved-local-catalog",
+            "query": "read approved local file A with authoritative result query"
+          },
+          {
+            "requirement_id": "catalog-read-A",
+            "kind": "catalog_candidates",
+            "reason": "Need an exact approved read declaration before proposing the action.",
+            "catalog_binding": "approved-local-catalog",
+            "query": "read approved local file A with authoritative result query"
+          },
+          {
+            "requirement_id": "catalog-read-A",
+            "kind": "catalog_candidates",
+            "reason": "Need an exact approved read declaration before proposing the action.",
+            "catalog_binding": "approved-local-catalog",
+            "query": "read approved local file A with authoritative result query"
+          },
+          {
+            "requirement_id": "catalog-read-A",
+            "kind": "catalog_candidates",
+            "reason": "Need an exact approved read declaration before proposing the action.",
+            "catalog_binding": "approved-local-catalog",
+            "query": "read approved local file A with authoritative result query"
+          }
+        ]
+      },
+      "operation_id": "00000000-0000-4000-8000-0000000ad5d2"
+    }
+  },
+  {
+    "name": "memory body digest mismatch",
+    "base": "harness.memory.mutate",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/mutation/record/content_sha256",
+        "value": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ]
+  },
+  {
+    "name": "use set query sent to another authority",
+    "base": "harness.authorization.query_use_set",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/payload/authority_endpoint",
+        "value": "00000000-0000-4000-8000-000000009989"
+      }
+    ]
+  },
+  {
+    "name": "duplicate context requirement identity",
+    "message": {
+      "protocol_version": 1,
+      "message_id": "00000000-0000-4000-8000-0000000afcc3",
+      "kind": "event",
+      "type": "harness.brain.observation",
+      "type_version": 1,
+      "source": "00000000-0000-4000-8000-000000000004",
+      "target": "00000000-0000-4000-8000-000000000002",
+      "delivery": {
+        "mode": "reliable",
+        "stream_id": "00000000-0000-4000-8000-0000000c8363",
+        "seq": "1",
+        "retain_until": "2026-10-24T10:00:00.000Z",
+        "scope": {
+          "kind": "task",
+          "id": "00000000-0000-4000-8000-0000000ad584"
+        }
+      },
+      "payload": {
+        "task_id": "00000000-0000-4000-8000-0000000ad584",
+        "work_id": "00000000-0000-4000-8000-0000000ad5d1",
+        "attempt_no": 1,
+        "call_operation_id": "00000000-0000-4000-8000-0000000ad5d2",
+        "producer_endpoint": "00000000-0000-4000-8000-000000000004",
+        "call_revision": "1",
+        "state": "returned",
+        "physical_state": "not_started",
+        "output": {
+          "content_id": "00000000-0000-4000-8000-0000000ad5d6",
+          "provider_endpoint": "00000000-0000-4000-8000-000000000003",
+          "media_type": "application/json",
+          "size": "128",
+          "sha256": "00000000000000000000000000000000000000000000000000000000000ad5d6"
+        },
+        "usage": [],
+        "gaps": [
+          "The approved catalog declaration needed for the next read is not in this snapshot."
+        ],
+        "stop_requested": false,
+        "cancel_operations": [],
+        "context_requirements": [
+          {
+            "requirement_id": "catalog-read-A",
+            "kind": "catalog_candidates",
+            "reason": "Need an exact approved read declaration before proposing the action.",
+            "catalog_binding": "approved-local-catalog",
+            "query": "read approved local file A with authoritative result query"
+          },
+          {
+            "requirement_id": "catalog-read-A",
+            "kind": "catalog_candidates",
+            "reason": "Need an exact approved read declaration before proposing the action.",
+            "catalog_binding": "approved-local-catalog",
+            "query": "read approved local file A with authoritative result query"
+          }
+        ]
+      },
+      "operation_id": "00000000-0000-4000-8000-0000000ad5d2"
+    }
   }
 ]

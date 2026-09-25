@@ -3153,5 +3153,1213 @@
       }
     },
     "operation_id": "00000000-0000-4000-8000-0000000c5c4f"
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.begin_use_set",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "command_id": "00000000-0000-4000-8000-0000000f8002",
+      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+      "operation_id": "00000000-0000-4000-8000-0000000f8001",
+      "set_sha256": "e892a26d6dfce417b9c300a9b46f29be4b9cff5a5c60b019a3b48c9d40c8598c",
+      "members": [
+        {
+          "target_grant_ref": "fixture:grant:use-set:1",
+          "intent": {
+            "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+            "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "resource_ref": "fixture://local-files/A.txt",
+            "action": "file.read",
+            "purpose": "read",
+            "recipient_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "processing_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "source_bindings": [
+              {
+                "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                "resource_ref": "fixture://local-files/A.txt",
+                "revision": "1",
+                "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                "observed_at": "2026-09-24T10:00:00.000Z",
+                "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                "policy_revision": "1",
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "current_proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                  "revision": "1",
+                  "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              }
+            ],
+            "parameter_schema_ref": "https://harness.invalid/capabilities/local.file.read/v1/arguments.schema.json",
+            "parameters": {
+              "content_id": "00000000-0000-4000-8000-0000000c5c59",
+              "provider_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "media_type": "application/json",
+              "size": "44",
+              "sha256": "52e2a5d898c5d5430dae55101b0a8d1b63ff67ee9544588bc5afcfc02fb51323"
+            },
+            "required_obligations": [
+              {
+                "resource_ref": "fixture://local-files/A.txt",
+                "selector_kind": "exact",
+                "resource_type": "file",
+                "actions": [
+                  "file.read"
+                ],
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "max_bytes": "8192",
+                "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                "parameter_policy_revision": "1",
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+              }
+            ],
+            "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+            "operation_id": "00000000-0000-4000-8000-0000000f8001",
+            "unit_no": "1",
+            "source_role": "input_1",
+            "operation_basis": {
+              "operation_id": "00000000-0000-4000-8000-0000000f8001",
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+              "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+              "source_bindings": [
+                {
+                  "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                  "resource_ref": "fixture://local-files/A.txt",
+                  "revision": "1",
+                  "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                  "observed_at": "2026-09-24T10:00:00.000Z",
+                  "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                  "policy_revision": "1",
+                  "purposes": [
+                    "read"
+                  ],
+                  "recipients": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "processing_endpoints": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "retain_until": "2026-09-24T11:00:00.000Z",
+                  "current_proof": {
+                    "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                    "revision": "1",
+                    "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                    "issued_at": "2026-09-24T10:00:00.000Z",
+                    "expires_at": "2026-09-24T11:00:00.000Z"
+                  }
+                }
+              ],
+              "sources_sha256": "e9cda2e0c60b135230931382513be308c1134e08d46f7fb786196a282f6d0ccd",
+              "budget": {
+                "budget_id": "00000000-0000-4000-8000-0000000c5c37",
+                "purpose": "goal",
+                "mode": "hard",
+                "limits": [
+                  {
+                    "dimension": "calls",
+                    "unit": "call",
+                    "amount": "1"
+                  }
+                ],
+                "reservation_proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "proof_id": "00000000-0000-4000-8000-0000000c5c38",
+                  "revision": "1",
+                  "binding_sha256": "e2871582e806e74cd9868005a1a0fe3747a5cea874b9dd2e0bc5154c61b81994",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              },
+              "control": {
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a",
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "owner_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "owner_epoch": "1",
+                "control_revision": "1",
+                "control": {
+                  "revision": "1",
+                  "self_paused": false,
+                  "paused_by": [],
+                  "external_unpaused": [],
+                  "effects_pending": false
+                },
+                "cancel_requested": false,
+                "proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "proof_id": "00000000-0000-4000-8000-0000000c5c36",
+                  "revision": "1",
+                  "binding_sha256": "a17070bdab90d9cca05b4d5d1377d6bb7332b1629a6740cdaadbef9b9f7b355d",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              },
+              "proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c39",
+                "revision": "1",
+                "binding_sha256": "8797722cc750beb6a75a0fc4856564e8986f57645e10d3538cd6c8f7ca7f38e0",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            }
+          }
+        },
+        {
+          "target_grant_ref": "fixture:grant:use-set:2",
+          "intent": {
+            "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+            "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "resource_ref": "fixture://local-files/A.txt",
+            "action": "file.read",
+            "purpose": "read",
+            "recipient_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "processing_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+            "source_bindings": [
+              {
+                "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                "resource_ref": "fixture://local-files/A.txt",
+                "revision": "1",
+                "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                "observed_at": "2026-09-24T10:00:00.000Z",
+                "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                "policy_revision": "1",
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "current_proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                  "revision": "1",
+                  "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              }
+            ],
+            "parameter_schema_ref": "https://harness.invalid/capabilities/local.file.read/v1/arguments.schema.json",
+            "parameters": {
+              "content_id": "00000000-0000-4000-8000-0000000c5c59",
+              "provider_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "media_type": "application/json",
+              "size": "44",
+              "sha256": "52e2a5d898c5d5430dae55101b0a8d1b63ff67ee9544588bc5afcfc02fb51323"
+            },
+            "required_obligations": [
+              {
+                "resource_ref": "fixture://local-files/A.txt",
+                "selector_kind": "exact",
+                "resource_type": "file",
+                "actions": [
+                  "file.read"
+                ],
+                "purposes": [
+                  "read"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000c5c12"
+                ],
+                "retain_until": "2026-09-24T11:00:00.000Z",
+                "max_bytes": "8192",
+                "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                "parameter_policy_revision": "1",
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+              }
+            ],
+            "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+            "operation_id": "00000000-0000-4000-8000-0000000f8001",
+            "unit_no": "1",
+            "source_role": "input_2",
+            "operation_basis": {
+              "operation_id": "00000000-0000-4000-8000-0000000f8001",
+              "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+              "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+              "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+              "source_bindings": [
+                {
+                  "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                  "resource_ref": "fixture://local-files/A.txt",
+                  "revision": "1",
+                  "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                  "observed_at": "2026-09-24T10:00:00.000Z",
+                  "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                  "policy_revision": "1",
+                  "purposes": [
+                    "read"
+                  ],
+                  "recipients": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "processing_endpoints": [
+                    "00000000-0000-4000-8000-0000000c5c12"
+                  ],
+                  "retain_until": "2026-09-24T11:00:00.000Z",
+                  "current_proof": {
+                    "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                    "revision": "1",
+                    "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                    "issued_at": "2026-09-24T10:00:00.000Z",
+                    "expires_at": "2026-09-24T11:00:00.000Z"
+                  }
+                }
+              ],
+              "sources_sha256": "e9cda2e0c60b135230931382513be308c1134e08d46f7fb786196a282f6d0ccd",
+              "budget": {
+                "budget_id": "00000000-0000-4000-8000-0000000c5c37",
+                "purpose": "goal",
+                "mode": "hard",
+                "limits": [
+                  {
+                    "dimension": "calls",
+                    "unit": "call",
+                    "amount": "1"
+                  }
+                ],
+                "reservation_proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "proof_id": "00000000-0000-4000-8000-0000000c5c38",
+                  "revision": "1",
+                  "binding_sha256": "e2871582e806e74cd9868005a1a0fe3747a5cea874b9dd2e0bc5154c61b81994",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              },
+              "control": {
+                "task_id": "00000000-0000-4000-8000-0000000c5c1a",
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "owner_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "owner_epoch": "1",
+                "control_revision": "1",
+                "control": {
+                  "revision": "1",
+                  "self_paused": false,
+                  "paused_by": [],
+                  "external_unpaused": [],
+                  "effects_pending": false
+                },
+                "cancel_requested": false,
+                "proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "proof_id": "00000000-0000-4000-8000-0000000c5c36",
+                  "revision": "1",
+                  "binding_sha256": "a17070bdab90d9cca05b4d5d1377d6bb7332b1629a6740cdaadbef9b9f7b355d",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              },
+              "proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c39",
+                "revision": "1",
+                "binding_sha256": "8797722cc750beb6a75a0fc4856564e8986f57645e10d3538cd6c8f7ca7f38e0",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "authorization": {
+      "grant_ref": "fixture:authorization-client:host"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "operation_id": "00000000-0000-4000-8000-0000000f8002",
+    "message_id": "00000000-0000-4000-8000-0000000f8014",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000f8078",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000f8001"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000f8015",
+    "kind": "response",
+    "type": "harness.authorization.begin_use_set",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000f8014",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000f8079",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000f8001"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "receipt": {
+          "command_id": "00000000-0000-4000-8000-0000000f8002",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+          "operation_id": "00000000-0000-4000-8000-0000000f8001",
+          "set_sha256": "e892a26d6dfce417b9c300a9b46f29be4b9cff5a5c60b019a3b48c9d40c8598c",
+          "start_before": "2026-09-24T11:00:00.000Z",
+          "receipts": [
+            {
+              "use_receipt_id": "00000000-0000-4000-8000-0000000f800a",
+              "grant_ref": "fixture:grant:use-set:1",
+              "intent": {
+                "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+                "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "resource_ref": "fixture://local-files/A.txt",
+                "action": "file.read",
+                "purpose": "read",
+                "recipient_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "processing_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "source_bindings": [
+                  {
+                    "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                    "resource_ref": "fixture://local-files/A.txt",
+                    "revision": "1",
+                    "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                    "observed_at": "2026-09-24T10:00:00.000Z",
+                    "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                    "policy_revision": "1",
+                    "purposes": [
+                      "read"
+                    ],
+                    "recipients": [
+                      "00000000-0000-4000-8000-0000000c5c12"
+                    ],
+                    "processing_endpoints": [
+                      "00000000-0000-4000-8000-0000000c5c12"
+                    ],
+                    "retain_until": "2026-09-24T11:00:00.000Z",
+                    "current_proof": {
+                      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                      "revision": "1",
+                      "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                      "issued_at": "2026-09-24T10:00:00.000Z",
+                      "expires_at": "2026-09-24T11:00:00.000Z"
+                    }
+                  }
+                ],
+                "parameter_schema_ref": "https://harness.invalid/capabilities/local.file.read/v1/arguments.schema.json",
+                "parameters": {
+                  "content_id": "00000000-0000-4000-8000-0000000c5c59",
+                  "provider_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "media_type": "application/json",
+                  "size": "44",
+                  "sha256": "52e2a5d898c5d5430dae55101b0a8d1b63ff67ee9544588bc5afcfc02fb51323"
+                },
+                "required_obligations": [
+                  {
+                    "resource_ref": "fixture://local-files/A.txt",
+                    "selector_kind": "exact",
+                    "resource_type": "file",
+                    "actions": [
+                      "file.read"
+                    ],
+                    "purposes": [
+                      "read"
+                    ],
+                    "recipients": [
+                      "00000000-0000-4000-8000-0000000c5c12"
+                    ],
+                    "processing_endpoints": [
+                      "00000000-0000-4000-8000-0000000c5c12"
+                    ],
+                    "retain_until": "2026-09-24T11:00:00.000Z",
+                    "max_bytes": "8192",
+                    "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                    "parameter_policy_revision": "1",
+                    "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+                  }
+                ],
+                "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+                "operation_id": "00000000-0000-4000-8000-0000000f8001",
+                "unit_no": "1",
+                "source_role": "input_1",
+                "operation_basis": {
+                  "operation_id": "00000000-0000-4000-8000-0000000f8001",
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+                  "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+                  "source_bindings": [
+                    {
+                      "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                      "resource_ref": "fixture://local-files/A.txt",
+                      "revision": "1",
+                      "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                      "observed_at": "2026-09-24T10:00:00.000Z",
+                      "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                      "policy_revision": "1",
+                      "purposes": [
+                        "read"
+                      ],
+                      "recipients": [
+                        "00000000-0000-4000-8000-0000000c5c12"
+                      ],
+                      "processing_endpoints": [
+                        "00000000-0000-4000-8000-0000000c5c12"
+                      ],
+                      "retain_until": "2026-09-24T11:00:00.000Z",
+                      "current_proof": {
+                        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                        "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                        "revision": "1",
+                        "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                        "issued_at": "2026-09-24T10:00:00.000Z",
+                        "expires_at": "2026-09-24T11:00:00.000Z"
+                      }
+                    }
+                  ],
+                  "sources_sha256": "e9cda2e0c60b135230931382513be308c1134e08d46f7fb786196a282f6d0ccd",
+                  "budget": {
+                    "budget_id": "00000000-0000-4000-8000-0000000c5c37",
+                    "purpose": "goal",
+                    "mode": "hard",
+                    "limits": [
+                      {
+                        "dimension": "calls",
+                        "unit": "call",
+                        "amount": "1"
+                      }
+                    ],
+                    "reservation_proof": {
+                      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "proof_id": "00000000-0000-4000-8000-0000000c5c38",
+                      "revision": "1",
+                      "binding_sha256": "e2871582e806e74cd9868005a1a0fe3747a5cea874b9dd2e0bc5154c61b81994",
+                      "issued_at": "2026-09-24T10:00:00.000Z",
+                      "expires_at": "2026-09-24T11:00:00.000Z"
+                    }
+                  },
+                  "control": {
+                    "task_id": "00000000-0000-4000-8000-0000000c5c1a",
+                    "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "owner_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "owner_epoch": "1",
+                    "control_revision": "1",
+                    "control": {
+                      "revision": "1",
+                      "self_paused": false,
+                      "paused_by": [],
+                      "external_unpaused": [],
+                      "effects_pending": false
+                    },
+                    "cancel_requested": false,
+                    "proof": {
+                      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "proof_id": "00000000-0000-4000-8000-0000000c5c36",
+                      "revision": "1",
+                      "binding_sha256": "a17070bdab90d9cca05b4d5d1377d6bb7332b1629a6740cdaadbef9b9f7b355d",
+                      "issued_at": "2026-09-24T10:00:00.000Z",
+                      "expires_at": "2026-09-24T11:00:00.000Z"
+                    }
+                  },
+                  "proof": {
+                    "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "proof_id": "00000000-0000-4000-8000-0000000c5c39",
+                    "revision": "1",
+                    "binding_sha256": "8797722cc750beb6a75a0fc4856564e8986f57645e10d3538cd6c8f7ca7f38e0",
+                    "issued_at": "2026-09-24T10:00:00.000Z",
+                    "expires_at": "2026-09-24T11:00:00.000Z"
+                  }
+                }
+              },
+              "start_before": "2026-09-24T11:00:00.000Z",
+              "authority_revision": "3",
+              "proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c3c",
+                "revision": "3",
+                "binding_sha256": "a78c5d4ea046183c88c6482cdd5d0c7d5273fec1de357025226a35bfc1dda543",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            },
+            {
+              "use_receipt_id": "00000000-0000-4000-8000-0000000f800b",
+              "grant_ref": "fixture:grant:use-set:2",
+              "intent": {
+                "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+                "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "resource_ref": "fixture://local-files/A.txt",
+                "action": "file.read",
+                "purpose": "read",
+                "recipient_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "processing_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                "source_bindings": [
+                  {
+                    "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                    "resource_ref": "fixture://local-files/A.txt",
+                    "revision": "1",
+                    "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                    "observed_at": "2026-09-24T10:00:00.000Z",
+                    "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                    "policy_revision": "1",
+                    "purposes": [
+                      "read"
+                    ],
+                    "recipients": [
+                      "00000000-0000-4000-8000-0000000c5c12"
+                    ],
+                    "processing_endpoints": [
+                      "00000000-0000-4000-8000-0000000c5c12"
+                    ],
+                    "retain_until": "2026-09-24T11:00:00.000Z",
+                    "current_proof": {
+                      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                      "revision": "1",
+                      "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                      "issued_at": "2026-09-24T10:00:00.000Z",
+                      "expires_at": "2026-09-24T11:00:00.000Z"
+                    }
+                  }
+                ],
+                "parameter_schema_ref": "https://harness.invalid/capabilities/local.file.read/v1/arguments.schema.json",
+                "parameters": {
+                  "content_id": "00000000-0000-4000-8000-0000000c5c59",
+                  "provider_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "media_type": "application/json",
+                  "size": "44",
+                  "sha256": "52e2a5d898c5d5430dae55101b0a8d1b63ff67ee9544588bc5afcfc02fb51323"
+                },
+                "required_obligations": [
+                  {
+                    "resource_ref": "fixture://local-files/A.txt",
+                    "selector_kind": "exact",
+                    "resource_type": "file",
+                    "actions": [
+                      "file.read"
+                    ],
+                    "purposes": [
+                      "read"
+                    ],
+                    "recipients": [
+                      "00000000-0000-4000-8000-0000000c5c12"
+                    ],
+                    "processing_endpoints": [
+                      "00000000-0000-4000-8000-0000000c5c12"
+                    ],
+                    "retain_until": "2026-09-24T11:00:00.000Z",
+                    "max_bytes": "8192",
+                    "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                    "parameter_policy_revision": "1",
+                    "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+                  }
+                ],
+                "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+                "operation_id": "00000000-0000-4000-8000-0000000f8001",
+                "unit_no": "1",
+                "source_role": "input_2",
+                "operation_basis": {
+                  "operation_id": "00000000-0000-4000-8000-0000000f8001",
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+                  "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+                  "source_bindings": [
+                    {
+                      "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                      "resource_ref": "fixture://local-files/A.txt",
+                      "revision": "1",
+                      "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                      "observed_at": "2026-09-24T10:00:00.000Z",
+                      "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                      "policy_revision": "1",
+                      "purposes": [
+                        "read"
+                      ],
+                      "recipients": [
+                        "00000000-0000-4000-8000-0000000c5c12"
+                      ],
+                      "processing_endpoints": [
+                        "00000000-0000-4000-8000-0000000c5c12"
+                      ],
+                      "retain_until": "2026-09-24T11:00:00.000Z",
+                      "current_proof": {
+                        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                        "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                        "revision": "1",
+                        "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                        "issued_at": "2026-09-24T10:00:00.000Z",
+                        "expires_at": "2026-09-24T11:00:00.000Z"
+                      }
+                    }
+                  ],
+                  "sources_sha256": "e9cda2e0c60b135230931382513be308c1134e08d46f7fb786196a282f6d0ccd",
+                  "budget": {
+                    "budget_id": "00000000-0000-4000-8000-0000000c5c37",
+                    "purpose": "goal",
+                    "mode": "hard",
+                    "limits": [
+                      {
+                        "dimension": "calls",
+                        "unit": "call",
+                        "amount": "1"
+                      }
+                    ],
+                    "reservation_proof": {
+                      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "proof_id": "00000000-0000-4000-8000-0000000c5c38",
+                      "revision": "1",
+                      "binding_sha256": "e2871582e806e74cd9868005a1a0fe3747a5cea874b9dd2e0bc5154c61b81994",
+                      "issued_at": "2026-09-24T10:00:00.000Z",
+                      "expires_at": "2026-09-24T11:00:00.000Z"
+                    }
+                  },
+                  "control": {
+                    "task_id": "00000000-0000-4000-8000-0000000c5c1a",
+                    "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "owner_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "owner_epoch": "1",
+                    "control_revision": "1",
+                    "control": {
+                      "revision": "1",
+                      "self_paused": false,
+                      "paused_by": [],
+                      "external_unpaused": [],
+                      "effects_pending": false
+                    },
+                    "cancel_requested": false,
+                    "proof": {
+                      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "proof_id": "00000000-0000-4000-8000-0000000c5c36",
+                      "revision": "1",
+                      "binding_sha256": "a17070bdab90d9cca05b4d5d1377d6bb7332b1629a6740cdaadbef9b9f7b355d",
+                      "issued_at": "2026-09-24T10:00:00.000Z",
+                      "expires_at": "2026-09-24T11:00:00.000Z"
+                    }
+                  },
+                  "proof": {
+                    "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "proof_id": "00000000-0000-4000-8000-0000000c5c39",
+                    "revision": "1",
+                    "binding_sha256": "8797722cc750beb6a75a0fc4856564e8986f57645e10d3538cd6c8f7ca7f38e0",
+                    "issued_at": "2026-09-24T10:00:00.000Z",
+                    "expires_at": "2026-09-24T11:00:00.000Z"
+                  }
+                }
+              },
+              "start_before": "2026-09-24T11:00:00.000Z",
+              "authority_revision": "3",
+              "proof": {
+                "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+                "proof_id": "00000000-0000-4000-8000-0000000c5c3c",
+                "revision": "3",
+                "binding_sha256": "a78c5d4ea046183c88c6482cdd5d0c7d5273fec1de357025226a35bfc1dda543",
+                "issued_at": "2026-09-24T10:00:00.000Z",
+                "expires_at": "2026-09-24T11:00:00.000Z"
+              }
+            }
+          ]
+        },
+        "current_decision": {
+          "decision": "allow",
+          "reason": "All members of the fixed use set currently allowed; fixture only.",
+          "basis_revision": "3",
+          "expires_at": "2026-09-24T11:00:00.000Z",
+          "obligations": [
+            {
+              "resource_ref": "fixture://local-files/A.txt",
+              "selector_kind": "exact",
+              "resource_type": "file",
+              "actions": [
+                "file.read"
+              ],
+              "purposes": [
+                "read"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-0000000c5c12"
+              ],
+              "retain_until": "2026-09-24T11:00:00.000Z",
+              "max_bytes": "8192",
+              "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+              "parameter_policy_revision": "1",
+              "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+            }
+          ],
+          "proof": {
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "proof_id": "00000000-0000-4000-8000-0000000c5c3d",
+            "revision": "3",
+            "binding_sha256": "a78c5d4ea046183c88c6482cdd5d0c7d5273fec1de357025226a35bfc1dda543",
+            "issued_at": "2026-09-24T10:00:00.000Z",
+            "expires_at": "2026-09-24T11:00:00.000Z"
+          },
+          "gaps": []
+        }
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-0000000f8002"
+  },
+  {
+    "protocol_version": 1,
+    "kind": "request",
+    "type": "harness.authorization.query_use_set",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c12",
+    "target": "00000000-0000-4000-8000-0000000c5c13",
+    "payload": {
+      "command_id": "00000000-0000-4000-8000-0000000f8002",
+      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+      "operation_id": "00000000-0000-4000-8000-0000000f8001"
+    },
+    "authorization": {
+      "grant_ref": "fixture:authorization-client:host"
+    },
+    "expires_at": "2026-09-24T11:00:00.000Z",
+    "message_id": "00000000-0000-4000-8000-0000000f8016",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000f807a",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000f8001"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-0000000f8017",
+    "kind": "response",
+    "type": "harness.authorization.query_use_set",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000c5c13",
+    "target": "00000000-0000-4000-8000-0000000c5c12",
+    "reply_to": "00000000-0000-4000-8000-0000000f8016",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-0000000f807b",
+      "seq": "1",
+      "retain_until": "2026-10-24T10:00:00.000Z",
+      "scope": {
+        "kind": "operation",
+        "id": "00000000-0000-4000-8000-0000000f8001"
+      }
+    },
+    "payload": {
+      "status": "completed",
+      "result": {
+        "command_id": "00000000-0000-4000-8000-0000000f8002",
+        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+        "operation_id": "00000000-0000-4000-8000-0000000f8001",
+        "receipts": [
+          {
+            "command_id": "00000000-0000-4000-8000-0000000f8002",
+            "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+            "operation_id": "00000000-0000-4000-8000-0000000f8001",
+            "set_sha256": "e892a26d6dfce417b9c300a9b46f29be4b9cff5a5c60b019a3b48c9d40c8598c",
+            "start_before": "2026-09-24T11:00:00.000Z",
+            "receipts": [
+              {
+                "use_receipt_id": "00000000-0000-4000-8000-0000000f800a",
+                "grant_ref": "fixture:grant:use-set:1",
+                "intent": {
+                  "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+                  "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "resource_ref": "fixture://local-files/A.txt",
+                  "action": "file.read",
+                  "purpose": "read",
+                  "recipient_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "processing_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "source_bindings": [
+                    {
+                      "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                      "resource_ref": "fixture://local-files/A.txt",
+                      "revision": "1",
+                      "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                      "observed_at": "2026-09-24T10:00:00.000Z",
+                      "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                      "policy_revision": "1",
+                      "purposes": [
+                        "read"
+                      ],
+                      "recipients": [
+                        "00000000-0000-4000-8000-0000000c5c12"
+                      ],
+                      "processing_endpoints": [
+                        "00000000-0000-4000-8000-0000000c5c12"
+                      ],
+                      "retain_until": "2026-09-24T11:00:00.000Z",
+                      "current_proof": {
+                        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                        "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                        "revision": "1",
+                        "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                        "issued_at": "2026-09-24T10:00:00.000Z",
+                        "expires_at": "2026-09-24T11:00:00.000Z"
+                      }
+                    }
+                  ],
+                  "parameter_schema_ref": "https://harness.invalid/capabilities/local.file.read/v1/arguments.schema.json",
+                  "parameters": {
+                    "content_id": "00000000-0000-4000-8000-0000000c5c59",
+                    "provider_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "media_type": "application/json",
+                    "size": "44",
+                    "sha256": "52e2a5d898c5d5430dae55101b0a8d1b63ff67ee9544588bc5afcfc02fb51323"
+                  },
+                  "required_obligations": [
+                    {
+                      "resource_ref": "fixture://local-files/A.txt",
+                      "selector_kind": "exact",
+                      "resource_type": "file",
+                      "actions": [
+                        "file.read"
+                      ],
+                      "purposes": [
+                        "read"
+                      ],
+                      "recipients": [
+                        "00000000-0000-4000-8000-0000000c5c12"
+                      ],
+                      "processing_endpoints": [
+                        "00000000-0000-4000-8000-0000000c5c12"
+                      ],
+                      "retain_until": "2026-09-24T11:00:00.000Z",
+                      "max_bytes": "8192",
+                      "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                      "parameter_policy_revision": "1",
+                      "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+                    }
+                  ],
+                  "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+                  "operation_id": "00000000-0000-4000-8000-0000000f8001",
+                  "unit_no": "1",
+                  "source_role": "input_1",
+                  "operation_basis": {
+                    "operation_id": "00000000-0000-4000-8000-0000000f8001",
+                    "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+                    "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+                    "source_bindings": [
+                      {
+                        "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                        "resource_ref": "fixture://local-files/A.txt",
+                        "revision": "1",
+                        "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                        "observed_at": "2026-09-24T10:00:00.000Z",
+                        "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                        "policy_revision": "1",
+                        "purposes": [
+                          "read"
+                        ],
+                        "recipients": [
+                          "00000000-0000-4000-8000-0000000c5c12"
+                        ],
+                        "processing_endpoints": [
+                          "00000000-0000-4000-8000-0000000c5c12"
+                        ],
+                        "retain_until": "2026-09-24T11:00:00.000Z",
+                        "current_proof": {
+                          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                          "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                          "revision": "1",
+                          "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                          "issued_at": "2026-09-24T10:00:00.000Z",
+                          "expires_at": "2026-09-24T11:00:00.000Z"
+                        }
+                      }
+                    ],
+                    "sources_sha256": "e9cda2e0c60b135230931382513be308c1134e08d46f7fb786196a282f6d0ccd",
+                    "budget": {
+                      "budget_id": "00000000-0000-4000-8000-0000000c5c37",
+                      "purpose": "goal",
+                      "mode": "hard",
+                      "limits": [
+                        {
+                          "dimension": "calls",
+                          "unit": "call",
+                          "amount": "1"
+                        }
+                      ],
+                      "reservation_proof": {
+                        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                        "proof_id": "00000000-0000-4000-8000-0000000c5c38",
+                        "revision": "1",
+                        "binding_sha256": "e2871582e806e74cd9868005a1a0fe3747a5cea874b9dd2e0bc5154c61b81994",
+                        "issued_at": "2026-09-24T10:00:00.000Z",
+                        "expires_at": "2026-09-24T11:00:00.000Z"
+                      }
+                    },
+                    "control": {
+                      "task_id": "00000000-0000-4000-8000-0000000c5c1a",
+                      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "owner_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "owner_epoch": "1",
+                      "control_revision": "1",
+                      "control": {
+                        "revision": "1",
+                        "self_paused": false,
+                        "paused_by": [],
+                        "external_unpaused": [],
+                        "effects_pending": false
+                      },
+                      "cancel_requested": false,
+                      "proof": {
+                        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                        "proof_id": "00000000-0000-4000-8000-0000000c5c36",
+                        "revision": "1",
+                        "binding_sha256": "a17070bdab90d9cca05b4d5d1377d6bb7332b1629a6740cdaadbef9b9f7b355d",
+                        "issued_at": "2026-09-24T10:00:00.000Z",
+                        "expires_at": "2026-09-24T11:00:00.000Z"
+                      }
+                    },
+                    "proof": {
+                      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "proof_id": "00000000-0000-4000-8000-0000000c5c39",
+                      "revision": "1",
+                      "binding_sha256": "8797722cc750beb6a75a0fc4856564e8986f57645e10d3538cd6c8f7ca7f38e0",
+                      "issued_at": "2026-09-24T10:00:00.000Z",
+                      "expires_at": "2026-09-24T11:00:00.000Z"
+                    }
+                  }
+                },
+                "start_before": "2026-09-24T11:00:00.000Z",
+                "authority_revision": "3",
+                "proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+                  "proof_id": "00000000-0000-4000-8000-0000000c5c3c",
+                  "revision": "3",
+                  "binding_sha256": "a78c5d4ea046183c88c6482cdd5d0c7d5273fec1de357025226a35bfc1dda543",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              },
+              {
+                "use_receipt_id": "00000000-0000-4000-8000-0000000f800b",
+                "grant_ref": "fixture:grant:use-set:2",
+                "intent": {
+                  "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+                  "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "resource_ref": "fixture://local-files/A.txt",
+                  "action": "file.read",
+                  "purpose": "read",
+                  "recipient_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "processing_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                  "source_bindings": [
+                    {
+                      "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                      "resource_ref": "fixture://local-files/A.txt",
+                      "revision": "1",
+                      "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                      "observed_at": "2026-09-24T10:00:00.000Z",
+                      "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                      "policy_revision": "1",
+                      "purposes": [
+                        "read"
+                      ],
+                      "recipients": [
+                        "00000000-0000-4000-8000-0000000c5c12"
+                      ],
+                      "processing_endpoints": [
+                        "00000000-0000-4000-8000-0000000c5c12"
+                      ],
+                      "retain_until": "2026-09-24T11:00:00.000Z",
+                      "current_proof": {
+                        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                        "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                        "revision": "1",
+                        "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                        "issued_at": "2026-09-24T10:00:00.000Z",
+                        "expires_at": "2026-09-24T11:00:00.000Z"
+                      }
+                    }
+                  ],
+                  "parameter_schema_ref": "https://harness.invalid/capabilities/local.file.read/v1/arguments.schema.json",
+                  "parameters": {
+                    "content_id": "00000000-0000-4000-8000-0000000c5c59",
+                    "provider_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "media_type": "application/json",
+                    "size": "44",
+                    "sha256": "52e2a5d898c5d5430dae55101b0a8d1b63ff67ee9544588bc5afcfc02fb51323"
+                  },
+                  "required_obligations": [
+                    {
+                      "resource_ref": "fixture://local-files/A.txt",
+                      "selector_kind": "exact",
+                      "resource_type": "file",
+                      "actions": [
+                        "file.read"
+                      ],
+                      "purposes": [
+                        "read"
+                      ],
+                      "recipients": [
+                        "00000000-0000-4000-8000-0000000c5c12"
+                      ],
+                      "processing_endpoints": [
+                        "00000000-0000-4000-8000-0000000c5c12"
+                      ],
+                      "retain_until": "2026-09-24T11:00:00.000Z",
+                      "max_bytes": "8192",
+                      "parameter_policy_ref": "00000000-0000-4000-8000-0000000c5c26",
+                      "parameter_policy_revision": "1",
+                      "task_id": "00000000-0000-4000-8000-0000000c5c1a"
+                    }
+                  ],
+                  "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+                  "operation_id": "00000000-0000-4000-8000-0000000f8001",
+                  "unit_no": "1",
+                  "source_role": "input_2",
+                  "operation_basis": {
+                    "operation_id": "00000000-0000-4000-8000-0000000f8001",
+                    "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "actor_id": "00000000-0000-4000-8000-0000000c5c14",
+                    "processor_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                    "intent_sha256": "4339f965cbbb13ab032f6a5542b2367459fe19fc6d6f806113c00239c7c2fbfb",
+                    "source_bindings": [
+                      {
+                        "source_authority": "00000000-0000-4000-8000-0000000c5c12",
+                        "resource_ref": "fixture://local-files/A.txt",
+                        "revision": "1",
+                        "sha256": "e358e6db09a0c959eb6b011836fd6e9184eaeb7a14925563d3b30a79fc0dd2c3",
+                        "observed_at": "2026-09-24T10:00:00.000Z",
+                        "policy_ref": "00000000-0000-4000-8000-0000000c5c24",
+                        "policy_revision": "1",
+                        "purposes": [
+                          "read"
+                        ],
+                        "recipients": [
+                          "00000000-0000-4000-8000-0000000c5c12"
+                        ],
+                        "processing_endpoints": [
+                          "00000000-0000-4000-8000-0000000c5c12"
+                        ],
+                        "retain_until": "2026-09-24T11:00:00.000Z",
+                        "current_proof": {
+                          "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                          "proof_id": "00000000-0000-4000-8000-0000000c5c25",
+                          "revision": "1",
+                          "binding_sha256": "8a4699b7170aeb0a5f15599b381aa092d21527ed91aa601cbab40e6dd9c7a9a9",
+                          "issued_at": "2026-09-24T10:00:00.000Z",
+                          "expires_at": "2026-09-24T11:00:00.000Z"
+                        }
+                      }
+                    ],
+                    "sources_sha256": "e9cda2e0c60b135230931382513be308c1134e08d46f7fb786196a282f6d0ccd",
+                    "budget": {
+                      "budget_id": "00000000-0000-4000-8000-0000000c5c37",
+                      "purpose": "goal",
+                      "mode": "hard",
+                      "limits": [
+                        {
+                          "dimension": "calls",
+                          "unit": "call",
+                          "amount": "1"
+                        }
+                      ],
+                      "reservation_proof": {
+                        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                        "proof_id": "00000000-0000-4000-8000-0000000c5c38",
+                        "revision": "1",
+                        "binding_sha256": "e2871582e806e74cd9868005a1a0fe3747a5cea874b9dd2e0bc5154c61b81994",
+                        "issued_at": "2026-09-24T10:00:00.000Z",
+                        "expires_at": "2026-09-24T11:00:00.000Z"
+                      }
+                    },
+                    "control": {
+                      "task_id": "00000000-0000-4000-8000-0000000c5c1a",
+                      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "owner_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "owner_epoch": "1",
+                      "control_revision": "1",
+                      "control": {
+                        "revision": "1",
+                        "self_paused": false,
+                        "paused_by": [],
+                        "external_unpaused": [],
+                        "effects_pending": false
+                      },
+                      "cancel_requested": false,
+                      "proof": {
+                        "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                        "proof_id": "00000000-0000-4000-8000-0000000c5c36",
+                        "revision": "1",
+                        "binding_sha256": "a17070bdab90d9cca05b4d5d1377d6bb7332b1629a6740cdaadbef9b9f7b355d",
+                        "issued_at": "2026-09-24T10:00:00.000Z",
+                        "expires_at": "2026-09-24T11:00:00.000Z"
+                      }
+                    },
+                    "proof": {
+                      "authority_endpoint": "00000000-0000-4000-8000-0000000c5c12",
+                      "proof_id": "00000000-0000-4000-8000-0000000c5c39",
+                      "revision": "1",
+                      "binding_sha256": "8797722cc750beb6a75a0fc4856564e8986f57645e10d3538cd6c8f7ca7f38e0",
+                      "issued_at": "2026-09-24T10:00:00.000Z",
+                      "expires_at": "2026-09-24T11:00:00.000Z"
+                    }
+                  }
+                },
+                "start_before": "2026-09-24T11:00:00.000Z",
+                "authority_revision": "3",
+                "proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000c5c13",
+                  "proof_id": "00000000-0000-4000-8000-0000000c5c3c",
+                  "revision": "3",
+                  "binding_sha256": "a78c5d4ea046183c88c6482cdd5d0c7d5273fec1de357025226a35bfc1dda543",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T11:00:00.000Z"
+                }
+              }
+            ]
+          }
+        ],
+        "gaps": []
+      }
+    }
   }
 ]

@@ -6,6 +6,8 @@
 
 正文依次阅读[生命周期](lifecycle.md)、[用户控制与管理](control-and-management.md)、[决策与工作](decision-and-work.md)、[接口与存储](storage-and-interfaces.md)和[恢复验证](recovery-and-validation.md)。
 
+上下文缺口沿[结构化补全闭环](decision-and-work.md#context-requirements)保存与推进；新业务目标通过[受信任务策略接口](storage-and-interfaces.md#task-policy)绑定验收条件，通用核心继续负责准入和完成裁决。
+
 ## 1. 范围与核心对象
 
 设计固定同用户单一写权威、固定任务控制方，支持提交、决策、执行反馈、输入、动作边界暂停／恢复、预算调整、补证、取消、核验与结果交付。写权威可部署在本地或云端。**写权威**指可以裁决该用户任务及操作唯一性的运行存储；执行端可以分布在其他设备。

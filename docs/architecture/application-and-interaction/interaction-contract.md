@@ -150,7 +150,7 @@ UI-P3 的管理入口由受信宿主固定安装，按当前本人身份和领�
 | 调整预算 | 按[预算合同](../task-kernel/control-and-management.md#budget)提交固定命令并展示权威额度与占用，修改显示数字不构成调额成功 |
 | 人工补证 | 按[补证合同](../task-kernel/control-and-management.md#evidence)关联条件、目标与原提交；材料接纳、verified／invalid／unavailable 和任务完成分别展示 |
 | 许可管理 | 按[受信确认](../identity-and-authorization/cross-endpoint.md#confirmation)及原命令查询展示批准与签发；普通输入或外部 Agent 说明不构成批准 |
-| 记忆及提取策略 | 按[记忆合同](../memory-system/contracts.md#interfaces)和[自动提取策略](../memory-system/contracts.md#automation)显示修改、来源、策略及用量，不借任务成功推定保存许可 |
+| 记忆及提取策略 | 按[记忆合同](../memory-system/contracts.md#interfaces)以管理元数据列表发现记录，按单条当前修订执行条件修改／删除；正文无权读取时不阻止获准管理，也不返回正文、摘要或置信度。按[自动提取策略](../memory-system/contracts.md#automation)显示策略及用量，不借任务成功推定保存许可 |
 | 能力／设备管理 | 按[执行端管理合同](../capability-and-execution/remote-contracts.md#management)呈现管理和设备状态，解除隔离不使旧操作重跑 |
 | 来源及内容清理 | 按[持有者治理](../content-and-provenance.md#holders)分别呈现停止使用、物理残留和原命令结果，不能以 UI 隐藏证明全链删除 |
 

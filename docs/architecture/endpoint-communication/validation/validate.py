@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 from datetime import datetime
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -156,6 +157,38 @@ def check_budget_objects(value):
         check_budget_objects(child)
 
 
+def check_use_members(operation_id, members):
+    """Check declared set associations, not actual grants or transaction execution."""
+    keys = [(m["target_grant_ref"], m["intent"]["unit_no"], m["intent"]["source_role"]) for m in members]
+    require(keys == sorted(keys) and len(set(keys)) == len(keys), "use set members must be ordered and unique")
+    first = members[0]["intent"]
+    for member in members:
+        intent = member["intent"]
+        require(intent["operation_id"] == operation_id == intent["operation_basis"]["operation_id"], "use set operation mismatch")
+        for field in ("actor_id", "processor_endpoint", "recipient_endpoint", "processing_endpoint", "unit_no"):
+            require(intent[field] == first[field], f"use set mixes {field}")
+
+
+def check_use_set_receipt(receipt):
+    members = [{"target_grant_ref": r["grant_ref"], "intent": r["intent"]} for r in receipt["receipts"]]
+    check_use_members(receipt["operation_id"], members)
+    for member in receipt["receipts"]:
+        require(member["start_before"] == receipt["start_before"], "use set deadline differs between members")
+        require(member["proof"]["authority_endpoint"] == receipt["authority_endpoint"], "use set mixes receipt authorities")
+
+
+def check_memory_records(value):
+    if isinstance(value, list):
+        for child in value:
+            check_memory_records(child)
+    elif isinstance(value, dict):
+        if {"memory_id", "revision", "text", "confidence", "content_sha256"} <= value.keys():
+            expected = hashlib.sha256(value["text"].encode("utf-8")).hexdigest()
+            require(value["content_sha256"] == expected, "memory body digest mismatch")
+        for child in value.values():
+            check_memory_records(child)
+
+
 def validate_message(message):
     inspect_numbers(message)
     validate_ref(BASE + "envelope.schema.json", message)
@@ -186,6 +219,36 @@ def validate_message(message):
 
     payload = message["payload"]
     check_budget_objects(payload)
+    if message["type"].startswith("harness.memory."):
+        check_memory_records(payload)
+        if message["kind"] == "request":
+            binding = descriptor["scope_binding"]
+            value = message
+            for segment in binding["field"].split("."):
+                value = value[segment]
+            require(message["delivery"]["scope"] == {"kind": binding["kind"], "id": value}, "memory scope binding mismatch")
+    if message["type"] == "harness.brain.observation" and "context_requirements" in payload:
+        ids = [item["requirement_id"] for item in payload["context_requirements"]]
+        require(len(ids) == len(set(ids)), "duplicate context requirement identity")
+    if message["type"] == "harness.authorization.begin_use_set":
+        if message["kind"] == "request":
+            require(message["operation_id"] == payload["command_id"], "use set command identity mismatch")
+            require(payload["authority_endpoint"] == message["target"], "use set target differs from authority")
+            check_use_members(payload["operation_id"], payload["members"])
+        elif payload["status"] == "completed":
+            receipt = payload["result"]["receipt"]
+            require(message["operation_id"] == receipt["command_id"], "use set receipt command mismatch")
+            require(receipt["authority_endpoint"] == message["source"], "use set response source differs from authority")
+            check_use_set_receipt(receipt)
+    if message["type"] == "harness.authorization.query_use_set" and message["kind"] == "request":
+        require(payload["authority_endpoint"] == message["target"], "use set query target differs from authority")
+    if message["type"] == "harness.authorization.query_use_set" and message["kind"] == "response" and payload["status"] == "completed":
+        result = payload["result"]
+        require(result["receipts"] or result["gaps"], "missing use set must explain recovery gap")
+        for receipt in result["receipts"]:
+            check_use_set_receipt(receipt)
+            for field in ("command_id", "authority_endpoint", "operation_id"):
+                require(receipt[field] == result[field], "use set query returned another set")
     limit_sets = []
     if message["type"] == "harness.core.hello":
         limit_sets.append(payload["receive_limits"])
@@ -324,6 +387,7 @@ def message_scope(message, seen):
 def validate_flow(messages):
     seen, streams, inputs, consumed, surfaces, ui_submissions = {}, {}, {}, {}, {}, {}
     presentations, presentation_operations, projections = {}, {}, {}
+    use_sets = {}
     for message in messages:
         validate_message(message)
         identity = message["message_id"]
@@ -338,6 +402,23 @@ def validate_flow(messages):
             require((typ, message["type_version"]) == (request["type"], request["type_version"]), "response type mismatch")
             require(message.get("operation_id") == request.get("operation_id"), "response operation mismatch")
             require((message["source"], message["target"]) == (request["target"], request["source"]), "response route mismatch")
+            if payload["status"] == "completed" and typ == "harness.authorization.begin_use_set":
+                receipt = payload["result"]["receipt"]
+                for field in ("command_id", "authority_endpoint", "operation_id", "set_sha256"):
+                    require(receipt[field] == request["payload"][field], "use set receipt binding mismatch")
+                returned = [{"target_grant_ref": r["grant_ref"], "intent": r["intent"]} for r in receipt["receipts"]]
+                require(returned == request["payload"]["members"], "use set receipt omitted or changed a member")
+                key = (receipt["authority_endpoint"], receipt["command_id"])
+                require(key not in use_sets or use_sets[key] == receipt, "use set retry changed immutable receipt")
+                use_sets[key] = receipt
+            if payload["status"] == "completed" and typ == "harness.authorization.query_use_set":
+                result = payload["result"]
+                for field in ("command_id", "authority_endpoint", "operation_id"):
+                    require(result[field] == request["payload"][field], "use set query association mismatch")
+                for receipt in result["receipts"]:
+                    key = (receipt["authority_endpoint"], receipt["command_id"])
+                    require(key not in use_sets or use_sets[key] == receipt, "use set query changed original receipt")
+                    use_sets[key] = receipt
             if payload["status"] == "completed" and typ == "harness.execution.query":
                 require(payload["result"]["operation_id"] == request["payload"]["target_operation_id"], "query returned another operation")
             if payload["status"] == "completed" and typ == "harness.task.query_result":
@@ -510,6 +591,25 @@ for case in read(ROOT / "validation/invalid-cases.json"):
 optional = deepcopy(extension_message)
 optional["extensions"] = [{"name":"net.example.unknown", "version":1, "required":False, "data":{}}]
 validate_message(optional)
+
+# A lost BeginUseSet response may leave recovery with query evidence only.
+query_only = deepcopy([m for m in domain_flows["identity-domain-flow"] if m["type"] == "harness.authorization.query_use_set"])
+repeated_query = deepcopy(query_only)
+repeated_query[0]["message_id"] = "00000000-0000-4000-8000-000000009990"
+repeated_query[1]["message_id"] = "00000000-0000-4000-8000-000000009991"
+repeated_query[1]["reply_to"] = repeated_query[0]["message_id"]
+query_only.extend(repeated_query)
+positions = {}
+for message in query_only:
+    delivery = message["delivery"]
+    key = (message["source"], message["target"], delivery["stream_id"])
+    positions[key] = positions.get(key, 0) + 1
+    delivery["seq"] = str(positions[key])
+validate_flow(query_only)
+changed_query = deepcopy(query_only)
+changed_query[-1]["payload"]["result"]["receipts"][0]["set_sha256"] = "f" * 64
+expect_failure("query-only recovery changed original use set receipt", lambda: validate_flow(changed_query))
+
 conflicting = deepcopy(flow)
 changed = deepcopy(next(message for message in flow if message["type"] == "harness.task.submit" and message["kind"] == "request"))
 changed["payload"]["goal"] = "A changed goal under the same message id"

@@ -83,6 +83,8 @@ UseIntent 由受信调用上下文建立；本地值及跨端编码见[授权领
 | `Delegate` | 父许可、目标主体与宿主、收缩范围、确认或父许可允许的委派依据 | 子许可及回执；与撤销共用串行裁决，跨用户、不可判定包含或深度超限拒绝 |
 | `Evaluate` | grant_ref、UseIntent、所需新鲜度 | allow／deny／indeterminate、依据修订与全部约束；只供规划、准入与预检，不消费也不充当启动回执 |
 | `BeginUse` | grant_ref、UseIntent、处理端身份、原操作及固定使用键 | 当前可用的使用回执或拒绝／提交未知；单次占用及回执一起保存；具体语义见[消费](mechanisms.md#use) |
+| `BeginUseSet` | 同一用户／消费权威、原 command_id／operation_id、固定集合摘要及 1～64 个 grant_ref／UseIntent | 同一有限使用单元的全部成员一次校验、原子消费；返回整体历史回执及本次集合判定。任一成员不满足则不新增任何消费，提交未知核对原集合；见[集合消费](mechanisms.md#use-set) |
+| `ReadUseSet` | 原消费权威、command_id、operation_id，当前查询权限 | 原完整集合回执或明确缺口；当前未见不证明未提交，历史回执不授予新启动资格 |
 | `ReadUse`／`ReadCommand` | 原使用键／原 command_id，当前查询权限 | 原提交事实或可核对缺口；查到历史成功不代表当前可启动，不返回今天无权披露的历史正文 |
 | `Revoke` | 精确许可、主体或端点，以及当前管理权限与预期修订 | 撤销提交修订、传播跟踪引用；不报告物理停止。许可撤销不删除原使用记录 |
 | `ReadAuthorityState` | 当前用户管理身份、过滤条件及分页游标 | 本用户主体、端点、许可范围、消费及撤销状态的受限视图；敏感历史仍检查当前披露许可 |
@@ -96,6 +98,8 @@ UseIntent 由受信调用上下文建立；本地值及跨端编码见[授权领
 `BeginUse` 使用键固定为 `(user, grant_ref, operation_id, use_slot)`；use_slot 由已安装动作模式固定为 `(unit_no, source_role)`，区分有限使用单元及其来源。处理端在本地账本先持久分配 unit_no，重投和恢复复用原号；同一单元不得因超时换号，下一单元须由已安装动作模式依据进度有界产生。GUI 独立动作仍各自使用内核分配的 operation_id，不靠 unit_no 绕过准入。
 
 once 许可对整个 grant 只有一个操作／意图占用，仅允许一个使用单元；全部来源 slot 继承首次消费时固定的启动截止，不能换 slot 或 command_id 刷新。continuous 对每个固定使用键保存回执，新单元要重新检查当前权限。同键异意图返回冲突。
+
+集合按 `(grant_ref, unit_no, source_role)` 固定排序，成员键不重复；完整规范值和 `set_sha256` 都参与原意图核对。所有成员具有相同的操作、actor、processor、处理位置、接收方和 unit_no，资源及来源角色可以不同。请求中的权威须与受信路由、各 grant 的实际消费权威一致。集合回执绑定原 command_id、权威、操作、完整成员、共同 start_before 及各成员原回执。已登记集合不能靠单项 BeginUse 增补成员或刷新截止；单项查询／复核可返回其中原回执。不能取得完整集合回执及当前集合 allow 时，不启动依赖该集合的行动。
 
 | Decision / UseReceipt 字段 | 语义 |
 | --- | --- |

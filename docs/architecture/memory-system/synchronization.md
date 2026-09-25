@@ -75,7 +75,7 @@ remove 只携带已交付对象所需最小删除关联，不携带旧正文。�
 | 场景 | 可观察结果与继续者 |
 | --- | --- |
 | 权威修改成功但应答丢失 | 发起方查原命令，恢复 M/2 的历史回执；当前 Read 得到墓碑，不解释为 M/2 仍可用 |
-| 旧编辑要求 expected_revision=1 | 权威拒绝冲突／墓碑复活；用户可查看当前最小状态，明确新建另一记录，系统不自动改成 create |
+| 旧编辑要求 expected_revision=1 | 权威拒绝冲突／墓碑复活；用户可用 InspectCurrent 查看获准当前修订／墓碑，明确新建另一记录，系统不自动改成 create |
 | remove 已应用后旧 M/1 页到达 | 视图代次／连续位置或记录修订不符，拒绝覆盖，墓碑和应用水位保留 |
 | 云端只收到了新快照前半部分 | 新代次不可见，旧代次保持受限；同步负责补页或重开，不把未出现的条目当已删除完成 |
 | 被过滤的变化造成无内容页 | 有连续覆盖依据才推进；只返回空列表而无覆盖依据视为缺口，不能确认恢复完成 |
@@ -102,7 +102,8 @@ remove 只携带已交付对象所需最小删除关联，不携带旧正文。�
 
 | 线类型 | 对应接口与结果 | lane／scope |
 | --- | --- | --- |
-| memory.search／read | 有界候选检索或固定版本读取；返回完整记录、来源、partial／缺口；分页按查询及切点绑定 | recovery；collection／查询集合，或 memory／memory_id |
+| memory.search／read | 有界候选检索或精确读取；返回完整获准记录（含类型数据、三类可信度及依据）、来源和缺口；Search 固定有限集合，返回 page／partial | recovery；collection／查询集合，或 memory／memory_id |
+| memory.list_metadata／inspect_current | 当前本人管理元数据；list 按固定 ID 集合分页，inspect 无需已知修订；无正文、无隐含来源摘要读取权 | recovery；collection／collection_id，或 memory／memory_id |
 | memory.mutate | command_id、memory_id、固定意图、create／replace／restrict／delete 和受信操作依据；返回原回执及权威修订 | work；memory／memory_id |
 | memory.query_command／close_command | 查询原命令，或原子封闭尚未提交原意图；closed_without_commit 不回滚已提交修改 | recovery／control；operation／原 command_id |
 | memory.open_view | 本轮恢复、view_id／代次、范围／用途／投影及期限；固定快照清单、切点与接续责任 | control；memory／view_id |
@@ -110,6 +111,8 @@ remove 只携带已交付对象所需最小删除关联，不携带旧正文。�
 | memory.apply_view | 接收端持久应用水位、清单摘要及受信应用证明；权威记录确认位置 | control；memory／view_id |
 | memory.close_view／query_view_receipt | 原关闭、旧代次应用及载体清理结果可核对；view 过期仍保留未决清理事实 | control／recovery；memory／view_id |
 | memory.set_extraction_policy | 本人确认的任务类型 opt-in、策略版本及独立预算；由应用策略权威保存 | control；memory／policy_id |
+
+memory.list_metadata／inspect_current 的 purpose 固定为 memory_management；受信管理主体和对象级最小披露权限由服务验证，消息类型和载荷不能自授本人资格。source_refs 属于可选获准字段，不为取得当前修订而调用已失效来源的正文接口。memory.read 未带 revision 时，先在受信服务内固定当前版本及完整来源，再 BeginUse；带 revision 时不能默默改用新版本。查询分页沿[有限集合算法](mechanisms.md#pagination)，同步快照仍沿本页完整清单／连续接续算法，不能用查询的跳项规则掩盖同步缺口。
 
 变更 envelope operation_id 等于 command_id；memory.mutate 顶层 memory_id 必须等于动作里的目标 ID。新建记录初始修订、替换预期修订与新修订关系由权威验证，客户端不得自行指定一条跳跃历史。restrict 只能收紧策略，delete／restrict 不要求重新获准旧正文。来源／actor／processor 与受信操作不符、闭包不完整或必要预算／控制依据缺失时拒绝。
 

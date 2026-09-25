@@ -609,7 +609,13 @@
           "recorded_at": "2026-09-24T10:00:00.000Z",
           "valid_from": "2026-09-24T10:00:00.000Z",
           "valid_until": "2026-09-24T10:30:00.000Z",
-          "confidence": 1,
+          "confidence": {
+            "kind": "graded",
+            "issuer_ref": "fixture://trusted-profile-importer",
+            "basis_ref": "fixture://confidence/user-statement-strength",
+            "basis_version": "1",
+            "value": "explicit"
+          },
           "source_bindings": [
             {
               "source_authority": "00000000-0000-4000-8000-0000000013ef",
@@ -666,7 +672,12 @@
             "cleanup_deadline": "2026-09-24T11:00:00.000Z"
           },
           "holder_id": "00000000-0000-4000-8000-00000000145a",
-          "origin": "imported"
+          "origin": "imported",
+          "type_details": {
+            "dimension": "answer_style"
+          },
+          "schema_version": 1,
+          "content_sha256": "7fa8a223d63a22a23d146352388368573ccab528eea94d6643bee929220689d1"
         }
       },
       "operation_basis": {
@@ -843,7 +854,7 @@
     "expires_at": "2026-09-24T10:30:00.000Z",
     "payload": {
       "collection_id": "00000000-0000-4000-8000-000000001451",
-      "query": "回答风格",
+      "query": "回答",
       "kinds": [
         "preference"
       ],
@@ -901,7 +912,13 @@
             "recorded_at": "2026-09-24T10:00:00.000Z",
             "valid_from": "2026-09-24T10:00:00.000Z",
             "valid_until": "2026-09-24T10:30:00.000Z",
-            "confidence": 1,
+            "confidence": {
+              "kind": "graded",
+              "issuer_ref": "fixture://trusted-profile-importer",
+              "basis_ref": "fixture://confidence/user-statement-strength",
+              "basis_version": "1",
+              "value": "explicit"
+            },
             "source_bindings": [
               {
                 "source_authority": "00000000-0000-4000-8000-0000000013ef",
@@ -958,11 +975,23 @@
               "cleanup_deadline": "2026-09-24T11:00:00.000Z"
             },
             "holder_id": "00000000-0000-4000-8000-00000000145a",
-            "origin": "imported"
+            "origin": "imported",
+            "type_details": {
+              "dimension": "answer_style"
+            },
+            "schema_version": 1,
+            "content_sha256": "7fa8a223d63a22a23d146352388368573ccab528eea94d6643bee929220689d1"
           }
         ],
         "partial": false,
-        "gaps": []
+        "gaps": [],
+        "page": {
+          "query_id": "00000000-0000-4000-8000-000000019001",
+          "cut_at": "2026-09-24T10:00:00.000Z",
+          "expires_at": "2026-09-24T10:05:00.000Z",
+          "set_complete": true,
+          "exhausted": true
+        }
       }
     },
     "operation_id": "00000000-0000-4000-8000-000000011181"
@@ -1032,7 +1061,13 @@
             "recorded_at": "2026-09-24T10:00:00.000Z",
             "valid_from": "2026-09-24T10:00:00.000Z",
             "valid_until": "2026-09-24T10:30:00.000Z",
-            "confidence": 1,
+            "confidence": {
+              "kind": "graded",
+              "issuer_ref": "fixture://trusted-profile-importer",
+              "basis_ref": "fixture://confidence/user-statement-strength",
+              "basis_version": "1",
+              "value": "explicit"
+            },
             "source_bindings": [
               {
                 "source_authority": "00000000-0000-4000-8000-0000000013ef",
@@ -1089,7 +1124,12 @@
               "cleanup_deadline": "2026-09-24T11:00:00.000Z"
             },
             "holder_id": "00000000-0000-4000-8000-00000000145a",
-            "origin": "imported"
+            "origin": "imported",
+            "type_details": {
+              "dimension": "answer_style"
+            },
+            "schema_version": 1,
+            "content_sha256": "7fa8a223d63a22a23d146352388368573ccab528eea94d6643bee929220689d1"
           }
         ],
         "gaps": []
@@ -1131,7 +1171,8 @@
           "observed_at",
           "confidence",
           "source_bindings",
-          "policy"
+          "policy",
+          "type_details"
         ],
         "retain_until": "2026-09-24T10:30:00.000Z"
       },
@@ -1196,7 +1237,8 @@
             "observed_at",
             "confidence",
             "source_bindings",
-            "policy"
+            "policy",
+            "type_details"
           ],
           "retain_until": "2026-09-24T10:30:00.000Z"
         },
@@ -1346,7 +1388,8 @@
           "observed_at",
           "confidence",
           "source_bindings",
-          "policy"
+          "policy",
+          "type_details"
         ],
         "retain_until": "2026-09-24T10:30:00.000Z"
       }
@@ -1405,7 +1448,8 @@
             "observed_at",
             "confidence",
             "source_bindings",
-            "policy"
+            "policy",
+            "type_details"
           ],
           "retain_until": "2026-09-24T10:30:00.000Z"
         },
@@ -1434,7 +1478,13 @@
               "recorded_at": "2026-09-24T10:00:00.000Z",
               "valid_from": "2026-09-24T10:00:00.000Z",
               "valid_until": "2026-09-24T10:30:00.000Z",
-              "confidence": 1,
+              "confidence": {
+                "kind": "graded",
+                "issuer_ref": "fixture://trusted-profile-importer",
+                "basis_ref": "fixture://confidence/user-statement-strength",
+                "basis_version": "1",
+                "value": "explicit"
+              },
               "source_bindings": [
                 {
                   "source_authority": "00000000-0000-4000-8000-0000000013ef",
@@ -1491,7 +1541,12 @@
                 "cleanup_deadline": "2026-09-24T11:00:00.000Z"
               },
               "holder_id": "00000000-0000-4000-8000-00000000145a",
-              "origin": "imported"
+              "origin": "imported",
+              "type_details": {
+                "dimension": "answer_style"
+              },
+              "schema_version": 1,
+              "content_sha256": "7fa8a223d63a22a23d146352388368573ccab528eea94d6643bee929220689d1"
             }
           }
         ],
@@ -1534,7 +1589,8 @@
           "observed_at",
           "confidence",
           "source_bindings",
-          "policy"
+          "policy",
+          "type_details"
         ],
         "retain_until": "2026-09-24T10:30:00.000Z"
       },
@@ -1907,6 +1963,439 @@
       }
     },
     "operation_id": "00000000-0000-4000-8000-0000000014df"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b002",
+    "kind": "request",
+    "type": "harness.memory.read",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ed",
+    "target": "00000000-0000-4000-8000-0000000013ee",
+    "authorization": {
+      "grant_ref": "memory-fixture-current-grant"
+    },
+    "expires_at": "2026-09-24T10:30:00.000Z",
+    "payload": {
+      "memory_id": "00000000-0000-4000-8000-000000019100",
+      "revision": "1",
+      "purpose": "memory",
+      "recipient_endpoint": "00000000-0000-4000-8000-0000000013ed"
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a001",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c002",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "memory",
+        "id": "00000000-0000-4000-8000-000000019100"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b003",
+    "kind": "response",
+    "type": "harness.memory.read",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ee",
+    "target": "00000000-0000-4000-8000-0000000013ed",
+    "reply_to": "00000000-0000-4000-8000-00000001b002",
+    "payload": {
+      "status": "completed",
+      "result": {
+        "records": [
+          {
+            "memory_id": "00000000-0000-4000-8000-000000019100",
+            "revision": "1",
+            "kind": "fact",
+            "text": "用户陈述希望回答简短",
+            "scope": [
+              "answer_style"
+            ],
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "recorded_at": "2026-09-24T10:00:00.000Z",
+            "valid_from": "2026-09-24T10:00:00.000Z",
+            "valid_until": "2026-09-24T10:30:00.000Z",
+            "confidence": {
+              "kind": "numeric",
+              "issuer_ref": "fixture://trusted-assessor",
+              "basis_ref": "fixture://confidence/raw-assessor-score",
+              "basis_version": "1",
+              "value": 0.8
+            },
+            "source_bindings": [
+              {
+                "source_authority": "00000000-0000-4000-8000-0000000013ef",
+                "resource_ref": "fixture://profile/brief-style",
+                "revision": "1",
+                "sha256": "91f0942f0be532092455bcf741ff85378b7d1d3febc4819292e75eba9e99b3da",
+                "observed_at": "2026-09-24T10:00:00.000Z",
+                "policy_ref": "00000000-0000-4000-8000-00000000146e",
+                "policy_revision": "1",
+                "purposes": [
+                  "memory",
+                  "memory_sync",
+                  "retention"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000013ed",
+                  "00000000-0000-4000-8000-0000000013ee",
+                  "00000000-0000-4000-8000-0000000013f0"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000013ed",
+                  "00000000-0000-4000-8000-0000000013ee",
+                  "00000000-0000-4000-8000-0000000013f0"
+                ],
+                "retain_until": "2026-09-24T10:30:00.000Z",
+                "current_proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000013ef",
+                  "proof_id": "00000000-0000-4000-8000-00000000146f",
+                  "revision": "1",
+                  "binding_sha256": "61907812588d081c9840ca7e882e0eeec62b69264fc8bd03a4a2fd528732e07d",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T10:30:00.000Z"
+                }
+              }
+            ],
+            "policy": {
+              "policy_ref": "00000000-0000-4000-8000-00000000146e",
+              "revision": "1",
+              "purposes": [
+                "memory",
+                "memory_sync"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-0000000013ed",
+                "00000000-0000-4000-8000-0000000013ee"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-0000000013ed",
+                "00000000-0000-4000-8000-0000000013ee"
+              ],
+              "retain_until": "2026-09-24T10:30:00.000Z",
+              "use_until": "2026-09-24T10:30:00.000Z",
+              "offline_use_until": "2026-09-24T10:00:00.000Z",
+              "cleanup_deadline": "2026-09-24T11:00:00.000Z"
+            },
+            "holder_id": "00000000-0000-4000-8000-000000019110",
+            "origin": "imported",
+            "type_details": {
+              "statement_subject": "用户声明的回答格式"
+            },
+            "schema_version": 1,
+            "content_sha256": "f70264f9100b74fb2646da13240a382673ecaebaf396eb266dc77f89d740c8f2"
+          }
+        ],
+        "gaps": []
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a001",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c003",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "memory",
+        "id": "00000000-0000-4000-8000-000000019100"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b004",
+    "kind": "request",
+    "type": "harness.memory.read",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ed",
+    "target": "00000000-0000-4000-8000-0000000013ee",
+    "authorization": {
+      "grant_ref": "memory-fixture-current-grant"
+    },
+    "expires_at": "2026-09-24T10:30:00.000Z",
+    "payload": {
+      "memory_id": "00000000-0000-4000-8000-000000019101",
+      "revision": "1",
+      "purpose": "memory",
+      "recipient_endpoint": "00000000-0000-4000-8000-0000000013ed"
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a002",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c004",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "memory",
+        "id": "00000000-0000-4000-8000-000000019101"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b005",
+    "kind": "response",
+    "type": "harness.memory.read",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ee",
+    "target": "00000000-0000-4000-8000-0000000013ed",
+    "reply_to": "00000000-0000-4000-8000-00000001b004",
+    "payload": {
+      "status": "completed",
+      "result": {
+        "records": [
+          {
+            "memory_id": "00000000-0000-4000-8000-000000019101",
+            "revision": "1",
+            "kind": "inference",
+            "text": "用户可能偏好先给结论的回答",
+            "scope": [
+              "answer_style"
+            ],
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "recorded_at": "2026-09-24T10:00:00.000Z",
+            "valid_from": "2026-09-24T10:00:00.000Z",
+            "valid_until": "2026-09-24T10:30:00.000Z",
+            "confidence": {
+              "kind": "unknown",
+              "issuer_ref": "fixture://preference-extractor",
+              "basis_ref": "fixture://confidence/not-assessed",
+              "basis_version": "1",
+              "reason": "没有校准或等级评估依据"
+            },
+            "source_bindings": [
+              {
+                "source_authority": "00000000-0000-4000-8000-0000000013ef",
+                "resource_ref": "fixture://profile/brief-style",
+                "revision": "1",
+                "sha256": "91f0942f0be532092455bcf741ff85378b7d1d3febc4819292e75eba9e99b3da",
+                "observed_at": "2026-09-24T10:00:00.000Z",
+                "policy_ref": "00000000-0000-4000-8000-00000000146e",
+                "policy_revision": "1",
+                "purposes": [
+                  "memory",
+                  "memory_sync",
+                  "retention"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000013ed",
+                  "00000000-0000-4000-8000-0000000013ee",
+                  "00000000-0000-4000-8000-0000000013f0"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000013ed",
+                  "00000000-0000-4000-8000-0000000013ee",
+                  "00000000-0000-4000-8000-0000000013f0"
+                ],
+                "retain_until": "2026-09-24T10:30:00.000Z",
+                "current_proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000013ef",
+                  "proof_id": "00000000-0000-4000-8000-00000000146f",
+                  "revision": "1",
+                  "binding_sha256": "61907812588d081c9840ca7e882e0eeec62b69264fc8bd03a4a2fd528732e07d",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T10:30:00.000Z"
+                }
+              }
+            ],
+            "policy": {
+              "policy_ref": "00000000-0000-4000-8000-00000000146e",
+              "revision": "1",
+              "purposes": [
+                "memory",
+                "memory_sync"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-0000000013ed",
+                "00000000-0000-4000-8000-0000000013ee"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-0000000013ed",
+                "00000000-0000-4000-8000-0000000013ee"
+              ],
+              "retain_until": "2026-09-24T10:30:00.000Z",
+              "use_until": "2026-09-24T10:30:00.000Z",
+              "offline_use_until": "2026-09-24T10:00:00.000Z",
+              "cleanup_deadline": "2026-09-24T11:00:00.000Z"
+            },
+            "holder_id": "00000000-0000-4000-8000-000000019111",
+            "origin": "extracted",
+            "type_details": {
+              "method_ref": "fixture://preference-extractor",
+              "model_version": "fixture-model-1",
+              "uncertainty": "仅为推断，没有足够样本估计可信度"
+            },
+            "schema_version": 1,
+            "content_sha256": "197ef4a3133aebbfe4279feeee324a54b1fe458a0e26d8c97228d8e471ae5383",
+            "source_task_id": "00000000-0000-4000-8000-000000019121",
+            "source_operation_id": "00000000-0000-4000-8000-000000019131"
+          }
+        ],
+        "gaps": []
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a002",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c005",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "memory",
+        "id": "00000000-0000-4000-8000-000000019101"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b006",
+    "kind": "request",
+    "type": "harness.memory.read",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ed",
+    "target": "00000000-0000-4000-8000-0000000013ee",
+    "authorization": {
+      "grant_ref": "memory-fixture-current-grant"
+    },
+    "expires_at": "2026-09-24T10:30:00.000Z",
+    "payload": {
+      "memory_id": "00000000-0000-4000-8000-000000019102",
+      "revision": "1",
+      "purpose": "memory",
+      "recipient_endpoint": "00000000-0000-4000-8000-0000000013ed"
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a003",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c006",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "memory",
+        "id": "00000000-0000-4000-8000-000000019102"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b007",
+    "kind": "response",
+    "type": "harness.memory.read",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ee",
+    "target": "00000000-0000-4000-8000-0000000013ed",
+    "reply_to": "00000000-0000-4000-8000-00000001b006",
+    "payload": {
+      "status": "completed",
+      "result": {
+        "records": [
+          {
+            "memory_id": "00000000-0000-4000-8000-000000019102",
+            "revision": "1",
+            "kind": "experience",
+            "text": "简短回答模板的任务效果尚未确认",
+            "scope": [
+              "answer_style"
+            ],
+            "observed_at": "2026-09-24T10:00:00.000Z",
+            "recorded_at": "2026-09-24T10:00:00.000Z",
+            "valid_from": "2026-09-24T10:00:00.000Z",
+            "valid_until": "2026-09-24T10:30:00.000Z",
+            "confidence": {
+              "kind": "unknown",
+              "issuer_ref": "fixture://experience-importer",
+              "basis_ref": "fixture://confidence/not-assessed",
+              "basis_version": "1",
+              "reason": "操作事实尚无效果证据"
+            },
+            "source_bindings": [
+              {
+                "source_authority": "00000000-0000-4000-8000-0000000013ef",
+                "resource_ref": "fixture://operation/brief-response-pending-effect",
+                "revision": "1",
+                "sha256": "dc942475bf0eaec8b83d3f228ab3a6b5ae5a45362094726adf891aa9d94b6f01",
+                "observed_at": "2026-09-24T10:00:00.000Z",
+                "policy_ref": "00000000-0000-4000-8000-00000000146e",
+                "policy_revision": "1",
+                "purposes": [
+                  "memory",
+                  "memory_sync",
+                  "retention"
+                ],
+                "recipients": [
+                  "00000000-0000-4000-8000-0000000013ed",
+                  "00000000-0000-4000-8000-0000000013ee",
+                  "00000000-0000-4000-8000-0000000013f0"
+                ],
+                "processing_endpoints": [
+                  "00000000-0000-4000-8000-0000000013ed",
+                  "00000000-0000-4000-8000-0000000013ee",
+                  "00000000-0000-4000-8000-0000000013f0"
+                ],
+                "retain_until": "2026-09-24T10:30:00.000Z",
+                "current_proof": {
+                  "authority_endpoint": "00000000-0000-4000-8000-0000000013ef",
+                  "proof_id": "00000000-0000-4000-8000-000000019142",
+                  "revision": "1",
+                  "binding_sha256": "a2ea9b4d49736121a264005cc80d24fb0b51c7fbe9cf119b2be9a592c61d091f",
+                  "issued_at": "2026-09-24T10:00:00.000Z",
+                  "expires_at": "2026-09-24T10:30:00.000Z"
+                }
+              }
+            ],
+            "policy": {
+              "policy_ref": "00000000-0000-4000-8000-00000000146e",
+              "revision": "1",
+              "purposes": [
+                "memory",
+                "memory_sync"
+              ],
+              "processing_endpoints": [
+                "00000000-0000-4000-8000-0000000013ed",
+                "00000000-0000-4000-8000-0000000013ee"
+              ],
+              "recipients": [
+                "00000000-0000-4000-8000-0000000013ed",
+                "00000000-0000-4000-8000-0000000013ee"
+              ],
+              "retain_until": "2026-09-24T10:30:00.000Z",
+              "use_until": "2026-09-24T10:30:00.000Z",
+              "offline_use_until": "2026-09-24T10:00:00.000Z",
+              "cleanup_deadline": "2026-09-24T11:00:00.000Z"
+            },
+            "holder_id": "00000000-0000-4000-8000-000000019112",
+            "origin": "extracted",
+            "type_details": {
+              "capability_ref": "fixture://capability/brief-response",
+              "capability_version": "1",
+              "environment_ref": "fixture://environment/text-review",
+              "environment_version": "1"
+            },
+            "schema_version": 1,
+            "content_sha256": "ca52a81f9f9ab0d8de906c9dff30dbc1dceff7e5932c6f494f4ace1f909dd024",
+            "source_task_id": "00000000-0000-4000-8000-000000019122",
+            "source_operation_id": "00000000-0000-4000-8000-000000019132",
+            "effect": "unknown"
+          }
+        ],
+        "gaps": []
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a003",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c007",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "memory",
+        "id": "00000000-0000-4000-8000-000000019102"
+      }
+    }
   },
   {
     "protocol_version": 1,
@@ -2712,5 +3201,367 @@
       }
     },
     "operation_id": "00000000-0000-4000-8000-0000000111a7"
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b008",
+    "kind": "request",
+    "type": "harness.memory.list_metadata",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ed",
+    "target": "00000000-0000-4000-8000-0000000013ee",
+    "authorization": {
+      "grant_ref": "memory-fixture-current-management-grant"
+    },
+    "expires_at": "2026-09-24T10:30:00.000Z",
+    "payload": {
+      "collection_id": "00000000-0000-4000-8000-000000001451",
+      "purpose": "memory_management",
+      "recipient_endpoint": "00000000-0000-4000-8000-0000000013ed",
+      "limit": 100
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a004",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c008",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "collection",
+        "id": "00000000-0000-4000-8000-000000001451"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b009",
+    "kind": "response",
+    "type": "harness.memory.list_metadata",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ee",
+    "target": "00000000-0000-4000-8000-0000000013ed",
+    "reply_to": "00000000-0000-4000-8000-00000001b008",
+    "payload": {
+      "status": "completed",
+      "result": {
+        "items": [
+          {
+            "memory_id": "00000000-0000-4000-8000-000000001450",
+            "current_revision": "1",
+            "record_state": "present",
+            "checked_at": "2026-09-24T10:01:00.000Z"
+          }
+        ],
+        "page": {
+          "query_id": "00000000-0000-4000-8000-000000019200",
+          "cut_at": "2026-09-24T10:01:00.000Z",
+          "expires_at": "2026-09-24T10:06:00.000Z",
+          "set_complete": true,
+          "exhausted": false,
+          "next_cursor": "fixture-opaque-management-next"
+        },
+        "partial": false,
+        "gaps": []
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a004",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c009",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "collection",
+        "id": "00000000-0000-4000-8000-000000001451"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b00a",
+    "kind": "request",
+    "type": "harness.memory.list_metadata",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ed",
+    "target": "00000000-0000-4000-8000-0000000013ee",
+    "authorization": {
+      "grant_ref": "memory-fixture-current-management-grant"
+    },
+    "expires_at": "2026-09-24T10:30:00.000Z",
+    "payload": {
+      "collection_id": "00000000-0000-4000-8000-000000001451",
+      "purpose": "memory_management",
+      "recipient_endpoint": "00000000-0000-4000-8000-0000000013ed",
+      "limit": 100,
+      "cursor": "fixture-opaque-management-next"
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a005",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c00a",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "collection",
+        "id": "00000000-0000-4000-8000-000000001451"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b00b",
+    "kind": "response",
+    "type": "harness.memory.list_metadata",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ee",
+    "target": "00000000-0000-4000-8000-0000000013ed",
+    "reply_to": "00000000-0000-4000-8000-00000001b00a",
+    "payload": {
+      "status": "completed",
+      "result": {
+        "items": [],
+        "page": {
+          "query_id": "00000000-0000-4000-8000-000000019200",
+          "cut_at": "2026-09-24T10:01:00.000Z",
+          "expires_at": "2026-09-24T10:06:00.000Z",
+          "set_complete": true,
+          "exhausted": true
+        },
+        "partial": true,
+        "gaps": [
+          {
+            "reason": "forbidden",
+            "authority_endpoint": "00000000-0000-4000-8000-0000000013ee",
+            "retry": "after_change"
+          }
+        ]
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a005",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c00b",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "collection",
+        "id": "00000000-0000-4000-8000-000000001451"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b00c",
+    "kind": "request",
+    "type": "harness.memory.inspect_current",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ed",
+    "target": "00000000-0000-4000-8000-0000000013ee",
+    "authorization": {
+      "grant_ref": "memory-fixture-current-management-grant"
+    },
+    "expires_at": "2026-09-24T10:30:00.000Z",
+    "payload": {
+      "memory_id": "00000000-0000-4000-8000-000000001450",
+      "purpose": "memory_management",
+      "recipient_endpoint": "00000000-0000-4000-8000-0000000013ed"
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a006",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c00c",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "memory",
+        "id": "00000000-0000-4000-8000-000000001450"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b00d",
+    "kind": "response",
+    "type": "harness.memory.inspect_current",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ee",
+    "target": "00000000-0000-4000-8000-0000000013ed",
+    "reply_to": "00000000-0000-4000-8000-00000001b00c",
+    "payload": {
+      "status": "completed",
+      "result": {
+        "items": [
+          {
+            "memory_id": "00000000-0000-4000-8000-000000001450",
+            "current_revision": "1",
+            "record_state": "present",
+            "checked_at": "2026-09-24T10:01:00.000Z"
+          }
+        ],
+        "gaps": []
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a006",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c00d",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "memory",
+        "id": "00000000-0000-4000-8000-000000001450"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b00e",
+    "kind": "request",
+    "type": "harness.memory.mutate",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ed",
+    "target": "00000000-0000-4000-8000-0000000013ee",
+    "authorization": {
+      "grant_ref": "memory-fixture-current-management-grant"
+    },
+    "expires_at": "2026-09-24T10:30:00.000Z",
+    "payload": {
+      "command_id": "00000000-0000-4000-8000-000000019210",
+      "intent_sha256": "1df221da942f46025e14f2350f519d7793199a8cd665b17b41b2fd7bf23a89a0",
+      "mutation": {
+        "action": "delete",
+        "memory_id": "00000000-0000-4000-8000-000000001450",
+        "expected_revision": "1"
+      },
+      "operation_basis": {
+        "operation_id": "00000000-0000-4000-8000-000000019210",
+        "authority_endpoint": "00000000-0000-4000-8000-0000000013f1",
+        "actor_id": "00000000-0000-4000-8000-000000019211",
+        "processor_endpoint": "00000000-0000-4000-8000-0000000013ee",
+        "intent_sha256": "1df221da942f46025e14f2350f519d7793199a8cd665b17b41b2fd7bf23a89a0",
+        "source_bindings": [],
+        "sources_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "proof": {
+          "authority_endpoint": "00000000-0000-4000-8000-0000000013f1",
+          "proof_id": "00000000-0000-4000-8000-000000019212",
+          "revision": "1",
+          "binding_sha256": "1df221da942f46025e14f2350f519d7793199a8cd665b17b41b2fd7bf23a89a0",
+          "issued_at": "2026-09-24T10:01:00.000Z",
+          "expires_at": "2026-09-24T10:30:00.000Z"
+        }
+      },
+      "memory_id": "00000000-0000-4000-8000-000000001450"
+    },
+    "operation_id": "00000000-0000-4000-8000-000000019210",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c00e",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "memory",
+        "id": "00000000-0000-4000-8000-000000001450"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b00f",
+    "kind": "response",
+    "type": "harness.memory.mutate",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ee",
+    "target": "00000000-0000-4000-8000-0000000013ed",
+    "reply_to": "00000000-0000-4000-8000-00000001b00e",
+    "payload": {
+      "status": "completed",
+      "result": {
+        "receipt": {
+          "command_id": "00000000-0000-4000-8000-000000019210",
+          "intent_sha256": "1df221da942f46025e14f2350f519d7793199a8cd665b17b41b2fd7bf23a89a0",
+          "authority_endpoint": "00000000-0000-4000-8000-0000000013ee",
+          "state": "committed",
+          "revision": "2",
+          "gaps": []
+        },
+        "memory_id": "00000000-0000-4000-8000-000000001450",
+        "revision": "2"
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-000000019210",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c00f",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "memory",
+        "id": "00000000-0000-4000-8000-000000001450"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b010",
+    "kind": "request",
+    "type": "harness.memory.inspect_current",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ed",
+    "target": "00000000-0000-4000-8000-0000000013ee",
+    "authorization": {
+      "grant_ref": "memory-fixture-current-management-grant"
+    },
+    "expires_at": "2026-09-24T10:30:00.000Z",
+    "payload": {
+      "memory_id": "00000000-0000-4000-8000-000000001450",
+      "purpose": "memory_management",
+      "recipient_endpoint": "00000000-0000-4000-8000-0000000013ed"
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a008",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c010",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "memory",
+        "id": "00000000-0000-4000-8000-000000001450"
+      }
+    }
+  },
+  {
+    "protocol_version": 1,
+    "message_id": "00000000-0000-4000-8000-00000001b011",
+    "kind": "response",
+    "type": "harness.memory.inspect_current",
+    "type_version": 1,
+    "source": "00000000-0000-4000-8000-0000000013ee",
+    "target": "00000000-0000-4000-8000-0000000013ed",
+    "reply_to": "00000000-0000-4000-8000-00000001b010",
+    "payload": {
+      "status": "completed",
+      "result": {
+        "items": [
+          {
+            "memory_id": "00000000-0000-4000-8000-000000001450",
+            "current_revision": "2",
+            "record_state": "deleted",
+            "checked_at": "2026-09-24T10:02:00.000Z"
+          }
+        ],
+        "gaps": []
+      }
+    },
+    "operation_id": "00000000-0000-4000-8000-00000001a008",
+    "delivery": {
+      "mode": "reliable",
+      "stream_id": "00000000-0000-4000-8000-00000001c011",
+      "seq": "1",
+      "retain_until": "2026-09-24T10:30:00.000Z",
+      "scope": {
+        "kind": "memory",
+        "id": "00000000-0000-4000-8000-000000001450"
+      }
+    }
   }
 ]

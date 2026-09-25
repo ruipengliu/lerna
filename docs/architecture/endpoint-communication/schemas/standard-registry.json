@@ -2736,6 +2736,102 @@
         "kind": "collection",
         "field": "payload.holder_id"
       }
+    },
+    {
+      "type": "harness.authorization.begin_use_set",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_begin_use_set_request",
+        "response": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_begin_use_set_response"
+      },
+      "delivery": "reliable",
+      "lane": "work",
+      "authorization_scopes": [
+        "authorization.begin_use_set"
+      ],
+      "side_effecting": true,
+      "operation_id": "required",
+      "recovery": "原身份重投或查询；当前未见不证明未提交，查询只恢复历史，不授予启动或正文读取资格。",
+      "scope_binding": {
+        "kind": "operation",
+        "field": "payload.operation_id"
+      }
+    },
+    {
+      "type": "harness.authorization.query_use_set",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_query_use_set_request",
+        "response": "https://harness.invalid/protocol/v1/identity.schema.json#/$defs/authorization_query_use_set_response"
+      },
+      "delivery": "reliable",
+      "lane": "recovery",
+      "authorization_scopes": [
+        "authorization.query_use_set"
+      ],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "原身份重投或查询；当前未见不证明未提交，查询只恢复历史，不授予启动或正文读取资格。",
+      "scope_binding": {
+        "kind": "operation",
+        "field": "payload.operation_id"
+      }
+    },
+    {
+      "type": "harness.memory.list_metadata",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_list_metadata_request",
+        "response": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_list_metadata_response"
+      },
+      "delivery": "reliable",
+      "lane": "recovery",
+      "authorization_scopes": [
+        "memory.list_metadata"
+      ],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "原身份重投或查询；当前未见不证明未提交，查询只恢复历史，不授予启动或正文读取资格。",
+      "scope_binding": {
+        "kind": "collection",
+        "field": "payload.collection_id"
+      }
+    },
+    {
+      "type": "harness.memory.inspect_current",
+      "type_version": 1,
+      "kinds": [
+        "request",
+        "response"
+      ],
+      "payload_schemas": {
+        "request": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_inspect_current_request",
+        "response": "https://harness.invalid/protocol/v1/memory.schema.json#/$defs/memory_inspect_current_response"
+      },
+      "delivery": "reliable",
+      "lane": "recovery",
+      "authorization_scopes": [
+        "memory.inspect_current"
+      ],
+      "side_effecting": false,
+      "operation_id": "optional",
+      "recovery": "原身份重投或查询；当前未见不证明未提交，查询只恢复历史，不授予启动或正文读取资格。",
+      "scope_binding": {
+        "kind": "memory",
+        "field": "payload.memory_id"
+      }
     }
   ],
   "extensions": [],

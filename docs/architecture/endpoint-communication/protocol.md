@@ -33,9 +33,9 @@
 | --- | --- | --- |
 | 任务生命周期、结果及用户控制 | [任务生命周期](../task-kernel/lifecycle.md)、[核心接口及固定结果查询](../task-kernel/storage-and-interfaces.md#result-recovery)、[控制与管理](../task-kernel/control-and-management.md)、[任务恢复](../task-kernel/recovery-and-validation.md)；线映射见[任务消息](task-and-ui.md) | task、task-control |
 | 准确目录、执行与设备管理 | [执行合同](../capability-and-execution/catalog-and-contracts.md)、[跨端执行](../capability-and-execution/remote-contracts.md) | execution、execution-control |
-| 身份、许可与恢复引导 | [身份接口](../identity-and-authorization/contracts.md)、[判定与恢复](../identity-and-authorization/mechanisms.md)、[跨端授权](../identity-and-authorization/cross-endpoint.md) | identity、domain-common、http |
+| 身份、许可与恢复引导 | [身份接口](../identity-and-authorization/contracts.md)、[判定与恢复](../identity-and-authorization/mechanisms.md)、[跨端授权](../identity-and-authorization/cross-endpoint.md)，包括同权威 [BeginUseSet](../identity-and-authorization/mechanisms.md#use-set) 及原集合查询 | identity、domain-common、http |
 | 远程大脑 | [调用与运行合同](../brain-system/contracts-and-runtime.md)中的原调用、资格、结果／用量及恢复规则 | brain |
-| 记忆与同步 | [记忆接口](../memory-system/contracts.md)、[同步与恢复](../memory-system/synchronization.md) | memory |
+| 记忆与同步 | [记忆接口](../memory-system/contracts.md)、[同步与恢复](../memory-system/synchronization.md)，包括独立管理元数据读取与[有限查询集合](../memory-system/mechanisms.md#pagination) | memory |
 | 内容、来源与受管副本 | [共同内容与来源合同](../content-and-provenance.md)，内容 HTTP 绑定见[传输规范](transport.md#content) | common、domain-common、governance、http |
 | 用户交互 | [交互语义与领域映射](../application-and-interaction/interaction-contract.md)，包括[目录](../application-and-interaction/interaction-contract.md#directory)、[预览](../application-and-interaction/interaction-contract.md#preview)及[管理](../application-and-interaction/interaction-contract.md#management)；消息配对见[UI 线映射](task-and-ui.md) | ui、interaction |
 | Agent 协作 | [协作规范入口](../agent-coordination/peer-contracts.md#normative)及其指定的[委派处理规则](../agent-coordination/delegation.md) | coordination |
