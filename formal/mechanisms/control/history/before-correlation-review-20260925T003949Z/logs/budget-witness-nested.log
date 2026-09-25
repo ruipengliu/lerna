@@ -1,0 +1,96 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Warning: Please run the Java VM which executes TLC with a throughput optimized garbage collector by passing the "-XX:+UseParallelGC" property.
+(Use the -nowarning option to disable this warning.)
+Running breadth-first search Model-Checking with fp 76 and seed 7438214146914295193 with 1 worker on 10 cores with 1536MB heap and 64MB offheap memory [pid: 15622] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/Budget.tla
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-95hjsdvx/Naturals.tla
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-95hjsdvx/FiniteSets.tla
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-95hjsdvx/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module Budget
+Starting... (2026-09-25 08:32:11)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:32:11.
+Error: Invariant NoNested is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ active |-> {0},
+  parent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  depth |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  free |-> (0 :> 2 @@ 1 :> 0 @@ 2 :> 0),
+  held |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  spent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  allocation |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  used |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  revision |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  calls |-> {},
+  final |-> {},
+  sealed |-> {},
+  done |-> {},
+  conflicts |-> {},
+  cancelled |-> FALSE,
+  cleanupFree |-> 1,
+  cleanupSpent |-> 0,
+  charged |-> 0,
+  lateBill |-> FALSE,
+  lateBillDuplicate |-> FALSE,
+  duplicateSeen |-> FALSE,
+  staleSeen |-> FALSE,
+  nested |-> FALSE ]
+
+State 2: <Delegate line 19, col 20 to line 24, col 26 of module Budget>
+s = [ active |-> {0, 1},
+  parent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  depth |-> (0 :> 0 @@ 1 :> 1 @@ 2 :> 0),
+  free |-> (0 :> 1 @@ 1 :> 1 @@ 2 :> 0),
+  held |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  spent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  allocation |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  used |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  revision |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  calls |-> {},
+  final |-> {},
+  sealed |-> {},
+  done |-> {},
+  conflicts |-> {},
+  cancelled |-> FALSE,
+  cleanupFree |-> 1,
+  cleanupSpent |-> 0,
+  charged |-> 0,
+  lateBill |-> FALSE,
+  lateBillDuplicate |-> FALSE,
+  duplicateSeen |-> FALSE,
+  staleSeen |-> FALSE,
+  nested |-> FALSE ]
+
+State 3: <Delegate line 19, col 20 to line 24, col 26 of module Budget>
+s = [ active |-> {0, 1, 2},
+  parent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 1),
+  depth |-> (0 :> 0 @@ 1 :> 1 @@ 2 :> 2),
+  free |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 1),
+  held |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  spent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  allocation |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  used |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  revision |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  calls |-> {},
+  final |-> {},
+  sealed |-> {},
+  done |-> {},
+  conflicts |-> {},
+  cancelled |-> FALSE,
+  cleanupFree |-> 1,
+  cleanupSpent |-> 0,
+  charged |-> 0,
+  lateBill |-> FALSE,
+  lateBillDuplicate |-> FALSE,
+  duplicateSeen |-> FALSE,
+  staleSeen |-> FALSE,
+  nested |-> TRUE ]
+
+11 states generated, 11 distinct states found, 8 states left on queue.
+The depth of the complete state graph search is 3.
+The average outdegree of the complete state graph is 8 (minimum is 8, the maximum 8 and the 95th percentile is 8).
+Finished in 00s at (2026-09-25 08:32:11)

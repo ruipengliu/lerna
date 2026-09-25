@@ -1,0 +1,32 @@
+{
+  "id": "core-batch",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:46.734064+00:00",
+  "duration_seconds": 0.582,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-s9em28z9",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-s9em28z9",
+    "-config",
+    "core-batch.cfg",
+    "CoreContracts.tla"
+  ],
+  "command_sha256": "9fa7627f34f988309fd68d7196e0babf3738f55a6886980b740ddae8be59733a",
+  "source_sha256": {
+    "CoreContracts.tla": "d87fdf26d662a1a716142b551cb87ed7348cd7dbaaf15d6773862464fc5cf40a",
+    "core-batch.cfg": "c1cb5267bd3cd79032d3d74133036cfb863e08f776973d087cd1188d08028913"
+  },
+  "exit_code": 0,
+  "expected_exit": 0,
+  "marker": "Model checking completed. No error has been found.",
+  "expectation_met": true,
+  "log_sha256": "596257c11fc5d5f2d196cf78169138b3ed2f119c559745f0f8270608a3be218b"
+}

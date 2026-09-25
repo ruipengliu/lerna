@@ -1,0 +1,30 @@
+{
+  "id": "control-witness-late-effect",
+  "started_utc": "2026-09-25T00:32:02.810514+00:00",
+  "duration_seconds": 0.62,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-fawk3ihn",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-fawk3ihn",
+    "-config",
+    "control-witness-late-effect.cfg",
+    "ControlRecovery.tla"
+  ],
+  "command_sha256": "c7dd02dd39b116ca50035b951142a20ee5fa942d5106e0fd59e86f2d636493b8",
+  "source_sha256": {
+    "ControlRecovery.tla": "22453fc7aa54d6080cc2a900c9858541d4023e36bdd13e3a591ccc412da4ae70",
+    "control-witness-late-effect.cfg": "46ffc7e25e7513da48fbd2a4b0178d393ff4b1390ad3c62f2cc3d101350d02da"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoLateCancelledEffect is violated.",
+  "expectation_met": true,
+  "log_sha256": "1ac1823b20d5c67640f61f944690f3481a3c373f82179869cfc71e59df351acc"
+}

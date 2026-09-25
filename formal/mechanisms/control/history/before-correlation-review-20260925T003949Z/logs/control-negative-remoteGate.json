@@ -1,0 +1,30 @@
+{
+  "id": "control-negative-remoteGate",
+  "started_utc": "2026-09-25T00:32:02.755031+00:00",
+  "duration_seconds": 0.611,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-16_yy6ws",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-16_yy6ws",
+    "-config",
+    "control-negative-remoteGate.cfg",
+    "ControlRecovery.tla"
+  ],
+  "command_sha256": "88ec5825423d3bb4182a7b751a64cc75ed41023f378b9f245bbd6d74e3f01b2a",
+  "source_sha256": {
+    "ControlRecovery.tla": "22453fc7aa54d6080cc2a900c9858541d4023e36bdd13e3a591ccc412da4ae70",
+    "control-negative-remoteGate.cfg": "ff03bbba3113035bb9e34c713d540ac74ef6fc53658f8939e184a6a70743a9d4"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant LocalControlGate is violated.",
+  "expectation_met": true,
+  "log_sha256": "5e327ecdaa0b905cbf384316151294b01899ad61c45357d2b65e02069257fd1b"
+}

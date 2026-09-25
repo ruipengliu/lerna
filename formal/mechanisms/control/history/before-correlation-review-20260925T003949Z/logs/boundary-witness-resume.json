@@ -1,0 +1,30 @@
+{
+  "id": "boundary-witness-resume",
+  "started_utc": "2026-09-25T00:32:20.818074+00:00",
+  "duration_seconds": 0.7,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-9l1btn0g",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-9l1btn0g",
+    "-config",
+    "boundary-witness-resume.cfg",
+    "Boundaries.tla"
+  ],
+  "command_sha256": "1ab003b41e8b31de297a0f83f6ed1a41b124a6ebee76d99d9c575f3d78de1ca5",
+  "source_sha256": {
+    "Boundaries.tla": "34f88e896cad394bb399a4dc2dcd8160416930a4ec186d52cd700ff0093bf6c4",
+    "boundary-witness-resume.cfg": "266864313ed06cbea3a07cbc710bb84705a1563559c932a857490a88136d8777"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoControlledClick is violated.",
+  "expectation_met": true,
+  "log_sha256": "9ec3b675529a593223f0402f1f0adaf0accf2ecfb40d950701c9b413fd9570a0"
+}

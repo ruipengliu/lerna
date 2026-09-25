@@ -1,0 +1,151 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 0 and seed 1 with 1 worker on 10 cores with 1820MB heap and 64MB offheap memory [pid: 20365] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/trust/RecoveryView.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-7pajq1ko/Naturals.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-7pajq1ko/FiniteSets.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-7pajq1ko/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module RecoveryView
+Starting... (2026-09-25 08:37:04)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:37:04.
+Error: Invariant NoReady is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ r |-> 0,
+  rev |-> 0,
+  round |-> 0,
+  owner |-> 1,
+  cuts |-> <<0, 0>>,
+  h |-> 0,
+  cursor |-> 0,
+  covered |-> {},
+  pages |-> {},
+  targeted |-> FALSE,
+  ready |-> FALSE,
+  localValue |-> TRUE,
+  queued |-> FALSE,
+  pf |-> 0,
+  pt |-> 0,
+  pr |-> 0,
+  po |-> 1,
+  badApply |-> FALSE,
+  badRead |-> FALSE,
+  blockedRead |-> FALSE ]
+
+State 2: <Open line 12, col 9 to line 16, col 45 of module RecoveryView>
+s = [ r |-> 0,
+  rev |-> 0,
+  round |-> 1,
+  owner |-> 1,
+  cuts |-> <<0, 0>>,
+  h |-> 0,
+  cursor |-> 0,
+  covered |-> {},
+  pages |-> {},
+  targeted |-> FALSE,
+  ready |-> FALSE,
+  localValue |-> TRUE,
+  queued |-> FALSE,
+  pf |-> 0,
+  pt |-> 0,
+  pr |-> 0,
+  po |-> 1,
+  badApply |-> FALSE,
+  badRead |-> FALSE,
+  blockedRead |-> FALSE ]
+
+State 3: <Page line 17, col 12 to line 17, col 80 of module RecoveryView>
+s = [ r |-> 0,
+  rev |-> 0,
+  round |-> 1,
+  owner |-> 1,
+  cuts |-> <<0, 0>>,
+  h |-> 0,
+  cursor |-> 0,
+  covered |-> {},
+  pages |-> {1},
+  targeted |-> FALSE,
+  ready |-> FALSE,
+  localValue |-> TRUE,
+  queued |-> FALSE,
+  pf |-> 0,
+  pt |-> 0,
+  pr |-> 0,
+  po |-> 1,
+  badApply |-> FALSE,
+  badRead |-> FALSE,
+  blockedRead |-> FALSE ]
+
+State 4: <Page line 17, col 12 to line 17, col 80 of module RecoveryView>
+s = [ r |-> 0,
+  rev |-> 0,
+  round |-> 1,
+  owner |-> 1,
+  cuts |-> <<0, 0>>,
+  h |-> 0,
+  cursor |-> 0,
+  covered |-> {},
+  pages |-> {1, 2},
+  targeted |-> FALSE,
+  ready |-> FALSE,
+  localValue |-> TRUE,
+  queued |-> FALSE,
+  pf |-> 0,
+  pt |-> 0,
+  pr |-> 0,
+  po |-> 1,
+  badApply |-> FALSE,
+  badRead |-> FALSE,
+  blockedRead |-> FALSE ]
+
+State 5: <FixTarget line 18, col 14 to line 19, col 62 of module RecoveryView>
+s = [ r |-> 0,
+  rev |-> 0,
+  round |-> 1,
+  owner |-> 1,
+  cuts |-> <<0, 0>>,
+  h |-> 0,
+  cursor |-> 0,
+  covered |-> {},
+  pages |-> {1, 2},
+  targeted |-> TRUE,
+  ready |-> FALSE,
+  localValue |-> TRUE,
+  queued |-> FALSE,
+  pf |-> 0,
+  pt |-> 0,
+  pr |-> 0,
+  po |-> 1,
+  badApply |-> FALSE,
+  badRead |-> FALSE,
+  blockedRead |-> FALSE ]
+
+State 6: <Publish line 33, col 12 to line 36, col 68 of module RecoveryView>
+s = [ r |-> 0,
+  rev |-> 0,
+  round |-> 1,
+  owner |-> 1,
+  cuts |-> <<0, 0>>,
+  h |-> 0,
+  cursor |-> 0,
+  covered |-> {},
+  pages |-> {1, 2},
+  targeted |-> TRUE,
+  ready |-> TRUE,
+  localValue |-> TRUE,
+  queued |-> FALSE,
+  pf |-> 0,
+  pt |-> 0,
+  pr |-> 0,
+  po |-> 1,
+  badApply |-> FALSE,
+  badRead |-> FALSE,
+  blockedRead |-> FALSE ]
+
+424 states generated, 171 distinct states found, 93 states left on queue.
+The depth of the complete state graph search is 6.
+The average outdegree of the complete state graph is 2 (minimum is 0, the maximum 9 and the 95th percentile is 6).
+Finished in 00s at (2026-09-25 08:37:04)

@@ -1,0 +1,30 @@
+{
+  "id": "control-witness-unknown-commit",
+  "started_utc": "2026-09-25T00:32:03.367106+00:00",
+  "duration_seconds": 0.627,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-gf3qn8id",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-gf3qn8id",
+    "-config",
+    "control-witness-unknown-commit.cfg",
+    "ControlRecovery.tla"
+  ],
+  "command_sha256": "77d4111db2dcb2b234db83ca74551809fdddfb5b5583e15dbd228d3615c68e61",
+  "source_sha256": {
+    "ControlRecovery.tla": "22453fc7aa54d6080cc2a900c9858541d4023e36bdd13e3a591ccc412da4ae70",
+    "control-witness-unknown-commit.cfg": "b03d88928087165424aefe10ea4678ada783a8ab9c93d294a4f3d5fadd8e751f"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoUnseenThenCommit is violated.",
+  "expectation_met": true,
+  "log_sha256": "789ad99708bc995ff09495ce4949429ad8f7c661ae32fc2ba32608bb6c4e9baa"
+}

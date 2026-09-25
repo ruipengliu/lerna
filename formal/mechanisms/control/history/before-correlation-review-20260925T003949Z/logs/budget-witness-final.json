@@ -1,0 +1,30 @@
+{
+  "id": "budget-witness-final",
+  "started_utc": "2026-09-25T00:32:12.195479+00:00",
+  "duration_seconds": 0.695,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-mi2cfevu",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-mi2cfevu",
+    "-config",
+    "budget-witness-final.cfg",
+    "Budget.tla"
+  ],
+  "command_sha256": "94ec77408a47fc16a51cd9012c6843ecd5e68fa7d4e898ba2fcfca2ddce793b4",
+  "source_sha256": {
+    "Budget.tla": "898eb6e910b025d000344558e92faf8f038acb57589c8eac3cd3d73c316ffe09",
+    "budget-witness-final.cfg": "00a962548c2a244b0c81ccdbc3885cf64eae246aa5db3e9b0fa4dce175bb6e5a"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoFinalRelease is violated.",
+  "expectation_met": true,
+  "log_sha256": "1cdea841748f1bca4dd631633c9de398e2a6320dd05a9103cbac9886636d383e"
+}

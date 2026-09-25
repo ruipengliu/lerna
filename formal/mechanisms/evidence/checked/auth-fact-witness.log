@@ -1,0 +1,133 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 0 and seed 1 with 1 worker on 10 cores with 1820MB heap and 64MB offheap memory [pid: 20301] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/trust/Authorization.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-tq9h75fl/Naturals.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-tq9h75fl/FiniteSets.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-tq9h75fl/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module Authorization
+Starting... (2026-09-25 08:36:57)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:36:57.
+Error: Invariant NoLateFact is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ issued |-> FALSE,
+  rights |-> {},
+  revoked |-> FALSE,
+  sourceRev |-> 1,
+  now |-> 0,
+  cached |-> FALSE,
+  context |-> "owner",
+  purpose |-> "act",
+  cacheRev |-> 1,
+  cacheAllow |-> FALSE,
+  pending |-> FALSE,
+  onceOp |-> 0,
+  receipts |-> {},
+  unsafeUse |-> FALSE,
+  unsafeDisclosure |-> FALSE,
+  lateFact |-> FALSE,
+  staleRejected |-> FALSE ]
+
+State 2: <Issue line 18, col 13 to line 20, col 60 of module Authorization>
+s = [ issued |-> TRUE,
+  rights |-> {"read"},
+  revoked |-> FALSE,
+  sourceRev |-> 1,
+  now |-> 0,
+  cached |-> FALSE,
+  context |-> "owner",
+  purpose |-> "act",
+  cacheRev |-> 1,
+  cacheAllow |-> FALSE,
+  pending |-> FALSE,
+  onceOp |-> 0,
+  receipts |-> {},
+  unsafeUse |-> FALSE,
+  unsafeDisclosure |-> FALSE,
+  lateFact |-> FALSE,
+  staleRejected |-> FALSE ]
+
+State 3: <Evaluate line 21, col 18 to line 24, col 100 of module Authorization>
+s = [ issued |-> TRUE,
+  rights |-> {"read"},
+  revoked |-> FALSE,
+  sourceRev |-> 1,
+  now |-> 0,
+  cached |-> TRUE,
+  context |-> "owner",
+  purpose |-> "read",
+  cacheRev |-> 1,
+  cacheAllow |-> TRUE,
+  pending |-> TRUE,
+  onceOp |-> 0,
+  receipts |-> {},
+  unsafeUse |-> FALSE,
+  unsafeDisclosure |-> FALSE,
+  lateFact |-> FALSE,
+  staleRejected |-> FALSE ]
+
+State 4: <BeginUse line 25, col 16 to line 32, col 81 of module Authorization>
+s = [ issued |-> TRUE,
+  rights |-> {"read"},
+  revoked |-> FALSE,
+  sourceRev |-> 1,
+  now |-> 0,
+  cached |-> TRUE,
+  context |-> "owner",
+  purpose |-> "read",
+  cacheRev |-> 1,
+  cacheAllow |-> TRUE,
+  pending |-> FALSE,
+  onceOp |-> 1,
+  receipts |-> {1},
+  unsafeUse |-> FALSE,
+  unsafeDisclosure |-> FALSE,
+  lateFact |-> FALSE,
+  staleRejected |-> FALSE ]
+
+State 5: <Revoke line 36, col 11 to line 36, col 71 of module Authorization>
+s = [ issued |-> TRUE,
+  rights |-> {"read"},
+  revoked |-> TRUE,
+  sourceRev |-> 1,
+  now |-> 0,
+  cached |-> TRUE,
+  context |-> "owner",
+  purpose |-> "read",
+  cacheRev |-> 1,
+  cacheAllow |-> TRUE,
+  pending |-> FALSE,
+  onceOp |-> 1,
+  receipts |-> {1},
+  unsafeUse |-> FALSE,
+  unsafeDisclosure |-> FALSE,
+  lateFact |-> FALSE,
+  staleRejected |-> FALSE ]
+
+State 6: <ReceiveHistoricalFact line 39, col 26 to line 40, col 61 of module Authorization>
+s = [ issued |-> TRUE,
+  rights |-> {"read"},
+  revoked |-> TRUE,
+  sourceRev |-> 1,
+  now |-> 0,
+  cached |-> TRUE,
+  context |-> "owner",
+  purpose |-> "read",
+  cacheRev |-> 1,
+  cacheAllow |-> TRUE,
+  pending |-> FALSE,
+  onceOp |-> 1,
+  receipts |-> {1},
+  unsafeUse |-> FALSE,
+  unsafeDisclosure |-> FALSE,
+  lateFact |-> TRUE,
+  staleRejected |-> FALSE ]
+
+7763 states generated, 1126 distinct states found, 655 states left on queue.
+The depth of the complete state graph search is 6.
+The average outdegree of the complete state graph is 2 (minimum is 0, the maximum 15 and the 95th percentile is 4).
+Finished in 00s at (2026-09-25 08:36:57)

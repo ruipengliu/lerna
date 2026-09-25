@@ -1,0 +1,32 @@
+{
+  "id": "boundary-catalog",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:34.984311+00:00",
+  "duration_seconds": 0.579,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-43ps7jc5",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-43ps7jc5",
+    "-config",
+    "boundary-catalog.cfg",
+    "Boundaries.tla"
+  ],
+  "command_sha256": "972d977384474005b72d945efeb48430f52865b8e81328a42e1586e1e772a239",
+  "source_sha256": {
+    "Boundaries.tla": "34f88e896cad394bb399a4dc2dcd8160416930a4ec186d52cd700ff0093bf6c4",
+    "boundary-catalog.cfg": "7e0bde08a5f7c6b1870801900faee3a6334a88108fe09ef91002496687afb330"
+  },
+  "exit_code": 0,
+  "expected_exit": 0,
+  "marker": "Model checking completed. No error has been found.",
+  "expectation_met": true,
+  "log_sha256": "b0b6c2454bc82a67b7441d00b9d2c3bcb9f89b8c7cfa4c7aaeb4dd66f4eb1e3f"
+}

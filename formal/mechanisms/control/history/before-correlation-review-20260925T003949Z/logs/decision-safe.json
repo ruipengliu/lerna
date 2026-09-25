@@ -1,0 +1,30 @@
+{
+  "id": "decision-safe",
+  "started_utc": "2026-09-25T00:32:03.995022+00:00",
+  "duration_seconds": 2.086,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-gdbl8yet",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-gdbl8yet",
+    "-config",
+    "decision-safe.cfg",
+    "Decision.tla"
+  ],
+  "command_sha256": "0e6587e632c55861e85cea0db25caf4c77667febc89687147cca100291cac695",
+  "source_sha256": {
+    "Decision.tla": "8d6eb8e496bf3b530d7cd277dc0ca5299544638ef1e0f8fa38cbe34b34eb6c7d",
+    "decision-safe.cfg": "c04760734d556af32a796b30536ea710152b44de8c742e63d666eeeec921a461"
+  },
+  "exit_code": 0,
+  "expected_exit": 0,
+  "marker": "Model checking completed. No error has been found.",
+  "expectation_met": true,
+  "log_sha256": "d212999c3f58c4354a37690010913fb95919010ea83cd81deabd73880988037e"
+}

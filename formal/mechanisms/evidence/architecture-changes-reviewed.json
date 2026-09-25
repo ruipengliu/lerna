@@ -1,0 +1,19 @@
+{
+  "reviewed_utc": "2026-09-25T00:50:44.329320+00:00",
+  "reviews": {
+    "docs/architecture/brain-system/README.md": {
+      "baseline_sha256": "62641df16711026aae2e2d190a5ea184945f5c4c0960359272cb510c9d5551c2",
+      "reviewed_sha256": "c04f9927a35ebdcddfaafe8e7893fcfa051db371e025b04155002caa70d672e4",
+      "baseline_snapshot": "formal/mechanisms/evidence/brain-overview-baseline.md",
+      "reviewed_snapshot": "formal/mechanisms/evidence/brain-overview-reviewed.md",
+      "diff": "formal/mechanisms/evidence/brain-overview-reviewed.patch",
+      "assessment": "本次验证过程中工作区总览同时发生改写；逐段对照后，职责、一次调用门禁、未知不重发及占额、暂停与取消、受控替换等已建模契约保持；新增取舍解释和接入实验建议不增加保证。未改动该工作区文件。",
+      "checks": [
+        "B1–B7保证表逐字一致",
+        "本组decision-policy、contracts-and-runtime与validation仍匹配原基线",
+        "组库存未引用此总览行号，291条验收映射不受重排影响"
+      ],
+      "verification_impact": "无模型、参数、命题或验收表变化；保留实际运行结果，补充基线复核记录。"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "control-negative-notFoundAbsent",
+  "started_utc": "2026-09-25T00:32:02.207691+00:00",
+  "duration_seconds": 0.602,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-ll8eg2ud",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-ll8eg2ud",
+    "-config",
+    "control-negative-notFoundAbsent.cfg",
+    "ControlRecovery.tla"
+  ],
+  "command_sha256": "4ea09fc4c5655bb54d8b07833baa792bd6feb20917c0d4340fbff5afd4e40d17",
+  "source_sha256": {
+    "ControlRecovery.tla": "22453fc7aa54d6080cc2a900c9858541d4023e36bdd13e3a591ccc412da4ae70",
+    "control-negative-notFoundAbsent.cfg": "57d21c4e4ed95372c669da8cd193fbc3527ddcc0823dee7dde2d862620ae9551"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant EvidenceNotGuess is violated.",
+  "expectation_met": true,
+  "log_sha256": "27122d196e039bd1e35bf8cc1301d6ec81d8c1ae1eb2dd99125e804dd8f27727"
+}

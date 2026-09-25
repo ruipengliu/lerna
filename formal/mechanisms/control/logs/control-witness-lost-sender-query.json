@@ -1,0 +1,32 @@
+{
+  "id": "control-witness-lost-sender-query",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:58.051378+00:00",
+  "duration_seconds": 0.589,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-p64pps8h",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-p64pps8h",
+    "-config",
+    "control-witness-lost-sender-query.cfg",
+    "ControlRecovery.tla"
+  ],
+  "command_sha256": "c085f192f75f1eadcc1c50256a3724fd382df652eae566f5dd8c06a61daf7419",
+  "source_sha256": {
+    "ControlRecovery.tla": "adcf35660f1e65419db899c63140b500e58966f57952a30bcffb919f5d395d63",
+    "control-witness-lost-sender-query.cfg": "b9c0738fff51042ef1cb209d68c726b92280e52a60fbde725785620d75bf059d"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoLostSenderQuery is violated.",
+  "expectation_met": true,
+  "log_sha256": "f8904319312525e6750baca9e862a2f2b8150a5310971f9229604e767a3ecd6d"
+}

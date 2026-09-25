@@ -1,0 +1,32 @@
+{
+  "id": "decision-negative-selfPass",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:17.119437+00:00",
+  "duration_seconds": 0.612,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-zflug6m0",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-zflug6m0",
+    "-config",
+    "decision-negative-selfPass.cfg",
+    "Decision.tla"
+  ],
+  "command_sha256": "3e91e8dd7f8630989e09b9a0c370a8519dc14567505cad50303b7a709addcb19",
+  "source_sha256": {
+    "Decision.tla": "da32c611620175d010afa9615bbb52c62e29c1480ebe83010764236425c0f56c",
+    "decision-negative-selfPass.cfg": "68d8aa16821a05080ad324a9d5e43c97f5f0a76e84a8133f8718837090431f86"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant AdmissionAndRepair is violated.",
+  "expectation_met": true,
+  "log_sha256": "3b10671d77196c052dd906edf7241b68ad12ad3092b8bccbc104c117cc0cfdce"
+}

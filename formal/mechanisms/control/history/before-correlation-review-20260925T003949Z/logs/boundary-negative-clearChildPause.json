@@ -1,0 +1,30 @@
+{
+  "id": "boundary-negative-clearChildPause",
+  "started_utc": "2026-09-25T00:32:16.643153+00:00",
+  "duration_seconds": 0.581,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-i7wbfrvz",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-i7wbfrvz",
+    "-config",
+    "boundary-negative-clearChildPause.cfg",
+    "Boundaries.tla"
+  ],
+  "command_sha256": "874078d01c6131a26a2d7287939045e877d00317bce69399448a31b290f2a923",
+  "source_sha256": {
+    "Boundaries.tla": "34f88e896cad394bb399a4dc2dcd8160416930a4ec186d52cd700ff0093bf6c4",
+    "boundary-negative-clearChildPause.cfg": "d9dfb15d977c7db2e0e4d146193b38e99b9c880683035ba150c4b6b4105963a1"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant PauseReasonsIndependent is violated.",
+  "expectation_met": true,
+  "log_sha256": "054bb9083bb98f98c703dbcd02565bfd900305856958a73b81cc7cec3766137d"
+}

@@ -1,0 +1,32 @@
+{
+  "id": "core-negative-wrongAuthority",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:48.479232+00:00",
+  "duration_seconds": 0.569,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-2k6zr3xp",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-2k6zr3xp",
+    "-config",
+    "core-negative-wrongAuthority.cfg",
+    "CoreContracts.tla"
+  ],
+  "command_sha256": "3e61caa2bc33081546f967c62aad271079d8d5d03a298fd6ae8b3ae9eec24492",
+  "source_sha256": {
+    "CoreContracts.tla": "d87fdf26d662a1a716142b551cb87ed7348cd7dbaaf15d6773862464fc5cf40a",
+    "core-negative-wrongAuthority.cfg": "1bdff80c84026a998edc28a907a977ff102a9a071461f9fb6f378fe6bffd09b3"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant FixedAuthority is violated.",
+  "expectation_met": true,
+  "log_sha256": "0baf36dad6af9802dd06b7584a5205f390e7cc5aa6a062678bcc96742ef4e4ae"
+}

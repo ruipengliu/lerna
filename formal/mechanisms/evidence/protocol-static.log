@@ -1,0 +1,3 @@
+PASS: 20 schemas, 122 standard type/version entries, 2 manifests, 285 linked messages, extension and optional-extension examples.
+PASS: 7 recovery/cancel messages and 7 HTTP bodies.
+PASS: 89 invalid cases rejected; completed/pending regressions passed. Runtime delivery, authorization and effects are not tested.

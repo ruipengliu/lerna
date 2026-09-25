@@ -1,0 +1,9 @@
+'ProtocolRules.known_payload_is_valid' depends on axioms: [propext]
+'ProtocolRules.minimum_required_cannot_be_lowered' depends on axioms: [propext]
+'ProtocolRules.unknown_required_rejected' does not depend on any axioms
+'ProtocolRules.selected_path_has_both_endpoints' depends on axioms: [propext]
+'ProtocolRules.selected_required_path_supports_constraint' depends on axioms: [propext]
+'ProtocolRules.required_input_not_lost' depends on axioms: [propext]
+'ProtocolRules.optional_invalid_rejected' does not depend on any axioms
+'ProtocolRules.supported_message_exists' does not depend on any axioms
+'ProtocolRules.optional_unknown_accepted' does not depend on any axioms

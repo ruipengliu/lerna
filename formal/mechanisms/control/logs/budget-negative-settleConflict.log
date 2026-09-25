@@ -1,0 +1,171 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Warning: Please run the Java VM which executes TLC with a throughput optimized garbage collector by passing the "-XX:+UseParallelGC" property.
+(Use the -nowarning option to disable this warning.)
+Running breadth-first search Model-Checking with fp 33 and seed 749429530726088999 with 1 worker on 10 cores with 1536MB heap and 64MB offheap memory [pid: 24724] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/Budget.tla
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-vv09_nfb/Naturals.tla
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-vv09_nfb/FiniteSets.tla
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-vv09_nfb/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module Budget
+Starting... (2026-09-25 08:43:58)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:43:58.
+Error: Invariant ConflictFreezesSettlement is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ active |-> {0},
+  parent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  depth |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  free |-> (0 :> 2 @@ 1 :> 0 @@ 2 :> 0),
+  held |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  spent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  allocation |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  used |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  revision |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  calls |-> {},
+  final |-> {},
+  sealed |-> {},
+  done |-> {},
+  conflicts |-> {},
+  conflictUsed |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  conflictHeld |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  badConflictSettlement |-> FALSE,
+  badConflictRelease |-> FALSE,
+  conflictFreezeObserved |-> FALSE,
+  cancelled |-> FALSE,
+  cleanupFree |-> 1,
+  cleanupSpent |-> 0,
+  charged |-> 0,
+  lateBill |-> FALSE,
+  lateBillDuplicate |-> FALSE,
+  duplicateSeen |-> FALSE,
+  staleSeen |-> FALSE,
+  nested |-> FALSE ]
+
+State 2: <Reserve line 28, col 17 to line 31, col 39 of module Budget>
+s = [ active |-> {0},
+  parent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  depth |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  free |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  held |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  spent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  allocation |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  used |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  revision |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  calls |-> {0},
+  final |-> {},
+  sealed |-> {},
+  done |-> {},
+  conflicts |-> {},
+  conflictUsed |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  conflictHeld |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  badConflictSettlement |-> FALSE,
+  badConflictRelease |-> FALSE,
+  conflictFreezeObserved |-> FALSE,
+  cancelled |-> FALSE,
+  cleanupFree |-> 1,
+  cleanupSpent |-> 0,
+  charged |-> 0,
+  lateBill |-> FALSE,
+  lateBillDuplicate |-> FALSE,
+  duplicateSeen |-> FALSE,
+  staleSeen |-> FALSE,
+  nested |-> FALSE ]
+
+State 3: <Report line 32, col 18 to line 39, col 51 of module Budget>
+s = [ active |-> {0},
+  parent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  depth |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  free |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  held |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  spent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  allocation |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  used |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  revision |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  calls |-> {0},
+  final |-> {},
+  sealed |-> {},
+  done |-> {},
+  conflicts |-> {},
+  conflictUsed |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  conflictHeld |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  badConflictSettlement |-> FALSE,
+  badConflictRelease |-> FALSE,
+  conflictFreezeObserved |-> FALSE,
+  cancelled |-> FALSE,
+  cleanupFree |-> 1,
+  cleanupSpent |-> 0,
+  charged |-> 0,
+  lateBill |-> FALSE,
+  lateBillDuplicate |-> FALSE,
+  duplicateSeen |-> FALSE,
+  staleSeen |-> FALSE,
+  nested |-> FALSE ]
+
+State 4: <Conflict line 48, col 20 to line 51, col 61 of module Budget>
+s = [ active |-> {0},
+  parent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  depth |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  free |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  held |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  spent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  allocation |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  used |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  revision |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  calls |-> {0},
+  final |-> {},
+  sealed |-> {},
+  done |-> {},
+  conflicts |-> {0},
+  conflictUsed |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  conflictHeld |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  badConflictSettlement |-> FALSE,
+  badConflictRelease |-> FALSE,
+  conflictFreezeObserved |-> FALSE,
+  cancelled |-> FALSE,
+  cleanupFree |-> 1,
+  cleanupSpent |-> 0,
+  charged |-> 0,
+  lateBill |-> FALSE,
+  lateBillDuplicate |-> FALSE,
+  duplicateSeen |-> FALSE,
+  staleSeen |-> FALSE,
+  nested |-> FALSE ]
+
+State 5: <Report line 32, col 18 to line 39, col 51 of module Budget>
+s = [ active |-> {0},
+  parent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  depth |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  free |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  held |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  spent |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  allocation |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  used |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  revision |-> (0 :> 2 @@ 1 :> 0 @@ 2 :> 0),
+  calls |-> {0},
+  final |-> {},
+  sealed |-> {},
+  done |-> {},
+  conflicts |-> {0},
+  conflictUsed |-> (0 :> 0 @@ 1 :> 0 @@ 2 :> 0),
+  conflictHeld |-> (0 :> 1 @@ 1 :> 0 @@ 2 :> 0),
+  badConflictSettlement |-> TRUE,
+  badConflictRelease |-> FALSE,
+  conflictFreezeObserved |-> FALSE,
+  cancelled |-> FALSE,
+  cleanupFree |-> 1,
+  cleanupSpent |-> 0,
+  charged |-> 0,
+  lateBill |-> FALSE,
+  lateBillDuplicate |-> FALSE,
+  duplicateSeen |-> FALSE,
+  staleSeen |-> FALSE,
+  nested |-> FALSE ]
+
+1142 states generated, 560 distinct states found, 430 states left on queue.
+The depth of the complete state graph search is 5.
+The average outdegree of the complete state graph is 4 (minimum is 0, the maximum 12 and the 95th percentile is 8).
+Finished in 00s at (2026-09-25 08:43:58)

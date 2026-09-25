@@ -1,0 +1,32 @@
+{
+  "id": "boundary-witness-old-binding",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:41.964207+00:00",
+  "duration_seconds": 0.572,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-bvo8l1lm",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-bvo8l1lm",
+    "-config",
+    "boundary-witness-old-binding.cfg",
+    "Boundaries.tla"
+  ],
+  "command_sha256": "3bca939fae90d1f9a67ae4bb4ea60430d7e417f9370a1c9c205dfb0346671ae2",
+  "source_sha256": {
+    "Boundaries.tla": "34f88e896cad394bb399a4dc2dcd8160416930a4ec186d52cd700ff0093bf6c4",
+    "boundary-witness-old-binding.cfg": "4bd35b136053450ed8d6707ec41014af615f24fcc3401f38e6417e901fe066c0"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoOldBindingAfterUpgrade is violated.",
+  "expectation_met": true,
+  "log_sha256": "e9509789e835e32fd958eed315c05c07b5077d50387163dd078d28660c5d7d8d"
+}

@@ -1,0 +1,49 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 0 and seed 1 with 1 worker on 10 cores with 1820MB heap and 64MB offheap memory [pid: 8883] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/communication/Scheduling.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/Naturals.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/FiniteSets.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module Scheduling
+Starting... (2026-09-25 08:16:42)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:16:42.
+Error: Invariant NeverReservedCoexistence is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ accepted |-> {},
+  done |-> {},
+  queued |-> {},
+  connection |-> <<1, 1, 1, 1, 1, 1>> ]
+
+State 2: <Admit line 14, col 15 to line 19, col 43 of module Scheduling>
+s = [ accepted |-> {1},
+  done |-> {},
+  queued |-> {1},
+  connection |-> <<1, 1, 1, 1, 1, 1>> ]
+
+State 3: <Admit line 14, col 15 to line 19, col 43 of module Scheduling>
+s = [ accepted |-> {1, 3},
+  done |-> {},
+  queued |-> {1, 3},
+  connection |-> <<1, 1, 1, 1, 1, 1>> ]
+
+State 4: <Admit line 14, col 15 to line 19, col 43 of module Scheduling>
+s = [ accepted |-> {1, 3, 5},
+  done |-> {},
+  queued |-> {1, 3, 5},
+  connection |-> <<1, 1, 1, 1, 1, 1>> ]
+
+State 5: <Serve line 20, col 13 to line 21, col 70 of module Scheduling>
+s = [ accepted |-> {1, 3, 5},
+  done |-> {5},
+  queued |-> {1, 3},
+  connection |-> <<1, 1, 1, 1, 1, 1>> ]
+
+767 states generated, 342 distinct states found, 258 states left on queue.
+The depth of the complete state graph search is 5.
+The average outdegree of the complete state graph is 4 (minimum is 0, the maximum 12 and the 95th percentile is 8).
+Finished in 00s at (2026-09-25 08:16:42)

@@ -1,0 +1,32 @@
+{
+  "id": "core-negative-expandExternal",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:52.486042+00:00",
+  "duration_seconds": 0.585,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-zyai3ckp",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-zyai3ckp",
+    "-config",
+    "core-negative-expandExternal.cfg",
+    "CoreContracts.tla"
+  ],
+  "command_sha256": "94f92e043207425fc92ee9ad927c4aa7e4fce481a2c4eda3c34cf9aeefeb8171",
+  "source_sha256": {
+    "CoreContracts.tla": "d87fdf26d662a1a716142b551cb87ed7348cd7dbaaf15d6773862464fc5cf40a",
+    "core-negative-expandExternal.cfg": "58ca0f3e210a09278e29f4ae32d183356bee49f3613d6111133cbd7e898856ca"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant ExternalContractFixed is violated.",
+  "expectation_met": true,
+  "log_sha256": "92c451e5345344b475ffe2b3bb2b3cb82f6f99e1b4cce10b01348c4f18f20ca2"
+}

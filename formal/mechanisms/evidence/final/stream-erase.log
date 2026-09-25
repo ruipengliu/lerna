@@ -1,0 +1,109 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 0 and seed 1 with 1 worker on 10 cores with 1820MB heap and 64MB offheap memory [pid: 25313] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/communication/Stream.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-m9aqrhvf/Naturals.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-m9aqrhvf/FiniteSets.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-m9aqrhvf/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module Stream
+Starting... (2026-09-25 08:45:15)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:45:15.
+Error: Invariant Safety is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ sent |-> 0,
+  source |-> {},
+  wire |-> {},
+  received |-> {},
+  payload |-> {},
+  target |-> 0,
+  ackWire |-> {},
+  ack |-> 0,
+  business |-> 0,
+  aGap |-> {},
+  bGap |-> {},
+  expired |-> FALSE,
+  ackFloor |-> 0,
+  reconcile |-> FALSE,
+  relayReceipt |-> 0,
+  acceptedForeignAck |-> FALSE ]
+
+State 2: <Accept line 13, col 14 to line 14, col 65 of module Stream>
+s = [ sent |-> 1,
+  source |-> {1},
+  wire |-> {},
+  received |-> {},
+  payload |-> {},
+  target |-> 0,
+  ackWire |-> {},
+  ack |-> 0,
+  business |-> 0,
+  aGap |-> {},
+  bGap |-> {},
+  expired |-> FALSE,
+  ackFloor |-> 0,
+  reconcile |-> FALSE,
+  relayReceipt |-> 0,
+  acceptedForeignAck |-> FALSE ]
+
+State 3: <Send line 15, col 12 to line 16, col 49 of module Stream>
+s = [ sent |-> 1,
+  source |-> {1},
+  wire |-> {1},
+  received |-> {},
+  payload |-> {},
+  target |-> 0,
+  ackWire |-> {},
+  ack |-> 0,
+  business |-> 0,
+  aGap |-> {},
+  bGap |-> {},
+  expired |-> FALSE,
+  ackFloor |-> 0,
+  reconcile |-> FALSE,
+  relayReceipt |-> 0,
+  acceptedForeignAck |-> FALSE ]
+
+State 4: <Receive line 17, col 15 to line 19, col 46 of module Stream>
+s = [ sent |-> 1,
+  source |-> {1},
+  wire |-> {},
+  received |-> {1},
+  payload |-> {1},
+  target |-> 0,
+  ackWire |-> {},
+  ack |-> 0,
+  business |-> 0,
+  aGap |-> {},
+  bGap |-> {},
+  expired |-> FALSE,
+  ackFloor |-> 0,
+  reconcile |-> FALSE,
+  relayReceipt |-> 0,
+  acceptedForeignAck |-> FALSE ]
+
+State 5: <Erase line 49, col 13 to line 50, col 50 of module Stream>
+s = [ sent |-> 1,
+  source |-> {1},
+  wire |-> {},
+  received |-> {1},
+  payload |-> {},
+  target |-> 0,
+  ackWire |-> {},
+  ack |-> 0,
+  business |-> 0,
+  aGap |-> {},
+  bGap |-> {},
+  expired |-> FALSE,
+  ackFloor |-> 0,
+  reconcile |-> FALSE,
+  relayReceipt |-> 0,
+  acceptedForeignAck |-> FALSE ]
+
+28 states generated, 23 distinct states found, 14 states left on queue.
+The depth of the complete state graph search is 5.
+The average outdegree of the complete state graph is 2 (minimum is 0, the maximum 4 and the 95th percentile is 4).
+Finished in 00s at (2026-09-25 08:45:15)

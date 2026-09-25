@@ -1,0 +1,32 @@
+{
+  "id": "decision-witness-old-return",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:56.092759+00:00",
+  "duration_seconds": 0.752,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-5btklvw8",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-5btklvw8",
+    "-config",
+    "decision-witness-old-return.cfg",
+    "Decision.tla"
+  ],
+  "command_sha256": "2204a936040d135fd92402c2a74a5f03f84056d7a3ced7e31b58b2b37edb8c7c",
+  "source_sha256": {
+    "Decision.tla": "da32c611620175d010afa9615bbb52c62e29c1480ebe83010764236425c0f56c",
+    "decision-witness-old-return.cfg": "29ca7cc3d2c4412ab3a88afcc08e883b036b02f40406e7b7c392f0435ad15c80"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoOldReturnRecovery is violated.",
+  "expectation_met": true,
+  "log_sha256": "9b5b0d6eb7ff968237488eb1213f8541cadb1df3e64978e2b97ab647d3207a27"
+}

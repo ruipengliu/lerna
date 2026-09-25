@@ -1,0 +1,30 @@
+{
+  "id": "budget-negative-doubleParent",
+  "started_utc": "2026-09-25T00:32:09.369629+00:00",
+  "duration_seconds": 0.783,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-z2nf6ye2",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-z2nf6ye2",
+    "-config",
+    "budget-negative-doubleParent.cfg",
+    "Budget.tla"
+  ],
+  "command_sha256": "2931601c942bb7f0c87935ddbfea43fecc95b1babae0db0aad0d73df3710b639",
+  "source_sha256": {
+    "Budget.tla": "898eb6e910b025d000344558e92faf8f038acb57589c8eac3cd3d73c316ffe09",
+    "budget-negative-doubleParent.cfg": "e2b7b3b2e7e9f8f38e0e8315ce2411821625cdd2e8a82eef6f3e6264b27e0689"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant SingleChargePath is violated.",
+  "expectation_met": true,
+  "log_sha256": "d342ff028a8107d820c1578cb95ccd2d93e206a3efca4f68b5384bcab2133e44"
+}

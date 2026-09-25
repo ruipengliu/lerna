@@ -1,0 +1,32 @@
+{
+  "id": "core-negative-twoWinners",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:49.048920+00:00",
+  "duration_seconds": 0.565,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-ifupa6ek",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-ifupa6ek",
+    "-config",
+    "core-negative-twoWinners.cfg",
+    "CoreContracts.tla"
+  ],
+  "command_sha256": "6e7e5f067778be24993350e15c6059bbe6b857711b142bfd0a72b89bea083363",
+  "source_sha256": {
+    "CoreContracts.tla": "d87fdf26d662a1a716142b551cb87ed7348cd7dbaaf15d6773862464fc5cf40a",
+    "core-negative-twoWinners.cfg": "fc857b699e73a85bf56c8c893812d7277d185564aa02213023f6d309ec9cfb49"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant OneInputConsumer is violated.",
+  "expectation_met": true,
+  "log_sha256": "b5c26c6945fc86d039e5e4f4702d089ec159e82146479c648ce0a83a94379694"
+}

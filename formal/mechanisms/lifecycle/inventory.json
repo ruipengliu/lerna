@@ -1,0 +1,4453 @@
+{
+  "schema_version": 1,
+  "scope": [
+    "extensions-and-runtime",
+    "application-and-interaction",
+    "observation-and-improvement"
+  ],
+  "formal_status": "executed-see-checks-and-evidence",
+  "semantics": "分类model-property仅表示本行列明的抽象子义务，完整验证行仍部分覆盖；跨组模型引用为共享机制的复用，不等于建立该模块实现精化。static-only仅核对未采用/后置政策文字。",
+  "mechanisms": [
+    {
+      "id": "ER-lock",
+      "name": "精确制品与依赖闭包",
+      "sources": [
+        {
+          "path": "docs/architecture/extensions-and-runtime/contracts.md",
+          "line": 30
+        }
+      ],
+      "rule": "版本、摘要、依赖锁固定；改变字节形成新身份",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "包解析、安全解包、签名、依赖解析器正确性"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "包解析、安全解包、签名、依赖解析器正确性"
+      ],
+      "cross_group_properties": [
+        "control/Boundaries.tla#FixedBinding"
+      ],
+      "unmodeled_rules": [
+        "完整依赖闭包解析算法、环/导出冲突检测、包归一化与摘要验证未建模"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#FixedBinding"
+      ]
+    },
+    {
+      "id": "ER-command",
+      "name": "持久管理命令与分阶段激活",
+      "sources": [
+        {
+          "path": "docs/architecture/extensions-and-runtime/contracts.md",
+          "line": 73
+        }
+      ],
+      "rule": "固定命令与意图，接纳/激活/当前健康分离，未知查原键",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "实际事务原子性、实例识别、回执可靠交接"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际事务原子性、实例识别、回执可靠交接"
+      ],
+      "cross_group_properties": [
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution",
+        "control/Boundaries.tla#NoIdentityResurrection"
+      ],
+      "unmodeled_rules": [
+        "多阶段实例准备/目录登记/激活的全部状态及多目标CAS未逐阶段建模"
+      ],
+      "verified_abstract_rules": [
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution",
+        "control/Boundaries.tla#NoIdentityResurrection"
+      ]
+    },
+    {
+      "id": "ER-reference",
+      "name": "使用前登记固定引用",
+      "sources": [
+        {
+          "path": "docs/architecture/extensions-and-runtime/contracts.md",
+          "line": 120
+        }
+      ],
+      "rule": "读门禁、决定与提交分离；登记提交与关闭门禁串行；使用前已有原身份保留资格",
+      "formal_properties": [
+        "lifecycle/References.tla#UseHasPin",
+        "lifecycle/References.tla#FreshRegistration",
+        "lifecycle/References.lean#reachable_safe"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "真实BindingReference与领域接纳跨库映射、语义能力与驱动双层引用"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实BindingReference与领域接纳跨库映射、语义能力与驱动双层引用"
+      ],
+      "cross_group_properties": [],
+      "unmodeled_rules": [
+        "跨模块长任务后继引用树与多层能力/驱动引用合并未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/References.tla#UseHasPin",
+        "lifecycle/References.tla#FreshRegistration",
+        "lifecycle/References.lean#reachable_safe"
+      ]
+    },
+    {
+      "id": "ER-reclaim",
+      "name": "关闭新引用、排空、计划先存、可恢复回收",
+      "sources": [
+        {
+          "path": "docs/architecture/extensions-and-runtime/contracts.md",
+          "line": 122
+        }
+      ],
+      "rule": "关闭后零持有者才存回收计划；删除可重启续做，未知不释放",
+      "formal_properties": [
+        "lifecycle/References.tla#NoPrematureReclaim",
+        "lifecycle/References.tla#NoRecoveryWitness",
+        "lifecycle/References.lean#reachable_safe"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "完整持有者枚举、文件删除/备份/暂存资产、未知效果核对"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "完整持有者枚举、文件删除/备份/暂存资产、未知效果核对"
+      ],
+      "cross_group_properties": [],
+      "unmodeled_rules": [
+        "所有真实持有者种类及保留期限算法未枚举"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/References.tla#NoPrematureReclaim",
+        "lifecycle/References.tla#NoRecoveryWitness",
+        "lifecycle/References.lean#reachable_safe"
+      ]
+    },
+    {
+      "id": "ER-withdraw",
+      "name": "普通排空与安全撤回分离",
+      "sources": [
+        {
+          "path": "docs/architecture/extensions-and-runtime/contracts.md",
+          "line": 124
+        }
+      ],
+      "rule": "关闭新引用不阻止旧引用后继；安全停用禁止新执行，迟到完成继续记账",
+      "formal_properties": [
+        "lifecycle/References.tla#UseHasPin",
+        "lifecycle/References.tla#NoNormalWitness"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "真实进程与设备隔离、受信查询白名单、后继引用树"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实进程与设备隔离、受信查询白名单、后继引用树"
+      ],
+      "cross_group_properties": [],
+      "unmodeled_rules": [
+        "获准查询白名单及外部进程隔离证据生成未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/References.tla#UseHasPin",
+        "lifecycle/References.tla#NoNormalWitness"
+      ]
+    },
+    {
+      "id": "ER-rollback",
+      "name": "新命令回退代码，历史事实不回退",
+      "sources": [
+        {
+          "path": "docs/architecture/extensions-and-runtime/installation-and-isolation.md",
+          "line": 64
+        }
+      ],
+      "rule": "指定旧版本须仍获准且读当前格式，原效果、账本、权限和预算保留",
+      "formal_properties": [
+        "lifecycle/Evaluation.tla#HistoryPreserved"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "实际旧版读取新版持久格式、预算/owner等领域账本历史"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际旧版读取新版持久格式、预算/owner等领域账本历史"
+      ],
+      "cross_group_properties": [
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation",
+        "lifecycle/Rollback.tla#NoFactRewind"
+      ],
+      "unmodeled_rules": [
+        "在线格式迁移、兼容性判定算法与多库回退未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation",
+        "lifecycle/Rollback.tla#NoFactRewind"
+      ]
+    },
+    {
+      "id": "ER-isolate",
+      "name": "宿主身份映射与资源隔离资格",
+      "sources": [
+        {
+          "path": "docs/architecture/extensions-and-runtime/installation-and-isolation.md",
+          "line": 102
+        }
+      ],
+      "rule": "插件不自行声称主体，不获DB或原始凭据，隔离依赖不齐拒绝加载",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "操作系统沙箱、IPC认证、路径/网络/凭据隔离与聚合配额"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "操作系统沙箱、IPC认证、路径/网络/凭据隔离与聚合配额"
+      ],
+      "cross_group_properties": [
+        "communication/Composition.tla#Safety",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "IPC身份映射算法、具体沙箱规则、资源对象权限未建模"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ]
+    },
+    {
+      "id": "ER-lifecycle",
+      "name": "依赖DAG与按行为就绪",
+      "sources": [
+        {
+          "path": "docs/architecture/extensions-and-runtime/lifecycle-and-recovery.md",
+          "line": 47
+        }
+      ],
+      "rule": "生命周期串行，故障限于依赖分支；新动作与事实接纳门禁独立",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "真实装配图、每模块就绪/恢复接口、owner排他"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实装配图、每模块就绪/恢复接口、owner排他"
+      ],
+      "cross_group_properties": [
+        "communication/Composition.tla#Safety",
+        "control/ControlRecovery.tla#LocalControlGate"
+      ],
+      "unmodeled_rules": [
+        "完整依赖DAG启动/逆序停止及可选组件降级算法未建模"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety",
+        "control/ControlRecovery.tla#LocalControlGate"
+      ]
+    },
+    {
+      "id": "ER-bounded-recovery",
+      "name": "持久有界恢复与公平扫描",
+      "sources": [
+        {
+          "path": "docs/architecture/extensions-and-runtime/lifecycle-and-recovery.md",
+          "line": 107
+        }
+      ],
+      "rule": "通知仅提示；重启不重置预算；扫描有界并最终覆盖责任",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "扫描公平性、容量、退避、时钟与持久计数"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "扫描公平性、容量、退避、时钟与持久计数"
+      ],
+      "cross_group_properties": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/Decision.tla#FiniteConsumption",
+        "control/ControlRecovery.tla#CurrentLease"
+      ],
+      "unmodeled_rules": [
+        "实际分页扫描与持久RecoveryEvent小时窗口/健康重置规则未建模"
+      ],
+      "verified_abstract_rules": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/Decision.tla#FiniteConsumption",
+        "control/ControlRecovery.tla#CurrentLease"
+      ]
+    },
+    {
+      "id": "ER-backup",
+      "name": "完整提交域恢复与旧写者隔离",
+      "sources": [
+        {
+          "path": "docs/architecture/extensions-and-runtime/lifecycle-and-recovery.md",
+          "line": 170
+        }
+      ],
+      "rule": "备份不完整不能证明未发生，缺尾保持受限",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "备份水位、存储连续性、旧进程/设备真实隔离"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "备份水位、存储连续性、旧进程/设备真实隔离"
+      ],
+      "cross_group_properties": [
+        "control/ControlRecovery.tla#NoUnknownDispatch",
+        "control/Boundaries.tla#RecoverableIdentity"
+      ],
+      "unmodeled_rules": [
+        "完整快照/增量尾对齐/恢复代次/fencing流程未建模，仅复用未知拒发和身份保留子规则"
+      ],
+      "verified_abstract_rules": [
+        "control/ControlRecovery.tla#NoUnknownDispatch",
+        "control/Boundaries.tla#RecoverableIdentity"
+      ]
+    },
+    {
+      "id": "ER-release",
+      "name": "逐目标批准新鲜度与部分生效",
+      "sources": [
+        {
+          "path": "docs/architecture/extensions-and-runtime/contracts.md",
+          "line": 129
+        }
+      ],
+      "rule": "每目标独立结果；撤回本地提交不等于远端停用",
+      "formal_properties": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "远端批准视图、离线期限、可信时钟、严格默认离线0与目标门禁"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "远端批准视图、离线期限、可信时钟、严格默认离线0与目标门禁"
+      ],
+      "cross_group_properties": [
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "真实可信时间/反回滚时钟与可配置离线窗口上界的计算未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ]
+    },
+    {
+      "id": "UI-input",
+      "name": "持久输入接管与父子操作映射",
+      "sources": [
+        {
+          "path": "docs/architecture/application-and-interaction/interaction-contract.md",
+          "line": 32
+        }
+      ],
+      "rule": "冻结输入意义和身份，接纳前保存责任，丢响应查原操作",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "实际唯一消费者CAS、父子事务与核心接纳；旧代次输入资格"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际唯一消费者CAS、父子事务与核心接纳；旧代次输入资格"
+      ],
+      "cross_group_properties": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#OneConsumer",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression"
+      ],
+      "unmodeled_rules": [
+        "任意多用户唯一索引、操作过期/回执窗口、完整请求Schema未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#OneConsumer",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression"
+      ]
+    },
+    {
+      "id": "UI-content",
+      "name": "完整快照与条件增量",
+      "sources": [
+        {
+          "path": "docs/architecture/application-and-interaction/interaction-contract.md",
+          "line": 71
+        }
+      ],
+      "rule": "增量只追加文本且基准精确匹配；同修订冲突清缓存重取",
+      "formal_properties": [
+        "lifecycle/UI.tla#DeltaContinuity"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "具体内容字节/schema、修订冲突检测、输入结构必须完整快照"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "具体内容字节/schema、修订冲突检测、输入结构必须完整快照"
+      ],
+      "cross_group_properties": [],
+      "unmodeled_rules": [
+        "具体文本/Markdown字节与输入表单结构验证未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/UI.tla#DeltaContinuity"
+      ]
+    },
+    {
+      "id": "UI-intent",
+      "name": "显式意图、待决展示与旧响应隔离",
+      "sources": [
+        {
+          "path": "docs/architecture/application-and-interaction/interaction-contract.md",
+          "line": 82
+        }
+      ],
+      "rule": "关闭立即隐藏；一次在途；旧答复不覆盖最新意图，内容不能自行打开",
+      "formal_properties": [
+        "lifecycle/UI.tla#DisplayAuthority",
+        "lifecycle/UI.tla#NoRecoveryWitness"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "真实存储失败、CAS/操作过期、ui.get现状校验、多窗口/多端点实现"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实存储失败、CAS/操作过期、ui.get现状校验、多窗口/多端点实现"
+      ],
+      "cross_group_properties": [],
+      "unmodeled_rules": [
+        "真实权威presentation独立变化、条件CAS及ui.get完整读现状未建模；Reply抽象为带可用当前依据的响应"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/UI.tla#DisplayAuthority",
+        "lifecycle/UI.tla#NoRecoveryWitness"
+      ]
+    },
+    {
+      "id": "UI-result",
+      "name": "正式结果与展示独立",
+      "sources": [
+        {
+          "path": "docs/architecture/application-and-interaction/interaction-and-recovery.md",
+          "line": 23
+        }
+      ],
+      "rule": "关闭、崩溃、缓存失效不删除既有正式结果",
+      "formal_properties": [
+        "lifecycle/UI.tla#ResultPersistence",
+        "lifecycle/UI.tla#NoNormalWitness"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "成果独立持有/不可恢复标记、当前权限、核心终态与迟到费用"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "成果独立持有/不可恢复标记、当前权限、核心终态与迟到费用"
+      ],
+      "cross_group_properties": [],
+      "unmodeled_rules": [
+        "正式成果多载体保留及result_unavailable处理未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/UI.tla#ResultPersistence",
+        "lifecycle/UI.tla#NoNormalWitness"
+      ]
+    },
+    {
+      "id": "UI-directory",
+      "name": "固定权威目录与显式订阅",
+      "sources": [
+        {
+          "path": "docs/architecture/application-and-interaction/interaction-contract.md",
+          "line": 112
+        }
+      ],
+      "rule": "目录切点与当前披露，缺口不作空目录；订阅不自动续期",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "端点目录、分页切点、可靠通知与订阅失效"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "端点目录、分页切点、可靠通知与订阅失效"
+      ],
+      "cross_group_properties": [
+        "trust/RecoveryView.tla#ReadyComplete",
+        "trust/RecoveryView.tla#NoStaleRead"
+      ],
+      "unmodeled_rules": [
+        "目录查询筛选/游标到期与显式订阅续期状态机未建模；只复用固定切点完整恢复与当前读取子规则"
+      ],
+      "verified_abstract_rules": [
+        "trust/RecoveryView.tla#ReadyComplete",
+        "trust/RecoveryView.tla#NoStaleRead"
+      ]
+    },
+    {
+      "id": "UI-preview",
+      "name": "可信预览与精确批准绑定",
+      "sources": [
+        {
+          "path": "docs/architecture/application-and-interaction/interaction-contract.md",
+          "line": 128
+        }
+      ],
+      "rule": "先保留字节与持有者，必需预览齐全才生成精确输入证明",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "可信宿主取得字节/digest、预览类型/权限、两侧验证；不证明人类阅读"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "可信宿主取得字节/digest、预览类型/权限、两侧验证；不证明人类阅读"
+      ],
+      "cross_group_properties": [
+        "lifecycle/Preview.tla#CompleteCurrentPreview",
+        "lifecycle/Preview.tla#RetainedBeforeAcquisition",
+        "trust/Authorization.tla#ReceiptBinding",
+        "trust/SourceGovernance.tla#RegisteredBeforePublish",
+        "communication/Composition.tla#Safety"
+      ],
+      "unmodeled_rules": [
+        "必需预览集合发现算法、所有proof完整绑定字段/签名、投影类型策略变更算法未建模；当前集合完备、取得前保留、投影修订与来源开放提交已建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Preview.tla#CompleteCurrentPreview",
+        "lifecycle/Preview.tla#RetainedBeforeAcquisition",
+        "trust/Authorization.tla#ReceiptBinding",
+        "trust/SourceGovernance.tla#RegisteredBeforePublish",
+        "communication/Composition.tla#Safety"
+      ]
+    },
+    {
+      "id": "UI-session",
+      "name": "会话代次及当前用户约束",
+      "sources": [
+        {
+          "path": "docs/architecture/application-and-interaction/interaction-and-recovery.md",
+          "line": 101
+        }
+      ],
+      "rule": "旧会话响应不得重新显示；退出先关闭显示和发送入口",
+      "formal_properties": [
+        "lifecycle/UI.tla#DisplayAuthority"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "多租户真实缓存/凭据清理、远端请求身份、字节披露授权"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "多租户真实缓存/凭据清理、远端请求身份、字节披露授权"
+      ],
+      "cross_group_properties": [
+        "trust/Authorization.tla#NoUnsafeDisclosure"
+      ],
+      "unmodeled_rules": [
+        "真实缓存键空间及所有异步回调的会话分区未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/UI.tla#DisplayAuthority",
+        "trust/Authorization.tla#NoUnsafeDisclosure"
+      ]
+    },
+    {
+      "id": "UI-render",
+      "name": "非受信内容受限呈现",
+      "sources": [
+        {
+          "path": "docs/architecture/application-and-interaction/contracts-and-storage.md",
+          "line": 87
+        }
+      ],
+      "rule": "呈现不取得新领域权威；不可恢复结果如实显示",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "脚本/HTML/URL渲染安全、附件类型、资源配额"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "脚本/HTML/URL渲染安全、附件类型、资源配额"
+      ],
+      "cross_group_properties": [
+        "communication/Composition.tla#Safety"
+      ],
+      "unmodeled_rules": [
+        "渲染解析器、HTML/脚本/URL拒绝逻辑未建模；资格门禁复用仅说明依赖不齐不能开启"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety"
+      ]
+    },
+    {
+      "id": "OI-observe",
+      "name": "领域事实、观测与独立评估证据分离",
+      "sources": [
+        {
+          "path": "docs/architecture/observation-and-improvement/evaluation.md",
+          "line": 40
+        }
+      ],
+      "rule": "候选/遥测声明不能写独立证据，报告不回写核心终态",
+      "formal_properties": [
+        "lifecycle/Evaluation.tla#EvidenceSeparation"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "取证通道真实隔离、来源真实性、时钟同步、注入抵抗"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "取证通道真实隔离、来源真实性、时钟同步、注入抵抗"
+      ],
+      "cross_group_properties": [],
+      "unmodeled_rules": [
+        "trace冲突解析、时钟域/延迟计算、缓冲导出算法未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#EvidenceSeparation"
+      ]
+    },
+    {
+      "id": "OI-freeze",
+      "name": "冻结候选/计划/保留集",
+      "sources": [
+        {
+          "path": "docs/architecture/observation-and-improvement/evaluation.md",
+          "line": 7
+        }
+      ],
+      "rule": "字节或行为变更形成新候选；评分规则与样本不可追溯修改",
+      "formal_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "完整制品/依赖/配置摘要、样本分组、保留集污染防护、受信判定器"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "完整制品/依赖/配置摘要、样本分组、保留集污染防护、受信判定器"
+      ],
+      "cross_group_properties": [
+        "lifecycle/EvaluationRules.lean#reachable_inv",
+        "lifecycle/EvaluationRules.lean#original_score_preserved"
+      ],
+      "unmodeled_rules": [
+        "保留集暴露/候选选择统计独立性、完整计划字段的不可变约束未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/EvaluationRules.lean#reachable_inv",
+        "lifecycle/EvaluationRules.lean#original_score_preserved"
+      ]
+    },
+    {
+      "id": "OI-denominator",
+      "name": "固定分母、未知不算成功",
+      "sources": [
+        {
+          "path": "docs/architecture/observation-and-improvement/evaluation.md",
+          "line": 53
+        }
+      ],
+      "rule": "启动后失败/超时/未知保留分母，预算未知不记零",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "统计公式、抽样独立性、真实成本/时钟与全局尝试限额"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "统计公式、抽样独立性、真实成本/时钟与全局尝试限额"
+      ],
+      "cross_group_properties": [
+        "lifecycle/EvaluationRules.lean#pass_iff_all",
+        "lifecycle/EvaluationRules.lean#successes_bounded",
+        "lifecycle/EvaluationRules.lean#unknown_is_not_success",
+        "lifecycle/EvaluationRules.lean#frozen_denominator"
+      ],
+      "unmodeled_rules": [
+        "API去重/Wilson区间/配对统计/多层阈值与成本判定完整算法未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/EvaluationRules.lean#pass_iff_all",
+        "lifecycle/EvaluationRules.lean#successes_bounded",
+        "lifecycle/EvaluationRules.lean#unknown_is_not_success",
+        "lifecycle/EvaluationRules.lean#frozen_denominator"
+      ]
+    },
+    {
+      "id": "OI-run",
+      "name": "持久run与测量/结算分离",
+      "sources": [
+        {
+          "path": "docs/architecture/observation-and-improvement/evaluation.md",
+          "line": 101
+        }
+      ],
+      "rule": "报告发布仍可有结算责任，迟到事实新修订不改旧报告",
+      "formal_properties": [
+        "lifecycle/Evaluation.tla#HistoryPreserved"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "评分唯一约束、worker代次、环境quarantine、迟到成本与报告修订"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "评分唯一约束、worker代次、环境quarantine、迟到成本与报告修订"
+      ],
+      "cross_group_properties": [
+        "lifecycle/EvaluationRules.lean#reachable_inv",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "control/ControlRecovery.tla#CurrentLease"
+      ],
+      "unmodeled_rules": [
+        "全部样本调度/环境quarantine/评分冲突导致报告不可用/迟到证据时间窗未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "control/ControlRecovery.tla#CurrentLease"
+      ]
+    },
+    {
+      "id": "OI-source",
+      "name": "来源关闭与派生/发布提交串行",
+      "sources": [
+        {
+          "path": "docs/architecture/observation-and-improvement/contracts.md",
+          "line": 124
+        }
+      ],
+      "rule": "来源或证据失效封闭新使用，旧报告不能继续作为新发布依据",
+      "formal_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "逐来源版本与派生图、跨模块关闭回执、所有正文副本清理"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "逐来源版本与派生图、跨模块关闭回执、所有正文副本清理"
+      ],
+      "cross_group_properties": [
+        "trust/SourceGovernance.tla#NoUnsafeUse",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete"
+      ],
+      "unmodeled_rules": [
+        "全来源图和跨机构持有者恢复工作未枚举"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#NoUnsafeUse",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete"
+      ]
+    },
+    {
+      "id": "OI-approval",
+      "name": "精确候选/报告批准及新鲜提交",
+      "sources": [
+        {
+          "path": "docs/architecture/observation-and-improvement/improvement.md",
+          "line": 23
+        }
+      ],
+      "rule": "人工受信批准独立于pass；读资格/决定/提交可交错，提交重新校验版本和撤回",
+      "formal_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "批准主体认证、完整scope/期限/批次/当前绑定校验"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "批准主体认证、完整scope/期限/批次/当前绑定校验"
+      ],
+      "cross_group_properties": [
+        "trust/Authorization.tla#Attenuation",
+        "trust/Authorization.tla#NoUnsafeUse",
+        "lifecycle/Evaluation.tla#TargetQualification"
+      ],
+      "unmodeled_rules": [
+        "完整批准字段、跨权威签名与在线监测报告可用性切换未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/Authorization.tla#Attenuation",
+        "trust/Authorization.tla#NoUnsafeUse",
+        "lifecycle/Evaluation.tla#TargetQualification"
+      ]
+    },
+    {
+      "id": "OI-rollout",
+      "name": "有限批次、持久调用资格与原键核对",
+      "sources": [
+        {
+          "path": "docs/architecture/observation-and-improvement/improvement.md",
+          "line": 30
+        }
+      ],
+      "rule": "提交调用资格视作可能已发；撤回不擦除责任；目标独立回复",
+      "formal_properties": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoRecoveryWitness",
+        "lifecycle/Evaluation.tla#NoPartialWitness"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "本地与远端批准各自串行域、真实消息重投、单目标幂等、有限查询预算"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "本地与远端批准各自串行域、真实消息重投、单目标幂等、有限查询预算"
+      ],
+      "cross_group_properties": [],
+      "unmodeled_rules": [
+        "观察窗口/所有批次阶段及受信恢复选择、目标批准离线窗口数值未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoRecoveryWitness",
+        "lifecycle/Evaluation.tla#NoPartialWitness"
+      ]
+    },
+    {
+      "id": "OI-history",
+      "name": "撤回/停用/回退与历史记录分离",
+      "sources": [
+        {
+          "path": "docs/architecture/observation-and-improvement/improvement.md",
+          "line": 78
+        }
+      ],
+      "rule": "撤回不删除报告批准或真实激活历史，停用不能声称旧版恢复",
+      "formal_properties": [
+        "lifecycle/Evaluation.tla#HistoryPreserved"
+      ],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "真实旧代码兼容、迁移、owner/预算/授权历史、预批准处置资格"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实旧代码兼容、迁移、owner/预算/授权历史、预批准处置资格"
+      ],
+      "cross_group_properties": [
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind"
+      ],
+      "unmodeled_rules": [
+        "实际数据格式兼容性检查、多目标处置完成聚合未建模"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind"
+      ]
+    },
+    {
+      "id": "OI-governance",
+      "name": "监测有界与新批次显式批准",
+      "sources": [
+        {
+          "path": "docs/architecture/observation-and-improvement/improvement.md",
+          "line": 72
+        }
+      ],
+      "rule": "数据不足暂停；完成初始窗口仍保留治理；不能凭分数扩批",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "监测完整样本、因果可比性、容量与通知送达"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "监测完整样本、因果可比性、容量与通知送达"
+      ],
+      "cross_group_properties": [
+        "communication/Scheduling.tla#Safety",
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "unmodeled_rules": [
+        "退化判据/分层样本/监测暂停与下一批的完整策略未建模"
+      ],
+      "verified_abstract_rules": [
+        "communication/Scheduling.tla#Safety",
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/Decision.tla#FiniteConsumption"
+      ]
+    },
+    {
+      "id": "OI-optin",
+      "name": "成功任务记忆提取与候选发布分离",
+      "sources": [
+        {
+          "path": "docs/architecture/observation-and-improvement/improvement.md",
+          "line": 7
+        }
+      ],
+      "rule": "按类型opt-in的提取用独立任务预算，不自动产生代码候选或发布",
+      "formal_properties": [],
+      "coverage": "abstract-partial",
+      "uncovered_details": [
+        "记忆模块真实授权、数据用途、预算隔离、触发幂等"
+      ],
+      "real_world_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "记忆模块真实授权、数据用途、预算隔离、触发幂等"
+      ],
+      "cross_group_properties": [
+        "trust/ExtractionPolicy.tla#Safety"
+      ],
+      "unmodeled_rules": [
+        "记忆提取质量及独立候选显式Propose入口鉴权未建模"
+      ],
+      "verified_abstract_rules": [
+        "trust/ExtractionPolicy.tla#Safety"
+      ]
+    }
+  ],
+  "validation_cases": [
+    {
+      "id": "ER-01",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 71
+      },
+      "original_case": "| ER-01 | 正常 P1→P2 文件插件升级后执行保存／读回 | Prepare、发布与业务接纳各有独立回执；新操作绑定 P2，任务凭读回证据完成 | ER1–3／C4–C6、A2、A4 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-command",
+        "ER-lock"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#FixedBinding",
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#FixedBinding",
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution"
+      ],
+      "unmodeled_rules": [
+        "完整依赖闭包解析算法、环/导出冲突检测、包归一化与摘要验证未建模",
+        "多阶段实例准备/目录登记/激活的全部状态及多目标CAS未逐阶段建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "包解析、安全解包、签名、依赖解析器正确性",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际事务原子性、实例识别、回执可靠交接"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-02",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 72
+      },
+      "original_case": "| ER-02 | 同包版本替换字节；依赖缺失、环、同导出冲突分别输入 | 安装拒绝并给出明确冲突；原装配不变，无下载或代码副作用 | ER1／C6、A4 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-lock"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#FixedBinding"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#FixedBinding"
+      ],
+      "unmodeled_rules": [
+        "完整依赖闭包解析算法、环/导出冲突检测、包归一化与摘要验证未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "包解析、安全解包、签名、依赖解析器正确性"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-03",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 73
+      },
+      "original_case": "| ER-03 | 压缩炸弹、路径越界、链接逃逸、安装脚本及远程 Schema 引用 | 有限资源内拒绝；宿主无越界文件写入、脚本执行或隐式联网 | ER1、ER4／C6、C7 |",
+      "classification": "runtime-required",
+      "coverage": "not-formally-covered",
+      "mechanism_ids": [
+        "ER-isolate"
+      ],
+      "model_properties": [],
+      "verified_abstract_rules": [],
+      "unmodeled_rules": [
+        "IPC身份映射算法、具体沙箱规则、资源对象权限未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "操作系统沙箱、IPC认证、路径/网络/凭据隔离与聚合配额"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-04",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 74
+      },
+      "original_case": "| ER-04 | 收到未知协议消息／必要扩展；已安装可选项载荷非法 | 按既有协议拒绝必要缺失或非法已知项；无自动安装，透明转发规则保持 | ER1／C6、A4 |",
+      "classification": "runtime-required",
+      "coverage": "not-formally-covered",
+      "mechanism_ids": [
+        "ER-lifecycle"
+      ],
+      "model_properties": [],
+      "verified_abstract_rules": [],
+      "unmodeled_rules": [
+        "完整依赖DAG启动/逆序停止及可选组件降级算法未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实装配图、每模块就绪/恢复接口、owner排他"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-05",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 75
+      },
+      "original_case": "| ER-05 | 回执返回丢失分别注入 Prepare、实例准备、目录登记、激活和最终保存后 | 查原步骤得到原结果；只有一个目标实例及接纳绑定，没有同版本替身命令 | ER2／C5、C6 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-command"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution"
+      ],
+      "unmodeled_rules": [
+        "多阶段实例准备/目录登记/激活的全部状态及多目标CAS未逐阶段建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际事务原子性、实例识别、回执可靠交接"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-06",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 76
+      },
+      "original_case": "| ER-06 | 同管理 command_id 换用户或内容；并发相同预期修订激活两个版本 | 作用域不混用，异意图冲突；同目标最多一个符合预期的发布者 | ER2、ER4／C6、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-command",
+        "ER-lock"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#FixedBinding",
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#FixedBinding",
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution"
+      ],
+      "unmodeled_rules": [
+        "完整依赖闭包解析算法、环/导出冲突检测、包归一化与摘要验证未建模",
+        "多阶段实例准备/目录登记/激活的全部状态及多目标CAS未逐阶段建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "包解析、安全解包、签名、依赖解析器正确性",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际事务原子性、实例识别、回执可靠交接"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-07",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 77
+      },
+      "original_case": "| ER-07 | Abort／超时分别发生在目录提交前、提交未知、已生效后 | 仅可证明未生效且永久封闭时 aborted；未知继续查；已生效通过新停用命令处理 | ER2／C5 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-command"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution"
+      ],
+      "unmodeled_rules": [
+        "多阶段实例准备/目录登记/激活的全部状态及多目标CAS未逐阶段建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际事务原子性、实例识别、回执可靠交接"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-08",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 78
+      },
+      "original_case": "| ER-08 | P1 写入 O1 已生效但响应丢失，升级、宿主崩溃同时发生 | 保留 P1、原 O1、once 与未知预算；P2 不重做 O1；查原效果后才能排空 | ER3、ER5／C4、C5、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-reference",
+        "ER-reclaim"
+      ],
+      "model_properties": [
+        "lifecycle/References.lean#reachable_safe",
+        "lifecycle/References.tla#FreshRegistration",
+        "lifecycle/References.tla#NoPrematureReclaim",
+        "lifecycle/References.tla#NoRecoveryWitness",
+        "lifecycle/References.tla#UseHasPin"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/References.lean#reachable_safe",
+        "lifecycle/References.tla#FreshRegistration",
+        "lifecycle/References.tla#NoPrematureReclaim",
+        "lifecycle/References.tla#NoRecoveryWitness",
+        "lifecycle/References.tla#UseHasPin"
+      ],
+      "unmodeled_rules": [
+        "跨模块长任务后继引用树与多层能力/驱动引用合并未建模",
+        "所有真实持有者种类及保留期限算法未枚举"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实BindingReference与领域接纳跨库映射、语义能力与驱动双层引用",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "完整持有者枚举、文件删除/备份/暂存资产、未知效果核对"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-09",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 79
+      },
+      "original_case": "| ER-09 | 策略／Skill／模型版本变更时旧 decide 已准备物理调用 | 旧轮固定原输入、版本与调用身份；不换模型重发；新轮独立预留 | ER3、ER5／C1、C5、C6 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-lock",
+        "ER-bounded-recovery"
+      ],
+      "model_properties": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/Boundaries.tla#FixedBinding",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "verified_abstract_rules": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/Boundaries.tla#FixedBinding",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "unmodeled_rules": [
+        "完整依赖闭包解析算法、环/导出冲突检测、包归一化与摘要验证未建模",
+        "实际分页扫描与持久RecoveryEvent小时窗口/健康重置规则未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "包解析、安全解包、签名、依赖解析器正确性",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "扫描公平性、容量、退避、时钟与持久计数"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-10",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 80
+      },
+      "original_case": "| ER-10 | draining／disabled 与 Invoke／Start 并发；另在两步任务间替换其固定组件 | 发布与接纳串行；固定组件先停新任务引用、允许旧任务完成后排空执行，升级不自阻塞；disabled 后不新启动 | ER2、ER3／C4、C5 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-reference",
+        "ER-withdraw"
+      ],
+      "model_properties": [
+        "lifecycle/References.lean#reachable_safe",
+        "lifecycle/References.tla#FreshRegistration",
+        "lifecycle/References.tla#NoNormalWitness",
+        "lifecycle/References.tla#UseHasPin"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/References.lean#reachable_safe",
+        "lifecycle/References.tla#FreshRegistration",
+        "lifecycle/References.tla#NoNormalWitness",
+        "lifecycle/References.tla#UseHasPin"
+      ],
+      "unmodeled_rules": [
+        "跨模块长任务后继引用树与多层能力/驱动引用合并未建模",
+        "获准查询白名单及外部进程隔离证据生成未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实BindingReference与领域接纳跨库映射、语义能力与驱动双层引用",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实进程与设备隔离、受信查询白名单、后继引用树"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-11",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 81
+      },
+      "original_case": "| ER-11 | 进程退出但子进程仍活跃；IPC 失联但原设备请求仍可能执行 | 不把 PID 或连接消失当作隔离；新实例不得接替原资源；外部未知继续保留 | ER3–5／C4、C5 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-isolate",
+        "ER-backup"
+      ],
+      "model_properties": [
+        "communication/Composition.tla#Safety",
+        "control/Boundaries.tla#RecoverableIdentity",
+        "control/ControlRecovery.tla#NoUnknownDispatch",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety",
+        "control/Boundaries.tla#RecoverableIdentity",
+        "control/ControlRecovery.tla#NoUnknownDispatch",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "IPC身份映射算法、具体沙箱规则、资源对象权限未建模",
+        "完整快照/增量尾对齐/恢复代次/fencing流程未建模，仅复用未知拒发和身份保留子规则"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "操作系统沙箱、IPC认证、路径/网络/凭据隔离与聚合配额",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "备份水位、存储连续性、旧进程/设备真实隔离"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-12",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 82
+      },
+      "original_case": "| ER-12 | 无挂载／出口／资源控制支持，或沙箱版本不能落实必需规则 | 相应代码导出不装载；受信内置组件可以独立继续，无静默宽权限回退 | ER4／C6、C7、A3 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-isolate"
+      ],
+      "model_properties": [
+        "communication/Composition.tla#Safety",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "IPC身份映射算法、具体沙箱规则、资源对象权限未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "操作系统沙箱、IPC认证、路径/网络/凭据隔离与聚合配额"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-13",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 83
+      },
+      "original_case": "| ER-13 | 同用户多 actor 共用驱动时交换原调用身份；另伪造 user／source、越权文件或直连网络 | 原行动 actor 从领域关联恢复，服务身份不替代原主体；越权被拒，认证连接和他人数据不可访问 | ER4／C7、A4 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-isolate"
+      ],
+      "model_properties": [
+        "communication/Composition.tla#Safety",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "IPC身份映射算法、具体沙箱规则、资源对象权限未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "操作系统沙箱、IPC认证、路径/网络/凭据隔离与聚合配额"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-14",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 84
+      },
+      "original_case": "| ER-14 | 两插件及重启同时冲击用户 CPU、内存、日志、IPC 和宿主出口 | 用户聚合上限不倍增；超额实例受限，原责任和其他用户仍可恢复 | ER4、ER6／C5、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-bounded-recovery"
+      ],
+      "model_properties": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "communication/Scheduling.tla#Safety",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "verified_abstract_rules": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "communication/Scheduling.tla#Safety",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "unmodeled_rules": [
+        "实际分页扫描与持久RecoveryEvent小时窗口/健康重置规则未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "扫描公平性、容量、退避、时钟与持久计数"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-15",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 85
+      },
+      "original_case": "| ER-15 | Skill 注入、结果要求覆盖许可或验收，测试插件尝试生产设备 | Skill 仅作有来源数据；控制依据不改变，测试无生产副作用 | ER1、ER4／C1、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-isolate"
+      ],
+      "model_properties": [
+        "communication/Composition.tla#Safety",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "IPC身份映射算法、具体沙箱规则、资源对象权限未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "操作系统沙箱、IPC认证、路径/网络/凭据隔离与聚合配额"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-16",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 86
+      },
+      "original_case": "| ER-16 | 伪造评测报告、自签批准、过期或不匹配摘要、超批准用户批次；声明支持回退却缺适用依据 | 拒绝按原批准激活；一致性通过不能替代维护者批准或隔离效果评测，不能静默取消批准中的回退保证 | ER1、ER4／C8、C9 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-approval",
+        "ER-rollback"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation",
+        "trust/Authorization.tla#Attenuation",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation",
+        "trust/Authorization.tla#Attenuation",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "在线格式迁移、兼容性判定算法与多库回退未建模",
+        "完整批准字段、跨权威签名与在线监测报告可用性切换未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际旧版读取新版持久格式、预算/owner等领域账本历史",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "批准主体认证、完整scope/期限/批次/当前绑定校验"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-17",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 87
+      },
+      "original_case": "| ER-17 | 依赖 DAG 环、缺存储、缺 owner、旧进程未隔离、仅可选组件缺席 | 必需分支受限且指出提供方；可选项按声明缺席，不绕过条件启动 | ER4、ER5／C5、A1–A3 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-lifecycle"
+      ],
+      "model_properties": [
+        "communication/Composition.tla#Safety",
+        "control/ControlRecovery.tla#LocalControlGate"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety",
+        "control/ControlRecovery.tla#LocalControlGate"
+      ],
+      "unmodeled_rules": [
+        "完整依赖DAG启动/逆序停止及可选组件降级算法未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实装配图、每模块就绪/恢复接口、owner排他"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-18",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 88
+      },
+      "original_case": "| ER-18 | A 有未知效果，B 就绪；A 已取消但迟到事实到达 | B 继续；A 保存获准事实且不新派发；不存在全局 ready 覆盖领域门禁 | ER5、ER6／C5、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-withdraw"
+      ],
+      "model_properties": [
+        "communication/Composition.tla#Safety",
+        "control/ControlRecovery.tla#LocalControlGate",
+        "lifecycle/References.tla#NoNormalWitness",
+        "lifecycle/References.tla#UseHasPin"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety",
+        "control/ControlRecovery.tla#LocalControlGate",
+        "lifecycle/References.tla#NoNormalWitness",
+        "lifecycle/References.tla#UseHasPin"
+      ],
+      "unmodeled_rules": [
+        "获准查询白名单及外部进程隔离证据生成未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实进程与设备隔离、受信查询白名单、后继引用树"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-19",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 89
+      },
+      "original_case": "| ER-19 | 丢通知、丢扫描游标、重启控制器、记录在扫描期间到期 | 有界重扫最终发现原责任，不全表无限扫描，不重置领域次数／期限／费用 | ER5、ER6／C5 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-bounded-recovery"
+      ],
+      "model_properties": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "verified_abstract_rules": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "unmodeled_rules": [
+        "实际分页扫描与持久RecoveryEvent小时窗口/健康重置规则未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "扫描公平性、容量、退避、时钟与持久计数"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-20",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 90
+      },
+      "original_case": "| ER-20 | 单用户洪峰、普通队列占满、控制风暴、存储逼近上限 | 各用户和类别保留有限机会；提前拒绝新接纳，work lane 收尾仍推进 | ER6／C5、C7、C8 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-bounded-recovery"
+      ],
+      "model_properties": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "verified_abstract_rules": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "unmodeled_rules": [
+        "实际分页扫描与持久RecoveryEvent小时窗口/健康重置规则未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "扫描公平性、容量、退避、时钟与持久计数"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-21",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 91
+      },
+      "original_case": "| ER-21 | 激活截止过去后进程崩溃、短暂健康后反复崩溃；关闭超时及退出后外部成功 | 有独立有界恢复事件且不重置次数；按原提交恢复、不重做激活；任务不因关机自动取消，迟到效果保留 | ER3、ER5／C4、C5 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-bounded-recovery",
+        "ER-command"
+      ],
+      "model_properties": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/ControlRecovery.tla#DurableExecution",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "verified_abstract_rules": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/ControlRecovery.tla#DurableExecution",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "unmodeled_rules": [
+        "多阶段实例准备/目录登记/激活的全部状态及多目标CAS未逐阶段建模",
+        "实际分页扫描与持久RecoveryEvent小时窗口/健康重置规则未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际事务原子性、实例识别、回执可靠交接",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "扫描公平性、容量、退避、时钟与持久计数"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-22",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 92
+      },
+      "original_case": "| ER-22 | 卸载遇未知效果、旧消息、长任务引用、有效回退声明保留、保留期未结束或删除中崩溃 | 有任一引用或保留责任则阻塞；安全撤回不重装旧代码，原回退声明标明受阻；可删除项沿回收计划续做 | ER2、ER3／C5、C6、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-reclaim"
+      ],
+      "model_properties": [
+        "lifecycle/References.lean#reachable_safe",
+        "lifecycle/References.tla#NoPrematureReclaim",
+        "lifecycle/References.tla#NoRecoveryWitness"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/References.lean#reachable_safe",
+        "lifecycle/References.tla#NoPrematureReclaim",
+        "lifecycle/References.tla#NoRecoveryWitness"
+      ],
+      "unmodeled_rules": [
+        "所有真实持有者种类及保留期限算法未枚举"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "完整持有者枚举、文件删除/备份/暂存资产、未知效果核对"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-23",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 93
+      },
+      "original_case": "| ER-23 | 回退程序版本；另用丢失 ACK／消费／启动尾部的旧备份启动 | 兼容旧程序可配当前账本；不兼容或旧备份证明不足则受限，不刷新身份重跑 | ER3、ER5／C5、C7、C9 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-backup",
+        "ER-rollback"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#RecoverableIdentity",
+        "control/ControlRecovery.tla#NoUnknownDispatch",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#RecoverableIdentity",
+        "control/ControlRecovery.tla#NoUnknownDispatch",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "unmodeled_rules": [
+        "在线格式迁移、兼容性判定算法与多库回退未建模",
+        "完整快照/增量尾对齐/恢复代次/fencing流程未建模，仅复用未知拒发和身份保留子规则"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际旧版读取新版持久格式、预算/owner等领域账本历史",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "备份水位、存储连续性、旧进程/设备真实隔离"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-24",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 94
+      },
+      "original_case": "| ER-24 | 无可信时间或反回滚依据时断网；离线旧许可随后过期 | 离线不因安装／重启开放；恢复后先核对当前依据，旧截止不延长 | ER4、ER5／C5、C7、A3 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-release"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "真实可信时间/反回滚时钟与可配置离线窗口上界的计算未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "远端批准视图、离线期限、可信时钟、严格默认离线0与目标门禁"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-25",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 95
+      },
+      "original_case": "| ER-25 | 观测服务中断或插件日志喷涌，同时有待保存结果 | 诊断导出受限，管理／领域回执仍耐久；不把日志确认当接纳或效果证据 | ER2、ER6／C5、C8 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-observe",
+        "ER-command"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution",
+        "lifecycle/Evaluation.tla#EvidenceSeparation"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution",
+        "lifecycle/Evaluation.tla#EvidenceSeparation"
+      ],
+      "unmodeled_rules": [
+        "多阶段实例准备/目录登记/激活的全部状态及多目标CAS未逐阶段建模",
+        "trace冲突解析、时钟域/延迟计算、缓冲导出算法未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际事务原子性、实例识别、回执可靠交接",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "取证通道真实隔离、来源真实性、时钟同步、注入抵抗"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-26",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 96
+      },
+      "original_case": "| ER-26 | 用第二个兼容实现替换三系统中一个，其余保持固定 | 公共任务、权限、错误与恢复用例仍通过；报告不支持的配置，不静默切换语义 | ER1、ER3／C6、A1、A2、A4 |",
+      "classification": "runtime-required",
+      "coverage": "not-formally-covered",
+      "mechanism_ids": [
+        "ER-lifecycle"
+      ],
+      "model_properties": [],
+      "verified_abstract_rules": [],
+      "unmodeled_rules": [
+        "完整依赖DAG启动/逆序停止及可选组件降级算法未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实装配图、每模块就绪/恢复接口、owner排他"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-27",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 97
+      },
+      "original_case": "| ER-27 | V1 实际获准来源检索任务中插件切换、检索失败及旧引用失效 | 答案仍绑定实际取得的来源／时间；缺口如实说明，安装成功不计作问答成功 | ER3、ER4／C3、C6、V1 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-source",
+        "ER-lock"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#FixedBinding",
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#FixedBinding",
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "完整依赖闭包解析算法、环/导出冲突检测、包归一化与摘要验证未建模",
+        "全来源图和跨机构持有者恢复工作未枚举"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "包解析、安全解包、签名、依赖解析器正确性",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "逐来源版本与派生图、跨模块关闭回执、所有正文副本清理"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-28",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 98
+      },
+      "original_case": "| ER-28 | 多个有状态模拟设备上观察→动作→再观察，中途崩溃、接管和升级 | 原操作与设备状态可核对，无重复写入／点击；未知与取消分别报告 | ER3–6／C4、C5、V2 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-command"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#ActionBoundary",
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#ActionBoundary",
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution"
+      ],
+      "unmodeled_rules": [
+        "多阶段实例准备/目录登记/激活的全部状态及多目标CAS未逐阶段建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际事务原子性、实例识别、回执可靠交接"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-29",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 99
+      },
+      "original_case": "| ER-29 | 经评测的版本按批准批次启用并写入数据，出现退化后沿声明路径回退；另注入旧版格式不兼容 | 兼容旧版可读取当前账本并运行支持的任务；不兼容时只报告停用或恢复受阻。精确关联基线、样本、产物、批准及分项回执，当前账本和撤权不回退 | ER1–5／C8、C9 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-rollback",
+        "OI-history"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "unmodeled_rules": [
+        "在线格式迁移、兼容性判定算法与多库回退未建模",
+        "实际数据格式兼容性检查、多目标处置完成聚合未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际旧版读取新版持久格式、预算/owner等领域账本历史",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实旧代码兼容、迁移、owner/预算/授权历史、预批准处置资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-P1",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 110
+      },
+      "original_case": "| ER-P1／OI-P1：获准产物自动交接 | 已采用：人工批准后自动固定原交接、执行限定批次、激活复核、查询及撤回停用，条件成立时执行预批准回退。完整治理归[改进设计](../observation-and-improvement/improvement.md)，不允许模型自批或自动扩批 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-rollout"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#NoRecoveryWitness"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#NoRecoveryWitness"
+      ],
+      "unmodeled_rules": [
+        "观察窗口/所有批次阶段及受信恢复选择、目标批准离线窗口数值未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "本地与远端批准各自串行域、真实消息重投、单目标幂等、有限查询预算"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-P2",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 111
+      },
+      "original_case": "| ER-P2：逐节点制品与管理 | 已采用：[release 线合同](contracts.md#wire)复用 CE-P1、身份和持久交付，分别验证节点准备／激活／停用，不承诺跨节点原子发布 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-release"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "真实可信时间/反回滚时钟与可配置离线窗口上界的计算未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "远端批准视图、离线期限、可信时钟、严格默认离线0与目标门禁"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-P3",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 112
+      },
+      "original_case": "| ER-P3：有状态在线替换 | 后置：当前正常升级排空，代码回退须读取当前格式；必要的模块私有迁移须先有独占、持久命令／原键核对、记录兼容、失败恢复和验证依据。无停顿新旧并存、配置引用转移及在线格式迁移不作为当前交付条件 |",
+      "classification": "static-only",
+      "coverage": "policy-exclusion-only",
+      "mechanism_ids": [],
+      "model_properties": [],
+      "verified_abstract_rules": [],
+      "unmodeled_rules": [
+        "文档明确未采用/后置；仅检查已发布边界，不声明行为实现或形式证明"
+      ],
+      "runtime_dependencies": [
+        "真实实现、数据与环境验收"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-30",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 118
+      },
+      "original_case": "| ER-30 | 两节点准备／激活，第二节点离线；第一节点提交后丢答复 | 分项保存事实；沿原 command_id 查询，不重建激活命令，不称全部生效 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-release"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "真实可信时间/反回滚时钟与可配置离线窗口上界的计算未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "远端批准视图、离线期限、可信时钟、严格默认离线0与目标门禁"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-31",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 119
+      },
+      "original_case": "| ER-31 | 批准撤回乱序、查询权威不可达、离线窗口到期、旧备份恢复 | 旧修订不覆盖撤回；停止新使用的最晚边界固定，刷新失败不续期；在途效果独立核对 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-release"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "真实可信时间/反回滚时钟与可配置离线窗口上界的计算未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "远端批准视图、离线期限、可信时钟、严格默认离线0与目标门禁"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-32",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 120
+      },
+      "original_case": "| ER-32 | 主产物撤回触发预批准回退；旧版被安全撤回或格式不兼容 | 自动停用可独立完成；回退受阻保留原责任，不执行不可信旧版，不恢复旧库 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-history"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "unmodeled_rules": [
+        "实际数据格式兼容性检查、多目标处置完成聚合未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实旧代码兼容、迁移、owner/预算/授权历史、预批准处置资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "ER-33",
+      "source": {
+        "path": "docs/architecture/extensions-and-runtime/validation.md",
+        "line": 121
+      },
+      "original_case": "| ER-33 | 控制 lane 伪装新激活、包 URL 注入、范围外节点或扩大批次 | 拒绝；仅已批准目标与精确制品可进入原管理步骤 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-approval"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#Attenuation",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#Attenuation",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "完整批准字段、跨权威签名与在线监测报告可用性切换未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "批准主体认证、完整scope/期限/批次/当前绑定校验"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-01",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 12
+      },
+      "original_case": "| UI-01 | 已获准检索及呈现，按总览提交比较任务、回答成本优先 | 任务 accepted、UI accepted、权威 consumed、父 applied 与正式结果各有依据；没有新增许可或长期记忆写入 | U1–U3／C3、C5–C7、V1 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-input",
+        "UI-result"
+      ],
+      "model_properties": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer",
+        "lifecycle/UI.tla#NoNormalWitness",
+        "lifecycle/UI.tla#ResultPersistence"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer",
+        "lifecycle/UI.tla#NoNormalWitness",
+        "lifecycle/UI.tla#ResultPersistence"
+      ],
+      "unmodeled_rules": [
+        "任意多用户唯一索引、操作过期/回执窗口、完整请求Schema未建模",
+        "正式成果多载体保留及result_unavailable处理未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际唯一消费者CAS、父子事务与核心接纳；旧代次输入资格",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "成果独立持有/不可恢复标记、当前权限、核心终态与迟到费用"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-02",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 13
+      },
+      "original_case": "| UI-02 | Submit 已提交但回应丢失；用户重复点击并重启 | 保留原任务和提交操作，核心只创建一个任务；本端先核对才显示接纳 | U1、U2／C5 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-input"
+      ],
+      "model_properties": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer"
+      ],
+      "unmodeled_rules": [
+        "任意多用户唯一索引、操作过期/回执窗口、完整请求Schema未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际唯一消费者CAS、父子事务与核心接纳；旧代次输入资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-03",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 14
+      },
+      "original_case": "| UI-03 | UI 接纳事务提交前、提交后及转交标记后分别崩溃 | 未提交不报告 accepted；已提交恢复同一父子映射与工作，没有已确认却无责任的空档 | U2／C5 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-input"
+      ],
+      "model_properties": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer"
+      ],
+      "unmodeled_rules": [
+        "任意多用户唯一索引、操作过期/回执窗口、完整请求Schema未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际唯一消费者CAS、父子事务与核心接纳；旧代次输入资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-04",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 15
+      },
+      "original_case": "| UI-04 | 核心消费 Q 后丢 O2 答复，随后关闭、过期并重连；accepted 晚于最终事件 | 父仍沿 O2 查询并最终 applied；过期或迟到 accepted 不回退消费事实，关闭持续隐藏 | U2、U4／C5、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-input",
+        "UI-intent"
+      ],
+      "model_properties": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer",
+        "lifecycle/UI.tla#DisplayAuthority",
+        "lifecycle/UI.tla#NoRecoveryWitness"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer",
+        "lifecycle/UI.tla#DisplayAuthority",
+        "lifecycle/UI.tla#NoRecoveryWitness"
+      ],
+      "unmodeled_rules": [
+        "任意多用户唯一索引、操作过期/回执窗口、完整请求Schema未建模",
+        "真实权威presentation独立变化、条件CAS及ui.get完整读现状未建模；Reply抽象为带可用当前依据的响应"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际唯一消费者CAS、父子事务与核心接纳；旧代次输入资格",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实存储失败、CAS/操作过期、ui.get现状校验、多窗口/多端点实现"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-05",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 16
+      },
+      "original_case": "| UI-05 | 两端以不同操作回答 Q，同时重投其中一项 | 一项消费，另一项冲突；原操作重复不创建第二个子操作或再次消费 | U2／C5、C6 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-input"
+      ],
+      "model_properties": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer"
+      ],
+      "unmodeled_rules": [
+        "任意多用户唯一索引、操作过期/回执窗口、完整请求Schema未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际唯一消费者CAS、父子事务与核心接纳；旧代次输入资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-06",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 17
+      },
+      "original_case": "| UI-06 | 仅进度刷新；另组改变字段含义并替换请求 | 前组旧 seen_revision 的有效回应可消费；后组旧请求不绑定到新请求 | U3／C6 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-input"
+      ],
+      "model_properties": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer"
+      ],
+      "unmodeled_rules": [
+        "任意多用户唯一索引、操作过期/回执窗口、完整请求Schema未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际唯一消费者CAS、父子事务与核心接纳；旧代次输入资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-07",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 18
+      },
+      "original_case": "| UI-07 | action_id 替换目标、提交任意方法／值、submit_input 双发 | 旧动作拒绝，不能路由任意接口；表单只产生一个 ui.input，无第二条输入路径 | U2、U5／C6、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-input"
+      ],
+      "model_properties": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer"
+      ],
+      "unmodeled_rules": [
+        "任意多用户唯一索引、操作过期/回执窗口、完整请求Schema未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际唯一消费者CAS、父子事务与核心接纳；旧代次输入资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-08",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 19
+      },
+      "original_case": "| UI-08 | 先 delta 后快照、缺基准、重复／逆序、同修订异内容 | 旧内容不回退，缺基准有限 get，异内容停止套用；新端仅完整快照即可恢复输入 | U3／C5、C6 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-content"
+      ],
+      "model_properties": [
+        "lifecycle/UI.tla#DeltaContinuity"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/UI.tla#DeltaContinuity"
+      ],
+      "unmodeled_rules": [
+        "具体文本/Markdown字节与输入表单结构验证未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "具体内容字节/schema、修订冲突检测、输入结构必须完整快照"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-09",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 20
+      },
+      "original_case": "| UI-09 | 一端离线关闭后崩溃，另一端仍打开；结果和快照持续到达 | 恢复本端关闭，其他端不变；已接纳输入和任务继续，通知不能自动打开 | U4／C5、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-intent",
+        "UI-result"
+      ],
+      "model_properties": [
+        "lifecycle/UI.tla#DisplayAuthority",
+        "lifecycle/UI.tla#NoNormalWitness",
+        "lifecycle/UI.tla#NoRecoveryWitness",
+        "lifecycle/UI.tla#ResultPersistence"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/UI.tla#DisplayAuthority",
+        "lifecycle/UI.tla#NoNormalWitness",
+        "lifecycle/UI.tla#NoRecoveryWitness",
+        "lifecycle/UI.tla#ResultPersistence"
+      ],
+      "unmodeled_rules": [
+        "真实权威presentation独立变化、条件CAS及ui.get完整读现状未建模；Reply抽象为带可用当前依据的响应",
+        "正式成果多载体保留及result_unavailable处理未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实存储失败、CAS/操作过期、ui.get现状校验、多窗口/多端点实现",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "成果独立持有/不可恢复标记、当前权限、核心终态与迟到费用"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-10",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 21
+      },
+      "original_case": "| UI-10 | 同端点两个窗口快速关闭／重开，旧答复迟到，条件冲突 | 一个宿主意图队列，旧回执不覆盖新选择；有限协调，无未确认内容闪现 | U4／C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-intent"
+      ],
+      "model_properties": [
+        "lifecycle/UI.tla#DisplayAuthority",
+        "lifecycle/UI.tla#NoRecoveryWitness"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/UI.tla#DisplayAuthority",
+        "lifecycle/UI.tla#NoRecoveryWitness"
+      ],
+      "unmodeled_rules": [
+        "真实权威presentation独立变化、条件CAS及ui.get完整读现状未建模；Reply抽象为带可用当前依据的响应"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实存储失败、CAS/操作过期、ui.get现状校验、多窗口/多端点实现"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-11",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 22
+      },
+      "original_case": "| UI-11 | 关闭日志写入失败、开闭回执超窗、读取到旧 presentation | 先隐藏；明确耐久缺口；query_operation 不伪装完整答复，未核清旧请求前不开启 | U4、U6／C5、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-intent"
+      ],
+      "model_properties": [
+        "lifecycle/UI.tla#DisplayAuthority",
+        "lifecycle/UI.tla#NoRecoveryWitness"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/UI.tla#DisplayAuthority",
+        "lifecycle/UI.tla#NoRecoveryWitness"
+      ],
+      "unmodeled_rules": [
+        "真实权威presentation独立变化、条件CAS及ui.get完整读现状未建模；Reply抽象为带可用当前依据的响应"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实存储失败、CAS/操作过期、ui.get现状校验、多窗口/多端点实现"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-12",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 23
+      },
+      "original_case": "| UI-12 | 完成结果超交付窗口，任务当前修订高于原结果；内容端失联 | ReadResult 返回原固定结果，ReadTask 单独展示；字节缺口不报告完整交付，不重跑任务 | U1／C3、C5、V1 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-result"
+      ],
+      "model_properties": [
+        "lifecycle/UI.tla#NoNormalWitness",
+        "lifecycle/UI.tla#ResultPersistence"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/UI.tla#NoNormalWitness",
+        "lifecycle/UI.tla#ResultPersistence"
+      ],
+      "unmodeled_rules": [
+        "正式成果多载体保留及result_unavailable处理未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "成果独立持有/不可恢复标记、当前权限、核心终态与迟到费用"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-13",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 24
+      },
+      "original_case": "| UI-13 | 取消与完成并发；取消已处理但效果未知，丢失完整取消答复 | action applied 只表示控制处理；当前事实和原答复缺口分别显示，不宣称远端停止 | U1、U6／C4、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-history"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#FixedHistoricalResult",
+        "control/ControlRecovery.tla#LocalControlGate",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#FixedHistoricalResult",
+        "control/ControlRecovery.tla#LocalControlGate",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "unmodeled_rules": [
+        "实际数据格式兼容性检查、多目标处置完成聚合未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实旧代码兼容、迁移、owner/预算/授权历史、预批准处置资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-14",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 25
+      },
+      "original_case": "| UI-14 | 多个有状态模拟设备执行点击／滑动／输入／返回；云断线时本地接管 | 立即封闭新自动动作；存储失败不报告耐久成功，重连／普通表单不解除屏障；重新开放依既有入口 | U5、U6／C4、C7、V2 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-withdraw"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#ActionBoundary",
+        "lifecycle/References.tla#NoNormalWitness",
+        "lifecycle/References.tla#UseHasPin"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#ActionBoundary",
+        "lifecycle/References.tla#NoNormalWitness",
+        "lifecycle/References.tla#UseHasPin"
+      ],
+      "unmodeled_rules": [
+        "获准查询白名单及外部进程隔离证据生成未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实进程与设备隔离、受信查询白名单、后继引用树"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-15",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 26
+      },
+      "original_case": "| UI-15 | 伪造授权批准、模型生成同样按钮、确认范围被扩大、响应丢失 | 只有受信宿主真实用户依据可签发；变范围新建确认，原命令核对不重复签发 | U5／C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-approval"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#Attenuation",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#Attenuation",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "完整批准字段、跨权威签名与在线监测报告可用性切换未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "批准主体认证、完整scope/期限/批次/当前绑定校验"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-16",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 27
+      },
+      "original_case": "| UI-16 | 记忆纠正冲突、delete 已提交丢回应、离线副本仍保留 | 原命令核对；不自动覆盖新修订，逻辑禁用与清理进度分别展示，不宣称全链删除 | U1、U5／C2、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-source"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/MemoryCommand.tla#CASRespected",
+        "trust/MemoryCommand.tla#NoResurrection",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/MemoryCommand.tla#CASRespected",
+        "trust/MemoryCommand.tla#NoResurrection",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "全来源图和跨机构持有者恢复工作未枚举"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "逐来源版本与派生图、跨模块关闭回执、所有正文副本清理"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-17",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 28
+      },
+      "original_case": "| UI-17 | 快照／缓存撤权、退出后切换用户、旧响应迟到、猜测其他用户 ID | 停止相关显示和新发送，旧响应不进入新用户缓存；拒绝不泄露对象存在性 | U5／C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-session"
+      ],
+      "model_properties": [
+        "lifecycle/UI.tla#DisplayAuthority",
+        "trust/Authorization.tla#NoUnsafeDisclosure"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/UI.tla#DisplayAuthority",
+        "trust/Authorization.tla#NoUnsafeDisclosure"
+      ],
+      "unmodeled_rules": [
+        "真实缓存键空间及所有异步回调的会话分区未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "多租户真实缓存/凭据清理、远端请求身份、字节披露授权"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-18",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 29
+      },
+      "original_case": "| UI-18 | Markdown 脚本、原始 HTML、自动远程图片、恶意内容类型或错误摘要 | 无脚本／任意网络加载，内容验证失败可见，无管理调用；既有输入责任不因渲染失败丢失 | U5／C6、C7 |",
+      "classification": "runtime-required",
+      "coverage": "not-formally-covered",
+      "mechanism_ids": [
+        "UI-render",
+        "UI-input"
+      ],
+      "model_properties": [],
+      "verified_abstract_rules": [],
+      "unmodeled_rules": [
+        "任意多用户唯一索引、操作过期/回执窗口、完整请求Schema未建模",
+        "渲染解析器、HTML/脚本/URL拒绝逻辑未建模；资格门禁复用仅说明依赖不齐不能开启"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际唯一消费者CAS、父子事务与核心接纳；旧代次输入资格",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "脚本/HTML/URL渲染安全、附件类型、资源配额"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-19",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 30
+      },
+      "original_case": "| UI-19 | 一个用户大量 surface／输入／大文件、存储近满且控制到达 | 接纳前限流，其他用户有进展，原输入不丢，取消／核对／本地接管获得预留处理容量 | U6／C5、C8 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-bounded-recovery"
+      ],
+      "model_properties": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "verified_abstract_rules": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "unmodeled_rules": [
+        "实际分页扫描与持久RecoveryEvent小时窗口/健康重置规则未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "扫描公平性、容量、退避、时钟与持久计数"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-20",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 31
+      },
+      "original_case": "| UI-20 | 双实例、旧备份缺去重、旧工作者迟到、账本不可写 | 无权威依据不启用新发送；未知旧操作不换 ID，关闭仍隐藏，未决责任可查 | U2、U6／C5、A3 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-backup",
+        "UI-intent"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#RecoverableIdentity",
+        "control/ControlRecovery.tla#NoUnknownDispatch",
+        "lifecycle/UI.tla#DisplayAuthority",
+        "lifecycle/UI.tla#NoRecoveryWitness"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#RecoverableIdentity",
+        "control/ControlRecovery.tla#NoUnknownDispatch",
+        "lifecycle/UI.tla#DisplayAuthority",
+        "lifecycle/UI.tla#NoRecoveryWitness"
+      ],
+      "unmodeled_rules": [
+        "完整快照/增量尾对齐/恢复代次/fencing流程未建模，仅复用未知拒发和身份保留子规则",
+        "真实权威presentation独立变化、条件CAS及ui.get完整读现状未建模；Reply抽象为带可用当前依据的响应"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "备份水位、存储连续性、旧进程/设备真实隔离",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实存储失败、CAS/操作过期、ui.get现状校验、多窗口/多端点实现"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-21",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 32
+      },
+      "original_case": "| UI-21 | 替换渲染器／Store／本地业务适配器，缺少必要消息或消费核对能力 | 支持者通过同一矩阵；缺能力关闭相应交互，不把安全降级解释为完整可用 | U1–U6／C6、A2、A4 |",
+      "classification": "runtime-required",
+      "coverage": "not-formally-covered",
+      "mechanism_ids": [
+        "ER-lifecycle"
+      ],
+      "model_properties": [],
+      "verified_abstract_rules": [],
+      "unmodeled_rules": [
+        "完整依赖DAG启动/逆序停止及可选组件降级算法未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实装配图、每模块就绪/恢复接口、owner排他"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-22",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 33
+      },
+      "original_case": "| UI-22 | V1 答案含实际来源、获取时间、冲突及失败；分别丢快照／引用内容 | 这些信息在最终展示和恢复后仍可见，缺内容明确；答案正确与引用支撑由整体 V1 评测另判 | U1、U3／C1、C3、V1 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-result",
+        "OI-source"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/UI.tla#NoNormalWitness",
+        "lifecycle/UI.tla#ResultPersistence",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/UI.tla#NoNormalWitness",
+        "lifecycle/UI.tla#ResultPersistence",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "正式成果多载体保留及result_unavailable处理未建模",
+        "全来源图和跨机构持有者恢复工作未枚举"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "成果独立持有/不可恢复标记、当前权限、核心终态与迟到费用",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "逐来源版本与派生图、跨模块关闭回执、所有正文副本清理"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-23",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 34
+      },
+      "original_case": "| UI-23 | 任务终态但 effects_pending=true，收敛通知丢失；耗尽刷新预算 | 未决查询工作仍可获知新事实；预算耗尽留下缺口，显式核对可恢复有限查询，不重新执行任务 | U1、U6／C5、C8 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-run"
+      ],
+      "model_properties": [
+        "control/ControlRecovery.tla#CurrentLease",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv"
+      ],
+      "verified_abstract_rules": [
+        "control/ControlRecovery.tla#CurrentLease",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv"
+      ],
+      "unmodeled_rules": [
+        "全部样本调度/环境quarantine/评分冲突导致报告不可用/迟到证据时间窗未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "评分唯一约束、worker代次、环境quarantine、迟到成本与报告修订"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-24",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 35
+      },
+      "original_case": "| UI-24 | 必需预览声明、输入或固定投影不完整，或策略版本变更未重新验证 | 不发布可提交控件，不以 purpose 文案猜测依赖；取得当前完整预览依据后才开放 | U1、U5／C4、C6、V2 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-preview"
+      ],
+      "model_properties": [
+        "communication/Composition.tla#Safety",
+        "lifecycle/Preview.tla#CompleteCurrentPreview",
+        "lifecycle/Preview.tla#RetainedBeforeAcquisition",
+        "trust/Authorization.tla#ReceiptBinding",
+        "trust/SourceGovernance.tla#RegisteredBeforePublish"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety",
+        "lifecycle/Preview.tla#CompleteCurrentPreview",
+        "lifecycle/Preview.tla#RetainedBeforeAcquisition",
+        "trust/Authorization.tla#ReceiptBinding",
+        "trust/SourceGovernance.tla#RegisteredBeforePublish"
+      ],
+      "unmodeled_rules": [
+        "必需预览集合发现算法、所有proof完整绑定字段/签名、投影类型策略变更算法未建模；当前集合完备、取得前保留、投影修订与来源开放提交已建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "可信宿主取得字节/digest、预览类型/权限、两侧验证；不证明人类阅读"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-25",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 60
+      },
+      "original_case": "| UI-25 新设备目录 | 丢本端索引后获准分页恢复；查询变化、删项、跨用户和游标超期，不越权枚举、不混合切点；目录缺席明确不完整 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-directory"
+      ],
+      "model_properties": [
+        "trust/RecoveryView.tla#NoStaleRead",
+        "trust/RecoveryView.tla#ReadyComplete"
+      ],
+      "verified_abstract_rules": [
+        "trust/RecoveryView.tla#NoStaleRead",
+        "trust/RecoveryView.tla#ReadyComplete"
+      ],
+      "unmodeled_rules": [
+        "目录查询筛选/游标到期与显式订阅续期状态机未建模；只复用固定切点完整恢复与当前读取子规则"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "端点目录、分页切点、可靠通知与订阅失效"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-26",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 61
+      },
+      "original_case": "| UI-26 订阅 | 接纳响应丢失、通知丢失、重连及到期；按原订阅 ID 查询，通知仅触发读取，旧通知不直接创建可显示内容 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-directory"
+      ],
+      "model_properties": [
+        "trust/RecoveryView.tla#NoStaleRead",
+        "trust/RecoveryView.tla#ReadyComplete"
+      ],
+      "verified_abstract_rules": [
+        "trust/RecoveryView.tla#NoStaleRead",
+        "trust/RecoveryView.tla#ReadyComplete"
+      ],
+      "unmodeled_rules": [
+        "目录查询筛选/游标到期与显式订阅续期状态机未建模；只复用固定切点完整恢复与当前读取子规则"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "端点目录、分页切点、可靠通知与订阅失效"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-27",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 62
+      },
+      "original_case": "| UI-27 预览绑定 | 截图生成后重启、输入／投影替换、来源撤销、内容到期；任一必需预览无当前获取依据则不转交输入，不把客户端自报已看作为证明 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-preview"
+      ],
+      "model_properties": [
+        "communication/Composition.tla#Safety",
+        "lifecycle/Preview.tla#CompleteCurrentPreview",
+        "lifecycle/Preview.tla#RetainedBeforeAcquisition",
+        "trust/Authorization.tla#ReceiptBinding",
+        "trust/SourceGovernance.tla#RegisteredBeforePublish"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety",
+        "lifecycle/Preview.tla#CompleteCurrentPreview",
+        "lifecycle/Preview.tla#RetainedBeforeAcquisition",
+        "trust/Authorization.tla#ReceiptBinding",
+        "trust/SourceGovernance.tla#RegisteredBeforePublish"
+      ],
+      "unmodeled_rules": [
+        "必需预览集合发现算法、所有proof完整绑定字段/签名、投影类型策略变更算法未建模；当前集合完备、取得前保留、投影修订与来源开放提交已建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "可信宿主取得字节/digest、预览类型/权限、两侧验证；不证明人类阅读"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-28",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 63
+      },
+      "original_case": "| UI-28 受信管理 | 伪造本人批准／补证、管理答复丢失；原领域命令可查；许可、补证接纳、证据核验与任务完成分别呈现 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-approval"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#Attenuation",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#Attenuation",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "完整批准字段、跨权威签名与在线监测报告可用性切换未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "批准主体认证、完整scope/期限/批次/当前绑定校验"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-29",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 64
+      },
+      "original_case": "| UI-29 暂停与预算 | 动作边界暂停、在途工作未结束、父子暂停来源、恢复响应丢失、未知用量；UI不将暂停等同物理停止，期限继续流逝 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-withdraw"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#PauseReasonsIndependent",
+        "control/Budget.tla#UnknownHeld",
+        "lifecycle/References.tla#NoNormalWitness",
+        "lifecycle/References.tla#UseHasPin"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#PauseReasonsIndependent",
+        "control/Budget.tla#UnknownHeld",
+        "lifecycle/References.tla#NoNormalWitness",
+        "lifecycle/References.tla#UseHasPin"
+      ],
+      "unmodeled_rules": [
+        "获准查询白名单及外部进程隔离证据生成未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实进程与设备隔离、受信查询白名单、后继引用树"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-30",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 65
+      },
+      "original_case": "| UI-30 数据关闭 | UI登记后来源关闭、离线设备未回执、备份残留；立即遮蔽已知失效内容，物理清理保持未完成直到对应依据齐备 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-source"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "全来源图和跨机构持有者恢复工作未枚举"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "逐来源版本与派生图、跨模块关闭回执、所有正文副本清理"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "UI-31",
+      "source": {
+        "path": "docs/architecture/application-and-interaction/validation.md",
+        "line": 66
+      },
+      "original_case": "| UI-31 替代接纳实现 | 采用接纳后、首次转交前才固定子操作的实现，在两点间崩溃并恢复；接纳责任不丢，唯一关联持久前不转交，已有映射永远复用；默认同事务实现不须制造该中间态 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-input"
+      ],
+      "model_properties": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer"
+      ],
+      "unmodeled_rules": [
+        "任意多用户唯一索引、操作过期/回执窗口、完整请求Schema未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际唯一消费者CAS、父子事务与核心接纳；旧代次输入资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-01",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 49
+      },
+      "original_case": "| OI-01 | 普通保存任务执行中停止观测后端，并塞满缓冲 | 原任务与操作仍有持久责任并可恢复；诊断标缺失，不凭零错误判成功 | O1／C5、C8 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-observe",
+        "ER-command"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution",
+        "lifecycle/Evaluation.tla#EvidenceSeparation"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution",
+        "lifecycle/Evaluation.tla#EvidenceSeparation"
+      ],
+      "unmodeled_rules": [
+        "多阶段实例准备/目录登记/激活的全部状态及多目标CAS未逐阶段建模",
+        "trace冲突解析、时钟域/延迟计算、缓冲导出算法未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际事务原子性、实例识别、回执可靠交接",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "取证通道真实隔离、来源真实性、时钟同步、注入抵抗"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-02",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 50
+      },
+      "original_case": "| OI-02 | 重复、乱序消息及伪造 trace／用户关联 | 业务按原操作去重，诊断标来源冲突；跨用户不可查，不从 trace 推断身份或效果 | O1、O4／C7、C8、A4 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-observe"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#EvidenceSeparation"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#EvidenceSeparation"
+      ],
+      "unmodeled_rules": [
+        "trace冲突解析、时钟域/延迟计算、缓冲导出算法未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "取证通道真实隔离、来源真实性、时钟同步、注入抵抗"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-03",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 51
+      },
+      "original_case": "| OI-03 | 两端时钟偏移，恢复后产生新 trace | 按业务关联定位原任务，单向延迟不可比时不报精确数值 | O1／C5、C8、A3 |",
+      "classification": "runtime-required",
+      "coverage": "not-formally-covered",
+      "mechanism_ids": [],
+      "model_properties": [],
+      "verified_abstract_rules": [],
+      "unmodeled_rules": [
+        "该行全部具体规则尚未形式建模"
+      ],
+      "runtime_dependencies": [
+        "真实实现、数据与环境验收"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-04",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 52
+      },
+      "original_case": "| OI-04 | 冻结后替换样本、阈值、候选字节或判定器 | 拒绝覆盖，要求新计划／候选；原报告仍固定原版本 | O2／C8、C9 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-freeze"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv"
+      ],
+      "unmodeled_rules": [
+        "保留集暴露/候选选择统计独立性、完整计划字段的不可变约束未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "完整制品/依赖/配置摘要、样本分组、保留集污染防护、受信判定器"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-05",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 53
+      },
+      "original_case": "| OI-05 | API 别名、重复包装、版本复制及仅有效调用通过 | 覆盖去重；缺负例／故障保证的操作不计完整支持，目录数独立报告 | O2／C4、C8 |",
+      "classification": "runtime-required",
+      "coverage": "not-formally-covered",
+      "mechanism_ids": [
+        "OI-denominator"
+      ],
+      "model_properties": [],
+      "verified_abstract_rules": [],
+      "unmodeled_rules": [
+        "API去重/Wilson区间/配对统计/多层阈值与成本判定完整算法未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "统计公式、抽样独立性、真实成本/时钟与全局尝试限额"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-06",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 54
+      },
+      "original_case": "| OI-06 | 样本混入失败、unknown、截止与预算耗尽 | 全部留冻结分母，unknown 对成功计0并单列；不因普通unknown就删除样本或自动重做 | O2、O3／C4、C8 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-denominator"
+      ],
+      "model_properties": [
+        "lifecycle/EvaluationRules.lean#frozen_denominator",
+        "lifecycle/EvaluationRules.lean#pass_iff_all",
+        "lifecycle/EvaluationRules.lean#successes_bounded",
+        "lifecycle/EvaluationRules.lean#unknown_is_not_success"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/EvaluationRules.lean#frozen_denominator",
+        "lifecycle/EvaluationRules.lean#pass_iff_all",
+        "lifecycle/EvaluationRules.lean#successes_bounded",
+        "lifecycle/EvaluationRules.lean#unknown_is_not_success"
+      ],
+      "unmodeled_rules": [
+        "API去重/Wilson区间/配对统计/多层阈值与成本判定完整算法未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "统计公式、抽样独立性、真实成本/时钟与全局尝试限额"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-07",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 55
+      },
+      "original_case": "| OI-07 | 同目标超过重试数；正常多步骤；模型修复／传输重投 | 各类次数分别计，正常步骤不误算重试；任务全局上限仍成立，无隐藏业务重做 | O2、O6／C4、C5 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-run",
+        "ER-bounded-recovery"
+      ],
+      "model_properties": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv"
+      ],
+      "verified_abstract_rules": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv"
+      ],
+      "unmodeled_rules": [
+        "实际分页扫描与持久RecoveryEvent小时窗口/健康重置规则未建模",
+        "全部样本调度/环境quarantine/评分冲突导致报告不可用/迟到证据时间窗未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "扫描公平性、容量、退避、时钟与持久计数",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "评分唯一约束、worker代次、环境quarantine、迟到成本与报告修订"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-08",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 56
+      },
+      "original_case": "| OI-08 | 双方预检失败与候选启跑后依赖失败对照；反复挑候选 | 前者无有效比较且保留失败，后者不删分母；保留集暴露后新候选不能沿原集宣称独立提升 | O2／C8、C9 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-freeze",
+        "OI-denominator"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/EvaluationRules.lean#frozen_denominator",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#pass_iff_all",
+        "lifecycle/EvaluationRules.lean#reachable_inv",
+        "lifecycle/EvaluationRules.lean#successes_bounded",
+        "lifecycle/EvaluationRules.lean#unknown_is_not_success"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/EvaluationRules.lean#frozen_denominator",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#pass_iff_all",
+        "lifecycle/EvaluationRules.lean#reachable_inv",
+        "lifecycle/EvaluationRules.lean#successes_bounded",
+        "lifecycle/EvaluationRules.lean#unknown_is_not_success"
+      ],
+      "unmodeled_rules": [
+        "保留集暴露/候选选择统计独立性、完整计划字段的不可变约束未建模",
+        "API去重/Wilson区间/配对统计/多层阈值与成本判定完整算法未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "完整制品/依赖/配置摘要、样本分组、保留集污染防护、受信判定器",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "统计公式、抽样独立性、真实成本/时钟与全局尝试限额"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-09",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 57
+      },
+      "original_case": "| OI-09 | 候选尝试读取答案、改评分或访问生产凭据 | 隔离拒绝并记录契约失败；效果高分不能覆盖越权 | O3、O4／C6、C7、A2 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-isolate",
+        "OI-denominator"
+      ],
+      "model_properties": [
+        "communication/Composition.tla#Safety",
+        "lifecycle/EvaluationRules.lean#frozen_denominator",
+        "lifecycle/EvaluationRules.lean#pass_iff_all",
+        "lifecycle/EvaluationRules.lean#successes_bounded",
+        "lifecycle/EvaluationRules.lean#unknown_is_not_success",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety",
+        "lifecycle/EvaluationRules.lean#frozen_denominator",
+        "lifecycle/EvaluationRules.lean#pass_iff_all",
+        "lifecycle/EvaluationRules.lean#successes_bounded",
+        "lifecycle/EvaluationRules.lean#unknown_is_not_success",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "IPC身份映射算法、具体沙箱规则、资源对象权限未建模",
+        "API去重/Wilson区间/配对统计/多层阈值与成本判定完整算法未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "操作系统沙箱、IPC认证、路径/网络/凭据隔离与聚合配额",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "统计公式、抽样独立性、真实成本/时钟与全局尝试限额"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-10",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 58
+      },
+      "original_case": "| OI-10 | V2 保存已发生但响应丢失，重启评测宿主 | 查原任务／操作，真值独立记录；不重做保存，不复用未封闭设备，未知责任保留 | O1、O3／C4、C5、V2 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-command",
+        "OI-observe"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution",
+        "lifecycle/Evaluation.tla#EvidenceSeparation"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#DurableExecution",
+        "lifecycle/Evaluation.tla#EvidenceSeparation"
+      ],
+      "unmodeled_rules": [
+        "多阶段实例准备/目录登记/激活的全部状态及多目标CAS未逐阶段建模",
+        "trace冲突解析、时钟域/延迟计算、缓冲导出算法未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际事务原子性、实例识别、回执可靠交接",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "取证通道真实隔离、来源真实性、时钟同步、注入抵抗"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-11",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 59
+      },
+      "original_case": "| OI-11 | 模型判分超时、无效格式、重复不同结果 | 原调用未知先查；新复判有独立预算／身份，冲突不覆盖原分数，不隐含重复费用 | O3、O6／C8 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-run"
+      ],
+      "model_properties": [
+        "control/ControlRecovery.tla#CurrentLease",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv"
+      ],
+      "verified_abstract_rules": [
+        "control/ControlRecovery.tla#CurrentLease",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv"
+      ],
+      "unmodeled_rules": [
+        "全部样本调度/环境quarantine/评分冲突导致报告不可用/迟到证据时间窗未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "评分唯一约束、worker代次、环境quarantine、迟到成本与报告修订"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-12",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 60
+      },
+      "original_case": "| OI-12 | 有效输入请求、过期请求及无脚本请求；GUI 接管 | 只消费匹配受信脚本，原键恢复；无脚本等待到截止；接管后无新自动动作，原效果仍核对 | O3／C1、C7、V2 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "UI-input",
+        "ER-withdraw"
+      ],
+      "model_properties": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer",
+        "lifecycle/References.tla#NoNormalWitness",
+        "lifecycle/References.tla#UseHasPin"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Input.tla#MappingBeforeForward",
+        "lifecycle/Input.tla#MeaningBound",
+        "lifecycle/Input.tla#NoParentRegression",
+        "lifecycle/Input.tla#OneConsumer",
+        "lifecycle/References.tla#NoNormalWitness",
+        "lifecycle/References.tla#UseHasPin"
+      ],
+      "unmodeled_rules": [
+        "获准查询白名单及外部进程隔离证据生成未建模",
+        "任意多用户唯一索引、操作过期/回执窗口、完整请求Schema未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实进程与设备隔离、受信查询白名单、后继引用树",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际唯一消费者CAS、父子事务与核心接纳；旧代次输入资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-13",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 61
+      },
+      "original_case": "| OI-13 | 仅许上下文使用的日志被请求作为测试集或发给模型 | 再用途拒绝，无持久正文／未获准披露；元数据与评分也受来源约束 | O4／C2、C7、C8 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-source"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/Authorization.tla#NoUnsafeUse",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/Authorization.tla#NoUnsafeUse",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "全来源图和跨机构持有者恢复工作未枚举"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "逐来源版本与派生图、跨模块关闭回执、所有正文副本清理"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-14",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 62
+      },
+      "original_case": "| OI-14 | 评分算完尚未提交时关闭来源；另保留已生成报告、待批准候选及待导出缓冲 | 本地关闭与派生提交串行，迟到正文不复活；缓冲出口复核并丢弃，受管清理可查，历史评分不能继续作为发布依据 | O4、O5／C7、C9 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-source"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "全来源图和跨机构持有者恢复工作未枚举"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "逐来源版本与派生图、跨模块关闭回执、所有正文副本清理"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-15",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 63
+      },
+      "original_case": "| OI-15 | 清理回执丢失、恢复旧备份、删除全部正文后重投 | 原清理键核对，当前关闭依据先应用，旧请求不重建内容；外部残留不报已擦除 | O4／C5、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-source",
+        "ER-backup"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#RecoverableIdentity",
+        "control/ControlRecovery.tla#NoUnknownDispatch",
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#RecoverableIdentity",
+        "control/ControlRecovery.tla#NoUnknownDispatch",
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "完整快照/增量尾对齐/恢复代次/fencing流程未建模，仅复用未知拒发和身份保留子规则",
+        "全来源图和跨机构持有者恢复工作未枚举"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "备份水位、存储连续性、旧进程/设备真实隔离",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "逐来源版本与派生图、跨模块关闭回执、所有正文副本清理"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-16",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 64
+      },
+      "original_case": "| OI-16 | 两用户相同内容、同命令 ID，并尝试跨用户配额／缓存复用 | 私有数据、查询、去重和消耗按受信 scope 隔离，不泄露另一用户存在性 | O4、O6／C7、A3 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "ER-isolate",
+        "ER-bounded-recovery"
+      ],
+      "model_properties": [
+        "communication/Composition.tla#Safety",
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "communication/Composition.tla#Safety",
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/Decision.tla#FiniteConsumption",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "IPC身份映射算法、具体沙箱规则、资源对象权限未建模",
+        "实际分页扫描与持久RecoveryEvent小时窗口/健康重置规则未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "操作系统沙箱、IPC认证、路径/网络/凭据隔离与聚合配额",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "扫描公平性、容量、退避、时钟与持久计数"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-17",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 65
+      },
+      "original_case": "| OI-17 | 伪造批准、摘要不符、过期、超范围或模型自批 | 拒绝交接；报告pass、安装许可和发布批准各自独立核验 | O5／C7、C9 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-approval"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#Attenuation",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "lifecycle/Evaluation.tla#TargetQualification",
+        "trust/Authorization.tla#Attenuation",
+        "trust/Authorization.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "完整批准字段、跨权威签名与在线监测报告可用性切换未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "批准主体认证、完整scope/期限/批次/当前绑定校验"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-18",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 66
+      },
+      "original_case": "| OI-18 | 激活生效后响应丢失；部分目标失联 | 原 command_id 核对，分项保留实际／未知，批次paused且无下一批，不重发新激活身份 | O5／C5、C9 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-rollout"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#NoRecoveryWitness"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#NoRecoveryWitness"
+      ],
+      "unmodeled_rules": [
+        "观察窗口/所有批次阶段及受信恢复选择、目标批准离线窗口数值未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "本地与远端批准各自串行域、真实消息重投、单目标幂等、有限查询预算"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-19",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 67
+      },
+      "original_case": "| OI-19 | 撤回批准与派发资格提交竞争，崩溃于实际调用前后；线上退化或遥测缺失 | 关闭新批次并保存通知，已取得资格的命令均按可能提交核对；分别显示停推、待处置、实际停用，不能凭本地撤回声称全停 | O5／C7、C9 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-rollout"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#NoRecoveryWitness"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#NoRecoveryWitness"
+      ],
+      "unmodeled_rules": [
+        "观察窗口/所有批次阶段及受信恢复选择、目标批准离线窗口数值未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "本地与远端批准各自串行域、真实消息重投、单目标幂等、有限查询预算"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-20",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 68
+      },
+      "original_case": "| OI-20 | 发布声明支持回退；分别缺少适用依据，以及先由新版写入再用指定旧版恢复 | 缺依据不按原批准交接；恢复用例检查旧版读取当前数据并运行支持的任务，保留账本、授权及预算事实。只核对版本指针不算恢复通过 | O5／C5、C9、A2 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-history"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "unmodeled_rules": [
+        "实际数据格式兼容性检查、多目标处置完成聚合未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实旧代码兼容、迁移、owner/预算/授权历史、预批准处置资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-20a",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 69
+      },
+      "original_case": "| OI-20a | 回退遇当前格式不兼容、旧未知操作或目标失联，同时停用已生效；另以明确不保证旧版恢复的批准发布 | 停用回执与恢复受阻／待核对分别保存；只有选定处置完成才进入 stopped，改为仅停用须另存受信决定。只停用不计 C9 旧版恢复通过，不保证恢复的批准也不能代替恢复证据；不恢复旧库或补造无效果 | O5／C5、C9、A2 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-history"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "unmodeled_rules": [
+        "实际数据格式兼容性检查、多目标处置完成聚合未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实旧代码兼容、迁移、owner/预算/授权历史、预批准处置资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-21",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 70
+      },
+      "original_case": "| OI-21 | 迟到证据／费用导致新报告修订，旧批准已使用 | 旧报告及历史决定不覆盖，新修订重新审查，报告失效关闭后续批次；已发生效果单列 | O2、O5／C8、C9 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-history",
+        "OI-run"
+      ],
+      "model_properties": [
+        "control/ControlRecovery.tla#CurrentLease",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "verified_abstract_rules": [
+        "control/ControlRecovery.tla#CurrentLease",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "unmodeled_rules": [
+        "全部样本调度/环境quarantine/评分冲突导致报告不可用/迟到证据时间窗未建模",
+        "实际数据格式兼容性检查、多目标处置完成聚合未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "评分唯一约束、worker代次、环境quarantine、迟到成本与报告修订",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实旧代码兼容、迁移、owner/预算/授权历史、预批准处置资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-22",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 71
+      },
+      "original_case": "| OI-22 | run接纳／证据保存／报告提交后立即崩溃 | 原命令回执与工作可恢复，唯一评分不双计；reported与settlement_pending独立 | O6／C5、C8 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-run",
+        "ER-command"
+      ],
+      "model_properties": [
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/ControlRecovery.tla#DurableExecution",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv"
+      ],
+      "verified_abstract_rules": [
+        "control/Boundaries.tla#NoIdentityResurrection",
+        "control/ControlRecovery.tla#CommitKnowledge",
+        "control/ControlRecovery.tla#CurrentLease",
+        "control/ControlRecovery.tla#DurableExecution",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv"
+      ],
+      "unmodeled_rules": [
+        "多阶段实例准备/目录登记/激活的全部状态及多目标CAS未逐阶段建模",
+        "全部样本调度/环境quarantine/评分冲突导致报告不可用/迟到证据时间窗未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "实际事务原子性、实例识别、回执可靠交接",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "评分唯一约束、worker代次、环境quarantine、迟到成本与报告修订"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-23",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 72
+      },
+      "original_case": "| OI-23 | 大用户排满评测且达到存储配额，再取消并清理 | 新run拒绝／有界等待，既有取消、核对和清理有预留资源，小用户不被无限阻塞 | O6／C5、C7 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-governance"
+      ],
+      "model_properties": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "communication/Scheduling.tla#Safety",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "verified_abstract_rules": [
+        "communication/Scheduling.tla#EveryAcceptedFinishes",
+        "communication/Scheduling.tla#Safety",
+        "control/Decision.tla#FiniteConsumption"
+      ],
+      "unmodeled_rules": [
+        "退化判据/分层样本/监测暂停与下一批的完整策略未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "监测完整样本、因果可比性、容量与通知送达"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-24",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 73
+      },
+      "original_case": "| OI-24 | 成本返回丢失、收尾查询额度用尽、无可用处置权限 | 未知预留不归零，释放主动槽而保留责任／隔离；可查处置缺口，不无限重试 | O6／C5、C8 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-run"
+      ],
+      "model_properties": [
+        "control/Budget.tla#UnknownHeld",
+        "control/ControlRecovery.tla#CurrentLease",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv"
+      ],
+      "verified_abstract_rules": [
+        "control/Budget.tla#UnknownHeld",
+        "control/ControlRecovery.tla#CurrentLease",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/EvaluationRules.lean#closing_monotone",
+        "lifecycle/EvaluationRules.lean#old_report_survives_late_cost",
+        "lifecycle/EvaluationRules.lean#original_score_preserved",
+        "lifecycle/EvaluationRules.lean#reachable_inv"
+      ],
+      "unmodeled_rules": [
+        "全部样本调度/环境quarantine/评分冲突导致报告不可用/迟到证据时间窗未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "评分唯一约束、worker代次、环境quarantine、迟到成本与报告修订"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-P1",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 89
+      },
+      "original_case": "| OI-P1／ER-P1：批准后自动执行 | 已采用：受信人工批准精确产物和有限批次；改进侧固定原交接并自动执行／核对，扩展侧在接纳、激活及后续新使用边界核验批准。自动撤回停用和适用预批准回退分别取得实际回执；扩批仍人工。载荷及有效期见[release 合同](../extensions-and-runtime/contracts.md#wire) |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-rollout"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#NoRecoveryWitness"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#NoRecoveryWitness"
+      ],
+      "unmodeled_rules": [
+        "观察窗口/所有批次阶段及受信恢复选择、目标批准离线窗口数值未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "本地与远端批准各自串行域、真实消息重投、单目标幂等、有限查询预算"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-P2",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 90
+      },
+      "original_case": "| OI-P2／MS-P2：受管持有者清理 | 已采用共同[持有者治理合同](../content-and-provenance.md#holders)，本模块在持久导入／派生提交前登记精确来源与载体；来源关闭可靠传播到本地门禁并分项回执。没有适用实现则不导入要求持续撤回的数据，不声称外部模型或用户已导出副本物理删除 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-source"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "全来源图和跨机构持有者恢复工作未枚举"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "逐来源版本与派生图、跨模块关闭回执、所有正文副本清理"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "MS-P3",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 91
+      },
+      "original_case": "| MS-P3：成功任务自动记忆提取 | 已采用按任务类型 opt-in、成功终态、独立用户预算的受限提取；提取本身不改变原任务结果、不启动改进循环 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-optin"
+      ],
+      "model_properties": [
+        "trust/ExtractionPolicy.tla#Safety"
+      ],
+      "verified_abstract_rules": [
+        "trust/ExtractionPolicy.tla#Safety"
+      ],
+      "unmodeled_rules": [
+        "记忆提取质量及独立候选显式Propose入口鉴权未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "记忆模块真实授权、数据用途、预算隔离、触发幂等"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-P3",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 92
+      },
+      "original_case": "| OI-P3：终态自动生成改进候选 | 未采用。候选继续显式 Propose 或显式的有限普通生成任务；不因 MS-P3 已采用而自动生成／发布 Skill、策略或代码 |",
+      "classification": "static-only",
+      "coverage": "policy-exclusion-only",
+      "mechanism_ids": [],
+      "model_properties": [],
+      "verified_abstract_rules": [],
+      "unmodeled_rules": [
+        "文档明确未采用/后置；仅检查已发布边界，不声明行为实现或形式证明"
+      ],
+      "runtime_dependencies": [
+        "真实实现、数据与环境验收"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-25",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 98
+      },
+      "original_case": "| OI-25 | 成功任务满足记忆 opt-in，后台提取结束；失败／取消或未 opt-in 的任务终态 | 只为合格任务登记独立提取责任；不生成改进候选、不批准或发布；提取费用不借原任务未决预留 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-optin"
+      ],
+      "model_properties": [
+        "trust/ExtractionPolicy.tla#Safety"
+      ],
+      "verified_abstract_rules": [
+        "trust/ExtractionPolicy.tla#Safety"
+      ],
+      "unmodeled_rules": [
+        "记忆提取质量及独立候选显式Propose入口鉴权未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "记忆模块真实授权、数据用途、预算隔离、触发幂等"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-26",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 99
+      },
+      "original_case": "| OI-26 | 批准后自动派发崩溃、撤回与目标激活竞争、预批准回退受阻 | 原键及批次边界固定；分清本地撤回、目标门禁、已停用与旧版恢复，不自动扩批 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-rollout",
+        "OI-history"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#NoRecoveryWitness",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#DurableResponsibility",
+        "lifecycle/Evaluation.tla#HistoryPreserved",
+        "lifecycle/Evaluation.tla#NoPartialWitness",
+        "lifecycle/Evaluation.tla#NoRecoveryWitness",
+        "lifecycle/Rollback.tla#CurrentRestoreBasis",
+        "lifecycle/Rollback.tla#DispositionHonest",
+        "lifecycle/Rollback.tla#NoFactRewind",
+        "lifecycle/Rollback.tla#RestoredRequiresActivation"
+      ],
+      "unmodeled_rules": [
+        "观察窗口/所有批次阶段及受信恢复选择、目标批准离线窗口数值未建模",
+        "实际数据格式兼容性检查、多目标处置完成聚合未建模"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "本地与远端批准各自串行域、真实消息重投、单目标幂等、有限查询预算",
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "真实旧代码兼容、迁移、owner/预算/授权历史、预批准处置资格"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    },
+    {
+      "id": "OI-27",
+      "source": {
+        "path": "docs/architecture/observation-and-improvement/validation.md",
+        "line": 100
+      },
+      "original_case": "| OI-27 | 外部来源导入与关闭竞争，报告／候选已派生；持有者回执丢失 | 登记及关闭依据可恢复；迟到派生不可用，逐载体清理单独回执，不将已有报告继续用于发布 |",
+      "classification": "model-property",
+      "coverage": "abstract-partial",
+      "mechanism_ids": [
+        "OI-source"
+      ],
+      "model_properties": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "verified_abstract_rules": [
+        "lifecycle/Evaluation.tla#ExactFreshQualification",
+        "trust/SourceGovernance.tla#ClosureCoverage",
+        "trust/SourceGovernance.tla#NoFalseComplete",
+        "trust/SourceGovernance.tla#NoUnsafeUse"
+      ],
+      "unmodeled_rules": [
+        "全来源图和跨机构持有者恢复工作未枚举"
+      ],
+      "runtime_dependencies": [
+        "持久存储与原子提交正确实现",
+        "模型变量到实现状态的精化映射",
+        "逐来源版本与派生图、跨模块关闭回执、所有正文副本清理"
+      ],
+      "uncovered_details": "整行验收未通过。仅列明抽象逻辑已检查；真实依赖和未建模规则必须分别完成。"
+    }
+  ],
+  "source_hashes": {
+    "docs/architecture/application-and-interaction/contracts-and-storage.md": "f5807bbea0a9853f06f763d23cdc60801865d7024c06a1ad90526784d90fc6e0",
+    "docs/architecture/application-and-interaction/interaction-and-recovery.md": "8862b3bd3704c0b58c9ac1a0e39c752b0a2284ff672ba5ac0f22e66dfaab91ad",
+    "docs/architecture/application-and-interaction/interaction-contract.md": "a9f905f061978e89056a51ab1202c472313f7f49bb5a446cb59cd744db83fd39",
+    "docs/architecture/application-and-interaction/validation.md": "b20a07fc16f53880c164a1ce4f38c1ee06919c73a287e6cf98c782f42bf90a7e",
+    "docs/architecture/extensions-and-runtime/contracts.md": "4ead281ac8ec0d0981c888d42134c73a149e160b06aa4dec1fd1ba8640e75891",
+    "docs/architecture/extensions-and-runtime/installation-and-isolation.md": "a8615ec606409ff958a9b95239bb0e5e0cd1056255ad4b1fa7e8b2206ba4dd7b",
+    "docs/architecture/extensions-and-runtime/lifecycle-and-recovery.md": "da18a1d0eb15bda1618c7e2dbb8f29b12383f3521cec281a2945b0cbddba4ead",
+    "docs/architecture/extensions-and-runtime/validation.md": "76e4b717cb2b98de6c2c8225fa051a277d7f77f677e7fcbb7217658341b7b17e",
+    "docs/architecture/observation-and-improvement/contracts.md": "3120a82711361a0fbbe30ae0d9c195bc507340957e130d428e47ab2ff7d156b1",
+    "docs/architecture/observation-and-improvement/evaluation.md": "c8cd495f3badcd6189a364c7d0d8b87569c7741a839c52617646779be7f71d65",
+    "docs/architecture/observation-and-improvement/improvement.md": "bbd1758b3107aadf94d7b10a496506f37ee2e4fd62ce1ce4e46bd65eb8b4af46",
+    "docs/architecture/observation-and-improvement/validation.md": "4a3f723971e9a36d8276341cbb6277afa08d7d76e9e72d291153568980803bbb"
+  }
+}

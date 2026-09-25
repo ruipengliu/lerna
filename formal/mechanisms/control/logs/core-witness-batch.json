@@ -1,0 +1,32 @@
+{
+  "id": "core-witness-batch",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:54.226712+00:00",
+  "duration_seconds": 0.585,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-apvyij1y",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-apvyij1y",
+    "-config",
+    "core-witness-batch.cfg",
+    "CoreContracts.tla"
+  ],
+  "command_sha256": "64e5dea1b686cfbc4551bf57f94b7429a5ec051bac9792d9f74ff841956b2d75",
+  "source_sha256": {
+    "CoreContracts.tla": "d87fdf26d662a1a716142b551cb87ed7348cd7dbaaf15d6773862464fc5cf40a",
+    "core-witness-batch.cfg": "3b68467851b9dc909d565de04b18ab800b00b6acbf379c3e953fb7f5fa3eb392"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoValidBatch is violated.",
+  "expectation_met": true,
+  "log_sha256": "4f8b90505d8743898939db5e26b2894ef8191ac83e0150aaaaa91b9adedad8ae"
+}

@@ -1,0 +1,30 @@
+{
+  "id": "core-negative-partialBatch",
+  "started_utc": "2026-09-25T00:32:29.274378+00:00",
+  "duration_seconds": 0.582,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-7qdbi143",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-7qdbi143",
+    "-config",
+    "core-negative-partialBatch.cfg",
+    "CoreContracts.tla"
+  ],
+  "command_sha256": "b4ced16d9a4960e47f2b19de9ee5242127d584093d6bf13a9a92ac9365c7a5fd",
+  "source_sha256": {
+    "CoreContracts.tla": "d87fdf26d662a1a716142b551cb87ed7348cd7dbaaf15d6773862464fc5cf40a",
+    "core-negative-partialBatch.cfg": "f52a10d22e32a20ccb69b6ccb1d3a01f23fbe24d0c11adf5c5059a4ff93dfad8"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant WholeBatch is violated.",
+  "expectation_met": true,
+  "log_sha256": "7a4809cf363ec23f7ac8f89e0a2d8f8b72dea51047542f4142abb42cf749ebd5"
+}

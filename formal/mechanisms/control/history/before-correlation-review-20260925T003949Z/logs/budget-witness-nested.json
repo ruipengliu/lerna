@@ -1,0 +1,30 @@
+{
+  "id": "budget-witness-nested",
+  "started_utc": "2026-09-25T00:32:10.845560+00:00",
+  "duration_seconds": 0.641,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-95hjsdvx",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-95hjsdvx",
+    "-config",
+    "budget-witness-nested.cfg",
+    "Budget.tla"
+  ],
+  "command_sha256": "841afa3fec1fa3c9f2e59020ac6b770714cfbd133cdf38c85b6a1b51211a045a",
+  "source_sha256": {
+    "Budget.tla": "898eb6e910b025d000344558e92faf8f038acb57589c8eac3cd3d73c316ffe09",
+    "budget-witness-nested.cfg": "b3bb9c0de4697444282335a3634765f78fd6475ab3bfd589cb7c7b6b98718c5e"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoNested is violated.",
+  "expectation_met": true,
+  "log_sha256": "1827cd6073280c25ad247ed8c2da55a6a25cf1e53024761b6968c313baeb7793"
+}

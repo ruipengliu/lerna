@@ -1,0 +1,20 @@
+'TrustRules.bootstrap_requires_current_binding' depends on axioms: [propext]
+'TrustRules.bootstrap_never_authorizes_action' depends on axioms: [propext]
+'TrustRules.bootstrap_never_authorizes_body' depends on axioms: [propext]
+'TrustRules.bootstrap_never_authorizes_confirmation' depends on axioms: [propext]
+'TrustRules.bootstrap_never_authorizes_delegation' depends on axioms: [propext]
+'TrustRules.bootstrap_never_authorizes_foreign_query' depends on axioms: [propext]
+'TrustRules.bootstrap_query_witness' does not depend on any axioms
+'TrustRules.offline_interval_is_conservative' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TrustRules.offline_no_rollback_evidence_blocks' depends on axioms: [propext]
+'TrustRules.offline_lost_anchor_blocks' depends on axioms: [propext]
+'TrustRules.offline_insufficient_budget_blocks' depends on axioms: [propext]
+'TrustRules.offline_expired_blocks' depends on axioms: [propext, Quot.sound]
+'TrustRules.offline_witness' does not depend on any axioms
+'TrustRules.confirmation_reachable_safe' does not depend on any axioms
+'TrustRules.confirmation_at_most_once' depends on axioms: [propext]
+'TrustRules.confirmation_binding_fixed' does not depend on any axioms
+'TrustRules.changed_confirmation_binding_cannot_issue' depends on axioms: [propext]
+'TrustRules.consumed_confirmation_cannot_reissue' depends on axioms: [propext]
+'TrustRules.rejected_confirmation_cannot_issue' depends on axioms: [propext]
+'TrustRules.confirmation_witness' does not depend on any axioms

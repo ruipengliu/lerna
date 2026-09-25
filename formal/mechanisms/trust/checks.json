@@ -1,0 +1,354 @@
+{
+  "checks": [
+    {
+      "id": "auth-safe",
+      "kind": "tlc",
+      "model": "Authorization.tla",
+      "config": "auth-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "auth-expand",
+      "kind": "tlc",
+      "model": "Authorization.tla",
+      "config": "auth-expand.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant Attenuation is violated."
+    },
+    {
+      "id": "auth-stale",
+      "kind": "tlc",
+      "model": "Authorization.tla",
+      "config": "auth-stale.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoUnsafeUse is violated."
+    },
+    {
+      "id": "auth-disclosure",
+      "kind": "tlc",
+      "model": "Authorization.tla",
+      "config": "auth-disclosure.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoUnsafeDisclosure is violated."
+    },
+    {
+      "id": "auth-stale-witness",
+      "kind": "tlc",
+      "model": "Authorization.tla",
+      "config": "auth-stale-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoStaleRejection is violated."
+    },
+    {
+      "id": "auth-fact-witness",
+      "kind": "tlc",
+      "model": "Authorization.tla",
+      "config": "auth-fact-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoLateFact is violated."
+    },
+    {
+      "id": "source-safe",
+      "kind": "tlc",
+      "model": "SourceGovernance.tla",
+      "config": "source-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "source-stale",
+      "kind": "tlc",
+      "model": "SourceGovernance.tla",
+      "config": "source-stale.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoUnsafeUse is violated."
+    },
+    {
+      "id": "source-publish",
+      "kind": "tlc",
+      "model": "SourceGovernance.tla",
+      "config": "source-publish.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant RegisteredBeforePublish is violated."
+    },
+    {
+      "id": "source-physical",
+      "kind": "tlc",
+      "model": "SourceGovernance.tla",
+      "config": "source-physical.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoFalseComplete is violated."
+    },
+    {
+      "id": "source-block-witness",
+      "kind": "tlc",
+      "model": "SourceGovernance.tla",
+      "config": "source-block-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoBlockedDerivedUse is violated."
+    },
+    {
+      "id": "source-clean-witness",
+      "kind": "tlc",
+      "model": "SourceGovernance.tla",
+      "config": "source-clean-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoCleaned is violated."
+    },
+    {
+      "id": "view-safe",
+      "kind": "tlc",
+      "model": "RecoveryView.tla",
+      "config": "view-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "view-gap",
+      "kind": "tlc",
+      "model": "RecoveryView.tla",
+      "config": "view-gap.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoBadApply is violated."
+    },
+    {
+      "id": "view-early",
+      "kind": "tlc",
+      "model": "RecoveryView.tla",
+      "config": "view-early.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant ReadyComplete is violated."
+    },
+    {
+      "id": "view-stale",
+      "kind": "tlc",
+      "model": "RecoveryView.tla",
+      "config": "view-stale.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoStaleRead is violated."
+    },
+    {
+      "id": "view-ready-witness",
+      "kind": "tlc",
+      "model": "RecoveryView.tla",
+      "config": "view-ready-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoReady is violated."
+    },
+    {
+      "id": "view-block-witness",
+      "kind": "tlc",
+      "model": "RecoveryView.tla",
+      "config": "view-block-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoBlockedRead is violated."
+    },
+    {
+      "id": "command-safe",
+      "kind": "tlc",
+      "model": "MemoryCommand.tla",
+      "config": "command-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "command-late",
+      "kind": "tlc",
+      "model": "MemoryCommand.tla",
+      "config": "command-late.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant ClosedNeverCommits is violated."
+    },
+    {
+      "id": "command-cas",
+      "kind": "tlc",
+      "model": "MemoryCommand.tla",
+      "config": "command-cas.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant CASRespected is violated."
+    },
+    {
+      "id": "command-conflict-witness",
+      "kind": "tlc",
+      "model": "MemoryCommand.tla",
+      "config": "command-conflict-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoConflict is violated."
+    },
+    {
+      "id": "command-delete-witness",
+      "kind": "tlc",
+      "model": "MemoryCommand.tla",
+      "config": "command-delete-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoDelete is violated."
+    },
+    {
+      "id": "lineage-safe",
+      "kind": "tlc",
+      "model": "Lineage.tla",
+      "config": "lineage-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "lineage-omitted",
+      "kind": "tlc",
+      "model": "Lineage.tla",
+      "config": "lineage-omitted.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant CompleteClosure is violated."
+    },
+    {
+      "id": "lineage-self",
+      "kind": "tlc",
+      "model": "Lineage.tla",
+      "config": "lineage-self.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoSelfDependency is violated."
+    },
+    {
+      "id": "lineage-save-witness",
+      "kind": "tlc",
+      "model": "Lineage.tla",
+      "config": "lineage-save-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoSaved is violated."
+    },
+    {
+      "id": "lineage-reject-witness",
+      "kind": "tlc",
+      "model": "Lineage.tla",
+      "config": "lineage-reject-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoRejected is violated."
+    },
+    {
+      "id": "extract-safe",
+      "kind": "tlc",
+      "model": "ExtractionPolicy.tla",
+      "config": "extract-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "extract-cache",
+      "kind": "tlc",
+      "model": "ExtractionPolicy.tla",
+      "config": "extract-cache.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoUnsafeTrigger is violated."
+    },
+    {
+      "id": "extract-trigger-witness",
+      "kind": "tlc",
+      "model": "ExtractionPolicy.tla",
+      "config": "extract-trigger-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoTrigger is violated."
+    },
+    {
+      "id": "extract-block-witness",
+      "kind": "tlc",
+      "model": "ExtractionPolicy.tla",
+      "config": "extract-block-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoBlocked is violated."
+    },
+    {
+      "id": "trust-proof",
+      "kind": "lean",
+      "source": "Trust.lean",
+      "expected_exit": 0,
+      "contains": "'Trust.gate_reachable_safe' depends on axioms:"
+    },
+    {
+      "id": "index-safe",
+      "kind": "tlc",
+      "model": "IndexSearch.tla",
+      "config": "index-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "index-omitted",
+      "kind": "tlc",
+      "model": "IndexSearch.tla",
+      "config": "index-omitted.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoFalseComplete is violated."
+    },
+    {
+      "id": "index-cached",
+      "kind": "tlc",
+      "model": "IndexSearch.tla",
+      "config": "index-cached.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoStaleResult is violated."
+    },
+    {
+      "id": "index-complete-witness",
+      "kind": "tlc",
+      "model": "IndexSearch.tla",
+      "config": "index-complete-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoCompleteNonempty is violated."
+    },
+    {
+      "id": "index-partial-witness",
+      "kind": "tlc",
+      "model": "IndexSearch.tla",
+      "config": "index-partial-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoPartial is violated."
+    },
+    {
+      "id": "log-safe",
+      "kind": "tlc",
+      "model": "LogRetention.tla",
+      "config": "log-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "log-ignore-index",
+      "kind": "tlc",
+      "model": "LogRetention.tla",
+      "config": "log-ignore-index.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant ConsumerCoverage is violated."
+    },
+    {
+      "id": "log-drop-first",
+      "kind": "tlc",
+      "model": "LogRetention.tla",
+      "config": "log-drop-first.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant RebuildRetained is violated."
+    },
+    {
+      "id": "log-pin-witness",
+      "kind": "tlc",
+      "model": "LogRetention.tla",
+      "config": "log-pin-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoPinnedTail is violated."
+    },
+    {
+      "id": "log-rebuilt-witness",
+      "kind": "tlc",
+      "model": "LogRetention.tla",
+      "config": "log-rebuilt-witness.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoRebuilt is violated."
+    },
+    {
+      "id": "trust-rules",
+      "kind": "lean",
+      "source": "TrustRules.lean",
+      "expected_exit": 0,
+      "contains": "'TrustRules.confirmation_reachable_safe' does not depend on any axioms"
+    }
+  ]
+}

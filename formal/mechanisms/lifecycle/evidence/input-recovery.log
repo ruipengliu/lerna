@@ -1,0 +1,165 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 0 and seed 1 with 1 worker on 10 cores with 1820MB heap and 64MB offheap memory [pid: 15605] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/lifecycle/Input.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/lerna-lifecycle-s0suf3g_/Naturals.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/lerna-lifecycle-s0suf3g_/FiniteSets.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/lerna-lifecycle-s0suf3g_/TLC.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/lerna-lifecycle-s0suf3g_/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module Input
+Starting... (2026-09-25 08:32:10)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:32:10.
+Error: Invariant NoRecoveryWitness is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ usedMeaning = 0
+/\ badMeaning = FALSE
+/\ appliedEver = {}
+/\ child = <<0, 0>>
+/\ crashed = FALSE
+/\ consumer = (0 :> 0 @@ 1 :> 0)
+/\ consumes = (0 :> 0 @@ 1 :> 0)
+/\ duty = {}
+/\ outcome = <<"none", "none">>
+/\ contentRev = 0
+/\ up = TRUE
+/\ frozenMeaning = <<0, 0>>
+/\ sent = {}
+/\ phase = <<"none", "none">>
+/\ meaning = 0
+/\ recovered = FALSE
+
+State 2: <Accept line 14, col 14 to line 19, col 80 of module Input>
+/\ usedMeaning = 0
+/\ badMeaning = FALSE
+/\ appliedEver = {}
+/\ child = <<0, 0>>
+/\ crashed = FALSE
+/\ consumer = (0 :> 0 @@ 1 :> 0)
+/\ consumes = (0 :> 0 @@ 1 :> 0)
+/\ duty = {1}
+/\ outcome = <<"none", "none">>
+/\ contentRev = 0
+/\ up = TRUE
+/\ frozenMeaning = <<0, 0>>
+/\ sent = {}
+/\ phase = <<"accepted", "none">>
+/\ meaning = 0
+/\ recovered = FALSE
+
+State 3: <SaveMapping line 20, col 19 to line 23, col 105 of module Input>
+/\ usedMeaning = 0
+/\ badMeaning = FALSE
+/\ appliedEver = {}
+/\ child = <<1, 0>>
+/\ crashed = FALSE
+/\ consumer = (0 :> 0 @@ 1 :> 0)
+/\ consumes = (0 :> 0 @@ 1 :> 0)
+/\ duty = {1}
+/\ outcome = <<"none", "none">>
+/\ contentRev = 0
+/\ up = TRUE
+/\ frozenMeaning = <<0, 0>>
+/\ sent = {}
+/\ phase = <<"accepted", "none">>
+/\ meaning = 0
+/\ recovered = FALSE
+
+State 4: <Forward line 24, col 15 to line 28, col 101 of module Input>
+/\ usedMeaning = 0
+/\ badMeaning = FALSE
+/\ appliedEver = {}
+/\ child = <<1, 0>>
+/\ crashed = FALSE
+/\ consumer = (0 :> 0 @@ 1 :> 0)
+/\ consumes = (0 :> 0 @@ 1 :> 0)
+/\ duty = {1}
+/\ outcome = <<"none", "none">>
+/\ contentRev = 0
+/\ up = TRUE
+/\ frozenMeaning = <<0, 0>>
+/\ sent = {1}
+/\ phase = <<"accepted", "none">>
+/\ meaning = 0
+/\ recovered = FALSE
+
+State 5: <Consume line 29, col 15 to line 37, col 56 of module Input>
+/\ usedMeaning = 0
+/\ badMeaning = FALSE
+/\ appliedEver = {}
+/\ child = <<1, 0>>
+/\ crashed = FALSE
+/\ consumer = (0 :> 1 @@ 1 :> 0)
+/\ consumes = (0 :> 1 @@ 1 :> 0)
+/\ duty = {1}
+/\ outcome = <<"consumed", "none">>
+/\ contentRev = 0
+/\ up = TRUE
+/\ frozenMeaning = <<0, 0>>
+/\ sent = {1}
+/\ phase = <<"accepted", "none">>
+/\ meaning = 0
+/\ recovered = FALSE
+
+State 6: <Crash line 57, col 10 to line 59, col 83 of module Input>
+/\ usedMeaning = 0
+/\ badMeaning = FALSE
+/\ appliedEver = {}
+/\ child = <<1, 0>>
+/\ crashed = TRUE
+/\ consumer = (0 :> 1 @@ 1 :> 0)
+/\ consumes = (0 :> 1 @@ 1 :> 0)
+/\ duty = {1}
+/\ outcome = <<"consumed", "none">>
+/\ contentRev = 0
+/\ up = FALSE
+/\ frozenMeaning = <<0, 0>>
+/\ sent = {1}
+/\ phase = <<"accepted", "none">>
+/\ meaning = 0
+/\ recovered = FALSE
+
+State 7: <Restart line 60, col 12 to line 62, col 94 of module Input>
+/\ usedMeaning = 0
+/\ badMeaning = FALSE
+/\ appliedEver = {}
+/\ child = <<1, 0>>
+/\ crashed = TRUE
+/\ consumer = (0 :> 1 @@ 1 :> 0)
+/\ consumes = (0 :> 1 @@ 1 :> 0)
+/\ duty = {1}
+/\ outcome = <<"consumed", "none">>
+/\ contentRev = 0
+/\ up = TRUE
+/\ frozenMeaning = <<0, 0>>
+/\ sent = {1}
+/\ phase = <<"accepted", "none">>
+/\ meaning = 0
+/\ recovered = FALSE
+
+State 8: <ReadOriginal line 43, col 20 to line 48, col 81 of module Input>
+/\ usedMeaning = 0
+/\ badMeaning = FALSE
+/\ appliedEver = {1}
+/\ child = <<1, 0>>
+/\ crashed = TRUE
+/\ consumer = (0 :> 1 @@ 1 :> 0)
+/\ consumes = (0 :> 1 @@ 1 :> 0)
+/\ duty = {1}
+/\ outcome = <<"consumed", "none">>
+/\ contentRev = 0
+/\ up = TRUE
+/\ frozenMeaning = <<0, 0>>
+/\ sent = {1}
+/\ phase = <<"applied", "none">>
+/\ meaning = 0
+/\ recovered = TRUE
+
+934 states generated, 350 distinct states found, 135 states left on queue.
+The depth of the complete state graph search is 8.
+The average outdegree of the complete state graph is 2 (minimum is 0, the maximum 5 and the 95th percentile is 4).
+Finished in 00s at (2026-09-25 08:32:10)

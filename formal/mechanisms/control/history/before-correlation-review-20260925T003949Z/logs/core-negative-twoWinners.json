@@ -1,0 +1,30 @@
+{
+  "id": "core-negative-twoWinners",
+  "started_utc": "2026-09-25T00:32:28.064418+00:00",
+  "duration_seconds": 0.585,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-b4zude7_",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-b4zude7_",
+    "-config",
+    "core-negative-twoWinners.cfg",
+    "CoreContracts.tla"
+  ],
+  "command_sha256": "fc042f913b2f8f05484273c7550b0b8b9ca900eea6c0cfa350d2c87a91bf1a04",
+  "source_sha256": {
+    "CoreContracts.tla": "d87fdf26d662a1a716142b551cb87ed7348cd7dbaaf15d6773862464fc5cf40a",
+    "core-negative-twoWinners.cfg": "fc857b699e73a85bf56c8c893812d7277d185564aa02213023f6d309ec9cfb49"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant OneInputConsumer is violated.",
+  "expectation_met": true,
+  "log_sha256": "d3843e30919a55f016f0af68b8cb623c1ba6183fb7800cfb935da29411e58e85"
+}

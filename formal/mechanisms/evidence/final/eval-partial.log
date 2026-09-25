@@ -1,0 +1,340 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 0 and seed 1 with 1 worker on 10 cores with 1820MB heap and 64MB offheap memory [pid: 26257] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/lifecycle/Evaluation.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-en7f8pc4/Naturals.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-en7f8pc4/FiniteSets.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-en7f8pc4/TLC.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-en7f8pc4/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module Evaluation
+Starting... (2026-09-25 08:47:23)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:47:23.
+Error: Invariant NoPartialWitness is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ badTarget = FALSE
+/\ approved = FALSE
+/\ unknownAtCrash = {}
+/\ stopped = {}
+/\ withdrawn = FALSE
+/\ commandVersion = (t1 :> 0 @@ t2 :> 0)
+/\ candidate = 1
+/\ stage = "idle"
+/\ targetExpired = {}
+/\ approvalHistory = {}
+/\ activatedVersion = (t1 :> 0 @@ t2 :> 0)
+/\ authRev = 0
+/\ readRev = 0
+/\ reportHistory = {}
+/\ readCandidate = 0
+/\ crashed = FALSE
+/\ telemetry = FALSE
+/\ commands = {}
+/\ up = TRUE
+/\ known = {}
+/\ targetBlocked = {}
+/\ evidence = FALSE
+/\ invalidCommit = FALSE
+/\ report = 0
+/\ prepared = {}
+/\ activated = {}
+/\ recovered = FALSE
+
+State 2: <IndependentEvidence line 23, col 24 to line 26, col 95 of module Evaluation>
+/\ badTarget = FALSE
+/\ approved = FALSE
+/\ unknownAtCrash = {}
+/\ stopped = {}
+/\ withdrawn = FALSE
+/\ commandVersion = (t1 :> 0 @@ t2 :> 0)
+/\ candidate = 1
+/\ stage = "idle"
+/\ targetExpired = {}
+/\ approvalHistory = {}
+/\ activatedVersion = (t1 :> 0 @@ t2 :> 0)
+/\ authRev = 0
+/\ readRev = 0
+/\ reportHistory = {}
+/\ readCandidate = 0
+/\ crashed = FALSE
+/\ telemetry = FALSE
+/\ commands = {}
+/\ up = TRUE
+/\ known = {}
+/\ targetBlocked = {}
+/\ evidence = TRUE
+/\ invalidCommit = FALSE
+/\ report = 0
+/\ prepared = {}
+/\ activated = {}
+/\ recovered = FALSE
+
+State 3: <Report line 27, col 11 to line 31, col 77 of module Evaluation>
+/\ badTarget = FALSE
+/\ approved = FALSE
+/\ unknownAtCrash = {}
+/\ stopped = {}
+/\ withdrawn = FALSE
+/\ commandVersion = (t1 :> 0 @@ t2 :> 0)
+/\ candidate = 1
+/\ stage = "idle"
+/\ targetExpired = {}
+/\ approvalHistory = {}
+/\ activatedVersion = (t1 :> 0 @@ t2 :> 0)
+/\ authRev = 0
+/\ readRev = 0
+/\ reportHistory = {1}
+/\ readCandidate = 0
+/\ crashed = FALSE
+/\ telemetry = FALSE
+/\ commands = {}
+/\ up = TRUE
+/\ known = {}
+/\ targetBlocked = {}
+/\ evidence = TRUE
+/\ invalidCommit = FALSE
+/\ report = 1
+/\ prepared = {}
+/\ activated = {}
+/\ recovered = FALSE
+
+State 4: <Approve line 32, col 12 to line 36, col 76 of module Evaluation>
+/\ badTarget = FALSE
+/\ approved = TRUE
+/\ unknownAtCrash = {}
+/\ stopped = {}
+/\ withdrawn = FALSE
+/\ commandVersion = (t1 :> 0 @@ t2 :> 0)
+/\ candidate = 1
+/\ stage = "idle"
+/\ targetExpired = {}
+/\ approvalHistory = {1}
+/\ activatedVersion = (t1 :> 0 @@ t2 :> 0)
+/\ authRev = 0
+/\ readRev = 0
+/\ reportHistory = {1}
+/\ readCandidate = 0
+/\ crashed = FALSE
+/\ telemetry = FALSE
+/\ commands = {}
+/\ up = TRUE
+/\ known = {}
+/\ targetBlocked = {}
+/\ evidence = TRUE
+/\ invalidCommit = FALSE
+/\ report = 1
+/\ prepared = {}
+/\ activated = {}
+/\ recovered = FALSE
+
+State 5: <ReadQualification line 41, col 22 to line 45, col 79 of module Evaluation>
+/\ badTarget = FALSE
+/\ approved = TRUE
+/\ unknownAtCrash = {}
+/\ stopped = {}
+/\ withdrawn = FALSE
+/\ commandVersion = (t1 :> 0 @@ t2 :> 0)
+/\ candidate = 1
+/\ stage = "read"
+/\ targetExpired = {}
+/\ approvalHistory = {1}
+/\ activatedVersion = (t1 :> 0 @@ t2 :> 0)
+/\ authRev = 0
+/\ readRev = 0
+/\ reportHistory = {1}
+/\ readCandidate = 1
+/\ crashed = FALSE
+/\ telemetry = FALSE
+/\ commands = {}
+/\ up = TRUE
+/\ known = {}
+/\ targetBlocked = {}
+/\ evidence = TRUE
+/\ invalidCommit = FALSE
+/\ report = 1
+/\ prepared = {}
+/\ activated = {}
+/\ recovered = FALSE
+
+State 6: <Decide line 46, col 11 to line 49, col 85 of module Evaluation>
+/\ badTarget = FALSE
+/\ approved = TRUE
+/\ unknownAtCrash = {}
+/\ stopped = {}
+/\ withdrawn = FALSE
+/\ commandVersion = (t1 :> 0 @@ t2 :> 0)
+/\ candidate = 1
+/\ stage = "decided"
+/\ targetExpired = {}
+/\ approvalHistory = {1}
+/\ activatedVersion = (t1 :> 0 @@ t2 :> 0)
+/\ authRev = 0
+/\ readRev = 0
+/\ reportHistory = {1}
+/\ readCandidate = 1
+/\ crashed = FALSE
+/\ telemetry = FALSE
+/\ commands = {}
+/\ up = TRUE
+/\ known = {}
+/\ targetBlocked = {}
+/\ evidence = TRUE
+/\ invalidCommit = FALSE
+/\ report = 1
+/\ prepared = {}
+/\ activated = {}
+/\ recovered = FALSE
+
+State 7: <CommitQualification line 50, col 24 to line 59, col 83 of module Evaluation>
+/\ badTarget = FALSE
+/\ approved = TRUE
+/\ unknownAtCrash = {}
+/\ stopped = {}
+/\ withdrawn = FALSE
+/\ commandVersion = (t1 :> 1 @@ t2 :> 1)
+/\ candidate = 1
+/\ stage = "prepared"
+/\ targetExpired = {}
+/\ approvalHistory = {1}
+/\ activatedVersion = (t1 :> 0 @@ t2 :> 0)
+/\ authRev = 0
+/\ readRev = 0
+/\ reportHistory = {1}
+/\ readCandidate = 1
+/\ crashed = FALSE
+/\ telemetry = FALSE
+/\ commands = {}
+/\ up = TRUE
+/\ known = {}
+/\ targetBlocked = {}
+/\ evidence = TRUE
+/\ invalidCommit = FALSE
+/\ report = 1
+/\ prepared = {t1, t2}
+/\ activated = {}
+/\ recovered = FALSE
+
+State 8: <Send line 64, col 12 to line 68, col 86 of module Evaluation>
+/\ badTarget = FALSE
+/\ approved = TRUE
+/\ unknownAtCrash = {}
+/\ stopped = {}
+/\ withdrawn = FALSE
+/\ commandVersion = (t1 :> 1 @@ t2 :> 1)
+/\ candidate = 1
+/\ stage = "prepared"
+/\ targetExpired = {}
+/\ approvalHistory = {1}
+/\ activatedVersion = (t1 :> 0 @@ t2 :> 0)
+/\ authRev = 0
+/\ readRev = 0
+/\ reportHistory = {1}
+/\ readCandidate = 1
+/\ crashed = FALSE
+/\ telemetry = FALSE
+/\ commands = {t1}
+/\ up = TRUE
+/\ known = {}
+/\ targetBlocked = {}
+/\ evidence = TRUE
+/\ invalidCommit = FALSE
+/\ report = 1
+/\ prepared = {t1, t2}
+/\ activated = {}
+/\ recovered = FALSE
+
+State 9: <Withdraw line 60, col 13 to line 63, col 87 of module Evaluation>
+/\ badTarget = FALSE
+/\ approved = TRUE
+/\ unknownAtCrash = {}
+/\ stopped = {}
+/\ withdrawn = TRUE
+/\ commandVersion = (t1 :> 1 @@ t2 :> 1)
+/\ candidate = 1
+/\ stage = "prepared"
+/\ targetExpired = {}
+/\ approvalHistory = {1}
+/\ activatedVersion = (t1 :> 0 @@ t2 :> 0)
+/\ authRev = 1
+/\ readRev = 0
+/\ reportHistory = {1}
+/\ readCandidate = 1
+/\ crashed = FALSE
+/\ telemetry = FALSE
+/\ commands = {t1}
+/\ up = TRUE
+/\ known = {}
+/\ targetBlocked = {}
+/\ evidence = TRUE
+/\ invalidCommit = FALSE
+/\ report = 1
+/\ prepared = {t1, t2}
+/\ activated = {}
+/\ recovered = FALSE
+
+State 10: <Activate line 70, col 16 to line 77, col 90 of module Evaluation>
+/\ badTarget = FALSE
+/\ approved = TRUE
+/\ unknownAtCrash = {}
+/\ stopped = {}
+/\ withdrawn = TRUE
+/\ commandVersion = (t1 :> 1 @@ t2 :> 1)
+/\ candidate = 1
+/\ stage = "prepared"
+/\ targetExpired = {}
+/\ approvalHistory = {1}
+/\ activatedVersion = (t1 :> 1 @@ t2 :> 0)
+/\ authRev = 1
+/\ readRev = 0
+/\ reportHistory = {1}
+/\ readCandidate = 1
+/\ crashed = FALSE
+/\ telemetry = FALSE
+/\ commands = {t1}
+/\ up = TRUE
+/\ known = {}
+/\ targetBlocked = {}
+/\ evidence = TRUE
+/\ invalidCommit = FALSE
+/\ report = 1
+/\ prepared = {t1, t2}
+/\ activated = {t1}
+/\ recovered = FALSE
+
+State 11: <ReadOriginal line 86, col 20 to line 90, col 82 of module Evaluation>
+/\ badTarget = FALSE
+/\ approved = TRUE
+/\ unknownAtCrash = {}
+/\ stopped = {}
+/\ withdrawn = TRUE
+/\ commandVersion = (t1 :> 1 @@ t2 :> 1)
+/\ candidate = 1
+/\ stage = "prepared"
+/\ targetExpired = {}
+/\ approvalHistory = {1}
+/\ activatedVersion = (t1 :> 1 @@ t2 :> 0)
+/\ authRev = 1
+/\ readRev = 0
+/\ reportHistory = {1}
+/\ readCandidate = 1
+/\ crashed = FALSE
+/\ telemetry = FALSE
+/\ commands = {t1}
+/\ up = TRUE
+/\ known = {t1}
+/\ targetBlocked = {}
+/\ evidence = TRUE
+/\ invalidCommit = FALSE
+/\ report = 1
+/\ prepared = {t1, t2}
+/\ activated = {t1}
+/\ recovered = FALSE
+
+5868 states generated, 1741 distinct states found, 371 states left on queue.
+The depth of the complete state graph search is 11.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 7 and the 95th percentile is 4).
+Finished in 00s at (2026-09-25 08:47:23)

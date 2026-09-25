@@ -1,0 +1,32 @@
+{
+  "id": "decision-witness-admission",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:18.340340+00:00",
+  "duration_seconds": 0.623,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-m9uj3ww5",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-m9uj3ww5",
+    "-config",
+    "decision-witness-admission.cfg",
+    "Decision.tla"
+  ],
+  "command_sha256": "61f5b79d5edcb1c8aece17747047ff05e7cfd0c9acaa51c3e0f8e353a605d497",
+  "source_sha256": {
+    "Decision.tla": "da32c611620175d010afa9615bbb52c62e29c1480ebe83010764236425c0f56c",
+    "decision-witness-admission.cfg": "43f8a9ec3bfbe1611986b19829571e8cc880cb45730da1638656fc9ed5ed90e4"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoAdmission is violated.",
+  "expectation_met": true,
+  "log_sha256": "c9a15fafa99b5e4640fcf9857d3fb48a0cecf518d14cba401ac13543ba709e62"
+}

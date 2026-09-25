@@ -1,0 +1,231 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Warning: Please run the Java VM which executes TLC with a throughput optimized garbage collector by passing the "-XX:+UseParallelGC" property.
+(Use the -nowarning option to disable this warning.)
+Running breadth-first search Model-Checking with fp 25 and seed 374418973581690035 with 1 worker on 10 cores with 1536MB heap and 64MB offheap memory [pid: 24313] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/Decision.tla
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-ytzrradm/Naturals.tla
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-ytzrradm/FiniteSets.tla
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-ytzrradm/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module Decision
+Starting... (2026-09-25 08:43:17)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:43:17.
+Error: Invariant AdmissionAndRepair is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ round |-> 0,
+  status |-> "idle",
+  semantic |-> 0,
+  base |-> 0,
+  epoch |-> 0,
+  roundEpoch |-> 0,
+  paused |-> FALSE,
+  cancelled |-> FALSE,
+  fixed |-> FALSE,
+  ready |-> FALSE,
+  proposal |-> FALSE,
+  valid |-> FALSE,
+  selfPass |-> FALSE,
+  attempt |-> 0,
+  sent |-> {},
+  responses |->
+      ( <<1, 1>> :> "none" @@
+        <<1, 2>> :> "none" @@
+        <<2, 1>> :> "none" @@
+        <<2, 2>> :> "none" ),
+  badCorrelation |-> FALSE,
+  oldReturnWaitingKey |-> <<0, 0>>,
+  oldReturnRecovered |-> FALSE,
+  outcome |-> "none",
+  ended |-> FALSE,
+  usageKnown |-> FALSE,
+  saved |-> FALSE,
+  admissions |-> 0,
+  calls |-> 0,
+  bad |-> FALSE,
+  billed |-> FALSE,
+  billDuring |-> FALSE,
+  admittedAfterBill |-> FALSE ]
+
+State 2: <Begin line 16, col 10 to line 21, col 64 of module Decision>
+s = [ round |-> 1,
+  status |-> "open",
+  semantic |-> 0,
+  base |-> 0,
+  epoch |-> 0,
+  roundEpoch |-> 0,
+  paused |-> FALSE,
+  cancelled |-> FALSE,
+  fixed |-> FALSE,
+  ready |-> FALSE,
+  proposal |-> FALSE,
+  valid |-> FALSE,
+  selfPass |-> FALSE,
+  attempt |-> 1,
+  sent |-> {},
+  responses |->
+      ( <<1, 1>> :> "none" @@
+        <<1, 2>> :> "none" @@
+        <<2, 1>> :> "none" @@
+        <<2, 2>> :> "none" ),
+  badCorrelation |-> FALSE,
+  oldReturnWaitingKey |-> <<0, 0>>,
+  oldReturnRecovered |-> FALSE,
+  outcome |-> "none",
+  ended |-> FALSE,
+  usageKnown |-> FALSE,
+  saved |-> FALSE,
+  admissions |-> 0,
+  calls |-> 0,
+  bad |-> FALSE,
+  billed |-> FALSE,
+  billDuring |-> FALSE,
+  admittedAfterBill |-> FALSE ]
+
+State 3: <Generate line 22, col 13 to line 25, col 42 of module Decision>
+s = [ round |-> 1,
+  status |-> "open",
+  semantic |-> 0,
+  base |-> 0,
+  epoch |-> 0,
+  roundEpoch |-> 0,
+  paused |-> FALSE,
+  cancelled |-> FALSE,
+  fixed |-> FALSE,
+  ready |-> FALSE,
+  proposal |-> FALSE,
+  valid |-> FALSE,
+  selfPass |-> FALSE,
+  attempt |-> 1,
+  sent |-> {<<1, 1>>},
+  responses |->
+      ( <<1, 1>> :> "none" @@
+        <<1, 2>> :> "none" @@
+        <<2, 1>> :> "none" @@
+        <<2, 2>> :> "none" ),
+  badCorrelation |-> FALSE,
+  oldReturnWaitingKey |-> <<0, 0>>,
+  oldReturnRecovered |-> FALSE,
+  outcome |-> "unknown",
+  ended |-> FALSE,
+  usageKnown |-> FALSE,
+  saved |-> FALSE,
+  admissions |-> 0,
+  calls |-> 1,
+  bad |-> FALSE,
+  billed |-> FALSE,
+  billDuring |-> FALSE,
+  admittedAfterBill |-> FALSE ]
+
+State 4: <Return line 28, col 18 to line 33, col 60 of module Decision>
+s = [ round |-> 1,
+  status |-> "open",
+  semantic |-> 0,
+  base |-> 0,
+  epoch |-> 0,
+  roundEpoch |-> 0,
+  paused |-> FALSE,
+  cancelled |-> FALSE,
+  fixed |-> FALSE,
+  ready |-> FALSE,
+  proposal |-> FALSE,
+  valid |-> FALSE,
+  selfPass |-> FALSE,
+  attempt |-> 1,
+  sent |-> {<<1, 1>>},
+  responses |->
+      ( <<1, 1>> :> "invalidUnknown" @@
+        <<1, 2>> :> "none" @@
+        <<2, 1>> :> "none" @@
+        <<2, 2>> :> "none" ),
+  badCorrelation |-> FALSE,
+  oldReturnWaitingKey |-> <<0, 0>>,
+  oldReturnRecovered |-> FALSE,
+  outcome |-> "unknown",
+  ended |-> FALSE,
+  usageKnown |-> FALSE,
+  saved |-> FALSE,
+  admissions |-> 0,
+  calls |-> 1,
+  bad |-> FALSE,
+  billed |-> FALSE,
+  billDuring |-> FALSE,
+  admittedAfterBill |-> FALSE ]
+
+State 5: <LoadReturn line 34, col 18 to line 43, col 88 of module Decision>
+s = [ round |-> 1,
+  status |-> "open",
+  semantic |-> 0,
+  base |-> 0,
+  epoch |-> 0,
+  roundEpoch |-> 0,
+  paused |-> FALSE,
+  cancelled |-> FALSE,
+  fixed |-> FALSE,
+  ready |-> FALSE,
+  proposal |-> FALSE,
+  valid |-> FALSE,
+  selfPass |-> TRUE,
+  attempt |-> 1,
+  sent |-> {<<1, 1>>},
+  responses |->
+      ( <<1, 1>> :> "invalidUnknown" @@
+        <<1, 2>> :> "none" @@
+        <<2, 1>> :> "none" @@
+        <<2, 2>> :> "none" ),
+  badCorrelation |-> FALSE,
+  oldReturnWaitingKey |-> <<0, 0>>,
+  oldReturnRecovered |-> FALSE,
+  outcome |-> "invalid",
+  ended |-> TRUE,
+  usageKnown |-> FALSE,
+  saved |-> TRUE,
+  admissions |-> 0,
+  calls |-> 1,
+  bad |-> FALSE,
+  billed |-> FALSE,
+  billDuring |-> FALSE,
+  admittedAfterBill |-> FALSE ]
+
+State 6: <Repair line 46, col 11 to line 51, col 31 of module Decision>
+s = [ round |-> 1,
+  status |-> "open",
+  semantic |-> 0,
+  base |-> 0,
+  epoch |-> 0,
+  roundEpoch |-> 0,
+  paused |-> FALSE,
+  cancelled |-> FALSE,
+  fixed |-> FALSE,
+  ready |-> FALSE,
+  proposal |-> FALSE,
+  valid |-> FALSE,
+  selfPass |-> TRUE,
+  attempt |-> 2,
+  sent |-> {<<1, 1>>},
+  responses |->
+      ( <<1, 1>> :> "invalidUnknown" @@
+        <<1, 2>> :> "none" @@
+        <<2, 1>> :> "none" @@
+        <<2, 2>> :> "none" ),
+  badCorrelation |-> FALSE,
+  oldReturnWaitingKey |-> <<0, 0>>,
+  oldReturnRecovered |-> FALSE,
+  outcome |-> "none",
+  ended |-> FALSE,
+  usageKnown |-> FALSE,
+  saved |-> FALSE,
+  admissions |-> 0,
+  calls |-> 1,
+  bad |-> TRUE,
+  billed |-> FALSE,
+  billDuring |-> FALSE,
+  admittedAfterBill |-> FALSE ]
+
+1347 states generated, 697 distinct states found, 505 states left on queue.
+The depth of the complete state graph search is 6.
+The average outdegree of the complete state graph is 4 (minimum is 0, the maximum 12 and the 95th percentile is 9).
+Finished in 00s at (2026-09-25 08:43:18)

@@ -1,0 +1,32 @@
+{
+  "id": "control-negative-cancelGate",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:13.929824+00:00",
+  "duration_seconds": 0.605,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-02i08zup",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-02i08zup",
+    "-config",
+    "control-negative-cancelGate.cfg",
+    "ControlRecovery.tla"
+  ],
+  "command_sha256": "817701e67319719e025165d73845c5c3a5079abb95ec73f7a833e7ba4ea6d386",
+  "source_sha256": {
+    "ControlRecovery.tla": "adcf35660f1e65419db899c63140b500e58966f57952a30bcffb919f5d395d63",
+    "control-negative-cancelGate.cfg": "9cbc7edcec688fb20221572cafa3bb1ede3a40992ea77497566326705cc57337"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant CancelWins is violated.",
+  "expectation_met": true,
+  "log_sha256": "bfa8e2fc287710bf068f123aa73b9b41f960a9d456ed049dc79ced2d06c82a53"
+}

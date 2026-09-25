@@ -1,0 +1,112 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 0 and seed 1 with 1 worker on 10 cores with 1820MB heap and 64MB offheap memory [pid: 26084] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/control/CoreContracts.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-4uwazkse/Naturals.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-4uwazkse/FiniteSets.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-4uwazkse/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CoreContracts
+Starting... (2026-09-25 08:47:05)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:47:05.
+Error: Invariant NoValidBatch is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ events |-> {},
+  wrongRoute |-> FALSE,
+  rejected |-> FALSE,
+  requestVersion |-> 0,
+  consumed |-> FALSE,
+  winningOp |-> 0,
+  consumes |-> 0,
+  consumedAfterRefresh |-> FALSE,
+  expired |-> FALSE,
+  uiRevision |-> 0,
+  invalidConsume |-> FALSE,
+  proposed |-> FALSE,
+  valid1 |-> FALSE,
+  valid2 |-> FALSE,
+  ready2 |-> FALSE,
+  decision |-> "none",
+  operations |-> {},
+  reservation |-> 0,
+  limit |-> 3,
+  used |-> 0,
+  held |-> 1,
+  management |-> "none",
+  originalDelta |-> 0,
+  applied |-> 0,
+  budgetRevision |-> 0,
+  duplicateSeen |-> FALSE,
+  externalLimit |-> 3,
+  internalParent |-> 2,
+  internalChild |-> 1 ]
+
+State 2: <Propose line 39, col 21 to line 40, col 74 of module CoreContracts>
+s = [ events |-> {},
+  wrongRoute |-> FALSE,
+  rejected |-> FALSE,
+  requestVersion |-> 0,
+  consumed |-> FALSE,
+  winningOp |-> 0,
+  consumes |-> 0,
+  consumedAfterRefresh |-> FALSE,
+  expired |-> FALSE,
+  uiRevision |-> 0,
+  invalidConsume |-> FALSE,
+  proposed |-> TRUE,
+  valid1 |-> TRUE,
+  valid2 |-> TRUE,
+  ready2 |-> TRUE,
+  decision |-> "none",
+  operations |-> {},
+  reservation |-> 0,
+  limit |-> 3,
+  used |-> 0,
+  held |-> 1,
+  management |-> "none",
+  originalDelta |-> 0,
+  applied |-> 0,
+  budgetRevision |-> 0,
+  duplicateSeen |-> FALSE,
+  externalLimit |-> 3,
+  internalParent |-> 2,
+  internalChild |-> 1 ]
+
+State 3: <AdmitBatch line 41, col 15 to line 43, col 79 of module CoreContracts>
+s = [ events |-> {},
+  wrongRoute |-> FALSE,
+  rejected |-> FALSE,
+  requestVersion |-> 0,
+  consumed |-> FALSE,
+  winningOp |-> 0,
+  consumes |-> 0,
+  consumedAfterRefresh |-> FALSE,
+  expired |-> FALSE,
+  uiRevision |-> 0,
+  invalidConsume |-> FALSE,
+  proposed |-> TRUE,
+  valid1 |-> TRUE,
+  valid2 |-> TRUE,
+  ready2 |-> TRUE,
+  decision |-> "accepted",
+  operations |-> {1, 2},
+  reservation |-> 2,
+  limit |-> 3,
+  used |-> 0,
+  held |-> 1,
+  management |-> "none",
+  originalDelta |-> 0,
+  applied |-> 0,
+  budgetRevision |-> 0,
+  duplicateSeen |-> FALSE,
+  externalLimit |-> 3,
+  internalParent |-> 2,
+  internalChild |-> 1 ]
+
+17 states generated, 17 distinct states found, 7 states left on queue.
+The depth of the complete state graph search is 3.
+The average outdegree of the complete state graph is 2 (minimum is 1, the maximum 8 and the 95th percentile is 8).
+Finished in 00s at (2026-09-25 08:47:05)

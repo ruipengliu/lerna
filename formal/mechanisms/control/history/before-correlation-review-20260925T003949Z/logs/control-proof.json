@@ -1,0 +1,18 @@
+{
+  "id": "control-proof",
+  "started_utc": "2026-09-25T00:32:22.286213+00:00",
+  "duration_seconds": 2.201,
+  "command": [
+    "/Users/ruipengliu/.cache/lerna-formal-tools/lean-4.19.0-darwin_aarch64/bin/lean",
+    "Control.lean"
+  ],
+  "command_sha256": "9958b26272cc713705e8705e95846d1c28bd83249f9dfa866dc1ebd72dff9fe5",
+  "source_sha256": {
+    "Control.lean": "d1ddd557ad1a4b35c84280fb1be425920829f2a3089303b4e70e9b25ef206c5d"
+  },
+  "exit_code": 0,
+  "expected_exit": 0,
+  "marker": "'ControlMechanisms.cancellation_is_monotone' depends on axioms: [propext]",
+  "expectation_met": true,
+  "log_sha256": "a42f6e8fb75b92683b5bed1560b5c3e96122883529ab69e0ba8cf97204598fcf"
+}

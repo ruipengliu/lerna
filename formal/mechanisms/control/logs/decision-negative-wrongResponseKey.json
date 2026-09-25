@@ -1,0 +1,32 @@
+{
+  "id": "decision-negative-wrongResponseKey",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:55.399232+00:00",
+  "duration_seconds": 0.693,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-sw9g8ife",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-sw9g8ife",
+    "-config",
+    "decision-negative-wrongResponseKey.cfg",
+    "Decision.tla"
+  ],
+  "command_sha256": "9bdc7f18093c593c44772f64896c08b02d366dbfabe9b72ebb16f66439e99535",
+  "source_sha256": {
+    "Decision.tla": "da32c611620175d010afa9615bbb52c62e29c1480ebe83010764236425c0f56c",
+    "decision-negative-wrongResponseKey.cfg": "b1038e4399d92991cd3d4e0de8a5e24fc174900bf6a3aa7ae65e268ee6f2c104"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant ResponseCorrelation is violated.",
+  "expectation_met": true,
+  "log_sha256": "012d80244c054a47cf325b1c7171920eb03a83208ad514cea521c575cef32669"
+}

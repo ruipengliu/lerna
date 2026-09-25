@@ -1,0 +1,32 @@
+{
+  "id": "control-witness-safe-retry",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:15.828192+00:00",
+  "duration_seconds": 0.641,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-c82mi4h5",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-c82mi4h5",
+    "-config",
+    "control-witness-safe-retry.cfg",
+    "ControlRecovery.tla"
+  ],
+  "command_sha256": "be0f325d377c193333f493b41eb9ae2eea76d5896cbcf42ea0e6be438ab37f85",
+  "source_sha256": {
+    "ControlRecovery.tla": "adcf35660f1e65419db899c63140b500e58966f57952a30bcffb919f5d395d63",
+    "control-witness-safe-retry.cfg": "ee7a3720db76fc6c6f11c0f503f923ee66c53f8e82f2ea81eb6b07e3ae298ea6"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoSafeRetry is violated.",
+  "expectation_met": true,
+  "log_sha256": "20d81af362e5d068c3137a4316a57bcaeceb5bf63d543d84f36ce2eaf2cd9ef0"
+}

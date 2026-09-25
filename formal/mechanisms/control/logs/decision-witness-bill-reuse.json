@@ -1,0 +1,32 @@
+{
+  "id": "decision-witness-bill-reuse",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:18.964016+00:00",
+  "duration_seconds": 0.677,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-uoh2pmt1",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-uoh2pmt1",
+    "-config",
+    "decision-witness-bill-reuse.cfg",
+    "Decision.tla"
+  ],
+  "command_sha256": "85ad640258e83b1c5b0dd8c223d4b4100fcf3ff8d9d69e0518619a567256754d",
+  "source_sha256": {
+    "Decision.tla": "da32c611620175d010afa9615bbb52c62e29c1480ebe83010764236425c0f56c",
+    "decision-witness-bill-reuse.cfg": "388c20545e9fd03ad30cf8e37f10a3ef881a953c00dada25018cdcd840c5a289"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoBillReuse is violated.",
+  "expectation_met": true,
+  "log_sha256": "a488cb63fb91b8d545d040e5ff540a838ce406394256e57e588ac957874c8d4b"
+}

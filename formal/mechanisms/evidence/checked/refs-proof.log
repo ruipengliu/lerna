@@ -1,0 +1,4 @@
+'ReferenceLifecycle.reachable_safe' depends on axioms: [propext, Quot.sound]
+'ReferenceLifecycle.no_use_without_retention' depends on axioms: [propext, Quot.sound]
+'ReferenceLifecycle.reclamation_has_no_holders' depends on axioms: [propext, Quot.sound]
+'ReferenceLifecycle.use_history_monotone' depends on axioms: [propext]

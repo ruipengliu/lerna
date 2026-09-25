@@ -1,0 +1,6 @@
+{
+  "evidence_revision": "pre-cross-review",
+  "status": "historical-only; not evidence for models after the correlation/physical-qualification/conflict review",
+  "archived_at_utc": "2026-09-25T00:39:49.756547+00:00",
+  "reason": "Expand missing response-correlation, send-time qualification, and conflict-freeze obligations; no current design contract change."
+}

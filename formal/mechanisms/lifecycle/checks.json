@@ -1,0 +1,314 @@
+{
+  "checks": [
+    {
+      "id": "refs-safe",
+      "kind": "tlc",
+      "model": "References.tla",
+      "config": "refs-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "refs-stale",
+      "kind": "tlc",
+      "model": "References.tla",
+      "config": "refs-stale.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant FreshRegistration is violated."
+    },
+    {
+      "id": "refs-early",
+      "kind": "tlc",
+      "model": "References.tla",
+      "config": "refs-early.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant UseHasPin is violated."
+    },
+    {
+      "id": "refs-normal",
+      "kind": "tlc",
+      "model": "References.tla",
+      "config": "refs-normal.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoNormalWitness is violated."
+    },
+    {
+      "id": "refs-recovery",
+      "kind": "tlc",
+      "model": "References.tla",
+      "config": "refs-recovery.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoRecoveryWitness is violated."
+    },
+    {
+      "id": "ui-safe",
+      "kind": "tlc",
+      "model": "UI.tla",
+      "config": "ui-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "ui-stale",
+      "kind": "tlc",
+      "model": "UI.tla",
+      "config": "ui-stale.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant DisplayAuthority is violated."
+    },
+    {
+      "id": "ui-delta",
+      "kind": "tlc",
+      "model": "UI.tla",
+      "config": "ui-delta.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant DeltaContinuity is violated."
+    },
+    {
+      "id": "ui-normal",
+      "kind": "tlc",
+      "model": "UI.tla",
+      "config": "ui-normal.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoNormalWitness is violated."
+    },
+    {
+      "id": "ui-recovery",
+      "kind": "tlc",
+      "model": "UI.tla",
+      "config": "ui-recovery.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoRecoveryWitness is violated."
+    },
+    {
+      "id": "eval-safe",
+      "kind": "tlc",
+      "model": "Evaluation.tla",
+      "config": "eval-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "eval-stale",
+      "kind": "tlc",
+      "model": "Evaluation.tla",
+      "config": "eval-stale.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant ExactFreshQualification is violated."
+    },
+    {
+      "id": "eval-version",
+      "kind": "tlc",
+      "model": "Evaluation.tla",
+      "config": "eval-version.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant ExactFreshQualification is violated."
+    },
+    {
+      "id": "eval-target",
+      "kind": "tlc",
+      "model": "Evaluation.tla",
+      "config": "eval-target.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant TargetQualification is violated."
+    },
+    {
+      "id": "eval-normal",
+      "kind": "tlc",
+      "model": "Evaluation.tla",
+      "config": "eval-normal.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoNormalWitness is violated."
+    },
+    {
+      "id": "eval-recovery",
+      "kind": "tlc",
+      "model": "Evaluation.tla",
+      "config": "eval-recovery.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoRecoveryWitness is violated."
+    },
+    {
+      "id": "eval-partial",
+      "kind": "tlc",
+      "model": "Evaluation.tla",
+      "config": "eval-partial.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoPartialWitness is violated."
+    },
+    {
+      "id": "input-safe",
+      "kind": "tlc",
+      "model": "Input.tla",
+      "config": "input-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "input-unmapped",
+      "kind": "tlc",
+      "model": "Input.tla",
+      "config": "input-unmapped.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant MappingBeforeForward is violated."
+    },
+    {
+      "id": "input-duplicate",
+      "kind": "tlc",
+      "model": "Input.tla",
+      "config": "input-duplicate.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant OneConsumer is violated."
+    },
+    {
+      "id": "input-meaning",
+      "kind": "tlc",
+      "model": "Input.tla",
+      "config": "input-meaning.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant MeaningBound is violated."
+    },
+    {
+      "id": "input-normal",
+      "kind": "tlc",
+      "model": "Input.tla",
+      "config": "input-normal.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoNormalWitness is violated."
+    },
+    {
+      "id": "input-recovery",
+      "kind": "tlc",
+      "model": "Input.tla",
+      "config": "input-recovery.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoRecoveryWitness is violated."
+    },
+    {
+      "id": "rollback-safe",
+      "kind": "tlc",
+      "model": "Rollback.tla",
+      "config": "rollback-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "rollback-stale",
+      "kind": "tlc",
+      "model": "Rollback.tla",
+      "config": "rollback-stale.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant CurrentRestoreBasis is violated."
+    },
+    {
+      "id": "rollback-false-restored",
+      "kind": "tlc",
+      "model": "Rollback.tla",
+      "config": "rollback-false-restored.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant RestoredRequiresActivation is violated."
+    },
+    {
+      "id": "rollback-rewind",
+      "kind": "tlc",
+      "model": "Rollback.tla",
+      "config": "rollback-rewind.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoFactRewind is violated."
+    },
+    {
+      "id": "rollback-normal",
+      "kind": "tlc",
+      "model": "Rollback.tla",
+      "config": "rollback-normal.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoNormalWitness is violated."
+    },
+    {
+      "id": "rollback-blocked",
+      "kind": "tlc",
+      "model": "Rollback.tla",
+      "config": "rollback-blocked.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoBlockedWitness is violated."
+    },
+    {
+      "id": "rollback-recovery",
+      "kind": "tlc",
+      "model": "Rollback.tla",
+      "config": "rollback-recovery.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoRecoveryWitness is violated."
+    },
+    {
+      "id": "preview-safe",
+      "kind": "tlc",
+      "model": "Preview.tla",
+      "config": "preview-safe.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "preview-missing",
+      "kind": "tlc",
+      "model": "Preview.tla",
+      "config": "preview-missing.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant CompleteCurrentPreview is violated."
+    },
+    {
+      "id": "preview-stale",
+      "kind": "tlc",
+      "model": "Preview.tla",
+      "config": "preview-stale.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant CompleteCurrentPreview is violated."
+    },
+    {
+      "id": "preview-normal",
+      "kind": "tlc",
+      "model": "Preview.tla",
+      "config": "preview-normal.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoNormalWitness is violated."
+    },
+    {
+      "id": "preview-closed",
+      "kind": "tlc",
+      "model": "Preview.tla",
+      "config": "preview-closed.cfg",
+      "expected_exit": 12,
+      "contains": "Invariant NoClosedOldPacketWitness is violated."
+    },
+    {
+      "id": "refs-live",
+      "kind": "tlc",
+      "model": "References.tla",
+      "config": "refs-live.cfg",
+      "expected_exit": 0,
+      "contains": "Model checking completed. No error has been found."
+    },
+    {
+      "id": "refs-unfair",
+      "kind": "tlc",
+      "model": "References.tla",
+      "config": "refs-unfair.cfg",
+      "expected_exit": 13,
+      "contains": "Temporal properties were violated."
+    },
+    {
+      "id": "refs-proof",
+      "kind": "lean",
+      "source": "References.lean",
+      "expected_exit": 0,
+      "contains": "'ReferenceLifecycle.reachable_safe' depends on axioms: [propext, Quot.sound]"
+    },
+    {
+      "id": "eval-rules-proof",
+      "kind": "lean",
+      "source": "EvaluationRules.lean",
+      "expected_exit": 0,
+      "contains": "'EvaluationRules.reachable_inv' depends on axioms: [propext, Quot.sound]"
+    }
+  ]
+}

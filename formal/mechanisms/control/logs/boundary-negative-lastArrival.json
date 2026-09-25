@@ -1,0 +1,32 @@
+{
+  "id": "boundary-negative-lastArrival",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:40.218831+00:00",
+  "duration_seconds": 0.579,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-rj3y3bw0",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-rj3y3bw0",
+    "-config",
+    "boundary-negative-lastArrival.cfg",
+    "Boundaries.tla"
+  ],
+  "command_sha256": "5b5f7f3b07a4679778e6b012894bbc48627e6136d917ae636e8903b760a3969c",
+  "source_sha256": {
+    "Boundaries.tla": "34f88e896cad394bb399a4dc2dcd8160416930a4ec186d52cd700ff0093bf6c4",
+    "boundary-negative-lastArrival.cfg": "7ef8bb84fdd5e75c640e641a580583da873ec6b00686571ee35d4274400e4fda"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant FactRevisionDoesNotRegress is violated.",
+  "expectation_met": true,
+  "log_sha256": "444f3bea9f8c8adfc07a7e79917a384266206ef4fde33fb193366cb6eb1175ac"
+}

@@ -1,0 +1,32 @@
+{
+  "id": "budget-negative-settleConflict",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:58.641389+00:00",
+  "duration_seconds": 0.62,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-vv09_nfb",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-vv09_nfb",
+    "-config",
+    "budget-negative-settleConflict.cfg",
+    "Budget.tla"
+  ],
+  "command_sha256": "059a5f17bbda19c2ead59b7e105798524a8155565a0c03af61a54cab1e58c09e",
+  "source_sha256": {
+    "Budget.tla": "73adc3b2e73e6465b555609b880185eef4a6ce1a540a66ef620c0c5a303d9914",
+    "budget-negative-settleConflict.cfg": "f31b44d2ab741c00a09151c250341d3279085feb89e43cf8e120826956868942"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant ConflictFreezesSettlement is violated.",
+  "expectation_met": true,
+  "log_sha256": "978aa5222473efb254b1959c1d9d5ab6b471a04f39f7224b0444b70473eb5fc5"
+}

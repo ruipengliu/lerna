@@ -1,0 +1,30 @@
+{
+  "id": "budget-witness-late-bill",
+  "started_utc": "2026-09-25T00:32:11.487655+00:00",
+  "duration_seconds": 0.707,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-1ku5fd0s",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-1ku5fd0s",
+    "-config",
+    "budget-witness-late-bill.cfg",
+    "Budget.tla"
+  ],
+  "command_sha256": "0185bf4262a2d075add63c3b7352db29bd8b04ab8a6c3307bb3259a2b102f1b9",
+  "source_sha256": {
+    "Budget.tla": "898eb6e910b025d000344558e92faf8f038acb57589c8eac3cd3d73c316ffe09",
+    "budget-witness-late-bill.cfg": "8d92c2ad8ed929b154adacb514d3fc9942c1220cff8384b2d48dcbfd0de3c98b"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoCancelledLateBill is violated.",
+  "expectation_met": true,
+  "log_sha256": "152a211bbaf3261a45804c9124ef68aee2f619f3163aeca4586323a021aec7f5"
+}

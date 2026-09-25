@@ -1,0 +1,5 @@
+'TransportPrefix.reachable_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TransportPrefix.acknowledged_prefix_is_durable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TransportPrefix.handed_off_prefix_is_durable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'AdmissionVector.reachable_safe' depends on axioms: [propext, Quot.sound]
+'AdmissionVector.all_admissions_were_eligible' depends on axioms: [propext, Quot.sound]

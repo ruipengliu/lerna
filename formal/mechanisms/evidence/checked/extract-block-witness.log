@@ -1,0 +1,93 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 0 and seed 1 with 1 worker on 10 cores with 1820MB heap and 64MB offheap memory [pid: 20490] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/trust/ExtractionPolicy.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-nzfaom33/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module ExtractionPolicy
+Starting... (2026-09-25 08:37:12)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:37:13.
+Error: Invariant NoBlocked is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ task |-> "running",
+  optin |-> FALSE,
+  permission |-> TRUE,
+  observed |-> FALSE,
+  cachedEligible |-> FALSE,
+  trigger |-> FALSE,
+  creates |-> 0,
+  ownBudget |-> 1,
+  parentBudget |-> 1,
+  unsafe |-> FALSE,
+  blocked |-> FALSE ]
+
+State 2: <OptIn line 9, col 10 to line 9, col 54 of module ExtractionPolicy>
+s = [ task |-> "running",
+  optin |-> TRUE,
+  permission |-> TRUE,
+  observed |-> FALSE,
+  cachedEligible |-> FALSE,
+  trigger |-> FALSE,
+  creates |-> 0,
+  ownBudget |-> 1,
+  parentBudget |-> 1,
+  unsafe |-> FALSE,
+  blocked |-> FALSE ]
+
+State 3: <Finish line 11, col 14 to line 12, col 42 of module ExtractionPolicy>
+s = [ task |-> "completed",
+  optin |-> TRUE,
+  permission |-> TRUE,
+  observed |-> FALSE,
+  cachedEligible |-> FALSE,
+  trigger |-> FALSE,
+  creates |-> 0,
+  ownBudget |-> 1,
+  parentBudget |-> 1,
+  unsafe |-> FALSE,
+  blocked |-> FALSE ]
+
+State 4: <Observe line 13, col 12 to line 15, col 89 of module ExtractionPolicy>
+s = [ task |-> "completed",
+  optin |-> TRUE,
+  permission |-> TRUE,
+  observed |-> TRUE,
+  cachedEligible |-> TRUE,
+  trigger |-> FALSE,
+  creates |-> 0,
+  ownBudget |-> 1,
+  parentBudget |-> 1,
+  unsafe |-> FALSE,
+  blocked |-> FALSE ]
+
+State 5: <OptOut line 10, col 11 to line 10, col 55 of module ExtractionPolicy>
+s = [ task |-> "completed",
+  optin |-> FALSE,
+  permission |-> TRUE,
+  observed |-> TRUE,
+  cachedEligible |-> TRUE,
+  trigger |-> FALSE,
+  creates |-> 0,
+  ownBudget |-> 1,
+  parentBudget |-> 1,
+  unsafe |-> FALSE,
+  blocked |-> FALSE ]
+
+State 6: <Trigger line 17, col 12 to line 23, col 81 of module ExtractionPolicy>
+s = [ task |-> "completed",
+  optin |-> FALSE,
+  permission |-> TRUE,
+  observed |-> TRUE,
+  cachedEligible |-> TRUE,
+  trigger |-> FALSE,
+  creates |-> 0,
+  ownBudget |-> 1,
+  parentBudget |-> 1,
+  unsafe |-> FALSE,
+  blocked |-> TRUE ]
+
+90 states generated, 35 distinct states found, 7 states left on queue.
+The depth of the complete state graph search is 6.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 5 and the 95th percentile is 4).
+Finished in 00s at (2026-09-25 08:37:13)

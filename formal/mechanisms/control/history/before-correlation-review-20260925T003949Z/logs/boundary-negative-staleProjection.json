@@ -1,0 +1,30 @@
+{
+  "id": "boundary-negative-staleProjection",
+  "started_utc": "2026-09-25T00:32:17.224454+00:00",
+  "duration_seconds": 0.594,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-hisnae7n",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-hisnae7n",
+    "-config",
+    "boundary-negative-staleProjection.cfg",
+    "Boundaries.tla"
+  ],
+  "command_sha256": "1cef41bc1acd02718d28c85bc9cac0dda8d6dad4fe7b6b9817a31256d0e3b3da",
+  "source_sha256": {
+    "Boundaries.tla": "34f88e896cad394bb399a4dc2dcd8160416930a4ec186d52cd700ff0093bf6c4",
+    "boundary-negative-staleProjection.cfg": "a49f1d761344376771e3ce7a28eb0a8322f2281e9fc3f3de810345bb0de49db0"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant ActionBoundary is violated.",
+  "expectation_met": true,
+  "log_sha256": "147ad836bab97bf52413ae312beb67cd484e7002a2d349ee5412b3aa05ad6e59"
+}

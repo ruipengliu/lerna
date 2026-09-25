@@ -1,0 +1,30 @@
+{
+  "id": "core-negative-belowReserved",
+  "started_utc": "2026-09-25T00:32:30.444646+00:00",
+  "duration_seconds": 0.577,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-ka84tn8x",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-ka84tn8x",
+    "-config",
+    "core-negative-belowReserved.cfg",
+    "CoreContracts.tla"
+  ],
+  "command_sha256": "5246e2896b623b5b7bb666bf71902095e4218a83a5231972340dee6483e6fbe4",
+  "source_sha256": {
+    "CoreContracts.tla": "d87fdf26d662a1a716142b551cb87ed7348cd7dbaaf15d6773862464fc5cf40a",
+    "core-negative-belowReserved.cfg": "79c34d62c006ab1515447582184dce0d8318c87dd9e2cdd5df2bac90a16d5655"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant AdjustmentFloor is violated.",
+  "expectation_met": true,
+  "log_sha256": "6248e0231ab376678c5f6f374994d9223493c37420126c4ac570bb79883edb2f"
+}

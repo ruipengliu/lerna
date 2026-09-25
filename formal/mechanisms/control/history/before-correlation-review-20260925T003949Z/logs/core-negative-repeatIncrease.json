@@ -1,0 +1,30 @@
+{
+  "id": "core-negative-repeatIncrease",
+  "started_utc": "2026-09-25T00:32:31.021886+00:00",
+  "duration_seconds": 0.572,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-wttrayxz",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-wttrayxz",
+    "-config",
+    "core-negative-repeatIncrease.cfg",
+    "CoreContracts.tla"
+  ],
+  "command_sha256": "1fefde09a42097916ba01a3ee316e7bfe168e3c4001057b6808a6b159338c34c",
+  "source_sha256": {
+    "CoreContracts.tla": "d87fdf26d662a1a716142b551cb87ed7348cd7dbaaf15d6773862464fc5cf40a",
+    "core-negative-repeatIncrease.cfg": "65f18f7924ee94a52db7696ad6dc543e8ee9083ce95baf7d8d536a48265214d9"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant ManagementOnce is violated.",
+  "expectation_met": true,
+  "log_sha256": "8e7f685fe4e47c8ed29f30546feb8500752ed7c59099574f1e0266b2bef66e1d"
+}

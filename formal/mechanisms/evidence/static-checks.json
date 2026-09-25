@@ -1,0 +1,31 @@
+{
+  "checked_utc": "2026-09-25T00:51:21.602408+00:00",
+  "scope": "static evidence and link-path audit; does not prove implementation correctness",
+  "registered_checks": 170,
+  "final_run_sources": 201,
+  "architecture_baseline_files": 65,
+  "reused_handoff_sources": 14,
+  "architecture_changes_reviewed": 1,
+  "protocol_inputs_hashed": 34,
+  "positive_tlc_completed": 30,
+  "lean_files": 7,
+  "printed_axiom_audits": 70,
+  "local_link_paths_checked": 415,
+  "acceptance_rows": 291,
+  "diagram": {
+    "path": "formal/mechanisms/evidence/verification-map.png",
+    "sha256": "6796d8c6b91a2cc951f6d8f09654362e94ab33f670a53f5374a82ebc4d9904ce",
+    "renderer": "mmdc 11.12.0 using installed Google Chrome",
+    "inspection": "rendered and visually inspected separately; no clipped labels or edges"
+  },
+  "supplemental_inputs": {
+    "formal/mechanisms/build_coverage.py": "6f8c1891cc3a874bfad1a6bb9d7c06d84b347b21eca557100f9ea5d26747ab97",
+    "formal/mechanisms/audit_evidence.py": "d20d2686cedfa74acf05ca24951f26d710447757c70d580461e7bd4428996cae",
+    "formal/mechanisms/evidence/coverage.json": "88e3a476581ea2d152943c106cfbbac10c3859a89320a88ff166de4aa1fd543e",
+    "formal/mechanisms/cross-group-mappings.json": "39fae6b6f89b9c3eaff3d5206c14ce791df99bf4c515d9a1ab78b04c2cfb4cd2",
+    "formal/mechanisms/evidence/architecture-changes-reviewed.json": "c5e650bff087430d2e044a7a4ad6a20fe71031c083276bd1c9414998ba035ecf",
+    "formal/mechanisms/evidence/protocol-static.json": "f8b4c259ac5095f585f3c7b429bb1606ede7210d54dd6831074ccd693442294b"
+  },
+  "issues": [],
+  "passed": true
+}

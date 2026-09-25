@@ -1,0 +1,19 @@
+{
+  "java": {
+    "path": "/opt/homebrew/opt/openjdk/bin/java",
+    "sha256": "370ef109f74f859afc8cfe0300b2da782d60698160b8a48f19731d6d2e3012ea",
+    "version_output": "openjdk version \"25.0.2\" 2026-01-20\nOpenJDK Runtime Environment Homebrew (build 25.0.2)\nOpenJDK 64-Bit Server VM Homebrew (build 25.0.2, mixed mode, sharing)\n",
+    "version_exit": 0
+  },
+  "tlc": {
+    "path": "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88",
+    "version_output": "TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)"
+  },
+  "lean": {
+    "path": "/Users/ruipengliu/.cache/lerna-formal-tools/lean-4.19.0-darwin_aarch64/bin/lean",
+    "sha256": "5c1fe58db7d10b1cd0ddff1a1cbc49db2396fff9c6c983cc3b49f1c5c1ae241b",
+    "version_output": "Lean (version 4.19.0, arm64-apple-darwin23.6.0, commit 6caaee842e94, Release)\n",
+    "version_exit": 0
+  }
+}

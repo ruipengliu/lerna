@@ -1,0 +1,61 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 0 and seed 1 with 1 worker on 10 cores with 1820MB heap and 64MB offheap memory [pid: 8792] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/communication/Stream.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/Naturals.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/FiniteSets.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module Stream
+Starting... (2026-09-25 08:16:33)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:16:33.
+Error: Invariant NeverGap is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ sent |-> 0,
+  source |-> {},
+  wire |-> {},
+  received |-> {},
+  payload |-> {},
+  target |-> 0,
+  ackWire |-> {},
+  ack |-> 0,
+  business |-> 0,
+  aGap |-> {},
+  bGap |-> {},
+  expired |-> FALSE ]
+
+State 2: <Accept line 11, col 14 to line 12, col 65 of module Stream>
+s = [ sent |-> 1,
+  source |-> {1},
+  wire |-> {},
+  received |-> {},
+  payload |-> {},
+  target |-> 0,
+  ackWire |-> {},
+  ack |-> 0,
+  business |-> 0,
+  aGap |-> {},
+  bGap |-> {},
+  expired |-> FALSE ]
+
+State 3: <Expire line 33, col 11 to line 36, col 60 of module Stream>
+s = [ sent |-> 1,
+  source |-> {1},
+  wire |-> {},
+  received |-> {},
+  payload |-> {},
+  target |-> 0,
+  ackWire |-> {},
+  ack |-> 0,
+  business |-> 0,
+  aGap |-> {1},
+  bGap |-> {},
+  expired |-> TRUE ]
+
+6 states generated, 6 distinct states found, 3 states left on queue.
+The depth of the complete state graph search is 3.
+The average outdegree of the complete state graph is 2 (minimum is 2, the maximum 2 and the 95th percentile is 2).
+Finished in 00s at (2026-09-25 08:16:33)

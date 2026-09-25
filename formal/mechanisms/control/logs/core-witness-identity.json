@@ -1,0 +1,32 @@
+{
+  "id": "core-witness-identity",
+  "evidence_revision": "post-correlation-review-v2",
+  "evidence_status": "current",
+  "started_utc": "2026-09-25T00:43:53.072121+00:00",
+  "duration_seconds": 0.571,
+  "command": [
+    "/opt/homebrew/opt/openjdk/bin/java",
+    "-Djava.io.tmpdir=/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-iy5q_0vb",
+    "-Xmx1536m",
+    "-cp",
+    "/Users/ruipengliu/.cache/lerna-formal-tools/tla-v1.7.4/tla2tools.jar",
+    "tlc2.TLC",
+    "-workers",
+    "1",
+    "-metadir",
+    "/Volumes/Data/proj/lerna-docs/formal/mechanisms/control/.states-iy5q_0vb",
+    "-config",
+    "core-witness-identity.cfg",
+    "CoreContracts.tla"
+  ],
+  "command_sha256": "cf9af3aeaf619fcf209f5d58bcda2cf2b5881a41a223eecda94ab20aca265762",
+  "source_sha256": {
+    "CoreContracts.tla": "d87fdf26d662a1a716142b551cb87ed7348cd7dbaaf15d6773862464fc5cf40a",
+    "core-witness-identity.cfg": "d4628b9f19ddf7624f45d2903cedd4d6644b8d04343324353563ce925c072a9c"
+  },
+  "exit_code": 12,
+  "expected_exit": 12,
+  "marker": "Invariant NoTwoUsersSameOp is violated.",
+  "expectation_met": true,
+  "log_sha256": "d4272fbcab190ba72cea5d92b0ebf6aaecedb430b4330b96a2c6a0a7fd5b6215"
+}

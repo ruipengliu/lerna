@@ -1,0 +1,150 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 0 and seed 1 with 1 worker on 10 cores with 1820MB heap and 64MB offheap memory [pid: 25336] (Mac OS X 27.0 aarch64, Homebrew 25.0.2 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Volumes/Data/proj/lerna-docs/formal/mechanisms/communication/Composition.tla
+Parsing file /private/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/mechanism-tlc-l4wqtytk/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Composition
+Starting... (2026-09-25 08:45:17)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-25 08:45:18.
+Error: Invariant Safety is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+s = [ rev |->
+      ( authorization :> 0 @@
+        control :> 0 @@
+        owner :> 0 @@
+        source :> 0 @@
+        runtime :> 0 ),
+  enabled |-> {authorization, control, owner, source, runtime},
+  authorityEnabled |-> {authorization, control, owner, source, runtime},
+  stamp |->
+      ( authorization :> 0 @@
+        control :> 0 @@
+        owner :> 0 @@
+        source :> 0 @@
+        runtime :> 0 ),
+  prepared |-> FALSE,
+  issued |-> FALSE,
+  command |-> FALSE,
+  effects |-> 0,
+  unknown |-> FALSE,
+  fact |-> FALSE,
+  held |-> FALSE,
+  illegal |-> FALSE,
+  completed |-> FALSE,
+  lateFact |-> FALSE,
+  issueDuringPropagation |-> FALSE ]
+
+State 2: <Prepare line 18, col 12 to line 19, col 79 of module Composition>
+s = [ rev |->
+      ( authorization :> 0 @@
+        control :> 0 @@
+        owner :> 0 @@
+        source :> 0 @@
+        runtime :> 0 ),
+  enabled |-> {authorization, control, owner, source, runtime},
+  authorityEnabled |-> {authorization, control, owner, source, runtime},
+  stamp |->
+      ( authorization :> 0 @@
+        control :> 0 @@
+        owner :> 0 @@
+        source :> 0 @@
+        runtime :> 0 ),
+  prepared |-> TRUE,
+  issued |-> FALSE,
+  command |-> FALSE,
+  effects |-> 0,
+  unknown |-> FALSE,
+  fact |-> FALSE,
+  held |-> TRUE,
+  illegal |-> FALSE,
+  completed |-> FALSE,
+  lateFact |-> FALSE,
+  issueDuringPropagation |-> FALSE ]
+
+State 3: <AuthorityInvalidate line 20, col 27 to line 21, col 72 of module Composition>
+s = [ rev |->
+      ( authorization :> 0 @@
+        control :> 0 @@
+        owner :> 0 @@
+        source :> 0 @@
+        runtime :> 0 ),
+  enabled |-> {authorization, control, owner, source, runtime},
+  authorityEnabled |-> {control, owner, source, runtime},
+  stamp |->
+      ( authorization :> 0 @@
+        control :> 0 @@
+        owner :> 0 @@
+        source :> 0 @@
+        runtime :> 0 ),
+  prepared |-> TRUE,
+  issued |-> FALSE,
+  command |-> FALSE,
+  effects |-> 0,
+  unknown |-> FALSE,
+  fact |-> FALSE,
+  held |-> TRUE,
+  illegal |-> FALSE,
+  completed |-> FALSE,
+  lateFact |-> FALSE,
+  issueDuringPropagation |-> FALSE ]
+
+State 4: <ApplyInvalidation line 22, col 25 to line 24, col 79 of module Composition>
+s = [ rev |->
+      ( authorization :> 1 @@
+        control :> 0 @@
+        owner :> 0 @@
+        source :> 0 @@
+        runtime :> 0 ),
+  enabled |-> {control, owner, source, runtime},
+  authorityEnabled |-> {control, owner, source, runtime},
+  stamp |->
+      ( authorization :> 0 @@
+        control :> 0 @@
+        owner :> 0 @@
+        source :> 0 @@
+        runtime :> 0 ),
+  prepared |-> TRUE,
+  issued |-> FALSE,
+  command |-> FALSE,
+  effects |-> 0,
+  unknown |-> FALSE,
+  fact |-> FALSE,
+  held |-> TRUE,
+  illegal |-> FALSE,
+  completed |-> FALSE,
+  lateFact |-> FALSE,
+  issueDuringPropagation |-> FALSE ]
+
+State 5: <CommitIssue line 25, col 16 to line 29, col 103 of module Composition>
+s = [ rev |->
+      ( authorization :> 1 @@
+        control :> 0 @@
+        owner :> 0 @@
+        source :> 0 @@
+        runtime :> 0 ),
+  enabled |-> {control, owner, source, runtime},
+  authorityEnabled |-> {control, owner, source, runtime},
+  stamp |->
+      ( authorization :> 0 @@
+        control :> 0 @@
+        owner :> 0 @@
+        source :> 0 @@
+        runtime :> 0 ),
+  prepared |-> TRUE,
+  issued |-> TRUE,
+  command |-> TRUE,
+  effects |-> 0,
+  unknown |-> FALSE,
+  fact |-> FALSE,
+  held |-> TRUE,
+  illegal |-> TRUE,
+  completed |-> FALSE,
+  lateFact |-> FALSE,
+  issueDuringPropagation |-> FALSE ]
+
+222 states generated, 120 distinct states found, 82 states left on queue.
+The depth of the complete state graph search is 5.
+The average outdegree of the complete state graph is 3 (minimum is 0, the maximum 7 and the 95th percentile is 7).
+Finished in 00s at (2026-09-25 08:45:18)
