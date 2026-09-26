@@ -10,7 +10,7 @@ Harness 接纳用户目标，组织大脑、记忆、执行与其他 Agent 持�
 
 ![Harness 架构概念图：设计原则、建模方法与九模块关系](diagrams/design-concepts.png)
 
-概念图以短标签串起原则、建模顺序与模块分工；双向联系概括请求和事实回传，治理连线作用于相应参与者。内部组件和具体交接继续按第 2 节进入可编辑全景图查阅。
+概念图用直白标题和一句行为说明解释各项原则，再串起建模顺序与模块分工；双向联系概括请求和事实回传，治理连线作用于相应参与者。内部组件和具体交接继续按第 2 节进入可编辑全景图查阅。
 
 ## 1. 从用户目标看决定架构形状的矛盾
 
@@ -69,6 +69,8 @@ Harness 接纳用户目标，组织大脑、记忆、执行与其他 Agent 持�
 | F12 | Extensions → 模块实现 | 精确安装锁、配置、隔离与生命周期管理；装配不授予用户业务权限 |
 
 F09 和 F12 概括多方共用的边界关系，不能据此推导所有模块都由同一在线服务裁决。尤其 F10 的观测汇集不改变事实归属；丢失 Trace 或通知时，任务仍由原业务记录恢复。
+
+[模块与数据 UML 图册](uml-models.md)按两种静态视角继续展开：组件页表达提供接口、内部职责与所需接口；领域页表达关键属性、事实归属与关联多重性。全局两页后接九模块各两页，关系成立的条件及完整定义在导读集中链接。
 
 ## 3. 八条抽象原则及其取舍
 
@@ -151,7 +153,7 @@ Brain、Memory、Executor 以及 Agent、UI 和生命周期适配器可以改变
 | --- | --- | --- |
 | Task | `status=active / succeeded / failed / cancelled`，终态不可重开 | `control=running / paused`、多项 `wait_reasons`、`open_effects` 和布尔值 `accounting_open` 分别保存 |
 | Operation | `execution_state=accepted / started / closed` | `effect=not_started / applied / not_applied / unknown`；`may_apply_later=true / false / unknown`；最终用量另由 `usage_final` 表达 |
-| MemoryRecord | `state=active / needs_review / disabled / deleted` | 逻辑禁止新使用之后，各持有者的物理清理仍可能 pending、residual 或 unknown |
+| MemoryRecord／MemoryControl | 仍可披露的 MemoryRecord 为 `active / needs_review / disabled`；删除后的 `deleted` 由 MemoryControl／墓碑表达 | 逻辑禁止新使用之后，各持有者的物理清理仍可能 pending、residual 或 unknown |
 | InputSubmission | `state=queued / sending / applied / rejected / withdrawn` | `withdrawal_requested` 与原目标命令消费分别核对；已发送输入不能直接改为成功撤回 |
 | Activation | `phase` 表达原切换进度 | 历史启动依据、当前实例就绪、停止新使用、旧版恢复和残留分别保存 |
 
@@ -217,9 +219,11 @@ Executor 取得可绑定原操作的写入证据后更新效果修订，Home 按
 
 ## 6. 部署映射与继续阅读
 
-上述逻辑关系先在默认模块化单体中闭合。本机使用同宿主数据库、内容存储和 jobs，适用记录共同提交；全本地身份、许可和批准可以就地核验。端云组合只把需要的 port 放到远端，原 Home 与对象 owner 保持固定，设备可主动取件，独立接纳和效果查询各自可恢复。
+上述逻辑关系先在默认模块化单体中闭合。本机使用同宿主数据库、内容存储和 jobs，适用记录共同提交；全本地身份、许可和批准可以就地核验。端云组合只把需要的 port 放到远端，原 Home 与对象 owner 保持固定，设备主动建立 WSS，云端沿连接推送，独立接纳和效果查询各自可恢复。
 
-生产设计把同一逻辑结构装入接入／取件进程、Home 应用进程、工作池、执行宿主及管理／隔离评测进程。工作池按工作类型、提供方和租户份额伸缩，事实仍归所属权威库；同一 Home 分区只有一个当前数据库写权威。应用副本增加处理机会，任务写入仍按原对象及修订裁决，共享设备也不会因多副本增加控制权。
+默认核心与宿主使用 Go，同进程通过 interface 协作，跨进程服务使用 gRPC。Protobuf 外壳承载现有严格 JSON，字段和 JCS 摘要仍由共同契约裁决；浏览器、CLI 和端侧宿主对云统一使用 WSS 双向长连接。发现、认证及大内容字节保留 HTTPS，上传／镜像管理通过 WSS／gRPC。连接、流和 goroutine 均是有界运行资源，不承担业务事实权威；详见[WSS 契约](contracts/transport.md)与[gRPC 绑定](contracts/grpc.md)。
+
+生产设计把同一逻辑结构装入连接接入进程、Home 应用进程、工作池、执行宿主及管理／隔离评测进程。工作池按工作类型、提供方和租户份额伸缩，事实仍归所属权威库；同一 Home 分区只有一个当前数据库写权威。应用副本增加处理机会，任务写入仍按原对象及修订裁决，共享设备也不会因多副本增加控制权。
 
 数据库切换须先隔离旧主、证明已确认记录完整，并恢复第二耐久副本与同步提交条件，才开放关闭、撤权、原回执及未决工作的业务写入；内容依赖与剩余容量达标后，再逐步开放新接纳。条件不足时停止相应写入，保留可安全执行的诊断与核对；已跨发送门禁的请求仍可能继续，其效果与费用须按原身份核对。跨区耐久性、故障剩余容量和性能数字属于待测生产配置，详见[生产拓扑与故障边界](deployment-production.md)。
 

@@ -1,0 +1,348 @@
+{
+  "module": "brain",
+  "title": "大脑",
+  "component": {
+    "nodes": [
+      {
+        "id": "api",
+        "name": "Brain 接口",
+        "kind": "interface",
+        "boundary": "provided",
+        "source": "brain/README.md#brain-contracts",
+        "methods": [
+          "brain.decide",
+          "brain.get",
+          "brain.cancel"
+        ]
+      },
+      {
+        "id": "service",
+        "name": "DecisionService",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "brain/implementation.md#module-shape"
+      },
+      {
+        "id": "reader",
+        "name": "ContextReader",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "brain/implementation.md#module-shape"
+      },
+      {
+        "id": "rules",
+        "name": "DecisionPolicy / ProposalValidator",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "brain/implementation.md#module-shape"
+      },
+      {
+        "id": "worker",
+        "name": "RecoveryWorker",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "brain/implementation.md#module-shape"
+      },
+      {
+        "id": "store",
+        "name": "DecisionStore",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "brain/implementation.md#module-shape"
+      },
+      {
+        "id": "adapter",
+        "name": "ModelAdapter",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "brain/implementation.md#module-shape"
+      },
+      {
+        "id": "content",
+        "name": "内容读取接口",
+        "kind": "interface",
+        "boundary": "required",
+        "source": "memory/README.md",
+        "methods": [
+          "content.get"
+        ]
+      },
+      {
+        "id": "grant",
+        "name": "使用依据接口",
+        "kind": "interface",
+        "boundary": "required",
+        "source": "security/README.md",
+        "methods": [
+          "grant.use",
+          "grant.use.get"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "from": "service",
+        "to": "api",
+        "type": "realization",
+        "label": "提供"
+      },
+      {
+        "from": "service",
+        "to": "reader",
+        "type": "dependency",
+        "label": "输入及来源检查"
+      },
+      {
+        "from": "service",
+        "to": "store",
+        "type": "dependency",
+        "label": "接纳／查询／取消"
+      },
+      {
+        "from": "worker",
+        "to": "reader",
+        "type": "dependency",
+        "label": "固定上下文"
+      },
+      {
+        "from": "worker",
+        "to": "rules",
+        "type": "dependency",
+        "label": "路径 / 校验"
+      },
+      {
+        "from": "worker",
+        "to": "store",
+        "type": "dependency",
+        "label": "阶段／调用事实"
+      },
+      {
+        "from": "worker",
+        "to": "adapter",
+        "type": "dependency",
+        "label": "生成／原调用核对"
+      },
+      {
+        "from": "reader",
+        "to": "content",
+        "type": "dependency",
+        "label": "准确字节 / 资格"
+      },
+      {
+        "from": "worker",
+        "to": "grant",
+        "type": "dependency",
+        "label": "原使用依据"
+      }
+    ],
+    "notes": [
+      "Home 组装上下文并独立准入；Brain 不拥有 Task 写权。",
+      "DecisionStore 绑定宿主事务与 jobs；模型与内容调用在事务外。",
+      "默认每轮零或一次物理生成；ModelAdapter 不执行模型返回的工具调用。"
+    ]
+  },
+  "data": {
+    "nodes": [
+      {
+        "id": "request",
+        "name": "DecisionRequest",
+        "owner": "Home 固定；Brain 绑定",
+        "schema": "DecisionRequest",
+        "attributes": [
+          {
+            "name": "decision_id",
+            "type": "ID"
+          },
+          {
+            "name": "task_id",
+            "type": "ID"
+          },
+          {
+            "name": "snapshot_revision",
+            "type": "Revision"
+          },
+          {
+            "name": "context_ref",
+            "type": "ContentRef"
+          },
+          {
+            "name": "model_profile_ref",
+            "type": "ComponentRef"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/DecisionRequest"
+      },
+      {
+        "id": "context",
+        "name": "BrainContext",
+        "owner": "Home（正文由内容 owner 保存）",
+        "schema": "BrainContext",
+        "attributes": [
+          {
+            "name": "task_ref",
+            "type": "TaskRef"
+          },
+          {
+            "name": "snapshot_revision",
+            "type": "Revision"
+          },
+          {
+            "name": "goal_revision",
+            "type": "Revision"
+          },
+          {
+            "name": "control_revision",
+            "type": "Revision"
+          },
+          {
+            "name": "input_manifest",
+            "type": "ContentRef[0..100]"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/BrainContext"
+      },
+      {
+        "id": "decision",
+        "name": "DecisionRecord",
+        "owner": "Brain",
+        "schema": "DecisionRecord",
+        "attributes": [
+          {
+            "name": "decision_id",
+            "type": "ID"
+          },
+          {
+            "name": "revision",
+            "type": "Revision"
+          },
+          {
+            "name": "snapshot_revision",
+            "type": "Revision"
+          },
+          {
+            "name": "status",
+            "type": "DecisionStatus"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/DecisionRecord"
+      },
+      {
+        "id": "call",
+        "name": "ModelCall",
+        "owner": "Brain",
+        "schema": "ModelCall",
+        "attributes": [
+          {
+            "name": "model_call_id",
+            "type": "ID"
+          },
+          {
+            "name": "provider_request_id",
+            "type": "String?"
+          },
+          {
+            "name": "state",
+            "type": "ModelCallState"
+          },
+          {
+            "name": "usage",
+            "type": "Amount[0..100]"
+          },
+          {
+            "name": "usage_final",
+            "type": "Boolean"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/ModelCall"
+      },
+      {
+        "id": "proposal",
+        "name": "Proposal",
+        "owner": "Brain（本轮结果值）",
+        "schema": "Proposal",
+        "attributes": [
+          {
+            "name": "kind",
+            "type": "ProposalKind"
+          },
+          {
+            "name": "rationale",
+            "type": "String"
+          },
+          {
+            "name": "evidence_refs",
+            "type": "ContentRef[0..100]"
+          },
+          {
+            "name": "assumptions",
+            "type": "String[0..100]"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/Proposal"
+      }
+    ],
+    "edges": [
+      {
+        "from": "request",
+        "to": "context",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "1",
+        "label": "绑定固定正文",
+        "source": "brain/implementation.md",
+        "constraint": "context_ref 固定一个 BrainContext；不声明该内容只能被一个决策引用。"
+      },
+      {
+        "from": "request",
+        "to": "decision",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..1",
+        "label": "按原身份接纳",
+        "source": "brain/implementation.md#data-flow",
+        "constraint": "成功接纳后恰好一份原决策；被拒请求可无记录。"
+      },
+      {
+        "from": "decision",
+        "to": "call",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..1",
+        "label": "可选模型调用",
+        "source": "brain/README.md#brain-contracts",
+        "constraint": "确定性路径不创建 ModelCall；换 worker 不创建第二次物理调用。"
+      },
+      {
+        "from": "decision",
+        "to": "proposal",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "0..1",
+        "label": "完成时返回",
+        "source": "brain/README.md#brain-contracts",
+        "constraint": "仅 completed 有 proposal；不推导 Proposal 内容在不同决策间全局独占。"
+      }
+    ],
+    "notes": [
+      "DecisionRecord→ModelCall 为 0..1；Proposal 只在 completed 有效。",
+      "跨 owner：BrainContext 由 Home 固定；提案仍须 Home 当前准入。",
+      "cancelled 与模型停止、usage_final 独立；迟到账单只更新原调用事实。"
+    ]
+  },
+  "reading_notes": [
+    "DecisionRecord 是线投影，DecisionStore 中的 brain_decision、decision_input、decision_output 与 jobs 保留接纳、输出和恢复责任。领域图不将这些存储表臆造为运行类继承体系。",
+    "DecisionRequest.context_ref 绑定一个固定 BrainContext，输入正文及来源清单由 Home 组装。图中反向 0..* 不限制同一准确上下文版本被引用的次数；每次实际来源处理仍分别记事实。",
+    "本轮可能直接给出确定性提案，因此 DecisionRecord→ModelCall 为 0..1。需要模型时同 decision_id 的 model_call 唯一；原决策查询及工作者更换不得再发送一次。",
+    "Proposal 是结果值，图只列共同字段；act、need_context、request_input、complete、fail 是 kind 分支，不表示代码继承。提案没有全局唯一身份，反向关联不声明内容全局独占。",
+    "供应商可能已处理而答复丢失时，Brain 查原调用；不支持查询则保留 provider_result_unknown 及费用责任。取消只关闭决策推进，ModelCall.stopped 需要停止证据；迟到输出不能改成新一轮提案。"
+  ],
+  "sources": [
+    "brain/README.md",
+    "brain/implementation.md",
+    "task-runtime/implementation.md",
+    "memory/README.md",
+    "security/README.md",
+    "contracts/schemas/protocol.schema.json",
+    "contracts/schemas/methods.json"
+  ]
+}

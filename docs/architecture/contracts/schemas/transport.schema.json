@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://harness.invalid/schema/transport-draft-2",
+  "$id": "https://harness.invalid/schema/transport-draft-3",
   "$defs": {
     "Discovery": {
       "type": "object",
@@ -33,48 +33,13 @@
           "maxItems": 256
         },
         "auth_profile": {
-          "const": "opaque-bearer-1"
+          "const": "session-cookie-or-opaque-bearer-1"
         },
         "proof_profile": {
           "const": "home-jws-es256-1"
         },
         "limits": {
-          "type": "object",
-          "properties": {
-            "max_json_bytes": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 262144
-            },
-            "max_page_items": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            },
-            "max_pull_items": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            },
-            "max_wait_ms": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 25000
-            },
-            "max_content_bytes": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 9007199254740991
-            }
-          },
-          "required": [
-            "max_json_bytes",
-            "max_page_items",
-            "max_pull_items",
-            "max_wait_ms",
-            "max_content_bytes"
-          ],
-          "additionalProperties": false
+          "$ref": "#/$defs/ConnectionLimits"
         },
         "retention": {
           "type": "object",
@@ -95,7 +60,13 @@
           "additionalProperties": false
         },
         "changes_supported": {
-          "type": "boolean"
+          "const": true
+        },
+        "transport_profile": {
+          "const": "harness-wss-draft-3"
+        },
+        "connect_path": {
+          "const": "/v1/connect"
         }
       },
       "required": [
@@ -109,7 +80,9 @@
         "proof_profile",
         "limits",
         "retention",
-        "changes_supported"
+        "changes_supported",
+        "transport_profile",
+        "connect_path"
       ],
       "additionalProperties": false
     },
@@ -120,36 +93,24 @@
           "const": "harness/1"
         },
         "auth_profile": {
-          "const": "opaque-bearer-1"
+          "const": "session-cookie-or-opaque-bearer-1"
         },
         "pairing_supported": {
           "type": "boolean"
+        },
+        "transport_profile": {
+          "const": "harness-wss-draft-3"
+        },
+        "connect_path": {
+          "const": "/v1/connect"
         }
       },
       "required": [
         "protocol",
         "auth_profile",
-        "pairing_supported"
-      ],
-      "additionalProperties": false
-    },
-    "PullInput": {
-      "type": "object",
-      "properties": {
-        "max_items": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 100
-        },
-        "wait_ms": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 25000
-        }
-      },
-      "required": [
-        "max_items",
-        "wait_ms"
+        "pairing_supported",
+        "transport_profile",
+        "connect_path"
       ],
       "additionalProperties": false
     },
@@ -326,33 +287,6 @@
       "required": [
         "delivery",
         "delivery_proof"
-      ],
-      "additionalProperties": false
-    },
-    "PullOutput": {
-      "type": "object",
-      "properties": {
-        "deliveries": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/DeliveryEnvelope"
-          },
-          "maxItems": 100
-        },
-        "more": {
-          "type": "boolean"
-        },
-        "mirror_uploads": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/MirrorTicket"
-          },
-          "maxItems": 100
-        }
-      },
-      "required": [
-        "deliveries",
-        "more"
       ],
       "additionalProperties": false
     },
@@ -1020,14 +954,1004 @@
             "restricted",
             "closed"
           ]
+        },
+        "ticket_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         }
       },
       "required": [
+        "ticket_id",
         "control_id",
         "content_ref",
         "copy_id",
         "control_revision",
         "cause"
+      ],
+      "additionalProperties": false
+    },
+    "ConnectionLimits": {
+      "type": "object",
+      "properties": {
+        "max_json_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 262144
+        },
+        "max_frame_bytes": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 1048576
+        },
+        "max_page_items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "max_inflight_requests": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 32
+        },
+        "max_pending_deliveries": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 32
+        },
+        "max_queue_bytes": {
+          "type": "integer",
+          "minimum": 2048,
+          "maximum": 4194304
+        },
+        "control_reserve_bytes": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 1048576
+        },
+        "control_reserve_items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "max_connections_per_identity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "max_subscriptions": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "heartbeat_interval_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 30000
+        },
+        "heartbeat_timeout_ms": {
+          "type": "integer",
+          "minimum": 2000,
+          "maximum": 90000
+        },
+        "max_content_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "max_json_bytes",
+        "max_frame_bytes",
+        "max_page_items",
+        "max_inflight_requests",
+        "max_pending_deliveries",
+        "max_queue_bytes",
+        "control_reserve_bytes",
+        "control_reserve_items",
+        "max_connections_per_identity",
+        "max_subscriptions",
+        "heartbeat_interval_ms",
+        "heartbeat_timeout_ms",
+        "max_content_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "SubscribeInput": {
+      "type": "object",
+      "properties": {
+        "object_types": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "task",
+              "operation",
+              "memory",
+              "surface",
+              "activation",
+              "grant"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true
+        },
+        "cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "object_types"
+      ],
+      "additionalProperties": false
+    },
+    "Subscribed": {
+      "type": "object",
+      "properties": {
+        "subscription_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "snapshot_required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "subscription_id",
+        "cursor",
+        "snapshot_required"
+      ],
+      "additionalProperties": false
+    },
+    "Frame": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "ready"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "logical_service_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "limits": {
+              "$ref": "#/$defs/ConnectionLimits"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "logical_service_id",
+            "limits"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "command"
+            },
+            "request": {
+              "$ref": "protocol.schema.json#/$defs/Command"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "command"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "protocol.schema.json#/$defs/Receipt"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "query"
+            },
+            "request": {
+              "$ref": "protocol.schema.json#/$defs/Query"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "query"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "protocol.schema.json#/$defs/QueryResult"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "receipt_lookup"
+            },
+            "request": {
+              "$ref": "#/$defs/Lookup"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "receipt_lookup"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "protocol.schema.json#/$defs/Receipt"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "subscribe"
+            },
+            "request": {
+              "$ref": "#/$defs/SubscribeInput"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "subscribe"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Subscribed"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "delivery"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "envelope": {
+              "$ref": "#/$defs/DeliveryEnvelope"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "envelope"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "reply"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "reply": {
+              "$ref": "#/$defs/Reply"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "reply"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "reply_ack"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "ack": {
+              "$ref": "#/$defs/ReplyAck"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "ack"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "mirror_ticket"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "ticket": {
+              "$ref": "#/$defs/MirrorTicket"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "ticket"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "change"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "subscription_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "change": {
+              "$ref": "#/$defs/Change"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "subscription_id",
+            "change"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "snapshot_required"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "subscription_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "reason": {
+              "enum": [
+                "cursor_expired",
+                "queue_overflow"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "subscription_id",
+            "reason"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "ping"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "nonce": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "nonce"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "pong"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "nonce": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "nonce"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "upload_reserve"
+            },
+            "request": {
+              "$ref": "#/$defs/UploadIntent"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "upload_reserve"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Upload"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "upload_lookup"
+            },
+            "request": {
+              "$ref": "#/$defs/UploadLookup"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "upload_lookup"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Upload"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "mirror_reserve"
+            },
+            "request": {
+              "$ref": "#/$defs/MirrorTicket"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "mirror_reserve"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Mirror"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "mirror_lookup"
+            },
+            "request": {
+              "$ref": "#/$defs/MirrorLookup"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "mirror_lookup"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Mirror"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "mirror_control"
+            },
+            "request": {
+              "$ref": "#/$defs/MirrorControl"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "mirror_control"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Mirror"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_id",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "UploadLookup": {
+      "type": "object",
+      "properties": {
+        "upload_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        }
+      },
+      "required": [
+        "upload_id"
+      ],
+      "additionalProperties": false
+    },
+    "MirrorLookup": {
+      "type": "object",
+      "properties": {
+        "ticket_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        }
+      },
+      "required": [
+        "ticket_id"
       ],
       "additionalProperties": false
     }

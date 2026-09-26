@@ -1,5 +1,7 @@
 # 任务运行时：从目标到持久推进
 
+[模块与数据 UML](../uml-models.md#task-runtime) · [可编辑 UML 图册](../diagrams/uml-models.drawio)
+
 [总览](../README.md) · [大脑](../brain/README.md) · [执行](../execution/README.md) · [共同契约](../contracts/README.md)
 
 Task Home 保存任务目标、控制、额度、操作意图和完成决定。它把一次决策的可用事实交给大脑，再把有效提案准入为持久工作。Executor 保存真实效果；运行时依据这些事实推进任务，不把模型输出或请求日志当作执行成功。

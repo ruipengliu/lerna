@@ -1,5 +1,7 @@
 # 大脑：可恢复的单轮决策
 
+[模块与数据 UML](../uml-models.md#brain) · [可编辑 UML 图册](../diagrams/uml-models.drawio)
+
 大脑根据目标、约束和已取得的事实提出下一步，Task Home 负责决定是否执行及任务是否完成。本模块承担 C1，并通过上下文、取证、能力选择和反馈参与 C2–C5；替换、权限与评测分别遵守 C6–C9、A1–A4。当前为设计规格，尚无运行质量或容量实测。
 
 本页定义大脑调用、模型适配、上下文补充和决策输出；任务条件与完成规则见[任务运行](../task-runtime/README.md)，工具契约见[执行](../execution/README.md)，来源与用途见[记忆](../memory/README.md)。单轮 Brain 可以独立部署；调用云模型并不要求部署远程 Brain。

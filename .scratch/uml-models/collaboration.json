@@ -1,0 +1,435 @@
+{
+  "module": "collaboration",
+  "title": "Agent 协作与任务委派",
+  "component": {
+    "nodes": [
+      {
+        "id": "api",
+        "name": "Collaboration API",
+        "kind": "interface",
+        "boundary": "provided",
+        "methods": [
+          "collaboration.delegate",
+          "collaboration.read",
+          "collaboration.control",
+          "collaboration.reconcile",
+          "collaboration.submit_input"
+        ],
+        "source": "contracts/schemas/methods.json"
+      },
+      {
+        "id": "admission",
+        "name": "协作用例 facade / DelegationAdmission",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "collaboration/implementation.md#module-shape"
+      },
+      {
+        "id": "factory",
+        "name": "InternalChildFactory",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "collaboration/implementation.md#module-shape"
+      },
+      {
+        "id": "adapter",
+        "name": "ExternalAgentAdapter",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "collaboration/implementation.md#module-shape"
+      },
+      {
+        "id": "reducer",
+        "name": "DelegationReducer",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "collaboration/implementation.md#module-shape"
+      },
+      {
+        "id": "control",
+        "name": "ControlPropagator / SettlementCoordinator",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "collaboration/implementation.md#module-shape"
+      },
+      {
+        "id": "store",
+        "name": "Collaboration Store",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "collaboration/implementation.md#module-shape"
+      },
+      {
+        "id": "runtime",
+        "name": "TaskCoordinator / BudgetLedger port",
+        "kind": "interface",
+        "boundary": "required",
+        "methods": [],
+        "source": "collaboration/implementation.md#module-shape"
+      },
+      {
+        "id": "remote",
+        "name": "外部 Agent port",
+        "kind": "interface",
+        "boundary": "required",
+        "methods": [],
+        "source": "collaboration/implementation.md#module-shape"
+      }
+    ],
+    "edges": [
+      {
+        "from": "admission",
+        "to": "api",
+        "type": "realization",
+        "label": "提供"
+      },
+      {
+        "from": "admission",
+        "to": "factory",
+        "type": "dependency",
+        "label": "内部创建"
+      },
+      {
+        "from": "admission",
+        "to": "store",
+        "type": "dependency",
+        "label": "保存外部发送责任"
+      },
+      {
+        "from": "factory",
+        "to": "store",
+        "type": "dependency",
+        "label": "唯一内部映射"
+      },
+      {
+        "from": "factory",
+        "to": "runtime",
+        "type": "dependency",
+        "label": "同事务建子与额度"
+      },
+      {
+        "from": "adapter",
+        "to": "remote",
+        "type": "dependency",
+        "label": "沿原创建键查询"
+      },
+      {
+        "from": "adapter",
+        "to": "reducer",
+        "type": "dependency",
+        "label": "归并原生事实"
+      },
+      {
+        "from": "reducer",
+        "to": "store",
+        "type": "dependency",
+        "label": "单调修订"
+      },
+      {
+        "from": "reducer",
+        "to": "runtime",
+        "type": "dependency",
+        "label": "父投影与后续工作"
+      },
+      {
+        "from": "control",
+        "to": "remote",
+        "type": "dependency",
+        "label": "原控制与封账"
+      },
+      {
+        "from": "control",
+        "to": "runtime",
+        "type": "dependency",
+        "label": "原额度结算"
+      },
+      {
+        "from": "control",
+        "to": "store",
+        "type": "dependency",
+        "label": "控制与收尾责任"
+      }
+    ],
+    "notes": [
+      "内部子任务与父任务共用 Task Home；子创建、映射与预算使用同一事务。",
+      "Store 中的持久 jobs 由宿主调度；远端调用在事务外，答复丢失沿原身份核对。",
+      "两个 required port 为参考实现边界，非新增公共线方法；组件名尚无对应运行代码。"
+    ]
+  },
+  "data": {
+    "nodes": [
+      {
+        "id": "task",
+        "name": "Task",
+        "owner": "Task Runtime / 固定 Home",
+        "schema": "Task",
+        "attributes": [
+          {
+            "name": "task_id",
+            "type": "ID"
+          },
+          {
+            "name": "home_id",
+            "type": "ID"
+          },
+          {
+            "name": "revision",
+            "type": "Revision"
+          },
+          {
+            "name": "status",
+            "type": "Enum"
+          },
+          {
+            "name": "open_effects",
+            "type": "ID[0..100]"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/Task"
+      },
+      {
+        "id": "delegation",
+        "name": "Delegation",
+        "owner": "Collaboration / 父 Home",
+        "schema": "Delegation",
+        "attributes": [
+          {
+            "name": "delegation_id",
+            "type": "ID"
+          },
+          {
+            "name": "parent_task_id",
+            "type": "ID"
+          },
+          {
+            "name": "phase",
+            "type": "Enum"
+          },
+          {
+            "name": "control_pending",
+            "type": "Boolean"
+          },
+          {
+            "name": "effects_pending",
+            "type": "Boolean"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/Delegation"
+      },
+      {
+        "id": "binding",
+        "name": "AgentBinding",
+        "owner": "Collaboration",
+        "schema": "AgentBinding",
+        "attributes": [
+          {
+            "name": "agent_ref",
+            "type": "ComponentRef"
+          },
+          {
+            "name": "adapter_ref",
+            "type": "ComponentRef"
+          },
+          {
+            "name": "endpoint_id",
+            "type": "ID"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/AgentBinding"
+      },
+      {
+        "id": "descriptor",
+        "name": "AgentDescriptor",
+        "owner": "Collaboration / 安装配置方",
+        "schema": null,
+        "attributes": [
+          {
+            "name": "agent_id",
+            "type": "ID"
+          },
+          {
+            "name": "version",
+            "type": "Version"
+          },
+          {
+            "name": "digest",
+            "type": "Digest"
+          },
+          {
+            "name": "kind",
+            "type": "internal | external"
+          },
+          {
+            "name": "control_support",
+            "type": "ControlCapabilities"
+          }
+        ],
+        "source": "collaboration/README.md#4-权威记录与接口"
+      },
+      {
+        "id": "internal",
+        "name": "InternalChildLink",
+        "owner": "Collaboration / 父 Home",
+        "schema": null,
+        "attributes": [
+          {
+            "name": "delegation_id",
+            "type": "ID"
+          },
+          {
+            "name": "child_task_id",
+            "type": "ID"
+          },
+          {
+            "name": "父任务",
+            "type": "Task ID"
+          }
+        ],
+        "source": "collaboration/implementation.md#2-存储与唯一约束"
+      },
+      {
+        "id": "external",
+        "name": "ExternalTaskLink",
+        "owner": "Collaboration / 父 Home",
+        "schema": null,
+        "attributes": [
+          {
+            "name": "delegation_id",
+            "type": "ID"
+          },
+          {
+            "name": "endpoint_id",
+            "type": "ID"
+          },
+          {
+            "name": "creation_key",
+            "type": "ID"
+          },
+          {
+            "name": "remote_task_id",
+            "type": "ID"
+          }
+        ],
+        "source": "collaboration/implementation.md#data-flow"
+      },
+      {
+        "id": "allocation",
+        "name": "RuntimeBudgetAllocation",
+        "owner": "Task Runtime / 父预算 owner",
+        "schema": "RuntimeBudgetAllocation",
+        "attributes": [
+          {
+            "name": "allocation_id",
+            "type": "ID"
+          },
+          {
+            "name": "receiver_id",
+            "type": "ID"
+          },
+          {
+            "name": "revision",
+            "type": "Revision"
+          },
+          {
+            "name": "state",
+            "type": "allocated | settled"
+          },
+          {
+            "name": "closure",
+            "type": "RuntimeBudgetClosure [0..1]"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/RuntimeBudgetAllocation"
+      }
+    ],
+    "edges": [
+      {
+        "from": "task",
+        "to": "delegation",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..*",
+        "label": "父任务",
+        "source": "collaboration/implementation.md#data-flow"
+      },
+      {
+        "from": "delegation",
+        "to": "binding",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "1",
+        "label": "精确绑定",
+        "source": "contracts/schemas/protocol.schema.json#/$defs/Delegation"
+      },
+      {
+        "from": "binding",
+        "to": "descriptor",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "1",
+        "label": "精确声明",
+        "source": "collaboration/implementation.md#2-存储与唯一约束"
+      },
+      {
+        "from": "delegation",
+        "to": "internal",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..1",
+        "label": "内部子映射",
+        "source": "collaboration/implementation.md#data-flow",
+        "constraint": "与外部映射互斥；preparing 可尚无映射"
+      },
+      {
+        "from": "delegation",
+        "to": "external",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..1",
+        "label": "已建立外部映射",
+        "source": "collaboration/implementation.md#data-flow",
+        "constraint": "与内部映射互斥；创建未知时先保存原 creation_key 与 job"
+      },
+      {
+        "from": "internal",
+        "to": "task",
+        "type": "association",
+        "fromMultiplicity": "0..1",
+        "toMultiplicity": "1",
+        "label": "同 Home 子任务",
+        "source": "collaboration/implementation.md#2-存储与唯一约束",
+        "constraint": "内部映射两方向唯一；普通根 Task 可无该映射"
+      },
+      {
+        "from": "delegation",
+        "to": "allocation",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "1",
+        "label": "唯一额度",
+        "source": "collaboration/implementation.md#data-flow",
+        "constraint": "仅展示已分配给协作委派的额度；一般预算分配不在此关系范围"
+      }
+    ],
+    "notes": [
+      "内外子映射最多一个且互斥；preparing 可两者皆无，固定创建键与额度仍须保留。",
+      "Task 与 Allocation 归运行时；remote_task_id 归远端，不能当成本地 Task 或分布式外键。",
+      "phase=closed 需目标封闭、效果核清及最终封账；父取消或子成功均不抹去原责任。"
+    ]
+  },
+  "reading_notes": [
+    "组件页合并展示共同入口与接纳、控制与结算职责，名称来自参考实现；箭头表示结构依赖，不表达执行顺序或事务完成。原 Agent 目录／授权核验、输入及进展记录等完整职责仍见模块实现篇。",
+    "InternalChildLink 与 ExternalTaskLink 表示已经固定的唯一子映射；外部创建未知时可暂时没有映射，但原 creation_key、Allocation 与发送／查询 job 已持久化。Delegation Schema 只禁止 child_task_id 与 remote_binding 同时存在，并未要求始终二选一。",
+    "额度关联按已属于协作委派的上下文显示一对一；不把这一局部视图扩大为整个预算领域中每份分配都必有委派。AgentBinding 可被多个委派引用，不能由单个嵌入对象推出全局一对一。",
+    "正常内部创建把子 Task、唯一映射、额度和首 job 共同提交。外部答复丢失或父取消后继续查询原创建键与原控制；无法证实未接纳或最终封账时保留预留，不建第二个远端任务。重启补原责任工作槽，最小关闭和映射身份长期保留。",
+    "AgentDescriptor、InternalChildLink 与 ExternalTaskLink 为有正文依据的内部领域记录，schema=null；不表示已实现的代码类、继承结构或删除级联。"
+  ],
+  "sources": [
+    "collaboration/README.md",
+    "collaboration/implementation.md",
+    "task-runtime/README.md",
+    "task-runtime/implementation.md",
+    "contracts/schemas/methods.json",
+    "contracts/schemas/protocol.schema.json"
+  ]
+}

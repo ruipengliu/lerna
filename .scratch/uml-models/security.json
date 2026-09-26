@@ -1,0 +1,425 @@
+{
+  "module": "security",
+  "title": "身份、授权与用户隔离",
+  "component": {
+    "nodes": [
+      {
+        "id": "api",
+        "name": "Security API",
+        "kind": "interface",
+        "boundary": "provided",
+        "methods": [
+          "grant.issue",
+          "grant.use",
+          "grant.use.settle",
+          "endpoint.pair.approve",
+          "confirmation.decide"
+        ],
+        "source": "contracts/schemas/methods.json"
+      },
+      {
+        "id": "facade",
+        "name": "grant / endpoint /\nconfirmation facade",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "security/implementation.md#module-shape"
+      },
+      {
+        "id": "ledgers",
+        "name": "GrantLedger / LeaseLedger",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "security/implementation.md#module-shape"
+      },
+      {
+        "id": "pairing",
+        "name": "PairingController",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "security/implementation.md#module-shape"
+      },
+      {
+        "id": "confirmation",
+        "name": "ConfirmationStore",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "security/implementation.md#module-shape"
+      },
+      {
+        "id": "repositories",
+        "name": "领域 repositories\n命令、账本与 jobs",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "security/implementation.md#module-shape"
+      },
+      {
+        "id": "revocation",
+        "name": "RevocationWorker",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "security/implementation.md#module-shape"
+      },
+      {
+        "id": "identity_port",
+        "name": "宿主身份与凭据 port\n经 IdentityAdapter",
+        "kind": "interface",
+        "boundary": "required",
+        "methods": [],
+        "source": "security/implementation.md#module-shape"
+      },
+      {
+        "id": "resource_port",
+        "name": "资源使用端控制 port",
+        "kind": "interface",
+        "boundary": "required",
+        "methods": [],
+        "source": "security/implementation.md#module-shape"
+      }
+    ],
+    "edges": [
+      {
+        "from": "facade",
+        "to": "api",
+        "type": "realization",
+        "label": "提供"
+      },
+      {
+        "from": "facade",
+        "to": "ledgers",
+        "type": "dependency",
+        "label": "许可／使用／租约"
+      },
+      {
+        "from": "facade",
+        "to": "pairing",
+        "type": "dependency",
+        "label": "配对与端点"
+      },
+      {
+        "from": "facade",
+        "to": "confirmation",
+        "type": "dependency",
+        "label": "本 owner 的确认"
+      },
+      {
+        "from": "ledgers",
+        "to": "confirmation",
+        "type": "dependency",
+        "label": "同事务一次消费"
+      },
+      {
+        "from": "pairing",
+        "to": "confirmation",
+        "type": "dependency",
+        "label": "同事务一次消费"
+      },
+      {
+        "from": "ledgers",
+        "to": "repositories",
+        "type": "dependency",
+        "label": "许可、占用与结算"
+      },
+      {
+        "from": "pairing",
+        "to": "repositories",
+        "type": "dependency",
+        "label": "端点 / 回执"
+      },
+      {
+        "from": "confirmation",
+        "to": "repositories",
+        "type": "dependency",
+        "label": "决定与消费位置"
+      },
+      {
+        "from": "revocation",
+        "to": "repositories",
+        "type": "dependency",
+        "label": "撤销 / 传播"
+      },
+      {
+        "from": "facade",
+        "to": "identity_port",
+        "type": "dependency",
+        "label": "认证上下文绑定"
+      },
+      {
+        "from": "revocation",
+        "to": "resource_port",
+        "type": "dependency",
+        "label": "传播 / 核对"
+      }
+    ],
+    "notes": [
+      "ConfirmationStore 只裁决本业务 owner 的确认；其他 owner 在自身提交域装配。",
+      "grant.check 是当前检查；固定 grant.use 回执才给出有限使用依据。",
+      "撤销提交、使用端停止与在途效果核对是不同事实。"
+    ]
+  },
+  "data": {
+    "nodes": [
+      {
+        "id": "confirmation",
+        "name": "ConfirmationRecord",
+        "owner": "consumer owner（本页：Grant）",
+        "schema": "ConfirmationRecord",
+        "attributes": [
+          {
+            "name": "confirmation_id",
+            "type": "ID"
+          },
+          {
+            "name": "consumer_method",
+            "type": "Enum"
+          },
+          {
+            "name": "consumer_command_id",
+            "type": "ID"
+          },
+          {
+            "name": "intent_hash",
+            "type": "Digest"
+          },
+          {
+            "name": "state",
+            "type": "Enum"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json"
+      },
+      {
+        "id": "grant",
+        "name": "GrantRecord",
+        "owner": "Grant owner",
+        "schema": "GrantRecord",
+        "attributes": [
+          {
+            "name": "grant_id",
+            "type": "ID"
+          },
+          {
+            "name": "owner_id",
+            "type": "ID"
+          },
+          {
+            "name": "revision",
+            "type": "Revision"
+          },
+          {
+            "name": "policy",
+            "type": "GrantPolicy"
+          },
+          {
+            "name": "state",
+            "type": "active | revoked"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json"
+      },
+      {
+        "id": "use",
+        "name": "UseReceipt",
+        "owner": "Grant owner",
+        "schema": "UseReceipt",
+        "attributes": [
+          {
+            "name": "use_id",
+            "type": "ID"
+          },
+          {
+            "name": "intent_hash",
+            "type": "Digest"
+          },
+          {
+            "name": "grant_revisions",
+            "type": "ObjectRef [1..100]"
+          },
+          {
+            "name": "decision",
+            "type": "allowed | denied"
+          },
+          {
+            "name": "start_before",
+            "type": "Timestamp"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json"
+      },
+      {
+        "id": "settlement",
+        "name": "UseSettlementRecord",
+        "owner": "Grant owner · 计量事实另属使用端",
+        "schema": "UseSettlementRecord",
+        "attributes": [
+          {
+            "name": "use_id",
+            "type": "ID"
+          },
+          {
+            "name": "operation_id",
+            "type": "ID"
+          },
+          {
+            "name": "usage_owner_id",
+            "type": "ID"
+          },
+          {
+            "name": "usage_revision",
+            "type": "Integer ≥ 0"
+          },
+          {
+            "name": "state",
+            "type": "open | final"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json"
+      },
+      {
+        "id": "lease",
+        "name": "OfflineLeaseRecord",
+        "owner": "Grant owner · 固定端点实例",
+        "schema": "OfflineLeaseRecord",
+        "attributes": [
+          {
+            "name": "lease_id",
+            "type": "ID"
+          },
+          {
+            "name": "grant_refs",
+            "type": "ObjectRef [1..100]"
+          },
+          {
+            "name": "endpoint_id",
+            "type": "ID"
+          },
+          {
+            "name": "instance_id",
+            "type": "ID"
+          },
+          {
+            "name": "state",
+            "type": "Enum"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json"
+      },
+      {
+        "id": "endpoint",
+        "name": "EndpointRecord",
+        "owner": "端点登记 owner",
+        "schema": "EndpointRecord",
+        "attributes": [
+          {
+            "name": "endpoint_id",
+            "type": "ID"
+          },
+          {
+            "name": "instance_id",
+            "type": "ID"
+          },
+          {
+            "name": "credential_generation",
+            "type": "Revision"
+          },
+          {
+            "name": "state",
+            "type": "active | revoked"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json"
+      }
+    ],
+    "edges": [
+      {
+        "from": "grant",
+        "to": "confirmation",
+        "type": "association",
+        "fromMultiplicity": "0..1",
+        "toMultiplicity": "1",
+        "label": "confirmation_ref",
+        "source": "security/implementation.md#data-flow",
+        "constraint": "仅 consumer_method=grant.issue 的确认可产生此 Grant；确认和签发同 owner、同事务消费。"
+      },
+      {
+        "from": "use",
+        "to": "grant",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "1..100",
+        "label": "必要许可修订",
+        "source": "contracts/schemas/protocol.schema.json",
+        "constraint": "一个 UseReceipt 可依赖多条 Grant；同 owner 全部必要许可一起裁决，占用不做局部成功。"
+      },
+      {
+        "from": "settlement",
+        "to": "use",
+        "type": "association",
+        "fromMultiplicity": "0..1",
+        "toMultiplicity": "1",
+        "label": "固定 use_id 的结算",
+        "source": "security/implementation.md#data-flow",
+        "constraint": "decision=allowed 时恰有 1 份结算；decision=denied 时为 0。结算不改写原 UseReceipt。"
+      },
+      {
+        "from": "lease",
+        "to": "grant",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "1..100",
+        "label": "预分配来源",
+        "source": "contracts/schemas/protocol.schema.json",
+        "constraint": "租约从这些许可预留额度；不因到期自动返还未知用量。"
+      },
+      {
+        "from": "lease",
+        "to": "endpoint",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "1",
+        "label": "固定端点与实例",
+        "source": "security/implementation.md#data-flow",
+        "constraint": "绑定签发时实例资格；端点当前实例改变不把旧租约迁给新实例。"
+      },
+      {
+        "from": "grant",
+        "to": "grant",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "0..1",
+        "label": "父许可",
+        "source": "security/README.md",
+        "constraint": "默认子许可仅有一条父链；每个父许可可有多条子许可，逐维收缩且检查当前撤销。"
+      },
+      {
+        "from": "lease",
+        "to": "confirmation",
+        "type": "association",
+        "fromMultiplicity": "0..1",
+        "toMultiplicity": "1",
+        "label": "分配确认",
+        "source": "security/implementation.md",
+        "constraint": "仅 consumer_method=grant.lease.allocate；关联来自固定原 consumer_command，不虚构 OfflineLeaseRecord.confirmation_ref 字段。"
+      }
+    ],
+    "notes": [
+      "UseReceipt 的历史决定不可变；当前启动资格与结算状态单独判定。",
+      "allowed 才建立 UseSettlementRecord；最终零用量也不恢复 once 身份。",
+      "Confirmation 属于实际业务 owner，不能集中交给交互服务消费。"
+    ]
+  },
+  "reading_notes": [
+    "组件页把 GrantLedger 与 LeaseLedger 放入同一授权账本框，保留二者真实名称；facade 才实现所列公共接口。两个空 methods 的接口是宿主装配 port，并非新增公共方法。",
+    "ResourceNormalizer、IdentityAdapter 与实际凭据保存的完整连接见实现页。规则仍分别由许可账本与资源使用端裁决；资源规范化不能签发 Grant，远端资源当前状态不具备跨库原子保证。",
+    "UseReceipt.grant_revisions 是 1..100 的准确许可修订引用，不是 UseReceipt 一对一归属于 Grant。同 owner 内多许可全部占用或全部拒绝；跨 owner 的部分占用要保留原事实，全部依据未齐或启动窗口失效时不能行动。",
+    "UseSettlementRecord 仅在 allowed 时建立，与 use_id 一一对应。实际计量 owner 先持久累计用量，Grant owner 按差额转入 spent；最终关闭证明才释放数值 held。once 消费身份与费用余额独立，零用量最终结算也不返还 once。",
+    "ConfirmationRecord 是通用契约，由各 consumer owner 保存。图中 Grant 和 OfflineLease 的确认关联只表达各自 consumer_method 分支；confirmation_ref 是 GrantRecord 字段，而租约关联来自原 allocate 命令，不是给租约 Schema 添加字段。",
+    "正常链路先固定业务 operation，再取得使用回执，使用端检查本地门禁后启动。grant.use 答复丢失只查原 use；撤销不改写已经 allowed 的历史，但获知撤销或到 start_before 后禁止新启动。",
+    "租约固定 endpoint_id 与签发时 instance_id；重配对或新实例不能接手旧余额。正文清理后继续保存原 use、一次消费、未结用量和最小关闭索引；旧备份无法证明关闭依据完整时不开放消费。"
+  ],
+  "sources": [
+    "security/README.md",
+    "security/implementation.md",
+    "contracts/schemas/methods.json",
+    "contracts/schemas/protocol.schema.json"
+  ]
+}

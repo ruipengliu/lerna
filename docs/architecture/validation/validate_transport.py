@@ -58,6 +58,198 @@ def definition_errors(name, value):
     return ['transport_schema: ' + e.message for e in validator.iter_errors(value)]
 
 
+CONTROL_METHODS = {
+    'task.pause', 'task.cancel', 'execution.control', 'execution.cancel',
+    'brain.cancel', 'evaluation.cancel', 'evaluation.revoke', 'grant.revoke',
+    'endpoint.revoke', 'content.close', 'content.release_copy', 'resource.release',
+    'budget.close', 'budget.settle', 'grant.lease.settle', 'grant.use.settle',
+}
+
+
+def limits_errors(limits):
+    if (limits['max_json_bytes'] >= limits['max_frame_bytes']
+            or limits['control_reserve_bytes'] < limits['max_frame_bytes']
+            or limits['control_reserve_bytes'] >= limits['max_queue_bytes']
+            or limits['control_reserve_items'] >= min(limits['max_inflight_requests'], limits['max_pending_deliveries'])
+            or limits['heartbeat_timeout_ms'] <= limits['heartbeat_interval_ms']):
+        return ['connection_limits: reserves, message bounds or heartbeat window are inconsistent']
+    return []
+
+
+def frame_errors(frame, context):
+    """Check recorded connection premises; this does not establish real authentication."""
+    errors = []
+    kind = frame['type']
+    client_types = {'request', 'reply', 'ping', 'pong'}
+    server_types = {'ready', 'response', 'delivery', 'reply_ack', 'mirror_ticket',
+                    'change', 'snapshot_required', 'ping', 'pong'}
+    allowed = {'client_to_server': client_types, 'server_to_client': server_types}
+    if kind not in allowed.get(context.get('direction'), set()):
+        errors.append('frame_direction: message is not allowed in this direction')
+    if frame['connection_id'] != context.get('connection_id'):
+        errors.append('frame_connection: message belongs to another socket')
+    if not context.get('authenticated') or context.get('credential_revoked'):
+        errors.append('frame_auth: current connection identity is not authorized')
+    if kind != 'ready' and not context.get('ready_received'):
+        errors.append('frame_ready: business messages cannot precede Ready')
+    limits = frame['limits'] if kind == 'ready' else context.get('limits')
+    if not limits:
+        return errors + ['connection_limits: negotiated limits are missing']
+    errors.extend(limits_errors(limits))
+    encoded = json.dumps(frame, ensure_ascii=False, separators=(',', ':')).encode('utf8')
+    if len(encoded) > limits['max_frame_bytes']:
+        errors.append('frame_capacity: complete frame exceeds byte limit')
+    control = kind in {'ready', 'response', 'reply', 'reply_ack', 'snapshot_required', 'ping', 'pong'}
+    request = frame.get('request', {})
+    if kind == 'delivery':
+        request = frame['envelope']['delivery']['request']
+    if request.get('method') in CONTROL_METHODS:
+        control = True
+    if kind == 'request' and frame['kind'] == 'mirror_control':
+        control = True
+    # collaboration.control branches are admitted to the reserve only after domain authorization.
+    if request.get('method') == 'collaboration.control' and context.get('closing_control_authorized'):
+        control = True
+    queue_limit = limits['max_queue_bytes'] - (0 if control else limits['control_reserve_bytes'])
+    if context.get('queued_bytes', 0) + len(encoded) > queue_limit:
+        errors.append('frame_capacity: send queue would consume unavailable capacity')
+    if kind == 'ready':
+        if frame['logical_service_id'] != context.get('logical_service_id'):
+            errors.append('frame_service: Ready changed the discovered logical service')
+        if context.get('existing_connections', 0) >= limits['max_connections_per_identity']:
+            errors.append('frame_capacity: authenticated identity connection limit reached')
+    if kind == 'request':
+        if frame['request_id'] in context.get('used_request_ids', []):
+            errors.append('frame_request_id: request id reused on one socket')
+        cap = limits['max_inflight_requests'] - (0 if control else limits['control_reserve_items'])
+        if context.get('inflight_requests', 0) >= cap:
+            errors.append('frame_capacity: request slots reserved or exhausted')
+        if frame['kind'] in ('command', 'query'):
+            spec = METHODS.get(request['method'])
+            if spec is None or spec['kind'] != frame['kind']:
+                errors.append('frame_method: method does not match request kind')
+            else:
+                from protocol.schema import validate
+                errors.extend('transport_schema: ' + e for e in validate(spec['input'], request['payload']))
+            if len(json.dumps(request, ensure_ascii=False, separators=(',', ':')).encode('utf8')) > limits['max_json_bytes']:
+                errors.append('frame_capacity: original request exceeds JSON limit')
+        if (frame['kind'] == 'subscribe' and not context.get('replaces_subscription')
+                and context.get('subscription_count', 0) >= limits['max_subscriptions']):
+            errors.append('frame_capacity: subscription limit reached')
+        management = frame['kind']
+        if management in ('upload_reserve', 'upload_lookup'):
+            if context.get('upload_owner_id') != context.get('authenticated_subject') or not context.get('authenticated_subject'):
+                errors.append('upload_owner: upload metadata belongs to another authenticated subject')
+            existing = context.get('existing_upload')
+            if existing and (request['upload_id'] != existing['upload_id'] or
+                    (management == 'upload_reserve' and any(request[k] != existing[k] for k in request))):
+                errors.append('upload_identity: reservation or lookup changed the original upload')
+        if management == 'mirror_reserve':
+            registered = context.get('registered_copy', {})
+            if (not context.get('reservation_authorized')
+                    or request['receiver_service_id'] != context.get('receiver_service_id')
+                    or request['content_ref'] != registered.get('content_ref')
+                    or request['copy_id'] != registered.get('copy_id')
+                    or request['receiver_service_id'] != registered.get('holder_id')
+                    or request['sender_endpoint_id'] != context.get('paired_sender_endpoint')
+                    or request['sender_instance_id'] != context.get('paired_sender_instance')
+                    or registered.get('use_stopped')
+                    or instant(request['expires_at']) > instant(registered['retention_until'])):
+                errors.append('mirror_reserve: reservation lacks current receiver authority or original copy binding')
+            if context.get('existing_mirror') and request != context['existing_mirror']['ticket']:
+                errors.append('mirror_identity: reservation changed the original ticket')
+        if management in ('mirror_lookup', 'mirror_control'):
+            mirror = context.get('mirror', {})
+            if not context.get('metadata_access_allowed') or request['ticket_id'] != mirror.get('ticket', {}).get('ticket_id'):
+                errors.append('mirror_identity: metadata access does not bind an authorized original ticket')
+        if management == 'mirror_control':
+            previous = context.get('original_control')
+            if previous is not None:
+                if request != previous:
+                    errors.append('control_identity: reused control id changed its original request')
+                if context.get('authenticated_owner_id') != request['content_ref']['owner_id']:
+                    errors.append('mirror_control: replay must still authenticate the original owner')
+            elif context.get('mirror'):
+                errors.extend(check({'definition': 'MirrorControl', 'value': request, 'context': context}))
+    if kind == 'response':
+        original = context.get('request_frame', {})
+        if (original.get('connection_id') != frame['connection_id']
+                or original.get('request_id') != frame['request_id']
+                or original.get('kind') != frame['kind']):
+            return errors + ['frame_response: response does not match this socket request']
+        result = frame['result']
+        original_request = original['request']
+        if context.get('disclosure_allowed') is False and 'output' in result:
+            errors.append('frame_disclosure: response cannot disclose content after permission closes')
+        if frame['kind'] in ('command', 'receipt_lookup') and 'command_id' in result:
+            if result['command_id'] != original['request']['command_id']:
+                errors.append('frame_command: receipt belongs to another command')
+        if frame['kind'] in ('command', 'query') and 'output' in result:
+            from protocol.schema import validate
+            spec = METHODS.get(original['request']['method'])
+            if spec is None:
+                errors.append('frame_method: original request method is unknown')
+            else:
+                errors.extend('transport_schema: ' + e for e in validate(spec['output'], result['output']))
+        if 'error' not in result and frame['kind'] in ('upload_reserve', 'upload_lookup'):
+            if result['upload_id'] != original_request['upload_id'] or (frame['kind'] == 'upload_reserve' and
+                    any(result[k] != original_request[k] for k in original_request)):
+                errors.append('upload_identity: response changed the original upload or reserved metadata')
+            errors.extend(check({'definition': 'Upload', 'value': result, 'context': context}))
+        if 'error' not in result and frame['kind'] in ('mirror_reserve', 'mirror_lookup', 'mirror_control'):
+            if result['ticket']['ticket_id'] != original_request['ticket_id']:
+                errors.append('mirror_identity: response changed the original mirror ticket')
+            if frame['kind'] == 'mirror_reserve' and result['ticket'] != original_request:
+                errors.append('mirror_identity: reserve response changed the immutable ticket')
+            if frame['kind'] == 'mirror_control' and (
+                    result['ticket']['content_ref'] != original_request['content_ref']
+                    or result['ticket']['copy_id'] != original_request['copy_id']
+                    or result['control_revision'] < original_request['control_revision']
+                    or result['state'] != 'closed'):
+                errors.append('control_identity: control response must confirm the original copy is closed at this revision')
+        if (context.get('disclosure_allowed') is False and 'error' not in result
+                and frame['kind'] in ('upload_reserve', 'upload_lookup', 'mirror_reserve', 'mirror_lookup', 'mirror_control')):
+            errors.append('frame_disclosure: transfer metadata response cannot bypass current disclosure permission')
+    if kind == 'delivery':
+        delivery = frame['envelope']['delivery']
+        cap = limits['max_pending_deliveries'] - (0 if control else limits['control_reserve_items'])
+        if context.get('pending_deliveries', 0) >= cap:
+            errors.append('frame_capacity: delivery slots reserved or exhausted')
+        if (delivery['recipient_endpoint_id'] != context.get('authenticated_endpoint')
+                or delivery['recipient_instance_id'] != context.get('authenticated_instance')):
+            errors.append('frame_endpoint: delivery does not bind the authenticated endpoint instance')
+        if context.get('disclosure_allowed') is False:
+            errors.append('frame_disclosure: delivery cannot cross a closed disclosure gate')
+        if len(json.dumps(delivery['request'], ensure_ascii=False, separators=(',', ':')).encode('utf8')) > limits['max_json_bytes']:
+            errors.append('frame_capacity: delivered request exceeds JSON limit')
+        errors.extend(check({'definition': 'Delivery', 'value': delivery, 'context': context}))
+    if kind in ('reply', 'reply_ack', 'mirror_ticket'):
+        definition, field = {'reply': ('Reply', 'reply'), 'reply_ack': ('ReplyAck', 'ack'),
+                             'mirror_ticket': ('MirrorTicket', 'ticket')}[kind]
+        errors.extend(check({'definition': definition, 'value': frame[field], 'context': context}))
+        if kind == 'reply':
+            delivery = context.get('delivery', {})
+            if (delivery.get('recipient_endpoint_id') != context.get('authenticated_endpoint')
+                    or delivery.get('recipient_instance_id') != context.get('authenticated_instance')):
+                errors.append('frame_endpoint: reply does not come from the expected endpoint instance')
+        if kind == 'mirror_ticket' and context.get('disclosure_allowed') is False:
+            errors.append('frame_disclosure: mirror ticket cannot cross a closed disclosure gate')
+    if kind in ('change', 'snapshot_required'):
+        subscription = context.get('subscription', {})
+        if frame['subscription_id'] != subscription.get('subscription_id'):
+            errors.append('frame_subscription: message belongs to another subscription')
+        if kind == 'change':
+            if subscription.get('paused_for_gap') or frame['change']['object_type'] not in subscription.get('object_types', []):
+                errors.append('frame_subscription: Change cannot pass a paused or different filter')
+            if context.get('disclosure_allowed') is False:
+                errors.append('frame_disclosure: current permission forbids this object hint')
+    if kind == 'pong' and frame['nonce'] != context.get('pending_ping_nonce'):
+        errors.append('frame_heartbeat: pong does not match the outstanding ping')
+    if kind == 'ping' and context.get('pending_ping_nonce'):
+        errors.append('frame_heartbeat: only one outstanding ping is allowed per direction')
+    return errors
+
+
 def check(vector):
     name, value = vector['definition'], vector['value']
     errors = definition_errors(name, value)
@@ -65,8 +257,13 @@ def check(vector):
         return errors
     context = vector.get('context', {})
     if name == 'Discovery':
+        errors.extend(limits_errors(value['limits']))
         if len(value['methods']) != len(set(value['methods'])) or any(m not in METHODS or METHODS[m]['status'] != 'frozen-draft' for m in value['methods']):
             errors.append('discovery_method: method not registered in exact profile')
+    if name == 'ConnectionLimits':
+        errors.extend(limits_errors(value))
+    if name == 'Frame':
+        errors.extend(frame_errors(value, context))
     if name == 'Delivery':
         if value['request_digest'] != digest(value['request']):
             errors.append('request_digest: immutable request hash differs')
@@ -126,7 +323,8 @@ def check(vector):
     if name == 'MirrorControl':
         mirror = context['mirror']
         ticket = mirror['ticket']
-        if (value['content_ref'] != ticket['content_ref']
+        if (value['ticket_id'] != ticket['ticket_id']
+                or value['content_ref'] != ticket['content_ref']
                 or value['copy_id'] != ticket['copy_id']
                 or context['authenticated_owner_id'] != ticket['content_ref']['owner_id']
                 or value['control_revision'] <= mirror['control_revision']):

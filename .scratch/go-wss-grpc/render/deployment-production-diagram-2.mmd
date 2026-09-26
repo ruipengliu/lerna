@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant E as 设备／浏览器
+    participant G as 接入副本
+    participant H as 原负责服务
+    participant D as 原权威库
+    E->>G: 建立 WSS，认证原身份
+    G->>H: 建立受信 EndpointChannel
+    H-->>E: 经接入层返回 ready
+    E->>H: 经接入层发送原命令
+    H->>D: 共同提交业务、回执与后续责任
+    G--xE: 回答前接入副本退出
+    E->>G: 抖动重连到健康副本
+    G->>H: 重建原服务通道
+    H-->>E: 经接入层返回新 ready
+    E->>H: 查询原 command_id
+    H-->>E: 原回执与当前事实

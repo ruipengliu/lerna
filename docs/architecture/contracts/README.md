@@ -2,7 +2,7 @@
 
 [总览](../README.md) · [权限](../security/README.md) · [部署](../deployment.md)
 
-本页定义独立实现共同遵守的调用语义。模块接口既可在同进程调用，也可绑定到 HTTPS；进程内不必先编码成网络消息。两种方式使用相同的业务输入、权限规则、持久成功点和错误。跨端增加可查询回执，不能改变业务成功的含义。
+本页定义独立实现共同遵守的调用语义。模块接口在同进程通过 Go interface 调用，独立服务间绑定到 gRPC，浏览器、CLI 和设备对云使用 WSS 双向长连接。这些绑定使用相同的业务输入、权限规则、持久成功点和错误；进程内不必先编码网络消息。跨端增加可查询回执，不能改变业务成功的含义。
 
 共同协议版本为本目录设计的 `harness/1`，尚未发布。发布时同时冻结本文、启用的领域方法清单和字段定义；任意实现不得以另一份持续变化的文档解释已发布消息。
 
@@ -70,37 +70,33 @@ sequenceDiagram
 
 expected_revision 是条件更新，冲突时原命令被拒绝，调用方读取当前对象后决定是否生成新命令。成功条件提交不能把数据库重试误当成可以重做外部动作；事务中不执行网络或工具调用。
 
-## 3. HTTPS 绑定
+## 3. 进程内、端云与服务间绑定
 
-| 入口 | 输入与输出 | 约束 |
+| 边界 | 绑定与对象 | 成立条件 |
 | --- | --- | --- |
-| `GET /.well-known/harness` | logical_service_id、协议主版本、启用方法及字段文档摘要、认证方式、有限容量参数 | 可以返回最小公开信息，详细能力需认证；能力声明不等于获准使用 |
-| `POST /v1/commands` | Command → Receipt | applied/rejected 通常即时答复；异步接受返回 accepted；业务回执优先于 HTTP 码解释 |
-| `GET /v1/commands/{command_id}` | 原 Receipt | 必须定位原逻辑服务及租户；错误服务不得创建原业务的替身 |
-| `POST /v1/queries` | Query → QueryResult | 只读方法允许有限重试；不能借读请求建立新操作 |
-| `GET /v1/changes?cursor=…` | 可选 SSE Change | 客户端用事件读取当前事实；游标过期返回需要重新取得快照 |
-| `POST /v1/endpoint-pulls` | 本端认证、max_items、wait_ms → 有界待处理命令 | 供无入站地址的设备主动取件；只返回绑定给该端的请求 |
-| `POST /v1/endpoint-replies` | 原 delivery_id、request_digest、kind、Receipt／查询结果 → 接收确认 | Command、Query 和原回执查询分别关联；先耐久保存再答复，原业务确认仍独立 |
+| 同进程模块 | Go interface，直接传递领域对象 | 需要共同提交的步骤共享明确事务句柄；不为接口对称增加网络 |
+| 浏览器／CLI／设备 ↔ 云 | `WSS /v1/connect`，Frame 内承载 Command、Query、原回执查询、Reply 和推送 | 客户端主动建立双向连接，服务端可主动发 Delivery、MirrorTicket 和 Change；完整帧及限额归[WSS 契约](transport.md) |
+| Harness 独立服务 ↔ 服务 | gRPC `Call`／`EndpointChannel`，Protobuf 外壳内携带严格 JSON | 原 logical_service_id 固定；认证、deadline、oneof、方法映射及错误归[gRPC 绑定](grpc.md) |
+| 发现／认证 | HTTPS 发现与登录／配对引导 | 发现公开部分不披露租户；端点取得当前凭据后才能打开一般业务连接 |
+| 大内容 | HTTPS 原始字节上传／下载 | 字节不阻塞交互连接；上传／镜像预留、查询与控制经 WSS／gRPC 管理类型交接，当前用途和副本关闭责任仍成立 |
 
-公网及跨进程网络默认 HTTPS；本机 IPC 可用受权限保护的套接字。参考 Web 使用同源会话、CSRF 防护和严格 Origin 校验；localhost 不自动意味着任意网页获准访问。认证与配对规则见[安全设计](../security/README.md)。
+WSS 承载双向交互，Change 继续只表示对象可能变化；服务端推送不等于界面已呈现、业务已消费或操作已生效。协议本身不会使未定义的音视频、token delta 或渲染补丁自动成为受支持的方法。选择统一 WSS 的依据及代价见 [ADR-0002](../../adr/0002-go-wss-grpc.md)；WebSocket 提供双向通信机制，[RFC 6455](https://www.rfc-editor.org/rfc/rfc6455)不提供本项目的业务恢复保证。
 
-协议不依赖 HTTP 自动重试来避免重复。HTTP 标准也将非幂等请求的自动重试限制在已知可安全重试的条件内；这里的安全性来自业务去重和原记录核对。[RFC 9110 §9.2.2](https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2.2)
+浏览器使用同源 Secure／HttpOnly 会话、严格 Origin 和引导入口的 CSRF 防护；设备使用握手 bearer 凭据。服务间使用 mTLS 和受信的主体映射。每条业务消息、推送披露及缓存回复重传继续检查当前资格，localhost 或握手成功均不意味着持续授权。
 
-默认 JSON 命令最大 256 KiB，分页最多 100 项，long-poll 最长 25 秒；大内容走 content 接口及获准引用。它们是初始设计上限，服务可声明更小值，客户端按较小值执行；调整须经过容量验收，不能默默截断内容。
+### 设备投递与恢复
 
-### 设备取件与恢复
+Home 在自身业务库保存原请求、delivery_id 与持久发送责任，沿已建立连接推送 Delivery。设备收到消息后按原 command_id 及当前门禁处理，持久保存原结果和待交回 Reply；Home 保存 Reply 及后续责任后返回 ReplyAck。ReplyAck 只确认本次交回已保存，后续业务效果仍按原 operation_id 查询；网络 write、ping/pong 和 gRPC OK 都不能替代该成功点。
 
-Home 在自身持久发送记录中保存原命令和 delivery_id；设备拉取不代表业务接纳。设备先按原 command_id 幂等处理，持久保存回执，再回复 Home。Home 保存回复后停止重复投递；业务仍在进行时继续按原 operation_id 查询。reply 丢失则双方都允许重投同回执。
+接入层只搬运消息，不保存第二份业务权威。设备核验原 Home／发送服务证明及目标实例绑定，跨连接的重复或乱序由原身份、expected_revision、控制修订与关闭记录裁决。查询和原回执查询同样可由 Delivery 转交，不额外创造业务 command_id；设备不可达返回 dependency_unavailable，不伪造 not_found。
 
-路由服务不能代替权限签发者。设备验证源 Home 身份及绑定该目标和请求摘要的许可，不能仅信任“消息来自网关”。取件列表可重复、乱序；对象 expected_revision 及原命令查询裁决行为，不要求所有领域共用一个全局序号。
-
-设备仍有原响应待交付时，先保留和交回，再接新工作；压力达到持久队列上限时拒绝新接纳，并为取消、撤权及收尾保留容量。远端查询也经同一取件通道，由 delivery_id 关联，无须生成业务 command_id；处理方不可达则调用方看到 dependency_unavailable，而不是伪造 not_found。发现、配对认证、来源证明、三类投递和大内容入口的精确配置见[传输契约](transport.md)，字段与关系向量独立验证。
+断线不取消任务，也不删除服务器未交付责任。重连先恢复当前身份与控制，再查询未知命令、重交原 Reply、接受仍有效的 Delivery 和新工作。Frame 的 connection_id／request_id 只关联这次连接上的消息，不能替代 command_id、delivery_id 或 endpoint instance。每连接的在途、订阅、条目和字节都有上限，控制及收尾保留份额；慢端无法排空时断开连接，业务责任继续持久保留。
 
 ### 通知与快照
 
-SSE 可使用 Last-Event-ID 恢复提示位置，但这不能证明业务消息已被消费。[WHATWG Server-sent events](https://html.spec.whatwg.org/multipage/server-sent-events.html)
+订阅返回当前水位后，查询当前领域快照并合并该水位之后的 Change；按对象 revision 去重，覆盖订阅建立与快照读取间的变化。游标超出保留范围、通知被合并后出现缺口或缓冲超限时，服务端明确要求快照恢复，客户端重建订阅并读取权威状态。权限撤回后停止推送敏感对象标识。
 
-订阅初次返回当前快照水位，之后读取大于该水位的变化。保留窗口外重新取快照；权限撤回后不再推送敏感对象标识。只靠通知不能完成任务，周期性查询或恢复扫描负责修补遗漏。查询接口为只读、限流且可分页，长时间等待不能占据任务事务。
+通知允许合并，不能用一条跨域全局序号裁决 Task、Operation 和许可。有限校准查询及业务恢复扫描修补遗漏，查询通过既有 WSS／gRPC 通道进行；不以 HTTP 长轮询或 SSE 作为另一套业务基线。查询只读、限流且可分页，连接等待不占据业务事务。
 
 ## 4. 共同错误与调用方动作
 

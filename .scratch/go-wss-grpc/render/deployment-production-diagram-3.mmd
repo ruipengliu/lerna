@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant C as 调用方
+    participant A as 应用副本
+    participant D as 当前主库及同步副本
+    participant W as 原工作者
+    participant N as 接替工作者
+    participant E as 原 Executor
+    C->>A: WSS 经接入层 gRPC 转交原 task.submit
+    A->>D: 事务：命令键、Task、首 job、回执
+    D-->>A: 同步耐久提交确认
+    A-->>C: 原 applied 回执
+    W->>D: 有限领取；按当前事实推进
+    W->>D: 事务：准入原 OperationIntent 与派发 job
+    W->>E: gRPC 原 invoke 命令
+    E->>E: 保存接纳、发送标记和原效果
+    E--xW: 答复丢失
+    Note over D,N: 平台隔离故障主；完整候选提升后重连原 Home
+    N->>D: 领取原 job，读取已保存的原 command／operation
+    N->>E: gRPC 查询原命令及原操作
+    E-->>N: 原回执、当前执行和效果事实
+    N->>D: 事务：归并事实、费用及下一 job

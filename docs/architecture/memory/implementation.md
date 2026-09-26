@@ -4,6 +4,8 @@
 
 本文规定单写者 Memory owner 和内容 owner 的参考实现，覆盖可据此编码的事务、索引与恢复步骤。
 同宿主共用数据库及内容目录；不同 owner 通过原命令和准确内容引用交接。
+核心使用 Go，同进程通过 Go 接口组合；领域服务跨进程用 gRPC，浏览器、CLI 和设备端云通过 `/v1/connect` 的 WSS 双向长连接调用。
+HTTPS 只保留发现、认证和大文件原始字节读写；上传预留、状态查询及镜像控制经 WSS request／gRPC Call 处理，具体类型由[公共传输契约](../contracts/transport.md)定义。
 正文、来源控制、授权使用、索引和持有者清理分别保存，不能用一个“删除成功”字段替代。
 以下表结构和算法为设计规格；没有实际隐私隔离或存储恢复实验结果。
 
@@ -51,7 +53,7 @@ flowchart TB
     U -->|提取| E
     U -->|视图| V
     U -->|内容| C
-    R -->|pull / ACK| V
+    R -->|view.pull / view.ack| V
     E -->|原提取任务| H[提取任务 Home]
     Q --> G[Grant owner]
     W --> G
@@ -348,6 +350,20 @@ create 事务同时写正式记忆、candidate.saved、实际 memory_id/revision
 
 ### 5.1 小元数据与大字节分开
 
+上传与镜像的管理请求使用下表五种传输管理 kind：端侧通过 WSS request，独立服务之间通过 gRPC Call。
+它们属于传输配置，不增加 101 个领域方法，也不替代 `content.put`、`content.close` 等领域决定；精确字段、认证和恢复规则见[公共传输契约](../contracts/transport.md)。
+
+| 传输管理 kind | 输入 → 输出 | 职责 |
+| --- | --- | --- |
+| upload_reserve | UploadIntent → Upload | 绑定原 upload_id 和不可变字节元数据，预留有限暂存空间 |
+| upload_lookup | `{upload_id}` → Upload | 核对原上传状态；答复丢失不另开上传身份 |
+| mirror_reserve | MirrorTicket → Mirror | 核对原副本登记，保存原票据与有限空间预留 |
+| mirror_lookup | `{ticket_id}` → Mirror | 核对原镜像字节及控制状态，不授予读取资格 |
+| mirror_control | MirrorControl → Mirror | 绑定原 ticket_id，按原控制身份及单调修订关闭镜像读取并保存清理责任 |
+
+一般上传先取得 `upload_reserve` 的原 Upload，再向 HTTPS `PUT /v1/content/uploads/{upload_id}` 发送原字节；失联后用 `upload_lookup` 核对原状态。
+字节 ready 以后，以下领域方法仍在原 owner 的业务事务内决定正式内容与副本责任。
+
 | 方法 | 精确载荷 | 成功边界 |
 | --- | --- | --- |
 | content.put | upload_id、content_ref、sources、policy | 不可变内容元数据与来源可查；未提交暂存不算内容 |
@@ -370,32 +386,42 @@ get 只为已登记副本返回定位，不创建新的持有者或授权责任�
 ### 5.2 无入站设备的受控反向交付
 
 云 Home 可能得到设备 Memory 或 Executor 产生的准确 ContentRef，却无法连接设备下载面。
-基础反向交付配置限定接收端就是设备已配对的主动取件服务；它预留有限上传入口，设备主动交付同一内容的受管副本。
+基础反向交付配置限定接收端就是设备已配对长连接服务对应的镜像接收端；它预留有限上传入口，经已有 WSS 连接主动发送 MirrorTicket，设备据此交付同一内容的受管副本。
 接收端只保存原 owner 的镜像，不成为新的内容 owner，也不重新调用 content.put 创建另一份来源身份。
 所有资料仍须满足对接收方的披露、同步或保存许可；local_only 不能因为走反向上传而外发。
 
 ```mermaid
 sequenceDiagram
     participant H as 云 Home
-    participant R as 已配对取件服务及镜像接收端
+    participant R as 已配对 WSS 服务及镜像接收端
     participant O as 设备内容 owner
-    H->>O: 经设备取件提交 content.register_copy
-    O-->>H: 原副本登记回执
-    H->>R: POST mirrors：原引用、copy 与发送实例
+    H->>R: 提交原 content.register_copy
+    R->>O: WSS Delivery：原登记命令
+    O-->>R: WSS Reply：原副本登记回执
+    R->>R: 保存原 Reply
+    R-->>O: WSS ReplyAck
+    R-->>H: 原副本登记回执
+    H->>R: gRPC mirror_reserve：原 MirrorTicket
     R->>R: 保存 ticket 及有限空间预留
-    O->>R: 主动 pull
-    R-->>O: mirror_uploads 中的原 ticket
+    R-->>H: 原 Mirror 状态
+    R->>O: WSS MirrorTicket：原票据
     O->>O: 复核副本、来源与本次披露资格
-    O->>R: PUT mirrors/ticket_id：原完整字节
+    O->>R: HTTPS PUT：原 ticket 的完整字节
     R->>R: 核验摘要并原子保存 ready 镜像
     R-->>O: 原 ticket 的接收状态
-    H->>O: 经设备取件调用原 content.get
-    O-->>H: 当前 ContentGetOutput
-    H->>R: 使用原 download_id 读取获准镜像
+    H->>R: 调用原 content.get
+    R->>O: WSS Delivery：原查询
+    O-->>R: WSS Reply：当前 ContentGetOutput
+    R->>R: 保存原 Reply
+    R-->>O: WSS ReplyAck
+    R-->>H: 当前 ContentGetOutput
+    H->>R: HTTPS GET：原 download_id 的获准字节
 ```
 
-图中的 H→O 请求通过设备主动取件传递，不要求设备监听公网端口。
-票据放在 PullOutput 的可选 mirror_uploads 数组中，不新增或改变 Delivery 的三种业务请求 kind。
+图中设备先主动建立 WSS 连接，R 沿该连接发送 Delivery 和 MirrorTicket，不要求设备监听公网端口。
+Home 与独立服务之间的领域调用和传输管理调用使用 gRPC；设备通过 WSS request 发起上传／镜像状态与控制请求，HTTPS 只传输原始字节。MirrorTicket 是传输对象，精确帧由[公共传输契约](../contracts/transport.md)定义；这五种管理类型不新增或改变 Delivery 的三种业务请求 kind。
+设备在发送 Reply 前保存固定回复，接收方持久接收后才返回 ReplyAck。断线或 ReplyAck 丢失时沿原 delivery／reply 身份恢复；ReplyAck 只结束该回复的传输责任，不能替代原业务回执、上传 ready 或内容可读资格。
+票据重复或重连重发仍使用原 ticket/upload_id；新连接不让新实例取得旧票据的上传资格。
 上传就绪与获准读取是两个检查点；缺少当前读取依据时，ready 镜像仍不可用于任务。
 
 | 对象 | 最小绑定 | 含义 |
@@ -406,12 +432,12 @@ sequenceDiagram
 | 本次镜像读取依据 | 原 owner 返回的 ContentGetOutput：content_ref、copy_id、control_revision、download_id、expires_at、range_supported | 每次在线核验所得，绑定本次接收端镜像；票据或历史回复不能代替当前披露资格 |
 
 字段的精确编码及传输入口归[共同传输协议](../contracts/transport.md)。
-receiver_service_id 必须解析为该设备已经配对的取件服务及其受信 HTTPS 入口，基础配置不开放任意第三方接收端。
+receiver_service_id 必须解析为该设备已经配对的长连接服务及其受信 HTTPS 字节入口，基础配置不开放任意第三方接收端。
 模型、内容正文、普通命令参数或 ticket 中的自由 URL 不能改变实际上传目的地。
 sender_endpoint_id 和 sender_instance_id 必须与接收连接的当前认证身份一致，ticket 本身不是可转交的匿名上传权限；设备重启后的新实例不能沿用旧实例 ticket。
 原 ContentRef 的 hash、byte_length、media_type 同时约束上传，不接受另一份内容占用同一 ticket。
 
-原 owner 先提交 content.register_copy。接收端核对原登记后，通过 POST /v1/content/mirrors 保存 ticket 及按字节长度预留的有限空间。
+原 owner 先提交 content.register_copy。调用方以 `mirror_reserve` 提交原 MirrorTicket；接收端核对原登记后，保存 ticket 及按字节长度预留的有限空间，返回 Mirror。
 单份大小、每用户并发和总暂存字节均受有限配额限制；ticket 创建前没有原副本登记时拒绝接纳。
 设备取得 ticket 后再次核对原 copy、接收方、用途、保留期限和固定地址，再读取或发送正文。
 设备发送前检查原来源及本地关闭状态；发送中按有界块检查关闭，发现失效即停止后续字节。
@@ -421,7 +447,7 @@ sender_endpoint_id 和 sender_instance_id 必须与接收连接的当前认证�
 
 基础配置不要求 Range。连接中断后在原 ticket 期限内向同一 ticket_id 整份重试，复用原 upload_id，不追加字节或改用新内容身份。
 接收端已经 ready 时，对匹配原元数据的重试返回原结果；不同字节拒绝，不能覆盖镜像。
-上传答复丢失由设备调用 GET /v1/content/mirrors/{ticket_id} 查询原镜像状态，Home 通过原交付记录继续核对，不重新登记第二个副本。
+上传答复丢失由设备经 WSS request 的 `mirror_lookup` 查询原 ticket_id 对应的 Mirror，Home 通过原交付记录继续核对，不重新登记第二个副本。
 ticket 到期后拒绝新上传；若字节仍需重传，新 ticket 必须重核当前原 owner 资格，不能凭旧关闭修订自动续期。
 
 基础反向交付配置在每次镜像读取前都向原 owner 调用 content.get，取得当前 ContentGetOutput。
@@ -431,7 +457,7 @@ ticket 到期后拒绝新上传；若字节仍需重传，新 ticket 必须重�
 本基础配置不定义新的 copy 读取租约，也不以镜像存在推导离线资格。
 已有明确离线授权的副本机制仍按模块主线单独验收；若未来接入镜像，必须由原 owner 确认有限期限，到期或获知关闭停读，不能由接收端续期。
 
-关闭传播把镜像作为原 copy 的一个持有者处理。原 owner 在关闭／限制事务中保存逐镜像发送责任，主动向接收端的 `POST /v1/content/mirrors/{ticket_id}/control` 提交 MirrorControl；原 owner 的 content.close 入口仍只裁决原内容。接收方校验认证 owner 和原引用／副本，按控制身份去重、单调推进修订，同事务关闭读取并保存清理 job，再删除暂存、正式镜像及派生缓存。
+关闭传播把镜像作为原 copy 的一个持有者处理。原 owner 在关闭／限制事务中保存逐镜像发送责任，再经 WSS request／gRPC Call 的 `mirror_control` 向接收端提交绑定原 ticket_id 的 MirrorControl；原 owner 的 content.close 入口仍只裁决原内容。接收方校验认证 owner、票据和原引用／副本，按控制身份去重、单调推进修订，同事务关闭读取并保存清理 job，返回 Mirror，再删除暂存、正式镜像及派生缓存。
 基础配置对 restricted 更新也保守关闭整个镜像；如新策略仍允许复制，重新登记副本并取得新票据，接受重新传输的代价。控制更新可由原 owner 的当前认证实例恢复，上传仍只允许票据原实例，不能因设备重启使旧镜像失去关闭通道。
 原 owner 对关闭请求返回 applied，只表示本端关闭和传播责任已保存；接收端停止及清理分别确认。
 接收端断线或清理失败时保留 pending、unknown 或 residual，不把原 owner 删除等同于全部镜像已擦除。
@@ -444,9 +470,10 @@ filter 仅由 types 和 Scope 组成；projection 为 metadata 或 content_refs�
 快照页先枚举有限对象集合，完成后沿 change_sequence 拉取连续变化。
 修改导致对象退出过滤时发送 tombstone；新对象进入过滤时发送当前获准 upsert。
 view.pull 每次返回固定 page_id、起止游标、有限变更和阶段。
+view.pull 是领域分页读取，继续经共同 WSS／gRPC 调用；它与设备传输层的投递机制无关，不要求为了等待请求而反复取件。
 
 接收端同事务应用修订／墓碑、清理任务和本地游标，然后以原 page_id 发送 view.ack。
-ACK 只确认已应用的连续位置，不能提前确认未取得页或跳过页。
+view.ack 只确认已应用的连续位置，不能提前确认未取得页或跳过页；它独立于 WSS 传输 ACK、ReplyAck 和仅供唤醒的 Change。
 owner 保留未确认页；重复 pull/ack 不产生重复应用。
 变化日志缺口返回 resnapshot_required，旧视图禁用，重新快照时保留旧副本清理责任。
 离线实际使用仍需有限租约；同步成功不等于永久使用资格。
@@ -527,10 +554,11 @@ query_sets 到期、无引用暂存与已满足责任的变化日志可以回收
 | MI-10 期限冲突 | 有确定清理期限的资料交给不能兑现的持有者 | 交付前拒绝；不能事后用 residual 掩盖错误接纳 |
 | MI-11 私密推断 | 模型未引用私密输入但生成公共措辞 | 来源依赖完整，未授权外发被拒 |
 | MI-12 非保存输入 | 提取进程重启后临时原文丢失 | 等待重新提供或明确失败，检查点不越过未保存责任 |
-| MI-13 无入站大内容 | 设备只主动取件，生成大于 JSON 限额的截图；上传完成后丢答复 | 同一 ticket/upload_id 整份恢复，接收端保持原 ContentRef/owner，不创建新内容身份 |
+| MI-13 无入站大内容 | 设备通过主动建立的 WSS 接收 MirrorTicket，生成大于 JSON 限额的截图；上传完成后丢答复 | 同一 ticket/upload_id 整份恢复，接收端保持原 ContentRef/owner，不创建新内容身份 |
 | MI-14 镜像失联读取 | 镜像 ready 后隔断原 owner；重放旧 ticket 或过期 ContentGetOutput | 新读取因无法在线核验而拒绝；历史回复不续期，不宣称基础镜像支持独立离线读 |
 | MI-15 上传目标篡改 | 将 receiver_service_id 换为未登记服务，或试图附任意 URL | 发送前拒绝，资料不进入未授权接收端 |
 | MI-16 镜像关闭恢复 | 来源关闭后接收端掉线，恢复含旧镜像字节的备份 | 先恢复关闭依据再服务；原 owner 的完成视图保留逐 copy 未确认清理 |
+| MI-17 票据与回复重放 | Reply 已持久接收但 ReplyAck 丢失，重连后重复下发原 MirrorTicket | 原 delivery／reply 只形成一份接收事实，原 ticket／upload_id 恢复，视图 ACK 和内容资格不被传输确认推进 |
 
 协议序列验证只检查给定字段与关联；运行实验必须记录真实数据库竞争、字节持有及隔离出口。
 长期关闭索引的增长、清理积压与备份恢复时间纳入容量实验，不能靠删除索引提升表面吞吐。

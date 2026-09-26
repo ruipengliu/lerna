@@ -1,0 +1,429 @@
+{
+  "module": "extensions",
+  "title": "宿主装配、首装与组件切换",
+  "component": {
+    "nodes": [
+      {
+        "id": "api",
+        "name": "Extensions API",
+        "kind": "interface",
+        "boundary": "provided",
+        "methods": [
+          "extensions.prepare",
+          "extensions.activate",
+          "extensions.deactivate",
+          "extensions.read",
+          "extensions.dispose"
+        ],
+        "source": "contracts/schemas/methods.json"
+      },
+      {
+        "id": "lifecycle",
+        "name": "extensions facade / LifecycleManager",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "extensions/implementation.md#module-shape"
+      },
+      {
+        "id": "verifier",
+        "name": "PackageVerifier / ArtifactReader",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "extensions/implementation.md#module-shape"
+      },
+      {
+        "id": "store",
+        "name": "LockStore / 宿主 repositories",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "extensions/implementation.md#module-shape"
+      },
+      {
+        "id": "references",
+        "name": "ReferenceCollector",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "extensions/implementation.md#module-shape"
+      },
+      {
+        "id": "router",
+        "name": "BindingRouter",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "extensions/implementation.md#module-shape"
+      },
+      {
+        "id": "approval",
+        "name": "ApprovalClient",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "extensions/implementation.md#module-shape"
+      },
+      {
+        "id": "content",
+        "name": "宿主内容 port",
+        "kind": "interface",
+        "boundary": "required",
+        "methods": [],
+        "source": "extensions/implementation.md#module-shape"
+      },
+      {
+        "id": "approval_api",
+        "name": "Evaluation API（远端启动依据）",
+        "kind": "interface",
+        "boundary": "required",
+        "methods": [
+          "evaluation.approval_check",
+          "evaluation.approval_lease"
+        ],
+        "source": "contracts/schemas/methods.json"
+      }
+    ],
+    "edges": [
+      {
+        "from": "lifecycle",
+        "to": "api",
+        "type": "realization",
+        "label": "提供"
+      },
+      {
+        "from": "lifecycle",
+        "to": "verifier",
+        "type": "dependency",
+        "label": "准备与核验"
+      },
+      {
+        "from": "verifier",
+        "to": "content",
+        "type": "dependency",
+        "label": "准确内容与摘要"
+      },
+      {
+        "from": "lifecycle",
+        "to": "store",
+        "type": "dependency",
+        "label": "锁、步骤与持久 jobs"
+      },
+      {
+        "from": "lifecycle",
+        "to": "references",
+        "type": "dependency",
+        "label": "排空与释放事实"
+      },
+      {
+        "from": "lifecycle",
+        "to": "router",
+        "type": "dependency",
+        "label": "关闭或开放入口"
+      },
+      {
+        "from": "lifecycle",
+        "to": "approval",
+        "type": "dependency",
+        "label": "当前批准与启动依据"
+      },
+      {
+        "from": "approval",
+        "to": "approval_api",
+        "type": "dependency",
+        "label": "原使用 / 窗口"
+      },
+      {
+        "from": "references",
+        "to": "store",
+        "type": "dependency",
+        "label": "引用索引及修订"
+      },
+      {
+        "from": "router",
+        "to": "store",
+        "type": "dependency",
+        "label": "当前绑定 / 就绪"
+      }
+    ],
+    "notes": [
+      "management_jobs 恢复原步骤；下载、装载、排空核对等外部操作在事务外。",
+      "批准 owner 共库时直接参与本地启动事务；远端使用有限依据，租约仅显式获准时适用。",
+      "组件是参考职责；业务入口同时要求批准有效、当前代际和本实例真实就绪。"
+    ]
+  },
+  "data": {
+    "nodes": [
+      {
+        "id": "manifest",
+        "name": "PackageManifest",
+        "owner": "Extensions / 制品校验",
+        "schema": "PackageManifest",
+        "attributes": [
+          {
+            "name": "package_id",
+            "type": "ID"
+          },
+          {
+            "name": "version",
+            "type": "Version"
+          },
+          {
+            "name": "digest",
+            "type": "Digest"
+          },
+          {
+            "name": "kind",
+            "type": "plugin | skill | agent_config"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/PackageManifest"
+      },
+      {
+        "id": "lock",
+        "name": "InstallLock",
+        "owner": "Extensions / 目标宿主",
+        "schema": "InstallLock",
+        "attributes": [
+          {
+            "name": "lock_id",
+            "type": "ID"
+          },
+          {
+            "name": "manifest_digest",
+            "type": "Digest"
+          },
+          {
+            "name": "config_digest",
+            "type": "Digest"
+          },
+          {
+            "name": "platform",
+            "type": "String"
+          },
+          {
+            "name": "reference_revision",
+            "type": "Revision"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/InstallLock"
+      },
+      {
+        "id": "activation",
+        "name": "Activation",
+        "owner": "Extensions / 目标宿主",
+        "schema": "Activation",
+        "attributes": [
+          {
+            "name": "activation_id",
+            "type": "ID"
+          },
+          {
+            "name": "target_id",
+            "type": "ID"
+          },
+          {
+            "name": "phase",
+            "type": "Enum"
+          },
+          {
+            "name": "generation",
+            "type": "Revision"
+          },
+          {
+            "name": "startup_evidence",
+            "type": "StartupEvidence [0..1]"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/Activation"
+      },
+      {
+        "id": "binding",
+        "name": "ActiveBinding",
+        "owner": "Extensions / 目标宿主",
+        "schema": null,
+        "attributes": [
+          {
+            "name": "target_id",
+            "type": "ID"
+          },
+          {
+            "name": "port",
+            "type": "Port"
+          },
+          {
+            "name": "generation",
+            "type": "Revision"
+          },
+          {
+            "name": "lock_id",
+            "type": "ID"
+          }
+        ],
+        "source": "extensions/implementation.md#4-管理账本与索引"
+      },
+      {
+        "id": "readiness",
+        "name": "InstanceReadiness",
+        "owner": "Extensions / 当前实例",
+        "schema": "InstanceReadiness",
+        "attributes": [
+          {
+            "name": "instance_id",
+            "type": "ID"
+          },
+          {
+            "name": "ready",
+            "type": "Boolean"
+          },
+          {
+            "name": "observed_at",
+            "type": "Timestamp"
+          },
+          {
+            "name": "startup_evidence",
+            "type": "StartupEvidence"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/InstanceReadiness"
+      },
+      {
+        "id": "approval",
+        "name": "ReleaseApproval",
+        "owner": "Evaluation / 批准 owner",
+        "schema": "ReleaseApproval",
+        "attributes": [
+          {
+            "name": "approval_id",
+            "type": "ID"
+          },
+          {
+            "name": "revision",
+            "type": "Revision"
+          },
+          {
+            "name": "state",
+            "type": "active | revoked | expired"
+          },
+          {
+            "name": "expires_at",
+            "type": "Timestamp"
+          },
+          {
+            "name": "max_offline_window_ms",
+            "type": "Integer"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json#/$defs/ReleaseApproval"
+      },
+      {
+        "id": "reference",
+        "name": "LockReference",
+        "owner": "Extensions 索引 · 跨 owner 持有事实",
+        "schema": null,
+        "attributes": [
+          {
+            "name": "lock_id",
+            "type": "ID"
+          },
+          {
+            "name": "owner_kind",
+            "type": "OwnerKind"
+          },
+          {
+            "name": "owner_id",
+            "type": "ID"
+          }
+        ],
+        "source": "extensions/implementation.md#4-管理账本与索引"
+      }
+    ],
+    "edges": [
+      {
+        "from": "manifest",
+        "to": "lock",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..*",
+        "label": "精确清单",
+        "source": "contracts/schemas/protocol.schema.json#/$defs/InstallLock"
+      },
+      {
+        "from": "lock",
+        "to": "activation",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..*",
+        "label": "new_lock_id",
+        "source": "contracts/schemas/protocol.schema.json#/$defs/Activation"
+      },
+      {
+        "from": "lock",
+        "to": "activation",
+        "type": "association",
+        "fromMultiplicity": "0..1",
+        "toMultiplicity": "0..*",
+        "label": "old_lock_id",
+        "source": "contracts/schemas/protocol.schema.json#/$defs/Activation",
+        "constraint": "首次安装 old_lock_id=null"
+      },
+      {
+        "from": "approval",
+        "to": "activation",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..*",
+        "label": "精确批准",
+        "source": "contracts/schemas/protocol.schema.json#/$defs/Activation",
+        "constraint": "跨 owner；当前有效性由 Evaluation 裁决，历史引用不授予新启动资格"
+      },
+      {
+        "from": "lock",
+        "to": "binding",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..*",
+        "label": "当前 lock_id",
+        "source": "extensions/implementation.md#4-管理账本与索引",
+        "constraint": "每 target_id / port 仅一个当前 generation"
+      },
+      {
+        "from": "activation",
+        "to": "readiness",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..1",
+        "label": "当前就绪投影",
+        "source": "contracts/schemas/protocol.schema.json#/$defs/Activation",
+        "constraint": "仅当前查询投影；phase=active 必须存在且为本实例 ready"
+      },
+      {
+        "from": "lock",
+        "to": "reference",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..*",
+        "label": "持有版本锁",
+        "source": "extensions/implementation.md#4-管理账本与索引",
+        "constraint": "(lock_id, owner_kind, owner_id) 唯一；不是销毁级联"
+      }
+    ],
+    "notes": [
+      "prepare 形成不可变安装锁；激活意图、当前活动指针与当前实例就绪分别确认。",
+      "重启保留 Activation.startup_evidence 与 generation，重新取得本实例 reopen 依据。",
+      "LockReference 是跨 owner 索引；任一持有者未知时不能按零引用清理旧锁。"
+    ]
+  },
+  "reading_notes": [
+    "组件页保留准备、引用、生命周期、批准适配与真实派发门禁。ReferenceCollector 还在事务外查询各业务持有者；图中省略这些展开端口，完整依赖见实现篇。内容 port 为内部适配器边界，不新增线方法。",
+    "InstallLock 的 manifest、配置与完整依赖固定；本图仅选关键属性。相同清单可以有多个平台或配置锁；首装 Activation 无旧锁，已准备锁可以尚未被任何激活或活动绑定使用。",
+    "Activation 是原切换身份与历史依据；ActiveBinding 是每个 target / port 当前唯一指针。InstanceReadiness 的 0..1 只描述 Activation 查询中的当前投影，不限制多次重启可保存的历史实例检查记录数量。图不把历史 Activation 删除或改写为当前进程成功。",
+    "正常切换需排空、核验批准并装载，自检及本实例真实入口满足后才能 active。活动指针提交后崩溃，恢复原锁与代际，新的 reopen 依据恢复当前实例，不再次迁移或推进 generation。",
+    "获知撤回，或当前检查不可用且没有仍有效的有限启动／离线续用依据时，关闭相应新使用；管理与原责任核对继续。共库批准与启动共同裁决；远端重启不能沿用旧实例 ApprovalUse 或离线租约。历史 Activation 与已发生效果继续保留。",
+    "LockReference 的 owner_kind / owner_id 指向任务、原操作、迁移或回退等持有责任；扩展本地索引不能代替这些 owner 的释放事实。dispose 与新引用比较 reference_revision，失联或未知引用保持旧包；清理字节后原管理关闭索引仍保留。",
+    "ActiveBinding 与 LockReference 为内部记录，schema=null；本图只作领域投影，不主张数据库外键、组合生命周期或级联删除。"
+  ],
+  "sources": [
+    "extensions/README.md",
+    "extensions/implementation.md",
+    "evaluation/README.md",
+    "evaluation/implementation.md",
+    "contracts/schemas/methods.json",
+    "contracts/schemas/protocol.schema.json"
+  ]
+}

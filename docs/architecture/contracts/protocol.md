@@ -2,7 +2,7 @@
 
 [共同调用语义](README.md) · [传输配置](transport.md) · [方法查阅](methods.md) · [序列用例](examples/protocol/README.md)
 
-本页与机器资产定义未发布的 `harness/1`、`full-harness-draft-2` 配置。原有 40 个严格方法、本轮补齐的 53 个保留方法，以及为预算关闭、输入请求读取、在线费用结算与可信确认补充的 8 个交接方法，共构成 101 个领域方法；当前登记无 reserved 方法。发现、设备取件、认证证明与内容字节另由传输配置规定，不能把领域方法数量当作完整服务互操作证据。
+本页与机器资产定义未发布的 `harness/1`、`full-harness-draft-2` 配置。原有 40 个严格方法、本轮补齐的 53 个保留方法，以及为预算关闭、输入请求读取、在线费用结算与可信确认补充的 8 个交接方法，共构成 101 个领域方法；当前登记无 reserved 方法。发现、WSS 双向交接、认证证明与内容字节另由传输配置规定，服务间 RPC 另由[gRPC 绑定](grpc.md)规定，不能把领域方法数量当作完整服务互操作证据。
 
 `frozen-draft` 表示当前修订具有精确输入、输出和关联用例，仍可随未发布设计统一修订。发布时须共同冻结正文、Schema、登记及用例摘要，不能以另一份变化中的正文解释已发布消息。进程内实现使用相同对象与业务语义，不要求先编码网络报文。
 
@@ -12,9 +12,10 @@
 | --- | --- | --- |
 | [protocol.schema.json](schemas/protocol.schema.json) | 共同对象、全部领域输入输出、正文类型与序列容器 | JSON Schema 2020-12、日期格式及封闭业务对象 |
 | [methods.json](schemas/methods.json) | 方法种类、输入输出映射、目标、条件修订、回执阶段、错误与恢复动作 | 按具体方法分派，不接受同名异义或自由字段 |
-| [transport.schema.json](schemas/transport.schema.json) | 发现、投递、回复、上传、关闭索引查询与证明载荷 | 独立结构与跨字段向量；共享对象引用领域Schema |
+| [transport.schema.json](schemas/transport.schema.json) | 发现、WSS 帧、投递、回复、上传、关闭索引查询与证明载荷 | 独立结构与跨字段向量；共享对象引用领域Schema |
 | [领域校验](../validation/validate_protocol.py) | 有限记录序列的身份、版本、状态及恢复关系 | 每个方法至少一项有效调用，新增方法有结构与关联反例 |
 | [传输校验](../validation/validate_transport.py) | 原请求／回复摘要、三类交接、内容发布及关闭记录 | 结构与关联校验，另运行公开密码学向量 |
+| [harness.proto](harness.proto) | 服务间 Call 与 EndpointChannel 的 Protobuf 外壳；JSON 内层复用以上 Schema | 描述符编译与消息映射检查；不等同于 gRPC 服务互操作 |
 | [完成判断投影](schemas/task-outcome.schema.json) | 独立结果与效果关系 | 保持原5正例／9反例，不作为完整协议 |
 
 这些资产可以指导两个实现交换同义数据，但没有服务、数据库或驱动。身份、许可、实际效果和来源关系的夹具是构造前提；字段合法不能证明这些前提在运行环境真实成立。安装、签发、创建界面及内容交接已经有精确方法，不再以“预先装配”替代其协议定义；部署缺少相应适配器时按所属模块拒绝或等待。
@@ -34,6 +35,8 @@
 | Receipt | command_id、stage及对应字段；业务决定固定，可按当前披露权限隐藏完整output |
 | QueryResult | output、observed_at，可带resource_revision、cursor、gaps；元数据不能与输出修订矛盾 |
 | Error | code、message、retry及有限辅助字段；按准确方法登记解释恢复动作 |
+
+端云 WSS 每帧携带严格 JSON；服务间 gRPC 在 Protobuf bytes 中携带同一严格对象。Protobuf oneof、内层 Schema 与方法关联分别校验，不用二进制序列化字节重定义领域请求摘要。完整映射见[gRPC 编码约束](grpc.md#2-protobuf-与领域字段的权威)。
 
 金额不使用浮点计算。签名与传输请求摘要使用[传输配置](transport.md)定义的JCS；拒绝重复键、非法Unicode和整数舍入。原命令请求结构在重试时保持不变，SDK不得补上新默认值、替换预期修订或升级解释版本。
 

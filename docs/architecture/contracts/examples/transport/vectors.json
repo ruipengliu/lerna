@@ -4,8 +4,10 @@
     "definition": "DiscoveryPublic",
     "value": {
       "protocol": "harness/1",
-      "auth_profile": "opaque-bearer-1",
-      "pairing_supported": true
+      "auth_profile": "session-cookie-or-opaque-bearer-1",
+      "pairing_supported": true,
+      "transport_profile": "harness-wss-draft-3",
+      "connect_path": "/v1/connect"
     }
   },
   {
@@ -21,28 +23,30 @@
         "task.submit",
         "task.read"
       ],
-      "auth_profile": "opaque-bearer-1",
+      "auth_profile": "session-cookie-or-opaque-bearer-1",
       "proof_profile": "home-jws-es256-1",
       "limits": {
         "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
         "max_page_items": 100,
-        "max_pull_items": 32,
-        "max_wait_ms": 25000,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216
       },
       "retention": {
         "receipt_query_seconds": 2592000,
         "minimal_closed_identity": "permanent"
       },
-      "changes_supported": false
-    }
-  },
-  {
-    "name": "bounded-pull",
-    "definition": "PullInput",
-    "value": {
-      "max_items": 32,
-      "wait_ms": 25000
+      "changes_supported": true,
+      "transport_profile": "harness-wss-draft-3",
+      "connect_path": "/v1/connect"
     }
   },
   {
@@ -1320,7 +1324,8 @@
       },
       "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "control_revision": 2,
-      "cause": "restricted"
+      "cause": "restricted",
+      "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     },
     "context": {
       "mirror": {
@@ -1399,6 +1404,2693 @@
       "observed_at": "2026-09-26T00:06:00Z",
       "source_online": true,
       "allowed": true
+    }
+  },
+  {
+    "name": "wss-ready",
+    "definition": "Frame",
+    "value": {
+      "type": "ready",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": false,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93"
+    }
+  },
+  {
+    "name": "wss-command-request",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+      "kind": "command",
+      "request": {
+        "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+        "method": "task.submit",
+        "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "expires_at": "2026-09-26T00:10:00Z",
+        "payload": {
+          "goal_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "constraints": [
+            "保存指定报告并读回核验"
+          ],
+          "policy_ref": {
+            "id": "policy_823412d1eacb67956220e532959f0104",
+            "version": "1.0.0",
+            "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+          },
+          "budget": [
+            {
+              "unit": "request",
+              "limit": "10"
+            }
+          ],
+          "deadline": "2026-09-26T00:10:00Z"
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server"
+    }
+  },
+  {
+    "name": "wss-command-response",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+      "kind": "command",
+      "result": {
+        "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+        "stage": "applied",
+        "decided_at": "2026-09-26T00:00:00Z",
+        "output": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "goal_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "goal_revision": 1,
+          "requirements": [
+            {
+              "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+              "kind": "effect",
+              "source_ref": {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                "version": 1,
+                "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "rule_ref": {
+                "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                "version": "1.0.0",
+                "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+              },
+              "required": true
+            }
+          ],
+          "policy_ref": {
+            "id": "policy_823412d1eacb67956220e532959f0104",
+            "version": "1.0.0",
+            "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+          },
+          "revision": 1,
+          "control_revision": 1,
+          "status": "active",
+          "control": "running",
+          "wait_reasons": [],
+          "deadline": "2026-09-26T00:10:00Z",
+          "budget": [
+            {
+              "unit": "request",
+              "limit": {
+                "unit": "request",
+                "amount": "10"
+              },
+              "spent": {
+                "unit": "request",
+                "amount": "0"
+              },
+              "reserved": {
+                "unit": "request",
+                "amount": "1"
+              }
+            }
+          ],
+          "open_effects": [],
+          "accounting_open": true
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+        "kind": "command",
+        "request": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "method": "task.submit",
+          "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "constraints": [
+              "保存指定报告并读回核验"
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "budget": [
+              {
+                "unit": "request",
+                "limit": "10"
+              }
+            ],
+            "deadline": "2026-09-26T00:10:00Z"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-command-error",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+      "kind": "command",
+      "result": {
+        "error": {
+          "code": "dependency_unavailable",
+          "message": "原负责服务暂不可达",
+          "retry": "query_original"
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+        "kind": "command",
+        "request": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "method": "task.submit",
+          "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "constraints": [
+              "保存指定报告并读回核验"
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "budget": [
+              {
+                "unit": "request",
+                "limit": "10"
+              }
+            ],
+            "deadline": "2026-09-26T00:10:00Z"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-query-request",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "kind": "query",
+      "request": {
+        "method": "task.read",
+        "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+        "payload": {}
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server"
+    }
+  },
+  {
+    "name": "wss-query-response",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "kind": "query",
+      "result": {
+        "output": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "goal_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "goal_revision": 1,
+          "requirements": [
+            {
+              "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+              "kind": "effect",
+              "source_ref": {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                "version": 1,
+                "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "rule_ref": {
+                "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                "version": "1.0.0",
+                "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+              },
+              "required": true
+            }
+          ],
+          "policy_ref": {
+            "id": "policy_823412d1eacb67956220e532959f0104",
+            "version": "1.0.0",
+            "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+          },
+          "revision": 1,
+          "control_revision": 1,
+          "status": "active",
+          "control": "running",
+          "wait_reasons": [],
+          "deadline": "2026-09-26T00:10:00Z",
+          "budget": [
+            {
+              "unit": "request",
+              "limit": {
+                "unit": "request",
+                "amount": "10"
+              },
+              "spent": {
+                "unit": "request",
+                "amount": "0"
+              },
+              "reserved": {
+                "unit": "request",
+                "amount": "1"
+              }
+            }
+          ],
+          "open_effects": [],
+          "accounting_open": true
+        },
+        "observed_at": "2026-09-26T00:00:00Z"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "kind": "query",
+        "request": {
+          "method": "task.read",
+          "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "payload": {}
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-query-error",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "kind": "query",
+      "result": {
+        "error": {
+          "code": "dependency_unavailable",
+          "message": "原负责服务暂不可达",
+          "retry": "after_change"
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "kind": "query",
+        "request": {
+          "method": "task.read",
+          "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "payload": {}
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-receipt_lookup-request",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_receipt_lookup_ee955d16162c41bc84ca8d3a9e164523",
+      "kind": "receipt_lookup",
+      "request": {
+        "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server"
+    }
+  },
+  {
+    "name": "wss-receipt_lookup-response",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_receipt_lookup_ee955d16162c41bc84ca8d3a9e164523",
+      "kind": "receipt_lookup",
+      "result": {
+        "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+        "stage": "applied",
+        "decided_at": "2026-09-26T00:00:00Z",
+        "output": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "goal_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "goal_revision": 1,
+          "requirements": [
+            {
+              "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+              "kind": "effect",
+              "source_ref": {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                "version": 1,
+                "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "rule_ref": {
+                "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                "version": "1.0.0",
+                "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+              },
+              "required": true
+            }
+          ],
+          "policy_ref": {
+            "id": "policy_823412d1eacb67956220e532959f0104",
+            "version": "1.0.0",
+            "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+          },
+          "revision": 1,
+          "control_revision": 1,
+          "status": "active",
+          "control": "running",
+          "wait_reasons": [],
+          "deadline": "2026-09-26T00:10:00Z",
+          "budget": [
+            {
+              "unit": "request",
+              "limit": {
+                "unit": "request",
+                "amount": "10"
+              },
+              "spent": {
+                "unit": "request",
+                "amount": "0"
+              },
+              "reserved": {
+                "unit": "request",
+                "amount": "1"
+              }
+            }
+          ],
+          "open_effects": [],
+          "accounting_open": true
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_receipt_lookup_ee955d16162c41bc84ca8d3a9e164523",
+        "kind": "receipt_lookup",
+        "request": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-receipt_lookup-error",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_receipt_lookup_ee955d16162c41bc84ca8d3a9e164523",
+      "kind": "receipt_lookup",
+      "result": {
+        "error": {
+          "code": "dependency_unavailable",
+          "message": "原负责服务暂不可达",
+          "retry": "after_change"
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_receipt_lookup_ee955d16162c41bc84ca8d3a9e164523",
+        "kind": "receipt_lookup",
+        "request": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-subscribe",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_subscribe_583a481f9bc59530865fdbbb6138c12b",
+      "kind": "subscribe",
+      "request": {
+        "object_types": [
+          "task",
+          "surface"
+        ]
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server"
+    }
+  },
+  {
+    "name": "wss-subscribed",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_subscribe_583a481f9bc59530865fdbbb6138c12b",
+      "kind": "subscribe",
+      "result": {
+        "subscription_id": "subscription_b48b13e73a6ac2a86dc54425dd24d9ff",
+        "cursor": "cursor-initial-1",
+        "snapshot_required": true
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_subscribe_583a481f9bc59530865fdbbb6138c12b",
+        "kind": "subscribe",
+        "request": {
+          "object_types": [
+            "task",
+            "surface"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-subscribe-resume",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_resume_ec9d5b5b7696721f130e97ab7e6c777f",
+      "kind": "subscribe",
+      "request": {
+        "object_types": [
+          "task",
+          "surface"
+        ],
+        "cursor": "cursor-initial-1"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server",
+      "replaces_subscription": true,
+      "subscription_count": 8
+    }
+  },
+  {
+    "name": "wss-subscription-resumed",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_resume_ec9d5b5b7696721f130e97ab7e6c777f",
+      "kind": "subscribe",
+      "result": {
+        "subscription_id": "subscription_b48b13e73a6ac2a86dc54425dd24d9ff",
+        "cursor": "cursor-initial-1",
+        "snapshot_required": false
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_resume_ec9d5b5b7696721f130e97ab7e6c777f",
+        "kind": "subscribe",
+        "request": {
+          "object_types": [
+            "task",
+            "surface"
+          ],
+          "cursor": "cursor-initial-1"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-delivery",
+    "definition": "Frame",
+    "value": {
+      "type": "delivery",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "envelope": {
+        "delivery": {
+          "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+          "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
+          "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
+          "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
+          "kind": "query",
+          "request": {
+            "method": "task.read",
+            "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "payload": {}
+          },
+          "deliver_before": "2026-09-26T00:10:00Z"
+        },
+        "delivery_proof": "eyJhbGciOiJFUzI1NiIsImtpZCI6InB1YmxpYy1leGFtcGxlLWtleS0xIiwidHlwIjoiaGFybmVzcy1kZWxpdmVyeStqd3MifQ.eyJkZWxpdmVyX2JlZm9yZSI6IjIwMjYtMDktMjZUMDA6MTA6MDBaIiwiZGVsaXZlcnlfaWQiOiJkZWxpdmVyeV9xdWVyeV9jNTM5ZmE5ZjdmYWMyNzVmZjlkMWRiMjQwZTA1ODVjNCIsImtpbmQiOiJxdWVyeSIsInJlY2lwaWVudF9lbmRwb2ludF9pZCI6ImVuZHBvaW50X2I2YmY3YmM4ZDk2ZjNlYTlkMTMyYzgzYjNkYThlNzc2IiwicmVjaXBpZW50X2luc3RhbmNlX2lkIjoiaW5zdGFuY2VfNWU4YzAzYTk0Yzc4MzViODdkZDgyYzY5MGY5Zjg1YzAiLCJyZXF1ZXN0Ijp7Im1ldGhvZCI6InRhc2sucmVhZCIsInBheWxvYWQiOnt9LCJ0YXJnZXRfaWQiOiJ0YXNrXzBlYmI0MjlmYTg2ZDQ4MWMyNjMwZmFjNTNkYjFjOTFjIn0sInJlcXVlc3RfZGlnZXN0Ijoic2hhMjU2OjcxYTkzZjRjMGIwM2E2YThiYjBkMGZkY2IwNzNmZDkwODUzZjM1Y2NhZWNiYThmYWEwMTM1NTc0Yjc3YjQ3YmMiLCJzZW5kZXJfc2VydmljZV9pZCI6ImhvbWVfNGVhMTQwNTg4MTUwNzczY2UzYWFjZTc4NmFlZWY3ZjQifQ.njS3V_HkneQNxUFyuB-vYNND8MX9SWz_jgPtKaOoWlz5Odl782zB_u_hTrJy4ZZgbLmXHETxVtUOhnyka2Wn5g"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "authenticated_endpoint": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
+      "authenticated_instance": "instance_5e8c03a94c7835b87dd82c690f9f85c0"
+    }
+  },
+  {
+    "name": "wss-reply",
+    "definition": "Frame",
+    "value": {
+      "type": "reply",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "reply": {
+        "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+        "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
+        "kind": "query",
+        "result": {
+          "output": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "goal_revision": 1,
+            "requirements": [
+              {
+                "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+                "kind": "effect",
+                "source_ref": {
+                  "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                  "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                  "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                  "version": 1,
+                  "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                },
+                "rule_ref": {
+                  "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                  "version": "1.0.0",
+                  "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+                },
+                "required": true
+              }
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "revision": 1,
+            "control_revision": 1,
+            "status": "active",
+            "control": "running",
+            "wait_reasons": [],
+            "deadline": "2026-09-26T00:10:00Z",
+            "budget": [
+              {
+                "unit": "request",
+                "limit": {
+                  "unit": "request",
+                  "amount": "10"
+                },
+                "spent": {
+                  "unit": "request",
+                  "amount": "0"
+                },
+                "reserved": {
+                  "unit": "request",
+                  "amount": "1"
+                }
+              }
+            ],
+            "open_effects": [],
+            "accounting_open": true
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server",
+      "delivery": {
+        "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
+        "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
+        "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
+        "kind": "query",
+        "request": {
+          "method": "task.read",
+          "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "payload": {}
+        },
+        "deliver_before": "2026-09-26T00:10:00Z"
+      },
+      "authenticated_endpoint": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
+      "authenticated_instance": "instance_5e8c03a94c7835b87dd82c690f9f85c0"
+    }
+  },
+  {
+    "name": "wss-reply-withheld",
+    "definition": "Frame",
+    "value": {
+      "type": "reply",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "reply": {
+        "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+        "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
+        "kind": "query",
+        "result": {
+          "error": {
+            "code": "forbidden",
+            "message": "Current disclosure permission has closed",
+            "retry": "after_change"
+          }
+        },
+        "withheld": true
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server",
+      "delivery": {
+        "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
+        "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
+        "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
+        "kind": "query",
+        "request": {
+          "method": "task.read",
+          "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "payload": {}
+        },
+        "deliver_before": "2026-09-26T00:10:00Z"
+      },
+      "disclosure_allowed": false,
+      "authenticated_endpoint": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
+      "authenticated_instance": "instance_5e8c03a94c7835b87dd82c690f9f85c0"
+    }
+  },
+  {
+    "name": "wss-reply-ack",
+    "definition": "Frame",
+    "value": {
+      "type": "reply_ack",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "ack": {
+        "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+        "stored": true,
+        "result_digest": "sha256:564fef25dbd243157b377c3be95fcce2f12ada0b9937d9f1f118984c717a2550"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "reply": {
+        "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+        "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
+        "kind": "query",
+        "result": {
+          "output": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "goal_revision": 1,
+            "requirements": [
+              {
+                "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+                "kind": "effect",
+                "source_ref": {
+                  "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                  "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                  "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                  "version": 1,
+                  "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                },
+                "rule_ref": {
+                  "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                  "version": "1.0.0",
+                  "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+                },
+                "required": true
+              }
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "revision": 1,
+            "control_revision": 1,
+            "status": "active",
+            "control": "running",
+            "wait_reasons": [],
+            "deadline": "2026-09-26T00:10:00Z",
+            "budget": [
+              {
+                "unit": "request",
+                "limit": {
+                  "unit": "request",
+                  "amount": "10"
+                },
+                "spent": {
+                  "unit": "request",
+                  "amount": "0"
+                },
+                "reserved": {
+                  "unit": "request",
+                  "amount": "1"
+                }
+              }
+            ],
+            "open_effects": [],
+            "accounting_open": true
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-mirror-ticket",
+    "definition": "Frame",
+    "value": {
+      "type": "mirror_ticket",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "ticket": {
+        "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "content_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+          "version": 1,
+          "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_control_revision": 1,
+        "expires_at": "2026-09-26T00:05:00Z"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "registered_copy": {
+        "content_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+          "version": 1,
+          "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "holder_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "use_stopped": false,
+        "retention_until": "2026-09-26T00:10:00Z"
+      },
+      "authenticated_sender": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "authenticated_instance": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "name": "wss-change",
+    "definition": "Frame",
+    "value": {
+      "type": "change",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "subscription_id": "subscription_b48b13e73a6ac2a86dc54425dd24d9ff",
+      "change": {
+        "cursor": "page:9",
+        "object_type": "task",
+        "object_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+        "revision": 2
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "subscription": {
+        "subscription_id": "subscription_b48b13e73a6ac2a86dc54425dd24d9ff",
+        "object_types": [
+          "task",
+          "surface"
+        ],
+        "paused_for_gap": false
+      }
+    }
+  },
+  {
+    "name": "wss-gap-cursor_expired",
+    "definition": "Frame",
+    "value": {
+      "type": "snapshot_required",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "subscription_id": "subscription_b48b13e73a6ac2a86dc54425dd24d9ff",
+      "reason": "cursor_expired"
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "subscription": {
+        "subscription_id": "subscription_b48b13e73a6ac2a86dc54425dd24d9ff",
+        "object_types": [
+          "task",
+          "surface"
+        ],
+        "paused_for_gap": false
+      }
+    }
+  },
+  {
+    "name": "wss-gap-queue_overflow",
+    "definition": "Frame",
+    "value": {
+      "type": "snapshot_required",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "subscription_id": "subscription_b48b13e73a6ac2a86dc54425dd24d9ff",
+      "reason": "queue_overflow"
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "subscription": {
+        "subscription_id": "subscription_b48b13e73a6ac2a86dc54425dd24d9ff",
+        "object_types": [
+          "task",
+          "surface"
+        ],
+        "paused_for_gap": false
+      }
+    }
+  },
+  {
+    "name": "wss-ping",
+    "definition": "Frame",
+    "value": {
+      "type": "ping",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "nonce": "heartbeat-1"
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client"
+    }
+  },
+  {
+    "name": "wss-pong",
+    "definition": "Frame",
+    "value": {
+      "type": "pong",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "nonce": "heartbeat-1"
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server",
+      "pending_ping_nonce": "heartbeat-1"
+    }
+  },
+  {
+    "name": "wss-control-reserve",
+    "definition": "Frame",
+    "value": {
+      "type": "reply_ack",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "ack": {
+        "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+        "stored": true,
+        "result_digest": "sha256:564fef25dbd243157b377c3be95fcce2f12ada0b9937d9f1f118984c717a2550"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "reply": {
+        "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+        "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
+        "kind": "query",
+        "result": {
+          "output": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "goal_revision": 1,
+            "requirements": [
+              {
+                "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+                "kind": "effect",
+                "source_ref": {
+                  "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                  "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                  "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                  "version": 1,
+                  "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                },
+                "rule_ref": {
+                  "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                  "version": "1.0.0",
+                  "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+                },
+                "required": true
+              }
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "revision": 1,
+            "control_revision": 1,
+            "status": "active",
+            "control": "running",
+            "wait_reasons": [],
+            "deadline": "2026-09-26T00:10:00Z",
+            "budget": [
+              {
+                "unit": "request",
+                "limit": {
+                  "unit": "request",
+                  "amount": "10"
+                },
+                "spent": {
+                  "unit": "request",
+                  "amount": "0"
+                },
+                "reserved": {
+                  "unit": "request",
+                  "amount": "1"
+                }
+              }
+            ],
+            "open_effects": [],
+            "accounting_open": true
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      },
+      "queued_bytes": 3145728
+    }
+  },
+  {
+    "name": "wss-cancel-reserve",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_cancel_6a4f208b06de57a057f6d43985dd9f36",
+      "kind": "command",
+      "request": {
+        "command_id": "task_cancel_6ce3b20a665a0dbf7dfb3267ace2c583",
+        "method": "task.cancel",
+        "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+        "expires_at": "2026-09-26T00:10:00Z",
+        "payload": {
+          "reason": "用户控制"
+        },
+        "expected_revision": 3
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server",
+      "inflight_requests": 28
+    }
+  },
+  {
+    "name": "wss-upload_reserve",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_upload_reserve_abd506372ad6a6c4c71affa142071a79",
+      "kind": "upload_reserve",
+      "request": {
+        "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270",
+        "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+        "byte_length": 16,
+        "media_type": "text/plain",
+        "expires_at": "2026-09-26T00:10:00Z"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server",
+      "authenticated_subject": "upload_subject_c42ddcf1683b53847e6cb719895379f3",
+      "upload_owner_id": "upload_subject_c42ddcf1683b53847e6cb719895379f3",
+      "existing_upload": {
+        "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270",
+        "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+        "byte_length": 16,
+        "media_type": "text/plain",
+        "expires_at": "2026-09-26T00:10:00Z",
+        "state": "ready"
+      }
+    }
+  },
+  {
+    "name": "wss-upload_reserve-response",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_upload_reserve_abd506372ad6a6c4c71affa142071a79",
+      "kind": "upload_reserve",
+      "result": {
+        "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270",
+        "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+        "byte_length": 16,
+        "media_type": "text/plain",
+        "expires_at": "2026-09-26T00:10:00Z",
+        "state": "reserved"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_upload_reserve_abd506372ad6a6c4c71affa142071a79",
+        "kind": "upload_reserve",
+        "request": {
+          "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270",
+          "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+          "byte_length": 16,
+          "media_type": "text/plain",
+          "expires_at": "2026-09-26T00:10:00Z"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-upload_reserve-error",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_upload_reserve_abd506372ad6a6c4c71affa142071a79",
+      "kind": "upload_reserve",
+      "result": {
+        "error": {
+          "code": "forbidden",
+          "message": "当前传输管理资格不足",
+          "retry": "after_change"
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_upload_reserve_abd506372ad6a6c4c71affa142071a79",
+        "kind": "upload_reserve",
+        "request": {
+          "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270",
+          "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+          "byte_length": 16,
+          "media_type": "text/plain",
+          "expires_at": "2026-09-26T00:10:00Z"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-upload_lookup",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_upload_lookup_f6b5675256862d76e63a044b08fa58a7",
+      "kind": "upload_lookup",
+      "request": {
+        "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server",
+      "authenticated_subject": "upload_subject_c42ddcf1683b53847e6cb719895379f3",
+      "upload_owner_id": "upload_subject_c42ddcf1683b53847e6cb719895379f3",
+      "existing_upload": {
+        "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270",
+        "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+        "byte_length": 16,
+        "media_type": "text/plain",
+        "expires_at": "2026-09-26T00:10:00Z",
+        "state": "ready"
+      }
+    }
+  },
+  {
+    "name": "wss-upload_lookup-response",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_upload_lookup_f6b5675256862d76e63a044b08fa58a7",
+      "kind": "upload_lookup",
+      "result": {
+        "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270",
+        "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+        "byte_length": 16,
+        "media_type": "text/plain",
+        "expires_at": "2026-09-26T00:10:00Z",
+        "state": "ready"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_upload_lookup_f6b5675256862d76e63a044b08fa58a7",
+        "kind": "upload_lookup",
+        "request": {
+          "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-upload_lookup-error",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_upload_lookup_f6b5675256862d76e63a044b08fa58a7",
+      "kind": "upload_lookup",
+      "result": {
+        "error": {
+          "code": "forbidden",
+          "message": "当前传输管理资格不足",
+          "retry": "after_change"
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_upload_lookup_f6b5675256862d76e63a044b08fa58a7",
+        "kind": "upload_lookup",
+        "request": {
+          "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-mirror_reserve",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_mirror_reserve_75b47c541be4801e48cda94c01f79ef2",
+      "kind": "mirror_reserve",
+      "request": {
+        "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "content_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+          "version": 1,
+          "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_control_revision": 1,
+        "expires_at": "2026-09-26T00:05:00Z"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server",
+      "registered_copy": {
+        "content_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+          "version": 1,
+          "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "holder_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "use_stopped": false,
+        "retention_until": "2026-09-26T00:10:00Z"
+      },
+      "reservation_authorized": true,
+      "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "paired_sender_endpoint": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "paired_sender_instance": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "name": "wss-mirror_reserve-response",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_mirror_reserve_75b47c541be4801e48cda94c01f79ef2",
+      "kind": "mirror_reserve",
+      "result": {
+        "ticket": {
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "content_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_control_revision": 1,
+          "expires_at": "2026-09-26T00:05:00Z"
+        },
+        "state": "reserved",
+        "cleanup_state": "pending",
+        "retention_until": "2026-09-26T00:10:00Z",
+        "control_revision": 1
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_mirror_reserve_75b47c541be4801e48cda94c01f79ef2",
+        "kind": "mirror_reserve",
+        "request": {
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "content_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_control_revision": 1,
+          "expires_at": "2026-09-26T00:05:00Z"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-mirror_reserve-error",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_mirror_reserve_75b47c541be4801e48cda94c01f79ef2",
+      "kind": "mirror_reserve",
+      "result": {
+        "error": {
+          "code": "forbidden",
+          "message": "当前传输管理资格不足",
+          "retry": "after_change"
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_mirror_reserve_75b47c541be4801e48cda94c01f79ef2",
+        "kind": "mirror_reserve",
+        "request": {
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "content_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_control_revision": 1,
+          "expires_at": "2026-09-26T00:05:00Z"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-mirror_lookup",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_mirror_lookup_2f31c6c29c7b99b542065c71e45dd199",
+      "kind": "mirror_lookup",
+      "request": {
+        "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server",
+      "mirror": {
+        "ticket": {
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "content_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_control_revision": 1,
+          "expires_at": "2026-09-26T00:05:00Z"
+        },
+        "state": "ready",
+        "cleanup_state": "pending",
+        "retention_until": "2026-09-26T00:10:00Z",
+        "control_revision": 1
+      },
+      "metadata_access_allowed": true
+    }
+  },
+  {
+    "name": "wss-mirror_lookup-response",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_mirror_lookup_2f31c6c29c7b99b542065c71e45dd199",
+      "kind": "mirror_lookup",
+      "result": {
+        "ticket": {
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "content_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_control_revision": 1,
+          "expires_at": "2026-09-26T00:05:00Z"
+        },
+        "state": "ready",
+        "cleanup_state": "pending",
+        "retention_until": "2026-09-26T00:10:00Z",
+        "control_revision": 1
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_mirror_lookup_2f31c6c29c7b99b542065c71e45dd199",
+        "kind": "mirror_lookup",
+        "request": {
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-mirror_lookup-error",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_mirror_lookup_2f31c6c29c7b99b542065c71e45dd199",
+      "kind": "mirror_lookup",
+      "result": {
+        "error": {
+          "code": "forbidden",
+          "message": "当前传输管理资格不足",
+          "retry": "after_change"
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_mirror_lookup_2f31c6c29c7b99b542065c71e45dd199",
+        "kind": "mirror_lookup",
+        "request": {
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-mirror_control",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_mirror_control_74fb0a1ad5d51504c194e433e412c3a8",
+      "kind": "mirror_control",
+      "request": {
+        "control_id": "control_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "content_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+          "version": 1,
+          "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "control_revision": 2,
+        "cause": "restricted",
+        "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server",
+      "mirror": {
+        "ticket": {
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "content_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_control_revision": 1,
+          "expires_at": "2026-09-26T00:05:00Z"
+        },
+        "state": "ready",
+        "cleanup_state": "pending",
+        "retention_until": "2026-09-26T00:10:00Z",
+        "control_revision": 1
+      },
+      "authenticated_owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+      "metadata_access_allowed": true,
+      "inflight_requests": 28
+    }
+  },
+  {
+    "name": "wss-mirror_control-response",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_mirror_control_74fb0a1ad5d51504c194e433e412c3a8",
+      "kind": "mirror_control",
+      "result": {
+        "ticket": {
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "content_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_control_revision": 1,
+          "expires_at": "2026-09-26T00:05:00Z"
+        },
+        "state": "closed",
+        "cleanup_state": "pending",
+        "retention_until": "2026-09-26T00:10:00Z",
+        "control_revision": 2
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_mirror_control_74fb0a1ad5d51504c194e433e412c3a8",
+        "kind": "mirror_control",
+        "request": {
+          "control_id": "control_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "content_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "control_revision": 2,
+          "cause": "restricted",
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-mirror_control-error",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_mirror_control_74fb0a1ad5d51504c194e433e412c3a8",
+      "kind": "mirror_control",
+      "result": {
+        "error": {
+          "code": "forbidden",
+          "message": "当前传输管理资格不足",
+          "retry": "after_change"
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_mirror_control_74fb0a1ad5d51504c194e433e412c3a8",
+        "kind": "mirror_control",
+        "request": {
+          "control_id": "control_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "content_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "control_revision": 2,
+          "cause": "restricted",
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    }
+  },
+  {
+    "name": "wss-mirror-control-replay",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_control_replay_b95506ac58593979e6287d2fa9d976e3",
+      "kind": "mirror_control",
+      "request": {
+        "control_id": "control_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "content_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+          "version": 1,
+          "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "control_revision": 2,
+        "cause": "restricted",
+        "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "client_to_server",
+      "mirror": {
+        "ticket": {
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "content_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_control_revision": 1,
+          "expires_at": "2026-09-26T00:05:00Z"
+        },
+        "state": "closed",
+        "cleanup_state": "pending",
+        "retention_until": "2026-09-26T00:10:00Z",
+        "control_revision": 2
+      },
+      "authenticated_owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+      "metadata_access_allowed": true,
+      "inflight_requests": 28,
+      "original_control": {
+        "control_id": "control_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "content_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+          "version": 1,
+          "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "control_revision": 2,
+        "cause": "restricted",
+        "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    }
+  },
+  {
+    "name": "wss-mirror-control-replay-response",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_control_replay_b95506ac58593979e6287d2fa9d976e3",
+      "kind": "mirror_control",
+      "result": {
+        "ticket": {
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "content_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_control_revision": 1,
+          "expires_at": "2026-09-26T00:05:00Z"
+        },
+        "state": "closed",
+        "cleanup_state": "pending",
+        "retention_until": "2026-09-26T00:10:00Z",
+        "control_revision": 2
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_connections_per_identity": 2,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_control_replay_b95506ac58593979e6287d2fa9d976e3",
+        "kind": "mirror_control",
+        "request": {
+          "control_id": "control_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "content_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "control_revision": 2,
+          "cause": "restricted",
+          "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
     }
   }
 ]

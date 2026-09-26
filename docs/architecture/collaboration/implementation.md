@@ -36,7 +36,7 @@ flowchart TB
 
 | 内部职责 | 决定及产出 | 边界 |
 | --- | --- | --- |
-| 协作用例 facade | 认证父 Home、原命令与所属协作用例 | 复用宿主原回执处理；不把 HTTP 回调作为父子关系权威 |
+| 协作用例 facade | 认证父 Home、原命令与所属协作用例 | 复用宿主原回执处理；不把 RPC 回复或连接推送作为父子关系权威 |
 | DelegationAdmission | 父当前资格、精确 Agent 绑定、收缩权限和有限预算 | 不接受模型自签权限或新实例地址 |
 | InternalChildFactory | 同事务创建子 Task、allocation 与映射 | 不创建第二个 Home，不复制父余额 |
 | ExternalAgentAdapter | 固定创建键、原生协议与语义映射 | 不把原生“请求完成”升级为效果已核清 |
@@ -121,7 +121,7 @@ create_internal_child(request):
   commit
 ```
 
-预算分配是同一个存储事务中的内部调用，不通过本地 HTTP 产生第二个提交点。若子创建失败，父预留和 delegation 均不提交。答复丢失只查询原 command 或 delegation，不重新分配。
+预算分配是同一个存储事务中的内部调用，不通过本地 RPC 产生第二个提交点。若子创建失败，父预留和 delegation 均不提交。答复丢失只查询原 command 或 delegation，不重新分配。
 
 默认深度、活跃子数和用户任务数均有有限配置。祖先列表由 Home 从真实父链产生并核验，不能相信模型提供的列表。拒绝父子环、重复祖先、错误 Home 和越界深度；活跃子任务也占用户任务额度。
 

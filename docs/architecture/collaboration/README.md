@@ -1,5 +1,7 @@
 # Agent 协作与任务委派
 
+[模块与数据 UML](../uml-models.md#collaboration) · [可编辑 UML 图册](../diagrams/uml-models.drawio)
+
 [总览](../README.md) · [任务运行](../task-runtime/README.md) · [公共调用契约](../contracts/README.md)
 
 协作把父任务中的一个有界目标交给 Agent，并把进展、结果、成本和仍未收束的行动交回父任务。它覆盖 C1、C5、C6、C7 及 A3、A4。内部 Agent 使用 Harness 的任务生命周期；外部 Agent 保有自己的运行时，另一 Task Home 管理的 Harness Agent 也按外部委派处理。

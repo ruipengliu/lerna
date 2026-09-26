@@ -1,0 +1,254 @@
+{
+  "module": "core",
+  "title": "跨 owner 核心对象",
+  "data": {
+    "nodes": [
+      {
+        "id": "task",
+        "name": "Task",
+        "owner": "Task Home",
+        "schema": "Task",
+        "attributes": [
+          {
+            "name": "task_id",
+            "type": "ID"
+          },
+          {
+            "name": "goal_revision",
+            "type": "Revision"
+          },
+          {
+            "name": "status",
+            "type": "TaskStatus"
+          },
+          {
+            "name": "open_effects",
+            "type": "ID[]"
+          },
+          {
+            "name": "accounting_open",
+            "type": "Boolean"
+          }
+        ],
+        "source": "task-runtime/README.md"
+      },
+      {
+        "id": "intent",
+        "name": "OperationIntent",
+        "owner": "Task Home · 内部记录",
+        "schema": null,
+        "attributes": [
+          {
+            "name": "operation_id",
+            "type": "ID"
+          },
+          {
+            "name": "task_id",
+            "type": "ID"
+          },
+          {
+            "name": "goal_revision",
+            "type": "Revision"
+          },
+          {
+            "name": "input_ref",
+            "type": "ContentRef"
+          }
+        ],
+        "source": "task-runtime/README.md"
+      },
+      {
+        "id": "operation",
+        "name": "Operation",
+        "owner": "Executor",
+        "schema": "Operation",
+        "attributes": [
+          {
+            "name": "operation_id",
+            "type": "ID"
+          },
+          {
+            "name": "execution_state",
+            "type": "ExecutionState"
+          },
+          {
+            "name": "effect",
+            "type": "Effect"
+          },
+          {
+            "name": "may_apply_later",
+            "type": "Boolean | unknown"
+          },
+          {
+            "name": "usage_final",
+            "type": "Boolean"
+          }
+        ],
+        "source": "execution/README.md"
+      },
+      {
+        "id": "attempt",
+        "name": "Attempt",
+        "owner": "Executor",
+        "schema": "Attempt",
+        "attributes": [
+          {
+            "name": "attempt_id",
+            "type": "ID"
+          },
+          {
+            "name": "prepared_at",
+            "type": "Timestamp"
+          },
+          {
+            "name": "sent_at",
+            "type": "Timestamp?"
+          },
+          {
+            "name": "target_key",
+            "type": "String?"
+          }
+        ],
+        "source": "execution/README.md"
+      },
+      {
+        "id": "result",
+        "name": "Result",
+        "owner": "Task Home",
+        "schema": "Result",
+        "attributes": [
+          {
+            "name": "task_id",
+            "type": "ID"
+          },
+          {
+            "name": "goal_revision",
+            "type": "Revision"
+          },
+          {
+            "name": "artifact_refs",
+            "type": "ContentRef[1..100]"
+          },
+          {
+            "name": "completion_basis",
+            "type": "CompletionBasis"
+          }
+        ],
+        "source": "task-runtime/README.md"
+      },
+      {
+        "id": "content",
+        "name": "ContentRef",
+        "owner": "值引用 · 定位内容 owner",
+        "schema": "ContentRef",
+        "attributes": [
+          {
+            "name": "owner_id",
+            "type": "ID"
+          },
+          {
+            "name": "content_id",
+            "type": "ID"
+          },
+          {
+            "name": "version",
+            "type": "Revision"
+          },
+          {
+            "name": "hash",
+            "type": "Digest"
+          }
+        ],
+        "source": "contracts/README.md"
+      }
+    ],
+    "edges": [
+      {
+        "from": "task",
+        "to": "intent",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..*",
+        "label": "准入",
+        "source": "task-runtime/implementation.md#data-flow",
+        "constraint": ""
+      },
+      {
+        "from": "intent",
+        "to": "operation",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..1",
+        "label": "原 operation_id",
+        "source": "execution/implementation.md#data-flow",
+        "constraint": "仅已接纳正常 Invoke 的 Operation；取消先到的关闭索引不算接纳 Operation"
+      },
+      {
+        "from": "operation",
+        "to": "attempt",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..*",
+        "label": "准备 / 发送尝试",
+        "source": "execution/README.md",
+        "constraint": "接纳尚未准备时可为 0；Attempt 不证明已发送，数组分页上限不是终身尝试数"
+      },
+      {
+        "from": "task",
+        "to": "result",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..1",
+        "label": "完成时固定",
+        "source": "task-runtime/implementation.md#data-flow",
+        "constraint": "当前目标正式结果仅在 Task.status=succeeded 时存在"
+      },
+      {
+        "from": "result",
+        "to": "content",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "1..100",
+        "label": "成果引用",
+        "source": "task-runtime/README.md",
+        "constraint": "引用可复用，不表示内容生命周期所有权"
+      },
+      {
+        "from": "intent",
+        "to": "content",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "1",
+        "label": "输入引用",
+        "source": "task-runtime/README.md",
+        "constraint": "OperationIntent 固定 input_ref；具体内容访问另行获准"
+      },
+      {
+        "from": "operation",
+        "to": "content",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "0..101",
+        "label": "证据 / 结果",
+        "source": "execution/README.md",
+        "constraint": "合并 evidence_refs 与可选 result_ref 的逻辑引用集合"
+      }
+    ],
+    "notes": [
+      "跨 owner 关联通过原身份核对，不是跨库事务",
+      "引用不授予权限；取消不删除未知效果与费用责任"
+    ]
+  },
+  "reading_notes": [
+    "全局类图聚焦从 Home 意图到 Executor 效果，再到正式结果的交接。OperationIntent 与 Operation 各有 owner；0..1 包含尚未派发或尚未接纳的阶段，不把网络答复当成持久效果。",
+    "OperationIntent → Operation 只表达已接纳正常 Invoke 的关联；取消先到时 Executor 可只有禁止迟到启动的关闭索引。关闭索引并不伪造成完整 Operation。",
+    "ContentRef 是按 owner、版本与摘要定位正文的值引用。类图按相同引用值合并展示可复用关系；引用的保留、删除和当前访问资格由所属规则决定，线段没有级联删除或数据库外键含义。"
+  ],
+  "sources": [
+    "task-runtime/README.md",
+    "task-runtime/implementation.md#data-flow",
+    "execution/README.md",
+    "execution/implementation.md#data-flow",
+    "contracts/README.md"
+  ]
+}

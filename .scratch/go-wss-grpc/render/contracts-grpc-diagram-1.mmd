@@ -1,0 +1,8 @@
+flowchart LR
+    C[浏览器／端侧宿主] <-->|WSS| G[连接接入层]
+    G <-->|gRPC| A[负责服务适配器]
+    A --> U[Go 用例接口]
+    U --> R[领域规则]
+    U --> S[(所属 repository)]
+    U --> P[远端 port]
+    P <-->|gRPC| O[另一负责服务]

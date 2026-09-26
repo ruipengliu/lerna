@@ -9,7 +9,7 @@
 <a id="module-shape"></a>
 ## 1. 模块形状与内部依赖
 
-运行时是宿主装配的一个软件模块，对外 facade 是 CommandHandler；其后是处理任务用例的 TaskCoordinator 与 JobRunner、执行领域规则的 BudgetLedger／PlanMaterializer／FactReducer，以及存储和外部 port。名称表示参考实现的代码职责，当前没有相应运行代码；这些职责默认共进程、共 Home 提交域，不各建服务。依赖由宿主注入，领域规则不反向依赖 HTTP、数据库驱动或具体模型 SDK。
+运行时是宿主装配的一个软件模块，对外 facade 是 CommandHandler；其后是处理任务用例的 TaskCoordinator 与 JobRunner、执行领域规则的 BudgetLedger／PlanMaterializer／FactReducer，以及存储和外部 port。名称表示参考实现的代码职责，当前没有相应运行代码；这些职责默认共进程、共 Home 提交域，不各建服务。依赖由宿主注入，领域规则不反向依赖 WSS／gRPC、数据库驱动或具体模型 SDK。
 
 ```mermaid
 flowchart TB
@@ -33,7 +33,7 @@ flowchart TB
 
 | 内部职责 | 输入及产出 | 不拥有的裁决权 |
 | --- | --- | --- |
-| CommandHandler | 认证主体、固定命令；原 Receipt 或明确拒绝 | 不从 HTTP 超时推断业务失败 |
+| CommandHandler | 认证主体、固定命令；原 Receipt 或明确拒绝 | 不从连接或 RPC 超时推断业务失败 |
 | TaskCoordinator | 当前任务、提案及精确依赖；状态变化与 jobs | 不自行声明外部效果 |
 | SnapshotAssembler | 获准目标、证据、能力和上下文；固定快照引用 | 不静默取得新的资料用途 |
 | PlanMaterializer | 固定计划、已核实前项输出；完整行动候选或缺口 | 不执行表达式，不把计划当权限 |
@@ -367,7 +367,7 @@ RuntimeBudgetReceiver 固定 allocation_id、parent_owner_id、receiver_id、par
 | 编号 | 初始状态与故障断点 | 恢复步骤及必须观察的结果 |
 | --- | --- | --- |
 | RT-01 | 两客户端提交相同 command；Task 插入后、事务提交前崩溃 | 重启并重投；一项 Task、一项首 job、一份原回执，未提交残片不存在 |
-| RT-02 | 接纳提交后、HTTP 回答前崩溃 | 查原命令得同 Task；Home 自行恢复首 job，不要求用户再提交目标 |
+| RT-02 | 接纳提交后、回执送达前崩溃 | 查原命令得同 Task；Home 自行恢复首 job，不要求用户再提交目标 |
 | RT-03 | Brain 已发送，暂停与旧决策返回竞争 | 费用保存；旧提案不准入；无新 operation，暂停既有证据完成仍可提交 |
 | RT-04 | dispatch 已保存原命令，worker 失联后被重领 | 两个 worker 只能交接同一 operation；旧 lease_epoch 写入拒绝，原效果继续核对 |
 | RT-05 | 文件写成丢答复，用户取消，随后成功事实到达 | Task 保持 cancelled；原文件版本、效果和费用更新；无第二次写入 |

@@ -1,0 +1,194 @@
+{
+  "module": "system",
+  "title": "系统",
+  "component": {
+    "nodes": [
+      {
+        "id": "interaction",
+        "name": "应用与交互\nInteraction",
+        "kind": "component",
+        "boundary": "internal",
+        "methods": [
+          "interaction.input",
+          "interaction.present"
+        ],
+        "source": "interaction/README.md"
+      },
+      {
+        "id": "task-runtime",
+        "name": "任务运行时\nTask Home",
+        "kind": "component",
+        "boundary": "internal",
+        "methods": [
+          "task.submit",
+          "task.read",
+          "task.cancel"
+        ],
+        "source": "task-runtime/README.md"
+      },
+      {
+        "id": "brain",
+        "name": "大脑\nBrain",
+        "kind": "component",
+        "boundary": "internal",
+        "methods": [
+          "brain.decide",
+          "brain.get"
+        ],
+        "source": "brain/README.md"
+      },
+      {
+        "id": "memory",
+        "name": "记忆与内容\nMemory / Content",
+        "kind": "component",
+        "boundary": "internal",
+        "methods": [
+          "memory.query",
+          "content.get"
+        ],
+        "source": "memory/README.md"
+      },
+      {
+        "id": "execution",
+        "name": "执行\nExecutor",
+        "kind": "component",
+        "boundary": "internal",
+        "methods": [
+          "execution.invoke",
+          "execution.reconcile"
+        ],
+        "source": "execution/README.md"
+      },
+      {
+        "id": "collaboration",
+        "name": "Agent 协作\nCollaboration",
+        "kind": "component",
+        "boundary": "internal",
+        "methods": [
+          "collaboration.delegate",
+          "collaboration.read"
+        ],
+        "source": "collaboration/README.md"
+      },
+      {
+        "id": "security",
+        "name": "权限与隔离\nSecurity",
+        "kind": "component",
+        "boundary": "internal",
+        "methods": [
+          "grant.use",
+          "grant.use.settle"
+        ],
+        "source": "security/README.md"
+      },
+      {
+        "id": "evaluation",
+        "name": "观测、评测与改进\nEvaluation",
+        "kind": "component",
+        "boundary": "internal",
+        "methods": [
+          "evaluation.run",
+          "evaluation.approval_check"
+        ],
+        "source": "evaluation/README.md"
+      },
+      {
+        "id": "extensions",
+        "name": "扩展与宿主\nExtensions",
+        "kind": "component",
+        "boundary": "internal",
+        "methods": [
+          "extensions.activate",
+          "extensions.read"
+        ],
+        "source": "extensions/README.md"
+      }
+    ],
+    "edges": [
+      {
+        "to": "task-runtime",
+        "type": "dependency",
+        "label": "目标 / 输入",
+        "from": "interaction"
+      },
+      {
+        "to": "brain",
+        "type": "dependency",
+        "label": "单轮提案",
+        "from": "task-runtime"
+      },
+      {
+        "to": "memory",
+        "type": "dependency",
+        "label": "检索 / 内容",
+        "from": "task-runtime"
+      },
+      {
+        "to": "execution",
+        "type": "dependency",
+        "label": "准入意图",
+        "from": "task-runtime"
+      },
+      {
+        "to": "collaboration",
+        "type": "dependency",
+        "label": "有界委派",
+        "from": "task-runtime"
+      },
+      {
+        "to": "security",
+        "type": "dependency",
+        "label": "使用 / 额度",
+        "from": "task-runtime"
+      },
+      {
+        "to": "security",
+        "type": "dependency",
+        "label": "启动依据",
+        "from": "execution"
+      },
+      {
+        "to": "security",
+        "type": "dependency",
+        "label": "委派授权",
+        "from": "collaboration"
+      },
+      {
+        "to": "task-runtime",
+        "type": "dependency",
+        "label": "获准观测",
+        "from": "evaluation"
+      },
+      {
+        "to": "extensions",
+        "type": "dependency",
+        "label": "激活 / 查询",
+        "from": "evaluation"
+      },
+      {
+        "to": "evaluation",
+        "type": "dependency",
+        "label": "当前批准",
+        "from": "extensions"
+      },
+      {
+        "to": "brain",
+        "type": "dependency",
+        "label": "装配 / 生命周期",
+        "from": "extensions"
+      }
+    ],
+    "notes": [
+      "逻辑模块 ≠ owner ≠ 进程 ≠ 提交域",
+      "仅画主线依赖；返回与控制细节见模块页"
+    ]
+  },
+  "reading_notes": [
+    "全局组件页以软件依赖为视角。箭头由依赖者指向被依赖者，接口方法是所提供能力的节选；未展开全部控制、内容读取和观测采集依赖。",
+    "Security 同时覆盖多个事实职责，Extensions 的装配边也不表示用户业务授权；部署和事务边界仍按所属 owner 单独判断。"
+  ],
+  "sources": [
+    "technical-overview.md",
+    "README.md"
+  ]
+}

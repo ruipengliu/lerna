@@ -1,0 +1,462 @@
+{
+  "module": "interaction",
+  "title": "应用、界面与用户输入",
+  "component": {
+    "nodes": [
+      {
+        "id": "surface_api",
+        "name": "Surface API",
+        "kind": "interface",
+        "boundary": "provided",
+        "methods": [
+          "interaction.surface_create",
+          "interaction.surface_read",
+          "interaction.surface_update",
+          "interaction.present"
+        ],
+        "source": "contracts/schemas/methods.json"
+      },
+      {
+        "id": "input_api",
+        "name": "Input API",
+        "kind": "interface",
+        "boundary": "provided",
+        "methods": [
+          "interaction.input",
+          "interaction.input_read",
+          "interaction.input_withdraw",
+          "interaction.application_event"
+        ],
+        "source": "contracts/schemas/methods.json"
+      },
+      {
+        "id": "surface",
+        "name": "SurfaceService",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "interaction/implementation.md#module-shape"
+      },
+      {
+        "id": "input",
+        "name": "InputService",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "interaction/implementation.md#module-shape"
+      },
+      {
+        "id": "store",
+        "name": "InteractionStore",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "interaction/implementation.md#module-shape"
+      },
+      {
+        "id": "delivery",
+        "name": "DeliveryWorker",
+        "kind": "component",
+        "boundary": "internal",
+        "source": "interaction/implementation.md#module-shape"
+      },
+      {
+        "id": "renderer",
+        "name": "Renderer",
+        "kind": "component",
+        "boundary": "host",
+        "source": "interaction/implementation.md#module-shape"
+      },
+      {
+        "id": "trusted",
+        "name": "TrustedConfirmationHost",
+        "kind": "component",
+        "boundary": "host",
+        "source": "interaction/implementation.md#module-shape"
+      },
+      {
+        "id": "owner_api",
+        "name": "实际业务 owner API",
+        "kind": "interface",
+        "boundary": "required",
+        "methods": [
+          "interaction.request_read",
+          "task.input",
+          "confirmation.read",
+          "confirmation.decide"
+        ],
+        "source": "contracts/schemas/methods.json"
+      }
+    ],
+    "edges": [
+      {
+        "from": "surface",
+        "to": "surface_api",
+        "type": "realization",
+        "label": "提供"
+      },
+      {
+        "from": "input",
+        "to": "input_api",
+        "type": "realization",
+        "label": "提供"
+      },
+      {
+        "from": "surface",
+        "to": "store",
+        "type": "dependency",
+        "label": "快照、回执与通知"
+      },
+      {
+        "from": "input",
+        "to": "store",
+        "type": "dependency",
+        "label": "输入 / 原命令"
+      },
+      {
+        "from": "delivery",
+        "to": "store",
+        "type": "dependency",
+        "label": "领取 / 原回执"
+      },
+      {
+        "from": "delivery",
+        "to": "owner_api",
+        "type": "dependency",
+        "label": "原命令 / 查询"
+      },
+      {
+        "from": "renderer",
+        "to": "surface_api",
+        "type": "dependency",
+        "label": "读取与设备呈现"
+      },
+      {
+        "from": "renderer",
+        "to": "input_api",
+        "type": "dependency",
+        "label": "输入与转交查询"
+      },
+      {
+        "from": "renderer",
+        "to": "trusted",
+        "type": "dependency",
+        "label": "受信确认入口"
+      },
+      {
+        "from": "trusted",
+        "to": "owner_api",
+        "type": "dependency",
+        "label": "意图 / 本人决定"
+      },
+      {
+        "from": "renderer",
+        "to": "owner_api",
+        "type": "dependency",
+        "label": "精确请求及预览要求"
+      }
+    ],
+    "notes": [
+      "Renderer 与 TrustedConfirmationHost 属于 CLI／Web 宿主；其余为耐久服务。",
+      "InputRequest 与 Confirmation 的消费归实际业务 owner。",
+      "本端 queued、业务 applied 与外部效果分别确认。"
+    ]
+  },
+  "data": {
+    "nodes": [
+      {
+        "id": "surface",
+        "name": "Surface",
+        "owner": "Surface owner",
+        "schema": "Surface",
+        "attributes": [
+          {
+            "name": "surface_id",
+            "type": "ID"
+          },
+          {
+            "name": "surface_owner_id",
+            "type": "ID"
+          },
+          {
+            "name": "app_binding",
+            "type": "ComponentRef"
+          },
+          {
+            "name": "task_ref",
+            "type": "TaskRef [0..1]"
+          },
+          {
+            "name": "revision",
+            "type": "Revision"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json"
+      },
+      {
+        "id": "snapshot",
+        "name": "SurfaceSnapshot",
+        "owner": "Surface owner；完整快照值",
+        "schema": "SurfaceSnapshot",
+        "attributes": [
+          {
+            "name": "title",
+            "type": "String"
+          },
+          {
+            "name": "blocks",
+            "type": "SurfaceBlock [0..100]"
+          },
+          {
+            "name": "request_refs",
+            "type": "ObjectRef [0..100]"
+          },
+          {
+            "name": "expires_at",
+            "type": "Timestamp"
+          },
+          {
+            "name": "source_revision",
+            "type": "Revision [0..1]"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json"
+      },
+      {
+        "id": "presentation",
+        "name": "Presentation",
+        "owner": "本设备呈现负责端",
+        "schema": null,
+        "attributes": [
+          {
+            "name": "surface_id",
+            "type": "ID"
+          },
+          {
+            "name": "endpoint_id",
+            "type": "ID"
+          },
+          {
+            "name": "intent_revision",
+            "type": "Revision"
+          },
+          {
+            "name": "open",
+            "type": "Boolean"
+          },
+          {
+            "name": "seen_revision",
+            "type": "Integer ≥ 0"
+          }
+        ],
+        "source": "interaction/README.md#interaction-contracts"
+      },
+      {
+        "id": "request",
+        "name": "InputRequestView",
+        "owner": "业务 owner · Home / 应用",
+        "schema": "InputRequestView",
+        "attributes": [
+          {
+            "name": "request_id",
+            "type": "ID"
+          },
+          {
+            "name": "owner_id",
+            "type": "ID"
+          },
+          {
+            "name": "revision",
+            "type": "Revision"
+          },
+          {
+            "name": "kind",
+            "type": "Enum"
+          },
+          {
+            "name": "state",
+            "type": "Enum"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json"
+      },
+      {
+        "id": "submission",
+        "name": "InputSubmission",
+        "owner": "耐久交互服务",
+        "schema": "InputSubmission",
+        "attributes": [
+          {
+            "name": "input_id",
+            "type": "ID"
+          },
+          {
+            "name": "request_id",
+            "type": "ID"
+          },
+          {
+            "name": "request_revision",
+            "type": "Revision"
+          },
+          {
+            "name": "target_command_id",
+            "type": "ID"
+          },
+          {
+            "name": "state",
+            "type": "Enum"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json"
+      },
+      {
+        "id": "event",
+        "name": "ApplicationEventSubmission",
+        "owner": "耐久交互服务",
+        "schema": "ApplicationEventSubmission",
+        "attributes": [
+          {
+            "name": "event_id",
+            "type": "ID"
+          },
+          {
+            "name": "surface_revision",
+            "type": "Revision"
+          },
+          {
+            "name": "app_binding",
+            "type": "ComponentRef"
+          },
+          {
+            "name": "target_command_id",
+            "type": "ID"
+          },
+          {
+            "name": "state",
+            "type": "Enum"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json"
+      },
+      {
+        "id": "confirmation",
+        "name": "ConfirmationRecord",
+        "owner": "实际 consumer owner",
+        "schema": "ConfirmationRecord",
+        "attributes": [
+          {
+            "name": "confirmation_id",
+            "type": "ID"
+          },
+          {
+            "name": "consumer_method",
+            "type": "Enum"
+          },
+          {
+            "name": "consumer_command_id",
+            "type": "ID"
+          },
+          {
+            "name": "intent_hash",
+            "type": "Digest"
+          },
+          {
+            "name": "state",
+            "type": "Enum"
+          }
+        ],
+        "source": "contracts/schemas/protocol.schema.json"
+      }
+    ],
+    "edges": [
+      {
+        "from": "surface",
+        "to": "snapshot",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "1",
+        "label": "当前快照",
+        "source": "contracts/schemas/protocol.schema.json",
+        "constraint": "快照是值投影；不由字段嵌入推导独立持久身份、唯一反向归属或级联生命周期。"
+      },
+      {
+        "from": "surface",
+        "to": "presentation",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..*",
+        "label": "设备呈现意图",
+        "source": "interaction/implementation.md",
+        "constraint": "(surface_id, endpoint_id) 唯一；没有记录时使用 closed 的初始意图。"
+      },
+      {
+        "from": "snapshot",
+        "to": "request",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "0..100",
+        "label": "准确请求修订",
+        "source": "contracts/schemas/protocol.schema.json",
+        "constraint": "可跨 owner；必须覆盖所有 input/action 引用；同请求可在多个页面展示。"
+      },
+      {
+        "from": "surface",
+        "to": "submission",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..*",
+        "label": "surface_id",
+        "source": "contracts/schemas/protocol.schema.json",
+        "constraint": "清理 Surface 不删除未结目标映射与转交责任；此为原身份引用，非级联删除。"
+      },
+      {
+        "from": "submission",
+        "to": "request",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "1",
+        "label": "提交请求修订",
+        "source": "interaction/implementation.md",
+        "constraint": "多份回答可竞争同一原请求；实际业务 owner 最多消费一个有效回答，交互接纳不等于消费。"
+      },
+      {
+        "from": "surface",
+        "to": "event",
+        "type": "association",
+        "fromMultiplicity": "1",
+        "toMultiplicity": "0..*",
+        "label": "独立应用事件",
+        "source": "interaction/implementation.md",
+        "constraint": "仅 Surface.task_ref 缺省时可接纳 application_event；固定 surface_revision 与 app_binding。"
+      },
+      {
+        "from": "confirmation",
+        "to": "request",
+        "type": "association",
+        "fromMultiplicity": "0..*",
+        "toMultiplicity": "0..1",
+        "label": "验收命令绑定原请求",
+        "source": "interaction/implementation.md",
+        "constraint": "consumer_method=task.accept_result 时恰关联 1 个 acceptance 请求，来自原 consumer_command.payload；其他方法无此关联。"
+      }
+    ],
+    "notes": [
+      "Surface.task_ref 可为空；独立应用无需创建任务。",
+      "请求、确认、输入转交和设备呈现各有 owner 与状态。",
+      "seen_revision 仅记录显示；清理页面不撤销业务消费。"
+    ]
+  },
+  "reading_notes": [
+    "组件页保留输入恢复和受信确认的关键依赖；ProjectionWorker、PresentationStore 及 Renderer 到内容 owner 的读取依赖见实现页。SurfaceService 与 InputService 分别实现自己的公共接口，没有把任一组件画成全部 interaction 方法的唯一裁决者。",
+    "interaction.request_read 虽使用 interaction 前缀，但调用实际 request_ref.owner_id 所指业务负责端。任务澄清经 task.input，验收经 task.accept_result，独立应用经已登记处理器；接口框只列代表方法，原命令查询沿共同传输协议进行。",
+    "Surface.task_ref 可缺省。application_event 仅适用于独立 Surface；已绑定任务的 Surface 由受信 Home 投影器更新，不能让普通应用冒充任务状态。Snapshot 是完整值投影，图中未虚构代码类、继承或生命周期所有权。",
+    "InputRequestView 是 InputRequest 的公共读取投影，其 owner 为 Home 或应用 owner；交互服务仅保存 InputSubmission 和固定目标命令。多个提交可指向一个请求修订，一次消费由业务事务裁决，不能把关联数量误写成每请求只有一次提交。",
+    "ConfirmationRecord 由实际 consumer owner 保存。图中到请求的关联仅适用于 task.accept_result，固定原命令还需绑定 goal_revision 与 candidate_hash；其他消费者（例如 grant.issue）不关联普通 InputRequest。一次请求可以有多个尚未消费的确认尝试，但最终业务消费仍唯一。",
+    "正常链路先保存 queued 与目标 command_id，再领取 sending、投递固定命令并查询原业务回执。答复丢失保留 sending，不创建新目标；queued 的撤回与发送领取在交互库竞争，sending 后只登记 withdrawal_requested 并继续核对。",
+    "必需预览撤权、过期或来源关闭时，实际业务 owner 拒绝依赖该预览的消费；旧按钮、缓存及 seen_revision 均不能放行。Presentation 按设备独立保存，关窗与历史快照清理不取消任务、不删除请求消费或未结转交责任。"
+  ],
+  "sources": [
+    "interaction/README.md",
+    "interaction/implementation.md",
+    "security/implementation.md",
+    "contracts/schemas/methods.json",
+    "contracts/schemas/protocol.schema.json"
+  ]
+}

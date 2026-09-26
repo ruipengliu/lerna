@@ -1,5 +1,7 @@
 # 记忆、内容与来源
 
+[模块与数据 UML](../uml-models.md#memory) · [可编辑 UML 图册](../diagrams/uml-models.drawio)
+
 [整体设计](../README.md) · [目标](../goals.md) · [授权规则](../security/README.md) · [大脑](../brain/README.md)
 
 本模块让任务能够使用个人信息与经验，并让用户能够纠正、限制和删除它们。覆盖 C2、C3、C7、C9 及三系统替换要求；对联网问答提供来源，对手机操作保存获准的观察与结果。本文定义设计契约，参考实现和运行验收均待交付。
@@ -152,7 +154,7 @@ sequenceDiagram
 
 接收端每次实际使用仍检查视图范围和当前许可，不能凭同步成功取得永久使用权。在线用当前授权；离线只用[有限租约](../security/README.md#offline)。收到撤权立即停止新使用，未收到时最晚在租约到期停止；发布方不能把消息发出当作对方已经停止。要求即时撤权的内容不开放离线副本使用。
 
-无入站地址的设备通过[受控反向交付](implementation.md#52-无入站设备的受控反向交付)提供大内容：原 owner 先登记副本，已配对的取件服务再预留绑定原 ContentRef、copy_id 和发送实例的有限上传 ticket，设备主动上传。接收地址仅从受信装配解析，接收端校验字节并保存只读镜像，不以 content.put 改变内容所有权。上传就绪不授予读取资格；基础镜像每次读取先取得原 owner 当前 content.get 结果，失联时停止新的读取。已有显式离线副本设计另行验收，镜像不会自动获得离线资格或延长原期限。
+无入站地址的设备通过[受控反向交付](implementation.md#52-无入站设备的受控反向交付)提供大内容：原 owner 先登记副本，已配对的接收服务再预留绑定原 ContentRef、copy_id 和发送实例的有限上传 ticket，经 WSS 推送票据后设备主动上传。接收地址仅从受信装配解析，接收端校验字节并保存只读镜像，不以 content.put 改变内容所有权。上传就绪不授予读取资格；基础镜像每次读取先取得原 owner 当前 content.get 结果，失联时停止新的读取。已有显式离线副本设计另行验收，镜像不会自动获得离线资格或延长原期限。
 
 ### 4.3 禁用、删除与恢复
 
@@ -190,7 +192,7 @@ stateDiagram-v2
 | `ContentRef` | `tenant_id, owner_id, content_id, version, hash, media_type, byte_length`；hash 对应完整不可变正文，owner 与版本不变；tenant 由服务校验 |
 | `SourceBinding` | `source_ref: ContentRef, relation, observed_at, valid_until?, policy_ref`；relation 为 user_statement、observation、derived；来源图无环，派生保留完整处理输入依赖 |
 | `ContentPolicy` | `classification, allowed_locations, allowed_recipients, allowed_purposes, retention_until, offline_allowed`；具体使用还需有效 Grant；组合来源取限制交集 |
-| `MemoryRecord` | `memory_id, owner_id, revision, type, content_ref, sources[], scope, observed_at, confidence?, state, policy_ref`；state 为 active、needs_review、disabled、deleted；墓碑只保留获准的身份、修订和清理依据；置信度只表示声明的方法估计 |
+| `MemoryRecord` | `memory_id, owner_id, revision, type, content_ref, sources[], scope, observed_at, confidence?, state, policy_ref`；state 为 active、needs_review、disabled；删除后的状态由 MemoryControl 与墓碑表达，只保留获准的身份、修订和清理依据；置信度只表示声明的方法估计 |
 | `Query` | `query_id, owner_ids, text_terms[], types[], scope, purpose, recipient_id, limit, cursor?`；分页必须沿原查询，空词项须提供类型或范围限制 |
 | `QueryPage` | `query_id, owner_id, items[], position, scanned_count, skipped_count, next_cursor?, exhausted, partial, changed, gaps[]`；items 仅包含当前获准记录，partial 指扫描或提供方不完整，exhausted 只针对原有限集合 |
 | `View` | `view_id, owner_id, recipient_id, filter, projection, purpose, retention_until, lease_ref?, revision, snapshot_cursor, change_cursor?, expires_at, state`；filter 只含类型与 Scope，projection 为 metadata／content_refs，不接受脚本 |

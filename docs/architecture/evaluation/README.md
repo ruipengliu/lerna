@@ -1,5 +1,7 @@
 # 运行观测、能力评测与受控改进
 
+[模块与数据 UML](../uml-models.md#evaluation) · [可编辑 UML 图册](../diagrams/uml-models.drawio)
+
 [总览](../README.md) · [项目目标](../goals.md) · [系统验收](../validation/README.md) · [版本激活](../extensions/README.md)
 
 
