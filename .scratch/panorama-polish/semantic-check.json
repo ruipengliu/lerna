@@ -1,0 +1,9 @@
+{
+  "semantic_graph": "unchanged",
+  "component_labels": "unchanged",
+  "edge_owned_labels": 15,
+  "modules": 9,
+  "components_and_stores": 54,
+  "internal_dependencies": 58,
+  "handoff_groups": 12
+}

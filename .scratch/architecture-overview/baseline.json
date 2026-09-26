@@ -1,0 +1,354 @@
+{
+  "assets": {
+    "docs/architecture/contracts/schemas/protocol.schema.json": "7cfd610e4838cdca53ae9e50a440ee530e9cbb93784e121df8eb7b81d25c790b",
+    "docs/architecture/contracts/schemas/task-outcome.schema.json": "5a2702a6fb8d5817a06c10a262d3e43ef682e5280a5e8733fc21b50e91073332",
+    "docs/architecture/contracts/schemas/methods.json": "eae45ac71bb83a814871e8f1ebc902377c57eba8fc25271354099ec238186dcc",
+    "docs/architecture/contracts/schemas/transport.schema.json": "341bafa65c9a6555d503e61f20e8a98676f331f4ba3b43670a73a3029acbc422",
+    "docs/architecture/contracts/examples/succeeded-user-accepted.json": "e0e7be2eedd380b95224df1d4d1522d2f94beaedba9cf6e2dfe74610a125a3f5",
+    "docs/architecture/contracts/examples/invalid-cases.json": "4cca6a68370a73a289d02169b53445f69003e0abe6dbec50852247836e93d4c1",
+    "docs/architecture/contracts/examples/cancelled-late-effect.json": "dec8dbfa1745ca32691b6c9bef41863a9a128b0868d7909c042c4d17f3e12119",
+    "docs/architecture/contracts/examples/active-unknown-effect.json": "2f1f14a82324109dfd4c946b844c415dfdfa61d49fb93d34ff1b75ad8a352034",
+    "docs/architecture/contracts/examples/succeeded-verified.json": "91bc2d08e6d685826d48eded8f4bd30afd932202856fc0895a6c4e08aab4e471",
+    "docs/architecture/contracts/examples/succeeded-assessed.json": "74f17784babbd448b5fe5ded2d6c857e2ddf95719b04af28f3f2f7a95ee16e3f",
+    "docs/architecture/contracts/examples/transport/vectors.json": "ccb4ad6a6092cb94b87ed6fcc66af3369f646be0fff919ab00af7ac00df4ddf9",
+    "docs/architecture/contracts/examples/transport/proofs.json": "584e2f608c9dded43664f5e3634fe4c957d560d70007155d61617b928c6dbe50",
+    "docs/architecture/contracts/examples/transport/invalid-mutations.json": "cf0e980f91de9747ac8f5c9f3c5fefa0b78462e08fc82b9c004fe05406b88ed2",
+    "docs/architecture/contracts/examples/protocol/52-confirmation-grant.json": "10f120570325498d6b1dbfe659350c23144bc64cdfccc9d2dbac1c62659aafbe",
+    "docs/architecture/contracts/examples/protocol/48-memory-changed-pages.json": "2f238e5e32845b2f4ac464afb3f24744812362857e6d612c79bb7a01c9895575",
+    "docs/architecture/contracts/examples/protocol/16-active-to-result.json": "642082e2b579fd77c9945f88d21c95eb1c6cdc9fae97707d66209fe2a1213db9",
+    "docs/architecture/contracts/examples/protocol/34-compatibility-release.json": "ee08afc816ec7fbf2cf102a64ca95015c559f0fec7071280b57ae989e7231c41",
+    "docs/architecture/contracts/examples/protocol/07-input-consumption.json": "5b1d2bfedf368ea7df5a07ee5e6c7948c06c23f697b5b8308a0dddb5c8fb8f42",
+    "docs/architecture/contracts/examples/protocol/10-use-recovery.json": "03ac096030f5e12ee3879106d3a30f8e610a1e469220059a59feb8e0ef7edd0f",
+    "docs/architecture/contracts/examples/protocol/14-approval-offline.json": "c95973a52c00c0e9eaaf83a656866e9b1aaeab993da5d18fa9d51adffc62fe75",
+    "docs/architecture/contracts/examples/protocol/54-confirmation-acceptance.json": "e300cff396eb674dcb72917fccf79360fcae1c1da6d3ee26866a44e620164240",
+    "docs/architecture/contracts/examples/protocol/36-local-install-restart.json": "bf3071661d54d2cb7b1d4b17f9b2c48486a68b2c72d543a14d29645b5b5982e7",
+    "docs/architecture/contracts/examples/protocol/05-task-control.json": "9980071b81a92db0b755f5b2a569da9891d7090b8dedea134fabfb159cd7f7ad",
+    "docs/architecture/contracts/examples/protocol/02-original-command.json": "dc2fd9d5028125554810c4f9fd236d8da6205c706e2327a5207bf66fb0fb9847",
+    "docs/architecture/contracts/examples/protocol/32-lease-settlement.json": "788dea649af6368a53b6bd9a883eb11a5cf8bb795186b723f04b455c187e8c36",
+    "docs/architecture/contracts/examples/protocol/22-resource-lifecycle.json": "8a27657083630761b594fae1d33813779331e19615d9a9d81f5e2d284641d46a",
+    "docs/architecture/contracts/examples/protocol/43-memory-view-sync.json": "09c20234968d7b709c0797a86f6c0003b4854f4ff9e5ac283b92485e5a179f9b",
+    "docs/architecture/contracts/examples/protocol/44-surface-lifecycle.json": "10ba383171235d87f72827a6fe370205832e5c43491068c39ee283bbfd7f58d8",
+    "docs/architecture/contracts/examples/protocol/11-memory-management.json": "f8b8a67cffb4724b3db540aeade970e1cf51fa1c3ec3d1a226ca97e79e3fe461",
+    "docs/architecture/contracts/examples/protocol/42-memory-extraction.json": "ae9b36547163ddb7f41f19397e55362293e1fbc7a8e4bb7cdb454e2bcaa9291a",
+    "docs/architecture/contracts/examples/protocol/49-source-projection.json": "3973cdfca68538cbd76f2df09d3bbd3512b6067691e44f6656d7256886b87037",
+    "docs/architecture/contracts/examples/protocol/09-brain-recovery.json": "e983f4aa4fbbb129b08e30a7e4f98cc3e01db5520feaa4593e983e364b93773e",
+    "docs/architecture/contracts/examples/protocol/38-revoked-approval-startup.json": "ad7bfcbed7bd559b7b10ff235809f0a453c05358faa9f8a18957a88ae57985b4",
+    "docs/architecture/contracts/examples/protocol/33-installation-lifecycle.json": "271faef838194acb1eae45e8f99e700d6df17c51580a5d2bee067bb652d8755d",
+    "docs/architecture/contracts/examples/protocol/17-optional-condition.json": "667689ffff003eea50d88bb5e04dc1ea456f8dee79c57ca1d04987b74398e9f1",
+    "docs/architecture/contracts/examples/protocol/31-pairing-lifecycle.json": "89970b5afebe039c7020dc8e1dcc8cd9afce8ce49ecfc67570f9bc4b598b624d",
+    "docs/architecture/contracts/examples/protocol/04-cancel-before-invoke.json": "445a809fcdcc02665a461f5c1982d0a415850e3038a6624519b97dfb629c8ad4",
+    "docs/architecture/contracts/examples/protocol/53-confirmation-release.json": "4a6a25847eba082276e5401fffb4fbbb60f9b43e6410d14a58ff0d8c40f3551c",
+    "docs/architecture/contracts/examples/protocol/39-evaluation-cancel.json": "1ccbe755d84beb706b5c4e125a3ebaa5a0b54b20daf47947b45da163d0975879",
+    "docs/architecture/contracts/examples/protocol/41-memory-query-list.json": "0d750a82c7ffdc415f2f08000491e3a14ff20a93b207074c242019b0e39c9b6b",
+    "docs/architecture/contracts/examples/protocol/13-activation-online.json": "798a896d32160bba1de4b1254bcaae0e2001d3b1cdb8d00ab89dc764bb917dbe",
+    "docs/architecture/contracts/examples/protocol/51-online-use-once-zero.json": "aa3405419351003b7da5603c10801decb9d1627cb7d156fdfd94ab1bff5cf220",
+    "docs/architecture/contracts/examples/protocol/invalid-mutations.json": "8aaeb4a99156f234da6cb80dadae5ba5acfd45371fee124749e495899ba8f2c1",
+    "docs/architecture/contracts/examples/protocol/15-rejected-branches.json": "3b799919cee46cdd20c17a2821ff3186f831c066df0862434bdfda100f032791",
+    "docs/architecture/contracts/examples/protocol/12-delegation-mapping.json": "a4eeacc4e187ad8d782242f844f898420c6ee6727e4a78bb263583892a05f235",
+    "docs/architecture/contracts/examples/protocol/03-control-order.json": "33792e87602a38d350cffe7e1eb566378c9b93dd2bab98e4927f86b92f0ebdb9",
+    "docs/architecture/contracts/examples/protocol/01-task-loop.json": "32dff98e8efe8c46422d424c14bf5f3b49f4e5e174a7d8f8bb3b2c5ad5652a4a",
+    "docs/architecture/contracts/examples/protocol/23-cross-home-budget.json": "49b3c7f7cb272a80cf652379db34b7b004d2e78891e3078e69e7b9f456baab80",
+    "docs/architecture/contracts/examples/protocol/40-content-lifecycle.json": "7e6353a45f3e5fbc3ed700f25388c0352b6a28e9e710b352307c6af8b2abef5e",
+    "docs/architecture/contracts/examples/protocol/21-capability-catalog.json": "f647221ccfc4c23563977588c345190fbd94bcfe04bfdd6a5a040a118485da5c",
+    "docs/architecture/contracts/examples/protocol/47-declarative-form.json": "9473eaddde6631ff486cad1fc81c2f44707075e89438d240ff19a4e9c33dd886",
+    "docs/architecture/contracts/examples/protocol/08-acceptance.json": "c35b83684d27aff0220c6f12a2efab0f44dc107c4d7b08c006d01abd9f8444fb",
+    "docs/architecture/contracts/examples/protocol/30-grant-lifecycle.json": "09b55b771b8bf257537cc568bbf476bc3742fc44288598bdd0d03d78ba59745b",
+    "docs/architecture/contracts/examples/protocol/20-budget-allocation.json": "6d1ed211e580dc365256263f0fe3ba38d68297bbdf0c7b65222e60391d2f5d25",
+    "docs/architecture/contracts/examples/protocol/18-unrelated-effect.json": "688b8c18acf34c930231ce62a7e5136ca8134300b163859694e0166274d6e5a2",
+    "docs/architecture/contracts/examples/protocol/45-application-delivery.json": "df1a16d21c1999b26ea8c5cec60fc3e932c8be39020d904cd8617d6213c1858d",
+    "docs/architecture/contracts/examples/protocol/06-goal-revision.json": "9fe678279b018737a6ff903f0dab060b910f2fba10f6dfcb40edaeb92cf60872",
+    "docs/architecture/contracts/examples/protocol/50-online-use-settlement.json": "6f69cacdf397a766e707f23f7508774813fbeb0d5b99b81c49e297da118e4abf",
+    "docs/architecture/contracts/examples/protocol/35-improvement-exposure.json": "b30ac134eb2ddffac8d3989a611f6d322b6c738232e54e2d7d0c959dd93a2168",
+    "docs/architecture/contracts/examples/protocol/37-remote-instance-reopen.json": "5d167ae0c25118e73065d579c7336eb68641047c82fdb74980692992f4c8e1bc",
+    "docs/architecture/contracts/examples/protocol/46-content-restriction.json": "3638e46d7bc02cb20627b94e33d821f11041f19547e51be67c25bafa0fd56c29",
+    "docs/architecture/validation/validate_transport.py": "abd88ad7db03a04c95f780bcf8f13dfe01572ef8732adb9970d774d2906b80de",
+    "docs/architecture/validation/check_documents.py": "7d98a40c94831c513f0703e2a3fe29e0db620ec3f5573cf7a651ecb0e68281fb",
+    "docs/architecture/validation/validate.py": "9e8aff65c055b22200386186d86ca92baf632b4fb5b8f03388ba83177bf4319e",
+    "docs/architecture/validation/verify_transport_proofs.mjs": "2e1fda6950b0ee6b57e7589f251afda3f5fd0d63c79b49a79722e19c38bcf7c7",
+    "docs/architecture/validation/validate_protocol.py": "823a60907aea5148fc00dafdda1c09658287d56fa58a9644cef389a823edaec3",
+    "docs/architecture/validation/protocol/governance_rules.py": "611e727098cf87421082ee6f9b6335b7a56d4ddf19c4f77ac02ff40c1fbc6f11",
+    "docs/architecture/validation/protocol/exchanges.py": "4a33af7a9dcb669fb871baf838bb22478c4bde21ca74e41d693275f51facfe6a",
+    "docs/architecture/validation/protocol/content_rules.py": "d19f4dc1af369fb8761f0807e200291794cc178a6f910f4c6ebb4462e2010f17",
+    "docs/architecture/validation/protocol/traces.py": "4636d3f4608f82a0ac134ad615c3987fbd78e8a915d73bbbeaea4f479dd5c659",
+    "docs/architecture/validation/protocol/runtime_rules.py": "2b8fa62b458e65b9783eb620685bb5d31cbc4c7a72c3481c426cc36b696f731d",
+    "docs/architecture/validation/protocol/schema.py": "59a64424684a5d78acec0b5ad3a1ba18222b89a948e6b5340a06338a85ffceb3"
+  },
+  "mermaid": [
+    {
+      "source": "docs/architecture/README.md",
+      "digest": "2ab6a7c21b9dddc19a6ee0c8efc598c65f230213f7c49ad7642835b46b83c593"
+    },
+    {
+      "source": "docs/architecture/brain/README.md",
+      "digest": "af0c40d8fd9e76598592d09099141d7a047c3880bff6520f6eafd843263becd1"
+    },
+    {
+      "source": "docs/architecture/brain/README.md",
+      "digest": "d00fbda0b50b0941f5617950d00dc97bf6855168c57b89163234b81e31a4e915"
+    },
+    {
+      "source": "docs/architecture/brain/implementation.md",
+      "digest": "d2f67a09d07372a181059241c0200ad19668445a19a262c0368b0654487bb382"
+    },
+    {
+      "source": "docs/architecture/brain/implementation.md",
+      "digest": "5506d28d28e8cf4398f62aac0dcce4f9d07955d369c755eff5f1d7d7536eab26"
+    },
+    {
+      "source": "docs/architecture/brain/implementation.md",
+      "digest": "74d3e0dbd863c1564e05f39dfc4f294bc04266ba5cff15a258f8a7c271e1e207"
+    },
+    {
+      "source": "docs/architecture/collaboration/README.md",
+      "digest": "61c418559f73682c555ba987ae87e697760977eaa92fa8938c959f2fb19d6dba"
+    },
+    {
+      "source": "docs/architecture/collaboration/README.md",
+      "digest": "962acf0b79ea9d22900f360dbeac763b380422eae6a8d06527e6c356a5b3694a"
+    },
+    {
+      "source": "docs/architecture/collaboration/implementation.md",
+      "digest": "f7624c0aaac55c67cabcf3d646dc2b90277bf335b9c2996b0607707b4cfbec78"
+    },
+    {
+      "source": "docs/architecture/collaboration/implementation.md",
+      "digest": "9c621047bd050d5eccabbcc59447e7bebafcafeb8c57eca9dd5dad703356ad6c"
+    },
+    {
+      "source": "docs/architecture/collaboration/implementation.md",
+      "digest": "096eefdd961c5e580efc3a12cc2bba6647368fa20952cee3a530e81d93122d04"
+    },
+    {
+      "source": "docs/architecture/collaboration/implementation.md",
+      "digest": "a5c4b2a75f4b2a3fa60b16ca72cc81264276df1a027511e04fe3f5f96db3d95f"
+    },
+    {
+      "source": "docs/architecture/contracts/README.md",
+      "digest": "a28e0bac83822e2964b9ce216ce20149c778ea78b529563fe49f334e89e9da6b"
+    },
+    {
+      "source": "docs/architecture/contracts/transport.md",
+      "digest": "6dfc94e527aa9cf59395c4e8119d3ffe73a2731b1220fa03c55d202135b53da1"
+    },
+    {
+      "source": "docs/architecture/deployment-production.md",
+      "digest": "f347365923d86cbdc6f0e7dff3b1adcca57a7e45a566a2423879b501c0b0acc3"
+    },
+    {
+      "source": "docs/architecture/deployment-production.md",
+      "digest": "8cc047d58f12b3377b0c6ade9d550fad2164a57c1573011f0a2a9ea73f38fe93"
+    },
+    {
+      "source": "docs/architecture/deployment-production.md",
+      "digest": "c6d152d39bd18c0831de3303de6fb31387ab4170b8d7578a400a12aa3c815811"
+    },
+    {
+      "source": "docs/architecture/deployment.md",
+      "digest": "b948810354d06de6719e49c3ec58a15efc2a381a6a8a5f24c7352d1e3a44f0ac"
+    },
+    {
+      "source": "docs/architecture/deployment.md",
+      "digest": "224bd97b249b5e07bf21744fef31a2781c204ef077e0559fc5f7ffca0da2357e"
+    },
+    {
+      "source": "docs/architecture/evaluation/README.md",
+      "digest": "2f33f6875161cb8afecd321b89eadb674e84ca5b93d682b5d64913257323f18e"
+    },
+    {
+      "source": "docs/architecture/evaluation/README.md",
+      "digest": "5ef65eb11ad5f1e7bcbe591f04bf3ff9049176ad3501b0bf46ed1015b312dba0"
+    },
+    {
+      "source": "docs/architecture/evaluation/implementation.md",
+      "digest": "ff236063404124916447f5398b7e664e40241ecfe6f35e60e5c5e4c0ba032ca5"
+    },
+    {
+      "source": "docs/architecture/evaluation/implementation.md",
+      "digest": "b4f3cd952edb267404b6441a3be6b67e2389fc2351202a13be1200443d3effa5"
+    },
+    {
+      "source": "docs/architecture/evaluation/implementation.md",
+      "digest": "a2c1f446215b3bdd04875a27ff9d70cb81c4d05081ce9731358a4c5ca86ad504"
+    },
+    {
+      "source": "docs/architecture/execution/README.md",
+      "digest": "ee9be93e8f2556530a60464759ed77fe22fdeea19cbbe6358cd9fb98efd2feaa"
+    },
+    {
+      "source": "docs/architecture/execution/README.md",
+      "digest": "39b071b66b05cb18c5a1042cc7b2bdf83c82ca9714239d8c6d9a76ea045fd160"
+    },
+    {
+      "source": "docs/architecture/execution/README.md",
+      "digest": "a602dacf431070372425310e50cb643018e926dca6d9f92d69abd8fd7d11cfc4"
+    },
+    {
+      "source": "docs/architecture/execution/implementation.md",
+      "digest": "b9a7474ede838d2b4ff33192876bbfa3472827afd3751783ca808a89e49e8cfa"
+    },
+    {
+      "source": "docs/architecture/execution/implementation.md",
+      "digest": "6bc3019fd5877284104659dee82236d1661d4aff07268b9c4653d7a866432bc8"
+    },
+    {
+      "source": "docs/architecture/execution/implementation.md",
+      "digest": "b982ffefca6b9b9f304ae627ebfeda251204b886f9444fbfcfaa30fc8ee8716c"
+    },
+    {
+      "source": "docs/architecture/extensions/README.md",
+      "digest": "79e6ee0778f21631cddc6cdf181a985a0eb83901253e92f2c4d3184ce01604b5"
+    },
+    {
+      "source": "docs/architecture/extensions/README.md",
+      "digest": "a3f2ca5ac461b8ca61bff4a8148bb8d9dc9828b943ef9863cc155e1741b36995"
+    },
+    {
+      "source": "docs/architecture/extensions/implementation.md",
+      "digest": "ef6105c9d196f36d1550dfe46c0e89155dab2da4198ee41337b9242e95225ec6"
+    },
+    {
+      "source": "docs/architecture/extensions/implementation.md",
+      "digest": "66d51d6c27471e1fde93412f8b128d83034b2c74c9719d12194871b614e2ef49"
+    },
+    {
+      "source": "docs/architecture/extensions/implementation.md",
+      "digest": "a16c1260a8290b3d386546ab2d47f36a3630c2785d27226a215badae9ca8fc13"
+    },
+    {
+      "source": "docs/architecture/extensions/implementation.md",
+      "digest": "f0f7192599dd9b498dd5028f83c87ae8f4b64f29c3f53073a6cc186950bba102"
+    },
+    {
+      "source": "docs/architecture/interaction/README.md",
+      "digest": "48c1b4d9f95faaff25984dca8866d6c197027446e3c340ebf79c8b522dde61ee"
+    },
+    {
+      "source": "docs/architecture/interaction/README.md",
+      "digest": "eef3d54c7a34d65d81b8d894fcf1046876c75146e193b56562127e4201f8e3c6"
+    },
+    {
+      "source": "docs/architecture/interaction/implementation.md",
+      "digest": "7516b2d4fe03513953d1fd5e48f558a3874c789f4ebef478a82990a230aad17b"
+    },
+    {
+      "source": "docs/architecture/interaction/implementation.md",
+      "digest": "d8ce8777cadd2877d8865e60b26a0a7565d716653ca4219d2e70a31733c40f1c"
+    },
+    {
+      "source": "docs/architecture/interaction/implementation.md",
+      "digest": "6e2f3277c27ea6929b7981cab5ec3dc9c0f34ca33398da2256f8bcd4f80aa5ee"
+    },
+    {
+      "source": "docs/architecture/interaction/implementation.md",
+      "digest": "28740d0d00ff42bcee01ff9143c6d5150b04d4e71217658fd06c658c0125a0c1"
+    },
+    {
+      "source": "docs/architecture/interaction/implementation.md",
+      "digest": "4cff39f77ef1741da719fa22d181d3d5addb5e587c9cbf1c88a9050fc6b8e206"
+    },
+    {
+      "source": "docs/architecture/memory/README.md",
+      "digest": "a7bdddc2308f36e390554084a293eb91d068fa409a512742bd4519d2466c91cf"
+    },
+    {
+      "source": "docs/architecture/memory/README.md",
+      "digest": "5709f5c0c9939b55f958336cca099334d43f16820ac432c05ce30e506d44d6f3"
+    },
+    {
+      "source": "docs/architecture/memory/README.md",
+      "digest": "91f67c2fe2461188aec3ba7d19eb24da9f6a97a9c5842de031a0b17315afb5cf"
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "digest": "f995ddd972c00a9447da2f1f92de8733ed8e4a96e5084750912480eeb4b40c55"
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "digest": "246d6abbf1b4d7dd12f2ce60158a80fae2f2053a3fb029fbb74280c45749de2d"
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "digest": "903cf16d076dda6a7b7728cde3c1c1b35c8a9ba37922a6609e123442e78d3c18"
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "digest": "28bbf8a88329fcc128faa2a0049507ad6d63ff6ebce6048b54c05ea0e22346ba"
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "digest": "2380b4e21927d8a121b4f8be8c091ddc76488e6bed5081b0ca9094762b43b8e2"
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "digest": "59a7566e32e66d6070e8b2463a78ffcc2c517089bb6eab9fe72708e4dccbf0d4"
+    },
+    {
+      "source": "docs/architecture/security/README.md",
+      "digest": "25dadde2bec1b2a684c7ff3c049571882186d8e9cabeee62ea8493e92e78b676"
+    },
+    {
+      "source": "docs/architecture/security/README.md",
+      "digest": "5525d7859d23fe86832148e5a2e3e2a4be8f21530f2890bb796b78b840fe2f26"
+    },
+    {
+      "source": "docs/architecture/security/README.md",
+      "digest": "65d3d094277e638e05a3ea544cd19b49fd4f5a637ea912bab3268776cacd4def"
+    },
+    {
+      "source": "docs/architecture/security/implementation.md",
+      "digest": "580fb398ef73a07af131f9c8a8e5d3a8587fbf8d8236633d3dd192c87c93ac47"
+    },
+    {
+      "source": "docs/architecture/security/implementation.md",
+      "digest": "7813109cfd7a829555c1849633b2c3b91cecb4bfe328b7af79b1ea5b10057020"
+    },
+    {
+      "source": "docs/architecture/security/implementation.md",
+      "digest": "58c8871887a1286156d79ecc71c5205dd66f0b8ed856472babefbd95ff2ceb24"
+    },
+    {
+      "source": "docs/architecture/security/implementation.md",
+      "digest": "3e58e6d9a4f90600c8bb4af6fea56551921c248631b05a904199439e8d031e47"
+    },
+    {
+      "source": "docs/architecture/task-runtime/README.md",
+      "digest": "50e21966c1e9430d2e0c05758566899bb3021d8900e024f45668c86b7eab8ab5"
+    },
+    {
+      "source": "docs/architecture/task-runtime/README.md",
+      "digest": "d0992ae42e92f4ea98e40b306c4e724fcb191d3f844034678e33d1111528ed5b"
+    },
+    {
+      "source": "docs/architecture/task-runtime/implementation.md",
+      "digest": "5ad380cce3d6c7d8e798cdce67dbca25394cd3b516eef382e78890958bbc68f3"
+    },
+    {
+      "source": "docs/architecture/task-runtime/implementation.md",
+      "digest": "e28f2d8daf3727df954d7b8fe852678d8ea8d345c72081ee9c87c15dccf550b6"
+    },
+    {
+      "source": "docs/architecture/task-runtime/implementation.md",
+      "digest": "dbae212b562695b0bae6e31e1c04052ec580dd942ee67ae79c972ae7b366a4c6"
+    },
+    {
+      "source": "docs/architecture/task-runtime/implementation.md",
+      "digest": "e5b5927840c205876bd65f9b3ded968e68a088d2b435fd2c1f711799f4e61537"
+    },
+    {
+      "source": "docs/architecture/validation/README.md",
+      "digest": "cc9f10c7990e66efb8435dcf964c33e95e1d176ab74ae2260c461c9f2d51845a"
+    },
+    {
+      "source": "docs/architecture/walkthrough.md",
+      "digest": "44b79309f58b8f0fff79947b61e9ff5aeed955c3bd79c708df3b610d50dd056b"
+    },
+    {
+      "source": "docs/architecture/walkthrough.md",
+      "digest": "4dd5150eea5307ee8ad30cbd6cc3a422b0640e6f90b9338331c1b4cc8803c598"
+    },
+    {
+      "source": "docs/architecture/walkthrough.md",
+      "digest": "9674a04a98ea3f7c29ddd5e006c0ff9989e188efdf9dd91430eee3666aa60592"
+    }
+  ]
+}

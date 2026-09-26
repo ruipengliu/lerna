@@ -4,6 +4,8 @@
 
 本目录是独立的设计基线。需求、术语、规则和验收方法均在目录内定义。技术方案、已冻结范围的机器契约及示例共同约束参考实现；未纳入线格式的能力明确保留为设计接口，不能宣称已经互操作。内核、SDK、默认组件和运行验收仍须实现，具体状态见[交付审查](review.md)。
 
+[技术总览](technical-overview.md) 解释整体设计的抽象原则、建模方法与关键取舍；[可编辑系统全景图](diagrams/system-panorama.drawio) 展示九模块的内部组件、主要事实对象及跨模块交接。全景图采用模块容器与内部框图，详细字段和行为约束按链接进入专题查阅。
+
 ## 1. 要解决的核心问题
 
 一个用户可能让 Agent 核实信息、保存文档，再在手机上执行操作。模型可以提出错误步骤，工具可能已经产生效果却丢失答复，端点也可能在执行中失联。Harness 必须把这几件事分开处理：是否接受了目标、是否获准行动、行动发生了什么、结果达到什么质量、失败后由谁继续。
@@ -65,7 +67,7 @@ flowchart TB
 
 | 顺序 | 文档 | 阅读所得 |
 | --- | --- | --- |
-| 1 | [目标与功能](goals.md) → [关键决策](decisions.md) → [贯穿场景](walkthrough.md) | 要建设什么、选择承担哪些代价、正常与失联路径如何连起来 |
+| 1 | [目标与功能](goals.md) → [技术总览](technical-overview.md)与[系统全景图](diagrams/system-panorama.drawio) → [关键决策](decisions.md) → [贯穿场景](walkthrough.md) | 要建设什么、如何划分职责与事实、选择承担哪些代价、正常与失联路径如何连起来 |
 | 2 | [任务运行时](task-runtime/README.md) → [大脑](brain/README.md) → [执行](execution/README.md) | 目标怎样形成行动，谁准入、验证和继续恢复 |
 | 3 | [权限与隔离](security/README.md) → [记忆与内容](memory/README.md) | 资料和权限如何跨任务、跨端使用及撤回 |
 | 4 | [Agent 协作](collaboration/README.md) → [应用与交互](interaction/README.md) → [共同契约](contracts/README.md) | 子任务与用户输入如何交接，独立实现如何接入 |
@@ -78,11 +80,15 @@ flowchart TB
 
 ### 目录与后续细化
 
-九个模块各有独立目录，以 `README.md` 保存模块主线和阅读入口，以 `implementation.md` 展开参考实现的内部职责、持久记录、事务、恢复与故障验证。全局目标、决策、贯穿场景、部署与审查保留在顶层；跨模块的契约资产和验收工具集中维护。
+九个模块各有独立目录，以 `README.md` 保存模块主线和阅读入口，以 `implementation.md` 展开参考实现的内部职责、持久记录、事务、恢复与故障验证。技术总览集中解释抽象原则与建模方法，原生全景图保存在 `diagrams/`。全局目标、决策、贯穿场景、部署与审查保留在顶层；跨模块的契约资产和验收工具集中维护。
 
 ```text
 architecture/
 ├── README.md                 # 系统总览与阅读路径
+├── technical-overview.md     # 抽象原则、建模方法与全景图导读
+├── diagrams/
+│   ├── design-concepts.png   # 原则、建模与模块关系概念图
+│   └── system-panorama.drawio # 可编辑模块与组件全景图
 ├── goals.md                  # 建设目标与功能范围
 ├── decisions.md              # 跨模块关键决策
 ├── walkthrough.md            # 贯穿场景
