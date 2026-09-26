@@ -1,0 +1,7727 @@
+{
+  "defs": {
+    "GrantPolicy": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "#/$defs/Subject"
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ResourceScope"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "read",
+              "process",
+              "store",
+              "sync",
+              "disclose",
+              "act",
+              "manage"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 7,
+          "uniqueItems": true
+        },
+        "purposes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "recipients": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "mode": {
+          "enum": [
+            "once",
+            "continuous"
+          ]
+        },
+        "valid_from": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "limits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BudgetLimit"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "max_offline_window_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "parent_grant_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        }
+      },
+      "required": [
+        "subject",
+        "resources",
+        "actions",
+        "purposes",
+        "recipients",
+        "locations",
+        "mode",
+        "valid_from",
+        "expires_at",
+        "limits",
+        "max_offline_window_ms"
+      ],
+      "additionalProperties": false
+    },
+    "PropagationTarget": {
+      "type": "object",
+      "properties": {
+        "endpoint_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "required_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "enforced_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "state": {
+          "enum": [
+            "pending",
+            "enforced",
+            "unreachable"
+          ]
+        },
+        "last_observed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "endpoint_id",
+        "required_revision",
+        "enforced_revision",
+        "state",
+        "last_observed_at"
+      ],
+      "additionalProperties": false
+    },
+    "GrantRecord": {
+      "type": "object",
+      "properties": {
+        "grant_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "policy": {
+          "$ref": "#/$defs/GrantPolicy"
+        },
+        "intent_hash": {
+          "$ref": "#/$defs/Digest"
+        },
+        "confirmation_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "state": {
+          "enum": [
+            "active",
+            "revoked"
+          ]
+        },
+        "issued_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "propagation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PropagationTarget"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "grant_id",
+        "owner_id",
+        "revision",
+        "policy",
+        "intent_hash",
+        "confirmation_ref",
+        "state",
+        "issued_at",
+        "propagation"
+      ],
+      "additionalProperties": false
+    },
+    "GrantIssueInput": {
+      "type": "object",
+      "properties": {
+        "grant_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "policy": {
+          "$ref": "#/$defs/GrantPolicy"
+        },
+        "intent_hash": {
+          "$ref": "#/$defs/Digest"
+        },
+        "confirmation_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        }
+      },
+      "required": [
+        "grant_id",
+        "policy",
+        "intent_hash",
+        "confirmation_ref"
+      ],
+      "additionalProperties": false
+    },
+    "GrantIssueOutput": {
+      "$ref": "#/$defs/GrantRecord"
+    },
+    "GrantReadInput": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "GrantReadOutput": {
+      "$ref": "#/$defs/GrantRecord"
+    },
+    "GrantRevokeInput": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "GrantRevokeOutput": {
+      "$ref": "#/$defs/GrantRecord"
+    },
+    "LeaseAllocationInput": {
+      "type": "object",
+      "properties": {
+        "lease_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "grant_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ObjectRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "endpoint_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "instance_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "scope": {
+          "$ref": "#/$defs/GrantPolicy"
+        },
+        "allocated_units": {
+          "$ref": "#/$defs/Amount"
+        },
+        "allocated_cost": {
+          "$ref": "#/$defs/Amount"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "confirmation_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        }
+      },
+      "required": [
+        "lease_id",
+        "grant_refs",
+        "endpoint_id",
+        "instance_id",
+        "scope",
+        "allocated_units",
+        "allocated_cost",
+        "expires_at",
+        "confirmation_ref"
+      ],
+      "additionalProperties": false
+    },
+    "OfflineLeaseRecord": {
+      "type": "object",
+      "properties": {
+        "lease_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "grant_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ObjectRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "endpoint_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "instance_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "scope": {
+          "$ref": "#/$defs/GrantPolicy"
+        },
+        "allocated_units": {
+          "$ref": "#/$defs/Amount"
+        },
+        "allocated_cost": {
+          "$ref": "#/$defs/Amount"
+        },
+        "issued_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "owner_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "state": {
+          "enum": [
+            "allocated",
+            "in_use",
+            "closed",
+            "reconciled"
+          ]
+        },
+        "settled_units": {
+          "$ref": "#/$defs/Amount"
+        },
+        "settled_cost": {
+          "$ref": "#/$defs/Amount"
+        },
+        "final_settlement_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        }
+      },
+      "required": [
+        "lease_id",
+        "owner_id",
+        "revision",
+        "grant_refs",
+        "endpoint_id",
+        "instance_id",
+        "scope",
+        "allocated_units",
+        "allocated_cost",
+        "issued_at",
+        "expires_at",
+        "owner_revision",
+        "state",
+        "settled_units",
+        "settled_cost"
+      ],
+      "additionalProperties": false
+    },
+    "LeaseUsageItem": {
+      "type": "object",
+      "properties": {
+        "use_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "intent_hash": {
+          "$ref": "#/$defs/Digest"
+        },
+        "used_units": {
+          "$ref": "#/$defs/Amount"
+        },
+        "used_cost": {
+          "$ref": "#/$defs/Amount"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "closed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "use_id",
+        "intent_hash",
+        "used_units",
+        "used_cost",
+        "started_at",
+        "closed"
+      ],
+      "additionalProperties": false
+    },
+    "LeaseSettlementInput": {
+      "type": "object",
+      "properties": {
+        "instance_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "usage_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "uses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LeaseUsageItem"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "cumulative_units": {
+          "$ref": "#/$defs/Amount"
+        },
+        "cumulative_cost": {
+          "$ref": "#/$defs/Amount"
+        },
+        "final": {
+          "type": "boolean"
+        },
+        "closure_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        }
+      },
+      "required": [
+        "instance_id",
+        "usage_revision",
+        "uses",
+        "cumulative_units",
+        "cumulative_cost",
+        "final"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "final": {
+                "const": true
+              }
+            },
+            "required": [
+              "final"
+            ]
+          },
+          "then": {
+            "required": [
+              "closure_ref"
+            ]
+          }
+        }
+      ]
+    },
+    "LeaseAllocationOutput": {
+      "$ref": "#/$defs/OfflineLeaseRecord"
+    },
+    "LeaseSettlementOutput": {
+      "$ref": "#/$defs/OfflineLeaseRecord"
+    },
+    "PairingScope": {
+      "type": "object",
+      "properties": {
+        "capability_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "resource_scopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ResourceScope"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "max_offline_window_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400000
+        }
+      },
+      "required": [
+        "capability_ids",
+        "resource_scopes",
+        "max_offline_window_ms"
+      ],
+      "additionalProperties": false
+    },
+    "PairingSessionRecord": {
+      "type": "object",
+      "properties": {
+        "pairing_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "requested_scope": {
+          "$ref": "#/$defs/PairingScope"
+        },
+        "device_description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "poll_interval_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 30000
+        },
+        "state": {
+          "enum": [
+            "pending",
+            "approved",
+            "denied",
+            "claimed",
+            "expired"
+          ]
+        },
+        "endpoint_id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "pairing_id",
+        "revision",
+        "requested_scope",
+        "device_description",
+        "expires_at",
+        "poll_interval_ms",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "EndpointRecord": {
+      "type": "object",
+      "properties": {
+        "endpoint_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "tenant_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "instance_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "credential_generation": {
+          "$ref": "#/$defs/Revision"
+        },
+        "state": {
+          "enum": [
+            "active",
+            "revoked"
+          ]
+        },
+        "approved_scope": {
+          "$ref": "#/$defs/PairingScope"
+        },
+        "registered_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "propagation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PropagationTarget"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "endpoint_id",
+        "tenant_id",
+        "instance_id",
+        "credential_generation",
+        "state",
+        "approved_scope",
+        "registered_at",
+        "propagation"
+      ],
+      "additionalProperties": false
+    },
+    "PairBeginInput": {
+      "type": "object",
+      "properties": {
+        "pairing_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "device_description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "requested_scope": {
+          "$ref": "#/$defs/PairingScope"
+        },
+        "client_nonce": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "pairing_id",
+        "device_description",
+        "requested_scope",
+        "client_nonce"
+      ],
+      "additionalProperties": false
+    },
+    "PairBeginOutput": {
+      "type": "object",
+      "properties": {
+        "session": {
+          "$ref": "#/$defs/PairingSessionRecord"
+        },
+        "device_code": {
+          "type": "string",
+          "minLength": 32,
+          "maxLength": 256
+        },
+        "user_code": {
+          "type": "string",
+          "pattern": "^[A-Z0-9-]{8,16}$"
+        },
+        "verification_uri": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "session",
+        "device_code",
+        "user_code",
+        "verification_uri"
+      ],
+      "additionalProperties": false
+    },
+    "PairApproveInput": {
+      "type": "object",
+      "properties": {
+        "user_code": {
+          "type": "string",
+          "pattern": "^[A-Z0-9-]{8,16}$"
+        },
+        "decision": {
+          "enum": [
+            "approve",
+            "deny"
+          ]
+        },
+        "approved_scope": {
+          "$ref": "#/$defs/PairingScope"
+        },
+        "confirmation_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        }
+      },
+      "required": [
+        "user_code",
+        "decision",
+        "approved_scope",
+        "confirmation_ref"
+      ],
+      "additionalProperties": false
+    },
+    "PairApproveOutput": {
+      "$ref": "#/$defs/PairingSessionRecord"
+    },
+    "PairClaimInput": {
+      "type": "object",
+      "properties": {
+        "device_code": {
+          "type": "string",
+          "minLength": 32,
+          "maxLength": 256
+        },
+        "client_nonce": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "device_code",
+        "client_nonce"
+      ],
+      "additionalProperties": false
+    },
+    "PairClaimOutput": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "pending",
+            "claimed"
+          ]
+        },
+        "session": {
+          "$ref": "#/$defs/PairingSessionRecord"
+        },
+        "endpoint": {
+          "$ref": "#/$defs/EndpointRecord"
+        },
+        "credential": {
+          "type": "object",
+          "properties": {
+            "token_type": {
+              "const": "Bearer"
+            },
+            "access_token": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 8192
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "recovery_until": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            }
+          },
+          "required": [
+            "token_type",
+            "access_token",
+            "expires_at",
+            "recovery_until"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "state",
+        "session"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "claimed"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "required": [
+              "endpoint",
+              "credential"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "pending"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "endpoint"
+                  ]
+                },
+                {
+                  "required": [
+                    "credential"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "EndpointRevokeInput": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "EndpointRevokeOutput": {
+      "$ref": "#/$defs/EndpointRecord"
+    },
+    "PackageDependency": {
+      "type": "object",
+      "properties": {
+        "package_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "version_range": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "package_id",
+        "version_range"
+      ],
+      "additionalProperties": false
+    },
+    "StateFormat": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "read_versions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "write_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "migration_entrypoint": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "domain",
+        "read_versions",
+        "write_version"
+      ],
+      "additionalProperties": false
+    },
+    "PackageManifest": {
+      "type": "object",
+      "properties": {
+        "package_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "kind": {
+          "enum": [
+            "plugin",
+            "skill",
+            "agent_config"
+          ]
+        },
+        "entrypoints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "ports": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "contract_versions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PackageDependency"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "requested_permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ResourceScope"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "trust_requirement": {
+          "enum": [
+            "trusted_native",
+            "isolated_native",
+            "data_only"
+          ]
+        },
+        "state_formats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StateFormat"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "package_id",
+        "version",
+        "digest",
+        "kind",
+        "entrypoints",
+        "ports",
+        "contract_versions",
+        "dependencies",
+        "requested_permissions",
+        "trust_requirement",
+        "state_formats"
+      ],
+      "additionalProperties": false
+    },
+    "ResolvedPackage": {
+      "type": "object",
+      "properties": {
+        "package_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "artifact_ref": {
+          "$ref": "#/$defs/ContentRef"
+        }
+      },
+      "required": [
+        "package_id",
+        "version",
+        "digest",
+        "artifact_ref"
+      ],
+      "additionalProperties": false
+    },
+    "InstallLock": {
+      "type": "object",
+      "properties": {
+        "lock_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "manifest": {
+          "$ref": "#/$defs/PackageManifest"
+        },
+        "manifest_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "resolved_dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ResolvedPackage"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "config_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "config_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "platform": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "trust_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContentRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "conformance_report": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "state_compatibility": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StateFormat"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "prepared_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "reference_revision": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": [
+        "lock_id",
+        "manifest",
+        "manifest_digest",
+        "resolved_dependencies",
+        "config_ref",
+        "config_digest",
+        "platform",
+        "trust_evidence",
+        "conformance_report",
+        "state_compatibility",
+        "prepared_at",
+        "reference_revision"
+      ],
+      "additionalProperties": false
+    },
+    "ExtensionsPrepareInput": {
+      "type": "object",
+      "properties": {
+        "lock_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "artifact_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "manifest": {
+          "$ref": "#/$defs/PackageManifest"
+        },
+        "config_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "config_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "platform": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "trust_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContentRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "conformance_report": {
+          "$ref": "#/$defs/ContentRef"
+        }
+      },
+      "required": [
+        "lock_id",
+        "artifact_ref",
+        "manifest",
+        "config_ref",
+        "config_digest",
+        "platform",
+        "trust_evidence",
+        "conformance_report"
+      ],
+      "additionalProperties": false
+    },
+    "ExtensionsPrepareOutput": {
+      "$ref": "#/$defs/InstallLock"
+    },
+    "ExtensionsDeactivateInput": {
+      "type": "object",
+      "properties": {
+        "activation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "generation": {
+          "$ref": "#/$defs/Revision"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "management_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        }
+      },
+      "required": [
+        "activation_id",
+        "generation",
+        "reason",
+        "management_ref"
+      ],
+      "additionalProperties": false
+    },
+    "DeactivationResult": {
+      "type": "object",
+      "properties": {
+        "activation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "generation": {
+          "$ref": "#/$defs/Revision"
+        },
+        "new_use_disabled": {
+          "const": true
+        },
+        "previous_version_ready": {
+          "type": "boolean"
+        },
+        "residual_work": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "decided_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "activation_id",
+        "generation",
+        "new_use_disabled",
+        "previous_version_ready",
+        "residual_work",
+        "decided_at"
+      ],
+      "additionalProperties": false
+    },
+    "ExtensionsDisposeInput": {
+      "type": "object",
+      "properties": {
+        "reference_revision": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": [
+        "reference_revision"
+      ],
+      "additionalProperties": false
+    },
+    "ExtensionsDisposeOutput": {
+      "type": "object",
+      "properties": {
+        "lock_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "state": {
+          "enum": [
+            "disposed",
+            "blocked"
+          ]
+        },
+        "reference_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "blocking_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ObjectRef"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "closed_index_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        }
+      },
+      "required": [
+        "lock_id",
+        "state",
+        "reference_revision",
+        "blocking_refs"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "disposed"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "required": [
+              "closed_index_ref"
+            ]
+          }
+        }
+      ]
+    },
+    "ApprovalRequest": {
+      "type": "object",
+      "properties": {
+        "use_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "approval_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "target_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "lock_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "instance_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "action_kind": {
+          "enum": [
+            "activation",
+            "reopen",
+            "work"
+          ]
+        },
+        "action_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        }
+      },
+      "required": [
+        "use_id",
+        "approval_id",
+        "target_id",
+        "lock_id",
+        "instance_id",
+        "action_kind",
+        "action_id"
+      ],
+      "additionalProperties": false
+    },
+    "ApprovalUse": {
+      "type": "object",
+      "properties": {
+        "use_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "approval_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "target_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "lock_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "instance_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "action_kind": {
+          "enum": [
+            "activation",
+            "reopen",
+            "work"
+          ]
+        },
+        "action_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "approval_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "start_before": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "use_id",
+        "approval_id",
+        "target_id",
+        "lock_id",
+        "instance_id",
+        "action_kind",
+        "action_id",
+        "approval_revision",
+        "start_before"
+      ],
+      "additionalProperties": false
+    },
+    "ApprovalFixture": {
+      "type": "object",
+      "properties": {
+        "approval_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "state": {
+          "enum": [
+            "active",
+            "revoked",
+            "expired"
+          ]
+        },
+        "target_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "lock_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "instance_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "max_offline_window_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "already_active": {
+          "type": "boolean"
+        },
+        "eligible_instance_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "approval_id",
+        "revision",
+        "state",
+        "target_id",
+        "lock_id",
+        "instance_id",
+        "max_offline_window_ms",
+        "expires_at",
+        "already_active"
+      ],
+      "additionalProperties": false
+    },
+    "LocalStartupEvidence": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "local_transaction"
+        },
+        "approval_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "approval_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "target_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "lock_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "instance_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "action_kind": {
+          "enum": [
+            "activation",
+            "reopen"
+          ]
+        },
+        "action_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "commit_id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "kind",
+        "approval_id",
+        "approval_revision",
+        "target_id",
+        "lock_id",
+        "instance_id",
+        "action_kind",
+        "action_id",
+        "checked_at",
+        "commit_id"
+      ],
+      "additionalProperties": false
+    },
+    "RemoteStartupEvidence": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "remote_use"
+        },
+        "approval_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "approval_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "target_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "lock_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "instance_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "action_kind": {
+          "enum": [
+            "activation",
+            "reopen"
+          ]
+        },
+        "action_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "use_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "start_before": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "kind",
+        "approval_id",
+        "approval_revision",
+        "target_id",
+        "lock_id",
+        "instance_id",
+        "action_kind",
+        "action_id",
+        "checked_at",
+        "use_id",
+        "start_before"
+      ],
+      "additionalProperties": false
+    },
+    "StartupEvidence": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/LocalStartupEvidence"
+        },
+        {
+          "$ref": "#/$defs/RemoteStartupEvidence"
+        }
+      ]
+    },
+    "InstanceReadiness": {
+      "type": "object",
+      "properties": {
+        "instance_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ready": {
+          "type": "boolean"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "startup_evidence": {
+          "$ref": "#/$defs/StartupEvidence"
+        }
+      },
+      "required": [
+        "instance_id",
+        "ready",
+        "observed_at",
+        "startup_evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Activation": {
+      "type": "object",
+      "properties": {
+        "activation_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "target_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "old_lock_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "new_lock_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "approval_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "phase": {
+          "enum": [
+            "prepared",
+            "draining",
+            "switching",
+            "active",
+            "blocked",
+            "disabled"
+          ]
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ready_instance": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_observed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "approval_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "activation_use_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "approval_lease_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "new_use_disabled": {
+          "type": "boolean"
+        },
+        "previous_version_ready": {
+          "type": "boolean"
+        },
+        "residual_work": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "error": {
+          "$ref": "#/$defs/Error"
+        },
+        "startup_evidence": {
+          "$ref": "#/$defs/StartupEvidence"
+        },
+        "instance_readiness": {
+          "$ref": "#/$defs/InstanceReadiness"
+        }
+      },
+      "required": [
+        "activation_id",
+        "target_id",
+        "old_lock_id",
+        "new_lock_id",
+        "approval_id",
+        "phase",
+        "generation",
+        "ready_instance",
+        "last_observed_at",
+        "new_use_disabled",
+        "previous_version_ready",
+        "residual_work"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "phase": {
+                "const": "active"
+              }
+            },
+            "required": [
+              "phase"
+            ]
+          },
+          "then": {
+            "required": [
+              "startup_evidence",
+              "instance_readiness"
+            ]
+          }
+        }
+      ]
+    },
+    "ExtensionsReadInput": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "activation",
+            "install_lock"
+          ]
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "ExtensionsReadOutput": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Activation"
+        },
+        {
+          "$ref": "#/$defs/InstallLock"
+        }
+      ]
+    },
+    "EvaluationCandidate": {
+      "type": "object",
+      "properties": {
+        "candidate_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "release_kind": {
+          "enum": [
+            "compatibility",
+            "improvement"
+          ]
+        },
+        "parent_candidate_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "kind": {
+          "enum": [
+            "memory_proposal",
+            "skill",
+            "execution_policy",
+            "agent_config",
+            "plugin",
+            "kernel"
+          ]
+        },
+        "artifact_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContentRef"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "candidate_lock": {
+          "$ref": "#/$defs/Id"
+        },
+        "baseline_lock": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "improvement_id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "revision",
+        "release_kind",
+        "parent_candidate_ids",
+        "kind",
+        "artifact_ref",
+        "source_refs",
+        "candidate_lock",
+        "baseline_lock",
+        "digest"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "release_kind": {
+                "const": "improvement"
+              }
+            },
+            "required": [
+              "release_kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "improvement_id"
+            ]
+          }
+        }
+      ]
+    },
+    "CandidateRegisterInput": {
+      "type": "object",
+      "properties": {
+        "candidate": {
+          "$ref": "#/$defs/EvaluationCandidate"
+        }
+      },
+      "required": [
+        "candidate"
+      ],
+      "additionalProperties": false
+    },
+    "CandidateRegisterOutput": {
+      "$ref": "#/$defs/EvaluationCandidate"
+    },
+    "SourceGroup": {
+      "type": "object",
+      "properties": {
+        "source_group_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "sample_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 1000,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "source_group_id",
+        "sample_ids"
+      ],
+      "additionalProperties": false
+    },
+    "DatasetPartition": {
+      "type": "object",
+      "properties": {
+        "partition_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "dataset_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "split": {
+          "enum": [
+            "development",
+            "selection",
+            "holdout"
+          ]
+        },
+        "sample_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "source_groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceGroup"
+          },
+          "minItems": 1,
+          "maxItems": 1000
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "permission_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ObjectRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "state": {
+          "enum": [
+            "available",
+            "reserved",
+            "closed"
+          ]
+        }
+      },
+      "required": [
+        "partition_id",
+        "revision",
+        "dataset_ref",
+        "split",
+        "sample_ids",
+        "source_groups",
+        "content_digest",
+        "permission_refs",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "PartitionRegisterInput": {
+      "type": "object",
+      "properties": {
+        "partition": {
+          "$ref": "#/$defs/DatasetPartition"
+        }
+      },
+      "required": [
+        "partition"
+      ],
+      "additionalProperties": false
+    },
+    "PartitionRegisterOutput": {
+      "$ref": "#/$defs/DatasetPartition"
+    },
+    "ImprovementPolicy": {
+      "type": "object",
+      "properties": {
+        "improvement_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "policy_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "candidate_scope": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "formal_attempt_limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "stop_rule": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "inference_method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "comparison_method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "related_improvement_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "approved_by": {
+          "$ref": "#/$defs/Id"
+        },
+        "confirmation_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        }
+      },
+      "required": [
+        "improvement_id",
+        "policy_digest",
+        "candidate_scope",
+        "formal_attempt_limit",
+        "stop_rule",
+        "inference_method",
+        "comparison_method",
+        "related_improvement_ids",
+        "approved_by",
+        "confirmation_ref"
+      ],
+      "additionalProperties": false
+    },
+    "SamplingPlan": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "sample_unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "sample_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "source_group_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "method": {
+          "enum": [
+            "independent",
+            "fixed_set",
+            "cluster",
+            "weighted"
+          ]
+        },
+        "analysis_method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "predeclared_stopping": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "frame",
+        "sample_unit",
+        "sample_size",
+        "source_group_ids",
+        "method",
+        "analysis_method",
+        "predeclared_stopping"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluationMetric": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "direction": {
+          "enum": [
+            "minimum",
+            "maximum"
+          ]
+        },
+        "threshold": {
+          "$ref": "#/$defs/Amount"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "direction",
+        "threshold",
+        "required"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluationPlan": {
+      "type": "object",
+      "properties": {
+        "plan_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "purpose": {
+          "enum": [
+            "development",
+            "selection",
+            "compatibility_check",
+            "release_confirmation"
+          ]
+        },
+        "candidate_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "candidate_lock": {
+          "$ref": "#/$defs/Id"
+        },
+        "baseline_lock": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "partition_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "sample_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "seed": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "release_request_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "environment_binding": {
+          "$ref": "#/$defs/ComponentRef"
+        },
+        "judge_binding": {
+          "$ref": "#/$defs/ComponentRef"
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvaluationMetric"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "budget": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BudgetLimit"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "retry_limit": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "stop_rule": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "invalid_run_policy": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "sampling": {
+          "$ref": "#/$defs/SamplingPlan"
+        },
+        "minimum_practical_gain": {
+          "$ref": "#/$defs/Amount"
+        },
+        "regression_limits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvaluationMetric"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "improvement_policy": {
+          "$ref": "#/$defs/ImprovementPolicy"
+        },
+        "formal_attempt_index": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "reservation_id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "plan_id",
+        "digest",
+        "purpose",
+        "candidate_id",
+        "candidate_lock",
+        "baseline_lock",
+        "partition_id",
+        "sample_ids",
+        "seed",
+        "environment_binding",
+        "judge_binding",
+        "metrics",
+        "budget",
+        "retry_limit",
+        "stop_rule",
+        "invalid_run_policy",
+        "sampling"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "purpose": {
+                "const": "release_confirmation"
+              }
+            },
+            "required": [
+              "purpose"
+            ]
+          },
+          "then": {
+            "required": [
+              "release_request_id",
+              "minimum_practical_gain",
+              "regression_limits",
+              "improvement_policy",
+              "formal_attempt_index",
+              "reservation_id"
+            ]
+          }
+        }
+      ]
+    },
+    "PlanCreateInput": {
+      "type": "object",
+      "properties": {
+        "plan": {
+          "$ref": "#/$defs/EvaluationPlan"
+        }
+      },
+      "required": [
+        "plan"
+      ],
+      "additionalProperties": false
+    },
+    "PlanCreateOutput": {
+      "$ref": "#/$defs/EvaluationPlan"
+    },
+    "EvaluationRunRecord": {
+      "type": "object",
+      "properties": {
+        "run_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "plan_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "state": {
+          "enum": [
+            "queued",
+            "running",
+            "scoring",
+            "finished",
+            "blocked"
+          ]
+        },
+        "cancel_requested": {
+          "type": "boolean"
+        },
+        "completed_samples": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "total_samples": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "environment_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ObjectRef"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "environment_sealed": {
+          "type": "boolean"
+        },
+        "cleanup_state": {
+          "enum": [
+            "pending",
+            "cleaned",
+            "residual"
+          ]
+        },
+        "report_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "run_id",
+        "plan_id",
+        "revision",
+        "state",
+        "cancel_requested",
+        "completed_samples",
+        "total_samples",
+        "environment_refs",
+        "environment_sealed",
+        "cleanup_state"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluationRunInput": {
+      "type": "object",
+      "properties": {
+        "run_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "plan_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "plan_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "run_id",
+        "plan_id",
+        "plan_digest"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluationRunOutput": {
+      "$ref": "#/$defs/EvaluationRunRecord"
+    },
+    "EvaluationCancelInput": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluationCancelOutput": {
+      "$ref": "#/$defs/EvaluationRunRecord"
+    },
+    "GateResult": {
+      "type": "object",
+      "properties": {
+        "applicable": {
+          "type": "boolean"
+        },
+        "result": {
+          "enum": [
+            "pass",
+            "fail",
+            "inconclusive"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "applicable",
+        "result",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "MetricObservation": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "value": {
+          "$ref": "#/$defs/Amount"
+        },
+        "numerator": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "denominator": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "CategoryChange": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "baseline": {
+          "$ref": "#/$defs/Amount"
+        },
+        "candidate": {
+          "$ref": "#/$defs/Amount"
+        },
+        "within_limit": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "category",
+        "baseline",
+        "candidate",
+        "within_limit"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluationReport": {
+      "type": "object",
+      "properties": {
+        "report_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "plan_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "plan_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "candidate_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "candidate_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "evidence_class": {
+          "enum": [
+            "conformance",
+            "formal",
+            "exploratory"
+          ]
+        },
+        "sealed": {
+          "type": "boolean"
+        },
+        "eligibility": {
+          "enum": [
+            "eligible",
+            "ineligible"
+          ]
+        },
+        "run_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ObjectRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MetricObservation"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "coverage_complete": {
+          "type": "boolean"
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "contract_gate": {
+          "enum": [
+            "pass",
+            "fail",
+            "inconclusive"
+          ]
+        },
+        "target_attainment": {
+          "$ref": "#/$defs/GateResult"
+        },
+        "statistical_gate": {
+          "$ref": "#/$defs/GateResult"
+        },
+        "improvement_gate": {
+          "$ref": "#/$defs/GateResult"
+        },
+        "paired_counts": {
+          "type": "object",
+          "properties": {
+            "a": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            "b": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            "c": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            "d": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            }
+          },
+          "required": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "additionalProperties": false
+        },
+        "category_changes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CategoryChange"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "sealed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "report_id",
+        "plan_id",
+        "plan_digest",
+        "candidate_id",
+        "candidate_digest",
+        "digest",
+        "evidence_class",
+        "sealed",
+        "eligibility",
+        "run_refs",
+        "metrics",
+        "coverage_complete",
+        "gaps",
+        "contract_gate",
+        "target_attainment",
+        "statistical_gate",
+        "improvement_gate",
+        "category_changes"
+      ],
+      "additionalProperties": false
+    },
+    "ReportStatus": {
+      "type": "object",
+      "properties": {
+        "report_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "plan_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "sealed": {
+          "type": "boolean"
+        },
+        "eligibility": {
+          "enum": [
+            "eligible",
+            "ineligible"
+          ]
+        },
+        "preparation_gaps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "report_id",
+        "plan_id",
+        "sealed",
+        "eligibility",
+        "preparation_gaps"
+      ],
+      "additionalProperties": false
+    },
+    "FeedbackExposure": {
+      "type": "object",
+      "properties": {
+        "exposure_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "partition_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "source_group_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "scope": {
+          "enum": [
+            "samples",
+            "answers",
+            "scores",
+            "full_report"
+          ]
+        },
+        "recipient": {
+          "$ref": "#/$defs/Id"
+        },
+        "occurred_at": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContentRef"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "report_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "report_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "exposure_id",
+        "partition_id",
+        "source_group_ids",
+        "scope",
+        "recipient",
+        "occurred_at",
+        "recorded_at",
+        "evidence_refs",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "ExposureRecordInput": {
+      "type": "object",
+      "properties": {
+        "exposure": {
+          "$ref": "#/$defs/FeedbackExposure"
+        }
+      },
+      "required": [
+        "exposure"
+      ],
+      "additionalProperties": false
+    },
+    "ExposureRecordOutput": {
+      "type": "object",
+      "properties": {
+        "exposure": {
+          "$ref": "#/$defs/FeedbackExposure"
+        },
+        "invalidated_plan_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "revocation_job_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "exposure",
+        "invalidated_plan_ids",
+        "revocation_job_ids"
+      ],
+      "additionalProperties": false
+    },
+    "FeedbackOpenInput": {
+      "type": "object",
+      "properties": {
+        "exposure_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "report_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "scope": {
+          "enum": [
+            "scores",
+            "full_report"
+          ]
+        }
+      },
+      "required": [
+        "exposure_id",
+        "report_digest",
+        "scope"
+      ],
+      "additionalProperties": false
+    },
+    "FeedbackOpenOutput": {
+      "type": "object",
+      "properties": {
+        "exposure": {
+          "$ref": "#/$defs/FeedbackExposure"
+        },
+        "report": {
+          "$ref": "#/$defs/EvaluationReport"
+        }
+      },
+      "required": [
+        "exposure",
+        "report"
+      ],
+      "additionalProperties": false
+    },
+    "ApprovalBatch": {
+      "type": "object",
+      "properties": {
+        "batch_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "observation_window_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 604800000
+        },
+        "minimum_samples": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "stop_rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvaluationMetric"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "batch_id",
+        "targets",
+        "observation_window_ms",
+        "minimum_samples",
+        "stop_rules"
+      ],
+      "additionalProperties": false
+    },
+    "ReleaseApproval": {
+      "type": "object",
+      "properties": {
+        "approval_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "release_kind": {
+          "enum": [
+            "compatibility",
+            "improvement"
+          ]
+        },
+        "candidate_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "candidate_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "lock_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "report_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "report_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "approved_by": {
+          "$ref": "#/$defs/Id"
+        },
+        "confirmation_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "batches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ApprovalBatch"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "max_offline_window_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "rollback_lock": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "enum": [
+            "active",
+            "revoked",
+            "expired"
+          ]
+        },
+        "propagation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PropagationTarget"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "approval_id",
+        "revision",
+        "release_kind",
+        "candidate_id",
+        "candidate_digest",
+        "lock_id",
+        "report_id",
+        "report_digest",
+        "targets",
+        "approved_by",
+        "confirmation_ref",
+        "batches",
+        "expires_at",
+        "max_offline_window_ms",
+        "rollback_lock",
+        "state",
+        "propagation"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluationApproveInput": {
+      "type": "object",
+      "properties": {
+        "approval": {
+          "$ref": "#/$defs/ReleaseApproval"
+        }
+      },
+      "required": [
+        "approval"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluationApproveOutput": {
+      "$ref": "#/$defs/ReleaseApproval"
+    },
+    "EvaluationRevokeInput": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluationRevokeOutput": {
+      "$ref": "#/$defs/ReleaseApproval"
+    },
+    "RolloutTarget": {
+      "type": "object",
+      "properties": {
+        "target_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "activation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "state": {
+          "enum": [
+            "pending",
+            "active",
+            "disabled",
+            "blocked"
+          ]
+        },
+        "ready": {
+          "type": "boolean"
+        },
+        "observation_elapsed_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "samples_observed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "residual_work": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "target_id",
+        "activation_id",
+        "state",
+        "ready",
+        "observation_elapsed_ms",
+        "samples_observed",
+        "residual_work"
+      ],
+      "additionalProperties": false
+    },
+    "RolloutRecord": {
+      "type": "object",
+      "properties": {
+        "rollout_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "approval_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "state": {
+          "enum": [
+            "running",
+            "waiting",
+            "stopped",
+            "finished"
+          ]
+        },
+        "current_batch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RolloutTarget"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "rollout_id",
+        "approval_id",
+        "revision",
+        "state",
+        "current_batch",
+        "targets"
+      ],
+      "additionalProperties": false
+    },
+    "RolloutReadInput": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "RolloutReadOutput": {
+      "$ref": "#/$defs/RolloutRecord"
+    },
+    "EvaluationReadInput": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "candidate",
+            "partition",
+            "plan",
+            "run",
+            "report",
+            "approval"
+          ]
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluationReadOutput": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "candidate"
+            },
+            "record": {
+              "$ref": "#/$defs/EvaluationCandidate"
+            }
+          },
+          "required": [
+            "kind",
+            "record"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "partition"
+            },
+            "record": {
+              "$ref": "#/$defs/DatasetPartition"
+            }
+          },
+          "required": [
+            "kind",
+            "record"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "plan"
+            },
+            "record": {
+              "$ref": "#/$defs/EvaluationPlan"
+            }
+          },
+          "required": [
+            "kind",
+            "record"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "run"
+            },
+            "record": {
+              "$ref": "#/$defs/EvaluationRunRecord"
+            }
+          },
+          "required": [
+            "kind",
+            "record"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "report"
+            },
+            "record": {
+              "$ref": "#/$defs/ReportStatus"
+            }
+          },
+          "required": [
+            "kind",
+            "record"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "approval"
+            },
+            "record": {
+              "$ref": "#/$defs/ReleaseApproval"
+            }
+          },
+          "required": [
+            "kind",
+            "record"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "UseRequest": {
+      "type": "object",
+      "properties": {
+        "use_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "operation_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "intent_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "grant_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ObjectRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContentRef"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "subject": {
+          "$ref": "#/$defs/Subject"
+        },
+        "resource_scopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ResourceScope"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "action": {
+          "enum": [
+            "read",
+            "process",
+            "store",
+            "sync",
+            "disclose",
+            "act",
+            "manage"
+          ]
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "recipient": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "location": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "max_units": {
+          "$ref": "#/$defs/Amount"
+        },
+        "max_cost": {
+          "$ref": "#/$defs/Amount"
+        },
+        "usage_owner_id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "use_id",
+        "operation_id",
+        "intent_hash",
+        "grant_refs",
+        "source_refs",
+        "subject",
+        "resource_scopes",
+        "action",
+        "purpose",
+        "recipient",
+        "location",
+        "max_units",
+        "max_cost",
+        "usage_owner_id"
+      ],
+      "additionalProperties": false
+    },
+    "UseSettlementInput": {
+      "type": "object",
+      "properties": {
+        "operation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "usage_owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "grant_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ObjectRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "usage_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "cumulative_units": {
+          "$ref": "#/$defs/Amount"
+        },
+        "cumulative_cost": {
+          "$ref": "#/$defs/Amount"
+        },
+        "final": {
+          "type": "boolean"
+        },
+        "closure_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        }
+      },
+      "required": [
+        "operation_id",
+        "usage_owner_id",
+        "grant_refs",
+        "usage_revision",
+        "cumulative_units",
+        "cumulative_cost",
+        "final"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "final": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "closure_ref"
+            ]
+          }
+        }
+      ]
+    },
+    "UseSettlementRecord": {
+      "type": "object",
+      "properties": {
+        "use_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "usage_owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "grant_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ObjectRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "usage_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "state": {
+          "enum": [
+            "open",
+            "final"
+          ]
+        },
+        "consumed_once": {
+          "type": "boolean"
+        },
+        "reserved_units": {
+          "$ref": "#/$defs/Amount"
+        },
+        "reserved_cost": {
+          "$ref": "#/$defs/Amount"
+        },
+        "spent_units": {
+          "$ref": "#/$defs/Amount"
+        },
+        "spent_cost": {
+          "$ref": "#/$defs/Amount"
+        },
+        "held_units": {
+          "$ref": "#/$defs/Amount"
+        },
+        "held_cost": {
+          "$ref": "#/$defs/Amount"
+        },
+        "released_units": {
+          "$ref": "#/$defs/Amount"
+        },
+        "released_cost": {
+          "$ref": "#/$defs/Amount"
+        },
+        "closure_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        }
+      },
+      "required": [
+        "use_id",
+        "owner_id",
+        "operation_id",
+        "usage_owner_id",
+        "grant_refs",
+        "revision",
+        "usage_revision",
+        "state",
+        "consumed_once",
+        "reserved_units",
+        "reserved_cost",
+        "spent_units",
+        "spent_cost",
+        "held_units",
+        "held_cost",
+        "released_units",
+        "released_cost"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "final"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "closure_ref"
+            ]
+          }
+        }
+      ]
+    },
+    "UseSettlementQueryInput": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "ConfirmationConsumerCommand": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "command_id": {
+              "$ref": "#/$defs/Id"
+            },
+            "method": {
+              "const": "grant.issue"
+            },
+            "target_id": {
+              "$ref": "#/$defs/Id"
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "$ref": "#/$defs/GrantIssueInput"
+            }
+          },
+          "required": [
+            "command_id",
+            "method",
+            "target_id",
+            "expires_at",
+            "payload"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "command_id": {
+              "$ref": "#/$defs/Id"
+            },
+            "method": {
+              "const": "evaluation.approve"
+            },
+            "target_id": {
+              "$ref": "#/$defs/Id"
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "$ref": "#/$defs/EvaluationApproveInput"
+            }
+          },
+          "required": [
+            "command_id",
+            "method",
+            "target_id",
+            "expires_at",
+            "payload"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "command_id": {
+              "$ref": "#/$defs/Id"
+            },
+            "method": {
+              "const": "task.accept_result"
+            },
+            "target_id": {
+              "$ref": "#/$defs/Id"
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "$ref": "#/$defs/TaskAccept_ResultInput"
+            }
+          },
+          "required": [
+            "command_id",
+            "method",
+            "target_id",
+            "expires_at",
+            "payload"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "command_id": {
+              "$ref": "#/$defs/Id"
+            },
+            "method": {
+              "const": "endpoint.pair.approve"
+            },
+            "target_id": {
+              "$ref": "#/$defs/Id"
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "$ref": "#/$defs/PairApproveInput"
+            },
+            "expected_revision": {
+              "$ref": "#/$defs/Revision"
+            }
+          },
+          "required": [
+            "command_id",
+            "method",
+            "target_id",
+            "expires_at",
+            "payload",
+            "expected_revision"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "command_id": {
+              "$ref": "#/$defs/Id"
+            },
+            "method": {
+              "const": "grant.lease.allocate"
+            },
+            "target_id": {
+              "$ref": "#/$defs/Id"
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "$ref": "#/$defs/LeaseAllocationInput"
+            }
+          },
+          "required": [
+            "command_id",
+            "method",
+            "target_id",
+            "expires_at",
+            "payload"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ConfirmationRequestInput": {
+      "type": "object",
+      "properties": {
+        "confirmation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "consumer_command": {
+          "$ref": "#/$defs/ConfirmationConsumerCommand"
+        },
+        "intent_hash": {
+          "$ref": "#/$defs/Digest"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "confirmation_id",
+        "consumer_command",
+        "intent_hash",
+        "expires_at"
+      ],
+      "additionalProperties": false
+    },
+    "ConfirmationRecord": {
+      "type": "object",
+      "properties": {
+        "confirmation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "consumer_method": {
+          "enum": [
+            "grant.issue",
+            "evaluation.approve",
+            "task.accept_result",
+            "endpoint.pair.approve",
+            "grant.lease.allocate"
+          ]
+        },
+        "consumer_command_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "consumer_target_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "consumer_command": {
+          "$ref": "#/$defs/ConfirmationConsumerCommand"
+        },
+        "intent_hash": {
+          "$ref": "#/$defs/Digest"
+        },
+        "challenge": {
+          "$ref": "#/$defs/Digest"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "state": {
+          "enum": [
+            "pending",
+            "approved",
+            "denied",
+            "consumed",
+            "expired"
+          ]
+        },
+        "decided_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "decided_by": {
+          "$ref": "#/$defs/Id"
+        },
+        "trusted_user_session_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "consumed_by": {
+          "$ref": "#/$defs/Id"
+        },
+        "consumed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "confirmation_id",
+        "owner_id",
+        "revision",
+        "consumer_method",
+        "consumer_command_id",
+        "consumer_target_id",
+        "consumer_command",
+        "intent_hash",
+        "challenge",
+        "expires_at",
+        "state"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "approved"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "decided_at",
+              "decided_by",
+              "trusted_user_session_ref"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "denied"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "decided_at",
+              "decided_by",
+              "trusted_user_session_ref"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "consumed"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "decided_at",
+              "decided_by",
+              "trusted_user_session_ref"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "consumed"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "consumed_by",
+              "consumed_at"
+            ]
+          }
+        }
+      ]
+    },
+    "ConfirmationReadInput": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "ConfirmationDecideInput": {
+      "type": "object",
+      "properties": {
+        "challenge": {
+          "$ref": "#/$defs/Digest"
+        },
+        "intent_hash": {
+          "$ref": "#/$defs/Digest"
+        },
+        "consumer_command_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "decision": {
+          "enum": [
+            "approve",
+            "deny"
+          ]
+        }
+      },
+      "required": [
+        "challenge",
+        "intent_hash",
+        "consumer_command_id",
+        "decision"
+      ],
+      "additionalProperties": false
+    },
+    "Scenario": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CapabilityFixture"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "input_requests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InputRequestFixture"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "approvals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ApprovalFixture"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "exchange": {
+                "$ref": "#/$defs/Exchange"
+              },
+              "recovery": {
+                "$ref": "#/$defs/ReceiptRecovery"
+              }
+            },
+            "required": [
+              "at"
+            ],
+            "additionalProperties": false,
+            "oneOf": [
+              {
+                "required": [
+                  "exchange"
+                ],
+                "not": {
+                  "required": [
+                    "recovery"
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "recovery"
+                ],
+                "not": {
+                  "required": [
+                    "exchange"
+                  ]
+                }
+              }
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 300
+        },
+        "confirmations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConfirmationRecord"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "capabilities",
+        "input_requests",
+        "approvals",
+        "events"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "methods": {
+    "grant.issue": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "GrantIssueInput",
+      "output": "GrantIssueOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked"
+      ],
+      "success": "原许可、一次确认消费、原回执同事务保存。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ]
+      }
+    },
+    "grant.read": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "GrantReadInput",
+      "output": "GrantReadOutput",
+      "target": "grant_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked"
+      ],
+      "success": "当前许可与逐端传播范围；过期独立按时间判定。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ]
+      }
+    },
+    "grant.revoke": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "GrantRevokeInput",
+      "output": "GrantRevokeOutput",
+      "target": "grant_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked"
+      ],
+      "success": "撤销修订和传播责任已保存；未承诺全端立即停止。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ]
+      }
+    },
+    "grant.lease.allocate": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "LeaseAllocationInput",
+      "output": "LeaseAllocationOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked"
+      ],
+      "success": "唯一端点实例租约及预算预留同事务提交；失回执不再分配。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ]
+      }
+    },
+    "grant.lease.settle": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "LeaseSettlementInput",
+      "output": "LeaseSettlementOutput",
+      "target": "lease_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked"
+      ],
+      "success": "原使用累计值去重结算；最终关闭有据才释放余额。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ]
+      }
+    },
+    "endpoint.pair.begin": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "PairBeginInput",
+      "output": "PairBeginOutput",
+      "target": "pairing_service_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "pairing_expired",
+        "slow_down"
+      ],
+      "success": "预认证限流入口保存有限会话；未赋予tenant或业务权限。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "pairing_expired": [
+          "after_change"
+        ],
+        "slow_down": [
+          "after_change"
+        ]
+      }
+    },
+    "endpoint.pair.approve": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "PairApproveInput",
+      "output": "PairApproveOutput",
+      "target": "pairing_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "pairing_expired",
+        "pairing_conflict"
+      ],
+      "success": "本人受信确认与批准或拒绝决定持久保存。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "pairing_expired": [
+          "after_change"
+        ],
+        "pairing_conflict": [
+          "after_change",
+          "query_original"
+        ]
+      }
+    },
+    "endpoint.pair.claim": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "PairClaimInput",
+      "output": "PairClaimOutput",
+      "target": "pairing_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "pairing_expired",
+        "authorization_pending",
+        "slow_down"
+      ],
+      "success": "原会话的一次凭据领取；pending仅指待批准。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "pairing_expired": [
+          "after_change"
+        ],
+        "authorization_pending": [
+          "after_change"
+        ],
+        "slow_down": [
+          "after_change"
+        ]
+      }
+    },
+    "endpoint.revoke": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "EndpointRevokeInput",
+      "output": "EndpointRevokeOutput",
+      "target": "endpoint_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked"
+      ],
+      "success": "端点撤销、凭据代次递增及传播责任同事务提交。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ]
+      }
+    },
+    "extensions.prepare": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ExtensionsPrepareInput",
+      "output": "ExtensionsPrepareOutput",
+      "target": "extension_manager_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "package_invalid",
+        "dependency_conflict",
+        "contract_unsupported",
+        "isolation_unavailable"
+      ],
+      "success": "完整制品、检查证据和不可变安装锁已提交；不执行包内安装脚本。",
+      "source": "extensions/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "package_invalid": [
+          "after_change"
+        ],
+        "dependency_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "contract_unsupported": [
+          "after_change"
+        ],
+        "isolation_unavailable": [
+          "after_change"
+        ]
+      }
+    },
+    "extensions.deactivate": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ExtensionsDeactivateInput",
+      "output": "DeactivationResult",
+      "target": "target_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "generation_conflict",
+        "approval_inactive"
+      ],
+      "success": "关闭新入口与停用事实持久保存；残留责任单列。",
+      "source": "extensions/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "generation_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ]
+      }
+    },
+    "extensions.dispose": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ExtensionsDisposeInput",
+      "output": "ExtensionsDisposeOutput",
+      "target": "lock_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "generation_conflict",
+        "drain_blocked"
+      ],
+      "success": "无引用则清理制品并保留关闭索引；否则返回具体blocked引用。",
+      "source": "extensions/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "generation_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "drain_blocked": [
+          "after_change"
+        ]
+      }
+    },
+    "extensions.read": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "ExtensionsReadInput",
+      "output": "ExtensionsReadOutput",
+      "target": "activation_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "查询准确激活及当前实例，或不可变安装锁；不把活动指针当就绪。",
+      "source": "extensions/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "evaluation.candidate_register": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "CandidateRegisterInput",
+      "output": "CandidateRegisterOutput",
+      "target": "evaluation_service_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "候选、内容谱系与原注册回执固定保存。",
+      "source": "evaluation/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
+    },
+    "evaluation.partition_register": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "PartitionRegisterInput",
+      "output": "PartitionRegisterOutput",
+      "target": "evaluation_service_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "受信分区与来源组登记；不授予内容使用权限。",
+      "source": "evaluation/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
+    },
+    "evaluation.plan_create": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "PlanCreateInput",
+      "output": "PlanCreateOutput",
+      "target": "evaluation_service_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "固定计划；正式确认同时占用保留分区和永久尝试序号。",
+      "source": "evaluation/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
+    },
+    "evaluation.run": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "EvaluationRunInput",
+      "output": "EvaluationRunOutput",
+      "target": "payload.plan_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "运行及首批环境准备责任已保存，不代表评分完成。",
+      "source": "evaluation/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
+    },
+    "evaluation.cancel": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "EvaluationCancelInput",
+      "output": "EvaluationCancelOutput",
+      "target": "run_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "取消意图、全部环境封闭及清理责任已保存。",
+      "source": "evaluation/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
+    },
+    "evaluation.read": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "EvaluationReadInput",
+      "output": "EvaluationReadOutput",
+      "target": "object_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "受控投影；未开放的报告不含成绩和逐例反馈。",
+      "source": "evaluation/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
+    },
+    "evaluation.exposure_record": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ExposureRecordInput",
+      "output": "ExposureRecordOutput",
+      "target": "evaluation_service_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "暴露、受影响资格失效与撤回责任一起提交。",
+      "source": "evaluation/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
+    },
+    "evaluation.feedback_open": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "FeedbackOpenInput",
+      "output": "FeedbackOpenOutput",
+      "target": "report_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "先记录不可撤销暴露，再返回已封存报告。",
+      "source": "evaluation/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
+    },
+    "evaluation.approve": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "EvaluationApproveInput",
+      "output": "EvaluationApproveOutput",
+      "target": "evaluation_service_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "按发布目的核对证据，批准和逐目标发布责任共同提交。",
+      "source": "evaluation/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
+    },
+    "evaluation.revoke": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "EvaluationRevokeInput",
+      "output": "EvaluationRevokeOutput",
+      "target": "approval_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "批准撤回与传播任务持久；原批准不可复活。",
+      "source": "evaluation/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
+    },
+    "evaluation.rollout_read": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "RolloutReadInput",
+      "output": "RolloutReadOutput",
+      "target": "rollout_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "原批次、逐目标就绪、观察与残留事实。",
+      "source": "evaluation/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
+    },
+    "grant.use.settle": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "UseSettlementInput",
+      "output": "UseSettlementRecord",
+      "target": "use_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "confirmation_expired",
+        "confirmation_consumed",
+        "settlement_conflict"
+      ],
+      "success": "原使用累计费用按差额入账；关闭有据才释放余量，单次资格不返还。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "use_unknown": [
+          "after_change"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_expired": [
+          "after_change"
+        ],
+        "confirmation_consumed": [
+          "after_change"
+        ],
+        "settlement_conflict": [
+          "after_change",
+          "query_original"
+        ]
+      }
+    },
+    "grant.use.settlement": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "UseSettlementQueryInput",
+      "output": "UseSettlementRecord",
+      "target": "use_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "confirmation_expired",
+        "confirmation_consumed",
+        "settlement_conflict"
+      ],
+      "success": "独立读取原使用结算修订，不改写原UseReceipt或续期。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "use_unknown": [
+          "after_change"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_expired": [
+          "after_change"
+        ],
+        "confirmation_consumed": [
+          "after_change"
+        ],
+        "settlement_conflict": [
+          "after_change",
+          "query_original"
+        ]
+      }
+    },
+    "confirmation.request": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ConfirmationRequestInput",
+      "output": "ConfirmationRecord",
+      "target": "consumer_owner_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "confirmation_expired",
+        "confirmation_consumed",
+        "settlement_conflict"
+      ],
+      "success": "实际业务owner保存原命令和规范意图，创建待本人决定的有限挑战。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "use_unknown": [
+          "after_change"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_expired": [
+          "after_change"
+        ],
+        "confirmation_consumed": [
+          "after_change"
+        ],
+        "settlement_conflict": [
+          "after_change",
+          "query_original"
+        ]
+      }
+    },
+    "confirmation.read": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "ConfirmationReadInput",
+      "output": "ConfirmationRecord",
+      "target": "confirmation_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "confirmation_expired",
+        "confirmation_consumed",
+        "settlement_conflict"
+      ],
+      "success": "按当前本人或获准管理会话返回原规范意图和决定；不消费。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "use_unknown": [
+          "after_change"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_expired": [
+          "after_change"
+        ],
+        "confirmation_consumed": [
+          "after_change"
+        ],
+        "settlement_conflict": [
+          "after_change",
+          "query_original"
+        ]
+      }
+    },
+    "confirmation.decide": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ConfirmationDecideInput",
+      "output": "ConfirmationRecord",
+      "target": "confirmation_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "confirmation_expired",
+        "confirmation_consumed",
+        "settlement_conflict"
+      ],
+      "success": "受信本人会话保存批准/拒绝及原回执；业务尚未执行，消费留在业务事务。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "use_unknown": [
+          "after_change"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_expired": [
+          "after_change"
+        ],
+        "confirmation_consumed": [
+          "after_change"
+        ],
+        "settlement_conflict": [
+          "after_change",
+          "query_original"
+        ]
+      }
+    }
+  }
+}

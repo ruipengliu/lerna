@@ -2,6 +2,8 @@
 
 [总览](../README.md) · [项目目标](../goals.md) · [系统验收](../validation/README.md) · [版本激活](../extensions/README.md)
 
+
+实现阅读：[模块形状与依赖](implementation.md#module-shape) → [证据对象流转](implementation.md#data-flow) → [暴露与撤回内部时序](implementation.md#key-sequence) → [生产可用性与容量](implementation.md#production)。先阅读本页行为合同，再按实现页落实持久化与恢复；线字段及正反例继续由公共契约资产维护。
 本模块让一次任务可以诊断、让能力可以重复测量，并把有证据的改进送到有限发布范围，覆盖 C8、C9。运行观测保存诊断线索；评测保存固定计划和独立判定；发布批准保存允许启用什么；扩展管理器保存每个目标实际运行什么。它们共享关联标识，不合并成功含义。
 
 默认复用宿主数据库、持久 job 和内容库。没有必需的隔离环境、独立真值或获准评测数据时，相应计划拒绝开始；不从任务自己的“成功”状态推断效果达标。当前文档给出契约及验收方法，未提供实际成功率或容量结果。
@@ -41,7 +43,7 @@ flowchart TB
 
 报告、答案或样本通过其他路径泄露时，受信评测维护者调用 evaluation.exposure_record，追加分区、来源组范围、泄露证据及发生时间；尚无报告也可以登记。系统在同一事务中保存暴露和受影响计划的正式资格失效事实，并创建在途封闭、已批准撤回的 jobs。发生在报告封存前的非受控暴露使该计划及报告失去正式资格；事后才发现早期泄露同样生效，发生时点不明时保守判定受影响。原报告保持不可变，读取时同时返回当前资格及原因，批准入口必须检查当前资格；失效不能靠重开报告恢复。正常封存后经 feedback_open 开放不使原报告失效，但仍禁止这份分区进入后续正式确认。所有在途效果、环境清理和用量核对继续由原运行负责。
 
-看过保留反馈后修改候选，必须登记新候选并使用另一份未暴露分区。复用原分区时必须显式创建选择用途计划，其报告为 exploratory，不能作为发布的独立改善证据；不能在正式申请失败后自动降级继续运行。受控运行器为评分读取真值不视为向开发过程暴露，但该次分区占用仍不可复用。普通兼容性发布可明确申请只验证契约，不得借此声称能力改善。所有记录仍复用评测数据库、用途权限和持久 job，不增加独立评测服务。
+看过保留反馈后修改候选，必须登记新候选并使用另一份未暴露分区。复用原分区时必须显式创建选择用途计划，其报告为 exploratory，不能作为发布的独立改善证据；不能在正式申请失败后自动降级继续运行。受控运行器为评分读取真值不视为向开发过程暴露，但该次分区占用仍不可复用。普通兼容性发布和没有旧基线的首装可明确申请只验证契约，产出 conformance 报告及 compatibility 批准，不得借此声称能力改善。失败的改善申请不可原地自动降级；新的兼容申请仍保留原候选与尝试历史。所有记录仍复用评测数据库、用途权限和持久 job，不增加独立评测服务。
 
 换用未暴露分区只是必要条件，不能通过新建发布申请不断尝试直到通过。同一 improvement_id 在第一次正式计划前绑定受信评测维护者核定的不可变 ImprovementPolicy，冻结候选范围、正式尝试总上限、停止规则和整个过程的推断／比较方法。默认只允许一次正式确认；需要多次确认时，必须在任何保留反馈开放前规定适用的多重比较或序贯方法，不能把每次未调整的 95% 区间当作整个过程的保证。
 
@@ -94,7 +96,7 @@ EvaluationPlan 固定数据集版本、样本集合、基线与候选安装锁�
 
 改进候选包括记忆提案、Skill、执行策略、Agent 配置和可审查代码补丁。常规记忆更新按已有用途授权进入[记忆系统](../memory/README.md)，不要求为每次用户偏好修订走软件发布；宣称效果改善仍需报告。Skill 和配置需通过评测后按批准范围逐步启用，插件与内核代码还必须经维护者审查。
 
-批准固定候选制品、报告、有限目标集合、批次划分、观察窗口、退出阈值、期限及精确回退版本。用户或维护者通过[受信确认入口](../interaction/README.md)批准，模型和候选自身没有此权限。一次批准可以预先包含多个有限批次；扩大目标集合、更换候选或降低阈值都需要新的批准。
+批准固定候选制品、报告、有限目标集合、批次划分、观察窗口、退出阈值、期限及精确回退版本。用户或维护者通过[受信确认入口](../interaction/README.md)决定，模型和候选自身没有此权限。Confirmation 由 evaluation owner 保存，原 approve 命令在请求确认前固定；批准事务内核对 owner、原命令、准确规范意图并一次消费，不另做跨库确认消费。一次批准可以预先包含多个有限批次；扩大目标集合、更换候选或降低阈值都需要新的批准。
 
 发布 job 为每个目标创建唯一 activation_id，通过[扩展激活接口](../extensions/README.md)交接。批次只有在所有目标报告实际绑定且 ready、观察窗口及最小样本均满足时才进入下一批；节点离线、样本不足或激活未知时等待或停止，不把命令 applied 当成整批成功。
 
@@ -115,7 +117,7 @@ sequenceDiagram
     X-->>P: 停用、旧版恢复和残留分别确认
 ```
 
-远端在线激活或启动一项新工作前，目标节点以固定 use_id 调用 evaluation.approval_check，绑定 activation_id 或业务 work_id、目标、精确安装锁及当前实例。批准服务在当前批准有效时持久保存一次启动回执，返回 approval_revision 和 start_before；初始待测窗口为 30 秒，并受批准到期限制。max_offline_window=0 仅关闭离线续用，不把在线启动窗口缩为零。
+远端在线激活或启动一项新工作前，目标节点以固定 use_id 调用 evaluation.approval_check，绑定 activation_id、当前代际的 reopen_id 或业务 work_id、目标、精确安装锁及当前实例。reopen 只恢复原组件新实例，不切代际或重复迁移。批准服务在当前批准有效时持久保存一次启动回执，返回 approval_revision 和 start_before；初始待测窗口为 30 秒，并受批准到期限制。max_offline_window=0 仅关闭离线续用，不把在线启动窗口缩为零。
 
 处理端须在 start_before 之前登记该动作已使用回执，并在实际启动门禁再次核对期限；只启动绑定的原动作，回执不能用于任意新工作。同一 use_id 查询或重投返回原截止时间，不续期；到期且已证明原动作尚未启动时，可用新 use_id 核验当前批准，不能修改旧回执。回执已签发后短暂断线，只允许尚在窗口内的这一固定动作启动；不获得断网后继续创建其他工作的资格。已知撤回立即停止新启动；撤回未到达时可能在这段在线窗口内启动，必须如实报告这一竞态边界。
 
@@ -130,13 +132,13 @@ sequenceDiagram
 | 对象／字段 | 权威与约束 |
 | --- | --- |
 | Observation：event_id、correlation、component_binding、time、kind、summary | 观测保存；correlation 引用业务 ID，summary 受数据最小化限制，不能代替业务账本 |
-| Candidate：candidate_id、improvement_id、parent_candidate_ids、kind、artifact_ref、source_refs、baseline_lock、digest | 精确制品及来源；improvement_id 关联同一改进过程的全部候选；评测前登记，改动产生有谱系的新候选 |
+| Candidate：candidate_id、release_kind、improvement_id?、parent_candidate_ids、kind、artifact_ref、source_refs、baseline_lock、digest | 精确制品及来源；改善候选必有 improvement_id，关联同一过程的全部候选；首装兼容候选可无旧基线。评测前登记，改动产生有谱系的新候选 |
 | ImprovementPolicy：improvement_id、policy_digest、candidate_scope、formal_attempt_limit、stop_rule、inference_method、comparison_method、related_improvement_ids | 受信维护者核定，首次正式计划前不可变绑定；覆盖整个改进过程的选择与停止规则，新申请不重置尝试额度 |
 | DatasetPartition：partition_id、dataset_ref、split、sample_ids、source_group_map、content_digest、permission_refs | split 为 development、selection 或 holdout；来源组映射阻止相关样本跨用途；登记不自动授予正文访问权 |
 | HoldoutReservation：reservation_id、release_request_id、candidate_id、plan_id、partition_id、reserved_at | 评测管理保存；release_request_id、plan_id 及 partition_id 各自唯一占用，原绑定不可改写或回收 |
 | FeedbackExposure：exposure_id、partition_id、source_group_ids、report_id?、report_digest?、recipient、scope、occurred_at、recorded_at、evidence_refs、reason | report 字段可缺，分区／来源组范围和证据必需；occurred_at 可为 unknown，recorded_at 是保存时点；scope 指成绩、逐例反馈、答案或样本内容，答复丢失不撤销暴露 |
 | PlanEligibility：plan_id、revision、status、exposure_ids、reason | 评测管理追加事实；status 为 eligible 或 ineligible，失效不可恢复；报告原摘要不变，当前资格单独返回并约束批准 |
-| EvaluationPlan：plan_id、digest、purpose、partition_id、sample_ids、seed、release_request_id、reservation_id、policy_digest、formal_attempt_index | purpose 为 development、selection 或 release_confirmation；后者必须绑定正式分区占用及过程策略中的唯一尝试序号，样本集合有界且不可换样本 |
+| EvaluationPlan：plan_id、digest、purpose、partition_id、sample_ids、seed、release_request_id、reservation_id、policy_digest、formal_attempt_index | purpose 为 development、selection、compatibility_check 或 release_confirmation；正式确认必须绑定保留占用及过程策略中的唯一尝试序号，兼容计划不要求改善基线。样本集合有界且不可换样本 |
 | EvaluationPlan：baseline_lock、candidate_lock、environment_binding、judge_binding | 固定实现、配置、环境与判定器版本，候选无修改权限 |
 | EvaluationPlan：metrics、thresholds、budget、retry_policy、stop_rule、invalid_run_policy | 阈值、固定样本量或其他预先审查的停止规则、失败口径运行前固定；默认不允许看到结果后加样本直到通过 |
 | EvaluationPlan：sampling_frame、sample_unit、cluster_map、weights、inference_method | 明确目标总体、抽样与相关结构；无合适方法时可报告固定集比例，但统计门禁 inconclusive |
@@ -144,12 +146,12 @@ sequenceDiagram
 | EvaluationRun：run_id、plan_id、sample_id、arm、attempts、state、evidence_refs | arm 为 baseline 或 candidate；同一 plan/sample/arm 唯一；state 为 queued、running、scoring、finished、blocked；blocked 保留继续责任 |
 | EvaluationRun：outcome、usage、environment_ref | outcome 为 pass、fail 或 invalid；只有 finished 才有最终 outcome；清理状态独立 |
 | EvaluationRun：cancel_requested、reason、environment_sealed、cleanup_state | 取消请求、实际封闭分别记录；cleanup_state 为 pending、cleaned 或 residual，清理未完不删除原环境映射 |
-| EvaluationReport：report_id、plan_digest、run_refs、metrics、coverage、gaps、digest、evidence_class | evidence_class 为 formal 或 exploratory；全部候选尝试及失效报告可追溯，补跑不能覆盖原结果 |
-| EvaluationReport：target_attainment、statistical_gate、improvement_gate、paired_counts、category_changes | 三项门禁各为 pass、fail 或 inconclusive，分别带适用指标与原因；配对四格及分类退化支撑改善结论 |
-| ReleaseApproval：approval_id、revision、candidate_digest、report_digest、targets | 精确目标集合；state 为 active、revoked、expired，撤回后不可复活同一批准 |
+| EvaluationReport：report_id、plan_digest、run_refs、metrics、coverage、gaps、digest、evidence_class | evidence_class 为 conformance、formal 或 exploratory；分别表示兼容合同证据、正式保留确认和探索。全部尝试及失效报告可追溯 |
+| EvaluationReport：target_attainment、statistical_gate、improvement_gate、paired_counts、category_changes | 三项门禁分别带 applicable、result（pass／fail／inconclusive）及原因；兼容报告的不适用质量门禁不能写成 pass。配对四格及分类退化支撑改善结论 |
+| ReleaseApproval：approval_id、revision、release_kind、candidate_digest、report_digest、targets | release_kind 为 compatibility 或 improvement，分别核验兼容证据或正式改善门禁；目标集合精确。state 为 active、revoked、expired，撤回后不可复活 |
 | ReleaseApproval：approved_by、confirmation_ref、max_offline_window | 绑定受信批准主体与精确确认；离线续用上限默认零，非零必须明确批准 |
 | ReleaseApproval：batches、window、minimum_samples、stop_rules、expires_at、rollback_lock | window 是每批观察窗口；回退锁可为空，为空不声称可自动恢复 |
-| ApprovalUse：use_id、approval_id、approval_revision、target_id、lock_id、instance_id、action_kind、action_id、start_before | action_kind 为 activation 或 work；action_id 对应原 activation_id/work_id；固定回执由批准服务保存，处理端保存原动作的使用登记 |
+| ApprovalUse：use_id、approval_id、approval_revision、target_id、lock_id、instance_id、action_kind、action_id、start_before | action_kind 为 activation、reopen 或 work；action_id 对应原激活、新实例重开或业务工作身份；固定回执由批准服务保存，处理端保存原动作的使用登记 |
 | ApprovalLease：lease_id、approval_id、approval_revision、target_id、lock_id、instance_id、continue_until | 只对显式获准离线续用的已激活实例分配，不用于激活或扩批 |
 | Rollout：rollout_id、approval_id、target_activations、current_batch、state | state 为 running、waiting、stopped、finished；逐目标事实来自扩展管理器 |
 

@@ -1,0 +1,794 @@
+{
+  "name": "50-online-use-settlement",
+  "description": "50-online-use-settlement; constructed records, no live authentication or durable commit proof",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [],
+  "confirmations": [
+    {
+      "confirmation_id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+      "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+      "revision": 2,
+      "consumer_method": "grant.issue",
+      "consumer_command_id": "command_8106c0b7dd82636e823b21e74eca5b85",
+      "consumer_target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+      "consumer_command": {
+        "method": "grant.issue",
+        "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+        "payload": {
+          "grant_id": "grant_ac12317f3baa328ee07764509eddd922",
+          "policy": {
+            "subject": {
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+              "actor_kind": "user"
+            },
+            "resources": [
+              {
+                "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "resource_type": "content",
+                "selector": {
+                  "object_ids": [
+                    "resource_03c9f206d1c2afd64261a5bbab141a54"
+                  ]
+                },
+                "normalizer_version": "1.0.0"
+              }
+            ],
+            "actions": [
+              "read"
+            ],
+            "purposes": [
+              "research"
+            ],
+            "recipients": [
+              "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+            ],
+            "locations": [
+              "owner_283a5912588ab6ee40efdbd083ba2f25"
+            ],
+            "mode": "continuous",
+            "valid_from": "2026-09-26T00:00:00Z",
+            "expires_at": "2026-09-26T01:00:00Z",
+            "limits": [
+              {
+                "unit": "calls",
+                "limit": "10"
+              },
+              {
+                "unit": "USD",
+                "limit": "5"
+              }
+            ],
+            "max_offline_window_ms": 600000
+          },
+          "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+          "confirmation_ref": {
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+            "revision": 2
+          }
+        },
+        "command_id": "command_8106c0b7dd82636e823b21e74eca5b85",
+        "expires_at": "2026-09-26T01:00:00Z"
+      },
+      "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+      "challenge": "sha256:95c15d57603fdf87a2b69631cbc1e0df303cf94af308cbb8d70f966087e40adb",
+      "expires_at": "2026-09-26T00:05:00Z",
+      "state": "approved",
+      "decided_at": "2026-09-26T00:00:00Z",
+      "decided_by": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+      "trusted_user_session_ref": {
+        "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+        "id": "session_436485ca06af00a349cf5be23165d44a",
+        "revision": 1
+      }
+    }
+  ],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "grant.issue",
+          "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "payload": {
+            "grant_id": "grant_ac12317f3baa328ee07764509eddd922",
+            "policy": {
+              "subject": {
+                "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+                "actor_kind": "user"
+              },
+              "resources": [
+                {
+                  "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "resource_type": "content",
+                  "selector": {
+                    "object_ids": [
+                      "resource_03c9f206d1c2afd64261a5bbab141a54"
+                    ]
+                  },
+                  "normalizer_version": "1.0.0"
+                }
+              ],
+              "actions": [
+                "read"
+              ],
+              "purposes": [
+                "research"
+              ],
+              "recipients": [
+                "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+              ],
+              "locations": [
+                "owner_283a5912588ab6ee40efdbd083ba2f25"
+              ],
+              "mode": "continuous",
+              "valid_from": "2026-09-26T00:00:00Z",
+              "expires_at": "2026-09-26T01:00:00Z",
+              "limits": [
+                {
+                  "unit": "calls",
+                  "limit": "10"
+                },
+                {
+                  "unit": "USD",
+                  "limit": "5"
+                }
+              ],
+              "max_offline_window_ms": 600000
+            },
+            "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+            "confirmation_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+              "revision": 2
+            }
+          },
+          "command_id": "command_8106c0b7dd82636e823b21e74eca5b85",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_8106c0b7dd82636e823b21e74eca5b85",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "grant_id": "grant_ac12317f3baa328ee07764509eddd922",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "revision": 1,
+            "policy": {
+              "subject": {
+                "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+                "actor_kind": "user"
+              },
+              "resources": [
+                {
+                  "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "resource_type": "content",
+                  "selector": {
+                    "object_ids": [
+                      "resource_03c9f206d1c2afd64261a5bbab141a54"
+                    ]
+                  },
+                  "normalizer_version": "1.0.0"
+                }
+              ],
+              "actions": [
+                "read"
+              ],
+              "purposes": [
+                "research"
+              ],
+              "recipients": [
+                "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+              ],
+              "locations": [
+                "owner_283a5912588ab6ee40efdbd083ba2f25"
+              ],
+              "mode": "continuous",
+              "valid_from": "2026-09-26T00:00:00Z",
+              "expires_at": "2026-09-26T01:00:00Z",
+              "limits": [
+                {
+                  "unit": "calls",
+                  "limit": "10"
+                },
+                {
+                  "unit": "USD",
+                  "limit": "5"
+                }
+              ],
+              "max_offline_window_ms": 600000
+            },
+            "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+            "confirmation_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+              "revision": 2
+            },
+            "state": "active",
+            "issued_at": "2026-09-26T00:00:00Z",
+            "propagation": []
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:01Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+          "sender_service_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2"
+        },
+        "request": {
+          "method": "grant.use",
+          "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "payload": {
+            "use_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+            "operation_id": "operation_8dc1a27ddb630fd6f9ddd59f7a7bb456",
+            "usage_owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+            "intent_hash": "sha256:97dac4fbbf335d41a1370025be8d128e3c7b41d64814ddf8a8ba936a5cfbe3c0",
+            "grant_refs": [
+              {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "grant_ac12317f3baa328ee07764509eddd922",
+                "revision": 1
+              }
+            ],
+            "source_refs": [],
+            "subject": {
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+              "actor_kind": "user"
+            },
+            "resource_scopes": [
+              {
+                "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "resource_type": "content",
+                "selector": {
+                  "object_ids": [
+                    "resource_03c9f206d1c2afd64261a5bbab141a54"
+                  ]
+                },
+                "normalizer_version": "1.0.0"
+              }
+            ],
+            "action": "read",
+            "purpose": "research",
+            "recipient": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+            "location": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "max_units": {
+              "unit": "calls",
+              "amount": "3"
+            },
+            "max_cost": {
+              "unit": "USD",
+              "amount": "4"
+            }
+          },
+          "command_id": "command_382058b87ea1728bdb3aac5ad0f8a658",
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "command_382058b87ea1728bdb3aac5ad0f8a658",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:01Z",
+          "output": {
+            "use_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "intent_hash": "sha256:97dac4fbbf335d41a1370025be8d128e3c7b41d64814ddf8a8ba936a5cfbe3c0",
+            "grant_revisions": [
+              {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "grant_ac12317f3baa328ee07764509eddd922",
+                "revision": 1
+              }
+            ],
+            "decision": "allowed",
+            "reserved_units": {
+              "unit": "calls",
+              "amount": "3"
+            },
+            "reserved_cost": {
+              "unit": "USD",
+              "amount": "4"
+            },
+            "start_before": "2026-09-26T00:00:30Z",
+            "decided_at": "2026-09-26T00:00:01Z"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+          "sender_service_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2"
+        },
+        "request": {
+          "method": "grant.use.settlement",
+          "target_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "use_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "operation_id": "operation_8dc1a27ddb630fd6f9ddd59f7a7bb456",
+            "usage_owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+            "grant_refs": [
+              {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "grant_ac12317f3baa328ee07764509eddd922",
+                "revision": 1
+              }
+            ],
+            "revision": 1,
+            "usage_revision": 0,
+            "state": "open",
+            "consumed_once": false,
+            "reserved_units": {
+              "unit": "calls",
+              "amount": "3"
+            },
+            "reserved_cost": {
+              "unit": "USD",
+              "amount": "4"
+            },
+            "spent_units": {
+              "unit": "calls",
+              "amount": "0"
+            },
+            "spent_cost": {
+              "unit": "USD",
+              "amount": "0"
+            },
+            "held_units": {
+              "unit": "calls",
+              "amount": "3"
+            },
+            "held_cost": {
+              "unit": "USD",
+              "amount": "4"
+            },
+            "released_units": {
+              "unit": "calls",
+              "amount": "0"
+            },
+            "released_cost": {
+              "unit": "USD",
+              "amount": "0"
+            }
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:03Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+          "sender_service_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2"
+        },
+        "request": {
+          "method": "grant.use.settle",
+          "target_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+          "payload": {
+            "operation_id": "operation_8dc1a27ddb630fd6f9ddd59f7a7bb456",
+            "usage_owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+            "grant_refs": [
+              {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "grant_ac12317f3baa328ee07764509eddd922",
+                "revision": 1
+              }
+            ],
+            "usage_revision": 1,
+            "cumulative_units": {
+              "unit": "calls",
+              "amount": "1"
+            },
+            "cumulative_cost": {
+              "unit": "USD",
+              "amount": "1"
+            },
+            "final": false
+          },
+          "command_id": "command_7eefe4aec29c4ea111d9d81e7260dfbd",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "expected_revision": 1
+        },
+        "response": {
+          "command_id": "command_7eefe4aec29c4ea111d9d81e7260dfbd",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:03Z",
+          "output": {
+            "use_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "operation_id": "operation_8dc1a27ddb630fd6f9ddd59f7a7bb456",
+            "usage_owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+            "grant_refs": [
+              {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "grant_ac12317f3baa328ee07764509eddd922",
+                "revision": 1
+              }
+            ],
+            "revision": 2,
+            "usage_revision": 1,
+            "state": "open",
+            "consumed_once": false,
+            "reserved_units": {
+              "unit": "calls",
+              "amount": "3"
+            },
+            "reserved_cost": {
+              "unit": "USD",
+              "amount": "4"
+            },
+            "spent_units": {
+              "unit": "calls",
+              "amount": "1"
+            },
+            "spent_cost": {
+              "unit": "USD",
+              "amount": "1"
+            },
+            "held_units": {
+              "unit": "calls",
+              "amount": "2"
+            },
+            "held_cost": {
+              "unit": "USD",
+              "amount": "3"
+            },
+            "released_units": {
+              "unit": "calls",
+              "amount": "0"
+            },
+            "released_cost": {
+              "unit": "USD",
+              "amount": "0"
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+          "sender_service_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2"
+        },
+        "request": {
+          "method": "grant.use.settle",
+          "target_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+          "payload": {
+            "operation_id": "operation_8dc1a27ddb630fd6f9ddd59f7a7bb456",
+            "usage_owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+            "grant_refs": [
+              {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "grant_ac12317f3baa328ee07764509eddd922",
+                "revision": 1
+              }
+            ],
+            "usage_revision": 2,
+            "cumulative_units": {
+              "unit": "calls",
+              "amount": "2"
+            },
+            "cumulative_cost": {
+              "unit": "USD",
+              "amount": "2"
+            },
+            "final": true,
+            "closure_ref": {
+              "owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+              "id": "closure_d547f8fc56d73ac084d293871d0f3ff2",
+              "revision": 1
+            }
+          },
+          "command_id": "command_968dbb8bc3a2d232e79e7f7ba6eb48ed",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "expected_revision": 2
+        },
+        "response": {
+          "command_id": "command_968dbb8bc3a2d232e79e7f7ba6eb48ed",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:04Z",
+          "output": {
+            "use_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "operation_id": "operation_8dc1a27ddb630fd6f9ddd59f7a7bb456",
+            "usage_owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+            "grant_refs": [
+              {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "grant_ac12317f3baa328ee07764509eddd922",
+                "revision": 1
+              }
+            ],
+            "revision": 3,
+            "usage_revision": 2,
+            "state": "final",
+            "consumed_once": false,
+            "reserved_units": {
+              "unit": "calls",
+              "amount": "3"
+            },
+            "reserved_cost": {
+              "unit": "USD",
+              "amount": "4"
+            },
+            "spent_units": {
+              "unit": "calls",
+              "amount": "2"
+            },
+            "spent_cost": {
+              "unit": "USD",
+              "amount": "2"
+            },
+            "held_units": {
+              "unit": "calls",
+              "amount": "0"
+            },
+            "held_cost": {
+              "unit": "USD",
+              "amount": "0"
+            },
+            "released_units": {
+              "unit": "calls",
+              "amount": "1"
+            },
+            "released_cost": {
+              "unit": "USD",
+              "amount": "2"
+            },
+            "closure_ref": {
+              "owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+              "id": "closure_d547f8fc56d73ac084d293871d0f3ff2",
+              "revision": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:05Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+          "sender_service_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2"
+        },
+        "request": {
+          "method": "grant.use.settle",
+          "target_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+          "payload": {
+            "operation_id": "operation_8dc1a27ddb630fd6f9ddd59f7a7bb456",
+            "usage_owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+            "grant_refs": [
+              {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "grant_ac12317f3baa328ee07764509eddd922",
+                "revision": 1
+              }
+            ],
+            "usage_revision": 2,
+            "cumulative_units": {
+              "unit": "calls",
+              "amount": "2"
+            },
+            "cumulative_cost": {
+              "unit": "USD",
+              "amount": "2"
+            },
+            "final": true,
+            "closure_ref": {
+              "owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+              "id": "closure_d547f8fc56d73ac084d293871d0f3ff2",
+              "revision": 1
+            }
+          },
+          "command_id": "command_968dbb8bc3a2d232e79e7f7ba6eb48ed",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "expected_revision": 2
+        },
+        "response": {
+          "command_id": "command_968dbb8bc3a2d232e79e7f7ba6eb48ed",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:04Z",
+          "output": {
+            "use_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "operation_id": "operation_8dc1a27ddb630fd6f9ddd59f7a7bb456",
+            "usage_owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+            "grant_refs": [
+              {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "grant_ac12317f3baa328ee07764509eddd922",
+                "revision": 1
+              }
+            ],
+            "revision": 3,
+            "usage_revision": 2,
+            "state": "final",
+            "consumed_once": false,
+            "reserved_units": {
+              "unit": "calls",
+              "amount": "3"
+            },
+            "reserved_cost": {
+              "unit": "USD",
+              "amount": "4"
+            },
+            "spent_units": {
+              "unit": "calls",
+              "amount": "2"
+            },
+            "spent_cost": {
+              "unit": "USD",
+              "amount": "2"
+            },
+            "held_units": {
+              "unit": "calls",
+              "amount": "0"
+            },
+            "held_cost": {
+              "unit": "USD",
+              "amount": "0"
+            },
+            "released_units": {
+              "unit": "calls",
+              "amount": "1"
+            },
+            "released_cost": {
+              "unit": "USD",
+              "amount": "2"
+            },
+            "closure_ref": {
+              "owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+              "id": "closure_d547f8fc56d73ac084d293871d0f3ff2",
+              "revision": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:06Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+          "sender_service_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2"
+        },
+        "request": {
+          "method": "grant.use.settlement",
+          "target_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "use_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "operation_id": "operation_8dc1a27ddb630fd6f9ddd59f7a7bb456",
+            "usage_owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+            "grant_refs": [
+              {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "grant_ac12317f3baa328ee07764509eddd922",
+                "revision": 1
+              }
+            ],
+            "revision": 3,
+            "usage_revision": 2,
+            "state": "final",
+            "consumed_once": false,
+            "reserved_units": {
+              "unit": "calls",
+              "amount": "3"
+            },
+            "reserved_cost": {
+              "unit": "USD",
+              "amount": "4"
+            },
+            "spent_units": {
+              "unit": "calls",
+              "amount": "2"
+            },
+            "spent_cost": {
+              "unit": "USD",
+              "amount": "2"
+            },
+            "held_units": {
+              "unit": "calls",
+              "amount": "0"
+            },
+            "held_cost": {
+              "unit": "USD",
+              "amount": "0"
+            },
+            "released_units": {
+              "unit": "calls",
+              "amount": "1"
+            },
+            "released_cost": {
+              "unit": "USD",
+              "amount": "2"
+            },
+            "closure_ref": {
+              "owner_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2",
+              "id": "closure_d547f8fc56d73ac084d293871d0f3ff2",
+              "revision": 1
+            }
+          },
+          "observed_at": "2026-09-26T00:00:06Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:07Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+          "sender_service_id": "usageowner_a7f4bbf7af1c6a9d4f86a46d6a13f2f2"
+        },
+        "request": {
+          "method": "grant.use.get",
+          "target_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "use_id": "use_e7152c6b741151fd974ba3c3cef9dfaf",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "intent_hash": "sha256:97dac4fbbf335d41a1370025be8d128e3c7b41d64814ddf8a8ba936a5cfbe3c0",
+            "grant_revisions": [
+              {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "grant_ac12317f3baa328ee07764509eddd922",
+                "revision": 1
+              }
+            ],
+            "decision": "allowed",
+            "reserved_units": {
+              "unit": "calls",
+              "amount": "3"
+            },
+            "reserved_cost": {
+              "unit": "USD",
+              "amount": "4"
+            },
+            "start_before": "2026-09-26T00:00:30Z",
+            "decided_at": "2026-09-26T00:00:01Z"
+          },
+          "observed_at": "2026-09-26T00:00:07Z"
+        }
+      }
+    }
+  ]
+}

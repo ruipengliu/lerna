@@ -1,0 +1,30 @@
+flowchart TB
+    U[客户端与主动取件设备] --> G[跨区接入副本<br/>固定逻辑服务路由]
+    subgraph H[一个稳定 Home 分区]
+      direction TB
+      subgraph A[可用区 A]
+        A1[应用与工作池副本 A]
+        DB[(当前数据库主)]
+      end
+      subgraph B[可用区 B]
+        B1[应用与工作池副本 B]
+        S1[(同步候选副本 B)]
+      end
+      subgraph C[可用区 C]
+        C1[应用与工作池副本 C]
+        S2[(同步候选副本 C)]
+      end
+      A1 --> DB
+      B1 --> DB
+      C1 --> DB
+      DB -.同步 WAL.-> S1
+      DB -.同步 WAL.-> S2
+    end
+    G --> A1
+    G --> B1
+    G --> C1
+    subgraph DEP[分区共享的外部依赖]
+      O[(跨区不可变内容存储)]
+      X[原 Executor／设备／外部提供方]
+    end
+    H --> DEP

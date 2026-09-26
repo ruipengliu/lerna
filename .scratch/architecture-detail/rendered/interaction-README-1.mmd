@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant U as 用户界面
+    participant I as 交互服务
+    participant H as Task Home
+    U->>I: 原 input_id、请求修订、目录回答
+    I->>I: 保存输入及唯一目标 command_id
+    I-->>U: 已保存，等待任务处理
+    I->>H: 用固定 command_id 提交回答
+    H->>H: 原子消费输入请求并保存后续工作
+    H-->>I: 原消费结果及任务修订
+    I->>I: 保存回执及呈现修订
+    U->>I: 查询原 input_id 与当前快照
+    I-->>U: 已生效或明确拒绝原因

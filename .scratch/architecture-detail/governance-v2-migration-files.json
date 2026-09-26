@@ -1,0 +1,16 @@
+[
+  "01-task-loop.json",
+  "08-acceptance.json",
+  "10-use-recovery.json",
+  "16-active-to-result.json",
+  "17-optional-condition.json",
+  "18-unrelated-effect.json",
+  "30-grant-lifecycle.json",
+  "31-pairing-lifecycle.json",
+  "32-lease-settlement.json",
+  "34-compatibility-release.json",
+  "35-improvement-exposure.json",
+  "36-local-install-restart.json",
+  "37-remote-instance-reopen.json",
+  "38-revoked-approval-startup.json"
+]

@@ -1,0 +1,462 @@
+{
+  "name": "grant-lifecycle",
+  "description": "一次确认签发、当前读取、撤销后状态不可复活。",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "grant.issue",
+          "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "payload": {
+            "grant_id": "grant_ac12317f3baa328ee07764509eddd922",
+            "policy": {
+              "subject": {
+                "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+                "actor_kind": "user"
+              },
+              "resources": [
+                {
+                  "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "resource_type": "content",
+                  "selector": {
+                    "object_ids": [
+                      "resource_03c9f206d1c2afd64261a5bbab141a54"
+                    ]
+                  },
+                  "normalizer_version": "1.0.0"
+                }
+              ],
+              "actions": [
+                "read"
+              ],
+              "purposes": [
+                "research"
+              ],
+              "recipients": [
+                "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+              ],
+              "locations": [
+                "owner_283a5912588ab6ee40efdbd083ba2f25"
+              ],
+              "mode": "continuous",
+              "valid_from": "2026-09-26T00:00:00Z",
+              "expires_at": "2026-09-26T01:00:00Z",
+              "limits": [
+                {
+                  "unit": "calls",
+                  "limit": "10"
+                },
+                {
+                  "unit": "USD",
+                  "limit": "5"
+                }
+              ],
+              "max_offline_window_ms": 600000
+            },
+            "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+            "confirmation_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+              "revision": 2
+            }
+          },
+          "command_id": "command_8106c0b7dd82636e823b21e74eca5b85",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_8106c0b7dd82636e823b21e74eca5b85",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "grant_id": "grant_ac12317f3baa328ee07764509eddd922",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "revision": 1,
+            "policy": {
+              "subject": {
+                "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+                "actor_kind": "user"
+              },
+              "resources": [
+                {
+                  "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "resource_type": "content",
+                  "selector": {
+                    "object_ids": [
+                      "resource_03c9f206d1c2afd64261a5bbab141a54"
+                    ]
+                  },
+                  "normalizer_version": "1.0.0"
+                }
+              ],
+              "actions": [
+                "read"
+              ],
+              "purposes": [
+                "research"
+              ],
+              "recipients": [
+                "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+              ],
+              "locations": [
+                "owner_283a5912588ab6ee40efdbd083ba2f25"
+              ],
+              "mode": "continuous",
+              "valid_from": "2026-09-26T00:00:00Z",
+              "expires_at": "2026-09-26T01:00:00Z",
+              "limits": [
+                {
+                  "unit": "calls",
+                  "limit": "10"
+                },
+                {
+                  "unit": "USD",
+                  "limit": "5"
+                }
+              ],
+              "max_offline_window_ms": 600000
+            },
+            "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+            "confirmation_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+              "revision": 2
+            },
+            "state": "active",
+            "issued_at": "2026-09-26T00:00:00Z",
+            "propagation": []
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:01Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "grant.read",
+          "target_id": "grant_ac12317f3baa328ee07764509eddd922",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "grant_id": "grant_ac12317f3baa328ee07764509eddd922",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "revision": 1,
+            "policy": {
+              "subject": {
+                "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+                "actor_kind": "user"
+              },
+              "resources": [
+                {
+                  "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "resource_type": "content",
+                  "selector": {
+                    "object_ids": [
+                      "resource_03c9f206d1c2afd64261a5bbab141a54"
+                    ]
+                  },
+                  "normalizer_version": "1.0.0"
+                }
+              ],
+              "actions": [
+                "read"
+              ],
+              "purposes": [
+                "research"
+              ],
+              "recipients": [
+                "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+              ],
+              "locations": [
+                "owner_283a5912588ab6ee40efdbd083ba2f25"
+              ],
+              "mode": "continuous",
+              "valid_from": "2026-09-26T00:00:00Z",
+              "expires_at": "2026-09-26T01:00:00Z",
+              "limits": [
+                {
+                  "unit": "calls",
+                  "limit": "10"
+                },
+                {
+                  "unit": "USD",
+                  "limit": "5"
+                }
+              ],
+              "max_offline_window_ms": 600000
+            },
+            "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+            "confirmation_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+              "revision": 2
+            },
+            "state": "active",
+            "issued_at": "2026-09-26T00:00:00Z",
+            "propagation": []
+          },
+          "observed_at": "2026-09-26T00:00:01Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "grant.revoke",
+          "target_id": "grant_ac12317f3baa328ee07764509eddd922",
+          "payload": {
+            "reason": "user revoked"
+          },
+          "command_id": "command_2ba10c7cc3db88a261653b0adc3cd201",
+          "expires_at": "2026-09-26T01:00:00Z",
+          "expected_revision": 1
+        },
+        "response": {
+          "command_id": "command_2ba10c7cc3db88a261653b0adc3cd201",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:02Z",
+          "output": {
+            "grant_id": "grant_ac12317f3baa328ee07764509eddd922",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "revision": 2,
+            "policy": {
+              "subject": {
+                "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+                "actor_kind": "user"
+              },
+              "resources": [
+                {
+                  "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "resource_type": "content",
+                  "selector": {
+                    "object_ids": [
+                      "resource_03c9f206d1c2afd64261a5bbab141a54"
+                    ]
+                  },
+                  "normalizer_version": "1.0.0"
+                }
+              ],
+              "actions": [
+                "read"
+              ],
+              "purposes": [
+                "research"
+              ],
+              "recipients": [
+                "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+              ],
+              "locations": [
+                "owner_283a5912588ab6ee40efdbd083ba2f25"
+              ],
+              "mode": "continuous",
+              "valid_from": "2026-09-26T00:00:00Z",
+              "expires_at": "2026-09-26T01:00:00Z",
+              "limits": [
+                {
+                  "unit": "calls",
+                  "limit": "10"
+                },
+                {
+                  "unit": "USD",
+                  "limit": "5"
+                }
+              ],
+              "max_offline_window_ms": 600000
+            },
+            "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+            "confirmation_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+              "revision": 2
+            },
+            "state": "revoked",
+            "issued_at": "2026-09-26T00:00:00Z",
+            "propagation": []
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:03Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "grant.read",
+          "target_id": "grant_ac12317f3baa328ee07764509eddd922",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "grant_id": "grant_ac12317f3baa328ee07764509eddd922",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "revision": 2,
+            "policy": {
+              "subject": {
+                "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+                "actor_kind": "user"
+              },
+              "resources": [
+                {
+                  "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "resource_type": "content",
+                  "selector": {
+                    "object_ids": [
+                      "resource_03c9f206d1c2afd64261a5bbab141a54"
+                    ]
+                  },
+                  "normalizer_version": "1.0.0"
+                }
+              ],
+              "actions": [
+                "read"
+              ],
+              "purposes": [
+                "research"
+              ],
+              "recipients": [
+                "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+              ],
+              "locations": [
+                "owner_283a5912588ab6ee40efdbd083ba2f25"
+              ],
+              "mode": "continuous",
+              "valid_from": "2026-09-26T00:00:00Z",
+              "expires_at": "2026-09-26T01:00:00Z",
+              "limits": [
+                {
+                  "unit": "calls",
+                  "limit": "10"
+                },
+                {
+                  "unit": "USD",
+                  "limit": "5"
+                }
+              ],
+              "max_offline_window_ms": 600000
+            },
+            "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+            "confirmation_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+              "revision": 2
+            },
+            "state": "revoked",
+            "issued_at": "2026-09-26T00:00:00Z",
+            "propagation": []
+          },
+          "observed_at": "2026-09-26T00:00:03Z"
+        }
+      }
+    }
+  ],
+  "confirmations": [
+    {
+      "confirmation_id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+      "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+      "revision": 2,
+      "consumer_method": "grant.issue",
+      "consumer_command_id": "command_8106c0b7dd82636e823b21e74eca5b85",
+      "consumer_target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+      "consumer_command": {
+        "method": "grant.issue",
+        "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+        "payload": {
+          "grant_id": "grant_ac12317f3baa328ee07764509eddd922",
+          "policy": {
+            "subject": {
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+              "actor_kind": "user"
+            },
+            "resources": [
+              {
+                "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "resource_type": "content",
+                "selector": {
+                  "object_ids": [
+                    "resource_03c9f206d1c2afd64261a5bbab141a54"
+                  ]
+                },
+                "normalizer_version": "1.0.0"
+              }
+            ],
+            "actions": [
+              "read"
+            ],
+            "purposes": [
+              "research"
+            ],
+            "recipients": [
+              "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+            ],
+            "locations": [
+              "owner_283a5912588ab6ee40efdbd083ba2f25"
+            ],
+            "mode": "continuous",
+            "valid_from": "2026-09-26T00:00:00Z",
+            "expires_at": "2026-09-26T01:00:00Z",
+            "limits": [
+              {
+                "unit": "calls",
+                "limit": "10"
+              },
+              {
+                "unit": "USD",
+                "limit": "5"
+              }
+            ],
+            "max_offline_window_ms": 600000
+          },
+          "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+          "confirmation_ref": {
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+            "revision": 2
+          }
+        },
+        "command_id": "command_8106c0b7dd82636e823b21e74eca5b85",
+        "expires_at": "2026-09-26T01:00:00Z"
+      },
+      "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+      "challenge": "sha256:95c15d57603fdf87a2b69631cbc1e0df303cf94af308cbb8d70f966087e40adb",
+      "expires_at": "2026-09-26T00:05:00Z",
+      "state": "approved",
+      "decided_at": "2026-09-26T00:00:00Z",
+      "decided_by": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+      "trusted_user_session_ref": {
+        "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+        "id": "session_95c15d57603fdf87a2b69631cbc1e0df",
+        "revision": 1
+      }
+    }
+  ]
+}

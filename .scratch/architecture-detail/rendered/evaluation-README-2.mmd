@@ -1,0 +1,14 @@
+sequenceDiagram
+    participant U as 受信批准者
+    participant P as 评测与发布管理
+    participant X as 目标扩展管理器
+    U->>P: 批准精确候选、报告及有限批次
+    P->>P: 保存批准与逐目标发布责任
+    P->>X: 原 activation_id 与批准引用
+    X->>X: 排空、切换并核验当前实例
+    X-->>P: 活动版本、就绪及残留事实
+    P->>P: 核验本批效果与观察窗口
+    U->>P: 撤回原批准
+    P->>P: 禁止新批次并保存停用责任
+    P->>X: 停止新使用；条件成立时回退旧锁
+    X-->>P: 停用、旧版恢复和残留分别确认

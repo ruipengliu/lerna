@@ -2,6 +2,8 @@
 
 [整体设计](../README.md) · [目标](../goals.md) · [公共契约](../contracts/README.md) · [记忆与来源](../memory/README.md)
 
+
+实现阅读：[模块形状与依赖](implementation.md#module-shape) → [许可对象流转](implementation.md#data-flow) → [在线结算内部时序](implementation.md#key-sequence) → [生产可用性与容量](implementation.md#production)。先阅读本页行为合同，再按实现页落实持久化与恢复；线字段及正反例继续由公共契约资产维护。
 本模块使每次读取、处理、保存、同步、披露和外部行动受用户许可约束，并保证用户能够中断和撤权。覆盖 C5、C7 与 A4；隔离约束同时适用于工具、记忆、模型、Agent 和后台改进。本文规定设计行为，平台隔离、身份接入和离线能力均需运行验收后开放。
 
 ## 1. 权限由谁决定
@@ -92,7 +94,7 @@ sequenceDiagram
 
 跨 owner 没有原子消费承诺。处理端先取得各方可用性，再逐一取得固定使用回执；只有全部齐备且仍在启动窗口内才行动。部分已消费时保存这些事实并停止启动；查原使用恢复，不退回单次许可或换新使用身份。确知未启动的作废申请可由用户另授新许可，原消费记录保留。分布式部分占用的代价由需要跨权限域的任务承担。
 
-单次使用已占用而答复丢失时，只查 `grant.use.get`。回执恢复不能重新延长有效期；处理端还要检查自己是否已启动原操作。如果已启动，只核对原效果；如果未启动且回执已过期，停止并报告需要新授权。`once` 不保证动作一定执行，也不保证外部系统恰好产生一次效果。
+单次使用已占用而答复丢失时，只查 `grant.use.get`。回执恢复不能重新延长有效期；处理端还要检查自己是否已启动原操作。如果已启动，只核对原效果；如果未启动且回执已过期，停止并报告需要新授权。`once` 不保证动作一定执行，也不保证外部系统恰好产生一次效果。实际单位和费用通过独立 use 结算按差额入账；unknown 保留剩余上界，最终关闭才释放数值预留。即使最终用量为零，原 once 消费资格仍不返还。
 
 UseRequest 的 `operation_id` 是调用方已持久保存的有限业务动作身份：设备使用执行操作 ID，模型使用 `model_call_id`，记忆修改使用原 `command_id`，检索使用固定查询及页身份；`use_id` 标识该动作下的一次具体用途。一个物理模型重试必须有新的调用和使用身份，费用另计，不能伪装原调用的查询。
 
@@ -141,7 +143,7 @@ stateDiagram-v2
 
 `endpoint.revoke` 同事务标记端点撤销、增加凭据代次并保存传播工作；在线入口拒绝其新连接、票据与业务请求，现有会话每次业务请求检查当前代次。受影响 Grant 和租约按各自撤销窗口关闭。新凭据或重新配对产生新实例资格，不获得旧实例的未决操作或余额；恢复旧操作必须查询原账本。
 
-授权确认不是普通聊天文本或任意按钮事件。受信入口从 owner 取得规范化待确认意图，以独立的确认组件呈现目标、用途、接收方、额度和期限；确认记录绑定意图摘要、用户会话、请求修订、随机挑战与短期有效期。后端核对请求仍待处理且内容未变化，再签发许可。模型不能提供可信确认结果，外部 Agent 的“用户已同意”只能作为待核对材料。
+授权确认不是普通聊天文本或任意按钮事件。受信入口从 owner 取得规范化待确认意图，以独立的确认组件呈现目标、用途、接收方、额度和期限。实际业务 owner 保存 Confirmation，核对原 consumer_method、consumer_command_id、规范 intent_hash、挑战及本人会话后保存决定；UI 只认证展示与转交。原业务命令在请求确认前已固定，随后该 owner 在业务事务内一次消费确认并保存决定，不通过另一个确认服务跨库消费。模型不能提供可信确认结果，外部 Agent 的“用户已同意”只能作为待核对材料。
 
 设备接管、取消与撤权入口持续可达且不依赖大脑决策。设备接管先在资源 owner 封闭自动行动，再通知 Task Home；不能等待模型回答后才把设备交还用户。使用端必须允许必要的本人管理操作绕过目标任务队列，但仍校验管理身份。
 
@@ -165,11 +167,12 @@ Skill、网页、文件、模型生成和外部 Agent 返回始终是数据。�
 | --- | --- |
 | `Subject` | `tenant_id, actor_id, actor_kind, endpoint_id?, task_id?, delegation_ref?`；actor_kind 为 user、endpoint、agent、job、maintainer；值来自认证及已保存委派关系 |
 | `ResourceScope` | `resource_owner_id, resource_type, selector, normalizer_version`；selector 为精确对象或受信可验证集合；需版本限定时绑定版本，不能以 payload 替换 owner |
-| `Grant` | `grant_id, owner_id, revision, subject, resources[], actions[], purposes[], recipients[], locations[], mode, valid_from, expires_at, limits, parent_grant_ref?, confirmation_ref, state`；mode 为 once／continuous，state 为 active／revoked；到期按时间独立判定 |
-| `UseRequest` | `use_id, operation_id, intent_hash, grant_refs[], source_refs[], subject, resource_scopes[], action, purpose, recipient, location, max_units, max_cost`；意图固定后不能增补资源或换接收方 |
+| `GrantRecord` | `grant_id, owner_id, revision, policy, intent_hash, confirmation_ref, state, issued_at, propagation[]`；policy 集中主体、资源、动作、用途、接收方、位置、mode、有效期、limits、离线上限及可选父许可；state 为 active／revoked，到期独立判定 |
+| `UseRequest` | `use_id, operation_id, usage_owner_id, intent_hash, grant_refs[], source_refs[], subject, resource_scopes[], action, purpose, recipient, location, max_units, max_cost`；计量 owner 由认证资格核验，意图固定后不能增补资源或换接收方 |
 | `UseReceipt` | `use_id, owner_id, intent_hash, grant_revisions[], decision, reserved_units, reserved_cost, start_before, decided_at`；decision 为 allowed／denied；回执不能独立证明仍未启动或效果 |
 | `OfflineLease` | `lease_id, owner_id, grant_refs[], endpoint_id, instance_id, scope, allocated_units, allocated_cost, issued_at, expires_at, owner_revision, settlement_state`；资格绑定单一本地消费账本，状态按租约图推进 |
-| `Confirmation` | `confirmation_id, user_session_ref, request_id, request_revision, intent_hash, challenge, confirmed_at, expires_at`；受信入口生成且只能消费一次，不含原始认证秘密 |
+| `ConfirmationRecord` | `confirmation_id, owner_id, revision, consumer_method, consumer_command_id, consumer_target_id, consumer_command, intent_hash, challenge, expires_at, state`；决定追加本人会话与时间，消费追加 consumed_by/consumed_at。由实际业务 owner 保存；拒绝不能消费 |
+| `UseSettlementRecord` | 原 use/operation/usage_owner/许可、记录与用量修订、reserved/spent/held/released 单位及费用、state、consumed_once、关闭引用；独立于不可变 UseReceipt |
 | `Endpoint` | `endpoint_id, tenant_id, instance_id, credential_generation, credential_ref, state, approved_scope, registered_at`；state 为 active／revoked，凭据正文留在安全凭据库 |
 | `PairingSession` | `pairing_id, device_code_hash, user_code_hash, requested_scope, device_description, expires_at, poll_interval, state, endpoint_id?`；state 为 pending／approved／denied／claimed／expired |
 
@@ -177,7 +180,9 @@ Skill、网页、文件、模型生成和外部 Agent 返回始终是数据。�
 | --- | --- | --- |
 | `grant.issue` | 规范化意图、许可范围、有效 Confirmation → Grant | owner 提交许可与固定回执后 applied；丢答复由入口查原命令 |
 | `grant.check` | UseRequest 候选 → 当前允许／拒绝及缺项 | 不占用；调用方完善许可或等待，不能凭本结果启动 |
-| `grant.use` / `grant.use.get` | 固定 UseRequest；use_id → UseReceipt | owner 原子占用后返回；未知由处理端查原 use，不能改键重做 |
+| `grant.use` / `grant.use.get` | 固定 UseRequest；use_id → UseReceipt | owner 原子占用后返回并建立独立结算投影；原回执不可变 |
+| `grant.use.settle` / `grant.use.settlement` | 原 use、计量 owner、累计用量、最终关闭依据；use_id → UseSettlementRecord | 按差额转实际支出，未知余量继续预留；有关闭证明才释放余额，once 身份不返还 |
+| `confirmation.request/read/decide` | 预先固定的准确业务命令、原确认、受信本人决定 → ConfirmationRecord | owner 保存规范意图与决定；read 不消费，消费在随后原业务事务内完成 |
 | `grant.revoke` / `grant.read` | ID、期望修订与原因；ID → 当前许可及传播状态 | 本地撤销 applied 不等于所有远端停止；owner 持续传播并报告缺口 |
 | `grant.lease.allocate` | 端点实例、范围、限额、期限与明确离线许可 → OfflineLease | owner 原子预留总额度；答复丢失查原命令，不重复分配 |
 | `grant.lease.settle` | lease_id、稳定使用明细、累计用量、最终关闭依据 → 固定结算回执 | 去重结算；未封账不返还未结算余额，调用方保留原消费记录 |

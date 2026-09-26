@@ -1,0 +1,34 @@
+sequenceDiagram
+    participant C as 原管理调用方
+    participant M as LifecycleManager
+    participant S as LockStore / 绑定 repository
+    participant P as ApprovalClient / 批准 owner
+    participant B as BindingRouter / 受管实例
+    Note over M,S: 原 activation 已提交 generation g，答复丢失
+    C->>M: extensions.read 原 activation
+    M->>S: 查历史启动依据与活动绑定
+    S-->>M: 原锁 L、generation g、旧实例已失效
+    M-->>C: 原代际与历史依据；当前入口关闭
+    M->>S: 保存本次 instance 与固定 reopen 动作及 job
+    M->>B: 事务外装载 L、自检，业务入口保持关闭
+    B-->>M: 当前实例自检结果
+    alt 批准 owner 与宿主共库
+      rect rgb(236, 244, 252)
+        Note over M,P: T：同库检查当前批准、绑定与本次启动
+        M->>P: 当前批准、制品信任与精确 reopen 核验
+        M->>S: 保存本地启动依据和本次 InstanceReadiness
+        Note over M,S: L 与 g 不变，历史 activation 依据不变
+      end
+    else 批准 owner 远端
+      M->>P: 事务外 approval_check 原 reopen 使用身份
+      P-->>M: 固定 ApprovalUse 与有限 start_before
+      rect rgb(236, 244, 252)
+        Note over M,S: T：当前实例、原窗口及已知撤回门禁
+        M->>S: 保存原 ApprovalUse 引用与本次 InstanceReadiness
+      end
+    end
+    M->>B: 核对本进程仍活跃、当前代际与启动依据后开放
+    B-->>M: 当前实例入口已就绪
+    C->>M: 查询原 activation 的当前实例
+    M-->>C: 原历史依据 + 新实例 readiness
+    Note over M,B: 再次崩溃则新建实例重新证明；不迁移、不推进 g

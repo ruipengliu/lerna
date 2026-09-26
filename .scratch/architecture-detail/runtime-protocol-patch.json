@@ -1,0 +1,2598 @@
+{
+  "defs": {
+    "RuntimeBudgetClosure": {
+      "type": "object",
+      "properties": {
+        "allocation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "receiver_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "usage_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "final_usage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Amount"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "spending_closed": {
+          "const": true
+        },
+        "closed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "proof_ref": {
+          "$ref": "#/$defs/ContentRef"
+        }
+      },
+      "required": [
+        "allocation_id",
+        "receiver_id",
+        "usage_revision",
+        "final_usage",
+        "spending_closed",
+        "closed_at",
+        "proof_ref"
+      ],
+      "additionalProperties": false
+    },
+    "RuntimeBudgetAllocation": {
+      "type": "object",
+      "properties": {
+        "allocation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "parent_task_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "receiver_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "limits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BudgetLimit"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "state": {
+          "enum": [
+            "allocated",
+            "settled"
+          ]
+        },
+        "final_usage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Amount"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "closure": {
+          "$ref": "#/$defs/RuntimeBudgetClosure"
+        }
+      },
+      "required": [
+        "allocation_id",
+        "parent_task_id",
+        "owner_id",
+        "receiver_id",
+        "revision",
+        "limits",
+        "expires_at",
+        "state",
+        "final_usage"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "settled"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "closure"
+            ]
+          },
+          "else": {
+            "properties": {
+              "final_usage": {
+                "maxItems": 0
+              }
+            },
+            "not": {
+              "required": [
+                "closure"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "BudgetAllocateInput": {
+      "type": "object",
+      "properties": {
+        "allocation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "parent_task_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "receiver_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "limits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BudgetLimit"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "allocation_id",
+        "parent_task_id",
+        "receiver_id",
+        "limits",
+        "expires_at"
+      ],
+      "additionalProperties": false
+    },
+    "BudgetAllocateOutput": {
+      "$ref": "#/$defs/RuntimeBudgetAllocation"
+    },
+    "BudgetSettleInput": {
+      "type": "object",
+      "properties": {
+        "allocation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "closure": {
+          "$ref": "#/$defs/RuntimeBudgetClosure"
+        }
+      },
+      "required": [
+        "allocation_id",
+        "closure"
+      ],
+      "additionalProperties": false
+    },
+    "BudgetSettleOutput": {
+      "$ref": "#/$defs/RuntimeBudgetAllocation"
+    },
+    "TaskAdjustBudgetInput": {
+      "type": "object",
+      "properties": {
+        "limits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BudgetLimit"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "limits"
+      ],
+      "additionalProperties": false
+    },
+    "TaskAdjustBudgetOutput": {
+      "$ref": "#/$defs/Task"
+    },
+    "RuntimeTaskListCursor": {
+      "type": "object",
+      "properties": {
+        "upper_bound": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "last_created_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "last_task_id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "upper_bound",
+        "last_created_at",
+        "last_task_id"
+      ],
+      "additionalProperties": false
+    },
+    "TaskListInput": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "statuses": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "active",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 4
+        },
+        "cursor": {
+          "$ref": "#/$defs/RuntimeTaskListCursor"
+        }
+      },
+      "required": [
+        "limit"
+      ],
+      "additionalProperties": false
+    },
+    "TaskListOutput": {
+      "type": "object",
+      "properties": {
+        "home_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "upper_bound": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "created_at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "task": {
+                "$ref": "#/$defs/Task"
+              }
+            },
+            "required": [
+              "created_at",
+              "task"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "$ref": "#/$defs/RuntimeTaskListCursor"
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "home_id",
+        "upper_bound",
+        "items",
+        "gaps"
+      ],
+      "additionalProperties": false
+    },
+    "RuntimeCapabilityRetry": {
+      "type": "object",
+      "properties": {
+        "max_attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "initial_backoff_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "max_backoff_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600000
+        },
+        "reconciliation_timeout_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400000
+        },
+        "key_scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "key_retention_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "replay_guarantee_ref": {
+          "$ref": "#/$defs/ComponentRef"
+        }
+      },
+      "required": [
+        "max_attempts",
+        "initial_backoff_ms",
+        "max_backoff_ms",
+        "reconciliation_timeout_ms"
+      ],
+      "additionalProperties": false
+    },
+    "RuntimeCapabilityVerification": {
+      "type": "object",
+      "properties": {
+        "predicate_ref": {
+          "$ref": "#/$defs/ComponentRef"
+        },
+        "evidence_kinds": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "target_receipt",
+              "query_result",
+              "resource_observation"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 3
+        },
+        "query_supported": {
+          "type": "boolean"
+        },
+        "cancel_supported": {
+          "type": "boolean"
+        },
+        "not_applied_rule_ref": {
+          "$ref": "#/$defs/ComponentRef"
+        }
+      },
+      "required": [
+        "predicate_ref",
+        "evidence_kinds",
+        "query_supported",
+        "cancel_supported"
+      ],
+      "additionalProperties": false
+    },
+    "RuntimeCapabilityAuthorization": {
+      "type": "object",
+      "properties": {
+        "resource_scopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ResourceScope"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "read",
+              "process",
+              "store",
+              "sync",
+              "disclose",
+              "act",
+              "manage"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 7
+        },
+        "purposes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "requires_lease": {
+          "type": "boolean"
+        },
+        "requires_confirmation": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "resource_scopes",
+        "actions",
+        "purposes",
+        "requires_lease",
+        "requires_confirmation"
+      ],
+      "additionalProperties": false
+    },
+    "RuntimeCapabilityLimits": {
+      "type": "object",
+      "properties": {
+        "max_duration_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "max_input_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "max_output_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "max_physical_requests": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "cost_bound": {
+          "enum": [
+            "strict",
+            "estimate"
+          ]
+        },
+        "max_cost": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Amount"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "mutex_domains": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "max_duration_ms",
+        "max_input_bytes",
+        "max_output_bytes",
+        "max_physical_requests",
+        "cost_bound",
+        "max_cost",
+        "mutex_domains"
+      ],
+      "additionalProperties": false
+    },
+    "Capability": {
+      "type": "object",
+      "properties": {
+        "capability_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "input_schema": {
+          "type": "object"
+        },
+        "output_schema": {
+          "type": "object"
+        },
+        "effect_class": {
+          "enum": [
+            "read_only",
+            "target_idempotent",
+            "non_repeatable"
+          ]
+        },
+        "verification": {
+          "$ref": "#/$defs/RuntimeCapabilityVerification"
+        },
+        "retry": {
+          "$ref": "#/$defs/RuntimeCapabilityRetry"
+        },
+        "authorization": {
+          "$ref": "#/$defs/RuntimeCapabilityAuthorization"
+        },
+        "limits": {
+          "$ref": "#/$defs/RuntimeCapabilityLimits"
+        },
+        "semantic_operation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "capability_id",
+        "version",
+        "digest",
+        "description",
+        "input_schema",
+        "output_schema",
+        "effect_class",
+        "verification",
+        "retry",
+        "authorization",
+        "limits",
+        "semantic_operation_id"
+      ],
+      "additionalProperties": false
+    },
+    "Binding": {
+      "type": "object",
+      "properties": {
+        "binding_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "capability_ref": {
+          "$ref": "#/$defs/ComponentRef"
+        },
+        "executor_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "target_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "driver_ref": {
+          "$ref": "#/$defs/ComponentRef"
+        },
+        "configuration_ref": {
+          "$ref": "#/$defs/ComponentRef"
+        },
+        "availability": {
+          "enum": [
+            "ready",
+            "offline",
+            "disabled"
+          ]
+        }
+      },
+      "required": [
+        "binding_id",
+        "revision",
+        "capability_ref",
+        "executor_id",
+        "target_ref",
+        "driver_ref",
+        "configuration_ref",
+        "availability"
+      ],
+      "additionalProperties": false
+    },
+    "RuntimeCapabilityCandidate": {
+      "type": "object",
+      "properties": {
+        "capability_ref": {
+          "$ref": "#/$defs/ComponentRef"
+        },
+        "binding_ref": {
+          "$ref": "#/$defs/BindingRef"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "capability_ref",
+        "binding_ref",
+        "summary"
+      ],
+      "additionalProperties": false
+    },
+    "CapabilitySearchInput": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "resource_scope": {
+          "$ref": "#/$defs/ResourceScope"
+        },
+        "cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "query",
+        "limit"
+      ],
+      "additionalProperties": false
+    },
+    "CapabilitySearchOutput": {
+      "type": "object",
+      "properties": {
+        "candidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RuntimeCapabilityCandidate"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "candidates",
+        "gaps"
+      ],
+      "additionalProperties": false
+    },
+    "CapabilityDescribeInput": {
+      "type": "object",
+      "properties": {
+        "capability_ref": {
+          "$ref": "#/$defs/ComponentRef"
+        },
+        "binding_ref": {
+          "$ref": "#/$defs/BindingRef"
+        }
+      },
+      "required": [
+        "capability_ref",
+        "binding_ref"
+      ],
+      "additionalProperties": false
+    },
+    "CapabilityDescribeOutput": {
+      "type": "object",
+      "properties": {
+        "capability": {
+          "$ref": "#/$defs/Capability"
+        },
+        "binding": {
+          "$ref": "#/$defs/Binding"
+        }
+      },
+      "required": [
+        "capability",
+        "binding"
+      ],
+      "additionalProperties": false
+    },
+    "ResourceLease": {
+      "type": "object",
+      "properties": {
+        "lease_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "resource_owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "resource_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "holder_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "instance_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "control_epoch": {
+          "$ref": "#/$defs/Revision"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "state": {
+          "enum": [
+            "active",
+            "released",
+            "revoked"
+          ]
+        }
+      },
+      "required": [
+        "lease_id",
+        "revision",
+        "resource_owner_id",
+        "resource_id",
+        "holder_id",
+        "instance_id",
+        "control_epoch",
+        "expires_at",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "RuntimeResourceState": {
+      "type": "object",
+      "properties": {
+        "resource_owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "resource_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "control_epoch": {
+          "$ref": "#/$defs/Revision"
+        },
+        "user_control": {
+          "type": "boolean"
+        },
+        "lease": {
+          "$ref": "#/$defs/ResourceLease"
+        },
+        "inflight_operation_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "resource_owner_id",
+        "resource_id",
+        "control_epoch",
+        "user_control",
+        "inflight_operation_ids"
+      ],
+      "additionalProperties": false
+    },
+    "ResourceAcquireInput": {
+      "type": "object",
+      "properties": {
+        "holder_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "instance_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "authorization_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorizationRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "holder_id",
+        "instance_id",
+        "expires_at",
+        "authorization_refs"
+      ],
+      "additionalProperties": false
+    },
+    "ResourceAcquireOutput": {
+      "$ref": "#/$defs/ResourceLease"
+    },
+    "ResourceRenewInput": {
+      "type": "object",
+      "properties": {
+        "lease_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "authorization_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorizationRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "lease_id",
+        "expires_at",
+        "authorization_refs"
+      ],
+      "additionalProperties": false
+    },
+    "ResourceRenewOutput": {
+      "$ref": "#/$defs/ResourceLease"
+    },
+    "ResourceGetInput": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "ResourceGetOutput": {
+      "$ref": "#/$defs/RuntimeResourceState"
+    },
+    "ResourceReleaseInput": {
+      "type": "object",
+      "properties": {
+        "expected_control_epoch": {
+          "$ref": "#/$defs/Revision"
+        },
+        "authorization_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorizationRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "expected_control_epoch",
+        "authorization_refs"
+      ],
+      "additionalProperties": false
+    },
+    "ResourceReleaseOutput": {
+      "$ref": "#/$defs/RuntimeResourceState"
+    },
+    "ResourceTakeoverInput": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "authorization_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorizationRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "reason",
+        "authorization_refs"
+      ],
+      "additionalProperties": false
+    },
+    "ResourceTakeoverOutput": {
+      "$ref": "#/$defs/RuntimeResourceState"
+    },
+    "RuntimeViewport": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32768
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32768
+        },
+        "scale": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 16
+        },
+        "orientation": {
+          "enum": [
+            "portrait",
+            "landscape"
+          ]
+        },
+        "coordinate_unit": {
+          "const": "logical_pixel"
+        }
+      },
+      "required": [
+        "width",
+        "height",
+        "scale",
+        "orientation",
+        "coordinate_unit"
+      ],
+      "additionalProperties": false
+    },
+    "Observation": {
+      "type": "object",
+      "properties": {
+        "observation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "resource_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "control_epoch": {
+          "$ref": "#/$defs/Revision"
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "ui_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "screenshot_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "structure_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "focus": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "viewport": {
+          "$ref": "#/$defs/RuntimeViewport"
+        },
+        "precondition_strength": {
+          "enum": [
+            "atomic",
+            "best_effort"
+          ]
+        }
+      },
+      "required": [
+        "observation_id",
+        "resource_id",
+        "control_epoch",
+        "captured_at",
+        "expires_at",
+        "ui_revision",
+        "screenshot_ref",
+        "focus",
+        "viewport",
+        "precondition_strength"
+      ],
+      "additionalProperties": false
+    },
+    "ResourceObserveInput": {
+      "type": "object",
+      "properties": {
+        "resource_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "invoke": {
+          "$ref": "#/$defs/Invoke"
+        }
+      },
+      "required": [
+        "resource_id",
+        "invoke"
+      ],
+      "additionalProperties": false
+    },
+    "ResourceObserveOutput": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/Operation"
+        },
+        "observation": {
+          "$ref": "#/$defs/Observation"
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "additionalProperties": false
+    },
+    "CapabilityFixture": {
+      "type": "object",
+      "properties": {
+        "capability_ref": {
+          "$ref": "#/$defs/ComponentRef"
+        },
+        "binding_ref": {
+          "$ref": "#/$defs/BindingRef"
+        },
+        "input_schema": {
+          "type": "object"
+        },
+        "semantic_operation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "effect_class": {
+          "enum": [
+            "read_only",
+            "target_idempotent",
+            "non_repeatable"
+          ]
+        }
+      },
+      "required": [
+        "capability_ref",
+        "binding_ref",
+        "input_schema"
+      ],
+      "additionalProperties": false
+    },
+    "RuntimeDelegationContext": {
+      "type": "object",
+      "properties": {
+        "sender_home_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "parent_delegation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "allocation_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "allocation_command_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "permission_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorizationRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "ancestor_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 5
+        }
+      },
+      "required": [
+        "sender_home_id",
+        "parent_delegation_id",
+        "allocation_ref",
+        "allocation_command_id",
+        "permission_refs",
+        "ancestor_ids"
+      ],
+      "additionalProperties": false
+    },
+    "TaskSubmitInput": {
+      "type": "object",
+      "properties": {
+        "goal_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "home_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "policy_ref": {
+          "$ref": "#/$defs/ComponentRef"
+        },
+        "budget": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BudgetLimit"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "deadline": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "delegation_context": {
+          "$ref": "#/$defs/RuntimeDelegationContext"
+        }
+      },
+      "required": [
+        "goal_ref",
+        "home_id",
+        "constraints",
+        "policy_ref",
+        "budget",
+        "deadline"
+      ],
+      "additionalProperties": false
+    },
+    "AuthContext": {
+      "type": "object",
+      "properties": {
+        "tenant_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "logical_service_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "actor_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "sender_service_id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "logical_service_id",
+        "actor_id"
+      ],
+      "additionalProperties": false
+    },
+    "RuntimeBudgetReceiver": {
+      "type": "object",
+      "properties": {
+        "allocation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "parent_owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "receiver_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "parent_delegation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "state": {
+          "enum": [
+            "open",
+            "closing",
+            "closed"
+          ]
+        },
+        "task_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "final_usage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Amount"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "closure": {
+          "$ref": "#/$defs/RuntimeBudgetClosure"
+        }
+      },
+      "required": [
+        "allocation_id",
+        "parent_owner_id",
+        "receiver_id",
+        "parent_delegation_id",
+        "revision",
+        "state",
+        "final_usage"
+      ],
+      "additionalProperties": false
+    },
+    "BudgetReadInput": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "enum": [
+            "owner",
+            "receiver"
+          ]
+        }
+      },
+      "required": [
+        "role"
+      ],
+      "additionalProperties": false
+    },
+    "BudgetReadOutput": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "const": "owner"
+            },
+            "allocation": {
+              "$ref": "#/$defs/RuntimeBudgetAllocation"
+            }
+          },
+          "required": [
+            "role",
+            "allocation"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "const": "receiver"
+            },
+            "receiver": {
+              "$ref": "#/$defs/RuntimeBudgetReceiver"
+            }
+          },
+          "required": [
+            "role",
+            "receiver"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "BudgetCloseInput": {
+      "type": "object",
+      "properties": {
+        "sender_home_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "parent_delegation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "allocation_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "allocation_command_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "sender_home_id",
+        "parent_delegation_id",
+        "allocation_ref",
+        "allocation_command_id",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "BudgetCloseOutput": {
+      "$ref": "#/$defs/RuntimeBudgetReceiver"
+    }
+  },
+  "methods": {
+    "budget.allocate": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "BudgetAllocateInput",
+      "output": "BudgetAllocateOutput",
+      "target": "payload.parent_task_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "父预留、固定 allocation 及额度交接责任共同提交；不证明接收方已可消费。",
+      "source": "task-runtime/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "budget.settle": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "BudgetSettleInput",
+      "output": "BudgetSettleOutput",
+      "target": "payload.allocation_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "核验原接收方最终封账、累计费用及版本；调整父预留并保存固定结算。",
+      "source": "task-runtime/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "task.adjust_budget": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "TaskAdjustBudgetInput",
+      "output": "TaskAdjustBudgetOutput",
+      "target": "task_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "在原义务以上修改精确单位上限；不恢复暂停、不改变期限。",
+      "source": "task-runtime/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "task.list": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "TaskListInput",
+      "output": "TaskListOutput",
+      "target": "home_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "返回本 Home 有界、按当前权限过滤的任务页；稳定上界与缺口可查。",
+      "source": "task-runtime/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "capability.search": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "CapabilitySearchInput",
+      "output": "CapabilitySearchOutput",
+      "target": "executor_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "当前获准候选的有限页；候选不授予执行权限。",
+      "source": "execution/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "capability.describe": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "CapabilityDescribeInput",
+      "output": "CapabilityDescribeOutput",
+      "target": "executor_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "返回准确版本与绑定修订的完整声明；停用状态不被隐去。",
+      "source": "execution/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "resource.acquire": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ResourceAcquireInput",
+      "output": "ResourceAcquireOutput",
+      "target": "resource_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "资源 owner 原子保存唯一有效占用；可能迟到旧动作未核清时拒绝。",
+      "source": "execution/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "resource.renew": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ResourceRenewInput",
+      "output": "ResourceRenewOutput",
+      "target": "resource_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "同一未过期占用比较修订后延长；不改变持有者或控制代次。",
+      "source": "execution/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "resource.get": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "ResourceGetInput",
+      "output": "ResourceGetOutput",
+      "target": "resource_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "返回 owner 当前控制代次、占用及在途操作；读取不新建占用。",
+      "source": "execution/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "resource.release": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ResourceReleaseInput",
+      "output": "ResourceReleaseOutput",
+      "target": "resource_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "比较控制代次后交还占用或人工控制；在途效果仍保留。",
+      "source": "execution/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "resource.takeover": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ResourceTakeoverInput",
+      "output": "ResourceTakeoverOutput",
+      "target": "resource_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "持久增加代次并封闭旧自动入口后确认人工接管；列出仍可能生效动作。",
+      "source": "execution/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "resource.observe": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ResourceObserveInput",
+      "output": "ResourceObserveOutput",
+      "target": "payload.resource_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "按固定 gui.observe Invoke 接纳读取责任；实际图像按原 operation 查询。",
+      "source": "execution/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "budget.read": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "BudgetReadInput",
+      "output": "BudgetReadOutput",
+      "target": "allocation_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "读取原分配owner当前记录或receiver唯一接纳/关闭投影；role不能改变服务身份。",
+      "source": "task-runtime/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "budget.close": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "BudgetCloseInput",
+      "output": "BudgetCloseOutput",
+      "target": "payload.allocation_ref.id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "原receiver关闭allocation接纳与新增消费门禁并保存收尾责任；最终封账证明另查，未知子创建也先保存禁止索引。",
+      "source": "task-runtime/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    }
+  }
+}

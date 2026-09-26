@@ -1,0 +1,14 @@
+{
+  "actor_kind": {
+    "enum": [
+      "user",
+      "endpoint",
+      "agent",
+      "job",
+      "maintainer"
+    ]
+  },
+  "trusted_user_session_ref": {
+    "$ref": "#/$defs/ObjectRef"
+  }
+}

@@ -1,0 +1,330 @@
+{
+  "name": "declarative-form",
+  "description": "Typed form and action share an exact request reference; no executable UI payload exists.",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "command_id": "command_30_0b154c5fd2f46be3988b5969e5fcbddc",
+          "method": "interaction.surface_create",
+          "target_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "payload": {
+            "surface_id": "form_surface_26a5fe525caa166192c005b436630d1b",
+            "app_binding": {
+              "id": "memory_manager_0f6943f45692bfffedae75cd05616a13",
+              "version": "1.0.0",
+              "digest": "sha256:e52ee9141d9e31df2fbe714ff65a3976bff8606facd543609aa4ac9dfc0e31ad"
+            },
+            "snapshot": {
+              "title": "Document review",
+              "blocks": [
+                {
+                  "kind": "input",
+                  "block_id": "directory",
+                  "request_ref": {
+                    "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                    "id": "request_10573b873d2fa5a365d558a45e328e47",
+                    "revision": 2
+                  },
+                  "label": "Save directory",
+                  "input_schema": {
+                    "fields": [
+                      {
+                        "name": "directory",
+                        "label": "Directory",
+                        "type": "text",
+                        "required": true,
+                        "max_length": 512
+                      }
+                    ]
+                  }
+                },
+                {
+                  "kind": "action",
+                  "block_id": "confirm",
+                  "request_ref": {
+                    "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                    "id": "request_10573b873d2fa5a365d558a45e328e47",
+                    "revision": 2
+                  },
+                  "action_id": "submit",
+                  "label": "Confirm"
+                },
+                {
+                  "kind": "table",
+                  "block_id": "summary",
+                  "columns": [
+                    "Name",
+                    "Value"
+                  ],
+                  "rows": [
+                    [
+                      "Target",
+                      "report.md"
+                    ]
+                  ]
+                }
+              ],
+              "request_refs": [
+                {
+                  "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                  "id": "request_10573b873d2fa5a365d558a45e328e47",
+                  "revision": 2
+                }
+              ],
+              "expires_at": "2026-09-27T00:00:00Z"
+            }
+          },
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "command_30_0b154c5fd2f46be3988b5969e5fcbddc",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "surface_id": "form_surface_26a5fe525caa166192c005b436630d1b",
+            "surface_owner_id": "surface_owner_d3414792361b69866f486d865962ff08",
+            "app_binding": {
+              "id": "memory_manager_0f6943f45692bfffedae75cd05616a13",
+              "version": "1.0.0",
+              "digest": "sha256:e52ee9141d9e31df2fbe714ff65a3976bff8606facd543609aa4ac9dfc0e31ad"
+            },
+            "revision": 1,
+            "snapshot": {
+              "title": "Document review",
+              "blocks": [
+                {
+                  "kind": "input",
+                  "block_id": "directory",
+                  "request_ref": {
+                    "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                    "id": "request_10573b873d2fa5a365d558a45e328e47",
+                    "revision": 2
+                  },
+                  "label": "Save directory",
+                  "input_schema": {
+                    "fields": [
+                      {
+                        "name": "directory",
+                        "label": "Directory",
+                        "type": "text",
+                        "required": true,
+                        "max_length": 512
+                      }
+                    ]
+                  }
+                },
+                {
+                  "kind": "action",
+                  "block_id": "confirm",
+                  "request_ref": {
+                    "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                    "id": "request_10573b873d2fa5a365d558a45e328e47",
+                    "revision": 2
+                  },
+                  "action_id": "submit",
+                  "label": "Confirm"
+                },
+                {
+                  "kind": "table",
+                  "block_id": "summary",
+                  "columns": [
+                    "Name",
+                    "Value"
+                  ],
+                  "rows": [
+                    [
+                      "Target",
+                      "report.md"
+                    ]
+                  ]
+                }
+              ],
+              "request_refs": [
+                {
+                  "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                  "id": "request_10573b873d2fa5a365d558a45e328e47",
+                  "revision": 2
+                }
+              ],
+              "expires_at": "2026-09-27T00:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "method": "interaction.surface_read",
+          "target_id": "form_surface_26a5fe525caa166192c005b436630d1b",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "status": "snapshot",
+            "surface": {
+              "surface_id": "form_surface_26a5fe525caa166192c005b436630d1b",
+              "surface_owner_id": "surface_owner_d3414792361b69866f486d865962ff08",
+              "app_binding": {
+                "id": "memory_manager_0f6943f45692bfffedae75cd05616a13",
+                "version": "1.0.0",
+                "digest": "sha256:e52ee9141d9e31df2fbe714ff65a3976bff8606facd543609aa4ac9dfc0e31ad"
+              },
+              "revision": 1,
+              "snapshot": {
+                "title": "Document review",
+                "blocks": [
+                  {
+                    "kind": "input",
+                    "block_id": "directory",
+                    "request_ref": {
+                      "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                      "id": "request_10573b873d2fa5a365d558a45e328e47",
+                      "revision": 2
+                    },
+                    "label": "Save directory",
+                    "input_schema": {
+                      "fields": [
+                        {
+                          "name": "directory",
+                          "label": "Directory",
+                          "type": "text",
+                          "required": true,
+                          "max_length": 512
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "kind": "action",
+                    "block_id": "confirm",
+                    "request_ref": {
+                      "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                      "id": "request_10573b873d2fa5a365d558a45e328e47",
+                      "revision": 2
+                    },
+                    "action_id": "submit",
+                    "label": "Confirm"
+                  },
+                  {
+                    "kind": "table",
+                    "block_id": "summary",
+                    "columns": [
+                      "Name",
+                      "Value"
+                    ],
+                    "rows": [
+                      [
+                        "Target",
+                        "report.md"
+                      ]
+                    ]
+                  }
+                ],
+                "request_refs": [
+                  {
+                    "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                    "id": "request_10573b873d2fa5a365d558a45e328e47",
+                    "revision": 2
+                  }
+                ],
+                "expires_at": "2026-09-27T00:00:00Z"
+              }
+            },
+            "gaps": []
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "home_106a6c241b8797f52e1e77317b96a201",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "method": "interaction.request_read",
+          "target_id": "home_106a6c241b8797f52e1e77317b96a201",
+          "payload": {
+            "request_ref": {
+              "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+              "id": "request_10573b873d2fa5a365d558a45e328e47",
+              "revision": 2
+            }
+          }
+        },
+        "response": {
+          "output": {
+            "request": {
+              "request_id": "request_10573b873d2fa5a365d558a45e328e47",
+              "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+              "revision": 2,
+              "kind": "clarification",
+              "task_ref": {
+                "home_id": "home_106a6c241b8797f52e1e77317b96a201",
+                "task_id": "task_478f3a4c51824ad23cb50c1c60670c0f"
+              },
+              "schema": {
+                "fields": [
+                  {
+                    "name": "directory",
+                    "label": "Directory",
+                    "type": "text",
+                    "required": true,
+                    "max_length": 512
+                  }
+                ]
+              },
+              "question_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "directory_question_e7609d8d9e0ed2db104cb5a181d2612c",
+                "version": 1,
+                "hash": "sha256:05066ea0342859d25abd6d01da301060987f18e8810a6c1e2b4b75ba0e2c9e4e",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "deadline": "2026-09-26T00:10:00Z",
+              "required_content_refs": [
+                {
+                  "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                  "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                  "content_id": "directory_preview_693e6ee93550a09b8851b607e0cd5886",
+                  "version": 1,
+                  "hash": "sha256:215af688042ea122c577db8b06d2921a57cbe31aa2f1496ee7fd81676ff428b7",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                }
+              ],
+              "allowed_actions": [
+                "submit"
+              ],
+              "state": "open"
+            },
+            "gaps": []
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    }
+  ]
+}

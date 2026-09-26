@@ -1,0 +1,12 @@
+flowchart LR
+    C[Candidate / 精确锁] --> P[EvaluationPlan]
+    D[Partition / 来源组] -->|永久占用| P
+    I[ImprovementPolicy / 尝试序号] --> P
+    P --> R[Run / SampleRun / 全部 Attempt]
+    R -->|固定分母与独立证据| S[不可变 Report]
+    P --> E[PlanEligibility]
+    X[Exposure] -->|记录来源及发生时点| E
+    S -->|精确报告摘要| A[ReleaseApproval]
+    E -->|当前资格门禁| A
+    A --> T[RolloutTarget / 固定 activation]
+    T -->|真实状态与观察| O[扩展 Activation / 当前实例 ready]

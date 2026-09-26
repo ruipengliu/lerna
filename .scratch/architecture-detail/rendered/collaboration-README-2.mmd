@@ -1,0 +1,8 @@
+stateDiagram-v2
+    [*] --> preparing
+    preparing --> active: 固定唯一子任务映射
+    preparing --> reconciling: 远端创建结果不明
+    active --> reconciling: 进入核对
+    reconciling --> active: 原任务仍运行
+    reconciling --> closed: 全部责任结清
+    preparing --> closed: 未接纳且额度结清

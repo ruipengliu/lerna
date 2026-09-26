@@ -1,0 +1,991 @@
+{
+  "name": "revoked-approval-startup",
+  "description": "批准撤回后保留历史激活，可查询disabled；新的在线启动明确拒绝。",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [
+    {
+      "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+      "revision": 1,
+      "state": "active",
+      "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+      "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+      "instance_id": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+      "max_offline_window_ms": 0,
+      "expires_at": "2026-09-26T01:00:00Z",
+      "already_active": true
+    }
+  ],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "evaluation.candidate_register",
+          "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "payload": {
+            "candidate": {
+              "candidate_id": "candidate_72dc46c0e89b6767ee54fe8a8f045199",
+              "revision": 1,
+              "release_kind": "compatibility",
+              "parent_candidate_ids": [],
+              "kind": "plugin",
+              "artifact_ref": {
+                "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "content_id": "content_3664afabad01c3d8a1cfc9c30eab2446",
+                "version": 1,
+                "hash": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c",
+                "media_type": "application/json",
+                "byte_length": 128
+              },
+              "source_refs": [],
+              "candidate_lock": "lock_028a1428d14b945fae7a36dfdf704fea",
+              "baseline_lock": null,
+              "digest": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c"
+            }
+          },
+          "command_id": "command_41ec9b1ad8745aa4200d19bc3a0c3d02",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_41ec9b1ad8745aa4200d19bc3a0c3d02",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "candidate_id": "candidate_72dc46c0e89b6767ee54fe8a8f045199",
+            "revision": 1,
+            "release_kind": "compatibility",
+            "parent_candidate_ids": [],
+            "kind": "plugin",
+            "artifact_ref": {
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "content_id": "content_3664afabad01c3d8a1cfc9c30eab2446",
+              "version": 1,
+              "hash": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c",
+              "media_type": "application/json",
+              "byte_length": 128
+            },
+            "source_refs": [],
+            "candidate_lock": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "baseline_lock": null,
+            "digest": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:01Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "evaluation.partition_register",
+          "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "payload": {
+            "partition": {
+              "partition_id": "partition_c40ec316d9798ad4d74d98d3347c5d2d",
+              "revision": 1,
+              "dataset_ref": {
+                "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "content_id": "content_9178d0e1d8b2f2616a711712834105fd",
+                "version": 1,
+                "hash": "sha256:6a330d349b03011a495623e4610f915e9fcaa434a1a738ed1a960339671ae1d1",
+                "media_type": "application/json",
+                "byte_length": 128
+              },
+              "split": "development",
+              "sample_ids": [
+                "sample_7b4aa960a75be465b1ca3264ab29f521"
+              ],
+              "source_groups": [
+                {
+                  "source_group_id": "group_9d74f1bd408d625343b3fcb9463522af",
+                  "sample_ids": [
+                    "sample_7b4aa960a75be465b1ca3264ab29f521"
+                  ]
+                }
+              ],
+              "content_digest": "sha256:6a330d349b03011a495623e4610f915e9fcaa434a1a738ed1a960339671ae1d1",
+              "permission_refs": [
+                {
+                  "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "id": "grant_5b5982d795764ddd8360694be0ebc73f",
+                  "revision": 1
+                }
+              ],
+              "state": "available"
+            }
+          },
+          "command_id": "command_98e1aaf37dabad70b87fcdc0787cf051",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_98e1aaf37dabad70b87fcdc0787cf051",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:01Z",
+          "output": {
+            "partition_id": "partition_c40ec316d9798ad4d74d98d3347c5d2d",
+            "revision": 1,
+            "dataset_ref": {
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "content_id": "content_9178d0e1d8b2f2616a711712834105fd",
+              "version": 1,
+              "hash": "sha256:6a330d349b03011a495623e4610f915e9fcaa434a1a738ed1a960339671ae1d1",
+              "media_type": "application/json",
+              "byte_length": 128
+            },
+            "split": "development",
+            "sample_ids": [
+              "sample_7b4aa960a75be465b1ca3264ab29f521"
+            ],
+            "source_groups": [
+              {
+                "source_group_id": "group_9d74f1bd408d625343b3fcb9463522af",
+                "sample_ids": [
+                  "sample_7b4aa960a75be465b1ca3264ab29f521"
+                ]
+              }
+            ],
+            "content_digest": "sha256:6a330d349b03011a495623e4610f915e9fcaa434a1a738ed1a960339671ae1d1",
+            "permission_refs": [
+              {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "grant_5b5982d795764ddd8360694be0ebc73f",
+                "revision": 1
+              }
+            ],
+            "state": "available"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "evaluation.plan_create",
+          "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "payload": {
+            "plan": {
+              "plan_id": "plan_d7d4f94a1f6606ec6bbef8c1c899a34b",
+              "digest": "sha256:d7d4f94a1f6606ec6bbef8c1c899a34b60c8bfc70ec3d0ddded46b880231c419",
+              "purpose": "compatibility_check",
+              "candidate_id": "candidate_72dc46c0e89b6767ee54fe8a8f045199",
+              "candidate_lock": "lock_028a1428d14b945fae7a36dfdf704fea",
+              "baseline_lock": null,
+              "partition_id": "partition_c40ec316d9798ad4d74d98d3347c5d2d",
+              "sample_ids": [
+                "sample_7b4aa960a75be465b1ca3264ab29f521"
+              ],
+              "seed": "fixed-seed-1",
+              "environment_binding": {
+                "id": "environment_b5b2c4657befbcbc106c70d14826d701",
+                "version": "1.0.0",
+                "digest": "sha256:b5b2c4657befbcbc106c70d14826d701ba8c4f35ca40d54f74ac9257b286c802"
+              },
+              "judge_binding": {
+                "id": "judge_500a1c85be65cd25299f186341516248",
+                "version": "1.0.0",
+                "digest": "sha256:500a1c85be65cd25299f186341516248fb1ed999aca7de483d07257a9022cc1e"
+              },
+              "metrics": [
+                {
+                  "name": "contract coverage",
+                  "direction": "minimum",
+                  "threshold": {
+                    "unit": "ratio",
+                    "amount": "1"
+                  },
+                  "required": true
+                }
+              ],
+              "budget": [
+                {
+                  "unit": "USD",
+                  "limit": "10"
+                }
+              ],
+              "retry_limit": 2,
+              "stop_rule": "one frozen sample set only",
+              "invalid_run_policy": "whole pair preflight failure is invalid",
+              "sampling": {
+                "frame": "constructed single documentation sample",
+                "sample_unit": "independent task",
+                "sample_size": 1,
+                "source_group_ids": [
+                  "group_9d74f1bd408d625343b3fcb9463522af"
+                ],
+                "method": "fixed_set",
+                "analysis_method": "contract coverage only",
+                "predeclared_stopping": "fixed sample count"
+              }
+            }
+          },
+          "command_id": "command_9ccf1bcd99ab171e2a1dc8f1d098bf1c",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_9ccf1bcd99ab171e2a1dc8f1d098bf1c",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:02Z",
+          "output": {
+            "plan_id": "plan_d7d4f94a1f6606ec6bbef8c1c899a34b",
+            "digest": "sha256:d7d4f94a1f6606ec6bbef8c1c899a34b60c8bfc70ec3d0ddded46b880231c419",
+            "purpose": "compatibility_check",
+            "candidate_id": "candidate_72dc46c0e89b6767ee54fe8a8f045199",
+            "candidate_lock": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "baseline_lock": null,
+            "partition_id": "partition_c40ec316d9798ad4d74d98d3347c5d2d",
+            "sample_ids": [
+              "sample_7b4aa960a75be465b1ca3264ab29f521"
+            ],
+            "seed": "fixed-seed-1",
+            "environment_binding": {
+              "id": "environment_b5b2c4657befbcbc106c70d14826d701",
+              "version": "1.0.0",
+              "digest": "sha256:b5b2c4657befbcbc106c70d14826d701ba8c4f35ca40d54f74ac9257b286c802"
+            },
+            "judge_binding": {
+              "id": "judge_500a1c85be65cd25299f186341516248",
+              "version": "1.0.0",
+              "digest": "sha256:500a1c85be65cd25299f186341516248fb1ed999aca7de483d07257a9022cc1e"
+            },
+            "metrics": [
+              {
+                "name": "contract coverage",
+                "direction": "minimum",
+                "threshold": {
+                  "unit": "ratio",
+                  "amount": "1"
+                },
+                "required": true
+              }
+            ],
+            "budget": [
+              {
+                "unit": "USD",
+                "limit": "10"
+              }
+            ],
+            "retry_limit": 2,
+            "stop_rule": "one frozen sample set only",
+            "invalid_run_policy": "whole pair preflight failure is invalid",
+            "sampling": {
+              "frame": "constructed single documentation sample",
+              "sample_unit": "independent task",
+              "sample_size": 1,
+              "source_group_ids": [
+                "group_9d74f1bd408d625343b3fcb9463522af"
+              ],
+              "method": "fixed_set",
+              "analysis_method": "contract coverage only",
+              "predeclared_stopping": "fixed sample count"
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:03Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "evaluation.run",
+          "target_id": "plan_d7d4f94a1f6606ec6bbef8c1c899a34b",
+          "payload": {
+            "run_id": "run_7b99a7a51352e7d816cbdd3d7083f792",
+            "plan_id": "plan_d7d4f94a1f6606ec6bbef8c1c899a34b",
+            "plan_digest": "sha256:d7d4f94a1f6606ec6bbef8c1c899a34b60c8bfc70ec3d0ddded46b880231c419"
+          },
+          "command_id": "command_f2d12e21d17367b133bd782eac7f9fdc",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_f2d12e21d17367b133bd782eac7f9fdc",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:03Z",
+          "output": {
+            "run_id": "run_7b99a7a51352e7d816cbdd3d7083f792",
+            "plan_id": "plan_d7d4f94a1f6606ec6bbef8c1c899a34b",
+            "revision": 1,
+            "state": "queued",
+            "cancel_requested": false,
+            "completed_samples": 0,
+            "total_samples": 1,
+            "environment_refs": [],
+            "environment_sealed": false,
+            "cleanup_state": "pending"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "evaluation.read",
+          "target_id": "run_7b99a7a51352e7d816cbdd3d7083f792",
+          "payload": {
+            "kind": "run"
+          }
+        },
+        "response": {
+          "output": {
+            "kind": "run",
+            "record": {
+              "run_id": "run_7b99a7a51352e7d816cbdd3d7083f792",
+              "plan_id": "plan_d7d4f94a1f6606ec6bbef8c1c899a34b",
+              "revision": 2,
+              "state": "finished",
+              "cancel_requested": false,
+              "completed_samples": 1,
+              "total_samples": 1,
+              "environment_refs": [],
+              "environment_sealed": true,
+              "cleanup_state": "cleaned",
+              "report_id": "report_80957af00f3fd1e3ec4d7ef68599c72d"
+            }
+          },
+          "observed_at": "2026-09-26T00:00:04Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:05Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "evaluation.read",
+          "target_id": "plan_d7d4f94a1f6606ec6bbef8c1c899a34b",
+          "payload": {
+            "kind": "plan"
+          }
+        },
+        "response": {
+          "output": {
+            "kind": "plan",
+            "record": {
+              "plan_id": "plan_d7d4f94a1f6606ec6bbef8c1c899a34b",
+              "digest": "sha256:d7d4f94a1f6606ec6bbef8c1c899a34b60c8bfc70ec3d0ddded46b880231c419",
+              "purpose": "compatibility_check",
+              "candidate_id": "candidate_72dc46c0e89b6767ee54fe8a8f045199",
+              "candidate_lock": "lock_028a1428d14b945fae7a36dfdf704fea",
+              "baseline_lock": null,
+              "partition_id": "partition_c40ec316d9798ad4d74d98d3347c5d2d",
+              "sample_ids": [
+                "sample_7b4aa960a75be465b1ca3264ab29f521"
+              ],
+              "seed": "fixed-seed-1",
+              "environment_binding": {
+                "id": "environment_b5b2c4657befbcbc106c70d14826d701",
+                "version": "1.0.0",
+                "digest": "sha256:b5b2c4657befbcbc106c70d14826d701ba8c4f35ca40d54f74ac9257b286c802"
+              },
+              "judge_binding": {
+                "id": "judge_500a1c85be65cd25299f186341516248",
+                "version": "1.0.0",
+                "digest": "sha256:500a1c85be65cd25299f186341516248fb1ed999aca7de483d07257a9022cc1e"
+              },
+              "metrics": [
+                {
+                  "name": "contract coverage",
+                  "direction": "minimum",
+                  "threshold": {
+                    "unit": "ratio",
+                    "amount": "1"
+                  },
+                  "required": true
+                }
+              ],
+              "budget": [
+                {
+                  "unit": "USD",
+                  "limit": "10"
+                }
+              ],
+              "retry_limit": 2,
+              "stop_rule": "one frozen sample set only",
+              "invalid_run_policy": "whole pair preflight failure is invalid",
+              "sampling": {
+                "frame": "constructed single documentation sample",
+                "sample_unit": "independent task",
+                "sample_size": 1,
+                "source_group_ids": [
+                  "group_9d74f1bd408d625343b3fcb9463522af"
+                ],
+                "method": "fixed_set",
+                "analysis_method": "contract coverage only",
+                "predeclared_stopping": "fixed sample count"
+              }
+            }
+          },
+          "observed_at": "2026-09-26T00:00:05Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:06Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "evaluation.feedback_open",
+          "target_id": "report_80957af00f3fd1e3ec4d7ef68599c72d",
+          "payload": {
+            "exposure_id": "exposure_c25ebec919706fb6d5c5c7aa68e63178",
+            "report_digest": "sha256:80957af00f3fd1e3ec4d7ef68599c72d00b7a88a5b580cc82f921f818378cf6e",
+            "scope": "full_report"
+          },
+          "command_id": "command_786a0a17fad1d1cc974e930b804b5dba",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_786a0a17fad1d1cc974e930b804b5dba",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:06Z",
+          "output": {
+            "exposure": {
+              "exposure_id": "exposure_c25ebec919706fb6d5c5c7aa68e63178",
+              "partition_id": "partition_c40ec316d9798ad4d74d98d3347c5d2d",
+              "source_group_ids": [
+                "group_9d74f1bd408d625343b3fcb9463522af"
+              ],
+              "scope": "full_report",
+              "recipient": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+              "occurred_at": "2026-09-26T00:00:05Z",
+              "recorded_at": "2026-09-26T00:00:05Z",
+              "evidence_refs": [],
+              "reason": "controlled feedback after sealing",
+              "report_id": "report_80957af00f3fd1e3ec4d7ef68599c72d",
+              "report_digest": "sha256:80957af00f3fd1e3ec4d7ef68599c72d00b7a88a5b580cc82f921f818378cf6e"
+            },
+            "report": {
+              "report_id": "report_80957af00f3fd1e3ec4d7ef68599c72d",
+              "plan_id": "plan_d7d4f94a1f6606ec6bbef8c1c899a34b",
+              "plan_digest": "sha256:d7d4f94a1f6606ec6bbef8c1c899a34b60c8bfc70ec3d0ddded46b880231c419",
+              "candidate_id": "candidate_72dc46c0e89b6767ee54fe8a8f045199",
+              "candidate_digest": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c",
+              "digest": "sha256:80957af00f3fd1e3ec4d7ef68599c72d00b7a88a5b580cc82f921f818378cf6e",
+              "evidence_class": "conformance",
+              "sealed": true,
+              "eligibility": "eligible",
+              "run_refs": [
+                {
+                  "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "id": "run_7b99a7a51352e7d816cbdd3d7083f792",
+                  "revision": 1
+                }
+              ],
+              "metrics": [],
+              "coverage_complete": true,
+              "gaps": [],
+              "contract_gate": "pass",
+              "target_attainment": {
+                "applicable": false,
+                "result": "inconclusive",
+                "reason": "not applicable to compatibility claim"
+              },
+              "statistical_gate": {
+                "applicable": false,
+                "result": "inconclusive",
+                "reason": "not applicable to compatibility claim"
+              },
+              "improvement_gate": {
+                "applicable": false,
+                "result": "inconclusive",
+                "reason": "not applicable to compatibility claim"
+              },
+              "category_changes": [],
+              "sealed_at": "2026-09-26T00:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:07Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "evaluation.approve",
+          "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "payload": {
+            "approval": {
+              "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+              "revision": 1,
+              "release_kind": "compatibility",
+              "candidate_id": "candidate_72dc46c0e89b6767ee54fe8a8f045199",
+              "candidate_digest": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c",
+              "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+              "report_id": "report_80957af00f3fd1e3ec4d7ef68599c72d",
+              "report_digest": "sha256:80957af00f3fd1e3ec4d7ef68599c72d00b7a88a5b580cc82f921f818378cf6e",
+              "targets": [
+                "target_3f85a1dd2e76294278410e755dfd783e"
+              ],
+              "approved_by": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+              "confirmation_ref": {
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "id": "confirmation_47b107efa61c322a09f1c20bc89e4964",
+                "revision": 2
+              },
+              "batches": [
+                {
+                  "batch_id": "batch_00122cfbdd7adc031f54478591c746b5",
+                  "targets": [
+                    "target_3f85a1dd2e76294278410e755dfd783e"
+                  ],
+                  "observation_window_ms": 1000,
+                  "minimum_samples": 1,
+                  "stop_rules": [
+                    {
+                      "name": "contract coverage",
+                      "direction": "minimum",
+                      "threshold": {
+                        "unit": "ratio",
+                        "amount": "1"
+                      },
+                      "required": true
+                    }
+                  ]
+                }
+              ],
+              "expires_at": "2026-09-26T01:00:00Z",
+              "max_offline_window_ms": 0,
+              "rollback_lock": null,
+              "state": "active",
+              "propagation": []
+            }
+          },
+          "command_id": "command_64d67f03eff13d6fe2d031421afe9686",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_64d67f03eff13d6fe2d031421afe9686",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:07Z",
+          "output": {
+            "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+            "revision": 1,
+            "release_kind": "compatibility",
+            "candidate_id": "candidate_72dc46c0e89b6767ee54fe8a8f045199",
+            "candidate_digest": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c",
+            "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "report_id": "report_80957af00f3fd1e3ec4d7ef68599c72d",
+            "report_digest": "sha256:80957af00f3fd1e3ec4d7ef68599c72d00b7a88a5b580cc82f921f818378cf6e",
+            "targets": [
+              "target_3f85a1dd2e76294278410e755dfd783e"
+            ],
+            "approved_by": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+            "confirmation_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "confirmation_47b107efa61c322a09f1c20bc89e4964",
+              "revision": 2
+            },
+            "batches": [
+              {
+                "batch_id": "batch_00122cfbdd7adc031f54478591c746b5",
+                "targets": [
+                  "target_3f85a1dd2e76294278410e755dfd783e"
+                ],
+                "observation_window_ms": 1000,
+                "minimum_samples": 1,
+                "stop_rules": [
+                  {
+                    "name": "contract coverage",
+                    "direction": "minimum",
+                    "threshold": {
+                      "unit": "ratio",
+                      "amount": "1"
+                    },
+                    "required": true
+                  }
+                ]
+              }
+            ],
+            "expires_at": "2026-09-26T01:00:00Z",
+            "max_offline_window_ms": 0,
+            "rollback_lock": null,
+            "state": "active",
+            "propagation": []
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:08Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "extensions.activate",
+          "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+          "payload": {
+            "activation_id": "activation_e0493e4c77498f759f579101f1520a41",
+            "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+            "old_lock_id": null,
+            "new_lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+            "expected_generation": 0
+          },
+          "command_id": "command_9dc29e35ce38120fb8015d815ff5eea3",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_9dc29e35ce38120fb8015d815ff5eea3",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:08Z",
+          "output": {
+            "activation_id": "activation_e0493e4c77498f759f579101f1520a41"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:09Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "extensions.read",
+          "target_id": "activation_e0493e4c77498f759f579101f1520a41",
+          "payload": {
+            "kind": "activation"
+          }
+        },
+        "response": {
+          "output": {
+            "activation_id": "activation_e0493e4c77498f759f579101f1520a41",
+            "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+            "old_lock_id": null,
+            "new_lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+            "phase": "active",
+            "generation": 1,
+            "ready_instance": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+            "last_observed_at": "2026-09-26T00:00:09Z",
+            "approval_revision": 1,
+            "new_use_disabled": false,
+            "previous_version_ready": false,
+            "residual_work": [],
+            "startup_evidence": {
+              "kind": "local_transaction",
+              "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+              "approval_revision": 1,
+              "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+              "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+              "instance_id": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+              "action_kind": "activation",
+              "action_id": "activation_e0493e4c77498f759f579101f1520a41",
+              "checked_at": "2026-09-26T00:00:09Z",
+              "commit_id": "commit_be514c39e5acce2a0971854499d09aaf"
+            },
+            "instance_readiness": {
+              "instance_id": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+              "ready": true,
+              "observed_at": "2026-09-26T00:00:09Z",
+              "startup_evidence": {
+                "kind": "local_transaction",
+                "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+                "approval_revision": 1,
+                "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+                "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+                "instance_id": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+                "action_kind": "activation",
+                "action_id": "activation_e0493e4c77498f759f579101f1520a41",
+                "checked_at": "2026-09-26T00:00:09Z",
+                "commit_id": "commit_be514c39e5acce2a0971854499d09aaf"
+              }
+            }
+          },
+          "observed_at": "2026-09-26T00:00:09Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:10Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "evaluation.revoke",
+          "target_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+          "payload": {
+            "reason": "stop all new use"
+          },
+          "command_id": "command_2c1fc89a0876bf8eae58e270ecf75de1",
+          "expires_at": "2026-09-26T01:00:00Z",
+          "expected_revision": 1
+        },
+        "response": {
+          "command_id": "command_2c1fc89a0876bf8eae58e270ecf75de1",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:10Z",
+          "output": {
+            "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+            "revision": 2,
+            "release_kind": "compatibility",
+            "candidate_id": "candidate_72dc46c0e89b6767ee54fe8a8f045199",
+            "candidate_digest": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c",
+            "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "report_id": "report_80957af00f3fd1e3ec4d7ef68599c72d",
+            "report_digest": "sha256:80957af00f3fd1e3ec4d7ef68599c72d00b7a88a5b580cc82f921f818378cf6e",
+            "targets": [
+              "target_3f85a1dd2e76294278410e755dfd783e"
+            ],
+            "approved_by": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+            "confirmation_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "confirmation_47b107efa61c322a09f1c20bc89e4964",
+              "revision": 2
+            },
+            "batches": [
+              {
+                "batch_id": "batch_00122cfbdd7adc031f54478591c746b5",
+                "targets": [
+                  "target_3f85a1dd2e76294278410e755dfd783e"
+                ],
+                "observation_window_ms": 1000,
+                "minimum_samples": 1,
+                "stop_rules": [
+                  {
+                    "name": "contract coverage",
+                    "direction": "minimum",
+                    "threshold": {
+                      "unit": "ratio",
+                      "amount": "1"
+                    },
+                    "required": true
+                  }
+                ]
+              }
+            ],
+            "expires_at": "2026-09-26T01:00:00Z",
+            "max_offline_window_ms": 0,
+            "rollback_lock": null,
+            "state": "revoked",
+            "propagation": []
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:11Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "extensions.read",
+          "target_id": "activation_e0493e4c77498f759f579101f1520a41",
+          "payload": {
+            "kind": "activation"
+          }
+        },
+        "response": {
+          "output": {
+            "activation_id": "activation_e0493e4c77498f759f579101f1520a41",
+            "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+            "old_lock_id": null,
+            "new_lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+            "phase": "disabled",
+            "generation": 1,
+            "ready_instance": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+            "last_observed_at": "2026-09-26T00:00:09Z",
+            "approval_revision": 1,
+            "new_use_disabled": true,
+            "previous_version_ready": false,
+            "residual_work": [],
+            "startup_evidence": {
+              "kind": "local_transaction",
+              "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+              "approval_revision": 1,
+              "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+              "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+              "instance_id": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+              "action_kind": "activation",
+              "action_id": "activation_e0493e4c77498f759f579101f1520a41",
+              "checked_at": "2026-09-26T00:00:09Z",
+              "commit_id": "commit_be514c39e5acce2a0971854499d09aaf"
+            },
+            "instance_readiness": {
+              "instance_id": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+              "ready": false,
+              "observed_at": "2026-09-26T00:00:09Z",
+              "startup_evidence": {
+                "kind": "local_transaction",
+                "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+                "approval_revision": 1,
+                "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+                "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+                "instance_id": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+                "action_kind": "activation",
+                "action_id": "activation_e0493e4c77498f759f579101f1520a41",
+                "checked_at": "2026-09-26T00:00:09Z",
+                "commit_id": "commit_be514c39e5acce2a0971854499d09aaf"
+              }
+            }
+          },
+          "observed_at": "2026-09-26T00:00:11Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:12Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "evaluation.approval_check",
+          "target_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+          "payload": {
+            "use_id": "use_c7516127e031d212343ca980794eaacd",
+            "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+            "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+            "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "instance_id": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+            "action_kind": "reopen",
+            "action_id": "reopen_8222b9a511958e29b64a3064b0fb2c80"
+          },
+          "command_id": "command_2cd4bcb95f005e6054d257219b1502d2",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_2cd4bcb95f005e6054d257219b1502d2",
+          "stage": "rejected",
+          "decided_at": "2026-09-26T00:00:12Z",
+          "error": {
+            "code": "approval_inactive",
+            "message": "Constructed expected rejection",
+            "retry": "after_change"
+          }
+        }
+      }
+    }
+  ],
+  "confirmations": [
+    {
+      "confirmation_id": "confirmation_47b107efa61c322a09f1c20bc89e4964",
+      "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+      "revision": 2,
+      "consumer_method": "evaluation.approve",
+      "consumer_command_id": "command_64d67f03eff13d6fe2d031421afe9686",
+      "consumer_target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+      "consumer_command": {
+        "method": "evaluation.approve",
+        "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+        "payload": {
+          "approval": {
+            "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+            "revision": 1,
+            "release_kind": "compatibility",
+            "candidate_id": "candidate_72dc46c0e89b6767ee54fe8a8f045199",
+            "candidate_digest": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c",
+            "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "report_id": "report_80957af00f3fd1e3ec4d7ef68599c72d",
+            "report_digest": "sha256:80957af00f3fd1e3ec4d7ef68599c72d00b7a88a5b580cc82f921f818378cf6e",
+            "targets": [
+              "target_3f85a1dd2e76294278410e755dfd783e"
+            ],
+            "approved_by": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+            "confirmation_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "confirmation_47b107efa61c322a09f1c20bc89e4964",
+              "revision": 2
+            },
+            "batches": [
+              {
+                "batch_id": "batch_00122cfbdd7adc031f54478591c746b5",
+                "targets": [
+                  "target_3f85a1dd2e76294278410e755dfd783e"
+                ],
+                "observation_window_ms": 1000,
+                "minimum_samples": 1,
+                "stop_rules": [
+                  {
+                    "name": "contract coverage",
+                    "direction": "minimum",
+                    "threshold": {
+                      "unit": "ratio",
+                      "amount": "1"
+                    },
+                    "required": true
+                  }
+                ]
+              }
+            ],
+            "expires_at": "2026-09-26T01:00:00Z",
+            "max_offline_window_ms": 0,
+            "rollback_lock": null,
+            "state": "active",
+            "propagation": []
+          }
+        },
+        "command_id": "command_64d67f03eff13d6fe2d031421afe9686",
+        "expires_at": "2026-09-26T01:00:00Z"
+      },
+      "intent_hash": "sha256:1d65d10741843a983171581ce59b34118754e60e624f3eeef5a4369753e83c80",
+      "challenge": "sha256:c06c5d0c1366f360f2537de476921efe2e7d101c66d926df932b26c99c7f2580",
+      "expires_at": "2026-09-26T00:05:07Z",
+      "state": "approved",
+      "decided_at": "2026-09-26T00:00:07Z",
+      "decided_by": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+      "trusted_user_session_ref": {
+        "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+        "id": "session_c06c5d0c1366f360f2537de476921efe",
+        "revision": 1
+      }
+    }
+  ]
+}

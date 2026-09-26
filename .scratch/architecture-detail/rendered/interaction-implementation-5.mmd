@@ -1,0 +1,36 @@
+sequenceDiagram
+    participant U as Renderer
+    participant I as InputService
+    participant S as InteractionStore
+    participant W as DeliveryWorker
+    participant H as 实际 Home
+    U->>I: 原 input_id、请求修订、回答和预览引用
+    rect rgb(236, 243, 250)
+      I->>S: 事务 A：查原输入，固定目标命令，写 queued、回执和 job
+      S-->>I: 原输入提交
+    end
+    I-->>U: 已保存，等待业务处理
+    rect rgb(236, 243, 250)
+      W->>S: 事务 B：按原输入和工作代次竞争 queued → sending
+      S-->>W: 领取成功或原撤回已提交
+    end
+    alt 撤回先提交
+      W->>S: 读取 withdrawn，无业务发送
+    else 发送领取先提交
+      W->>H: 事务外发送固定 target_command_id
+      rect rgb(241, 247, 235)
+        H->>H: Home 事务：复核当前请求及预览，消费、应用回答、保存回执与 jobs
+      end
+      H--xW: 已消费，但答复丢失
+      Note over W,S: 换工作者后仍查询原服务和原命令
+      W->>H: GET /v1/commands/{target_command_id}
+      H-->>W: 当前获准披露的原业务决定
+      rect rgb(236, 243, 250)
+        W->>S: 事务 C：保存 applied／rejected、receipt_ref，结束原 job
+        S-->>W: 转交状态提交
+      end
+    end
+    U->>I: 查询原 input_id
+    I->>S: 读取原状态与获准消费事实
+    S-->>I: 当前转交结果
+    I-->>U: 已消费、拒绝或已撤回

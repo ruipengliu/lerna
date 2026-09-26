@@ -1,0 +1,649 @@
+[
+  {
+    "name": "public-discovery-unknown-field",
+    "vector": "public-discovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "discovery-unknown-field",
+    "vector": "discovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "bounded-pull-unknown-field",
+    "vector": "bounded-pull",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "command-delivery-unknown-field",
+    "vector": "command-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "command-reply-unknown-field",
+    "vector": "command-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "command-ack-unknown-field",
+    "vector": "command-ack",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "query-delivery-unknown-field",
+    "vector": "query-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "query-reply-unknown-field",
+    "vector": "query-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "query-ack-unknown-field",
+    "vector": "query-ack",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "receipt_lookup-delivery-unknown-field",
+    "vector": "receipt_lookup-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "receipt_lookup-reply-unknown-field",
+    "vector": "receipt_lookup-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "receipt_lookup-ack-unknown-field",
+    "vector": "receipt_lookup-ack",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "purged-receipt-reply-unknown-field",
+    "vector": "purged-receipt-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "upload-intent-unknown-field",
+    "vector": "upload-intent",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "ready-upload-unknown-field",
+    "vector": "ready-upload",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "committed-upload-unknown-field",
+    "vector": "committed-upload",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "change-hint-unknown-field",
+    "vector": "change-hint",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "closed-command-unknown-field",
+    "vector": "closed-command",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "closed-command-conflict-unknown-field",
+    "vector": "closed-command-conflict",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "closed-operation-unknown-field",
+    "vector": "closed-operation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "closed-task-unknown-field",
+    "vector": "closed-task",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "unknown-discovered-method",
+    "vector": "discovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/methods/0",
+        "value": "task.launch_anything"
+      }
+    ],
+    "expect": "discovery_method"
+  },
+  {
+    "name": "changed-query-kind",
+    "vector": "query-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/kind",
+        "value": "command"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "query-with-command-id",
+    "vector": "query-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/command_id",
+        "value": "command_5d347fd948b66308f502c3f65c8f7e12"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wrong-command-reply",
+    "vector": "command-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/command_id",
+        "value": "other_d9298a10d1b0735837dc4bd85dac641b"
+      }
+    ],
+    "expect": "delivery_command"
+  },
+  {
+    "name": "wrong-query-digest",
+    "vector": "query-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "delivery_binding"
+  },
+  {
+    "name": "wrong-ack",
+    "vector": "command-ack",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "reply_digest"
+  },
+  {
+    "name": "upload-length-change",
+    "vector": "committed-upload",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/content_ref/byte_length",
+        "value": 999
+      }
+    ],
+    "expect": "content_upload"
+  },
+  {
+    "name": "upload-hash-change",
+    "vector": "committed-upload",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/content_ref/hash",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "content_upload"
+  },
+  {
+    "name": "closed-command-loses-identity",
+    "vector": "closed-command",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/response_code",
+        "value": "precondition_failed"
+      }
+    ],
+    "expect": "closed_identity"
+  },
+  {
+    "name": "closed-command-hash-conflict",
+    "vector": "closed-command-conflict",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/response_code",
+        "value": "gone"
+      }
+    ],
+    "expect": "closed_identity"
+  },
+  {
+    "name": "closed-operation-not-found",
+    "vector": "closed-operation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/response_code",
+        "value": "not_found"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wrong-delivery-digest",
+    "vector": "query-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "request_digest"
+  },
+  {
+    "name": "command transport error cannot claim receipt stage",
+    "vector": "purged-command-reply",
+    "edits": [
+      {
+        "op": "add",
+        "path": "/value/result/stage",
+        "value": "rejected"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "command error remains bound to delivery",
+    "vector": "unavailable-command-reply",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/request_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "delivery_binding"
+  },
+  {
+    "name": "command error needs recovery rule",
+    "vector": "unavailable-command-reply",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/value/result/error/retry"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "revoked reply cache cannot disclose old output",
+    "vector": "query-reply",
+    "edits": [
+      {
+        "op": "add",
+        "path": "/context/disclosure_allowed",
+        "value": false
+      }
+    ],
+    "expect": "reply_disclosure"
+  },
+  {
+    "name": "closed delivery cannot later resend cached content",
+    "vector": "command-reply",
+    "edits": [
+      {
+        "op": "add",
+        "path": "/context/disclosure_closed",
+        "value": true
+      }
+    ],
+    "expect": "reply_disclosure"
+  },
+  {
+    "name": "withheld is a strict disclosure denial",
+    "vector": "query-replay-withheld",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/result/error/code",
+        "value": "not_found"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "withheld cannot attach business output",
+    "vector": "query-replay-withheld",
+    "edits": [
+      {
+        "op": "add",
+        "path": "/value/result/output",
+        "value": {}
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "ticket cannot change original owner",
+    "vector": "reverse-mirror-ticket",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/content_ref/owner_id",
+        "value": "different_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "mirror_binding"
+  },
+  {
+    "name": "ticket cannot choose arbitrary remote URL",
+    "vector": "reverse-mirror-ticket",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/upload_url",
+        "value": "https://untrusted.invalid/upload"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "mirror sender must be paired endpoint",
+    "vector": "reverse-mirror-ready",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/context/authenticated_sender",
+        "value": "different_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "mirror_binding"
+  },
+  {
+    "name": "mirror sender must be paired instance",
+    "vector": "reverse-mirror-ready",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/context/authenticated_instance",
+        "value": "different_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "mirror_binding"
+  },
+  {
+    "name": "mirror cannot upload closed copy",
+    "vector": "reverse-mirror-ready",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/context/registered_copy/use_stopped",
+        "value": true
+      }
+    ],
+    "expect": "mirror_binding"
+  },
+  {
+    "name": "mirror must keep original copy identity",
+    "vector": "reverse-mirror-read",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/source_download/copy_id",
+        "value": "different_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "mirror_read"
+  },
+  {
+    "name": "mirror must use current source revision",
+    "vector": "reverse-mirror-read",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/source_download/control_revision",
+        "value": 2
+      }
+    ],
+    "expect": "mirror_read"
+  },
+  {
+    "name": "offline basic mirror cannot read",
+    "vector": "reverse-mirror-offline-blocked",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/allowed",
+        "value": true
+      }
+    ],
+    "expect": "mirror_read"
+  },
+  {
+    "name": "closed mirror cannot read",
+    "vector": "reverse-mirror-closed",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/allowed",
+        "value": true
+      }
+    ],
+    "expect": "mirror_read"
+  },
+  {
+    "name": "expired source read cannot replay",
+    "vector": "reverse-mirror-expired",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/allowed",
+        "value": true
+      }
+    ],
+    "expect": "mirror_read"
+  },
+  {
+    "name": "mirror control authenticates source owner",
+    "vector": "reverse-mirror-control",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/context/authenticated_owner_id",
+        "value": "owner_cccccccccccccccccccccccccccccccc"
+      }
+    ],
+    "expect": "mirror_control"
+  },
+  {
+    "name": "mirror control cannot target another copy",
+    "vector": "reverse-mirror-control",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/copy_id",
+        "value": "copy_cccccccccccccccccccccccccccccccc"
+      }
+    ],
+    "expect": "mirror_control"
+  },
+  {
+    "name": "mirror control cannot roll back known revision",
+    "vector": "reverse-mirror-control",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/control_revision",
+        "value": 1
+      }
+    ],
+    "expect": "mirror_control"
+  },
+  {
+    "name": "mirror control cannot reopen closed content",
+    "vector": "reverse-mirror-control",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/cause",
+        "value": "active"
+      }
+    ],
+    "expect": "transport_schema"
+  }
+]

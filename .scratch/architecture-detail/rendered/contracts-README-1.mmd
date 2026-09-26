@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant H as 发起方及其持久 job
+    participant R as 处理方命令入口
+    participant D as 处理方业务存储
+    H->>H: 保存固定 command_id 与请求
+    H->>R: 提交原命令
+    R->>D: 幂等检查并提交业务或处理责任
+    D-->>R: 原命令回执
+    R--xH: 响应丢失
+    H->>R: 查询同一 command_id
+    R->>D: 读取原回执并检查当前披露权限
+    R-->>H: accepted / applied / rejected
+    H->>H: 保存回执和后续业务查询责任

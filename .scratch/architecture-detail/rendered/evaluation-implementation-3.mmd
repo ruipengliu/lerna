@@ -1,0 +1,36 @@
+sequenceDiagram
+    participant U as 受信批准者入口
+    participant E as ExposureLedger
+    participant S as 评测 repository
+    participant C as 受控报告内容端口
+    participant A as ApprovalOwner
+    participant W as RolloutWorker
+    participant H as 目标扩展管理
+    U->>E: feedback_open 原命令与准确报告
+    rect rgb(236, 244, 252)
+      Note over E,S: T1：确认已封存及输出范围，先登记暴露
+      E->>S: 保存 exposure、原决定及当前报告引用
+    end
+    E->>C: 事务外按原输出范围读取受控内容
+    C-->>E: 当前获准的反馈
+    E--xU: 答复丢失；暴露仍然成立
+    U->>E: 重投原 feedback_open
+    E->>S: 查询原命令与暴露
+    E->>C: 重新核验当前读取资格并读取原范围
+    E-->>U: 原反馈范围；资格撤回则不再交付正文
+    Note over U,A: 原批准 Command 已固定，本人 Confirmation 已在此 owner 批准
+    U->>A: evaluation.approve 原命令
+    rect rgb(236, 244, 252)
+      Note over A,S: T2：锁报告资格、确认与目标集合
+      A->>S: 核验当前资格，同事务消费确认并保存批准 / 发布 jobs
+    end
+    A-->>U: 批准与逐目标原映射
+    U->>E: exposure_record 新发现的封存前泄露
+    rect rgb(236, 244, 252)
+      Note over E,S: T3：与批准共享资格锁及来源关系
+      E->>S: 保存暴露、资格失效、批准撤回与传播 jobs
+    end
+    S-->>W: 领取原撤回 job
+    W->>H: 事务外停用原 activation
+    H-->>W: 新使用已关闭 / 当前残留
+    W->>S: 保存逐目标事实；未响应目标继续核对

@@ -6,6 +6,8 @@
 
 本页规定委派事实及接口。任务状态与预算归[任务运行](../task-runtime/README.md)，真实执行效果归[执行系统](../execution/README.md)。当前交付为设计；外部适配器没有证明原任务查询、权限收缩及费用边界时，不开放依赖这些保证的委派。
 
+实现阅读：[模块形状与依赖](implementation.md#module-shape) → [委派对象流转](implementation.md#data-flow) → [内部创建事务时序](implementation.md#key-sequence) → [生产部署和容量](implementation.md#production)。本页定义委派行为，实现篇集中规定子任务事务、外部映射、控制、封账及故障实验。
+
 ## 1. 把内部协作留在一个任务提交域
 
 默认内部子任务与父任务共用 Task Home，一次短事务保存委派、子任务、预算分配及首次工作。子任务可使用远端 Brain 或 Executor，但决策与任务事实仍在原 Home。父任务直接读取本地子任务修订；无需用远端 Agent 端点回传同一库已有的事实。
@@ -103,7 +105,7 @@ stateDiagram-v2
 | collaboration.reconcile | delegation_id；返回已保存的核对 job 身份 | 只唤醒原映射查询，不建立新远端任务；重复调用合并工作 |
 | collaboration.submit_input | delegation_id、原远端请求 ID/修订、答复引用；返回本地转交及远端消费状态 | 沿固定子命令查询或重投；扩权需求转[受信确认入口](../interaction/README.md)，普通回答不扩大许可 |
 
-写接口不要求调用者等到任务完成。accepted 表示命令已收下，applied 表示该方法的决定已持久保存；外部创建、控制应用、效果确认和预算结清使用各自字段。委派查询与命令回执在原责任未收束前不可清理。
+写接口不要求调用者等到任务完成。本配置的协作写方法在决定与后续责任共同保存后返回 Receipt.applied；外部创建、控制应用、效果确认和预算结清使用各自字段，不返回未登记的 Receipt.accepted。委派查询与命令回执在原责任未收束前不可清理；完整内容清理后，最小关闭及唯一映射索引长期保留，旧身份返回 gone 而不重新创建。
 
 ## 5. 最容易出错的恢复路径
 

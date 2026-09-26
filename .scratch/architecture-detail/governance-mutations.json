@@ -1,0 +1,1047 @@
+[
+  {
+    "name": "grant issue binds original intent",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/intent_hash",
+        "value": "sha256:9d6f965ac832e40a5df6c06afe983e3b449c07b843ff51ce76204de05c690d11"
+      }
+    ]
+  },
+  {
+    "name": "grant read binds target",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/grant_id",
+        "value": "grant_d130289529636aef4e84d85458e664c7"
+      }
+    ]
+  },
+  {
+    "name": "grant revoke closes policy",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "grant_revocation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/state",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "grant cannot reopen after revocation",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "grant_reopen",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/state",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "pair begin stays pending",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "pairing_state",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/session/state",
+        "value": "approved"
+      }
+    ]
+  },
+  {
+    "name": "pair approve matches decision",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "pairing_decision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/state",
+        "value": "denied"
+      }
+    ]
+  },
+  {
+    "name": "claim endpoint mapping fixed",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/session/endpoint_id",
+        "value": "endpoint_d025e1b84c9b033fec8df9812f7bbbbb"
+      }
+    ]
+  },
+  {
+    "name": "endpoint revoke closes credential",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "endpoint_revocation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/state",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "allocation cannot switch instance",
+    "fixture": "32-lease-settlement.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/instance_id",
+        "value": "instance_2f58dd76c411e699f7b7bc2d4ec749e1"
+      }
+    ]
+  },
+  {
+    "name": "final settlement requires closed use",
+    "fixture": "32-lease-settlement.json",
+    "expect": "lease_final",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/uses/0/closed",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "prepare digest matches artifact",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "package_digest",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/artifact_ref/hash",
+        "value": "sha256:2b64eaadff58068f5695b65b6fd86742a36a6e2f7ce1bfc662dc1df4da580f97"
+      }
+    ]
+  },
+  {
+    "name": "lock query cannot change identity",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "extension_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/lock_id",
+        "value": "lock_071591d5c545e42c62028a421e339d7e"
+      }
+    ]
+  },
+  {
+    "name": "deactivate names original activation",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/activation_id",
+        "value": "activation_5326eb34e1ab2065090ee822c0a97057"
+      }
+    ]
+  },
+  {
+    "name": "dispose cannot drop live references",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "extension_references",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/blocking_refs",
+        "value": [
+          {
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "id": "task_512a371366df8f5336d749938702b42c",
+            "revision": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "candidate output stays exact",
+    "fixture": "34-compatibility-release.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/digest",
+        "value": "sha256:8810ad581e59f2bc3928b261707a71308f7e139eb04820366dc4d5c18d980225"
+      }
+    ]
+  },
+  {
+    "name": "partition groups cover samples",
+    "fixture": "34-compatibility-release.json",
+    "expect": "partition_sources",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/source_groups/0/sample_ids",
+        "value": [
+          "sample_e93511a42dd30f2c121e5a4e4802b9fb"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "plan output cannot change seed",
+    "fixture": "34-compatibility-release.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/seed",
+        "value": "changed"
+      }
+    ]
+  },
+  {
+    "name": "run uses frozen plan digest",
+    "fixture": "34-compatibility-release.json",
+    "expect": "run_plan",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/plan_digest",
+        "value": "sha256:bc4f39fa6e1ffb56ee9c7f56928a1c2933f16a264efe4aa4caa29f7979287745"
+      }
+    ]
+  },
+  {
+    "name": "evaluation query projection matches kind",
+    "fixture": "34-compatibility-release.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/record/plan_id",
+        "value": "plan_2517e4c7dbfe692648c05add022b91ea"
+      }
+    ]
+  },
+  {
+    "name": "feedback report must be sealed",
+    "fixture": "34-compatibility-release.json",
+    "expect": "feedback_sealed",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/report/sealed",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "approval batches cover targets",
+    "fixture": "34-compatibility-release.json",
+    "expect": "approval_targets",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/batches/0/targets",
+        "value": [
+          "target_39c92e42d22a31ecc679df69b6d375e7"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "rollout finished needs ready",
+    "fixture": "34-compatibility-release.json",
+    "expect": "rollout_completion",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/exchange/response/output/targets/0/ready",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "approval revoke cannot remain active",
+    "fixture": "34-compatibility-release.json",
+    "expect": "approval_revocation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/response/output/state",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "exposure must invalidate related formal plan",
+    "fixture": "35-improvement-exposure.json",
+    "expect": "exposure_invalidation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/exchange/response/output/invalidated_plan_ids",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "formal plan needs positive gain",
+    "fixture": "35-improvement-exposure.json",
+    "expect": "improvement_plan",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/minimum_practical_gain/amount",
+        "value": "0"
+      }
+    ]
+  },
+  {
+    "name": "formal approval cannot accept failed improvement gate",
+    "fixture": "35-improvement-exposure.json",
+    "expect": "improvement_approval",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/report/improvement_gate/result",
+        "value": "fail"
+      }
+    ]
+  },
+  {
+    "name": "restart preserves original activation evidence",
+    "fixture": "36-local-install-restart.json",
+    "expect": "activation_history",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/10/exchange/response/output/startup_evidence/commit_id",
+        "value": "commit_a8a2edbcdb4ed63198dc5fd812acf80e"
+      }
+    ]
+  },
+  {
+    "name": "current readiness binds actual instance",
+    "fixture": "36-local-install-restart.json",
+    "expect": "activation_readiness",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/10/exchange/response/output/instance_readiness/instance_id",
+        "value": "instance_6212a06cac8b50f7a9f4a2667fb81787"
+      }
+    ]
+  },
+  {
+    "name": "remote reopen cannot use prior instance receipt",
+    "fixture": "37-remote-instance-reopen.json",
+    "expect": "activation_approval",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/12/exchange/response/output/instance_readiness/startup_evidence/use_id",
+        "value": "use_506a671c1a69760b9f5bbb57d8b5db08"
+      }
+    ]
+  },
+  {
+    "name": "new startup cannot bypass observed revocation",
+    "fixture": "38-revoked-approval-startup.json",
+    "expect": "approval_current",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/12/exchange/response",
+        "value": {
+          "command_id": "command_2cd4bcb95f005e6054d257219b1502d2",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:12Z",
+          "output": {
+            "use_id": "use_c7516127e031d212343ca980794eaacd",
+            "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+            "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+            "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "instance_id": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+            "action_kind": "reopen",
+            "action_id": "reopen_8222b9a511958e29b64a3064b0fb2c80",
+            "approval_revision": 1,
+            "start_before": "2026-09-26T00:00:30Z"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "cancel preserves intention and original run",
+    "fixture": "39-evaluation-cancel.json",
+    "expect": "evaluation_cancel",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/cancel_requested",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "grant.issue rejects unknown payload field",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "grant.read rejects unknown payload field",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "grant.revoke rejects unknown payload field",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "grant.lease.allocate rejects unknown payload field",
+    "fixture": "32-lease-settlement.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "grant.lease.settle rejects unknown payload field",
+    "fixture": "32-lease-settlement.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "endpoint.pair.begin rejects unknown payload field",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "endpoint.pair.approve rejects unknown payload field",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "endpoint.pair.claim rejects unknown payload field",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "endpoint.revoke rejects unknown payload field",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "extensions.prepare rejects unknown payload field",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "extensions.deactivate rejects unknown payload field",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "extensions.dispose rejects unknown payload field",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.candidate_register rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.partition_register rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.plan_create rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.run rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.cancel rejects unknown payload field",
+    "fixture": "39-evaluation-cancel.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.read rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.exposure_record rejects unknown payload field",
+    "fixture": "35-improvement-exposure.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.feedback_open rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.approve rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.revoke rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.rollout_read rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "claim requires original private nonce",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "pairing_identity",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/client_nonce",
+        "value": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      }
+    ]
+  },
+  {
+    "name": "formal report retains frozen denominator",
+    "fixture": "35-improvement-exposure.json",
+    "expect": "report_denominator",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/report/paired_counts/b",
+        "value": 99
+      }
+    ]
+  },
+  {
+    "name": "compatibility approval requires conformance evidence",
+    "fixture": "34-compatibility-release.json",
+    "expect": "compatibility_approval",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/report/evidence_class",
+        "value": "formal"
+      }
+    ]
+  },
+  {
+    "name": "reopen evidence cannot precede original use",
+    "fixture": "37-remote-instance-reopen.json",
+    "expect": "approval_window",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/12/exchange/response/output/instance_readiness/startup_evidence/checked_at",
+        "value": "2026-09-26T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "name": "50: unknown open use retains all unspent reservation",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "use_settlement_unknown",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/released_cost/amount",
+        "value": "1"
+      }
+    ]
+  },
+  {
+    "name": "50: grant.use.settle rejects unknown field",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/unknown",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "50: grant.use.settlement rejects unknown field",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unknown",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "50: settlement requires authenticated usage owner",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "usage_owner",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/auth/sender_service_id",
+        "value": "usageowner_c1185e7038e90f35ebe5c0d79970f9e4"
+      }
+    ]
+  },
+  {
+    "name": "50: settlement preserves original operation",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "use_settlement_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/operation_id",
+        "value": "operation_1305ee4239221ef027cbf3e9a1b88c9f"
+      }
+    ]
+  },
+  {
+    "name": "50: settlement preserves exact accounting unit",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "use_settlement_unit",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/spent_cost/unit",
+        "value": "EUR"
+      }
+    ]
+  },
+  {
+    "name": "51: final zero never refunds once identity",
+    "fixture": "51-online-use-once-zero.json",
+    "expect": "once_not_refunded",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/consumed_once",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation request rejects arbitrary intent payload 0",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/consumer_command/payload/extra",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation caller cannot switch consumer owner 0",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "confirmation_owner",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/target_id",
+        "value": "owner_264c6328703eb15d164b185f6aff17f7"
+      }
+    ]
+  },
+  {
+    "name": "52: model cannot certify trusted user approval 2",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "confirmation_actor",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/auth/actor_kind",
+        "value": "agent"
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation cannot change original consumer command 2",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "confirmation_decision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/consumer_command_id",
+        "value": "command_7028e1f75a1656cca3db94ad4ae56b25"
+      }
+    ]
+  },
+  {
+    "name": "52: business consumption must be visible at owner 5",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "confirmation_observation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/state",
+        "value": "approved"
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation.request rejects unknown payload",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/extra",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation.read rejects unknown payload",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/extra",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation.decide rejects unknown payload",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/extra",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation hash must bind exact normalized intent",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "confirmation_intent",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/intent_hash",
+        "value": "sha256:2f05d4b689d270cafb02285f35f44866f7dc8a2d368a3f9d1124373eeab31fb1"
+      }
+    ]
+  },
+  {
+    "name": "53: confirmation request rejects arbitrary intent payload 7",
+    "fixture": "53-confirmation-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/request/payload/consumer_command/payload/extra",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "53: confirmation caller cannot switch consumer owner 7",
+    "fixture": "53-confirmation-release.json",
+    "expect": "confirmation_owner",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/request/target_id",
+        "value": "owner_264c6328703eb15d164b185f6aff17f7"
+      }
+    ]
+  },
+  {
+    "name": "53: model cannot certify trusted user approval 9",
+    "fixture": "53-confirmation-release.json",
+    "expect": "confirmation_actor",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/auth/actor_kind",
+        "value": "agent"
+      }
+    ]
+  },
+  {
+    "name": "53: confirmation cannot change original consumer command 9",
+    "fixture": "53-confirmation-release.json",
+    "expect": "confirmation_decision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/request/payload/consumer_command_id",
+        "value": "command_7028e1f75a1656cca3db94ad4ae56b25"
+      }
+    ]
+  },
+  {
+    "name": "53: business consumption must be visible at owner 12",
+    "fixture": "53-confirmation-release.json",
+    "expect": "confirmation_observation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/12/exchange/response/output/state",
+        "value": "approved"
+      }
+    ]
+  },
+  {
+    "name": "54: confirmation request rejects arbitrary intent payload 0",
+    "fixture": "54-confirmation-acceptance.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/consumer_command/payload/extra",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "54: confirmation caller cannot switch consumer owner 0",
+    "fixture": "54-confirmation-acceptance.json",
+    "expect": "confirmation_owner",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/target_id",
+        "value": "owner_264c6328703eb15d164b185f6aff17f7"
+      }
+    ]
+  },
+  {
+    "name": "54: model cannot certify trusted user approval 2",
+    "fixture": "54-confirmation-acceptance.json",
+    "expect": "confirmation_actor",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/auth/actor_kind",
+        "value": "agent"
+      }
+    ]
+  },
+  {
+    "name": "54: confirmation cannot change original consumer command 2",
+    "fixture": "54-confirmation-acceptance.json",
+    "expect": "confirmation_decision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/consumer_command_id",
+        "value": "command_7028e1f75a1656cca3db94ad4ae56b25"
+      }
+    ]
+  },
+  {
+    "name": "54: business consumption must be visible at owner 5",
+    "fixture": "54-confirmation-acceptance.json",
+    "expect": "confirmation_observation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/state",
+        "value": "approved"
+      }
+    ]
+  },
+  {
+    "name": "54: accepted result cannot switch confirmed goal",
+    "fixture": "54-confirmation-acceptance.json",
+    "expect": "confirmation_consumer",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/goal_revision",
+        "value": 2
+      }
+    ]
+  }
+]

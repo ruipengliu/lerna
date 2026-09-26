@@ -1,0 +1,7 @@
+stateDiagram-v2
+    [*] --> allocated: owner 预分配额度
+    allocated --> in_use: 本地登记有限使用
+    allocated --> closed: 收到撤权或到期
+    in_use --> closed: 收到撤权或到期
+    closed --> reconciled: 本地封闭后提交最终用量
+    reconciled --> [*]

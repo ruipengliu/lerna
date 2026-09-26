@@ -1,0 +1,36 @@
+flowchart TB
+    Caller[本人入口与业务使用端]
+    Auth[宿主身份与凭据端口]
+    Resource[内容与设备 owner]
+    Target[远端资源使用端]
+    subgraph Security[权限模块]
+      F[grant / endpoint / confirmation facade]
+      I[IdentityAdapter]
+      G[GrantLedger]
+      L[LeaseLedger]
+      P[PairingController]
+      C[ConfirmationStore]
+      N[ResourceNormalizer]
+      S[(领域 repositories<br/>命令、账本与 jobs)]
+      W[RevocationWorker]
+      F --> I
+      F --> G
+      F --> L
+      F --> P
+      F --> C
+      G --> C
+      L --> C
+      P --> C
+      G --> N
+      G --> S
+      L --> S
+      P --> S
+      C --> S
+      S -.->|撤销 job| W
+      W --> S
+    end
+    Caller --> F
+    I --> Auth
+    P --> Auth
+    N --> Resource
+    W --> Target

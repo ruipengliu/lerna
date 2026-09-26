@@ -1,0 +1,12 @@
+flowchart LR
+    H[Home 当前事实或应用记录] -->|ProjectionWorker 生成| S[SurfaceRevision]
+    S -->|准确引用| C[内容与预览 ContentRef]
+    S -->|请求引用| R[业务 owner 的 InputRequest]
+    S -->|本设备独立关联| P[Presentation]
+    R -->|准确版本及一次回答| I[InputSubmission]
+    I -->|固定身份与负载| T[原目标业务 Command]
+    T -->|业务事务消费| B[业务回执与后续工作]
+    B -->|查询原决定后归并| I
+    I -->|正文到期后保留| X[SubmissionClosure]
+    S -->|修订提示| N[通知]
+    N -->|提示重读，不携带裁决| U[Renderer]

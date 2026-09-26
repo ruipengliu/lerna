@@ -1,0 +1,10 @@
+sequenceDiagram
+    participant U as 本人入口
+    participant G as Grant owner
+    participant E as 使用端
+    U->>G: revoke 原许可与期望修订
+    G->>G: 撤销、传播任务、原回执同事务
+    G-->>U: applied 与未确认端
+    G->>E: 原撤销修订
+    E->>E: 关闭新启动并保存落实修订
+    E-->>G: 当前已落实范围

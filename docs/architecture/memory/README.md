@@ -6,6 +6,14 @@
 
 owner、来源、许可、修订、分页与清理规则是替换实现必须保持的契约；[默认匹配](#default-matching)和[容量配置](#memory-capacity)是参考实现选择。索引算法可以更换，不能借替换改变结果的授权边界或完整性声明。
 
+## 实现阅读路径
+
+先阅读本页的职责与行为，再读[实现设计](implementation.md)：查询、提取、内容交付与关闭。实现设计规定内部记录、事务、算法与故障实验；[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)提供精确线字段。
+
+实现阅读顺序为[软件形状与依赖](implementation.md#module-shape) → [核心对象流转](implementation.md#data-flow) → [候选发布与索引时序](implementation.md#key-sequence) → [生产可用性与性能](implementation.md#production)。内容 owner 可与 Memory 同宿主或独立部署；镜像与索引始终服从原权威记录和来源控制。
+
+本页与实现设计均为待实现规格，静态序列通过不代表服务、隐私隔离或恢复机制已经运行。
+
 ## 1. 边界与选择
 
 **任务上下文**是 Task Home 为一次决策选择的目标、进展、证据和内容引用，随任务保留策略管理；**长期记忆**是取得独立保存许可、可以跨任务检索的记录。进入模型上下文不自动产生长期记忆，也不自动允许发送给云模型。[任务运行](../task-runtime/README.md)保存上下文版本与使用责任，本模块保存记忆修订、检索依据和清理责任。
@@ -73,7 +81,7 @@ sequenceDiagram
 | --- | --- | --- | --- |
 | 受信管理入口 → Memory owner | 原命令、明确内容、来源和保存依据 | owner 同事务提交记忆修订、原回执及索引责任 | 管理入口查原命令；owner 补齐索引，不能让调用方再建一条 |
 | Home → Memory owner | 库、用途、接收方和有限查询 | owner 固定查询集合，返回当前获准项及完整性；结果不等于正文永久可用 | Home 保存已用版本、游标与缺口，按[分页规则](#memory-pages)继续 |
-| 内容消费者 → 内容 owner | 精确引用、用途及持有者信息 | owner 持久登记必要副本后交付当前获准字节 | 消费者先核对原登记与引用；无正文时向上返回缺口 |
+| 内容消费者 → 内容 owner | 精确引用、用途及持有者信息 | owner 持久登记必要副本后交付当前获准字节；无入站设备主动上传到受信接收端 | 消费者核对原副本及引用；镜像不改变 owner，无正文或资格时返回缺口 |
 | Memory owner → 受管副本 | 获准视图页、修订或墓碑 | 副本同事务提交对象变化、清理责任和游标后确认 | owner 保留未确认交付；副本沿原页恢复，断裂时重建 |
 
 使用许可的消费由 [Grant owner](../security/README.md)裁决；Memory owner 不能根据资料已在本地推导出可读取或可外发。表格仅汇总交接责任，完整字段在[集中契约](#memory-contracts)。
@@ -116,7 +124,7 @@ sequenceDiagram
 
 ### 3.5 端侧挖掘与提取
 
-端侧连接器先声明可观察来源、有限输入范围和稳定检查点；用户分别批准读取、处理、候选暂存及长期保存。`memory.extract` 接纳一个有限提取任务，原命令与输入集合持久保存后返回 `accepted`；Task Home 负责执行、取消和预算，本模块保存候选及发布决定。连接器扫描检查点只有在对应输入和下一步责任已保存后前移。
+端侧连接器先声明可观察来源、有限输入范围和稳定检查点；用户分别批准读取、处理、候选暂存及长期保存。`memory.extract` 接纳一个有限提取任务，原命令、输入集合和唯一 Home 任务映射持久保存后返回 `applied`，输出 `state=queued`；Task Home 负责执行、取消和预算，本模块保存候选及发布决定。连接器扫描检查点只有在对应输入和下一步责任已保存后前移。
 
 本地私密资料优先用本地可用模型；没有获准且可运行的本地处理能力时等待或报告不支持，不能自动切云。调用云模型必须获准向精确接收方 `process` 与 `disclose`；只允许保存一条偏好，不等于允许上传提取它的完整聊天。
 
@@ -144,6 +152,8 @@ sequenceDiagram
 
 接收端每次实际使用仍检查视图范围和当前许可，不能凭同步成功取得永久使用权。在线用当前授权；离线只用[有限租约](../security/README.md#offline)。收到撤权立即停止新使用，未收到时最晚在租约到期停止；发布方不能把消息发出当作对方已经停止。要求即时撤权的内容不开放离线副本使用。
 
+无入站地址的设备通过[受控反向交付](implementation.md#52-无入站设备的受控反向交付)提供大内容：原 owner 先登记副本，已配对的取件服务再预留绑定原 ContentRef、copy_id 和发送实例的有限上传 ticket，设备主动上传。接收地址仅从受信装配解析，接收端校验字节并保存只读镜像，不以 content.put 改变内容所有权。上传就绪不授予读取资格；基础镜像每次读取先取得原 owner 当前 content.get 结果，失联时停止新的读取。已有显式离线副本设计另行验收，镜像不会自动获得离线资格或延长原期限。
+
 ### 4.3 禁用、删除与恢复
 
 下图只建模一条记忆的逻辑可用性；物理清理作为独立维度记录，不强行画成单一成功状态。
@@ -168,7 +178,7 @@ stateDiagram-v2
 
 物理清理状态为 `pending | complete | residual | unknown`，按持有者聚合；有任何未知或残留都不能显示全部完成。备份、断网设备、用户导出和外部供应商分别列明范围与最长保留声明，不把本地 SQL 删除等同于设备介质擦除。无法兑现确定清理期限的路径，不接纳带该期限要求的资料。
 
-恢复实例先恢复未过期墓碑、来源限制和未完成清理工作，再开放正文读取；仅有旧备份而无法取得当前关闭依据时，相关内容保持禁用。来源 owner 暂时不可达是 `source_unavailable`，不是来源被删除；必要信息等待，可选记忆在任务明确显示缺席后继续。
+恢复实例先恢复长期最小关闭索引、来源限制和未完成清理工作，再开放正文读取；仅有旧备份而无法取得当前关闭依据时，相关内容保持禁用。来源 owner 暂时不可达是 `source_unavailable`，不是来源被删除；必要信息等待，可选记忆在任务明确显示缺席后继续。
 
 <a id="memory-contracts"></a>
 ## 5. 集中字段与接口
@@ -181,24 +191,24 @@ stateDiagram-v2
 | `SourceBinding` | `source_ref: ContentRef, relation, observed_at, valid_until?, policy_ref`；relation 为 user_statement、observation、derived；来源图无环，派生保留完整处理输入依赖 |
 | `ContentPolicy` | `classification, allowed_locations, allowed_recipients, allowed_purposes, retention_until, offline_allowed`；具体使用还需有效 Grant；组合来源取限制交集 |
 | `MemoryRecord` | `memory_id, owner_id, revision, type, content_ref, sources[], scope, observed_at, confidence?, state, policy_ref`；state 为 active、needs_review、disabled、deleted；墓碑只保留获准的身份、修订和清理依据；置信度只表示声明的方法估计 |
-| `Query` | `owner_ids, text_terms[], types[], scope, purpose, recipient_id, limit, cursor?`；分页必须沿原查询，空词项须提供类型或范围限制 |
-| `QueryPage` | `items[], next_cursor?, exhausted, partial, changed, gaps[]`；items 仅包含当前获准记录，partial 指扫描或提供方不完整，exhausted 只针对原有限集合 |
-| `View` | `view_id, owner_id, recipient_id, filter, projection, policy_ref, lease_ref?, revision, snapshot_cursor, change_cursor, expires_at`；filter 不接受任意可执行脚本 |
-| `CleanupReport` | `object_ref, closure_revision, holders[{holder_id, use_stopped, physical_state, residual_reason?, retry_after?}]`；汇总保留逐持有者依据 |
-| `ExtractionCandidate` | `candidate_id, extraction_task_id, proposed_type, content_ref, sources[], scope, proposed_policy, decision`；decision 为 pending、saved、rejected，保存关联实际记忆修订 |
+| `Query` | `query_id, owner_ids, text_terms[], types[], scope, purpose, recipient_id, limit, cursor?`；分页必须沿原查询，空词项须提供类型或范围限制 |
+| `QueryPage` | `query_id, owner_id, items[], position, scanned_count, skipped_count, next_cursor?, exhausted, partial, changed, gaps[]`；items 仅包含当前获准记录，partial 指扫描或提供方不完整，exhausted 只针对原有限集合 |
+| `View` | `view_id, owner_id, recipient_id, filter, projection, purpose, retention_until, lease_ref?, revision, snapshot_cursor, change_cursor?, expires_at, state`；filter 只含类型与 Scope，projection 为 metadata／content_refs，不接受脚本 |
+| `CleanupReport` | `object_ref, closure_revision, physical_state, holders[{holder_id, copy_id, use_stopped, physical_state, residual_reason?, retry_after_ms?}]`；汇总保留逐持有者依据 |
+| `ExtractionCandidate` | `candidate_id, owner_id, revision, extraction_task_id, proposed_type, content_ref, sources[], scope, proposed_policy, decision, memory_ref?`；decision 为 pending、saved、rejected，保存关联实际记忆修订 |
 
 | 方法 | 业务输入 → 输出 | 持久责任与恢复 |
 | --- | --- | --- |
 | `memory.query` / `memory.read` | Query；或精确 ID／修订、用途、接收方 → QueryPage／当前获准记录与正文引用 | owner 保存有限查询集合；超时可有限重查；精确修订失效不静默换新版 |
 | `memory.list` / `memory.inspect` | 管理过滤与游标；或 ID → 当前获准控制元数据 | 正文不可读仍可管理；不暴露无管理权限的条目 |
-| `memory.create` / `memory.replace` | 类型、正文、来源、范围、策略；replace 带期望修订 → 新修订 | 记录、原答复及后续工作同事务；丢答复查原命令 |
+| `memory.create` / `memory.replace` | 类型、正文、来源、范围、策略；create 可带 extraction_candidate_ref，replace 带期望修订 → 新修订 | 记录、原答复及后续工作同事务；丢答复查原命令 |
 | `memory.restrict` / `memory.delete` | ID、期望修订、收紧规则或删除原因 → 当前修订与清理入口 | 提交关闭及清理责任后 applied；旧正文权限不作为删除前提 |
-| `memory.extract` | 有限输入、检查点、提取规则与预算 → 提取任务 ID | 接纳及任务启动责任先持久；后续按原任务查询／取消 |
+| `memory.extract` | 有限输入、检查点、提取规则、确认模式与预算 → queued 的唯一提取任务映射 | 映射及启动责任提交后 applied；后续按原任务查询／取消 |
 | `memory.view.open` / `memory.view.pull` / `memory.view.ack` | 过滤、接收方及用途；游标；已应用页 → 视图／页／固定 ACK | owner 保存视图与发送切点；副本保存应用及游标，双方按原页恢复 |
 | `memory.cleanup.get` | 对象及关闭修订 → CleanupReport | 只报告已取得事实，离线持有者保留未完成 |
-| `content.put` / `content.get` | 正文、来源与策略 → ContentRef；精确引用及用途 → 获准正文 | put 先保存正文再提交元数据；get 每次核对当前使用条件 |
-| `content.register_copy` / `content.release_copy` | 精确引用、持有者、用途、保留期；停止使用及清理证明 → 固定登记／清理回执 | 登记提交后才交付；清理答复丢失沿原命令重报 |
-| `content.close` | 精确引用、期望修订、限制／关闭原因 → 关闭修订与清理入口 | owner 封闭新交付并保存传播责任；不等待所有持有者才响应 |
+| `content.put` / `content.get` | upload_id、预期 ContentRef、来源与策略 → 提交内容；精确引用、copy_id 及用途 → 有限下载定位 | 正文字节走独立认证传输；无入站设备按受信 ticket 反向交付镜像，保持原引用；get 不创建副本，每次核对当前资格 |
+| `content.register_copy` / `content.release_copy` | copy_id、精确引用、持有者、用途、保留期；停止使用及清理证据 → 固定登记／清理回执 | 登记提交后才交付；清理答复丢失沿原命令重报 |
+| `content.close` | 精确引用、mode=restrict／close、原因；信封带期望修订，restrict 带新策略 → 关闭修订与清理入口 | owner 封闭新交付并保存传播责任；不等待所有持有者才响应 |
 
 可执行错误包括：`revision_conflict` 读新修订重决策；`cursor_expired` 新建有限查询；`source_unavailable` 等待或声明可选资料缺席；`source_closed` 不再使用；`forbidden` 申请新授权；`resnapshot_required` 禁用旧视图并重建；`quota_exceeded` 等待额度或缩小请求。是否已经写入仍以原命令查询为准，错误不能推导“原写入一定未发生”。
 

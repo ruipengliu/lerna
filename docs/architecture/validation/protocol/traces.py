@@ -79,9 +79,10 @@ def check_trace(trace):
             if approval is None:
                 err('approval_context','missing authority snapshot')
             else:
-                invalid=approval['state']!='active' or instant(approval['expires_at'])<=instant(event['at']) or any(p[k]!=approval[k] for k in ('target_id','lock_id','instance_id'))
+                replayed_use=name.endswith('check') and p['use_id'] in approvals
+                invalid=approval['state']!='active' or instant(approval['expires_at'])<=instant(event['at']) or any(p[k]!=approval[k] for k in ('target_id','lock_id')) or p['instance_id'] not in approval.get('eligible_instance_ids',[approval['instance_id']])
                 if name=='evaluation.approval_lease':invalid|=approval['max_offline_window_ms']==0 or not approval['already_active']
-                if invalid and not rejected:err('approval_authority','current approval does not cover requested use')
+                if invalid and not rejected and not replayed_use:err('approval_authority','current approval does not cover requested use')
                 if not rejected and output:
                     deadline=output['start_before'] if name.endswith('check') else output['continue_until']
                     replayed_use=name.endswith('check') and p['use_id'] in approvals
@@ -116,12 +117,6 @@ def check_trace(trace):
             tombstones.add((a['tenant_id'],p['home_id'],p['task_id'],p['operation_id']))
         if rejected or output is None:errors.extend(f'event {index}: '+e for e in local);continue
         if name=='extensions.activate':activations[p['activation_id']]=deepcopy(p)
-        if name=='extensions.read' and output['phase']=='active':
-            approval_use=approvals.get(output.get('activation_use_id'))
-            intended=activations.get(output['activation_id'])
-            if not approval_use or approval_use['action_kind']!='activation' or approval_use['action_id']!=output['activation_id'] or approval_use['target_id']!=output['target_id'] or approval_use['lock_id']!=output['new_lock_id'] or approval_use['instance_id']!=output['ready_instance'] or approval_use['approval_id']!=output['approval_id'] or approval_use['approval_revision']!=output['approval_revision']:
-                err('activation_approval','active binding must match the fixed online activation use')
-            if intended and (any(output[k]!=intended[k] for k in ('target_id','old_lock_id','new_lock_id','approval_id')) or output['generation']!=intended['expected_generation']+1):err('activation_intent','active binding differs from admitted switch')
         if name in ('grant.use','grant.use.get'):
             uid=output['use_id']
             if uid in uses and uses[uid]!=output:err('use_immutable','query or new command cannot change original use/deadline')
@@ -194,4 +189,11 @@ def check_trace(trace):
             if any((o['effect']=='unknown' or o['may_apply_later'] is not False) and (operation_tasks.get(oid)==result['task_id'] or task and oid in task['open_effects']) for oid,o in operations.items()):
                 err('result_effect','trace still has unresolved possible external effects')
         errors.extend(f'event {index}: '+e for e in local)
+    if not any('schema:' in error for error in errors):
+        from .runtime_rules import check_trace_rules as runtime_trace
+        from .governance_rules import check_trace_rules as governance_trace
+        from .content_rules import check_trace_rules as content_trace
+        errors += runtime_trace(trace)
+        errors += governance_trace(trace)
+        errors += content_trace(trace)
     return errors

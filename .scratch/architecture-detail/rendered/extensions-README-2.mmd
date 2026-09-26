@@ -1,0 +1,11 @@
+stateDiagram-v2
+    [*] --> prepared
+    prepared --> draining: 当前批准有效
+    draining --> switching: 原责任已排空
+    draining --> blocked: 原效果或格式不可交接
+    switching --> active: 新代际持久且实例就绪
+    switching --> blocked: 装载或核对失败
+    active --> disabled: 撤回或安全停用
+    disabled --> prepared: 新的获准恢复命令
+    blocked --> draining: 原缺口已核清
+    blocked --> switching: 已切代际的装载故障修复

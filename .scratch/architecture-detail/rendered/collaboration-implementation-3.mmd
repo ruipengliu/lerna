@@ -1,0 +1,29 @@
+sequenceDiagram
+    participant P as 父调用方
+    participant I as 协作用例 facade
+    participant A as DelegationAdmission
+    participant C as InternalChildFactory
+    participant R as TaskCoordinator / BudgetLedger
+    participant S as 同一提交域的各领域 Store
+    P->>I: 原委派命令、固定目标和准确绑定
+    I->>S: 优先查询原命令／关闭索引
+    S-->>I: 首次请求，无原决定
+    I->>A: 事务外取得并固定获准依赖
+    rect rgb(232, 242, 255)
+      Note over A,S: 创建事务：原命令 → 祖先 → 父预算 → 委派槽
+      A->>S: 再查原决定，锁父链并检查当前资格与容量
+      S-->>A: 原父任务仍允许新委派
+      A->>C: 受限目标、权限、预算与同一事务句柄
+      C->>R: 内部创建用例，传同一事务句柄
+      R->>S: 预留父额度，创建子 Task、预算与首 job
+      S-->>R: 事务内的固定 child_task_id
+      R-->>C: 子与原 allocation 关联
+      C->>S: 保存 Delegation、唯一映射及原 Receipt
+      S-->>I: 共同提交完成
+    end
+    I--xP: 原创建答复丢失
+    Note over P,S: 子 job 已可恢复；父取消只能在相同锁序之后提交
+    P->>I: 查询或重投同一原 command_id
+    I->>S: 查原 Receipt 与原 delegation
+    S-->>I: 同一 child_task_id 和 allocation
+    I-->>P: 原接纳结果，当前进展另行读取

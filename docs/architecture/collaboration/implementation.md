@@ -1,0 +1,358 @@
+# 协作实现：唯一子映射、控制传播与封账
+
+[模块主线](README.md) · [任务实现](../task-runtime/implementation.md) · [执行实现](../execution/implementation.md) · [共同契约](../contracts/README.md)
+
+本页规定内部子任务与外部 Agent 的参考实现。委派用于把一部分目标交给另一个执行主体，父任务始终保留自己的完成裁决。子成功、目标行动封闭、效果核清和费用封账分别保存，不能用一个“完成”布尔值替代。
+
+内部子任务与父任务在同一 Home；它们可以调用远端 Brain、Memory 或 Executor。另一 Home 即使采用相同软件，也通过外部委派路径交接。没有原创建查询、可信预算上限或所需控制能力时，适配器不开放依赖这些保证的委派。
+
+<a id="module-shape"></a>
+## 1. 模块形状与内部职责
+
+协作是宿主装配的逻辑模块：协作用例入口作为 facade，DelegationAdmission／InternalChildFactory／ExternalAgentAdapter 处理接纳与交接，DelegationReducer／ControlPropagator／SettlementCoordinator 保存聚合、控制和封账规则，Store 与适配器 port 隔离存储和外部协议。组件名描述参考实现职责，尚无对应运行代码。内部任务复用 TaskCoordinator 与 jobs，不建立第二套任务循环；子创建、预算和父控制因此可以共事务裁决。
+
+```mermaid
+flowchart TB
+    P[TaskCoordinator / BudgetLedger] -->|协作用例| I
+    subgraph CO[协作模块]
+      I[协作用例 facade] -->|同步| D[DelegationAdmission]
+      D -->|内部创建| C[InternalChildFactory]
+      D -->|外部交接| L[(Collaboration Store · 映射 / 进展 / jobs)]
+      C -->|同事务写映射| L
+      L -.->|持久 job| A[ExternalAgentAdapter]
+      A -->|原事实归并| F[DelegationReducer]
+      F -->|短事务| L
+      L -.->|持久 job| S[ControlPropagator / SettlementCoordinator]
+    end
+    D -->|核验准确依赖| K[Agent 目录 / 授权 ports]
+    C -->|创建 Task／额度| P
+    F -->|父投影／job| P
+    S -->|原额度结算| P
+    A -->|创建／查询| X[外部 Agent port]
+    S -->|控制／封账| X
+```
+
+图中协作模块位于父任务固定 Home。实线表示同步用例、读写或 port 调用，虚线表示宿主 JobRunner 领取持久责任后调用对应组件。创建 Task／额度、父投影／job 的更新与协作映射通过同一事务句柄提交；外部交接先用短事务保存本地责任。外部 Agent 的原创建、查询、控制及封账调用均在事务外，原生响应沿 ExternalAgentAdapter 结构化映射后返回，不能直接写父任务状态。
+
+| 内部职责 | 决定及产出 | 边界 |
+| --- | --- | --- |
+| 协作用例 facade | 认证父 Home、原命令与所属协作用例 | 复用宿主原回执处理；不把 HTTP 回调作为父子关系权威 |
+| DelegationAdmission | 父当前资格、精确 Agent 绑定、收缩权限和有限预算 | 不接受模型自签权限或新实例地址 |
+| InternalChildFactory | 同事务创建子 Task、allocation 与映射 | 不创建第二个 Home，不复制父余额 |
+| ExternalAgentAdapter | 固定创建键、原生协议与语义映射 | 不把原生“请求完成”升级为效果已核清 |
+| DelegationReducer | 唯一远端映射、单调进展、成果和未决责任 | 不按接收时间覆盖提供方修订 |
+| ControlPropagator | 本地决定、逐端传播及实际确认 | 无暂停支持时明确报告仍可能运行 |
+| SettlementCoordinator | 原 allocation 最终累计费用与封账 | 不因父取消或子成功释放预留 |
+
+替代方案是让内部 Agent 也各自运行 Home。它增加创建、控制和预算的分布式缝隙；需要独立信任或运维边界时才使用，统一按外部路径实现，不另定义中间类型。
+
+存储适配器只实现所属表的条件读写，外部适配器只实现固定版本 Agent port。两者由宿主注入；DelegationReducer 和封账规则不依赖提供方 SDK。内部子进展直接读取同 Home 的 Task 修订，再走相同聚合规则；不为读取同一库已有事实增加网络事件链。
+
+## 2. 存储与唯一约束
+
+所有表带 tenant；跨端映射额外绑定认证发送方和固定 endpoint／instance。任务表、许可和预算由各自模块保存，协作表只引用这些权威记录。
+
+| 表 | 核心字段 | 原子性与索引 |
+| --- | --- | --- |
+| agent_descriptors | agent_ref、kind、目标／结果 Schema、控制能力、权限和费用上限 | 固定版本及摘要；不采纳运行时模型改写 |
+| agent_bindings | descriptor、adapter_ref、endpoint_id、配置摘要 | 原委派固定组合；更新创建新版本 |
+| delegations | delegation_id、父任务、原请求、phase、revision、allocation_id | 原 delegation 唯一；目标和配置不可改 |
+| internal_child_links | delegation_id、child_task_id、父任务 | 两方向唯一；同事务创建子与映射 |
+| external_task_links | delegation_id、endpoint_id、creation_key、remote_task_id | 原创建键唯一；映射一旦建立不可替换 |
+| incoming_delegations | 认证发送 Home、parent_delegation_id、原创建命令、child_task_id | 接收端原委派唯一；原命令重投返回同子任务 |
+| delegation_progress | 原任务、remote_revision、摘要、结果、未知效果、费用修订 | 同来源修订唯一；同修订异内容冲突 |
+| delegation_controls | 本地控制修订、固定子命令、逐端状态和在途责任 | 决定与传播 job 共同提交 |
+| delegated_inputs | 原远端请求 ID／修订、答复引用、原转交命令和消费回执 | 同业务输入只转交一个固定版本 |
+| delegation_jobs | 创建、读取、控制、输入或结算的原责任 | 每原对象每 kind 一个活动槽，复用宿主调度 |
+| delegation_closures | 映射、目标封闭依据、效果核清及封账引用 | closed 后长期保留最小身份与关闭依据 |
+
+表中 phase 的含义复用主线，不新增“任务成功”列。父子任务的 Task.status 各自有权威，协作只记录完成判断需要的可查投影。
+
+<a id="data-flow"></a>
+### 2.1 委派对象关系与流转
+
+Delegation 是父侧交接聚合；InternalChildLink 与 ExternalTaskLink 分别把它绑定到唯一子身份，二者互斥。外部创建未知时可以暂时没有 remote_task_id，但固定 creation_key 和 Allocation 已存在。图中的 Task／Allocation 由运行时保存，协作只通过接口引用和变更它们。
+
+```mermaid
+erDiagram
+    ParentTask ||--o{ Delegation : "准入有界目标"
+    Delegation ||--|| Allocation : "绑定唯一额度来源"
+    Delegation ||--o| InternalChildLink : "内部唯一路径"
+    InternalChildLink ||--|| ChildTask : "固定同 Home 子任务"
+    Delegation ||--o| ExternalTaskLink : "外部唯一路径"
+    Delegation ||--o{ DelegationProgress : "归并版本化事实"
+    Delegation ||--o{ DelegationControl : "记录原控制交接"
+    Delegation ||--o{ DelegatedInput : "记录原输入消费"
+    Delegation ||--o| DelegationClosure : "固定封账依据"
+```
+
+| 阶段 | 对象创建、保存与交接 | 消费、归并及清理条件 |
+| --- | --- | --- |
+| 父准入 | DelegationAdmission 核验父当前资格及准确绑定，固定委派目标、权限和 Allocation | 内部路径由 InternalChildFactory 同事务建 ChildTask／映射／首 Job；外部路径持久化 creation_key 和发送 Job |
+| 创建消费 | ExternalAgentAdapter 只发送原创建；接收方持久化原键→子任务映射后发布原回执 | 丢答复查原键；父保存唯一 ExternalTaskLink，不能用另一个子身份填补暂时未知 |
+| 进展和输入 | 子 Task 修订或原生响应转为 DelegationProgress；澄清保存 DelegatedInput 与原请求关联 | DelegationReducer 应用合法新修订；输入一次消费，重复进展不重复记费和唤醒父任务 |
+| 控制与关闭 | 父控制建立 DelegationControl 及持久传播责任；SettlementCoordinator 收取原接收方封账证明 | 控制 applied、目标封闭、效果核清和预算 closed 分别确认，不能从其中一项推断其他项 |
+| 归并及清理 | 父取得当前获准成果并自行判断要求；协作保存 DelegationClosure | 原映射与未决费用仍有恢复引用时不清理；完整内容到期可删，最小禁止复用关联长期保留 |
+
+跨 Home 的 incoming_delegations／incoming_allocations 属于接收方同一创建事务，绑定父 delegation、原 allocation 和接收子 Task。父侧 ExternalTaskLink 与接收映射通过原命令核对，不是分布式外键；任何一侧不可达都不能由另一侧猜测建表补齐。
+
+<a id="21-并发序"></a>
+### 2.2 并发序
+
+内部委派按根到叶锁祖先链，再锁父任务预算、delegation 与子创建槽。父取消使用相同顺序：取消先提交则新委派拒绝，创建先提交则取消事务必能发现子映射并建立传播责任。
+
+外部网络调用不占本地事务。保存远端映射时锁原 delegation，比较固定创建键、绑定及当前 revision；若映射已经存在，仅接受完全相同的远端任务。另一任务 ID 即使报告成功也不能覆盖原映射。
+
+## 3. 内部委派的原子创建
+
+用户要求“比较两个版本的 API 并写入报告”，父任务可以委派比较部分，自己准备报告结构。子只取得两份输入的读取／处理用途和固定预算；最终写报告仍由父另行准入。
+
+```text
+create_internal_child(request):
+  begin with original command and ancestor locks
+  require parent active, effective running and within deadline
+  require exact installed internal Agent descriptor and bounded ancestry
+  require requested permissions and budget are valid subsets
+  if original delegation exists: compare intent and return same mapping
+  reserve the fixed allocation from parent budget
+  create child Task at the same Home, limited configuration and first job
+  create Delegation(active) with exactly one child_task_id
+  save original applied Receipt
+  commit
+```
+
+预算分配是同一个存储事务中的内部调用，不通过本地 HTTP 产生第二个提交点。若子创建失败，父预留和 delegation 均不提交。答复丢失只查询原 command 或 delegation，不重新分配。
+
+默认深度、活跃子数和用户任务数均有有限配置。祖先列表由 Home 从真实父链产生并核验，不能相信模型提供的列表。拒绝父子环、重复祖先、错误 Home 和越界深度；活跃子任务也占用户任务额度。
+
+子工作执行完全复用任务运行时。父通过子任务修订唤醒事实归并，不要求同库子任务再经网络发送一份“完成消息”。远端 Brain 停机时，已经提交的本地子事实仍可供父读取。
+
+<a id="key-sequence"></a>
+### 3.1 同一事务句柄如何连接子创建与预算
+
+下图展开内部委派的代码调用。Store 节点代表宿主同一事务句柄下的各领域仓储，不给协作组件任意写 Task 表的权力。目录、内容及授权依赖在事务前固定，事务内验证其仍可使用；没有外部网络调用参加提交。
+
+```mermaid
+sequenceDiagram
+    participant P as 父调用方
+    participant I as 协作用例 facade
+    participant A as DelegationAdmission
+    participant C as InternalChildFactory
+    participant R as TaskCoordinator / BudgetLedger
+    participant S as 同一提交域的各领域 Store
+    P->>I: 原委派命令、固定目标和准确绑定
+    I->>S: 优先查询原命令／关闭索引
+    S-->>I: 首次请求，无原决定
+    I->>A: 事务外取得并固定获准依赖
+    rect rgb(232, 242, 255)
+      Note over A,S: 创建事务：原命令 → 祖先 → 父预算 → 委派槽
+      A->>S: 再查原决定，锁父链并检查当前资格与容量
+      S-->>A: 原父任务仍允许新委派
+      A->>C: 受限目标、权限、预算与同一事务句柄
+      C->>R: 内部创建用例，传同一事务句柄
+      R->>S: 预留父额度，创建子 Task、预算与首 job
+      S-->>R: 事务内的固定 child_task_id
+      R-->>C: 子与原 allocation 关联
+      C->>S: 保存 Delegation、唯一映射及原 Receipt
+      S-->>I: 共同提交完成
+    end
+    I--xP: 原创建答复丢失
+    Note over P,S: 子 job 已可恢复；父取消只能在相同锁序之后提交
+    P->>I: 查询或重投同一原 command_id
+    I->>S: 查原 Receipt 与原 delegation
+    S-->>I: 同一 child_task_id 和 allocation
+    I-->>P: 原接纳结果，当前进展另行读取
+```
+
+如果父取消先取得锁并提交，创建事务看到终态后拒绝，不留下子 Task 或父预留。如果创建先提交，取消事务一定能读到新子映射并建立其控制责任。创建已提交后父再取消，也不改变原接纳回执；原命令查询仍指向同一子任务。事务中任何仓储写入失败都整体回滚，不能只重试子创建而再次扣父预算。
+
+## 4. 外部创建与答复丢失
+
+外部委派先在父 Home 保存固定目标、准确输入、Agent 绑定、额度预留、creation_key 和发送 job，phase 为 preparing。applied 表示本地责任已建立；此时不伪造 remote_task_id。
+
+外部适配器按安装时声明的原生合同创建子任务。创建请求必须包含稳定父委派键，原输入、预算和接收方不可变；远端必须支持原键查询或能够证明同键创建幂等。缺少两者的提供方只可作为明确有界的咨询能力接入。
+
+```mermaid
+sequenceDiagram
+    participant H as 父 Home
+    participant S as 本地记录与jobs
+    participant A as 固定外部适配器
+    participant R as 远端任务负责方
+    H->>S: 保存委派、预留、创建键与发送责任
+    S-->>H: applied，本地责任已接纳
+    A->>R: 固定创建键和受限目标
+    R->>R: 创建原任务并持久保存键映射
+    R--xA: 创建答复丢失
+    A->>R: 查询原创建键
+    R-->>A: 同一remote_task_id及当前事实
+    A->>S: 保存唯一映射和后续查询责任
+```
+
+创建结果未知时 phase 为 reconciling，预留继续占用。查询表明原任务仍运行后可以回到 active；查询证明未接纳且未来不会接纳，才可关闭创建责任并按原额度封账。暂时 not_found 不提供这种证明。
+
+### 4.1 另一 Harness Home 的接收
+
+另一 Home 使用 task.submit.delegation_context，固定 sender_home_id、parent_delegation_id、allocation_ref、allocation_command_id、permission_refs 和 ancestor_ids。sender_home_id 必须与认证上下文的 sender_service_id 相同；接收方验证原父权威及接收方范围后，在自己的事务中建立 incoming_delegations、incoming_allocations、唯一子 Task 和首 job。
+
+原 allocation 先由负责方原命令回执核对，再通过 budget.read(role=owner) 核对当前分配修订仍可消费。Task 的 budget 必须等于准确分配上限，期限不能更晚；查询已 gone、负责方不可达、当前已封账、预留未证明或接收方不符时，不创建可消费子任务。父保留预留并进入 dependency／budget 等待。
+
+父取消时，还必须向原接收 Home 发送 budget.close，以原 allocation 和父委派身份关闭接纳及新增消费门禁。它与子创建争用同一事务记录：关闭先胜则迟到创建永久拒绝，创建先胜则收束既有子的消费。budget.close 接纳不代表最终费用已知；父经 budget.read(role=receiver) 取得 closed 证明后，才可对原 allocation 结算。未知分配先保存最小禁止索引并核对原父记录，不能因为没有 child_task_id 就断言原创建永远不会迟到。
+
+两个 Home 之间不共享 Task 行写权。接收方的子任务拥有自己的 Home 和控制修订；父只有协议允许的有限控制与披露资格。相同用户名、目标内容或 parent_task_id 都不是认证依据。
+
+## 5. 单调进展与结果读取
+
+外部适配器把原生事实映射为固定的 remote_revision、明确成果版本、用量修订和 effects_pending。原生接口不提供单调修订时，适配器保存目标回执摘要及受信观察序号，但不能凭本地序号制造原生事实没有的终态保证。
+
+| 已保存事实与新输入 | 处理规则 |
+| --- | --- |
+| 同 remote_revision、同摘要 | 幂等返回，费用和父唤醒不重复 |
+| 同 remote_revision、不同摘要 | 标明协议冲突，暂停依赖该结果的目标推进 |
+| 较旧修订 | 不覆盖当前状态，保留诊断关联 |
+| 新修订映射到另一 remote_task_id | 拒绝覆盖，查询固定原任务 |
+| 新结果只给自然语言“完成” | 作为候选内容保存，完成保证仍按证据分级 |
+| 远端终态仍有未知效果 | 结果可展示，effects_pending 保持 true |
+
+结果内容读取遵守当前披露权限，不能因为远端曾允许父查看就永久缓存全部正文。只有结果引用已获准、来源可查且符合固定结果 Schema，才进入父任务的快照。
+
+父可用子结果重新推理，但子输出不能发出系统控制、修改父预算或批准扩大权限。任务完成判断把子产物当输入，并核对父自身要求的全部必要条件。
+
+## 6. 暂停、取消及恢复的传播
+
+父暂停后的内部有效控制由同 Home 祖先链计算。子自身 paused 保留；父恢复只移除父造成的限制，不覆盖子意图。子已在远端排队的操作也必须收到更新后的子 TaskGate。
+
+外部控制由适配器按固定原命令发送，再查询对应原任务／控制结果。control_pending 表示尚有必要入口未确认，不能用 phase=active 或远端“已收到”推断控制已执行。
+
+| 竞争场景 | 本地提交与后续责任 |
+| --- | --- |
+| 父取消先于内部创建 | 新子创建拒绝，无 allocation 转移 |
+| 内部创建先于父取消 | 子映射已在同库；父终态与子取消工作共同保存 |
+| 父取消时外部创建仍未知 | 停新目标工作，保留原创建查询；找到原子后再取消 |
+| 外部暂停不受支持 | 保存限制与实际边界，界面明确外部仍可能运行 |
+| 远端已开始不可撤回动作 | 关闭后续发送，保留在途效果核对 |
+| 父已取消后子成功 | 只收取原结果元数据、费用及效果，不新建综合工作 |
+
+用户要求立即中断的设备任务不能交给只有最终结果、没有相应控制保证的 Agent。对具备有限停止窗口的提供方，窗口进入固定适配声明与用户可見限制；失联不延长原期限或额度。
+
+### 6.1 控制命令的合并
+
+同一远端可以只保留最高尚需应用控制的活动工作槽，但每条用户命令仍保存原本地回执。新的控制先持久化，再使旧未发送控制工作失效；已经可能发送的旧命令沿原身份保留查询责任。
+
+父终态后不生成 resume。外部不支持控制修订单调时，适配器不得把乱序的 pause／resume 直接并发发出；它按该原任务串行交接并取得原结果，或者声明无法提供所需保证并拒绝该装配。
+
+## 7. 用户输入与权限补充
+
+外部 Agent 请求澄清时，适配器保存原请求 ID、请求修订、目标任务及允许输入类型；父界面只展示当前获准内容。`collaboration.submit_input` 固定 answer_ref 和原远端请求，不能在重试中替换答案。
+
+输入转交遵守与交互模块相同的区别：本地接纳、正在发送、远端消费分别确认。答复丢失先查询原转交命令或请求消费记录。另一个回答竞争同一请求时，远端一次消费决定胜者，本地展示冲突并刷新。
+
+权限请求通过受信入口处理。普通回答、子 Agent 输出或“用户已经同意”的外部文本不能签发 Grant。新许可必须仍满足父允许范围；若用户确实希望扩大父目标权限，先走父任务明确变更，不让子擅自修改祖先约束。
+
+取消后到达的新输入请求不唤醒目标行动。允许收取原消费回执、停止事实和最小账务材料，所需收尾用途仍由当前管理依据授权。
+
+## 8. 分配、费用和 closed 的条件
+
+父侧 allocation 是该委派唯一费用来源。内部子支出从父 reserved 划拨；父报表聚合显示子费用但不再扣一次。跨 Home 分配固定 receiver 和期限；答复丢失不再创建另一份相同额度。
+
+每份进展携带累计用量及 usage_revision。适配器保存每个计价单位的最近值，较旧修订不回退账务，同修订异金额产生冲突。任务结果只有“费用估计”时，不能把它当最终账单释放预留。
+
+委派进入 closed 必须同时具备：
+
+1. 已经证明没有新的子目标行动可以开始，或原创建从未被接纳且不可能迟到接纳。
+2. 所有内部子任务终结；外部原任务的对应封闭保证已确认。
+3. 本委派及其受管后代没有未知或可能迟到的效果。
+4. 原接收方已经封闭新增消费，全部单位最终累计费用已确定，budget.settle 完成。
+5. 原输入和控制不存在还可能产生目标行动的未确认转交。
+
+```text
+close_delegation(delegation):
+  lock original delegation and allocation
+  require immutable original child mapping or proof of never-accepted creation
+  require target work is closed and all delegated effects are resolved
+  require final receiver spending closure and accepted original settlement
+  save closed phase, revision and closure references
+  schedule only retained cleanup, disclosure and audit responsibilities
+  commit
+```
+
+closed 不要求无限保留全部内容，但长期最小关闭索引必须阻止同 delegation 和 creation_key 被重新创建。费用核对尚未封账时保持 reconciling，不通过删除原映射把责任“清零”。
+
+## 9. 恢复、限额与生命周期
+
+恢复扫描按用户分页读取 preparing、active 和 reconciling 的委派。每个对象检查是否存在创建、查询、控制和结算所需工作槽；补建时沿原责任键和原远端身份，不调用 Brain 猜测恢复动作。
+
+| 当前缺口 | 自动动作 | 耗尽后保持的状态 |
+| --- | --- | --- |
+| 原创建未获答复 | 查原键或按已验证幂等合同重投 | reconciling，父预留不释放 |
+| 原任务暂时不可达 | 有限退避查询，保留控制 pending | 明确 agent_unavailable 及下次恢复条件 |
+| 远端副作用未知 | 原凭据查询或获准独立核验 | effects_pending，阻止父成功 |
+| 最终费用未取得 | 查原账单／allocation 封账 | 保守预留和账务责任 |
+| 输入消费未确认 | 查原请求／原转交命令 | 不重复创造另一份答案 |
+| 适配器版本停用 | 停新委派，保留受限旧版本恢复能力 | 无安全核对实现时明确缺口 |
+
+默认采用运行时配置中的有限委派深度、活跃子数和每用户任务上限。外部每轮最多一次请求，退避有上限，创建与自动查询都有总次数和绝对期限。达到上限后保持可查缺口，等待提供方恢复或受信处置，不能无限重试。
+
+控制与收尾不与新委派共用全部容量。一个提供方洪峰或长时间失联只占其有界队列和既有预留，不能通过循环创建新 Home、Agent 或连接绕过用户总限额；多个 Home 按[保守分区份额](../deployment-production.md#quota-scope)计量，原分区的未结占用不随扩容释放。
+
+适配器升级前保留原版本、原输入编码和原创建键。迁移只改本地表示且通过对应合同检查时可切换读取；不能在更新后把原远端任务解释为新对象。不可兼容旧责任时停止新接纳，先完成核对或报告无法恢复。
+
+## 10. 保留、删除及失去远端权威
+
+完整任务内容、原生响应和日志分别按用途授权保留。委派未结清时必须保留足够的原映射、权限范围、费用和目标凭据；删除正文不删除这些必要责任依据。
+
+已 closed 的完整记录可以压缩，但 `(tenant, sender, delegation_id, creation_key, remote_task_id)` 的最小禁止复用关联长期保留。完整查询依据过期返回 gone；旧委派键不能被当作首次请求再次交给远端。
+
+恢复旧备份时先核对当前控制和关闭依据；缺少备份后的原创建记录时禁止重新执行副作用委派。用户可以查看损失范围、提供真实目标凭据或终止自动核对，不能用“当作没做过”按钮释放原预算并重建。
+
+外部提供方永久失去账本时，适配器保留 unknown 和实际保证缺口。父任务可以失败／取消并交付已有获准材料；这种结束不等于证明外部动作或账务已全部消失。
+
+<a id="production"></a>
+## 11. 生产部署、外部隔离与容量
+
+协作组件与父任务运行时按固定 Home 装配，内部创建继续使用同一数据库事务。应用副本可跨可用区替换，外部适配器工作者可独立扩容；逻辑边界和物理进程数不必一一对应。采用[公共可用性策略](../deployment-production.md#availability)的稳定 Home 和数据库写权，不能通过把内部子任务临时迁到另一 Home 来绕过原库故障。
+
+| 扩展单位与串行键 | 处理边界 | 代价及热点控制 |
+| --- | --- | --- |
+| 不同父任务树的准入与聚合 | 命令入口无持久内存状态，事务按固定 tenant／Home 路由 | 受任务树事务域限制；增加副本不能消除同一父预算争用 |
+| 原 delegation 与 creation_key | 创建、固定映射和单调进展按原键串行提交 | 外部超时不释放唯一映射槽；重复请求读取原决定，不能并发创建替代任务 |
+| 父祖先链、子创建槽与原 allocation | 按既定锁序控制有界子树；封账对同 allocation 一次应用累计差额 | 子数和深度影响取消事务延迟，先限额再扩树，不能批次漏掉已创建子 |
+| 同远端任务的控制和输入 | 固定原控制／输入命令，缺修订单调时串行交接 | 原生 pause／resume 无序接口限制并发；不可用时保留 pending，不假报全树生效 |
+| 提供方工作池 | 每 provider、租户分别设置创建／查询并发与退避 | 失联提供方只占其有界队列；控制、原创建查询及结算保留工作槽 |
+
+| 依赖中断 | 当前委派表现 | 恢复责任 |
+| --- | --- | --- |
+| 父 Home 数据库不可写或提交结果未知 | 新委派不可接纳，原创建／取消可能已提交 | 查询原命令；权威恢复后补原责任槽，不重新建立父子关系 |
+| 外部创建或原任务查询不可达 | preparing／reconciling、原预留及控制 pending 保留 | ExternalAgentAdapter 只查原键；自动次数耗尽后等待恢复事件或受信核查 |
+| Agent 目录、内容或授权依据不可用 | 依赖它的新委派等待／拒绝，原内部子和已知费用可归并 | 恢复后核验原准确版本及当前用途，不能悄悄换 Agent 或扩大权限 |
+| 额度负责方或接收方失联 | 原 allocation 不能证明当前可消费或最终已封账 | 接收侧不新建子；父侧保留预留，原 budget.read／close 继续负责核对 |
+| 原提供方永久失去账本 | 保留实际 unknown、effects_pending 与费用缺口 | 父可结束自身任务并披露限制；不得据此宣布外部全部结束或再建替身 |
+
+外部调用从连接池取得有界槽，网络等待不占父事务。提供方持续失败时暂停该池的新创建，原查询与停止按有限频率继续；恢复事件只唤醒原工作，不能重置创建次数、期限和额度。输入、进展和结果正文按准确引用传递，限制单条字节量及每委派待消费输入数，防止外部持续生成内容耗尽父 Home。
+
+按[公共容量方法](../deployment-production.md#capacity)，至少测量内部创建事务 p95／p99、父预算与祖先锁等待、活跃子数、外部创建未知年龄、控制 pending 年龄、未结 allocation 年龄、每提供方最老工作年龄、重复进展率、协议冲突率和结果字节率。父完成时间分别记录等待子目标、未知效果和最终费用的时长，不能用一个“远端慢”归因所有延迟。
+
+压测包括一棵有界热点树、多个独立租户、单提供方长时失联和集中恢复。取消与创建在负载下竞争时仍需满足唯一映射及共同提交；恢复时按租户轮转，限制提供方重连洪峰。扩容以剩余故障容量和保守预留存量为依据，未知费用不能通过统计折扣释放。扩大外部并发带来的主要代价是更多长期未决责任，而不只是连接数。
+
+## 12. 具体故障实验
+
+以下实验要求从真实委派入口开始，使用独立的父库、远端库及目标真值。仅构造 Delegation.phase 不能替代这些实验。
+
+| 编号 | 初始状态与故障点 | 恢复及可观察断言 |
+| --- | --- | --- |
+| CL-01 | 同一内部委派并发，子Task写入后提交前崩溃 | 事务回滚或共同提交；唯一child、allocation和首job，无半条映射 |
+| CL-02 | 内部创建提交后答复丢失 | 重投原command；返回同child，父预留不增加第二次 |
+| CL-03 | 父取消与子创建同时提交 | 按锁序只有一个明确顺序；创建胜出时取消工作包含新子 |
+| CL-04 | 外部创建成功后断线，父随即取消 | 查出同remote_task_id，再落实取消与封账；没有第二远端任务 |
+| CL-05 | 远端创建返回暂时not_found，随后旧创建才可查 | 保留unknown与预留；不得提前释放后再创建替身 |
+| CL-06 | 同remote_revision的结果或费用不同 | 标记协议冲突，不覆盖原事实、不继续父成功判断 |
+| CL-07 | 子自身暂停，父暂停后再恢复 | 子自身control仍paused，对外有效TaskGate不允许新动作 |
+| CL-08 | 父暂停时子操作已被远端接纳未发送 | 子有效门禁传播并在实际入口生效，首次发送和安全重试都被阻止 |
+| CL-09 | 外部不支持pause而应用请求整树暂停 | 显示外部仍可能运行；不能报告全树enforced |
+| CL-10 | 子返回答案同时仍有未知写入 | 答案可预览；父不能succeeded，原Executor继续核对 |
+| CL-11 | 重复累计账单、旧账单和最终封账乱序 | 同单位累计差额只记一次；未封账不归还预留 |
+| CL-12 | 两设备回答同一个远端澄清，消费后丢答复 | 一次消费；原答案及回执可查，另一输入显示冲突 |
+| CL-13 | 子请求超出父范围的私密材料 | 交给受信权限入口；普通输入不增权，无授权外读取 |
+| CL-14 | closed完整记录已清理后重放旧委派键 | 最小索引返回gone／冲突，远端任务数不增加 |
+| CL-15 | 适配器升级后无法解码原任务回执 | 不切换原身份，不重建任务；保留缺口和最小查询责任 |
+
+[跨 Home 额度序列](../contracts/examples/protocol/23-cross-home-budget.json)检验当前分配、接收门禁与封账关联。既有[委派协议序列](../contracts/examples/protocol/12-delegation-mapping.json)检验映射、控制和输入的字段关联。上述事务、独立远端及真实效果实验仍须由参考实现和至少一个独立适配器提供运行证据。

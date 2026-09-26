@@ -1,0 +1,324 @@
+[
+  {
+    "source": "docs/architecture/README.md",
+    "index": 1,
+    "digest": "2ab6a7c21b9dddc19a6ee0c8efc598c65f230213f7c49ad7642835b46b83c593",
+    "image": ".scratch/architecture-detail/rendered/README-1.png",
+    "name": "README-1"
+  },
+  {
+    "source": "docs/architecture/brain/README.md",
+    "index": 1,
+    "digest": "af0c40d8fd9e76598592d09099141d7a047c3880bff6520f6eafd843263becd1",
+    "image": ".scratch/architecture-detail/rendered/brain-README-1.png",
+    "name": "brain-README-1"
+  },
+  {
+    "source": "docs/architecture/brain/README.md",
+    "index": 2,
+    "digest": "d00fbda0b50b0941f5617950d00dc97bf6855168c57b89163234b81e31a4e915",
+    "image": ".scratch/architecture-detail/rendered/brain-README-2.png",
+    "name": "brain-README-2"
+  },
+  {
+    "source": "docs/architecture/brain/implementation.md",
+    "index": 1,
+    "digest": "1e9bcf17336954f63e83e09f83d166bb4f0028a12dc632150b5ccbdf5251bdea",
+    "image": ".scratch/architecture-detail/rendered/brain-implementation-1.png",
+    "name": "brain-implementation-1"
+  },
+  {
+    "source": "docs/architecture/collaboration/README.md",
+    "index": 1,
+    "digest": "61c418559f73682c555ba987ae87e697760977eaa92fa8938c959f2fb19d6dba",
+    "image": ".scratch/architecture-detail/rendered/collaboration-README-1.png",
+    "name": "collaboration-README-1"
+  },
+  {
+    "source": "docs/architecture/collaboration/README.md",
+    "index": 2,
+    "digest": "962acf0b79ea9d22900f360dbeac763b380422eae6a8d06527e6c356a5b3694a",
+    "image": ".scratch/architecture-detail/rendered/collaboration-README-2.png",
+    "name": "collaboration-README-2"
+  },
+  {
+    "source": "docs/architecture/collaboration/implementation.md",
+    "index": 1,
+    "digest": "07a8e3bc00eb1f5491103a42808c46199a0a3d4c6725890d5a4878a58c88457e",
+    "image": ".scratch/architecture-detail/rendered/collaboration-implementation-1.png",
+    "name": "collaboration-implementation-1"
+  },
+  {
+    "source": "docs/architecture/collaboration/implementation.md",
+    "index": 2,
+    "digest": "a5c4b2a75f4b2a3fa60b16ca72cc81264276df1a027511e04fe3f5f96db3d95f",
+    "image": ".scratch/architecture-detail/rendered/collaboration-implementation-2.png",
+    "name": "collaboration-implementation-2"
+  },
+  {
+    "source": "docs/architecture/contracts/README.md",
+    "index": 1,
+    "digest": "a28e0bac83822e2964b9ce216ce20149c778ea78b529563fe49f334e89e9da6b",
+    "image": ".scratch/architecture-detail/rendered/contracts-README-1.png",
+    "name": "contracts-README-1"
+  },
+  {
+    "source": "docs/architecture/contracts/transport.md",
+    "index": 1,
+    "digest": "6dfc94e527aa9cf59395c4e8119d3ffe73a2731b1220fa03c55d202135b53da1",
+    "image": ".scratch/architecture-detail/rendered/contracts-transport-1.png",
+    "name": "contracts-transport-1"
+  },
+  {
+    "source": "docs/architecture/deployment.md",
+    "index": 1,
+    "digest": "b948810354d06de6719e49c3ec58a15efc2a381a6a8a5f24c7352d1e3a44f0ac",
+    "image": ".scratch/architecture-detail/rendered/deployment-1.png",
+    "name": "deployment-1"
+  },
+  {
+    "source": "docs/architecture/deployment.md",
+    "index": 2,
+    "digest": "224bd97b249b5e07bf21744fef31a2781c204ef077e0559fc5f7ffca0da2357e",
+    "image": ".scratch/architecture-detail/rendered/deployment-2.png",
+    "name": "deployment-2"
+  },
+  {
+    "source": "docs/architecture/evaluation/README.md",
+    "index": 1,
+    "digest": "2f33f6875161cb8afecd321b89eadb674e84ca5b93d682b5d64913257323f18e",
+    "image": ".scratch/architecture-detail/rendered/evaluation-README-1.png",
+    "name": "evaluation-README-1"
+  },
+  {
+    "source": "docs/architecture/evaluation/README.md",
+    "index": 2,
+    "digest": "5ef65eb11ad5f1e7bcbe591f04bf3ff9049176ad3501b0bf46ed1015b312dba0",
+    "image": ".scratch/architecture-detail/rendered/evaluation-README-2.png",
+    "name": "evaluation-README-2"
+  },
+  {
+    "source": "docs/architecture/evaluation/implementation.md",
+    "index": 1,
+    "digest": "9ee7becea0655ffab934af004b968f2b3cecc3b895da76ddf3324cb4feb08059",
+    "image": ".scratch/architecture-detail/rendered/evaluation-implementation-1.png",
+    "name": "evaluation-implementation-1"
+  },
+  {
+    "source": "docs/architecture/execution/README.md",
+    "index": 1,
+    "digest": "ee9be93e8f2556530a60464759ed77fe22fdeea19cbbe6358cd9fb98efd2feaa",
+    "image": ".scratch/architecture-detail/rendered/execution-README-1.png",
+    "name": "execution-README-1"
+  },
+  {
+    "source": "docs/architecture/execution/README.md",
+    "index": 2,
+    "digest": "39b071b66b05cb18c5a1042cc7b2bdf83c82ca9714239d8c6d9a76ea045fd160",
+    "image": ".scratch/architecture-detail/rendered/execution-README-2.png",
+    "name": "execution-README-2"
+  },
+  {
+    "source": "docs/architecture/execution/README.md",
+    "index": 3,
+    "digest": "a602dacf431070372425310e50cb643018e926dca6d9f92d69abd8fd7d11cfc4",
+    "image": ".scratch/architecture-detail/rendered/execution-README-3.png",
+    "name": "execution-README-3"
+  },
+  {
+    "source": "docs/architecture/execution/implementation.md",
+    "index": 1,
+    "digest": "e99e2378c276e22bb614a4ae5f1bdbf3b93b2b9550ca435bd390c32475066864",
+    "image": ".scratch/architecture-detail/rendered/execution-implementation-1.png",
+    "name": "execution-implementation-1"
+  },
+  {
+    "source": "docs/architecture/extensions/README.md",
+    "index": 1,
+    "digest": "79e6ee0778f21631cddc6cdf181a985a0eb83901253e92f2c4d3184ce01604b5",
+    "image": ".scratch/architecture-detail/rendered/extensions-README-1.png",
+    "name": "extensions-README-1"
+  },
+  {
+    "source": "docs/architecture/extensions/README.md",
+    "index": 2,
+    "digest": "a3f2ca5ac461b8ca61bff4a8148bb8d9dc9828b943ef9863cc155e1741b36995",
+    "image": ".scratch/architecture-detail/rendered/extensions-README-2.png",
+    "name": "extensions-README-2"
+  },
+  {
+    "source": "docs/architecture/extensions/implementation.md",
+    "index": 1,
+    "digest": "4f8059b6422ac1c384a6ffa8aabc7e1b24efd143fbaf76746d7c53c85b45af14",
+    "image": ".scratch/architecture-detail/rendered/extensions-implementation-1.png",
+    "name": "extensions-implementation-1"
+  },
+  {
+    "source": "docs/architecture/extensions/implementation.md",
+    "index": 2,
+    "digest": "f0f7192599dd9b498dd5028f83c87ae8f4b64f29c3f53073a6cc186950bba102",
+    "image": ".scratch/architecture-detail/rendered/extensions-implementation-2.png",
+    "name": "extensions-implementation-2"
+  },
+  {
+    "source": "docs/architecture/interaction/README.md",
+    "index": 1,
+    "digest": "48c1b4d9f95faaff25984dca8866d6c197027446e3c340ebf79c8b522dde61ee",
+    "image": ".scratch/architecture-detail/rendered/interaction-README-1.png",
+    "name": "interaction-README-1"
+  },
+  {
+    "source": "docs/architecture/interaction/README.md",
+    "index": 2,
+    "digest": "eef3d54c7a34d65d81b8d894fcf1046876c75146e193b56562127e4201f8e3c6",
+    "image": ".scratch/architecture-detail/rendered/interaction-README-2.png",
+    "name": "interaction-README-2"
+  },
+  {
+    "source": "docs/architecture/interaction/implementation.md",
+    "index": 1,
+    "digest": "769ab19224acce5f056a03029343b4f1ba7b96e8f241d9120ab7637324481ccb",
+    "image": ".scratch/architecture-detail/rendered/interaction-implementation-1.png",
+    "name": "interaction-implementation-1"
+  },
+  {
+    "source": "docs/architecture/interaction/implementation.md",
+    "index": 2,
+    "digest": "28740d0d00ff42bcee01ff9143c6d5150b04d4e71217658fd06c658c0125a0c1",
+    "image": ".scratch/architecture-detail/rendered/interaction-implementation-2.png",
+    "name": "interaction-implementation-2"
+  },
+  {
+    "source": "docs/architecture/memory/README.md",
+    "index": 1,
+    "digest": "a7bdddc2308f36e390554084a293eb91d068fa409a512742bd4519d2466c91cf",
+    "image": ".scratch/architecture-detail/rendered/memory-README-1.png",
+    "name": "memory-README-1"
+  },
+  {
+    "source": "docs/architecture/memory/README.md",
+    "index": 2,
+    "digest": "5709f5c0c9939b55f958336cca099334d43f16820ac432c05ce30e506d44d6f3",
+    "image": ".scratch/architecture-detail/rendered/memory-README-2.png",
+    "name": "memory-README-2"
+  },
+  {
+    "source": "docs/architecture/memory/README.md",
+    "index": 3,
+    "digest": "91f67c2fe2461188aec3ba7d19eb24da9f6a97a9c5842de031a0b17315afb5cf",
+    "image": ".scratch/architecture-detail/rendered/memory-README-3.png",
+    "name": "memory-README-3"
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "index": 1,
+    "digest": "71ce77456f311f0cc36f5585dbb9883c0adeb92d7c67d406911ec8c584343b9e",
+    "image": ".scratch/architecture-detail/rendered/memory-implementation-1.png",
+    "name": "memory-implementation-1"
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "index": 2,
+    "digest": "2380b4e21927d8a121b4f8be8c091ddc76488e6bed5081b0ca9094762b43b8e2",
+    "image": ".scratch/architecture-detail/rendered/memory-implementation-2.png",
+    "name": "memory-implementation-2"
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "index": 3,
+    "digest": "59a7566e32e66d6070e8b2463a78ffcc2c517089bb6eab9fe72708e4dccbf0d4",
+    "image": ".scratch/architecture-detail/rendered/memory-implementation-3.png",
+    "name": "memory-implementation-3"
+  },
+  {
+    "source": "docs/architecture/security/README.md",
+    "index": 1,
+    "digest": "25dadde2bec1b2a684c7ff3c049571882186d8e9cabeee62ea8493e92e78b676",
+    "image": ".scratch/architecture-detail/rendered/security-README-1.png",
+    "name": "security-README-1"
+  },
+  {
+    "source": "docs/architecture/security/README.md",
+    "index": 2,
+    "digest": "5525d7859d23fe86832148e5a2e3e2a4be8f21530f2890bb796b78b840fe2f26",
+    "image": ".scratch/architecture-detail/rendered/security-README-2.png",
+    "name": "security-README-2"
+  },
+  {
+    "source": "docs/architecture/security/README.md",
+    "index": 3,
+    "digest": "65d3d094277e638e05a3ea544cd19b49fd4f5a637ea912bab3268776cacd4def",
+    "image": ".scratch/architecture-detail/rendered/security-README-3.png",
+    "name": "security-README-3"
+  },
+  {
+    "source": "docs/architecture/security/implementation.md",
+    "index": 1,
+    "digest": "716b221843c065cbad15b49dc7c0681935ad68dc8b2b6cf74920dbe042f2fc6a",
+    "image": ".scratch/architecture-detail/rendered/security-implementation-1.png",
+    "name": "security-implementation-1"
+  },
+  {
+    "source": "docs/architecture/security/implementation.md",
+    "index": 2,
+    "digest": "3e58e6d9a4f90600c8bb4af6fea56551921c248631b05a904199439e8d031e47",
+    "image": ".scratch/architecture-detail/rendered/security-implementation-2.png",
+    "name": "security-implementation-2"
+  },
+  {
+    "source": "docs/architecture/task-runtime/README.md",
+    "index": 1,
+    "digest": "50e21966c1e9430d2e0c05758566899bb3021d8900e024f45668c86b7eab8ab5",
+    "image": ".scratch/architecture-detail/rendered/task-runtime-README-1.png",
+    "name": "task-runtime-README-1"
+  },
+  {
+    "source": "docs/architecture/task-runtime/README.md",
+    "index": 2,
+    "digest": "d0992ae42e92f4ea98e40b306c4e724fcb191d3f844034678e33d1111528ed5b",
+    "image": ".scratch/architecture-detail/rendered/task-runtime-README-2.png",
+    "name": "task-runtime-README-2"
+  },
+  {
+    "source": "docs/architecture/task-runtime/implementation.md",
+    "index": 1,
+    "digest": "49afa17279fdbb1dbc452502eeb66481a2cbdf6d5d2be448b4f2a21efbdc44a9",
+    "image": ".scratch/architecture-detail/rendered/task-runtime-implementation-1.png",
+    "name": "task-runtime-implementation-1"
+  },
+  {
+    "source": "docs/architecture/task-runtime/implementation.md",
+    "index": 2,
+    "digest": "e5b5927840c205876bd65f9b3ded968e68a088d2b435fd2c1f711799f4e61537",
+    "image": ".scratch/architecture-detail/rendered/task-runtime-implementation-2.png",
+    "name": "task-runtime-implementation-2"
+  },
+  {
+    "source": "docs/architecture/validation/README.md",
+    "index": 1,
+    "digest": "cc9f10c7990e66efb8435dcf964c33e95e1d176ab74ae2260c461c9f2d51845a",
+    "image": ".scratch/architecture-detail/rendered/validation-README-1.png",
+    "name": "validation-README-1"
+  },
+  {
+    "source": "docs/architecture/walkthrough.md",
+    "index": 1,
+    "digest": "44b79309f58b8f0fff79947b61e9ff5aeed955c3bd79c708df3b610d50dd056b",
+    "image": ".scratch/architecture-detail/rendered/walkthrough-1.png",
+    "name": "walkthrough-1"
+  },
+  {
+    "source": "docs/architecture/walkthrough.md",
+    "index": 2,
+    "digest": "4dd5150eea5307ee8ad30cbd6cc3a422b0640e6f90b9338331c1b4cc8803c598",
+    "image": ".scratch/architecture-detail/rendered/walkthrough-2.png",
+    "name": "walkthrough-2"
+  },
+  {
+    "source": "docs/architecture/walkthrough.md",
+    "index": 3,
+    "digest": "9674a04a98ea3f7c29ddd5e006c0ff9989e188efdf9dd91430eee3666aa60592",
+    "image": ".scratch/architecture-detail/rendered/walkthrough-3.png",
+    "name": "walkthrough-3"
+  }
+]

@@ -1,0 +1,37 @@
+sequenceDiagram
+    participant W as 执行工作者
+    participant S as Executor Store / FactStore
+    participant B as StartBarrier
+    participant O as 资源 owner Store
+    participant D as 固定 Driver
+    participant T as 目标系统
+    Note over W,S: 原 Operation 已接纳；事务外核验原使用依据
+    rect rgb(232, 242, 255)
+      W->>S: 校验当前条件、创建 Attempt 和核对 job
+      S-->>W: 准备事务提交
+    end
+    rect rgb(255, 243, 224)
+      Note over B,O: 实际入口串行；Gate 更新争用同一入口
+      W->>B: 原 Attempt、固定输入与资源前提
+      B->>O: 短事务复查 Gate、epoch、lease、Observation
+      O-->>B: 持久登记本次在途责任
+      B->>D: invoke：允许进入本次发送边界
+      D->>T: 发出固定参数及原目标键
+    end
+    Note over B,T: 入口交接后释放串行锁；不持数据库事务等待答复
+    T->>T: 提交原目标效果
+    T--xD: 目标答复丢失
+    D-->>W: 已跨边界，但效果未核实
+    rect rgb(232, 242, 255)
+      W->>S: 保存 unknown、Attempt 证据和原核对 job
+      S-->>W: 共同提交
+    end
+    Note over W,S: 进程可在此替换；新 worker 领取同一原责任
+    W->>D: query：原目标键或原目标回执
+    D->>T: 有限、获准的原效果读取
+    T-->>D: 原效果证据及累计用量
+    D-->>W: 结构化可信事实
+    rect rgb(232, 242, 255)
+      W->>S: 单调归并效果、费用及下一收尾责任
+      S-->>W: 提交新 Operation 修订
+    end

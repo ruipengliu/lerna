@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant U as 用户
+    participant I as 受信入口
+    participant G as Grant owner
+    participant H as Task Home
+    participant E as 执行端
+    U->>I: 确认指定意图与范围
+    I->>G: grant.issue 确认记录
+    G-->>I: applied 与 Grant
+    H->>G: grant.check 操作候选
+    G-->>H: 当前可准入或缺口
+    H->>H: 保存固定操作与派发责任
+    H->>E: 执行原操作
+    E->>G: grant.use 固定使用单元
+    G->>G: 校验与占用许可同事务
+    G-->>E: 使用回执
+    E->>E: 复核本端控制并保存启动责任
+    E-->>H: 已启动及后续实际效果

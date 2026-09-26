@@ -1,0 +1,23 @@
+[
+  {
+    "source": "docs/architecture/deployment-production.md",
+    "index": 1,
+    "digest": "f347365923d86cbdc6f0e7dff3b1adcca57a7e45a566a2423879b501c0b0acc3",
+    "image": ".scratch/architecture-detail/layout-production/deployment-production-1.png",
+    "name": "deployment-production-1"
+  },
+  {
+    "source": "docs/architecture/deployment-production.md",
+    "index": 2,
+    "digest": "8cc047d58f12b3377b0c6ade9d550fad2164a57c1573011f0a2a9ea73f38fe93",
+    "image": ".scratch/architecture-detail/layout-production/deployment-production-2.png",
+    "name": "deployment-production-2"
+  },
+  {
+    "source": "docs/architecture/deployment-production.md",
+    "index": 3,
+    "digest": "c6d152d39bd18c0831de3303de6fb31387ab4170b8d7578a400a12aa3c815811",
+    "image": ".scratch/architecture-detail/layout-production/deployment-production-3.png",
+    "name": "deployment-production-3"
+  }
+]

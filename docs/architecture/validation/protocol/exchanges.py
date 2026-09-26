@@ -173,7 +173,7 @@ def validate_exchange(exchange, capabilities):
         elif any(Decimal(output[k]['amount'])!=0 for k in ('reserved_units','reserved_cost')):
             errors.append('denied_consumption: denied use consumes no quota')
     if name=='grant.use.get':same(output['use_id'],target)
-    if name.startswith('memory.'):
+    if name in ('memory.create','memory.replace','memory.restrict','memory.delete','memory.read','memory.inspect'):
         if name!='memory.create':same(output['memory_id'],target)
         if name=='memory.create':same(output['owner_id'],target)
         if name in ('memory.replace','memory.delete','memory.restrict') and output['revision']<=req['expected_revision']:
@@ -198,10 +198,6 @@ def validate_exchange(exchange, capabilities):
     if name=='evaluation.approval_lease':
         for key in ('approval_id','target_id','lock_id','instance_id'):same(output[key],p[key],'approval_binding')
     if name=='extensions.activate':same(output['activation_id'],p['activation_id'])
-    if name=='extensions.read':
-        same(output['activation_id'],target)
-        if output['phase']=='active' and (output['ready_instance'] is None or 'activation_use_id' not in output or 'approval_revision' not in output or output['new_use_disabled']):
-            errors.append('activation_readiness: active needs current instance and approval use')
     if name.startswith('execution.') and 'effect' in output:
         if output['execution_state']=='accepted' and output['effect']!='not_started':
             errors.append('operation_state: accepted operation has not crossed startup boundary')
@@ -209,6 +205,12 @@ def validate_exchange(exchange, capabilities):
             errors.append('operation_effect: sent attempt cannot be proved never started')
         if output['effect']=='not_applied' and output['may_apply_later'] is not False:
             errors.append('operation_effect: not_applied requires no later effect')
+    from .runtime_rules import check_exchange as runtime_exchange
+    from .governance_rules import check_exchange as governance_exchange
+    from .content_rules import check_exchange as content_exchange
+    errors += runtime_exchange(exchange, capabilities)
+    errors += governance_exchange(exchange, capabilities)
+    errors += content_exchange(exchange, capabilities)
     return errors
 
 

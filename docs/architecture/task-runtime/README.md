@@ -6,6 +6,8 @@ Task Home 保存任务目标、控制、额度、操作意图和完成决定。�
 
 默认将任务管理、上下文组装、准入、调度和结果核验放在同一模块。它们需要围绕同一个任务修订作决定，拆成独立服务会增加本地事务之外的恢复关系。独立替换边界放在 Brain、Memory、Executor，而不是运行时的每个内部函数。
 
+实现阅读：[模块形状与依赖](implementation.md#module-shape) → [对象流转](implementation.md#data-flow) → [准入与恢复时序](implementation.md#key-sequence) → [生产部署和容量](implementation.md#production)。主线定义可见行为，实现篇集中规定事务、jobs、计划物化、预算及故障断点。
+
 ## 1. 最小任务闭环
 
 以“核实两个软件版本的差异，附引用，保存至指定目录”为例。Home 先保存原目标和调用者明确约束；目录不明时建立输入请求。取得获准来源后，大脑生成候选答案；质量评估绑定这份候选，文件写入和读回则绑定同一内容摘要。Home 仅在条件、效果和成果版本一致时完成。
@@ -136,7 +138,7 @@ job 是必须继续履行的责任，包含唯一 `job_id`、业务关联、kind
 <a id="budget"></a>
 ## 6. 额度与有限执行
 
-Home 的任务额度采用 `spent + reserved ≤ limit`。每次调用先按声明的最大消耗预留；明确少于预留的最终费用才释放差额。费用以整数最小计价单位和计价版本记录，禁止混用不同货币或把估计值当最终账单。调用次数、运行时间、模型 token 和费用各有独立限额，任一耗尽都阻止对应新工作。
+Home 的任务额度采用 `spent + reserved ≤ limit`。每次调用先按声明的最大消耗预留；明确少于预留的最终费用才释放差额。费用以精确十进制数、明确单位和计价版本记录，线格式使用十进制字符串，禁止混用不同货币或把估计值当最终账单。调用次数、运行时间、模型 token 和费用各有独立限额，任一耗尽都阻止对应新工作。
 
 模型费用不明时按上限保留或保守结算，真实账单迟到按原计费项调整，不能再次累计全部金额。本地并发槽与未知费用不是同一资源；具体边界见[大脑调用恢复](../brain/README.md)。无法提供可信最大费用的适配器只能在用户明确接受估算预算的配置中启用，不得声称严格费用上限。
 
@@ -145,7 +147,9 @@ Home 的任务额度采用 `spent + reserved ≤ limit`。每次调用先按声�
 | 方法 | 输入与持久结果 | 失败后的动作 |
 | --- | --- | --- |
 | `budget.allocate` | 父任务、allocation_id、接收方、单位、上限、期限；共同保存父预留与交接 job | 原 allocation 查询；不明时不另分同笔额度 |
-| `budget.settle` | allocation_id、最终累计费用、原结算版本、不可再新增消费的证明 | 重复结算返回同结果；证据不足继续预留 |
+| `budget.settle` | allocation_id、expected_revision、原接收方 RuntimeBudgetClosure | 同命令返回同结果；证据不足继续预留，另一命令旧修订冲突 |
+| `budget.read` | allocation_id、role=owner／receiver → 当前分配或接收门禁投影 | 仅对应权威服务返回当前事实；历史原回执不代替本查询 |
+| `budget.close` | 原接收方、allocation_ref、原分配命令及父委派关联 → closing／closed | 与子接纳竞争同一接收门禁；未知分配也先关闭，最终证明另查 |
 | `task.adjust_budget` | expected_revision、每项新上限 | 低于已消费及仍承担义务则冲突；加额不恢复暂停也不延长期限 |
 
 默认每轮补上下文次数、决策轮数、单步重试、用户等待期限和收尾查询间隔均由装配配置给出有限值。未知责任超出自动查询次数后转受信处置，仍可查询；不通过删除记录清空预算或设备互斥。
@@ -159,7 +163,7 @@ Home 的任务额度采用 `spent + reserved ≤ limit`。每次调用先按声�
 | --- | --- |
 | Task | `tenant_id, task_id, home_id, submit_command_id, goal_ref, goal_revision, requirements, policy_ref, revision, control_revision, status, control, wait_reasons, deadline, budget, open_effects, accounting_open, result_ref?`；Home 和原提交绑定不可变；祖先控制按同 Home 任务链检查 |
 | Requirement | `requirement_id, kind, source_ref, rule_ref, required`；rule 引用机械检查、评估规则或用户验收；依据不足不能标 pass |
-| OperationIntent | `operation_id, task_id, goal_revision, decision_id, capability_ref, binding_ref, input_ref, input_digest, grant_refs, reservation_id`；准入后不可改参数；效果字段由 Executor 提供 |
+| OperationIntent | `operation_id, task_id, goal_revision, decision_id?, plan_step?, capability_ref, binding_ref, input_ref, input_digest, grant_refs, reservation_id`；来源二选一：Brain 提案绑定 decision_id，计划物化绑定 `{plan_id, plan_revision, step_id}`；准入后不可改参数，效果字段由 Executor 提供 |
 | ConditionResult | `requirement_id, goal_revision, artifact_ref, verdict, basis, evidence_refs, evaluator_ref`；verdict 为 pass/fail/unknown，引用准确成果与适用规则 |
 | Result | `task_id, goal_revision, artifact_refs, completion_basis, condition_results, limitations, completed_at`；只供 succeeded；失败／取消返回独立结束说明和未决项 |
 

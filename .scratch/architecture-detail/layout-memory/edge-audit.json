@@ -1,0 +1,14 @@
+{
+  "memory": {
+    "original_edges": 31,
+    "new_distinct_edges": 31,
+    "removed": [],
+    "added": []
+  },
+  "interaction": {
+    "original_edges": 21,
+    "new_distinct_edges": 21,
+    "removed": [],
+    "added": []
+  }
+}

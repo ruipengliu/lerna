@@ -8,6 +8,14 @@
 
 本页的输入消费、版本复核和恢复语义属于适配器共同契约；CLI、本地 Web 与 SSE 是参考实现选择。界面样式和通知方式可以替换，替换后仍须区分“本端已保存”“业务已消费”和“目标效果已证实”。
 
+## 实现阅读路径
+
+先阅读本页的职责与行为，再读[实现设计](implementation.md)：声明式快照、可靠输入与受信确认。实现设计规定内部记录、事务、算法与故障实验；[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)提供精确线字段。
+
+实现阅读顺序为[软件形状与依赖](implementation.md#module-shape) → [核心对象流转](implementation.md#data-flow) → [输入跨提交域时序](implementation.md#key-sequence) → [生产可用性与性能](implementation.md#production)。服务、连接层与宿主渲染器可分开扩容，实际请求和确认的消费仍归业务 owner。
+
+本页与实现设计均为待实现规格，静态序列通过不代表服务、隐私隔离或恢复机制已经运行。
+
 ## 1. 用快照恢复界面，用业务记录确认输入
 
 默认界面读取可版本化的快照，变化通知只负责唤醒。相较于把所有渲染增量变成必须连续接收的指令，这使新设备和断线设备可以直接恢复当前状态；代价是应用维护快照版本与分页查询。只有实际带宽或交互频率证明有必要时，才增加局部补丁，并继续保留完整快照入口。
@@ -75,9 +83,9 @@ InputRequest 由实际业务负责端创建，固定 request_id、revision、sch
 
 目标命令由已绑定处理器决定：clarification 调用 task.input；acceptance 调用 task.accept_result，传 request_id、request_revision、候选摘要、goal_revision 和受信用户决定；application 调用已登记处理器。Home 原子消费原请求并保存验收记录，界面不能通过更换命令类型消费同一请求两次。
 
-授权确认走受信入口：宿主显示请求主体、动作、准确资源、用途、上限、期限和拟使用的数据位置；用户认证后，由授权服务产生决定。请求内容、插件自绘 UI、远端 Agent 的“已获批准”字段都不能替代此过程。界面只传递授权 request_id 与原决定回执，完整 Grant 字段和消费规则集中在[授权](../security/README.md)。
+授权确认走受信入口：宿主显示请求主体、动作、准确资源、用途、上限、期限和拟使用的数据位置；宿主先固定原业务命令及规范意图，在实际业务负责端登记确认；用户认证并提交决定后，业务负责端在原命令的事务中消费确认并产生决定。请求内容、插件自绘 UI、远端 Agent 的“已获批准”字段都不能替代此过程。界面只传递授权 request_id 与原决定回执，完整 Grant 字段和消费规则集中在[授权](../security/README.md)。
 
-需要“先看截图再确认”的输入，交互服务在返回快照时给出 required_content_refs。宿主取得并校验这些版本后才启用按钮，提交时将实际预览的引用放入 preview_refs。业务负责端复核请求修订、期限、所需引用覆盖关系和当前来源资格；按钮曾经可点击不是消费依据。若只是缺图但普通目录输入仍完整可回答，应用按具体请求的依赖开放输入，不封闭整个界面。
+需要“先看截图再确认”的输入，交互服务在返回快照时给出 required_content_refs。宿主先向实际请求负责端调用 `interaction.request_read` 取得准确请求、Schema 和预览要求，再取得并校验这些内容版本后才启用按钮，提交时将实际预览的引用放入 preview_refs。业务负责端复核请求修订、期限、所需引用覆盖关系和当前来源资格；按钮曾经可点击不是消费依据。若只是缺图但普通目录输入仍完整可回答，应用按具体请求的依赖开放输入，不封闭整个界面。
 
 <a id="interaction-contracts"></a>
 ## 4. 权威对象与业务接口
@@ -87,8 +95,8 @@ InputRequest 由实际业务负责端创建，固定 request_id、revision、sch
 | 对象／字段 | 约束 |
 | --- | --- |
 | Surface：surface_id、surface_owner_id、app_binding、task_ref? | app_binding 固定处理器版本；task_ref 是 home_id/task_id，可为空 |
-| Surface：revision、title、blocks、request_refs、expires_at | blocks 只含受支持的声明式内容与引用；不允许运行模型生成脚本 |
-| InputRequest：request_id、owner_id、revision、kind、schema、deadline | kind 为 clarification、acceptance 或 application；权限请求引用安全模块对象，不复制为普通请求 |
+| Surface：revision、snapshot | snapshot 集中保存 title、blocks、request_refs、expires_at；任务投影另含 source_revision。blocks 只含[严格声明式组件](implementation.md#2-严格声明式组件)，不运行模型脚本 |
+| InputRequest：request_id、owner_id、revision、kind、schema、question_ref、deadline、state | kind 为 clarification、acceptance 或 application；权限请求引用安全模块对象，不复制为普通请求 |
 | InputRequest：required_content_refs、allowed_actions、consumed_by? | 必需预览绑定精确版本；consumed_by 由业务负责端原子保存 |
 | 验收请求绑定：goal_revision、candidate_ref、candidate_hash | 仅 acceptance 必填；改目标或候选后创建新请求修订，旧确认不得套用 |
 | InputSubmission：input_id、revision、surface_id、request_id、request_revision、answer_ref | 首次接纳后不可换回答；状态变化递增 revision；新回答用新 input_id，仍受一次消费约束 |
@@ -98,6 +106,7 @@ InputRequest 由实际业务负责端创建，固定 request_id、revision、sch
 
 | 方法 | 业务输入／输出 | 成功与失联后的责任 |
 | --- | --- | --- |
+| interaction.request_read | request_ref；返回当前准确 InputRequest 与材料缺口 | 实际请求 owner 认证并复核披露；旧修订返回 revision_conflict，不拿旧按钮消费新请求 |
 | interaction.surface_create | 应用绑定、可选 task_ref、初始快照；返回 surface_id | 保存 Surface、应用绑定及原命令回执后 applied |
 | interaction.surface_read | surface_id、可选已知修订；返回获准快照或未变化 | 每次复核当前权限；内容不可取返回具体缺口 |
 | interaction.surface_update | surface_id、预期修订、完整声明式快照及源修订；返回新修订 | 只允许已绑定处理器或 Home 投影器调用；保存快照及提示责任后 applied |
@@ -106,7 +115,7 @@ InputRequest 由实际业务负责端创建，固定 request_id、revision、sch
 | interaction.input_read | input_id；返回原转交和业务消费回执 | 不能凭当前表单消失推断历史回答成功 |
 | interaction.input_withdraw | input_id、预期修订；返回 withdrawn 或 withdrawal_requested | queued 时原子撤回；已发送则仅保存核对责任，不能保证阻止业务消费 |
 | interaction.present | surface_id、预期 intent_revision、open/close；返回新修订 | 负责端保存本设备意图后 applied；迟到结果不覆盖 close |
-| interaction.application_event | 独立 Surface、事件类型、负载引用；返回目标 command_id 与消费状态 | 仅调用固定应用处理器，按输入相同的持久转交规则恢复 |
+| interaction.application_event | 独立 Surface、准确 surface_revision/app_binding、event_id、事件类型及负载引用；返回固定目标 service/command_id 与转交状态 | 仅调用固定应用处理器，按输入相同的持久转交规则恢复 |
 
 独立应用处理器必须实现幂等消费及原命令查询。只能接收普通回调且无法查询的处理器，不可用于承诺可恢复的有副作用事件。Surface 可以清理，但未收束输入及其目标映射按命令保留策略继续保存；清理历史显示不删除业务消费事实。
 

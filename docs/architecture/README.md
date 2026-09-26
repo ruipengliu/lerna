@@ -74,11 +74,11 @@ flowchart TB
 
 实现查阅时先看所属模块的接口与字段，再看共同信封、错误和恢复规则。技术方案不要求按文件顺序拆成独立开发服务。
 
-第三方实现另从[线格式与方法注册](contracts/protocol.md)进入：只实现自己声明的严格方法范围，连同其查询、错误与恢复义务一起验证。字段资产不要求复制参考实现的数据库表；草案发布时必须共同冻结行为正文、Schema、注册表与关联用例。
+第三方实现另从[线格式与方法注册](contracts/protocol.md)进入，逐方法签名查[方法索引](contracts/methods.md)，跨端装配继续读[发现、认证、取件与内容传输](contracts/transport.md)。只实现自己声明的方法范围，连同其查询、错误与恢复义务一起验证；字段资产不要求复制参考实现的数据库表。草案发布时必须共同冻结行为正文、Schema、注册表与关联用例。
 
 ### 目录与后续细化
 
-九个模块各有独立目录，以 `README.md` 保存模块主线和阅读入口。全局目标、决策、贯穿场景、部署与审查保留在顶层；跨模块的契约资产和验收工具集中维护。
+九个模块各有独立目录，以 `README.md` 保存模块主线和阅读入口，以 `implementation.md` 展开参考实现的内部职责、持久记录、事务、恢复与故障验证。全局目标、决策、贯穿场景、部署与审查保留在顶层；跨模块的契约资产和验收工具集中维护。
 
 ```text
 architecture/
@@ -87,6 +87,7 @@ architecture/
 ├── decisions.md              # 跨模块关键决策
 ├── walkthrough.md            # 贯穿场景
 ├── deployment.md             # 部署与容量
+├── deployment-production.md  # 生产拓扑、故障边界及性能预算
 ├── review.md                 # 交付审查记录
 ├── task-runtime/README.md    # 任务运行时
 ├── brain/README.md           # 大脑
@@ -100,6 +101,8 @@ architecture/
 ├── contracts/
 │   ├── README.md             # 共同调用语义
 │   ├── protocol.md           # 线格式与方法登记
+│   ├── methods.md            # 全部严格方法签名查阅
+│   ├── transport.md          # 发现、认证、取件及内容字节
 │   ├── schemas/              # 共享机器契约
 │   └── examples/             # 完成判断投影与协议序列
 └── validation/
@@ -107,13 +110,36 @@ architecture/
     ├── check_documents.py    # 文档静态检查
     ├── validate.py           # 完成判断投影校验
     ├── validate_protocol.py  # 协议序列校验入口
+    ├── validate_transport.py # 传输、关闭身份与签名向量
+    ├── fault-experiments.md  # 待实现的故障断点与断言
     ├── protocol/             # 协议关联检查实现
     └── requirements.txt      # 校验依赖
 ```
 
 细化某个模块时，先更新该目录的 `README.md`，保留职责、关键决策和完整处理链。独立机制需要展开时，再在同目录增加按主题命名的文件，并由模块入口给出阅读顺序；专属图示和示例随模块保存。共同字段、方法登记和跨模块用例继续归 `contracts/` 与 `validation/`，模块正文链接其权威定义。
 
-## 5. 启用前提与边界
+<a id="detailed-design"></a>
+## 5. 从主线进入详细实现
+
+先读各模块 README 中的行为与取舍，再沿实现文档的“模块形状与依赖 → 对象流转 → 关键事务时序 → 生产约束”阅读。模块结构图表达软件依赖，流程／时序图表达运行中的对象交接，部署图表达进程及故障域；三种视角分别给出，图中节点不自动对应独立微服务。公共字段继续以同版 Schema 为准。
+
+<a id="design-coverage"></a>
+
+| 模块 | 形状与组件依赖 | 数据对象与流转 | 关键时序 | 生产约束 |
+| --- | --- | --- | --- | --- |
+| 任务运行时 | [入口与准入](task-runtime/implementation.md#module-shape) | [任务及工作](task-runtime/implementation.md#data-flow) | [提交与恢复](task-runtime/implementation.md#key-sequence) | [调度与热键](task-runtime/implementation.md#production) |
+| 大脑 | [决策与适配器](brain/implementation.md#module-shape) | [上下文与提案](brain/implementation.md#data-flow) | [调用与归并](brain/implementation.md#key-sequence) | [并发与费用](brain/implementation.md#production) |
+| 执行 | [门禁与驱动](execution/implementation.md#module-shape) | [操作与效果](execution/implementation.md#data-flow) | [发送与核对](execution/implementation.md#key-sequence) | [资源与隔离](execution/implementation.md#production) |
+| 权限与隔离 | [身份与许可](security/implementation.md#module-shape) | [许可与使用](security/implementation.md#data-flow) | [裁决与消费](security/implementation.md#key-sequence) | [权威与热点](security/implementation.md#production) |
+| 记忆与内容 | [检索与内容](memory/implementation.md#module-shape) | [修订与副本](memory/implementation.md#data-flow) | [发布与读取](memory/implementation.md#key-sequence) | [索引与清理](memory/implementation.md#production) |
+| Agent 协作 | [映射与转交](collaboration/implementation.md#module-shape) | [委派与额度](collaboration/implementation.md#data-flow) | [创建与恢复](collaboration/implementation.md#key-sequence) | [跨 Home 等待](collaboration/implementation.md#production) |
+| 应用与交互 | [快照与输入](interaction/implementation.md#module-shape) | [请求与消费](interaction/implementation.md#data-flow) | [转交与确认](interaction/implementation.md#key-sequence) | [连接与积压](interaction/implementation.md#production) |
+| 扩展与宿主 | [装配与隔离](extensions/implementation.md#module-shape) | [安装与实例](extensions/implementation.md#data-flow) | [激活与就绪](extensions/implementation.md#key-sequence) | [发布与可用性](extensions/implementation.md#production) |
+| 观测评测与改进 | [评测与发布](evaluation/implementation.md#module-shape) | [计划与证据](evaluation/implementation.md#data-flow) | [封存与批准](evaluation/implementation.md#key-sequence) | [隔离与容量](evaluation/implementation.md#production) |
+
+跨端部署继续读[传输契约](contracts/transport.md)；默认进程、事务接口、磁盘保护与备份读[部署基线](deployment.md#7-默认宿主的装配与持久接口)，生产拓扑、稳定 Home 路由、单区故障恢复和性能预算读[分布式部署详设](deployment-production.md)。完成实现后按[故障实验](validation/fault-experiments.md)及生产用例取得运行证据，当前文档和静态检查不代表 L2 达成。
+
+## 6. 启用前提与边界
 
 首个参考实现包含本地运行时、默认三系统、CLI／本地 Web 交互、搜索与内容获取适配器、文件能力以及多个有状态模拟手机。云模型、搜索服务和外部 Agent 是可配置依赖；缺失时对应任务等待或明确返回不支持，本地具备模型和能力的任务仍可执行。
 

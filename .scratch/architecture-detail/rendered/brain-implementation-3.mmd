@@ -1,0 +1,34 @@
+sequenceDiagram
+    participant W as RecoveryWorker
+    participant S as DecisionStore
+    participant G as Grant owner
+    participant M as ModelAdapter
+    participant P as 模型供应商
+    rect rgb(236, 243, 250)
+      W->>S: 事务 A：固定 ModelCall、输入摘要、上界和恢复 job
+      S-->>W: 提交原 model_call_id
+    end
+    W->>G: 事务外取得原用途使用
+    G-->>W: 原使用回执或缺口
+    rect rgb(236, 243, 250)
+      W->>S: 事务 B：复核代次、取消与使用窗口，写 send_started
+      S-->>W: 门禁提交
+    end
+    W->>M: 原 model_call_id 与固定请求
+    M->>P: 事务外发送一次物理请求
+    P--xM: 已处理，但响应丢失
+    Note over W,S: 进程替换后领取原 job；有 send_started 不盲目重发
+    W->>M: 查询原调用
+    M->>P: 原供应商身份查询
+    alt 取得原完整结果
+      P-->>M: 输出与物理用量
+      M-->>W: 原结果
+      W->>W: ProposalValidator 校验并先保存获准内容
+      rect rgb(236, 243, 250)
+        W->>S: 事务 C：比较状态与代次，固定终态及费用收尾
+        S-->>W: completed 或取消已先提交
+      end
+    else 无查询能力或结果仍不可判定
+      M-->>W: 无法核实原结果
+      W->>S: 短事务保存 provider_result_unknown 与未结费用责任
+    end

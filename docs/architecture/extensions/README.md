@@ -2,6 +2,8 @@
 
 [总览](../README.md) · [共同接口](../contracts/README.md) · [授权与隔离](../security/README.md) · [评测与发布](../evaluation/README.md)
 
+
+实现阅读：[模块形状与依赖](implementation.md#module-shape) → [锁与实例对象流转](implementation.md#data-flow) → [重启内部时序](implementation.md#key-sequence) → [生产可用性与容量](implementation.md#production)。先阅读本页行为合同，再按实现页落实持久化与恢复；线字段及正反例继续由公共契约资产维护。
 扩展系统把默认实现和替换实现装配成可运行宿主，覆盖 C6、C9 及 A2、A4。Plugin 是携带代码或适配器的安装包；Skill 是供 Agent 使用的操作知识与流程内容；Agent 配置绑定 Brain、Skill 和允许能力。三者都需版本化，安装不自动授予用户数据或设备权限。
 
 默认宿主运行内置或经维护者审核的受信代码。任意不可信原生插件只有在目标平台隔离通过验收后才可运行；缺少隔离适配器时拒绝安装为可执行实例。Skill、模型结果和外部 Agent 内容始终按不可信输入处理，即使它们来自已安装的软件包。
@@ -40,6 +42,8 @@ flowchart TB
 
 ## 2. 安装锁与 SDK 的最低要求
 
+干净安装先启动只承担身份、安装、批准和恢复的受信最小宿主。内置制品以契约符合性报告和本人或维护者经批准 owner 确认入口作出的决定建立 compatibility 批准，确认与批准在同一事务消费；没有旧版时 old_lock_id=null。普通兼容发布同样只声明合同符合，宣称改善的发布另走完整正式证据门禁。首装材料缺失时保留管理与诊断入口，不能直接开放业务执行。完整交接见[首装实现](implementation.md)。
+
 安装先取得完整制品并校验摘要，展开到独立的暂存目录，拒绝绝对路径、路径逃逸和越界符号链接。默认制品必须预构建，不自动执行下载包中的安装脚本。审核过的构建在单独构建环境执行，产出新的固定制品后才进入宿主安装流程。
 
 安装器解析声明，求得一个有限、无冲突的完整依赖集合，校验来源、主接口版本、宿主平台、数据格式和信任要求。完成后原子发布安装锁及制品可用记录；引用该锁的任务只能读取锁内文件，不能在运行时依赖最新包名解析。
@@ -63,13 +67,13 @@ SDK 提供认证上下文、命令去重、内容引用、截止时间、结构�
 
 正常切换先禁止向旧绑定接纳新的相关工作，再等待原任务、模型调用、执行操作和查询责任达到可交接边界。任务依赖的锁保持固定；不在一半任务里混用两个策略版本。只有声明可保留旧实例并存、且验证了资源及格式隔离的无状态实现，才能让新任务先使用新版本。
 
-排空结束后，管理器装载新实例并完成自检，再取得绑定原 activation_id、实例及精确锁的在线启动回执；全本地共库则直接核验当前批准。随后在 start_before 之前以本宿主短事务登记回执使用、按预期旧代际更新 active_binding 和 activation_generation，保存原管理回执。入口只向当前代际且本进程已确认 ready 的实例派发；重启时先重新装载与核对，持久指针存在不能代替实例就绪。
+排空结束后，管理器装载新实例并完成自检，再取得绑定原 activation_id、实例及精确锁的在线启动回执；全本地共库则直接核验当前批准。远端在 start_before 之前登记回执使用；本地把当前批准检查与启动登记放入同一事务，不创建虚构的在线回执。随后按预期旧代际更新 active_binding 和 activation_generation，保存原管理回执。入口只向当前代际且本进程已确认 ready 的实例派发；重启时先重新装载与核对，持久指针存在不能代替实例就绪。
 
 已激活实例的每项新工作同样绑定原 work_id，取得在线回执后在窗口内登记启动；回执不能替代业务授权，也不能给另一项工作复用。只有显式分配了离线续用租约时，才可在 continue_until 前按原批准范围启动新工作；max_offline_window=0 的默认配置仍可逐项在线核验。获知撤回立即阻止新启动，未收到撤回时仅保留[evaluation 定义的有限窗口边界](../evaluation/README.md)。
 
 旧入口携带过时代际时拒绝新调用。Executor 已接纳操作仍按原操作绑定查询，不能把同一 operation_id 交给新驱动再执行。激活答复丢失时发布协调者查询原 activation_id，不能根据端口探活就认定新版本已经生效。
 
-切换状态按 prepare、停止接纳、排空、装载、自检、提交代际、开放入口的顺序恢复。崩溃后管理器先查活动绑定和原管理命令；旧绑定仍在则继续排空，新绑定已提交则重做该版本自检并恢复入口，不能再次迁移数据。状态格式迁移属于独立固定管理步骤，需有原步骤查询和重入判据，未声明这些能力的包拒绝迁移。
+切换状态按 prepare、停止接纳、排空、装载、自检、提交代际、开放入口的顺序恢复。崩溃后管理器先查活动绑定和原管理命令；旧绑定仍在则继续排空，新绑定已提交则重做该版本自检，核验当前批准并取得绑定本次实例的 reopen 启动依据后恢复入口，不能再次迁移数据或增加活动代际。状态格式迁移属于独立固定管理步骤，需有原步骤查询和重入判据，未声明这些能力的包拒绝迁移。
 
 ```mermaid
 stateDiagram-v2
@@ -102,7 +106,7 @@ stateDiagram-v2
 | InstallLock：trust_evidence、conformance_report、state_compatibility | 绑定审核或平台隔离证据、合同测试及格式兼容证据 |
 | Activation：activation_id、target_id、old_lock_id、new_lock_id、approval_id | 每个目标一份不可变切换意图；批准对象定义在[evaluation](../evaluation/README.md) |
 | Activation：phase、generation、ready_instance、last_observed_at | phase 使用状态图；ready_instance 必须属于当前宿主实例，重启重新取证 |
-| Activation：approval_revision?、activation_use_id?、approval_lease_ref? | 取得本次激活启动依据后保存 approval_revision 与 activation_use_id，进入 active 时两者必需；接纳／排空阶段可以尚无回执。activation_use_id 绑定原激活，不因查询或重启刷新；可选租约只用于已激活实例离线续用。字段及期限在[evaluation](../evaluation/README.md)，不能混用 start_before 与 continue_until |
+| Activation：startup_evidence、instance_readiness、approval_revision?、activation_use_id?、approval_lease_ref? | active 必须有原激活启动依据及当前实例就绪依据。startup_evidence 区分 local_transaction 与 remote_use；activation_use_id 仅是原远端激活的历史身份，不因重启刷新。instance_readiness 在新实例重启时绑定新的 reopen 依据；本地共同事务不要求在线回执。可选租约只用于已有活动实例离线续用 |
 | Activation：new_use_disabled、previous_version_ready、residual_work、error | 分项保存停止、恢复及残留；不能从一个布尔值推导全部成功 |
 
 | 方法 | 业务输入／输出 | 成功含义与恢复 |

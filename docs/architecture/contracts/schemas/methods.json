@@ -1,6 +1,6 @@
 {
   "protocol": "harness/1",
-  "profile": "core-recovery-draft-1",
+  "profile": "full-harness-draft-2",
   "published": false,
   "methods": {
     "brain.cancel": {
@@ -347,24 +347,354 @@
       }
     },
     "budget.allocate": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "BudgetAllocateInput",
+      "output": "BudgetAllocateOutput",
+      "target": "payload.parent_task_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "父预留、固定 allocation 及额度交接责任共同提交；不证明接收方已可消费。",
       "source": "task-runtime/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
     },
     "budget.settle": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "BudgetSettleInput",
+      "output": "BudgetSettleOutput",
+      "target": "payload.allocation_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "核验原接收方最终封账、累计费用及版本；调整父预留并保存固定结算。",
       "source": "task-runtime/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
     },
     "capability.describe": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "CapabilityDescribeInput",
+      "output": "CapabilityDescribeOutput",
+      "target": "executor_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "返回准确版本与绑定修订的完整声明；停用状态不被隐去。",
       "source": "execution/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
     },
     "capability.search": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "CapabilitySearchInput",
+      "output": "CapabilitySearchOutput",
+      "target": "executor_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "当前获准候选的有限页；候选不授予执行权限。",
       "source": "execution/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
     },
     "collaboration.control": {
       "status": "frozen-draft",
@@ -839,49 +1169,1002 @@
       }
     },
     "content.close": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ContentCloseInput",
+      "output": "ContentCloseOutput",
+      "target": "payload.content_ref.owner_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "source_closed",
+        "policy_not_restriction"
+      ],
+      "success": "保存当前控制修订、最小关闭索引及传播清理责任。",
       "source": "memory/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "source_closed": [
+          "after_change",
+          "none"
+        ],
+        "policy_not_restriction": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "content.get": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "ContentGetInput",
+      "output": "ContentGetOutput",
+      "target": "payload.content_ref.owner_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "copy_not_registered",
+        "source_closed",
+        "source_unavailable"
+      ],
+      "success": "已登记副本的当前获准有限下载定位；字节另走认证下载通道。",
       "source": "memory/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "copy_not_registered": [
+          "after_change",
+          "none"
+        ],
+        "source_closed": [
+          "after_change",
+          "none"
+        ],
+        "source_unavailable": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "content.put": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ContentPutInput",
+      "output": "ContentPutOutput",
+      "target": "payload.content_ref.owner_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "upload_incomplete",
+        "content_conflict",
+        "source_closed",
+        "source_unavailable"
+      ],
+      "success": "提交已完整上传的不可变内容、策略与来源；正文不进入Command。",
       "source": "memory/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "upload_incomplete": [
+          "after_change",
+          "none"
+        ],
+        "content_conflict": [
+          "after_change",
+          "none"
+        ],
+        "source_closed": [
+          "after_change",
+          "none"
+        ],
+        "source_unavailable": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "content.register_copy": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ContentRegister_CopyInput",
+      "output": "ContentRegister_CopyOutput",
+      "target": "payload.content_ref.owner_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "copy_conflict",
+        "source_closed",
+        "source_unavailable"
+      ],
+      "success": "交付前持久登记固定内容、持有者、用途与保留责任。",
       "source": "memory/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "copy_conflict": [
+          "after_change",
+          "none"
+        ],
+        "source_closed": [
+          "after_change",
+          "none"
+        ],
+        "source_unavailable": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "content.release_copy": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ContentRelease_CopyInput",
+      "output": "ContentRelease_CopyOutput",
+      "target": "payload.content_ref.owner_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "copy_not_registered",
+        "copy_conflict"
+      ],
+      "success": "保存逐副本停止与物理清理事实；仍未知时保留责任。",
       "source": "memory/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "copy_not_registered": [
+          "after_change",
+          "none"
+        ],
+        "copy_conflict": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "endpoint.pair.approve": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "PairApproveInput",
+      "output": "PairApproveOutput",
+      "target": "pairing_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "pairing_expired",
+        "pairing_conflict"
+      ],
+      "success": "本人受信确认与批准或拒绝决定持久保存。",
       "source": "security/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "pairing_expired": [
+          "after_change"
+        ],
+        "pairing_conflict": [
+          "after_change",
+          "query_original"
+        ]
+      }
     },
     "endpoint.pair.begin": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "PairBeginInput",
+      "output": "PairBeginOutput",
+      "target": "pairing_service_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "pairing_expired",
+        "slow_down"
+      ],
+      "success": "预认证限流入口保存有限会话；未赋予tenant或业务权限。",
       "source": "security/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "pairing_expired": [
+          "after_change"
+        ],
+        "slow_down": [
+          "after_change"
+        ]
+      }
     },
     "endpoint.pair.claim": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "PairClaimInput",
+      "output": "PairClaimOutput",
+      "target": "pairing_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "pairing_expired",
+        "authorization_pending",
+        "slow_down"
+      ],
+      "success": "原会话的一次凭据领取；pending仅指待批准。",
       "source": "security/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "pairing_expired": [
+          "after_change"
+        ],
+        "authorization_pending": [
+          "after_change"
+        ],
+        "slow_down": [
+          "after_change"
+        ]
+      }
     },
     "endpoint.revoke": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "EndpointRevokeInput",
+      "output": "EndpointRevokeOutput",
+      "target": "endpoint_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked"
+      ],
+      "success": "端点撤销、凭据代次递增及传播责任同事务提交。",
       "source": "security/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "evaluation.approval_check": {
       "status": "frozen-draft",
@@ -1074,59 +2357,1604 @@
       }
     },
     "evaluation.approve": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "EvaluationApproveInput",
+      "output": "EvaluationApproveOutput",
+      "target": "evaluation_service_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "按发布目的核对证据，批准和逐目标发布责任共同提交。",
       "source": "evaluation/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
     },
     "evaluation.cancel": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "EvaluationCancelInput",
+      "output": "EvaluationCancelOutput",
+      "target": "run_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "取消意图、全部环境封闭及清理责任已保存。",
       "source": "evaluation/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
     },
     "evaluation.candidate_register": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "CandidateRegisterInput",
+      "output": "CandidateRegisterOutput",
+      "target": "evaluation_service_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "候选、内容谱系与原注册回执固定保存。",
       "source": "evaluation/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
     },
     "evaluation.exposure_record": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ExposureRecordInput",
+      "output": "ExposureRecordOutput",
+      "target": "evaluation_service_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "暴露、受影响资格失效与撤回责任一起提交。",
       "source": "evaluation/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
     },
     "evaluation.feedback_open": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "FeedbackOpenInput",
+      "output": "FeedbackOpenOutput",
+      "target": "report_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "先记录不可撤销暴露，再返回已封存报告。",
       "source": "evaluation/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
     },
     "evaluation.partition_register": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "PartitionRegisterInput",
+      "output": "PartitionRegisterOutput",
+      "target": "evaluation_service_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "受信分区与来源组登记；不授予内容使用权限。",
       "source": "evaluation/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
     },
     "evaluation.plan_create": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "PlanCreateInput",
+      "output": "PlanCreateOutput",
+      "target": "evaluation_service_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "固定计划；正式确认同时占用保留分区和永久尝试序号。",
       "source": "evaluation/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
     },
     "evaluation.read": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "EvaluationReadInput",
+      "output": "EvaluationReadOutput",
+      "target": "object_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "受控投影；未开放的报告不含成绩和逐例反馈。",
       "source": "evaluation/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
     },
     "evaluation.revoke": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "EvaluationRevokeInput",
+      "output": "EvaluationRevokeOutput",
+      "target": "approval_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "批准撤回与传播任务持久；原批准不可复活。",
       "source": "evaluation/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
     },
     "evaluation.rollout_read": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "RolloutReadInput",
+      "output": "RolloutReadOutput",
+      "target": "rollout_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "原批次、逐目标就绪、观察与残留事实。",
       "source": "evaluation/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
     },
     "evaluation.run": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "EvaluationRunInput",
+      "output": "EvaluationRunOutput",
+      "target": "payload.plan_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "plan_conflict",
+        "holdout_unavailable",
+        "feedback_not_ready",
+        "source_unavailable",
+        "environment_unavailable",
+        "evidence_incomplete",
+        "approval_inactive",
+        "rollback_unavailable"
+      ],
+      "success": "运行及首批环境准备责任已保存，不代表评分完成。",
       "source": "evaluation/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "plan_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "holdout_unavailable": [
+          "after_change"
+        ],
+        "feedback_not_ready": [
+          "after_change"
+        ],
+        "source_unavailable": [
+          "after_change"
+        ],
+        "environment_unavailable": [
+          "after_change"
+        ],
+        "evidence_incomplete": [
+          "after_change"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ],
+        "rollback_unavailable": [
+          "after_change"
+        ]
+      }
     },
     "execution.cancel": {
       "status": "frozen-draft",
@@ -1774,19 +4602,378 @@
       }
     },
     "extensions.deactivate": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ExtensionsDeactivateInput",
+      "output": "DeactivationResult",
+      "target": "target_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "generation_conflict",
+        "approval_inactive"
+      ],
+      "success": "关闭新入口与停用事实持久保存；残留责任单列。",
       "source": "extensions/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "generation_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "approval_inactive": [
+          "after_change"
+        ]
+      }
     },
     "extensions.dispose": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ExtensionsDisposeInput",
+      "output": "ExtensionsDisposeOutput",
+      "target": "lock_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "generation_conflict",
+        "drain_blocked"
+      ],
+      "success": "无引用则清理制品并保留关闭索引；否则返回具体blocked引用。",
       "source": "extensions/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "generation_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "drain_blocked": [
+          "after_change"
+        ]
+      }
     },
     "extensions.prepare": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ExtensionsPrepareInput",
+      "output": "ExtensionsPrepareOutput",
+      "target": "extension_manager_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "package_invalid",
+        "dependency_conflict",
+        "contract_unsupported",
+        "isolation_unavailable"
+      ],
+      "success": "完整制品、检查证据和不可变安装锁已提交；不执行包内安装脚本。",
       "source": "extensions/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "package_invalid": [
+          "after_change"
+        ],
+        "dependency_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "contract_unsupported": [
+          "after_change"
+        ],
+        "isolation_unavailable": [
+          "after_change"
+        ]
+      }
     },
     "extensions.read": {
       "status": "frozen-draft",
@@ -1814,7 +5001,7 @@
         "precondition_failed",
         "internal_error"
       ],
-      "success": "本 profile 只开放 Activation 查询；InstallLock 查询仍 reserved。",
+      "success": "查询准确激活及当前实例，或不可变安装锁；不把活动指针当就绪。",
       "source": "extensions/README.md",
       "error_recovery": {
         "invalid_argument": [
@@ -1986,29 +5173,566 @@
       }
     },
     "grant.issue": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "GrantIssueInput",
+      "output": "GrantIssueOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked"
+      ],
+      "success": "原许可、一次确认消费、原回执同事务保存。",
       "source": "security/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "grant.lease.allocate": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "LeaseAllocationInput",
+      "output": "LeaseAllocationOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked"
+      ],
+      "success": "唯一端点实例租约及预算预留同事务提交；失回执不再分配。",
       "source": "security/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "grant.lease.settle": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "LeaseSettlementInput",
+      "output": "LeaseSettlementOutput",
+      "target": "lease_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked"
+      ],
+      "success": "原使用累计值去重结算；最终关闭有据才释放余额。",
       "source": "security/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "grant.read": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "GrantReadInput",
+      "output": "GrantReadOutput",
+      "target": "grant_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked"
+      ],
+      "success": "当前许可与逐端传播范围；过期独立按时间判定。",
       "source": "security/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "grant.revoke": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "GrantRevokeInput",
+      "output": "GrantRevokeOutput",
+      "target": "grant_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked"
+      ],
+      "success": "撤销修订和传播责任已保存；未承诺全端立即停止。",
       "source": "security/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "query_original"
+        ],
+        "use_unknown": [
+          "query_original"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "grant.use": {
       "status": "frozen-draft",
@@ -2234,9 +5958,114 @@
       }
     },
     "interaction.application_event": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "InteractionApplication_EventInput",
+      "output": "InteractionApplication_EventOutput",
+      "target": "payload.surface_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "app_not_registered",
+        "event_unsupported",
+        "request_binding",
+        "source_unavailable"
+      ],
+      "success": "保存固定事件/处理器/原目标命令及转交责任；queued不证明领域消费。",
       "source": "interaction/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "app_not_registered": [
+          "after_change",
+          "none"
+        ],
+        "event_unsupported": [
+          "after_change",
+          "none"
+        ],
+        "request_binding": [
+          "after_change",
+          "none"
+        ],
+        "source_unavailable": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "interaction.input": {
       "status": "frozen-draft",
@@ -2510,34 +6339,599 @@
       }
     },
     "interaction.present": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "InteractionPresentInput",
+      "output": "InteractionPresentOutput",
+      "target": "surface_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "presentation_conflict"
+      ],
+      "success": "保存本设备呈现意图；关闭不取消任务、不撤回已消费输入。",
       "source": "interaction/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "presentation_conflict": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "interaction.surface_create": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "InteractionSurface_CreateInput",
+      "output": "InteractionSurface_CreateOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "app_not_registered",
+        "surface_conflict",
+        "component_unsupported",
+        "request_binding"
+      ],
+      "success": "保存固定应用/任务绑定、完整快照与提示责任。",
       "source": "interaction/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "app_not_registered": [
+          "after_change",
+          "none"
+        ],
+        "surface_conflict": [
+          "after_change",
+          "none"
+        ],
+        "component_unsupported": [
+          "after_change",
+          "none"
+        ],
+        "request_binding": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "interaction.surface_list": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "InteractionSurface_ListInput",
+      "output": "InteractionSurface_ListOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "cursor_expired",
+        "query_conflict"
+      ],
+      "success": "本owner有限目录逐页复核披露；跨端不可达项单列，不表示全局完整。",
       "source": "interaction/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "cursor_expired": [
+          "after_change"
+        ],
+        "query_conflict": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "interaction.surface_read": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "InteractionSurface_ReadInput",
+      "output": "InteractionSurface_ReadOutput",
+      "target": "surface_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "source_unavailable",
+        "source_closed"
+      ],
+      "success": "按当前披露资格返回完整快照或未变化；缺材料单列。",
       "source": "interaction/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "source_unavailable": [
+          "after_change",
+          "none"
+        ],
+        "source_closed": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "interaction.surface_update": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "InteractionSurface_UpdateInput",
+      "output": "InteractionSurface_UpdateOutput",
+      "target": "surface_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "component_unsupported",
+        "request_binding",
+        "source_revision_conflict"
+      ],
+      "success": "按原绑定处理器与源修订更新完整快照及提示责任。",
       "source": "interaction/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "component_unsupported": [
+          "after_change",
+          "none"
+        ],
+        "request_binding": [
+          "after_change",
+          "none"
+        ],
+        "source_revision_conflict": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "memory.cleanup.get": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "MemoryCleanupGetInput",
+      "output": "MemoryCleanupGetOutput",
+      "target": "payload.object_ref.owner_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "source_unavailable"
+      ],
+      "success": "逐持有者报告停止、物理清理和残留；未确认不汇总完成。",
       "source": "memory/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "source_unavailable": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "memory.create": {
       "status": "frozen-draft",
@@ -2720,9 +7114,114 @@
       }
     },
     "memory.extract": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "MemoryExtractInput",
+      "output": "MemoryExtractOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "source_unavailable",
+        "source_closed",
+        "extraction_conflict",
+        "preauthorization_required"
+      ],
+      "success": "有限输入、唯一Home任务映射和启动责任已保存；尚未生成或发布候选。",
       "source": "memory/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "source_unavailable": [
+          "after_change",
+          "none"
+        ],
+        "source_closed": [
+          "after_change",
+          "none"
+        ],
+        "extraction_conflict": [
+          "after_change",
+          "none"
+        ],
+        "preauthorization_required": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "memory.inspect": {
       "status": "frozen-draft",
@@ -2812,14 +7311,206 @@
       }
     },
     "memory.list": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "MemoryListInput",
+      "output": "MemoryListOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "cursor_expired",
+        "query_conflict"
+      ],
+      "success": "固定管理ID集合，逐页返回当前获准控制元数据；不要求旧正文可读。",
       "source": "memory/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "cursor_expired": [
+          "after_change"
+        ],
+        "query_conflict": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "memory.query": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "MemoryQueryInput",
+      "output": "MemoryQueryOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "cursor_expired",
+        "query_conflict",
+        "source_unavailable",
+        "source_closed"
+      ],
+      "success": "固定有限候选集合，逐页复核当前状态/来源/用途，返回完整性与缺口。",
       "source": "memory/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "cursor_expired": [
+          "after_change"
+        ],
+        "query_conflict": [
+          "after_change",
+          "none"
+        ],
+        "source_unavailable": [
+          "after_change",
+          "none"
+        ],
+        "source_closed": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "memory.read": {
       "status": "frozen-draft",
@@ -3089,49 +7780,844 @@
       }
     },
     "memory.view.ack": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "MemoryViewAckInput",
+      "output": "MemoryViewAckOutput",
+      "target": "payload.view_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "ack_gap",
+        "view_expired",
+        "resnapshot_required"
+      ],
+      "success": "持久保存已应用原页的连续ACK；不允许确认未交付页或跳过。",
       "source": "memory/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "ack_gap": [
+          "after_change",
+          "none"
+        ],
+        "view_expired": [
+          "after_change",
+          "none"
+        ],
+        "resnapshot_required": [
+          "after_change"
+        ]
+      }
     },
     "memory.view.open": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "MemoryViewOpenInput",
+      "output": "MemoryViewOpenOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "view_conflict",
+        "source_unavailable"
+      ],
+      "success": "保存获准视图、有限快照切点及发送责任；不授予永久离线使用。",
       "source": "memory/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "view_conflict": [
+          "after_change",
+          "none"
+        ],
+        "source_unavailable": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "memory.view.pull": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "MemoryViewPullInput",
+      "output": "MemoryViewPullOutput",
+      "target": "payload.view_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "resnapshot_required",
+        "view_expired",
+        "source_unavailable"
+      ],
+      "success": "返回原视图连续快照或增量页；副本原子应用后才确认。",
       "source": "memory/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "resnapshot_required": [
+          "after_change"
+        ],
+        "view_expired": [
+          "after_change",
+          "none"
+        ],
+        "source_unavailable": [
+          "after_change",
+          "none"
+        ]
+      }
     },
     "resource.acquire": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ResourceAcquireInput",
+      "output": "ResourceAcquireOutput",
+      "target": "resource_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "资源 owner 原子保存唯一有效占用；可能迟到旧动作未核清时拒绝。",
       "source": "execution/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
     },
     "resource.get": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "ResourceGetInput",
+      "output": "ResourceGetOutput",
+      "target": "resource_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "返回 owner 当前控制代次、占用及在途操作；读取不新建占用。",
       "source": "execution/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
     },
     "resource.observe": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ResourceObserveInput",
+      "output": "ResourceObserveOutput",
+      "target": "payload.resource_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "按固定 gui.observe Invoke 接纳读取责任；实际图像按原 operation 查询。",
       "source": "execution/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
     },
     "resource.release": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ResourceReleaseInput",
+      "output": "ResourceReleaseOutput",
+      "target": "resource_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "比较控制代次后交还占用或人工控制；在途效果仍保留。",
       "source": "execution/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
     },
     "resource.renew": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ResourceRenewInput",
+      "output": "ResourceRenewOutput",
+      "target": "resource_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "同一未过期占用比较修订后延长；不改变持有者或控制代次。",
       "source": "execution/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
     },
     "resource.takeover": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ResourceTakeoverInput",
+      "output": "ResourceTakeoverOutput",
+      "target": "resource_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "持久增加代次并封闭旧自动入口后确认人工接管；列出仍可能生效动作。",
       "source": "execution/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
     },
     "task.accept_result": {
       "status": "frozen-draft",
@@ -3228,9 +8714,94 @@
       }
     },
     "task.adjust_budget": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "TaskAdjustBudgetInput",
+      "output": "TaskAdjustBudgetOutput",
+      "target": "task_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "在原义务以上修改精确单位上限；不恢复暂停、不改变期限。",
       "source": "task-runtime/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
     },
     "task.attach_evidence": {
       "status": "frozen-draft",
@@ -3507,9 +9078,89 @@
       }
     },
     "task.list": {
-      "status": "reserved",
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "TaskListInput",
+      "output": "TaskListOutput",
+      "target": "home_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "返回本 Home 有界、按当前权限过滤的任务页；稳定上界与缺口可查。",
       "source": "task-runtime/README.md",
-      "reason": "本 profile 未冻结完整线字段及输出，不得在能力发现中声明可调用；返回 unsupported。"
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
     },
     "task.pause": {
       "status": "frozen-draft",
@@ -4042,6 +9693,907 @@
         ],
         "internal_error": [
           "query_original"
+        ]
+      }
+    },
+    "budget.read": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "BudgetReadInput",
+      "output": "BudgetReadOutput",
+      "target": "allocation_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "读取原分配owner当前记录或receiver唯一接纳/关闭投影；role不能改变服务身份。",
+      "source": "task-runtime/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "budget.close": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "BudgetCloseInput",
+      "output": "BudgetCloseOutput",
+      "target": "payload.allocation_ref.id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "原receiver关闭allocation接纳与新增消费门禁并保存收尾责任；最终封账证明另查，未知子创建也先保存禁止索引。",
+      "source": "task-runtime/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
+    "grant.use.settle": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "UseSettlementInput",
+      "output": "UseSettlementRecord",
+      "target": "use_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "confirmation_expired",
+        "confirmation_consumed",
+        "settlement_conflict"
+      ],
+      "success": "原使用累计费用按差额入账；关闭有据才释放余量，单次资格不返还。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "use_unknown": [
+          "after_change"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_expired": [
+          "after_change"
+        ],
+        "confirmation_consumed": [
+          "after_change"
+        ],
+        "settlement_conflict": [
+          "after_change",
+          "query_original"
+        ]
+      }
+    },
+    "grant.use.settlement": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "UseSettlementQueryInput",
+      "output": "UseSettlementRecord",
+      "target": "use_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "confirmation_expired",
+        "confirmation_consumed",
+        "settlement_conflict"
+      ],
+      "success": "独立读取原使用结算修订，不改写原UseReceipt或续期。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "use_unknown": [
+          "after_change"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_expired": [
+          "after_change"
+        ],
+        "confirmation_consumed": [
+          "after_change"
+        ],
+        "settlement_conflict": [
+          "after_change",
+          "query_original"
+        ]
+      }
+    },
+    "confirmation.request": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ConfirmationRequestInput",
+      "output": "ConfirmationRecord",
+      "target": "consumer_owner_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "confirmation_expired",
+        "confirmation_consumed",
+        "settlement_conflict"
+      ],
+      "success": "实际业务owner保存原命令和规范意图，创建待本人决定的有限挑战。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "use_unknown": [
+          "after_change"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_expired": [
+          "after_change"
+        ],
+        "confirmation_consumed": [
+          "after_change"
+        ],
+        "settlement_conflict": [
+          "after_change",
+          "query_original"
+        ]
+      }
+    },
+    "confirmation.read": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "ConfirmationReadInput",
+      "output": "ConfirmationRecord",
+      "target": "confirmation_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "confirmation_expired",
+        "confirmation_consumed",
+        "settlement_conflict"
+      ],
+      "success": "按当前本人或获准管理会话返回原规范意图和决定；不消费。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "use_unknown": [
+          "after_change"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_expired": [
+          "after_change"
+        ],
+        "confirmation_consumed": [
+          "after_change"
+        ],
+        "settlement_conflict": [
+          "after_change",
+          "query_original"
+        ]
+      }
+    },
+    "confirmation.decide": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "ConfirmationDecideInput",
+      "output": "ConfirmationRecord",
+      "target": "confirmation_id",
+      "expected_revision": true,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "grant_expired",
+        "grant_revoked",
+        "intent_conflict",
+        "use_unknown",
+        "endpoint_revoked",
+        "confirmation_expired",
+        "confirmation_consumed",
+        "settlement_conflict"
+      ],
+      "success": "受信本人会话保存批准/拒绝及原回执；业务尚未执行，消费留在业务事务。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "grant_expired": [
+          "after_change",
+          "none"
+        ],
+        "grant_revoked": [
+          "after_change",
+          "none"
+        ],
+        "intent_conflict": [
+          "after_change",
+          "query_original"
+        ],
+        "use_unknown": [
+          "after_change"
+        ],
+        "endpoint_revoked": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_expired": [
+          "after_change"
+        ],
+        "confirmation_consumed": [
+          "after_change"
+        ],
+        "settlement_conflict": [
+          "after_change",
+          "query_original"
+        ]
+      }
+    },
+    "interaction.request_read": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "InteractionRequest_ReadInput",
+      "output": "InteractionRequest_ReadOutput",
+      "target": "payload.request_ref.owner_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "source_unavailable",
+        "source_closed"
+      ],
+      "success": "实际请求负责端返回当前准确请求投影及预览依赖；旧修订拒绝，引用不授予披露资格。",
+      "source": "interaction/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "source_unavailable": [
+          "after_change",
+          "none"
+        ],
+        "source_closed": [
+          "after_change",
+          "none"
         ]
       }
     }

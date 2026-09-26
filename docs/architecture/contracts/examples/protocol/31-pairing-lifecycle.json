@@ -1,0 +1,408 @@
+{
+  "name": "pairing-lifecycle",
+  "description": "预认证创建、本人批准、设备一次领取及凭据撤销；token只是构造数据。",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "endpoint.pair.begin",
+          "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "payload": {
+            "pairing_id": "pairing_cf66f1270ebf44cf8c82513ce06c0cc8",
+            "device_description": "Constructed laptop endpoint",
+            "requested_scope": {
+              "capability_ids": [
+                "capability_609c9b34235bb911f627772f4eb18840"
+              ],
+              "resource_scopes": [
+                {
+                  "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "resource_type": "content",
+                  "selector": {
+                    "object_ids": [
+                      "resource_03c9f206d1c2afd64261a5bbab141a54"
+                    ]
+                  },
+                  "normalizer_version": "1.0.0"
+                }
+              ],
+              "max_offline_window_ms": 0
+            },
+            "client_nonce": "sha256:78377b525757b494427f89014f97d79928f3938d14eb51e20fb5dec9834eb304"
+          },
+          "command_id": "command_79f869a3b7cc7b8984c8db73cbe40493",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_79f869a3b7cc7b8984c8db73cbe40493",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "session": {
+              "pairing_id": "pairing_cf66f1270ebf44cf8c82513ce06c0cc8",
+              "revision": 1,
+              "requested_scope": {
+                "capability_ids": [
+                  "capability_609c9b34235bb911f627772f4eb18840"
+                ],
+                "resource_scopes": [
+                  {
+                    "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                    "resource_type": "content",
+                    "selector": {
+                      "object_ids": [
+                        "resource_03c9f206d1c2afd64261a5bbab141a54"
+                      ]
+                    },
+                    "normalizer_version": "1.0.0"
+                  }
+                ],
+                "max_offline_window_ms": 0
+              },
+              "device_description": "Constructed laptop endpoint",
+              "expires_at": "2026-09-26T00:05:00Z",
+              "poll_interval_ms": 5000,
+              "state": "pending"
+            },
+            "device_code": "synthetic-device-code-for-documentation-0001",
+            "user_code": "ABCD-EFGH",
+            "verification_uri": "https://example.invalid/pair"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:01Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "endpoint.pair.claim",
+          "target_id": "pairing_cf66f1270ebf44cf8c82513ce06c0cc8",
+          "payload": {
+            "device_code": "synthetic-device-code-for-documentation-0001",
+            "client_nonce": "sha256:78377b525757b494427f89014f97d79928f3938d14eb51e20fb5dec9834eb304"
+          },
+          "command_id": "command_799f45bef0161d50311e969edab3fa2d",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_799f45bef0161d50311e969edab3fa2d",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:01Z",
+          "output": {
+            "state": "pending",
+            "session": {
+              "pairing_id": "pairing_cf66f1270ebf44cf8c82513ce06c0cc8",
+              "revision": 1,
+              "requested_scope": {
+                "capability_ids": [
+                  "capability_609c9b34235bb911f627772f4eb18840"
+                ],
+                "resource_scopes": [
+                  {
+                    "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                    "resource_type": "content",
+                    "selector": {
+                      "object_ids": [
+                        "resource_03c9f206d1c2afd64261a5bbab141a54"
+                      ]
+                    },
+                    "normalizer_version": "1.0.0"
+                  }
+                ],
+                "max_offline_window_ms": 0
+              },
+              "device_description": "Constructed laptop endpoint",
+              "expires_at": "2026-09-26T00:05:00Z",
+              "poll_interval_ms": 5000,
+              "state": "pending"
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "endpoint.pair.approve",
+          "target_id": "pairing_cf66f1270ebf44cf8c82513ce06c0cc8",
+          "payload": {
+            "user_code": "ABCD-EFGH",
+            "decision": "approve",
+            "approved_scope": {
+              "capability_ids": [
+                "capability_609c9b34235bb911f627772f4eb18840"
+              ],
+              "resource_scopes": [
+                {
+                  "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "resource_type": "content",
+                  "selector": {
+                    "object_ids": [
+                      "resource_03c9f206d1c2afd64261a5bbab141a54"
+                    ]
+                  },
+                  "normalizer_version": "1.0.0"
+                }
+              ],
+              "max_offline_window_ms": 0
+            },
+            "confirmation_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "confirmation_e14caf95f886072da79e74deb6123c61",
+              "revision": 2
+            }
+          },
+          "command_id": "command_df5b70e103036a876378f291e8b0266f",
+          "expires_at": "2026-09-26T01:00:00Z",
+          "expected_revision": 1
+        },
+        "response": {
+          "command_id": "command_df5b70e103036a876378f291e8b0266f",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:02Z",
+          "output": {
+            "pairing_id": "pairing_cf66f1270ebf44cf8c82513ce06c0cc8",
+            "revision": 2,
+            "requested_scope": {
+              "capability_ids": [
+                "capability_609c9b34235bb911f627772f4eb18840"
+              ],
+              "resource_scopes": [
+                {
+                  "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "resource_type": "content",
+                  "selector": {
+                    "object_ids": [
+                      "resource_03c9f206d1c2afd64261a5bbab141a54"
+                    ]
+                  },
+                  "normalizer_version": "1.0.0"
+                }
+              ],
+              "max_offline_window_ms": 0
+            },
+            "device_description": "Constructed laptop endpoint",
+            "expires_at": "2026-09-26T00:05:00Z",
+            "poll_interval_ms": 5000,
+            "state": "approved"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:03Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "endpoint.pair.claim",
+          "target_id": "pairing_cf66f1270ebf44cf8c82513ce06c0cc8",
+          "payload": {
+            "device_code": "synthetic-device-code-for-documentation-0001",
+            "client_nonce": "sha256:78377b525757b494427f89014f97d79928f3938d14eb51e20fb5dec9834eb304"
+          },
+          "command_id": "command_a0b7f325858752783d6a97660e67c057",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_a0b7f325858752783d6a97660e67c057",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:03Z",
+          "output": {
+            "state": "claimed",
+            "session": {
+              "pairing_id": "pairing_cf66f1270ebf44cf8c82513ce06c0cc8",
+              "revision": 3,
+              "requested_scope": {
+                "capability_ids": [
+                  "capability_609c9b34235bb911f627772f4eb18840"
+                ],
+                "resource_scopes": [
+                  {
+                    "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                    "resource_type": "content",
+                    "selector": {
+                      "object_ids": [
+                        "resource_03c9f206d1c2afd64261a5bbab141a54"
+                      ]
+                    },
+                    "normalizer_version": "1.0.0"
+                  }
+                ],
+                "max_offline_window_ms": 0
+              },
+              "device_description": "Constructed laptop endpoint",
+              "expires_at": "2026-09-26T00:05:00Z",
+              "poll_interval_ms": 5000,
+              "state": "claimed",
+              "endpoint_id": "endpoint_a08bf8802c91a4a312c5f957b78e67ac"
+            },
+            "endpoint": {
+              "endpoint_id": "endpoint_a08bf8802c91a4a312c5f957b78e67ac",
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "instance_id": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+              "credential_generation": 1,
+              "state": "active",
+              "approved_scope": {
+                "capability_ids": [
+                  "capability_609c9b34235bb911f627772f4eb18840"
+                ],
+                "resource_scopes": [
+                  {
+                    "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                    "resource_type": "content",
+                    "selector": {
+                      "object_ids": [
+                        "resource_03c9f206d1c2afd64261a5bbab141a54"
+                      ]
+                    },
+                    "normalizer_version": "1.0.0"
+                  }
+                ],
+                "max_offline_window_ms": 0
+              },
+              "registered_at": "2026-09-26T00:00:00Z",
+              "propagation": []
+            },
+            "credential": {
+              "token_type": "Bearer",
+              "access_token": "synthetic-bearer-token-never-valid-00000001",
+              "expires_at": "2026-09-26T01:00:00Z",
+              "recovery_until": "2026-09-26T00:05:00Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "endpoint.revoke",
+          "target_id": "endpoint_a08bf8802c91a4a312c5f957b78e67ac",
+          "payload": {
+            "reason": "lost device"
+          },
+          "command_id": "command_3f60d75808345ef6541193ec8d0aced8",
+          "expires_at": "2026-09-26T01:00:00Z",
+          "expected_revision": 1
+        },
+        "response": {
+          "command_id": "command_3f60d75808345ef6541193ec8d0aced8",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:04Z",
+          "output": {
+            "endpoint_id": "endpoint_a08bf8802c91a4a312c5f957b78e67ac",
+            "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+            "instance_id": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+            "credential_generation": 2,
+            "state": "revoked",
+            "approved_scope": {
+              "capability_ids": [
+                "capability_609c9b34235bb911f627772f4eb18840"
+              ],
+              "resource_scopes": [
+                {
+                  "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "resource_type": "content",
+                  "selector": {
+                    "object_ids": [
+                      "resource_03c9f206d1c2afd64261a5bbab141a54"
+                    ]
+                  },
+                  "normalizer_version": "1.0.0"
+                }
+              ],
+              "max_offline_window_ms": 0
+            },
+            "registered_at": "2026-09-26T00:00:00Z",
+            "propagation": []
+          }
+        }
+      }
+    }
+  ],
+  "confirmations": [
+    {
+      "confirmation_id": "confirmation_e14caf95f886072da79e74deb6123c61",
+      "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+      "revision": 2,
+      "consumer_method": "endpoint.pair.approve",
+      "consumer_command_id": "command_df5b70e103036a876378f291e8b0266f",
+      "consumer_target_id": "pairing_cf66f1270ebf44cf8c82513ce06c0cc8",
+      "consumer_command": {
+        "method": "endpoint.pair.approve",
+        "target_id": "pairing_cf66f1270ebf44cf8c82513ce06c0cc8",
+        "payload": {
+          "user_code": "ABCD-EFGH",
+          "decision": "approve",
+          "approved_scope": {
+            "capability_ids": [
+              "capability_609c9b34235bb911f627772f4eb18840"
+            ],
+            "resource_scopes": [
+              {
+                "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "resource_type": "content",
+                "selector": {
+                  "object_ids": [
+                    "resource_03c9f206d1c2afd64261a5bbab141a54"
+                  ]
+                },
+                "normalizer_version": "1.0.0"
+              }
+            ],
+            "max_offline_window_ms": 0
+          },
+          "confirmation_ref": {
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "id": "confirmation_e14caf95f886072da79e74deb6123c61",
+            "revision": 2
+          }
+        },
+        "command_id": "command_df5b70e103036a876378f291e8b0266f",
+        "expires_at": "2026-09-26T01:00:00Z",
+        "expected_revision": 1
+      },
+      "intent_hash": "sha256:ec00f27acafe84c605ac6398ac9c8ea7078d97edf9f807283fa950e683ea8a1c",
+      "challenge": "sha256:f1486e8c5dc528f267c703f9ee2862e1636828f66ccc4f5fd30ff3f9d246b3b2",
+      "expires_at": "2026-09-26T00:05:02Z",
+      "state": "approved",
+      "decided_at": "2026-09-26T00:00:02Z",
+      "decided_by": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+      "trusted_user_session_ref": {
+        "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+        "id": "session_f1486e8c5dc528f267c703f9ee2862e1",
+        "revision": 1
+      }
+    }
+  ]
+}

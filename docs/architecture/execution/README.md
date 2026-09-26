@@ -4,6 +4,8 @@ Executor 接收 Task Home 准入的操作，使用固定能力与实例绑定执
 
 Home 保存“为什么要做”，Executor 保存“做到了哪一步、效果是什么”。能力目录描述行为契约，实例绑定确定谁以何种驱动访问哪个目标。任务完成由[任务运行](../task-runtime/README.md)裁决，身份和设备占用规则与[授权](../security/README.md)协作，本页是操作、能力和 GUI 字段的权威位置。
 
+实现阅读：[模块形状与依赖](implementation.md#module-shape) → [原操作对象流转](implementation.md#data-flow) → [发送与核对时序](implementation.md#key-sequence) → [生产部署和容量](implementation.md#production)。本页保留行为主线，执行记录、发送门禁、能力装配、模拟设备及故障断点在实现篇查阅。
+
 ## 1. 默认选择与适用条件
 
 | 选择 | 理由 | 主要代价与边界 |
@@ -81,7 +83,7 @@ Home 刚提交暂停而执行端仍未收到时，执行端可能在旧快照允
 
 `execution.control` 只有在持久记录并封闭本执行端旧入口后，才返回已执行的 `enforced_control_revision` 与在途清单。若设备 owner 有独立命令入口，Executor 保存转交责任，待该入口持久应用相同 gate 后才计入已执行；此前只报告 accepted 和逐入口待确认。已封闭表示不再由这些入口启动旧资格动作，不表示所有旧动作已停止。
 
-`execution.cancel` 对未知 `operation_id` 也保存 `CancellationTombstone`，不能只回 `not_found`。随后迟到的 Invoke 命中该墓碑时被拒绝启动，并建立可查询的取消事实；墓碑不能被任务 resume 清除。若执行权威存储不可核对，返回提交未知，不能编造未启动结论。gate 和墓碑保留至少覆盖全部启动、重投及恢复窗口；超过可证明的保留范围返回 `gone`，不得重新初始化为可执行身份。
+`execution.cancel` 对未知 `operation_id` 也保存 `CancellationTombstone`，不能只回 `not_found`。随后迟到的 Invoke 命中该墓碑时被拒绝启动，并建立可查询的取消事实；墓碑不能被任务 resume 清除。若执行权威存储不可核对，返回提交未知，不能编造未启动结论。完整 gate、回执和取消记录至少保留至责任结清及查询窗口结束，之后可压缩为长期最小关闭索引；该索引不按 TTL 删除。未知操作取消时无法从未收到的 Invoke 推算期限，因此也必须保留禁止索引。完整记录已清理时返回 `gone`，不得重新初始化为可执行身份。
 
 例如暂停修订 8 晚于恢复修订 9 到达：执行端保持修订 9，不把旧暂停重新施加；恢复 9 晚于取消 10 到达则保持取消。目标从 3 修订为 4 后，未启动的目标 3 操作确定终止；若目标 3 的写入已交给远端服务，worker 租约到期也只能继续核对该写入，不能宣称旧目标没有效果。
 
@@ -169,24 +171,24 @@ flowchart LR
 | --- | --- | --- |
 | `capability.search` | `query, resource_scope?, cursor?, limit` → 候选引用及下一游标 | 只读、有限分页；Brain 经 Home 获取，失败不影响已有准确版本的可用性 |
 | `capability.describe` | 准确能力及绑定引用 → `Capability, Binding` | 返回固定版本及当前可用性；不存在或停用时 Home 重新选择，不能猜契约 |
-| `execution.invoke` | `Invoke` → `Operation` | `accepted` 时操作、原命令答复与工作已保存；答复丢失 Home 查原操作，同键异意图冲突 |
+| `execution.invoke` | `Invoke` → `Operation` | Receipt 为 `applied` 时，Operation 的 `execution_state=accepted` 表示操作、原答复与工作已保存；答复丢失查原操作，同键异意图冲突 |
 | `execution.get` | `operation_id` → `Operation` | 当前事实；暂时不可达保持查询责任。`not_found` 后原键重投不等于新建目标动作 |
 | `execution.control` | `ControlSnapshot` → `ControlReceipt` | 先持久接纳 gate 与传播责任；所有受控入口落实后才确认 enforced 修订；丢答复由 Home 查询或重投原控制命令 |
 | `execution.control.get` | `home_id, task_id` → `ControlReceipt` | 返回当前已知和已执行修订、逐入口缺口及在途集合；Home 保留工作直至确认，不以操作查询代替任务控制确认 |
 | `execution.reconcile` | `operation_id, evidence_refs?, query_budget_ref` → `Operation` | 接纳一次有限核对责任；证据需验证，Executor 更新原事实，Home 查询至可决策状态 |
 | `execution.cancel` | `home_id, task_id, operation_id, reason` → `Operation` 或 `CancellationTombstone` | 保存禁止新发送及尽力停止责任；未知操作先存墓碑，迟到 Invoke 不能启动；在途效果继续核对，不隐含补偿 |
 | `resource.acquire` / `resource.renew` / `resource.get` | 资源、获准持有者与实例、有限期限；占用及期望修订；资源 ID → `ResourceLease` 或当前占用 | owner 原子分配或延长，冲突返回设备忙；过期或被接管的占用不能续期；答复丢失先查原命令 |
-| `resource.observe` | `Invoke` 中固定 `gui.observe`、资源及可选 `lease_ref` → 原操作及 `Observation` | `execution.invoke` 的便利绑定，复用操作、权限、预算及查询恢复；只有实际观察成功才有图像结果 |
+| `resource.observe` | `{resource_id, invoke}`，Invoke 固定 `gui.observe` → `{operation, observation?}` | `execution.invoke` 的便利绑定，复用操作、权限、预算及查询恢复；applied 接纳读取责任，只有实际读取成功才有 Observation |
 | `resource.takeover` | `resource_id, reason` → 新代次及在途操作集合 | owner 持久增加代次并关闭旧入口后确认；调用方仍查看在途未知效果 |
 | `resource.release` | `resource_id, expected_control_epoch` → 当前占用事实 | 当前持有者交还；旧代次冲突不能覆盖新持有者；重新自动执行需新占用 |
 
 | `Capability` 字段 | 定义与约束 |
 | --- | --- |
-| `capability_id, version, description` | 固定行为契约；描述含适用范围、前提和副作用，版本不可原地改义 |
+| `capability_id, version, digest, semantic_operation_id, description` | 固定行为契约；描述含适用范围、前提和副作用，版本不可原地改义 |
 | `input_schema, output_schema` | 带方言的完整参数与输出定义；外部 Schema 引用随版本固定并在激活前解析 |
 | `effect_class` | `read_only / target_idempotent / non_repeatable`，按第 2 节决定可重复路径 |
 | `verification` | 效果谓词、证据类型、原操作查询方式、`may_apply_later=false` 的可接受依据；缺失项明确标为不可证明 |
-| `retry` | `max_attempts, backoff, reconciliation_deadline`；幂等类另含目标键作用域、保留期、原键回放保证 |
+| `retry` | `max_attempts, initial_backoff_ms, max_backoff_ms, reconciliation_timeout_ms`；幂等类另含 `key_scope, key_retention_ms, replay_guarantee_ref` |
 | `authorization` | 所需资源、动作、用途、是否需设备占用或额外确认；不包含可被模型直接使用的密钥 |
 | `limits` | 最大时长、输入输出大小、物理请求数、成本上界及资源互斥域；未知费用上界如实声明 |
 
@@ -202,7 +204,7 @@ flowchart LR
 | `Invoke.goal_revision, control_snapshot` | 准入时固定目标修订及 Home 认证的初始 `ControlSnapshot`；不得由模型填充；当前 gate 的更高修订优先 |
 | `Invoke.capability_ref, binding_ref, arguments, intent_hash` | 固定能力、绑定和规范化输入摘要；参数全文或内容引用由授权规则决定 |
 | `Invoke.authorization_refs, reservation_ref, deadline` | 本次许可依据、执行费用预留和最后允许启动时间；执行端不能自行放宽 |
-| `Invoke.gui_precondition?` | GUI 动作必需的 `observation_id, control_epoch, lease_ref, max_age`，外加声明的页面或焦点条件 |
+| `Invoke.gui_precondition?` | GUI 动作必需的 `observation_id, control_epoch, lease_ref, max_age_ms`，外加声明的页面或焦点条件 |
 | `Operation.operation_id, revision, execution_state` | `execution_state=accepted / started / closed`；`closed` 不表示外部目标已结束 |
 | `Operation.effect, may_apply_later` | `effect=not_started / applied / not_applied / unknown`；`may_apply_later=true / false / unknown`，否定值须证据支持 |
 | `Operation.attempts, target_receipt_ref?, evidence_refs` | 物理尝试身份、时间、目标关联键、结果或错误；证据与内容版本绑定，不能以日志字符串代替目标凭据 |
@@ -227,7 +229,7 @@ flowchart LR
 
 ## 6. 部署、恢复与验收
 
-本地执行器与 Home 可共用数据库和内容库，远端执行器保存自身记录及有限保留的原命令答复。幂等墓碑至少覆盖双方允许的重投窗口；过期身份返回 `gone`，不能当作新请求执行。设备在 NAT 后主动拉取绑定给自己的有界命令；断连时不把同一操作重新分配给另一设备。
+本地执行器与 Home 可共用数据库和内容库，远端执行器保存自身记录及有限保留的原命令答复。完整幂等记录覆盖责任及查询窗口，最小关闭／禁止索引长期保留；完整内容已清理的身份返回 `gone`，不能当作新请求执行。设备在 NAT 后主动拉取绑定给自己的有界命令；断连时不把同一操作重新分配给另一设备。
 
 调度按用户、目标服务和资源域分别设置队列、并发、请求速率与存储限额。达到上限在接纳前返回可重试过载，已经接纳的责任仍持久保留；查询、取消、接管和结果收集保留容量。API 请求进程槽与目标业务是否终结分别管理，不能因连接关闭便释放业务互斥。隔离资源占用的释放依据由 owner 保存。
 

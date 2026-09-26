@@ -1,0 +1,10 @@
+stateDiagram-v2
+    [*] --> queued
+    queued --> withdrawn: 撤回事务先提交
+    queued --> sending: 领取发送事务先提交
+    sending --> applied: 原业务命令已消费
+    sending --> rejected: 原业务命令拒绝
+    sending --> sending: 失联后查询原命令
+    applied --> [*]
+    rejected --> [*]
+    withdrawn --> [*]

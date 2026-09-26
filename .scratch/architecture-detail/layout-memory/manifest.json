@@ -1,0 +1,32 @@
+[
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "index": 1,
+    "image": ".scratch/architecture-detail/layout-memory/memory-1.png",
+    "digest": "f995ddd972c00a9447da2f1f92de8733ed8e4a96e5084750912480eeb4b40c55"
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "index": 2,
+    "image": ".scratch/architecture-detail/layout-memory/memory-jobs.png",
+    "digest": "246d6abbf1b4d7dd12f2ce60158a80fae2f2053a3fb029fbb74280c45749de2d"
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "index": 3,
+    "image": ".scratch/architecture-detail/layout-memory/memory-2.png",
+    "digest": "903cf16d076dda6a7b7728cde3c1c1b35c8a9ba37922a6609e123442e78d3c18"
+  },
+  {
+    "source": "docs/architecture/interaction/implementation.md",
+    "index": 1,
+    "image": ".scratch/architecture-detail/layout-memory/interaction-1.png",
+    "digest": "7516b2d4fe03513953d1fd5e48f558a3874c789f4ebef478a82990a230aad17b"
+  },
+  {
+    "source": "docs/architecture/interaction/implementation.md",
+    "index": 2,
+    "image": ".scratch/architecture-detail/layout-memory/interaction-jobs.png",
+    "digest": "d8ce8777cadd2877d8865e60b26a0a7565d716653ca4219d2e70a31733c40f1c"
+  }
+]

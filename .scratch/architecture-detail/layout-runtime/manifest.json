@@ -1,0 +1,16 @@
+[
+  {
+    "source": "docs/architecture/task-runtime/implementation.md",
+    "index": 1,
+    "digest": "5ad380cce3d6c7d8e798cdce67dbca25394cd3b516eef382e78890958bbc68f3",
+    "image": ".scratch/architecture-detail/layout-runtime/task-runtime-implementation-1.png",
+    "name": "task-runtime-implementation-1"
+  },
+  {
+    "source": "docs/architecture/collaboration/implementation.md",
+    "index": 1,
+    "digest": "f7624c0aaac55c67cabcf3d646dc2b90277bf335b9c2996b0607707b4cfbec78",
+    "image": ".scratch/architecture-detail/layout-runtime/collaboration-implementation-1.png",
+    "name": "collaboration-implementation-1"
+  }
+]

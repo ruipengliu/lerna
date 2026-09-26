@@ -1,0 +1,10 @@
+flowchart LR
+    H[Home 固定的 BrainContext] -->|接纳时绑定准确引用| D[Decision 与 decision_input]
+    D -->|需要生成时唯一关联| M[ModelCall]
+    M -->|追加物理事实| F[发送、返回、用量事实]
+    D -->|终态事务固定| O[decision_output]
+    O -->|引用准确内容| P[Proposal ContentRef]
+    P -->|查询交回，另行准入| T[Home 原 Decision 消费记录]
+    D -->|正文到期后保留| X[decision_closure]
+    F -->|原调用核对后归并| U[费用最终记录或未结责任]
+    I[实际 input_manifest] -->|保存派生边| P

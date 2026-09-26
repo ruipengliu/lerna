@@ -1,0 +1,8 @@
+stateDiagram-v2
+    direction LR
+    [*] --> not_started
+    not_started --> unknown: 可能已发送
+    not_started --> not_applied: 启动前确定终止
+    unknown --> applied: 原操作效果证据
+    unknown --> not_applied: 确证未生效且不会迟到
+    not_applied --> unknown: 原操作获准重试
