@@ -4,7 +4,7 @@
 
 ## 一、理由只证明共同前提
 
-来源：[大脑总览：单轮决策](../../../../docs/architecture/brain-system/README.md#decisions)。
+来源：[大脑总览：单轮决策](../../../../docs/archive/architecture-2026-09-26/brain-system/README.md#decisions)。
 
 问题写法：
 
@@ -20,7 +20,7 @@
 
 ## 二、先给身份，后给动机
 
-来源：[调用交接](../../../../docs/architecture/brain-system/contracts-and-runtime.md#call-handoff)。
+来源：[调用交接](../../../../docs/archive/architecture-2026-09-26/brain-system/contracts-and-runtime.md#call-handoff)。
 
 问题写法：
 
@@ -36,7 +36,7 @@
 
 ## 三、代价只有抽象名称
 
-来源：[大脑总览：取舍与接入](../../../../docs/architecture/brain-system/README.md#decisions)。
+来源：[大脑总览：取舍与接入](../../../../docs/archive/architecture-2026-09-26/brain-system/README.md#decisions)。
 
 问题写法：
 

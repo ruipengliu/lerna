@@ -1,6 +1,6 @@
 # 技术方案归档 · 2026-09-22
 
-本版方案因篇幅冗长、重点不清、阅读成本过高而整体归档，停止维护。后续以[系统全景图](../../architecture/diagrams/system-panorama.drawio)和[项目目标](../../harness-project-goals.md)为依据，逐个模块重新展开设计。归档中的“已确认”“已定稿”均为当时记录，旧设计不自动成为新方案的约束。
+本版方案因篇幅冗长、重点不清、阅读成本过高而整体归档，停止维护。随后使用的[系统全景图](../architecture-2026-09-26/diagrams/system-panorama.drawio)也已归档，现行设计见[技术方案](../../architecture/README.md)与[项目目标](../../harness-project-goals.md)。归档中的“已确认”“已定稿”均为当时记录，旧设计不自动成为新方案的约束。
 
 保留归档前的目录关系与文件内容：
 

@@ -1,0 +1,365 @@
+{
+  "name": "03-control-order",
+  "description": "resume9先到，再到pause8；cancel10保存后旧控制与旧Invoke不能重新打开入口。",
+  "capabilities": [
+    {
+      "capability_ref": {
+        "id": "capability_38a5be91af79d7e5ba9809bf383c699b",
+        "version": "1.0.0",
+        "digest": "sha256:38a5be91af79d7e5ba9809bf383c699b6864ee50446239fe56a45e32b84638fe"
+      },
+      "binding_ref": {
+        "binding_id": "binding_80f70afeef3caa57646fd20afb95be9c",
+        "revision": 1
+      },
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "resume9_541b82fb5b7c1d51a7a3698b23de38d4",
+          "method": "execution.control",
+          "target_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "gate": {
+              "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+              "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+              "control_revision": 9,
+              "goal_revision": 1,
+              "status": "active",
+              "control": "running"
+            },
+            "executor_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+            "issued_at": "2026-09-26T00:00:00Z",
+            "start_before": "2026-09-26T00:00:30Z",
+            "home_proof": "fixture-authenticated-home-proof"
+          }
+        },
+        "response": {
+          "command_id": "resume9_541b82fb5b7c1d51a7a3698b23de38d4",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "gate": {
+              "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+              "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+              "control_revision": 9,
+              "goal_revision": 1,
+              "status": "active",
+              "control": "running"
+            },
+            "enforced_control_revision": 9,
+            "entrances": [
+              {
+                "entrance_id": "entrance_3902eb874fcc6c8a1dbfeecd3d5997e8",
+                "enforced_control_revision": 9
+              }
+            ],
+            "inflight_operation_ids": [],
+            "observed_at": "2026-09-26T00:00:00Z"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "pause8_0d9deab39226479a8776166dc79cd4c3",
+          "method": "execution.control",
+          "target_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "gate": {
+              "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+              "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+              "control_revision": 8,
+              "goal_revision": 1,
+              "status": "active",
+              "control": "paused"
+            },
+            "executor_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+            "issued_at": "2026-09-26T00:00:00Z",
+            "start_before": "2026-09-26T00:00:30Z",
+            "home_proof": "fixture-authenticated-home-proof"
+          }
+        },
+        "response": {
+          "command_id": "pause8_0d9deab39226479a8776166dc79cd4c3",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "gate": {
+              "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+              "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+              "control_revision": 9,
+              "goal_revision": 1,
+              "status": "active",
+              "control": "running"
+            },
+            "enforced_control_revision": 9,
+            "entrances": [
+              {
+                "entrance_id": "entrance_3902eb874fcc6c8a1dbfeecd3d5997e8",
+                "enforced_control_revision": 9
+              }
+            ],
+            "inflight_operation_ids": [],
+            "observed_at": "2026-09-26T00:00:00Z"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "cancel10_01417066e06df315fc9df8f519863dae",
+          "method": "execution.control",
+          "target_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "gate": {
+              "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+              "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+              "control_revision": 10,
+              "goal_revision": 1,
+              "status": "cancelled",
+              "control": "paused"
+            },
+            "executor_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+            "issued_at": "2026-09-26T00:00:00Z",
+            "start_before": "2026-09-26T00:00:30Z",
+            "home_proof": "fixture-authenticated-home-proof"
+          }
+        },
+        "response": {
+          "command_id": "cancel10_01417066e06df315fc9df8f519863dae",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "gate": {
+              "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+              "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+              "control_revision": 10,
+              "goal_revision": 1,
+              "status": "cancelled",
+              "control": "paused"
+            },
+            "enforced_control_revision": 10,
+            "entrances": [
+              {
+                "entrance_id": "entrance_3902eb874fcc6c8a1dbfeecd3d5997e8",
+                "enforced_control_revision": 10
+              }
+            ],
+            "inflight_operation_ids": [],
+            "observed_at": "2026-09-26T00:00:00Z"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "late_resume9_e41b56bce42e0fdad37d537b971246ca",
+          "method": "execution.control",
+          "target_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "gate": {
+              "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+              "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+              "control_revision": 9,
+              "goal_revision": 1,
+              "status": "active",
+              "control": "running"
+            },
+            "executor_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+            "issued_at": "2026-09-26T00:00:00Z",
+            "start_before": "2026-09-26T00:00:30Z",
+            "home_proof": "fixture-authenticated-home-proof"
+          }
+        },
+        "response": {
+          "command_id": "late_resume9_e41b56bce42e0fdad37d537b971246ca",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "gate": {
+              "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+              "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+              "control_revision": 10,
+              "goal_revision": 1,
+              "status": "cancelled",
+              "control": "paused"
+            },
+            "enforced_control_revision": 10,
+            "entrances": [
+              {
+                "entrance_id": "entrance_3902eb874fcc6c8a1dbfeecd3d5997e8",
+                "enforced_control_revision": 10
+              }
+            ],
+            "inflight_operation_ids": [],
+            "observed_at": "2026-09-26T00:00:00Z"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.control.get",
+          "target_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+          "payload": {
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+          }
+        },
+        "response": {
+          "output": {
+            "gate": {
+              "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+              "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+              "control_revision": 10,
+              "goal_revision": 1,
+              "status": "cancelled",
+              "control": "paused"
+            },
+            "enforced_control_revision": 10,
+            "entrances": [
+              {
+                "entrance_id": "entrance_3902eb874fcc6c8a1dbfeecd3d5997e8",
+                "enforced_control_revision": 10
+              }
+            ],
+            "inflight_operation_ids": [],
+            "observed_at": "2026-09-26T00:00:00Z"
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "execution_invoke_df5d3e7b68cf0fdb78ae40a4da19ca19",
+          "method": "execution.invoke",
+          "target_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "operation_id": "operation_9bf5a24e4aa779981ac41f1a0f8713ec",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "goal_revision": 1,
+            "control_snapshot": {
+              "gate": {
+                "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+                "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+                "control_revision": 1,
+                "goal_revision": 1,
+                "status": "active",
+                "control": "running"
+              },
+              "executor_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+              "issued_at": "2026-09-26T00:00:00Z",
+              "start_before": "2026-09-26T00:00:30Z",
+              "home_proof": "fixture-authenticated-home-proof"
+            },
+            "capability_ref": {
+              "id": "capability_38a5be91af79d7e5ba9809bf383c699b",
+              "version": "1.0.0",
+              "digest": "sha256:38a5be91af79d7e5ba9809bf383c699b6864ee50446239fe56a45e32b84638fe"
+            },
+            "binding_ref": {
+              "binding_id": "binding_80f70afeef3caa57646fd20afb95be9c",
+              "revision": 1
+            },
+            "arguments": {
+              "text": "verified report"
+            },
+            "intent_hash": "sha256:a28f85649f126226011a40361804971532136507d8ca49356948cb76bfaca504",
+            "authorization_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+                "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+                "revision": 1
+              }
+            ],
+            "reservation_ref": {
+              "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+              "id": "reservation_9efa077f044e7a779c655f8d8e8760ca",
+              "revision": 1
+            },
+            "deadline": "2026-09-26T00:10:00Z"
+          }
+        },
+        "response": {
+          "command_id": "execution_invoke_df5d3e7b68cf0fdb78ae40a4da19ca19",
+          "stage": "rejected",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "error": {
+            "code": "precondition_failed",
+            "message": "前提不满足",
+            "retry": "after_change"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "name": "04-cancel-before-invoke",
+  "description": "未知操作先保存取消墓碑；迟到请求拒绝，核对只沿原操作。",
+  "capabilities": [
+    {
+      "capability_ref": {
+        "id": "capability_38a5be91af79d7e5ba9809bf383c699b",
+        "version": "1.0.0",
+        "digest": "sha256:38a5be91af79d7e5ba9809bf383c699b6864ee50446239fe56a45e32b84638fe"
+      },
+      "binding_ref": {
+        "binding_id": "binding_80f70afeef3caa57646fd20afb95be9c",
+        "revision": 1
+      },
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "execution_cancel_8ee471e74d4c6f6435787181bd60fee6",
+          "method": "execution.cancel",
+          "target_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "operation_id": "operation_9bf5a24e4aa779981ac41f1a0f8713ec",
+            "reason": "用户取消"
+          }
+        },
+        "response": {
+          "command_id": "execution_cancel_8ee471e74d4c6f6435787181bd60fee6",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "operation_id": "operation_9bf5a24e4aa779981ac41f1a0f8713ec",
+            "cancel_command_id": "execution_cancel_8ee471e74d4c6f6435787181bd60fee6",
+            "cancelled_at": "2026-09-26T00:00:00Z"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "execution_invoke_df5d3e7b68cf0fdb78ae40a4da19ca19",
+          "method": "execution.invoke",
+          "target_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "operation_id": "operation_9bf5a24e4aa779981ac41f1a0f8713ec",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "goal_revision": 1,
+            "control_snapshot": {
+              "gate": {
+                "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+                "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+                "control_revision": 1,
+                "goal_revision": 1,
+                "status": "active",
+                "control": "running"
+              },
+              "executor_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
+              "issued_at": "2026-09-26T00:00:00Z",
+              "start_before": "2026-09-26T00:00:30Z",
+              "home_proof": "fixture-authenticated-home-proof"
+            },
+            "capability_ref": {
+              "id": "capability_38a5be91af79d7e5ba9809bf383c699b",
+              "version": "1.0.0",
+              "digest": "sha256:38a5be91af79d7e5ba9809bf383c699b6864ee50446239fe56a45e32b84638fe"
+            },
+            "binding_ref": {
+              "binding_id": "binding_80f70afeef3caa57646fd20afb95be9c",
+              "revision": 1
+            },
+            "arguments": {
+              "text": "verified report"
+            },
+            "intent_hash": "sha256:a28f85649f126226011a40361804971532136507d8ca49356948cb76bfaca504",
+            "authorization_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+                "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+                "revision": 1
+              }
+            ],
+            "reservation_ref": {
+              "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+              "id": "reservation_9efa077f044e7a779c655f8d8e8760ca",
+              "revision": 1
+            },
+            "deadline": "2026-09-26T00:10:00Z"
+          }
+        },
+        "response": {
+          "command_id": "execution_invoke_df5d3e7b68cf0fdb78ae40a4da19ca19",
+          "stage": "rejected",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "error": {
+            "code": "precondition_failed",
+            "message": "前提不满足",
+            "retry": "after_change"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "execution_reconcile_05aa128f98c1a2fe863f89f521d204fc",
+          "method": "execution.reconcile",
+          "target_id": "operation_9bf5a24e4aa779981ac41f1a0f8713ec",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "evidence_refs": [],
+            "query_budget_ref": {
+              "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+              "id": "reservation_9efa077f044e7a779c655f8d8e8760ca",
+              "revision": 1
+            }
+          }
+        },
+        "response": {
+          "command_id": "execution_reconcile_05aa128f98c1a2fe863f89f521d204fc",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "operation_id": "operation_9bf5a24e4aa779981ac41f1a0f8713ec",
+            "revision": 2,
+            "execution_state": "closed",
+            "effect": "not_started",
+            "may_apply_later": false,
+            "attempts": [],
+            "evidence_refs": [],
+            "usage": [
+              {
+                "unit": "request",
+                "amount": "1"
+              }
+            ],
+            "usage_final": false,
+            "next_action": "query_original"
+          }
+        }
+      }
+    }
+  ]
+}
