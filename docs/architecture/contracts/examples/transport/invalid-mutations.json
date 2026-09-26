@@ -1918,5 +1918,765 @@
       }
     ],
     "expect": "transport_schema"
+  },
+  {
+    "name": "external Ready cannot be repeated",
+    "vector": "wss-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/ready_received",
+        "value": true
+      }
+    ],
+    "expect": "frame_ready"
+  },
+  {
+    "name": "identity across services total connection quota",
+    "vector": "wss-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/existing_total_connections",
+        "value": 16
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "ordinary requests stop before lifetime reserve",
+    "vector": "wss-final-ordinary-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/request_count",
+        "value": 9996
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "control requests stop at lifetime total",
+    "vector": "wss-final-control-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/request_count",
+        "value": 10000
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "rebind metadata authenticates gateway",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/authenticated_gateway",
+        "value": false
+      }
+    ],
+    "expect": "channel_auth"
+  },
+  {
+    "name": "rebind cannot refresh revoked identity",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/current_identity_valid",
+        "value": false
+      }
+    ],
+    "expect": "channel_auth"
+  },
+  {
+    "name": "rebind gets new binding id",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_id",
+        "value": "binding_initial_39e335c1cb0608d3d7a3d21405050f07"
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "rebind preserves external connection",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/connection_id",
+        "value": "another_connection_74926fa97833153f3b2f6a2f498da05f"
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "rebind preserves logical service",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/logical_service_id",
+        "value": "another_service_f83925522a90e5a3976b076f17ea20f6"
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "rebind digest covers exact limits",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "channel_limits"
+  },
+  {
+    "name": "rebind cannot change limits",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits/max_subscriptions",
+        "value": 7
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "rebind does not acquire external slot",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/external_slots_after",
+        "value": 3
+      }
+    ],
+    "expect": "channel_quota"
+  },
+  {
+    "name": "rebind does not reset request count",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/request_count_after",
+        "value": 0
+      }
+    ],
+    "expect": "channel_quota"
+  },
+  {
+    "name": "rebind does not duplicate request count",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/request_count_after",
+        "value": 9997
+      }
+    ],
+    "expect": "channel_quota"
+  },
+  {
+    "name": "old internal binding output is ignored",
+    "vector": "channel-rebound-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_id",
+        "value": "binding_initial_39e335c1cb0608d3d7a3d21405050f07"
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "unrelated binding output is ignored",
+    "vector": "channel-rebound-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_id",
+        "value": "unrelated_binding_309e1b4d91a4ac172be062e830b3e97d"
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "internal Ready must echo fixed limits",
+    "vector": "channel-rebound-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/frame/limits/max_subscriptions",
+        "value": 7
+      }
+    ],
+    "expect": "channel_limits"
+  },
+  {
+    "name": "internal Ready must echo fixed service",
+    "vector": "channel-rebound-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/frame/logical_service_id",
+        "value": "another_service_f83925522a90e5a3976b076f17ea20f6"
+      }
+    ],
+    "expect": "channel_limits"
+  },
+  {
+    "name": "internal Ready not forwarded twice",
+    "vector": "channel-rebound-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/forward_to_client",
+        "value": true
+      }
+    ],
+    "expect": "channel_ready"
+  },
+  {
+    "name": "internal frame binds external connection",
+    "vector": "channel-rebound-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/frame/connection_id",
+        "value": "another_connection_74926fa97833153f3b2f6a2f498da05f"
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "internal recovery keeps request id",
+    "vector": "wss-query-internal-recovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_id",
+        "value": "another_request_569ec384453ed6d85721d178bc13b63e"
+      }
+    ],
+    "expect": "frame_recovery_identity"
+  },
+  {
+    "name": "internal recovery keeps input",
+    "vector": "wss-query-internal-recovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/target_id",
+        "value": "another_task_70bab38202a9389961c200a3b1f695ba"
+      }
+    ],
+    "expect": "frame_recovery_identity"
+  },
+  {
+    "name": "internal recovery does not consume another request",
+    "vector": "wss-query-internal-recovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/request_count_after",
+        "value": 10001
+      }
+    ],
+    "expect": "frame_recovery_quota"
+  },
+  {
+    "name": "uncertain write is not automatically replayed",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/internal_request_replay",
+        "value": true
+      }
+    ],
+    "expect": "frame_recovery_identity"
+  },
+  {
+    "name": "channel-initial-binding rejects unknown field",
+    "vector": "channel-initial-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "channel-rebound-binding rejects unknown field",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "channel-initial-ready rejects unknown field",
+    "vector": "channel-initial-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "channel-rebound-ready rejects unknown field",
+    "vector": "channel-rebound-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "channel-rebound-response rejects unknown field",
+    "vector": "channel-rebound-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "channel-rebound-reply rejects unknown field",
+    "vector": "channel-rebound-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "channel-rebound-reply-ack rejects unknown field",
+    "vector": "channel-rebound-reply-ack",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-gap-backend-rebind rejects unknown field",
+    "vector": "wss-gap-backend-rebind",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-query-internal-recovery rejects unknown field",
+    "vector": "wss-query-internal-recovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-final-ordinary-request rejects unknown field",
+    "vector": "wss-final-ordinary-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-final-control-request rejects unknown field",
+    "vector": "wss-final-control-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "initial binding starts at revision one",
+    "vector": "channel-initial-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_revision",
+        "value": 2
+      }
+    ],
+    "expect": "channel_revision"
+  },
+  {
+    "name": "binding revision is positive",
+    "vector": "channel-initial-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_revision",
+        "value": 0
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "binding revision stays a safe integer",
+    "vector": "channel-initial-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_revision",
+        "value": 9007199254740992
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "binding revision is required",
+    "vector": "channel-initial-binding",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/value/binding_revision"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "new candidate increments prior allocated revision",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_revision",
+        "value": 3
+      }
+    ],
+    "expect": "channel_revision"
+  },
+  {
+    "name": "new candidate cannot reuse previous revision",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_revision",
+        "value": 1
+      }
+    ],
+    "expect": "channel_revision"
+  },
+  {
+    "name": "late second registration cannot replace third",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/stored_binding",
+        "value": {
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+          "binding_id": "binding_third_123456789012345678901234567890ab",
+          "limits": {
+            "max_json_bytes": 262144,
+            "max_frame_bytes": 1048576,
+            "max_page_items": 100,
+            "max_inflight_requests": 32,
+            "max_pending_deliveries": 32,
+            "max_queue_bytes": 4194304,
+            "control_reserve_bytes": 1048576,
+            "control_reserve_items": 4,
+            "max_subscriptions": 8,
+            "heartbeat_interval_ms": 30000,
+            "heartbeat_timeout_ms": 90000,
+            "max_content_bytes": 16777216,
+            "max_connections_per_identity_service": 2,
+            "max_connections_per_identity_total": 16,
+            "max_requests_per_connection": 10000
+          },
+          "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+          "binding_revision": 3
+        }
+      }
+    ],
+    "expect": "channel_revision"
+  },
+  {
+    "name": "same revision rejects a different binding id",
+    "vector": "channel-rebound-binding-retry",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_id",
+        "value": "binding_other_abcdefabcdefabcdefabcdefabcdefab"
+      }
+    ],
+    "expect": "channel_revision"
+  },
+  {
+    "name": "retry cannot change fields at the same revision",
+    "vector": "channel-rebound-binding-retry",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "channel_revision"
+  },
+  {
+    "name": "content control query is not a mirror read permit",
+    "vector": "reverse-mirror-read",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/source_download",
+        "value": {
+          "mode": "control",
+          "control": {
+            "content_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "control_revision": 1,
+            "state": "active",
+            "policy_ref": {
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "id": "policy_11111111111111111111111111111111",
+              "revision": 1
+            }
+          },
+          "copy": {
+            "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "content_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "holder_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "revision": 1,
+            "use_stopped": false,
+            "physical_state": "pending"
+          }
+        }
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-content-bytes-response rejects wrong content query mode",
+    "vector": "wss-content-bytes-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result",
+        "value": {
+          "output": {
+            "mode": "control",
+            "control": {
+              "content_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                "version": 1,
+                "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "policy_ref": {
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+                "revision": 1
+              },
+              "control_revision": 1,
+              "state": "active"
+            },
+            "copy": {
+              "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+              "content_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                "version": 1,
+                "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+              "revision": 1,
+              "use_stopped": false,
+              "physical_state": "pending"
+            }
+          },
+          "observed_at": "2026-09-26T00:00:04Z"
+        }
+      }
+    ],
+    "expect": "content_get_mode"
+  },
+  {
+    "name": "content-bytes-reply rejects wrong content query mode",
+    "vector": "content-bytes-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result",
+        "value": {
+          "output": {
+            "mode": "control",
+            "control": {
+              "content_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                "version": 1,
+                "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "policy_ref": {
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+                "revision": 1
+              },
+              "control_revision": 1,
+              "state": "active"
+            },
+            "copy": {
+              "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+              "content_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                "version": 1,
+                "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+              "revision": 1,
+              "use_stopped": false,
+              "physical_state": "pending"
+            }
+          },
+          "observed_at": "2026-09-26T00:00:04Z"
+        }
+      }
+    ],
+    "expect": "content_get_mode"
+  },
+  {
+    "name": "wss-content-control-response rejects wrong content query mode",
+    "vector": "wss-content-control-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result",
+        "value": {
+          "output": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "control_revision": 1,
+            "download_id": "download_fd456406745d816a45cae554c788e754",
+            "expires_at": "2026-09-26T00:10:00Z",
+            "range_supported": true
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      }
+    ],
+    "expect": "content_get_mode"
+  },
+  {
+    "name": "content-control-reply rejects wrong content query mode",
+    "vector": "content-control-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result",
+        "value": {
+          "output": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "control_revision": 1,
+            "download_id": "download_fd456406745d816a45cae554c788e754",
+            "expires_at": "2026-09-26T00:10:00Z",
+            "range_supported": true
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      }
+    ],
+    "expect": "content_get_mode"
   }
 ]

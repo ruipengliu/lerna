@@ -34,11 +34,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "retention": {
         "receipt_query_seconds": 2592000,
@@ -1422,11 +1424,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       }
     },
     "context": {
@@ -1442,11 +1446,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93"
@@ -1507,11 +1513,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server"
     }
@@ -1610,11 +1618,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -1687,11 +1697,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -1762,11 +1774,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server"
     }
@@ -1863,11 +1877,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -1912,11 +1928,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -1957,11 +1975,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server"
     }
@@ -2060,11 +2080,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -2107,11 +2129,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -2153,11 +2177,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server"
     }
@@ -2189,11 +2215,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -2239,11 +2267,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server",
       "replaces_subscription": true,
@@ -2277,11 +2307,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -2336,11 +2368,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "authenticated_endpoint": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
@@ -2442,11 +2476,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server",
       "delivery": {
@@ -2500,11 +2536,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server",
       "delivery": {
@@ -2551,11 +2589,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "reply": {
@@ -2674,11 +2714,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "registered_copy": {
@@ -2728,11 +2770,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "subscription": {
@@ -2767,11 +2811,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "subscription": {
@@ -2806,11 +2852,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "subscription": {
@@ -2844,11 +2892,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client"
     }
@@ -2874,11 +2924,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server",
       "pending_ping_nonce": "heartbeat-1"
@@ -2909,11 +2961,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "reply": {
@@ -3026,11 +3080,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server",
       "inflight_requests": 28
@@ -3065,11 +3121,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server",
       "authenticated_subject": "upload_subject_c42ddcf1683b53847e6cb719895379f3",
@@ -3114,11 +3172,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -3165,11 +3225,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -3212,11 +3274,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server",
       "authenticated_subject": "upload_subject_c42ddcf1683b53847e6cb719895379f3",
@@ -3261,11 +3325,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -3308,11 +3374,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -3367,11 +3435,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server",
       "registered_copy": {
@@ -3442,11 +3512,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -3505,11 +3577,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -3564,11 +3638,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server",
       "mirror": {
@@ -3646,11 +3722,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -3693,11 +3771,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -3749,11 +3829,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server",
       "mirror": {
@@ -3833,11 +3915,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -3893,11 +3977,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -3962,11 +4048,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "client_to_server",
       "mirror": {
@@ -4062,11 +4150,13 @@
         "max_queue_bytes": 4194304,
         "control_reserve_bytes": 1048576,
         "control_reserve_items": 4,
-        "max_connections_per_identity": 2,
         "max_subscriptions": 8,
         "heartbeat_interval_ms": 30000,
         "heartbeat_timeout_ms": 90000,
-        "max_content_bytes": 16777216
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
       },
       "direction": "server_to_client",
       "request_frame": {
@@ -4090,6 +4180,1537 @@
           "cause": "restricted",
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         }
+      }
+    }
+  },
+  {
+    "name": "channel-initial-binding",
+    "definition": "ChannelBinding",
+    "value": {
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "binding_id": "binding_initial_39e335c1cb0608d3d7a3d21405050f07",
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+      "binding_revision": 1
+    },
+    "context": {
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated_gateway": true,
+      "current_identity_valid": true
+    }
+  },
+  {
+    "name": "channel-rebound-binding",
+    "definition": "ChannelBinding",
+    "value": {
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "binding_id": "binding_rebound_e352b86d71d14a1e7c381ad792f5b661",
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+      "binding_revision": 2
+    },
+    "context": {
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated_gateway": true,
+      "current_identity_valid": true,
+      "previous_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_initial_39e335c1cb0608d3d7a3d21405050f07",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 1
+      },
+      "external_slots_before": 2,
+      "external_slots_after": 2,
+      "request_count_before": 9996,
+      "request_count_after": 9996,
+      "stored_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_initial_39e335c1cb0608d3d7a3d21405050f07",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 1
+      }
+    }
+  },
+  {
+    "name": "channel-initial-ready",
+    "definition": "ChannelFrameRecord",
+    "value": {
+      "binding_id": "binding_initial_39e335c1cb0608d3d7a3d21405050f07",
+      "frame": {
+        "type": "ready",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": false,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "direction": "server_to_client",
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "active_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_initial_39e335c1cb0608d3d7a3d21405050f07",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 1
+      },
+      "external_ready_sent": false,
+      "forward_to_client": true,
+      "existing_connections": 2,
+      "existing_total_connections": 16
+    }
+  },
+  {
+    "name": "channel-rebound-ready",
+    "definition": "ChannelFrameRecord",
+    "value": {
+      "binding_id": "binding_rebound_e352b86d71d14a1e7c381ad792f5b661",
+      "frame": {
+        "type": "ready",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "direction": "server_to_client",
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "active_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_initial_39e335c1cb0608d3d7a3d21405050f07",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 1
+      },
+      "external_ready_sent": true,
+      "forward_to_client": false,
+      "existing_connections": 2,
+      "existing_total_connections": 16,
+      "candidate_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_rebound_e352b86d71d14a1e7c381ad792f5b661",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 2
+      }
+    }
+  },
+  {
+    "name": "channel-rebound-response",
+    "definition": "ChannelFrameRecord",
+    "value": {
+      "binding_id": "binding_rebound_e352b86d71d14a1e7c381ad792f5b661",
+      "frame": {
+        "type": "response",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+        "kind": "command",
+        "result": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "goal_revision": 1,
+            "requirements": [
+              {
+                "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+                "kind": "effect",
+                "source_ref": {
+                  "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                  "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                  "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                  "version": 1,
+                  "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                },
+                "rule_ref": {
+                  "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                  "version": "1.0.0",
+                  "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+                },
+                "required": true
+              }
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "revision": 1,
+            "control_revision": 1,
+            "status": "active",
+            "control": "running",
+            "wait_reasons": [],
+            "deadline": "2026-09-26T00:10:00Z",
+            "budget": [
+              {
+                "unit": "request",
+                "limit": {
+                  "unit": "request",
+                  "amount": "10"
+                },
+                "spent": {
+                  "unit": "request",
+                  "amount": "0"
+                },
+                "reserved": {
+                  "unit": "request",
+                  "amount": "1"
+                }
+              }
+            ],
+            "open_effects": [],
+            "accounting_open": true
+          }
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+        "kind": "command",
+        "request": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "method": "task.submit",
+          "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "constraints": [
+              "保存指定报告并读回核验"
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "budget": [
+              {
+                "unit": "request",
+                "limit": "10"
+              }
+            ],
+            "deadline": "2026-09-26T00:10:00Z"
+          }
+        }
+      },
+      "active_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_rebound_e352b86d71d14a1e7c381ad792f5b661",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 2
+      },
+      "external_ready_sent": true,
+      "forward_to_client": true
+    }
+  },
+  {
+    "name": "channel-rebound-reply",
+    "definition": "ChannelFrameRecord",
+    "value": {
+      "binding_id": "binding_rebound_e352b86d71d14a1e7c381ad792f5b661",
+      "frame": {
+        "type": "reply",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "reply": {
+          "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+          "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
+          "kind": "query",
+          "result": {
+            "output": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+              "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+              "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+              "goal_ref": {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                "version": 1,
+                "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "goal_revision": 1,
+              "requirements": [
+                {
+                  "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+                  "kind": "effect",
+                  "source_ref": {
+                    "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                    "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                    "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                    "version": 1,
+                    "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "rule_ref": {
+                    "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                    "version": "1.0.0",
+                    "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+                  },
+                  "required": true
+                }
+              ],
+              "policy_ref": {
+                "id": "policy_823412d1eacb67956220e532959f0104",
+                "version": "1.0.0",
+                "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+              },
+              "revision": 1,
+              "control_revision": 1,
+              "status": "active",
+              "control": "running",
+              "wait_reasons": [],
+              "deadline": "2026-09-26T00:10:00Z",
+              "budget": [
+                {
+                  "unit": "request",
+                  "limit": {
+                    "unit": "request",
+                    "amount": "10"
+                  },
+                  "spent": {
+                    "unit": "request",
+                    "amount": "0"
+                  },
+                  "reserved": {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                }
+              ],
+              "open_effects": [],
+              "accounting_open": true
+            },
+            "observed_at": "2026-09-26T00:00:00Z"
+          }
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "direction": "client_to_server",
+      "delivery": {
+        "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
+        "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
+        "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
+        "kind": "query",
+        "request": {
+          "method": "task.read",
+          "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "payload": {}
+        },
+        "deliver_before": "2026-09-26T00:10:00Z"
+      },
+      "authenticated_endpoint": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
+      "authenticated_instance": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
+      "active_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_rebound_e352b86d71d14a1e7c381ad792f5b661",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 2
+      },
+      "external_ready_sent": true,
+      "forward_to_client": false
+    }
+  },
+  {
+    "name": "channel-rebound-reply-ack",
+    "definition": "ChannelFrameRecord",
+    "value": {
+      "binding_id": "binding_rebound_e352b86d71d14a1e7c381ad792f5b661",
+      "frame": {
+        "type": "reply_ack",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "ack": {
+          "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+          "stored": true,
+          "result_digest": "sha256:564fef25dbd243157b377c3be95fcce2f12ada0b9937d9f1f118984c717a2550"
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "direction": "server_to_client",
+      "reply": {
+        "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+        "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
+        "kind": "query",
+        "result": {
+          "output": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "goal_revision": 1,
+            "requirements": [
+              {
+                "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+                "kind": "effect",
+                "source_ref": {
+                  "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                  "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                  "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                  "version": 1,
+                  "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                },
+                "rule_ref": {
+                  "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                  "version": "1.0.0",
+                  "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+                },
+                "required": true
+              }
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "revision": 1,
+            "control_revision": 1,
+            "status": "active",
+            "control": "running",
+            "wait_reasons": [],
+            "deadline": "2026-09-26T00:10:00Z",
+            "budget": [
+              {
+                "unit": "request",
+                "limit": {
+                  "unit": "request",
+                  "amount": "10"
+                },
+                "spent": {
+                  "unit": "request",
+                  "amount": "0"
+                },
+                "reserved": {
+                  "unit": "request",
+                  "amount": "1"
+                }
+              }
+            ],
+            "open_effects": [],
+            "accounting_open": true
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      },
+      "active_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_rebound_e352b86d71d14a1e7c381ad792f5b661",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 2
+      },
+      "external_ready_sent": true,
+      "forward_to_client": true
+    }
+  },
+  {
+    "name": "wss-gap-backend-rebind",
+    "definition": "Frame",
+    "value": {
+      "type": "snapshot_required",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "subscription_id": "subscription_b48b13e73a6ac2a86dc54425dd24d9ff",
+      "reason": "backend_rebind"
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "direction": "server_to_client",
+      "subscription": {
+        "subscription_id": "subscription_b48b13e73a6ac2a86dc54425dd24d9ff",
+        "object_types": [
+          "task",
+          "surface"
+        ],
+        "paused_for_gap": false
+      }
+    }
+  },
+  {
+    "name": "wss-query-internal-recovery",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "kind": "query",
+      "request": {
+        "method": "task.read",
+        "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+        "payload": {}
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "direction": "client_to_server",
+      "internal_request_replay": true,
+      "original_request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "kind": "query",
+        "request": {
+          "method": "task.read",
+          "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "payload": {}
+        }
+      },
+      "request_count": 10000,
+      "request_count_after": 10000,
+      "used_request_ids": [
+        "request_query_a3c5696a7dbec63d0c0bb1922541d4cb"
+      ],
+      "inflight_requests": 32
+    }
+  },
+  {
+    "name": "wss-final-ordinary-request",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+      "kind": "command",
+      "request": {
+        "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+        "method": "task.submit",
+        "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "expires_at": "2026-09-26T00:10:00Z",
+        "payload": {
+          "goal_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "constraints": [
+            "保存指定报告并读回核验"
+          ],
+          "policy_ref": {
+            "id": "policy_823412d1eacb67956220e532959f0104",
+            "version": "1.0.0",
+            "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+          },
+          "budget": [
+            {
+              "unit": "request",
+              "limit": "10"
+            }
+          ],
+          "deadline": "2026-09-26T00:10:00Z"
+        }
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "direction": "client_to_server",
+      "request_count": 9995
+    }
+  },
+  {
+    "name": "wss-final-control-request",
+    "definition": "Frame",
+    "value": {
+      "type": "request",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_cancel_6a4f208b06de57a057f6d43985dd9f36",
+      "kind": "command",
+      "request": {
+        "command_id": "task_cancel_6ce3b20a665a0dbf7dfb3267ace2c583",
+        "method": "task.cancel",
+        "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+        "expires_at": "2026-09-26T00:10:00Z",
+        "payload": {
+          "reason": "用户控制"
+        },
+        "expected_revision": 3
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "direction": "client_to_server",
+      "inflight_requests": 28,
+      "request_count": 9999
+    }
+  },
+  {
+    "name": "channel-initial-binding-retry",
+    "definition": "ChannelBinding",
+    "value": {
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "binding_id": "binding_initial_39e335c1cb0608d3d7a3d21405050f07",
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+      "binding_revision": 1
+    },
+    "context": {
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated_gateway": true,
+      "current_identity_valid": true,
+      "stored_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_initial_39e335c1cb0608d3d7a3d21405050f07",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 1
+      }
+    }
+  },
+  {
+    "name": "channel-rebound-binding-retry",
+    "definition": "ChannelBinding",
+    "value": {
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "binding_id": "binding_rebound_e352b86d71d14a1e7c381ad792f5b661",
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+      "binding_revision": 2
+    },
+    "context": {
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated_gateway": true,
+      "current_identity_valid": true,
+      "previous_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_initial_39e335c1cb0608d3d7a3d21405050f07",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 1
+      },
+      "external_slots_before": 2,
+      "external_slots_after": 2,
+      "request_count_before": 9996,
+      "request_count_after": 9996,
+      "stored_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_rebound_e352b86d71d14a1e7c381ad792f5b661",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 2
+      }
+    }
+  },
+  {
+    "name": "channel-third-binding-after-unknown-registration",
+    "definition": "ChannelBinding",
+    "value": {
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "binding_id": "binding_third_123456789012345678901234567890ab",
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+      "binding_revision": 3
+    },
+    "context": {
+      "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated_gateway": true,
+      "current_identity_valid": true,
+      "previous_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_rebound_e352b86d71d14a1e7c381ad792f5b661",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 2
+      },
+      "external_slots_before": 2,
+      "external_slots_after": 2,
+      "request_count_before": 9996,
+      "request_count_after": 9996,
+      "stored_binding": {
+        "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "binding_id": "binding_initial_39e335c1cb0608d3d7a3d21405050f07",
+        "limits": {
+          "max_json_bytes": 262144,
+          "max_frame_bytes": 1048576,
+          "max_page_items": 100,
+          "max_inflight_requests": 32,
+          "max_pending_deliveries": 32,
+          "max_queue_bytes": 4194304,
+          "control_reserve_bytes": 1048576,
+          "control_reserve_items": 4,
+          "max_subscriptions": 8,
+          "heartbeat_interval_ms": 30000,
+          "heartbeat_timeout_ms": 90000,
+          "max_content_bytes": 16777216,
+          "max_connections_per_identity_service": 2,
+          "max_connections_per_identity_total": 16,
+          "max_requests_per_connection": 10000
+        },
+        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "binding_revision": 1
+      }
+    }
+  },
+  {
+    "name": "wss-content-bytes-response",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "kind": "query",
+      "result": {
+        "output": {
+          "content_ref": {
+            "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+            "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+            "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+            "version": 1,
+            "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+          "control_revision": 1,
+          "download_id": "download_fd456406745d816a45cae554c788e754",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "range_supported": true
+        },
+        "observed_at": "2026-09-26T00:00:02Z"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "kind": "query",
+        "request": {
+          "method": "content.get",
+          "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "payload": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "purpose": "review",
+            "recipient_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d",
+            "usage_authorization_refs": [
+              {
+                "kind": "use",
+                "owner_id": "grant_owner_912c54b3a5faa1717e21484ac5b3bde9",
+                "id": "use_5ef76d30bf9232902687324b5bfa0bd2",
+                "revision": 1
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "content-bytes-reply",
+    "definition": "Reply",
+    "value": {
+      "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+      "request_digest": "sha256:c3a8e250b7a1621d51970658981b924d86055172533abee1d608cfc0a31b093f",
+      "kind": "query",
+      "result": {
+        "output": {
+          "content_ref": {
+            "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+            "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+            "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+            "version": 1,
+            "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+          "control_revision": 1,
+          "download_id": "download_fd456406745d816a45cae554c788e754",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "range_supported": true
+        },
+        "observed_at": "2026-09-26T00:00:02Z"
+      }
+    },
+    "context": {
+      "delivery": {
+        "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
+        "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
+        "request_digest": "sha256:c3a8e250b7a1621d51970658981b924d86055172533abee1d608cfc0a31b093f",
+        "kind": "query",
+        "request": {
+          "method": "content.get",
+          "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "payload": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "purpose": "review",
+            "recipient_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d",
+            "usage_authorization_refs": [
+              {
+                "kind": "use",
+                "owner_id": "grant_owner_912c54b3a5faa1717e21484ac5b3bde9",
+                "id": "use_5ef76d30bf9232902687324b5bfa0bd2",
+                "revision": 1
+              }
+            ]
+          }
+        },
+        "deliver_before": "2026-09-26T00:10:00Z"
+      }
+    }
+  },
+  {
+    "name": "wss-content-control-response",
+    "definition": "Frame",
+    "value": {
+      "type": "response",
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "kind": "query",
+      "result": {
+        "output": {
+          "mode": "control",
+          "control": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "policy_ref": {
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+              "revision": 1
+            },
+            "control_revision": 1,
+            "state": "active"
+          },
+          "copy": {
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+            "revision": 1,
+            "use_stopped": false,
+            "physical_state": "pending"
+          }
+        },
+        "observed_at": "2026-09-26T00:00:04Z"
+      }
+    },
+    "context": {
+      "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+      "authenticated": true,
+      "ready_received": true,
+      "limits": {
+        "max_json_bytes": 262144,
+        "max_frame_bytes": 1048576,
+        "max_page_items": 100,
+        "max_inflight_requests": 32,
+        "max_pending_deliveries": 32,
+        "max_queue_bytes": 4194304,
+        "control_reserve_bytes": 1048576,
+        "control_reserve_items": 4,
+        "max_subscriptions": 8,
+        "heartbeat_interval_ms": 30000,
+        "heartbeat_timeout_ms": 90000,
+        "max_content_bytes": 16777216,
+        "max_connections_per_identity_service": 2,
+        "max_connections_per_identity_total": 16,
+        "max_requests_per_connection": 10000
+      },
+      "direction": "server_to_client",
+      "request_frame": {
+        "type": "request",
+        "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "kind": "query",
+        "request": {
+          "method": "content.get",
+          "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "payload": {
+            "mode": "control",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "content-control-reply",
+    "definition": "Reply",
+    "value": {
+      "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+      "request_digest": "sha256:084b875df11f99b48a7753b2010df26b88500e33a729c9fb8e5631f0b0f0dea0",
+      "kind": "query",
+      "result": {
+        "output": {
+          "mode": "control",
+          "control": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "policy_ref": {
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+              "revision": 1
+            },
+            "control_revision": 1,
+            "state": "active"
+          },
+          "copy": {
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+            "revision": 1,
+            "use_stopped": false,
+            "physical_state": "pending"
+          }
+        },
+        "observed_at": "2026-09-26T00:00:04Z"
+      }
+    },
+    "context": {
+      "delivery": {
+        "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
+        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
+        "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
+        "request_digest": "sha256:084b875df11f99b48a7753b2010df26b88500e33a729c9fb8e5631f0b0f0dea0",
+        "kind": "query",
+        "request": {
+          "method": "content.get",
+          "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "payload": {
+            "mode": "control",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678"
+          }
+        },
+        "deliver_before": "2026-09-26T00:10:00Z"
       }
     }
   }

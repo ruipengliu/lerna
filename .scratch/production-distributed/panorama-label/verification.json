@@ -1,0 +1,26 @@
+{
+  "source": "docs/architecture/diagrams/system-panorama.drawio",
+  "changed_cell": "deployment",
+  "changes": [
+    [
+      "deployment",
+      "value",
+      "本地共库  /  远端原命令与查询  /  生产稳定 Home 分区 + 多可用区",
+      "生产稳定 Home 分区 + 多可用区  /  同提交域短事务  /  跨域原命令与查询"
+    ]
+  ],
+  "cells": 209,
+  "structure_and_geometry_unchanged": true,
+  "source_sha256": "14a40322dc25421168435cbbf3b8fdcba1856b8a04883978e6a1624ebd2d57b8",
+  "scope": "Existing draw.io architecture view; single deployment label, same style and geometry.",
+  "render_status": "passed",
+  "visual_review": "passed",
+  "renderer": "native draw.io desktop CLI",
+  "render": ".scratch/production-distributed/panorama-label/system-panorama.png",
+  "render_size": [
+    3440,
+    2652
+  ],
+  "detail_screenshot": ".scratch/production-distributed/panorama-label/deployment-label.png",
+  "visual_notes": "已实际查看原生导出底部局部：部署说明完整保持单行；与标题、横线、图例留有空间，无裁切或覆盖。此次只验证单标签变更，未重新主张全图语义审查。"
+}

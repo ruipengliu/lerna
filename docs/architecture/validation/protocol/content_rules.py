@@ -26,6 +26,11 @@ def successful(response):
     return response.get('stage') != 'rejected' and 'error' not in response and 'output' in response
 
 
+def holder_identity(auth):
+    # Both fields are authenticated fixture context, not caller-selected payload.
+    return auth.get('sender_service_id', auth['actor_id'])
+
+
 def snapshot_errors(snapshot):
     errors = []
     blocks = snapshot['blocks']
@@ -80,16 +85,24 @@ def check_exchange(exchange, capabilities):
     if not successful(response):
         return errors
     o = response['output']
+    control_get = name == 'content.get' and p.get('mode', 'bytes') == 'control'
+    if name == 'content.get' and control_get != (o.get('mode') == 'control'):
+        return errors + ['content_get_mode: result does not match requested bytes/control mode']
     if name.startswith('content.'):
-        same(o['content_ref'], p['content_ref'])
+        same(o['control']['content_ref'] if control_get else o['content_ref'], p['content_ref'])
         same(target, p['content_ref']['owner_id'], 'content_owner')
         if name == 'content.put':
             same(o['control_revision'], 1, 'content_initial_revision')
             same(o['policy_ref']['owner_id'], target, 'content_owner')
         if name == 'content.get':
-            same(o['copy_id'], p['copy_id'])
-            if instant(o['expires_at']) <= instant(response['observed_at']):
-                errors.append('content_download_window: download locator already expired')
+            if control_get:
+                same(o['copy']['content_ref'], p['content_ref'])
+                same(o['copy']['copy_id'], p['copy_id'])
+                same(o['copy']['holder_id'], holder_identity(exchange['auth']), 'copy_control_holder')
+            else:
+                same(o['copy_id'], p['copy_id'])
+                if instant(o['expires_at']) <= instant(response['observed_at']):
+                    errors.append('content_download_window: download locator already expired')
         if name in ('content.register_copy', 'content.release_copy'):
             for key in p:
                 if key in o:
@@ -208,6 +221,7 @@ def check_exchange(exchange, capabilities):
 def check_trace_rules(trace):
     """Facts absent from the trace remain unproven; no fabricated auth or content lookup."""
     errors=[]; copies={}; contents={}; views={}; pages={}; acked={}; surfaces={}; presentations={}; apps={}; queries={}; uploads={}; extractions={}; commands=set(); memory_versions={}; saved_candidates={}
+    control_history={}; copy_history={}; holder_gates={}; holder_copies={}
     for index,event in enumerate(trace['events']):
         if 'exchange' not in event:
             continue
@@ -224,6 +238,11 @@ def check_trace_rules(trace):
         if 'command_id' in r:
             commands.add(key)
         def err(code,detail):errors.append(f'event {index}: {code}: {detail}')
+        control_get = name == 'content.get' and p.get('mode', 'bytes') == 'control'
+        if name == 'content.get' and control_get != (o.get('mode') == 'control'):
+            continue  # The exchange-level rule reports the mode mismatch.
+        if 'holder_gate' in event and not control_get:
+            err('copy_gate_context', 'holder observation requires a successful control query')
         if name=='content.put':
             cref=tuple(p['content_ref'][k] for k in ('owner_id','content_id','version'))
             if cref in contents and contents[cref]['ref']!=p['content_ref']:
@@ -231,16 +250,51 @@ def check_trace_rules(trace):
             if p['upload_id'] in uploads and uploads[p['upload_id']]!=p['content_ref']:
                 err('upload_binding','same upload adopted as another content version')
             contents[cref]={'ref':deepcopy(p['content_ref']),'policy':deepcopy(p['policy']),'state':'active','revision':o['control_revision']}
+            control_history.setdefault(cref, []).append((instant(event['at']), deepcopy(o)))
             uploads[p['upload_id']]=deepcopy(p['content_ref'])
         if name in ('content.register_copy','content.get','content.close'):
             cref=tuple(p['content_ref'][k] for k in ('owner_id','content_id','version')); old=contents.get(cref)
-            if old and old['state']=='closed':err('content_closed','closed content cannot be delivered or reopened')
+            if old and old['state']=='closed' and not control_get:err('content_closed','closed content cannot be delivered or reopened')
             if name=='content.register_copy':
                 cid=p['copy_id']; prev=copies.get(cid)
                 if prev and any(prev[k]!=p[k] for k in p):err('copy_immutable','copy registration identity rebound')
                 if old and instant(p['retention_until'])>instant(old['policy']['retention_until']):err('copy_retention','copy exceeds original content retention')
                 copies[cid]=deepcopy(o)
-            if name=='content.get':
+                copy_history.setdefault(cid, []).append((instant(event['at']), deepcopy(o)))
+            if control_get:
+                observed=instant(x['response']['observed_at'])
+                known_copies=[v for at,v in copy_history.get(p['copy_id'], []) if at<=observed]
+                registered=known_copies[-1] if known_copies else None
+                if not registered or registered['content_ref']!=p['content_ref'] or registered['holder_id']!=holder_identity(a):
+                    err('copy_control_holder','control requires this authenticated holder and original registered copy')
+                elif any(o['copy'][k]!=registered[k] for k in o['copy']):
+                    err('copy_control_record','control projection differs from original copy at observation time')
+                known_controls=[v for at,v in control_history.get(cref, []) if at<=observed]
+                if known_controls and o['control']!=known_controls[-1]:
+                    err('copy_control_current','control differs from known authority at observation time')
+                incoming=o['control']; previous=holder_gates.get(p['copy_id'])
+                if previous and incoming['control_revision']==previous['control_revision'] and incoming!=previous:
+                    err('copy_control_conflict','same control revision changed its fact')
+                if not previous or incoming['control_revision']>previous['control_revision']:
+                    if previous and previous['state']=='closed' and incoming['state']!='closed':
+                        err('copy_gate_reopen','closed holder cannot reopen on a later revision')
+                    else:
+                        holder_gates[p['copy_id']]=deepcopy(incoming)
+                current=holder_gates[p['copy_id']]
+                incoming_copy=o['copy']; previous_copy=holder_copies.get(p['copy_id'])
+                if previous_copy and incoming_copy['revision']==previous_copy['revision'] and incoming_copy!=previous_copy:
+                    err('copy_control_conflict','same copy revision changed its fact')
+                if not previous_copy or incoming_copy['revision']>previous_copy['revision']:
+                    if previous_copy and previous_copy['use_stopped'] and not incoming_copy['use_stopped']:
+                        err('copy_gate_reopen','stopped holder copy cannot reopen on a later revision')
+                    else:
+                        holder_copies[p['copy_id']]=deepcopy(incoming_copy)
+                current_copy=holder_copies[p['copy_id']]
+                if 'holder_gate' in event:
+                    expected={'copy_id':p['copy_id'],'control_revision':current['control_revision'],'copy_revision':current_copy['revision'],'state':'closed' if current['state']=='closed' or current_copy['use_stopped'] else 'open'}
+                    if event['holder_gate']!=expected:
+                        err('copy_gate_monotonic','persisted holder gate regressed or missed current control')
+            elif name=='content.get':
                 copy=copies.get(p['copy_id'])
                 if not copy or copy['use_stopped'] or any(copy[k]!=p[k] for k in ('content_ref','purpose','recipient_id')):
                     err('copy_access','download requires matching live copy registration')
@@ -253,6 +307,7 @@ def check_trace_rules(trace):
                         err('content_policy_widening','restriction expands a known policy')
                     old['policy']=deepcopy(policy)
                 old['state']=o['state'];old['revision']=o['control_revision']
+                control_history.setdefault(cref, []).append((instant(event['at']), deepcopy(o)))
         if name=='content.release_copy':
             prev=copies.get(p['copy_id'])
             if not prev:err('copy_access','release requires original registered copy')
@@ -261,6 +316,7 @@ def check_trace_rules(trace):
             elif prev['use_stopped'] and not o['use_stopped']:
                 err('copy_reopen','stopped copy cannot restart use')
             copies[p['copy_id']]=deepcopy(o)
+            copy_history.setdefault(p['copy_id'], []).append((instant(event['at']), deepcopy(o)))
         if name=='memory.extract':
             old=extractions.get(p['extraction_id'])
             if old and old!=o:err('extraction_immutable','same extraction changed original task mapping')

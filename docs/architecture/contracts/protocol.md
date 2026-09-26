@@ -67,6 +67,8 @@ Invoke.arguments和行动模板最终参数仍按准确Capability版本、摘要
 
 字段之外的不可机械证明条件仍需真实实现裁决，例如来源限制的子集关系、可信用户确认、Grant是否有效、独立真值是否存在。序列容器里的已知许可、请求、批准或环境是显式测试前提；报告必须说明它们未由该静态工具自行建立。
 
+`content.get` 保持同一查询方法，按输入分成互斥的 bytes／control 模式。省略 mode 或 mode=bytes 沿原输入返回 ContentBytesGetOutput 下载定位；mode=control 只携带准确 content_ref 与 copy_id，向当前认证 holder 返回 `{mode:control, control:ContentControl, copy:ContentCopyControl}`。后者仅供自身持有者停止／清理恢复，正文关闭后仍可查询，不含 download_id，不授予读取或保存资格。输出必须与请求模式关联，镜像读取只能采用 bytes 分支；完整字段和恢复机制见[内容接口](../memory/implementation.md#51-小元数据与大字节分开)，正反关联见[持有者控制序列](examples/protocol/55-content-holder-control.json)。
+
 ## 4. 方法覆盖
 
 完整签名索引见[methods.md](methods.md)，逐方法错误码及可行恢复动作直接查登记表。本配置不再允许以reserved作为已列领域接口的替代；某个具体服务可以只声明自己实现的子集，但必须一并实现相应查询及恢复义务。

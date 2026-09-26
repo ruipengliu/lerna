@@ -3,7 +3,7 @@
 [模块主线](README.md) · [指标权威定义](../validation/README.md#metrics) · [组件切换](../extensions/implementation.md)
 
 本页落实候选、固定计划、运行、报告、暴露、批准和发布的内部接口及事务。
-默认实现共用宿主数据库、内容库和持久 job，评测工作使用独立资源份额。
+默认实现将治理账本、内容元数据和持久 job 放在原评测 owner 的提交域，字节使用共享对象存储；实验运行在独立隔离池并占用独立资源份额。
 业务效果由独立判定器取证，评测不直接改任务成功状态。
 静态序列只验证已给出事实的结构与关联，不执行模型、隔离或设备。
 
@@ -12,8 +12,8 @@
 
 评测治理是宿主内的领域包，对外 facade 是 evaluation 方法处理器与本 owner 的 confirmation 方法处理器。
 CandidateRegistry、DatasetRegistry、PlanService 和 ApprovalOwner 负责短事务准入，RunCoordinator 与 RolloutWorker 负责持久任务推进，ReportSealer 与 ExposureLedger 管理证据封存及当前资格。
-这些内部组件通过领域 repositories 访问宿主数据库；EnvironmentAdapter 隔离真实实验环境的创建、真值与封闭端口。
-评测工作者可以独立进程运行，但候选、计划、资格和批准不会因此分成相互独立的写权威。确认记录由本评测 owner 保存并在批准事务内消费，UI 不承担该事实。
+这些内部组件通过领域 repositories 访问原 owner 的数据库；EnvironmentAdapter 隔离真实实验环境的创建、真值与封闭端口。
+生产评测工作者独立进程运行，候选、计划、资格和批准仍由原评测 owner 裁决。确认记录由本评测 owner 保存并在批准事务内消费，UI 不承担该事实。
 
 | 内部单元 | 接口 | 权威责任 |
 | --- | --- | --- |

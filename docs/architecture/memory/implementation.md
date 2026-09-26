@@ -2,8 +2,8 @@
 
 [模块主线](README.md) · [安全](../security/README.md) · [Brain 输入](../brain/implementation.md) · [交互实现](../interaction/implementation.md)
 
-本文规定单写者 Memory owner 和内容 owner 的参考实现，覆盖可据此编码的事务、索引与恢复步骤。
-同宿主共用数据库及内容目录；不同 owner 通过原命令和准确内容引用交接。
+本文规定 Memory owner 和内容 owner 的生产实现；云端每个 owner 由一个 PostgreSQL 写权威裁决，应用与工作进程可多副本运行。
+云端默认同租户的 Memory 与 Content 元数据共提交域，正文与云端镜像放跨可用区共享对象存储；开发单体及适用端侧组件可使用本地数据库与目录。物理布局和维护约束归[生产存储](../storage-and-middleware.md)。
 核心使用 Go，同进程通过 Go 接口组合；领域服务跨进程用 gRPC，浏览器、CLI 和设备端云通过 `/v1/connect` 的 WSS 双向长连接调用。
 HTTPS 只保留发现、认证和大文件原始字节读写；上传预留、状态查询及镜像控制经 WSS request／gRPC Call 处理，具体类型由[公共传输契约](../contracts/transport.md)定义。
 正文、来源控制、授权使用、索引和持有者清理分别保存，不能用一个“删除成功”字段替代。
@@ -91,7 +91,7 @@ flowchart TB
 
 两图实线均为同步依赖，虚线表示从原数据库领取持久 job。指向 MetadataStore 的边表示各组件读写其负责的原记录；组件与表的对应关系见下表。
 指向 Grant owner 的边分别核验管理、查询或内容用途；规则函数本身不签发使用依据。外部调用均位于本地事务之外，记录、回执和 jobs 在所属 owner 的短事务中一起保存。
-Memory owner 和内容 owner 可分别部署，跨 owner 的准确引用校验通过 ContentStore 的远程 port 完成，不能假设跨库原子提交。
+Memory owner 和内容 owner 可分别部署；跨库除准确引用校验外，还须先登记持久 copy，再将本地 copy 门禁与发布共事务，见[引用门禁](#reference-gate)。
 索引不是权限边界之外的捷径，所有候选生成都先限制到允许处理的集合。
 
 | 内部组件 | 责任 | 失败时的继续者 |
@@ -106,7 +106,7 @@ Memory owner 和内容 owner 可分别部署，跨 owner 的准确引用校验�
 | MetadataStore | 封装各 owner 的修订比较、唯一键、回执与 jobs 事务 | 原数据库中的业务决定 |
 | ByteStore | 暂存、准确版本读取、整份上传与删除观察 | 原 upload 或 copy；不自行授予可读资格 |
 
-默认词法索引和权威增量补扫便于本地部署；语义索引须单独获得处理、保存和清理许可。
+默认词法索引和权威增量补扫复用现有数据分区；语义索引须单独获得处理、保存和清理许可，并证明检索收益与运行成本。
 引入语义候选不能移除逐页当前状态复核，也不能把未经许可的资料先做全库排名。
 
 ## 2. 持久对象与数据库约束
@@ -131,6 +131,9 @@ Memory owner 和内容 owner 可分别部署，跨 owner 的准确引用校验�
 | content_copies | copy_id 唯一；内容、持有者、用途、保留期限固定 | 到逐副本停止及物理清理确认 |
 | content_mirrors | 原 ContentRef、copy_id 唯一；接收方只保存字节与原 owner 控制修订 | 只读副本；不创建新所有权或延长来源资格 |
 | content_closures | 对象身份、关闭修订、必要关联及决定摘要 | 长期最小关闭索引 |
+| reference_intents | 原 Memory 命令、准确来源集合、固定 copy／登记命令身份及阶段 | 跨库登记与本地发布的恢复责任；取消或失败也须清理原登记 |
+| held_copy_gates | 原 owner、copy_id 唯一；准确引用、最高 control_revision、最高 copy.revision、use_stopped 及本地 open／closed 门禁 | 两种修订独立单调；原内容 closed 或 copy 已停止均闭门，发布与关闭共用行锁，迟到答复不能重新开放 |
+| copy_control_jobs | 原 owner、copy_id 的唯一活动责任槽、due_at 及领取代次 | 登记前与 reference_intent 共同保存；持有期查询当前控制，直至停止且 physical_state=complete 的报告获原 owner 接纳；残留保留有界核对责任 |
 
 长期关闭索引不包含正文、完整参数、凭据或可重构敏感资料的解释文本。
 它用于拒绝迟到原身份、阻止旧备份复活、区分已关闭与从未存在。
@@ -169,26 +172,77 @@ flowchart TB
 | ContentObject → 来源边／Policy | 完整字节校验后 content.put 提交元数据和准确来源 | 各消费者取得原 copy 和当前用途使用；来源限制交集随派生关系传递 | 先关闭新使用，再传播和清理；残留保留原责任，最小关闭依据长期保存 |
 | MemoryChange → Index／View | 记忆事务追加变化；后台分别前移连续检查点 | 索引仅产候选，视图接收端应用后 ACK；不能共享成功含义 | 日志依必要水位回收；落后视图重建快照，关闭责任不随日志删除 |
 | QuerySet → 页投影 | QueryService 固定有界 ID、修订与排序 | 每页按当前权威状态和资格筛选，原游标只移动位置 | 到期清集合；不续旧游标或把正文复制入永久查询缓存 |
-| ContentCopy → Mirror | 原 owner 先登记 copy，接收端预留票据，准确字节校验后 ready | 每次镜像读取在线取得原 owner 的 ContentGetOutput | 接收原控制后先停读、再清字节；无原 owner 可达性即不能开始新读 |
+| ContentCopy → Mirror | 原 owner 先登记 copy，接收端预留票据，准确字节校验后 ready | 每次镜像读取在线取得原 owner 的 ContentBytesGetOutput | 接收原控制后先停读、再清字节；无原 owner 可达性即不能开始新读 |
 
 ### 2.2 写入与正文提交
 
-正文先写入有限上传暂存，校验完整 hash、media_type 和 byte_length，再提交引用。
+正文先写入有限上传暂存，校验完整 hash、media_type 和 byte_length，再提交引用。云端生产暂存、正式正文和镜像均使用共享对象存储；原 upload／ticket 的状态及准确对象版本在 PostgreSQL 保存，换接收实例不依赖原实例磁盘。
 `content.put` 不携带大正文，只携带 upload_id、预期 ContentRef、完整来源与 ContentPolicy。
 已提交 ContentRef 的字节不可覆盖；同一身份不同摘要返回冲突。
 元数据事务失败时，暂存或孤立字节由有限清理工作回收。
 
-采用一个内容元数据门禁协调引用登记与垃圾清理。
+采用一个内容元数据门禁协调引用登记与垃圾清理。同库发布把业务引用、来源边、回执和后续工作放进同一事务。
 清理事务先标记对象不可新增引用，再检查无业务引用和持有者；登记引用必须检查该标记。
 已经被持久业务记录采用的对象不能按创建时间删除。
 跨存储字节删除失败保存 residual，不撤销已经提交的逻辑关闭。
 
+<a id="reference-gate"></a>
+### 跨库引用：先登记持有者，再发布
+
+```mermaid
+sequenceDiagram
+    participant M as Memory 发布用例
+    participant D as Memory 权威库
+    participant J as 持有者校准 job
+    participant C as 原内容 owner
+    M->>D: 同事务保存引用准备、固定 copy 与校准 job
+    M->>C: 原 content.register_copy
+    C->>C: 登记持有者，与原内容关闭及清理互斥
+    C-->>M: 原登记回执
+    M->>D: 合并登记事实，不覆盖较高关闭修订
+    alt 关闭先在 Memory 端提交
+      J->>C: content.get mode=control，原 copy
+      C-->>J: 当前 ContentControl 与自身 copy 投影
+      J->>D: 提交 copy 关闭门禁与清理 job
+      M->>D: 发布检查 closed，拒绝并保存原登记清理责任
+    else Memory 发布先提交
+      M->>D: 同事务锁 copy 门禁，保存 Memory、来源边及回执
+      J->>C: content.get mode=control，原 copy
+      C-->>J: 当前 ContentControl 与自身 copy 投影
+      J->>D: 关闭 copy，禁用关联记忆并保存清理 job
+    end
+    J->>J: 封闭关联使用、处理在途单元、核查清理
+    J->>C: content.release_copy 回报实际观察
+```
+
+图建模本地发布事务与已认证关闭事实的先后，不声称两个数据库原子提交。正文及实际参与处理的远端来源均先取得原 owner 的持久持有者登记；各 copy 绑定 Memory holder、用途、准确内容和保留期。来源与 Memory 的本地关联以 reference_intent 固定，不能在重试时换 copy 或遗漏输入来源。
+
+默认共库可让来源关闭与发布真正共事务互斥。跨库只与已经同步的本地门禁互斥：源端在最近一次查询之后关闭、本地尚未查到时，发布记录仍可能提交；不能宣称跨库关闭瞬时阻止发布。该记录不取得永久可用性，后续每次使用在线复核来源，校准查回关闭后禁用关联使用并清理。
+
+准备记录与恢复 job 先共同提交，才向远端登记；它们不表示 Memory 已发布或 memory.create 已 applied。本地发布失败后即使当前进程退出，原恢复 job 仍会查询登记结果，并按原命令决定继续发布或停止及清理持有关系。
+
+普通 copy 的恢复入口是 `content.get(mode=control)`，由当前认证 holder 查询原准确引用与 copy_id。校准 job 在登记／发布准备和重启时优先运行，持有期按 due_at 有界轮询，最长间隔纳入关闭传播预算；可丢通知只提前原槽的 due_at。它不依赖未定义的远端关闭 RPC。owner 保存未确认停止及清理的持有者责任，直到 `content.release_copy` 报告实际事实；成功查询本身不确认停止。
+
+本节生产跨库发布和普通在线 copy 采用在线核验，不改变已有显式离线资格的范围与期限；离线装配须独立验收。control 查询不签发或续期该资格，持有者获知关闭立即停止，尚未获知时最迟到原资格到期停止。下述查询失败阻塞规则适用于依赖当前在线核验的路径。
+
+关闭处理与发布都按固定 copy 键顺序锁 held_copy_gates。控制查询先于登记答复取得关闭时，先留最小 closed 门禁；登记答复迟到只补登记事实。control_revision 与 copy.revision 独立按更高修订合并，同修订不同事实拒绝；原内容 closed 或 copy.use_stopped=true 均永久封闭该 copy。源内容仍 active 也不能复用已停止的 copy，晚到的旧控制或旧 copy 投影不重开门禁。查询失败仅阻塞依赖使用，不推断来源已关闭。发布事务必须核验所有必要登记已取得、本地门禁开放、用途与来源当前检查满足要求，再写 MemoryRevision、全部来源边和后续工作。关闭后提交的发布拒绝；发布先提交则关闭事务禁用关联的记忆／派生使用并建清理责任。原 owner 的关闭尚未查回时，本地记录不能声称已收到撤回；后续读取继续在线复核原来源，不凭登记或控制回执取得永久使用资格。
+
+| 中断位置 | 沿原身份恢复 |
+| --- | --- |
+| 登记提交、答复丢失 | 查询原登记命令；状态未知时不发布、不释放可能仍需清理的登记 |
+| 已登记、本地发布失败或取消 | 保存并执行原 copy 的停止／清理工作，以 content.release_copy 回报；不把事务回滚当作远端登记不存在 |
+| 控制查回关闭、关联记忆尚未创建 | 先保存 copy 关闭门禁，迟到登记或发布不能重开；剩余临时字节继续清理 |
+| 发布成功、答复丢失或新实例接替 | 查原 Memory 命令与 reference_intent，恢复同一记忆和持有关系；不重复登记或另建记忆 |
+| 控制查询失败或旧回答迟到 | 原校准槽继续，依赖使用保持 blocked；不能把失败当关闭，也不能用旧修订重开门禁 |
+
+持有者在原 owner 的认证查询答复上核对准确引用与 copy_id，再将门禁和清理责任共同保存。普通 copy 使用上述查询；已有镜像还可接收绑定 ticket 的 MirrorControl，两条路径共用本地最高控制修订。控制查询的最小投影不含正文、下载定位或新的授权依据，不能据此发布或保存记忆。跨库装配须提供原登记回执查询和持久校准槽；缺席时拒绝跨库发布，使用默认共提交域。
+
 ### 2.3 记忆写事务
 
 1. 查询原命令与关闭索引，已决定的原命令返回固定回执。
-2. 取得管理或保存用途依据，核对正文准确版本与当前来源限制。
+2. 取得管理或保存用途依据，核对正文准确版本与当前来源限制；跨库先完成上述持久 copy 登记。
 3. create 检查原命令唯一约束；replace/restrict/delete 比较 expected_revision。
-4. 在同一事务更新当前修订、保存完整新记录或最小墓碑、原回执、变化项及 jobs。
+4. 在同一事务核验本地内容／copy 门禁，登记业务引用和来源边，更新当前修订、保存完整新记录或最小墓碑、原回执、变化项及 jobs。
 5. 提交后响应；索引、派生审查及副本关闭不作为事务内外部调用。
 
 replace 的旧修订退出查询，依赖旧结论的派生记忆进入 needs_review。
@@ -210,13 +264,13 @@ sequenceDiagram
     participant S as MetadataStore
     participant I as IndexWorker
     U->>W: memory.create：原命令与准确 candidate_ref
-    W->>C: 事务外核验准确正文与当前来源限制
-    C-->>W: 原内容及当前控制事实
+    W->>C: 核验准确正文；跨库先登记原 copy
+    C-->>W: 原内容、当前控制及必要登记事实
     W->>G: 事务外取得原保存用途使用
     G-->>W: 有效原使用回执
     rect rgb(236, 243, 250)
-      W->>S: 事务 A：查原命令，比较候选状态、修订和使用窗口
-      W->>S: 创建 MemoryRevision，candidate.saved，回执、变化项和索引 job
+      W->>S: 事务 A：锁引用门禁，查原命令、候选及使用窗口
+      W->>S: 创建引用、来源边、MemoryRevision、回执和索引 job
       S-->>W: 一并提交；并发新命令只能读到已发布决定
     end
     W--xU: 发布成功但答复丢失
@@ -232,8 +286,8 @@ sequenceDiagram
     end
 ```
 
-原内容 owner 与 Memory owner 分离时，事务外资格检查不能变成永久授权快照。
-任一当前来源或保存用途缺口都不进入图中的保存分支；事务 A 还须复核原使用窗口和候选竞争结果。
+默认同库事务 A 同时完成引用登记与候选发布；分库时先完成[持有者登记](#reference-gate)，事务外资格检查不能变成永久授权快照。
+任一当前来源或保存用途缺口都不进入图中的保存分支；事务 A 还须复核本地 copy 门禁、原使用窗口和候选竞争结果，并将 candidate.saved 与正式版本共同提交。
 Memory 保存准确来源关系，后续查询及使用仍按当前来源核验；关闭并发到达时先阻止新使用并传播清理。
 索引写完后进程崩溃，重领者按同一变更范围幂等重建，不把未提交 checkpoint 当已覆盖。
 发布成功不等待索引完成；查询通过有界补扫看见新修订，补扫不足时准确返回 partial。
@@ -368,20 +422,23 @@ create 事务同时写正式记忆、candidate.saved、实际 memory_id/revision
 | --- | --- | --- |
 | content.put | upload_id、content_ref、sources、policy | 不可变内容元数据与来源可查；未提交暂存不算内容 |
 | content.register_copy | copy_id、content_ref、holder_id、purpose、recipient_id、retention_until | 副本登记可查；尚未证明字节已经交付 |
-| content.get | content_ref、copy_id、purpose、recipient_id、usage_authorization_refs | 返回有限下载定位及当前 control_revision |
+| content.get，默认或 mode=bytes | content_ref、copy_id、purpose、recipient_id、usage_authorization_refs | ContentBytesGetOutput：有限下载定位及当前 control_revision |
+| content.get，mode=control | 仅 mode、content_ref、copy_id | ContentControlGetOutput：原 ContentControl 与自身 copy 的最小控制投影；不返回下载定位 |
 | content.release_copy | copy_id、content_ref、use_stopped、physical_state、evidence_refs | 保存原副本的停止／清理观察，不删除未知责任 |
 | content.close | content_ref、收紧或关闭意图、原因；信封带 expected_revision | 封闭新交付并保存传播及清理责任 |
 
-get 返回 download_id、expires_at、range_supported 和原 ContentRef，不返回任意 URL 或 JSON 大正文。
+bytes 模式返回 download_id、expires_at、range_supported 和原 ContentRef，不返回任意 URL 或 JSON 大正文。
 原 owner 下载面可达时，字节端点由[共同传输协议](../contracts/transport.md)定义为 `/v1/content/downloads/{download_id}`。
 设备没有入站地址时，下载定位不能使设备突然可达，改用下一节的受控反向交付。
 下载定位绑定原认证主体、接收方、copy_id 和准确内容；它不替代当前使用资格检查。
 重复 get 可返回新定位，不能续期原授权或原副本的保留上限。
 
-get 只为已登记副本返回定位，不创建新的持有者或授权责任。
+bytes 模式只为已登记副本返回定位，不创建新的持有者或授权责任。
 下载前再次复核当前关闭和来源状态；长下载按有限块复核，期限或关闭后停止后续交付。
 已交付字节无法通过中断连接收回，原 copy 继续报告停止和物理清理。
 临时下载票据丢失可重查；正文未取得时上层显示缺口，不使用 hash 代替正文。
+
+control 模式不要求已撤销的正文读取 Grant：原 owner 用当前认证身份核对既有 holder_id，只披露该持有者自身 copy 的控制状态。服务调用取受信 AuthContext.sender_service_id，直接持有者取 AuthContext.actor_id；两者均由认证绑定产生，不接受正文指定 holder。返回 `{mode:control, control:ContentControl, copy:ContentCopyControl}`，copy 仅含 copy_id、content_ref、holder_id、revision、use_stopped、physical_state，不含其他副本、用途清单、清理证据或凭据。身份失效仍拒绝；正文 closed、copy 已停止或保留期结束不取消其必要收尾查询资格，最低控制依据保留到责任结清。请求 mode 与输出分支必须关联，control 不创建 download_id，也不授予 read／store 或新的使用窗口。
 
 ### 5.2 无入站设备的受控反向交付
 
@@ -411,10 +468,10 @@ sequenceDiagram
     R-->>O: 原 ticket 的接收状态
     H->>R: 调用原 content.get
     R->>O: WSS Delivery：原查询
-    O-->>R: WSS Reply：当前 ContentGetOutput
+    O-->>R: WSS Reply：当前 ContentBytesGetOutput
     R->>R: 保存原 Reply
     R-->>O: WSS ReplyAck
-    R-->>H: 当前 ContentGetOutput
+    R-->>H: 当前 ContentBytesGetOutput
     H->>R: HTTPS GET：原 download_id 的获准字节
 ```
 
@@ -429,7 +486,7 @@ Home 与独立服务之间的领域调用和传输管理调用使用 gRPC；设�
 | MirrorTicket | ticket_id、upload_id、receiver_service_id、sender_endpoint_id、sender_instance_id、content_ref、copy_id、source_control_revision、expires_at | 接收端预留空间并允许固定发送实例交付这一版本；不授予读取或新所有权 |
 | 原副本登记 | 原 content_ref、copy_id、holder_id、recipient_id、purpose、retention_until | 由原内容 owner 持久保存；holder 指向实际接收端镜像持有者 |
 | Mirror | 原 ticket 绑定、state、control_revision、retention_until、cleanup_state | 接收端保存；state 为 reserved、ready、closed 或 expired，字节就绪不替代来源控制 |
-| 本次镜像读取依据 | 原 owner 返回的 ContentGetOutput：content_ref、copy_id、control_revision、download_id、expires_at、range_supported | 每次在线核验所得，绑定本次接收端镜像；票据或历史回复不能代替当前披露资格 |
+| 本次镜像读取依据 | 原 owner 返回的 ContentBytesGetOutput：content_ref、copy_id、control_revision、download_id、expires_at、range_supported | 每次在线核验所得，绑定本次接收端镜像；票据或历史回复不能代替当前披露资格 |
 
 字段的精确编码及传输入口归[共同传输协议](../contracts/transport.md)。
 receiver_service_id 必须解析为该设备已经配对的长连接服务及其受信 HTTPS 字节入口，基础配置不开放任意第三方接收端。
@@ -450,7 +507,7 @@ sender_endpoint_id 和 sender_instance_id 必须与接收连接的当前认证�
 上传答复丢失由设备经 WSS request 的 `mirror_lookup` 查询原 ticket_id 对应的 Mirror，Home 通过原交付记录继续核对，不重新登记第二个副本。
 ticket 到期后拒绝新上传；若字节仍需重传，新 ticket 必须重核当前原 owner 资格，不能凭旧关闭修订自动续期。
 
-基础反向交付配置在每次镜像读取前都向原 owner 调用 content.get，取得当前 ContentGetOutput。
+基础反向交付配置在每次镜像读取前都向原 owner 调用 content.get，取得当前 ContentBytesGetOutput。
 接收端核对结果来自原 owner 的受信响应，并将 download_id、原 content_ref、copy_id、control_revision 和 expires_at 绑定到本镜像；不能接受调用方自行声明的许可对象。
 读取时继续核对本端已知关闭、当前认证接收方、用途和期限；旧 ticket、旧 Query 回复或接收端重启均不延长资格。
 原 owner 不可达时停止新的镜像读取，已经得到的有限在线使用仅限原使用单元及原期限，不能换成独立离线读。
@@ -489,6 +546,8 @@ owner 保留未确认页；重复 pull/ack 不产生重复应用。
 远端无法核对时 physical_state=unknown 或 pending；不能因为发送了通知就汇总 complete。
 任一持有者 residual/unknown 或尚未确认停止，汇总不能是 complete。
 
+`use_stopped=true` 之前，持有者必须封闭该 copy 全部关联的新使用入口，并核对或终止已经进入的有限使用单元；仅更新一行门禁不能证明在途处理已停止。清理工作继续处理正文、派生物、索引、缓存和暂存，physical_state=complete 需要其声明范围的实际证据。`content.release_copy` 的 applied 只证明原 owner 保存了这份报告，不会把报告中的 pending／residual／unknown 自动提升为 complete；未结责任继续保留。
+
 恢复必须先加载最小关闭索引、当前来源限制和未结清理，再开放正文读取。
 旧备份缺少当前关闭依据时保持相关内容禁用，向原 owner 补齐；不可达返回 source_unavailable。
 本地独立库仍可处理自己的新对象，不能改写失联远端库的修订。
@@ -501,6 +560,7 @@ owner 保留未确认页；重复 pull/ack 不产生重复应用。
 分区、保护水位与故障剩余容量遵循[公共容量策略](../deployment-production.md#capacity)。
 云端按 tenant 和稳定 Memory／内容 owner 路由至权威数据库分区；各 facade 和后台 worker 可横向增加。
 同一 owner 的写入仍由原数据库裁决。个人设备 owner 保留本地事实，云端镜像不会成为它的故障接管主库。
+默认 Memory／Content 元数据共提交域，上传和镜像字节跨实例共享；业务与清理 jobs、对象存储、索引和数据库维护按[存储与中间件基线](../storage-and-middleware.md)实施。NOTIFY 丢失只增加扫描等待，不丢失关闭责任。
 
 | 可并行单位 | 必须串行或条件更新的键 | 扩展边界 |
 | --- | --- | --- |
@@ -555,10 +615,15 @@ query_sets 到期、无引用暂存与已满足责任的变化日志可以回收
 | MI-11 私密推断 | 模型未引用私密输入但生成公共措辞 | 来源依赖完整，未授权外发被拒 |
 | MI-12 非保存输入 | 提取进程重启后临时原文丢失 | 等待重新提供或明确失败，检查点不越过未保存责任 |
 | MI-13 无入站大内容 | 设备通过主动建立的 WSS 接收 MirrorTicket，生成大于 JSON 限额的截图；上传完成后丢答复 | 同一 ticket/upload_id 整份恢复，接收端保持原 ContentRef/owner，不创建新内容身份 |
-| MI-14 镜像失联读取 | 镜像 ready 后隔断原 owner；重放旧 ticket 或过期 ContentGetOutput | 新读取因无法在线核验而拒绝；历史回复不续期，不宣称基础镜像支持独立离线读 |
+| MI-14 镜像失联读取 | 镜像 ready 后隔断原 owner；重放旧 ticket 或过期 ContentBytesGetOutput | 新读取因无法在线核验而拒绝；历史回复不续期，不宣称基础镜像支持独立离线读 |
 | MI-15 上传目标篡改 | 将 receiver_service_id 换为未登记服务，或试图附任意 URL | 发送前拒绝，资料不进入未授权接收端 |
 | MI-16 镜像关闭恢复 | 来源关闭后接收端掉线，恢复含旧镜像字节的备份 | 先恢复关闭依据再服务；原 owner 的完成视图保留逐 copy 未确认清理 |
 | MI-17 票据与回复重放 | Reply 已持久接收但 ReplyAck 丢失，重连后重复下发原 MirrorTicket | 原 delivery／reply 只形成一份接收事实，原 ticket／upload_id 恢复，视图 ACK 和内容资格不被传输确认推进 |
+| MI-18 跨库发布与关闭 | 登记 copy 后暂停发布；先查回关闭，再交回旧登记／控制答复并恢复发布 | 本地 closed 门禁不倒退，无新可用记忆；原 copy 的清理责任可查 |
+| MI-19 登记后进程退出 | content.register_copy 提交后结束发布进程，分别注入成功发布和取消恢复 | 原意图恢复同一 copy；发布只生成一条记忆，取消沿原登记报告停止及清理 |
+| MI-20 字节接收实例退出 | 共享对象完整写入后、ready 元数据答复前结束实例 | 新实例核对原 upload／ticket 和准确对象版本后继续；不依赖旧临时盘，不发布另一版本 |
+| MI-21 普通 copy 控制恢复 | 关闭正文读取授权后重启 holder，通知全丢；查询自身与其他 holder 的 copy | 自身原控制可查且无下载定位；他人 copy 拒绝；查询失败保持 blocked，不能推断 closed |
+| MI-22 停止与物理清理分离 | 已关新入口但旧有限处理未结，随后 release 报 residual | 不提前报告 use_stopped；原 owner 保存 residual 并保留责任，不因 release.applied 宣称擦除完成 |
 
 协议序列验证只检查给定字段与关联；运行实验必须记录真实数据库竞争、字节持有及隔离出口。
 长期关闭索引的增长、清理积压与备份恢复时间纳入容量实验，不能靠删除索引提升表面吞吐。

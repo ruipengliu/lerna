@@ -1297,7 +1297,7 @@
         "source_closed",
         "source_unavailable"
       ],
-      "success": "已登记副本的当前获准有限下载定位；字节另走认证下载通道。",
+      "success": "默认 bytes 返回已登记副本当前获准的有限下载定位；control 仅向当前认证持有者返回自身 copy 的最小控制投影及原内容控制，不返回下载定位或授予使用／保存资格。",
       "source": "memory/README.md",
       "error_recovery": {
         "invalid_argument": [

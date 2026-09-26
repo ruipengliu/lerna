@@ -12,7 +12,7 @@ owner、来源、许可、修订、分页与清理规则是替换实现必须保
 
 先阅读本页的职责与行为，再读[实现设计](implementation.md)：查询、提取、内容交付与关闭。实现设计规定内部记录、事务、算法与故障实验；[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)提供精确线字段。
 
-实现阅读顺序为[软件形状与依赖](implementation.md#module-shape) → [核心对象流转](implementation.md#data-flow) → [候选发布与索引时序](implementation.md#key-sequence) → [生产可用性与性能](implementation.md#production)。内容 owner 可与 Memory 同宿主或独立部署；镜像与索引始终服从原权威记录和来源控制。
+实现阅读顺序为[软件形状与依赖](implementation.md#module-shape) → [核心对象流转](implementation.md#data-flow) → [候选发布与索引时序](implementation.md#key-sequence) → [生产可用性与性能](implementation.md#production)。生产默认 Memory 与 Content 元数据共提交域，字节使用共享对象存储；独立内容 owner 按[跨库引用门禁](implementation.md#reference-gate)登记持有与关闭责任。镜像与索引始终服从原权威记录和来源控制。
 
 本页与实现设计均为待实现规格，静态序列通过不代表服务、隐私隔离或恢复机制已经运行。
 
@@ -22,7 +22,7 @@ owner、来源、许可、修订、分页与清理规则是替换实现必须保
 
 **owner** 是对象所属账本的逻辑负责方，不是当前调用进程。一个记忆库只有一个固定 Memory owner，同一用户可有本地私密库和云端共享库；Task Home 可以与两者不同。一个库失联时不在另一端改写它。用户可以在本地库新增独立记录，日后显式合并；它不能冒充远端旧记录的新修订。
 
-内容 owner 保存正文及其版本；任务、执行或记忆模块可以拥有内容。默认内容 port 与业务模块共用本地存储，不另设必须联网的中心服务。其他模块替换内容实现时，仍须提供本页的引用、权限、保留和清理行为。
+内容 owner 保存正文及其版本；任务、执行或记忆模块可以拥有内容。云端默认内容元数据与对应业务记录共享 owner 提交域，正文放跨实例共享对象存储；个人设备保留适用的本地存储。其他模块替换内容实现时，仍须提供本页的引用、权限、保留和清理行为。
 
 ```mermaid
 flowchart LR
@@ -36,7 +36,7 @@ flowchart LR
     Auth -->|许可与有限租约| Content
 ```
 
-图中箭头表示调用或资料交接；各 owner 保存自身事实，身份和许可规则见[授权](../security/README.md)。默认同进程装配可直接调用并合并同库事务，跨端才使用[公共接口](../contracts/README.md)。
+图中箭头表示调用或资料交接；各 owner 保存自身事实，身份和许可规则见[授权](../security/README.md)。同进程以 Go 接口组合，共事务职责共享事务句柄；独立服务跨进程使用 gRPC，端云使用 WSS，均沿[公共接口](../contracts/README.md)。
 
 | 决策 | 推荐理由与代价 | 改选条件 |
 | --- | --- | --- |
@@ -178,6 +178,10 @@ stateDiagram-v2
 
 内容 owner 保存持有者登记和反向来源关系。登记在交付正文前完成；同库消费者可在本地事务中登记，跨端由 `content.register_copy` 持久接纳后再披露。来源关闭后，各持有者先停止使用，再清理自己负责的正文、索引、缓存、暂存和派生物，分别回报。未知持有者不得被忽略；无法登记或无法兑现清理条件时拒绝该条内容交付。
 
+普通 copy 的持久校准工作通过 `content.get(mode=control)` 查询自身登记及原内容控制，即使正文读取许可已经撤回仍可收尾；该查询不返回下载定位，也不授予处理或保存资格。只有当前认证 holder 可查，原 owner 不可达时依赖使用保持 blocked。已有镜像可另外接收 MirrorControl；丢通知后仍沿查询恢复。owner 保留 pending，直到 holder 以 `content.release_copy` 回报实际停止和清理事实，流程见[跨库引用门禁](implementation.md#reference-gate)。
+
+上述生产跨库发布和普通在线 copy 采用在线核验；已有显式离线资格仍按原范围和期限独立验收。control 查询不签发或续期离线资格；获知关闭立即停止，未获知时最迟到原资格到期停止，不扩大既有离线窗口。
+
 物理清理状态为 `pending | complete | residual | unknown`，按持有者聚合；有任何未知或残留都不能显示全部完成。备份、断网设备、用户导出和外部供应商分别列明范围与最长保留声明，不把本地 SQL 删除等同于设备介质擦除。无法兑现确定清理期限的路径，不接纳带该期限要求的资料。
 
 恢复实例先恢复长期最小关闭索引、来源限制和未完成清理工作，再开放正文读取；仅有旧备份而无法取得当前关闭依据时，相关内容保持禁用。来源 owner 暂时不可达是 `source_unavailable`，不是来源被删除；必要信息等待，可选记忆在任务明确显示缺席后继续。
@@ -192,6 +196,8 @@ stateDiagram-v2
 | `ContentRef` | `tenant_id, owner_id, content_id, version, hash, media_type, byte_length`；hash 对应完整不可变正文，owner 与版本不变；tenant 由服务校验 |
 | `SourceBinding` | `source_ref: ContentRef, relation, observed_at, valid_until?, policy_ref`；relation 为 user_statement、observation、derived；来源图无环，派生保留完整处理输入依赖 |
 | `ContentPolicy` | `classification, allowed_locations, allowed_recipients, allowed_purposes, retention_until, offline_allowed`；具体使用还需有效 Grant；组合来源取限制交集 |
+| `ContentControl` | `content_ref, control_revision, state, policy_ref, cleanup_ref?`；state 为 active、restricted、closed，关闭不能复活；策略引用不授予正文读取 |
+| `ContentCopyControl` | `copy_id, content_ref, holder_id, revision, use_stopped, physical_state`；仅自身登记的控制投影，省去其他副本、清理证据和使用依据 |
 | `MemoryRecord` | `memory_id, owner_id, revision, type, content_ref, sources[], scope, observed_at, confidence?, state, policy_ref`；state 为 active、needs_review、disabled；删除后的状态由 MemoryControl 与墓碑表达，只保留获准的身份、修订和清理依据；置信度只表示声明的方法估计 |
 | `Query` | `query_id, owner_ids, text_terms[], types[], scope, purpose, recipient_id, limit, cursor?`；分页必须沿原查询，空词项须提供类型或范围限制 |
 | `QueryPage` | `query_id, owner_id, items[], position, scanned_count, skipped_count, next_cursor?, exhausted, partial, changed, gaps[]`；items 仅包含当前获准记录，partial 指扫描或提供方不完整，exhausted 只针对原有限集合 |
@@ -208,7 +214,9 @@ stateDiagram-v2
 | `memory.extract` | 有限输入、检查点、提取规则、确认模式与预算 → queued 的唯一提取任务映射 | 映射及启动责任提交后 applied；后续按原任务查询／取消 |
 | `memory.view.open` / `memory.view.pull` / `memory.view.ack` | 过滤、接收方及用途；游标；已应用页 → 视图／页／固定 ACK | owner 保存视图与发送切点；副本保存应用及游标，双方按原页恢复 |
 | `memory.cleanup.get` | 对象及关闭修订 → CleanupReport | 只报告已取得事实，离线持有者保留未完成 |
-| `content.put` / `content.get` | upload_id、预期 ContentRef、来源与策略 → 提交内容；精确引用、copy_id 及用途 → 有限下载定位 | 正文字节走独立认证传输；无入站设备按受信 ticket 反向交付镜像，保持原引用；get 不创建副本，每次核对当前资格 |
+| `content.put` | upload_id、预期 ContentRef、来源与策略 → 提交内容 | 正文字节走独立认证传输；元数据提交不改变原来源归属 |
+| `content.get`，默认或 mode=bytes | 精确引用、copy_id、用途、接收方及使用依据 → ContentBytesGetOutput | 返回有限下载定位，不创建副本；镜像读取也使用此分支，每次核对当前资格 |
+| `content.get`，mode=control | 仅 mode、content_ref、copy_id → `{mode:control, control:ContentControl, copy:ContentCopyControl}` | 当前认证 holder 查询自身控制；正文 closed 仍可收尾，不创建 download_id，不产生读取／保存授权 |
 | `content.register_copy` / `content.release_copy` | copy_id、精确引用、持有者、用途、保留期；停止使用及清理证据 → 固定登记／清理回执 | 登记提交后才交付；清理答复丢失沿原命令重报 |
 | `content.close` | 精确引用、mode=restrict／close、原因；信封带期望修订，restrict 带新策略 → 关闭修订与清理入口 | owner 封闭新交付并保存传播责任；不等待所有持有者才响应 |
 

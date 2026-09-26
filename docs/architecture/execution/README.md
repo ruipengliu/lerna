@@ -6,7 +6,7 @@ Executor 接收 Task Home 准入的操作，使用固定能力与实例绑定执
 
 Home 保存“为什么要做”，Executor 保存“做到了哪一步、效果是什么”。能力目录描述行为契约，实例绑定确定谁以何种驱动访问哪个目标。任务完成由[任务运行](../task-runtime/README.md)裁决，身份和设备占用规则与[授权](../security/README.md)协作，本页是操作、能力和 GUI 字段的权威位置。
 
-实现阅读：[模块形状与依赖](implementation.md#module-shape) → [原操作对象流转](implementation.md#data-flow) → [发送与核对时序](implementation.md#key-sequence) → [生产部署和容量](implementation.md#production)。本页保留行为主线，执行记录、发送门禁、能力装配、模拟设备及故障断点在实现篇查阅。
+实现阅读：[模块形状与依赖](implementation.md#module-shape) → [原操作对象流转](implementation.md#data-flow) → [发送与核对时序](implementation.md#key-sequence) → [固定设备入口恢复](implementation.md#entrance-recovery) → [生产部署和容量](implementation.md#production)。本页保留行为主线，执行记录、发送门禁、能力装配、模拟设备及故障断点在实现篇查阅。
 
 ## 1. 默认选择与适用条件
 
@@ -17,6 +17,7 @@ Home 保存“为什么要做”，Executor 保存“做到了哪一步、效果
 | 按能力声明重复语义 | 网络故障不说明目标是否已经执行；不同工具不能共用“超时便重试” | 无目标幂等或核对能力的高影响动作会保留未知，工具接入者承担声明与验证成本 |
 | 一个操作承载一个有界动作 | 取消、接管、授权与新观察能在动作之间生效 | 长 GUI 流程增加交接次数；目标自身原子的业务 API 可作为一个有界动作 |
 | 资源 owner 负责启动互斥 | worker 租约结束不表示旧 worker 已停止，跨 Home 也不能各自认为持有设备 | 同设备串行；只有驱动证实独立资源域后才细化锁粒度 |
+| 设备发送入口固定宿主 | OS 排他锁保证同机入口唯一，重启沿原记录核对动作 | 不能隔离旧发送者的资源不自动跨实例接管，恢复控制查询不等于恢复新动作吞吐 |
 
 工具返回的业务文本不具有控制权限。可信驱动解析实际结果，Executor 校验结构并记录证据；模型对一张截图的判断可以作为评估，不能替代目标凭据。受信插件仍须遵守预算、授权及日志规则；任意原生不可信驱动只有通过平台隔离验收后才可启用，见[扩展](../extensions/README.md)。
 

@@ -21,7 +21,7 @@
 | retention | 完整回执查询秒数及长期最小关闭索引；未结责任不受普通清理期限支配 |
 | changes_supported | 本配置提供变化订阅；通知仍不能取代原记录查询 |
 
-端主动连接 `wss://原服务/v1/connect`，握手的 `Sec-WebSocket-Protocol` 必须协商为 `harness-wss-draft-3`。握手完成后服务端首先发送 `ready`，给出该 socket 独有的随机 `connection_id`、原 `logical_service_id` 和本次有效 limits；客户端核对服务与发现一致后才发送业务帧。Ready 只确认连接可用，不接纳任何任务。服务不能发送比已声明限额更大的帧；客户端无法支持该限额时停止接入。每个文本 WebSocket 消息恰好携带一个完整 UTF-8 JSON Frame，拒绝二进制业务帧；WebSocket 分片不改变应用消息边界。浏览器双向接口依据 [WHATWG WebSocket](https://websockets.spec.whatwg.org/)。
+端主动连接 `wss://原服务/v1/connect`，握手的 `Sec-WebSocket-Protocol` 必须协商为 `harness-wss-draft-3`。网关为该 socket 生成随机 `connection_id`，取得外连接配额并完成到原负责服务的内部绑定后，向端首先发送且只发送一次 `ready`，给出该 connection_id、原 logical_service_id 和本次有效 limits；客户端核对服务与发现一致后才发送业务帧。网关持有本连接的请求关联及订阅状态，内部业务实例不能重新分配外连接身份。Ready 只确认连接可用，不接纳任何任务。服务不能发送比已声明限额更大的帧；客户端无法支持该限额时停止接入。每个文本 WebSocket 消息恰好携带一个完整 UTF-8 JSON Frame，拒绝二进制业务帧；WebSocket 分片不改变应用消息边界。浏览器双向接口依据 [WHATWG WebSocket](https://websockets.spec.whatwg.org/)。
 
 | limits 字段 | 初始上限／默认值 | 约束 |
 | --- | --- | --- |
@@ -30,7 +30,8 @@
 | max_inflight_requests、max_pending_deliveries | 各 32 | 未收到 response 的请求数；已发送尚未取得匹配 Reply 的投递数 |
 | max_queue_bytes | 4 MiB | 每连接、每发送方向尚未写出的应用帧总字节；持久业务队列另有限额 |
 | control_reserve_bytes、control_reserve_items | 1 MiB、4 | 普通工作不能占用；分别小于总字节／在途与投递限额，字节预留至少容纳一份最大帧 |
-| max_connections_per_identity、max_subscriptions | 2、8 | 同认证端点实例或浏览器会话的连接数；每连接订阅数 |
+| max_connections_per_identity_service、max_connections_per_identity_total | 2、16 | 同认证端点实例或浏览器会话对一个逻辑服务的连接数，以及该身份跨服务总连接数 |
+| max_subscriptions、max_requests_per_connection | 8、10000 | 每连接订阅数；连接存续期内登记的不同 request_id 总数，重绑恢复不重复计数 |
 | heartbeat_interval_ms、heartbeat_timeout_ms | 30000、90000 | 空闲后发应用 ping；原 nonce 的 pong 超时则断开，超时大于间隔 |
 | max_content_bytes | 部署声明的有限正整数 | 大内容及临时空间上限，独立于帧容量 |
 
@@ -38,7 +39,11 @@
 
 双方持续独立读写，不能在等待某一业务 response 时停止读取控制或回复帧。发送队列持续不降、无法排入控制帧或心跳超时则关闭慢连接；未交付的 Delivery、未确认 Reply 和业务 jobs 仍在持久存储中恢复。应用 ping/pong、socket write 完成和任何传输流控都不确认业务成功。本配置不另设流控 ACK；ReplyAck 的持久含义另见第 4 节。
 
-同一认证身份最多保留声明数量的并行连接，连接接入层共享计数并限制连接创建速率；不能核实配额时拒绝新连接。重连不会创造新的 endpoint instance，不设置跨网关全局连接序号。重复投递即使经过不同连接仍按 delivery_id／command_id 去重，连接只决定本次帧往返。断线释放连接、request_id 和订阅状态，不释放业务责任；指数退避并加入抖动后重连，参考从 1 秒增长至 30 秒上限，认证失败先重新认证，不无限重试旧凭据。
+外连接配额由身份权威分区同时检查“身份＋逻辑服务”和身份总额，网关不能按本进程计数放大上限；无法核实配额时拒绝新外连接。网关进程租约、条件释放和过期回收按[生产连接机制](../deployment-production.md#connections)执行；旧实例的清理必须匹配原进程及绑定，不能删除新实例的记录。内部流重绑继续使用原外连接槽，不增加连接数，也不清零 request_id 计数。
+
+一个 WSS 初始最多登记 10000 个不同 request_id；达到上限减 control_reserve_items（默认 9996）后停止接收新的普通 request，最后 4 个名额仅供控制请求。已有等待、Reply／ReplyAck 和服务端控制 Delivery 可继续处理，达到总上限后不再登记任何新 request。网关在最长 5 秒排空后以 1012 关闭并让端重连；原回复没有结束时沿原身份恢复。超过登记名额的请求直接返回过载错误且不建立新的等待记录，不能借恢复或错误缓存建立无界 ID 集合。
+
+外连接重建不会创造新的 endpoint instance；内外连接均不决定业务唯一执行权。重复投递即使经过不同连接仍按 delivery_id／command_id 去重。外断线释放连接、request_id 和订阅状态，不释放业务责任；指数退避并加入抖动后重连，参考从 1 秒增长至 30 秒上限，认证失败先重新认证，不无限重试旧凭据。
 
 发现字段和 Frame 完整结构见 [transport.schema.json](schemas/transport.schema.json)。服务只能声明已安装并通过对应配置验证的方法，未知 profile、资产摘要或必要方法缺失时停止集成。没有全局注册中心：装配保存逻辑服务及认证关系，跨 Home 任务目录聚合现有映射。
 
@@ -61,9 +66,9 @@ Bearer 至少来自 256 位密码学随机值，服务保存令牌校验值及�
 
 尚未批准时，claim 的 `pending` 是该次命令的最终观察结果；后续轮询使用新 command_id，保持原 pairing_id、私密码及设备 nonce 不变，不能重放 pending 回执期待其变化。领取成功与原领取回执在同事务保存。回复丢失时，设备以原私密码及原命令恢复同一结果；不同命令不能生成第二份端点凭据。敏感回执只在安全领取窗口内保存可恢复密文，窗口结束返回 `gone` 并要求重新配对；最小关闭记录继续拒绝旧会话重新领取。已经持有的凭据是否有效按自己的期限与撤销决定，不由回执清理决定。
 
-`AuthContext` 由认证适配器生成，不从请求正文反序列化：`sender_service_id` 来自服务凭据或已验证的 Delivery 发送方，接收端还须检查该服务是否有权代表对应 Home 或 usage owner。`actor_kind` 与 `trusted_user_session_ref` 来自当前用户／维护者会话；`confirmation.decide` 只允许受信的人类会话，服务令牌、模型产物及普通输入消息不能自报这两个字段完成批准。Confirmation 由原业务 owner 保存，并在原业务命令的事务中核验与消费，完整绑定见[安全实现](../security/implementation.md)。
+`AuthContext` 由认证适配器生成，不从请求正文反序列化：`sender_service_id` 来自业务服务凭据或已验证的 Delivery 发送方，接收端还须检查该服务是否有权代表对应 Home 或 usage owner。中转网关的 mTLS 身份仅验证转交关系，不能写成业务 sender_service_id；委托调用恢复原主体及已验证的原业务发送者（如有），直接用户／端点没有业务发送者时不填该字段。否则持有者控制查询等按 sender 判定的入口会把网关错认成持有者。`actor_kind` 与 `trusted_user_session_ref` 来自当前用户／维护者会话；`confirmation.decide` 只允许受信的人类会话，服务令牌、模型产物及普通输入消息不能自报这两个字段完成批准。Confirmation 由原业务 owner 保存，并在原业务命令的事务中核验与消费，完整绑定见[安全实现](../security/implementation.md)。
 
-令牌到期需受信重新认证并重新建链，不通过请求正文延长。端点撤销增加代次，所有旧连接的新请求和披露立即拒绝并关闭；已发出的有限离线资格仍遵守其明确窗口。新实例不得直接取得旧实例的未决操作或余额；旧工作始终从原领域账本恢复。云端登录供应商和操作系统密钥保存器为装配适配器，缺席时不开放远程入口。
+原端点凭据或浏览器会话到期需受信重新认证并重新建链，不通过请求正文延长；仅内部委托令牌轮换时，网关可经受信身份适配器重新取得委托并重绑内部流，外 WSS 保持。端点撤销增加代次，所有旧连接的新请求和披露立即拒绝并关闭；已发出的有限离线资格仍遵守其明确窗口。新实例不得直接取得旧实例的未决操作或余额；旧工作始终从原领域账本恢复。云端登录供应商和操作系统密钥保存器为装配适配器，缺席时不开放远程入口。
 
 ## 3. Home 控制证明
 
@@ -85,7 +90,7 @@ Bearer 至少来自 256 位密码学随机值，服务保存令牌校验值及�
 
 ## 4. 双向请求与主动交付
 
-`request_id` 仅在当前 connection_id 内关联一次 request／response，同连接不得复用。收到 response 或断线后释放等待槽；业务身份、回执和恢复责任不以 request_id 为键。命令重新发起网络请求可换 request_id，内含 command_id、原参数及首次接纳期限不变。响应超时先查原命令；query 和 receipt_lookup 本身不创造新业务命令。
+`request_id` 仅在当前 connection_id 内关联一次 request／response，同连接的新调用不得复用；内部重绑继续同一未决调用时保留原关联。收到 response 或外连接断开后释放等待槽；业务身份、回执和恢复责任不以 request_id 为键。命令重新发起网络请求可换 request_id，内含 command_id、原参数及首次接纳期限不变。响应超时先查原命令；query 和 receipt_lookup 本身不创造新业务命令。
 
 | Frame.type | 方向与精确业务字段 | 含义 |
 | --- | --- | --- |
@@ -98,7 +103,9 @@ Bearer 至少来自 256 位密码学随机值，服务保存令牌校验值及�
 | change、snapshot_required | 服务→端：subscription_id＋change／reason | 第 6 节通知与快照缺口；不包含执行许可 |
 | ping、pong | 双向：nonce | 每方向最多一个未答复 ping，pong 复用对方 nonce；只检测连接存活 |
 
-除 ready 外，各帧也必须包含表首定义的 connection_id；所有对象封闭且 type/kind 互斥。跨连接迟到的 response 丢弃，不能借另一个 socket 的同 request_id 完成等待；Delivery 与 Reply 的耐久恢复沿其原业务身份重新编码帧。没有连续全局消息序号或重放整条连接的承诺。服务端端点推送与内部连接转交共享 Frame，内部网关路由按 [gRPC EndpointChannel](grpc.md)执行，领域准入仍在实际 owner。
+除 ready 外，各帧也必须包含表首定义的 connection_id；所有对象封闭且 type/kind 互斥。跨外连接迟到的 response 丢弃，不能借另一个 socket 的同 request_id 完成等待；内部重绑则保留当前 socket 的关联，网关仅接收当前 binding_id 的输出。Delivery 与 Reply 的耐久恢复沿其原业务身份重新编码帧。没有连续全局消息序号或重放整条连接的承诺。服务端端点推送与内部转交共享 Frame，受控重绑按 [gRPC EndpointChannel](grpc.md#channel-rebind)执行，领域准入仍在实际 owner。
+
+内部流短暂失效时，网关保持外 WSS 和心跳，不积压新的普通请求；这些请求返回 dependency_unavailable，不伪造业务回执。网关在原请求自首次收到起的 5 秒总期限内查询已发命令、恢复只读请求及原回复；总期限不随重绑重置。无法确定写入结果时返回 retry=query_original 的真实 Error，仍可在之后查询原身份。后端不可用连续达到 60 秒则以 1013 有界断开外连接；这与单次请求 5 秒期限独立。身份撤销、过期或无法继续满足当前披露检查时，先停止业务与数据发送，已确认身份失效时立即关闭。
 
 无入站地址的设备主动建链后，Home 可立即推送有界 Delivery。Home 保存发送责任，设备领域 owner 保存接纳和效果记录；交付、处理、回交和原效果查询分别承担持久责任。
 
@@ -133,7 +140,7 @@ Delivery 固定 `delivery_id, sender_service_id, recipient_endpoint_id, recipien
 
 Home 根据当前认证端点和实例将 DeliveryEnvelope 放入 `delivery` 帧；跨并行连接的同一投递仍是同一持久责任。取得匹配 Reply 前占据该连接的 pending delivery 槽；连接断开后发送责任继续存在，重连可重新投递。同一 Delivery 不因等待超时生成新的 Command。取消、撤权及收尾使用前述有限预留，设备优先交回已经持久保存的回复；设备自己的持久队列满时拒绝新接纳，并保留查询和关闭责任。
 
-设备发送 `reply` 后，Home 核对预期设备实例、原请求和响应结构，保存回复并创建后续领域查询 job，再返回 `reply_ack`，其 ack 为 `{delivery_id,stored:true,result_digest}`。重复完全相同回复返回同确认；同 delivery_id 不同业务结果冲突。reply_ack 丢失时设备跨重连交回原 Reply，Home 不重复建立后续责任。原 accepted 回执的后续变化通过新的 receipt_lookup Delivery 获取，不能覆盖已确认的第一次回复。MirrorTicket 通过独立 `mirror_ticket` 帧推送，不改动 Delivery 的三类请求；它的成功由上传状态查询确认。
+设备发送 `reply` 后，Home 核对预期设备实例、原请求和响应结构，保存回复并创建后续领域查询 job，再返回 `reply_ack`，其 ack 为 `{delivery_id,stored:true,result_digest}`。重复完全相同回复返回同确认；同 delivery_id 不同业务结果冲突。reply_ack 丢失时设备保留原 Reply，按有界退避重交，不能只等外 WSS 断开才重试；网关内部重绑后也可重交已缓存的同一 Reply。Home 不重复建立后续责任。原 accepted 回执的后续变化通过新的 receipt_lookup Delivery 获取，不能覆盖已确认的第一次回复。MirrorTicket 通过独立 `mirror_ticket` 帧推送，不改动 Delivery 的三类请求；它的成功由上传状态查询确认。
 
 缓存回复在首次发送和每次重传前均重查当前披露资格，包含 Query 快照和已裁剪的 Receipt。资格不足时，设备保留原结果事实，持久关闭该 Delivery 的内容交付，改发 `withheld:true` 及严格的 `{error:{code:"forbidden",message,retry:"after_change"}}`。此分支只关闭披露，不改写原业务决定；Home 将其作为单独的当前披露状态保存与确认，不当作不同业务结果冲突。Home 已知关闭后丢弃迟到完整回复的内容；资格以后恢复，也须新建 Delivery 执行当前查询或原命令查询。已经交付的字节不能召回，内容副本仍按原 owner 的关闭流程清理。
 
@@ -151,12 +158,14 @@ JSON 命令上限不能容纳任意截图或文件。基础配置采用可幂等
 | `PUT /v1/content/uploads/{upload_id}` | 原始字节，Content-Length 与 Content-Type 匹配 → Upload | 临时写、校验摘要／长度、同步后原子就绪；丢回复查原上传，不追加字节 |
 | `upload_lookup` | `{upload_id}` → Upload | state 为 reserved／ready／committed／expired；不跨用户返回状态 |
 | WSS／gRPC 的 content.put 命令 | upload_id、ContentRef、来源及策略 → 固定内容版本 | 只有 ready 且精确字节匹配才提交；内容引用和策略持久成功，不在JSON放正文 |
-| WSS／gRPC 的 content.get 查询 | 精确内容、已登记副本与用途依据 → Download | 当前许可核对后发有限下载定位；不创建副本或新的业务消费责任 |
+| WSS／gRPC 的 content.get 字节查询（默认或 mode=bytes） | 精确内容、已登记副本与用途依据 → ContentBytesGetOutput | 当前许可核对后发有限下载定位；不创建副本或新的业务消费责任 |
 | `GET /v1/content/downloads/{download_id}` | 当前认证＋原下载定位 → 字节 | 每次复核主体、接收方、copy_id、来源、用途和期限；定位串本身不是独立权限 |
 
 这五个 kind 的 request_id 仍只关联本次往返：upload_reserve 按原 upload_id 与不可变元数据去重，mirror_reserve 按原 ticket_id 与完整票据去重，mirror_control 按原 control_id 与完整请求去重；同 ID 不同内容冲突。lookup 只读原记录，不重新预留、发布或关闭。断线重连后换 request_id，内含上传、票据及控制身份保持不变；response 必须匹配原管理 kind 和上述身份。
 
 Upload 的 owner、tenant、主体绑定来自当前会话。重复 PUT 先完成有界接收及一致性检查，已 ready／committed 时只返回原元数据；内容不同拒绝。上传期限限制新字节和首次发布，已 committed 的正式引用不随临时上传过期而失效；正式保留由 ContentPolicy 管理。
+
+云端 Upload／Mirror 元数据保存在原内容负责分区，临时上传和就绪字节保存在跨可用区共享耐久存储。接入、上传或应用进程退出后，健康副本仍能按原 upload_id／ticket_id 查询并取得就绪字节；单进程临时文件同步不能作为返回 ready 的唯一依据。receiver_service_id 始终是稳定逻辑接收服务，不是某个网关进程。未完成字节仍按原 ID 有界重传，元数据与字节发布／清理竞争继续由原 owner 裁决。
 
 content.put 先取得不可变耐久字节，再在业务事务中将 upload 从 ready 变为 committed，保存 ContentRef、来源图及策略。清理候选与新引用登记锁同一上传／内容元数据，防止孤儿清理删掉刚发布对象。崩溃后 ready 可由原命令继续；数据库提交结果未知时先查原回执，不能重新发布另一个版本。
 
@@ -183,7 +192,7 @@ mirror_reserve 由接收端当前获准的本地任务或受信服务身份发�
 
 设备取得票据后再次检查原 copy、当前来源及披露资格，再以原 ticket 上传。接收方在分片写入期间检查本地关闭状态，完整校验后才开放读取；同票据重复 PUT 只能返回相同 ready 内容，不追加字节。上传中断时继续保留同票据的有限恢复责任，过期或关闭后删除临时字节；已 ready 的镜像不因上传期限结束自动失效，其保留及读取始终由原 copy 管理。
 
-每次镜像读取先通过已定义的查询投递取得原 owner 当前 ContentGetOutput，再核对原引用、copy_id、下载截止及镜像已知的控制修订。接收端从该受信答复推进已知修订后才能使用；旧答复不得覆盖较新关闭事实。基础镜像配置不支持独立离线读，原 owner 不可达则停读，不从上传票据或旧定位推导新资格。读取响应和后续流检查沿用普通下载规则。已明确授权的离线副本是另行验收的能力，不能借本路径获得。
+每次镜像读取先通过已定义的查询投递取得原 owner 当前 ContentBytesGetOutput，再核对原引用、copy_id、下载截止及镜像已知的控制修订。接收端从该受信答复推进已知修订后才能使用；旧答复不得覆盖较新关闭事实。基础镜像配置不支持独立离线读，原 owner 不可达则停读，不从上传票据或旧定位推导新资格。读取响应和后续流检查沿用普通下载规则。content.get 的 mode=control 分支只返回持有者控制事实，不能代替本次字节读取资格或下载定位。已明确授权的离线副本是另行验收的能力，不能借本路径获得。
 
 原 owner 在 content.close 或限制事务中保存逐镜像的控制发送责任，再经 WSS／gRPC 的 `mirror_control` 主动提交 MirrorControl。接收端从认证装配核对发起者确为 ContentRef.owner_id，不把 owner 的 content.close 直接路由给镜像端。控制按原 control_id 和请求摘要去重，旧修订不得覆盖新修订；较新修订、读取关闭、state=closed、清理 job 与回执同事务保存。这里 cause=restricted 也保守关闭整个镜像并清理，不在接收端维护另一套策略比较器；原新策略仍允许复制时，由调用方重新登记副本并取得新票据，代价是重新传输。
 
@@ -197,6 +206,8 @@ owner 丢失控制答复时重投绑定原 ticket_id 的同一 MirrorControl，�
 
 已建立的订阅遇到保留缺口或无法保留提示的队列溢出，服务发送 `snapshot_required` 帧，reason 分别为 cursor_expired／queue_overflow，并暂停该订阅的 Change；无法排入该控制帧则关闭连接。客户端放弃旧连续性假设，以同过滤集合、不带 cursor 的 subscribe 替换订阅，再按新水位取得快照。纯同对象修订合并不丢失查询义务；任何不能保证覆盖的跳跃均走明确缺口。客户端忽略已替换 subscription_id 的迟到通知，周期查询及恢复扫描修补通知之外的遗漏；领域 memory.view.pull 的连续分页规则保持独立。
 
+内部流重绑默认不承诺接续原通知窗口。网关隔离旧绑定后，向客户端仍认识的每个 subscription_id 发送 reason=backend_rebind 的 snapshot_required，并暂停该旧订阅；新内部 Ready 不转发为第二个外 Ready。客户端按同过滤集合、不带 cursor 重新订阅并取得快照，期间重复提示按修订查询当前事实。网关不能把新实例的任意游标当作旧连续游标；通知恢复和业务结果查询分别限额。
+
 权限撤回后，服务立即停止披露敏感对象标识，缓存提示和回复每次实际发送前复核资格。连接身份失效则关闭；仅对象权限减少时重新按当前范围查询并撤去不可继续展示的内容，不能凭历史订阅继续读旧快照。通知丢失可恢复查询，服务端推送的控制命令仍须经原 Delivery／Receipt 持久链路，不能降成可丢 Change。
 
 | 情况 | 线返回 | 调用方动作 |
@@ -205,7 +216,8 @@ owner 丢失控制答复时重投绑定原 ticket_id 的同一 MirrorControl，�
 | 已关联请求尚未接纳、参数或资格失败 | 同 request_id 的 response，result=`{error: Error}` | 按准确 code/retry 恢复；不生成伪持久回执 |
 | 握手认证失败或接入过载 | HTTP 401／403／429／503；未升级 | 重新认证或退避；不能显示命令已排队 |
 | 帧格式非法／消息过大 | WebSocket 1002／1009 关闭 | 修正协议或容量；原业务身份仍须查询 |
-| 会话撤销／慢连接或过载 | WebSocket 1008／1013 关闭 | 重新认证或退避重连，不把关闭改成业务 rejected |
+| 会话撤销／慢连接、过载或内部恢复超过 60 秒 | WebSocket 1008／1013 关闭 | 重新认证或退避重连，不把关闭改成业务 rejected |
+| 网关滚动退出／连接请求总数达限 | WebSocket 1012，有界排空后关闭 | 按原身份重连恢复；不清零业务配额或责任 |
 | 原始字节传输成功／字节过大／不存在／已回收 | HTTPS 200／201、413、404／410，加字节传输结果或 Error | 按上传、镜像和下载状态解释；not_found 与 gone 分开 |
 | 断开、心跳超时或答复未知 | 可能无应用帧或 JSON | 原写命令先查原记录；断线不取消已接纳操作 |
 
@@ -216,7 +228,7 @@ owner 丢失控制答复时重投绑定原 ticket_id 的同一 MirrorControl，�
 | 场景 | 静态／向量断言 | 运行实现须补的证据 |
 | --- | --- | --- |
 | 发现、Ready 与方法不一致 | profile、限额关系、未登记方法及未知字段拒绝 | 实际安装资产与发现摘要一致 |
-| 帧方向、关联与连接恢复 | 非法方向、旧 connection_id、错 request_id／kind、错误与结果并存拒绝 | 刷新、双连接、响应丢失、跨网关重连仍沿原身份恢复 |
+| 帧方向、关联与连接恢复 | 非法方向、旧 connection_id／binding_id、迟到低代绑定、同代异 ID、错 request_id／kind、重复外 Ready、limits 变化、配额重复消费拒绝 | 业务实例滚动保持 WSS，网关退出再外重连；响应丢失仍沿原身份恢复 |
 | 慢端、过载与通知缺口 | 帧／队列／在途上限、控制预留和订阅归属校验 | 心跳失效、重连风暴、取消不被普通工作饿死、快照与通知并发 |
 | 命令、查询、回执查询混淆 | kind与请求／响应互斥；命令回复匹配原ID；Query不含command_id | 断线两端仍沿原领域身份恢复 |
 | 回复丢失／被篡改 | delivery和摘要固定、不同结果拒绝 | 回复提交后断网，设备重投只有一次接收事实 |

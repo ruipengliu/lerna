@@ -38,4 +38,7 @@ message CallResponse {
 message ChannelFrame {
   // Exactly one transport.schema.json Frame, including connection_id.
   bytes frame_json = 1;
+  // Must equal harness-binding-id; harness-binding-revision orders registrations.
+  // A retry of the same candidate retains both metadata values.
+  string binding_id = 2;
 }

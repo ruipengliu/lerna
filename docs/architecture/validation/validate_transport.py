@@ -66,11 +66,21 @@ CONTROL_METHODS = {
 }
 
 
+def query_result_binding_errors(request, result):
+    if request.get('method') == 'content.get' and 'output' in result:
+        control_requested = request['payload'].get('mode', 'bytes') == 'control'
+        if control_requested != (result['output'].get('mode') == 'control'):
+            return ['content_get_mode: returned bytes/control branch differs from the original query']
+    return []
+
+
 def limits_errors(limits):
     if (limits['max_json_bytes'] >= limits['max_frame_bytes']
             or limits['control_reserve_bytes'] < limits['max_frame_bytes']
             or limits['control_reserve_bytes'] >= limits['max_queue_bytes']
             or limits['control_reserve_items'] >= min(limits['max_inflight_requests'], limits['max_pending_deliveries'])
+            or limits['control_reserve_items'] >= limits['max_requests_per_connection']
+            or limits['max_connections_per_identity_service'] > limits['max_connections_per_identity_total']
             or limits['heartbeat_timeout_ms'] <= limits['heartbeat_interval_ms']):
         return ['connection_limits: reserves, message bounds or heartbeat window are inconsistent']
     return []
@@ -92,6 +102,8 @@ def frame_errors(frame, context):
         errors.append('frame_auth: current connection identity is not authorized')
     if kind != 'ready' and not context.get('ready_received'):
         errors.append('frame_ready: business messages cannot precede Ready')
+    if kind == 'ready' and context.get('ready_received') and not context.get('internal_binding'):
+        errors.append('frame_ready: an external socket receives Ready only once')
     limits = frame['limits'] if kind == 'ready' else context.get('limits')
     if not limits:
         return errors + ['connection_limits: negotiated limits are missing']
@@ -116,13 +128,26 @@ def frame_errors(frame, context):
     if kind == 'ready':
         if frame['logical_service_id'] != context.get('logical_service_id'):
             errors.append('frame_service: Ready changed the discovered logical service')
-        if context.get('existing_connections', 0) >= limits['max_connections_per_identity']:
-            errors.append('frame_capacity: authenticated identity connection limit reached')
+        if not context.get('internal_binding'):
+            if context.get('existing_connections', 0) >= limits['max_connections_per_identity_service']:
+                errors.append('frame_capacity: identity and service connection limit reached')
+            if context.get('existing_total_connections', 0) >= limits['max_connections_per_identity_total']:
+                errors.append('frame_capacity: identity total connection limit reached')
     if kind == 'request':
-        if frame['request_id'] in context.get('used_request_ids', []):
+        replay = context.get('internal_request_replay')
+        if replay and frame != context.get('original_request_frame'):
+            errors.append('frame_recovery_identity: internal rebind cannot change an outstanding request')
+        if replay and frame['kind'] not in {'query', 'receipt_lookup', 'subscribe', 'upload_lookup', 'mirror_lookup'}:
+            errors.append('frame_recovery_identity: uncertain writes must be looked up before returning their outcome')
+        if not replay and frame['request_id'] in context.get('used_request_ids', []):
             errors.append('frame_request_id: request id reused on one socket')
+        lifetime_cap = limits['max_requests_per_connection'] - (0 if control else limits['control_reserve_items'])
+        if not replay and context.get('request_count', 0) >= lifetime_cap:
+            errors.append('frame_capacity: connection request budget is draining or exhausted')
+        if replay and context.get('request_count_after') != context.get('request_count'):
+            errors.append('frame_recovery_quota: replay cannot consume another external request id')
         cap = limits['max_inflight_requests'] - (0 if control else limits['control_reserve_items'])
-        if context.get('inflight_requests', 0) >= cap:
+        if not replay and context.get('inflight_requests', 0) >= cap:
             errors.append('frame_capacity: request slots reserved or exhausted')
         if frame['kind'] in ('command', 'query'):
             spec = METHODS.get(request['method'])
@@ -191,6 +216,7 @@ def frame_errors(frame, context):
                 errors.append('frame_method: original request method is unknown')
             else:
                 errors.extend('transport_schema: ' + e for e in validate(spec['output'], result['output']))
+                errors.extend(query_result_binding_errors(original_request, result))
         if 'error' not in result and frame['kind'] in ('upload_reserve', 'upload_lookup'):
             if result['upload_id'] != original_request['upload_id'] or (frame['kind'] == 'upload_reserve' and
                     any(result[k] != original_request[k] for k in original_request)):
@@ -264,6 +290,52 @@ def check(vector):
         errors.extend(limits_errors(value))
     if name == 'Frame':
         errors.extend(frame_errors(value, context))
+    if name == 'ChannelBinding':
+        errors.extend(limits_errors(value['limits']))
+        if (value['logical_service_id'] != context.get('logical_service_id')
+                or value['connection_id'] != context.get('connection_id')):
+            errors.append('channel_binding: metadata changed the gateway external service or connection')
+        if value['limits_digest'] != digest(value['limits']):
+            errors.append('channel_limits: metadata digest does not bind the complete effective limits')
+        if not context.get('authenticated_gateway') or not context.get('current_identity_valid'):
+            errors.append('channel_auth: internal binding lacks current gateway or original identity authority')
+        previous = context.get('previous_binding')
+        if previous:
+            if value['binding_id'] == previous['binding_id']:
+                errors.append('channel_binding: each internal replacement needs a fresh binding id')
+            if value['binding_revision'] != previous['binding_revision'] + 1:
+                errors.append('channel_revision: each newly allocated candidate advances exactly one revision')
+            if any(value[k] != previous[k] for k in ('logical_service_id', 'connection_id', 'limits', 'limits_digest')):
+                errors.append('channel_binding: rebind changed the external service, connection or limits')
+            if (context.get('external_slots_before') != context.get('external_slots_after')
+                    or context.get('request_count_before') != context.get('request_count_after')):
+                errors.append('channel_quota: rebind must preserve external connection and request counts')
+        elif value['binding_revision'] != 1:
+            errors.append('channel_revision: the first candidate starts at revision one')
+        # This is a constructed atomic-registration observation, not a database test.
+        # stored_binding may be newer than this request after an unknown earlier commit.
+        stored = context.get('stored_binding')
+        if stored:
+            if value['binding_revision'] < stored['binding_revision']:
+                errors.append('channel_revision: a delayed lower revision cannot replace the stored binding')
+            elif value['binding_revision'] == stored['binding_revision'] and value != stored:
+                errors.append('channel_revision: the same revision only permits the identical binding retry')
+    if name == 'ChannelFrameRecord':
+        frame = value['frame']
+        # A candidate may only supply Ready; business output belongs to the active binding.
+        binding = (context.get('candidate_binding', context.get('active_binding', {}))
+                   if frame['type'] == 'ready' else context.get('active_binding', {}))
+        if value['binding_id'] != binding.get('binding_id'):
+            return errors + ['channel_binding: stale or unrelated internal stream output must be discarded']
+        if frame['connection_id'] != binding.get('connection_id'):
+            errors.append('channel_binding: frame changed the external connection identity')
+        if frame['type'] == 'ready':
+            if (frame['logical_service_id'] != binding.get('logical_service_id')
+                    or frame['limits'] != binding.get('limits')):
+                errors.append('channel_limits: internal Ready must echo the same service and exact external limits')
+            if context.get('external_ready_sent') and context.get('forward_to_client'):
+                errors.append('channel_ready: replacement Ready must not be forwarded as a second external Ready')
+        errors.extend(frame_errors(frame, dict(context, internal_binding=True)))
     if name == 'Delivery':
         if value['request_digest'] != digest(value['request']):
             errors.append('request_digest: immutable request hash differs')
@@ -290,6 +362,7 @@ def check(vector):
             from protocol.schema import validate
             method = delivery['request']['method']
             errors.extend('transport_schema: ' + e for e in validate(METHODS[method]['output'], value['result']['output']))
+            errors.extend(query_result_binding_errors(delivery['request'], value['result']))
     if name == 'ReplyAck':
         reply = context.get('reply')
         if not reply or value['delivery_id'] != reply['delivery_id'] or value['result_digest'] != digest(reply['result']):

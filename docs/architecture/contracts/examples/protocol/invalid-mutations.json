@@ -4565,5 +4565,270 @@
       }
     ],
     "expect": "query_continuity"
+  },
+  {
+    "name": "control query cannot disclose another holder copy",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_control_holder",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/auth/sender_service_id",
+        "value": "other_holder_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    ]
+  },
+  {
+    "name": "forged matching output holder does not change registered ownership",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_control_holder",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/auth/sender_service_id",
+        "value": "other_holder_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/copy/holder_id",
+        "value": "other_holder_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    ]
+  },
+  {
+    "name": "control response cannot create a download locator",
+    "fixture": "55-content-holder-control.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/download_id",
+        "value": "download_cccccccccccccccccccccccccccccccc"
+      }
+    ]
+  },
+  {
+    "name": "control mode cannot request a storage or processing purpose",
+    "fixture": "55-content-holder-control.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/request/payload/purpose",
+        "value": "memory"
+      }
+    ]
+  },
+  {
+    "name": "control response cannot grant storage qualification",
+    "fixture": "55-content-holder-control.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/store_allowed",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "control response cannot add use authorization",
+    "fixture": "55-content-holder-control.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/usage_authorization_refs",
+        "value": [
+          {
+            "kind": "use",
+            "owner_id": "grant_owner_912c54b3a5faa1717e21484ac5b3bde9",
+            "id": "use_5ef76d30bf9232902687324b5bfa0bd2",
+            "revision": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "control query cannot return bytes result",
+    "fixture": "55-content-holder-control.json",
+    "expect": "content_get_mode",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output",
+        "value": {
+          "content_ref": {
+            "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+            "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+            "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+            "version": 1,
+            "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+          "control_revision": 1,
+          "download_id": "download_fd456406745d816a45cae554c788e754",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "range_supported": true
+        }
+      }
+    ]
+  },
+  {
+    "name": "default bytes query cannot return control result",
+    "fixture": "55-content-holder-control.json",
+    "expect": "content_get_mode",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output",
+        "value": {
+          "mode": "control",
+          "control": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "policy_ref": {
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+              "revision": 1
+            },
+            "control_revision": 1,
+            "state": "active"
+          },
+          "copy": {
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+            "revision": 1,
+            "use_stopped": false,
+            "physical_state": "pending"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "late old control cannot reopen persisted holder gate",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_gate_monotonic",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/holder_gate/control_revision",
+        "value": 1
+      },
+      {
+        "op": "set",
+        "path": "/events/7/holder_gate/state",
+        "value": "open"
+      }
+    ]
+  },
+  {
+    "name": "current control query cannot report a known pre-close snapshot",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_control_current",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/control",
+        "value": {
+          "content_ref": {
+            "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+            "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+            "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+            "version": 1,
+            "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "policy_ref": {
+            "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+            "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+            "revision": 1
+          },
+          "control_revision": 1,
+          "state": "active"
+        }
+      }
+    ]
+  },
+  {
+    "name": "control query cannot rebind the exact content of a copy",
+    "fixture": "55-content-holder-control.json",
+    "expect": "content_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/copy/content_ref/content_id",
+        "value": "content_dddddddddddddddddddddddddddddddd"
+      }
+    ]
+  },
+  {
+    "name": "stopped copy control cannot forget recorded cleanup",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_control_record",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/11/exchange/response/output/copy/use_stopped",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "active source does not reopen released copy",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_gate_monotonic",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/16/holder_gate/state",
+        "value": "open"
+      }
+    ]
+  },
+  {
+    "name": "late older copy cannot reduce stored copy revision",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_gate_monotonic",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/17/holder_gate/copy_revision",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "late older copy cannot reopen stopped use",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_gate_monotonic",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/17/holder_gate/state",
+        "value": "open"
+      }
+    ]
   }
 ]

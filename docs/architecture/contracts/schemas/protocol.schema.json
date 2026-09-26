@@ -4600,6 +4600,34 @@
               },
               "recovery": {
                 "$ref": "#/$defs/ReceiptRecovery"
+              },
+              "holder_gate": {
+                "description": "Test-only persisted holder gate observation after applying a content.get control response; never a wire field.",
+                "type": "object",
+                "properties": {
+                  "copy_id": {
+                    "$ref": "#/$defs/Id"
+                  },
+                  "control_revision": {
+                    "$ref": "#/$defs/Revision"
+                  },
+                  "state": {
+                    "enum": [
+                      "open",
+                      "closed"
+                    ]
+                  },
+                  "copy_revision": {
+                    "$ref": "#/$defs/Revision"
+                  }
+                },
+                "required": [
+                  "copy_id",
+                  "control_revision",
+                  "state",
+                  "copy_revision"
+                ],
+                "additionalProperties": false
               }
             },
             "required": [
@@ -9649,73 +9677,24 @@
       "$ref": "#/$defs/ContentCommit"
     },
     "ContentGetInput": {
-      "type": "object",
-      "properties": {
-        "content_ref": {
-          "$ref": "#/$defs/ContentRef"
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ContentBytesGetInput"
         },
-        "copy_id": {
-          "$ref": "#/$defs/Id"
-        },
-        "purpose": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 256
-        },
-        "recipient_id": {
-          "$ref": "#/$defs/Id"
-        },
-        "usage_authorization_refs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/AuthorizationRef"
-          },
-          "minItems": 1,
-          "maxItems": 100
+        {
+          "$ref": "#/$defs/ContentControlGetInput"
         }
-      },
-      "required": [
-        "content_ref",
-        "copy_id",
-        "purpose",
-        "recipient_id",
-        "usage_authorization_refs"
-      ],
-      "additionalProperties": false
+      ]
     },
     "ContentGetOutput": {
-      "type": "object",
-      "properties": {
-        "content_ref": {
-          "$ref": "#/$defs/ContentRef"
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ContentBytesGetOutput"
         },
-        "copy_id": {
-          "$ref": "#/$defs/Id"
-        },
-        "control_revision": {
-          "$ref": "#/$defs/Revision"
-        },
-        "download_id": {
-          "$ref": "#/$defs/Id"
-        },
-        "expires_at": {
-          "type": "string",
-          "format": "date-time",
-          "pattern": "Z$"
-        },
-        "range_supported": {
-          "type": "boolean"
+        {
+          "$ref": "#/$defs/ContentControlGetOutput"
         }
-      },
-      "required": [
-        "content_ref",
-        "copy_id",
-        "control_revision",
-        "download_id",
-        "expires_at",
-        "range_supported"
-      ],
-      "additionalProperties": false
+      ]
     },
     "ContentRegister_CopyInput": {
       "type": "object",
@@ -11947,6 +11926,155 @@
         "capabilities",
         "gaps",
         "input_manifest"
+      ],
+      "additionalProperties": false
+    },
+    "ContentBytesGetInput": {
+      "type": "object",
+      "properties": {
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "copy_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "recipient_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "usage_authorization_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorizationRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "mode": {
+          "const": "bytes"
+        }
+      },
+      "required": [
+        "content_ref",
+        "copy_id",
+        "purpose",
+        "recipient_id",
+        "usage_authorization_refs"
+      ],
+      "additionalProperties": false
+    },
+    "ContentBytesGetOutput": {
+      "type": "object",
+      "properties": {
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "copy_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "control_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "download_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "range_supported": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "content_ref",
+        "copy_id",
+        "control_revision",
+        "download_id",
+        "expires_at",
+        "range_supported"
+      ],
+      "additionalProperties": false
+    },
+    "ContentControlGetInput": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "const": "control"
+        },
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "copy_id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "mode",
+        "content_ref",
+        "copy_id"
+      ],
+      "additionalProperties": false
+    },
+    "ContentCopyControl": {
+      "type": "object",
+      "properties": {
+        "copy_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "holder_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "use_stopped": {
+          "type": "boolean"
+        },
+        "physical_state": {
+          "enum": [
+            "pending",
+            "complete",
+            "residual",
+            "unknown"
+          ]
+        }
+      },
+      "required": [
+        "copy_id",
+        "content_ref",
+        "holder_id",
+        "revision",
+        "use_stopped",
+        "physical_state"
+      ],
+      "additionalProperties": false
+    },
+    "ContentControlGetOutput": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "const": "control"
+        },
+        "control": {
+          "$ref": "#/$defs/ContentControl"
+        },
+        "copy": {
+          "$ref": "#/$defs/ContentCopyControl"
+        }
+      },
+      "required": [
+        "mode",
+        "control",
+        "copy"
       ],
       "additionalProperties": false
     }

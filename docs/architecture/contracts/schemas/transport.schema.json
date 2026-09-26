@@ -907,7 +907,7 @@
           "$ref": "#/$defs/Mirror"
         },
         "source_download": {
-          "$ref": "protocol.schema.json#/$defs/ContentGetOutput"
+          "$ref": "protocol.schema.json#/$defs/ContentBytesGetOutput"
         },
         "observed_at": {
           "type": "string",
@@ -1013,11 +1013,6 @@
           "minimum": 1,
           "maximum": 4
         },
-        "max_connections_per_identity": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 2
-        },
         "max_subscriptions": {
           "type": "integer",
           "minimum": 1,
@@ -1037,6 +1032,21 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 9007199254740991
+        },
+        "max_connections_per_identity_service": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "max_connections_per_identity_total": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 16
+        },
+        "max_requests_per_connection": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 10000
         }
       },
       "required": [
@@ -1048,11 +1058,13 @@
         "max_queue_bytes",
         "control_reserve_bytes",
         "control_reserve_items",
-        "max_connections_per_identity",
+        "max_connections_per_identity_service",
         "max_subscriptions",
         "heartbeat_interval_ms",
         "heartbeat_timeout_ms",
-        "max_content_bytes"
+        "max_content_bytes",
+        "max_connections_per_identity_total",
+        "max_requests_per_connection"
       ],
       "additionalProperties": false
     },
@@ -1532,7 +1544,8 @@
             "reason": {
               "enum": [
                 "cursor_expired",
-                "queue_overflow"
+                "queue_overflow",
+                "backend_rebind"
               ]
             }
           },
@@ -1952,6 +1965,61 @@
       },
       "required": [
         "ticket_id"
+      ],
+      "additionalProperties": false
+    },
+    "ChannelBinding": {
+      "type": "object",
+      "properties": {
+        "logical_service_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "connection_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "binding_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "limits": {
+          "$ref": "#/$defs/ConnectionLimits"
+        },
+        "limits_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "binding_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "logical_service_id",
+        "connection_id",
+        "binding_id",
+        "binding_revision",
+        "limits",
+        "limits_digest"
+      ],
+      "additionalProperties": false
+    },
+    "ChannelFrameRecord": {
+      "type": "object",
+      "properties": {
+        "binding_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "frame": {
+          "$ref": "#/$defs/Frame"
+        }
+      },
+      "required": [
+        "binding_id",
+        "frame"
       ],
       "additionalProperties": false
     }
