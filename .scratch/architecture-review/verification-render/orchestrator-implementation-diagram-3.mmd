@@ -1,0 +1,16 @@
+flowchart TB
+    subgraph P[父 Orchestrator 提交域]
+      T[Task] -->|每单位一项| B[BudgetBalance]
+      T -->|直接计费预留| R[BudgetReservation]
+      R -->|唯一原计费身份| S[Brain / Executor / Grant 计费来源]
+      T -->|固定 allocation_id，占用父 reserved| A[BudgetAllocation]
+      A -->|每账单修订唯一| I[CorrectionIntent]
+    end
+    subgraph C[接收 Orchestrator 提交域]
+      G[IncomingAllocation 门禁] -->|封闭且费用最终核清| CL[当前累计 Closure]
+      G -->|至多接纳一个| CT[ChildTask]
+      CL -->|上调修订共同保存| O[CorrectionOutbox]
+    end
+    A -.固定分配原命令.-> G
+    CL -.关闭和累计费用证明.-> A
+    O -.持久唤醒原 allocation 结算.-> I

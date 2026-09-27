@@ -1,6 +1,20 @@
 # 任务验证机制评审后续优化项（2026-09-27）
 
-本记录只登记后续需要细化的设计问题，不修改正式方案，不将候选建议视为已确认决策。以下依据用于界定待办范围，不是完整问答记录；已存在部分契约，不能据此宣称全项目缺少验证机制。
+本记录最初只登记后续需要细化的设计问题。下方第 1–8 节保留原评审范围及当时的候选状态；当前落实情况以本节和正式方案为准，不能将原记录中的“本轮只登记”理解为后续修订仍被禁止。
+
+## 落实情况（2026-09-27）
+
+用户已确认：普通开放质量保留未专项校准的 assessed 路径并明示限制；普通停用只封闭新调用，已证实且命中范围的判断缺陷阻止活动任务采用旧 pass，成功 Result 另示缺陷而不重开。选择与代价记入 [ADR-0005](../../docs/adr/0005-evaluator-evidence-eligibility.md)。
+
+| 原评审项 | 正式方案落点 | 当前交付边界 |
+| --- | --- | --- |
+| 1–4 验证生命周期、持久责任、异常与准确性 | [任务验证专题](../../docs/architecture/orchestrator/verification.md)、[条件持久化](../../docs/architecture/orchestrator/implementation.md#condition-storage)，邻接模块同步引用 | 设计与验收步骤已补齐；内部登记／缺陷门禁仍需实现，跨域当前证据资格未冻结为线方法，相应用途受限 |
+| 5 六张聚焦机制图 | [任务运行第三至第六节](../../docs/architecture/orchestrator/README.md#state) | 保留原 Task.status 图，分别表达维度、推进、两种恢复竞争与两类额度关系 |
+| 6 核心类图 | [字段查阅](../../docs/architecture/orchestrator/README.md#records) | 公共值记录、版本及多重性已核对，不增加公共实体身份 |
+| 7 持久结构与账务关系 | [对象关系](../../docs/architecture/orchestrator/implementation.md#data-flow)、[账务关系](../../docs/architecture/orchestrator/implementation.md#accounting-relations)，UML 图册同步修正预留来源 | 区分领域关联和物理外键；费用来源不再被误限定为 OperationIntent |
+| 8 访问路径与性能证据 | [八条访问路径](../../docs/architecture/orchestrator/access-paths.md)、[运行验证计划](../../docs/architecture/validation/fault-experiments.md#storage-access) | 查询、索引及有界访问要求已列出；尚无 DDL／SQL 执行计划或容量实测，不宣称达标 |
+
+实际检查范围与结果见[交付审查](../../docs/architecture/review.md#verification-review)。以下是原始评审内容，已有依据用于限定问题范围，并不表示此前全项目缺少验证机制。
 
 ## 1. 连起条件、规则与验证实现的生命周期
 

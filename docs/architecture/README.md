@@ -79,6 +79,8 @@ flowchart TB
 
 实现查阅时先看所属模块的接口与字段，再看共同信封、错误和恢复规则。技术方案不要求按文件顺序拆成独立开发服务。
 
+任务验证沿[条件、规则与验证器生命周期](orchestrator/verification.md)阅读，再查[核验持久化](orchestrator/implementation.md#condition-storage)及[存储访问路径](orchestrator/access-paths.md)。前者集中定义完成依据、异常与证据适用性，后两者给出恢复、查询和性能验收约束；当前仍是设计规格。
+
 第三方实现另从[线格式与方法注册](contracts/protocol.md)进入，逐方法签名查[方法索引](contracts/methods.md)，跨端装配继续读[端云 WSS、认证与内容传输](contracts/transport.md)和[服务间 gRPC](contracts/grpc.md)。只实现自己声明的方法范围，连同其查询、错误与恢复义务一起验证；字段资产不要求复制参考实现的数据库表。草案发布时必须共同冻结行为正文、Schema、注册表与关联用例。
 
 ### 目录与后续细化

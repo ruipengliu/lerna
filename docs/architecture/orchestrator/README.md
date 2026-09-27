@@ -8,7 +8,7 @@ Orchestrator 保存任务目标、控制、额度、操作意图和完成决定�
 
 默认将任务管理、上下文组装、准入、调度和结果核验放在同一模块。它们需要围绕同一个任务修订作决定，拆成独立服务会增加本地事务之外的恢复关系。独立替换边界放在 Brain、Memory、Executor，而不是 Orchestrator 的每个内部函数。
 
-实现阅读：[模块形状与依赖](implementation.md#module-shape) → [对象流转](implementation.md#data-flow) → [准入与恢复时序](implementation.md#key-sequence) → [生产部署和容量](implementation.md#production)。主线定义可见行为，实现篇集中规定事务、jobs、计划物化、预算及故障断点。
+阅读路径：本篇建立任务主线 → [验证生命周期](verification.md#verification-lifecycle)展开条件、评估与完成责任 → [实现篇](implementation.md#module-shape)落实提交与恢复。实现查阅：[对象关系](implementation.md#data-flow) · [准入与恢复时序](implementation.md#key-sequence) · [账务关系](implementation.md#accounting-relations) · [访问路径](implementation.md#access-paths) · [生产部署和容量](implementation.md#production)。
 
 ## 1. 最小任务闭环
 
@@ -52,6 +52,10 @@ flowchart TB
 
 模型自称“全部满足”不能提高保证等级。没有机械检查覆盖的自然语言约束仍属质量判断；用户可以查看解释后的目标并纠正，Orchestrator 不宣称已穷尽识别任意自然语言中的所有隐含要求。
 
+验证沿“条件与规则固定 → 准确候选固定 → 评估准入与执行 → 条件记录保存 → 完成汇总”推进。Executor 核对操作效果，获准评估实现判断条件，Orchestrator 保存条件记录并独立裁决完成；中途质量评估与最终汇总复用这些事实。验证实现的登记、版本绑定、当前资格及异常后的持久责任统一见[验证生命周期](verification.md#verification-lifecycle)。
+
+<a id="completion-basis"></a>
+
 | `completion_basis` | Orchestrator 必须具备的依据 | 保证与限制 |
 | --- | --- | --- |
 | `verified` | 每个必要条件均有适用的确定性验证，全部绑定当前目标修订及成果版本 | 客观约定条件通过；检查方法本身有适用范围 |
@@ -86,6 +90,35 @@ stateDiagram-v2
 | `open_effects` | 引用仍未知或仍可能在外部生效的原操作；与 Task.status 独立 |
 | `accounting_open` | 尚待最终费用的调用或额度分配；以保守预留约束，单独欠费核对不必阻止已有确定成果 |
 
+下图从准入和收尾的视角读取五个独立维度；连线表示判断依据，不表示状态迁移。新工作还须通过授权、期限和资源等门禁，成功提交还须满足第二节的条件与委派要求。
+
+```mermaid
+flowchart LR
+    subgraph D[任务的独立维度]
+      S[status]
+      C[control]
+      W[wait_reasons]
+      E[open_effects]
+      A[accounting_open]
+    end
+    N[新目标工作准入]
+    F[成功提交]
+    T[效果与费用收尾]
+    S -->|须 active| N
+    C -->|自身及祖先有效运行| N
+    W -->|只检查本次工作相关等待| N
+    E -->|冲突动作先核对| N
+    A -->|保留预留并检查额度| N
+    S -->|须 active| F
+    C -->|暂停仅可使用既有充分证据| F
+    E -->|必须全部核清| F
+    E -->|沿原操作核对| T
+    A -->|沿原计费项结算| T
+    S -->|终态仍履行收尾责任| T
+```
+
+例如 `cancelled`、非空 `open_effects` 和非空 `accounting_open` 可以同时成立：目标工作已停止，原效果与费用仍需核对。单独未结费用以保守预留覆盖，不自动阻止已有确定成果的成功提交。
+
 取消提交后，Orchestrator 停止新目标工作并为已派发操作建立取消或核对责任。取消不撤销已发生的文件修改。`cancelled` 可以带 `open_effects`；迟到成功仅更新事实及收尾，不把任务改回成功。期限到期记录 `failed` 和 `deadline_exceeded`，同样保留收尾责任。
 
 暂停是动作边界控制：已发出的单次动作可能继续。只有执行端确认看见控制并阻止后续启动，才可展示该端已暂停；失联端显示待确认。暂停期间不启动新的质量评估来推进目标，但此前已经得到的全部证据可以使任务成功。这样“暂停请求”和“外部动作已完成”不互相掩盖。
@@ -99,6 +132,39 @@ stateDiagram-v2
 ## 4. 一轮推进与提交边界
 
 工作者先领取 job，再读取固定任务修订、策略、输入、能力版本及获准材料。模型调用在事务外完成。回传 Decision 只能引用该快照；若目标、控制或关键证据修订已变化，保存调用事实及费用，丢弃旧提案的行动效力，重新调度需要的一轮。
+
+下图聚焦固定输入到行动准入的一轮；蓝色区域为行动准入事务，Brain 调用及远端资格查询均在事务外。
+
+```mermaid
+sequenceDiagram
+    participant W as 工作者
+    participant S as Orchestrator Store
+    participant B as Brain
+    participant U as 用户控制入口
+    W->>S: 短事务领取 job，取得领取代次
+    W->>S: 读取并固定快照、原决策身份与调用输入
+    W->>B: 事务外调用原 decision_id
+    opt 推理期间目标修订或取消先提交
+      U->>S: 保存目标／控制修订及后续责任
+    end
+    B-->>W: 原 Decision 与已知用量
+    Note over W,S: 准入前在事务外取得必要的当前资格依据
+    rect rgb(232, 242, 255)
+      W->>S: 校验领取、当前修订、控制及本次行动门禁
+      alt 领取已失效
+        S-->>W: 拒绝本轮回写，原事实由有效领取或独立归并收取
+      else 领取有效，但旧快照失效或控制阻止行动
+        S->>S: 保存原事实与费用责任，废弃提案行动效力
+      else 当前依赖匹配且全部准入条件满足
+        S->>S: 共同保存操作意图、额度预留、原命令、dispatch job
+        S->>S: 消费原决策，递增任务修订
+      end
+      S-->>W: 提交准入或明确缺口
+    end
+    Note over W,S: dispatch 领取后再次检查控制；外部动作在事务外启动
+```
+
+图中推理费用属于原调用，即使提案失效仍按原计费项核对；动作预留只在行动准入成功时建立。派发丢答复后的查询与归并见[实现时序](implementation.md#key-sequence)。
 
 准入按以下顺序执行，分支互斥，安全条件分别检查：
 
@@ -121,9 +187,56 @@ stateDiagram-v2
 
 ## 5. 恢复与调度
 
-job 是必须继续履行的责任，包含唯一 `job_id`、业务关联、kind、due_at、attempt_count、lease_epoch、work_revision 和有限重试策略。默认类别为 decide、dispatch、poll、control、settle、extract；业务对象保存最终事实，job 完成不代表业务成功。领取代次裁决谁能回写，责任版本防止有效领取者把处理中新增的工作写成完成或延后；[完成规则](implementation.md#job-completion)同时覆盖新责任与 done／backoff 的两种提交顺序。
+job 是必须继续履行的责任，包含唯一 `job_id`、业务关联、kind、due_at、attempt_count、lease_epoch、work_revision 和有限重试策略。默认类别为 decide、dispatch、poll、verify、control、settle、extract；业务对象保存最终事实，job 完成不代表业务成功。领取代次裁决谁能回写，责任版本防止有效领取者把处理中新增的工作写成完成或延后；[完成规则](implementation.md#job-completion)同时覆盖新责任与 done／backoff 的两种提交顺序。
 
 领取在短事务内递增 lease_epoch。过期领取可被重新领取，旧工作者不能再写任务结果；它可能已经发出的远端操作仍按原 operation_id 核对。派发者在第一次调用前已保存全部不可变输入和原命令，重启后查原回执。不能因“任务领取过期”生成新的副作用身份。
+
+下图只展示领取资格的接替。领取代次变化不改变业务身份，也不裁定外部效果。
+
+```mermaid
+sequenceDiagram
+    participant A as 旧工作者
+    participant S as Orchestrator Store
+    participant B as 新工作者
+    participant E as Executor
+    A->>S: 领取原 job
+    S-->>A: lease_epoch=7，work_revision=r
+    A->>E: 事务外发送已固定的原 operation／command
+    Note over A,S: 原领取过期；外部动作可能已经发生
+    B->>S: 重领同一 job
+    S-->>B: lease_epoch=8，work_revision=r
+    E-->>A: 原效果迟到
+    A->>S: 以 lease_epoch=7 回写
+    S-->>A: 拒绝旧领取的槽及业务结果回写
+    B->>E: 查询同一原 command／operation
+    E-->>B: 当前效果与累计用量
+    B->>S: 以有效领取归并事实，核对当前责任
+    Note over S,E: 真实事实也可独立按原身份归并；不能换身份重复动作
+```
+
+责任版本解决另一种竞争：工作者仍有领取资格，但处理期间同槽收到新工作。以下两条分支从同一初始状态分别推演；新增责任与完成／退避都在领域事务中锁同一槽，读锁内当前值。
+
+```mermaid
+sequenceDiagram
+    participant W as 有效领取者
+    participant S as Orchestrator Store
+    participant N as 新责任提交者
+    S-->>W: job_id、有效 lease_epoch、观察到的 work_revision=r
+    alt 新责任先提交
+      N->>S: 同事务保存领域责任、work_revision=r+1、提前 due_at
+      Note over W,S: 保持原领取；新责任不刷新租约
+      W->>S: 按观察值 r 请求 done 或 backoff
+      S->>S: 领取仍有效，但责任版本已增加
+      S-->>W: 释放领取，保留 ready 与更早 due_at
+    else 完成／退避先提交
+      W->>S: 领取有效且仍为 r，核对后提交 done 或 waiting
+      N->>S: 同事务保存新责任、work_revision=r+1
+      S->>S: 原槽重开 ready，due_at 取更早值
+    end
+    Note over W,S: 先判领取资格，再判责任版本；二者不能相互替代
+```
+
+`verify` job 只承担条件归并与完成汇总；需要新的评估时仍经普通行动准入建立 dispatch。领域责任、版本和槽状态的完整提交规则见[实现篇](implementation.md#job-completion)。
 
 同一任务默认一个决策 job；已声明独立的操作可并发。调度按用户轮转，再按用户内任务轮转，控制和收尾单列保留容量；限额详见[部署](../deployment.md)。阻塞工作按 due_at 重试或等具体对象变化，不把所有等待任务循环送给模型。
 
@@ -142,16 +255,62 @@ job 是必须继续履行的责任，包含唯一 `job_id`、业务关联、kind
 
 默认严格额度只接纳具有可信单次上界的计费项：准入时预留上界，维持 `spent + reserved ≤ limit`；最终费用低于上界才释放差额。费用以精确十进制数、明确单位和计价版本记录，线格式使用十进制字符串，禁止混用不同货币或把估计值当最终账单。调用次数、运行时间、模型 token 和费用各有独立限额，任一耗尽都阻止对应新工作。
 
+下图描述单任务、单计价单位的正常严格预算。可用额度由余额推导，实线表示金额转移，虚线说明预留保留条件；调用答复本身不证明最终费用。
+
+```mermaid
+flowchart LR
+    A["可用额度<br/>limit − spent − reserved"]
+    R["reserved<br/>仍承担的费用上界"]
+    S["spent<br/>已核实累计费用"]
+    U["费用未知<br/>保留原预留与核对责任"]
+    A -->|行动准入共同提交：预留单次上界| R
+    R -->|可信累计账单：仅结算新增差额| S
+    U -.->|未最终核清时继续占用| R
+    R -->|可信最终账单或不计费证明：释放剩余| A
+```
+
+| 预算模式 | 允许使用的条件 | 保证边界 |
+| --- | --- | --- |
+| `strict` | 每项计费有可信单次上界；固定 allocation 始终使用此模式 | 提供方履约时维持 `spent + reserved ≤ limit`；违约账单仍须照实入账 |
+| `estimate` | 本人接受准确策略和范围、当前资格有效；只限同受信提交域内未经过 allocation 的直接调用 | 以有限估算额决定启动，最终账单可超总限额；超额即停止新计费，不能称硬上限 |
+
 模型费用不明时严格模式按上界保留，估算模式按已获准的有限估算额保留；自动查询次数耗尽只转为受信核对，不能按时释放。只有可信最终账单或可验证的不计费证明到达，才按原计费项结清或释放；迟到账单只应用累计差额，不能再次累计全部金额。本地并发槽与未知费用不是同一资源；具体边界见[大脑调用恢复](../brain/README.md)。无法提供可信最大费用的适配器仅可在用户明确接受的估算预算配置中，对未通过 allocation 分配的任务直接调用使用有限估算额预留；最终账单可能使 `spent + reserved > limit`。账本必须记录真实超额和原调用，立即停止新的计费工作，保留其余未知费用及结算，界面不能称这类限额为硬上限。固定额度的子任务或外部委派不得使用估算计费，除非另有经确认的超额交接合同；当前方案没有该合同。
 
 估算模式由固定 TaskPolicy 声明允许的能力、费用单位、单次估算预留与总预算；策略本身不能代替用户同意。原 Orchestrator 的受信 TaskPolicyRegistry 在任务提交前按租户、认证用户和准确 `policy_ref` 保存本人估算接受事实，注明非硬上限、适用范围、预算上限和期限。`task.submit` 根据认证主体及租户核验该记录，在接纳事务中保存 Task 与接受记录的关联；缺失、过期或预算超范围即拒绝。模型或客户端布尔字段不能启用估算。当前仅当原 Orchestrator 与全部涉及费用的 Grant owner 处于同一受信提交域、能直接核验该 Task 的内部接受关联时开放估算；跨域或无法核验时只允许 strict，不能从公开 Task.policy_ref 推定用户已接受。每次行动仍须重新核验该接受事实尚有效，并同时通过固定策略、适配器声明及在线 Grant owner 的当前资格；撤回只封闭新估算使用，不抹去原账单。任一 Grant 对费用单位要求硬上限时拒绝估算。`task.adjust_budget` 只可在原接受范围内加额；超范围拒绝，另建采用已接受新策略的任务，不静默换掉现有 Task 的策略。受信策略管理入口是默认宿主必须实现的先决能力，目前未作为冻结的第三方线方法；没有它的装配只能使用严格模式。跨域估算若要开放，须另冻结可认证的原 Task 资格查询或证明合同。
 
 内部子任务的可支配额度从父任务 reserved 中划拨；父聚合报表展示子费用，但不再扣一遍。不同 Orchestrator 使用唯一 allocation_id 交接固定额度，父侧未证明子侧封闭后不返还。分区时额度宁可闲置，不同时在两端消费。
 
-跨 Orchestrator 实际费用超过固定 allocation 时，可能是提供方突破可信单次上界，也可能是接收方把多笔各自合规调用放过总分配上限。接收方仍保存原调用与可信实际账单并封闭新增消费；父方核验账单后一次性把原 allocation 预留转为真实支出，超出部分如实记为债务。事故分别判断 provider_bound_breach 与 receiver_allocation_breach，两者可同时成立；未查明的原因保留待查标记，停止受影响的新计费／委派；不能截断账单、因超额拒收真实 Closure，或反复结算同一 allocation。证据不足时保留原预留与核对责任。严格额度的硬上限以提供方履行可信上界合同为前提，违约路径需要单独告警与验收。
-已 settled 后，可信提供方仍可能上调同一原调用的最终账单。接收方保持新增消费关闭，在更新完整累计 Closure 的同一事务保存向父方校准的持久责任；一个账单修订固定业务键和摘要，交付 Command 过期后可在保留旧尝试身份与回执的前提下生成同语义继任命令。父方先持久保存 `budget.settle` 结算意图及有限命令尝试、比较当前 allocation 修订；命令过期时先查原账，未应用才以同一账单修订生成继任命令。结算只按上调差额调整 spent，不重新预留、不倒流已释放额度，也不重开任务或委派。更正导致总预算超限时记录追账债务并停止新计费；累计金额超过 allocation 时另记超额事故，分别判提供方上界违约与接收方分配违规，二者可并存；原因待查不妨碍可信费用入账。原结算命令重放返回原回执，新修订重复或冲突分别幂等返回或拒绝。终态与 DelegationClosure 保留，当前账务查询另显示更正及未决证据；退款与贷记走独立对账，不在此追账分支减记。
+下图从父账本到接收账本展示同一固定 allocation；内部任务树可以共同提交，跨 Orchestrator 的两端分别持久接纳，箭头不表示跨库事务。
 
-`RuntimeBudgetClosure` 只携带接收方关闭和完整累计费用证明，不让接收方自报事故归因。父方的当前 `RuntimeBudgetAllocation` 以 `incident_causes[]` 分别列出已证实的 provider_bound_breach、receiver_allocation_breach，并以 `incident_pending` 表示尚未核清的归因；已知一项时另一项仍可 pending。已 settled 且累计超过 allocation 的记录必须至少有一项已知原因或 pending，不能以空原因、无缺口展示为正常结算。
+```mermaid
+sequenceDiagram
+    participant P as 父 Orchestrator／账本
+    participant C as 接收 Orchestrator／子账本
+    alt 同 Orchestrator 内部子任务
+      Note over P,C: 同一提交域中的共同事务
+      P->>C: 父预留、allocation、子接纳、首 job 一起提交
+    else 跨 Orchestrator
+      P->>P: 父事务：预留额度、保存 allocation 与交接 job
+      P->>C: 事务外交接原分配依据与原 task.submit 命令
+      C->>P: 查询原回执及 allocation 当前权威状态
+      C->>C: 接收事务：一次保存分配映射、子 Task 与首 job
+      C-->>P: 原接纳回执；丢答复仍查原身份
+    end
+    C->>C: 子调用在分配内预留、结算
+    P->>C: 请求关闭原 allocation 的新增消费
+    C->>C: 关闭门禁与收尾责任共同提交
+    Note over P,C: closing 期间父预留不返还；到期或失联不能代替封账
+    C->>C: 费用核清后保存 closed 与完整累计 Closure
+    P->>C: 查询当前关闭证明
+    C-->>P: 原 allocation 的 Closure
+    P->>P: 核验后同事务转实际支出、释放剩余、保存结算回执
+```
+
+父方首次封账只将原 allocation 预留转支出一次，后续更正仅追累计差额；报表中的子费用不另加扣。关闭先于子接纳时，接收方保留拒绝迟到创建的关闭依据；预算关闭仅封闭新增消费，目标取消仍有独立控制责任。账务对象及两端身份见[账务关系](implementation.md#accounting-relations)，关闭竞争和封账后的费用更正见[预算实现](implementation.md#budget-handoff)。
+
+跨 Orchestrator 实际费用超过固定 allocation 时，可能是提供方突破可信单次上界，也可能是接收方把多笔各自合规调用放过总分配上限。接收方仍保存原调用与可信实际账单并封闭新增消费；父方核验账单后一次性把原 allocation 预留转为真实支出，超出部分如实记为债务。事故分别判断 provider_bound_breach 与 receiver_allocation_breach，两者可同时成立；未查明的原因保留待查标记，停止受影响的新计费／委派；不能截断账单、因超额拒收真实 Closure，或反复结算同一 allocation。证据不足时保留原预留与核对责任。严格额度的硬上限以提供方履行可信上界合同为前提，违约路径需要单独告警与验收。
+
+已 settled 后仍可能收到原计费方的可信上调账单。接收方保持消费关闭，以更高费用修订和持久交回责任提交完整累计证明；父方恢复原结算意图，只追加累计差额，不倒流已释放额度或重开任务。更正导致超预算时记债并停新计费。事故归因、同修订冲突、原命令过期和退款边界集中见[最终结算](implementation.md#budget-handoff)。
 
 | 方法 | 输入与持久结果 | 失败后的动作 |
 | --- | --- | --- |
@@ -166,7 +325,64 @@ job 是必须继续履行的责任，包含唯一 `job_id`、业务关联、kind
 <a id="records"></a>
 ## 7. 字段与方法查阅
 
-共同标识、引用、版本、错误和 Command／Receipt 见[共同契约](../contracts/README.md)。下表是 Task 与 Result 的权威字段定义；大对象均使用获准 ContentRef。
+共同标识、引用、版本、错误和 Command／Receipt 见[共同契约](../contracts/README.md)。下图只帮助查阅核心关系：Requirement 采用 Task 当前目标修订的集合，ConditionResult 表示该修订内的核验值记录，历史组织和唯一约束见[持久对象关系](implementation.md#data-flow)。关联线不表示调用、外键或内容生命周期所有权。
+
+```mermaid
+classDiagram
+    direction LR
+    class Task {
+      task_id
+      goal_revision
+      policy_ref
+      result_ref
+    }
+    class Requirement {
+      requirement_id
+      rule_ref
+      required
+    }
+    class OperationIntent {
+      operation_id
+      task_id
+      goal_revision
+    }
+    class ConditionResult {
+      requirement_id
+      goal_revision
+      artifact_ref
+      evaluator_ref
+    }
+    class Result {
+      task_id
+      goal_revision
+      completion_basis
+    }
+    class Job {
+      job_id
+      kind
+      object_id
+      lease_epoch
+      work_revision
+    }
+    class ContentRef {
+      owner_id
+      content_id
+      version
+      hash
+    }
+    Task "1" -- "0..*" Requirement : 当前目标要求
+    Task "1" -- "0..*" OperationIntent : 已准入意图
+    Task "1" -- "0..*" Job : 推进与收尾
+    Task "1" -- "0..1" Result : 仅成功发布
+    Requirement "1" -- "0..*" ConditionResult : 同任务及目标修订
+    Result "0..1" -- "1..*" ConditionResult : 固定选中记录
+    Result "0..*" -- "1..*" ContentRef : 准确成果
+    ConditionResult "0..*" -- "1" ContentRef : 被核验成果
+```
+
+图中的多重性表达一对多关系；线格式中 Task 当前 requirements 为 0–100 项，Result 的条件结果与成果引用各为 1–100 项，内部历史不受这些数组上限约束。每个 ConditionResult 以所属任务、`goal_revision` 和 `requirement_id` 关联准确要求，并固定成果版本；同一要求可以有不同候选或尝试的记录，Result 只选取适用于最终成果的依据。图中的 `0..1 Result` 表示记录可尚未被成功结果选中；证据引用也使用准确 ContentRef，完整字段不在图中重复展开。OperationIntent 保存准入意图，Executor 保存的 Operation 才是效果事实；Executor 是负责组件，未与这些值记录混画。
+
+下表集中定义业务字段；大对象均使用获准 ContentRef。
 
 | 对象 | 字段与约束 |
 | --- | --- |

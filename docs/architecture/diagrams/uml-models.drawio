@@ -915,7 +915,7 @@
         <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="task" target="result" semanticKind="association" sourceDoc="orchestrator/README.md#records" tooltip="仅 status=succeeded 有 Result；失败及取消没有 Result。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.72;entryPerimeter=0;" edge="1" parent="1" source="intent" target="reservation" semanticKind="association" sourceDoc="orchestrator/implementation.md#data-flow" tooltip="">
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.72;entryPerimeter=0;" edge="1" parent="1" source="intent" target="reservation" semanticKind="association" sourceDoc="orchestrator/implementation.md#accounting-relations" tooltip="操作计价项关联原意图；Brain 等其他来源可无 OperationIntent，每笔预留仍唯一绑定原计费来源。">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="536" y="408" />
@@ -980,9 +980,9 @@
             <mxPoint as="offset" x="-25.0" y="-32" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e4-source-multiplicity" value="1" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e4" semanticKind="source-multiplicity" connectable="0">
-          <mxGeometry as="geometry" x="-0.78125" y="0" width="24" height="24" relative="1">
-            <mxPoint as="offset" x="-12.0" y="-32" />
+        <mxCell id="e4-source-multiplicity" value="0..1" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e4" semanticKind="source-multiplicity" connectable="0">
+          <mxGeometry as="geometry" x="-0.78125" y="0" width="50" height="24" relative="1">
+            <mxPoint as="offset" x="-25.0" y="-32" />
           </mxGeometry>
         </mxCell>
         <mxCell id="e4-target-multiplicity" value="0..*" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e4" semanticKind="target-multiplicity" connectable="0">
@@ -1025,7 +1025,7 @@
             <mxPoint as="offset" x="8.0" y="-14.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e4-relationship-label" value="预留计价项" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e4" semanticKind="relationship-label" connectable="0">
+        <mxCell id="e4-relationship-label" value="操作计价项" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e4" semanticKind="relationship-label" connectable="0">
           <mxGeometry as="geometry" x="-0.125" y="0" width="106" height="28" relative="1">
             <mxPoint as="offset" x="-53.0" y="-36.0" />
           </mxGeometry>
@@ -1228,7 +1228,7 @@
         <mxCell id="legend" value="实线：普通关联    两端：多重性    ?：可选属性    owner：事实负责方" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1631" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="内部记录无 Schema 的类按实现篇命名；普通关联不表示级联删除。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="普通关联不表示级联删除；预留可来自 Brain 等其他来源，每笔仍只绑定一个原计费来源。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
         <mxCell id="note-1" value="OperationIntent 归 Orchestrator；真实 Operation／效果仍归 Executor，ReceivedFact 只是版本化归并。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">

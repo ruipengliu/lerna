@@ -379,10 +379,11 @@
         "from": "intent",
         "to": "reservation",
         "type": "association",
-        "fromMultiplicity": "1",
+        "fromMultiplicity": "0..1",
         "toMultiplicity": "0..*",
-        "label": "预留计价项",
-        "source": "task-runtime/implementation.md#data-flow"
+        "label": "操作计价项",
+        "source": "task-runtime/implementation.md#data-flow",
+        "condition": "操作计价项关联原意图；Brain 等其他来源可无意图，每笔预留仍唯一绑定原计费来源。"
       },
       {
         "from": "intent",

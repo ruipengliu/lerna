@@ -25,6 +25,8 @@
 
 任务状态、有效祖先控制、完成条件及修订规则以[任务编排器](orchestrator/README.md#state)为准；执行端可确认的停止范围以[执行设计](execution/README.md)为准。控制命令的持久回执与远端实际生效是两个检查点。
 
+通用质量评估的最低依据与历史证据效力按[ADR-0005](../adr/0005-evaluator-evidence-eligibility.md)细化：普通开放质量可在明示未专项校准时使用 `assessed`，专项保证需要相应独立证据；验证器普通停用不作废旧判断，已证实且命中范围的缺陷阻止活动任务继续采用旧 pass。已成功任务另展示缺陷说明，原 Result 不重写。完整规则集中于[任务验证](orchestrator/verification.md)。
+
 ## 3. 验收数字与改善证据
 
 | 决策 | 固定口径 | 代价与适用边界 |

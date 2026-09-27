@@ -21,6 +21,8 @@ Orchestrator 保存“为什么要做”，Executor 保存“做到了哪一步�
 
 工具返回的业务文本不具有控制权限。可信驱动解析实际结果，Executor 校验结构并记录证据；模型对一张截图的判断可以作为评估，不能替代目标凭据。受信插件仍须遵守预算、授权及日志规则；任意原生不可信驱动只有通过平台隔离验收后才可启用，见[扩展](../extensions/README.md)。
 
+执行器的效果核对、中途质量评估和 Orchestrator 的完成汇总按[任务验证](../orchestrator/verification.md)分别建模。质量评估复用普通 Operation，输入固定条件、规则、实现及准确候选，输出报告与原操作事实共同保存；此时 `effect=applied` 只证明已取得声明的评估结果，报告的条件 verdict 仍可以是 fail 或 unknown。Executor 保留原报告与核对责任，Orchestrator 负责条件记录、当前适用性和最终完成。
+
 ## 2. 一次执行的责任交接
 
 下图只表示操作执行和事实持久化。Orchestrator 与 Executor 同进程时可合并短事务；独立部署时双方保存后续工作，网络调用不进入数据库事务。

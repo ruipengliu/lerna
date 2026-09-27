@@ -1,0 +1,50 @@
+classDiagram
+    direction LR
+    class Task {
+      task_id
+      goal_revision
+      policy_ref
+      result_ref
+    }
+    class Requirement {
+      requirement_id
+      rule_ref
+      required
+    }
+    class OperationIntent {
+      operation_id
+      task_id
+      goal_revision
+    }
+    class ConditionResult {
+      requirement_id
+      goal_revision
+      artifact_ref
+      evaluator_ref
+    }
+    class Result {
+      task_id
+      goal_revision
+      completion_basis
+    }
+    class Job {
+      job_id
+      kind
+      object_id
+      lease_epoch
+      work_revision
+    }
+    class ContentRef {
+      owner_id
+      content_id
+      version
+      hash
+    }
+    Task "1" -- "0..*" Requirement : 当前目标要求
+    Task "1" -- "0..*" OperationIntent : 已准入意图
+    Task "1" -- "0..*" Job : 推进与收尾
+    Task "1" -- "0..1" Result : 仅成功发布
+    Requirement "1" -- "0..*" ConditionResult : 同任务及目标修订
+    Result "0..1" -- "1..*" ConditionResult : 固定选中记录
+    Result "0..*" -- "1..*" ContentRef : 准确成果
+    ConditionResult "0..*" -- "1" ContentRef : 被核验成果

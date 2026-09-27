@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant A as 旧工作者
+    participant S as Orchestrator Store
+    participant B as 新工作者
+    participant E as Executor
+    A->>S: 领取原 job
+    S-->>A: lease_epoch=7，work_revision=r
+    A->>E: 事务外发送已固定的原 operation／command
+    Note over A,S: 原领取过期；外部动作可能已经发生
+    B->>S: 重领同一 job
+    S-->>B: lease_epoch=8，work_revision=r
+    E-->>A: 原效果迟到
+    A->>S: 以 lease_epoch=7 回写
+    S-->>A: 拒绝旧领取的槽及业务结果回写
+    B->>E: 查询同一原 command／operation
+    E-->>B: 当前效果与累计用量
+    B->>S: 以有效领取归并事实，核对当前责任
+    Note over S,E: 真实事实也可独立按原身份归并；不能换身份重复动作

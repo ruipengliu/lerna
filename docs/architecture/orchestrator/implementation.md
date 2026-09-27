@@ -53,6 +53,10 @@ flowchart TB
 | --- | --- | --- |
 | tasks | tenant、task_id、Orchestrator、父任务、业务 Task、created_at | 主键；`(tenant, orchestrator, created_at, task_id)` 列表索引 |
 | task_requirements | task_id、goal_revision、requirement_id、规则及来源 | 同目标修订内 requirement 唯一 |
+| condition_checks | check_id、task_id、goal_revision、requirement_id、准确 artifact／rule／evaluator 引用、原 operation_id?、原判断与证据、当前选择标记、适用性及原因 | check_id 唯一；同 task／goal／condition／准确成果至多一份当前选定的汇总记录，组成依据另关联，原判断不覆盖；详见[核验持久化](#condition-storage) |
+| task_results | task_id、goal_revision、固定 Result、所选 check_id 集合及完成时门禁修订 | 每任务最多一个成功结果；原 Result 不因后续缺陷或账单修改 |
+| evaluator_evidence_gates / evidence_defects | 准确 evaluator_ref 的固定门禁行及单调修订；缺陷 ID、准确规则与影响范围、依据、受信登记身份 | 登记缺陷和核验完成锁同一实现门禁；缺陷原事实与分页影响责任共同提交，不等待任务投影追上 |
+| result_evidence_notices | task_id、check_id、defect_id、说明引用 | 关联唯一；在固定 Result 之外保存已成功任务的证据失效说明，不生成新成功结果 |
 | task_snapshots | task_id、snapshot_revision、精确依赖摘要、content_ref | 同任务快照修订唯一，不原地更新 |
 | task_plans | task_id、plan_id、plan_revision、goal_revision、正文引用 | 计划版本唯一；当前可用指针由 tasks 保存 |
 | decision_consumptions | task_id、decision_id、输入修订、采纳／失效原因 | decision 只消费一次 |
@@ -73,6 +77,8 @@ flowchart TB
 
 任务、操作和账务的写入通过一个存储适配层完成。SQLite 和云数据库使用不同领取语句，但适配层提供相同的条件更新结果；任何数据库重试都只重复事务内逻辑，不能重复一次外部调用。
 
+Task 的 `open_effects` 与委派当前责任来自本任务全部已准入意图、当前原效果及委派记录的权威关联。参考实现可用同库当前投影及未结部分索引承载；新增意图／委派时即建立未结项，核清和封闭时才在归并事务中移出，并递增关联 Task 修订。内部子任务终结同时更新父任务的未结关联。它们不是可丢通知驱动的缓存，也不能从截断的公开数组反推全集。具体物理布局与 DDL 随[访问路径](access-paths.md)验证；投影尚未重建完整时，完成检查保持待核验。
+
 `jobs` 的业务责任槽由 `(tenant, task_id, kind, object_id)` 确定。例如同一操作只需要一个自动 poll 槽。`work_revision` 是该槽的内部责任版本：新的领域责任或需要重新核对的事实与递增版本、提前 due_at 共同提交；重复事实、可丢通知、时间到期和领取本身不递增它。它不替代 Task／控制修订，也不表示领取资格。[槽完成规则](#job-completion)防止旧处理者盖掉新责任。
 
 同一责任槽后续再需工作时更新原行，done 可回到 ready，work_revision 与 lease_epoch 均不重置。槽确已满足清理条件后才能删除；重新建立槽使用新的 job_id，旧 job_id 的回写不能命中新行。已经固定原命令的 dispatch 槽不能通过更新 payload 变成另一个操作；责任版本变化也不能重置原命令、累计尝试数、期限或重试预算。
@@ -80,19 +86,54 @@ flowchart TB
 <a id="data-flow"></a>
 ### 2.1 核心对象关系与流转
 
-Task 是本 Orchestrator 的状态聚合根；Snapshot 和 PlanVersion 是不可变输入，OperationIntent 是已准入的固定意图，ReceivedFact 是外部负责方的版本化事实。Job 只保存继续处理这些对象的责任。下图只列持久关联，箭头不表示调度顺序。
+Task 是本 Orchestrator 的状态聚合根；Snapshot、PlanVersion 与 RequirementVersion 固定对应修订，OperationIntent 是已准入的固定意图，ReceivedFact 是外部负责方的版本化事实。ConditionCheck 承载内部核验过程，公开 ConditionResult 是其判断值，不新增公共实体身份。下图表达领域持久关联，不声明全部物理外键，也不表示调度顺序；所有键隐含 tenant_id。
 
 ```mermaid
 erDiagram
     Task ||--o{ Snapshot : "固定决策输入"
     Task ||--o{ PlanVersion : "保存计划版本"
+    Task ||--o{ RequirementVersion : "保留目标条件版本"
+    RequirementVersion ||--o{ ConditionCheck : "固定条件及准确成果"
     Task ||--o{ OperationIntent : "准入原操作"
     PlanVersion ||--o{ PlanStepAdmission : "记录步骤唯一消费"
     Task ||--o{ DecisionConsumption : "记录提案唯一消费"
-    OperationIntent ||--o{ BudgetReservation : "预留计价项"
+    DecisionConsumption |o--o{ OperationIntent : "Brain来源可准入多项"
+    PlanStepAdmission |o--o| OperationIntent : "计划步骤的操作分支"
     OperationIntent |o--o{ ReceivedFact : "归并原操作事实"
+    OperationIntent |o--o{ ConditionCheck : "有外部评估时关联原操作"
     Task ||--o{ Job : "保存推进和收尾责任"
     Task ||--o| Result : "发布固定成果"
+    Result |o--|{ ConditionCheck : "固定所选判断"
+    Snapshot {
+      string task_id
+      int snapshot_revision
+    }
+    PlanVersion {
+      string plan_id
+      int plan_revision
+      int goal_revision
+    }
+    RequirementVersion {
+      string task_id
+      int goal_revision
+      string requirement_id
+    }
+    PlanStepAdmission {
+      string plan_id
+      int plan_revision
+      string step_id
+    }
+    ReceivedFact {
+      string owner
+      string object_id
+      int revision
+    }
+    Job {
+      string job_id
+      string task_id
+      string kind
+      string object_id
+    }
 ```
 
 DecisionConsumption 与 PlanStepAdmission 是互斥的候选来源登记：一次准入只消费其中一种身份，并在同事务中关联原 operation 或 delegation。图仅展开 operation 分支；委派分支沿同样准入约束进入[协作对象关系](../collaboration/implementation.md#data-flow)。一个 Job 可引用多项固定依赖，业务责任槽仍只属于一个原对象。
@@ -107,10 +148,57 @@ DecisionConsumption 与 PlanStepAdmission 是互斥的候选来源登记：一�
 
 这条流转使模型输入、执行输入和最终成果各有固定版本。Result 不保存另一个可独立修改的任务副本；完成时引用准确成果和证据，之后新增费用或效果事实不能把终态改回 active。
 
-<a id="21-锁定顺序"></a>
-### 2.2 锁定顺序
+<a id="accounting-relations"></a>
+### 2.2 账务关联与双方持久边界
 
-所有任务变更先锁原命令键，再按根到叶顺序锁需要判断的祖先任务；同层按 task_id 排序。随后锁预算单位、操作意图、参与领域的门禁及业务行，最后锁工作槽，各类内部按稳定键排序。Memory 参与共同事务时，在它的门禁及业务行之前取得[owner 事务头](../memory/implementation.md#memory-change-head)。控制涉及有界子树时同样遵守此顺序。后台事实归并也采用相同顺序，不能从工作槽或预算反向锁领域对象和祖先。
+图只表达账务记录及原身份关联。父方与接收方可以位于不同库；虚线是持久命令／证明交接，不是跨库事务。每笔 Reservation 固定唯一实际计费来源，Brain 调用等预留不必关联 OperationIntent；父聚合展示的子费用不再作为另一笔支出扣除。
+
+```mermaid
+flowchart TB
+    subgraph P[父 Orchestrator 提交域]
+      T[Task] -->|每单位一项| B[BudgetBalance]
+      T -->|直接计费预留| R[BudgetReservation]
+      R -->|唯一原计费身份| S[Brain / Executor / Grant 计费来源]
+      T -->|固定 allocation_id，占用父 reserved| A[BudgetAllocation]
+      A -->|每账单修订唯一| I[CorrectionIntent]
+    end
+    subgraph C[接收 Orchestrator 提交域]
+      G[IncomingAllocation 门禁] -->|封闭且费用最终核清| CL[当前累计 Closure]
+      G -->|至多接纳一个| CT[ChildTask]
+      CL -->|上调修订共同保存| O[CorrectionOutbox]
+    end
+    A -.固定分配原命令.-> G
+    CL -.关闭和累计费用证明.-> A
+    O -.持久唤醒原 allocation 结算.-> I
+```
+
+父 Allocation 的 `allocated/settled` 与接收门禁的 `open/closing/closed` 是不同状态；关闭先到时可以没有 ChildTask。父方只有取得可核验 Closure 才结算并释放剩余；接收方已 closed 仍可收到可信上调账单，沿相同 allocation 追加累计修订和交回责任，不重新开放消费。`budget.close` 只关闭费用门禁，停止目标行动仍由任务控制落实。唯一约束见本节表，完整算法归[额度交接](#81-额度交接)。
+
+<a id="condition-storage"></a>
+### 2.3 条件记录、当前适用性与核验责任
+
+`condition_checks` 解决检查尚未出结果时的恢复，以及旧判断仍存在但已不适用的区分；它复用 Orchestrator Store、普通操作和 jobs，不另设验证服务。每个 check_id 固定任务、目标修订、条件、准确成果、rule_ref、evaluator_ref 与所用策略／安装锁。rule_ref 必须等于该 `(task_id, goal_revision, requirement_id)` 的不可变 Requirement；公共 ConditionResult 沿这条关系取得规则，不重复增加线字段。内部 check_id 不暴露为公共 ConditionResult 身份。
+
+检查尚未完成时保存待检查原因、依赖及原操作关联；完成后追加不可变 ConditionResult 和证据引用。组合检查另保存不可变的 dependency_check_ids，依赖必须有界且无环；当前核验集合包括全部组成检查，门禁覆盖其准确实现，缺陷影响同时覆盖引用它们的汇总记录。当前选定记录及 `applicability=usable/unknown/inapplicable` 分开保存：unknown 表示缺少适用依据或缺陷影响尚待核清，inapplicable 表示已证实不适用；二者均不能作为 pass 依据。原 verdict 不因停用、修订或新记录而覆写。成果或规则变化创建新检查，不能改写原检查输入；新目标复用旧材料也须创建新目标的核验记录并保存适用性理由。
+
+| 触发 | 同事务保存的事实与责任 | 后续执行者 |
+| --- | --- | --- |
+| 条件／候选固定，或允许复用的旧证据待审 | check、当前条件候选关联、任务修订与任务级 verify 槽 | JobRunner 按固定输入核对适用性；需要新评估时走普通准入 |
+| 评估行动准入 | check 到 operation 的固定关联、意图、预留、原命令及 dispatch 槽 | Executor 执行；Orchestrator 沿原 operation 持久 poll |
+| 原评估、效果或用户验收事实归并 | ReceivedFact／验收记录、对应条件判断、费用变化及 verify 槽责任版本 | verify 工作者归并当前条件并尝试完成；未知不产生 pass |
+| 缺陷登记及影响处理 | 登记事务保存门禁修订、缺陷原事实及登记端分页影响责任；后续按任务保存适用性变化与 verify 槽，或终态说明 | 登记端持续枚举影响；完成检查直接读原缺陷，不依赖枚举进度 |
+| 最终汇总 | 精确所选 checks、门禁修订、task_results、Task 终态及控制／收尾责任 | 后续查询读取固定 Result；效果、费用与缺陷说明独立继续 |
+
+verify 槽键为 `(tenant, task_id, verify, task_id)`，合并同任务新增核验责任；每次有限处理当前条件与候选，不扫描全部历史。需要新质量评估或补证行动时，先检查当前控制、授权、预算和有限尝试规则，再提交普通 Operation；verify 本身不能绕过暂停启动模型。无新行动且既有证据充分时可在暂停中完成。崩溃、答复丢失和新增责任均按[领取及责任版本规则](#job-completion)恢复；不通过创建新 check_id 重置任务累计尝试、期限或费用上限。
+
+受信维护者通过宿主内部登记入口提供准确缺陷身份、规则／实现／适用范围和证据；管理命令及原回执与缺陷共同保存。每个 evaluator_ref 在启用前建立固定 evidence gate。缺陷登记独占写锁该 gate、递增修订、追加不可变缺陷并保存分页影响责任，不在登记事务锁整批 Task。核验事务先按下节顺序锁 Task，再按稳定实现键对 gates 取共享读锁，读取全部命中范围的缺陷及当前选定 checks；不同任务的读锁兼容，只有缺陷登记与完成需要在该门禁上互斥。因此缺陷先提交则阻止旧证据完成，完成先提交则结果保持终态并补充说明。影响处理分页同样按 Task→gate→条件→job 加锁，更新并保存游标后才确认该批完成。
+
+本地 gate 只对本提交域已经受信登记的缺陷给出上述串行保证。它不证明远端没有尚未送达的缺陷；远端判断治理尚无冻结的当前证据资格查询／交接合同，不能用 `evaluation.approval_check` 的启动回执冒充证据适用性证明。普通评估明示这一已知缺陷范围限制；要求更强当前资格的用途在依赖落实前拒绝启用。缺陷说明由查询侧通过受信记录关联原 Result，缺陷投影尚未追上时直接核对 gate 及原事实；公共 `task.result` 仍返回原 Result，附加说明通过默认宿主获准诊断视图展示，尚不宣称第三方线协议已支持该说明。
+
+<a id="21-锁定顺序"></a>
+### 2.4 锁定顺序
+
+所有任务变更先锁原命令键，再按根到叶顺序锁需要判断的祖先任务；同层按 task_id 排序。随后锁预算单位、操作意图、参与领域的门禁及业务行，最后锁工作槽，各类内部按稳定键排序。条件汇总在核验领域先锁 evaluator evidence gates，再锁当前条件记录；缺陷登记只锁 gate 与自身登记／影响责任，不反向锁 Task。Memory 参与共同事务时，在它的门禁及业务行之前取得[owner 事务头](../memory/implementation.md#memory-change-head)。控制涉及有界子树时同样遵守此顺序。后台事实归并也采用相同顺序，不能从工作槽或预算反向锁领域对象和祖先。
 
 同宿主扩展若要将许可消费或执行接纳纳入共同事务，必须使用同一存储适配层声明的锁顺序。无法保证顺序或不共库时使用原命令交接，不假定两个连接构成同一事务。
 
@@ -258,7 +346,7 @@ sequenceDiagram
 
 尚未派发的旧目标工作标为失效；已派发操作继续核对。新的目标与旧效果可能冲突时保留 effect 等待，直到有可验证的外部事实。`task.revise` 不修改已发生费用、单次许可消费或旧操作参数。
 
-提交完成时锁任务、必要条件、受管委派及原效果投影，执行以下合取检查：当前目标修订一致；全部必要条件通过；所有内部子任务终结；外部目标行动已封闭；本任务及委派无未知或可能迟到效果。随后固定 Result、终态、控制传播及结果可查事实。
+提交完成时按统一锁序读取任务、所选条件的实现门禁、必要条件、受管委派及原效果投影，执行以下合取检查：当前目标修订一致；全部必要条件对准确成果为 pass 且当前适用；固定规则、实现与策略匹配；所有内部子任务终结；外部目标行动已封闭；本任务及委派无未知或可能迟到效果。缺陷范围核对直接读取本提交域的受信原事实，不能仅靠尚未更新的 applicability 投影。随后固定所选 check_id 与 Result、终态、控制传播及结果可查事实。条件集合、未结子任务及效果分别做集合查询，完整性与有界访问见[访问路径](access-paths.md#completion-queries)。
 
 暂停允许既有证据完成；它禁止新的质量评估和行动。完成与取消由条件事务顺序决定：先提交终态的一方胜出，后一命令明确冲突或返回终态事实。费用未最终核清可以保守保留，不伪装成目标效果未知。
 
@@ -284,11 +372,12 @@ stateDiagram-v2
 | decide | 一次固定快照决策 | 记录依赖／费用缺口，等待或任务到期 |
 | dispatch | 一次原命令提交或原回执查询 | 保留未决操作，转具体查询责任 |
 | poll | 一次原操作／委派事实读取 | 停止高频查询，等待恢复事件或受信处置 |
+| verify | 本任务当前条件与准确成果的有限核对／完成汇总；需外部评估时仍提交普通操作 | 保存缺条件、适用性或依赖原因；原策略允许时请求用户验收，否则等待或到期，不反复换实现评分 |
 | control | 一个执行端当前固定控制命令 | 保留逐端未确认，继续有限退避 |
 | settle | 一个原计费项或 allocation 的累计结算 | 保留原预留与最小收尾责任 |
 | extract | 一个独立获准的记忆提取请求 | 不改变原 Task 的完成结果 |
 
-领取事务只锁 job，向 worker 返回固定的 job_id、lease_epoch 和观察到的 work_revision，提交后才读取固定输入或调用外部服务。完成／退避使用另一个短事务，按第 2.2 节先锁责任来源、最后锁槽，并按数据库当前时间核验租约；不能持有领取事务的槽锁再读取领域行。
+领取事务只锁 job，向 worker 返回固定的 job_id、lease_epoch 和观察到的 work_revision，提交后才读取固定输入或调用外部服务。完成／退避使用另一个短事务，按第 2.4 节先锁责任来源、最后锁槽，并按数据库当前时间核验租约；不能持有领取事务的槽锁再读取领域行。
 
 | 依次检查 | 槽的处理 |
 | --- | --- |
@@ -318,6 +407,7 @@ stateDiagram-v2
 `task.adjust_budget` 输入是任务完整单位上限集合。单位集合不能借调额更换计价口径；输出 Task 只增加 revision、修改 limit，并按需解除 budget 等待。它不修改 spent、reserved、goal_revision、control_revision、暂停状态或 deadline，终态拒绝调额。
 估算任务的调额还须处于提交时固定的 TaskPolicyAcceptance 范围；超过该范围时拒绝，不从后来新登记的接受事实回填到已有 Task。原任务保留其策略和已发生账单，用户可以另建采用新策略及新接受范围的任务。
 
+<a id="budget-handoff"></a>
 ### 8.1 额度交接
 
 `budget.allocate` 的信封目标为父 task_id。调用方固定 allocation_id、receiver_id、单位上限和 expires_at；父事务扣入 reserved，保存 allocation 与交接 job。applied 只证明父侧预留和交接责任，接收方尚未接纳时额度不能在任一新对象重新分配。
@@ -413,6 +503,11 @@ closed 不因原计费方上调账单而重新开放。接收方以更高 revisi
 按[公共容量方法](../deployment-production.md#capacity)分别测量接纳事务、候选准入、事实归并、祖先控制和恢复领取。至少记录事务 p95／p99、祖先与预算锁等待、每任务提交数、每租户最老 ready job 年龄、过期领取比例、重复事实比例、未决效果／预留年龄，以及关闭索引增长率。对原始错误率低但队列持续增长的情况，按排队年龄触发保护，不能只看入口 QPS。
 
 过载顺序为限制新任务和新目标 job、限制同用户并发与快照字节、保留控制／核对／结算容量；已接纳责任不因队列满丢弃。验收须同时压入单租户洪峰、模型长尾和数据库切换，证明恢复积压有界且其他租户能前进。分区数和 worker 数由这些实验的故障剩余容量推导；本节不新增未经测量的吞吐承诺。
+
+<a id="access-paths"></a>
+### 10.1 访问路径与性能证据
+
+[访问路径矩阵](access-paths.md)逐项规定接纳、候选准入、事实归并、完成核验、控制传播、领取恢复、列表和结算的关联键、逻辑读取批次、扫描／返回上界及锁范围。当前没有正式数据库 DDL、运行 SQL 或执行计划，表多不能直接推导查询慢；每路径的实际查询次数、索引命中、锁等待、写入放大和故障剩余容量须在参考实现上记录。活跃子任务限额不限制终身历史数量，完成不能依靠反复扫描历史证明未结责任为零。
 
 ## 11. 可执行故障实验
 

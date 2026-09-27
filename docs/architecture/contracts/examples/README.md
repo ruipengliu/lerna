@@ -8,7 +8,7 @@
 
 | 文件 | 要说明的规则 |
 | --- | --- |
-| [succeeded-assessed.json](succeeded-assessed.json) | 报告质量经评估，文件效果已证实；保守记账后的最终费用可以继续核对 |
+| [succeeded-assessed.json](succeeded-assessed.json) | 报告质量经通用评估并明示尚无专项校准，文件效果已证实；最终费用可以继续核对 |
 | [succeeded-verified.json](succeeded-verified.json) | 仅包含客观检查覆盖的必要条件，才标 verified |
 | [succeeded-user-accepted.json](succeeded-user-accepted.json) | 用户验收质量，但外部效果仍有确定证据 |
 | [active-unknown-effect.json](active-unknown-effect.json) | 写入不明时保留 active 与原操作，不能发布成功结果 |
@@ -25,3 +25,5 @@ python3 docs/architecture/validation/validate.py
 ```
 
 应接受 5 个正例，拒绝 9 个反例。上述仅证明文档示例与声明规则一致，不证明事务、模型质量、设备操作、权限、恢复或互操作已经运行通过。
+
+原投影只检查完成时固定的条件结果，不携带当前缺陷门禁。规则通过原任务、目标修订及条件定位；当前证据适用性、普通停用与判断缺陷的区别见[任务验证](../../orchestrator/verification.md)。静态正例通过不能证明实现已经核验当前缺陷，也不能证明评估准确率。

@@ -91,10 +91,10 @@
 | Task — OperationIntent | 1 | 0..* | 保存已准入的原操作。 |
 | Task — Job | 1 | 0..* | 同时覆盖推进及终态后的收尾责任。 |
 | Task — Result | 1 | 0..1 | 仅成功有 Result；失败与取消另存结束说明。 |
-| OperationIntent — BudgetReservation | 1 | 0..* | 按适用计价项预留。 |
+| OperationIntent — BudgetReservation | 0..1 | 0..* | 操作计价项关联原意图；Brain 等其他计费来源可无操作意图，每笔预留仍唯一绑定原计费来源。 |
 | OperationIntent — ReceivedFact | 0..1 | 0..* | 归并事实也可来自 decision 或委派，故可不关联操作意图。 |
 
-准入消费原 Decision 身份或计划步骤身份之一，并与不可变意图、预留及派发 job 共同提交。计划版本和消费唯一约束未展开，仍按[实现机制](orchestrator/implementation.md)执行。`status`、`control`、`wait_reasons`、`open_effects`、`accounting_open` 独立，暂停和未知效果不是新的 Task 状态分类。
+准入消费原 Decision 身份或计划步骤身份之一，并与不可变意图、预留及派发 job 共同提交。本页保留主要对象；条件及准确成果关系见[主文精简类图](orchestrator/README.md#records)，计划版本、消费身份及历史记录见[持久对象关系](orchestrator/implementation.md#data-flow)，预留、固定分配及两端结算见[账务关系](orchestrator/implementation.md#accounting-relations)。各图沿用同一字段与规则，不声明额外数据库外键。`status`、`control`、`wait_reasons`、`open_effects`、`accounting_open` 独立，暂停和未知效果不是新的 Task 状态分类。
 
 答复丢失查原 decision、command 或 operation；重启继续原 jobs。取消可保留效果与账务收尾，迟到成功不创建 Result。内容和历史清理须检查未决引用，长期关闭索引继续阻止原身份复活。
 
