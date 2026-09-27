@@ -2,7 +2,7 @@
 
 [配置和方法登记](../../protocol.md) · [共同语义](../../README.md) · [独立完成判断投影](../README.md)
 
-本目录的 52 个 JSON 文件是有界的跨调用记录序列，覆盖全部 104 个严格登记方法。`invalid-mutations.json` 保存 366 个定向反例、来源文件、变更路径和应命中的规则；校验器逐项应用到原例副本，不修改原例。每个方法的准确输入、输出、种类及错误恢复动作见[方法登记](../../schemas/methods.json)。
+本目录的 53 个 JSON 文件是有界的跨调用记录序列，覆盖全部 105 个严格登记方法。`invalid-mutations.json` 保存 371 个定向反例、来源文件、变更路径和应命中的规则；校验器逐项应用到原例副本，不修改原例。校验入口另构造超过 100 个受影响计划、跨分区超原分配账单的提供方／接收方／双重／待查原因，以及原使用 final 后的可信费用更正；这些构造只核对结构和记录关系，账单与用户接受事实仍须运行核验。每个方法的准确输入、输出、种类及错误恢复动作见[方法登记](../../schemas/methods.json)。
 
 夹具的 `auth` 是验收工具从认证通道取得的测试前提，不属于可由调用者选择的业务正文。`capabilities` 是预先装配的准确能力参数 Schema，`input_requests`、`approvals` 与 `confirmations` 是受信负责端的有限前提快照。它们不是可由模型提交并自证权限的线接口。ID、摘要、正文长度、proof 和内容引用均为占位数据；格式合法不证明真实内容哈希、用户批准或签名已经核验。
 
@@ -41,7 +41,7 @@
 | [32-lease-settlement](32-lease-settlement.json) | 固定实例的离线租约及最终结算 |
 | [33-installation-lifecycle](33-installation-lifecycle.json) | 安装锁、停用及无引用清理 |
 | [34-compatibility-release](34-compatibility-release.json) | 首装兼容报告、批准与逐目标发布 |
-| [35-improvement-exposure](35-improvement-exposure.json) | 正式改善策略、保留占用及泄露后撤回 |
+| [35-improvement-exposure](35-improvement-exposure.json) | 正式改善策略、保留占用、暴露后的单一影响 job 与后续撤回；另构造 101 个受影响计划检查输出不截断 |
 | [36-local-install-restart](36-local-install-restart.json) | 共库首装与重启，本次实例另取开放依据 |
 | [37-remote-instance-reopen](37-remote-instance-reopen.json) | 远端新实例取得 reopen，历史激活依据保持不变 |
 | [38-revoked-approval-startup](38-revoked-approval-startup.json) | 保留历史查询，撤回后拒绝新启动 |
@@ -66,6 +66,7 @@
 | [57-collection-authorization-reset](57-collection-authorization-reset.json) | 调用参数错误不破坏原集合；权限 A→B→A 不能复活旧游标或旧首部，新 query_id 恢复 |
 | [58-lease-open-close-ledger](58-lease-open-close-ledger.json) | 首次使用保持 open；closed 保留未知费用，全部原使用封闭后最终结算 |
 | [59-delegation-phase-projection](59-delegation-phase-projection.json) | 创建未知、固定映射、普通未final用量、取消后未知费用、Closure 优先及原固定回执恢复 |
+| [60-task-billing-reconcile](60-task-billing-reconcile.json) | 终态任务收到认证 Brain 来源的迟到费用修订；原命令期限后同一 source/revision/digest 的后继命令复用核对 job，旧命令迟到仍回原回执 |
 
 在仓库根目录运行：
 

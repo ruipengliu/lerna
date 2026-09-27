@@ -72,7 +72,7 @@ flowchart TB
 ```
 
 图例：实线表示同步依赖；指向 repositories 的实线为事务读写，虚线为持久管理 job 的领取。ArtifactReader 读取准确内容，ReferenceCollector 在事务外核对原责任，BindingRouter 向精确就绪实例派发。ApprovalClient 访问当前批准：批准 owner 共库时参与同一事务，远端时在事务外调用；图中节点不代表独立服务。
-BindingRouter 的进程内入口与持久就绪记录共同构成开放条件，单独写一行 ready 不会令尚未装载的进程可用。
+BindingRouter 的进程内入口、当前活动绑定、进程租约与持久就绪记录共同构成开放条件，单独写一行 ready 不会令尚未装载或已经失联的进程可用。
 任何一步缺失时，管理入口可达，业务派发保持关闭。
 
 extensions.list 由现有查询入口读取本 owner 的 Activation 仓储，复用 extensions.read(kind=activation) 的当前披露策略。共享存储中的有限 collection_queries 保存认证范围、query_id、原参数、按 ID 排序的成员、期限与位置；页读取不固定旧记录修订，也不跨请求持有事务。查询槽、扫描上限、权限变化失效、partial 与提示合并统一按[集合恢复契约](../contracts/protocol.md#collection-snapshots)实现；此表仅为临时查询状态，不增加全局目录或业务 owner。
@@ -139,8 +139,8 @@ prepare 同命令返回原锁；参数变更需要新命令及新锁。
 | management_jobs | job_id；(state, next_run_at, priority) | 排空、装载、停用和原责任查询 |
 | closed_extension_keys | (scope_hash, command_id) UNIQUE | 最小关闭索引，阻止旧管理命令重新执行 |
 
-锁引用的增加与业务对象接纳在同事务或持久交接中完成。
-跨领域不能通过遍历当前进程对象推断全部引用。
+锁引用的增加与业务对象接纳在同事务或持久交接中完成。跨提交域的持久交接先以固定 holder／原命令身份取得引用，再向原业务 owner 发送；答复未知时保留引用并查原命令，绝不先释放再猜测业务未接纳。收到原 owner 可查询的责任终结或独立驱动接管事实后，才按同一 holder 身份条件释放；预登记后未发出的引用也须有原工作记录和有界核对／关闭步骤。
+跨领域不能通过遍历当前进程对象推断全部引用。dispose 在同一引用权威事务中先封闭该 lock 的新引用取得，再比较 reference_revision、未结预登记及全部持有者释放；封闭期间新的业务接纳须选择另一可用锁或等待，不能绕过入口直用制品。若已有 holder 的状态暂不可核验，清理保持 blocked，不能把缺失当作无引用。
 停机中的 Executor 仍可能持有原操作；其账本未确认释放时保留驱动制品。
 
 引用集合维护单调 reference_revision。
@@ -269,7 +269,7 @@ sequenceDiagram
 远端批准答复丢失时查询／重投原使用身份，取得的窗口保持不变；窗口已过且已证实本次未启动时才申请新的使用身份。
 共库事务与撤回竞争按同一提交顺序裁决；远端取得依据后也必须在开放入口时核对已知撤回和窗口。
 装载、自检或批准失败均保留管理查询和原责任恢复，不能返回当前 ready；历史激活记录不因此被删除。
-当前查询投影按已有 blocked / disabled 等事实表达入口关闭；phase=active 仍要求真实的当前实例 ready，不能用历史成功替代。
+当前查询投影按已有 blocked / disabled 等事实表达入口关闭；phase=active 仍要求真实的当前实例 ready，不能用历史成功替代。读／列表入口必须核验 ready_instance 的当前进程租约与绑定代际；宿主突然退出而关闭事实尚未持久化时，不能返回旧的 ready=true，核验不可用则返回 dependency_unavailable 缺口。恢复工作者观察租约失效后条件提交 blocked、ready_instance=null 和递增的 Activation.revision，写出变化提示；新实例沿原代际取得 reopen 依据并重新开放，不能再次执行 migration 或递增 generation。
 
 ## 7. 重启和批准撤回
 
@@ -301,7 +301,7 @@ flowchart TD
 ## 8. 停用、回退与格式迁移
 
 deactivate 锁目标当前代际，验证管理身份与原 activation。
-关闭 BindingRouter 的新入口与写停用回执同事务提交。
+在权威绑定事务中标记 new_use_disabled、阻止后续新业务接纳并写停用回执；各进程的 BindingRouter 以当前代际和停用事实为派发门禁，权威不可核验时拒绝新接纳。停用提交前已经接纳的工作按原身份列入 residual_work，是否仍可物理启动由其领域控制、批准及当前安全门禁再决定，不能把停用解释为既有外部效果已撤回。
 结果分别给出 new_use_disabled、previous_version_ready 和 residual_work。
 残留非空不妨碍报告已经停止新使用，但不能报告全部责任结清。
 
@@ -380,6 +380,8 @@ deactivate 锁目标当前代际，验证管理身份与原 activation。
 | X-I10 | 迁移提交后崩溃再恢复 | 迁移只核对不重做；数据历史不回滚 |
 | X-I11 | dispose 与新引用并发 | 引用修订冲突，仍被需要的包不删除 |
 | X-I12 | 已删除锁的旧命令重放 | 最小关闭索引阻止重新安装或再次清理副作用 |
+| X-I13 | 跨库 holder 预登记后答复丢失，同时另一管理者 dispose | 新引用入口封闭后仍见未结 holder；查原业务命令前不释放，制品不删除 |
+| X-I14 | 活动宿主无预告崩溃，旧 ready 行仍在 | read/list 不返回旧 ready=true；旧代际不重复迁移，新实例取得 reopen 依据后才派发 |
 
 每项实验记录原管理命令、代际、实例、批准与实际派发记录。
 字段合法、状态序列正确只能证明记录一致，不能证明进程真正停止或磁盘写入耐久。

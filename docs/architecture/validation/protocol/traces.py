@@ -21,7 +21,7 @@ def check_trace(trace):
         except Exception:return ['capability_schema: invalid pinned input schema']
         if cap['input_schema'].get('type')!='object' or cap['input_schema'].get('additionalProperties') is not False:
             return ['capability_schema: fixture root parameters must be a closed object']
-    commands={}; gates={}; tombstones=set(); uses={}; approvals={}; consumed={}; decisions={}; operations={}; operation_tasks={}; delegations={}; inputs={}; tasks={}; activations={}
+    commands={}; gates={}; tombstones=set(); uses={}; approvals={}; consumed={}; decisions={}; operations={}; operation_tasks={}; operation_orchestrators={}; delegations={}; inputs={}; tasks={}; activations={}; billing_sources={}; grant_billing={}; billing_jobs={}; billing_digests={}
     request_index={x['request_id']:x for x in trace['input_requests']}
     approval_index={x['approval_id']:x for x in trace['approvals']}
     for index,event in enumerate(trace['events']):
@@ -93,6 +93,7 @@ def check_trace(trace):
                         if millis>min(p['requested_window_ms'],approval['max_offline_window_ms']):err('approval_window','offline window exceeds granted maximum')
         if name=='execution.invoke':
             operation_tasks[p['operation_id']]=p['task_id']
+            operation_orchestrators[p['operation_id']]=p['orchestrator_id']
             gate=p['control_snapshot']['gate'];gkey=(a['tenant_id'],gate['orchestrator_id'],gate['task_id'],target)
             known=gates.get(gkey,gate)
             blocked=(a['tenant_id'],p['orchestrator_id'],p['task_id'],p['operation_id']) in tombstones or known['status']!='active' or p['goal_revision']!=known['goal_revision']
@@ -116,6 +117,34 @@ def check_trace(trace):
         if name=='execution.cancel' and not rejected:
             tombstones.add((a['tenant_id'],p['orchestrator_id'],p['task_id'],p['operation_id']))
         if rejected or output is None:errors.extend(f'event {index}: '+e for e in local);continue
+        if name=='brain.decide':
+            billing_sources[(a['tenant_id'],'brain_decision',p['decision_id'])]=(p['task_id'],p['orchestrator_id'],a['logical_service_id'])
+        if name=='execution.invoke':
+            billing_sources[(a['tenant_id'],'execution_operation',p['operation_id'])]=(p['task_id'],p['orchestrator_id'],a['logical_service_id'])
+        if name=='grant.use' and output['decision']=='allowed':
+            grant_billing[(a['tenant_id'],'grant_use',output['use_id'])]=(p['operation_id'],a['logical_service_id'])
+        if name=='budget.allocate':
+            billing_sources[(a['tenant_id'],'budget_allocation',output['allocation_id'])]=(output['parent_task_id'],output['owner_id'],output['receiver_id'])
+        if name=='task.billing_reconcile':
+            source_key=(a['tenant_id'],p['source_kind'],p['source_id'])
+            source=billing_sources.get(source_key)
+            if p['source_kind']=='grant_use':
+                grant=grant_billing.get(source_key)
+                if grant:
+                    operation_id,source_owner=grant
+                    if operation_id in operation_tasks:
+                        source=(operation_tasks[operation_id],operation_orchestrators[operation_id],source_owner)
+            if source is None:
+                err('billing_source','bounded trace lacks the original trusted source/task binding')
+            elif source!=(target,a['logical_service_id'],a.get('sender_service_id')):
+                err('billing_source','authenticated source, original Orchestrator and Task binding differ')
+            if output['resource_id']!=target:err('billing_task','wakeup job belongs to another Task')
+            job=billing_jobs.get(source_key)
+            if job and job!=output['job_id']:err('billing_job','same source must retain one reconcile responsibility slot')
+            billing_jobs[source_key]=output['job_id']
+            rev_key=(*source_key,p['usage_revision']);digest=billing_digests.get(rev_key)
+            if digest and digest!=p['usage_digest']:err('billing_revision_conflict','same source usage revision claims another bill digest')
+            billing_digests[rev_key]=p['usage_digest']
         if name=='extensions.activate':activations[p['activation_id']]=deepcopy(p)
         if name in ('grant.use','grant.use.get'):
             uid=output['use_id']

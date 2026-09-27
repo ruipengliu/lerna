@@ -1,6 +1,6 @@
 {
-  "name": "01-task-loop",
-  "description": "固定能力已装配的最小任务链；Brain提案、用途消费、原操作查询和准确成果绑定。",
+  "name": "60-task-billing-reconcile",
+  "description": "终态 Task 后，原 Brain 账单修订由认证来源耐久通知；首次交回答复丢失且期限已过，后继命令共用原结算 job，旧命令迟到重放仍返回原回执。金额由 Orchestrator 回读。",
   "capabilities": [
     {
       "capability_ref": {
@@ -661,6 +661,102 @@
             }
           },
           "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:01Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0",
+          "sender_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93"
+        },
+        "request": {
+          "command_id": "task_billing_reconcile_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "method": "task.billing_reconcile",
+          "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "source_kind": "brain_decision",
+            "source_id": "decision_86ae35d58a6aa3b5742df94ef9d71622",
+            "usage_revision": 3,
+            "usage_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        },
+        "response": {
+          "command_id": "task_billing_reconcile_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:01Z",
+          "output": {
+            "job_id": "billing_job_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "resource_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:10:01Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0",
+          "sender_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93"
+        },
+        "request": {
+          "command_id": "task_billing_reconcile_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "method": "task.billing_reconcile",
+          "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "expires_at": "2026-09-26T00:20:00Z",
+          "payload": {
+            "source_kind": "brain_decision",
+            "source_id": "decision_86ae35d58a6aa3b5742df94ef9d71622",
+            "usage_revision": 3,
+            "usage_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        },
+        "response": {
+          "command_id": "task_billing_reconcile_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:10:01Z",
+          "output": {
+            "job_id": "billing_job_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "resource_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:10:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0",
+          "sender_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93"
+        },
+        "request": {
+          "command_id": "task_billing_reconcile_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "method": "task.billing_reconcile",
+          "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "source_kind": "brain_decision",
+            "source_id": "decision_86ae35d58a6aa3b5742df94ef9d71622",
+            "usage_revision": 3,
+            "usage_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        },
+        "response": {
+          "command_id": "task_billing_reconcile_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:01Z",
+          "output": {
+            "job_id": "billing_job_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "resource_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+          }
         }
       }
     }

@@ -60,6 +60,10 @@ sequenceDiagram
 
 内容引用由[记忆与内容](../memory/README.md)定义；Task／Result 在[Orchestrator](../orchestrator/README.md#records)，许可在[授权](../security/README.md)。金额用带单位的整数或十进制字符串，不用浮点数比较额度。时间采用带 UTC 时区的 RFC 3339 字符串；跨端排序以对象修订为准，不以墙上时间决定先后。
 
+`grant.use` 的 `cost_bound` 随原 UseRequest、UseReceipt 和 UseSettlementRecord 固定：strict 的 `max_cost` 是经受信能力合同核验的单次可信上界；estimate 是经本人接受、有限但可能不足的预留估算额。Grant owner 必须从认证的 usage owner 和原 operation 对照已登记能力的真实计费模式，不能只相信请求正文自报 strict。estimate 仅在 Grant owner 与原 Orchestrator 同一受信提交域、能直接核验 Task 内部的本人接受事实、在线裁决且所需 Grant 对该费用单位没有硬限额时开放；跨域或核验不可用时只允许 strict。原 Orchestrator 对准确 `policy_ref` 核验其用户接受记录，跨 Orchestrator 固定 allocation 不接纳无可信上界计费。可信账单超过 allocation 还可能由接收方多笔各自合规的调用累计越界导致；原父方分别核对提供方单次上界与接收方分配门禁，在自己的 Allocation 投影标注已证实或待查原因，不从 Closure 自报原因推断。实际可信账单突破估算额或供应商声明上界时，原账本照实记录超额并停止新计费，不能把该配置描述为硬费用保证；具体原使用结算见[授权](../security/README.md)，任务余额见[编排预算](../orchestrator/README.md#budget)。
+
+`task.billing_reconcile` 是终态后费用上调的原来源交回入口：Brain、Executor、Grant owner 或已 closed 的委派接收方，在可信账单修订与固定交回 outbox 同事务保存后，用原命令通知原 Task Orchestrator。payload 只含 source_kind、source_id、usage_revision 与 usage_digest，不含可直接入账的金额；认证来源、原 Task/source 绑定及同修订摘要由 Orchestrator 核对，返回原结算责任槽的 JobAck 后主动读源账本并按差额核算。同来源同修订同摘要共用 job，同修订异摘要冲突；较旧修订经原账核实已被更新修订覆盖时可回原 job 的 no-op 回执。原命令的首次接纳期限过后仍未取得 JobAck 时，源 owner 可为同一 source_kind／source_id／usage_revision／usage_digest 建立后继 command_id；旧尝试可能已应用，原 Orchestrator 跨命令归并到同一 job，不再次入账。来源不知道 Task 当前 revision，因此此方法不要求 Command.expected_revision；具体恢复见[编排预算](../orchestrator/implementation.md)。
+
 幂等键为 `(tenant_id, logical_service_id, command_id)`，处理方同时保存 method、target_id、expected_revision、expires_at 和 payload 的规范化摘要。原键原请求返回原决定，原键不同请求返回 idempotency_conflict 且不覆盖原记录。规范化比较按 JSON 结构进行：对象键顺序忽略、数组顺序保留、字符串逐字匹配；不以重新编码后的原始字节比较。SDK 固定同一请求结构，不在恢复时补写新的默认值。
 
 该键**不跨逻辑服务去重**。新任务由受信装配／发现选定 Orchestrator，调用方在首次发送前保存目标与原命令；答复未知时只能查或重投原服务，不能仅保留同一个 command_id 就改投新分区。网关与应用对照原逻辑服务检查目标，详见[发现与路由](transport.md#1-连接与发现)。

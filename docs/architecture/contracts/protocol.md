@@ -2,7 +2,7 @@
 
 [共同调用语义](README.md) · [传输配置](transport.md) · [方法查阅](methods.md) · [序列用例](examples/protocol/README.md)
 
-本页与机器资产定义未发布的 `harness/1`、`full-harness-draft-2` 配置。当前 104 个领域方法包括预算关闭、输入读取、费用结算、可信确认，以及 Operation／Activation／Grant 集合恢复所需的三个枚举查询；当前登记无 reserved 方法。发现、WSS 双向交接、认证证明与内容字节另由传输配置规定，服务间 RPC 另由[gRPC 绑定](grpc.md)规定，不能把领域方法数量当作完整服务互操作证据。
+本页与机器资产定义未发布的 `harness/1`、`full-harness-draft-2` 配置。当前 105 个领域方法包括预算关闭、输入读取、费用结算、可信确认，以及 Operation／Activation／Grant 集合恢复所需的三个枚举查询；当前登记无 reserved 方法。发现、WSS 双向交接、认证证明与内容字节另由传输配置规定，服务间 RPC 另由[gRPC 绑定](grpc.md)规定，不能把领域方法数量当作完整服务互操作证据。
 
 `frozen-draft` 表示当前修订具有精确输入、输出和关联用例，仍可随未发布设计统一修订。发布时须共同冻结正文、Schema、登记及用例摘要，不能以另一份变化中的正文解释已发布消息。进程内实现使用相同对象与业务语义，不要求先编码网络报文。
 
@@ -114,6 +114,12 @@ Activation.revision 是可见持久投影的独立修订；phase、ready_instanc
 | Agent协作 | phase 是依据同一修订事实生成的只读摘要；closed 必有持久关闭依据，active 必有唯一子映射；创建未知及未结责任分别保存，不换远端任务掩盖失联 | [协作](../collaboration/implementation.md) |
 | 安装与批准 | 首装／兼容证据与正式改善用途区分；历史激活不变，当前实例开放重新核验；本地事务与远端回执均可表达 | [扩展](../extensions/implementation.md)、[评测](../evaluation/implementation.md) |
 
+`evaluation.exposure_record` 的 applied 输出是 `{exposure, impact_job_id}`：原评测 owner 已共同保存暴露事实、来源组关联、唯一影响扫描 job 与原回执。job 身份不枚举受影响计划，也不证明异步失效投影或撤回已完成；正式计划、报告封存、批准与继续使用的准入仍须同步核验原暴露门禁。一个暴露可影响超过单帧列表上限的计划，不能以截断的 ID 列表定义成功。
+
+`UseRequest`、`UseReceipt` 和 `UseSettlementRecord` 均携带不变的 cost_bound；原请求的 max_cost 在 strict 下是可信最大费用，在 estimate 下只是有限预留额。原使用的可信账单可使 `spent_cost` 高于 `reserved_cost`；final 封闭新动作使用，但供应商对同一原操作的可信更正账单可按新修订继续增加已发生费用，不复活原 once 资格、不倒回已释放额。跨 Orchestrator `RuntimeBudgetClosure.final_usage` 也可如实高于原 allocation：原父 owner 核验 `proof_ref`、原计费身份、单次可信上界及接收方分配门禁后全额入账，不能把超额都归为提供方违约。父方分别判定 `provider_bound_breach` 与 `receiver_allocation_breach`，可同时成立；`RuntimeBudgetAllocation.incident_causes` 记录已证实原因，`incident_pending` 标尚待查明的部分。Closure 不自报原因；已 settled 且累计高于 allocation 时，父输出至少含一项已证实原因或明确 pending。接收方 `closed` 后可信原账单更正可保留同一 closed_at、allocation_id、receiver_id 与 spending_closed，递增 `usage_revision` 和累计 `final_usage`；父方已 settled 的 allocation 仍可用新 `budget.settle` 命令、当前 expected_revision 与这份完整 Closure 只追记增量，已释放预留不倒流，也不重开任务或子方消费。原命令重放仍返回原回执。Schema 和构造序列只能检查身份、单位与修订，不能证明账单真伪或 TaskPolicy 的本人接受。
+
+`task.billing_reconcile` 的 applied 输出为 `{job_id, resource_id=原 task_id}`，只确认原结算核对责任已耐久唤醒。输入的 `source_kind` 为 brain_decision／execution_operation／grant_use／budget_allocation，`source_id` 分别指原 Decision／Operation／Use／Allocation；`usage_revision` 为原来源相应的 DecisionRecord／Operation／UseSettlementRecord／RuntimeBudgetClosure 费用事实修订，`usage_digest` 是该累计事实的规范摘要。原计费 owner 在可信上调与固定 outbox 同事务保存后发送；Orchestrator 核认证 sender、原 source→Task 绑定及同修订摘要，主动读取原权威账单再结算，不信通知金额。来源不知道 Task 当前修订，故无 expected_revision；通知答复丢失沿原命令查询或重投；原首次接纳期限过后仍未取得 JobAck，源 owner 可持久生成同一来源修订及摘要的新 command_id，原 Orchestrator 跨命令归并同一 job，不能据旧尝试超时推断未应用。旧账单经核对已被较新修订覆盖时可返回同一 job 的 no-op 回执，同修订异摘要冲突。静态用例仅验证给定来源绑定和记录一致性，不证明账单真实性、outbox 投递或后台 job 完成。
+
 Invoke.arguments和行动模板最终参数仍按准确Capability版本、摘要及Binding对应的能力Schema检查。开放的是工具声明的参数结构，不是任意领域消息；能力Schema必须是有界、闭合且引用已固定的声明。夹具仅允许本地引用，运行安装同样须固定所有依赖，不能为校验访问任意网络。
 
 字段之外的不可机械证明条件仍需真实实现裁决，例如来源限制的子集关系、可信用户确认、Grant是否有效、独立真值是否存在。序列容器里的已知许可、请求、批准或环境是显式测试前提；报告必须说明它们未由该静态工具自行建立。
@@ -134,10 +140,10 @@ Invoke.arguments和行动模板最终参数仍按准确Capability版本、摘要
 | [interaction](../interaction/README.md) | 10 | 请求、输出、阶段、错误与原身份关联见方法登记 |
 | [memory](../memory/README.md) | 18 | 请求、输出、阶段、错误与原身份关联见方法登记 |
 | [security](../security/README.md) | 18 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [orchestrator](../orchestrator/README.md) | 16 | 请求、输出、阶段、错误与原身份关联见方法登记 |
+| [orchestrator](../orchestrator/README.md) | 17 | 请求、输出、阶段、错误与原身份关联见方法登记 |
 
 ## 5. 从静态资产取得什么证据
 
 正常序列保存调用方可观察的原回执、查询结果和权威前提。反例通过具体JSON路径改变身份、版本、数量、资格或阶段，每项必须命中它声称破坏的规则；仅因无关格式错误拒绝不算该语义被验证。校验器保留原40方法的回归，不以新增覆盖掩盖已有行为退化。
 
-运行符合还须启动两个独立实现，从接纳入口产生调用，在提交前、提交后回复前、对方确认后本方记账前三处注入故障，并查验双方业务记录及目标真值。签名向量通过不证明认证系统可用；全部 104 个方法的构造序列通过也不证明事务、权限或容量成立。可复现命令与最新计数见[交付审查](../review.md)。
+运行符合还须启动两个独立实现，从接纳入口产生调用，在提交前、提交后回复前、对方确认后本方记账前三处注入故障，并查验双方业务记录及目标真值。签名向量通过不证明认证系统可用；全部 105 个方法的构造序列通过也不证明事务、权限或容量成立。可复现命令与最新计数见[交付审查](../review.md)。

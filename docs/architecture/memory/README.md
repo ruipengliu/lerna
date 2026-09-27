@@ -75,6 +75,8 @@ sequenceDiagram
     M->>A: 按精确来源取得结果披露许可
     A-->>M: 原披露使用依据或拒绝
     M-->>H: 候选修订、来源、缺口
+    H->>C: content.register_copy 原引用、持有者、用途与保留期
+    C-->>H: 原副本登记回执
     H->>C: content.get 精确引用及处理用途
     C-->>H: 当前获准正文或拒绝
 ```
@@ -83,7 +85,7 @@ sequenceDiagram
 | --- | --- | --- | --- |
 | 受信管理入口 → Memory owner | 原命令、明确内容、来源和保存依据 | owner 同事务提交记忆修订、原回执及索引责任 | 管理入口查原命令；owner 补齐索引，不能让调用方再建一条 |
 | Orchestrator → Memory owner | 库、用途、接收方和有限查询 | owner 固定查询集合，返回当前获准项及完整性；结果不等于正文永久可用 | Orchestrator 保存已用版本、游标与缺口，按[分页规则](#memory-pages)继续 |
-| 内容消费者 → 内容 owner | 精确引用、用途及持有者信息 | owner 持久登记必要副本后交付当前获准字节；无入站设备主动上传到受信接收端 | 消费者核对原副本及引用；镜像不改变 owner，无正文或资格时返回缺口 |
+| 内容消费者 → 内容 owner | 先以原命令登记精确引用、持有者、用途与保留期，再用该 copy_id 请求正文 | 登记回执只证明持有者责任已保存；`content.get` 当前核验通过后才交付获准字节，无入站设备主动上传到受信接收端 | 消费者沿原登记命令核对、停止并清理副本；镜像不改变 owner，无正文或资格时返回缺口 |
 | Memory owner → 受管副本 | 获准视图页、修订或墓碑 | 副本同事务提交对象变化、清理责任和游标后确认 | owner 保留未确认交付；副本沿原页恢复，断裂时重建 |
 
 使用许可的消费由 [Grant owner](../security/README.md)裁决；Memory owner 不能根据资料已在本地推导出可读取或可外发。表格仅汇总交接责任，完整字段在[集中契约](#memory-contracts)。
@@ -108,9 +110,9 @@ sequenceDiagram
 <a id="memory-pages"></a>
 ### 3.3 稳定分页与管理读取
 
-初次查询冻结有限有序的 `(memory_id, revision)` 集合、排序依据与截止时间，生成不透明游标。后续页只遍历这个集合；每次返回前重新核对当前记录状态、来源、用途和披露权限。被删除、修订或撤权的项跳过，返回跳过数量与 `changed`，不返回受限对象标识；新记录留给新查询。空页可以带下一游标，调用方不能把空页当全部结束。
+初次查询冻结有限有序的 `(memory_id, revision)` 集合、排序依据与截止时间，生成不透明游标。后续页只遍历这个集合；每次返回前重新核对当前记录状态、来源、用途和披露权限。被删除、修订或失去披露资格的项跳过，返回跳过数量与 `changed`，不返回受限对象标识；来源无法核验时还须返回 `partial` 与缺口。新记录留给新查询；已冻结集合遍历结束也不表示此刻所有新获准记录均已枚举。空页可以带下一游标，调用方不能把空页当全部结束。
 
-游标绑定认证用户、调用主体、接收方、原查询摘要、库 owner、集合与遍历位置，不携带正文。每页消耗至少一个未遍历位置或返回 `exhausted=true`。集合过期返回 `cursor_expired`，调用方重新查询；新查询不会重置任务累计扫描与返回预算。跨库聚合由调用方保存每库游标和缺口，不能把部分库返回包装成完整结果。
+游标绑定认证用户、调用主体、接收方、原查询摘要、库 owner、集合与遍历位置，不携带正文。每页消耗至少一个未遍历位置或返回 `exhausted=true`。候选或补扫达到上限时返回 `partial` 与缺口，不以有限集合结束声称检索完整。集合过期返回 `cursor_expired`，调用方重新查询；新查询不会重置任务累计扫描与返回预算。跨库聚合由调用方保存每库游标和缺口，不能把部分库返回包装成完整结果。
 
 `memory.list` 用于用户管理，按 ID 列出当前控制元数据，不要求旧正文仍可读；固定 ID 集合之后逐页读取当前修订。`memory.inspect` 允许直接取得获准的当前修订、限制和清理状态。管理结果仍受最小披露权限约束，无正文读取权不妨碍用户删除自己有管理权的记录。
 
@@ -150,7 +152,7 @@ sequenceDiagram
 
 视图是 Memory owner 为指定接收方生成的有限对象集合及投影，绑定用途、租约、保留期和当前规则版本。接收端是只读副本；其本地编辑另存为待提交意图，联网后按原 owner 的期望修订提交。远端库失联不会阻止用户操作本地独立库。
 
-`view.open` 在同一数据库快照中固定 owner 的已提交切点与有限对象版本集合；`view.pull` 先完成快照页，再传切点之后的连续变化。切点来自与业务共同提交的[owner 事务头](implementation.md#memory-change-head)，不是普通数据库序列的最大值；每页仍按当前授权、来源与正文保留规则检查。接收端在同一事务中应用修订／墓碑、清理工作和接收游标，之后才 `view.ack`。重复页不重复写入；变化日志缺口返回 `resnapshot_required`，接收端禁用无法证明连续的旧视图并重新建立，不沿断裂游标继续。
+`view.open` 在同一数据库快照中固定 owner 的已提交切点与有限对象版本集合；`view.pull` 先完成快照页，再传切点之后的连续 **Memory 对象变化**。切点来自与业务共同提交的[owner 事务头](implementation.md#memory-change-head)，不是普通数据库序列的最大值；每页仍按当前授权、来源与正文保留规则检查。接收端在同一事务中应用修订／墓碑、清理工作和接收游标，之后才 `view.ack`。重复页不重复写入；变化日志缺口返回 `resnapshot_required`，接收端禁用无法证明连续的旧视图并重新建立，不沿断裂游标继续。其他 Grant owner 后来扩权可能让一条旧 Memory 新获准，但不会产生 Memory 变化；旧视图的 `exhausted` 只表示其固定快照与 Memory 变化已遍历，不保证枚举当前全部新获准旧对象。签发方或接收方在扩权确认后须重新 `view.open` 才能取得当前完整集合；无法得知外部扩权时，需完整性的使用者也须主动重新开放视图，不能把旧视图当作当前授权全集。
 
 接收端每次实际使用仍检查视图范围和当前许可，不能凭同步成功取得永久使用权。在线用当前授权；离线只用[有限租约](../security/README.md#offline)。收到撤权立即停止新使用，未收到时最晚在租约到期停止；发布方不能把消息发出当作对方已经停止。要求即时撤权的内容不开放离线副本使用。
 
@@ -200,7 +202,7 @@ stateDiagram-v2
 | `ContentCopyControl` | `copy_id, content_ref, holder_id, revision, use_stopped, physical_state`；仅自身登记的控制投影，省去其他副本、清理证据和使用依据 |
 | `MemoryRecord` | `memory_id, owner_id, revision, type, content_ref, sources[], scope, observed_at, confidence?, state, policy_ref`；state 为 active、needs_review、disabled；删除后的状态由 MemoryControl 与墓碑表达，只保留获准的身份、修订和清理依据；置信度只表示声明的方法估计 |
 | `Query` | `query_id, owner_ids, text_terms[], types[], scope, purpose, recipient_id, limit, cursor?`；分页必须沿原查询，空词项须提供类型或范围限制 |
-| `QueryPage` | `query_id, owner_id, items[], position, scanned_count, skipped_count, next_cursor?, exhausted, partial, changed, gaps[]`；items 仅包含当前获准记录，partial 指扫描或提供方不完整，exhausted 只针对原有限集合 |
+| `QueryPage` | `query_id, owner_id, items[], position, scanned_count, skipped_count, next_cursor?, exhausted, partial, changed, gaps[]`；items 仅包含当前获准记录；partial 指候选／补扫上限或来源不可核验造成的缺口，changed 标记冻结成员的可见性变化，exhausted 只针对原有限集合 |
 | `View` | `view_id, owner_id, recipient_id, filter, projection, purpose, retention_until, lease_ref?, revision, snapshot_cursor, change_cursor?, expires_at, state`；filter 只含类型与 Scope，projection 为 metadata／content_refs，不接受脚本 |
 | `CleanupReport` | `object_ref, closure_revision, physical_state, holders[{holder_id, copy_id, use_stopped, physical_state, residual_reason?, retry_after_ms?}]`；汇总保留逐持有者依据 |
 | `ExtractionCandidate` | `candidate_id, owner_id, revision, extraction_task_id, proposed_type, content_ref, sources[], scope, proposed_policy, decision, memory_ref?`；decision 为 pending、saved、rejected，保存关联实际记忆修订 |
@@ -233,7 +235,8 @@ stateDiagram-v2
 | --- | --- | --- |
 | 偏好实际生效 | 保存限定技术评审的偏好，执行评审与非评审两个任务 | 仅适用任务采用输出格式，记录精确来源；C2、V1 |
 | 写答复丢失 | create 提交后断连，重投原命令 | 一条记录、同一修订和固定回执；C5、A4 |
-| 热写分页 | 查询后新增／修改／删除记录，并在两页间撤权 | 原集合有限结束，失效记录不披露，新记录不混入；C2、C7 |
+| 热写分页 | 查询后新增／修改／删除记录，并在两页间撤权或扩权 | 原集合有限结束，失效记录不披露，新记录不混入；权限变化后须新查询才能枚举当前范围，旧集合不称当前完整结果；C2、C7 |
+| 视图开放后的外部扩权 | view.open 时旧 Memory 不可披露；另一 Grant owner 随后签发可见许可但 Memory owner 无对象变更 | 旧 view.pull 不伪造该对象的 upsert，exhausted 只表示原快照和 Memory 变化已遍历；新 view.open 才枚举当前获准旧对象；撤权后旧页仍逐项复核当前许可；C2、C7 |
 | 索引滞后 | 记忆已提交、索引未追平，变化区间超过扫描上限 | 在获准范围补扫；未覆盖部分以 partial 与缺口返回，不声称完整或扩大许可；C2、C7 |
 | 私密提取 | local_only 来源，仅有云模型可用 | 提取等待或不支持，正文、摘要和向量均未外发；C2、C7 |
 | 分区撤权 | 副本取得有限租约后离线，owner 删除 | owner 已禁用；离线副本不晚于租约截止停止，物理状态仍 pending；C5、C7 |

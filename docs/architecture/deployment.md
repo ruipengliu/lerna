@@ -98,9 +98,12 @@ flowchart TB
 | job_store | 领域关联、工作种类、到期、work_revision 与 lease_epoch → 原工作 | 责任版本与领取代次分别比较；旧领取不得结束或退避较新的责任，详情归[Orchestrator](orchestrator/implementation.md) |
 | content_store | 已核验临时字节及准确引用 → 不可变内容 | 字节先耐久、引用后提交；元数据门禁互斥引用与孤儿清理 |
 | identity_store／credential_store | 受信会话或令牌校验值 → 当前主体及范围 | 原始凭据不入领域表，令牌到期／撤销逐请求检查 |
+| user_source_directory | 已认证用户 → 完整来源、每来源披露授权权威集合及目录版本 | 身份权威提供受信内部读端口；新增来源／权威与版本同事务预登记，首屏及续页核对当前版本；不可核验时列表报缺口，见[目录边界](storage-and-middleware.md#source-directory) |
 | ClockAdapter | 覆盖允许暂停的经过时间、UTC 区间及可信代次 → 保守截止判断 | 资格判断使用下述时间界限；共库事务免除跨端缓存窗口，仍须检查当前批准／许可的绝对期限 |
 
 生产以 tenant 和固定 Orchestrator 分区绑定数据库连接，各领域只能通过自己的 repository 修改事实，禁止事务中临时改租户。跨领域需要共同提交时，由宿主传递同一事务句柄给明确参与者；插件不能取得任意表访问接口。开发单体可让适用领域共享 SQLite 文件，复用同一事务 API；端侧独立 owner 仍只管理自己的账本。
+
+估算费用的用户接受事实由原 Orchestrator 的受信 TaskPolicyRegistry 保存并在 task.submit 时绑定，缺少登记即只开放严格费用模式；它不是由普通命令正文或宿主缓存推断的授权。当前只在原 Orchestrator 与相关 Grant owner 同一受信提交域、能够读取这份原记录时允许估算，跨域保持严格模式；详细入口及结算归[任务预算](orchestrator/README.md#budget)与[授权使用](security/README.md)。
 
 生产按[Orchestrator 的锁定顺序](orchestrator/implementation.md#21-锁定顺序)，先取得原命令键，再判断祖先任务、预算与领域对象，最后保存工作和回执；不需要的层次跳过。首次命令以唯一键插入事务内占位，冲突方等待原事务后读固定决定，不能提交一项没有处理责任的空占位。执行、授权 owner 独立部署后各自提交，不能把共库代码路径当跨库原子事务。本地 SQLite 写事务采用单写队列与短 `BEGIN IMMEDIATE`，只在已有事务尚未建立且无外部动作时有限退避重试。
 

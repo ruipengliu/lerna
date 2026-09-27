@@ -39,7 +39,7 @@
 | heartbeat_interval_ms、heartbeat_timeout_ms | 30000、90000 | 空闲后发应用 ping；原 nonce 的 pong 超时则断开，超时大于间隔 |
 | max_content_bytes | 部署声明的有限正整数 | 大内容及临时空间上限，独立于帧容量 |
 
-服务可以声明更小值，但须满足表中相互约束并通过容量验收；运行中不静默缩小已发 Ready 的限额。普通工作达到 `max_* - control_reserve_*` 后停止新发送；取消、撤权、收尾、mirror_control、响应和心跳可使用预留，全部仍受总上限约束。控制类别由受信入口按方法登记裁决，发送方不能自报高优先级。参考控制方法为 task.pause/cancel、execution.control/cancel、brain.cancel、evaluation.cancel/revoke、grant.revoke、endpoint.revoke、content.close/release_copy、resource.release、budget.close/settle、grant.lease.settle、grant.use.settle 及 collaboration.control；后者仅关闭／停止分支可占预留。普通 Change 可以合并成同对象最新修订；无法保持提示游标连续时发 `snapshot_required`，不能无声丢失。
+服务可以声明更小值，但须满足表中相互约束并通过容量验收；运行中不静默缩小已发 Ready 的限额。普通工作达到 `max_* - control_reserve_*` 后停止新发送；取消、撤权、收尾、mirror_control、响应和心跳可使用预留，全部仍受总上限约束。控制类别由受信入口按方法登记裁决，发送方不能自报高优先级。参考控制方法为 task.pause/cancel/billing_reconcile、execution.control/cancel、brain.cancel、evaluation.cancel/revoke、grant.revoke、endpoint.revoke、content.close/release_copy、resource.release、budget.close/settle、grant.lease.settle、grant.use.settle 及 collaboration.control；后者仅关闭／停止分支可占预留。普通 Change 可以合并成同对象最新修订；无法保持提示游标连续时发 `snapshot_required`，不能无声丢失。
 
 双方持续独立读写，不能在等待某一业务 response 时停止读取控制或回复帧。发送队列持续不降、无法排入控制帧或心跳超时则关闭慢连接；未交付的 Delivery、未确认 Reply 和业务 jobs 仍在持久存储中恢复。应用 ping/pong、socket write 完成和任何传输流控都不确认业务成功。本配置不另设流控 ACK；ReplyAck 的持久含义另见第 4 节。
 

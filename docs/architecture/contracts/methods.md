@@ -2,7 +2,7 @@
 
 [线格式](protocol.md) · [机器登记](schemas/methods.json) · [共享 Schema](schemas/protocol.schema.json)
 
-本表是同版登记的 104 个方法的查阅视图。输入、输出定义名指向共享 Schema 的 `$defs`，完整字段以 Schema 为准；成功含义及异常责任按所属模块定义。`条件` 表示 Command 必须携带 expected_revision，Query 不携带。全部方法属于未发布草案。
+本表是同版登记的 105 个方法的查阅视图。输入、输出定义名指向共享 Schema 的 `$defs`，完整字段以 Schema 为准；成功含义及异常责任按所属模块定义。`条件` 表示 Command 必须携带 expected_revision，Query 不携带。全部方法属于未发布草案。
 
 ## brain
 
@@ -161,6 +161,7 @@
 | `task.accept_result` | command | TaskAccept_ResultInput → TaskAccept_ResultOutput | applied、rejected |
 | `task.adjust_budget` | command／条件 | TaskAdjustBudgetInput → TaskAdjustBudgetOutput | applied、rejected |
 | `task.attach_evidence` | command | TaskAttach_EvidenceInput → TaskAttach_EvidenceOutput | applied、rejected |
+| `task.billing_reconcile` | command | TaskBilling_ReconcileInput → TaskBilling_ReconcileOutput | applied、rejected |
 | `task.cancel` | command／条件 | TaskCancelInput → TaskCancelOutput | applied、rejected |
 | `task.input` | command | TaskInputInput → TaskInputOutput | applied、rejected |
 | `task.list` | query | TaskListInput → TaskListOutput | QueryResult／Error |

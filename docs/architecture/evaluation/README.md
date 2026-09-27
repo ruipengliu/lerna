@@ -41,9 +41,11 @@ flowchart TB
 
 每个 release_request_id 在运行前只绑定一个精确候选、一份正式计划和一个未暴露保留分区。plan_create 在同一事务中保存此绑定与分区占用；第二个候选竞争同一申请，或另一申请竞争同一分区时拒绝。原计划重投、恢复原 run 和已冻结的有限重试不属于再次选择候选。占用开始后分区不再用于其他候选的正式确认，即使运行中断也不回收为“未使用”；这是有意承担的数据成本，避免从停止时点或不完整反馈挑选有利测试。
 
-正式报告全部封存后才开放反馈。受信批准者通过 evaluation.feedback_open 取得报告，系统先保存 exposure_id、主体、报告摘要、内容范围与时间，再返回内容；答复丢失仍视为已暴露，查询同一命令不制造新额度。evaluation.read 在此之前只返回进度与准备故障，不能泄露保留逐例结果、成绩或通过状态。
+正式报告全部封存后才开放反馈。受信批准者通过 evaluation.feedback_open 取得报告，系统先保存 exposure_id、关联来源组索引、唯一影响扫描 job、主体、报告摘要、内容范围与时间，再返回内容；答复丢失仍视为已暴露，查询同一命令不制造新额度。该报告封存后的正常反馈不撤销自身，但同来源组的其他正式计划若尚未封存仍受影响：新报告及改善使用被原暴露门禁同步拒绝，扫描负责逐项封闭环境；已经开始的样本动作可能在环境实际封闭前继续，其效果与费用仍须收尾。evaluation.read 在此之前只返回进度与准备故障，不能泄露保留逐例结果、成绩或通过状态。
 
-报告、答案或样本通过其他路径泄露时，受信评测维护者调用 evaluation.exposure_record，追加分区、来源组范围、泄露证据及发生时间；尚无报告也可以登记。系统在同一事务中保存暴露和受影响计划的正式资格失效事实，并创建在途封闭、已批准撤回的 jobs。发生在报告封存前的非受控暴露使该计划及报告失去正式资格；事后才发现早期泄露同样生效，发生时点不明时保守判定受影响。原报告保持不可变，读取时同时返回当前资格及原因，批准入口必须检查当前资格；失效不能靠重开报告恢复。正常封存后经 feedback_open 开放不使原报告失效，但仍禁止这份分区进入后续正式确认。所有在途效果、环境清理和用量核对继续由原运行负责。
+报告、答案或样本通过其他路径泄露时，受信评测维护者调用 evaluation.exposure_record，追加分区、来源组范围、泄露证据及发生时间；尚无报告也可以登记。原评测 owner 在短事务中保存暴露事实、可按来源组查询的索引、原回执和唯一的影响扫描 job 后即可确认接纳。这个回执只证明暴露已进入同步资格门禁，不证明所有受影响计划已逐项更新或目标已停用。影响扫描按有界页补写失效投影，并为在途环境封闭、已批准目标撤回保存逐项责任；扫描中断沿原 job 续页。
+
+正式改善计划、run 接纳、每次新环境／样本／重试的逻辑启动、报告封存、改善批准及其在线启动、离线租约和扩批在各自决定前，都从原评测 owner 核对所用分区和来源组的**暴露原事实**；投影尚未追上或门禁不可核验时，不能凭旧 `PlanEligibility` 或批准缓存继续。兼容发布仍核对当前数据用途与契约证据，不把保留集独立性门禁套在 conformance 报告上。非受控暴露发生在正式报告封存前或时点不明时，该计划及报告失去正式资格；事后才发现早期泄露同样生效。原报告保持不可变，读取时给出当前资格和原因；正常封存后经 feedback_open 开放不使原报告失效，但禁止这份分区进入后续正式确认。已签发的在线启动窗口及离线租约仍按其固定期限和已知撤回规则收束，失联目标可能在窗口内行动，须在逐目标状态中如实展示；所有在途效果、环境清理和用量核对继续由原运行负责。详细的并发与分页规则见[评测实现](implementation.md#7-报告读取与反馈暴露)。
 
 看过保留反馈后修改候选，必须登记新候选并使用另一份未暴露分区。复用原分区时必须显式创建选择用途计划，其报告为 exploratory，不能作为发布的独立改善证据；不能在正式申请失败后自动降级继续运行。受控运行器为评分读取真值不视为向开发过程暴露，但该次分区占用仍不可复用。普通兼容性发布和没有旧基线的首装可明确申请只验证契约，产出 conformance 报告及 compatibility 批准，不得借此声称能力改善。失败的改善申请不可原地自动降级；新的兼容申请仍保留原候选与尝试历史。所有记录仍复用评测数据库、用途权限和持久 job，不增加独立评测服务。
 
@@ -57,7 +59,7 @@ EvaluationPlan 固定数据集版本、样本集合、基线与候选安装锁�
 
 基线与候选各自从同一冻结初始状态运行，不共享可被前一运行修改的设备或记忆。双方任一任务启动前完成整对环境预检；冻结种子决定样本顺序及双方先后，热身集和缓存条件单列。样本的实际输入引用、种子、初始状态摘要和最终真值引用一并保存；需要网络实时性的样本注明获取时点及不可完全回放的部分。评测样本复制前按内容 owner 登记受管持有者，不能把生产日志默认视为获准训练或评测材料。
 
-评测环境提供方实现 prepare、inspect、observe_truth、seal 和 destroy。prepare 按 run_id 幂等创建隔离环境，固定初始数据与种子；候选只接触任务侧观察与动作入口，不能读参考答案、改判定器或伪造真值。判定器通过独立只读通道取得效果证据。代码候选的评测依赖通过验收的代码隔离，数据型 Skill/配置候选也不能修改运行器与评分配置。
+评测环境提供方实现 prepare、start_sample、inspect、observe_truth、seal 和 destroy。prepare 按 run_id 幂等创建隔离环境，固定初始数据与种子；prepare 与 start_sample 都在物理启动前核验原 Evaluation owner 的准确有限时许可，缺可信签发依据或跨机时钟界限时拒绝。候选只接触任务侧观察与动作入口，不能读参考答案、改判定器或伪造真值。判定器通过独立只读通道取得效果证据。代码候选的评测依赖通过验收的代码隔离，数据型 Skill/配置候选也不能修改运行器与评分配置。
 
 每个样本运行固定目标与预算。计划允许的重试生成新 attempt_id，但样本 ID 和原操作恢复身份不变；效果未知时仍按[执行规则](../execution/README.md)核对，不能为了得到一个可评分答案重复未知写动作。样本结束后先封闭新动作并核清允许的在途责任，再取最终真值、评分和清理环境。
 
@@ -67,7 +69,8 @@ EvaluationPlan 固定数据集版本、样本集合、基线与候选安装锁�
 
 | 环境方法 | 输入与输出 | 效果确认 |
 | --- | --- | --- |
-| prepare | run_id、环境版本、初始状态/种子、额度；返回 environment_id | 环境已耐久登记且准备完成；答复丢失按原 run_id 查询 |
+| prepare | run_id、环境版本、初始状态/种子、额度、原环境准备许可；返回 environment_id | 环境已耐久登记且准备完成；许可过期或原身份不符拒绝新建，答复丢失按原 run_id 查询 |
+| start_sample | 原 environment_id、sample_id、arm、attempt_id、原样本启动许可；返回原尝试入口 | 环境 owner 在物理启动前核对有限时许可、未 seal 及固定样本身份；重复只查原 attempt，不凭排队 job 扩大资格 |
 | inspect | 原 environment_id 或创建 run_id；返回当前实例、动作入口及责任 | 未找到必须说明查询范围；暂时未找到不证明从未创建 |
 | observe_truth | 原环境、观测切点、判定器身份；返回受保护真值引用 | 只允许独立判定器读取，返回证据版本及仍在途动作 |
 | seal | 原环境、原控制 ID；返回已封闭新动作及未终结工作 | 环境 owner 裁决实际封闭，命令接纳不能代替完成 |
@@ -139,7 +142,7 @@ sequenceDiagram
 | DatasetPartition：partition_id、dataset_ref、split、sample_ids、source_group_map、content_digest、permission_refs | split 为 development、selection 或 holdout；来源组映射阻止相关样本跨用途；登记不自动授予正文访问权 |
 | HoldoutReservation：reservation_id、release_request_id、candidate_id、plan_id、partition_id、reserved_at | 评测管理保存；release_request_id、plan_id 及 partition_id 各自唯一占用，原绑定不可改写或回收 |
 | FeedbackExposure：exposure_id、partition_id、source_group_ids、report_id?、report_digest?、recipient、scope、occurred_at、recorded_at、evidence_refs、reason | report 字段可缺，分区／来源组范围和证据必需；occurred_at 可为 unknown，recorded_at 是保存时点；scope 指成绩、逐例反馈、答案或样本内容，答复丢失不撤销暴露 |
-| PlanEligibility：plan_id、revision、status、exposure_ids、reason | 评测管理追加事实；status 为 eligible 或 ineligible，失效不可恢复；报告原摘要不变，当前资格单独返回并约束批准 |
+| PlanEligibility：plan_id、revision、status、exposure_ids、reason | 评测管理的可滞后失效投影；status 为 eligible 或 ineligible，失效不可恢复。当前资格须同时核对暴露原事实，不能仅凭投影放行计划、批准或启动；报告原摘要不变 |
 | EvaluationPlan：plan_id、digest、purpose、partition_id、sample_ids、seed、release_request_id、reservation_id、policy_digest、formal_attempt_index | purpose 为 development、selection、compatibility_check 或 release_confirmation；正式确认必须绑定保留占用及过程策略中的唯一尝试序号，兼容计划不要求改善基线。样本集合有界且不可换样本 |
 | EvaluationPlan：baseline_lock、candidate_lock、environment_binding、judge_binding | 固定实现、配置、环境与判定器版本，候选无修改权限 |
 | EvaluationPlan：metrics、thresholds、budget、retry_policy、stop_rule、invalid_run_policy | 阈值、固定样本量或其他预先审查的停止规则、失败口径运行前固定；默认不允许看到结果后加样本直到通过 |
@@ -170,7 +173,7 @@ sequenceDiagram
 | evaluation.cancel | 原 run_id 集合、预期控制修订、原因；返回已保存控制与待封闭环境 | applied 只证明停止新工作及封闭责任保存；各环境 seal 结果分别确认 |
 | evaluation.read | 计划、run 或 report ID；返回获准事实及缺口 | 只读；保留反馈开放前仅返回进度及准备故障；开放后仍限暴露主体和范围，正文另受用途许可控制 |
 | evaluation.feedback_open | exposure_id、封存 report_id/digest、recipient、scope；返回 Exposure 及反馈引用 | 核验受信主体及范围，在返回任何保留反馈前原子保存暴露；同命令返回原回执，失联按原命令查询 |
-| evaluation.exposure_record | exposure_id、partition_id、source_group_ids、scope、recipient、occurred_at、evidence_refs、reason；可带 report_id/digest；返回暴露及受影响资格 | 仅受信评测维护者可追加；暴露、正式资格失效与在途封闭／已批准撤回 jobs 同事务保存，随后按原运行和原批准继续收尾 |
+| evaluation.exposure_record | exposure_id、partition_id、source_group_ids、scope、recipient、occurred_at、evidence_refs、reason；可带 report_id/digest；返回原暴露与 impact_job_id | 仅受信评测维护者可追加；原暴露、来源组索引、唯一影响扫描责任和原回执同事务保存。影响扫描分页补写资格投影及撤回责任；当前门禁在扫描完成前直接核对原暴露 |
 | evaluation.approve | 精确候选/报告、批次、期限、退出及回退策略；返回 approval_id | 受信批准及发布 job 同事务保存后 applied；不证明目标已经激活 |
 | evaluation.revoke | approval_id、预期修订、原因；返回固定撤回决定及未确认目标 | 保存撤回、停止扩批和逐目标停用责任；发布管理持续查询原命令 |
 | evaluation.approval_check | use_id、approval_id、目标、精确锁、实例、action_kind/action_id；返回 ApprovalUse | 通过 Command 持久保存固定在线启动回执后 applied；只证明原动作在有限窗口内获准，同一 use 查询返回原截止 |
@@ -205,5 +208,7 @@ Rollout.finished 表示有限批次已执行及观察完毕，不解除当前活
 | EV-16 | 先后注入环境预检失败与正式启动后的提供方超时 | 前者保留 invalid 与覆盖缺口，后者在原分母计未成功；不能逐例剔除超时提高成绩；C8 |
 | EV-17 | 报告批准后发现样本在评测前已泄露，另测尚无报告时登记泄露 | 无报告也可登记；来源组关联的正式资格失效，禁止新批准并保存已有批准撤回责任；原报告及失败原因仍可追溯；C8、C9 |
 | EV-18 | 同一改进过程换申请名和未暴露分区反复正式确认，或改 improvement_id 隐去前次失败 | 跨申请检查固定策略与全部尝试；超限不接纳正式计划，来源或方法不足时门禁 inconclusive，新 ID 不清除选择历史；C8、C9 |
+| EV-19 | 一次泄露关联超过单页计划和多个已批准目标，影响扫描在两页之间崩溃 | 原暴露回执只有一个 impact_job_id；未扫描到的旧批准也无法通过新启动或扩批门禁，扫描恢复后每个目标只保存一份撤回责任；已发窗口和离线租约按固定边界单列；C7、C9 |
+| EV-20 | 分区 A 的正式报告封存后开放正常反馈；同来源组的分区 B 仍在正式运行且一个样本动作已经启动 | A 的原报告资格不倒退；B 的新环境／样本／重试启动门禁及封存／改善使用门禁立即失效，原环境由影响扫描封闭；暴露前已获有限时启动许可的动作仍可能启动或继续，效果、清理和费用责任不丢失；C8、C9 |
 
 评测并发、环境数、单样本时间、总调用费和保留字节必须由计划和宿主共同限定；耗尽时停止接纳新样本，保留原环境封闭与清理预算。生产任务与评测分配独立资源份额，避免候选压测耗尽取消和恢复容量。服务规模、专项质量及 1000 项 API 的证据由[系统验收](../validation/README.md)汇总，不能由一次演示或接口结构合法替代。

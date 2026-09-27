@@ -62,8 +62,12 @@ flowchart TB
 | task_executor_bindings | task_id、executor_id、最近目标／控制修订 | 同任务执行端唯一；控制传播不能漏端 |
 | jobs | job_id、业务关联、kind、状态、due_at、work_revision、lease_epoch、lease_until、尝试数 | 责任槽唯一；work_revision 单调，可领取状态有索引 |
 | budget_balances | task_id、unit、limit、spent、reserved | 每任务每计价单位唯一 |
-| budget_reservations | reservation_id、task_id、unit、上限、累计已结金额、是否最终 | 每操作每计价项唯一 |
+| budget_reservations | reservation_id、task_id、unit、上限、累计已结金额、是否最终、唯一计费来源绑定及最近来源费用修订 | 每操作每计价项唯一；Brain／Executor／Grant 对同一物理收费不得各扣一次 |
 | budget_allocations | allocation_id、父任务、接收方、单位上限、期限、状态、关闭证明 | allocation 唯一；不可换接收方或单位 |
+| budget_correction_intents | allocation_id、receiver_usage_revision、原闭合证明摘要、有限 budget.settle 命令尝试／回执、当前父 allocation expected_revision、状态 | 父方在调用 budget.settle 前保存；同接收方修订唯一，丢答复沿原命令查询 |
+| receiver_correction_outbox | allocation_id、usage_revision、原计费项、完整累计 Closure 摘要、有限唤醒命令尝试及回执、交付状态 | 接收方 closed 证明上调事务共同保存；收到父方 durable billing_reconcile 回执才完成交付 |
+| budget_incidents | 原计费项／allocation、提供方与能力绑定、声明上界、可信实际账单、超额差额、原因与处置状态 | 同原计费项唯一；分别记录 provider_bound_breach 与 receiver_allocation_breach 的证据及待查标记，两者可同时成立；另记封账后更正造成的预算超额 |
+| task_policy_acceptances / task_estimate_consents | 租户、认证用户、准确 policy_ref、费用单位、适用范围、预算上限、期限；Task 关联原 acceptance_id | 受信 TaskPolicyRegistry 先登记接受事实；估算 Task 接纳时固定关联，不由模型或请求正文伪造 |
 | command_receipts | logical_service、command_id、请求摘要、固定 Receipt | 原命令唯一；接纳与业务提交共事务 |
 | closed_identities | 身份类型、ID、原服务、摘要、关闭依据、最小修订 | 长期禁止复用索引；无 TTL 删除 |
 
@@ -115,6 +119,8 @@ DecisionConsumption 与 PlanStepAdmission 是互斥的候选来源登记：一�
 ## 3. 接纳任务及固定原命令
 
 接纳入口先核对认证、消息结构、Orchestrator 路由、容量和期限，再执行以下短事务。准确策略及内容依赖在事务前取得并固定；事务内只检查它们仍具有可接纳资格，不能调用远端供应商。
+若固定 TaskPolicy 使用估算费用，原 Orchestrator 的受信 TaskPolicyRegistry 须先按租户和认证用户登记对准确策略版本的接受事实，注明非硬上限、适用范围、预算上限和期限。该登记使用宿主受信管理入口与原命令回执，答复丢失先查原登记命令，不重复制造接受事实；此入口尚未冻结为第三方线方法。提交事务按认证租户／主体、策略摘要及预算核验当前登记并固定 Task→acceptance 关联；策略不可读、接受缺失或预算超出范围时不接纳估算任务。涉及费用的 Grant owner 必须在同一受信提交域直接核验该内部关联；远端 Grant owner 只有公开 Task.policy_ref 时不可证明接受，故跨域及无管理入口装配只开放严格模式。
+默认宿主的策略管理入口先从本人会话取得 tenant_id、actor_id，读取不可变 TaskPolicy 的 ID、版本和摘要，展示允许的计费能力、估算方式、费用非硬上限、预算范围和期限。本人接受后，Registry 以固定管理 command_id 保存 acceptance_id、tenant_id、actor_id、policy_ref、显示内容摘要、范围、期限及原回执；同命令重放只返回原记录，冲突请求拒绝。撤回或到期只关闭后续估算使用，不删原任务、原 use 或迟到账单。任务后续每次计费准入在同提交域重新核对该接受记录仍有效，并同当前 Grant 及适配器声明取交集；受信管理入口不可用时停止新估算调用。登记 API 是宿主内部接口，尚不宣称第三方线互操作。
 
 ```text
 accept_task(command):
@@ -124,7 +130,9 @@ accept_task(command):
   require now < command.expires_at
   require target Orchestrator == this logical authority
   require tenant capacity and finite task deadline/budget
+  if policy uses estimated billing: verify current trusted policy acceptance for authenticated user
   insert Task(active, running), original goal and budget balances
+  if policy uses estimated billing: bind original acceptance_id, policy digest and accepted scope to Task
   insert first decide job using a unique responsibility slot
   insert applied receipt referring to this Task
   commit
@@ -195,6 +203,12 @@ Executor 的 applied Receipt 只确认接纳责任。Orchestrator 保存该回�
 | 终态被改为可发送或已实现效果被撤销 | 拒绝新投影，保留冲突及原证据 |
 
 事实归并与下一项 job 同事务提交。取消任务仍接收效果和费用事实；它不会生成新的 decide 或写入成果工作。已具备的任务终态不能被迟到成功重开。
+
+计费项的预留在首次发送前固定一个账单权威来源 `(source_owner, source_kind, source_id)`；Brain／Executor 的用量与 Grant 使用可同时留作证据，但一个物理账单只由该绑定更新 Task spent，其他投影不能再次扣费。若源身份直到远端接纳才确定，预留保持占用，首次可核验事实在唯一绑定约束下固定它；来源互相矛盾时不猜一个金额结清。源 owner 对终态后可信的上调账单也在保存新费用修订的同一事务创建或重开持久交回 outbox。Orchestrator 的旧 poll／settle job 即使已 done，不是以后不会再有可信更正的证明。
+
+跨 owner 的交回使用 `task.billing_reconcile` Command：target_id 为原 task_id，payload 固定 `source_kind`（brain_decision、execution_operation、grant_use、budget_allocation）、对应原 source_id、usage_revision 及规范账单摘要 usage_digest。Brain／Executor 的 usage_revision 是含新账单的 DecisionRecord／Operation.revision，Grant 是 UseSettlementRecord.usage_revision，allocation 是 RuntimeBudgetClosure.usage_revision。源 owner 为每个账单修订固定业务键与 usage_digest，保存有限 expires_at 的唤醒命令尝试及原回执。原命令仍可查询／重投时沿原 ID；受信期限过后仍无 JobAck，可保存同一修订、摘要及 target 的继任 command_id 再交付，旧未知尝试保留审计身份，不据此判未执行。任一命令取得 Orchestrator 已持久保存对应 settle 责任的 JobAck 才结束该修订交付；源反复不可达按退避保留 outbox。Orchestrator 认证发送 owner，核对原 Task 与计费绑定及该 owner 的原对象关系；先认证并核对原绑定，再按 `(source_kind, source_id, usage_revision)` 判序：同修订已登记且摘要不同才冲突；同摘要重复或同语义继任命令返回原 job，较旧修订在更高可信累计值已入账后返回该 job 的 applied/no-op，不倒退费用。r1 唤醒时主动读取到 r2 可直接归并 r2，随后 r2 或 r1 重投都只取得已持久的原责任；无法解析绑定或读源账时保留缺口而不确认结清。接纳事务只新建或重开按 Task／原计费来源唯一的 settle 槽，不信通知中的金额或摘要作账单证据；JobAck.resource_id 为原 task_id，job_id 为该责任槽。原槽完成与新责任竞争遵守 [job 完成规则](#job-completion)，终态 Task 仍可重开账务槽但不重开目标行动。
+
+settle 工作者主动查询原 source 当前累计费用和可信账单／不收费依据，比对已记的来源费用修订与累计额，仅将非负上调差额记入原 reservation 的 spent；原释放额度不倒流。源记录较旧或相同金额重报不双扣，较新修订与已入账金额冲突时保存协议缺口；超出可信上界照实记账并停止新计费。结算提交与 source 修订、spent、incident 及槽状态在一个事务；若当前源资料暂不可核验，槽保持待核对，不因 Task／Decision／Operation／Use 已终态或首次 job 完成而删除。退款和贷记另行对账，不走此上调分支。
 
 <a id="key-sequence"></a>
 ### 5.1 准入提交、丢答复与原事实恢复
@@ -298,9 +312,11 @@ stateDiagram-v2
 
 ## 8. 预算分配与最终结算
 
-金额和用量采用精确十进制字符串，按声明单位独立比较。修改预算、预留调用和接收累计费用都锁对应 balance 行，维持 `spent + reserved ≤ limit`。未知费用保留上限；账单迟到只应用累计差额。
+金额和用量采用精确十进制字符串，按声明单位独立比较。修改预算、预留调用和接收累计费用都锁对应 balance 行。严格额度的每项调用先预留可信最大费用，正常供应商合同下维持 `spent + reserved ≤ limit`；未知费用仍占上界，账单迟到只应用累计差额。明确获准的估算模式只允许未通过 allocation 分配、且费用 Grant owner 与原 Task 同受信提交域的直接调用：以有限估算额决定是否启动，未知账单保持该笔预留，自动核对耗尽后仍需可信最终账单或可验证不计费证明才能结清。最终账单若超估算仍全额记入 spent，允许账面超过 limit，并立即封闭新的计费准入；不得因违反严格模式的数据库检查而丢弃真实账单或释放其他未知预留。若提供方实际收费突破其声明的可信上界，同样全额记账、停止该适配器的新计费调用并报告合同违约，不以不变量拒收账单。`budget.allocate` 及其接收方始终要求严格上界，直到另有可验证的超额交接合同。
+数据库不能把 `spent + reserved ≤ limit` 设为对所有账单更新都生效的无条件 CHECK；应在正常准入事务检查该式，并允许带原计费证据、合同违约或已获准估算依据的结算事务记录真实超额。超额不是新的可花额度，后续准入始终拒绝。
 
 `task.adjust_budget` 输入是任务完整单位上限集合。单位集合不能借调额更换计价口径；输出 Task 只增加 revision、修改 limit，并按需解除 budget 等待。它不修改 spent、reserved、goal_revision、control_revision、暂停状态或 deadline，终态拒绝调额。
+估算任务的调额还须处于提交时固定的 TaskPolicyAcceptance 范围；超过该范围时拒绝，不从后来新登记的接受事实回填到已有 Task。原任务保留其策略和已发生账单，用户可以另建采用新策略及新接受范围的任务。
 
 ### 8.1 额度交接
 
@@ -309,19 +325,35 @@ stateDiagram-v2
 同 Orchestrator 子任务直接在共同事务内取得该分配；不同 Orchestrator 接收时验证原父权威、准确 allocation 和接收方绑定，在自身账本仅接纳一次。委派携带原分配依据，接收方不能自行填写另一份余额；跨端传输规则见[协作实现](../collaboration/implementation.md)。
 
 `budget.settle` 的信封目标为 allocation_id，比较 allocation revision。输入 RuntimeBudgetClosure 必须绑定原 receiver、allocation、最终用量修订、全部单位及不可再消费证明。接纳方验证证明来自负责方且属于固定原记录；ContentRef 格式本身不证明可信。
+正常结算要求最终累计费用不超过原 allocation。最终累计费用突破原 allocation 时，原因可能是提供方违反单次可信上界，也可能是接收方违反总分配门禁、放行多笔各自合规的调用。接收方均须关闭新消费并出具完整最终 Closure；父方独立核验原计费身份、可信账单、分配上限和接收方封闭事实后如实入账，分别判断是否有提供方单次上界违约、接收方分配门禁违规；两者可并存，未能判断的标记待查并停受影响的新计费。提供方违约以原单次可信上界与原物理账单比较，接收方违规以原接纳／预留日志检查是否放行超额消费；不能仅从总额超 allocation 推断责任方。只凭接收方自报的超额数或一个未核验的 proof_ref 不得把申报额作为可信实际支出；原计费证据不可核验时保留预留、申报缺口和核对责任。
+父方 incident_causes 对两项证据分别入列，incident_pending 在任一归因尚未核清时可与已知原因并存；超过 allocation 的 settled 输出不能同时给空原因且 pending=false。RuntimeBudgetClosure 不带由接收方声称的原因，BudgetSettleOutput 和 budget.read(role=owner) 的当前 RuntimeBudgetAllocation 显示父方已核定的两字段。可信费用已经发生且可核验时先全额结算，不等待归因调查结束；归因更新保留原账单身份与历史修订。
+已 settled 的 allocation 仍可收到原计费方可信的上调账单。接收方保持 spending_closed，在同一事务追加更高 usage_revision 的完整累计 Closure 和按 `(allocation_id, usage_revision)` 唯一的校准 outbox；该更正不重新开放新消费资格。outbox 向原父任务调用 `task.billing_reconcile`（source_kind=budget_allocation、source_id=原 allocation_id）唤醒结算；原唤醒命令答复未知先查询或同 ID 重投，过期仍无 JobAck 时保存同账单修订及摘要的继任 command_id，保留旧尝试身份，任一父方 durable job 回执才完成交付。父方 job 通过 `budget.read(role=receiver)` 获取当前 closed Closure，比较已 settled allocation 的 closure.usage_revision；发现更高修订时，在自己的数据库先保存准确 Closure 摘要、当前 expected_revision 与首个固定 `budget.settle` 命令尝试，再提交结算。答复丢失沿原命令查询或重投；若命令过期仍无 applied，先读原 allocation 当前 revision 与 closure，已达到该累计账单则结束 intent，尚未达到且可核验时才保存同 Closure 修订／摘要的继任结算命令，旧未知尝试与回执不删除。旧尝试若随后先 applied，使继任命令因 expected_revision 过旧而冲突，父方读取当前 allocation；累计 Closure 与原 intent 摘要一致即认定该账单已结，绝不再扣差额。若与另一账单修订竞争，先恢复旧命令结果，再读取最新双方修订继续。父方既扫描尚未关闭委派，也按持久校准 job／intent 恢复已关闭委派的追账，不以 DelegationClosure 排除这项责任。
+更正要求各单位累计值不低于已结值且至少一项上调；同修订异内容冲突，旧修订不覆盖。`budget.settle` 只调整原 allocation 的 spent 上调差额，已经释放的 reserved 不倒流。它可能在新工作已使用余量后使 Task 账面超过 limit，此时记追账债务并停止新计费，但累计仍在 allocation 上界内时不误报超额事故。退款或贷记另走对账，不在此分支减记原 spent。
 
 ```text
 settle(allocation, closure):
   lock original allocation and parent unit balances
   require compared allocation revision and exact receiver
   require receiver has closed all new spending and reports final cumulative use
-  require each unit is present once and total <= allocated bound
-  move final actual amount from reserved to spent
-  release only the difference; save closure and settled revision
+  require each unit is present once
+  if allocation.state == allocated:
+    if any total > allocated bound: require trusted original billing; record cause or pending classification
+    release original allocation reservation; add complete actual to spent
+  else if allocation.state == settled:
+    require closure.usage_revision > stored closure.usage_revision
+    require trusted correction of original billing and unchanged closed spending gate
+    require each new cumulative unit >= stored unit and at least one unit is greater
+    if any total > allocated bound: require trusted original billing; record cause or pending classification
+    add (new cumulative actual - stored cumulative actual) to spent
+    do not alter original released reservation or reopen receiver spending
+  if parent balance now exceeds limit: record excess debt; block new billable work
+  if any total > allocated bound: independently classify provider breach and receiver allocation breach; allow both or pending cause; block affected new billing until classified
+  save closure and settled revision
   commit fixed Receipt and any parent continuation
 ```
 
-同命令查询和重放返回原结算。另一命令带旧 allocation revision 必须冲突，不能双扣。分配到期只关闭新的消费资格；未证明远端封账不返还额度。父取消、子返回答案及租约到期都不替代封账证明。
+同命令查询和重放返回该次原结算；不同命令带旧 allocation revision 必须冲突，不能双扣。首次结算证据尚不可验证时保留原预留，更正证据尚不可验证时保留已 settled 事实与独立待核对责任；都不能截断真实费用。分配到期只关闭新的消费资格；未证明远端封账不返还额度。父取消、子返回答案及租约到期都不替代封账证明。
+超额事故事务同时保存本 Orchestrator 对受影响提供方能力及接收方计费绑定的新调用禁用事实，并向安装负责方报告持久工作；安装负责方是否停用其他分区，按其独立审核与发布合同处理。原任务仍可收取效果、账单和取消事实，超额不得通过换分区或新 allocation 隐去。
 
 ### 8.2 跨 Orchestrator 接纳与预算关闭
 
@@ -337,6 +369,7 @@ settle(allocation, closure):
 | budget.close，目标 allocation_id、路由原 receiver | sender_orchestrator_id、parent_delegation_id、allocation_ref、allocation_command_id、reason → RuntimeBudgetReceiver | 原接收方关闭该分配的新子接纳及新增消费门禁，保存收尾责任；closing 尚无最终证明，closed 才有 closure |
 
 RuntimeBudgetReceiver 固定 allocation_id、parent_owner_id、receiver_id、parent_delegation_id、revision、state、可选 task_id、final_usage 和可选 closure。state 为 open／closing／closed；closing 和 closed 均禁止新的额度消费。parent 通过 receiver 投影取最终证明，再调用原 owner 的 budget.settle。
+closed 不因原计费方上调账单而重新开放。接收方以更高 revision／closure.usage_revision 更新同一 closed 投影，并同事务保存 receiver_correction_outbox，保留原 closed_at、原接收门禁及旧证明；父方收到原校准唤醒后按新的累计证明追账，不能拿旧 budget.settle 回执当成当前费用。若唤醒答复丢失，接收方重投原唤醒命令；父方若已保存核对 job 则继续原 job，不依赖委派仍处于未关闭状态。
 
 关闭与子创建争用同一 incoming_allocations 行。关闭先提交时，即使原创建随后到达且历史分配回执仍为 applied，也被长期关闭索引拒绝；创建先提交时，关闭封闭该子的新消费，保留所有在途费用并等待最终核对。原 task.cancel 仍单独负责目标取消，不能把预算关闭误称为目标动作已经停止。
 
@@ -401,5 +434,10 @@ RuntimeBudgetReceiver 固定 allocation_id、parent_owner_id、receiver_id、par
 | RT-12 | 任务分页期间撤权、新建任务并耗尽单页扫描量 | 新任务不跨上界进入旧查询；撤权项不披露，返回缺口及前进游标 |
 | RT-13 | worker 持有效领取等待远端；同槽先提交新控制，再让旧处理返回成功或可重试失败 | work_revision 已增加；旧 done／backoff 均保留 ready 和更早 due_at，原控制命令与尝试预算不重置 |
 | RT-14 | worker 分别先提交 done、waiting，再提交同槽新责任；另重放一个已失去租约的旧完成 | 新责任同事务重开／提前原槽；旧 job_id 或旧 lease_epoch 无权改槽，即使责任版本相同也拒绝 |
+| RT-15 | 顶层任务获准估算计费，最终原账单高于预留；同时尝试新的计费行动和固定 allocation 委派 | 原账单全额入 spent，账面可超 limit，后续计费和无可信上界的 allocation 接纳被拒；重复账单不再扣，用户可见估算超额而非硬上限成功 |
+| RT-16 | 本人接受估算策略的登记答复丢失并重试；任务接纳后撤回接受，另以远端 Grant owner 或仅 Task.policy_ref 请求 estimate | 原管理命令只形成一项接受事实；新估算调用拒绝，旧账单仍归原 use；跨域或不能查内部关联时 strict-only，不由公开策略引用推断接受 |
+| RT-17 | allocation 已 settled 并释放余量；父用该余量接纳新工作后，原接收方以上调账单更新 closed Closure，校准唤醒过期未获答复、继任命令与父结算答复先后丢失 | 接收方 outbox 保留旧唤醒并用同修订继任 task.billing_reconcile 取得同 JobAck，父 durable job 保存结算命令尝试并从原回执／当前 allocation 恢复，过期未应用才建同账单继任命令；只追原 allocation 的累计差额一次，已释放数值不倒流；父超预算记债并停新计费，未突破原 allocation 上界时不误判违约 |
+| RT-18 | Task／Decision／Operation／Use 已终态且首次 settle job 已 done，原计费 owner 保存上调账单后通知丢失，随后 O 重启 | 源 outbox 保留旧未知尝试，命令过期后以同修订继任 task.billing_reconcile 交回同 JobAck；O 在终态 Task 重开原计费槽，主动读原账并只记一次上调差额，原 Task 目标和已释放额度不重开；同物理账单的 Brain／Grant 双投影不双扣 |
+| RT-19 | 两笔各自未超过可信单次上界的调用被接收方错误地接纳，总额超原 allocation；另一笔同时出现提供方单次上界违约 | 父凭原账单记全部真实费用，不因总额超限拒收；分别保存 receiver_allocation_breach 与 provider_bound_breach，二者可并存；一项证据暂缺时 incident_pending=true 与已知原因并列，停受影响新计费并继续核证 |
 
 实现交付应同时记录表约束、事务故障结果和调度负载。静态方法序列覆盖见[20-budget-allocation](../contracts/examples/protocol/20-budget-allocation.json)；它不能证明上述并发和磁盘故障已经通过。

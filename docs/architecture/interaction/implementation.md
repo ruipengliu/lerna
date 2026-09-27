@@ -162,11 +162,12 @@ seen_revision 只记录曾显示哪个修订，不能证明用户读完、理解
 | surface_revisions | surface_id、revision 唯一；完整快照摘要不可变 | 恢复当前呈现 |
 | surface_projection | surface_id 唯一；last_source_revision 单调 | 防旧投影覆盖 |
 | presentations | surface_id、endpoint_id 唯一；intent_revision 单调 | 本设备打开／关闭意图 |
-| input_submissions | input_id 唯一；回答、请求、预览和目标命令固定 | 输入转交状态 |
-| application_events | event_id 唯一；应用绑定、事件类型、负载及目标命令固定 | 独立应用的可靠转交 |
+| input_submissions | input_id 唯一；回答、请求、预览、目标服务及完整原 Command 固定 | 输入转交状态；对外 InputSubmission 只披露 target_command_id，worker 从本记录恢复原目标 |
+| application_events | event_id 唯一；应用绑定、事件类型、负载、目标服务及完整原 Command 固定 | 独立应用的可靠转交 |
 | delivery_jobs | 原 input_id 或 event_id 唯一未结 job | 原业务命令重投与查询 |
 | surface_notifications | surface_id、revision 唯一提示责任 | 提交后通知，可重复唤醒 |
 | surface_queries | query_id、主体、过滤摘要及有限集合 | 目录稳定分页 |
+| aggregate_task_queries | 查询身份、过滤摘要、来源目录版本、各来源范围代次／上界／游标、未输出候选与期限 | 应用跨来源列表的短期续页状态，不保存第二份 Task 权威 |
 | submission_closures | 输入／事件身份、目标 owner、command_id 和原决定摘要 | 长期最小关闭依据 |
 
 正文、截图和完整回答按各自用途保留，不因输入去重要求无限保存。
@@ -242,17 +243,21 @@ surface_list 对一个 owner 冻结有限 ID 集合，逐页返回当前获准�
 跨端任务目录先从身份权威读取已预登记来源，按[跨 Orchestrator 列表契约](README.md#cross-orchestrator-list)固定来源版本、合并排序和续页。部分端点失联不导致本地任务消失，返回 unreachable_endpoints／partial；目录换版、权限变化或不可达时不把旧页包装成全局完整清单。
 目录标题、预览和关联 task_id 均受最小披露要求，不能用知道 ID 绕过权限。
 
+跨来源聚合使用受信内部端口，不属于 `harness/1` 的新领域方法。身份端口 `read_user_sources(已认证 tenant_id, user_id)` 从同一提交视图返回 `{sources: [{orchestrator_id, disclosure_authority_ids}], directory_version}` 或明确不可用／不完整结果；聚合器从目录所列各授权权威读取该用户在该来源的披露范围修订，组成可比较的复合 token，失败时不把未知当成空集合。聚合器先为固定来源建立变化水位并缓冲，再分别读取 `task.list` 首屏，把各来源首屏的 `upper_bound`、原游标和尚未输出候选保存在共享的短期 aggregate_task_queries 中。客户端续页只持有不可伪造的查询引用；状态绑定 tenant、用户、过滤条件、来源及授权权威集合、目录版本、范围代次及不可延长期限，副本切换不依赖原进程内存。
+
+每次输出一个全局排序项前，聚合器须为每个未耗尽来源取得下一候选，空的本地页继续按原本地游标扫描；不能把未知来源的下一项排在已输出页之后。预取但未输出的候选留在聚合状态，不因本地游标已前进而跳过。同一聚合游标的重读返回同一页和后继游标；推进位置与保存该页结果条件提交，两个应用副本不能各自跳过一页。每页输出前后复核来源目录和范围代次，并处理首屏后连续收到的 Change：新 Task 排序键进入已输出段，或任一水位出现缺口时，旧聚合游标失效。单来源超时、查询预算耗尽、目录或资格不可核验时可返回带来源缺口的 partial 结果，但不给可宣称全局有序完整的续页游标；恢复后以新查询重取首屏。单来源 `task.list` 的 `upper_bound` 不作全局提交水位或权限证明。
+
 ## 4. 输入转交、消费与撤回
 
 ### 4.1 接纳输入事务
 
 1. 核对 input_id、surface_id、request_id/revision、准确 answer_ref 和 preview_refs。
-2. 根据固定处理器确定唯一目标 logical_service_id、target_id、method 与 command_id。
+2. 根据固定处理器和受信装配确定唯一目标 logical_service_id、原服务地址、target_id、method 与 command_id，构造完整原 Command。若不能确定目标或查询回执的原服务地址，拒绝接纳，不能先 queued 再靠当前默认路由补选。
 3. 校验请求允许的输入类型；授权请求不能转成普通 task.input。
-4. 同事务保存 InputSubmission=queued、固定目标命令、原回执与 delivery job。
+4. 同事务保存 InputSubmission=queued、目标 logical_service_id／地址、完整原 Command 及其规范摘要、原回执与 delivery job。地址变化时仍按已固定的 logical_service_id 到原服务发现健康实例，不重新选择业务目标。
 5. 提交后显示“已保存，等待处理”；不承诺 Orchestrator 已消费。
 
-同 input_id 的回答、预览和目标命令都不可改变。
+同 input_id 的回答、预览、目标服务和原命令都不可改变。对外 InputSubmission 只包含 target_command_id；宿主查询原 input_id，由交互服务沿内部持久目标核对，不要求客户端凭一个 command_id 猜测业务服务。
 用户编辑回答需要新 input_id，但原业务请求仍只消费一个有效答案。
 无耐久宿主的纯浏览器只能显示本端待发送，清除浏览器数据后不能承诺恢复未发输入。
 

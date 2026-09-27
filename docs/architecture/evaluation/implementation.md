@@ -21,7 +21,7 @@ CandidateRegistry、DatasetRegistry、PlanService 和 ApprovalOwner 负责短事
 | DatasetRegistry | register/reserve/close | 来源组、用途权限、保留占用与关闭 |
 | PlanService | create/read | 冻结计划、永久尝试序号及准入裁决 |
 | RunCoordinator | start/cancel/recover | 样本、两臂环境及有限重试责任 |
-| EnvironmentAdapter | prepare/inspect/truth/seal/destroy | 实际环境身份、候选隔离和封闭事实 |
+| EnvironmentAdapter | prepare/start_sample/inspect/observe_truth/seal/destroy | 实际环境身份、受信启动许可、候选隔离和封闭事实 |
 | ReportSealer | assemble/seal | 完整分母、缺口、独立证据和不可变摘要 |
 | ExposureLedger | open/record | 正常反馈开放和异常泄露的永久事实 |
 | ApprovalOwner | approve/check/revoke | 当前批准及有限使用依据 |
@@ -110,6 +110,7 @@ conformance 对应兼容验证，formal 对应具备正式资格的保留确认�
 | improvement_policies | improvement_id UNIQUE | 范围、次数、停止规则、整体推断方法和受信批准 |
 | dataset_partitions | partition_id；content_digest | 精确样本、来源组、用途与权限引用 |
 | partition_sources | (partition_id, source_group_id) | 跨分区的来源关系；相同字节之外的谱系 |
+| source_group_gates | source_group_id UNIQUE；revision | 来源组登记时建立；正式资格核验取共享锁，异常暴露登记取排他锁并递增修订 |
 | holdout_reservations | partition_id UNIQUE；plan_id UNIQUE；release_request_id UNIQUE | 不可返还的正式保留占用 |
 | formal_attempts | (improvement_id, attempt_index) UNIQUE | 跨申请的永久尝试次数 |
 | evaluation_plans | plan_id UNIQUE；digest | 固定输入、抽样、判定、停止及预算 |
@@ -117,9 +118,12 @@ conformance 对应兼容验证，formal 对应具备正式资格的保留确认�
 | sample_runs | (plan_id, sample_id, arm) UNIQUE | 基线／候选固定样本位置和结果 |
 | sample_attempts | (sample_run_id, attempt_index) UNIQUE | 全部物理尝试、费用与环境身份 |
 | environments | (run_id, sample_id, arm) UNIQUE | 原环境创建键、实例、封闭与清理状态 |
+| sample_start_admissions | (run_id, sample_id, arm, stage, attempt_id?) UNIQUE；formal_gate_revision、start_before | stage 区分环境准备与样本尝试；每次有限时逻辑启动许可单独绑定，暴露前已提交者单列在途 |
 | reports | report_id UNIQUE；digest | 不可变内容；当前资格在独立表 |
-| plan_eligibility | plan_id UNIQUE | 当前正式资格及使其失效的暴露引用 |
-| feedback_exposures | exposure_id UNIQUE；(partition_id, occurred_at) | 主体、范围、发生时点与证据 |
+| plan_eligibility | plan_id UNIQUE | 可滞后的正式资格投影及已归并暴露；准入还须查询原暴露 |
+| feedback_exposures / exposure_sources | exposure_id UNIQUE；(source_group_id, exposure_id) 索引 | 原暴露、来源组范围、发生时点与证据；正式资格的同步门禁事实 |
+| exposure_impact_jobs | exposure_id UNIQUE；扫描游标与 work_revision | 正常反馈与异常泄露均建立；按来源关系分页更新计划投影、封闭运行并登记撤回；exposure_record 原回执返回固定 impact_job_id |
+| formal_quarantines | tenant／评测 owner、受影响分区、证据引用、状态与恢复依据 | 历史数据来源组超线格式范围或关联不完整时先持久封闭该 owner 的全部正式改善门禁，待完整核验后才解除 |
 | release_approvals | approval_id；(state, expires_at) | 精确候选、报告、目标、批次、截止和回退 |
 | approval_uses | use_id UNIQUE | 原动作、实例、批准修订和固定启动窗口 |
 | rollout_targets | (approval_id, target_id) UNIQUE | 固定 activation_id 与实际观察 |
@@ -143,7 +147,10 @@ flowchart LR
     P --> R[Run / SampleRun / 全部 Attempt]
     R -->|固定分母与独立证据| S[不可变 Report]
     P --> E[PlanEligibility]
-    X[Exposure] -->|记录来源及发生时点| E
+    X[Exposure] -->|记录来源及发生时点| G[来源组暴露原事实]
+    G -->|同步正式资格门禁| P
+    G -->|同步改善批准门禁| A
+    G -->|分页更新| E
     S -->|精确报告摘要| A[ReleaseApproval]
     E -->|当前资格门禁| A
     A --> T[RolloutTarget / 固定 activation]
@@ -155,7 +162,7 @@ flowchart LR
 | Candidate / Partition / Policy → Plan | Registry 保存准确制品与来源；PlanService 一次提交计划、正式尝试序号和 holdout 占用 | RunCoordinator 只接收冻结 plan 引用；重试不换样本、目的或统计方法 | 过程次数、来源关系和占用索引，取消或改名不返还 |
 | Plan → Run → SampleRun / Attempt / Environment | 先持久固定样本位置、环境创建键与 job，再调用 EnvironmentAdapter | 每次物理尝试独立留证；独立判定器经受保护通道交回真值；RunCoordinator 归并所有尝试及未知责任 | 原环境与费用核对、seal / destroy 责任不随运行终态消失 |
 | Run → Report | ReportSealer 先构造不可变正文，再锁计划、样本修订和当前资格提交摘要 | 消费者读取准确报告引用；完整分母及报告内容不随审批或撤回改写 | 原报告摘要、缺口和正式资格关联；正文清理后返回 gone |
-| Exposure → PlanEligibility | 正常反馈先记永久暴露再输出；异常泄露按发生时点保存并更新当前资格 | 来源组关联将污染归并到受影响计划与批准；迟发现的早期泄露触发撤回 job | 暴露和失效摘要持续阻止重用材料；日志清理不恢复资格 |
+| Exposure → PlanEligibility | 正常反馈先记永久暴露再输出；异常泄露先保存原事实、来源组索引和唯一影响扫描责任 | 资格门禁同步查询原暴露；分页扫描补写投影、环境封闭和撤回 job，迟发现的早期泄露也能阻止新使用 | 暴露和失效摘要持续阻止重用材料；日志清理不恢复资格 |
 | Confirmation → Approval → RolloutTarget | 本人决定在 owner 保存；approve 同事务消费确认并建立有限目标映射 | RolloutWorker 以固定 activation 查询实际切换、当前 ready 与观察，再按既定门禁扩批 | 每个目标实际状态、撤回及残留；不能仅保留“整批成功”汇总 |
 
 运行计数、发布进度和仪表盘是这些原事实的投影，不取代原样本、尝试与目标映射。
@@ -168,17 +175,17 @@ candidate_register 固定候选制品、锁、来源和父谱系。
 新候选必须明确关联既有改进过程；改名不重置正式尝试历史。
 无法核对来源关系时可以做探索，不产生正式改善资格。
 
-partition_register 检查内容可读取、用途允许、样本唯一且来源组覆盖完整。
+partition_register 检查内容可读取、用途允许、样本唯一且来源组覆盖完整。用于正式改善的分区在登记时还须限制来源组数量，使任一次完整暴露范围可由线格式表示；超出时拒绝正式资格，不等待泄露后才截断证据。
 同一个来源任务的改写、派生及重复种子必须落在同一来源组。
 维护者不能仅依赖内容哈希宣称来源独立；来源审查结论也需可查引用。
 关闭、撤权或保留暴露的分区不能再当作新的正式确认材料。
 
 plan_create 的共同事务步骤：
 
-1. 查原命令和 plan_id，验证候选、锁、判定器、环境及权限引用。
+1. 查原命令和 plan_id，事务外解析候选、分区、锁、判定器、环境及权限引用；事务内先锁原命令与 tenant／owner 正式门禁，再按 source_group_id 升序锁相关来源组门禁，随后重读固定引用。
 2. 检查样本恰为冻结分区的获准子集，预算、期限、重试及停止规则有界。
 3. 按 purpose 检查兼容或正式确认的必需条件。
-4. 正式确认锁 ImprovementPolicy、分区及 release_request 唯一占用。
+4. 正式确认再锁 ImprovementPolicy、分区及 release_request 唯一占用，并核对分区／来源组的原暴露索引及 formal_quarantine；不可核验时不占用保留资格。
 5. 检查整个过程剩余次数；分配唯一 formal_attempt_index。
 6. 同时保存计划、永久次数占用、保留占用及原回执。
 
@@ -194,9 +201,11 @@ ImprovementPolicy 在第一项正式计划前由受信维护者确认，不由�
 
 ## 5. 运行与环境交接
 
-run 接纳固定 run_id、plan_id 和 plan_digest，同事务建立首次环境准备 jobs。
+run 接纳固定 run_id、plan_id 和 plan_digest；正式改善 run 先按共同锁序核对原暴露与 formal_quarantine，才在同事务建立首次环境准备 jobs。资格不可核验时不建立新的正式环境责任。
 重复提交同一身份返回原运行；同一计划样本臂不会重复创建逻辑位置。
 物理重测始终另建 attempt，不能覆盖前次结果或挑选最好结果。
+
+每个环境准备、样本首轮及重试在真正交给环境适配器前，还须在短事务中按 tenant／owner、source_group_id 升序的共同锁序核对该 plan 全部来源组的暴露原事实及 formal_quarantine，保存绑定原 run/sample/arm、阶段及可选 attempt_id 的有限时 start_before 与当前 gate_revision。无许可、已过期或资格不可核验的 worker 不发新启动；EnvironmentAdapter 在实际 prepare 或 start_sample 前须从原 Evaluation owner 可认证地查询许可，或验证该 owner 签发的许可，核对准确 run/sample/arm/阶段、适用时的 attempt／原实例以及 start_before；跨机截止按宿主可信时钟误差保守缩短，不接受 worker 自报的 gate_revision、期限或签发者。任何一项不可验都拒绝新启动，不能凭已有 queued job 新建环境或 attempt。暴露若先于该事务提交，新许可拒绝；许可若先提交，则其后才发生的暴露不能倒消已经逻辑准入的动作，远端可能在原有限窗口内物理启动，按在途效果、费用和 seal 责任报告。已知暴露或 seal 的环境不得再接受旧许可启动；许可不授权后续新 attempt，影响扫描仍向全部已创建／未知环境传播封闭。事务内不等待远端；窗口上限由宿主固定并以本链路的撤回时延验收。
 
 | 阶段 | 保存事实 | 成功点 |
 | --- | --- | --- |
@@ -229,7 +238,7 @@ unknown 在已证明成功比例中计零，同时保留它区别于确定失败
 ReportSealer 在短事务前构造完整报告内容、摘要及来源引用。
 首装的受信发行报告可由最小宿主调用内部 import_conformance 端口导入：核验来源、签名、制品摘要和目标环境覆盖，并保留外部运行身份。
 该端口只接纳 conformance，不授予 formal 改善资格；本机环境预检独立留证，不伪造本机模型或工具运行结果。
-事务中再锁计划、全部样本结果修订与当前资格，防止封存时发生遗漏或资格变化。
+正式改善报告的事务先按共同锁序取得 tenant／owner 与来源组门禁，再锁计划、全部样本结果修订与当前资格，核对原暴露索引和 formal_quarantine；兼容报告只核对其所需用途与契约证据。这样封存时不会遗漏并发暴露或资格变化。计划样本数及来源组数受装配上限约束；超出锁内可核验范围的计划不得接纳正式运行。
 同一个 report_id 只能对应一份内容摘要；后续泄露改变当前资格，不修改原报告。
 
 | 门禁 | conformance 报告 | formal 改善报告 |
@@ -251,14 +260,18 @@ evaluation.read 的 report 分支只返回封存状态、当前资格和准备�
 它不返回成绩、逐例答案、通过状态或能反推出保留结果的错误细节。
 正式报告封存后，受信批准者用 feedback_open 申请获准范围。
 
-反馈事务先保存 exposure_id、接收主体、报告摘要、范围和时间，再读取受控报告内容。
+反馈事务先按共同锁序锁该报告关联的来源组门禁，保存 exposure_id、来源组索引、唯一 impact job、接收主体、报告摘要、范围和时间，再读取受控报告内容。它不撤销本报告的既有资格，却使同分区和同来源组不再可作为新的正式保留材料；共享来源组的其他正式计划若尚未封存，原暴露门禁立即阻止其正式报告及改善使用，影响扫描再分页保存失效、环境封闭与撤回责任。扫描尚未封闭的 B 环境可能已有样本动作在运行；这些动作不能进入正式成绩，实际效果、清理和费用仍沿原环境责任核对。feedback_open 原线输出仍为 exposure 与本报告，不以扫描完成作为反馈读取前提。
 返回答复丢失仍视为暴露；重投原命令恢复原结果，不产生第二次未暴露资格。
 只能对完全封存报告开放，不能边跑边向候选展示成绩。
 
 exposure_record 记录异常泄露，允许尚无 report_id。
 发生时点未知时按可能污染正式过程的情况保守失效。
-事务中锁来源组关联的计划，保存暴露、PlanEligibility 失效以及在途封闭/批准撤回 jobs。
-跨 owner 的内容关闭由原 owner 继续传播，评测本地不伪造远端删除。
+受信维护者须核验输入的 partition_id、来源组与泄露证据对应；`source_group_ids` 覆盖所有可能受影响的组。无法缩小到具体组时取该分区的完整来源组集合，不能让提交者选择有利子集。若在历史数据中发现来源关联不全或一次泄露范围超过线格式上限，原 owner 先以受信管理入口持久保存泄露证据及 formal_quarantine，封闭本 owner 全部正式改善门禁；随后拆分可表达的准确范围逐条登记原暴露并核对关联，完成前不得解除隔离。事后发现泄露永远不能仅因线格式不容纳而丢弃证据或继续使用旧批准。
+原评测 owner 在一个短事务内保存暴露、准确来源组关联、原命令回执和按 exposure_id 唯一的 impact job；返回固定 impact_job_id。它不在该事务内遍历全部计划或目标。来源组关联有输入上限；分区登记时先建立来源组门禁行。所有涉及来源组的正式占用、run 接纳、环境／样本／重试逻辑启动、报告封存、批准、在线使用、反馈开放和异常暴露事务，都先按相同稳定顺序锁 tenant／owner 门禁及来源组 ID，再读取或更新原暴露；异常暴露递增相应门禁修订，资格核验取共享锁。这样若准入先提交，后提交的暴露使其后续使用失去资格；若暴露先提交，准入必须看见并拒绝。资格门禁或 formal_quarantine 状态不可核验时不根据旧投影放行。
+
+正式改善计划在创建时不得使用已有暴露的保留分区或关联来源组。已创建计划在报告封存前发生非受控暴露，或后续发现其发生时点不明／早于或等于封存切点时，当前正式资格为 ineligible；已封存报告仍保存原内容和摘要。正常 feedback_open 发生在封存后，只影响该分区之后的正式用途，不撤销原报告。当前资格由计划、封存切点和原暴露事实共同决定；PlanEligibility 只是便于查询的失效投影，不能作为改善发布使用门禁的唯一依据。兼容性报告仍依其契约证据与当前数据用途判断，不因保留集暴露自动撤销。
+
+每项正常反馈或异常泄露的 impact job 都从来源组关联索引按稳定键分页找出受影响计划、运行和批准。尚未封存的同源正式计划受已记录暴露影响；已封存报告仅在暴露发生时点早于或等于其封存切点、或时点不明时失效。原报告封存后的正常反馈不撤销原报告，但会影响仍在运行的其他同源计划。每页在短事务内推进扫描游标，幂等写入失效投影、环境 seal 责任，以及每个原 approval／target 的撤回或停用责任；崩溃重领沿原游标继续，不能从尚未处理的计划数推断“没有影响”。扫描中的 approval_check、approval_lease、计划或报告决定、扩批仍直接查询原暴露，旧批准不能借投影滞后继续签发新的使用资格。已签发但目标尚未知撤回的在线回执及离线租约只在原固定窗口内可能继续，不能宣称瞬时封闭失联节点；逐目标撤回、残留效果与费用继续核对。跨 owner 的内容关闭由原 owner 继续传播，评测本地不伪造远端删除。
 
 正常封存后的反馈不撤销这份报告的既有正式资格，但禁止该分区再用于后续正式确认。
 事后发现封存前已泄露则原计划失效，已经形成的批准也必须撤回。
@@ -277,12 +290,12 @@ sequenceDiagram
     participant S as 评测 repository
     participant C as 受控报告内容端口
     participant A as ApprovalOwner
-    participant W as RolloutWorker
+    participant W as ImpactWorker / RolloutWorker
     participant H as 目标扩展管理
     U->>E: feedback_open 原命令与准确报告
     rect rgb(236, 244, 252)
-      Note over E,S: T1：确认已封存及输出范围，先登记暴露
-      E->>S: 保存 exposure、原决定及当前报告引用
+      Note over E,S: T1：确认已封存及输出范围，先登记暴露和影响责任
+      E->>S: 保存 exposure、来源组索引、impact job、原决定及当前报告引用
     end
     E->>C: 事务外按原输出范围读取受控内容
     C-->>E: 当前获准的反馈
@@ -300,22 +313,24 @@ sequenceDiagram
     A-->>U: 批准与逐目标原映射
     U->>E: exposure_record 新发现的封存前泄露
     rect rgb(236, 244, 252)
-      Note over E,S: T3：与批准共享资格锁及来源关系
-      E->>S: 保存暴露、资格失效、批准撤回与传播 jobs
+      Note over E,S: T3：锁来源组门禁，保存原暴露、索引、唯一影响 job
+      E->>S: 保存原事实、impact_job_id 与固定回执
     end
-    S-->>W: 领取原撤回 job
+    Note over U,A: T3 提交后，新批准或原批准新使用直接查原暴露并拒绝
+    S-->>W: 分页领取原影响 job
+    W->>S: 补写资格投影、环境封闭及逐目标撤回责任
     W->>H: 事务外停用原 activation
     H-->>W: 新使用已关闭 / 当前残留
     W->>S: 保存逐目标事实；未响应目标继续核对
 ```
 
-若 T3 先于 T2 提交，批准直接拒绝；若批准先提交，原批准与报告仍可查询，但当前资格失效，撤回工作必须可恢复。
+若 T3 先于 T2 提交，批准直接拒绝；若批准先提交，原批准与报告仍可查询，但当前资格从 T3 起受原暴露门禁约束，撤回工作必须可恢复。既有在线启动窗口和离线租约在原期限内可能继续，状态须标明尚未确认的目标。
 反馈读取当前被拒绝不会抹去原暴露，重投也不获得一个新的未暴露身份。
 撤回答复丢失由 RolloutWorker 查询原目标 activation 和停用命令，不能以已发送控制代表实际封闭；在途效果与费用仍由原 owner 收尾。
 
 ## 8. 批准与逐目标发布
 
-approve 锁候选、报告当前资格和目标集合，验证 report_digest 与 candidate_digest。
+approve 先查原命令；改善批准按共同锁序先取得 tenant／owner 与相关来源组门禁，再锁候选、报告当前资格和目标集合，验证 report_digest 与 candidate_digest，直接查询原暴露及 formal_quarantine 并按报告封存切点计算当前资格；PlanEligibility 投影尚未更新或影响扫描未完成，都不允许以旧 eligible 值放行。兼容批准核对 conformance 的契约和当前来源用途，不要求未暴露保留集。
 本人或维护者的 Confirmation 固定发布目的、目标、批次、期限、停止规则和回退锁。
 调用端先固定 evaluation.approve 的完整原 Command，再向 evaluation owner 请求 confirmation.request；UI 经本人会话 decide 后提交原命令。
 approve 在自己的批准事务内锁定并一次消费同 owner 的 approved 确认，核对原 command_id、准确 Schema、规范摘要及期限；消费和发布责任共同成败。
@@ -326,7 +341,7 @@ compatibility 检查 conformance 报告；improvement 检查 formal 及全部适
 目标集合有限且不变；扩大目标、更换锁或降低门禁需要新的批准。
 多批次只按预先批准的集合推进，不能在后台自动扩为全部用户。
 
-RolloutWorker 查询原 activation，等待真实 active、当前实例 ready 与观察证据。
+RolloutWorker 在发送每个新 activation 或扩批前核对原批准；改善发布还要核对报告的原暴露门禁及 formal_quarantine。然后查询原 activation，等待真实 active、当前实例 ready 与观察证据。
 本批所有目标通过最小观察窗口及样本数量，且未触发停止阈值后，才推进下一批。
 离线、无样本、激活未知都保持等待或停止，不能把 applied 当作整批发布成功。
 
@@ -344,14 +359,14 @@ reopen 不能换锁、扩大目标或重新执行迁移。
 全本地批准 owner 与宿主共库时，当前批准核验和启动登记在共同事务中完成。
 批准的绝对到期仍在该事务中按 [ClockAdapter](../deployment.md#clock-adapter) 的可信当前时间检查；共库只免除远端窗口，不免除时钟前提。
 返回的本地启动证据引用 commit_id，不伪造远端回执或启动截止。
-远端 owner 保存 ApprovalUse，窗口取批准期限和有限在线上限的较小者。
+远端 owner 在保存 ApprovalUse 前同步核验原批准与当前目标；改善发布还核验相关报告的原暴露门禁及 formal_quarantine。窗口取批准期限和有限在线上限的较小者。必需门禁不可达或无法核验时不签发新回执；已经签发的原动作只在原窗口内按原规则处理。
 
 原 use 重放保持原绑定和 start_before。
 已知撤回立即阻止启动；未知撤回仅可能影响原窗口内的固定动作。
 不得把一个 work 回执复用于其他工作或用查询刷新期限。
 宿主暂停恢复或时间信任代次变化后，先封闭旧本地资格，再按原 use／lease 核对当前状态与保守截止；已过期的窗口不能因 UTC 回拨或重新换算而延长。
 
-approval_lease 只针对已有活动实例及显式非零离线窗口。
+approval_lease 对改善发布同样先核验原暴露门禁及 formal_quarantine，只针对已有活动实例及显式非零离线窗口。
 租约不能离线激活新版或扩批；新进程实例也不能继承旧租约。
 重启读取历史激活依据，但重新取得本次实例的 reopen 依据后才开放入口。
 
@@ -371,7 +386,7 @@ approval_lease 只针对已有活动实例及显式非零离线窗口。
 | PlanService 与治理 facade | improvement 过程、partition / 来源关联、正式尝试序号、原命令 | 权威不可用不新占用、不新批准；恢复原记录后继续，不能另起 owner 绕过次数 |
 | RunCoordinator / EnvironmentAdapter 按样本工作 | 同 plan / sample / arm 的逻辑位置与原环境创建键；两臂预检屏障 | 创建或动作未知先查原环境；候选真值隔离不可证明则关闭对应正式运行 |
 | ReportSealer 按 run 构造报告 | 封存时固定计划、全部样本修订和当前资格的共同检查 | 内容不完整或原证据不可读则保持未封存或明确无效，不输出成绩 |
-| ExposureLedger / ApprovalOwner | 报告资格、相关来源组、确认一次消费与批准对象 | 数据库中断不宣称暴露登记或批准成功；已保存暴露不因正文读取失败撤销 |
+| ExposureLedger / ApprovalOwner | 报告资格、相关来源组原暴露、确认一次消费与批准对象 | 数据库中断不宣称暴露登记或批准成功，也不凭旧资格投影放行；已保存暴露不因正文读取失败撤销 |
 | RolloutWorker 按批准和目标 | 固定批次门禁、同 target 的 activation 和当前实例 | 目标、批准或观测不可达则等待/停止扩批；已发生效果和费用保留收尾 |
 
 高并发主要花在模型调用、设备环境、内容读取与独立判定，控制账本的写入量随物理 attempt 增长。
@@ -379,8 +394,8 @@ approval_lease 只针对已有活动实例及显式非零离线窗口。
 提供方调用已经启动后的错误、超时和费用未知仍进入固定分母与账务，供应商拥塞不能变成删除坏样本的理由。
 
 报告构造在事务外完成，事务中只核对固定样本集合及其已保存修订和资格；可维护索引及计数投影减少定位开销，最终封存仍须验证完整性，不能只相信一个汇总计数。
-热点通常是同一改善过程集中创建计划、来源组关联大面积暴露更新、一次运行的大报告封存，以及多目标同时重连形成的观察积压。
-按来源关系定位受影响计划并逐项保留工作责任；在无法确认当前资格前不得发新批准，不能用后台传播尚未完成作为暂时准许依据。
+热点通常是同一改善过程集中创建计划、一次暴露关联大量来源组或计划、一次运行的大报告封存，以及多目标同时重连形成的观察积压。
+原暴露提交只写有限来源组索引和唯一影响 job，按来源关系分页定位受影响计划并逐项保留工作责任。测量来源组门禁的读写竞争、影响扫描最老游标、待撤回目标数及端到端停用时间；在无法确认当前资格前不得发新批准或启动使用，不能用后台传播尚未完成作为暂时准许依据。
 
 容量实验记录每份计划的独立样本数、物理尝试数与费用、环境创建/封闭/销毁延迟、未知环境龄期、报告构造与锁内提交耗时、资格失效到撤回落实的分段延迟、批次等待和最老目标观察。
 新实验超限时排队或拒绝，已经启动的尝试继续受原预算约束并保留结算与环境清理；扩批限额耗尽时等待，不扩大预先批准的目标集合。
@@ -405,6 +420,9 @@ approval_lease 只针对已有活动实例及显式非零离线窗口。
 | V-I13 | 重启复用旧实例窗口 | 拒绝；新的 reopen 依据绑定当前实例 |
 | V-I14 | 原批准撤回后重放激活回执 | 历史事实可查，新的工作和重开均拒绝 |
 | V-I15 | 清理保留数据后重复登记旧分区 | 最小关闭/暴露索引阻止当作全新保留材料 |
+| V-I16 | 一次异常泄露关联超过 100 个计划／目标，在 impact job 第一页提交后崩溃；同时请求旧批准的新 use 与下一批发布 | 原 exposure 回执只给一个 impact_job_id；受影响项即使尚未扫描也被原暴露门禁拒绝新使用和扩批；重领续页且每目标撤回责任唯一，已签发窗口与离线租约分别报告 |
+| V-I17 | A 分区报告封存后反馈开放；同来源组 B 分区正式运行尚未封存且已有样本动作启动 | A 原报告保持资格，B 在原暴露门禁立即失去正式资格；反馈的唯一 impact job 分页封闭 B 环境并更新投影，已启动动作可能继续到实际封闭，效果、费用和清理责任不丢失 |
+| V-I18 | 一次暴露与 B 的 run 接纳、队列中环境准备、样本首轮及重试各自并发，环境适配器延迟读取启动许可 | 暴露先提交则所有新逻辑启动拒绝；许可先提交只允许原 attempt 在有限 start_before 内物理启动，超期拒绝；未获许可的 queued job 不能启动，已启动动作进入原环境 seal、效果和费用核对 |
 
 运行报告固定环境、全部样本、费用、原命令、证据摘要和异常注入位置。
 本页不提供实际成功率、隔离通过或容量达标结论。

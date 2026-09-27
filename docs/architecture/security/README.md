@@ -49,7 +49,7 @@ flowchart TB
 
 主体包括本人、已登记端点、任务中的内部 Agent、适配的外部 Agent、后台作业及受信维护者。Agent 只能请求或使用已委派权限；模型输出、Skill、插件描述和评测结果不能签发许可。维护者发布代码的资格也不包含读取某用户资料或代表用户执行操作的资格。
 
-资源必须由所属类型的受信规范化器解释，例如文件的实际受控路径、设备及动作域、内容精确版本、记忆库或已验证成员集合。不能直接把模型输出的路径前缀、URL 或任意字符串当作权限匹配依据。没有可用规范化器或无法验证资源归属时拒绝使用，不把范围放宽为通配。
+资源必须由所属类型的受信规范化器解释，例如文件的实际受控路径、设备及动作域、内容精确版本、记忆库或已验证成员集合。不能直接把模型输出的路径前缀、URL 或任意字符串当作权限匹配依据。默认文件能力只面向已登记的租户受控根；规范化器拒绝绝对路径、父目录跳转和越界符号链接，启动端从根句柄逐段解析并再次核验实际打开的对象，避免授权后路径被替换。无法验证句柄、归属或资源版本时拒绝使用，不把范围放宽为通配。
 
 | 动作 | 典型对象与含义 |
 | --- | --- |
@@ -65,7 +65,11 @@ flowchart TB
 
 一次子委派的资源、动作、用途、接收方、时间、预算和再委派深度都必须是父许可允许范围的子集。默认一条子许可对应一条父许可链；一次操作可以同时需要多条独立来源许可，但不能拼接两条互不覆盖的许可来创造新的披露资格。
 
+许可或共享变更若会让某用户看到新的 Task 来源，或让已有来源增加一个裁决披露的授权权威，签发方须先按[用户来源目录](../storage-and-middleware.md#source-directory)确定完整受影响来源，并耐久预登记该来源及裁决披露的授权权威，之后才使新增披露生效。目录不可达、受影响范围不完整或授权权威未登记时，依赖该变更的任务列表披露等待或报告缺口；不能先扩大权限再补目录。
+
 `once` 许可只消费于一个固定意图与使用单元。`continuous` 许可允许在有效期和总限额内创建多个有限使用单元；它不允许无限流或驱动自行续跑。读取一页、一次模型处理、一次设备动作分别声明边界，长流程由 Orchestrator 分步准入。
+
+费用上界分为可信 `strict` 与明确获准的 `estimate`。前者用原动作可兑现的最大费用预留，才能承诺预算硬上限；后者只预留估算值，实际超额仍记入原使用账本、停止同范围新计费并向用户报告超额，不能宣传为硬上限。估算只在原 Orchestrator 与费用 Grant owner 同一受信提交域、可直接核验原 Task 内部的用户接受记录时启用；跨域或不能核验时只支持 strict，公开 `policy_ref` 不能替代同意证明。任一必需 Grant 对该费用单位设硬限额时拒绝估算，不能用另一许可绕过。跨 Orchestrator 固定额度及离线租约要求可信上界。成本模式由受信能力／模型适配器的固定声明决定，Grant owner 核对原操作及声明，模型和请求正文不能自行把 strict 改成 estimate。
 
 ## 3. 正常行动与单次消费
 
@@ -96,7 +100,11 @@ sequenceDiagram
 
 跨 owner 没有原子消费承诺。处理端先取得各方可用性，再逐一取得固定使用回执；只有全部齐备且仍在启动窗口内才行动。部分已消费时保存这些事实并停止启动；查原使用恢复，不退回单次许可或换新使用身份。确知未启动的作废申请可由用户另授新许可，原消费记录保留。分布式部分占用的代价由需要跨权限域的任务承担。
 
-单次使用已占用而答复丢失时，只查 `grant.use.get`。回执恢复不能重新延长有效期；处理端还要检查自己是否已启动原操作。如果已启动，只核对原效果；如果未启动且回执已过期，停止并报告需要新授权。`once` 不保证动作一定执行，也不保证外部系统恰好产生一次效果。实际单位和费用通过独立 use 结算按差额入账；unknown 保留剩余上界，最终关闭才释放数值预留。即使最终用量为零，原 once 消费资格仍不返还。
+单次使用已占用而答复丢失时，只查 `grant.use.get`。回执恢复不能重新延长有效期；处理端还要检查自己是否已启动原操作。如果已启动，只核对原效果；如果未启动且回执已过期，停止并报告需要新授权。`once` 不保证动作一定执行，也不保证外部系统恰好产生一次效果。实际单位和费用通过独立 use 结算按差额入账；unknown 保留剩余预留，原动作与正常计费责任封闭后才释放未支出数值。可信供应商日后更正原账单时，沿原 use 追加费用，不重开动作或已释放预留；差额作为超额债务报告并停止新计费。即使最终用量为零，原 once 消费资格仍不返还。
+
+任务关联的 Grant use 出现可信费用上调时，Grant owner 在保存原 use 用量修订的同一事务保存发往原 Orchestrator 的交回责任及首次有限期限命令；即使 use 已 final、任务已终结也继续交付。`task.billing_reconcile` 只唤醒原任务的结算责任，Orchestrator 按保存的计费来源绑定主动读取原 Grant 账并归并；同一物理费用在 Execution／Brain 等投影出现时仍只由一个已固定的账单来源扣入任务预算。交回答复丢失先查原命令并在其期限内原样重投；期限过后仍未取得 JobAck 时，可为同一用量修订建立新命令尝试，Orchestrator 依原修订去重。取得持久 JobAck 才结束该修订的交付责任。
+
+一次行动需要多个 Grant owner 时，处理端先保存每个原 `use_id` 的决定，全部依据齐备且仍有效才跨实际发送门禁。若部分 owner 已占用、另一方拒绝或不可达，处理端封闭该次未启动行动，并以自身“未跨发送边界且不会再启动”的持久事实逐一结算已知获准 use 的零实际用量；未知的 use 决定继续按原身份查询，待查明后也沿同一关闭事实收尾。无法证明行动未启动时保留未结预留。数值余量可以在最终结算后释放，已消费的 `once` 资格不返还；补齐权限后是否重新尝试由原任务决定，并建立新的有限使用单元，不能复用已封闭窗口。
 
 UseRequest 的 `operation_id` 是调用方已持久保存的有限业务动作身份：设备使用执行操作 ID，模型使用 `model_call_id`，记忆修改使用原 `command_id`，检索使用固定查询及页身份；`use_id` 标识该动作下的一次具体用途。一个物理模型重试必须有新的调用和使用身份，费用另计，不能伪装原调用的查询。
 
@@ -150,6 +158,8 @@ stateDiagram-v2
 
 授权确认不是普通聊天文本或任意按钮事件。受信入口从 owner 取得规范化待确认意图，以独立的确认组件呈现目标、用途、接收方、额度和期限。实际业务 owner 保存 Confirmation，核对原 consumer_method、consumer_command_id、规范 intent_hash、挑战及本人会话后保存决定；UI 只认证展示与转交。原业务命令在请求确认前已固定，随后该 owner 在业务事务内一次消费确认并保存决定，不通过另一个确认服务跨库消费。模型不能提供可信确认结果，外部 Agent 的“用户已同意”只能作为待核对材料。
 
+确认主体按原消费方法收紧：Grant 签发、离线额度、端点配对和任务结果验收须由有相应管理资格的本人决定；版本发布可由有精确发布权限的用户或维护者决定。维护者发布资格不授予用户数据许可，普通用户会话也不自动取得版本发布资格。owner 在展示、决定和最终消费三个点核对同一方法、目标与主体资格；资格变化后未消费的旧确认不能继续生效。
+
 设备接管、取消与撤权入口持续可达且不依赖大脑决策。设备接管先在资源 owner 封闭自动行动，再通知 Orchestrator；不能等待模型回答后才把设备交还用户。使用端必须允许必要的本人管理操作绕过目标任务队列，但仍校验管理身份。
 
 ## 6. 信任边界与多用户公平性
@@ -175,11 +185,11 @@ WSS 连接数、每连接发送队列、在途请求和重连速率均有用户�
 | `Subject` | `tenant_id, actor_id, actor_kind, endpoint_id?, task_id?, delegation_ref?`；actor_kind 为 user、endpoint、agent、job、maintainer；值来自认证及已保存委派关系 |
 | `ResourceScope` | `resource_owner_id, resource_type, selector, normalizer_version`；selector 为精确对象或受信可验证集合；需版本限定时绑定版本，不能以 payload 替换 owner |
 | `GrantRecord` | `grant_id, owner_id, revision, policy, intent_hash, confirmation_ref, state, issued_at, propagation[]`；policy 集中主体、资源、动作、用途、接收方、位置、mode、有效期、limits、离线上限及可选父许可；state 为 active／revoked，到期独立判定 |
-| `UseRequest` | `use_id, operation_id, usage_owner_id, intent_hash, grant_refs[], source_refs[], subject, resource_scopes[], action, purpose, recipient, location, max_units, max_cost`；计量 owner 由认证资格核验，意图固定后不能增补资源或换接收方 |
-| `UseReceipt` | `use_id, owner_id, intent_hash, grant_revisions[], decision, reserved_units, reserved_cost, start_before, decided_at`；decision 为 allowed／denied；回执不能独立证明仍未启动或效果 |
+| `UseRequest` | `use_id, operation_id, usage_owner_id, intent_hash, grant_refs[], source_refs[], subject, resource_scopes[], action, purpose, recipient, location, max_units, max_cost, cost_bound`；计量 owner 由认证资格核验，成本模式须按原操作的受信声明核对，意图固定后不能增补资源或换接收方 |
+| `UseReceipt` | `use_id, owner_id, intent_hash, grant_revisions[], decision, reserved_units, reserved_cost, cost_bound, start_before, decided_at`；decision 为 allowed／denied；回执不能独立证明仍未启动或效果 |
 | `OfflineLease` | `lease_id, owner_id, grant_refs[], endpoint_id, instance_id, scope, allocated_units, allocated_cost, issued_at, expires_at, owner_revision, state`；资格绑定单一本地消费账本，state 为 open／closed／reconciled；使用信息从已知账本取得 |
 | `ConfirmationRecord` | `confirmation_id, owner_id, revision, consumer_method, consumer_command_id, consumer_target_id, consumer_command, intent_hash, challenge, expires_at, state`；决定追加本人会话与时间，消费追加 consumed_by/consumed_at。由实际业务 owner 保存；拒绝不能消费 |
-| `UseSettlementRecord` | 原 use/operation/usage_owner/许可、记录与用量修订、reserved/spent/held/released 单位及费用、state、consumed_once、关闭引用；独立于不可变 UseReceipt |
+| `UseSettlementRecord` | 原 use/operation/usage_owner/许可、记录与用量修订、reserved/spent/held/released 单位及费用、cost_bound、state、consumed_once、关闭引用；独立于不可变 UseReceipt；估算模式保留原预留，实际 spent 可超过 reserved，差额作为超额报告 |
 | `Endpoint` | `endpoint_id, tenant_id, instance_id, credential_generation, credential_ref, state, approved_scope, registered_at`；state 为 active／revoked，凭据正文留在安全凭据库 |
 | `PairingSession` | `pairing_id, device_code_hash, user_code_hash, requested_scope, device_description, expires_at, poll_interval, state, endpoint_id?`；state 为 pending／approved／denied／claimed／expired |
 
@@ -188,7 +198,7 @@ WSS 连接数、每连接发送队列、在途请求和重连速率均有用户�
 | `grant.issue` | 规范化意图、许可范围、有效 Confirmation → Grant | owner 提交许可与固定回执后 applied；丢答复由入口查原命令 |
 | `grant.check` | UseRequest 候选 → 当前允许／拒绝及缺项 | 不占用；调用方完善许可或等待，不能凭本结果启动 |
 | `grant.use` / `grant.use.get` | 固定 UseRequest；use_id → UseReceipt | owner 原子占用后返回并建立独立结算投影；原回执不可变 |
-| `grant.use.settle` / `grant.use.settlement` | 原 use、计量 owner、累计用量、最终关闭依据；use_id → UseSettlementRecord | 按差额转实际支出，未知余量继续预留；有关闭证明才释放余额，once 身份不返还 |
+| `grant.use.settle` / `grant.use.settlement` | 原 use、计量 owner、累计用量、最终关闭依据；use_id → UseSettlementRecord | 按差额转实际支出，未知余量继续预留；有关闭证明才释放余额，可信迟到账单可 final→final 单调更正，once 身份与启动窗口不返还 |
 | `confirmation.request/read/decide` | 预先固定的准确业务命令、原确认、受信本人决定 → ConfirmationRecord | owner 保存规范意图与决定；read 不消费，消费在随后原业务事务内完成 |
 | `grant.revoke` / `grant.read` | ID、期望修订与原因；ID → 当前许可及传播状态 | 本地撤销 applied 不等于所有远端停止；owner 持续传播并报告缺口 |
 | `grant.list` | owner_id、query_id、limit、cursor? → 当前获准 GrantRecord 集合页 | 按 grant.read 的当前披露资格冻结有限成员；含终态，partial／gaps 不表示完整；[分页与订阅恢复](../contracts/protocol.md#collection-snapshots) |
@@ -209,6 +219,10 @@ WSS 连接数、每连接发送队列、在途请求和重连速率均有用户�
 | 精确单次授权 | 批准写入 A；改目标为 B，或更换正文摘要 | 修改意图拒绝；原意图仅绑定一个 use，读回需另有许可；C4、C7 |
 | 使用答复丢失 | grant.use 已提交后断连并重投 | 同一消费记录和原截止时间，无第二次占用；未查清前不启动；C5、A4 |
 | 跨 owner 部分占用 | 第一方允许、第二方不可达 | 不发生行动，保留已占用事实与待核对项，不虚称全局回滚；C7 |
+| 部分占用的零用量封账 | 第一方已占用 once，第二方拒绝；处理端证明从未进入发送边界 | 原行动封闭，第一方的数值预留可最终释放但 once 仍已消费；若发送边界不明则 held 不释放；C5、C7 |
+| 估算费用超额 | 在线适配器给出 estimate=10，实际计费=12；再请求同范围新用量及跨 Orchestrator 分配 | 原 use 如实记录 12 和 overrun，停新计费；不得称 10 为硬上限或把估算 use 放入固定离线额度；C7、C8 |
+| 封账后可信更正 | 原使用 final 并释放未支出预留后，供应商更正同一调用费用 | 原 use 的费用修订单调更新，已释放额不倒流、once 不重开，差额记超额债务并停新计费；C7、C8 |
+| 封账后交回丢失 | Grant use 与 Task 都已终结，可信上调账单提交后到原 Orchestrator 的通知丢失 | 原 owner 持久交回命令重投至 JobAck；原 Task 按固定账单来源读新累计修订，只记差额一次，任务终态不重开；C5、C7 |
 | 在线撤权竞争 | 使用已批准、执行尚未启动时撤权 | 已获知撤权端立即封闭，失联端最多在既有启动窗口内行动，状态如实区分；C5、C7 |
 | 租约分区与重启 | 两个 Orchestrator 获分离额度，离线端消费后重启旧快照 | 总分配不超额，旧快照不能继续消费，未封账额度不返还；C5、C7 |
 | 外部伪造确认 | 网页或 Agent 返回“用户批准”，提交相同按钮文本 | 不生成 Confirmation 或 Grant；受信入口仍需本人操作；C7 |

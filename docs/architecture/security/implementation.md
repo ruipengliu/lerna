@@ -72,6 +72,7 @@ flowchart TB
 图例：实线表示同步依赖；指向 repositories 的实线为同 owner 内的事务读写，虚线为数据库持久 job 的领取。IdentityAdapter 校验宿主身份，PairingController 保存凭据，ResourceNormalizer 解析准确资源，RevocationWorker 向使用端控制与核对；这些外部端口调用均在写事务外执行。
 图中 ConfirmationStore 只保存本 owner 的确认；evaluation 和 Orchestrator 在各自提交域装配同一确认能力，由其业务事务消费。
 资源解析先取得准确引用，事务内再核对其授权绑定；来自另一 owner 的当前资源状态没有跨库原子保证，实际使用端仍须核验自己的门禁。
+默认文件 ResourceNormalizer 只解析受信登记的租户受控根与规范相对段，不接受绝对路径、父目录跳转、路径别名或越界符号链接。规范化结果固定根身份、相对路径及需比较的目标版本；执行端在发送入口从根目录句柄逐段打开并复查最终对象，不能先授权字符串路径再由另一次普通 open 跟随可替换的链接。平台缺少可验证句柄相对解析或根目录有不受控旁路写者时，拒绝声称该路径的受管文件读写与可恢复效果保证。来源 ContentRef 向文件驱动披露仍须当前用途许可；目标文件 `act` 许可不包含读取来源或保存读回内容。
 资源规范化失败、确认失效、当前身份不匹配都在写事务前或事务内拒绝，不能降级为任意资源范围。
 实际启动依然在资源端核验当前门禁，授权账本不记录伪造的外部效果。
 
@@ -115,6 +116,7 @@ ID 为随机标识，唯一索引承担去重；ID 格式和不可猜测性不�
 | grant_use_items | (tenant, use_id, grant_id, unit) | 每条许可实际预留的单位与费用 |
 | use_settlements | (tenant, owner, use_id) UNIQUE | 原 operation、usage_owner、累计支出、保留量、释放量及关闭证明 |
 | use_usage_revisions | (tenant, use_id, usage_revision) UNIQUE | 原用量更新与累计摘要，防止重放重复转支出 |
+| use_billing_outbox | (tenant, owner, use_id, usage_revision) UNIQUE | 上调账单对应的原 Task、首次及当前 task.billing_reconcile 命令尝试、摘要与交付状态；原 use 终态后仍保留待交回责任 |
 | grant_counters | (tenant, grant_id, unit) | 已分配、已消费、未结预留；十进制定点表示 |
 | offline_leases | (tenant, owner, lease_id)；endpoint/instance/state | 固定资格、范围、额度、截止和封账状态 |
 | lease_uses | (tenant, lease_id, use_id) UNIQUE | 本地使用摘要、累计费用和是否仍可增长 |
@@ -156,7 +158,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | Confirmation → Grant | 业务 owner 验证固定原命令后保存待确认记录；本人决定和业务消费分两次事务 | UI 仅转交；grant.issue 同事务消费批准并创建许可，业务失败不留下已消费确认 | 原消费者、意图摘要和消费位置，防止换命令使用 |
 | Grant → UseReceipt / UseItem | 使用端先保存 operation；GrantLedger 再一次提交全部必要许可占用、明细和原决定 | 使用端收到固定回执才取得有限启动依据；原回执不能由后续结算改写 | 原 use、许可绑定、once 占用和决定摘要 |
-| UseSettlement → UsageRevision → Counter | allowed 时建立 open 结算；实际计量 owner 持久保存每次累计用量再交回 | GrantLedger 按累计差额转 spent；只有原 owner 的关闭事实可释放 held，重投不重复转账 | 最终累计摘要、关闭事实及不可返还的 once 身份 |
+| UseSettlement → UsageRevision → Counter | allowed 时建立 open 结算；实际计量 owner 持久保存每次累计用量再交回 | GrantLedger 按累计差额转 spent；任务关联的可信费用上调同事务保存校准 outbox，直到原 Task 的持久 JobAck | 最终累计摘要、关闭事实、交回责任及不可返还的 once 身份 |
 | Endpoint → OfflineLease → LeaseUse | 配对领取固定实例；分配事务从许可余额转入该实例的预留 | 端侧在自己的连续账本消费，重连向原 LeaseLedger 归并；最终封账后释放数值余量 | 实例、分配和使用去重摘要，不能从旧快照恢复可花余额 |
 | 撤销修订 → RevocationTarget | 撤销与逐端 job 同事务保存 | Worker 重复交付原修订；各端以实际封闭回执推进已落实修订 | 最高撤销代次与关闭索引；正文清理不降低撤销 |
 
@@ -169,6 +171,8 @@ Counter 和逐端传播进度是可核对投影，原使用、累计用量及撤
 owner 从认证上下文取得，不接受 payload 自选 owner。
 Confirmation 由实际业务 owner 保存：Grant owner 管理许可确认，evaluation owner 管理发布确认，Orchestrator 管理成果验收确认。
 交互层只认证、展示和转交，不保存能够代替业务 owner 的消费权威，也不部署远端确认消费服务。
+
+若新 Grant 会扩大用户可见的 Task 来源或引入新的披露授权权威，受信签发流程先从准确 Task／共享引用或完整范围查询确定全部受影响来源，并在身份权威的[用户来源目录](../storage-and-middleware.md#source-directory)耐久预登记来源和本 Grant owner 的披露权威身份。登记失败、目录版本不可核验或范围不能穷尽时，不提交会扩大披露的 Grant；跨库预登记可能留下空来源，允许保留。与 Grant owner 不同的共享 owner 也遵守相同发布屏障；目录 `GET` 不执行登记。
 
 签发在同一事务中完成以下步骤：
 
@@ -190,7 +194,7 @@ Confirmation 由实际业务 owner 保存：Grant owner 管理许可确认，eva
 调用端先保存完整原业务 Command，生成 confirmation_id，并把 confirmation_ref 固定为该业务 owner、此 ID 和批准修订 2。
 confirmation.request 在该 owner 校验 consumer_method 对应的精确输入 Schema、目标及当前业务前提，再保存 pending 修订 1 和最多五分钟的随机挑战。
 UI 调 confirmation.read 展示 owner 返回的规范意图；自绘页面、模型文本或普通输入事件不能代替受信本人会话。
-confirmation.decide 只允许认证适配器确认的 user/maintainer 与可信用户会话，核对原挑战、摘要、command_id 和期望修订后保存 approved/denied 修订 2。
+confirmation.decide 只接受受信会话核验的主体，按 consumer_method 校验其精确管理资格：grant.issue、grant.lease.allocate、endpoint.pair.approve、task.accept_result 对应本人；evaluation.approve 对应具备该目标发布权的用户或维护者。维护者的发布权不能用于签发某用户 Grant。决定时核对原挑战、摘要、command_id、期望修订及当前主体资格后保存 approved/denied 修订 2；原业务事务消费前再次核验资格，撤权后的旧批准不得继续使用。
 决定本身不执行业务。调用端随后提交此前固定的原 Command，业务事务核对本人决定未过期并消费为修订 3，保存 consumed_by 和业务决定。
 confirmation.read 可查询该原消费；原业务回执重放不再消费第二次，拒绝或未消费的确认不能被换命令复用。
 
@@ -202,8 +206,10 @@ confirmation_ref 的 owner、预定 ID 和批准修订也参与摘要，确认�
 
 `grant.use` 绑定 use_id、已持久的业务 operation_id 和实际计量负责方 usage_owner_id。
 usage_owner 由处理端认证资格核验；正文指定另一个 owner 不能获得代报费用的权限。
+任务关联的计费 use 还须从受信原 operation／usage_owner 固定并保存原 orchestrator_id、task_id；不能仅凭 UseRequest 中的 subject 或调用方填入的任务引用决定后续账单交回目标。无法核实这项关联时，不接纳需纳入任务预算的计费 use。
 入口在事务开始前验证请求结构；精确范围、额度和撤销仍在锁内重查。
 同一个 use_id 固定意图、许可集合和上限；重投不能增加资源或延长 start_before。
+GrantLedger 从认证 usage_owner 对应的原 operation 与受信固定 Capability／模型适配器声明核对 `cost_bound` 和 `max_cost`，不能信 UseRequest 自报。`strict` 需要可兑现最大费用；`estimate` 还要求原 Orchestrator 与费用 Grant owner 在同一受信提交域内，能直接读取原 Task 保存的用户接受非硬上限事实，且全部必需 Grant 对该费用单位都没有硬 limit。公开 policy_ref、调用方布尔声明或跨域缓存都不是该事实证明；缺少共同提交域、原动作、声明或同意记录时拒绝估算并保持 strict-only。离线租约及跨 Orchestrator 固定额度只接纳 `strict`；估算费用也不能放宽次数、字节等其他维度的可信上界。
 
 | 顺序 | 事务动作 | 失败结果 |
 | --- | --- | --- |
@@ -216,7 +222,7 @@ usage_owner 由处理端认证资格核验；正文指定另一个 owner 不能�
 同 owner 的多项许可必须一次事务全成或全拒。
 跨 owner 的消费没有共同原子性；调用端分别保存已取得的依据，全部有效才行动。
 部分许可已经占用而另一方不可达时，不行动、不撤销历史消费，也不换身份偷偷再试。
-确知从未启动且原窗口过期时，向用户报告需要新授权；旧消费事实仍保留。
+处理端在自己的原操作记录中持久封闭发送资格并证明未跨发送边界后，沿各原 use_id 对已知获准许可报告累计零用量和最终关闭；结算答复丢失仍查原结算。未知的远端 use 决定继续按原身份查询，查明 allowed 后也用同一关闭事实封账。这样只释放未支出的数值预留，不返还 once 的消费身份。若已有发送准备或跨边界与否不明，则保留相应 held 和原查询责任，不凭“这次没有收到结果”提交零用量最终关闭。确知从未启动且原窗口过期时，向用户报告需要新授权；旧消费事实仍保留。
 
 资源端只在自己的启动记录尚未存在、窗口仍有效且门禁允许时首次启动。
 启动记录与驱动不可原子时保留 unknown 并查原效果，不能依据 use 已获准推定动作发生。
@@ -225,24 +231,27 @@ usage_owner 由处理端认证资格核验；正文指定另一个 owner 不能�
 ### 在线预留、实际支出和最终释放
 
 UseReceipt 是不可变的原授权结果；结算单独保存为 UseSettlementRecord，不修改原回执、许可修订或 start_before。
-grant.use 为 allowed 时同事务建立 revision=1、usage_revision=0 的 open 结算记录，原预留全部计入 held。
+grant.use 为 allowed 时同事务建立 revision=1、usage_revision=0 的 open 结算记录，原预留全部计入 held，并固定经核验的 cost_bound。
 使用端通过 grant.use.settle 报告原 operation、usage_owner、许可引用、递增 usage_revision 和累计单位／费用；Grant owner 验证认证发送方及原绑定。
 grant.use.settlement 查询这一独立投影，用于发送成功但答复丢失后的恢复；它不能延长授权窗口。
 
-每次更新先按稳定使用身份查询原累计值，再以新累计值减旧累计值的差额从 held 转入 spent。
+每次更新先按稳定使用身份查询原累计值，再以新累计值减旧累计值的差额转入 spent。`strict` 的实际费用不得超过可信预留；若提供方违反该合同，仍记录已发生费用与保证失效，停止同范围新计费并告警，不能丢弃真实支出。`estimate` 的累计实际费用可以超过初始预留，超额按 `spent_cost - reserved_cost` 的正差额报告；原 UseReceipt 与结算的 reserved_cost 均不改写，停止同范围新计费，避免后续估算继续扩大暴露。
 跨端重放同一个原结算命令返回原回执，不重复转账；新的用量修订不得倒退累计值或更换单位。
-对每一精确单位始终满足 reserved = spent + held + released，不能把费用单位和调用次数混算。
+对有可信上界的每一精确单位，正常合同内满足 reserved = spent + held + released；估算费用按原预留与实际支出分别记账，未结时 `held=max(0,reserved-spent)`，超额为 `max(0,spent-reserved)`，不能假造负 held 或把差额计为另一 use 的支出。final 时未支出 held 才转 released。不能把费用单位和调用次数混算。
 多项必要许可在各自 grant_use_items 上执行相同受限使用的计量核对，不把一份必要许可的余量视为另一条许可的额外资格。
 
-open 包括效果或最终费用未知的使用；已知部分费用可转 spent，剩余上界全部留在 held，released 必须为零。
-final 必须有原 usage_owner 的关闭证明，证明原有限动作已封闭且费用不能继续增长；随后把全部未支出 held 转 released。
+open 包括效果或最终费用未知的使用；已知部分费用可转 spent，strict 的剩余上界全部留在 held，released 必须为零。estimate 的未支出原预留也暂留 held，但它不是未知最终费用的硬上界。
+final 必须有原 usage_owner 的关闭证明，证明原有限动作及正常计费窗口已封闭，不会再主动产生新的使用；随后把全部未支出 held 转 released。它不保证提供方永不更正这次调用的账单。
 授权撤销、窗口到期、进程超时或一次查询失败都不能单独提供最终关闭证明。
 
 once 的身份消费独立于金额：即使证明从未启动、累计实际费用为零，consumed_once 仍为 true。
 数值预留可以结清，原单次执行资格不返还，不允许第二个 use 使用它；需要重做时由本人另授新许可。
-最终结算不能再打开或增添用量。收到矛盾的迟到用量时保存诊断缺口，不擅自修改关闭事实或发放新额度。
+最终结算不能重新开放使用资格。若已 final 后出现经原计量 owner 核验的供应商账单更正，允许同一 use 的 final→final 单调费用修订；原 operation、once 消费、启动窗口和关闭依据不变，已 released 的数值不倒流。新增真实支出中超出仍可覆盖预留的差额记为超额债务，停止同范围新计费并保留异常审计；不能抹掉费用或发放新额度。未经核验或相互矛盾的迟到报告进入诊断缺口，不擅自改账。静态结构校验只能核对原身份及修订单调，账单真伪由运行中的原 usage owner 核验。
 
-结算事务锁 use、原 grant_use_items 和计数，核对 expected_revision、原计量 owner 与 usage_revision，保存明细、差额转账、关闭事实和原回执。
+这里的 final→final 更正仅指迟到追加收费或上调；退款、贷记等负向账务事件不通过降低累计用量处理。出现这类账单时标记待人工对账，后续若需自动化须另定可审计的负向事件及父子账本传播规则。
+
+结算事务锁 use、原 grant_use_items 和计数，核对 expected_revision、原计量 owner 与 usage_revision，保存明细、差额转账、关闭事实和原回执。任务关联 use 的每次可信费用上调还在同一事务按 `(use_id, usage_revision)` 唯一保存交回 outbox 及首次有限期限的 command_id，目标为原 task_id，`task.billing_reconcile` 携带 `source_kind=grant_use`、原 use_id、原账 usage_revision 和 usage_digest；通知金额不作 Orchestrator 账本的权威输入。交回 worker 先查原 command_id，仍可接纳时原样重投；原尝试到期仍无 JobAck 时，保留旧命令审计身份，并为相同 use／usage_revision／usage_digest 保存新 command_id 的后继尝试。原 Orchestrator 以来源修订业务键归并到同一 JobAck，即使旧尝试已应用也不双扣；直到取得其已持久保存结算 job 的 JobAck；随后只结束该 outbox 交付，不删除原 use 的迟到账单身份。重启扫描所有未获 JobAck 的 outbox，已 final、原任务终态或旧 settle job done 均不跳过。Orchestrator 主动读原 Grant 账并按固定计费来源去重；同一物理收费若也出现在 Executor／Brain 投影，只能由任务已绑定的一个来源计入预算。
+每个上调修订保留独立 outbox 行；每次命令尝试固定 ID、载荷和期限，旧尝试保留在原命令记录中，r2 不覆盖未获 JobAck 的 r1。原 Orchestrator 收到 r1 时可主动读到 r2 并先归并较新累计额；以后 r1／r2 迟到或重投按已持久的最高来源修订确认，只有同一修订不同摘要才冲突。原 use 的计费身份、累计费用、已交回修订及供应商更正关联保留至可验证的账单更正期限结束；若没有可验证期限，最小计费账本和查询入口长期保留。完整授权正文可以依清理策略回收，但 `final` 或长期关闭索引不能抹掉迟到更正的交回路由。
 并发撤权不删除原结算责任；计量和封账使用最小管理依据继续，不能因目标 Grant 已撤销而丢掉已发生费用。
 
 <a id="key-sequence"></a>
@@ -352,7 +361,7 @@ approved 时创建唯一 endpoint/instance，生成受限凭据并保存加密�
 ## 8. 离线分配、重连与封账
 
 allocate 锁当前持续许可、端点实例及可分配余额。
-租约范围必须是许可子集，期限不能超过许可和显式离线上限。
+租约范围必须是许可子集，期限不能超过许可和显式离线上限；每项可计费使用须有可信最大费用，estimate 模式或无上界费用不能进入离线租约。
 单次许可若分配离线资格，同时关闭对应在线消费资格。
 租约固定一个实例账本；复制文件或同账号登录另一端不获得第二份消费权。
 
@@ -365,7 +374,7 @@ allocate 锁当前持续许可、端点实例及可分配余额。
 重连严格先取得当前端点状态及撤销，再上送原用量，最后开放新工作。
 settle 的累计费用不得倒退、超过分配或切换单位。
 相同 use 的不同意图拒绝；累计值与本批明细的关系按原账本逐项去重检查。
-final 必须附资源端的封闭证明，且全部使用不能继续新增费用。
+final 必须附资源端的封闭证明，且全部使用不能再主动产生新费用；原供应商账单更正仍按第 5 节记在原 use，不重新开放离线租约。
 到期仅关闭新使用，不足以最终返还余额。
 租约按 open → closed → reconciled 收敛；本地关闭可先于 owner 获知，重连沿原账本报告。非最终用量上报不把 closed 重新打开；最终封账同时记录关闭依据和 reconciled，不要求额外一次网络往返。owner 尚未收到的使用保持未知，不用空明细推导可释放余额。
 
@@ -397,6 +406,11 @@ final 必须附资源端的封闭证明，且全部使用不能继续新增费�
 | S-I16 | 另一 owner 或另一 command 消费批准 | 拒绝；原确认仍只绑定原业务事务 |
 | S-I17 | 确认决定后业务提交崩溃 | 同库消费与业务同时成败，失回执查原命令 |
 | S-I18 | 租约首次消费与关闭竞争，消费提交后再崩溃 | 关闭先提交拒绝新 use；消费先提交保留一次扣额及未结责任，open 不代表尚未使用，closed 不提前释放费用 |
+| S-I19 | 一方已占用 once，另一 Grant owner 拒绝；再分别注入处理端未启动与发送边界不明 | 确证未启动时原使用以零用量最终结算、释放数值预留但 once 不返还；边界不明时保留 held 与查询责任 |
+| S-I20 | 在线 estimate 初始预留 10、实际计费 12；另试图以该能力申请离线或跨 Orchestrator 固定额度 | 原 use 记录 spent=12 与超额 2，停止同范围新计费；固定分配拒绝，不把估算额称为硬上限 |
+| S-I21 | 原 use 已 final 并释放余量后，供应商对原调用更正费用且原 usage owner 核验通过 | final→final 只增费用修订，已释放数值、once 和启动窗口不回滚，新增差额进超额债务并停新计费 |
+| S-I22 | 文件路径在授权和实际打开之间替换为越界符号链接，或另一个租户创建同名相对路径 | 句柄相对解析与租户根复核拒绝越界；已签发 Grant 或规范字符串不能放行目标动作 |
+| S-I23 | final 的 Grant use 连续 r1／r2 费用上调分别与交回 outbox 同时提交，随后断网、停机超过原命令期限再以新 ID 交回，令 r2 通知先到；原 Task 已终态且旧 settle job done | r1／r2 原 outbox 均先恢复原尝试，到期后以后继命令交回并按来源修订合并同一 JobAck；Orchestrator JobAck 后各源交付才结束，任务按最新原 use 账只记累计差额一次，迟到 r1 不回退、不重开 use 或 Task，不和 Executor 投影双扣 |
 
 记录 check/use/revoke 的提交延迟、冲突率、传播积压和未封账预留。
 拒绝与控制使用独立容量，普通任务洪峰不能占尽撤权槽。
@@ -438,7 +452,7 @@ GrantRecord 把可收缩范围集中为 policy，身份、修订、状态和传�
 吞吐的主要共享点是热门父许可的计数行、一次许可竞争和原 owner 的短事务写队列。
 当前检查必须从权威状态裁决，不能通过缓存 allowed 或异步副本读取增加准入容量。
 可并行的是身份前置检查、不可变资源摘要读取和不同许可的工作；远端调用、内容解析和秘密介质访问不占业务锁。
-结算合并累计上报可减少写次数，但不得超过已批准预留，不能延误有限关闭责任；每次归并仍使用原累计修订。
+结算合并累计上报可减少写次数；`strict` 的可信预留约束正常支出，`estimate` 超额如实记录并阻止新计费，不能把两种模式都写成“不得超过预留”。归并不能延误有限关闭责任，每次仍使用原累计修订。
 
 容量实验分开记录 use / settle / revoke 的提交延迟、锁等待与冲突、每条父许可的使用集中度、未结 held 的金额和龄期、撤销最老未落实龄期、配对拒绝率及关闭索引增长。
 按实际每次使用的结算修订数计算写放大，不能只用任务接纳量推算授权吞吐。

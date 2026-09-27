@@ -46,6 +46,18 @@ def _pair_scope_subset(child, parent):
             and child['max_offline_window_ms'] <= parent['max_offline_window_ms'])
 
 
+def _exposure_affects_plan(exposure, plan, partition, related_reports):
+    """A source leak before sealing blocks formal evidence, even if projections lag."""
+    if partition is None:
+        return False
+    groups={g['source_group_id'] for g in partition['source_groups']}
+    if exposure['partition_id'] != plan['partition_id'] and not groups.intersection(exposure['source_group_ids']):
+        return False
+    if exposure['occurred_at'] is None or not related_reports:
+        return True
+    return any('sealed_at' not in report or _time(exposure['occurred_at']) <= _time(report['sealed_at']) for report in related_reports)
+
+
 def check_exchange(exchange, capabilities):
     """Call after shared Schema validation; tolerate rejected/redacted projections."""
     req=exchange.get('request',{}); res=exchange.get('response',{}); name=req.get('method','')
@@ -152,7 +164,9 @@ def check_exchange(exchange, capabilities):
         if not out['cancel_requested']:fail('evaluation_cancel','cancel intention must remain recorded')
     if name=='evaluation.read':
         same(out['kind'],p['kind'],'evaluation_projection');same(out['record'][{'candidate':'candidate_id','partition':'partition_id','plan':'plan_id','run':'run_id','report':'report_id','approval':'approval_id'}[p['kind']]],target)
-    if name=='evaluation.exposure_record':same(out['exposure'],p['exposure'])
+    if name=='evaluation.exposure_record':
+        same(out['exposure'],p['exposure'])
+        if not out['impact_job_id'].startswith('job_'):fail('exposure_impact_job','impact scan needs a durable job identity')
     if name=='evaluation.feedback_open':
         same(out['report']['report_id'],target);same(out['report']['digest'],p['report_digest'],'report_binding');same(out['exposure']['exposure_id'],p['exposure_id'])
         same(out['exposure'].get('report_id'),target,'report_binding');same(out['exposure'].get('report_digest'),p['report_digest'],'report_binding')
@@ -173,7 +187,7 @@ def check_exchange(exchange, capabilities):
 
 def check_trace_rules(trace):
     """Check authority records supplied in this bounded sequence, never infer missing facts."""
-    errors=[]; grants={}; confirms={}; leases={}; lease_uses={}; lease_rev={}; lease_closed_at={}; pairs={}; pair_secrets={}; pair_scopes={}; claims={}; endpoints={}; candidates={}; partitions={}; plans={}; reservations={}; attempts={}; policies={}; reports={}; exposures=[]; approvals={}; uses={}; use_times={}; activations={}; intentions={}; immutable={}
+    errors=[]; grants={}; confirms={}; leases={}; lease_uses={}; lease_rev={}; lease_closed_at={}; pairs={}; pair_secrets={}; pair_scopes={}; claims={}; endpoints={}; candidates={}; partitions={}; plans={}; reservations={}; attempts={}; policies={}; reports={}; exposures=[]; impact_jobs={}; approvals={}; uses={}; use_times={}; activations={}; intentions={}; immutable={}
     for i,event in enumerate(trace['events']):
         if 'exchange' not in event:continue
         x=event['exchange'];req=x['request'];res=x['response'];name=req['method'];p=req['payload'];out=res.get('output');target=req['target_id']; rejected=res.get('stage')=='rejected' or ('error' in res and 'stage' not in res)
@@ -273,7 +287,7 @@ def check_trace_rules(trace):
                 if out['formal_attempt_index']!=expected_index:fail('formal_attempt_sequence','formal attempt must use next permanent ordinal')
                 if out['candidate_id'] not in policy['candidate_scope']:fail('improvement_scope','candidate outside approved process')
                 policies[pid]=deepcopy(policy);attempts[key]=out['plan_id']
-                if any(e['partition_id']==out['partition_id'] for e in exposures):fail('holdout_exposure','exposed partition cannot become new formal holdout')
+                if any(_exposure_affects_plan(e,out,part,[]) for e in exposures):fail('holdout_exposure','exposed source group cannot become new formal holdout')
             plans[out['plan_id']]=deepcopy(out)
         if name=='evaluation.run':
             plan=plans.get(p['plan_id'])
@@ -282,35 +296,36 @@ def check_trace_rules(trace):
             report=out['report'];plan=plans.get(report['plan_id'])
             if plan and report['plan_digest']!=plan['digest']:fail('report_plan','report does not match frozen plan')
             if plan and report['evidence_class']=='formal' and ('paired_counts' not in report or sum(report['paired_counts'].values())!=len(plan['sample_ids'])):fail('report_denominator','paired counts must include every frozen sample')
+            if plan and report['evidence_class']=='formal' and report['eligibility']=='eligible' and any(_exposure_affects_plan(e,plan,partitions.get(plan['partition_id']),[report]) for e in exposures):fail('exposure_gate','formal report cannot seal as eligible after source exposure')
             if report['report_id'] in reports and reports[report['report_id']]['digest']!=report['digest']:fail('report_immutable','sealed report digest cannot change')
             reports[report['report_id']]=deepcopy(report);exposures.append(deepcopy(out['exposure']))
         if name=='evaluation.exposure_record':
-            exposure=out['exposure'];exposures.append(deepcopy(exposure));affected=[]
-            for pid,plan in plans.items():
-                if plan['purpose']!='release_confirmation':continue
-                part=partitions.get(plan['partition_id'])
-                overlapping=part and bool(set(exposure['source_group_ids']) & {g['source_group_id'] for g in part['source_groups']})
-                if plan['partition_id']!=exposure['partition_id'] and not overlapping:continue
-                related=[r for r in reports.values() if r['plan_id']==pid]
-                before=not related or exposure['occurred_at'] is None or any('sealed_at' not in r or _time(exposure['occurred_at'])<=_time(r['sealed_at']) for r in related)
-                if before:
-                    affected.append(pid)
-                    for r in related:r['eligibility']='ineligible'
-            if not set(affected)<=set(out['invalidated_plan_ids']):fail('exposure_invalidation','pre-sealing exposure must invalidate related formal plans')
-            if affected and any(a['report_id'] in reports and reports[a['report_id']]['plan_id'] in affected and a['state']=='active' for a in approvals.values()) and not out['revocation_job_ids']:fail('exposure_revocation','affected live approvals need durable revocation jobs')
+            exposure=out['exposure'];old=impact_jobs.get(exposure['exposure_id'])
+            if old and old!=out['impact_job_id']:fail('exposure_impact_job','one exposure cannot acquire a second impact job')
+            if out['impact_job_id'] in impact_jobs.values() and old!=out['impact_job_id']:fail('exposure_impact_job','one impact job cannot be reused for another exposure')
+            impact_jobs[exposure['exposure_id']]=out['impact_job_id'];exposures.append(deepcopy(exposure))
         if name=='evaluation.approve':
             report=reports.get(out['report_id']);candidate=candidates.get(out['candidate_id'])
             if candidate and any(out[k]!=candidate[v] for k,v in [('candidate_digest','digest'),('lock_id','candidate_lock'),('release_kind','release_kind')]):fail('approval_candidate','approval must bind registered candidate')
             if report:
                 if report['digest']!=out['report_digest'] or report['candidate_id']!=out['candidate_id'] or report['candidate_digest']!=out['candidate_digest']:fail('approval_report','approval names another report/candidate')
                 if not report['sealed'] or report['eligibility']!='eligible' or not report['coverage_complete'] or report['contract_gate']!='pass':fail('approval_evidence','approval requires complete eligible sealed contract evidence')
+                plan=plans.get(report['plan_id'])
+                if plan and any(_exposure_affects_plan(e,plan,partitions.get(plan['partition_id']),[report]) for e in exposures):fail('exposure_gate','approval must check original exposure facts, not only lagging report projection')
                 if out['release_kind']=='improvement' and (report['evidence_class']!='formal' or any(not report[k]['applicable'] or report[k]['result']!='pass' for k in ('target_attainment','statistical_gate','improvement_gate')) or any(not c['within_limit'] for c in report['category_changes'])):fail('improvement_approval','improvement approval requires all formal gates and categories')
                 if out['release_kind']=='compatibility' and report['evidence_class']!='conformance':fail('compatibility_approval','compatibility path requires explicit conformance report')
             else:fail('approval_report','sequence must provide report through recorded trusted feedback')
             approvals[out['approval_id']]=deepcopy(out)
         if name=='evaluation.revoke':approvals[target]=deepcopy(out)
         if name=='evaluation.approval_check':
+            approval=approvals.get(out['approval_id']);report=reports.get(approval['report_id']) if approval else None
+            plan=plans.get(report['plan_id']) if report else None
+            if plan and any(_exposure_affects_plan(e,plan,partitions.get(plan['partition_id']),[report]) for e in exposures):fail('exposure_gate','new approval use must check original exposure facts')
             uses[out['use_id']]=deepcopy(out);use_times.setdefault(out['use_id'],event['at'])
+        if name=='evaluation.approval_lease':
+            approval=approvals.get(out['approval_id']);report=reports.get(approval['report_id']) if approval else None
+            plan=plans.get(report['plan_id']) if report else None
+            if plan and any(_exposure_affects_plan(e,plan,partitions.get(plan['partition_id']),[report]) for e in exposures):fail('exposure_gate','new offline lease must check original exposure facts')
         if name=='extensions.activate':intentions[p['activation_id']]=deepcopy(p)
         if name=='evaluation.rollout_read' and out['state']=='finished':
             approval=approvals.get(out['approval_id'])
@@ -404,14 +419,16 @@ def _confirmation_settlement_exchange(exchange):
             values=[out[k+'_'+suffix] for k in ('reserved','spent','held','released')]
             if len({v['unit'] for v in values})!=1:fail('use_settlement_unit','reservation, spent, held and released units must match')
             reserved,spent,held,released=[Decimal(v['amount']) for v in values]
-            if reserved!=spent+held+released:fail('use_settlement_conservation','spent plus held plus released must equal original reservation')
+            if suffix=='units' and reserved!=spent+held+released:fail('use_settlement_conservation','unit usage must conserve its original reservation')
+            if suffix=='cost' and (spent+held+released<reserved or released>reserved):fail('use_settlement_conservation','cost correction may exceed but cannot lose or release more than original reservation')
             if out['state']=='open' and released!=0:fail('use_settlement_unknown','open/unknown use cannot release unspent reservation')
+            if suffix=='cost' and out['state']=='open' and held!=max(reserved-spent,Decimal(0)):fail('use_settlement_unknown','open use must hold its unspent estimate or strict reservation')
             if out['state']=='final' and held!=0:fail('use_settlement_final','closed use must settle all held amounts')
     return errors
 
 
 def _confirmation_settlement_trace(trace):
-    errors=[];confirmations={c['confirmation_id']:deepcopy(c) for c in trace.get('confirmations',[])};uses={};settlements={};grant_modes={};commands=set()
+    errors=[];confirmations={c['confirmation_id']:deepcopy(c) for c in trace.get('confirmations',[])};uses={};settlements={};grant_modes={};grant_cost_limits={};commands=set()
     for i,event in enumerate(trace['events']):
         if 'exchange' not in event:continue
         x=event['exchange'];req=x['request'];p=req['payload'];name=req['method'];res=x['response'];out=res.get('output');a=x['auth'];target=req['target_id'];rejected=res.get('stage')=='rejected' or ('error' in res and 'stage' not in res)
@@ -446,8 +463,12 @@ def _confirmation_settlement_trace(trace):
                 expected=deepcopy(prior)
                 if expected['state'] in ('pending','approved') and _time(event['at'])>=_time(expected['expires_at']):expected['state']='expired'
                 if out!=expected:fail('confirmation_observation','read must preserve current decision and atomic consumption')
-        if name=='grant.issue':grant_modes[out['grant_id']]=out['policy']['mode']
-        if name=='grant.use' and out['decision']=='allowed':uses[out['use_id']]={'request':deepcopy(p),'receipt':deepcopy(out),'owner_id':target}
+        if name=='grant.issue':
+            grant_modes[out['grant_id']]=out['policy']['mode']
+            grant_cost_limits[out['grant_id']]={limit['unit'] for limit in out['policy']['limits']}
+        if name=='grant.use' and out['decision']=='allowed':
+            if p['cost_bound']=='estimate' and any(p['max_cost']['unit'] in grant_cost_limits.get(g['id'],set()) for g in p['grant_refs']):fail('estimate_hard_grant','estimate use cannot claim a Grant hard limit for its cost unit')
+            uses[out['use_id']]={'request':deepcopy(p),'receipt':deepcopy(out),'owner_id':target}
         if name in ('grant.use.settle','grant.use.settlement'):
             origin=uses.get(target);prior=settlements.get(target)
             if not origin:fail('use_settlement_origin','settlement requires recorded original allowed UseReceipt')
@@ -455,12 +476,14 @@ def _confirmation_settlement_trace(trace):
                 q=origin['request'];r=origin['receipt']
                 if any(out[k]!=q[v] for k,v in [('operation_id','operation_id'),('usage_owner_id','usage_owner_id'),('grant_refs','grant_refs')]) or out['owner_id']!=origin['owner_id']:fail('use_settlement_binding','settlement changed original usage identity')
                 if out['reserved_units']!=r['reserved_units'] or out['reserved_cost']!=r['reserved_cost']:fail('use_settlement_reservation','settlement cannot resize original reservation')
+                if out['cost_bound']!=q['cost_bound'] or out['cost_bound']!=r['cost_bound']:fail('usage_cost_bound','settlement cannot change original cost mode')
                 once=any(grant_modes.get(g['id'])=='once' for g in q['grant_refs'])
                 if once and not out['consumed_once']:fail('once_not_refunded','zero final usage cannot return consumed once identity')
             if prior:
-                for field in ('operation_id','usage_owner_id','grant_refs','reserved_units','reserved_cost','consumed_once'):
+                for field in ('operation_id','usage_owner_id','grant_refs','reserved_units','reserved_cost','cost_bound','consumed_once'):
                     if out[field]!=prior[field]:fail('use_settlement_immutable','fixed settlement identity changed')
-                if prior['state']=='final' and out!=prior:fail('use_settlement_closed','final settlement cannot reopen or add usage')
+                if prior['state']=='final' and out!=prior:
+                    if name!='grant.use.settle' or out['state']!='final' or out['spent_units']!=prior['spent_units'] or any(out[k]!=prior[k] for k in ('released_units','released_cost','held_units','held_cost')) or not _amount_le(prior['spent_cost'],out['spent_cost']):fail('use_settlement_closed','final correction cannot reopen action, add units or retract released reserve')
                 if name=='grant.use.settle':
                     if p['usage_revision']<=prior['usage_revision'] or req['expected_revision']!=prior['revision']:fail('use_settlement_revision','new usage revision and expected record revision must advance')
                     if not _amount_le(prior['spent_units'],out['spent_units']) or not _amount_le(prior['spent_cost'],out['spent_cost']):fail('use_settlement_monotonic','cumulative spent cannot decrease')

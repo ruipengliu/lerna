@@ -12,7 +12,7 @@
 
 生产方案独立部署 WSS 连接接入层、Orchestrator 应用服务、按工作类别划分的 worker 池及隔离执行宿主，使连接、任务推进和外部执行能够分别扩容与恢复。Orchestrator 的 JobRunner 装入[工作进程池](deployment-production.md#1-软件模块怎样装进生产进程)，从原权威库领取持久 job；池中也可装入其他模块的后台工作，业务裁决仍在原模块。同一提交域内的任务状态、待处理工作和授权使用继续放入短事务；跨进程或跨端交接沿原命令、回执与事实查询恢复。模块边界不等于服务或数据库边界。
 
-生产基线采用单地域三个可用区，优先使用不绑定厂商的托管 PostgreSQL、对象存储及连接池／平台能力。单可用区失效时，已确认账本的目标为 RPO=0，原 Orchestrator 恢复控制与查询的 RTO≤60 秒；整地域故障按受限灾备恢复处理。持久 jobs 与业务事实共同提交，有界批量扫描保证工作可被重新发现，可丢通知只加速唤醒。具体基础设施职责和取舍集中在[存储与中间件](storage-and-middleware.md)，可用性条件见[生产部署](deployment-production.md)。
+生产基线采用单地域三个可用区，优先使用不绑定厂商的托管 PostgreSQL、对象存储及连接池／平台能力。单可用区失效时，已确认账本的目标为 RPO=0，原 Orchestrator 恢复控制与查询的 RTO≤60 秒；受管文件根的目标字节另有[故障域边界](deployment-production.md#2-拓扑路由及数据放置)，不由账本 RPO 推出跨区可用。整地域故障按受限灾备恢复处理。持久 jobs 与业务事实共同提交，有界批量扫描保证工作可被重新发现，可丢通知只加速唤醒。具体基础设施职责和取舍集中在[存储与中间件](storage-and-middleware.md)，可用性条件见[生产部署](deployment-production.md)。
 
 这里的“最优”以已确认规模与恢复目标为约束：用少量成熟组件降低实现和运营复杂度，再以稳态、故障剩余容量及恢复积压的测量确定分区与副本数。上述目标仍需实际运行验收；相应代价在下表和各专题中明确给出。
 
@@ -98,7 +98,7 @@ architecture/
 ├── goals.md                  # 建设目标与功能范围
 ├── decisions.md              # 跨模块关键决策
 ├── walkthrough.md            # 贯穿场景
-├── deployment.md             # 生产基线、容量与端云装配
+├── deployment.md             # 技术基线与三种宿主装配
 ├── deployment-production.md  # 生产拓扑、故障边界及性能预算
 ├── storage-and-middleware.md # 存储、连接池、工作唤醒及中间件取舍
 ├── review.md                 # 交付审查记录

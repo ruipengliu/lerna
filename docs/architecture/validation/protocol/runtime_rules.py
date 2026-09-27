@@ -49,6 +49,12 @@ def check_exchange(exchange, capabilities):
     def unique_units(items, field='amount'):
         require(len(items) == len(values(items, field)), 'budget_units', 'unit may occur only once')
 
+    def check_allocation_incident(record):
+        limits=values(record['limits'],'limit');spent=values(record['final_usage'])
+        if record['state']=='settled' and set(limits)==set(spent) and any(spent[u]>limits[u] for u in limits):
+            require(bool(record.get('incident_causes')) or record.get('incident_pending') is True,
+                    'allocation_incident', 'over-allocation bill needs an attributed cause or explicit pending investigation')
+
     if delegated_submit:
         ctx = p['delegation_context']
         require(exchange['auth'].get('sender_service_id') == ctx['sender_orchestrator_id'] == ctx['allocation_ref']['owner_id'],
@@ -63,6 +69,7 @@ def check_exchange(exchange, capabilities):
         require(record['allocation_id'] == target, 'allocation_binding', 'query returned another allocation')
         authority = record['owner_id'] if output['role'] == 'owner' else record['receiver_id']
         require(authority == owner, 'budget_owner', 'query role must be served by its fixed authority')
+        if output['role']=='owner':check_allocation_incident(record)
     if name == 'budget.close':
         require(exchange['auth'].get('sender_service_id') == p['sender_orchestrator_id'] == p['allocation_ref']['owner_id'],
                 'delegation_sender', 'only authenticated original allocation owner can request closure')
@@ -83,6 +90,7 @@ def check_exchange(exchange, capabilities):
             unique_units(output[key], 'limit' if key == 'limits' else 'amount')
         require(output['owner_id'] == owner, 'budget_owner', 'allocation belongs to responding budget owner')
         require(output['allocation_id'] == p['allocation_id'], 'allocation_binding', 'original allocation identity differs')
+        check_allocation_incident(output)
         if name == 'budget.allocate':
             for key in ('parent_task_id', 'receiver_id', 'limits', 'expires_at'):
                 require(output[key] == p[key], 'allocation_binding', 'fixed allocation intent differs')
@@ -99,8 +107,11 @@ def check_exchange(exchange, capabilities):
                     'allocation_closure', 'receiver and final cumulative use differ')
             require(output['revision'] == req['expected_revision'] + 1, 'budget_revision', 'settlement advances compared revision once')
             limits = values(output['limits'], 'limit'); spent = values(closure['final_usage'])
-            require(set(limits) == set(spent) and all(spent[u] <= limits[u] for u in spent),
-                    'allocation_amount', 'settled amounts must have exact units and fit transferred bounds')
+            require(set(limits) == set(spent), 'allocation_amount', 'settled amounts must have the original units')
+            # A verified final bill can exceed allocation after a provider's
+            # single-call bound breach, a receiver admission breach, or both.
+            # This trace checks explicit attribution/pending status, not proof
+            # bytes; the parent owner must classify from original evidence.
     if name == 'task.adjust_budget':
         require(output['task_id'] == target and output['orchestrator_id'] == owner,
                 'budget_owner', 'adjustment must target the original Orchestrator task')
@@ -119,7 +130,10 @@ def check_exchange(exchange, capabilities):
         require(output['orchestrator_id'] == target == owner, 'task_list_orchestrator', 'a page belongs to one authoritative Orchestrator')
         require(len(output['items']) <= p['limit'], 'page_bound', 'page exceeds requested count')
         keys = [(x['created_at'], x['task']['task_id']) for x in output['items']]
-        require(keys == sorted(set(keys)), 'task_list_order', 'page must contain unique ascending stable keys')
+        def after(current, previous):
+            return instant(current[0]) < instant(previous[0]) or (instant(current[0]) == instant(previous[0]) and current[1] > previous[1])
+        require(all(after(current, previous) for previous, current in zip(keys, keys[1:])),
+                'task_list_order', 'page must use created_at descending and task_id ascending at equal time')
         require(all(x['task']['orchestrator_id'] == target for x in output['items']), 'task_list_orchestrator', 'foreign Orchestrator task in page')
         require(all(instant(x['created_at']) <= instant(output['upper_bound']) for x in output['items']),
                 'task_list_cut', 'newer task crossed fixed listing upper bound')
@@ -127,14 +141,18 @@ def check_exchange(exchange, capabilities):
             require(all(x['task']['status'] in p['statuses'] for x in output['items']), 'task_list_filter', 'page violates status filter')
         if 'cursor' in p:
             c = p['cursor']
-            require(output['upper_bound'] == c['upper_bound'] and all(k > (c['last_created_at'], c['last_task_id']) for k in keys),
+            require(output['upper_bound'] == c['upper_bound'] and all(after(k, (c['last_created_at'], c['last_task_id'])) for k in keys),
                     'task_list_cursor', 'page must continue after the supplied key at the same upper bound')
         if 'next_cursor' in output:
             c = output['next_cursor']
             require(c['upper_bound'] == output['upper_bound'], 'task_list_cursor', 'continuation changed upper bound')
-            floor = keys[-1] if keys else ((p.get('cursor') or {}).get('last_created_at', ''), (p.get('cursor') or {}).get('last_task_id', ''))
-            require((c['last_created_at'], c['last_task_id']) >= floor,
-                    'task_list_cursor', 'continuation went backwards over returned or scanned rows')
+            require(instant(c['last_created_at']) <= instant(output['upper_bound']),
+                    'task_list_cursor', 'continuation crossed fixed listing upper bound')
+            floor = keys[-1] if keys else (p['cursor']['last_created_at'], p['cursor']['last_task_id']) if 'cursor' in p else None
+            if floor:
+                next_key = (c['last_created_at'], c['last_task_id'])
+                require(next_key == floor or after(next_key, floor),
+                        'task_list_cursor', 'continuation went backwards over returned or scanned rows')
     if name == 'capability.search':
         require(len(output['candidates']) <= p['limit'], 'page_bound', 'catalog page exceeds requested count')
         pairs = [(c['capability_ref']['id'], c['capability_ref']['version'], c['capability_ref']['digest'], c['binding_ref']['binding_id'], c['binding_ref']['revision']) for c in output['candidates']]
@@ -258,6 +276,14 @@ def check_trace_rules(trace):
             if old:
                 require(old['parent_delegation_id']==r['parent_delegation_id'] and old.get('task_id')==r.get('task_id'), 'receiver_binding', 'receiver changed original child or delegation mapping')
                 require(not(old['state'] in ('closing','closed') and r['state']=='open') and not(old['state']=='closed' and r['state']!='closed'), 'receiver_reopen', 'receiver closure cannot reopen admission')
+                if old['state']=='closed' and r['state']=='closed':
+                    previous=old['closure'];current=r['closure']
+                    earlier=values(previous['final_usage']);later=values(current['final_usage'])
+                    require(r['revision']>old['revision'] and current['usage_revision']>previous['usage_revision'],
+                            'receiver_correction', 'closed receiver can only publish a newer billing revision')
+                    require(all(current[k]==previous[k] for k in ('allocation_id','receiver_id','spending_closed','closed_at')) and
+                            set(earlier)==set(later) and all(later[u]>=earlier[u] for u in earlier),
+                            'receiver_correction', 'billing correction cannot reopen spending, change identity or reduce cumulative use')
             receivers[key]=deepcopy(r)
         if name == 'task.submit' and 'delegation_context' in p:
             ctx=p['delegation_context'];aref=ctx['allocation_ref'];akey=(tenant,ctx['sender_orchestrator_id'],aref['id']);rkey=(*akey,owner)
@@ -303,10 +329,17 @@ def check_trace_rules(trace):
             key = (tenant, owner, out['allocation_id']); old = allocations.get(key)
             require(old is not None, 'allocation_original', 'settlement needs original allocation record')
             if old:
-                require(old['state'] == 'allocated' and req['expected_revision'] == old['revision'], 'allocation_terminal', 'settled allocation cannot be consumed or settled again by another command')
+                require(req['expected_revision'] == old['revision'], 'allocation_revision', 'settlement must compare current allocation revision')
                 require(all(out[k] == old[k] for k in ('parent_task_id', 'receiver_id', 'limits', 'expires_at', 'owner_id')),
                         'allocation_identity', 'settlement changed fixed allocation intent')
                 require(instant(p['closure']['closed_at']) <= instant(event['at']), 'allocation_closure', 'closure claims a future fact')
+                if old['state']=='settled':
+                    previous=old['closure'];current=p['closure']
+                    earlier=values(previous['final_usage']);later=values(current['final_usage'])
+                    require(current['usage_revision']>previous['usage_revision'] and
+                            all(current[k]==previous[k] for k in ('allocation_id','receiver_id','spending_closed','closed_at')) and
+                            set(earlier)==set(later) and all(later[u]>=earlier[u] for u in earlier),
+                            'allocation_correction', 'settled allocation accepts only newer cumulative bill for the same closed receiver')
                 receiver=receivers.get((tenant,owner,out['allocation_id'],out['receiver_id']))
                 if receiver:
                     require(receiver['state']=='closed' and receiver.get('closure')==p['closure'], 'allocation_closure', 'known receiver has not produced this final closure')

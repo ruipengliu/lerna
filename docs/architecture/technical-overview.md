@@ -142,7 +142,7 @@ Brain、Memory、Executor 以及 Agent、UI 和生命周期适配器可以改变
 | Delegation／Allocation | 父 Orchestrator 的协作与预算职责；接收方保存自己的接纳与关闭事实 | 固定委派、额度与唯一子映射；内部子 ID 和外部映射互斥 | 父及祖先控制、子目标范围；原接收方封闭、效果与最终费用依据 |
 | Surface／InputSubmission／InputRequest | 交互保存快照和转交；业务 owner 保存请求消费 | Surface、输入和请求分别有身份及修订；目标命令首次固定 | 准确请求、未消费状态、预览版本和当前披露资格 |
 | ConfirmationRecord | 实际消费确认的业务 owner | 固定原业务命令、规范意图和挑战；本人决定及消费可查 | 本人身份、期限、原命令绑定和未消费状态 |
-| EvaluationReport／PlanEligibility | Evaluation owner | 报告摘要不可变；资格记录修订及使其失效的暴露 | 当前正式资格、完整门禁与受信批准，报告分数不自行授权 |
+| EvaluationReport／PlanEligibility | Evaluation owner | 报告摘要不可变；资格投影修订及使其失效的暴露原事实 | 正式使用同步核验原暴露门禁、完整证据与受信批准；滞后的资格投影或报告分数不自行授权 |
 | ReleaseApproval／Activation | Evaluation 保存批准；目标 Extensions 保存激活和实例事实 | 固定批准范围、精确锁和原激活；Activation.revision 表示当前投影修订，generation 表示活动代际；新实例另取开放依据 | 当前批准、活动代际、实际就绪和残留工作，业务 Grant 另行成立 |
 
 表中列的是建模所需的主要字段，完整必填性以[协议 Schema](contracts/schemas/protocol.schema.json)及所属模块为准。一个对象被别的模块引用或投影，不转移写权；修订只在同一对象及其 owner 内比较，不能用接收时间或另一对象的较大修订覆盖它。
@@ -175,6 +175,7 @@ Brain、Memory、Executor 以及 Agent、UI 和生命周期适配器可以改变
 | Executor 启动准备 | 原操作、Attempt、目标关联与核对责任，并检查当前门禁 | 实际资源入口再次复核后发送；Executor 记录目标证据或未知 |
 | Orchestrator 取消 | 任务终态、控制修订、旧工作失效与逐端控制／核对责任 | Orchestrator 传播；执行和资源端报告已封闭入口及在途集合 |
 | 业务 owner 消费输入或确认 | 准确请求的一次消费、业务决定、原回执和后续工作 | 交互查原目标命令；业务 owner 继续已接纳责任 |
+| 原计费 owner 在终态后取得上调账单 | 原计费身份、新累计费用修订、固定交回命令及持久 outbox | 原 owner 重投 `task.billing_reconcile`，Orchestrator 持久唤醒原结算槽并主动查原账；原任务目标保持终态 |
 
 同宿主、同信任边界且共库时可以合并适用事务，逻辑成功含义仍保留。拆到独立提交域后，发起方保存原请求与查询 job，处理方保存决定与自己的后续工作；返回已收到也不能让处理方丢弃尚未完成的效果核对。
 

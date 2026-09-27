@@ -2390,14 +2390,25 @@
     ]
   },
   {
-    "name": "exposure must invalidate related formal plan",
-    "fixture": "35-improvement-exposure.json",
-    "expect": "exposure_invalidation",
+    "name": "grant use cannot change trusted cost mode in receipt",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "usage_cost_bound",
     "edits": [
       {
         "op": "set",
-        "path": "/events/8/exchange/response/output/invalidated_plan_ids",
-        "value": []
+        "path": "/events/1/exchange/response/output/cost_bound",
+        "value": "estimate"
+      }
+    ]
+  },
+  {
+    "name": "exposure must retain one durable impact job",
+    "fixture": "35-improvement-exposure.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/events/8/exchange/response/output/impact_job_id"
       }
     ]
   },
@@ -5820,6 +5831,59 @@
             "revision": 1
           }
         }
+      }
+    ]
+  },
+  {
+    "name": "billing wakeup must come from authenticated original source",
+    "fixture": "60-task-billing-reconcile.json",
+    "expect": "billing_source",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/auth/sender_service_id",
+        "value": "service_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "billing wakeup must name original Task",
+    "fixture": "60-task-billing-reconcile.json",
+    "expect": "billing_source",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/request/target_id",
+        "value": "task_ffffffffffffffffffffffffffffffff"
+      },
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/resource_id",
+        "value": "task_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "same source revision cannot carry another bill digest",
+    "fixture": "60-task-billing-reconcile.json",
+    "expect": "billing_revision_conflict",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/exchange/request/payload/usage_digest",
+        "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    ]
+  },
+  {
+    "name": "same billing source must retain one reconcile job",
+    "fixture": "60-task-billing-reconcile.json",
+    "expect": "billing_job",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/exchange/response/output/job_id",
+        "value": "billing_job_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
       }
     ]
   }

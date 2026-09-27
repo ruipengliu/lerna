@@ -5,6 +5,7 @@
 本页规定内部子任务与外部 Agent 的参考实现。委派用于把一部分目标交给另一个执行主体，父任务始终保留自己的完成裁决。子成功、目标行动封闭、效果核清和费用封账分别保存，不能用一个“完成”布尔值替代。
 
 内部子任务与父任务在同一 Orchestrator；它们可以调用远端 Brain、Memory 或 Executor。另一 Orchestrator 即使采用相同软件，也通过外部委派路径交接。没有原创建查询、可信预算上限或所需控制能力时，适配器不开放依赖这些保证的委派。
+委派的 allocation 是固定可消费上限。准入时收缩子策略，禁止只有估算费用而无可信单次上界的计费能力；子 TaskCoordinator 对每次实际绑定重复检查。顶层任务的获准估算计费不能借委派变成可封账的固定 allocation。
 
 <a id="module-shape"></a>
 ## 1. 模块形状与内部职责
@@ -64,6 +65,7 @@ flowchart TB
 | delegation_controls | 本地控制修订、固定子命令、逐端状态和在途责任 | 决定与传播 job 共同提交 |
 | delegated_inputs | 原远端请求 ID／修订、答复引用、原转交命令和消费回执 | 同业务输入只转交一个固定版本 |
 | delegation_jobs | 创建、读取、控制、输入或结算的原责任 | 每原对象每 kind 一个活动槽，复用宿主调度 |
+| receiver_correction_outbox（Orchestrator 账本） | 原 allocation、usage_revision、完整累计 Closure 摘要、有限 task.billing_reconcile 命令尝试及回执、交付状态 | 协作只引用原 receiver 的同一账本行，不复制费用权威；已 closed 委派仍按它恢复交付 |
 | delegation_closures | 映射、目标封闭依据、效果核清及封账引用 | closed 后长期保留最小身份与关闭依据 |
 
 父子任务的 Task.status 各自有权威，协作保存已归并事实、原来源修订及必要责任；phase 在查询时计算，不另存阶段转移记录。Closure 仍是必须持久保存的关闭决定，不能用即时计算替代它。
@@ -133,10 +135,13 @@ erDiagram
 ```text
 create_internal_child(request):
   begin with original command and ancestor locks
+  if original receipt exists: compare fixed intent and return original decision
+  if closed identity exists: return gone or idempotency_conflict
   require parent active, effective running and within deadline
   require exact installed internal Agent descriptor and bounded ancestry
   require requested permissions and budget are valid subsets
-  if original delegation exists: compare intent and return same mapping
+  require delegated policy excludes billable capabilities without credible cost bounds
+  require no other command has already occupied this delegation identity
   reserve the fixed allocation from parent budget
   create child Task at the same Orchestrator, limited configuration and first job
   create Delegation with exactly one child_task_id and its original facts
@@ -145,6 +150,7 @@ create_internal_child(request):
 ```
 
 预算分配是同一个存储事务中的内部调用，不通过本地 RPC 产生第二个提交点。若子创建失败，父预留和 delegation 均不提交。答复丢失只查询原 command 或 delegation，不重新分配。
+原命令查询先于当前父任务资格检查：若创建已提交而父后来取消，重投仍返回创建时的原回执，当前子任务状态另用 `collaboration.read` 查询；只有首次接纳才检查父此刻能否创建。固定拒绝也按原回执返回，不因父状态后来变化而重算。
 
 默认深度、活跃子数和用户任务数均有有限配置。祖先列表由 Orchestrator 从真实父链产生并核验，不能相信模型提供的列表。拒绝父子环、重复祖先、错误 Orchestrator 和越界深度；活跃子任务也占用户任务额度。
 
@@ -281,13 +287,15 @@ sequenceDiagram
 父侧 allocation 是该委派唯一费用来源。内部子支出从父 reserved 划拨；父报表聚合显示子费用但不再扣一次。跨 Orchestrator 分配固定 receiver 和期限；答复丢失不再创建另一份相同额度。
 
 每份进展携带累计用量及 usage_revision。适配器保存每个计价单位的最近值，较旧修订不回退账务，同修订异金额产生冲突。任务结果只有“费用估计”时，不能把它当最终账单释放预留。
+若可信最终账单显示累计费用超过固定 allocation，适配器不得把 final_usage 截断。原因可以是提供方突破可信单次上界，也可以是接收方违规放行多笔各自合规调用。它先关闭接收方新消费，连同原计费身份、分配与单次上界及可信账单出具完整 Closure；父方按[超额结算](../orchestrator/implementation.md#8-预算分配与最终结算)一次记真实超额、分别判提供方单次上界违约与接收方总分配违规（可同时成立），证据不足的原因标待查，并禁用受影响绑定的新计费委派。证据不足则原 allocation 保持未结，不把远端自报值当可信账单。
+原 allocation 已 settled 后发生可信上调账单时，接收方 closed 状态不变，在同一事务保存更高用量修订的完整累计 Closure 和按原 allocation／usage_revision 唯一的校准 outbox。outbox 向父方原 task_id 调用 `task.billing_reconcile`（source_kind=budget_allocation、source_id=原 allocation_id）唤醒结算责任；答复丢失查询或重投原命令，受信期限过后仍无 JobAck 时保留旧尝试及回执、另存同修订／同摘要的继任命令，父方 durable job 回执后才完成交付。父方通过 `budget.read(role=receiver)` 取得当前 closed 证明，在本地先持久保存该接收方修订对应的预算结算 intent、准确 Closure 摘要和有限命令尝试／当前 allocation expected_revision；随后调用 budget.settle。答复丢失先查原回执；原命令过期仍无 applied 时读取当前 allocation，已按该累计账单结算则结束 intent，否则才保存同修订／同摘要的继任命令，旧未知尝试不删；旧命令迟到先 applied 而继任因 expected_revision 冲突时，父读当前 allocation 与 intent 摘要匹配后认定已结。仅按上调累计差额调整 spent，已释放余量不倒流；父预算超限则记录追账债务并停新计费。已保存的 DelegationClosure 仍证明原目标及当时已知费用已封闭，后续上调作为该 allocation 的独立账务责任与当前查询缺口展示，不启动新目标行动，也不因历史 phase=closed 丢弃原计费身份。退款、贷记另行对账。
 
 提交 DelegationClosure 必须同时具备：
 
 1. 已经证明没有新的子目标行动可以开始，或原创建从未被接纳且不可能迟到接纳。
 2. 所有内部子任务终结；外部原任务的对应封闭保证已确认。
 3. 本委派及其受管后代没有未知或可能迟到的效果。
-4. 原接收方已经封闭新增消费，全部单位最终累计费用已确定，budget.settle 完成。
+4. 原接收方已经封闭新增消费，全部单位取得当时可信的最终账单且 budget.settle 完成；以后可信更正另沿原 allocation 追账。
 5. 原输入和控制不存在还可能产生目标行动的未确认转交。
 
 ```text
@@ -305,7 +313,7 @@ Closure 提交后查询投影为 closed，历史核对记录不覆盖关闭依�
 
 ## 9. 恢复、限额与生命周期
 
-恢复扫描按用户分页读取尚无 Closure 的委派。每个对象根据原事实检查是否存在创建、查询、控制和结算所需工作槽；补建时沿原责任键和原远端身份，不按展示 phase 分派业务，也不调用 Brain 猜测恢复动作。
+恢复扫描按用户分页读取尚无 Closure 的委派，同时读取接收方未交付的校准 outbox、父方已保存但尚未结算的更正 intent／job；这两类工作可关联已 closed 的委派，不受 phase 过滤。每个对象根据原事实检查是否存在创建、查询、控制和结算所需工作槽；补建时沿原责任键和原远端身份，不按展示 phase 分派业务，也不调用 Brain 猜测恢复动作。接收方沿未过期的原 `task.billing_reconcile` 唤醒命令重投；过期未确认则按同一账单修订与摘要保存继任尝试，直到父方确认已保存结算 job；父方沿未过期的原 budget.settle 命令继续，过期未获回执则先查当前 allocation，必要时用同修订／摘要的继任命令，直到应用或明确证据缺口，并在收到较新修订时先解决较旧 intent 的结果。仅以通知已发送或委派已 closed 清理这些工作会使迟到账单永不入父账。
 
 | 当前缺口 | 自动动作 | 耗尽后保持的状态 |
 | --- | --- | --- |
@@ -382,5 +390,8 @@ Closure 提交后查询投影为 closed，历史核对记录不覆盖关闭依�
 | CL-15 | 适配器升级后无法解码原任务回执 | 不切换原身份，不重建任务；保留缺口和最小查询责任 |
 | CL-16 | 外部创建发送前、答复未知、核实映射、普通非最终用量和例行查询、控制未确认依次发生 | 依次投影 preparing、reconciling、active、active、reconciling；同修订重复读取一致，原接纳回执不重算 |
 | CL-17 | 父取消后子迟到成功、费用未知；核清全部责任并保存 Closure 后清理详细事实 | 费用及封闭缺口使投影 reconciling，父保持 cancelled；Closure 使查询投影 closed，历史缺口不覆盖它；完整查询依据清理后 gone，旧身份不重新准备 |
+| CL-18 | 已声明严格上界的远端计费超出 allocation，随后重复发送最终账单和 Closure | 接收方封闭新消费并给出原计费证据；父一次记全部真实费用、超额债务与合同违约，重复账单不双扣，证据不足时保留原预留且不完成 DelegationClosure |
+| CL-19 | 委派已 Closure、allocation 已 settled，原提供方上调同一调用账单；接收方校准唤醒过期未获回执，父方保存 intent 后故障，budget.settle 结算答复也丢失 | 接收方 outbox 保留旧唤醒并以同修订继任命令取得同 JobAck，父方已 closed 委派的 durable job 查询原结算命令和当前 allocation，必要时用继任命令；父只追累计差额一次，已释放额度不倒流，超预算时停新计费；历史 phase 不重开且当前查询显示更正责任 |
+| CL-20 | 接收方多笔单次合规消费合计突破 allocation，提供方另一笔账单又突破其单次声明上界 | 父方凭原调用及可信账单收全部真实费用，两个事故原因独立判断且可同时成立；某项归因证据暂缺仍保存已知原因与 pending，不把子方自报原因当裁决，也不因超额抹去已关闭的原目标事实 |
 
 [跨 Orchestrator 额度序列](../contracts/examples/protocol/23-cross-orchestrator-budget.json)检验当前分配、接收门禁与封账关联。既有[委派协议序列](../contracts/examples/protocol/12-delegation-mapping.json)检验映射、控制和输入的字段关联。上述事务、独立远端及真实效果实验仍须由参考实现和至少一个独立适配器提供运行证据。

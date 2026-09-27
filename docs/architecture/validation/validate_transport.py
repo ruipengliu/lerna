@@ -59,7 +59,7 @@ def definition_errors(name, value):
 
 
 CONTROL_METHODS = {
-    'task.pause', 'task.cancel', 'execution.control', 'execution.cancel',
+    'task.pause', 'task.cancel', 'task.billing_reconcile', 'execution.control', 'execution.cancel',
     'brain.cancel', 'evaluation.cancel', 'evaluation.revoke', 'grant.revoke',
     'endpoint.revoke', 'content.close', 'content.release_copy', 'resource.release',
     'budget.close', 'budget.settle', 'grant.lease.settle', 'grant.use.settle',

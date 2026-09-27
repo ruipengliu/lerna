@@ -352,7 +352,8 @@
               "unit": "credit",
               "amount": "1"
             },
-            "usage_owner_id": "usageowner_8f5710774bff37e301826d0e79f738b4"
+            "usage_owner_id": "usageowner_8f5710774bff37e301826d0e79f738b4",
+            "cost_bound": "strict"
           }
         },
         "response": {
@@ -380,7 +381,8 @@
               "amount": "1"
             },
             "start_before": "2026-09-26T00:00:30Z",
-            "decided_at": "2026-09-26T00:00:00Z"
+            "decided_at": "2026-09-26T00:00:00Z",
+            "cost_bound": "strict"
           }
         }
       }

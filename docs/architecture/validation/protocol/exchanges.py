@@ -101,6 +101,10 @@ def validate_exchange(exchange, capabilities):
         same(output['orchestrator_id'], target)
         same(output['submit_command_id'], req['command_id'])
         same(output['goal_ref'], p['goal_ref'])
+    if name == 'task.billing_reconcile':
+        same(output['resource_id'], target, 'billing_task')
+        if 'sender_service_id' not in exchange['auth']:
+            errors.append('billing_sender: billing wakeup requires an authenticated source service')
     if name in ('task.read','task.revise'):
         same(output['task_id'], target)
         if name == 'task.revise':
@@ -165,6 +169,9 @@ def validate_exchange(exchange, capabilities):
         same(output['owner_id'],target,'grant_owner')
         same(output['grant_revisions'],p['grant_refs'],'grant_version')
         same(output['use_id'],p['use_id']);same(output['intent_hash'],p['intent_hash'])
+        same(output['cost_bound'],p['cost_bound'],'usage_cost_bound')
+        if p['cost_bound']=='estimate' and Decimal(p['max_cost']['amount'])<=0:
+            errors.append('usage_bound: estimate requires a positive finite reservation')
         if output['decision']=='allowed':
             for maximum,reserved in [('max_units','reserved_units'),('max_cost','reserved_cost')]:
                 same(p[maximum]['unit'],output[reserved]['unit'],'usage_unit')

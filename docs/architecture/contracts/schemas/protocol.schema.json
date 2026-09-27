@@ -1315,6 +1315,12 @@
         "max_cost": {
           "$ref": "#/$defs/Amount"
         },
+        "cost_bound": {
+          "enum": [
+            "strict",
+            "estimate"
+          ]
+        },
         "usage_owner_id": {
           "$ref": "#/$defs/Id"
         }
@@ -1333,6 +1339,7 @@
         "location",
         "max_units",
         "max_cost",
+        "cost_bound",
         "usage_owner_id"
       ],
       "additionalProperties": false
@@ -1372,6 +1379,12 @@
         "reserved_cost": {
           "$ref": "#/$defs/Amount"
         },
+        "cost_bound": {
+          "enum": [
+            "strict",
+            "estimate"
+          ]
+        },
         "start_before": {
           "type": "string",
           "format": "date-time",
@@ -1391,6 +1404,7 @@
         "decision",
         "reserved_units",
         "reserved_cost",
+        "cost_bound",
         "start_before",
         "decided_at"
       ],
@@ -3399,6 +3413,38 @@
     "TaskAttach_EvidenceOutput": {
       "$ref": "#/$defs/JobAck"
     },
+    "TaskBilling_ReconcileInput": {
+      "type": "object",
+      "properties": {
+        "source_kind": {
+          "enum": [
+            "brain_decision",
+            "execution_operation",
+            "grant_use",
+            "budget_allocation"
+          ]
+        },
+        "source_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "usage_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "usage_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "source_kind",
+        "source_id",
+        "usage_revision",
+        "usage_digest"
+      ],
+      "additionalProperties": false
+    },
+    "TaskBilling_ReconcileOutput": {
+      "$ref": "#/$defs/JobAck"
+    },
     "BrainDecideInput": {
       "$ref": "#/$defs/DecisionRequest"
     },
@@ -4022,6 +4068,7 @@
             "task.accept_result",
             "task.adjust_budget",
             "task.attach_evidence",
+            "task.billing_reconcile",
             "task.cancel",
             "task.input",
             "task.pause",
@@ -4851,6 +4898,21 @@
         },
         "closure": {
           "$ref": "#/$defs/RuntimeBudgetClosure"
+        },
+        "incident_causes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "provider_bound_breach",
+              "receiver_allocation_breach"
+            ]
+          },
+          "uniqueItems": true,
+          "minItems": 0,
+          "maxItems": 2
+        },
+        "incident_pending": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -8461,29 +8523,13 @@
         "exposure": {
           "$ref": "#/$defs/FeedbackExposure"
         },
-        "invalidated_plan_ids": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Id"
-          },
-          "minItems": 0,
-          "maxItems": 100,
-          "uniqueItems": true
-        },
-        "revocation_job_ids": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Id"
-          },
-          "minItems": 0,
-          "maxItems": 100,
-          "uniqueItems": true
+        "impact_job_id": {
+          "$ref": "#/$defs/Id"
         }
       },
       "required": [
         "exposure",
-        "invalidated_plan_ids",
-        "revocation_job_ids"
+        "impact_job_id"
       ],
       "additionalProperties": false
     },
@@ -9044,6 +9090,12 @@
         "reserved_cost": {
           "$ref": "#/$defs/Amount"
         },
+        "cost_bound": {
+          "enum": [
+            "strict",
+            "estimate"
+          ]
+        },
         "spent_units": {
           "$ref": "#/$defs/Amount"
         },
@@ -9078,6 +9130,7 @@
         "consumed_once",
         "reserved_units",
         "reserved_cost",
+        "cost_bound",
         "spent_units",
         "spent_cost",
         "held_units",

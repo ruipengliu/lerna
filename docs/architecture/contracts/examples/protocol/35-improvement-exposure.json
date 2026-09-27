@@ -2971,12 +2971,7 @@
               ],
               "reason": "unknown-time leak recorded conservatively"
             },
-            "invalidated_plan_ids": [
-              "plan_c031d24f16cd26904ca51b542d7144da"
-            ],
-            "revocation_job_ids": [
-              "job_ee2e4dc27dfe1ae818c2314fb8aa8488"
-            ]
+            "impact_job_id": "job_ee2e4dc27dfe1ae818c2314fb8aa8488"
           }
         }
       }

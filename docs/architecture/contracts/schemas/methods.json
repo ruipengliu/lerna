@@ -465,7 +465,7 @@
         "precondition_failed",
         "internal_error"
       ],
-      "success": "核验原接收方最终封账、累计费用及版本；调整父预留并保存固定结算。",
+      "success": "核验原接收方 closed 的累计 Closure：首次结算释放原预留并记实际费用；后续可信更正只追新旧累计差额。可信费用超过 allocation 时仍记全额，父 owner 分别核定提供方单次上界违约、接收方分配门禁违约及待核原因，不重开额度或子任务。",
       "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
@@ -2836,7 +2836,7 @@
         "approval_inactive",
         "rollback_unavailable"
       ],
-      "success": "暴露、受影响资格失效与撤回责任一起提交。",
+      "success": "原评测 owner 共同保存暴露、来源组索引、唯一影响扫描 job 与原回执；影响投影和撤回异步推进，正式门禁同步读取原暴露事实。",
       "source": "evaluation/README.md",
       "error_recovery": {
         "invalid_argument": [
@@ -8893,6 +8893,96 @@
         ]
       }
     },
+    "task.billing_reconcile": {
+      "status": "frozen-draft",
+      "kind": "command",
+      "input": "TaskBilling_ReconcileInput",
+      "output": "TaskBilling_ReconcileOutput",
+      "target": "task_id",
+      "expected_revision": false,
+      "stages": [
+        "applied",
+        "rejected"
+      ],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error"
+      ],
+      "success": "认证来源的费用修订通知与原 Task/source 绑定后，持久唤醒原结算责任槽并返回同一 JobAck；金额须由 Orchestrator 回读原权威账本，通知不直接入账。",
+      "source": "orchestrator/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ]
+      }
+    },
     "task.cancel": {
       "status": "frozen-draft",
       "kind": "command",
@@ -9908,7 +9998,7 @@
         "confirmation_consumed",
         "settlement_conflict"
       ],
-      "success": "原使用累计费用按差额入账；关闭有据才释放余量，单次资格不返还。",
+      "success": "原使用累计费用按差额入账；关闭有据才释放余量，final 后可信原账单更正可追记已发生费用，单次资格和启动窗口不返还。",
       "source": "security/README.md",
       "error_recovery": {
         "invalid_argument": [

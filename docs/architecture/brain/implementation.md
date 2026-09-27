@@ -142,6 +142,7 @@ capabilities 只能包含已获准披露的声明，工具凭据不进入模型�
 ### 2.3 全输入来源继承
 
 input_manifest 由实际读取和发送组件记录，不能由模型自行提供。
+BrainContext 的清单记录组装与本轮读取的来源；发送门禁另固定最终编码实际包含的来源与接收方。输出来源取本轮实际处理来源的并集，不能因编码时省掉某一项，就删除 Brain 已读取该项的来源责任。
 一次物理调用读入的所有来源都加入其输出来源依赖，包括模型未引用的偏好与历史。
 `evidence_refs` 表示提案声称的证据支撑，不能代替完整处理来源。
 内容 owner 保存输出与输入的反向关系，输出策略取全部实际来源的限制交集。
@@ -164,11 +165,12 @@ input_manifest 由实际读取和发送组件记录，不能由模型自行提�
 | --- | --- | --- |
 | brain_decision | tenant、decision_id 唯一；input_digest 不可改变 | 接纳事务 |
 | decision_input | decision_id 唯一；context_ref、profile、limits 与来源清单固定 | 接纳前取得可保存内容，接纳时绑定 |
-| model_call | decision_id 唯一；model_call_id 唯一 | 发送准备事务 |
+| model_call | decision_id 唯一；model_call_id 唯一；发送门禁固定实际 input_manifest、最终编码摘要、接收方与 use_id | 准备身份，门禁时保存披露依据 |
 | model_attempt_fact | model_call_id、fact_id 唯一；供应商号、发送及返回事实只追加 | 每次得到可核对事实 |
 | decision_output | decision_id 唯一；提案或失败固定，内容引用精确 | 终态事务 |
-| brain_usage | model_call_id、计费项身份唯一；预留、估计、最终账单分别记录 | 准备及原调用对账 |
-| brain_job | decision_id、job_kind 唯一未结工作；固定恢复目标 | 接纳、发送准备、查询或收尾事务 |
+| brain_usage | model_call_id、计费项身份唯一；预留、估计、最终账单及费用修订分别记录 | 准备及原调用对账；可信上调与交回 job 同事务 |
+| billing_handoff_outbox | decision_id、费用修订、固定账单摘要、有限唤醒命令尝试与回执、交付状态 | 每费用修订唯一；同 Decision 的多个未交付修订可共用一个扫描 job，旧尝试的身份与回执不可覆盖 |
+| brain_job | decision_id、job_kind 唯一未结工作；固定恢复目标 | 接纳、发送准备、查询、收尾或费用交回事务；已 done 可随新账单重开 |
 | decision_closure | decision_id、终态、输入摘要及原决定摘要 | 原正文到期后保留最小关闭依据 |
 
 input_digest 覆盖 DecisionRequest 的规范化结构，数组顺序保留。
@@ -218,11 +220,11 @@ flowchart LR
 ### 3.3 物理发送事务
 
 工作者读取固定输入并选择零次或一次生成。
-确定性返回不创建 ModelCall；需要生成时先核对 profile 和费用上界。
+确定性返回不创建 ModelCall；需要生成时先核对 profile 的费用模式。strict 要有可信单次上界；estimate 要有原 Task 固定的受信策略接受关联、有限估算预留、与该 Task 同受信提交域的在线费用 Grant owner 原使用回执，且不能处于 allocation 下。Brain 不采信请求正文自行声明的费用模式；任一核验不可得则不发送。远程 Brain 可以执行获准的 strict 调用；仅凭 Task.policy_ref 或远端转述不开放 estimate。
 准备事务固定 model_call_id、最终输入摘要、最大输出、计价版本和所需 use_id。
 逐项取得用途回执；任一未知时查询原使用，不能先发送后补授权。
 
-发送门禁事务确认 Decision 尚可推进、工作代次有效、所有使用窗口有效，保存 `send_started`。
+ModelAdapter 先完成最终请求编码；ContextReader 与适配器核对本次实际送入模型的全部来源、处理位置、接收方和编码摘要。发送门禁事务确认 Decision 尚可推进、工作代次有效、所有使用窗口有效，并将这份实际 input_manifest、最终请求摘要、接收方及原使用身份与 `send_started` 共同保存。禁止保存的正文不落库，但允许的最小来源身份和披露事实仍须先持久化；若连这些事实都不能保存，该适配器不能接纳会外发的调用。
 然后在事务外调用供应商。`send_started` 表示可能发出，不证明供应商收到。
 没有 send_started 的 prepared 记录可以继续原首次发送；有该记录则进入原调用查询或 unknown 分支。
 默认禁止 SDK 透明重试；无法暴露物理次数的适配器不进入精确调用计量配置。
@@ -234,6 +236,8 @@ flowchart LR
 取消先提交时，不再写入 completed；迟到输出只进入仍获准的诊断记录。
 Orchestrator 获取 Decision 后，另在自己的事务中消费提案和决定后续工作。
 因此 Brain completed 与任务 succeeded 不在同一状态机中。
+
+供应商可信上调账单即使在 Decision 终态、原费用交回 job 已 done 后到达，也沿原 model_call_id、原计费项追加更高费用修订；同一事务为该修订保存独立 billing_handoff_outbox（固定业务键、账单摘要和首个有限 `task.billing_reconcile` 命令尝试），并重开按 decision_id 唯一的扫描 job。r1、r2 在 r1 尚未交付时到达也不能用 r2 覆盖 r1 的原命令；工作者按修订扫描待交回记录，向原 Orchestrator/task_id 发送各自原命令，payload 的 source_kind=brain_decision、source_id=decision_id、usage_revision=含本次账单的 DecisionRecord.revision；丢答复先查原命令或同 ID 重投；受信期限过后仍无 JobAck 时，该 outbox 保存同修订／同摘要的继任 command_id 及旧未知尝试身份，按退避继续交付，不能把过期误作原命令未执行。Orchestrator 的 JobAck 仅证明原计费槽已持久唤醒；实际费用仍由它主动 `brain.get` 核对原 ModelCall、可信账单和 Task 的唯一计费来源绑定后应用。Brain 接受 JobAck 才将本次交回标完成；旧工作者不能用先前 done 覆盖新修订责任。未取得可信账单时原费用责任继续保留，不以估计值结清。退款、贷记另行对账。
 
 <a id="key-sequence"></a>
 ### 3.5 发送门禁、丢答复与原调用恢复
@@ -255,7 +259,7 @@ sequenceDiagram
     W->>G: 事务外取得原用途使用
     G-->>W: 原使用回执或缺口
     rect rgb(236, 243, 250)
-      W->>S: 事务 B：复核代次、取消与使用窗口，写 send_started
+      W->>S: 事务 B：复核代次、取消与使用窗口，写实际来源、请求摘要及 send_started
       S-->>W: 门禁提交
     end
     W->>M: 原 model_call_id 与固定请求
@@ -410,6 +414,9 @@ Brain 按租户和稳定 owner 路由至原 Decision 数据库分区；增加无
 | BI-08 计划绑定 | 写入返回另一版本，后续读回模板仍指原版本 | 物化校验拒绝，不能拼接不同版本的完成证据 |
 | BI-09 非法引用 | 模型捏造能力或未读 ContentRef | invalid_output，无执行调用 |
 | BI-10 费用迟到 | 超时后重试新决策，再收到两笔账单 | 两次物理调用分别记账，同账单重报不重复计费 |
+| BI-11 披露后立即崩溃 | 编码包含私密材料，`send_started` 提交并发送后杀死进程 | 原 ModelCall 可查实际来源、接收方、用途使用和请求摘要；不因原文不可重取而抹去披露事实，也不凭摘要盲目重发 |
+| BI-12 供应商违背费用声明 | strict 模型按可信上界预留后出现更高可信最终账单，随后同账单重报 | Brain 保存原物理调用与全额账单并停该 profile 新发送；Orchestrator 沿原计费项一次记录超额与合同违约，不截断为预留上界 |
+| BI-13 终态迟到上调 | Decision、Task 已终态，旧费用交回 job 已 done；供应商上调原调用账单，Brain 保存后交回答复丢失且原命令到期 | Brain 原修订的交回 job 重领，保留旧尝试并以同修订继任命令取得同 JobAck；O 持久重开原计费槽，主动读原账只补一次差额；Decision／Task 目标状态不变，Brain 和 Grant 同物理收费不双扣 |
 
 实验必须记录实际发送次数、数据库决定、授权使用与原供应商查询结果。
 静态 Schema 只能验证提案形状，不能证明材料真实存在或供应商只处理一次。
