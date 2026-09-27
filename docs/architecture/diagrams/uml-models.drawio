@@ -4695,7 +4695,7 @@
         <mxCell id="delegation-attr-1" value="parent_task_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="delegation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="136" width="368" height="30" />
         </mxCell>
-        <mxCell id="delegation-attr-2" value="phase: Enum" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="delegation" semanticKind="text">
+        <mxCell id="delegation-attr-2" value="/phase: Enum {readOnly}" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="delegation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="168" width="368" height="30" />
         </mxCell>
         <mxCell id="delegation-attr-3" value="control_pending: Boolean" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="delegation" semanticKind="text">

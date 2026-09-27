@@ -119,15 +119,14 @@ UseRequest 的 `operation_id` 是调用方已持久保存的有限业务动作�
 
 ```mermaid
 stateDiagram-v2
-    [*] --> allocated: owner 预分配额度
-    allocated --> in_use: 本地登记有限使用
-    allocated --> closed: 收到撤权或到期
-    in_use --> closed: 收到撤权或到期
+    [*] --> open: owner 预分配额度
+    open --> open: 原子登记使用并扣额度
+    open --> closed: 收到撤权、到期或主动封闭
     closed --> reconciled: 本地封闭后提交最终用量
     reconciled --> [*]
 ```
 
-图只建模一份租约；每次实际动作的效果状态仍由执行模块管理。到期和关闭禁止新使用，不证明在途动作结束，也不立即释放未知账务。
+图只建模一份租约的开放与封账。首次使用不改变 open；是否发生过使用及已知累计量从原使用账本展示，不另存生命周期状态。尚未上报的离线使用不能被 owner 解释为没有发生。每次实际动作的效果状态仍由执行模块管理；到期和关闭禁止新使用，不证明在途动作结束，也不立即释放未知账务。
 
 租约有效期取许可、来源策略、设备资格及部署离线上限的最小值。许可必须显式同意最长撤权窗口；默认远端许可不允许离线，用户可以为适用任务开启有限窗口。内容允许离线处理而发布批准不允许离线运行时，两项条件分别满足，不能取其中较宽者。
 
@@ -178,7 +177,7 @@ WSS 连接数、每连接发送队列、在途请求和重连速率均有用户�
 | `GrantRecord` | `grant_id, owner_id, revision, policy, intent_hash, confirmation_ref, state, issued_at, propagation[]`；policy 集中主体、资源、动作、用途、接收方、位置、mode、有效期、limits、离线上限及可选父许可；state 为 active／revoked，到期独立判定 |
 | `UseRequest` | `use_id, operation_id, usage_owner_id, intent_hash, grant_refs[], source_refs[], subject, resource_scopes[], action, purpose, recipient, location, max_units, max_cost`；计量 owner 由认证资格核验，意图固定后不能增补资源或换接收方 |
 | `UseReceipt` | `use_id, owner_id, intent_hash, grant_revisions[], decision, reserved_units, reserved_cost, start_before, decided_at`；decision 为 allowed／denied；回执不能独立证明仍未启动或效果 |
-| `OfflineLease` | `lease_id, owner_id, grant_refs[], endpoint_id, instance_id, scope, allocated_units, allocated_cost, issued_at, expires_at, owner_revision, settlement_state`；资格绑定单一本地消费账本，状态按租约图推进 |
+| `OfflineLease` | `lease_id, owner_id, grant_refs[], endpoint_id, instance_id, scope, allocated_units, allocated_cost, issued_at, expires_at, owner_revision, state`；资格绑定单一本地消费账本，state 为 open／closed／reconciled；使用信息从已知账本取得 |
 | `ConfirmationRecord` | `confirmation_id, owner_id, revision, consumer_method, consumer_command_id, consumer_target_id, consumer_command, intent_hash, challenge, expires_at, state`；决定追加本人会话与时间，消费追加 consumed_by/consumed_at。由实际业务 owner 保存；拒绝不能消费 |
 | `UseSettlementRecord` | 原 use/operation/usage_owner/许可、记录与用量修订、reserved/spent/held/released 单位及费用、state、consumed_once、关闭引用；独立于不可变 UseReceipt |
 | `Endpoint` | `endpoint_id, tenant_id, instance_id, credential_generation, credential_ref, state, approved_scope, registered_at`；state 为 active／revoked，凭据正文留在安全凭据库 |

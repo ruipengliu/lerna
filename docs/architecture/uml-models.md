@@ -10,7 +10,7 @@
 
 组件以 `«component»` 标注，接口以 `«interface»` 标注；合并框保留原文中的职责名称。公共接口最多摘录三个已登记方法，空方法区的内部 port 表示实现适配边界。未画出的依赖、方法和记录仍须满足原契约。
 
-领域类每个仅选三至五个关键属性。公共对象对应线格式，内部记录来自实现文档；每组导读分别给出 Schema 链接与内部记录来源。它们不表示新增代码类或公共 Schema。`ID`、`Revision`、`Ref`、`Enum`、`Set` 等是排版简写，完整类型、必填性及数组上限以同版 [Schema](contracts/schemas/protocol.schema.json) 为准；字段省略不表示可选。
+领域类每个仅选三至五个关键属性。公共对象对应线格式，内部记录来自实现文档；每组导读分别给出 Schema 链接与内部记录来源。它们不表示新增代码类或公共 Schema。`ID`、`Revision`、`Ref`、`Enum`、`Set` 等是排版简写，完整类型、必填性及数组上限以同版 [Schema](contracts/schemas/protocol.schema.json) 为准；字段省略不表示可选。属性名前的 `/` 表示派生值，`{readOnly}` 表示调用方不能独立修改。
 
 | UML 关系 | 线型与端点 | 含义及本册用法 |
 | --- | --- | --- |
@@ -188,6 +188,8 @@ GrantLedger／LeaseLedger 裁决许可占用与结算，PairingController 管理
 
 撤销不改写历史 allowed 决定；获知撤销或到 `start_before` 后禁止新启动。计量 owner 先保存累计用量，Grant owner 按差额结算，最终关闭依据才释放 held；最终零用量也不返还 once 身份。重配对、重启与正文清理仍保留未结用量、一次消费及关闭索引，旧备份不能证明关闭依据完整时不开放消费。
 
+OfflineLeaseRecord 的生命周期为 open、closed、reconciled；open 同时覆盖尚未使用及已经使用。已知使用从原账本读取，首次消费不再维护另一项生命周期迁移。门禁、扣额与原使用登记仍共同提交。
+
 依据：[授权合同](security/README.md)、[有限离线](security/README.md#offline)、[同事务确认与账本](security/implementation.md)。
 
 <a id="interaction"></a>
@@ -208,6 +210,8 @@ SurfaceService 保存页面快照，InputService 与 DeliveryWorker 保存输入
 | ConfirmationRecord — InputRequestView | 0..* | 0..1 | 仅 `task.accept_result` 恰关联一个 acceptance 请求，依据原命令 payload；其他消费者无此关联。 |
 
 独立 Surface 不必创建任务；已绑定任务的页面由受信 Orchestrator 投影器更新。验收确认还绑定原 `goal_revision` 与 `candidate_hash`；多个未消费确认尝试不改变最终业务消费唯一性。`seen_revision` 只说明设备显示，不证明用户消费或外部效果。
+
+SurfaceSnapshot 的 input 块只持有准确 request_ref；Renderer 经业务 owner 读取 InputRequestView.schema，页面不另存表单字段约束。请求修订过期或 owner 不可达时，相应输入不可用，不能使用旧页面中的另一份结构继续消费。
 
 正常转交先保存 queued 和目标命令，再领取 sending 并查询原回执。答复丢失保留 sending；queued 撤回与领取竞争，sending 后只登记撤回请求并继续核对。必需预览撤权、过期或来源关闭时，业务 owner 拒绝相关消费；旧按钮与缓存不能放行。关窗不取消任务，清理历史快照不删除消费事实。
 
@@ -232,7 +236,7 @@ DelegationAdmission 固定有界委派，InternalChildFactory 在父 Orchestrato
 
 内部创建将子任务、唯一映射、额度和首 job 共同提交。外部 `remote_task_id` 归远端，图不把它当成本地 Task 或跨库外键。preparing 时两种映射都可缺省，但原创建键、额度及发送／查询责任仍须持久保存。
 
-外部答复丢失、父取消或重启后，沿原创建键及原控制继续，不建第二个远端任务。无法证明未接纳或最终封账时保留预留。`phase=closed` 须有目标封闭、效果核清及最终封账；父取消或子成功都不抹去这些责任，最小映射及关闭身份长期保留。
+外部答复丢失、父取消或重启后，沿原创建键及原控制继续，不建第二个远端任务。无法证明未接纳或最终封账时保留预留。`/phase` 是同一已提交修订上按[判定顺序](collaboration/README.md)生成的只读摘要，不另存可写阶段；`phase=closed` 必须来自持久 Closure，要求目标封闭、效果核清及最终封账。父取消或子成功都不抹去这些责任，最小映射及关闭身份长期保留。
 
 依据：[协作合同](collaboration/README.md)、[存储唯一约束](collaboration/implementation.md#2-存储与唯一约束)、[协作实现](collaboration/implementation.md)。
 

@@ -39,8 +39,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "retention": {
         "receipt_query_seconds": 2592000,
@@ -1429,8 +1428,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       }
     },
     "context": {
@@ -1451,8 +1449,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93"
@@ -1464,7 +1461,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+      "request_seq": 1,
       "kind": "command",
       "request": {
         "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
@@ -1518,10 +1515,11 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
-      "direction": "client_to_server"
+      "direction": "client_to_server",
+      "request_seq_before": 0,
+      "request_seq_after": 1
     }
   },
   {
@@ -1530,7 +1528,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+      "request_seq": 1,
       "kind": "command",
       "result": {
         "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
@@ -1623,14 +1621,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+        "request_seq": 1,
         "kind": "command",
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
@@ -1674,7 +1671,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+      "request_seq": 1,
       "kind": "command",
       "result": {
         "error": {
@@ -1702,14 +1699,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+        "request_seq": 1,
         "kind": "command",
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
@@ -1753,7 +1749,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "request_seq": 2,
       "kind": "query",
       "request": {
         "method": "task.read",
@@ -1779,10 +1775,11 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
-      "direction": "client_to_server"
+      "direction": "client_to_server",
+      "request_seq_before": 0,
+      "request_seq_after": 2
     }
   },
   {
@@ -1791,7 +1788,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "request_seq": 2,
       "kind": "query",
       "result": {
         "output": {
@@ -1882,14 +1879,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "request_seq": 2,
         "kind": "query",
         "request": {
           "method": "task.read",
@@ -1905,7 +1901,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "request_seq": 2,
       "kind": "query",
       "result": {
         "error": {
@@ -1933,14 +1929,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "request_seq": 2,
         "kind": "query",
         "request": {
           "method": "task.read",
@@ -1956,7 +1951,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_receipt_lookup_ee955d16162c41bc84ca8d3a9e164523",
+      "request_seq": 3,
       "kind": "receipt_lookup",
       "request": {
         "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb"
@@ -1980,10 +1975,11 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
-      "direction": "client_to_server"
+      "direction": "client_to_server",
+      "request_seq_before": 0,
+      "request_seq_after": 3
     }
   },
   {
@@ -1992,7 +1988,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_receipt_lookup_ee955d16162c41bc84ca8d3a9e164523",
+      "request_seq": 3,
       "kind": "receipt_lookup",
       "result": {
         "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
@@ -2085,14 +2081,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_receipt_lookup_ee955d16162c41bc84ca8d3a9e164523",
+        "request_seq": 3,
         "kind": "receipt_lookup",
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb"
@@ -2106,7 +2101,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_receipt_lookup_ee955d16162c41bc84ca8d3a9e164523",
+      "request_seq": 3,
       "kind": "receipt_lookup",
       "result": {
         "error": {
@@ -2134,14 +2129,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_receipt_lookup_ee955d16162c41bc84ca8d3a9e164523",
+        "request_seq": 3,
         "kind": "receipt_lookup",
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb"
@@ -2155,7 +2149,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_subscribe_583a481f9bc59530865fdbbb6138c12b",
+      "request_seq": 4,
       "kind": "subscribe",
       "request": {
         "object_types": [
@@ -2182,10 +2176,11 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
-      "direction": "client_to_server"
+      "direction": "client_to_server",
+      "request_seq_before": 0,
+      "request_seq_after": 4
     }
   },
   {
@@ -2194,7 +2189,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_subscribe_583a481f9bc59530865fdbbb6138c12b",
+      "request_seq": 4,
       "kind": "subscribe",
       "result": {
         "subscription_id": "subscription_b48b13e73a6ac2a86dc54425dd24d9ff",
@@ -2220,14 +2215,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_subscribe_583a481f9bc59530865fdbbb6138c12b",
+        "request_seq": 4,
         "kind": "subscribe",
         "request": {
           "object_types": [
@@ -2244,7 +2238,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_resume_ec9d5b5b7696721f130e97ab7e6c777f",
+      "request_seq": 5,
       "kind": "subscribe",
       "request": {
         "object_types": [
@@ -2272,12 +2266,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "replaces_subscription": true,
-      "subscription_count": 8
+      "subscription_count": 8,
+      "request_seq_before": 0,
+      "request_seq_after": 5
     }
   },
   {
@@ -2286,7 +2281,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_resume_ec9d5b5b7696721f130e97ab7e6c777f",
+      "request_seq": 5,
       "kind": "subscribe",
       "result": {
         "subscription_id": "subscription_b48b13e73a6ac2a86dc54425dd24d9ff",
@@ -2312,14 +2307,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_resume_ec9d5b5b7696721f130e97ab7e6c777f",
+        "request_seq": 5,
         "kind": "subscribe",
         "request": {
           "object_types": [
@@ -2373,8 +2367,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "authenticated_endpoint": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
@@ -2481,8 +2474,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "delivery": {
@@ -2541,8 +2533,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "delivery": {
@@ -2594,8 +2585,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "reply": {
@@ -2719,8 +2709,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "registered_copy": {
@@ -2775,8 +2764,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "subscription": {
@@ -2816,8 +2804,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "subscription": {
@@ -2857,8 +2844,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "subscription": {
@@ -2897,8 +2883,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client"
     }
@@ -2929,8 +2914,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "pending_ping_nonce": "heartbeat-1"
@@ -2966,8 +2950,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "reply": {
@@ -3054,7 +3037,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_cancel_6a4f208b06de57a057f6d43985dd9f36",
+      "request_seq": 6,
       "kind": "command",
       "request": {
         "command_id": "task_cancel_6ce3b20a665a0dbf7dfb3267ace2c583",
@@ -3085,11 +3068,12 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
-      "inflight_requests": 28
+      "inflight_requests": 28,
+      "request_seq_before": 0,
+      "request_seq_after": 6
     }
   },
   {
@@ -3098,7 +3082,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_upload_reserve_abd506372ad6a6c4c71affa142071a79",
+      "request_seq": 7,
       "kind": "upload_reserve",
       "request": {
         "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270",
@@ -3126,8 +3110,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "authenticated_subject": "upload_subject_c42ddcf1683b53847e6cb719895379f3",
@@ -3139,7 +3122,9 @@
         "media_type": "text/plain",
         "expires_at": "2026-09-26T00:10:00Z",
         "state": "ready"
-      }
+      },
+      "request_seq_before": 0,
+      "request_seq_after": 7
     }
   },
   {
@@ -3148,7 +3133,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_upload_reserve_abd506372ad6a6c4c71affa142071a79",
+      "request_seq": 7,
       "kind": "upload_reserve",
       "result": {
         "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270",
@@ -3177,14 +3162,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_upload_reserve_abd506372ad6a6c4c71affa142071a79",
+        "request_seq": 7,
         "kind": "upload_reserve",
         "request": {
           "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270",
@@ -3202,7 +3186,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_upload_reserve_abd506372ad6a6c4c71affa142071a79",
+      "request_seq": 7,
       "kind": "upload_reserve",
       "result": {
         "error": {
@@ -3230,14 +3214,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_upload_reserve_abd506372ad6a6c4c71affa142071a79",
+        "request_seq": 7,
         "kind": "upload_reserve",
         "request": {
           "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270",
@@ -3255,7 +3238,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_upload_lookup_f6b5675256862d76e63a044b08fa58a7",
+      "request_seq": 8,
       "kind": "upload_lookup",
       "request": {
         "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270"
@@ -3279,8 +3262,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "authenticated_subject": "upload_subject_c42ddcf1683b53847e6cb719895379f3",
@@ -3292,7 +3274,9 @@
         "media_type": "text/plain",
         "expires_at": "2026-09-26T00:10:00Z",
         "state": "ready"
-      }
+      },
+      "request_seq_before": 0,
+      "request_seq_after": 8
     }
   },
   {
@@ -3301,7 +3285,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_upload_lookup_f6b5675256862d76e63a044b08fa58a7",
+      "request_seq": 8,
       "kind": "upload_lookup",
       "result": {
         "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270",
@@ -3330,14 +3314,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_upload_lookup_f6b5675256862d76e63a044b08fa58a7",
+        "request_seq": 8,
         "kind": "upload_lookup",
         "request": {
           "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270"
@@ -3351,7 +3334,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_upload_lookup_f6b5675256862d76e63a044b08fa58a7",
+      "request_seq": 8,
       "kind": "upload_lookup",
       "result": {
         "error": {
@@ -3379,14 +3362,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_upload_lookup_f6b5675256862d76e63a044b08fa58a7",
+        "request_seq": 8,
         "kind": "upload_lookup",
         "request": {
           "upload_id": "upload_ff4085ad157354dc8ea67a848e7c2270"
@@ -3400,7 +3382,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_mirror_reserve_75b47c541be4801e48cda94c01f79ef2",
+      "request_seq": 9,
       "kind": "mirror_reserve",
       "request": {
         "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -3440,8 +3422,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "registered_copy": {
@@ -3462,7 +3443,9 @@
       "reservation_authorized": true,
       "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "paired_sender_endpoint": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "paired_sender_instance": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      "paired_sender_instance": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "request_seq_before": 0,
+      "request_seq_after": 9
     }
   },
   {
@@ -3471,7 +3454,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_mirror_reserve_75b47c541be4801e48cda94c01f79ef2",
+      "request_seq": 9,
       "kind": "mirror_reserve",
       "result": {
         "ticket": {
@@ -3517,14 +3500,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_mirror_reserve_75b47c541be4801e48cda94c01f79ef2",
+        "request_seq": 9,
         "kind": "mirror_reserve",
         "request": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -3554,7 +3536,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_mirror_reserve_75b47c541be4801e48cda94c01f79ef2",
+      "request_seq": 9,
       "kind": "mirror_reserve",
       "result": {
         "error": {
@@ -3582,14 +3564,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_mirror_reserve_75b47c541be4801e48cda94c01f79ef2",
+        "request_seq": 9,
         "kind": "mirror_reserve",
         "request": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -3619,7 +3600,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_mirror_lookup_2f31c6c29c7b99b542065c71e45dd199",
+      "request_seq": 10,
       "kind": "mirror_lookup",
       "request": {
         "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -3643,8 +3624,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "mirror": {
@@ -3672,7 +3652,9 @@
         "retention_until": "2026-09-26T00:10:00Z",
         "control_revision": 1
       },
-      "metadata_access_allowed": true
+      "metadata_access_allowed": true,
+      "request_seq_before": 0,
+      "request_seq_after": 10
     }
   },
   {
@@ -3681,7 +3663,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_mirror_lookup_2f31c6c29c7b99b542065c71e45dd199",
+      "request_seq": 10,
       "kind": "mirror_lookup",
       "result": {
         "ticket": {
@@ -3727,14 +3709,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_mirror_lookup_2f31c6c29c7b99b542065c71e45dd199",
+        "request_seq": 10,
         "kind": "mirror_lookup",
         "request": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -3748,7 +3729,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_mirror_lookup_2f31c6c29c7b99b542065c71e45dd199",
+      "request_seq": 10,
       "kind": "mirror_lookup",
       "result": {
         "error": {
@@ -3776,14 +3757,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_mirror_lookup_2f31c6c29c7b99b542065c71e45dd199",
+        "request_seq": 10,
         "kind": "mirror_lookup",
         "request": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -3797,7 +3777,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_mirror_control_74fb0a1ad5d51504c194e433e412c3a8",
+      "request_seq": 11,
       "kind": "mirror_control",
       "request": {
         "control_id": "control_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -3834,8 +3814,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "mirror": {
@@ -3865,7 +3844,9 @@
       },
       "authenticated_owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
       "metadata_access_allowed": true,
-      "inflight_requests": 28
+      "inflight_requests": 28,
+      "request_seq_before": 0,
+      "request_seq_after": 11
     }
   },
   {
@@ -3874,7 +3855,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_mirror_control_74fb0a1ad5d51504c194e433e412c3a8",
+      "request_seq": 11,
       "kind": "mirror_control",
       "result": {
         "ticket": {
@@ -3920,14 +3901,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_mirror_control_74fb0a1ad5d51504c194e433e412c3a8",
+        "request_seq": 11,
         "kind": "mirror_control",
         "request": {
           "control_id": "control_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -3954,7 +3934,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_mirror_control_74fb0a1ad5d51504c194e433e412c3a8",
+      "request_seq": 11,
       "kind": "mirror_control",
       "result": {
         "error": {
@@ -3982,14 +3962,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_mirror_control_74fb0a1ad5d51504c194e433e412c3a8",
+        "request_seq": 11,
         "kind": "mirror_control",
         "request": {
           "control_id": "control_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -4016,7 +3995,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_control_replay_b95506ac58593979e6287d2fa9d976e3",
+      "request_seq": 12,
       "kind": "mirror_control",
       "request": {
         "control_id": "control_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -4053,8 +4032,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "mirror": {
@@ -4100,7 +4078,9 @@
         "control_revision": 2,
         "cause": "restricted",
         "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      }
+      },
+      "request_seq_before": 0,
+      "request_seq_after": 12
     }
   },
   {
@@ -4109,7 +4089,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_control_replay_b95506ac58593979e6287d2fa9d976e3",
+      "request_seq": 12,
       "kind": "mirror_control",
       "result": {
         "ticket": {
@@ -4155,14 +4135,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_control_replay_b95506ac58593979e6287d2fa9d976e3",
+        "request_seq": 12,
         "kind": "mirror_control",
         "request": {
           "control_id": "control_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -4204,10 +4183,9 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
-      "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+      "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
       "binding_revision": 1
     },
     "context": {
@@ -4238,10 +4216,9 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
-      "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+      "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
       "binding_revision": 2
     },
     "context": {
@@ -4267,16 +4244,15 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 1
       },
       "external_slots_before": 2,
       "external_slots_after": 2,
-      "request_count_before": 9996,
-      "request_count_after": 9996,
+      "request_seq_before": 42,
+      "request_seq_after": 42,
       "stored_binding": {
         "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
@@ -4295,10 +4271,9 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 1
       }
     }
@@ -4326,8 +4301,7 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         }
       }
     },
@@ -4349,8 +4323,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
@@ -4372,10 +4345,9 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 1
       },
       "external_ready_sent": false,
@@ -4407,8 +4379,7 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         }
       }
     },
@@ -4430,8 +4401,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
@@ -4453,10 +4423,9 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 1
       },
       "external_ready_sent": true,
@@ -4481,10 +4450,9 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 2
       }
     }
@@ -4497,7 +4465,7 @@
       "frame": {
         "type": "response",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+        "request_seq": 1,
         "kind": "command",
         "result": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
@@ -4591,14 +4559,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+        "request_seq": 1,
         "kind": "command",
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
@@ -4652,10 +4619,9 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 2
       },
       "external_ready_sent": true,
@@ -4765,8 +4731,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "delivery": {
@@ -4803,10 +4768,9 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 2
       },
       "external_ready_sent": true,
@@ -4846,8 +4810,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "reply": {
@@ -4943,10 +4906,9 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 2
       },
       "external_ready_sent": true,
@@ -4980,8 +4942,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "subscription": {
@@ -5000,7 +4961,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "request_seq": 2,
       "kind": "query",
       "request": {
         "method": "task.read",
@@ -5026,15 +4987,14 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "internal_request_replay": true,
       "original_request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "request_seq": 2,
         "kind": "query",
         "request": {
           "method": "task.read",
@@ -5042,21 +5002,19 @@
           "payload": {}
         }
       },
-      "request_count": 10000,
-      "request_count_after": 10000,
-      "used_request_ids": [
-        "request_query_a3c5696a7dbec63d0c0bb1922541d4cb"
-      ],
-      "inflight_requests": 32
+      "request_seq_before": 10000,
+      "request_seq_after": 10000,
+      "inflight_requests": 32,
+      "internal_binding": true
     }
   },
   {
-    "name": "wss-final-ordinary-request",
+    "name": "wss-high-sequence-ordinary-request",
     "definition": "Frame",
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_command_0c9aec3232c0e1c974e39307c0782ed1",
+      "request_seq": 10001,
       "kind": "command",
       "request": {
         "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
@@ -5110,20 +5068,20 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
-      "request_count": 9995
+      "request_seq_before": 10000,
+      "request_seq_after": 10001
     }
   },
   {
-    "name": "wss-final-control-request",
+    "name": "wss-last-safe-control-request",
     "definition": "Frame",
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_cancel_6a4f208b06de57a057f6d43985dd9f36",
+      "request_seq": 9007199254740991,
       "kind": "command",
       "request": {
         "command_id": "task_cancel_6ce3b20a665a0dbf7dfb3267ace2c583",
@@ -5154,12 +5112,12 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "client_to_server",
       "inflight_requests": 28,
-      "request_count": 9999
+      "request_seq_before": 9007199254740990,
+      "request_seq_after": 9007199254740991
     }
   },
   {
@@ -5183,10 +5141,9 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
-      "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+      "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
       "binding_revision": 1
     },
     "context": {
@@ -5212,10 +5169,9 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 1
       }
     }
@@ -5241,10 +5197,9 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
-      "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+      "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
       "binding_revision": 2
     },
     "context": {
@@ -5270,16 +5225,15 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 1
       },
       "external_slots_before": 2,
       "external_slots_after": 2,
-      "request_count_before": 9996,
-      "request_count_after": 9996,
+      "request_seq_before": 42,
+      "request_seq_after": 42,
       "stored_binding": {
         "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
@@ -5298,10 +5252,9 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 2
       }
     }
@@ -5327,10 +5280,9 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
-      "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+      "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
       "binding_revision": 3
     },
     "context": {
@@ -5356,16 +5308,15 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 2
       },
       "external_slots_before": 2,
       "external_slots_after": 2,
-      "request_count_before": 9996,
-      "request_count_after": 9996,
+      "request_seq_before": 42,
+      "request_seq_after": 42,
       "stored_binding": {
         "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
@@ -5384,10 +5335,9 @@
           "heartbeat_timeout_ms": 90000,
           "max_content_bytes": 16777216,
           "max_connections_per_identity_service": 2,
-          "max_connections_per_identity_total": 16,
-          "max_requests_per_connection": 10000
+          "max_connections_per_identity_total": 16
         },
-        "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+        "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
         "binding_revision": 1
       }
     }
@@ -5398,7 +5348,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "request_seq": 2,
       "kind": "query",
       "result": {
         "output": {
@@ -5438,14 +5388,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "request_seq": 2,
         "kind": "query",
         "request": {
           "method": "content.get",
@@ -5547,7 +5496,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "request_seq": 2,
       "kind": "query",
       "result": {
         "output": {
@@ -5608,14 +5557,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "request_seq": 2,
         "kind": "query",
         "request": {
           "method": "content.get",
@@ -5741,8 +5689,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "subscription": {
@@ -5762,7 +5709,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "request_seq": 2,
       "kind": "query",
       "request": {
         "method": "execution.list",
@@ -5791,10 +5738,11 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
-      "direction": "client_to_server"
+      "direction": "client_to_server",
+      "request_seq_before": 0,
+      "request_seq_after": 2
     }
   },
   {
@@ -5803,7 +5751,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "request_seq": 2,
       "kind": "query",
       "result": {
         "output": {
@@ -5856,14 +5804,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "request_seq": 2,
         "kind": "query",
         "request": {
           "method": "execution.list",
@@ -5882,7 +5829,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "request_seq": 2,
       "kind": "query",
       "request": {
         "method": "extensions.list",
@@ -5911,10 +5858,11 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
-      "direction": "client_to_server"
+      "direction": "client_to_server",
+      "request_seq_before": 0,
+      "request_seq_after": 2
     }
   },
   {
@@ -5923,7 +5871,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "request_seq": 2,
       "kind": "query",
       "result": {
         "output": {
@@ -5974,14 +5922,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "request_seq": 2,
         "kind": "query",
         "request": {
           "method": "extensions.list",
@@ -6000,7 +5947,7 @@
     "value": {
       "type": "request",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "request_seq": 2,
       "kind": "query",
       "request": {
         "method": "grant.list",
@@ -6029,10 +5976,11 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
-      "direction": "client_to_server"
+      "direction": "client_to_server",
+      "request_seq_before": 0,
+      "request_seq_after": 2
     }
   },
   {
@@ -6041,7 +5989,7 @@
     "value": {
       "type": "response",
       "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-      "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+      "request_seq": 2,
       "kind": "query",
       "result": {
         "output": {
@@ -6136,14 +6084,13 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "request_frame": {
         "type": "request",
         "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
-        "request_id": "request_query_a3c5696a7dbec63d0c0bb1922541d4cb",
+        "request_seq": 2,
         "kind": "query",
         "request": {
           "method": "grant.list",
@@ -6188,8 +6135,7 @@
         "heartbeat_timeout_ms": 90000,
         "max_content_bytes": 16777216,
         "max_connections_per_identity_service": 2,
-        "max_connections_per_identity_total": 16,
-        "max_requests_per_connection": 10000
+        "max_connections_per_identity_total": 16
       },
       "direction": "server_to_client",
       "subscription": {

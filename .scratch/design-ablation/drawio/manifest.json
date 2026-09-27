@@ -1,0 +1,9 @@
+[
+  {
+    "source": "docs/architecture/diagrams/uml-models.drawio",
+    "page": 16,
+    "name": "16 Agent 协作与任务委派 · 领域对象",
+    "render": ".scratch/design-ablation/drawio/uml-models-16.png",
+    "passed": true
+  }
+]

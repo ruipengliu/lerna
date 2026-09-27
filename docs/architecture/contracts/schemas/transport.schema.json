@@ -1042,11 +1042,6 @@
           "type": "integer",
           "minimum": 2,
           "maximum": 16
-        },
-        "max_requests_per_connection": {
-          "type": "integer",
-          "minimum": 2,
-          "maximum": 10000
         }
       },
       "required": [
@@ -1063,8 +1058,7 @@
         "heartbeat_interval_ms",
         "heartbeat_timeout_ms",
         "max_content_bytes",
-        "max_connections_per_identity_total",
-        "max_requests_per_connection"
+        "max_connections_per_identity_total"
       ],
       "additionalProperties": false
     },
@@ -1159,21 +1153,20 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
-            "request_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
             "kind": {
               "const": "command"
             },
             "request": {
               "$ref": "protocol.schema.json#/$defs/Command"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "request"
           ],
@@ -1186,10 +1179,6 @@
               "const": "response"
             },
             "connection_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
-            "request_id": {
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
@@ -1205,12 +1194,15 @@
                   "$ref": "#/$defs/ErrorResult"
                 }
               ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "result"
           ],
@@ -1226,21 +1218,20 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
-            "request_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
             "kind": {
               "const": "query"
             },
             "request": {
               "$ref": "protocol.schema.json#/$defs/Query"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "request"
           ],
@@ -1253,10 +1244,6 @@
               "const": "response"
             },
             "connection_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
-            "request_id": {
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
@@ -1272,12 +1259,15 @@
                   "$ref": "#/$defs/ErrorResult"
                 }
               ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "result"
           ],
@@ -1293,21 +1283,20 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
-            "request_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
             "kind": {
               "const": "receipt_lookup"
             },
             "request": {
               "$ref": "#/$defs/Lookup"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "request"
           ],
@@ -1320,10 +1309,6 @@
               "const": "response"
             },
             "connection_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
-            "request_id": {
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
@@ -1339,12 +1324,15 @@
                   "$ref": "#/$defs/ErrorResult"
                 }
               ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "result"
           ],
@@ -1360,21 +1348,20 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
-            "request_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
             "kind": {
               "const": "subscribe"
             },
             "request": {
               "$ref": "#/$defs/SubscribeInput"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "request"
           ],
@@ -1390,10 +1377,6 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
-            "request_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
             "kind": {
               "const": "subscribe"
             },
@@ -1406,12 +1389,15 @@
                   "$ref": "#/$defs/ErrorResult"
                 }
               ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "result"
           ],
@@ -1616,21 +1602,20 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
-            "request_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
             "kind": {
               "const": "upload_reserve"
             },
             "request": {
               "$ref": "#/$defs/UploadIntent"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "request"
           ],
@@ -1646,10 +1631,6 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
-            "request_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
             "kind": {
               "const": "upload_reserve"
             },
@@ -1662,12 +1643,15 @@
                   "$ref": "#/$defs/ErrorResult"
                 }
               ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "result"
           ],
@@ -1680,10 +1664,6 @@
               "const": "request"
             },
             "connection_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
-            "request_id": {
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
@@ -1692,12 +1672,15 @@
             },
             "request": {
               "$ref": "#/$defs/UploadLookup"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "request"
           ],
@@ -1710,10 +1693,6 @@
               "const": "response"
             },
             "connection_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
-            "request_id": {
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
@@ -1729,12 +1708,15 @@
                   "$ref": "#/$defs/ErrorResult"
                 }
               ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "result"
           ],
@@ -1747,10 +1729,6 @@
               "const": "request"
             },
             "connection_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
-            "request_id": {
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
@@ -1759,12 +1737,15 @@
             },
             "request": {
               "$ref": "#/$defs/MirrorTicket"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "request"
           ],
@@ -1777,10 +1758,6 @@
               "const": "response"
             },
             "connection_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
-            "request_id": {
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
@@ -1796,12 +1773,15 @@
                   "$ref": "#/$defs/ErrorResult"
                 }
               ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "result"
           ],
@@ -1814,10 +1794,6 @@
               "const": "request"
             },
             "connection_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
-            "request_id": {
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
@@ -1826,12 +1802,15 @@
             },
             "request": {
               "$ref": "#/$defs/MirrorLookup"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "request"
           ],
@@ -1844,10 +1823,6 @@
               "const": "response"
             },
             "connection_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
-            "request_id": {
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
@@ -1863,12 +1838,15 @@
                   "$ref": "#/$defs/ErrorResult"
                 }
               ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "result"
           ],
@@ -1884,21 +1862,20 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
-            "request_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
             "kind": {
               "const": "mirror_control"
             },
             "request": {
               "$ref": "#/$defs/MirrorControl"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "request"
           ],
@@ -1914,10 +1891,6 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
             },
-            "request_id": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
-            },
             "kind": {
               "const": "mirror_control"
             },
@@ -1930,12 +1903,15 @@
                   "$ref": "#/$defs/ErrorResult"
                 }
               ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
             }
           },
           "required": [
             "type",
             "connection_id",
-            "request_id",
+            "request_seq",
             "kind",
             "result"
           ],
@@ -2023,6 +1999,11 @@
         "frame"
       ],
       "additionalProperties": false
+    },
+    "RequestSequence": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
     }
   }
 }

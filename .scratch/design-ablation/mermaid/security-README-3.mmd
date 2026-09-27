@@ -1,0 +1,6 @@
+stateDiagram-v2
+    [*] --> open: owner 预分配额度
+    open --> open: 原子登记使用并扣额度
+    open --> closed: 收到撤权、到期或主动封闭
+    closed --> reconciled: 本地封闭后提交最终用量
+    reconciled --> [*]

@@ -2,11 +2,13 @@
 
 [配置和方法登记](../../protocol.md) · [共同语义](../../README.md) · [独立完成判断投影](../README.md)
 
-本目录的 50 个 JSON 文件是有界的跨调用记录序列，覆盖全部 104 个严格登记方法。`invalid-mutations.json` 保存 343 个定向反例、来源文件、变更路径和应命中的规则；校验器逐项应用到原例副本，不修改原例。每个方法的准确输入、输出、种类及错误恢复动作见[方法登记](../../schemas/methods.json)。
+本目录的 52 个 JSON 文件是有界的跨调用记录序列，覆盖全部 104 个严格登记方法。`invalid-mutations.json` 保存 366 个定向反例、来源文件、变更路径和应命中的规则；校验器逐项应用到原例副本，不修改原例。每个方法的准确输入、输出、种类及错误恢复动作见[方法登记](../../schemas/methods.json)。
 
 夹具的 `auth` 是验收工具从认证通道取得的测试前提，不属于可由调用者选择的业务正文。`capabilities` 是预先装配的准确能力参数 Schema，`input_requests`、`approvals` 与 `confirmations` 是受信负责端的有限前提快照。它们不是可由模型提交并自证权限的线接口。ID、摘要、正文长度、proof 和内容引用均为占位数据；格式合法不证明真实内容哈希、用户批准或签名已经核验。
 
 `collection` 记录构造的集合成员、当前可披露范围与扫描位置，`activation_view` 记录客户端合并最高修订后的投影；两者都不是线字段。它们验证给定前提下的页归属、稳定遍历、缺口和迟到读合并，不证明真实权限变化或数据库快照成立。
+
+`delegation_facts` 是计算委派只读 phase 所需的本地权威记录前提，包括原创建、输入与查询缺口、终结、费用封账和 Closure 保存。它不是领域线字段；公开 Delegation 对象不足以完整推导 phase。序列只检查给定记录的投影优先序、同修订一致性及关闭不重开，不证明这些记录已被真实事务提交。
 
 `holder_gate` 是控制查询答复归并后的持久门禁观察，只存在于验收事件；它不随 WSS／gRPC 发送。序列可记录晚到的旧查询答复，并断言本地内容控制与 copy 两种最高修订及 closed 门禁保持。open 只说明没有已知关闭事实，不代表获得使用资格。该比较不执行真实事务竞争、当前身份认证或清理操作。
 
@@ -51,7 +53,7 @@
 | [44-surface-lifecycle](44-surface-lifecycle.json) | 完整快照更新与设备关闭意图 |
 | [45-application-delivery](45-application-delivery.json) | 已注册处理端的原命令转交及业务消费 |
 | [46-content-restriction](46-content-restriction.json) | 收紧用途，物理残留单独记录 |
-| [47-declarative-form](47-declarative-form.json) | 准确请求版本、类型化表单与禁止脚本 |
+| [47-declarative-form](47-declarative-form.json) | Surface 只引用请求；owner Schema 单一权威、新修订读取及旧修订拒绝 |
 | [48-memory-changed-pages](48-memory-changed-pages.json) | 并发删除后的固定分页位置及披露复核 |
 | [49-source-projection](49-source-projection.json) | 来源修订推进与预授权有限提取 |
 | [50-online-use-settlement](50-online-use-settlement.json) | 在线使用累计费用、未知保留及最终差额释放 |
@@ -62,6 +64,8 @@
 | [55-content-holder-control](55-content-holder-control.json) | 默认／显式 bytes、关闭后自身 control 查询、其他持有者拒绝、旧控制晚到与门禁保持、清理后核对 |
 | [56-owner-collection-pages](56-owner-collection-pages.json) | Operation／Activation／Grant 固定成员分页、当前记录、范围变化、截断／过期、查询槽回收与旧游标拒绝、Activation 高修订保持 |
 | [57-collection-authorization-reset](57-collection-authorization-reset.json) | 调用参数错误不破坏原集合；权限 A→B→A 不能复活旧游标或旧首部，新 query_id 恢复 |
+| [58-lease-open-close-ledger](58-lease-open-close-ledger.json) | 首次使用保持 open；closed 保留未知费用，全部原使用封闭后最终结算 |
+| [59-delegation-phase-projection](59-delegation-phase-projection.json) | 创建未知、固定映射、普通未final用量、取消后未知费用、Closure 优先及原固定回执恢复 |
 
 在仓库根目录运行：
 

@@ -1,0 +1,906 @@
+{
+  "name": "delegation-phase-projection",
+  "description": "由原创建、映射、终结费用及 Closure 事实按优先序计算只读 phase；普通未final用量不构成恢复缺口。前提是静态记录，不证明真实执行或提交。",
+  "capabilities": [
+    {
+      "capability_ref": {
+        "id": "capability_38a5be91af79d7e5ba9809bf383c699b",
+        "version": "1.0.0",
+        "digest": "sha256:38a5be91af79d7e5ba9809bf383c699b6864ee50446239fe56a45e32b84638fe"
+      },
+      "binding_ref": {
+        "binding_id": "binding_80f70afeef3caa57646fd20afb95be9c",
+        "revision": 1
+      },
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "collaboration_delegate_2f99e6fe72d1a143a2175c3f7edd34b0",
+          "method": "collaboration.delegate",
+          "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "delegation_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+            "parent_task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "agent_binding": {
+              "agent_ref": {
+                "id": "agent_d4f0bc5a29de06b510f9aa428f1eedba",
+                "version": "1.0.0",
+                "digest": "sha256:d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824"
+              },
+              "adapter_ref": {
+                "id": "agent_adapter_bd0ef18530e218ba018e4a7f34b94050",
+                "version": "1.0.0",
+                "digest": "sha256:bd0ef18530e218ba018e4a7f34b94050e27bd84b8fd8cea3e272f863930625f9"
+              },
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1"
+            },
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "child_goal_0a47e149e77d62c190b94b8dfab51dda",
+              "version": 1,
+              "hash": "sha256:5527029d176a5fd3907532d20eff56db020aec193aa7d3665b39be8d024fddf9",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "input_refs": [
+              {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+                "version": 1,
+                "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "constraints": [
+              "只读研究"
+            ],
+            "deadline": "2026-09-26T00:10:00Z",
+            "allocation_id": "allocation_165f0f8e557c430929784035df7eeacf",
+            "permission_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+                "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+                "revision": 1
+              }
+            ],
+            "ancestor_ids": [
+              "task_0ebb429fa86d481c2630fac53db1c91c"
+            ]
+          }
+        },
+        "response": {
+          "command_id": "collaboration_delegate_2f99e6fe72d1a143a2175c3f7edd34b0",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "delegation_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+            "parent_task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "agent_binding": {
+              "agent_ref": {
+                "id": "agent_d4f0bc5a29de06b510f9aa428f1eedba",
+                "version": "1.0.0",
+                "digest": "sha256:d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824"
+              },
+              "adapter_ref": {
+                "id": "agent_adapter_bd0ef18530e218ba018e4a7f34b94050",
+                "version": "1.0.0",
+                "digest": "sha256:bd0ef18530e218ba018e4a7f34b94050e27bd84b8fd8cea3e272f863930625f9"
+              },
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1"
+            },
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "child_goal_0a47e149e77d62c190b94b8dfab51dda",
+              "version": 1,
+              "hash": "sha256:5527029d176a5fd3907532d20eff56db020aec193aa7d3665b39be8d024fddf9",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "input_refs": [
+              {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+                "version": 1,
+                "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "constraints": [
+              "只读研究"
+            ],
+            "deadline": "2026-09-26T00:10:00Z",
+            "allocation_id": "allocation_165f0f8e557c430929784035df7eeacf",
+            "permission_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+                "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+                "revision": 1
+              }
+            ],
+            "ancestor_ids": [
+              "task_0ebb429fa86d481c2630fac53db1c91c"
+            ],
+            "revision": 1,
+            "phase": "preparing",
+            "remote_revision": 0,
+            "control_pending": false,
+            "usage_revision": 0,
+            "effects_pending": false
+          }
+        }
+      },
+      "delegation_facts": {
+        "creation": "not_sent",
+        "query_gap": false,
+        "input_pending": false,
+        "ending": false,
+        "settlement_final": false,
+        "closure_pending": false,
+        "closure_saved": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:01Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "collaboration.read",
+          "target_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "delegation_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+            "parent_task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "agent_binding": {
+              "agent_ref": {
+                "id": "agent_d4f0bc5a29de06b510f9aa428f1eedba",
+                "version": "1.0.0",
+                "digest": "sha256:d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824"
+              },
+              "adapter_ref": {
+                "id": "agent_adapter_bd0ef18530e218ba018e4a7f34b94050",
+                "version": "1.0.0",
+                "digest": "sha256:bd0ef18530e218ba018e4a7f34b94050e27bd84b8fd8cea3e272f863930625f9"
+              },
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1"
+            },
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "child_goal_0a47e149e77d62c190b94b8dfab51dda",
+              "version": 1,
+              "hash": "sha256:5527029d176a5fd3907532d20eff56db020aec193aa7d3665b39be8d024fddf9",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "input_refs": [
+              {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+                "version": 1,
+                "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "constraints": [
+              "只读研究"
+            ],
+            "deadline": "2026-09-26T00:10:00Z",
+            "allocation_id": "allocation_165f0f8e557c430929784035df7eeacf",
+            "permission_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+                "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+                "revision": 1
+              }
+            ],
+            "ancestor_ids": [
+              "task_0ebb429fa86d481c2630fac53db1c91c"
+            ],
+            "revision": 2,
+            "phase": "reconciling",
+            "remote_revision": 0,
+            "control_pending": false,
+            "usage_revision": 0,
+            "effects_pending": false
+          },
+          "observed_at": "2026-09-26T00:00:01Z"
+        }
+      },
+      "delegation_facts": {
+        "creation": "unknown",
+        "query_gap": false,
+        "input_pending": false,
+        "ending": false,
+        "settlement_final": false,
+        "closure_pending": false,
+        "closure_saved": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "collaboration.read",
+          "target_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "delegation_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+            "parent_task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "agent_binding": {
+              "agent_ref": {
+                "id": "agent_d4f0bc5a29de06b510f9aa428f1eedba",
+                "version": "1.0.0",
+                "digest": "sha256:d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824"
+              },
+              "adapter_ref": {
+                "id": "agent_adapter_bd0ef18530e218ba018e4a7f34b94050",
+                "version": "1.0.0",
+                "digest": "sha256:bd0ef18530e218ba018e4a7f34b94050e27bd84b8fd8cea3e272f863930625f9"
+              },
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1"
+            },
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "child_goal_0a47e149e77d62c190b94b8dfab51dda",
+              "version": 1,
+              "hash": "sha256:5527029d176a5fd3907532d20eff56db020aec193aa7d3665b39be8d024fddf9",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "input_refs": [
+              {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+                "version": 1,
+                "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "constraints": [
+              "只读研究"
+            ],
+            "deadline": "2026-09-26T00:10:00Z",
+            "allocation_id": "allocation_165f0f8e557c430929784035df7eeacf",
+            "permission_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+                "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+                "revision": 1
+              }
+            ],
+            "ancestor_ids": [
+              "task_0ebb429fa86d481c2630fac53db1c91c"
+            ],
+            "revision": 3,
+            "phase": "active",
+            "remote_revision": 1,
+            "control_pending": false,
+            "usage_revision": 0,
+            "effects_pending": false,
+            "remote_binding": {
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1",
+              "remote_task_id": "remote_task_74abd92cd79df34d45f9b8d4710ecd8c",
+              "creation_key": "delegation_5214bf637717ddb480ecc554b2ec4c3f"
+            }
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      },
+      "delegation_facts": {
+        "creation": "mapped",
+        "query_gap": false,
+        "input_pending": false,
+        "ending": false,
+        "settlement_final": false,
+        "closure_pending": false,
+        "closure_saved": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:03Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "collaboration.read",
+          "target_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "delegation_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+            "parent_task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "agent_binding": {
+              "agent_ref": {
+                "id": "agent_d4f0bc5a29de06b510f9aa428f1eedba",
+                "version": "1.0.0",
+                "digest": "sha256:d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824"
+              },
+              "adapter_ref": {
+                "id": "agent_adapter_bd0ef18530e218ba018e4a7f34b94050",
+                "version": "1.0.0",
+                "digest": "sha256:bd0ef18530e218ba018e4a7f34b94050e27bd84b8fd8cea3e272f863930625f9"
+              },
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1"
+            },
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "child_goal_0a47e149e77d62c190b94b8dfab51dda",
+              "version": 1,
+              "hash": "sha256:5527029d176a5fd3907532d20eff56db020aec193aa7d3665b39be8d024fddf9",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "input_refs": [
+              {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+                "version": 1,
+                "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "constraints": [
+              "只读研究"
+            ],
+            "deadline": "2026-09-26T00:10:00Z",
+            "allocation_id": "allocation_165f0f8e557c430929784035df7eeacf",
+            "permission_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+                "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+                "revision": 1
+              }
+            ],
+            "ancestor_ids": [
+              "task_0ebb429fa86d481c2630fac53db1c91c"
+            ],
+            "revision": 3,
+            "phase": "active",
+            "remote_revision": 1,
+            "control_pending": false,
+            "usage_revision": 0,
+            "effects_pending": false,
+            "remote_binding": {
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1",
+              "remote_task_id": "remote_task_74abd92cd79df34d45f9b8d4710ecd8c",
+              "creation_key": "delegation_5214bf637717ddb480ecc554b2ec4c3f"
+            }
+          },
+          "observed_at": "2026-09-26T00:00:03Z"
+        }
+      },
+      "delegation_facts": {
+        "creation": "mapped",
+        "query_gap": false,
+        "input_pending": false,
+        "ending": false,
+        "settlement_final": false,
+        "closure_pending": false,
+        "closure_saved": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "collaboration_control_f8eb8e222a844d6dd23a7ad03a218e46",
+          "method": "collaboration.control",
+          "target_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "action": "cancel",
+            "reason": "父取消"
+          },
+          "expected_revision": 3
+        },
+        "response": {
+          "command_id": "collaboration_control_f8eb8e222a844d6dd23a7ad03a218e46",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:04Z",
+          "output": {
+            "delegation_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+            "parent_task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "agent_binding": {
+              "agent_ref": {
+                "id": "agent_d4f0bc5a29de06b510f9aa428f1eedba",
+                "version": "1.0.0",
+                "digest": "sha256:d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824"
+              },
+              "adapter_ref": {
+                "id": "agent_adapter_bd0ef18530e218ba018e4a7f34b94050",
+                "version": "1.0.0",
+                "digest": "sha256:bd0ef18530e218ba018e4a7f34b94050e27bd84b8fd8cea3e272f863930625f9"
+              },
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1"
+            },
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "child_goal_0a47e149e77d62c190b94b8dfab51dda",
+              "version": 1,
+              "hash": "sha256:5527029d176a5fd3907532d20eff56db020aec193aa7d3665b39be8d024fddf9",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "input_refs": [
+              {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+                "version": 1,
+                "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "constraints": [
+              "只读研究"
+            ],
+            "deadline": "2026-09-26T00:10:00Z",
+            "allocation_id": "allocation_165f0f8e557c430929784035df7eeacf",
+            "permission_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+                "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+                "revision": 1
+              }
+            ],
+            "ancestor_ids": [
+              "task_0ebb429fa86d481c2630fac53db1c91c"
+            ],
+            "revision": 4,
+            "phase": "reconciling",
+            "remote_revision": 1,
+            "control_pending": true,
+            "usage_revision": 0,
+            "effects_pending": false,
+            "remote_binding": {
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1",
+              "remote_task_id": "remote_task_74abd92cd79df34d45f9b8d4710ecd8c",
+              "creation_key": "delegation_5214bf637717ddb480ecc554b2ec4c3f"
+            }
+          }
+        }
+      },
+      "delegation_facts": {
+        "creation": "mapped",
+        "query_gap": false,
+        "input_pending": false,
+        "ending": true,
+        "settlement_final": false,
+        "closure_pending": true,
+        "closure_saved": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:05Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "collaboration.read",
+          "target_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "delegation_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+            "parent_task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "agent_binding": {
+              "agent_ref": {
+                "id": "agent_d4f0bc5a29de06b510f9aa428f1eedba",
+                "version": "1.0.0",
+                "digest": "sha256:d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824"
+              },
+              "adapter_ref": {
+                "id": "agent_adapter_bd0ef18530e218ba018e4a7f34b94050",
+                "version": "1.0.0",
+                "digest": "sha256:bd0ef18530e218ba018e4a7f34b94050e27bd84b8fd8cea3e272f863930625f9"
+              },
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1"
+            },
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "child_goal_0a47e149e77d62c190b94b8dfab51dda",
+              "version": 1,
+              "hash": "sha256:5527029d176a5fd3907532d20eff56db020aec193aa7d3665b39be8d024fddf9",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "input_refs": [
+              {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+                "version": 1,
+                "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "constraints": [
+              "只读研究"
+            ],
+            "deadline": "2026-09-26T00:10:00Z",
+            "allocation_id": "allocation_165f0f8e557c430929784035df7eeacf",
+            "permission_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+                "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+                "revision": 1
+              }
+            ],
+            "ancestor_ids": [
+              "task_0ebb429fa86d481c2630fac53db1c91c"
+            ],
+            "revision": 5,
+            "phase": "reconciling",
+            "remote_revision": 1,
+            "control_pending": false,
+            "usage_revision": 0,
+            "effects_pending": false,
+            "remote_binding": {
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1",
+              "remote_task_id": "remote_task_74abd92cd79df34d45f9b8d4710ecd8c",
+              "creation_key": "delegation_5214bf637717ddb480ecc554b2ec4c3f"
+            }
+          },
+          "observed_at": "2026-09-26T00:00:05Z"
+        }
+      },
+      "delegation_facts": {
+        "creation": "mapped",
+        "query_gap": false,
+        "input_pending": false,
+        "ending": true,
+        "settlement_final": false,
+        "closure_pending": true,
+        "closure_saved": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:06Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "collaboration.read",
+          "target_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "delegation_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+            "parent_task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "agent_binding": {
+              "agent_ref": {
+                "id": "agent_d4f0bc5a29de06b510f9aa428f1eedba",
+                "version": "1.0.0",
+                "digest": "sha256:d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824"
+              },
+              "adapter_ref": {
+                "id": "agent_adapter_bd0ef18530e218ba018e4a7f34b94050",
+                "version": "1.0.0",
+                "digest": "sha256:bd0ef18530e218ba018e4a7f34b94050e27bd84b8fd8cea3e272f863930625f9"
+              },
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1"
+            },
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "child_goal_0a47e149e77d62c190b94b8dfab51dda",
+              "version": 1,
+              "hash": "sha256:5527029d176a5fd3907532d20eff56db020aec193aa7d3665b39be8d024fddf9",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "input_refs": [
+              {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+                "version": 1,
+                "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "constraints": [
+              "只读研究"
+            ],
+            "deadline": "2026-09-26T00:10:00Z",
+            "allocation_id": "allocation_165f0f8e557c430929784035df7eeacf",
+            "permission_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+                "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+                "revision": 1
+              }
+            ],
+            "ancestor_ids": [
+              "task_0ebb429fa86d481c2630fac53db1c91c"
+            ],
+            "revision": 6,
+            "phase": "closed",
+            "remote_revision": 1,
+            "control_pending": false,
+            "usage_revision": 1,
+            "effects_pending": false,
+            "remote_binding": {
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1",
+              "remote_task_id": "remote_task_74abd92cd79df34d45f9b8d4710ecd8c",
+              "creation_key": "delegation_5214bf637717ddb480ecc554b2ec4c3f"
+            },
+            "settlement_ref": {
+              "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+              "id": "settlement_49cedf5bde86598f4926fbc53ca5383b",
+              "revision": 1
+            }
+          },
+          "observed_at": "2026-09-26T00:00:06Z"
+        }
+      },
+      "delegation_facts": {
+        "creation": "mapped",
+        "query_gap": false,
+        "input_pending": false,
+        "ending": true,
+        "settlement_final": true,
+        "closure_pending": false,
+        "closure_saved": true
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:07Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "collaboration.read",
+          "target_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "delegation_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+            "parent_task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "agent_binding": {
+              "agent_ref": {
+                "id": "agent_d4f0bc5a29de06b510f9aa428f1eedba",
+                "version": "1.0.0",
+                "digest": "sha256:d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824"
+              },
+              "adapter_ref": {
+                "id": "agent_adapter_bd0ef18530e218ba018e4a7f34b94050",
+                "version": "1.0.0",
+                "digest": "sha256:bd0ef18530e218ba018e4a7f34b94050e27bd84b8fd8cea3e272f863930625f9"
+              },
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1"
+            },
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "child_goal_0a47e149e77d62c190b94b8dfab51dda",
+              "version": 1,
+              "hash": "sha256:5527029d176a5fd3907532d20eff56db020aec193aa7d3665b39be8d024fddf9",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "input_refs": [
+              {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+                "version": 1,
+                "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "constraints": [
+              "只读研究"
+            ],
+            "deadline": "2026-09-26T00:10:00Z",
+            "allocation_id": "allocation_165f0f8e557c430929784035df7eeacf",
+            "permission_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+                "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+                "revision": 1
+              }
+            ],
+            "ancestor_ids": [
+              "task_0ebb429fa86d481c2630fac53db1c91c"
+            ],
+            "revision": 6,
+            "phase": "closed",
+            "remote_revision": 1,
+            "control_pending": false,
+            "usage_revision": 1,
+            "effects_pending": false,
+            "remote_binding": {
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1",
+              "remote_task_id": "remote_task_74abd92cd79df34d45f9b8d4710ecd8c",
+              "creation_key": "delegation_5214bf637717ddb480ecc554b2ec4c3f"
+            },
+            "settlement_ref": {
+              "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+              "id": "settlement_49cedf5bde86598f4926fbc53ca5383b",
+              "revision": 1
+            }
+          },
+          "observed_at": "2026-09-26T00:00:07Z"
+        }
+      },
+      "delegation_facts": {
+        "creation": "mapped",
+        "query_gap": true,
+        "input_pending": false,
+        "ending": true,
+        "settlement_final": true,
+        "closure_pending": false,
+        "closure_saved": true
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:08Z",
+      "recovery": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "original_command_id": "collaboration_delegate_2f99e6fe72d1a143a2175c3f7edd34b0",
+        "lookup": {
+          "command_id": "collaboration_delegate_2f99e6fe72d1a143a2175c3f7edd34b0"
+        },
+        "response": {
+          "command_id": "collaboration_delegate_2f99e6fe72d1a143a2175c3f7edd34b0",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "delegation_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+            "parent_task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "agent_binding": {
+              "agent_ref": {
+                "id": "agent_d4f0bc5a29de06b510f9aa428f1eedba",
+                "version": "1.0.0",
+                "digest": "sha256:d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824"
+              },
+              "adapter_ref": {
+                "id": "agent_adapter_bd0ef18530e218ba018e4a7f34b94050",
+                "version": "1.0.0",
+                "digest": "sha256:bd0ef18530e218ba018e4a7f34b94050e27bd84b8fd8cea3e272f863930625f9"
+              },
+              "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1"
+            },
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "child_goal_0a47e149e77d62c190b94b8dfab51dda",
+              "version": 1,
+              "hash": "sha256:5527029d176a5fd3907532d20eff56db020aec193aa7d3665b39be8d024fddf9",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "input_refs": [
+              {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+                "version": 1,
+                "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "constraints": [
+              "只读研究"
+            ],
+            "deadline": "2026-09-26T00:10:00Z",
+            "allocation_id": "allocation_165f0f8e557c430929784035df7eeacf",
+            "permission_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+                "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+                "revision": 1
+              }
+            ],
+            "ancestor_ids": [
+              "task_0ebb429fa86d481c2630fac53db1c91c"
+            ],
+            "revision": 1,
+            "phase": "preparing",
+            "remote_revision": 0,
+            "control_pending": false,
+            "usage_revision": 0,
+            "effects_pending": false
+          }
+        }
+      }
+    }
+  ]
+}

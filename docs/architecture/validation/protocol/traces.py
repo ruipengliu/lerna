@@ -141,9 +141,22 @@ def check_trace(trace):
             operations[oid]=deepcopy(output)
         if name.startswith('collaboration.') and 'delegation_id' in output:
             did=output['delegation_id'];old=delegations.get(did)
+            facts=event.get('delegation_facts')
+            if facts:
+                # Supplied authority observations, not a second domain state machine.
+                has_gap=(facts['creation'] in ('unknown','not_admitted') or facts['query_gap'] or facts['input_pending']
+                         or output['control_pending'] or output['effects_pending'] or facts['closure_pending']
+                         or facts['ending'] and (not facts['settlement_final'] or not facts['closure_saved']))
+                expected=('closed' if facts['closure_saved'] else 'reconciling' if has_gap
+                          else 'active' if facts['creation']=='mapped' else 'preparing')
+                if output['phase']!=expected:err('delegation_projection','phase differs from the ordered projection of original responsibility records')
+                if facts['creation']=='mapped' and not ('child_task_id' in output or 'remote_binding' in output):err('delegation_mapping','recorded mapping requires its fixed child identity')
+                if facts['closure_saved'] and (not facts['settlement_final'] or facts['closure_pending'] or facts['input_pending']):err('delegation_closure','durable closure cannot leave required input or settlement responsibility unfinished')
             if old:
                 for k in ('child_task_id','remote_binding'):
                     if k in old and output.get(k)!=old[k]:err('delegation_identity','original child mapping changed')
+                if old['revision']==output['revision'] and old!=output:err('delegation_revision','same revision cannot change its recorded projection')
+                # closed is evidence of a durable Closure; it is not an inferred enum edge.
                 if old['phase']=='closed' and output['phase']!='closed':err('delegation_terminal','closed responsibility reopened')
             delegations[did]=deepcopy(output)
         if name.startswith('interaction.input'):

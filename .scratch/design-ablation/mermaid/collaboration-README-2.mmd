@@ -1,0 +1,8 @@
+flowchart TD
+    F[同一修订的已归并委派事实] --> C{已有持久 Closure？}
+    C -->|是| X[closed]
+    C -->|否| G{存在具体恢复或收尾缺口？}
+    G -->|是| R[reconciling]
+    G -->|否| M{已固定唯一子任务映射？}
+    M -->|是| A[active]
+    M -->|否| P[preparing]

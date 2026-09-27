@@ -767,18 +767,16 @@
     "expect": "frame_connection"
   },
   {
-    "name": "request id is socket unique",
+    "name": "request sequence is socket monotonic",
     "vector": "wss-command-request",
     "edits": [
       {
         "op": "set",
-        "path": "/context/used_request_ids",
-        "value": [
-          "request_command_0c9aec3232c0e1c974e39307c0782ed1"
-        ]
+        "path": "/context/request_seq_before",
+        "value": 1
       }
     ],
-    "expect": "frame_request_id"
+    "expect": "frame_sequence"
   },
   {
     "name": "old credential cannot use live socket",
@@ -875,13 +873,13 @@
     "expect": "frame_capacity"
   },
   {
-    "name": "response request id match",
+    "name": "response request sequence match",
     "vector": "wss-command-response",
     "edits": [
       {
         "op": "set",
-        "path": "/value/request_id",
-        "value": "other_request_a8f01b472d096d00530c5b358eba9903"
+        "path": "/value/request_seq",
+        "value": 13
       }
     ],
     "expect": "frame_response"
@@ -1944,30 +1942,6 @@
     "expect": "frame_capacity"
   },
   {
-    "name": "ordinary requests stop before lifetime reserve",
-    "vector": "wss-final-ordinary-request",
-    "edits": [
-      {
-        "op": "set",
-        "path": "/context/request_count",
-        "value": 9996
-      }
-    ],
-    "expect": "frame_capacity"
-  },
-  {
-    "name": "control requests stop at lifetime total",
-    "vector": "wss-final-control-request",
-    "edits": [
-      {
-        "op": "set",
-        "path": "/context/request_count",
-        "value": 10000
-      }
-    ],
-    "expect": "frame_capacity"
-  },
-  {
     "name": "rebind metadata authenticates gateway",
     "vector": "channel-rebound-binding",
     "edits": [
@@ -2064,25 +2038,25 @@
     "expect": "channel_quota"
   },
   {
-    "name": "rebind does not reset request count",
+    "name": "rebind does not reset request high-watermark",
     "vector": "channel-rebound-binding",
     "edits": [
       {
         "op": "set",
-        "path": "/context/request_count_after",
+        "path": "/context/request_seq_after",
         "value": 0
       }
     ],
     "expect": "channel_quota"
   },
   {
-    "name": "rebind does not duplicate request count",
+    "name": "rebind does not duplicate request high-watermark",
     "vector": "channel-rebound-binding",
     "edits": [
       {
         "op": "set",
-        "path": "/context/request_count_after",
-        "value": 9997
+        "path": "/context/request_seq_after",
+        "value": 43
       }
     ],
     "expect": "channel_quota"
@@ -2160,13 +2134,13 @@
     "expect": "channel_binding"
   },
   {
-    "name": "internal recovery keeps request id",
+    "name": "internal recovery keeps request sequence",
     "vector": "wss-query-internal-recovery",
     "edits": [
       {
         "op": "set",
-        "path": "/value/request_id",
-        "value": "another_request_569ec384453ed6d85721d178bc13b63e"
+        "path": "/value/request_seq",
+        "value": 14
       }
     ],
     "expect": "frame_recovery_identity"
@@ -2189,11 +2163,11 @@
     "edits": [
       {
         "op": "set",
-        "path": "/context/request_count_after",
+        "path": "/context/request_seq_after",
         "value": 10001
       }
     ],
-    "expect": "frame_recovery_quota"
+    "expect": "frame_recovery_sequence"
   },
   {
     "name": "uncertain write is not automatically replayed",
@@ -2317,7 +2291,7 @@
   },
   {
     "name": "wss-final-ordinary-request rejects unknown field",
-    "vector": "wss-final-ordinary-request",
+    "vector": "wss-high-sequence-ordinary-request",
     "edits": [
       {
         "op": "set",
@@ -2329,7 +2303,7 @@
   },
   {
     "name": "wss-final-control-request rejects unknown field",
-    "vector": "wss-final-control-request",
+    "vector": "wss-last-safe-control-request",
     "edits": [
       {
         "op": "set",
@@ -2435,10 +2409,9 @@
             "heartbeat_timeout_ms": 90000,
             "max_content_bytes": 16777216,
             "max_connections_per_identity_service": 2,
-            "max_connections_per_identity_total": 16,
-            "max_requests_per_connection": 10000
+            "max_connections_per_identity_total": 16
           },
-          "limits_digest": "sha256:9a1792e762662c6326aa47061a23fee63597663970db0d8fcb6de63547ca6168",
+          "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
           "binding_revision": 3
         }
       }
@@ -2807,6 +2780,150 @@
         "op": "set",
         "path": "/value/request/payload/limit",
         "value": 101
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "request sequence rejects zero",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": 0
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "request sequence rejects negative",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": -1
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "request sequence rejects fractional",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": 1.5
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "request sequence rejects unsafe-integer",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": 9007199254740992
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "request sequence rejects string",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": "1"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "request sequence rejects boolean",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "new request cannot leave high-water unchanged",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/request_seq_after",
+        "value": 0
+      }
+    ],
+    "expect": "frame_sequence"
+  },
+  {
+    "name": "ordinary in-flight slots retain control reserve",
+    "vector": "wss-high-sequence-ordinary-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/inflight_requests",
+        "value": 28
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "control in-flight slots remain bounded",
+    "vector": "wss-last-safe-control-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/inflight_requests",
+        "value": 32
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "client cannot self-claim internal recovery",
+    "vector": "wss-query-internal-recovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/internal_binding",
+        "value": false
+      }
+    ],
+    "expect": "frame_recovery_identity"
+  },
+  {
+    "name": "old request_id is not an accepted frame alias",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_id",
+        "value": "request_00000000000000000000000000000001"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "old request lifetime limit is not negotiated",
+    "vector": "wss-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits/max_requests_per_connection",
+        "value": 10000
       }
     ],
     "expect": "transport_schema"

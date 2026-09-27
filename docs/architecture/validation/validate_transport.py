@@ -83,7 +83,6 @@ def limits_errors(limits):
             or limits['control_reserve_bytes'] < limits['max_frame_bytes']
             or limits['control_reserve_bytes'] >= limits['max_queue_bytes']
             or limits['control_reserve_items'] >= min(limits['max_inflight_requests'], limits['max_pending_deliveries'])
-            or limits['control_reserve_items'] >= limits['max_requests_per_connection']
             or limits['max_connections_per_identity_service'] > limits['max_connections_per_identity_total']
             or limits['heartbeat_timeout_ms'] <= limits['heartbeat_interval_ms']):
         return ['connection_limits: reserves, message bounds or heartbeat window are inconsistent']
@@ -139,17 +138,20 @@ def frame_errors(frame, context):
                 errors.append('frame_capacity: identity total connection limit reached')
     if kind == 'request':
         replay = context.get('internal_request_replay')
+        before = context.get('request_seq_before', 0)
+        after = context.get('request_seq_after')
+        if replay and not context.get('internal_binding'):
+            errors.append('frame_recovery_identity: only gateway-held internal recovery bypasses new ingress')
         if replay and frame != context.get('original_request_frame'):
             errors.append('frame_recovery_identity: internal rebind cannot change an outstanding request')
         if replay and frame['kind'] not in {'query', 'receipt_lookup', 'subscribe', 'upload_lookup', 'mirror_lookup'}:
             errors.append('frame_recovery_identity: uncertain writes must be looked up before returning their outcome')
-        if not replay and frame['request_id'] in context.get('used_request_ids', []):
-            errors.append('frame_request_id: request id reused on one socket')
-        lifetime_cap = limits['max_requests_per_connection'] - (0 if control else limits['control_reserve_items'])
-        if not replay and context.get('request_count', 0) >= lifetime_cap:
-            errors.append('frame_capacity: connection request budget is draining or exhausted')
-        if replay and context.get('request_count_after') != context.get('request_count'):
-            errors.append('frame_recovery_quota: replay cannot consume another external request id')
+        if not replay and frame['request_seq'] <= before:
+            errors.append('frame_sequence: repeated or lower request sequence closes the socket without a response')
+        if not replay and after != max(before, frame['request_seq']):
+            errors.append('frame_sequence: recognized new requests consume their sequence even when later rejected')
+        if replay and (after != before or frame['request_seq'] > before):
+            errors.append('frame_recovery_sequence: recovery preserves the existing high-watermark and original sequence')
         cap = limits['max_inflight_requests'] - (0 if control else limits['control_reserve_items'])
         if not replay and context.get('inflight_requests', 0) >= cap:
             errors.append('frame_capacity: request slots reserved or exhausted')
@@ -203,7 +205,7 @@ def frame_errors(frame, context):
     if kind == 'response':
         original = context.get('request_frame', {})
         if (original.get('connection_id') != frame['connection_id']
-                or original.get('request_id') != frame['request_id']
+                or original.get('request_seq') != frame['request_seq']
                 or original.get('kind') != frame['kind']):
             return errors + ['frame_response: response does not match this socket request']
         result = frame['result']
@@ -314,8 +316,8 @@ def check(vector):
             if any(value[k] != previous[k] for k in ('logical_service_id', 'connection_id', 'limits', 'limits_digest')):
                 errors.append('channel_binding: rebind changed the external service, connection or limits')
             if (context.get('external_slots_before') != context.get('external_slots_after')
-                    or context.get('request_count_before') != context.get('request_count_after')):
-                errors.append('channel_quota: rebind must preserve external connection and request counts')
+                    or context.get('request_seq_before') != context.get('request_seq_after')):
+                errors.append('channel_quota: rebind must preserve external slots and request high-watermark')
         elif value['binding_revision'] != 1:
             errors.append('channel_revision: the first candidate starts at revision one')
         # This is a constructed atomic-registration observation, not a database test.
@@ -434,6 +436,75 @@ def edit(value, operations):
     return value
 
 
+def sequence_trace_errors(trace):
+    """Check recorded queue/ingress observations, not a running socket implementation."""
+    sockets = {}
+    errors = []
+    maximum = 9007199254740991
+    for event in trace['events']:
+        action, connection = event['action'], event['connection_id']
+        if action == 'open':
+            if connection in sockets:
+                errors.append('sequence_connection: a new socket needs a new connection identity')
+                continue
+            initial = event.get('initial_high_water', 0)
+            sockets[connection] = dict(high_water=initial, last_sent=initial,
+                                       binding=event['binding_id'], pending={}, queued=set(), closed=False)
+            continue
+        state = sockets[connection]
+        if state['closed']:
+            errors.append('sequence_closed: no events may resume a closed external socket')
+            continue
+        if action == 'enqueue':
+            if 'request_seq' in event:
+                errors.append('sequence_send_order: sequence allocation must occur at actual write, not enqueue')
+            state['queued'].add(event['call'])
+        elif action == 'write':
+            seq = event['request_seq']
+            if (event['call'] not in state['queued'] or not isinstance(seq, int)
+                    or isinstance(seq, bool) or not state['last_sent'] < seq <= maximum):
+                errors.append('sequence_send_order: actual serialized request order must strictly increase')
+            state['queued'].discard(event['call'])
+            state['last_sent'] = seq
+        elif action == 'ingress':
+            seq = event['request_seq']
+            if (not isinstance(seq, int) or isinstance(seq, bool)
+                    or not state['high_water'] < seq <= maximum):
+                outcome = 'close'
+                state['closed'] = True
+            else:
+                state['high_water'] = seq
+                # Rejection is a recorded current-authority/capacity premise, not inferred here.
+                outcome = 'error' if event.get('rejection') else 'pending'
+                if outcome == 'pending':
+                    state['pending'][seq] = event['call']
+            if event['outcome'] != outcome or event['high_water_after'] != state['high_water']:
+                errors.append('sequence_ingress: old sequences close; every recognized new sequence is consumed')
+        elif action == 'rebind':
+            if event['high_water_after'] != state['high_water']:
+                errors.append('sequence_rebind: replacing an internal binding cannot reset or increment the high-watermark')
+            state['binding'] = event['binding_id']
+        elif action == 'recover':
+            if (state['pending'].get(event['request_seq']) != event['call']
+                    or event['high_water_after'] != state['high_water']):
+                errors.append('sequence_recovery: only an original pending request can recover without new admission')
+        elif action == 'response':
+            seq = event['request_seq']
+            deliver = (event['frame_connection_id'] == connection
+                       and event['binding_id'] == state['binding'] and seq in state['pending'])
+            if event['outcome'] != ('delivered' if deliver else 'discarded'):
+                errors.append('sequence_response: match current connection, binding and pending sequence')
+            if deliver:
+                del state['pending'][seq]
+        elif action == 'exhaustion_close':
+            if state['high_water'] != maximum or not 0 <= event['drain_seconds'] <= 5:
+                errors.append('sequence_exhaustion: close after safe-integer exhaustion with bounded draining')
+            state['closed'] = True
+        else:
+            errors.append('sequence_event: unknown recorded event')
+    return errors
+
+
 def main():
     vectors = load(ROOT / 'examples/transport/vectors.json')
     cases = load(ROOT / 'examples/transport/invalid-mutations.json')
@@ -448,7 +519,18 @@ def main():
         errors = check(edit(copy.deepcopy(index[case['vector']]), case['edits']))
         if not any(e.startswith(case['expect'] + ':') for e in errors):
             raise AssertionError(case['name'] + ': expected ' + case['expect'] + ', got ' + str(errors))
+    sequences = load(ROOT / 'examples/transport/request-sequences.json')
+    traces = {v['name']: v for v in sequences['traces']}
+    for trace in traces.values():
+        errors = sequence_trace_errors(trace)
+        if errors:
+            raise AssertionError(trace['name'] + ': ' + '\n'.join(errors))
+    for case in sequences['invalid_mutations']:
+        errors = sequence_trace_errors(edit(copy.deepcopy(traces[case['trace']]), case['edits']))
+        if not any(e.startswith(case['expect'] + ':') for e in errors):
+            raise AssertionError(case['name'] + ': expected ' + case['expect'] + ', got ' + str(errors))
     print(f'PASS: {len(vectors)} transport/closure vectors; {len(cases)} directed invalid mutations')
+    print(f'PASS: {len(traces)} request-sequence traces; {len(sequences["invalid_mutations"])} directed invalid mutations')
     print('Scope: bounded recorded structures and bindings; no network, storage, authentication or byte transfer executed')
     subprocess.run(['node', str(NODE)], check=True)
 

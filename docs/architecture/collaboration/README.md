@@ -69,18 +69,20 @@ flowchart LR
 
 外部控制按固定 command_id 发送并查原结果。外部 Agent 不支持暂停时，父界面明确显示“外部仍可能运行”，不声称整棵任务树暂停。失联期间只能依靠预先约定的动作、费用和控制有效期约束远端；需要立即可中断的设备任务不得委派给不具备相应控制的 Agent。
 
-下图固定建模对象为一份委派记录。closed 只表示父方需要核对的委派责任已结清，不替代子任务状态。
+`phase` 是委派查询的只读展示投影。创建、控制、效果、输入消费和费用各有原事实，关闭由持久 Closure 证明；再维护一套可写阶段会重复记录这些判断。因此按下图顺序从同一已归并修订计算 phase，业务准入和恢复直接检查原事实，不以展示值驱动工作。closed 只表示委派责任已结清，不替代子任务状态。
 
 ```mermaid
-stateDiagram-v2
-    [*] --> preparing
-    preparing --> active: 固定唯一子任务映射
-    preparing --> reconciling: 远端创建结果不明
-    active --> reconciling: 进入核对
-    reconciling --> active: 原任务仍运行
-    reconciling --> closed: 全部责任结清
-    preparing --> closed: 未接纳且额度结清
+flowchart TD
+    F[同一修订的已归并委派事实] --> C{已有持久 Closure？}
+    C -->|是| X[closed]
+    C -->|否| G{存在具体恢复或收尾缺口？}
+    G -->|是| R[reconciling]
+    G -->|否| M{已固定唯一子任务映射？}
+    M -->|是| A[active]
+    M -->|否| P[preparing]
 ```
+
+箭头表示查询判定顺序，不表示阶段转移。具体缺口及事实来源集中定义于[投影规则](implementation.md#phase-projection)。普通运行期间费用尚未最终结算、例行查询和已确认暂停不会单独构成缺口；active 也不证明子当前正在执行。无法取得当前权威记录时返回查询不可用或明确缺口，不从空记录计算 preparing。
 
 ## 4. 权威记录与接口
 
@@ -96,7 +98,7 @@ stateDiagram-v2
 | Delegation：allocation_id、permission_refs、ancestor_ids | 对接预算、授权及有界祖先链；不允许把父完整凭据交给远端 |
 | Delegation：child_task_id 或 remote_binding | 内部保存子 ID；外部保存 endpoint_id、remote_task_id 及创建键；二者互斥 |
 | 远端创建关联：parent_delegation_id | 外部适配器发送固定 delegation_id；接收方支持本方案时以认证发送方与该 ID 为创建唯一键，不据此获得父库写权限 |
-| Delegation：phase、remote_revision、control_pending | phase 使用上图状态；远端状态、控制答复分别保存，不由 phase 推测 |
+| Delegation：phase、remote_revision、control_pending | phase 按上述顺序从已归并事实派生，只读；远端修订与控制答复分别保存，不由 phase 推测 |
 | Delegation：result_ref、usage_revision、effects_pending、settlement_ref | 绑定可查询的原结果、累计用量与最终结算；缺项继续核对 |
 
 | 方法 | 业务输入与输出 | 持久成功及重启后的继续者 |
@@ -134,5 +136,6 @@ stateDiagram-v2
 | CO-04 | 两份相同累计用量、旧修订进展和迟到成功 | 费用只扣一次，终态不倒退，取消父不复活；C5、C8 |
 | CO-05 | 远端副作用未知而返回优质答案 | 父成果可预览，但成功门槛仍阻止提交；C1、C4 |
 | CO-06 | 远端 Brain 停机但本地子事实已提交 | 父可直接消费本地事实；替换 Brain 无需改父完成规则；A2、A3 |
+| CO-07 | 同一修订先后读取、创建答复未知、子终态但费用未知、Closure 保存后清理正文 | phase 由对应修订事实唯一派生；缺口优先于映射，Closure 优先于历史缺口；完整依据清理后返回 gone，不重新变成 preparing |
 
 最大委派深度、活跃子数、轮询间隔和每用户核对并发是待测配置，必须设置有限值。控制与核对保留独立调度份额，过载时拒绝新委派，已接纳责任不丢弃。外部协议兼容性按适配器实际版本及上述用例声明，不以名称相同推定互操作通过。

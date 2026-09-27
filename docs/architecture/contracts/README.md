@@ -90,7 +90,7 @@ Orchestrator 在自身业务库保存原请求、delivery_id 与持久发送责�
 
 接入层只搬运消息，不保存第二份业务权威。设备核验原 Orchestrator／发送服务证明及目标实例绑定，跨连接的重复或乱序由原身份、expected_revision、控制修订与关闭记录裁决。查询和原回执查询同样可由 Delivery 转交，不额外创造业务 command_id；设备不可达返回 dependency_unavailable，不伪造 not_found。
 
-断线不取消任务，也不删除服务器未交付责任。重连先恢复当前身份与控制，再查询未知命令、重交原 Reply、接受仍有效的 Delivery 和新工作。Frame 的 connection_id／request_id 只关联这次连接上的消息，不能替代 command_id、delivery_id 或 endpoint instance。每连接的在途、订阅、条目和字节都有上限，控制及收尾保留份额；慢端无法排空时断开连接，业务责任继续持久保留。
+断线不取消任务，也不删除服务器未交付责任。重连先恢复当前身份与控制，再查询未知命令、重交原 Reply、接受仍有效的 Delivery 和新工作。Frame 的 connection_id／request_seq 只关联这次连接上的请求与响应，不能替代 command_id、delivery_id 或 endpoint instance。request_seq 在客户端实际发送 request 时递增分配，网关保存高水位和有限在途关联，内部重绑不重置序号。每连接的在途、订阅和字节都有上限，控制及收尾保留份额；慢端无法排空时断开连接，业务责任继续持久保留。
 
 生产网关持有外部连接，应用实例或内部流失效先按[gRPC 重绑规则](grpc.md#channel-rebind)恢复原逻辑服务，外 connection_id 保持。内部绑定代次只隔离旧路由及输出，不裁决业务执行权；网关自身退出才由客户端建立新 WSS。原命令、Reply 和订阅分别恢复，不能把 socket 仍存活显示为请求已经成功。跨实例发送、在线额度及实例租约由[生产连接机制](../deployment-production.md#connections)定义。
 

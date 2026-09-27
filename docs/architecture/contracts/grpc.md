@@ -24,7 +24,7 @@ flowchart LR
 | `HarnessService.Call` | `CallRequest` → `CallResponse` | 模块间命令、查询、原回执查询及内容传输管理；接纳后较长工作由原 job 推进，不让 RPC 一直等待任务结束 |
 | `HarnessService.EndpointChannel` | 双向 `ChannelFrame` 流 | 内部接入层与负责服务间转交已认证端云会话的请求、回复、Delivery 和通知；设备外连仍是 WSS |
 
-每条外部 WSS 对应一个当前 EndpointChannel；网关创建并持有外部 connection_id、request_id 等待及订阅状态，负责服务持有业务事实。更换内部绑定只更新 binding_id 与 binding_revision，不要求关闭健康外连接。每条 WSS 最多同时有一个当前流和一个候选重绑流，多个流复用有界 HTTP/2 连接池；不会建立另一套端云推送协议。连接、在线路由和进程租约的配合见[生产连接机制](../deployment-production.md#connections)。
+每条外部 WSS 对应一个当前 EndpointChannel；网关创建并持有外部 connection_id、request_seq 等待及订阅状态，负责服务持有业务事实。更换内部绑定只更新 binding_id 与 binding_revision，不要求关闭健康外连接。每条 WSS 最多同时有一个当前流和一个候选重绑流，多个流复用有界 HTTP/2 连接池；不会建立另一套端云推送协议。连接、在线路由和进程租约的配合见[生产连接机制](../deployment-production.md#connections)。
 
 <a id="channel-rebind"></a>
 ### 1.1 内部绑定与外连接分别恢复
@@ -55,7 +55,7 @@ sequenceDiagram
     G->>A: EndpointChannel（connection_id、绑定 A / 代次 1）
     A-->>G: 原内部 ready
     G-->>E: 唯一外 ready
-    E->>G: request（原 request_id、command_id）
+    E->>G: request（原 request_seq、command_id）
     G->>A: 原 Frame
     Note over A,G: 内部流失效或委托轮换，外 WSS 保持
     G->>B: 新绑定 B / 代次 2（同 connection_id、同 limits）
@@ -63,24 +63,24 @@ sequenceDiagram
     A-->>G: 迟到输出（旧绑定，丢弃）
     G->>B: Call 查询原 command_id
     B-->>G: 原持久回执
-    G-->>E: 原 request_id 的 response
+    G-->>E: 原 request_seq 的 response
     G-->>E: 原订阅 snapshot_required（backend_rebind）
 ```
 
 候选成功登记并通过内部 Ready 校验后，网关在内存中原子切换当前 binding_id，仅接收当前绑定输出；隔离旧流不证明旧服务尚未处理命令或已经停止。旧处理结果可能已经持久化，原业务唯一键、修订及执行门禁继续裁决。关闭旧流或释放在线绑定必须条件匹配原网关进程、应用进程、binding_id 与 binding_revision，不能由迟到清理删除新绑定；具体记录归生产部署。
 
-内部流失败后，网关不把新普通请求无界排队；直接返回 dependency_unavailable。先前已发送的请求保留原外 request_id，在首次收到请求起 5 秒总期限内按下表恢复；重绑与查询不能重置期限。后端短暂不可用时外心跳由网关继续承担，连续 60 秒仍未建立可用绑定则关闭外 WSS；原身份和网关进程租约必须仍有效，任一更早失效时先停止业务与披露。只有内部故障允许这段保活窗口，原身份撤销／过期仍立即停止新请求和披露并关闭。
+内部流失败后，网关不把新普通请求无界排队；直接返回 dependency_unavailable。先前已发送的请求保留原外 request_seq，在首次收到请求起 5 秒总期限内按下表恢复；重绑与查询不能重置期限。后端短暂不可用时外心跳由网关继续承担，连续 60 秒仍未建立可用绑定则关闭外 WSS；原身份和网关进程租约必须仍有效，任一更早失效时先停止业务与披露。只有内部故障允许这段保活窗口，原身份撤销／过期仍立即停止新请求和披露并关闭。
 
 | 原等待 | 重绑后的动作 |
 | --- | --- |
-| command | 以原 command_id 调用原负责服务的 receipt_lookup；找到后封装为原 request_id 的 response。未确定时返回 retry=query_original 的 Error，不自动重新发起写命令 |
-| query／receipt_lookup／upload_lookup／mirror_lookup | 在剩余总期限内有限重读，外 request_id 与输入保持不变；不新增外请求计数 |
+| command | 以原 command_id 调用原负责服务的 receipt_lookup；找到后封装为原 request_seq 的 response。未确定时返回 retry=query_original 的 Error，不自动重新发起写命令 |
+| query／receipt_lookup／upload_lookup／mirror_lookup | 在剩余总期限内有限重读，外 request_seq 与输入保持不变；不推进外请求序号高水位 |
 | upload_reserve／mirror_reserve／mirror_control | 查原 upload_id／ticket_id 及控制修订；只在能核对原不可变输入和目标状态时确认，否则返回可恢复 Error，由调用者按原管理身份继续 |
 | 未确认 Reply | 保留或重交原 Reply，原 owner 返回同 ReplyAck；设备在未收到 Ack 时仍承担原回复保留责任 |
-| subscribe 尚未答复 | 在剩余期限内按原输入重建该次订阅，答复仍关联原 request_id；旧流的迟到订阅输出被隔离 |
+| subscribe 尚未答复 | 在剩余期限内按原输入重建该次订阅，答复仍关联原 request_seq；旧流的迟到订阅输出被隔离 |
 | 已建立订阅 | 网关向端仍认识的 subscription_id 发 backend_rebind 缺口并暂停旧订阅，由端无 cursor 重订阅；不声称流切换后变化连续 |
 
-内部流重绑不新增外连接槽、不清零累计请求数，也不重复计入某个未决 request_id。网关丢失时外 WSS 会断开，客户端沿原命令、Reply 和订阅快照恢复；不持久化整条 socket 会话来模拟无感迁移。
+内部流重绑不新增外连接槽、不清零请求序号高水位，也不为原未决请求分配新序号或等待槽。恢复由网关现有在途关联发起，原请求不再经过新外请求序号准入；端侧不能自报内部恢复。网关丢失时外 WSS 会断开，客户端沿原命令、Reply 和订阅快照恢复；不持久化整条 socket 会话来模拟无感迁移。
 
 <a id="backend-pools"></a>
 ### 1.2 实际地址发现与连接分配
@@ -165,10 +165,10 @@ Call 的请求与响应必须恰有一个非空 oneof 分支；ChannelFrame 的 
 
 关闭应用配置的写 RPC retry／hedging；库仍可能做有限透明重试，所以服务端始终按原 command_id 去重。查询可在自身总 deadline 内有限退避，不自动把查询失败改写成 not_found。重试安全来自业务记录，不能从 gRPC 传输层推出。[gRPC 重试机制](https://grpc.io/docs/guides/retry/)
 
-EndpointChannel 不使用单次 Call 的 5 秒期限：初始允许最长 30 分钟，内部委托期限也不超过 30 分钟。网关在到期前带抖动取得新委托、建立候选流，验证内部 ready 后切换并关闭旧绑定，外连接保持；至多一个候选，不能无界并行重试。原会话／凭据到期或撤销更早发生时立即停止新请求和披露并关闭外连接。单次请求的 5 秒总期限、内部恢复的 60 秒窗口和外连接 10000 个 request_id 的登记上限分别计量；均不能通过流轮换清零。内部轮换默认给已有订阅产生快照缺口：按 30 分钟均摊，20 万连接约产生 111 次／秒的内部重绑；订阅恢复按每连接活动订阅数扇出，每个订阅还涉及重新订阅、权限核验及有界快照查询。提前轮换和失败重试会继续增加负载，不能把 111 次重绑等同于 111 次后端请求。这项查询、授权和快照成本须计入[生产容量](../deployment-production.md#capacity)；只有测量证明收益后才另行设计连续订阅接续。所有流共享的连接故障计入内部恢复容量，网关故障才计入外部集中重连模型。HTTP/2 flow control 与 keepalive 不替代应用队列限额、当前资格或 ReplyAck；流写入成功只代表交给传输栈。[流控](https://grpc.io/docs/guides/flow-control/)、[keepalive](https://grpc.io/docs/guides/keepalive/)
+EndpointChannel 不使用单次 Call 的 5 秒期限：初始允许最长 30 分钟，内部委托期限也不超过 30 分钟。网关在到期前带抖动取得新委托、建立候选流，验证内部 ready 后切换并关闭旧绑定，外连接保持；至多一个候选，不能无界并行重试。原会话／凭据到期或撤销更早发生时立即停止新请求和披露并关闭外连接。单次请求的 5 秒总期限、内部恢复的 60 秒窗口和外连接请求序号高水位分别保存；均不能通过流轮换重置。高水位达到安全整数上限才排空外连接，不按累计请求数定期轮换。内部轮换默认给已有订阅产生快照缺口：按 30 分钟均摊，20 万连接约产生 111 次／秒的内部重绑；订阅恢复按每连接活动订阅数扇出，每个订阅还涉及重新订阅、权限核验及有界快照查询。提前轮换和失败重试会继续增加负载，不能把 111 次重绑等同于 111 次后端请求。这项查询、授权和快照成本须计入[生产容量](../deployment-production.md#capacity)；只有测量证明收益后才另行设计连续订阅接续。所有流共享的连接故障计入内部恢复容量，网关故障才计入外部集中重连模型。HTTP/2 flow control 与 keepalive 不替代应用队列限额、当前资格或 ReplyAck；流写入成功只代表交给传输栈。[流控](https://grpc.io/docs/guides/flow-control/)、[keepalive](https://grpc.io/docs/guides/keepalive/)
 
 ## 4. 验证边界
 
-`.proto` 编译只证明描述符有效。发布前还须核对 oneof／内层 JSON／方法登记的映射、Go 与另一语言的相同 JCS 摘要、未知字段与过大消息拒绝，以及 WSS → gRPC 转发后原身份和认证主体不变。当前构造向量检查绑定摘要、代次比较、同候选登记重试、迟到低代与同代冲突拒绝、旧绑定丢弃、内部 Ready 不二次外发、精确 limits、配额不重复占用及请求数上限；其认证、路由和计数前提均为显式夹具。调用提交后取消 RPC、丢失回复、断开 EndpointChannel、旧凭据保持连接和慢接收端的行为必须用实际服务验证；现有静态向量不提供这些运行证据。
+`.proto` 编译只证明描述符有效。发布前还须核对 oneof／内层 JSON／方法登记的映射、Go 与另一语言的相同 JCS 摘要、未知字段与过大消息拒绝，以及 WSS → gRPC 转发后原身份和认证主体不变。当前构造向量检查绑定摘要、代次比较、同候选登记重试、迟到低代与同代冲突拒绝、旧绑定丢弃、内部 Ready 不二次外发、精确 limits、配额不重复占用及请求序号高水位不回退；其认证、路由和计数前提均为显式夹具。调用提交后取消 RPC、丢失回复、断开 EndpointChannel、旧凭据保持连接和慢接收端的行为必须用实际服务验证；现有静态向量不提供这些运行证据。
 
 发现与连接分配另执行 [PROD-18](../validation/fault-experiments.md#grpc-capacity)：保持原 HTTP/2 连接不动增加副本，核对新 Call／新 EndpointChannel 分布；再填满一个实例、使 watch 断流并排空另一实例，核对有限候选、旧流归属及控制 RPC 余量。时钟与统计分别由 PROD-17／19 验收，不由上述 Schema 向量推出。

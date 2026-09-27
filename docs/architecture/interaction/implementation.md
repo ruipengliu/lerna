@@ -20,7 +20,7 @@ application 层执行快照投影、输入转交和状态比较；InteractionSto
 PresentationStore 封装设备呈现意图。Renderer 和 TrustedConfirmationHost 是宿主侧组件，
 通过既有内容、请求与业务 owner port 工作；它们不是新增的任务或授权裁决层。
 本机通过 Go 接口同进程装配，云端独立进程间使用 gRPC；可以分开部署连接层和服务，但协议选择不要求拆分模块或共库事务，领域身份及事务边界保持一致。
-组件兼容、请求引用覆盖和转交状态比较是同包纯规则函数；application 层取得当前事实后调用，
+组件格式、请求引用覆盖和转交状态比较是同包纯规则函数；application 层取得当前事实后调用，
 再由 store 的条件事务固定结果，规则函数本身不负责网络或持久化。
 
 ```mermaid
@@ -114,7 +114,7 @@ blocks 是有界有序组件集合，每项 block_id 在本快照内唯一。
 | text | block_id、content_ref | format 为 plain 或 markdown；Markdown 禁用原始 HTML 和脚本 |
 | media | block_id、content_ref、alt | display 为 image／audio／video／file，不能据文件扩展名提升权限 |
 | table | block_id、columns、rows | 列和单元格为有限纯文本；不执行公式或内嵌事件 |
-| input | block_id、request_ref、label、input_schema | 只提交原请求，按钮资格由请求依赖决定 |
+| input | block_id、request_ref、label | 字段从准确请求修订的 schema 取得；只提交原请求，按钮资格由请求依赖决定 |
 | action | block_id、request_ref、action_id、label | action_id 必须来自业务请求 allowed_actions |
 | status | block_id、code、label | code 为 queued、working、waiting、done、error 或 unavailable；只是呈现 |
 
@@ -126,14 +126,15 @@ table 初值最多 20 列、100 行，每个单元格最多 512 个字符；大�
 
 ### 2.1 输入 Schema 子集
 
-input_schema 采用封闭对象描述 fields，每字段有 name、type、required、label。
+业务 owner 的 InputRequest.schema 采用封闭对象描述 fields，每字段有 name、type、required、label。
 type 仅为 text、integer、boolean、choice 或 choices，不允许任意 JSON Schema 执行器扩展。
 text 声明 max_length；integer 声明 minimum/maximum；choice(s) 列出准确 option ID 和标签。
 choices 的选项数与最大选择数有界；不允许浏览器从远端脚本加载额外选项。
 
 字段名不能重复；未知字段、重复选项或超限答案在宿主和业务端都拒绝。
-表单 Schema 是便利呈现，实际业务请求 Schema 仍是消费入口的权威。
-两者必须在 surface_update 时证明兼容；无法表达的请求使用受信专用入口并明确不支持普通表单。
+Surface 只保存准确 request_ref 与块标签、布局，不复制字段 Schema；Renderer 从请求 owner 取得该修订的 schema 后生成表单，业务消费也使用这一份定义。
+宿主原本就须读取当前请求及预览要求，复用这次读取可省去两份 Schema 的同步和兼容判断。代价是请求 owner 不可达时不能启用依赖表单；缓存快照不替代请求读取。
+surface_update 校验组件格式与请求引用覆盖。请求修订已改变时，request_read 返回 revision_conflict，宿主禁用旧表单并刷新；无法用受支持字段表达的请求走受信专用入口。
 表单 answer_ref 指向准确回答正文，不在重试时重新编码默认值。
 
 ### 2.2 请求和预览绑定
@@ -409,7 +410,7 @@ CLI 和 Web 共享服务语义；纯浏览器的未发送内存不计作耐久�
 交互权威库不可写时不返回 queued、withdrawn 或保存成功；浏览器可保留本端待发送提示，但不承诺跨清除数据恢复。
 Orchestrator 不可达时已有 queued／sending 输入保留原目标责任，关闭窗口仍可在交互库保存；
 不能把关窗解释成 Orchestrator 已取消。请求或必需内容不可达时页面展示缺口并禁用依赖输入，
-不会因已有截图、按钮或过期请求缓存而继续确认。
+不接纳新的依赖回答，也不会因已有截图、按钮或过期请求缓存而继续确认；已保存且尚未发送的输入仍可撤回，发送结果不明时继续查原命令。
 连接层失效时退避重连并查原输入与当前快照；业务消费继续由原 owner 和转交 job 推进，不等待全部在线客户端。
 
 快照缓存的键至少区分 owner、准确修订、认证主体和披露上下文，但键完整仍不等于当前资格有效。
@@ -449,6 +450,7 @@ surface_read 的 not_modified 和 Query 重放都须重新证明当前披露；�
 | II-13 网关提交后断开 | 原输入已提交，网关在回执送达前退出 | 客户端以原身份查得固定结果；任务与输入各只有一份，连接 ACK 不算业务成功 |
 | II-14 重连与慢页面 | 集中重连，同时使一个客户端停止读取 | 队列、内存与重连率受限；Change 可合并，取消仍获保留容量，快照能恢复 |
 | II-15 长连接撤权 | 连接已建立后撤销会话或设备代次，再发输入及查询 | 原提交事实保留，新消息拒绝，旧连接不再获得未授权快照 |
+| II-16 请求 Schema 单一权威 | Surface 仅含请求引用；读取后业务 owner 修订字段，再从旧快照读取请求或提交 | 字段由准确请求 schema 产生；旧修订读取或提交拒绝，不以旧快照字段继续消费 |
 
 静态协议检查覆盖字段、绑定和有限状态序列，不能证明浏览器确实取得字节或用户理解内容。
 CLI、生产／本地 Web 和任何后续原生适配器分别完成预览、缓存、恢复及权限实验，不相互外推通过结论。

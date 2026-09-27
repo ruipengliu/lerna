@@ -157,6 +157,8 @@ Brain、Memory、Executor 以及 Agent、UI 和生命周期适配器可以改变
 | Operation | `execution_state=accepted / started / closed` | `effect=not_started / applied / not_applied / unknown`；`may_apply_later=true / false / unknown`；最终用量另由 `usage_final` 表达 |
 | MemoryRecord／MemoryControl | 仍可披露的 MemoryRecord 为 `active / needs_review / disabled`；删除后的 `deleted` 由 MemoryControl／墓碑表达 | 逻辑禁止新使用之后，各持有者的物理清理仍可能 pending、residual 或 unknown |
 | InputSubmission | `state=queued / sending / applied / rejected / withdrawn` | `withdrawal_requested` 与原目标命令消费分别核对；已发送输入不能直接改为成功撤回 |
+| OfflineLease | `state=open / closed / reconciled` | 已知使用及累计用量来自使用账本；open 不表示尚未使用，closed 不表示效果及费用已结清 |
+| Delegation | `phase` 为同一修订事实的只读摘要，不单独驱动状态迁移 | 创建、子映射、控制、效果和费用分别保存；只有持久 Closure 能投影为 closed |
 | Activation | `phase` 表达原切换进度 | 历史启动依据、当前实例就绪、停止新使用、旧版恢复和残留分别保存 |
 
 例如 `Task.status=cancelled`、`open_effects` 非空且 `accounting_open=true` 合法：目标推进已结束，原动作效果及费用仍待处理。`Operation.execution_state=closed` 只禁止再发送目标动作，旧动作在目标系统排队时仍可 `effect=unknown` 且 `may_apply_later=true` 或 `unknown`。两者都不能凭“已关闭”推导外部世界没有变化。

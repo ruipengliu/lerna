@@ -1,6 +1,6 @@
 {
   "name": "declarative-form",
-  "description": "Typed form and action share an exact request reference; no executable UI payload exists.",
+  "description": "Surface 输入块只绑定准确 request_ref；表单字段由业务 owner 的请求 schema 提供，旧请求版本不可替代新版本。",
   "capabilities": [],
   "input_requests": [],
   "approvals": [],
@@ -35,18 +35,7 @@
                     "id": "request_10573b873d2fa5a365d558a45e328e47",
                     "revision": 2
                   },
-                  "label": "Save directory",
-                  "input_schema": {
-                    "fields": [
-                      {
-                        "name": "directory",
-                        "label": "Directory",
-                        "type": "text",
-                        "required": true,
-                        "max_length": 512
-                      }
-                    ]
-                  }
+                  "label": "Save directory"
                 },
                 {
                   "kind": "action",
@@ -110,18 +99,7 @@
                     "id": "request_10573b873d2fa5a365d558a45e328e47",
                     "revision": 2
                   },
-                  "label": "Save directory",
-                  "input_schema": {
-                    "fields": [
-                      {
-                        "name": "directory",
-                        "label": "Directory",
-                        "type": "text",
-                        "required": true,
-                        "max_length": 512
-                      }
-                    ]
-                  }
+                  "label": "Save directory"
                 },
                 {
                   "kind": "action",
@@ -198,18 +176,7 @@
                       "id": "request_10573b873d2fa5a365d558a45e328e47",
                       "revision": 2
                     },
-                    "label": "Save directory",
-                    "input_schema": {
-                      "fields": [
-                        {
-                          "name": "directory",
-                          "label": "Directory",
-                          "type": "text",
-                          "required": true,
-                          "max_length": 512
-                        }
-                      ]
-                    }
+                    "label": "Save directory"
                   },
                   {
                     "kind": "action",
@@ -323,6 +290,108 @@
             "gaps": []
           },
           "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:01Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "method": "interaction.request_read",
+          "target_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+          "payload": {
+            "request_ref": {
+              "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+              "id": "request_10573b873d2fa5a365d558a45e328e47",
+              "revision": 3
+            }
+          }
+        },
+        "response": {
+          "output": {
+            "request": {
+              "request_id": "request_10573b873d2fa5a365d558a45e328e47",
+              "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+              "revision": 3,
+              "kind": "clarification",
+              "task_ref": {
+                "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+                "task_id": "task_478f3a4c51824ad23cb50c1c60670c0f"
+              },
+              "schema": {
+                "fields": [
+                  {
+                    "name": "directory",
+                    "label": "Directory",
+                    "type": "text",
+                    "required": true,
+                    "max_length": 256
+                  }
+                ]
+              },
+              "question_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "directory_question_e7609d8d9e0ed2db104cb5a181d2612c",
+                "version": 1,
+                "hash": "sha256:05066ea0342859d25abd6d01da301060987f18e8810a6c1e2b4b75ba0e2c9e4e",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "deadline": "2026-09-26T00:10:00Z",
+              "required_content_refs": [
+                {
+                  "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                  "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                  "content_id": "directory_preview_693e6ee93550a09b8851b607e0cd5886",
+                  "version": 1,
+                  "hash": "sha256:215af688042ea122c577db8b06d2921a57cbe31aa2f1496ee7fd81676ff428b7",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                }
+              ],
+              "allowed_actions": [
+                "submit"
+              ],
+              "state": "open"
+            },
+            "gaps": []
+          },
+          "observed_at": "2026-09-26T00:00:01Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "method": "interaction.request_read",
+          "target_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+          "payload": {
+            "request_ref": {
+              "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+              "id": "request_10573b873d2fa5a365d558a45e328e47",
+              "revision": 2
+            }
+          }
+        },
+        "response": {
+          "error": {
+            "code": "revision_conflict",
+            "message": "The request now has revision 3; refresh the surface and read that exact request.",
+            "retry": "after_change",
+            "current_revision": 3
+          }
         }
       }
     }

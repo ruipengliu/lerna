@@ -4545,14 +4545,10 @@
     "edits": [
       {
         "op": "remove",
-        "path": "/events/0/exchange/request/payload/snapshot/blocks/0/input_schema/fields/0/max_length"
-      },
-      {
-        "op": "remove",
-        "path": "/events/0/exchange/response/output/snapshot/blocks/0/input_schema/fields/0/max_length"
+        "path": "/events/2/exchange/response/output/request/schema/fields/0/max_length"
       }
     ],
-    "expect": "surface_fields"
+    "expect": "request_fields"
   },
   {
     "name": "empty skipped page still consumes original positions",
@@ -5394,6 +5390,436 @@
         "value": [
           "object_ffffffffffffffffffffffffffffffff"
         ]
+      }
+    ]
+  },
+  {
+    "name": "surface input cannot carry a second field schema",
+    "fixture": "47-declarative-form.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/snapshot/blocks/0/input_schema",
+        "value": {
+          "fields": [
+            {
+              "name": "directory",
+              "label": "Directory",
+              "type": "text",
+              "required": true,
+              "max_length": 10
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "old request cannot return a schema after current version advanced",
+    "fixture": "47-declarative-form.json",
+    "expect": "request_current_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response",
+        "value": {
+          "output": {
+            "request": {
+              "request_id": "request_10573b873d2fa5a365d558a45e328e47",
+              "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+              "revision": 2,
+              "kind": "clarification",
+              "task_ref": {
+                "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+                "task_id": "task_478f3a4c51824ad23cb50c1c60670c0f"
+              },
+              "schema": {
+                "fields": [
+                  {
+                    "name": "directory",
+                    "label": "Directory",
+                    "type": "text",
+                    "required": true,
+                    "max_length": 512
+                  }
+                ]
+              },
+              "question_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "directory_question_e7609d8d9e0ed2db104cb5a181d2612c",
+                "version": 1,
+                "hash": "sha256:05066ea0342859d25abd6d01da301060987f18e8810a6c1e2b4b75ba0e2c9e4e",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "deadline": "2026-09-26T00:10:00Z",
+              "required_content_refs": [
+                {
+                  "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                  "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                  "content_id": "directory_preview_693e6ee93550a09b8851b607e0cd5886",
+                  "version": 1,
+                  "hash": "sha256:215af688042ea122c577db8b06d2921a57cbe31aa2f1496ee7fd81676ff428b7",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                }
+              ],
+              "allowed_actions": [
+                "submit"
+              ],
+              "state": "open"
+            },
+            "gaps": []
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      }
+    ]
+  },
+  {
+    "name": "request read cannot substitute another revision schema",
+    "fixture": "47-declarative-form.json",
+    "expect": "request_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/request/revision",
+        "value": 3
+      }
+    ]
+  },
+  {
+    "name": "same request revision cannot change field constraints",
+    "fixture": "47-declarative-form.json",
+    "expect": "request_revision_immutable",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/request_ref/revision",
+        "value": 2
+      },
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/request/revision",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "offline lease rejects removed state allocated",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/state",
+        "value": "allocated"
+      }
+    ]
+  },
+  {
+    "name": "offline lease rejects removed state in_use",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/state",
+        "value": "in_use"
+      }
+    ]
+  },
+  {
+    "name": "closed lease cannot reopen on later usage reporting",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "lease_reopen",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/final",
+        "value": false
+      },
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/state",
+        "value": "open"
+      }
+    ]
+  },
+  {
+    "name": "closed unknown lease cannot claim final release",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "lease_final",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/state",
+        "value": "reconciled"
+      }
+    ]
+  },
+  {
+    "name": "known unfinished use cannot disappear from final settlement",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "lease_final",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/uses",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "lease cannot admit a new use after known closure",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "lease_use_after_close",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/uses/0/use_id",
+        "value": "use_efc196f46f1429b0a4387f41426caf78"
+      },
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/uses/0/started_at",
+        "value": "2026-09-26T00:10:02Z"
+      }
+    ]
+  },
+  {
+    "name": "lease final total cannot omit a recorded use cost",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "lease_use_total",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/cumulative_cost/amount",
+        "value": "0.2"
+      },
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/settled_cost/amount",
+        "value": "0.2"
+      }
+    ]
+  },
+  {
+    "name": "lease recorded use cannot grow after closed",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "lease_use_closed",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/uses/0/closed",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "unknown creation must project reconciliation",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/phase",
+        "value": "preparing"
+      }
+    ]
+  },
+  {
+    "name": "ordinary nonfinal running usage must remain active",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/phase",
+        "value": "reconciling"
+      }
+    ]
+  },
+  {
+    "name": "cancelled delegation with unknown fees cannot be active",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/phase",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "Closure takes priority over a later query gap",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/phase",
+        "value": "reconciling"
+      }
+    ]
+  },
+  {
+    "name": "same delegation revision cannot change phase",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/phase",
+        "value": "reconciling"
+      },
+      {
+        "op": "set",
+        "path": "/events/3/delegation_facts/query_gap",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "known control gap cannot project active",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/phase",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "known effect gap cannot project active",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/effects_pending",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "closed delegation cannot retain pending control",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_closure",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/control_pending",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "closed delegation requires final settlement fact",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_closure",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/delegation_facts/settlement_final",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "final settlement without Closure cannot project closed",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/delegation_facts/closure_saved",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "current phase cannot replace the original creation receipt",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "recovery_original",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/recovery/response/output",
+        "value": {
+          "delegation_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+          "parent_task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "agent_binding": {
+            "agent_ref": {
+              "id": "agent_d4f0bc5a29de06b510f9aa428f1eedba",
+              "version": "1.0.0",
+              "digest": "sha256:d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824"
+            },
+            "adapter_ref": {
+              "id": "agent_adapter_bd0ef18530e218ba018e4a7f34b94050",
+              "version": "1.0.0",
+              "digest": "sha256:bd0ef18530e218ba018e4a7f34b94050e27bd84b8fd8cea3e272f863930625f9"
+            },
+            "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1"
+          },
+          "goal_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "child_goal_0a47e149e77d62c190b94b8dfab51dda",
+            "version": 1,
+            "hash": "sha256:5527029d176a5fd3907532d20eff56db020aec193aa7d3665b39be8d024fddf9",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "input_refs": [
+            {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+              "version": 1,
+              "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+              "media_type": "text/plain",
+              "byte_length": 16
+            }
+          ],
+          "constraints": [
+            "只读研究"
+          ],
+          "deadline": "2026-09-26T00:10:00Z",
+          "allocation_id": "allocation_165f0f8e557c430929784035df7eeacf",
+          "permission_refs": [
+            {
+              "kind": "grant",
+              "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+              "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+              "revision": 1
+            }
+          ],
+          "ancestor_ids": [
+            "task_0ebb429fa86d481c2630fac53db1c91c"
+          ],
+          "revision": 6,
+          "phase": "closed",
+          "remote_revision": 1,
+          "control_pending": false,
+          "usage_revision": 1,
+          "effects_pending": false,
+          "remote_binding": {
+            "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1",
+            "remote_task_id": "remote_task_74abd92cd79df34d45f9b8d4710ecd8c",
+            "creation_key": "delegation_5214bf637717ddb480ecc554b2ec4c3f"
+          },
+          "settlement_ref": {
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "id": "settlement_49cedf5bde86598f4926fbc53ca5383b",
+            "revision": 1
+          }
+        }
       }
     ]
   }

@@ -1,0 +1,34 @@
+[
+  {
+    "source": "docs/architecture/collaboration/README.md",
+    "number": 2,
+    "sha256": "3ec029e7c31f0a95617a451a05fd47233607f8a3d9094a4239991eeed4191458",
+    "render": ".scratch/design-ablation/mermaid/collaboration-README-2.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/contracts/grpc.md",
+    "number": 2,
+    "sha256": "0210ca8f3880b32e076e3bfc6d9b0fe5101185e877a9c54e34b20a3f82680d13",
+    "render": ".scratch/design-ablation/mermaid/contracts-grpc-2.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/deployment-production.md",
+    "number": 2,
+    "sha256": "44d3b783232b89e099d9eb80bfd19a4aeb48cc312446e2838e6e4f98de195753",
+    "render": ".scratch/design-ablation/mermaid/deployment-production-2.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/security/README.md",
+    "number": 3,
+    "sha256": "183440667b58c3bc072974f2cac2697a84edfec0f5ed56c2697c625ab323e09d",
+    "render": ".scratch/design-ablation/mermaid/security-README-3.png",
+    "passed": true,
+    "log": ""
+  }
+]

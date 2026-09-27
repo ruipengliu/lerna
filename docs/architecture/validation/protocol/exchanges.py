@@ -190,8 +190,10 @@ def validate_exchange(exchange, capabilities):
             for key in p:same(output[key],p[key],'delegation_binding')
         if output['phase']=='active' and not ('child_task_id' in output or 'remote_binding' in output):
             errors.append('delegation_mapping: active requires one fixed child mapping')
-        if output['phase']=='closed' and (output['effects_pending'] or 'settlement_ref' not in output):
-            errors.append('delegation_closure: effects and final settlement must be closed')
+        if output['phase']=='active' and (output['control_pending'] or output['effects_pending']):
+            errors.append('delegation_projection: pending control or effects require reconciliation')
+        if output['phase']=='closed' and (output['control_pending'] or output['effects_pending'] or 'settlement_ref' not in output):
+            errors.append('delegation_closure: control, effects and final settlement must be closed')
     if name=='evaluation.approval_check':
         same(p['approval_id'],target)
         for key in p:same(output[key],p[key],'approval_binding')

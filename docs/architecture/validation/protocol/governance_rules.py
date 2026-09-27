@@ -81,7 +81,7 @@ def check_exchange(exchange, capabilities):
     if name=='grant.lease.allocate':
         same(out['owner_id'],target)
         for k in ('lease_id','grant_refs','endpoint_id','instance_id','scope','allocated_units','allocated_cost','expires_at'):same(out[k],p[k])
-        if out['state']!='allocated' or out['revision']!=1:fail('lease_state','new lease must be allocated')
+        if out['state']!='open' or out['revision']!=1:fail('lease_state','new lease must be open')
         if _time(out['expires_at'])<=_time(out['issued_at']) or _time(out['expires_at'])>_time(out['scope']['expires_at']) or (_time(out['expires_at'])-_time(out['issued_at'])).total_seconds()*1000>out['scope']['max_offline_window_ms']:fail('lease_window','lease must fit permission')
     if name=='grant.lease.settle':
         same(out['lease_id'],target);same(out['instance_id'],p['instance_id']);revision(out['revision'])
@@ -173,7 +173,7 @@ def check_exchange(exchange, capabilities):
 
 def check_trace_rules(trace):
     """Check authority records supplied in this bounded sequence, never infer missing facts."""
-    errors=[]; grants={}; confirms={}; leases={}; lease_uses={}; lease_rev={}; pairs={}; pair_secrets={}; pair_scopes={}; claims={}; endpoints={}; candidates={}; partitions={}; plans={}; reservations={}; attempts={}; policies={}; reports={}; exposures=[]; approvals={}; uses={}; use_times={}; activations={}; intentions={}; immutable={}
+    errors=[]; grants={}; confirms={}; leases={}; lease_uses={}; lease_rev={}; lease_closed_at={}; pairs={}; pair_secrets={}; pair_scopes={}; claims={}; endpoints={}; candidates={}; partitions={}; plans={}; reservations={}; attempts={}; policies={}; reports={}; exposures=[]; approvals={}; uses={}; use_times={}; activations={}; intentions={}; immutable={}
     for i,event in enumerate(trace['events']):
         if 'exchange' not in event:continue
         x=event['exchange'];req=x['request'];res=x['response'];name=req['method'];p=req['payload'];out=res.get('output');target=req['target_id']; rejected=res.get('stage')=='rejected' or ('error' in res and 'stage' not in res)
@@ -217,13 +217,24 @@ def check_trace_rules(trace):
             if old:
                 if old['instance_id']!=p['instance_id']:fail('lease_instance','settlement changes consuming instance')
                 if old['state']=='reconciled':fail('lease_reopen','final settlement is closed to new commands')
+                if old['state']=='closed' and out['state']=='open':fail('lease_reopen','usage reporting cannot reopen a closed lease')
                 if not _amount_le(old['settled_units'],p['cumulative_units']) or not _amount_le(old['settled_cost'],p['cumulative_cost']):fail('lease_monotonic','cumulative settlement cannot decrease')
+            if out['state']=='open' and _time(event['at'])>=_time(out['expires_at']):fail('lease_expired_open','expired lease cannot remain open to new use')
             if p['usage_revision']<=lease_rev.get(target,0):fail('lease_usage_revision','new settlement must advance usage revision')
             lease_rev[target]=p['usage_revision']
             for u in p['uses']:
                 key=(target,u['use_id']); prior=lease_uses.get(key)
                 if prior and (prior['intent_hash']!=u['intent_hash'] or not _amount_le(prior['used_cost'],u['used_cost'])):fail('lease_use_identity','use identity or cumulative cost changed')
+                if prior and prior['closed'] and u!=prior:fail('lease_use_closed','closed original use cannot reopen or grow')
+                if not _time(out['issued_at'])<=_time(u['started_at'])<_time(out['expires_at']):fail('lease_use_window','use must have started within the original lease window')
+                if target in lease_closed_at and _time(u['started_at'])>=lease_closed_at[target]:fail('lease_use_after_close','observed closure forbids a new use; late reporting of an earlier use remains possible')
                 lease_uses[key]=deepcopy(u)
+            known_uses=[u for (lease_id,_),u in lease_uses.items() if lease_id==target]
+            if p['final'] and any(not u['closed'] for u in known_uses):fail('lease_final','final settlement cannot omit a known unfinished use')
+            for field,total in [('used_units','cumulative_units'),('used_cost','cumulative_cost')]:
+                if any(u[field]['unit']!=p[total]['unit'] for u in known_uses) or sum((Decimal(u[field]['amount']) for u in known_uses),Decimal(0))!=Decimal(p[total]['amount']):fail('lease_use_total','cumulative totals must equal the merged original-use ledger')
+            if out['state'] in ('closed','reconciled'):
+                lease_closed_at.setdefault(target,_time(event['at']))
             leases[target]=deepcopy(out)
         if name=='endpoint.pair.begin':
             pairs[p['pairing_id']]=deepcopy(out['session']);pair_secrets[p['pairing_id']]={'device_code':out['device_code'],'client_nonce':p['client_nonce'],'user_code':out['user_code']}

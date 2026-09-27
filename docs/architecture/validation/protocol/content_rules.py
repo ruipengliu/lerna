@@ -41,25 +41,30 @@ def snapshot_errors(snapshot):
             errors.append('surface_request: block request is not in snapshot request set')
         if block['kind'] == 'table' and any(len(row) != len(block['columns']) for row in block['rows']):
             errors.append('surface_table: row width differs from declared columns')
-        if block['kind'] == 'input':
-            fields = block['input_schema']['fields']
-            if len({f['name'] for f in fields}) != len(fields):
-                errors.append('surface_fields: repeated input field name')
-            for field in fields:
-                kind = field['type']
-                extra = set(field) - {'name', 'label', 'type', 'required'}
-                allowed = {'text': {'max_length'}, 'integer': {'minimum', 'maximum'},
-                           'boolean': set(), 'choice': {'options'}, 'choices': {'options', 'max_choices'}}[kind]
-                if extra != allowed:
-                    errors.append('surface_fields: field constraints differ from type')
-                if kind == 'integer' and field.get('minimum', 0) > field.get('maximum', 0):
-                    errors.append('surface_fields: reversed integer range')
-                if 'options' in field:
-                    options = field['options']
-                    if len({o['id'] for o in options}) != len(options):
-                        errors.append('surface_fields: duplicate choice identifiers')
-                    if field.get('max_choices', 1) > len(options):
-                        errors.append('surface_fields: selection maximum exceeds options')
+    return errors
+
+
+def request_schema_errors(schema):
+    """Validate the sole field authority returned by the business request owner."""
+    errors = []
+    fields = schema['fields']
+    if len({f['name'] for f in fields}) != len(fields):
+        errors.append('request_fields: repeated input field name')
+    for field in fields:
+        kind = field['type']
+        extra = set(field) - {'name', 'label', 'type', 'required'}
+        allowed = {'text': {'max_length'}, 'integer': {'minimum', 'maximum'},
+                   'boolean': set(), 'choice': {'options'}, 'choices': {'options', 'max_choices'}}[kind]
+        if extra != allowed:
+            errors.append('request_fields: field constraints differ from type')
+        if kind == 'integer' and field.get('minimum', 0) > field.get('maximum', 0):
+            errors.append('request_fields: reversed integer range')
+        if 'options' in field:
+            options = field['options']
+            if len({o['id'] for o in options}) != len(options):
+                errors.append('request_fields: duplicate choice identifiers')
+            if field.get('max_choices', 1) > len(options):
+                errors.append('request_fields: selection maximum exceeds options')
     return errors
 
 
@@ -193,7 +198,7 @@ def check_exchange(exchange, capabilities):
             errors.append('presentation_revision: intent revision did not advance')
     if name == 'interaction.request_read':
         request = o['request']; expected = p['request_ref']
-        errors += snapshot_errors({'blocks':[{'kind':'input','block_id':'request','request_ref':expected,'input_schema':request['schema']}], 'request_refs':[expected]})
+        errors += request_schema_errors(request['schema'])
         same(request['owner_id'], expected['owner_id'], 'request_owner')
         same(request['owner_id'], exchange['auth']['logical_service_id'], 'request_owner')
         same(request['request_id'], expected['id'], 'request_identity')
@@ -221,7 +226,7 @@ def check_exchange(exchange, capabilities):
 def check_trace_rules(trace):
     """Facts absent from the trace remain unproven; no fabricated auth or content lookup."""
     errors=[]; copies={}; contents={}; views={}; pages={}; acked={}; surfaces={}; presentations={}; apps={}; queries={}; uploads={}; extractions={}; commands=set(); memory_versions={}; saved_candidates={}
-    control_history={}; copy_history={}; holder_gates={}; holder_copies={}
+    control_history={}; copy_history={}; holder_gates={}; holder_copies={}; requests={}
     for index,event in enumerate(trace['events']):
         if 'exchange' not in event:
             continue
@@ -238,6 +243,17 @@ def check_trace_rules(trace):
         if 'command_id' in r:
             commands.add(key)
         def err(code,detail):errors.append(f'event {index}: {code}: {detail}')
+        if name == 'interaction.request_read':
+            request=o['request']; ref=p['request_ref']
+            key=(a['tenant_id'],ref['owner_id'],ref['id']); known=requests.get(key)
+            observed=x['response']['observed_at']
+            if known and ref['revision'] < known['request']['revision'] and instant(observed)>=instant(known['observed_at']):
+                err('request_current_revision','old request revision cannot return a usable schema after a newer owner revision is known')
+            definition=lambda value:{k:v for k,v in value.items() if k not in ('state','consumed_by')}
+            if known and request['revision'] == known['request']['revision'] and definition(request)!=definition(known['request']):
+                err('request_revision_immutable','same request revision cannot change its field schema or request definition')
+            if not known or request['revision'] > known['request']['revision']:
+                requests[key]={'request':deepcopy(request),'observed_at':observed}
         control_get = name == 'content.get' and p.get('mode', 'bytes') == 'control'
         if name == 'content.get' and control_get != (o.get('mode') == 'control'):
             continue  # The exchange-level rule reports the mode mismatch.

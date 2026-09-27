@@ -1,0 +1,94 @@
+{
+  "checks": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "domain",
+        "chunk_id": "d33318",
+        "wall_time_seconds": 9.444645833,
+        "exit_code": 0,
+        "original_token_count": 81,
+        "output": "PASS: 52 valid traces; 366 invalid mutations rejected for their stated rule; 104 frozen methods exercised\nRegistry: 104 methods, 0 reserved; protocol is an unpublished draft profile\nScope: structure and recorded semantic relations only; no authentication, service, concurrency, durability or interoperability runtime tested\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "transport",
+        "chunk_id": "64553b",
+        "wall_time_seconds": 1.4863559579999999,
+        "exit_code": 0,
+        "original_token_count": 110,
+        "output": "PASS: 2 ES256 public vectors; 3 canonical vectors; 23 negative checks\nScope: constructed bytes, signatures and pinned bindings; no live identity, key custody, revocation or interoperability tested\nPASS: 100 transport/closure vectors; 228 directed invalid mutations\nPASS: 8 request-sequence traces; 12 directed invalid mutations\nScope: bounded recorded structures and bindings; no network, storage, authentication or byte transfer executed\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "completion",
+        "chunk_id": "566cc0",
+        "wall_time_seconds": 0.020689583,
+        "exit_code": 0,
+        "original_token_count": 33,
+        "output": "PASS: 5 valid examples; 9 invalid examples rejected\nScope: schema and document fixture semantics only; runtime behavior not tested\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "assets",
+        "chunk_id": "95bf94",
+        "wall_time_seconds": 0.000007333,
+        "exit_code": 0,
+        "original_token_count": 78,
+        "output": "{\n  \"system-panorama.drawio\": {\n    \"pages\": 1,\n    \"cells\": 209,\n    \"edges\": 76,\n    \"source_links\": 9,\n    \"schema_fields\": 0\n  },\n  \"uml-models.drawio\": {\n    \"pages\": 20,\n    \"cells\": 1707,\n    \"edges\": 174,\n    \"source_links\": 222,\n    \"schema_fields\": 254\n  },\n  \"mermaid_rendered\": 4,\n  \"errors\": []\n}\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "whitespace",
+        "chunk_id": "c79dba",
+        "wall_time_seconds": 0.0000105,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    }
+  ],
+  "documents": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "documents",
+        "chunk_id": "7570b2",
+        "wall_time_seconds": 0.000005917,
+        "exit_code": 0,
+        "original_token_count": 37,
+        "output": "PASS: 38 Markdown files; 960 local links; 82 Mermaid blocks; 0 errors\nScope: local links and Markdown structure; no semantic or rendering guarantee\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "whitespace",
+        "chunk_id": "803360",
+        "wall_time_seconds": 0.000006375,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "final_scope",
+        "chunk_id": "c36e7a",
+        "wall_time_seconds": 0.00000875,
+        "exit_code": 0,
+        "original_token_count": 393,
+        "output": "docs/architecture/collaboration/README.md\ndocs/architecture/collaboration/implementation.md\ndocs/architecture/contracts/README.md\ndocs/architecture/contracts/examples/protocol/32-lease-settlement.json\ndocs/architecture/contracts/examples/protocol/47-declarative-form.json\ndocs/architecture/contracts/examples/protocol/README.md\ndocs/architecture/contracts/examples/protocol/invalid-mutations.json\ndocs/architecture/contracts/examples/transport/README.md\ndocs/architecture/contracts/examples/transport/invalid-mutations.json\ndocs/architecture/contracts/examples/transport/vectors.json\ndocs/architecture/contracts/grpc.md\ndocs/architecture/contracts/protocol.md\ndocs/architecture/contracts/schemas/protocol.schema.json\ndocs/architecture/contracts/schemas/transport.schema.json\ndocs/architecture/contracts/transport.md\ndocs/architecture/decisions.md\ndocs/architecture/deployment-production.md\ndocs/architecture/diagrams/architecture-atlas.html\ndocs/architecture/diagrams/uml-models.drawio\ndocs/architecture/interaction/README.md\ndocs/architecture/interaction/implementation.md\ndocs/architecture/review.md\ndocs/architecture/security/README.md\ndocs/architecture/security/implementation.md\ndocs/architecture/technical-overview.md\ndocs/architecture/uml-models.md\ndocs/architecture/validation/fault-experiments.md\ndocs/architecture/validation/protocol/content_rules.py\ndocs/architecture/validation/protocol/exchanges.py\ndocs/architecture/validation/protocol/governance_rules.py\ndocs/architecture/validation/protocol/traces.py\ndocs/architecture/validation/validate_transport.py\n"
+      }
+    }
+  ]
+}

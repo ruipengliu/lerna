@@ -56,7 +56,7 @@ flowchart TB
 | --- | --- | --- |
 | agent_descriptors | agent_ref、kind、目标／结果 Schema、控制能力、权限和费用上限 | 固定版本及摘要；不采纳运行时模型改写 |
 | agent_bindings | descriptor、adapter_ref、endpoint_id、配置摘要 | 原委派固定组合；更新创建新版本 |
-| delegations | delegation_id、父任务、原请求、phase、revision、allocation_id | 原 delegation 唯一；目标和配置不可改 |
+| delegations | delegation_id、父任务、原请求、revision、allocation_id | 原 delegation 唯一；目标和配置不可改；phase 不独立保存 |
 | internal_child_links | delegation_id、child_task_id、父任务 | 两方向唯一；同事务创建子与映射 |
 | external_task_links | delegation_id、endpoint_id、creation_key、remote_task_id | 原创建键唯一；映射一旦建立不可替换 |
 | incoming_delegations | 认证发送 Orchestrator、parent_delegation_id、原创建命令、child_task_id | 接收端原委派唯一；原命令重投返回同子任务 |
@@ -66,7 +66,30 @@ flowchart TB
 | delegation_jobs | 创建、读取、控制、输入或结算的原责任 | 每原对象每 kind 一个活动槽，复用宿主调度 |
 | delegation_closures | 映射、目标封闭依据、效果核清及封账引用 | closed 后长期保留最小身份与关闭依据 |
 
-表中 phase 的含义复用主线，不新增“任务成功”列。父子任务的 Task.status 各自有权威，协作只记录完成判断需要的可查投影。
+父子任务的 Task.status 各自有权威，协作保存已归并事实、原来源修订及必要责任；phase 在查询时计算，不另存阶段转移记录。Closure 仍是必须持久保存的关闭决定，不能用即时计算替代它。
+
+<a id="phase-projection"></a>
+### 委派阶段的只读投影
+
+查询以 Delegation.revision 对应的已归并本地记录为输入，按下表从上到下命中第一项。外部事实以原适配器已接受的来源修订为准；同库子 Task 的变化也经既有归并事务登记来源修订后进入投影。公开 Delegation 字段不是完整事实输入，不能只凭 result_ref 或 settlement_ref 重建关闭判断。
+
+| 顺序 | 判定及权威来源 | phase |
+| --- | --- | --- |
+| 1 | 已保存满足[关闭条件](#delegation-closure)的 DelegationClosure，包括正文清理后保留的最小关闭依据 | closed |
+| 2 | 下表任一具体恢复或收尾缺口成立 | reconciling |
+| 3 | 前两项不成立，且 internal_child_links 或 external_task_links 已固定唯一子任务 | active |
+| 4 | 前三项均不成立，原创建仍在发送前准备 | preparing |
+
+| 事实来源 | 构成第二项的条件 |
+| --- | --- |
+| 原创建记录及唯一映射 | 原创建已发送或可能发送，但接纳结果未核实；暂时 not_found 不消除该缺口 |
+| delegation_progress | 原任务读取失败、同修订事实冲突或 effects_pending 仍未核清 |
+| delegation_controls、delegated_inputs | control_pending，或已转交输入的远端消费未确认 |
+| 父子终态、原取消决定、目标封闭及 allocation 封账依据 | 父或子已终结、已保存取消该委派的决定、已证明目标工作封闭、原创建已证实不会接纳、预算接收门禁已关闭新增消费，其中任一事实已成立，但 Closure 尚未提交；此时尚须核清其余关闭条件或完成 Closure 提交 |
+
+这些条件直接读取既有事实，不新增统一“核对中”开关。普通运行中的非最终用量、例行查询 job、已确认暂停或尚未回答的输入请求不满足第二项。已进入上述收尾范围但仍未完成 Closure 提交的委派不能落回 active；未固定映射且已发出的创建也不能落回 preparing。
+
+影响投影的来源事实变化与 Delegation.revision 递增、后续 jobs 在同一归并事务提交；查询只读取，不发起远端核对，也不因读取而增加修订。当前墙钟、job 领取或退避不直接参与投影；期限到达须先由原责任提交到期、取消或相应缺口事实，再按新修订展示。同一修订得到同一投影；原命令回执仍保留接纳时的固定快照，重放不按最新事实重算回执。当前记录或必要依据不可读时，返回查询不可用或明确缺口，不能把存储缺失解释为首次准备。
 
 <a id="data-flow"></a>
 ### 2.1 委派对象关系与流转
@@ -116,7 +139,7 @@ create_internal_child(request):
   if original delegation exists: compare intent and return same mapping
   reserve the fixed allocation from parent budget
   create child Task at the same Orchestrator, limited configuration and first job
-  create Delegation(active) with exactly one child_task_id
+  create Delegation with exactly one child_task_id and its original facts
   save original applied Receipt
   commit
 ```
@@ -168,7 +191,7 @@ sequenceDiagram
 
 ## 4. 外部创建与答复丢失
 
-外部委派先在父 Orchestrator 保存固定目标、准确输入、Agent 绑定、额度预留、creation_key 和发送 job，phase 为 preparing。applied 表示本地责任已建立；此时不伪造 remote_task_id。
+外部委派先在父 Orchestrator 保存固定目标、准确输入、Agent 绑定、额度预留、creation_key 和发送 job，查询投影为 preparing。applied 表示本地责任已建立；此时不伪造 remote_task_id。发送前持久登记原创建的发送责任；进程在发送边界失联时，沿该原记录保留可能已发送的事实。
 
 外部适配器按安装时声明的原生合同创建子任务。创建请求必须包含稳定父委派键，原输入、预算和接收方不可变；远端必须支持原键查询或能够证明同键创建幂等。缺少两者的提供方只可作为明确有界的咨询能力接入。
 
@@ -188,7 +211,7 @@ sequenceDiagram
     A->>S: 保存唯一映射和后续查询责任
 ```
 
-创建结果未知时 phase 为 reconciling，预留继续占用。查询表明原任务仍运行后可以回到 active；查询证明未接纳且未来不会接纳，才可关闭创建责任并按原额度封账。暂时 not_found 不提供这种证明。
+创建结果未知时，原事实使查询投影为 reconciling，预留继续占用。取得唯一原任务映射并核清其他缺口后，查询投影为 active；查询证明未接纳且未来不会接纳，才可关闭创建责任并按原额度封账。暂时 not_found 不提供这种证明；投影变化本身不建立或取消任何工作责任。
 
 ### 4.1 另一 Harness Orchestrator 的接收
 
@@ -206,12 +229,14 @@ sequenceDiagram
 
 | 已保存事实与新输入 | 处理规则 |
 | --- | --- |
-| 同 remote_revision、同摘要 | 幂等返回，费用和父唤醒不重复 |
+| 同 remote_revision、同摘要 | 不重复归并子进展或记费；没有新恢复事实时幂等返回，不重复唤醒父任务 |
 | 同 remote_revision、不同摘要 | 标明协议冲突，暂停依赖该结果的目标推进 |
 | 较旧修订 | 不覆盖当前状态，保留诊断关联 |
 | 新修订映射到另一 remote_task_id | 拒绝覆盖，查询固定原任务 |
 | 新结果只给自然语言“完成” | 作为候选内容保存，完成保证仍按证据分级 |
 | 远端终态仍有未知效果 | 结果可展示，effects_pending 保持 true |
+
+原任务曾查询失败时，一次成功核对即使返回相同 remote_revision，也能核清原查询缺口。该核对结果沿原责任保存，并与 Delegation.revision 递增及必要唤醒共同提交；它不再应用一次子进展或累计费用。这样恢复后的 phase 可以变化，而同一修订的查询结果保持不变。
 
 结果内容读取遵守当前披露权限，不能因为远端曾允许父查看就永久缓存全部正文。只有结果引用已获准、来源可查且符合固定结果 Schema，才进入父任务的快照。
 
@@ -250,13 +275,14 @@ sequenceDiagram
 
 取消后到达的新输入请求不唤醒目标行动。允许收取原消费回执、停止事实和最小账务材料，所需收尾用途仍由当前管理依据授权。
 
-## 8. 分配、费用和 closed 的条件
+<a id="delegation-closure"></a>
+## 8. 分配、费用和关闭依据
 
 父侧 allocation 是该委派唯一费用来源。内部子支出从父 reserved 划拨；父报表聚合显示子费用但不再扣一次。跨 Orchestrator 分配固定 receiver 和期限；答复丢失不再创建另一份相同额度。
 
 每份进展携带累计用量及 usage_revision。适配器保存每个计价单位的最近值，较旧修订不回退账务，同修订异金额产生冲突。任务结果只有“费用估计”时，不能把它当最终账单释放预留。
 
-委派进入 closed 必须同时具备：
+提交 DelegationClosure 必须同时具备：
 
 1. 已经证明没有新的子目标行动可以开始，或原创建从未被接纳且不可能迟到接纳。
 2. 所有内部子任务终结；外部原任务的对应封闭保证已确认。
@@ -270,20 +296,20 @@ close_delegation(delegation):
   require immutable original child mapping or proof of never-accepted creation
   require target work is closed and all delegated effects are resolved
   require final receiver spending closure and accepted original settlement
-  save closed phase, revision and closure references
+  save immutable DelegationClosure and its evidence references; increment revision
   schedule only retained cleanup, disclosure and audit responsibilities
   commit
 ```
 
-closed 不要求无限保留全部内容，但长期最小关闭索引必须阻止同 delegation 和 creation_key 被重新创建。费用核对尚未封账时保持 reconciling，不通过删除原映射把责任“清零”。
+Closure 提交后查询投影为 closed，历史核对记录不覆盖关闭依据。完整内容不必无限保留，但长期最小关闭索引必须阻止同 delegation 和 creation_key 被重新创建；详细查询依据已经清理时返回 gone，而不是重建 preparing。目标已终结但费用尚未封账时，原账务责任使投影保持 reconciling，不通过删除原映射把责任“清零”。
 
 ## 9. 恢复、限额与生命周期
 
-恢复扫描按用户分页读取 preparing、active 和 reconciling 的委派。每个对象检查是否存在创建、查询、控制和结算所需工作槽；补建时沿原责任键和原远端身份，不调用 Brain 猜测恢复动作。
+恢复扫描按用户分页读取尚无 Closure 的委派。每个对象根据原事实检查是否存在创建、查询、控制和结算所需工作槽；补建时沿原责任键和原远端身份，不按展示 phase 分派业务，也不调用 Brain 猜测恢复动作。
 
 | 当前缺口 | 自动动作 | 耗尽后保持的状态 |
 | --- | --- | --- |
-| 原创建未获答复 | 查原键或按已验证幂等合同重投 | reconciling，父预留不释放 |
+| 原创建未获答复 | 查原键或按已验证幂等合同重投 | 原创建接纳未知，投影为 reconciling；父预留不释放 |
 | 原任务暂时不可达 | 有限退避查询，保留控制 pending | 明确 agent_unavailable 及下次恢复条件 |
 | 远端副作用未知 | 原凭据查询或获准独立核验 | effects_pending，阻止父成功 |
 | 最终费用未取得 | 查原账单／allocation 封账 | 保守预留和账务责任 |
@@ -300,7 +326,7 @@ closed 不要求无限保留全部内容，但长期最小关闭索引必须阻�
 
 完整任务内容、原生响应和日志分别按用途授权保留。委派未结清时必须保留足够的原映射、权限范围、费用和目标凭据；删除正文不删除这些必要责任依据。
 
-已 closed 的完整记录可以压缩，但 `(tenant, sender, delegation_id, creation_key, remote_task_id)` 的最小禁止复用关联长期保留。完整查询依据过期返回 gone；旧委派键不能被当作首次请求再次交给远端。
+已保存 Closure 的完整记录可以压缩，但 `(tenant, sender, delegation_id, creation_key, remote_task_id)` 的最小禁止复用关联及关闭依据长期保留。完整查询依据过期返回 gone；旧委派键不能被当作首次请求再次交给远端。
 
 恢复旧备份时先核对当前控制和关闭依据；缺少备份后的原创建记录时禁止重新执行副作用委派。用户可以查看损失范围、提供真实目标凭据或终止自动核对，不能用“当作没做过”按钮释放原预算并重建。
 
@@ -335,7 +361,7 @@ closed 不要求无限保留全部内容，但长期最小关闭索引必须阻�
 
 ## 12. 具体故障实验
 
-以下实验要求从真实委派入口开始，使用独立的父库、远端库及目标真值。仅构造 Delegation.phase 不能替代这些实验。
+以下实验要求从真实委派入口开始，使用独立的父库、远端库及目标真值。phase 必须从实验产生的已归并事实读取，直接填写展示值不能替代这些实验。
 
 | 编号 | 初始状态与故障点 | 恢复及可观察断言 |
 | --- | --- | --- |
@@ -354,5 +380,7 @@ closed 不要求无限保留全部内容，但长期最小关闭索引必须阻�
 | CL-13 | 子请求超出父范围的私密材料 | 交给受信权限入口；普通输入不增权，无授权外读取 |
 | CL-14 | closed完整记录已清理后重放旧委派键 | 最小索引返回gone／冲突，远端任务数不增加 |
 | CL-15 | 适配器升级后无法解码原任务回执 | 不切换原身份，不重建任务；保留缺口和最小查询责任 |
+| CL-16 | 外部创建发送前、答复未知、核实映射、普通非最终用量和例行查询、控制未确认依次发生 | 依次投影 preparing、reconciling、active、active、reconciling；同修订重复读取一致，原接纳回执不重算 |
+| CL-17 | 父取消后子迟到成功、费用未知；核清全部责任并保存 Closure 后清理详细事实 | 费用及封闭缺口使投影 reconciling，父保持 cancelled；Closure 使查询投影 closed，历史缺口不覆盖它；完整查询依据清理后 gone，旧身份不重新准备 |
 
 [跨 Orchestrator 额度序列](../contracts/examples/protocol/23-cross-orchestrator-budget.json)检验当前分配、接收门禁与封账关联。既有[委派协议序列](../contracts/examples/protocol/12-delegation-mapping.json)检验映射、控制和输入的字段关联。上述事务、独立远端及真实效果实验仍须由参考实现和至少一个独立适配器提供运行证据。

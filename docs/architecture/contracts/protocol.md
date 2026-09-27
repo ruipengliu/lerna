@@ -108,10 +108,10 @@ Activation.revision 是可见持久投影的独立修订；phase、ready_instanc
 | 任务与预算 | 固定 Orchestrator、原提交及操作身份；修订递增；余额与分配不重复消费，封账后才归还；列表切点有界 | [Orchestrator](../orchestrator/implementation.md) |
 | Brain与计划 | 原决策固定快照及至多一次物理生成；上下文正文及有界计划都有准确结构，确定性物化仍逐步准入 | [大脑](../brain/implementation.md) |
 | 能力与资源 | 精确版本和实例绑定；resource.observe仍产生原Operation；资源代次、GUI观察和TaskGate同时有效 | [执行](../execution/implementation.md) |
-| 许可与配对 | Subject来自受信身份，确认一次消费；单次使用与离线分配不扩大来源用途；配对回复丢失不重复发凭据 | [安全](../security/implementation.md) |
+| 许可与配对 | Subject来自受信身份，确认一次消费；离线租约为 open／closed／reconciled，已知使用从账本读取；单次使用与离线分配不扩大来源用途；配对回复丢失不重复发凭据 | [安全](../security/implementation.md) |
 | 记忆与内容 | 实际处理输入完整继承来源；上传字节与引用一致；稳定分页、派生候选、视图确认及清理分别保存 | [记忆](../memory/implementation.md) |
-| Surface与输入 | 声明式块及固定处理器；呈现意图、实际预览、排队转交与一次业务消费分别判断 | [交互](../interaction/implementation.md) |
-| Agent协作 | preparing可无映射；active只有一份子映射；closed要求效果与费用结清；不换远端任务掩盖失联 | [协作](../collaboration/implementation.md) |
+| Surface与输入 | input 块只引用准确 request_ref，表单结构由业务 owner 的 InputRequestView.schema 提供；呈现意图、实际预览、排队转交与一次业务消费分别判断 | [交互](../interaction/implementation.md) |
+| Agent协作 | phase 是依据同一修订事实生成的只读摘要；closed 必有持久关闭依据，active 必有唯一子映射；创建未知及未结责任分别保存，不换远端任务掩盖失联 | [协作](../collaboration/implementation.md) |
 | 安装与批准 | 首装／兼容证据与正式改善用途区分；历史激活不变，当前实例开放重新核验；本地事务与远端回执均可表达 | [扩展](../extensions/implementation.md)、[评测](../evaluation/implementation.md) |
 
 Invoke.arguments和行动模板最终参数仍按准确Capability版本、摘要及Binding对应的能力Schema检查。开放的是工具声明的参数结构，不是任意领域消息；能力Schema必须是有界、闭合且引用已固定的声明。夹具仅允许本地引用，运行安装同样须固定所有依赖，不能为校验访问任意网络。

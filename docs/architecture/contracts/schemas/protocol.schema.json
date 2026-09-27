@@ -1919,7 +1919,9 @@
             "active",
             "reconciling",
             "closed"
-          ]
+          ],
+          "description": "只读派生投影：先取持久关闭记录为 closed，否则具体恢复或收尾缺口为 reconciling，否则已固定子映射为 active，其余 preparing。普通运行期未最终结算或常规轮询不单独构成缺口；来源为原创建、进展、控制、输入、额度及关闭记录，不独立写入状态。",
+          "readOnly": true
         },
         "remote_revision": {
           "type": "integer",
@@ -4666,6 +4668,48 @@
                   "phase"
                 ],
                 "additionalProperties": false
+              },
+              "delegation_facts": {
+                "description": "Test-only local authority facts used to recompute the Delegation phase projection; never domain wire fields. Ordinary polling or non-final ongoing usage is not a recovery gap.",
+                "type": "object",
+                "properties": {
+                  "creation": {
+                    "enum": [
+                      "not_sent",
+                      "unknown",
+                      "mapped",
+                      "not_admitted"
+                    ]
+                  },
+                  "query_gap": {
+                    "type": "boolean"
+                  },
+                  "input_pending": {
+                    "type": "boolean"
+                  },
+                  "ending": {
+                    "type": "boolean"
+                  },
+                  "settlement_final": {
+                    "type": "boolean"
+                  },
+                  "closure_pending": {
+                    "type": "boolean"
+                  },
+                  "closure_saved": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "creation",
+                  "query_gap",
+                  "input_pending",
+                  "ending",
+                  "settlement_final",
+                  "closure_pending",
+                  "closure_saved"
+                ],
+                "additionalProperties": false
               }
             },
             "required": [
@@ -6318,11 +6362,11 @@
         },
         "state": {
           "enum": [
-            "allocated",
-            "in_use",
+            "open",
             "closed",
             "reconciled"
-          ]
+          ],
+          "description": "租约生命周期；首次使用不改变 open，使用情况由已知使用账本给出。closed 禁止新使用但保留未结费用，reconciled 表示取得最终封账依据。"
         },
         "settled_units": {
           "$ref": "#/$defs/Amount"
@@ -10903,23 +10947,20 @@
               "maxLength": 64
             },
             "request_ref": {
-              "$ref": "#/$defs/ObjectRef"
+              "$ref": "#/$defs/ObjectRef",
+              "description": "准确定位业务 owner 的 InputRequestView；输入字段与约束只从该修订的 schema 取得。"
             },
             "label": {
               "type": "string",
               "minLength": 1,
               "maxLength": 256
-            },
-            "input_schema": {
-              "$ref": "#/$defs/SurfaceInputSchema"
             }
           },
           "required": [
             "kind",
             "block_id",
             "request_ref",
-            "label",
-            "input_schema"
+            "label"
           ],
           "additionalProperties": false
         },
