@@ -1,6 +1,6 @@
 # 模块与数据 UML 图册导读
 
-[方案入口](README.md) · [技术总览](technical-overview.md) · [原生可编辑图册](diagrams/uml-models.drawio) · [系统全景图](diagrams/system-panorama.drawio)
+[方案入口](README.md) · [技术总览](technical-overview.md) · [HTML 图集](diagrams/architecture-atlas.html) · [原生可编辑图册](diagrams/uml-models.drawio) · [系统全景图](diagrams/system-panorama.drawio)
 
 图册把当前九模块设计投影为静态逻辑组件图和领域类图：先识别谁提供能力、依赖谁，再看哪些对象保存事实、由谁裁决、如何关联。它补充系统全景图中的内部结构与数据关系；处理时序、完整状态规则和实现约束继续以所属模块正文为准。
 

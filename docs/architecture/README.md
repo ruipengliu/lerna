@@ -4,7 +4,7 @@
 
 本目录是独立的设计基线。需求、术语、规则和验收方法均在目录内定义。技术方案、已冻结范围的机器契约及示例共同约束参考实现；未纳入线格式的能力明确保留为设计接口，不能宣称已经互操作。内核、SDK、默认组件和运行验收仍须实现，具体状态见[交付审查](review.md)。
 
-[技术总览](technical-overview.md) 解释整体设计的抽象原则、建模方法与关键取舍；[可编辑系统全景图](diagrams/system-panorama.drawio) 展示九模块的内部组件、主要事实对象及跨模块交接。全景图采用模块容器与内部框图，详细字段和行为约束按链接进入专题查阅。 [模块与数据 UML 导读](uml-models.md)与[20 页可编辑图册](diagrams/uml-models.drawio)进一步区分接口依赖、领域属性和关联多重性。
+[技术总览](technical-overview.md) 解释整体设计的抽象原则、建模方法与关键取舍；[架构全景与模块 UML HTML 图集](diagrams/architecture-atlas.html)把九模块逻辑全景和 20 页组件、领域对象视图放在一处阅读。[可编辑系统全景图](diagrams/system-panorama.drawio)展示内部组件、主要事实对象及跨模块交接；[模块与数据 UML 导读](uml-models.md)与[20 页可编辑图册](diagrams/uml-models.drawio)进一步定义接口依赖、领域属性和关联多重性。详细字段和行为约束按链接进入专题查阅。
 
 ## 1. 要解决的核心问题
 
@@ -92,6 +92,7 @@ architecture/
 ├── uml-models.md             # UML 页索引、关系条件与来源
 ├── diagrams/
 │   ├── design-concepts.png   # 原则、建模与模块关系概念图
+│   ├── architecture-atlas.html # 全景与模块 UML 单页图集
 │   ├── system-panorama.drawio # 可编辑模块与组件全景图
 │   └── uml-models.drawio      # 全局与九模块的 UML 图册
 ├── goals.md                  # 建设目标与功能范围
