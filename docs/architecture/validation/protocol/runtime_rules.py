@@ -51,10 +51,10 @@ def check_exchange(exchange, capabilities):
 
     if delegated_submit:
         ctx = p['delegation_context']
-        require(exchange['auth'].get('sender_service_id') == ctx['sender_home_id'] == ctx['allocation_ref']['owner_id'],
-                'delegation_sender', 'sender Home must come from authenticated peer identity')
-        require(owner == target == p['home_id'] == output['home_id'],
-                'receiver_admission', 'delegated task must be created at the fixed receiver Home')
+        require(exchange['auth'].get('sender_service_id') == ctx['sender_orchestrator_id'] == ctx['allocation_ref']['owner_id'],
+                'delegation_sender', 'sender Orchestrator must come from authenticated peer identity')
+        require(owner == target == p['orchestrator_id'] == output['orchestrator_id'],
+                'receiver_admission', 'delegated task must be created at the fixed receiver Orchestrator')
         require(len(ctx['ancestor_ids']) == len(set(ctx['ancestor_ids'])) and output['task_id'] not in ctx['ancestor_ids'],
                 'delegation_ancestry', 'delegated ancestry must be bounded and acyclic')
     if name == 'budget.read':
@@ -64,9 +64,9 @@ def check_exchange(exchange, capabilities):
         authority = record['owner_id'] if output['role'] == 'owner' else record['receiver_id']
         require(authority == owner, 'budget_owner', 'query role must be served by its fixed authority')
     if name == 'budget.close':
-        require(exchange['auth'].get('sender_service_id') == p['sender_home_id'] == p['allocation_ref']['owner_id'],
+        require(exchange['auth'].get('sender_service_id') == p['sender_orchestrator_id'] == p['allocation_ref']['owner_id'],
                 'delegation_sender', 'only authenticated original allocation owner can request closure')
-        require(output['allocation_id'] == target == p['allocation_ref']['id'] and output['receiver_id'] == owner and output['parent_owner_id'] == p['sender_home_id'] and output['parent_delegation_id'] == p['parent_delegation_id'],
+        require(output['allocation_id'] == target == p['allocation_ref']['id'] and output['receiver_id'] == owner and output['parent_owner_id'] == p['sender_orchestrator_id'] and output['parent_delegation_id'] == p['parent_delegation_id'],
                 'receiver_binding', 'close must preserve original allocation, sender, receiver and delegation')
         require(output['state'] in ('closing', 'closed'), 'receiver_closure', 'close cannot leave new admission open')
     if name == 'budget.close' or name == 'budget.read' and output['role'] == 'receiver':
@@ -102,8 +102,8 @@ def check_exchange(exchange, capabilities):
             require(set(limits) == set(spent) and all(spent[u] <= limits[u] for u in spent),
                     'allocation_amount', 'settled amounts must have exact units and fit transferred bounds')
     if name == 'task.adjust_budget':
-        require(output['task_id'] == target and output['home_id'] == owner,
-                'budget_owner', 'adjustment must target the original Home task')
+        require(output['task_id'] == target and output['orchestrator_id'] == owner,
+                'budget_owner', 'adjustment must target the original Orchestrator task')
         require(output['status'] == 'active' and output['revision'] == req['expected_revision'] + 1,
                 'budget_revision', 'only active task advances compared revision once')
         unique_units(p['limits'], 'limit')
@@ -116,11 +116,11 @@ def check_exchange(exchange, capabilities):
             require(Decimal(b['spent']['amount']) + Decimal(b['reserved']['amount']) <= Decimal(b['limit']['amount']),
                     'budget_obligations', 'new limit is below spent plus reserved')
     if name == 'task.list':
-        require(output['home_id'] == target == owner, 'task_list_home', 'a page belongs to one authoritative Home')
+        require(output['orchestrator_id'] == target == owner, 'task_list_orchestrator', 'a page belongs to one authoritative Orchestrator')
         require(len(output['items']) <= p['limit'], 'page_bound', 'page exceeds requested count')
         keys = [(x['created_at'], x['task']['task_id']) for x in output['items']]
         require(keys == sorted(set(keys)), 'task_list_order', 'page must contain unique ascending stable keys')
-        require(all(x['task']['home_id'] == target for x in output['items']), 'task_list_home', 'foreign Home task in page')
+        require(all(x['task']['orchestrator_id'] == target for x in output['items']), 'task_list_orchestrator', 'foreign Orchestrator task in page')
         require(all(instant(x['created_at']) <= instant(output['upper_bound']) for x in output['items']),
                 'task_list_cut', 'newer task crossed fixed listing upper bound')
         if 'statuses' in p:
@@ -201,7 +201,7 @@ def check_exchange(exchange, capabilities):
         require(target == p['resource_id'] and op['operation_id'] == inv['operation_id'], 'observation_binding', 'observation operation identity changed')
         require(inv['arguments'].get('resource_id') == target, 'observation_binding', 'gui.observe must target the same resource')
         gate = inv['control_snapshot']['gate']
-        require(all(inv[k] == gate[k] for k in ('home_id', 'task_id', 'goal_revision')), 'observation_binding', 'embedded Invoke differs from Home gate')
+        require(all(inv[k] == gate[k] for k in ('orchestrator_id', 'task_id', 'goal_revision')), 'observation_binding', 'embedded Invoke differs from Orchestrator gate')
         require(bool(obs) == (op['effect'] == 'applied'), 'observation_effect', 'image only accompanies a successful declared read')
         if obs:
             require(obs['resource_id'] == target and instant(obs['expires_at']) > instant(obs['captured_at']),
@@ -237,9 +237,9 @@ def check_trace_rules(trace):
                 errors.append(f'event {index}: {code}: {detail}')
         tenant = x['auth']['tenant_id']; owner = x['auth']['logical_service_id']
         if name == 'execution.control':
-            gate=out['gate'];gates[(tenant,gate['home_id'],gate['task_id'],owner)]=deepcopy(gate)
+            gate=out['gate'];gates[(tenant,gate['orchestrator_id'],gate['task_id'],owner)]=deepcopy(gate)
         if name == 'execution.cancel':
-            cancelled.add((tenant,p['home_id'],p['task_id'],p['operation_id']))
+            cancelled.add((tenant,p['orchestrator_id'],p['task_id'],p['operation_id']))
         if name == 'budget.read' and out['role'] == 'owner':
             a=out['allocation'];key=(tenant,a['owner_id'],a['allocation_id']);old=allocations.get(key)
             if old:
@@ -260,9 +260,9 @@ def check_trace_rules(trace):
                 require(not(old['state'] in ('closing','closed') and r['state']=='open') and not(old['state']=='closed' and r['state']!='closed'), 'receiver_reopen', 'receiver closure cannot reopen admission')
             receivers[key]=deepcopy(r)
         if name == 'task.submit' and 'delegation_context' in p:
-            ctx=p['delegation_context'];aref=ctx['allocation_ref'];akey=(tenant,ctx['sender_home_id'],aref['id']);rkey=(*akey,owner)
+            ctx=p['delegation_context'];aref=ctx['allocation_ref'];akey=(tenant,ctx['sender_orchestrator_id'],aref['id']);rkey=(*akey,owner)
             a=allocations.get(akey);original=original_allocations.get(akey);receiver=receivers.get(rkey)
-            dkey=(tenant,ctx['sender_home_id'],ctx['parent_delegation_id'])
+            dkey=(tenant,ctx['sender_orchestrator_id'],ctx['parent_delegation_id'])
             previous=incoming_delegations.get(dkey)
             if previous:
                 require(previous==(out['task_id'],p), 'receiver_reopen', 'original delegation may only return the same child for the same intent')
@@ -272,9 +272,9 @@ def check_trace_rules(trace):
                         'receiver_admission', 'current exact allocation must still fund this receiver within its bounds')
                 require(receiver is None, 'receiver_reopen', 'one allocation may admit only one original child; closed gates cannot reopen')
                 incoming_delegations[dkey]=(out['task_id'],deepcopy(p))
-                receivers[rkey]={'allocation_id':aref['id'],'parent_owner_id':ctx['sender_home_id'],'receiver_id':owner,'parent_delegation_id':ctx['parent_delegation_id'],'revision':1,'state':'open','task_id':out['task_id'],'final_usage':[]}
+                receivers[rkey]={'allocation_id':aref['id'],'parent_owner_id':ctx['sender_orchestrator_id'],'receiver_id':owner,'parent_delegation_id':ctx['parent_delegation_id'],'revision':1,'state':'open','task_id':out['task_id'],'final_usage':[]}
         if name in ('task.submit', 'task.read', 'task.revise', 'task.adjust_budget') and 'task_id' in out:
-            key = (tenant, out['home_id'], out['task_id']); old = tasks.get(key)
+            key = (tenant, out['orchestrator_id'], out['task_id']); old = tasks.get(key)
             if name == 'task.adjust_budget' and old:
                 require(req['expected_revision'] == old['revision'], 'budget_revision', 'adjustment ignored current revision')
                 require(all(out[k] == old[k] for k in ('deadline', 'control', 'control_revision', 'goal_revision', 'requirements', 'submit_command_id')),
@@ -347,10 +347,10 @@ def check_trace_rules(trace):
                 resources[key] = deepcopy(out)
         if name == 'resource.observe' and 'observation' in out:
             inv=p['invoke'];gate=inv['control_snapshot']['gate'];obs=out['observation']
-            gate=gates.get((tenant,inv['home_id'],inv['task_id'],inv['control_snapshot']['executor_id']),gate)
+            gate=gates.get((tenant,inv['orchestrator_id'],inv['task_id'],inv['control_snapshot']['executor_id']),gate)
             require(gate['status']=='active' and gate['control']=='running' and instant(event['at'])<instant(inv['deadline']) and instant(event['at'])<instant(inv['control_snapshot']['start_before']),
                     'observation_start', 'successful new observation requires current eligible bounded startup')
-            require((tenant,inv['home_id'],inv['task_id'],inv['operation_id']) not in cancelled and inv['goal_revision']==gate['goal_revision'],
+            require((tenant,inv['orchestrator_id'],inv['task_id'],inv['operation_id']) not in cancelled and inv['goal_revision']==gate['goal_revision'],
                     'observation_start', 'observation convenience method cannot bypass cancellation or revised goal')
             known=resources.get((tenant,owner,p['resource_id']))
             if known:

@@ -51,7 +51,7 @@
             "authorization_refs": [
               {
                 "kind": "grant",
-                "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                 "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
                 "revision": 1
               }
@@ -95,7 +95,7 @@
             "authorization_refs": [
               {
                 "kind": "grant",
-                "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                 "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
                 "revision": 1
               }
@@ -175,11 +175,11 @@
             "invoke": {
               "operation_id": "runtime_observation_operation_bf6e6909c7a8043ee562de1ee2796e98",
               "task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
-              "home_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+              "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
               "goal_revision": 1,
               "control_snapshot": {
                 "gate": {
-                  "home_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                  "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                   "task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
                   "control_revision": 1,
                   "goal_revision": 1,
@@ -189,7 +189,7 @@
                 "executor_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
                 "issued_at": "2026-09-26T00:00:00Z",
                 "start_before": "2026-09-26T00:00:30Z",
-                "home_proof": "fixture: authenticated Home snapshot"
+                "orchestrator_proof": "fixture: authenticated Orchestrator snapshot"
               },
               "capability_ref": {
                 "id": "runtime_observe_e5ae7c3c930902e70cde861f4fb5c01e",
@@ -207,13 +207,13 @@
               "authorization_refs": [
                 {
                   "kind": "grant",
-                  "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                  "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                   "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
                   "revision": 1
                 }
               ],
               "reservation_ref": {
-                "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                 "id": "runtime_observation_reservation_421ae03b577ca0ad37ec5a12925d88c5",
                 "revision": 1
               },
@@ -301,7 +301,7 @@
             "authorization_refs": [
               {
                 "kind": "grant",
-                "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                 "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
                 "revision": 1
               }
@@ -351,7 +351,7 @@
             "authorization_refs": [
               {
                 "kind": "grant",
-                "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                 "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
                 "revision": 1
               }

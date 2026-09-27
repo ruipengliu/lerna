@@ -24,7 +24,7 @@
         "task.read"
       ],
       "auth_profile": "session-cookie-or-opaque-bearer-1",
-      "proof_profile": "home-jws-es256-1",
+      "proof_profile": "orchestrator-jws-es256-1",
       "limits": {
         "max_json_bytes": 262144,
         "max_frame_bytes": 1048576,
@@ -56,15 +56,15 @@
     "definition": "Delivery",
     "value": {
       "delivery_id": "delivery_command_76c163c8869321c0f69c7d683b1a0044",
-      "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+      "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
       "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
       "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
-      "request_digest": "sha256:12ae13b88697371b0637d5d9e3ea3784e95cf4b2812db8d22ea3aaa921859a03",
+      "request_digest": "sha256:5e57778ccfcd1153f7338eaa7ecd774360e7d50ee2ffcc45d1601c02cf3f54d0",
       "kind": "command",
       "request": {
         "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
         "method": "task.submit",
-        "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "expires_at": "2026-09-26T00:10:00Z",
         "payload": {
           "goal_ref": {
@@ -76,7 +76,7 @@
             "media_type": "text/plain",
             "byte_length": 16
           },
-          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "constraints": [
             "保存指定报告并读回核验"
           ],
@@ -102,7 +102,7 @@
     "definition": "Reply",
     "value": {
       "delivery_id": "delivery_command_76c163c8869321c0f69c7d683b1a0044",
-      "request_digest": "sha256:12ae13b88697371b0637d5d9e3ea3784e95cf4b2812db8d22ea3aaa921859a03",
+      "request_digest": "sha256:5e57778ccfcd1153f7338eaa7ecd774360e7d50ee2ffcc45d1601c02cf3f54d0",
       "kind": "command",
       "result": {
         "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
@@ -111,7 +111,7 @@
         "output": {
           "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
           "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "goal_ref": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -180,15 +180,15 @@
     "context": {
       "delivery": {
         "delivery_id": "delivery_command_76c163c8869321c0f69c7d683b1a0044",
-        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
         "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
-        "request_digest": "sha256:12ae13b88697371b0637d5d9e3ea3784e95cf4b2812db8d22ea3aaa921859a03",
+        "request_digest": "sha256:5e57778ccfcd1153f7338eaa7ecd774360e7d50ee2ffcc45d1601c02cf3f54d0",
         "kind": "command",
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "method": "task.submit",
-          "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "expires_at": "2026-09-26T00:10:00Z",
           "payload": {
             "goal_ref": {
@@ -200,7 +200,7 @@
               "media_type": "text/plain",
               "byte_length": 16
             },
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "constraints": [
               "保存指定报告并读回核验"
             ],
@@ -228,12 +228,12 @@
     "value": {
       "delivery_id": "delivery_command_76c163c8869321c0f69c7d683b1a0044",
       "stored": true,
-      "result_digest": "sha256:76a71988b411e0cc38d0951213131712bfa073400eaaa2251bb1a8198519c5b6"
+      "result_digest": "sha256:bb259308550fe53449bdd9310e3ea60cb4d9843e959104b58556b7d91db7f252"
     },
     "context": {
       "reply": {
         "delivery_id": "delivery_command_76c163c8869321c0f69c7d683b1a0044",
-        "request_digest": "sha256:12ae13b88697371b0637d5d9e3ea3784e95cf4b2812db8d22ea3aaa921859a03",
+        "request_digest": "sha256:5e57778ccfcd1153f7338eaa7ecd774360e7d50ee2ffcc45d1601c02cf3f54d0",
         "kind": "command",
         "result": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
@@ -242,7 +242,7 @@
           "output": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
             "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
             "goal_ref": {
               "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -315,7 +315,7 @@
     "definition": "Delivery",
     "value": {
       "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
-      "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+      "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
       "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
       "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
       "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
@@ -339,7 +339,7 @@
         "output": {
           "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
           "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "goal_ref": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -409,7 +409,7 @@
     "context": {
       "delivery": {
         "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
-        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
         "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
         "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
@@ -429,7 +429,7 @@
     "value": {
       "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
       "stored": true,
-      "result_digest": "sha256:564fef25dbd243157b377c3be95fcce2f12ada0b9937d9f1f118984c717a2550"
+      "result_digest": "sha256:5a17babeb04ead7cbbb7f2a94ea993f40f09b56056c8b1cc5b3f7fdcdba89966"
     },
     "context": {
       "reply": {
@@ -440,7 +440,7 @@
           "output": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
             "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
             "goal_ref": {
               "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -514,7 +514,7 @@
     "definition": "Delivery",
     "value": {
       "delivery_id": "delivery_receipt_lookup_02a5d5b5f8c5e7616fd8e07e1895db78",
-      "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+      "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
       "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
       "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
       "request_digest": "sha256:523657aba851b1d9b9610f3d3dbbad080d7322a8313bcd24efba383806d1dba0",
@@ -539,7 +539,7 @@
         "output": {
           "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
           "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "goal_ref": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -608,7 +608,7 @@
     "context": {
       "delivery": {
         "delivery_id": "delivery_receipt_lookup_02a5d5b5f8c5e7616fd8e07e1895db78",
-        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
         "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
         "request_digest": "sha256:523657aba851b1d9b9610f3d3dbbad080d7322a8313bcd24efba383806d1dba0",
@@ -626,7 +626,7 @@
     "value": {
       "delivery_id": "delivery_receipt_lookup_02a5d5b5f8c5e7616fd8e07e1895db78",
       "stored": true,
-      "result_digest": "sha256:76a71988b411e0cc38d0951213131712bfa073400eaaa2251bb1a8198519c5b6"
+      "result_digest": "sha256:bb259308550fe53449bdd9310e3ea60cb4d9843e959104b58556b7d91db7f252"
     },
     "context": {
       "reply": {
@@ -640,7 +640,7 @@
           "output": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
             "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
             "goal_ref": {
               "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -726,7 +726,7 @@
     "context": {
       "delivery": {
         "delivery_id": "delivery_receipt_lookup_02a5d5b5f8c5e7616fd8e07e1895db78",
-        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
         "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
         "request_digest": "sha256:523657aba851b1d9b9610f3d3dbbad080d7322a8313bcd24efba383806d1dba0",
@@ -869,7 +869,7 @@
     "definition": "Reply",
     "value": {
       "delivery_id": "delivery_command_76c163c8869321c0f69c7d683b1a0044",
-      "request_digest": "sha256:12ae13b88697371b0637d5d9e3ea3784e95cf4b2812db8d22ea3aaa921859a03",
+      "request_digest": "sha256:5e57778ccfcd1153f7338eaa7ecd774360e7d50ee2ffcc45d1601c02cf3f54d0",
       "kind": "command",
       "result": {
         "error": {
@@ -882,15 +882,15 @@
     "context": {
       "delivery": {
         "delivery_id": "delivery_command_76c163c8869321c0f69c7d683b1a0044",
-        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
         "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
-        "request_digest": "sha256:12ae13b88697371b0637d5d9e3ea3784e95cf4b2812db8d22ea3aaa921859a03",
+        "request_digest": "sha256:5e57778ccfcd1153f7338eaa7ecd774360e7d50ee2ffcc45d1601c02cf3f54d0",
         "kind": "command",
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "method": "task.submit",
-          "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "expires_at": "2026-09-26T00:10:00Z",
           "payload": {
             "goal_ref": {
@@ -902,7 +902,7 @@
               "media_type": "text/plain",
               "byte_length": 16
             },
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "constraints": [
               "保存指定报告并读回核验"
             ],
@@ -929,7 +929,7 @@
     "definition": "Reply",
     "value": {
       "delivery_id": "delivery_command_76c163c8869321c0f69c7d683b1a0044",
-      "request_digest": "sha256:12ae13b88697371b0637d5d9e3ea3784e95cf4b2812db8d22ea3aaa921859a03",
+      "request_digest": "sha256:5e57778ccfcd1153f7338eaa7ecd774360e7d50ee2ffcc45d1601c02cf3f54d0",
       "kind": "command",
       "result": {
         "error": {
@@ -942,15 +942,15 @@
     "context": {
       "delivery": {
         "delivery_id": "delivery_command_76c163c8869321c0f69c7d683b1a0044",
-        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
         "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
-        "request_digest": "sha256:12ae13b88697371b0637d5d9e3ea3784e95cf4b2812db8d22ea3aaa921859a03",
+        "request_digest": "sha256:5e57778ccfcd1153f7338eaa7ecd774360e7d50ee2ffcc45d1601c02cf3f54d0",
         "kind": "command",
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "method": "task.submit",
-          "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "expires_at": "2026-09-26T00:10:00Z",
           "payload": {
             "goal_ref": {
@@ -962,7 +962,7 @@
               "media_type": "text/plain",
               "byte_length": 16
             },
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "constraints": [
               "保存指定报告并读回核验"
             ],
@@ -1003,7 +1003,7 @@
     "context": {
       "delivery": {
         "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
-        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
         "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
         "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
@@ -1024,7 +1024,7 @@
     "value": {
       "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "content_ref": {
@@ -1052,13 +1052,13 @@
           "byte_length": 16
         },
         "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "holder_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "holder_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "use_stopped": false,
         "retention_until": "2026-09-26T00:10:00Z"
       },
       "authenticated_sender": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "authenticated_instance": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
   },
   {
@@ -1068,7 +1068,7 @@
       "ticket": {
         "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "content_ref": {
@@ -1101,13 +1101,13 @@
           "byte_length": 16
         },
         "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "holder_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "holder_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "use_stopped": false,
         "retention_until": "2026-09-26T00:10:00Z"
       },
       "authenticated_sender": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "authenticated_instance": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
   },
   {
@@ -1118,7 +1118,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -1168,7 +1168,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -1218,7 +1218,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -1268,7 +1268,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -1334,7 +1334,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -1366,7 +1366,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -1469,7 +1469,7 @@
       "request": {
         "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
         "method": "task.submit",
-        "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "expires_at": "2026-09-26T00:10:00Z",
         "payload": {
           "goal_ref": {
@@ -1481,7 +1481,7 @@
             "media_type": "text/plain",
             "byte_length": 16
           },
-          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "constraints": [
             "保存指定报告并读回核验"
           ],
@@ -1539,7 +1539,7 @@
         "output": {
           "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
           "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "goal_ref": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -1635,7 +1635,7 @@
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "method": "task.submit",
-          "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "expires_at": "2026-09-26T00:10:00Z",
           "payload": {
             "goal_ref": {
@@ -1647,7 +1647,7 @@
               "media_type": "text/plain",
               "byte_length": 16
             },
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "constraints": [
               "保存指定报告并读回核验"
             ],
@@ -1714,7 +1714,7 @@
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "method": "task.submit",
-          "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "expires_at": "2026-09-26T00:10:00Z",
           "payload": {
             "goal_ref": {
@@ -1726,7 +1726,7 @@
               "media_type": "text/plain",
               "byte_length": 16
             },
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "constraints": [
               "保存指定报告并读回核验"
             ],
@@ -1797,7 +1797,7 @@
         "output": {
           "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
           "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "goal_ref": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -2001,7 +2001,7 @@
         "output": {
           "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
           "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "goal_ref": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -2340,7 +2340,7 @@
       "envelope": {
         "delivery": {
           "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
-          "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
           "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
           "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
@@ -2395,7 +2395,7 @@
           "output": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
             "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
             "goal_ref": {
               "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -2487,7 +2487,7 @@
       "direction": "client_to_server",
       "delivery": {
         "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
-        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
         "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
         "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
@@ -2547,7 +2547,7 @@
       "direction": "client_to_server",
       "delivery": {
         "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
-        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
         "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
         "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
@@ -2573,7 +2573,7 @@
       "ack": {
         "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
         "stored": true,
-        "result_digest": "sha256:564fef25dbd243157b377c3be95fcce2f12ada0b9937d9f1f118984c717a2550"
+        "result_digest": "sha256:5a17babeb04ead7cbbb7f2a94ea993f40f09b56056c8b1cc5b3f7fdcdba89966"
       }
     },
     "context": {
@@ -2606,7 +2606,7 @@
           "output": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
             "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
             "goal_ref": {
               "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -2684,7 +2684,7 @@
       "ticket": {
         "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "content_ref": {
@@ -2734,13 +2734,13 @@
           "byte_length": 16
         },
         "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "holder_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "holder_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "use_stopped": false,
         "retention_until": "2026-09-26T00:10:00Z"
       },
       "authenticated_sender": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "authenticated_instance": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
   },
   {
@@ -2945,7 +2945,7 @@
       "ack": {
         "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
         "stored": true,
-        "result_digest": "sha256:564fef25dbd243157b377c3be95fcce2f12ada0b9937d9f1f118984c717a2550"
+        "result_digest": "sha256:5a17babeb04ead7cbbb7f2a94ea993f40f09b56056c8b1cc5b3f7fdcdba89966"
       }
     },
     "context": {
@@ -2978,7 +2978,7 @@
           "output": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
             "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
             "goal_ref": {
               "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -3405,7 +3405,7 @@
       "request": {
         "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "content_ref": {
@@ -3455,12 +3455,12 @@
           "byte_length": 16
         },
         "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "holder_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "holder_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "use_stopped": false,
         "retention_until": "2026-09-26T00:10:00Z"
       },
       "reservation_authorized": true,
-      "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "paired_sender_endpoint": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "paired_sender_instance": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
@@ -3477,7 +3477,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -3529,7 +3529,7 @@
         "request": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -3594,7 +3594,7 @@
         "request": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -3651,7 +3651,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -3687,7 +3687,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -3842,7 +3842,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -3880,7 +3880,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -4061,7 +4061,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -4115,7 +4115,7 @@
         "ticket": {
           "ticket_id": "ticket_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "upload_id": "mirror_upload_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "receiver_service_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "receiver_service_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_endpoint_id": "endpoint_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "sender_instance_id": "instance_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "content_ref": {
@@ -4506,7 +4506,7 @@
           "output": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
             "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
             "goal_ref": {
               "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -4603,7 +4603,7 @@
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "method": "task.submit",
-          "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "expires_at": "2026-09-26T00:10:00Z",
           "payload": {
             "goal_ref": {
@@ -4615,7 +4615,7 @@
               "media_type": "text/plain",
               "byte_length": 16
             },
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "constraints": [
               "保存指定报告并读回核验"
             ],
@@ -4678,7 +4678,7 @@
             "output": {
               "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
               "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-              "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+              "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
               "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
               "goal_ref": {
                 "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -4771,7 +4771,7 @@
       "direction": "client_to_server",
       "delivery": {
         "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
-        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
         "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
         "request_digest": "sha256:71a93f4c0b03a6a8bb0d0fdcb073fd90853f35ccaecba8faa0135574b77b47bc",
@@ -4824,7 +4824,7 @@
         "ack": {
           "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
           "stored": true,
-          "result_digest": "sha256:564fef25dbd243157b377c3be95fcce2f12ada0b9937d9f1f118984c717a2550"
+          "result_digest": "sha256:5a17babeb04ead7cbbb7f2a94ea993f40f09b56056c8b1cc5b3f7fdcdba89966"
         }
       }
     },
@@ -4858,7 +4858,7 @@
           "output": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
             "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
             "goal_ref": {
               "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -5061,7 +5061,7 @@
       "request": {
         "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
         "method": "task.submit",
-        "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "expires_at": "2026-09-26T00:10:00Z",
         "payload": {
           "goal_ref": {
@@ -5073,7 +5073,7 @@
             "media_type": "text/plain",
             "byte_length": 16
           },
-          "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "constraints": [
             "保存指定报告并读回核验"
           ],
@@ -5506,7 +5506,7 @@
     "context": {
       "delivery": {
         "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
-        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
         "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
         "request_digest": "sha256:c3a8e250b7a1621d51970658981b924d86055172533abee1d608cfc0a31b093f",
@@ -5688,7 +5688,7 @@
     "context": {
       "delivery": {
         "delivery_id": "delivery_query_c539fa9f7fac275ff9d1db240e0585c4",
-        "sender_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+        "sender_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
         "recipient_endpoint_id": "endpoint_b6bf7bc8d96f3ea9d132c83b3da8e776",
         "recipient_instance_id": "instance_5e8c03a94c7835b87dd82c690f9f85c0",
         "request_digest": "sha256:084b875df11f99b48a7753b2010df26b88500e33a729c9fb8e5631f0b0f0dea0",

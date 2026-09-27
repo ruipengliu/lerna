@@ -1,6 +1,6 @@
 # 交互实现：声明式快照、可靠输入与受信确认
 
-[模块主线](README.md) · [任务运行时](../task-runtime/README.md) · [内容与清理](../memory/implementation.md)
+[模块主线](README.md) · [任务编排器](../orchestrator/README.md) · [内容与清理](../memory/implementation.md)
 
 本实现核心使用 Go，提供 CLI 和 Web 两个适配器，共用 Surface、输入转交和请求消费契约。
 浏览器、CLI 和设备经 `/v1/connect` 的 WSS 双向长连接调用；HTTPS 保留发现、认证和大文件传输，精确线格式见[公共传输契约](../contracts/transport.md)。
@@ -12,7 +12,7 @@ UI 可以显示已保存、处理中、已消费或拒绝，不能自行裁决�
 ## 1. 软件形状、内部分工与正常路径
 
 用户为任务选择保存目录时，交互服务先固定回答、请求修订和唯一目标命令。
-Home 消费请求后保存目标参数及下一项工作；交互服务查询原命令取得结果，再更新可见快照。
+Orchestrator 消费请求后保存目标参数及下一项工作；交互服务查询原命令取得结果，再更新可见快照。
 期间关闭页面只改变本端呈现，不取消任务或撤销已经消费的输入。
 
 交互模块由耐久交互服务与 CLI／Web 宿主适配器组成。SurfaceService 和 InputService 是服务 facade，
@@ -44,7 +44,7 @@ flowchart TB
       I -->|绑定检查| V
     end
     U -->|操作与展示| R
-    R -->|请求读取| H[Home / 业务 owner]
+    R -->|请求读取| H[Orchestrator / 业务 owner]
     R -->|预览字节| C[内容 owner]
     T -->|规范意图 / 确认| H
     K -->|短事务| DB[(权威数据库)]
@@ -67,7 +67,7 @@ flowchart TB
     end
     J -.投影 job.-> P
     J -.转交 job.-> W
-    P -->|当前业务事实| H[Home / 业务 owner]
+    P -->|当前业务事实| H[Orchestrator / 业务 owner]
     W -->|原命令 / 查询| H
 ```
 
@@ -80,13 +80,13 @@ flowchart TB
 | 组件 | 保存或处理的事实 | 不承担的责任 |
 | --- | --- | --- |
 | SurfaceService | 快照版本、固定应用绑定、来源修订 | 不解释模型 HTML 或脚本 |
-| ProjectionWorker | 从当前 Home 记录生成完整快照 | 不维护第二份任务状态机 |
+| ProjectionWorker | 从当前 Orchestrator 记录生成完整快照 | 不维护第二份任务状态机 |
 | InputService | 原输入、固定转交命令、撤回竞争 | 不把排队解释成业务已消费 |
 | DeliveryWorker | 原目标发送、查询及回执保存 | 不因超时更换目标命令 |
 | PresentationStore | endpoint 的 open、intent_revision、seen_revision | 不以显示状态证明用户同意 |
 | Renderer | 受支持组件、内容读取、依赖输入禁用 | 不签发授权或验证外部效果 |
 | TrustedConfirmationHost | 本人认证与准确内容展示 | 不相信插件提供的“已批准”字段 |
-| InteractionStore | 快照、输入、应用事件与回执／jobs 的原子存储 | 不跨数据库消费 Home 请求或 Confirmation |
+| InteractionStore | 快照、输入、应用事件与回执／jobs 的原子存储 | 不跨数据库消费 Orchestrator 请求或 Confirmation |
 
 默认完整快照较易恢复。通知仅提示对象变化，遗漏后通过读取恢复。
 局部补丁会引入版本应用顺序和客户端状态成本；当前不实现补丁协议。
@@ -143,7 +143,7 @@ request_read 是只读 Query，输入 request_ref，输出 request 与 gaps；�
 业务负责端复核认证主体、当前披露与请求版本，返回 question_ref、schema、deadline、required_content_refs、allowed_actions 和 state。
 state 为 open、consumed、expired 或 superseded；consumed 同时返回获准的 consumed_by。
 acceptance 必须有 task_ref、goal_revision、candidate_ref 及匹配的 candidate_hash；application 不绑定任务。
-读取请求不授予其正文或预览永久资格，创建仍由 Home 或已登记应用处理器内部完成。
+读取请求不授予其正文或预览永久资格，创建仍由 Orchestrator 或已登记应用处理器内部完成。
 Surface.request_refs 必须覆盖 input/action 引用；同请求在页面多处展示仍是一次消费。
 请求负责端保存 required_content_refs、deadline、allowed_actions 和当前消费状态。
 acceptance 另绑定准确候选、goal_revision 和受信用户决定，不能借普通 application 事件改义。
@@ -181,7 +181,7 @@ Presentation 与这些业务对象并列存在，设备关窗不会删除请求�
 
 ```mermaid
 flowchart LR
-    H[Home 当前事实或应用记录] -->|ProjectionWorker 生成| S[SurfaceRevision]
+    H[Orchestrator 当前事实或应用记录] -->|ProjectionWorker 生成| S[SurfaceRevision]
     S -->|准确引用| C[内容与预览 ContentRef]
     S -->|请求引用| R[业务 owner 的 InputRequest]
     S -->|本设备独立关联| P[Presentation]
@@ -200,7 +200,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | Surface／Revision | 受信投影器或固定应用创建，更新保存完整快照与来源修订 | Renderer 当前读取；变化通知只提示重读 | 清理旧正文和快照须遵循来源政策，保留未结输入必需的准确关联 |
 | Presentation | 每 endpoint 保存 open、意图修订和已呈现修订 | 本设备打开／关闭；不消费业务请求 | 可清理不再使用的设备偏好，但不能由此撤销业务效果 |
-| InputRequest | Home 或应用 owner 内部创建并保存 schema、期限及消费状态 | 交互宿主从实际 owner 读取准确版本；原业务方法一次消费 | 过期／替代关闭新输入；原消费与必要关闭依据仍归业务 owner |
+| InputRequest | Orchestrator 或应用 owner 内部创建并保存 schema、期限及消费状态 | 交互宿主从实际 owner 读取准确版本；原业务方法一次消费 | 过期／替代关闭新输入；原消费与必要关闭依据仍归业务 owner |
 | InputSubmission／ApplicationEvent | 交互接纳事务固定原输入、负载、目标方法与 command_id | DeliveryWorker 沿原目标发送或查询，业务回执决定 applied／rejected | 正文按政策清理；未结责任保留，已结身份归并最小关闭索引 |
 | Confirmation | 实际 consumer owner 保存规范意图和本人决定 | TrustedConfirmationHost 认证展示；原业务命令在 owner 事务消费 | 确认与业务事实归 owner；交互服务不持有可重复消费的批准副本 |
 
@@ -208,15 +208,15 @@ flowchart LR
 
 surface_create 校验已注册应用版本、调用主体、组件类型、请求绑定及内容引用范围。
 同事务保存 Surface、revision=1、原回执和变化提示。
-有 task_ref 时必须由该 Home 的受信投影器创建或登记关联，普通应用不能冒充任务投影。
+有 task_ref 时必须由该 Orchestrator 的受信投影器创建或登记关联，普通应用不能冒充任务投影。
 
 surface_update 携带 expected_revision 和完整新快照。
 独立应用由原 app_binding 对应处理器更新；任务投影还携带 source_revision。
-任务投影只应用较新 Home 修订，同修订不同内容为冲突并回查 Home。
+任务投影只应用较新 Orchestrator 修订，同修订不同内容为冲突并回查 Orchestrator。
 已应用的同修订同内容可以返回当前快照；另一个命令不能借此修改内容。
 
-投影工作者只从 Home 正式状态生成待处理、等待、结果和控制说明。
-ProjectionWorker 读取到旧源状态时不重写新快照；失败后重新读当前 Home，不拼接半份增量。
+投影工作者只从 Orchestrator 正式状态生成待处理、等待、结果和控制说明。
+ProjectionWorker 读取到旧源状态时不重写新快照；失败后重新读当前 Orchestrator，不拼接半份增量。
 输入消费回执与 Surface 更新可以异步，客户端通过原 input_id 查询确认业务是否生效。
 
 ### 3.3 读取与 not_modified
@@ -250,7 +250,7 @@ surface_list 对一个 owner 冻结有限 ID 集合，逐页返回当前获准�
 2. 根据固定处理器确定唯一目标 logical_service_id、target_id、method 与 command_id。
 3. 校验请求允许的输入类型；授权请求不能转成普通 task.input。
 4. 同事务保存 InputSubmission=queued、固定目标命令、原回执与 delivery job。
-5. 提交后显示“已保存，等待处理”；不承诺 Home 已消费。
+5. 提交后显示“已保存，等待处理”；不承诺 Orchestrator 已消费。
 
 同 input_id 的回答、预览和目标命令都不可改变。
 用户编辑回答需要新 input_id，但原业务请求仍只消费一个有效答案。
@@ -271,18 +271,18 @@ stateDiagram-v2
     withdrawn --> [*]
 ```
 
-图只建模 InputSubmission，任务是否完成是 Home 的独立状态。
+图只建模 InputSubmission，任务是否完成是 Orchestrator 的独立状态。
 sending 后撤回仅设置 withdrawal_requested；没有停止消费的确认，不得改成 withdrawn。
 原业务入口没有请求撤销能力时，UI 提供业务取消或纠正入口，并继续核对原命令。
 
 转交工作者先将 queued 原子改为 sending，再发送固定命令。
 发送前崩溃与发送后答复丢失均沿原 command_id 查询；确证未接纳且仍在期限内才原样重投。
 原命令接纳截止到期不代表已接纳回答失效，仍须查询最终消费结果。
-同宿主共库可把输入登记与 Home 消费合并事务，但仍保存两类事实的含义。
+同宿主共库可把输入登记与 Orchestrator 消费合并事务，但仍保存两类事实的含义。
 
 ### 4.3 业务消费
 
-Home 在事务内比较请求 owner、kind、revision、deadline、当前未消费状态和所有必需预览。
+Orchestrator 在事务内比较请求 owner、kind、revision、deadline、当前未消费状态和所有必需预览。
 消费、回答应用、回执及后续 job 同事务保存；两个设备竞争只有一个成功。
 本轮目标或候选已改变时拒绝旧输入，不自动把旧回答套到新目标。
 acceptance 只替代其允许的质量判断，不能覆盖未知外部效果。
@@ -294,7 +294,7 @@ acceptance 只替代其允许的质量判断，不能覆盖未知外部效果。
 <a id="key-sequence"></a>
 ### 4.4 转交领取与业务消费的两个提交域
 
-下图展开交互服务与远端 Home 的输入交接。两处数据库分别提交，
+下图展开交互服务与远端 Orchestrator 的输入交接。两处数据库分别提交，
 原 target_command_id 是连接责任的依据；通知和页面状态不参与决定成功。
 
 ```mermaid
@@ -303,7 +303,7 @@ sequenceDiagram
     participant I as InputService
     participant S as InteractionStore
     participant W as DeliveryWorker
-    participant H as 实际 Home
+    participant H as 实际 Orchestrator
     U->>I: 原 input_id、请求修订、回答和预览引用
     rect rgb(236, 243, 250)
       I->>S: 事务 A：查原输入，固定目标命令，写 queued、回执和 job
@@ -319,7 +319,7 @@ sequenceDiagram
     else 发送领取先提交
       W->>H: 事务外发送固定 target_command_id
       rect rgb(241, 247, 235)
-        H->>H: Home 事务：复核当前请求及预览，消费、应用回答、保存回执与 jobs
+        H->>H: Orchestrator 事务：复核当前请求及预览，消费、应用回答、保存回执与 jobs
       end
       H--xW: 已消费，但答复丢失
       Note over W,S: 换工作者后仍查询原服务和原命令
@@ -337,7 +337,7 @@ sequenceDiagram
 ```
 
 如果事务 C 提交后丢答复，恢复者读 InputSubmission 的原终态，不能产生新的目标命令。
-如果原 Home 只能证明命令仍处理中，交互服务保持 sending；不能把查询接收成功当作消费成功。
+如果原 Orchestrator 只能证明命令仍处理中，交互服务保持 sending；不能把查询接收成功当作消费成功。
 发送领取之后到达的撤回只保存 withdrawal_requested，必须沿原业务能力核对，不能走图中的 withdrawn 分支。
 原回执正文不可披露时只返回获准状态；无法取得消费决定时继续原责任，不从 UI 推断。
 
@@ -361,7 +361,7 @@ application_event 的 applied 只表示交互服务保存事件和转交责任�
 授权确认显示主体、动作、准确资源、用途、上限、期限和数据位置，使用宿主认证身份。
 确认前先固定实际业务 command_id 与规范意图，再向业务 owner 发起 confirmation.request。
 宿主通过 confirmation.read 展示规范意图，以本人受信会话提交 confirmation.decide，然后投递同一业务命令。
-Grant owner、批准 owner 或 Home 分别在 grant.issue、evaluation.approve、task.accept_result 的事务中一次消费原 Confirmation。
+Grant owner、批准 owner 或 Orchestrator 分别在 grant.issue、evaluation.approve、task.accept_result 的事务中一次消费原 Confirmation。
 确认内容及消费责任归实际业务 owner，UI 不建立跨库确认消费服务，也不从插件自绘文案推断批准。
 Grant、ReleaseApproval 和普通 InputRequest 分别有权威 owner，不相互转型。
 即使用户仍有取消／删除权而无正文读取权，管理入口仍以获准最小元数据提供控制。
@@ -395,7 +395,7 @@ CLI 终端无法证明已经擦除显示历史时，内容清理报告保留该�
 原 owner 和数据库接替遵循[公共可用性策略](../deployment-production.md#availability)，
 连接数、请求率和故障容量分开按[公共容量策略](../deployment-production.md#capacity)估算。
 云端 SurfaceService、InputService、WSS 连接层和 worker 可以独立增加进程，跨进程以 gRPC 交接，按 tenant 和稳定 surface_owner 路由原记录。
-进程替换不移动业务 Home，也不让另一个数据库重复消费 InputRequest。
+进程替换不移动业务 Orchestrator，也不让另一个数据库重复消费 InputRequest。
 CLI 和 Web 共享服务语义；纯浏览器的未发送内存不计作耐久交互接纳。
 
 | 扩展单位 | 必须串行或条件更新的键 | 性能边界 |
@@ -407,8 +407,8 @@ CLI 和 Web 共享服务语义；纯浏览器的未发送内存不计作耐久�
 | ProjectionWorker | 每 Surface 应用水位单调 | 可合并到已观察的较新源修订后重新读取完整状态；不合并或丢弃任何输入／业务回执 |
 
 交互权威库不可写时不返回 queued、withdrawn 或保存成功；浏览器可保留本端待发送提示，但不承诺跨清除数据恢复。
-Home 不可达时已有 queued／sending 输入保留原目标责任，关闭窗口仍可在交互库保存；
-不能把关窗解释成 Home 已取消。请求或必需内容不可达时页面展示缺口并禁用依赖输入，
+Orchestrator 不可达时已有 queued／sending 输入保留原目标责任，关闭窗口仍可在交互库保存；
+不能把关窗解释成 Orchestrator 已取消。请求或必需内容不可达时页面展示缺口并禁用依赖输入，
 不会因已有截图、按钮或过期请求缓存而继续确认。
 连接层失效时退避重连并查原输入与当前快照；业务消费继续由原 owner 和转交 job 推进，不等待全部在线客户端。
 
@@ -436,7 +436,7 @@ surface_read 的 not_modified 和 Query 重放都须重新证明当前披露；�
 | --- | --- | --- |
 | II-01 保存后断连 | queued 提交后丢响应，宿主重投 input_id | 一个输入、一个 target_command_id |
 | II-02 领取竞争 | 撤回与 queued→sending 同时提交 | 先撤回则永不发；先领取则只标撤回待核对 |
-| II-03 消费后断连 | Home 已消费，交互服务未收到答复 | 查原命令恢复 applied，不生成新回答 |
+| II-03 消费后断连 | Orchestrator 已消费，交互服务未收到答复 | 查原命令恢复 applied，不生成新回答 |
 | II-04 双设备答案 | 同 request 不同 answer_ref 并发 | 一胜一拒，拒绝端获准确原因 |
 | II-05 预览关闭 | 截图展示后关闭来源，再点击确认 | 原输入拒绝，新快照显示缺口 |
 | II-06 旧投影 | 新 task_revision 已应用后送达旧投影 | Surface 不回退，同修订不同内容冲突 |

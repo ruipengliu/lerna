@@ -1375,14 +1375,14 @@
     ]
   },
   {
-    "name": "task list cannot include another Home",
+    "name": "task list cannot include another Orchestrator",
     "fixture": "20-budget-allocation.json",
-    "expect": "task_list_home",
+    "expect": "task_list_orchestrator",
     "edits": [
       {
         "op": "set",
-        "path": "/events/4/exchange/response/output/items/0/task/home_id",
-        "value": "wrong_home_a97bb4f247fefa51818e58892928be22"
+        "path": "/events/4/exchange/response/output/items/0/task/orchestrator_id",
+        "value": "wrong_orchestrator_a97bb4f247fefa51818e58892928be22"
       }
     ]
   },
@@ -1489,7 +1489,7 @@
   },
   {
     "name": "budget.read cannot substitute receiver view",
-    "fixture": "23-cross-home-budget.json",
+    "fixture": "23-cross-orchestrator-budget.json",
     "expect": "budget_read_role",
     "edits": [
       {
@@ -1501,19 +1501,19 @@
   },
   {
     "name": "delegated task cannot invent authenticated sender",
-    "fixture": "23-cross-home-budget.json",
+    "fixture": "23-cross-orchestrator-budget.json",
     "expect": "delegation_sender",
     "edits": [
       {
         "op": "set",
-        "path": "/events/2/exchange/request/payload/delegation_context/sender_home_id",
+        "path": "/events/2/exchange/request/payload/delegation_context/sender_orchestrator_id",
         "value": "wrong_sender_9acbe3f0bc5c5ae8446287e187b3c862"
       }
     ]
   },
   {
     "name": "delegated task must match current allocation revision",
-    "fixture": "23-cross-home-budget.json",
+    "fixture": "23-cross-orchestrator-budget.json",
     "expect": "receiver_admission",
     "edits": [
       {
@@ -1525,7 +1525,7 @@
   },
   {
     "name": "budget.close must seal receiver gate",
-    "fixture": "23-cross-home-budget.json",
+    "fixture": "23-cross-orchestrator-budget.json",
     "expect": "receiver_closure",
     "edits": [
       {
@@ -1537,7 +1537,7 @@
   },
   {
     "name": "closed receiver cannot omit final proof association",
-    "fixture": "23-cross-home-budget.json",
+    "fixture": "23-cross-orchestrator-budget.json",
     "expect": "receiver_closure",
     "edits": [
       {
@@ -1549,7 +1549,7 @@
   },
   {
     "name": "closed receiver refuses late new child under same allocation",
-    "fixture": "23-cross-home-budget.json",
+    "fixture": "23-cross-orchestrator-budget.json",
     "expect": "receiver_reopen",
     "edits": [
       {
@@ -1561,13 +1561,13 @@
             "auth": {
               "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
               "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
-              "logical_service_id": "runtime_receiver_home_38551d9a7118629c2cb13f59d43c490a",
-              "sender_service_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2"
+              "logical_service_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+              "sender_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
             },
             "request": {
               "command_id": "runtime_late_child_submit_44123c6ca28a7a947e639a7e3a1746b9",
               "method": "task.submit",
-              "target_id": "runtime_receiver_home_38551d9a7118629c2cb13f59d43c490a",
+              "target_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
               "expires_at": "2026-09-26T00:10:00Z",
               "payload": {
                 "goal_ref": {
@@ -1579,7 +1579,7 @@
                   "media_type": "application/json",
                   "byte_length": 16
                 },
-                "home_id": "runtime_receiver_home_38551d9a7118629c2cb13f59d43c490a",
+                "orchestrator_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
                 "constraints": [],
                 "policy_ref": {
                   "id": "policy_823412d1eacb67956220e532959f0104",
@@ -1594,10 +1594,10 @@
                 ],
                 "deadline": "2026-09-26T00:10:00Z",
                 "delegation_context": {
-                  "sender_home_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                  "sender_orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                   "parent_delegation_id": "runtime_other_delegation_ec1fc1a0790346cc589e2530b1881508",
                   "allocation_ref": {
-                    "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                    "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                     "id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
                     "revision": 1
                   },
@@ -1605,7 +1605,7 @@
                   "permission_refs": [
                     {
                       "kind": "grant",
-                      "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                      "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                       "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
                       "revision": 1
                     }
@@ -1623,7 +1623,7 @@
               "output": {
                 "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
                 "task_id": "runtime_other_child_29e347c482902f5591a1abaadc0b9c26",
-                "home_id": "runtime_receiver_home_38551d9a7118629c2cb13f59d43c490a",
+                "orchestrator_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
                 "submit_command_id": "runtime_late_child_submit_44123c6ca28a7a947e639a7e3a1746b9",
                 "goal_ref": {
                   "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
@@ -1705,7 +1705,7 @@
               "method": "execution.cancel",
               "target_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
               "payload": {
-                "home_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                 "task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
                 "operation_id": "runtime_observation_operation_bf6e6909c7a8043ee562de1ee2796e98",
                 "reason": "先取消原观察"
@@ -1718,7 +1718,7 @@
               "stage": "applied",
               "decided_at": "2026-09-26T00:00:00Z",
               "output": {
-                "home_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                 "task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
                 "operation_id": "runtime_observation_operation_bf6e6909c7a8043ee562de1ee2796e98",
                 "cancel_command_id": "execution_cancel_6_c3acea660948346ee25519540559118a",
@@ -1732,7 +1732,7 @@
   },
   {
     "name": "receiver closure before first child wins permanently",
-    "fixture": "23-cross-home-budget.json",
+    "fixture": "23-cross-orchestrator-budget.json",
     "expect": "receiver_reopen",
     "edits": [
       {
@@ -1744,17 +1744,17 @@
             "auth": {
               "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
               "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
-              "logical_service_id": "runtime_receiver_home_38551d9a7118629c2cb13f59d43c490a",
-              "sender_service_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2"
+              "logical_service_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+              "sender_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
             },
             "request": {
               "method": "budget.close",
               "target_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
               "payload": {
-                "sender_home_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                "sender_orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                 "parent_delegation_id": "runtime_cross_delegation_1a4b4a26818204b0d8fcad76f63f6d63",
                 "allocation_ref": {
-                  "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                  "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                   "id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
                   "revision": 1
                 },
@@ -1770,8 +1770,8 @@
               "decided_at": "2026-09-26T00:00:00Z",
               "output": {
                 "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
-                "parent_owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
-                "receiver_id": "runtime_receiver_home_38551d9a7118629c2cb13f59d43c490a",
+                "parent_owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
                 "parent_delegation_id": "runtime_cross_delegation_1a4b4a26818204b0d8fcad76f63f6d63",
                 "revision": 2,
                 "state": "closing",
@@ -1790,13 +1790,13 @@
             "auth": {
               "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
               "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
-              "logical_service_id": "runtime_receiver_home_38551d9a7118629c2cb13f59d43c490a",
-              "sender_service_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2"
+              "logical_service_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+              "sender_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
             },
             "request": {
               "command_id": "runtime_child_submit_536d9ce73d0afd22a76d622c82c78aa3",
               "method": "task.submit",
-              "target_id": "runtime_receiver_home_38551d9a7118629c2cb13f59d43c490a",
+              "target_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
               "expires_at": "2026-09-26T00:10:00Z",
               "payload": {
                 "goal_ref": {
@@ -1808,7 +1808,7 @@
                   "media_type": "application/json",
                   "byte_length": 16
                 },
-                "home_id": "runtime_receiver_home_38551d9a7118629c2cb13f59d43c490a",
+                "orchestrator_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
                 "constraints": [],
                 "policy_ref": {
                   "id": "policy_823412d1eacb67956220e532959f0104",
@@ -1823,10 +1823,10 @@
                 ],
                 "deadline": "2026-09-26T00:10:00Z",
                 "delegation_context": {
-                  "sender_home_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                  "sender_orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                   "parent_delegation_id": "runtime_cross_delegation_1a4b4a26818204b0d8fcad76f63f6d63",
                   "allocation_ref": {
-                    "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                    "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                     "id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
                     "revision": 1
                   },
@@ -1834,7 +1834,7 @@
                   "permission_refs": [
                     {
                       "kind": "grant",
-                      "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                      "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                       "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
                       "revision": 1
                     }
@@ -1852,7 +1852,7 @@
               "output": {
                 "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
                 "task_id": "runtime_cross_child_570c389baa993585090ef866cbd955ae",
-                "home_id": "runtime_receiver_home_38551d9a7118629c2cb13f59d43c490a",
+                "orchestrator_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
                 "submit_command_id": "runtime_child_submit_536d9ce73d0afd22a76d622c82c78aa3",
                 "goal_ref": {
                   "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
@@ -1904,7 +1904,7 @@
   },
   {
     "name": "receiver close validates original allocation revision",
-    "fixture": "23-cross-home-budget.json",
+    "fixture": "23-cross-orchestrator-budget.json",
     "expect": "receiver_allocation_original",
     "edits": [
       {
@@ -1916,7 +1916,7 @@
   },
   {
     "name": "parent cannot settle while known receiver still closing",
-    "fixture": "23-cross-home-budget.json",
+    "fixture": "23-cross-orchestrator-budget.json",
     "expect": "allocation_closure",
     "edits": [
       {
@@ -1924,8 +1924,8 @@
         "path": "/events/4/exchange/response/output/receiver",
         "value": {
           "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
-          "parent_owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
-          "receiver_id": "runtime_receiver_home_38551d9a7118629c2cb13f59d43c490a",
+          "parent_owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+          "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
           "parent_delegation_id": "runtime_cross_delegation_1a4b4a26818204b0d8fcad76f63f6d63",
           "revision": 2,
           "state": "closing",
@@ -2081,7 +2081,7 @@
   },
   {
     "name": "budget.read rejects undeclared payload field",
-    "fixture": "23-cross-home-budget.json",
+    "fixture": "23-cross-orchestrator-budget.json",
     "expect": "schema",
     "edits": [
       {
@@ -2093,7 +2093,7 @@
   },
   {
     "name": "budget.close rejects undeclared payload field",
-    "fixture": "23-cross-home-budget.json",
+    "fixture": "23-cross-orchestrator-budget.json",
     "expect": "schema",
     "edits": [
       {
@@ -3709,7 +3709,7 @@
               "target_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
               "payload": {
                 "extraction_id": "extraction_868994937b1c6f12924fa744402f419e",
-                "home_id": "home_106a6c241b8797f52e1e77317b96a201",
+                "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                 "input_refs": [
                   {
                     "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
@@ -3740,7 +3740,7 @@
                   "max_input_bytes": 1024,
                   "deadline": "2026-09-26T00:10:00Z",
                   "cost_reservation_ref": {
-                    "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                    "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                     "id": "extraction_budget_5a20b0fc6137bbf795fdd328a6d7a3b3",
                     "revision": 1
                   }
@@ -3755,7 +3755,7 @@
               "output": {
                 "extraction_id": "extraction_868994937b1c6f12924fa744402f419e",
                 "extraction_task_id": "new_task_d0d3104edbb2f1b1ef875372aeeb7d29",
-                "home_id": "home_106a6c241b8797f52e1e77317b96a201",
+                "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                 "owner_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
                 "input_digest": "sha256:4570a4ac24eded98fd4b3db2dd19a59db807acfe4ad5b8adc96571de6dc093a4",
                 "state": "queued"

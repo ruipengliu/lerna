@@ -1,0 +1,90 @@
+[
+  {
+    "source": "docs/architecture/diagrams/system-panorama.drawio",
+    "page": 1,
+    "name": "Harness 技术全景",
+    "render": ".scratch/orchestrator-rename/drawio/system-panorama-01.png",
+    "passed": true,
+    "visual_review": "passed"
+  },
+  {
+    "source": "docs/architecture/diagrams/uml-models.drawio",
+    "page": 1,
+    "name": "01 系统 · 组件与接口",
+    "render": ".scratch/orchestrator-rename/drawio/uml-models-01.png",
+    "passed": true,
+    "visual_review": "passed"
+  },
+  {
+    "source": "docs/architecture/diagrams/uml-models.drawio",
+    "page": 2,
+    "name": "02 跨 owner 核心对象 · 领域对象",
+    "render": ".scratch/orchestrator-rename/drawio/uml-models-02.png",
+    "passed": true,
+    "visual_review": "passed"
+  },
+  {
+    "source": "docs/architecture/diagrams/uml-models.drawio",
+    "page": 3,
+    "name": "03 任务编排器 · 组件与接口",
+    "render": ".scratch/orchestrator-rename/drawio/uml-models-03.png",
+    "passed": true,
+    "visual_review": "passed"
+  },
+  {
+    "source": "docs/architecture/diagrams/uml-models.drawio",
+    "page": 4,
+    "name": "04 任务编排器 · 领域对象",
+    "render": ".scratch/orchestrator-rename/drawio/uml-models-04.png",
+    "passed": true,
+    "visual_review": "passed"
+  },
+  {
+    "source": "docs/architecture/diagrams/uml-models.drawio",
+    "page": 5,
+    "name": "05 大脑 · 组件与接口",
+    "render": ".scratch/orchestrator-rename/drawio/uml-models-05.png",
+    "passed": true,
+    "visual_review": "passed"
+  },
+  {
+    "source": "docs/architecture/diagrams/uml-models.drawio",
+    "page": 6,
+    "name": "06 大脑 · 领域对象",
+    "render": ".scratch/orchestrator-rename/drawio/uml-models-06.png",
+    "passed": true,
+    "visual_review": "passed"
+  },
+  {
+    "source": "docs/architecture/diagrams/uml-models.drawio",
+    "page": 8,
+    "name": "08 执行 · 领域对象",
+    "render": ".scratch/orchestrator-rename/drawio/uml-models-08.png",
+    "passed": true,
+    "visual_review": "passed"
+  },
+  {
+    "source": "docs/architecture/diagrams/uml-models.drawio",
+    "page": 14,
+    "name": "14 应用、界面与用户输入 · 领域对象",
+    "render": ".scratch/orchestrator-rename/drawio/uml-models-14.png",
+    "passed": true,
+    "visual_review": "passed"
+  },
+  {
+    "source": "docs/architecture/diagrams/uml-models.drawio",
+    "page": 15,
+    "name": "15 Agent 协作与任务委派 · 组件与接口",
+    "render": ".scratch/orchestrator-rename/drawio/uml-models-15.png",
+    "passed": true,
+    "visual_review": "passed"
+  },
+  {
+    "source": "docs/architecture/diagrams/uml-models.drawio",
+    "page": 16,
+    "name": "16 Agent 协作与任务委派 · 领域对象",
+    "render": ".scratch/orchestrator-rename/drawio/uml-models-16.png",
+    "passed": true,
+    "visual_review": "passed"
+  }
+]

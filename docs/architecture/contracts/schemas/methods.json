@@ -376,7 +376,7 @@
         "internal_error"
       ],
       "success": "父预留、固定 allocation 及额度交接责任共同提交；不证明接收方已可消费。",
-      "source": "task-runtime/README.md",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -466,7 +466,7 @@
         "internal_error"
       ],
       "success": "核验原接收方最终封账、累计费用及版本；调整父预留并保存固定结算。",
-      "source": "task-runtime/README.md",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -7146,7 +7146,7 @@
         "extraction_conflict",
         "preauthorization_required"
       ],
-      "success": "有限输入、唯一Home任务映射和启动责任已保存；尚未生成或发布候选。",
+      "success": "有限输入、唯一Orchestrator任务映射和启动责任已保存；尚未生成或发布候选。",
       "source": "memory/README.md",
       "error_recovery": {
         "invalid_argument": [
@@ -8650,7 +8650,7 @@
         "request_already_consumed"
       ],
       "success": "准确请求与候选的验收消费及核验 job 保存；并非 Task 成功。",
-      "source": "task-runtime/README.md",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -8743,7 +8743,7 @@
         "internal_error"
       ],
       "success": "在原义务以上修改精确单位上限；不恢复暂停、不改变期限。",
-      "source": "task-runtime/README.md",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -8833,7 +8833,7 @@
         "internal_error"
       ],
       "success": "核验工作已保存；不直接修改效果。",
-      "source": "task-runtime/README.md",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -8922,8 +8922,8 @@
         "precondition_failed",
         "internal_error"
       ],
-      "success": "Home 本地控制决定与传播责任提交；pending 不证明远端生效。",
-      "source": "task-runtime/README.md",
+      "success": "Orchestrator 本地控制决定与传播责任提交；pending 不证明远端生效。",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -9014,7 +9014,7 @@
         "request_already_consumed"
       ],
       "success": "澄清请求一次消费及后续 job 保存。",
-      "source": "task-runtime/README.md",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -9082,7 +9082,7 @@
       "kind": "query",
       "input": "TaskListInput",
       "output": "TaskListOutput",
-      "target": "home_id",
+      "target": "orchestrator_id",
       "expected_revision": false,
       "stages": [],
       "errors": [
@@ -9103,8 +9103,8 @@
         "precondition_failed",
         "internal_error"
       ],
-      "success": "返回本 Home 有界、按当前权限过滤的任务页；稳定上界与缺口可查。",
-      "source": "task-runtime/README.md",
+      "success": "返回本 Orchestrator 有界、按当前权限过滤的任务页；稳定上界与缺口可查。",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -9191,8 +9191,8 @@
         "precondition_failed",
         "internal_error"
       ],
-      "success": "Home 本地控制决定与传播责任提交；pending 不证明远端生效。",
-      "source": "task-runtime/README.md",
+      "success": "Orchestrator 本地控制决定与传播责任提交；pending 不证明远端生效。",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -9278,8 +9278,8 @@
         "precondition_failed",
         "internal_error"
       ],
-      "success": "本 Home 当前获准任务快照。",
-      "source": "task-runtime/README.md",
+      "success": "本 Orchestrator 当前获准任务快照。",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -9366,7 +9366,7 @@
         "internal_error"
       ],
       "success": "固定 Result 或当前非成功状态。",
-      "source": "task-runtime/README.md",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -9455,8 +9455,8 @@
         "precondition_failed",
         "internal_error"
       ],
-      "success": "Home 本地控制决定与传播责任提交；pending 不证明远端生效。",
-      "source": "task-runtime/README.md",
+      "success": "Orchestrator 本地控制决定与传播责任提交；pending 不证明远端生效。",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -9546,7 +9546,7 @@
         "internal_error"
       ],
       "success": "新目标修订及旧工作失效责任提交。",
-      "source": "task-runtime/README.md",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -9611,7 +9611,7 @@
       "kind": "command",
       "input": "TaskSubmitInput",
       "output": "TaskSubmitOutput",
-      "target": "payload.home_id",
+      "target": "payload.orchestrator_id",
       "expected_revision": false,
       "stages": [
         "applied",
@@ -9636,7 +9636,7 @@
         "internal_error"
       ],
       "success": "Task 与首项工作持久创建。",
-      "source": "task-runtime/README.md",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -9723,7 +9723,7 @@
         "internal_error"
       ],
       "success": "读取原分配owner当前记录或receiver唯一接纳/关闭投影；role不能改变服务身份。",
-      "source": "task-runtime/README.md",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"
@@ -9811,7 +9811,7 @@
         "internal_error"
       ],
       "success": "原receiver关闭allocation接纳与新增消费门禁并保存收尾责任；最终封账证明另查，未知子创建也先保存禁止索引。",
-      "source": "task-runtime/README.md",
+      "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [
           "after_change"

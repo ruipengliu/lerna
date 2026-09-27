@@ -1,6 +1,6 @@
 # 执行实现：原操作、发送门禁和资源 owner
 
-[模块主线](README.md) · [任务实现](../task-runtime/implementation.md) · [授权实现](../security/implementation.md) · [线协议](../contracts/protocol.md)
+[模块主线](README.md) · [任务实现](../orchestrator/implementation.md) · [授权实现](../security/implementation.md) · [线协议](../contracts/protocol.md)
 
 本页将执行主线落为参考实现。Executor 接纳一项原操作，资源 owner 裁决实际入口，驱动提供目标效果证据。三个职责可共进程，但外部副作用总在业务提交之后；网络成功和 Receipt.applied 都不代替 Operation.effect。
 
@@ -13,7 +13,7 @@
 
 ```mermaid
 flowchart TB
-    H[Task Home / 本人管理入口] -->|同步原命令| I
+    H[Orchestrator / 本人管理入口] -->|同步原命令| I
     subgraph EX[execution 逻辑模块]
       I[执行命令入口 facade] -->|同步| A[接纳与控制用例]
       A -->|准确声明读取| C[CatalogPort]
@@ -38,7 +38,7 @@ flowchart TB
 | 执行命令入口／接纳与控制用例 | 认证主体、固定原命令、当前容量 | 路由到所属用例与原回执；不在请求栈等待目标动作完成 |
 | 执行工作者 | 原 operation、工作种类和领取代次 | 调用原使用核验、启动／查询／取消与事实归并；不自创替代 operation |
 | CatalogPort.describe | capability_ref、binding_ref | 完整准确声明与当前可用性；不替调用授权 |
-| ExecutionStore.accept | 原 Invoke、认证 Home、规范化摘要 | 原 Operation 与接纳 Receipt，或固定拒绝 |
+| ExecutionStore.accept | 原 Invoke、认证 Orchestrator、规范化摘要 | 原 Operation 与接纳 Receipt，或固定拒绝 |
 | GateStore.apply | 认证 ControlSnapshot | 最新 gate、逐入口执行修订及在途清单 |
 | StartBarrier.enter | operation、attempt、TaskGate、使用依据、资源前提 | 允许进入不可撤回发送边界，或明确启动前拒绝 |
 | Driver.invoke | 固定输入、attempt_id、原目标幂等键 | 目标凭据、结构化输出、已跨发送边界标记 |
@@ -46,7 +46,7 @@ flowchart TB
 | Driver.cancel | 原目标关联 | 尽力停止事实及能否证明不再生效 |
 | FactStore.apply | 原 operation、单调修订、证据及累计用量 | 原事实与下一核对责任共同提交 |
 
-驱动在加载时固定版本和配置摘要。运行时不会把模型生成的 URL、请求头或任意驱动名称注入这些接口；模型只提供准确能力的业务参数。
+驱动在加载时固定版本和配置摘要。Executor 不会把模型生成的 URL、请求头或任意驱动名称注入这些接口；模型只提供准确能力的业务参数。
 
 ExecutionStore.accept 封装接纳的条件事务，GateStore.apply 封装控制单调合并，FactStore.apply 封装效果和费用规则后提交；它们共用宿主事务接口而不开放任意表写权限。Store 适配器处理数据库语句，Driver 处理目标协议，领域规则只依赖它们的固定输入、证据与错误。资源 owner 和执行工作者可在同一进程，是否跨网络由资源所属位置决定，不按内部接口数量拆服务。
 
@@ -60,9 +60,9 @@ execution.list 由现有查询入口读取本 owner 的 Operation 仓储，复�
 | bindings | capability_ref、目标、driver_ref、configuration_ref、availability | binding_id 与 revision 固定，停用另有当前指针 |
 | operations | 原 Invoke、摘要、发送状态、效果、可能迟到、费用 | `(tenant, operation_id)` 唯一，意图不可替换 |
 | attempts | operation、attempt_id、准备时间、发送边界、目标键和结果 | 每次实际发送独立行，原业务幂等键不变 |
-| task_gates | Home、task、最高控制修订、有效控制、终态标记 | 与发送准备及实际入口串行检查 |
+| task_gates | Orchestrator、task、最高控制修订、有效控制、终态标记 | 与发送准备及实际入口串行检查 |
 | gate_entrances | gate、入口、已落实修订、未决原因 | 全端 enforced 取全部必要入口的最低已落实修订 |
-| operation_cancellations | Home、task、operation、原取消命令、关闭原因 | 未见 Invoke 也写入；不按 TTL 删除 |
+| operation_cancellations | Orchestrator、task、operation、原取消命令、关闭原因 | 未见 Invoke 也写入；不按 TTL 删除 |
 | resource_states | resource、owner、control_epoch、人工控制、当前 lease | owner 唯一写者，设备动作串行 |
 | resource_leases | lease_id、持有者及实例、epoch、修订、期限、state | 原 lease 不能换主体；过期不自动证明旧动作结束 |
 | observations | 原 observation、epoch、界面修订、期限、准确截图引用 | 不可变；动作验证读取同一版本 |
@@ -97,17 +97,17 @@ erDiagram
 
 | 阶段 | 创建、持久化与传递 | 消费与清理依据 |
 | --- | --- | --- |
-| 接纳 | 接纳用例固定 Capability／Binding 与原 Invoke，事务写 Operation、原 Receipt 和 ExecutionJob | Home 取得的是执行责任；目录更新不改原意图和绑定 |
+| 接纳 | 接纳用例固定 Capability／Binding 与原 Invoke，事务写 Operation、原 Receipt 和 ExecutionJob | Orchestrator 取得的是执行责任；目录更新不改原意图和绑定 |
 | 准备 | 执行工作者取原授权使用依据，准备事务新增 Attempt、目标关联和核对责任 | StartBarrier 使用最新 Gate、epoch、lease 和 Observation 检查本次入口；领取过期不撤销已准备 Attempt |
 | 发送 | 固定 Driver 获得原参数、Attempt 和目标键，向目标传递一次声明允许的请求 | 目标回执及边界证据返回工作者；丢答复仍保留原目标关联，不另造操作 |
-| 核对归并 | Driver.query／cancel 返回原效果与停止事实；FactStore.apply 提交单调效果、累计用量和下一 Job | Home 读取原 Operation 并归并；通知只唤醒查询，不能代替权威事实 |
+| 核对归并 | Driver.query／cancel 返回原效果与停止事实；FactStore.apply 提交单调效果、累计用量和下一 Job | Orchestrator 读取原 Operation 并归并；通知只唤醒查询，不能代替权威事实 |
 | 关闭及清理 | 效果已核清且迟到可能消除后关闭原责任；内容按引用和用途保留 | 清理完整 Attempt／日志前保留必要证据；取消、终态 Gate 和原身份最小禁止索引长期留存 |
 
 执行结果正文与 Observation 都可能比操作元数据大得多，先以不可变内容保存再提交引用。写内容失败不能提交一项带可读取证据的 applied 效果；目标本已写成时效果依据与内容缺口分别记录，不能因截图或附件丢失抹掉真实副作用。
 
 ## 3. 从接纳到可能已经发送
 
-接纳事务验证认证 Home、目标、准确绑定和参数，查询原 operation 及长期取消索引，然后合并不倒退的 TaskGate。新的 active gate 不能覆盖已保存的终态索引。
+接纳事务验证认证 Orchestrator、目标、准确绑定和参数，查询原 operation 及长期取消索引，然后合并不倒退的 TaskGate。新的 active gate 不能覆盖已保存的终态索引。
 
 | 当前输入 | 接纳结果 |
 | --- | --- |
@@ -208,7 +208,7 @@ Operation 的发送状态和效果独立。发送关闭后，effects 仍可能 u
 
 只读能力在剩余授权、期限和预算内有限重取。目标幂等能力先查原键，只有固定键作用域、保留期、相同参数和回放保证仍成立时才原键重放。不可重复能力只有明确 not_applied 且不会迟到时，才允许仍开放的原操作获准重试。
 
-同一意图换 API、GUI、驱动或执行端都属于新行动。Home 必须取得不会重复原效果的依据；Executor 不能自行把 unknown 转移给另一设备。补偿也有新的操作、预算和授权，不隐藏在 cancel 内。
+同一意图换 API、GUI、驱动或执行端都属于新行动。Orchestrator 必须取得不会重复原效果的依据；Executor 不能自行把 unknown 转移给另一设备。补偿也有新的操作、预算和授权，不隐藏在 cancel 内。
 
 核对 job 每次执行一个有界查询，按能力声明退避，受绝对核对期限和专属预算约束。耗尽自动额度后保留原不确定事实，等待可读目标凭据、恢复事件或受信的一次核查；停止自动高频查询不删除迟到事实入口。
 
@@ -216,7 +216,7 @@ Operation 的发送状态和效果独立。发送关闭后，effects 仍可能 u
 
 Gate 只接受更高 control_revision；同修订同内容幂等，同修订异内容冲突。目标修订不可倒退，终态身份不可恢复。较低控制返回当前事实，不把旧 pause 重新施加到新 resume 上。
 
-同 gate 修订的新控制凭据可以更新 issued_at／start_before，但不能改 gate、原 Invoke、操作 deadline 或授权使用。原 command 重投必须返回原窗口；需要刷新时 Home 建立独立固定命令。
+同 gate 修订的新控制凭据可以更新 issued_at／start_before，但不能改 gate、原 Invoke、操作 deadline 或授权使用。原 command 重投必须返回原窗口；需要刷新时 Orchestrator 建立独立固定命令。
 
 整端 ControlReceipt 的 entrances 是当前受控入口集合。安装新入口前先落实当前 gate；未完成时不可接目标工作。移除入口前证明它已封闭且不会继续发送，再从集合移除，不能靠删行抬高 enforced。
 
@@ -224,7 +224,7 @@ Gate 只接受更高 control_revision；同修订同内容幂等，同修订异�
 
 未知 operation 的取消必须创建最小禁止索引。此时执行端没有原 Invoke，不能推算其最晚启动或重投时间；禁止索引不得按固定 TTL 删除，也不能被 task.resume 清除。
 
-完整取消记录与正文按策略清理后，最小索引仍保留原 Home、task、operation、关闭依据和必要摘要。迟到 Invoke 命中后返回 gone 或固定禁止事实，不产生新的可发送操作；字段更改不提供新身份资格。
+完整取消记录与正文按策略清理后，最小索引仍保留原 Orchestrator、task、operation、关闭依据和必要摘要。迟到 Invoke 命中后返回 gone 或固定禁止事实，不产生新的可发送操作；字段更改不提供新身份资格。
 
 TaskGate 终态同样压缩为长期关闭索引。只有原任务从未登记、没有关闭索引且认证控制有效时，才允许初次初始化；索引不可用、从旧备份恢复或存储损坏时，先关闭自动行动并核对原权威。
 
@@ -295,7 +295,7 @@ GUI 动作必须引用仍新鲜的观察与当前占用。发送门禁在模拟�
 
 模拟器动作执行和内部日志在同一串行入口提交，因此可提供 atomic 观察前提。真值检查读取独立管理通道；Brain、能力输出和普通驱动查询都不能读取验收答案或任意内部表。
 
-可注入断点包括准备前、准备后、门禁检查后、目标提交后、答复发布前和 Home 归并前。故障注入只改变可控时序或网络，不直接手改最终效果状态来制造正例。
+可注入断点包括准备前、准备后、门禁检查后、目标提交后、答复发布前和 Orchestrator 归并前。故障注入只改变可控时序或网络，不直接手改最终效果状态来制造正例。
 
 ## 9. 调度、恢复和停机
 
@@ -341,7 +341,7 @@ flowchart TD
 | --- | --- | --- |
 | 目录查询与不同资源的原操作 | 无状态入口按 tenant、provider、resource 分配有界工作槽 | 准确版本缓存可复用；当前 availability、授权和门禁不能当永久缓存 |
 | `(tenant, operation_id)` 与 Attempt 准备 | 同一原操作串行推进，领取代次仅保护提交 | 多 worker 只能恢复原操作；旧 worker 是否仍可能发送由实际门禁和目标事实裁决 |
-| `(Home, task_id)` 的 Gate | 控制修订单调合并，逐入口传播；当前入口集合可查 | 控制传播扇出受已绑定执行端数量约束，不能以本地数据库提交延迟代替全端生效延迟 |
+| `(Orchestrator, task_id)` 的 Gate | 控制修订单调合并，逐入口传播；当前入口集合可查 | 控制传播扇出受已绑定执行端数量约束，不能以本地数据库提交延迟代替全端生效延迟 |
 | `(owner, resource_id)` 的发送入口 | Gate、epoch、lease 与观察检查使用同一资源入口锁 | 同设备单入口是业务约束；驱动证明资源独立后才可细分资源域 |
 | 原目标键与提供方配额 | 按准确驱动合同执行原键查询及允许重放 | 供应商限流与幂等保留窗口影响恢复能力，扩充本地 worker 不会消除约束 |
 
@@ -373,7 +373,7 @@ flowchart TD
 | EX-06 | 终态 gate 压缩后重放较高 active 修订 | 关闭索引阻止重新初始化；不产生自动工作 |
 | EX-07 | 独立 owner 未收到控制，Executor 已收到 | Receipt 只能报告 accepted／逐入口 pending；owner 实际落实后才 applied |
 | EX-08 | 自动动作已准备，本人接管后旧动作迟到 | epoch 增加；未跨入口者拒绝，已跨入口者列为在途并核对 |
-| EX-09 | lease 过期但旧动作仍可能迟到，另 Home acquire | 拒绝第二自动执行者；不能用失联超时替代效果终结 |
+| EX-09 | lease 过期但旧动作仍可能迟到，另 Orchestrator acquire | 拒绝第二自动执行者；不能用失联超时替代效果终结 |
 | EX-10 | 观察后界面改变，使用原坐标点击 | 模拟器原子比较拒绝；重新观察；无错误页面副作用 |
 | EX-11 | acquire／renew 回答丢失，重投同命令 | 原 lease 与期限返回；renew 不换主体、不复活已接管 lease |
 | EX-12 | API 版本同名、目录停用或参数未知字段 | 准确绑定校验拒绝错误版本及参数；不会静默切驱动 |

@@ -70,7 +70,7 @@ flowchart TB
 ```
 
 图例：实线表示同步依赖；指向 repositories 的实线为同 owner 内的事务读写，虚线为数据库持久 job 的领取。IdentityAdapter 校验宿主身份，PairingController 保存凭据，ResourceNormalizer 解析准确资源，RevocationWorker 向使用端控制与核对；这些外部端口调用均在写事务外执行。
-图中 ConfirmationStore 只保存本 owner 的确认；evaluation 和 Task Home 在各自提交域装配同一确认能力，由其业务事务消费。
+图中 ConfirmationStore 只保存本 owner 的确认；evaluation 和 Orchestrator 在各自提交域装配同一确认能力，由其业务事务消费。
 资源解析先取得准确引用，事务内再核对其授权绑定；来自另一 owner 的当前资源状态没有跨库原子保证，实际使用端仍须核验自己的门禁。
 资源规范化失败、确认失效、当前身份不匹配都在写事务前或事务内拒绝，不能降级为任意资源范围。
 实际启动依然在资源端核验当前门禁，授权账本不记录伪造的外部效果。
@@ -167,7 +167,7 @@ Counter 和逐端传播进度是可核对投影，原使用、累计用量及撤
 
 `grant.issue` 输入包含固定 grant_id、GrantPolicy、intent_hash 和确认引用。
 owner 从认证上下文取得，不接受 payload 自选 owner。
-Confirmation 由实际业务 owner 保存：Grant owner 管理许可确认，evaluation owner 管理发布确认，Task Home 管理成果验收确认。
+Confirmation 由实际业务 owner 保存：Grant owner 管理许可确认，evaluation owner 管理发布确认，Orchestrator 管理成果验收确认。
 交互层只认证、展示和转交，不保存能够代替业务 owner 的消费权威，也不部署远端确认消费服务。
 
 签发在同一事务中完成以下步骤：

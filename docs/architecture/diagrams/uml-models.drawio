@@ -5,16 +5,16 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="task-runtime" target="security" semanticKind="dependency" sourceDoc="" tooltip="">
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="orchestrator" target="security" semanticKind="dependency" sourceDoc="" tooltip="">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="evaluation" target="task-runtime" semanticKind="dependency" sourceDoc="" tooltip="">
+        <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="evaluation" target="orchestrator" semanticKind="dependency" sourceDoc="" tooltip="">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="e11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="extensions" target="brain" semanticKind="dependency" sourceDoc="" tooltip="">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.0;entryY=0.4827586206896552;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="interaction" target="task-runtime" semanticKind="dependency" sourceDoc="" tooltip="">
+        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitPerimeter=0;entryX=0.0;entryY=0.4827586206896552;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="interaction" target="orchestrator" semanticKind="dependency" sourceDoc="" tooltip="">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="744" y="816" />
@@ -22,7 +22,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.4827586206896552;exitPerimeter=0;entryX=0.0;entryY=0.5;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="task-runtime" target="brain" semanticKind="dependency" sourceDoc="" tooltip="">
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.4827586206896552;exitPerimeter=0;entryX=0.0;entryY=0.5;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="orchestrator" target="brain" semanticKind="dependency" sourceDoc="" tooltip="">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="1384" y="824" />
@@ -42,7 +42,7 @@
         <mxCell id="e10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.2692307692307692;exitPerimeter=0;entryX=1.0;entryY=0.2692307692307692;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="extensions" target="evaluation" semanticKind="dependency" sourceDoc="" tooltip="">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.14;exitY=0.0;exitPerimeter=0;entryX=0.86;entryY=1.0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="task-runtime" target="memory" semanticKind="dependency" sourceDoc="" tooltip="">
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.14;exitY=0.0;exitPerimeter=0;entryX=0.86;entryY=1.0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="orchestrator" target="memory" semanticKind="dependency" sourceDoc="" tooltip="">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="816" y="504" />
@@ -50,7 +50,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.86;exitY=1.0;exitPerimeter=0;entryX=0.14;entryY=0.0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="task-runtime" target="execution" semanticKind="dependency" sourceDoc="" tooltip="">
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.86;exitY=1.0;exitPerimeter=0;entryX=0.14;entryY=0.0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="orchestrator" target="execution" semanticKind="dependency" sourceDoc="" tooltip="">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="1104" y="1128" />
@@ -58,7 +58,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.14;exitY=1.0;exitPerimeter=0;entryX=0.86;entryY=0.0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="task-runtime" target="collaboration" semanticKind="dependency" sourceDoc="" tooltip="">
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=open;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.14;exitY=1.0;exitPerimeter=0;entryX=0.86;entryY=0.0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="orchestrator" target="collaboration" semanticKind="dependency" sourceDoc="" tooltip="">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="816" y="1128" />
@@ -150,22 +150,22 @@
         <mxCell id="interaction-method-1" value="interaction.present" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="interaction" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="137" width="368" height="24" />
         </mxCell>
-        <mxCell id="task-runtime" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="task-runtime/README.md" schemaRef="" tooltip="">
+        <mxCell id="orchestrator" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="orchestrator/README.md" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="760" y="712" width="400" height="232" />
         </mxCell>
-        <mxCell id="task-runtime-kind" value="«component»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="task-runtime" semanticKind="text">
+        <mxCell id="orchestrator-kind" value="«component»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="orchestrator" semanticKind="text">
           <mxGeometry as="geometry" x="20" y="14" width="360" height="24" />
         </mxCell>
-        <mxCell id="task-runtime-name" value="任务运行时&#10;Task Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=23;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="task-runtime" semanticKind="text">
+        <mxCell id="orchestrator-name" value="任务编排器&#10;Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=23;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="orchestrator" semanticKind="text">
           <mxGeometry as="geometry" x="24" y="48" width="352" height="56" />
         </mxCell>
-        <mxCell id="task-runtime-method-0" value="task.submit" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="task-runtime" semanticKind="text">
+        <mxCell id="orchestrator-method-0" value="task.submit" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="orchestrator" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="112" width="368" height="24" />
         </mxCell>
-        <mxCell id="task-runtime-method-1" value="task.read" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="task-runtime" semanticKind="text">
+        <mxCell id="orchestrator-method-1" value="task.read" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="orchestrator" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="137" width="368" height="24" />
         </mxCell>
-        <mxCell id="task-runtime-method-2" value="task.cancel" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="task-runtime" semanticKind="text">
+        <mxCell id="orchestrator-method-2" value="task.cancel" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="orchestrator" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="162" width="368" height="24" />
         </mxCell>
         <mxCell id="brain" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="brain/README.md" schemaRef="" tooltip="">
@@ -299,13 +299,13 @@
         <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;" edge="1" parent="1" source="operation" target="attempt" semanticKind="association" sourceDoc="execution/README.md" tooltip="接纳尚未准备时可为 0；Attempt 不证明已发送，数组分页上限不是终身尝试数">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="task" target="result" semanticKind="association" sourceDoc="task-runtime/implementation.md#data-flow" tooltip="当前目标正式结果仅在 Task.status=succeeded 时存在">
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="task" target="result" semanticKind="association" sourceDoc="orchestrator/implementation.md#data-flow" tooltip="当前目标正式结果仅在 Task.status=succeeded 时存在">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="intent" target="content" semanticKind="association" sourceDoc="task-runtime/README.md" tooltip="OperationIntent 固定 input_ref；具体内容访问另行获准">
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="intent" target="content" semanticKind="association" sourceDoc="orchestrator/README.md" tooltip="OperationIntent 固定 input_ref；具体内容访问另行获准">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.4827586206896552;entryPerimeter=0;" edge="1" parent="1" source="task" target="intent" semanticKind="association" sourceDoc="task-runtime/implementation.md#data-flow" tooltip="">
+        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.4827586206896552;entryPerimeter=0;" edge="1" parent="1" source="task" target="intent" semanticKind="association" sourceDoc="orchestrator/implementation.md#data-flow" tooltip="">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="1176" y="840" />
@@ -313,7 +313,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.4827586206896552;exitPerimeter=0;entryX=1.0;entryY=0.4827586206896552;entryPerimeter=0;" edge="1" parent="1" source="result" target="content" semanticKind="association" sourceDoc="task-runtime/README.md" tooltip="引用可复用，不表示内容生命周期所有权">
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.4827586206896552;exitPerimeter=0;entryX=1.0;entryY=0.4827586206896552;entryPerimeter=0;" edge="1" parent="1" source="result" target="content" semanticKind="association" sourceDoc="orchestrator/README.md" tooltip="引用可复用，不表示内容生命周期所有权">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=0.0;entryY=0.4827586206896552;entryPerimeter=0;" edge="1" parent="1" source="operation" target="content" semanticKind="association" sourceDoc="execution/README.md" tooltip="合并 evidence_refs 与可选 result_ref 的逻辑引用集合">
@@ -446,7 +446,7 @@
             <mxPoint as="offset" x="-26.0" y="-36.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="task" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="task-runtime/README.md" schemaRef="Task" tooltip="">
+        <mxCell id="task" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="orchestrator/README.md" schemaRef="Task" tooltip="">
           <mxGeometry as="geometry" x="1400" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="task-head" value="" style="fillColor=#fcf0e9;strokeColor=none;" vertex="1" parent="task" semanticKind="header">
@@ -455,7 +455,7 @@
         <mxCell id="task-name" value="Task" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="task-owner" value="Task Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
+        <mxCell id="task-owner" value="Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="task-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="task" semanticKind="decoration">
@@ -476,7 +476,7 @@
         <mxCell id="task-attr-4" value="accounting_open: Boolean" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="intent" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="task-runtime/README.md" schemaRef="" tooltip="">
+        <mxCell id="intent" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="orchestrator/README.md" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="760" y="712" width="400" height="232" />
         </mxCell>
         <mxCell id="intent-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="intent" semanticKind="header">
@@ -485,7 +485,7 @@
         <mxCell id="intent-name" value="OperationIntent" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="intent" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="intent-owner" value="Task Home · 内部记录" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="intent" semanticKind="text">
+        <mxCell id="intent-owner" value="Orchestrator · 内部记录" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="intent" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="intent-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="intent" semanticKind="decoration">
@@ -560,7 +560,7 @@
         <mxCell id="attempt-attr-3" value="target_key: String?" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="attempt" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="200" width="368" height="30" />
         </mxCell>
-        <mxCell id="result" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="task-runtime/README.md" schemaRef="Result" tooltip="">
+        <mxCell id="result" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="orchestrator/README.md" schemaRef="Result" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="232" />
         </mxCell>
         <mxCell id="result-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="result" semanticKind="header">
@@ -569,7 +569,7 @@
         <mxCell id="result-name" value="Result" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="result" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="result-owner" value="Task Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="result" semanticKind="text">
+        <mxCell id="result-owner" value="Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="result" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="result-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="result" semanticKind="decoration">
@@ -632,7 +632,7 @@
       </root>
     </mxGraphModel>
   </diagram>
-  <diagram id="uml-task-runtime-component" name="03 任务运行时 · 组件与接口">
+  <diagram id="uml-orchestrator-component" name="03 任务编排器 · 组件与接口">
     <mxGraphModel dx="1920" dy="1796" grid="1" gridSize="8" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1796" background="#f5f5f5" math="0" shadow="0">
       <root>
         <mxCell id="0" />
@@ -703,7 +703,7 @@
         <mxCell id="eyebrow" value="HARNESS  /  UML ATLAS  /  03" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=14;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="30" width="1500" height="24" />
         </mxCell>
-        <mxCell id="title" value="任务运行时 · 组件与接口" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=42;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="title" value="任务编排器 · 组件与接口" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=42;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="70" width="1760" height="62" />
         </mxCell>
         <mxCell id="subtitle" value="提供接口 · 内部职责 · 所需接口" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -754,7 +754,7 @@
             <mxPoint as="offset" x="-44.0" y="-36.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="task-runtime/README.md#records" schemaRef="" tooltip="">
+        <mxCell id="api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="orchestrator/README.md#records" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="120" y="280" width="400" height="200" />
         </mxCell>
         <mxCell id="api-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="api" semanticKind="text">
@@ -772,7 +772,7 @@
         <mxCell id="api-method-2" value="task.revise" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=17;fontColor=#2e5aa8;fontStyle=0;" vertex="1" parent="api" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="134" width="368" height="24" />
         </mxCell>
-        <mxCell id="facade" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="task-runtime/implementation.md#module-shape" schemaRef="" tooltip="">
+        <mxCell id="facade" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="orchestrator/implementation.md#module-shape" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="120" y="712" width="400" height="176" />
         </mxCell>
         <mxCell id="facade-kind" value="«component»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="facade" semanticKind="text">
@@ -784,7 +784,7 @@
         <mxCell id="facade-role" value="内部职责" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=16;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="facade" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="140" width="368" height="24" />
         </mxCell>
-        <mxCell id="coordinator" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="task-runtime/implementation.md#module-shape" schemaRef="" tooltip="">
+        <mxCell id="coordinator" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="orchestrator/implementation.md#module-shape" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="760" y="712" width="400" height="176" />
         </mxCell>
         <mxCell id="coordinator-kind" value="«component»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="coordinator" semanticKind="text">
@@ -796,7 +796,7 @@
         <mxCell id="coordinator-role" value="内部职责" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=16;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="coordinator" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="140" width="368" height="24" />
         </mxCell>
-        <mxCell id="runner" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="task-runtime/implementation.md#module-shape" schemaRef="" tooltip="">
+        <mxCell id="runner" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="orchestrator/implementation.md#module-shape" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="760" y="1144" width="400" height="176" />
         </mxCell>
         <mxCell id="runner-kind" value="«component»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="runner" semanticKind="text">
@@ -808,7 +808,7 @@
         <mxCell id="runner-role" value="内部职责" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=16;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="runner" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="140" width="368" height="24" />
         </mxCell>
-        <mxCell id="assembler" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="task-runtime/implementation.md#module-shape" schemaRef="" tooltip="">
+        <mxCell id="assembler" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="orchestrator/implementation.md#module-shape" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="176" />
         </mxCell>
         <mxCell id="assembler-kind" value="«component»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="assembler" semanticKind="text">
@@ -820,7 +820,7 @@
         <mxCell id="assembler-role" value="内部职责" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=16;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="assembler" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="140" width="368" height="24" />
         </mxCell>
-        <mxCell id="reducer" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="task-runtime/implementation.md#module-shape" schemaRef="" tooltip="">
+        <mxCell id="reducer" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="orchestrator/implementation.md#module-shape" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="1400" y="712" width="400" height="176" />
         </mxCell>
         <mxCell id="reducer-kind" value="«component»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="reducer" semanticKind="text">
@@ -832,13 +832,13 @@
         <mxCell id="reducer-role" value="内部职责" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=16;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="reducer" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="140" width="368" height="24" />
         </mxCell>
-        <mxCell id="store" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="task-runtime/implementation.md#module-shape" schemaRef="" tooltip="">
+        <mxCell id="store" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="component" sourceDoc="orchestrator/implementation.md#module-shape" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="760" y="280" width="400" height="176" />
         </mxCell>
         <mxCell id="store-kind" value="«component»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="store" semanticKind="text">
           <mxGeometry as="geometry" x="20" y="14" width="360" height="24" />
         </mxCell>
-        <mxCell id="store-name" value="运行时 Store" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=23;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="store" semanticKind="text">
+        <mxCell id="store-name" value="Orchestrator Store" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=23;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="store" semanticKind="text">
           <mxGeometry as="geometry" x="24" y="48" width="352" height="28" />
         </mxCell>
         <mxCell id="store-role" value="内部职责" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=16;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="store" semanticKind="text">
@@ -886,7 +886,7 @@
         <mxCell id="legend" value="虚线空心三角：实现接口    虚线开箭头：依赖    方法为接口节选" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1631" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="内部职责默认共进程、共 Home 提交域；接口列出关键方法。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="内部职责共 Orchestrator 提交域；入口与工作者可分进程，接口列出关键方法。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
         <mxCell id="note-1" value="Brain 与远端 Executor 调用在事务外；其他上下文、授权及协作 port 见实现篇。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -898,24 +898,24 @@
       </root>
     </mxGraphModel>
   </diagram>
-  <diagram id="uml-task-runtime-data" name="04 任务运行时 · 领域对象">
+  <diagram id="uml-orchestrator-data" name="04 任务编排器 · 领域对象">
     <mxGraphModel dx="1920" dy="1796" grid="1" gridSize="8" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1796" background="#f5f5f5" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;" edge="1" parent="1" source="task" target="snapshot" semanticKind="association" sourceDoc="task-runtime/implementation.md#data-flow" tooltip="">
+        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;" edge="1" parent="1" source="task" target="snapshot" semanticKind="association" sourceDoc="orchestrator/implementation.md#data-flow" tooltip="">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="task" target="intent" semanticKind="association" sourceDoc="task-runtime/implementation.md#data-flow" tooltip="">
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="task" target="intent" semanticKind="association" sourceDoc="orchestrator/implementation.md#data-flow" tooltip="">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=0.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="task" target="job" semanticKind="association" sourceDoc="task-runtime/implementation.md#data-flow" tooltip="">
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=0.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="task" target="job" semanticKind="association" sourceDoc="orchestrator/implementation.md#data-flow" tooltip="">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="task" target="result" semanticKind="association" sourceDoc="task-runtime/README.md#records" tooltip="仅 status=succeeded 有 Result；失败及取消没有 Result。">
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="task" target="result" semanticKind="association" sourceDoc="orchestrator/README.md#records" tooltip="仅 status=succeeded 有 Result；失败及取消没有 Result。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.72;entryPerimeter=0;" edge="1" parent="1" source="intent" target="reservation" semanticKind="association" sourceDoc="task-runtime/implementation.md#data-flow" tooltip="">
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.72;entryPerimeter=0;" edge="1" parent="1" source="intent" target="reservation" semanticKind="association" sourceDoc="orchestrator/implementation.md#data-flow" tooltip="">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="536" y="408" />
@@ -923,7 +923,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=0.0;entryY=0.72;entryPerimeter=0;" edge="1" parent="1" source="intent" target="fact" semanticKind="association" sourceDoc="task-runtime/implementation.md#data-flow" tooltip="ReceivedFact 也可来自 decision 或委派；未关联 OperationIntent 时为 0。">
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=0.0;entryY=0.72;entryPerimeter=0;" edge="1" parent="1" source="intent" target="fact" semanticKind="association" sourceDoc="orchestrator/implementation.md#data-flow" tooltip="ReceivedFact 也可来自 decision 或委派；未关联 OperationIntent 时为 0。">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="1384" y="408" />
@@ -934,7 +934,7 @@
         <mxCell id="eyebrow" value="HARNESS  /  UML ATLAS  /  04" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=14;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="30" width="1500" height="24" />
         </mxCell>
-        <mxCell id="title" value="任务运行时 · 领域对象" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=42;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="title" value="任务编排器 · 领域对象" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=42;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="70" width="1760" height="62" />
         </mxCell>
         <mxCell id="subtitle" value="关键属性 · 事实归属 · 关联多重性" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -1039,7 +1039,7 @@
         <mxCell id="task-name" value="Task" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="task-owner" value="Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
+        <mxCell id="task-owner" value="Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="task-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="task" semanticKind="decoration">
@@ -1048,7 +1048,7 @@
         <mxCell id="task-attr-0" value="task_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="104" width="368" height="30" />
         </mxCell>
-        <mxCell id="task-attr-1" value="home_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
+        <mxCell id="task-attr-1" value="orchestrator_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="136" width="368" height="30" />
         </mxCell>
         <mxCell id="task-attr-2" value="goal_revision: Revision" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
@@ -1060,7 +1060,7 @@
         <mxCell id="task-attr-4" value="control: running | paused" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="snapshot" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="task-runtime/implementation.md#data-flow" schemaRef="" tooltip="">
+        <mxCell id="snapshot" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="orchestrator/implementation.md#data-flow" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="760" y="1144" width="400" height="200" />
         </mxCell>
         <mxCell id="snapshot-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="snapshot" semanticKind="header">
@@ -1069,7 +1069,7 @@
         <mxCell id="snapshot-name" value="Snapshot" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="snapshot" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="snapshot-owner" value="Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="snapshot" semanticKind="text">
+        <mxCell id="snapshot-owner" value="Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="snapshot" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="snapshot-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="snapshot" semanticKind="decoration">
@@ -1084,7 +1084,7 @@
         <mxCell id="snapshot-attr-2" value="content_ref: ContentRef" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="snapshot" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="168" width="368" height="30" />
         </mxCell>
-        <mxCell id="intent" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="task-runtime/README.md#records" schemaRef="" tooltip="">
+        <mxCell id="intent" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="orchestrator/README.md#records" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="760" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="intent-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="intent" semanticKind="header">
@@ -1093,7 +1093,7 @@
         <mxCell id="intent-name" value="OperationIntent" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="intent" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="intent-owner" value="Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="intent" semanticKind="text">
+        <mxCell id="intent-owner" value="Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="intent" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="intent-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="intent" semanticKind="decoration">
@@ -1114,7 +1114,7 @@
         <mxCell id="intent-attr-4" value="reservation_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="intent" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="fact" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="task-runtime/implementation.md#data-flow" schemaRef="" tooltip="">
+        <mxCell id="fact" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="orchestrator/implementation.md#data-flow" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="200" />
         </mxCell>
         <mxCell id="fact-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="fact" semanticKind="header">
@@ -1123,7 +1123,7 @@
         <mxCell id="fact-name" value="ReceivedFact" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="fact" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="fact-owner" value="Home（归并副本）" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="fact" semanticKind="text">
+        <mxCell id="fact-owner" value="Orchestrator（归并副本）" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="fact" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="fact-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="fact" semanticKind="decoration">
@@ -1138,7 +1138,7 @@
         <mxCell id="fact-attr-2" value="revision: Revision" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="fact" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="168" width="368" height="30" />
         </mxCell>
-        <mxCell id="job" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="task-runtime/README.md" schemaRef="" tooltip="">
+        <mxCell id="job" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="orchestrator/README.md" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="1400" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="job-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="job" semanticKind="header">
@@ -1147,7 +1147,7 @@
         <mxCell id="job-name" value="Job" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="job" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="job-owner" value="Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="job" semanticKind="text">
+        <mxCell id="job-owner" value="Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="job" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="job-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="job" semanticKind="decoration">
@@ -1168,7 +1168,7 @@
         <mxCell id="job-attr-4" value="attempt_count: Integer" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="job" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="reservation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="task-runtime/implementation.md" schemaRef="" tooltip="">
+        <mxCell id="reservation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="orchestrator/implementation.md" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="120" y="280" width="400" height="200" />
         </mxCell>
         <mxCell id="reservation-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="reservation" semanticKind="header">
@@ -1177,7 +1177,7 @@
         <mxCell id="reservation-name" value="BudgetReservation" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="reservation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="reservation-owner" value="Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="reservation" semanticKind="text">
+        <mxCell id="reservation-owner" value="Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="reservation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="reservation-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="reservation" semanticKind="decoration">
@@ -1201,7 +1201,7 @@
         <mxCell id="result-name" value="Result" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="result" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="result-owner" value="Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="result" semanticKind="text">
+        <mxCell id="result-owner" value="Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="result" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="result-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="result" semanticKind="decoration">
@@ -1231,7 +1231,7 @@
         <mxCell id="note-0" value="内部记录无 Schema 的类按实现篇命名；普通关联不表示级联删除。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-1" value="OperationIntent 归 Home；真实 Operation／效果仍归 Executor，ReceivedFact 只是版本化归并。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-1" value="OperationIntent 归 Orchestrator；真实 Operation／效果仍归 Executor，ReceivedFact 只是版本化归并。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1703" width="1760" height="28" />
         </mxCell>
         <mxCell id="source-note" value="完整约束与逐页来源：docs/architecture/uml-models.md" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -1454,7 +1454,7 @@
         <mxCell id="legend" value="虚线空心三角：实现接口    虚线开箭头：依赖    方法为接口节选" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1631" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="Home 组装上下文并独立准入；Brain 不拥有 Task 写权。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="Orchestrator 组装上下文并独立准入；Brain 不拥有 Task 写权。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
         <mxCell id="note-1" value="DecisionStore 绑定宿主事务与 jobs；模型与内容调用在事务外。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -1566,7 +1566,7 @@
         <mxCell id="request-name" value="DecisionRequest" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="request" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="request-owner" value="Home 固定；Brain 绑定" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="request" semanticKind="text">
+        <mxCell id="request-owner" value="Orchestrator 固定；Brain 绑定" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="request" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="request-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="request" semanticKind="decoration">
@@ -1596,7 +1596,7 @@
         <mxCell id="context-name" value="BrainContext" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="context" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="context-owner" value="Home（正文由内容 owner 保存）" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="context" semanticKind="text">
+        <mxCell id="context-owner" value="Orchestrator（正文由内容 owner 保存）" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="context" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="context-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="context" semanticKind="decoration">
@@ -1710,7 +1710,7 @@
         <mxCell id="note-0" value="DecisionRecord→ModelCall 为 0..1；Proposal 只在 completed 有效。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1241" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-1" value="跨 owner：BrainContext 由 Home 固定；提案仍须 Home 当前准入。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-1" value="跨 owner：BrainContext 由 Orchestrator 固定；提案仍须 Orchestrator 当前准入。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1271" width="1760" height="28" />
         </mxCell>
         <mxCell id="source-note" value="完整约束与逐页来源：docs/architecture/uml-models.md" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -1976,7 +1976,7 @@
         <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="capability" target="binding" semanticKind="association" sourceDoc="execution/README.md" tooltip="">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="gate" target="operation" semanticKind="association" sourceDoc="execution/implementation.md#data-flow" tooltip="同 Executor 的 (home_id, task_id) 门禁；不能把接纳快照当永久许可。">
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="gate" target="operation" semanticKind="association" sourceDoc="execution/implementation.md#data-flow" tooltip="同 Executor 的 (orchestrator_id, task_id) 门禁；不能把接纳快照当永久许可。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="operation" target="resource" semanticKind="association" sourceDoc="execution/implementation.md#data-flow" tooltip="只对需要该资源的能力建立关系；历史多项关联不允许并发占用。">
@@ -2230,13 +2230,13 @@
         <mxCell id="gate-name" value="TaskGate" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="gate" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="gate-owner" value="Executor／实际入口（Home 控制投影）" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="gate" semanticKind="text">
+        <mxCell id="gate-owner" value="Executor（Orchestrator 控制投影）" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="gate" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="gate-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="gate" semanticKind="decoration">
           <mxGeometry as="geometry" x="0" y="96" width="400" height="1" />
         </mxCell>
-        <mxCell id="gate-attr-0" value="home_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="gate" semanticKind="text">
+        <mxCell id="gate-attr-0" value="orchestrator_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="gate" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="104" width="368" height="30" />
         </mxCell>
         <mxCell id="gate-attr-1" value="task_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="gate" semanticKind="text">
@@ -4098,7 +4098,7 @@
         <mxCell id="request-name" value="InputRequestView" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="request" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="request-owner" value="业务 owner · Home / 应用" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="request" semanticKind="text">
+        <mxCell id="request-owner" value="业务 owner · Orchestrator / 应用" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="request" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="request-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="request" semanticKind="decoration">
@@ -4472,7 +4472,7 @@
         <mxCell id="legend" value="虚线空心三角：实现接口    虚线开箭头：依赖    方法为接口节选" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1631" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="内部子任务与父任务共用 Task Home；子创建、映射与预算使用同一事务。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="内部子任务与父任务共用 Orchestrator；子创建、映射与预算使用同一事务。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
         <mxCell id="note-1" value="Store 中的持久 jobs 由宿主调度；远端调用在事务外，答复丢失沿原身份核对。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -4609,7 +4609,7 @@
             <mxPoint as="offset" x="-50" y="-32" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e5-relationship-label" value="同 Home 子任务" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e5" semanticKind="relationship-label" connectable="0">
+        <mxCell id="e5-relationship-label" value="同一编排器&#10;子任务" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e5" semanticKind="relationship-label" connectable="0">
           <mxGeometry as="geometry" x="0.22499999999999964" y="0" width="150" height="28" relative="1">
             <mxPoint as="offset" x="-75.0" y="8.0" />
           </mxGeometry>
@@ -4653,7 +4653,7 @@
         <mxCell id="task-name" value="Task" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="task-owner" value="Task Runtime / 固定 Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
+        <mxCell id="task-owner" value="Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="task-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="task" semanticKind="decoration">
@@ -4662,7 +4662,7 @@
         <mxCell id="task-attr-0" value="task_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="104" width="368" height="30" />
         </mxCell>
-        <mxCell id="task-attr-1" value="home_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
+        <mxCell id="task-attr-1" value="orchestrator_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="136" width="368" height="30" />
         </mxCell>
         <mxCell id="task-attr-2" value="revision: Revision" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
@@ -4683,7 +4683,7 @@
         <mxCell id="delegation-name" value="Delegation" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="delegation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="delegation-owner" value="Collaboration / 父 Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="delegation" semanticKind="text">
+        <mxCell id="delegation-owner" value="Collaboration / 父 Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="delegation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="delegation-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="delegation" semanticKind="decoration">
@@ -4767,7 +4767,7 @@
         <mxCell id="internal-name" value="InternalChildLink" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="internal" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="internal-owner" value="Collaboration / 父 Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="internal" semanticKind="text">
+        <mxCell id="internal-owner" value="Collaboration / 父 Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="internal" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="internal-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="internal" semanticKind="decoration">
@@ -4791,7 +4791,7 @@
         <mxCell id="external-name" value="ExternalTaskLink" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="external" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="external-owner" value="Collaboration / 父 Home" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="external" semanticKind="text">
+        <mxCell id="external-owner" value="Collaboration / 父 Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="external" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="external-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="external" semanticKind="decoration">
@@ -4818,7 +4818,7 @@
         <mxCell id="allocation-name" value="RuntimeBudgetAllocation" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=26;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="allocation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="12" width="368" height="40" />
         </mxCell>
-        <mxCell id="allocation-owner" value="Task Runtime / 父预算 owner" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="allocation" semanticKind="text">
+        <mxCell id="allocation-owner" value="Orchestrator / 父预算 owner" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="allocation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="60" width="368" height="24" />
         </mxCell>
         <mxCell id="allocation-rule" value="" style="line;strokeColor=#cbd1d8;" vertex="1" parent="allocation" semanticKind="decoration">
@@ -4848,7 +4848,7 @@
         <mxCell id="note-0" value="内外子映射最多一个且互斥；preparing 可两者皆无，固定创建键与额度仍须保留。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-1" value="Task 与 Allocation 归运行时；remote_task_id 归远端，不能当成本地 Task 或分布式外键。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-1" value="Task 与 Allocation 归Orchestrator；remote_task_id 归远端，不能当成本地 Task 或分布式外键。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1703" width="1760" height="28" />
         </mxCell>
         <mxCell id="source-note" value="完整约束与逐页来源：docs/architecture/uml-models.md" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">

@@ -1,0 +1,17 @@
+flowchart TB
+    H[Orchestrator / 本人管理入口] -->|同步原命令| I
+    subgraph EX[execution 逻辑模块]
+      I[执行命令入口 facade] -->|同步| A[接纳与控制用例]
+      A -->|准确声明读取| C[CatalogPort]
+      A -->|接纳短事务| S[(Executor Store · Operation / jobs / 回执)]
+      A -->|控制落实| R[GateStore / StartBarrier]
+      S -.->|持久 job 领取| W[执行工作者]
+      W -->|同步启动检查| R
+      W -->|同步事实归并| F[FactStore.apply]
+      F -->|短事务| S
+      R -->|实际入口串行读写| O[(资源 owner Store · Gate / epoch / lease)]
+      R -->|通过后进入发送边界| D[固定版本 Driver]
+      W -->|原目标查询或取消| D
+    end
+    W -->|事务外核验使用依据| G[授权 port]
+    D -->|事务外调用| X[目标系统]

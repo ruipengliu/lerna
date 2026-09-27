@@ -25,7 +25,7 @@ ByteStore 适配本地目录或对象存储。索引、字节及传输适配器�
 
 ```mermaid
 flowchart TB
-    U[Home / 管理入口]
+    U[Orchestrator / 管理入口]
     R[视图持有者]
     subgraph M[Memory / Content 同步依赖]
       W[MemoryWriter]
@@ -54,7 +54,7 @@ flowchart TB
     U -->|视图| V
     U -->|内容| C
     R -->|view.pull / view.ack| V
-    E -->|原提取任务| H[提取任务 Home]
+    E -->|原提取任务| H[提取任务 Orchestrator]
     Q --> G[Grant owner]
     W --> G
     C --> G
@@ -86,7 +86,7 @@ flowchart TB
     J -.提取 job.-> E
     J -.视图 job.-> V
     K -->|关闭 / 核对| R[内容持有者]
-    E -->|原提取任务| H[提取任务 Home]
+    E -->|原提取任务| H[提取任务 Orchestrator]
 ```
 
 两图实线均为同步依赖，虚线表示从原数据库领取持久 job。指向 MetadataStore 的边表示各组件读写其负责的原记录；组件与表的对应关系见下表。
@@ -99,7 +99,7 @@ Memory owner 和内容 owner 可分别部署；跨库除准确引用校验外，
 | MemoryWriter | 修订比较、记录写入、候选发布与关闭 | 原 Memory job |
 | QueryService | 获准候选、排序、冻结集合和分页 | 调用方保存查询身份及游标 |
 | IndexWorker | 按修订切点构建可重放索引 | 原索引工作，不修改记忆事实 |
-| ExtractionCoordinator | 绑定有限输入、Home 任务和候选 | 原提取任务及候选映射 |
+| ExtractionCoordinator | 绑定有限输入、Orchestrator 任务和候选 | 原提取任务及候选映射 |
 | ViewPublisher | 快照、变化序列、ACK 与日志保留 | 原视图发送责任 |
 | ContentStore | 不可变字节、策略、来源及交付 | 原上传／内容命令 |
 | ClosureWorker | 禁用传播、持有者核对、物理清理 | 原关闭修订及清理工作 |
@@ -124,7 +124,7 @@ Memory owner 和内容 owner 可分别部署；跨库除准确引用校验外，
 | index_checkpoint | owner、索引版本唯一；covered_sequence 单调 | 同一 change_sequence 中已连续应用的末端 |
 | memory_changes | owner、change_sequence 唯一；修改与变化项同事务 | 视图及索引最慢必要水位 |
 | query_sets | query_id 唯一；绑定主体、接收方、摘要、期限与有限有序集合 | 初值 5 分钟，到期不可续旧游标 |
-| extraction_jobs | extraction_id 唯一；输入摘要及 Home 任务不可改绑 | 原任务及输入检查点 |
+| extraction_jobs | extraction_id 唯一；输入摘要及 Orchestrator 任务不可改绑 | 原任务及输入检查点 |
 | extraction_candidates | candidate_id 唯一；原提取任务、版本及发布决定固定 | 确认、拒绝或清理责任 |
 | views | view_id 唯一；范围、接收方、快照切点及 ACK 水位 | 未确认页和关闭范围 |
 | view_snapshot_items | view_id、位置唯一；固定 memory_id／revision 和必要投影引用 | 有界初始集合；不延长正文或授权期限 |
@@ -151,7 +151,7 @@ MemoryRevision 引用一份准确 ContentRef；正文可位于另一个内容 ow
 
 ```mermaid
 flowchart TB
-    E[ExtractionJob] -->|原 Home 结果生成| C[ExtractionCandidate]
+    E[ExtractionJob] -->|原 Orchestrator 结果生成| C[ExtractionCandidate]
     C -->|唯一发布决定| M[Memory / MemoryRevision]
     M -->|准确正文引用| O[ContentObject]
     O -->|完整依赖边| S[源 ContentRef 与 Policy]
@@ -170,7 +170,7 @@ flowchart TB
 
 | 对象链 | 创建与持久化 | 传递与消费 | 归并与清理 |
 | --- | --- | --- | --- |
-| ExtractionJob → Candidate → MemoryRevision | Coordinator 固定输入和 Home；候选有期限暂存；Writer 在发布事务唯一决定保存 | UI 或有限预授权消费候选；查询只接纳已发布、当前有效记忆 | 拒绝／过期清候选字节；已保存记忆独立保留，不因原任务取消被删除 |
+| ExtractionJob → Candidate → MemoryRevision | Coordinator 固定输入和 Orchestrator；候选有期限暂存；Writer 在发布事务唯一决定保存 | UI 或有限预授权消费候选；查询只接纳已发布、当前有效记忆 | 拒绝／过期清候选字节；已保存记忆独立保留，不因原任务取消被删除 |
 | ContentObject → 来源边／Policy | 完整字节校验后 content.put 提交元数据和准确来源 | 各消费者取得原 copy 和当前用途使用；来源限制交集随派生关系传递 | 先关闭新使用，再传播和清理；残留保留原责任，最小关闭依据长期保存 |
 | MemoryChange → Index／View | 记忆事务追加变化；后台分别前移连续检查点 | 索引仅产候选，视图接收端应用后 ACK；不能共享成功含义 | 日志依必要水位回收；落后视图重建快照，关闭责任不随日志删除 |
 | QuerySet → 页投影 | QueryService 固定有界 ID、修订与排序 | 每页按当前权威状态和资格筛选，原游标只移动位置 | 到期清集合；不续旧游标或把正文复制入永久查询缓存 |
@@ -256,7 +256,7 @@ flowchart LR
 
 图中的头、业务和变化项在同一短事务保存。持锁事务从 last_sequence 后分配恰好所需的有限连续区间，追加变化项并把头更新到区间末端；不预留跨事务号段，无变化则不取号。后一写者必须等前者提交或回滚才能分配，因此不会先提交 102、再补交 101；崩溃／回滚不会留下需要消费者永久等待的空洞。不可用 PostgreSQL sequence、时间戳或变化表的最大值代替此头；sequence 的取号不随事务回滚撤销。[PostgreSQL sequence](https://www.postgresql.org/docs/18/functions-sequence.html)
 
-共同事务沿[公共锁序](../task-runtime/implementation.md#21-锁定顺序)先锁原命令及适用的任务／预算／操作，进入 Memory 后依次锁 owner 头、内容／copy 门禁、候选及记忆业务行，最后工作槽；各类内按稳定键排序。所有会改变 Memory 权威记录或视图投影的 create、replace、restrict、delete、关闭归并和派生状态更新，都通过这条路径追加变化。只改 Content 控制而不改 Memory 的事务可不取头，但持有内容门禁后不得再反向加入 Memory 写入；应保存原后续责任。
+共同事务沿[公共锁序](../orchestrator/implementation.md#21-锁定顺序)先锁原命令及适用的任务／预算／操作，进入 Memory 后依次锁 owner 头、内容／copy 门禁、候选及记忆业务行，最后工作槽；各类内按稳定键排序。所有会改变 Memory 权威记录或视图投影的 create、replace、restrict、delete、关闭归并和派生状态更新，都通过这条路径追加变化。只改 Content 控制而不改 Memory 的事务可不取头，但持有内容门禁后不得再反向加入 Memory 写入；应保存原后续责任。
 
 视图登记和变化日志回收也先锁同一头，再锁视图／检查点，使新视图需要的增量区间不会在登记提交前被回收。回收采用短 `READ COMMITTED` 事务，取头锁后用新语句读取当前保留水位，不能沿用等待锁之前的旧快照漏掉新登记视图。清理已无必要保留的变化项不回退头，也不从残存日志的最大值重建头。
 
@@ -335,7 +335,7 @@ text_terms 按调用方提供的词项去空、去重，单词项最长 256 个�
 QueryService 先规范化认证用户、owner、purpose、recipient、类型和范围。
 读取可处理记录与字段的受信范围，再为有限查询身份取得 continuous 处理使用依据。
 同一查询在单个 owner 内执行；owner_ids 可以列出聚合目标，但当前响应只属于请求 target。
-跨库聚合由 Home 分别保存各库游标与缺口，不承诺跨 owner 的原子快照。
+跨库聚合由 Orchestrator 分别保存各库游标与缺口，不承诺跨 owner 的原子快照。
 
 索引和权威补扫均受相同允许集合过滤；不得先读取无资格正文后丢弃候选。
 取得候选后，按准确来源申请结果披露使用依据；拒绝项不出现在结果中。
@@ -350,7 +350,7 @@ once 只用于来源和输出范围可预先固定的精确 read，不用于未�
 默认词法索引复用权威数据分区，索引候选、I 与补扫使用同一数据库快照。若以后替换为库外索引，须固定与 I 对应的不可变索引版本／段清单，并保留到本次查询结束，或提供等价的快照读取；缺席时只能返回有缺口的降级结果，不能把旧 I 与已原地变化的索引拼成完整结果。
 修改和删除使用最新权威状态去重；旧索引命中不能恢复旧正文。
 
-索引 job 完成或退避也使用[责任版本规则](../task-runtime/implementation.md#job-completion)：已构建范围的 checkpoint 可以单调前移，处理期间新增的变化仍保留原槽后续责任，不能随旧批次完成而消失。Memory 的关闭、清理和 copy 校准槽采用相同规则。
+索引 job 完成或退避也使用[责任版本规则](../orchestrator/implementation.md#job-completion)：已构建范围的 checkpoint 可以单调前移，处理期间新增的变化仍保留原槽后续责任，不能随旧批次完成而消失。Memory 的关闭、清理和 copy 校准槽采用相同规则。
 
 补扫命中上限时返回 partial 和缺口，不能假装新写记录已完整可检索。
 索引损坏时关闭该索引并执行有界权威扫描；仍不足则 partial，不取消扫描上限。
@@ -378,9 +378,9 @@ inspect 可直接查看拥有管理权的对象；没有正文读取权不妨碍
 
 ## 4. 端侧提取与候选发布
 
-`memory.extract` 在 Memory owner 保存 extraction_id、有限输入摘要、规则与唯一 Home 任务映射。
+`memory.extract` 在 Memory owner 保存 extraction_id、有限输入摘要、规则与唯一 Orchestrator 任务映射。
 接纳成功表示推进责任已保存，输出 state=queued，不表示已经产生候选或长期记忆。
-Home 负责模型、工具、预算和取消；Memory owner 负责候选事实与发布决定。
+Orchestrator 负责模型、工具、预算和取消；Memory owner 负责候选事实与发布决定。
 连接器检查点只有在本批输入与下一步责任都持久后才前移。
 
 ### 4.1 输入与候选
@@ -469,14 +469,14 @@ control 模式不要求已撤销的正文读取 Grant：原 owner 用当前认�
 
 ### 5.2 无入站设备的受控反向交付
 
-云 Home 可能得到设备 Memory 或 Executor 产生的准确 ContentRef，却无法连接设备下载面。
+云 Orchestrator 可能得到设备 Memory 或 Executor 产生的准确 ContentRef，却无法连接设备下载面。
 基础反向交付配置限定接收端就是设备已配对长连接服务对应的镜像接收端；它预留有限上传入口，经已有 WSS 连接主动发送 MirrorTicket，设备据此交付同一内容的受管副本。
 接收端只保存原 owner 的镜像，不成为新的内容 owner，也不重新调用 content.put 创建另一份来源身份。
 所有资料仍须满足对接收方的披露、同步或保存许可；local_only 不能因为走反向上传而外发。
 
 ```mermaid
 sequenceDiagram
-    participant H as 云 Home
+    participant H as 云 Orchestrator
     participant R as 已配对 WSS 服务及镜像接收端
     participant O as 设备内容 owner
     H->>R: 提交原 content.register_copy
@@ -503,7 +503,7 @@ sequenceDiagram
 ```
 
 图中设备先主动建立 WSS 连接，R 沿该连接发送 Delivery 和 MirrorTicket，不要求设备监听公网端口。
-Home 与独立服务之间的领域调用和传输管理调用使用 gRPC；设备通过 WSS request 发起上传／镜像状态与控制请求，HTTPS 只传输原始字节。MirrorTicket 是传输对象，精确帧由[公共传输契约](../contracts/transport.md)定义；这五种管理类型不新增或改变 Delivery 的三种业务请求 kind。
+Orchestrator 与独立服务之间的领域调用和传输管理调用使用 gRPC；设备通过 WSS request 发起上传／镜像状态与控制请求，HTTPS 只传输原始字节。MirrorTicket 是传输对象，精确帧由[公共传输契约](../contracts/transport.md)定义；这五种管理类型不新增或改变 Delivery 的三种业务请求 kind。
 设备在发送 Reply 前保存固定回复，接收方持久接收后才返回 ReplyAck。断线或 ReplyAck 丢失时沿原 delivery／reply 身份恢复；ReplyAck 只结束该回复的传输责任，不能替代原业务回执、上传 ready 或内容可读资格。
 票据重复或重连重发仍使用原 ticket/upload_id；新连接不让新实例取得旧票据的上传资格。
 上传就绪与获准读取是两个检查点；缺少当前读取依据时，ready 镜像仍不可用于任务。
@@ -531,7 +531,7 @@ sender_endpoint_id 和 sender_instance_id 必须与接收连接的当前认证�
 
 基础配置不要求 Range。连接中断后在原 ticket 期限内向同一 ticket_id 整份重试，复用原 upload_id，不追加字节或改用新内容身份。
 接收端已经 ready 时，对匹配原元数据的重试返回原结果；不同字节拒绝，不能覆盖镜像。
-上传答复丢失由设备经 WSS request 的 `mirror_lookup` 查询原 ticket_id 对应的 Mirror，Home 通过原交付记录继续核对，不重新登记第二个副本。
+上传答复丢失由设备经 WSS request 的 `mirror_lookup` 查询原 ticket_id 对应的 Mirror，Orchestrator 通过原交付记录继续核对，不重新登记第二个副本。
 ticket 到期后拒绝新上传；若字节仍需重传，新 ticket 必须重核当前原 owner 资格，不能凭旧关闭修订自动续期。
 
 基础反向交付配置在每次镜像读取前都向原 owner 调用 content.get，取得当前 ContentBytesGetOutput。

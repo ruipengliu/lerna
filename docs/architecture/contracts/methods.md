@@ -148,9 +148,9 @@
 | `grant.use.settle` | command／条件 | UseSettlementInput → UseSettlementRecord | applied、rejected |
 | `grant.use.settlement` | query | UseSettlementQueryInput → UseSettlementRecord | QueryResult／Error |
 
-## task-runtime
+## orchestrator
 
-[领域规则](../task-runtime/README.md) · [实现设计](../task-runtime/implementation.md)
+[领域规则](../orchestrator/README.md) · [实现设计](../orchestrator/implementation.md)
 
 | 方法 | 种类／条件 | 输入 → 输出 | 回执阶段 |
 | --- | --- | --- | --- |

@@ -1,0 +1,28 @@
+{
+  "protocol": {
+    "valid": 50,
+    "invalid": 343,
+    "methods": 104
+  },
+  "transport": {
+    "valid": 100,
+    "invalid": 218
+  },
+  "crypto": {
+    "es256": 2,
+    "jcs": 3,
+    "invalid": 23
+  },
+  "outcomes": {
+    "valid": 5,
+    "invalid": 9
+  },
+  "documents": {
+    "markdown": 38,
+    "links": 945,
+    "mermaid": 82,
+    "errors": 0
+  },
+  "old_names_in_active_architecture": 0,
+  "runtime_tests": false
+}

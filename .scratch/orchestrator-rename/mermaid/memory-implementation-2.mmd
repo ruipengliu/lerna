@@ -1,0 +1,23 @@
+flowchart TB
+    DB[(原权威数据库)] -.扫描 jobs.-> J[宿主 job 领取器]
+    subgraph M[Memory 后台]
+      I[IndexWorker]
+      K[ClosureWorker]
+      E[ExtractionCoordinator]
+      V[ViewPublisher]
+      S[MetadataStore]
+      X[(派生候选索引)]
+      B[ByteStore]
+      I --> S
+      I -->|应用连续变更| X
+      K --> S
+      K -->|清理字节| B
+      E --> S
+      V --> S
+    end
+    J -.索引 job.-> I
+    J -.关闭 job.-> K
+    J -.提取 job.-> E
+    J -.视图 job.-> V
+    K -->|关闭 / 核对| R[内容持有者]
+    E -->|原提取任务| H[提取任务 Orchestrator]

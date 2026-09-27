@@ -1,6 +1,6 @@
 {
   "name": "20-budget-allocation",
-  "description": "父任务调额、预留固定子额度和凭原接收方封账结算；列表使用本Home固定上界。",
+  "description": "父任务调额、预留固定子额度和凭原接收方封账结算；列表使用本Orchestrator固定上界。",
   "capabilities": [],
   "input_requests": [],
   "approvals": [],
@@ -11,12 +11,12 @@
         "auth": {
           "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
           "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
-          "logical_service_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2"
+          "logical_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
         },
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "method": "task.submit",
-          "target_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+          "target_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
           "expires_at": "2026-09-26T00:10:00Z",
           "payload": {
             "goal_ref": {
@@ -28,7 +28,7 @@
               "media_type": "application/json",
               "byte_length": 16
             },
-            "home_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+            "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
             "constraints": [],
             "policy_ref": {
               "id": "policy_823412d1eacb67956220e532959f0104",
@@ -51,7 +51,7 @@
           "output": {
             "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
             "task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
-            "home_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+            "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
             "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
             "goal_ref": {
               "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
@@ -104,7 +104,7 @@
         "auth": {
           "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
           "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
-          "logical_service_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2"
+          "logical_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
         },
         "request": {
           "method": "task.adjust_budget",
@@ -128,7 +128,7 @@
           "output": {
             "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
             "task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
-            "home_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+            "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
             "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
             "goal_ref": {
               "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
@@ -181,7 +181,7 @@
         "auth": {
           "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
           "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
-          "logical_service_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2"
+          "logical_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
         },
         "request": {
           "method": "budget.allocate",
@@ -189,7 +189,7 @@
           "payload": {
             "allocation_id": "runtime_allocation_10954cdfb86db62a906fd095f6f26d12",
             "parent_task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
-            "receiver_id": "runtime_child_home_4f28173e7a42b3b74337d5783ac9c080",
+            "receiver_id": "runtime_child_orchestrator_4f28173e7a42b3b74337d5783ac9c080",
             "limits": [
               {
                 "unit": "request",
@@ -208,8 +208,8 @@
           "output": {
             "allocation_id": "runtime_allocation_10954cdfb86db62a906fd095f6f26d12",
             "parent_task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
-            "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
-            "receiver_id": "runtime_child_home_4f28173e7a42b3b74337d5783ac9c080",
+            "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+            "receiver_id": "runtime_child_orchestrator_4f28173e7a42b3b74337d5783ac9c080",
             "revision": 1,
             "limits": [
               {
@@ -230,7 +230,7 @@
         "auth": {
           "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
           "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
-          "logical_service_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2"
+          "logical_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
         },
         "request": {
           "method": "budget.settle",
@@ -239,7 +239,7 @@
             "allocation_id": "runtime_allocation_10954cdfb86db62a906fd095f6f26d12",
             "closure": {
               "allocation_id": "runtime_allocation_10954cdfb86db62a906fd095f6f26d12",
-              "receiver_id": "runtime_child_home_4f28173e7a42b3b74337d5783ac9c080",
+              "receiver_id": "runtime_child_orchestrator_4f28173e7a42b3b74337d5783ac9c080",
               "usage_revision": 1,
               "final_usage": [
                 {
@@ -271,8 +271,8 @@
           "output": {
             "allocation_id": "runtime_allocation_10954cdfb86db62a906fd095f6f26d12",
             "parent_task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
-            "owner_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
-            "receiver_id": "runtime_child_home_4f28173e7a42b3b74337d5783ac9c080",
+            "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+            "receiver_id": "runtime_child_orchestrator_4f28173e7a42b3b74337d5783ac9c080",
             "revision": 2,
             "limits": [
               {
@@ -290,7 +290,7 @@
             ],
             "closure": {
               "allocation_id": "runtime_allocation_10954cdfb86db62a906fd095f6f26d12",
-              "receiver_id": "runtime_child_home_4f28173e7a42b3b74337d5783ac9c080",
+              "receiver_id": "runtime_child_orchestrator_4f28173e7a42b3b74337d5783ac9c080",
               "usage_revision": 1,
               "final_usage": [
                 {
@@ -320,11 +320,11 @@
         "auth": {
           "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
           "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
-          "logical_service_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2"
+          "logical_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
         },
         "request": {
           "method": "task.list",
-          "target_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+          "target_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
           "payload": {
             "limit": 10,
             "statuses": [
@@ -334,7 +334,7 @@
         },
         "response": {
           "output": {
-            "home_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+            "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
             "upper_bound": "2026-09-26T00:00:00Z",
             "items": [
               {
@@ -342,7 +342,7 @@
                 "task": {
                   "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
                   "task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
-                  "home_id": "runtime_home_71e2c886fdf12492a7f5b682f27652c2",
+                  "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
                   "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
                   "goal_ref": {
                     "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",

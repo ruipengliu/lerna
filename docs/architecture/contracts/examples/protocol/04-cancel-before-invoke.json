@@ -46,7 +46,7 @@
           "target_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
           "expires_at": "2026-09-26T00:10:00Z",
           "payload": {
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
             "operation_id": "operation_9bf5a24e4aa779981ac41f1a0f8713ec",
             "reason": "用户取消"
@@ -57,7 +57,7 @@
           "stage": "applied",
           "decided_at": "2026-09-26T00:00:00Z",
           "output": {
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
             "operation_id": "operation_9bf5a24e4aa779981ac41f1a0f8713ec",
             "cancel_command_id": "execution_cancel_8ee471e74d4c6f6435787181bd60fee6",
@@ -82,11 +82,11 @@
           "payload": {
             "operation_id": "operation_9bf5a24e4aa779981ac41f1a0f8713ec",
             "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "goal_revision": 1,
             "control_snapshot": {
               "gate": {
-                "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+                "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
                 "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
                 "control_revision": 1,
                 "goal_revision": 1,
@@ -96,7 +96,7 @@
               "executor_id": "executor_8fba13dab71d6fdd8a9b9db1f06e8131",
               "issued_at": "2026-09-26T00:00:00Z",
               "start_before": "2026-09-26T00:00:30Z",
-              "home_proof": "fixture-authenticated-home-proof"
+              "orchestrator_proof": "fixture-authenticated-orchestrator-proof"
             },
             "capability_ref": {
               "id": "capability_38a5be91af79d7e5ba9809bf383c699b",

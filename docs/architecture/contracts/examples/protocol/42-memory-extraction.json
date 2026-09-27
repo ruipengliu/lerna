@@ -1,6 +1,6 @@
 {
   "name": "memory-extraction",
-  "description": "Accepted finite extraction maps to one Home task; an explicit candidate create publishes once.",
+  "description": "Accepted finite extraction maps to one Orchestrator task; an explicit candidate create publishes once.",
   "capabilities": [],
   "input_requests": [],
   "approvals": [],
@@ -19,7 +19,7 @@
           "target_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
           "payload": {
             "extraction_id": "extraction_868994937b1c6f12924fa744402f419e",
-            "home_id": "home_106a6c241b8797f52e1e77317b96a201",
+            "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
             "input_refs": [
               {
                 "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
@@ -50,7 +50,7 @@
               "max_input_bytes": 1024,
               "deadline": "2026-09-26T00:10:00Z",
               "cost_reservation_ref": {
-                "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                 "id": "extraction_budget_5a20b0fc6137bbf795fdd328a6d7a3b3",
                 "revision": 1
               }
@@ -65,7 +65,7 @@
           "output": {
             "extraction_id": "extraction_868994937b1c6f12924fa744402f419e",
             "extraction_task_id": "extraction_task_69c48037af94b49a8dae2e3e9c5ebd7c",
-            "home_id": "home_106a6c241b8797f52e1e77317b96a201",
+            "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
             "owner_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
             "input_digest": "sha256:4570a4ac24eded98fd4b3db2dd19a59db807acfe4ad5b8adc96571de6dc093a4",
             "state": "queued"

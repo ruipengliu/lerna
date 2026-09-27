@@ -15,7 +15,7 @@
     "artifact_refs": [
       {
         "tenant_id": "tenant_demo",
-        "owner_id": "home_demo",
+        "owner_id": "orchestrator_demo",
         "content_id": "report_demo",
         "version": "1",
         "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -30,7 +30,7 @@
         "goal_revision": 1,
         "artifact_ref": {
           "tenant_id": "tenant_demo",
-          "owner_id": "home_demo",
+          "owner_id": "orchestrator_demo",
           "content_id": "report_demo",
           "version": "1",
           "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -42,7 +42,7 @@
         "evidence_refs": [
           {
             "tenant_id": "tenant_demo",
-            "owner_id": "home_demo",
+            "owner_id": "orchestrator_demo",
             "content_id": "evidence_demo",
             "version": "1",
             "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -61,7 +61,7 @@
         "goal_revision": 1,
         "artifact_ref": {
           "tenant_id": "tenant_demo",
-          "owner_id": "home_demo",
+          "owner_id": "orchestrator_demo",
           "content_id": "report_demo",
           "version": "1",
           "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -73,7 +73,7 @@
         "evidence_refs": [
           {
             "tenant_id": "tenant_demo",
-            "owner_id": "home_demo",
+            "owner_id": "orchestrator_demo",
             "content_id": "evidence_demo",
             "version": "1",
             "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",

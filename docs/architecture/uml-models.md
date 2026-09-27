@@ -4,7 +4,7 @@
 
 图册把当前九模块设计投影为静态逻辑组件图和领域类图：先识别谁提供能力、依赖谁，再看哪些对象保存事实、由谁裁决、如何关联。它补充系统全景图中的内部结构与数据关系；处理时序、完整状态规则和实现约束继续以所属模块正文为准。
 
-全册共 20 页：前两页建立系统与跨 owner 主线，后续九组各含组件页、数据页。组件位置及容器只表达逻辑分工，不划定进程、owner 或数据库事务；这些边界可能重合，也可能分开。owner 指固定的逻辑裁决者，Task Home 是单个任务的 owner。
+全册共 20 页：前两页建立系统与跨 owner 主线，后续九组各含组件页、数据页。组件位置及容器只表达逻辑分工，不划定进程、owner 或数据库事务；这些边界可能重合，也可能分开。owner 指固定的逻辑裁决者，Orchestrator 是单个任务的 owner。
 
 ## 图例与阅读约定
 
@@ -30,9 +30,9 @@
 | 页 | 视图 | 要回答的问题 | 导读 |
 | --- | --- | --- | --- |
 | 01 | 系统组件 | 九模块如何依赖与交接 | [系统](#system) |
-| 02 | 跨 owner 核心对象 | Home 意图、执行效果与正式结果如何关联 | [核心对象](#core) |
-| 03 | 任务运行时组件 | 准入、持久工作与事实归并如何分工 | [任务运行时](#task-runtime) |
-| 04 | 任务运行时数据 | 意图、预留、工作与结果如何保存 | [任务运行时](#task-runtime) |
+| 02 | 跨 owner 核心对象 | Orchestrator 意图、执行效果与正式结果如何关联 | [核心对象](#core) |
+| 03 | 任务编排器组件 | 准入、持久工作与事实归并如何分工 | [任务编排器](#orchestrator) |
+| 04 | 任务编排器数据 | 意图、预留、工作与结果如何保存 | [任务编排器](#orchestrator) |
 | 05 | 大脑组件 | 单轮决策如何读取输入、调用与恢复 | [大脑](#brain) |
 | 06 | 大脑数据 | 请求、固定上下文、调用与提案如何绑定 | [大脑](#brain) |
 | 07 | 执行组件 | 接纳、实际入口门禁与驱动如何协作 | [执行](#execution) |
@@ -53,20 +53,20 @@
 <a id="system"></a>
 ## 01 · 系统组件
 
-先沿交互、Task Home、Brain、Executor／协作阅读任务主线。Home 组装获准上下文，Brain 给出单轮提案，Home 独立准入；执行效果及子任务事实再归并回 Home。Memory／Content 提供准确版本及当前获准材料。
+先沿交互、Orchestrator、Brain、Executor／协作阅读任务主线。Orchestrator 组装获准上下文，Brain 给出单轮提案，Orchestrator 独立准入；执行效果及子任务事实再归并回 Orchestrator。Memory／Content 提供准确版本及当前获准材料。
 
-再看治理依赖：实际使用端向 Security 取得使用依据，资源入口仍检查当前状态；Evaluation 使用获准观测并管理评测与批准，Extensions 管理精确版本和实际实例。Evaluation 指向 Home 的依赖表示读取获准观测，图中不展开反向事实传输；Extensions 指向 Brain 的装配边是代表性依赖，不限定其只能装配 Brain。
+再看治理依赖：实际使用端向 Security 取得使用依据，资源入口仍检查当前状态；Evaluation 使用获准观测并管理评测与批准，Extensions 管理精确版本和实际实例。Evaluation 指向 Orchestrator 的依赖表示读取获准观测，图中不展开反向事实传输；Extensions 指向 Brain 的装配边是代表性依赖，不限定其只能装配 Brain。
 
 依赖箭头省略返回与部分控制路径。Security 内也有不同事实 owner；Extensions 装配不授予业务权限。整体边界与完整交接依据见[技术总览](technical-overview.md#2-系统全景图的阅读方法)及[方案入口](README.md)。
 
 <a id="core"></a>
 ## 02 · 跨 owner 核心对象
 
-本页沿 Home 固定意图、Executor 保存效果、Home 固定成功成果阅读。`OperationIntent` 是 [Home 内部记录](task-runtime/README.md#records)；公共对象为 [Task](contracts/schemas/protocol.schema.json#/$defs/Task)、[Operation](contracts/schemas/protocol.schema.json#/$defs/Operation)、[Attempt](contracts/schemas/protocol.schema.json#/$defs/Attempt)、[Result](contracts/schemas/protocol.schema.json#/$defs/Result) 与 [ContentRef](contracts/schemas/protocol.schema.json#/$defs/ContentRef)。
+本页沿 Orchestrator 固定意图、Executor 保存效果、Orchestrator 固定成功成果阅读。`OperationIntent` 是 [Orchestrator 内部记录](orchestrator/README.md#records)；公共对象为 [Task](contracts/schemas/protocol.schema.json#/$defs/Task)、[Operation](contracts/schemas/protocol.schema.json#/$defs/Operation)、[Attempt](contracts/schemas/protocol.schema.json#/$defs/Attempt)、[Result](contracts/schemas/protocol.schema.json#/$defs/Result) 与 [ContentRef](contracts/schemas/protocol.schema.json#/$defs/ContentRef)。
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
-| Task — OperationIntent | 1 | 0..* | Home 准入并固定原意图。 |
+| Task — OperationIntent | 1 | 0..* | Orchestrator 准入并固定原意图。 |
 | OperationIntent — Operation | 1 | 0..1 | 仅指正常 Invoke 已接纳的 Operation；取消先到留下的关闭索引不算完整接纳记录。 |
 | Operation — Attempt | 1 | 0..* | 接纳尚未准备时可为零；Attempt 不证明已发送，线格式分页上限不是终身尝试数。 |
 | Task — Result | 1 | 0..1 | 当前目标的正式 Result 仅在 `status=succeeded` 时存在。 |
@@ -76,14 +76,14 @@
 
 接纳、效果成立与任务完成有不同确认点；`0..1` 包含尚未派发或尚未接纳的阶段。任务取消后，未知或可能迟到的效果及费用仍沿原操作核对，迟到证据不重开任务。准确内容引用可以保留，但不证明字节仍存在或当前可读。
 
-依据：[运行时记录与提交](task-runtime/implementation.md#data-flow)、[执行记录](execution/implementation.md#data-flow)、[共同契约](contracts/README.md)。
+依据：[Orchestrator 记录与提交](orchestrator/implementation.md#data-flow)、[执行记录](execution/implementation.md#data-flow)、[共同契约](contracts/README.md)。
 
-<a id="task-runtime"></a>
-## 03–04 · 任务运行时
+<a id="orchestrator"></a>
+## 03–04 · 任务编排器
 
-组件页先看 CommandHandler 与 TaskCoordinator／BudgetLedger 的同步裁决，再看 JobRunner、SnapshotAssembler／PlanMaterializer 和 FactReducer 的持续工作。默认参考实现共 Home 提交域；Brain、远端 Executor 等调用在短事务之外。领取 job 只取得本轮工作资格，不证明任务成功。
+组件页先看 CommandHandler 与 TaskCoordinator／BudgetLedger 的同步裁决，再看 JobRunner、SnapshotAssembler／PlanMaterializer 和 FactReducer 的持续工作。默认参考实现共 Orchestrator 提交域；Brain、远端 Executor 等调用在短事务之外。领取 job 只取得本轮工作资格，不证明任务成功。
 
-公共对象：[Task](contracts/schemas/protocol.schema.json#/$defs/Task)、[Result](contracts/schemas/protocol.schema.json#/$defs/Result)。内部记录：Snapshot、OperationIntent、ReceivedFact、Job、BudgetReservation，见[记录结构](task-runtime/implementation.md#data-flow)；ReceivedFact 是 Home 的归并副本，其 `owner` 字段仍指原事实权威。
+公共对象：[Task](contracts/schemas/protocol.schema.json#/$defs/Task)、[Result](contracts/schemas/protocol.schema.json#/$defs/Result)。内部记录：Snapshot、OperationIntent、ReceivedFact、Job、BudgetReservation，见[记录结构](orchestrator/implementation.md#data-flow)；ReceivedFact 是 Orchestrator 的归并副本，其 `owner` 字段仍指原事实权威。
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
@@ -94,11 +94,11 @@
 | OperationIntent — BudgetReservation | 1 | 0..* | 按适用计价项预留。 |
 | OperationIntent — ReceivedFact | 0..1 | 0..* | 归并事实也可来自 decision 或委派，故可不关联操作意图。 |
 
-准入消费原 Decision 身份或计划步骤身份之一，并与不可变意图、预留及派发 job 共同提交。计划版本和消费唯一约束未展开，仍按[实现机制](task-runtime/implementation.md)执行。`status`、`control`、`wait_reasons`、`open_effects`、`accounting_open` 独立，暂停和未知效果不是新的 Task 状态分类。
+准入消费原 Decision 身份或计划步骤身份之一，并与不可变意图、预留及派发 job 共同提交。计划版本和消费唯一约束未展开，仍按[实现机制](orchestrator/implementation.md)执行。`status`、`control`、`wait_reasons`、`open_effects`、`accounting_open` 独立，暂停和未知效果不是新的 Task 状态分类。
 
 答复丢失查原 decision、command 或 operation；重启继续原 jobs。取消可保留效果与账务收尾，迟到成功不创建 Result。内容和历史清理须检查未决引用，长期关闭索引继续阻止原身份复活。
 
-依据：[模块合同](task-runtime/README.md)、[内部职责](task-runtime/implementation.md#module-shape)、[数据与唯一约束](task-runtime/implementation.md#data-flow)。
+依据：[模块合同](orchestrator/README.md)、[内部职责](orchestrator/implementation.md#module-shape)、[数据与唯一约束](orchestrator/implementation.md#data-flow)。
 
 <a id="brain"></a>
 ## 05–06 · 大脑
@@ -114,7 +114,7 @@ DecisionService 接纳固定请求，ContextReader 校验准确输入与来源�
 | DecisionRecord — ModelCall | 1 | 0..1 | 确定性路径不建调用；更换 worker 不产生第二次物理调用。 |
 | DecisionRecord — Proposal | 0..* | 0..1 | 仅 `completed` 有提案；Proposal 是值，不宣称跨决策全局独占。 |
 
-BrainContext 由 Home 固定，正文由内容 owner 保存；每次实际来源处理仍分别记事实。Proposal 的 `act`、`need_context`、`request_input`、`complete`、`fail` 是 `kind` 分支，图不建立继承关系。提案完成后仍须通过 Home 的当前准入。
+BrainContext 由 Orchestrator 固定，正文由内容 owner 保存；每次实际来源处理仍分别记事实。Proposal 的 `act`、`need_context`、`request_input`、`complete`、`fail` 是 `kind` 分支，图不建立继承关系。提案完成后仍须通过 Orchestrator 的当前准入。
 
 供应商可能已处理而答复丢失时，查询原模型调用；不支持查询则保留 `provider_result_unknown` 和费用责任。取消关闭决策推进，模型停止仍须证据，`usage_final` 单独确认；迟到输出不能变成新一轮提案。
 
@@ -132,7 +132,7 @@ BrainContext 由 Home 固定，正文由内容 owner 保存；每次实际来源
 | Capability — Binding | 1 | 0..* | Binding 固定准确能力版本。 |
 | Capability — Operation | 1 | 0..* | 沿原 `Invoke.capability_ref`；Operation 返回投影不因此新增字段。 |
 | Binding — Operation | 1 | 0..* | 沿原 `Invoke.binding_ref`；目录更新不改写原意图。 |
-| TaskGate — Operation | 1 | 0..* | 同 Executor 的 `(home_id, task_id)` 门禁；每次启动复核，接纳快照不是永久许可。 |
+| TaskGate — Operation | 1 | 0..* | 同 Executor 的 `(orchestrator_id, task_id)` 门禁；每次启动复核，接纳快照不是永久许可。 |
 | Operation — Attempt | 1 | 0..* | 接纳后可尚未准备尝试；实际请求分别记录，原业务键不变。 |
 | Operation — RuntimeResourceState | 0..* | 0..* | 仅适用于能力声明的资源域；历史多项关联不允许并发占用。 |
 | RuntimeResourceState — ResourceLease | 0..1 | 0..1 | 仅当前 `lease` 投影，不含历史租约；期限另按 `expires_at` 判断。 |
@@ -207,7 +207,7 @@ SurfaceService 保存页面快照，InputService 与 DeliveryWorker 保存输入
 | Surface — ApplicationEventSubmission | 1 | 0..* | 仅 `task_ref` 缺省时接纳；固定页面修订与 `app_binding`。 |
 | ConfirmationRecord — InputRequestView | 0..* | 0..1 | 仅 `task.accept_result` 恰关联一个 acceptance 请求，依据原命令 payload；其他消费者无此关联。 |
 
-独立 Surface 不必创建任务；已绑定任务的页面由受信 Home 投影器更新。验收确认还绑定原 `goal_revision` 与 `candidate_hash`；多个未消费确认尝试不改变最终业务消费唯一性。`seen_revision` 只说明设备显示，不证明用户消费或外部效果。
+独立 Surface 不必创建任务；已绑定任务的页面由受信 Orchestrator 投影器更新。验收确认还绑定原 `goal_revision` 与 `candidate_hash`；多个未消费确认尝试不改变最终业务消费唯一性。`seen_revision` 只说明设备显示，不证明用户消费或外部效果。
 
 正常转交先保存 queued 和目标命令，再领取 sending 并查询原回执。答复丢失保留 sending；queued 撤回与领取竞争，sending 后只登记撤回请求并继续核对。必需预览撤权、过期或来源关闭时，业务 owner 拒绝相关消费；旧按钮与缓存不能放行。关窗不取消任务，清理历史快照不删除消费事实。
 
@@ -216,7 +216,7 @@ SurfaceService 保存页面快照，InputService 与 DeliveryWorker 保存输入
 <a id="collaboration"></a>
 ## 15–16 · Agent 协作
 
-DelegationAdmission 固定有界委派，InternalChildFactory 在父 Home 内建子，ExternalAgentAdapter 沿原外部创建键交接。DelegationReducer 归并原生事实，ControlPropagator／SettlementCoordinator 继续控制与收尾。图中依赖不表示时序；两个 required port 是内部实现边界。
+DelegationAdmission 固定有界委派，InternalChildFactory 在父 Orchestrator 内建子，ExternalAgentAdapter 沿原外部创建键交接。DelegationReducer 归并原生事实，ControlPropagator／SettlementCoordinator 继续控制与收尾。图中依赖不表示时序；两个 required port 是内部实现边界。
 
 公共对象：[Task](contracts/schemas/protocol.schema.json#/$defs/Task)、[Delegation](contracts/schemas/protocol.schema.json#/$defs/Delegation)、[AgentBinding](contracts/schemas/protocol.schema.json#/$defs/AgentBinding)、[RuntimeBudgetAllocation](contracts/schemas/protocol.schema.json#/$defs/RuntimeBudgetAllocation)。AgentDescriptor、InternalChildLink、ExternalTaskLink 为[内部记录](collaboration/implementation.md#data-flow)。
 
@@ -227,7 +227,7 @@ DelegationAdmission 固定有界委派，InternalChildFactory 在父 Home 内建
 | AgentBinding — AgentDescriptor | 0..* | 1 | 固定准确 Agent 声明。 |
 | Delegation — InternalChildLink | 1 | 0..1 | 与外部映射互斥；preparing 可尚无映射。 |
 | Delegation — ExternalTaskLink | 1 | 0..1 | 仅已建立映射；创建未知时先保存原 creation key 与 job。 |
-| InternalChildLink — Task（子） | 0..1 | 1 | 同 Home，映射两方向唯一；普通根 Task 可无内部映射。 |
+| InternalChildLink — Task（子） | 0..1 | 1 | 同 Orchestrator，映射两方向唯一；普通根 Task 可无内部映射。 |
 | Delegation — RuntimeBudgetAllocation | 1 | 1 | 仅限已分配给协作委派的额度；一般预算分配不在此关系范围。 |
 
 内部创建将子任务、唯一映射、额度和首 job 共同提交。外部 `remote_task_id` 归远端，图不把它当成本地 Task 或跨库外键。preparing 时两种映射都可缺省，但原创建键、额度及发送／查询责任仍须持久保存。

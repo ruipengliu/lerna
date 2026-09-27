@@ -1,6 +1,6 @@
 # 生产数据布局与最小中间件
 
-[生产拓扑与恢复目标](deployment-production.md) · [任务事务](task-runtime/implementation.md) · [内容与清理](memory/implementation.md#reference-gate) · [执行入口](execution/implementation.md#entrance-recovery)
+[生产拓扑与恢复目标](deployment-production.md) · [任务事务](orchestrator/implementation.md) · [内容与清理](memory/implementation.md#reference-gate) · [执行入口](execution/implementation.md#entrance-recovery)
 
 生产默认采用托管 PostgreSQL 18、跨可用区对象存储和平台已有的连接池、容器、负载均衡、DNS、密钥及监控能力；供应商可替换。单地域三个可用区、单可用区故障下已确认账本 RPO=0、控制与查询 RTO≤60 秒是待运行验收的目标，完整故障前提归[生产部署](deployment-production.md#availability)。完整单体仅用于开发调试；适用端侧组件也可使用本机 SQLite，其恢复边界与云端生产容灾分别验收。
 
@@ -9,7 +9,7 @@
 
 ```mermaid
 flowchart TB
-    H[稳定 Home 与领域 owner] -->|固定放置映射| P[数据库分区]
+    H[稳定 Orchestrator 与领域 owner] -->|固定放置映射| P[数据库分区]
     A[多个 Go 应用与工作进程] -->|短事务| W[(PostgreSQL 当前写主)]
     P --> W
     W --- B[业务记录 / commands / jobs / 关闭索引]
@@ -19,12 +19,12 @@ flowchart TB
     A -.重建候选.-> X[词法索引与进程缓存]
 ```
 
-图展示权威归属及访问路径；虚线是可重建派生数据。数据库分区可以承载多个 Home 和租户，一个租户也可为新任务使用多个 Home。Home 是任务负责端，owner 是领域事实的裁决者，均不等于当前进程或一台数据库机器。
+图展示权威归属及访问路径；虚线是可重建派生数据。数据库分区可以承载多个 Orchestrator 和租户，一个租户也可为新任务使用多个 Orchestrator。Orchestrator 是任务负责端，owner 是领域事实的裁决者，均不等于当前进程或一台数据库机器。
 
 | 数据与归属 | 默认提交域 | 实现边界 |
 | --- | --- | --- |
-| Task、内部任务树、预算、原命令及 jobs | 原 Home 所在 PostgreSQL 分区 | 同一 Home 多进程共享一个写权威；祖先控制、准入和账务仍用短事务 |
-| Grant 父链、计数与 Use；Confirmation | 原授权 owner；确认随消费它的业务 owner 放置 | 一条许可父链不拆库，Confirmation 与业务消费共事务；增加 Home 不复制旧许可余额 |
+| Task、内部任务树、预算、原命令及 jobs | 原 Orchestrator 所在 PostgreSQL 分区 | 同一 Orchestrator 多进程共享一个写权威；祖先控制、准入和账务仍用短事务 |
+| Grant 父链、计数与 Use；Confirmation | 原授权 owner；确认随消费它的业务 owner 放置 | 一条许可父链不拆库，Confirmation 与业务消费共事务；增加 Orchestrator 不复制旧许可余额 |
 | Memory、Content 元数据、来源边及清理工作 | 同租户的 Memory／Content 默认共提交域 | 引用登记、关闭门禁和本域发布共同提交；Memory 变化与 [owner 事务头](memory/implementation.md#memory-change-head)共同保存，索引／视图从同一提交序列取切点；跨 owner 分支见[引用门禁](memory/implementation.md#reference-gate) |
 | 上传、镜像、正文与制品字节 | 元数据在原 owner；字节在共享对象存储 | 接收实例可以替换，准确对象版本不依赖原 Pod 的临时磁盘 |
 | 会话、端点代次、委托凭据校验记录 | 按稳定 tenant／identity 映射到所属身份权威 | 身份路由可缓存，当前有效性不可用任意 TTL 的 allowed 缓存代替；核验不可达时拒绝相应新工作和披露 |
@@ -32,7 +32,7 @@ flowchart TB
 
 放置映射由受信配置和持久目录保存，实例发现只解析当前健康地址。身份权威按账户／端点的稳定键分区，不把全部逐消息核验隐含压到一张全局热行；同一身份的会话撤销与代次仍由原分区裁决。预认证配对按独立 pairing_id 路由，批准时绑定租户，不能由匿名请求选择租户。映射不可确定时等待或拒绝，不把缓存 miss 当作新对象。
 
-默认扩容增加 Home 承接新任务；原 `task_id→home_id` 不变。整库分区搬迁允许维护窗口：停止该分区新写与发送门禁、隔离旧写者、取得包含 commands／jobs／关闭索引及身份映射的完整切点，在目标恢复并验证对象引用后更新放置映射，再先开放控制和核对。旧映射只能拒绝或引导到原逻辑服务，不能继续写旧库；迁移失败保持维护状态，不从两个库择一重试。本方案不承诺在线重分片。
+默认扩容增加 Orchestrator 承接新任务；原 `task_id→orchestrator_id` 不变。整库分区搬迁允许维护窗口：停止该分区新写与发送门禁、隔离旧写者、取得包含 commands／jobs／关闭索引及身份映射的完整切点，在目标恢复并验证对象引用后更新放置映射，再先开放控制和核对。旧映射只能拒绝或引导到原逻辑服务，不能继续写旧库；迁移失败保持维护状态，不从两个库择一重试。本方案不承诺在线重分片。
 
 <a id="durable-work"></a>
 ## 2. PostgreSQL 保存责任，通知只缩短等待
@@ -57,7 +57,7 @@ sequenceDiagram
 
 | 路径 | 固定机制 | 失败后继续者 |
 | --- | --- | --- |
-| 正常领取 | 按分区、工作类别、状态、due_at 和稳定键批量扫描；短事务 `FOR UPDATE SKIP LOCKED` 领取并递增 lease_epoch | 原 job；领域写入核对领取资格，完成／退避另核对当前 work_revision，见[责任槽规则](task-runtime/implementation.md#job-completion) |
+| 正常领取 | 按分区、工作类别、状态、due_at 和稳定键批量扫描；短事务 `FOR UPDATE SKIP LOCKED` 领取并递增 lease_epoch | 原 job；领域写入核对领取资格，完成／退避另核对当前 work_revision，见[责任槽规则](orchestrator/implementation.md#job-completion) |
 | 长期等待与历史完成 | 等待工作有具体期限／依赖，不占 goroutine；终态工作退出活跃领取索引 | 恢复扫描按原责任键检查缺槽，不能新造命令身份 |
 | 唤醒合并 | 有限内存集合只保留“某分区／类别需扫描”；载荷不含租户正文或用户凭据 | 集合溢出可丢提示，保留周期扫描 |
 | 提交后发送失败 | NOTIFY 使用独立提交与有限超时，失败不回滚原业务、也不让客户端重提已成功命令 | 扫描发现原记录；无需可靠地补发每一条通知 |

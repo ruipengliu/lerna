@@ -31,7 +31,7 @@
                   "kind": "input",
                   "block_id": "directory",
                   "request_ref": {
-                    "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                    "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                     "id": "request_10573b873d2fa5a365d558a45e328e47",
                     "revision": 2
                   },
@@ -52,7 +52,7 @@
                   "kind": "action",
                   "block_id": "confirm",
                   "request_ref": {
-                    "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                    "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                     "id": "request_10573b873d2fa5a365d558a45e328e47",
                     "revision": 2
                   },
@@ -76,7 +76,7 @@
               ],
               "request_refs": [
                 {
-                  "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                  "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                   "id": "request_10573b873d2fa5a365d558a45e328e47",
                   "revision": 2
                 }
@@ -106,7 +106,7 @@
                   "kind": "input",
                   "block_id": "directory",
                   "request_ref": {
-                    "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                    "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                     "id": "request_10573b873d2fa5a365d558a45e328e47",
                     "revision": 2
                   },
@@ -127,7 +127,7 @@
                   "kind": "action",
                   "block_id": "confirm",
                   "request_ref": {
-                    "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                    "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                     "id": "request_10573b873d2fa5a365d558a45e328e47",
                     "revision": 2
                   },
@@ -151,7 +151,7 @@
               ],
               "request_refs": [
                 {
-                  "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                  "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                   "id": "request_10573b873d2fa5a365d558a45e328e47",
                   "revision": 2
                 }
@@ -194,7 +194,7 @@
                     "kind": "input",
                     "block_id": "directory",
                     "request_ref": {
-                      "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                      "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                       "id": "request_10573b873d2fa5a365d558a45e328e47",
                       "revision": 2
                     },
@@ -215,7 +215,7 @@
                     "kind": "action",
                     "block_id": "confirm",
                     "request_ref": {
-                      "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                      "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                       "id": "request_10573b873d2fa5a365d558a45e328e47",
                       "revision": 2
                     },
@@ -239,7 +239,7 @@
                 ],
                 "request_refs": [
                   {
-                    "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                    "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                     "id": "request_10573b873d2fa5a365d558a45e328e47",
                     "revision": 2
                   }
@@ -258,15 +258,15 @@
       "exchange": {
         "auth": {
           "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
-          "logical_service_id": "home_106a6c241b8797f52e1e77317b96a201",
+          "logical_service_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
           "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
         },
         "request": {
           "method": "interaction.request_read",
-          "target_id": "home_106a6c241b8797f52e1e77317b96a201",
+          "target_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
           "payload": {
             "request_ref": {
-              "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+              "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
               "id": "request_10573b873d2fa5a365d558a45e328e47",
               "revision": 2
             }
@@ -276,11 +276,11 @@
           "output": {
             "request": {
               "request_id": "request_10573b873d2fa5a365d558a45e328e47",
-              "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+              "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
               "revision": 2,
               "kind": "clarification",
               "task_ref": {
-                "home_id": "home_106a6c241b8797f52e1e77317b96a201",
+                "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                 "task_id": "task_478f3a4c51824ad23cb50c1c60670c0f"
               },
               "schema": {

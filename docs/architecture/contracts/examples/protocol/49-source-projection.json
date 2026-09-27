@@ -1,6 +1,6 @@
 {
   "name": "source-projection",
-  "description": "Task projections advance source revision; finite preauthorized extraction still only queues a Home task.",
+  "description": "Task projections advance source revision; finite preauthorized extraction still only queues a Orchestrator task.",
   "capabilities": [],
   "input_requests": [],
   "approvals": [],
@@ -25,7 +25,7 @@
               "digest": "sha256:e52ee9141d9e31df2fbe714ff65a3976bff8606facd543609aa4ac9dfc0e31ad"
             },
             "task_ref": {
-              "home_id": "home_106a6c241b8797f52e1e77317b96a201",
+              "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
               "task_id": "task_478f3a4c51824ad23cb50c1c60670c0f"
             },
             "snapshot": {
@@ -73,7 +73,7 @@
               "source_revision": 3
             },
             "task_ref": {
-              "home_id": "home_106a6c241b8797f52e1e77317b96a201",
+              "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
               "task_id": "task_478f3a4c51824ad23cb50c1c60670c0f"
             }
           }
@@ -139,7 +139,7 @@
               "source_revision": 4
             },
             "task_ref": {
-              "home_id": "home_106a6c241b8797f52e1e77317b96a201",
+              "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
               "task_id": "task_478f3a4c51824ad23cb50c1c60670c0f"
             }
           }
@@ -160,7 +160,7 @@
           "target_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
           "payload": {
             "extraction_id": "auto_extraction_d634eab4b43746ba290d821930f777d7",
-            "home_id": "home_106a6c241b8797f52e1e77317b96a201",
+            "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
             "input_refs": [
               {
                 "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
@@ -191,7 +191,7 @@
               "max_input_bytes": 1024,
               "deadline": "2026-09-26T00:10:00Z",
               "cost_reservation_ref": {
-                "owner_id": "home_106a6c241b8797f52e1e77317b96a201",
+                "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
                 "id": "extraction_budget_5a20b0fc6137bbf795fdd328a6d7a3b3",
                 "revision": 1
               }
@@ -206,7 +206,7 @@
           "output": {
             "extraction_id": "auto_extraction_d634eab4b43746ba290d821930f777d7",
             "extraction_task_id": "auto_task_5956d039ba42f7a4724ee897a215fe00",
-            "home_id": "home_106a6c241b8797f52e1e77317b96a201",
+            "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
             "owner_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
             "input_digest": "sha256:4570a4ac24eded98fd4b3db2dd19a59db807acfe4ad5b8adc96571de6dc093a4",
             "state": "queued"

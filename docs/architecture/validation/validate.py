@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate documentation fixtures; this is not a task-runtime implementation."""
+"""Validate documentation fixtures; this is not a orchestrator implementation."""
 import json
 from pathlib import Path
 

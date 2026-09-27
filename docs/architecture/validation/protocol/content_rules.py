@@ -140,7 +140,7 @@ def check_exchange(exchange, capabilities):
     if name == 'memory.list' and p['states'] and any(item['state'] not in p['states'] for item in o['items']):
         errors.append('memory_list_filter: control state outside management filter')
     if name == 'memory.extract':
-        for key in ('extraction_id', 'home_id'):
+        for key in ('extraction_id', 'orchestrator_id'):
             same(o[key], p[key], 'extraction_binding')
         same(o['owner_id'], target, 'extraction_binding')
         same(o['input_digest'], digest(p['input_refs']), 'extraction_binding')

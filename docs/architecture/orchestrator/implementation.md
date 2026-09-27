@@ -1,26 +1,26 @@
-# 任务运行时实现：提交、推进与保留
+# Orchestrator 实现：提交、推进与保留
 
 [模块主线](README.md) · [大脑实现](../brain/implementation.md) · [执行实现](../execution/implementation.md) · [协作实现](../collaboration/implementation.md)
 
 本页给出参考实现的内部组织和算法。Task、Result、控制和预算的对外含义仍以[模块主线](README.md#records)为准；精确消息字段由[共同 Schema](../contracts/schemas/protocol.schema.json)定义。实现可以改变表名、调度器和存储布局，但必须保留相同提交点、原身份和恢复结果。
 
-生产由独立应用与工作进程共享原 Home 的 PostgreSQL 权威与持久 jobs；跨提交域沿原命令交接，开发单体复用相同规则。没有可写权威存储、准确能力、可核对授权或有限费用边界时，不接纳依赖该前提的新行动。已经接纳的任务可以等待，原操作与收尾责任继续保存。本文的表和伪代码是实现规格，尚非运行代码或持久性验证结果。
+生产由独立应用与工作进程共享原 Orchestrator 的 PostgreSQL 权威与持久 jobs；跨提交域沿原命令交接，开发单体复用相同规则。没有可写权威存储、准确能力、可核对授权或有限费用边界时，不接纳依赖该前提的新行动。已经接纳的任务可以等待，原操作与收尾责任继续保存。本文的表和伪代码是实现规格，尚非运行代码或持久性验证结果。
 
 <a id="module-shape"></a>
 ## 1. 模块形状与内部依赖
 
-运行时是宿主装配的一个软件模块，对外 facade 是 CommandHandler；其后是处理任务用例的 TaskCoordinator 与 JobRunner、执行领域规则的 BudgetLedger／PlanMaterializer／FactReducer，以及存储和外部 port。名称表示参考实现的代码职责，当前没有相应运行代码；这些职责保持同一 Home 提交域，业务入口与 JobRunner 在生产分别装入应用池和工作池；其他内部组件按用例组合，不各建服务。依赖由宿主注入，领域规则不反向依赖 WSS／gRPC、数据库驱动或具体模型 SDK。
+Orchestrator 是宿主装配的一个软件模块，对外 facade 是 CommandHandler；其后是处理任务用例的 TaskCoordinator 与 JobRunner、执行领域规则的 BudgetLedger／PlanMaterializer／FactReducer，以及存储和外部 port。名称表示参考实现的代码职责，当前没有相应运行代码；这些职责保持同一 Orchestrator 提交域，业务入口与 JobRunner 在生产分别装入应用池和工作池；其他内部组件按用例组合，不各建服务。依赖由宿主注入，领域规则不反向依赖 WSS／gRPC、数据库驱动或具体模型 SDK。
 
 ```mermaid
 flowchart TB
     U[交互或协议入口] -->|同步命令与认证上下文| I
-    subgraph RT[task-runtime]
+    subgraph RT[orchestrator]
       I[CommandHandler facade] -->|同步用例| C[TaskCoordinator / BudgetLedger]
       W[JobRunner] -->|同步组装或物化| P[SnapshotAssembler / PlanMaterializer]
       P -->|固定候选| C
       W -->|同步归并| F[FactReducer]
       F -->|任务与账务变更| C
-      C -->|短事务| T[(运行时 Store · Task / 预算 / jobs / 回执)]
+      C -->|短事务| T[(Orchestrator Store · Task / 预算 / jobs / 回执)]
       T -.->|持久 job 领取| W
     end
     P -->|同步读取准确依赖| K[Context / 能力 / 授权 ports]
@@ -29,7 +29,7 @@ flowchart TB
     C -->|内部委派| D[Collaboration port]
 ```
 
-图建模固定 Home 内的代码调用依赖；实线是同步调用或事务读写，虚线是已持久 job 驱动后续工作，不代表新增消息中间件。返回值沿原调用返回。内部委派共享宿主事务句柄，Brain、远端 Executor 和其他远端 port 的调用均在事务外。异步答复先成为原对象事实，再由 FactReducer 归并；回调不能直接修改 Task。
+图建模固定 Orchestrator 内的代码调用依赖；实线是同步调用或事务读写，虚线是已持久 job 驱动后续工作，不代表新增消息中间件。返回值沿原调用返回。内部委派共享宿主事务句柄，Brain、远端 Executor 和其他远端 port 的调用均在事务外。异步答复先成为原对象事实，再由 FactReducer 归并；回调不能直接修改 Task。
 
 | 内部职责 | 输入及产出 | 不拥有的裁决权 |
 | --- | --- | --- |
@@ -43,7 +43,7 @@ flowchart TB
 
 内部 port 返回结构化业务事实及错误。进程内接口可以直接传对象；远端代理增加原 Command／Receipt 和查询义务，不改变以上职责。
 
-存储侧用一个运行时 Store 装配宿主 transaction、command_store 和 job_store；TaskCoordinator 通过它提交任务与责任，BudgetLedger 只写预算所属记录。远端 port 的代理负责协议编码、认证和原回执恢复，不替协调器作准入。将计划推进另拆为服务会复制任务修订、预算及控制判定，因此计划物化继续由既有 JobRunner 调用，只产出候选。
+存储侧用一个 Orchestrator Store 装配宿主 transaction、command_store 和 job_store；TaskCoordinator 通过它提交任务与责任，BudgetLedger 只写预算所属记录。远端 port 的代理负责协议编码、认证和原回执恢复，不替协调器作准入。将计划推进另拆为服务会复制任务修订、预算及控制判定，因此计划物化继续由既有 JobRunner 调用，只产出候选。
 
 ## 2. 持久表与索引
 
@@ -51,7 +51,7 @@ flowchart TB
 
 | 表 | 主键与必要字段 | 唯一约束／索引 |
 | --- | --- | --- |
-| tasks | tenant、task_id、Home、父任务、业务 Task、created_at | 主键；`(tenant, home, created_at, task_id)` 列表索引 |
+| tasks | tenant、task_id、Orchestrator、父任务、业务 Task、created_at | 主键；`(tenant, orchestrator, created_at, task_id)` 列表索引 |
 | task_requirements | task_id、goal_revision、requirement_id、规则及来源 | 同目标修订内 requirement 唯一 |
 | task_snapshots | task_id、snapshot_revision、精确依赖摘要、content_ref | 同任务快照修订唯一，不原地更新 |
 | task_plans | task_id、plan_id、plan_revision、goal_revision、正文引用 | 计划版本唯一；当前可用指针由 tasks 保存 |
@@ -76,7 +76,7 @@ flowchart TB
 <a id="data-flow"></a>
 ### 2.1 核心对象关系与流转
 
-Task 是本 Home 的状态聚合根；Snapshot 和 PlanVersion 是不可变输入，OperationIntent 是已准入的固定意图，ReceivedFact 是外部负责方的版本化事实。Job 只保存继续处理这些对象的责任。下图只列持久关联，箭头不表示调度顺序。
+Task 是本 Orchestrator 的状态聚合根；Snapshot 和 PlanVersion 是不可变输入，OperationIntent 是已准入的固定意图，ReceivedFact 是外部负责方的版本化事实。Job 只保存继续处理这些对象的责任。下图只列持久关联，箭头不表示调度顺序。
 
 ```mermaid
 erDiagram
@@ -114,7 +114,7 @@ DecisionConsumption 与 PlanStepAdmission 是互斥的候选来源登记：一�
 
 ## 3. 接纳任务及固定原命令
 
-接纳入口先核对认证、消息结构、Home 路由、容量和期限，再执行以下短事务。准确策略及内容依赖在事务前取得并固定；事务内只检查它们仍具有可接纳资格，不能调用远端供应商。
+接纳入口先核对认证、消息结构、Orchestrator 路由、容量和期限，再执行以下短事务。准确策略及内容依赖在事务前取得并固定；事务内只检查它们仍具有可接纳资格，不能调用远端供应商。
 
 ```text
 accept_task(command):
@@ -122,7 +122,7 @@ accept_task(command):
   if original receipt exists: compare fixed request; return original decision
   if closed identity exists: return gone or idempotency_conflict
   require now < command.expires_at
-  require target Home == this logical authority
+  require target Orchestrator == this logical authority
   require tenant capacity and finite task deadline/budget
   insert Task(active, running), original goal and budget balances
   insert first decide job using a unique responsibility slot
@@ -132,7 +132,7 @@ accept_task(command):
 
 同命令并发由唯一键串行。提交之后答复丢失，入口和客户端都查原命令；只有原提交不存在且仍可首次接纳时，才按原命令执行这段事务。固定拒绝也不被后来的能力恢复改写；用户改变请求时使用新命令。
 
-任务 created_at 由 Home 保存。它决定列表稳定顺序，不用于判断跨端事实新旧；领域事实仍按修订比较。
+任务 created_at 由 Orchestrator 保存。它决定列表稳定顺序，不用于判断跨端事实新旧；领域事实仍按修订比较。
 
 ## 4. 一轮工作如何形成行动
 
@@ -153,7 +153,7 @@ Brain 调用有固定 decision_id。调用在任务暂停之后才返回时，�
 
 ### 4.1 有限计划的确定性物化
 
-Brain 可以返回版本化计划，格式见[大脑实现](../brain/implementation.md)。计划正文是有界 DAG，任务运行时只负责取出可开始步骤并把已有事实代入模板。它不拥有另一套流程状态或独立恢复队列。
+Brain 可以返回版本化计划，格式见[大脑实现](../brain/implementation.md)。计划正文是有界 DAG，任务编排器只负责取出可开始步骤并把已有事实代入模板。它不拥有另一套流程状态或独立恢复队列。
 
 每个计划步骤的进度由原 operation／delegation 和任务事实派生。`depends_on` 全部结束且可用输出已核实，才是候选；失败、未知或仍可能迟到的前项不满足条件。没有行动模板的步骤回到 Brain，请它基于当前快照提出下一步。
 
@@ -174,7 +174,7 @@ materialize(plan, step, facts):
 
 上述过程可以减少不必要的模型往返，但不绕过每步准入。相同物化在重启后得到相同参数；计划候选查 plan_step_admissions 返回原 operation／delegation，不能再次产生副作用。第二个可执行步骤拥有自己的 step_id，可以在无需新 Brain 决策时独立准入。
 
-保存计划的 Brain decision 只消费一次；后续步骤不伪造新 Decision，也不再次消费它。物化候选由运行时附加准确计划版本、步骤及当前输入快照关联，通过现有 decide／dispatch jobs 推进。候选来源只决定去重键，授权、预算、控制、目标检查及提交原子性仍完全相同。
+保存计划的 Brain decision 只消费一次；后续步骤不伪造新 Decision，也不再次消费它。物化候选由 Orchestrator 附加准确计划版本、步骤及当前输入快照关联，通过现有 decide／dispatch jobs 推进。候选来源只决定去重键，授权、预算、控制、目标检查及提交原子性仍完全相同。
 
 计划修订废弃未准入步骤。已经派发的原步骤保留操作身份和事实，不能因为新计划删掉该节点就删除其预算或未知效果。GUI 动作仍需要动作后的新观察，不能从计划模板预先批准后续点击。
 
@@ -182,7 +182,7 @@ materialize(plan, step, facts):
 
 dispatch 工作者在外部调用前重复有效控制及期限检查。失效但可证明未发送的本地意图可封闭；第一次调用前保存的原命令保持不可变。不能证明是否已经交给远端时，切到原命令查询和原操作核对。
 
-Executor 的 applied Receipt 只确认接纳责任。运行时保存该回执后改为 poll 原 operation；变化通知仅提前其 due_at。无通知或进程重启都不影响查询责任。
+Executor 的 applied Receipt 只确认接纳责任。Orchestrator 保存该回执后改为 poll 原 operation；变化通知仅提前其 due_at。无通知或进程重启都不影响查询责任。
 
 应用事实时，按 `(owner, object_id, revision)` 去重：
 
@@ -206,7 +206,7 @@ sequenceDiagram
     participant W as JobRunner
     participant B as Brain port
     participant C as TaskCoordinator / BudgetLedger
-    participant S as 运行时 Store
+    participant S as Orchestrator Store
     participant E as Executor port
     participant F as FactReducer
     W->>B: 事务外提交固定快照的原 Decide
@@ -234,11 +234,11 @@ sequenceDiagram
     end
 ```
 
-若第一段事务提交结果不明，先查原候选消费关联或原命令，不能再次预留。若派发后 Home 故障，Executor 仍拥有原操作核对责任；Home 恢复后读取它的事实。原 command 查询暂时不可达、原 operation 仍未知，或历史只剩 gone 时，保留缺口和预留，不能从缺答复推导 not_started。Brain 答复丢失也沿原 Decide 查询；任务修订失效只阻止行动准入，不抹掉已发生模型费用。
+若第一段事务提交结果不明，先查原候选消费关联或原命令，不能再次预留。若派发后 Orchestrator 故障，Executor 仍拥有原操作核对责任；Orchestrator 恢复后读取它的事实。原 command 查询暂时不可达、原 operation 仍未知，或历史只剩 gone 时，保留缺口和预留，不能从缺答复推导 not_started。Brain 答复丢失也沿原 Decide 查询；任务修订失效只阻止行动准入，不抹掉已发生模型费用。
 
 ## 6. 控制、目标修订和完成竞争
 
-暂停、恢复、取消及目标修订先在 Home 提交，再向执行端传播。控制事务根据 task_executor_bindings 建立逐端责任；绑定新执行端与派发必须共事务，因此不存在“已派发但不在传播清单”窗口。
+暂停、恢复、取消及目标修订先在 Orchestrator 提交，再向执行端传播。控制事务根据 task_executor_bindings 建立逐端责任；绑定新执行端与派发必须共事务，因此不存在“已派发但不在传播清单”窗口。
 
 对内部子任务，祖先变化在同一事务中更新受影响活动子任务的有效控制修订，并保存各自传播工作。子自身 control 不被父恢复覆盖。子树数量受任务容量和委派上限约束，不能在事务中递归扫描无限历史。
 
@@ -306,7 +306,7 @@ stateDiagram-v2
 
 `budget.allocate` 的信封目标为父 task_id。调用方固定 allocation_id、receiver_id、单位上限和 expires_at；父事务扣入 reserved，保存 allocation 与交接 job。applied 只证明父侧预留和交接责任，接收方尚未接纳时额度不能在任一新对象重新分配。
 
-同 Home 子任务直接在共同事务内取得该分配；不同 Home 接收时验证原父权威、准确 allocation 和接收方绑定，在自身账本仅接纳一次。委派携带原分配依据，接收方不能自行填写另一份余额；跨端传输规则见[协作实现](../collaboration/implementation.md)。
+同 Orchestrator 子任务直接在共同事务内取得该分配；不同 Orchestrator 接收时验证原父权威、准确 allocation 和接收方绑定，在自身账本仅接纳一次。委派携带原分配依据，接收方不能自行填写另一份余额；跨端传输规则见[协作实现](../collaboration/implementation.md)。
 
 `budget.settle` 的信封目标为 allocation_id，比较 allocation revision。输入 RuntimeBudgetClosure 必须绑定原 receiver、allocation、最终用量修订、全部单位及不可再消费证明。接纳方验证证明来自负责方且属于固定原记录；ContentRef 格式本身不证明可信。
 
@@ -323,18 +323,18 @@ settle(allocation, closure):
 
 同命令查询和重放返回原结算。另一命令带旧 allocation revision 必须冲突，不能双扣。分配到期只关闭新的消费资格；未证明远端封账不返还额度。父取消、子返回答案及租约到期都不替代封账证明。
 
-### 8.2 跨 Home 接纳与预算关闭
+### 8.2 跨 Orchestrator 接纳与预算关闭
 
-跨 Home 子创建使用 task.submit 的可选 delegation_context，字段为 sender_home_id、parent_delegation_id、allocation_ref、allocation_command_id、permission_refs 和 ancestor_ids。sender_home_id 必须来自认证的 sender_service_id，不能用请求正文声明认证身份。普通任务提交没有该字段，沿原接纳行为处理。
+跨 Orchestrator 子创建使用 task.submit 的可选 delegation_context，字段为 sender_orchestrator_id、parent_delegation_id、allocation_ref、allocation_command_id、permission_refs 和 ancestor_ids。sender_orchestrator_id 必须来自认证的 sender_service_id，不能用请求正文声明认证身份。普通任务提交没有该字段，沿原接纳行为处理。
 
-接收 Home 先查询原 allocation_command_id 的固定回执，再通过 budget.read(role=owner) 核对分配当前仍为 allocated、准确修订、receiver、全部单位上限和期限。回执只证明历史接纳；当前已 settled、原记录 gone 或负责方不可达时，不据历史回执建立新子任务。
+接收 Orchestrator 先查询原 allocation_command_id 的固定回执，再通过 budget.read(role=owner) 核对分配当前仍为 allocated、准确修订、receiver、全部单位上限和期限。回执只证明历史接纳；当前已 settled、原记录 gone 或负责方不可达时，不据历史回执建立新子任务。
 
 接收方持久保存 incoming_allocations，以原父 owner 和 allocation_id 为唯一键。子 Task、原委派映射、额度接纳和首 job 在同一事务提交；一个 allocation 只对应一个子任务。已有原委派映射的同意图重投直接返回同一子任务，不重复接纳额度。
 
 | 方法及目标 | 输入与持久结果 | 成功与缺口 |
 | --- | --- | --- |
 | budget.read，目标 allocation_id | role=owner 返回 `{role, allocation}`；role=receiver 返回 `{role, receiver}` | owner 投影只由父预算负责方服务，receiver 投影只由原接收方服务；role 不改变认证服务身份 |
-| budget.close，目标 allocation_id、路由原 receiver | sender_home_id、parent_delegation_id、allocation_ref、allocation_command_id、reason → RuntimeBudgetReceiver | 原接收方关闭该分配的新子接纳及新增消费门禁，保存收尾责任；closing 尚无最终证明，closed 才有 closure |
+| budget.close，目标 allocation_id、路由原 receiver | sender_orchestrator_id、parent_delegation_id、allocation_ref、allocation_command_id、reason → RuntimeBudgetReceiver | 原接收方关闭该分配的新子接纳及新增消费门禁，保存收尾责任；closing 尚无最终证明，closed 才有 closure |
 
 RuntimeBudgetReceiver 固定 allocation_id、parent_owner_id、receiver_id、parent_delegation_id、revision、state、可选 task_id、final_usage 和可选 closure。state 为 open／closing／closed；closing 和 closed 均禁止新的额度消费。parent 通过 receiver 投影取最终证明，再调用原 owner 的 budget.settle。
 
@@ -346,7 +346,7 @@ RuntimeBudgetReceiver 固定 allocation_id、parent_owner_id、receiver_id、par
 
 ## 9. 查询、清理与长期最小索引
 
-`task.list` 只列本 Home。首请求固定 created_at 上界；后续游标携带上界和最后扫描的 `(created_at, task_id)`。每页重新检查权限，跳过已删除／撤权项并报告 gaps；扫描上限到达时可返回不足一页并给出前进游标，不能为凑满数量无限扫描。
+`task.list` 只列本 Orchestrator。首请求固定 created_at 上界；后续游标携带上界和最后扫描的 `(created_at, task_id)`。每页重新检查权限，跳过已删除／撤权项并报告 gaps；扫描上限到达时可返回不足一页并给出前进游标，不能为凑满数量无限扫描。
 
 过滤集合和游标必须绑定同一认证主体与查询条件。服务验证游标来源或存储对应查询摘要；调用方传来的游标字段不是扩大披露范围的依据。新任务超过固定上界时留给下一次查询。
 
@@ -359,23 +359,23 @@ RuntimeBudgetReceiver 固定 allocation_id、parent_owner_id、receiver_id、par
 <a id="production"></a>
 ## 10. 生产部署、瓶颈与故障域
 
-生产装配采用[公共可用性策略](../deployment-production.md#availability)：同一逻辑 Home 的无状态命令入口和 JobRunner 可以在多个可用区替换或扩展，权威记录仍落在同一数据库提交域。进程替换不改变 task_id→home_id。内部任务树共域；热点分区只为新任务树选择落点，不能把现存父子拆到不同库后继续声称原子控制。
+生产装配采用[公共可用性策略](../deployment-production.md#availability)：同一逻辑 Orchestrator 的无状态命令入口和 JobRunner 可以在多个可用区替换或扩展，权威记录仍落在同一数据库提交域。进程替换不改变 task_id→orchestrator_id。内部任务树共域；热点分区只为新任务树选择落点，不能把现存父子拆到不同库后继续声称原子控制。
 
 | 扩展或串行单位 | 具体实现边界 | 代价与替代条件 |
 | --- | --- | --- |
 | 命令入口、固定快照读取、不同任务的 JobRunner | 入口无业务内存权威；领取按租户与任务公平分配，共用持久责任槽 | 增加 worker 可减少等待，不能消除同任务锁争用；模型并发单独受供应商额度限制 |
 | 原命令与候选来源键 | 数据库唯一约束裁决重复；消费与意图、预算、job 同事务 | 不用进程本地锁代替跨副本竞争；重复请求优先读取原结果 |
 | 一棵内部任务树的控制及预算 | 祖先按既定锁序、有限子树处理；同 Task 的目标与完成决定串行 | 大任务树会放大写事务和锁等待；先收紧深度／活跃子数，再考虑显式外部委派 |
-| 账务与长期关闭索引 | 原 reservation／allocation 及计价单位串行更新；关闭键按原 Home 可查 | 正文清理不能降低全部元数据成本；按实测写放大和长期保留量配置分区 |
+| 账务与长期关闭索引 | 原 reservation／allocation 及计价单位串行更新；关闭键按原 Orchestrator 可查 | 正文清理不能降低全部元数据成本；按实测写放大和长期保留量配置分区 |
 
 | 依赖中断 | 对已接纳任务的表现 | 新接纳及恢复边界 |
 | --- | --- | --- |
-| Home 数据库无可证明唯一写者或提交结果未知 | 原 jobs 和操作保持待核对；不能发布新的成功提交 | 停新行动与写入接纳；数据库平台完成同步记录恢复及旧主隔离后，按原身份继续 |
+| Orchestrator 数据库无可证明唯一写者或提交结果未知 | 原 jobs 和操作保持待核对；不能发布新的成功提交 | 停新行动与写入接纳；数据库平台完成同步记录恢复及旧主隔离后，按原身份继续 |
 | Brain、Memory 或内容负责方不可达 | 固定调用／读取进入 dependency 等待；已知原效果仍可归并 | 不猜内容、不换快照绕过原调用；可独立完成的本地控制和账务继续 |
 | Executor 或设备离线 | 原操作与逐端控制保持 pending，效果和费用保守保留 | 不新建替身操作；有限查询恢复后读取原对象，控制提交与全端生效分别展示 |
 | 授权当前依据不可取得 | 保存原工作和已发生事实 | 禁止依赖新使用资格的行动；不能用旧快照许可无限延长窗口 |
 
-只读副本或缓存可承担读取投影，但准入、完成、控制和去重必须回到权威事务。跨可用区数据库能力由部署平台验收，运行时不会用 job 租约代替选主。外部请求不占事务连接；固定输入准备和内容读取限制并发与字节量，防止慢依赖耗尽连接池。
+只读副本或缓存可承担读取投影，但准入、完成、控制和去重必须回到权威事务。跨可用区数据库能力由部署平台验收，Orchestrator 不会用 job 租约代替选主。外部请求不占事务连接；固定输入准备和内容读取限制并发与字节量，防止慢依赖耗尽连接池。
 
 按[公共容量方法](../deployment-production.md#capacity)分别测量接纳事务、候选准入、事实归并、祖先控制和恢复领取。至少记录事务 p95／p99、祖先与预算锁等待、每任务提交数、每租户最老 ready job 年龄、过期领取比例、重复事实比例、未决效果／预留年龄，以及关闭索引增长率。对原始错误率低但队列持续增长的情况，按排队年龄触发保护，不能只看入口 QPS。
 
@@ -388,7 +388,7 @@ RuntimeBudgetReceiver 固定 allocation_id、parent_owner_id、receiver_id、par
 | 编号 | 初始状态与故障断点 | 恢复步骤及必须观察的结果 |
 | --- | --- | --- |
 | RT-01 | 两客户端提交相同 command；Task 插入后、事务提交前崩溃 | 重启并重投；一项 Task、一项首 job、一份原回执，未提交残片不存在 |
-| RT-02 | 接纳提交后、回执送达前崩溃 | 查原命令得同 Task；Home 自行恢复首 job，不要求用户再提交目标 |
+| RT-02 | 接纳提交后、回执送达前崩溃 | 查原命令得同 Task；Orchestrator 自行恢复首 job，不要求用户再提交目标 |
 | RT-03 | Brain 已发送，暂停与旧决策返回竞争 | 费用保存；旧提案不准入；无新 operation，暂停既有证据完成仍可提交 |
 | RT-04 | dispatch 已保存原命令，worker 失联后被重领 | 两个 worker 只能交接同一 operation；旧 lease_epoch 写入拒绝，原效果继续核对 |
 | RT-05 | 文件写成丢答复，用户取消，随后成功事实到达 | Task 保持 cancelled；原文件版本、效果和费用更新；无第二次写入 |

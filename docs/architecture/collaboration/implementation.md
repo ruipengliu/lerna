@@ -1,10 +1,10 @@
 # 协作实现：唯一子映射、控制传播与封账
 
-[模块主线](README.md) · [任务实现](../task-runtime/implementation.md) · [执行实现](../execution/implementation.md) · [共同契约](../contracts/README.md)
+[模块主线](README.md) · [任务实现](../orchestrator/implementation.md) · [执行实现](../execution/implementation.md) · [共同契约](../contracts/README.md)
 
 本页规定内部子任务与外部 Agent 的参考实现。委派用于把一部分目标交给另一个执行主体，父任务始终保留自己的完成裁决。子成功、目标行动封闭、效果核清和费用封账分别保存，不能用一个“完成”布尔值替代。
 
-内部子任务与父任务在同一 Home；它们可以调用远端 Brain、Memory 或 Executor。另一 Home 即使采用相同软件，也通过外部委派路径交接。没有原创建查询、可信预算上限或所需控制能力时，适配器不开放依赖这些保证的委派。
+内部子任务与父任务在同一 Orchestrator；它们可以调用远端 Brain、Memory 或 Executor。另一 Orchestrator 即使采用相同软件，也通过外部委派路径交接。没有原创建查询、可信预算上限或所需控制能力时，适配器不开放依赖这些保证的委派。
 
 <a id="module-shape"></a>
 ## 1. 模块形状与内部职责
@@ -32,21 +32,21 @@ flowchart TB
     S -->|控制／封账| X
 ```
 
-图中协作模块位于父任务固定 Home。实线表示同步用例、读写或 port 调用，虚线表示宿主 JobRunner 领取持久责任后调用对应组件。创建 Task／额度、父投影／job 的更新与协作映射通过同一事务句柄提交；外部交接先用短事务保存本地责任。外部 Agent 的原创建、查询、控制及封账调用均在事务外，原生响应沿 ExternalAgentAdapter 结构化映射后返回，不能直接写父任务状态。
+图中协作模块位于父任务固定 Orchestrator。实线表示同步用例、读写或 port 调用，虚线表示宿主 JobRunner 领取持久责任后调用对应组件。创建 Task／额度、父投影／job 的更新与协作映射通过同一事务句柄提交；外部交接先用短事务保存本地责任。外部 Agent 的原创建、查询、控制及封账调用均在事务外，原生响应沿 ExternalAgentAdapter 结构化映射后返回，不能直接写父任务状态。
 
 | 内部职责 | 决定及产出 | 边界 |
 | --- | --- | --- |
-| 协作用例 facade | 认证父 Home、原命令与所属协作用例 | 复用宿主原回执处理；不把 RPC 回复或连接推送作为父子关系权威 |
+| 协作用例 facade | 认证父 Orchestrator、原命令与所属协作用例 | 复用宿主原回执处理；不把 RPC 回复或连接推送作为父子关系权威 |
 | DelegationAdmission | 父当前资格、精确 Agent 绑定、收缩权限和有限预算 | 不接受模型自签权限或新实例地址 |
-| InternalChildFactory | 同事务创建子 Task、allocation 与映射 | 不创建第二个 Home，不复制父余额 |
+| InternalChildFactory | 同事务创建子 Task、allocation 与映射 | 不创建第二个 Orchestrator，不复制父余额 |
 | ExternalAgentAdapter | 固定创建键、原生协议与语义映射 | 不把原生“请求完成”升级为效果已核清 |
 | DelegationReducer | 唯一远端映射、单调进展、成果和未决责任 | 不按接收时间覆盖提供方修订 |
 | ControlPropagator | 本地决定、逐端传播及实际确认 | 无暂停支持时明确报告仍可能运行 |
 | SettlementCoordinator | 原 allocation 最终累计费用与封账 | 不因父取消或子成功释放预留 |
 
-替代方案是让内部 Agent 也各自运行 Home。它增加创建、控制和预算的分布式缝隙；需要独立信任或运维边界时才使用，统一按外部路径实现，不另定义中间类型。
+替代方案是让内部 Agent 也各自运行 Orchestrator。它增加创建、控制和预算的分布式缝隙；需要独立信任或运维边界时才使用，统一按外部路径实现，不另定义中间类型。
 
-存储适配器只实现所属表的条件读写，外部适配器只实现固定版本 Agent port。两者由宿主注入；DelegationReducer 和封账规则不依赖提供方 SDK。内部子进展直接读取同 Home 的 Task 修订，再走相同聚合规则；不为读取同一库已有事实增加网络事件链。
+存储适配器只实现所属表的条件读写，外部适配器只实现固定版本 Agent port。两者由宿主注入；DelegationReducer 和封账规则不依赖提供方 SDK。内部子进展直接读取同 Orchestrator 的 Task 修订，再走相同聚合规则；不为读取同一库已有事实增加网络事件链。
 
 ## 2. 存储与唯一约束
 
@@ -59,7 +59,7 @@ flowchart TB
 | delegations | delegation_id、父任务、原请求、phase、revision、allocation_id | 原 delegation 唯一；目标和配置不可改 |
 | internal_child_links | delegation_id、child_task_id、父任务 | 两方向唯一；同事务创建子与映射 |
 | external_task_links | delegation_id、endpoint_id、creation_key、remote_task_id | 原创建键唯一；映射一旦建立不可替换 |
-| incoming_delegations | 认证发送 Home、parent_delegation_id、原创建命令、child_task_id | 接收端原委派唯一；原命令重投返回同子任务 |
+| incoming_delegations | 认证发送 Orchestrator、parent_delegation_id、原创建命令、child_task_id | 接收端原委派唯一；原命令重投返回同子任务 |
 | delegation_progress | 原任务、remote_revision、摘要、结果、未知效果、费用修订 | 同来源修订唯一；同修订异内容冲突 |
 | delegation_controls | 本地控制修订、固定子命令、逐端状态和在途责任 | 决定与传播 job 共同提交 |
 | delegated_inputs | 原远端请求 ID／修订、答复引用、原转交命令和消费回执 | 同业务输入只转交一个固定版本 |
@@ -71,14 +71,14 @@ flowchart TB
 <a id="data-flow"></a>
 ### 2.1 委派对象关系与流转
 
-Delegation 是父侧交接聚合；InternalChildLink 与 ExternalTaskLink 分别把它绑定到唯一子身份，二者互斥。外部创建未知时可以暂时没有 remote_task_id，但固定 creation_key 和 Allocation 已存在。图中的 Task／Allocation 由运行时保存，协作只通过接口引用和变更它们。
+Delegation 是父侧交接聚合；InternalChildLink 与 ExternalTaskLink 分别把它绑定到唯一子身份，二者互斥。外部创建未知时可以暂时没有 remote_task_id，但固定 creation_key 和 Allocation 已存在。图中的 Task／Allocation 由 Orchestrator 保存，协作只通过接口引用和变更它们。
 
 ```mermaid
 erDiagram
     ParentTask ||--o{ Delegation : "准入有界目标"
     Delegation ||--|| Allocation : "绑定唯一额度来源"
     Delegation ||--o| InternalChildLink : "内部唯一路径"
-    InternalChildLink ||--|| ChildTask : "固定同 Home 子任务"
+    InternalChildLink ||--|| ChildTask : "固定同 Orchestrator 子任务"
     Delegation ||--o| ExternalTaskLink : "外部唯一路径"
     Delegation ||--o{ DelegationProgress : "归并版本化事实"
     Delegation ||--o{ DelegationControl : "记录原控制交接"
@@ -94,7 +94,7 @@ erDiagram
 | 控制与关闭 | 父控制建立 DelegationControl 及持久传播责任；SettlementCoordinator 收取原接收方封账证明 | 控制 applied、目标封闭、效果核清和预算 closed 分别确认，不能从其中一项推断其他项 |
 | 归并及清理 | 父取得当前获准成果并自行判断要求；协作保存 DelegationClosure | 原映射与未决费用仍有恢复引用时不清理；完整内容到期可删，最小禁止复用关联长期保留 |
 
-跨 Home 的 incoming_delegations／incoming_allocations 属于接收方同一创建事务，绑定父 delegation、原 allocation 和接收子 Task。父侧 ExternalTaskLink 与接收映射通过原命令核对，不是分布式外键；任何一侧不可达都不能由另一侧猜测建表补齐。
+跨 Orchestrator 的 incoming_delegations／incoming_allocations 属于接收方同一创建事务，绑定父 delegation、原 allocation 和接收子 Task。父侧 ExternalTaskLink 与接收映射通过原命令核对，不是分布式外键；任何一侧不可达都不能由另一侧猜测建表补齐。
 
 <a id="21-并发序"></a>
 ### 2.2 并发序
@@ -115,7 +115,7 @@ create_internal_child(request):
   require requested permissions and budget are valid subsets
   if original delegation exists: compare intent and return same mapping
   reserve the fixed allocation from parent budget
-  create child Task at the same Home, limited configuration and first job
+  create child Task at the same Orchestrator, limited configuration and first job
   create Delegation(active) with exactly one child_task_id
   save original applied Receipt
   commit
@@ -123,9 +123,9 @@ create_internal_child(request):
 
 预算分配是同一个存储事务中的内部调用，不通过本地 RPC 产生第二个提交点。若子创建失败，父预留和 delegation 均不提交。答复丢失只查询原 command 或 delegation，不重新分配。
 
-默认深度、活跃子数和用户任务数均有有限配置。祖先列表由 Home 从真实父链产生并核验，不能相信模型提供的列表。拒绝父子环、重复祖先、错误 Home 和越界深度；活跃子任务也占用户任务额度。
+默认深度、活跃子数和用户任务数均有有限配置。祖先列表由 Orchestrator 从真实父链产生并核验，不能相信模型提供的列表。拒绝父子环、重复祖先、错误 Orchestrator 和越界深度；活跃子任务也占用户任务额度。
 
-子工作执行完全复用任务运行时。父通过子任务修订唤醒事实归并，不要求同库子任务再经网络发送一份“完成消息”。远端 Brain 停机时，已经提交的本地子事实仍可供父读取。
+子工作执行完全复用任务编排器。父通过子任务修订唤醒事实归并，不要求同库子任务再经网络发送一份“完成消息”。远端 Brain 停机时，已经提交的本地子事实仍可供父读取。
 
 <a id="key-sequence"></a>
 ### 3.1 同一事务句柄如何连接子创建与预算
@@ -168,13 +168,13 @@ sequenceDiagram
 
 ## 4. 外部创建与答复丢失
 
-外部委派先在父 Home 保存固定目标、准确输入、Agent 绑定、额度预留、creation_key 和发送 job，phase 为 preparing。applied 表示本地责任已建立；此时不伪造 remote_task_id。
+外部委派先在父 Orchestrator 保存固定目标、准确输入、Agent 绑定、额度预留、creation_key 和发送 job，phase 为 preparing。applied 表示本地责任已建立；此时不伪造 remote_task_id。
 
 外部适配器按安装时声明的原生合同创建子任务。创建请求必须包含稳定父委派键，原输入、预算和接收方不可变；远端必须支持原键查询或能够证明同键创建幂等。缺少两者的提供方只可作为明确有界的咨询能力接入。
 
 ```mermaid
 sequenceDiagram
-    participant H as 父 Home
+    participant H as 父 Orchestrator
     participant S as 本地记录与jobs
     participant A as 固定外部适配器
     participant R as 远端任务负责方
@@ -190,15 +190,15 @@ sequenceDiagram
 
 创建结果未知时 phase 为 reconciling，预留继续占用。查询表明原任务仍运行后可以回到 active；查询证明未接纳且未来不会接纳，才可关闭创建责任并按原额度封账。暂时 not_found 不提供这种证明。
 
-### 4.1 另一 Harness Home 的接收
+### 4.1 另一 Harness Orchestrator 的接收
 
-另一 Home 使用 task.submit.delegation_context，固定 sender_home_id、parent_delegation_id、allocation_ref、allocation_command_id、permission_refs 和 ancestor_ids。sender_home_id 必须与认证上下文的 sender_service_id 相同；接收方验证原父权威及接收方范围后，在自己的事务中建立 incoming_delegations、incoming_allocations、唯一子 Task 和首 job。
+另一 Orchestrator 使用 task.submit.delegation_context，固定 sender_orchestrator_id、parent_delegation_id、allocation_ref、allocation_command_id、permission_refs 和 ancestor_ids。sender_orchestrator_id 必须与认证上下文的 sender_service_id 相同；接收方验证原父权威及接收方范围后，在自己的事务中建立 incoming_delegations、incoming_allocations、唯一子 Task 和首 job。
 
 原 allocation 先由负责方原命令回执核对，再通过 budget.read(role=owner) 核对当前分配修订仍可消费。Task 的 budget 必须等于准确分配上限，期限不能更晚；查询已 gone、负责方不可达、当前已封账、预留未证明或接收方不符时，不创建可消费子任务。父保留预留并进入 dependency／budget 等待。
 
-父取消时，还必须向原接收 Home 发送 budget.close，以原 allocation 和父委派身份关闭接纳及新增消费门禁。它与子创建争用同一事务记录：关闭先胜则迟到创建永久拒绝，创建先胜则收束既有子的消费。budget.close 接纳不代表最终费用已知；父经 budget.read(role=receiver) 取得 closed 证明后，才可对原 allocation 结算。未知分配先保存最小禁止索引并核对原父记录，不能因为没有 child_task_id 就断言原创建永远不会迟到。
+父取消时，还必须向原接收 Orchestrator 发送 budget.close，以原 allocation 和父委派身份关闭接纳及新增消费门禁。它与子创建争用同一事务记录：关闭先胜则迟到创建永久拒绝，创建先胜则收束既有子的消费。budget.close 接纳不代表最终费用已知；父经 budget.read(role=receiver) 取得 closed 证明后，才可对原 allocation 结算。未知分配先保存最小禁止索引并核对原父记录，不能因为没有 child_task_id 就断言原创建永远不会迟到。
 
-两个 Home 之间不共享 Task 行写权。接收方的子任务拥有自己的 Home 和控制修订；父只有协议允许的有限控制与披露资格。相同用户名、目标内容或 parent_task_id 都不是认证依据。
+两个 Orchestrator 之间不共享 Task 行写权。接收方的子任务拥有自己的 Orchestrator 和控制修订；父只有协议允许的有限控制与披露资格。相同用户名、目标内容或 parent_task_id 都不是认证依据。
 
 ## 5. 单调进展与结果读取
 
@@ -219,7 +219,7 @@ sequenceDiagram
 
 ## 6. 暂停、取消及恢复的传播
 
-父暂停后的内部有效控制由同 Home 祖先链计算。子自身 paused 保留；父恢复只移除父造成的限制，不覆盖子意图。子已在远端排队的操作也必须收到更新后的子 TaskGate。
+父暂停后的内部有效控制由同 Orchestrator 祖先链计算。子自身 paused 保留；父恢复只移除父造成的限制，不覆盖子意图。子已在远端排队的操作也必须收到更新后的子 TaskGate。
 
 外部控制由适配器按固定原命令发送，再查询对应原任务／控制结果。control_pending 表示尚有必要入口未确认，不能用 phase=active 或远端“已收到”推断控制已执行。
 
@@ -252,7 +252,7 @@ sequenceDiagram
 
 ## 8. 分配、费用和 closed 的条件
 
-父侧 allocation 是该委派唯一费用来源。内部子支出从父 reserved 划拨；父报表聚合显示子费用但不再扣一次。跨 Home 分配固定 receiver 和期限；答复丢失不再创建另一份相同额度。
+父侧 allocation 是该委派唯一费用来源。内部子支出从父 reserved 划拨；父报表聚合显示子费用但不再扣一次。跨 Orchestrator 分配固定 receiver 和期限；答复丢失不再创建另一份相同额度。
 
 每份进展携带累计用量及 usage_revision。适配器保存每个计价单位的最近值，较旧修订不回退账务，同修订异金额产生冲突。任务结果只有“费用估计”时，不能把它当最终账单释放预留。
 
@@ -290,9 +290,9 @@ closed 不要求无限保留全部内容，但长期最小关闭索引必须阻�
 | 输入消费未确认 | 查原请求／原转交命令 | 不重复创造另一份答案 |
 | 适配器版本停用 | 停新委派，保留受限旧版本恢复能力 | 无安全核对实现时明确缺口 |
 
-默认采用运行时配置中的有限委派深度、活跃子数和每用户任务上限。外部每轮最多一次请求，退避有上限，创建与自动查询都有总次数和绝对期限。达到上限后保持可查缺口，等待提供方恢复或受信处置，不能无限重试。
+默认采用 Orchestrator 配置中的有限委派深度、活跃子数和每用户任务上限。外部每轮最多一次请求，退避有上限，创建与自动查询都有总次数和绝对期限。达到上限后保持可查缺口，等待提供方恢复或受信处置，不能无限重试。
 
-控制与收尾不与新委派共用全部容量。一个提供方洪峰或长时间失联只占其有界队列和既有预留，不能通过循环创建新 Home、Agent 或连接绕过用户总限额；多个 Home 按[保守分区份额](../deployment-production.md#quota-scope)计量，原分区的未结占用不随扩容释放。
+控制与收尾不与新委派共用全部容量。一个提供方洪峰或长时间失联只占其有界队列和既有预留，不能通过循环创建新 Orchestrator、Agent 或连接绕过用户总限额；多个 Orchestrator 按[保守分区份额](../deployment-production.md#quota-scope)计量，原分区的未结占用不随扩容释放。
 
 适配器升级前保留原版本、原输入编码和原创建键。迁移只改本地表示且通过对应合同检查时可切换读取；不能在更新后把原远端任务解释为新对象。不可兼容旧责任时停止新接纳，先完成核对或报告无法恢复。
 
@@ -309,11 +309,11 @@ closed 不要求无限保留全部内容，但长期最小关闭索引必须阻�
 <a id="production"></a>
 ## 11. 生产部署、外部隔离与容量
 
-协作组件与父任务运行时按固定 Home 装配，内部创建继续使用同一数据库事务。应用副本可跨可用区替换，外部适配器工作者可独立扩容；逻辑边界和物理进程数不必一一对应。采用[公共可用性策略](../deployment-production.md#availability)的稳定 Home 和数据库写权，不能通过把内部子任务临时迁到另一 Home 来绕过原库故障。
+协作组件与父任务编排器按固定 Orchestrator 装配，内部创建继续使用同一数据库事务。应用副本可跨可用区替换，外部适配器工作者可独立扩容；逻辑边界和物理进程数不必一一对应。采用[公共可用性策略](../deployment-production.md#availability)的稳定 Orchestrator 和数据库写权，不能通过把内部子任务临时迁到另一 Orchestrator 来绕过原库故障。
 
 | 扩展单位与串行键 | 处理边界 | 代价及热点控制 |
 | --- | --- | --- |
-| 不同父任务树的准入与聚合 | 命令入口无持久内存状态，事务按固定 tenant／Home 路由 | 受任务树事务域限制；增加副本不能消除同一父预算争用 |
+| 不同父任务树的准入与聚合 | 命令入口无持久内存状态，事务按固定 tenant／Orchestrator 路由 | 受任务树事务域限制；增加副本不能消除同一父预算争用 |
 | 原 delegation 与 creation_key | 创建、固定映射和单调进展按原键串行提交 | 外部超时不释放唯一映射槽；重复请求读取原决定，不能并发创建替代任务 |
 | 父祖先链、子创建槽与原 allocation | 按既定锁序控制有界子树；封账对同 allocation 一次应用累计差额 | 子数和深度影响取消事务延迟，先限额再扩树，不能批次漏掉已创建子 |
 | 同远端任务的控制和输入 | 固定原控制／输入命令，缺修订单调时串行交接 | 原生 pause／resume 无序接口限制并发；不可用时保留 pending，不假报全树生效 |
@@ -321,13 +321,13 @@ closed 不要求无限保留全部内容，但长期最小关闭索引必须阻�
 
 | 依赖中断 | 当前委派表现 | 恢复责任 |
 | --- | --- | --- |
-| 父 Home 数据库不可写或提交结果未知 | 新委派不可接纳，原创建／取消可能已提交 | 查询原命令；权威恢复后补原责任槽，不重新建立父子关系 |
+| 父 Orchestrator 数据库不可写或提交结果未知 | 新委派不可接纳，原创建／取消可能已提交 | 查询原命令；权威恢复后补原责任槽，不重新建立父子关系 |
 | 外部创建或原任务查询不可达 | preparing／reconciling、原预留及控制 pending 保留 | ExternalAgentAdapter 只查原键；自动次数耗尽后等待恢复事件或受信核查 |
 | Agent 目录、内容或授权依据不可用 | 依赖它的新委派等待／拒绝，原内部子和已知费用可归并 | 恢复后核验原准确版本及当前用途，不能悄悄换 Agent 或扩大权限 |
 | 额度负责方或接收方失联 | 原 allocation 不能证明当前可消费或最终已封账 | 接收侧不新建子；父侧保留预留，原 budget.read／close 继续负责核对 |
 | 原提供方永久失去账本 | 保留实际 unknown、effects_pending 与费用缺口 | 父可结束自身任务并披露限制；不得据此宣布外部全部结束或再建替身 |
 
-外部调用从连接池取得有界槽，网络等待不占父事务。提供方持续失败时暂停该池的新创建，原查询与停止按有限频率继续；恢复事件只唤醒原工作，不能重置创建次数、期限和额度。输入、进展和结果正文按准确引用传递，限制单条字节量及每委派待消费输入数，防止外部持续生成内容耗尽父 Home。
+外部调用从连接池取得有界槽，网络等待不占父事务。提供方持续失败时暂停该池的新创建，原查询与停止按有限频率继续；恢复事件只唤醒原工作，不能重置创建次数、期限和额度。输入、进展和结果正文按准确引用传递，限制单条字节量及每委派待消费输入数，防止外部持续生成内容耗尽父 Orchestrator。
 
 按[公共容量方法](../deployment-production.md#capacity)，至少测量内部创建事务 p95／p99、父预算与祖先锁等待、活跃子数、外部创建未知年龄、控制 pending 年龄、未结 allocation 年龄、每提供方最老工作年龄、重复进展率、协议冲突率和结果字节率。父完成时间分别记录等待子目标、未知效果和最终费用的时长，不能用一个“远端慢”归因所有延迟。
 
@@ -355,4 +355,4 @@ closed 不要求无限保留全部内容，但长期最小关闭索引必须阻�
 | CL-14 | closed完整记录已清理后重放旧委派键 | 最小索引返回gone／冲突，远端任务数不增加 |
 | CL-15 | 适配器升级后无法解码原任务回执 | 不切换原身份，不重建任务；保留缺口和最小查询责任 |
 
-[跨 Home 额度序列](../contracts/examples/protocol/23-cross-home-budget.json)检验当前分配、接收门禁与封账关联。既有[委派协议序列](../contracts/examples/protocol/12-delegation-mapping.json)检验映射、控制和输入的字段关联。上述事务、独立远端及真实效果实验仍须由参考实现和至少一个独立适配器提供运行证据。
+[跨 Orchestrator 额度序列](../contracts/examples/protocol/23-cross-orchestrator-budget.json)检验当前分配、接收门禁与封账关联。既有[委派协议序列](../contracts/examples/protocol/12-delegation-mapping.json)检验映射、控制和输入的字段关联。上述事务、独立远端及真实效果实验仍须由参考实现和至少一个独立适配器提供运行证据。

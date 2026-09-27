@@ -42,7 +42,7 @@ sequenceDiagram
 | `applied` | 该方法定义的业务决定及后续责任已持久保存 | 按方法检查资源、远端接纳、效果或逐节点结果；不把 applied 一概当任务成功 |
 | `rejected` | 已确定拒绝，该命令不再启动目标行为 | 按错误调整前提；改参数须使用新命令，原拒绝记录不改写 |
 
-例如 task.submit 的 applied 表示创建任务；execution.invoke 的 applied 表示接受原操作并承担执行责任；task.cancel 的 applied 表示 Home 保存取消决定。三者均不表示外部系统已结束。若入口尚未持久化便不可用，返回传输级错误，不伪造 accepted。
+例如 task.submit 的 applied 表示创建任务；execution.invoke 的 applied 表示接受原操作并承担执行责任；task.cancel 的 applied 表示 Orchestrator 保存取消决定。三者均不表示外部系统已结束。若入口尚未持久化便不可用，返回传输级错误，不伪造 accepted。
 
 ## 2. 标识、命令和查询
 
@@ -58,7 +58,7 @@ sequenceDiagram
 | ComponentRef | `id, version, digest`；version 用于兼容协商，digest 绑定实际不可变实现或配置 |
 | Change | `cursor, object_type, object_id, revision`；只表示对象可能变化，不携带执行许可、不确认效果 |
 
-内容引用由[记忆与内容](../memory/README.md)定义；Task／Result 在[运行时](../task-runtime/README.md#records)，许可在[授权](../security/README.md)。金额用带单位的整数或十进制字符串，不用浮点数比较额度。时间采用带 UTC 时区的 RFC 3339 字符串；跨端排序以对象修订为准，不以墙上时间决定先后。
+内容引用由[记忆与内容](../memory/README.md)定义；Task／Result 在[Orchestrator](../orchestrator/README.md#records)，许可在[授权](../security/README.md)。金额用带单位的整数或十进制字符串，不用浮点数比较额度。时间采用带 UTC 时区的 RFC 3339 字符串；跨端排序以对象修订为准，不以墙上时间决定先后。
 
 幂等键为 `(tenant_id, logical_service_id, command_id)`，处理方同时保存 method、target_id、expected_revision、expires_at 和 payload 的规范化摘要。原键原请求返回原决定，原键不同请求返回 idempotency_conflict 且不覆盖原记录。规范化比较按 JSON 结构进行：对象键顺序忽略、数组顺序保留、字符串逐字匹配；不以重新编码后的原始字节比较。SDK 固定同一请求结构，不在恢复时补写新的默认值。
 
@@ -86,9 +86,9 @@ WSS 承载双向交互，Change 继续只表示对象可能变化；服务端推
 
 ### 设备投递与恢复
 
-Home 在自身业务库保存原请求、delivery_id 与持久发送责任，沿已建立连接推送 Delivery。设备收到消息后按原 command_id 及当前门禁处理，持久保存原结果和待交回 Reply；Home 保存 Reply 及后续责任后返回 ReplyAck。ReplyAck 只确认本次交回已保存，后续业务效果仍按原 operation_id 查询；网络 write、ping/pong 和 gRPC OK 都不能替代该成功点。
+Orchestrator 在自身业务库保存原请求、delivery_id 与持久发送责任，沿已建立连接推送 Delivery。设备收到消息后按原 command_id 及当前门禁处理，持久保存原结果和待交回 Reply；Orchestrator 保存 Reply 及后续责任后返回 ReplyAck。ReplyAck 只确认本次交回已保存，后续业务效果仍按原 operation_id 查询；网络 write、ping/pong 和 gRPC OK 都不能替代该成功点。
 
-接入层只搬运消息，不保存第二份业务权威。设备核验原 Home／发送服务证明及目标实例绑定，跨连接的重复或乱序由原身份、expected_revision、控制修订与关闭记录裁决。查询和原回执查询同样可由 Delivery 转交，不额外创造业务 command_id；设备不可达返回 dependency_unavailable，不伪造 not_found。
+接入层只搬运消息，不保存第二份业务权威。设备核验原 Orchestrator／发送服务证明及目标实例绑定，跨连接的重复或乱序由原身份、expected_revision、控制修订与关闭记录裁决。查询和原回执查询同样可由 Delivery 转交，不额外创造业务 command_id；设备不可达返回 dependency_unavailable，不伪造 not_found。
 
 断线不取消任务，也不删除服务器未交付责任。重连先恢复当前身份与控制，再查询未知命令、重交原 Reply、接受仍有效的 Delivery 和新工作。Frame 的 connection_id／request_id 只关联这次连接上的消息，不能替代 command_id、delivery_id 或 endpoint instance。每连接的在途、订阅、条目和字节都有上限，控制及收尾保留份额；慢端无法排空时断开连接，业务责任继续持久保留。
 
@@ -126,7 +126,7 @@ Home 在自身业务库保存原请求、delivery_id 与持久发送责任，沿
 
 | 领域 | 方法与字段的定义位置 | 独立实现必须提供 |
 | --- | --- | --- |
-| task / budget | [任务运行时](../task-runtime/README.md#records)及[额度](../task-runtime/README.md#budget) | 持久接纳、条件控制、状态／结果查询、额度责任 |
+| task / budget | [任务编排器](../orchestrator/README.md#records)及[额度](../orchestrator/README.md#budget) | 持久接纳、条件控制、状态／结果查询、额度责任 |
 | brain | [大脑](../brain/README.md) | 单轮快照输入、五类提案、原决策与费用恢复 |
 | capability / execution / resource | [能力与执行](../execution/README.md) | 精确声明、原操作效果、可核对性、设备控制 |
 | grant / endpoint | [授权与身份](../security/README.md) | 配对、许可、使用去重、撤回及有限离线 |

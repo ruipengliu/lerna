@@ -37,13 +37,13 @@
       "exchange": {
         "auth": {
           "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
-          "logical_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
         },
         "request": {
           "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
           "method": "task.submit",
-          "target_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "expires_at": "2026-09-26T00:10:00Z",
           "payload": {
             "goal_ref": {
@@ -55,7 +55,7 @@
               "media_type": "text/plain",
               "byte_length": 16
             },
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "constraints": [
               "保存指定报告并读回核验"
             ],
@@ -80,7 +80,7 @@
           "output": {
             "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
             "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
-            "home_id": "home_4ea140588150773ce3aace786aeef7f4",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
             "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
             "goal_ref": {
               "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
@@ -152,7 +152,7 @@
       "exchange": {
         "auth": {
           "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
-          "logical_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
         },
         "request": {
@@ -188,7 +188,7 @@
       "exchange": {
         "auth": {
           "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
-          "logical_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
         },
         "request": {
@@ -224,7 +224,7 @@
       "exchange": {
         "auth": {
           "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
-          "logical_service_id": "home_4ea140588150773ce3aace786aeef7f4",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
           "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
         },
         "request": {

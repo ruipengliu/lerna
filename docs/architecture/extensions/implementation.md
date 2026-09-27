@@ -40,7 +40,7 @@ flowchart TB
     Caller[本人管理入口与发布工作者]
     Content[宿主内容端口]
     Approval[批准 owner]
-    Domain[Task Home / Brain / Memory / Executor]
+    Domain[Orchestrator / Brain / Memory / Executor]
     subgraph Extension[扩展管理]
       F[extensions facade]
       M[LifecycleManager]
@@ -189,7 +189,7 @@ activate 接纳只固定切换意图和后续 job。
 
 | 持有者 | 可以释放引用的事实 | 不能作为释放依据 |
 | --- | --- | --- |
-| Task Home | 任务不再使用该锁，全部原操作已有独立可保留绑定 | UI 显示任务结束 |
+| Orchestrator | 任务不再使用该锁，全部原操作已有独立可保留绑定 | UI 显示任务结束 |
 | Brain | 原物理调用终结或其未知责任仍有可查询负责者 | HTTP 超时 |
 | Executor | 原动作效果及驱动查询责任已交接 | 旧进程被杀 |
 | Memory | 数据格式、索引及原写责任可由目标版本读取 | 新版读了一个样本 |
@@ -343,7 +343,7 @@ deactivate 锁目标当前代际，验证管理身份与原 activation。
 
 宿主部署遵守[公共可用性策略](../deployment-production.md#availability)与[容量和过载策略](../deployment-production.md#capacity)。
 扩展管理随目标宿主运行；发布工作者可以跨目标并行，活动指针仍由每个目标的固定权威裁决。
-云端替换管理进程可以接续同一数据库的 job，但目标进程的装载与 ready 必须重新取得；进程替换不等于迁移 Task Home 或重新激活一个代际。
+云端替换管理进程可以接续同一数据库的 job，但目标进程的装载与 ready 必须重新取得；进程替换不等于迁移 Orchestrator 或重新激活一个代际。
 默认按目标排空切换，以暂停该目标的新工作换取清晰的原责任归属。只有已证明状态和资源隔离的无状态实现才可并存；下载并行不会自动满足这个条件。
 
 | 扩展单位 | 串行位置 | 依赖或节点故障的表现 |

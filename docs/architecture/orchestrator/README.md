@@ -1,18 +1,18 @@
-# 任务运行时：从目标到持久推进
+# Orchestrator：任务编排与持久推进
 
-[模块与数据 UML](../uml-models.md#task-runtime) · [可编辑 UML 图册](../diagrams/uml-models.drawio)
+[模块与数据 UML](../uml-models.md#orchestrator) · [可编辑 UML 图册](../diagrams/uml-models.drawio)
 
 [总览](../README.md) · [大脑](../brain/README.md) · [执行](../execution/README.md) · [共同契约](../contracts/README.md)
 
-Task Home 保存任务目标、控制、额度、操作意图和完成决定。它把一次决策的可用事实交给大脑，再把有效提案准入为持久工作。Executor 保存真实效果；运行时依据这些事实推进任务，不把模型输出或请求日志当作执行成功。
+Orchestrator 保存任务目标、控制、额度、操作意图和完成决定。它把一次决策的可用事实交给大脑，再把有效提案准入为持久工作。Executor 保存真实效果；Orchestrator 依据这些事实推进任务，不把模型输出或请求日志当作执行成功。
 
-默认将任务管理、上下文组装、准入、调度和结果核验放在同一模块。它们需要围绕同一个任务修订作决定，拆成独立服务会增加本地事务之外的恢复关系。独立替换边界放在 Brain、Memory、Executor，而不是运行时的每个内部函数。
+默认将任务管理、上下文组装、准入、调度和结果核验放在同一模块。它们需要围绕同一个任务修订作决定，拆成独立服务会增加本地事务之外的恢复关系。独立替换边界放在 Brain、Memory、Executor，而不是 Orchestrator 的每个内部函数。
 
 实现阅读：[模块形状与依赖](implementation.md#module-shape) → [对象流转](implementation.md#data-flow) → [准入与恢复时序](implementation.md#key-sequence) → [生产部署和容量](implementation.md#production)。主线定义可见行为，实现篇集中规定事务、jobs、计划物化、预算及故障断点。
 
 ## 1. 最小任务闭环
 
-以“核实两个软件版本的差异，附引用，保存至指定目录”为例。Home 先保存原目标和调用者明确约束；目录不明时建立输入请求。取得获准来源后，大脑生成候选答案；质量评估绑定这份候选，文件写入和读回则绑定同一内容摘要。Home 仅在条件、效果和成果版本一致时完成。
+以“核实两个软件版本的差异，附引用，保存至指定目录”为例。Orchestrator 先保存原目标和调用者明确约束；目录不明时建立输入请求。取得获准来源后，大脑生成候选答案；质量评估绑定这份候选，文件写入和读回则绑定同一内容摘要。Orchestrator 仅在条件、效果和成果版本一致时完成。
 
 ```mermaid
 flowchart TB
@@ -36,23 +36,23 @@ flowchart TB
 
 | 发起方 → 处理方 | 交接对象 | 可以确认的成功 | 答复丢失后的继续者 |
 | --- | --- | --- | --- |
-| 应用 → Home | 原提交命令、目标及获准配置 | Home 共同保存 Task、回执和首 job | 应用查原 command；Home 恢复原 job，均不重建任务 |
-| Home → Brain | 固定快照、decision_id、期限与额度 | Brain 保存该决策的结果或明确缺口；不表示提案获准 | Home 查询原决策；Brain 核对原模型调用并回收用量 |
-| Home → Executor | 已准入的原操作、控制快照和固定输入 | Executor 保存接纳决定及后续执行责任 | Home 查原 command／operation；Executor 继续原效果核对 |
-| 交互入口 → Home | 请求 ID／修订、准确材料及原输入命令 | 一次消费与唤醒／验证工作共同保存 | 入口查原回执，不把同一回答转成新消费 |
-| Home → 应用 | 固定 Result 及成果引用 | Result 已可查；字节实际取得另确认 | 应用按原 Result 取获准内容，不要求 Home 重做动作 |
+| 应用 → Orchestrator | 原提交命令、目标及获准配置 | Orchestrator 共同保存 Task、回执和首 job | 应用查原 command；Orchestrator 恢复原 job，均不重建任务 |
+| Orchestrator → Brain | 固定快照、decision_id、期限与额度 | Brain 保存该决策的结果或明确缺口；不表示提案获准 | Orchestrator 查询原决策；Brain 核对原模型调用并回收用量 |
+| Orchestrator → Executor | 已准入的原操作、控制快照和固定输入 | Executor 保存接纳决定及后续执行责任 | Orchestrator 查原 command／operation；Executor 继续原效果核对 |
+| 交互入口 → Orchestrator | 请求 ID／修订、准确材料及原输入命令 | 一次消费与唤醒／验证工作共同保存 | 入口查原回执，不把同一回答转成新消费 |
+| Orchestrator → 应用 | 固定 Result 及成果引用 | Result 已可查；字节实际取得另确认 | 应用按原 Result 取获准内容，不要求 Orchestrator 重做动作 |
 
 同宿主可合并提交，但不能合并上表的成功含义。Brain 提案、Executor 接纳、效果证据和正式 Result 是不同事实；“方法已应用”以该方法的定义解释。完整信封与恢复查询见[共同契约](../contracts/README.md)。
 
 ## 2. 目标、计划和完成依据
 
-原始用户目标始终保留。运行时记录解释后的 `requirements`，每项包含稳定 ID、原文依据、类型 `effect|quality`、判断方式和必要性；模型生成的解释标记为派生，不能覆盖显式约束。默认问答采用质量评估，不要求事先安装每种主题的任务流程。涉及具体对象、金额、发布范围等高影响歧义时，先取得用户输入再行动。
+原始用户目标始终保留。Orchestrator 记录解释后的 `requirements`，每项包含稳定 ID、原文依据、类型 `effect|quality`、判断方式和必要性；模型生成的解释标记为派生，不能覆盖显式约束。默认问答采用质量评估，不要求事先安装每种主题的任务流程。涉及具体对象、金额、发布范围等高影响歧义时，先取得用户输入再行动。
 
-计划是可修订的工作假设，不是执行权限。任务接纳时绑定执行策略版本，策略规定工具范围、确认等级、回路限额和允许的评估方式。安装新工具只需声明能力、授权与效果合同；只有业务需要更强的完成保证时才增加专用验证器。Brain 可提交绑定 base_goal_revision 的 requirements_proposal；Home 只自动采纳保留显式约束且不降低必要性的解释补全，并递增 goal_revision。改变目标含义或降低必要性必须经用户 task.revise，所有旧提案按修订检查。
+计划是可修订的工作假设，不是执行权限。任务接纳时绑定执行策略版本，策略规定工具范围、确认等级、回路限额和允许的评估方式。安装新工具只需声明能力、授权与效果合同；只有业务需要更强的完成保证时才增加专用验证器。Brain 可提交绑定 base_goal_revision 的 requirements_proposal；Orchestrator 只自动采纳保留显式约束且不降低必要性的解释补全，并递增 goal_revision。改变目标含义或降低必要性必须经用户 task.revise，所有旧提案按修订检查。
 
-模型自称“全部满足”不能提高保证等级。没有机械检查覆盖的自然语言约束仍属质量判断；用户可以查看解释后的目标并纠正，运行时不宣称已穷尽识别任意自然语言中的所有隐含要求。
+模型自称“全部满足”不能提高保证等级。没有机械检查覆盖的自然语言约束仍属质量判断；用户可以查看解释后的目标并纠正，Orchestrator 不宣称已穷尽识别任意自然语言中的所有隐含要求。
 
-| `completion_basis` | Home 必须具备的依据 | 保证与限制 |
+| `completion_basis` | Orchestrator 必须具备的依据 | 保证与限制 |
 | --- | --- | --- |
 | `verified` | 每个必要条件均有适用的确定性验证，全部绑定当前目标修订及成果版本 | 客观约定条件通过；检查方法本身有适用范围 |
 | `assessed` | 所有必要效果条件已证实，开放质量由固定规则与评估实现给出通过记录 | 声明评估来源与局限，不当作真实正确率或确定事实 |
@@ -80,21 +80,21 @@ stateDiagram-v2
 
 | 独立维度 | 取值与责任 |
 | --- | --- |
-| `status` | `active / succeeded / failed / cancelled`，只有 Home 修改；终态不可重开 |
+| `status` | `active / succeeded / failed / cancelled`，只有 Orchestrator 修改；终态不可重开 |
 | `control` | `running / paused`；暂停阻止新决策和新目标行动，允许核对、收账及已具备全部证据的完成 |
 | `wait_reasons` | 可同时存在的 `input / authorization / dependency / budget / effect / capacity`，逐项带所等对象与恢复条件；解决一项不清空其他项 |
 | `open_effects` | 引用仍未知或仍可能在外部生效的原操作；与 Task.status 独立 |
 | `accounting_open` | 尚待最终费用的调用或额度分配；以保守预留约束，单独欠费核对不必阻止已有确定成果 |
 
-取消提交后，Home 停止新目标工作并为已派发操作建立取消或核对责任。取消不撤销已发生的文件修改。`cancelled` 可以带 `open_effects`；迟到成功仅更新事实及收尾，不把任务改回成功。期限到期记录 `failed` 和 `deadline_exceeded`，同样保留收尾责任。
+取消提交后，Orchestrator 停止新目标工作并为已派发操作建立取消或核对责任。取消不撤销已发生的文件修改。`cancelled` 可以带 `open_effects`；迟到成功仅更新事实及收尾，不把任务改回成功。期限到期记录 `failed` 和 `deadline_exceeded`，同样保留收尾责任。
 
 暂停是动作边界控制：已发出的单次动作可能继续。只有执行端确认看见控制并阻止后续启动，才可展示该端已暂停；失联端显示待确认。暂停期间不启动新的质量评估来推进目标，但此前已经得到的全部证据可以使任务成功。这样“暂停请求”和“外部动作已完成”不互相掩盖。
 
-用户可对 active 任务调用 `task.revise`。Home 保存新目标修订，废弃尚未派发的旧提案与 job，保留已经启动的操作。新目标若与在途效果冲突，进入 effect 等待，先核对再规划。旧证据仅在仍能明确满足新条件时复用，并产生绑定新 goal_revision 的核验记录；终态后改变目标则建新任务并显式关联。
+用户可对 active 任务调用 `task.revise`。Orchestrator 保存新目标修订，废弃尚未派发的旧提案与 job，保留已经启动的操作。新目标若与在途效果冲突，进入 effect 等待，先核对再规划。旧证据仅在仍能明确满足新条件时复用，并产生绑定新 goal_revision 的核验记录；终态后改变目标则建新任务并显式关联。
 
-暂停、恢复、取消、目标修订和终态提交都递增 `control_revision`，与本地决定同事务保存向所有已绑定 Executor 的控制 job。控制快照带 home_id、task_id、goal_revision、status、control 和修订，按[执行端 TaskGate](../execution/README.md)持久应用。新派发附当前 Home 认证的快照和有限启动截止；旧控制或迟到 invoke 不能覆盖较新门禁。已接纳未启动的旧目标操作由执行端核清为未应用，已经可能启动的则保留效果责任。
+暂停、恢复、取消、目标修订和终态提交都递增 `control_revision`，与本地决定同事务保存向所有已绑定 Executor 的控制 job。控制快照带 orchestrator_id、task_id、goal_revision、status、control 和修订，按[执行端 TaskGate](../execution/README.md)持久应用。新派发附当前 Orchestrator 认证的快照和有限启动截止；旧控制或迟到 invoke 不能覆盖较新门禁。已接纳未启动的旧目标操作由执行端核清为未应用，已经可能启动的则保留效果责任。
 
-内部子任务对外的 TaskGate.control 是**有效控制**：只有自身及全部祖先都 active 且 running 时才为 running，其余为 paused。子 Task.control 仍保留自身选择。祖先控制改变时，Home 在同一事务中递增受影响子任务的 control_revision、重新计算有效控制并保存逐执行端传播 job；父控制确认范围包含这些子门禁。恢复父任务只重新计算，不能解除子自身暂停；祖先终结后的子取消继续落实。用户任务数量和并发配额包含内部子任务，使这项同 Home 更新有界。
+内部子任务对外的 TaskGate.control 是**有效控制**：只有自身及全部祖先都 active 且 running 时才为 running，其余为 paused。子 Task.control 仍保留自身选择。祖先控制改变时，Orchestrator 在同一事务中递增受影响子任务的 control_revision、重新计算有效控制并保存逐执行端传播 job；父控制确认范围包含这些子门禁。恢复父任务只重新计算，不能解除子自身暂停；祖先终结后的子取消继续落实。用户任务数量和并发配额包含内部子任务，使这项同 Orchestrator 更新有界。
 
 ## 4. 一轮推进与提交边界
 
@@ -129,10 +129,10 @@ job 是必须继续履行的责任，包含唯一 `job_id`、业务关联、kind
 
 | 异常 | 保存的事实与继续者 | 后续行为 |
 | --- | --- | --- |
-| 创建事务已提交，接纳答复丢失 | 调用方保留 command_id；Home 保存任务映射 | 查原命令或原键重投，返回同任务 |
-| 模型返回时用户修订目标 | 大脑保留费用与输出；Home 发现 revision 不符 | 不派发旧行动，按新快照再决策 |
-| 外部写入后响应丢失 | Executor 原操作未知；Home 保留预留与 poll job | 核对原目标效果，不换新操作重复写 |
-| 暂停、完成、取消并发 | Home 对任务行按修订串行提交 | 先提交的终态保持；暂停不伪称已撤回外部行动 |
+| 创建事务已提交，接纳答复丢失 | 调用方保留 command_id；Orchestrator 保存任务映射 | 查原命令或原键重投，返回同任务 |
+| 模型返回时用户修订目标 | 大脑保留费用与输出；Orchestrator 发现 revision 不符 | 不派发旧行动，按新快照再决策 |
+| 外部写入后响应丢失 | Executor 原操作未知；Orchestrator 保留预留与 poll job | 核对原目标效果，不换新操作重复写 |
+| 暂停、完成、取消并发 | Orchestrator 对任务行按修订串行提交 | 先提交的终态保持；暂停不伪称已撤回外部行动 |
 | 持久存储提交结果未知 | 原业务键和 job 关联可重建 | 先恢复同数据库权威并查询；数据库分裂或原主未隔离时不另起写者 |
 | 依赖长期不可用 | wait_reasons、原期限和恢复对象 | 有限等待，到期失败并继续已有收尾 |
 | 未知效果不能进一步核对 | 原事实及失败原因、受信处置入口 | 用户可补充可验证证据或结束任务；不能直接点击“视为未执行”开放重试 |
@@ -140,11 +140,11 @@ job 是必须继续履行的责任，包含唯一 `job_id`、业务关联、kind
 <a id="budget"></a>
 ## 6. 额度与有限执行
 
-Home 的任务额度采用 `spent + reserved ≤ limit`。每次调用先按声明的最大消耗预留；明确少于预留的最终费用才释放差额。费用以精确十进制数、明确单位和计价版本记录，线格式使用十进制字符串，禁止混用不同货币或把估计值当最终账单。调用次数、运行时间、模型 token 和费用各有独立限额，任一耗尽都阻止对应新工作。
+Orchestrator 的任务额度采用 `spent + reserved ≤ limit`。每次调用先按声明的最大消耗预留；明确少于预留的最终费用才释放差额。费用以精确十进制数、明确单位和计价版本记录，线格式使用十进制字符串，禁止混用不同货币或把估计值当最终账单。调用次数、运行时间、模型 token 和费用各有独立限额，任一耗尽都阻止对应新工作。
 
 模型费用不明时按上限保留或保守结算，真实账单迟到按原计费项调整，不能再次累计全部金额。本地并发槽与未知费用不是同一资源；具体边界见[大脑调用恢复](../brain/README.md)。无法提供可信最大费用的适配器只能在用户明确接受估算预算的配置中启用，不得声称严格费用上限。
 
-内部子任务的可支配额度从父任务 reserved 中划拨；父聚合报表展示子费用，但不再扣一遍。不同 Home 使用唯一 allocation_id 交接固定额度，父侧未证明子侧封闭后不返还。分区时额度宁可闲置，不同时在两端消费。
+内部子任务的可支配额度从父任务 reserved 中划拨；父聚合报表展示子费用，但不再扣一遍。不同 Orchestrator 使用唯一 allocation_id 交接固定额度，父侧未证明子侧封闭后不返还。分区时额度宁可闲置，不同时在两端消费。
 
 | 方法 | 输入与持久结果 | 失败后的动作 |
 | --- | --- | --- |
@@ -163,7 +163,7 @@ Home 的任务额度采用 `spent + reserved ≤ limit`。每次调用先按声�
 
 | 对象 | 字段与约束 |
 | --- | --- |
-| Task | `tenant_id, task_id, home_id, submit_command_id, goal_ref, goal_revision, requirements, policy_ref, revision, control_revision, status, control, wait_reasons, deadline, budget, open_effects, accounting_open, result_ref?`；Home 和原提交绑定不可变；祖先控制按同 Home 任务链检查 |
+| Task | `tenant_id, task_id, orchestrator_id, submit_command_id, goal_ref, goal_revision, requirements, policy_ref, revision, control_revision, status, control, wait_reasons, deadline, budget, open_effects, accounting_open, result_ref?`；Orchestrator 和原提交绑定不可变；祖先控制按同 Orchestrator 任务链检查 |
 | Requirement | `requirement_id, kind, source_ref, rule_ref, required`；rule 引用机械检查、评估规则或用户验收；依据不足不能标 pass |
 | OperationIntent | `operation_id, task_id, goal_revision, decision_id?, plan_step?, capability_ref, binding_ref, input_ref, input_digest, grant_refs, reservation_id`；来源二选一：Brain 提案绑定 decision_id，计划物化绑定 `{plan_id, plan_revision, step_id}`；准入后不可改参数，效果字段由 Executor 提供 |
 | ConditionResult | `requirement_id, goal_revision, artifact_ref, verdict, basis, evidence_refs, evaluator_ref`；verdict 为 pass/fail/unknown，引用准确成果与适用规则 |
@@ -171,16 +171,16 @@ Home 的任务额度采用 `spent + reserved ≤ limit`。每次调用先按声�
 
 | 方法 | 业务输入 → 输出 | 成功含义 |
 | --- | --- | --- |
-| `task.submit` | goal_ref、目标 Home、明确约束、策略选择、预算及期限 → Task | 接纳与首项工作持久化，不保证任务成功 |
-| `task.read` / `task.list` | task_id 或过滤条件／游标 → 当前获准快照 | 查询不引发行动，目录只包含本 Home 的任务 |
+| `task.submit` | goal_ref、目标 Orchestrator、明确约束、策略选择、预算及期限 → Task | 接纳与首项工作持久化，不保证任务成功 |
+| `task.read` / `task.list` | task_id 或过滤条件／游标 → 当前获准快照 | 查询不引发行动，目录只包含本 Orchestrator 的任务 |
 | `task.result` | task_id → 固定 Result 或尚未成功的状态说明 | 返回原结果，成果字节按当前权限另取 |
 | `task.revise` | expected_revision、新 goal_ref、明确约束变化 → 新修订 | 旧在途效果保留；新目标等待冲突解决 |
-| `task.pause` / `task.resume` / `task.cancel` | expected_revision、控制理由 → 本 Home 决定及逐远端确认状态 | 本地决定已保存；远端生效另查 |
+| `task.pause` / `task.resume` / `task.cancel` | expected_revision、控制理由 → 本 Orchestrator 决定及逐远端确认状态 | 本地决定已保存；远端生效另查 |
 | `task.input` | request_id、request_revision、内容或选择、准确预览绑定 → 消费回执 | 一次消费；授权输入走独立受信签发入口 |
 | `task.attach_evidence` | 原 operation_id、可核验证据引用 → 核验 job | 接纳证据不直接改变效果或终态 |
 | `task.accept_result` | request_id、request_revision、候选摘要、goal_revision、受信用户决定 → 验收记录 | 核对请求类型、版本和未消费状态，同事务消费请求、保存验收及后续核验 job；原命令返回原回执，另一命令竞争同请求只可一份生效 |
 
-task.list 使用固定查询上界及稳定 `(created_at, task_id)` 游标，逐页重新检查当前披露权限；已删除或已撤权项跳过并记录缺口，不能为了补齐数量无限扫描。跨 Home 目录由应用合并来源明确的结果，不建立第二个任务裁决者。
+task.list 使用固定查询上界及稳定 `(created_at, task_id)` 游标，逐页重新检查当前披露权限；已删除或已撤权项跳过并记录缺口，不能为了补齐数量无限扫描。跨 Orchestrator 目录由应用合并来源明确的结果，不建立第二个任务裁决者。
 
 ## 8. 验证要点
 

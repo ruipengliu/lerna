@@ -57,7 +57,7 @@ accepted必须有accepted_at，不能带decided_at或业务错误；applied必�
 
 | object_type | 集合查询及无筛选输入 | 单对象当前查询 | 集合的披露边界 |
 | --- | --- | --- | --- |
-| task | task.list：省略 statuses，沿 next_cursor 到末页 | task.read | 原 Home 当前获准任务，含终态；gaps 非空不能标为完整 |
+| task | task.list：省略 statuses，沿 next_cursor 到末页 | task.read | 原 Orchestrator 当前获准任务，含终态；gaps 非空不能标为完整 |
 | operation | execution.list：query_id、limit、cursor? | execution.get | 原 Executor 当前获准 Operation，含已关闭及效果未知记录 |
 | memory | memory.list：types=[]、states=[]，沿 next_cursor | memory.inspect | 当前获准管理控制元数据，含 disabled／deleted；不授予正文读取资格 |
 | surface | interaction.surface_list：app_ids=[]、task_refs=[]、include_expired=true | interaction.surface_read | 当前获准 Surface，含过期项；partial、gaps 或 unreachable_endpoints 均保留缺口 |
@@ -105,7 +105,7 @@ Activation.revision 是可见持久投影的独立修订；phase、ready_instanc
 
 | 领域 | 必须保持的关系 | 完整机制 |
 | --- | --- | --- |
-| 任务与预算 | 固定Home、原提交及操作身份；修订递增；余额与分配不重复消费，封账后才归还；列表切点有界 | [运行时](../task-runtime/implementation.md) |
+| 任务与预算 | 固定 Orchestrator、原提交及操作身份；修订递增；余额与分配不重复消费，封账后才归还；列表切点有界 | [Orchestrator](../orchestrator/implementation.md) |
 | Brain与计划 | 原决策固定快照及至多一次物理生成；上下文正文及有界计划都有准确结构，确定性物化仍逐步准入 | [大脑](../brain/implementation.md) |
 | 能力与资源 | 精确版本和实例绑定；resource.observe仍产生原Operation；资源代次、GUI观察和TaskGate同时有效 | [执行](../execution/implementation.md) |
 | 许可与配对 | Subject来自受信身份，确认一次消费；单次使用与离线分配不扩大来源用途；配对回复丢失不重复发凭据 | [安全](../security/implementation.md) |
@@ -134,7 +134,7 @@ Invoke.arguments和行动模板最终参数仍按准确Capability版本、摘要
 | [interaction](../interaction/README.md) | 10 | 请求、输出、阶段、错误与原身份关联见方法登记 |
 | [memory](../memory/README.md) | 18 | 请求、输出、阶段、错误与原身份关联见方法登记 |
 | [security](../security/README.md) | 18 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [task-runtime](../task-runtime/README.md) | 16 | 请求、输出、阶段、错误与原身份关联见方法登记 |
+| [orchestrator](../orchestrator/README.md) | 16 | 请求、输出、阶段、错误与原身份关联见方法登记 |
 
 ## 5. 从静态资产取得什么证据
 

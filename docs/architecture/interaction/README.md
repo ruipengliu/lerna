@@ -2,11 +2,11 @@
 
 [模块与数据 UML](../uml-models.md#interaction) · [可编辑 UML 图册](../diagrams/uml-models.drawio)
 
-[总览](../README.md) · [任务运行](../task-runtime/README.md) · [授权](../security/README.md) · [公共调用契约](../contracts/README.md)
+[总览](../README.md) · [任务运行](../orchestrator/README.md) · [授权](../security/README.md) · [公共调用契约](../contracts/README.md)
 
 应用层让用户创建和查看任务、处理输入与授权请求、管理个人信息并接管执行。它覆盖 C5、C6、C7 及 A4。Surface 是具有固定负责端的界面会话，可关联一个任务，也可独立承载记忆管理或应用内容；Surface 与任务生命周期分别保存。
 
-默认提供 CLI 和轻量 Web 适配器，Web 支持生产入口和本地调试装配。交互服务保存 Surface 与输入转交责任，Task Home 保存任务输入消费与任务控制，授权服务保存许可决定。界面不能通过渲染一个“同意”按钮取得授权裁决权。
+默认提供 CLI 和轻量 Web 适配器，Web 支持生产入口和本地调试装配。交互服务保存 Surface 与输入转交责任，Orchestrator 保存任务输入消费与任务控制，授权服务保存许可决定。界面不能通过渲染一个“同意”按钮取得授权裁决权。
 
 本页的输入消费、版本复核和恢复语义属于适配器共同契约。参考实现核心使用 Go；浏览器、CLI 和设备统一经 `/v1/connect` 的 WSS 双向长连接调用，同进程使用 Go 接口，服务跨进程使用 gRPC。HTTPS 保留发现、认证与大文件传输。界面样式可以替换，替换后仍须区分“本端已保存”“业务已消费”和“目标效果已证实”。
 
@@ -32,7 +32,7 @@
 sequenceDiagram
     participant U as 用户界面
     participant I as 交互服务
-    participant H as Task Home
+    participant H as Orchestrator
     U->>I: 原 input_id、请求修订、目录回答
     I->>I: 保存输入及唯一目标 command_id
     I-->>U: 已保存，等待任务处理
@@ -47,23 +47,23 @@ sequenceDiagram
 | 发起方 → 处理方 | 交接输入 | 持久成功点 | 失败后由谁继续 |
 | --- | --- | --- | --- |
 | 用户宿主 → 交互服务 | 原输入、请求修订、回答及精确预览引用 | 交互服务保存 InputSubmission、唯一目标命令和转交责任 | 宿主查询原 input_id；交互服务恢复转交，不生成第二个目标命令 |
-| 交互服务 → Home／已绑定处理器 | 固定目标命令、业务请求与用户回答 | 业务负责端原子消费请求并保存决定及后续工作 | 交互服务查原命令；业务负责端继续已接纳责任 |
+| 交互服务 → Orchestrator／已绑定处理器 | 固定目标命令、业务请求与用户回答 | 业务负责端原子消费请求并保存决定及后续工作 | 交互服务查原命令；业务负责端继续已接纳责任 |
 | 受信确认宿主 → Grant owner | 本人认证和准确授权请求 | Grant owner 保存许可决定，界面取得固定回执 | 宿主查原授权；普通 Surface 不补造许可 |
-| Home／应用投影器 → Surface owner | 已绑定来源修订与完整声明式快照 | Surface owner 提交新快照和变化提示责任 | 投影器重读源状态；宿主读取当前快照补齐提示遗漏 |
+| Orchestrator／应用投影器 → Surface owner | 已绑定来源修订与完整声明式快照 | Surface owner 提交新快照和变化提示责任 | 投影器重读源状态；宿主读取当前快照补齐提示遗漏 |
 
 表格只汇总责任，输入消费和撤回规则分别见[输入](#input-consumption)与[故障恢复](#interaction-recovery)，对象字段集中在[契约查阅](#interaction-contracts)。
 
-同宿主共库时，输入登记和 Task Home 消费可以合并为一个事务，避免额外队列。跨端时交互服务必须先持久化唯一目标命令，再向 Home 发送；重启沿原命令查询或原样重投。没有耐久宿主支持的浏览器只能显示“本端待发送”，不能承诺清理浏览器数据后仍能恢复未发出的回答。
+同宿主共库时，输入登记和 Orchestrator 消费可以合并为一个事务，避免额外队列。跨端时交互服务必须先持久化唯一目标命令，再向 Orchestrator 发送；重启沿原命令查询或原样重投。没有耐久宿主支持的浏览器只能显示“本端待发送”，不能承诺清理浏览器数据后仍能恢复未发出的回答。
 
 ## 2. 会话与呈现有独立生命周期
 
-Surface 的业务快照由固定 surface_owner_id 管理。任务 Surface 指向 home_id/task_id，独立 Surface 指向一个已注册应用处理器。处理器声明允许的事件种类、输入格式和幂等查询；不能把任意界面事件路由到任意管理接口。
+Surface 的业务快照由固定 surface_owner_id 管理。任务 Surface 指向 orchestrator_id/task_id，独立 Surface 指向一个已注册应用处理器。处理器声明允许的事件种类、输入格式和幂等查询；不能把任意界面事件路由到任意管理接口。
 
-任务投影更新绑定 task_revision，交互服务只应用较新的源修订；同修订不同内容视为冲突并回查 Home。独立 Surface 的应用处理器通过预期 Surface 修订更新快照。两类更新均同事务保存新快照和变化提示责任，提示丢失时完整读取仍能恢复。
+任务投影更新绑定 task_revision，交互服务只应用较新的源修订；同修订不同内容视为冲突并回查 Orchestrator。独立 Surface 的应用处理器通过预期 Surface 修订更新快照。两类更新均同事务保存新快照和变化提示责任，提示丢失时完整读取仍能恢复。
 
 每台设备独立保存打开、关闭及最后查看修订。关闭页面停止本端主动呈现，不取消任务，也不撤回已消费输入；稍后结果到达只更新可查询记录，不自行重新打开页面。用户明确点击取消时，才发送任务控制命令。设备接管入口直接到[执行资源控制](../execution/README.md)，不等待模型解释或普通聊天输入。
 
-跨端发现按用户已登记 Home 和 Surface 负责端分别查询目录。目录可能因部分端点失联而不完整，返回 unreachable_endpoints；不创建一个看似全局权威的聊天索引。任务标题、预览及目录条目本身也需读取权限，任务 ID 不能绕过检查。
+跨端发现按用户已登记 Orchestrator 和 Surface 负责端分别查询目录。目录可能因部分端点失联而不完整，返回 unreachable_endpoints；不创建一个看似全局权威的聊天索引。任务标题、预览及目录条目本身也需读取权限，任务 ID 不能绕过检查。
 
 界面呈现只使用本次读取获准的内容引用。正文、截图及派生内容保留精确版本、摘要与来源；读取和披露分别检查[内容与记忆规则](../memory/README.md)。缓存到期、来源失效或权限改变后，既有卡片显示不可用，不继续用缓存提供新的阅读或回答依据。
 
@@ -81,11 +81,11 @@ flowchart TB
 <a id="input-consumption"></a>
 ## 3. 输入、主观验收与真实授权
 
-InputRequest 由实际业务负责端创建，固定 request_id、revision、schema、期限及必需预览。Task Home 对同一请求只消费一个有效回答；两个设备同时作答时，先成功提交的回答获胜，另一端收到已消费的请求及可披露的回执，不悄悄覆盖。
+InputRequest 由实际业务负责端创建，固定 request_id、revision、schema、期限及必需预览。Orchestrator 对同一请求只消费一个有效回答；两个设备同时作答时，先成功提交的回答获胜，另一端收到已消费的请求及可披露的回执，不悄悄覆盖。
 
-普通澄清只改变其允许的目标参数。对开放式成果的用户验收，必须绑定精确成果版本及未满足条件；验收结果交 Task Home 决定 completion_basis，不能覆盖未知副作用。任务目标整体改变是否创建关联任务，遵循[任务运行](../task-runtime/README.md)的修订规则。
+普通澄清只改变其允许的目标参数。对开放式成果的用户验收，必须绑定精确成果版本及未满足条件；验收结果交 Orchestrator 决定 completion_basis，不能覆盖未知副作用。任务目标整体改变是否创建关联任务，遵循[任务运行](../orchestrator/README.md)的修订规则。
 
-目标命令由已绑定处理器决定：clarification 调用 task.input；acceptance 调用 task.accept_result，传 request_id、request_revision、候选摘要、goal_revision 和受信用户决定；application 调用已登记处理器。Home 原子消费原请求并保存验收记录，界面不能通过更换命令类型消费同一请求两次。
+目标命令由已绑定处理器决定：clarification 调用 task.input；acceptance 调用 task.accept_result，传 request_id、request_revision、候选摘要、goal_revision 和受信用户决定；application 调用已登记处理器。Orchestrator 原子消费原请求并保存验收记录，界面不能通过更换命令类型消费同一请求两次。
 
 授权确认走受信入口：宿主显示请求主体、动作、准确资源、用途、上限、期限和拟使用的数据位置；宿主先固定原业务命令及规范意图，在实际业务负责端登记确认；用户认证并提交决定后，业务负责端在原命令的事务中消费确认并产生决定。请求内容、插件自绘 UI、远端 Agent 的“已获批准”字段都不能替代此过程。界面只传递授权 request_id 与原决定回执，完整 Grant 字段和消费规则集中在[授权](../security/README.md)。
 
@@ -98,7 +98,7 @@ InputRequest 由实际业务负责端创建，固定 request_id、revision、sch
 
 | 对象／字段 | 约束 |
 | --- | --- |
-| Surface：surface_id、surface_owner_id、app_binding、task_ref? | app_binding 固定处理器版本；task_ref 是 home_id/task_id，可为空 |
+| Surface：surface_id、surface_owner_id、app_binding、task_ref? | app_binding 固定处理器版本；task_ref 是 orchestrator_id/task_id，可为空 |
 | Surface：revision、snapshot | snapshot 集中保存 title、blocks、request_refs、expires_at；任务投影另含 source_revision。blocks 只含[严格声明式组件](implementation.md#2-严格声明式组件)，不运行模型脚本 |
 | InputRequest：request_id、owner_id、revision、kind、schema、question_ref、deadline、state | kind 为 clarification、acceptance 或 application；权限请求引用安全模块对象，不复制为普通请求 |
 | InputRequest：required_content_refs、allowed_actions、consumed_by? | 必需预览绑定精确版本；consumed_by 由业务负责端原子保存 |
@@ -113,7 +113,7 @@ InputRequest 由实际业务负责端创建，固定 request_id、revision、sch
 | interaction.request_read | request_ref；返回当前准确 InputRequest 与材料缺口 | 实际请求 owner 认证并复核披露；旧修订返回 revision_conflict，不拿旧按钮消费新请求 |
 | interaction.surface_create | 应用绑定、可选 task_ref、初始快照；返回 surface_id | 保存 Surface、应用绑定及原命令回执后 applied |
 | interaction.surface_read | surface_id、可选已知修订；返回获准快照或未变化 | 每次复核当前权限；内容不可取返回具体缺口 |
-| interaction.surface_update | surface_id、预期修订、完整声明式快照及源修订；返回新修订 | 只允许已绑定处理器或 Home 投影器调用；保存快照及提示责任后 applied |
+| interaction.surface_update | surface_id、预期修订、完整声明式快照及源修订；返回新修订 | 只允许已绑定处理器或 Orchestrator 投影器调用；保存快照及提示责任后 applied |
 | interaction.surface_list | 负责端、有限筛选及游标；返回可披露条目、下一游标及完整性 | 固定查询切点和有限候选，每页复核权限；失联端单列 |
 | interaction.input | 原输入、请求修订、回答与预览引用；返回 input_id、state | queued 后由交互服务 job 负责转交；重复读原输入得到固定决定 |
 | interaction.input_read | input_id；返回原转交和业务消费回执 | 不能凭当前表单消失推断历史回答成功 |
@@ -128,14 +128,14 @@ InputRequest 由实际业务负责端创建，固定 request_id、revision、sch
 
 | 场景 | 对外行为与恢复 |
 | --- | --- |
-| 用户回答已被 Home 消费，UI 回执丢失 | 显示处理中并查原 target_command_id；返回原应用结果，不再创建回答 |
+| 用户回答已被 Orchestrator 消费，UI 回执丢失 | 显示处理中并查原 target_command_id；返回原应用结果，不再创建回答 |
 | WSS 网关断开，原输入是否提交不明 | 保留原 input_id 与 command_id；重连后查原回执和当前快照，不把连接失败当作业务失败，也不更换身份重试 |
 | 两台设备提交不同答案 | 一份被消费，另一份明确 request_already_consumed；刷新到新快照，必要的新澄清必须由负责端发起 |
 | 用户提交时请求或候选已更换 | 拒绝旧修订，保留拒绝回执并刷新原请求；旧答案不能自动套用新目标或新候选 |
 | 预览已看过，但提交前到期、撤权或来源关闭 | 禁止消费依赖该预览的输入，给出具体材料缺口；由请求负责端重建有效预览或等待资格恢复，用户重新查看后再提交新输入 |
 | 预览引用版本不符或正文未取得 | 不启用依赖按钮；若绕过宿主直接提交，业务负责端仍拒绝，不能以 seen_revision 或“用户已读”字段放行 |
 | 关窗后重启，正式成果到达 | 保持本端关闭意图；任务目录可查成果。主动打开后才重新读取正文 |
-| Surface 所在端在线，Task Home 失联 | 允许保存有界排队回答，显示尚未生效；用户仍可撤回尚未发送的本地输入，发送结果不明时必须先查原命令 |
+| Surface 所在端在线，Orchestrator 失联 | 允许保存有界排队回答，显示尚未生效；用户仍可撤回尚未发送的本地输入，发送结果不明时必须先查原命令 |
 | 模型生成伪造权限按钮或管理链接 | 作为不可信文本呈现；实际批准只能进入宿主认证的权限页面 |
 | 读取权限撤销，用户仍有删除或取消权 | 关闭正文展示，保留最小可授权管理元数据与控制入口；不能要求读正文才能管理 |
 

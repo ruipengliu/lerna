@@ -1,6 +1,6 @@
 # 大脑实现：固定上下文、单轮提案与调用恢复
 
-[模块主线](README.md) · [运行时](../task-runtime/README.md) · [内容实现](../memory/implementation.md)
+[模块主线](README.md) · [Orchestrator](../orchestrator/README.md) · [内容实现](../memory/implementation.md)
 
 本文把单轮 Brain 展开为参考实现，供同进程 port 与远程适配器共用。
 接口、状态及成功含义沿用模块主线；这里规定内部记录、处理顺序与故障实验。
@@ -11,7 +11,7 @@
 ## 1. 软件形状、内部职责与边界
 
 Brain 的工作从接纳一个固定 DecisionRequest 开始，到保存该快照上的提案或明确错误结束。
-Home 负责选择上下文、保存计划和决定后续工作；Brain 不拥有任务写权限。
+Orchestrator 负责选择上下文、保存计划和决定后续工作；Brain 不拥有任务写权限。
 模型适配器负责供应商编码及物理请求事实，不能执行生成内容中的工具调用。
 
 Brain 是宿主装配的一组 Go package。DecisionService 是唯一对外 facade，
@@ -25,7 +25,7 @@ DecisionStore 将事务和领域记录映射到宿主 command_store、job_store�
 
 ```mermaid
 flowchart TB
-    H[外部：Task Home]
+    H[外部：Orchestrator]
     O[外部：内容 owner]
     G[外部：Grant owner]
     P[外部：模型供应商或本地推理进程]
@@ -61,7 +61,7 @@ flowchart TB
 
 图展示软件依赖方向；实线为同步调用，虚线为持久工作交接。
 调用者在事务外等待网络；同进程装配仍保留相同 store 和外部 port 边界。
-Home 收到提案后仍执行独立准入，宿主 job 领取器只提供处理机会。
+Orchestrator 收到提案后仍执行独立准入，宿主 job 领取器只提供处理机会。
 
 接纳 RPC 的 context 只约束该次接纳及等待。接纳成功后的 RecoveryWorker 从原 job 建立有界工作 context，
 依据持久取消决定、工作期限和宿主关闭信号停止本地处理；客户端断连不取消已接纳 Decision。
@@ -74,7 +74,7 @@ Home 收到提案后仍执行独立准入，宿主 job 领取器只提供处理�
 | ContextReader | 读取准确上下文版本，验证正文类型和来源清单 | 不自行补搜索、抓取或设备观察 |
 | DecisionPolicy | 固定策略选择确定性返回或一次物理生成 | 不形成另一套长期 Agent 循环 |
 | ModelAdapter | 精确模型配置、请求序列化、流汇总、用量记录 | 不重试未知请求，不运行返回工具 |
-| ProposalValidator | 提案结构、能力绑定、引用闭包及上限 | 不替代 Home 的当前权限和控制检查 |
+| ProposalValidator | 提案结构、能力绑定、引用闭包及上限 | 不替代 Orchestrator 的当前权限和控制检查 |
 | RecoveryWorker | 领取本轮推进工作；沿原调用查询、停止和费用核对 | 不用新调用身份掩盖旧调用未知 |
 | DecisionStore | 接纳、发送门禁和终态短事务；绑定宿主事务与 jobs | 不在事务闭包内访问模型或远端 owner |
 
@@ -92,8 +92,8 @@ Home 收到提案后仍执行独立准入，宿主 job 领取器只提供处理�
 | BrainContext 字段 | 内容与约束 |
 | --- | --- |
 | schema_version | 固定正文格式；未知版本拒绝 |
-| task_ref | 当前 home_id 与 task_id |
-| snapshot_revision、goal_revision、control_revision | 与 Home 本轮固定记录一致，不比较不同对象的修订 |
+| task_ref | 当前 orchestrator_id 与 task_id |
+| snapshot_revision、goal_revision、control_revision | 与 Orchestrator 本轮固定记录一致，不比较不同对象的修订 |
 | goal_ref、requirements | 原始目标引用及本轮完整要求，显式约束不可裁剪 |
 | control | 当前 running／paused 及不可执行的原因；暂停通常不发新决策 |
 | plan_ref | 可空；已接受的准确计划版本 |
@@ -111,9 +111,9 @@ material 包含 content_ref、可选片段选择器、role 和 source_refs；rol
 片段选择只减少实际处理字节，不自行放宽原内容的来源策略。
 capabilities 只能包含已获准披露的声明，工具凭据不进入模型上下文。
 
-### 2.1 Home 的组装步骤
+### 2.1 Orchestrator 的组装步骤
 
-组装属于 Home；Brain 在读取后再次验证足以解释本轮输入，不反向修改快照。
+组装属于 Orchestrator；Brain 在读取后再次验证足以解释本轮输入，不反向修改快照。
 同宿主可以传递只读对象，但序列化后必须具有相同正文含义。
 
 1. 固定任务、目标和控制修订，取得硬约束及原未知效果。
@@ -135,7 +135,7 @@ capabilities 只能包含已获准披露的声明，工具凭据不进入模型�
 固定目标、控制、未知效果和所用能力完整契约是不可裁剪区。
 
 可重用摘要必须已有准确内容版本、来源闭包和获准处理依据。
-本轮不隐含再调用一次模型生成摘要；需要新摘要时由 Home 建立独立有界处理工作。
+本轮不隐含再调用一次模型生成摘要；需要新摘要时由 Orchestrator 建立独立有界处理工作。
 摘要过期、来源关闭或不可定位时作为缺口，不用缓存文字替代原资格检查。
 模型窗口限额与任务累计读取额度分别检查，重新组装不能重置累计费用。
 
@@ -152,7 +152,7 @@ input_manifest 由实际读取和发送组件记录，不能由模型自行提�
 
 禁止保存的资料只进入部署已验证的临时处理路径。
 持久记录保存获准的最小身份、摘要与使用事实，不保存被禁止的正文或提示词。
-进程重启后原文无法重取时，原决策结束为 context_incomplete；Home 请求重新提供材料或按明确缺口继续。
+进程重启后原文无法重取时，原决策结束为 context_incomplete；Orchestrator 请求重新提供材料或按明确缺口继续。
 若原模型请求可能已经发送，先保留 provider_result_unknown 及费用责任，不能把缺原文解释为从未调用。
 
 ## 3. 持久记录与唯一约束
@@ -181,17 +181,17 @@ input_digest 覆盖 DecisionRequest 的规范化结构，数组顺序保留。
 ### 3.1 核心对象关系与流转
 
 Decision 是一轮工作的聚合根；ModelCall 是该轮可能产生的一次物理调用，
-Proposal 是可交回的结果内容。三者分别回答“本轮决定了什么”“外部可能处理了什么”和“Home 可检查什么”。
+Proposal 是可交回的结果内容。三者分别回答“本轮决定了什么”“外部可能处理了什么”和“Orchestrator 可检查什么”。
 来源清单属于实际处理事实；不能因为正文已清理而从一份仍受管产出的来源闭包中删除。
 
 ```mermaid
 flowchart LR
-    H[Home 固定的 BrainContext] -->|接纳时绑定准确引用| D[Decision 与 decision_input]
+    H[Orchestrator 固定的 BrainContext] -->|接纳时绑定准确引用| D[Decision 与 decision_input]
     D -->|需要生成时唯一关联| M[ModelCall]
     M -->|追加物理事实| F[发送、返回、用量事实]
     D -->|终态事务固定| O[decision_output]
     O -->|引用准确内容| P[Proposal ContentRef]
-    P -->|查询交回，另行准入| T[Home 原 Decision 消费记录]
+    P -->|查询交回，另行准入| T[Orchestrator 原 Decision 消费记录]
     D -->|正文到期后保留| X[decision_closure]
     F -->|原调用核对后归并| U[费用最终记录或未结责任]
     I[实际 input_manifest] -->|保存派生边| P
@@ -202,10 +202,10 @@ flowchart LR
 
 | 对象 | 创建与持久化 | 传递、消费与收尾 |
 | --- | --- | --- |
-| BrainContext／input_manifest | Home 先保存获准正文；Decision 接纳固定版本和摘要 | ContextReader 取准确字节；ModelAdapter 保存实际处理来源。禁止保存的字节仅走已验证临时路径，恢复缺失按 2.3 节处理 |
-| Decision | DecisionService 在接纳事务生成当前记录、原回执与 job | RecoveryWorker 只推进原身份；Home 按原 Decision 查询并单独消费，正文到期归并为最小关闭依据 |
+| BrainContext／input_manifest | Orchestrator 先保存获准正文；Decision 接纳固定版本和摘要 | ContextReader 取准确字节；ModelAdapter 保存实际处理来源。禁止保存的字节仅走已验证临时路径，恢复缺失按 2.3 节处理 |
+| Decision | DecisionService 在接纳事务生成当前记录、原回执与 job | RecoveryWorker 只推进原身份；Orchestrator 按原 Decision 查询并单独消费，正文到期归并为最小关闭依据 |
 | ModelCall／使用与用量事实 | 发送准备时固定唯一调用，发送门禁及物理观察分别追加 | ModelAdapter 外部调用，RecoveryWorker 查询原调用；最终账单可替换估计，不能覆盖原发生事实或抹去未知责任 |
-| Proposal 内容／decision_output | 校验后先保存获准内容，再在终态事务固定结果引用 | Home 当前准入接受或拒绝；失效提案仍是原结果，内容按来源关闭和保留策略清理 |
+| Proposal 内容／decision_output | 校验后先保存获准内容，再在终态事务固定结果引用 | Orchestrator 当前准入接受或拒绝；失效提案仍是原结果，内容按来源关闭和保留策略清理 |
 
 ### 3.2 接纳事务
 
@@ -232,7 +232,7 @@ flowchart LR
 输出先完成流汇总、解析、大小和引用校验，再保存获准的输出内容。
 事务比较 Decision 状态及代次，固定 completed／failed 与原结果，删除推进 job 并保存费用收尾责任。
 取消先提交时，不再写入 completed；迟到输出只进入仍获准的诊断记录。
-Home 获取 Decision 后，另在自己的事务中消费提案和决定后续工作。
+Orchestrator 获取 Decision 后，另在自己的事务中消费提案和决定后续工作。
 因此 Brain completed 与任务 succeeded 不在同一状态机中。
 
 <a id="key-sequence"></a>
@@ -296,11 +296,11 @@ sequenceDiagram
 | 4 | act 能力及绑定与本轮准确声明一致 | 不按近似名称寻找替代能力 |
 | 5 | arguments 按固定能力输入 Schema 校验 | 返回字段路径，不自动猜值 |
 | 6 | 行动相互独立且不超 max_actions | 有依赖的步骤改成后续计划 |
-| 7 | complete 的成果、条件与评估引用完整 | Home 仍复核完成资格 |
+| 7 | complete 的成果、条件与评估引用完整 | Orchestrator 仍复核完成资格 |
 
 格式错误、截断和引用错误统一结束当前生成，不能在同 decision_id 内再生成。
-Home 可以携带机器可读缺口发起新决策；修复次数、总轮数、费用和期限分别计入。
-无新事实而重复 need_context 时，Home 返回已有查询结果或缺口，不能反复探活。
+Orchestrator 可以携带机器可读缺口发起新决策；修复次数、总轮数、费用和期限分别计入。
+无新事实而重复 need_context 时，Orchestrator 返回已有查询结果或缺口，不能反复探活。
 
 ### 4.1 计划正文
 
@@ -318,10 +318,10 @@ Home 可以携带机器可读缺口发起新决策；修复次数、总轮数、
 | source_refs | 编制计划的完整处理来源；不等于已执行证据 |
 
 没有 action_template 的步骤必须由后续 Brain 决策展开。
-存在模板时，Home 仅在全部依赖已满足、取值来源准确且目标未变时物化下一行动。
+存在模板时，Orchestrator 仅在全部依赖已满足、取值来源准确且目标未变时物化下一行动。
 绑定字段须通过同一能力 Schema；缺字段或类型改变返回重新决策，不执行隐式类型转换。
 任何物化行动仍逐次检查控制、权限、预算与资源门禁。
-计划步骤按 `(task,plan_id,plan_revision,step_id)` 唯一准入并保存原操作关联；不再次消费生成计划的 Brain 决策，事务规则见[任务准入](../task-runtime/implementation.md)。
+计划步骤按 `(task,plan_id,plan_revision,step_id)` 唯一准入并保存原操作关联；不再次消费生成计划的 Brain 决策，事务规则见[任务准入](../orchestrator/implementation.md)。
 例如“评估通过后写入同一候选，再读回准确版本”，可以复用固定模板；评估不通过则交 Brain 修订。
 计划不是新的授权单位，计划保存成功也不表示全部步骤获准。
 
@@ -340,7 +340,7 @@ Home 可以携带机器可读缺口发起新决策；修复次数、总轮数、
 取消并不证明供应商停算；model_call.state=stopped 必须有停止证据。
 本地执行槽在本进程请求或推理实际结束后释放，未知费用继续按上界占用。
 供应商没有终结查询时不声明远端物理并发硬上限；新尝试仍受速率、费用和熔断约束。
-已完成提案在 Home 处失效时保留原结果，不修改为另一个快照上的提案。
+已完成提案在 Orchestrator 处失效时保留原结果，不修改为另一个快照上的提案。
 来源随后关闭时，产出按内容治理停止新使用，已发生调用和费用不消失。
 
 ## 6. 参考上限与可观察记录
@@ -349,7 +349,7 @@ Home 可以携带机器可读缺口发起新决策；修复次数、总轮数、
 
 | 资源 | 初值 | 达限行为 |
 | --- | --- | --- |
-| 单轮行动／补充请求 | 8／8 | 拒绝超限提案，Home 可拆分新轮 |
+| 单轮行动／补充请求 | 8／8 | 拒绝超限提案，Orchestrator 可拆分新轮 |
 | 上下文清单引用 | 100 | 先裁可选材料；必需材料超限返回缺口 |
 | 单计划步骤／依赖数 | 64／每步 16 | 拒绝循环或超限，不自动展开 |
 | 提案 JSON 字节 | 128 KiB | invalid_output；正文成果另存内容引用 |
@@ -367,7 +367,7 @@ Home 可以携带机器可读缺口发起新决策；修复次数、总轮数、
 生产拓扑、主写域隔离和故障域保证遵循[公共可用性策略](../deployment-production.md#availability)，
 容量推导及剩余容量遵循[公共容量策略](../deployment-production.md#capacity)。
 Brain 按租户和稳定 owner 路由至原 Decision 数据库分区；增加无状态 facade 或工作者不改变原决策身份，
-也不改变任务 Home。推理进程可以按 ModelProfile 独立扩容，仍由宿主 jobs 和已保存的调用上界驱动。
+也不改变任务 Orchestrator。推理进程可以按 ModelProfile 独立扩容，仍由宿主 jobs 和已保存的调用上界驱动。
 
 | 扩展或竞争点 | 必须维持的约束 |
 | --- | --- |
@@ -403,7 +403,7 @@ Brain 按租户和稳定 owner 路由至原 Decision 数据库分区；增加无
 | BI-01 接纳中断 | 保存 Decision 后、答复前断连 | 原身份一条记录，重投不新增 ModelCall |
 | BI-02 发送边界 | send_started 提交后强制结束进程 | 查询原调用或 unknown；物理请求不自动重复 |
 | BI-03 取消竞争 | 流返回前提交取消，再交回完整输出 | Decision 保持 cancelled，费用继续收尾 |
-| BI-04 过期快照 | 模型运行中修订任务目标 | Brain 原结果可查，Home 不采纳旧行动 |
+| BI-04 过期快照 | 模型运行中修订任务目标 | Brain 原结果可查，Orchestrator 不采纳旧行动 |
 | BI-05 来源全继承 | 同轮读私密偏好及公开文档，输出只引用公开文档 | 派生来源包含两者，未经许可外发被拒 |
 | BI-06 窗口不足 | 硬约束与完整能力声明超过窗口 | 无供应商请求，context_incomplete 可解释 |
 | BI-07 非保存输入 | 临时资料进入模型后进程崩溃 | 不产生持久正文；可能发送和费用仍保留，缺原文不重做 |

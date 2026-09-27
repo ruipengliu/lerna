@@ -16,7 +16,7 @@
 | transport_profile、connect_path | `harness-wss-draft-3`、`/v1/connect`；WSS 地址从原受信服务同源解析，不接受任意连接 URL |
 | schema_digest、methods_digest | 精确领域 Schema 和方法登记的 SHA-256；从装配认可的资产取得，不执行任意远程 Schema |
 | methods | 本服务实现的严格方法子集；声明方法不表示调用者已有权限 |
-| auth_profile、proof_profile | `session-cookie-or-opaque-bearer-1`、`home-jws-es256-1`；不宣称完整 OAuth 供应商互操作 |
+| auth_profile、proof_profile | `session-cookie-or-opaque-bearer-1`、`orchestrator-jws-es256-1`；不宣称完整 OAuth 供应商互操作 |
 | limits | 消息、在途调用、待交付、队列、订阅、连接及心跳限额，见下表 |
 | retention | 完整回执查询秒数及长期最小关闭索引；未结责任不受普通清理期限支配 |
 | changes_supported | 本配置提供变化订阅；通知仍不能取代原记录查询 |
@@ -45,7 +45,7 @@
 
 外连接重建不会创造新的 endpoint instance；内外连接均不决定业务唯一执行权。重复投递即使经过不同连接仍按 delivery_id／command_id 去重。外断线释放连接、request_id 和订阅状态，不释放业务责任；指数退避并加入抖动后重连，参考从 1 秒增长至 30 秒上限，认证失败先重新认证，不无限重试旧凭据。
 
-发现字段和 Frame 完整结构见 [transport.schema.json](schemas/transport.schema.json)。服务只能声明已安装并通过对应配置验证的方法，未知 profile、资产摘要或必要方法缺失时停止集成。没有全局注册中心：装配保存逻辑服务及认证关系，跨 Home 任务目录聚合现有映射。
+发现字段和 Frame 完整结构见 [transport.schema.json](schemas/transport.schema.json)。服务只能声明已安装并通过对应配置验证的方法，未知 profile、资产摘要或必要方法缺失时停止集成。没有全局注册中心：装配保存逻辑服务及认证关系，跨 Orchestrator 任务目录聚合现有映射。
 
 ## 2. 认证主体和有限配对入口
 
@@ -57,7 +57,7 @@ Bearer 至少来自 256 位密码学随机值，服务保存令牌校验值及�
 | --- | --- | --- |
 | 本地 CLI／Web | CLI 使用受控系统凭据；Web 同源 Cookie 会话、Origin 与 CSRF 检查 | 任意本机网页不能自动成为用户 |
 | 已配对端点 | 令牌绑定 tenant、endpoint、instance、credential_generation、到期与范围；每次查当前端点代次／撤销状态 | 设备认证不自动授予 Grant 或批准 |
-| 服务间调用 | 受信装配绑定逻辑服务与主体，令牌只发给对应服务范围 | 网关转交不允许伪装原 Home |
+| 服务间调用 | 受信装配绑定逻辑服务与主体，令牌只发给对应服务范围 | 网关转交不允许伪装原 Orchestrator |
 | 配对 begin | 受限匿名入口，限流并生成短期会话 | 不带 tenant，不得调用一般方法 |
 | 配对 claim | 原 pairing_id、私密设备码和设备 nonce；每次轮询用新命令，丢答复重投原命令 | 公开用户码不能领取凭据 |
 | 配对 approve | 已认证用户在独立受信入口确认原请求 | 新端自报的批准字段没有效力 |
@@ -66,19 +66,19 @@ Bearer 至少来自 256 位密码学随机值，服务保存令牌校验值及�
 
 尚未批准时，claim 的 `pending` 是该次命令的最终观察结果；后续轮询使用新 command_id，保持原 pairing_id、私密码及设备 nonce 不变，不能重放 pending 回执期待其变化。领取成功与原领取回执在同事务保存。回复丢失时，设备以原私密码及原命令恢复同一结果；不同命令不能生成第二份端点凭据。敏感回执只在安全领取窗口内保存可恢复密文，窗口结束返回 `gone` 并要求重新配对；最小关闭记录继续拒绝旧会话重新领取。已经持有的凭据是否有效按自己的期限与撤销决定，不由回执清理决定。
 
-`AuthContext` 由认证适配器生成，不从请求正文反序列化：`sender_service_id` 来自业务服务凭据或已验证的 Delivery 发送方，接收端还须检查该服务是否有权代表对应 Home 或 usage owner。中转网关的 mTLS 身份仅验证转交关系，不能写成业务 sender_service_id；委托调用恢复原主体及已验证的原业务发送者（如有），直接用户／端点没有业务发送者时不填该字段。否则持有者控制查询等按 sender 判定的入口会把网关错认成持有者。`actor_kind` 与 `trusted_user_session_ref` 来自当前用户／维护者会话；`confirmation.decide` 只允许受信的人类会话，服务令牌、模型产物及普通输入消息不能自报这两个字段完成批准。Confirmation 由原业务 owner 保存，并在原业务命令的事务中核验与消费，完整绑定见[安全实现](../security/implementation.md)。
+`AuthContext` 由认证适配器生成，不从请求正文反序列化：`sender_service_id` 来自业务服务凭据或已验证的 Delivery 发送方，接收端还须检查该服务是否有权代表对应 Orchestrator 或 usage owner。中转网关的 mTLS 身份仅验证转交关系，不能写成业务 sender_service_id；委托调用恢复原主体及已验证的原业务发送者（如有），直接用户／端点没有业务发送者时不填该字段。否则持有者控制查询等按 sender 判定的入口会把网关错认成持有者。`actor_kind` 与 `trusted_user_session_ref` 来自当前用户／维护者会话；`confirmation.decide` 只允许受信的人类会话，服务令牌、模型产物及普通输入消息不能自报这两个字段完成批准。Confirmation 由原业务 owner 保存，并在原业务命令的事务中核验与消费，完整绑定见[安全实现](../security/implementation.md)。
 
 原端点凭据或浏览器会话到期需受信重新认证并重新建链，不通过请求正文延长；仅内部委托令牌轮换时，网关可经受信身份适配器重新取得委托并重绑内部流，外 WSS 保持。端点撤销增加代次，所有旧连接的新请求和披露立即拒绝并关闭；已发出的有限离线资格仍遵守其明确窗口。新实例不得直接取得旧实例的未决操作或余额；旧工作始终从原领域账本恢复。云端登录供应商和操作系统密钥保存器为装配适配器，缺席时不开放远程入口。
 
-## 3. Home 控制证明
+## 3. Orchestrator 控制证明
 
-仅用“从网关收到”无法证明暂停快照由原 Home 发出。Home 为 ControlSnapshot 的准确内容生成 JWS Compact，`home_proof` 保存完整串；端点验证已登记 Home 的签名及接收方绑定后，才应用 TaskGate。签名用于证明来源，不替代当前 Grant、设备占用或控制修订单调性。
+仅用“从网关收到”无法证明暂停快照由原 Orchestrator 发出。Orchestrator 为 ControlSnapshot 的准确内容生成 JWS Compact，`orchestrator_proof` 保存完整串；端点验证已登记 Orchestrator 的签名及接收方绑定后，才应用 TaskGate。签名用于证明来源，不替代当前 Grant、设备占用或控制修订单调性。
 
-本配置使用 JWS protected header `{alg:"ES256",typ:"harness-control+jws",kid}`，拒绝 `none`、其他算法、不认识的 header、消息自带 JWK 或取钥 URL。公钥必须来自事先配对／装配登记的原 Home 密钥集。编码与验证沿用 [RFC 7515](https://www.rfc-editor.org/rfc/rfc7515)，ES256 的 P-256、SHA-256 及固定宽度签名格式依据 [RFC 7518 §3.4](https://www.rfc-editor.org/rfc/rfc7518#section-3.4)。
+本配置使用 JWS protected header `{alg:"ES256",typ:"harness-control+jws",kid}`，拒绝 `none`、其他算法、不认识的 header、消息自带 JWK 或取钥 URL。公钥必须来自事先配对／装配登记的原 Orchestrator 密钥集。编码与验证沿用 [RFC 7515](https://www.rfc-editor.org/rfc/rfc7515)，ES256 的 P-256、SHA-256 及固定宽度签名格式依据 [RFC 7518 §3.4](https://www.rfc-editor.org/rfc/rfc7518#section-3.4)。
 
 | 签名载荷 | 约束 |
 | --- | --- |
-| issuer、tenant_id、audience | issuer 等于 gate.home_id；audience 为准确 executor_id；租户与认证上下文相同 |
+| issuer、tenant_id、audience | issuer 等于 gate.orchestrator_id；audience 为准确 executor_id；租户与认证上下文相同 |
 | gate | 原 TaskGate 的完整对象，包括目标与控制修订；不能只签 task_id |
 | issued_at、start_before | 与 ControlSnapshot 一致，构成非空有限窗口；有效窗口不得超过双方装配的控制上限 |
 
@@ -107,11 +107,11 @@ Bearer 至少来自 256 位密码学随机值，服务保存令牌校验值及�
 
 内部流短暂失效时，网关保持外 WSS 和心跳，不积压新的普通请求；这些请求返回 dependency_unavailable，不伪造业务回执。网关在原请求自首次收到起的 5 秒总期限内查询已发命令、恢复只读请求及原回复；总期限不随重绑重置。无法确定写入结果时返回 retry=query_original 的真实 Error，仍可在之后查询原身份。后端不可用连续达到 60 秒则以 1013 有界断开外连接；这与单次请求 5 秒期限独立。身份撤销、过期或无法继续满足当前披露检查时，先停止业务与数据发送，已确认身份失效时立即关闭。
 
-无入站地址的设备主动建链后，Home 可立即推送有界 Delivery。Home 保存发送责任，设备领域 owner 保存接纳和效果记录；交付、处理、回交和原效果查询分别承担持久责任。
+无入站地址的设备主动建链后，Orchestrator 可立即推送有界 Delivery。Orchestrator 保存发送责任，设备领域 owner 保存接纳和效果记录；交付、处理、回交和原效果查询分别承担持久责任。
 
 ```mermaid
 sequenceDiagram
-    participant H as Home 发送记录
+    participant H as Orchestrator 发送记录
     participant D as 已配对设备
     participant O as 设备领域 owner
     D->>H: WSS /v1/connect（认证与子协议）
@@ -134,17 +134,17 @@ Delivery 固定 `delivery_id, sender_service_id, recipient_endpoint_id, recipien
 | query | 原 Query | QueryResult 或 `{error: Error}` | 没有 command_id；delivery_id 关联本次有界读取，不创造目标业务命令 |
 | receipt_lookup | `{command_id}` | 原 Receipt 或 `{error: Error}` | 查询原命令；查询失败不生成该命令的 rejected 回执 |
 
-`request_digest` 为 request 的 JCS SHA-256；发送方、目标、kind、原请求和截止首次保存后不变。同 delivery_id 不同内容冲突。设备未能提交原命令回执，或命中已清理的回执关闭索引时，以 `{error: Error}` 交回明确错误；Home 保存传输结果，但不能把它写成该业务命令的 rejected 或成功。可恢复错误按原 command_id 查询或有限重投，`gone` 保持原身份关闭并查询仍可读取的业务事实。若本次 Delivery 的错误回复已固定，需要重试处理时新建 Delivery，内含的原 Command 保持不变。重复 query delivery 在当前披露资格仍成立时返回设备已保存的该次读取快照；需要更新状态时 Home 新建 query delivery，业务对象身份不变。业务请求的接纳截止与 Delivery 的投递截止分别检查，外部执行 deadline 不由传输延长。
+`request_digest` 为 request 的 JCS SHA-256；发送方、目标、kind、原请求和截止首次保存后不变。同 delivery_id 不同内容冲突。设备未能提交原命令回执，或命中已清理的回执关闭索引时，以 `{error: Error}` 交回明确错误；Orchestrator 保存传输结果，但不能把它写成该业务命令的 rejected 或成功。可恢复错误按原 command_id 查询或有限重投，`gone` 保持原身份关闭并查询仍可读取的业务事实。若本次 Delivery 的错误回复已固定，需要重试处理时新建 Delivery，内含的原 Command 保持不变。重复 query delivery 在当前披露资格仍成立时返回设备已保存的该次读取快照；需要更新状态时 Orchestrator 新建 query delivery，业务对象身份不变。业务请求的接纳截止与 Delivery 的投递截止分别检查，外部执行 deadline 不由传输延长。
 
 设备按当前凭据实例接收。跨端转交请求同时附由受信发送服务签名的 Delivery 证明，沿前节 ES256 配置，typ 改为 `harness-delivery+jws`，签名载荷为完整 Delivery（不含证明自身）；证明的发送方必须属于允许向本设备路由的服务。这样，即使中转不可信，也不能替换原请求或接收实例。查询只在当前数据许可下执行，历史签名不授予新的读取权。
 
-Home 根据当前认证端点和实例将 DeliveryEnvelope 放入 `delivery` 帧；跨并行连接的同一投递仍是同一持久责任。取得匹配 Reply 前占据该连接的 pending delivery 槽；连接断开后发送责任继续存在，重连可重新投递。同一 Delivery 不因等待超时生成新的 Command。取消、撤权及收尾使用前述有限预留，设备优先交回已经持久保存的回复；设备自己的持久队列满时拒绝新接纳，并保留查询和关闭责任。
+Orchestrator 根据当前认证端点和实例将 DeliveryEnvelope 放入 `delivery` 帧；跨并行连接的同一投递仍是同一持久责任。取得匹配 Reply 前占据该连接的 pending delivery 槽；连接断开后发送责任继续存在，重连可重新投递。同一 Delivery 不因等待超时生成新的 Command。取消、撤权及收尾使用前述有限预留，设备优先交回已经持久保存的回复；设备自己的持久队列满时拒绝新接纳，并保留查询和关闭责任。
 
-设备发送 `reply` 后，Home 核对预期设备实例、原请求和响应结构，保存回复并创建后续领域查询 job，再返回 `reply_ack`，其 ack 为 `{delivery_id,stored:true,result_digest}`。重复完全相同回复返回同确认；同 delivery_id 不同业务结果冲突。reply_ack 丢失时设备保留原 Reply，按有界退避重交，不能只等外 WSS 断开才重试；网关内部重绑后也可重交已缓存的同一 Reply。Home 不重复建立后续责任。原 accepted 回执的后续变化通过新的 receipt_lookup Delivery 获取，不能覆盖已确认的第一次回复。MirrorTicket 通过独立 `mirror_ticket` 帧推送，不改动 Delivery 的三类请求；它的成功由上传状态查询确认。
+设备发送 `reply` 后，Orchestrator 核对预期设备实例、原请求和响应结构，保存回复并创建后续领域查询 job，再返回 `reply_ack`，其 ack 为 `{delivery_id,stored:true,result_digest}`。重复完全相同回复返回同确认；同 delivery_id 不同业务结果冲突。reply_ack 丢失时设备保留原 Reply，按有界退避重交，不能只等外 WSS 断开才重试；网关内部重绑后也可重交已缓存的同一 Reply。Orchestrator 不重复建立后续责任。原 accepted 回执的后续变化通过新的 receipt_lookup Delivery 获取，不能覆盖已确认的第一次回复。MirrorTicket 通过独立 `mirror_ticket` 帧推送，不改动 Delivery 的三类请求；它的成功由上传状态查询确认。
 
-缓存回复在首次发送和每次重传前均重查当前披露资格，包含 Query 快照和已裁剪的 Receipt。资格不足时，设备保留原结果事实，持久关闭该 Delivery 的内容交付，改发 `withheld:true` 及严格的 `{error:{code:"forbidden",message,retry:"after_change"}}`。此分支只关闭披露，不改写原业务决定；Home 将其作为单独的当前披露状态保存与确认，不当作不同业务结果冲突。Home 已知关闭后丢弃迟到完整回复的内容；资格以后恢复，也须新建 Delivery 执行当前查询或原命令查询。已经交付的字节不能召回，内容副本仍按原 owner 的关闭流程清理。
+缓存回复在首次发送和每次重传前均重查当前披露资格，包含 Query 快照和已裁剪的 Receipt。资格不足时，设备保留原结果事实，持久关闭该 Delivery 的内容交付，改发 `withheld:true` 及严格的 `{error:{code:"forbidden",message,retry:"after_change"}}`。此分支只关闭披露，不改写原业务决定；Orchestrator 将其作为单独的当前披露状态保存与确认，不当作不同业务结果冲突。Orchestrator 已知关闭后丢弃迟到完整回复的内容；资格以后恢复，也须新建 Delivery 执行当前查询或原命令查询。已经交付的字节不能召回，内容副本仍按原 owner 的关闭流程清理。
 
-设备无需额外自造 command_id 来确认 Query。Home 收到查询 Error 仍保存本次查询完成及可重试原因；设备暂不可达呈现 `dependency_unavailable`，不可伪造 `not_found`。投递超时但可能已交付时先核对原 command；只读查询可新建 delivery 重试，副作用身份不得重建。
+设备无需额外自造 command_id 来确认 Query。Orchestrator 收到查询 Error 仍保存本次查询完成及可重试原因；设备暂不可达呈现 `dependency_unavailable`，不可伪造 `not_found`。投递超时但可能已交付时先核对原 command；只读查询可新建 delivery 重试，副作用身份不得重建。
 
 ## 5. 大内容的临时字节与正式引用
 
@@ -175,7 +175,7 @@ content.put 先取得不可变耐久字节，再在业务事务中将 upload 从
 
 ### 5.1 无入站设备的反向副本
 
-云 Home 读取设备截图或端侧记忆时，设备上的下载地址可能不可达。基础配置允许设备向已配对的连接接入服务主动上传只读镜像；原 ContentRef、内容 owner 和 copy_id 保持不变。接收方必须先取得原 owner 的 `content.register_copy` 结果及当前读取资格，再预留接收空间。它不能把镜像经 content.put 发布成自己拥有的新内容。
+云 Orchestrator 读取设备截图或端侧记忆时，设备上的下载地址可能不可达。基础配置允许设备向已配对的连接接入服务主动上传只读镜像；原 ContentRef、内容 owner 和 copy_id 保持不变。接收方必须先取得原 owner 的 `content.register_copy` 结果及当前读取资格，再预留接收空间。它不能把镜像经 content.put 发布成自己拥有的新内容。
 
 | 入口／记录 | 精确结构及约束 |
 | --- | --- |

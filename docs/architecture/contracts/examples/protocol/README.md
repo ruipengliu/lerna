@@ -33,7 +33,7 @@
 | [20-budget-allocation](20-budget-allocation.json) | 任务调额、父侧划拨及按原接收方封账结算 |
 | [21-capability-catalog](21-capability-catalog.json) | 按候选查准确能力、参数及效果核对声明 |
 | [22-resource-lifecycle](22-resource-lifecycle.json) | 设备占用、续期、观察、本人接管及交还 |
-| [23-cross-home-budget](23-cross-home-budget.json) | 跨 Home 创建与 receiver 关闭竞争，原分配只结算一次 |
+| [23-cross-orchestrator-budget](23-cross-orchestrator-budget.json) | 跨 Orchestrator 创建与 receiver 关闭竞争，原分配只结算一次 |
 | [30-grant-lifecycle](30-grant-lifecycle.json) | 确认签发、当前读取及撤销 |
 | [31-pairing-lifecycle](31-pairing-lifecycle.json) | 预认证请求、本人批准、领取及凭据撤销 |
 | [32-lease-settlement](32-lease-settlement.json) | 固定实例的离线租约及最终结算 |
@@ -46,7 +46,7 @@
 | [39-evaluation-cancel](39-evaluation-cancel.json) | 取消实验及独立环境清理责任 |
 | [40-content-lifecycle](40-content-lifecycle.json) | 上传发布、交付前登记副本、内容关闭及清理 |
 | [41-memory-query-list](41-memory-query-list.json) | 准确修订读取与无正文管理 |
-| [42-memory-extraction](42-memory-extraction.json) | 排队提取、有限 Home 任务与候选一次发布 |
+| [42-memory-extraction](42-memory-extraction.json) | 排队提取、有限 Orchestrator 任务与候选一次发布 |
 | [43-memory-view-sync](43-memory-view-sync.json) | 快照与连续墓碑先提交再确认 |
 | [44-surface-lifecycle](44-surface-lifecycle.json) | 完整快照更新与设备关闭意图 |
 | [45-application-delivery](45-application-delivery.json) | 已注册处理端的原命令转交及业务消费 |
@@ -58,7 +58,7 @@
 | [51-online-use-once-zero](51-online-use-once-zero.json) | 最终零费用不返还一次性使用身份 |
 | [52-confirmation-grant](52-confirmation-grant.json) | Grant owner 登记挑战、本人决定及签发事务消费 |
 | [53-confirmation-release](53-confirmation-release.json) | 评测 owner 确认精确发布命令并批准 |
-| [54-confirmation-acceptance](54-confirmation-acceptance.json) | Task Home 确认精确验收命令并一次消费 |
+| [54-confirmation-acceptance](54-confirmation-acceptance.json) | Orchestrator 确认精确验收命令并一次消费 |
 | [55-content-holder-control](55-content-holder-control.json) | 默认／显式 bytes、关闭后自身 control 查询、其他持有者拒绝、旧控制晚到与门禁保持、清理后核对 |
 | [56-owner-collection-pages](56-owner-collection-pages.json) | Operation／Activation／Grant 固定成员分页、当前记录、范围变化、截断／过期、查询槽回收与旧游标拒绝、Activation 高修订保持 |
 | [57-collection-authorization-reset](57-collection-authorization-reset.json) | 调用参数错误不破坏原集合；权限 A→B→A 不能复活旧游标或旧首部，新 query_id 恢复 |

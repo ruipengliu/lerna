@@ -36,7 +36,7 @@
           "const": "session-cookie-or-opaque-bearer-1"
         },
         "proof_profile": {
-          "const": "home-jws-es256-1"
+          "const": "orchestrator-jws-es256-1"
         },
         "limits": {
           "$ref": "#/$defs/ConnectionLimits"

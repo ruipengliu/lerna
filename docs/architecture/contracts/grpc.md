@@ -17,7 +17,7 @@ flowchart LR
     P <-->|gRPC| O[另一负责服务]
 ```
 
-图表示调用适配和依赖方向，不表示每个框单独部署。gRPC handler 负责有界解码、认证与业务分派，领域规则不依赖生成的 RPC stub。调用者通过 port 使用原逻辑服务，解析器只选择该服务的健康副本，不改写 Home、owner 或业务目标。
+图表示调用适配和依赖方向，不表示每个框单独部署。gRPC handler 负责有界解码、认证与业务分派，领域规则不依赖生成的 RPC stub。调用者通过 port 使用原逻辑服务，解析器只选择该服务的健康副本，不改写 Orchestrator、owner 或业务目标。
 
 | RPC | 输入与输出 | 使用范围 |
 | --- | --- | --- |
@@ -142,7 +142,7 @@ Call 的请求与响应必须恰有一个非空 oneof 分支；ChannelFrame 的 
 
 | 模式 | metadata 与受信记录 | 接收端构造主体的依据 |
 | --- | --- | --- |
-| service | `authorization: Bearer <服务令牌>`；令牌绑定 mTLS 调用服务及目标逻辑服务 | 服务身份和允许代表的 Home／usage owner 来自受信装配；不能构造受信人类会话 |
+| service | `authorization: Bearer <服务令牌>`；令牌绑定 mTLS 调用服务及目标逻辑服务 | 服务身份和允许代表的 Orchestrator／usage owner 来自受信装配；不能构造受信人类会话 |
 | delegated | `authorization: Bearer <委托令牌>`；仅登记的接入服务可提交 | 验证令牌绑定的 mTLS 接入服务、目标服务、原会话／端点及当前代次，然后还原原主体；接入层不是业务 actor |
 
 `AuthContext.sender_service_id` 表示受信业务发送服务。service 模式从服务令牌及装配映射取得该业务身份；delegated 模式恢复原主体和已验证的原业务发送者（如有），直接用户／端点没有业务发送者时省略该字段。代理网关的 mTLS 身份只约束委托交接，不能覆盖 actor_id 或被填入 sender_service_id。持有者控制等入口据此区分业务服务 holder 与直接 holder，不能因为请求经网关转交而改变其持有归属。

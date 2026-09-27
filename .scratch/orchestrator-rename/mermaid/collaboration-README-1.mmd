@@ -1,0 +1,8 @@
+flowchart LR
+    P[父任务 Orchestrator] -->|同事务创建与分配额度| C[同 Orchestrator 内部子任务]
+    C -->|读取子修订及结算| P
+    C -->|单轮调用或有限动作| R[远端 Brain 或 Executor]
+    P -->|固定委派身份及上限| A[外部适配器]
+    A -->|创建或查询原任务| X[外部运行时或另一 Orchestrator]
+    X -->|进展、结果、用量与未决效果| A
+    A -->|保存原映射并唤醒父任务| P

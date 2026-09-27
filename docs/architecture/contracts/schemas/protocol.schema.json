@@ -248,7 +248,7 @@
     "TaskGate": {
       "type": "object",
       "properties": {
-        "home_id": {
+        "orchestrator_id": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         },
@@ -282,7 +282,7 @@
         }
       },
       "required": [
-        "home_id",
+        "orchestrator_id",
         "task_id",
         "control_revision",
         "goal_revision",
@@ -311,7 +311,7 @@
           "format": "date-time",
           "pattern": "Z$"
         },
-        "home_proof": {
+        "orchestrator_proof": {
           "type": "string",
           "minLength": 1,
           "maxLength": 4096
@@ -322,7 +322,7 @@
         "executor_id",
         "issued_at",
         "start_before",
-        "home_proof"
+        "orchestrator_proof"
       ],
       "additionalProperties": false
     },
@@ -644,7 +644,7 @@
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         },
-        "home_id": {
+        "orchestrator_id": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         },
@@ -735,7 +735,7 @@
       "required": [
         "tenant_id",
         "task_id",
-        "home_id",
+        "orchestrator_id",
         "submit_command_id",
         "goal_ref",
         "goal_revision",
@@ -1008,7 +1008,7 @@
     "CancellationTombstone": {
       "type": "object",
       "properties": {
-        "home_id": {
+        "orchestrator_id": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         },
@@ -1031,7 +1031,7 @@
         }
       },
       "required": [
-        "home_id",
+        "orchestrator_id",
         "task_id",
         "operation_id",
         "cancel_command_id",
@@ -1089,7 +1089,7 @@
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         },
-        "home_id": {
+        "orchestrator_id": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         },
@@ -1137,7 +1137,7 @@
       "required": [
         "operation_id",
         "task_id",
-        "home_id",
+        "orchestrator_id",
         "goal_revision",
         "control_snapshot",
         "capability_ref",
@@ -1708,7 +1708,7 @@
     "TaskRef": {
       "type": "object",
       "properties": {
-        "home_id": {
+        "orchestrator_id": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         },
@@ -1718,7 +1718,7 @@
         }
       },
       "required": [
-        "home_id",
+        "orchestrator_id",
         "task_id"
       ],
       "additionalProperties": false
@@ -2638,7 +2638,7 @@
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         },
-        "home_id": {
+        "orchestrator_id": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         },
@@ -2722,7 +2722,7 @@
       "required": [
         "decision_id",
         "task_id",
-        "home_id",
+        "orchestrator_id",
         "snapshot_revision",
         "context_ref",
         "capability_refs",
@@ -3154,7 +3154,7 @@
         "goal_ref": {
           "$ref": "#/$defs/ContentRef"
         },
-        "home_id": {
+        "orchestrator_id": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         },
@@ -3190,7 +3190,7 @@
       },
       "required": [
         "goal_ref",
-        "home_id",
+        "orchestrator_id",
         "constraints",
         "policy_ref",
         "budget",
@@ -3453,7 +3453,7 @@
     "ExecutionControlGetInput": {
       "type": "object",
       "properties": {
-        "home_id": {
+        "orchestrator_id": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         },
@@ -3463,7 +3463,7 @@
         }
       },
       "required": [
-        "home_id",
+        "orchestrator_id",
         "task_id"
       ],
       "additionalProperties": false
@@ -3474,7 +3474,7 @@
     "ExecutionCancelInput": {
       "type": "object",
       "properties": {
-        "home_id": {
+        "orchestrator_id": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
         },
@@ -3493,7 +3493,7 @@
         }
       },
       "required": [
-        "home_id",
+        "orchestrator_id",
         "task_id",
         "operation_id",
         "reason"
@@ -4984,7 +4984,7 @@
     "TaskListOutput": {
       "type": "object",
       "properties": {
-        "home_id": {
+        "orchestrator_id": {
           "$ref": "#/$defs/Id"
         },
         "upper_bound": {
@@ -5030,7 +5030,7 @@
         }
       },
       "required": [
-        "home_id",
+        "orchestrator_id",
         "upper_bound",
         "items",
         "gaps"
@@ -5792,7 +5792,7 @@
     "RuntimeDelegationContext": {
       "type": "object",
       "properties": {
-        "sender_home_id": {
+        "sender_orchestrator_id": {
           "$ref": "#/$defs/Id"
         },
         "parent_delegation_id": {
@@ -5822,7 +5822,7 @@
         }
       },
       "required": [
-        "sender_home_id",
+        "sender_orchestrator_id",
         "parent_delegation_id",
         "allocation_ref",
         "allocation_command_id",
@@ -5936,7 +5936,7 @@
     "BudgetCloseInput": {
       "type": "object",
       "properties": {
-        "sender_home_id": {
+        "sender_orchestrator_id": {
           "$ref": "#/$defs/Id"
         },
         "parent_delegation_id": {
@@ -5955,7 +5955,7 @@
         }
       },
       "required": [
-        "sender_home_id",
+        "sender_orchestrator_id",
         "parent_delegation_id",
         "allocation_ref",
         "allocation_command_id",
@@ -10217,7 +10217,7 @@
         "extraction_id": {
           "$ref": "#/$defs/Id"
         },
-        "home_id": {
+        "orchestrator_id": {
           "$ref": "#/$defs/Id"
         },
         "input_refs": {
@@ -10281,7 +10281,7 @@
       },
       "required": [
         "extraction_id",
-        "home_id",
+        "orchestrator_id",
         "input_refs",
         "rule_ref",
         "save_mode",
@@ -10299,7 +10299,7 @@
         "extraction_task_id": {
           "$ref": "#/$defs/Id"
         },
-        "home_id": {
+        "orchestrator_id": {
           "$ref": "#/$defs/Id"
         },
         "owner_id": {
@@ -10315,7 +10315,7 @@
       "required": [
         "extraction_id",
         "extraction_task_id",
-        "home_id",
+        "orchestrator_id",
         "owner_id",
         "input_digest",
         "state"

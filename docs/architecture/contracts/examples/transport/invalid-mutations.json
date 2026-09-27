@@ -2507,7 +2507,7 @@
               "media_type": "text/plain",
               "byte_length": 16
             },
-            "holder_id": "home_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "holder_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             "revision": 1,
             "use_stopped": false,
             "physical_state": "pending"

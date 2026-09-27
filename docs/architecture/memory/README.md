@@ -18,18 +18,18 @@ owner、来源、许可、修订、分页与清理规则是替换实现必须保
 
 ## 1. 边界与选择
 
-**任务上下文**是 Task Home 为一次决策选择的目标、进展、证据和内容引用，随任务保留策略管理；**长期记忆**是取得独立保存许可、可以跨任务检索的记录。进入模型上下文不自动产生长期记忆，也不自动允许发送给云模型。[任务运行](../task-runtime/README.md)保存上下文版本与使用责任，本模块保存记忆修订、检索依据和清理责任。
+**任务上下文**是 Orchestrator 为一次决策选择的目标、进展、证据和内容引用，随任务保留策略管理；**长期记忆**是取得独立保存许可、可以跨任务检索的记录。进入模型上下文不自动产生长期记忆，也不自动允许发送给云模型。[任务运行](../orchestrator/README.md)保存上下文版本与使用责任，本模块保存记忆修订、检索依据和清理责任。
 
-**owner** 是对象所属账本的逻辑负责方，不是当前调用进程。一个记忆库只有一个固定 Memory owner，同一用户可有本地私密库和云端共享库；Task Home 可以与两者不同。一个库失联时不在另一端改写它。用户可以在本地库新增独立记录，日后显式合并；它不能冒充远端旧记录的新修订。
+**owner** 是对象所属账本的逻辑负责方，不是当前调用进程。一个记忆库只有一个固定 Memory owner，同一用户可有本地私密库和云端共享库；Orchestrator 可以与两者不同。一个库失联时不在另一端改写它。用户可以在本地库新增独立记录，日后显式合并；它不能冒充远端旧记录的新修订。
 
 内容 owner 保存正文及其版本；任务、执行或记忆模块可以拥有内容。云端默认内容元数据与对应业务记录共享 owner 提交域，正文放跨实例共享对象存储；个人设备保留适用的本地存储。其他模块替换内容实现时，仍须提供本页的引用、权限、保留和清理行为。
 
 ```mermaid
 flowchart LR
     User[用户与受信管理入口] -->|纠正、限制、删除| Memory[Memory owner]
-    Home[Task Home] -->|查询获准记忆| Memory
-    Memory -->|精确内容引用| Home
-    Home -->|按用途读与处理| Content[内容 owner]
+    Orchestrator[Orchestrator] -->|查询获准记忆| Memory
+    Memory -->|精确内容引用| Orchestrator
+    Orchestrator -->|按用途读与处理| Content[内容 owner]
     Memory -->|读取、写入正文| Content
     Memory -->|获准视图| Replica[其他端的受管副本]
     Auth[Grant owner] -->|许可与有限租约| Memory
@@ -61,7 +61,7 @@ sequenceDiagram
     participant U as 受信入口
     participant M as Memory owner
     participant A as Grant owner
-    participant H as Task Home
+    participant H as Orchestrator
     participant C as 内容 owner
     U->>M: memory.create 原命令与明确陈述
     M->>A: grant.use 保存用途及来源
@@ -82,7 +82,7 @@ sequenceDiagram
 | 发起方 → 处理方 | 交接输入 | 持久成功点 | 失败后由谁继续 |
 | --- | --- | --- | --- |
 | 受信管理入口 → Memory owner | 原命令、明确内容、来源和保存依据 | owner 同事务提交记忆修订、原回执及索引责任 | 管理入口查原命令；owner 补齐索引，不能让调用方再建一条 |
-| Home → Memory owner | 库、用途、接收方和有限查询 | owner 固定查询集合，返回当前获准项及完整性；结果不等于正文永久可用 | Home 保存已用版本、游标与缺口，按[分页规则](#memory-pages)继续 |
+| Orchestrator → Memory owner | 库、用途、接收方和有限查询 | owner 固定查询集合，返回当前获准项及完整性；结果不等于正文永久可用 | Orchestrator 保存已用版本、游标与缺口，按[分页规则](#memory-pages)继续 |
 | 内容消费者 → 内容 owner | 精确引用、用途及持有者信息 | owner 持久登记必要副本后交付当前获准字节；无入站设备主动上传到受信接收端 | 消费者核对原副本及引用；镜像不改变 owner，无正文或资格时返回缺口 |
 | Memory owner → 受管副本 | 获准视图页、修订或墓碑 | 副本同事务提交对象变化、清理责任和游标后确认 | owner 保留未确认交付；副本沿原页恢复，断裂时重建 |
 
@@ -126,7 +126,7 @@ sequenceDiagram
 
 ### 3.5 端侧挖掘与提取
 
-端侧连接器先声明可观察来源、有限输入范围和稳定检查点；用户分别批准读取、处理、候选暂存及长期保存。`memory.extract` 接纳一个有限提取任务，原命令、输入集合和唯一 Home 任务映射持久保存后返回 `applied`，输出 `state=queued`；Task Home 负责执行、取消和预算，本模块保存候选及发布决定。连接器扫描检查点只有在对应输入和下一步责任已保存后前移。
+端侧连接器先声明可观察来源、有限输入范围和稳定检查点；用户分别批准读取、处理、候选暂存及长期保存。`memory.extract` 接纳一个有限提取任务，原命令、输入集合和唯一 Orchestrator 任务映射持久保存后返回 `applied`，输出 `state=queued`；Orchestrator 负责执行、取消和预算，本模块保存候选及发布决定。连接器扫描检查点只有在对应输入和下一步责任已保存后前移。
 
 本地私密资料优先用本地可用模型；没有获准且可运行的本地处理能力时等待或报告不支持，不能自动切云。调用云模型必须获准向精确接收方 `process` 与 `disclose`；只允许保存一条偏好，不等于允许上传提取它的完整聊天。
 

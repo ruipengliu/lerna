@@ -93,16 +93,16 @@ def check_trace(trace):
                         if millis>min(p['requested_window_ms'],approval['max_offline_window_ms']):err('approval_window','offline window exceeds granted maximum')
         if name=='execution.invoke':
             operation_tasks[p['operation_id']]=p['task_id']
-            gate=p['control_snapshot']['gate'];gkey=(a['tenant_id'],gate['home_id'],gate['task_id'],target)
+            gate=p['control_snapshot']['gate'];gkey=(a['tenant_id'],gate['orchestrator_id'],gate['task_id'],target)
             known=gates.get(gkey,gate)
-            blocked=(a['tenant_id'],p['home_id'],p['task_id'],p['operation_id']) in tombstones or known['status']!='active' or p['goal_revision']!=known['goal_revision']
+            blocked=(a['tenant_id'],p['orchestrator_id'],p['task_id'],p['operation_id']) in tombstones or known['status']!='active' or p['goal_revision']!=known['goal_revision']
             if blocked and not rejected:err('cancel_or_goal_gate','known cancellation or revised goal must prevent delayed invocation')
             if not rejected and output and output['execution_state']=='started':
                 if known['control']!='running' or instant(event['at'])>=instant(p['control_snapshot']['start_before']) or instant(event['at'])>=instant(p['deadline']):err('startup_gate','paused or expired action cannot start')
             if not rejected:
                 if gate['control_revision']>=known['control_revision']:gates[gkey]=deepcopy(gate)
         if name=='execution.control' and not rejected and output:
-            incoming=p['gate'];gkey=(a['tenant_id'],incoming['home_id'],incoming['task_id'],target);known=gates.get(gkey)
+            incoming=p['gate'];gkey=(a['tenant_id'],incoming['orchestrator_id'],incoming['task_id'],target);known=gates.get(gkey)
             if known:
                 if incoming['control_revision']==known['control_revision'] and incoming!=known:err('control_conflict','same revision cannot change gate')
                 if incoming['control_revision']>known['control_revision'] and incoming['goal_revision']<known['goal_revision']:
@@ -114,7 +114,7 @@ def check_trace(trace):
             if output['gate']!=chosen:err('control_order','receiver must preserve highest known effective gate')
             gates[gkey]=deepcopy(chosen)
         if name=='execution.cancel' and not rejected:
-            tombstones.add((a['tenant_id'],p['home_id'],p['task_id'],p['operation_id']))
+            tombstones.add((a['tenant_id'],p['orchestrator_id'],p['task_id'],p['operation_id']))
         if rejected or output is None:errors.extend(f'event {index}: '+e for e in local);continue
         if name=='extensions.activate':activations[p['activation_id']]=deepcopy(p)
         if name in ('grant.use','grant.use.get'):
@@ -165,8 +165,8 @@ def check_trace(trace):
         if name in ('task.submit','task.read','task.revise'):
             tid=output['task_id'];old=tasks.get(tid)
             if old:
-                for k in ('home_id','submit_command_id'):
-                    if output[k]!=old[k]:err('task_identity','fixed Home or original submit changed')
+                for k in ('orchestrator_id','submit_command_id'):
+                    if output[k]!=old[k]:err('task_identity','fixed Orchestrator or original submit changed')
                 if old['status']!=output['status'] and output['control_revision']<=old['control_revision']:err('task_control_revision','terminal transition must advance control revision')
                 if name=='task.revise' and output['control_revision']<=old['control_revision']:err('task_control_revision','goal revision must advance control revision')
                 if old['status']!='active' and output['status']!=old['status']:err('task_terminal','terminal task reopened')

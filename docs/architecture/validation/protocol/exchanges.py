@@ -50,7 +50,7 @@ def validate_exchange(exchange, capabilities):
     errors += check_capability(req['payload'], capabilities)
     if name == 'execution.invoke':
         p = req['payload']; gate = p['control_snapshot']['gate']
-        if any(p[k] != gate[k] for k in ('home_id','task_id','goal_revision')):
+        if any(p[k] != gate[k] for k in ('orchestrator_id','task_id','goal_revision')):
             errors.append('gate_binding: Invoke and authenticated snapshot differ')
         if instant(p['control_snapshot']['start_before']) <= instant(p['control_snapshot']['issued_at']):
             errors.append('control_window: empty or reversed startup window')
@@ -98,7 +98,7 @@ def validate_exchange(exchange, capabilities):
         if a != b:
             errors.append(rule + ': correlated fields differ')
     if name == 'task.submit':
-        same(output['home_id'], target)
+        same(output['orchestrator_id'], target)
         same(output['submit_command_id'], req['command_id'])
         same(output['goal_ref'], p['goal_ref'])
     if name in ('task.read','task.revise'):
@@ -141,7 +141,7 @@ def validate_exchange(exchange, capabilities):
     if name == 'execution.invoke':
         same(output['operation_id'], p['operation_id'])
         gate = p['control_snapshot']['gate']
-        for key in ('task_id','home_id','goal_revision'):
+        for key in ('task_id','orchestrator_id','goal_revision'):
             same(p[key], gate[key], 'gate_binding')
         if instant(p['control_snapshot']['start_before']) <= instant(p['control_snapshot']['issued_at']):
             errors.append('control_window: empty or reversed startup window')
@@ -151,10 +151,10 @@ def validate_exchange(exchange, capabilities):
         same(output['operation_id'], p['operation_id'])
         if 'cancel_command_id' in output:
             same(output['cancel_command_id'], req['command_id'])
-            same(output['home_id'], p['home_id']); same(output['task_id'], p['task_id'])
+            same(output['orchestrator_id'], p['orchestrator_id']); same(output['task_id'], p['task_id'])
     if name in ('execution.control','execution.control.get'):
         gate=output['gate']; source=p['gate'] if name=='execution.control' else p
-        same(gate['home_id'],source['home_id']);same(gate['task_id'],source['task_id'])
+        same(gate['orchestrator_id'],source['orchestrator_id']);same(gate['task_id'],source['task_id'])
         minimum=min(x['enforced_control_revision'] for x in output['entrances'])
         same(output['enforced_control_revision'],minimum,'control_enforcement')
         if minimum > gate['control_revision'] or any(e['enforced_control_revision']>gate['control_revision'] for e in output['entrances']):
