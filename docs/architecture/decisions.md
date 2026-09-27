@@ -12,7 +12,7 @@
 | D-02 每任务固定 Orchestrator | 同一用户可有多个 Orchestrator，单个任务始终只有一个裁决方；本地独立任务不因另一个云任务失联而无法接纳 | 跨 Orchestrator 的共享额度预分配、资源 owner 及目录聚合增加协调成本。单用户统一 Orchestrator 更简单，适合不需要多端独立接纳的装配；不自动迁移已有任务 |
 | D-03 普通模型 API 按可兑现能力分级 | 本地调用槽、发起速率、费用与远端物理并发分别声明；普通 API 可以接入，但没有提供方证据时不承诺远端物理并发硬上限 | 保留所有未知调用的物理占位更保守，可能因缺少终结查询而长期停收。需要远端硬上限的部署只采用具备可验证终结或执行上界的后端，不通过超时回收伪造保证 |
 
-规则归属：[本地事务](orchestrator/README.md)、[命令恢复](contracts/README.md)、[跨 Orchestrator 额度](orchestrator/README.md#budget)、[模型资源保证](brain/README.md)、[部署与容量](deployment.md)。D-01 减少的是通用交付状态，不免除任何领域保存未决操作及后续工作的责任。
+规则归属：[本地事务](orchestrator/README.md)、[命令恢复](contracts/README.md)、[跨 Orchestrator 额度](orchestrator/README.md#budget)、[模型资源保证](brain/README.md)、[技术基线与宿主装配](deployment.md)、[生产容量](deployment-production.md#capacity)。D-01 减少的是通用交付状态，不免除任何领域保存未决操作及后续工作的责任。
 
 ## 2. 任务与用户控制
 

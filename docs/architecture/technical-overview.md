@@ -241,7 +241,7 @@ Executor 取得可绑定原操作的写入证据后更新效果修订，Orchestr
 | --- | --- |
 | 用户目标怎样成为可解释的任务结果 | [目标与功能](goals.md) → [设计决策](decisions.md) → [任务编排器](orchestrator/README.md) → [大脑](brain/README.md) → [贯穿场景](walkthrough.md) |
 | 外部效果、资料和用户控制怎样成立 | [执行](execution/README.md) → [权限与隔离](security/README.md) → [记忆与内容](memory/README.md) → [交互](interaction/README.md) → [协作](collaboration/README.md) |
-| 如何实现、替换并运行这套闭环 | [部署基线](deployment.md) → [生产部署](deployment-production.md) → [存储与中间件](storage-and-middleware.md) → 各模块 `implementation.md` 的形状、对象与时序 → [扩展](extensions/README.md)与[评测](evaluation/README.md) |
+| 如何实现、替换并运行这套闭环 | [技术基线与宿主装配](deployment.md) → [生产部署与运行](deployment-production.md) → [存储与中间件](storage-and-middleware.md) → 各模块 `implementation.md` 的形状、对象与时序 → [扩展](extensions/README.md)与[评测](evaluation/README.md) |
 | 哪些规则已经有机器资产，哪些保证还须运行取证 | [共同契约](contracts/README.md) → [方法与线格式](contracts/protocol.md) → [传输契约](contracts/transport.md) → [验收](validation/README.md) → [交付审查](review.md) |
 
 修改方案时，沿“发起者、裁决者、持久事实、成功点、失败后继续者”复查受影响链路，再对照状态、图示、Schema 和例子。只改接口名称或总览连线不足以改变已确认保证；实际运行证据仍按各模块及系统验收分别取得。

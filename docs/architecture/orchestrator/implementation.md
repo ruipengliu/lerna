@@ -346,7 +346,7 @@ RuntimeBudgetReceiver 固定 allocation_id、parent_owner_id、receiver_id、par
 
 ## 9. 查询、清理与长期最小索引
 
-`task.list` 只列本 Orchestrator。首请求固定 created_at 上界；后续游标携带上界和最后扫描的 `(created_at, task_id)`。每页重新检查权限，跳过已删除／撤权项并报告 gaps；扫描上限到达时可返回不足一页并给出前进游标，不能为凑满数量无限扫描。
+`task.list` 只列本 Orchestrator。首请求固定 created_at 上界；后续按 `(created_at DESC, task_id)` 排序，游标携带上界和最后扫描的同组键。现有线游标不含范围代次，原 Orchestrator 分区的有界短期查询记录把游标、主体、过滤摘要和原授权 owner 的当前范围代次绑定，供应用副本共同读取；记录缺失或歧义时要求新查询。范围代次变化后，旧游标返回 `revision_conflict`；资格适配器不可核验时返回 `dependency_unavailable`。每页仍重新检查权限，跳过已删除／撤权项并报告 gaps；扫描上限到达时可返回不足一页并给出前进游标，不能为凑满数量无限扫描。上界不是事务提交水位：首屏之后提交但创建时间落在上界内的新 Task 也可能因已越过游标而留待新查询，不据此声明同刻快照。
 
 过滤集合和游标必须绑定同一认证主体与查询条件。服务验证游标来源或存储对应查询摘要；调用方传来的游标字段不是扩大披露范围的依据。新任务超过固定上界时留给下一次查询。
 

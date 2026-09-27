@@ -53,7 +53,7 @@ accepted必须有accepted_at，不能带decided_at或业务错误；applied必�
 <a id="collection-snapshots"></a>
 ### 按类型订阅的集合恢复
 
-订阅的范围是当前主体在原逻辑服务上、所选类型下获准披露的完整集合，不要求客户端预先知道对象 ID。服务只声明自身负责且同时实现下表枚举与准确读取的方法；不支持的类型在 subscribe 时返回 unsupported。一个 owner 的完整枚举不表示跨 owner 全局完整，客户端对每个已登记并订阅的负责端分别保存水位和缺口。
+订阅的范围是当前主体在原逻辑服务上、所选类型下获准披露的完整集合，不要求客户端预先知道对象 ID。服务只声明自身负责且同时实现下表枚举与准确读取的方法；不支持的类型在 subscribe 时返回 unsupported。一个 owner 的完整枚举不表示跨 owner 全局完整，客户端对每个已登记并订阅的负责端分别保存水位和缺口；用户任务的跨来源排序、游标与完整性由[应用聚合契约](../interaction/README.md#cross-orchestrator-list)定义，不扩展单 owner `task.list` 的裁决范围。
 
 | object_type | 集合查询及无筛选输入 | 单对象当前查询 | 集合的披露边界 |
 | --- | --- | --- | --- |
@@ -64,7 +64,7 @@ accepted必须有accepted_at，不能带decided_at或业务错误；applied必�
 | activation | extensions.list：query_id、limit、cursor? | extensions.read(kind=activation) | 原安装 owner 当前获准 Activation，含 blocked／disabled；不枚举 InstallLock |
 | grant | grant.list：query_id、limit、cursor? | grant.read | 原 Grant owner 当前获准 GrantRecord，含 revoked／按时间已到期；不授予许可使用资格 |
 
-客户端先取得 Subscribed.cursor 并开始缓冲后续提示，再发起上表集合查询。领域页游标、snapshot_at 或 task.list.upper_bound 都不是订阅提示水位；尤其 created_at 上界不代表事务提交切点。客户端先合并当前集合，再处理从订阅水位起的所有提示；提示中的未知 ID 也必须按表读取，不能只刷新已知对象。各 owner 只保证自己的查询与提示覆盖，不提供跨 owner 原子快照。分页期间有缺口、权限范围改变或提示缓冲溢出时，旧集合不能被提升为完整。
+客户端先取得 Subscribed.cursor 并开始缓冲后续提示，再发起上表集合查询。领域页游标、snapshot_at 或 task.list.upper_bound 都不是订阅提示水位；尤其 created_at 上界不代表事务提交切点。客户端先合并当前集合，再处理从订阅水位起的所有提示；提示中的未知 ID 也必须按表读取，不能只刷新已知对象。各 owner 只保证自己的查询与提示覆盖，不提供跨 owner 原子快照。分页期间有缺口、权限范围改变或提示缓冲溢出时，旧集合不能被提升为完整；`task.list` 的披露范围代次变化使本来源旧页游标返回 `revision_conflict`，应用聚合游标也须重新建立。
 
 ```mermaid
 sequenceDiagram

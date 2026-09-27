@@ -10,7 +10,7 @@
 
 一个用户可能让 Agent 核实信息、保存文档，再在手机上执行操作。模型可以提出错误步骤，工具可能已经产生效果却丢失答复，端点也可能在执行中失联。Harness 必须把这几件事分开处理：是否接受了目标、是否获准行动、行动发生了什么、结果达到什么质量、失败后由谁继续。
 
-生产方案独立部署 WSS 连接接入层、Orchestrator 应用服务、按工作类别划分的 worker 池及隔离执行宿主，使连接、任务推进和外部执行能够分别扩容与恢复。同一提交域内的任务状态、待处理工作和授权使用继续放入短事务；跨进程或跨端交接沿原命令、回执与事实查询恢复。模块边界不等于服务或数据库边界，需要共同裁决的事实不因分布式部署而被拆散。
+生产方案独立部署 WSS 连接接入层、Orchestrator 应用服务、按工作类别划分的 worker 池及隔离执行宿主，使连接、任务推进和外部执行能够分别扩容与恢复。Orchestrator 的 JobRunner 装入[工作进程池](deployment-production.md#1-软件模块怎样装进生产进程)，从原权威库领取持久 job；池中也可装入其他模块的后台工作，业务裁决仍在原模块。同一提交域内的任务状态、待处理工作和授权使用继续放入短事务；跨进程或跨端交接沿原命令、回执与事实查询恢复。模块边界不等于服务或数据库边界。
 
 生产基线采用单地域三个可用区，优先使用不绑定厂商的托管 PostgreSQL、对象存储及连接池／平台能力。单可用区失效时，已确认账本的目标为 RPO=0，原 Orchestrator 恢复控制与查询的 RTO≤60 秒；整地域故障按受限灾备恢复处理。持久 jobs 与业务事实共同提交，有界批量扫描保证工作可被重新发现，可丢通知只加速唤醒。具体基础设施职责和取舍集中在[存储与中间件](storage-and-middleware.md)，可用性条件见[生产部署](deployment-production.md)。
 
@@ -61,7 +61,7 @@ flowchart TB
 | 共享资源由资源负责方裁决，跨 Orchestrator 预算预分配 | 任意端离线消费共享余额会透支或重复消费。用户承担预分配额度暂不可回收、远端撤权延迟 | 明确接受更弱的额度保证，或有可用的共享在线裁决能力 |
 | 默认交付审核插件；不可信代码按平台验证隔离后开放 | 直接加载任意代码可减少接入阻力，却无法靠接口检查约束宿主权限；任意原生沙箱又明显增加平台成本 | 某平台的文件、网络、凭证和资源隔离已经通过攻击与故障验证 |
 
-语言、装配与容量假设见[部署基线](deployment.md)，进程与故障边界见[生产部署](deployment-production.md)，存储、连接池、工作唤醒及引入额外中间件的条件见[存储与中间件](storage-and-middleware.md)。任何选择都不要求把业务事实解释为外部效果的全局“恰好一次”。
+共同选型、端云装配与宿主接口见[技术基线与宿主装配](deployment.md)；[生产部署与运行](deployment-production.md)连续说明进程分工、任务路由、连接恢复、负载推导、故障及发布；存储、连接池、工作唤醒及中间件改选条件见[存储与中间件](storage-and-middleware.md)。任何选择都不要求把业务事实解释为外部效果的全局“恰好一次”。
 
 会改变用户可见行为与验收含义的选择集中在[设计决策与行为基线](decisions.md)：目标修订、暂停期间完成、完成依据、取消乱序、模型并发保证及统计门禁均有明确边界，不能在替换实现时静默改义。
 
@@ -70,7 +70,7 @@ flowchart TB
 | 顺序 | 文档 | 阅读所得 |
 | --- | --- | --- |
 | 1 | [目标与功能](goals.md) → [技术总览](technical-overview.md)与[系统全景图](diagrams/system-panorama.drawio) → [关键决策](decisions.md) → [贯穿场景](walkthrough.md) | 要建设什么、如何划分职责与事实、选择承担哪些代价、正常与失联路径如何连起来 |
-| 2 | [部署与容量](deployment.md) → [生产部署](deployment-production.md) → [存储与中间件](storage-and-middleware.md) | 生产进程如何分工、基础设施保存什么、规模与故障目标如何验证 |
+| 2 | [技术基线与宿主装配](deployment.md) → [生产部署与运行](deployment-production.md) → [存储与中间件](storage-and-middleware.md) | 共同装配如何约束实现，生产路由与恢复怎样运行，容量和故障目标如何验证 |
 | 3 | [任务编排器](orchestrator/README.md) → [大脑](brain/README.md) → [执行](execution/README.md) | 目标怎样形成行动，谁准入、验证和继续恢复 |
 | 4 | [权限与隔离](security/README.md) → [记忆与内容](memory/README.md) | 资料和权限如何跨任务、跨端使用及撤回 |
 | 5 | [Agent 协作](collaboration/README.md) → [应用与交互](interaction/README.md) → [共同契约](contracts/README.md) | 子任务与用户输入如何交接，独立实现如何接入 |
@@ -152,7 +152,7 @@ architecture/
 | 扩展与宿主 | [装配与隔离](extensions/implementation.md#module-shape) | [安装与实例](extensions/implementation.md#data-flow) | [激活与就绪](extensions/implementation.md#key-sequence) | [发布与可用性](extensions/implementation.md#production) |
 | 观测评测与改进 | [评测与发布](evaluation/implementation.md#module-shape) | [计划与证据](evaluation/implementation.md#data-flow) | [封存与批准](evaluation/implementation.md#key-sequence) | [隔离与容量](evaluation/implementation.md#production) |
 
-跨端部署继续读[传输契约](contracts/transport.md)；生产拓扑、稳定 Orchestrator 路由、内部通道重绑、单区故障恢复和性能预算读[分布式部署详设](deployment-production.md)，基础设施职责读[存储与中间件](storage-and-middleware.md)，共同事务接口、空间保护与备份读[部署基线](deployment.md#7-默认宿主的装配与持久接口)。完成实现后按[故障实验](validation/fault-experiments.md)及生产用例取得运行证据，当前文档和静态检查不代表 L2 达成。
+跨端部署继续读[传输契约](contracts/transport.md)；生产拓扑、稳定 Orchestrator 路由、内部通道重绑、单区故障恢复和性能预算读[生产部署与运行](deployment-production.md)，基础设施与备份职责读[存储与中间件](storage-and-middleware.md)，共同事务与时钟接口读[技术基线与宿主装配](deployment.md#4-默认宿主的装配与持久接口)。完成实现后按[故障实验](validation/fault-experiments.md)及生产用例取得运行证据，当前文档和静态检查不代表 L2 达成。
 
 ## 6. 启用前提与边界
 
