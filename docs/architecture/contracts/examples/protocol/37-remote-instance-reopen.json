@@ -786,7 +786,8 @@
                 "start_before": "2026-09-26T00:00:30Z"
               }
             },
-            "activation_use_id": "use_506a671c1a69760b9f5bbb57d8b5db08"
+            "activation_use_id": "use_506a671c1a69760b9f5bbb57d8b5db08",
+            "revision": 1
           },
           "observed_at": "2026-09-26T00:00:10Z"
         }
@@ -894,7 +895,8 @@
                 "start_before": "2026-09-26T00:00:30Z"
               }
             },
-            "activation_use_id": "use_506a671c1a69760b9f5bbb57d8b5db08"
+            "activation_use_id": "use_506a671c1a69760b9f5bbb57d8b5db08",
+            "revision": 2
           },
           "observed_at": "2026-09-26T00:00:12Z"
         }

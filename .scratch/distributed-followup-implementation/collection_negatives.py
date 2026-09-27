@@ -1,0 +1,30 @@
+import json,copy
+from pathlib import Path
+base=Path('docs/architecture/contracts/examples/protocol');p=base/'invalid-mutations.json';m=json.loads(p.read_text());t=json.loads((base/'56-owner-collection-pages.json').read_text())
+def add(name,edits,expect):
+ m.append({'name':name,'fixture':'56-owner-collection-pages.json','expect':expect,'edits':[{'op':'set','path':path,'value':value} for path,value in edits]})
+for method,idx,idkey in [('execution.list',0,'operation_id'),('extensions.list',7,'activation_id'),('grant.list',9,'grant_id')]:
+ r=f'/events/{idx}/exchange/request/payload';o=f'/events/{idx}/exchange/response/output'
+ add(method+' rejects undeclared input',[(r+'/object_ids',[])],'schema')
+ add(method+' bounds requested page',[(r+'/limit',101)],'schema')
+ add(method+' binds owner',[(o+'/owner_id','owner_'+('f'*32))],'collection_binding')
+ add(method+' binds query identity',[(o+'/query_id','query_'+('f'*32))],'collection_binding')
+ add(method+' cannot invent a member',[(o+'/items/0/'+idkey,idkey[:-3]+'_'+('f'*32))],'collection_membership')
+add('collection does not extend expiry across pages',[('/events/1/exchange/response/output/expires_at','2026-09-26T00:10:02Z')],'collection_snapshot')
+add('collection does not change frozen members',[('/events/1/collection/member_ids',t['events'][1]['collection']['member_ids']+['operation_'+('f'*32)])],'collection_snapshot')
+add('collection does not disclose a currently denied member',[('/events/1/collection/readable_ids',[])],'collection_membership')
+add('collection cannot reuse cursor across actors',[('/events/1/exchange/auth/actor_id','actor_'+('f'*32))],'collection_context')
+add('collection cannot reuse cursor across senders',[('/events/1/exchange/auth/sender_service_id','service_'+('f'*32))],'collection_context')
+add('collection rejects changed permission scope',[('/events/1/collection/authorization_scope','scope-b')],'collection_context')
+add('collection rejects changed original limit',[('/events/1/exchange/request/payload/limit',2)],'collection_context')
+add('collection rejects unknown cursor',[('/events/1/exchange/request/payload/cursor','foreign-cursor')],'collection_context')
+add('collection nonterminal scan must advance',[('/events/0/collection/scan_end',0)],'collection_progress')
+add('collection cannot claim exhausted before member end',[('/events/0/exchange/response/output/exhausted',True)],'collection_progress')
+add('collection capacity truncation stays partial',[('/events/5/exchange/response/output/partial',False),('/events/5/exchange/response/output/gaps',[])],'collection_gap')
+add('collection cannot silently lose a gap',[('/events/5/exchange/response/output/gaps',[])],'collection_gap')
+add('collection cannot resurrect expired cursor after query slot reuse',[('/events/14/exchange/response',t['events'][1]['exchange']['response'])],'collection_context')
+add('activation late read cannot lower displayed revision',[('/events/12/activation_view/revision',1)],'activation_revision')
+add('activation late read cannot reopen an old phase',[('/events/12/activation_view/phase','prepared')],'activation_revision')
+add('activation same revision cannot describe changed phase',[('/events/11/exchange/response/output/revision',1),('/events/11/exchange/response/resource_revision',1)],'activation_revision')
+m.append({'name':'activation requires revision independent of generation','fixture':'56-owner-collection-pages.json','expect':'schema','edits':[{'op':'remove','path':'/events/7/exchange/response/output/items/0/revision'}]})
+p.write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n')

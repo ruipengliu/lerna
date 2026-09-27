@@ -211,6 +211,8 @@ def validate_exchange(exchange, capabilities):
     errors += runtime_exchange(exchange, capabilities)
     errors += governance_exchange(exchange, capabilities)
     errors += content_exchange(exchange, capabilities)
+    from .collection_rules import check_exchange as collection_exchange
+    errors += collection_exchange(exchange, capabilities)
     return errors
 
 

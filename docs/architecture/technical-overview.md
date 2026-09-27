@@ -92,6 +92,8 @@ Brain 消费固定快照，返回 `act`、`need_context`、`request_input`、`co
 
 `job` 是持久的待履行责任，最终业务事实仍在 Task、Operation 或所属领域对象上。领取租约只约束谁能提交本轮处理结果，无法撤回已经发出的网络字节。网络、模型和工具调用位于短事务之外；跨库之后双方分别保存责任，不能把本地共同提交的原子性带到远端。代价是增加少量业务记录和恢复扫描，换得接纳后的责任不依赖进程存活。依据见[提交边界](task-runtime/README.md)和[共同调用成功点](contracts/README.md)。
 
+工作领取仍有效，不代表领取期间没有新增责任；完成工作槽前须比较当前责任版本。类似地，分配过序号不等于该序号之前都已提交，Memory 的索引和视图使用 owner 内共同提交的变化水位。两种比较分别防止新工作被旧完成覆盖、迟提交数据被游标跳过，完整规则归[工作领取](task-runtime/implementation.md)与[记忆索引和视图](memory/implementation.md)。
+
 ### 3.4 恢复沿原身份进行，关闭也保留身份
 
 命令身份回答“这次提交处理过没有”，操作身份回答“这个有界意图发生了什么”，尝试身份记录一次实际发送。答复丢失时，先查原负责方、原命令和原对象；允许重投时仍保持原请求及原意图。修订冲突要求读取当前事实重新判断，不能只替换期望修订后盲发。
@@ -141,7 +143,7 @@ Brain、Memory、Executor 以及 Agent、UI 和生命周期适配器可以改变
 | Surface／InputSubmission／InputRequest | 交互保存快照和转交；业务 owner 保存请求消费 | Surface、输入和请求分别有身份及修订；目标命令首次固定 | 准确请求、未消费状态、预览版本和当前披露资格 |
 | ConfirmationRecord | 实际消费确认的业务 owner | 固定原业务命令、规范意图和挑战；本人决定及消费可查 | 本人身份、期限、原命令绑定和未消费状态 |
 | EvaluationReport／PlanEligibility | Evaluation owner | 报告摘要不可变；资格记录修订及使其失效的暴露 | 当前正式资格、完整门禁与受信批准，报告分数不自行授权 |
-| ReleaseApproval／Activation | Evaluation 保存批准；目标 Extensions 保存激活和实例事实 | 固定批准范围、精确锁和原激活；新实例另取开放依据 | 当前批准、活动代际、实际就绪和残留工作，业务 Grant 另行成立 |
+| ReleaseApproval／Activation | Evaluation 保存批准；目标 Extensions 保存激活和实例事实 | 固定批准范围、精确锁和原激活；Activation.revision 表示当前投影修订，generation 表示活动代际；新实例另取开放依据 | 当前批准、活动代际、实际就绪和残留工作，业务 Grant 另行成立 |
 
 表中列的是建模所需的主要字段，完整必填性以[协议 Schema](contracts/schemas/protocol.schema.json)及所属模块为准。一个对象被别的模块引用或投影，不转移写权；修订只在同一对象及其 owner 内比较，不能用接收时间或另一对象的较大修订覆盖它。
 

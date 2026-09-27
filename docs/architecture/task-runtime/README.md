@@ -121,7 +121,7 @@ stateDiagram-v2
 
 ## 5. 恢复与调度
 
-job 是必须继续履行的责任，包含唯一 `job_id`、业务关联、kind、due_at、attempt_count、lease_epoch 和有限重试策略。默认类别为 decide、dispatch、poll、control、settle、extract；业务对象保存最终事实，job 完成不代表业务成功。
+job 是必须继续履行的责任，包含唯一 `job_id`、业务关联、kind、due_at、attempt_count、lease_epoch、work_revision 和有限重试策略。默认类别为 decide、dispatch、poll、control、settle、extract；业务对象保存最终事实，job 完成不代表业务成功。领取代次裁决谁能回写，责任版本防止有效领取者把处理中新增的工作写成完成或延后；[完成规则](implementation.md#job-completion)同时覆盖新责任与 done／backoff 的两种提交顺序。
 
 领取在短事务内递增 lease_epoch。过期领取可被重新领取，旧工作者不能再写任务结果；它可能已经发出的远端操作仍按原 operation_id 核对。派发者在第一次调用前已保存全部不可变输入和原命令，重启后查原回执。不能因“任务领取过期”生成新的副作用身份。
 

@@ -236,6 +236,8 @@ surface_list 对一个 owner 冻结有限 ID 集合，逐页返回当前获准�
 请求包含 query_id、有限 filters、limit 和可选 cursor；新条件使用新 query_id。
 每页重新复核权限，失效项跳过，exhausted 只表示本次集合结束。
 
+用于按类型订阅恢复时，filters 必须覆盖全部当前获准 Surface（app_ids=[]、task_refs=[]、include_expired=true）。200 项冻结上限截断时必须保留 partial／gaps，不能把末页当作完整目录；权限范围变化废弃旧页集合并重新订阅，新增可见的旧 Surface 也从新集合发现。完整条件、先订阅再枚举及有限重试统一见[集合恢复](../contracts/protocol.md#collection-snapshots)，固定截断不触发相同快照的立即循环。
+
 跨端目录由应用分别读取已登记 owner，再显示来源和 unreachable_endpoints。
 部分端点失联不导致本地任务消失，也不能被包装成全局完整清单。
 目录标题、预览和关联 task_id 均受最小披露要求，不能用知道 ID 绕过权限。

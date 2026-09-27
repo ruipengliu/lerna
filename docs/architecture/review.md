@@ -253,3 +253,31 @@ python -m grpc_tools.protoc -I docs/architecture/contracts --descriptor_set_out=
 | Harness、生产故障及容量 | **未执行** | 数据库提升、WSS／gRPC 互操作、真实撤权与清理、单区故障及海量负载均须参考实现取得运行证据 |
 
 本轮封装检查位于 `.scratch/production-distributed/check_grpc_envelope.py`，图示源摘要及目视结论位于 `.scratch/production-distributed/render/manifest.json` 与同目录 `review.md`；全景图局部检查位于 `.scratch/production-distributed/panorama-label/`。完整 L1 设计及静态验证交付不提升为 L2 运行实现。
+
+## 16. 分布式恢复条件与集合查询补齐
+
+2026-09-27 按已接受的六项审查建议修订正文、未发布契约、示例与验收程序。技术栈、稳定 Home／owner、单地域三可用区及中间件组合保持原决策；本轮补齐并发条件、恢复入口和可测量定义。
+
+| 修订 | 规则归属及结果 |
+| --- | --- |
+| 工作槽并发完成 | [任务运行时](task-runtime/implementation.md#job-completion)分别检查 lease_epoch 与 work_revision；旧成功／退避不能覆盖后来加入的责任，新责任在 done 之后提交也会重新开放唯一槽 |
+| Memory 提交水位 | [owner 事务头](memory/implementation.md#memory-change-head)与业务、变化项共同提交；R／I 使用同一提交序列，同库索引及补扫取一致快照，view.open 固定集合后再沿 S 之后增量继续 |
+| 集合订阅恢复 | [领域分页](contracts/protocol.md#collection-snapshots)补 execution.list、extensions.list、grant.list，登记方法增至 104；六类订阅都有集合与准确查询入口，权限变化、截断及超限保持明确缺口 |
+| Activation 状态合并 | Activation.revision 跟踪持久投影，generation 继续表示活动代际；读取、列表、提示及当前客户端投影不得被迟到低修订覆盖 |
+| 时钟及 gRPC 扩容 | [ClockAdapter](deployment.md#clock-adapter)明确暂停和时间误差前提；[连接分配](contracts/grpc.md#backend-pools)明确实际地址同步、短 Call 均衡、长流池和有限候选，Ready 计时器与流寿命分开 |
+| 可用性统计 | [生产 SLO](deployment-production.md#42-可用性与时延验收口径)分别统计可观察调用、原命令接纳及查询，迟到回执不改写首次超时；失败时段独立报告 |
+
+语义复核交叉推演新责任与完成／退避的两种提交顺序、Memory 回滚与日志回收、初始视图接增量、暂停和数据库换钟、旧 HTTP/2 保持时扩容、接口超时后查回执，以及未知对象的集合发现。复核补充了索引候选须对应所读 I 的稳定快照、陈旧但未断开的 watch 不能无限保持地址有效、只读查询状态清理后不得将新旧分页拼接等成立条件。当前索引默认使用同库 MVCC；库外替换不能证明稳定版本时明确降级。
+
+本轮运行验收增加 PROD-17～22，并在[故障实验](validation/fault-experiments.md#job-merge)给出屏障、步骤和独立真值断言。新增分页序列的 collection／activation_view 属于测试观察，不是客户端可提交的授权事实；传输向量中的 authorization_changed 也是给定的资格前提。
+
+| 本轮实际检查 | 结果 | 保证边界 |
+| --- | --- | --- |
+| 交叉语义复核 | 六项机制的正常及异常路径完成对照；集合项 owner、权限恢复后旧游标复活、缺口文本披露标识三项独立发现已修正，并定向复核 | 文档推演及给定事实检查，不证明实际鉴权或事务执行 |
+| 领域与完成投影 | 50 组正常序列、343 个定向反例，覆盖 104 个方法且 reserved=0；完成投影 5 正例／9 反例通过 | 56／57 序列的成员、权限与回收状态是显式测试前提，不是真实数据库扫描 |
+| 传输及签名 | 100 个传输向量、218 个定向反例通过；2 个 ES256、3 个 JCS 向量及 23 个密码学反例通过 | 验证新增查询绑定及权限变化缺口；不建立网络、身份或当前权限 |
+| 图示 | 6 张新增／变化 Mermaid 全部实际渲染、逐张目视检查，最终源码摘要与输入一致 | 调整工作槽回边及订阅恢复分支标签；未变化图和原生 drawio 未重复计入 |
+| 文档及差异 | 38 篇 Markdown、945 个本地链接及 82 个 Mermaid 块结构检查通过；差异空白检查通过 | 结构、语义及图示可读性分别检查；历史交付记录保留原计数 |
+| 真实服务与生产实验 | **未执行** | 数据库并发、ClockAdapter 平台能力、服务发现、网络互操作、故障与容量须实际运行 PROD-01～22 |
+
+复现仍使用本页第 5 节的检查命令；本轮输出保存在 `.scratch/distributed-followup-audit/checks.json`，渲染及源摘要保存在同目录 `render/manifest.json`。Protobuf 外壳没有变化，本轮没有重复编译或宣称网络互操作通过。当前交付仍为设计、契约及静态资产。

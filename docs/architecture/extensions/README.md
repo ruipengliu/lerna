@@ -111,7 +111,7 @@ stateDiagram-v2
 | InstallLock：lock_id、manifest_digest、resolved_dependencies、config_digest、platform | 固定完整依赖及配置摘要；改变任何项产生新锁 |
 | InstallLock：trust_evidence、conformance_report、state_compatibility | 绑定审核或平台隔离证据、合同测试及格式兼容证据 |
 | Activation：activation_id、target_id、old_lock_id、new_lock_id、approval_id | 每个目标一份不可变切换意图；批准对象定义在[evaluation](../evaluation/README.md) |
-| Activation：phase、generation、ready_instance、last_observed_at | phase 使用状态图；ready_instance 必须属于当前宿主实例，重启重新取证 |
+| Activation：revision、phase、generation、ready_instance、last_observed_at | revision 跟踪持久可见投影，每次变化递增；generation 仅为活动代际。phase 使用状态图；ready_instance 必须属于当前宿主实例，重启重新取证 |
 | Activation：startup_evidence、instance_readiness、approval_revision?、activation_use_id?、approval_lease_ref? | active 必须有原激活启动依据及当前实例就绪依据。startup_evidence 区分 local_transaction 与 remote_use；activation_use_id 仅是原远端激活的历史身份，不因重启刷新。instance_readiness 在新实例重启时绑定新的 reopen 依据；本地共同事务不要求在线回执。可选租约只用于已有活动实例离线续用 |
 | Activation：new_use_disabled、previous_version_ready、residual_work、error | 分项保存停止、恢复及残留；不能从一个布尔值推导全部成功 |
 
@@ -121,6 +121,7 @@ stateDiagram-v2
 | extensions.activate | 预先保存的 activation_id、目标、精确新旧锁、approval_id、预期代际；返回原 activation_id | applied 表示切换请求及执行责任保存；实际 active/ready 另查 Activation |
 | extensions.deactivate | 目标、原绑定、原因及控制依据；返回原停用决定 | 原子关闭新入口后保存事实；残留操作单列，由所属模块继续 |
 | extensions.read | lock_id 或 activation_id；返回精确状态、当前就绪及残留 | 查询不能凭配置期望值替代实际装载事实 |
+| `extensions.list` | owner_id、query_id、limit、cursor? → 当前获准 Activation 集合页 | 按 extensions.read(kind=activation) 的当前披露资格冻结有限成员；含终态，partial／gaps 不表示完整；[分页与订阅恢复](../contracts/protocol.md#collection-snapshots) |
 | extensions.dispose | lock_id、预期引用修订；返回删除或 blocked 引用清单 | 只有无任务、原操作、回退保留及管理责任引用才清理制品 |
 
 所有写入沿[公共 Command](../contracts/README.md)查询原回执；同一命令参数变化返回冲突。一个目标同一端口最多有一个活动代际，竞争切换用预期代际裁决。卸载请求无法排空时返回可查阻塞引用，不能先删除驱动再要求它核对原操作。

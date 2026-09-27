@@ -3106,6 +3106,9 @@
         },
         "instance_readiness": {
           "$ref": "#/$defs/InstanceReadiness"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
         }
       },
       "required": [
@@ -3120,7 +3123,8 @@
         "last_observed_at",
         "new_use_disabled",
         "previous_version_ready",
-        "residual_work"
+        "residual_work",
+        "revision"
       ],
       "additionalProperties": false,
       "allOf": [
@@ -4067,8 +4071,11 @@
             "evaluation.rollout_read",
             "execution.control.get",
             "execution.get",
+            "execution.list",
+            "extensions.list",
             "extensions.read",
             "grant.check",
+            "grant.list",
             "grant.read",
             "grant.use.get",
             "grant.use.settlement",
@@ -4626,6 +4633,37 @@
                   "control_revision",
                   "state",
                   "copy_revision"
+                ],
+                "additionalProperties": false
+              },
+              "collection": {
+                "$ref": "#/$defs/OwnerCollectionFixture"
+              },
+              "activation_view": {
+                "description": "Test-only client highest-revision activation projection; never a wire field.",
+                "type": "object",
+                "properties": {
+                  "activation_id": {
+                    "$ref": "#/$defs/Id"
+                  },
+                  "revision": {
+                    "$ref": "#/$defs/Revision"
+                  },
+                  "phase": {
+                    "enum": [
+                      "prepared",
+                      "draining",
+                      "switching",
+                      "active",
+                      "blocked",
+                      "disabled"
+                    ]
+                  }
+                },
+                "required": [
+                  "activation_id",
+                  "revision",
+                  "phase"
                 ],
                 "additionalProperties": false
               }
@@ -12077,6 +12115,278 @@
         "copy"
       ],
       "additionalProperties": false
+    },
+    "OwnerCollectionListInput": {
+      "type": "object",
+      "properties": {
+        "query_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "query_id",
+        "limit"
+      ],
+      "additionalProperties": false
+    },
+    "ExecutionListInput": {
+      "$ref": "#/$defs/OwnerCollectionListInput"
+    },
+    "ExecutionListOutput": {
+      "type": "object",
+      "properties": {
+        "query_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Operation"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "exhausted": {
+          "type": "boolean"
+        },
+        "partial": {
+          "type": "boolean"
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "membership_limit",
+              "member_unavailable",
+              "source_unavailable"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 3,
+          "uniqueItems": true
+        },
+        "snapshot_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "query_id",
+        "owner_id",
+        "items",
+        "exhausted",
+        "partial",
+        "gaps",
+        "snapshot_at",
+        "expires_at"
+      ],
+      "additionalProperties": false
+    },
+    "ExtensionsListInput": {
+      "$ref": "#/$defs/OwnerCollectionListInput"
+    },
+    "ExtensionsListOutput": {
+      "type": "object",
+      "properties": {
+        "query_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Activation"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "exhausted": {
+          "type": "boolean"
+        },
+        "partial": {
+          "type": "boolean"
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "membership_limit",
+              "member_unavailable",
+              "source_unavailable"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 3,
+          "uniqueItems": true
+        },
+        "snapshot_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "query_id",
+        "owner_id",
+        "items",
+        "exhausted",
+        "partial",
+        "gaps",
+        "snapshot_at",
+        "expires_at"
+      ],
+      "additionalProperties": false
+    },
+    "GrantListInput": {
+      "$ref": "#/$defs/OwnerCollectionListInput"
+    },
+    "GrantListOutput": {
+      "type": "object",
+      "properties": {
+        "query_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GrantRecord"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "exhausted": {
+          "type": "boolean"
+        },
+        "partial": {
+          "type": "boolean"
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "membership_limit",
+              "member_unavailable",
+              "source_unavailable"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 3,
+          "uniqueItems": true
+        },
+        "snapshot_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "query_id",
+        "owner_id",
+        "items",
+        "exhausted",
+        "partial",
+        "gaps",
+        "snapshot_at",
+        "expires_at"
+      ],
+      "additionalProperties": false
+    },
+    "OwnerCollectionFixture": {
+      "type": "object",
+      "properties": {
+        "member_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "readable_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "authorization_scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "scan_end": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "state_reclaimed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "member_ids",
+        "readable_ids",
+        "authorization_scope",
+        "scan_end",
+        "truncated"
+      ],
+      "additionalProperties": false,
+      "description": "Test-only authority membership, current disclosure and scan observations; never accepted from a wire caller."
     }
   }
 }

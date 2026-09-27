@@ -1,0 +1,26 @@
+{
+  "date": "2026-09-27",
+  "scope": "Static contract and document checks; no service runtime executed",
+  "results": [
+    {
+      "name": "protocol",
+      "exit_code": 0,
+      "output": "PASS: 50 valid traces; 343 invalid mutations rejected for their stated rule; 104 frozen methods exercised\nRegistry: 104 methods, 0 reserved; protocol is an unpublished draft profile\nScope: structure and recorded semantic relations only; no authentication, service, concurrency, durability or interoperability runtime tested\n"
+    },
+    {
+      "name": "transport",
+      "exit_code": 0,
+      "output": "PASS: 2 ES256 public vectors; 3 canonical vectors; 23 negative checks\nScope: constructed bytes, signatures and pinned bindings; no live identity, key custody, revocation or interoperability tested\nPASS: 100 transport/closure vectors; 218 directed invalid mutations\nScope: bounded recorded structures and bindings; no network, storage, authentication or byte transfer executed\n"
+    },
+    {
+      "name": "completion",
+      "exit_code": 0,
+      "output": "PASS: 5 valid examples; 9 invalid examples rejected\nScope: schema and document fixture semantics only; runtime behavior not tested\n"
+    },
+    {
+      "name": "documents",
+      "exit_code": 0,
+      "output": "PASS: 38 Markdown files; 945 local links; 82 Mermaid blocks; 0 errors\nScope: local links and Markdown structure; no semantic or rendering guarantee\n"
+    }
+  ]
+}

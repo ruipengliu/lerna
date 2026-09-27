@@ -25,7 +25,7 @@ flowchart TB
 | --- | --- | --- |
 | Task、内部任务树、预算、原命令及 jobs | 原 Home 所在 PostgreSQL 分区 | 同一 Home 多进程共享一个写权威；祖先控制、准入和账务仍用短事务 |
 | Grant 父链、计数与 Use；Confirmation | 原授权 owner；确认随消费它的业务 owner 放置 | 一条许可父链不拆库，Confirmation 与业务消费共事务；增加 Home 不复制旧许可余额 |
-| Memory、Content 元数据、来源边及清理工作 | 同租户的 Memory／Content 默认共提交域 | 引用登记、关闭门禁和本域发布共同提交；跨 owner 分支见[引用门禁](memory/implementation.md#reference-gate) |
+| Memory、Content 元数据、来源边及清理工作 | 同租户的 Memory／Content 默认共提交域 | 引用登记、关闭门禁和本域发布共同提交；Memory 变化与 [owner 事务头](memory/implementation.md#memory-change-head)共同保存，索引／视图从同一提交序列取切点；跨 owner 分支见[引用门禁](memory/implementation.md#reference-gate) |
 | 上传、镜像、正文与制品字节 | 元数据在原 owner；字节在共享对象存储 | 接收实例可以替换，准确对象版本不依赖原 Pod 的临时磁盘 |
 | 会话、端点代次、委托凭据校验记录 | 按稳定 tenant／identity 映射到所属身份权威 | 身份路由可缓存，当前有效性不可用任意 TTL 的 allowed 缓存代替；核验不可达时拒绝相应新工作和披露 |
 | 词法索引、查询缓存、统计 | 原事实的派生物 | 可重建；不提供授权、去重、关闭或余额的最终判断 |
@@ -50,18 +50,20 @@ sequenceDiagram
     D-->>W: 可丢失唤醒
     W->>D: 按索引限量扫描并领取原责任
     Note over N,W: 发送失败、断线或无通知时，<br/>由周期扫描继续
-    W->>D: 原身份、领取代次下提交结果与后续责任
+    W->>D: 核对领取与当前责任，提交结果及后续工作
 ```
 
 实线数据库操作决定业务结果，通知线不决定成功。jobs 与 Delivery 已是待处理责任，不再复制成另一份可靠队列；派发器只扫描本进程可服务的在线目标及有界到期范围，不为每条 WSS 单独建立数据库轮询器。连接位置丢失时原 Delivery 仍在，在线路由恢复后继续交付。
 
 | 路径 | 固定机制 | 失败后继续者 |
 | --- | --- | --- |
-| 正常领取 | 按分区、工作类别、状态、due_at 和稳定键批量扫描；短事务 `FOR UPDATE SKIP LOCKED` 领取并递增 lease_epoch | 原 job；领域写入再次核对代次与业务前提 |
+| 正常领取 | 按分区、工作类别、状态、due_at 和稳定键批量扫描；短事务 `FOR UPDATE SKIP LOCKED` 领取并递增 lease_epoch | 原 job；领域写入核对领取资格，完成／退避另核对当前 work_revision，见[责任槽规则](task-runtime/implementation.md#job-completion) |
 | 长期等待与历史完成 | 等待工作有具体期限／依赖，不占 goroutine；终态工作退出活跃领取索引 | 恢复扫描按原责任键检查缺槽，不能新造命令身份 |
 | 唤醒合并 | 有限内存集合只保留“某分区／类别需扫描”；载荷不含租户正文或用户凭据 | 集合溢出可丢提示，保留周期扫描 |
 | 提交后发送失败 | NOTIFY 使用独立提交与有限超时，失败不回滚原业务、也不让客户端重提已成功命令 | 扫描发现原记录；无需可靠地补发每一条通知 |
 | 监听连接恢复 | 先提交 LISTEN，再读取数据库当前到期工作，随后同时消费通知与周期扫描 | 重复提示按原记录去重，不依赖通知序号恢复 |
+
+jobs 的责任版本在业务事务内递增；NOTIFY 只唤醒扫描，不产生新的责任版本。新责任与旧 done／backoff 争用原槽，使两种提交顺序都保留当前工作；周期补扫不承担修复正常并发丢唤醒的义务。Memory 索引、关闭与 copy 校准同样采用此规则，固定外部命令和累计重试预算不随版本变化重置。
 
 NOTIFY 只向当时监听的会话发送提示；同事务相同载荷会合并，且队列满会使包含 NOTIFY 的事务提交失败，因此它不能进入本方案的业务提交事务。监听器不持长事务，也不把 NOTIFY 当作多租户保密通道。[PostgreSQL NOTIFY](https://www.postgresql.org/docs/18/sql-notify.html) 监听重建的先后顺序遵循官方的“先监听，再读取当前状态”规则。[PostgreSQL LISTEN](https://www.postgresql.org/docs/18/sql-listen.html)
 

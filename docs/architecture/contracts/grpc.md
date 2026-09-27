@@ -82,9 +82,41 @@ sequenceDiagram
 
 内部流重绑不新增外连接槽、不清零累计请求数，也不重复计入某个未决 request_id。网关丢失时外 WSS 会断开，客户端沿原命令、Reply 和订阅快照恢复；不持久化整条 socket 会话来模拟无感迁移。
 
+<a id="backend-pools"></a>
+### 1.2 实际地址发现与连接分配
+
+默认由客户端直连平台登记的应用实例地址。受信装配先把原 logical_service_id 解析到部署后端集合，再由进程共享的发现适配器取得实例身份、实际 IP／端口、就绪及排空状态；同一后端集合只维护一份 watch 和缓存。Kubernetes 装配使用受限身份读取对应 Service 的 EndpointSlice，合并全部 slice、按实例去重，只把 ready 且非 terminating 的目标纳入新调用；其他托管平台须提供等价接口。地址不是业务权威，连接仍核验 mTLS 服务身份及每次请求的准确逻辑服务。[EndpointSlice](https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/)
+
+发现采用“完整 LIST＋从返回资源版本开始 watch”：以最长 20 秒的抖动间隔重新 LIST，单次最多 5 秒；成功快照从该次 LIST 发起时起最多有效 30 秒，持续 TCP、旧 watch 事件或本地重试都不刷新这个期限。每轮新快照及 watch 使用本地新代次，原子替换后丢弃旧 watch 输出；断流或版本失效提前发起有限重列举。超过 30 秒仍未取得新快照就停止该集合的新拨号／新流，即使旧 watch 看似未断；期限使用 ClockAdapter 的可信经过时间。地址新增即时成为候选，地址删除／排空立即停止新分配，已有流按原租约和排空规则继续。缓存有效期间的调用仍受连接状态、目标准入及原 deadline 约束，空集合不能替换成任意 VIP。使用标准 gRPC resolver 接口推送变化，配置摘要随安装锁固定；不依赖一次 DNS 解析或默认 `pick_first` 偶然分流。[名称解析](https://grpc.io/docs/guides/custom-name-resolution/)、[负载策略](https://grpc.io/docs/guides/service-config/)
+
+```mermaid
+flowchart LR
+    P[平台实际实例集合] -->|持续更新| D[进程共享发现适配器]
+    D --> C[短 Call 连接组<br/>round_robin]
+    D --> S[EndpointChannel 连接池<br/>按后端剩余流槽选择]
+    C --> A[应用 A]
+    C --> B[应用 B／新增副本]
+    S --> A
+    S --> B
+```
+
+图只表示新 RPC 的选址。每个 ClientConn 是可复用的逻辑连接管理器，可能管理多个底层连接，不能与一条物理 HTTP/2 连接等同；不按请求、租户或每条 WSS 新建一个 ClientConn。[grpc-go ClientConn](https://pkg.go.dev/google.golang.org/grpc#ClientConn)
+
+| 流量 | 连接和选择规则 | 满额、退出与恢复 |
+| --- | --- | --- |
+| 短 Call | 按后端集合、调用方 mTLS 配置和预算类别复用 ClientConn，显式配置 `round_robin`；控制／核对与普通工作分连接组和并发槽 | 调用前取得本类有限槽；无健康目标或槽满时有界失败，不启用无限 wait-for-ready。地址变化影响后续调用，已发命令仍先查原回执 |
+| EndpointChannel | 每个具体后端维持有上限的专用 ClientConn 池；在健康、未排空且有本地槽的后端中选本调用进程活动流占比最低者，平局随机，再取得池成员流槽 | 服务端原子检查自身全局活动流上限，满额在登记新绑定前拒绝；本地估计不替代全局上限。流退出释放本地槽，候选也占槽 |
+| 移除目标／进程退出 | 新分配先停，连接组保持原在途调用至有界排空；长流沿 §1.1 建立新 binding | 发现摘除、round_robin 和新增副本均不迁移已有流；只有正常轮换、受控排空或故障重绑移动它们。空闲池成员退出，进程关闭时统一 Close |
+
+流槽 S 由安装配置限制，不能超过已验收的单物理连接并发流上限；每后端池成员数 K、每进程后端数 B 及全部物理连接另设硬上限。正常连接预算至少核对 `B×K`，还须计入短 Call 连接组、重连时旧连接排空与新连接的重叠。某后端当前承接 C 条长流时，正常池容量须满足 `K×S≥C`，候选重绑使用另外保留的有限流槽；服务端全局流上限同时覆盖所有网关及候选。不同 ClientConn 是否形成独立底层连接及协商后的实际流数必须实测，不能靠增加逻辑句柄虚增容量。长流达到 HTTP/2 流上限会使新 RPC 在库内等待，因此短 Call 使用独立连接组，建候选的等待也受显式期限约束。[gRPC 连接与流容量](https://grpc.io/docs/guides/performance/)
+
+每轮重绑初始最多顺序尝试 3 个不同健康后端，每个候选等待内部 Ready 的独立计时器最多 2 秒且不超过剩余恢复窗口；只有一个可用后端时一轮只试一次。该计时器在 Ready 校验通过时停止，不设为 EndpointChannel 的 2 秒 RPC deadline；就绪流仍受原最长 30 分钟及更早委托／身份期限限制。拒绝、握手失败或超时后先取消该候选，确认流退出并释放槽，再有限退避，后端短暂冷却，不能同时向多个实例竞速登记。每个新 RPC 流使用新 binding_id／更高 binding_revision；登记结果未知仍按 §1.1 处理。轮间采用带抖动的退避，整个过程不超过原 60 秒窗口，且受网关级建流速率和并发预算约束；仍未就绪则关闭外 WSS。首次 WSS 从网关接收握手到发出首个 Ready 初始总期限为 10 秒，覆盖认证、占额和首次内部绑定，失败按原连接条件释放额度；不能借重绑窗口延长握手。原业务请求的 5 秒期限也不随候选改变。
+
+该选择由宿主连接适配器承担 watch、池限额和候选失败处理的复杂度，并将共享发现的定期 LIST 计入平台 API 预算；复用平台服务发现，不另引入 mesh。若已有可验收的 L7 gRPC 代理，可替换该适配器，但仍须证明新流分配、单区余量、排空与身份透传；仅返回一个 L4 VIP 不满足本节默认发现条件。扩容只改善新分配，现有长流的收敛速度受 30 分钟正常轮换及有界主动排空限制，不承诺瞬时均衡。
+
 ## 2. Protobuf 与领域字段的权威
 
-[harness.proto](harness.proto) 定义 RPC 外壳，`bytes` 中放 UTF-8 严格 JSON。Command、Query、Receipt、QueryResult 和 Error 继续由[领域 Schema](schemas/protocol.schema.json)及[方法登记](schemas/methods.json)裁决；Lookup、Frame 由[传输 Schema](schemas/transport.schema.json)裁决。这样不用为 101 个方法维护两套可漂移的字段定义，代价是仍需 JSON 解码与运行时校验，不能声称已经具备逐方法 Protobuf 强类型或二进制压缩收益。只有测量表明编码成本主导时，才另定完整字段映射及兼容 profile。
+[harness.proto](harness.proto) 定义 RPC 外壳，`bytes` 中放 UTF-8 严格 JSON。Command、Query、Receipt、QueryResult 和 Error 继续由[领域 Schema](schemas/protocol.schema.json)及[方法登记](schemas/methods.json)裁决；Lookup、Frame 由[传输 Schema](schemas/transport.schema.json)裁决。这样不用为领域方法维护两套可漂移的字段定义，代价是仍需 JSON 解码与运行时校验，不能声称已经具备逐方法 Protobuf 强类型或二进制压缩收益。只有测量表明编码成本主导时，才另定完整字段映射及兼容 profile。
 
 | Protobuf 字段 | 内层对象及关联检查 |
 | --- | --- |
@@ -121,6 +153,8 @@ Call 的请求与响应必须恰有一个非空 oneof 分支；ChannelFrame 的 
 
 每次 Call 设置有限 deadline，并把剩余时间传给下游；初始同地域接纳／查询上限为 5 秒，实际值随方法和运行实验固定。数据库事务不覆盖网络等待。deadline 或客户端 context 取消只结束本次等待；已经提交的业务责任由宿主 job 生命周期继续，任务取消仍需原 `task.cancel` 等控制命令。相关机制见 [gRPC deadline](https://grpc.io/docs/guides/deadlines/) 与[取消](https://grpc.io/docs/guides/cancellation/)。
 
+租约、委托及远端启动窗口的时间资格统一使用 [ClockAdapter](../deployment.md#clock-adapter)；宿主暂停或时钟信任改变不能延长旧委托和旧本地截止。内部 RPC 尝试与外部接口调用分别观测，重绑内的有限查询不重复计为外部调用；5 秒内未得到确定结果的接口调用不因后来查到原回执而改成成功，计量归[生产 SLO](../deployment-production.md#42-可用性与时延验收口径)。
+
 | 可观察结果 | 调用方解释与恢复 |
 | --- | --- |
 | gRPC OK + Receipt | 按 stage 和方法成功点解释，accepted／applied 均不自动证明外部效果 |
@@ -136,3 +170,5 @@ EndpointChannel 不使用单次 Call 的 5 秒期限：初始允许最长 30 分
 ## 4. 验证边界
 
 `.proto` 编译只证明描述符有效。发布前还须核对 oneof／内层 JSON／方法登记的映射、Go 与另一语言的相同 JCS 摘要、未知字段与过大消息拒绝，以及 WSS → gRPC 转发后原身份和认证主体不变。当前构造向量检查绑定摘要、代次比较、同候选登记重试、迟到低代与同代冲突拒绝、旧绑定丢弃、内部 Ready 不二次外发、精确 limits、配额不重复占用及请求数上限；其认证、路由和计数前提均为显式夹具。调用提交后取消 RPC、丢失回复、断开 EndpointChannel、旧凭据保持连接和慢接收端的行为必须用实际服务验证；现有静态向量不提供这些运行证据。
+
+发现与连接分配另执行 [PROD-18](../validation/fault-experiments.md#grpc-capacity)：保持原 HTTP/2 连接不动增加副本，核对新 Call／新 EndpointChannel 分布；再填满一个实例、使 watch 断流并排空另一实例，核对有限候选、旧流归属及控制 RPC 余量。时钟与统计分别由 PROD-17／19 验收，不由上述 Schema 向量推出。

@@ -192,6 +192,7 @@ WSS 连接数、每连接发送队列、在途请求和重连速率均有用户�
 | `grant.use.settle` / `grant.use.settlement` | 原 use、计量 owner、累计用量、最终关闭依据；use_id → UseSettlementRecord | 按差额转实际支出，未知余量继续预留；有关闭证明才释放余额，once 身份不返还 |
 | `confirmation.request/read/decide` | 预先固定的准确业务命令、原确认、受信本人决定 → ConfirmationRecord | owner 保存规范意图与决定；read 不消费，消费在随后原业务事务内完成 |
 | `grant.revoke` / `grant.read` | ID、期望修订与原因；ID → 当前许可及传播状态 | 本地撤销 applied 不等于所有远端停止；owner 持续传播并报告缺口 |
+| `grant.list` | owner_id、query_id、limit、cursor? → 当前获准 GrantRecord 集合页 | 按 grant.read 的当前披露资格冻结有限成员；含终态，partial／gaps 不表示完整；[分页与订阅恢复](../contracts/protocol.md#collection-snapshots) |
 | `grant.lease.allocate` | 端点实例、范围、限额、期限与明确离线许可 → OfflineLease | owner 原子预留总额度；答复丢失查原命令，不重复分配 |
 | `grant.lease.settle` | lease_id、稳定使用明细、累计用量、最终关闭依据 → 固定结算回执 | 去重结算；未封账不返还未结算余额，调用方保留原消费记录 |
 | `endpoint.pair.begin` | 设备描述、请求范围 → 有限会话及两种代码 | 持久保存待批准会话，只允许配对查询 |

@@ -75,6 +75,8 @@ flowchart TB
 BindingRouter 的进程内入口与持久就绪记录共同构成开放条件，单独写一行 ready 不会令尚未装载的进程可用。
 任何一步缺失时，管理入口可达，业务派发保持关闭。
 
+extensions.list 由现有查询入口读取本 owner 的 Activation 仓储，复用 extensions.read(kind=activation) 的当前披露策略。共享存储中的有限 collection_queries 保存认证范围、query_id、原参数、按 ID 排序的成员、期限与位置；页读取不固定旧记录修订，也不跨请求持有事务。查询槽、扫描上限、权限变化失效、partial 与提示合并统一按[集合恢复契约](../contracts/protocol.md#collection-snapshots)实现；此表仅为临时查询状态，不增加全局目录或业务 owner。
+
 ## 2. 干净安装与两类发布
 
 安装器核验发行包摘要、受信来源和随包契约证据。
@@ -208,6 +210,7 @@ activate 接纳只固定切换意图和后续 job。
 | Activation.startup_evidence | 原 activation_id、锁、批准修订及提交依据 | 不变 |
 | Activation.activation_use_id | 远端原激活使用身份；本地可缺省 | 不变，不作为当前实例依据 |
 | Activation.instance_readiness | 当前 instance、当前代际、自检及新启动依据 | 每次进程实例重建 |
+| Activation.revision | 本 owner 持久可见投影修订，独立于 generation | phase／ready／残留变化同事务递增并写提示责任；read、list、Change 共用该修订，迟到低修订不可覆盖 |
 | ActiveBinding | target、port、generation、lock | 只在新激活时推进 generation |
 
 本地共库 `startup_evidence.kind=local_transaction` 保存批准修订、commit_id、实例及动作身份。

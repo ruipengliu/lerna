@@ -738,7 +738,8 @@
                 "checked_at": "2026-09-26T00:00:09Z",
                 "commit_id": "commit_be514c39e5acce2a0971854499d09aaf"
               }
-            }
+            },
+            "revision": 1
           },
           "observed_at": "2026-09-26T00:00:09Z"
         }
@@ -872,7 +873,8 @@
                 "checked_at": "2026-09-26T00:00:09Z",
                 "commit_id": "commit_be514c39e5acce2a0971854499d09aaf"
               }
-            }
+            },
+            "revision": 2
           },
           "observed_at": "2026-09-26T00:00:11Z"
         }

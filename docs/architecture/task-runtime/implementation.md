@@ -60,7 +60,7 @@ flowchart TB
 | operation_intents | operation_id、task_id、不可变 Invoke、原 command_id | operation 唯一；原命令及摘要唯一关联 |
 | received_facts | owner、object_id、revision、摘要、事实引用 | 同来源对象修订唯一；同修订异内容拒绝 |
 | task_executor_bindings | task_id、executor_id、最近目标／控制修订 | 同任务执行端唯一；控制传播不能漏端 |
-| jobs | job_id、业务关联、kind、状态、due_at、lease_epoch、lease_until、尝试数 | 可领取索引；同业务责任槽只有一个活动 job |
+| jobs | job_id、业务关联、kind、状态、due_at、work_revision、lease_epoch、lease_until、尝试数 | 责任槽唯一；work_revision 单调，可领取状态有索引 |
 | budget_balances | task_id、unit、limit、spent、reserved | 每任务每计价单位唯一 |
 | budget_reservations | reservation_id、task_id、unit、上限、累计已结金额、是否最终 | 每操作每计价项唯一 |
 | budget_allocations | allocation_id、父任务、接收方、单位上限、期限、状态、关闭证明 | allocation 唯一；不可换接收方或单位 |
@@ -69,7 +69,9 @@ flowchart TB
 
 任务、操作和账务的写入通过一个存储适配层完成。SQLite 和云数据库使用不同领取语句，但适配层提供相同的条件更新结果；任何数据库重试都只重复事务内逻辑，不能重复一次外部调用。
 
-`jobs` 的业务责任槽由 `(tenant, task_id, kind, object_id)` 确定。例如同一操作只需要一个自动 poll 槽；新的事实可以把 due_at 提前。已经固定原命令的 dispatch 槽不能通过更新 payload 变成另一个操作。
+`jobs` 的业务责任槽由 `(tenant, task_id, kind, object_id)` 确定。例如同一操作只需要一个自动 poll 槽。`work_revision` 是该槽的内部责任版本：新的领域责任或需要重新核对的事实与递增版本、提前 due_at 共同提交；重复事实、可丢通知、时间到期和领取本身不递增它。它不替代 Task／控制修订，也不表示领取资格。[槽完成规则](#job-completion)防止旧处理者盖掉新责任。
+
+同一责任槽后续再需工作时更新原行，done 可回到 ready，work_revision 与 lease_epoch 均不重置。槽确已满足清理条件后才能删除；重新建立槽使用新的 job_id，旧 job_id 的回写不能命中新行。已经固定原命令的 dispatch 槽不能通过更新 payload 变成另一个操作；责任版本变化也不能重置原命令、累计尝试数、期限或重试预算。
 
 <a id="data-flow"></a>
 ### 2.1 核心对象关系与流转
@@ -104,7 +106,7 @@ DecisionConsumption 与 PlanStepAdmission 是互斥的候选来源登记：一�
 <a id="21-锁定顺序"></a>
 ### 2.2 锁定顺序
 
-所有任务变更先锁原命令键，再按根到叶顺序锁需要判断的祖先任务；同层按 task_id 排序。随后锁预算单位、操作意图与工作槽，各类内部按稳定键排序。控制涉及有界子树时同样遵守此顺序。后台事实归并也采用相同顺序，不能从预算反向锁祖先。
+所有任务变更先锁原命令键，再按根到叶顺序锁需要判断的祖先任务；同层按 task_id 排序。随后锁预算单位、操作意图、参与领域的门禁及业务行，最后锁工作槽，各类内部按稳定键排序。Memory 参与共同事务时，在它的门禁及业务行之前取得[owner 事务头](../memory/implementation.md#memory-change-head)。控制涉及有界子树时同样遵守此顺序。后台事实归并也采用相同顺序，不能从工作槽或预算反向锁领域对象和祖先。
 
 同宿主扩展若要将许可消费或执行接纳纳入共同事务，必须使用同一存储适配层声明的锁顺序。无法保证顺序或不共库时使用原命令交接，不假定两个连接构成同一事务。
 
@@ -246,19 +248,22 @@ sequenceDiagram
 
 暂停允许既有证据完成；它禁止新的质量评估和行动。完成与取消由条件事务顺序决定：先提交终态的一方胜出，后一命令明确冲突或返回终态事实。费用未最终核清可以保守保留，不伪装成目标效果未知。
 
+<a id="job-completion"></a>
 ## 7. jobs 生命周期与有限调度
 
 ```mermaid
 stateDiagram-v2
-    [*] --> ready: 业务责任与job共同提交
-    ready --> leased: 原子领取并递增代次
-    leased --> done: 业务交接或终结责任已保存
-    leased --> waiting: 明确依赖或有限退避
+    direction LR
+    [*] --> ready: 共同提交
+    ready --> leased: 领取并递增代次
+    leased --> done: 覆盖当前责任
+    leased --> waiting: 当前责任仍需等待
+    leased --> ready: 回写保留责任／领取过期
     waiting --> ready: 到时或依赖变化
-    leased --> ready: 领取过期重新调度
+    done --> ready: 新责任提交
 ```
 
-图只建模一项 job；Task 状态和外部效果独立。过期领取回到 ready 不表示外部动作未发生。
+图只建模一个责任槽；Task 状态和外部效果独立。leased 的完成／退避边须同时通过下述领取与责任校验。新责任在 leased 期间只更新责任版本和 due_at，不抢占已有领取；过期领取回到 ready 不表示外部动作未发生。
 
 | kind | 每次处理的有界单位 | 自动尝试耗尽后 |
 | --- | --- | --- |
@@ -269,11 +274,27 @@ stateDiagram-v2
 | settle | 一个原计费项或 allocation 的累计结算 | 保留原预留与最小收尾责任 |
 | extract | 一个独立获准的记忆提取请求 | 不改变原 Task 的完成结果 |
 
-领取只锁 job；业务写入时再次核对 lease_epoch，保证旧工作者不能覆盖新结果。外部提供方返回的真实事实可以由新的归并事务按原身份收取，不依赖旧 worker 的领取资格。
+领取事务只锁 job，向 worker 返回固定的 job_id、lease_epoch 和观察到的 work_revision，提交后才读取固定输入或调用外部服务。完成／退避使用另一个短事务，按第 2.2 节先锁责任来源、最后锁槽，并按数据库当前时间核验租约；不能持有领取事务的槽锁再读取领域行。
+
+| 依次检查 | 槽的处理 |
+| --- | --- |
+| 原 job_id 不存在，或 state／lease_epoch／lease_until 已不具有本次领取资格 | 拒绝旧 worker 修改槽及受该领取保护的业务结果；不因责任版本相同恢复资格 |
+| 领取仍有效，但当前 work_revision 大于本次观察值 | 可按原身份归并已核实事实；释放本次领取，保留 ready 和已经提前的 due_at，不能写 done 或用旧退避延后它 |
+| 领取有效且责任版本相同 | 锁内核对领域责任；本次处理已完成或已持久交接全部责任才写 done，否则保存具体依赖及有界 waiting/due_at |
+
+新责任的事务与完成／退避事务锁同一槽，取锁后都读取当前值，不能用事务外旧快照覆盖。若事实归并在本事务内又生成该槽的新责任，也先递增 work_revision，再按新版本分支处理；worker 不能在回写时把观察值改成当前值来冒充已处理。真实外部事实仍可由独立归并事务沿原身份收取，不依赖旧 worker 的领取资格。
+
+| 先提交者 | 后提交者及结果 |
+| --- | --- |
+| 新责任提交：版本递增，due_at 提前 | 旧 worker 的 done 或 backoff 均转为 ready，保留新唤醒；不得覆盖它 |
+| worker 提交 done | 新责任在同槽递增版本并设 ready，不依赖补缺槽扫描发现 |
+| worker 提交 waiting／backoff | 新责任递增版本并设 ready，due_at 取既有等待与新要求中更早者 |
+
+在 leased 期间保存新责任时，due_at 也只可提前；若当前领取失效则由到期扫描重新领取。责任版本变化不刷新租约，也不清零有限重试预算；高优先级控制继续使用保留调度份额。
 
 默认先按用户轮转，再按用户内任务轮转；控制和收尾各保留至少一个本机槽。每类任务、提供方和资源的并发上限同时满足。阻塞 job 由 due_at 或具体对象变化唤醒，不进入模型空转。
 
-恢复扫描分页读取未完成 job 和缺少工作槽的未决领域记录，补建时使用同一唯一责任键。这样，程序缺陷或迁移造成的孤立责任可被发现；扫描不能重新发明命令或操作身份。
+恢复扫描分页读取未完成 job 和缺少工作槽的未决领域记录，补建时使用同一唯一责任键。它用于发现程序缺陷或迁移留下的孤立责任；正常并发唤醒由上述共同事务完成，不能依赖补扫兜底才能保证及时性。扫描不能重新发明命令或操作身份。
 
 ## 8. 预算分配与最终结算
 
@@ -378,5 +399,7 @@ RuntimeBudgetReceiver 固定 allocation_id、parent_owner_id、receiver_id、par
 | RT-10 | 清理完整回执和终态 Task 后重放旧 ID | 返回 gone／冲突；最小索引仍在，无新 Task、Invoke 或预算占用 |
 | RT-11 | 计划前项输出缺失 JSON Pointer，另一项仍未知 | 不猜参数、不执行模板；显示缺口或交回 Brain，原未知继续核对 |
 | RT-12 | 任务分页期间撤权、新建任务并耗尽单页扫描量 | 新任务不跨上界进入旧查询；撤权项不披露，返回缺口及前进游标 |
+| RT-13 | worker 持有效领取等待远端；同槽先提交新控制，再让旧处理返回成功或可重试失败 | work_revision 已增加；旧 done／backoff 均保留 ready 和更早 due_at，原控制命令与尝试预算不重置 |
+| RT-14 | worker 分别先提交 done、waiting，再提交同槽新责任；另重放一个已失去租约的旧完成 | 新责任同事务重开／提前原槽；旧 job_id 或旧 lease_epoch 无权改槽，即使责任版本相同也拒绝 |
 
 实现交付应同时记录表约束、事务故障结果和调度负载。静态方法序列覆盖见[20-budget-allocation](../contracts/examples/protocol/20-budget-allocation.json)；它不能证明上述并发和磁盘故障已经通过。

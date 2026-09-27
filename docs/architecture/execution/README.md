@@ -176,6 +176,7 @@ flowchart LR
 | `capability.describe` | 准确能力及绑定引用 → `Capability, Binding` | 返回固定版本及当前可用性；不存在或停用时 Home 重新选择，不能猜契约 |
 | `execution.invoke` | `Invoke` → `Operation` | Receipt 为 `applied` 时，Operation 的 `execution_state=accepted` 表示操作、原答复与工作已保存；答复丢失查原操作，同键异意图冲突 |
 | `execution.get` | `operation_id` → `Operation` | 当前事实；暂时不可达保持查询责任。`not_found` 后原键重投不等于新建目标动作 |
+| `execution.list` | owner_id、query_id、limit、cursor? → 当前获准 Operation 集合页 | 按 execution.get 的当前披露资格冻结有限成员；含终态，partial／gaps 不表示完整；[分页与订阅恢复](../contracts/protocol.md#collection-snapshots) |
 | `execution.control` | `ControlSnapshot` → `ControlReceipt` | 先持久接纳 gate 与传播责任；所有受控入口落实后才确认 enforced 修订；丢答复由 Home 查询或重投原控制命令 |
 | `execution.control.get` | `home_id, task_id` → `ControlReceipt` | 返回当前已知和已执行修订、逐入口缺口及在途集合；Home 保留工作直至确认，不以操作查询代替任务控制确认 |
 | `execution.reconcile` | `operation_id, evidence_refs?, query_budget_ref` → `Operation` | 接纳一次有限核对责任；证据需验证，Executor 更新原事实，Home 查询至可决策状态 |

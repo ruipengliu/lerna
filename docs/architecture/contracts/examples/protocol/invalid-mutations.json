@@ -4830,5 +4830,571 @@
         "value": "open"
       }
     ]
+  },
+  {
+    "name": "execution.list rejects undeclared input",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/object_ids",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "execution.list bounds requested page",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/limit",
+        "value": 101
+      }
+    ]
+  },
+  {
+    "name": "execution.list binds owner",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/owner_id",
+        "value": "owner_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "execution.list binds query identity",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/query_id",
+        "value": "query_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "execution.list cannot invent a member",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_membership",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/items/0/operation_id",
+        "value": "operation_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "extensions.list rejects undeclared input",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/request/payload/object_ids",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "extensions.list bounds requested page",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/request/payload/limit",
+        "value": 101
+      }
+    ]
+  },
+  {
+    "name": "extensions.list binds owner",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/owner_id",
+        "value": "owner_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "extensions.list binds query identity",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/query_id",
+        "value": "query_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "extensions.list cannot invent a member",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_membership",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/items/0/activation_id",
+        "value": "activation_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "grant.list rejects undeclared input",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/request/payload/object_ids",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "grant.list bounds requested page",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/request/payload/limit",
+        "value": 101
+      }
+    ]
+  },
+  {
+    "name": "grant.list binds owner",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/response/output/owner_id",
+        "value": "owner_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "grant.list binds query identity",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/response/output/query_id",
+        "value": "query_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "grant.list cannot invent a member",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_membership",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/response/output/items/0/grant_id",
+        "value": "grant_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "collection does not extend expiry across pages",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_snapshot",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/expires_at",
+        "value": "2026-09-26T00:10:02Z"
+      }
+    ]
+  },
+  {
+    "name": "collection does not change frozen members",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_snapshot",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/collection/member_ids",
+        "value": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065",
+          "operation_ffffffffffffffffffffffffffffffff"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "collection does not disclose a currently denied member",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_membership",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/collection/readable_ids",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "collection cannot reuse cursor across actors",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/auth/actor_id",
+        "value": "actor_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "collection cannot reuse cursor across senders",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/auth/sender_service_id",
+        "value": "service_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "collection rejects changed permission scope",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/collection/authorization_scope",
+        "value": "scope-b"
+      }
+    ]
+  },
+  {
+    "name": "collection rejects changed original limit",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/limit",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "collection rejects unknown cursor",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/cursor",
+        "value": "foreign-cursor"
+      }
+    ]
+  },
+  {
+    "name": "collection nonterminal scan must advance",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_progress",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/collection/scan_end",
+        "value": 0
+      }
+    ]
+  },
+  {
+    "name": "collection cannot claim exhausted before member end",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_progress",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/exhausted",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "collection capacity truncation stays partial",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_gap",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/partial",
+        "value": false
+      },
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/gaps",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "collection cannot silently lose a gap",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_gap",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/gaps",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "collection cannot resurrect expired cursor after query slot reuse",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/14/exchange/response",
+        "value": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000064",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000065",
+                "revision": 3,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": true,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z"
+          },
+          "observed_at": "2026-09-26T00:00:03Z"
+        }
+      }
+    ]
+  },
+  {
+    "name": "activation late read cannot lower displayed revision",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "activation_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/12/activation_view/revision",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "activation late read cannot reopen an old phase",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "activation_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/12/activation_view/phase",
+        "value": "prepared"
+      }
+    ]
+  },
+  {
+    "name": "activation same revision cannot describe changed phase",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "activation_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/11/exchange/response/output/revision",
+        "value": 1
+      },
+      {
+        "op": "set",
+        "path": "/events/11/exchange/response/resource_revision",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "activation requires revision independent of generation",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/events/7/exchange/response/output/items/0/revision"
+      }
+    ]
+  },
+  {
+    "name": "grant.list cannot mix another owner record",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/response/output/items/0/owner_id",
+        "value": "service_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "collection old authorization scope cannot revive cursor",
+    "fixture": "57-collection-authorization-reset.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response",
+        "value": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000064",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000065",
+                "revision": 3,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": true,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z"
+          },
+          "observed_at": "2026-09-26T00:00:03Z"
+        }
+      }
+    ]
+  },
+  {
+    "name": "collection old authorization scope cannot revive first-page",
+    "fixture": "57-collection-authorization-reset.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response",
+        "value": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000064",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000064",
+                "revision": 2,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": false,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z",
+            "next_cursor": "page-0-1"
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      }
+    ]
+  },
+  {
+    "name": "execution.list gaps cannot leak inaccessible object IDs",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/gaps",
+        "value": [
+          "object_ffffffffffffffffffffffffffffffff"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "extensions.list gaps cannot leak inaccessible object IDs",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/gaps",
+        "value": [
+          "object_ffffffffffffffffffffffffffffffff"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "grant.list gaps cannot leak inaccessible object IDs",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/response/output/gaps",
+        "value": [
+          "object_ffffffffffffffffffffffffffffffff"
+        ]
+      }
+    ]
   }
 ]

@@ -67,6 +67,10 @@ CONTROL_METHODS = {
 
 
 def query_result_binding_errors(request, result):
+    if request.get('method') in {'execution.list', 'extensions.list', 'grant.list'} and 'output' in result:
+        output = result['output']
+        if output.get('query_id') != request['payload']['query_id'] or output.get('owner_id') != request['target_id']:
+            return ['collection_result: result changed the original query or responsible owner']
     if request.get('method') == 'content.get' and 'output' in result:
         control_requested = request['payload'].get('mode', 'bytes') == 'control'
         if control_requested != (result['output'].get('mode') == 'control'):
@@ -264,8 +268,10 @@ def frame_errors(frame, context):
         subscription = context.get('subscription', {})
         if frame['subscription_id'] != subscription.get('subscription_id'):
             errors.append('frame_subscription: message belongs to another subscription')
+        if kind == 'snapshot_required' and subscription.get('authorization_changed') and frame['reason'] != 'authorization_changed':
+            errors.append('frame_subscription: changed authorization scope requires an explicit new snapshot')
         if kind == 'change':
-            if subscription.get('paused_for_gap') or frame['change']['object_type'] not in subscription.get('object_types', []):
+            if subscription.get('paused_for_gap') or subscription.get('authorization_changed') or frame['change']['object_type'] not in subscription.get('object_types', []):
                 errors.append('frame_subscription: Change cannot pass a paused or different filter')
             if context.get('disclosure_allowed') is False:
                 errors.append('frame_disclosure: current permission forbids this object hint')

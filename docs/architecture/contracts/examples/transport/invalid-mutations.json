@@ -2678,5 +2678,137 @@
       }
     ],
     "expect": "content_get_mode"
+  },
+  {
+    "name": "authorization-changed subscription cannot emit Change",
+    "vector": "wss-change",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/subscription/authorization_changed",
+        "value": true
+      }
+    ],
+    "expect": "frame_subscription"
+  },
+  {
+    "name": "authorization-changed gap retains explicit reason",
+    "vector": "wss-gap-authorization-changed",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/reason",
+        "value": "queue_overflow"
+      }
+    ],
+    "expect": "frame_subscription"
+  },
+  {
+    "name": "execution.list rejects owner rebound",
+    "vector": "wss-execution.list-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/output/owner_id",
+        "value": "owner_ffffffffffffffffffffffffffffffff"
+      }
+    ],
+    "expect": "collection_result"
+  },
+  {
+    "name": "execution.list rejects query rebound",
+    "vector": "wss-execution.list-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/output/query_id",
+        "value": "query_ffffffffffffffffffffffffffffffff"
+      }
+    ],
+    "expect": "collection_result"
+  },
+  {
+    "name": "execution.list rejects unbounded page",
+    "vector": "wss-execution.list-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/payload/limit",
+        "value": 101
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "extensions.list rejects owner rebound",
+    "vector": "wss-extensions.list-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/output/owner_id",
+        "value": "owner_ffffffffffffffffffffffffffffffff"
+      }
+    ],
+    "expect": "collection_result"
+  },
+  {
+    "name": "extensions.list rejects query rebound",
+    "vector": "wss-extensions.list-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/output/query_id",
+        "value": "query_ffffffffffffffffffffffffffffffff"
+      }
+    ],
+    "expect": "collection_result"
+  },
+  {
+    "name": "extensions.list rejects unbounded page",
+    "vector": "wss-extensions.list-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/payload/limit",
+        "value": 101
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "grant.list rejects owner rebound",
+    "vector": "wss-grant.list-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/output/owner_id",
+        "value": "owner_ffffffffffffffffffffffffffffffff"
+      }
+    ],
+    "expect": "collection_result"
+  },
+  {
+    "name": "grant.list rejects query rebound",
+    "vector": "wss-grant.list-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/output/query_id",
+        "value": "query_ffffffffffffffffffffffffffffffff"
+      }
+    ],
+    "expect": "collection_result"
+  },
+  {
+    "name": "grant.list rejects unbounded page",
+    "vector": "wss-grant.list-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/payload/limit",
+        "value": 101
+      }
+    ],
+    "expect": "transport_schema"
   }
 ]

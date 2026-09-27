@@ -2,9 +2,11 @@
 
 [配置和方法登记](../../protocol.md) · [共同语义](../../README.md) · [独立完成判断投影](../README.md)
 
-本目录的 48 个 JSON 文件是有界的跨调用记录序列，覆盖全部 101 个严格登记方法。`invalid-mutations.json` 保存 305 个定向反例、来源文件、变更路径和应命中的规则；校验器逐项应用到原例副本，不修改原例。每个方法的准确输入、输出、种类及错误恢复动作见[方法登记](../../schemas/methods.json)。
+本目录的 50 个 JSON 文件是有界的跨调用记录序列，覆盖全部 104 个严格登记方法。`invalid-mutations.json` 保存 343 个定向反例、来源文件、变更路径和应命中的规则；校验器逐项应用到原例副本，不修改原例。每个方法的准确输入、输出、种类及错误恢复动作见[方法登记](../../schemas/methods.json)。
 
 夹具的 `auth` 是验收工具从认证通道取得的测试前提，不属于可由调用者选择的业务正文。`capabilities` 是预先装配的准确能力参数 Schema，`input_requests`、`approvals` 与 `confirmations` 是受信负责端的有限前提快照。它们不是可由模型提交并自证权限的线接口。ID、摘要、正文长度、proof 和内容引用均为占位数据；格式合法不证明真实内容哈希、用户批准或签名已经核验。
+
+`collection` 记录构造的集合成员、当前可披露范围与扫描位置，`activation_view` 记录客户端合并最高修订后的投影；两者都不是线字段。它们验证给定前提下的页归属、稳定遍历、缺口和迟到读合并，不证明真实权限变化或数据库快照成立。
 
 `holder_gate` 是控制查询答复归并后的持久门禁观察，只存在于验收事件；它不随 WSS／gRPC 发送。序列可记录晚到的旧查询答复，并断言本地内容控制与 copy 两种最高修订及 closed 门禁保持。open 只说明没有已知关闭事实，不代表获得使用资格。该比较不执行真实事务竞争、当前身份认证或清理操作。
 
@@ -58,6 +60,8 @@
 | [53-confirmation-release](53-confirmation-release.json) | 评测 owner 确认精确发布命令并批准 |
 | [54-confirmation-acceptance](54-confirmation-acceptance.json) | Task Home 确认精确验收命令并一次消费 |
 | [55-content-holder-control](55-content-holder-control.json) | 默认／显式 bytes、关闭后自身 control 查询、其他持有者拒绝、旧控制晚到与门禁保持、清理后核对 |
+| [56-owner-collection-pages](56-owner-collection-pages.json) | Operation／Activation／Grant 固定成员分页、当前记录、范围变化、截断／过期、查询槽回收与旧游标拒绝、Activation 高修订保持 |
+| [57-collection-authorization-reset](57-collection-authorization-reset.json) | 调用参数错误不破坏原集合；权限 A→B→A 不能复活旧游标或旧首部，新 query_id 恢复 |
 
 在仓库根目录运行：
 

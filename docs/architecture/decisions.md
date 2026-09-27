@@ -62,7 +62,7 @@ D-11 的长期决定另记于根域 ADR；实现规则集中在[共同保留语�
 | 决策 | 采用的行为及依据 | 代价与改选条件 |
 | --- | --- | --- |
 | D-14 Go 核心、端云 WSS、服务间 gRPC | 云服务、本地宿主和默认组件采用 Go；浏览器、CLI 和设备主动建立 WSS，双向承载命令、回复和推送；独立服务采用 gRPC，同进程 interface 保持共同事务 | 接入层承担连接、流控、认证续期及重连；不因使用 gRPC 就拆成九个服务。浏览器或设备传输边界确有新约束时再增加绑定 |
-| D-15 Protobuf 外壳复用严格 JSON | 101 个领域方法继续以现有 Schema 和 JCS 为权威，RPC 外壳固定在 .proto；不为同一字段维护第二套解释 | 保留 JSON 编码和运行时校验成本；只有测量证明该成本成为瓶颈，才另行定义完整 typed Protobuf 映射及兼容配置 |
+| D-15 Protobuf 外壳复用严格 JSON | 领域方法继续以现有 Schema 和 JCS 为权威，RPC 外壳固定在 .proto；不为同一字段维护第二套解释 | 保留 JSON 编码和运行时校验成本；只有测量证明该成本成为瓶颈，才另行定义完整 typed Protobuf 映射及兼容配置 |
 
 集成取舍见 [ADR-0002](../adr/0002-go-wss-grpc.md)，实现约束集中在[部署](deployment.md)、[WSS](contracts/transport.md)和[gRPC](contracts/grpc.md)。交付检查须覆盖已提交命令断线、ReplyAck 丢失、旧凭据长连接、慢端与控制竞争、服务 deadline／取消、网关排空与集中重连；连接成功不能代替业务成功。
 

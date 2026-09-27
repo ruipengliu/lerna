@@ -10596,6 +10596,294 @@
           "none"
         ]
       }
+    },
+    "execution.list": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "ExecutionListInput",
+      "output": "ExecutionListOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "cursor_expired",
+        "query_conflict"
+      ],
+      "success": "冻结本 owner 当前获准成员 ID，有界分页返回当前可披露记录；权限范围变化使原分页失效，截断明确 partial/gaps。",
+      "source": "execution/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "cursor_expired": [
+          "after_change"
+        ],
+        "query_conflict": [
+          "after_change",
+          "none"
+        ]
+      }
+    },
+    "extensions.list": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "ExtensionsListInput",
+      "output": "ExtensionsListOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "cursor_expired",
+        "query_conflict"
+      ],
+      "success": "冻结本 owner 当前获准成员 ID，有界分页返回当前可披露记录；权限范围变化使原分页失效，截断明确 partial/gaps。",
+      "source": "extensions/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "cursor_expired": [
+          "after_change"
+        ],
+        "query_conflict": [
+          "after_change",
+          "none"
+        ]
+      }
+    },
+    "grant.list": {
+      "status": "frozen-draft",
+      "kind": "query",
+      "input": "GrantListInput",
+      "output": "GrantListOutput",
+      "target": "owner_id",
+      "expected_revision": false,
+      "stages": [],
+      "errors": [
+        "invalid_argument",
+        "unsupported",
+        "unauthenticated",
+        "forbidden",
+        "confirmation_required",
+        "revision_conflict",
+        "idempotency_conflict",
+        "expired",
+        "not_found",
+        "gone",
+        "quota_exceeded",
+        "overloaded",
+        "dependency_unavailable",
+        "effect_unknown",
+        "precondition_failed",
+        "internal_error",
+        "cursor_expired",
+        "query_conflict"
+      ],
+      "success": "冻结本 owner 当前获准成员 ID，有界分页返回当前可披露记录；权限范围变化使原分页失效，截断明确 partial/gaps。",
+      "source": "security/README.md",
+      "error_recovery": {
+        "invalid_argument": [
+          "after_change"
+        ],
+        "unsupported": [
+          "after_change",
+          "none"
+        ],
+        "unauthenticated": [
+          "after_change"
+        ],
+        "forbidden": [
+          "after_change",
+          "none"
+        ],
+        "confirmation_required": [
+          "after_change"
+        ],
+        "revision_conflict": [
+          "after_change"
+        ],
+        "idempotency_conflict": [
+          "query_original"
+        ],
+        "expired": [
+          "query_original",
+          "after_change"
+        ],
+        "not_found": [
+          "query_original",
+          "none"
+        ],
+        "gone": [
+          "none"
+        ],
+        "quota_exceeded": [
+          "after_change"
+        ],
+        "overloaded": [
+          "same_command",
+          "after_change"
+        ],
+        "dependency_unavailable": [
+          "same_command",
+          "query_original",
+          "after_change"
+        ],
+        "effect_unknown": [
+          "query_original"
+        ],
+        "precondition_failed": [
+          "after_change",
+          "none"
+        ],
+        "internal_error": [
+          "query_original"
+        ],
+        "cursor_expired": [
+          "after_change"
+        ],
+        "query_conflict": [
+          "after_change",
+          "none"
+        ]
+      }
     }
   }
 }

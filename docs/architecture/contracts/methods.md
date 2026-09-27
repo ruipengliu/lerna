@@ -2,7 +2,7 @@
 
 [线格式](protocol.md) · [机器登记](schemas/methods.json) · [共享 Schema](schemas/protocol.schema.json)
 
-本表是同版登记的 101 个方法的查阅视图。输入、输出定义名指向共享 Schema 的 `$defs`，完整字段以 Schema 为准；成功含义及异常责任按所属模块定义。`条件` 表示 Command 必须携带 expected_revision，Query 不携带。全部方法属于未发布草案。
+本表是同版登记的 104 个方法的查阅视图。输入、输出定义名指向共享 Schema 的 `$defs`，完整字段以 Schema 为准；成功含义及异常责任按所属模块定义。`条件` 表示 Command 必须携带 expected_revision，Query 不携带。全部方法属于未发布草案。
 
 ## brain
 
@@ -58,6 +58,7 @@
 | `execution.control` | command | ExecutionControlInput → ExecutionControlOutput | accepted、applied、rejected |
 | `execution.control.get` | query | ExecutionControlGetInput → ExecutionControlGetOutput | QueryResult／Error |
 | `execution.get` | query | ExecutionGetInput → ExecutionGetOutput | QueryResult／Error |
+| `execution.list` | query | ExecutionListInput → ExecutionListOutput | QueryResult／Error |
 | `execution.invoke` | command | ExecutionInvokeInput → ExecutionInvokeOutput | applied、rejected |
 | `execution.reconcile` | command | ExecutionReconcileInput → ExecutionReconcileOutput | applied、rejected |
 | `resource.acquire` | command | ResourceAcquireInput → ResourceAcquireOutput | applied、rejected |
@@ -78,6 +79,7 @@
 | `extensions.dispose` | command／条件 | ExtensionsDisposeInput → ExtensionsDisposeOutput | applied、rejected |
 | `extensions.prepare` | command | ExtensionsPrepareInput → ExtensionsPrepareOutput | applied、rejected |
 | `extensions.read` | query | ExtensionsReadInput → ExtensionsReadOutput | QueryResult／Error |
+| `extensions.list` | query | ExtensionsListInput → ExtensionsListOutput | QueryResult／Error |
 
 ## interaction
 
@@ -139,6 +141,7 @@
 | `grant.lease.allocate` | command | LeaseAllocationInput → LeaseAllocationOutput | applied、rejected |
 | `grant.lease.settle` | command／条件 | LeaseSettlementInput → LeaseSettlementOutput | applied、rejected |
 | `grant.read` | query | GrantReadInput → GrantReadOutput | QueryResult／Error |
+| `grant.list` | query | GrantListInput → GrantListOutput | QueryResult／Error |
 | `grant.revoke` | command／条件 | GrantRevokeInput → GrantRevokeOutput | applied、rejected |
 | `grant.use` | command | GrantUseInput → GrantUseOutput | applied、rejected |
 | `grant.use.get` | query | GrantUseGetInput → GrantUseGetOutput | QueryResult／Error |

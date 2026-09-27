@@ -2,7 +2,7 @@
 
 [共同调用语义](README.md) · [传输配置](transport.md) · [方法查阅](methods.md) · [序列用例](examples/protocol/README.md)
 
-本页与机器资产定义未发布的 `harness/1`、`full-harness-draft-2` 配置。原有 40 个严格方法、本轮补齐的 53 个保留方法，以及为预算关闭、输入请求读取、在线费用结算与可信确认补充的 8 个交接方法，共构成 101 个领域方法；当前登记无 reserved 方法。发现、WSS 双向交接、认证证明与内容字节另由传输配置规定，服务间 RPC 另由[gRPC 绑定](grpc.md)规定，不能把领域方法数量当作完整服务互操作证据。
+本页与机器资产定义未发布的 `harness/1`、`full-harness-draft-2` 配置。当前 104 个领域方法包括预算关闭、输入读取、费用结算、可信确认，以及 Operation／Activation／Grant 集合恢复所需的三个枚举查询；当前登记无 reserved 方法。发现、WSS 双向交接、认证证明与内容字节另由传输配置规定，服务间 RPC 另由[gRPC 绑定](grpc.md)规定，不能把领域方法数量当作完整服务互操作证据。
 
 `frozen-draft` 表示当前修订具有精确输入、输出和关联用例，仍可随未发布设计统一修订。发布时须共同冻结正文、Schema、登记及用例摘要，不能以另一份变化中的正文解释已发布消息。进程内实现使用相同对象与业务语义，不要求先编码网络报文。
 
@@ -50,6 +50,57 @@ accepted必须有accepted_at，不能带decided_at或业务错误；applied必�
 
 完整回执清理后，长期关闭索引按[共同保留规则](README.md)返回gone或输入冲突，不构造新的业务rejected覆盖原applied。原方法回执查询和传输错误分别表达；取消和终态身份保持禁止重新启动。未结责任不受普通查询保留期清理。
 
+<a id="collection-snapshots"></a>
+### 按类型订阅的集合恢复
+
+订阅的范围是当前主体在原逻辑服务上、所选类型下获准披露的完整集合，不要求客户端预先知道对象 ID。服务只声明自身负责且同时实现下表枚举与准确读取的方法；不支持的类型在 subscribe 时返回 unsupported。一个 owner 的完整枚举不表示跨 owner 全局完整，客户端对每个已登记并订阅的负责端分别保存水位和缺口。
+
+| object_type | 集合查询及无筛选输入 | 单对象当前查询 | 集合的披露边界 |
+| --- | --- | --- | --- |
+| task | task.list：省略 statuses，沿 next_cursor 到末页 | task.read | 原 Home 当前获准任务，含终态；gaps 非空不能标为完整 |
+| operation | execution.list：query_id、limit、cursor? | execution.get | 原 Executor 当前获准 Operation，含已关闭及效果未知记录 |
+| memory | memory.list：types=[]、states=[]，沿 next_cursor | memory.inspect | 当前获准管理控制元数据，含 disabled／deleted；不授予正文读取资格 |
+| surface | interaction.surface_list：app_ids=[]、task_refs=[]、include_expired=true | interaction.surface_read | 当前获准 Surface，含过期项；partial、gaps 或 unreachable_endpoints 均保留缺口 |
+| activation | extensions.list：query_id、limit、cursor? | extensions.read(kind=activation) | 原安装 owner 当前获准 Activation，含 blocked／disabled；不枚举 InstallLock |
+| grant | grant.list：query_id、limit、cursor? | grant.read | 原 Grant owner 当前获准 GrantRecord，含 revoked／按时间已到期；不授予许可使用资格 |
+
+客户端先取得 Subscribed.cursor 并开始缓冲后续提示，再发起上表集合查询。领域页游标、snapshot_at 或 task.list.upper_bound 都不是订阅提示水位；尤其 created_at 上界不代表事务提交切点。客户端先合并当前集合，再处理从订阅水位起的所有提示；提示中的未知 ID 也必须按表读取，不能只刷新已知对象。各 owner 只保证自己的查询与提示覆盖，不提供跨 owner 原子快照。分页期间有缺口、权限范围改变或提示缓冲溢出时，旧集合不能被提升为完整。
+
+```mermaid
+sequenceDiagram
+    participant C as 客户端
+    participant S as 订阅入口
+    participant Q as 领域查询
+    C->>S: subscribe
+    S->>S: 固定水位 L，建立缓冲
+    S-->>C: Subscribed(L)
+    S-->>C: L 之后的 Change
+    Note over C: 分页期间持续缓冲提示
+    C->>Q: 对应类型的有界 list 分页
+    Q-->>C: 当前记录、游标与缺口
+    C->>Q: 查询提示中的对象
+    Q-->>C: 当前修订与资格结果
+    alt 完整且连续
+        C->>C: 标记该水位恢复
+    else 仍有缺口
+        C->>C: 保留缺口，有限重建
+    end
+```
+
+图中的两个入口属于原负责服务的逻辑职责，查询经既有 WSS／gRPC 传递。Change 在分页期间持续到达，图仅画出一次；查询提示中的对象时也包含客户端此前未知的 ID。
+
+execution.list、extensions.list、grant.list 复用同一个分页形状，target_id 为准确 owner_id。输入为 `{query_id,limit,cursor?}`，limit 为 1–100；输出为 `{query_id,owner_id,snapshot_at,expires_at,items,next_cursor?,exhausted,partial,gaps}`，items 分别是完整 Operation、Activation、GrantRecord。获准枚举与相应单对象查询使用同一当前披露策略，不能因列表入口降低敏感字段权限。
+
+这三个查询在首次接纳时，以 owner 本地一致读取固定当前获准成员 ID，按 ID 字典序保存有限集合；冻结的是成员，不是记录修订。后续页返回成员的当前记录，修订升高不使其自动缺失。服务以认证的 tenant、actor、业务 sender（存在时）、owner、method、query_id、原 limit 和当前权限范围绑定查询；代理网关身份不替代业务 sender。同 query_id 原样重读首部复用原集合与期限；条件或权限范围改变返回 query_conflict，调用方先废弃旧分页再以新 query_id 枚举。游标是不可伪造的不透明集合／位置引用，跨身份、owner、方法或查询移用也拒绝，正文中的 ID 不能选择认证范围。
+
+每页至少扫描一个未遍历位置，或以 exhausted=true 结束；单页最多扫描 1000 个位置并最多返回 limit 项，响应字节接近帧上限时提前切页，不能越过尚未返回的获准成员；单条记录仍过大则返回 quota_exceeded。空页可以带 next_cursor。next_cursor 缺席当且仅当 exhausted=true。每次发送前重新检查当前披露资格；成员已不可读或权威来源不可用时不输出其 ID，返回不含敏感标识的 gap。权限范围增减会使原集合在其剩余保留期内持续失效，后来恢复同一权限范围也不能复活旧分页；调用者单纯改错 limit 只拒绝该请求，不使原集合失效。不能仅跳过撤权项后继续声称覆盖当前集合；新可见的历史对象也要求新集合。范围未变而记录更新时直接返回当前记录。这三个输出的 gaps 只允许固定原因码 membership_limit／member_unavailable／source_unavailable，禁止自由文本与对象 ID。partial 必须与非空 gaps 同时出现；exhausted 仅表示冻结集合遍历结束。
+
+初始上限为每集合 10000 个 ID 或 1 MiB 成员元数据先到者、10 分钟不可续期、每 tenant／actor／业务 sender／owner 合计 4 个活动集合；查询槽与集合保存于 owner 的共享存储，副本切换不依赖原进程内存。容量截断返回 partial=true、gaps 包含 membership_limit，后续页保持该标志；携带 cursor 的请求在集合到期或已清理时返回 cursor_expired。到期集合及查询槽按有界清理回收，不为只读 query_id 建永久墓碑。cursor 必须绑定内部随机集合身份及不可延长的到期信息，旧 cursor 即使碰到同 query_id 的新集合也不能续接。服务仍保留旧集合时到期请求返回 cursor_expired；旧状态已回收后，不带 cursor 的请求可建立新集合并给出新的 snapshot_at／expires_at，带旧 cursor 仍拒绝。客户端重建时使用新 query_id；收到同 query_id 但快照时间对改变的首部必须整体替换，不能接在旧分页后。每页有独立扫描／返回预算，同一主体不断更换 query_id 不重置累计预算。这里不保留跨请求数据库事务或长期 MVCC 快照；集合自身不是业务事实或新领域目录。Memory、Surface 原有更小的集合上限继续生效。
+
+客户端只有在所有目标类型／owner 的枚举均已到末页、没有 partial／gaps／不可达端且从起始水位至处理位置的提示连续时，才可标记“在该水位已完整恢复”，不能称为不再变化的全局快照。恢复每轮最多 100 页、10000 项、60 秒；任一上限先到即保留明确缺口。暂时失联、游标失效或权限改变最多自动重新开始 2 轮，带抖动退避并共用原恢复预算；仍不足则展示来源与类型级缺口，保留已知对象的受权查询，并等待新权限／容量事实、用户刷新或正常周期校准。固定容量截断不立即重跑相同全量查询，不以不断重订阅制造快照风暴。
+
+Activation.revision 是可见持久投影的独立修订；phase、ready_instance、instance_readiness、new_use_disabled 或 residual_work 等任何可见变化都在同事务递增它并写变化责任。last_observed_at 仅在真实观察被持久保存时更新，普通读取不制造新修订。generation 仍只表示活动绑定代际。extensions.read、extensions.list 与 Change.revision 对应同一个 revision；QueryResult.resource_revision 若出现也必须一致。客户端对所有带修订投影按对象保留最高值，迟到旧记录不能覆盖较新事实，同修订不同内容视为协议冲突并重新核对；提示只推进“需查询”的最高水位，不能代替尚未取得的记录。旧查询到达且低于待查询水位时继续读取；权限失效或移除以当前查询结果及缺口处理，不由修订高低重新授予展示资格。
+
 ## 3. 领域关联及正文类型
 
 | 领域 | 必须保持的关系 | 完整机制 |
@@ -78,15 +129,15 @@ Invoke.arguments和行动模板最终参数仍按准确Capability版本、摘要
 | [brain](../brain/README.md) | 3 | 请求、输出、阶段、错误与原身份关联见方法登记 |
 | [collaboration](../collaboration/README.md) | 5 | 请求、输出、阶段、错误与原身份关联见方法登记 |
 | [evaluation](../evaluation/README.md) | 13 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [execution](../execution/README.md) | 14 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [extensions](../extensions/README.md) | 5 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [interaction](../interaction/README.md) | 9 | 请求、输出、阶段、错误与原身份关联见方法登记 |
+| [execution](../execution/README.md) | 15 | 请求、输出、阶段、错误与原身份关联见方法登记 |
+| [extensions](../extensions/README.md) | 6 | 请求、输出、阶段、错误与原身份关联见方法登记 |
+| [interaction](../interaction/README.md) | 10 | 请求、输出、阶段、错误与原身份关联见方法登记 |
 | [memory](../memory/README.md) | 18 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [security](../security/README.md) | 12 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [task-runtime](../task-runtime/README.md) | 14 | 请求、输出、阶段、错误与原身份关联见方法登记 |
+| [security](../security/README.md) | 18 | 请求、输出、阶段、错误与原身份关联见方法登记 |
+| [task-runtime](../task-runtime/README.md) | 16 | 请求、输出、阶段、错误与原身份关联见方法登记 |
 
 ## 5. 从静态资产取得什么证据
 
 正常序列保存调用方可观察的原回执、查询结果和权威前提。反例通过具体JSON路径改变身份、版本、数量、资格或阶段，每项必须命中它声称破坏的规则；仅因无关格式错误拒绝不算该语义被验证。校验器保留原40方法的回归，不以新增覆盖掩盖已有行为退化。
 
-运行符合还须启动两个独立实现，从接纳入口产生调用，在提交前、提交后回复前、对方确认后本方记账前三处注入故障，并查验双方业务记录及目标真值。签名向量通过不证明认证系统可用；全部 101 个方法的构造序列通过也不证明事务、权限或容量成立。可复现命令与最新计数见[交付审查](../review.md)。
+运行符合还须启动两个独立实现，从接纳入口产生调用，在提交前、提交后回复前、对方确认后本方记账前三处注入故障，并查验双方业务记录及目标真值。签名向量通过不证明认证系统可用；全部 104 个方法的构造序列通过也不证明事务、权限或容量成立。可复现命令与最新计数见[交付审查](../review.md)。

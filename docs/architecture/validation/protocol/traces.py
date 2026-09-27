@@ -196,4 +196,6 @@ def check_trace(trace):
         errors += runtime_trace(trace)
         errors += governance_trace(trace)
         errors += content_trace(trace)
+        from .collection_rules import check_trace_rules as collection_trace
+        errors += collection_trace(trace)
     return errors

@@ -148,7 +148,7 @@ Home 根据当前认证端点和实例将 DeliveryEnvelope 放入 `delivery` 帧
 
 ## 5. 大内容的临时字节与正式引用
 
-上传／镜像管理复用 WSS request／response 与 gRPC Call，五个严格的传输管理 kind 不增加领域方法登记中的 101 个方法。本机共同事务可直接调用 Go 接口；HTTPS 只接收或返回原始字节。管理入口的 tenant、主体和范围来自当前认证，正文中的 upload_id／ticket_id 只定位原记录，不提供访问权。
+上传／镜像管理复用 WSS request／response 与 gRPC Call，五个严格的传输管理 kind 不增加领域方法。本机共同事务可直接调用 Go 接口；HTTPS 只接收或返回原始字节。管理入口的 tenant、主体和范围来自当前认证，正文中的 upload_id／ticket_id 只定位原记录，不提供访问权。
 
 JSON 命令上限不能容纳任意截图或文件。基础配置采用可幂等整份重传的临时上传；分块恢复是后续可选能力，默认不引入多段提交协议。上传空间按用户预留，超额或摘要不符明确拒绝，不将部分字节交给业务读取。
 
@@ -200,15 +200,17 @@ owner 丢失控制答复时重投绑定原 ticket_id 的同一 MirrorControl，�
 
 ## 6. 变化订阅、快照与错误
 
-端通过 kind=subscribe 的 request 提交 `SubscribeInput={object_types,cursor?}`，object_types 为 task／operation／memory／surface／activation／grant 的非空去重集合。服务按当前权限过滤这些类型下可披露的对象，返回 `Subscribed={subscription_id,cursor,snapshot_required}`。每个连接最多保留 limits 声明数量的订阅；同过滤集合重新订阅会替换旧订阅并返回新 subscription_id，断线释放订阅。cursor 是该主体、原逻辑服务及准确过滤集合下的提示位置，不能跨主体或过滤条件移用。
+端通过 kind=subscribe 的 request 提交 `SubscribeInput={object_types,cursor?}`，object_types 为 task／operation／memory／surface／activation／grant 的非空去重集合。类型的集合范围及对应枚举／单对象读取入口见[集合恢复](protocol.md#collection-snapshots)。服务按当前权限过滤这些类型下可披露的对象，返回 `Subscribed={subscription_id,cursor,snapshot_required}`。每个连接最多保留 limits 声明数量的订阅；同过滤集合重新订阅会替换旧订阅并返回新 subscription_id，断线释放订阅。cursor 是该主体、原逻辑服务及准确过滤集合下的提示位置，不能跨主体或过滤条件移用。
 
-首次订阅或原游标超保留窗口时，Subscribed.snapshot_required=true：服务先建立新水位之后的提示缓冲，再答复水位；客户端读取领域完整快照，同时有界缓冲已收到的提示，随后根据变化重新查询当前对象；客户端缓冲溢出时断开并重新建立快照。Subscribed 的标志只要求重取快照，不暂停新订阅的 Change。快照查询期间重复提示可按修订合并，不能因快照与订阅先后留下遗漏。有效 cursor 恢复时返回 snapshot_required=false，并发送该位置之后仍可披露的提示。每条 `change.change` 仅含 `cursor,object_type,object_id,revision`，不带敏感正文，不证明用户已看到页面、输入已消费或效果已发生。
+首次订阅或原游标超保留窗口时，Subscribed.snapshot_required=true：服务先建立新水位之后的提示缓冲，再答复水位；客户端按[六类型映射](protocol.md#collection-snapshots)逐页枚举当前获准集合，同时有界缓冲已收到的提示，随后根据变化重新查询当前对象；客户端缓冲溢出时断开并按有界恢复预算重新建立快照。Subscribed 的标志只要求重取快照，不暂停新订阅的 Change。快照查询期间重复提示可按修订合并，不能因快照与订阅先后留下遗漏。有效 cursor 恢复时返回 snapshot_required=false，并发送该位置之后仍可披露的提示。每条 `change.change` 仅含 `cursor,object_type,object_id,revision`，不带敏感正文，不证明用户已看到页面、输入已消费或效果已发生。
 
 已建立的订阅遇到保留缺口或无法保留提示的队列溢出，服务发送 `snapshot_required` 帧，reason 分别为 cursor_expired／queue_overflow，并暂停该订阅的 Change；无法排入该控制帧则关闭连接。客户端放弃旧连续性假设，以同过滤集合、不带 cursor 的 subscribe 替换订阅，再按新水位取得快照。纯同对象修订合并不丢失查询义务；任何不能保证覆盖的跳跃均走明确缺口。客户端忽略已替换 subscription_id 的迟到通知，周期查询及恢复扫描修补通知之外的遗漏；领域 memory.view.pull 的连续分页规则保持独立。
 
 内部流重绑默认不承诺接续原通知窗口。网关隔离旧绑定后，向客户端仍认识的每个 subscription_id 发送 reason=backend_rebind 的 snapshot_required，并暂停该旧订阅；新内部 Ready 不转发为第二个外 Ready。客户端按同过滤集合、不带 cursor 重新订阅并取得快照，期间重复提示按修订查询当前事实。网关不能把新实例的任意游标当作旧连续游标；通知恢复和业务结果查询分别限额。
 
-权限撤回后，服务立即停止披露敏感对象标识，缓存提示和回复每次实际发送前复核资格。连接身份失效则关闭；仅对象权限减少时重新按当前范围查询并撤去不可继续展示的内容，不能凭历史订阅继续读旧快照。通知丢失可恢复查询，服务端推送的控制命令仍须经原 Delivery／Receipt 持久链路，不能降成可丢 Change。
+权限范围增减均发送 reason=authorization_changed 的 snapshot_required 并暂停旧订阅；帧只标订阅，不泄露被移除对象 ID。新增可见的历史对象即使没有业务修订变化，也必须通过新枚举发现。当前资格适配器在授权变更后使受影响订阅失效；跨 owner 变更通知不能证明连续时，订阅器至少每 30 秒通过当前资格适配器校准范围，无法证明范围未变则保守置缺口、停披露并按有界预算恢复。该周期只用于发现范围变化，每条消息和实际发送前仍须当前资格检查。连接身份失效则关闭；客户端收到权限缺口即废弃完整性标记与旧分页，撤去未经当前复核的缓存，再不带 cursor 重订阅。不同身份不能续用原 cursor。
+
+集合恢复明确保留 partial、gaps、不可达端及容量截断，不把 Surface 的 200 项冻结集合或 Memory 的有限集合当作无限目录；固定截断不触发同样全量查询的立即循环。领域页游标和订阅水位独立，任务创建时间上界也不等于提示切点；客户端需先订阅、后枚举，再读取水位之后的未知及已知对象提示。具体预算、完整条件和有限重试见[集合恢复](protocol.md#collection-snapshots)。通知丢失可恢复查询，服务端推送的控制命令仍须经原 Delivery／Receipt 持久链路，不能降成可丢 Change。
 
 | 情况 | 线返回 | 调用方动作 |
 | --- | --- | --- |

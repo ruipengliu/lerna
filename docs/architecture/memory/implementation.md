@@ -120,12 +120,14 @@ Memory owner 和内容 owner 可分别部署；跨库除准确引用校验外，
 | memory_revisions | memory_id、revision 唯一；正文、来源、范围不可就地改变 | 按历史证据许可清理正文 |
 | source_edges | derived_ref、source_ref 唯一；提交前验证无环 | 仍有受管派生物时保留必要关系 |
 | policies | policy_id、revision 唯一；完整不可变策略 | 使用和关闭核验依据 |
-| index_checkpoint | owner、索引版本唯一；covered_revision 单调 | 不超过已成功应用的变更 |
+| memory_change_heads | owner 唯一；last_sequence 初值 0，事务内递增 | 该 owner 已提交变化的连续末端 |
+| index_checkpoint | owner、索引版本唯一；covered_sequence 单调 | 同一 change_sequence 中已连续应用的末端 |
 | memory_changes | owner、change_sequence 唯一；修改与变化项同事务 | 视图及索引最慢必要水位 |
 | query_sets | query_id 唯一；绑定主体、接收方、摘要、期限与有限有序集合 | 初值 5 分钟，到期不可续旧游标 |
 | extraction_jobs | extraction_id 唯一；输入摘要及 Home 任务不可改绑 | 原任务及输入检查点 |
 | extraction_candidates | candidate_id 唯一；原提取任务、版本及发布决定固定 | 确认、拒绝或清理责任 |
 | views | view_id 唯一；范围、接收方、快照切点及 ACK 水位 | 未确认页和关闭范围 |
+| view_snapshot_items | view_id、位置唯一；固定 memory_id／revision 和必要投影引用 | 有界初始集合；不延长正文或授权期限 |
 | content_objects | owner、content_id、version 唯一；hash 与长度固定 | 按策略管理字节 |
 | content_controls | 精确内容版本主键；control_revision 单调 | 关闭依据先于恢复开放 |
 | content_copies | copy_id 唯一；内容、持有者、用途、保留期限固定 | 到逐副本停止及物理清理确认 |
@@ -133,7 +135,7 @@ Memory owner 和内容 owner 可分别部署；跨库除准确引用校验外，
 | content_closures | 对象身份、关闭修订、必要关联及决定摘要 | 长期最小关闭索引 |
 | reference_intents | 原 Memory 命令、准确来源集合、固定 copy／登记命令身份及阶段 | 跨库登记与本地发布的恢复责任；取消或失败也须清理原登记 |
 | held_copy_gates | 原 owner、copy_id 唯一；准确引用、最高 control_revision、最高 copy.revision、use_stopped 及本地 open／closed 门禁 | 两种修订独立单调；原内容 closed 或 copy 已停止均闭门，发布与关闭共用行锁，迟到答复不能重新开放 |
-| copy_control_jobs | 原 owner、copy_id 的唯一活动责任槽、due_at 及领取代次 | 登记前与 reference_intent 共同保存；持有期查询当前控制，直至停止且 physical_state=complete 的报告获原 owner 接纳；残留保留有界核对责任 |
+| copy_control_jobs | 原 owner、copy_id 的唯一责任槽、due_at、领取代次及 work_revision | 登记前与 reference_intent 共同保存；持有期查询当前控制，直至停止且 physical_state=complete 的报告获原 owner 接纳；残留保留有界核对责任 |
 
 长期关闭索引不包含正文、完整参数、凭据或可重构敏感资料的解释文本。
 它用于拒绝迟到原身份、阻止旧备份复活、区分已关闭与从未存在。
@@ -237,17 +239,38 @@ sequenceDiagram
 
 持有者在原 owner 的认证查询答复上核对准确引用与 copy_id，再将门禁和清理责任共同保存。普通 copy 使用上述查询；已有镜像还可接收绑定 ticket 的 MirrorControl，两条路径共用本地最高控制修订。控制查询的最小投影不含正文、下载定位或新的授权依据，不能据此发布或保存记忆。跨库装配须提供原登记回执查询和持久校准槽；缺席时拒绝跨库发布，使用默认共提交域。
 
-### 2.3 记忆写事务
+<a id="memory-change-head"></a>
+### 2.3 记忆写事务与提交水位
+
+每个租户内的 Memory owner 用一行 `memory_change_heads` 串行分配 change_sequence；它只排序该 `(tenant_id, owner)` 的 Memory 变化，不是跨 owner、Task 或传输订阅的全局序号。单条记忆的 revision 仍表示自身版本，与此序列分开。
+
+```mermaid
+flowchart LR
+    L[锁 owner 事务头] --> W[写业务与变化项]
+    W --> C{事务结果}
+    C -->|提交| H[头与变化同时可见]
+    C -->|回滚| R[头与取号一并回滚]
+    H --> I[索引覆盖点 I]
+    H --> V[视图快照点 S]
+```
+
+图中的头、业务和变化项在同一短事务保存。持锁事务从 last_sequence 后分配恰好所需的有限连续区间，追加变化项并把头更新到区间末端；不预留跨事务号段，无变化则不取号。后一写者必须等前者提交或回滚才能分配，因此不会先提交 102、再补交 101；崩溃／回滚不会留下需要消费者永久等待的空洞。不可用 PostgreSQL sequence、时间戳或变化表的最大值代替此头；sequence 的取号不随事务回滚撤销。[PostgreSQL sequence](https://www.postgresql.org/docs/18/functions-sequence.html)
+
+共同事务沿[公共锁序](../task-runtime/implementation.md#21-锁定顺序)先锁原命令及适用的任务／预算／操作，进入 Memory 后依次锁 owner 头、内容／copy 门禁、候选及记忆业务行，最后工作槽；各类内按稳定键排序。所有会改变 Memory 权威记录或视图投影的 create、replace、restrict、delete、关闭归并和派生状态更新，都通过这条路径追加变化。只改 Content 控制而不改 Memory 的事务可不取头，但持有内容门禁后不得再反向加入 Memory 写入；应保存原后续责任。
+
+视图登记和变化日志回收也先锁同一头，再锁视图／检查点，使新视图需要的增量区间不会在登记提交前被回收。回收采用短 `READ COMMITTED` 事务，取头锁后用新语句读取当前保留水位，不能沿用等待锁之前的旧快照漏掉新登记视图。清理已无必要保留的变化项不回退头，也不从残存日志的最大值重建头。
 
 1. 查询原命令与关闭索引，已决定的原命令返回固定回执。
 2. 取得管理或保存用途依据，核对正文准确版本与当前来源限制；跨库先完成上述持久 copy 登记。
-3. create 检查原命令唯一约束；replace/restrict/delete 比较 expected_revision。
-4. 在同一事务核验本地内容／copy 门禁，登记业务引用和来源边，更新当前修订、保存完整新记录或最小墓碑、原回执、变化项及 jobs。
+3. 开始短事务，按上述顺序取得原命令、头与所需业务锁；create 检查原命令唯一约束，replace/restrict/delete 比较 expected_revision。
+4. 核验本地内容／copy 门禁，登记业务引用和来源边，更新当前修订；完整新记录或最小墓碑、原回执、按头分配的变化项、头及 jobs 一并提交。
 5. 提交后响应；索引、派生审查及副本关闭不作为事务内外部调用。
 
 replace 的旧修订退出查询，依赖旧结论的派生记忆进入 needs_review。
 restrict 只能收紧接收方、位置、用途、保留期和范围；策略子集由 owner 校验，不靠 Schema 格式推断。
 冲突不自动修改 expected_revision；调用方读取当前状态后重新决定。
+
+该选择让一个 owner 的短写事务和初始视图登记承担头锁等待，owner 之间仍可并行；网络、正文读取和索引构建不占头锁。先测每 owner 的提交量、头锁等待、视图枚举时长和 WAL 放大。只有这个串行点成为实测瓶颈时，再评估独立的已提交变化发布流程，并重新证明未发布变化的补扫和视图切点；当前不增加第二套发布进度。
 
 <a id="key-sequence"></a>
 ### 2.4 候选唯一发布、索引推进与丢答复恢复
@@ -269,8 +292,8 @@ sequenceDiagram
     W->>G: 事务外取得原保存用途使用
     G-->>W: 有效原使用回执
     rect rgb(236, 243, 250)
-      W->>S: 事务 A：锁引用门禁，查原命令、候选及使用窗口
-      W->>S: 创建引用、来源边、MemoryRevision、回执和索引 job
+      W->>S: 事务 A：原命令、owner 头、门禁与业务锁
+      W->>S: 保存发布、变化项、头、回执与索引 job
       S-->>W: 一并提交；并发新命令只能读到已发布决定
     end
     W--xU: 发布成功但答复丢失
@@ -281,8 +304,8 @@ sequenceDiagram
     I->>S: 领取原索引 job，读取连续变更范围
     I->>I: 在事务外按准确修订更新派生索引
     rect rgb(236, 243, 250)
-      I->>S: 事务 B：核对代次与连续覆盖，前移 checkpoint
-      S-->>I: 原工作完成
+      I->>S: 事务 B：核对领取、责任版本与连续覆盖
+      S-->>I: 前移 checkpoint；完成或保留后续工作
     end
 ```
 
@@ -318,12 +341,16 @@ QueryService 先规范化认证用户、owner、purpose、recipient、类型和�
 取得候选后，按准确来源申请结果披露使用依据；拒绝项不出现在结果中。
 once 只用于来源和输出范围可预先固定的精确 read，不用于未知集合搜索。
 
+<a id="index-watermarks"></a>
 ### 3.3 索引追赶
 
 索引工作在事务外构建候选索引段，再在短事务确认对应变更范围全部应用。
-checkpoint 只前移到已连续覆盖的最后修订；中间失败不能跳过。
-查询读取当前权威切点 R 和索引覆盖切点 I，在索引候选之外补扫 (I,R] 的获准变化。
+权威切点 R 是该 owner 事务头的 last_sequence，索引切点 I 是 covered_sequence；二者使用同一 change_sequence，不能拿某条 Memory 的 revision 与它比较。checkpoint 只前移到连续成功应用的末端，满足 `I ≤ R`；中间失败不能跳过，日志清理不得越过仍需要的索引区间。
+查询在同一个有界数据库快照中读取 R、I 及该区间的权威候选，在索引候选之外补扫 `(I,R]` 的获准变化；快照提交后仍须执行当前来源与披露检查。生产使用短 `REPEATABLE READ` 事务固定这些读取，不跨客户端请求保持事务；序列化失败重新执行整个本地事务，不重复外部动作。[PostgreSQL 事务隔离](https://www.postgresql.org/docs/18/transaction-iso.html#XACT-REPEATABLE-READ)
+默认词法索引复用权威数据分区，索引候选、I 与补扫使用同一数据库快照。若以后替换为库外索引，须固定与 I 对应的不可变索引版本／段清单，并保留到本次查询结束，或提供等价的快照读取；缺席时只能返回有缺口的降级结果，不能把旧 I 与已原地变化的索引拼成完整结果。
 修改和删除使用最新权威状态去重；旧索引命中不能恢复旧正文。
+
+索引 job 完成或退避也使用[责任版本规则](../task-runtime/implementation.md#job-completion)：已构建范围的 checkpoint 可以单调前移，处理期间新增的变化仍保留原槽后续责任，不能随旧批次完成而消失。Memory 的关闭、清理和 copy 校准槽采用相同规则。
 
 补扫命中上限时返回 partial 和缺口，不能假装新写记录已完整可检索。
 索引损坏时关闭该索引并执行有界权威扫描；仍不足则 partial，不取消扫描上限。
@@ -405,7 +432,7 @@ create 事务同时写正式记忆、candidate.saved、实际 memory_id/revision
 ### 5.1 小元数据与大字节分开
 
 上传与镜像的管理请求使用下表五种传输管理 kind：端侧通过 WSS request，独立服务之间通过 gRPC Call。
-它们属于传输配置，不增加 101 个领域方法，也不替代 `content.put`、`content.close` 等领域决定；精确字段、认证和恢复规则见[公共传输契约](../contracts/transport.md)。
+它们属于传输配置，不增加领域方法，也不替代 `content.put`、`content.close` 等领域决定；精确字段、认证和恢复规则见[公共传输契约](../contracts/transport.md)。
 
 | 传输管理 kind | 输入 → 输出 | 职责 |
 | --- | --- | --- |
@@ -522,10 +549,11 @@ ticket 到期后拒绝新上传；若字节仍需重传，新 ticket 必须重�
 
 ### 5.3 视图快照及增量
 
-view.open 保存过滤、投影、接收方、用途、有效期及初始快照切点。
+view.open 先取得当前用途依据，再在一个有界 `REPEATABLE READ` 事务中按原命令、owner 头、视图的锁序，读取头的 S 和相同数据库快照下的对象集合，保存过滤、投影、接收方、用途、有效期、S 及固定的 memory_id／revision 列表后提交。头只被锁定，不因建立视图而递增；序列化失败沿原命令重试整个本地事务。不可先读 S、提交后再用不断变化的普通分页拼初始集合，也不可先枚举集合再读取另一个时刻的头。
 filter 仅由 types 和 Scope 组成；projection 为 metadata 或 content_refs，不接受代码。
-快照页先枚举有限对象集合，完成后沿 change_sequence 拉取连续变化。
+快照总对象数、元数据字节和枚举时长均受配额约束；超过上限返回 quota_exceeded，不留下成功视图或靠长事务等待接收端。后续快照页沿已保存集合分页，完成后只读取 change_sequence 大于 S 的连续变化。与 view.open 并发的写入，要么已经包含在 S 对应的集合中，要么提交为 S 之后的变化；不会落在两段之间。
 修改导致对象退出过滤时发送 tombstone；新对象进入过滤时发送当前获准 upsert。
+每次发页仍核对当前授权、来源关闭和准确版本是否可取得；固定集合不延长正文保留或使用资格。已关闭／退出的项按既有墓碑规则处理；缺少必要历史或连续变化时报告缺口并要求 resnapshot_required，不能披露旧授权快照，也不能把缺项静默算作已应用。原视图清理责任继续保留。
 view.pull 每次返回固定 page_id、起止游标、有限变更和阶段。
 view.pull 是领域分页读取，继续经共同 WSS／gRPC 调用；它与设备传输层的投递机制无关，不要求为了等待请求而反复取件。
 
@@ -560,13 +588,14 @@ owner 保留未确认页；重复 pull/ack 不产生重复应用。
 分区、保护水位与故障剩余容量遵循[公共容量策略](../deployment-production.md#capacity)。
 云端按 tenant 和稳定 Memory／内容 owner 路由至权威数据库分区；各 facade 和后台 worker 可横向增加。
 同一 owner 的写入仍由原数据库裁决。个人设备 owner 保留本地事实，云端镜像不会成为它的故障接管主库。
-默认 Memory／Content 元数据共提交域，上传和镜像字节跨实例共享；业务与清理 jobs、对象存储、索引和数据库维护按[存储与中间件基线](../storage-and-middleware.md)实施。NOTIFY 丢失只增加扫描等待，不丢失关闭责任。
+默认 Memory／Content 元数据共提交域，上传和镜像字节跨实例共享；业务与清理 jobs、对象存储、索引和数据库维护按[存储与中间件基线](../storage-and-middleware.md)实施。NOTIFY 丢失只增加扫描等待，不丢失关闭责任；同槽更新与完成的竞争按责任版本裁决。
 
 | 可并行单位 | 必须串行或条件更新的键 | 扩展边界 |
 | --- | --- | --- |
-| 不同记忆、不同提取任务 | memory_id 修订；candidate_id 唯一发布；原 command_id | 同候选两个确认不能各建一条记忆；单租户洪峰不能占满其他租户写入份额 |
+| 不同记忆的准备及不同提取任务 | memory_id 修订；candidate_id 唯一发布；原 command_id | 准备可并行，同 owner 的最终写事务还须取头锁；同候选两个确认不能各建一条记忆 |
 | 查询集合与读取工作 | query_id 绑定、有限集合和游标校验 | 页结果可并发计算，但每次按当前资格复核；游标位置不以缓存是否命中决定 |
-| 索引段构建 | owner 的连续变更切点与 index_checkpoint | 段可并行构建，只有连续已应用范围可前移覆盖水位；不得越过失败变更 |
+| Memory 写入及视图登记 | 每 owner 的事务头与固定业务锁序 | 有限短事务串行；记录头锁等待，视图枚举受总量和时长限制 |
+| 索引段构建 | owner 事务头的 R 与 index_checkpoint 的 I | 段可并行构建，只有同一 change_sequence 中连续已应用范围可前移覆盖水位；不得越过失败变更 |
 | 视图发送与持有者清理 | view_id 的连续 ACK；原 copy_id、关闭修订 | 不同持有者可并行；单个 ACK 不能越页，同 copy 的旧观察不能覆盖更高关闭修订 |
 | 正文上传及镜像字节 | content_id/version 不可变；ticket_id 状态和空间预留 | 字节流可拆为独立工作进程；同 ticket 只有一份有效提交，配额先预留再接收 |
 
@@ -624,6 +653,9 @@ query_sets 到期、无引用暂存与已满足责任的变化日志可以回收
 | MI-20 字节接收实例退出 | 共享对象完整写入后、ready 元数据答复前结束实例 | 新实例核对原 upload／ticket 和准确对象版本后继续；不依赖旧临时盘，不发布另一版本 |
 | MI-21 普通 copy 控制恢复 | 关闭正文读取授权后重启 holder，通知全丢；查询自身与其他 holder 的 copy | 自身原控制可查且无下载定位；他人 copy 拒绝；查询失败保持 blocked，不能推断 closed |
 | MI-22 停止与物理清理分离 | 已关新入口但旧有限处理未结，随后 release 报 residual | 不提前报告 use_stopped；原 owner 保存 residual 并保留责任，不因 release.applied 宣称擦除完成 |
+| MI-23 提交乱序与回滚 | T1 持头并写变化，T2 尝试写入；分别让 T1 提交、回滚及崩溃 | T2 只能随后分配；头和变化共提交，无迟到低序号或回滚空洞；查询补扫、视图增量均不漏项 |
+| MI-24 快照接增量 | view.open 读取头与集合时并发 create／replace／delete，分别在其提交前后完成；页间撤权或清理正文 | 每项变化属于 S 的固定集合或 S 后增量；当前资格下降不披露旧内容，必要历史缺失明确重建；不跨页保留数据库事务 |
+| MI-25 索引槽新增责任 | 构建批次等待时提交新 Memory 变化，旧批次随后成功或退避 | I 仅覆盖已应用范围，新责任保持 ready／更早 due_at，`(I,R]` 补扫仍包含新变化 |
 
 协议序列验证只检查给定字段与关联；运行实验必须记录真实数据库竞争、字节持有及隔离出口。
 长期关闭索引的增长、清理积压与备份恢复时间纳入容量实验，不能靠删除索引提升表面吞吐。

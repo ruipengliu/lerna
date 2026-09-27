@@ -75,6 +75,8 @@ flowchart TB
 资源规范化失败、确认失效、当前身份不匹配都在写事务前或事务内拒绝，不能降级为任意资源范围。
 实际启动依然在资源端核验当前门禁，授权账本不记录伪造的外部效果。
 
+grant.list 由现有查询入口读取本 owner 的 GrantRecord 仓储，复用 grant.read 的当前披露策略。共享存储中的有限 collection_queries 保存认证范围、query_id、原参数、按 ID 排序的成员、期限与位置；页读取不固定旧记录修订，也不跨请求持有事务。查询槽、扫描上限、权限变化失效、partial 与提示合并统一按[集合恢复契约](../contracts/protocol.md#collection-snapshots)实现；此表仅为临时查询状态，不增加全局目录或业务 owner。
+
 ## 2. 本地身份与远端身份
 
 本地首次启动先取得独占宿主资格，再创建随机本地 tenant 和用户 actor。

@@ -276,7 +276,7 @@ LifecycleManager 组织准备、切换、停用和恢复，PackageVerifier／Art
 | Activation — InstanceReadiness | 1 | 0..1 | 仅当前查询投影；`phase=active` 必须有本实例 ready，不限制历史实例检查数量。 |
 | InstallLock — LockReference | 1 | 0..* | `(lock_id, owner_kind, owner_id)` 唯一；引用不产生销毁级联。 |
 
-正常切换完成排空、批准核验、装载及自检，并满足本实例真实入口条件后才为 active。Activation 保存原切换与历史启动依据，ActiveBinding 保存当前指针。指针提交后崩溃，按原锁与代际恢复并取得新实例 reopen 依据，不再次迁移或推进 generation。
+正常切换完成排空、批准核验、装载及自检，并满足本实例真实入口条件后才为 active。Activation 保存原切换与历史启动依据，ActiveBinding 保存当前指针。指针提交后崩溃，按原锁与代际恢复并取得新实例 reopen 依据，不再次迁移或推进 generation。Activation 的 revision 随持久可见投影变化递增，供列表、读取与通知合并；它与图中活动 generation 分开，不能用代际未变推导实例就绪状态未变。图册仍只列关键属性，完整字段见共享 Schema。
 
 批准与启动共库时共同裁决；远端使用有限依据，离线租约仅在明确获准时适用。获知撤回，或当前检查不可用且没有仍有效的有限启动／离线续用依据时，关闭相应新使用；原责任核对继续；远端新实例不能沿用旧实例 ApprovalUse 或租约。历史激活与效果继续保留。
 
