@@ -2,7 +2,7 @@
 
 [生产拓扑与恢复目标](deployment-production.md) · [任务事务](orchestrator/implementation.md) · [内容与清理](memory/implementation.md#reference-gate) · [执行入口](execution/implementation.md#entrance-recovery)
 
-生产默认采用托管 PostgreSQL 18、跨可用区对象存储和平台已有的连接池、容器、负载均衡、DNS、密钥及监控能力；供应商可替换。单地域三个可用区、单可用区故障下已确认账本 RPO=0、控制与查询 RTO≤60 秒是待运行验收的目标，完整故障前提归[生产部署](deployment-production.md#availability)。完整单体仅用于开发调试；适用端侧组件也可使用本机 SQLite，其恢复边界与云端生产容灾分别验收。
+生产接入公司自有平台，采用托管 PostgreSQL 18、跨可用区对象存储和平台已有的连接池、容器、负载均衡、DNS、密钥及监控能力；供应商可替换。开发使用 SQLite 单体和本机 PostgreSQL 多进程集成，生产的跨区存储与设施不作为本机开发前置依赖。单地域三个可用区、单可用区故障下已确认账本 RPO=0、控制与查询 RTO≤60 秒是待运行验收的目标，完整故障前提归[生产部署](deployment-production.md#availability)。完整单体仅用于开发调试；适用端侧组件也可使用本机 SQLite，其恢复边界与云端生产容灾分别验收。
 
 <a id="data-placement"></a>
 ## 1. 权威记录与物理位置
@@ -93,7 +93,7 @@ flowchart LR
     M[管理与恢复保留连接] --> D
 ```
 
-先复用托管连接池；若不支持所需事务行为或无法满足故障容量，再部署跨可用区的 PgBouncer 事务池副本。连接池不选举数据库主，只连接平台已确认的写主；实例增加前核算所有池、监听和管理连接的总和。
+生产先复用公司平台的托管连接池；若不支持所需事务行为或无法满足故障容量，再由平台装配跨可用区的 PgBouncer 事务池副本。本机集成先用有界应用连接池直连 PostgreSQL；事务池兼容性在接入对应平台池时另验。连接池不选举数据库主，只连接平台已确认的写主；实例增加前核算所有池、监听和管理连接的总和。
 
 事务池只在事务期间占用后端连接。租户上下文在每次事务内设置并核验，采用事务作用域状态，不依赖上一次请求遗留的 session 设置；RLS 角色不得绕过限制。LISTEN 和会话级 advisory lock 不经事务池，后者也不用于证明外部驱动已经停止。预编译语句及驱动配置按实际池版本验收。[PgBouncer 功能边界](https://www.pgbouncer.org/features.html)
 

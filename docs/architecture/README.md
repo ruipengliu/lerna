@@ -76,7 +76,7 @@ flowchart TB
 | 2．落实负责的模块 | [大脑](brain/README.md)／[执行](execution/README.md)／[记忆与内容](memory/README.md)／[权限](security/README.md)／[交互](interaction/README.md)／[协作](collaboration/README.md) | 按主链的交接点查完整规则，再进入本页第 5 节对应的实现章节 |
 | 3．连接独立实现 | [共同契约](contracts/README.md) → [方法索引](contracts/methods.md) → [线格式与机器资产](contracts/protocol.md) | 输入输出、成功点、错误、原身份恢复及对应构造序列 |
 | 4．装配与运行 | [宿主装配](deployment.md) → [可靠接纳与持久工作框架](reliable-work.md) → [生产部署](deployment-production.md) → [存储与中间件](storage-and-middleware.md)；按需查[扩展](extensions/README.md)与[评测改进](evaluation/README.md) | 公共模板与领域处理器、事务及责任槽、生产故障边界、安装切换及隔离评测 |
-| 5．交付切片 | [验收建设顺序](validation/README.md#5-建设顺序与退出条件) → [交付审查](review.md) | 首个闭环依赖、退出证据及当前实际检查范围 |
+| 5．交付切片 | [工程落地方案](engineering.md) → [验收建设顺序](validation/README.md#5-建设顺序与退出条件) → [交付审查](review.md) | 技术栈、代码目录、开发切片、生产准入及当前实际检查范围 |
 
 [目标与功能](goals.md)保存范围和指标，[设计决策](decisions.md)保存关键选择及改选条件；[技术总览](technical-overview.md)解释四种边界和建模依据。图形查阅使用[架构图集](diagrams/architecture-atlas.html)、[可编辑全景图](diagrams/system-panorama.drawio)及[UML 导读](uml-models.md)，不以图中容器数量决定服务数量。
 
@@ -117,7 +117,7 @@ flowchart TB
 
 ## 6. 启用前提与边界
 
-首个参考实现按生产分布式形态装配 Orchestrator、默认三系统、CLI／Web 交互、搜索与内容获取适配器、文件能力以及多个有状态模拟手机，首阶段即验证多副本与恢复。完整单体保留为开发调试入口；本地 Brain、Memory、Executor 和混合装配仍是需验证的能力。云模型、搜索服务和外部 Agent 是可配置依赖；缺失时对应任务等待或明确返回不支持，全部权威与依赖在本地的任务仍按原契约执行。
+参考实现先提供开发单体，再在本机 PostgreSQL 上集成独立网关、应用、worker 与执行宿主，验证跨进程交接及恢复。生产接入公司自有平台，项目保留必要控制和适配入口，首次上线前完成相应生产准入验收；公司平台部署不作为开发前提。完整参考实现覆盖默认三系统、CLI／Web、搜索与内容获取、文件能力及多个有状态模拟手机，完整联网问答和模拟手机专项按第二阶段交付。本地 Brain、Memory、Executor 和混合装配仍须分别验证。云模型、搜索服务和外部 Agent 缺失时，对应任务等待或明确返回不支持，全部权威与依赖在本地的任务仍按原契约执行。
 
 跨端需要已配对身份、目标服务的持久幂等记录、有效权限及有限额度；缺少任一条件，不派发新动作。离线权限还需要对应平台的时钟与防回滚保证，缺失时关闭依赖远端缓存的权限使用，不影响全部权威在本机的模式。
 
