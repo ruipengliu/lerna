@@ -1,0 +1,35 @@
+flowchart TB
+    U[Orchestrator / 管理入口]
+    R[视图持有者]
+    subgraph M[Memory / Content 同步依赖]
+      W[MemoryWriter]
+      Q[QueryService]
+      E[ExtractionCoordinator]
+      V[ViewPublisher]
+      C[ContentStore]
+      FQ[范围 / 来源 / 修订规则]
+      S[MetadataStore]
+      X[(派生候选索引)]
+      B[ByteStore]
+      W --> S
+      W -->|规则检查| FQ
+      W -->|正文 / 来源| C
+      Q --> S
+      Q -->|匹配 / 排序| FQ
+      Q -->|获准候选| X
+      E --> S
+      V --> S
+      C --> S
+      C -->|准确字节| B
+    end
+    U -->|管理| W
+    U -->|查询| Q
+    U -->|提取| E
+    U -->|视图| V
+    U -->|内容| C
+    R -->|view.pull / view.ack| V
+    E -->|原提取任务| H[提取任务 Orchestrator]
+    Q --> G[Grant owner]
+    W --> G
+    C --> G
+    S -->|短事务| DB[(权威数据库)]

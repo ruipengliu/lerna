@@ -1,0 +1,17 @@
+flowchart TB
+    Input[获准用户陈述与任务结果] --> Extract[ExtractionCoordinator<br/>有限提取任务与质量检查]
+    Extract --> Candidate[有期限的候选<br/>逐条确认或有限预授权]
+    Candidate --> Writer[MemoryWriter<br/>正式修订与固定回执]
+    Writer --> Authority[(Memory 与 Content<br/>权威记录)]
+    Authority --> Index[IndexWorker<br/>词法及可选语义投影]
+    Task[Orchestrator<br/>当前目标与 need_context] --> Query[QueryService<br/>处理许可与适用范围]
+    Query --> Search[获准集合内召回<br/>融合与有限集合冻结]
+    Index --> Search
+    Authority -->|增量补扫与当前状态| Search
+    Search --> Page[逐页来源与披露复核]
+    Page --> Context[Orchestrator<br/>读取准确内容并组装上下文]
+    Context --> Brain[Brain<br/>受来源约束的建议]
+    Close[来源关闭与用户删除] --> Gate[权威门禁与 ClosureWorker]
+    Gate -.停止及清理.-> Candidate
+    Gate -.停止及清理.-> Index
+    Gate -.停止及清理.-> Context

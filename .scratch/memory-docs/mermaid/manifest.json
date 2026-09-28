@@ -1,0 +1,98 @@
+[
+  {
+    "source": "docs/architecture/memory/README.md",
+    "diagram": 1,
+    "sha256": "60fc55a6759fe8f687efdf74288edf0982daeb6923295cd6c940ddf620f68c87",
+    "render": ".scratch/memory-docs/mermaid/README-1.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/memory/README.md",
+    "diagram": 2,
+    "sha256": "f120cf0e46c4a4baf6f369498778253753a8203ef3144cf33991785589f651dd",
+    "render": ".scratch/memory-docs/mermaid/README-2.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/memory/README.md",
+    "diagram": 3,
+    "sha256": "91f67c2fe2461188aec3ba7d19eb24da9f6a97a9c5842de031a0b17315afb5cf",
+    "render": ".scratch/memory-docs/mermaid/README-3.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "diagram": 1,
+    "sha256": "b686ce9235351c4eedd24dc678dd7a40319e04ffe17801cadb82f3040ac0730f",
+    "render": ".scratch/memory-docs/mermaid/implementation-1.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "diagram": 2,
+    "sha256": "46b577f2c92117cb5a3e59db7cc8e4440b2e6660071fe2264b01c70fb926b050",
+    "render": ".scratch/memory-docs/mermaid/implementation-2.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "diagram": 3,
+    "sha256": "5fef02b69836470d2349aa481543397c5afac9b6ab281edfbb8dd0fa0d3e28e7",
+    "render": ".scratch/memory-docs/mermaid/implementation-3.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "diagram": 4,
+    "sha256": "3817f1b4ca16e537e5631a4046e74f8096e70af0e0497b8708b1e0753f5ddc84",
+    "render": ".scratch/memory-docs/mermaid/implementation-4.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "diagram": 5,
+    "sha256": "646baa4d7d5e53fe41e28165a895346d9885404446daeb2aa85c01158260587f",
+    "render": ".scratch/memory-docs/mermaid/implementation-5.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "diagram": 6,
+    "sha256": "6a318fb5ea8d3cede981f2ce5f43b307994887f363b86f0acff4efc43cc21a5e",
+    "render": ".scratch/memory-docs/mermaid/implementation-6.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "diagram": 7,
+    "sha256": "2380b4e21927d8a121b4f8be8c091ddc76488e6bed5081b0ca9094762b43b8e2",
+    "render": ".scratch/memory-docs/mermaid/implementation-7.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/memory/implementation.md",
+    "diagram": 8,
+    "sha256": "b6d7d4fa95fb4765c704a8bd6a4130789fb4c3647b552b45e71b0b7a44eb1538",
+    "render": ".scratch/memory-docs/mermaid/implementation-8.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/memory/optimization-plan.md",
+    "diagram": 1,
+    "sha256": "e5e873bcaece994136a50aa10d87983b66e1475a0281186c36dea6f1b94c4aac",
+    "render": ".scratch/memory-docs/mermaid/optimization-plan-1.png",
+    "passed": true,
+    "log": ""
+  }
+]

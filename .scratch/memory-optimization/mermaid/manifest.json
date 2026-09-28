@@ -1,0 +1,18 @@
+[
+  {
+    "source": "docs/architecture/memory/optimization-plan.md",
+    "diagram": 1,
+    "sha256": "df3e112691c7c3cdc1a9883d037e7d14b09c891b9e4fec17353cbc71d99f09c4",
+    "render": ".scratch/memory-optimization/mermaid/memory-optimization-1.png",
+    "passed": true,
+    "log": ""
+  },
+  {
+    "source": "docs/architecture/memory/optimization-plan.md",
+    "diagram": 2,
+    "sha256": "e5e873bcaece994136a50aa10d87983b66e1475a0281186c36dea6f1b94c4aac",
+    "render": ".scratch/memory-optimization/mermaid/memory-optimization-2.png",
+    "passed": true,
+    "log": ""
+  }
+]
