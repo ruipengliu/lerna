@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant H as Orchestrator
+    participant B as Brain
+    participant S as S1 类型化模型
+    participant G as S2 通用模型
+    H->>B: D_s：固定快照、typed profile、预留
+    B->>S: 原 ModelCall，发送门禁后一次推理
+    S-->>B: 合法答案与实际用量
+    B->>B: 不满足固定接纳条件；保存 failed 和原调用
+    B-->>H: precondition_failed，after_change
+    H->>H: 核对升级额度、当前控制、授权和新预留
+    H->>H: 保存原失败关联、升级消费及新 Decision 责任
+    H->>B: D_g：当前快照、固定通用 profile
+    B->>G: 新 ModelCall，一次推理
+    G-->>B: 候选与用量
+    B-->>H: 保存的提案
+    H->>H: 复核当前修订后独立准入

@@ -1,0 +1,18 @@
+flowchart TB
+    H[Orchestrator<br/>任务、计划与事实<br/>跨轮调度和准入]
+    subgraph B[Brain：一个公共决策入口]
+      D[DecisionService／RecoveryWorker<br/>固定输入、共同门禁与恢复]
+      P[DecisionPolicy<br/>规则覆盖与固定配置]
+      S1[System One<br/>规则 shortcut／类型化判断]
+      S2[System Two<br/>理解、规划、综合与修订]
+      V[共同校验与保存<br/>Proposal／失败／调用用量]
+      D --> P
+      P -->|有界工作| S1
+      P -->|开放工作| S2
+      S1 --> V
+      S2 --> V
+    end
+    H -->|固定快照与本轮模型配置| D
+    V -->|原 Decision 的结果| H
+    H -->|当前准入后执行| E[Executor／独立验证器]
+    E -->|原操作事实与核验记录| H

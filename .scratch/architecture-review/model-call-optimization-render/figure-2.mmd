@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant H as Orchestrator
+    participant B as Brain
+    participant M as 模型
+    participant E as Executor／模拟设备
+    H->>B: D1，g1 固定快照
+    B->>M: 理解目标与完整条件
+    M-->>B: 条件提案及本轮候选
+    B-->>H: 保存的 D1 结果
+    H->>H: 接受条件为 g2；丢弃 D1 行动／计划
+    H->>B: 新 D2，g2 新快照
+    B-->>H: 规则生成新的 observe 提案
+    H->>E: 准入 O1 observe
+    E-->>H: 原观察：关闭，state_version=1
+    H->>B: 新 D3，g2 加准确 O1 事实
+    B-->>H: 新计划 enable → observe_after
+    H->>H: 安装计划；后续 decide 物化首步
+    H->>E: O2 enable，expected_state_version=1
+    E-->>H: 原效果已核清，state_version=2
+    H->>E: 物化 O3 observe_after
+    E-->>H: 新观察为开启，准确版本与设备
+    H->>H: 条件与未知责任核清后保存完成

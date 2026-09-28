@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "scope": "Four affected Markdown documents; baseline prose generator; new diagrams and byte table",
+  "files": {
+    "model-call-optimization-2026-09-28.md": "sha256:5d1d14f47e4060fe89109f6426f736ffc0ed75725e7dd660a38d9c85bf88db6d",
+    "task-scenarios-input-output-2026-09-28.md": "sha256:657645c6cd08109be6554188fd9dd02e88ee3bffaae97486d12d6a89d3676414",
+    "verification-review-2026-09-28.md": "sha256:95c3ea4a9f649ef1929b53790f9dcc49ba858cf900f9c2a7706a1e2a98699a9f",
+    "model-call-optimization-data/README.md": "sha256:dbbf24fa360b514fe768bf61d47d5c63c51279dc7981884a1cbbe56e5b642cfe"
+  },
+  "local_links": 45,
+  "tables": 124,
+  "issues": [],
+  "baseline_unchanged_blocks": {
+    "json": 18,
+    "mermaid": 2
+  },
+  "baseline_statistics_sections_unchanged": true,
+  "generator_program_structure_unchanged": true,
+  "byte_table_matches_statistics": true,
+  "render": {
+    "figures": 2,
+    "source_digest_matches": true,
+    "visual_inspection": "Both figures inspected; labels readable; no clipping found; full Markdown page not browser-rendered"
+  },
+  "semantic_review": {
+    "independent_reader": "Problem, recommendation, tradeoffs, cost owners and failure responsibility restated from document and cited contracts; local repair review passed",
+    "fixed_findings": [
+      "Rule conflict/invalid output persistence and after_change responsibility",
+      "Fixture goal, complete requirements and capability version matching",
+      "Malformed URL port produces explicit gap",
+      "Known state-version literal matches derived plan",
+      "Waiting plan dependencies do not trigger generation"
+    ]
+  },
+  "runtime": "Synthetic local fixture construction and selector checks only; Harness/providers/devices/authorization/database/performance not executed"
+}

@@ -1,0 +1,17 @@
+flowchart TD
+    J[Orchestrator 领取 decide] --> G{控制与原效果允许推进?}
+    G -->|否| W[保存原等待或核对责任]
+    G -->|是| P{既有计划怎样推进?}
+    P -->|可物化| A[Orchestrator<br/>按当前事实准入]
+    P -->|等待依赖| W
+    P -->|无计划或需要新提案| D[固定新快照与 Decision]
+    D --> I{Brain 必需输入可用?}
+    I -->|否| K[返回明确缺口或补充请求]
+    I -->|是| R{确定性规则完整命中?}
+    R -->|是| Z[形成全新 Proposal<br/>不创建 ModelCall]
+    R -->|否且需要语义判断| M[按原门禁生成一次]
+    Z --> V[校验并持久保存<br/>Decision 结果]
+    M --> V
+    V --> A
+    K --> H[Orchestrator 保存下一责任]
+    A --> H

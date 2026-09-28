@@ -1,0 +1,13 @@
+{
+  "scope": "changed Brain docs, research note, review record; Markdown/link structure only",
+  "files": {
+    "docs/architecture/brain/decision-paths.md": "88669d21030fde5e80d51f0d2de7062f460de0a34b0cebd7561aa5622c9d6e23",
+    "docs/architecture/brain/README.md": "c11db0aa391269123e12ee9becca7af11801b3f2a38483839cfc745a66d5d0b0",
+    "docs/architecture/brain/implementation.md": "2b7481f76fb56ea60f96be3b8b442830b251d70e73e74bd0a7ea55bda96ca0ae",
+    "docs/research/system-one-models-2026-09-28.md": "ad5420a44ca839782b520d7926ae73b630cfdc7d4c15042f2d04d9431701317b",
+    ".scratch/architecture-review/verification-review-2026-09-28.md": "ef7a0e49446f0b7bf1482829789454dc81be192c82fac651cdf006c98ea30bcd"
+  },
+  "local_links": 81,
+  "table_rows": 255,
+  "errors": []
+}

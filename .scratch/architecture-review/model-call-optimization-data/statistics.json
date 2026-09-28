@@ -1,0 +1,274 @@
+{
+  "schema": "call-projection-statistics/1",
+  "metric": "sum exact manifest ContentRef.byte_length per projected physical generation; repeated bodies in different calls counted again",
+  "limitation": "fixed synthetic body bytes, not provider encoding, tokens, measured time or real charges; rule input reads are not model input",
+  "variants": [
+    {
+      "variant": "bluetooth-on-1-call",
+      "baseline_scenario": "bluetooth-on",
+      "phases": [
+        {
+          "phase": "D1",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 1,
+          "baseline_model_input_body_bytes": 12220,
+          "candidate_model_input_body_bytes": 12220,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/bluetooth-on/scenario.json",
+            "pointer": "/generations/0/actual_input_manifest",
+            "value_digest": "sha256:9aa06f6c8ee9c41ef60c4a17befd3cc50a384d3216d6964ccc4522eeca082c1c"
+          }
+        },
+        {
+          "phase": "D2",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 0,
+          "baseline_model_input_body_bytes": 12809,
+          "candidate_model_input_body_bytes": 0,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/bluetooth-on/scenario.json",
+            "pointer": "/generations/1/actual_input_manifest",
+            "value_digest": "sha256:ab614d8377bfd75e83b09b867c9daf9bdfc399917410b454367191679a20bc1a"
+          }
+        }
+      ],
+      "decision_count": 2,
+      "zero_model_decision_count": 1,
+      "baseline_model_generations": 2,
+      "candidate_model_generations": 1,
+      "baseline_model_input_body_bytes": 25029,
+      "candidate_model_input_body_bytes": 12220,
+      "baseline_brain_model_input_body_bytes": 25029,
+      "baseline_assessment_input_body_bytes": 0,
+      "model_tokens": null,
+      "real_model_cost": null,
+      "end_to_end_latency_ms": null,
+      "eliminated_model_input_body_bytes": 12809
+    },
+    {
+      "variant": "bluetooth-off-1-call",
+      "baseline_scenario": "bluetooth-off",
+      "phases": [
+        {
+          "phase": "D1",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 1,
+          "baseline_model_input_body_bytes": 12220,
+          "candidate_model_input_body_bytes": 12220,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/bluetooth-off/scenario.json",
+            "pointer": "/generations/0/actual_input_manifest",
+            "value_digest": "sha256:92468fcd0e622c595ae6493086d8cfd8fcdeb2ab022d793a16c631ddafac2a11"
+          }
+        },
+        {
+          "phase": "D2",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 0,
+          "baseline_model_input_body_bytes": 12809,
+          "candidate_model_input_body_bytes": 0,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/bluetooth-off/scenario.json",
+            "pointer": "/generations/1/actual_input_manifest",
+            "value_digest": "sha256:c4839314185ae3547a232b86f33be2ae21e2aa2805a1e9ddd79ab976c6c78817"
+          }
+        },
+        {
+          "phase": "D3",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 0,
+          "baseline_model_input_body_bytes": 14416,
+          "candidate_model_input_body_bytes": 0,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/bluetooth-off/scenario.json",
+            "pointer": "/generations/2/actual_input_manifest",
+            "value_digest": "sha256:4242228b86cb2b07a3d2a8556d0343b36e5e54f7b370daaceaa6ad2b4b669e43"
+          }
+        }
+      ],
+      "decision_count": 3,
+      "zero_model_decision_count": 2,
+      "baseline_model_generations": 3,
+      "candidate_model_generations": 1,
+      "baseline_model_input_body_bytes": 39445,
+      "candidate_model_input_body_bytes": 12220,
+      "baseline_brain_model_input_body_bytes": 39445,
+      "baseline_assessment_input_body_bytes": 0,
+      "model_tokens": null,
+      "real_model_cost": null,
+      "end_to_end_latency_ms": null,
+      "eliminated_model_input_body_bytes": 27225
+    },
+    {
+      "variant": "report-4-calls",
+      "baseline_scenario": "report",
+      "phases": [
+        {
+          "phase": "D1",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 1,
+          "baseline_model_input_body_bytes": 42361,
+          "candidate_model_input_body_bytes": 42361,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/report/scenario.json",
+            "pointer": "/generations/0/actual_input_manifest",
+            "value_digest": "sha256:91c7f73364a3804b71dee9624425e505cd6a01ed848eab787c99f9385fa3411f"
+          }
+        },
+        {
+          "phase": "D2",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 0,
+          "baseline_model_input_body_bytes": 44132,
+          "candidate_model_input_body_bytes": 0,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/report/scenario.json",
+            "pointer": "/generations/1/actual_input_manifest",
+            "value_digest": "sha256:1d09f229c1be2e9fd6aca9250e58d9bdc1b30156c26d2357676bf25df2c43b11"
+          }
+        },
+        {
+          "phase": "D3",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 1,
+          "baseline_model_input_body_bytes": 47984,
+          "candidate_model_input_body_bytes": 47984,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/report/scenario.json",
+            "pointer": "/generations/2/actual_input_manifest",
+            "value_digest": "sha256:dbcca271d40c7c1b93a99d7fb90fce8d6e9197c3b2ce89e0fefaaa25aea1ad17"
+          }
+        },
+        {
+          "phase": "D4",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 1,
+          "baseline_model_input_body_bytes": 61529,
+          "candidate_model_input_body_bytes": 61529,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/report/scenario.json",
+            "pointer": "/generations/3/actual_input_manifest",
+            "value_digest": "sha256:45d8ff7c163d75aeba7b8044bb3460770f59d64af8be7f20eaf50624868aab66"
+          }
+        },
+        {
+          "phase": "O7",
+          "owner": "Executor assessment",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 1,
+          "baseline_model_input_body_bytes": 3234,
+          "candidate_model_input_body_bytes": 3234,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/report/scenario.json",
+            "pointer": "/objects/O7:model-send/value/input_manifest",
+            "value_digest": "sha256:f2e19dc3ccf817416c949a72917d31d8c24bc330d874e08e79bcd4f6052aedaa"
+          }
+        }
+      ],
+      "decision_count": 4,
+      "zero_model_decision_count": 1,
+      "baseline_model_generations": 5,
+      "candidate_model_generations": 4,
+      "baseline_model_input_body_bytes": 199240,
+      "candidate_model_input_body_bytes": 155108,
+      "baseline_brain_model_input_body_bytes": 196006,
+      "baseline_assessment_input_body_bytes": 3234,
+      "model_tokens": null,
+      "real_model_cost": null,
+      "end_to_end_latency_ms": null,
+      "eliminated_model_input_body_bytes": 44132
+    },
+    {
+      "variant": "report-3-calls",
+      "baseline_scenario": "report",
+      "phases": [
+        {
+          "phase": "D1",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 1,
+          "baseline_model_input_body_bytes": 42361,
+          "candidate_model_input_body_bytes": 42361,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/report/scenario.json",
+            "pointer": "/generations/0/actual_input_manifest",
+            "value_digest": "sha256:91c7f73364a3804b71dee9624425e505cd6a01ed848eab787c99f9385fa3411f"
+          }
+        },
+        {
+          "phase": "D2",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 0,
+          "baseline_model_input_body_bytes": 44132,
+          "candidate_model_input_body_bytes": 0,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/report/scenario.json",
+            "pointer": "/generations/1/actual_input_manifest",
+            "value_digest": "sha256:1d09f229c1be2e9fd6aca9250e58d9bdc1b30156c26d2357676bf25df2c43b11"
+          }
+        },
+        {
+          "phase": "D3",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 0,
+          "baseline_model_input_body_bytes": 47984,
+          "candidate_model_input_body_bytes": 0,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/report/scenario.json",
+            "pointer": "/generations/2/actual_input_manifest",
+            "value_digest": "sha256:dbcca271d40c7c1b93a99d7fb90fce8d6e9197c3b2ce89e0fefaaa25aea1ad17"
+          }
+        },
+        {
+          "phase": "D4",
+          "owner": "Brain",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 1,
+          "baseline_model_input_body_bytes": 61529,
+          "candidate_model_input_body_bytes": 61529,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/report/scenario.json",
+            "pointer": "/generations/3/actual_input_manifest",
+            "value_digest": "sha256:45d8ff7c163d75aeba7b8044bb3460770f59d64af8be7f20eaf50624868aab66"
+          }
+        },
+        {
+          "phase": "O7",
+          "owner": "Executor assessment",
+          "baseline_model_generations": 1,
+          "candidate_model_generations": 1,
+          "baseline_model_input_body_bytes": 3234,
+          "candidate_model_input_body_bytes": 3234,
+          "baseline_manifest": {
+            "file": "../task-scenarios-data/report/scenario.json",
+            "pointer": "/objects/O7:model-send/value/input_manifest",
+            "value_digest": "sha256:f2e19dc3ccf817416c949a72917d31d8c24bc330d874e08e79bcd4f6052aedaa"
+          }
+        }
+      ],
+      "decision_count": 4,
+      "zero_model_decision_count": 2,
+      "baseline_model_generations": 5,
+      "candidate_model_generations": 3,
+      "baseline_model_input_body_bytes": 199240,
+      "candidate_model_input_body_bytes": 107124,
+      "baseline_brain_model_input_body_bytes": 196006,
+      "baseline_assessment_input_body_bytes": 3234,
+      "model_tokens": null,
+      "real_model_cost": null,
+      "end_to_end_latency_ms": null,
+      "eliminated_model_input_body_bytes": 92116
+    }
+  ]
+}

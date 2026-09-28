@@ -1,0 +1,52 @@
+[
+  {
+    "source": "docs/architecture/brain/decision-paths.md",
+    "figure": 1,
+    "source_sha256": "04ef767e294adb0a29f967281b713154c836d42e69a704c191357f0b409ca2bc",
+    "mermaid": ".scratch/architecture-review/system-one-checks/decision-paths-1.mmd",
+    "render": ".scratch/architecture-review/system-one-checks/decision-paths-1.png",
+    "status": "passed",
+    "log": "",
+    "visual_review": "passed; labels and arrows inspected"
+  },
+  {
+    "source": "docs/architecture/brain/decision-paths.md",
+    "figure": 2,
+    "source_sha256": "4f573b0804735d36f2c3c000c15e9645aacd40e94a7fad49097624832bb996d3",
+    "mermaid": ".scratch/architecture-review/system-one-checks/decision-paths-2.mmd",
+    "render": ".scratch/architecture-review/system-one-checks/decision-paths-2.png",
+    "status": "passed",
+    "log": "",
+    "visual_review": "passed; labels and arrows inspected"
+  },
+  {
+    "source": "docs/architecture/brain/README.md",
+    "figure": 1,
+    "source_sha256": "f5aca8e85b1d4ba36f29ec311228ba5ba87ddbc80b6f633008be583af97d6f77",
+    "mermaid": ".scratch/architecture-review/system-one-checks/README-1.mmd",
+    "render": ".scratch/architecture-review/system-one-checks/README-1.png",
+    "status": "passed",
+    "log": "",
+    "visual_review": "passed; labels and arrows inspected"
+  },
+  {
+    "source": "docs/architecture/brain/implementation.md",
+    "figure": 1,
+    "source_sha256": "54f470aee3c9ce693d8758e0e102a09b54058bdf1a1643adf551bba40b7f2ea9",
+    "mermaid": ".scratch/architecture-review/system-one-checks/implementation-1.mmd",
+    "render": ".scratch/architecture-review/system-one-checks/implementation-1.png",
+    "status": "passed",
+    "log": "",
+    "visual_review": "passed; labels and arrows inspected"
+  },
+  {
+    "source": "docs/architecture/brain/implementation.md",
+    "figure": 2,
+    "source_sha256": "9d81709e884ae9d43b016dab6a19d50ea5335cbedb90c9aac8bed7270566da95",
+    "mermaid": ".scratch/architecture-review/system-one-checks/implementation-2.mmd",
+    "render": ".scratch/architecture-review/system-one-checks/implementation-2.png",
+    "status": "passed",
+    "log": "",
+    "visual_review": "passed; labels and arrows inspected"
+  }
+]

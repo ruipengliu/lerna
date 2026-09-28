@@ -1,37 +1,25 @@
 # 大脑实现：固定上下文、单轮提案与调用恢复
 
-[模块主线](README.md) · [决策路径](decision-paths.md) · [Orchestrator](../orchestrator/README.md) · [内容实现](../memory/implementation.md)
+[模块主线](README.md) · [Orchestrator](../orchestrator/README.md) · [内容实现](../memory/implementation.md) · [双系统协作](dual-system.md) · [规则与 System One 路径](decision-paths.md)
 
 本文把单轮 Brain 展开为参考实现，供同进程 port 与远程适配器共用。
 接口、状态及成功含义沿用模块主线；这里规定内部记录、处理顺序与故障实验。
 默认 Go 组件复用宿主数据库和 jobs，不增加独立调度服务。
 本文中的算法和表结构是设计规格，尚非已运行的 Harness。
 
-先读[模块主线中的 S1／S2 分工与协作](README.md#dual-system)及[对外契约](README.md#brain-contracts)，再沿本篇的处理链阅读。规则覆盖、类型化推理、拒判升级和质量评测集中在[决策路径](decision-paths.md)。
-
-| 阅读环节 | 本篇内容 |
-| --- | --- |
-| 接入与输入 | [组件边界](#module-shape)、[公共工作模板接入](#reliable-work-integration)、[上下文正文与来源](#2-上下文正文与资料来源) |
-| 单轮推进 | [持久记录](#3-持久记录与唯一约束)、[对象流转](#data-flow)、[接纳、发送与完成事务](#32-接纳事务) |
-| 产出与恢复 | [正文保存](#generated-content)、[提案校验](#42-最终提案校验)、[有限计划](#finite-plan)、[恢复分支](#5-状态与恢复分支) |
-| 装配与验收 | [资源初值](#6-参考上限与可观察记录)、[生产部署](#production)、[故障实验](#8-可重复故障实验) |
-
 <a id="module-shape"></a>
 ## 1. 软件形状、内部职责与边界
 
 Brain 的工作从接纳一个固定 DecisionRequest 开始，到保存该快照上的提案或明确错误结束。
 Orchestrator 负责选择上下文、保存计划和决定后续工作；Brain 不拥有任务写权限。
-模型适配器负责供应商编码及物理请求事实，不能执行模型返回的工具调用。
+模型适配器负责供应商编码及物理请求事实，不能执行生成内容中的工具调用。
 
 Brain 是宿主装配的一组 Go package。DecisionService 是唯一对外 facade，
 其 application 层组合 ContextReader、DecisionPolicy 和 ProposalValidator；
 DecisionPolicy 只做本轮选择，ProposalValidator 只判断候选契约，二者不直接读写数据库。
-DecisionStore 将事务和领域记录接入[公共接纳与工作模板](../reliable-work.md#interfaces)的 command_store、逻辑 JobStore；ModelAdapter 和内容 port 隔离外部依赖。
-内容 port 既读取固定输入，也由 RecoveryWorker 保存获准新产出和恢复原保存命令，不新增独立发布服务。
+DecisionStore 将事务和领域记录接入[公共接纳与工作模板](../reliable-work.md#interfaces)的 command_store、逻辑 JobStore；ModelAdapter 和内容 port 隔离外部依赖。内容 port 既读取固定输入，也由 RecoveryWorker 保存获准新产出和恢复原保存命令，不新增独立发布服务。
 各 port 用 Go interface 表达，构造时注入依赖；规则接收领域值类型，不依赖 RPC 生成类型。
-
-[S1／S2](README.md#dual-system)复用本节组件，模型路径按固定 profile 装配。跨轮交接仍由 Orchestrator 保存和调度，内部角色不新增长期 Agent、任务库或独立执行权限。
-
+[双系统设计](dual-system.md)将规则与有界语义判断归入 S1，把理解、规划与综合归入 S2；它们复用本节组件，模型路径按固定 profile 装配。跨轮交接仍由 Orchestrator 保存和调度，内部角色不新增长期 Agent、任务库或独立执行权限。
 本机装配为同进程调用，独立服务部署的 Brain 在同一 facade 前加 gRPC 适配器；端侧 Brain 由宿主将 WSS／Delivery 交接适配到该 facade，二者映射同一领域契约，
 不要求这些组件各自成为服务。ModelAdapter 对模型供应商沿用其 API，对本项目独立推理服务使用 gRPC；
 第三方本地推理程序由适配器转换其原有协议。
@@ -91,16 +79,14 @@ Orchestrator 收到提案后仍执行独立准入，宿主 job 领取器只提�
 | RecoveryWorker | 领取本轮推进工作；原调用查询、停止、费用核对；按固定 publication 保存产出并恢复原内容命令 | 不用新调用或保存身份掩盖原结果未知 |
 | DecisionStore | 接纳、发送门禁和终态短事务；绑定宿主事务与 jobs | 不在事务闭包内访问模型或远端 owner |
 
-每个 Decision 至多一次物理模型推理，包含类型化判断；规则命中为零次。费用与恢复记录因此可以关联到唯一 ModelCall。固定配置和[拒判升级](decision-paths.md#43-拒判错误和升级分别处理)由决策路径定义；升级须由 Orchestrator 另建 Decision，不增加路由服务或第二套调度循环。
+默认保持一轮至多一次物理模型推理，包含类型化判断，可以直接把费用及恢复记录关联起来。规则命中为零次，System One 拒判后的通用模型升级须由 Orchestrator 另建 Decision；固定配置与失败行为见[决策路径](decision-paths.md)，不增加路由服务或第二套调度循环。
 多模型竞速会增加输入披露、物理请求和取消责任；只有冻结评测证明收益时才作为新实现加入。
 更换模型供应商时只替换 ModelAdapter；更换 Brain 时还须验证上下文及提案契约。
 
 <a id="reliable-work-integration"></a>
 ### 1.1 公共模板在决策域的接入
 
-DecisionService 使用公共接纳模板保存原 Decision，RecoveryWorker 向有界工作模板注册本域处理器。DecisionStore 提供本 Brain owner 的事务参与者；单体可与 Orchestrator 共用受限 Tx，独立 Brain 则在自己的提交域保存回执和工作，调用方持久查询原 Decide。
-
-公共模板收敛领取和回写竞争；单轮至多一次物理模型推理、发送门禁、产出保存以及未知费用仍由 Brain 裁决。
+DecisionService 使用公共接纳模板保存原 Decision，RecoveryWorker 向有界工作模板注册本域处理器。DecisionStore 提供本 Brain owner 的事务参与者；单体可与 Orchestrator 共用受限 Tx，独立 Brain 则在自己的提交域保存回执和工作，调用方持久查询原 Decide。公共模板收敛领取和回写竞争，单轮至多一次推理、发送门禁、产出保存以及未知费用仍由 Brain 裁决。
 
 | 接入点 | 领域参与者及事务边界 | 处理和提交责任 |
 | --- | --- | --- |
@@ -182,7 +168,7 @@ capabilities 只能包含已获准披露的声明，工具凭据不进入模型�
 
 input_manifest 由实际读取和发送组件记录，不能由模型自行提供。
 BrainContext 的清单记录组装与本轮读取的来源；发送门禁另固定最终编码实际包含的来源与接收方。输出来源取本轮实际处理来源的并集，不能因编码时省掉某一项，就删除 Brain 已读取该项的来源责任。
-一次物理模型推理读入的所有来源都加入其输出来源依赖，包括模型未引用的偏好与历史。
+一次物理调用读入的所有来源都加入其输出来源依赖，包括模型未引用的偏好与历史。
 `evidence_refs` 表示提案声称的证据支撑，不能代替完整处理来源。
 内容 owner 保存输出与输入的反向关系，输出策略取全部实际来源的限制交集。
 
@@ -222,7 +208,7 @@ RecoveryWorker 使用公共 Claim，领取及责任版本按[工作提交](../re
 <a id="data-flow"></a>
 ### 3.1 核心对象关系与流转
 
-Decision 是一轮工作的聚合根；ModelCall 记录该轮可能产生的一次物理模型推理，
+Decision 是一轮工作的聚合根；ModelCall 是该轮可能产生的一次物理调用，
 Proposal 是可交回的结果内容。三者分别回答“本轮决定了什么”“外部可能处理了什么”和“Orchestrator 可检查什么”。
 来源清单属于实际处理事实；不能因为正文已清理而从一份仍受管产出的来源闭包中删除。
 
@@ -240,7 +226,7 @@ flowchart LR
 ```
 
 图中的边表示对象来源或持久关联，不是新增消息接口。
-确定性 Decision 可直接形成 Proposal，不创建 ModelCall 与模型费用记录，公共输出省略 model_call。类型化推理仍创建 ModelCall，不能因没有生成自由文本而计为零次推理。
+确定性 Decision 可直接形成 Proposal，不创建 ModelCall 与模型费用记录，公共输出省略 model_call。类型化推理仍创建 ModelCall，不能因没有自由文本而算作零模型。
 
 | 对象 | 创建与持久化 | 传递、消费与收尾 |
 | --- | --- | --- |
@@ -260,19 +246,14 @@ flowchart LR
 ### 3.3 物理发送事务
 
 工作者读取固定输入并选择零次或一次模型推理。
-确定性返回不创建 ModelCall；需要模型推理时先核对 profile 的费用模式。
-strict 要有可信单次上界；estimate 要有原 Task 固定的受信策略接受关联、有限估算预留、与该 Task 同受信提交域的在线费用 Grant owner 原使用回执，且不能处于 allocation 下。
-Brain 不采信请求正文自行声明的费用模式；任一核验不可得则不发送。远程 Brain 可以执行获准的 strict 调用；仅凭 Task.policy_ref 或远端转述不开放 estimate。
-
+确定性返回不创建 ModelCall；需要模型推理时先核对 profile 的费用模式。strict 要有可信单次上界；estimate 要有原 Task 固定的受信策略接受关联、有限估算预留、与该 Task 同受信提交域的在线费用 Grant owner 原使用回执，且不能处于 allocation 下。Brain 不采信请求正文自行声明的费用模式；任一核验不可得则不发送。远程 Brain 可以执行获准的 strict 调用；仅凭 Task.policy_ref 或远端转述不开放 estimate。
 准备事务固定 model_call_id、最终输入摘要、最大输出、计价版本和所需 use_id。
 逐项取得用途回执；任一未知时查询原使用，不能先发送后补授权。
 
-ModelAdapter 先完成最终请求编码；ContextReader 与适配器核对本次实际送入模型的全部来源、处理位置、接收方和编码摘要。发送门禁事务确认 Decision 尚可推进、工作代次有效、所有使用窗口有效，并将这份实际 input_manifest、最终请求摘要、接收方及原使用身份与 `send_started` 共同保存。
-禁止保存的正文不落库，但允许的最小来源身份和披露事实仍须先持久化；若连这些事实都不能保存，该适配器不能接纳会外发的调用。
-
+ModelAdapter 先完成最终请求编码；ContextReader 与适配器核对本次实际送入模型的全部来源、处理位置、接收方和编码摘要。发送门禁事务确认 Decision 尚可推进、工作代次有效、所有使用窗口有效，并将这份实际 input_manifest、最终请求摘要、接收方及原使用身份与 `send_started` 共同保存。禁止保存的正文不落库，但允许的最小来源身份和披露事实仍须先持久化；若连这些事实都不能保存，该适配器不能接纳会外发的调用。
 然后在事务外调用供应商。`send_started` 表示可能发出，不证明供应商收到。
 没有 send_started 的 prepared 记录可以继续原首次发送；有该记录则进入原调用查询或 unknown 分支。
-本版关闭 SDK 和代理的透明重试。适配器必须暴露物理推理次数；即使能够计量，多请求模式也不进入本版 profile，需要另行设计。
+默认禁止 SDK 透明重试；无法暴露物理次数的适配器不进入精确调用计量配置。
 
 ### 3.4 完成事务
 
@@ -282,11 +263,7 @@ ModelAdapter 先完成最终请求编码；ContextReader 与适配器核对本�
 Orchestrator 获取 Decision 后，另在自己的事务中消费提案和决定后续工作。
 因此 Brain completed 与任务 succeeded 不在同一状态机中。
 
-供应商可信上调账单即使在 Decision 终态、原费用交回 job 已 done 后到达，也沿原 model_call_id、原计费项追加更高费用修订；同一事务为该修订保存独立 billing_handoff_outbox（固定业务键、账单摘要和首个有限 `task.billing_reconcile` 命令尝试），并重开按 decision_id 唯一的扫描 job。
-
-工作者按修订扫描待交回记录，向原 Orchestrator/task_id 发送各自原命令，payload 的 source_kind=brain_decision、source_id=decision_id、usage_revision=含本次账单的 DecisionRecord.revision。r1、r2 在 r1 尚未交付时到达也不能用 r2 覆盖 r1 的原命令。丢答复先查原命令或同 ID 重投；受信期限过后仍无 JobAck 时，该 outbox 保存同修订／同摘要的继任 command_id 及旧未知尝试身份，按退避继续交付，不能把过期误作原命令未执行。
-
-Orchestrator 的 JobAck 仅证明原计费槽已持久唤醒；实际费用仍由它主动 `brain.get` 核对原 ModelCall、可信账单和 Task 的唯一计费来源绑定后应用。Brain 接受 JobAck 才将本次交回标完成；旧工作者不能用先前 done 覆盖新修订责任。未取得可信账单时原费用责任继续保留，不以估计值结清。退款、贷记另行对账。
+供应商可信上调账单即使在 Decision 终态、原费用交回 job 已 done 后到达，也沿原 model_call_id、原计费项追加更高费用修订；同一事务为该修订保存独立 billing_handoff_outbox（固定业务键、账单摘要和首个有限 `task.billing_reconcile` 命令尝试），并重开按 decision_id 唯一的扫描 job。r1、r2 在 r1 尚未交付时到达也不能用 r2 覆盖 r1 的原命令；工作者按修订扫描待交回记录，向原 Orchestrator/task_id 发送各自原命令，payload 的 source_kind=brain_decision、source_id=decision_id、usage_revision=含本次账单的 DecisionRecord.revision；丢答复先查原命令或同 ID 重投；受信期限过后仍无 JobAck 时，该 outbox 保存同修订／同摘要的继任 command_id 及旧未知尝试身份，按退避继续交付，不能把过期误作原命令未执行。Orchestrator 的 JobAck 仅证明原计费槽已持久唤醒；实际费用仍由它主动 `brain.get` 核对原 ModelCall、可信账单和 Task 的唯一计费来源绑定后应用。Brain 接受 JobAck 才将本次交回标完成；旧工作者不能用先前 done 覆盖新修订责任。未取得可信账单时原费用责任继续保留，不以估计值结清。退款、贷记另行对账。
 
 <a id="key-sequence"></a>
 ### 3.5 发送门禁、丢答复与原调用恢复
@@ -331,7 +308,7 @@ sequenceDiagram
     end
 ```
 
-事务 C 的提交响应若再次丢失，恢复者读原 Decision 终态，只返回已固定结果，不再发起模型推理。
+事务 C 的提交响应若再次丢失，恢复者读原 Decision 终态，不再查询模型以生成另一份输出。
 当取消先提交，晚到结果不得把 cancelled 改成 completed；外部停止与费用核对仍继续。
 确定性路径省略 ModelCall 和供应商交接，仍经过输出校验与同一终态事务。
 
@@ -340,13 +317,9 @@ sequenceDiagram
 <a id="generated-content"></a>
 ### 4.1 新正文保存与准确引用
 
-模型生成报告时，正文还没有内容 owner 分配的版本和摘要，不能要求它直接返回准确 ContentRef。默认适配器使用独立的 [brain-generation.schema.json](../contracts/schemas/brain-generation.schema.json)：`schema_version=brain-generation/1`、有限 `contents[]` 和 `proposal` 模板。
+模型生成报告时，正文还没有内容 owner 分配的版本和摘要，不能要求它直接返回准确 ContentRef。默认适配器使用独立的 [brain-generation.schema.json](../contracts/schemas/brain-generation.schema.json)：`schema_version=brain-generation/1`、有限 `contents[]` 和 `proposal` 模板。`contents` 每项只有本轮唯一 `local_id`、`media_type` 与 `body`；文本正文使用 UTF-8，JSON 正文在引用回填后按共同 JCS 编码。模板和 JSON 正文用 `{"$local_ref":"report"}` 引用同轮新正文，已有引用仍使用完整 ContentRef。局部引用只在内部有效，不能经 brain.get 交付，也不能出现在最终能力参数或 Proposal 中。
 
-`contents` 每项只有本轮唯一 `local_id`、`media_type` 与 `body`；文本正文使用 UTF-8，JSON 正文在引用回填后按共同 JCS 编码。模板和 JSON 正文用 `{"$local_ref":"report"}` 引用同轮新正文，已有引用仍使用完整 ContentRef。局部引用只在内部有效，不能经 brain.get 交付，也不能出现在最终能力参数或 Proposal 中。
-
-先检查局部标识唯一、所有局部引用存在、依赖无环、层数与字节上限，再按依赖顺序解析；模板的未知字段仍须被最终 Proposal Schema 拒绝。局部引用只允许填入最终类型为 ContentRef 的字段或能力声明允许的 ContentRef 参数位置，不能借回填更换能力、主体或权限字段。
-
-每项新内容的 owner、身份、摘要、长度、完整来源和策略由受信 Brain／内容 port 形成，来源至少包含本轮实际处理清单及引用的同轮新内容。模型不能在内部格式中指定许可、来源删减、保存命令或外发目的地。计划正文必须通过 BrainPlan Schema 和[计划语义检查](#finite-plan)；计划的 `source_refs` 由 Brain 写入完整处理来源，不能采信模型删减后的集合。
+先检查局部标识唯一、所有局部引用存在、依赖无环、层数与字节上限，再按依赖顺序解析；模板的未知字段仍须被最终 Proposal Schema 拒绝。每项新内容的 owner、身份、摘要、长度、完整来源和策略由受信 Brain／内容 port 形成，来源至少包含本轮实际处理清单及引用的同轮新内容。模型不能在内部格式中指定许可、来源删减、保存命令或外发目的地。计划正文必须通过 BrainPlan Schema 和下节语义检查；计划的 `source_refs` 由 Brain 写入完整处理来源，不能采信模型删减后的集合。局部引用只允许填入最终类型为 ContentRef 的字段或能力声明允许的 ContentRef 参数位置，不能借回填更换能力、主体或权限字段。
 
 ```mermaid
 flowchart LR
@@ -358,15 +331,13 @@ flowchart LR
     P --> D[比较取消与代次后提交 Decision 终态]
 ```
 
-图只表示本轮产出路径，保存内容不执行模型建议的行动。采用内部模板使报告与计划仍能在一次物理模型推理中生成，代价是 Brain 承担有界暂存、引用解析和保存恢复；公共 Proposal 继续只交付准确引用，不增加正文传输或第二轮推理。
+图只表示本轮产出路径，保存内容不执行模型建议的行动。采用内部模板使报告与计划仍能一次生成，代价是 Brain 承担有界暂存、引用解析和保存恢复；公共 Proposal 继续只交付准确引用，不增加正文传输或第二轮生成。
 
-Brain 在获准的内容暂存保存完整输出与逐项正文；持久准备事务固定原 decision_id、输出摘要、局部依赖、暂存引用、每项稳定 content_id/version/upload_id 和 `content.put` command_id，并保留原恢复 job，之后才调用内容 owner。
-
-每项输出摘要在其依赖回填后计算，首次 `content.put` 前固定完整命令；不得把一个尚未确定的 JSON 模板摘要当成最终内容摘要。多个正文按依赖顺序分别提交，不要求跨内容 owner 原子保存，只有全部引用可核验时才交回提案。
+Brain 在获准的内容暂存保存完整输出与逐项正文；持久准备事务固定原 decision_id、输出摘要、局部依赖、暂存引用、每项稳定 content_id/version/upload_id 和 `content.put` command_id，并保留原恢复 job，之后才调用内容 owner。每项输出摘要在其依赖回填后计算，首次 `content.put` 前固定完整命令；不得把一个尚未确定的 JSON 模板摘要当成最终内容摘要。多个正文按依赖顺序分别提交，不要求跨内容 owner 原子保存，只有全部引用可核验时才交回提案。
 
 | 中断或竞争 | 原责任怎样继续 |
 | --- | --- |
-| 已收到输出，但获准暂存尚未耐久 | 能查原供应商结果则恢复同一输出；否则按原调用 unknown／失败规则结束，不在同 decision_id 再推理 |
+| 已收到输出，但获准暂存尚未耐久 | 能查原供应商结果则恢复同一输出；否则按原调用 unknown／失败规则结束，不在同 decision_id 再生成 |
 | content.put 已提交、答复丢失或 Brain 退出 | 原 publication job 查原命令并回填同一引用，不换 local_id、内容身份或生成新文本 |
 | 部分正文保存后，下一项不可保存或最终校验失败 | 保留原拒绝／缺口；已保存且未被采用的内容沿原映射清理，不能交回半份 Proposal |
 | 取消先于终态事务提交 | 不写 completed；封闭尚未发出的保存，已在途保存按原命令核对并清理，迟到保存不恢复提案资格 |
@@ -377,8 +348,7 @@ Brain 在获准的内容暂存保存完整输出与逐项正文；持久准备�
 ### 4.2 最终提案校验
 
 提案采用共享 Proposal Schema；未知 kind、字段或枚举均拒绝。
-原生工具编码与类型化答案映射先转换为同一 Proposal，不会获得额外执行权限。
-类型化响应及接纳阈值先按[决策规格](decision-paths.md#41-固定配置与职责)检查；合法但不可采用的答案按[拒判分支](decision-paths.md#43-拒判错误和升级分别处理)结束，不进入结构修复循环。
+原生工具编码与类型化答案映射先转换为同一 Proposal，不会获得额外执行权限。类型化响应及接纳阈值先按[决策规格](decision-paths.md#41-固定配置与职责)检查；合法但不可采用的答案按[拒判分支](decision-paths.md#43-拒判错误和升级分别处理)结束，不进入结构修复循环。
 校验顺序固定，避免下游错误掩盖更基础的输入或引用缺口。
 
 | 顺序 | 检查 | 失败处理 |
@@ -398,10 +368,7 @@ Orchestrator 可以携带机器可读缺口发起新决策；修复次数、总�
 <a id="finite-plan"></a>
 ### 4.3 计划正文
 
-计划是可修订的有限工作说明；每次变更引用 base_plan_ref 和完整 next_plan_ref。首次 base_plan_ref 为 null 且下一计划 revision=1；其后保持 plan_id、revision 加一，并比较当前准确 base。任务、目标版本或 base 不匹配时不安装计划。
-
-安装可单独用 `act` 的 `actions=[] + plan_delta`：计划至少一项步骤，当前图中必须有可物化或交 Brain 展开的起始节点。该 Decision 只消费为计划安装和后续 decide 责任，不同时创建直接行动；非空 actions 不得携带 plan_delta，避免同一建议分别经 Decision 和 step 准入两次。decide 优先尝试已有计划物化，安装计划本身不强制另调模型。
-
+计划是可修订的有限工作说明；每次变更引用 base_plan_ref 和完整 next_plan_ref。首次 base_plan_ref 为 null 且下一计划 revision=1；其后保持 plan_id、revision 加一，并比较当前准确 base。任务、目标版本或 base 不匹配时不安装计划。安装可单独用 `act` 的 `actions=[] + plan_delta`：计划至少一项步骤，当前图中必须有可物化或交 Brain 展开的起始节点。该 Decision 只消费为计划安装和后续 decide 责任，不同时创建直接行动；非空 actions 不得携带 plan_delta，避免同一建议分别经 Decision 和 step 准入两次。decide 优先尝试已有计划物化，安装计划本身不强制另调模型。
 参考计划保存步骤 ID、目标条件、依赖步骤及预期产出，已发生事实只引用原记录。
 确定性续行只支持准确行动模板和有限字段绑定；不支持任意脚本、循环或递归子计划。
 
@@ -486,16 +453,16 @@ Brain 按租户和稳定 owner 路由至原 Decision 数据库分区；增加无
 
 缓存可保存获准的准确内容字节、能力 Schema 和最终编码计算结果，键包含内容摘要、完整配置和编码版本。
 复用前仍检查当前来源、处理位置、期限与用途；缓存命中不建立新使用依据。
-跨 Decision 复用模型输出需要独立的来源和用途资格，本实现不以相同提示词摘要自动跳过本轮记录。
+跨 Decision 复用生成结果需要独立的来源和用途资格，本实现不以相同提示词摘要自动跳过本轮记录。
 
 主要瓶颈是外部模型占用、内容下载／编码和费用热点事务，而非 RPC 接纳数。
-按阶段记录接纳 p95/p99、job 最老等待时间、上下文读取字节／耗时、首字节及完整输出耗时、
+按阶段记录接纳 p95/p99、job 最老等待时间、上下文读取字节／耗时、首字节及完整生成耗时、
 发送门禁冲突、provider_result_unknown 数及存续时间、费用上界占用和取消收尾延迟。
 容量实验分别施加单租户高峰、单供应商限流和模型长尾；不把平均调用时间外推为超时上限。
 
 新接纳先检查有限队列和费用预留；高水位返回 overloaded 或保存明确等待，已接纳原工作不丢弃。
 控制、停止、原调用查询和账单核对使用保留工作份额；恢复风暴按原提供方退避并设每租户公平限额。
-先限流新的模型推理，再降低可选上下文量；硬约束和准确能力声明不能作为负载削减项。
+先限流新生成，再降低可选上下文量；硬约束和准确能力声明不能作为负载削减项。
 本节不新增容量常数，采用第 6 节待测初值，扩容以故障期间的实测剩余容量为依据。
 
 ## 8. 可重复故障实验
