@@ -2,28 +2,34 @@
   "scope": "STATIC ONLY; no Harness, model, database, remote sources, authorization or devices executed.",
   "scenarios": {
     "bluetooth-on": {
-      "schema_objects": 139,
-      "exchanges": 129,
+      "schema_objects": 219,
+      "exchanges": 180,
       "body_files": 10,
       "generations": 2,
       "counts_and_bytes": "passed",
-      "plan_and_reference_links": "passed"
+      "plan_and_reference_links": "passed",
+      "grant_containment_and_units": "passed on assumed policy; not live authorization",
+      "event_order": "passed"
     },
     "bluetooth-off": {
-      "schema_objects": 209,
-      "exchanges": 186,
+      "schema_objects": 332,
+      "exchanges": 268,
       "body_files": 14,
       "generations": 3,
       "counts_and_bytes": "passed",
-      "plan_and_reference_links": "passed"
+      "plan_and_reference_links": "passed",
+      "grant_containment_and_units": "passed on assumed policy; not live authorization",
+      "event_order": "passed"
     },
     "report": {
-      "schema_objects": 488,
-      "exchanges": 449,
+      "schema_objects": 773,
+      "exchanges": 648,
       "body_files": 30,
       "generations": 4,
       "counts_and_bytes": "passed",
-      "plan_and_reference_links": "passed"
+      "plan_and_reference_links": "passed",
+      "grant_containment_and_units": "passed on assumed policy; not live authorization",
+      "event_order": "passed"
     }
   },
   "known_upstream_checker_limitations": [
@@ -39,6 +45,10 @@
       "scenario": "report",
       "label": "describe:assess",
       "messages": [
+        "tenant_binding: response reference belongs to another tenant",
+        "tenant_binding: response reference belongs to another tenant",
+        "tenant_binding: response reference belongs to another tenant",
+        "tenant_binding: response reference belongs to another tenant",
         "tenant_binding: response reference belongs to another tenant",
         "tenant_binding: response reference belongs to another tenant",
         "tenant_binding: response reference belongs to another tenant",
@@ -65,6 +75,11 @@
     }
   ],
   "negative_checks": [
+    "quality pass and citation semantic fail blocks write",
+    "unregistered final host blocks citation and write",
+    "missing fetch evidence blocks citation and write",
+    "missing redirect chain blocks citation and write",
+    "wrong report link blocks citation and write",
     "valid assessment fail blocks write",
     "unknown effect blocks dependent read",
     "missing output version cannot be guessed",
@@ -79,8 +94,8 @@
     "verified": 16
   },
   "markdown": {
-    "local_links": 16,
-    "tables": 12,
+    "local_links": 15,
+    "tables": 112,
     "status": "passed",
     "rendering": "separate"
   },
@@ -95,8 +110,8 @@
     ".scratch/architecture-review/verification-review-2026-09-27.md": true
   },
   "shared_workspace_note": "This task writes only the main scenario document and task-scenarios-data/. Other chats may update formal docs and the September 28 review; changed hashes are reported, not overwritten.",
-  "schema_objects": 836,
-  "exchanges": 764,
+  "schema_objects": 1324,
+  "exchanges": 1096,
   "body_files": 54,
   "status": "passed_with_documented_upstream_checker_limitation",
   "runtime": "not_tested"

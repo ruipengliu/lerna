@@ -1,0 +1,1 @@
+{"description":"核对抓取凭据的正文引用、版本路径及全跳转链与受信来源登记；不接受页面自行声明官方身份。","fixture_only":true,"name":"official-source-checker","version":"1.0.0"}

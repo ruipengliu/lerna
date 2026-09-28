@@ -1,0 +1,16 @@
+[
+  {
+    "figure": 1,
+    "status": "passed",
+    "source_sha256": "b49683147584fae50f9305c584435c51cdf0845ed87ef07c18cd3ddc3126f637",
+    "log": "",
+    "path": "render/scenario-1.png"
+  },
+  {
+    "figure": 2,
+    "status": "passed",
+    "source_sha256": "0b39bdbfd21bf35c3489d62b61a8e2df4a5ff42f53b803b3905356d7b782e89d",
+    "log": "",
+    "path": "render/scenario-2.png"
+  }
+]

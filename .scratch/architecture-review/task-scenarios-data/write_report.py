@@ -60,7 +60,9 @@ put('''报告需要 5 次模型生成，评估那一次包含在评估操作中�
 
 ### 1.1 固定装配与不成立时的行为
 
-本样例把 H（Orchestrator）、B（Brain）、E（Executor）、C（内容 owner）、G（Grant owner）、V（批准 owner）作为逻辑边界；字节服务单独展示，H/B/E/界面各登记任务内临时副本，同一持有者复用准确版本缓存。逐条列出 `grant.use`／结算和 `evaluation.approval_check`，这是便于算账的**显式协议装配**，不是规范要求它们部署成六个服务。所有模型处理选择本地 profile，不产生云模型披露；搜索／抓取的 URL 与查询外发另列 disclose 用途。生产默认分布式装配需实测哪些交接跨进程、库、可用区；本机可合并提交的路径另记网络增量为零。
+本样例把 H（Orchestrator）、B（Brain）、E（Executor）、C（内容 owner）、G（Grant owner）、V（批准 owner）作为逻辑边界；字节服务单独展示，H/B/E/界面各登记任务内临时副本，同一持有者复用准确版本缓存。逐条列出 `grant.use`／结算和 `evaluation.approval_check`，这是便于算账的**显式协议装配**，不是规范要求它们部署成六个服务。所有模型选择本地 profile；向该模型接收方交付材料仍有 disclose，模型计算另有 process。搜索／抓取外发的查询和 URL 使用 SEARCH_LOC／WEB_LOC，不拿调用端 LOC 冒充接收位置。生产默认分布式装配需实测哪些交接跨进程、库、可用区；本机可合并提交的路径另记网络增量为零。
+
+权限预置的完整 GrantPolicy 见第 5 节：动作、目的、接收方、三个登记位置、精确资源集合和限额均明确列出。目标提交前的使用仅绑定已认证用户，尚不填不存在的 Task 身份。H 组装上下文、消费提案、计划物化、条件与结果归并各有有限 process；B 的校验/发布和 E 的确定性评估也分别登记。取得正文的 read 与交付给接收方的 disclose 分开核验。这里把本可同域完成的检查逐一序列化以便审计，不能把协议对数当成最低网络往返数。
 
 两例均为一个用户、一个固定 Orchestrator、一个任务，无子任务／外部 Agent，无长期记忆需求、无 GUI。蓝牙使用有状态模拟设备的显式 API，**不代表真实手机平台已有支持**；报告使用虚构 Atlas/Boreal 1.0 和 `.example` 域名，四篇正文是本地 fixture，不是已核实的真实官方资料。选择虚构资料是为了审查处理链和字节关系，不能用报告内容做选型。
 
@@ -85,7 +87,7 @@ put('''本文读取期间，另一项工作补入了[公共可靠工作框架](.
 下列完整值来自身份登记器。`B+`、`B−`、`R` 只是正文定位前缀，JSON 中均为完整 ID；两条蓝牙轨迹是独立的初始状态实验，不是同一设备状态在一次运行中互相矛盾。所有业务查询的 `target_id` 指原对象，租户来自认证上下文。
 ''')
 table(['正文角色','具体 ID','来源与复用'],[[a, '`'+IDS[k]+'`',source] for a,k,source in [
-('租户','tenant','认证适配器的 fixture 身份'),('H','orchestrator','受信放置目录，原提交后不换 owner'),('B','brain','已装配 Brain 服务'),('E','executor','已装配 Executor 服务'),('C','content-owner','准确内容 owner'),('G','grant-owner','原授权 owner'),('V','approval-owner','批准 owner'),('用户','user','受信用户会话'),('本地位置','local-host','已登记端点'),('蓝牙目标','bound-simulator','会话绑定的模拟设备'),('文件根','managed-report-root','受信文件根登记')]])
+('租户','tenant','认证适配器的 fixture 身份'),('H','orchestrator','受信放置目录，原提交后不换 owner'),('B','brain','已装配 Brain 服务'),('E','executor','已装配 Executor 服务'),('C','content-owner','准确内容 owner'),('G','grant-owner','原授权 owner'),('V','approval-owner','批准 owner'),('用户','user','受信用户会话'),('本地位置 LOC','local-host','已登记端点'),('SEARCH_LOC','search-provider-location','假设已获准的搜索接收位置'),('WEB_LOC','fetch-provider-location','假设已获准的网页获取接收位置'),('蓝牙目标','bound-simulator','会话绑定的模拟设备'),('文件根','managed-report-root','受信文件根登记')]])
 table(['轨迹','Task ID','完成 Task.revision','goal/control revision'],[[SHORT[n],'`'+S[n]['task_id']+'`',obj(n,'Task-final')['revision'],'2 / 3'] for n in S])
 put('''`goal_revision` 由 1→2 表示采用结构化条件；`control_revision` 同时 1→2，完成时 2→3 封闭新启动。`Task.revision` 是本夹具所选择的提交序列计数，不能当事务下界；每一步变化记录在各 `scenario.json.task_revision_log`。Decision/Operation 的 1→3 表示本样例接纳、发送阶段、结果阶段三份状态，墙上时间不参与跨对象排序。
 
@@ -168,19 +170,19 @@ for a in ['O1-output','O2-output','O3-output']:
     put('**B−/'+a+'**');code(S['bluetooth-off']['contents'][a]['body'])
 put('''## 4. 报告：来源、候选、评估和文件怎样贯通
 
-用户目标明确了产品版本、三个比较维度、受控根与相对路径。`.example` 只用于 fixture，实际部署应由受信目录确认官方 host、驱动记录重定向后的 URL、获取时间和准确正文；搜索摘要只帮助选页。这里四篇合成正文分别为：
+用户目标明确了产品版本、三个比较维度、受控根与相对路径。`.example` 只用于 fixture。本例由固定 `K/official-source-registry` 给出 Atlas/Boreal 1.0 的主机登记；它是受信来源配置的合成前提，不能证明真实官方身份。获取驱动为每份正文交付请求 URL、全部重定向、最终 URL、时间和准确 body_ref；搜索摘要只帮助选页。这里四篇合成正文分别为：
 ''')
 for i in range(1,5):
     put('**R/source-'+str(i)+'**\n\n```text\n'+S['report']['contents']['source-'+str(i)]['body'].rstrip()+'\n```')
 put('''```mermaid
-flowchart LR
+flowchart TB
     G[原目标与三个条件] --> D2[D2 搜索决策]
     D2 --> S[O1/O2 两份搜索输出]
     S --> D3[D3 从命中复制四个URL]
     D3 --> F[O3到O6 获取正文与来源]
     F --> D4[D4 同轮生成报告与计划]
     D4 --> P[保存正文后回填引用并安装计划]
-    P --> A[O7 固定候选评估]
+    P --> A[O7 官方来源与引用定位核对<br/>一次模型评估质量与语义支撑]
     A --> Q{两个当前条件均pass}
     Q -->|否：fail或unknown| W[修订或补证责任]
     Q -->|是| O8[O8 写入受控根]
@@ -195,10 +197,10 @@ table(['交接','具体输入（来源）','输出与下游','模型/目标增�
 ['R2 搜索决策','D2 的 g2、规则和准确 search 声明','两个 Action；query 为 Atlas/Boreal 1.0 deployment limits maintenance','Brain +1'],
 ['O1/O2 搜索','product/version/official_host/query 全部字符串','各 2 个 hits：url/title/snippet/official_host；retrieved_at 来自驱动','搜索各1，共2'],
 ['D3 选页','两份原搜索输出，来源不靠模型记忆','4 个 fetch Action；URL 从 hits 精确复制','Brain +1'],
-['O3～O6 获取','url、official_host；独立已准入 operation','url/final_url/retrieved_at/http_status=200/body_ref；body_ref 指 source-1～4','正文请求各1，共4'],
+['O3～O6 获取','url、official_host；独立已准入 operation','url/final_url/redirect_chain/retrieved_at/http_status=200/body_ref；body_ref 指 source-1～4','正文请求各1，共4'],
 ['D4 综合/计划','g2、四篇正文、来源封套、规则、准确评估/文件合同','内部 contents[report,plan]；C 固定 report 引用，再回填 plan 和 Proposal','Brain +1，无额外摘要生成'],
-['O7 评估','task_id,g2,report准确ref,两条件ID,两rule_ref,四source_ref','judgments[quality,citation]；citation_checks[4]；固定 model/prompt/evaluator；limitations','评估模型 +1，无新网页'],
-['H 条件归并','原 O7/result_ref 和全组成依据','quality pass/assessed；citation pass/assessed，依赖定位与语义检查','零模型；缺陷门禁覆盖组成实现'],
+['O7 评估','task_id,g2,report准确ref,两条件ID,两rule_ref,四source_ref、四fetch_evidence_ref、官方登记ref','judgments[quality,citation]；origin_checks[4]、citation_checks[4]；固定 model/prompt/evaluator；limitations','评估模型 +1；来源/定位为CPU，无新网页'],
+['H 条件归并','原 O7/result_ref 和全组成依据','quality pass/assessed；citation pass/assessed，依赖官方来源、定位与语义检查','零模型；缺陷门禁覆盖全部组成实现'],
 ['O8 写入','root_id、reports/comparison.md、expected_absent=true、同 report ref','file_version=1；content_hash/byte_length 与候选一致；原 operation_id、closed=true','文件写动作1；底层I/O不等于1'],
 ['O9 读回','expected_file_version 从原 write 输出 /file_version 解析','file_version=1，独立 readback-bytes ref；hash与候选相等，content_id不同','文件读动作1'],
 ['H 完成/交互','三个必要条件对同一 report；无未知或可能迟到效果','file pass/verified；整体 Result assessed；Task/Result查询及报告获准读取','零汇总模型']])
@@ -210,7 +212,11 @@ readback 模板在发布时故意不填 `expected_file_version`。它使用 `arg
 
 ### 4.2 评估和保存的边界
 
-O7 的 `effect=applied` 只表示评估报告已经形成，`judgments[].verdict` 可以是 fail。write 的两个 pass_conditions 同时绑定当前 g2 的两个 Requirement、固定 rule_ref 和同一 report 引用；只有都 usable/pass 才能准入。确定性定位保存 source_ref、UTF-8 起止字节、quote、matched；语义支撑来自固定评估方法。组合记录保留四份来源和组成检查，不能只保留一个“总分”。
+O7 的 `effect=applied` 只表示评估报告已经形成，`judgments[].verdict` 可以是 fail。write 的两个 pass_conditions 同时绑定当前 g2 的两个 Requirement、固定 rule_ref 和同一 report 引用；只有都 usable/pass 才能准入。
+
+引用条件 R-C 由三项同时成立：官方来源身份、准确定位、语义支撑。O7 从受信组件目录解析固定来源登记，再以 `fetch_evidence_refs` 对照每份正文的 `body_ref`，逐项核对请求、全部重定向和最终 URL 的 HTTPS 主机及版本路径。确定性定位保存 source_ref、UTF-8 起止字节、quote、matched，并将报告实际 citation_key/cited_url 与原抓取请求绑定；只验证摘录存在而不验证报告链接不能通过。语义支撑仍来自一次固定评估模型。
+H 导入 O7 的组成证据，`check:citation` 直接读取 `O7.judgments[requirement_id=R-C]` 的语义判断，同时依赖 official-origin、citation-location 两项确定性检查；quality 是 write 的另一项独立 pass_condition，不能替代引用语义判断。任一组成 fail 则 citation fail，均 pass 才 pass，其余为 unknown；不再发起模型或网页请求。
+登记缺失、封套缺失、跨域跳转、错误链接、错字节或任一组成结果未知都不能形成可用于写入的 citation pass。生产若要允许官方 CDN/不同版本路径，须修改准确登记与规则制品；不能临时把任意跳转目标视为官方。
 
 文件输出中的 `content_hash` 从已取得候选字节计算，`file_version` 由文件 owner 的提交日志分配，`closed` 来自原写入不再发送/不迟到的证据。读回内容是新观察，具有不同 ContentRef 身份与来源；即便存储层按 hash 去重物理正文，也不能合并写入与读回的事实身份。R-F 检查路径、版本、原写入关闭和准确字节，最终保证仍为 assessed，因为质量两条件依赖评估。
 
@@ -218,11 +224,36 @@ O7 的 `effect=applied` 只表示评估报告已经形成，`judgments[].verdict
 
 表中“必填”以精确 Schema 为准，附加业务条件在来源列说明；枚举只展示本例选值，其余合法值见正式 Schema。公共对象复用第 2 节字典；子对象/数组按其专表展开。每行 B 为 `"字段名":值` 的紧凑 UTF-8 字节，不含外层 `{}` 和字段间逗号；**只在同一对象同一层相加**才等于对象大小，嵌套表不能再加一次。
 
-`I/D/C/H/M/X/V/A` 成本含义见 2.3。字段既有直接产生者，也有读取/复制它的下游；下列表头给定主交接方向，来源列说明它实际依赖哪项前序事实。完整实例均在对应 `scenario.json`，原请求/响应没有使用正文别名。
+`I/D/C/H/M/X/V/A` 成本含义见 2.3。字段既有直接产生者，也有读取/复制它的下游；下列表头给定主交接方向，来源列说明它实际依赖哪项前序事实。`DecisionRecord.proposal`、actions、plan_delta、steps 和评估 judgments 的首次产生计入所属模型调用；下游复制不抹去首次成本，也不重复收费。`model_call` 是适配器汇总的持久事实，子字段才分别来自身份、供应商和计量。相同字段名按对象区分，例如 ContentControl 与 Task 的 control_revision 互不替代。完整实例均在对应 `scenario.json`，原请求/响应没有使用正文别名。
 ''')
 
 # Field dictionaries: explicit exceptions first, then mechanism-based fallback.
 SPECIFIC={
+ 'proposal':('M','本 Decision 的模型/规则输出，经 Validator 校验和 publication 局部引用解析后写入；本例每 D 一次模型生成，各字段共用该次成本'),
+ 'model_call':('D','Brain 模型适配器汇总已持久的准备、发送、供应商回执和计量事实；子字段分别追身份、驱动和账本，不是固定配置'),
+ 'actions':('M','本 Decision 生成的行动建议，经 Validator 校验；plan_delta 分支必须为空；所有行动共享本 D 一次模型成本'),
+ 'plan_delta':('M','本轮提出计划替换，publication 将局部引用解析成已保存 next_plan_ref；安装不同时准入行动'),
+ 'steps':('M','本轮生成的有限步骤及依赖，Validator 核对 DAG/模板，publication 回填准确引用；和报告共享 D4'),
+ 'action_key':('M','模型在本份提案内选定的局部键，Validator 检查唯一；不是受信 operation_id'),
+ 'target_pointer':('M','模型按能力输入 Schema 给出确定性复制落点，Validator 检查 JSON Pointer 与目标类型'),
+ 'source_pointer':('M','模型按前项输出 Schema 给出取值路径；真实值只能由后续物化读取'),
+ 'source':('M','计划生成的前项输出绑定声明；H 按同 plan/step 唯一映射解析，不能执行表达式'),
+ 'attempts':('D','Executor 从原操作持久的准备/发送记录汇集 Attempt；不由模型报告执行经历'),
+ 'target_key':('I','从原 operation_id 确定性复制到目标幂等键；重试必须复用原键'),
+ 'control_snapshot':('D','H 读取当前 TaskGate，绑定执行端与窗口后签名；不是模型产物或静态配置'),
+ 'gate':('D','TaskGate 当前状态的准确投影，H 裁决、E 单调应用；与内容门禁独立'),
+ 'entrances':('D','E 从实际发送入口逐项汇总已落实的控制修订；缺失入口保留 gap'),
+ 'user_control':('X','资源 owner 当前用户接管事实；不是 Harness 根据愿望写 false'),
+ 'lease':('D','资源 owner 当前唯一占用租约记录；查询仅复制原事实'),
+ 'approval_revision':('A','批准 owner 当前已核验的批准行修订，回执记录本次实际使用版本'),
+ 'redirect_chain':('X','抓取驱动按跳转顺序记录完整中间 URL；空数组仅表示本次无跳转'),
+ 'fetch_evidence_refs':('H','从 O3～O6 原结果复制准确抓取封套引用，与 source_refs 一一绑定'),
+ 'official_registry_ref':('C','固定受信来源登记制品；E 从组件目录解析正文，不能信页面自称官方'),
+ 'origin_checks':('V','O7 确定性核对登记主机、版本路径、全部跳转及封套 body_ref；无新模型/抓取'),
+ 'requested_url':('X','原抓取封套 url；从原搜索命中到原请求的精确链'),
+ 'registered_host_match':('V','对请求/每跳/最终 URL 解析 HTTPS 主机，与固定来源登记逐项相等'),
+ 'redirect_chain_checked':('V','原封套具有完整 redirect_chain 且 body_ref 等于被引用正文；缺失就不通过'),
+ 'version_match':('V','全部来源 URL 路径匹配登记版本；本例规则为 /1.0/，其他版本规则需固定制品'),
  'tenant_id':('I','认证会话；不是请求正文指定租户'),
  'goal_ref':('H','用户准确 goal 字节发布后的 ContentRef'),
  'goal_revision':('D','H 当前条件版本；D1条件变更后为2'),
@@ -248,7 +279,7 @@ SPECIFIC={
  'action_template':('M','完整固定模板；缺未来值仅由声明的argument_bindings补齐'),
  'argument_bindings':('M','JSON Pointer复制映射，不允许表达式或外部动作'),
  'depends_on':('M','有限计划DAG；发布时无未来operation_id'),
- 'pass_conditions':('C','模型按既有规则提出，H再次检查当前准确条件与成果'),
+ 'pass_conditions':('M','本轮模型按既有 Requirement/rule 提出门禁，Validator 核对；H 物化再检查当前准确条件与成果'),
  'source_refs':('H','实际处理清单/前序来源闭包；由可信适配器继承，不许模型删减'),
  'sources':('H','source_ref+关系+原观察时间+policy_ref；沿已发布来源回填'),
  'input_manifest':('H','本轮真实使用的全部准确资料清单；CPU组装/去重，不新生成摘要'),
@@ -278,7 +309,7 @@ SPECIFIC={
  'grant_refs':('A','受信预授权owner/ID/revision，不接受模型给许可'),
  'resource_scopes':('A','类型规范化器验证资源/集合成员，不按模型字符串前缀放行'),
  'recipient':('A','受信接收方登记；来源许可必须覆盖'),
- 'location':('A','实际处理端点登记；本例本地LOC'),
+ 'location':('A','实际接收/处理端点登记；本地用 LOC，查询/URL 外发分别用 SEARCH_LOC/WEB_LOC，不能用调用端冒充目的地'),
  'cost_bound':('C','原能力/profile的strict声明；fixture额度非真实货币'),
  'max_cost':('C','可信fixture tariff最大值，不由模型估算'),
  'max_units':('C','动作1或内容准确字节长度，使用身份固定后不增大'),
@@ -298,9 +329,101 @@ SPECIFIC={
  'control_epoch':('D','资源owner控制代次；不是Task.control_revision'),
  'expected_control_epoch':('D','原资源占用代次；释放不得覆盖用户接管'),
  'expected_file_version':('X','原写入输出/file_version，由H按step_output复制'),
+ 'expected_state_version':('X','D3从O1准确观察state_version=1复制，目标启动时比较'),
+ 'enabled':('X','模拟设备当前状态寄存器；本次是脚本化true/false期望值'),
+ 'desired':('M','由用户“打开”确定为true，不能改成toggle'),
+ 'state_version':('X','目标owner的状态提交日志单调版本'),
+ 'previous_state_version':('X','目标owner原设置操作提交前读取到的版本'),
+ 'file_version':('X','文件owner原写入/读回日志；模型不知道未来值'),
+ 'content_hash':('H','文件实际候选/读回字节SHA-256，驱动核对后报告'),
+ 'closed':('X','原目标操作不再发送且不可能迟到的凭据；非超时推断'),
+ 'product':('I','原用户目标明确的比较对象；复制，不另猜产品'),
+ 'official_host':('C','受信产品来源登记；本次.example为虚构fixture，未核实真实官方性'),
+ 'query':('M','本轮用原产品/版本与比较维度构造搜索文本'),
+ 'hits':('X','实际搜索提供方返回的有限候选；本次脚本化'),
+ 'url':('X','搜索命中复制至获取输入；不能当已获取正文'),
+ 'final_url':('X','获取驱动实际重定向完成地址；本例无重定向'),
+ 'http_status':('X','HTTP驱动状态；200不证明内容质量'),
+ 'retrieved_at':('X','搜索/获取驱动的受信时钟；本次虚拟时间'),
+ 'title':('X','搜索提供方候选标题'), 'snippet':('X','搜索提供方摘要；仅供定位'),
+ 'relative_path':('I','受信入口从用户目标取得，文件规范化器再次检查'),
+ 'expected_absent':('C','示例文件合同：预期不存在；目标owner启动时核验'),
+ 'judgments':('M','O7 固定评估模型对质量/语义支撑的输出，适配器绑定规则与准确输入后保存；共享一次评估生成，不是配置复制'),
+ 'citation_checks':('V','确定性定位结果，须与语义支撑组成记录共同使用'),
+ 'quote':('H','原来源UTF-8区间解码得到，不能从搜索摘要替代'),
+ 'byte_start':('H','在准确来源字节中确定起始偏移'),
+ 'byte_end':('H','起始偏移+摘录UTF-8长度，半开区间'),
+ 'matched':('V','原始字节切片与quote逐字比较'),
+ 'reason':('V','条件判断的明确依据/缺口；本次不是实际模型结论'),
 }
 
-def fallback(key):
+for key in ['media_type','schema_version','description','input_schema','output_schema','effect_class','verification','retry','authorization','limits','evidence_kinds','query_supported','cancel_supported','max_attempts','initial_backoff_ms','max_backoff_ms','reconciliation_timeout_ms','key_scope','key_retention_ms','requires_lease','requires_confirmation','max_duration_ms','max_input_bytes','max_output_bytes','max_physical_requests','mutex_domains','max_output_tokens','max_actions','max_context_requests','range_supported','normalizer_version','max_offline_window_ms','offline_allowed']:
+    SPECIFIC[key]=('C','由该对象所属协议版本、准确 capability/profile/规范化器或存储实现声明提供；按安装锁读取，本次没有模型生成')
+for key in ['subject','resources','recipients','locations','purposes','classification','allowed_locations','allowed_recipients','allowed_purposes','valid_from']:
+    SPECIFIC[key]=('A','由受信授权/内容策略制定者按认证主体、规范资源、目的地与来源限制确定；本例为明确预置假设，模型不得签发或放宽')
+for key in ['kind','type','required']:
+    SPECIFIC[key]=('C','按本对象 Schema 分支或固定规则分类；模型输出对象的分类来源另按类型覆盖')
+SPECIFIC.update({
+ 'citation_key':('H','从准确候选的引用定义解析 A1/A2/B1/B2，和本条来源证据关联'),
+ 'cited_url':('X','原抓取请求 url；确定性检查与报告对应引用定义逐字一致'),
+ 'report_link_matches':('V','候选引用键实际解析的 URL 与原抓取请求一致；缺失或改链时引用条件不通过'),
+ 'fetch_evidence_ref':('H','固定 O3～O6 中绑定本 source_ref 的原抓取封套；不靠模型补正文身份'),
+ 'unit':('C','原能力/计量合同给定；fixture_credit、byte、invocation 为不同单位，禁止混加'),
+ 'amount':('D','原计量方/账本给定精确十进制量；本字段复制既有金额，不从模型估价'),
+ 'actor_kind':('I','认证适配器的主体分类；本例 user'),
+ 'cursor':('D','查询 owner 对固定查询状态编码；本例未分页，无生成成本'),
+ 'constraints':('I','从原用户提交复制明确约束；本例空数组，不隐含新模型解释'),
+ 'budget':('D','Submit 从受信用户上限生成；Task 从原账投影 limit/spent/reserved，各数有唯一来源'),
+ 'delegation_context':('I','受信委派入口提供父任务与分配绑定；本例未委派，不产生此对象'),
+ 'capabilities':('C','H 从准确能力/绑定目录组装模型可见清单；完整目录为输入材料，不由模型自报可用工具'),
+ 'availability':('D','目录/执行宿主对当前准确绑定的可用性事实；不是能力静态存在即 ready'),
+ 'purpose':('A','调用方为本次有限使用选择目的，G 核对授权覆盖；来自原动作而非模型扩大许可'),
+ 'action':('A','由实际 read/process/store/act/disclose/manage 工作确定，G 分别裁决，不互相隐含'),
+ 'gui_precondition':('X','最近获准 GUI 观察及目标前提经受信适配器绑定；本例纯 API，不生成'),
+ 'resource_type':('C','资源 owner 登记的类型与规范化器合同，不能把任意路径字符串当范围'),
+ 'selector':('A','受信规范化器确认 object_ids/versions 的实际归属与范围，再供 Grant 匹配'),
+ 'action_kind':('C','批准接口的工作类别；本例 work，原 action_id 另绑定具体工作'),
+ 'relation':('H','发布适配器根据真实派生/观察关系写 SourceBinding；不是模型自由删改来源'),
+ 'mode':('C','方法/策略选择的模式；Content 为 bytes，Grant 为预置 continuous，含义按所属类型'),
+ 'residual_reason':('X','持有者实际清理失败/残留原因；本例 pending，无虚构删除凭据'),
+ 'gap':('D','发送入口尚未落实当前控制的实际缺口；本例无缺口是合成前提'),
+ 'base_goal_revision':('D','复制本 D 输入的 g1，H 采用前比较当前目标修订'),
+ 'role':('H','H 按实际输入用途分类；本例材料为 evidence，不改变来源权限'),
+ 'versions':('A','规范化器确认的精确资源版本筛选；本例 selector 只用 object_ids'),
+})
+for key in ['source_ref','context_ref','content_ref','body_ref','artifact_refs','next_plan_ref']:
+    SPECIFIC[key]=('H','准确正文已发布后从其 ContentRef 复制；首次字节编码/hash 在原发布计，当前字段仅复制，不能靠模型预造引用')
+for key in ['plan_ref','base_plan_ref','object_ref','reservation_ref','cost_reservation_ref']:
+    SPECIFIC[key]=('D','从当前已保存的计划/前序事实/原预算预留复制准确版本；该引用不新增模型或目标调用')
+for key in ['capability_refs','capability_ref','binding_ref','model_profile_ref','driver_ref','configuration_ref','predicate_ref','not_applied_rule_ref','replay_guarantee_ref','rule_refs','prompt_ref']:
+    SPECIFIC[key]=('C','受信安装/能力目录按准确版本取得；模型可选择允许项，不能发明已安装实现；配置冷读按目录整体计一次')
+SPECIFIC.update(task_ref=('I','固定原 orchestrator_id/task_id 的二元身份；复制接纳绑定，不重新选 owner'),target_ref=('C','准确 Binding 中的受信目标 owner/id/revision，由绑定目录提供'),trusted_user_session_ref=('I','认证适配器的受信用户会话证明；本例未用此可选字段'),parent_grant_ref=('A','受信签发的父许可引用；当前父链逐次核验，本例未委派'),delegation_ref=('A','受信委派许可/分配绑定；本例没有此项，不以模型请求替代'))
+TYPE_SOURCE={
+ ('ContentRef','version'):('D','C 为准确 content_id 分配的不可变发布版本；独立于组件安装版本'),
+ ('ContentCommit','control_revision'):('D','C 对此准确内容版本保存的 ContentControl 修订；本例 1，与 H 的 Task c2/c3 独立'),
+ ('ContentBytesGetOutput','control_revision'):('D','C 在当前下载资格检查时读取的 ContentControl 修订；不是 Task.control_revision'),
+ ('DecisionRecord','proposal'):SPECIFIC['proposal'],
+ ('DecisionRecord','model_call'):SPECIFIC['model_call'],
+ ('Task','requirements'):('D','H 接纳 D1 提出的条件后保存，后续 Task 仅复制；解释成本计 D1 一次，不随每次投影重复'),
+ ('BrainContext','requirements'):('D','H 从当前 Task 条件集合复制；首次解释成本属于 D1，本轮组装不再次生成条件'),
+ ('BrainContext','assumptions'):('D','H 根据已知部署前提和缺口写入上下文；不是另一次模型假设生成'),
+ ('Invoke','arguments'):('H','H 从获准 Action/计划模板复制，step_output 按原 Operation 输出确定性补齐；不新增模型'),
+ ('Requirement','kind'):('M','D1 按用户目标与既有规则分类，由 H 校验接纳；共享 D1 生成'),
+ ('Requirement','required'):('M','D1 对原目标提出必要条件，H 确认；不能把用户必需条件降为可选'),
+ ('Proposal','kind'):('M','本轮模型/规则选择 act 分支，经 Validator 校验；不是静态配置'),
+ ('ActionInvoke','type'):('M','本轮 Action 选择 invoke 类型；H 再按 Schema 校验'),
+ ('BrainOutputSource','kind'):('M','D4 选择 step_output 绑定语法，实际未来值由 H 物化复制'),
+ ('RuntimeCapabilityAuthorization','actions'):('C','能力提供方声明实际动作所需权限种类；不是 Proposal.actions，也不能替用户授权'),
+ ('GrantPolicy','actions'):('A','受信签发者预置允许动作集合；本包是授权假设，不是本轮用户签发记录'),
+ ('GrantPolicy','limits'):('A','受信签发者给定各单位总限额；Grant 逐项检查当前余额，本包仅验证样例包含关系'),
+ ('AssessmentJudgment','verdict'):('M','O7 评估模型按准确候选/规则/来源输出；通过不等于确定性正确，共享一次评估'),
+ ('AssessmentJudgment','reason'):('M','同一 O7 评估输出的短依据；本例为脚本化期望，不另开一次模型'),
+ ('AssessmentJudgment','basis'):('C','评估适配器声明 assessed，模型无权提升为 verified'),
+ ('SourceBinding','observed_at'):('H','发布适配器记录本次来源关联时刻；正文原 observed_at/retrieved_at 仍从驱动保留'),
+}
+
+def fallback(key,name):
+    if (name,key) in TYPE_SOURCE:return TYPE_SOURCE[(name,key)]
     if key in SPECIFIC:return SPECIFIC[key]
     if key.endswith('_id') or key.endswith('_ids') or key in ['id','use_id','target_id']:
         return ('I','受信分配或从前序固定身份复制；恢复保持原ID')
@@ -314,7 +437,7 @@ def fallback(key):
         return ('D','配置上限和原累计账确定性运算；在所属账本事务保存')
     if key in ['method','stage','output','payload','request','response','error','redacted','observed_at','resource_revision']:
         return ('D','按methods登记和原领域记录编码/投影；不产生新业务事实')
-    return ('C','准确声明/固定策略或从前序对象复制；本字段不单独产生模型调用')
+    raise ValueError('Unreviewed field provenance: '+name+'.'+key)
 
 def typename(s):
     if '$ref' in s:return s['$ref'].split('/')[-1]
@@ -334,7 +457,7 @@ def fieldtable(name,value,where,direction,schema=None):
     rows=[]
     for k,s in schema.get('properties',{}).items():
         required='是' if k in schema.get('required',[]) else '否/按分支'
-        cost,source=fallback(k)
+        cost,source=fallback(k,name)
         if k in value:
             v=value[k]
             # Inline object/array structures have their own typed field tables.
@@ -371,7 +494,7 @@ common=[
  ('DecisionRequest',val(bt,'D2:DecisionRequest'),'B−/D2:DecisionRequest','H→B，准备/预留完成后的固定请求'),
  ('BrainContext',val(bt,'D3:BrainContext'),'B−/D3:BrainContext','H组装→C保存→B读取'),
  ('DecisionRecord',val(bt,'D3:DecisionRecord'),'B−/D3:DecisionRecord','B→H，原决策状态和一次生成结果'),
- ('ModelCall',val(bt,'D3:ModelCall'),'B−/D3:ModelCall','B/模型适配器→原账务恢复'),
+ ('ModelCall',val(bt,'D3:ModelCall'),'B−/D3:ModelCall','B/模型适配器→原账务恢复；R/O7:ModelCall 使用同型，固定其内部模型身份并向 O7 投影费用'),
  ('Proposal',val(bt,'D1:Proposal'),'B−/D1:Proposal','B→H；字段表展示act分支，D1条件变化后行动失效'),
  ('ActionInvoke',val(bt,'D2:Proposal')['actions'][0],'B−/D2:Proposal.actions[0]','B/物化器→H准入；没有operation_id或权限签发能力'),
  ('BrainPlan',val(rp,'BrainPlan'),'R/BrainPlan','B发布→H安装/物化'),
@@ -395,6 +518,7 @@ common=[
  ('ResourceReleaseInput',exchange(bt,'resource-release')['request']['payload'],'B−/resource-release.payload','E→原资源owner，固定代次释放'),
  ('RuntimeResourceState',exchange(bt,'resource-release')['response']['output'],'B−/resource-release.output','资源owner→E，释放不意味着Task成功'),
  ('UseRequest',val(bt,'O2:target:UseRequest'),'B−/O2:target:UseRequest','实际使用端→G；用途、范围、单位和费用分别固定'),
+ ('GrantPolicy',SH['grant_policy'],'shared/grant_policy','G中假设存在的受信预授权范围；只给完整政策值，不伪造GrantRecord/Confirmation'),
  ('Subject',val(bt,'O2:target:UseRequest')['subject'],'B−/O2:target:UseRequest.subject','认证映射→G'),
  ('ResourceScope',val(bt,'O2:target:UseRequest')['resource_scopes'][0],'B−/O2:target:UseRequest.resource_scopes[0]','受信规范化器→G'),
  ('UseReceipt',val(bt,'O2:target:UseReceipt'),'B−/O2:target:UseReceipt','G→E；原窗口与消费决定不可变'),
@@ -440,7 +564,8 @@ for capname,opnum,n in [('observe',1,bt),('enable',2,bt),('search',1,rp),('fetch
 for name,value,schema in [
  ('SearchHit',S[rp]['contents']['O1-output']['body']['hits'][0],SH['capabilities']['search']['capability']['output_schema']['properties']['hits']['items']),
  ('AssessmentJudgment',S[rp]['contents']['O7-output']['body']['judgments'][0],SH['capabilities']['assess']['capability']['output_schema']['properties']['judgments']['items']),
- ('CitationCheck',S[rp]['contents']['O7-output']['body']['citation_checks'][0],SH['capabilities']['assess']['capability']['output_schema']['properties']['citation_checks']['items'])
+ ('CitationCheck',S[rp]['contents']['O7-output']['body']['citation_checks'][0],SH['capabilities']['assess']['capability']['output_schema']['properties']['citation_checks']['items']),
+ ('OriginCheck',S[rp]['contents']['O7-output']['body']['origin_checks'][0],SH['capabilities']['assess']['capability']['output_schema']['properties']['origin_checks']['items'])
 ]:fieldtable(name,value,name,'示例输出子对象，非新增正式领域类型',schema)
 
 put('''### 内部记录不冒充公共 RPC
@@ -460,6 +585,7 @@ put('''内部 Job 值给出了一个无重领的串行调度示例，**不能把
 for n,label,title in [(bt,'submit','6.1 task.submit 接纳'),(bt,'D2:decide','6.2 brain.decide 固定请求及 accepted'),(bt,'D1:get','6.3 brain.get 取得条件补全；其同行动必须丢弃'),(bt,'O2:invoke','6.4 execution.invoke 只接纳设置责任'),(bt,'O2:get','6.5 execution.get 取得原设置效果'),(bt,'put:goal','6.6 content.put 发布已存在字节'),(bt,'read:O1-output:orchestrator:task_processing:get','6.7 content.get 只返回下载身份'),(bt,'O2:target:use','6.8 grant.use 消費准确用途'),(bt,'O2:target:settle','6.9 grant.use.settle 原使用结算'),(bt,'O2:work:approval','6.10 evaluation.approval_check 当前启动批准')]:pair(n,label,title)
 put('**6.11 R 完整有限计划正文。** 写入门禁和未来文件版本都可在这份 JSON 中定位。');code(val(rp,'BrainPlan'))
 put('**6.12 R 评估输出正文。** `execution.get(O7).output.result_ref` 指这份准确字节；它不是离线 evaluation.run/report。');code(S[rp]['contents']['O7-output']['body'])
+put('**O7 内部模型事实。** 调用身份在发送前分配，process/disclose 绑定此 model_call_id；E 的确定性评估工作仍绑定原 operation_id。费用由此调用向原 O7 usage 投影，Task 只按 Executor 的 O7 累计账扣一次。');code(val(rp,'O7:ModelCall'))
 put('**6.13 R 最终 Result。** 三项条件绑定同一准确报告；读回证据保留独立身份。');code(val(rp,'Result'))
 pair(bt,'task-read','6.14 task.read 查询终态；target_id承载任务身份')
 put('''## 7. 把每个对象换算成生成与存储成本
@@ -482,7 +608,7 @@ put('''### 7.2 精确计数与序列化字节
 
 下表由样例逐项计算，字节用十进制 B。`协议对`是一份领域请求及返回，**不等于网络请求数或数据库事务数**。传输帧、TLS、压缩、数据库行头、索引/WAL/副本不在 JSON 字节内；查询响应、记录重复保存和内容下载分别计量，不把它们相加伪装成物理占用。
 ''')
-metrics=[('Brain 生成','brain_calls'),('评估模型生成','assessment_model_calls'),('Operation','operations'),('领域协议对','protocol_pairs'),('请求+返回 JSON B','request_response_json_bytes'),('本包序列化的保留记录数','retained_record_count'),('这些记录 JSON B','retained_record_json_bytes'),('新正文数','new_body_count'),('新正文唯一身份字节 B','new_body_bytes'),('共享预置正文 B（不入本次新写）','preinstalled_body_bytes'),('临时副本数','copy_count'),('下载字节 B（本轮各持有者冷读）','download_bytes'),('用途使用/结算各次数','use_count'),('选定最小关闭记录数','minimum_closure_count'),('其独立 JSON B','minimum_closure_json_bytes'),('Brain 输入材料字节累计（非token）','model_input_body_bytes')]
+metrics=[('Brain 生成','brain_calls'),('评估模型生成','assessment_model_calls'),('Operation','operations'),('领域协议对','protocol_pairs'),('请求+返回 JSON B','request_response_json_bytes'),('本包序列化的保留记录数','retained_record_count'),('这些记录 JSON B','retained_record_json_bytes'),('新正文数','new_body_count'),('新正文唯一身份字节 B','new_body_bytes'),('共享预置正文 B（不入本次新写）','preinstalled_body_bytes'),('临时副本数','copy_count'),('下载字节 B（本轮各持有者冷读）','download_bytes'),('用途使用/结算各次数','use_count'),('选定最小关闭记录数','minimum_closure_count'),('其独立 JSON B','minimum_closure_json_bytes'),('Brain 输入材料字节累计（非token）','model_input_body_bytes'),('O7 评估输入材料字节（非token）','assessment_input_body_bytes')]
 table(['口径','B+已开','B−关闭','R报告'],[[title]+[STAT[n][k] for n in S] for title,k in metrics])
 put('''这些字段产生量是真实文件算出的**样例量**，不是 Harness 性能。完整请求和回执是本包选择的恢复序列化布局：其中嵌套的 Invoke、Task、ContentRef 可能重复出现，记录表按实际重复字节计；同一个原正文只在“新正文”栏计一次。Result 作为内容字节与 task_results 中嵌入的逻辑值分别列出，这是显式冗余布局；若实现只存引用，减去嵌入值，不保留本表的重复量。`IntentProjection` 等内部对象可以嵌入原记录，不必成为单独表或独立事务。
 
@@ -493,6 +619,8 @@ put('''这些字段产生量是真实文件算出的**样例量**，不是 Harne
 methods=sorted(set(k for s in STAT.values() for k in s['methods']))
 table(['方法','B+','B−','R','此调用为什么存在'],[[m]+[STAT[n]['methods'].get(m,0) for n in S]+[{'brain.decide':'固定一次决策责任','brain.get':'首次查询即已终结的假设','execution.invoke':'每项原操作接纳','execution.get':'每项原操作持久查询基线','capability.describe':'少量工具跳过search，读取完整准确声明','content.put':'每个新正文一次发布；上传字节另计','content.get':'每holder/准确正文/用途首次冷读','content.register_copy':'跨内容持有边界先登记','content.release_copy':'停止使用，物理删除仍pending','grant.use':'每有限store/read/process/act/disclose/manage使用','grant.use.settle':'每原使用最终累计结算；同笔钱不再扣Task','evaluation.approval_check':'本装配对Brain、操作和本地检查显式取一次工作批准','execution.control':'终态传播；条件首次变化时尚无已绑定E','resource.acquire':'模拟设备的任务内占用','resource.release':'原占用释放','task.submit':'一次任务接纳','task.read':'一次最终状态展示','task.result':'一次固定Result展示'}[m]] for m in methods])
 put('''本例 `content.get` 按精确版本缓存，缓存命中只重核当前用途；这种重核在同域是查库/门禁，不伪造为新的公开 RPC。统计没有把每个字段的复制乘成外部调用。对于公共且可共享的目录/策略，运行装配可以使用安装锁下的本地不可变制品与当前门禁，取消此处“每任务、每持有者受控内容副本”的可选代价；同时保留真实私有目标、观察和报告的用途约束。
+
+最终界面直接使用 `task.result` 返回的完整 Result，没有再次下载同一 Result 正文；`Task.result_ref` 与权威存储仍保留。报告正文是另一份内容，仍执行 read/disclose/副本登记/下载和收尾。`task.read`、`task.result` 返回前各做当前披露检查，本包将其也展开成有限 disclose 使用；正式实现可由同域资格适配器完成，不能把它误解成必须增加公开 RPC。任何当前权限或来源状态无法核验时停止披露，原任务成功事实仍保存。
 
 ### 7.3 选定逻辑记录分布与正文分布
 
@@ -542,13 +670,13 @@ put('''## 8. 正常之外，哪些故障最可能推翻方案
 | O7执行成功，但quality/citation有效fail | E保留原评估报告和费用；H当前fail拦住write，Brain按策略修订 | 新候选v2、新检查通过，再独立写/读；旧fail保留 | 若无需补源且一次修订通过，+1 Brain/+1评估，即模型共7，操作共10；这不是故障上界 |
 | O7缺报告或组成证据冲突 | H保存unknown、原poll/verify；E继续原责任 | 必需证据齐备且适用，不从历史报告挑pass | 查询/补证另计；不能“评估调用没报错”就pass |
 | report v2却引用v1通过记录 | H检查artifact_ref、goal、rule及当前选定check | 仅准确同一候选版本的依据可用 | 新内容即使只改一句也不能免费继承旧质量分数 |
-| 文件替换成功，原答复丢失 | 文件owner原操作日志/版本/摘要；E核对O8；H继续poll | 原写入核清且不会迟到，读回同字节 | 不能创建新写入或换GUI保存；读到相同字节不单独证明旧发送者已封闭 |
+| 文件写入生效，原答复丢失 | 文件owner原操作日志/版本/摘要；E核对O8；H继续poll | 原写入核清且不会迟到，读回同字节 | 不能创建新写入或换GUI保存；读到相同字节不单独证明旧发送者已封闭 |
 | 本轮处理后新增责任，旧job想done | 领域先Raise增加work_revision；Guard/Finish锁原槽核对观察版本和lease_epoch | 后续责任仍可被新领取处理；不以handler返回判Task成功 | 旧worker不能结束或延后新责任；重领次数/事务另测 |
 | 本轮模型输出已生成，content.put失答复 | B保留publication和原保存命令；C返回原ContentCommit | 所有局部引用已解析且准确正文可核验才交Proposal | 增原内容命令查询，不重新生成报告/计划 |
 | 授权/批准窗口过期，尚未发送 | 原使用和Gate保持，当前依赖不可用则等待/拒绝新启动 | 取得合法新依据后按领域规则继续；closed不能复活 | 重放UseReceipt/ApprovalUse不续期；grant.check不能替代use |
 | Task已成功但费用上调或清理pending | 原Brain/E/G保留原账及可靠交回，H原计费槽结算；C跟进副本 | 成功结果不重开；费用和清理独立可查 | 原来源累计差额只扣一次；不能删旧身份省存储 |
 
-负例校验覆盖 stale goal、有效fail阻写、unknown前项、缺失file_version、inapplicable pass、计划/行动互斥、查询身份位置和控制证明绑定。它们验证构造数据的行为约束，不证明数据库并发、目标隔离或实际授权有效。
+负例校验覆盖官方主机/跳转封套/报告链接错误、quality pass 而 citation fail、stale goal、有效fail阻写、unknown前项、缺失file_version、inapplicable pass、计划/行动互斥、查询身份位置和控制证明绑定。它们验证构造数据的行为约束，不证明数据库并发、目标隔离或实际授权有效。
 
 ### 8.1 当前不能用假字段补掉的缺口
 
@@ -590,7 +718,13 @@ put('''静态检查入口是 [validate.py](task-scenarios-data/validate.py)，�
 
 仓库原逐消息校验器会把 `Capability.input_schema/output_schema.properties.tenant_id` 的“字段类型定义”误当运行值，4条 describe 出现同类误报。本次保留原校验结果，在配套校验器中只对这4条已定位情况另作排除Schema节点的真实租户核验，其他错误仍失败；**不宣称未修改的原校验器对本包全部通过**，也未修改正式校验代码。其余跨字段、内容状态和计划校验复用仓库检查器。
 
-语义审查、图渲染、链接和静态数据校验分别记录；运行实现、模型质量、授权真实性、数据库事务/并发、目标效果、真实token/费用/延迟、清理和长期容量均未验证。原27日评审不改，28日及正式设计其他会话的修改原样保留；不切分支、不建worktree、不提交。
+独立读者能够复述 H/B/E/C/G/V 的分工、蓝牙 2/3 次及报告 4+1 次模型路径，以及样例 JSON 与未知物理占用的区别。审查指出并已修正官方来源证据链、用途覆盖、内容控制修订归属、观察时序、重复 Result 下载，以及质量/引用语义的独立判断；主线程指出的模型产物来源误分类也已按对象修正。结果留在 [review-results.json](task-scenarios-data/review-results.json)。
+
+静态检查：1324 个类型对象、1096 份协议对、54 份正文的 Schema/引用/实际字节、16 份控制签名及 14 个负例均通过，保留上述 4 条已定位的原检查器限制。正文统计另与机器账本逐行比对。仓库既有 Brain 静态向量、协议的 55 条有效轨迹/371 个无效变体/105 个方法，以及任务结果的 5 个有效/9 个无效样例均通过；这些是静态检查，不是服务调用。
+
+渲染检查：两张 Mermaid 均成功渲染并目视检查，报告图调整为纵向以避免横向压缩；正文链接、锚点、112 张表的列数和代码围栏检查通过。渲染产物及源摘要见 [render-results.json](task-scenarios-data/render-results.json)。没有对整篇长文逐屏做浏览器截图。
+
+运行实现、模型质量、授权真实性、数据库事务/并发、目标效果、真实token/费用/延迟、清理和长期容量均未验证。原27日评审不改，28日及正式设计其他会话的修改原样保留；本工作不切分支、不建worktree、不提交。
 ''')
 DOC.write_text('\n'.join(OUT))
 print('Wrote',DOC,'lines',len(DOC.read_text().splitlines()),'bytes',DOC.stat().st_size)

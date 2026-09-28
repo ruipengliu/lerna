@@ -8,6 +8,7 @@ import json
 import re
 import subprocess
 import sys
+from urllib.parse import urlparse
 
 HERE=Path(__file__).resolve().parent
 ROOT=HERE.parents[2]
@@ -68,6 +69,28 @@ def materialization_state(b):
     return state
 
 
+def official_chain_valid(bundle,shared):
+    """Independent deterministic check; never trusts fixture pass booleans."""
+    output=bundle['contents']['O7-output']['body']
+    registry=shared['components']['official-source-registry']
+    if output['official_registry_ref']!=registry['ref']:return False
+    sources=output['source_refs'];fetches=output['fetch_evidence_refs']
+    if len(sources)!=4 or len(fetches)!=len(sources):return False
+    links=dict(re.findall(r'^\[([^\]]+)\]: (\S+)$',bundle['contents']['report']['body'],re.M))
+    if len(links)!=len(sources):return False
+    for source,fetchref in zip(sources,fetches):
+        fetch=next((v['body'] for v in bundle['contents'].values() if v['ref']==fetchref),None)
+        citation=next((x for x in output['citation_checks'] if x['source_ref']==source),None)
+        if not fetch or not citation or 'redirect_chain' not in fetch or fetch.get('body_ref')!=source:return False
+        registered=next((p for p in registry['body']['products'] if p['host']==urlparse(fetch['url']).hostname),None)
+        if not registered:return False
+        if citation['cited_url']!=fetch['url'] or links.get(citation['citation_key'])!=fetch['url']:return False
+        for url in [fetch['url']]+fetch['redirect_chain']+[fetch['final_url']]:
+            p=urlparse(url)
+            if p.scheme!='https' or p.hostname!=registered['host'] or not p.path.startswith('/'+registered['version']+'/'):return False
+    return True
+
+
 def main():
     shared=read(HERE/'shared.json')
     ids=read(HERE/'identities.json')
@@ -77,6 +100,7 @@ def main():
     all_refs=[];all_proofs=[];schemas=0;exchanges=0;bytefiles=0
     check(len(set(ids.values()))==len(ids),'fixture ID collisions')
     check(all(not validate('Id',v) for v in ids.values()),'ID format')
+    check(not validate('GrantPolicy',shared['grant_policy']),'assumed GrantPolicy schema')
     for k,c in shared['components'].items():
         raw=(HERE/c['body_file']).read_bytes()
         check(dg(raw)==c['ref']['digest'] and len(raw)==c['byte_length'],('component bytes',k))
@@ -87,6 +111,24 @@ def main():
             Draft202012Validator.check_schema(c['capability'][f])
     for name,exp in expected.items():
         b=read(HERE/name/'scenario.json')
+        submitted=False
+        grant=shared['grant_policy'];limits={x['unit']:int(x['limit']) for x in grant['limits']}
+        consumed=Counter()
+        for ex in b['exchanges']:
+            request=ex['exchange']['request']
+            if request['method']=='task.submit':submitted=True
+            if request['method']!='grant.use':continue
+            q=request['payload']
+            check(('task_id' in q['subject'])==submitted,(name,'no task scope before task exists',ex['label']))
+            for one,many in [('action','actions'),('purpose','purposes'),('recipient','recipients'),('location','locations')]:
+                check(q[one] in grant[many],(name,'use outside assumed grant',one,ex['label']))
+            check(all(r in grant['resources'] for r in q['resource_scopes']),(name,'use outside resource scope',ex['label']))
+            for one in ['max_units','max_cost']:
+                v=q[one];check(v['unit'] in limits,(name,'unbounded unit',v));consumed[v['unit']]+=int(v['amount'])
+            wanted_location={ids['search-provider']:ids['search-provider-location'],ids['fetch-provider']:ids['fetch-provider-location']}.get(q['recipient'],ids['local-host'])
+            check(q['location']==wanted_location,(name,'receiver location',ex['label']))
+        check(all(v<=limits[u] for u,v in consumed.items()),(name,'assumed grant quota exceeded',consumed))
+        check(not any(x['label'].startswith('read:result:user') for x in b['exchanges']),(name,'duplicate Result download'))
         for alias,c in b['contents'].items():
             raw=(HERE/c['body_file']).read_bytes();r=c['ref']
             check(dg(raw)==r['hash'] and len(raw)==r['byte_length'],('content bytes',name,alias))
@@ -148,6 +190,10 @@ def main():
             check(inv['operation_id']==op['operation_id'] and inv['goal_revision']==2,(name,'operation linkage'))
             check(op['result_ref']==b['contents'][f'O{i}-output']['ref'],(name,'operation result linkage'))
             check(op['execution_state']=='closed' and op['effect']=='applied' and op['may_apply_later'] is False,(name,'successful dependencies'))
+            attempt=op['attempts'][0]
+            check(attempt['prepared_at']<attempt['sent_at'],(name,'attempt order',i))
+            for timestamp in ['observed_at','retrieved_at']:
+                if timestamp in out:check(attempt['sent_at']<out[timestamp],(name,'observation before send',i))
         check([x['revision'] for x in b['task_revision_log']]==list(range(1,len(b['task_revision_log'])+1)),(name,'Task revision sequence'))
         first_intent=b['objects']['O1:OperationIntent']['value']
         check(first_intent['source']['decision_id']==ids[name+':D2'],(name,'D1 stale action must not be admitted'))
@@ -179,9 +225,36 @@ def main():
         for r in b['records'].values():
             check(r['json_bytes']==len(enc(r['value'])),(name,'record bytes'))
         all_proofs+=b['control_proofs']
-        report['scenarios'][name]=dict(schema_objects=sum(o['schema']!='INTERNAL-DESIGN-EXAMPLE' for o in b['objects'].values()),exchanges=len(b['exchanges']),body_files=len(b['contents']),generations=len(b['generations']),counts_and_bytes='passed',plan_and_reference_links='passed')
+        report['scenarios'][name]=dict(schema_objects=sum(o['schema']!='INTERNAL-DESIGN-EXAMPLE' for o in b['objects'].values()),exchanges=len(b['exchanges']),body_files=len(b['contents']),generations=len(b['generations']),counts_and_bytes='passed',plan_and_reference_links='passed',grant_containment_and_units='passed on assumed policy; not live authorization',event_order='passed')
 
     r=read(HERE/'report/scenario.json');plan=r['objects']['BrainPlan']['value'];state=materialization_state(r)
+    check(official_chain_valid(r,shared),'official fixture chain')
+    assessment=r['contents']['O7-output']['body']
+    judgments={x['requirement_id']:x['verdict'] for x in assessment['judgments']}
+    citation=ids['report:requirement:citation'];quality=ids['report:requirement:quality']
+    for key in ['citation','quality']:
+        internal=r['records']['check:'+key]['value']
+        check(internal['assessment_judgment']==dict(report_ref=r['contents']['O7-output']['ref'],requirement_id=ids['report:requirement:'+key]),'exact assessment judgment binding')
+    check(ids['report:check:quality'] not in r['records']['check:citation']['value']['dependency_check_ids'],'quality is independent of citation semantics')
+    changed=cp(r)
+    next(x for x in changed['contents']['O7-output']['body']['judgments'] if x['requirement_id']==citation)['verdict']='fail'
+    quality_judgment=next(x for x in changed['contents']['O7-output']['body']['judgments'] if x['requirement_id']==quality)
+    check(official_chain_valid(changed,shared) and quality_judgment['verdict']=='pass','valid identity and quality do not override failed semantic citation')
+    st=cp(state)
+    next(x for x in st['condition_checks'] if x['result']['requirement_id']==citation)['result']['verdict']='fail'
+    check(inspect_plan_materialization(plan,'write',st,caps)['status']=='redecide','quality pass citation fail blocks write')
+    report['negative_checks'].append('quality pass and citation semantic fail blocks write')
+    for label,mutate in [
+        ('unregistered final host blocks citation and write',lambda b:b['contents']['O3-output']['body'].update(final_url='https://untrusted.example/1.0/deployment')),
+        ('missing fetch evidence blocks citation and write',lambda b:b['contents']['O7-output']['body']['fetch_evidence_refs'].pop()),
+        ('missing redirect chain blocks citation and write',lambda b:b['contents']['O3-output']['body'].pop('redirect_chain')),
+        ('wrong report link blocks citation and write',lambda b:b['contents']['report'].update(body=b['contents']['report']['body'].replace('[A1]: https://atlas.example','[A1]: https://untrusted.example')))
+    ]:
+        changed=cp(r);mutate(changed);check(not official_chain_valid(changed,shared),label)
+        st=cp(state)
+        next(x for x in st['condition_checks'] if x['result']['requirement_id']==ids['report:requirement:citation'])['result']['verdict']='fail'
+        check(inspect_plan_materialization(plan,'write',st,caps)['status']=='redecide',label+' propagation')
+        report['negative_checks'].append(label)
     for label,mutate,step,want in [
         ('valid assessment fail blocks write',lambda s:s['condition_checks'][0]['result'].update(verdict='fail'),'write','redecide'),
         ('unknown effect blocks dependent read',lambda s:next(x for x in s['outputs'] if x['operation_id']==ids['report:O8']).update(effect='unknown',may_apply_later='unknown'),'readback','waiting'),
@@ -212,6 +285,10 @@ def main():
     check(tampered.returncode!=0,'changed control binding must fail');report['negative_checks'].append('control proof binding changed')
     doc=HERE.parent/'task-scenarios-input-output-2026-09-28.md'
     text=doc.read_text();plain=re.sub(r'^```.*?^```\s*$', '', text, flags=re.M|re.S)
+    stats=read(HERE/'statistics.json')
+    for label,key in [('Brain 生成','brain_calls'),('评估模型生成','assessment_model_calls'),('Operation','operations'),('领域协议对','protocol_pairs'),('请求+返回 JSON B','request_response_json_bytes'),('本包序列化的保留记录数','retained_record_count'),('这些记录 JSON B','retained_record_json_bytes'),('新正文数','new_body_count'),('新正文唯一身份字节 B','new_body_bytes'),('下载字节 B（本轮各持有者冷读）','download_bytes'),('用途使用/结算各次数','use_count'),('选定最小关闭记录数','minimum_closure_count'),('其独立 JSON B','minimum_closure_json_bytes'),('Brain 输入材料字节累计（非token）','model_input_body_bytes'),('O7 评估输入材料字节（非token）','assessment_input_body_bytes')]:
+        row='| '+' | '.join([label]+[str(stats[n][key]) for n in expected])+' |'
+        check(row in plain,('document statistics stale',label))
     links=[]
     for target in re.findall(r'\[[^\]]*\]\(([^)]+)\)',plain):
         if re.match(r'^[a-zA-Z][\w+.-]*:',target):continue

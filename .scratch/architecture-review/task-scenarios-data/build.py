@@ -13,6 +13,7 @@ import hashlib
 import json
 import secrets
 import subprocess
+from urllib.parse import urlparse
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
@@ -91,6 +92,8 @@ NAMESPACE = ident('verified-content-collection', 'collection')
 MODEL = ident('local-model-recipient', 'model')
 SEARCH = ident('search-provider', 'provider')
 WEB = ident('fetch-provider', 'provider')
+SEARCH_LOC = ident('search-provider-location', 'endpoint')
+WEB_LOC = ident('fetch-provider-location', 'endpoint')
 GRANT = ref(G, ident('preinstalled-continuous-grant', 'grant'))
 AUTHORIZATION = dict(kind='grant', **GRANT)
 COMPONENTS = {}
@@ -113,12 +116,14 @@ POLICY = component('task-policy', '演示装配：规则集合固定、修订最
 PROFILE = component('model-profile', '脚本化输出账本，每个概念模型请求记 1 fixture_credit；未调用模型、token 未知。', max_cost=amount(1), max_output_tokens=4096, physical_requests=1)
 RULE_BT = component('bluetooth-enabled-rule', '同一设备、新鲜观察 enabled=true；已准入动作全部核清且不迟到。', freshness_seconds=30)
 RULE_Q = component('report-quality-rule', '三个维度均有论据、推荐说明适用条件；开放质量 assessed。')
-RULE_C = component('report-citation-rule', '引用定位确定性检查与语义支撑评估均通过，组合报告保留组成证据。')
+OFFICIAL_REGISTRY = component('official-source-registry', '受信来源登记的合成前提；不是互联网官方身份调查结果。', products=[dict(product='Atlas',version='1.0',host='atlas.example'),dict(product='Boreal',version='1.0',host='boreal.example')])
+RULE_C = component('report-citation-rule', '准确抓取凭据绑定正文；请求、全部重定向和最终地址均匹配受信登记的版本化官方域名；定位与语义支撑亦须通过。', official_registry_ref=OFFICIAL_REGISTRY)
 RULE_F = component('file-equality-rule', '受管根和路径匹配、原写入关闭、读回字节等于候选。')
 VER_BT = component('bluetooth-checker', '示例确定性谓词；非已安装或已验收实现。')
 VER_Q = component('quality-checker', '固定本地模型和提示配置的脚本化期望评估；不证明质量。')
 VER_C = component('citation-combiner', '确定性定位与质量支撑组合。')
 VER_LOC = component('citation-locator', 'UTF-8 字节范围、摘录和来源 hash 的确定性核对。')
+VER_ORIGIN = component('official-source-checker', '核对抓取凭据的正文引用、版本路径及全跳转链与受信来源登记；不接受页面自行声明官方身份。')
 VER_F = component('file-checker', '候选与受管读回 hash、长度及路径的确定性核对。')
 PROMPT = component('assessment-prompt', '逐条件检查，保留分歧，不以执行成功冒充质量通过。')
 REPLAY = component('target-key-guarantee', '示例驱动按 task/operation 固定键及原意图去重；永久保留关闭身份。')
@@ -128,7 +133,7 @@ INPUTS = {
  'enable': obj(dict(device_id=id_schema(), desired=dict(const=True), expected_state_version=INT)),
  'search': obj(dict(product=STR, version=STR, official_host=STR, query=STR)),
  'fetch': obj(dict(url=dict(type='string', format='uri'), official_host=STR)),
- 'assess': obj(dict(task_id=id_schema(), goal_revision=INT, artifact_ref=cr_schema(), requirement_ids=arr(id_schema()), rule_refs=arr(comp_schema()), source_refs=arr(cr_schema()))),
+ 'assess': obj(dict(task_id=id_schema(), goal_revision=INT, artifact_ref=cr_schema(), requirement_ids=arr(id_schema()), rule_refs=arr(comp_schema()), source_refs=arr(cr_schema()),fetch_evidence_refs=arr(cr_schema()),official_registry_ref=comp_schema())),
  'write': obj(dict(root_id=id_schema(), relative_path=STR, expected_absent=dict(const=True), content_ref=cr_schema())),
  'readback': obj(dict(root_id=id_schema(), relative_path=STR, expected_file_version=INT))
 }
@@ -136,11 +141,15 @@ OUTPUTS = {
  'observe': obj(dict(device_id=id_schema(), enabled=BOOL, state_version=INT, observed_at=TIME)),
  'enable': obj(dict(device_id=id_schema(), operation_id=id_schema(), previous_state_version=INT, state_version=INT, enabled=dict(const=True), closed=dict(const=True))),
  'search': obj(dict(product=STR, version=STR, query=STR, retrieved_at=TIME, hits=arr(obj(dict(url=dict(type='string', format='uri'), title=STR, snippet=STR, official_host=STR))))),
- 'fetch': obj(dict(url=dict(type='string', format='uri'), final_url=dict(type='string', format='uri'), retrieved_at=TIME, http_status=dict(const=200), body_ref=cr_schema(), official_host=STR)),
+ 'fetch': obj(dict(url=dict(type='string', format='uri'), final_url=dict(type='string', format='uri'), redirect_chain=arr(dict(type='string',format='uri')), retrieved_at=TIME, http_status=dict(const=200), body_ref=cr_schema(), official_host=STR)),
  'assess': obj(dict(task_id=id_schema(), goal_revision=INT, artifact_ref=cr_schema(), rule_refs=arr(comp_schema()), evaluator_ref=comp_schema(), model_profile_ref=comp_schema(), prompt_ref=comp_schema(), source_refs=arr(cr_schema()), judgments=arr(obj(dict(requirement_id=id_schema(), verdict=dict(enum=['pass','fail','unknown']), basis=dict(const='assessed'), reason=STR))), citation_checks=arr(obj(dict(source_ref=cr_schema(), byte_start=dict(type='integer',minimum=0), byte_end=INT, quote=STR, matched=BOOL))), limitations=arr(STR))),
  'write': obj(dict(root_id=id_schema(), relative_path=STR, operation_id=id_schema(), file_version=INT, content_hash=cp(SCHEMA['$defs']['Digest']), byte_length=dict(type='integer',minimum=0), closed=dict(const=True))),
  'readback': obj(dict(root_id=id_schema(), relative_path=STR, file_version=INT, content_ref=cr_schema(), observed_at=TIME))
 }
+OUTPUTS['assess']['properties'].update(fetch_evidence_refs=arr(cr_schema()),official_registry_ref=comp_schema(),origin_checks=arr(obj(dict(source_ref=cr_schema(),fetch_evidence_ref=cr_schema(),requested_url=STR,final_url=STR,official_host=STR,registered_host_match=BOOL,redirect_chain_checked=BOOL,version_match=BOOL))))
+OUTPUTS['assess']['required']+=['fetch_evidence_refs','official_registry_ref','origin_checks']
+OUTPUTS['assess']['properties']['citation_checks']['items']['properties'].update(citation_key=STR,cited_url=STR,report_link_matches=BOOL)
+OUTPUTS['assess']['properties']['citation_checks']['items']['required']+=['citation_key','cited_url','report_link_matches']
 CAPS = {}
 for name in INPUTS:
     cap_ref = component('capability-' + name, '仅本评审使用的显式示例适配器 Schema；不属于冻结业务 API。', input_schema=INPUTS[name], output_schema=OUTPUTS[name])
@@ -153,6 +162,8 @@ for name in INPUTS:
     capability = dict(capability_id=cap_ref['id'], version=cap_ref['version'], digest=cap_ref['digest'], description=name+' 示例能力', input_schema=INPUTS[name], output_schema=OUTPUTS[name], effect_class='read_only' if read else 'target_idempotent', verification=dict(predicate_ref=predicate,evidence_kinds=['query_result'],query_supported=True,cancel_supported=False), retry=dict(max_attempts=1,initial_backoff_ms=100,max_backoff_ms=1000,reconciliation_timeout_ms=30000), authorization=dict(resource_scopes=[scope],actions=['read' if read else 'act'],purposes=['task_execution'],requires_lease=name in ['observe','enable'],requires_confirmation=False), limits=dict(max_duration_ms=30000,max_input_bytes=131072,max_output_bytes=131072,max_physical_requests=1,cost_bound='strict',max_cost=[amount(1 if name=='assess' else 0)],mutex_domains=[target] if name in ['observe','enable','write'] else []),semantic_operation_id='fixture.'+name)
     if not read:
         capability['retry'].update(key_scope='tenant/task/operation',key_retention_ms=86400000,replay_guarantee_ref=REPLAY)
+    if name=='assess':
+        capability['authorization']['actions']=['process']
     binding = dict(binding_id=ident('binding:'+name,'binding'),revision=1,capability_ref=cap_ref,executor_id=E,target_ref=ref(E,target),driver_ref=driver,configuration_ref=config,availability='ready')
     CAPS[name] = dict(ref=cap_ref,binding_ref=dict(binding_id=binding['binding_id'],revision=1),capability=capability,binding=binding)
 
@@ -229,25 +240,30 @@ class Scenario:
 
     def use(self, label, operation, action, sources, recipient, usage_owner, cost=0, scope=None, purpose='task_execution', units=1):
         scope=scope or dict(resource_owner_id=C,resource_type='verified_collection',selector=dict(object_ids=[NAMESPACE]),normalizer_version='fixture-normalizer/1')
+        unit='byte' if action in ['read','store'] and scope['resource_owner_id']==C else 'invocation'
         # This fixture pins the digest domain explicitly; no public canonical
         # business-intent projection is frozen in the referenced documents.
-        intent=dict(operation_id=operation,action=action,source_refs=sources,recipient=recipient,location=LOC,resource_scopes=[scope],purpose=purpose,max_units=amount(units,'use_unit'),max_cost=amount(cost))
+        location={SEARCH:SEARCH_LOC,WEB:WEB_LOC}.get(recipient,LOC)
+        subject=dict(tenant_id=TENANT,actor_id=U,actor_kind='user')
+        if self.task is not None:
+            subject['task_id']=self.taskid
+        intent=dict(operation_id=operation,action=action,source_refs=sources,recipient=recipient,location=location,resource_scopes=[scope],purpose=purpose,max_units=amount(units,unit),max_cost=amount(cost))
         h=digest(encoded(intent))
-        req=dict(use_id=self.iid(label+':use','use'),operation_id=operation,intent_hash=h,grant_refs=[GRANT],source_refs=cp(sources),subject=dict(tenant_id=TENANT,actor_id=U,actor_kind='user',task_id=self.taskid),resource_scopes=[scope],action=action,purpose=purpose,recipient=recipient,location=LOC,max_units=amount(units,'use_unit'),max_cost=amount(cost),cost_bound='strict',usage_owner_id=usage_owner)
+        req=dict(use_id=self.iid(label+':use','use'),operation_id=operation,intent_hash=h,grant_refs=[GRANT],source_refs=cp(sources),subject=subject,resource_scopes=[scope],action=action,purpose=purpose,recipient=recipient,location=location,max_units=amount(units,unit),max_cost=amount(cost),cost_bound='strict',usage_owner_id=usage_owner)
+        self.internal(label+':IntentProjection',intent,usage_owner,'调用方先持久固定有限业务身份、范围和意图，再请求 use；示例摘要域不是冻结 RPC 字段','IntentProjection')
         receipt=dict(use_id=req['use_id'],owner_id=G,intent_hash=h,grant_revisions=[GRANT],decision='allowed',reserved_units=req['max_units'],reserved_cost=req['max_cost'],cost_bound='strict',start_before='2026-09-28T01:05:00Z',decided_at=self.now())
         self.exchange(label+':use','grant.use',G,req,receipt,sender=usage_owner)
         self.object(label+':UseRequest','UseRequest',req,usage_owner,'原业务身份、已登记主体/资源/Grant + fixture-intent-v1 确定性投影')
         self.object(label+':UseReceipt','UseReceipt',receipt,G,'Grant owner 锁内裁决的合成期望值',True)
-        self.internal(label+':IntentProjection',intent,usage_owner,'示例摘要域；不是冻结 RPC 字段','IntentProjection')
-        self.uses.append(dict(label=label,request=req,receipt=receipt,cost=cost,units=units))
+        self.uses.append(dict(label=label,request=req,receipt=receipt,cost=cost,units=units,unit=unit))
         return dict(kind='use',owner_id=G,id=req['use_id'],revision=1)
 
     def settle_uses(self):
         for u in self.uses:
             q=u['request']; label=u['label']
             closure=ref(q['usage_owner_id'],self.iid(label+':closure','closure'))
-            inp=dict(operation_id=q['operation_id'],usage_owner_id=q['usage_owner_id'],grant_refs=q['grant_refs'],usage_revision=1,cumulative_units=amount(u['units'],'use_unit'),cumulative_cost=amount(u['cost']),final=True,closure_ref=closure)
-            out=dict(use_id=q['use_id'],owner_id=G,operation_id=q['operation_id'],usage_owner_id=q['usage_owner_id'],grant_refs=q['grant_refs'],revision=2,usage_revision=1,state='final',consumed_once=False,reserved_units=q['max_units'],reserved_cost=q['max_cost'],cost_bound='strict',spent_units=inp['cumulative_units'],spent_cost=inp['cumulative_cost'],held_units=amount(0,'use_unit'),held_cost=amount(0),released_units=amount(0,'use_unit'),released_cost=amount(0),closure_ref=closure)
+            inp=dict(operation_id=q['operation_id'],usage_owner_id=q['usage_owner_id'],grant_refs=q['grant_refs'],usage_revision=1,cumulative_units=amount(u['units'],u['unit']),cumulative_cost=amount(u['cost']),final=True,closure_ref=closure)
+            out=dict(use_id=q['use_id'],owner_id=G,operation_id=q['operation_id'],usage_owner_id=q['usage_owner_id'],grant_refs=q['grant_refs'],revision=2,usage_revision=1,state='final',consumed_once=False,reserved_units=q['max_units'],reserved_cost=q['max_cost'],cost_bound='strict',spent_units=inp['cumulative_units'],spent_cost=inp['cumulative_cost'],held_units=amount(0,u['unit']),held_cost=amount(0),released_units=amount(0,u['unit']),released_cost=amount(0),closure_ref=closure)
             self.exchange(label+':settle','grant.use.settle',q['use_id'],inp,out,sender=q['usage_owner_id'],expected=1)
             self.object(label+':Settlement','UseSettlementRecord',out,G,'原 use 的合成累计计量与关闭事实；不重复计入 Task',True)
             self.internal(label+':Closure',dict(**closure,operation_id=q['operation_id'],sending_closed=True,usage_final=True),q['usage_owner_id'],'内部关闭证据；未证明运行时真实性','UsageClosure')
@@ -258,7 +274,7 @@ class Scenario:
         cr=dict(tenant_id=TENANT,owner_id=C,content_id=content_id or self.iid('content:'+alias,'content'),version=version,hash=digest(raw),media_type=media,byte_length=len(raw))
         path=self.path/'bodies'/(alias+('.json' if media=='application/json' else '.md'))
         path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
-        policy=dict(classification='controlled_remote',allowed_locations=[LOC],allowed_recipients=[U,H,B,E,MODEL,SEARCH,WEB],allowed_purposes=['task_execution','task_processing','task_storage','task_display'],retention_until='2026-10-28T00:00:00Z',offline_allowed=False)
+        policy=dict(classification='controlled_remote',allowed_locations=[LOC,SEARCH_LOC,WEB_LOC],allowed_recipients=[U,H,B,E,C,MODEL,SEARCH,WEB],allowed_purposes=['task_execution','task_processing','task_storage','task_display'],retention_until='2026-10-28T00:00:00Z',offline_allowed=False)
         pr=ref(C,self.iid('policy:'+alias,'content_policy'))
         sb=[]
         for source in sources:
@@ -286,15 +302,21 @@ class Scenario:
         label='read:'+alias+':'+holder.split('_')[0]+':'+purpose
         copyid=self.iid(label+':copy','copy')
         use=self.use(label,copyid,'read',[cr],holder,C,purpose=purpose,units=cr['byte_length'])
+        disclose=self.use(label+':disclose',copyid,'disclose',[cr],holder,C,purpose=purpose)
         inp=dict(copy_id=copyid,content_ref=cr,holder_id=holder,purpose=purpose,recipient_id=holder,retention_until='2026-09-28T02:00:00Z')
         out=dict(**inp,revision=1,use_stopped=False,physical_state='pending',evidence_refs=[])
         self.exchange(label+':register','content.register_copy',C,inp,out,sender=holder)
-        request=dict(content_ref=cr,copy_id=copyid,purpose=purpose,recipient_id=holder,usage_authorization_refs=[use],mode='bytes')
+        request=dict(content_ref=cr,copy_id=copyid,purpose=purpose,recipient_id=holder,usage_authorization_refs=[use,disclose],mode='bytes')
         result=dict(content_ref=cr,copy_id=copyid,control_revision=1,download_id=self.iid(label+':download','download'),expires_at='2026-09-28T01:05:00Z',range_supported=False)
         self.exchange(label+':get','content.get',C,request,result,sender=holder)
         self.copies[key]=dict(label=label,input=inp,ref=cr)
         self.events.append(dict(kind='download_bytes',alias=alias,holder=holder,byte_length=cr['byte_length'],download_id=result['download_id']))
         return cr
+
+    def local_process(self,label,sources,owner=H,operation=None):
+        # One finite deterministic calculation, never a new model generation.
+        refs=list({r['content_id']:r for r in sources}.values())
+        return self.use(label+':process-local',operation or self.iid(label+':work','work'),'process',refs,owner,owner,purpose='task_processing')
 
     def close_copies(self):
         for x in self.copies.values():
@@ -356,6 +378,7 @@ class Scenario:
         base=['goal','policy','rules','allocated-handles']+['catalog-'+n for n in self.capnames]+(needed or [])
         base=list(dict.fromkeys(base))
         manifest=[self.contents[a]['ref'] for a in base]
+        self.local_process(label+':context',manifest)
         facts=[dict(kind='operation',object_ref=ref(E,x['operation_id'],x['revision']),content_ref=x['result_ref']) for x in self.opresults]
         context=dict(schema_version='brain-context/1',task_ref=self.taskref,snapshot_revision=self.task['revision'],goal_revision=self.task['goal_revision'],control_revision=self.task['control_revision'],goal_ref=self.goal,requirements=cp(self.requirements),control='running',plan_ref=self.plan,facts=facts,assumptions=['无用户接管、当前已登记缺陷门禁未命中；这是 fixture 前提。'],unresolved_effects=[],materials=[dict(content_ref=self.contents[a]['ref'],role='evidence',source_refs=self.contents[a]['source_refs']) for a in base if a!='goal'],capabilities=[dict(capability_ref=CAPS[n]['ref'],binding_ref=CAPS[n]['binding_ref'],input_schema=INPUTS[n],semantic_operation_id='fixture.'+n,effect_class=CAPS[n]['capability']['effect_class']) for n in self.capnames],gaps=[],input_manifest=manifest)
         cx=self.content(label+'-context',context,H,manifest)
@@ -369,6 +392,8 @@ class Scenario:
         self.object(label+':DecisionRequest','DecisionRequest',request,H,'原身份、固定上下文及策略上界；不得从模型取得许可')
         self.internal(label+':model-prepare',dict(model_call_id=mid,decision_id=did,state='prepared',max_output_tokens=4096,model_profile_ref=PROFILE),B,'模型调用身份与上界先持久化，再消费用途','ModelPreparation')
         usage=self.use(label+':process',mid,'process',actual,MODEL,B,cost=1,purpose='task_processing')
+        self.use(label+':model-disclose',mid,'disclose',actual,MODEL,B,purpose='task_processing')
+        self.local_process(label+':validate-publish',actual,B,mid)
         self.approval(label+':work',did,B)
         proposal=make_proposal(actual,label)
         if not any(g['label']==label for g in self.generations):
@@ -386,6 +411,11 @@ class Scenario:
         self.internal(label+':reservation',dict(**res,task_id=self.taskid,unit='fixture_credit',maximum='1',spent='1',reserved='0',final=True,source_owner=B,source_kind='brain_decision',source_id=did,source_revision=3),H,'选择 Brain 作为 Task 唯一费用来源；Grant 投影不再扣款','BudgetReservation')
         self.spent+=1
         self.task['budget'][0]['reserved']=amount(0);self.task['accounting_open']=False
+        consume_sources=actual
+        if 'plan_delta' in proposal:
+            self.read('plan',H)
+            consume_sources=actual+[proposal['plan_delta']['next_plan_ref']]
+        self.local_process(label+':consume',consume_sources,H,did)
         if 'requirements_proposal' in proposal:
             self.requirements=proposal['requirements_proposal']['requirements']
             self.revision(label+' 消费：条件变更，全部行动丢弃',requirements=cp(self.requirements),goal_revision=2,control_revision=2)
@@ -429,6 +459,8 @@ class Scenario:
         for a in sources or []:
             self.read(a,E)
         cap=CAPS[name]
+        if step:
+            self.local_process(label+':materialize',[self.plan]+source_refs,H,opid)
         self.revision(label+' 行动准入')
         gate=dict(**self.taskref,control_revision=self.task['control_revision'],goal_revision=self.task['goal_revision'],status='active',control='running')
         cs=self.control(gate)
@@ -444,13 +476,23 @@ class Scenario:
         self.internal(label+':OperationIntent',dict(task_id=self.taskid,operation_id=opid,invoke=invoke,command_id=ex['request']['command_id'],source=dict(plan_ref=self.plan,step_id=step) if step else dict(decision_id=self.iid('D'+str(self.dcount),'decision'))),H,'保存原命令，恢复不重拼 Invoke','OperationIntent')
         self.approval(label+':work',opid,E)
         action='read' if name in ['observe','search','fetch','readback'] else 'process' if name=='assess' else 'act'
-        self.use(label+':target',opid,action,source_refs,MODEL if name=='assess' else E,E,cost=1 if name=='assess' else 0,scope=cap['capability']['authorization']['resource_scopes'][0])
+        self.use(label+':target',opid,action,source_refs,E,E,scope=cap['capability']['authorization']['resource_scopes'][0])
         if name in ['search','fetch']:
             self.use(label+':disclose',opid,'disclose',source_refs,SEARCH if name=='search' else WEB,E,scope=cap['capability']['authorization']['resource_scopes'][0])
+        if name=='assess':
+            modelid=self.iid(label+':model-call','model_call')
+            self.internal(label+':model-prepare',dict(model_call_id=modelid,operation_id=opid,state='prepared',model_profile_ref=PROFILE,prompt_ref=PROMPT,max_output_tokens=4096),E,'O7 内部物理模型身份；不新增 Operation 或 Brain 决策','ModelPreparation')
+            modeluse=self.use(label+':model-process',modelid,'process',source_refs,MODEL,E,cost=1,scope=cap['capability']['authorization']['resource_scopes'][0],purpose='task_processing')
+            self.use(label+':model-disclose',modelid,'disclose',source_refs,MODEL,E,purpose='task_processing')
+        attempt=dict(attempt_id=self.iid(label+':attempt','attempt'),prepared_at=self.now(),sent_at=self.now(),target_key=opid)
+        if name=='assess':
+            self.internal(label+':model-send',dict(model_call_id=modelid,operation_id=opid,input_manifest=source_refs,input_digest=digest(encoded(source_refs)),usage_authorization_refs=[modeluse],recipient=MODEL,location=LOC,send_started=True),E,'O7 内部发送记录，费用投影到原 Operation；最终 provider 编码尚未实现','ModelSend')
         body,extra=output_fn(opid)
+        if name=='assess':
+            self.object(label+':ModelCall','ModelCall',dict(model_call_id=modelid,provider_request_id='fixture-provider/'+modelid,state='returned',usage=[amount(1)],usage_final=True),E,'固定评估模型的脚本化回执与原调用身份；向 O7 usage 投影，同笔费用不再新增扣款',True)
+            self.events.append(dict(kind='assessment_model_fixture',operation_id=opid,model_call_id=modelid,input_manifest=source_refs,input_bytes=sum(x['byte_length'] for x in source_refs),tokens_in=None,tokens_out=None,cost=amount(1)))
         output_sources=source_refs+extra
         outref=self.content(label+'-output',body,E,output_sources)
-        attempt=dict(attempt_id=self.iid(label+':attempt','attempt'),prepared_at=self.now(),sent_at=self.now(),target_key=opid)
         result=dict(operation_id=opid,revision=3,execution_state='closed',effect='applied',may_apply_later=False,attempts=[attempt],evidence_refs=[outref],result_ref=outref,usage=[amount(1 if name=='assess' else 0)],usage_final=True,next_action='none')
         if name in ['enable','write']:
             result['target_receipt_ref']=outref
@@ -473,16 +515,20 @@ class Scenario:
         req=next(r for r in self.requirements if r['requirement_id']==self.iid('requirement:'+key,'requirement'))
         result=dict(requirement_id=req['requirement_id'],goal_revision=2,artifact_ref=artifact,verdict=verdict,basis=basis,evidence_refs=evidence,evaluator_ref=evaluator or VER_BT)
         checkid=self.iid('check:'+key,'check')
+        self.local_process('check:'+key,[artifact]+evidence,H,checkid)
         self.approval('check:'+key,checkid,H)
         self.object('ConditionResult-'+key,'ConditionResult',result,H,'固定规则与当前证据的脚本化期望判断')
         internal=dict(check_id=checkid,task_id=self.taskid,goal_revision=2,requirement_id=req['requirement_id'],artifact_ref=artifact,rule_ref=req['rule_ref'],evaluator_ref=result['evaluator_ref'],policy_ref=POLICY,result=result,applicability='usable',selected=True,dependency_check_ids=dependencies or [],evidence_gate_revision=1)
         if operation_id:
             internal['operation_id']=operation_id
+        if basis=='assessed':
+            internal['assessment_judgment']=dict(report_ref=evidence[0],requirement_id=req['requirement_id'])
         self.internal('check:'+key,internal,H,'内部 ConditionCheck，公开判断沿 requirement 找 rule','ConditionCheck')
         return result
 
     def finish(self,artifact,conditions):
         # Control shutdown is after result; target resource release is distinct.
+        self.local_process('result-summary',[artifact]+[c for x in conditions for c in x['evidence_refs']])
         result=dict(task_id=self.taskid,goal_revision=2,artifact_refs=[artifact],completion_basis='assessed' if self.name=='report' else 'verified',condition_results=conditions,limitations=['合成静态样例；未运行模型、官方网站、数据库或真实设备。','只反映指定观察时点；当前缺陷范围仅 fixture 内已登记记录。'],completed_at=self.now())
         rr=self.content('result',result,H,[artifact]+list({c['content_id']:c for x in conditions for c in x['evidence_refs'] if c!=artifact}.values()))
         self.object('Result','Result',result,H,'当前全部必要条件汇总，最弱依据 assessed/verified',True)
@@ -501,9 +547,11 @@ class Scenario:
             self.exchange('resource-release','resource.release',DEVICE,dict(expected_control_epoch=1,authorization_refs=[AUTHORIZATION]),state,sender=E)
             self.lease['revision']=2;self.lease['state']='released'
             self.records['ResourceLease']['value']=cp(self.lease);self.records['ResourceLease']['json_bytes']=len(encoded(self.lease))
+        for method,sources in [('task.read',[self.goal]),('task.result',[rr])]:
+            self.use(method+':display',self.iid(method+':query','query'),'disclose',sources,U,H,purpose='task_display')
+            self.events.append(dict(kind='query_disclosure_check',method=method,actor_id=U,current_permission_recheck=True,fail_closed=True))
         self.exchange('task-read','task.read',self.taskid,{},self.task,sender=U)
         self.exchange('task-result','task.result',self.taskid,{},dict(status='succeeded',result=result),sender=U)
-        self.read('result',U,'task_display')
         if self.name=='report':
             self.read('report',U,'task_display')
         self.close_copies();self.settle_uses()
@@ -511,18 +559,26 @@ class Scenario:
         self.job('verify',self.taskid)
         self.job('control',E)
         # Explicit minimum closure example, not a claim of complete physical DB.
-        closing=[('task',self.taskid,H,digest(encoded(self.task)))]
+        closing=[('task',self.taskid,H,self.records['command:submit']['value']['request_digest'])]
         closing += [('decision',self.iid('D'+str(i),'decision'),B,digest(encoded(self.objects['D'+str(i)+':DecisionRequest']['value']))) for i in range(1,self.dcount+1)]
         closing += [('operation',x['operation_id'],E,x['intent_hash']) for x in self.invokes]
         closing += [('command',x['value']['command_id'],x['value']['logical_service_id'],x['value']['request_digest']) for x in list(self.records.values()) if x['kind']=='CommandRecord']
         closing += [('use',x['request']['use_id'],G,x['request']['intent_hash']) for x in self.uses]
-        closures=[dict(tenant_id=TENANT,owner_id=owner,identity_kind=kind,object_id=iid,request_digest=dg,decision='closed',revision=1) for kind,iid,owner,dg in closing]
+        closures=[]
+        for kind,iid,owner,dg in closing:
+            decision={'task':'succeeded','decision':'completed','operation':'applied','command':'applied','use':'allowed'}[kind]
+            revision=self.task['revision'] if kind=='task' else 3 if kind in ['decision','operation'] else 1
+            closure=dict(tenant_id=TENANT,owner_id=owner,identity_kind=kind,object_id=iid,request_digest=dg,decision=decision,revision=revision,new_start_closed=True)
+            if kind=='use':
+                closure['bound_operation_id']=next(u['request']['operation_id'] for u in self.uses if u['request']['use_id']==iid)
+            closures.append(closure)
         methods=Counter(x['exchange']['request']['method'] for x in self.exchanges)
         rows=Counter(x['kind'] for x in self.records.values())
         newcontents=[x for x in self.contents.values() if not x['preinstalled']]
         wire=sum(len(encoded(x['exchange']['request']))+len(encoded(x['exchange']['response'])) for x in self.exchanges)
         logical=sum(x['json_bytes'] for x in self.records.values())
         stats=dict(brain_calls=self.dcount,assessment_model_calls=1 if self.name=='report' else 0,operations=self.ocount,methods=dict(sorted(methods.items())),protocol_pairs=len(self.exchanges),request_response_json_bytes=wire,retained_record_kinds=dict(sorted(rows.items())),retained_record_count=len(self.records),retained_record_json_bytes=logical,new_body_count=len(newcontents),new_body_bytes=sum(x['ref']['byte_length'] for x in newcontents),preinstalled_body_count=len(self.contents)-len(newcontents),preinstalled_body_bytes=sum(x['ref']['byte_length'] for x in self.contents.values() if x['preinstalled']),copy_count=len(self.copies),download_bytes=sum(x['byte_length'] for x in self.events if x['kind']=='download_bytes'),use_count=len(self.uses),minimum_closure_count=len(closures),minimum_closure_json_bytes=sum(len(encoded(x)) for x in closures),fixture_credit=self.spent,model_input_body_bytes=sum(x['input_bytes'] for x in self.events if x['kind']=='brain_model_fixture'),model_tokens=None,physical_db_bytes=None)
+        stats['assessment_input_body_bytes']=sum(x['input_bytes'] for x in self.events if x['kind']=='assessment_model_fixture')
         bundle=dict(schema='scenario-review-fixture/1',warning='Constructed expectations only; no Harness/model/target runtime executed.',task_id=self.taskid,objects=self.objects,contents=self.contents,exchanges=self.exchanges,records=self.records,minimum_closures=closures,task_revision_log=self.task_updates,events=self.events,generations=self.generations,control_proofs=self.proofs,statistics=stats)
         save(self.path/'scenario.json',bundle)
         return bundle
@@ -592,12 +648,12 @@ def report():
         def fetchout(op,i=i,x=x):
             bodyref=s.content('source-'+str(i+1),texts[i],E,[s.contents['O1-output' if i<2 else 'O2-output']['ref']],media='text/markdown',source_relation='observation')
             src.append(bodyref)
-            return dict(url=x['url'],final_url=x['url'],retrieved_at=s.now(),http_status=200,body_ref=bodyref,official_host=x['official_host']),[bodyref]
+            return dict(url=x['url'],final_url=x['url'],redirect_chain=[],retrieved_at=s.now(),http_status=200,body_ref=bodyref,official_host=x['official_host']),[bodyref]
         s.operation('fetch',dict(url=x['url'],official_host=x['official_host']),fetchout,sources=['O1-output' if i<2 else 'O2-output'])
     reporttext='# Atlas 与 Boreal 比较（合成资料示例）\n\n| 维度 | Atlas 1.0 | Boreal 1.0 |\n| --- | --- | --- |\n| 部署 | 单进程、嵌入式存储 [A1] | 外部数据库、两个 worker [B1] |\n| 限制 | 不支持多节点故障转移 [A2] | 支持 worker 替换 [B2] |\n| 维护 | 操作者管理备份 [A2] | 操作者维护数据库备份 [B2] |\n\n小型单机使用优先评估 Atlas；需要 worker 替换时评估 Boreal，并承担外部数据库维护。资料没有人时或费用测量，不能断言 Boreal 的总维护成本必然更高。\n\n[A1]: https://atlas.example/1.0/deployment\n[A2]: https://atlas.example/1.0/limits\n[B1]: https://boreal.example/1.0/deployment\n[B2]: https://boreal.example/1.0/limits\n\n这些是虚构产品和合成来源，报告不用于真实软件选型。\n'
     def synthesize(actual,label):
         candidate=s.content('report',reporttext,B,actual,media='text/markdown')
-        assess=s.action('assess','assess',dict(task_id=s.taskid,goal_revision=2,artifact_ref=candidate,requirement_ids=[r['requirement_id'] for r in requirements[:2]],rule_refs=[RULE_Q,RULE_C],source_refs=src))
+        assess=s.action('assess','assess',dict(task_id=s.taskid,goal_revision=2,artifact_ref=candidate,requirement_ids=[r['requirement_id'] for r in requirements[:2]],rule_refs=[RULE_Q,RULE_C],source_refs=src,fetch_evidence_refs=[s.contents['O'+str(i)+'-output']['ref'] for i in range(3,7)],official_registry_ref=OFFICIAL_REGISTRY))
         write=s.action('write','write',dict(root_id=FILE_ROOT,relative_path='reports/comparison.md',expected_absent=True,content_ref=candidate))
         read=s.action('readback','readback',dict(root_id=FILE_ROOT,relative_path='reports/comparison.md'))
         steps=[dict(step_id='assess',requirement_refs=[r['requirement_id'] for r in requirements[:2]],depends_on=[],instruction='按固定规则联合评估。',action_template=assess),dict(step_id='write',requirement_refs=[requirements[2]['requirement_id']],depends_on=['assess'],pass_conditions=[dict(requirement_id=r['requirement_id'],rule_ref=r['rule_ref'],artifact_ref=candidate) for r in requirements[:2]],instruction='两项当前有效 pass 后写入。',action_template=write),dict(step_id='readback',requirement_refs=[requirements[2]['requirement_id']],depends_on=['write'],instruction='从原写入输出读取版本，再读回。',action_template=read,argument_bindings=[dict(target_pointer='/arguments/expected_file_version',source=dict(kind='step_output',step_id='write',source_pointer='/file_version'))])]
@@ -621,18 +677,33 @@ def report():
         s.read(a,H)
     def assessout(op):
         checks=[]
+        origins=[]
         for i,t in enumerate(texts):
             quote=t.splitlines()[1];raw=t.encode();b=raw.index(quote.encode())
-            checks.append(dict(source_ref=src[i],byte_start=b,byte_end=b+len(quote.encode()),quote=quote,matched=True))
-        return dict(task_id=s.taskid,goal_revision=2,artifact_ref=candidate,rule_refs=[RULE_Q,RULE_C],evaluator_ref=VER_Q,model_profile_ref=PROFILE,prompt_ref=PROMPT,source_refs=src,judgments=[dict(requirement_id=r['requirement_id'],verdict='pass',basis='assessed',reason='脚本化期望：维度齐全且引用支持；不是实际模型结论。') for r in requirements[:2]],citation_checks=checks,limitations=['语义支撑是 assessed；产品和网页 fixture 不证明真实官方来源。']),[]
+            fetch=s.contents['O'+str(i+3)+'-output'];fb=fetch['body']
+            citation_key=['A1','A2','B1','B2'][i]
+            checks.append(dict(source_ref=src[i],byte_start=b,byte_end=b+len(quote.encode()),quote=quote,matched=raw[b:b+len(quote.encode())]==quote.encode(),citation_key=citation_key,cited_url=fb['url'],report_link_matches=('['+citation_key+']: '+fb['url']) in reporttext.splitlines()))
+            registered=COMPONENTS['official-source-registry']['body']['products'][0 if i<2 else 1]
+            chain=[fb['url']]+fb['redirect_chain']+[fb['final_url']]
+            origins.append(dict(source_ref=src[i],fetch_evidence_ref=fetch['ref'],requested_url=fb['url'],final_url=fb['final_url'],official_host=registered['host'],registered_host_match=all(urlparse(u).scheme=='https' and urlparse(u).hostname==registered['host'] for u in chain),redirect_chain_checked='redirect_chain' in fb and fb['body_ref']==src[i],version_match=all(urlparse(u).path.startswith('/'+registered['version']+'/') for u in chain)))
+        return dict(task_id=s.taskid,goal_revision=2,artifact_ref=candidate,rule_refs=[RULE_Q,RULE_C],evaluator_ref=VER_Q,model_profile_ref=PROFILE,prompt_ref=PROMPT,source_refs=src,fetch_evidence_refs=[x['fetch_evidence_ref'] for x in origins],official_registry_ref=OFFICIAL_REGISTRY,origin_checks=origins,judgments=[dict(requirement_id=r['requirement_id'],verdict='pass',basis='assessed',reason='脚本化期望：维度齐全且引用支持；不是实际模型结论。') for r in requirements[:2]],citation_checks=checks,limitations=['语义支撑是 assessed；域名登记、抓取链和产品资料均为合成前提，不证明真实官方身份。']),[]
     assessargs=s.contents['plan']['body']['steps'][0]['action_template']['arguments']
-    assessment,assessmentbody=s.operation('assess',assessargs,assessout,sources=['report']+['source-'+str(i) for i in range(1,5)],step='assess')
+    assessment,assessmentbody=s.operation('assess',assessargs,assessout,sources=['report']+['source-'+str(i) for i in range(1,5)]+['O'+str(i)+'-output' for i in range(3,7)],step='assess')
     selfop=s.opresults[-1]['operation_id']
-    q=s.check('quality',candidate,[assessment]+src,basis='assessed',evaluator=VER_Q,operation_id=selfop)
+    judgments={x['requirement_id']:x['verdict'] for x in assessmentbody['judgments']}
+    q=s.check('quality',candidate,[assessment]+src,verdict=judgments[requirements[0]['requirement_id']],basis='assessed',evaluator=VER_Q,operation_id=selfop)
     sub=s.iid('check:citation-location','check')
     s.approval('check:citation-location',sub,H)
-    s.internal('check:citation-location',dict(check_id=sub,task_id=s.taskid,goal_revision=2,requirement_id=requirements[1]['requirement_id'],artifact_ref=candidate,rule_ref=RULE_C,evaluator_ref=VER_LOC,verdict='pass',evidence_refs=[assessment]+src,applicability='usable',evidence_gate_revision=1),H,'UTF-8 定位检查组成记录，不是新增公共 Requirement','ConditionCheck')
-    c=s.check('citation',candidate,[assessment]+src,basis='assessed',evaluator=VER_C,dependencies=[sub,s.iid('check:quality','check')],operation_id=selfop)
+    location_verdict='pass' if all(x['matched'] and x['report_link_matches'] for x in assessmentbody['citation_checks']) else 'fail'
+    s.internal('check:citation-location',dict(check_id=sub,task_id=s.taskid,goal_revision=2,requirement_id=requirements[1]['requirement_id'],artifact_ref=candidate,rule_ref=RULE_C,evaluator_ref=VER_LOC,verdict=location_verdict,evidence_refs=[assessment]+src,applicability='usable',evidence_gate_revision=1),H,'导入 O7 确定性定位组成证据，不另运行一次模型；合并由 check:citation 有限 process 覆盖','ConditionCheck')
+    origin=s.iid('check:official-origin','check')
+    s.approval('check:official-origin',origin,H)
+    fetchrefs=[s.contents['O'+str(i)+'-output']['ref'] for i in range(3,7)]
+    origin_verdict='pass' if all(x['registered_host_match'] and x['redirect_chain_checked'] and x['version_match'] for x in assessmentbody['origin_checks']) else 'fail'
+    s.internal('check:official-origin',dict(check_id=origin,task_id=s.taskid,goal_revision=2,requirement_id=requirements[1]['requirement_id'],artifact_ref=candidate,rule_ref=RULE_C,evaluator_ref=VER_ORIGIN,verdict=origin_verdict,evidence_refs=[assessment]+fetchrefs,applicability='usable',evidence_gate_revision=1),H,'导入 O7 来源登记/完整抓取链/正文绑定检查；合并由 check:citation 有限 process 覆盖','ConditionCheck')
+    parts=[origin_verdict,location_verdict,judgments[requirements[1]['requirement_id']]]
+    citation_verdict='fail' if 'fail' in parts else 'pass' if all(v=='pass' for v in parts) else 'unknown'
+    c=s.check('citation',candidate,[assessment]+src+fetchrefs,verdict=citation_verdict,basis='assessed',evaluator=VER_C,dependencies=[origin,sub],operation_id=selfop)
     writeargs=s.contents['plan']['body']['steps'][1]['action_template']['arguments']
     write,writebody=s.operation('write',writeargs,lambda op:(dict(root_id=FILE_ROOT,relative_path='reports/comparison.md',operation_id=op,file_version=1,content_hash=candidate['hash'],byte_length=candidate['byte_length'],closed=True),[]),sources=['report','O7-output'],step='write')
     # Readback has independent identity and provenance even when bytes are equal.
@@ -653,7 +724,12 @@ def main():
         scenarios[name]=bundle['statistics']
     save(REGPATH,REG)
     save(PROOFS_PATH,PROOFS)
-    save(HERE/'shared.json',dict(warning='Fixture identities/components/configuration are not live grants, releases or runtime evidence.',identities={k:v for k,v in REG.items() if not ':' in k},components=COMPONENTS,capabilities=CAPS,grant_ref=GRANT,grant_precondition=dict(authorization_source='受信用户预授权数据库快照是假设；本包没有伪造已完成 Confirmation。',mode='continuous',state='active',revision=1,allowed_actions=['read','process','store','act','disclose','manage'],scope_membership='精确已登记资源和 verified-content-collection 的受信成员；归属查询接口待实现',quota='fixture 足够，未访问真实额度'),statistics=scenarios))
+    resources=[dict(resource_owner_id=C,resource_type='verified_collection',selector=dict(object_ids=[NAMESPACE]),normalizer_version='fixture-normalizer/1')]
+    for cap in CAPS.values():
+        for resource in cap['capability']['authorization']['resource_scopes']:
+            if resource not in resources:resources.append(resource)
+    grant_policy=dict(subject=dict(tenant_id=TENANT,actor_id=U,actor_kind='user'),resources=resources,actions=['read','process','store','act','disclose','manage'],purposes=['task_execution','task_processing','task_storage','task_display'],recipients=[U,H,B,E,C,MODEL,SEARCH,WEB],locations=[LOC,SEARCH_LOC,WEB_LOC],mode='continuous',valid_from='2026-09-28T00:00:00Z',expires_at='2026-10-28T00:00:00Z',limits=[dict(unit='fixture_credit',limit='20'),dict(unit='byte',limit='5000000'),dict(unit='invocation',limit='1000')],max_offline_window_ms=0)
+    save(HERE/'shared.json',dict(warning='Fixture identities/components/configuration are not live grants, releases or runtime evidence.',identities={k:v for k,v in REG.items() if not ':' in k},components=COMPONENTS,capabilities=CAPS,grant_ref=GRANT,grant_policy=grant_policy,grant_precondition=dict(authorization_source='受信用户预授权数据库快照是假设；本包没有伪造已完成 Confirmation。',mode='continuous',state='active',revision=1,scope_membership='精确已登记资源和 verified-content-collection 的受信成员；归属查询接口待实现',quota='fixture 足够，未访问真实额度'),statistics=scenarios))
     save(HERE/'statistics.json',scenarios)
     print(json.dumps({k:{p:v[p] for p in ['brain_calls','assessment_model_calls','operations','protocol_pairs','retained_record_count','retained_record_json_bytes','new_body_count','new_body_bytes','use_count','minimum_closure_count']} for k,v in scenarios.items()},ensure_ascii=False,indent=2))
 

@@ -1,0 +1,33 @@
+{
+  "scope": "Independent reader review and local static/visual verification; no system runtime.",
+  "independent_review": {
+    "rounds": 2,
+    "main_flow_reconstructed": true,
+    "issues_resolved": [
+      "official-source evidence and report URL binding",
+      "separate read/process/disclose finite uses and true receiver locations",
+      "content control revision owner",
+      "attempt before observation",
+      "remove duplicate Result body download",
+      "citation semantic judgment independent of quality judgment"
+    ],
+    "followup_resolution": "Final citation judgment binding checked by main author and a quality-pass/citation-fail negative vector."
+  },
+  "field_provenance_review": {
+    "proposal": "Decision model/rule output through Validator and publication resolution; one charge per Decision",
+    "model_call": "Adapter aggregation of persistent preparation, send, provider and meter facts",
+    "other_model_outputs": "actions, plan_delta, steps, bindings and assessment judgments reviewed; unclassified keys fail generation"
+  },
+  "repository_static_checks": {
+    "brain": "generation/recovery, 5 plan-install checks, 11 rejected generations, 15 plan branches passed",
+    "protocol": "55 valid traces, 371 invalid mutations, 105 methods passed",
+    "task_outcome": "5 valid examples, 9 invalid examples passed"
+  },
+  "visual_review": {
+    "mermaid_figures": 2,
+    "status": "rendered and visually inspected; no overlap or clipping",
+    "full_document_browser_screenshots": "not performed",
+    "markdown_tables": "static column-count and fence/link checks only"
+  },
+  "runtime": "not tested; synthetic data do not prove actual source identity, authorization, effect, fee or physical database footprint"
+}

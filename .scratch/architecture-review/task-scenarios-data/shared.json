@@ -17,7 +17,9 @@
     "search-provider": "provider_388a8a5de39afac2323d5e4823a13c36",
     "fetch-provider": "provider_a64a70edfe3940a4e066d2ae40bf7791",
     "preinstalled-continuous-grant": "grant_f508784c5074fdcc0717f465024dc3cf",
-    "executor-entrance": "entrance_beced709511ea6d39d1e0614be9d96a9"
+    "executor-entrance": "entrance_beced709511ea6d39d1e0614be9d96a9",
+    "search-provider-location": "endpoint_ea067a5c0548694159658276096e45a6",
+    "fetch-provider-location": "endpoint_5a6b0539138d03b3b1c014bff19f756e"
   },
   "components": {
     "task-policy": {
@@ -88,19 +90,51 @@
         "version": "1.0.0"
       }
     },
+    "official-source-registry": {
+      "ref": {
+        "id": "component_bd384c588b6b1f6a2eca38b5a08e9df2",
+        "version": "1.0.0",
+        "digest": "sha256:a35956b6acf7a607375eca0cd03641874bdfd04d8fc2f87b2b6f6409ed490527"
+      },
+      "body_file": "components/official-source-registry.json",
+      "byte_length": 301,
+      "body": {
+        "fixture_only": true,
+        "name": "official-source-registry",
+        "description": "受信来源登记的合成前提；不是互联网官方身份调查结果。",
+        "version": "1.0.0",
+        "products": [
+          {
+            "product": "Atlas",
+            "version": "1.0",
+            "host": "atlas.example"
+          },
+          {
+            "product": "Boreal",
+            "version": "1.0",
+            "host": "boreal.example"
+          }
+        ]
+      }
+    },
     "report-citation-rule": {
       "ref": {
         "id": "component_e273e2ed37ea29ce0e890989bafd6a74",
         "version": "1.0.0",
-        "digest": "sha256:a87e5492ec2c406a275b7f1d982fddc653756cddd13c6198505d99e5fadbc243"
+        "digest": "sha256:a90521f6f6c3ca666ec2a7a4480a4d94c84cfa1a51dc4f5b2d110a8624f616c3"
       },
       "body_file": "components/report-citation-rule.json",
-      "byte_length": 179,
+      "byte_length": 419,
       "body": {
         "fixture_only": true,
         "name": "report-citation-rule",
-        "description": "引用定位确定性检查与语义支撑评估均通过，组合报告保留组成证据。",
-        "version": "1.0.0"
+        "description": "准确抓取凭据绑定正文；请求、全部重定向和最终地址均匹配受信登记的版本化官方域名；定位与语义支撑亦须通过。",
+        "version": "1.0.0",
+        "official_registry_ref": {
+          "id": "component_bd384c588b6b1f6a2eca38b5a08e9df2",
+          "version": "1.0.0",
+          "digest": "sha256:a35956b6acf7a607375eca0cd03641874bdfd04d8fc2f87b2b6f6409ed490527"
+        }
       }
     },
     "file-equality-rule": {
@@ -175,6 +209,21 @@
         "fixture_only": true,
         "name": "citation-locator",
         "description": "UTF-8 字节范围、摘录和来源 hash 的确定性核对。",
+        "version": "1.0.0"
+      }
+    },
+    "official-source-checker": {
+      "ref": {
+        "id": "component_a0da454dc3298b3492a08626dd49ab16",
+        "version": "1.0.0",
+        "digest": "sha256:a88082a660c095c6093fdfde63c9df28006a1a79254113ba5db064d0908a227c"
+      },
+      "body_file": "components/official-source-checker.json",
+      "byte_length": 218,
+      "body": {
+        "fixture_only": true,
+        "name": "official-source-checker",
+        "description": "核对抓取凭据的正文引用、版本路径及全跳转链与受信来源登记；不接受页面自行声明官方身份。",
         "version": "1.0.0"
       }
     },
@@ -550,10 +599,10 @@
       "ref": {
         "id": "component_b1cb124264ad2ce9f9e75ca79ee0f1f5",
         "version": "1.0.0",
-        "digest": "sha256:0cab33f8e0ecadf0fcbf0986b1d39f5c2e49d69fbe7bf9456befb3a518fca840"
+        "digest": "sha256:2adf74ec5835908c98be2d806f61b2bfc8d16fd35c39329b6085624bcf709851"
       },
       "body_file": "components/capability-fetch.json",
-      "byte_length": 1401,
+      "byte_length": 1521,
       "body": {
         "fixture_only": true,
         "name": "capability-fetch",
@@ -587,6 +636,15 @@
             "final_url": {
               "type": "string",
               "format": "uri"
+            },
+            "redirect_chain": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              },
+              "minItems": 0,
+              "maxItems": 100
             },
             "retrieved_at": {
               "type": "string",
@@ -648,6 +706,7 @@
           "required": [
             "url",
             "final_url",
+            "redirect_chain",
             "retrieved_at",
             "http_status",
             "body_ref",
@@ -691,10 +750,10 @@
       "ref": {
         "id": "component_e0b23ca26eab16dce31db0538898e148",
         "version": "1.0.0",
-        "digest": "sha256:0b1ae45b33865ddf549f932b7f3dae9097f443d455153818b64425a82c7b56ab"
+        "digest": "sha256:6abd7550379243d77d98329e1167b3cfc8f706638e3c6e53911bae767ecb632f"
       },
       "body_file": "components/capability-assess.json",
-      "byte_length": 6960,
+      "byte_length": 11256,
       "body": {
         "fixture_only": true,
         "name": "capability-assess",
@@ -842,6 +901,79 @@
               },
               "minItems": 0,
               "maxItems": 100
+            },
+            "fetch_evidence_refs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "tenant_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                  },
+                  "owner_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                  },
+                  "content_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "hash": {
+                    "type": "string",
+                    "pattern": "^sha256:[0-9a-f]{64}$"
+                  },
+                  "media_type": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9.+-]+/[a-zA-Z0-9.+-]+$"
+                  },
+                  "byte_length": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "tenant_id",
+                  "owner_id",
+                  "content_id",
+                  "version",
+                  "hash",
+                  "media_type",
+                  "byte_length"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 0,
+              "maxItems": 100
+            },
+            "official_registry_ref": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                },
+                "version": {
+                  "type": "string",
+                  "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"
+                },
+                "digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "id",
+                "version",
+                "digest"
+              ],
+              "additionalProperties": false
             }
           },
           "required": [
@@ -850,7 +982,9 @@
             "artifact_ref",
             "requirement_ids",
             "rule_refs",
-            "source_refs"
+            "source_refs",
+            "fetch_evidence_refs",
+            "official_registry_ref"
           ],
           "additionalProperties": false
         },
@@ -1156,6 +1290,17 @@
                   },
                   "matched": {
                     "type": "boolean"
+                  },
+                  "citation_key": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "cited_url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "report_link_matches": {
+                    "type": "boolean"
                   }
                 },
                 "required": [
@@ -1163,7 +1308,10 @@
                   "byte_start",
                   "byte_end",
                   "quote",
-                  "matched"
+                  "matched",
+                  "citation_key",
+                  "cited_url",
+                  "report_link_matches"
                 ],
                 "additionalProperties": false
               },
@@ -1175,6 +1323,211 @@
               "items": {
                 "type": "string",
                 "minLength": 1
+              },
+              "minItems": 0,
+              "maxItems": 100
+            },
+            "fetch_evidence_refs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "tenant_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                  },
+                  "owner_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                  },
+                  "content_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "hash": {
+                    "type": "string",
+                    "pattern": "^sha256:[0-9a-f]{64}$"
+                  },
+                  "media_type": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9.+-]+/[a-zA-Z0-9.+-]+$"
+                  },
+                  "byte_length": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "tenant_id",
+                  "owner_id",
+                  "content_id",
+                  "version",
+                  "hash",
+                  "media_type",
+                  "byte_length"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 0,
+              "maxItems": 100
+            },
+            "official_registry_ref": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                },
+                "version": {
+                  "type": "string",
+                  "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"
+                },
+                "digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "id",
+                "version",
+                "digest"
+              ],
+              "additionalProperties": false
+            },
+            "origin_checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "source_ref": {
+                    "type": "object",
+                    "properties": {
+                      "tenant_id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                      },
+                      "owner_id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                      },
+                      "content_id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                      },
+                      "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "hash": {
+                        "type": "string",
+                        "pattern": "^sha256:[0-9a-f]{64}$"
+                      },
+                      "media_type": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9.+-]+/[a-zA-Z0-9.+-]+$"
+                      },
+                      "byte_length": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "tenant_id",
+                      "owner_id",
+                      "content_id",
+                      "version",
+                      "hash",
+                      "media_type",
+                      "byte_length"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "fetch_evidence_ref": {
+                    "type": "object",
+                    "properties": {
+                      "tenant_id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                      },
+                      "owner_id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                      },
+                      "content_id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                      },
+                      "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "hash": {
+                        "type": "string",
+                        "pattern": "^sha256:[0-9a-f]{64}$"
+                      },
+                      "media_type": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9.+-]+/[a-zA-Z0-9.+-]+$"
+                      },
+                      "byte_length": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "tenant_id",
+                      "owner_id",
+                      "content_id",
+                      "version",
+                      "hash",
+                      "media_type",
+                      "byte_length"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "requested_url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "final_url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "official_host": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "registered_host_match": {
+                    "type": "boolean"
+                  },
+                  "redirect_chain_checked": {
+                    "type": "boolean"
+                  },
+                  "version_match": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "source_ref",
+                  "fetch_evidence_ref",
+                  "requested_url",
+                  "final_url",
+                  "official_host",
+                  "registered_host_match",
+                  "redirect_chain_checked",
+                  "version_match"
+                ],
+                "additionalProperties": false
               },
               "minItems": 0,
               "maxItems": 100
@@ -1191,7 +1544,10 @@
             "source_refs",
             "judgments",
             "citation_checks",
-            "limitations"
+            "limitations",
+            "fetch_evidence_refs",
+            "official_registry_ref",
+            "origin_checks"
           ],
           "additionalProperties": false
         }
@@ -2026,7 +2382,7 @@
       "ref": {
         "id": "component_b1cb124264ad2ce9f9e75ca79ee0f1f5",
         "version": "1.0.0",
-        "digest": "sha256:0cab33f8e0ecadf0fcbf0986b1d39f5c2e49d69fbe7bf9456befb3a518fca840"
+        "digest": "sha256:2adf74ec5835908c98be2d806f61b2bfc8d16fd35c39329b6085624bcf709851"
       },
       "binding_ref": {
         "binding_id": "binding_0a4d01e0f6cafb722a5a5a9f5596d19c",
@@ -2035,7 +2391,7 @@
       "capability": {
         "capability_id": "component_b1cb124264ad2ce9f9e75ca79ee0f1f5",
         "version": "1.0.0",
-        "digest": "sha256:0cab33f8e0ecadf0fcbf0986b1d39f5c2e49d69fbe7bf9456befb3a518fca840",
+        "digest": "sha256:2adf74ec5835908c98be2d806f61b2bfc8d16fd35c39329b6085624bcf709851",
         "description": "fetch 示例能力",
         "input_schema": {
           "type": "object",
@@ -2065,6 +2421,15 @@
             "final_url": {
               "type": "string",
               "format": "uri"
+            },
+            "redirect_chain": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              },
+              "minItems": 0,
+              "maxItems": 100
             },
             "retrieved_at": {
               "type": "string",
@@ -2126,6 +2491,7 @@
           "required": [
             "url",
             "final_url",
+            "redirect_chain",
             "retrieved_at",
             "http_status",
             "body_ref",
@@ -2196,7 +2562,7 @@
         "capability_ref": {
           "id": "component_b1cb124264ad2ce9f9e75ca79ee0f1f5",
           "version": "1.0.0",
-          "digest": "sha256:0cab33f8e0ecadf0fcbf0986b1d39f5c2e49d69fbe7bf9456befb3a518fca840"
+          "digest": "sha256:2adf74ec5835908c98be2d806f61b2bfc8d16fd35c39329b6085624bcf709851"
         },
         "executor_id": "executor_be3b470db73f373c87fcd397a2ece738",
         "target_ref": {
@@ -2221,7 +2587,7 @@
       "ref": {
         "id": "component_e0b23ca26eab16dce31db0538898e148",
         "version": "1.0.0",
-        "digest": "sha256:0b1ae45b33865ddf549f932b7f3dae9097f443d455153818b64425a82c7b56ab"
+        "digest": "sha256:6abd7550379243d77d98329e1167b3cfc8f706638e3c6e53911bae767ecb632f"
       },
       "binding_ref": {
         "binding_id": "binding_6506b598e85cf2e65305cf9d0ccd24b6",
@@ -2230,7 +2596,7 @@
       "capability": {
         "capability_id": "component_e0b23ca26eab16dce31db0538898e148",
         "version": "1.0.0",
-        "digest": "sha256:0b1ae45b33865ddf549f932b7f3dae9097f443d455153818b64425a82c7b56ab",
+        "digest": "sha256:6abd7550379243d77d98329e1167b3cfc8f706638e3c6e53911bae767ecb632f",
         "description": "assess 示例能力",
         "input_schema": {
           "type": "object",
@@ -2374,6 +2740,79 @@
               },
               "minItems": 0,
               "maxItems": 100
+            },
+            "fetch_evidence_refs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "tenant_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                  },
+                  "owner_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                  },
+                  "content_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "hash": {
+                    "type": "string",
+                    "pattern": "^sha256:[0-9a-f]{64}$"
+                  },
+                  "media_type": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9.+-]+/[a-zA-Z0-9.+-]+$"
+                  },
+                  "byte_length": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "tenant_id",
+                  "owner_id",
+                  "content_id",
+                  "version",
+                  "hash",
+                  "media_type",
+                  "byte_length"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 0,
+              "maxItems": 100
+            },
+            "official_registry_ref": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                },
+                "version": {
+                  "type": "string",
+                  "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"
+                },
+                "digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "id",
+                "version",
+                "digest"
+              ],
+              "additionalProperties": false
             }
           },
           "required": [
@@ -2382,7 +2821,9 @@
             "artifact_ref",
             "requirement_ids",
             "rule_refs",
-            "source_refs"
+            "source_refs",
+            "fetch_evidence_refs",
+            "official_registry_ref"
           ],
           "additionalProperties": false
         },
@@ -2688,6 +3129,17 @@
                   },
                   "matched": {
                     "type": "boolean"
+                  },
+                  "citation_key": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "cited_url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "report_link_matches": {
+                    "type": "boolean"
                   }
                 },
                 "required": [
@@ -2695,7 +3147,10 @@
                   "byte_start",
                   "byte_end",
                   "quote",
-                  "matched"
+                  "matched",
+                  "citation_key",
+                  "cited_url",
+                  "report_link_matches"
                 ],
                 "additionalProperties": false
               },
@@ -2707,6 +3162,211 @@
               "items": {
                 "type": "string",
                 "minLength": 1
+              },
+              "minItems": 0,
+              "maxItems": 100
+            },
+            "fetch_evidence_refs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "tenant_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                  },
+                  "owner_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                  },
+                  "content_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "hash": {
+                    "type": "string",
+                    "pattern": "^sha256:[0-9a-f]{64}$"
+                  },
+                  "media_type": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9.+-]+/[a-zA-Z0-9.+-]+$"
+                  },
+                  "byte_length": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "tenant_id",
+                  "owner_id",
+                  "content_id",
+                  "version",
+                  "hash",
+                  "media_type",
+                  "byte_length"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 0,
+              "maxItems": 100
+            },
+            "official_registry_ref": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                },
+                "version": {
+                  "type": "string",
+                  "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"
+                },
+                "digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "id",
+                "version",
+                "digest"
+              ],
+              "additionalProperties": false
+            },
+            "origin_checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "source_ref": {
+                    "type": "object",
+                    "properties": {
+                      "tenant_id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                      },
+                      "owner_id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                      },
+                      "content_id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                      },
+                      "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "hash": {
+                        "type": "string",
+                        "pattern": "^sha256:[0-9a-f]{64}$"
+                      },
+                      "media_type": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9.+-]+/[a-zA-Z0-9.+-]+$"
+                      },
+                      "byte_length": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "tenant_id",
+                      "owner_id",
+                      "content_id",
+                      "version",
+                      "hash",
+                      "media_type",
+                      "byte_length"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "fetch_evidence_ref": {
+                    "type": "object",
+                    "properties": {
+                      "tenant_id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                      },
+                      "owner_id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                      },
+                      "content_id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+                      },
+                      "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "hash": {
+                        "type": "string",
+                        "pattern": "^sha256:[0-9a-f]{64}$"
+                      },
+                      "media_type": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9.+-]+/[a-zA-Z0-9.+-]+$"
+                      },
+                      "byte_length": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "tenant_id",
+                      "owner_id",
+                      "content_id",
+                      "version",
+                      "hash",
+                      "media_type",
+                      "byte_length"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "requested_url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "final_url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "official_host": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "registered_host_match": {
+                    "type": "boolean"
+                  },
+                  "redirect_chain_checked": {
+                    "type": "boolean"
+                  },
+                  "version_match": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "source_ref",
+                  "fetch_evidence_ref",
+                  "requested_url",
+                  "final_url",
+                  "official_host",
+                  "registered_host_match",
+                  "redirect_chain_checked",
+                  "version_match"
+                ],
+                "additionalProperties": false
               },
               "minItems": 0,
               "maxItems": 100
@@ -2723,7 +3383,10 @@
             "source_refs",
             "judgments",
             "citation_checks",
-            "limitations"
+            "limitations",
+            "fetch_evidence_refs",
+            "official_registry_ref",
+            "origin_checks"
           ],
           "additionalProperties": false
         },
@@ -2760,7 +3423,7 @@
             }
           ],
           "actions": [
-            "read"
+            "process"
           ],
           "purposes": [
             "task_execution"
@@ -2790,7 +3453,7 @@
         "capability_ref": {
           "id": "component_e0b23ca26eab16dce31db0538898e148",
           "version": "1.0.0",
-          "digest": "sha256:0b1ae45b33865ddf549f932b7f3dae9097f443d455153818b64425a82c7b56ab"
+          "digest": "sha256:6abd7550379243d77d98329e1167b3cfc8f706638e3c6e53911bae767ecb632f"
         },
         "executor_id": "executor_be3b470db73f373c87fcd397a2ece738",
         "target_ref": {
@@ -3231,12 +3894,75 @@
     "id": "grant_f508784c5074fdcc0717f465024dc3cf",
     "revision": 1
   },
-  "grant_precondition": {
-    "authorization_source": "受信用户预授权数据库快照是假设；本包没有伪造已完成 Confirmation。",
-    "mode": "continuous",
-    "state": "active",
-    "revision": 1,
-    "allowed_actions": [
+  "grant_policy": {
+    "subject": {
+      "tenant_id": "tenant_8ac2a2ec55cb31a9955588e3b23a84d0",
+      "actor_id": "user_f523ea205251d544fae7483da5cddba8",
+      "actor_kind": "user"
+    },
+    "resources": [
+      {
+        "resource_owner_id": "content_owner_9af3ae2e176212d6ebe17583552be2ed",
+        "resource_type": "verified_collection",
+        "selector": {
+          "object_ids": [
+            "collection_d5a5e3e77167b1fb1eb194dc89764c1c"
+          ]
+        },
+        "normalizer_version": "fixture-normalizer/1"
+      },
+      {
+        "resource_owner_id": "executor_be3b470db73f373c87fcd397a2ece738",
+        "resource_type": "simulator",
+        "selector": {
+          "object_ids": [
+            "device_252b9d083cdbd895700becaab28d8043"
+          ]
+        },
+        "normalizer_version": "fixture-normalizer/1"
+      },
+      {
+        "resource_owner_id": "executor_be3b470db73f373c87fcd397a2ece738",
+        "resource_type": "provider",
+        "selector": {
+          "object_ids": [
+            "provider_388a8a5de39afac2323d5e4823a13c36"
+          ]
+        },
+        "normalizer_version": "fixture-normalizer/1"
+      },
+      {
+        "resource_owner_id": "executor_be3b470db73f373c87fcd397a2ece738",
+        "resource_type": "provider",
+        "selector": {
+          "object_ids": [
+            "provider_a64a70edfe3940a4e066d2ae40bf7791"
+          ]
+        },
+        "normalizer_version": "fixture-normalizer/1"
+      },
+      {
+        "resource_owner_id": "executor_be3b470db73f373c87fcd397a2ece738",
+        "resource_type": "provider",
+        "selector": {
+          "object_ids": [
+            "model_e456c40e06ba04628a1b6797a182b505"
+          ]
+        },
+        "normalizer_version": "fixture-normalizer/1"
+      },
+      {
+        "resource_owner_id": "executor_be3b470db73f373c87fcd397a2ece738",
+        "resource_type": "managed_root",
+        "selector": {
+          "object_ids": [
+            "resource_77faeac6cb33a843089218278ed62861"
+          ]
+        },
+        "normalizer_version": "fixture-normalizer/1"
+      }
+    ],
+    "actions": [
       "read",
       "process",
       "store",
@@ -3244,6 +3970,51 @@
       "disclose",
       "manage"
     ],
+    "purposes": [
+      "task_execution",
+      "task_processing",
+      "task_storage",
+      "task_display"
+    ],
+    "recipients": [
+      "user_f523ea205251d544fae7483da5cddba8",
+      "orchestrator_6c2a7b84c457f86835e4cd936f13e82a",
+      "brain_3cba62a7eb2a14403ec3789626e12ad5",
+      "executor_be3b470db73f373c87fcd397a2ece738",
+      "content_owner_9af3ae2e176212d6ebe17583552be2ed",
+      "model_e456c40e06ba04628a1b6797a182b505",
+      "provider_388a8a5de39afac2323d5e4823a13c36",
+      "provider_a64a70edfe3940a4e066d2ae40bf7791"
+    ],
+    "locations": [
+      "endpoint_ed7b43476e2bc7c366105dfa651927ce",
+      "endpoint_ea067a5c0548694159658276096e45a6",
+      "endpoint_5a6b0539138d03b3b1c014bff19f756e"
+    ],
+    "mode": "continuous",
+    "valid_from": "2026-09-28T00:00:00Z",
+    "expires_at": "2026-10-28T00:00:00Z",
+    "limits": [
+      {
+        "unit": "fixture_credit",
+        "limit": "20"
+      },
+      {
+        "unit": "byte",
+        "limit": "5000000"
+      },
+      {
+        "unit": "invocation",
+        "limit": "1000"
+      }
+    ],
+    "max_offline_window_ms": 0
+  },
+  "grant_precondition": {
+    "authorization_source": "受信用户预授权数据库快照是假设；本包没有伪造已完成 Confirmation。",
+    "mode": "continuous",
+    "state": "active",
+    "revision": 1,
     "scope_membership": "精确已登记资源和 verified-content-collection 的受信成员；归属查询接口待实现",
     "quota": "fixture 足够，未访问真实额度"
   },
@@ -3256,36 +4027,36 @@
         "brain.decide": 2,
         "brain.get": 2,
         "capability.describe": 2,
-        "content.get": 17,
+        "content.get": 16,
         "content.put": 6,
-        "content.register_copy": 17,
-        "content.release_copy": 17,
+        "content.register_copy": 16,
+        "content.release_copy": 16,
         "evaluation.approval_check": 4,
         "execution.control": 1,
         "execution.get": 1,
         "execution.invoke": 1,
-        "grant.use": 27,
-        "grant.use.settle": 27,
+        "grant.use": 54,
+        "grant.use.settle": 54,
         "resource.acquire": 1,
         "resource.release": 1,
         "task.read": 1,
         "task.result": 1,
         "task.submit": 1
       },
-      "protocol_pairs": 129,
-      "request_response_json_bytes": 241347,
+      "protocol_pairs": 180,
+      "request_response_json_bytes": 365982,
       "retained_record_kinds": {
         "ApprovalUse": 4,
         "BudgetReservation": 3,
-        "CleanupResponsibility": 17,
-        "CommandRecord": 105,
+        "CleanupResponsibility": 16,
+        "CommandRecord": 157,
         "ConditionCheck": 1,
-        "ContentCopy": 17,
+        "ContentCopy": 16,
         "ContentMetadata": 6,
         "ControlReceipt": 1,
         "DecisionConsumption": 2,
         "DecisionRecord": 2,
-        "IntentProjection": 28,
+        "IntentProjection": 55,
         "Job": 8,
         "ModelPreparation": 2,
         "ModelSend": 2,
@@ -3297,25 +4068,26 @@
         "Task": 1,
         "TaskExecutorBinding": 1,
         "TaskGate": 1,
-        "UsageClosure": 27,
-        "UseReceipt": 27,
-        "UseSettlementRecord": 27
+        "UsageClosure": 54,
+        "UseReceipt": 54,
+        "UseSettlementRecord": 54
       },
-      "retained_record_count": 287,
-      "retained_record_json_bytes": 370437,
+      "retained_record_count": 445,
+      "retained_record_json_bytes": 592627,
       "new_body_count": 6,
       "new_body_bytes": 13942,
       "preinstalled_body_count": 4,
       "preinstalled_body_bytes": 6278,
-      "copy_count": 17,
-      "download_bytes": 26964,
-      "use_count": 27,
-      "minimum_closure_count": 136,
-      "minimum_closure_json_bytes": 43097,
+      "copy_count": 16,
+      "download_bytes": 25332,
+      "use_count": 54,
+      "minimum_closure_count": 215,
+      "minimum_closure_json_bytes": 76743,
       "fixture_credit": 2,
       "model_input_body_bytes": 25029,
       "model_tokens": null,
-      "physical_db_bytes": null
+      "physical_db_bytes": null,
+      "assessment_input_body_bytes": 0
     },
     "bluetooth-off": {
       "brain_calls": 3,
@@ -3333,28 +4105,28 @@
         "execution.control": 1,
         "execution.get": 3,
         "execution.invoke": 3,
-        "grant.use": 40,
-        "grant.use.settle": 40,
+        "grant.use": 81,
+        "grant.use.settle": 81,
         "resource.acquire": 1,
         "resource.release": 1,
         "task.read": 1,
         "task.result": 1,
         "task.submit": 1
       },
-      "protocol_pairs": 186,
-      "request_response_json_bytes": 359809,
+      "protocol_pairs": 268,
+      "request_response_json_bytes": 558482,
       "retained_record_kinds": {
         "ApprovalUse": 7,
         "BudgetReservation": 6,
         "CleanupResponsibility": 23,
-        "CommandRecord": 153,
+        "CommandRecord": 235,
         "ConditionCheck": 1,
         "ContentCopy": 23,
         "ContentMetadata": 10,
         "ControlReceipt": 1,
         "DecisionConsumption": 3,
         "DecisionRecord": 3,
-        "IntentProjection": 43,
+        "IntentProjection": 84,
         "Job": 15,
         "ModelPreparation": 3,
         "ModelSend": 3,
@@ -3367,25 +4139,26 @@
         "Task": 1,
         "TaskExecutorBinding": 1,
         "TaskGate": 1,
-        "UsageClosure": 40,
-        "UseReceipt": 40,
-        "UseSettlementRecord": 40
+        "UsageClosure": 81,
+        "UseReceipt": 81,
+        "UseSettlementRecord": 81
       },
-      "retained_record_count": 430,
-      "retained_record_json_bytes": 573044,
+      "retained_record_count": 676,
+      "retained_record_json_bytes": 923230,
       "new_body_count": 10,
       "new_body_bytes": 26759,
       "preinstalled_body_count": 4,
       "preinstalled_body_bytes": 6278,
       "copy_count": 23,
-      "download_bytes": 35763,
-      "use_count": 40,
-      "minimum_closure_count": 200,
-      "minimum_closure_json_bytes": 63378,
+      "download_bytes": 38283,
+      "use_count": 81,
+      "minimum_closure_count": 323,
+      "minimum_closure_json_bytes": 115308,
       "fixture_credit": 3,
       "model_input_body_bytes": 39445,
       "model_tokens": null,
-      "physical_db_bytes": null
+      "physical_db_bytes": null,
+      "assessment_input_body_bytes": 0
     },
     "report": {
       "brain_calls": 4,
@@ -3395,37 +4168,38 @@
         "brain.decide": 4,
         "brain.get": 4,
         "capability.describe": 5,
-        "content.get": 58,
+        "content.get": 62,
         "content.put": 23,
-        "content.register_copy": 58,
-        "content.release_copy": 58,
-        "evaluation.approval_check": 17,
+        "content.register_copy": 62,
+        "content.release_copy": 62,
+        "evaluation.approval_check": 18,
         "execution.control": 1,
         "execution.get": 9,
         "execution.invoke": 9,
-        "grant.use": 100,
-        "grant.use.settle": 100,
+        "grant.use": 193,
+        "grant.use.settle": 193,
         "task.read": 1,
         "task.result": 1,
         "task.submit": 1
       },
-      "protocol_pairs": 449,
-      "request_response_json_bytes": 936768,
+      "protocol_pairs": 648,
+      "request_response_json_bytes": 1444006,
       "retained_record_kinds": {
-        "ApprovalUse": 17,
+        "ApprovalUse": 18,
         "BudgetReservation": 13,
-        "CleanupResponsibility": 58,
-        "CommandRecord": 371,
-        "ConditionCheck": 4,
-        "ContentCopy": 58,
+        "CleanupResponsibility": 62,
+        "CommandRecord": 566,
+        "ConditionCheck": 5,
+        "ContentCopy": 62,
         "ContentMetadata": 23,
         "ControlReceipt": 1,
         "DecisionConsumption": 4,
         "DecisionRecord": 4,
-        "IntentProjection": 109,
+        "IntentProjection": 202,
         "Job": 34,
-        "ModelPreparation": 4,
-        "ModelSend": 4,
+        "ModelCall": 1,
+        "ModelPreparation": 5,
+        "ModelSend": 5,
         "Operation": 9,
         "OperationIntent": 9,
         "PlanStepAdmission": 3,
@@ -3434,25 +4208,26 @@
         "Task": 1,
         "TaskExecutorBinding": 1,
         "TaskGate": 1,
-        "UsageClosure": 100,
-        "UseReceipt": 100,
-        "UseSettlementRecord": 100
+        "UsageClosure": 193,
+        "UseReceipt": 193,
+        "UseSettlementRecord": 193
       },
-      "retained_record_count": 1038,
-      "retained_record_json_bytes": 1504626,
+      "retained_record_count": 1618,
+      "retained_record_json_bytes": 2394242,
       "new_body_count": 23,
-      "new_body_bytes": 101729,
+      "new_body_bytes": 114384,
       "preinstalled_body_count": 7,
-      "preinstalled_body_bytes": 23678,
-      "copy_count": 58,
-      "download_bytes": 147736,
-      "use_count": 100,
-      "minimum_closure_count": 485,
-      "minimum_closure_json_bytes": 153728,
+      "preinstalled_body_bytes": 28337,
+      "copy_count": 62,
+      "download_bytes": 182349,
+      "use_count": 193,
+      "minimum_closure_count": 773,
+      "minimum_closure_json_bytes": 275939,
       "fixture_credit": 5,
-      "model_input_body_bytes": 172850,
+      "model_input_body_bytes": 196006,
       "model_tokens": null,
-      "physical_db_bytes": null
+      "physical_db_bytes": null,
+      "assessment_input_body_bytes": 3234
     }
   }
 }
