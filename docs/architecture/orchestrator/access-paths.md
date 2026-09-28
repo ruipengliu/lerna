@@ -15,7 +15,7 @@
 | `R`、`U` | 当前目标条件数、任务计价单位数；公开 Schema 分别最多 100 | 拒绝越界输入，不能截断条件或费用单位 |
 | `A`、`T` | 准入需核对的祖先数、一次控制影响的活动子树规模；初始委派深度为 4，活跃子数为 8，具体口径归[资源上限](../deployment-production.md#56-初始资源上限与改选-mq-的边界) | 新子创建须同时满足深度、活跃子数、用户及事务容量限制；不得把原子控制拆成漏覆盖的分页提交 |
 | `L_action`、`L_fact` | 一轮准入行动数、一次归并事实数 | 拆为后续有限轮次；每项保持原身份 |
-| `L_check`、`L_delegation`、`L_effect` | 一个任务当前需核验的检查记录（含组合检查全部有界依赖）、未结受管委派和未决效果数 | 新准入不超出可处理集合；已存在的超界或不完整集合阻止成功提交，保留核对责任 |
+| `L_check`、`L_delegation`、`L_effect` | 一个任务当前需核验的检查记录（含当前目标覆盖报告及组合检查全部有界依赖）、未结受管委派和未决效果数 | 新准入不超出可处理集合；已存在的超界或不完整集合阻止成功提交，保留核对责任 |
 | `L_defect` | 一次核验所选准确实现／规则命中的缺陷记录处理预算 | 缺陷登记照常保存；核验读不全则保留缺口，不能截断后采用旧 pass |
 | `L_executor` | 一项任务已绑定、需要控制传播的执行端数 | 新绑定前检查容量；已有逐端责任不能因分页或列表裁剪遗漏 |
 | `L_scan`、`L_page` | 每轮应用层候选扫描上限、每批返回／处理上限，`L_page ≤ L_scan` | 保存最后扫描键并让出调度份额；列表可不足一页，核验不能把一页结束当作全部通过 |
@@ -32,9 +32,9 @@
 | 路径 | 权威对象与关联键 | 逻辑读写批次及关联方式 | 所需键或索引访问条件 |
 | --- | --- | --- | --- |
 | 接纳 | `command_receipts`／`closed_identities` 按原服务及命令；策略接受事实按主体与准确策略；新 `tasks`、`task_requirements`、`budget_balances`、`jobs` 按 task_id | 原身份查重 1 组→当前资格与容量 1 组→Task、条件、预算、首 job、回执共同写入 1 组。重复命令直接返回原结果 | 原命令及关闭身份唯一键；接受事实准确键；任务、条件、单位与责任槽唯一键 |
-| 候选准入 | `tasks` 祖先链、准确快照／计划；`decision_consumptions` 或 `plan_step_admissions`；`operation_intents`、预留、绑定和 jobs | 任务及固定依赖 1 组→候选消费与预算 1 组→本轮意图、预留和派发责任共同写入 1 组。两种候选身份互斥，每项沿原键准入 | task_id／父链；decision_id 或 `(task_id, plan_id, plan_revision, step_id)`；operation_id、计费绑定、责任槽唯一键 |
+| 候选准入 | `tasks` 祖先链、准确快照／计划；`decision_consumptions`、`plan_step_admissions` 或受信核验原检查；`operation_intents`、预留、绑定和 jobs | 任务及固定依赖 1 组→候选消费与预算 1 组→本轮意图、预留和派发责任共同写入 1 组。三类候选身份互斥，每项沿原键准入 | task_id／父链；decision_id、计划步骤键或原核验检查键；operation_id、计费绑定、责任槽唯一键 |
 | 事实归并 | `received_facts` 按 `(owner, object_id, revision)`；原 intent／委派、`condition_checks`、当前效果投影、预留与 Task | 来源和关联对象 1 组→当前投影及费用累计值 1 组→新事实、适用性、差额、Task 修订与后续 job 共同写入 1 组；批内按来源键归组，不逐项回查全历史 | 来源修订唯一键；原 operation／delegation 映射；`(task_id, goal_revision, requirement_id)` 的当前检查访问；原计费来源绑定 |
-| 完成核验 | `tasks` 当前 goal_revision；`task_requirements` 与当前所选 `condition_checks`；`evaluator_evidence_gates`／`evidence_defects`；未结子委派／效果投影；`task_results` | 任务及目标 1 组→所选实现门禁及命中缺陷 1 组→条件、子委派、效果分别 1 组集合读取→固定 Result、终态及收尾责任共同写入 1 组；条件先按准确版本及原缺陷核验再汇总，各集合分别判断 | `(task_id, goal_revision, requirement_id)` 的当前 check_id 关联；准确 evaluator_ref 的 gate；按实现／规则及影响范围筛选缺陷；父 task_id 下的未结委派与未决效果；task_id 的唯一 Result |
+| 完成核验 | `tasks` 当前 goal_revision；`task_goal_coverage` 当前修订；`task_requirements` 与当前所选 `condition_checks`；`evaluator_evidence_gates`／`evidence_defects`；未结子委派／效果投影；`task_results` | 任务、目标及当前覆盖记录 1 组→所选覆盖／条件实现门禁及命中缺陷 1 组→条件、子委派、效果分别 1 组集合读取→固定 Result、终态及收尾责任共同写入 1 组；条件先按准确版本及原缺陷核验再汇总，各集合分别判断 | `(task_id, goal_revision)` 的当前 coverage_revision；`(task_id, goal_revision, requirement_id)` 的当前 check_id 关联；准确 evaluator_ref 的 gate；按实现／规则及影响范围筛选缺陷；父 task_id 下的未结委派与未决效果；task_id 的唯一 Result |
 | 控制传播 | `tasks` 父链及受影响活动子树、`task_executor_bindings`、逐端控制与 jobs | 祖先／子树 1 组→受影响任务的端绑定 1 组→有效控制修订与逐端责任共同写入 1 组；从真实父链取集合，不采信请求提供的祖先清单 | 父任务下活动子任务访问；`(task_id, executor_id)` 唯一绑定；控制责任槽键 |
 | jobs 领取与恢复 | `jobs` 活跃状态、due_at、稳定 job_id；未决领域对象与其 `(task_id, kind, object_id)` 责任槽 | 领取为到期候选 1 组＋条件更新 1 组，随即提交；恢复每页领域对象 1 组＋责任槽集合核对 1 组＋缺槽补建 1 组；不逐对象单独查槽 | 分区／工作类别／可领取状态、due_at、稳定键的活跃访问；责任槽唯一键；各领域未结状态及分页键 |
 | 列表查询 | `tasks` 按 Orchestrator、created_at、task_id；共享查询记录及当前披露资格 | 候选页 1 组→资格核验 1 组→返回至多一页。具备批量接口的权威按集合核验；只有逐对象接口时，调用次数受扫描与调用预算约束并单独计量，不假设存在批量 RPC | `(orchestrator, created_at, task_id)`；查询身份／主体／过滤摘要绑定。其他过滤是否需索引由真实查询分布和计划决定 |
@@ -58,7 +58,7 @@
 <a id="completion-queries"></a>
 ## 3. 完成核验不遍历历史
 
-完成核验读取当前目标的条件及适用检查，引用准确成果、规则、评估实现和证据；旧目标、旧候选与已失去适用性的检查留作历史。检查结果的生成、失效和后续责任按[验证生命周期](verification.md)处理。一次评分通过不能使未知效果、证据冲突或未满足的客观条件消失。
+完成核验先点查当前目标的覆盖记录及其输入摘要、缺口和实现门禁，再读取当前条件及适用检查；覆盖报告属于 L_check 总预算，不遍历历史覆盖修订。随后引用准确成果、规则、评估实现和证据；旧目标、旧候选与已失去适用性的检查留作历史。检查结果的生成、失效和后续责任按[验证生命周期](verification.md)处理。一次评分通过不能使未知效果、证据冲突或未满足的客观条件消失。
 
 未结效果和子委派集合的完整性来自领域事务：操作／子委派接纳时登记，事实归并时更新，只有对应效果或目标责任已核清时才移出；相关 Task 修订与后续 job 同时保存。已终结子任务仍有未知效果时，其原委派或效果责任继续留在集合中。纯账务未结可以继续结算，不被错误归为目标未完成。
 

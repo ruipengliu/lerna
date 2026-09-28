@@ -82,6 +82,8 @@ flowchart TB
 
 任务验证沿[条件、规则与验证器生命周期](orchestrator/verification.md)阅读，再查[核验持久化](orchestrator/implementation.md#condition-storage)及[存储访问路径](orchestrator/access-paths.md)。前者集中定义完成依据、异常与证据适用性，后两者给出恢复、查询和性能验收约束；当前仍是设计规格。
 
+已确认的九模块优化按[预期效果、组件对照与验收](validation/optimization-evidence.md)查阅：24 项工作映射到所属模块，重点补齐原目标覆盖、输入与工具结果语义、实际制品及失败归因。规则进入方案，压缩、记忆整理、Skill、规划与协作候选保留实验门禁；方案采用与运行收益分别记录。
+
 第三方实现从同一方法索引进入 [Schema](contracts/schemas/protocol.schema.json)、[登记表](contracts/schemas/methods.json)及[协议序列](contracts/examples/protocol/README.md)；跨端再查[WSS](contracts/transport.md)或[gRPC](contracts/grpc.md)。声明一个方法须同时承担其查询、错误和恢复义务，参考实现表结构不属于替换要求。
 
 ### 目录与后续细化

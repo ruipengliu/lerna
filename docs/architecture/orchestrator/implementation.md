@@ -71,10 +71,11 @@ CommandHandler 使用公共接纳模板，JobRunner 将下文各 kind 的处理�
 | --- | --- | --- |
 | tasks | tenant、task_id、Orchestrator、父任务、业务 Task、created_at | 主键；`(tenant, orchestrator, created_at, task_id)` 列表索引 |
 | task_requirements | task_id、goal_revision、requirement_id、规则及来源 | 同目标修订内 requirement 唯一 |
+| task_goal_coverage | task_id、goal_revision、coverage_revision、完整目标及条件摘要、rule_ref／evaluator_ref、准确核验报告、当前适用性／缺口、原评估 operation? | 同目标下覆盖修订唯一，同一目标／完整输入／规则至多一个未结束核验；按实现／规则反查影响；原报告不可改写，当前选择与 Task 修订及 verify 责任共同提交；不是公共 Task 新字段 |
 | condition_checks | check_id、task_id、goal_revision、requirement_id、准确 artifact／rule／evaluator 引用、原 operation_id?、原判断与证据、当前选择标记、适用性及原因 | check_id 唯一；同 task／goal／condition／准确成果至多一份当前选定的汇总记录，组成依据另关联，原判断不覆盖；详见[核验持久化](#condition-storage) |
-| task_results | task_id、goal_revision、固定 Result、所选 check_id 集合及完成时门禁修订 | 每任务最多一个成功结果；原 Result 不因后续缺陷或账单修改 |
+| task_results | task_id、goal_revision、固定 Result、所选 coverage_revision／check_id 集合及完成时门禁修订 | 每任务最多一个成功结果；原 Result 不因后续缺陷或账单修改 |
 | evaluator_evidence_gates / evidence_defects | 准确 evaluator_ref 的固定门禁行及单调修订；缺陷 ID、准确规则与影响范围、依据、受信登记身份 | 登记缺陷和核验完成锁同一实现门禁；缺陷原事实与分页影响责任共同提交，不等待任务投影追上 |
-| result_evidence_notices | task_id、check_id、defect_id、说明引用 | 关联唯一；在固定 Result 之外保存已成功任务的证据失效说明，不生成新成功结果 |
+| result_evidence_notices | task_id、依据类型（condition／coverage）、原 check_id 或 goal_revision／coverage_revision、defect_id、说明引用 | 关联唯一；在固定 Result 之外保存已成功任务的证据失效说明，不生成新成功结果 |
 | task_snapshots | task_id、snapshot_revision、精确依赖摘要、content_ref | 同任务快照修订唯一，不原地更新 |
 | task_plans | task_id、plan_id、plan_revision、goal_revision、正文引用 | 计划版本唯一；当前可用指针由 tasks 保存 |
 | decision_consumptions | task_id、decision_id、输入修订、采纳／失效原因 | decision 只消费一次 |
@@ -109,6 +110,7 @@ erDiagram
     Task ||--o{ Snapshot : "固定决策输入"
     Task ||--o{ PlanVersion : "保存计划版本"
     Task ||--o{ RequirementVersion : "保留目标条件版本"
+    Task ||--o{ GoalCoverage : "保存完整目标覆盖核验"
     RequirementVersion ||--o{ ConditionCheck : "固定条件及准确成果"
     Task ||--o{ OperationIntent : "准入原操作"
     PlanVersion ||--o{ PlanStepAdmission : "记录步骤唯一消费"
@@ -117,9 +119,11 @@ erDiagram
     PlanStepAdmission |o--o| OperationIntent : "计划步骤的操作分支"
     OperationIntent |o--o{ ReceivedFact : "归并原操作事实"
     OperationIntent |o--o{ ConditionCheck : "有外部评估时关联原操作"
+    OperationIntent |o--o{ GoalCoverage : "核验或复用的原报告"
     Task ||--o{ Job : "保存推进和收尾责任"
     Task ||--o| Result : "发布固定成果"
     Result |o--|{ ConditionCheck : "固定所选判断"
+    Result |o--|| GoalCoverage : "固定所选覆盖"
     Snapshot {
       string task_id
       int snapshot_revision
@@ -128,6 +132,11 @@ erDiagram
       string plan_id
       int plan_revision
       int goal_revision
+    }
+    GoalCoverage {
+      string task_id
+      int goal_revision
+      int coverage_revision
     }
     RequirementVersion {
       string task_id
@@ -152,13 +161,13 @@ erDiagram
     }
 ```
 
-DecisionConsumption 与 PlanStepAdmission 是互斥的候选来源登记：一次准入只消费其中一种身份，并在同事务中关联原 operation 或 delegation。图仅展开 operation 分支；委派分支沿同样准入约束进入[协作对象关系](../collaboration/implementation.md#data-flow)。一个 Job 可引用多项固定依赖，业务责任槽仍只属于一个原对象。
+行动有三类互斥来源：Brain 的 DecisionConsumption、计划的 PlanStepAdmission，以及受信固定核验的原检查身份。核验来源复用 condition_checks.check_id 或 task_goal_coverage 的 task／goal_revision／coverage_revision，不另建准入账本；一次准入只消费其中一种身份，并同事务关联原 operation，Brain／计划的委派分支另关联 delegation。图中的操作与检查关联还允许复用报告，只有首次准入关联承担发送去重，复用不创建新操作。委派分支的对象见[协作关系](../collaboration/implementation.md#data-flow)。一个 Job 可引用多项固定依赖，业务责任槽仍只属于一个原对象。
 
 | 阶段 | 对象由谁创建、保存与传递 | 消费、归并与释放条件 |
 | --- | --- | --- |
 | 接纳 | CommandHandler 将原目标交 TaskCoordinator；Task、预算和首 Job 共同持久化 | 原 Receipt 发布 Task 引用；JobRunner 消费工作领取，不消费掉业务对象 |
 | 固定输入 | SnapshotAssembler 取得当前获准依赖，保存 Snapshot 与准确正文引用；JobRunner 交 Brain | Decision 绑定该快照；旧提案不能覆盖新任务修订，实际用量仍归原调用 |
-| 准入行动 | TaskCoordinator 消费 Decision 身份或 PlanStepAdmission 键，保存 OperationIntent、预留和 dispatch Job | Executor 接收不可变 Invoke；派发重试只传同一原命令，不从 Task 当前值重新拼输入 |
+| 准入行动 | TaskCoordinator 消费 Decision、PlanStepAdmission 或受信核验检查三者之一的原身份，保存 OperationIntent、预留和 dispatch Job | Executor 接收不可变 Invoke；派发重试只传同一原命令，不从 Task 当前值重新拼输入 |
 | 归并结果 | JobRunner 取得原事实，FactReducer 按来源修订写 ReceivedFact | 同事务应用累计费用差额、条件证据、Task 修订及下一 Job；重复事实不重复扣费或唤醒 |
 | 完成及清理 | TaskCoordinator 固定 Result、终态与控制／结算责任；清理器检查所有保留引用 | 正文和历史可按用途清理；未决原事实继续保留，最小关闭索引长期阻止身份复用 |
 
@@ -192,6 +201,12 @@ flowchart TB
 
 <a id="condition-storage"></a>
 ### 2.3 条件记录、当前适用性与核验责任
+
+[目标覆盖记录](verification.md#goal-coverage)与条件判断共用本节的持久责任。TaskPolicy 固定覆盖核验规则、准确声明、唯一选择顺序及有限修订／尝试额度。核验开始前锁定 Task，分配本目标下唯一 coverage_revision，保存完整目标／条件摘要、规则／实现、待核验原因及 verify 责任；需要外部评估时同事务关联原 OperationIntent、预留及 dispatch。相同原输入与核验身份的恢复读取已有记录，不再次分配或调用。JobRunner 在事务外取得原报告，事务内核对绑定后固定报告、当前适用性／选择、Task 修订和 verify 责任；复用报告也须新建当前输入绑定并记录复用依据。原有效 fail 不靠更换实现或重跑取优消除，遵守条件检查相同的有限修订规则。目标修订同事务使旧覆盖选择失效，迟到报告只存为原目标证据。
+
+覆盖报告指出可补全遗漏时，归并缺口、Task 修订、verify 与 decide 责任共同提交；SnapshotAssembler 将准确覆盖报告作为获准 materials，把待解决项写入 gaps，Brain 在新快照中补条件或提出澄清。暂停保留责任而不派发新 Decision，取消／终态只归并历史与收尾；缺合法材料或预算时保存对应等待。新提案真正改变条件仍先提交新目标修订，不在原覆盖报告下直接行动。
+
+完成事务持有 Task 锁后读取当前覆盖选择，按既有锁序核对其依赖实现的 evidence gate、准确输入与适用性，再处理 ConditionResult；缺陷登记也覆盖覆盖核验所用报告。覆盖变更递增 Task 修订，旧快照的完成处理不得提交。缺少覆盖记录、待核验或存在遗漏时保留 verify 和具体依赖；暂停不能新启评估，终态不重开。缺陷影响扫描按准确实现／规则同时枚举 condition_checks 与 task_goal_coverage，各自保留分页游标；活动覆盖失效唤醒原 verify，终态以 result_evidence_notices 关联说明。详细映射由宿主内部只读投影提供给 UI，跨端沿既有 Surface 的受控内容呈现；不向公共 Task／Result 增加未登记字段。
 
 `condition_checks` 解决检查尚未出结果时的恢复，以及旧判断仍存在但已不适用的区分；它复用 Orchestrator Store、普通操作和 jobs，不另设验证服务。每个 check_id 固定任务、目标修订、条件、准确成果、rule_ref、evaluator_ref 与所用策略／安装锁。rule_ref 必须等于该 `(task_id, goal_revision, requirement_id)` 的不可变 Requirement；公共 ConditionResult 沿这条关系取得规则，不重复增加线字段。内部 check_id 不暴露为公共 ConditionResult 身份。
 
@@ -274,14 +289,16 @@ Brain 调用有固定 decision_id。调用在任务暂停之后才返回时，�
 
 这是内部事务的设计断言，仍须由实际并发与崩溃实验取得证据；公共 Proposal 的字段合法并不能证明这些提交已经发生。
 
-通过上述无变化分支的行动准入事务继续执行以下步骤：
+通过上述无变化分支的 Brain 行动、计划物化及受信固定核验候选，统一进入以下行动准入事务。后两者不伪造 Brain Decision；受信核验只由固定 TaskPolicy／检查规则构造准确评估能力及输入，不能由网页、模型输出或普通请求自报来源以取得该入口：
 
 1. 比较工作领取代次；比较当前 Task.revision 与候选依赖修订。
 2. 检查 active、所有祖先的有效运行条件、目标修订和期限。
-3. 按候选来源检查唯一准入键：Brain 提案检查 decision_id 尚未消费；计划物化检查 `(task_id, plan_id, plan_revision, step_id)` 尚未准入。两类都检查准确能力、固定 Schema 和目标约束。
+3. 按来源检查唯一准入键：Brain 检查 decision_id；计划检查 `(task_id, plan_id, plan_revision, step_id)`；受信核验检查原 check_id 或 `(task_id, goal_revision, coverage_revision)`。已有准入只恢复原 operation，不生成第二项。三类均检查准确能力、固定 Schema 和目标约束，核验还复核原检查输入／规则及当前必要性。
 4. 检查本次授权候选、资源冲突、先前未知效果与预算。
 5. 保存固定 operation_id、Invoke、费用预留、原执行命令及 dispatch job。
-6. Brain 候选保存 decision 的消费记录；计划候选保存 plan_step_admissions 及 operation／delegation 映射。递增任务修订，提交。
+6. Brain 候选保存 decision 消费；计划候选保存 plan_step_admissions 与 operation／delegation 映射；受信核验候选在原检查记录保存唯一 operation 关联。Intent 固定且只包含一类来源，递增任务修订并与预留、dispatch 共同提交。
+
+Brain／计划已经为某次检查准入过评估操作时，原检查关联在那次事务一并保存，verify 只查询它；不能再按受信核验来源创建另一份。核验来源不授予业务权限，也不允许额外目标动作，暂停、取消、期限、预算及原未知效果仍经过同一门禁。
 
 本轮可同时准入少量独立行动，但批次内每项仍有独立操作身份和预留。存在依赖、共享设备、重叠不可重复效果或需要前项输出时拆为后续轮次。
 
@@ -318,6 +335,8 @@ materialize(plan, step, facts):
 保存计划的 Brain decision 只消费一次；后续步骤不伪造新 Decision，也不再次消费它。物化候选由 Orchestrator 附加准确计划版本、步骤及当前输入快照关联，通过现有 decide／dispatch jobs 推进。候选来源只决定去重键，授权、预算、控制、目标检查及提交原子性仍完全相同。
 
 计划修订废弃未准入步骤。已经派发的原步骤保留操作身份和事实，不能因为新计划删掉该节点就删除其预算或未知效果；旧计划／目标／候选的迟到输出只归并原事实，不自动绑定到新步骤。新计划要复用旧操作，须明确引用 operation_output 并重新核对当前适用性。GUI 动作仍需要动作后的新观察，不能从计划模板预先批准后续点击。
+
+计划复用作为可选配置实验，默认不从一次成功自动生成可执行模板。候选材料须随安装锁固定适用目标、输入／环境前提、所需证据、可表达的步骤与退出原因；规则由 TaskPolicy 和 PlanMaterializer 的受信实现检查，不能把任意自然语言前提当可执行表达式。前提无法核验时回到 Brain 或等待所缺事实，已经准入且效果未清的步骤继续原核对，禁止以“退出计划”为由重做。同模型、同任务上的每步决策与有限计划对照须计入模板构建、维护、失配、回退及旧操作收尾成本，按[实验门禁](../validation/optimization-evidence.md#experiments)决定后续任务是否启用。
 
 ## 5. 派发与事实归并
 
@@ -391,7 +410,7 @@ sequenceDiagram
 
 尚未派发的旧目标工作标为失效；已派发操作继续核对。新的目标与旧效果可能冲突时保留 effect 等待，直到有可验证的外部事实。`task.revise` 不修改已发生费用、单次许可消费或旧操作参数。
 
-提交完成时按统一锁序读取任务、所选条件的实现门禁、必要条件、受管委派及原效果投影，执行以下合取检查：当前目标修订一致；全部必要条件对准确成果为 pass 且当前适用；固定规则、实现与策略匹配；所有内部子任务终结；外部目标行动已封闭；本任务及委派无未知或可能迟到效果。缺陷范围核对直接读取本提交域的受信原事实，不能仅靠尚未更新的 applicability 投影。随后固定所选 check_id 与 Result、终态、控制传播及结果可查事实。条件集合、未结子任务及效果分别做集合查询，完整性与有界访问见[访问路径](access-paths.md#completion-queries)。
+提交完成时按统一锁序读取任务、所选覆盖与条件报告的实现门禁、必要条件、受管委派及原效果投影，执行以下合取检查：当前目标修订一致；覆盖核验绑定完整当前输入、适用且无未解决缺口；全部必要条件对准确成果为 pass 且当前适用；固定规则、实现与策略匹配；所有内部子任务终结；外部目标行动已封闭；本任务及委派无未知或可能迟到效果。缺陷范围核对直接读取本提交域的受信原事实，不能仅靠尚未更新的 applicability 投影。随后固定所选 coverage_revision、check_id 与 Result、终态、控制传播及结果可查事实。条件集合、未结子任务及效果分别做集合查询，完整性与有界访问见[访问路径](access-paths.md#completion-queries)。
 
 暂停允许既有证据完成；它禁止新的质量评估和行动。完成与取消由条件事务顺序决定：先提交终态的一方胜出，后一命令明确冲突或返回终态事实。费用未最终核清可以保守保留，不伪装成目标效果未知。
 

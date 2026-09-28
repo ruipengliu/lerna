@@ -45,6 +45,9 @@ flowchart LR
 
 ## 2. 接纳、推进与结算
 
+<a id="delegation-evidence"></a>
+委派交接须能把父方条件、准确子目标／输入、配置及原创建键连到子结果版本、证据范围、未决效果、控制落实范围和累计费用。复用 Delegation、子任务原事实及 Closure 保存，咨询正文放受控引用；原生协议表达不了的部分保留 gap，不能把提供方一个 success 字段补译成全部责任关闭。父 Orchestrator 在自己的目标覆盖与条件核验中决定子结果证明了哪一部分，子结果内容、成功状态和预算关闭均不直接提交父成功。
+
 内部委派按以下顺序处理，所有检查通过后才提交创建。
 
 1. 核心核对父任务仍允许新目标工作，目标、材料和所选 Agent 配置均为精确版本。
@@ -132,6 +135,9 @@ flowchart TD
 局部错误与调用方动作固定为：agent_unavailable 等待已绑定提供方；agent_contract_unsupported 选择满足要求的其他候选，但先核清已发委派；delegation_conflict 读取原记录；depth_exceeded 收窄拆分；delegation_pending 沿原键查询；control_unsupported 展示实际控制边界。通用权限、额度和修订错误沿[公共契约](../contracts/README.md)处理。
 
 ## 6. 验证及实现边界
+
+<a id="delegation-experiment"></a>
+委派配置先比较单 Agent、有限独立分支并行和强顺序依赖三类任务，固定总预算、工具、模型、来源及同等初始状态。统计实际重复上下文、子创建与等待、父方汇总／核验、取消及费用核对，按每个真实完成任务的总成本和端到端时延判断；不能只保留最快完成的分支。按[组件对照](../validation/optimization-evidence.md#experiments)证实净收益后才选择性启用更多委派，不默认增加递归深度。收益不足时调整之后任务的配置，已有未知子效果仍沿原映射恢复，不能改回单 Agent 重做。
 
 | 用例 | 前置／刺激 | 可观察结果与目标 |
 | --- | --- | --- |

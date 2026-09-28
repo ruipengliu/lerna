@@ -52,7 +52,7 @@ flowchart TB
 
 Brain 可在任一种提案中携带绑定 `base_goal_revision` 的 `requirements_proposal`。Orchestrator 先裁决条件补全，只自动采纳保留显式约束且不降低必要性的变化；真正改变条件时递增 `goal_revision` 与控制修订，消费本次 Decision，并持久保存下一轮决策及控制传播责任。同一提案其余部分全部失效，包括 actions、完成请求与 `plan_delta`，不把旧快照下的行动改绑到新条件。代价是条件变化后增加一轮决策，换得每次行动只依赖一份已经固定的目标。与当前条件完全相同的补全按无变化处理，继续裁决原提案；改变目标含义或降低必要性仍须用户 `task.revise`。判定顺序、重复交回和竞争规则集中在[提案消费](implementation.md#proposal-consumption)。
 
-模型自称“全部满足”不能提高保证等级。没有机械检查覆盖的自然语言约束仍属质量判断；用户可以查看解释后的目标并纠正，Orchestrator 不宣称已穷尽识别任意自然语言中的所有隐含要求。
+模型自称“全部满足”不能提高保证等级。Orchestrator 先按[目标覆盖规则](verification.md#goal-coverage)核对完整原目标与当前条件集合，保存映射、检查依据及遗漏；存在已知缺口时，即使全部已登记条件通过也不能成功。没有机械检查覆盖的自然语言约束仍属质量判断；用户可以查看解释后的目标并纠正，Orchestrator 不宣称已穷尽识别任意自然语言中的所有隐含要求。
 
 验证沿“条件与规则固定 → 准确候选固定 → 评估准入与执行 → 条件记录保存 → 完成汇总”推进。Executor 核对操作效果，获准评估实现判断条件，Orchestrator 保存条件记录并独立裁决完成；中途质量评估与最终汇总复用这些事实。验证实现的登记、版本绑定、当前资格及异常后的持久责任统一见[验证生命周期](verification.md#verification-lifecycle)。
 
@@ -350,7 +350,7 @@ classDiagram
 | --- | --- |
 | Task | `tenant_id, task_id, orchestrator_id, submit_command_id, goal_ref, goal_revision, requirements, policy_ref, revision, control_revision, status, control, wait_reasons, deadline, budget, open_effects, accounting_open, result_ref?`；Orchestrator 和原提交绑定不可变；祖先控制按同 Orchestrator 任务链检查 |
 | Requirement | `requirement_id, kind, source_ref, rule_ref, required`；rule 引用机械检查、评估规则或用户验收；依据不足不能标 pass |
-| OperationIntent | `operation_id, task_id, goal_revision, decision_id?, plan_step?, capability_ref, binding_ref, input_ref, input_digest, grant_refs, reservation_id`；来源二选一：Brain 提案绑定 decision_id，计划物化绑定 `{plan_id, plan_revision, step_id}`；准入后不可改参数，效果字段由 Executor 提供 |
+| OperationIntent | `operation_id, task_id, goal_revision, decision_id?, plan_step?, verification_ref?, capability_ref, binding_ref, input_ref, input_digest, grant_refs, reservation_id`；内部来源三选一：Brain 的 decision_id、计划的 `{plan_id, plan_revision, step_id}`，或受信核验的 `{kind=condition, check_id}`／`{kind=goal_coverage, goal_revision, coverage_revision}`；核验引用不能由普通调用自报。准入后不可改参数，公共 Invoke 不增加来源字段，效果由 Executor 提供 |
 | ConditionResult | `requirement_id, goal_revision, artifact_ref, verdict, basis, evidence_refs, evaluator_ref`；verdict 为 pass/fail/unknown，引用准确成果与适用规则 |
 | Result | `task_id, goal_revision, artifact_refs, completion_basis, condition_results, limitations, completed_at`；只供 succeeded；失败／取消返回独立结束说明和未决项 |
 
