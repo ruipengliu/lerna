@@ -2,7 +2,7 @@
 
 [配置和方法登记](../../protocol.md) · [共同语义](../../README.md) · [独立完成判断投影](../README.md)
 
-本目录的 53 个 JSON 文件是有界的跨调用记录序列，覆盖全部 105 个严格登记方法。`invalid-mutations.json` 保存 371 个定向反例、来源文件、变更路径和应命中的规则；校验器逐项应用到原例副本，不修改原例。校验入口另构造超过 100 个受影响计划、跨分区超原分配账单的提供方／接收方／双重／待查原因，以及原使用 final 后的可信费用更正；这些构造只核对结构和记录关系，账单与用户接受事实仍须运行核验。每个方法的准确输入、输出、种类及错误恢复动作见[方法登记](../../schemas/methods.json)。
+本目录的 55 个 JSON 文件是有界的跨调用记录序列，覆盖全部 105 个严格登记方法。`invalid-mutations.json` 保存 371 个定向反例、来源文件、变更路径和应命中的规则；校验器逐项应用到原例副本，不修改原例。校验入口另构造超过 100 个受影响计划、跨分区超原分配账单的提供方／接收方／双重／待查原因，以及原使用 final 后的可信费用更正；这些构造只核对结构和记录关系，账单与用户接受事实仍须运行核验。每个方法的准确输入、输出、种类及错误恢复动作见[方法登记](../../schemas/methods.json)。
 
 夹具的 `auth` 是验收工具从认证通道取得的测试前提，不属于可由调用者选择的业务正文。`capabilities` 是预先装配的准确能力参数 Schema，`input_requests`、`approvals` 与 `confirmations` 是受信负责端的有限前提快照。它们不是可由模型提交并自证权限的线接口。ID、摘要、正文长度、proof 和内容引用均为占位数据；格式合法不证明真实内容哈希、用户批准或签名已经核验。
 
@@ -67,6 +67,8 @@
 | [58-lease-open-close-ledger](58-lease-open-close-ledger.json) | 首次使用保持 open；closed 保留未知费用，全部原使用封闭后最终结算 |
 | [59-delegation-phase-projection](59-delegation-phase-projection.json) | 创建未知、固定映射、普通未final用量、取消后未知费用、Closure 优先及原固定回执恢复 |
 | [60-task-billing-reconcile](60-task-billing-reconcile.json) | 终态任务收到认证 Brain 来源的迟到费用修订；原命令期限后同一 source/revision/digest 的后继命令复用核对 job，旧命令迟到仍回原回执 |
+| [61-lease-final-correction](61-lease-final-correction.json) | 原离线使用最终封账后追加可信费用，保持使用与初次封账；旧结算命令重放仍回原回执 |
+| [65-approved-rollback](65-approved-rollback.json) | 新版撤回后以独立旧批准激活准确旧锁；原命令重放、后续 work 和新实例 reopen 保持旧批准绑定 |
 
 在仓库根目录运行：
 
@@ -74,6 +76,10 @@
 python3 -m pip install -r docs/architecture/validation/requirements.txt
 python3 docs/architecture/validation/validate_protocol.py
 python3 docs/architecture/validation/validate.py
+python3 docs/architecture/validation/validate_lease.py
+python3 docs/architecture/validation/validate_release_recovery.py
 ```
 
-第一项检查共同及方法 Schema、动态工具参数、请求／响应关联，以及序列中已给出的原命令、门禁、输入、用途和映射事实。第二项另查完成判断投影。当前用例不是服务器实现；认证、加密证明、策略子集、真实正文、调度、数据库原子提交、网络恢复、平台隔离和性能都没有运行验证。单个示例中的物理效果或 `ready` 只是待实现系统必须提供的观察，不能据静态通过声称效果已发生。
+第一项检查共同及方法 Schema、动态工具参数、请求／响应关联，以及序列中已给出的原命令、门禁、输入、用途和映射事实。第二项另查完成判断投影；第三项构造封账后费用上调、超额、旧回执及非法来源／用量反例，第四项核对旧批准回退和每计划唯一运行。当前用例不是服务器实现；认证、加密证明、策略子集、真实正文、调度、数据库原子提交、网络恢复、平台隔离和性能都没有运行验证。单个示例中的物理效果或 `ready` 只是待实现系统必须提供的观察，不能据静态通过声称效果已发生。
+
+Brain 的内部生成模板、首次计划及前序输出物化示例另见[正文与有限计划夹具](../brain/README.md)，它们不属于领域 Exchange 消息。

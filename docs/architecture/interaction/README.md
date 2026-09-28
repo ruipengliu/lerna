@@ -136,7 +136,7 @@ InputRequest 由实际业务负责端创建，固定 request_id、revision、sch
 | InputRequest：required_content_refs、allowed_actions、consumed_by? | 必需预览绑定精确版本；consumed_by 由业务负责端原子保存 |
 | 验收请求绑定：goal_revision、candidate_ref、candidate_hash | 仅 acceptance 必填；改目标或候选后创建新请求修订，旧确认不得套用 |
 | InputSubmission：input_id、revision、surface_id、request_id、request_revision、answer_ref | 首次接纳后不可换回答；状态变化递增 revision；新回答用新 input_id，仍受一次消费约束 |
-| InputSubmission：preview_refs | 提交时实际取得的精确 ContentRef 列表；无预览要求时为空。必须覆盖原请求 required_content_refs，不用新版本替代旧版本；消费时还须通过当前资格复核 |
+| InputSubmission：preview_refs | 回答所针对的精确 ContentRef 列表；无预览要求时为空。受信 Renderer 取得并呈现后才提交，业务端检查其覆盖 required_content_refs 及当前资格；引用本身不是取得或阅读证明 |
 | InputSubmission：target_command_id、state、withdrawal_requested、receipt_ref | state 为 queued、sending、applied、rejected、withdrawn；sending 表示已领取发送，可能已消费；queued 只证明交互服务已耐久保存 |
 | Presentation：surface_id、endpoint_id、intent_revision、open、seen_revision | 本端负责；seen_revision 仅是显示遥测，不证明用户理解或同意 |
 
@@ -165,7 +165,7 @@ InputRequest 由实际业务负责端创建，固定 request_id、revision、sch
 | 两台设备提交不同答案 | 一份被消费，另一份明确 request_already_consumed；刷新到新快照，必要的新澄清必须由负责端发起 |
 | 用户提交时请求或候选已更换 | 拒绝旧修订，保留拒绝回执并刷新原请求；旧答案不能自动套用新目标或新候选 |
 | 预览已看过，但提交前到期、撤权或来源关闭 | 禁止消费依赖该预览的输入，给出具体材料缺口；由请求负责端重建有效预览或等待资格恢复，用户重新查看后再提交新输入 |
-| 预览引用版本不符或正文未取得 | 不启用依赖按钮；若绕过宿主直接提交，业务负责端仍拒绝，不能以 seen_revision 或“用户已读”字段放行 |
+| 预览引用版本不符或正文未取得 | 受信 Renderer 不启用依赖按钮；业务端拒绝版本不符、引用不全或当前资格无效的输入。正确引用本身不能证明任意认证客户端已经取得或呈现正文 |
 | 关窗后重启，正式成果到达 | 保持本端关闭意图；任务目录可查成果。主动打开后才重新读取正文 |
 | Surface 所在端在线，请求 owner 失联 | 禁用新的依赖输入；失联前已保存的 queued／sending 输入保留原目标和恢复责任，仍显示尚未确认生效。尚未发送的输入可撤回，发送结果不明时查原命令 |
 | 模型生成伪造权限按钮或管理链接 | 作为不可信文本呈现；实际批准只能进入宿主认证的权限页面 |

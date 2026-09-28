@@ -2127,7 +2127,10 @@
               "type": "object",
               "properties": {
                 "base_plan_ref": {
-                  "$ref": "#/$defs/ContentRef"
+                  "oneOf": [
+                    { "$ref": "#/$defs/ContentRef" },
+                    { "type": "null" }
+                  ]
                 },
                 "next_plan_ref": {
                   "$ref": "#/$defs/ContentRef"
@@ -2174,7 +2177,7 @@
                   }
                 ]
               },
-              "minItems": 1,
+              "minItems": 0,
               "maxItems": 100
             }
           },
@@ -2185,7 +2188,14 @@
             "assumptions",
             "actions"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": { "properties": { "actions": { "maxItems": 0 } } },
+              "then": { "required": ["plan_delta"] },
+              "else": { "not": { "required": ["plan_delta"] } }
+            }
+          ]
         },
         {
           "type": "object",
@@ -2220,7 +2230,10 @@
               "type": "object",
               "properties": {
                 "base_plan_ref": {
-                  "$ref": "#/$defs/ContentRef"
+                  "oneOf": [
+                    { "$ref": "#/$defs/ContentRef" },
+                    { "type": "null" }
+                  ]
                 },
                 "next_plan_ref": {
                   "$ref": "#/$defs/ContentRef"
@@ -2354,7 +2367,10 @@
               "type": "object",
               "properties": {
                 "base_plan_ref": {
-                  "$ref": "#/$defs/ContentRef"
+                  "oneOf": [
+                    { "$ref": "#/$defs/ContentRef" },
+                    { "type": "null" }
+                  ]
                 },
                 "next_plan_ref": {
                   "$ref": "#/$defs/ContentRef"
@@ -2467,7 +2483,10 @@
               "type": "object",
               "properties": {
                 "base_plan_ref": {
-                  "$ref": "#/$defs/ContentRef"
+                  "oneOf": [
+                    { "$ref": "#/$defs/ContentRef" },
+                    { "type": "null" }
+                  ]
                 },
                 "next_plan_ref": {
                   "$ref": "#/$defs/ContentRef"
@@ -2575,7 +2594,10 @@
               "type": "object",
               "properties": {
                 "base_plan_ref": {
-                  "$ref": "#/$defs/ContentRef"
+                  "oneOf": [
+                    { "$ref": "#/$defs/ContentRef" },
+                    { "type": "null" }
+                  ]
                 },
                 "next_plan_ref": {
                   "$ref": "#/$defs/ContentRef"
@@ -6465,6 +6487,19 @@
         "use_id": {
           "$ref": "#/$defs/Id"
         },
+        "operation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "usage_owner_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "billing_source_kind": {
+          "enum": ["brain_decision", "execution_operation"]
+        },
+        "billing_ref": {
+          "$ref": "#/$defs/ObjectRef",
+          "description": "原 Decision 或 Operation 的准确修订；owner_id=usage_owner_id、id=operation_id，分别以 brain.get 或 execution.get 核原费用。费用上调须绑定同一对象更高修订。"
+        },
         "intent_hash": {
           "$ref": "#/$defs/Digest"
         },
@@ -6485,6 +6520,10 @@
       },
       "required": [
         "use_id",
+        "operation_id",
+        "usage_owner_id",
+        "billing_source_kind",
+        "billing_ref",
         "intent_hash",
         "used_units",
         "used_cost",
@@ -8688,6 +8727,9 @@
             }
           ]
         },
+        "rollback_approval_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        },
         "state": {
           "enum": [
             "active",
@@ -8723,7 +8765,33 @@
         "state",
         "propagation"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "rollback_lock": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "rollback_lock"
+            ]
+          },
+          "then": {
+            "required": [
+              "rollback_approval_ref"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "rollback_approval_ref"
+              ]
+            }
+          }
+        }
+      ]
     },
     "EvaluationApproveInput": {
       "type": "object",
@@ -11706,31 +11774,57 @@
       ],
       "additionalProperties": false
     },
+    "BrainOutputSource": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": { "const": "operation_output" },
+            "operation_id": { "$ref": "#/$defs/Id" },
+            "evidence_ref": { "$ref": "#/$defs/ContentRef" },
+            "source_pointer": { "type": "string", "maxLength": 512, "pattern": "^(?:/(?:[^~/]|~[01])*)*$" }
+          },
+          "required": ["kind", "operation_id", "evidence_ref", "source_pointer"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": { "const": "step_output" },
+            "step_id": { "type": "string", "minLength": 1, "maxLength": 64 },
+            "source_pointer": { "type": "string", "maxLength": 512, "pattern": "^(?:/(?:[^~/]|~[01])*)*$" }
+          },
+          "required": ["kind", "step_id", "source_pointer"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "BrainPassCondition": {
+      "type": "object",
+      "properties": {
+        "requirement_id": { "$ref": "#/$defs/Id" },
+        "rule_ref": { "$ref": "#/$defs/ComponentRef" },
+        "artifact_ref": { "$ref": "#/$defs/ContentRef" }
+      },
+      "required": ["requirement_id", "rule_ref", "artifact_ref"],
+      "additionalProperties": false
+    },
     "BrainArgumentBinding": {
       "type": "object",
       "properties": {
         "target_pointer": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 512
+          "maxLength": 512,
+          "pattern": "^(?:/arguments(?:/(?:[^~/]|~[01])+)+|/delegation/(?:goal_ref|input_refs/(?:0|[1-9][0-9]*)))$"
         },
-        "operation_id": {
-          "$ref": "#/$defs/Id"
-        },
-        "source_pointer": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 512
-        },
-        "evidence_ref": {
-          "$ref": "#/$defs/ContentRef"
+        "source": {
+          "$ref": "#/$defs/BrainOutputSource"
         }
       },
       "required": [
         "target_pointer",
-        "operation_id",
-        "source_pointer",
-        "evidence_ref"
+        "source"
       ],
       "additionalProperties": false
     },
@@ -11759,6 +11853,12 @@
           },
           "minItems": 0,
           "maxItems": 16
+        },
+        "pass_conditions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/BrainPassCondition" },
+          "maxItems": 16,
+          "uniqueItems": true
         },
         "instruction": {
           "type": "string",

@@ -236,7 +236,29 @@ accept_task(command):
 
 Brain 调用有固定 decision_id。调用在任务暂停之后才返回时，仍保存模型费用和原决策记录；旧提案不获得行动效力。新的决策需要新的快照和新的 decision_id。
 
-行动准入事务执行以下顺序：
+<a id="proposal-consumption"></a>
+### 提案先固定条件，再裁决后续行为
+
+一个 Proposal 可以在 kind 专属字段之外携带 `requirements_proposal` 或合法 `plan_delta`。条件补全会改变后续判断所依赖的目标，因此先处理它；一旦条件改变，当前提案的其他部分不再具有准入资格。以下步骤由 TaskCoordinator 在同一 Task 条件事务中裁决，远端内容和资格材料在事务前取得，事务内重新核对其有效性：
+
+1. 先查询原 `decision_id` 的消费记录。已消费只返回原处理结果；未消费再比较工作领取代次、Task 总修订、固定快照及当前有效控制，过期提案只保存调用与费用，不改变条件或派发行动。
+2. 未携带条件补全时进入原 kind 的处理。携带时要求 `base_goal_revision` 等于当前目标修订，逐项核对稳定条件 ID、原文依据及显式约束。缺条件、不再保留原约束、降低必要性或无法判断是否改变目标含义时，不部分采纳，也不继续应用当前提案其余字段；保存缺口及相应澄清／重新决策责任，需要改变目标含义的请求交给用户 `task.revise`。
+3. 合法补全与当前完整条件相同时按无变化处理，不递增目标或控制修订，继续裁决原 kind 及合法计划变更。比较以稳定条件 ID 对应的完整字段为准；只改变数组次序不制造目标变更，不能通过重建条件 ID 绕过已有约束。
+4. 合法补全确实改变条件时，共同保存新 `requirements`、`goal_revision + 1`、`control_revision + 1` 和新的 Task 修订，消费原 Decision，废弃当前提案的全部其余内容及旧目标下尚未派发的工作，并持久保存新 decide 责任和逐执行端控制 job。旧 `plan_delta` 不应用，旧计划不能自动改绑新目标；原操作、用量与已启动效果继续核对。新 decide 仍经过暂停、期限、预算和在途效果门禁，保存责任不表示立即调用 Brain。
+5. 只有无条件变化的分支才按 `act`、`need_context`、`request_input`、`complete` 或 `fail` 继续；每个分支将原 Decision 的消费结果与相应工作共同提交。完成请求另走[条件核验](verification.md)，不能凭提案 kind 直接写成功。事务未提交时不消耗 Decision；提交后失答复依原消费记录恢复，不再次升修订或创建第二轮责任。
+
+例如目标修订 g1 的 `act` 同时补入条件 R2 并提出写入 A。若补全获准，本次只固定 g2，A 不获准。新决策 d2 读取 g2 后，才能再次提出 A 或其他行动。本轮已经获准保存的正文及原调用事实仍保留，新快照可按当前用途资格读取其准确引用；保留材料不等于采纳旧提案。条件已经在当前快照中、仅重复列出原条件时则走无变化分支，不为同一解释反复调用模型。
+
+| 正常或竞争场景 | 事务可提交的事实 | 不得出现的结果 |
+| --- | --- | --- |
+| `act`／`complete` 同时有有效条件变化 | 新目标与控制修订、原 Decision 消费、下一轮及传播责任 | 同次派发动作、提交完成或应用旧 `plan_delta` |
+| 条件内容不变，原快照仍当前 | 原 kind 经自己的完整门禁处理 | 仅因携带条件数组而递增目标修订 |
+| 用户修订、暂停或关键事实先改变 Task 修订 | 原调用及费用保留，旧提案不采纳，按当前控制安排后续 | 先接受旧条件，再把旧动作改成新修订 |
+| 条件提交后原答复丢失或 Decision 再次交回 | 返回该 Decision 已保存的消费结果 | 重复增加修订、消费或创建新决策责任 |
+
+这是内部事务的设计断言，仍须由实际并发与崩溃实验取得证据；公共 Proposal 的字段合法并不能证明这些提交已经发生。
+
+通过上述无变化分支的行动准入事务继续执行以下步骤：
 
 1. 比较工作领取代次；比较当前 Task.revision 与候选依赖修订。
 2. 检查 active、所有祖先的有效运行条件、目标修订和期限。
@@ -247,32 +269,39 @@ Brain 调用有固定 decision_id。调用在任务暂停之后才返回时，�
 
 本轮可同时准入少量独立行动，但批次内每项仍有独立操作身份和预留。存在依赖、共享设备、重叠不可重复效果或需要前项输出时拆为后续轮次。
 
+<a id="finite-plan"></a>
 ### 4.1 有限计划的确定性物化
 
 Brain 可以返回版本化计划，格式见[大脑实现](../brain/implementation.md)。计划正文是有界 DAG，任务编排器只负责取出可开始步骤并把已有事实代入模板。它不拥有另一套流程状态或独立恢复队列。
 
-每个计划步骤的进度由原 operation／delegation 和任务事实派生。`depends_on` 全部结束且可用输出已核实，才是候选；失败、未知或仍可能迟到的前项不满足条件。没有行动模板的步骤回到 Brain，请它基于当前快照提出下一步。
+安装计划先比较 Task 的当前准确 plan_ref 与 plan_delta.base_plan_ref；无计划时只接受 null 基线及 revision=1，已有计划则保持 plan_id 并递增一版。目标修订不符或基线已变时不安装；同提案含真正的条件变更时按上一节先修订目标、废弃该 plan_delta，不能借计划跨过新一轮决策。`act` 的直接行动与计划安装互斥：非空 actions 禁止 plan_delta；actions=[] 必须带合法非空计划，只在同事务消费 Decision、保存计划版本并唤醒 decide。下一次 decide 先尝试物化，只有需展开步骤或明确修订时才调用 Brain；不把计划首步同时映射为本次直接行动。
 
-物化仅允许两种输入：计划内的字面值，以及指定前项已核实输出的 JSON Pointer。不得执行代码、网络检索、隐式字符串求值或任意表达式。指针缺失、输出版本变化或参数类型不匹配时产生明确缺口，不填默认猜测值。
+每个计划步骤的进度由原 operation／delegation 和任务事实派生。`depends_on` 全部结束、不会迟到且输出已核实，才满足执行依赖；失败、未知或仍可能迟到的前项不满足。评估操作执行成功仍可能得到 verdict=fail，另按 `pass_conditions` 查询本任务当前目标下、准确 artifact_ref 与 rule_ref 对应的所选条件记录，检查当前适用性与判断缺陷门禁。全部 usable 且 pass 才放行；任一当前有效 fail 则不准入并交 Brain 修订，没有有效 fail 但存在 unknown／缺失／不适用则保留原 verify 或补证责任。不能从历史检查挑另一份 pass 覆盖当前 fail。没有行动模板的步骤回到 Brain，请它基于当前快照提出下一步。
+
+物化只复制计划内的字面值，或按 JSON Pointer 从已核实的原输出取值。`operation_output` 固定编制时已有的 operation_id 与 evidence_ref；`step_output` 则在本计划直接或传递前项的 `plan_step_admissions` 中解析唯一 operation／delegation，再取其核实输出，不要求 Brain 预知未来身份或摘要。字段、指针与允许写入位置见[计划正文](../brain/implementation.md#finite-plan)。不得执行代码、网络检索、隐式字符串求值或任意表达式。指针缺失、输出版本变化或参数类型不匹配时产生明确缺口，不填默认猜测值。
 
 ```text
 materialize(plan, step, facts):
   require plan.goal_revision == Task.goal_revision
   require every dependency is finished with usable verified output
+  require every pass_condition has the selected current usable pass
   copy the fixed ActionInvoke or ActionDelegate template
   for each argument binding:
-    resolve the exact original operation and output ContentRef
+    resolve the fixed operation, or this plan revision's admitted predecessor
+    freeze the exact operation/delegation, output ContentRef and observed revision
     read the declared JSON Pointer; fail if absent
-    copy value to the declared argument field
+    copy value only to the allowed non-overlapping business argument field
   validate the completed action against its exact capability/agent schema
-  return candidate for the ordinary TaskCoordinator admission transaction
+  in the ordinary admission transaction:
+    recheck current plan, goal, dependencies and selected condition evidence gates
+    persist resolved inputs and candidate digest with the unique step admission
 ```
 
-上述过程可以减少不必要的模型往返，但不绕过每步准入。相同物化在重启后得到相同参数；计划候选查 plan_step_admissions 返回原 operation／delegation，不能再次产生副作用。第二个可执行步骤拥有自己的 step_id，可以在无需新 Brain 决策时独立准入。
+上述过程可以减少不必要的模型往返，但不绕过每步准入。事务内按共同锁序核对计划／目标、原依赖映射、条件 evidence gates 和所选记录，并把解析后的来源、参数摘要及条件依据与 plan_step_admissions、原意图和工作共同保存；事务外先读到 pass 不能成为永久放行依据。已有准入记录时返回原 operation／delegation，不重新取较新输出或再次产生副作用。第二个可执行步骤拥有自己的 step_id，可以在无需新 Brain 决策时独立准入。
 
 保存计划的 Brain decision 只消费一次；后续步骤不伪造新 Decision，也不再次消费它。物化候选由 Orchestrator 附加准确计划版本、步骤及当前输入快照关联，通过现有 decide／dispatch jobs 推进。候选来源只决定去重键，授权、预算、控制、目标检查及提交原子性仍完全相同。
 
-计划修订废弃未准入步骤。已经派发的原步骤保留操作身份和事实，不能因为新计划删掉该节点就删除其预算或未知效果。GUI 动作仍需要动作后的新观察，不能从计划模板预先批准后续点击。
+计划修订废弃未准入步骤。已经派发的原步骤保留操作身份和事实，不能因为新计划删掉该节点就删除其预算或未知效果；旧计划／目标／候选的迟到输出只归并原事实，不自动绑定到新步骤。新计划要复用旧操作，须明确引用 operation_output 并重新核对当前适用性。GUI 动作仍需要动作后的新观察，不能从计划模板预先批准后续点击。
 
 ## 5. 派发与事实归并
 

@@ -119,7 +119,9 @@ ID 为随机标识，唯一索引承担去重；ID 格式和不可猜测性不�
 | use_billing_outbox | (tenant, owner, use_id, usage_revision) UNIQUE | 上调账单对应的原 Task、首次及当前 task.billing_reconcile 命令尝试、摘要与交付状态；原 use 终态后仍保留待交回责任 |
 | grant_counters | (tenant, grant_id, unit) | 已分配、已消费、未结预留；十进制定点表示 |
 | offline_leases | (tenant, owner, lease_id)；endpoint/instance/state | 固定资格、范围、额度、截止和封账状态 |
-| lease_uses | (tenant, lease_id, use_id) UNIQUE | 本地使用摘要、累计费用和是否仍可增长 |
+| lease_uses | (tenant, lease_id, use_id) UNIQUE | Grant owner 已核验的原使用绑定、累计费用及关闭事实 |
+| 原实例的本地租约账本 | (tenant, instance_id, lease_id, use_id) UNIQUE | 全部原使用及来源账单修订；原计量负责方与账本在同一受信提交域内共同保存费用变更及待报责任 |
+| 原实例的 lease_report_outbox | (tenant, instance_id, lease_id) 单一未决报告 | 已确认 owner 修订、待报用量、固定 usage_revision、完整结算命令和原结果；后续账单合并但不越过未决报告 |
 | revocation_targets | (tenant, object_id, endpoint_id) | 要求修订、端侧已落实修订、最后核对时间 |
 | pairing_sessions | pairing_id；device_code_hash UNIQUE；user_code_hash | 会话期限、nonce、范围、状态和一次领取索引 |
 | endpoints | (tenant, endpoint_id)；credential_fingerprint UNIQUE | 当前 instance、凭据代次、状态与批准范围 |
@@ -371,16 +373,23 @@ allocate 锁当前持续许可、端点实例及可分配余额。
 默认进程重启后不继续远端离线租约，先联网核验当前实例与撤销。
 旧快照不能恢复“剩余额度”；无法证明消费连续性时关闭新使用并报告账务缺口。
 
-重连严格先取得当前端点状态及撤销，再上送原用量，最后开放新工作。
-settle 的累计费用不得倒退、超过分配或切换单位。
-相同 use 的不同意图拒绝；累计值与本批明细的关系按原账本逐项去重检查。
-final 必须附资源端的封闭证明，且全部使用不能再主动产生新费用；原供应商账单更正仍按第 5 节记在原 use，不重新开放离线租约。
+重连严格先取得当前端点状态及撤销，再上送原用量，最后开放新工作。原实例的本地租约账本是唯一报告者，负责汇总全部原使用及累计量；Grant owner 内部的 LeaseLedger 负责核验、入账和返回租约记录，两者职责不同。各 Brain／Executor 计量负责方将原账单与本地待报责任共同保存，由原实例串行交回 `grant.lease.settle`，不各自向 owner 猜测全租约累计量。参考装配要求计量负责方与本地账本处于同一端点宿主的受信提交域；若计量事实在其他域，须先落实并验收可靠交回合同，当前缺该依赖的能力不能进入离线租约。
+
+同一 lease 最多一个结果未确定的 settle。报告前固定本批明细、累计值、usage_revision、command_id 和完整命令；expected_revision 来自已持久保存的 allocate 或前一次 applied 输出。后续账单可先更新本地待报账本，待原报告确认后再形成下一批。撤权、到期与端点资格先按原权威门禁禁止新使用，不在后台悄悄推进 OfflineLeaseRecord.revision；租约可见状态与修订由这条串行结算链更新，open 不能单独作为当前使用资格。
+
+`grant.lease.settle` 按 `usage_revision` 接收租约累计事实；每项 `LeaseUsageItem` 固定 use、意图、原 operation、计量负责方 `usage_owner_id` 及 `billing_ref` 的 owner/id。`billing_source_kind` 固定为 brain_decision 或 execution_operation，billing_ref 的 owner_id=usage_owner_id、id=operation_id，分别通过 `brain.get` 或 `execution.get` 读取原 Decision／Operation 的费用事实；这里的 operation_id 是原计费行动身份，Brain 路径填写 decision_id。租约 owner 核认证来源、原使用绑定、准确修订及累计量，不能仅因引用结构合法就相信金额。累计用量不得超过分配，费用不得倒退或切换单位；可信原账单若超过原分配仍全额入账，同时封闭受影响的新计费并保留超额责任，不能丢弃已发生费用。离线准入仍只接受 strict 上界。
+
+每批 uses 最多 100 条新增或修订明细，原实例固定“上一已确认报告账本＋本批更新”的报告截面并据此计算累计值；尚未进入本批的待报更新不能混入累计值。同 use 的多个待报上调先合并或排入后续批。owner 按原 use 归并本批，再核对全账本累计值；本批不必重传全部历史使用。相同 use 的意图、原 operation 或计量来源变化均拒绝。final 只能在全部已发生使用均已纳入报告且关闭后提交，并附资源端封闭证明；未上报使用不能被解释为零。首次 final 保存 `closure_ref`、`final_settlement_ref` 与已释放余额。
 到期仅关闭新使用，不足以最终返还余额。
 租约按 open → closed → reconciled 收敛；本地关闭可先于 owner 获知，重连沿原账本报告。非最终用量上报不把 closed 重新打开；最终封账同时记录关闭依据和 reconciled，不要求额外一次网络往返。owner 尚未收到的使用保持未知，不用空明细推导可释放余额。
 
 结算事务写原 usage_revision、明细、累计值、结算回执与可释放额度。
 答复丢失沿原命令恢复；已经最终封账的租约不能再次打开或增加新 use。
 未知外部费用由原调用核对者继续处理，父许可不能靠管理员改状态提前收回。
+
+封账之后，供应商可能更正原调用账单。原计量负责方保存更高修订账单时，同事务更新本地待报责任；原实例在前一报告确认后汇总新累计量，沿串行结算链交回。Grant owner 核验原账后接收，状态保持 reconciled。更正必须保留全部原使用身份、用量、closed 标志及初次封账依据，仅允许已有 use 的费用上调，并绑定同一 billing_ref 对象的更高修订。owner 只追加累计差额，已释放金额不倒回，也不再次释放；余额不足形成可查的费用责任，并停止该范围的新计费。退款／贷记另行对账，不伪装成累计下降。
+
+交回答复丢失时先查询或重投原命令。只有原接纳期限已过、并从原 owner 在当前获准范围内查明 not_found，才能确定原报告未应用，使用新 command_id 发送同一 usage_revision 与完整内容；不得仅凭到期换身份。查询得到 applied 则先保存原输出再推进；gone、失联或结果未知时保留未决报告，停止后续自动结算并显示恢复缺口。这里不承诺未知结果下的跨命令 no-op；原实例失联或原回执不可恢复的代价是补账等待，不能把账本交给第二实例重新开始。已应用的旧命令始终返回原回执，租约当前记录则可包含后来更正。账单来源及交回责任须保留到原计费提供方的更正窗口关闭，不能随首次封账清理。若使用绑定 Task，原 Brain／Executor 另按其原物理计费来源保存 `task.billing_reconcile` 交回责任；租约结算只核对 Grant 范围额度，不制造在线 UseReceipt，也不能让 Task 把租约和原调用重复计费。缺少原账单核验或持久交回依赖时，不开放相应离线计费能力。
 
 ## 9. 故障实验与观察点
 
@@ -411,6 +420,7 @@ final 必须附资源端的封闭证明，且全部使用不能再主动产生�
 | S-I21 | 原 use 已 final 并释放余量后，供应商对原调用更正费用且原 usage owner 核验通过 | final→final 只增费用修订，已释放数值、once 和启动窗口不回滚，新增差额进超额债务并停新计费 |
 | S-I22 | 文件路径在授权和实际打开之间替换为越界符号链接，或另一个租户创建同名相对路径 | 句柄相对解析与租户根复核拒绝越界；已签发 Grant 或规范字符串不能放行目标动作 |
 | S-I23 | final 的 Grant use 连续 r1／r2 费用上调分别与交回 outbox 同时提交，随后断网、停机超过原命令期限再以新 ID 交回，令 r2 通知先到；原 Task 已终态且旧 settle job done | r1／r2 原 outbox 均先恢复原尝试，到期后以后继命令交回并按来源修订合并同一 JobAck；Orchestrator JobAck 后各源交付才结束，任务按最新原 use 账只记累计差额一次，迟到 r1 不回退、不重开 use 或 Task，不和 Executor 投影双扣 |
+| S-I24 | 租约最终封账后上调原账单，交回丢答复并重启，再重放原结算命令 | 沿原来源修订追记差额，reconciled 不重开，旧回执不改、余额不再次释放；超额照实入账并停新计费，新 use／用量被拒 |
 
 记录 check/use/revoke 的提交延迟、冲突率、传播积压和未封账预留。
 拒绝与控制使用独立容量，普通任务洪峰不能占尽撤权槽。

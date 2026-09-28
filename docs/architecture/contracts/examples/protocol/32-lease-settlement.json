@@ -337,7 +337,15 @@
                   "amount": "0.1"
                 },
                 "started_at": "2026-09-26T00:00:00Z",
-                "closed": true
+                "closed": true,
+                "operation_id": "operation_1234567890abcdef1234567890abcdef",
+                "usage_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "billing_ref": {
+                  "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "id": "operation_1234567890abcdef1234567890abcdef",
+                  "revision": 1
+                },
+                "billing_source_kind": "execution_operation"
               }
             ],
             "cumulative_units": {

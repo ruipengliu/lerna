@@ -114,10 +114,10 @@ conformance 对应兼容验证，formal 对应具备正式资格的保留确认�
 | holdout_reservations | partition_id UNIQUE；plan_id UNIQUE；release_request_id UNIQUE | 不可返还的正式保留占用 |
 | formal_attempts | (improvement_id, attempt_index) UNIQUE | 跨申请的永久尝试次数 |
 | evaluation_plans | plan_id UNIQUE；digest | 固定输入、抽样、判定、停止及预算 |
-| evaluation_runs | run_id；(plan_id, run_id) | 整组实验、状态、取消和清理责任 |
+| evaluation_runs | run_id UNIQUE；plan_id UNIQUE | 每冻结计划唯一整组运行、状态、取消和清理责任 |
 | sample_runs | (plan_id, sample_id, arm) UNIQUE | 基线／候选固定样本位置和结果 |
 | sample_attempts | (sample_run_id, attempt_index) UNIQUE | 全部物理尝试、费用与环境身份 |
-| environments | (run_id, sample_id, arm) UNIQUE | 原环境创建键、实例、封闭与清理状态 |
+| environments | (run_id, sample_id, arm) UNIQUE；environment_key UNIQUE | 创建前固定原环境键；不同样本／臂不共用键，保存实例、封闭与清理状态 |
 | sample_start_admissions | (run_id, sample_id, arm, stage, attempt_id?) UNIQUE；formal_gate_revision、start_before | stage 区分环境准备与样本尝试；每次有限时逻辑启动许可单独绑定，暴露前已提交者单列在途 |
 | reports | report_id UNIQUE；digest | 不可变内容；当前资格在独立表 |
 | plan_eligibility | plan_id UNIQUE | 可滞后的正式资格投影及已归并暴露；准入还须查询原暴露 |
@@ -127,6 +127,7 @@ conformance 对应兼容验证，formal 对应具备正式资格的保留确认�
 | release_approvals | approval_id；(state, expires_at) | 精确候选、报告、目标、批次、截止和回退 |
 | approval_uses | use_id UNIQUE | 原动作、实例、批准修订和固定启动窗口 |
 | rollout_targets | (approval_id, target_id) UNIQUE | 固定 activation_id 与实际观察 |
+| rollback_targets | (source_approval_id, target_id) UNIQUE | 新版发布的唯一回退 activation_id、独立旧版批准引用、触发及逐目标恢复事实；不覆盖旧批准原 rollout |
 | closed_governance_keys | (scope_hash, object_kind, original_id) UNIQUE | 关闭、次数及占用的最小不可重用索引 |
 
 上述唯一性都包含 tenant 和权威 owner，跨租户不能形成同一业务对象。
@@ -201,8 +202,8 @@ ImprovementPolicy 在第一项正式计划前由受信维护者确认，不由�
 
 ## 5. 运行与环境交接
 
-run 接纳固定 run_id、plan_id 和 plan_digest；正式改善 run 先按共同锁序核对原暴露与 formal_quarantine，才在同事务建立首次环境准备 jobs。资格不可核验时不建立新的正式环境责任。
-重复提交同一身份返回原运行；同一计划样本臂不会重复创建逻辑位置。
+run 接纳固定 run_id、plan_id 和 plan_digest；先查询原命令及 plan_id 的唯一运行绑定。相同 run_id 和准确绑定返回原运行；不同 run_id 请求同一 plan 返回 precondition_failed，related_id 指向原 run。计划内重试和分批不新建 run，另一轮实验须新计划并重新占用其适用的正式资格。
+首次正式改善接纳按原命令、tenant／owner、来源组、计划的共同锁序取得门禁，再次检查唯一运行槽及准确计划，核对原暴露与 formal_quarantine，同事务保存唯一 Run、全部 SampleRun 位置和首次环境准备 jobs。兼容用途也在锁原命令和计划后竞争同一唯一槽。资格不可核验时不建立新的正式环境责任。completed_samples 按已结束全部所需臂的样本计数，不按臂或 attempt 增加分母。
 物理重测始终另建 attempt，不能覆盖前次结果或挑选最好结果。
 
 每个环境准备、样本首轮及重试在真正交给环境适配器前，还须在短事务中按 tenant／owner、source_group_id 升序的共同锁序核对该 plan 全部来源组的暴露原事实及 formal_quarantine，保存绑定原 run/sample/arm、阶段及可选 attempt_id 的有限时 start_before 与当前 gate_revision。无许可、已过期或资格不可核验的 worker 不发新启动；EnvironmentAdapter 在实际 prepare 或 start_sample 前须从原 Evaluation owner 可认证地查询许可，或验证该 owner 签发的许可，核对准确 run/sample/arm/阶段、适用时的 attempt／原实例以及 start_before；跨机截止按宿主可信时钟误差保守缩短，不接受 worker 自报的 gate_revision、期限或签发者。任何一项不可验都拒绝新启动，不能凭已有 queued job 新建环境或 attempt。暴露若先于该事务提交，新许可拒绝；许可若先提交，则其后才发生的暴露不能倒消已经逻辑准入的动作，远端可能在原有限窗口内物理启动，按在途效果、费用和 seal 责任报告。已知暴露或 seal 的环境不得再接受旧许可启动；许可不授权后续新 attempt，影响扫描仍向全部已创建／未知环境传播封闭。事务内不等待远端；窗口上限由宿主固定并以本链路的撤回时延验收。
@@ -219,11 +220,11 @@ run 接纳固定 run_id、plan_id 和 plan_digest；正式改善 run 先按共�
 基线与候选不共享可变设备或记忆；种子固定顺序，热身和缓存条件单列。
 候选只接触观察和动作入口，真值通道由判定器独占。
 
-环境 prepare 使用预先保存的创建键。
-创建答复丢失时 inspect 原 run/sample/arm 映射；暂时查不到不能证明从未创建。
+环境 prepare 使用预先保存的 environment_key，连同 run_id、sample_id、arm 固定一份原创建意图。
+创建答复丢失时 inspect 原 environment_key，核对返回的 run/sample/arm 映射；同键不同臂是冲突，暂时查不到不能证明从未创建。
 未知效果只核对原操作，不为了获得可评分答案重新发出不可重复动作。
 
-取消先禁止新样本，逐一登记已创建和创建结果未知的环境 seal 责任。
+取消以整体 run 为边界，先禁止其新样本，逐一登记该 run 全部已创建和创建结果未知的环境 seal 责任。
 seal 确認禁止候选继续行动后，仍需核对在途效果与账务，再 destroy。
 无法 seal 则保持 blocked 和预留，不能直接删除环境后声称无残留。
 任务总期限不取消清理责任；清理使用预留管理份额。
@@ -331,11 +332,13 @@ sequenceDiagram
 ## 8. 批准与逐目标发布
 
 approve 先查原命令；改善批准按共同锁序先取得 tenant／owner 与相关来源组门禁，再锁候选、报告当前资格和目标集合，验证 report_digest 与 candidate_digest，直接查询原暴露及 formal_quarantine 并按报告封存切点计算当前资格；PlanEligibility 投影尚未更新或影响扫描未完成，都不允许以旧 eligible 值放行。兼容批准核对 conformance 的契约和当前来源用途，不要求未暴露保留集。
-本人或维护者的 Confirmation 固定发布目的、目标、批次、期限、停止规则和回退锁。
+本人或维护者的 Confirmation 固定发布目的、目标、批次、期限、停止规则、回退锁与独立旧版批准引用。
 调用端先固定 evaluation.approve 的完整原 Command，再向 evaluation owner 请求 confirmation.request；UI 经本人会话 decide 后提交原命令。
 approve 在自己的批准事务内锁定并一次消费同 owner 的 approved 确认，核对原 command_id、准确 Schema、规范摘要及期限；消费和发布责任共同成败。
 compatibility 检查 conformance 报告；improvement 检查 formal 及全部适用门禁。
 任一所需证据缺失、来源失效、报告未封存或内容不匹配时拒绝。
+
+rollback_lock 非空时，rollback_approval_ref 必填且只能指同一批准 owner 的另一份既有 ReleaseApproval。approve 同事务核对引用修订、旧批准 active、精确锁一致、覆盖本次目标及不早于本次 expires_at 的期限，并按旧批准自身 release_kind 核验报告、暴露门禁和当前来源用途；不得用新版报告替代。回退锁为空时拒绝携带该引用。新版批准与引用共同固定，旧批准以后撤回、到期或证据失效仍立即影响回退资格；接纳时的引用修订不允许覆盖旧批准当前状态。
 
 批准记录与每个目标唯一 activation_id 同事务保存。
 目标集合有限且不变；扩大目标、更换锁或降低门禁需要新的批准。
@@ -345,9 +348,10 @@ RolloutWorker 在发送每个新 activation 或扩批前核对原批准；改善
 本批所有目标通过最小观察窗口及样本数量，且未触发停止阈值后，才推进下一批。
 离线、无样本、激活未知都保持等待或停止，不能把 applied 当作整批发布成功。
 
-撤回先保存批准 revoked、传播 jobs 和原回执。
+撤回先保存指定批准 revoked、传播 jobs 和原回执；撤回新版不连带撤回其引用的旧版批准。
 目标收到后封闭新使用；已发生效果和费用继续核对。
-仅当批准明确允许精确旧锁、旧代码仍可信、当前格式可读时自动回退。
+回退工作按原新版批准和 target 唯一保存 rollback_targets：新的固定 activation_id、预期当前代际及所引用旧批准；它不覆盖旧批准最初发布的 rollout_targets。重新核验旧批准当前状态、锁、目标、期限及其自身证据资格，再核对旧代码信任和当前格式，全部成立才交接 extensions.activate。该 activation 的 approval_id 是旧批准 ID，old_lock 是被停用的新版，new_lock 是固定回退锁；后续 work／reopen 继续使用旧批准。无当前批准依据或目标离线时只保留停用与恢复缺口，不凭原新版回执或旧离线租约激活。
+新版本后来又被另一份发布替换时，原回退命令的预期代际冲突；读取当前绑定并报告原恢复已被后续发布取代，不盲改 expected_generation 覆盖新赢家。回退提交后丢答复只查询原回退 activation；迟到的新版停用仍绑定原 activation，不能封闭已切回的代际。
 停用成功、旧版就绪与残留责任分别报告。
 
 ## 9. 在线启动、离线续用与重启
@@ -371,7 +375,7 @@ approval_lease 对改善发布同样先核验原暴露门禁及 formal_quarantin
 重启读取历史激活依据，但重新取得本次实例的 reopen 依据后才开放入口。
 
 原批准撤回或过期后不可复活。
-恢复运行需新的受信批准；历史回执、已发生效果和关闭索引仍保留。
+恢复同一已失效批准下的版本需新的受信批准；自动回退使用已独立获准且此刻仍有效的旧版批准，不复活原批准。历史回执、已发生效果和关闭索引仍保留。
 
 <a id="production"></a>
 ### 生产部署、评测容量与可用性
@@ -423,6 +427,10 @@ approval_lease 对改善发布同样先核验原暴露门禁及 formal_quarantin
 | V-I16 | 一次异常泄露关联超过 100 个计划／目标，在 impact job 第一页提交后崩溃；同时请求旧批准的新 use 与下一批发布 | 原 exposure 回执只给一个 impact_job_id；受影响项即使尚未扫描也被原暴露门禁拒绝新使用和扩批；重领续页且每目标撤回责任唯一，已签发窗口与离线租约分别报告 |
 | V-I17 | A 分区报告封存后反馈开放；同来源组 B 分区正式运行尚未封存且已有样本动作启动 | A 原报告保持资格，B 在原暴露门禁立即失去正式资格；反馈的唯一 impact job 分页封闭 B 环境并更新投影，已启动动作可能继续到实际封闭，效果、费用和清理责任不丢失 |
 | V-I18 | 一次暴露与 B 的 run 接纳、队列中环境准备、样本首轮及重试各自并发，环境适配器延迟读取启动许可 | 暴露先提交则所有新逻辑启动拒绝；许可先提交只允许原 attempt 在有限 start_before 内物理启动，超期拒绝；未获许可的 queued job 不能启动，已启动动作进入原环境 seal、效果和费用核对 |
+| V-I19 | 两个不同 run_id 同时接纳同一 plan；随后分批派发及有限重试 | 只有一个整体 Run，另一命令 precondition_failed 并关联原 run；sample/arm 位置、分母及费用不重复，取消覆盖全部原环境 |
+| V-I20 | 同一 run 两样本的两臂并发准备，任一 prepare 答复丢失 | 四个独立 environment_key，恢复只查原键；同键换 sample/arm 拒绝，未知环境不能换键重建 |
+| V-I21 | 新版撤回后自动回退，分别注入旧批准撤回／到期／证据失效和切回后崩溃 | 有效旧批准独立授权新的回退 activation、work 与 reopen；其他分支只停用并保留缺口，不复活新版批准，迟到新版停用不关闭新代际 |
 
 运行报告固定环境、全部样本、费用、原命令、证据摘要和异常注入位置。
 本页不提供实际成功率、隔离通过或容量达标结论。
+[回退记录序列](../contracts/examples/protocol/65-approved-rollback.json)和[定向静态校验](../validation/validate_release_recovery.py)检查独立批准、原回退重放及单计划唯一 Run；环境隔离、并发竞争和实际 Renderer 行为仍须上述运行实验。

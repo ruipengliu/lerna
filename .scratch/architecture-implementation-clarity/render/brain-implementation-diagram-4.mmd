@@ -1,0 +1,7 @@
+flowchart LR
+    M[单次模型完整输出] --> V[检查内部结构与局部依赖]
+    V --> J[获准暂存字节并固定保存责任]
+    J --> C[沿原命令保存内容]
+    C --> R[回填准确 ContentRef]
+    R --> P[校验公共 Proposal]
+    P --> D[比较取消与代次后提交 Decision 终态]

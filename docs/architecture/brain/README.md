@@ -91,7 +91,7 @@ Brain 将 `decision_id` 映射至零个或一个 `model_call_id`，在发送前�
 
 Decision 成为终态后，原供应商仍可能给出可信的上调账单。Brain 保存原 ModelCall 的新费用修订时同步建立对原 Task 的持久交回责任，以固定 `task.billing_reconcile` 命令唤醒 Orchestrator 的原计费槽；丢答复查原命令。Orchestrator 主动读取同一 Decision／ModelCall 的账单并按原预留差额入账，Brain 的终态和此前交回 job 已完成都不结束这项新责任。一个物理收费若已由 Grant UseSettlement 作为 Task 计费权威，Brain 的用量只作证据，不能再扣一遍。
 
-普通文本或聊天模型 API 可以接入。模型适配器将输入编码为供应商格式，将完整输出解析为本页提案；原生结构化输出和工具调用编码属于可选优化，适配器不运行模型返回的工具。SDK 的自动重试默认关闭；如果底层不能关闭，适配器必须逐次暴露物理请求和上界，无法做到则不进入声称精确调用计量的配置。
+普通文本或聊天模型 API 可以接入。模型适配器将输入编码为供应商格式，完整输出采用[内部产出格式](implementation.md#generated-content)：新报告或计划先用本轮局部标识关联，Brain 保存获准正文后回填准确 ContentRef，才形成本页的公共 Proposal。模型不生成正文摘要或内容 owner 身份；只引用已有材料时新正文集合可为空。原生结构化输出和工具调用编码属于可选优化，适配器不运行模型返回的工具。SDK 的自动重试默认关闭；如果底层不能关闭，适配器必须逐次暴露物理请求和上界，无法做到则不进入声称精确调用计量的配置。
 
 | 资源 | 本方案能保证什么 | 超时后的处理 |
 | --- | --- | --- |
@@ -134,11 +134,11 @@ Decision 成为终态后，原供应商仍可能给出可信的上调账单。Br
 | `model_call` | 可选，含 `model_call_id, provider_request_id?, state, usage, usage_final`；`state=prepared / sent / returned / unknown / stopped`，`stopped` 须供应商或本地执行证据 |
 | `error` | `failed` 时必需；采用共同错误格式并给出可执行恢复建议。`unknown` 不能转换为“未计费” |
 
-`proposal` 共同字段为 `kind, rationale, evidence_refs, assumptions, plan_delta?, requirements_proposal?`。`rationale` 是可供用户和实现者理解的短理由，不要求保存模型隐含推理。`plan_delta` 引用原计划版本并提出完整下一版本，Orchestrator 决定是否应用。`requirements_proposal` 含 `base_goal_revision, requirements[]`，逐项复用[Requirement](../orchestrator/README.md#records)；Orchestrator 可以接受保留显式约束的解释补全，改变目标含义或降低必要性须走用户目标修订。
+`proposal` 共同字段为 `kind, rationale, evidence_refs, assumptions, plan_delta?, requirements_proposal?`。`rationale` 是可供用户和实现者理解的短理由，不要求保存模型隐含推理。`plan_delta` 引用原计划版本并提出完整下一版本；首次计划用 `base_plan_ref=null` 与任务当前无计划的事实比较，下一版本从 revision=1 开始。Orchestrator 决定是否应用，有限计划的执行依赖、条件通过前提及未来输出绑定见[计划正文](implementation.md#finite-plan)。`requirements_proposal` 含 `base_goal_revision, requirements[]`，逐项复用[Requirement](../orchestrator/README.md#records)；条件解释的接受及整份提案消费按[任务准入](../orchestrator/implementation.md#proposal-consumption)裁决。
 
 | `kind` | 专属字段与含义 |
 | --- | --- |
-| `act` | `actions[]`：共同包含本轮局部 `action_key`、`type, purpose, requirement_refs, evidence_refs`；`type=invoke` 另含 `capability_ref, binding_ref, arguments`，`type=delegate` 另含[协作请求](../collaboration/README.md)。数组必须相互独立且不超过 `max_actions` |
+| `act` | 两条互斥路径：非空 `actions[]` 直接提出独立行动，不带 plan_delta；或 `actions=[]` 配合法非空计划的 plan_delta，只安装计划并保存后续 decide 责任。直接行动包含本轮局部 `action_key`、`type, purpose, requirement_refs, evidence_refs`；invoke 另含准确能力、绑定及 arguments，delegate 另含[协作请求](../collaboration/README.md)。数量不超过 max_actions，不能把同一行动同时交给两条准入路径 |
 | `need_context` | `requests[]`：`request_key, kind, query, scope_refs, reason, max_items`；`kind=memory / capability / operation / content`，不得嵌入任意代码或外部动作 |
 | `request_input` | 用户可理解的问题、选项或所需材料，以及影响哪些条件；具体持久输入请求由[交互](../interaction/README.md)创建 |
 | `complete` | `artifact_ref, requirement_refs, completion_basis, assessment_refs`；版本、证据和保证强度按[任务运行](../orchestrator/README.md)核验 |

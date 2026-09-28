@@ -4,7 +4,7 @@
 
 Harness 接纳用户目标，组织大脑、记忆、执行与其他 Agent 持续工作。生产主线是面向多用户的分布式服务：各类事实由固定负责方裁决，每次决定和继续履行的责任一起保存，再依据实际证据推进目标。模型输出、网络答复、外部效果和任务完成各自有明确的确认点。
 
-本文解释现有九模块的抽象依据及建模方法，供高级工程师先形成整体判断，再进入模块详设。它不新增行为合同；状态含义归所属模块，精确字段归同版 Schema，跨模块取舍归[设计决策](decisions.md)。当前仍是设计基线，内核、SDK、默认组件及运行验收的交付状态见[交付审查](review.md)。
+本文是[正常处理链](walkthrough.md)之外的建模与图册导读，解释为何保留这些边界和对象。状态含义归所属模块，精确字段归同版 Schema，跨模块取舍归[设计决策](decisions.md)；本页的例子用于解释这些选择，不另行定义行为。
 
 下文的 owner（负责方）指某类对象的固定逻辑裁决者；Orchestrator（任务编排器）组织任务持续推进，每个任务固定归属的 Orchestrator 是其 owner，决定目标、行动准入、控制和完成。`orchestrator_id` 标识这项逻辑归属，实例重启或工作进程替换不改变它。Operation（操作）则是 Orchestrator 准入的一个有界行动及其持续核对责任，请求重复传送不会使它变成另一项操作。
 
@@ -18,15 +18,7 @@ Harness 接纳用户目标，组织大脑、记忆、执行与其他 Agent 持�
 
 因此，最小闭环不仅要保存“下一步做什么”，还要保存“已经接受了什么、哪些动作可能发生、哪些责任仍须继续”。否则一次超时就会迫使系统在漏做与重复副作用之间猜测，用户也无法判断取消后的实际结果。
 
-| 决定形状的矛盾 | 现有选择 | 谁承担主要代价 |
-| --- | --- | --- |
-| 模型需要灵活规划，用户约束必须持续生效 | Brain 依据固定快照提出一轮建议，Orchestrator 每次独立准入 | 多轮任务承担交接与过期提案重算；确定性计划步骤可减少模型往返 |
-| 用户需要中断，外部动作与本地提交无法共同回滚 | 按有界 Operation 保存发送、效果与核对责任，控制逐入口确认 | 执行端维护门禁和在途记录；用户可能等待失联端确认 |
-| 海量用户需要独立伸缩，任务准入又须共同裁决 | 连接接入、Orchestrator 应用、工作池和执行宿主分开部署；同提交域短事务，跨域持久命令交接 | 运营承担多副本和跨区基础设施成本；跨域调用维护原回执、查询、传播和部分成功的责任 |
-| 多端可以独立接纳任务，共享事实又必须有唯一裁决顺序 | 每任务固定 Orchestrator，资源和许可各有固定 owner，跨 Orchestrator 额度预分配 | 分区时依赖原 owner 的步骤等待，未结额度暂时闲置 |
-| 资料和组件需要复用，用户又能纠正、撤权和停用 | 精确版本引用与当前使用资格分别保存、逐次核验 | 使用端承担当前检查；持有者承担传播和清理责任 |
-
-这些选择共同限定了保证范围：同提交域内需要共同裁决的事实尽量共库；跨域依靠原身份和证据恢复；无法核清的效果保留未知。模型质量、外部可用性与物理清理能力仍由各自实现和验收证明。任务处理不依赖全局有序事件账本，也不承诺外部效果的全局恰好一次。
+方案因此选择一轮提案、独立行动准入、原身份恢复和当前资格检查。主要代价是更多持久交接、保守预留及失联等待；完整比较与改选条件见[总览中的关键选择](README.md#3-决定方案形状的选择)。下文沿这些选择解释模块、owner、进程和提交域怎样对应。
 
 ## 2. 系统全景图的阅读方法
 
@@ -132,34 +124,20 @@ Brain、Memory、Executor 以及 Agent、UI 和生命周期适配器可以改变
 
 以保存报告为例，首先区分“候选质量达到要求”和“指定文件已保存该候选”两个必要条件。再问谁能分别证明它们，哪个版本的候选被评估和写入，答复丢失时能查到哪个原对象。由此得到 ConditionResult、OperationIntent、Operation 和 Result 的分工，而非先设计一个把全部状态塞进去的任务日志。
 
-| 实际对象 | 裁决并持久保存的主体 | 身份与变化 | 决定当前能否继续的依据 |
+| 要裁决的问题 | 分开的对象 | 分开之后能解释什么 | 完整规则 |
 | --- | --- | --- | --- |
-| Task／Result | Orchestrator | `task_id`、固定 `orchestrator_id`；目标、任务与控制各有修订；Result 绑定完成时目标及成果 | 当前任务及祖先控制、期限、必要条件、未决效果和预算 |
-| DecisionRecord | Brain | `decision_id` 固定输入快照；原模型调用另有 `model_call_id` | 原决策状态；Orchestrator 当前修订决定提案是否仍可准入 |
-| OperationIntent／Operation | Orchestrator 保存意图，Executor 保存执行事实 | `operation_id` 固定意图；`attempt_id` 区分实际发送，Operation 修订归并事实 | TaskGate、准确绑定、许可使用、资源条件、期限和允许的恢复路径 |
-| Grant／UseReceipt／UseSettlement | Grant owner | Grant 修订记录许可变化；固定 `use_id` 绑定意图；结算独立更新累计用量 | 当前许可及父链、固定启动窗口、实际端点与资源门禁；一次消费不会因零费用返还 |
-| ContentRef／MemoryRecord | 内容 owner／Memory owner | 内容 `version + hash` 固定正文；记忆 `revision` 记录纠正及状态变化 | 来源与用途、当前记录和关闭修订、接收方及副本责任 |
-| Delegation／Allocation | 父 Orchestrator 的协作与预算职责；接收方保存自己的接纳与关闭事实 | 固定委派、额度与唯一子映射；内部子 ID 和外部映射互斥 | 父及祖先控制、子目标范围；原接收方封闭、效果与最终费用依据 |
-| Surface／InputSubmission／InputRequest | 交互保存快照和转交；业务 owner 保存请求消费 | Surface、输入和请求分别有身份及修订；目标命令首次固定 | 准确请求、未消费状态、预览版本和当前披露资格 |
-| ConfirmationRecord | 实际消费确认的业务 owner | 固定原业务命令、规范意图和挑战；本人决定及消费可查 | 本人身份、期限、原命令绑定和未消费状态 |
-| EvaluationReport／PlanEligibility | Evaluation owner | 报告摘要不可变；资格投影修订及使其失效的暴露原事实 | 正式使用同步核验原暴露门禁、完整证据与受信批准；滞后的资格投影或报告分数不自行授权 |
-| ReleaseApproval／Activation | Evaluation 保存批准；目标 Extensions 保存激活和实例事实 | 固定批准范围、精确锁和原激活；Activation.revision 表示当前投影修订，generation 表示活动代际；新实例另取开放依据 | 当前批准、活动代际、实际就绪和残留工作，业务 Grant 另行成立 |
+| 模型建议是否已成为获准行动 | DecisionRecord、OperationIntent、Operation | 提案已返回，仍可能因目标或控制变化而没有行动效力 | [提案消费](orchestrator/implementation.md#proposal-consumption) |
+| 同一份报告是否既有质量依据，又已保存到目标 | ContentRef、ConditionResult、Operation、Result | 候选版本、条件判断、外部效果与任务成功各自有据 | [条件核验](orchestrator/verification.md) |
+| 许可已使用，为何零费用也不能再用一次 | Grant、UseReceipt、UseSettlement | 一次资格消费与数值费用结算分别成立 | [授权结算](security/implementation.md) |
+| 用户点过按钮，业务是否已经消费 | Surface、InputSubmission、InputRequest、ConfirmationRecord | 呈现、转交、准确预览和本人确认分别由实际负责方保存 | [输入交接](interaction/implementation.md) |
 
-表中列的是建模所需的主要字段，完整必填性以[协议 Schema](contracts/schemas/protocol.schema.json)及所属模块为准。一个对象被别的模块引用或投影，不转移写权；修订只在同一对象及其 owner 内比较，不能用接收时间或另一对象的较大修订覆盖它。
+这些对象由裁决问题推导出来。只有身份、变化和继续责任确实不同，才需要拆分；准确字段查所属模块及 [Schema](contracts/schemas/protocol.schema.json)，不从此处的解释表生成另一份领域定义。
 
 ### 4.2 互斥状态与独立维度分别表达
 
 同一对象在同一状态维度中只能取一个值；可以同时成立的事实应分字段保存。判定时先选互斥分支，再对授权、控制、期限、费用等独立条件逐项检查，避免用一条 `else if` 隐藏另一项未解决限制。
 
-| 建模对象 | 互斥的状态维度 | 同时成立或独立变化的事实 |
-| --- | --- | --- |
-| Task | `status=active / succeeded / failed / cancelled`，终态不可重开 | `control=running / paused`、多项 `wait_reasons`、`open_effects` 和布尔值 `accounting_open` 分别保存 |
-| Operation | `execution_state=accepted / started / closed` | `effect=not_started / applied / not_applied / unknown`；`may_apply_later=true / false / unknown`；最终用量另由 `usage_final` 表达 |
-| MemoryRecord／MemoryControl | 仍可披露的 MemoryRecord 为 `active / needs_review / disabled`；删除后的 `deleted` 由 MemoryControl／墓碑表达 | 逻辑禁止新使用之后，各持有者的物理清理仍可能 pending、residual 或 unknown |
-| InputSubmission | `state=queued / sending / applied / rejected / withdrawn` | `withdrawal_requested` 与原目标命令消费分别核对；已发送输入不能直接改为成功撤回 |
-| OfflineLease | `state=open / closed / reconciled` | 已知使用及累计用量来自使用账本；open 不表示尚未使用，closed 不表示效果及费用已结清 |
-| Delegation | `phase` 为同一修订事实的只读摘要，不单独驱动状态迁移 | 创建、子映射、控制、效果和费用分别保存；只有持久 Closure 能投影为 closed |
-| Activation | `phase` 表达原切换进度 | 历史启动依据、当前实例就绪、停止新使用、旧版恢复和残留分别保存 |
+保存报告的最小例子已经需要两个对象各自保留独立维度：Task 的目标状态、控制和未决责任；Operation 的发送状态、效果和可能迟到性。把它们压成一个“成功／失败”会丢失取消后仍可能写入的情况。完整枚举归[任务状态](orchestrator/README.md#state)和[执行效果](execution/README.md)。
 
 例如 `Task.status=cancelled`、`open_effects` 非空且 `accounting_open=true` 合法：目标推进已结束，原动作效果及费用仍待处理。`Operation.execution_state=closed` 只禁止再发送目标动作，旧动作在目标系统排队时仍可 `effect=unknown` 且 `may_apply_later=true` 或 `unknown`。两者都不能凭“已关闭”推导外部世界没有变化。
 
@@ -179,70 +157,8 @@ Brain、Memory、Executor 以及 Agent、UI 和生命周期适配器可以改变
 
 同宿主、同信任边界且共库时可以合并适用事务，逻辑成功含义仍保留。拆到独立提交域后，发起方保存原请求与查询 job，处理方保存决定与自己的后续工作；返回已收到也不能让处理方丢弃尚未完成的效果核对。
 
-## 5. 贯穿场景：保存文档丢失答复，随后取消
+## 5. 从模型回到处理链
 
-以下场景中，用户要求比较两个方案并保存报告。到写入阶段时，候选质量已有适用评估，写入及必要核查的用途已获准；宿主所用精确版本已通过安装和当前开放检查。示例中的“原写入”始终指同一个 `operation_id`，实际标识遵守共同契约。
+沿[贯穿场景](walkthrough.md)可以检查这些对象是否足够：同一份报告先成为已保存内容，再被提案和条件记录引用，随后形成独立写入与读回操作；写入答复丢失和取消分别依靠原效果及控制责任收束。正常链和两种丢答复的位置集中在该场景，本页不再复述。
 
-### 5.1 从目标到原写入
-
-应用把固定提交命令交给 Orchestrator。Orchestrator 同事务保存目标、条件、预算、原回执和首项工作，应用此时可确认任务已接纳。Orchestrator 从 Memory／Content 取得当前获准材料和准确版本，组装快照；Brain 返回该快照上的候选及行动提案。
-
-Orchestrator 核对当前目标和控制、准确能力、权限与预算，保存原写入的 OperationIntent、费用预留和派发 job。质量记录、写入内容和后续读回必须绑定同一候选；评估通过不预先授权写入，写入也不自动授予读回用途。固定计划能够生成后续候选时仍须逐步准入。
-
-Executor 接纳原 Invoke 后，保存 Operation、回执和执行责任。实际启动前取得原使用依据，再核对 TaskGate、资源、期限和准确绑定，保存 Attempt 后进入实际发送入口。此时 Orchestrator 可以知道原操作被接纳，却还不能宣布文件已保存。
-
-### 5.2 写入已经发生，答复在哪里丢失
-
-目标完成写入后，存在两个不同故障点，必须按保存的事实区分。
-
-| 丢失的位置 | 已有权威事实 | 继续者与下一步 |
-| --- | --- | --- |
-| Executor 已保存效果，向 Orchestrator 的答复丢失 | Executor 有原目标凭据和 Operation 修订；Orchestrator 尚未归并 | Orchestrator 查询原 command／operation，取得既有事实后同事务归并与结算 |
-| 目标答复尚未被 Executor 保存 | 目标可能已写入；Executor 只能证明已发送或可能已发送 | Executor 保存 unknown 和核对责任，使用准确目标关联及原操作证据查询；Orchestrator 保留 poll 与预留 |
-
-两条路径都没有理由再创建一次“保存同一文档”。目标幂等能力只有在原键、参数、作用域和回放窗口仍有效时才允许原键重放；不可重复能力必须先确证未生效且不会迟到，原操作仍开放并获准时才可再尝试。切换 GUI、驱动或执行端是新的行动，不能用来绕开原未知。
-
-### 5.3 用户取消先在 Orchestrator 成为事实
-
-假设 Orchestrator 尚未提交成功终态，此时收到用户取消。Orchestrator 在任务条件事务中保存 `cancelled`、新的控制修订、停止新目标工作以及逐执行端控制和原效果核对责任，随后返回原取消回执。界面可以显示任务已取消，并同时展示外部控制待确认及原文件效果待核对。
-
-取消与完成竞争同一任务决定：若完成先提交，取消不能覆盖已成功终态；本场景取消先提交，迟到证据不能把任务改回 `succeeded`。取消回执也不证明每个远端入口已收到控制，更不隐含删除已保存文件。
-
-### 5.4 执行端封闭后续发送，保留在途事实
-
-Executor 接收更高控制修订后，持久更新 TaskGate，并在实际受控入口封闭旧资格。控制若在发送边界前落实，可以证明相应动作未启动；控制在发送边界后落实，则关闭后续发送，保留在途集合并尽力停止、继续核对。只有全部必要入口确认后，Orchestrator 才能显示该执行端的相应控制已落实。
-
-若原操作取消比 Invoke 先到，Executor 也保存 CancellationTombstone，迟到 Invoke 命中后不得启动。失联时已有控制窗口不会自动延长；原命令查询或重投返回原截止。执行端报告 `closed` 后，目标排队中的写入仍可能生效，需继续读取 `effect` 和 `may_apply_later`。
-
-### 5.5 收束原效果与账务，不再推进原目标
-
-Executor 取得可绑定原操作的写入证据后更新效果修订，Orchestrator 按原 owner、对象与修订归并，核清仍可能迟到的效果，并按累计用量差额结算。只有证明没有相关未决效果后，才移除对应 `open_effects`；只有取得最终费用依据后，才释放多余预留并关闭相应账务。
-
-若当前文件已被用户修改，新的读回版本只说明当前资源变化，不能抹掉原写入曾发生的事实，也不能冒充原候选的完成证据。核对缺权限或依赖不可达时保存具体缺口；自动核对到上限后停止高频查询，保留原身份、未知和受信处置入口。用户补充证据须核验，普通“视为没执行”不能开放重复写入。
-
-最终可能是“任务已取消，原报告确已保存，费用已结清”，也可能长期保持“任务已取消，原效果或费用待核对”。两者都符合已确认控制，区别来自实际证据。原版本及恢复资料按引用和许可保留，收尾继续保存恢复所需事实；取消不触发新的目标综合、报告保存、长期成功经验提取或补偿操作。完整场景及读回分支见[写入与读回异常](walkthrough.md#write-recovery)。
-
-## 6. 部署映射与继续阅读
-
-上述逻辑关系以生产分布式装配为基线：独立 WSS 网关负责端云连接，Orchestrator 应用处理接纳与控制，worker 按工作类别分池，执行宿主及评测按信任边界隔离。各角色可以装配多个模块，同一 Orchestrator 分区内需要共同提交的事实保留短事务；新增进程不新增业务权威，也不要求九套服务和数据库。
-
-默认核心与宿主使用 Go，同进程通过 interface 协作，跨进程服务使用 gRPC。Protobuf 外壳承载现有严格 JSON，字段和 JCS 摘要仍由共同契约裁决；浏览器、CLI 和端侧宿主对云统一使用 WSS 双向长连接。发现、认证及大内容字节保留 HTTPS，上传／镜像管理通过 WSS／gRPC。连接、流和 goroutine 均是有界运行资源，不承担业务事实权威；详见[WSS 契约](contracts/transport.md)与[gRPC 绑定](contracts/grpc.md)。
-
-生产默认托管 PostgreSQL、对象存储与连接池／平台能力，具体厂商不进入业务契约。PG jobs 保存持久责任，有限批量扫描保证未结工作可重新发现，通知仅加速唤醒；默认不增加独立 MQ 或 Redis。完整选择、故障行为与改变选择的条件集中在[存储与中间件](storage-and-middleware.md)。工作池按工作类型、提供方和租户份额伸缩，同一 Orchestrator 分区只有一个当前数据库写权威；共享设备不会因多副本增加控制权。
-
-网关维持外部 WSS，内部 EndpointChannel 可以沿原负责服务重新绑定；内部委托的 30 分钟轮换不要求设备重新建链。重绑期间业务结果不明仍按原命令核对，内部连接更新不续期端侧认证。网关自身退出时，按排空及抖动重连规则恢复端云连接。外部会话与内部通道的身份、在途关联及限额见[生产连接规则](deployment-production.md#connections)。
-
-已确认生产边界为单地域三个可用区，单可用区故障时已确认账本 RPO=0、控制与查询恢复 RTO≤60 秒；整地域故障走受限灾备恢复。数据库切换须先隔离旧主、证明已确认记录完整，并恢复第二耐久副本与同步提交条件，才开放关闭、撤权、原回执及未决工作的业务写入；内容依赖与剩余容量达标后，再逐步开放新接纳。条件不足时停止相应写入，保留可安全执行的诊断与核对；已跨发送门禁的请求仍可能继续，其效果与费用须按原身份核对。目标达成仍须实测，详见[生产拓扑与故障边界](deployment-production.md)。
-
-完整单体仅用于开发与调试，复用相同 Go 接口、领域规则及恢复语义。本地 Brain、Memory、Executor 和本地 Orchestrator＋云能力、云 Orchestrator＋端侧能力的混合装配继续保留；全本地身份、许可和批准仍可就地核验。它们的功能通过不能替代分布式生产的多副本、容量与容灾证据。
-
-连续阅读建议按要回答的问题推进，而非把九模块当作九个服务逐一拆建。
-
-| 阅读问题 | 路径 |
-| --- | --- |
-| 用户目标怎样成为可解释的任务结果 | [目标与功能](goals.md) → [设计决策](decisions.md) → [任务编排器](orchestrator/README.md) → [大脑](brain/README.md) → [贯穿场景](walkthrough.md) |
-| 外部效果、资料和用户控制怎样成立 | [执行](execution/README.md) → [权限与隔离](security/README.md) → [记忆与内容](memory/README.md) → [交互](interaction/README.md) → [协作](collaboration/README.md) |
-| 如何实现、替换并运行这套闭环 | [技术基线与宿主装配](deployment.md) → [生产部署与运行](deployment-production.md) → [存储与中间件](storage-and-middleware.md) → 各模块 `implementation.md` 的形状、对象与时序 → [扩展](extensions/README.md)与[评测](evaluation/README.md) |
-| 哪些规则已经有机器资产，哪些保证还须运行取证 | [共同契约](contracts/README.md) → [方法与线格式](contracts/protocol.md) → [传输契约](contracts/transport.md) → [验收](validation/README.md) → [交付审查](review.md) |
-
-修改方案时，沿“发起者、裁决者、持久事实、成功点、失败后继续者”复查受影响链路，再对照状态、图示、Schema 和例子。只改接口名称或总览连线不足以改变已确认保证；实际运行证据仍按各模块及系统验收分别取得。
+逻辑模块映射到生产进程时，继续区分“哪个 owner 裁决”和“哪个进程承载”。具体进程、存储及故障域归[生产部署](deployment-production.md)，同进程事务与接口归[宿主装配](deployment.md)。实现与机器契约的查阅路径统一回到[方案入口](README.md#4-连续阅读路径)。

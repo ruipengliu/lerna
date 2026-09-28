@@ -17,7 +17,7 @@ Orchestrator 负责选择上下文、保存计划和决定后续工作；Brain �
 Brain 是宿主装配的一组 Go package。DecisionService 是唯一对外 facade，
 其 application 层组合 ContextReader、DecisionPolicy 和 ProposalValidator；
 DecisionPolicy 只做本轮选择，ProposalValidator 只判断候选契约，二者不直接读写数据库。
-DecisionStore 将事务和领域记录映射到宿主 command_store、job_store；ModelAdapter 和内容读取 port 隔离外部依赖。
+DecisionStore 将事务和领域记录映射到宿主 command_store、job_store；ModelAdapter 和内容 port 隔离外部依赖。内容 port 既读取固定输入，也由 RecoveryWorker 保存获准新产出和恢复原保存命令，不新增独立发布服务。
 各 port 用 Go interface 表达，构造时注入依赖；规则接收领域值类型，不依赖 RPC 生成类型。
 本机装配为同进程调用，独立服务部署的 Brain 在同一 facade 前加 gRPC 适配器；端侧 Brain 由宿主将 WSS／Delivery 交接适配到该 facade，二者映射同一领域契约，
 不要求这些组件各自成为服务。ModelAdapter 对模型供应商沿用其 API，对本项目独立推理服务使用 gRPC；
@@ -27,7 +27,7 @@ DecisionStore 将事务和领域记录映射到宿主 command_store、job_store�
 flowchart TB
     H[外部：Orchestrator]
     O[外部：内容 owner]
-    G[外部：Grant owner]
+    G[外部：Grant owner<br/>原用途取得与核对]
     P[外部：模型供应商或本地推理进程]
     DB[(宿主权威数据库)]
     J[宿主 job 领取器]
@@ -47,12 +47,12 @@ flowchart TB
       W -->|同步：选择本轮路径| R
       W -->|同步：校验输出| V
       W -->|同步：阶段与原调用事实| S
-      W -->|门禁提交后：至多一次生成| M
-      W -->|同步：原调用核对或停止| M
+      W -->|发送门禁后生成；原调用核对或停止| M
     end
     H -->|同步：命令或查询| D
     C -->|同步：当前资格与准确字节| O
-    W -->|同步：用途取得与核对| G
+    W -->|事务外：原内容保存、查询与清理| O
+    W --> G
     M -->|外部调用：发送、查询、停止| P
     S -->|短事务：记录、回执、jobs| DB
     DB -.持久 job.-> J
@@ -75,7 +75,7 @@ Orchestrator 收到提案后仍执行独立准入，宿主 job 领取器只提�
 | DecisionPolicy | 固定策略选择确定性返回或一次物理生成 | 不形成另一套长期 Agent 循环 |
 | ModelAdapter | 精确模型配置、请求序列化、流汇总、用量记录 | 不重试未知请求，不运行返回工具 |
 | ProposalValidator | 提案结构、能力绑定、引用闭包及上限 | 不替代 Orchestrator 的当前权限和控制检查 |
-| RecoveryWorker | 领取本轮推进工作；沿原调用查询、停止和费用核对 | 不用新调用身份掩盖旧调用未知 |
+| RecoveryWorker | 领取本轮推进工作；原调用查询、停止、费用核对；按固定 publication 保存产出并恢复原内容命令 | 不用新调用或保存身份掩盖原结果未知 |
 | DecisionStore | 接纳、发送门禁和终态短事务；绑定宿主事务与 jobs | 不在事务闭包内访问模型或远端 owner |
 
 默认保持一轮至多一次物理生成，可以直接把费用及恢复记录关联起来。
@@ -167,6 +167,7 @@ BrainContext 的清单记录组装与本轮读取的来源；发送门禁另固�
 | decision_input | decision_id 唯一；context_ref、profile、limits 与来源清单固定 | 接纳前取得可保存内容，接纳时绑定 |
 | model_call | decision_id 唯一；model_call_id 唯一；发送门禁固定实际 input_manifest、最终编码摘要、接收方与 use_id | 准备身份，门禁时保存披露依据 |
 | model_attempt_fact | model_call_id、fact_id 唯一；供应商号、发送及返回事实只追加 | 每次得到可核对事实 |
+| decision_publication | decision_id 唯一；固定产出清单、获准暂存引用、局部标识到准确 ContentRef／upload_id／content.put 命令的映射 | 第一次外部保存前与原恢复 job 同事务固定；重启不换保存身份 |
 | decision_output | decision_id 唯一；提案或失败固定，内容引用精确 | 终态事务 |
 | brain_usage | model_call_id、计费项身份唯一；预留、估计、最终账单及费用修订分别记录 | 准备及原调用对账；可信上调与交回 job 同事务 |
 | billing_handoff_outbox | decision_id、费用修订、固定账单摘要、有限唤醒命令尝试与回执、交付状态 | 每费用修订唯一；同 Decision 的多个未交付修订可共用一个扫描 job，旧尝试的身份与回执不可覆盖 |
@@ -231,7 +232,7 @@ ModelAdapter 先完成最终请求编码；ContextReader 与适配器核对本�
 
 ### 3.4 完成事务
 
-输出先完成流汇总、解析、大小和引用校验，再保存获准的输出内容。
+输出先完成流汇总、内部产出结构及引用关系检查，再按下节保存获准正文、回填准确引用并执行最终 Proposal 校验。
 事务比较 Decision 状态及代次，固定 completed／failed 与原结果，删除推进 job 并保存费用收尾责任。
 取消先提交时，不再写入 completed；迟到输出只进入仍获准的诊断记录。
 Orchestrator 获取 Decision 后，另在自己的事务中消费提案和决定后续工作。
@@ -288,6 +289,39 @@ sequenceDiagram
 
 ## 4. 输出校验与有限计划
 
+<a id="generated-content"></a>
+### 4.1 新正文保存与准确引用
+
+模型生成报告时，正文还没有内容 owner 分配的版本和摘要，不能要求它直接返回准确 ContentRef。默认适配器使用独立的 [brain-generation.schema.json](../contracts/schemas/brain-generation.schema.json)：`schema_version=brain-generation/1`、有限 `contents[]` 和 `proposal` 模板。`contents` 每项只有本轮唯一 `local_id`、`media_type` 与 `body`；文本正文使用 UTF-8，JSON 正文在引用回填后按共同 JCS 编码。模板和 JSON 正文用 `{"$local_ref":"report"}` 引用同轮新正文，已有引用仍使用完整 ContentRef。局部引用只在内部有效，不能经 brain.get 交付，也不能出现在最终能力参数或 Proposal 中。
+
+先检查局部标识唯一、所有局部引用存在、依赖无环、层数与字节上限，再按依赖顺序解析；模板的未知字段仍须被最终 Proposal Schema 拒绝。每项新内容的 owner、身份、摘要、长度、完整来源和策略由受信 Brain／内容 port 形成，来源至少包含本轮实际处理清单及引用的同轮新内容。模型不能在内部格式中指定许可、来源删减、保存命令或外发目的地。计划正文必须通过 BrainPlan Schema 和下节语义检查；计划的 `source_refs` 由 Brain 写入完整处理来源，不能采信模型删减后的集合。局部引用只允许填入最终类型为 ContentRef 的字段或能力声明允许的 ContentRef 参数位置，不能借回填更换能力、主体或权限字段。
+
+```mermaid
+flowchart LR
+    M[单次模型完整输出] --> V[检查内部结构与局部依赖]
+    V --> J[获准暂存字节并固定保存责任]
+    J --> C[沿原命令保存内容]
+    C --> R[回填准确 ContentRef]
+    R --> P[校验公共 Proposal]
+    P --> D[比较取消与代次后提交 Decision 终态]
+```
+
+图只表示本轮产出路径，保存内容不执行模型建议的行动。采用内部模板使报告与计划仍能一次生成，代价是 Brain 承担有界暂存、引用解析和保存恢复；公共 Proposal 继续只交付准确引用，不增加正文传输或第二轮生成。
+
+Brain 在获准的内容暂存保存完整输出与逐项正文；持久准备事务固定原 decision_id、输出摘要、局部依赖、暂存引用、每项稳定 content_id/version/upload_id 和 `content.put` command_id，并保留原恢复 job，之后才调用内容 owner。每项输出摘要在其依赖回填后计算，首次 `content.put` 前固定完整命令；不得把一个尚未确定的 JSON 模板摘要当成最终内容摘要。多个正文按依赖顺序分别提交，不要求跨内容 owner 原子保存，只有全部引用可核验时才交回提案。
+
+| 中断或竞争 | 原责任怎样继续 |
+| --- | --- |
+| 已收到输出，但获准暂存尚未耐久 | 能查原供应商结果则恢复同一输出；否则按原调用 unknown／失败规则结束，不在同 decision_id 再生成 |
+| content.put 已提交、答复丢失或 Brain 退出 | 原 publication job 查原命令并回填同一引用，不换 local_id、内容身份或生成新文本 |
+| 部分正文保存后，下一项不可保存或最终校验失败 | 保留原拒绝／缺口；已保存且未被采用的内容沿原映射清理，不能交回半份 Proposal |
+| 取消先于终态事务提交 | 不写 completed；封闭尚未发出的保存，已在途保存按原命令核对并清理，迟到保存不恢复提案资格 |
+| 终态事务提交后答复丢失 | 查询原 Decision；只返回原 Proposal，不重做正文保存 |
+
+暂存与正式产出均须独立保存用途；不允许持久保存的输出不能进入这条可恢复发布路径，应在调用前报告缺口或使用另行验收的临时处理装配。保存许可在处理中失效时停止新保存并收尾已发生事实。publication 与输出内容沿原 Decision 的保留及关闭策略清理，未结保存命令和清理责任不能因 Decision 已 failed／cancelled 而丢弃。
+
+### 4.2 最终提案校验
+
 提案采用共享 Proposal Schema；未知 kind、字段或枚举均拒绝。
 原生工具编码先转换为同一 Proposal，不会获得额外执行权限。
 校验顺序固定，避免下游错误掩盖更基础的输入或引用缺口。
@@ -306,9 +340,10 @@ sequenceDiagram
 Orchestrator 可以携带机器可读缺口发起新决策；修复次数、总轮数、费用和期限分别计入。
 无新事实而重复 need_context 时，Orchestrator 返回已有查询结果或缺口，不能反复探活。
 
-### 4.1 计划正文
+<a id="finite-plan"></a>
+### 4.3 计划正文
 
-计划是可修订的有限工作说明；每次变更引用 base_plan_ref 和完整 next_plan_ref。
+计划是可修订的有限工作说明；每次变更引用 base_plan_ref 和完整 next_plan_ref。首次 base_plan_ref 为 null 且下一计划 revision=1；其后保持 plan_id、revision 加一，并比较当前准确 base。任务、目标版本或 base 不匹配时不安装计划。安装可单独用 `act` 的 `actions=[] + plan_delta`：计划至少一项步骤，当前图中必须有可物化或交 Brain 展开的起始节点。该 Decision 只消费为计划安装和后续 decide 责任，不同时创建直接行动；非空 actions 不得携带 plan_delta，避免同一建议分别经 Decision 和 step 准入两次。decide 优先尝试已有计划物化，安装计划本身不强制另调模型。
 参考计划保存步骤 ID、目标条件、依赖步骤及预期产出，已发生事实只引用原记录。
 确定性续行只支持准确行动模板和有限字段绑定；不支持任意脚本、循环或递归子计划。
 
@@ -316,14 +351,18 @@ Orchestrator 可以携带机器可读缺口发起新决策；修复次数、总�
 | --- | --- |
 | schema_version、plan_id、revision | 正文类型及版本固定；修订产生新内容版本 |
 | task_ref、goal_revision | 只能用于所属任务与目标版本 |
-| steps | 有限无环集合；每项有 step_id、requirement_refs、depends_on、instruction |
-| action_template | 可选，完整 invoke／delegate 模板，能力版本固定 |
-| argument_bindings | 可选，从指定原操作已核实输出的 JSON Pointer 取值；无表达式求值 |
+| steps | 有限无环集合；step_id 唯一，每项有 requirement_refs、depends_on、instruction；depends_on 只约束执行结束与可用输出 |
+| pass_conditions | 可选有限数组；每项为 requirement_id、rule_ref、artifact_ref，表示该准确候选必须有当前可用的 pass；全部同时成立才可准入 |
+| action_template | 可选 invoke／delegate 模板；能力及绑定固定；invoke 的 arguments 待绑定叶属性可缺席，其他结构仍满足动作 Schema，物化后再按完整能力／Agent Schema 校验 |
+| argument_bindings | 每项有 target_pointer 和 source；source 为 operation_output（operation_id、evidence_ref、source_pointer）或 step_output（step_id、source_pointer） |
 | source_refs | 编制计划的完整处理来源；不等于已执行证据 |
 
 没有 action_template 的步骤必须由后续 Brain 决策展开。
-存在模板时，Orchestrator 仅在全部依赖已满足、取值来源准确且目标未变时物化下一行动。
-绑定字段须通过同一能力 Schema；缺字段或类型改变返回重新决策，不执行隐式类型转换。
+step_output 只能引用本计划 depends_on 的直接或传递前项；发布时不预造 operation_id 或未来 ContentRef。物化时沿该计划版本的唯一准入映射取得原 operation／delegation 及已核实的输出，固定实际取值来源。operation_output 则引用编制时已存在的原操作及准确输出，不能静默换新版。两种来源的 JSON Pointer 均按准确输出正文取值，空指针表示整个 JSON 值。
+
+执行依赖满足不代表评估通过。需要“评估通过才写入”时必须列出对应 pass_conditions，Orchestrator 按当前目标、准确候选、规则和所选条件记录核验适用性；评估 Operation.effect=applied 而 verdict=fail 时禁止写入并交 Brain 修订，unknown／缺证等待原核验。规则、候选或目标不匹配的旧 pass 不能放行。条件只有有限的“必须通过”合取，没有表达式、分支脚本或任意谓词；更复杂分支仍由下一轮 Brain 展开。
+
+target_pointer 只允许写 invoke 的 arguments 子字段，或 delegate 的 goal_ref／input_refs 现有位置；不覆盖能力、主体、授权、预算及控制。绑定目标不得重复或互为祖先，父对象／数组位置必须存在，叶属性可以补入；不隐式扩数组或创造中间路径。全部绑定后须通过准确能力／Agent Schema；缺字段或类型改变返回重新决策，不执行隐式类型转换。
 任何物化行动仍逐次检查控制、权限、预算与资源门禁。
 计划步骤按 `(task,plan_id,plan_revision,step_id)` 唯一准入并保存原操作关联；不再次消费生成计划的 Brain 决策，事务规则见[任务准入](../orchestrator/implementation.md)。
 例如“评估通过后写入同一候选，再读回准确版本”，可以复用固定模板；评估不通过则交 Brain 修订。
@@ -357,6 +396,7 @@ Orchestrator 可以携带机器可读缺口发起新决策；修复次数、总�
 | 上下文清单引用 | 100 | 先裁可选材料；必需材料超限返回缺口 |
 | 单计划步骤／依赖数 | 64／每步 16 | 拒绝循环或超限，不自动展开 |
 | 提案 JSON 字节 | 128 KiB | invalid_output；正文成果另存内容引用 |
+| 内部新正文／聚合输出 | 最多 8 份；每份及提案模板 128 KiB；聚合 1 MiB、嵌套深度 32 | 先按内部结构和 UTF-8 字节拒绝超限，模型输出 token 限额仍独立适用 |
 | 模型本地并发 | 按宿主每用户上限，初值 4 | 等待有限队列 |
 | 单轮格式修复 | 最多 2 次新决策 | 耗尽后报告错误或请求人工补充 |
 | 原调用自动核对 | 按任务期限内有限退避 | 超限转可查询处置，不删除原责任 |
@@ -417,7 +457,11 @@ Brain 按租户和稳定 owner 路由至原 Decision 数据库分区；增加无
 | BI-11 披露后立即崩溃 | 编码包含私密材料，`send_started` 提交并发送后杀死进程 | 原 ModelCall 可查实际来源、接收方、用途使用和请求摘要；不因原文不可重取而抹去披露事实，也不凭摘要盲目重发 |
 | BI-12 供应商违背费用声明 | strict 模型按可信上界预留后出现更高可信最终账单，随后同账单重报 | Brain 保存原物理调用与全额账单并停该 profile 新发送；Orchestrator 沿原计费项一次记录超额与合同违约，不截断为预留上界 |
 | BI-13 终态迟到上调 | Decision、Task 已终态，旧费用交回 job 已 done；供应商上调原调用账单，Brain 保存后交回答复丢失且原命令到期 | Brain 原修订的交回 job 重领，保留旧尝试并以同修订继任命令取得同 JobAck；O 持久重开原计费槽，主动读原账只补一次差额；Decision／Task 目标状态不变，Brain 和 Grant 同物理收费不双扣 |
+| BI-14 新正文保存恢复 | 一轮生成报告和引用它的计划；content.put 已提交后断连并重启 | 沿同 publication 和原保存命令回填准确引用，公共 Proposal 不含正文／局部标识，不二次生成 |
+| BI-15 条件不通过 | 评估操作 applied，但准确候选的当前 verdict=fail；计划待写入 | pass_conditions 拒绝写入并交 Brain，unknown 保留核验责任；不能仅凭操作成功放行 |
+| BI-16 未来输出与旧结果 | 计划读回依赖未来写入返回的版本；另交回旧计划或旧候选的迟到结果 | 只按本计划准入映射解析原输出；重启保持相同物化参数，旧结果不替换新步骤输入 |
 
 实验必须记录实际发送次数、数据库决定、授权使用与原供应商查询结果。
 静态 Schema 只能验证提案形状，不能证明材料真实存在或供应商只处理一次。
+内部产出、局部引用与计划门禁的构造正反例可独立运行 `python3 docs/architecture/validation/validate_brain.py`；该检查不调用模型或内容服务，不替代 BI-14–16 的运行故障实验。
 实现验收另记录模型质量与延迟，不能用以上恢复实验替代 C1 和 V1 的效果评测。

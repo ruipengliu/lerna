@@ -5156,7 +5156,7 @@
             <mxPoint as="offset" x="8" y="-12.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e0-target-multiplicity" value="0..*" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e0" semanticKind="target-multiplicity" connectable="0">
+        <mxCell id="e0-target-multiplicity" value="0..1" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e0" semanticKind="target-multiplicity" connectable="0">
           <mxGeometry as="geometry" x="0.6666666666666667" y="0" width="50" height="24" relative="1">
             <mxPoint as="offset" x="8" y="-12.0" />
           </mxGeometry>
@@ -5304,7 +5304,7 @@
         <mxCell id="run-attr-0" value="run_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="run" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="104" width="368" height="30" />
         </mxCell>
-        <mxCell id="run-attr-1" value="state: Enum" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="run" semanticKind="text">
+        <mxCell id="run-attr-1" value="plan_id: ID {unique}" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="run" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="136" width="368" height="30" />
         </mxCell>
         <mxCell id="run-attr-2" value="cancel_requested: Boolean" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="run" semanticKind="text">
@@ -5433,7 +5433,7 @@
         <mxCell id="approval-attr-3" value="targets: ID[1..100]" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="approval" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="200" width="368" height="30" />
         </mxCell>
-        <mxCell id="approval-attr-4" value="expires_at: Timestamp" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="approval" semanticKind="text">
+        <mxCell id="approval-attr-4" value="rollback_approval_ref: ObjectRef?" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="approval" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
         <mxCell id="activation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Activation" schemaRef="Activation" tooltip="">
@@ -5472,10 +5472,10 @@
         <mxCell id="legend" value="实线：普通关联    两端：多重性    ?：可选属性    owner：事实负责方" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1631" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="Report 内容和摘要不可变；当前 PlanEligibility 独立保存，失效不可通过重开报告恢复。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="每冻结计划一个整体 Run；报告不可变，当前 PlanEligibility 独立核验。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-1" value="Exposure 可没有 report_id；关联的失效范围按来源组与发生时点判定。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-1" value="回退引用独立旧版批准；撤回新版不撤回旧批准，回退使用新的 Activation。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1703" width="1760" height="28" />
         </mxCell>
         <mxCell id="source-note" value="完整约束与逐页来源：docs/architecture/uml-models.md" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -6050,7 +6050,7 @@
         <mxCell id="approval-attr-3" value="expires_at: Timestamp" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="approval" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="200" width="368" height="30" />
         </mxCell>
-        <mxCell id="approval-attr-4" value="max_offline_window_ms: Integer" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=17;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="approval" semanticKind="text">
+        <mxCell id="approval-attr-4" value="rollback_approval_ref: ObjectRef?" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="approval" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
         <mxCell id="reference" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="extensions/implementation.md#4-管理账本与索引" schemaRef="" tooltip="">
@@ -6083,7 +6083,7 @@
         <mxCell id="legend" value="实线：普通关联    两端：多重性    ?：可选属性    owner：事实负责方" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1631" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="prepare 形成不可变安装锁；激活意图、当前活动指针与当前实例就绪分别确认。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="回退以新的 Activation 使用独立旧版批准；旧批准无效时只停用并报告缺口。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
         <mxCell id="note-1" value="重启保留 Activation.startup_evidence 与 generation，重新取得本实例 reopen 依据。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">

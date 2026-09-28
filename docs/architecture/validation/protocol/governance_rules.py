@@ -58,6 +58,23 @@ def _exposure_affects_plan(exposure, plan, partition, related_reports):
     return any('sealed_at' not in report or _time(exposure['occurred_at']) <= _time(report['sealed_at']) for report in related_reports)
 
 
+def _approval_evidence_current(approval, reports, plans, partitions, exposures):
+    """Check the referenced version's own recorded evidence, never the new version's."""
+    report=reports.get(approval['report_id'])
+    if not report or any(report[k]!=approval[k] for k in ('candidate_id','candidate_digest')) or report['digest']!=approval['report_digest']:
+        return False
+    if not report['sealed'] or report['eligibility']!='eligible' or not report['coverage_complete'] or report['contract_gate']!='pass':
+        return False
+    if approval['release_kind']=='compatibility':
+        return report['evidence_class']=='conformance'
+    plan=plans.get(report['plan_id'])
+    if not plan or any(_exposure_affects_plan(e,plan,partitions.get(plan['partition_id']),[report]) for e in exposures):
+        return False
+    return (report['evidence_class']=='formal'
+            and all(report[k]['applicable'] and report[k]['result']=='pass' for k in ('target_attainment','statistical_gate','improvement_gate'))
+            and all(c['within_limit'] for c in report['category_changes']))
+
+
 def check_exchange(exchange, capabilities):
     """Call after shared Schema validation; tolerate rejected/redacted projections."""
     req=exchange.get('request',{}); res=exchange.get('response',{}); name=req.get('method','')
@@ -98,7 +115,12 @@ def check_exchange(exchange, capabilities):
     if name=='grant.lease.settle':
         same(out['lease_id'],target);same(out['instance_id'],p['instance_id']);revision(out['revision'])
         same(out['settled_units'],p['cumulative_units'],'lease_total');same(out['settled_cost'],p['cumulative_cost'],'lease_total')
-        if not _amount_le(out['settled_units'],out['allocated_units']) or not _amount_le(out['settled_cost'],out['allocated_cost']):fail('lease_bound','settlement exceeds allocation')
+        if not _amount_le(out['settled_units'],out['allocated_units']):fail('lease_bound','usage units exceed allocation')
+        if out['settled_cost']['unit']!=out['allocated_cost']['unit']:fail('lease_bound','billing cannot change the allocated unit')
+        if not _amount_le(out['settled_cost'],out['allocated_cost']) and out['state']=='open':fail('lease_bound','a verified over-limit bill must close new spending')
+        if len({u['use_id'] for u in p['uses']})!=len(p['uses']):fail('lease_use_identity','one report cannot repeat a use')
+        for u in p['uses']:
+            if u['billing_ref']['owner_id']!=u['usage_owner_id'] or u['billing_ref']['id']!=u['operation_id']:fail('lease_billing','billing must name the fixed original source object and owner')
         if p['final'] and (out['state']!='reconciled' or 'final_settlement_ref' not in out or any(not u['closed'] for u in p['uses'])):fail('lease_final','final settlement needs closed uses and proof')
         if not p['final'] and out['state']=='reconciled':fail('lease_final','partial settlement cannot claim final release')
     if name=='endpoint.pair.begin':
@@ -187,7 +209,9 @@ def check_exchange(exchange, capabilities):
 
 def check_trace_rules(trace):
     """Check authority records supplied in this bounded sequence, never infer missing facts."""
+    lease_closures={}
     errors=[]; grants={}; confirms={}; leases={}; lease_uses={}; lease_rev={}; lease_closed_at={}; pairs={}; pair_secrets={}; pair_scopes={}; claims={}; endpoints={}; candidates={}; partitions={}; plans={}; reservations={}; attempts={}; policies={}; reports={}; exposures=[]; impact_jobs={}; approvals={}; uses={}; use_times={}; activations={}; intentions={}; immutable={}
+    evaluation_runs={}; approval_owners={}
     for i,event in enumerate(trace['events']):
         if 'exchange' not in event:continue
         x=event['exchange'];req=x['request'];res=x['response'];name=req['method'];p=req['payload'];out=res.get('output');target=req['target_id']; rejected=res.get('stage')=='rejected' or ('error' in res and 'stage' not in res)
@@ -230,7 +254,11 @@ def check_trace_rules(trace):
             old=leases.get(target)
             if old:
                 if old['instance_id']!=p['instance_id']:fail('lease_instance','settlement changes consuming instance')
-                if old['state']=='reconciled':fail('lease_reopen','final settlement is closed to new commands')
+                if any(out[k]!=old[k] for k in ('owner_id','grant_refs','endpoint_id','instance_id','scope','allocated_units','allocated_cost','issued_at','expires_at','owner_revision')):fail('lease_identity','settlement cannot change the original allocation or scope')
+                if old['state']=='reconciled':
+                    if out['state']!='reconciled' or not p['final']:fail('lease_reopen','a billing correction cannot reopen the lease')
+                    if p['cumulative_units']!=old['settled_units'] or not _amount_le(old['settled_cost'],p['cumulative_cost']) or p['cumulative_cost']==old['settled_cost']:fail('lease_correction','a final correction must only increase original cumulative cost')
+                    if p.get('closure_ref')!=lease_closures.get(target) or out.get('final_settlement_ref')!=old.get('final_settlement_ref'):fail('lease_correction','original closure and released balance cannot be replaced')
                 if old['state']=='closed' and out['state']=='open':fail('lease_reopen','usage reporting cannot reopen a closed lease')
                 if not _amount_le(old['settled_units'],p['cumulative_units']) or not _amount_le(old['settled_cost'],p['cumulative_cost']):fail('lease_monotonic','cumulative settlement cannot decrease')
             if out['state']=='open' and _time(event['at'])>=_time(out['expires_at']):fail('lease_expired_open','expired lease cannot remain open to new use')
@@ -238,13 +266,21 @@ def check_trace_rules(trace):
             lease_rev[target]=p['usage_revision']
             for u in p['uses']:
                 key=(target,u['use_id']); prior=lease_uses.get(key)
-                if prior and (prior['intent_hash']!=u['intent_hash'] or not _amount_le(prior['used_cost'],u['used_cost'])):fail('lease_use_identity','use identity or cumulative cost changed')
-                if prior and prior['closed'] and u!=prior:fail('lease_use_closed','closed original use cannot reopen or grow')
+                if old and old['state']=='reconciled' and not prior:fail('lease_correction','a reconciled lease cannot acquire another use')
+                if prior:
+                    if any(prior[k]!=u[k] for k in ('intent_hash','operation_id','usage_owner_id','billing_source_kind','started_at')) or not _amount_le(prior['used_cost'],u['used_cost']) or not _amount_le(prior['used_units'],u['used_units']):fail('lease_use_identity','original use binding or monotonic amounts changed')
+                    old_bill=prior['billing_ref'];new_bill=u['billing_ref']
+                    if any(old_bill[k]!=new_bill[k] for k in ('owner_id','id')) or new_bill['revision']<old_bill['revision']:fail('lease_billing','billing identity is fixed and its revision cannot decrease')
+                    if (u['used_cost']!=prior['used_cost'] or u['used_units']!=prior['used_units']) and new_bill['revision']<=old_bill['revision']:fail('lease_billing','changed cumulative usage requires newer original billing')
+                    if prior['closed'] and (not u['closed'] or u['used_units']!=prior['used_units']):fail('lease_use_closed','closed original use cannot reopen or consume more units')
+                    if prior['closed'] and u!=prior and (u['used_cost']==prior['used_cost'] or new_bill['revision']<=old_bill['revision']):fail('lease_use_closed','closed use changes require an upward original bill correction')
                 if not _time(out['issued_at'])<=_time(u['started_at'])<_time(out['expires_at']):fail('lease_use_window','use must have started within the original lease window')
                 if target in lease_closed_at and _time(u['started_at'])>=lease_closed_at[target]:fail('lease_use_after_close','observed closure forbids a new use; late reporting of an earlier use remains possible')
                 lease_uses[key]=deepcopy(u)
             known_uses=[u for (lease_id,_),u in lease_uses.items() if lease_id==target]
             if p['final'] and any(not u['closed'] for u in known_uses):fail('lease_final','final settlement cannot omit a known unfinished use')
+            if p['final']:
+                lease_closures.setdefault(target,deepcopy(p['closure_ref']))
             for field,total in [('used_units','cumulative_units'),('used_cost','cumulative_cost')]:
                 if any(u[field]['unit']!=p[total]['unit'] for u in known_uses) or sum((Decimal(u[field]['amount']) for u in known_uses),Decimal(0))!=Decimal(p[total]['amount']):fail('lease_use_total','cumulative totals must equal the merged original-use ledger')
             if out['state'] in ('closed','reconciled'):
@@ -292,6 +328,10 @@ def check_trace_rules(trace):
         if name=='evaluation.run':
             plan=plans.get(p['plan_id'])
             if plan and p['plan_digest']!=plan['digest']:fail('run_plan','run must use exact frozen plan')
+            run_key=(x['auth']['tenant_id'],x['auth']['logical_service_id'],p['plan_id'])
+            if run_key in evaluation_runs and evaluation_runs[run_key]!=p['run_id']:fail('run_once','one frozen plan cannot create a second logical run')
+            evaluation_runs[run_key]=p['run_id']
+            if plan and out['total_samples']!=len(plan['sample_ids']):fail('run_denominator','total samples must match plan, not arms or attempts')
         if name=='evaluation.feedback_open':
             report=out['report'];plan=plans.get(report['plan_id'])
             if plan and report['plan_digest']!=plan['digest']:fail('report_plan','report does not match frozen plan')
@@ -315,7 +355,19 @@ def check_trace_rules(trace):
                 if out['release_kind']=='improvement' and (report['evidence_class']!='formal' or any(not report[k]['applicable'] or report[k]['result']!='pass' for k in ('target_attainment','statistical_gate','improvement_gate')) or any(not c['within_limit'] for c in report['category_changes'])):fail('improvement_approval','improvement approval requires all formal gates and categories')
                 if out['release_kind']=='compatibility' and report['evidence_class']!='conformance':fail('compatibility_approval','compatibility path requires explicit conformance report')
             else:fail('approval_report','sequence must provide report through recorded trusted feedback')
+            rollback=out.get('rollback_approval_ref')
+            if rollback:
+                old=approvals.get(rollback['id'])
+                if (not old or rollback['id']==out['approval_id'] or rollback['owner_id']!=x['auth']['logical_service_id']
+                        or approval_owners.get(rollback['id'])!=rollback['owner_id'] or rollback['revision']!=old['revision']
+                        or old['state']!='active' or old['lock_id']!=out['rollback_lock']
+                        or not set(out['targets'])<=set(old['targets']) or _time(old['expires_at'])<_time(out['expires_at'])
+                        or _time(old['expires_at'])<=_time(event['at'])):
+                    fail('rollback_approval','rollback needs a distinct current approval for the exact old lock, targets and full window')
+                elif not _approval_evidence_current(old,reports,plans,partitions,exposures):
+                    fail('rollback_evidence','rollback must retain the old version own current evidence')
             approvals[out['approval_id']]=deepcopy(out)
+            approval_owners[out['approval_id']]=x['auth']['logical_service_id']
         if name=='evaluation.revoke':approvals[target]=deepcopy(out)
         if name=='evaluation.approval_check':
             approval=approvals.get(out['approval_id']);report=reports.get(approval['report_id']) if approval else None
@@ -326,7 +378,15 @@ def check_trace_rules(trace):
             approval=approvals.get(out['approval_id']);report=reports.get(approval['report_id']) if approval else None
             plan=plans.get(report['plan_id']) if report else None
             if plan and any(_exposure_affects_plan(e,plan,partitions.get(plan['partition_id']),[report]) for e in exposures):fail('exposure_gate','new offline lease must check original exposure facts')
-        if name=='extensions.activate':intentions[p['activation_id']]=deepcopy(p)
+        if name=='extensions.activate':
+            approved=approvals.get(p['approval_id'])
+            if approved:
+                if (approved['state']!='active' or _time(approved['expires_at'])<=_time(event['at'])
+                        or p['target_id'] not in approved['targets'] or p['new_lock_id']!=approved['lock_id']):
+                    fail('activation_approval','activation including rollback must use its own currently active exact approval')
+                elif not _approval_evidence_current(approved,reports,plans,partitions,exposures):
+                    fail('activation_evidence','activation including rollback must check its own current evidence')
+            intentions[p['activation_id']]=deepcopy(p)
         if name=='evaluation.rollout_read' and out['state']=='finished':
             approval=approvals.get(out['approval_id'])
             if approval:

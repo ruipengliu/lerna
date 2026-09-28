@@ -4,17 +4,17 @@
 
 本目录是独立的设计基线。需求、术语、规则和验收方法均在目录内定义。技术方案、已冻结范围的机器契约及示例共同约束参考实现；未纳入线格式的能力明确保留为设计接口，不能宣称已经互操作。内核、SDK、默认组件和运行验收仍须实现，具体状态见[交付审查](review.md)。
 
-[技术总览](technical-overview.md) 解释整体设计的抽象原则、建模方法与关键取舍；[架构全景与模块 UML HTML 图集](diagrams/architecture-atlas.html)把九模块逻辑全景和 20 页组件、领域对象视图放在一处阅读。[可编辑系统全景图](diagrams/system-panorama.drawio)展示内部组件、主要事实对象及跨模块交接；[模块与数据 UML 导读](uml-models.md)与[20 页可编辑图册](diagrams/uml-models.drawio)进一步定义接口依赖、领域属性和关联多重性。详细字段和行为约束按链接进入专题查阅。
+首次阅读先用本页建立分工，再沿[贯穿场景](walkthrough.md)看一次任务从正文形成到执行、核验和异常收尾。实现入口集中在本页第 4、5 节；[技术总览](technical-overview.md)补充抽象依据和全景图导读，可在需要理解建模理由时查阅。
 
 ## 1. 要解决的核心问题
 
 一个用户可能让 Agent 核实信息、保存文档，再在手机上执行操作。模型可以提出错误步骤，工具可能已经产生效果却丢失答复，端点也可能在执行中失联。Harness 必须把这几件事分开处理：是否接受了目标、是否获准行动、行动发生了什么、结果达到什么质量、失败后由谁继续。
 
-生产方案独立部署 WSS 连接接入层、Orchestrator 应用服务、按工作类别划分的 worker 池及隔离执行宿主，使连接、任务推进和外部执行能够分别扩容与恢复。Orchestrator 的 JobRunner 装入[工作进程池](deployment-production.md#1-软件模块怎样装进生产进程)，从原权威库领取持久 job；池中也可装入其他模块的后台工作，业务裁决仍在原模块。同一提交域内的任务状态、待处理工作和授权使用继续放入短事务；跨进程或跨端交接沿原命令、回执与事实查询恢复。模块边界不等于服务或数据库边界。
+生产方案把 WSS 连接接入层、Orchestrator 应用、工作池和隔离执行宿主分开部署，使连接、任务推进和外部执行能够分别扩容与恢复。模块边界不等于服务或数据库边界：需要共同裁决的事实使用同一提交域，跨域交接保存原命令、回执与继续处理的责任。
 
-生产基线采用单地域三个可用区，优先使用不绑定厂商的托管 PostgreSQL、对象存储及连接池／平台能力。单可用区失效时，已确认账本的目标为 RPO=0，原 Orchestrator 恢复控制与查询的 RTO≤60 秒；受管文件根的目标字节另有[故障域边界](deployment-production.md#2-拓扑路由及数据放置)，不由账本 RPO 推出跨区可用。整地域故障按受限灾备恢复处理。持久 jobs 与业务事实共同提交，有界批量扫描保证工作可被重新发现，可丢通知只加速唤醒。具体基础设施职责和取舍集中在[存储与中间件](storage-and-middleware.md)，可用性条件见[生产部署](deployment-production.md)。
+生产基线为单地域三个可用区，优先采用托管 PostgreSQL、对象存储及连接池。单区失效时已确认账本的目标为 RPO=0，原 Orchestrator 控制与查询恢复 RTO≤60 秒；目标文件字节和整地域灾备另有边界。这些保证成立的条件、恢复顺序和负载预算集中在[生产部署](deployment-production.md)，基础设施选择归[存储与中间件](storage-and-middleware.md)。
 
-这里的“最优”以已确认规模与恢复目标为约束：用少量成熟组件降低实现和运营复杂度，再以稳态、故障剩余容量及恢复积压的测量确定分区与副本数。上述目标仍需实际运行验收；相应代价在下表和各专题中明确给出。
+方案以已确认规模与恢复目标为约束，先采用少量成熟组件，再用稳态、故障剩余容量及积压恢复的测量确定配置。上述目标仍需实际运行验收。
 
 ## 2. 系统分工与事实归属
 
@@ -65,73 +65,28 @@ flowchart TB
 
 会改变用户可见行为与验收含义的选择集中在[设计决策与行为基线](decisions.md)：目标修订、暂停期间完成、完成依据、取消乱序、模型并发保证及统计门禁均有明确边界，不能在替换实现时静默改义。
 
+<a id="reading-path"></a>
 ## 4. 连续阅读路径
+
+跨模块处理例子在[贯穿场景](walkthrough.md#2-正常主链)连续展开；行为规则在所属模块集中定义，场景和图册链接这些规则。完成这条主线后，按负责的实现范围进入下表，无需先通读所有专题。
 
 | 顺序 | 文档 | 阅读所得 |
 | --- | --- | --- |
-| 1 | [目标与功能](goals.md) → [技术总览](technical-overview.md)与[系统全景图](diagrams/system-panorama.drawio) → [关键决策](decisions.md) → [贯穿场景](walkthrough.md) | 要建设什么、如何划分职责与事实、选择承担哪些代价、正常与失联路径如何连起来 |
-| 2 | [技术基线与宿主装配](deployment.md) → [生产部署与运行](deployment-production.md) → [存储与中间件](storage-and-middleware.md) | 共同装配如何约束实现，生产路由与恢复怎样运行，容量和故障目标如何验证 |
-| 3 | [任务编排器](orchestrator/README.md) → [大脑](brain/README.md) → [执行](execution/README.md) | 目标怎样形成行动，谁准入、验证和继续恢复 |
-| 4 | [权限与隔离](security/README.md) → [记忆与内容](memory/README.md) | 资料和权限如何跨任务、跨端使用及撤回 |
-| 5 | [Agent 协作](collaboration/README.md) → [应用与交互](interaction/README.md) → [共同契约](contracts/README.md) | 子任务与用户输入如何交接，独立实现如何接入 |
-| 6 | [扩展与宿主](extensions/README.md) → [观测、评测与改进](evaluation/README.md) | 如何装配、运行、更新与隔离评测 |
-| 7 | [验收与建设顺序](validation/README.md) → [交付审查](review.md) | 哪些实验能证明目标，当前实际检查到了哪一层 |
+| 1．建立主线 | 本页 → [贯穿场景](walkthrough.md) → [任务编排器](orchestrator/README.md)及[实现](orchestrator/implementation.md) | 谁形成提案、谁准入，正文、效果和完成证据如何交接，异常后谁继续 |
+| 2．落实负责的模块 | [大脑](brain/README.md)／[执行](execution/README.md)／[记忆与内容](memory/README.md)／[权限](security/README.md)／[交互](interaction/README.md)／[协作](collaboration/README.md) | 按主链的交接点查完整规则，再进入本页第 5 节对应的实现章节 |
+| 3．连接独立实现 | [共同契约](contracts/README.md) → [方法索引](contracts/methods.md) → [线格式与机器资产](contracts/protocol.md) | 输入输出、成功点、错误、原身份恢复及对应构造序列 |
+| 4．装配与运行 | [宿主装配](deployment.md) → [生产部署](deployment-production.md) → [存储与中间件](storage-and-middleware.md)；按需查[扩展](extensions/README.md)与[评测改进](evaluation/README.md) | 进程与提交域、生产故障边界、安装切换及隔离评测 |
+| 5．交付切片 | [验收建设顺序](validation/README.md#5-建设顺序与退出条件) → [交付审查](review.md) | 首个闭环依赖、退出证据及当前实际检查范围 |
 
-实现查阅时先看所属模块的接口与字段，再看共同信封、错误和恢复规则。技术方案不要求按文件顺序拆成独立开发服务。
+[目标与功能](goals.md)保存范围和指标，[设计决策](decisions.md)保存关键选择及改选条件；[技术总览](technical-overview.md)解释四种边界和建模依据。图形查阅使用[架构图集](diagrams/architecture-atlas.html)、[可编辑全景图](diagrams/system-panorama.drawio)及[UML 导读](uml-models.md)，不以图中容器数量决定服务数量。
 
 任务验证沿[条件、规则与验证器生命周期](orchestrator/verification.md)阅读，再查[核验持久化](orchestrator/implementation.md#condition-storage)及[存储访问路径](orchestrator/access-paths.md)。前者集中定义完成依据、异常与证据适用性，后两者给出恢复、查询和性能验收约束；当前仍是设计规格。
 
-第三方实现另从[线格式与方法注册](contracts/protocol.md)进入，逐方法签名查[方法索引](contracts/methods.md)，跨端装配继续读[端云 WSS、认证与内容传输](contracts/transport.md)和[服务间 gRPC](contracts/grpc.md)。只实现自己声明的方法范围，连同其查询、错误与恢复义务一起验证；字段资产不要求复制参考实现的数据库表。草案发布时必须共同冻结行为正文、Schema、注册表与关联用例。
+第三方实现从同一方法索引进入 [Schema](contracts/schemas/protocol.schema.json)、[登记表](contracts/schemas/methods.json)及[协议序列](contracts/examples/protocol/README.md)；跨端再查[WSS](contracts/transport.md)或[gRPC](contracts/grpc.md)。声明一个方法须同时承担其查询、错误和恢复义务，参考实现表结构不属于替换要求。
 
 ### 目录与后续细化
 
-九个模块各有独立目录，以 `README.md` 保存模块主线和阅读入口，以 `implementation.md` 展开参考实现的内部职责、持久记录、事务、恢复与故障验证。技术总览集中解释抽象原则与建模方法，原生全景图保存在 `diagrams/`。全局目标、决策、贯穿场景、部署与审查保留在顶层；跨模块的契约资产和验收工具集中维护。
-
-```text
-architecture/
-├── README.md                 # 系统总览与阅读路径
-├── technical-overview.md     # 抽象原则、建模方法与全景图导读
-├── uml-models.md             # UML 页索引、关系条件与来源
-├── diagrams/
-│   ├── design-concepts.png   # 原则、建模与模块关系概念图
-│   ├── architecture-atlas.html # 全景与模块 UML 单页图集
-│   ├── system-panorama.drawio # 可编辑模块与组件全景图
-│   └── uml-models.drawio      # 全局与九模块的 UML 图册
-├── goals.md                  # 建设目标与功能范围
-├── decisions.md              # 跨模块关键决策
-├── walkthrough.md            # 贯穿场景
-├── deployment.md             # 技术基线与三种宿主装配
-├── deployment-production.md  # 生产拓扑、故障边界及性能预算
-├── storage-and-middleware.md # 存储、连接池、工作唤醒及中间件取舍
-├── review.md                 # 交付审查记录
-├── orchestrator/README.md    # 任务编排器
-├── brain/README.md           # 大脑
-├── execution/README.md       # 执行
-├── memory/README.md          # 记忆与内容
-├── security/README.md        # 权限与隔离
-├── interaction/README.md     # 应用与交互
-├── collaboration/README.md   # Agent 协作
-├── extensions/README.md      # 扩展与宿主
-├── evaluation/README.md      # 观测、评测与改进
-├── contracts/
-│   ├── README.md             # 共同调用语义
-│   ├── protocol.md           # 线格式与方法登记
-│   ├── methods.md            # 全部严格方法签名查阅
-│   ├── transport.md          # WSS 帧、认证、恢复及内容字节
-│   ├── grpc.md               # 服务间 gRPC 绑定与恢复
-│   ├── harness.proto         # Protobuf RPC 外壳
-│   ├── schemas/              # 共享机器契约
-│   └── examples/             # 完成判断投影与协议序列
-└── validation/
-    ├── README.md             # 系统验收与建设顺序
-    ├── check_documents.py    # 文档静态检查
-    ├── validate.py           # 完成判断投影校验
-    ├── validate_protocol.py  # 协议序列校验入口
-    ├── validate_transport.py # 传输、关闭身份与签名向量
-    ├── fault-experiments.md  # 待实现的故障断点与断言
-    ├── protocol/             # 协议关联检查实现
-    └── requirements.txt      # 校验依赖
-```
+九个模块各有独立目录，以 `README.md` 保存完整行为链，以 `implementation.md` 展开内部职责、持久记录、事务、恢复与故障验证。全局目标、决策、场景和部署位于顶层，图源在 `diagrams/`，机器契约及例子在 `contracts/`，系统验收与静态校验在 `validation/`。
 
 细化某个模块时，先更新该目录的 `README.md`，保留职责、关键决策和完整处理链。独立机制需要展开时，再在同目录增加按主题命名的文件，并由模块入口给出阅读顺序；专属图示和示例随模块保存。共同字段、方法登记和跨模块用例继续归 `contracts/` 与 `validation/`，模块正文链接其权威定义。
 

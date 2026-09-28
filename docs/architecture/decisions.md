@@ -103,3 +103,15 @@ D-11 的长期决定另记于根域 ADR；实现规则集中在[共同保留语�
 | D-28 受管文件根按已验证故障域承诺 | 首阶段文件驱动用稳定 file_owner、受控根和原写入 journal；根所在区失联时账本可恢复，文件新写停止、旧效果保留 unknown。跨区接管须先验证共享介质的原子替换、持久化、路径独占和旧写者隔离 | 单根可用率低于多区账本，不把 RPO=0 推给文件字节。需要跨区文件写可用时先取得独立存储与故障注入证据，不能把空根视为同一目标 |
 
 对应实现规则分别归[预算](orchestrator/README.md#budget)、[授权结算](security/implementation.md)、[评测暴露](evaluation/README.md)、[用户来源目录](storage-and-middleware.md#source-directory)、[GUI 与文件执行](execution/README.md)及[Memory 视图](memory/README.md)。新增运行用例在[全量复核故障实验](validation/fault-experiments.md#full-review-boundaries)；这些决策不是已取得的运行保证。
+
+## 10. 实现交接与阅读复核
+
+2026-09-28 用户确认以下三项选择。其余修订补全既有交接、统一未发布契约与示例；连续阅读入口收敛到[总览](README.md#reading-path)，完整规则由所属模块集中维护。
+
+| 决策 | 当前选择与依据 | 代价与适用边界 |
+| --- | --- | --- |
+| D-29 条件先修订再决策 | 有效条件变更推进目标及控制修订，并废弃同提案的行动、完成建议和计划变化；相同条件不制造新轮次。原 Decision 的消费与下一轮责任共同保存 | 变化发生时增加一轮决策成本；换取准入与完成判断使用同一快照，暂停与未知效果仍可阻止下一轮。见 [ADR-0006](../adr/0006-adopt-requirements-before-actions.md) |
+| D-30 自动回退独立核验旧批准 | 新发布关联精确旧锁与旧版独立批准；撤回新版后，恢复及后续使用依赖旧批准当前资格 | 发布者提前维护旧版证据、批准范围与兼容性；无法核验只能停用。见 [ADR-0007](../adr/0007-independent-rollback-approval.md) |
+| D-31 受信界面负责正文预览 | Renderer 取得并呈现准确正文后开放输入；业务 owner 核对版本、权限和消费条件，preview_refs 不充当取阅证明 | 业务端不承诺识别绕过受信界面的未预览提交；需要防旁路时再定义受信取阅完成协议。见 [ADR-0008](../adr/0008-trusted-renderer-preview.md) |
+
+Brain 新正文的本地草稿与受控保存、有限计划的前序输出绑定及 pass 前提、封账后离线账单更正、整项 EvaluationRun 的唯一身份，分别见[大脑实现](brain/implementation.md#generated-content)、[计划物化](orchestrator/implementation.md#finite-plan)、[离线结算](security/implementation.md#8-离线分配重连与封账)与[评测实现](evaluation/implementation.md)。各项失败恢复与静态证据边界见[本轮故障实验](validation/fault-experiments.md#implementation-clarity)。

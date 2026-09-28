@@ -6,7 +6,7 @@
 
 ## 1. 场景装配与用户可见承诺
 
-Orchestrator、大脑和记忆在本机；搜索经网络适配器，文件由本机 Executor 操作；模拟手机可以在另一端。用户已有读取指定来源、处理资料和写入报告目录的许可，但尚未授权创建提醒。写入目录若不明确先询问；手机行动则建立绑定准确内容的授权请求，两者分别处理。
+本例使用混合装配说明交接：Orchestrator、大脑和记忆在本机，搜索经网络适配器，文件由本机 Executor 操作，模拟手机可以在另一端。同一逻辑链在生产进程中的放置见[部署映射](deployment-production.md#1-软件模块怎样装进生产进程)。用户已有读取指定来源、处理资料、暂存及保存候选正文和写入报告目录的许可，但尚未授权创建提醒。写入目录若不明确先询问；手机行动则建立绑定准确内容的授权请求，两者分别处理。
 
 所需能力是 search、fetch、候选质量评估、file.write、file.read、phone.observe、phone.action，各有精确版本和可核对性声明。这里的质量评估是执行域中的有限能力，返回候选的质量记录；[评测改进](evaluation/README.md)中的候选发布评测另有生命周期，二者不混用。手机不存在或没有持久原操作记录时，任务不得默默改用“已发送操作”作为成功条件。若只有本地文件能力，仍可接纳报告部分，并明确等待或拆分尚不支持的手机目标。
 
@@ -18,19 +18,42 @@ Orchestrator、大脑和记忆在本机；搜索经网络适配器，文件由�
 
 本任务整体最多按 assessed 完成，因为比较质量仍依赖评估。文件与手机操作必须各自得到客观证据，不能被“用户觉得答案不错”替代。
 
-第一次装配时先完成[首装与当前实例核验](extensions/implementation.md)，端侧手机再按[配对和 WSS 双向连接](contracts/transport.md)建立通信。候选报告和截图通过有界临时上传后发布为精确ContentRef；WSS Delivery 到达仅代表收到请求，原操作仍须由Executor持久接纳。后续每步的内部表、提交和故障断言可从[详设阅读入口](README.md#detailed-design)连续查阅。
+第一次装配时先完成[首装与当前实例核验](extensions/implementation.md)，端侧手机再按[配对和 WSS 双向连接](contracts/transport.md)建立通信。候选报告和截图须先保存为准确 ContentRef；WSS Delivery 到达只表示收到请求，原操作仍须由 Executor 持久接纳。下文中的 `report_ref`、`d1`、`assess` 等是阅读标签，实际引用和 ID 遵守[机器契约](contracts/protocol.md)。
 
 ## 2. 正常主链
 
+图按持久交接顺序表达本例，节点是处理阶段，不是独立服务。条件补全的分支只改变当前目标；后续动作重新从新快照准入。质量未通过、效果未知及权限缺失的分支在后文展开。
+
+```mermaid
+flowchart TD
+    T[Orchestrator 接纳任务<br/>保存 Task、回执和首 job] --> F[搜索并获取来源<br/>保存准确内容与来源]
+    F --> B[Brain 保存新正文<br/>回填准确 ContentRef]
+    B --> C{条件解释是否改变}
+    C -->|改变| G[固定新目标与控制修订<br/>消费当前提案，保存新 decide]
+    G --> N[Brain 从新快照提案<br/>复用仍获准的原正文]
+    N --> A[Orchestrator 准入评估<br/>保存准确条件记录]
+    C -->|未变| A
+    A --> Q[当前适用的质量条件通过]
+    Q --> W[逐步准入写入和读回<br/>核验同一候选与目标版本]
+    W --> P[手机观察、单动作及后观察<br/>核验提醒效果]
+    P --> R[Orchestrator 核验完整条件<br/>保存 assessed Result]
+```
+
 ### 2.1 取证与候选形成
 
-用户提交目标后，Orchestrator 保存任务、原回执和首次推进责任。目录不明确时，应用提交绑定原输入请求的回答，Orchestrator 消费后固定保存位置；这个回答不授予永久记忆保存权。
+用户目标先成为准确 `goal_ref`；应用保存原服务与完整 `task.submit` 命令，Orchestrator 共同保存 Task、预算、原回执和首 decide job。目录不明确时，应用转交绑定原 `request_id` 和 `request_revision` 的回答，Orchestrator 消费后固定保存位置；这个回答不授予永久记忆保存权。
 
 Brain 根据固定快照提出搜索。Orchestrator 准入搜索操作，取得结果后才能选择来源，再分别准入内容获取操作。Executor 保存实际正文、来源和限制，返回精确内容引用；Orchestrator 保存这些事实后创建新快照，Brain 才形成候选报告。搜索命中、正文取得和候选生成是三个交接点，不能把搜索摘要当成已经读取的来源。
 
+本轮 `decision_id=d1` 的模型输出采用内部 `brain-generation/1`：报告正文放在 `contents` 中，`local_id=report`，提案模板用 `{"$local_ref":"report"}` 引用它。Brain 的内容 port 从实际字节、完整处理来源和当前保存许可形成原保存命令，沿同一 `content.put` 恢复并取得 `report_ref`；随后回填模板，校验公共 Proposal，才保存 `DecisionRecord.status=completed`。公共提案不交付局部标识或让模型自报的摘要。部分保存、保存答复丢失与取消的处理见[新正文保存](brain/implementation.md#generated-content)。
+
+假设 d1 同时补充“比较必须覆盖兼容性差异”的派生质量条件，并提出评估该报告。`requirements_proposal.base_goal_revision=1` 对应当前目标；Orchestrator 核验完整条件仍保留用户显式约束后，只提交新的 `requirements`、`goal_revision=2`、控制修订和下一轮责任。d1 的评估动作不执行。`report_ref` 已保存，可在当前许可下进入新快照；新 `decision_id=d2` 依据 g2 再提出评估。这是[条件先采纳](orchestrator/implementation.md#proposal-consumption)的变更分支；条件完全不变时直接继续原提案。
+
 ### 2.2 评估、保存与读回
 
-图中从固定候选开始，聚焦三个依赖操作。`op_assess`、`op_write`、`op_read` 是不同操作的阅读标签；各次准入都遵守[Orchestrator 规则](orchestrator/README.md)。同机短事务可以合并存储提交，但不能将尚无事实依据的后续行动提前准入。
+d2 以 `kind=act` 提出评估 `report_ref` 的一项行动，Orchestrator 按 g2 和当前门禁准入 `op_assess`。评估结果归并后保存绑定 `goal_revision=2`、质量 `requirement_id`、`artifact_ref=report_ref` 的 ConditionResult；只有当前适用的 verdict=pass 才继续。本例沿逐轮提案展开：新决策提出写入，取得写入事实后的下一决策再提出读回。每轮都使用当前快照；`op_assess`、`op_write`、`op_read` 是不同操作，不在一次独立 actions 数组中提前准入依赖步骤。
+
+下图聚焦这三次行动的执行交接，省略它们之间按 2.1 节建立的新决策。写入参数引用同一 `report_ref`，读回使用原写入已核实的目标版本；参数名称由准确文件 Capability 的 Schema 定义，操作身份和结果引用由原 owner 提供。
 
 ```mermaid
 sequenceDiagram
@@ -42,8 +65,9 @@ sequenceDiagram
     H->>E: 评估原候选版本
     E->>Q: 候选、来源与质量条件
     Q-->>E: 通过或缺口，绑定候选摘要
-    E-->>H: 保存后的原操作与质量记录
-    H->>H: 检查评估通过及当前资格，准入 op_write
+    E-->>H: 保存后的原操作与质量证据
+    H->>H: 保存 g2 / report_ref 的 ConditionResult
+    H->>H: 核验质量 pass 及当前资格，准入 op_write
     H->>E: 写入准确目录和候选字节
     E->>F: 固定目标、版本条件与原幂等依据
     F-->>E: 写入结果与目标版本证据
@@ -56,9 +80,11 @@ sequenceDiagram
     H->>H: 核验质量、写入与读回绑定同一候选
 ```
 
-评估器是装配时允许的具体实现；这里采用与生成步骤隔离输入的固定规则评估，并保留来源支撑记录，不声称独立模型天然无偏。评估失败时，Orchestrator 保留缺口并调度补源或修改候选；新候选重新评估。若任务允许保存草稿，必须把“草稿”作为另一个明确产物及操作意图。
+评估器是装配时允许的具体实现；这里采用与生成步骤隔离输入的固定规则评估，并保留来源支撑记录，不声称独立模型天然无偏。评估 Operation 执行成功只说明检查完成，`verdict=fail` 仍阻止 write，并交 Brain 补源或修改候选；unknown 或缺失保留原核验责任。新候选重新评估。若任务允许保存草稿，必须把“草稿”作为另一个明确产物及操作意图。
 
-评估通过不预先允许写入，写入成功也不自动允许新的读取。Orchestrator 在各次交接检查当前控制、目标、用途和预算；已固定计划可以确定性推进，无需为了执行下一步强制增加模型调用。读取被撤权时保存已有写入事实，并明确读回条件尚未完成。
+评估通过不预先允许写入，写入成功也不自动允许新的读取。Orchestrator 在各次交接检查当前控制、目标、用途和预算。读取被撤权时保存已有写入事实，并明确读回条件尚未完成。
+
+实现也可用[有限计划](brain/implementation.md#finite-plan)减少上述后续模型调用：评估通过的门禁由 `pass_conditions` 表达，未来输出通过 `argument_bindings` 的 `step_output` 在[物化时](orchestrator/implementation.md#41-有限计划的确定性物化)解析。该方式保持相同准入和证据要求，完整计划规则只在对应专题定义。
 
 ### 2.3 手机观察、动作与后观察
 
@@ -93,7 +119,14 @@ sequenceDiagram
 
 ### 3.1 写成后丢回执，随后取消
 
-假设报告已经保存，Executor 的答复丢失，此时用户取消任务。Orchestrator 先提交 cancelled，阻止创建提醒；原文件 operation_id 和核对 job 保留。取消命令与效果核对是两项责任，不能因为已经答复取消成功便删除原操作。
+目标可能已经保存报告，但“丢回执”有两个故障点，继续者取决于最后已经保存的事实。
+
+| 丢失的位置 | 已有权威事实 | 继续者与下一步 |
+| --- | --- | --- |
+| Executor 已保存效果，向 Orchestrator 的答复丢失 | Executor 有原目标凭据和 Operation 修订；Orchestrator 尚未归并 | Orchestrator 查原 command／operation，取得已有事实后归并与结算 |
+| 目标答复尚未被 Executor 保存 | 目标可能已写入；Executor 只能证明已发送或可能已发送 | Executor 保留 unknown 和核对责任，查准确目标关联及原操作证据；Orchestrator 保留 poll 与预留 |
+
+下图取第一种情况：Executor 的答复丢失后，用户取消先于任务成功提交。Orchestrator 保存 cancelled、新控制修订及收尾工作，阻止创建提醒；原文件 operation_id 和核对 job 保留。取消与完成竞争同一个 Task 条件事务；若完成先提交，取消不能覆盖成功终态。
 
 ```mermaid
 sequenceDiagram
@@ -112,7 +145,11 @@ sequenceDiagram
     H->>H: 更新原效果与费用，保持 cancelled
 ```
 
-Executor 若也未收到目标回执，就依据准确文件目标、版本条件及原操作日志核对；不能证明未发生时保持 unknown。核对需要当前相应用途资格，取消不自动授予读取权限。确认已经写入只收束原效果，不重开任务、不删除用户文件，也不启动提醒。
+第二种情况中，Executor 依据准确文件目标、版本条件及原操作日志核对；不能证明未发生时保持 unknown。两条路径都沿同一 operation 恢复。是否允许重放原目标请求由[驱动恢复合同](execution/README.md)裁决，切换 GUI、驱动或执行端不能绕过原未知。
+
+Executor 收到更高控制修订后，在实际入口封闭后续发送并回报在途集合；取消回执本身不证明远端已经停止。目标队列中的旧写入仍可能迟到，因此 `execution_state=closed` 后还要检查 effect 与 may_apply_later。核对继续要求当前用途资格；缺权限或依赖时保存缺口，到达自动核对上限后保留原身份及受信处置入口。
+
+取得原写入证据后，Orchestrator 归并效果并按累计用量差额结算，保持 cancelled。确认已经写入只收束原效果，不删除用户文件，也不启动提醒。最终可以是“任务已取消，报告已保存，费用已结清”，也可以长期保留“任务已取消，效果或费用待核对”；区别来自实际证据，迟到账单仍沿[原计费来源](orchestrator/README.md#budget)补记。
 
 ### 3.2 读回内容或版本不同
 

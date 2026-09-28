@@ -14,7 +14,7 @@
 
 一个字段的业务含义归所属模块，线格式的类型和必填性归同版 Schema；二者冲突时该草案组合不能发布，不允许实现自行挑选更宽松的一方。安装和发布清单同时固定这些文档、资产和递归引用的版本及摘要，避免正文更新改变未决命令的解释。
 
-本目录的 `schemas/` 保存共享字段与方法登记，`examples/` 保存完成判断投影和跨模块协议序列。校验入口及系统验收统一位于[validation](../validation/README.md)；模块内部实现细节在所属模块目录继续展开。
+实现一个方法时，先读本页共同语义，再从[方法索引](methods.md)找到输入／输出定义及所属模块；准确字段查[Schema](schemas/protocol.schema.json)，种类、目标、错误与恢复动作查[方法登记](schemas/methods.json)，跨调用关系查[协议序列](examples/protocol/README.md)。[线格式说明](protocol.md)定义这些资产的组合方式；[validation](../validation/README.md)区分静态校验和运行验收，模块内部机制仍在所属实现篇。
 
 ## 1. 从持久命令而非连接恢复
 
@@ -60,9 +60,7 @@ sequenceDiagram
 
 内容引用由[记忆与内容](../memory/README.md)定义；Task／Result 在[Orchestrator](../orchestrator/README.md#records)，许可在[授权](../security/README.md)。金额用带单位的整数或十进制字符串，不用浮点数比较额度。时间采用带 UTC 时区的 RFC 3339 字符串；跨端排序以对象修订为准，不以墙上时间决定先后。
 
-`grant.use` 的 `cost_bound` 随原 UseRequest、UseReceipt 和 UseSettlementRecord 固定：strict 的 `max_cost` 是经受信能力合同核验的单次可信上界；estimate 是经本人接受、有限但可能不足的预留估算额。Grant owner 必须从认证的 usage owner 和原 operation 对照已登记能力的真实计费模式，不能只相信请求正文自报 strict。estimate 仅在 Grant owner 与原 Orchestrator 同一受信提交域、能直接核验 Task 内部的本人接受事实、在线裁决且所需 Grant 对该费用单位没有硬限额时开放；跨域或核验不可用时只允许 strict。原 Orchestrator 对准确 `policy_ref` 核验其用户接受记录，跨 Orchestrator 固定 allocation 不接纳无可信上界计费。可信账单超过 allocation 还可能由接收方多笔各自合规的调用累计越界导致；原父方分别核对提供方单次上界与接收方分配门禁，在自己的 Allocation 投影标注已证实或待查原因，不从 Closure 自报原因推断。实际可信账单突破估算额或供应商声明上界时，原账本照实记录超额并停止新计费，不能把该配置描述为硬费用保证；具体原使用结算见[授权](../security/README.md)，任务余额见[编排预算](../orchestrator/README.md#budget)。
-
-`task.billing_reconcile` 是终态后费用上调的原来源交回入口：Brain、Executor、Grant owner 或已 closed 的委派接收方，在可信账单修订与固定交回 outbox 同事务保存后，用原命令通知原 Task Orchestrator。payload 只含 source_kind、source_id、usage_revision 与 usage_digest，不含可直接入账的金额；认证来源、原 Task/source 绑定及同修订摘要由 Orchestrator 核对，返回原结算责任槽的 JobAck 后主动读源账本并按差额核算。同来源同修订同摘要共用 job，同修订异摘要冲突；较旧修订经原账核实已被更新修订覆盖时可回原 job 的 no-op 回执。原命令的首次接纳期限过后仍未取得 JobAck 时，源 owner 可为同一 source_kind／source_id／usage_revision／usage_digest 建立后继 command_id；旧尝试可能已应用，原 Orchestrator 跨命令归并到同一 job，不再次入账。来源不知道 Task 当前 revision，因此此方法不要求 Command.expected_revision；具体恢复见[编排预算](../orchestrator/implementation.md)。
+费用模式、原使用结算与跨 Orchestrator 分配属于[授权](../security/README.md)和[任务预算](../orchestrator/README.md#budget)。终态后账单交回的 `task.billing_reconcile` 输入及特殊恢复规则见[领域关联](protocol.md#3-领域关联及正文类型)，共同命令语义仍按下文执行。
 
 幂等键为 `(tenant_id, logical_service_id, command_id)`，处理方同时保存 method、target_id、expected_revision、expires_at 和 payload 的规范化摘要。原键原请求返回原决定，原键不同请求返回 idempotency_conflict 且不覆盖原记录。规范化比较按 JSON 结构进行：对象键顺序忽略、数组顺序保留、字符串逐字匹配；不以重新编码后的原始字节比较。SDK 固定同一请求结构，不在恢复时补写新的默认值。
 
@@ -92,19 +90,13 @@ WSS 承载双向交互，Change 继续只表示对象可能变化；服务端推
 
 ### 设备投递与恢复
 
-Orchestrator 在自身业务库保存原请求、delivery_id 与持久发送责任，沿已建立连接推送 Delivery。设备收到消息后按原 command_id 及当前门禁处理，持久保存原结果和待交回 Reply；Orchestrator 保存 Reply 及后续责任后返回 ReplyAck。ReplyAck 只确认本次交回已保存，后续业务效果仍按原 operation_id 查询；网络 write、ping/pong 和 gRPC OK 都不能替代该成功点。
+Orchestrator 保存原请求及持久发送责任，设备保存原决定和待交回 Reply；Orchestrator 保存回复及后续责任后才返回 ReplyAck。该确认只说明本次交回已保存，外部效果继续按原 operation_id 查询。三类投递、当前披露检查、ReplyAck 丢失和重连规则集中在[双向交付](transport.md#4-双向请求与主动交付)。
 
-接入层只搬运消息，不保存第二份业务权威。设备核验原 Orchestrator／发送服务证明及目标实例绑定，跨连接的重复或乱序由原身份、expected_revision、控制修订与关闭记录裁决。查询和原回执查询同样可由 Delivery 转交，不额外创造业务 command_id；设备不可达返回 dependency_unavailable，不伪造 not_found。
-
-断线不取消任务，也不删除服务器未交付责任。重连先恢复当前身份与控制，再查询未知命令、重交原 Reply、接受仍有效的 Delivery 和新工作。Frame 的 connection_id／request_seq 只关联这次连接上的请求与响应，不能替代 command_id、delivery_id 或 endpoint instance。request_seq 在客户端实际发送 request 时递增分配，网关保存高水位和有限在途关联，内部重绑不重置序号。每连接的在途、订阅和字节都有上限，控制及收尾保留份额；慢端无法排空时断开连接，业务责任继续持久保留。
-
-生产网关持有外部连接，应用实例或内部流失效先按[gRPC 重绑规则](grpc.md#channel-rebind)恢复原逻辑服务，外 connection_id 保持。内部绑定代次只隔离旧路由及输出，不裁决业务执行权；网关自身退出才由客户端建立新 WSS。原命令、Reply 和订阅分别恢复，不能把 socket 仍存活显示为请求已经成功。跨实例发送、在线额度及实例租约由[生产连接机制](../deployment-production.md#connections)定义。
+连接失效不取消业务。外 WSS 与内部流分别按[连接与发现](transport.md#1-连接与发现)和[gRPC 重绑](grpc.md#channel-rebind)恢复，业务仍沿原命令与对象查询；连接序号和绑定代次不能取得业务裁决权。生产路由、在线额度与实例租约归[生产连接机制](../deployment-production.md#connections)。
 
 ### 通知与快照
 
-订阅返回当前水位后，查询当前领域快照并合并该水位之后的 Change；按对象 revision 去重，覆盖订阅建立与快照读取间的变化。游标超出保留范围、通知被合并后出现缺口或缓冲超限时，服务端明确要求快照恢复，客户端重建订阅并读取权威状态。权限撤回后停止推送敏感对象标识。
-
-通知允许合并，不能用一条跨域全局序号裁决 Task、Operation 和许可。有限校准查询及业务恢复扫描修补遗漏，查询通过既有 WSS／gRPC 通道进行；不以 HTTP 长轮询或 SSE 作为另一套业务基线。查询只读、限流且可分页，连接等待不占据业务事务。
+Change 提示客户端重新读取当前对象，不携带执行许可或成功决定。先订阅再枚举、分页期间合并提示、权限变化及缺口后的有限重建，统一按[集合恢复](protocol.md#collection-snapshots)和[订阅帧规则](transport.md#6-变化订阅快照与错误)执行。提示丢失不解除任何业务 owner 的持久恢复责任。
 
 ## 4. 共同错误与调用方动作
 

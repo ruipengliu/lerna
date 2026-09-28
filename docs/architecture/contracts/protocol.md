@@ -14,6 +14,7 @@
 | [methods.json](schemas/methods.json) | 方法种类、输入输出映射、目标、条件修订、回执阶段、错误与恢复动作 | 按具体方法分派，不接受同名异义或自由字段 |
 | [transport.schema.json](schemas/transport.schema.json) | 发现、WSS 帧、投递、回复、上传、关闭索引查询与证明载荷 | 独立结构与跨字段向量；共享对象引用领域Schema |
 | [领域校验](../validation/validate_protocol.py) | 有限记录序列的身份、版本、状态及恢复关系 | 每个方法至少一项有效调用，新增方法有结构与关联反例 |
+| [Brain 内部生成格式](schemas/brain-generation.schema.json)及[构造校验](../validation/validate_brain.py) | 新正文局部引用、准确保存结果及有限计划前序输出 | 宿主内部适配规格；最终 Proposal 仍须通过公共 Schema，不作为另一条领域线接口 |
 | [传输校验](../validation/validate_transport.py) | 原请求／回复摘要、三类交接、内容发布及关闭记录 | 结构与关联校验，另运行公开密码学向量 |
 | [harness.proto](harness.proto) | 服务间 Call 与 EndpointChannel 的 Protobuf 外壳；JSON 内层复用以上 Schema | 描述符编译与消息映射检查；不等同于 gRPC 服务互操作 |
 | [完成判断投影](schemas/task-outcome.schema.json) | 独立结果与效果关系 | 保持原5正例／9反例，不作为完整协议 |
@@ -117,6 +118,8 @@ Activation.revision 是可见持久投影的独立修订；phase、ready_instanc
 `evaluation.exposure_record` 的 applied 输出是 `{exposure, impact_job_id}`：原评测 owner 已共同保存暴露事实、来源组关联、唯一影响扫描 job 与原回执。job 身份不枚举受影响计划，也不证明异步失效投影或撤回已完成；正式计划、报告封存、批准与继续使用的准入仍须同步核验原暴露门禁。一个暴露可影响超过单帧列表上限的计划，不能以截断的 ID 列表定义成功。
 
 `UseRequest`、`UseReceipt` 和 `UseSettlementRecord` 均携带不变的 cost_bound；原请求的 max_cost 在 strict 下是可信最大费用，在 estimate 下只是有限预留额。原使用的可信账单可使 `spent_cost` 高于 `reserved_cost`；final 封闭新动作使用，但供应商对同一原操作的可信更正账单可按新修订继续增加已发生费用，不复活原 once 资格、不倒回已释放额。跨 Orchestrator `RuntimeBudgetClosure.final_usage` 也可如实高于原 allocation：原父 owner 核验 `proof_ref`、原计费身份、单次可信上界及接收方分配门禁后全额入账，不能把超额都归为提供方违约。父方分别判定 `provider_bound_breach` 与 `receiver_allocation_breach`，可同时成立；`RuntimeBudgetAllocation.incident_causes` 记录已证实原因，`incident_pending` 标尚待查明的部分。Closure 不自报原因；已 settled 且累计高于 allocation 时，父输出至少含一项已证实原因或明确 pending。接收方 `closed` 后可信原账单更正可保留同一 closed_at、allocation_id、receiver_id 与 spending_closed，递增 `usage_revision` 和累计 `final_usage`；父方已 settled 的 allocation 仍可用新 `budget.settle` 命令、当前 expected_revision 与这份完整 Closure 只追记增量，已释放预留不倒流，也不重开任务或子方消费。原命令重放仍返回原回执。Schema 和构造序列只能检查身份、单位与修订，不能证明账单真伪或 TaskPolicy 的本人接受。
+
+离线使用通过 `grant.lease.settle` 独立结算。`LeaseUsageItem` 固定原 use、operation、usage_owner_id、billing_source_kind 和 billing_ref 的 owner/id；billing_ref 指原 Decision／Operation，分别通过 brain.get／execution.get 核验；金额变化须绑定更高原账单修订。首次封账后仅允许 reconciled→reconciled 的原费用上调，保留用量、使用关闭事实、closure_ref 与首次 final_settlement_ref，不能增加 use 或再次释放余额。可信费用可超过原分配，owner 如实追差额并封闭受影响新计费；离线准入仍只允许 strict。原实例账本是唯一累计报告者，每 lease 仅一个未决 settle；同域计量源持久更新待报责任。结果未知时沿原命令恢复，期限已过且原 owner 明确 not_found 才能换 command_id；gone 或失联保留缺口。Task 按原物理计费来源核对，不能将租约账与调用账重复计入；完整规则见[离线结算](../security/implementation.md#8-离线分配重连与封账)。
 
 `task.billing_reconcile` 的 applied 输出为 `{job_id, resource_id=原 task_id}`，只确认原结算核对责任已耐久唤醒。输入的 `source_kind` 为 brain_decision／execution_operation／grant_use／budget_allocation，`source_id` 分别指原 Decision／Operation／Use／Allocation；`usage_revision` 为原来源相应的 DecisionRecord／Operation／UseSettlementRecord／RuntimeBudgetClosure 费用事实修订，`usage_digest` 是该累计事实的规范摘要。原计费 owner 在可信上调与固定 outbox 同事务保存后发送；Orchestrator 核认证 sender、原 source→Task 绑定及同修订摘要，主动读取原权威账单再结算，不信通知金额。来源不知道 Task 当前修订，故无 expected_revision；通知答复丢失沿原命令查询或重投；原首次接纳期限过后仍未取得 JobAck，源 owner 可持久生成同一来源修订及摘要的新 command_id，原 Orchestrator 跨命令归并同一 job，不能据旧尝试超时推断未应用。旧账单经核对已被较新修订覆盖时可返回同一 job 的 no-op 回执，同修订异摘要冲突。静态用例仅验证给定来源绑定和记录一致性，不证明账单真实性、outbox 投递或后台 job 完成。
 

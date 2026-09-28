@@ -2844,7 +2844,7 @@
               ],
               "expires_at": "2026-09-26T01:00:00Z",
               "max_offline_window_ms": 0,
-              "rollback_lock": "lock_a2e8baf92cb7260c464ada7f3ea79ff5",
+              "rollback_lock": null,
               "state": "active",
               "propagation": []
             }
@@ -2897,7 +2897,7 @@
             ],
             "expires_at": "2026-09-26T01:00:00Z",
             "max_offline_window_ms": 0,
-            "rollback_lock": "lock_a2e8baf92cb7260c464ada7f3ea79ff5",
+            "rollback_lock": null,
             "state": "active",
             "propagation": []
           }
@@ -3039,7 +3039,7 @@
             ],
             "expires_at": "2026-09-26T01:00:00Z",
             "max_offline_window_ms": 0,
-            "rollback_lock": "lock_a2e8baf92cb7260c464ada7f3ea79ff5",
+            "rollback_lock": null,
             "state": "revoked",
             "propagation": []
           }
@@ -3100,7 +3100,7 @@
             ],
             "expires_at": "2026-09-26T01:00:00Z",
             "max_offline_window_ms": 0,
-            "rollback_lock": "lock_a2e8baf92cb7260c464ada7f3ea79ff5",
+            "rollback_lock": null,
             "state": "active",
             "propagation": []
           }
@@ -3108,7 +3108,7 @@
         "command_id": "command_201cc97ace4c72d60e60fb59143714e6",
         "expires_at": "2026-09-26T01:00:00Z"
       },
-      "intent_hash": "sha256:c0ed1fe943c86e71a02cf058358efe75e9659628644e924819274b390f581f9f",
+      "intent_hash": "sha256:4102cf462c9e9a40a76675a65da0d8abab84e69dd11953bf60bc3befe47202f8",
       "challenge": "sha256:c06c5d0c1366f360f2537de476921efe2e7d101c66d926df932b26c99c7f2580",
       "expires_at": "2026-09-26T00:05:07Z",
       "state": "approved",

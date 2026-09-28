@@ -21,6 +21,184 @@ def values(items, field='amount'):
     return {x['unit']: Decimal(x[field]) for x in items}
 
 
+def check_brain_plan(plan):
+    """Static bounded-plan invariants; this does not execute a task or a tool."""
+    errors = validate('BrainPlan', plan)
+    if errors:
+        return errors
+    steps = {step['step_id']: step for step in plan['steps']}
+    if len(steps) != len(plan['steps']):
+        errors.append('plan_steps: step_id must be unique')
+    visiting, ancestors = set(), {}
+
+    def predecessors(step_id):
+        if step_id in visiting:
+            raise ValueError('cycle')
+        if step_id not in steps:
+            raise ValueError('missing predecessor')
+        if step_id not in ancestors:
+            visiting.add(step_id)
+            deps = steps[step_id]['depends_on']
+            if len(set(deps)) != len(deps):
+                raise ValueError('duplicate predecessor')
+            result = set(deps)
+            for dep in deps:
+                result.update(predecessors(dep))
+            visiting.remove(step_id)
+            ancestors[step_id] = result
+        return ancestors[step_id]
+
+    try:
+        for step_id in steps:
+            predecessors(step_id)
+    except ValueError as error:
+        return errors + ['plan_dependencies: ' + str(error)]
+    for step in steps.values():
+        targets = []
+        for binding in step.get('argument_bindings', []):
+            pointer = binding['target_pointer']
+            targets.append(pointer)
+            source = binding['source']
+            if source['kind'] == 'step_output' and source['step_id'] not in ancestors[step['step_id']]:
+                errors.append('plan_source: future output must belong to an actual predecessor')
+        if targets and 'action_template' not in step:
+            errors.append('plan_template: bindings require an action template')
+        for index, pointer in enumerate(targets):
+            if any(pointer == other or pointer.startswith(other + '/') or other.startswith(pointer + '/')
+                   for other in targets[index + 1:]):
+                errors.append('plan_targets: binding targets must not overlap')
+    return errors
+
+
+def check_plan_installation(proposal, next_plan, next_plan_ref, task_ref, goal_revision,
+                            current_plan_ref=None, current_plan=None):
+    """Compare a proposed plan with the caller's constructed current Task state."""
+    errors = validate('Proposal', proposal) + check_brain_plan(next_plan)
+    if errors:
+        return errors
+    delta = proposal.get('plan_delta')
+    if delta is None or delta['base_plan_ref'] != current_plan_ref or delta['next_plan_ref'] != next_plan_ref:
+        errors.append('plan_base: exact current plan reference must match')
+    if next_plan['task_ref'] != task_ref or next_plan['goal_revision'] != goal_revision:
+        errors.append('plan_goal: plan must belong to the current task and goal')
+    if current_plan_ref is None:
+        if current_plan is not None or next_plan['revision'] != 1:
+            errors.append('plan_revision: initial plan starts at revision one')
+    elif current_plan is None or next_plan['plan_id'] != current_plan['plan_id'] or next_plan['revision'] != current_plan['revision'] + 1:
+        errors.append('plan_revision: replacement keeps plan identity and advances once')
+    return errors
+
+
+def inspect_plan_materialization(plan, step_id, state, capabilities):
+    """Check constructed authority snapshots, never infer that effects really ran.
+
+    state supplies the current Task, exact admitted predecessor mappings, original
+    output bodies and selected ConditionResults with their current applicability.
+    Return a diagnostic branch and, only when ready, the resolved candidate.
+    """
+    errors = check_brain_plan(plan)
+    if errors:
+        return {'status': 'invalid', 'errors': errors}
+    if state['task_ref'] != plan['task_ref'] or state['goal_revision'] != plan['goal_revision'] or state['plan_ref'] != {'plan_id': plan['plan_id'], 'revision': plan['revision']}:
+        return {'status': 'stale'}
+    steps = {step['step_id']: step for step in plan['steps']}
+    step = steps[step_id]
+    resolved_inputs = []
+
+    def admission(source_step):
+        matches = [item for item in state['admissions']
+                   if item['task_ref'] == plan['task_ref'] and item['plan_id'] == plan['plan_id']
+                   and item['plan_revision'] == plan['revision'] and item['step_id'] == source_step]
+        if len(matches) != 1:
+            raise LookupError('missing or ambiguous predecessor admission')
+        return matches[0]
+
+    def output(operation_id, expected_ref=None):
+        matches = [item for item in state['outputs'] if item['operation_id'] == operation_id
+                   and item['task_ref'] == plan['task_ref']]
+        if len(matches) != 1:
+            raise LookupError('missing or ambiguous original output')
+        item = matches[0]
+        if item['execution_state'] != 'closed' or item['effect'] != 'applied' or item['may_apply_later'] is not False or not item['verified']:
+            raise LookupError('predecessor has no final verified output')
+        if expected_ref is not None and item['content_ref'] != expected_ref:
+            raise ValueError('fixed output version differs')
+        return item
+
+    try:
+        for dependency in step['depends_on']:
+            output(admission(dependency)['operation_id'])
+    except (LookupError, ValueError) as error:
+        return {'status': 'waiting', 'reason': str(error)}
+    checks, gap = [], False
+    for condition in step.get('pass_conditions', []):
+        requirements = [item for item in state['requirements'] if item['requirement_id'] == condition['requirement_id']]
+        if len(requirements) != 1 or requirements[0]['rule_ref'] != condition['rule_ref']:
+            gap = True
+            continue
+        selected = [item for item in state['condition_checks'] if item['selected']
+                    and item['task_ref'] == plan['task_ref'] and item['rule_ref'] == condition['rule_ref']
+                    and item['result']['requirement_id'] == condition['requirement_id']
+                    and item['result']['goal_revision'] == plan['goal_revision']
+                    and item['result']['artifact_ref'] == condition['artifact_ref']]
+        if len(selected) != 1 or selected[0]['applicability'] != 'usable' or validate('ConditionResult', selected[0]['result']):
+            gap = True
+            continue
+        checks.append(selected[0])
+    if any(item['result']['verdict'] == 'fail' for item in checks):
+        return {'status': 'redecide', 'reason': 'current condition failed'}
+    if gap or any(item['result']['verdict'] != 'pass' for item in checks):
+        return {'status': 'waiting', 'reason': 'current applicable condition evidence missing'}
+    if 'action_template' not in step:
+        return {'status': 'redecide', 'reason': 'step has no action template'}
+    candidate = deepcopy(step['action_template'])
+
+    def tokens(pointer):
+        return [part.replace('~1', '/').replace('~0', '~') for part in pointer.split('/')[1:]]
+
+    def descend(node, parts):
+        for part in parts:
+            if isinstance(node, list):
+                if not part.isdigit() or str(int(part)) != part:
+                    raise ValueError('invalid array index')
+                node = node[int(part)]
+            else:
+                node = node[part]
+        return node
+
+    try:
+        for binding in step.get('argument_bindings', []):
+            source = binding['source']
+            operation_id = source['operation_id'] if source['kind'] == 'operation_output' else admission(source['step_id'])['operation_id']
+            item = output(operation_id, source.get('evidence_ref'))
+            value = deepcopy(descend(item['body'], tokens(source['source_pointer'])))
+            path = tokens(binding['target_pointer'])
+            target = descend(candidate, path[:-1])
+            if isinstance(target, list):
+                if not path[-1].isdigit() or str(int(path[-1])) != path[-1] or int(path[-1]) >= len(target):
+                    raise ValueError('target array slot must already exist')
+                target[int(path[-1])] = value
+            elif isinstance(target, dict):
+                target[path[-1]] = value
+            else:
+                raise ValueError('binding parent is not an object or array')
+            resolved_inputs.append({'operation_id': operation_id, 'content_ref': item['content_ref'],
+                                    'revision': item['revision'], 'source_pointer': source['source_pointer']})
+    except (KeyError, IndexError, TypeError, LookupError, ValueError) as error:
+        return {'status': 'redecide', 'reason': str(error)}
+    errors = validate('ActionInvoke' if candidate['type'] == 'invoke' else 'ActionDelegate', candidate)
+    if candidate['type'] == 'invoke':
+        matches = [cap for cap in capabilities if cap['capability_ref'] == candidate['capability_ref'] and cap['binding_ref'] == candidate['binding_ref']]
+        if len(matches) != 1:
+            errors.append('plan_capability: exact declared capability missing')
+        else:
+            errors.extend('plan_arguments: ' + error.message for error in Draft202012Validator(matches[0]['input_schema']).iter_errors(candidate['arguments']))
+    if errors:
+        return {'status': 'redecide', 'errors': errors}
+    return {'status': 'ready', 'candidate': candidate, 'resolved_inputs': resolved_inputs,
+            'condition_check_ids': [item['check_id'] for item in checks]}
+
+
 def check_exchange(exchange, capabilities):
     req = exchange.get('request', {})
     name = req.get('method')

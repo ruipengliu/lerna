@@ -28,7 +28,7 @@ flowchart TB
     J --> A[受信批准精确候选及批次]
     A --> X[扩展管理器执行激活]
     X --> M[按实际版本监测]
-    M -->|触发冻结阈值| R[停止扩批与原批准内回退]
+    M -->|触发冻结阈值| R[停止扩批并独立核验旧版批准]
 ```
 
 选择“固定计划＋隔离成对比较”作为改进默认依据。直接比较生产日志更便宜，但用户目标、数据和环境变化会混入结论；生产监测用于发现退化，不直接声称因果收益。只有稳定分组、完整分母和明确用户数据许可具备后，才开展生产对照实验。
@@ -59,7 +59,9 @@ EvaluationPlan 固定数据集版本、样本集合、基线与候选安装锁�
 
 基线与候选各自从同一冻结初始状态运行，不共享可被前一运行修改的设备或记忆。双方任一任务启动前完成整对环境预检；冻结种子决定样本顺序及双方先后，热身集和缓存条件单列。样本的实际输入引用、种子、初始状态摘要和最终真值引用一并保存；需要网络实时性的样本注明获取时点及不可完全回放的部分。评测样本复制前按内容 owner 登记受管持有者，不能把生产日志默认视为获准训练或评测材料。
 
-评测环境提供方实现 prepare、start_sample、inspect、observe_truth、seal 和 destroy。prepare 按 run_id 幂等创建隔离环境，固定初始数据与种子；prepare 与 start_sample 都在物理启动前核验原 Evaluation owner 的准确有限时许可，缺可信签发依据或跨机时钟界限时拒绝。候选只接触任务侧观察与动作入口，不能读参考答案、改判定器或伪造真值。判定器通过独立只读通道取得效果证据。代码候选的评测依赖通过验收的代码隔离，数据型 Skill/配置候选也不能修改运行器与评分配置。
+EvaluationRun 是一份冻结计划的整体执行，SampleRun 是其中一个 `(sample_id, arm)` 的逻辑样本位置，Attempt 是该位置的有限物理尝试。一份计划只接纳一个逻辑 run；分批派发、重启恢复和计划内重试均沿原 run。另一轮实验须创建新计划并重新核对正式尝试及保留占用，不能用新 run_id 重置原计划的失败或费用。
+
+评测环境提供方实现 prepare、start_sample、inspect、observe_truth、seal 和 destroy。prepare 按预先保存的 environment_key 幂等创建隔离环境，该键唯一绑定 `(run_id, sample_id, arm)`，固定初始数据与种子；不同样本和两臂不共用创建键。prepare 与 start_sample 都在物理启动前核验原 Evaluation owner 的准确有限时许可，缺可信签发依据或跨机时钟界限时拒绝。候选只接触任务侧观察与动作入口，不能读参考答案、改判定器或伪造真值。判定器通过独立只读通道取得效果证据。代码候选的评测依赖通过验收的代码隔离，数据型 Skill/配置候选也不能修改运行器与评分配置。
 
 每个样本运行固定目标与预算。计划允许的重试生成新 attempt_id，但样本 ID 和原操作恢复身份不变；效果未知时仍按[执行规则](../execution/README.md)核对，不能为了得到一个可评分答案重复未知写动作。样本结束后先封闭新动作并核清允许的在途责任，再取最终真值、评分和清理环境。
 
@@ -69,14 +71,14 @@ EvaluationPlan 固定数据集版本、样本集合、基线与候选安装锁�
 
 | 环境方法 | 输入与输出 | 效果确认 |
 | --- | --- | --- |
-| prepare | run_id、环境版本、初始状态/种子、额度、原环境准备许可；返回 environment_id | 环境已耐久登记且准备完成；许可过期或原身份不符拒绝新建，答复丢失按原 run_id 查询 |
+| prepare | environment_key、run_id、sample_id、arm、环境版本、初始状态/种子、额度、原环境准备许可；返回 environment_id | 原键与样本臂共同固定，环境已耐久登记且准备完成；许可过期或身份不符拒绝新建，答复丢失按原 environment_key 查询 |
 | start_sample | 原 environment_id、sample_id、arm、attempt_id、原样本启动许可；返回原尝试入口 | 环境 owner 在物理启动前核对有限时许可、未 seal 及固定样本身份；重复只查原 attempt，不凭排队 job 扩大资格 |
-| inspect | 原 environment_id 或创建 run_id；返回当前实例、动作入口及责任 | 未找到必须说明查询范围；暂时未找到不证明从未创建 |
+| inspect | 原 environment_id 或 environment_key；返回固定 run/sample/arm、当前实例、动作入口及责任 | 未找到必须说明查询范围；暂时未找到不证明从未创建 |
 | observe_truth | 原环境、观测切点、判定器身份；返回受保护真值引用 | 只允许独立判定器读取，返回证据版本及仍在途动作 |
 | seal | 原环境、原控制 ID；返回已封闭新动作及未终结工作 | 环境 owner 裁决实际封闭，命令接纳不能代替完成 |
 | destroy | 原环境、封闭证据、清理策略；返回逐载体清理与残留 | 未 seal 或仍可写时拒绝销毁；清理失败沿原管理命令继续 |
 
-用户取消评测后，运行器禁止新样本及新目标动作，为全部已创建环境保存 seal 责任。已完成样本保留原结果，未完成样本按冻结的中断口径记录 reason=cancelled；封闭及清理继续，即使评测的总期限已经结束。取消与准备答复丢失竞争时先核对原 run_id 是否创建环境，不提前释放全部配额。
+用户取消整个 run 后，运行器禁止其新样本及新目标动作，为全部已创建和创建结果未知的环境保存 seal 责任。已完成样本保留原结果，未完成样本按冻结的中断口径记录 reason=cancelled；封闭及清理继续，即使评测的总期限已经结束。取消与准备答复丢失竞争时逐一核对原 environment_key，不提前释放全部配额。
 
 联网问答既测固定内容回放，也测带实际取得时间的联网样本；两者结果分别报告。模拟手机环境提供多个独立设备、可观察 UI 和受保护的真实状态，点击、滑动、输入、返回、取消和接管都用实际状态变化判定。任务侧截图与判定侧真值不能来自同一份模型自述。
 
@@ -127,7 +129,7 @@ sequenceDiagram
     P->>P: 核验本批效果与观察窗口
     U->>P: 撤回原批准
     P->>P: 禁止新批次并保存停用责任
-    P->>X: 停止新使用；条件成立时回退旧锁
+    P->>X: 停止新版；独立旧版批准有效时以新激活切回
     X-->>P: 停用、旧版恢复和残留分别确认
 ```
 
@@ -139,7 +141,9 @@ sequenceDiagram
 
 全本地批准与宿主共库时，把当前批准核验与启动登记放在同一事务，无需在线回执、离线租约或公网依赖；批准的绝对到期仍使用 [ClockAdapter](../deployment.md#clock-adapter) 的可信时间检查。远端窗口也沿该接口保守换算，宿主暂停或时钟回拨不延长旧资格。撤回响应只表示发布管理已保存决定与传播责任，节点尚未确认时保留未确认范围；批准检查与业务 Grant 始终分别成立。
 
-达到退出阈值或撤回批准时，管理器先停止扩批并向目标发送停用。只有已预先批准的精确旧锁、当前格式兼容且旧版本信任仍有效时才自动回退；否则停用并报告恢复缺口。停用不会回滚已有外部效果，报告必须分别保留停止、旧版恢复和在途责任。
+达到退出阈值或撤回新版批准时，管理器先停止扩批并向目标发送停用。自动回退复用独立的旧版 ReleaseApproval：新版批准固定 rollback_lock 和 rollback_approval_ref，当前只允许引用同一批准 owner 的既有批准；批准新版时共同核验旧批准仍 active、精确锁匹配、目标范围覆盖且期限不早于新版批准，并检查旧版自己的报告资格与当前来源用途。引用固定选中的批准及接纳时修订，不冻结它以后的有效性。
+
+回退时重新核验该旧批准当前有效、证据可用、旧代码可信且当前格式可读；任何一项缺失均只停用并报告恢复缺口。条件成立才保存新的回退 activation_id，并使用旧版 approval_id 取得在线或共库启动依据，回退后的 work／reopen 也继续核验旧批准。撤回新版不撤回旧批准，不复活已失效批准；希望全部版本停止须分别关闭相应批准。批准 owner 不可达时不离线激活。停用不会回滚已有外部效果，报告分别保留新版停止、旧版恢复和在途责任。
 
 ## 4. 不可变计划与可更新运行记录
 
@@ -157,14 +161,14 @@ sequenceDiagram
 | EvaluationPlan：metrics、thresholds、budget、retry_policy、stop_rule、invalid_run_policy | 阈值、固定样本量或其他预先审查的停止规则、失败口径运行前固定；默认不允许看到结果后加样本直到通过 |
 | EvaluationPlan：sampling_frame、sample_unit、cluster_map、weights、inference_method | 明确目标总体、抽样与相关结构；无合适方法时可报告固定集比例，但统计门禁 inconclusive |
 | EvaluationPlan：primary_metric、minimum_practical_gain、regression_limits、comparison_method | 正式改善必须有大于零的最小实用改善量和各关键类别、费用、时延的退化限额；方法在反馈前固定 |
-| EvaluationRun：run_id、plan_id、sample_id、arm、attempts、state、evidence_refs | arm 为 baseline 或 candidate；同一 plan/sample/arm 唯一；state 为 queued、running、scoring、finished、blocked；blocked 保留继续责任 |
-| EvaluationRun：outcome、usage、environment_ref | outcome 为 pass、fail 或 invalid；只有 finished 才有最终 outcome；清理状态独立 |
+| EvaluationRun：run_id、plan_id、revision、state、completed_samples、total_samples、environment_refs、report_id? | 每 plan 唯一整体运行；state 为 queued、running、scoring、finished、blocked。样本总数不因两臂或重试增加，completed_samples 只统计全部所需臂已有最终结果的样本 |
+| 内部 SampleRun／Attempt：sample_id、arm、attempt_id、outcome、usage、evidence_refs、environment_key | 同一 plan/sample/arm 一个逻辑位置；arm 为 baseline 或 candidate，有限尝试另存。最终 outcome 为 pass、fail 或 invalid，未知责任仍保留；不将样本结果字段冒充整体 Run 线字段 |
 | EvaluationRun：cancel_requested、reason、environment_sealed、cleanup_state | 取消请求、实际封闭分别记录；cleanup_state 为 pending、cleaned 或 residual，清理未完不删除原环境映射 |
 | EvaluationReport：report_id、plan_digest、run_refs、metrics、coverage、gaps、digest、evidence_class | evidence_class 为 conformance、formal 或 exploratory；分别表示兼容合同证据、正式保留确认和探索。全部尝试及失效报告可追溯 |
 | EvaluationReport：target_attainment、statistical_gate、improvement_gate、paired_counts、category_changes | 三项门禁分别带 applicable、result（pass／fail／inconclusive）及原因；兼容报告的不适用质量门禁不能写成 pass。配对四格及分类退化支撑改善结论 |
 | ReleaseApproval：approval_id、revision、release_kind、candidate_digest、report_digest、targets | release_kind 为 compatibility 或 improvement，分别核验兼容证据或正式改善门禁；目标集合精确。state 为 active、revoked、expired，撤回后不可复活 |
 | ReleaseApproval：approved_by、confirmation_ref、max_offline_window | 绑定受信批准主体与精确确认；离线续用上限默认零，非零必须明确批准 |
-| ReleaseApproval：batches、window、minimum_samples、stop_rules、expires_at、rollback_lock | window 是每批观察窗口；回退锁可为空，为空不声称可自动恢复 |
+| ReleaseApproval：batches、window、minimum_samples、stop_rules、expires_at、rollback_lock、rollback_approval_ref? | 回退锁为空时不得带批准引用；非空时必须引用同 owner 的独立旧版批准，锁、目标、期限与其自身证据均核验。window 是每批观察窗口 |
 | ApprovalUse：use_id、approval_id、approval_revision、target_id、lock_id、instance_id、action_kind、action_id、start_before | action_kind 为 activation、reopen 或 work；action_id 对应原激活、新实例重开或业务工作身份；固定回执由批准服务保存，处理端保存原动作的使用登记 |
 | ApprovalLease：lease_id、approval_id、approval_revision、target_id、lock_id、instance_id、continue_until | 只对显式获准离线续用的已激活实例分配，不用于激活或扩批 |
 | Rollout：rollout_id、approval_id、target_activations、current_batch、state | state 为 running、waiting、stopped、finished；逐目标事实来自扩展管理器 |
@@ -178,8 +182,8 @@ sequenceDiagram
 | evaluation.candidate_register | 精确候选、improvement_id、父候选及来源；返回 candidate_id/digest | applied 表示不可变候选与谱系保存；相同 ID 不同摘要冲突 |
 | evaluation.partition_register | 精确数据分区、来源组、用途、许可及已知暴露；返回 partition_id/digest | 保存分区资格；新 ID 不能清除相同内容或来源组的既有占用及暴露 |
 | evaluation.plan_create | 候选、分区、环境、判定、抽样、比较及预算；正式计划另带 release_request_id、policy_digest；返回 plan_id/digest | applied 表示冻结计划已保存；正式计划的候选绑定、HoldoutReservation 与策略尝试序号同事务保存，尚未运行 |
-| evaluation.run | plan_id、明确样本子集；返回 run_id 集合 | 一次保存全部计划样本位置；分批只改变派发顺序，原 plan/sample/arm 返回原 run，不能用最好子集生成正式报告 |
-| evaluation.cancel | 原 run_id 集合、预期控制修订、原因；返回已保存控制与待封闭环境 | applied 只证明停止新工作及封闭责任保存；各环境 seal 结果分别确认 |
+| evaluation.run | run_id、plan_id、plan_digest；返回单个 EvaluationRun | 一次保存全部计划样本位置；同 plan 的不同 run_id 返回 precondition_failed 并关联原 run，分批与有限重试仍属于原 run |
+| evaluation.cancel | 原 run_id、预期运行修订、原因；返回该 EvaluationRun | applied 只证明整个 run 停止新工作及封闭责任保存；覆盖其全部已创建及创建未知的环境，各 seal 结果分别确认 |
 | evaluation.read | 计划、run 或 report ID；返回获准事实及缺口 | 只读；保留反馈开放前仅返回进度及准备故障；开放后仍限暴露主体和范围，正文另受用途许可控制 |
 | evaluation.feedback_open | exposure_id、封存 report_id/digest、recipient、scope；返回 Exposure 及反馈引用 | 核验受信主体及范围，在返回任何保留反馈前原子保存暴露；同命令返回原回执，失联按原命令查询 |
 | evaluation.exposure_record | exposure_id、partition_id、source_group_ids、scope、recipient、occurred_at、evidence_refs、reason；可带 report_id/digest；返回原暴露与 impact_job_id | 仅受信评测维护者可追加；原暴露、来源组索引、唯一影响扫描责任和原回执同事务保存。影响扫描分页补写资格投影及撤回责任；当前门禁在扫描完成前直接核对原暴露 |

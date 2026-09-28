@@ -12,6 +12,8 @@
 
 任务检查的版本、持久责任及证据适用性按[验证生命周期](../orchestrator/verification.md)设计，故障交错见[验证生命周期实验](fault-experiments.md#verification-lifecycle)。数据库验收先逐项落实[八条访问路径](../orchestrator/access-paths.md)，再按[访问路径与性能实验](fault-experiments.md#storage-access)记录实际 SQL、执行计划、有限集合、锁范围及规模结果。两组新增实验均待运行；现有静态校验不证明检查器准确性、事务恢复或存储容量。
 
+实现交接的新增实验见[SYS-30～36](fault-experiments.md#implementation-clarity)：生成正文、条件先采纳、计划前序输出及质量前提、独立旧批准回退、离线封账后补账、预览保证和整项评测运行。它们仍待真实运行；内部正文／计划及离线更正的静态构造检查另由 [validate_brain.py](validate_brain.py)、[validate_lease.py](validate_lease.py) 执行；独立批准与每计划唯一 run 由 [validate_release_recovery.py](validate_release_recovery.py) 核对，不能替代事务、内容保存、账单来源或 Renderer 证据。
+
 ## 1. 测试装配与证据
 
 最小测试宿主提供可暂停的时钟和工作者、事务故障点、受控网络代理、固定模型回放、真实模型适配器、模拟搜索源、文件版本驱动及多个有状态模拟手机。判定器可以读取独立真值，Agent 不能读取判定器的答案或手机内部状态来绕过观察。

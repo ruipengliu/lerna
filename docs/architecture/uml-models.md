@@ -249,17 +249,18 @@ DelegationAdmission 固定有界委派，InternalChildFactory 在父 Orchestrato
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
-| EvaluationPlan — EvaluationRunRecord | 1 | 0..* | 运行绑定唯一计划。 |
+| EvaluationPlan — EvaluationRunRecord | 1 | 0..1 | 每冻结计划唯一整体运行；分批与有限 Attempt 不新建 run。 |
 | EvaluationPlan — EvaluationReport | 1 | 0..* | 报告绑定准确计划；当前文档未规定每计划全局唯一报告。 |
 | EvaluationPlan — PlanEligibility | 1 | 0..1 | `plan_id` 唯一；并非所有用途的计划都被规定必须有此内部记录。 |
 | PlanEligibility — FeedbackExposure | 0..* | 0..* | 按来源组及发生时点判断失效；正常封存后反馈不使原报告失效。 |
 | FeedbackExposure — EvaluationReport | 0..* | 0..1 | 暴露可先于报告；此边不是受影响报告的完整集合。 |
 | EvaluationReport — ReleaseApproval | 1 | 0..* | 固定报告及摘要，批准另查当前资格与适用门禁。 |
 | ReleaseApproval — Activation | 1 | 0..* | 跨 owner，以固定激活身份交接有限目标；批准不等于当前实例就绪。 |
+| ReleaseApproval（新版） — ReleaseApproval（旧版） | 0..* | 0..1 | 非空 rollback_lock 必须绑定独立 rollback_approval_ref；当前只引用同 owner，旧版资格独立核验。 |
 
 报告正文及摘要不可变，PlanEligibility 保存可异步收敛的资格投影；正式使用还须同步核验原暴露事实，不能仅凭图中的 eligible 状态放行。候选谱系、保留占用、过程尝试、完整物理样本与发布记录未展开，门禁仍完整适用。正常反馈先登记暴露再返回；迟发现的早期泄露保存唯一影响 job，随后分页投影失效与撤回，原报告继续供诊断。
 
-环境准备失联沿原创建键恢复。取消先停止新工作并保存 seal 责任，清理状态单独推进；不能新建环境掩盖旧责任。批准撤回只确认决定及传播责任，目标停止新使用和残留另查。发布推进须读取真实 active、当前实例 ready 及观察证据；重启后须重新取得 reopen 依据。
+环境准备失联沿固定到 run/sample/arm 的原创建键恢复。取消整体 run，逐一保存全部已创建及创建未知环境的 seal 责任，清理独立推进；不能新建环境掩盖旧责任。新版批准撤回不撤回独立旧版批准；回退以新的 activation 使用旧批准，其当前有效性与新版停用、残留分别核验。发布推进读取真实 active、当前实例 ready 及观察证据；重启重新取得 reopen 依据。
 
 依据：[评测合同与门禁](evaluation/README.md)、[运行与发布实现](evaluation/implementation.md)、[实际宿主就绪](extensions/implementation.md)。
 

@@ -352,3 +352,40 @@ python -m grpc_tools.protoc -I docs/architecture/contracts --descriptor_set_out=
 | 运行、准确性与容量 | **未执行**；[验证生命周期与访问路径实验](validation/fault-experiments.md#verification-lifecycle)明确前置、刺激和断言 | 尚无验证器专项校准、缺陷并发、数据库执行计划、压力或故障剩余容量证据 |
 
 渲染输入、源摘要和逐图结果保存在 `.scratch/architecture-review/verification-render/manifest.json`。默认宿主仍须实现受信登记、条件持久化、共享读／独占写缺陷门禁及独立说明视图；缺少这些依赖的行为在验证入口说明。跨域当前证据资格尚无冻结的查询／交接合同，依赖该保证的用途禁用；普通 assessed 仅声明本域已登记缺陷范围，不承诺全局即时撤回。
+
+
+<a id="implementation-clarity-review"></a>
+## 21. 实现缺口与连续阅读路径（2026-09-28）
+
+本轮按实现者能否确定输入、保存位置、裁决顺序与失败继续者审查，修订七项具体缺口，并将入口收敛为[总览 → 贯穿场景 → Orchestrator → 模块实现](README.md#reading-path)。技术总览保留边界与建模理由，共同契约保留公共规则，各专题集中维护完整行为，减少同一规则在多个入口重复展开。用户确认的条件先修订、旧版独立批准和受信界面预览记入 [D-29～31](decisions.md#10-实现交接与阅读复核)及 ADR-0006～0008。
+
+| 原实现疑点 | 已落实的行为及查阅位置 |
+| --- | --- |
+| Brain 首次生成正文时没有 ContentRef | 内部有限草稿用局部引用，宿主固定来源、字节及原保存身份；全部内容可核验后回填准确引用，再发布公共 Proposal。部分保存或答复丢失沿原责任恢复，见[新正文保存](brain/implementation.md#generated-content) |
+| 同提案修改条件又行动／完成的顺序不确定 | 原快照先核验；有效条件变化只提交新目标、控制和下一轮责任，本提案其余建议失效。相同条件不增修订，见[提案消费](orchestrator/implementation.md#proposal-consumption) |
+| 计划无质量前提，无法预先引用尚未执行步骤的输出 | 执行依赖与 pass_conditions 分开，step_output 解析原步骤准入及准确输出；fail 重新决策、unknown 等待核验。首计划允许 null 基线，直接行动和仅安装计划互斥，见[有限计划](orchestrator/implementation.md#finite-plan) |
+| 新版批准撤回后，自动回退缺少有效批准路径 | 新版绑定准确旧锁和独立旧批准；恢复、work 和 reopen 均核验旧批准当前资格，缺依据只停用，见[扩展实现](extensions/implementation.md) |
+| 离线租约最终封账与迟到更正账单冲突 | 复用 lease.settle 追原费用差额，保留首次封账和已释放余额；原实例唯一汇总、串行报告，未知旧命令不得仅凭到期换身份，见[离线结算](security/implementation.md#8-离线分配重连与封账) |
+| preview_refs 被写成可证明实际预览 | 受信 Renderer 保证取得和呈现，业务 owner 核准确版本、覆盖与当前资格；明确引用不能证明下载、呈现或阅读，见[交互实现](interaction/implementation.md) |
+| EvaluationRun 在整项实验和单样本间混用 | 每冻结计划一个整体 run；SampleRun／Attempt 独立定义，环境键固定 run/sample/arm，取消覆盖全部已创建及未知环境，见[评测运行](evaluation/implementation.md#5-运行与环境交接) |
+
+跨文档复核沿正常链、条件提交后重放、正文保存失回执、评估执行成功但质量失败、新版撤回与旧资格失效、离线封账后补账、预览旁路和重复评测运行推演。复核补明了仅安装计划的入口、计费来源的实际查询方法，以及每批累计值必须对应“已确认账本＋本批更新”的报告截面，避免把未上报使用提前计入。离线计费缺少同域持久交回依赖时禁用；原实例或旧回执不可恢复时补账保留缺口，不声称可以自动接管。
+
+| 检查类别 | 本轮结果 | 保证边界 |
+| --- | --- | --- |
+| 文档与链接 | 架构 Markdown、本地链接、锚点、表格和围栏检查通过，差异空白检查通过；新增 ADR 的引用另行核对 | 静态结构不证明行为实现 |
+| 协议与完成投影 | 55 条协议正例、371 个定向反例，覆盖 105 个登记方法；完成投影 5 正例／9 反例通过 | 认证、费用来源、数据库提交及外部效果均为测试前提 |
+| 新增专项构造 | Brain 生成／原保存恢复、5 项计划安装、11 个拒绝生成及 15 个物化分支通过；离线更正 2 条正例／11 个反例；发布批准及唯一 run 共 13 项通过 | 内部状态为构造快照，不执行模型、内容保存、可靠投递或界面操作 |
+| 传输与密码学 | 100 个传输／关闭向量、228 个反例；8 条请求序列及 12 个反例；2 个 ES256、3 个规范化向量及 23 个密码学反例通过 | 未执行真实网络、密钥托管或身份互操作 |
+| 图示 | 8 张变化 Mermaid、UML 第 18／20 页及 HTML 对应两页已实际渲染并目视；字段、多重性、独立旧批准关系与图文一致 | 图形可读性和语义审查分别完成，不证明事务和恢复 |
+| 真实运行 | **未执行**；新增 [SYS-30～36](validation/fault-experiments.md#implementation-clarity)及各模块故障实验 | 并发、崩溃恢复、账单真实性、Renderer 行为、环境隔离与容量仍待实现验收 |
+
+新增构造检查在仓库根目录运行：
+
+```sh
+python3 -B docs/architecture/validation/validate_brain.py
+python3 -B docs/architecture/validation/validate_lease.py
+python3 -B docs/architecture/validation/validate_release_recovery.py
+```
+
+Mermaid 的最终源摘要、渲染输入和目视结果在 `.scratch/architecture-implementation-clarity/render/manifest.json`；UML／HTML 的四张截图、源摘要和逐项检查在[图册渲染记录](../../.scratch/architecture-implementation-clarity/uml/render-review.md)。协议仍为未发布草案，本轮直接统一正文、Schema 和用例，不保留旧字段共存层；未改线方法数或 Protobuf 外壳，本轮未重复编译或宣称新服务已互操作。
