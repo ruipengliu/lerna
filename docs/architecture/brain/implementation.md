@@ -17,7 +17,7 @@ Orchestrator 负责选择上下文、保存计划和决定后续工作；Brain �
 Brain 是宿主装配的一组 Go package。DecisionService 是唯一对外 facade，
 其 application 层组合 ContextReader、DecisionPolicy 和 ProposalValidator；
 DecisionPolicy 只做本轮选择，ProposalValidator 只判断候选契约，二者不直接读写数据库。
-DecisionStore 将事务和领域记录映射到宿主 command_store、job_store；ModelAdapter 和内容 port 隔离外部依赖。内容 port 既读取固定输入，也由 RecoveryWorker 保存获准新产出和恢复原保存命令，不新增独立发布服务。
+DecisionStore 将事务和领域记录接入[公共接纳与工作模板](../reliable-work.md#interfaces)的 command_store、逻辑 JobStore；ModelAdapter 和内容 port 隔离外部依赖。内容 port 既读取固定输入，也由 RecoveryWorker 保存获准新产出和恢复原保存命令，不新增独立发布服务。
 各 port 用 Go interface 表达，构造时注入依赖；规则接收领域值类型，不依赖 RPC 生成类型。
 本机装配为同进程调用，独立服务部署的 Brain 在同一 facade 前加 gRPC 适配器；端侧 Brain 由宿主将 WSS／Delivery 交接适配到该 facade，二者映射同一领域契约，
 不要求这些组件各自成为服务。ModelAdapter 对模型供应商沿用其 API，对本项目独立推理服务使用 gRPC；
@@ -81,6 +81,30 @@ Orchestrator 收到提案后仍执行独立准入，宿主 job 领取器只提�
 默认保持一轮至多一次物理生成，可以直接把费用及恢复记录关联起来。
 多模型竞速会增加输入披露、物理请求和取消责任；只有冻结评测证明收益时才作为新实现加入。
 更换模型供应商时只替换 ModelAdapter；更换 Brain 时还须验证上下文及提案契约。
+
+<a id="reliable-work-integration"></a>
+### 1.1 公共模板在决策域的接入
+
+DecisionService 使用公共接纳模板保存原 Decision，RecoveryWorker 向有界工作模板注册本域处理器。DecisionStore 提供本 Brain owner 的事务参与者；单体可与 Orchestrator 共用受限 Tx，独立 Brain 则在自己的提交域保存回执和工作，调用方持久查询原 Decide。公共模板收敛领取和回写竞争，单轮至多一次生成、发送门禁、产出保存以及未知费用仍由 Brain 裁决。
+
+| 接入点 | 领域参与者及事务边界 | 处理和提交责任 |
+| --- | --- | --- |
+| Decide 接纳 | DecisionStore 在 `transaction.Within` 内核对原命令及 decision_id、输入摘要、任务绑定和容量 | 同事务保存 Decision、固定输入、原回执及 `Raise(run_decision)`；同 decision_id 的新命令也须核对原输入，不能仅靠命令去重 |
+| 调用准备与发送门禁 | ContextReader、DecisionPolicy 和 ModelAdapter 在事务外读取、选择和编码；DecisionStore 分次保存 ModelCall、用途关联和 send_started | 每次领取保护的提交先锁 Decision／调用／费用行，最后 `Guard` 原 Claim；实际模型调用在门禁事务提交后进行。准备和门禁是不同提交点，公共模板不合并它们 |
+| 输出保存和终态 | ProposalValidator 校验；内容 port 沿固定 publication 保存获准正文；DecisionStore 固定原提案或错误 | 外部 content.put 与查询在事务外。终态、必要费用／停止责任与 `Finish` 共同提交，失答复读原 Decision 和 publication，不再次生成 |
+| 调用事实与费用交回 | RecoveryWorker 核对原调用；DecisionStore 归并可信用量及每修订 outbox | 用量事实、费用修订与 `Raise` 同事务；交回仅在原 Orchestrator 已持久接纳的 JobAck 后确认，该确认不等于 Task 已完成结算 |
+
+Brain 的责任键为 `(tenant, brain_owner, decision_id, kind)`，由本 owner 的 brain_job 映射逻辑 JobStore；model_call_id、固定 publication 的原保存命令及每费用修订 outbox 继续保存在领域记录中。它们不随着领取或责任版本变化。下列 kind 是参考实现的内部映射，不增加公共消息或业务状态。
+
+| kind | 原身份与有界处理单位 | 可请求完成／必须继续的条件 |
+| --- | --- | --- |
+| run_decision | 固定 Decision；一次当前阶段的准备、生成、原调用读取或产出保存 | 只有 Decision 已固定终态，且未结费用、停止或交回责任已持久交接，才完成推进槽。输入／用途依赖不可得时保存有界等待；确定性输出省略 ModelCall |
+| reconcile_call | 原 model_call_id；一次获准查询、停止或费用核对 | 已证明所承担的调用／费用责任结清才完成；Decision 终态和本地连接关闭都不证明供应商已停止或费用已结。自动查询耗尽保留原责任及具体恢复条件 |
+| billing_handoff | 原 Decision 的有限页未交付费用修订，各项保留原命令尝试 | 本页进度已保存且原待交付集合已无未结修订，才请求完成；仍有下一页则保留续页责任。处理中新增账单由 `Raise` 保留，不能以最高修订覆盖未交付的旧命令 |
+
+取消可关闭 run_decision 的新推进，同时建立 reconcile_call 的必要停止／核对责任；后者不执行新的生成。两种工作若并发触及同一 ModelCall，DecisionStore 按原事实去重并遵守同一领域锁序。可信供应商账单或结果另有按原调用归并的事实入口；失去领取的 worker 不能利用该入口覆写提案、重新发送或结束槽。
+
+恢复时须先读领域发送事实：`prepared` 且没有 `send_started` 才能在重新核验后继续原首次发送；已有 `send_started` 只查询原调用，无法查询则保存 `provider_result_unknown` 及未结费用。框架返回的超时或领取接替不能选择这条分支。`Guard`／`Finish` 的完整并发规则见[公共工作提交](../reliable-work.md#completion)，Brain 的外部未知分支仍以第 3、5 节为准。
 
 ## 2. 上下文正文与资料来源
 
@@ -171,14 +195,14 @@ BrainContext 的清单记录组装与本轮读取的来源；发送门禁另固�
 | decision_output | decision_id 唯一；提案或失败固定，内容引用精确 | 终态事务 |
 | brain_usage | model_call_id、计费项身份唯一；预留、估计、最终账单及费用修订分别记录 | 准备及原调用对账；可信上调与交回 job 同事务 |
 | billing_handoff_outbox | decision_id、费用修订、固定账单摘要、有限唤醒命令尝试与回执、交付状态 | 每费用修订唯一；同 Decision 的多个未交付修订可共用一个扫描 job，旧尝试的身份与回执不可覆盖 |
-| brain_job | decision_id、job_kind 唯一未结工作；固定恢复目标 | 接纳、发送准备、查询、收尾或费用交回事务；已 done 可随新账单重开 |
+| brain_job | [公共工作记录](../reliable-work.md#work-record)：job_id、责任键、kind、状态、due_at、work_revision、lease_epoch、lease_until、尝试与等待依据；关联原 Decision | 本 Brain owner 的 `(tenant, decision_id, kind)` 唯一；接纳、阶段变更或新费用与 Raise 同事务，物理表可独立 |
 | decision_closure | decision_id、终态、输入摘要及原决定摘要 | 原正文到期后保留最小关闭依据 |
 
 input_digest 覆盖 DecisionRequest 的规范化结构，数组顺序保留。
 同 decision_id 不同输入返回 idempotency_conflict；不得创建第二条 ModelCall。
-业务状态与下一项 job 同事务更新，单独发送消息不能推进状态。
-工作者使用租约及代次领取；过期工作者不能提交结果或再次发送。
-租约换主只改变处理者，不改变 decision_id、model_call_id 或使用身份。
+业务状态与 `job_store.Raise` 同事务更新，单独发送消息不能推进状态。
+RecoveryWorker 使用公共 Claim，领取及责任版本按[工作提交](../reliable-work.md#completion)核验；DecisionStore 另检验当前 Decision 状态及发送事实。
+租约换主只改变处理者，不改变 decision_id、model_call_id 或使用身份，也不能据此重发模型请求。
 
 <a id="data-flow"></a>
 ### 3.1 核心对象关系与流转
@@ -215,7 +239,7 @@ flowchart LR
 接纳前完成结构、负责端、当前输入资格和固定配置检查。
 事务内依次检查原命令、原 decision_id、任务绑定、数量上限及必要费用预留。
 已有终态返回原决定；已有处理中记录返回 accepted 和当前记录。
-新请求同时保存 Decision、输入绑定、原回执及 run_decision job。
+新请求由公共接纳模板同时保存 Decision、输入绑定、原回执及 run_decision job；已固定终态的重复命令或查询不空建推进槽。
 数据库不可写时不返回 accepted；内容预先保存但接纳失败的孤立版本进入有界清理。
 
 ### 3.3 物理发送事务
@@ -233,7 +257,7 @@ ModelAdapter 先完成最终请求编码；ContextReader 与适配器核对本�
 ### 3.4 完成事务
 
 输出先完成流汇总、内部产出结构及引用关系检查，再按下节保存获准正文、回填准确引用并执行最终 Proposal 校验。
-事务比较 Decision 状态及代次，固定 completed／failed 与原结果，删除推进 job 并保存费用收尾责任。
+事务先按本域锁序读取 Decision、调用和费用记录，最后由 `Guard` 核验原 Claim；固定 completed／failed 与原结果，保存必要费用收尾责任，再交 `Finish` 处理推进槽。槽的完成和清理由公共规则分别裁决，不能在终态事务无条件删除推进 job。
 取消先提交时，不再写入 completed；迟到输出只进入仍获准的诊断记录。
 Orchestrator 获取 Decision 后，另在自己的事务中消费提案和决定后续工作。
 因此 Brain completed 与任务 succeeded 不在同一状态机中。
@@ -401,7 +425,7 @@ target_pointer 只允许写 invoke 的 arguments 子字段，或 delegate 的 go
 | 单轮格式修复 | 最多 2 次新决策 | 耗尽后报告错误或请求人工补充 |
 | 原调用自动核对 | 按任务期限内有限退避 | 超限转可查询处置，不删除原责任 |
 
-日志记录 decision_id、model_call_id、profile 摘要、阶段、耗时和用量，不记录正文与隐含推理。
+日志在[公共工作观测](../reliable-work.md#observability)的命令、job、领取及责任版本之上，记录 decision_id、model_call_id、profile 摘要、阶段、耗时和用量，不记录正文与隐含推理。
 输出 diagnostic 只保留字段路径、错误类别和获准的短说明。
 来源、权限和费用缺口分别记录，不能统一包装成“模型失败”。
 
@@ -461,7 +485,7 @@ Brain 按租户和稳定 owner 路由至原 Decision 数据库分区；增加无
 | BI-15 条件不通过 | 评估操作 applied，但准确候选的当前 verdict=fail；计划待写入 | pass_conditions 拒绝写入并交 Brain，unknown 保留核验责任；不能仅凭操作成功放行 |
 | BI-16 未来输出与旧结果 | 计划读回依赖未来写入返回的版本；另交回旧计划或旧候选的迟到结果 | 只按本计划准入映射解析原输出；重启保持相同物化参数，旧结果不替换新步骤输入 |
 
-实验必须记录实际发送次数、数据库决定、授权使用与原供应商查询结果。
+本域适配器先通过[公共故障用例](../reliable-work.md#validation)，再运行上述模型发送、产出保存与费用恢复实验；尤其以新账单插入验证 run_decision 已终态而 billing_handoff 仍可重开。实验必须记录实际发送次数、数据库决定、授权使用与原供应商查询结果。
 静态 Schema 只能验证提案形状，不能证明材料真实存在或供应商只处理一次。
 内部产出、局部引用与计划门禁的构造正反例可独立运行 `python3 docs/architecture/validation/validate_brain.py`；该检查不调用模型或内容服务，不替代 BI-14–16 的运行故障实验。
 实现验收另记录模型质量与延迟，不能用以上恢复实验替代 C1 和 V1 的效果评测。

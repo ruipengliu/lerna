@@ -6,7 +6,7 @@ Executor 接收 Orchestrator 准入的操作，使用固定能力与实例绑定
 
 Orchestrator 保存“为什么要做”，Executor 保存“做到了哪一步、效果是什么”。能力目录描述行为契约，实例绑定确定谁以何种驱动访问哪个目标。任务完成由[任务运行](../orchestrator/README.md)裁决，身份和设备占用规则与[授权](../security/README.md)协作，本页是操作、能力和 GUI 字段的权威位置。
 
-实现阅读：[模块形状与依赖](implementation.md#module-shape) → [原操作对象流转](implementation.md#data-flow) → [发送与核对时序](implementation.md#key-sequence) → [固定设备入口恢复](implementation.md#entrance-recovery) → [生产部署和容量](implementation.md#production)。本页保留行为主线，执行记录、发送门禁、能力装配、模拟设备及故障断点在实现篇查阅。
+实现阅读：[模块形状与依赖](implementation.md#module-shape) → [框架接入](implementation.md#reliable-work-integration) → [原操作对象流转](implementation.md#data-flow) → [发送与核对时序](implementation.md#key-sequence) → [固定设备入口恢复](implementation.md#entrance-recovery) → [生产部署和容量](implementation.md#production)。本页保留行为主线，执行记录、发送门禁、能力装配、模拟设备及故障断点在实现篇查阅。
 
 ## 1. 默认选择与适用条件
 
@@ -24,6 +24,8 @@ Orchestrator 保存“为什么要做”，Executor 保存“做到了哪一步�
 执行器的效果核对、中途质量评估和 Orchestrator 的完成汇总按[任务验证](../orchestrator/verification.md)分别建模。质量评估复用普通 Operation，输入固定条件、规则、实现及准确候选，输出报告与原操作事实共同保存；此时 `effect=applied` 只证明已取得声明的评估结果，报告的条件 verdict 仍可以是 fail 或 unknown。Executor 保留原报告与核对责任，Orchestrator 负责条件记录、当前适用性和最终完成。
 
 ## 2. 一次执行的责任交接
+
+执行入口与工作者使用[公共接纳及有界工作模板](../reliable-work.md)保存原命令、领取责任和条件回写；ExecutionStore、GateStore、FactStore 仍裁决操作接纳、实际入口与效果事实。Executor 和独立资源 owner 各自在自己的提交域接入逻辑 JobStore；公共层不把远程接纳变成跨库事务，也不按超时自动重试目标动作。槽键、处理器及完成／等待条件见[接入设计](implementation.md#reliable-work-integration)。
 
 下图只表示操作执行和事实持久化。Orchestrator 与 Executor 同进程时可合并短事务；独立部署时双方保存后续工作，网络调用不进入数据库事务。
 

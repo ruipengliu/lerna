@@ -102,6 +102,31 @@ Change 只提示重新读取，可按 Surface 合并、重复或遗漏。重连�
 连接中断不撤销已提交命令；只有查原业务回执才能确认消费或拒绝。无耐久宿主的离线浏览器仍只能承诺本端待发送，不能显示“业务已消费”。
 设备侧的 Delivery、Reply 与 ReplyAck 沿原 delivery 和业务身份恢复，连接或网关更换不创建第二项责任；具体确认和保留规则由公共传输契约集中定义。
 
+<a id="reliable-work-integration"></a>
+### 1.2 公共框架接入：转交与消费的两个提交域
+
+SurfaceService、InputService 复用[可靠接纳模板](../reliable-work.md#admission)，ProjectionWorker 和 DeliveryWorker 复用[有限工作循环](../reliable-work.md#claim)。InteractionStore 将原命令、快照／输入／事件及必要责任映射到同一交互提交域。实际 InputRequest 和 Confirmation 的消费仍由各自 consumer owner 在其业务事务决定；框架不把它们移到交互库，也不以转交完成裁决任务成功。
+
+InputService 用 `transaction.Within` 将 InputSubmission 或 ApplicationEvent、固定目标 logical_service_id、完整原目标 Command、交互回执与 `jobs.Raise(tx)` 共同保存。该提交只确认输入或事件已耐久接纳；业务目标的原回执由 DeliveryWorker 在事务外取得，再用另一短事务保存消费投影。Surface 更新与变化提示共事务，Presentation 的打开／关闭独立保存。原目标暂不可达不影响交互服务保存本设备呈现意图，也不能让它先报业务已消费。
+
+下表槽键带认证 tenant 和交互 owner；Surface、独立应用事件可以没有 task_ref。固定 target_command_id 是目标业务身份，job_id 是宿主工作身份，两者不能相互替代。
+
+| 责任槽业务键与处理器 | 固定身份及事务参与者 | 完成、等待与恢复判据 |
+| --- | --- | --- |
+| `input_delivery / input_id`：DeliveryWorker | input_submissions、原目标服务／Command、原请求及准确回答／预览引用 | 撤回在发送前胜出，或已保存原业务 applied／rejected 回执才结束；sending 后未知保持原查询，不换输入或目标命令 |
+| `event_delivery / event_id`：DeliveryWorker | application_events、固定 app_binding／处理器、原目标 Command | 只从原处理器查询消费决定；超时不能改派新处理器；原业务无查询能力时不开放有副作用事件 |
+| `projection / surface_id`：ProjectionWorker | Surface、surface_projection 的已应用／待覆盖来源修订、投影停止依据、内容／请求引用及变化提示 | 关联存续期间持续核对原来源，当前已追平仍保存有限 waiting；只发布完整投影，旧版本不覆盖新快照；获准清理结束投影且残留责任已交接后才请求 done |
+
+表中 delivery_jobs 与投影槽由逻辑 JobStore 承载，物理共表或分表保持现有布局。输入发送前，领域处理器先锁原输入，再锁槽，在同一事务核验 `jobs.Guard` 并裁决 queued→sending 与 withdrawn；Claim 本身不完成这项业务竞争。远端调用结束后按同一锁序归并事实并调用 `jobs.Finish`，使用[公共领取与责任版本规则](../reliable-work.md#completion)。若发送已经可能发生，租约接替或停止信号都不证明未消费，接替者仍查原业务命令。真正的迟到消费回执可沿独立认证的归并入口保存，但失效领取不能据此结束槽或覆盖新责任。
+
+任务 Surface 创建或受信登记投影关联时，同事务建立 projection 槽。只要该投影仍提供页面，追平当前来源后仍以有限 waiting 继续核对原 Orchestrator；Task 终态、本设备关窗或一次快照到期都不自动结束这项责任。Surface 按保留策略获准清理时，同事务保存投影停止依据，并交接未结输入、内容及清理责任，之后才请求完成；task_ref 始终固定，不新增解除或改绑它的公开方法。
+
+Surface 源核对发现尚未覆盖的新修订时，ProjectionWorker 保存经原 owner 核实的 `required_source_revision`，并与同槽新责任共同提交；若同事务已完成该修订的快照发布，则不再为已覆盖事实增加工作。`last_source_revision` 只随完整快照发布前移，保存待覆盖修订不能冒充页面已更新。可丢 Change 通过公共 Hint 提前已有未结槽的 due_at，不把每条通知解释成新业务责任；完全没有提示时原定期核对仍会读取新修订。旧工作完成时若已有新责任，保留原槽可领取及更早时间。核对间隔和退避上界按页面刷新目标在部署前冻结，额外查询及回写计入活跃 Surface 容量；不为每条连接各建槽。页游标、Presentation 修订、业务请求修订与 work_revision 各有含义，不能相互充当已经处理的证明。
+
+`surface_read`、request_read、input_read、列表与聚合分页保持查询；聚合游标的条件保存只保证续页一致，不新增后台业务队列。surface_create／update、present 等可同步保存决定及必要提示，不强制每次建 job。surface_notifications 是可合并的变化提示，丢提示后仍能读当前快照；它既不是原输入转交责任，也不是设备传输的 Delivery／Reply 账本。后者按[传输契约](../contracts/transport.md)保存自己的确认与恢复身份，ReplyAck 不结束尚无业务决定的 input_delivery 槽。
+
+共同[观测](../reliable-work.md#observability)分别记录本地接纳、目标命令未决和快照投影等待；业务消费耗时不混入页面实际呈现或本人理解的指标。工作池为原输入核对、撤回和管理控制保留有限容量，普通快照提示与慢页面不能占尽这些槽。无耐久宿主的浏览器不因采用相同模板接口就取得可恢复接纳能力。
+
 ## 2. 严格声明式组件
 
 Surface 固定 app_binding、surface_owner_id 和可选 task_ref。
@@ -161,11 +186,12 @@ seen_revision 只记录曾显示哪个修订，不能证明用户读完、理解
 | --- | --- | --- |
 | surfaces | tenant、surface_id 唯一；owner、app_binding、task_ref 创建后固定 | 版本化快照 |
 | surface_revisions | surface_id、revision 唯一；完整快照摘要不可变 | 恢复当前呈现 |
-| surface_projection | surface_id 唯一；last_source_revision 单调 | 防旧投影覆盖 |
+| surface_projection | surface_id 唯一；last_source_revision、required_source_revision 各自单调；获准清理时保存投影停止依据 | 前者是已发布快照覆盖的来源修订，后者是已核实且须覆盖的修订；未覆盖要求与 job 责任共同保存；存续投影始终保留周期核对槽 |
 | presentations | surface_id、endpoint_id 唯一；intent_revision 单调 | 本设备打开／关闭意图 |
 | input_submissions | input_id 唯一；回答、请求、预览、目标服务及完整原 Command 固定 | 输入转交状态；对外 InputSubmission 只披露 target_command_id，worker 从本记录恢复原目标 |
 | application_events | event_id 唯一；应用绑定、事件类型、负载、目标服务及完整原 Command 固定 | 独立应用的可靠转交 |
-| delivery_jobs | 原 input_id 或 event_id 唯一未结 job | 原业务命令重投与查询 |
+| delivery_jobs | 工作种类与原 input_id／event_id 唯一槽；job_id、due_at、lease_epoch、work_revision 映射公共 JobStore | 原业务命令重投与查询；槽完成按原消费或发送前撤回事实，不以传输确认代替 |
+| projection 的 JobStore 槽 | owner、surface_id 与工作种类唯一；领取与责任版本独立 | 原来源核对和完整投影；领域事实更新与同槽新责任共同提交 |
 | surface_notifications | surface_id、revision 唯一提示责任 | 提交后通知，可重复唤醒 |
 | surface_queries | query_id、主体、过滤摘要及有限集合 | 目录稳定分页 |
 | aggregate_task_queries | 查询身份、过滤摘要、来源目录版本、各来源范围代次／上界／游标、未输出候选与期限 | 应用跨来源列表的短期续页状态，不保存第二份 Task 权威 |
@@ -210,7 +236,7 @@ flowchart LR
 ### 3.2 创建与更新
 
 surface_create 校验已注册应用版本、调用主体、组件类型、请求绑定及内容引用范围。
-同事务保存 Surface、revision=1、原回执和变化提示。
+同事务保存 Surface、revision=1、原回执和变化提示；任务投影同时保存原来源关联及首个 projection 核对责任。
 有 task_ref 时必须由该 Orchestrator 的受信投影器创建或登记关联，普通应用不能冒充任务投影。
 
 surface_update 携带 expected_revision 和完整新快照。
@@ -220,6 +246,7 @@ surface_update 携带 expected_revision 和完整新快照。
 
 投影工作者只从 Orchestrator 正式状态生成待处理、等待、结果和控制说明。
 ProjectionWorker 读取到旧源状态时不重写新快照；失败后重新读当前 Orchestrator，不拼接半份增量。
+若原快照尚未覆盖 required_source_revision，投影槽继续等待或领取；重新读取不可核验时不能因已有较旧完整快照而结束这项责任。已覆盖时也按第 1.2 节保留周期核对；只有获准清理已结束投影生命周期，且未结责任已持久交接，才能完成槽。
 输入消费回执与 Surface 更新可以异步，客户端通过原 input_id 查询确认业务是否生效。
 
 ### 3.3 读取与 not_modified
@@ -457,7 +484,9 @@ surface_read 的 not_modified 和 Query 重放都须重新证明当前披露；�
 | II-15 长连接撤权 | 连接已建立后撤销会话或设备代次，再发输入及查询 | 原提交事实保留，新消息拒绝，旧连接不再获得未授权快照 |
 | II-16 请求 Schema 单一权威 | Surface 仅含请求引用；读取后业务 owner 修订字段，再从旧快照读取请求或提交 | 字段由准确请求 schema 产生；旧修订读取或提交拒绝，不以旧快照字段继续消费 |
 | II-17 预览保证边界 | 截断下载或呈现失败；另以认证旁路客户端复制正确 preview_refs | 受信 Renderer 不开放失败预览的输入；旁路正确引用不被误报为已证明预览，业务端仍只依准确版本、覆盖、请求及当前资格裁决 |
+| II-18 转交槽接替 | sending 后远端消费但答复延迟，旧 worker 租约失效并重领，再送达旧回执与 ReplyAck | 接替者查询同服务和 target_command_id；旧领取不能结束槽，独立归并可保存原消费事实，ReplyAck 不证明业务成功 |
+| II-19 投影中新责任与无通知发现 | 旧投影取源时先提交较新来源与槽责任，再让旧 worker 结束；另在当前已追平后关闭全部通知，使远端再次更新 | 快照不倒退，旧结束不覆盖新责任；原 waiting 核对槽在声明间隔内发现远端新修订，不靠补缺槽扫描；重复 Change 不增责任版本，关窗不终止投影 |
 
-静态协议检查覆盖字段、绑定和有限状态序列，不能证明浏览器确实取得字节或用户理解内容。
+交互 JobStore 适配器须运行[公共故障套件](../reliable-work.md#validation)，II-02、II-18、II-19 再验证发送／撤回竞争、跨提交域消费与投影新责任。静态协议检查覆盖字段、绑定和有限状态序列，不能证明浏览器确实取得字节或用户理解内容。
 旁路客户端原样复制正确引用属于该保证的边界；不将它登记为业务端可识别的“未预览”错误，也不把下载回执、ETag 或 seen_revision 当作用户阅读证明。
 CLI、生产／本地 Web 和任何后续原生适配器分别完成预览、缓存、恢复及权限实验，不相互外推通过结论。

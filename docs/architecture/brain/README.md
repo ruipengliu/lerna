@@ -12,7 +12,7 @@
 
 先阅读本页的职责与行为，再读[实现设计](implementation.md)：固定上下文、单轮提案与调用恢复。实现设计规定内部记录、事务、算法与故障实验；[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)提供精确线字段。
 
-实现阅读顺序为[软件形状与依赖](implementation.md#module-shape) → [核心对象流转](implementation.md#data-flow) → [发送与恢复时序](implementation.md#key-sequence) → [生产可用性与性能](implementation.md#production)。Brain 的工作者与推理池可以分别扩展，任务调度和行动准入仍归 Orchestrator。
+实现阅读顺序为[软件形状与依赖](implementation.md#module-shape) → [框架接入](implementation.md#reliable-work-integration) → [核心对象流转](implementation.md#data-flow) → [发送与恢复时序](implementation.md#key-sequence) → [生产可用性与性能](implementation.md#production)。Brain 的工作者与推理池可以分别扩展，任务调度和行动准入仍归 Orchestrator。
 
 本页与实现设计均为待实现规格，静态序列通过不代表服务、隐私隔离或恢复机制已经运行。
 
@@ -103,6 +103,8 @@ Decision 成为终态后，原供应商仍可能给出可信的上调账单。Br
 此处将不明费用与物理槽分开，是为了让普通模型 API 可用，同时准确界定保障。反例是“调用超时便退回费用，再无限重试”，会超支；另一个反例是“账单未返回便永不释放本地槽”，会让已关闭的连接永久占住服务容量。两者都不能作为恢复策略。
 
 取消及暂停由 Orchestrator 关闭原决策的采纳资格，并通知 Brain 停止未启动调用、尽力终止在途调用。迟到输出可以按当前用途权限留作原调用诊断，不能成为下一轮提案；迟到计费仍沿原调用对账。取消成功只表示 Brain 不再推进该决策，不表示供应商已经停止或不再收费。
+
+Brain 的 DecisionService 与 RecoveryWorker 接入[公共接纳及有界工作模板](../reliable-work.md)，DecisionStore 在原提交域共同保存领域事实、回执与责任槽。公共层检查领取和责任版本，Brain 保留调用、内容保存、终态及费用的裁决；同步查询与已完成决定的返回不空建 job。
 
 远程 Brain 在接纳时保存输入、固定配置及后续责任，Orchestrator 保存查询工作；通知只负责唤醒。Brain 重启后从原记录恢复，不能因为 worker 租约换主便重复发送模型请求。Brain 的持久记录与 Orchestrator 可在同进程共库提交；独立部署时使用同一行为契约并分别持久化。
 

@@ -20,10 +20,11 @@ flowchart TB
       D -->|内部创建| C[InternalChildFactory]
       D -->|外部交接| L[(Collaboration Store · 映射 / 进展 / jobs)]
       C -->|同事务写映射| L
-      L -.->|持久 job| A[ExternalAgentAdapter]
+      J[公共有界工作模板] -->|领取 / 条件回写| L
+      J -.->|一次有限处理| A[ExternalAgentAdapter]
       A -->|原事实归并| F[DelegationReducer]
       F -->|短事务| L
-      L -.->|持久 job| S[ControlPropagator / SettlementCoordinator]
+      J -.->|一次有限处理| S[ControlPropagator / SettlementCoordinator]
     end
     D -->|核验准确依赖| K[Agent 目录 / 授权 ports]
     C -->|创建 Task／额度| P
@@ -33,7 +34,7 @@ flowchart TB
     S -->|控制／封账| X
 ```
 
-图中协作模块位于父任务固定 Orchestrator。实线表示同步用例、读写或 port 调用，虚线表示宿主 JobRunner 领取持久责任后调用对应组件。创建 Task／额度、父投影／job 的更新与协作映射通过同一事务句柄提交；外部交接先用短事务保存本地责任。外部 Agent 的原创建、查询、控制及封账调用均在事务外，原生响应沿 ExternalAgentAdapter 结构化映射后返回，不能直接写父任务状态。
+图中协作模块位于父任务固定 Orchestrator。实线表示同步用例、读写或 port 调用，虚线表示宿主 JobRunner 装配公共有界工作模板后调用领域组件。创建 Task／额度、父投影／job 的更新与协作映射通过同一事务句柄提交；外部交接先用短事务保存本地责任。外部 Agent 的原创建、查询、控制及封账调用均在事务外，原生响应沿 ExternalAgentAdapter 结构化映射后返回，不能直接写父任务状态。
 
 | 内部职责 | 决定及产出 | 边界 |
 | --- | --- | --- |
@@ -48,6 +49,26 @@ flowchart TB
 替代方案是让内部 Agent 也各自运行 Orchestrator。它增加创建、控制和预算的分布式缝隙；需要独立信任或运维边界时才使用，统一按外部路径实现，不另定义中间类型。
 
 存储适配器只实现所属表的条件读写，外部适配器只实现固定版本 Agent port。两者由宿主注入；DelegationReducer 和封账规则不依赖提供方 SDK。内部子进展直接读取同 Orchestrator 的 Task 修订，再走相同聚合规则；不为读取同一库已有事实增加网络事件链。
+
+<a id="reliable-work-integration"></a>
+### 1.1 接入公共接纳与工作模板
+
+协作用例 facade 装配[接纳模板](../reliable-work.md#admission)，JobRunner 装配[有界工作模板](../reliable-work.md#interfaces)。公共库处理原命令去重、提交结果分类及领取回写；DelegationAdmission、DelegationReducer 和 SettlementCoordinator 仍裁决父资格、唯一子映射、单调事实与关闭。协作 Store 实现同一逻辑 JobStore，不增加协作调度服务或第二个任务循环。
+
+同提交域的 TaskCoordinator、BudgetLedger 与协作 repositories 参加 `transaction.Within`，仅接收所属用例允许的受限 Tx。内部委派沿原命令、根到叶祖先、父预算、委派及子创建槽的锁序检查；全部业务锁之后才取得相关工作槽锁，调用 `Raise(tx, ...)`，将子 Task、allocation、双向映射、子首次工作及原 `applied` 回执共同提交。任何参与仓储不能自行提交。外部委派的 `applied` 只提交父侧委派、固定 `creation_key`、预留及发送责任；跨 Orchestrator 接收方在自己的事务接纳，公共模板不跨两个 owner 提交。
+
+下表为协作提供的槽键后缀；完整键还包含 tenant、固定 Orchestrator／owner 及 kind。原命令和远端调用身份保存在领域记录中，不以 `job_id`、领取代次或工作版本替换。
+
+| 责任及领域处理器 | 稳定槽键与原身份 | 本轮结束、等待及继续者 |
+| --- | --- | --- |
+| 外部创建／查询：ExternalAgentAdapter | 原 delegation；关联原 endpoint、creation_key 及一旦确定即不变的 remote_task_id | 唯一映射和后续观察责任共同保存后可结束创建槽；结果未知保留原键查询，由适配器继续，暂时 not_found 不准许重建 |
+| 进展归并：DelegationReducer | 原 delegation 的观察槽；关联原来源修订 | 保存单调进展及父后续责任后结束本轮；未终结或事实冲突按领域依据等待下一次观察，不重算接纳回执 |
+| 控制／输入：ControlPropagator | 原 delegation、目标端及原控制命令；输入另以原远端请求 ID／修订定位 | 持久交回真实应用／消费事实后完成对应责任；仅已发送或本地 `applied` 时仍由原转交责任查询 |
+| 封账／更正：SettlementCoordinator | 原 allocation 的结算槽；接收侧交付按 allocation／usage_revision 关联唯一校准 outbox | 当前累计差额和下一交付责任共同提交后结束本轮；未知费用保留预留；已 closed 委派收到可信上调仍 `Raise` 原账务责任，不重开子目标 |
+
+一次领取取得 `job_id / lease_epoch / observed_work_revision`。处理器可执行多个短事务及事务外调用：先查原事实，必要时持久登记发送意图，再调用原端口，最后归并结果。每笔受领取保护的业务写入均在取得业务锁后，按稳定槽键顺序最后锁相关工作槽并调用 `Guard`；业务结果、下一责任与 `Finish` 在同一事务提交。领取失效则不能写这次处理结果，新的责任版本也不能被旧完成或旧退避清除，具体判定由[共同完成规则](../reliable-work.md#completion)实现。可信远端迟到进展和账单仍可经独立事实归并入口接收；该入口核验来源、原映射及修订，不借旧领取授权写入。
+
+本地提交未知先查询原命令、委派或结算 intent；外部创建未知先沿原 `creation_key` 核对。公共模板不会因为超时自动再次创建。安全重投、总次数、绝对期限及耗尽后的等待条件继续由本页第 9 节决定；控制、原创建查询和结算按[容量接口](../reliable-work.md#capacity)保留份额。恢复审计同时检查未关闭委派和已关闭委派的未结账务，按原键补槽，不依赖展示 phase。
 
 ## 2. 存储与唯一约束
 
@@ -64,7 +85,7 @@ flowchart TB
 | delegation_progress | 原任务、remote_revision、摘要、结果、未知效果、费用修订 | 同来源修订唯一；同修订异内容冲突 |
 | delegation_controls | 本地控制修订、固定子命令、逐端状态和在途责任 | 决定与传播 job 共同提交 |
 | delegated_inputs | 原远端请求 ID／修订、答复引用、原转交命令和消费回执 | 同业务输入只转交一个固定版本 |
-| delegation_jobs | 创建、读取、控制、输入或结算的原责任 | 每原对象每 kind 一个活动槽，复用宿主调度 |
+| delegation_jobs | 槽键、原对象关联及[公共工作字段](../reliable-work.md#work-record) | 按上述稳定键唯一；适配统一 JobStore 的 `Raise / Claim / Guard / Finish`，业务变化与责任共同提交 |
 | receiver_correction_outbox（Orchestrator 账本） | 原 allocation、usage_revision、完整累计 Closure 摘要、有限 task.billing_reconcile 命令尝试及回执、交付状态 | 协作只引用原 receiver 的同一账本行，不复制费用权威；已 closed 委派仍按它恢复交付 |
 | delegation_closures | 映射、目标封闭依据、效果核清及封账引用 | closed 后长期保留最小身份与关闭依据 |
 
@@ -393,5 +414,7 @@ Closure 提交后查询投影为 closed，历史核对记录不覆盖关闭依�
 | CL-18 | 已声明严格上界的远端计费超出 allocation，随后重复发送最终账单和 Closure | 接收方封闭新消费并给出原计费证据；父一次记全部真实费用、超额债务与合同违约，重复账单不双扣，证据不足时保留原预留且不完成 DelegationClosure |
 | CL-19 | 委派已 Closure、allocation 已 settled，原提供方上调同一调用账单；接收方校准唤醒过期未获回执，父方保存 intent 后故障，budget.settle 结算答复也丢失 | 接收方 outbox 保留旧唤醒并以同修订继任命令取得同 JobAck，父方已 closed 委派的 durable job 查询原结算命令和当前 allocation，必要时用继任命令；父只追累计差额一次，已释放额度不倒流，超预算时停新计费；历史 phase 不重开且当前查询显示更正责任 |
 | CL-20 | 接收方多笔单次合规消费合计突破 allocation，提供方另一笔账单又突破其单次声明上界 | 父方凭原调用及可信账单收全部真实费用，两个事故原因独立判断且可同时成立；某项归因证据暂缺仍保存已知原因与 pending，不把子方自报原因当裁决，也不因超额抹去已关闭的原目标事实 |
+| CL-21 | 外部创建 worker 领取后停顿，另一 worker 接替；旧 worker 带远端真实答复返回 | 旧领取不能写映射或结束工作；原来源事实可由归并入口核验后保存，仍只有原 creation_key 对应的一个远端任务 |
+| CL-22 | 结算 worker 读取账单修订后收到更高可信用量，旧 worker 随后完成或退避 | 新账务责任及 work_revision 共同提交；旧回写不能清掉或推迟新责任，父按原 allocation 只追累计差额且不重开目标 |
 
-[跨 Orchestrator 额度序列](../contracts/examples/protocol/23-cross-orchestrator-budget.json)检验当前分配、接收门禁与封账关联。既有[委派协议序列](../contracts/examples/protocol/12-delegation-mapping.json)检验映射、控制和输入的字段关联。上述事务、独立远端及真实效果实验仍须由参考实现和至少一个独立适配器提供运行证据。
+[跨 Orchestrator 额度序列](../contracts/examples/protocol/23-cross-orchestrator-budget.json)检验当前分配、接收门禁与封账关联。既有[委派协议序列](../contracts/examples/protocol/12-delegation-mapping.json)检验映射、控制和输入的字段关联。JobStore 适配器还须运行[公共故障用例](../reliable-work.md#validation)，以 CL-01／02 覆盖接纳原子性，以 CL-21／22 覆盖协作事实与领取的交接。上述事务、独立远端及真实效果实验仍须由参考实现和至少一个独立适配器提供运行证据。

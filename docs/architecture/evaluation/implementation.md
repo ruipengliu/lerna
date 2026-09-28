@@ -62,13 +62,14 @@ flowchart TB
       D --> S
       P --> S
       R --> S
-      S -.->|实验 job| R
+      J[公共有界工作模板] -->|领取 / 条件回写| S
+      J -.->|一次有限实验处理| R
       R --> A
       R --> T
       T --> S
       E --> S
       O --> S
-      S -.->|发布 / 撤回 job| W
+      J -.->|一次有限发布 / 撤回处理| W
       W --> S
     end
     Caller --> F
@@ -78,10 +79,31 @@ flowchart TB
     W --> Host
 ```
 
-图例：实线表示同步依赖；指向 repositories 的实线为同 owner 的事务读写，虚线为持久 job 的领取。EnvironmentAdapter 操作隔离环境，DatasetRegistry 读取准确材料，ReportSealer 写入不可变报告，RolloutWorker 激活、观察或停用目标；这些外部调用均在事务外执行，答复回写原责任后才能推进下一步。
+图例：实线表示同步依赖；指向 repositories 的实线为同 owner 的事务读写，虚线为公共模板领取持久 job 后调用领域处理器。公共库分别装入实验和发布工作池，不取得评测资格或目标激活的裁决权。EnvironmentAdapter 操作隔离环境，DatasetRegistry 读取准确材料，ReportSealer 写入不可变报告，RolloutWorker 激活、观察或停用目标；这些外部调用均在事务外执行，答复回写原责任后才能推进下一步。
 图中 facade 的反馈输出受 ExposureLedger 控制，不能从 ReportSealer 或内容端口旁路读取保留成绩。
 分区占用、环境身份、报告封存和真实激活分别确认。
 报告通过不会直接生成业务 Grant，也不会证明组件已在节点就绪。
+
+<a id="reliable-work-integration"></a>
+### 1.1 领域接纳与工作模板的分工
+
+evaluation facade 复用[接纳模板](../reliable-work.md#admission)，各 worker 在原评测 owner 装配[有界工作模板](../reliable-work.md#interfaces)。Registry、PlanService、RunCoordinator、ExposureLedger 和 ApprovalOwner 通过 `transaction.Within` 及各自受限 Tx 参加领域事务；公共库统一命令判重、提交结果和逻辑 JobStore。实验环境与扩展宿主仍经原端口交接，不形成跨 owner 事务，评测也不因共享工作库取得其他模块的事实所有权。
+
+接纳的成功点沿用方法登记。plan_create 可以在冻结计划、永久次数、占用与回执共同提交后同步结束，无后续责任时不创建 job；run 必须连同全部 SampleRun 位置及首次准备责任提交；approve／revoke 必须与逐目标发布／停用责任共同提交。`feedback_open` 在输出前持久保存暴露及影响责任，`approval_check`／`approval_lease` 保存原使用资格与固定窗口，因此都经过写命令接纳；其名称不使它们成为只读查询。普通 read 和 rollout_read 不创建工作。
+
+| 责任与领域处理器 | 稳定槽键后缀及原事实 | 本轮结束或等待时的责任归属 |
+| --- | --- | --- |
+| 环境准备／样本／核对：RunCoordinator | 原 SampleRun／kind，关联冻结 run/sample/arm、environment_key 和全部 attempt | 一轮事实与下一责任共同提交后结束本轮；创建未知由 EnvironmentAdapter inspect 原环境键，真实副作用未知沿原操作核对。重领和工作版本变化不增加样本或重置物理尝试预算 |
+| 取消／封闭／销毁：RunCoordinator | 原 environment_key／kind，关联原 run 及管理命令 | seal、在途效果、费用和 destroy 各有确认；未知由原环境责任继续，run 终结不删除这些槽，不创建替代环境掩盖失败 |
+| 报告构造／封存：ReportSealer | 原 run／report_id 的封存槽，关联冻结样本集合及其修订 | 事务外构造正文，短事务核验完整分母与当前资格后封存；缺证据或资格改变按原 run 保持未封存或保存无效结论，不重跑样本“补齐”成绩 |
+| 暴露影响：ExposureLedger 的 ImpactWorker | 原 exposure_id 的影响槽，关联稳定分页游标 | 每页游标、失效投影、环境 seal 与逐目标撤回责任共同提交；最后一页已交接全部责任才结束扫描。下游未完成仍各自持久负责，原暴露门禁在扫描前后均直接生效 |
+| 发布／观察／撤回／回退：RolloutWorker | 原 approval／target／kind；回退关联原 source_approval／target 及其固定 rollback activation | 原 activation 的实际绑定、当前 ready 和观察窗口满足才推进批次；未知继续查原映射。回退重新核验独立旧批准，不借 job 恢复原已撤回批准 |
+
+完整槽键带 tenant、固定评测 owner；kind 区分可独立完成的责任。物理 `sample_attempts`、来源组 gate revision、计划正式尝试序号均是领域事实，不能用 `lease_epoch` 或 `work_revision` 代替。JobStore 在 `Claim` 后交给处理器 `job_id / lease_epoch / observed_work_revision`，处理器先读当前阶段，再决定本轮需要的短事务和外部调用，不限制为一次准备、一次执行、一次提交。
+
+涉及正式资格的事务仍按原命令、tenant／owner、来源组、计划／样本／报告／批准等既定业务锁序核验原暴露及 quarantine；所有业务锁之后才按稳定键锁本事务所涉工作槽。受领取保护的事实变更必须通过 `Guard`，与 `Raise(tx, ...)`、游标及 `Finish` 同事务提交。原暴露登记走自身命令事务，不能等待某 worker 的领取到期才关闭新使用；领取本身也不授予环境准备、样本尝试或发布的启动许可。旧 worker 回写与新责任竞争按[共同完成规则](../reliable-work.md#completion)保留新责任；可信环境事实可经独立原身份归并入口接收，过期领取不能直接提交评分或推进发布。
+
+本地提交未知查原命令与领域对象；环境或激活未知查原环境键、activation 和固定管理命令。框架不按超时自动重试物理样本、刷新批准窗口或换目标。安全重试仅由冻结计划及已核实效果决定，所有尝试费用仍进入原统计位置。实验、发布、撤回与环境清理按[容量规则](../reliable-work.md#capacity)分别配置有限份额；恢复扫描同时审计运行终态后的清理／账务及已封存报告的影响／撤回责任，不能仅按运行状态过滤未结工作。
 
 ## 2. 两类发布和探索活动
 
@@ -122,7 +144,8 @@ conformance 对应兼容验证，formal 对应具备正式资格的保留确认�
 | reports | report_id UNIQUE；digest | 不可变内容；当前资格在独立表 |
 | plan_eligibility | plan_id UNIQUE | 可滞后的正式资格投影及已归并暴露；准入还须查询原暴露 |
 | feedback_exposures / exposure_sources | exposure_id UNIQUE；(source_group_id, exposure_id) 索引 | 原暴露、来源组范围、发生时点与证据；正式资格的同步门禁事实 |
-| exposure_impact_jobs | exposure_id UNIQUE；扫描游标与 work_revision | 正常反馈与异常泄露均建立；按来源关系分页更新计划投影、封闭运行并登记撤回；exposure_record 原回执返回固定 impact_job_id |
+| exposure_impact_jobs | exposure_id UNIQUE；扫描游标及[公共工作字段](../reliable-work.md#work-record) | 适配统一 JobStore；正常反馈与异常泄露均建立，分页保存投影与后续责任，exposure_record 原回执返回固定 impact_job_id |
+| 其他评测工作记录（可按责任分表） | 上述稳定槽键、领域关联及[公共工作字段](../reliable-work.md#work-record) | 样本、环境、封存及逐目标工作共用逻辑 JobStore；业务事实、下一责任与原回执共同提交，不强制增加一张物理共表 |
 | formal_quarantines | tenant／评测 owner、受影响分区、证据引用、状态与恢复依据 | 历史数据来源组超线格式范围或关联不完整时先持久封闭该 owner 的全部正式改善门禁，待完整核验后才解除 |
 | release_approvals | approval_id；(state, expires_at) | 精确候选、报告、目标、批次、截止和回退 |
 | approval_uses | use_id UNIQUE | 原动作、实例、批准修订和固定启动窗口 |
@@ -430,7 +453,10 @@ approval_lease 对改善发布同样先核验原暴露门禁及 formal_quarantin
 | V-I19 | 两个不同 run_id 同时接纳同一 plan；随后分批派发及有限重试 | 只有一个整体 Run，另一命令 precondition_failed 并关联原 run；sample/arm 位置、分母及费用不重复，取消覆盖全部原环境 |
 | V-I20 | 同一 run 两样本的两臂并发准备，任一 prepare 答复丢失 | 四个独立 environment_key，恢复只查原键；同键换 sample/arm 拒绝，未知环境不能换键重建 |
 | V-I21 | 新版撤回后自动回退，分别注入旧批准撤回／到期／证据失效和切回后崩溃 | 有效旧批准独立授权新的回退 activation、work 与 reopen；其他分支只停用并保留缺口，不复活新版批准，迟到新版停用不关闭新代际 |
+| V-I22 | 样本 worker 领取后停顿，接替者完成原环境查询；旧 worker 随后带结果返回 | 旧领取不能覆盖样本、评分或槽状态；受信原事实可独立归并，原 sample/arm 分母、attempt 计数和费用均不重置，无第二环境 |
+| V-I23 | impact worker 第一页处理时同槽新增责任，旧 worker 随后结束或退避；另一个目标正请求 approval_check | 新责任及到期时间不被旧回写清除或推迟；游标与每页后续槽共同提交，原暴露门禁直接拒绝受影响的新 use，与扫描进度无关 |
 
 运行报告固定环境、全部样本、费用、原命令、证据摘要和异常注入位置。
+评测 JobStore 适配器须运行[公共故障用例](../reliable-work.md#validation)，将 V-I05／09／16／22／23 作为环境身份、暴露及分母断言；按[观测约定](../reliable-work.md#observability)分别记录领取／回写事务、分页扫描和实际环境调用成本，不能用逻辑样本数或 job 数代替物理尝试量。
 本页不提供实际成功率、隔离通过或容量达标结论。
 [回退记录序列](../contracts/examples/protocol/65-approved-rollback.json)和[定向静态校验](../validation/validate_release_recovery.py)检查独立批准、原回退重放及单计划唯一 Run；环境隔离、并发竞争和实际 Renderer 行为仍须上述运行实验。

@@ -1,0 +1,1 @@
+{"description":"脚本化输出账本，每个概念模型请求记 1 fixture_credit；未调用模型、token 未知。","fixture_only":true,"max_cost":{"amount":"1","unit":"fixture_credit"},"max_output_tokens":4096,"name":"model-profile","physical_requests":1,"version":"1.0.0"}

@@ -109,6 +109,28 @@ Memory owner 和内容 owner 可分别部署；跨库除准确引用校验外，
 默认词法索引和权威增量补扫复用现有数据分区；语义索引须单独获得处理、保存和清理许可，并证明检索收益与运行成本。
 引入语义候选不能移除逐页当前状态复核，也不能把未经许可的资料先做全库排名。
 
+<a id="reliable-work-integration"></a>
+### 1.1 公共框架接入：写入、索引与持有者责任
+
+MemoryWriter、ExtractionCoordinator 和 ContentStore 复用[可靠接纳模板](../reliable-work.md#admission)，各 Worker 复用[有限工作循环](../reliable-work.md#claim)；MetadataStore 将原命令、业务记录与逻辑 JobStore 映射到所属 owner 的提交域。Memory 与 Content 共库时可传递同一事务句柄，分别部署时仍各自保存责任，不由公共层取得来源、发布或清理的裁决权。
+
+写入用例先取得准确字节、来源和用途依据，再由 `transaction.Within` 将 Memory／Content repositories、原命令记录和 `jobs.Raise(tx)` 置于同一短事务。MemoryWriter 按下文锁序核对当前门禁，提交修订、来源边、变化项、回执与必要责任；同步写入完成不等待索引。跨库发布则先提交 `reference_intent`、固定远端登记命令及 copy 校准责任，事务外登记后再用后续事务决定发布或清理。这一准备提交不代表 `memory.create` 已 applied，原命令阶段和恢复关联持续可查；完整机制见[引用门禁](#reference-gate)。框架不把这些步骤压成一次准备和一次外部调用。
+
+下表的槽键均带认证 tenant 和本地 owner；其中远端 owner 属于固定业务关联。它们不要求 task_id，物理表可保持现有分布。
+
+| 责任槽业务键与处理器 | 固定身份及事务参与者 | 完成、等待与恢复判据 |
+| --- | --- | --- |
+| `index / index_version`：IndexWorker | owner 变化头、连续变化与 index_checkpoint；已发布索引版本固定 | 已应用范围可前移 checkpoint；新增变化由写入事务提高同槽责任版本，旧批次不能把新范围结束或延后 |
+| `extract / extraction_id`：ExtractionCoordinator | 原输入、固定提取命令与唯一 Orchestrator 任务映射、候选记录 | 只核对原任务与候选；候选发布由 MemoryWriter 另行裁决；取消或未知结果保留相应核对、暂存清理责任 |
+| `reference / 原 Memory command_id`：MemoryWriter | reference_intent、全部固定 copy、原登记命令与 held_copy_gates | 发布决定已保存，或拒绝／取消及原登记清理已持久交接，才能结束此槽；失答复查原命令，不重建 copy |
+| `copy_control / 原内容 owner / copy_id`：ClosureWorker | held_copy_gates、关联使用、清理记录及原 release 命令 | 持有期间定期核对，已关闭后仍须实际停止和清理；只有 complete 报告获原 owner 接纳才结束，无响应或 residual 保留有限等待 |
+| `closure / 准确内容版本 / holder或copy`：ClosureWorker | 原关闭修订、逐持有者事实、来源边及清理责任 | 新使用禁用、使用停止与物理清理分别核实；可把子责任持久交接，不能凭通知已送达汇总 complete |
+| `view / view_id / 工作种类`：ViewPublisher | 固定快照切点、页身份、连续 ACK 与关闭记录 | 未确认页和必要清理分别保留；某页已交付不表示已应用，原 ACK 不能越过缺页；view.pull 本身仍同步读页 |
+
+领域处理器先锁本次责任来源，最后锁槽，在同一提交事务调用 `jobs.Guard`／`jobs.Finish`，完整比较遵循[领取与责任版本规则](../reliable-work.md#completion)。是否出现新变化、关闭或清理责任由模块判断；可丢通知只提前核对，不凭通知制造新修订。有效领取处理旧索引批次时可保存已核实 checkpoint，但必须保留处理期间新增的范围；失去领取的 Worker 不能写受保护结果，真实持有者报告仍可通过独立认证的归并入口接收。
+
+`memory.query`、查询续页、内容控制读取和原回执查询不改成持久业务队列。query_sets 及页游标只是有期限的查询状态；查询所需 Grant 使用仍按原授权合同另行办理。view.open、view.ack、内容写入和候选决定虽可同步结束，仍保存各自命令决定及必要后续责任。ByteStore、库外索引及远端 owner 调用均在事务外，未知结果的核对和安全重试由对应处理器决定。共同[观测](../reliable-work.md#observability)按索引、引用登记和关闭工作分别记录，关闭与原上传核对保留独立容量。
+
 ## 2. 持久对象与数据库约束
 
 每个表的唯一键都包含 tenant_id；owner 从受信路由与认证确定。
@@ -135,7 +157,7 @@ Memory owner 和内容 owner 可分别部署；跨库除准确引用校验外，
 | content_closures | 对象身份、关闭修订、必要关联及决定摘要 | 长期最小关闭索引 |
 | reference_intents | 原 Memory 命令、准确来源集合、固定 copy／登记命令身份及阶段 | 跨库登记与本地发布的恢复责任；取消或失败也须清理原登记 |
 | held_copy_gates | 原 owner、copy_id 唯一；准确引用、最高 control_revision、最高 copy.revision、use_stopped 及本地 open／closed 门禁 | 两种修订独立单调；原内容 closed 或 copy 已停止均闭门，发布与关闭共用行锁，迟到答复不能重新开放 |
-| copy_control_jobs | 原 owner、copy_id 的唯一责任槽、due_at、领取代次及 work_revision | 登记前与 reference_intent 共同保存；持有期查询当前控制，直至停止且 physical_state=complete 的报告获原 owner 接纳；残留保留有界核对责任 |
+| copy_control_jobs | 原 owner、copy_id 的唯一责任槽；job_id、due_at、lease_epoch、work_revision 映射公共 JobStore | 登记前与 reference_intent 共同保存；持有期查询当前控制，直至停止且 physical_state=complete 的报告获原 owner 接纳；残留保留有界核对责任 |
 
 长期关闭索引不包含正文、完整参数、凭据或可重构敏感资料的解释文本。
 它用于拒绝迟到原身份、阻止旧备份复活、区分已关闭与从未存在。
@@ -350,7 +372,7 @@ once 只用于来源和输出范围可预先固定的精确 read，不用于未�
 默认词法索引复用权威数据分区，索引候选、I 与补扫使用同一数据库快照。若以后替换为库外索引，须固定与 I 对应的不可变索引版本／段清单，并保留到本次查询结束，或提供等价的快照读取；缺席时只能返回有缺口的降级结果，不能把旧 I 与已原地变化的索引拼成完整结果。
 修改和删除使用最新权威状态去重；旧索引命中不能恢复旧正文。
 
-索引 job 完成或退避也使用[责任版本规则](../orchestrator/implementation.md#job-completion)：已构建范围的 checkpoint 可以单调前移，处理期间新增的变化仍保留原槽后续责任，不能随旧批次完成而消失。Memory 的关闭、清理和 copy 校准槽采用相同规则。
+索引 job 完成或退避使用[公共责任版本规则](../reliable-work.md#completion)，具体槽映射见[框架接入](#reliable-work-integration)：已构建范围的 checkpoint 可以单调前移，处理期间新增的变化仍保留原槽后续责任，不能随旧批次完成而消失。Memory 的关闭、清理和 copy 校准槽采用相同规则。
 
 补扫命中上限时返回 partial 和缺口，不能假装新写记录已完整可检索。
 索引损坏时关闭该索引并执行有界权威扫描；仍不足则 partial，不取消扫描上限。
@@ -657,6 +679,7 @@ query_sets 到期、无引用暂存与已满足责任的变化日志可以回收
 | MI-23 提交乱序与回滚 | T1 持头并写变化，T2 尝试写入；分别让 T1 提交、回滚及崩溃 | T2 只能随后分配；头和变化共提交，无迟到低序号或回滚空洞；查询补扫、视图增量均不漏项 |
 | MI-24 快照接增量 | view.open 读取头与集合时并发 create／replace／delete，分别在其提交前后完成；页间撤权或清理正文 | 每项变化属于 S 的固定集合或 S 后增量；当前资格下降不披露旧内容，必要历史缺失明确重建；不跨页保留数据库事务 |
 | MI-25 索引槽新增责任 | 构建批次等待时提交新 Memory 变化，旧批次随后成功或退避 | I 仅覆盖已应用范围，新责任保持 ready／更早 due_at，`(I,R]` 补扫仍包含新变化 |
+| MI-27 copy 槽接替 | 旧 worker 取得 active 控制答复后租约失效；接替者先归并 closed，再让旧 worker 回写或退避 | 旧领取不能修改门禁或结束槽；同 copy 的较高关闭事实保留，停止／清理及原 release 查询继续，原登记不重新执行 |
 
-协议序列验证只检查给定字段与关联；运行实验必须记录真实数据库竞争、字节持有及隔离出口。
+上述槽映射须分别运行[公共故障套件](../reliable-work.md#validation)，MI-19、MI-25、MI-27 再核对多阶段准备、连续索引与 copy 门禁的领域断言。协议序列验证只检查给定字段与关联；运行实验必须记录真实数据库竞争、字节持有及隔离出口。
 长期关闭索引的增长、清理积压与备份恢复时间纳入容量实验，不能靠删除索引提升表面吞吐。

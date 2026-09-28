@@ -62,7 +62,8 @@ flowchart TB
       R --> S
       B --> S
       M --> S
-      S -.->|管理 job| M
+      J[公共有界工作模板<br/>独立有限管理池] -->|领取 / 条件回写| S
+      J -.->|一次有限管理处理| M
     end
     Caller --> F
     A --> Content
@@ -71,11 +72,30 @@ flowchart TB
     B --> Domain
 ```
 
-图例：实线表示同步依赖；指向 repositories 的实线为事务读写，虚线为持久管理 job 的领取。ArtifactReader 读取准确内容，ReferenceCollector 在事务外核对原责任，BindingRouter 向精确就绪实例派发。ApprovalClient 访问当前批准：批准 owner 共库时参与同一事务，远端时在事务外调用；图中节点不代表独立服务。
+图例：实线表示同步依赖；指向 repositories 的实线为事务读写，虚线为公共模板领取管理 job 后调用领域处理器。模板位于最小宿主，独立管理池不依赖受管组件 ready。ArtifactReader 读取准确内容，ReferenceCollector 在事务外核对原责任，BindingRouter 向精确就绪实例派发。ApprovalClient 访问当前批准：批准 owner 共库时参与同一事务，远端时在事务外调用；图中节点不代表独立服务。
 BindingRouter 的进程内入口、当前活动绑定、进程租约与持久就绪记录共同构成开放条件，单独写一行 ready 不会令尚未装载或已经失联的进程可用。
 任何一步缺失时，管理入口可达，业务派发保持关闭。
 
 extensions.list 由现有查询入口读取本 owner 的 Activation 仓储，复用 extensions.read(kind=activation) 的当前披露策略。共享存储中的有限 collection_queries 保存认证范围、query_id、原参数、按 ID 排序的成员、期限与位置；页读取不固定旧记录修订，也不跨请求持有事务。查询槽、扫描上限、权限变化失效、partial 与提示合并统一按[集合恢复契约](../contracts/protocol.md#collection-snapshots)实现；此表仅为临时查询状态，不增加全局目录或业务 owner。
+
+<a id="reliable-work-integration"></a>
+### 1.1 管理接纳与持久工作装配
+
+extensions facade 复用[接纳模板](../reliable-work.md#admission)，LifecycleManager 作为[有界工作模板](../reliable-work.md#interfaces)的领域处理器。公共库和管理池由受信发行程序直接提供，不经尚未就绪的插件加载；池的领取数、并发、调用时间和等待队列均有限，为停用、原步骤查询与清理保留份额。它们共用宿主账本，不增加发布 owner、数据库或通用调度服务。
+
+管理 repositories 在 `transaction.Within` 中参与所属宿主的短事务，LockStore、绑定、步骤、原命令与 JobStore 使用同一受限 Tx。共库批准核验通过 ApprovalOwner 的受限接口参加事务；远端 ApprovalClient、内容读取、磁盘发布、装载和迁移调用均在事务外。LifecycleManager 按实际阶段组合多笔短事务：先保存原步骤及继续责任，再取得外部事实，最后提交领域结果；公共模板不重跑一个包住这些外部动作的大事务。
+
+| 管理入口与接纳边界 | 稳定责任槽及原身份 | 领域完成条件与未完成时的继续者 |
+| --- | --- | --- |
+| prepare：内部准备记录可先耐久；`applied` 仅在准确字节完整且 InstallLock 耐久可用后返回 | 原 prepare 命令的准备槽，关联固定内容摘要、暂存身份及 lock_id | ArtifactReader／PackageVerifier 核实字节后由 LockStore 发布；内容未知沿原记录恢复，不发布半锁，也不增设对外 `accepted` 阶段 |
+| activate：切换意图和后续管理责任共同保存后 `applied` | 原 activation 的生命周期槽；迁移子责任绑定 activation／domain／step_id | LifecycleManager 查询原步骤和当前代际；切换提交后才确认历史激活，当前 ready 另行核验，迁移未知只能查询原步骤 |
+| reopen：沿既有活动代际保存本次实例动作 | 原 activation／当前 instance／固定 reopen action 的槽 | 新实例装载、自检及本次启动依据均有效才开放；重领不能推进 generation、重迁移或继承旧实例租约 |
+| deactivate：关闭权威新使用门禁后保存 `applied` | 原 activation／代际／停用命令的槽，关联逐实例及 residual_work | LifecycleManager 核对实际门禁和残留交接；领域 owner 继续效果与费用，管理 job 结束不证明它们已结清 |
+| dispose：保存已删或阻塞决定后 `applied` | 原 lock／dispose 命令的清理槽，关联 reference_revision 和各 holder | ReferenceCollector 核实全部释放后推进原删除步骤；引用未知保留阻塞与原责任，空间压力不提供强删依据 |
+
+完整槽键带 tenant、固定宿主 owner 和 kind，`job_id` 与 `lease_epoch / observed_work_revision` 不替换管理命令、activation、migration step 或实例身份。领取后先读原步骤，受领取保护的提交先按领域规则取得目标绑定、锁引用或步骤等业务锁，最后按稳定键取得所涉工作槽锁；`Guard`、领域事实、`Raise(tx, ...)` 和 `Finish` 在同一事务作用域完成。旧领取不能提交 ready 或改变活动指针；旧完成／退避不能清除后来写入的停用或恢复责任，公共判定见[完成规则](../reliable-work.md#completion)。JobStore 租约不隔离受管进程，实际开放仍须 BindingRouter 验证当前代际、实例租约和批准依据。
+
+提交结果未知时查询原管理命令、步骤与绑定；外部迁移或启动未知时先查原步骤或动作。持久保存下一步或等待条件才结束本轮，自动恢复不换原管理身份。已提交代际但当前实例不可核验时保持业务入口关闭，由恢复责任记录缺口并按当前实例重新取得 reopen 依据；收到可信迟到管理事实时走独立归并入口核验其原步骤与代际，不能借过期领取写状态。只读诊断、read／list 和临时集合快照不建立业务 job。
 
 ## 2. 干净安装与两类发布
 
@@ -136,7 +156,7 @@ prepare 同命令返回原锁；参数变更需要新命令及新锁。
 | instance_readiness | (target_id, instance_id, generation) | 本次装载检查及启动依据，重启失效 |
 | lifecycle_steps | (activation_id, step_kind) UNIQUE | 原步骤状态、已知效果及查询责任 |
 | migration_steps | (activation_id, domain, step_id) UNIQUE | 格式迁移前置、幂等键及结果证据 |
-| management_jobs | job_id；(state, next_run_at, priority) | 排空、装载、停用和原责任查询 |
+| management_jobs | 上述稳定槽键；[公共工作字段](../reliable-work.md#work-record)及有限到期索引 | 排空、装载、停用和原责任查询；沿统一 JobStore 条件更新，物理 next_run_at 若保留仅映射逻辑 due_at |
 | closed_extension_keys | (scope_hash, command_id) UNIQUE | 最小关闭索引，阻止旧管理命令重新执行 |
 
 锁引用的增加与业务对象接纳在同事务或持久交接中完成。跨提交域的持久交接先以固定 holder／原命令身份取得引用，再向原业务 owner 发送；答复未知时保留引用并查原命令，绝不先释放再猜测业务未接纳。收到原 owner 可查询的责任终结或独立驱动接管事实后，才按同一 holder 身份条件释放；预登记后未发出的引用也须有原工作记录和有界核对／关闭步骤。
@@ -383,8 +403,11 @@ deactivate 锁目标当前代际，验证管理身份与原 activation。
 | X-I12 | 已删除锁的旧命令重放 | 最小关闭索引阻止重新安装或再次清理副作用 |
 | X-I13 | 跨库 holder 预登记后答复丢失，同时另一管理者 dispose | 新引用入口封闭后仍见未结 holder；查原业务命令前不释放，制品不删除 |
 | X-I14 | 活动宿主无预告崩溃，旧 ready 行仍在 | read/list 不返回旧 ready=true；旧代际不重复迁移，新实例取得 reopen 依据后才派发 |
+| X-I15 | 生命周期 worker 领取后失效，接替者保存停用；旧 worker 带自检成功返回 | 旧领取不能写 ready 或重开入口；新停用责任不被旧完成／退避覆盖，实际 BindingRouter 保持关闭 |
+| X-I16 | 受管组件未 ready 且普通业务池已满，同时请求诊断和停用 | 有限管理池仍可处理获准管理请求，停用与原步骤恢复不依赖受管组件队列；达到管理上限时有明确排队／拒绝且已接纳责任保留 |
 
 每项实验记录原管理命令、代际、实例、批准与实际派发记录。
+management_jobs 适配器还须通过[公共故障用例](../reliable-work.md#validation)，将 X-I03／10／15 的锁、步骤和当前实例作为领域断言；容量记录分别计量领取、回写、磁盘发布和实际装载，不用 job 数推算固定事务数。
 字段合法、状态序列正确只能证明记录一致，不能证明进程真正停止或磁盘写入耐久。
 
 ## 11. 管理接口的查询投影

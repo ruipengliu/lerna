@@ -1,0 +1,1 @@
+{"description":"逐条件检查，保留分歧，不以执行成功冒充质量通过。","fixture_only":true,"name":"assessment-prompt","version":"1.0.0"}

@@ -5,10 +5,12 @@
 [总览](../README.md) · [项目目标](../goals.md) · [系统验收](../validation/README.md) · [版本激活](../extensions/README.md)
 
 
-实现阅读：[模块形状与依赖](implementation.md#module-shape) → [证据对象流转](implementation.md#data-flow) → [暴露与撤回内部时序](implementation.md#key-sequence) → [生产可用性与容量](implementation.md#production)。先阅读本页行为合同，再按实现页落实持久化与恢复；线字段及正反例继续由公共契约资产维护。
+实现阅读：[模块形状与依赖](implementation.md#module-shape) → [可靠工作接入](implementation.md#reliable-work-integration) → [证据对象流转](implementation.md#data-flow) → [暴露与撤回内部时序](implementation.md#key-sequence) → [生产可用性与容量](implementation.md#production)。先阅读本页行为合同，再按实现页落实持久化与恢复；线字段及正反例继续由公共契约资产维护。
 本模块让一次任务可以诊断、让能力可以重复测量，并把有证据的改进送到有限发布范围，覆盖 C8、C9。运行观测保存诊断线索；评测保存固定计划和独立判定；发布批准保存允许启用什么；扩展管理器保存每个目标实际运行什么。它们共享关联标识，不合并成功含义。
 
 默认复用宿主数据库、持久 job 和内容库。没有必需的隔离环境、独立真值或获准评测数据时，相应计划拒绝开始；不从任务自己的“成功”状态推断效果达标。当前文档给出契约及验收方法，未提供实际成功率或容量结果。
+
+评测用例接入[可靠接纳与持久工作框架](../reliable-work.md)，共同保存领域事实与下一责任。重领只推进原 SampleRun、环境和发布目标；冻结分母、正式尝试次数及原暴露门禁仍由评测 owner 裁决，公共模板不能将未知样本改为重跑或把扫描尚未完成解释为仍可发布。
 
 ## 1. 观测事实与效果证据分别保存
 

@@ -1,0 +1,44 @@
+flowchart TB
+    Caller[开发者 / 受信维护者入口]
+    Env[隔离环境与独立判定器]
+    Content[宿主内容端口]
+    Host[各目标扩展管理]
+    subgraph Evaluation[评测]
+      F[evaluation / confirmation facade]
+      C[CandidateRegistry]
+      D[DatasetRegistry]
+      P[PlanService]
+      R[RunCoordinator]
+      A[EnvironmentAdapter]
+      T[ReportSealer]
+      E[ExposureLedger]
+      O[ApprovalOwner]
+      W[RolloutWorker]
+      S[(领域 repositories<br/>计划、证据、确认、批准与 jobs)]
+      F --> C
+      F --> D
+      F --> P
+      F --> R
+      F --> E
+      F --> O
+      P --> C
+      P --> D
+      C --> S
+      D --> S
+      P --> S
+      R --> S
+      J[公共有界工作模板] -->|领取 / 条件回写| S
+      J -.->|一次有限实验处理| R
+      R --> A
+      R --> T
+      T --> S
+      E --> S
+      O --> S
+      J -.->|一次有限发布 / 撤回处理| W
+      W --> S
+    end
+    Caller --> F
+    A --> Env
+    D --> Content
+    T --> Content
+    W --> Host

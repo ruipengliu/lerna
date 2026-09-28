@@ -14,7 +14,7 @@
 
 先阅读本页的职责与行为，再读[实现设计](implementation.md)：声明式快照、可靠输入与受信确认。实现设计规定内部记录、事务、算法与故障实验；[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)提供精确线字段。
 
-实现阅读顺序为[软件形状与依赖](implementation.md#module-shape) → [核心对象流转](implementation.md#data-flow) → [输入跨提交域时序](implementation.md#key-sequence) → [生产可用性与性能](implementation.md#production)。服务、连接层与宿主渲染器可分开扩容，实际请求和确认的消费仍归业务 owner。
+实现阅读顺序为[软件形状与依赖](implementation.md#module-shape) → [公共框架接入](implementation.md#reliable-work-integration) → [核心对象流转](implementation.md#data-flow) → [输入跨提交域时序](implementation.md#key-sequence) → [生产可用性与性能](implementation.md#production)。接纳、转交和投影复用[公共框架](../reliable-work.md)，服务、连接层与宿主渲染器可分开扩容；实际请求和确认的消费仍归业务 owner，传输 Delivery 的确认也不替代业务回执。
 
 本页与实现设计均为待实现规格，静态序列通过不代表服务、隐私隔离或恢复机制已经运行。
 

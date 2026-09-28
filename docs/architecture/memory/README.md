@@ -12,7 +12,7 @@ owner、来源、许可、修订、分页与清理规则是替换实现必须保
 
 先阅读本页的职责与行为，再读[实现设计](implementation.md)：查询、提取、内容交付与关闭。实现设计规定内部记录、事务、算法与故障实验；[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)提供精确线字段。
 
-实现阅读顺序为[软件形状与依赖](implementation.md#module-shape) → [核心对象流转](implementation.md#data-flow) → [候选发布与索引时序](implementation.md#key-sequence) → [生产可用性与性能](implementation.md#production)。生产默认 Memory 与 Content 元数据共提交域，字节使用共享对象存储；独立内容 owner 按[跨库引用门禁](implementation.md#reference-gate)登记持有与关闭责任。镜像与索引始终服从原权威记录和来源控制。
+实现阅读顺序为[软件形状与依赖](implementation.md#module-shape) → [公共框架接入](implementation.md#reliable-work-integration) → [核心对象流转](implementation.md#data-flow) → [候选发布与索引时序](implementation.md#key-sequence) → [生产可用性与性能](implementation.md#production)。接纳与持久工作复用[公共框架](../reliable-work.md)，来源资格、发布和清理仍由本模块裁决。生产默认 Memory 与 Content 元数据共提交域，字节使用共享对象存储；独立内容 owner 按[跨库引用门禁](implementation.md#reference-gate)登记持有与关闭责任。镜像与索引始终服从原权威记录和来源控制。
 
 本页与实现设计均为待实现规格，静态序列通过不代表服务、隐私隔离或恢复机制已经运行。
 

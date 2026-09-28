@@ -8,7 +8,7 @@ Orchestrator 保存任务目标、控制、额度、操作意图和完成决定�
 
 默认将任务管理、上下文组装、准入、调度和结果核验放在同一模块。它们需要围绕同一个任务修订作决定，拆成独立服务会增加本地事务之外的恢复关系。独立替换边界放在 Brain、Memory、Executor，而不是 Orchestrator 的每个内部函数。
 
-阅读路径：本篇建立任务主线 → [验证生命周期](verification.md#verification-lifecycle)展开条件、评估与完成责任 → [实现篇](implementation.md#module-shape)落实提交与恢复。实现查阅：[对象关系](implementation.md#data-flow) · [准入与恢复时序](implementation.md#key-sequence) · [账务关系](implementation.md#accounting-relations) · [访问路径](implementation.md#access-paths) · [生产部署和容量](implementation.md#production)。
+阅读路径：本篇建立任务主线 → [验证生命周期](verification.md#verification-lifecycle)展开条件、评估与完成责任 → [实现篇](implementation.md#module-shape)落实提交与恢复，其中[框架接入](implementation.md#reliable-work-integration)说明领域事务与公共模板的交接。实现查阅：[对象关系](implementation.md#data-flow) · [准入与恢复时序](implementation.md#key-sequence) · [账务关系](implementation.md#accounting-relations) · [访问路径](implementation.md#access-paths) · [生产部署和容量](implementation.md#production)。
 
 ## 1. 最小任务闭环
 
@@ -194,56 +194,11 @@ sequenceDiagram
 
 ## 5. 恢复与调度
 
-job 是必须继续履行的责任，包含唯一 `job_id`、业务关联、kind、due_at、attempt_count、lease_epoch、work_revision 和有限重试策略。默认类别为 decide、dispatch、poll、verify、control、settle、extract；业务对象保存最终事实，job 完成不代表业务成功。领取代次裁决谁能回写，责任版本防止有效领取者把处理中新增的工作写成完成或延后；[完成规则](implementation.md#job-completion)同时覆盖新责任与 done／backoff 的两种提交顺序。
+job 保存必须继续履行的责任，业务对象保存最终事实；job 完成不代表任务成功。Orchestrator 的 JobRunner 接入[可靠接纳与有界工作模板](../reliable-work.md)，公共层提供原命令去重、领取和条件回写，TaskCoordinator 继续裁决目标、控制、行动准入和完成。模块如何映射责任键、事务参与者与各类处理器，见[接入设计](implementation.md#reliable-work-integration)。
 
-领取在短事务内递增 lease_epoch。过期领取可被重新领取，旧工作者不能再写任务结果；它可能已经发出的远端操作仍按原 operation_id 核对。派发者在第一次调用前已保存全部不可变输入和原命令，重启后查原回执。不能因“任务领取过期”生成新的副作用身份。
+例如 Executor 接纳固定 Invoke 后丢答复，Orchestrator 重领原 dispatch 仍查询同一 command／operation；Executor 继续核对目标效果。新 worker 不能换操作身份，旧 worker 的迟到答复不能直接修改 Task。若处理期间新增控制或账务责任，公共 `work_revision` 检查阻止旧完成／退避覆盖它；领域的目标、控制和来源修订仍分别核验。完整领取与责任竞争规则集中在[工作提交](../reliable-work.md#completion)。
 
-下图只展示领取资格的接替。领取代次变化不改变业务身份，也不裁定外部效果。
-
-```mermaid
-sequenceDiagram
-    participant A as 旧工作者
-    participant S as Orchestrator Store
-    participant B as 新工作者
-    participant E as Executor
-    A->>S: 领取原 job
-    S-->>A: lease_epoch=7，work_revision=r
-    A->>E: 事务外发送已固定的原 operation／command
-    Note over A,S: 原领取过期；外部动作可能已经发生
-    B->>S: 重领同一 job
-    S-->>B: lease_epoch=8，work_revision=r
-    E-->>A: 原效果迟到
-    A->>S: 以 lease_epoch=7 回写
-    S-->>A: 拒绝旧领取的槽及业务结果回写
-    B->>E: 查询同一原 command／operation
-    E-->>B: 当前效果与累计用量
-    B->>S: 以有效领取归并事实，核对当前责任
-    Note over S,E: 真实事实也可独立按原身份归并；不能换身份重复动作
-```
-
-责任版本解决另一种竞争：工作者仍有领取资格，但处理期间同槽收到新工作。以下两条分支从同一初始状态分别推演；新增责任与完成／退避都在领域事务中锁同一槽，读锁内当前值。
-
-```mermaid
-sequenceDiagram
-    participant W as 有效领取者
-    participant S as Orchestrator Store
-    participant N as 新责任提交者
-    S-->>W: job_id、有效 lease_epoch、观察到的 work_revision=r
-    alt 新责任先提交
-      N->>S: 同事务保存领域责任、work_revision=r+1、提前 due_at
-      Note over W,S: 保持原领取；新责任不刷新租约
-      W->>S: 按观察值 r 请求 done 或 backoff
-      S->>S: 领取仍有效，但责任版本已增加
-      S-->>W: 释放领取，保留 ready 与更早 due_at
-    else 完成／退避先提交
-      W->>S: 领取有效且仍为 r，核对后提交 done 或 waiting
-      N->>S: 同事务保存新责任、work_revision=r+1
-      S->>S: 原槽重开 ready，due_at 取更早值
-    end
-    Note over W,S: 先判领取资格，再判责任版本；二者不能相互替代
-```
-
-`verify` job 只承担条件归并与完成汇总；需要新的评估时仍经普通行动准入建立 dispatch。领域责任、版本和槽状态的完整提交规则见[实现篇](implementation.md#job-completion)。
+默认 kind 为 decide、dispatch、poll、verify、control、settle、extract；[领域工作种类](implementation.md#job-completion)定义它们何时可以结束、何时交接以及耗尽后的等待。verify 只承担条件归并与完成汇总；需要新的评估时仍经普通行动准入建立 dispatch。
 
 同一任务默认一个决策 job；已声明独立的操作可并发。调度按用户轮转，再按用户内任务轮转，控制和收尾单列保留容量；限额详见[部署](../deployment.md)。阻塞工作按 due_at 重试或等具体对象变化，不把所有等待任务循环送给模型。
 

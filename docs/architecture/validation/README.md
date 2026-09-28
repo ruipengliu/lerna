@@ -14,6 +14,8 @@
 
 实现交接的新增实验见[SYS-30～36](fault-experiments.md#implementation-clarity)：生成正文、条件先采纳、计划前序输出及质量前提、独立旧批准回退、离线封账后补账、预览保证和整项评测运行。它们仍待真实运行；内部正文／计划及离线更正的静态构造检查另由 [validate_brain.py](validate_brain.py)、[validate_lease.py](validate_lease.py) 执行；独立批准与每计划唯一 run 由 [validate_release_recovery.py](validate_release_recovery.py) 核对，不能替代事务、内容保存、账单来源或 Renderer 证据。
 
+公共框架另提供 [FW-01～09](../reliable-work.md#validation)，按[各域接入与证据矩阵](fault-experiments.md#reliable-work-framework)对真实 PostgreSQL／SQLite 适配器、模板和领域映射运行。共用套件覆盖接纳、两种版本、提交未知及恢复成本；各模块继续提供外部效果和业务成功断言，不能用 JobStore 通过代替领域验收。
+
 ## 1. 测试装配与证据
 
 最小测试宿主提供可暂停的时钟和工作者、事务故障点、受控网络代理、固定模型回放、真实模型适配器、模拟搜索源、文件版本驱动及多个有状态模拟手机。判定器可以读取独立真值，Agent 不能读取判定器的答案或手机内部状态来绕过观察。

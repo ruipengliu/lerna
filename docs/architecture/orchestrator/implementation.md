@@ -43,7 +43,25 @@ flowchart TB
 
 内部 port 返回结构化业务事实及错误。进程内接口可以直接传对象；远端代理增加原 Command／Receipt 和查询义务，不改变以上职责。
 
-存储侧用一个 Orchestrator Store 装配宿主 transaction、command_store 和 job_store；TaskCoordinator 通过它提交任务与责任，BudgetLedger 只写预算所属记录。远端 port 的代理负责协议编码、认证和原回执恢复，不替协调器作准入。将计划推进另拆为服务会复制任务修订、预算及控制判定，因此计划物化继续由既有 JobRunner 调用，只产出候选。
+存储侧由 Orchestrator Store 接入[可靠接纳与持久工作框架](../reliable-work.md#interfaces)的 transaction、command_store 和逻辑 JobStore；TaskCoordinator 通过领域参与者提交任务与责任，BudgetLedger 只写预算所属记录。远端 port 的代理负责协议编码、认证和原回执恢复，不替协调器作准入。将计划推进另拆为服务会复制任务修订、预算及控制判定，因此计划物化继续由既有 JobRunner 调用，只产出候选。
+
+<a id="reliable-work-integration"></a>
+### 1.1 公共模板在任务域的接入
+
+CommandHandler 使用公共接纳模板，JobRunner 将下文各 kind 的处理器注册到有界工作模板；二者仍装入原 Orchestrator 的应用池和工作池。公共模板统一命令去重、事务结果、领取及槽回写，TaskCoordinator 保留目标、行动准入、控制和完成裁决。与各模块自行复制版本算法相比，公共模板减少并发恢复分支的重复实现；代价是 Orchestrator Store 必须提供遵守本域锁序的事务参与者，不能把现有任意存储回调直接装入模板。
+
+| 接入点 | 领域参与者和共同提交内容 | 框架调用及边界 |
+| --- | --- | --- |
+| 任务接纳与控制 | TaskCoordinator、BudgetLedger，以及本次确需共同裁决的同域参与者；Task、预算／控制事实、原回执与下一责任 | `transaction.Within` 传递受限 Tx；`command_store` 查询／占用原键，领域裁决后共同写回执及 `job_store.Raise`。固定拒绝或无需后续处理的同步裁决不空建 job |
+| 固定输入及行动准入 | SnapshotAssembler 先在事务外取得准确依赖；TaskCoordinator 在事务中固定 Snapshot／Decision 或消费候选、保存 Intent 与预留 | 领取后可经过多个短事务；每次领取保护的提交均使用原 Claim。已经固定的 Decide／Invoke 及原命令不能由重领时的 Task 当前值重新拼装 |
+| 外部处理 | JobRunner 调用 Brain、Executor、Collaboration 和内容 port；PlanMaterializer 只产出候选 | 网络、模型和驱动调用均在事务外。提交结果未知先查原命令、候选消费或领域记录；框架不会重新运行外部步骤 |
+| 事实及完成提交 | FactReducer、TaskCoordinator、BudgetLedger 归并原事实、费用差额和条件，保存下一责任 | 按第 2.4 节先锁领域行，最后以 `Guard(tx, claim)` 核验领取；领域写入与 `Raise`／`Finish(tx, claim, domainDisposition)` 共同提交。框架只决定槽能否完成，不裁决 Task 成功 |
+
+原槽键保持 `(tenant, task_id, kind, object_id)`，所在逻辑服务和数据库分区固定为原 Orchestrator；具体 object_id 及关闭条件见[本域工作种类](#job-completion)。JobStore 可映射到现有 jobs 表，不要求与 Brain 或 Executor 共表。领取输入保存 `job_id、lease_epoch、observed_work_revision`，它们不能替代 Task、目标、控制及来源事实修订。
+
+领域处理器只有在本项责任已履行或已持久交给下一槽时才请求完成。例如 dispatch 保存已接纳事实并建立 poll 后可以结束，而原操作未知、费用未结仍分别由对应槽承担；verify 核对当前检查；尚有缺口时保存具体等待，不能仅因本次查询返回就关闭责任。原命令／原操作不可达、缺少准入依据或查询额度耗尽时，处理器保存具体等待对象、期限及恢复条件，不把未知转换为新行动。终态 Task 可以重开 settle，不得重开目标推进。
+
+已失去领取的 JobRunner 不能借事实归并回调继续准入或完成任务；可信迟到事实由独立的 FactReducer 接收事务按原 owner、对象及修订去重，并保存新责任。两条路径及 `Guard`、`Finish` 的锁定要求统一见[事务参与](../reliable-work.md#transactions)与[工作提交](../reliable-work.md#completion)。
 
 ## 2. 持久表与索引
 
@@ -64,7 +82,7 @@ flowchart TB
 | operation_intents | operation_id、task_id、不可变 Invoke、原 command_id | operation 唯一；原命令及摘要唯一关联 |
 | received_facts | owner、object_id、revision、摘要、事实引用 | 同来源对象修订唯一；同修订异内容拒绝 |
 | task_executor_bindings | task_id、executor_id、最近目标／控制修订 | 同任务执行端唯一；控制传播不能漏端 |
-| jobs | job_id、业务关联、kind、状态、due_at、work_revision、lease_epoch、lease_until、尝试数 | 责任槽唯一；work_revision 单调，可领取状态有索引 |
+| jobs | [公共工作记录](../reliable-work.md#work-record)：job_id、责任键、kind、状态、due_at、work_revision、lease_epoch、lease_until、尝试与等待依据；本域关联 task_id、object_id | 原 Orchestrator 内责任槽唯一；映射逻辑 JobStore，可领取状态有索引 |
 | budget_balances | task_id、unit、limit、spent、reserved | 每任务每计价单位唯一 |
 | budget_reservations | reservation_id、task_id、unit、上限、累计已结金额、是否最终、唯一计费来源绑定及最近来源费用修订 | 每操作每计价项唯一；Brain／Executor／Grant 对同一物理收费不得各扣一次 |
 | budget_allocations | allocation_id、父任务、接收方、单位上限、期限、状态、关闭证明 | allocation 唯一；不可换接收方或单位 |
@@ -79,9 +97,7 @@ flowchart TB
 
 Task 的 `open_effects` 与委派当前责任来自本任务全部已准入意图、当前原效果及委派记录的权威关联。参考实现可用同库当前投影及未结部分索引承载；新增意图／委派时即建立未结项，核清和封闭时才在归并事务中移出，并递增关联 Task 修订。内部子任务终结同时更新父任务的未结关联。它们不是可丢通知驱动的缓存，也不能从截断的公开数组反推全集。具体物理布局与 DDL 随[访问路径](access-paths.md)验证；投影尚未重建完整时，完成检查保持待核验。
 
-`jobs` 的业务责任槽由 `(tenant, task_id, kind, object_id)` 确定。例如同一操作只需要一个自动 poll 槽。`work_revision` 是该槽的内部责任版本：新的领域责任或需要重新核对的事实与递增版本、提前 due_at 共同提交；重复事实、可丢通知、时间到期和领取本身不递增它。它不替代 Task／控制修订，也不表示领取资格。[槽完成规则](#job-completion)防止旧处理者盖掉新责任。
-
-同一责任槽后续再需工作时更新原行，done 可回到 ready，work_revision 与 lease_epoch 均不重置。槽确已满足清理条件后才能删除；重新建立槽使用新的 job_id，旧 job_id 的回写不能命中新行。已经固定原命令的 dispatch 槽不能通过更新 payload 变成另一个操作；责任版本变化也不能重置原命令、累计尝试数、期限或重试预算。
+`jobs` 的责任键映射见[框架接入](#reliable-work-integration)。原 dispatch 槽绑定不可变 Invoke 和原 command_id，责任更新不能将它改作另一操作；任务的轮数、期限、预算与命令尝试也不因责任版本变化重置。共同字段、重开及保留规则集中在[公共工作记录](../reliable-work.md#work-record)，本域删除槽前还须满足第 9 节的任务和引用保留条件。
 
 <a id="data-flow"></a>
 ### 2.1 核心对象关系与流转
@@ -380,53 +396,25 @@ sequenceDiagram
 暂停允许既有证据完成；它禁止新的质量评估和行动。完成与取消由条件事务顺序决定：先提交终态的一方胜出，后一命令明确冲突或返回终态事实。费用未最终核清可以保守保留，不伪装成目标效果未知。
 
 <a id="job-completion"></a>
-## 7. jobs 生命周期与有限调度
+## 7. 任务工作种类与有限调度
 
-```mermaid
-stateDiagram-v2
-    direction LR
-    [*] --> ready: 共同提交
-    ready --> leased: 领取并递增代次
-    leased --> done: 覆盖当前责任
-    leased --> waiting: 当前责任仍需等待
-    leased --> ready: 回写保留责任／领取过期
-    waiting --> ready: 到时或依赖变化
-    done --> ready: 新责任提交
-```
+槽状态、领取与责任版本的判定顺序、新责任和 done／backoff 竞争统一遵循[公共工作提交](../reliable-work.md#completion)。本节只定义 Orchestrator 的责任映射；`Finish` 接受下表的领域处理结论后，仍须通过公共条件才能关闭或退避原槽。
 
-图只建模一个责任槽；Task 状态和外部效果独立。leased 的完成／退避边须同时通过下述领取与责任校验。新责任在 leased 期间只更新责任版本和 due_at，不抢占已有领取；过期领取回到 ready 不表示外部动作未发生。
+| kind／object_id | 每次处理的有界单位 | 领域完成或交接条件 | 等待及自动尝试耗尽后 |
+| --- | --- | --- | --- |
+| decide／task_id | 一个当前快照的决策或已固定计划的有限物化 | 原提案已消费／明确失效，下一任务责任已保存；无新模型调用的物化也经过同一准入 | 记录具体依赖、输入或费用缺口；等待或任务到期，不反复调用模型探活 |
+| dispatch／operation_id 或 delegation_id | 一次固定原命令提交或原回执查询 | 接纳事实已保存且 poll 已建立，或已确定禁止派发并保存原因 | 原回执未知时保存查询责任，不重新生成意图或预留 |
+| poll／operation_id、decision_id 或 delegation_id | 一次原对象事实读取和归并 | 原目标责任已结，或剩余责任已明确交给 verify／settle 等槽 | 未知效果保留；停止高频查询，等待恢复事件或受信处置 |
+| verify／task_id | 当前条件与准确成果的有限核对／完成汇总 | 当前检查已覆盖，Task 完成或下一核验／行动／输入责任已保存 | 保存缺条件、适用性或依赖原因；不反复换实现评分，外部评估仍走普通准入 |
+| control／executor_id | 一个执行端当前固定控制命令 | 已保存该端要求修订的落实事实；旧命令交接完毕不表示较新控制也已落实 | 保留逐端未确认，继续有限退避；终态不抹去待落实控制 |
+| settle／原计费来源键或 allocation_id | 一个来源的当前累计结算 | 当前可信修订已归并，未结预留或交回责任已继续保存 | 保留原预留与最小收尾责任；新可信账单可重开同槽 |
+| extract／原提取请求身份 | 一个独立获准的记忆提取请求 | 接收方已接纳且后续责任已交接，或确定拒绝 | 按原请求保存缺口；不改变原 Task 的完成结果 |
 
-| kind | 每次处理的有界单位 | 自动尝试耗尽后 |
-| --- | --- | --- |
-| decide | 一次固定快照决策 | 记录依赖／费用缺口，等待或任务到期 |
-| dispatch | 一次原命令提交或原回执查询 | 保留未决操作，转具体查询责任 |
-| poll | 一次原操作／委派事实读取 | 停止高频查询，等待恢复事件或受信处置 |
-| verify | 本任务当前条件与准确成果的有限核对／完成汇总；需外部评估时仍提交普通操作 | 保存缺条件、适用性或依赖原因；原策略允许时请求用户验收，否则等待或到期，不反复换实现评分 |
-| control | 一个执行端当前固定控制命令 | 保留逐端未确认，继续有限退避 |
-| settle | 一个原计费项或 allocation 的累计结算 | 保留原预留与最小收尾责任 |
-| extract | 一个独立获准的记忆提取请求 | 不改变原 Task 的完成结果 |
+object_id 中的计费来源键包含 source_kind 与 source_id，避免不同 owner 的原对象碰撞。每个外部命令在首次发送前固定身份、载荷和期限；同责任槽合并多项待处理来源时，领域表保存各项原身份及进度，不能用最后一份载荷覆盖未结项。
 
-领取事务只锁 job，向 worker 返回固定的 job_id、lease_epoch 和观察到的 work_revision，提交后才读取固定输入或调用外部服务。完成／退避使用另一个短事务，按第 2.4 节先锁责任来源、最后锁槽，并按数据库当前时间核验租约；不能持有领取事务的槽锁再读取领域行。
+TaskCoordinator 在新增意图、控制、条件或可信来源事实的事务中调用 `Raise`；可丢通知只唤醒扫描，不自行增加领域责任。JobRunner 向公共领取器提供按用户、用户内任务轮转的有界候选，控制和收尾各保留至少一个本机槽；每类任务、提供方和资源并发上限同时满足。实际限额装配见[公共容量接口](../reliable-work.md#capacity)。
 
-| 依次检查 | 槽的处理 |
-| --- | --- |
-| 原 job_id 不存在，或 state／lease_epoch／lease_until 已不具有本次领取资格 | 拒绝旧 worker 修改槽及受该领取保护的业务结果；不因责任版本相同恢复资格 |
-| 领取仍有效，但当前 work_revision 大于本次观察值 | 可按原身份归并已核实事实；释放本次领取，保留 ready 和已经提前的 due_at，不能写 done 或用旧退避延后它 |
-| 领取有效且责任版本相同 | 锁内核对领域责任；本次处理已完成或已持久交接全部责任才写 done，否则保存具体依赖及有界 waiting/due_at |
-
-新责任的事务与完成／退避事务锁同一槽，取锁后都读取当前值，不能用事务外旧快照覆盖。若事实归并在本事务内又生成该槽的新责任，也先递增 work_revision，再按新版本分支处理；worker 不能在回写时把观察值改成当前值来冒充已处理。真实外部事实仍可由独立归并事务沿原身份收取，不依赖旧 worker 的领取资格。
-
-| 先提交者 | 后提交者及结果 |
-| --- | --- |
-| 新责任提交：版本递增，due_at 提前 | 旧 worker 的 done 或 backoff 均转为 ready，保留新唤醒；不得覆盖它 |
-| worker 提交 done | 新责任在同槽递增版本并设 ready，不依赖补缺槽扫描发现 |
-| worker 提交 waiting／backoff | 新责任递增版本并设 ready，due_at 取既有等待与新要求中更早者 |
-
-在 leased 期间保存新责任时，due_at 也只可提前；若当前领取失效则由到期扫描重新领取。责任版本变化不刷新租约，也不清零有限重试预算；高优先级控制继续使用保留调度份额。
-
-默认先按用户轮转，再按用户内任务轮转；控制和收尾各保留至少一个本机槽。每类任务、提供方和资源的并发上限同时满足。阻塞 job 由 due_at 或具体对象变化唤醒，不进入模型空转。
-
-恢复扫描分页读取未完成 job 和缺少工作槽的未决领域记录，补建时使用同一唯一责任键。它用于发现程序缺陷或迁移留下的孤立责任；正常并发唤醒由上述共同事务完成，不能依赖补扫兜底才能保证及时性。扫描不能重新发明命令或操作身份。
+恢复适配器分页枚举未完成 jobs，以及已有任务、意图、逐端控制、条件与未结账务中缺槽的责任；按原业务键补齐，不重新发明命令或操作身份。补扫用于程序缺陷或迁移后的修复，正常唤醒仍由领域事实和 `Raise` 共同提交。需要保持未知的记录返回具体等待依据，不能用无限到期扫描维持忙循环。共同恢复调度见[公共恢复](../reliable-work.md#recovery)。
 
 ## 8. 预算分配与最终结算
 
@@ -529,7 +517,7 @@ closed 不因原计费方上调账单而重新开放。接收方以更高 revisi
 
 只读副本或缓存可承担读取投影，但准入、完成、控制和去重必须回到权威事务。跨可用区数据库能力由部署平台验收，Orchestrator 不会用 job 租约代替选主。外部请求不占事务连接；固定输入准备和内容读取限制并发与字节量，防止慢依赖耗尽连接池。
 
-按[公共容量方法](../deployment-production.md#capacity)分别测量接纳事务、候选准入、事实归并、祖先控制和恢复领取。至少记录事务 p95／p99、祖先与预算锁等待、每任务提交数、每租户最老 ready job 年龄、过期领取比例、重复事实比例、未决效果／预留年龄，以及关闭索引增长率。对原始错误率低但队列持续增长的情况，按排队年龄触发保护，不能只看入口 QPS。
+在[公共工作观测](../reliable-work.md#observability)的命令、job、领取与责任版本关联之上，按[公共容量方法](../deployment-production.md#capacity)分别测量接纳事务、候选准入、事实归并、祖先控制和恢复领取。至少记录事务 p95／p99、祖先与预算锁等待、每任务提交数、每租户最老 ready job 年龄、过期领取比例、重复事实比例、未决效果／预留年龄，以及关闭索引增长率。对原始错误率低但队列持续增长的情况，按排队年龄触发保护，不能只看入口 QPS。
 
 过载顺序为限制新任务和新目标 job、限制同用户并发与快照字节、保留控制／核对／结算容量；已接纳责任不因队列满丢弃。验收须同时压入单租户洪峰、模型长尾和数据库切换，证明恢复积压有界且其他租户能前进。分区数和 worker 数由这些实验的故障剩余容量推导；本节不新增未经测量的吞吐承诺。
 
@@ -539,6 +527,8 @@ closed 不因原计费方上调账单而重新开放。接收方以更高 revisi
 [访问路径矩阵](access-paths.md)逐项规定接纳、候选准入、事实归并、完成核验、控制传播、领取恢复、列表和结算的关联键、逻辑读取批次、扫描／返回上界及锁范围。当前没有正式数据库 DDL、运行 SQL 或执行计划，表多不能直接推导查询慢；每路径的实际查询次数、索引命中、锁等待、写入放大和故障剩余容量须在参考实现上记录。活跃子任务限额不限制终身历史数量，完成不能依靠反复扫描历史证明未结责任为零。
 
 ## 11. 可执行故障实验
+
+Orchestrator Store 先通过[公共接纳与工作故障用例](../reliable-work.md#validation)，再用下列领域实验验证控制、预算和完成裁决。公共适配器通过不替代这些业务断言。
 
 每项实验从真实入口发起，在指定断点暂停工作者，恢复后读取原回执、业务行、jobs 和独立目标真值。以下仍是运行实现的验收规格；JSON 序列只检验其中可表达的字段及关联。
 

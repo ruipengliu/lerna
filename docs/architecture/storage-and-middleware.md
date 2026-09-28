@@ -72,13 +72,13 @@ sequenceDiagram
 
 | 路径 | 固定机制 | 失败后继续者 |
 | --- | --- | --- |
-| 正常领取 | 按分区、工作类别、状态、due_at 和稳定键批量扫描；短事务 `FOR UPDATE SKIP LOCKED` 领取并递增 lease_epoch | 原 job；领域写入核对领取资格，完成／退避另核对当前 work_revision，见[责任槽规则](orchestrator/implementation.md#job-completion) |
+| 正常领取 | 按分区、工作类别、状态、due_at 和稳定键批量扫描；短事务 `FOR UPDATE SKIP LOCKED` 领取并递增 lease_epoch | 各域物理表接入统一逻辑 JobStore；业务与工作回写共同遵守[公共条件提交](reliable-work.md#completion) |
 | 长期等待与历史完成 | 等待工作有具体期限／依赖，不占 goroutine；终态工作退出活跃领取索引 | 恢复扫描按原责任键检查缺槽，不能新造命令身份 |
 | 唤醒合并 | 有限内存集合只保留“某分区／类别需扫描”；载荷不含租户正文或用户凭据 | 集合溢出可丢提示，保留周期扫描 |
 | 提交后发送失败 | NOTIFY 使用独立提交与有限超时，失败不回滚原业务、也不让客户端重提已成功命令 | 扫描发现原记录；无需可靠地补发每一条通知 |
 | 监听连接恢复 | 先提交 LISTEN，再读取数据库当前到期工作，随后同时消费通知与周期扫描 | 重复提示按原记录去重，不依赖通知序号恢复 |
 
-jobs 的责任版本在业务事务内递增；NOTIFY 只唤醒扫描，不产生新的责任版本。新责任与旧 done／backoff 争用原槽，使两种提交顺序都保留当前工作；周期补扫不承担修复正常并发丢唤醒的义务。Memory 索引、关闭与 copy 校准同样采用此规则，固定外部命令和累计重试预算不随版本变化重置。
+[公共框架](reliable-work.md#work-record)集中定义责任槽、版本递增、完成竞争及适配器接口；本节定义其存储与唤醒实现。Orchestrator、Memory 索引／copy 校准及其他模块共用这套逻辑契约，各自保存领域记录和责任键。NOTIFY 不产生责任版本，周期补扫不承担修复正常并发丢唤醒的义务。
 
 NOTIFY 只向当时监听的会话发送提示；同事务相同载荷会合并，且队列满会使包含 NOTIFY 的事务提交失败，因此它不能进入本方案的业务提交事务。监听器不持长事务，也不把 NOTIFY 当作多租户保密通道。[PostgreSQL NOTIFY](https://www.postgresql.org/docs/18/sql-notify.html) 监听重建的先后顺序遵循官方的“先监听，再读取当前状态”规则。[PostgreSQL LISTEN](https://www.postgresql.org/docs/18/sql-listen.html)
 

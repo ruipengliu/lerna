@@ -78,6 +78,28 @@ flowchart TB
 
 grant.list 由现有查询入口读取本 owner 的 GrantRecord 仓储，复用 grant.read 的当前披露策略。共享存储中的有限 collection_queries 保存认证范围、query_id、原参数、按 ID 排序的成员、期限与位置；页读取不固定旧记录修订，也不跨请求持有事务。查询槽、扫描上限、权限变化失效、partial 与提示合并统一按[集合恢复契约](../contracts/protocol.md#collection-snapshots)实现；此表仅为临时查询状态，不增加全局目录或业务 owner。
 
+<a id="reliable-work-integration"></a>
+### 1.1 公共框架接入：许可决定与后续收尾
+
+GrantLedger、LeaseLedger、PairingController 复用[原命令接纳模板](../reliable-work.md#admission)，RevocationWorker 及账单交回处理器复用[有限工作循环](../reliable-work.md#claim)。公共层管理去重、领取和条件回写，许可父链、一次消费、额度、撤回及封账条件仍由本 owner 的领域规则裁决。Grant、结算、Confirmation、原命令与必要 jobs 通过 `transaction.Within` 传递同一事务句柄；确认只与其实际消费业务共事务，其他 owner 不通过这一句柄访问授权表。
+
+`grant.issue`／`grant.use` 等短事务入口可以直接提交固定回执，不为已经结束且没有后续责任的调用创建 job。撤回在保存 revoked 和原回执的事务中调用 `jobs.Raise(tx)` 建立逐目标传播责任；可信费用修订在保存账本差额的事务中建立或推进对应交回责任。原费用和使用事实先于外部交回耐久，发送和回执核对在事务外，取得回执后另行归并。公共模板不把这些阶段合成一个事务，也不替业务选取继任命令。
+
+常规槽键含认证 tenant 和原 owner；下列对象无需关联 Task 才可工作。配对批准前使用宿主固定的预认证会话域，依据 device_code／nonce 等方法所需证明限定原命令和会话；批准事务才绑定认证用户的 tenant，保留此前原会话与命令关联，不能借绑定重建已领取资格。
+
+| 责任槽业务键与处理器 | 固定事实与事务参与者 | 完成、等待与恢复判据 |
+| --- | --- | --- |
+| `revoke / object_kind / object_id / endpoint_id`：RevocationWorker | 原撤销事实、revocation_targets 的最高要求与已落实修订、固定控制命令 | 目标已落实所要求范围后结束；更高撤销事实推进同槽，未知端保留有限核对，发送成功不等于封闭 |
+| `billing / use_id / usage_revision`：原 use 账单交回处理器 | use_settlements、累计用量修订、use_billing_outbox 与原 Task 路由 | 原 Orchestrator 的持久 JobAck 才结束本修订交付；同修订摘要固定，r2 不覆盖未交付 r1；use 已 final 也继续 |
+| `lease_report / instance_id / lease_id`：原实例串行结算处理器 | 原实例账本、lease_report_outbox、固定未决 usage_revision 和结算命令 | 先取得原报告 applied 并保存输出，再推进后续累计量；未知报告阻止后续自动结算，reconciled 不清除迟到账单责任 |
+| `pairing_cleanup / pairing_id`：PairingController 的清理处理器 | 原会话、恢复包保留期限、凭据引用与最小领取关闭索引 | 只清已达到保留条件的秘密；未完成实际清理时保留原责任，不撤销或再次签发既有端点资格 |
+
+这些槽映射到原 owner 或原实例的 JobStore，不能把两个提交域的 outbox 合为一笔事务。领域确定新修订是否产生责任以及哪些要求可以合并，JobStore 只原子维护槽版本和 due_at。提交时先按本页顺序锁许可／用量／目标等领域记录，最后锁责任槽，并在同一事务执行 `jobs.Guard`／`jobs.Finish`，完整判定见[公共完成规则](../reliable-work.md#completion)。例如旧撤回工作返回时已有更高要求，已核实的端侧落实事实可单调归并，但旧工作不能结束或延后新要求。
+
+账单交回的安全重试并不相同：在线 use 交回按[在线结算](#5-一次使用与并发裁决)的来源修订去重规则保存有限继任尝试；离线报告按[离线封账](#8-离线分配重连与封账)要求先核清原决定，不可仅凭期限届满或通用失败码换命令。`lease_epoch` 仅约束宿主领取，不能替代授权离线租约、start_before、credential_generation 或资源启动门禁。
+
+`grant.check`、read/list、原使用及结算查询保持同步查询；collection_queries 的持久分页状态不形成业务推进 job。`pair.claim` 虽会轮询 pending，仍是保存固定决定的命令；旧 pending 回执不随批准改变，下一轮有限查询使用新命令，领取成功后只恢复原端点及凭据。原回执返回继续复核当前披露资格。共同[观测](../reliable-work.md#observability)按撤权、在线账单交回和离线报告分别计量；控制、封账与原决定查询保留容量，不能因普通 use 洪峰失去继续者。
+
 ## 2. 本地身份与远端身份
 
 本地首次启动先取得独占宿主资格，再创建随机本地 tenant 和用户 actor。
@@ -123,6 +145,7 @@ ID 为随机标识，唯一索引承担去重；ID 格式和不可猜测性不�
 | 原实例的本地租约账本 | (tenant, instance_id, lease_id, use_id) UNIQUE | 全部原使用及来源账单修订；原计量负责方与账本在同一受信提交域内共同保存费用变更及待报责任 |
 | 原实例的 lease_report_outbox | (tenant, instance_id, lease_id) 单一未决报告 | 已确认 owner 修订、待报用量、固定 usage_revision、完整结算命令和原结果；后续账单合并但不越过未决报告 |
 | revocation_targets | (tenant, object_id, endpoint_id) | 要求修订、端侧已落实修订、最后核对时间 |
+| JobStore 责任槽映射 | 所属提交域及上述稳定业务键唯一；job_id、due_at、lease_epoch、work_revision | 由撤销目标、outbox 或清理记录关联；业务事实与 Raise 同事务，不另建许可或费用权威 |
 | pairing_sessions | pairing_id；device_code_hash UNIQUE；user_code_hash | 会话期限、nonce、范围、状态和一次领取索引 |
 | endpoints | (tenant, endpoint_id)；credential_fingerprint UNIQUE | 当前 instance、凭据代次、状态与批准范围 |
 | closed_security_keys | (scope_hash, object_kind, original_id) UNIQUE | 最小关闭索引，阻止旧身份被当成新请求 |
@@ -421,8 +444,10 @@ allocate 锁当前持续许可、端点实例及可分配余额。
 | S-I22 | 文件路径在授权和实际打开之间替换为越界符号链接，或另一个租户创建同名相对路径 | 句柄相对解析与租户根复核拒绝越界；已签发 Grant 或规范字符串不能放行目标动作 |
 | S-I23 | final 的 Grant use 连续 r1／r2 费用上调分别与交回 outbox 同时提交，随后断网、停机超过原命令期限再以新 ID 交回，令 r2 通知先到；原 Task 已终态且旧 settle job done | r1／r2 原 outbox 均先恢复原尝试，到期后以后继命令交回并按来源修订合并同一 JobAck；Orchestrator JobAck 后各源交付才结束，任务按最新原 use 账只记累计差额一次，迟到 r1 不回退、不重开 use 或 Task，不和 Executor 投影双扣 |
 | S-I24 | 租约最终封账后上调原账单，交回丢答复并重启，再重放原结算命令 | 沿原来源修订追记差额，reconciled 不重开，旧回执不改、余额不再次释放；超额照实入账并停新计费，新 use／用量被拒 |
+| S-I25 | 撤权 worker 领取后，原槽提交更高要求，再返回旧落实答复或退避；另注入领取过期接替 | 有效旧领取只能归并原落实事实，保留新责任及更早 due_at；过期领取不写受保护状态，已核准使用和实际外部效果不被改成不存在 |
+| S-I26 | 尚未绑定 tenant 的配对会话与命令已保存，批准后重放原 begin／claim，再让清理 worker 接替 | 原会话、唯一领取和恢复包保持原关联；不能因身份域绑定重新生成会话或凭据，清理后只返回获准关闭状态 |
 
-记录 check/use/revoke 的提交延迟、冲突率、传播积压和未封账预留。
+各提交域的槽适配器须运行[公共故障套件](../reliable-work.md#validation)，并以 S-I23–S-I26 核对在线／离线交回、撤权新责任和预认证的不同领域条件。记录 check/use/revoke 的提交延迟、冲突率、传播积压和未封账预留。
 拒绝与控制使用独立容量，普通任务洪峰不能占尽撤权槽。
 以上是待实施运行实验；线序列只检查字段与已给出事实的关联。
 

@@ -5,10 +5,12 @@
 [总览](../README.md) · [共同接口](../contracts/README.md) · [授权与隔离](../security/README.md) · [评测与发布](../evaluation/README.md)
 
 
-实现阅读：[模块形状与依赖](implementation.md#module-shape) → [锁与实例对象流转](implementation.md#data-flow) → [重启内部时序](implementation.md#key-sequence) → [生产可用性与容量](implementation.md#production)。先阅读本页行为合同，再按实现页落实持久化与恢复；线字段及正反例继续由公共契约资产维护。
+实现阅读：[模块形状与依赖](implementation.md#module-shape) → [可靠工作接入](implementation.md#reliable-work-integration) → [锁与实例对象流转](implementation.md#data-flow) → [重启内部时序](implementation.md#key-sequence) → [生产可用性与容量](implementation.md#production)。先阅读本页行为合同，再按实现页落实持久化与恢复；线字段及正反例继续由公共契约资产维护。
 扩展系统把默认实现和替换实现装配成可运行宿主，覆盖 C6、C9 及 A2、A4。Plugin 是携带代码或适配器的安装包；Skill 是供 Agent 使用的操作知识与流程内容；Agent 配置绑定 Brain、Skill 和允许能力。三者都需版本化，安装不自动授予用户数据或设备权限。
 
 默认宿主运行内置或经维护者审核的受信代码。任意不可信原生插件只有在目标平台隔离通过验收后才可运行；缺少隔离适配器时拒绝安装为可执行实例。Skill、模型结果和外部 Agent 内容始终按不可信输入处理，即使它们来自已安装的软件包。
+
+最小宿主将[可靠接纳与持久工作框架](../reliable-work.md)装入自己的管理入口和有限管理池，在受管组件未 ready 时仍能诊断、停用并恢复原管理步骤。公共领取只提供处理资格，版本切换、迁移和当前实例 ready 仍由 LifecycleManager 与实际入口核验；这些接口及故障行为尚需运行实现验收。
 
 ## 1. 扩展点保持行为合同，宿主负责装配
 

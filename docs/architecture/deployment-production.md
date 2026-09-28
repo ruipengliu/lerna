@@ -14,7 +14,7 @@
 | --- | --- | --- |
 | Go 连接接入进程 | WSS 握手与逐消息认证、帧限额、按逻辑服务转发 gRPC、推送与慢端控制 | 连接可丢；原命令、Delivery 和 Reply 恢复记录在负责分区。按连接、在途消息、带宽与握手容量增加副本 |
 | Orchestrator 应用进程 | Task、计划准入、协作映射、Input／Surface、默认同分区 Grant 和 Confirmation 的业务入口 | 按对应 repository 保存事实；同一事务句柄协调需共同提交的记录。按请求吞吐增加副本 |
-| 工作进程池 | Orchestrator 的 JobRunner 装入独立 worker 进程；同一池也可装入 Brain、Memory 等模块的后台工作，负责原 jobs 领取、远端派发、效果／费用核对和关闭传播 | 各 worker 从该 job 所属权威库领取；业务裁决仍归原模块／owner。按工作类型、提供方及租户配额分池，增加工作者不会增加数据库写容量 |
+| 工作进程池 | [公共有界工作模板](reliable-work.md#claim)装入 Orchestrator 的 JobRunner 及 Brain、Memory 等领域处理器，负责原 jobs 领取、有限处理和条件回写 | 各 worker 从所属权威库的逻辑 JobStore 领取；领域处理器裁决派发、效果／费用核对和关闭。按类型、提供方及租户分池，管理／控制／收尾保留容量；共享实现不要求共池，也不增加数据库写容量 |
 | 执行适配进程／设备宿主 | Executor、资源 owner、具体驱动及单设备门禁 | Operation、发送标记和效果事实归原 Executor；按互不冲突的资源增加实例，不能复制同一设备控制权 |
 | 管理与隔离评测进程 | Extensions、Evaluation 入口及受限实验执行器 | 安装与批准账本按 owner 保存；实验环境、CPU 和内容配额独立于用户任务。管理入口可共宿主，实验执行单独隔离 |
 

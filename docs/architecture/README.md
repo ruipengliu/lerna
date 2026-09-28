@@ -75,7 +75,7 @@ flowchart TB
 | 1．建立主线 | 本页 → [贯穿场景](walkthrough.md) → [任务编排器](orchestrator/README.md)及[实现](orchestrator/implementation.md) | 谁形成提案、谁准入，正文、效果和完成证据如何交接，异常后谁继续 |
 | 2．落实负责的模块 | [大脑](brain/README.md)／[执行](execution/README.md)／[记忆与内容](memory/README.md)／[权限](security/README.md)／[交互](interaction/README.md)／[协作](collaboration/README.md) | 按主链的交接点查完整规则，再进入本页第 5 节对应的实现章节 |
 | 3．连接独立实现 | [共同契约](contracts/README.md) → [方法索引](contracts/methods.md) → [线格式与机器资产](contracts/protocol.md) | 输入输出、成功点、错误、原身份恢复及对应构造序列 |
-| 4．装配与运行 | [宿主装配](deployment.md) → [生产部署](deployment-production.md) → [存储与中间件](storage-and-middleware.md)；按需查[扩展](extensions/README.md)与[评测改进](evaluation/README.md) | 进程与提交域、生产故障边界、安装切换及隔离评测 |
+| 4．装配与运行 | [宿主装配](deployment.md) → [可靠接纳与持久工作框架](reliable-work.md) → [生产部署](deployment-production.md) → [存储与中间件](storage-and-middleware.md)；按需查[扩展](extensions/README.md)与[评测改进](evaluation/README.md) | 公共模板与领域处理器、事务及责任槽、生产故障边界、安装切换及隔离评测 |
 | 5．交付切片 | [验收建设顺序](validation/README.md#5-建设顺序与退出条件) → [交付审查](review.md) | 首个闭环依赖、退出证据及当前实际检查范围 |
 
 [目标与功能](goals.md)保存范围和指标，[设计决策](decisions.md)保存关键选择及改选条件；[技术总览](technical-overview.md)解释四种边界和建模依据。图形查阅使用[架构图集](diagrams/architecture-atlas.html)、[可编辑全景图](diagrams/system-panorama.drawio)及[UML 导读](uml-models.md)，不以图中容器数量决定服务数量。
@@ -94,6 +94,8 @@ flowchart TB
 ## 5. 从主线进入详细实现
 
 先读各模块 README 中的行为与取舍，再沿实现文档的“模块形状与依赖 → 对象流转 → 关键事务时序 → 生产约束”阅读。模块结构图表达软件依赖，流程／时序图表达运行中的对象交接，部署图表达进程及故障域；三种视角分别给出，图中节点不自动对应独立微服务。公共字段继续以同版 Schema 为准。
+
+实现共同持久机制时先读[框架接口](reliable-work.md#interfaces)和[条件提交](reliable-work.md#completion)，再进入各模块的[接入节](reliable-work.md#integration)。框架统一参考实现的接纳与有限工作模板、逻辑 JobStore；各模块明确自己的事务参与者、责任键、成功与恢复判断，正式运行库及适配器仍待实现。
 
 <a id="design-coverage"></a>
 

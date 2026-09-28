@@ -1,0 +1,103 @@
+{
+  "scope": "STATIC ONLY; no Harness, model, database, remote sources, authorization or devices executed.",
+  "scenarios": {
+    "bluetooth-on": {
+      "schema_objects": 139,
+      "exchanges": 129,
+      "body_files": 10,
+      "generations": 2,
+      "counts_and_bytes": "passed",
+      "plan_and_reference_links": "passed"
+    },
+    "bluetooth-off": {
+      "schema_objects": 209,
+      "exchanges": 186,
+      "body_files": 14,
+      "generations": 3,
+      "counts_and_bytes": "passed",
+      "plan_and_reference_links": "passed"
+    },
+    "report": {
+      "schema_objects": 488,
+      "exchanges": 449,
+      "body_files": 30,
+      "generations": 4,
+      "counts_and_bytes": "passed",
+      "plan_and_reference_links": "passed"
+    }
+  },
+  "known_upstream_checker_limitations": [
+    {
+      "scenario": "report",
+      "label": "describe:fetch",
+      "messages": [
+        "tenant_binding: response reference belongs to another tenant"
+      ],
+      "reason": "upstream recursive tenant walker enters capability JSON Schema; data-only check performed separately"
+    },
+    {
+      "scenario": "report",
+      "label": "describe:assess",
+      "messages": [
+        "tenant_binding: response reference belongs to another tenant",
+        "tenant_binding: response reference belongs to another tenant",
+        "tenant_binding: response reference belongs to another tenant",
+        "tenant_binding: response reference belongs to another tenant",
+        "tenant_binding: response reference belongs to another tenant"
+      ],
+      "reason": "upstream recursive tenant walker enters capability JSON Schema; data-only check performed separately"
+    },
+    {
+      "scenario": "report",
+      "label": "describe:write",
+      "messages": [
+        "tenant_binding: response reference belongs to another tenant"
+      ],
+      "reason": "upstream recursive tenant walker enters capability JSON Schema; data-only check performed separately"
+    },
+    {
+      "scenario": "report",
+      "label": "describe:readback",
+      "messages": [
+        "tenant_binding: response reference belongs to another tenant"
+      ],
+      "reason": "upstream recursive tenant walker enters capability JSON Schema; data-only check performed separately"
+    }
+  ],
+  "negative_checks": [
+    "valid assessment fail blocks write",
+    "unknown effect blocks dependent read",
+    "missing output version cannot be guessed",
+    "changed goal invalidates plan",
+    "inapplicable pass cannot authorize write",
+    "plan plus direct actions rejected",
+    "query payload identity rejected",
+    "changed candidate hash would fail equality check",
+    "control proof binding changed"
+  ],
+  "control_signatures": {
+    "verified": 16
+  },
+  "markdown": {
+    "local_links": 16,
+    "tables": 12,
+    "status": "passed",
+    "rendering": "separate"
+  },
+  "contract_digests": {
+    "docs/architecture/contracts/schemas/protocol.schema.json": "sha256:3bf96ca2891358745d554465f8a6bada327bac7f8bfda7464844dba8628ca0fc",
+    "docs/architecture/contracts/schemas/methods.json": "sha256:f25425550e04cde87567d151667d58fe44532a774dad0c0bf41e15218813ff3e",
+    "docs/architecture/contracts/schemas/brain-generation.schema.json": "sha256:cbc5556e1dc3db88d7cf6c003ad48ddeb59876969e324d8b112e776d72520d39"
+  },
+  "preexisting_review_preservation": {
+    ".scratch/architecture-review/review-2026-09-27.md": true,
+    ".scratch/architecture-review/verification-review-2026-09-28.md": false,
+    ".scratch/architecture-review/verification-review-2026-09-27.md": true
+  },
+  "shared_workspace_note": "This task writes only the main scenario document and task-scenarios-data/. Other chats may update formal docs and the September 28 review; changed hashes are reported, not overwritten.",
+  "schema_objects": 836,
+  "exchanges": 764,
+  "body_files": 54,
+  "status": "passed_with_documented_upstream_checker_limitation",
+  "runtime": "not_tested"
+}

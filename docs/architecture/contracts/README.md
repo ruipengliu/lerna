@@ -44,6 +44,8 @@ sequenceDiagram
 
 例如 task.submit 的 applied 表示创建任务；execution.invoke 的 applied 表示接受原操作并承担执行责任；task.cancel 的 applied 表示 Orchestrator 保存取消决定。三者均不表示外部系统已结束。若入口尚未持久化便不可用，返回传输级错误，不伪造 accepted。
 
+部分只允许 applied／rejected 的方法需先持久准备，例如跨库 memory.create 和 extensions.prepare。准备责任不改变方法登记的回执阶段：原命令重投或 receipt_lookup 关联原准备，有限等待最终决定；本次请求期限到达仍无决定时按现有传输超时处理，明确依赖错误按原 Error 合同返回，均不生成业务 rejected。调用方继续按原身份有界查询，后台不继承该请求的结束；有原准备不能报告“原命令从未存在”的 not_found，也不能另造 accepted 阶段。参考宿主实现见[接纳模板](../reliable-work.md#admission)。
+
 ## 2. 标识、命令和查询
 
 所有业务 ID 使用带类型前缀的至少 128 位随机标识，大小写敏感，作为不透明字符串处理。标识不是权限凭证。tenant_id 从认证会话取得，不接受请求正文任意指定租户；跨端委派身份由[安全契约](../security/README.md)验证。

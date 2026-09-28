@@ -5,7 +5,7 @@
 [整体设计](../README.md) · [目标](../goals.md) · [公共契约](../contracts/README.md) · [记忆与来源](../memory/README.md)
 
 
-实现阅读：[模块形状与依赖](implementation.md#module-shape) → [许可对象流转](implementation.md#data-flow) → [在线结算内部时序](implementation.md#key-sequence) → [生产可用性与容量](implementation.md#production)。先阅读本页行为合同，再按实现页落实持久化与恢复；线字段及正反例继续由公共契约资产维护。
+实现阅读：[模块形状与依赖](implementation.md#module-shape) → [公共框架接入](implementation.md#reliable-work-integration) → [许可对象流转](implementation.md#data-flow) → [在线结算内部时序](implementation.md#key-sequence) → [生产可用性与容量](implementation.md#production)。先阅读本页行为合同，再按实现页落实持久化与恢复；接纳和工作领取复用[公共框架](../reliable-work.md)，许可消费、撤权和结算仍由原 owner 裁决，线字段及正反例继续由公共契约资产维护。
 本模块使每次读取、处理、保存、同步、披露和外部行动受用户许可约束，并保证用户能够中断和撤权。覆盖 C5、C7 与 A4；隔离约束同时适用于工具、记忆、模型、Agent 和后台改进。本文规定设计行为，平台隔离、身份接入和离线能力均需运行验收后开放。
 
 ## 1. 权限由谁决定
