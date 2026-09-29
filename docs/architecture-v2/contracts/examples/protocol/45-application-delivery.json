@@ -1,0 +1,140 @@
+{
+  "name": "application-delivery",
+  "description": "Fixed independent handler registers one target command; queue state is not domain consumption.",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "command_id": "command_23_10158c206243cff1bd709f7b0ff66906",
+          "method": "interaction.surface_create",
+          "target_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "payload": {
+            "surface_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+            "app_binding": {
+              "id": "memory_candidates_2abcaedbfa786b162ca9aec5c1d1b625",
+              "version": "1.0.0",
+              "digest": "sha256:603ab6d2c4fa8044197df7ae87121edd9e39bbb866c388825eacc7ebbfbda2b7"
+            },
+            "snapshot": {
+              "title": "Document review",
+              "blocks": [
+                {
+                  "kind": "status",
+                  "block_id": "progress",
+                  "code": "working",
+                  "label": "Ready"
+                }
+              ],
+              "request_refs": [],
+              "expires_at": "2026-09-27T00:00:00Z"
+            }
+          },
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "command_23_10158c206243cff1bd709f7b0ff66906",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "surface_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+            "surface_owner_id": "surface_owner_d3414792361b69866f486d865962ff08",
+            "app_binding": {
+              "id": "memory_candidates_2abcaedbfa786b162ca9aec5c1d1b625",
+              "version": "1.0.0",
+              "digest": "sha256:603ab6d2c4fa8044197df7ae87121edd9e39bbb866c388825eacc7ebbfbda2b7"
+            },
+            "revision": 1,
+            "snapshot": {
+              "title": "Document review",
+              "blocks": [
+                {
+                  "kind": "status",
+                  "block_id": "progress",
+                  "code": "working",
+                  "label": "Ready"
+                }
+              ],
+              "request_refs": [],
+              "expires_at": "2026-09-27T00:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "command_id": "command_24_c38d3b5578c83c1078f35c31bb3eadb6",
+          "method": "interaction.application_event",
+          "target_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+          "payload": {
+            "event_id": "event_4119639092e62c55ea8be348e4d9260d",
+            "surface_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+            "surface_revision": 1,
+            "app_binding": {
+              "id": "memory_candidates_2abcaedbfa786b162ca9aec5c1d1b625",
+              "version": "1.0.0",
+              "digest": "sha256:603ab6d2c4fa8044197df7ae87121edd9e39bbb866c388825eacc7ebbfbda2b7"
+            },
+            "event_type": "candidate.reject",
+            "payload_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "candidate_rejection_2b9a61a6ba2a1aac1d4ee30b5bdeb9dc",
+              "version": 1,
+              "hash": "sha256:acc475091707fe4ad81a7e38e2bfd16f5aaf9d59e84fcbe0e4341b223f85b7a3",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "preview_refs": []
+          },
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "command_24_c38d3b5578c83c1078f35c31bb3eadb6",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "event_id": "event_4119639092e62c55ea8be348e4d9260d",
+            "surface_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+            "surface_revision": 1,
+            "app_binding": {
+              "id": "memory_candidates_2abcaedbfa786b162ca9aec5c1d1b625",
+              "version": "1.0.0",
+              "digest": "sha256:603ab6d2c4fa8044197df7ae87121edd9e39bbb866c388825eacc7ebbfbda2b7"
+            },
+            "event_type": "candidate.reject",
+            "payload_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "candidate_rejection_2b9a61a6ba2a1aac1d4ee30b5bdeb9dc",
+              "version": 1,
+              "hash": "sha256:acc475091707fe4ad81a7e38e2bfd16f5aaf9d59e84fcbe0e4341b223f85b7a3",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "preview_refs": [],
+            "target_service_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+            "target_command_id": "candidate_command_3cbfd492cbcb033fc4ba2fab9ad30385",
+            "state": "queued"
+          }
+        }
+      }
+    }
+  ]
+}

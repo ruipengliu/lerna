@@ -1,0 +1,287 @@
+{
+  "name": "surface-lifecycle",
+  "description": "Full snapshots update independently of a device close intent.",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "command_id": "command_17_4aed2be4cef28c4e34f104954b8c7bb4",
+          "method": "interaction.surface_create",
+          "target_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "payload": {
+            "surface_id": "surface_d302e976c9dd527a9521a88c012437c5",
+            "app_binding": {
+              "id": "memory_manager_0f6943f45692bfffedae75cd05616a13",
+              "version": "1.0.0",
+              "digest": "sha256:e52ee9141d9e31df2fbe714ff65a3976bff8606facd543609aa4ac9dfc0e31ad"
+            },
+            "snapshot": {
+              "title": "Document review",
+              "blocks": [
+                {
+                  "kind": "status",
+                  "block_id": "progress",
+                  "code": "working",
+                  "label": "Ready"
+                }
+              ],
+              "request_refs": [],
+              "expires_at": "2026-09-27T00:00:00Z"
+            }
+          },
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "command_17_4aed2be4cef28c4e34f104954b8c7bb4",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "surface_id": "surface_d302e976c9dd527a9521a88c012437c5",
+            "surface_owner_id": "surface_owner_d3414792361b69866f486d865962ff08",
+            "app_binding": {
+              "id": "memory_manager_0f6943f45692bfffedae75cd05616a13",
+              "version": "1.0.0",
+              "digest": "sha256:e52ee9141d9e31df2fbe714ff65a3976bff8606facd543609aa4ac9dfc0e31ad"
+            },
+            "revision": 1,
+            "snapshot": {
+              "title": "Document review",
+              "blocks": [
+                {
+                  "kind": "status",
+                  "block_id": "progress",
+                  "code": "working",
+                  "label": "Ready"
+                }
+              ],
+              "request_refs": [],
+              "expires_at": "2026-09-27T00:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "method": "interaction.surface_read",
+          "target_id": "surface_d302e976c9dd527a9521a88c012437c5",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "status": "snapshot",
+            "surface": {
+              "surface_id": "surface_d302e976c9dd527a9521a88c012437c5",
+              "surface_owner_id": "surface_owner_d3414792361b69866f486d865962ff08",
+              "app_binding": {
+                "id": "memory_manager_0f6943f45692bfffedae75cd05616a13",
+                "version": "1.0.0",
+                "digest": "sha256:e52ee9141d9e31df2fbe714ff65a3976bff8606facd543609aa4ac9dfc0e31ad"
+              },
+              "revision": 1,
+              "snapshot": {
+                "title": "Document review",
+                "blocks": [
+                  {
+                    "kind": "status",
+                    "block_id": "progress",
+                    "code": "working",
+                    "label": "Ready"
+                  }
+                ],
+                "request_refs": [],
+                "expires_at": "2026-09-27T00:00:00Z"
+              }
+            },
+            "gaps": []
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "command_id": "command_19_c16acbdbc57faaccef8413eaae8a57fa",
+          "method": "interaction.surface_update",
+          "target_id": "surface_d302e976c9dd527a9521a88c012437c5",
+          "payload": {
+            "snapshot": {
+              "title": "Document review",
+              "blocks": [
+                {
+                  "kind": "status",
+                  "block_id": "progress",
+                  "code": "done",
+                  "label": "Done"
+                }
+              ],
+              "request_refs": [],
+              "expires_at": "2026-09-27T00:00:00Z"
+            }
+          },
+          "expires_at": "2026-09-26T00:10:00Z",
+          "expected_revision": 1
+        },
+        "response": {
+          "command_id": "command_19_c16acbdbc57faaccef8413eaae8a57fa",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "surface_id": "surface_d302e976c9dd527a9521a88c012437c5",
+            "surface_owner_id": "surface_owner_d3414792361b69866f486d865962ff08",
+            "app_binding": {
+              "id": "memory_manager_0f6943f45692bfffedae75cd05616a13",
+              "version": "1.0.0",
+              "digest": "sha256:e52ee9141d9e31df2fbe714ff65a3976bff8606facd543609aa4ac9dfc0e31ad"
+            },
+            "revision": 2,
+            "snapshot": {
+              "title": "Document review",
+              "blocks": [
+                {
+                  "kind": "status",
+                  "block_id": "progress",
+                  "code": "done",
+                  "label": "Done"
+                }
+              ],
+              "request_refs": [],
+              "expires_at": "2026-09-27T00:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "method": "interaction.surface_read",
+          "target_id": "surface_d302e976c9dd527a9521a88c012437c5",
+          "payload": {
+            "known_revision": 2
+          }
+        },
+        "response": {
+          "output": {
+            "status": "not_modified",
+            "surface_id": "surface_d302e976c9dd527a9521a88c012437c5",
+            "revision": 2,
+            "gaps": []
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "method": "interaction.surface_list",
+          "target_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "payload": {
+            "query_id": "surface_query_8b3b8f93e13ce9aa55b1cb13742d785d",
+            "filters": {
+              "app_ids": [],
+              "task_refs": [],
+              "include_expired": false
+            },
+            "limit": 20
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "surface_query_8b3b8f93e13ce9aa55b1cb13742d785d",
+            "owner_id": "surface_owner_d3414792361b69866f486d865962ff08",
+            "items": [
+              {
+                "surface_id": "surface_d302e976c9dd527a9521a88c012437c5",
+                "surface_owner_id": "surface_owner_d3414792361b69866f486d865962ff08",
+                "app_binding": {
+                  "id": "memory_manager_0f6943f45692bfffedae75cd05616a13",
+                  "version": "1.0.0",
+                  "digest": "sha256:e52ee9141d9e31df2fbe714ff65a3976bff8606facd543609aa4ac9dfc0e31ad"
+                },
+                "revision": 2,
+                "title": "Document review",
+                "expires_at": "2026-09-27T00:00:00Z"
+              }
+            ],
+            "exhausted": true,
+            "partial": false,
+            "gaps": [],
+            "unreachable_endpoints": []
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "command_id": "command_22_fbc9a17872609b6efa930267c879bb25",
+          "method": "interaction.present",
+          "target_id": "surface_d302e976c9dd527a9521a88c012437c5",
+          "payload": {
+            "endpoint_id": "endpoint_ad65d91ba5fc5f4494e00822c04e583b",
+            "open": false,
+            "seen_revision": 2
+          },
+          "expires_at": "2026-09-26T00:10:00Z",
+          "expected_revision": 1
+        },
+        "response": {
+          "command_id": "command_22_fbc9a17872609b6efa930267c879bb25",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "surface_id": "surface_d302e976c9dd527a9521a88c012437c5",
+            "endpoint_id": "endpoint_ad65d91ba5fc5f4494e00822c04e583b",
+            "intent_revision": 2,
+            "open": false,
+            "seen_revision": 2
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,352 @@
+{
+  "name": "collection-authorization-reset",
+  "description": "Changing request limit rejects only that request; a trusted authorization scope change permanently invalidates the live collection, even after the old scope returns. A new query restores enumeration without permanent query tombstones.",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 1
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000064",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000064",
+                "revision": 2,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": false,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z",
+            "next_cursor": "page-0-1"
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 1,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:03Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 2,
+            "cursor": "page-0-1"
+          }
+        },
+        "response": {
+          "error": {
+            "code": "query_conflict",
+            "message": "Original collection is invalidated; start a new authorized collection.",
+            "retry": "after_change"
+          }
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 2,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 1,
+            "cursor": "page-0-1"
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000064",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000065",
+                "revision": 3,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": true,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z"
+          },
+          "observed_at": "2026-09-26T00:00:04Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 2,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:05Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 1,
+            "cursor": "page-0-1"
+          }
+        },
+        "response": {
+          "error": {
+            "code": "query_conflict",
+            "message": "Original collection cannot continue; restart within the current authorized scope.",
+            "retry": "after_change"
+          }
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-b",
+        "scan_end": 1,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:06Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 1,
+            "cursor": "page-0-1"
+          }
+        },
+        "response": {
+          "error": {
+            "code": "query_conflict",
+            "message": "Original collection is invalidated; start a new authorized collection.",
+            "retry": "after_change"
+          }
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 2,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:07Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 1
+          }
+        },
+        "response": {
+          "error": {
+            "code": "query_conflict",
+            "message": "Original collection is invalidated; start a new authorized collection.",
+            "retry": "after_change"
+          }
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 1,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:08Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_0000000000000000000000000000012c",
+            "limit": 1
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_0000000000000000000000000000012c",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000064",
+                "revision": 2,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": false,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:08Z",
+            "expires_at": "2026-09-26T00:10:08Z",
+            "next_cursor": "scope-renewed-first"
+          },
+          "observed_at": "2026-09-26T00:00:08Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 1,
+        "truncated": false
+      }
+    }
+  ]
+}

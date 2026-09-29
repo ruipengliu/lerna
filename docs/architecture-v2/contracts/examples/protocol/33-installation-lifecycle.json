@@ -1,0 +1,304 @@
+{
+  "name": "installation-lifecycle",
+  "description": "准备完整安装锁定清单、按kind读取、停用入口与无引用清理。",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "extensions.prepare",
+          "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "payload": {
+            "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "artifact_ref": {
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "content_id": "content_3664afabad01c3d8a1cfc9c30eab2446",
+              "version": 1,
+              "hash": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c",
+              "media_type": "application/json",
+              "byte_length": 128
+            },
+            "manifest": {
+              "package_id": "package_48eec340899a03945fb4e8be55a95824",
+              "version": "1.0.0",
+              "digest": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c",
+              "kind": "plugin",
+              "entrypoints": [
+                "dist/main.js"
+              ],
+              "ports": [
+                "brain"
+              ],
+              "contract_versions": [
+                "harness/1"
+              ],
+              "dependencies": [],
+              "requested_permissions": [],
+              "trust_requirement": "trusted_native",
+              "state_formats": []
+            },
+            "config_ref": {
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "content_id": "content_69a5aab8ec111e1967815b47c00a1327",
+              "version": 1,
+              "hash": "sha256:b79606fb3afea5bd1609ed40b622142f1c98125abcfe89a76a661b0e8e343910",
+              "media_type": "application/json",
+              "byte_length": 128
+            },
+            "config_digest": "sha256:b79606fb3afea5bd1609ed40b622142f1c98125abcfe89a76a661b0e8e343910",
+            "platform": "linux-x86_64",
+            "trust_evidence": [
+              {
+                "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "content_id": "content_378e4e36ab7f07f0bc1e102f482a9491",
+                "version": 1,
+                "hash": "sha256:c97ace4c8fef2cee8fa0f3c9f52aab18dbd4f42438afe362ffb8f75ce4c04b84",
+                "media_type": "application/json",
+                "byte_length": 128
+              }
+            ],
+            "conformance_report": {
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "content_id": "content_f8d8fa943a2bf62fdd238b8db30e6310",
+              "version": 1,
+              "hash": "sha256:12a8239941565633fd75a66d523fef1e2998e87d0767d5e0d6a8e2196caa0adc",
+              "media_type": "application/json",
+              "byte_length": 128
+            }
+          },
+          "command_id": "command_72c1b93feb16b86fdeca778bc5de3f6f",
+          "expires_at": "2026-09-26T01:00:00Z"
+        },
+        "response": {
+          "command_id": "command_72c1b93feb16b86fdeca778bc5de3f6f",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "manifest": {
+              "package_id": "package_48eec340899a03945fb4e8be55a95824",
+              "version": "1.0.0",
+              "digest": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c",
+              "kind": "plugin",
+              "entrypoints": [
+                "dist/main.js"
+              ],
+              "ports": [
+                "brain"
+              ],
+              "contract_versions": [
+                "harness/1"
+              ],
+              "dependencies": [],
+              "requested_permissions": [],
+              "trust_requirement": "trusted_native",
+              "state_formats": []
+            },
+            "config_ref": {
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "content_id": "content_69a5aab8ec111e1967815b47c00a1327",
+              "version": 1,
+              "hash": "sha256:b79606fb3afea5bd1609ed40b622142f1c98125abcfe89a76a661b0e8e343910",
+              "media_type": "application/json",
+              "byte_length": 128
+            },
+            "config_digest": "sha256:b79606fb3afea5bd1609ed40b622142f1c98125abcfe89a76a661b0e8e343910",
+            "platform": "linux-x86_64",
+            "trust_evidence": [
+              {
+                "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "content_id": "content_378e4e36ab7f07f0bc1e102f482a9491",
+                "version": 1,
+                "hash": "sha256:c97ace4c8fef2cee8fa0f3c9f52aab18dbd4f42438afe362ffb8f75ce4c04b84",
+                "media_type": "application/json",
+                "byte_length": 128
+              }
+            ],
+            "conformance_report": {
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "content_id": "content_f8d8fa943a2bf62fdd238b8db30e6310",
+              "version": 1,
+              "hash": "sha256:12a8239941565633fd75a66d523fef1e2998e87d0767d5e0d6a8e2196caa0adc",
+              "media_type": "application/json",
+              "byte_length": 128
+            },
+            "manifest_digest": "sha256:05b3abf2579a5eb66403cd78be557fd860633a1fe2103c7642030defe32c657f",
+            "resolved_dependencies": [],
+            "state_compatibility": [],
+            "prepared_at": "2026-09-26T00:00:00Z",
+            "reference_revision": 1
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:01Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "extensions.read",
+          "target_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+          "payload": {
+            "kind": "install_lock"
+          }
+        },
+        "response": {
+          "output": {
+            "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "manifest": {
+              "package_id": "package_48eec340899a03945fb4e8be55a95824",
+              "version": "1.0.0",
+              "digest": "sha256:9833f6ca39d1ed4006ad176bb8fe00eeaf3dcf5dea854b4cdbc0d0a93993683c",
+              "kind": "plugin",
+              "entrypoints": [
+                "dist/main.js"
+              ],
+              "ports": [
+                "brain"
+              ],
+              "contract_versions": [
+                "harness/1"
+              ],
+              "dependencies": [],
+              "requested_permissions": [],
+              "trust_requirement": "trusted_native",
+              "state_formats": []
+            },
+            "config_ref": {
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "content_id": "content_69a5aab8ec111e1967815b47c00a1327",
+              "version": 1,
+              "hash": "sha256:b79606fb3afea5bd1609ed40b622142f1c98125abcfe89a76a661b0e8e343910",
+              "media_type": "application/json",
+              "byte_length": 128
+            },
+            "config_digest": "sha256:b79606fb3afea5bd1609ed40b622142f1c98125abcfe89a76a661b0e8e343910",
+            "platform": "linux-x86_64",
+            "trust_evidence": [
+              {
+                "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "content_id": "content_378e4e36ab7f07f0bc1e102f482a9491",
+                "version": 1,
+                "hash": "sha256:c97ace4c8fef2cee8fa0f3c9f52aab18dbd4f42438afe362ffb8f75ce4c04b84",
+                "media_type": "application/json",
+                "byte_length": 128
+              }
+            ],
+            "conformance_report": {
+              "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "content_id": "content_f8d8fa943a2bf62fdd238b8db30e6310",
+              "version": 1,
+              "hash": "sha256:12a8239941565633fd75a66d523fef1e2998e87d0767d5e0d6a8e2196caa0adc",
+              "media_type": "application/json",
+              "byte_length": 128
+            },
+            "manifest_digest": "sha256:05b3abf2579a5eb66403cd78be557fd860633a1fe2103c7642030defe32c657f",
+            "resolved_dependencies": [],
+            "state_compatibility": [],
+            "prepared_at": "2026-09-26T00:00:00Z",
+            "reference_revision": 1
+          },
+          "observed_at": "2026-09-26T00:00:01Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "extensions.deactivate",
+          "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+          "payload": {
+            "activation_id": "activation_e0493e4c77498f759f579101f1520a41",
+            "generation": 1,
+            "reason": "maintenance",
+            "management_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "management_288965a1f2c883c71bff8a4b3a1b76cc",
+              "revision": 1
+            }
+          },
+          "command_id": "command_62a879e866b673730c14ab506253fdc6",
+          "expires_at": "2026-09-26T01:00:00Z",
+          "expected_revision": 1
+        },
+        "response": {
+          "command_id": "command_62a879e866b673730c14ab506253fdc6",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:02Z",
+          "output": {
+            "activation_id": "activation_e0493e4c77498f759f579101f1520a41",
+            "generation": 1,
+            "new_use_disabled": true,
+            "previous_version_ready": false,
+            "residual_work": [],
+            "decided_at": "2026-09-26T00:00:00Z"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:03Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "extensions.dispose",
+          "target_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+          "payload": {
+            "reference_revision": 1
+          },
+          "command_id": "command_a3059e0f1db2746070e7257cb9c5bedf",
+          "expires_at": "2026-09-26T01:00:00Z",
+          "expected_revision": 1
+        },
+        "response": {
+          "command_id": "command_a3059e0f1db2746070e7257cb9c5bedf",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:03Z",
+          "output": {
+            "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "state": "disposed",
+            "reference_revision": 1,
+            "blocking_refs": [],
+            "closed_index_ref": {
+              "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+              "id": "closed_eecf995503db47951c236f1705933264",
+              "revision": 1
+            }
+          }
+        }
+      }
+    }
+  ]
+}
