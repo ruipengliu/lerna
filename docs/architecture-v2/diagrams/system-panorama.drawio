@@ -1,0 +1,811 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="Electron" version="28.0.6" type="device">
+  <diagram id="harness-technical-panorama" name="Harness 技术全景">
+    <mxGraphModel dx="3440" dy="2632" grid="1" gridSize="8" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3440" pageHeight="2632" background="#f5f5f5" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="core" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=none;strokeColor=#d5d9df;strokeWidth=1;container=1;collapsible=0;recursiveResize=0;dashed=1;dashPattern=3 5;" vertex="1" parent="1" semanticKind="zone">
+          <mxGeometry as="geometry" x="64" y="200" width="2624" height="1432" />
+        </mxCell>
+        <mxCell id="external" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=none;strokeColor=#d5d9df;strokeWidth=1;container=1;collapsible=0;recursiveResize=0;dashed=1;dashPattern=3 5;" vertex="1" parent="1" semanticKind="zone">
+          <mxGeometry as="geometry" x="2784" y="200" width="544" height="1432" />
+        </mxCell>
+        <mxCell id="governance" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=none;strokeColor=#d5d9df;strokeWidth=1;container=1;collapsible=0;recursiveResize=0;dashed=1;dashPattern=3 5;" vertex="1" parent="1" semanticKind="zone">
+          <mxGeometry as="geometry" x="64" y="1760" width="3264" height="560" />
+        </mxCell>
+        <mxCell id="interaction" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="core" semanticKind="module" sourceDoc="interaction/implementation.md">
+          <mxGeometry as="geometry" x="48" y="80" width="688" height="544" />
+        </mxCell>
+        <mxCell id="orchestrator" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.6;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="core" semanticKind="module" sourceDoc="orchestrator/implementation.md">
+          <mxGeometry as="geometry" x="880" y="80" width="888" height="544" />
+        </mxCell>
+        <mxCell id="brain" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="core" semanticKind="module" sourceDoc="brain/implementation.md">
+          <mxGeometry as="geometry" x="1912" y="80" width="656" height="544" />
+        </mxCell>
+        <mxCell id="memory" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="core" semanticKind="module" sourceDoc="memory/implementation.md">
+          <mxGeometry as="geometry" x="48" y="800" width="688" height="544" />
+        </mxCell>
+        <mxCell id="collaboration" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="core" semanticKind="module" sourceDoc="collaboration/implementation.md">
+          <mxGeometry as="geometry" x="880" y="800" width="888" height="544" />
+        </mxCell>
+        <mxCell id="execution" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.6;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="core" semanticKind="module" sourceDoc="execution/implementation.md">
+          <mxGeometry as="geometry" x="1912" y="800" width="656" height="544" />
+        </mxCell>
+        <mxCell id="security" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="governance" semanticKind="module" sourceDoc="security/implementation.md">
+          <mxGeometry as="geometry" x="48" y="64" width="896" height="464" />
+        </mxCell>
+        <mxCell id="evaluation" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="governance" semanticKind="module" sourceDoc="evaluation/implementation.md">
+          <mxGeometry as="geometry" x="1104" y="64" width="896" height="464" />
+        </mxCell>
+        <mxCell id="extensions" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="governance" semanticKind="module" sourceDoc="extensions/implementation.md">
+          <mxGeometry as="geometry" x="2168" y="64" width="1048" height="464" />
+        </mxCell>
+        <mxCell id="interaction-header" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="interaction" semanticKind="header">
+          <mxGeometry as="geometry" x="1" y="1" width="686" height="64" />
+        </mxCell>
+        <mxCell id="orchestrator-header" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#fcf0e9;strokeColor=none;" vertex="1" parent="orchestrator" semanticKind="header">
+          <mxGeometry as="geometry" x="1" y="1" width="886" height="64" />
+        </mxCell>
+        <mxCell id="brain-header" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="brain" semanticKind="header">
+          <mxGeometry as="geometry" x="1" y="1" width="654" height="64" />
+        </mxCell>
+        <mxCell id="memory-header" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="memory" semanticKind="header">
+          <mxGeometry as="geometry" x="1" y="1" width="686" height="64" />
+        </mxCell>
+        <mxCell id="collaboration-header" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="collaboration" semanticKind="header">
+          <mxGeometry as="geometry" x="1" y="1" width="886" height="64" />
+        </mxCell>
+        <mxCell id="execution-header" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#fcf0e9;strokeColor=none;" vertex="1" parent="execution" semanticKind="header">
+          <mxGeometry as="geometry" x="1" y="1" width="654" height="64" />
+        </mxCell>
+        <mxCell id="security-header" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="security" semanticKind="header">
+          <mxGeometry as="geometry" x="1" y="1" width="894" height="64" />
+        </mxCell>
+        <mxCell id="evaluation-header" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="evaluation" semanticKind="header">
+          <mxGeometry as="geometry" x="1" y="1" width="894" height="64" />
+        </mxCell>
+        <mxCell id="extensions-header" value="" style="rounded=1;absoluteArcSize=1;arcSize=8;fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="extensions" semanticKind="header">
+          <mxGeometry as="geometry" x="1" y="1" width="1046" height="64" />
+        </mxCell>
+        <mxCell id="interaction-dep-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="interaction" source="interaction-renderer" target="interaction-surface" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="interaction-dep-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.4444444444444444;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.4444444444444444;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="interaction" source="interaction-renderer" target="interaction-input" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="interaction-dep-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="interaction" source="interaction-surface" target="interaction-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="interaction-dep-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.2;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="interaction" source="interaction-input" target="interaction-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="296" y="168" />
+              <mxPoint x="296" y="432" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="orchestrator-dep-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5161290322580645;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5161290322580645;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="orchestrator" source="orchestrator-command" target="orchestrator-coordinator" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="orchestrator-dep-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.4444444444444444;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.4444444444444444;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="orchestrator" source="orchestrator-runner" target="orchestrator-snapshot" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="orchestrator-dep-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.2;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="orchestrator" source="orchestrator-snapshot" target="orchestrator-coordinator" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="288" y="168" />
+              <mxPoint x="288" y="256" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="orchestrator-dep-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5161290322580645;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5161290322580645;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="orchestrator" source="orchestrator-runner" target="orchestrator-reducer" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="orchestrator-dep-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="orchestrator" source="orchestrator-reducer" target="orchestrator-coordinator" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="orchestrator-dep-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.8;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5074626865671642;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="orchestrator" source="orchestrator-coordinator" target="orchestrator-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="304" y="304" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="brain-dep-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5161290322580645;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5161290322580645;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="brain" source="brain-decision" target="brain-context" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="brain-dep-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.2727272727272727;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="brain" source="brain-decision" target="brain-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="24" y="168" />
+              <mxPoint x="24" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="brain-dep-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.4444444444444444;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.4444444444444444;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="brain" source="brain-recovery" target="brain-context" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="brain-dep-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.4838709677419355;exitY=0.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.4838709677419355;entryY=1.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="brain" source="brain-recovery" target="brain-rules" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="brain-dep-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.4838709677419355;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.4838709677419355;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="brain" source="brain-recovery" target="brain-adapter" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="brain-dep-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.2727272727272727;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="brain" source="brain-recovery" target="brain-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="288" y="296" />
+              <mxPoint x="288" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="memory-dep-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="memory" source="memory-writer" target="memory-content" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="memory-dep-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.2727272727272727;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="memory" source="memory-writer" target="memory-metadata" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="24" y="168" />
+              <mxPoint x="24" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="memory-dep-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.2727272727272727;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="memory" source="memory-query" target="memory-metadata" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="296" y="168" />
+              <mxPoint x="296" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="memory-dep-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="memory" source="memory-query" target="memory-index" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="memory-dep-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="memory" source="memory-content" target="memory-metadata" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="memory-dep-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.2727272727272727;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="memory" source="memory-content" target="memory-bytes" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="392" y="296" />
+              <mxPoint x="392" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="collaboration-dep-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.4444444444444444;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.4444444444444444;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="collaboration" source="collaboration-admission" target="collaboration-child" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="collaboration-dep-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.2727272727272727;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="collaboration" source="collaboration-admission" target="collaboration-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="24" y="168" />
+              <mxPoint x="24" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="collaboration-dep-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.2727272727272727;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="collaboration" source="collaboration-child" target="collaboration-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="368" y="168" />
+              <mxPoint x="368" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="collaboration-dep-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.4444444444444444;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.4444444444444444;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="collaboration" source="collaboration-adapter" target="collaboration-reducer" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="collaboration-dep-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.4878048780487805;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.4878048780487805;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="collaboration" source="collaboration-reducer" target="collaboration-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="execution-dep-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.2727272727272727;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="execution" source="execution-admission" target="execution-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="24" y="168" />
+              <mxPoint x="24" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="execution-dep-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.4444444444444444;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.4444444444444444;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="execution" source="execution-admission" target="execution-gate" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="execution-dep-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.4444444444444444;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.7777777777777778;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="execution" source="execution-worker" target="execution-gate" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="368" y="272" />
+              <mxPoint x="368" y="168" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="execution-dep-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.4838709677419355;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.4838709677419355;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="execution" source="execution-gate" target="execution-driver" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="execution-dep-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.2727272727272727;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="execution" source="execution-gate" target="execution-resource" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="632" y="168" />
+              <mxPoint x="632" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="execution-dep-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.7777777777777778;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="execution" source="execution-worker" target="execution-driver" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="security-dep-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="security" source="security-facade" target="security-identity" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="security-dep-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="security" source="security-facade" target="security-grant" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="security-dep-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.7;exitY=0.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="security" source="security-facade" target="security-lease" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="200" y="88" />
+              <mxPoint x="616" y="88" />
+              <mxPoint x="616" y="128" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="security-dep-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="security" source="security-grant" target="security-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="security-dep-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.3;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.2;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="security" source="security-lease" target="security-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="696" y="344" />
+              <mxPoint x="576" y="344" />
+              <mxPoint x="576" y="368" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="evaluation-dep-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.2;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="evaluation" source="evaluation-plan" target="evaluation-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="320" y="128" />
+              <mxPoint x="320" y="368" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="evaluation-dep-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="evaluation" source="evaluation-run" target="evaluation-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="312" y="256" />
+              <mxPoint x="312" y="392" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="evaluation-dep-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="evaluation" source="evaluation-run" target="evaluation-report" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="evaluation-dep-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.8;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.8;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="evaluation" source="evaluation-report" target="evaluation-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="evaluation-dep-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="evaluation" source="evaluation-exposure" target="evaluation-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="evaluation-dep-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.2;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="evaluation" source="evaluation-approval" target="evaluation-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="576" y="128" />
+              <mxPoint x="576" y="368" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="extensions-dep-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="extensions" source="extensions-manager" target="extensions-verifier" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="extensions-dep-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.6666666666666666;exitY=0.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="extensions" source="extensions-manager" target="extensions-approval" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="224" y="88" />
+              <mxPoint x="720" y="88" />
+              <mxPoint x="720" y="128" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="extensions-dep-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="extensions" source="extensions-manager" target="extensions-lock" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="extensions-dep-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.6666666666666666;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="extensions" source="extensions-manager" target="extensions-binding" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="224" y="216" />
+              <mxPoint x="368" y="216" />
+              <mxPoint x="368" y="256" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="extensions-dep-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.2;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="extensions" source="extensions-manager" target="extensions-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="24" y="128" />
+              <mxPoint x="24" y="368" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="extensions-dep-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.46835443037974683;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="extensions" source="extensions-lock" target="extensions-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="328" y="256" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="extensions-dep-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.2;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="extensions" source="extensions-binding" target="extensions-store" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="672" y="256" />
+              <mxPoint x="672" y="368" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F01" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="interaction" target="orchestrator" semanticKind="relationship" flowId="F01">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="F02" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="orchestrator" target="brain" semanticKind="relationship" flowId="F02">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="F03" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#2e5aa8;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.45588235294117646;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="brain" target="model-provider" semanticKind="relationship" flowId="F03">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="F04" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.08108108108108109;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="orchestrator" target="memory" semanticKind="relationship" flowId="F04">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1016" y="880" />
+              <mxPoint x="456" y="880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F05" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.8918918918918919;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="orchestrator" target="execution" semanticKind="relationship" flowId="F05">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1736" y="912" />
+              <mxPoint x="2304" y="912" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F07" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.4954954954954955;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.4954954954954955;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="orchestrator" target="collaboration" semanticKind="relationship" flowId="F07">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="F06" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#2e5aa8;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.38235294117647056;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.52;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="execution" target="target-system" semanticKind="relationship" flowId="F06">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="F08" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#2e5aa8;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.8738738738738738;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="collaboration" target="other-agent" semanticKind="relationship" flowId="F08">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1720" y="1600" />
+              <mxPoint x="2720" y="1600" />
+              <mxPoint x="2720" y="1456" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F09" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.18597560975609756;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.49107142857142855;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="core" target="security" semanticKind="relationship" flowId="F09">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="method-edge-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="method-0" target="method-1" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="method-edge-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="method-1" target="method-2" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="method-edge-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="method-2" target="method-3" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="method-edge-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="method-3" target="method-4" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="method-edge-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="method-4" target="method-5" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="interaction-dep-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="interaction" source="interaction-store" target="interaction-delivery" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="orchestrator-dep-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.2;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.7777777777777778;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="orchestrator" source="orchestrator-store" target="orchestrator-runner" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="864" y="440" />
+              <mxPoint x="864" y="168" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="collaboration-dep-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5454545454545454;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.7777777777777778;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="collaboration" source="collaboration-store" target="collaboration-adapter" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="520" y="464" />
+              <mxPoint x="520" y="296" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="collaboration-dep-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.8181818181818182;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.8181818181818182;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="collaboration" source="collaboration-store" target="collaboration-control" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="execution-dep-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5161290322580645;exitY=0.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5161290322580645;entryY=1.0;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="execution" source="execution-store" target="execution-worker" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="security-dep-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="security" source="security-store" target="security-revocation" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="evaluation-dep-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.4;endArrow=block;endSize=7;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="evaluation" source="evaluation-store" target="evaluation-rollout" semanticKind="dependency">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="F10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.5914634146341463;exitY=1.0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="core" target="evaluation" semanticKind="relationship" flowId="F10">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="F11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.3448275862068966;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.0;entryY=0.3448275862068966;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="evaluation" target="extensions" semanticKind="relationship" flowId="F11">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="F11-return" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.7931034482758621;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.0;entryY=0.7931034482758621;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="extensions" target="evaluation" semanticKind="relationship" flowId="F11">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="F12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;orthogonalLoop=1;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=2.2;endArrow=block;endSize=9;endFill=1;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.896551724137931;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.9878048780487805;entryY=0.0;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="extensions" target="core" semanticKind="relationship" flowId="F12">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="3392" y="2240" />
+              <mxPoint x="3392" y="144" />
+              <mxPoint x="2656" y="144" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="core-title" value="任务处理" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#4f5d75;fontStyle=1;" vertex="1" parent="core" semanticKind="text">
+          <mxGeometry as="geometry" x="24" y="20" width="2576" height="32" />
+        </mxCell>
+        <mxCell id="external-title" value="外部依赖" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#4f5d75;fontStyle=1;" vertex="1" parent="external" semanticKind="text">
+          <mxGeometry as="geometry" x="24" y="20" width="496" height="32" />
+        </mxCell>
+        <mxCell id="governance-title" value="治理与宿主" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#4f5d75;fontStyle=1;" vertex="1" parent="governance" semanticKind="text">
+          <mxGeometry as="geometry" x="24" y="20" width="3216" height="32" />
+        </mxCell>
+        <mxCell id="eyebrow" value="HARNESS  /  SYSTEM ARCHITECTURE" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=14;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+          <mxGeometry as="geometry" x="64" y="28" width="1720" height="24" />
+        </mxCell>
+        <mxCell id="title" value="以事实裁决组织目标推进" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Instrument Serif, Songti SC, serif;fontSize=48;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+          <mxGeometry as="geometry" x="64" y="64" width="2320" height="64" />
+        </mxCell>
+        <mxCell id="subtitle" value="九模块  ·  内部组件与权威对象  ·  关键交接" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+          <mxGeometry as="geometry" x="64" y="144" width="2104" height="32" />
+        </mxCell>
+        <mxCell id="page-meta" value="LOGICAL VIEW  /  09 MODULES" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, monospace;fontSize=14;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+          <mxGeometry as="geometry" x="2544" y="40" width="784" height="32" />
+        </mxCell>
+        <mxCell id="interaction-title" value="应用与交互" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=28;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="interaction" semanticKind="text">
+          <mxGeometry as="geometry" x="24" y="16" width="464" height="32" />
+        </mxCell>
+        <mxCell id="interaction-tag" value="INTERACTION" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, monospace;fontSize=12;fontColor=#7a8399;fontStyle=0;" vertex="1" parent="interaction" semanticKind="text">
+          <mxGeometry as="geometry" x="488" y="20" width="176" height="24" />
+        </mxCell>
+        <mxCell id="orchestrator-title" value="任务编排器 · Orchestrator" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=28;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="orchestrator" semanticKind="text">
+          <mxGeometry as="geometry" x="24" y="16" width="664" height="32" />
+        </mxCell>
+        <mxCell id="orchestrator-tag" value="ORCHESTRATOR" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, monospace;fontSize=12;fontColor=#eb6c36;fontStyle=0;" vertex="1" parent="orchestrator" semanticKind="text">
+          <mxGeometry as="geometry" x="688" y="20" width="176" height="24" />
+        </mxCell>
+        <mxCell id="brain-title" value="大脑" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=28;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="brain" semanticKind="text">
+          <mxGeometry as="geometry" x="24" y="16" width="432" height="32" />
+        </mxCell>
+        <mxCell id="brain-tag" value="BRAIN" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, monospace;fontSize=12;fontColor=#7a8399;fontStyle=0;" vertex="1" parent="brain" semanticKind="text">
+          <mxGeometry as="geometry" x="456" y="20" width="176" height="24" />
+        </mxCell>
+        <mxCell id="memory-title" value="记忆与内容" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=28;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="memory" semanticKind="text">
+          <mxGeometry as="geometry" x="24" y="16" width="464" height="32" />
+        </mxCell>
+        <mxCell id="memory-tag" value="MEMORY" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, monospace;fontSize=12;fontColor=#7a8399;fontStyle=0;" vertex="1" parent="memory" semanticKind="text">
+          <mxGeometry as="geometry" x="488" y="20" width="176" height="24" />
+        </mxCell>
+        <mxCell id="collaboration-title" value="Agent 协作" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=28;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="collaboration" semanticKind="text">
+          <mxGeometry as="geometry" x="24" y="16" width="664" height="32" />
+        </mxCell>
+        <mxCell id="collaboration-tag" value="COLLABORATION" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, monospace;fontSize=12;fontColor=#7a8399;fontStyle=0;" vertex="1" parent="collaboration" semanticKind="text">
+          <mxGeometry as="geometry" x="688" y="20" width="176" height="24" />
+        </mxCell>
+        <mxCell id="execution-title" value="执行" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=28;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="execution" semanticKind="text">
+          <mxGeometry as="geometry" x="24" y="16" width="432" height="32" />
+        </mxCell>
+        <mxCell id="execution-tag" value="EXECUTION" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, monospace;fontSize=12;fontColor=#eb6c36;fontStyle=0;" vertex="1" parent="execution" semanticKind="text">
+          <mxGeometry as="geometry" x="456" y="20" width="176" height="24" />
+        </mxCell>
+        <mxCell id="security-title" value="权限与隔离" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=28;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="security" semanticKind="text">
+          <mxGeometry as="geometry" x="24" y="16" width="672" height="32" />
+        </mxCell>
+        <mxCell id="security-tag" value="SECURITY" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, monospace;fontSize=12;fontColor=#7a8399;fontStyle=0;" vertex="1" parent="security" semanticKind="text">
+          <mxGeometry as="geometry" x="696" y="20" width="176" height="24" />
+        </mxCell>
+        <mxCell id="evaluation-title" value="观测、评测与改进" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=28;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="evaluation" semanticKind="text">
+          <mxGeometry as="geometry" x="24" y="16" width="672" height="32" />
+        </mxCell>
+        <mxCell id="evaluation-tag" value="EVALUATION" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, monospace;fontSize=12;fontColor=#7a8399;fontStyle=0;" vertex="1" parent="evaluation" semanticKind="text">
+          <mxGeometry as="geometry" x="696" y="20" width="176" height="24" />
+        </mxCell>
+        <mxCell id="extensions-title" value="扩展与宿主" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=28;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="extensions" semanticKind="text">
+          <mxGeometry as="geometry" x="24" y="16" width="824" height="32" />
+        </mxCell>
+        <mxCell id="extensions-tag" value="EXTENSIONS" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, monospace;fontSize=12;fontColor=#7a8399;fontStyle=0;" vertex="1" parent="extensions" semanticKind="text">
+          <mxGeometry as="geometry" x="848" y="20" width="176" height="24" />
+        </mxCell>
+        <mxCell id="interaction-renderer" value="Renderer" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="interaction" semanticKind="component" labelPlain="Renderer">
+          <mxGeometry as="geometry" x="32" y="112" width="256" height="72" />
+        </mxCell>
+        <mxCell id="interaction-input" value="InputService" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="interaction" semanticKind="component" labelPlain="InputService">
+          <mxGeometry as="geometry" x="400" y="112" width="256" height="72" />
+        </mxCell>
+        <mxCell id="interaction-surface" value="SurfaceService" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="interaction" semanticKind="component" labelPlain="SurfaceService">
+          <mxGeometry as="geometry" x="32" y="240" width="256" height="72" />
+        </mxCell>
+        <mxCell id="interaction-delivery" value="DeliveryWorker" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="interaction" semanticKind="component" labelPlain="DeliveryWorker">
+          <mxGeometry as="geometry" x="400" y="416" width="256" height="80" />
+        </mxCell>
+        <mxCell id="interaction-store" value="&lt;div style=&quot;font-size:20px;font-weight:600;line-height:1.3&quot;&gt;InteractionStore&lt;/div&gt;&lt;div style=&quot;font-size:16px;color:#4f5d75;line-height:1.4&quot;&gt;Surface · InputSubmission&lt;/div&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=14;html=1;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="interaction" semanticKind="repository" labelPlain="InteractionStore&#10;Surface · InputSubmission">
+          <mxGeometry as="geometry" x="32" y="416" width="256" height="80" />
+        </mxCell>
+        <mxCell id="orchestrator-command" value="CommandHandler" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="orchestrator" semanticKind="component" labelPlain="CommandHandler">
+          <mxGeometry as="geometry" x="32" y="112" width="248" height="72" />
+        </mxCell>
+        <mxCell id="orchestrator-snapshot" value="SnapshotAssembler&#10;PlanMaterializer" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="orchestrator" semanticKind="component" labelPlain="SnapshotAssembler&#10;PlanMaterializer">
+          <mxGeometry as="geometry" x="320" y="112" width="248" height="72" />
+        </mxCell>
+        <mxCell id="orchestrator-runner" value="JobRunner" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="orchestrator" semanticKind="component" labelPlain="JobRunner">
+          <mxGeometry as="geometry" x="608" y="112" width="248" height="72" />
+        </mxCell>
+        <mxCell id="orchestrator-coordinator" value="TaskCoordinator&#10;BudgetLedger" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="orchestrator" semanticKind="component" labelPlain="TaskCoordinator&#10;BudgetLedger">
+          <mxGeometry as="geometry" x="32" y="240" width="248" height="80" />
+        </mxCell>
+        <mxCell id="orchestrator-reducer" value="FactReducer" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="orchestrator" semanticKind="component" labelPlain="FactReducer">
+          <mxGeometry as="geometry" x="608" y="240" width="248" height="80" />
+        </mxCell>
+        <mxCell id="orchestrator-store" value="&lt;div style=&quot;font-size:20px;font-weight:600;line-height:1.3&quot;&gt;Orchestrator Store&lt;/div&gt;&lt;div style=&quot;font-size:16px;color:#4f5d75;line-height:1.4&quot;&gt;Task · Plan · Intent · Result · jobs&lt;/div&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=14;html=1;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="orchestrator" semanticKind="repository" labelPlain="Orchestrator Store&#10;Task · Plan · Intent · Result · jobs">
+          <mxGeometry as="geometry" x="32" y="424" width="536" height="80" />
+        </mxCell>
+        <mxCell id="brain-decision" value="DecisionService" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="brain" semanticKind="component" labelPlain="DecisionService">
+          <mxGeometry as="geometry" x="32" y="112" width="248" height="72" />
+        </mxCell>
+        <mxCell id="brain-rules" value="DecisionPolicy&#10;ProposalValidator" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="brain" semanticKind="component" labelPlain="DecisionPolicy&#10;ProposalValidator">
+          <mxGeometry as="geometry" x="376" y="112" width="248" height="72" />
+        </mxCell>
+        <mxCell id="brain-context" value="ContextReader" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="brain" semanticKind="component" labelPlain="ContextReader">
+          <mxGeometry as="geometry" x="32" y="240" width="248" height="72" />
+        </mxCell>
+        <mxCell id="brain-recovery" value="RecoveryWorker" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="brain" semanticKind="component" labelPlain="RecoveryWorker">
+          <mxGeometry as="geometry" x="376" y="240" width="248" height="72" />
+        </mxCell>
+        <mxCell id="brain-store" value="&lt;div style=&quot;font-size:20px;font-weight:600;line-height:1.3&quot;&gt;DecisionStore&lt;/div&gt;&lt;div style=&quot;font-size:16px;color:#4f5d75;line-height:1.4&quot;&gt;Decision · ModelCall&lt;/div&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=14;html=1;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="brain" semanticKind="repository" labelPlain="DecisionStore&#10;Decision · ModelCall">
+          <mxGeometry as="geometry" x="32" y="416" width="248" height="88" />
+        </mxCell>
+        <mxCell id="brain-adapter" value="ModelAdapter" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#f0f5fc;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="brain" semanticKind="component" labelPlain="ModelAdapter">
+          <mxGeometry as="geometry" x="376" y="416" width="248" height="88" />
+        </mxCell>
+        <mxCell id="memory-writer" value="MemoryWriter" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="memory" semanticKind="component" labelPlain="MemoryWriter">
+          <mxGeometry as="geometry" x="32" y="112" width="256" height="72" />
+        </mxCell>
+        <mxCell id="memory-query" value="QueryService" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="memory" semanticKind="component" labelPlain="QueryService">
+          <mxGeometry as="geometry" x="400" y="112" width="256" height="72" />
+        </mxCell>
+        <mxCell id="memory-content" value="ContentStore" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="memory" semanticKind="component" labelPlain="ContentStore">
+          <mxGeometry as="geometry" x="32" y="240" width="256" height="72" />
+        </mxCell>
+        <mxCell id="memory-index" value="&lt;div style=&quot;font-size:20px;font-weight:600;line-height:1.3&quot;&gt;候选索引&lt;/div&gt;&lt;div style=&quot;font-size:16px;color:#4f5d75;line-height:1.4&quot;&gt;派生数据&lt;/div&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=14;html=1;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="memory" semanticKind="repository" labelPlain="候选索引&#10;派生数据">
+          <mxGeometry as="geometry" x="400" y="240" width="256" height="72" />
+        </mxCell>
+        <mxCell id="memory-metadata" value="&lt;div style=&quot;font-size:20px;font-weight:600;line-height:1.3&quot;&gt;MetadataStore&lt;/div&gt;&lt;div style=&quot;font-size:16px;color:#4f5d75;line-height:1.4&quot;&gt;MemoryRevision · ContentRef&lt;/div&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=14;html=1;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="memory" semanticKind="repository" labelPlain="MetadataStore&#10;MemoryRevision · ContentRef">
+          <mxGeometry as="geometry" x="32" y="416" width="256" height="88" />
+        </mxCell>
+        <mxCell id="memory-bytes" value="&lt;div style=&quot;font-size:20px;font-weight:600;line-height:1.3&quot;&gt;ByteStore&lt;/div&gt;&lt;div style=&quot;font-size:16px;color:#4f5d75;line-height:1.4&quot;&gt;准确版本字节&lt;/div&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=14;html=1;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="memory" semanticKind="repository" labelPlain="ByteStore&#10;准确版本字节">
+          <mxGeometry as="geometry" x="400" y="416" width="256" height="88" />
+        </mxCell>
+        <mxCell id="collaboration-admission" value="DelegationAdmission" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="collaboration" semanticKind="component" labelPlain="DelegationAdmission">
+          <mxGeometry as="geometry" x="32" y="112" width="328" height="72" />
+        </mxCell>
+        <mxCell id="collaboration-child" value="InternalChildFactory" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="collaboration" semanticKind="component" labelPlain="InternalChildFactory">
+          <mxGeometry as="geometry" x="528" y="112" width="328" height="72" />
+        </mxCell>
+        <mxCell id="collaboration-reducer" value="DelegationReducer" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="collaboration" semanticKind="component" labelPlain="DelegationReducer">
+          <mxGeometry as="geometry" x="32" y="240" width="328" height="72" />
+        </mxCell>
+        <mxCell id="collaboration-adapter" value="ExternalAgentAdapter" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#f0f5fc;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="collaboration" semanticKind="component" labelPlain="ExternalAgentAdapter">
+          <mxGeometry as="geometry" x="528" y="240" width="328" height="72" />
+        </mxCell>
+        <mxCell id="collaboration-store" value="&lt;div style=&quot;font-size:20px;font-weight:600;line-height:1.3&quot;&gt;Collaboration Store&lt;/div&gt;&lt;div style=&quot;font-size:16px;color:#4f5d75;line-height:1.4&quot;&gt;Delegation · 子映射 · jobs&lt;/div&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=14;html=1;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="collaboration" semanticKind="repository" labelPlain="Collaboration Store&#10;Delegation · 子映射 · jobs">
+          <mxGeometry as="geometry" x="32" y="416" width="328" height="88" />
+        </mxCell>
+        <mxCell id="collaboration-control" value="ControlPropagator&#10;SettlementCoordinator" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="collaboration" semanticKind="component" labelPlain="ControlPropagator&#10;SettlementCoordinator">
+          <mxGeometry as="geometry" x="528" y="416" width="328" height="88" />
+        </mxCell>
+        <mxCell id="execution-admission" value="接纳与控制用例" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="execution" semanticKind="component" labelPlain="接纳与控制用例">
+          <mxGeometry as="geometry" x="32" y="112" width="248" height="72" />
+        </mxCell>
+        <mxCell id="execution-gate" value="GateStore&#10;StartBarrier" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="execution" semanticKind="component" labelPlain="GateStore&#10;StartBarrier">
+          <mxGeometry as="geometry" x="376" y="112" width="248" height="72" />
+        </mxCell>
+        <mxCell id="execution-worker" value="执行工作者" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="execution" semanticKind="component" labelPlain="执行工作者">
+          <mxGeometry as="geometry" x="32" y="240" width="248" height="72" />
+        </mxCell>
+        <mxCell id="execution-driver" value="固定版本 Driver" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#f0f5fc;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="execution" semanticKind="component" labelPlain="固定版本 Driver">
+          <mxGeometry as="geometry" x="376" y="240" width="248" height="72" />
+        </mxCell>
+        <mxCell id="execution-store" value="&lt;div style=&quot;font-size:20px;font-weight:600;line-height:1.3&quot;&gt;Executor Store&lt;/div&gt;&lt;div style=&quot;font-size:16px;color:#4f5d75;line-height:1.4&quot;&gt;Operation · Attempt · jobs&lt;/div&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=14;html=1;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="execution" semanticKind="repository" labelPlain="Executor Store&#10;Operation · Attempt · jobs">
+          <mxGeometry as="geometry" x="32" y="416" width="248" height="88" />
+        </mxCell>
+        <mxCell id="execution-resource" value="&lt;div style=&quot;font-size:20px;font-weight:600;line-height:1.3&quot;&gt;资源 owner Store&lt;/div&gt;&lt;div style=&quot;font-size:16px;color:#4f5d75;line-height:1.4&quot;&gt;Gate · epoch · lease&lt;/div&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=14;html=1;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="execution" semanticKind="repository" labelPlain="资源 owner Store&#10;Gate · epoch · lease">
+          <mxGeometry as="geometry" x="376" y="416" width="248" height="88" />
+        </mxCell>
+        <mxCell id="security-facade" value="权限入口 facade" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="security" semanticKind="component" labelPlain="权限入口 facade">
+          <mxGeometry as="geometry" x="32" y="96" width="240" height="64" />
+        </mxCell>
+        <mxCell id="security-grant" value="GrantLedger" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="security" semanticKind="component" labelPlain="GrantLedger">
+          <mxGeometry as="geometry" x="328" y="96" width="240" height="64" />
+        </mxCell>
+        <mxCell id="security-lease" value="LeaseLedger" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="security" semanticKind="component" labelPlain="LeaseLedger">
+          <mxGeometry as="geometry" x="624" y="96" width="240" height="64" />
+        </mxCell>
+        <mxCell id="security-identity" value="IdentityAdapter" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="security" semanticKind="component" labelPlain="IdentityAdapter">
+          <mxGeometry as="geometry" x="32" y="224" width="240" height="64" />
+        </mxCell>
+        <mxCell id="security-store" value="&lt;div style=&quot;font-size:20px;font-weight:600;line-height:1.3&quot;&gt;领域 repositories&lt;/div&gt;&lt;div style=&quot;font-size:16px;color:#4f5d75;line-height:1.4&quot;&gt;Grant · UseReceipt · Lease&lt;/div&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=14;html=1;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="security" semanticKind="repository" labelPlain="领域 repositories&#10;Grant · UseReceipt · Lease">
+          <mxGeometry as="geometry" x="328" y="352" width="240" height="80" />
+        </mxCell>
+        <mxCell id="security-revocation" value="RevocationWorker" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="security" semanticKind="component" labelPlain="RevocationWorker">
+          <mxGeometry as="geometry" x="624" y="352" width="240" height="80" />
+        </mxCell>
+        <mxCell id="evaluation-plan" value="PlanService" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="evaluation" semanticKind="component" labelPlain="PlanService">
+          <mxGeometry as="geometry" x="32" y="96" width="240" height="64" />
+        </mxCell>
+        <mxCell id="evaluation-exposure" value="ExposureLedger" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="evaluation" semanticKind="component" labelPlain="ExposureLedger">
+          <mxGeometry as="geometry" x="328" y="96" width="240" height="64" />
+        </mxCell>
+        <mxCell id="evaluation-approval" value="ApprovalOwner" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="evaluation" semanticKind="component" labelPlain="ApprovalOwner">
+          <mxGeometry as="geometry" x="624" y="96" width="240" height="64" />
+        </mxCell>
+        <mxCell id="evaluation-run" value="RunCoordinator" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="evaluation" semanticKind="component" labelPlain="RunCoordinator">
+          <mxGeometry as="geometry" x="32" y="224" width="240" height="64" />
+        </mxCell>
+        <mxCell id="evaluation-report" value="ReportSealer" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="evaluation" semanticKind="component" labelPlain="ReportSealer">
+          <mxGeometry as="geometry" x="32" y="352" width="240" height="80" />
+        </mxCell>
+        <mxCell id="evaluation-store" value="&lt;div style=&quot;font-size:20px;font-weight:600;line-height:1.3&quot;&gt;领域 repositories&lt;/div&gt;&lt;div style=&quot;font-size:16px;color:#4f5d75;line-height:1.4&quot;&gt;Plan · Report · Approval&lt;/div&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=14;html=1;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="evaluation" semanticKind="repository" labelPlain="领域 repositories&#10;Plan · Report · Approval">
+          <mxGeometry as="geometry" x="328" y="352" width="240" height="80" />
+        </mxCell>
+        <mxCell id="evaluation-rollout" value="RolloutWorker" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="evaluation" semanticKind="component" labelPlain="RolloutWorker">
+          <mxGeometry as="geometry" x="624" y="352" width="240" height="80" />
+        </mxCell>
+        <mxCell id="extensions-manager" value="LifecycleManager" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="extensions" semanticKind="component" labelPlain="LifecycleManager">
+          <mxGeometry as="geometry" x="32" y="96" width="288" height="64" />
+        </mxCell>
+        <mxCell id="extensions-verifier" value="PackageVerifier" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="extensions" semanticKind="component" labelPlain="PackageVerifier">
+          <mxGeometry as="geometry" x="376" y="96" width="288" height="64" />
+        </mxCell>
+        <mxCell id="extensions-approval" value="ApprovalClient" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="extensions" semanticKind="component" labelPlain="ApprovalClient">
+          <mxGeometry as="geometry" x="728" y="96" width="288" height="64" />
+        </mxCell>
+        <mxCell id="extensions-lock" value="LockStore" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="extensions" semanticKind="component" labelPlain="LockStore">
+          <mxGeometry as="geometry" x="32" y="224" width="288" height="64" />
+        </mxCell>
+        <mxCell id="extensions-binding" value="BindingRouter" style="rounded=1;absoluteArcSize=1;arcSize=8;html=0;whiteSpace=wrap;fillColor=#f0f5fc;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="extensions" semanticKind="component" labelPlain="BindingRouter">
+          <mxGeometry as="geometry" x="376" y="224" width="288" height="64" />
+        </mxCell>
+        <mxCell id="extensions-store" value="&lt;div style=&quot;font-size:20px;font-weight:600;line-height:1.3&quot;&gt;宿主 repositories&lt;/div&gt;&lt;div style=&quot;font-size:16px;color:#4f5d75;line-height:1.4&quot;&gt;InstallLock · Activation · Binding · InstanceReadiness&lt;/div&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=14;html=1;whiteSpace=wrap;fillColor=#f2f4f7;strokeColor=#aeb8c6;strokeWidth=1.1;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="extensions" semanticKind="repository" labelPlain="宿主 repositories&#10;InstallLock · Activation · Binding · InstanceReadiness">
+          <mxGeometry as="geometry" x="32" y="352" width="632" height="80" />
+        </mxCell>
+        <mxCell id="model-provider" value="&lt;div style=&quot;font-size:26px;font-weight:600;line-height:1.4&quot;&gt;本地模型 / 云模型&lt;/div&gt;&lt;div style=&quot;font-size:20px;color:#4f5d75;line-height:1.6&quot;&gt;输出 · 请求凭据 · 用量&lt;/div&gt;" style="rounded=1;absoluteArcSize=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#eef2f7;strokeColor=#b4bfce;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=24;spacing=24;" vertex="1" parent="external" semanticKind="external" labelPlain="本地模型 / 云模型&#10;输出 · 请求凭据 · 用量">
+          <mxGeometry as="geometry" x="48" y="224" width="448" height="208" />
+        </mxCell>
+        <mxCell id="target-system" value="&lt;div style=&quot;font-size:26px;font-weight:600;line-height:1.4&quot;&gt;API / 文件 / 模拟设备&lt;/div&gt;&lt;div style=&quot;font-size:20px;color:#4f5d75;line-height:1.6&quot;&gt;目标凭据 · 效果证据&lt;/div&gt;" style="rounded=1;absoluteArcSize=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#eef2f7;strokeColor=#b4bfce;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=24;spacing=24;" vertex="1" parent="external" semanticKind="external" labelPlain="API / 文件 / 模拟设备&#10;目标凭据 · 效果证据">
+          <mxGeometry as="geometry" x="48" y="904" width="448" height="200" />
+        </mxCell>
+        <mxCell id="other-agent" value="&lt;div style=&quot;font-size:26px;font-weight:600;line-height:1.4&quot;&gt;其他 Agent / 另一 Orchestrator&lt;/div&gt;&lt;div style=&quot;font-size:20px;color:#4f5d75;line-height:1.6&quot;&gt;原任务 · 结果 · 封账&lt;/div&gt;" style="rounded=1;absoluteArcSize=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#eef2f7;strokeColor=#b4bfce;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=24;spacing=24;" vertex="1" parent="external" semanticKind="external" labelPlain="其他 Agent / 另一 Orchestrator&#10;原任务 · 结果 · 封账">
+          <mxGeometry as="geometry" x="48" y="1168" width="448" height="176" />
+        </mxCell>
+        <mxCell id="execution-dep-5-label" value="发送" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=16;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="execution-dep-5" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="0.0714285714285714" y="0" width="64" height="28" relative="1">
+            <mxPoint as="offset" x="8" y="-14.0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="execution-dep-7-label" value="查 / 停" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=16;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="execution-dep-7" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="0.0" y="0" width="80" height="28" relative="1">
+            <mxPoint as="offset" x="-40.0" y="8" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F01-label" value="01 目标 / 输入" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F01" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="0.0" y="0" width="128" height="32" relative="1">
+            <mxPoint as="offset" x="-64.0" y="-40" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F02-label" value="02 单轮决策" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F02" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="0.0" y="0" width="128" height="32" relative="1">
+            <mxPoint as="offset" x="-64.0" y="-40" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F03-label" value="03 模型调用" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#2e5aa8;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F03" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="0.0" y="0" width="144" height="32" relative="1">
+            <mxPoint as="offset" x="-72.0" y="-40" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F04-label" value="04 检索 / 内容" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F04" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="-0.09782608695652173" y="0" width="184" height="32" relative="1">
+            <mxPoint as="offset" x="-92.0" y="-40" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F05-label" value="05 意图 / 控制" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F05" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="0.021505376344086002" y="0" width="200" height="32" relative="1">
+            <mxPoint as="offset" x="-100.0" y="-40" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F07-label" value="07 有界委派" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F07" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="0.4545454545454546" y="0" width="160" height="32" relative="1">
+            <mxPoint as="offset" x="8" y="-16.0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F06-label" value="06 原目标动作" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#2e5aa8;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F06" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="0.0" y="0" width="168" height="32" relative="1">
+            <mxPoint as="offset" x="-84.0" y="-40" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F08-label" value="08 原任务交接" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#2e5aa8;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F08" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="-0.13414634146341464" y="0" width="192" height="32" relative="1">
+            <mxPoint as="offset" x="-96.0" y="-40" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F09-label" value="09 使用 / 租约 / 结算" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F09" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="-0.41666666666666663" y="0" width="248" height="32" relative="1">
+            <mxPoint as="offset" x="8" y="-16.0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F10-label" value="10 获准观测" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F10" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="-0.41666666666666663" y="0" width="176" height="32" relative="1">
+            <mxPoint as="offset" x="8" y="-16.0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F11-label" value="11 批准 / 发布" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F11" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="0.0" y="0" width="152" height="32" relative="1">
+            <mxPoint as="offset" x="-76.0" y="-40" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F11-return-label" value="核验 / 实例事实" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F11-return" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="0.0" y="0" width="152" height="32" relative="1">
+            <mxPoint as="offset" x="-76.0" y="-40" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F12-label" value="12 装配 / 隔离 / 生命周期" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="F12" semanticKind="edge-label" connectable="0">
+          <mxGeometry as="geometry" x="0.712" y="0" width="336" height="32" relative="1">
+            <mxPoint as="offset" x="-168.0" y="-40" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="method-title" value="建模顺序" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="1" semanticKind="text">
+          <mxGeometry as="geometry" x="64" y="2376" width="224" height="32" />
+        </mxCell>
+        <mxCell id="method-0" value="目标与条件" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#bfc0c0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;" vertex="1" parent="1" semanticKind="method-step">
+          <mxGeometry as="geometry" x="344" y="2368" width="352" height="48" />
+        </mxCell>
+        <mxCell id="method-1" value="需裁决的事实" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#bfc0c0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;" vertex="1" parent="1" semanticKind="method-step">
+          <mxGeometry as="geometry" x="840" y="2368" width="352" height="48" />
+        </mxCell>
+        <mxCell id="method-2" value="固定 owner" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#bfc0c0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;" vertex="1" parent="1" semanticKind="method-step">
+          <mxGeometry as="geometry" x="1336" y="2368" width="352" height="48" />
+        </mxCell>
+        <mxCell id="method-3" value="身份与版本" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#bfc0c0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;" vertex="1" parent="1" semanticKind="method-step">
+          <mxGeometry as="geometry" x="1832" y="2368" width="352" height="48" />
+        </mxCell>
+        <mxCell id="method-4" value="独立状态" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#bfc0c0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;" vertex="1" parent="1" semanticKind="method-step">
+          <mxGeometry as="geometry" x="2328" y="2368" width="352" height="48" />
+        </mxCell>
+        <mxCell id="method-5" value="提交与恢复" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#bfc0c0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;" vertex="1" parent="1" semanticKind="method-step">
+          <mxGeometry as="geometry" x="2824" y="2368" width="352" height="48" />
+        </mxCell>
+        <mxCell id="deployment-title" value="部署映射" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="1" semanticKind="text">
+          <mxGeometry as="geometry" x="64" y="2452" width="224" height="32" />
+        </mxCell>
+        <mxCell id="deployment" value="稳定 Orchestrator + 数据库分片 + 多可用区  /  本地短事务  /  跨库原命令与查询" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+          <mxGeometry as="geometry" x="344" y="2452" width="2920" height="32" />
+        </mxCell>
+        <mxCell id="footer-rule" value="" style="line;strokeColor=#bfc0c0;strokeWidth=1;fillColor=none;" vertex="1" parent="1" semanticKind="separator">
+          <mxGeometry as="geometry" x="64" y="2504" width="3264" height="1" />
+        </mxCell>
+        <mxCell id="legend-title" value="图例与范围" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="1" semanticKind="text">
+          <mxGeometry as="geometry" x="64" y="2528" width="224" height="32" />
+        </mxCell>
+        <mxCell id="legend1" value="内部实线：调用 / 读写     内部虚线：持久 job     编号连线：业务交接     蓝线：外部调用     外层虚线：治理 / 装配" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=20;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+          <mxGeometry as="geometry" x="344" y="2520" width="2920" height="32" />
+        </mxCell>
+        <mxCell id="legend2" value="09 / 10 / 12 作用于相关参与者  ·  模块、owner、进程与事务边界分别定义  ·  完整约束见 technical-overview.md" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=20;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text" tooltip="完整字段、状态机、确认消费、其他内容调用与生产恢复条件见 technical-overview.md 及各模块详设。">
+          <mxGeometry as="geometry" x="344" y="2560" width="2920" height="32" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,348 @@
+{
+  "name": "content-restriction",
+  "description": "Restrict only narrows current policy, while residual bytes remain an explicit cleanup result.",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "command_id": "command_25_db24d8b3e8bed0cb622bc1e7bb4b5112",
+          "method": "content.put",
+          "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "payload": {
+            "upload_id": "upload_76ee3de97a1b8b903319b7c013d8c877",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "sources": [
+              {
+                "source_ref": {
+                  "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                  "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                  "content_id": "source_36cd38f49b9afa08222c0dc9ebfe35eb",
+                  "version": 1,
+                  "hash": "sha256:41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                },
+                "relation": "user_statement",
+                "observed_at": "2026-09-26T00:00:00Z",
+                "policy_ref": {
+                  "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                  "id": "source_policy_b16ea25b47516c0e521510b7343a0afd",
+                  "revision": 1
+                }
+              }
+            ],
+            "policy": {
+              "classification": "controlled_remote",
+              "allowed_locations": [
+                "local_endpoint_d4c8a1d28797a577ca99cd17c0d64bb1",
+                "remote_endpoint_eda42d4d388dfe34938b3216c8be5012"
+              ],
+              "allowed_recipients": [
+                "actor_8e62561c3ac6d3fb0016e9a34a2caa5d",
+                "model_20f35e630daf44dbfa4c3f68f5399d8c"
+              ],
+              "allowed_purposes": [
+                "review",
+                "memory"
+              ],
+              "retention_until": "2026-09-27T00:00:00Z",
+              "offline_allowed": false
+            }
+          },
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "command_25_db24d8b3e8bed0cb622bc1e7bb4b5112",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "policy_ref": {
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+              "revision": 1
+            },
+            "control_revision": 1,
+            "state": "active"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "command_id": "command_26_40841bff3f0dae72793b4a67f03c0dc3",
+          "method": "content.register_copy",
+          "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "payload": {
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+            "purpose": "review",
+            "recipient_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d",
+            "retention_until": "2026-09-27T00:00:00Z"
+          },
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "command_26_40841bff3f0dae72793b4a67f03c0dc3",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+            "purpose": "review",
+            "recipient_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d",
+            "retention_until": "2026-09-27T00:00:00Z",
+            "revision": 1,
+            "use_stopped": false,
+            "physical_state": "pending",
+            "evidence_refs": []
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "command_id": "command_27_c452129420f2e0e231e2baa4deec20cc",
+          "method": "content.close",
+          "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "payload": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "mode": "restrict",
+            "reason": "Narrow use scope",
+            "policy": {
+              "classification": "controlled_remote",
+              "allowed_locations": [
+                "local_endpoint_d4c8a1d28797a577ca99cd17c0d64bb1",
+                "remote_endpoint_eda42d4d388dfe34938b3216c8be5012"
+              ],
+              "allowed_recipients": [
+                "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+              ],
+              "allowed_purposes": [
+                "review"
+              ],
+              "retention_until": "2026-09-27T00:00:00Z",
+              "offline_allowed": false
+            }
+          },
+          "expires_at": "2026-09-26T00:10:00Z",
+          "expected_revision": 1
+        },
+        "response": {
+          "command_id": "command_27_c452129420f2e0e231e2baa4deec20cc",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "control_revision": 2,
+            "state": "restricted",
+            "policy_ref": {
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+              "revision": 1
+            },
+            "cleanup_ref": {
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "id": "cleanup_ecfb9f08f09baba9587e427bc8a820b1",
+              "revision": 2
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "command_id": "command_28_7941f1ff135863de6bf8a01bd7512a01",
+          "method": "content.release_copy",
+          "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "payload": {
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "use_stopped": true,
+            "physical_state": "residual",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "cleanup_evidence_4c52564702f7d6d33d1229e2d957d600",
+                "version": 1,
+                "hash": "sha256:6fff3b62d6a293f6b412561495093990d0e48014076a8abeb61cf9ef3632a579",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "residual_reason": "An offline cache is not yet erased."
+          },
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "command_28_7941f1ff135863de6bf8a01bd7512a01",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+            "purpose": "review",
+            "recipient_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d",
+            "retention_until": "2026-09-27T00:00:00Z",
+            "revision": 2,
+            "use_stopped": true,
+            "physical_state": "residual",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "cleanup_evidence_4c52564702f7d6d33d1229e2d957d600",
+                "version": 1,
+                "hash": "sha256:6fff3b62d6a293f6b412561495093990d0e48014076a8abeb61cf9ef3632a579",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "residual_reason": "An offline cache is not yet erased."
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "method": "memory.cleanup.get",
+          "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+          "payload": {
+            "object_ref": {
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "revision": 1
+            },
+            "closure_revision": 2
+          }
+        },
+        "response": {
+          "output": {
+            "object_ref": {
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "revision": 1
+            },
+            "closure_revision": 2,
+            "holders": [
+              {
+                "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+                "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+                "use_stopped": true,
+                "physical_state": "residual",
+                "residual_reason": "Offline cache remains."
+              }
+            ],
+            "physical_state": "residual"
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,2009 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness.invalid/schema/transport-draft-3",
+  "$defs": {
+    "Discovery": {
+      "type": "object",
+      "properties": {
+        "logical_service_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "protocol": {
+          "const": "harness/1"
+        },
+        "profile": {
+          "const": "full-harness-draft-2"
+        },
+        "schema_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "methods_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 256
+        },
+        "auth_profile": {
+          "const": "session-cookie-or-opaque-bearer-1"
+        },
+        "proof_profile": {
+          "const": "orchestrator-jws-es256-1"
+        },
+        "limits": {
+          "$ref": "#/$defs/ConnectionLimits"
+        },
+        "retention": {
+          "type": "object",
+          "properties": {
+            "receipt_query_seconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "minimal_closed_identity": {
+              "const": "permanent"
+            }
+          },
+          "required": [
+            "receipt_query_seconds",
+            "minimal_closed_identity"
+          ],
+          "additionalProperties": false
+        },
+        "changes_supported": {
+          "const": true
+        },
+        "transport_profile": {
+          "const": "harness-wss-draft-3"
+        },
+        "connect_path": {
+          "const": "/v1/connect"
+        }
+      },
+      "required": [
+        "logical_service_id",
+        "protocol",
+        "profile",
+        "schema_digest",
+        "methods_digest",
+        "methods",
+        "auth_profile",
+        "proof_profile",
+        "limits",
+        "retention",
+        "changes_supported",
+        "transport_profile",
+        "connect_path"
+      ],
+      "additionalProperties": false
+    },
+    "DiscoveryPublic": {
+      "type": "object",
+      "properties": {
+        "protocol": {
+          "const": "harness/1"
+        },
+        "auth_profile": {
+          "const": "session-cookie-or-opaque-bearer-1"
+        },
+        "pairing_supported": {
+          "type": "boolean"
+        },
+        "transport_profile": {
+          "const": "harness-wss-draft-3"
+        },
+        "connect_path": {
+          "const": "/v1/connect"
+        }
+      },
+      "required": [
+        "protocol",
+        "auth_profile",
+        "pairing_supported",
+        "transport_profile",
+        "connect_path"
+      ],
+      "additionalProperties": false
+    },
+    "Lookup": {
+      "type": "object",
+      "properties": {
+        "command_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        }
+      },
+      "required": [
+        "command_id"
+      ],
+      "additionalProperties": false
+    },
+    "Delivery": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "delivery_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "sender_service_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "recipient_endpoint_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "recipient_instance_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "kind": {
+              "const": "command"
+            },
+            "request": {
+              "$ref": "protocol.schema.json#/$defs/Command"
+            },
+            "deliver_before": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            }
+          },
+          "required": [
+            "delivery_id",
+            "sender_service_id",
+            "recipient_endpoint_id",
+            "recipient_instance_id",
+            "request_digest",
+            "kind",
+            "request",
+            "deliver_before"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "delivery_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "sender_service_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "recipient_endpoint_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "recipient_instance_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "kind": {
+              "const": "query"
+            },
+            "request": {
+              "$ref": "protocol.schema.json#/$defs/Query"
+            },
+            "deliver_before": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            }
+          },
+          "required": [
+            "delivery_id",
+            "sender_service_id",
+            "recipient_endpoint_id",
+            "recipient_instance_id",
+            "request_digest",
+            "kind",
+            "request",
+            "deliver_before"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "delivery_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "sender_service_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "recipient_endpoint_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "recipient_instance_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "kind": {
+              "const": "receipt_lookup"
+            },
+            "request": {
+              "$ref": "#/$defs/Lookup"
+            },
+            "deliver_before": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            }
+          },
+          "required": [
+            "delivery_id",
+            "sender_service_id",
+            "recipient_endpoint_id",
+            "recipient_instance_id",
+            "request_digest",
+            "kind",
+            "request",
+            "deliver_before"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "DeliveryEnvelope": {
+      "type": "object",
+      "properties": {
+        "delivery": {
+          "$ref": "#/$defs/Delivery"
+        },
+        "delivery_proof": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$",
+          "maxLength": 65536
+        }
+      },
+      "required": [
+        "delivery",
+        "delivery_proof"
+      ],
+      "additionalProperties": false
+    },
+    "Reply": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "delivery_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "kind": {
+              "const": "command"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "protocol.schema.json#/$defs/Receipt"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            },
+            "withheld": {
+              "const": true
+            }
+          },
+          "required": [
+            "delivery_id",
+            "request_digest",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "withheld"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "result": {
+                    "allOf": [
+                      {
+                        "$ref": "#/$defs/ErrorResult"
+                      },
+                      {
+                        "properties": {
+                          "error": {
+                            "properties": {
+                              "code": {
+                                "const": "forbidden"
+                              },
+                              "retry": {
+                                "const": "after_change"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "delivery_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "kind": {
+              "const": "query"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "protocol.schema.json#/$defs/QueryResult"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            },
+            "withheld": {
+              "const": true
+            }
+          },
+          "required": [
+            "delivery_id",
+            "request_digest",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "withheld"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "result": {
+                    "allOf": [
+                      {
+                        "$ref": "#/$defs/ErrorResult"
+                      },
+                      {
+                        "properties": {
+                          "error": {
+                            "properties": {
+                              "code": {
+                                "const": "forbidden"
+                              },
+                              "retry": {
+                                "const": "after_change"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "delivery_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "request_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "kind": {
+              "const": "receipt_lookup"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "protocol.schema.json#/$defs/Receipt"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            },
+            "withheld": {
+              "const": true
+            }
+          },
+          "required": [
+            "delivery_id",
+            "request_digest",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "withheld"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "result": {
+                    "allOf": [
+                      {
+                        "$ref": "#/$defs/ErrorResult"
+                      },
+                      {
+                        "properties": {
+                          "error": {
+                            "properties": {
+                              "code": {
+                                "const": "forbidden"
+                              },
+                              "retry": {
+                                "const": "after_change"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "ReplyAck": {
+      "type": "object",
+      "properties": {
+        "delivery_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "stored": {
+          "const": true
+        },
+        "result_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "delivery_id",
+        "stored",
+        "result_digest"
+      ],
+      "additionalProperties": false
+    },
+    "ControlProofPayload": {
+      "type": "object",
+      "properties": {
+        "issuer": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "tenant_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "audience": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "gate": {
+          "$ref": "protocol.schema.json#/$defs/TaskGate"
+        },
+        "issued_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "start_before": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "issuer",
+        "tenant_id",
+        "audience",
+        "gate",
+        "issued_at",
+        "start_before"
+      ],
+      "additionalProperties": false
+    },
+    "UploadIntent": {
+      "type": "object",
+      "properties": {
+        "upload_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "upload_id",
+        "hash",
+        "byte_length",
+        "media_type",
+        "expires_at"
+      ],
+      "additionalProperties": false
+    },
+    "Upload": {
+      "type": "object",
+      "properties": {
+        "upload_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "state": {
+          "enum": [
+            "reserved",
+            "ready",
+            "committed",
+            "expired"
+          ]
+        },
+        "content_ref": {
+          "$ref": "protocol.schema.json#/$defs/ContentRef"
+        }
+      },
+      "required": [
+        "upload_id",
+        "hash",
+        "byte_length",
+        "media_type",
+        "expires_at",
+        "state"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "committed"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "content_ref"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "content_ref"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Change": {
+      "type": "object",
+      "properties": {
+        "cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "object_type": {
+          "enum": [
+            "task",
+            "operation",
+            "memory",
+            "surface",
+            "activation",
+            "grant"
+          ]
+        },
+        "object_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "cursor",
+        "object_type",
+        "object_id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "ClosedIdentity": {
+      "type": "object",
+      "properties": {
+        "tenant_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "owner_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "object_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "kind": {
+          "enum": [
+            "command",
+            "operation",
+            "task"
+          ]
+        },
+        "closed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "request_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "outcome": {
+          "enum": [
+            "applied",
+            "rejected",
+            "cancelled",
+            "succeeded",
+            "failed"
+          ]
+        },
+        "payload_retained": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "owner_id",
+        "object_id",
+        "kind",
+        "closed_at",
+        "outcome",
+        "payload_retained"
+      ],
+      "additionalProperties": false
+    },
+    "ClosedIdentityLookup": {
+      "type": "object",
+      "properties": {
+        "record": {
+          "$ref": "#/$defs/ClosedIdentity"
+        },
+        "lookup_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "request_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "response_code": {
+          "enum": [
+            "gone",
+            "idempotency_conflict",
+            "precondition_failed"
+          ]
+        }
+      },
+      "required": [
+        "record",
+        "lookup_id",
+        "response_code"
+      ],
+      "additionalProperties": false
+    },
+    "ErrorResult": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "protocol.schema.json#/$defs/Error"
+        }
+      },
+      "required": [
+        "error"
+      ],
+      "additionalProperties": false
+    },
+    "MirrorTicket": {
+      "type": "object",
+      "properties": {
+        "ticket_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "upload_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "receiver_service_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "sender_endpoint_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "sender_instance_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "content_ref": {
+          "$ref": "protocol.schema.json#/$defs/ContentRef"
+        },
+        "copy_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "source_control_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "ticket_id",
+        "upload_id",
+        "receiver_service_id",
+        "sender_endpoint_id",
+        "sender_instance_id",
+        "content_ref",
+        "copy_id",
+        "source_control_revision",
+        "expires_at"
+      ],
+      "additionalProperties": false
+    },
+    "Mirror": {
+      "type": "object",
+      "properties": {
+        "ticket": {
+          "$ref": "#/$defs/MirrorTicket"
+        },
+        "state": {
+          "enum": [
+            "reserved",
+            "ready",
+            "closed",
+            "expired"
+          ]
+        },
+        "cleanup_state": {
+          "enum": [
+            "pending",
+            "complete",
+            "residual",
+            "unknown"
+          ]
+        },
+        "retention_until": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "control_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "ticket",
+        "state",
+        "cleanup_state",
+        "retention_until",
+        "control_revision"
+      ],
+      "additionalProperties": false
+    },
+    "MirrorRead": {
+      "type": "object",
+      "properties": {
+        "mirror": {
+          "$ref": "#/$defs/Mirror"
+        },
+        "source_download": {
+          "$ref": "protocol.schema.json#/$defs/ContentBytesGetOutput"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "source_online": {
+          "type": "boolean"
+        },
+        "allowed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "mirror",
+        "source_download",
+        "observed_at",
+        "source_online",
+        "allowed"
+      ],
+      "additionalProperties": false
+    },
+    "MirrorControl": {
+      "type": "object",
+      "properties": {
+        "control_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "content_ref": {
+          "$ref": "protocol.schema.json#/$defs/ContentRef"
+        },
+        "copy_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "control_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "cause": {
+          "enum": [
+            "restricted",
+            "closed"
+          ]
+        },
+        "ticket_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        }
+      },
+      "required": [
+        "ticket_id",
+        "control_id",
+        "content_ref",
+        "copy_id",
+        "control_revision",
+        "cause"
+      ],
+      "additionalProperties": false
+    },
+    "ConnectionLimits": {
+      "type": "object",
+      "properties": {
+        "max_json_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 262144
+        },
+        "max_frame_bytes": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 1048576
+        },
+        "max_page_items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "max_inflight_requests": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 32
+        },
+        "max_pending_deliveries": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 32
+        },
+        "max_queue_bytes": {
+          "type": "integer",
+          "minimum": 2048,
+          "maximum": 4194304
+        },
+        "control_reserve_bytes": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 1048576
+        },
+        "control_reserve_items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "max_subscriptions": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "heartbeat_interval_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 30000
+        },
+        "heartbeat_timeout_ms": {
+          "type": "integer",
+          "minimum": 2000,
+          "maximum": 90000
+        },
+        "max_content_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "max_connections_per_identity_service": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "max_connections_per_identity_total": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 16
+        }
+      },
+      "required": [
+        "max_json_bytes",
+        "max_frame_bytes",
+        "max_page_items",
+        "max_inflight_requests",
+        "max_pending_deliveries",
+        "max_queue_bytes",
+        "control_reserve_bytes",
+        "control_reserve_items",
+        "max_connections_per_identity_service",
+        "max_subscriptions",
+        "heartbeat_interval_ms",
+        "heartbeat_timeout_ms",
+        "max_content_bytes",
+        "max_connections_per_identity_total"
+      ],
+      "additionalProperties": false
+    },
+    "SubscribeInput": {
+      "type": "object",
+      "properties": {
+        "object_types": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "task",
+              "operation",
+              "memory",
+              "surface",
+              "activation",
+              "grant"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true
+        },
+        "cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "object_types"
+      ],
+      "additionalProperties": false
+    },
+    "Subscribed": {
+      "type": "object",
+      "properties": {
+        "subscription_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "snapshot_required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "subscription_id",
+        "cursor",
+        "snapshot_required"
+      ],
+      "additionalProperties": false
+    },
+    "Frame": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "ready"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "logical_service_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "limits": {
+              "$ref": "#/$defs/ConnectionLimits"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "logical_service_id",
+            "limits"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "command"
+            },
+            "request": {
+              "$ref": "protocol.schema.json#/$defs/Command"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "command"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "protocol.schema.json#/$defs/Receipt"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "query"
+            },
+            "request": {
+              "$ref": "protocol.schema.json#/$defs/Query"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "query"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "protocol.schema.json#/$defs/QueryResult"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "receipt_lookup"
+            },
+            "request": {
+              "$ref": "#/$defs/Lookup"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "receipt_lookup"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "protocol.schema.json#/$defs/Receipt"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "subscribe"
+            },
+            "request": {
+              "$ref": "#/$defs/SubscribeInput"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "subscribe"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Subscribed"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "delivery"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "envelope": {
+              "$ref": "#/$defs/DeliveryEnvelope"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "envelope"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "reply"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "reply": {
+              "$ref": "#/$defs/Reply"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "reply"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "reply_ack"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "ack": {
+              "$ref": "#/$defs/ReplyAck"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "ack"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "mirror_ticket"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "ticket": {
+              "$ref": "#/$defs/MirrorTicket"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "ticket"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "change"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "subscription_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "change": {
+              "$ref": "#/$defs/Change"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "subscription_id",
+            "change"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "snapshot_required"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "subscription_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "reason": {
+              "enum": [
+                "cursor_expired",
+                "queue_overflow",
+                "backend_rebind",
+                "authorization_changed"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "subscription_id",
+            "reason"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "ping"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "nonce": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "nonce"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "pong"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "nonce": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "nonce"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "upload_reserve"
+            },
+            "request": {
+              "$ref": "#/$defs/UploadIntent"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "upload_reserve"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Upload"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "upload_lookup"
+            },
+            "request": {
+              "$ref": "#/$defs/UploadLookup"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "upload_lookup"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Upload"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "mirror_reserve"
+            },
+            "request": {
+              "$ref": "#/$defs/MirrorTicket"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "mirror_reserve"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Mirror"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "mirror_lookup"
+            },
+            "request": {
+              "$ref": "#/$defs/MirrorLookup"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "mirror_lookup"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Mirror"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "request"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "mirror_control"
+            },
+            "request": {
+              "$ref": "#/$defs/MirrorControl"
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "response"
+            },
+            "connection_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+            },
+            "kind": {
+              "const": "mirror_control"
+            },
+            "result": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Mirror"
+                },
+                {
+                  "$ref": "#/$defs/ErrorResult"
+                }
+              ]
+            },
+            "request_seq": {
+              "$ref": "#/$defs/RequestSequence"
+            }
+          },
+          "required": [
+            "type",
+            "connection_id",
+            "request_seq",
+            "kind",
+            "result"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "UploadLookup": {
+      "type": "object",
+      "properties": {
+        "upload_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        }
+      },
+      "required": [
+        "upload_id"
+      ],
+      "additionalProperties": false
+    },
+    "MirrorLookup": {
+      "type": "object",
+      "properties": {
+        "ticket_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        }
+      },
+      "required": [
+        "ticket_id"
+      ],
+      "additionalProperties": false
+    },
+    "ChannelBinding": {
+      "type": "object",
+      "properties": {
+        "logical_service_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "connection_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "binding_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "limits": {
+          "$ref": "#/$defs/ConnectionLimits"
+        },
+        "limits_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "binding_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "logical_service_id",
+        "connection_id",
+        "binding_id",
+        "binding_revision",
+        "limits",
+        "limits_digest"
+      ],
+      "additionalProperties": false
+    },
+    "ChannelFrameRecord": {
+      "type": "object",
+      "properties": {
+        "binding_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+        },
+        "frame": {
+          "$ref": "#/$defs/Frame"
+        }
+      },
+      "required": [
+        "binding_id",
+        "frame"
+      ],
+      "additionalProperties": false
+    },
+    "RequestSequence": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    }
+  }
+}

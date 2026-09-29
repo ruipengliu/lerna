@@ -1,0 +1,201 @@
+{
+  "name": "memory-extraction",
+  "description": "Accepted finite extraction maps to one Orchestrator task; an explicit candidate create publishes once.",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "command_id": "command_10_6c9d1d4440e97b21266efa5a8911d597",
+          "method": "memory.extract",
+          "target_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+          "payload": {
+            "extraction_id": "extraction_868994937b1c6f12924fa744402f419e",
+            "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+            "input_refs": [
+              {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "source_36cd38f49b9afa08222c0dc9ebfe35eb",
+                "version": 1,
+                "hash": "sha256:41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ],
+            "rule_ref": {
+              "id": "extraction_policy_497000049e8ce2a4b94b1bf03217d3c3",
+              "version": "1.0.0",
+              "digest": "sha256:f93e1c5d1b161decc5af28d3fe399c0f4fe5d643c04c59733fc5eb220b55502b"
+            },
+            "save_mode": "confirm",
+            "usage_authorization_refs": [
+              {
+                "kind": "use",
+                "owner_id": "grant_owner_912c54b3a5faa1717e21484ac5b3bde9",
+                "id": "extraction_use_baa4b2d28d2607386303abb54a398ad1",
+                "revision": 1
+              }
+            ],
+            "limits": {
+              "max_candidates": 10,
+              "max_input_bytes": 1024,
+              "deadline": "2026-09-26T00:10:00Z",
+              "cost_reservation_ref": {
+                "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+                "id": "extraction_budget_5a20b0fc6137bbf795fdd328a6d7a3b3",
+                "revision": 1
+              }
+            }
+          },
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "command_10_6c9d1d4440e97b21266efa5a8911d597",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "extraction_id": "extraction_868994937b1c6f12924fa744402f419e",
+            "extraction_task_id": "extraction_task_69c48037af94b49a8dae2e3e9c5ebd7c",
+            "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+            "owner_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+            "input_digest": "sha256:4570a4ac24eded98fd4b3db2dd19a59db807acfe4ad5b8adc96571de6dc093a4",
+            "state": "queued"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+          "logical_service_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+          "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+        },
+        "request": {
+          "command_id": "command_11_27676f1cf9093b7c9baf1d62c54abd43",
+          "method": "memory.create",
+          "target_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+          "payload": {
+            "type": "preference",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "preference_content_cdf2b9cb7fab68e1025ac9f215a2db46",
+              "version": 1,
+              "hash": "sha256:139778e654ae23dd9d4555d123c6b53cf4cb4da64396df435ea21a596398a0c8",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "sources": [
+              {
+                "source_ref": {
+                  "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                  "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                  "content_id": "source_36cd38f49b9afa08222c0dc9ebfe35eb",
+                  "version": 1,
+                  "hash": "sha256:41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                },
+                "relation": "user_statement",
+                "observed_at": "2026-09-26T00:00:00Z",
+                "policy_ref": {
+                  "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                  "id": "source_policy_b16ea25b47516c0e521510b7343a0afd",
+                  "revision": 1
+                }
+              }
+            ],
+            "scope": {
+              "task_types": [
+                "technical_review"
+              ],
+              "resource_ids": [],
+              "purpose_tags": [
+                "personalization"
+              ]
+            },
+            "observed_at": "2026-09-26T00:00:00Z",
+            "policy_ref": {
+              "owner_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+              "id": "memory_policy_b25c180c5a018ddb3f4eeccf5592120a",
+              "revision": 1
+            },
+            "extraction_candidate_ref": {
+              "owner_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+              "id": "candidate_65afdfb40872c44eb6118b669b0d751e",
+              "revision": 1
+            }
+          },
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "command_11_27676f1cf9093b7c9baf1d62c54abd43",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "memory_id": "preference_042740c402a7681b79544c560701e3ee",
+            "owner_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+            "revision": 1,
+            "type": "preference",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "preference_content_cdf2b9cb7fab68e1025ac9f215a2db46",
+              "version": 1,
+              "hash": "sha256:139778e654ae23dd9d4555d123c6b53cf4cb4da64396df435ea21a596398a0c8",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "sources": [
+              {
+                "source_ref": {
+                  "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                  "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                  "content_id": "source_36cd38f49b9afa08222c0dc9ebfe35eb",
+                  "version": 1,
+                  "hash": "sha256:41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                },
+                "relation": "user_statement",
+                "observed_at": "2026-09-26T00:00:00Z",
+                "policy_ref": {
+                  "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                  "id": "source_policy_b16ea25b47516c0e521510b7343a0afd",
+                  "revision": 1
+                }
+              }
+            ],
+            "scope": {
+              "task_types": [
+                "technical_review"
+              ],
+              "resource_ids": [],
+              "purpose_tags": [
+                "personalization"
+              ]
+            },
+            "observed_at": "2026-09-26T00:00:00Z",
+            "state": "active",
+            "policy_ref": {
+              "owner_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+              "id": "memory_policy_b25c180c5a018ddb3f4eeccf5592120a",
+              "revision": 1
+            }
+          }
+        }
+      }
+    }
+  ]
+}

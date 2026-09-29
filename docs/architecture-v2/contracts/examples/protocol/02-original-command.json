@@ -1,0 +1,511 @@
+{
+  "name": "02-original-command",
+  "description": "接纳答复丢失后查询并重投原命令；同键不同意图保留原决定。",
+  "capabilities": [
+    {
+      "capability_ref": {
+        "id": "capability_38a5be91af79d7e5ba9809bf383c699b",
+        "version": "1.0.0",
+        "digest": "sha256:38a5be91af79d7e5ba9809bf383c699b6864ee50446239fe56a45e32b84638fe"
+      },
+      "binding_ref": {
+        "binding_id": "binding_80f70afeef3caa57646fd20afb95be9c",
+        "revision": 1
+      },
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "method": "task.submit",
+          "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+            "constraints": [
+              "保存指定报告并读回核验"
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "budget": [
+              {
+                "unit": "request",
+                "limit": "10"
+              }
+            ],
+            "deadline": "2026-09-26T00:10:00Z"
+          }
+        },
+        "response": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+            "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "goal_revision": 1,
+            "requirements": [
+              {
+                "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+                "kind": "effect",
+                "source_ref": {
+                  "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                  "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                  "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                  "version": 1,
+                  "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                },
+                "rule_ref": {
+                  "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                  "version": "1.0.0",
+                  "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+                },
+                "required": true
+              }
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "revision": 1,
+            "control_revision": 1,
+            "status": "active",
+            "control": "running",
+            "wait_reasons": [],
+            "deadline": "2026-09-26T00:10:00Z",
+            "budget": [
+              {
+                "unit": "request",
+                "limit": {
+                  "unit": "request",
+                  "amount": "10"
+                },
+                "spent": {
+                  "unit": "request",
+                  "amount": "0"
+                },
+                "reserved": {
+                  "unit": "request",
+                  "amount": "1"
+                }
+              }
+            ],
+            "open_effects": [],
+            "accounting_open": true
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "recovery": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "original_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+        "lookup": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb"
+        },
+        "response": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+            "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "goal_revision": 1,
+            "requirements": [
+              {
+                "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+                "kind": "effect",
+                "source_ref": {
+                  "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                  "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                  "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                  "version": 1,
+                  "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                },
+                "rule_ref": {
+                  "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                  "version": "1.0.0",
+                  "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+                },
+                "required": true
+              }
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "revision": 1,
+            "control_revision": 1,
+            "status": "active",
+            "control": "running",
+            "wait_reasons": [],
+            "deadline": "2026-09-26T00:10:00Z",
+            "budget": [
+              {
+                "unit": "request",
+                "limit": {
+                  "unit": "request",
+                  "amount": "10"
+                },
+                "spent": {
+                  "unit": "request",
+                  "amount": "0"
+                },
+                "reserved": {
+                  "unit": "request",
+                  "amount": "1"
+                }
+              }
+            ],
+            "open_effects": [],
+            "accounting_open": true
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "method": "task.submit",
+          "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+            "constraints": [
+              "保存指定报告并读回核验"
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "budget": [
+              {
+                "unit": "request",
+                "limit": "10"
+              }
+            ],
+            "deadline": "2026-09-26T00:10:00Z"
+          }
+        },
+        "response": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+            "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "goal_revision": 1,
+            "requirements": [
+              {
+                "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+                "kind": "effect",
+                "source_ref": {
+                  "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                  "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                  "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                  "version": 1,
+                  "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                },
+                "rule_ref": {
+                  "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                  "version": "1.0.0",
+                  "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+                },
+                "required": true
+              }
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "revision": 1,
+            "control_revision": 1,
+            "status": "active",
+            "control": "running",
+            "wait_reasons": [],
+            "deadline": "2026-09-26T00:10:00Z",
+            "budget": [
+              {
+                "unit": "request",
+                "limit": {
+                  "unit": "request",
+                  "amount": "10"
+                },
+                "spent": {
+                  "unit": "request",
+                  "amount": "0"
+                },
+                "reserved": {
+                  "unit": "request",
+                  "amount": "1"
+                }
+              }
+            ],
+            "open_effects": [],
+            "accounting_open": true
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "method": "task.submit",
+          "target_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+            "constraints": [
+              "different constraint"
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "budget": [
+              {
+                "unit": "request",
+                "limit": "10"
+              }
+            ],
+            "deadline": "2026-09-26T00:10:00Z"
+          }
+        },
+        "response": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "stage": "rejected",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "error": {
+            "code": "idempotency_conflict",
+            "message": "前提不满足",
+            "retry": "query_original"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "recovery": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "original_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+        "lookup": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb"
+        },
+        "response": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+            "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+            "goal_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "goal_revision": 1,
+            "requirements": [
+              {
+                "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+                "kind": "effect",
+                "source_ref": {
+                  "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                  "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                  "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                  "version": 1,
+                  "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                },
+                "rule_ref": {
+                  "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                  "version": "1.0.0",
+                  "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+                },
+                "required": true
+              }
+            ],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "revision": 1,
+            "control_revision": 1,
+            "status": "active",
+            "control": "running",
+            "wait_reasons": [],
+            "deadline": "2026-09-26T00:10:00Z",
+            "budget": [
+              {
+                "unit": "request",
+                "limit": {
+                  "unit": "request",
+                  "amount": "10"
+                },
+                "spent": {
+                  "unit": "request",
+                  "amount": "0"
+                },
+                "reserved": {
+                  "unit": "request",
+                  "amount": "1"
+                }
+              }
+            ],
+            "open_effects": [],
+            "accounting_open": true
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "recovery": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "original_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+        "lookup": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb"
+        },
+        "response": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "redacted": true
+        }
+      }
+    }
+  ]
+}

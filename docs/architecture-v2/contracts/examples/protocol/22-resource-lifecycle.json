@@ -1,0 +1,389 @@
+{
+  "name": "22-resource-lifecycle",
+  "description": "设备唯一占用、条件续期、实际观察、本人接管和交还分别产生持久事实。",
+  "capabilities": [
+    {
+      "capability_ref": {
+        "id": "runtime_observe_e5ae7c3c930902e70cde861f4fb5c01e",
+        "version": "1.0.0",
+        "digest": "sha256:e5ae7c3c930902e70cde861f4fb5c01e6b2cc8cc256c4c7b8a637059b3cbe244"
+      },
+      "binding_ref": {
+        "binding_id": "runtime_binding_306c3943e547f252a32662b91f512785",
+        "revision": 1
+      },
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "resource_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*_[0-9a-f]{32}$"
+          }
+        },
+        "required": [
+          "resource_id"
+        ],
+        "additionalProperties": false
+      },
+      "semantic_operation_id": "harness.gui.observe",
+      "effect_class": "read_only"
+    }
+  ],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+          "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+          "logical_service_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a"
+        },
+        "request": {
+          "method": "resource.acquire",
+          "target_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+          "payload": {
+            "holder_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+            "instance_id": "runtime_instance_5942b674ee120a6d4a0b33638f52bb08",
+            "expires_at": "2026-09-26T00:05:00Z",
+            "authorization_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
+                "revision": 1
+              }
+            ]
+          },
+          "command_id": "resource_acquire_0_97362e37ea651d243afa076cf9e09fdc",
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "resource_acquire_0_97362e37ea651d243afa076cf9e09fdc",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "lease_id": "runtime_lease_8857bc73d52e12d82a8e38d711d323fa",
+            "revision": 1,
+            "resource_owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+            "resource_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+            "holder_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+            "instance_id": "runtime_instance_5942b674ee120a6d4a0b33638f52bb08",
+            "control_epoch": 1,
+            "expires_at": "2026-09-26T00:05:00Z",
+            "state": "active"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+          "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+          "logical_service_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a"
+        },
+        "request": {
+          "method": "resource.renew",
+          "target_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+          "payload": {
+            "lease_id": "runtime_lease_8857bc73d52e12d82a8e38d711d323fa",
+            "expires_at": "2026-09-26T00:10:00Z",
+            "authorization_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
+                "revision": 1
+              }
+            ]
+          },
+          "command_id": "resource_renew_1_f6af026eb365fa6c6cec8801778ecc13",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "expected_revision": 1
+        },
+        "response": {
+          "command_id": "resource_renew_1_f6af026eb365fa6c6cec8801778ecc13",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "lease_id": "runtime_lease_8857bc73d52e12d82a8e38d711d323fa",
+            "revision": 2,
+            "resource_owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+            "resource_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+            "holder_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+            "instance_id": "runtime_instance_5942b674ee120a6d4a0b33638f52bb08",
+            "control_epoch": 1,
+            "expires_at": "2026-09-26T00:10:00Z",
+            "state": "active"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+          "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+          "logical_service_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a"
+        },
+        "request": {
+          "method": "resource.get",
+          "target_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+          "payload": {}
+        },
+        "response": {
+          "output": {
+            "resource_owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+            "resource_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+            "control_epoch": 1,
+            "user_control": false,
+            "lease": {
+              "lease_id": "runtime_lease_8857bc73d52e12d82a8e38d711d323fa",
+              "revision": 2,
+              "resource_owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+              "resource_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+              "holder_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+              "instance_id": "runtime_instance_5942b674ee120a6d4a0b33638f52bb08",
+              "control_epoch": 1,
+              "expires_at": "2026-09-26T00:10:00Z",
+              "state": "active"
+            },
+            "inflight_operation_ids": []
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+          "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+          "logical_service_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a"
+        },
+        "request": {
+          "method": "resource.observe",
+          "target_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+          "payload": {
+            "resource_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+            "invoke": {
+              "operation_id": "runtime_observation_operation_bf6e6909c7a8043ee562de1ee2796e98",
+              "task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
+              "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+              "goal_revision": 1,
+              "control_snapshot": {
+                "gate": {
+                  "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                  "task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
+                  "control_revision": 1,
+                  "goal_revision": 1,
+                  "status": "active",
+                  "control": "running"
+                },
+                "executor_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+                "issued_at": "2026-09-26T00:00:00Z",
+                "start_before": "2026-09-26T00:00:30Z",
+                "orchestrator_proof": "fixture: authenticated Orchestrator snapshot"
+              },
+              "capability_ref": {
+                "id": "runtime_observe_e5ae7c3c930902e70cde861f4fb5c01e",
+                "version": "1.0.0",
+                "digest": "sha256:e5ae7c3c930902e70cde861f4fb5c01e6b2cc8cc256c4c7b8a637059b3cbe244"
+              },
+              "binding_ref": {
+                "binding_id": "runtime_binding_306c3943e547f252a32662b91f512785",
+                "revision": 1
+              },
+              "arguments": {
+                "resource_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd"
+              },
+              "intent_hash": "sha256:2a01015504680f8cfaa9f3a4b58ecc0de8c47a1b9104a1a157dde21e7379c3f6",
+              "authorization_refs": [
+                {
+                  "kind": "grant",
+                  "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                  "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
+                  "revision": 1
+                }
+              ],
+              "reservation_ref": {
+                "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                "id": "runtime_observation_reservation_421ae03b577ca0ad37ec5a12925d88c5",
+                "revision": 1
+              },
+              "deadline": "2026-09-26T00:10:00Z"
+            }
+          },
+          "command_id": "resource_observe_3_e3286477be46288039dcae017d5a4109",
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "resource_observe_3_e3286477be46288039dcae017d5a4109",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "operation": {
+              "operation_id": "runtime_observation_operation_bf6e6909c7a8043ee562de1ee2796e98",
+              "revision": 2,
+              "execution_state": "closed",
+              "effect": "applied",
+              "may_apply_later": false,
+              "attempts": [],
+              "evidence_refs": [
+                {
+                  "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+                  "owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+                  "content_id": "runtime_screen_4b3c51c2d5da397f9a62cfaef8354b53",
+                  "version": 1,
+                  "hash": "sha256:4b3c51c2d5da397f9a62cfaef8354b53ed562d0f16b50eff9b50b14e6be07c70",
+                  "media_type": "image/png",
+                  "byte_length": 16
+                }
+              ],
+              "usage": [
+                {
+                  "unit": "request",
+                  "amount": "1"
+                }
+              ],
+              "usage_final": true,
+              "next_action": "none"
+            },
+            "observation": {
+              "observation_id": "runtime_observation_b98840d81a586120a75d511a3385105e",
+              "resource_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+              "control_epoch": 1,
+              "captured_at": "2026-09-26T00:00:00Z",
+              "expires_at": "2026-09-26T00:00:10Z",
+              "ui_revision": 1,
+              "screenshot_ref": {
+                "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+                "owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+                "content_id": "runtime_screen_4b3c51c2d5da397f9a62cfaef8354b53",
+                "version": 1,
+                "hash": "sha256:4b3c51c2d5da397f9a62cfaef8354b53ed562d0f16b50eff9b50b14e6be07c70",
+                "media_type": "image/png",
+                "byte_length": 16
+              },
+              "focus": "reminders",
+              "viewport": {
+                "width": 390,
+                "height": 844,
+                "scale": 1,
+                "orientation": "portrait",
+                "coordinate_unit": "logical_pixel"
+              },
+              "precondition_strength": "atomic"
+            }
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+          "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+          "logical_service_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a"
+        },
+        "request": {
+          "method": "resource.takeover",
+          "target_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+          "payload": {
+            "reason": "本人接管",
+            "authorization_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
+                "revision": 1
+              }
+            ]
+          },
+          "command_id": "resource_takeover_4_6b4950530e79150382a21f87b5143725",
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "resource_takeover_4_6b4950530e79150382a21f87b5143725",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "resource_owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+            "resource_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+            "control_epoch": 2,
+            "user_control": true,
+            "lease": {
+              "lease_id": "runtime_lease_8857bc73d52e12d82a8e38d711d323fa",
+              "revision": 3,
+              "resource_owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+              "resource_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+              "holder_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+              "instance_id": "runtime_instance_5942b674ee120a6d4a0b33638f52bb08",
+              "control_epoch": 1,
+              "expires_at": "2026-09-26T00:10:00Z",
+              "state": "revoked"
+            },
+            "inflight_operation_ids": []
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+          "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+          "logical_service_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a"
+        },
+        "request": {
+          "method": "resource.release",
+          "target_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+          "payload": {
+            "expected_control_epoch": 2,
+            "authorization_refs": [
+              {
+                "kind": "grant",
+                "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
+                "revision": 1
+              }
+            ]
+          },
+          "command_id": "resource_release_5_a8b06706b08e754e46c1984c2570830b",
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "resource_release_5_a8b06706b08e754e46c1984c2570830b",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "resource_owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+            "resource_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+            "control_epoch": 2,
+            "user_control": false,
+            "lease": {
+              "lease_id": "runtime_lease_8857bc73d52e12d82a8e38d711d323fa",
+              "revision": 4,
+              "resource_owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+              "resource_id": "runtime_phone_c1a7b8678446de74ca4dfe348a07eefd",
+              "holder_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+              "instance_id": "runtime_instance_5942b674ee120a6d4a0b33638f52bb08",
+              "control_epoch": 1,
+              "expires_at": "2026-09-26T00:10:00Z",
+              "state": "released"
+            },
+            "inflight_operation_ids": []
+          }
+        }
+      }
+    }
+  ]
+}
