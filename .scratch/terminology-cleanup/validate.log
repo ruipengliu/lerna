@@ -1,0 +1,2 @@
+PASS: 5 valid examples; 9 invalid examples rejected
+Scope: schema and document fixture semantics only; runtime behavior not tested

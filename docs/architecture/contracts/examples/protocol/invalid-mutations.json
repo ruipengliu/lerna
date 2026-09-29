@@ -1681,7 +1681,7 @@
       {
         "op": "set",
         "path": "/capabilities/0/effect_class",
-        "value": "non_repeatable"
+        "value": "no_idempotency_guarantee"
       }
     ]
   },

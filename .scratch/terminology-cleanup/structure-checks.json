@@ -1,0 +1,24 @@
+{
+  "docs/architecture/diagrams/system-panorama.drawio": {
+    "pages": 1,
+    "non_text_structure": "unchanged",
+    "source_sha256": "783c3de182e7b31bfda560f22008b236363e0a3292f64e6feb45739755b16178"
+  },
+  "docs/architecture/diagrams/uml-models.drawio": {
+    "pages": 20,
+    "non_text_structure": "unchanged",
+    "source_sha256": "b8a48be8dc48df30f7ccfb4f4e8f2cf106f7beaffba9b759e8c1ddbee199a8ad"
+  },
+  "docs/architecture/diagrams/architecture-atlas.html": {
+    "non_text_structure": "unchanged",
+    "source_sha256": "66897e128151e63eb0a696a384d07216289d30fb7b23c04392cf4d24635cb3ba"
+  },
+  "docs/architecture/contracts/schemas/protocol.schema.json": {
+    "machine_structure": "unchanged except effect_class enum rename; descriptions excluded",
+    "source_sha256": "1d59d6fc2bbfd5a6aba7f6327cf3540b3526709f4e7939c8b186a1324674f5f9"
+  },
+  "docs/architecture/contracts/schemas/methods.json": {
+    "machine_structure": "unchanged except effect_class enum rename; descriptions excluded",
+    "source_sha256": "e7bae72df35d8f19748b9fb7a706f09750673da778c5c82abce6e17f0569eb7c"
+  }
+}

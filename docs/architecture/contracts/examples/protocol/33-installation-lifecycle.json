@@ -1,6 +1,6 @@
 {
   "name": "installation-lifecycle",
-  "description": "准备完整安装锁、按kind读取、停用入口与无引用清理。",
+  "description": "准备完整安装锁定清单、按kind读取、停用入口与无引用清理。",
   "capabilities": [],
   "input_requests": [],
   "approvals": [],

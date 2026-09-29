@@ -1,0 +1,830 @@
+{
+  "base_commit": "62e9284dc087ad8208b5963c67bdb57ce196b586",
+  "changed_diagrams": [
+    {
+      "source": "docs/architecture/brain/README.md",
+      "diagram_number": 1,
+      "fence_line": 33,
+      "source_sha256": "0a2d22e546995a0e426bf6c9f04ad9f558931e5d42f7db46d4693151d733c6a6",
+      "mermaid": ".scratch/terminology-cleanup/render/brain-README-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/brain-README-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "621a503bb1b597620cb92bf3a1144326900f507d0d8526e5a1bfa015930c04d2"
+    },
+    {
+      "source": "docs/architecture/brain/decision-paths.md",
+      "diagram_number": 1,
+      "fence_line": 16,
+      "source_sha256": "072104b1eac08d639a00702c167029a7794f93221e8a3d56a506032a9ab52f3e",
+      "mermaid": ".scratch/terminology-cleanup/render/brain-decision-paths-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/brain-decision-paths-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "271fc13bd9ef7835ac5b2f28c1030e3546d51ec9ea5d8d8f9a5cb4a9bf854c1a"
+    },
+    {
+      "source": "docs/architecture/brain/decision-paths.md",
+      "diagram_number": 2,
+      "fence_line": 134,
+      "source_sha256": "e18d4e9e14e0c93345faff55d99b178996083fb4e9af82c4367ad5fff195f0f3",
+      "mermaid": ".scratch/terminology-cleanup/render/brain-decision-paths-diagram-2.mmd",
+      "render": ".scratch/terminology-cleanup/render/brain-decision-paths-diagram-2.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "439eaf962eb72e54d27223283f479a57629fd93159fb00f47eedd68719ac94c8"
+    },
+    {
+      "source": "docs/architecture/brain/implementation.md",
+      "diagram_number": 1,
+      "fence_line": 39,
+      "source_sha256": "5040238207de3270d8e5319a4437b86e17250659f7be7108aa6b9c048cd7449e",
+      "mermaid": ".scratch/terminology-cleanup/render/brain-implementation-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/brain-implementation-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "f54ca43314a9f985ff5af734a139bff270862c2f179bdcb6fa77f53b81abb342"
+    },
+    {
+      "source": "docs/architecture/collaboration/README.md",
+      "diagram_number": 1,
+      "fence_line": 24,
+      "source_sha256": "0cc99e055aaae90b05cd6e246a8c08b13392f687f57ed8e761f275e896eed76b",
+      "mermaid": ".scratch/terminology-cleanup/render/collaboration-README-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/collaboration-README-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "53f95ba868be093f20a6fc229c0cc1b587dbd31265a92b359df8c169e14f8c20"
+    },
+    {
+      "source": "docs/architecture/collaboration/implementation.md",
+      "diagram_number": 3,
+      "fence_line": 185,
+      "source_sha256": "d6e23849c22326d1c179262af1e5d1c74d35dc584ef0bb8a31a85753072ba234",
+      "mermaid": ".scratch/terminology-cleanup/render/collaboration-implementation-diagram-3.mmd",
+      "render": ".scratch/terminology-cleanup/render/collaboration-implementation-diagram-3.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "2ddc868714cfa441c66a40858eff64edc63bbe52e0e2a6d72d3bdba22008cf5e"
+    },
+    {
+      "source": "docs/architecture/deployment-production.md",
+      "diagram_number": 1,
+      "fence_line": 31,
+      "source_sha256": "cdc5935858cc8050a67b6704ec6b5681e6f18538c0ce00426ebca4846b64d2f0",
+      "mermaid": ".scratch/terminology-cleanup/render/deployment-production-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/deployment-production-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "9f2b43b6a61cccc5ecbb2e1817d79eb00c7c72dbd5560559f690fa637b644d84"
+    },
+    {
+      "source": "docs/architecture/deployment-production.md",
+      "diagram_number": 4,
+      "fence_line": 150,
+      "source_sha256": "71296101139ac18abc4d7e1cc716b4df159a56b59411630b4b6257f290010c08",
+      "mermaid": ".scratch/terminology-cleanup/render/deployment-production-diagram-4.mmd",
+      "render": ".scratch/terminology-cleanup/render/deployment-production-diagram-4.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "e83c933b2315e246d281e6c3038c56921f05b949aabeeadfe7614c8716fe7b9f"
+    },
+    {
+      "source": "docs/architecture/deployment-production.md",
+      "diagram_number": 5,
+      "fence_line": 173,
+      "source_sha256": "93cabe9ba4b3693c71ee885188794bc3cbb7d2c5f71a7ebeac654a88475a76a9",
+      "mermaid": ".scratch/terminology-cleanup/render/deployment-production-diagram-5.mmd",
+      "render": ".scratch/terminology-cleanup/render/deployment-production-diagram-5.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "c580eba03955efd6d42134237c8c09cc84021455719f8345bba15233a747eaca"
+    },
+    {
+      "source": "docs/architecture/deployment-production.md",
+      "diagram_number": 6,
+      "fence_line": 193,
+      "source_sha256": "84607cae30a300bc0de0d2103ef86e82b2b9809afdc2220c695bfcffa137d964",
+      "mermaid": ".scratch/terminology-cleanup/render/deployment-production-diagram-6.mmd",
+      "render": ".scratch/terminology-cleanup/render/deployment-production-diagram-6.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "0c1b37f6b8692a239d311ad8c3cb44ec9b23c4ec7f54912b23b31f3be9646759"
+    },
+    {
+      "source": "docs/architecture/deployment-production.md",
+      "diagram_number": 7,
+      "fence_line": 218,
+      "source_sha256": "82dff23ce6a49b048cedd1f1f19e0d37b382de426aeb173b9239979fa6d06ab3",
+      "mermaid": ".scratch/terminology-cleanup/render/deployment-production-diagram-7.mmd",
+      "render": ".scratch/terminology-cleanup/render/deployment-production-diagram-7.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "fce67fcaf1aae00be0ac015fa73e80d4ec1ab06cad9d1c9bdbd45c3c06632195"
+    },
+    {
+      "source": "docs/architecture/deployment-production.md",
+      "diagram_number": 9,
+      "fence_line": 297,
+      "source_sha256": "f8eb6e6faca8d44c60f3f4a2ac4cc3202d655a1af90fcee087e1735a3d262375",
+      "mermaid": ".scratch/terminology-cleanup/render/deployment-production-diagram-9.mmd",
+      "render": ".scratch/terminology-cleanup/render/deployment-production-diagram-9.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "72c3daa8e3af6b7f1c30cc73ecc4c610cfdfb9e5fc49368566cf7b27635eab60"
+    },
+    {
+      "source": "docs/architecture/deployment.md",
+      "diagram_number": 1,
+      "fence_line": 31,
+      "source_sha256": "3de90f102acd437173ffea2039c4f0c4cb948bb38bf6a6296193b7e86387a1d6",
+      "mermaid": ".scratch/terminology-cleanup/render/deployment-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/deployment-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "34060e30c769b984d9f3418a8e9800e3be8fa04b1332476a3cec67b58e16de7b"
+    },
+    {
+      "source": "docs/architecture/deployment.md",
+      "diagram_number": 2,
+      "fence_line": 141,
+      "source_sha256": "da23a3f6ca6215374a0aeb65502e081a011677366c8ac162f9b96416d82651e5",
+      "mermaid": ".scratch/terminology-cleanup/render/deployment-diagram-2.mmd",
+      "render": ".scratch/terminology-cleanup/render/deployment-diagram-2.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "e9b4eee666f696620a7d097bb6f79d6efe526a3335b7ba0aaa328c3c1cf20c81"
+    },
+    {
+      "source": "docs/architecture/evaluation/README.md",
+      "diagram_number": 1,
+      "fence_line": 23,
+      "source_sha256": "d7349522d630a5907262c9fa25736ccbfd45f1a9b658b84931a17d3a820fec58",
+      "mermaid": ".scratch/terminology-cleanup/render/evaluation-README-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/evaluation-README-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "40d16bb594be9d356736b37160c2fbab92c581ec0932200e1c99280a71b27642"
+    },
+    {
+      "source": "docs/architecture/evaluation/implementation.md",
+      "diagram_number": 2,
+      "fence_line": 166,
+      "source_sha256": "9267f6132dafe99c91c43841e4337b33396b8ea0badbf67b97597c68574810fd",
+      "mermaid": ".scratch/terminology-cleanup/render/evaluation-implementation-diagram-2.mmd",
+      "render": ".scratch/terminology-cleanup/render/evaluation-implementation-diagram-2.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "56351cb3e90981271a9466811e06d4b85d0d98f10cfaf3fd700fa42be6af306b"
+    },
+    {
+      "source": "docs/architecture/evaluation/implementation.md",
+      "diagram_number": 3,
+      "fence_line": 310,
+      "source_sha256": "9892ea721e31c108f204a74c41bfd886f9f062d899adf9308db6d251881e150b",
+      "mermaid": ".scratch/terminology-cleanup/render/evaluation-implementation-diagram-3.mmd",
+      "render": ".scratch/terminology-cleanup/render/evaluation-implementation-diagram-3.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "eca325109263c11eb4310a898a124cd18ea8d3c8e0fd5704209604dbe5fba15d"
+    },
+    {
+      "source": "docs/architecture/execution/implementation.md",
+      "diagram_number": 4,
+      "fence_line": 375,
+      "source_sha256": "dabf45d80842a6be3f668415118eb37c9c835c58708e10a2e8692864fa3da701",
+      "mermaid": ".scratch/terminology-cleanup/render/execution-implementation-diagram-4.mmd",
+      "render": ".scratch/terminology-cleanup/render/execution-implementation-diagram-4.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "e7373c42280da3ad9c721f04966a2a305eef349140a98e3cff4328805d0203f7"
+    },
+    {
+      "source": "docs/architecture/extensions/README.md",
+      "diagram_number": 1,
+      "fence_line": 25,
+      "source_sha256": "a4e529f1f5544fccc323bc95232503fbd6e75edb73379f85d55b4a3ea8d44684",
+      "mermaid": ".scratch/terminology-cleanup/render/extensions-README-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/extensions-README-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "352d2e7f468c94bc070ee6b796c4e953cc52230432c6035fe658d82f8c0b5e1e"
+    },
+    {
+      "source": "docs/architecture/extensions/implementation.md",
+      "diagram_number": 1,
+      "fence_line": 38,
+      "source_sha256": "3c90935d3f0f5135fa9d21ec3e846f27c4bba1dc259a37aa82d01184f61478fb",
+      "mermaid": ".scratch/terminology-cleanup/render/extensions-implementation-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/extensions-implementation-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "6743192b2b73dc97a262f363a32f94fa68cbb064ade1adb35bf6584507ea3f2c"
+    },
+    {
+      "source": "docs/architecture/extensions/implementation.md",
+      "diagram_number": 2,
+      "fence_line": 180,
+      "source_sha256": "5e7e1b183f2fa2af4e5bdc32b2fb26397bf4bc83479b7d9933bfd1d5538d0cf5",
+      "mermaid": ".scratch/terminology-cleanup/render/extensions-implementation-diagram-2.mmd",
+      "render": ".scratch/terminology-cleanup/render/extensions-implementation-diagram-2.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "325638cc88ae19678b5523acd7c9a0f86d62bcc2f97a3a377f191c2e51cf9a57"
+    },
+    {
+      "source": "docs/architecture/extensions/implementation.md",
+      "diagram_number": 3,
+      "fence_line": 256,
+      "source_sha256": "034cfc7894d67c4be172380cf3048ad5169cfe74044ad45034da85891e7e3a52",
+      "mermaid": ".scratch/terminology-cleanup/render/extensions-implementation-diagram-3.mmd",
+      "render": ".scratch/terminology-cleanup/render/extensions-implementation-diagram-3.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "9fb0bff72a3bb621e81ede1fdbe6101e9762946bababf4fc0722646b1051f7ea"
+    },
+    {
+      "source": "docs/architecture/extensions/implementation.md",
+      "diagram_number": 4,
+      "fence_line": 301,
+      "source_sha256": "e4de4bd6a94997eda027e08183f414aba517edc2c616481af63e68f53b2eb855",
+      "mermaid": ".scratch/terminology-cleanup/render/extensions-implementation-diagram-4.mmd",
+      "render": ".scratch/terminology-cleanup/render/extensions-implementation-diagram-4.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "983169eb68a3fa7c2160500a5b23bbf80a09bd4cb2a3c5cb26892eac601c2a32"
+    },
+    {
+      "source": "docs/architecture/interaction/README.md",
+      "diagram_number": 2,
+      "fence_line": 87,
+      "source_sha256": "77555a9c7d8f7de565abc4f705e0005194aa7e21a87798480b26de7048c32b4b",
+      "mermaid": ".scratch/terminology-cleanup/render/interaction-README-diagram-2.mmd",
+      "render": ".scratch/terminology-cleanup/render/interaction-README-diagram-2.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "3a9a2c02b39513f243f8d4296474fa69e6a60822235efed3388710c00ce16144"
+    },
+    {
+      "source": "docs/architecture/interaction/implementation.md",
+      "diagram_number": 3,
+      "fence_line": 211,
+      "source_sha256": "698d859ab9a896cc9297a6f54e768865b9cf672bd0d43f3f5a96de2c7e6f862f",
+      "mermaid": ".scratch/terminology-cleanup/render/interaction-implementation-diagram-3.mmd",
+      "render": ".scratch/terminology-cleanup/render/interaction-implementation-diagram-3.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "cb737278f6446d9f41f0c0fe823d7c14afc7c85a9823881e764286085bf3e59b"
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "diagram_number": 3,
+      "fence_line": 174,
+      "source_sha256": "f23445fe116847c39fe3596a7de28512c8f0a86e373bf852dcd61f6e1c7fe07c",
+      "mermaid": ".scratch/terminology-cleanup/render/memory-implementation-diagram-3.mmd",
+      "render": ".scratch/terminology-cleanup/render/memory-implementation-diagram-3.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "a7165839278d3ab0103ed849a005aad80e5233ce05ebf6f5fc86f29f96548df1"
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "diagram_number": 4,
+      "fence_line": 216,
+      "source_sha256": "fd544996c9cbebd75dc5f5aef87c54eb9956c8d0e14271ea21744846d700408b",
+      "mermaid": ".scratch/terminology-cleanup/render/memory-implementation-diagram-4.mmd",
+      "render": ".scratch/terminology-cleanup/render/memory-implementation-diagram-4.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "c0bc8218dde7a6c3f48978130ae32428685ce6fc1ec232ff61fca3cd083713d9"
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "diagram_number": 5,
+      "fence_line": 269,
+      "source_sha256": "d06c7e422fed1b94bc73a3e6fedadff97f9c11a66ac7f24d0055f07e6622f579",
+      "mermaid": ".scratch/terminology-cleanup/render/memory-implementation-diagram-5.mmd",
+      "render": ".scratch/terminology-cleanup/render/memory-implementation-diagram-5.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "1c47364ea34a349d24de3ee496be6118eb341ce472497dd4cdbe19f7558888ee"
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "diagram_number": 6,
+      "fence_line": 303,
+      "source_sha256": "78cddb998985a70ef0d850cc3a76326d31e65e5a246120e0a780313046e71f71",
+      "mermaid": ".scratch/terminology-cleanup/render/memory-implementation-diagram-6.mmd",
+      "render": ".scratch/terminology-cleanup/render/memory-implementation-diagram-6.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "e9bc144e515cb8fb9436e84adbc75bf2ecbf48dfb14ea22685f7152e99b4b537"
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "diagram_number": 8,
+      "fence_line": 504,
+      "source_sha256": "48a471201db3ba3e08c9c68f32383598ba79f2ec8512444e36b2568721159531",
+      "mermaid": ".scratch/terminology-cleanup/render/memory-implementation-diagram-8.mmd",
+      "render": ".scratch/terminology-cleanup/render/memory-implementation-diagram-8.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "d0fe670f8625ca7ccd5006a16509829ddb8b61b99129c3e99b6e715d9d32f172"
+    },
+    {
+      "source": "docs/architecture/orchestrator/README.md",
+      "diagram_number": 6,
+      "fence_line": 247,
+      "source_sha256": "645a386679bc6eee42fdffbe8b3d0a878f7c6006b696ff73556bd3272c996580",
+      "mermaid": ".scratch/terminology-cleanup/render/orchestrator-README-diagram-6.mmd",
+      "render": ".scratch/terminology-cleanup/render/orchestrator-README-diagram-6.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "4af86c994a59200a583807e12dd78bbc077f0d9e9df657d605f0663c2d918fba"
+    },
+    {
+      "source": "docs/architecture/orchestrator/implementation.md",
+      "diagram_number": 1,
+      "fence_line": 14,
+      "source_sha256": "3e219a4b8b2fd30a78ed1db38cadad517b36dbb3ae49c32e9c39858a063fca5c",
+      "mermaid": ".scratch/terminology-cleanup/render/orchestrator-implementation-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/orchestrator-implementation-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "f6fd8e094ed10155857d743fc7225ab180456acb73271fcf7dc30b5a80d115a6"
+    },
+    {
+      "source": "docs/architecture/orchestrator/implementation.md",
+      "diagram_number": 3,
+      "fence_line": 181,
+      "source_sha256": "3960477432850eeb49922e5f640e8a872b86892387e3aeb2e20e788b2dc42bdb",
+      "mermaid": ".scratch/terminology-cleanup/render/orchestrator-implementation-diagram-3.mmd",
+      "render": ".scratch/terminology-cleanup/render/orchestrator-implementation-diagram-3.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "d70659886bf9561a285b0b3debaf2d38a5337b77531404e5e48358652580b8a6"
+    },
+    {
+      "source": "docs/architecture/orchestrator/implementation.md",
+      "diagram_number": 4,
+      "fence_line": 371,
+      "source_sha256": "4a59c7ce47aa99ed534bf7cf4473c35131d7f5da35d2ef1ab639c05e5c39271a",
+      "mermaid": ".scratch/terminology-cleanup/render/orchestrator-implementation-diagram-4.mmd",
+      "render": ".scratch/terminology-cleanup/render/orchestrator-implementation-diagram-4.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "b07124fc0d6d5f74fcd1b555a6ab6b9fe0b2d7c8c58160392c3979f64d1797fc"
+    },
+    {
+      "source": "docs/architecture/orchestrator/verification.md",
+      "diagram_number": 1,
+      "fence_line": 58,
+      "source_sha256": "dd5b4447c1fe1fe7a4a9bf96c4cf20159770579fcf8be032826835b42807ef28",
+      "mermaid": ".scratch/terminology-cleanup/render/orchestrator-verification-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/orchestrator-verification-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "63362fced522c13397cecb99c945e7d5f8a4bbeb58ac86e6f5c39931f2d53e37"
+    },
+    {
+      "source": "docs/architecture/reliable-work.md",
+      "diagram_number": 2,
+      "fence_line": 98,
+      "source_sha256": "87e661dffcc8b91eb39f24aaba4865ba77f65ae6b15bc8085184346bb91e0840",
+      "mermaid": ".scratch/terminology-cleanup/render/reliable-work-diagram-2.mmd",
+      "render": ".scratch/terminology-cleanup/render/reliable-work-diagram-2.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "267790f59fd1f237b95a4261da3a93a5d1b804028a987df7eac72834d58a5103"
+    },
+    {
+      "source": "docs/architecture/reliable-work.md",
+      "diagram_number": 4,
+      "fence_line": 191,
+      "source_sha256": "d8836dfd9567ba72ce788aca97470c92bcc55353a7db106eee4ee55dce29ef96",
+      "mermaid": ".scratch/terminology-cleanup/render/reliable-work-diagram-4.mmd",
+      "render": ".scratch/terminology-cleanup/render/reliable-work-diagram-4.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "1c0029cf203f268e306e591db7aac17180056cea0a42ee80d0ea2ca129a1732c"
+    },
+    {
+      "source": "docs/architecture/security/README.md",
+      "diagram_number": 1,
+      "fence_line": 19,
+      "source_sha256": "979da69b41e5ee93143bd5f75b576c1f19e095040ffecd924b0a4597a64add1e",
+      "mermaid": ".scratch/terminology-cleanup/render/security-README-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/security-README-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "3959993588b731eb75d2d08d1b08f835276df99c0c19bf93c09314505f57196a"
+    },
+    {
+      "source": "docs/architecture/security/implementation.md",
+      "diagram_number": 2,
+      "fence_line": 168,
+      "source_sha256": "b07b15f84b7856374dc049850e5684888b4ca543a539c35554cfcc1719f7d9d5",
+      "mermaid": ".scratch/terminology-cleanup/render/security-implementation-diagram-2.mmd",
+      "render": ".scratch/terminology-cleanup/render/security-implementation-diagram-2.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "6e49062505e667369f9ef27ee916a079d7722490a82670eb3ee3e41faa6be09f"
+    },
+    {
+      "source": "docs/architecture/security/implementation.md",
+      "diagram_number": 3,
+      "fence_line": 287,
+      "source_sha256": "f164410a11bee8e9c8cfd62111babd364905563f459a759d9af2856642302b31",
+      "mermaid": ".scratch/terminology-cleanup/render/security-implementation-diagram-3.mmd",
+      "render": ".scratch/terminology-cleanup/render/security-implementation-diagram-3.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "b7db08a704a46d793e8740627613e0cf60ca4c763db3b2f96482b6729a0bf075"
+    },
+    {
+      "source": "docs/architecture/storage-and-middleware.md",
+      "diagram_number": 1,
+      "fence_line": 10,
+      "source_sha256": "261a7f6706acc951a96e1c39f474d210d6fa0a2501263495debbe485b04b7119",
+      "mermaid": ".scratch/terminology-cleanup/render/storage-and-middleware-diagram-1.mmd",
+      "render": ".scratch/terminology-cleanup/render/storage-and-middleware-diagram-1.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "d6a38d0f77e1259453d87011bc91c94c0bc6bee16096ec28718eb5d5a2d9e151"
+    },
+    {
+      "source": "docs/architecture/storage-and-middleware.md",
+      "diagram_number": 2,
+      "fence_line": 55,
+      "source_sha256": "00dec27e2eb5c21e2926d95812034f9836b5249959b7343fdd4990df45f03389",
+      "mermaid": ".scratch/terminology-cleanup/render/storage-and-middleware-diagram-2.mmd",
+      "render": ".scratch/terminology-cleanup/render/storage-and-middleware-diagram-2.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "91c3e0f60f05278c8c14f384d911b7409f36f5d391db4ecdc0e94cf161be1fbb"
+    },
+    {
+      "source": "docs/architecture/storage-and-middleware.md",
+      "diagram_number": 4,
+      "fence_line": 105,
+      "source_sha256": "1b72a8e0985cc3b8e3eb7a8a89ea6c71bfda3ff5aae06dafc1b4f8cfc1498448",
+      "mermaid": ".scratch/terminology-cleanup/render/storage-and-middleware-diagram-4.mmd",
+      "render": ".scratch/terminology-cleanup/render/storage-and-middleware-diagram-4.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "8be24cb66ce91f99c6ec4c0e45c5a758d497c56312877d0120c1ba5c611316e7"
+    },
+    {
+      "source": "docs/architecture/walkthrough.md",
+      "diagram_number": 2,
+      "fence_line": 58,
+      "source_sha256": "0ec1d0578b2cb1e64be1f083fbe6542f6cbac9c2278f1a167c0c08ac77fbb873",
+      "mermaid": ".scratch/terminology-cleanup/render/walkthrough-diagram-2.mmd",
+      "render": ".scratch/terminology-cleanup/render/walkthrough-diagram-2.png",
+      "render_status": "passed",
+      "visual_review": "passed",
+      "render_log": "",
+      "render_sha256": "ec28227383bc31abcf785e813a277765b0d61f601a9042d5c61c2d368ccc7de4"
+    }
+  ],
+  "unchanged_diagrams_skipped": [
+    {
+      "source": "docs/architecture/README.md",
+      "diagram_number": 1,
+      "fence_line": 23
+    },
+    {
+      "source": "docs/architecture/brain/implementation.md",
+      "diagram_number": 2,
+      "fence_line": 243
+    },
+    {
+      "source": "docs/architecture/brain/implementation.md",
+      "diagram_number": 3,
+      "fence_line": 311
+    },
+    {
+      "source": "docs/architecture/brain/implementation.md",
+      "diagram_number": 4,
+      "fence_line": 365
+    },
+    {
+      "source": "docs/architecture/collaboration/README.md",
+      "diagram_number": 2,
+      "fence_line": 83
+    },
+    {
+      "source": "docs/architecture/collaboration/implementation.md",
+      "diagram_number": 1,
+      "fence_line": 15
+    },
+    {
+      "source": "docs/architecture/collaboration/implementation.md",
+      "diagram_number": 2,
+      "fence_line": 122
+    },
+    {
+      "source": "docs/architecture/collaboration/implementation.md",
+      "diagram_number": 4,
+      "fence_line": 225
+    },
+    {
+      "source": "docs/architecture/contracts/README.md",
+      "diagram_number": 1,
+      "fence_line": 23
+    },
+    {
+      "source": "docs/architecture/contracts/grpc.md",
+      "diagram_number": 1,
+      "fence_line": 9
+    },
+    {
+      "source": "docs/architecture/contracts/grpc.md",
+      "diagram_number": 2,
+      "fence_line": 49
+    },
+    {
+      "source": "docs/architecture/contracts/grpc.md",
+      "diagram_number": 3,
+      "fence_line": 92
+    },
+    {
+      "source": "docs/architecture/contracts/protocol.md",
+      "diagram_number": 1,
+      "fence_line": 70
+    },
+    {
+      "source": "docs/architecture/contracts/transport.md",
+      "diagram_number": 1,
+      "fence_line": 120
+    },
+    {
+      "source": "docs/architecture/deployment-production.md",
+      "diagram_number": 2,
+      "fence_line": 79
+    },
+    {
+      "source": "docs/architecture/deployment-production.md",
+      "diagram_number": 3,
+      "fence_line": 124
+    },
+    {
+      "source": "docs/architecture/deployment-production.md",
+      "diagram_number": 8,
+      "fence_line": 262
+    },
+    {
+      "source": "docs/architecture/engineering.md",
+      "diagram_number": 1,
+      "fence_line": 15
+    },
+    {
+      "source": "docs/architecture/engineering.md",
+      "diagram_number": 2,
+      "fence_line": 148
+    },
+    {
+      "source": "docs/architecture/evaluation/README.md",
+      "diagram_number": 2,
+      "fence_line": 146
+    },
+    {
+      "source": "docs/architecture/evaluation/implementation.md",
+      "diagram_number": 1,
+      "fence_line": 35
+    },
+    {
+      "source": "docs/architecture/execution/README.md",
+      "diagram_number": 1,
+      "fence_line": 32
+    },
+    {
+      "source": "docs/architecture/execution/README.md",
+      "diagram_number": 2,
+      "fence_line": 103
+    },
+    {
+      "source": "docs/architecture/execution/README.md",
+      "diagram_number": 3,
+      "fence_line": 172
+    },
+    {
+      "source": "docs/architecture/execution/implementation.md",
+      "diagram_number": 1,
+      "fence_line": 14
+    },
+    {
+      "source": "docs/architecture/execution/implementation.md",
+      "diagram_number": 2,
+      "fence_line": 112
+    },
+    {
+      "source": "docs/architecture/execution/implementation.md",
+      "diagram_number": 3,
+      "fence_line": 178
+    },
+    {
+      "source": "docs/architecture/extensions/README.md",
+      "diagram_number": 2,
+      "fence_line": 104
+    },
+    {
+      "source": "docs/architecture/interaction/README.md",
+      "diagram_number": 1,
+      "fence_line": 31
+    },
+    {
+      "source": "docs/architecture/interaction/README.md",
+      "diagram_number": 3,
+      "fence_line": 109
+    },
+    {
+      "source": "docs/architecture/interaction/implementation.md",
+      "diagram_number": 1,
+      "fence_line": 26
+    },
+    {
+      "source": "docs/architecture/interaction/implementation.md",
+      "diagram_number": 2,
+      "fence_line": 56
+    },
+    {
+      "source": "docs/architecture/interaction/implementation.md",
+      "diagram_number": 4,
+      "fence_line": 294
+    },
+    {
+      "source": "docs/architecture/interaction/implementation.md",
+      "diagram_number": 5,
+      "fence_line": 333
+    },
+    {
+      "source": "docs/architecture/memory/README.md",
+      "diagram_number": 1,
+      "fence_line": 30
+    },
+    {
+      "source": "docs/architecture/memory/README.md",
+      "diagram_number": 2,
+      "fence_line": 62
+    },
+    {
+      "source": "docs/architecture/memory/README.md",
+      "diagram_number": 3,
+      "fence_line": 185
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "diagram_number": 1,
+      "fence_line": 26
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "diagram_number": 2,
+      "fence_line": 66
+    },
+    {
+      "source": "docs/architecture/memory/implementation.md",
+      "diagram_number": 7,
+      "fence_line": 426
+    },
+    {
+      "source": "docs/architecture/memory/optimization-plan.md",
+      "diagram_number": 1,
+      "fence_line": 134
+    },
+    {
+      "source": "docs/architecture/orchestrator/README.md",
+      "diagram_number": 1,
+      "fence_line": 17
+    },
+    {
+      "source": "docs/architecture/orchestrator/README.md",
+      "diagram_number": 2,
+      "fence_line": 76
+    },
+    {
+      "source": "docs/architecture/orchestrator/README.md",
+      "diagram_number": 3,
+      "fence_line": 97
+    },
+    {
+      "source": "docs/architecture/orchestrator/README.md",
+      "diagram_number": 4,
+      "fence_line": 140
+    },
+    {
+      "source": "docs/architecture/orchestrator/README.md",
+      "diagram_number": 5,
+      "fence_line": 222
+    },
+    {
+      "source": "docs/architecture/orchestrator/README.md",
+      "diagram_number": 7,
+      "fence_line": 292
+    },
+    {
+      "source": "docs/architecture/orchestrator/implementation.md",
+      "diagram_number": 2,
+      "fence_line": 108
+    },
+    {
+      "source": "docs/architecture/reliable-work.md",
+      "diagram_number": 1,
+      "fence_line": 24
+    },
+    {
+      "source": "docs/architecture/reliable-work.md",
+      "diagram_number": 3,
+      "fence_line": 142
+    },
+    {
+      "source": "docs/architecture/security/README.md",
+      "diagram_number": 2,
+      "fence_line": 80
+    },
+    {
+      "source": "docs/architecture/security/README.md",
+      "diagram_number": 3,
+      "fence_line": 130
+    },
+    {
+      "source": "docs/architecture/security/implementation.md",
+      "diagram_number": 1,
+      "fence_line": 33
+    },
+    {
+      "source": "docs/architecture/security/implementation.md",
+      "diagram_number": 4,
+      "fence_line": 337
+    },
+    {
+      "source": "docs/architecture/storage-and-middleware.md",
+      "diagram_number": 3,
+      "fence_line": 88
+    },
+    {
+      "source": "docs/architecture/validation/README.md",
+      "diagram_number": 1,
+      "fence_line": 182
+    },
+    {
+      "source": "docs/architecture/walkthrough.md",
+      "diagram_number": 1,
+      "fence_line": 27
+    },
+    {
+      "source": "docs/architecture/walkthrough.md",
+      "diagram_number": 3,
+      "fence_line": 93
+    },
+    {
+      "source": "docs/architecture/walkthrough.md",
+      "diagram_number": 4,
+      "fence_line": 131
+    }
+  ]
+}

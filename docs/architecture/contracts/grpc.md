@@ -42,7 +42,7 @@ EndpointChannel metadata 除第 3 节的身份头外，必须携带下表字段�
 
 拒绝缺失、重复字段、错误摘要或无法支持原 limits 的绑定；身份及绑定 metadata 解码后总额最多 16 KiB，其中 limits 字节最多 4 KiB。副本不能静默降低限额后继续原 WSS。服务以 metadata 中的 connection_id 返回内部 ready，精确回显原 logical_service_id 和 limits；网关验证完整绑定后才设为当前流。第一次内部 ready 可形成唯一外 ready，后续内部 ready 只完成重绑，绝不再次发给端。
 
-服务分区对 connection_id 的登记在原子条件更新中比较 binding_revision：仅更高代次可以替换；同代次须 binding_id、原服务、外连接和 limits 完全相同，才是幂等重试；同代异 ID 冲突，低代拒绝。网关分配候选后固定完整登记请求，提交未知时可重试同候选或另建更高代次候选，不能由迟到旧请求读取新记录后改写自己的代次或预期条件。即使 b2 的登记结果未知、b3 已就绪，迟到 b2 也不能覆盖 b3。在线进程租约失效可以使路由不可发送，但外连接 slot 仍存活时保留已见最高代次，防止删行后旧登记重新插入；详情见生产连接机制。代次只属于这一条存活 WSS，不是领域 owner 代次或跨连接全局序号；安全整数耗尽时有界排空并关闭外连接。
+服务分片对 connection_id 的登记在原子条件更新中比较 binding_revision：仅更高代次可以替换；同代次须 binding_id、原服务、外连接和 limits 完全相同，才是幂等重试；同代异 ID 冲突，低代拒绝。网关分配候选后固定完整登记请求，提交未知时可重试同候选或另建更高代次候选，不能由迟到旧请求读取新记录后改写自己的代次或预期条件。即使 b2 的登记结果未知、b3 已就绪，迟到 b2 也不能覆盖 b3。在线进程租约失效可以使路由不可发送，但外连接 slot 仍存活时保留已见最高代次，防止删行后旧登记重新插入；详情见生产连接机制。代次只属于这一条存活 WSS，不是领域 owner 代次或跨连接全局序号；安全整数耗尽时有界排空并关闭外连接。
 
 同候选重试只重试该候选流的登记，网关与应用进程 boot 身份也须保持原值；更换 RPC 流或应用进程 boot 须分配新的 binding_id 并使 binding_revision 加 1。同代登记不能变更投递路由，网关验证输出时同时核对当前流对象与 binding_id，防止把另一条流当作幂等登记的延续。
 
@@ -69,7 +69,7 @@ sequenceDiagram
 
 候选成功登记并通过内部 Ready 校验后，网关在内存中原子切换当前 binding_id，仅接收当前绑定输出；隔离旧流不证明旧服务尚未处理命令或已经停止。旧处理结果可能已经持久化，原业务唯一键、修订及执行门禁继续裁决。关闭旧流或释放在线绑定必须条件匹配原网关进程、应用进程、binding_id 与 binding_revision，不能由迟到清理删除新绑定；具体记录归生产部署。
 
-内部流失败后，网关不把新普通请求无界排队；直接返回 dependency_unavailable。先前已发送的请求保留原外 request_seq，在首次收到请求起 5 秒总期限内按下表恢复；重绑与查询不能重置期限。后端短暂不可用时外心跳由网关继续承担，连续 60 秒仍未建立可用绑定则关闭外 WSS；原身份和网关进程租约必须仍有效，任一更早失效时先停止业务与披露。只有内部故障允许这段保活窗口，原身份撤销／过期仍立即停止新请求和披露并关闭。
+内部流失败后，网关不把新普通请求无界排队；直接返回 dependency_unavailable。先前已发送的请求保留原外 request_seq，在首次收到请求起 5 秒总期限内按下表恢复；重绑与查询不能重置期限。后端短暂不可用时外心跳由网关继续承担，连续 60 秒仍未建立可用绑定则关闭外 WSS；原会话／端点凭据和网关进程租约必须仍有效，任一更早失效时先停止业务与披露。只有内部故障允许这段保活窗口，原会话／端点凭据撤销或过期仍立即停止新请求和披露并关闭。
 
 | 原等待 | 重绑后的动作 |
 | --- | --- |
@@ -87,7 +87,7 @@ sequenceDiagram
 
 默认由客户端直连平台登记的应用实例地址。受信装配先把原 logical_service_id 解析到部署后端集合，再由进程共享的发现适配器取得实例身份、实际 IP／端口、就绪及排空状态；同一后端集合只维护一份 watch 和缓存。Kubernetes 装配使用受限身份读取对应 Service 的 EndpointSlice，合并全部 slice、按实例去重，只把 ready 且非 terminating 的目标纳入新调用；其他托管平台须提供等价接口。地址不是业务权威，连接仍核验 mTLS 服务身份及每次请求的准确逻辑服务。[EndpointSlice](https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/)
 
-发现采用“完整 LIST＋从返回资源版本开始 watch”：以最长 20 秒的抖动间隔重新 LIST，单次最多 5 秒；成功快照从该次 LIST 发起时起最多有效 30 秒，持续 TCP、旧 watch 事件或本地重试都不刷新这个期限。每轮新快照及 watch 使用本地新代次，原子替换后丢弃旧 watch 输出；断流或版本失效提前发起有限重列举。超过 30 秒仍未取得新快照就停止该集合的新拨号／新流，即使旧 watch 看似未断；期限使用 ClockAdapter 的可信经过时间。地址新增即时成为候选，地址删除／排空立即停止新分配，已有流按原租约和排空规则继续。缓存有效期间的调用仍受连接状态、目标准入及原 deadline 约束，空集合不能替换成任意 VIP。使用标准 gRPC resolver 接口推送变化，配置摘要随安装锁固定；不依赖一次 DNS 解析或默认 `pick_first` 偶然分流。[名称解析](https://grpc.io/docs/guides/custom-name-resolution/)、[负载策略](https://grpc.io/docs/guides/service-config/)
+发现采用“完整 LIST＋从返回资源版本开始 watch”：以最长 20 秒的抖动间隔重新 LIST，单次最多 5 秒；成功快照从该次 LIST 发起时起最多有效 30 秒，持续 TCP、旧 watch 事件或本地重试都不刷新这个期限。每轮新快照及 watch 使用本地新代次，原子替换后丢弃旧 watch 输出；断流或版本失效提前发起有限重列举。超过 30 秒仍未取得新快照就停止该集合的新拨号／新流，即使旧 watch 看似未断；期限使用 ClockAdapter 的可信经过时间。地址新增即时成为候选，地址删除／排空立即停止新分配，已有流按原租约和排空规则继续。缓存有效期间的调用仍受连接状态、目标准入及原 deadline 约束，空集合不能替换成任意 VIP。使用标准 gRPC resolver 接口推送变化，配置摘要随安装锁定清单固定；不依赖一次 DNS 解析或默认 `pick_first` 偶然分流。[名称解析](https://grpc.io/docs/guides/custom-name-resolution/)、[负载策略](https://grpc.io/docs/guides/service-config/)
 
 ```mermaid
 flowchart LR
@@ -134,7 +134,7 @@ flowchart LR
 
 Call 的请求与响应必须恰有一个非空 oneof 分支；ChannelFrame 的 frame_json 与 binding_id 均必需且非空，binding_id 符合公共随机身份格式。`bytes` 为空不等于合法 JSON。适配器限制外层消息为协商的 max_frame_bytes 加 8 KiB 封装余量（默认 1 MiB + 8 KiB），logical_service_id 最多 4 KiB；内部 Command／Query 为 256 KiB，Frame 及其他响应按协商的帧上限；同时限制解码深度及集合数量。解析前按冻结描述符拒绝未知字段、重复单值字段和多个 oneof 分支，不能依赖默认 Protobuf 解码的覆盖行为；这需要解码前的字段扫描或受控 codec，普通 handler 收到解码对象后已经无法证明原报文没有重复分支。随后严格 JSON 解码拒绝重复键、非法 Unicode 与非安全整数，再执行 Schema 和方法关联检查。
 
-请求摘要、Delivery 证明和 JWS 继续对原 JSON 对象做 JCS。不要对 Protobuf 序列化字节计算业务身份摘要，也不经 `Struct` 的通用浮点数转换修订号。Protobuf 序列化不承诺规范字节表示，依据见[官方说明](https://protobuf.dev/programming-guides/serialization-not-canonical/)。包名和字段号随 profile 固定，安装锁包含 `.proto`、生成器、grpc-go、Protobuf runtime、Schema 和方法登记的精确版本及摘要。
+请求摘要、Delivery 证明和 JWS 继续对原 JSON 对象做 JCS。不要对 Protobuf 序列化字节计算业务身份摘要，也不经 `Struct` 的通用浮点数转换修订号。Protobuf 序列化不承诺规范字节表示，依据见[官方说明](https://protobuf.dev/programming-guides/serialization-not-canonical/)。包名和字段号随 profile 固定，安装锁定清单包含 `.proto`、生成器、grpc-go、Protobuf runtime、Schema 和方法登记的精确版本及摘要。
 
 ## 3. 身份、截止与错误
 
@@ -149,7 +149,7 @@ Call 的请求与响应必须恰有一个非空 oneof 分支；ChannelFrame 的 
 
 委托采用不透明句柄方案，不透传浏览器 Cookie。接入层先验证 WSS 身份，再由受信 IdentityAdapter 核验原会话或端点凭据并签发至少 256 位随机的委托令牌。令牌校验记录固定：调用接入服务、audience=准确 logical_service_id、tenant、原主体、actor_kind、原 sender_service_id（仅确有受信业务发送者）、原 trusted_user_session_ref（仅人类会话）、端点实例／credential_generation（仅设备）、原会话或凭据引用及 expires_at。身份适配器从权威记录填这些值，不接受接入调用者自报 actor_kind 或人类确认资格；有效期不超过原凭据有效期和 30 分钟。
 
-负责服务逐条消息通过受信身份存储核验委托记录及原会话／凭据的当前有效性，再生成 AuthContext；必要核验不可用时拒绝新工作与披露。委托句柄只用于认证，不取得新的 Grant、许可消费或 Confirmation。来源会话撤销／凭据代次变化立即使后续使用失败；只有内部委托接近到期时，网关才凭仍有效的原身份重新签发并重绑，令牌不进入业务表或通用日志。没有该签发与核验适配器的部署不能开放代理用户／设备入口；不会退化成接入层管理员身份。受信人类会话和每次用途检查仍沿[认证规则](transport.md#2-认证主体和有限配对入口)执行。
+负责服务逐条消息通过受信身份存储核验委托记录及原会话／凭据的当前有效性，再生成 AuthContext；必要核验不可用时拒绝新工作与披露。委托句柄只用于认证，不取得新的 Grant、许可消费或 Confirmation。来源会话撤销／凭据代次变化立即使后续使用失败；只有内部委托接近到期时，网关才凭仍有效的原会话／端点凭据重新签发并重绑，令牌不进入业务表或通用日志。没有该签发与核验适配器的部署不能开放代理用户／设备入口；不会退化成接入层管理员身份。受信人类会话和每次用途检查仍沿[认证规则](transport.md#2-认证主体和有限配对入口)执行。
 
 每次 Call 设置有限 deadline，并把剩余时间传给下游；初始同地域接纳／查询上限为 5 秒，实际值随方法和运行实验固定。数据库事务不覆盖网络等待。deadline 或客户端 context 取消只结束本次等待；已经提交的业务责任由宿主 job 生命周期继续，任务取消仍需原 `task.cancel` 等控制命令。相关机制见 [gRPC deadline](https://grpc.io/docs/guides/deadlines/) 与[取消](https://grpc.io/docs/guides/cancellation/)。
 
@@ -160,7 +160,7 @@ Call 的请求与响应必须恰有一个非空 oneof 分支；ChannelFrame 的 
 | gRPC OK + Receipt | 按 stage 和方法成功点解释，accepted／applied 均不自动证明外部效果 |
 | gRPC OK + Error | 按 Error.retry、原命令和当前前提处理；请求格式或业务拒绝不靠状态码猜测 |
 | UNAUTHENTICATED／PERMISSION_DENIED | 认证入口无法建立当前身份／路由资格；业务已发送过仍保留原查询责任 |
-| RESOURCE_EXHAUSTED／UNAVAILABLE／DEADLINE_EXCEEDED／CANCELLED | 传输或服务暂不能给出结果，可能已有提交；写命令先查原记录，只能沿原身份有限恢复 |
+| RESOURCE_EXHAUSTED／UNAVAILABLE／DEADLINE_EXCEEDED／CANCELLED | 传输或服务暂不能给出结果，可能已有提交；写命令先查原记录，只能沿原 command_id 有限恢复 |
 | 内部流结束或 GOAWAY | 网关保持外连接并受控重绑，查询原命令、重交原 Reply、给旧订阅明确缺口；超过恢复窗口才关闭外 WSS |
 
 关闭应用配置的写 RPC retry／hedging；库仍可能做有限透明重试，所以服务端始终按原 command_id 去重。查询可在自身总 deadline 内有限退避，不自动把查询失败改写成 not_found。重试安全来自业务记录，不能从 gRPC 传输层推出。[gRPC 重试机制](https://grpc.io/docs/guides/retry/)
@@ -169,6 +169,6 @@ EndpointChannel 不使用单次 Call 的 5 秒期限：初始允许最长 30 分
 
 ## 4. 验证边界
 
-`.proto` 编译只证明描述符有效。发布前还须核对 oneof／内层 JSON／方法登记的映射、Go 与另一语言的相同 JCS 摘要、未知字段与过大消息拒绝，以及 WSS → gRPC 转发后原身份和认证主体不变。当前构造向量检查绑定摘要、代次比较、同候选登记重试、迟到低代与同代冲突拒绝、旧绑定丢弃、内部 Ready 不二次外发、精确 limits、配额不重复占用及请求序号高水位不回退；其认证、路由和计数前提均为显式夹具。调用提交后取消 RPC、丢失回复、断开 EndpointChannel、旧凭据保持连接和慢接收端的行为必须用实际服务验证；现有静态向量不提供这些运行证据。
+`.proto` 编译只证明描述符有效。发布前还须核对 oneof／内层 JSON／方法登记的映射、Go 与另一语言的相同 JCS 摘要、未知字段与过大消息拒绝，以及 WSS → gRPC 转发后命令／业务对象标识和认证主体不变。当前构造向量检查绑定摘要、代次比较、同候选登记重试、迟到低代与同代冲突拒绝、旧绑定丢弃、内部 Ready 不二次外发、精确 limits、配额不重复占用及请求序号高水位不回退；其认证、路由和计数前提均为显式夹具。调用提交后取消 RPC、丢失回复、断开 EndpointChannel、旧凭据保持连接和慢接收端的行为必须用实际服务验证；现有静态向量不提供这些运行证据。
 
 发现与连接分配另执行 [PROD-18](../validation/fault-experiments.md#grpc-capacity)：保持原 HTTP/2 连接不动增加副本，核对新 Call／新 EndpointChannel 分布；再填满一个实例、使 watch 断流并排空另一实例，核对有限候选、旧流归属及控制 RPC 余量。时钟与统计分别由 PROD-17／19 验收，不由上述 Schema 向量推出。

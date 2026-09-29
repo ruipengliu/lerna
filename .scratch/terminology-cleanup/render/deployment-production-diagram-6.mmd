@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant C as 客户端 WSS
+    participant G as 存活网关
+    participant O as 旧应用流 b1
+    participant N as 新应用流 b2
+    participant D as 原服务分片
+    Note over C,G: 外连接保持，先继续心跳
+    G->>N: 建立候选内部流与新委托
+    N->>D: 登记更高 binding_revision
+    D-->>N: 当前绑定已提交
+    N-->>G: 内部 Ready
+    G->>G: 原子切换当前流为 b2
+    O--xG: 旧 b1 输出被丢弃
+    G-->>C: snapshot_required(backend_rebind)
+    C->>G: 原过滤集合重新订阅，不带旧 cursor
+    G->>N: 取当前快照与后续变化

@@ -1,0 +1,11 @@
+flowchart LR
+    C[Confirmation] -->|一次批准消费| G[Grant]
+    P[父 Grant] -->|收缩来源| G
+    G -->|许可与单位| I[GrantUseItem]
+    U[不可变 UseReceipt] -->|一项或多项| I
+    U -->|固定 operation 与 usage owner| S[UseSettlement]
+    S -->|累计修订| R[UsageRevision]
+    I -->|预留与差额| B[GrantCounter]
+    R -->|spent / held / released 归并| B
+    U -->|关闭后保留 use_id| K[ClosedSecurityKey]
+    S -->|最终关闭摘要| K

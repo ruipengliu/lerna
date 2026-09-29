@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant U as 原命令调用方
+    participant M as Memory 领域处理器
+    participant S as 本域 Tx 与 stores
+    participant C as 内容 owner
+    U->>M: 原 memory.create
+    M->>S: 固定引用准备、原登记命令和恢复责任
+    Note over M,S: 准备提交不表示 memory.create applied
+    M->>C: 事务外登记原 copy
+    C-->>M: 原登记事实
+    M->>S: 锁定本地来源可用状态记录，裁决发布或清理
+    S-->>M: 业务决定、原回执和下一责任共同提交
+    M--xU: 答复丢失
+    U->>M: 原命令查询或原样重投
+    M->>S: 查原阶段或最终决定
+    S-->>M: 原阶段或最终决定
+    M-->>U: 获准的原回执；未决则按原查询契约继续

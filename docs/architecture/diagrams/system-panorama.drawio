@@ -790,7 +790,7 @@
         <mxCell id="deployment-title" value="部署映射" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#2d3142;fontStyle=1;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="64" y="2452" width="224" height="32" />
         </mxCell>
-        <mxCell id="deployment" value="生产稳定 Orchestrator 分区 + 多可用区  /  同提交域短事务  /  跨域原命令与查询" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="deployment" value="稳定 Orchestrator + 数据库分片 + 多可用区  /  本地短事务  /  跨库原命令与查询" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="344" y="2452" width="2920" height="32" />
         </mxCell>
         <mxCell id="footer-rule" value="" style="line;strokeColor=#bfc0c0;strokeWidth=1;fillColor=none;" vertex="1" parent="1" semanticKind="separator">
@@ -802,7 +802,7 @@
         <mxCell id="legend1" value="内部实线：调用 / 读写     内部虚线：持久 job     编号连线：业务交接     蓝线：外部调用     外层虚线：治理 / 装配" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=20;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="344" y="2520" width="2920" height="32" />
         </mxCell>
-        <mxCell id="legend2" value="09 / 10 / 12 作用于相关参与者  ·  模块 ≠ owner ≠ 进程 ≠ 提交域  ·  完整约束见 technical-overview.md" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=20;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text" tooltip="完整字段、状态机、确认消费、其他内容调用与生产恢复条件见 technical-overview.md 及各模块详设。">
+        <mxCell id="legend2" value="09 / 10 / 12 作用于相关参与者  ·  模块、owner、进程与事务边界分别定义  ·  完整约束见 technical-overview.md" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=20;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text" tooltip="完整字段、状态机、确认消费、其他内容调用与生产恢复条件见 technical-overview.md 及各模块详设。">
           <mxGeometry as="geometry" x="344" y="2560" width="2920" height="32" />
         </mxCell>
       </root>

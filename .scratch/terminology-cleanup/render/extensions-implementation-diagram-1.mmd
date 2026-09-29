@@ -1,0 +1,34 @@
+flowchart TB
+    Caller[本人管理入口与发布工作者]
+    Content[宿主内容端口]
+    Approval[批准 owner]
+    Domain[Orchestrator / Brain / Memory / Executor]
+    subgraph Extension[扩展管理]
+      F[extensions facade]
+      M[LifecycleManager]
+      V[PackageVerifier]
+      A[ArtifactReader]
+      L[LockStore]
+      R[ReferenceCollector]
+      P[ApprovalClient]
+      B[BindingRouter]
+      S[(宿主 repositories<br/>清单、绑定、步骤与 jobs)]
+      F --> M
+      M --> V
+      V --> A
+      M --> L
+      M --> R
+      M --> P
+      M --> B
+      L --> S
+      R --> S
+      B --> S
+      M --> S
+      J[公共有界工作模板<br/>独立有限管理池] -->|领取 / 条件回写| S
+      J -.->|一次有限管理处理| M
+    end
+    Caller --> F
+    A --> Content
+    P --> Approval
+    R --> Domain
+    B --> Domain

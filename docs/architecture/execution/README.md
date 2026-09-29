@@ -6,7 +6,7 @@ Executor 接收 Orchestrator 准入的操作，使用固定能力与实例绑定
 
 Orchestrator 保存“为什么要做”，Executor 保存“做到了哪一步、效果是什么”。能力目录描述行为契约，实例绑定确定谁以何种驱动访问哪个目标。任务完成由[任务运行](../orchestrator/README.md)裁决，身份和设备占用规则与[授权](../security/README.md)协作，本页是操作、能力和 GUI 字段的权威位置。
 
-实现阅读：[模块形状与依赖](implementation.md#module-shape) → [框架接入](implementation.md#reliable-work-integration) → [原操作对象流转](implementation.md#data-flow) → [发送与核对时序](implementation.md#key-sequence) → [固定设备入口恢复](implementation.md#entrance-recovery) → [生产部署和容量](implementation.md#production)。本页保留行为主线，执行记录、发送门禁、能力装配、模拟设备及故障断点在实现篇查阅。
+实现阅读：[模块结构与依赖](implementation.md#module-shape) → [框架接入](implementation.md#reliable-work-integration) → [原操作对象流转](implementation.md#data-flow) → [发送与核对时序](implementation.md#key-sequence) → [固定设备入口恢复](implementation.md#entrance-recovery) → [生产部署和容量](implementation.md#production)。本页保留行为主线，执行记录、发送门禁、能力装配、模拟设备及故障断点在实现篇查阅。
 
 ## 1. 默认选择与适用条件
 
@@ -25,7 +25,7 @@ Orchestrator 保存“为什么要做”，Executor 保存“做到了哪一步�
 
 ## 2. 一次执行的责任交接
 
-执行入口与工作者使用[公共接纳及有界工作模板](../reliable-work.md)保存原命令、领取责任和条件回写；ExecutionStore、GateStore、FactStore 仍裁决操作接纳、实际入口与效果事实。Executor 和独立资源 owner 各自在自己的提交域接入逻辑 JobStore；公共层不把远程接纳变成跨库事务，也不按超时自动重试目标动作。槽键、处理器及完成／等待条件见[接入设计](implementation.md#reliable-work-integration)。
+执行入口与工作者使用[公共接纳及有界工作模板](../reliable-work.md)保存原命令、领取责任和条件回写；ExecutionStore、GateStore、FactStore 仍裁决操作接纳、实际入口与效果事实。Executor 和独立资源 owner 各自在自己的本地事务范围内接入逻辑 JobStore；公共层不把远程接纳变成跨库事务，也不按超时自动重试目标动作。作业记录键、处理器及完成／等待条件见[接入设计](implementation.md#reliable-work-integration)。
 
 下图只表示操作执行和事实持久化。Orchestrator 与 Executor 同进程时可合并短事务；独立部署时双方保存后续工作，网络调用不进入数据库事务。
 
@@ -61,19 +61,19 @@ Executor 接纳时验证绑定可用、参数结构、目标范围和必要依�
 | Executor → Grant／资源 owner | 原使用单元及资源控制代次 | 使用获准且资源入口仍接受该代次 | Executor 核对原使用；任一依据不明不启动 |
 | Executor → 目标驱动 | 原幂等身份与准确目标 | 目标凭据或可绑定原操作的效果证据 | Executor 查询或观察原效果；无证据保留 unknown |
 | Executor → Orchestrator | 单调事实修订、证据和累计费用 | Orchestrator 幂等保存事实及后续任务工作 | Orchestrator 的查询 job 修补遗漏；Executor 不因“已通知”清除核对责任 |
-| Orchestrator → Executor／独立资源入口 | 当前 TaskGate 或原操作取消 | 实际入口已封闭旧资格，返回范围与在途清单 | Executor 保存转交并核对逐入口；Orchestrator 展示尚未确认的部分 |
+| Orchestrator → Executor／独立资源入口 | 当前 TaskGate 或原操作取消 | 实际入口已阻止旧控制修订下的启动，返回范围与在途清单 | Executor 保存转交并核对逐入口；Orchestrator 展示尚未确认的部分 |
 
 这里 `applied` 回执确认的是方法决定，`Operation.effect=applied` 确认的是声明效果，两者不得共用一个成功布尔值。取消先到、控制乱序与效果丢失的完整规则紧接下文；交接表用于定位责任，不另定义恢复策略。
 
 ### 任务控制先于、晚于行动到达时
 
-Executor 为每个 `(orchestrator_id, task_id)` 持久保存 `TaskGate`，记录 Orchestrator 最新已知的任务状态、控制和目标修订。它约束该任务在本执行端的所有操作，与设备占用的 `control_epoch` 分开；任务允许运行与设备允许被控制必须同时成立。
+Executor 为每个 `(orchestrator_id, task_id)` 持久保存任务执行控制记录 `TaskGate`，记录 Orchestrator 最新已知的任务状态、控制和目标修订。它约束该任务在本执行端的所有操作，与设备占用的 `control_epoch` 分开；任务允许运行与设备允许被控制必须同时成立。
 
 Orchestrator 通过 `execution.control` 传播控制，Invoke 也必须携带由 Orchestrator 认证的 `ControlSnapshot`。模型只能提出业务行动，不能自行签发或修改控制依据。快照绑定原 Orchestrator、任务与接收执行端，经已登记认证关系验证；重放到另一任务或执行端无效。没有控制记录时，任一种消息都可先初始化 gate，因此取消和暂停不必等第一条 Invoke 到达。
 
 更新只接受更高 `control_revision`，同修订同内容去重，同修订不同 gate 内容冲突；更低修订只返回当前事实。`goal_revision` 不得倒退。任何终态不可恢复，尤其 `cancelled` 后即使收到更高修订的 active/running 快照也拒绝；Orchestrator 必须新建任务，不能以恢复命令复用取消身份。
 
-控制接纳事务保存 gate、原命令回执和停止／唤醒／拒绝未启动操作的工作。TaskGate 的更新与启动准备通过同一持久门禁串行；实际驱动入口也在其发送门禁检查最新 gate。控制已到达但 worker 尚未消费队列时，不能继续凭缓存许可发送。动作已经交给不可撤回的外部入口，则列入在途集合，继续查询，不能把迟到控制当作未执行证据。
+控制接纳事务保存 gate、原命令回执和停止／唤醒／拒绝未启动操作的工作。TaskGate 的更新与启动准备使用同一持久控制记录串行裁决；实际驱动入口也在发送前检查最新 gate。本文把这些持久检查与串行控制点简称为“门禁”。控制已到达但 worker 尚未消费队列时，不能继续凭缓存许可发送。动作已经交给不可撤回的外部入口，则列入在途集合，继续查询，不能把迟到控制当作未执行证据。
 
 执行端内的启动事务及实际入口逐项检查：gate 为 active/running、操作目标修订匹配、该操作无取消墓碑、控制启动凭据尚有效、Grant 使用窗口与原 deadline 未过，以及资源代次、占用和 GUI 观察仍有效。检查必须同时成立，单独的工作租约、授权回执或资源占用不能替代其他条件。
 
@@ -88,9 +88,9 @@ Orchestrator 通过 `execution.control` 传播控制，Invoke 也必须携带由
 
 Orchestrator 刚提交暂停而执行端仍未收到时，执行端可能在旧快照允许的有限窗口内开始动作。因此 Orchestrator 保存控制不等于全局停止；失联执行端明确显示未确认，并受原 `start_before` 限制。窗口按任务政策与部署上限取最小值，需向用户说明；同 owner 共库可共同提交以缩小窗口，不能将这项优化泛化为所有跨端即时停止保证。
 
-`execution.control` 只有在持久记录并封闭本执行端旧入口后，才返回已执行的 `enforced_control_revision` 与在途清单。若设备 owner 有独立命令入口，Executor 保存转交责任，待该入口持久应用相同 gate 后才计入已执行；此前只报告 accepted 和逐入口待确认。已封闭表示不再由这些入口启动旧资格动作，不表示所有旧动作已停止。
+`execution.control` 只有在持久记录并封闭本执行端旧入口后，才返回已执行的 `enforced_control_revision` 与在途清单。若设备 owner 有独立命令入口，Executor 保存转交责任，待该入口持久应用相同 gate 后才计入已执行；此前只报告 accepted 和逐入口待确认。已封闭表示不再由这些入口启动旧控制修订下的动作，不表示所有旧动作已停止。
 
-`execution.cancel` 对未知 `operation_id` 也保存 `CancellationTombstone`，不能只回 `not_found`。随后迟到的 Invoke 命中该墓碑时被拒绝启动，并建立可查询的取消事实；墓碑不能被任务 resume 清除。若执行权威存储不可核对，返回提交未知，不能编造未启动结论。完整 gate、回执和取消记录至少保留至责任结清及查询窗口结束，之后可压缩为长期最小关闭索引；该索引不按 TTL 删除。未知操作取消时无法从未收到的 Invoke 推算期限，因此也必须保留禁止索引。完整记录已清理时返回 `gone`，不得重新初始化为可执行身份。
+`execution.cancel` 对未知 `operation_id` 也保存 `CancellationTombstone`，不能只回 `not_found`。随后迟到的 Invoke 命中该墓碑时被拒绝启动，并建立可查询的取消事实；墓碑不能被任务 resume 清除。若执行权威存储不可核对，返回提交未知，不能编造未启动结论。完整 gate、回执和取消记录至少保留至责任结清及查询窗口结束，之后分别保留长期命令去重记录、操作取消墓碑和任务终态记录；这些记录不按 TTL 删除。未知操作取消时无法从未收到的 Invoke 推算期限，因此也必须保留取消墓碑。完整记录已清理时返回 `gone`，不得重新初始化为可执行身份。
 
 例如暂停修订 8 晚于恢复修订 9 到达：执行端保持修订 9，不把旧暂停重新施加；恢复 9 晚于取消 10 到达则保持取消。目标从 3 修订为 4 后，未启动的目标 3 操作确定终止；若目标 3 的写入已交给远端服务，worker 租约到期也只能继续核对该写入，不能宣称旧目标没有效果。
 
@@ -115,11 +115,13 @@ stateDiagram-v2
 
 可信提供方后来上调原 Operation 费用时，执行 owner 保留原任务与操作身份，在保存更高累计用量的同一事务建立发往原 Orchestrator 的持久交回责任；`closed`、任务终态或旧结算 job 已完成均不取消这项责任。交回只唤醒原任务重新读取 Operation 账单，任务按准入时固定的唯一计费来源归并累计差额；同一收费在 Grant use 等投影出现不能再次计入预算。源 owner 收到原任务已持久接纳核对工作的 JobAck 后才结束交付，答复丢失沿原命令重投。
 
+`effect_class` 按恢复策略分类，按以下顺序判定：无目标业务副作用的操作归为 `read_only`；其余操作中，目标提供符合下述契约的幂等保证时归为 `target_idempotent`；剩余归为 `no_idempotency_guarantee`（无幂等保证）。最后一类包括非幂等操作，以及未声明或无法依赖目标幂等保证的操作，不表示它们在任何条件下都不能重试。
+
 | `effect_class` | 结果丢失后的允许路径 | 禁止与调用方后续 |
 | --- | --- | --- |
 | `read_only` | 对声明无目标业务副作用的读取，可在授权、期限和剩余预算内有限重试；每次记录成本和实际内容版本 | “读接口”标签不足以保证无副作用；消耗额度仍计费。数据可能变化，调用方按实际版本重新判断 |
 | `target_idempotent` | 先查询原操作；目标契约保证同键同意图最多产生一次效果且有效窗口未过时，才可原键重放 | 键作用域、保留期或原 payload 不明时不得重放；窗口到期转未知核对，不自动换键 |
-| `non_repeatable` | 已确证 `not_applied` 且 `may_apply_later=false` 时才可在原操作内获准重试；否则只查询原凭据或做独立观察 | 不能因重试预算尚余而重复；无法核实则保持未知，Orchestrator 请求具体核对或失败/取消，并继续必要收尾 |
+| `no_idempotency_guarantee` | 已确证 `not_applied` 且 `may_apply_later=false` 时才可在原操作内获准重试；否则只查询原凭据或做独立观察 | 不能因重试预算尚余而重复；无法核实则保持未知，Orchestrator 请求具体核对或失败/取消，并继续必要收尾 |
 
 驱动在异常分类上先判定是否已跨发送边界，再判定有无目标凭据和查询能力，最后才应用重复策略。通用 `5xx`、网关超时或空响应不能自动归类为未执行。目标显式拒绝且保证不会后续生效，才可报告 `not_applied`；一个队列中暂时没有查到的记录不具备该保证。
 
@@ -133,7 +135,7 @@ Executor 采用有限次数、退避和绝对核对期限查询目标；参数�
 
 ## 3. API 绑定如何落到实际请求
 
-能力接入同时验证目录解析、输出语义和实际重复行为。完整性、分页、筛选、观察时间及缺失字段在各能力的准确输出合同中说明，不能以结构合法代替结果正确；规则及接入反例见[返回范围与语义验收](implementation.md#output-coverage)。这份证据由原 Executor 保存，条件是否满足仍由 Orchestrator 判断。
+能力接入同时验证目录解析、输出语义和实际重复行为。完整性、分页、筛选、观察时间及缺失字段在各能力的准确输出契约中说明，不能以结构合法代替结果正确；规则及接入反例见[返回范围与语义验收](implementation.md#output-coverage)。这份证据由原 Executor 保存，条件是否满足仍由 Orchestrator 判断。
 
 参考实现从固定版本 OpenAPI 文档导入参数、请求体和响应结构，经接入者补齐业务效果、授权、幂等及核对声明后，生成能力和绑定。OpenAPI 能描述 HTTP 操作、参数、响应与安全方案；它不替本项目证明业务幂等或实际效果。导入基线固定为 [OpenAPI 3.1.1](https://spec.openapis.org/oas/v3.1.1.html)，这是本方案的兼容范围选择，不声称它是最新版本。
 
@@ -206,7 +208,7 @@ flowchart LR
 | --- | --- |
 | `capability_id, version, digest, semantic_operation_id, description` | 固定行为契约；描述含适用范围、前提和副作用，版本不可原地改义 |
 | `input_schema, output_schema` | 带方言的完整参数与输出定义；外部 Schema 引用随版本固定并在激活前解析 |
-| `effect_class` | `read_only / target_idempotent / non_repeatable`，按第 2 节决定可重复路径 |
+| `effect_class` | `read_only / target_idempotent / no_idempotency_guarantee`，按第 2 节的顺序分类并决定恢复路径 |
 | `verification` | 效果谓词、证据类型、原操作查询方式、`may_apply_later=false` 的可接受依据；缺失项明确标为不可证明 |
 | `retry` | `max_attempts, initial_backoff_ms, max_backoff_ms, reconciliation_timeout_ms`；幂等类另含 `key_scope, key_retention_ms, replay_guarantee_ref` |
 | `authorization` | 所需资源、动作、用途、是否需设备占用或额外确认；不包含可被模型直接使用的密钥 |
@@ -237,7 +239,7 @@ flowchart LR
 | `ControlReceipt` | `gate, enforced_control_revision, entrances[{entrance_id, enforced_control_revision, gap?}], inflight_operation_ids, observed_at`；enforced 取所有受控入口共同落实的修订，缺入口确认时不得报告全端生效 |
 | `CancellationTombstone` | `orchestrator_id, task_id, operation_id, cancel_command_id, cancelled_at`；由认证 Orchestrator 或具备本人管理权的入口签发，禁止该操作启动且不能恢复；未知原意图不补造业务参数 |
 
-`authorization_refs` 使用类型化的 Grant、UseReceipt 或 OfflineLease 引用；其字段与使用规则仅在[授权](../security/README.md)定义。`ResourceLease` 字段为 `lease_id, revision, resource_owner_id, resource_id, holder_id, instance_id, control_epoch, expires_at, state`，`state=active / released / revoked`，到期按时间另行判定。占用本身不授予观察或行动权限，启动还须有效使用依据。
+`authorization_refs` 使用明确区分类型的 Grant、UseReceipt 或 OfflineLease 引用；其字段与使用规则仅在[授权](../security/README.md)定义。`ResourceLease` 字段为 `lease_id, revision, resource_owner_id, resource_id, holder_id, instance_id, control_epoch, expires_at, state`，`state=active / released / revoked`，到期按时间另行判定。占用本身不授予观察或行动权限，启动还须有效使用依据。
 
 | `Observation` 字段 | 定义与约束 |
 | --- | --- |
@@ -249,14 +251,14 @@ flowchart LR
 
 ## 6. 部署、恢复与验收
 
-本地执行器与 Orchestrator 可共用数据库和内容库，远端执行器保存自身记录及有限保留的原命令答复。完整幂等记录覆盖责任及查询窗口，最小关闭／禁止索引长期保留；完整内容已清理的身份返回 `gone`，不能当作新请求执行。设备在 NAT 后主动拉取绑定给自己的有界命令；断连时不把同一操作重新分配给另一设备。
+本地执行器与 Orchestrator 可共用数据库和内容库，远端执行器保存自身记录及有限保留的原命令答复。完整幂等记录覆盖责任及查询窗口，最小去重与终态索引长期保留；完整内容已清理的身份返回 `gone`，不能当作新请求执行。设备在 NAT 后主动拉取绑定给自己的有界命令；断连时不把同一操作重新分配给另一设备。
 
 调度按用户、目标服务和资源域分别设置队列、并发、请求速率与存储限额。达到上限在接纳前返回可重试过载，已经接纳的责任仍持久保留；查询、取消、接管和结果收集保留容量。API 请求进程槽与目标业务是否终结分别管理，不能因连接关闭便释放业务互斥。隔离资源占用的释放依据由 owner 保存。
 
 | 用例 | 故障或刺激 | 必须观察到的结果 | 对应目标 |
 | --- | --- | --- | --- |
 | E-01 准确 API | 同名不同版本能力、可选参数、分页及业务拒绝 | 固定正确版本与编码；真实请求和结果可关联，拒绝不误报成功 | C4、C6 |
-| E-02 三类重复 | 分别在三类目标生效后丢失答复 | 读取有限重试；幂等原键不重复效果；不可重复类只核对，不换工具重做 | C4、C5 |
+| E-02 三类重复 | 分别在三类目标生效后丢失答复 | 读取有限重试；幂等原键不重复效果；无幂等保证类只核对，不换工具重做 | C4、C5 |
 | E-03 准备后崩溃 | 保存启动准备后、发送边界附近逐点崩溃 | 不能证明未发送时按未知处理；worker 重启不自行产生第二效果 | C5、C8 |
 | E-04 旧 worker | 占用过期、旧 worker 恢复，并发从另一 Orchestrator 发起 | owner 只允许当前占用和代次启动；无法撤回的在途操作明确列出 | C5、C7 |
 | E-05 GUI 全链路 | 多台有状态模拟手机上点击、滑动、输入、返回、掉线与接管 | 每动作前后可观察状态变化；旧观察和旧代次拒绝；保存不明先核对 | C4、C7、V2 |

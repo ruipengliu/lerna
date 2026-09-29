@@ -1,0 +1,10 @@
+PASS: 55 valid traces; 371 invalid mutations rejected for their stated rule; 105 frozen methods exercised
+Exposure boundary: one impact job covers a constructed 101-plan overlap; no bounded affected-ID response list
+Budget boundary: a 7-unit actual bill against a 5-unit allocation remains recordable with provider, receiver, both, or pending incident cause; proof remains a runtime prerequisite
+Budget correction: a parent recovery scan reads settled and closed records, receives one durable billing wakeup, and settles a newer bill; stale revision is rejected and original receipt replay is stable
+Billing wakeup: source r2 is visible before r1 notice; r1, r2, then r1 retains one job, and same-revision digest conflict is rejected
+Task listing: equal-time IDs and older timestamps paginate in documented descending-time order; reverse order is rejected
+Use boundary: a constructed final-to-final cost correction keeps the original use and released reserve; bill authenticity remains a runtime prerequisite
+Estimate boundary: a hard Grant cost limit rejects estimate; without it, constructed actual cost 6 exceeds reserved 4 without dropping the bill
+Registry: 105 methods, 0 reserved; protocol is an unpublished draft profile
+Scope: structure and recorded semantic relations only; no authentication, service, concurrency, durability or interoperability runtime tested

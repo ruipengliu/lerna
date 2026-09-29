@@ -1,0 +1,33 @@
+flowchart TB
+    H[外部：Orchestrator]
+    O[外部：内容 owner]
+    G[外部：Grant owner<br/>原用途取得与核对]
+    P[外部：模型供应商或本地推理进程]
+    DB[(宿主权威数据库)]
+    J[宿主 job 领取器]
+    subgraph B[Brain 模块边界]
+      D[facade：DecisionService]
+      subgraph A[application 与本轮规则]
+        C[ContextReader]
+        R[DecisionPolicy]
+        V[ProposalValidator]
+        W[RecoveryWorker]
+      end
+      S[store port：DecisionStore]
+      M[adapter：ModelAdapter]
+      D -->|同步：输入与来源检查| C
+      D -->|同步：接纳、查询、取消| S
+      W -->|同步：读取固定上下文| C
+      W -->|同步：选择本轮路径| R
+      W -->|同步：校验输出| V
+      W -->|同步：阶段与原调用事实| S
+      W -->|发送前检查通过后调用模型；原调用核对或停止| M
+    end
+    H -->|同步：命令或查询| D
+    C -->|同步：当前资格与准确字节| O
+    W -->|事务外：原内容保存、查询与清理| O
+    W --> G
+    M -->|外部调用：发送、查询、停止| P
+    S -->|短事务：记录、回执、jobs| DB
+    DB -.持久 job.-> J
+    J -.领取原 job 与代次.-> W

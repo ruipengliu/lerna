@@ -1,0 +1,14 @@
+[
+  {
+    "source": "docs/architecture/diagrams/system-panorama.drawio",
+    "pages": 1,
+    "topology_and_geometry": "unchanged",
+    "sha256": "783c3de182e7b31bfda560f22008b236363e0a3292f64e6feb45739755b16178"
+  },
+  {
+    "source": "docs/architecture/diagrams/uml-models.drawio",
+    "pages": 20,
+    "topology_and_geometry": "unchanged",
+    "sha256": "c07b8a290e8b33c6f173afcd9e821304b82fe6d22fc82c80df4c7630a510351c"
+  }
+]

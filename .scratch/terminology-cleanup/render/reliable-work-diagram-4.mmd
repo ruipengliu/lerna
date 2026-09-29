@@ -1,0 +1,14 @@
+sequenceDiagram
+    participant W as W1 持有版本 r 的领取
+    participant N as 新领域责任事务
+    participant S as 领域记录与作业记录
+    alt 新责任先提交
+      N->>S: 保存新事实、r+1、提前 due_at
+      W->>S: 原事实与 Finish(r)
+      S-->>W: 领取有效但版本落后，保留 ready
+    else W1 完成或等待先提交
+      W->>S: 原事实与 Finish(r)
+      S-->>W: done 或 waiting
+      N->>S: 同一作业 r+1，重开 ready 并提前到期
+    end
+    Note over W,S: 若领取已失效，W1 受保护事务全部拒绝

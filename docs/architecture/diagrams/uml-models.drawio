@@ -279,7 +279,7 @@
         <mxCell id="legend" value="虚线空心三角：实现接口    虚线开箭头：依赖    方法为接口节选" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1631" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="逻辑模块 ≠ owner ≠ 进程 ≠ 提交域" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="逻辑模块、owner、进程与事务边界分别定义" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
         <mxCell id="note-1" value="仅画主线依赖；返回与控制细节见模块页" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -324,7 +324,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.27586206896551724;exitPerimeter=0;entryX=1.0;entryY=0.8484848484848485;entryPerimeter=0;" edge="1" parent="1" source="intent" target="operation" semanticKind="association" sourceDoc="execution/implementation.md#data-flow" tooltip="仅已接纳正常 Invoke 的 Operation；取消先到的关闭索引不算接纳 Operation">
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.27586206896551724;exitPerimeter=0;entryX=1.0;entryY=0.8484848484848485;entryPerimeter=0;" edge="1" parent="1" source="intent" target="operation" semanticKind="association" sourceDoc="execution/implementation.md#data-flow" tooltip="仅已接纳正常 Invoke 的 Operation；取消先到的取消墓碑不算接纳 Operation">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="536" y="776" />
@@ -620,7 +620,7 @@
         <mxCell id="legend" value="实线：普通关联    两端：多重性    ?：可选属性    owner：事实负责方" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1199" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="跨 owner 关联通过原身份核对，不是跨库事务" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="跨 owner 关联按原对象标识核对，不承诺跨库事务" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1241" width="1760" height="28" />
         </mxCell>
         <mxCell id="note-1" value="引用不授予权限；取消不删除未知效果与费用责任" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -739,7 +739,7 @@
             <mxPoint as="offset" x="-53.0" y="-36.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e2-relationship-label" value="组装／物化" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e2" semanticKind="relationship-label" connectable="0">
+        <mxCell id="e2-relationship-label" value="组装／步骤实例化" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e2" semanticKind="relationship-label" connectable="0">
           <mxGeometry as="geometry" x="-0.24449541284403675" y="0" width="106" height="28" relative="1">
             <mxPoint as="offset" x="-53.0" y="8.0" />
           </mxGeometry>
@@ -886,7 +886,7 @@
         <mxCell id="legend" value="虚线空心三角：实现接口    虚线开箭头：依赖    方法为接口节选" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1631" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="内部职责共 Orchestrator 提交域；入口与工作者可分进程，接口列出关键方法。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="内部职责共用 Orchestrator 本地事务；入口与工作者可分进程，接口列出关键方法。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
         <mxCell id="note-1" value="Brain 与远端 Executor 调用在事务外；其他上下文、授权及协作 port 见实现篇。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -1301,7 +1301,7 @@
             <mxPoint as="offset" x="8.0" y="-14.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e7-relationship-label" value="准确字节 / 资格" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e7" semanticKind="relationship-label" connectable="0">
+        <mxCell id="e7-relationship-label" value="准确字节 / 使用权限" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e7" semanticKind="relationship-label" connectable="0">
           <mxGeometry as="geometry" x="0.0" y="0" width="155" height="28" relative="1">
             <mxPoint as="offset" x="-77.5" y="-36.0" />
           </mxGeometry>
@@ -1547,7 +1547,7 @@
             <mxPoint as="offset" x="8.0" y="-14.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e1-relationship-label" value="按原身份接纳" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e1" semanticKind="relationship-label" connectable="0">
+        <mxCell id="e1-relationship-label" value="按原命令标识接纳" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e1" semanticKind="relationship-label" connectable="0">
           <mxGeometry as="geometry" x="-0.125" y="0" width="124" height="28" relative="1">
             <mxPoint as="offset" x="-62.0" y="8.0" />
           </mxGeometry>
@@ -1947,7 +1947,7 @@
         <mxCell id="legend" value="虚线空心三角：实现接口    虚线开箭头：依赖    方法为接口节选" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1631" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="CatalogPort 是内部非线格式 port；公共方法只摘录关键入口。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="CatalogPort 是内部接口，不属于公开协议；公共方法只摘录关键入口。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
         <mxCell id="note-1" value="Executor 与资源 owner 是不同写权边界；共进程或共库不等于跨目标原子提交。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -2399,7 +2399,7 @@
         <mxCell id="subtitle" value="提供接口 · 内部职责 · 所需接口" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="150" width="1700" height="32" />
         </mxCell>
-        <mxCell id="e8-relationship-label" value="原索引／关闭工作" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e8" semanticKind="relationship-label" connectable="0">
+        <mxCell id="e8-relationship-label" value="索引／内容停用作业" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e8" semanticKind="relationship-label" connectable="0">
           <mxGeometry as="geometry" x="0.0" y="0" width="160" height="28" relative="1">
             <mxPoint as="offset" x="8.0" y="-14.0" />
           </mxGeometry>
@@ -2556,7 +2556,7 @@
         <mxCell id="legend" value="虚线空心三角：实现接口    虚线开箭头：依赖    方法为接口节选" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1631" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="Memory owner 与内容 owner 可独立部署；MetadataStore 封装各自提交域。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="Memory owner 与内容 owner 可独立部署；MetadataStore 封装各自本地事务范围。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
         <mxCell id="note-1" value="正文先保存，业务再提交引用；跨 owner 不承诺原子提交。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -3218,7 +3218,7 @@
         <mxCell id="legend" value="虚线空心三角：实现接口    虚线开箭头：依赖    方法为接口节选" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1631" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="ConfirmationStore 只裁决本业务 owner 的确认；其他 owner 在自身提交域装配。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="ConfirmationStore 只裁决本业务 owner 的确认；其他 owner 在自身本地事务范围装配。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
         <mxCell id="note-1" value="grant.check 是当前检查；固定 grant.use 回执才给出有限使用依据。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -3568,10 +3568,10 @@
         <mxCell id="legend" value="实线：普通关联    两端：多重性    ?：可选属性    owner：事实负责方" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1199" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-0" value="UseReceipt 的历史决定不可变；当前启动资格与结算状态单独判定。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-0" value="UseReceipt 的历史决定不可变；当前启动许可与结算状态单独判定。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1241" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-1" value="allowed 才建立 UseSettlementRecord；最终零用量也不恢复 once 身份。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-1" value="allowed 才建立 UseSettlementRecord；最终零用量也不恢复已消费的一次性授权。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1271" width="1760" height="28" />
         </mxCell>
         <mxCell id="source-note" value="完整约束与逐页来源：docs/architecture/uml-models.md" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -4475,7 +4475,7 @@
         <mxCell id="note-0" value="内部子任务与父任务共用 Orchestrator；子创建、映射与预算使用同一事务。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-1" value="Store 中的持久 jobs 由宿主调度；远端调用在事务外，答复丢失沿原身份核对。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-1" value="Store 中的持久 jobs 由宿主调度；远端调用在事务外，答复丢失按原命令与对象标识核对。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1703" width="1760" height="28" />
         </mxCell>
         <mxCell id="source-note" value="完整约束与逐页来源：docs/architecture/uml-models.md" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -4943,7 +4943,7 @@
             <mxPoint as="offset" x="-80.0" y="-36.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e8-relationship-label" value="暴露、资格与批准" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e8" semanticKind="relationship-label" connectable="0">
+        <mxCell id="e8-relationship-label" value="暴露、适用性与批准" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e8" semanticKind="relationship-label" connectable="0">
           <mxGeometry as="geometry" x="-0.07816455696202529" y="0" width="160" height="28" relative="1">
             <mxPoint as="offset" x="-80.0" y="-36.0" />
           </mxGeometry>
@@ -5107,7 +5107,7 @@
         <mxCell id="note-0" value="共享评测 owner 的 repositories 与持久 jobs；工作者分进程不增加独立写权威。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1673" width="1760" height="28" />
         </mxCell>
-        <mxCell id="note-1" value="反馈先登记 Exposure；批准核验当前资格，目标实际就绪归扩展管理器。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
+        <mxCell id="note-1" value="反馈先登记 Exposure；批准核验当前评测适用性，目标实际就绪归扩展管理器。" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=19;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="1703" width="1760" height="28" />
         </mxCell>
         <mxCell id="source-note" value="完整约束与逐页来源：docs/architecture/uml-models.md" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -5231,12 +5231,12 @@
             <mxPoint as="offset" x="8.0" y="-14.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e2-relationship-label" value="独立当前资格" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e2" semanticKind="relationship-label" connectable="0">
+        <mxCell id="e2-relationship-label" value="独立资格状态" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e2" semanticKind="relationship-label" connectable="0">
           <mxGeometry as="geometry" x="0.0" y="0" width="124" height="28" relative="1">
             <mxPoint as="offset" x="-62.0" y="8.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e3-relationship-label" value="使资格失效" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e3" semanticKind="relationship-label" connectable="0">
+        <mxCell id="e3-relationship-label" value="使正式评测资格失效" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e3" semanticKind="relationship-label" connectable="0">
           <mxGeometry as="geometry" x="0.0" y="0" width="106" height="28" relative="1">
             <mxPoint as="offset" x="8.0" y="-14.0" />
           </mxGeometry>
@@ -5547,7 +5547,7 @@
         <mxCell id="subtitle" value="提供接口 · 内部职责 · 所需接口" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=22;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
           <mxGeometry as="geometry" x="80" y="150" width="1700" height="32" />
         </mxCell>
-        <mxCell id="e3-relationship-label" value="锁、步骤与持久 jobs" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e3" semanticKind="relationship-label" connectable="0">
+        <mxCell id="e3-relationship-label" value="清单、步骤与持久 jobs" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e3" semanticKind="relationship-label" connectable="0">
           <mxGeometry as="geometry" x="0.0" y="0" width="194" height="28" relative="1">
             <mxPoint as="offset" x="-202.0" y="-14.0" />
           </mxGeometry>
@@ -5867,7 +5867,7 @@
             <mxPoint as="offset" x="-62.0" y="8.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e6-relationship-label" value="持有版本锁" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e6" semanticKind="relationship-label" connectable="0">
+        <mxCell id="e6-relationship-label" value="引用安装清单" style="edgeLabel;html=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=none;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=18;fontColor=#4f5d75;align=center;verticalAlign=middle;spacing=0;resizable=1;" vertex="1" parent="e6" semanticKind="relationship-label" connectable="0">
           <mxGeometry as="geometry" x="-0.125" y="0" width="106" height="28" relative="1">
             <mxPoint as="offset" x="-53.0" y="-36.0" />
           </mxGeometry>

@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant W as JobRunner
+    participant B as Brain port
+    participant C as TaskCoordinator / BudgetLedger
+    participant S as Orchestrator Store
+    participant E as Executor port
+    participant F as FactReducer
+    W->>B: 事务外提交固定快照的原 Decide
+    B-->>W: 原 Decision 与实际用量
+    rect rgb(232, 242, 255)
+      Note over C,S: 准入事务：锁原命令、祖先、预算、作业记录
+      W->>C: 候选、固定依赖与领取代次
+      C->>S: 检查当前修订；消费本次候选身份
+      C->>S: 写 Invoke、预留、dispatch job 与回执
+      S-->>C: 共同提交
+    end
+    W->>S: 领取原 dispatch，复查控制与期限
+    W->>E: 事务外发送固定 Invoke 和原 command_id
+    E->>E: 持久接纳原 operation
+    E--xW: 接纳答复丢失
+    Note over W,S: 工作者重启；新领取只取得原责任
+    W->>E: 查询原 command，再查询原 operation
+    E-->>W: 原回执及当前效果／累计用量
+    rect rgb(232, 242, 255)
+      Note over F,S: 归并事务：事实去重与业务变更共同提交
+      W->>F: 原对象、修订、摘要与证据
+      F->>C: 计算合法状态及累计费用差额
+      C->>S: 写事实、Task 修订、预算与下一 job
+      S-->>F: 提交或同修订幂等结果
+    end

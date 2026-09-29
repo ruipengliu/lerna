@@ -51,7 +51,7 @@ Brain 根据固定快照提出搜索。Orchestrator 准入搜索操作，取得�
 
 ### 2.2 评估、保存与读回
 
-d2 以 `kind=act` 提出评估 `report_ref` 的一项行动，Orchestrator 按 g2 和当前门禁准入 `op_assess`。评估结果归并后保存绑定 `goal_revision=2`、质量 `requirement_id`、`artifact_ref=report_ref` 的 ConditionResult；只有当前适用的 verdict=pass 才继续。本例沿逐轮提案展开：新决策提出写入，取得写入事实后的下一决策再提出读回。每轮都使用当前快照；`op_assess`、`op_write`、`op_read` 是不同操作，不在一次独立 actions 数组中提前准入依赖步骤。
+d2 以 `kind=act` 提出评估 `report_ref` 的一项行动，Orchestrator 按 g2、当前任务控制与授权条件准入 `op_assess`。评估结果归并后保存绑定 `goal_revision=2`、质量 `requirement_id`、`artifact_ref=report_ref` 的 ConditionResult；只有当前适用的 verdict=pass 才继续。本例沿逐轮提案展开：新决策提出写入，取得写入事实后的下一决策再提出读回。每轮都使用当前快照；`op_assess`、`op_write`、`op_read` 是不同操作，不在一次独立 actions 数组中提前准入依赖步骤。
 
 下图聚焦这三次行动的执行交接，省略它们之间按 2.1 节建立的新决策。写入参数引用同一 `report_ref`，读回使用原写入已核实的目标版本；参数名称由准确文件 Capability 的 Schema 定义，操作身份和结果引用由原 owner 提供。
 
@@ -67,12 +67,12 @@ sequenceDiagram
     Q-->>E: 通过或缺口，绑定候选摘要
     E-->>H: 保存后的原操作与质量证据
     H->>H: 保存 g2 / report_ref 的 ConditionResult
-    H->>H: 核验质量 pass 及当前资格，准入 op_write
+    H->>H: 核验质量 pass、证据有效性及写入授权，准入 op_write
     H->>E: 写入准确目录和候选字节
     E->>F: 固定目标、版本条件与原幂等依据
     F-->>E: 写入结果与目标版本证据
     E-->>H: 原写入效果及证据
-    H->>H: 保存效果，按当前资格准入 op_read
+    H->>H: 保存效果，核验当前控制与读取授权，准入 op_read
     H->>E: 读回准确文件及预期版本
     E->>F: 读取目标内容
     F-->>E: 实际版本与字节
@@ -84,7 +84,7 @@ sequenceDiagram
 
 评估通过不预先允许写入，写入成功也不自动允许新的读取。Orchestrator 在各次交接检查当前控制、目标、用途和预算。读取被撤权时保存已有写入事实，并明确读回条件尚未完成。
 
-实现也可用[有限计划](brain/implementation.md#finite-plan)减少上述后续模型调用：评估通过的门禁由 `pass_conditions` 表达，未来输出通过 `argument_bindings` 的 `step_output` 在[物化时](orchestrator/implementation.md#41-有限计划的确定性物化)解析。该方式保持相同准入和证据要求，完整计划规则只在对应专题定义。
+实现也可用[有限计划](brain/implementation.md#finite-plan)减少上述后续模型调用：必须评估通过的前置条件由 `pass_conditions` 表达，未来输出通过 `argument_bindings` 的 `step_output` 在[实例化步骤时](orchestrator/implementation.md#41-有限计划的确定性物化)解析。该方式保持相同准入和证据要求，完整计划规则只在对应专题定义。
 
 ### 2.3 手机观察、动作与后观察
 
@@ -145,9 +145,9 @@ sequenceDiagram
     H->>H: 更新原效果与费用，保持 cancelled
 ```
 
-第二种情况中，Executor 依据准确文件目标、版本条件及原操作日志核对；不能证明未发生时保持 unknown。两条路径都沿同一 operation 恢复。是否允许重放原目标请求由[驱动恢复合同](execution/README.md)裁决，切换 GUI、驱动或执行端不能绕过原未知。
+第二种情况中，Executor 依据准确文件目标、版本条件及原操作日志核对；不能证明未发生时保持 unknown。两条路径都沿同一 operation 恢复。是否允许重放原目标请求由[驱动恢复契约](execution/README.md)裁决，切换 GUI、驱动或执行端不能绕过原未知。
 
-Executor 收到更高控制修订后，在实际入口封闭后续发送并回报在途集合；取消回执本身不证明远端已经停止。目标队列中的旧写入仍可能迟到，因此 `execution_state=closed` 后还要检查 effect 与 may_apply_later。核对继续要求当前用途资格；缺权限或依赖时保存缺口，到达自动核对上限后保留原身份及受信处置入口。
+Executor 收到更高控制修订后，在实际入口封闭后续发送并回报在途集合；取消回执本身不证明远端已经停止。目标队列中的旧写入仍可能迟到，因此 `execution_state=closed` 后还要检查 effect 与 may_apply_later。核对仍须取得当前用途的授权；缺权限或依赖时保存缺口，到达自动核对上限后保留原操作标识及受信处置入口。
 
 取得原写入证据后，Orchestrator 归并效果并按累计用量差额结算，保持 cancelled。确认已经写入只收束原效果，不删除用户文件，也不启动提醒。最终可以是“任务已取消，报告已保存，费用已结清”，也可以长期保留“任务已取消，效果或费用待核对”；区别来自实际证据，迟到账单仍沿[原计费来源](orchestrator/README.md#budget)补记。
 
@@ -158,7 +158,7 @@ Executor 收到更高控制修订后，在实际入口封闭后续发送并回�
 | 原写入有证据，读回版本和摘要均匹配 | 该候选的文件条件成立 | 与质量记录及其余条件一并核验 |
 | 原写入有证据，当前文件已被修改 | 原效果仍成立，当前读回不满足该候选的条件 | 保留新旧版本差异；用户决定采用现状或以新操作纠正，禁止盲目覆盖 |
 | 只有不同的当前内容，没有原写入证据 | 不能据此断言原写入未发生 | Executor 核对原凭据；无法证明则保持 unknown |
-| 无法读取或内容引用已经失效 | 原写入事实不变，缺少读回证据 | 等待负责方恢复、取得有效用途资格或明确未完成条件 |
+| 无法读取或内容引用已经失效 | 原写入事实不变，缺少读回证据 | 等待负责方恢复、取得该读取用途的有效授权或明确未完成条件 |
 
 任何新候选都要有相应质量与文件证据。不能把候选 v1 的评估、v2 的写入和 v3 的当前读回拼成“完成”。界面允许查看原操作、补充可核验证据或结束自动核对；普通用户满意或“视为没执行”不能改写未知效果。
 

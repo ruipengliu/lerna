@@ -1,0 +1,28 @@
+flowchart TB
+    subgraph L[生产主部署 · 三可用区]
+      U[浏览器 / CLI / 设备]
+      G[独立 WSS 网关]
+      H1[Orchestrator 应用服务]
+      W[分类 worker 池]
+      E[隔离执行宿主]
+      D1[(PostgreSQL 权威分片)]
+      O[(内容对象存储)]
+      U <-->|WSS| G
+      G <-->|gRPC| H1
+      H1 --> D1
+      W -->|领取原 jobs / 条件提交| D1
+      W <-->|gRPC| E
+      W --> O
+    end
+    subgraph M[本机 Orchestrator · 云能力]
+      H2[本机 Orchestrator / 私密 Memory]
+      B2[云 Brain 或云 Memory]
+      H2 <-->|WSS · 原命令与事实| B2
+    end
+    subgraph C[云 Orchestrator · 端侧能力]
+      H3[云 Orchestrator / PostgreSQL]
+      E3[端侧 Brain / Memory / Executor]
+      E3 <-->|WSS · 推送与回复| H3
+    end
+    L ~~~ M
+    M ~~~ C

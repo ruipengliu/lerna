@@ -1,0 +1,14 @@
+passed Harness 技术全景
+passed 01 系统 · 组件与接口
+passed 02 跨 owner 核心对象 · 领域对象
+passed 03 任务编排器 · 组件与接口
+passed 05 大脑 · 组件与接口
+passed 06 大脑 · 领域对象
+passed 07 执行 · 组件与接口
+passed 09 记忆、内容与来源 · 组件与接口
+passed 11 身份、授权与用户隔离 · 组件与接口
+passed 12 身份、授权与用户隔离 · 领域对象
+passed 15 Agent 协作与任务委派 · 组件与接口
+passed 17 运行观测、能力评测与受控改进 · 组件与接口
+passed 18 运行观测、能力评测与受控改进 · 领域对象
+passed 19 宿主装配、首装与组件切换 · 组件与接口

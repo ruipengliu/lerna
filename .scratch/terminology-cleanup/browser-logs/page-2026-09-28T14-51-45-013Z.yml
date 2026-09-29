@@ -1,0 +1,1398 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - paragraph [ref=e4]: HARNESS / ATLAS
+    - navigation [ref=e5]:
+      - link "系统全景" [ref=e6] [cursor=pointer]:
+        - /url: "#panorama"
+      - link "01 系统组件" [ref=e7] [cursor=pointer]:
+        - /url: "#view-01"
+      - link "02 跨 owner 对象" [ref=e8] [cursor=pointer]:
+        - /url: "#view-02"
+      - link "03–04 任务编排器" [ref=e9] [cursor=pointer]:
+        - /url: "#view-03"
+      - link "05–06 大脑" [ref=e10] [cursor=pointer]:
+        - /url: "#view-05"
+      - link "07–08 执行" [ref=e11] [cursor=pointer]:
+        - /url: "#view-07"
+      - link "09–10 记忆与内容" [ref=e12] [cursor=pointer]:
+        - /url: "#view-09"
+      - link "11–12 权限与隔离" [ref=e13] [cursor=pointer]:
+        - /url: "#view-11"
+      - link "13–14 应用与交互" [ref=e14] [cursor=pointer]:
+        - /url: "#view-13"
+      - link "15–16 Agent 协作" [ref=e15] [cursor=pointer]:
+        - /url: "#view-15"
+      - link "17–18 观测、评测与改进" [ref=e16] [cursor=pointer]:
+        - /url: "#view-17"
+      - link "19–20 扩展与宿主" [ref=e17] [cursor=pointer]:
+        - /url: "#view-19"
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - paragraph [ref=e20]: HARNESS / ARCHITECTURE ATLAS
+      - heading "架构全景与模块 UML 图集" [level=1] [ref=e21]
+      - paragraph [ref=e22]: 从九模块逻辑分工，走到组件依赖与跨 owner 领域对象。图中只保留主干线，全部原关联与条件放在每页的关系表中。
+      - generic [ref=e23]:
+        - generic [ref=e24]: 21 VIEWS
+        - generic [ref=e25]: 09 MODULES
+        - generic [ref=e26]: LOGICAL DESIGN
+        - generic [ref=e27]: 2026-09-27
+      - paragraph [ref=e28]: 当前是设计基线的静态投影，方框不等于独立进程或数据库。线图、契约与实现细节以对应设计文档为准；实际耐久性、隔离和恢复仍待运行验收。
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - text: 00 / PANORAMA
+          - heading "九模块逻辑全景" [level=2] [ref=e32]
+        - generic [ref=e33]: ARCHITECTURE
+      - paragraph [ref=e34]: 每个卡片列出主要内部职责与事实对象。任务链中的外部模型、目标系统和其他 Agent 保持各自故障边界；跨端交接必须沿原命令与回执恢复。
+      - img "Harness 九模块逻辑全景 九个逻辑模块分为任务处理与治理宿主；任务编排器组织决策、检索、执行和协作，安全、评测与扩展提供授权、评测与装配。" [ref=e36]:
+        - generic [ref=e40]: 任务处理 / TASK
+        - generic [ref=e41]: 治理与宿主 / GOVERNANCE
+        - generic [ref=e48]:
+          - generic [ref=e51]: MODULE
+          - generic [ref=e52]: 应用与交互
+          - generic [ref=e53]: SurfaceService · InputService · DeliveryWorker
+          - generic [ref=e54]: Surface / InputSubmission
+        - generic [ref=e55]:
+          - generic [ref=e58]: MODULE
+          - generic [ref=e59]: 任务编排器
+          - generic [ref=e60]: TaskCoordinator · JobRunner · FactReducer
+          - generic [ref=e61]: Task / Intent / Result / jobs
+        - generic [ref=e62]:
+          - generic [ref=e65]: MODULE
+          - generic [ref=e66]: 大脑
+          - generic [ref=e67]: DecisionService · RecoveryWorker · ModelAdapter
+          - generic [ref=e68]: Decision / ModelCall
+        - generic [ref=e69]:
+          - generic [ref=e72]: MODULE
+          - generic [ref=e73]: 记忆与内容
+          - generic [ref=e74]: MemoryWriter · QueryService · ContentStore
+          - generic [ref=e75]: MemoryRevision / ContentRef
+        - generic [ref=e76]:
+          - generic [ref=e79]: MODULE
+          - generic [ref=e80]: Agent 协作
+          - generic [ref=e81]: DelegationAdmission · ExternalAgentAdapter
+          - generic [ref=e82]: Delegation / 子映射 / jobs
+        - generic [ref=e83]:
+          - generic [ref=e86]: MODULE
+          - generic [ref=e87]: 执行
+          - generic [ref=e88]: StartBarrier · Worker · Driver
+          - generic [ref=e89]: Operation / Attempt / Gate
+        - generic [ref=e90]:
+          - generic [ref=e93]: MODULE
+          - generic [ref=e94]: 观测、评测与改进
+          - generic [ref=e95]: PlanService · RunCoordinator · ApprovalOwner
+          - generic [ref=e96]: Plan / Report / Approval
+        - generic [ref=e97]:
+          - generic [ref=e100]: MODULE
+          - generic [ref=e101]: 扩展与宿主
+          - generic [ref=e102]: LifecycleManager · BindingRouter · Verifier
+          - generic [ref=e103]: InstallLock / Activation / Binding
+        - generic [ref=e104]:
+          - generic [ref=e107]: MODULE
+          - generic [ref=e108]: 权限与隔离
+          - generic [ref=e109]: GrantLedger · LeaseLedger · RevocationWorker
+          - generic [ref=e110]: Grant / UseReceipt / Lease
+        - generic [ref=e111]: LEGEND
+        - generic [ref=e112]: 实线：任务交接
+        - generic [ref=e113]: 虚线：治理与装配
+        - generic [ref=e114]: 框：逻辑模块，非独立服务
+      - paragraph [ref=e115]:
+        - link "系统分工" [ref=e116] [cursor=pointer]:
+          - /url: ../README.md
+        - link "全景阅读方法" [ref=e117] [cursor=pointer]:
+          - /url: ../technical-overview.md
+        - link "可编辑原图" [ref=e118] [cursor=pointer]:
+          - /url: system-panorama.drawio
+      - group [ref=e119]:
+        - generic "主要模块交接（12 组，图中主干 8 组）" [ref=e120] [cursor=pointer]
+      - paragraph [ref=e121]: 原全景图的 54 个组件／存储折入九个模块卡片；内部依赖在后续组件页展开。F03、F06、F08 的外部目标列在上表，完整交接条件见技术总览。
+    - generic [ref=e122]:
+      - generic [ref=e123]:
+        - generic [ref=e124]:
+          - text: 01 / 20
+          - heading "系统 · 组件与接口" [level=2] [ref=e125]
+        - generic [ref=e126]: COMPONENT UML
+      - paragraph [ref=e127]: 逻辑依赖；组件位置不代表进程、owner 或数据库边界。
+      - img "系统 · 组件与接口 系统 · 组件与接口：逻辑依赖；组件位置不代表进程、owner 或数据库边界。图中显示主干关系，全部 12 条关系与条件见下方对照表。" [ref=e129]:
+        - generic [ref=e136]:
+          - generic [ref=e139]: COMPONENT
+          - generic [ref=e140]: 应用与交互 · Interaction
+          - generic [ref=e141]: interaction.input
+          - generic [ref=e142]: interaction.present
+        - generic [ref=e143]:
+          - generic [ref=e146]: COMPONENT
+          - generic [ref=e147]: 任务编排器 · Orchestrator
+          - generic [ref=e148]: task.submit
+          - generic [ref=e149]: task.read
+          - generic [ref=e150]: task.cancel
+        - generic [ref=e151]:
+          - generic [ref=e154]: COMPONENT
+          - generic [ref=e155]: 大脑 · Brain
+          - generic [ref=e156]: brain.decide
+          - generic [ref=e157]: brain.get
+        - generic [ref=e158]:
+          - generic [ref=e161]: COMPONENT
+          - generic [ref=e162]: 记忆与内容 · Memory / Content
+          - generic [ref=e163]: memory.query
+          - generic [ref=e164]: content.get
+        - generic [ref=e165]:
+          - generic [ref=e168]: COMPONENT
+          - generic [ref=e169]: 执行 · Executor
+          - generic [ref=e170]: execution.invoke
+          - generic [ref=e171]: execution.reconcile
+        - generic [ref=e172]:
+          - generic [ref=e175]: COMPONENT
+          - generic [ref=e176]: Agent 协作 · Collaboration
+          - generic [ref=e177]: collaboration.delegate
+          - generic [ref=e178]: collaboration.read
+        - generic [ref=e179]:
+          - generic [ref=e182]: COMPONENT
+          - generic [ref=e183]: 权限与隔离 · Security
+          - generic [ref=e184]: grant.use
+          - generic [ref=e185]: grant.use.settle
+        - generic [ref=e186]:
+          - generic [ref=e189]: COMPONENT
+          - generic [ref=e190]: 观测、评测与改进 · Evaluation
+          - generic [ref=e191]: evaluation.run
+          - generic [ref=e192]: evaluation.approval_check
+        - generic [ref=e193]:
+          - generic [ref=e196]: COMPONENT
+          - generic [ref=e197]: 扩展与宿主 · Extensions
+          - generic [ref=e198]: extensions.activate
+          - generic [ref=e199]: extensions.read
+        - generic [ref=e200]: LEGEND
+        - generic [ref=e201]: 虚线开放箭头：依赖
+        - generic [ref=e202]: 空心三角：提供接口
+        - generic [ref=e203]: 其余依赖见下表
+      - paragraph [ref=e204]:
+        - link "UML 导读" [ref=e205] [cursor=pointer]:
+          - /url: ../uml-models.md#system
+        - link "可编辑原图" [ref=e206] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e207]:
+        - generic "全部关系与条件（12 条；图中主干 8 条）" [ref=e208] [cursor=pointer]
+      - paragraph [ref=e209]: 图中仅保留构成依赖主干的连线；其余关系在上表中逐项保留。接口方法仅摘录原图中的主要方法。
+    - generic [ref=e210]:
+      - generic [ref=e211]:
+        - generic [ref=e212]:
+          - text: 02 / 20
+          - heading "跨 owner 核心对象 · 领域对象" [level=2] [ref=e213]
+        - generic [ref=e214]: DOMAIN MODEL
+      - paragraph [ref=e215]: 任务意图由 Orchestrator 保存，外部效果由 Executor 保存；引用不转移写权。
+      - img "跨 owner 核心对象 · 领域对象 跨 owner 核心对象 · 领域对象：任务意图由 Orchestrator 保存，外部效果由 Executor 保存；引用不转移写权。图中显示主干关系，全部 7 条关系与条件见下方对照表。" [ref=e217]:
+        - generic [ref=e220]:
+          - generic [ref=e223]: DOMAIN OBJECT
+          - generic [ref=e224]: Task
+          - generic [ref=e225]: Orchestrator
+          - generic [ref=e226]: "task_id: ID"
+          - generic [ref=e227]: "goal_revision: Revision"
+          - generic [ref=e228]: "status: TaskStatus"
+        - generic [ref=e229]:
+          - generic [ref=e232]: DOMAIN OBJECT
+          - generic [ref=e233]: OperationIntent
+          - generic [ref=e234]: Orchestrator · 内部记录
+          - generic [ref=e235]: "operation_id: ID"
+          - generic [ref=e236]: "task_id: ID"
+          - generic [ref=e237]: "goal_revision: Revision"
+        - generic [ref=e238]:
+          - generic [ref=e241]: DOMAIN OBJECT
+          - generic [ref=e242]: Operation
+          - generic [ref=e243]: Executor
+          - generic [ref=e244]: "operation_id: ID"
+          - generic [ref=e245]: "execution_state: ExecutionState"
+          - generic [ref=e246]: "effect: Effect"
+        - generic [ref=e247]:
+          - generic [ref=e250]: DOMAIN OBJECT
+          - generic [ref=e251]: Attempt
+          - generic [ref=e252]: Executor
+          - generic [ref=e253]: "attempt_id: ID"
+          - generic [ref=e254]: "prepared_at: Timestamp"
+          - generic [ref=e255]: "sent_at: Timestamp?"
+        - generic [ref=e256]:
+          - generic [ref=e259]: DOMAIN OBJECT
+          - generic [ref=e260]: Result
+          - generic [ref=e261]: Orchestrator
+          - generic [ref=e262]: "task_id: ID"
+          - generic [ref=e263]: "goal_revision: Revision"
+          - generic [ref=e264]: "artifact_refs: ContentRef[1..100]"
+        - generic [ref=e265]:
+          - generic [ref=e268]: DOMAIN OBJECT
+          - generic [ref=e269]: ContentRef
+          - generic [ref=e270]: 值引用 · 定位内容 owner
+          - generic [ref=e271]: "owner_id: ID"
+          - generic [ref=e272]: "content_id: ID"
+          - generic [ref=e273]: "version: Revision"
+        - generic [ref=e274]: LEGEND
+        - generic [ref=e275]: 实线：领域关联
+        - generic [ref=e276]: 多重性和条件见下表
+        - generic [ref=e277]: 跨 owner 引用不表示共同事务
+      - paragraph [ref=e278]:
+        - link "UML 导读" [ref=e279] [cursor=pointer]:
+          - /url: ../uml-models.md#core
+        - link "可编辑原图" [ref=e280] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e281]:
+        - generic "全部关系与条件（7 条；图中主干 5 条）" [ref=e282] [cursor=pointer]
+      - paragraph [ref=e283]: 图中属性为辨识用节选；完整字段、值对象边界及异常责任以链接中的同版正文与 Schema 为准。实线表示关联，不表示外键、共同事务或级联删除。
+    - generic [ref=e284]:
+      - generic [ref=e285]:
+        - generic [ref=e286]:
+          - text: 03 / 20
+          - heading "任务编排器 · 组件与接口" [level=2] [ref=e287]
+        - generic [ref=e288]: COMPONENT UML
+      - paragraph [ref=e289]: 准入时把状态、预算与后续 job 一起提交；未知效果保留核对责任。
+      - img "任务编排器 · 组件与接口 任务编排器 · 组件与接口：准入时把状态、预算与后续 job 一起提交；未知效果保留核对责任。图中显示主干关系，全部 10 条关系与条件见下方对照表。" [ref=e291]:
+        - generic [ref=e297]:
+          - generic [ref=e300]: INTERFACE
+          - generic [ref=e301]: Task 接口
+          - generic [ref=e302]: task.submit
+          - generic [ref=e303]: task.read
+          - generic [ref=e304]: task.revise
+        - generic [ref=e305]:
+          - generic [ref=e308]: COMPONENT
+          - generic [ref=e309]: CommandHandler
+        - generic [ref=e310]:
+          - generic [ref=e313]: COMPONENT
+          - generic [ref=e314]: TaskCoordinator · / BudgetLedger
+        - generic [ref=e315]:
+          - generic [ref=e318]: COMPONENT
+          - generic [ref=e319]: JobRunner
+        - generic [ref=e320]:
+          - generic [ref=e323]: COMPONENT
+          - generic [ref=e324]: SnapshotAssembler · PlanMaterializer
+        - generic [ref=e325]:
+          - generic [ref=e328]: COMPONENT
+          - generic [ref=e329]: FactReducer
+        - generic [ref=e330]:
+          - generic [ref=e333]: COMPONENT
+          - generic [ref=e334]: Orchestrator Store
+        - generic [ref=e335]:
+          - generic [ref=e338]: INTERFACE
+          - generic [ref=e339]: Brain 接口
+          - generic [ref=e340]: brain.decide
+          - generic [ref=e341]: brain.get
+          - generic [ref=e342]: brain.cancel
+        - generic [ref=e343]:
+          - generic [ref=e346]: INTERFACE
+          - generic [ref=e347]: Execution 接口
+          - generic [ref=e348]: execution.invoke
+          - generic [ref=e349]: execution.get
+          - generic [ref=e350]: execution.control
+        - generic [ref=e351]: LEGEND
+        - generic [ref=e352]: 虚线开放箭头：依赖
+        - generic [ref=e353]: 空心三角：提供接口
+        - generic [ref=e354]: 其余依赖见下表
+      - paragraph [ref=e355]:
+        - link "UML 导读" [ref=e356] [cursor=pointer]:
+          - /url: ../uml-models.md#orchestrator
+        - link "模块契约" [ref=e357] [cursor=pointer]:
+          - /url: ../orchestrator/README.md
+        - link "实现职责" [ref=e358] [cursor=pointer]:
+          - /url: ../orchestrator/implementation.md
+        - link "可编辑原图" [ref=e359] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e360]:
+        - generic "全部关系与条件（10 条；图中主干 8 条）" [ref=e361] [cursor=pointer]
+      - paragraph [ref=e362]: 图中仅保留构成依赖主干的连线；其余关系在上表中逐项保留。接口方法仅摘录原图中的主要方法。
+    - generic [ref=e363]:
+      - generic [ref=e364]:
+        - generic [ref=e365]:
+          - text: 04 / 20
+          - heading "任务编排器 · 领域对象" [level=2] [ref=e366]
+        - generic [ref=e367]: DOMAIN MODEL
+      - paragraph [ref=e368]: 准入时把状态、预算与后续 job 一起提交；未知效果保留核对责任。
+      - img "任务编排器 · 领域对象 任务编排器 · 领域对象：准入时把状态、预算与后续 job 一起提交；未知效果保留核对责任。图中显示主干关系，全部 6 条关系与条件见下方对照表。" [ref=e370]:
+        - generic [ref=e373]:
+          - generic [ref=e376]: DOMAIN OBJECT
+          - generic [ref=e377]: Task
+          - generic [ref=e378]: Orchestrator
+          - generic [ref=e379]: "task_id: ID"
+          - generic [ref=e380]: "orchestrator_id: ID"
+          - generic [ref=e381]: "goal_revision: Revision"
+        - generic [ref=e382]:
+          - generic [ref=e385]: DOMAIN OBJECT
+          - generic [ref=e386]: Snapshot
+          - generic [ref=e387]: Orchestrator
+          - generic [ref=e388]: "task_id: ID"
+          - generic [ref=e389]: "snapshot_revision: Revision"
+          - generic [ref=e390]: "content_ref: ContentRef"
+        - generic [ref=e391]:
+          - generic [ref=e394]: DOMAIN OBJECT
+          - generic [ref=e395]: OperationIntent
+          - generic [ref=e396]: Orchestrator
+          - generic [ref=e397]: "operation_id: ID"
+          - generic [ref=e398]: "task_id: ID"
+          - generic [ref=e399]: "goal_revision: Revision"
+        - generic [ref=e400]:
+          - generic [ref=e403]: DOMAIN OBJECT
+          - generic [ref=e404]: ReceivedFact
+          - generic [ref=e405]: Orchestrator（归并副本）
+          - generic [ref=e406]: "owner: ID"
+          - generic [ref=e407]: "object_id: ID"
+          - generic [ref=e408]: "revision: Revision"
+        - generic [ref=e409]:
+          - generic [ref=e412]: DOMAIN OBJECT
+          - generic [ref=e413]: Job
+          - generic [ref=e414]: Orchestrator
+          - generic [ref=e415]: "job_id: ID"
+          - generic [ref=e416]: "kind: JobKind"
+          - generic [ref=e417]: "due_at: DateTime"
+        - generic [ref=e418]:
+          - generic [ref=e421]: DOMAIN OBJECT
+          - generic [ref=e422]: BudgetReservation
+          - generic [ref=e423]: Orchestrator
+          - generic [ref=e424]: "reservation_id: ID"
+          - generic [ref=e425]: "task_id: ID"
+          - generic [ref=e426]: "unit: String"
+        - generic [ref=e427]:
+          - generic [ref=e430]: DOMAIN OBJECT
+          - generic [ref=e431]: Result
+          - generic [ref=e432]: Orchestrator
+          - generic [ref=e433]: "task_id: ID"
+          - generic [ref=e434]: "goal_revision: Revision"
+          - generic [ref=e435]: "artifact_refs: ContentRef[1..100]"
+        - generic [ref=e436]: LEGEND
+        - generic [ref=e437]: 实线：领域关联
+        - generic [ref=e438]: 多重性和条件见下表
+        - generic [ref=e439]: 跨 owner 引用不表示共同事务
+      - paragraph [ref=e440]:
+        - link "UML 导读" [ref=e441] [cursor=pointer]:
+          - /url: ../uml-models.md#orchestrator
+        - link "模块契约" [ref=e442] [cursor=pointer]:
+          - /url: ../orchestrator/README.md
+        - link "实现职责" [ref=e443] [cursor=pointer]:
+          - /url: ../orchestrator/implementation.md
+        - link "可编辑原图" [ref=e444] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e445]:
+        - generic "全部关系与条件（6 条；图中主干 6 条）" [ref=e446] [cursor=pointer]
+      - paragraph [ref=e447]: 图中属性为辨识用节选；完整字段、值对象边界及异常责任以链接中的同版正文与 Schema 为准。实线表示关联，不表示外键、共同事务或级联删除。
+    - generic [ref=e448]:
+      - generic [ref=e449]:
+        - generic [ref=e450]:
+          - text: 05 / 20
+          - heading "大脑 · 组件与接口" [level=2] [ref=e451]
+        - generic [ref=e452]: COMPONENT UML
+      - paragraph [ref=e453]: Brain 返回绑定固定快照的一轮提案，Orchestrator 才能准入行动；供应商结果未知须沿原调用核对。
+      - img "大脑 · 组件与接口 大脑 · 组件与接口：Brain 返回绑定固定快照的一轮提案，Orchestrator 才能准入行动；供应商结果未知须沿原调用核对。图中显示主干关系，全部 9 条关系与条件见下方对照表。" [ref=e455]:
+        - generic [ref=e459]:
+          - generic [ref=e462]: INTERFACE
+          - generic [ref=e463]: Brain 接口
+          - generic [ref=e464]: brain.decide
+          - generic [ref=e465]: brain.get
+          - generic [ref=e466]: brain.cancel
+        - generic [ref=e467]:
+          - generic [ref=e470]: COMPONENT
+          - generic [ref=e471]: DecisionService
+        - generic [ref=e472]:
+          - generic [ref=e475]: COMPONENT
+          - generic [ref=e476]: ContextReader
+        - generic [ref=e477]:
+          - generic [ref=e480]: COMPONENT
+          - generic [ref=e481]: DecisionPolicy · / ProposalValidator
+        - generic [ref=e482]:
+          - generic [ref=e485]: COMPONENT
+          - generic [ref=e486]: RecoveryWorker
+        - generic [ref=e487]:
+          - generic [ref=e490]: COMPONENT
+          - generic [ref=e491]: DecisionStore
+        - generic [ref=e492]:
+          - generic [ref=e495]: COMPONENT
+          - generic [ref=e496]: ModelAdapter
+        - generic [ref=e497]:
+          - generic [ref=e500]: INTERFACE
+          - generic [ref=e501]: 内容读取接口
+          - generic [ref=e502]: content.get
+        - generic [ref=e503]:
+          - generic [ref=e506]: INTERFACE
+          - generic [ref=e507]: 使用依据接口
+          - generic [ref=e508]: grant.use
+          - generic [ref=e509]: grant.use.get
+        - generic [ref=e510]: LEGEND
+        - generic [ref=e511]: 虚线开放箭头：依赖
+        - generic [ref=e512]: 空心三角：提供接口
+        - generic [ref=e513]: 其余依赖见下表
+      - paragraph [ref=e514]:
+        - link "UML 导读" [ref=e515] [cursor=pointer]:
+          - /url: ../uml-models.md#brain
+        - link "模块契约" [ref=e516] [cursor=pointer]:
+          - /url: ../brain/README.md
+        - link "实现职责" [ref=e517] [cursor=pointer]:
+          - /url: ../brain/implementation.md
+        - link "可编辑原图" [ref=e518] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e519]:
+        - generic "全部关系与条件（9 条；图中主干 8 条）" [ref=e520] [cursor=pointer]
+      - paragraph [ref=e521]: 图中仅保留构成依赖主干的连线；其余关系在上表中逐项保留。接口方法仅摘录原图中的主要方法。
+    - generic [ref=e522]:
+      - generic [ref=e523]:
+        - generic [ref=e524]:
+          - text: 06 / 20
+          - heading "大脑 · 领域对象" [level=2] [ref=e525]
+        - generic [ref=e526]: DOMAIN MODEL
+      - paragraph [ref=e527]: Brain 返回绑定固定快照的一轮提案，Orchestrator 才能准入行动；供应商结果未知须沿原调用核对。
+      - img "大脑 · 领域对象 大脑 · 领域对象：Brain 返回绑定固定快照的一轮提案，Orchestrator 才能准入行动；供应商结果未知须沿原调用核对。图中显示主干关系，全部 4 条关系与条件见下方对照表。" [ref=e529]:
+        - generic [ref=e531]:
+          - generic [ref=e534]: DOMAIN OBJECT
+          - generic [ref=e535]: DecisionRequest
+          - generic [ref=e536]: Orchestrator 固定；Brain 绑定
+          - generic [ref=e537]: "decision_id: ID"
+          - generic [ref=e538]: "task_id: ID"
+          - generic [ref=e539]: "snapshot_revision: Revision"
+        - generic [ref=e540]:
+          - generic [ref=e543]: DOMAIN OBJECT
+          - generic [ref=e544]: BrainContext
+          - generic [ref=e545]: Orchestrator（正文由内容 owner 保存）
+          - generic [ref=e546]: "task_ref: TaskRef"
+          - generic [ref=e547]: "snapshot_revision: Revision"
+          - generic [ref=e548]: "goal_revision: Revision"
+        - generic [ref=e549]:
+          - generic [ref=e552]: DOMAIN OBJECT
+          - generic [ref=e553]: DecisionRecord
+          - generic [ref=e554]: Brain
+          - generic [ref=e555]: "decision_id: ID"
+          - generic [ref=e556]: "revision: Revision"
+          - generic [ref=e557]: "snapshot_revision: Revision"
+        - generic [ref=e558]:
+          - generic [ref=e561]: DOMAIN OBJECT
+          - generic [ref=e562]: ModelCall
+          - generic [ref=e563]: Brain
+          - generic [ref=e564]: "model_call_id: ID"
+          - generic [ref=e565]: "provider_request_id: String?"
+          - generic [ref=e566]: "state: ModelCallState"
+        - generic [ref=e567]:
+          - generic [ref=e570]: DOMAIN OBJECT
+          - generic [ref=e571]: Proposal
+          - generic [ref=e572]: Brain（本轮结果值）
+          - generic [ref=e573]: "kind: ProposalKind"
+          - generic [ref=e574]: "rationale: String"
+          - generic [ref=e575]: "evidence_refs: ContentRef[0..100]"
+        - generic [ref=e576]: LEGEND
+        - generic [ref=e577]: 实线：领域关联
+        - generic [ref=e578]: 多重性和条件见下表
+        - generic [ref=e579]: 跨 owner 引用不表示共同事务
+      - paragraph [ref=e580]:
+        - link "UML 导读" [ref=e581] [cursor=pointer]:
+          - /url: ../uml-models.md#brain
+        - link "模块契约" [ref=e582] [cursor=pointer]:
+          - /url: ../brain/README.md
+        - link "实现职责" [ref=e583] [cursor=pointer]:
+          - /url: ../brain/implementation.md
+        - link "可编辑原图" [ref=e584] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e585]:
+        - generic "全部关系与条件（4 条；图中主干 4 条）" [ref=e586] [cursor=pointer]
+      - paragraph [ref=e587]: 图中属性为辨识用节选；完整字段、值对象边界及异常责任以链接中的同版正文与 Schema 为准。实线表示关联，不表示外键、共同事务或级联删除。
+    - generic [ref=e588]:
+      - generic [ref=e589]:
+        - generic [ref=e590]:
+          - text: 07 / 20
+          - heading "执行 · 组件与接口" [level=2] [ref=e591]
+        - generic [ref=e592]: COMPONENT UML
+      - paragraph [ref=e593]: 接纳与实际发送分开；StartBarrier 逐次复核当前任务控制、资源代次与使用依据。
+      - img "执行 · 组件与接口 执行 · 组件与接口：接纳与实际发送分开；StartBarrier 逐次复核当前任务控制、资源代次与使用依据。图中显示主干关系，全部 10 条关系与条件见下方对照表。" [ref=e595]:
+        - generic [ref=e599]:
+          - generic [ref=e602]: INTERFACE
+          - generic [ref=e603]: 执行／目录／资源接口
+          - generic [ref=e604]: execution.invoke
+          - generic [ref=e605]: execution.get
+          - generic [ref=e606]: execution.control
+        - generic [ref=e607]:
+          - generic [ref=e610]: COMPONENT
+          - generic [ref=e611]: 执行命令入口 · 接纳与控制用例
+        - generic [ref=e612]:
+          - generic [ref=e615]: COMPONENT
+          - generic [ref=e616]: CatalogPort
+        - generic [ref=e617]:
+          - generic [ref=e620]: COMPONENT
+          - generic [ref=e621]: 执行工作者
+        - generic [ref=e622]:
+          - generic [ref=e625]: COMPONENT
+          - generic [ref=e626]: GateStore · StartBarrier
+        - generic [ref=e627]:
+          - generic [ref=e630]: COMPONENT
+          - generic [ref=e631]: Executor Store · FactStore
+        - generic [ref=e632]:
+          - generic [ref=e635]: COMPONENT
+          - generic [ref=e636]: 固定版本 Driver
+        - generic [ref=e637]:
+          - generic [ref=e640]: COMPONENT
+          - generic [ref=e641]: 资源 owner Store
+        - generic [ref=e642]:
+          - generic [ref=e645]: INTERFACE
+          - generic [ref=e646]: 授权使用接口
+          - generic [ref=e647]: grant.use
+          - generic [ref=e648]: grant.use.get
+        - generic [ref=e649]: LEGEND
+        - generic [ref=e650]: 虚线开放箭头：依赖
+        - generic [ref=e651]: 空心三角：提供接口
+        - generic [ref=e652]: 其余依赖见下表
+      - paragraph [ref=e653]:
+        - link "UML 导读" [ref=e654] [cursor=pointer]:
+          - /url: ../uml-models.md#execution
+        - link "模块契约" [ref=e655] [cursor=pointer]:
+          - /url: ../execution/README.md
+        - link "实现职责" [ref=e656] [cursor=pointer]:
+          - /url: ../execution/implementation.md
+        - link "可编辑原图" [ref=e657] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e658]:
+        - generic "全部关系与条件（10 条；图中主干 7 条）" [ref=e659] [cursor=pointer]
+      - paragraph [ref=e660]: 图中仅保留构成依赖主干的连线；其余关系在上表中逐项保留。接口方法仅摘录原图中的主要方法。
+    - generic [ref=e661]:
+      - generic [ref=e662]:
+        - generic [ref=e663]:
+          - text: 08 / 20
+          - heading "执行 · 领域对象" [level=2] [ref=e664]
+        - generic [ref=e665]: DOMAIN MODEL
+      - paragraph [ref=e666]: 接纳与实际发送分开；StartBarrier 逐次复核当前任务控制、资源代次与使用依据。
+      - img "执行 · 领域对象 执行 · 领域对象：接纳与实际发送分开；StartBarrier 逐次复核当前任务控制、资源代次与使用依据。图中显示主干关系，全部 7 条关系与条件见下方对照表。" [ref=e668]:
+        - generic [ref=e670]:
+          - generic [ref=e673]: DOMAIN OBJECT
+          - generic [ref=e674]: Capability
+          - generic [ref=e675]: 执行目录
+          - generic [ref=e676]: "capability_id: ID"
+          - generic [ref=e677]: "version: Version"
+          - generic [ref=e678]: "digest: Digest"
+        - generic [ref=e679]:
+          - generic [ref=e682]: DOMAIN OBJECT
+          - generic [ref=e683]: Binding
+          - generic [ref=e684]: 执行目录
+          - generic [ref=e685]: "binding_id: ID"
+          - generic [ref=e686]: "revision: Revision"
+          - generic [ref=e687]: "capability_ref: ComponentRef"
+        - generic [ref=e688]:
+          - generic [ref=e691]: DOMAIN OBJECT
+          - generic [ref=e692]: Operation
+          - generic [ref=e693]: Executor
+          - generic [ref=e694]: "operation_id: ID"
+          - generic [ref=e695]: "revision: Revision"
+          - generic [ref=e696]: "execution_state: ExecutionState"
+        - generic [ref=e697]:
+          - generic [ref=e700]: DOMAIN OBJECT
+          - generic [ref=e701]: Attempt
+          - generic [ref=e702]: Executor
+          - generic [ref=e703]: "attempt_id: ID"
+          - generic [ref=e704]: "prepared_at: DateTime"
+          - generic [ref=e705]: "sent_at: DateTime?"
+        - generic [ref=e706]:
+          - generic [ref=e709]: DOMAIN OBJECT
+          - generic [ref=e710]: TaskGate
+          - generic [ref=e711]: Executor（Orchestrator 控制投影）
+          - generic [ref=e712]: "orchestrator_id: ID"
+          - generic [ref=e713]: "task_id: ID"
+          - generic [ref=e714]: "control_revision: Revision"
+        - generic [ref=e715]:
+          - generic [ref=e718]: DOMAIN OBJECT
+          - generic [ref=e719]: RuntimeResourceState
+          - generic [ref=e720]: 资源 owner
+          - generic [ref=e721]: "resource_owner_id: ID"
+          - generic [ref=e722]: "resource_id: ID"
+          - generic [ref=e723]: "control_epoch: Revision"
+        - generic [ref=e724]:
+          - generic [ref=e727]: DOMAIN OBJECT
+          - generic [ref=e728]: ResourceLease
+          - generic [ref=e729]: 资源 owner
+          - generic [ref=e730]: "lease_id: ID"
+          - generic [ref=e731]: "resource_id: ID"
+          - generic [ref=e732]: "holder_id: ID"
+        - generic [ref=e733]: LEGEND
+        - generic [ref=e734]: 实线：领域关联
+        - generic [ref=e735]: 多重性和条件见下表
+        - generic [ref=e736]: 跨 owner 引用不表示共同事务
+      - paragraph [ref=e737]:
+        - link "UML 导读" [ref=e738] [cursor=pointer]:
+          - /url: ../uml-models.md#execution
+        - link "模块契约" [ref=e739] [cursor=pointer]:
+          - /url: ../execution/README.md
+        - link "实现职责" [ref=e740] [cursor=pointer]:
+          - /url: ../execution/implementation.md
+        - link "可编辑原图" [ref=e741] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e742]:
+        - generic "全部关系与条件（7 条；图中主干 6 条）" [ref=e743] [cursor=pointer]
+      - paragraph [ref=e744]: 图中属性为辨识用节选；完整字段、值对象边界及异常责任以链接中的同版正文与 Schema 为准。实线表示关联，不表示外键、共同事务或级联删除。
+    - generic [ref=e745]:
+      - generic [ref=e746]:
+        - generic [ref=e747]:
+          - text: 09 / 20
+          - heading "记忆、内容与来源 · 组件与接口" [level=2] [ref=e748]
+        - generic [ref=e749]: COMPONENT UML
+      - paragraph [ref=e750]: 先保存准确字节再发布业务引用；查询与披露分别检查当前资格，副本关闭逐持有者核对。
+      - img "记忆、内容与来源 · 组件与接口 记忆、内容与来源 · 组件与接口：先保存准确字节再发布业务引用；查询与披露分别检查当前资格，副本关闭逐持有者核对。图中显示主干关系，全部 10 条关系与条件见下方对照表。" [ref=e752]:
+        - generic [ref=e756]:
+          - generic [ref=e759]: INTERFACE
+          - generic [ref=e760]: Memory API
+          - generic [ref=e761]: memory.create
+          - generic [ref=e762]: memory.query
+          - generic [ref=e763]: memory.extract
+        - generic [ref=e764]:
+          - generic [ref=e767]: INTERFACE
+          - generic [ref=e768]: Content API
+          - generic [ref=e769]: content.put
+          - generic [ref=e770]: content.get
+          - generic [ref=e771]: content.register_copy
+        - generic [ref=e772]:
+          - generic [ref=e775]: COMPONENT
+          - generic [ref=e776]: Memory facade
+          - generic [ref=e777]: Writer · Query · Extraction · View
+        - generic [ref=e778]:
+          - generic [ref=e781]: COMPONENT
+          - generic [ref=e782]: ContentStore · 内容 owner
+        - generic [ref=e783]:
+          - generic [ref=e786]: COMPONENT
+          - generic [ref=e787]: MetadataStore
+        - generic [ref=e788]:
+          - generic [ref=e791]: COMPONENT
+          - generic [ref=e792]: ByteStore
+        - generic [ref=e793]:
+          - generic [ref=e796]: COMPONENT
+          - generic [ref=e797]: Memory · 后台 · IndexWorker
+          - generic [ref=e798]: ClosureWorker
+        - generic [ref=e799]:
+          - generic [ref=e802]: INTERFACE
+          - generic [ref=e803]: Grant owner API
+          - generic [ref=e804]: grant.use
+          - generic [ref=e805]: grant.use.get
+        - generic [ref=e806]: LEGEND
+        - generic [ref=e807]: 虚线开放箭头：依赖
+        - generic [ref=e808]: 空心三角：提供接口
+        - generic [ref=e809]: 其余依赖见下表
+      - paragraph [ref=e810]:
+        - link "UML 导读" [ref=e811] [cursor=pointer]:
+          - /url: ../uml-models.md#memory
+        - link "模块契约" [ref=e812] [cursor=pointer]:
+          - /url: ../memory/README.md
+        - link "实现职责" [ref=e813] [cursor=pointer]:
+          - /url: ../memory/implementation.md
+        - link "可编辑原图" [ref=e814] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e815]:
+        - generic "全部关系与条件（10 条；图中主干 7 条）" [ref=e816] [cursor=pointer]
+      - paragraph [ref=e817]: 图中仅保留构成依赖主干的连线；其余关系在上表中逐项保留。接口方法仅摘录原图中的主要方法。
+    - generic [ref=e818]:
+      - generic [ref=e819]:
+        - generic [ref=e820]:
+          - text: 10 / 20
+          - heading "记忆、内容与来源 · 领域对象" [level=2] [ref=e821]
+        - generic [ref=e822]: DOMAIN MODEL
+      - paragraph [ref=e823]: 先保存准确字节再发布业务引用；查询与披露分别检查当前资格，副本关闭逐持有者核对。
+      - img "记忆、内容与来源 · 领域对象 记忆、内容与来源 · 领域对象：先保存准确字节再发布业务引用；查询与披露分别检查当前资格，副本关闭逐持有者核对。图中显示主干关系，全部 8 条关系与条件见下方对照表。" [ref=e825]:
+        - generic [ref=e828]:
+          - generic [ref=e831]: DOMAIN OBJECT
+          - generic [ref=e832]: MemoryRecord
+          - generic [ref=e833]: Memory owner
+          - generic [ref=e834]: "memory_id: ID"
+          - generic [ref=e835]: "owner_id: ID"
+          - generic [ref=e836]: "revision: Revision"
+        - generic [ref=e837]:
+          - generic [ref=e840]: DOMAIN OBJECT
+          - generic [ref=e841]: MemoryControl
+          - generic [ref=e842]: Memory owner
+          - generic [ref=e843]: "memory_id: ID"
+          - generic [ref=e844]: "owner_id: ID"
+          - generic [ref=e845]: "revision: Revision"
+        - generic [ref=e846]:
+          - generic [ref=e849]: DOMAIN OBJECT
+          - generic [ref=e850]: ExtractionCandidate
+          - generic [ref=e851]: Memory owner
+          - generic [ref=e852]: "candidate_id: ID"
+          - generic [ref=e853]: "revision: Revision"
+          - generic [ref=e854]: "extraction_task_id: ID"
+        - generic [ref=e855]:
+          - generic [ref=e858]: DOMAIN OBJECT
+          - generic [ref=e859]: ContentRef
+          - generic [ref=e860]: 值引用 · 定位内容 owner
+          - generic [ref=e861]: "owner_id: ID"
+          - generic [ref=e862]: "content_id: ID"
+          - generic [ref=e863]: "version: Revision"
+        - generic [ref=e864]:
+          - generic [ref=e867]: DOMAIN OBJECT
+          - generic [ref=e868]: SourceBinding
+          - generic [ref=e869]: 值对象 · 随依赖记录保存
+          - generic [ref=e870]: "source_ref: ContentRef"
+          - generic [ref=e871]: "relation: Enum"
+          - generic [ref=e872]: "observed_at: Timestamp"
+        - generic [ref=e873]:
+          - generic [ref=e876]: DOMAIN OBJECT
+          - generic [ref=e877]: ContentControl
+          - generic [ref=e878]: 内容 owner
+          - generic [ref=e879]: "content_ref: ContentRef"
+          - generic [ref=e880]: "control_revision: Revision"
+          - generic [ref=e881]: "state: active | restricted | closed"
+        - generic [ref=e882]:
+          - generic [ref=e885]: DOMAIN OBJECT
+          - generic [ref=e886]: ContentCopy
+          - generic [ref=e887]: 内容 owner · holder 持有字节
+          - generic [ref=e888]: "copy_id: ID"
+          - generic [ref=e889]: "content_ref: ContentRef"
+          - generic [ref=e890]: "holder_id: ID"
+        - generic [ref=e891]: LEGEND
+        - generic [ref=e892]: 实线：领域关联
+        - generic [ref=e893]: 多重性和条件见下表
+        - generic [ref=e894]: 跨 owner 引用不表示共同事务
+      - paragraph [ref=e895]:
+        - link "UML 导读" [ref=e896] [cursor=pointer]:
+          - /url: ../uml-models.md#memory
+        - link "模块契约" [ref=e897] [cursor=pointer]:
+          - /url: ../memory/README.md
+        - link "实现职责" [ref=e898] [cursor=pointer]:
+          - /url: ../memory/implementation.md
+        - link "可编辑原图" [ref=e899] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e900]:
+        - generic "全部关系与条件（8 条；图中主干 6 条）" [ref=e901] [cursor=pointer]
+      - paragraph [ref=e902]: 图中属性为辨识用节选；完整字段、值对象边界及异常责任以链接中的同版正文与 Schema 为准。实线表示关联，不表示外键、共同事务或级联删除。
+    - generic [ref=e903]:
+      - generic [ref=e904]:
+        - generic [ref=e905]:
+          - text: 11 / 20
+          - heading "权限与隔离 · 组件与接口" [level=2] [ref=e906]
+        - generic [ref=e907]: COMPONENT UML
+      - paragraph [ref=e908]: Grant owner 保存原使用回执与结算；撤销阻止新启动，既有用量与离线窗口单独收束。
+      - img "权限与隔离 · 组件与接口 权限与隔离 · 组件与接口：Grant owner 保存原使用回执与结算；撤销阻止新启动，既有用量与离线窗口单独收束。图中显示主干关系，全部 12 条关系与条件见下方对照表。" [ref=e910]:
+        - generic [ref=e915]:
+          - generic [ref=e918]: INTERFACE
+          - generic [ref=e919]: Security API
+          - generic [ref=e920]: grant.issue
+          - generic [ref=e921]: grant.use
+          - generic [ref=e922]: grant.use.settle
+        - generic [ref=e923]:
+          - generic [ref=e926]: COMPONENT
+          - generic [ref=e927]: grant · endpoint · confirmation
+          - generic [ref=e928]: facade
+        - generic [ref=e929]:
+          - generic [ref=e932]: COMPONENT
+          - generic [ref=e933]: GrantLedger · LeaseLedger
+        - generic [ref=e934]:
+          - generic [ref=e937]: COMPONENT
+          - generic [ref=e938]: PairingController
+        - generic [ref=e939]:
+          - generic [ref=e942]: COMPONENT
+          - generic [ref=e943]: ConfirmationStore
+        - generic [ref=e944]:
+          - generic [ref=e947]: COMPONENT
+          - generic [ref=e948]: 领域 repositories · 命令、账本与 jobs
+        - generic [ref=e949]:
+          - generic [ref=e952]: COMPONENT
+          - generic [ref=e953]: RevocationWorker
+        - generic [ref=e954]:
+          - generic [ref=e957]: INTERFACE
+          - generic [ref=e958]: 宿主身份与凭据 · port · 经
+          - generic [ref=e959]: IdentityAdapter
+        - generic [ref=e960]:
+          - generic [ref=e963]: INTERFACE
+          - generic [ref=e964]: 资源使用端控制 port
+        - generic [ref=e965]: LEGEND
+        - generic [ref=e966]: 虚线开放箭头：依赖
+        - generic [ref=e967]: 空心三角：提供接口
+        - generic [ref=e968]: 其余依赖见下表
+      - paragraph [ref=e969]:
+        - link "UML 导读" [ref=e970] [cursor=pointer]:
+          - /url: ../uml-models.md#security
+        - link "模块契约" [ref=e971] [cursor=pointer]:
+          - /url: ../security/README.md
+        - link "实现职责" [ref=e972] [cursor=pointer]:
+          - /url: ../security/implementation.md
+        - link "可编辑原图" [ref=e973] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e974]:
+        - generic "全部关系与条件（12 条；图中主干 8 条）" [ref=e975] [cursor=pointer]
+      - paragraph [ref=e976]: 图中仅保留构成依赖主干的连线；其余关系在上表中逐项保留。接口方法仅摘录原图中的主要方法。
+    - generic [ref=e977]:
+      - generic [ref=e978]:
+        - generic [ref=e979]:
+          - text: 12 / 20
+          - heading "权限与隔离 · 领域对象" [level=2] [ref=e980]
+        - generic [ref=e981]: DOMAIN MODEL
+      - paragraph [ref=e982]: Grant owner 保存原使用回执与结算；撤销阻止新启动，既有用量与离线窗口单独收束。
+      - img "权限与隔离 · 领域对象 权限与隔离 · 领域对象：Grant owner 保存原使用回执与结算；撤销阻止新启动，既有用量与离线窗口单独收束。图中显示主干关系，全部 7 条关系与条件见下方对照表。" [ref=e984]:
+        - generic [ref=e986]:
+          - generic [ref=e989]: DOMAIN OBJECT
+          - generic [ref=e990]: ConfirmationRecord
+          - generic [ref=e991]: consumer owner（本页：Grant）
+          - generic [ref=e992]: "confirmation_id: ID"
+          - generic [ref=e993]: "consumer_method: Enum"
+          - generic [ref=e994]: "consumer_command_id: ID"
+        - generic [ref=e995]:
+          - generic [ref=e998]: DOMAIN OBJECT
+          - generic [ref=e999]: GrantRecord
+          - generic [ref=e1000]: Grant owner
+          - generic [ref=e1001]: "grant_id: ID"
+          - generic [ref=e1002]: "owner_id: ID"
+          - generic [ref=e1003]: "revision: Revision"
+        - generic [ref=e1004]:
+          - generic [ref=e1007]: DOMAIN OBJECT
+          - generic [ref=e1008]: UseReceipt
+          - generic [ref=e1009]: Grant owner
+          - generic [ref=e1010]: "use_id: ID"
+          - generic [ref=e1011]: "intent_hash: Digest"
+          - generic [ref=e1012]: "grant_revisions: ObjectRef [1..100]"
+        - generic [ref=e1013]:
+          - generic [ref=e1016]: DOMAIN OBJECT
+          - generic [ref=e1017]: UseSettlementRecord
+          - generic [ref=e1018]: Grant owner · 计量事实另属使用端
+          - generic [ref=e1019]: "use_id: ID"
+          - generic [ref=e1020]: "operation_id: ID"
+          - generic [ref=e1021]: "usage_owner_id: ID"
+        - generic [ref=e1022]:
+          - generic [ref=e1025]: DOMAIN OBJECT
+          - generic [ref=e1026]: OfflineLeaseRecord
+          - generic [ref=e1027]: Grant owner · 固定端点实例
+          - generic [ref=e1028]: "lease_id: ID"
+          - generic [ref=e1029]: "grant_refs: ObjectRef [1..100]"
+          - generic [ref=e1030]: "endpoint_id: ID"
+        - generic [ref=e1031]:
+          - generic [ref=e1034]: DOMAIN OBJECT
+          - generic [ref=e1035]: EndpointRecord
+          - generic [ref=e1036]: 端点登记 owner
+          - generic [ref=e1037]: "endpoint_id: ID"
+          - generic [ref=e1038]: "instance_id: ID"
+          - generic [ref=e1039]: "credential_generation: Revision"
+        - generic [ref=e1040]: LEGEND
+        - generic [ref=e1041]: 实线：领域关联
+        - generic [ref=e1042]: 多重性和条件见下表
+        - generic [ref=e1043]: 跨 owner 引用不表示共同事务
+      - paragraph [ref=e1044]:
+        - link "UML 导读" [ref=e1045] [cursor=pointer]:
+          - /url: ../uml-models.md#security
+        - link "模块契约" [ref=e1046] [cursor=pointer]:
+          - /url: ../security/README.md
+        - link "实现职责" [ref=e1047] [cursor=pointer]:
+          - /url: ../security/implementation.md
+        - link "可编辑原图" [ref=e1048] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e1049]:
+        - generic "全部关系与条件（7 条；图中主干 5 条）" [ref=e1050] [cursor=pointer]
+      - paragraph [ref=e1051]: 图中属性为辨识用节选；完整字段、值对象边界及异常责任以链接中的同版正文与 Schema 为准。实线表示关联，不表示外键、共同事务或级联删除。
+    - generic [ref=e1052]:
+      - generic [ref=e1053]:
+        - generic [ref=e1054]:
+          - text: 13 / 20
+          - heading "应用与交互 · 组件与接口" [level=2] [ref=e1055]
+        - generic [ref=e1056]: COMPONENT UML
+      - paragraph [ref=e1057]: 界面保存呈现和转交，实际业务 owner 一次消费输入；本地送达不等于业务消费。
+      - img "应用与交互 · 组件与接口 应用与交互 · 组件与接口：界面保存呈现和转交，实际业务 owner 一次消费输入；本地送达不等于业务消费。图中显示主干关系，全部 11 条关系与条件见下方对照表。" [ref=e1059]:
+        - generic [ref=e1061]:
+          - generic [ref=e1064]: INTERFACE
+          - generic [ref=e1065]: Surface API
+          - generic [ref=e1066]: interaction.surface_create
+          - generic [ref=e1067]: interaction.surface_read
+          - generic [ref=e1068]: interaction.surface_update
+        - generic [ref=e1069]:
+          - generic [ref=e1072]: INTERFACE
+          - generic [ref=e1073]: Input API
+          - generic [ref=e1074]: interaction.input
+          - generic [ref=e1075]: interaction.input_read
+          - generic [ref=e1076]: interaction.input_withdraw
+        - generic [ref=e1077]:
+          - generic [ref=e1080]: COMPONENT
+          - generic [ref=e1081]: SurfaceService
+        - generic [ref=e1082]:
+          - generic [ref=e1085]: COMPONENT
+          - generic [ref=e1086]: InputService
+        - generic [ref=e1087]:
+          - generic [ref=e1090]: COMPONENT
+          - generic [ref=e1091]: InteractionStore
+        - generic [ref=e1092]:
+          - generic [ref=e1095]: COMPONENT
+          - generic [ref=e1096]: DeliveryWorker
+        - generic [ref=e1097]:
+          - generic [ref=e1100]: COMPONENT
+          - generic [ref=e1101]: Renderer
+        - generic [ref=e1102]:
+          - generic [ref=e1105]: COMPONENT
+          - generic [ref=e1106]: TrustedConfirmationHost
+        - generic [ref=e1107]:
+          - generic [ref=e1110]: INTERFACE
+          - generic [ref=e1111]: 实际业务 owner API
+          - generic [ref=e1112]: interaction.request_read
+          - generic [ref=e1113]: task.input
+          - generic [ref=e1114]: confirmation.read
+        - generic [ref=e1115]: LEGEND
+        - generic [ref=e1116]: 虚线开放箭头：依赖
+        - generic [ref=e1117]: 空心三角：提供接口
+        - generic [ref=e1118]: 其余依赖见下表
+      - paragraph [ref=e1119]:
+        - link "UML 导读" [ref=e1120] [cursor=pointer]:
+          - /url: ../uml-models.md#interaction
+        - link "模块契约" [ref=e1121] [cursor=pointer]:
+          - /url: ../interaction/README.md
+        - link "实现职责" [ref=e1122] [cursor=pointer]:
+          - /url: ../interaction/implementation.md
+        - link "可编辑原图" [ref=e1123] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e1124]:
+        - generic "全部关系与条件（11 条；图中主干 8 条）" [ref=e1125] [cursor=pointer]
+      - paragraph [ref=e1126]: 图中仅保留构成依赖主干的连线；其余关系在上表中逐项保留。接口方法仅摘录原图中的主要方法。
+    - generic [ref=e1127]:
+      - generic [ref=e1128]:
+        - generic [ref=e1129]:
+          - text: 14 / 20
+          - heading "应用与交互 · 领域对象" [level=2] [ref=e1130]
+        - generic [ref=e1131]: DOMAIN MODEL
+      - paragraph [ref=e1132]: 界面保存呈现和转交，实际业务 owner 一次消费输入；本地送达不等于业务消费。
+      - img "应用与交互 · 领域对象 应用与交互 · 领域对象：界面保存呈现和转交，实际业务 owner 一次消费输入；本地送达不等于业务消费。图中显示主干关系，全部 7 条关系与条件见下方对照表。" [ref=e1134]:
+        - generic [ref=e1138]:
+          - generic [ref=e1141]: DOMAIN OBJECT
+          - generic [ref=e1142]: Surface
+          - generic [ref=e1143]: Surface owner
+          - generic [ref=e1144]: "surface_id: ID"
+          - generic [ref=e1145]: "surface_owner_id: ID"
+          - generic [ref=e1146]: "app_binding: ComponentRef"
+        - generic [ref=e1147]:
+          - generic [ref=e1150]: DOMAIN OBJECT
+          - generic [ref=e1151]: SurfaceSnapshot
+          - generic [ref=e1152]: Surface owner；完整快照值
+          - generic [ref=e1153]: "title: String"
+          - generic [ref=e1154]: "blocks: SurfaceBlock [0..100]"
+          - generic [ref=e1155]: "request_refs: ObjectRef [0..100]"
+        - generic [ref=e1156]:
+          - generic [ref=e1159]: DOMAIN OBJECT
+          - generic [ref=e1160]: Presentation
+          - generic [ref=e1161]: 本设备呈现负责端
+          - generic [ref=e1162]: "surface_id: ID"
+          - generic [ref=e1163]: "endpoint_id: ID"
+          - generic [ref=e1164]: "intent_revision: Revision"
+        - generic [ref=e1165]:
+          - generic [ref=e1168]: DOMAIN OBJECT
+          - generic [ref=e1169]: InputRequestView
+          - generic [ref=e1170]: 业务 owner · Orchestrator / 应用
+          - generic [ref=e1171]: "request_id: ID"
+          - generic [ref=e1172]: "owner_id: ID"
+          - generic [ref=e1173]: "revision: Revision"
+        - generic [ref=e1174]:
+          - generic [ref=e1177]: DOMAIN OBJECT
+          - generic [ref=e1178]: InputSubmission
+          - generic [ref=e1179]: 耐久交互服务
+          - generic [ref=e1180]: "input_id: ID"
+          - generic [ref=e1181]: "request_id: ID"
+          - generic [ref=e1182]: "request_revision: Revision"
+        - generic [ref=e1183]:
+          - generic [ref=e1186]: DOMAIN OBJECT
+          - generic [ref=e1187]: ApplicationEventSubmission
+          - generic [ref=e1188]: 耐久交互服务
+          - generic [ref=e1189]: "event_id: ID"
+          - generic [ref=e1190]: "surface_revision: Revision"
+          - generic [ref=e1191]: "app_binding: ComponentRef"
+        - generic [ref=e1192]:
+          - generic [ref=e1195]: DOMAIN OBJECT
+          - generic [ref=e1196]: ConfirmationRecord
+          - generic [ref=e1197]: 实际 consumer owner
+          - generic [ref=e1198]: "confirmation_id: ID"
+          - generic [ref=e1199]: "consumer_method: Enum"
+          - generic [ref=e1200]: "consumer_command_id: ID"
+        - generic [ref=e1201]: LEGEND
+        - generic [ref=e1202]: 实线：领域关联
+        - generic [ref=e1203]: 多重性和条件见下表
+        - generic [ref=e1204]: 跨 owner 引用不表示共同事务
+      - paragraph [ref=e1205]:
+        - link "UML 导读" [ref=e1206] [cursor=pointer]:
+          - /url: ../uml-models.md#interaction
+        - link "模块契约" [ref=e1207] [cursor=pointer]:
+          - /url: ../interaction/README.md
+        - link "实现职责" [ref=e1208] [cursor=pointer]:
+          - /url: ../interaction/implementation.md
+        - link "可编辑原图" [ref=e1209] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e1210]:
+        - generic "全部关系与条件（7 条；图中主干 6 条）" [ref=e1211] [cursor=pointer]
+      - paragraph [ref=e1212]: 图中属性为辨识用节选；完整字段、值对象边界及异常责任以链接中的同版正文与 Schema 为准。实线表示关联，不表示外键、共同事务或级联删除。
+    - generic [ref=e1213]:
+      - generic [ref=e1214]:
+        - generic [ref=e1215]:
+          - text: 15 / 20
+          - heading "Agent 协作 · 组件与接口" [level=2] [ref=e1216]
+        - generic [ref=e1217]: COMPONENT UML
+      - paragraph [ref=e1218]: 内部子任务共事务建立；外部任务沿原创建键恢复，父任务结束不抹掉未结额度。
+      - img "Agent 协作 · 组件与接口 Agent 协作 · 组件与接口：内部子任务共事务建立；外部任务沿原创建键恢复，父任务结束不抹掉未结额度。图中显示主干关系，全部 12 条关系与条件见下方对照表。" [ref=e1220]:
+        - generic [ref=e1225]:
+          - generic [ref=e1228]: INTERFACE
+          - generic [ref=e1229]: Collaboration API
+          - generic [ref=e1230]: collaboration.delegate
+          - generic [ref=e1231]: collaboration.read
+          - generic [ref=e1232]: collaboration.control
+        - generic [ref=e1233]:
+          - generic [ref=e1236]: COMPONENT
+          - generic [ref=e1237]: 协作用例 · facade
+          - generic [ref=e1238]: DelegationAdmission
+        - generic [ref=e1239]:
+          - generic [ref=e1242]: COMPONENT
+          - generic [ref=e1243]: InternalChildFactory
+        - generic [ref=e1244]:
+          - generic [ref=e1247]: COMPONENT
+          - generic [ref=e1248]: ExternalAgentAdapter
+        - generic [ref=e1249]:
+          - generic [ref=e1252]: COMPONENT
+          - generic [ref=e1253]: DelegationReducer
+        - generic [ref=e1254]:
+          - generic [ref=e1257]: COMPONENT
+          - generic [ref=e1258]: ControlPropagator
+          - generic [ref=e1259]: SettlementCoordinator
+        - generic [ref=e1260]:
+          - generic [ref=e1263]: COMPONENT
+          - generic [ref=e1264]: Collaboration Store
+        - generic [ref=e1265]:
+          - generic [ref=e1268]: INTERFACE
+          - generic [ref=e1269]: TaskCoordinator · / BudgetLedger port
+        - generic [ref=e1270]:
+          - generic [ref=e1273]: INTERFACE
+          - generic [ref=e1274]: 外部 Agent port
+        - generic [ref=e1275]: LEGEND
+        - generic [ref=e1276]: 虚线开放箭头：依赖
+        - generic [ref=e1277]: 空心三角：提供接口
+        - generic [ref=e1278]: 其余依赖见下表
+      - paragraph [ref=e1279]:
+        - link "UML 导读" [ref=e1280] [cursor=pointer]:
+          - /url: ../uml-models.md#collaboration
+        - link "模块契约" [ref=e1281] [cursor=pointer]:
+          - /url: ../collaboration/README.md
+        - link "实现职责" [ref=e1282] [cursor=pointer]:
+          - /url: ../collaboration/implementation.md
+        - link "可编辑原图" [ref=e1283] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e1284]:
+        - generic "全部关系与条件（12 条；图中主干 7 条）" [ref=e1285] [cursor=pointer]
+      - paragraph [ref=e1286]: 图中仅保留构成依赖主干的连线；其余关系在上表中逐项保留。接口方法仅摘录原图中的主要方法。
+    - generic [ref=e1287]:
+      - generic [ref=e1288]:
+        - generic [ref=e1289]:
+          - text: 16 / 20
+          - heading "Agent 协作 · 领域对象" [level=2] [ref=e1290]
+        - generic [ref=e1291]: DOMAIN MODEL
+      - paragraph [ref=e1292]: 内部子任务共事务建立；外部任务沿原创建键恢复，父任务结束不抹掉未结额度。
+      - img "Agent 协作 · 领域对象 Agent 协作 · 领域对象：内部子任务共事务建立；外部任务沿原创建键恢复，父任务结束不抹掉未结额度。图中显示主干关系，全部 7 条关系与条件见下方对照表。" [ref=e1294]:
+        - generic [ref=e1296]:
+          - generic [ref=e1299]: DOMAIN OBJECT
+          - generic [ref=e1300]: Task
+          - generic [ref=e1301]: Orchestrator
+          - generic [ref=e1302]: "task_id: ID"
+          - generic [ref=e1303]: "orchestrator_id: ID"
+          - generic [ref=e1304]: "revision: Revision"
+        - generic [ref=e1305]:
+          - generic [ref=e1308]: DOMAIN OBJECT
+          - generic [ref=e1309]: Delegation
+          - generic [ref=e1310]: Collaboration / 父 Orchestrator
+          - generic [ref=e1311]: "delegation_id: ID"
+          - generic [ref=e1312]: "parent_task_id: ID"
+          - generic [ref=e1313]: "/phase: Enum {readOnly}"
+        - generic [ref=e1314]:
+          - generic [ref=e1317]: DOMAIN OBJECT
+          - generic [ref=e1318]: AgentBinding
+          - generic [ref=e1319]: Collaboration
+          - generic [ref=e1320]: "agent_ref: ComponentRef"
+          - generic [ref=e1321]: "adapter_ref: ComponentRef"
+          - generic [ref=e1322]: "endpoint_id: ID"
+        - generic [ref=e1323]:
+          - generic [ref=e1326]: DOMAIN OBJECT
+          - generic [ref=e1327]: AgentDescriptor
+          - generic [ref=e1328]: Collaboration / 安装配置方
+          - generic [ref=e1329]: "agent_id: ID"
+          - generic [ref=e1330]: "version: Version"
+          - generic [ref=e1331]: "digest: Digest"
+        - generic [ref=e1332]:
+          - generic [ref=e1335]: DOMAIN OBJECT
+          - generic [ref=e1336]: InternalChildLink
+          - generic [ref=e1337]: Collaboration / 父 Orchestrator
+          - generic [ref=e1338]: "delegation_id: ID"
+          - generic [ref=e1339]: "child_task_id: ID"
+          - generic [ref=e1340]: "父任务: Task ID"
+        - generic [ref=e1341]:
+          - generic [ref=e1344]: DOMAIN OBJECT
+          - generic [ref=e1345]: ExternalTaskLink
+          - generic [ref=e1346]: Collaboration / 父 Orchestrator
+          - generic [ref=e1347]: "delegation_id: ID"
+          - generic [ref=e1348]: "endpoint_id: ID"
+          - generic [ref=e1349]: "creation_key: ID"
+        - generic [ref=e1350]:
+          - generic [ref=e1353]: DOMAIN OBJECT
+          - generic [ref=e1354]: RuntimeBudgetAllocation
+          - generic [ref=e1355]: Orchestrator / 父预算 owner
+          - generic [ref=e1356]: "allocation_id: ID"
+          - generic [ref=e1357]: "receiver_id: ID"
+          - generic [ref=e1358]: "revision: Revision"
+        - generic [ref=e1359]: LEGEND
+        - generic [ref=e1360]: 实线：领域关联
+        - generic [ref=e1361]: 多重性和条件见下表
+        - generic [ref=e1362]: 跨 owner 引用不表示共同事务
+      - paragraph [ref=e1363]:
+        - link "UML 导读" [ref=e1364] [cursor=pointer]:
+          - /url: ../uml-models.md#collaboration
+        - link "模块契约" [ref=e1365] [cursor=pointer]:
+          - /url: ../collaboration/README.md
+        - link "实现职责" [ref=e1366] [cursor=pointer]:
+          - /url: ../collaboration/implementation.md
+        - link "可编辑原图" [ref=e1367] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e1368]:
+        - generic "全部关系与条件（7 条；图中主干 6 条）" [ref=e1369] [cursor=pointer]
+      - paragraph [ref=e1370]: /phase 为同一修订事实的只读摘要；closed 须有持久 Closure。图中属性为辨识用节选；完整字段、值对象边界及异常责任以链接中的同版正文与 Schema 为准。实线表示关联，不表示外键、共同事务或级联删除。
+    - generic [ref=e1371]:
+      - generic [ref=e1372]:
+        - generic [ref=e1373]:
+          - text: 17 / 20
+          - heading "观测、评测与改进 · 组件与接口" [level=2] [ref=e1374]
+        - generic [ref=e1375]: COMPONENT UML
+      - paragraph [ref=e1376]: 不可变报告、当前适用性与批准分别保存；发布逐目标核对真实就绪。
+      - img "观测、评测与改进 · 组件与接口 观测、评测与改进 · 组件与接口：不可变报告、当前适用性与批准分别保存；发布逐目标核对真实就绪。图中显示主干关系，全部 11 条关系与条件见下方对照表。" [ref=e1378]:
+        - generic [ref=e1382]:
+          - generic [ref=e1385]: INTERFACE
+          - generic [ref=e1386]: Evaluation API（主链摘录）
+          - generic [ref=e1387]: evaluation.plan_create
+          - generic [ref=e1388]: evaluation.run
+          - generic [ref=e1389]: evaluation.feedback_open
+        - generic [ref=e1390]:
+          - generic [ref=e1393]: COMPONENT
+          - generic [ref=e1394]: facade · CandidateRegistry
+          - generic [ref=e1395]: DatasetRegistry · PlanService
+        - generic [ref=e1396]:
+          - generic [ref=e1399]: COMPONENT
+          - generic [ref=e1400]: RunCoordinator · / EnvironmentAdapter
+        - generic [ref=e1401]:
+          - generic [ref=e1404]: COMPONENT
+          - generic [ref=e1405]: ReportSealer
+        - generic [ref=e1406]:
+          - generic [ref=e1409]: COMPONENT
+          - generic [ref=e1410]: ExposureLedger · / ApprovalOwner
+        - generic [ref=e1411]:
+          - generic [ref=e1414]: COMPONENT
+          - generic [ref=e1415]: RolloutWorker
+        - generic [ref=e1416]:
+          - generic [ref=e1419]: COMPONENT
+          - generic [ref=e1420]: 领域 repositories · jobs
+        - generic [ref=e1421]:
+          - generic [ref=e1424]: INTERFACE
+          - generic [ref=e1425]: 隔离环境与独立判定器 port
+        - generic [ref=e1426]:
+          - generic [ref=e1429]: INTERFACE
+          - generic [ref=e1430]: Extensions API（发布依赖）
+          - generic [ref=e1431]: extensions.activate
+          - generic [ref=e1432]: extensions.read
+          - generic [ref=e1433]: extensions.deactivate
+        - generic [ref=e1434]: LEGEND
+        - generic [ref=e1435]: 虚线开放箭头：依赖
+        - generic [ref=e1436]: 空心三角：提供接口
+        - generic [ref=e1437]: 其余依赖见下表
+      - paragraph [ref=e1438]:
+        - link "UML 导读" [ref=e1439] [cursor=pointer]:
+          - /url: ../uml-models.md#evaluation
+        - link "模块契约" [ref=e1440] [cursor=pointer]:
+          - /url: ../evaluation/README.md
+        - link "实现职责" [ref=e1441] [cursor=pointer]:
+          - /url: ../evaluation/implementation.md
+        - link "可编辑原图" [ref=e1442] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e1443]:
+        - generic "全部关系与条件（11 条；图中主干 8 条）" [ref=e1444] [cursor=pointer]
+      - paragraph [ref=e1445]: 图中仅保留构成依赖主干的连线；其余关系在上表中逐项保留。接口方法仅摘录原图中的主要方法。
+    - generic [ref=e1446]:
+      - generic [ref=e1447]:
+        - generic [ref=e1448]:
+          - text: 18 / 20
+          - heading "观测、评测与改进 · 领域对象" [level=2] [ref=e1449]
+        - generic [ref=e1450]: DOMAIN MODEL
+      - paragraph [ref=e1451]: 不可变报告、当前适用性与批准分别保存；发布逐目标核对真实就绪。
+      - img "观测、评测与改进 · 领域对象 观测、评测与改进 · 领域对象：不可变报告、当前适用性与批准分别保存；发布逐目标核对真实就绪。图中显示主干关系，全部 8 条关系与条件见下方对照表。" [ref=e1453]:
+        - generic [ref=e1455]:
+          - generic [ref=e1458]: DOMAIN OBJECT
+          - generic [ref=e1459]: EvaluationPlan
+          - generic [ref=e1460]: Evaluation
+          - generic [ref=e1461]: "plan_id: ID"
+          - generic [ref=e1462]: "digest: Digest"
+          - generic [ref=e1463]: "purpose: Enum"
+        - generic [ref=e1464]:
+          - generic [ref=e1467]: DOMAIN OBJECT
+          - generic [ref=e1468]: EvaluationRunRecord
+          - generic [ref=e1469]: Evaluation
+          - generic [ref=e1470]: "run_id: ID"
+          - generic [ref=e1471]: "plan_id: ID {unique}"
+          - generic [ref=e1472]: "cancel_requested: Boolean"
+        - generic [ref=e1473]:
+          - generic [ref=e1476]: DOMAIN OBJECT
+          - generic [ref=e1477]: EvaluationReport
+          - generic [ref=e1478]: Evaluation
+          - generic [ref=e1479]: "report_id: ID"
+          - generic [ref=e1480]: "digest: Digest"
+          - generic [ref=e1481]: "evidence_class: Enum"
+        - generic [ref=e1482]:
+          - generic [ref=e1485]: DOMAIN OBJECT
+          - generic [ref=e1486]: PlanEligibility
+          - generic [ref=e1487]: Evaluation
+          - generic [ref=e1488]: "plan_id: ID"
+          - generic [ref=e1489]: "revision: Revision"
+          - generic [ref=e1490]: "status: eligible | ineligible"
+        - generic [ref=e1491]:
+          - generic [ref=e1494]: DOMAIN OBJECT
+          - generic [ref=e1495]: FeedbackExposure
+          - generic [ref=e1496]: Evaluation
+          - generic [ref=e1497]: "exposure_id: ID"
+          - generic [ref=e1498]: "partition_id: ID"
+          - generic [ref=e1499]: "source_group_ids: ID[1..1000]"
+        - generic [ref=e1500]:
+          - generic [ref=e1503]: DOMAIN OBJECT
+          - generic [ref=e1504]: ReleaseApproval
+          - generic [ref=e1505]: Evaluation / 批准 owner
+          - generic [ref=e1506]: "approval_id: ID"
+          - generic [ref=e1507]: "rollback_approval_ref: ObjectRef?"
+          - generic [ref=e1508]: "state: active | revoked | expired"
+        - generic [ref=e1509]:
+          - generic [ref=e1512]: DOMAIN OBJECT
+          - generic [ref=e1513]: Activation
+          - generic [ref=e1514]: Extensions / 目标宿主
+          - generic [ref=e1515]: "activation_id: ID"
+          - generic [ref=e1516]: "target_id: ID"
+          - generic [ref=e1517]: "phase: Enum"
+        - generic [ref=e1518]: LEGEND
+        - generic [ref=e1519]: 实线：领域关联
+        - generic [ref=e1520]: 多重性和条件见下表
+        - generic [ref=e1521]: 跨 owner 引用不表示共同事务
+      - paragraph [ref=e1522]:
+        - link "UML 导读" [ref=e1523] [cursor=pointer]:
+          - /url: ../uml-models.md#evaluation
+        - link "模块契约" [ref=e1524] [cursor=pointer]:
+          - /url: ../evaluation/README.md
+        - link "实现职责" [ref=e1525] [cursor=pointer]:
+          - /url: ../evaluation/implementation.md
+        - link "可编辑原图" [ref=e1526] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e1527]:
+        - generic "全部关系与条件（8 条；图中主干 6 条）" [ref=e1528] [cursor=pointer]
+      - paragraph [ref=e1529]: 回退使用新的 Activation 和独立旧版批准；旧批准的锁、目标、期限及证据当前有效才恢复，撤回新版不撤回旧批准。图中属性为辨识用节选；完整字段、值对象边界及异常责任以链接中的同版正文与 Schema 为准。实线表示关联，不表示外键、共同事务或级联删除。
+    - generic [ref=e1530]:
+      - generic [ref=e1531]:
+        - generic [ref=e1532]:
+          - text: 19 / 20
+          - heading "扩展与宿主 · 组件与接口" [level=2] [ref=e1533]
+        - generic [ref=e1534]: COMPONENT UML
+      - paragraph [ref=e1535]: 安装锁定清单固定实现与配置，Activation 保留历史决定；当前 Binding 与实例就绪另行核验。
+      - img "扩展与宿主 · 组件与接口 扩展与宿主 · 组件与接口：安装锁定清单固定实现与配置，Activation 保留历史决定；当前 Binding 与实例就绪另行核验。图中显示主干关系，全部 10 条关系与条件见下方对照表。" [ref=e1537]:
+        - generic [ref=e1543]:
+          - generic [ref=e1546]: INTERFACE
+          - generic [ref=e1547]: Extensions API
+          - generic [ref=e1548]: extensions.prepare
+          - generic [ref=e1549]: extensions.activate
+          - generic [ref=e1550]: extensions.deactivate
+        - generic [ref=e1551]:
+          - generic [ref=e1554]: COMPONENT
+          - generic [ref=e1555]: extensions · facade
+          - generic [ref=e1556]: LifecycleManager
+        - generic [ref=e1557]:
+          - generic [ref=e1560]: COMPONENT
+          - generic [ref=e1561]: PackageVerifier · / ArtifactReader
+        - generic [ref=e1562]:
+          - generic [ref=e1565]: COMPONENT
+          - generic [ref=e1566]: LockStore · 宿主 / repositories
+        - generic [ref=e1567]:
+          - generic [ref=e1570]: COMPONENT
+          - generic [ref=e1571]: ReferenceCollector
+        - generic [ref=e1572]:
+          - generic [ref=e1575]: COMPONENT
+          - generic [ref=e1576]: BindingRouter
+        - generic [ref=e1577]:
+          - generic [ref=e1580]: COMPONENT
+          - generic [ref=e1581]: ApprovalClient
+        - generic [ref=e1582]:
+          - generic [ref=e1585]: INTERFACE
+          - generic [ref=e1586]: 宿主内容 port
+        - generic [ref=e1587]:
+          - generic [ref=e1590]: INTERFACE
+          - generic [ref=e1591]: Evaluation · API（远端启动依据）
+          - generic [ref=e1592]: evaluation.approval_check
+          - generic [ref=e1593]: evaluation.approval_lease
+        - generic [ref=e1594]: LEGEND
+        - generic [ref=e1595]: 虚线开放箭头：依赖
+        - generic [ref=e1596]: 空心三角：提供接口
+        - generic [ref=e1597]: 其余依赖见下表
+      - paragraph [ref=e1598]:
+        - link "UML 导读" [ref=e1599] [cursor=pointer]:
+          - /url: ../uml-models.md#extensions
+        - link "模块契约" [ref=e1600] [cursor=pointer]:
+          - /url: ../extensions/README.md
+        - link "实现职责" [ref=e1601] [cursor=pointer]:
+          - /url: ../extensions/implementation.md
+        - link "可编辑原图" [ref=e1602] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e1603]:
+        - generic "全部关系与条件（10 条；图中主干 8 条）" [ref=e1604] [cursor=pointer]
+      - paragraph [ref=e1605]: 图中仅保留构成依赖主干的连线；其余关系在上表中逐项保留。接口方法仅摘录原图中的主要方法。
+    - generic [ref=e1606]:
+      - generic [ref=e1607]:
+        - generic [ref=e1608]:
+          - text: 20 / 20
+          - heading "扩展与宿主 · 领域对象" [level=2] [ref=e1609]
+        - generic [ref=e1610]: DOMAIN MODEL
+      - paragraph [ref=e1611]: 安装锁定清单固定实现与配置，Activation 保留历史决定；当前 Binding 与实例就绪另行核验。
+      - img "扩展与宿主 · 领域对象 扩展与宿主 · 领域对象：安装锁定清单固定实现与配置，Activation 保留历史决定；当前 Binding 与实例就绪另行核验。图中显示主干关系，全部 7 条关系与条件见下方对照表。" [ref=e1613]:
+        - generic [ref=e1617]:
+          - generic [ref=e1620]: DOMAIN OBJECT
+          - generic [ref=e1621]: PackageManifest
+          - generic [ref=e1622]: Extensions / 制品校验
+          - generic [ref=e1623]: "package_id: ID"
+          - generic [ref=e1624]: "version: Version"
+          - generic [ref=e1625]: "digest: Digest"
+        - generic [ref=e1626]:
+          - generic [ref=e1629]: DOMAIN OBJECT
+          - generic [ref=e1630]: InstallLock
+          - generic [ref=e1631]: Extensions / 目标宿主
+          - generic [ref=e1632]: "lock_id: ID"
+          - generic [ref=e1633]: "manifest_digest: Digest"
+          - generic [ref=e1634]: "config_digest: Digest"
+        - generic [ref=e1635]:
+          - generic [ref=e1638]: DOMAIN OBJECT
+          - generic [ref=e1639]: Activation
+          - generic [ref=e1640]: Extensions / 目标宿主
+          - generic [ref=e1641]: "activation_id: ID"
+          - generic [ref=e1642]: "target_id: ID"
+          - generic [ref=e1643]: "phase: Enum"
+        - generic [ref=e1644]:
+          - generic [ref=e1647]: DOMAIN OBJECT
+          - generic [ref=e1648]: ActiveBinding
+          - generic [ref=e1649]: Extensions / 目标宿主
+          - generic [ref=e1650]: "target_id: ID"
+          - generic [ref=e1651]: "port: Port"
+          - generic [ref=e1652]: "generation: Revision"
+        - generic [ref=e1653]:
+          - generic [ref=e1656]: DOMAIN OBJECT
+          - generic [ref=e1657]: InstanceReadiness
+          - generic [ref=e1658]: Extensions / 当前实例
+          - generic [ref=e1659]: "instance_id: ID"
+          - generic [ref=e1660]: "ready: Boolean"
+          - generic [ref=e1661]: "observed_at: Timestamp"
+        - generic [ref=e1662]:
+          - generic [ref=e1665]: DOMAIN OBJECT
+          - generic [ref=e1666]: ReleaseApproval
+          - generic [ref=e1667]: Evaluation / 批准 owner
+          - generic [ref=e1668]: "approval_id: ID"
+          - generic [ref=e1669]: "rollback_approval_ref: ObjectRef?"
+          - generic [ref=e1670]: "state: active | revoked | expired"
+        - generic [ref=e1671]:
+          - generic [ref=e1674]: DOMAIN OBJECT
+          - generic [ref=e1675]: LockReference
+          - generic [ref=e1676]: Extensions 索引 · 跨 owner 持有事实
+          - generic [ref=e1677]: "lock_id: ID"
+          - generic [ref=e1678]: "owner_kind: OwnerKind"
+          - generic [ref=e1679]: "owner_id: ID"
+        - generic [ref=e1680]: LEGEND
+        - generic [ref=e1681]: 实线：领域关联
+        - generic [ref=e1682]: 多重性和条件见下表
+        - generic [ref=e1683]: 跨 owner 引用不表示共同事务
+      - paragraph [ref=e1684]:
+        - link "UML 导读" [ref=e1685] [cursor=pointer]:
+          - /url: ../uml-models.md#extensions
+        - link "模块契约" [ref=e1686] [cursor=pointer]:
+          - /url: ../extensions/README.md
+        - link "实现职责" [ref=e1687] [cursor=pointer]:
+          - /url: ../extensions/implementation.md
+        - link "可编辑原图" [ref=e1688] [cursor=pointer]:
+          - /url: uml-models.drawio
+      - group [ref=e1689]:
+        - generic "全部关系与条件（7 条；图中主干 6 条）" [ref=e1690] [cursor=pointer]
+      - paragraph [ref=e1691]: 回退使用新的 Activation 和独立旧版批准；旧批准的锁、目标、期限及证据当前有效才恢复，撤回新版不撤回旧批准。图中属性为辨识用节选；完整字段、值对象边界及异常责任以链接中的同版正文与 Schema 为准。实线表示关联，不表示外键、共同事务或级联删除。
+    - paragraph [ref=e1693]:
+      - text: 来源：现行设计文档、
+      - link "系统全景源图" [ref=e1694] [cursor=pointer]:
+        - /url: system-panorama.drawio
+      - text: 与
+      - link "20 页 UML 源图" [ref=e1695] [cursor=pointer]:
+        - /url: uml-models.drawio
+      - text: 。20 页节点均保留；关系共 174 条，全部列于各页表格，主干图线 141 条。静态图集不替代字段 Schema、状态机、时序及运行证据。

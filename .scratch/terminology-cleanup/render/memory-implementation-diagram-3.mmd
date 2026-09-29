@@ -1,0 +1,14 @@
+flowchart TB
+    E[ExtractionJob] -->|原 Orchestrator 结果生成| C[ExtractionCandidate]
+    C -->|唯一发布决定| M[Memory / MemoryRevision]
+    M -->|准确正文引用| O[ContentObject]
+    O -->|完整依赖边| S[源 ContentRef 与 Policy]
+    M -->|同事务追加| L[MemoryChange]
+    L -->|连续水位应用| I[派生索引]
+    L -->|固定变更序号与变化页| V[View 与 ACK]
+    M -->|冻结有限 ID 和修订| Q[QuerySet]
+    O -->|原 owner 登记| P[ContentCopy]
+    P -->|受控反向交付| R[Mirror 字节]
+    M -->|关闭先提交| X[禁用与删除记录 / 清理 jobs]
+    O -->|关闭先提交| X
+    X -->|传播、核对、物理清理| P

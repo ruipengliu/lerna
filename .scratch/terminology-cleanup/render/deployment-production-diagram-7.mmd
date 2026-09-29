@@ -1,0 +1,20 @@
+sequenceDiagram
+    participant C as 客户端／受信宿主
+    participant I as 身份与来源目录
+    participant G as 新网关
+    participant A as 原 Orchestrator 健康副本
+    participant D as 原权威库
+    C->>I: 重新认证；原目标遗失时查询已登记来源
+    Note over C,G: 只有保存或找回原负责方，才继续建链
+    C->>G: 按原逻辑服务建 WSS
+    G->>A: 放置映射与健康实例解析后建立内部绑定
+    A->>D: 登记当前绑定
+    A-->>G: 内部 Ready
+    G-->>C: 外部 Ready
+    C->>G: 查原 command_id／task_id
+    G->>A: 转交原逻辑服务
+    A->>D: 查原回执／Task 与当前披露权限
+    A-->>G: 原决定或明确缺口
+    G-->>C: 返回原决定或缺口
+    C->>G: 订阅；按游标续读或重建快照
+    G->>A: 转交原服务订阅

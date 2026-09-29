@@ -3,23 +3,23 @@
 [模块主线](README.md) · [任务编排器](../orchestrator/README.md) · [内容与清理](../memory/implementation.md)
 
 本实现核心使用 Go，提供 CLI 和 Web 两个适配器，共用 Surface、输入转交和请求消费契约。
-浏览器、CLI 和设备经 `/v1/connect` 的 WSS 双向长连接调用；HTTPS 保留发现、认证和大文件传输，精确线格式见[公共传输契约](../contracts/transport.md)。
-Surface 是可呈现的业务快照，Presentation 是某台设备是否打开它的意图；两者分别保存。
+浏览器、CLI 和设备经 `/v1/connect` 的 WSS 双向长连接调用；HTTPS 保留发现、认证和大文件传输，精确协议编码格式见[公共传输契约](../contracts/transport.md)。
+界面对象（Surface）保存版本化快照与请求引用；SurfaceSnapshot 是某一版本的界面快照，Presentation 保存某台设备的打开／关闭意图及已呈现修订。三个对象的状态分别记录。
 UI 可以显示已保存、处理中、已消费或拒绝，不能自行裁决任务成功或签发许可。
 本文定义参考组件和协议行为，浏览器与终端的运行验收仍待实现。
 
 <a id="module-shape"></a>
-## 1. 软件形状、内部分工与正常路径
+## 1. 模块结构、内部分工与正常路径
 
 用户为任务选择保存目录时，交互服务先固定回答、请求修订和唯一目标命令。
 Orchestrator 消费请求后保存目标参数及下一项工作；交互服务查询原命令取得结果，再更新可见快照。
 期间关闭页面只改变本端呈现，不取消任务或撤销已经消费的输入。
 
-交互模块由耐久交互服务与 CLI／Web 宿主适配器组成。SurfaceService 和 InputService 是服务 facade，
+交互模块由持久交互服务与 CLI／Web 宿主适配器组成。SurfaceService 和 InputService 是服务 facade，
 application 层执行快照投影、输入转交和状态比较；InteractionStore 将业务表、回执和 jobs 映射到宿主数据库。
 PresentationStore 封装设备呈现意图。Renderer 和 TrustedConfirmationHost 是宿主侧组件，
 通过既有内容、请求与业务 owner port 工作；它们不是新增的任务或授权裁决层。
-本机通过 Go 接口同进程装配，云端独立进程间使用 gRPC；可以分开部署连接层和服务，但协议选择不要求拆分模块或共库事务，领域身份及事务边界保持一致。
+本机通过 Go 接口同进程装配，云端独立进程间使用 gRPC；可以分开部署连接层和服务，但协议选择不要求拆分模块或共库事务，领域对象标识及事务边界保持一致。
 组件格式、请求引用覆盖和转交状态比较是同包纯规则函数；application 层取得当前事实后调用，
 再由 store 的条件事务固定结果，规则函数本身不负责网络或持久化。
 
@@ -72,7 +72,7 @@ flowchart TB
 ```
 
 两图实线为同步依赖，虚线为从原数据库领取持久工作；store 仍在同一权威库的短事务中保存业务记录、回执和 jobs。
-外部调用不位于交互数据库事务内。Renderer 与 TrustedConfirmationHost 属于 CLI／Web 宿主，其余组件属于耐久交互服务；两图只分开观察调用和恢复依赖。
+外部调用不位于交互数据库事务内。Renderer 与 TrustedConfirmationHost 属于 CLI／Web 宿主，其余组件属于持久交互服务；两图只分开观察调用和恢复依赖。
 不同用户动作可以由同一个宿主进程调用上述组件，逻辑分工不等于独立微服务。
 快照更新不反向获得业务裁决权。
 普通表单处理器只能接收自己登记的事件；授权确认使用独立受信入口。
@@ -95,37 +95,37 @@ flowchart TB
 
 WSS 网关把已认证的 Command、Query 和原回执查询交给原业务 owner；同连接返回结果并主动发送 Change。
 浏览器以同源 Secure、HttpOnly 会话 Cookie 握手，网关校验 Origin；CLI／设备以 bearer 凭据握手。
-连接认证不授予后续永久资格：每条消息都核对当前会话或端点代次及方法权限，推送和查询返回前也核对当前披露资格。
+连接认证不授予后续永久访问权限：每条消息都核对当前会话或端点代次及方法权限，推送和查询返回前也核对当前披露权限。
 网关只持有连接、路由和有限发送队列，不能将传输 ACK 或 ReplyAck 写成 InputRequest 已消费的业务事实。
 
 Change 只提示重新读取，可按 Surface 合并、重复或遗漏。重连先恢复原 input_id／command_id 的未结查询，再读取当前获准快照与本设备呈现意图。
-连接中断不撤销已提交命令；只有查原业务回执才能确认消费或拒绝。无耐久宿主的离线浏览器仍只能承诺本端待发送，不能显示“业务已消费”。
-设备侧的 Delivery、Reply 与 ReplyAck 沿原 delivery 和业务身份恢复，连接或网关更换不创建第二项责任；具体确认和保留规则由公共传输契约集中定义。
+连接中断不撤销已提交命令；只有查原业务回执才能确认消费或拒绝。无持久宿主的离线浏览器仍只能承诺本端待发送，不能显示“业务已消费”。
+设备侧的 Delivery、Reply 与 ReplyAck 沿原 delivery_id 和业务对象标识恢复，连接或网关更换不创建第二项责任；具体确认和保留规则由公共传输契约集中定义。
 
 <a id="reliable-work-integration"></a>
-### 1.2 公共框架接入：转交与消费的两个提交域
+### 1.2 公共框架接入：转交与消费的两个本地事务范围
 
-SurfaceService、InputService 复用[可靠接纳模板](../reliable-work.md#admission)，ProjectionWorker 和 DeliveryWorker 复用[有限工作循环](../reliable-work.md#claim)。InteractionStore 将原命令、快照／输入／事件及必要责任映射到同一交互提交域。实际 InputRequest 和 Confirmation 的消费仍由各自 consumer owner 在其业务事务决定；框架不把它们移到交互库，也不以转交完成裁决任务成功。
+SurfaceService、InputService 复用[可靠接纳模板](../reliable-work.md#admission)，ProjectionWorker 和 DeliveryWorker 复用[有限工作循环](../reliable-work.md#claim)。InteractionStore 将原命令、快照／输入／事件及必要责任映射到交互数据库的同一本地事务范围。实际 InputRequest 和 Confirmation 的消费仍由各自 consumer owner 在其业务事务决定；框架不把它们移到交互库，也不以转交完成裁决任务成功。
 
-InputService 用 `transaction.Within` 将 InputSubmission 或 ApplicationEvent、固定目标 logical_service_id、完整原目标 Command、交互回执与 `jobs.Raise(tx)` 共同保存。该提交只确认输入或事件已耐久接纳；业务目标的原回执由 DeliveryWorker 在事务外取得，再用另一短事务保存消费投影。Surface 更新与变化提示共事务，Presentation 的打开／关闭独立保存。原目标暂不可达不影响交互服务保存本设备呈现意图，也不能让它先报业务已消费。
+InputService 用 `transaction.Within` 将 InputSubmission 或 ApplicationEvent、固定目标 logical_service_id、完整原目标 Command、交互回执与 `jobs.Raise(tx)` 共同保存。该提交只确认输入或事件已持久接纳；业务目标的原回执由 DeliveryWorker 在事务外取得，再用另一短事务保存消费投影。Surface 更新与变化提示共事务，Presentation 的打开／关闭独立保存。原目标暂不可达不影响交互服务保存本设备呈现意图，也不能让它先报业务已消费。
 
-下表槽键带认证 tenant 和交互 owner；Surface、独立应用事件可以没有 task_ref。固定 target_command_id 是目标业务身份，job_id 是宿主工作身份，两者不能相互替代。
+下表作业去重键带认证 tenant 和交互 owner；Surface、独立应用事件可以没有 task_ref。固定 target_command_id 是目标命令标识，job_id 是宿主作业标识，两者不能相互替代。
 
-| 责任槽业务键与处理器 | 固定身份及事务参与者 | 完成、等待与恢复判据 |
+| 作业去重键与处理器 | 固定标识及事务参与者 | 完成、等待与恢复判据 |
 | --- | --- | --- |
 | `input_delivery / input_id`：DeliveryWorker | input_submissions、原目标服务／Command、原请求及准确回答／预览引用 | 撤回在发送前胜出，或已保存原业务 applied／rejected 回执才结束；sending 后未知保持原查询，不换输入或目标命令 |
 | `event_delivery / event_id`：DeliveryWorker | application_events、固定 app_binding／处理器、原目标 Command | 只从原处理器查询消费决定；超时不能改派新处理器；原业务无查询能力时不开放有副作用事件 |
 | `projection / surface_id`：ProjectionWorker | Surface、surface_projection 的已应用／待覆盖来源修订、投影停止依据、内容／请求引用及变化提示 | 关联存续期间持续核对原来源，当前已追平仍保存有限 waiting；只发布完整投影，旧版本不覆盖新快照；获准清理结束投影且残留责任已交接后才请求 done |
 
-表中 delivery_jobs 与投影槽由逻辑 JobStore 承载，物理共表或分表保持现有布局。输入发送前，领域处理器先锁原输入，再锁槽，在同一事务核验 `jobs.Guard` 并裁决 queued→sending 与 withdrawn；Claim 本身不完成这项业务竞争。远端调用结束后按同一锁序归并事实并调用 `jobs.Finish`，使用[公共领取与责任版本规则](../reliable-work.md#completion)。若发送已经可能发生，租约接替或停止信号都不证明未消费，接替者仍查原业务命令。真正的迟到消费回执可沿独立认证的归并入口保存，但失效领取不能据此结束槽或覆盖新责任。
+表中 delivery_jobs 与投影作业由逻辑 JobStore 承载，物理共表或分表保持现有布局。输入发送前，领域处理器先锁原输入，再锁作业记录，在同一事务核验 `jobs.Guard` 并裁决 queued→sending 与 withdrawn；Claim 本身不完成这项业务竞争。远端调用结束后按同一锁序归并事实并调用 `jobs.Finish`，使用[公共领取与作业版本规则](../reliable-work.md#completion)。若发送已经可能发生，租约接替或停止信号都不证明未消费，接替者仍查原业务命令。真正的迟到消费回执可沿独立认证的归并入口保存，但失效领取不能据此结束作业或覆盖新责任。
 
-任务 Surface 创建或受信登记投影关联时，同事务建立 projection 槽。只要该投影仍提供页面，追平当前来源后仍以有限 waiting 继续核对原 Orchestrator；Task 终态、本设备关窗或一次快照到期都不自动结束这项责任。Surface 按保留策略获准清理时，同事务保存投影停止依据，并交接未结输入、内容及清理责任，之后才请求完成；task_ref 始终固定，不新增解除或改绑它的公开方法。
+任务 Surface 创建或受信登记投影关联时，同事务建立 projection 作业记录。只要该投影仍提供页面，追平当前来源后仍以有限 waiting 继续核对原 Orchestrator；Task 终态、本设备关窗或一次快照到期都不自动结束这项责任。Surface 按保留策略获准清理时，同事务保存投影停止依据，并交接未结输入、内容及清理责任，之后才请求完成；task_ref 始终固定，不新增解除或改绑它的公开方法。
 
-Surface 源核对发现尚未覆盖的新修订时，ProjectionWorker 保存经原 owner 核实的 `required_source_revision`，并与同槽新责任共同提交；若同事务已完成该修订的快照发布，则不再为已覆盖事实增加工作。`last_source_revision` 只随完整快照发布前移，保存待覆盖修订不能冒充页面已更新。可丢 Change 通过公共 Hint 提前已有未结槽的 due_at，不把每条通知解释成新业务责任；完全没有提示时原定期核对仍会读取新修订。旧工作完成时若已有新责任，保留原槽可领取及更早时间。核对间隔和退避上界按页面刷新目标在部署前冻结，额外查询及回写计入活跃 Surface 容量；不为每条连接各建槽。页游标、Presentation 修订、业务请求修订与 work_revision 各有含义，不能相互充当已经处理的证明。
+Surface 源核对发现尚未覆盖的新修订时，ProjectionWorker 保存经原 owner 核实的 `required_source_revision`，并与同一作业记录中的新增工作共同提交；若同事务已完成该修订的快照发布，则不再为已覆盖事实增加工作。`last_source_revision` 只随完整快照发布前移，保存待覆盖修订不能冒充页面已更新。可丢 Change 通过公共 Hint 提前尚未结束的作业记录的 due_at，不把每条通知解释成新业务责任；完全没有提示时原定期核对仍会读取新修订。旧工作完成时若已有新责任，保留原作业的可领取状态和较早的执行时间。核对间隔和退避上界按页面刷新目标在部署前冻结，额外查询及回写计入活跃 Surface 容量；不为每条连接各创建作业记录。页游标、Presentation 修订、业务请求修订与 work_revision 各有含义，不能相互充当已经处理的证明。
 
-`surface_read`、request_read、input_read、列表与聚合分页保持查询；聚合游标的条件保存只保证续页一致，不新增后台业务队列。surface_create／update、present 等可同步保存决定及必要提示，不强制每次建 job。surface_notifications 是可合并的变化提示，丢提示后仍能读当前快照；它既不是原输入转交责任，也不是设备传输的 Delivery／Reply 账本。后者按[传输契约](../contracts/transport.md)保存自己的确认与恢复身份，ReplyAck 不结束尚无业务决定的 input_delivery 槽。
+`surface_read`、request_read、input_read、列表与聚合分页保持查询；聚合游标的条件保存只保证续页一致，不新增后台业务队列。surface_create／update、present 等可同步保存决定及必要提示，不强制每次建 job。surface_notifications 是可合并的变化提示，丢提示后仍能读当前快照；它既不是原输入转交责任，也不是设备传输的 Delivery／Reply 账本。后者按[传输契约](../contracts/transport.md)保存自己的确认与恢复所用标识，ReplyAck 不结束尚无业务决定的 input_delivery 作业。
 
-共同[观测](../reliable-work.md#observability)分别记录本地接纳、目标命令未决和快照投影等待；业务消费耗时不混入页面实际呈现或本人理解的指标。工作池为原输入核对、撤回和管理控制保留有限容量，普通快照提示与慢页面不能占尽这些槽。无耐久宿主的浏览器不因采用相同模板接口就取得可恢复接纳能力。
+共同[观测](../reliable-work.md#observability)分别记录本地接纳、目标命令未决和快照投影等待；业务消费耗时不混入页面实际呈现或本人理解的指标。工作池为原输入核对、撤回和管理控制保留有限容量，普通快照提示与慢页面不能占尽这些保留容量。无持久宿主的浏览器不因采用相同模板接口就取得可恢复接纳能力。
 
 ## 2. 严格声明式组件
 
@@ -139,7 +139,7 @@ blocks 是有界有序组件集合，每项 block_id 在本快照内唯一。
 | text | block_id、content_ref | format 为 plain 或 markdown；Markdown 禁用原始 HTML 和脚本 |
 | media | block_id、content_ref、alt | display 为 image／audio／video／file，不能据文件扩展名提升权限 |
 | table | block_id、columns、rows | 列和单元格为有限纯文本；不执行公式或内嵌事件 |
-| input | block_id、request_ref、label | 字段从准确请求修订的 schema 取得；只提交原请求，按钮资格由请求依赖决定 |
+| input | block_id、request_ref、label | 字段从准确请求修订的 schema 取得；只提交原请求，按钮是否启用由请求依赖决定 |
 | action | block_id、request_ref、action_id、label | action_id 必须来自业务请求 allowed_actions |
 | status | block_id、code、label | code 为 queued、working、waiting、done、error 或 unavailable；只是呈现 |
 
@@ -169,7 +169,7 @@ request_read 是只读 Query，输入 request_ref，输出 request 与 gaps；�
 业务负责端复核认证主体、当前披露与请求版本，返回 question_ref、schema、deadline、required_content_refs、allowed_actions 和 state。
 state 为 open、consumed、expired 或 superseded；consumed 同时返回获准的 consumed_by。
 acceptance 必须有 task_ref、goal_revision、candidate_ref 及匹配的 candidate_hash；application 不绑定任务。
-读取请求不授予其正文或预览永久资格，创建仍由 Orchestrator 或已登记应用处理器内部完成。
+读取请求不授予其正文或预览的永久使用许可，创建仍由 Orchestrator 或已登记应用处理器内部完成。
 Surface.request_refs 必须覆盖 input/action 引用；同请求在页面多处展示仍是一次消费。
 请求负责端保存 required_content_refs、deadline、allowed_actions 和当前消费状态。
 acceptance 另绑定准确候选、goal_revision 和受信用户决定，不能借普通 application 事件改义。
@@ -186,25 +186,25 @@ seen_revision 只记录曾显示哪个修订，不能证明用户读完、理解
 | --- | --- | --- |
 | surfaces | tenant、surface_id 唯一；owner、app_binding、task_ref 创建后固定 | 版本化快照 |
 | surface_revisions | surface_id、revision 唯一；完整快照摘要不可变 | 恢复当前呈现 |
-| surface_projection | surface_id 唯一；last_source_revision、required_source_revision 各自单调；获准清理时保存投影停止依据 | 前者是已发布快照覆盖的来源修订，后者是已核实且须覆盖的修订；未覆盖要求与 job 责任共同保存；存续投影始终保留周期核对槽 |
+| surface_projection | surface_id 唯一；last_source_revision、required_source_revision 各自单调；获准清理时保存投影停止依据 | 前者是已发布快照覆盖的来源修订，后者是已核实且须覆盖的修订；未覆盖要求与 job 责任共同保存；存续投影始终保留周期核对作业 |
 | presentations | surface_id、endpoint_id 唯一；intent_revision 单调 | 本设备打开／关闭意图 |
 | input_submissions | input_id 唯一；回答、请求、预览、目标服务及完整原 Command 固定 | 输入转交状态；对外 InputSubmission 只披露 target_command_id，worker 从本记录恢复原目标 |
 | application_events | event_id 唯一；应用绑定、事件类型、负载、目标服务及完整原 Command 固定 | 独立应用的可靠转交 |
-| delivery_jobs | 工作种类与原 input_id／event_id 唯一槽；job_id、due_at、lease_epoch、work_revision 映射公共 JobStore | 原业务命令重投与查询；槽完成按原消费或发送前撤回事实，不以传输确认代替 |
-| projection 的 JobStore 槽 | owner、surface_id 与工作种类唯一；领取与责任版本独立 | 原来源核对和完整投影；领域事实更新与同槽新责任共同提交 |
+| delivery_jobs | 工作种类与原 input_id／event_id 唯一定位一条作业记录；job_id、due_at、lease_epoch、work_revision 映射公共 JobStore | 原业务命令重投与查询；作业完成按原消费或发送前撤回事实，不以传输确认代替 |
+| projection 的 JobStore 记录 | owner、surface_id 与工作种类唯一；领取与作业版本独立 | 原来源核对和完整投影；领域事实更新与同一作业记录中的新增工作共同提交 |
 | surface_notifications | surface_id、revision 唯一提示责任 | 提交后通知，可重复唤醒 |
 | surface_queries | query_id、主体、过滤摘要及有限集合 | 目录稳定分页 |
-| aggregate_task_queries | 查询身份、过滤摘要、来源目录版本、各来源范围代次／上界／游标、未输出候选与期限 | 应用跨来源列表的短期续页状态，不保存第二份 Task 权威 |
-| submission_closures | 输入／事件身份、目标 owner、command_id 和原决定摘要 | 长期最小关闭依据 |
+| aggregate_task_queries | 查询标识、过滤摘要、来源目录版本、各来源授权范围版本／上界／游标、未输出候选与期限 | 应用跨来源列表的短期续页状态，不保存第二份 Task 权威 |
+| submission_closures | 输入／事件标识、目标 owner、command_id 和原决定摘要 | 长期最小输入去重记录 |
 
 正文、截图和完整回答按各自用途保留，不因输入去重要求无限保存。
-最小关闭索引不保留正文，只防止原身份被重新解释或已消费输入复活。
+最小输入去重记录保留 input_id／event_id、目标命令、请求摘要及原决定摘要，不保留正文，用于阻止重复消费。完整回执清理后，同输入重投或查询按共同契约返回 `gone`，不同输入仍返回 `idempotency_conflict`。
 Surface 清理不得删除仍未收束输入的目标映射和转交责任。
 
 <a id="data-flow"></a>
 ### 3.1 核心对象关系与生命周期
 
-Surface 聚合可见快照，InputRequest 属于实际业务 owner；页面只能引用该请求。
+Surface 保存版本化界面快照，InputRequest 属于实际业务 owner；页面只能引用该请求。
 InputSubmission 表示一次可靠转交，最终业务回执才说明原请求是否消费。
 Presentation 与这些业务对象并列存在，设备关窗不会删除请求或停止转交。
 
@@ -215,7 +215,7 @@ flowchart LR
     S -->|请求引用| R[业务 owner 的 InputRequest]
     S -->|本设备独立关联| P[Presentation]
     R -->|准确版本及一次回答| I[InputSubmission]
-    I -->|固定身份与负载| T[原目标业务 Command]
+    I -->|固定命令标识与负载| T[原目标业务 Command]
     T -->|业务事务消费| B[业务回执与后续工作]
     B -->|查询原决定后归并| I
     I -->|正文到期后保留| X[SubmissionClosure]
@@ -223,14 +223,14 @@ flowchart LR
     N -->|提示重读，不携带裁决| U[Renderer]
 ```
 
-图中关联不授予读取资格。Renderer 每次取得当前可披露快照和请求依赖后，才读取内容并启用相应输入。
+图中关联不授予读取许可。Renderer 每次取得当前可披露快照和请求依赖后，才读取内容并启用相应输入。
 
 | 对象 | 创建与持久化 | 传递与消费 | 归并与清理 |
 | --- | --- | --- | --- |
 | Surface／Revision | 受信投影器或固定应用创建，更新保存完整快照与来源修订 | Renderer 当前读取；变化通知只提示重读 | 清理旧正文和快照须遵循来源政策，保留未结输入必需的准确关联 |
 | Presentation | 每 endpoint 保存 open、意图修订和已呈现修订 | 本设备打开／关闭；不消费业务请求 | 可清理不再使用的设备偏好，但不能由此撤销业务效果 |
-| InputRequest | Orchestrator 或应用 owner 内部创建并保存 schema、期限及消费状态 | 交互宿主从实际 owner 读取准确版本；原业务方法一次消费 | 过期／替代关闭新输入；原消费与必要关闭依据仍归业务 owner |
-| InputSubmission／ApplicationEvent | 交互接纳事务固定原输入、负载、目标方法与 command_id | DeliveryWorker 沿原目标发送或查询，业务回执决定 applied／rejected | 正文按政策清理；未结责任保留，已结身份归并最小关闭索引 |
+| InputRequest | Orchestrator 或应用 owner 内部创建并保存 schema、期限及消费状态 | 交互宿主从实际 owner 读取准确版本；原业务方法一次消费 | 过期／替代关闭新输入；原消费、过期或替代记录仍归业务 owner |
+| InputSubmission／ApplicationEvent | 交互接纳事务固定原输入、负载、目标方法与 command_id | DeliveryWorker 沿原目标发送或查询，业务回执决定 applied／rejected | 正文按政策清理；未结责任保留，已结束输入的标识归入最小输入去重索引 |
 | Confirmation | 实际 consumer owner 保存规范意图和本人决定 | TrustedConfirmationHost 认证展示；原业务命令在 owner 事务消费 | 确认与业务事实归 owner；交互服务不持有可重复消费的批准副本 |
 
 ### 3.2 创建与更新
@@ -246,18 +246,18 @@ surface_update 携带 expected_revision 和完整新快照。
 
 投影工作者只从 Orchestrator 正式状态生成待处理、等待、结果和控制说明。
 ProjectionWorker 读取到旧源状态时不重写新快照；失败后重新读当前 Orchestrator，不拼接半份增量。
-若原快照尚未覆盖 required_source_revision，投影槽继续等待或领取；重新读取不可核验时不能因已有较旧完整快照而结束这项责任。已覆盖时也按第 1.2 节保留周期核对；只有获准清理已结束投影生命周期，且未结责任已持久交接，才能完成槽。
+若原快照尚未覆盖 required_source_revision，投影作业继续等待或领取；重新读取不可核验时不能因已有较旧完整快照而结束这项责任。已覆盖时也按第 1.2 节保留周期核对；只有获准清理已结束投影生命周期，且未结责任已持久交接，才能完成作业。
 输入消费回执与 Surface 更新可以异步，客户端通过原 input_id 查询确认业务是否生效。
 
 ### 3.3 读取与 not_modified
 
-surface_read 每次复核当前快照和内容披露资格。
+surface_read 每次复核当前快照和内容披露权限。
 known_revision 相同且当前获准呈现与请求依赖没有变化时，可返回 not_modified。
-权限或内容资格变化时，即使业务源修订未变，也返回 snapshot 或具体 gaps，不能让客户端永久保留旧正文。
+权限或内容可用状态变化时，即使业务源修订未变，也返回 snapshot 或具体 gaps，不能让客户端永久保留旧正文。
 服务端不得把 not_modified 当作延长缓存保留或使用期限的许可。
 
 Renderer 对内容到期设置本端失效时点；一旦到期或收到关闭通知，旧卡片停止新阅读并显示不可用。
-重新开放需要重新查询当前资格，不沿用当初下载成功的事实。
+重新开放需要重新核验内容状态与当前授权，不沿用当初下载成功的事实。
 浏览器截图、用户导出和终端滚屏的物理可收回能力按内容持有者声明报告，不声称可远程抹除用户已经看见的内容。
 
 ### 3.4 目录与设备发现
@@ -271,9 +271,9 @@ surface_list 对一个 owner 冻结有限 ID 集合，逐页返回当前获准�
 跨端任务目录先从身份权威读取已预登记来源，按[跨 Orchestrator 列表契约](README.md#cross-orchestrator-list)固定来源版本、合并排序和续页。部分端点失联不导致本地任务消失，返回 unreachable_endpoints／partial；目录换版、权限变化或不可达时不把旧页包装成全局完整清单。
 目录标题、预览和关联 task_id 均受最小披露要求，不能用知道 ID 绕过权限。
 
-跨来源聚合使用受信内部端口，不属于 `harness/1` 的新领域方法。身份端口 `read_user_sources(已认证 tenant_id, user_id)` 从同一提交视图返回 `{sources: [{orchestrator_id, disclosure_authority_ids}], directory_version}` 或明确不可用／不完整结果；聚合器从目录所列各授权权威读取该用户在该来源的披露范围修订，组成可比较的复合 token，失败时不把未知当成空集合。聚合器先为固定来源建立变化水位并缓冲，再分别读取 `task.list` 首屏，把各来源首屏的 `upper_bound`、原游标和尚未输出候选保存在共享的短期 aggregate_task_queries 中。客户端续页只持有不可伪造的查询引用；状态绑定 tenant、用户、过滤条件、来源及授权权威集合、目录版本、范围代次及不可延长期限，副本切换不依赖原进程内存。
+跨来源聚合使用受信内部端口，不属于 `harness/1` 的新领域方法。身份端口 `read_user_sources(已认证 tenant_id, user_id)` 从同一提交视图返回 `{sources: [{orchestrator_id, disclosure_authority_ids}], directory_version}` 或明确不可用／不完整结果；聚合器从目录所列各授权权威读取该用户在该来源的任务披露范围的授权修订，组成可比较的复合 token，失败时不把未知当成空集合。聚合器先为固定来源建立变化水位并缓冲，再分别读取 `task.list` 首屏，把各来源首屏的 `upper_bound`、原游标和尚未输出候选保存在共享的短期 aggregate_task_queries 中。客户端续页只持有不可伪造的查询引用；状态绑定 tenant、用户、过滤条件、来源及授权权威集合、目录版本、授权范围版本及不可延长期限，副本切换不依赖原进程内存。
 
-每次输出一个全局排序项前，聚合器须为每个未耗尽来源取得下一候选，空的本地页继续按原本地游标扫描；不能把未知来源的下一项排在已输出页之后。预取但未输出的候选留在聚合状态，不因本地游标已前进而跳过。同一聚合游标的重读返回同一页和后继游标；推进位置与保存该页结果条件提交，两个应用副本不能各自跳过一页。每页输出前后复核来源目录和范围代次，并处理首屏后连续收到的 Change：新 Task 排序键进入已输出段，或任一水位出现缺口时，旧聚合游标失效。单来源超时、查询预算耗尽、目录或资格不可核验时可返回带来源缺口的 partial 结果，但不给可宣称全局有序完整的续页游标；恢复后以新查询重取首屏。单来源 `task.list` 的 `upper_bound` 不作全局提交水位或权限证明。
+每次输出一个全局排序项前，聚合器须为每个未耗尽来源取得下一候选，空的本地页继续按原本地游标扫描；不能把未知来源的下一项排在已输出页之后。预取但未输出的候选留在聚合状态，不因本地游标已前进而跳过。同一聚合游标的重读返回同一页和后继游标；推进位置与保存该页结果条件提交，两个应用副本不能各自跳过一页。每页输出前后复核来源目录和授权范围版本，并处理首屏后连续收到的 Change：新 Task 排序键进入已输出段，或任一水位出现缺口时，旧聚合游标失效。单来源超时、查询预算耗尽、目录或当前授权不可核验时可返回带来源缺口的 partial 结果，但不给可宣称全局有序完整的续页游标；恢复后以新查询重取首屏。单来源 `task.list` 的 `upper_bound` 不作全局提交水位或权限证明。
 
 ## 4. 输入转交、消费与撤回
 
@@ -287,7 +287,7 @@ surface_list 对一个 owner 冻结有限 ID 集合，逐页返回当前获准�
 
 同 input_id 的回答、预览、目标服务和原命令都不可改变。对外 InputSubmission 只包含 target_command_id；宿主查询原 input_id，由交互服务沿内部持久目标核对，不要求客户端凭一个 command_id 猜测业务服务。
 用户编辑回答需要新 input_id，但原业务请求仍只消费一个有效答案。
-无耐久宿主的纯浏览器只能显示本端待发送，清除浏览器数据后不能承诺恢复未发输入。
+无持久宿主的纯浏览器只能显示本端待发送，清除浏览器数据后不能承诺恢复未发输入。
 
 ### 4.2 转交状态机
 
@@ -325,7 +325,7 @@ acceptance 只替代其允许的质量判断，不能覆盖未知外部效果。
 若当前权限不允许读取原回答，可以返回获准的消费状态，不重新披露正文。
 
 <a id="key-sequence"></a>
-### 4.4 转交领取与业务消费的两个提交域
+### 4.4 转交领取与业务消费的两个本地事务范围
 
 下图展开交互服务与远端 Orchestrator 的输入交接。两处数据库分别提交，
 原 target_command_id 是连接责任的依据；通知和页面状态不参与决定成功。
@@ -420,7 +420,7 @@ present 按 surface_id、endpoint_id 和 expected intent_revision 保存 open/cl
 
 CLI 终端无法证明已经擦除显示历史时，内容清理报告保留该载体限制。
 浏览器重启后先恢复未结输入与本设备 close 意图，再读取当前获准快照。
-连接层故障不阻止已接纳任务消费；页面显示离线，退避重连后用原身份查询和快照恢复状态，不能反复提交输入探测。
+连接层故障不阻止已接纳任务消费；页面显示离线，退避重连后按原 input_id／command_id 查询并读取当前快照，不能反复提交输入探测。
 
 <a id="production"></a>
 ## 7. 生产部署、可用性与性能
@@ -429,7 +429,7 @@ CLI 终端无法证明已经擦除显示历史时，内容清理报告保留该�
 连接数、请求率和故障容量分开按[公共容量策略](../deployment-production.md#capacity)估算。
 云端 SurfaceService、InputService、WSS 连接层和 worker 可以独立增加进程，跨进程以 gRPC 交接，按 tenant 和稳定 surface_owner 路由原记录。
 进程替换不移动业务 Orchestrator，也不让另一个数据库重复消费 InputRequest。
-CLI 和 Web 共享服务语义；纯浏览器的未发送内存不计作耐久交互接纳。
+CLI 和 Web 共享服务语义；纯浏览器的未发送内存不计作持久交互接纳。
 
 | 扩展单位 | 必须串行或条件更新的键 | 性能边界 |
 | --- | --- | --- |
@@ -445,13 +445,13 @@ Orchestrator 不可达时已有 queued／sending 输入保留原目标责任，�
 不接纳新的依赖回答，也不会因已有截图、按钮或过期请求缓存而继续确认；已保存且尚未发送的输入仍可撤回，发送结果不明时继续查原命令。
 连接层失效时退避重连并查原输入与当前快照；业务消费继续由原 owner 和转交 job 推进，不等待全部在线客户端。
 
-快照缓存的键至少区分 owner、准确修订、认证主体和披露上下文，但键完整仍不等于当前资格有效。
+快照缓存的键至少区分 owner、准确修订、认证主体和披露上下文，但键完整仍不等于内容状态与当前授权仍有效。
 surface_read 的 not_modified 和 Query 重放都须重新证明当前披露；来源关闭、期限到达或核验不可用时，
 旧快照不能继续支撑新的阅读和输入。Renderer 收到关闭或到期即清除受管缓存并刷新缺口，
 通知未送达不能延长使用期限；镜像字节仍遵循内容模块每读在线的约束。
 不得把连接缓存、传输 ACK、ReplyAck 或 Redis 记录作为请求已消费、用户已确认或当前权限的权威。
 
-主要瓶颈是完整快照投影、逐内容资格检查和高在线数产生的查询／扇出，而非表单组件渲染本身。
+主要瓶颈是完整快照投影、逐项内容状态与授权检查和高在线数产生的查询／扇出，而非表单组件渲染本身。
 度量接纳与查询 p95/p99、最老 delivery job、sending 未决时间、业务回执到本端可见的延迟、
 投影落后修订数、not_modified 实际可用率、披露核验耗时、单快照字节、活跃连接与集中重连峰值。
 请求消费延迟、页面刷新延迟和用户真正阅读分别报告；不能把后一项推断为前两项的成功保证。
@@ -461,7 +461,7 @@ surface_read 的 not_modified 和 Query 重放都须重新证明当前披露；�
 控制与回执流量在有限发送队列内优先调度；慢端耗尽发送额度时停止普通数据扇出，必要时断开该连接并保留原责任，不能让一个页面占满全用户控制容量。
 同用户开大量页面时按共享用户额度计费和限流，不能让每个连接各自获得完整刷新额度。
 第 6 节限额是待测初值；验收加入断线集中重连、热点任务更新、预览来源同时失效及通知层停机，
-据实测调整查询频率与连接分区，不以降低当前资格核验频率换吞吐。
+据实测调整查询频率与连接分片，不以降低内容状态与当前授权的核验频率换吞吐。
 
 ## 8. 故障实验与检查边界
 
@@ -479,14 +479,14 @@ surface_read 的 not_modified 和 Query 重放都须重新证明当前披露；�
 | II-10 权限变化 | known_revision 相同但内容已撤权 | 不返回可继续阅读的旧缓存，依赖按钮关闭 |
 | II-11 应用命令未知 | 应用处理器消费后答复丢失 | 原服务/命令查询恢复，不转给另一处理器 |
 | II-12 控制过载 | 普通输入队列满时用户取消 | 管理控制仍有保留容量，未接纳输入不显示已排队 |
-| II-13 网关提交后断开 | 原输入已提交，网关在回执送达前退出 | 客户端以原身份查得固定结果；任务与输入各只有一份，连接 ACK 不算业务成功 |
+| II-13 网关提交后断开 | 原输入已提交，网关在回执送达前退出 | 客户端以原 input_id／command_id 查得固定结果；任务与输入各只有一份，连接 ACK 不算业务成功 |
 | II-14 重连与慢页面 | 集中重连，同时使一个客户端停止读取 | 队列、内存与重连率受限；Change 可合并，取消仍获保留容量，快照能恢复 |
 | II-15 长连接撤权 | 连接已建立后撤销会话或设备代次，再发输入及查询 | 原提交事实保留，新消息拒绝，旧连接不再获得未授权快照 |
 | II-16 请求 Schema 单一权威 | Surface 仅含请求引用；读取后业务 owner 修订字段，再从旧快照读取请求或提交 | 字段由准确请求 schema 产生；旧修订读取或提交拒绝，不以旧快照字段继续消费 |
-| II-17 预览保证边界 | 截断下载或呈现失败；另以认证旁路客户端复制正确 preview_refs | 受信 Renderer 不开放失败预览的输入；旁路正确引用不被误报为已证明预览，业务端仍只依准确版本、覆盖、请求及当前资格裁决 |
-| II-18 转交槽接替 | sending 后远端消费但答复延迟，旧 worker 租约失效并重领，再送达旧回执与 ReplyAck | 接替者查询同服务和 target_command_id；旧领取不能结束槽，独立归并可保存原消费事实，ReplyAck 不证明业务成功 |
-| II-19 投影中新责任与无通知发现 | 旧投影取源时先提交较新来源与槽责任，再让旧 worker 结束；另在当前已追平后关闭全部通知，使远端再次更新 | 快照不倒退，旧结束不覆盖新责任；原 waiting 核对槽在声明间隔内发现远端新修订，不靠补缺槽扫描；重复 Change 不增责任版本，关窗不终止投影 |
+| II-17 预览保证边界 | 截断下载或呈现失败；另以认证旁路客户端复制正确 preview_refs | 受信 Renderer 不开放失败预览的输入；旁路正确引用不被误报为已证明预览，业务端仍只依准确版本、覆盖、请求、内容状态及当前授权裁决 |
+| II-18 转交作业接替 | sending 后远端消费但答复延迟，旧 worker 租约失效并重领，再送达旧回执与 ReplyAck | 接替者查询同服务和 target_command_id；旧领取不能结束作业，独立归并可保存原消费事实，ReplyAck 不证明业务成功 |
+| II-19 投影中新责任与无通知发现 | 旧投影取源时先提交较新来源与待处理工作，再让旧 worker 结束；另在当前已追平后关闭全部通知，使远端再次更新 | 快照不倒退，旧结束不覆盖新责任；原 waiting 核对作业在声明间隔内发现远端新修订，不靠扫描补齐作业记录；重复 Change 不增作业版本，关窗不终止投影 |
 
-交互 JobStore 适配器须运行[公共故障套件](../reliable-work.md#validation)，II-02、II-18、II-19 再验证发送／撤回竞争、跨提交域消费与投影新责任。静态协议检查覆盖字段、绑定和有限状态序列，不能证明浏览器确实取得字节或用户理解内容。
+交互 JobStore 适配器须运行[公共故障套件](../reliable-work.md#validation)，II-02、II-18、II-19 再验证发送／撤回竞争、跨数据库事务边界消费与投影新责任。静态协议检查覆盖字段、绑定和有限状态序列，不能证明浏览器确实取得字节或用户理解内容。
 旁路客户端原样复制正确引用属于该保证的边界；不将它登记为业务端可识别的“未预览”错误，也不把下载回执、ETag 或 seen_revision 当作用户阅读证明。
 CLI、生产／本地 Web 和任何后续原生适配器分别完成预览、缓存、恢复及权限实验，不相互外推通过结论。

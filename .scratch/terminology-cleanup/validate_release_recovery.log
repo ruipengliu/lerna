@@ -1,0 +1,2 @@
+PASS: 13 targeted release/run cases; replay, rollback work and reopen use the independent old approval
+Scope: recorded identities, evidence and refusal rules; no live UI, environment isolation or durable recovery tested

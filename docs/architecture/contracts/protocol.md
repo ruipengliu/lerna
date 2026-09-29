@@ -1,4 +1,4 @@
-# 线字段、方法登记与恢复一致性
+# 协议字段、方法登记与恢复一致性
 
 [共同调用语义](README.md) · [传输配置](transport.md) · [方法查阅](methods.md) · [序列用例](examples/protocol/README.md)
 
@@ -12,11 +12,11 @@
 | --- | --- | --- |
 | [protocol.schema.json](schemas/protocol.schema.json) | 共同对象、全部领域输入输出、正文类型与序列容器 | JSON Schema 2020-12、日期格式及封闭业务对象 |
 | [methods.json](schemas/methods.json) | 方法种类、输入输出映射、目标、条件修订、回执阶段、错误与恢复动作 | 按具体方法分派，不接受同名异义或自由字段 |
-| [transport.schema.json](schemas/transport.schema.json) | 发现、WSS 帧、投递、回复、上传、关闭索引查询与证明载荷 | 独立结构与跨字段向量；共享对象引用领域Schema |
+| [transport.schema.json](schemas/transport.schema.json) | 发现、WSS 帧、投递、回复、上传、去重与终态索引查询和证明载荷 | 独立结构与跨字段向量；共享对象引用领域Schema |
 | [领域校验](../validation/validate_protocol.py) | 有限记录序列的身份、版本、状态及恢复关系 | 每个方法至少一项有效调用，新增方法有结构与关联反例 |
 | [Brain 内部生成格式](schemas/brain-generation.schema.json)及[构造校验](../validation/validate_brain.py) | 新正文局部引用、准确保存结果及有限计划前序输出 | 宿主内部适配规格；最终 Proposal 仍须通过公共 Schema，不作为另一条领域线接口 |
-| [传输校验](../validation/validate_transport.py) | 原请求／回复摘要、三类交接、内容发布及关闭记录 | 结构与关联校验，另运行公开密码学向量 |
-| [harness.proto](harness.proto) | 服务间 Call 与 EndpointChannel 的 Protobuf 外壳；JSON 内层复用以上 Schema | 描述符编译与消息映射检查；不等同于 gRPC 服务互操作 |
+| [传输校验](../validation/validate_transport.py) | 原请求／回复摘要、三类交接、内容发布及去重与终态记录 | 结构与关联校验，另运行公开密码学向量 |
+| [harness.proto](harness.proto) | 服务间 Call 与 EndpointChannel 的 Protobuf 消息封装；JSON 内层复用以上 Schema | 描述符编译与消息映射检查；不等同于 gRPC 服务互操作 |
 | [完成判断投影](schemas/task-outcome.schema.json) | 独立结果与效果关系 | 保持原5正例／9反例，不作为完整协议 |
 
 这些资产可以指导两个实现交换同义数据，但没有服务、数据库或驱动。身份、许可、实际效果和来源关系的夹具是构造前提；字段合法不能证明这些前提在运行环境真实成立。安装、签发、创建界面及内容交接已经有精确方法，不再以“预先装配”替代其协议定义；部署缺少相应适配器时按所属模块拒绝或等待。
@@ -49,7 +49,7 @@ accepted必须有accepted_at，不能带decided_at或业务错误；applied必�
 
 当前披露允许固定回执设置redacted=true并省略整个output，不允许任意部分裁剪后逃过结构或身份检查。redacted不改变stage、原时间或原请求，也不使调用方可以重新执行原动作。
 
-完整回执清理后，长期关闭索引按[共同保留规则](README.md)返回gone或输入冲突，不构造新的业务rejected覆盖原applied。原方法回执查询和传输错误分别表达；取消和终态身份保持禁止重新启动。未结责任不受普通查询保留期清理。
+完整回执清理后，长期命令去重记录按[共同保留规则](README.md)返回gone或输入冲突，不构造新的业务rejected覆盖原applied。原方法回执查询和传输错误分别表达；取消和终态身份保持禁止重新启动。未结责任不受普通查询保留期清理。
 
 <a id="collection-snapshots"></a>
 ### 按类型订阅的集合恢复
@@ -90,7 +90,7 @@ sequenceDiagram
 
 图中的两个入口属于原负责服务的逻辑职责，查询经既有 WSS／gRPC 传递。Change 在分页期间持续到达，图仅画出一次；查询提示中的对象时也包含客户端此前未知的 ID。
 
-execution.list、extensions.list、grant.list 复用同一个分页形状，target_id 为准确 owner_id。输入为 `{query_id,limit,cursor?}`，limit 为 1–100；输出为 `{query_id,owner_id,snapshot_at,expires_at,items,next_cursor?,exhausted,partial,gaps}`，items 分别是完整 Operation、Activation、GrantRecord。获准枚举与相应单对象查询使用同一当前披露策略，不能因列表入口降低敏感字段权限。
+execution.list、extensions.list、grant.list 复用同一个分页结构，target_id 为准确 owner_id。输入为 `{query_id,limit,cursor?}`，limit 为 1–100；输出为 `{query_id,owner_id,snapshot_at,expires_at,items,next_cursor?,exhausted,partial,gaps}`，items 分别是完整 Operation、Activation、GrantRecord。获准枚举与相应单对象查询使用同一当前披露策略，不能因列表入口降低敏感字段权限。
 
 这三个查询在首次接纳时，以 owner 本地一致读取固定当前获准成员 ID，按 ID 字典序保存有限集合；冻结的是成员，不是记录修订。后续页返回成员的当前记录，修订升高不使其自动缺失。服务以认证的 tenant、actor、业务 sender（存在时）、owner、method、query_id、原 limit 和当前权限范围绑定查询；代理网关身份不替代业务 sender。同 query_id 原样重读首部复用原集合与期限；条件或权限范围改变返回 query_conflict，调用方先废弃旧分页再以新 query_id 枚举。游标是不可伪造的不透明集合／位置引用，跨身份、owner、方法或查询移用也拒绝，正文中的 ID 不能选择认证范围。
 
@@ -98,7 +98,7 @@ execution.list、extensions.list、grant.list 复用同一个分页形状，targ
 
 初始上限为每集合 10000 个 ID 或 1 MiB 成员元数据先到者、10 分钟不可续期、每 tenant／actor／业务 sender／owner 合计 4 个活动集合；查询槽与集合保存于 owner 的共享存储，副本切换不依赖原进程内存。容量截断返回 partial=true、gaps 包含 membership_limit，后续页保持该标志；携带 cursor 的请求在集合到期或已清理时返回 cursor_expired。到期集合及查询槽按有界清理回收，不为只读 query_id 建永久墓碑。cursor 必须绑定内部随机集合身份及不可延长的到期信息，旧 cursor 即使碰到同 query_id 的新集合也不能续接。服务仍保留旧集合时到期请求返回 cursor_expired；旧状态已回收后，不带 cursor 的请求可建立新集合并给出新的 snapshot_at／expires_at，带旧 cursor 仍拒绝。客户端重建时使用新 query_id；收到同 query_id 但快照时间对改变的首部必须整体替换，不能接在旧分页后。每页有独立扫描／返回预算，同一主体不断更换 query_id 不重置累计预算。这里不保留跨请求数据库事务或长期 MVCC 快照；集合自身不是业务事实或新领域目录。Memory、Surface 原有更小的集合上限继续生效。
 
-客户端只有在所有目标类型／owner 的枚举均已到末页、没有 partial／gaps／不可达端且从起始水位至处理位置的提示连续时，才可标记“在该水位已完整恢复”，不能称为不再变化的全局快照。恢复每轮最多 100 页、10000 项、60 秒；任一上限先到即保留明确缺口。暂时失联、游标失效或权限改变最多自动重新开始 2 轮，带抖动退避并共用原恢复预算；仍不足则展示来源与类型级缺口，保留已知对象的受权查询，并等待新权限／容量事实、用户刷新或正常周期校准。固定容量截断不立即重跑相同全量查询，不以不断重订阅制造快照风暴。
+客户端只有在所有目标类型／owner 的枚举均已到末页、没有 partial／gaps／不可达端且从起始水位至处理位置的提示连续时，才可标记“在该水位已完整恢复”，不能称为不再变化的全局快照。恢复每轮最多 100 页、10000 项、60 秒；任一上限先到即保留明确缺口。暂时失联、游标失效或权限改变最多自动重新开始 2 轮，带抖动退避并共用原恢复预算；仍不足则展示来源与类型级缺口，保留已知对象的受权查询，并等待新权限／容量事实、用户刷新或正常周期状态核对。固定容量截断不立即重跑相同全量查询，不以不断重订阅制造快照风暴。
 
 Activation.revision 是可见持久投影的独立修订；phase、ready_instance、instance_readiness、new_use_disabled 或 residual_work 等任何可见变化都在同事务递增它并写变化责任。last_observed_at 仅在真实观察被持久保存时更新，普通读取不制造新修订。generation 仍只表示活动绑定代际。extensions.read、extensions.list 与 Change.revision 对应同一个 revision；QueryResult.resource_revision 若出现也必须一致。客户端对所有带修订投影按对象保留最高值，迟到旧记录不能覆盖较新事实，同修订不同内容视为协议冲突并重新核对；提示只推进“需查询”的最高水位，不能代替尚未取得的记录。旧查询到达且低于待查询水位时继续读取；权限失效或移除以当前查询结果及缺口处理，不由修订高低重新授予展示资格。
 
@@ -107,12 +107,12 @@ Activation.revision 是可见持久投影的独立修订；phase、ready_instanc
 | 领域 | 必须保持的关系 | 完整机制 |
 | --- | --- | --- |
 | 任务与预算 | 固定 Orchestrator、原提交及操作身份；修订递增；余额与分配不重复消费，封账后才归还；列表切点有界 | [Orchestrator](../orchestrator/implementation.md) |
-| Brain与计划 | 原决策固定快照及至多一次物理生成；上下文正文及有界计划都有准确结构，确定性物化仍逐步准入 | [大脑](../brain/implementation.md) |
+| Brain与计划 | 原决策固定快照及至多一次模型调用；上下文正文及有界计划都有准确结构，确定性实例化仍逐步准入 | [大脑](../brain/implementation.md) |
 | 能力与资源 | 精确版本和实例绑定；resource.observe仍产生原Operation；资源代次、GUI观察和TaskGate同时有效 | [执行](../execution/implementation.md) |
 | 许可与配对 | Subject来自受信身份，确认一次消费；离线租约为 open／closed／reconciled，已知使用从账本读取；单次使用与离线分配不扩大来源用途；配对回复丢失不重复发凭据 | [安全](../security/implementation.md) |
 | 记忆与内容 | 实际处理输入完整继承来源；上传字节与引用一致；稳定分页、派生候选、视图确认及清理分别保存 | [记忆](../memory/implementation.md) |
 | Surface与输入 | input 块只引用准确 request_ref，表单结构由业务 owner 的 InputRequestView.schema 提供；呈现意图、实际预览、排队转交与一次业务消费分别判断 | [交互](../interaction/implementation.md) |
-| Agent协作 | phase 是依据同一修订事实生成的只读摘要；closed 必有持久关闭依据，active 必有唯一子映射；创建未知及未结责任分别保存，不换远端任务掩盖失联 | [协作](../collaboration/implementation.md) |
+| Agent协作 | phase 是依据同一修订事实生成的只读摘要；closed 必有持久委派关闭记录，active 必有唯一子映射；创建未知及未结责任分别保存，不换远端任务掩盖失联 | [协作](../collaboration/implementation.md) |
 | 安装与批准 | 首装／兼容证据与正式改善用途区分；历史激活不变，当前实例开放重新核验；本地事务与远端回执均可表达 | [扩展](../extensions/implementation.md)、[评测](../evaluation/implementation.md) |
 
 `evaluation.exposure_record` 的 applied 输出是 `{exposure, impact_job_id}`：原评测 owner 已共同保存暴露事实、来源组关联、唯一影响扫描 job 与原回执。job 身份不枚举受影响计划，也不证明异步失效投影或撤回已完成；正式计划、报告封存、批准与继续使用的准入仍须同步核验原暴露门禁。一个暴露可影响超过单帧列表上限的计划，不能以截断的 ID 列表定义成功。
@@ -135,15 +135,15 @@ Invoke.arguments和行动模板最终参数仍按准确Capability版本、摘要
 
 | 所属模块 | 严格方法数 | 查询与恢复重点 |
 | --- | --- | --- |
-| [brain](../brain/README.md) | 3 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [collaboration](../collaboration/README.md) | 5 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [evaluation](../evaluation/README.md) | 13 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [execution](../execution/README.md) | 15 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [extensions](../extensions/README.md) | 6 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [interaction](../interaction/README.md) | 10 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [memory](../memory/README.md) | 18 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [security](../security/README.md) | 18 | 请求、输出、阶段、错误与原身份关联见方法登记 |
-| [orchestrator](../orchestrator/README.md) | 17 | 请求、输出、阶段、错误与原身份关联见方法登记 |
+| [brain](../brain/README.md) | 3 | 请求、输出、阶段、错误与命令与对象标识关联见方法登记 |
+| [collaboration](../collaboration/README.md) | 5 | 请求、输出、阶段、错误与命令与对象标识关联见方法登记 |
+| [evaluation](../evaluation/README.md) | 13 | 请求、输出、阶段、错误与命令与对象标识关联见方法登记 |
+| [execution](../execution/README.md) | 15 | 请求、输出、阶段、错误与命令与对象标识关联见方法登记 |
+| [extensions](../extensions/README.md) | 6 | 请求、输出、阶段、错误与命令与对象标识关联见方法登记 |
+| [interaction](../interaction/README.md) | 10 | 请求、输出、阶段、错误与命令与对象标识关联见方法登记 |
+| [memory](../memory/README.md) | 18 | 请求、输出、阶段、错误与命令与对象标识关联见方法登记 |
+| [security](../security/README.md) | 18 | 请求、输出、阶段、错误与命令与对象标识关联见方法登记 |
+| [orchestrator](../orchestrator/README.md) | 17 | 请求、输出、阶段、错误与命令与对象标识关联见方法登记 |
 
 ## 5. 从静态资产取得什么证据
 

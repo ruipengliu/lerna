@@ -1,0 +1,5 @@
+PASS: 2 ES256 public vectors; 3 canonical vectors; 23 negative checks
+Scope: constructed bytes, signatures and pinned bindings; no live identity, key custody, revocation or interoperability tested
+PASS: 100 transport/closure vectors; 228 directed invalid mutations
+PASS: 8 request-sequence traces; 12 directed invalid mutations
+Scope: bounded recorded structures and bindings; no network, storage, authentication or byte transfer executed

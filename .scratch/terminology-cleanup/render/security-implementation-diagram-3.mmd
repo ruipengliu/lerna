@@ -1,0 +1,38 @@
+sequenceDiagram
+    participant U as 业务使用端 / usage owner
+    participant F as grant facade
+    participant G as GrantLedger
+    participant S as 账本 repository
+    participant X as 资源驱动
+    U->>F: grant.use 原 use / operation
+    F->>G: 已认证主体与准确意图
+    rect rgb(236, 244, 252)
+      Note over G,S: T1 短事务：原命令、许可父链与计数
+      G->>S: 核对当前状态并锁全部必要许可
+      G->>S: 保存固定 UseReceipt、预留、open 结算与原回执
+    end
+    G-->>U: 原 allowed 回执
+    U->>U: 核验启动窗口、资源状态与本地授权
+    U->>U: 持久保存原启动责任
+    U->>X: 事务外执行原 operation
+    X-->>U: 已知部分费用或结果未知
+    U->>U: 持久保存累计用量及交回责任
+    U->>F: grant.use.settle 原绑定与累计修订
+    F->>G: 已认证的原 usage owner
+    rect rgb(236, 244, 252)
+      Note over G,S: T2 短事务：使用、原明细与计数
+      G->>S: 按累计差额 held 转 spent；unknown 不释放
+      G->>S: 保存修订及固定结算回执
+    end
+    G--xU: 结算已提交，答复丢失
+    U->>F: grant.use.settlement 查询原 use
+    F->>S: 读取当前结算投影
+    S-->>U: 已保存的累计修订与 held
+    U->>X: 核对原效果并取得最终关闭事实
+    U->>F: settle 新累计修订 / final / 原关闭事实
+    rect rgb(236, 244, 252)
+      Note over G,S: T3 短事务：验证关闭，余额最终封账
+      F->>G: 原 owner 与绑定核验
+      G->>S: 差额转 spent、余量转 released、保存 final
+    end
+    G-->>U: 最终结算；once 许可仍已消费

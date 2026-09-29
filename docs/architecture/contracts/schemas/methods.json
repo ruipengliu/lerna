@@ -1199,7 +1199,7 @@
         "source_closed",
         "policy_not_restriction"
       ],
-      "success": "保存当前控制修订、最小关闭索引及传播清理责任。",
+      "success": "保存当前控制修订、最小内容控制记录及传播清理责任。",
       "source": "memory/README.md",
       "error_recovery": {
         "invalid_argument": [
@@ -3128,7 +3128,7 @@
         "approval_inactive",
         "rollback_unavailable"
       ],
-      "success": "受信分区与来源组登记；不授予内容使用权限。",
+      "success": "受信数据子集与来源组登记；不授予内容使用权限。",
       "source": "evaluation/README.md",
       "error_recovery": {
         "invalid_argument": [
@@ -3274,7 +3274,7 @@
         "approval_inactive",
         "rollback_unavailable"
       ],
-      "success": "固定计划；正式确认同时占用保留分区和永久尝试序号。",
+      "success": "固定计划；正式确认同时占用独立测试集和永久尝试序号。",
       "source": "evaluation/README.md",
       "error_recovery": {
         "invalid_argument": [
@@ -4759,7 +4759,7 @@
         "generation_conflict",
         "drain_blocked"
       ],
-      "success": "无引用则清理制品并保留关闭索引；否则返回具体blocked引用。",
+      "success": "无引用则清理制品并保留安装终态索引；否则返回具体blocked引用。",
       "source": "extensions/README.md",
       "error_recovery": {
         "invalid_argument": [
@@ -4883,7 +4883,7 @@
         "contract_unsupported",
         "isolation_unavailable"
       ],
-      "success": "完整制品、检查证据和不可变安装锁已提交；不执行包内安装脚本。",
+      "success": "完整制品、检查证据和不可变安装锁定清单已提交；不执行包内安装脚本。",
       "source": "extensions/README.md",
       "error_recovery": {
         "invalid_argument": [
@@ -5001,7 +5001,7 @@
         "precondition_failed",
         "internal_error"
       ],
-      "success": "查询准确激活及当前实例，或不可变安装锁；不把活动指针当就绪。",
+      "success": "查询准确激活及当前实例，或不可变安装锁定清单；不把活动指针当就绪。",
       "source": "extensions/README.md",
       "error_recovery": {
         "invalid_argument": [
@@ -8922,7 +8922,7 @@
         "precondition_failed",
         "internal_error"
       ],
-      "success": "认证来源的费用修订通知与原 Task/source 绑定后，持久唤醒原结算责任槽并返回同一 JobAck；金额须由 Orchestrator 回读原权威账本，通知不直接入账。",
+      "success": "认证来源的费用修订通知与原 Task/source 绑定后，持久唤醒原结算作业并返回同一 JobAck；金额须由 Orchestrator 回读原权威账本，通知不直接入账。",
       "source": "orchestrator/README.md",
       "error_recovery": {
         "invalid_argument": [

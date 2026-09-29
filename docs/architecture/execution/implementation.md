@@ -4,10 +4,10 @@
 
 本页将执行主线落为参考实现。Executor 接纳一项原操作，资源 owner 裁决实际入口，驱动提供目标效果证据。三个职责可共进程，但外部副作用总在业务提交之后；网络成功和 Receipt.applied 都不代替 Operation.effect。
 
-参考实现支持声明完整的 API 驱动、版本化文件能力和有状态模拟手机。真实手机或任意原生不可信驱动需要各自的平台验收；缺少可验证入口、效果核对或必要权限时，按能力合同拒绝或保留未知，不能从模拟器保证推断真实平台保证。
+参考实现支持声明完整的 API 驱动、版本化文件能力和有状态模拟手机。真实手机或任意原生不可信驱动需要各自的平台验收；缺少可验证入口、效果核对或必要权限时，按能力契约拒绝或保留未知，不能从模拟器保证推断真实平台保证。
 
 <a id="module-shape"></a>
-## 1. 模块形状与内部接口
+## 1. 模块结构与内部接口
 
 执行模块对外 facade 是执行命令入口，承接执行、控制、目录和资源方法；内部按接纳／控制用例、执行工作者、门禁与效果规则、Store／port／Driver 适配组织。下述接口名是参考实现的职责，不是已经实现的类。宿主注入存储、授权 port 和固定版本 Driver；WSS／gRPC 处理器与具体驱动不能绕过门禁直接更新效果。
 
@@ -31,7 +31,7 @@ flowchart TB
     D -->|事务外调用| X[目标系统]
 ```
 
-图中实线为同步调用或读写，虚线为持久 job 驱动。Executor Store 与资源 owner Store 是写权边界；默认可共库，分开部署时通过原命令和确认交接，不共同提交。资源 owner 的 StartBarrier 是最后一个可拒绝旧资格的入口；目标已经接受的动作进入在途集合，此时收到取消不能报告未执行。
+图中实线为同步调用或读写，虚线为持久 job 驱动。Executor Store 与资源 owner Store 是写权边界；默认可共库，分开部署时通过原命令和确认交接，不共同提交。资源 owner 的 StartBarrier 是发送前检查与串行控制点，也是最后一个可拒绝旧控制修订下动作的入口；目标已经接受的动作进入在途集合，此时收到取消不能报告未执行。
 
 | 内部接口 | 固定输入 | 输出及限制 |
 | --- | --- | --- |
@@ -60,24 +60,24 @@ execution.list 由现有查询入口读取本 owner 的 Operation 仓储，复�
 | 接入点 | 事务参与者及保存内容 | 框架和领域的分工 |
 | --- | --- | --- |
 | Invoke 接纳 | ExecutionStore 锁原命令、TaskGate 和 Operation／取消索引，核验固定意图、绑定及容量 | 公共模板在 `transaction.Within` 内保存原回执，领域共同保存 Operation 和 `Raise(execute)`；新命令携相同 operation_id 仍按业务身份去重 |
-| 控制与资源裁决 | GateStore 单调保存当前 gate、逐入口事实、资源占用或禁止依据 | 同库参与者共享受限 Tx；独立资源 owner 使用原命令与各自事务，Executor 的控制转交槽直到实际入口确认才完成。可同步结束的 acquire／renew／查询不空建 job |
-| 启动准备与实际入口 | ExecutionStore 固定 Attempt、目标键和核对责任；StartBarrier 在资源 owner 核对最新 Gate、epoch、lease、观察和时间资格 | 工作者先在事务外取得用途依据，准备事务按领域锁序最后 `Guard` 原 Claim；事务提交后才能交实际入口。公共领取既不替代 StartBarrier，也不把两个 Store 合成跨库事务 |
+| 控制与资源裁决 | GateStore 单调保存当前 gate、逐入口事实、资源占用或禁止依据 | 同库参与者共享受限 Tx；独立资源 owner 使用原命令与各自事务，Executor 的控制转交作业直到实际入口确认才完成。可同步结束的 acquire／renew／查询不空建 job |
+| 启动准备与实际入口 | ExecutionStore 固定 Attempt、目标键和核对责任；StartBarrier 在资源 owner 核对最新 Gate、epoch、lease、观察有效性和时间窗口 | 工作者先在事务外取得用途依据，准备事务按领域锁序最后 `Guard` 原 Claim；事务提交后才能交实际入口。公共领取既不替代 StartBarrier，也不把两个 Store 合成跨库事务 |
 | 效果和费用归并 | FactStore 按原 Operation／Attempt、可信来源与修订归并效果、迟到可能和累计用量 | 领域事实、必要 `Raise` 及 `Finish` 同事务；可信费用上调同时保存每修订 outbox，终态不抹去交回责任。独立事实入口去重接收迟到证据，但无权凭旧领取启动或结束工作 |
 
-领取保护的事务先锁本域需要裁决的 Gate、Operation、Attempt、资源与费用行，最后锁工作槽并调用 `Guard`；各领域行内部的固定顺序由同一 Store 适配器声明，资源仍按规范化 resource_id 排序。参与同提交域的 Orchestrator 事务时服从其统一锁序，不能先持 job 锁再调用 GateStore／FactStore。实际入口锁仅保护交接瞬间，目标网络调用不在数据库事务内等待。
+领取保护的事务先锁本域需要裁决的 Gate、Operation、Attempt、资源与费用行，最后锁作业记录并调用 `Guard`；各领域行内部的固定顺序由同一 Store 适配器声明，资源仍按规范化 resource_id 排序。参与同一本地事务范围内的 Orchestrator 事务时服从其统一锁序，不能先持 job 锁再调用 GateStore／FactStore。实际入口锁仅保护交接瞬间，目标网络调用不在数据库事务内等待。
 
-责任键为 `(tenant, executor_or_resource_owner, kind, object_id)`。owner 取实际保存该责任的逻辑负责方；跨 owner 分别建自己的槽，通过原命令交接，不共享领取。以下内部 kind 不改变公共 Operation、Receipt 或 Gate 的字段。
+责任键为 `(tenant, executor_or_resource_owner, kind, object_id)`。owner 取实际保存该责任的逻辑负责方；跨 owner 分别建自己的作业记录，通过原命令交接，不共享领取。以下内部 kind 不改变公共 Operation、Receipt 或 Gate 的字段。
 
-| kind／object_id | 有界处理和原身份 | 领域完成／等待条件 |
+| kind／object_id | 单次处理范围和操作／控制命令标识 | 领域完成／等待条件 |
 | --- | --- | --- |
 | execute／operation_id | 固定 Invoke 的一次启动准备及声明允许的发送；每次物理发送保留 attempt_id，目标业务键属于原 Operation | 原发送阶段已关闭，或后续查询／停止责任已持久交给 reconcile，才请求完成；缺用途、控制或入口资格时等待／确定拒绝，不借框架退避重复发送 |
 | reconcile／operation_id | 一次原目标键查询、获准停止或必要效果／费用核对 | 所承担效果、迟到可能和费用均核清或已持久交接才能完成；自动额度耗尽保留未知、凭据缺口和恢复条件，原 Operation.closed 本身不足以结清 |
-| control／TaskGate 与目标入口的组合键 | 当前固定控制命令和要求落实修订；各命令尝试保存原身份与期限 | 取得该实际入口的落实事实才请求完成；处理中更高控制修订由 Raise 保留，不能用旧 applied 关闭新控制责任 |
+| control／TaskGate 与目标入口的组合键 | 当前固定控制命令和要求落实修订；各命令尝试保存原 command_id 与期限 | 取得该实际入口的落实事实才请求完成；处理中更高控制修订由 Raise 保留，不能用旧 applied 关闭新控制责任 |
 | billing_handoff／operation_id | 有限页未交付费用修订；每修订保存独立 outbox 和命令尝试 | 保存本页进度且全部待交付修订已取得原 Orchestrator 的 JobAck 才完成；仍有下一页保留续页责任。答复未知查原命令，命令到期按领域规则建立同修订继任尝试 |
 
 准备后崩溃即进入“可能已发送”核对，与 Brain 的 `prepared` 且无发送标记分支不同。恢复者读取原 Attempt 和能力重复合同后选择 query、允许的原键回放或继续 unknown，公共处理器错误不能自动触发 Driver.invoke。job 的 lease_epoch 只限制领取保护的提交；资源控制代次、TaskGate 与设备隔离仍分别约束实际入口。
 
-公共 `Finish` 会再次判断本次 Claim 能否覆盖当前槽，完整规则归[公共工作提交](../reliable-work.md#completion)。本域处理器的完成结论不表示目标效果成功；具体成功与安全重试条件继续由第 3、4 节裁决。
+公共 `Finish` 会再次判断本次 Claim 能否覆盖当前作业记录，完整规则归[公共工作提交](../reliable-work.md#completion)。本域处理器的完成结论不表示目标效果成功；具体成功与安全重试条件继续由第 3、4 节裁决。
 
 ## 2. 持久记录和并发边界
 
@@ -86,7 +86,7 @@ execution.list 由现有查询入口读取本 owner 的 Operation 仓储，复�
 | capabilities | 行为版本、摘要、完整 Schema、授权、效果与重复合同 | 版本不可原地改义；被原操作引用时保留 |
 | bindings | capability_ref、目标、driver_ref、configuration_ref、availability | binding_id 与 revision 固定，停用另有当前指针 |
 | operations | 原 Invoke、摘要、发送状态、效果、可能迟到、费用 | `(tenant, operation_id)` 唯一，意图不可替换 |
-| operation_billing_outbox | (tenant, operation_id, revision) UNIQUE | 可信上调费用修订、原 Orchestrator／Task、固定校准命令和交付状态；操作终态仍可待交回 |
+| operation_billing_outbox | (tenant, operation_id, revision) UNIQUE | 可信上调费用修订、原 Orchestrator／Task、固定对账命令和交付状态；操作终态仍可待交回 |
 | attempts | operation、attempt_id、准备时间、发送边界、目标键和结果 | 每次实际发送独立行，原业务幂等键不变 |
 | task_gates | Orchestrator、task、最高控制修订、有效控制、终态标记 | 与发送准备及实际入口串行检查 |
 | gate_entrances | gate、入口、已落实修订、未决原因 | 全端 enforced 取全部必要入口的最低已落实修订 |
@@ -128,8 +128,8 @@ erDiagram
 | 接纳 | 接纳用例固定 Capability／Binding 与原 Invoke，事务写 Operation、原 Receipt 和 ExecutionJob | Orchestrator 取得的是执行责任；目录更新不改原意图和绑定 |
 | 准备 | 执行工作者取原授权使用依据，准备事务新增 Attempt、目标关联和核对责任 | StartBarrier 使用最新 Gate、epoch、lease 和 Observation 检查本次入口；领取过期不撤销已准备 Attempt |
 | 发送 | 固定 Driver 获得原参数、Attempt 和目标键，向目标传递一次声明允许的请求 | 目标回执及边界证据返回工作者；丢答复仍保留原目标关联，不另造操作 |
-| 核对归并 | Driver.query／cancel 返回原效果与停止事实；FactStore.apply 提交单调效果、累计用量和下一 Job；费用上调同事务增加校准 outbox | Orchestrator 读取原 Operation 并归并；通知只唤醒查询，不能代替权威事实 |
-| 关闭及清理 | 效果已核清且迟到可能消除后关闭原责任；内容按引用和用途保留 | 清理完整 Attempt／日志前保留必要证据；取消、终态 Gate 和原身份最小禁止索引长期留存 |
+| 核对归并 | Driver.query／cancel 返回原效果与停止事实；FactStore.apply 提交单调效果、累计用量和下一 Job；费用上调同事务增加对账 outbox | Orchestrator 读取原 Operation 并归并；通知只唤醒查询，不能代替权威事实 |
+| 关闭及清理 | 效果已核清且迟到可能消除后关闭原责任；内容按引用和用途保留 | 清理完整 Attempt／日志前保留必要证据；取消墓碑、任务终态记录和命令去重索引长期留存 |
 
 执行结果正文与 Observation 都可能比操作元数据大得多，先以不可变内容保存再提交引用。写内容失败不能提交一项带可读取证据的 applied 效果；目标本已写成时效果依据与内容缺口分别记录，不能因截图或附件丢失抹掉真实副作用。
 
@@ -144,7 +144,7 @@ erDiagram
 | 取消墓碑命中 | 返回固定禁止事实；不建立可发送工作 |
 | 终态 TaskGate 或旧目标 | 拒绝启动，保存可查原因 |
 | 有效意图且容量足够 | 操作、原回执和执行 job 共同提交 |
-| 存储结果无法确定 | 不伪造 accepted／not_started；调用方查原身份 |
+| 存储结果无法确定 | 不伪造 accepted／not_started；调用方查询原 command_id／operation_id |
 
 `execution.invoke` 的 Receipt.stage 为 applied 时，只表示 Operation.execution_state=accepted 的接纳事实已持久保存。接纳之后实际开始也可立即反映在返回快照，但不能把传输 Receipt.accepted 和执行状态 accepted 混作同一个枚举。
 
@@ -234,13 +234,13 @@ Operation 的发送状态和效果独立。发送关闭后，effects 仍可能 u
 
 发生失败时先判断发送边界，再检查目标凭据和查询能力，最后应用效果类型的重复策略。不能根据 HTTP 5xx、连接超时或“当前未查到”跳过前两步。
 
-只读能力在剩余授权、期限和预算内有限重取。目标幂等能力先查原键，只有固定键作用域、保留期、相同参数和回放保证仍成立时才原键重放。不可重复能力只有明确 not_applied 且不会迟到时，才允许仍开放的原操作获准重试。
+只读能力在剩余授权、期限和预算内有限重取。目标幂等能力先查原键，只有固定键作用域、保留期、相同参数和回放保证仍成立时才原键重放。无幂等保证的能力只有明确 not_applied 且不会迟到时，才允许仍开放的原操作获准重试。
 
 同一意图换 API、GUI、驱动或执行端都属于新行动。Orchestrator 必须取得不会重复原效果的依据；Executor 不能自行把 unknown 转移给另一设备。补偿也有新的操作、预算和授权，不隐藏在 cancel 内。
 
 核对 job 每次执行一个有界查询，按能力声明退避，受绝对核对期限和专属预算约束。耗尽自动额度后保留原不确定事实，等待可读目标凭据、恢复事件或受信的一次核查；停止自动高频查询不删除迟到事实入口。
 
-可信费用上调沿原 Operation 增加修订，不能因 execution_state=closed、usage_final 曾为 true 或原 Task 终态而舍弃。在保存更高累计费用的 FactStore 事务中，按 `(operation_id, Operation.revision)` 唯一持久保存交回 outbox 及首次有限期限的 command_id，使用原 Invoke 固定的 orchestrator_id、task_id 调用 `task.billing_reconcile`，携带 `source_kind=execution_operation`、原 operation_id、该修订及 usage_digest。交回 worker 只发送唤醒，不以通知金额改 Task 账；答复未知先查询或在原期限内重投同一命令；原尝试到期仍未获 JobAck 时，保留其审计身份并为同一来源修订和摘要保存新 command_id 的后继尝试。原 Orchestrator 按来源修订业务键返回同一 JobAck，即使旧尝试已经应用也不双扣；只有取得其持久保存原 settle 槽工作的 JobAck 后完成交付。重启扫描全部未获 JobAck 的 outbox，不按旧核对 job 的 done 或操作终态过滤。Orchestrator 主动读原 `execution.get`，核验原 Task／Operation 绑定与准入时固定的唯一计费来源；同一物理收费的 Grant use、Brain 等投影只留证，不重复扣预算。原目标动作与已释放授权数值不因账单更正重新开放。
+可信费用上调沿原 Operation 增加修订，不能因 execution_state=closed、usage_final 曾为 true 或原 Task 终态而舍弃。在保存更高累计费用的 FactStore 事务中，按 `(operation_id, Operation.revision)` 唯一持久保存交回 outbox 及首次有限期限的 command_id，使用原 Invoke 固定的 orchestrator_id、task_id 调用 `task.billing_reconcile`，携带 `source_kind=execution_operation`、原 operation_id、该修订及 usage_digest。交回 worker 只发送唤醒，不以通知金额改 Task 账；答复未知先查询或在原期限内重投同一命令；原尝试到期仍未获 JobAck 时，保留其审计身份并为同一来源修订和摘要保存新 command_id 的后继尝试。原 Orchestrator 按来源修订业务键返回同一 JobAck，即使旧尝试已经应用也不双扣；只有取得其持久保存原 settle 作业的 JobAck 后完成交付。重启扫描全部未获 JobAck 的 outbox，不按旧核对 job 的 done 或操作终态过滤。Orchestrator 主动读原 `execution.get`，核验原 Task／Operation 绑定与准入时固定的唯一计费来源；同一物理收费的 Grant use、Brain 等投影只留证，不重复扣预算。原目标动作与已释放授权数值不因账单更正重新开放。
 每个上调修订保留独立 outbox 行；每次命令尝试固定 ID、载荷和期限，旧尝试保留在原命令记录中，r2 不覆盖未获 JobAck 的 r1。原 Orchestrator 收到 r1 时可主动读到 r2 并先归并较新累计额；以后 r1／r2 迟到或重投按已持久的最高来源修订确认，只有同一修订不同摘要才冲突。完整 Attempt 可按原清理规则回收，但原 Operation 的计费身份、累计账、已交回修订及供应商更正关联须保留至可验证的账单更正期限结束；没有该期限时保留最小计费账本与查询入口，不能靠终态压缩切断上述 outbox。
 
 ## 5. TaskGate、控制刷新和长期禁止索引
@@ -253,13 +253,13 @@ Gate 只接受更高 control_revision；同修订同内容幂等，同修订异�
 
 ### 5.1 取消先到与清理
 
-未知 operation 的取消必须创建最小禁止索引。此时执行端没有原 Invoke，不能推算其最晚启动或重投时间；禁止索引不得按固定 TTL 删除，也不能被 task.resume 清除。
+未知 operation 的取消必须创建最小取消墓碑。此时执行端没有原 Invoke，不能推算其最晚启动或重投时间；取消墓碑不得按固定 TTL 删除，也不能被 task.resume 清除。
 
-完整取消记录与正文按策略清理后，最小索引仍保留原 Orchestrator、task、operation、关闭依据和必要摘要。迟到 Invoke 命中后返回 gone 或固定禁止事实，不产生新的可发送操作；字段更改不提供新身份资格。
+完整取消记录与正文按策略清理后，最小索引仍保留原 Orchestrator、task、operation、取消依据和必要摘要。迟到 Invoke 命中后返回 gone 或固定禁止事实，不产生新的可发送操作；更改字段也不能复用该 operation_id 启动。
 
-TaskGate 终态同样压缩为长期关闭索引。只有原任务从未登记、没有关闭索引且认证控制有效时，才允许初次初始化；索引不可用、从旧备份恢复或存储损坏时，先关闭自动行动并核对原权威。
+TaskGate 终态同样压缩为长期任务终态索引。只有原任务从未登记、没有任务终态索引且认证控制有效时，才允许初次初始化；索引不可用、从旧备份恢复或存储损坏时，先关闭自动行动并核对原权威。
 
-完整原回执已清理后的查询是 gone，不是另一份业务 rejected Receipt。索引还保存请求摘要时，同 ID 异请求返回 idempotency_conflict。统一查询线格式见[共同契约](../contracts/README.md)。
+完整原回执已清理后的查询是 gone，不是另一份业务 rejected Receipt。索引还保存请求摘要时，同 ID 异请求返回 idempotency_conflict。统一查询协议编码格式见[共同契约](../contracts/README.md)。
 
 ## 6. 能力目录与 API 驱动装配
 
@@ -277,7 +277,7 @@ TaskGate 终态同样压缩为长期关闭索引。只有原任务从未登记�
 | limits | max_duration_ms、max_input_bytes、max_output_bytes、max_physical_requests、cost_bound、max_cost、mutex_domains |
 | Binding | binding_id、revision、capability_ref、executor_id、target_ref、driver_ref、configuration_ref、availability |
 
-`cost_bound=strict` 表示可信上限；estimate 的 max_cost 只是本次预留估算额，仅当原 Orchestrator 与费用 Grant owner 在同一受信提交域、可直接核验原 Task 内部的用户接受记录，且全部必需 Grant 无该费用单位硬 limit 时启用。执行端固定原 Capability／Binding 与 operation_id，Grant owner 通过受信原操作而非 UseRequest 自报核验模式；公开 policy_ref、跨域缓存或仅有在线连接均不能证明同意，缺少同域核验时 strict-only。固定跨 Orchestrator allocation 和离线租约不使用 estimate。实际费用超估算仍按原 use 上报，停止同范围新计费，不把超额改写成其他操作的费用。Capability 声明只是接入者的受信合同，必须有目标测试证据，不能从 JSON 合法性推导保证兑现。
+`cost_bound=strict` 表示可信上限；estimate 的 max_cost 只是本次预留估算额，仅当原 Orchestrator 与费用 Grant owner 在同一受信本地事务范围内、可直接核验原 Task 内部的用户接受记录，且全部必需 Grant 无该费用单位硬 limit 时启用。执行端固定原 Capability／Binding 与 operation_id，Grant owner 通过受信原操作而非 UseRequest 自报核验模式；公开 policy_ref、跨域缓存或仅有在线连接均不能证明同意，缺少同域核验时 strict-only。固定跨 Orchestrator allocation 和离线租约不使用 estimate。实际费用超估算仍按原 use 上报，停止同范围新计费，不把超额改写成其他操作的费用。Capability 声明只是接入者的受信合同，必须有目标测试证据，不能从 JSON 合法性推导保证兑现。
 
 接入流水线从已固定的 OpenAPI 基线生成参数映射，由接入者补充业务副作用、幂等键、查原效果和授权声明。安装先解析全部 Schema 依赖，固定其摘要，验证请求与响应样本，再生成候选索引；未补完业务合同的 API 不进入可执行目录。
 
@@ -361,11 +361,11 @@ GUI 动作必须引用仍新鲜的观察与当前占用。发送门禁在模拟�
 
 执行工作按用户、提供方和资源域分队列，实际领取同时受这些限额约束。任务工作租约、进程并发槽和设备业务互斥分别保存；连接关闭只释放进程资源，不证明外部动作终结。
 
-每操作核对只有一个 reconcile 责任槽。FactStore 保存新领域事实时同事务调用 `Raise`，可丢通知只加速扫描；不同查询 command 可以合并下一次工作，但各自原回执必须可查。执行工作者使用公共 Claim／Guard／Finish，不自行实现另一份 done／退避竞争算法。控制、接管、撤权和查询保留容量，目标洪峰不能排在它们前面耗尽持久空间。
+每操作核对只有一个 reconcile 作业记录。FactStore 保存新领域事实时同事务调用 `Raise`，可丢通知只加速扫描；不同查询 command 可以合并下一次工作，但各自原回执必须可查。执行工作者使用公共 Claim／Guard／Finish，不自行实现另一份 done／退避竞争算法。控制、接管、撤权和查询保留容量，目标洪峰不能排在它们前面耗尽持久空间。
 
-重启先恢复关闭索引、TaskGate、资源代次、未决 attempts 和原回执，再开放新动作。恢复适配器按有限页核对 Operation、在途 Attempt、逐入口控制和未交付账务是否有对应原槽；缺槽时在原领域事务补齐，不能根据新进程内存推导未发送。不能证明旧发送已结束时将资源置为自动执行隔离；本人管理和必要只读核查保持可用。
+重启先恢复去重与终态索引、TaskGate、资源代次、未决 attempts 和原回执，再开放新动作。恢复适配器按有限页核对 Operation、在途 Attempt、逐入口控制和未交付账务是否有对应原作业记录；缺少时在原领域事务补齐，不能根据新进程内存推导未发送。不能证明旧发送已结束时将资源置为自动执行隔离；本人管理和必要只读核查保持可用。
 
-升级排空只阻止新的原操作接纳，保留旧版本核对。停机日志记录仍未知的 operation 和资源，重启按原身份恢复；不能以 graceful shutdown 完成便认为目标动作已终结。
+升级排空只阻止新的原操作接纳，保留旧版本核对。停机日志记录仍未知的 operation 和资源，重启按原 operation_id 恢复；不能以 graceful shutdown 完成便认为目标动作已终结。
 
 <a id="entrance-recovery"></a>
 ### 固定设备入口的恢复
@@ -376,7 +376,7 @@ GUI 动作必须引用仍新鲜的观察与当前占用。发送门禁在模拟�
 flowchart TD
     S[宿主进程启动或恢复] --> L{取得固定设备 OS 锁？}
     L -->|否| X[拒绝新自动动作]
-    L -->|是| D[恢复原关闭索引、Gate、epoch、Attempt]
+    L -->|是| D[恢复原去重与终态索引、Gate、epoch、Attempt]
     D --> V{原状态完整且当前资格可核验？}
     V -->|否| Q[保持自动执行隔离]
     V -->|是| R[按原 operation 核对未决动作]
@@ -399,7 +399,7 @@ flowchart TD
 
 | 扩展单位与串行键 | 执行方式 | 限制与瓶颈 |
 | --- | --- | --- |
-| 目录查询与不同资源的原操作 | 无状态入口按 tenant、provider、resource 分配有界工作槽 | 准确版本缓存可复用；当前 availability、授权和门禁不能当永久缓存 |
+| 目录查询与不同资源的原操作 | 无状态入口按 tenant、provider、resource 分配有界作业记录 | 准确版本缓存可复用；当前 availability、授权和门禁不能当永久缓存 |
 | `(tenant, operation_id)` 与 Attempt 准备 | 同一原操作串行推进，领取代次仅保护提交 | 多 worker 只能恢复原操作；旧 worker 是否仍可能发送由实际门禁和目标事实裁决 |
 | `(Orchestrator, task_id)` 的 Gate | 控制修订单调合并，逐入口传播；当前入口集合可查 | 控制传播扇出受已绑定执行端数量约束，不能以本地数据库提交延迟代替全端生效延迟 |
 | `(owner, resource_id)` 的发送入口 | Gate、epoch、lease 与观察检查使用同一资源入口锁 | 同设备单入口是业务约束；驱动证明资源独立后才可细分资源域 |
@@ -407,7 +407,7 @@ flowchart TD
 
 | 依赖中断 | 保持的事实及对外表现 | 恢复前不能做的事 |
 | --- | --- | --- |
-| Executor 数据库不可写或写资格不明 | 新接纳不可用；原命令结果可能未知，现存操作继续按原身份核对 | 不从空缓存建立 Operation 或开放新的发送责任 |
+| Executor 数据库不可写或写资格不明 | 新接纳不可用；原命令结果可能未知，现存操作继续按原 operation_id 核对 | 不从空缓存建立 Operation 或开放新的发送责任 |
 | 资源 owner／设备失联 | 原租约、在途 Attempt 和控制 pending 保留；设备入口到窗口后关闭新启动 | 不因连接超时、worker 租约到期或另一个云副本存活而接管设备 |
 | 授权负责方或当前控制不可核验 | 可保存已发生结果与核对缺口；没有新使用资格就等待 | 不延长原 start_before、使用窗口或 operation deadline |
 | 目标系统超时／限流 | 按是否跨边界保存失败或 unknown，原查询有限退避 | 不换工具、设备或新目标键重做未知效果 |
@@ -415,7 +415,7 @@ flowchart TD
 
 连接池、Driver 并发、图片内存、内容写入和查询吞吐分别限额；大截图使用有界流与准确内容引用，避免在多个 worker 中复制完整字节。目标超时会占用调用槽，因此原效果查询、控制／接管和账务归并各有保留容量。耗尽高频自动查询后保留原责任，依恢复事件或受信核查继续；禁止靠删除 unknown 操作减轻积压。
 
-在[公共工作观测](../reliable-work.md#observability)关联 command、job、领取与责任版本后，按[公共容量方法](../deployment-production.md#capacity)，分别记录接纳延迟、准备事务锁等待、实际入口等待、Driver 延迟、目标限流率、在途与 unknown 年龄、控制提交至每入口 enforced 的耗时、截图字节率及核对预算消耗。同设备吞吐以动作占用时长和强制新观察成本估算，API 吞吐则受提供方配额与响应长尾约束，二者分开压测。
+在[公共工作观测](../reliable-work.md#observability)关联 command、job、领取与作业版本后，按[公共容量方法](../deployment-production.md#capacity)，分别记录接纳延迟、准备事务锁等待、实际入口等待、Driver 延迟、目标限流率、在途与 unknown 年龄、控制提交至每入口 enforced 的耗时、截图字节率及核对预算消耗。同设备吞吐以动作占用时长和强制新观察成本估算，API 吞吐则受提供方配额与响应长尾约束，二者分开压测。
 
 验收负载应包含独立设备并行、一台设备持续热点、提供方长尾、节点集中重连及旧 worker 迟到。需要证明控制和核对在新动作过载时仍能前进，且资源只存在一个有效发送入口。云数据库故障时由平台证明旧主隔离；端侧无法证明原状态完整时保持自动执行隔离。可用性来自这些明确边界，不承诺在未知效果下立即恢复新动作吞吐。
 
@@ -425,12 +425,12 @@ flowchart TD
 
 | 编号 | 初始状态与刺激 | 断言及恢复 |
 | --- | --- | --- |
-| EX-01 | Invoke 持久接纳后丢答复并重启 | 同 operation 和工作槽恢复；Receipt.applied 不被当作目标成功 |
+| EX-01 | Invoke 持久接纳后丢答复并重启 | 同 operation 和作业记录恢复；Receipt.applied 不被当作目标成功 |
 | EX-02 | 准备事务提交、发送前崩溃 | 无确证时报告可能已发送；恢复查询原目标键，不创建新意图 |
-| EX-03 | 目标写成后丢答复 | target_idempotent 原键查询／有限重放；non_repeatable 只核对；无第二效果 |
-| EX-04 | pause 已写 gate，旧 worker 尚未消费控制队列 | 实际发送门禁拒绝旧资格；不能仅凭旧缓存授权发送 |
+| EX-03 | 目标写成后丢答复 | target_idempotent 原键查询／有限重放；no_idempotency_guarantee 只核对；无第二效果 |
+| EX-04 | pause 已写 gate，旧 worker 尚未消费控制队列 | 实际发送门禁拒绝旧控制修订下的启动；不能仅凭旧缓存授权发送 |
 | EX-05 | 取消未知 operation，清理完整记录，迟到 Invoke | 长期禁止索引仍在；无启动；同身份不能恢复 |
-| EX-06 | 终态 gate 压缩后重放较高 active 修订 | 关闭索引阻止重新初始化；不产生自动工作 |
+| EX-06 | 终态 gate 压缩后重放较高 active 修订 | 任务终态索引阻止重新初始化；不产生自动工作 |
 | EX-07 | 独立 owner 未收到控制，Executor 已收到 | Receipt 只能报告 accepted／逐入口 pending；owner 实际落实后才 applied |
 | EX-08 | 自动动作已准备，本人接管后旧动作迟到 | epoch 增加；未跨入口者拒绝，已跨入口者列为在途并核对 |
 | EX-09 | lease 过期但旧动作仍可能迟到，另 Orchestrator acquire | 拒绝第二自动执行者；不能用失联超时替代效果终结 |
@@ -441,7 +441,7 @@ flowchart TD
 | EX-14 | 磁盘接近保护水位，同时新动作洪峰 | 新接纳过载；原控制、核对和结果归并仍有持久容量 |
 | EX-15 | 同一设备同时启动两个宿主进程，首进程崩溃后留有驱动子进程 | 第二进程未取 OS 锁不开放；取锁后仍先处理原发送者并核对 Attempt，不从锁释放推定无在途动作 |
 | EX-16 | 设备宿主失联，云端 job 被另一实例领取 | 原未知效果与隔离保留；没有目标隔离证据就不建立另一设备发送入口 |
-| EX-17 | 原关闭索引缺失或备份落后，设备 OS 锁可取得 | 只允许控制及必要核查；恢复原权威之前不初始化新资源代次或放行旧任务 |
+| EX-17 | 原去重与终态索引缺失或备份落后，设备 OS 锁可取得 | 只允许控制及必要核查；恢复原权威之前不初始化新资源代次或放行旧任务 |
 | EX-18 | GUI 写动作越过入口后丢答复；同一持有者用新观察启动下一点击，随后旧动作迟到 | 资源 owner 仍拒绝第二自动写动作；查询或只读观察不解除隔离；核清原动作后比较原 operation／attempt／epoch 才允许继续 |
 | EX-19 | 受管文件写在临时字节持久、原子替换、目录持久化、Operation 归并各点崩溃，并试图借符号链接或旧版本改写目标 | 原 journal 和目标文件身份区分已写、未写与 unknown；越界访问拒绝；同路径另一自动写者在未决期间不能进入 |
 | EX-20 | 终态 Operation 连续收到 r1／r2 可信上调账单；FactStore 事务、交回答复和 Executor 进程依次故障，停机超过原命令期限再以新 ID 交回且 r2 通知先到且原 Task 结算 job 已 done | 每修订账单与固定 outbox 同时存在或同时缺失；r2 不覆盖 r1 原命令；原尝试到期后新命令按来源修订合并同一 JobAck，重启分别交回。Task 可读最新累计额而只追差额，随后 r1／r2 通知均不重扣、不重启目标或与 Grant use 投影双扣 |

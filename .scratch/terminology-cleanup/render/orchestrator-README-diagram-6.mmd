@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant P as 父 Orchestrator／账本
+    participant C as 接收 Orchestrator／子账本
+    alt 同 Orchestrator 内部子任务
+      Note over P,C: 共享同一事务原子提交
+      P->>C: 父预留、allocation、子接纳、首 job 一起提交
+    else 跨 Orchestrator
+      P->>P: 父事务：预留额度、保存 allocation 与交接 job
+      P->>C: 事务外交接原分配依据与原 task.submit 命令
+      C->>P: 查询原回执及 allocation 当前权威状态
+      C->>C: 接收事务：一次保存分配映射、子 Task 与首 job
+      C-->>P: 原接纳回执；丢答复仍查原 command_id
+    end
+    C->>C: 子调用在分配内预留、结算
+    P->>C: 请求关闭原 allocation 的新增消费
+    C->>C: 禁止新消费与收尾责任共同提交
+    Note over P,C: closing 期间父预留不返还；到期或失联不能代替封账
+    C->>C: 费用核清后保存 closed 与完整累计 Closure
+    P->>C: 查询当前关闭证明
+    C-->>P: 原 allocation 的 Closure
+    P->>P: 核验后同事务转实际支出、释放剩余、保存结算回执

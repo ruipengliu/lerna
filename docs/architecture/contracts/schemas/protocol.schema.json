@@ -1934,7 +1934,7 @@
             "reconciling",
             "closed"
           ],
-          "description": "只读派生投影：先取持久关闭记录为 closed，否则具体恢复或收尾缺口为 reconciling，否则已固定子映射为 active，其余 preparing。普通运行期未最终结算或常规轮询不单独构成缺口；来源为原创建、进展、控制、输入、额度及关闭记录，不独立写入状态。",
+          "description": "只读派生投影：先取持久委派关闭记录为 closed，否则具体恢复或收尾缺口为 reconciling，否则已固定子映射为 active，其余 preparing。普通运行期未最终结算或常规轮询不单独构成缺口；来源为原创建、进展、控制、输入、额度及关闭记录，不独立写入状态。",
           "readOnly": true
         },
         "remote_revision": {
@@ -4487,10 +4487,11 @@
           "maxLength": 4096
         },
         "effect_class": {
+          "description": "按恢复策略依次分类：无目标业务副作用归 read_only；其余有目标幂等保证归 target_idempotent；其余归 no_idempotency_guarantee（包括非幂等或未声明幂等保证）。无幂等保证操作仅在已确证 not_applied 且 may_apply_later=false、并通过当前授权等独立检查后允许原操作内重试。",
           "enum": [
             "read_only",
             "target_idempotent",
-            "non_repeatable"
+            "no_idempotency_guarantee"
           ]
         }
       },
@@ -5381,10 +5382,11 @@
           "type": "object"
         },
         "effect_class": {
+          "description": "按恢复策略依次分类：无目标业务副作用归 read_only；其余有目标幂等保证归 target_idempotent；其余归 no_idempotency_guarantee（包括非幂等或未声明幂等保证）。无幂等保证操作仅在已确证 not_applied 且 may_apply_later=false、并通过当前授权等独立检查后允许原操作内重试。",
           "enum": [
             "read_only",
             "target_idempotent",
-            "non_repeatable"
+            "no_idempotency_guarantee"
           ]
         },
         "verification": {
