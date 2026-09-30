@@ -225,10 +225,4 @@ PostgreSQL 保存业务事实和需要继续履行的工作，对象存储保存
 
 本文描述的是目标架构。可运行内核、默认组件和 SDK 仍待实现，故障恢复、授权隔离、组件互操作以及质量、时延、费用和容量都需要运行验收。联网问答和多个有状态模拟手机分别设有专项验收；真实手机支持需要另行取得对应平台的验证证据。
 
-| 想继续了解 | 阅读入口 |
-| --- | --- |
-| 建设范围与验证进度 | [建设目标](.draft/goals.md)、[交付审查](.draft/review.md) |
-| 一次任务的完整流转 | [贯穿场景](.draft/walkthrough.md)、[任务编排器](.draft/orchestrator/README.md) |
-| 模块职责与关键取舍 | [详细方案索引](.draft/README.md)、[设计决策](.draft/decisions.md) |
-| 组件接入与替换 | [共同契约](.draft/contracts/README.md)、[扩展与宿主](.draft/extensions/README.md) |
-| 实现与生产运行 | [工程方案](.draft/engineering.md)、[生产部署](.draft/deployment-production.md) |
+TODO：待其他正式章节完成后，补充对应的阅读入口与引用。
