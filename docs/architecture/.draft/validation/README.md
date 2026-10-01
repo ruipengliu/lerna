@@ -16,6 +16,8 @@
 
 公共框架另提供 [FW-01～09](../reliable-work.md#validation)，按[各域接入与证据矩阵](fault-experiments.md#reliable-work-framework)对真实 PostgreSQL／SQLite 适配器、模板和领域映射运行。共用套件覆盖接纳、两种版本、提交未知及恢复成本；各模块继续提供外部效果和业务成功断言，不能用 JobStore 通过代替领域验收。
 
+核心模型收敛沿同一应用／SDK 切面组织 [CM-01～17 行为场景与 CM-S1～S5 静态检查](core-model-scenarios.md)，逐项映射[54 条用户故事及 24 项实施决策](../../../../.scratch/harness-core-model-simplification/traceability.md)。四类基础请求、原提交、继续权、未知效果及按需能力均复用既有 HAR／FW／模块向量；全部运行场景仍待实施。冷恢复先观察历史与原责任的重建，再单列恢复后继续的调用和成本，不能把后者混入历史研究 C 的计数终点。文档静态、机制、数据库／平台、质量和性能按[证据状态](core-model-scenarios.md#evidence)分别登记。
+
 ## 1. 测试装配与证据
 
 九模块优化的 24 项采用范围、12 组跨模块用例及 6 类候选对照见[优化验收](optimization-evidence.md)。目标覆盖遗漏、工具静默语义错误、长期上下文与记忆冲突、制品替换及完整成本在该页细化；沿本页的独立真值、统计和发布条件取得证据，当前仍未运行。
