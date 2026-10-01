@@ -14,7 +14,7 @@ Review base: `1b647dc970317173f349296e47efd41a4cf3a23c`
 | [01 核心对象与数据归属](issues/01-core-object-ownership.md) | 无 | completed |
 | [02 参考语义覆盖矩阵](issues/02-reference-semantic-coverage.md) | 无 | completed |
 | [03 应用入口与四类数据流程](issues/03-application-workflows.md) | 01 | completed |
-| [04 领域规则与扩展生命周期](issues/04-domain-and-extension-semantics.md) | 01、02 | in-progress |
+| [04 领域规则与扩展生命周期](issues/04-domain-and-extension-semantics.md) | 01、02 | completed |
 | [05 验收场景与规格追踪](issues/05-acceptance-traceability.md) | 02、03、04 | pending |
 | [06 架构导航与交付整合](issues/06-document-integration.md) | 01～05 | pending |
 
