@@ -4,7 +4,7 @@
 
 本表按规格原编号映射 54 条用户故事和 24 项实施决策，不复写规格或另造每项独立测试。CM 是复用 HAR／FW／模块向量的行为场景组，CM-S 是本轮静态审查入口；预期行为是待实现断言。所有运行状态当前均为未验证，设计承载、静态检查和按需能力不得计为运行通过。
 
-G-01～07 沿[参考语义矩阵的合同差异](../../docs/research/agent-harness-comparison/core-model-semantic-coverage.md#4-需要独立交付的合同差异)解释。G-01～05 中的完整公共能力尚待独立合同和实现；G-06／07 保留现有 Memory 与扩展合同并按需启用。设计中写明这些边界可以完成本轮映射，不表示已经交付对应运行能力。总览与工程导航的整合由[票据 06](issues/06-document-integration.md)收尾。
+G-01～07 沿[参考语义矩阵的合同差异](../../docs/research/agent-harness-comparison/core-model-semantic-coverage.md#4-需要独立交付的合同差异)解释。G-01～05 中的完整公共能力尚待独立合同和实现；G-06／07 保留现有 Memory 与扩展合同并按需启用。设计中写明这些边界可以完成本轮映射，不表示已经交付对应运行能力。总览与工程导航的设计整合已由[票据 06](issues/06-document-integration.md)完成并合入，运行状态仍为未验证。
 
 ## 1. 用户故事
 
@@ -92,10 +92,10 @@ G-01～07 沿[参考语义矩阵的合同差异](../../docs/research/agent-harne
 | ID-21 | [默认接口](../../docs/architecture/.draft/application-workflow.md)、[105 方法登记](../../docs/architecture/.draft/contracts/methods.md) | [CM-S3](../../docs/architecture/.draft/validation/core-model-scenarios.md#static-review) | 不删改公共合同；完整扩展的公开差异另行同版交付 | 未验证；差异检查 |
 | ID-22 | [四类流程与事务](../../docs/architecture/.draft/request-data-flows.md) | [CM-01～04／17](../../docs/architecture/.draft/validation/core-model-scenarios.md#baseline)、[CM-S5](../../docs/architecture/.draft/validation/core-model-scenarios.md#static-review) | 字节先耐久，必要发送屏障保留；计量单位及 C 两段不混合 | 未验证；未测量 |
 | ID-23 | [最小装配](../../docs/architecture/.draft/engineering.md#minimum-profile)、[生产部署](../../docs/architecture/.draft/deployment-production.md) | [生产验收](../../docs/architecture/.draft/deployment-production.md#6-发布观测与生产验收)、[CM-S4](../../docs/architecture/.draft/validation/core-model-scenarios.md#static-review) | 单进程不替代生产分工、固定 Orchestrator 或本地事务边界 | 未验证；需平台 |
-| ID-24 | [领域词汇](../../CONTEXT.md)、[架构总入口](../../docs/architecture/README.md)、[工程](../../docs/architecture/.draft/engineering.md)及原模块；[06](issues/06-document-integration.md)待整合 | [CM-S4](../../docs/architecture/.draft/validation/core-model-scenarios.md#static-review) | 映射只导航，规则留在原模块；ADR 无静默替代，总导航由 06 收尾 | 未验证；整合待 06 |
+| ID-24 | [领域词汇](../../CONTEXT.md)、[架构总入口](../../docs/architecture/README.md)、[工程](../../docs/architecture/.draft/engineering.md)及原模块；[06](issues/06-document-integration.md)已完成设计整合 | [CM-S4](../../docs/architecture/.draft/validation/core-model-scenarios.md#static-review) | 映射只导航，规则留在原模块；ADR 无静默替代，总导航已对齐 | 未验证 |
 
 ## 3. 验证记录及更新规则
 
-本票据的实际静态命令、检查范围与结果见[票据 05 Comments](issues/05-acceptance-traceability.md#comments)。完整交付状态由实施图及最终整合记录维护；本表不把其他票据尚未完成的导航整合记为通过。
+票据 05 的实际静态命令、检查范围与结果见[原 Comments](issues/05-acceptance-traceability.md#comments)，其中 06 尚待整合的说明保留当时状态。后续设计整合及静态证据见[交付核对](verification.md)；完整交付状态由实施图及最终整合记录维护，设计整合完成不改变本表的未验证运行状态。
 
 规格故事、决策、公共行为或能力范围变化时同步对应行和 CM 场景，再检查原模块与契约差异。只改变名称或分组不能省略原身份、许可、来源、未知效果或迟到账务。运行实现、数据库／平台试验或性能测量真正执行后，应另附实现提交、冻结装配、刺激、实际结果及证据链接，再更新对应状态；不得从本次静态检查批量改为运行通过。
