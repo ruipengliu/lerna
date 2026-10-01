@@ -1,7 +1,7 @@
 # 05：验收场景与规格追踪
 
 Status: ready-for-agent
-Progress: pending
+Progress: in-progress
 Blocked by: 02, 03, 04
 
 ## Scope
@@ -20,4 +20,5 @@ Owned files: `docs/architecture/.draft/validation/core-model-scenarios.md`、`va
 
 ## Comments
 
+- 2026-10-01：在独立工作树从 `e35fa9b` 建立 `codex/core-model-05`，依赖 01～04 已完成；开始按真实设计入口建立行为场景和规格追踪，运行验证保持待实施。
 - 2026-10-01：依赖实现内容合入后编写，便于逐条引用真实交付而非假想文件。
