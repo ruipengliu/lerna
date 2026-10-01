@@ -1,5 +1,21 @@
-scripts/architecture/node_modules/
-docs/architecture/html/
-docs/archive/architecture-2026-09-22/architecture/html/
+# macOS metadata
+.DS_Store
+._*
+
+# Editor temporary files
+*.swp
+*.swo
+*~
+
+# Dependencies and Python cache
+node_modules/
 __pycache__/
-.reference/
+*.pyc
+*.pyo
+
+# Generated documentation
+/docs/architecture/html/
+/docs/archive/architecture-2026-09-22/architecture/html/
+
+# Local reference checkouts; .scratch/ contains versioned issues and specs
+/.reference/
