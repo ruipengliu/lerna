@@ -90,7 +90,7 @@ git diff --check 1b647dc970317173f349296e47efd41a4cf3a23c
 
 结果：保护范围的 `git diff --exit-code` 退出 0，无输出；登记仍为 105 个领域方法；`git diff --check` 退出 0。保护范围实际包含 contracts 的 84 份受版本控制文件、16 份验证程序及依赖清单、10 份 ADR 和 2 份历史来源／基线文件。Schema、方法、示例、验证程序与 ADR 决定均未改变，历史哈希未重写。
 
-本轮未重复运行已有协议、Brain、传输、签名、租约或发布构造套件，历史通过记录保留原执行范围。
+票据 06 未重复运行已有协议、Brain、传输、签名、租约或发布构造套件。整轮实施中，[票据 04](issues/04-domain-and-extension-semantics.md#comments)已实际执行协议静态检查和 Brain 静态向量；各通过记录保留原执行范围，不代表运行系统已经通过验证。
 
 ## 4. 设计检查与未运行项目
 
@@ -100,6 +100,6 @@ git diff --check 1b647dc970317173f349296e47efd41a4cf3a23c
 
 ## 5. 整合交接状态
 
-01～05 已完成并合入本票起点，06 的文档整合与检查证据由本记录及票据 Comments 交付。双轴审查、发现项统一修复、traceability 中 ID-24 的最终状态同步、整个 spec 的关闭及工作树清理由根协调者收尾；在完成前保留 pending，不把本票完成解释为整轮已关闭。
+01～05 已完成并合入本票起点，06 的文档整合与检查证据由本记录及票据 Comments 交付。traceability 中 ID-24 已同步为设计整合完成、运行未验证。双轴审查、发现项统一修复、整个 spec 的关闭及工作树清理由根协调者收尾；在完成前保留 pending，不把本票完成解释为整轮已关闭。
 
 设计提交后执行 `git merge --no-edit codex/harness-core-model-simplification`，当时集成 tip 仍为 `d291e03c8285475988dfa51c1e46891bb2286e79`，输出 `Already up to date.`；工作树检查为空。随后补记本节固定引用，供集成代理合入和审查。

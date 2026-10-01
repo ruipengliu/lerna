@@ -78,7 +78,7 @@ TaskPolicy、验证规则、Evaluator 的适用资格是配置与证据门禁，
 | --- | --- | --- | --- | --- |
 | Message／Session 内部 | 原会话、消息身份及顺序、准确正文、原命令或输入关联 | 已保存消息与业务接纳分别成立；跨库转交先保存原命令及 outbox | 应用会话查询；正文清理后仍保留未决交接与必要来源关联 | 消息只是提交内容，不能自行证明 Task 接纳或输入消费 |
 | InputSubmission／Interaction 辅助记录 | input_id、request_id／revision、target_command_id、answer_ref、preview_refs | queued 接纳后持久转交；sending 可能已经消费，撤回请求不保证阻止消费 | interaction.input_read；未收束输入和目标映射不随 Surface 清理 | 同一 Task 可有多个输入，需独立排队、查询和撤回；当前合同范围见[交互接口](interaction/README.md) |
-| InputRequest／实际业务 owner 辅助对象 | request_id、revision、kind、准确问题、候选和允许动作 | owner 创建和修订；与真实业务改变同事务一次消费，旧修订拒绝 | 受信界面、input_read 与业务查询；保留原消费及去重依据 | 回答任务澄清、接受成果和应用输入有各自业务裁决；不会都归 Session 所有 |
+| InputRequest／实际业务 owner 辅助对象 | request_id、revision、kind、准确问题、候选和允许动作 | owner 创建和修订；与真实业务改变同事务一次消费，旧修订拒绝 | 受信界面、interaction.request_read 与业务查询；保留原消费及去重依据 | 回答任务澄清、接受成果和应用输入有各自业务裁决；不会都归 Session 所有 |
 | Confirmation／实际业务 owner 辅助对象 | confirmation_id、consumer_method、原 consumer_command_id、intent_hash、本人决定 | 原命令先固定；受信决定由 owner 保存，并在原业务事务一次消费 | 受信界面与原业务入口；已消费决定和最小身份按原命令保留 | 不是普通 Message，也不能统一移到 Grant owner 跨库消费；[正文预览](../../adr/0008-trusted-renderer-preview.md)不证明用户阅读 |
 | Surface、SurfaceSnapshot／应用 owner 辅助对象 | surface_id、app_binding、可选 task_ref、revision；快照记录来源修订 | Surface 可以独立存在；快照提交后发布正式提示，权限变化后重新披露 | interaction.surface_read；未收束输入独立于界面正文保留 | 界面本身有生命周期；展示 Task 的部分才是任务投影，不能把整个 Surface 当 Task 子行 |
 | Presentation／设备本端呈现记录 | surface_id、endpoint_id、intent_revision、open、seen_revision | 当前打开／关闭意图按修订覆盖，迟到输出不得重开；遥测可按本端策略清理 | Renderer 与设备恢复；不是本人确认依据 | 关闭窗口不同于归档 Session 或取消 Task |

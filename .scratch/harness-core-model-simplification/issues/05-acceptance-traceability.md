@@ -20,9 +20,9 @@ Owned files: `docs/architecture/.draft/validation/core-model-scenarios.md`、`va
 
 ## Comments
 
+- 2026-10-01：依赖实现内容合入后编写，便于逐条引用真实交付而非假想文件。
+- 2026-10-01：在独立工作树从 `e35fa9b` 建立 `codex/core-model-05`，依赖 01～04 已完成；开始按真实设计入口建立行为场景和规格追踪，运行验证保持待实施。
 - 2026-10-01：文档提交 `21525022ccc4999b1947bed0affd259acb400a93` 完成[CM-01～17 场景及 CM-S1～S5 静态检查](../../../docs/architecture/.draft/validation/core-model-scenarios.md)、[US／ID 追踪](../traceability.md)和验收总入口。复用 HAR、FW 与模块场景；C 明确分为历史及原责任重建、恢复后继续，后段不混入历史研究的冷打开计数。
 - 2026-10-01：实际静态验证通过：`python3 docs/architecture/.draft/validation/check_documents.py` 为 56 篇 Markdown／1749 本地链接／104 Mermaid／0 错误；同一检查器将 ROOT 指向本 feature 后为 9 篇／220 本地链接／0 错误。独立编号检查核对规格原编号，US-01～54、ID-01～24 各恰一行且含设计、验收、预期行为和未验证运行状态；CM-01～17 锚点齐全。暂存全部四个 owned 文件后 `git diff --cached --check` 通过。
 - 2026-10-01：差异检查确认方法登记仍为 105 项；相对起点 `e35fa9b` 及固定 review base `1b647dc970317173f349296e47efd41a4cf3a23c`，contracts（含 Schema、方法、示例、proto）、ADR 和历史 sources.json 均无变更。完成前已合入最新集成分支检查，tip 为 `e35fa9b770f13a5ff321167a703ddf5a6c889294`，返回 Already up to date。
 - 2026-10-01：本票据只交付设计与上述静态证据，没有运行内核、SDK、数据库、平台、上游测试、模型质量或性能实验，也没有 red／green 运行记录。G-01～05 的完整公共能力仍待合同及实现；G-06／07 按需启用。总览与工程导航由 06 整合，未计为本票据已经完成。
-- 2026-10-01：在独立工作树从 `e35fa9b` 建立 `codex/core-model-05`，依赖 01～04 已完成；开始按真实设计入口建立行为场景和规格追踪，运行验证保持待实施。
-- 2026-10-01：依赖实现内容合入后编写，便于逐条引用真实交付而非假想文件。
