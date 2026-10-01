@@ -3,7 +3,7 @@
 Status: ready-for-agent
 Type: spec
 Created: 2026-10-01
-Progress: pending
+Progress: in-progress
 
 ## Problem Statement
 
@@ -190,5 +190,6 @@ Progress: pending
 
 ## Comments
 
+- 2026-10-01：用户调用 implement-spec 实施本目录。已建立[六张实施票据](README.md)，沿用本规格的验证切面，运行场景保持待执行；规格实施范围仍为架构设计交付。
 - 2026-10-01：按用户显式调用的 to-spec 技能创建并发布本规格，triage 为 ready-for-agent。主验证切面已向用户征询；在收到回复前按既有应用／SDK 工作流编写，未将未回复记录为确认。规格发布不代表运行实现或架构改造完成。
 - 2026-10-01：规格静态检查通过：七个模板章节齐全且顺序正确，54 条用户故事连续编号并符合格式，24 项实施决策未嵌入具体文件路径或代码；文档检查通过 15 个本地链接。上述检查只验证规格结构与引用，未运行 Harness、上游项目、数据库或性能测试。
