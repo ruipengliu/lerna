@@ -10,12 +10,19 @@
 | 06 集成起点 | `d291e03c8285475988dfa51c1e46891bb2286e79`，包含已完成且合入的 01～05 |
 | 集成分支 | `codex/harness-core-model-simplification` |
 | 06 分支 | `codex/core-model-06` |
-| 设计整合提交 | 提交后补记固定提交号；最终分支可能另含验证记录提交 |
+| 设计整合提交 | `0bffbdc8013194631bb28c49278b4de3cfb85fcf`；此后仅补记固定提交号及整合检查结果 |
 | 规格与实施 | [spec](spec.md)、[实施图](README.md)、[票据 06](issues/06-document-integration.md)、[54 条故事与 24 项决策追踪](traceability.md) |
 | 架构阅读链 | [主入口](../../docs/architecture/README.md) → [六组对象](../../docs/architecture/.draft/core-data-model.md) → [默认应用](../../docs/architecture/.draft/application-workflow.md) → [四类读写](../../docs/architecture/.draft/request-data-flows.md) → [参考覆盖](../../docs/research/agent-harness-comparison/core-model-semantic-coverage.md) → [17 组验收](../../docs/architecture/.draft/validation/core-model-scenarios.md) |
 | 设计整合说明 | [架构交付记录](../../docs/architecture/.draft/review.md#core-model-review)；行为规则仍归九模块，矩阵与目录不构成第二套规范 |
 
 本票据只修改七份 Owned 架构文档、本记录及票据 06，共九份 Markdown；feature README、spec 与最终双轴审查记录由根协调者维护。`docs/architecture/ochestrator/` 沿用既有目录名。对整轮差异使用固定 review base，对本票据差异使用 06 集成起点，不将此前架构刷新计入本次实施。
+
+固定设计差异可分别读取整轮和本票范围；最终双轴审查还须包含该设计提交之后的验证记录及统一修复提交。
+
+```sh
+git diff 1b647dc970317173f349296e47efd41a4cf3a23c 0bffbdc8013194631bb28c49278b4de3cfb85fcf
+git diff d291e03c8285475988dfa51c1e46891bb2286e79 0bffbdc8013194631bb28c49278b4de3cfb85fcf
+```
 
 ## 2. 实际静态检查
 
@@ -94,3 +101,5 @@ git diff --check 1b647dc970317173f349296e47efd41a4cf3a23c
 ## 5. 整合交接状态
 
 01～05 已完成并合入本票起点，06 的文档整合与检查证据由本记录及票据 Comments 交付。双轴审查、发现项统一修复、traceability 中 ID-24 的最终状态同步、整个 spec 的关闭及工作树清理由根协调者收尾；在完成前保留 pending，不把本票完成解释为整轮已关闭。
+
+设计提交后执行 `git merge --no-edit codex/harness-core-model-simplification`，当时集成 tip 仍为 `d291e03c8285475988dfa51c1e46891bb2286e79`，输出 `Already up to date.`；工作树检查为空。随后补记本节固定引用，供集成代理合入和审查。

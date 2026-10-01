@@ -25,3 +25,4 @@ Owned files: `docs/architecture/README.md`、`.draft/README.md`、`.draft/techni
 - 2026-10-01：七份 Owned 架构文档已接通六组对象、默认应用工作流、四类读写、参考矩阵与 CM-01～17；保留九模块裁决、开发／生产 ADR、静态配置和按需合同缺口，沿用既有 ochestrator 目录。完整交付入口与复现命令见 [verification](../verification.md)。
 - 2026-10-01：复用原文档检查器，architecture 为 60 篇／1846 本地链接／124 Mermaid 围栏；ADR 10 篇／13 链接，综合研究 9 篇／179 链接，五份项目报告合计 162 链接，均 0 错误。固定 review base 的保护范围 diff 与空白检查通过，105 个公开方法保持；54 条故事、24 项决策及 17 组验收编号连续，01～05 全部完成且已合入。
 - 2026-10-01：本票完成设计整合；未重跑未变化机器向量，未执行 Harness、SDK、数据库、模型、平台、性能或 Mermaid 渲染验证。标准／规格双轴审查、统一修复和整个 spec 关闭仍由根协调者收尾。
+- 2026-10-01：主体提交为 `0bffbdc8013194631bb28c49278b4de3cfb85fcf`。完成记录后再次检查受影响范围：architecture 60 篇／1846 链接，feature 10 篇／233 链接，均 0 错误；九份修改均在 Owned 范围内。与最新集成 tip `d291e03` 合并输出 `Already up to date.`，随后仅补记固定提交与整合结果。
