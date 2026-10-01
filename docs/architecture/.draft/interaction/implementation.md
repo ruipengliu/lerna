@@ -127,6 +127,17 @@ Surface 源核对发现尚未覆盖的新修订时，ProjectionWorker 保存经�
 
 共同[观测](../reliable-work.md#observability)分别记录本地接纳、目标命令未决和快照投影等待；业务消费耗时不混入页面实际呈现或本人理解的指标。工作池为原输入核对、撤回和管理控制保留有限容量，普通快照提示与慢页面不能占尽这些保留容量。无持久宿主的浏览器不因采用相同模板接口就取得可恢复接纳能力。
 
+<a id="application-composition"></a>
+### 1.3 Session 与默认应用组合
+
+应用组合入口位于既有交互宿主与领域 ports 之上，具体动作见[默认应用工作流](../application-workflow.md#entry-points)。它负责持久保存原提交、固定目标、查询原决定和组织呈现；TaskCoordinator 仍是唯一任务推进与完成裁决者。SDK 不提供另一条模型循环，不要求普通应用逐项维护 Decision、Attempt、Job 或 Claim。
+
+Session 消息保存消息身份、顺序、获准正文引用及原提交关联；Task 的创建来源关联至多一个 Session，其他界面只引用原 Task。跨事务提交时，消息、完整原命令和交付 outbox 在应用库共同保存，Task 接纳后按原 submit_command_id 补关联；应使用既有交付框架，不新增通用 Session Run 作业。直接 API 调用可无 Session，原负责方和恢复身份仍必须固定。
+
+首版线性 Session 与 Surface、InputRequest、InputSubmission 分工独立：消息保存不证明问题已消费，Surface 是呈现对象，InputRequest 的创建／修订／消费仍归实际业务 owner。回合按原提交及回复关联生成投影；不能只有一个 task.status 而丢失多次输入的身份和控制范围。后续分支的数据要求及未开放范围见[历史分支](session-and-task.md#history-branches)。
+
+应用必须按当前已支持的动作显示入口：独立目标提交 Task，结构化回答走原请求，控制绑定准确 Task，笔记只保存正文。普通聊天 steering／follow-up 没有公共合同时不把它编码为任意 task.input 或 task.cancel。原输入字段、消费事实、用户可见状态和各阶段的共同提交范围见[四类数据流程](../request-data-flows.md#transaction-boundaries)。
+
 ## 2. 严格声明式组件
 
 Surface 固定 app_binding、surface_owner_id 和可选 task_ref。
@@ -304,7 +315,7 @@ surface_list 对一个 owner 冻结有限 ID 集合，逐页返回当前获准�
 | 宿主保存原写入 | 原服务、完整 Command、input_id／请求及准确负载引用 | 仅“本端已保存／待发送”；沿原身份首发或查原决定 |
 | 交互接纳 | InputSubmission=queued、固定目标 Command、接纳回执与转交 job | “交互已保存”；入口命令的 applied 不等于目标请求已消费 |
 | 发送资格取得 | 原输入 queued→sending 与有效 job Guard 条件 | 仅“已领取转交”；job Claim 本身不改变输入状态，可能尚未发送 |
-| 目标命令 accepted | 实际业务 owner 的原命令接纳记录与继续责任 | “业务已接纳、尚未确认消费”；继续查该目标原回执 |
+| 目标入口持久准备，尚无业务决定 | 实际业务 owner 的原命令准备记录与继续责任 | 尚未确认消费，继续查原命令；仅方法登记支持时可返回 accepted，当前 task.input 不增加该阶段 |
 | 请求消费 | 原请求 consumed_by、回答应用、业务回执与后续工作 | 仅该事务提交后显示“已消费”；交互取得并保存其固定投影 |
 | 本人决定／确认消费 | 前者保存 Confirmation 的本人决定及决定回执；后者与原业务共同提交 | approved 不等于 Grant 已签发或成果已验收，见[两端确认](#confirmation-races) |
 
@@ -398,16 +409,18 @@ sequenceDiagram
 <a id="input-control-races"></a>
 ### 4.5 未领取取消、新输入与旧工作退出
 
-撤回一份回答和取消整个 Task 分别提交 `interaction.input_withdraw` 与 `task.cancel`，不能互相代替。交互 owner 以原 input_id、预期修订和原 job 裁决 queued→withdrawn／sending；Orchestrator 以固定 `(orchestrator_id, task_id)`、当前任务及控制修订裁决取消，与输入消费使用同一任务锁序。取消命令仅 accepted 时显示取消处理中；取消业务事务提交后 Task 保持 cancelled，关闭新目标工作，将尚未消费的任务 InputRequest 置为 superseded 并保留原消费／关闭事实，同时保存控制与未结核对责任。
+撤回一份回答和取消整个 Task 分别提交 `interaction.input_withdraw` 与 `task.cancel`，不能互相代替。交互 owner 以原 input_id、预期修订和原 job 裁决 queued→withdrawn／sending；Orchestrator 以固定 `(orchestrator_id, task_id)`、当前任务及控制修订裁决取消，与输入消费使用同一任务锁序。取消决定未知时显示处理中并查原命令，当前 task.cancel 只返回 applied／rejected；取消业务事务提交后 Task 保持 cancelled，关闭新目标工作，将尚未消费的任务 InputRequest 置为 superseded 并保留原消费／关闭事实，同时保存控制与未结核对责任。
+
+本节“新输入”指绑定当前 InputRequest 的回答，不承诺任意 Session 聊天消息的插队或多 Lane 调度。该能力缺口与原提交视图见[默认输入范围](../application-workflow.md#input-scope)；实现不能用取消整个 Task 代替单条输入撤回，也不能把已消费回答改写为 withdrawn。
 
 | 提交顺序 | 持久裁决与恢复 |
 | --- | --- |
 | job 已 Claim，输入仍 queued，撤回先提交 | 保存 withdrawn 与撤回回执；旧 Claim 不取得发送资格，worker 不发原目标命令。重复撤回查原决定，不要求等租约到期 |
 | queued→sending 先提交 | 撤回只保存 withdrawal_requested；即使 worker 尚未实际发送，也不能凭网络沉默报 withdrawn。查原目标命令，或由原业务取消能力阻断后续目标工作 |
-| 目标命令已 accepted 但尚未消费，任务取消先提交 | 原 Task 取消记录阻断旧输入消费与目标启动；业务处理者给原输入命令保存准确拒绝／结束决定，交互继续沿原命令取得结果，不伪造交互 withdrawn |
+| 目标命令已有内部准备但尚未消费，任务取消先提交 | 原 Task 取消记录阻断旧输入消费与目标启动；业务处理者给原输入命令保存准确拒绝／结束决定，交互继续沿原命令取得结果，不伪造交互 withdrawn 或新增 accepted 回执 |
 | 输入消费先提交，任务取消随后提交 | 保留 consumed_by 和原回答事实；取消停止新的目标推进，已派发效果与费用仍核对。原回答不能被撤销成“从未消费” |
 
-`task.submit` 已 accepted 且 Task 已持久创建、目标 job 尚未领取时，也能对该准确 Task 提交取消；目标启动检查当前任务门禁，不等后台循环开始才承认取消。若提交结果未知且尚无 Task 引用，SDK 先查原 submit 回执，取得原 Task 后才绑定取消；“取消当前页面”不能猜测最近 Task 或生成另一个任务。无法定位时保留未知，不能声称已取消。
+`task.submit` 已 applied 且 Task 已持久创建、目标 job 尚未领取时，也能对该准确 Task 提交取消；目标启动检查当前任务门禁，不等后台循环开始才承认取消。若提交结果未知且尚无 Task 引用，SDK 先查原 submit 回执，取得原 Task 后才绑定取消；“取消当前页面”不能猜测最近 Task 或生成另一个任务。无法定位时保留未知，不能声称已取消。
 
 请求与目标命令创建后不改绑。取消后的同一 Task 不接受回答以恢复 active；终态后用户改变目标，沿既有规则创建新的独立 Task、新命令及对应 Surface，而旧 task_ref 固定。正例：T1 取消后创建 T2，迟到 T1 回答只得到原决定／拒绝，T2 正常推进；反例：将 T1 的 queued 回答迁到 T2，或把“取消本设备当前任务”延迟解析到 T2，均不允许。
 
@@ -586,7 +599,7 @@ surface_read 的 not_modified 和 Query 重放都须重新证明当前披露；�
 | II-18 转交作业接替 | sending 后远端消费但答复延迟，旧 worker 租约失效并重领，再送达旧回执与 ReplyAck | 接替者查询同服务和 target_command_id；旧领取不能结束作业，独立归并可保存原消费事实，ReplyAck 不证明业务成功 |
 | II-19 投影中新责任与无通知发现 | 旧投影取源时先提交较新来源与待处理工作，再让旧 worker 结束；另在当前已追平后关闭全部通知，使远端再次更新 | 快照不倒退，旧结束不覆盖新责任；原 waiting 核对作业在声明间隔内发现远端新修订，不靠扫描补齐作业记录；重复 Change 不增作业版本，关窗不终止投影 |
 | II-20 Claim 后撤回 | 领取 job 但保持 queued；先提交撤回，再让旧 worker 竞争 sending | withdrawn 可查询且无目标发送；对照 sending 先提交时只得到 withdrawal_requested，不以 Claim／网络沉默宣称未消费 |
-| II-21 accepted 未推进即取消 | task.submit 已创建 Task、目标 job 尚未领取；另令目标输入命令 accepted 尚未消费，再先提交 task.cancel | 原 Task cancelled 可读；启动与输入消费均被门禁阻断，原输入决定可查；不能等待循环开始才取消，也不能由旧输入重开 Task |
+| II-21 接纳未推进即取消 | task.submit 已 applied 创建 Task、目标 job 尚未领取；另令目标输入命令已有内部准备但尚未消费，再先提交 task.cancel | 原 Task cancelled 可读；启动与输入消费均被门禁阻断，原输入决定可查；不能等待循环开始才取消，也不能由旧输入重开 Task 或增加未登记的 accepted 阶段 |
 | II-22 后来独立 Task | T1 取消后创建 T2，再送达 T1 输入、控制和退出回调 | T1 保持终态且原效果继续核对，T2 正常推进；旧控制不解析为“当前任务”，旧 Surface 不改绑 T2 |
 | II-23 队列交接与旧退出 | 活动 Task 的新输入保存新工作；旧领取结束，同时替换本端取消句柄 | 新责任不被旧 Finish 清掉；旧 defer 只清自己，不能清用户队列或取消替代句柄；持久结果以 Guard／work_revision 裁决 |
 | II-24 双端 confirm／deny | 两端读取同一 pending 修订，分别抢先 approve 或 deny；再重复原决定命令和另 ID 点击 | 一份本人决定，原重放返回固定结果，新命令受当前修订约束；败方零 Grant／自动许可，批准本身不是消费 |

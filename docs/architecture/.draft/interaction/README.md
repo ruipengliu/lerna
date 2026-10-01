@@ -14,6 +14,8 @@
 
 先阅读本页的职责与行为，再读[实现设计](implementation.md)：声明式快照、可靠输入与受信确认。[Session、Task 与流程简化](session-and-task.md)说明应用内部对话归组与最小实现。实现设计规定内部记录、事务、算法与故障实验；[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)提供精确协议字段。
 
+普通应用接入先读[默认应用与 SDK 工作流](../application-workflow.md)：用现有提交、查询、控制和结果端口完成工作，Decision／Operation 子记录由内核管理。[四类数据流程](../request-data-flows.md)列出直接回答、读后回答、冷恢复及保存读回的读取、写入与可合并事务；这些是组合设计，尚无运行 SDK。
+
 实现阅读顺序为[模块结构与依赖](implementation.md#module-shape) → [公共框架接入](implementation.md#reliable-work-integration) → [核心对象流转](implementation.md#data-flow) → [输入跨数据库事务边界时序](implementation.md#key-sequence) → [生产可用性与性能](implementation.md#production)。接纳、转交和投影复用[公共框架](../reliable-work.md)，服务、连接层与宿主渲染器可分开扩容；实际请求和确认的消费仍归业务 owner，传输 Delivery 的确认也不替代业务回执。
 
 多端竞争与恢复另沿[持久成功点](implementation.md#input-durable-boundaries) → [输入与取消竞争](implementation.md#input-control-races) → [两端确认](implementation.md#confirmation-races) → [快照先于提示](implementation.md#surface-publication) → [旧流隔离](implementation.md#surface-generation) → [SDK 查询原决定](implementation.md#sdk-original-decision)阅读；这些规则沿用现有身份、状态和传输世代，不增加公开运行对象或字段。
@@ -132,7 +134,9 @@ flowchart LR
 <a id="input-consumption"></a>
 ## 3. 输入、主观验收与真实授权
 
-InputRequest 由实际业务负责端创建，固定 request_id、revision、schema、期限及必需预览。Orchestrator 对同一请求只消费一个有效回答；两个设备同时作答时，以业务消费事务的提交裁决胜方，另一端收到已消费的请求及可披露的回执，不悄悄覆盖。交互接纳或目标命令 accepted 均不证明该事务已提交。
+InputRequest 由实际业务负责端创建，固定 request_id、revision、schema、期限及必需预览。Orchestrator 对同一请求只消费一个有效回答；两个设备同时作答时，以业务消费事务的提交裁决胜方，另一端收到已消费的请求及可披露的回执，不悄悄覆盖。交互接纳或目标入口的内部准备均不证明该事务已提交；公开回执阶段按方法登记，不能给只支持 applied／rejected 的 task.input 增加 accepted 阶段。
+
+此处队列管理有准确 InputRequest 的结构化 InputSubmission：queued 可以用 `interaction.input_withdraw` 独立撤回，sending 后只能保存 withdrawal_requested 并核对。任意 Session 聊天队列、steering、follow-up、多 Lane 及按 Run 控制仍是能力缺口，不能从本队列推导已经支持，也不能通过 task.cancel 撤回某一条输入。应用保留原提交、接纳／消费和输出关联；完整范围见[输入与回合视图](../application-workflow.md#input-scope)。
 
 普通澄清只改变其允许的目标参数。对开放式成果的用户验收，必须绑定精确成果版本及未满足条件；验收结果交 Orchestrator 决定 completion_basis，不能覆盖未知副作用。任务目标整体改变是否创建关联任务，遵循[任务运行](../orchestrator/README.md)的修订规则。
 
