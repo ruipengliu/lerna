@@ -24,4 +24,4 @@ Owned files: `CONTEXT.md`、`docs/architecture/.draft/core-data-model.md`。
 
 - 2026-10-01：在基于集成分支的独立工作树完成 [核心数据模型](../../../docs/architecture/.draft/core-data-model.md) 与根术语收敛。目录按核心对象、子记录、辅助责任、投影、配置、扩展及公共执行记录列出负责方、原身份、持久点、查询与保留；补充默认共事务范围和保存报告贯穿身份示例。
 - 2026-10-01：语义审查保留 OperationIntent／Operation 双方责任、可选 ModelCall、独立 Confirmation／Surface、内容用途与副本清理、不可变 UseReceipt 和累计 UseSettlement。核对已有 interaction.input_withdraw 后，明确它只承担原 InputRequest 回答撤回，未宣称已支持 Session 自由输入多 Lane／steering／follow-up。现有公开端口及机器契约未修改。
-- 2026-10-01：复用 check_documents.py：本票 3 个 Markdown 文件、32 个本地链接通过；架构草稿范围 52 个 Markdown、1603 个本地链接、104 个 Mermaid 块通过结构检查；git diff --check 通过。本票未新增图，既有图只作结构检查。按 tdd 技能沿用规格既定应用／SDK 工作流切面；本票为文档设计，未制造 red/green、未执行数据库、模型或运行恢复验证。
+- 2026-10-01：复用 check_documents.py：本票 3 个 Markdown 文件、33 个本地链接通过；架构草稿范围 52 个 Markdown、1603 个本地链接、104 个 Mermaid 块通过结构检查；git diff --check 通过。本票未新增图，既有图只作结构检查。按 tdd 技能沿用规格既定应用／SDK 工作流切面；本票为文档设计，未制造 red/green、未执行数据库、模型或运行恢复验证。
