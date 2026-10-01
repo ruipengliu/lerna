@@ -1,6 +1,6 @@
 # 核心数据模型收敛实施
 
-[规格](spec.md) · [领域词汇](../../CONTEXT.md)
+[规格](spec.md) · [领域词汇](../../CONTEXT.md) · [规格追踪](traceability.md) · [交付核对](verification.md)
 
 Integration branch: `codex/harness-core-model-simplification`
 Review base: `1b647dc970317173f349296e47efd41a4cf3a23c`
@@ -16,10 +16,11 @@ Review base: `1b647dc970317173f349296e47efd41a4cf3a23c`
 | [03 应用入口与四类数据流程](issues/03-application-workflows.md) | 01 | completed |
 | [04 领域规则与扩展生命周期](issues/04-domain-and-extension-semantics.md) | 01、02 | completed |
 | [05 验收场景与规格追踪](issues/05-acceptance-traceability.md) | 02、03、04 | completed |
-| [06 架构导航与交付整合](issues/06-document-integration.md) | 01～05 | pending |
+| [06 架构导航与交付整合](issues/06-document-integration.md) | 01～05 | completed |
 
 ## Comments
 
 - 2026-10-01：规格目录此前没有票据；按 implement-spec 的任务图要求补齐上述六张独立票据。沿用规格的应用／SDK 工作流及必要模块契约作为验收切面；本轮不新增运行测试或测试专用接口。
 - 2026-10-01：实施前静态检查通过：架构 55 篇／1605 本地链接，ADR 10 篇／13 链接，综合研究 8 篇／134 链接；方法登记仍为 105 项。01、02 已在独立工作树并行启动，后续差异以 Review base 为固定比较点。
 - 2026-10-01：05 已合入集成分支，01～05 全部完成，06 的阻塞依赖已解除，可进入实施。
+- 2026-10-01：06 已合入集成分支，六张实施票据全部完成。标准／规格双轴审查、发现问题修复与规格关闭仍待根协调者完成。
