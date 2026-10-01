@@ -12,9 +12,11 @@
 
 ## 实现阅读路径
 
-先阅读本页的职责与行为，再读[实现设计](implementation.md)：声明式快照、可靠输入与受信确认。实现设计规定内部记录、事务、算法与故障实验；[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)提供精确协议字段。
+先阅读本页的职责与行为，再读[实现设计](implementation.md)：声明式快照、可靠输入与受信确认。[Session、Task 与流程简化](session-and-task.md)说明应用内部对话归组与最小实现。实现设计规定内部记录、事务、算法与故障实验；[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)提供精确协议字段。
 
 实现阅读顺序为[模块结构与依赖](implementation.md#module-shape) → [公共框架接入](implementation.md#reliable-work-integration) → [核心对象流转](implementation.md#data-flow) → [输入跨数据库事务边界时序](implementation.md#key-sequence) → [生产可用性与性能](implementation.md#production)。接纳、转交和投影复用[公共框架](../reliable-work.md)，服务、连接层与宿主渲染器可分开扩容；实际请求和确认的消费仍归业务 owner，传输 Delivery 的确认也不替代业务回执。
+
+多端竞争与恢复另沿[持久成功点](implementation.md#input-durable-boundaries) → [输入与取消竞争](implementation.md#input-control-races) → [两端确认](implementation.md#confirmation-races) → [快照先于提示](implementation.md#surface-publication) → [旧流隔离](implementation.md#surface-generation) → [SDK 查询原决定](implementation.md#sdk-original-decision)阅读；这些规则沿用现有身份、状态和传输世代，不增加公开运行对象或字段。
 
 本页与实现设计均为待实现规格，静态序列通过不代表服务、隐私隔离或恢复机制已经运行。
 
@@ -130,13 +132,15 @@ flowchart LR
 <a id="input-consumption"></a>
 ## 3. 输入、主观验收与真实授权
 
-InputRequest 由实际业务负责端创建，固定 request_id、revision、schema、期限及必需预览。Orchestrator 对同一请求只消费一个有效回答；两个设备同时作答时，先成功提交的回答获胜，另一端收到已消费的请求及可披露的回执，不悄悄覆盖。
+InputRequest 由实际业务负责端创建，固定 request_id、revision、schema、期限及必需预览。Orchestrator 对同一请求只消费一个有效回答；两个设备同时作答时，以业务消费事务的提交裁决胜方，另一端收到已消费的请求及可披露的回执，不悄悄覆盖。交互接纳或目标命令 accepted 均不证明该事务已提交。
 
 普通澄清只改变其允许的目标参数。对开放式成果的用户验收，必须绑定精确成果版本及未满足条件；验收结果交 Orchestrator 决定 completion_basis，不能覆盖未知副作用。任务目标整体改变是否创建关联任务，遵循[任务运行](../orchestrator/README.md)的修订规则。
 
 目标命令由已绑定处理器决定：clarification 调用 task.input；acceptance 调用 task.accept_result，传 request_id、request_revision、候选摘要、goal_revision 和受信用户决定；application 调用已登记处理器。Orchestrator 原子消费原请求并保存验收记录，界面不能通过更换命令类型消费同一请求两次。
 
 授权确认走受信入口：宿主显示请求主体、动作、准确资源、用途、上限、期限和拟使用的数据位置；宿主先固定原业务命令及规范意图，在实际业务负责端登记确认；用户认证并提交决定后，业务负责端在原命令的事务中消费确认并产生决定。请求内容、插件自绘 UI、远端 Agent 的“已获批准”字段都不能替代此过程。界面只传递授权 request_id 与原决定回执，完整 Grant 字段和消费规则集中在[授权](../security/README.md)。
+
+两端对同一确认点“确认”或“拒绝”，只产生一份持久本人决定；批准仍待原业务一次消费。败方、重复点击和普通答案都不写自动许可。已批准后再拒绝不能撤销既有业务，应按原许可或任务的受信控制入口处理；完整竞争与撤权规则见[确认事务](implementation.md#confirmation-races)。
 
 需要“先看截图再确认”的输入，交互服务在返回快照时给出 required_content_refs。宿主先向实际请求负责端调用 `interaction.request_read` 取得准确请求、Schema 和预览要求，再取得并校验这些内容版本后才启用按钮，提交时将实际预览的引用放入 preview_refs。Surface 输入块只保存 request_ref 和呈现标签，字段与约束以请求 owner 的 schema 为唯一依据；旧请求修订或 owner 不可达时禁用依赖输入并刷新或等待。业务负责端复核请求修订、期限、所需引用覆盖关系和当前来源状态与使用许可；按钮曾经可点击不是消费依据。若只是缺图但普通目录输入仍完整可回答，应用按具体请求的依赖开放输入，不封闭整个界面。
 
@@ -180,6 +184,7 @@ InputRequest 由实际业务负责端创建，固定 request_id、revision、sch
 | 用户回答已被 Orchestrator 消费，UI 回执丢失 | 显示处理中并查原 target_command_id；返回原应用结果，不再创建回答 |
 | WSS 网关断开，原输入是否提交不明 | 保留原 input_id 与 command_id；重连后查原回执和当前快照，不把连接失败当作业务失败，也不更换这些标识重试 |
 | 两台设备提交不同答案 | 一份被消费，另一份明确 request_already_consumed；刷新到新快照，必要的新澄清必须由负责端发起 |
+| 输入已接纳但尚未领取，用户撤回或取消任务 | queued 撤回与 sending 竞争；任务取消独立到原 Orchestrator。取消生效后旧输入不能重开该 Task，后来的独立 Task 不受原取消影响；见[事务与队列竞争](implementation.md#input-control-races) |
 | 用户提交时请求或候选已更换 | 拒绝旧修订，保留拒绝回执并刷新原请求；旧答案不能自动套用新目标或新候选 |
 | 预览已看过，但提交前到期、撤权或来源关闭 | 禁止消费依赖该预览的输入，给出具体材料缺口；由请求负责端重建有效预览或等待有效授权或可用材料，用户重新查看后再提交新输入 |
 | 预览引用版本不符或正文未取得 | 受信 Renderer 不启用依赖按钮；业务端拒绝版本不符、引用不全或当前来源不可用或使用许可无效的输入。正确引用本身不能证明任意认证客户端已经取得或呈现正文 |
@@ -187,6 +192,8 @@ InputRequest 由实际业务负责端创建，固定 request_id、revision、sch
 | Surface 所在端在线，请求 owner 失联 | 禁用新的依赖输入；失联前已保存的 queued／sending 输入保留原目标和恢复责任，仍显示尚未确认生效。尚未发送的输入可撤回，发送结果不明时查原命令 |
 | 模型生成伪造权限按钮或管理链接 | 作为不可信文本呈现；实际批准只能进入宿主认证的权限页面 |
 | 读取权限撤销，用户仍有删除或取消权 | 关闭正文展示，保留最小可授权管理元数据与控制入口；不能要求读正文才能管理 |
+| 终结 Change 丢失，或旧连接／旧预览在新页面打开后返回 | 读取持久快照与原决定恢复；旧世代回调不能覆盖当前页面或开放按钮，见[呈现恢复](implementation.md#surface-generation) |
+| SDK 保存原命令或保存答复失败 | 首发前失败不发可恢复写入；首发后失败沿已保存身份查原 input、Confirmation 或命令，不将本端错误改成业务拒绝，见[SDK 恢复](implementation.md#sdk-original-decision) |
 
 排队输入撤回与发送领取在交互服务内原子竞争：撤回先提交则永不发送；领取先提交则显示“撤回待核对”，不能声称已阻止消费。没有原请求撤销能力时，应明确用户需继续用业务取消或纠正入口处理。
 

@@ -1,6 +1,6 @@
 # 模块优化：预期效果、对照与验收
 
-[架构入口](../README.md) · [系统验收](README.md) · [评测与发布](../evaluation/README.md) · [调研来源及原编号](../../research/ai-report-2026-09-project-implications.md)
+[架构入口](../README.md) · [系统验收](README.md) · [评测与发布](../evaluation/README.md) · [调研来源及原编号](../../../research/ai-report-2026-09-project-implications.md)
 
 2026-09-28 确认采用九模块、24 项优化方向。本页将其落实为建设与验证要求，完整行为规则仍在所属模块。目标是让完成声明有依据、长任务少丢约束、工具结果与实际效果可核对，并用同口径证据决定哪些策略值得启用。当前交付是方案修订；运行实现、真实故障实验和收益测量均未完成。
 
@@ -92,6 +92,11 @@
 | X-04 规划 | 当前规则优先的 Brain 路径 → 同模型的提示或提案粒度调整 | 覆盖漏项、补证轮数、任务质量和全部成本；若包含固定答案类型判断，则独立报告模型替换因素和升级成本 |
 | X-05 协作 | 单 Agent → 有限并行独立分支；强顺序任务另分层 | 总成功成本、端到端时延、重复工作和未决子责任；等待、汇总与清理不得从成本剔除 |
 | X-06 计划 | 每步依据当前快照决策 → 已固定前提和退出规则的有限计划 | 稳定任务复用量与构建／维护／失配成本；环境变化、前项 fail、未知旧步骤及批准撤回 |
+| X-07 自动精炼 | 原明确维护的经验 → 固定触发和形成方法的经验候选 | before／after、并发纠正、部分应用、来源关闭；包括全部失败候选与发布成本，不复用 X-02 的读时整理结论 |
+| X-08 交互程序 | 原单工具路径 → 受限交互式 cell 组合 | 真实隔离、逐调用准入、取消实际退出、被动恢复与未决效果；编译为有限计划仍属 X-06 |
+| X-09 目录发现 | 有界准确目录直载 → 检索后 describe 或延迟正文 | 固定同一目录集合、安装与模型；全部搜索和加载成本、正负触发与最终任务质量；只变 Skill 策略仍属 X-03 |
+
+X-07～09 为 2026-10-01 新登记的独立因素，X-01～06 的原含义与既有成绩不变。候选实现及运行数据均待交付，不因本表登记而成为默认启用策略。
 
 开始前必须固定任务总体、来源组、样本量、模型／提示及全部配置摘要、初始状态、主要收益指标、最小实用改善量、逐类退化界限、费用／延迟上限、停止规则和正式尝试预算。参数当前没有项目实测，实施时在看到该轮结果前冻结；未冻结则不能启动用于改善宣称的比较。安全契约一旦失败便不批准候选，其余不确定结果按 inconclusive 处理。
 
@@ -109,3 +114,25 @@
 | 随能力开放贯穿 | MEM-03、SEC-02；内容 holder、平台及宿主维护者 | 跨端副本、不可信执行在开放前通过 OPT-07～09 对应路径；离线窗口、清理残留与平台支持范围明示 |
 
 每个工作包交付实现／配置版本、静态契约结果、实际调用与目标证据、失败继续记录、独立质量结论及完整成本。文档完成、构造样例通过和运行验收分别登记；任一必需运行证据缺席仍是待实施，不能因方案已确认而标为能力已具备。
+
+<a id="harness-adoption"></a>
+## 6. 五项目调研建议的采用映射
+
+2026-10-01 的 [O-01～12](../../../research/agent-harness-comparison/architecture-optimization.md) 在下表落实。阶段对应[工程切片](../engineering.md#phases)；本轮交付为设计、静态契约复核及新增待运行向量，所有真实运行证据仍待实现。既有 24 项、OPT-01～12 与 X-01～06 保留原义。
+
+| 建议 | 采用范围与规则归属 | 工程时机 | 新增证据入口 |
+| --- | --- | --- | --- |
+| O-01 上下文投影 | [固定快照与最终完整请求](../brain/implementation.md#snapshot-reconstruction)，默认机械投影；摘要为候选 | 1.3／1.4，长任务随后 | HAR-01；X-01 |
+| O-02 有界进展 | [原事实与推进判断](../orchestrator/implementation.md#bounded-progress)，同 Task 保存，不新增调度器 | 1.3 | HAR-02 |
+| O-03 最终绑定 | [最后参数准入](../execution/implementation.md#final-tool-admission)与真正出口 | 1.3，各驱动启用前 | HAR-03 |
+| O-04 恢复就绪 | [分层就绪](../deployment.md#recovery-readiness)与[耐久后发送](../reliable-work.md#durable-before-send) | 1.2／1.5，生产另验 | HAR-04；FW |
+| O-05 原始结果 | [原结果、覆盖与派生呈现](../execution/implementation.md#result-provenance) | 1.3／2.1 | HAR-03 |
+| O-06 子任务 | [异步等待与原绑定冷恢复](../collaboration/implementation.md#async-child)，按需开放 | 协作切片 | HAR-06；X-05 |
+| O-07 输入与呈现 | [消费竞争](../interaction/implementation.md#input-control-races)与[当前呈现](../interaction/implementation.md#surface-generation) | 1.3／1.5 | HAR-05 |
+| O-08 暂存装配 | [配置竞争与 ready](../extensions/implementation.md#staged-readiness)，先静态受信组件 | 1.2；动态扩展随后 | HAR-07 |
+| O-09 经验精炼 | [准确候选](../memory/implementation.md#experience-candidate)进入[原发布流程](../evaluation/implementation.md#experience-release)；候选不默认自动启用 | 2.3 后按独立证据 | HAR-08；X-07 |
+| O-10 程序组合 | [受限工具候选](../execution/programmatic-tools.md)，不是第二个 Brain 循环 | 平台隔离取证后 | HAR-09；X-06／08 |
+| O-11 渐进发现 | [同目录独立对照](../extensions/progressive-discovery.md)，没有新增 Router | 目录规模出现后 | HAR-10；X-03／09 |
+| O-12 共同验证 | [共享组合向量](harness-scenarios.md)引用原对象与独立真值，机制和质量证据分开 | 随所有开放能力 | HAR-01～11，真实数据库与平台分别验 |
+
+执行中补充的 Session 问题采用[应用内 Session 与 Task 分工](../interaction/session-and-task.md)，按 HAR-11 验证；没有新增公开 RPC 或持久 Turn／Run。数据对象及 IO 对比用于[最小实现](../engineering.md#minimum-profile)的合并与延后决策，不能作为已经测得的性能结论。

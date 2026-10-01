@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-01",
+  "scope": "Existing frozen contract fixtures; no runtime, database fault, provider call or benchmark executed.",
+  "checks": [
+    {
+      "script": "validate.py",
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "637d3c",
+        "wall_time_seconds": 0.181456042,
+        "exit_code": 0,
+        "original_token_count": 33,
+        "output": "PASS: 5 valid examples; 9 invalid examples rejected\nScope: schema and document fixture semantics only; runtime behavior not tested\n"
+      }
+    },
+    {
+      "script": "validate_protocol.py",
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "c51d14",
+        "wall_time_seconds": 9.393528333999999,
+        "exit_code": 0,
+        "original_token_count": 343,
+        "output": "PASS: 55 valid traces; 371 invalid mutations rejected for their stated rule; 105 frozen methods exercised\nExposure boundary: one impact job covers a constructed 101-plan overlap; no bounded affected-ID response list\nBudget boundary: a 7-unit actual bill against a 5-unit allocation remains recordable with provider, receiver, both, or pending incident cause; proof remains a runtime prerequisite\nBudget correction: a parent recovery scan reads settled and closed records, receives one durable billing wakeup, and settles a newer bill; stale revision is rejected and original receipt replay is stable\nBilling wakeup: source r2 is visible before r1 notice; r1, r2, then r1 retains one job, and same-revision digest conflict is rejected\nTask listing: equal-time IDs and older timestamps paginate in documented descending-time order; reverse order is rejected\nUse boundary: a constructed final-to-final cost correction keeps the original use and released reserve; bill authenticity remains a runtime prerequisite\nEstimate boundary: a hard Grant cost limit rejects estimate; without it, constructed actual cost 6 exceeds reserved 4 without dropping the bill\nRegistry: 105 methods, 0 reserved; protocol is an unpublished draft profile\nScope: structure and recorded semantic relations only; no authentication, service, concurrency, durability or interoperability runtime tested\n"
+      }
+    },
+    {
+      "script": "validate_brain.py",
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "a679f5",
+        "wall_time_seconds": 0.904666292,
+        "exit_code": 0,
+        "original_token_count": 40,
+        "output": "Brain static vectors passed: generation/recovery, 5 plan-install checks, 11 rejected generations, 15 plan branches. No service or fault experiment executed.\n"
+      }
+    },
+    {
+      "script": "validate_lease.py",
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "ff6611",
+        "wall_time_seconds": 1.429395042,
+        "exit_code": 0,
+        "original_token_count": 33,
+        "output": "Offline lease corrections: 2 valid traces, 11 invalid mutations passed; bill authenticity and durable delivery are not exercised.\n"
+      }
+    },
+    {
+      "script": "validate_release_recovery.py",
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "6f302e",
+        "wall_time_seconds": 1.970108916,
+        "exit_code": 0,
+        "original_token_count": 55,
+        "output": "PASS: 13 targeted release/run cases; replay, rollback work and reopen use the independent old approval\nScope: recorded identities, evidence and refusal rules; no live UI, environment isolation or durable recovery tested\n"
+      }
+    },
+    {
+      "script": "validate_transport.py",
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "9cc3fb",
+        "wall_time_seconds": 1.487527708,
+        "exit_code": 0,
+        "original_token_count": 110,
+        "output": "PASS: 2 ES256 public vectors; 3 canonical vectors; 23 negative checks\nScope: constructed bytes, signatures and pinned bindings; no live identity, key custody, revocation or interoperability tested\nPASS: 100 transport/closure vectors; 228 directed invalid mutations\nPASS: 8 request-sequence traces; 12 directed invalid mutations\nScope: bounded recorded structures and bindings; no network, storage, authentication or byte transfer executed\n"
+      }
+    }
+  ]
+}

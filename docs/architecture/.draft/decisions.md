@@ -25,7 +25,7 @@
 
 任务状态、有效祖先控制、完成条件及修订规则以[任务编排器](orchestrator/README.md#state)为准；执行端可确认的停止范围以[执行设计](execution/README.md)为准。控制命令的持久回执与远端实际生效是两个检查点。
 
-通用质量评估的最低依据与历史证据效力按[ADR-0005](../adr/0005-evaluator-evidence-eligibility.md)细化：开放式任务的普通质量评估可在明示未专项校准时使用 `assessed`，专项保证需要相应独立证据；验证器普通停用不作废旧判断，已证实且命中范围的缺陷阻止活动任务继续采用旧 pass。已成功任务另展示缺陷说明，原 Result 不重写。完整规则集中于[任务验证](orchestrator/verification.md)。
+通用质量评估的最低依据与历史证据效力按[ADR-0005](../../adr/0005-evaluator-evidence-eligibility.md)细化：开放式任务的普通质量评估可在明示未专项校准时使用 `assessed`，专项保证需要相应独立证据；验证器普通停用不作废旧判断，已证实且命中范围的缺陷阻止活动任务继续采用旧 pass。已成功任务另展示缺陷说明，原 Result 不重写。完整规则集中于[任务验证](orchestrator/verification.md)。
 
 ## 3. 验收数字与改善证据
 
@@ -66,7 +66,7 @@ D-11 的长期决定另记于根域 ADR；实现规则集中在[共同保留语�
 | D-14 Go 核心、端云 WSS、服务间 gRPC | 云服务、本地宿主和默认组件采用 Go；浏览器、CLI 和设备主动建立 WSS，双向承载命令、回复和推送；独立服务采用 gRPC，同进程 interface 保持共同事务 | 接入层承担连接、流控、认证续期及重连；不因使用 gRPC 就拆成九个服务。浏览器或设备传输边界确有新约束时再增加绑定 |
 | D-15 Protobuf 外壳复用严格 JSON | 领域方法继续以现有 Schema 和 JCS 为权威，RPC 外壳固定在 .proto；不为同一字段维护第二套解释 | 保留 JSON 编码和运行时校验成本；只有测量证明该成本成为瓶颈，才另行定义完整 typed Protobuf 映射及兼容配置 |
 
-集成取舍见 [ADR-0002](../adr/0002-go-wss-grpc.md)，实现约束集中在[部署](deployment.md)、[WSS](contracts/transport.md)和[gRPC](contracts/grpc.md)。交付检查须覆盖已提交命令断线、ReplyAck 丢失、旧凭据长连接、慢端与控制竞争、服务 deadline／取消、网关排空与集中重连；连接成功不能代替业务成功。
+集成取舍见 [ADR-0002](../../adr/0002-go-wss-grpc.md)，实现约束集中在[部署](deployment.md)、[WSS](contracts/transport.md)和[gRPC](contracts/grpc.md)。交付检查须覆盖已提交命令断线、ReplyAck 丢失、旧凭据长连接、慢端与控制竞争、服务 deadline／取消、网关排空与集中重连；连接成功不能代替业务成功。
 
 ## 7. 生产分布式与基础设施
 
@@ -76,7 +76,7 @@ D-11 的长期决定另记于根域 ADR；实现规则集中在[共同保留语�
 | D-17 外连接与内部实例生命周期分开 | 存活网关保持 WSS，内部流重新认证并受控绑定原服务，原命令查询恢复；网关退出、当前身份失效或内部恢复超限时结束所属外连接 | 网关维护有界请求和绑定状态，内部重绑保守触发订阅快照。若流数量或快照成本成为瓶颈，再评估短 RPC 与独立推送通道；不能静默丢提示 |
 | D-18 收敛权威存储与持久工作 | PostgreSQL 保存各数据库分片的业务事实、去重与 jobs，对象存储保存准确版本字节；默认数据库批扫、可丢通知唤醒。额外缓存／消息／索引按明确瓶颈引入 | 数据库承担领取、索引维护和恢复 IO，必须在单区故障及长期历史规模下压测。外部消息系统的收益须超过其发布、重投、容量和运维成本，不能仅凭用户数决定 |
 
-记录见 [ADR-0003](../adr/0003-production-distributed.md)。完整拓扑、重启与发布程序归[生产部署](deployment-production.md)，数据布局和中间件比较归[存储专题](storage-and-middleware.md)。开发阶段用本机 PostgreSQL 多进程验证跨进程交接，生产接公司自有平台；首次生产上线前验证对应的平台故障保证。可用性、性能和容灾数字均为待运行验收目标。
+记录见 [ADR-0003](../../adr/0003-production-distributed.md)。完整拓扑、重启与发布程序归[生产部署](deployment-production.md)，数据布局和中间件比较归[存储专题](storage-and-middleware.md)。开发阶段用本机 PostgreSQL 多进程验证跨进程交接，生产接公司自有平台；首次生产上线前验证对应的平台故障保证。可用性、性能和容灾数字均为待运行验收目标。
 
 ## 8. 收敛重复定义与派生状态
 
@@ -110,8 +110,8 @@ D-11 的长期决定另记于根域 ADR；实现规则集中在[共同保留语�
 
 | 决策 | 当前选择与依据 | 代价与适用边界 |
 | --- | --- | --- |
-| D-29 条件先修订再决策 | 有效条件变更推进目标及控制修订，并废弃同提案的行动、完成建议和计划变化；相同条件不制造新轮次。原 Decision 的消费与下一轮责任共同保存 | 变化发生时增加一轮决策成本；换取准入与完成判断使用同一快照，暂停与未知效果仍可阻止下一轮。见 [ADR-0006](../adr/0006-adopt-requirements-before-actions.md) |
-| D-30 自动回退独立核验旧批准 | 新发布关联精确旧版安装锁定清单与旧版独立批准；撤回新版后，恢复及后续使用依赖旧批准当前有效性 | 发布者提前维护旧版证据、批准范围与兼容性；无法核验只能停用。见 [ADR-0007](../adr/0007-independent-rollback-approval.md) |
-| D-31 受信界面负责正文预览 | Renderer 取得并呈现准确正文后开放输入；业务 owner 核对版本、权限和消费条件，preview_refs 不充当取阅证明 | 业务端不承诺识别绕过受信界面的未预览提交；需要防旁路时再定义受信取阅完成协议。见 [ADR-0008](../adr/0008-trusted-renderer-preview.md) |
+| D-29 条件先修订再决策 | 有效条件变更推进目标及控制修订，并废弃同提案的行动、完成建议和计划变化；相同条件不制造新轮次。原 Decision 的消费与下一轮责任共同保存 | 变化发生时增加一轮决策成本；换取准入与完成判断使用同一快照，暂停与未知效果仍可阻止下一轮。见 [ADR-0006](../../adr/0006-adopt-requirements-before-actions.md) |
+| D-30 自动回退独立核验旧批准 | 新发布关联精确旧版安装锁定清单与旧版独立批准；撤回新版后，恢复及后续使用依赖旧批准当前有效性 | 发布者提前维护旧版证据、批准范围与兼容性；无法核验只能停用。见 [ADR-0007](../../adr/0007-independent-rollback-approval.md) |
+| D-31 受信界面负责正文预览 | Renderer 取得并呈现准确正文后开放输入；业务 owner 核对版本、权限和消费条件，preview_refs 不充当取阅证明 | 业务端不承诺识别绕过受信界面的未预览提交；需要防旁路时再定义受信取阅完成协议。见 [ADR-0008](../../adr/0008-trusted-renderer-preview.md) |
 
 Brain 新正文的本地草稿与受控保存、有限计划的前序输出绑定及 pass 前提、封账后离线账单更正、整项 EvaluationRun 的唯一身份，分别见[大脑实现](brain/implementation.md#generated-content)、[计划步骤实例化](orchestrator/implementation.md#finite-plan)、[离线结算](security/implementation.md#8-离线分配重连与封账)与[评测实现](evaluation/implementation.md)。各项失败恢复与静态证据边界见[本轮故障实验](validation/fault-experiments.md#implementation-clarity)。

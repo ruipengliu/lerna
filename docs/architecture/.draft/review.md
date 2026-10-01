@@ -107,7 +107,7 @@ python3 -B docs/architecture/validation/validate_transport.py
 
 本次按已确认范围，为九个模块分别新增 implementation.md，落实内部职责、持久记录和唯一键、事务及锁定顺序、调度步骤、异常恢复与故障实验。总览提供连续阅读路径；共同传输、部署启动、存储保护和容量估算同步补充。原有 53 个 reserved 方法全部补齐，并因具体交接需要增加 8 个方法：预算当前状态及接收方关闭、输入请求读取、在线使用结算及查询、可信确认请求及读取与决定。
 
-已终结对象标识采用长期最小记录，完整正文、参数及敏感材料独立清理。该选择的依据、成本及替代条件记于[决策 D11](decisions.md)和[ADR](../adr/0001-retain-closed-identities.md)。清理不会让旧命令、已取消操作或终结任务重新获得启动资格；最小索引的持续空间由权威存储、容量及备份承担。
+已终结对象标识采用长期最小记录，完整正文、参数及敏感材料独立清理。该选择的依据、成本及替代条件记于[决策 D11](decisions.md)和[ADR](../../adr/0001-retain-closed-identities.md)。清理不会让旧命令、已取消操作或终结任务重新获得启动资格；最小索引的持续空间由权威存储、容量及备份承担。
 
 独立读者未取得设计讨论历史，按正文复述主线并推演失败路径。审查中发现并修正的实现缺口包括：
 
@@ -216,7 +216,7 @@ python3 -B docs/architecture/validation/validate_transport.py
 
 按已确认的技术栈和通信边界修订[部署基线](deployment.md)、[端云传输](contracts/transport.md)与[gRPC 绑定](contracts/grpc.md)：Go 实现核心、宿主及默认组件；同进程 interface 保持共同事务，独立服务使用 gRPC；浏览器、CLI 和设备统一主动建立 WSS。HTTPS 保留发现、认证与原始内容字节。未发布的 HTTP／pull／SSE 草案直接替换，不增加共存兼容层；领域配置和 101 个方法保持。
 
-新增 [harness.proto](contracts/harness.proto)，固定 Call 和 EndpointChannel 两个 RPC；Protobuf 外壳携带原严格 JSON，复用 Schema、方法登记和 JCS。上传／镜像预留、查询和关闭统一走五个传输管理 kind，MirrorControl 显式包含原 ticket_id。抽象原则、owner 归属与原命令或对象标识恢复保持；通用实现术语不加入领域词汇，集成取舍记录 [ADR-0002](../adr/0002-go-wss-grpc.md)。
+新增 [harness.proto](contracts/harness.proto)，固定 Call 和 EndpointChannel 两个 RPC；Protobuf 外壳携带原严格 JSON，复用 Schema、方法登记和 JCS。上传／镜像预留、查询和关闭统一走五个传输管理 kind，MirrorControl 显式包含原 ticket_id。抽象原则、owner 归属与原命令或对象标识恢复保持；通用实现术语不加入领域词汇，集成取舍记录 [ADR-0002](../../adr/0002-go-wss-grpc.md)。
 
 语义审查沿正常接纳、提交后断线、ReplyAck 丢失、慢端与取消竞争、旧凭据连接、镜像关闭和 gRPC deadline 推演。独立复核发现并修正了四项具体问题：Protobuf 封装预留字节；浏览器身份转发固定为有受众和原命令或对象标识核验的不透明委托句柄；镜像关闭从 HTTPS 管理路径转入 WSS／gRPC；端侧 Brain 与云内独立 Brain 的适配边界分开。重连时序补上新 ready 后才查询原命令。
 
@@ -341,7 +341,7 @@ python -m grpc_tools.protoc -I docs/architecture/contracts --descriptor_set_out=
 <a id="verification-review"></a>
 ## 20. 任务验证、对象图与访问路径（2026-09-27）
 
-依据[验证评审记录](../../.scratch/architecture-review/verification-review-2026-09-27.md)落实八项文档修订。用户确认的两项取舍记入 [ADR-0005](../adr/0005-evaluator-evidence-eligibility.md)：普通开放质量保留未专项校准的 assessed 并明示限制；普通停用与已证实判断缺陷分别处理，活动任务不得依赖命中缺陷的旧 pass，历史成功 Result 保持不变并另示说明。
+依据[验证评审记录](../../../.scratch/architecture-review/verification-review-2026-09-27.md)落实八项文档修订。用户确认的两项取舍记入 [ADR-0005](../../adr/0005-evaluator-evidence-eligibility.md)：普通开放质量保留未专项校准的 assessed 并明示限制；普通停用与已证实判断缺陷分别处理，活动任务不得依赖命中缺陷的旧 pass，历史成功 Result 保持不变并另示说明。
 
 [验证专题](orchestrator/verification.md)集中定义三类检查、目录与版本选择、准确性准入、异常和证据复用；[实现篇](orchestrator/implementation.md#condition-storage)补充条件记录、任务级 verify 责任、缺陷检查与完成竞争。主文补六张机制图及一张精简类图，实现篇完善持久 ER 并拆出账务关系；图册同步修正预留不必来自操作意图的多重性。[访问路径](orchestrator/access-paths.md)说明八条读写链的关联、有限集合和锁范围，避免以活跃子任务限额推导历史扫描有界。
 
@@ -392,12 +392,12 @@ python3 -B docs/architecture/validation/validate_lease.py
 python3 -B docs/architecture/validation/validate_release_recovery.py
 ```
 
-Mermaid 的最终源摘要、渲染输入和目视结果在 `.scratch/architecture-implementation-clarity/render/manifest.json`；UML／HTML 的四张截图、源摘要和逐项检查在[图册渲染记录](../../.scratch/architecture-implementation-clarity/uml/render-review.md)。协议仍为未发布草案，本轮直接统一正文、Schema 和用例，不保留旧字段共存层；未改协议方法数或 Protobuf 外壳，本轮未重复编译或宣称新服务已互操作。
+Mermaid 的最终源摘要、渲染输入和目视结果在 `.scratch/architecture-implementation-clarity/render/manifest.json`；UML／HTML 的四张截图、源摘要和逐项检查在[图册渲染记录](../../../.scratch/architecture-implementation-clarity/uml/render-review.md)。协议仍为未发布草案，本轮直接统一正文、Schema 和用例，不保留旧字段共存层；未改协议方法数或 Protobuf 外壳，本轮未重复编译或宣称新服务已互操作。
 
 <a id="reliable-work-review"></a>
 ## 22. 可靠接纳与持久工作框架（2026-09-28）
 
-用户确认采用公共接纳与有界工作模板、统一逻辑 JobStore，并保留领域业务／恢复裁决及各本地事务范围物理布局，见 [ADR-0009](../adr/0009-reliable-work-framework.md)。[框架专题](reliable-work.md)集中定义内部接口、Tx、作业记录、Claim、两种版本校验、恢复、调度和成本口径；九个模块分别落实接入、槽键和领域完成条件，宿主、生产、存储与验收入口同步整合。
+用户确认采用公共接纳与有界工作模板、统一逻辑 JobStore，并保留领域业务／恢复裁决及各本地事务范围物理布局，见 [ADR-0009](../../adr/0009-reliable-work-framework.md)。[框架专题](reliable-work.md)集中定义内部接口、Tx、作业记录、Claim、两种版本校验、恢复、调度和成本口径；九个模块分别落实接入、槽键和领域完成条件，宿主、生产、存储与验收入口同步整合。
 
 多阶段准备仍遵守各方法已登记的回执阶段，不提前返回 applied 或新增 accepted；只读及可同步完成的调用不空建 job。公共规则从 Orchestrator 提炼，原工作完成锚点保留模块说明与导航。Brain 终态不再无条件删除推进 job；交互投影分别保存待覆盖来源和已发布水位，避免吞掉并发新增责任。
 
@@ -407,7 +407,7 @@ Mermaid 的最终源摘要、渲染输入和目视结果在 `.scratch/architectu
 | --- | --- | --- |
 | 语义审查 | 公共接口与九模块独立复述、异常推演及上述问题复核完成 | 基于正文，不证明数据库或外部效果行为 |
 | 文档与链接 | 全量架构 Markdown、本地锚点、表格／围栏及差异空白检查通过；新 ADR、提案和评审记录的 26 处本地引用另行检查通过 | 未验证外链可用性或整页 Markdown 呈现 |
-| 图示 | 7 张新增／修改 Mermaid 实际渲染并目视核对，未见裁切；源摘要与渲染输入一致，记录见[渲染清单](../../.scratch/architecture-review/reliable-work-render/manifest.json) | 删除的 3 张公共机制图已由框架权威图承接；未修改图不重复渲染，图示不证明并发正确性 |
+| 图示 | 7 张新增／修改 Mermaid 实际渲染并目视核对，未见裁切；源摘要与渲染输入一致，记录见[渲染清单](../../../.scratch/architecture-review/reliable-work-render/manifest.json) | 删除的 3 张公共机制图已由框架权威图承接；未修改图不重复渲染，图示不证明并发正确性 |
 | 静态契约回归 | 105 方法的 55 组正向序列与 371 个反向变体、传输／去重与终态记录、Brain、离线租约、发布／运行以及完成投影检查均通过 | 沿用原 Schema 与构造资产，新增框架内部接口没有运行代码；检查不覆盖新增事务或周期查询行为 |
 | 运行与性能 | 未执行；公共 FW-01～09、模块新增断言及领域映射已写明 | 尚无适配器持久性、故障并发、物理调用次数、查询放大或容量证据 |
 
@@ -416,7 +416,7 @@ Mermaid 的最终源摘要、渲染输入和目视结果在 `.scratch/architectu
 <a id="module-optimization-review"></a>
 ## 23. 调研方向纳入九模块方案（2026-09-28）
 
-用户确认采用[调研清单](../research/ai-report-2026-09-project-implications.md)的 24 项方向。本轮将目标覆盖、上下文信息保留、工具输出范围、记忆时间／冲突、实际安全与制品边界、委派交接、用户结果视图及失败归因写入所属模块；[优化验收](validation/optimization-evidence.md)集中记录预期效果、12 组组合用例、6 类对照和建设顺序。
+用户确认采用[调研清单](../../research/ai-report-2026-09-project-implications.md)的 24 项方向。本轮将目标覆盖、上下文信息保留、工具输出范围、记忆时间／冲突、实际安全与制品边界、委派交接、用户结果视图及失败归因写入所属模块；[优化验收](validation/optimization-evidence.md)集中记录预期效果、12 组组合用例、6 类对照和建设顺序。
 
 目标覆盖使用内部记录及原 verify／评估机制，条件提议与覆盖核验分别作出，完成时核完整目标和当前条件。压缩、读时整理、Skill、规划、协作和有限计划采用实验方向，未选定默认算法或承诺比例收益。公共线 Schema 与示例数据保持，完成状态投影示例另注明不覆盖原要求遗漏；正式规则、静态资产及真实运行的保证范围分别说明。
 
@@ -482,4 +482,22 @@ Mermaid 的最终源摘要、渲染输入和目视结果在 `.scratch/architectu
 | 图示 | 44 张修改的 Mermaid 和 15 页修改的原生图实际渲染并逐张目视复核；HTML 图册检查结构及代表性页面、展开关系表，概念 PNG 同步改字并目视检查。原生图节点、连线和几何布局保持 |
 | 运行 | 未运行真实服务、数据库故障、外部模型或性能实验；本轮是文档及草案契约的术语修订，静态与渲染结果不证明运行行为 |
 
-检查输出、最终图源摘要与目视记录见[本轮检查清单](../../.scratch/terminology-cleanup/README.md)。后续写作继续使用所属专题的定义，避免重新引入同义别名或将不同检查条件合称一个含糊名词。
+检查输出、最终图源摘要与目视记录见[本轮检查清单](../../../.scratch/terminology-cleanup/README.md)。后续写作继续使用所属专题的定义，避免重新引入同义别名或将不同检查条件合称一个含糊名词。
+
+## 26. 五项目调研采用、Session 与读写成本（2026-10-01）
+
+用户确认按五个 Harness 的调研优化方案后，将 12 项建议落实为 11 项设计任务，采用与实验关系见[本轮映射](validation/optimization-evidence.md#harness-adoption)。上下文、最终请求、工具准入与原结果、持久进展、恢复就绪、多端输入、子任务冷恢复和扩展暂存分别归原模块；经验形成、交互程序和目录发现登记独立 X-07～09，未改变 X-01～06 的原含义。
+
+执行中补充 [Session 与 Task](interaction/session-and-task.md)：Session 归应用交互，保存消息与任务关联；目标、控制、效果和预算仍由原 Task 及各负责方裁决。首版无新增会话执行循环或持久 Turn／Run。工程方案明确正文单份引用、投影可重建、逻辑记录按访问与事务需要合并、临时流式片段不逐片提交，候选能力按需启用。
+
+[同场景读写报告](../../research/agent-harness-comparison/data-flow-io-comparison.md)采用参考源码静态追踪及本项目持久阶段推导，区分逻辑追加、SQL、事务、flush 与 sync；不据此宣称真实性能排名。本项目尚未有存储实现，明确保留授权、内容、作业、结算及物理合并的计数缺口。
+
+| 本轮验证 | 结果与实际范围 |
+| --- | --- |
+| 文档与领域复核 | 主入口、工程切片、贯穿场景与模块设计已对齐；新增 HAR-01～11 是待运行规格。修复 .draft 移动后的相对链接及 ADR 回链，仅改变地址，ADR 决定不变 |
+| 公开契约 | 沿现有 105 方法，未新增字段、方法或状态枚举；Session、诊断清单及程序 host-call 只在内部设计／候选范围 |
+| 既有静态机制 | 六个验证脚本通过，包括 55 条正向协议序列与 371 个反向变体，以及完成投影、Brain、租约、发布恢复和传输构造检查；机器资产未改动 |
+| 文档结构与图 | 架构、ADR 与新增研究链接／锚点、表格、围栏及 diff 空白检查通过；新增 Session Mermaid 已实际渲染并目视检查，原图没有重新做全量像素审查 |
+| 运行证据 | 尚无本轮真实服务、数据库／平台故障、模型质量或 IO benchmark；不能以文档及构造检查替代运行验收 |
+
+实际命令、输出、票据及边界见[交付验证记录](../../../.scratch/harness-architecture-refresh/verification.md)。原调研 sources.json 和 verification 保留优化前的历史基线，未修改原哈希使它们冒充当前架构快照。

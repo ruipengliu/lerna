@@ -180,6 +180,15 @@ acceptance 另绑定准确候选、goal_revision 和受信用户决定，不能�
 preview_refs 只绑定回答所针对的版本，不是取阅凭据。业务端复核请求、期限、引用覆盖与当前来源状态，不能据这些字段证明任意认证客户端实际取得或呈现了正文。
 seen_revision 只记录曾显示哪个修订，不能证明用户读完、理解或同意。
 
+<a id="preview-consumption-boundary"></a>
+### 2.3 准确预览与消费前撤权
+
+Renderer 固定本次准确 request_ref、候选及 required_content_refs；取得完整字节、校验摘要并完成要求的呈现后，只开放依赖这些版本的输入。摘要、缩略图、旧版本或下载成功但呈现失败均不满足该宿主保证。请求更新、来源关闭、到期或撤权后，立即禁用依赖按钮并使未完成呈现回调失效；重新开放须重读请求及当前获准正文，不复用旧“已预览”状态。
+
+业务端仍复核准确请求、期限、引用覆盖、来源状态与当前用途许可。远端材料及资格通过所属 owner 的既有受信 port 核验；消费事务锁内重查本 owner 的任务、请求与确认，只接受依所属合同仍有效的依据。核验不可用、依据过期或版本不符时不消费，不声明跨 owner 的原子快照。普通无依赖输入可继续使用；取消、删除等最小管理入口不要求重新读取已撤权正文。
+
+正例：截图 v3 完整呈现且消费时仍有效，回答只绑定 v3；反例：v3 呈现后换为 v4 或被撤权，即使旧按钮曾启用，仍须拒绝旧消费并重新取阅。依 [ADR-0008](../../../adr/0008-trusted-renderer-preview.md)，preview_refs 只表达版本绑定；旁路认证客户端复制正确引用不能被业务端识别为“未预览”，也不能据此宣称用户已经阅读或理解，不新增取阅凭据。
+
 ## 3. 持久表、快照投影与目录
 
 | 记录 | 主键与约束 | 事务用途 |
@@ -277,7 +286,8 @@ surface_list 对一个 owner 冻结有限 ID 集合，逐页返回当前获准�
 
 ## 4. 输入转交、消费与撤回
 
-### 4.1 接纳输入事务
+<a id="input-durable-boundaries"></a>
+### 4.1 接纳输入事务与持久成功点
 
 1. 核对 input_id、surface_id、request_id/revision、准确 answer_ref 和 preview_refs。
 2. 根据固定处理器和受信装配确定唯一目标 logical_service_id、原服务地址、target_id、method 与 command_id，构造完整原 Command。若不能确定目标或查询回执的原服务地址，拒绝接纳，不能先 queued 再靠当前默认路由补选。
@@ -288,6 +298,17 @@ surface_list 对一个 owner 冻结有限 ID 集合，逐页返回当前获准�
 同 input_id 的回答、预览、目标服务和原命令都不可改变。对外 InputSubmission 只包含 target_command_id；宿主查询原 input_id，由交互服务沿内部持久目标核对，不要求客户端凭一个 command_id 猜测业务服务。
 用户编辑回答需要新 input_id，但原业务请求仍只消费一个有效答案。
 无持久宿主的纯浏览器只能显示本端待发送，清除浏览器数据后不能承诺恢复未发输入。
+
+| 事实与保存者 | 必须共同提交的记录 | 可显示的含义与恢复依据 |
+| --- | --- | --- |
+| 宿主保存原写入 | 原服务、完整 Command、input_id／请求及准确负载引用 | 仅“本端已保存／待发送”；沿原身份首发或查原决定 |
+| 交互接纳 | InputSubmission=queued、固定目标 Command、接纳回执与转交 job | “交互已保存”；入口命令的 applied 不等于目标请求已消费 |
+| 发送资格取得 | 原输入 queued→sending 与有效 job Guard 条件 | 仅“已领取转交”；job Claim 本身不改变输入状态，可能尚未发送 |
+| 目标命令 accepted | 实际业务 owner 的原命令接纳记录与继续责任 | “业务已接纳、尚未确认消费”；继续查该目标原回执 |
+| 请求消费 | 原请求 consumed_by、回答应用、业务回执与后续工作 | 仅该事务提交后显示“已消费”；交互取得并保存其固定投影 |
+| 本人决定／确认消费 | 前者保存 Confirmation 的本人决定及决定回执；后者与原业务共同提交 | approved 不等于 Grant 已签发或成果已验收，见[两端确认](#confirmation-races) |
+
+上述层次不是新增公开状态。Receipt.stage、InputSubmission.state、InputRequest.state、Confirmation.state 分别解释自己的记录；超时、页面关闭和传输确认不补造其中任何成功点。
 
 ### 4.2 转交状态机
 
@@ -374,6 +395,24 @@ sequenceDiagram
 发送领取之后到达的撤回只保存 withdrawal_requested，必须沿原业务能力核对，不能走图中的 withdrawn 分支。
 原回执正文不可披露时只返回获准状态；无法取得消费决定时继续原责任，不从 UI 推断。
 
+<a id="input-control-races"></a>
+### 4.5 未领取取消、新输入与旧工作退出
+
+撤回一份回答和取消整个 Task 分别提交 `interaction.input_withdraw` 与 `task.cancel`，不能互相代替。交互 owner 以原 input_id、预期修订和原 job 裁决 queued→withdrawn／sending；Orchestrator 以固定 `(orchestrator_id, task_id)`、当前任务及控制修订裁决取消，与输入消费使用同一任务锁序。取消命令仅 accepted 时显示取消处理中；取消业务事务提交后 Task 保持 cancelled，关闭新目标工作，将尚未消费的任务 InputRequest 置为 superseded 并保留原消费／关闭事实，同时保存控制与未结核对责任。
+
+| 提交顺序 | 持久裁决与恢复 |
+| --- | --- |
+| job 已 Claim，输入仍 queued，撤回先提交 | 保存 withdrawn 与撤回回执；旧 Claim 不取得发送资格，worker 不发原目标命令。重复撤回查原决定，不要求等租约到期 |
+| queued→sending 先提交 | 撤回只保存 withdrawal_requested；即使 worker 尚未实际发送，也不能凭网络沉默报 withdrawn。查原目标命令，或由原业务取消能力阻断后续目标工作 |
+| 目标命令已 accepted 但尚未消费，任务取消先提交 | 原 Task 取消记录阻断旧输入消费与目标启动；业务处理者给原输入命令保存准确拒绝／结束决定，交互继续沿原命令取得结果，不伪造交互 withdrawn |
+| 输入消费先提交，任务取消随后提交 | 保留 consumed_by 和原回答事实；取消停止新的目标推进，已派发效果与费用仍核对。原回答不能被撤销成“从未消费” |
+
+`task.submit` 已 accepted 且 Task 已持久创建、目标 job 尚未领取时，也能对该准确 Task 提交取消；目标启动检查当前任务门禁，不等后台循环开始才承认取消。若提交结果未知且尚无 Task 引用，SDK 先查原 submit 回执，取得原 Task 后才绑定取消；“取消当前页面”不能猜测最近 Task 或生成另一个任务。无法定位时保留未知，不能声称已取消。
+
+请求与目标命令创建后不改绑。取消后的同一 Task 不接受回答以恢复 active；终态后用户改变目标，沿既有规则创建新的独立 Task、新命令及对应 Surface，而旧 task_ref 固定。正例：T1 取消后创建 T2，迟到 T1 回答只得到原决定／拒绝，T2 正常推进；反例：将 T1 的 queued 回答迁到 T2，或把“取消本设备当前任务”延迟解析到 T2，均不允许。
+
+旧 worker 退出、发送回调和队列交接只处理原 owner、job_id 及本次 Claim。锁内归并仍检查 lease_epoch、observed_work_revision 和最新领域状态；旧完成不能清掉同 job 后来的责任，输入状态不从 sending／终态退回 queued。真正的迟到消费事实仍可沿独立认证入口保存，失效 Claim 不能据此结束作业或覆盖新责任。内存 goroutine／取消句柄按原工作身份保存，defer 仅在句柄仍是自己时清除，不能清空用户级队列或取消一个后来替换的句柄；这些句柄不成为持久 RunID 或准入依据。正例：活动 Task 的新有效输入提交了后续工作，旧轮退出保留它；反例：旧退出因共享“当前运行”指针而删掉新输入或停止 T2。持久裁决仍使用[公共完成规则](../reliable-work.md#completion)，不是靠内存指针提供恢复保证。
+
 ## 5. 独立应用事件与受信管理
 
 application_event 只用于无 task_ref 的独立 Surface。
@@ -399,6 +438,24 @@ Grant owner、批准 owner 或 Orchestrator 分别在 grant.issue、evaluation.a
 Grant、ReleaseApproval 和普通 InputRequest 分别有权威 owner，不相互转型。
 即使用户仍有取消／删除权而无正文读取权，管理入口仍以获准最小元数据提供控制。
 
+<a id="confirmation-races"></a>
+### 5.1 两端 confirm／deny 与原业务一次消费
+
+受信按钮“确认”／“拒绝”映射为既有 `confirmation.decide` 的 approve／deny。两个设备读取同一 pending 修订、挑战、意图摘要和 consumer_command_id，各自先保存完整决定命令；owner 在事务中先查该决定命令的去重记录，再锁原 Confirmation，核验受信主体、准确绑定、期限、预期修订及当前管理权。只有一方能把 pending 提交为 approved 或 denied 并保存固定回执；败方不改变决定，不保存会话自动允许、Grant 或其他批准。
+
+决定与消费有两个成功点。原业务 Command 到达后，consumer owner 的同一事务核验当前业务条件、准确 approved 决定及当前权限，消费为 consumed 并保存业务结果及必要工作；业务拒绝或事务失败不留下已消费确认，也不产生许可。Confirmation 与消费业务同 owner 共事务，UI 不跨库先标 consumed。普通 InputRequest 的回答和成果验收仍以第 4 节的一次请求消费为准，不能借批准另造第二次回答。
+
+| 竞争／重放 | 正确结果 | 不允许的结果 |
+| --- | --- | --- |
+| deny 先提交，另端 confirm 迟到 | denied 不变；迟到决定按原修订冲突拒绝，原业务不能消费批准 | 迟到 confirm 写自动许可，或覆盖 denied |
+| confirm 先提交，另端 deny 迟到 | approved 不变且尚非业务成功；若需关闭实际权限，走原许可／任务的受信控制入口 | 用旧 deny 冒充 Grant 已撤销，或把旧批准改成另一份业务决定 |
+| 重发同一决定 command_id | 复核当前披露后返回该命令的原决定，即使 Confirmation 已 consumed | 因当前 revision 已变而把原成功改成冲突，再生成一个确认 |
+| 同一按钮另用 command_id 重点 | 新命令仍受当前修订约束；可读取原决定，无第二次消费 | 从重复点击取得新的默认批准或延长确认期限 |
+| approved 后、业务消费前撤权／到期／换内容 | 拒绝原业务，保留已决定但未消费的事实；变更意图须新命令、新确认及准确预览 | 使用旧成功页面、preview_refs 或缓存权限继续签发 |
+| 原业务已消费但答复丢失 | 查原业务回执和 confirmation.read，恢复同一 consumed_by 与结果 | 因断线重签 Grant、重验收成果，或把已发生效果解释为未发生 |
+
+断线先查询原决定命令、`confirmation.read` 与已固定 consumer Command 的回执。只在原记录明确仍 pending、资格及期限仍有效时重投原决定；确认读取失败不能自动 approve。真实撤权另由原授权 owner 裁决；确认页面消失、deny 按钮或普通聊天文字都不承担撤权传播责任。当前权限检查与支持的消费者继续按[安全实现](../security/implementation.md#固定命令后请求受信确认)执行。
+
 ## 6. 呈现意图、过载与恢复
 
 present 按 surface_id、endpoint_id 和 expected intent_revision 保存 open/close。
@@ -421,6 +478,47 @@ present 按 surface_id、endpoint_id 和 expected intent_revision 保存 open/cl
 CLI 终端无法证明已经擦除显示历史时，内容清理报告保留该载体限制。
 浏览器重启后先恢复未结输入与本设备 close 意图，再读取当前获准快照。
 连接层故障不阻止已接纳任务消费；页面显示离线，退避重连后按原 input_id／command_id 查询并读取当前快照，不能反复提交输入探测。
+
+<a id="surface-publication"></a>
+### 6.1 持久快照先于可丢提示
+
+ProjectionWorker 取得原 owner 已提交的事实，校验源修订后，把完整 SurfaceRevision、当前修订、必要请求／内容引用及 surface_notifications 责任同事务提交。正文须已按内容合同发布；材料暂不可取时快照准确保存／返回缺口，不能先显示可操作的完成卡片再补引用。提交结果未知时先读原 Surface，不发猜测的新修订；提交失败不发送对应提示。
+
+通知发送器只从已提交记录取 Change，在原负责端的权威读取路径已能读到该版本后才发送；不能先推送再异步刷数据库，也不能将复制延迟中的旧查询响应冒充最新快照。Task 的 Change 对应原 Task 的可读提交，Surface 的 Change 对应原 Surface 的可读提交，不等待所有页面投影，也不假装两个 owner 原子提交。Task 终态已知而投影尚旧时显示更新中，查询原 Task／input 决定，待 Surface 追平。
+
+终结提示仍是既有 Change，不新增 RunComplete 权威。正例：终态 Surface 已提交而 Change 全丢，重连或有限周期核对仍读到准确结束事实；反例：发送“已完成”后快照提交失败，或因为提示未收到而重新执行原输入。表单状态、任务控制、许可决定及业务回执均按原记录恢复，不取决于通知是否到达。
+
+<a id="surface-generation"></a>
+### 6.2 旧流隔离与仅呈现增量合并
+
+传输按已有 connection_id、网关当前 binding_id、subscription_id 隔离旧外连接、旧内部流和已替换订阅。Renderer 另为一次打开／刷新保存进程内的读取标记，绑定当前身份、Surface owner／ID、Presentation.intent_revision 和本次请求引用；它只隔离异步回调，不是公开字段或新的业务世代。关窗、切换 Surface、重连、换请求或权限失效均使旧标记失效。
+
+收到快照、正文下载或 not_modified 后，应用前再次比较该标记、当前打开意图、准确引用与本地失效时点；旧返回直接丢弃，不覆盖新 Surface，不开启旧输入，不更新 seen_revision。Surface 修订不倒退，同修订不同内容回查；不同 Surface／来源的 revision 不作大小比较。已收到撤权／关闭后，旧成功回调不能恢复正文，当前资格不可核验时保留缺口。原 input／Confirmation 的迟到业务回执可由原服务保存，不因本端丢回调而丢弃业务事实。
+
+重连顺序是：隔离旧回调 → 认证并核对原服务 Ready → 查询已保存的未知原决定 → 建立新订阅及提示缓冲 → 读取当前获准 Surface、本设备意图及准确请求 → 取得必需正文并呈现 → 按新水位处理提示、有限周期核对。保持 close 的设备只恢复记录，主动打开才读正文；采用[集合恢复](../contracts/protocol.md#collection-snapshots)的先订阅后枚举，缓冲溢出重建，不把旧页或旧提示接在新集合后。
+
+宿主若提供 live/token 片段，须明确显示为尚未发布的临时内容；它可以先展示、合并或丢弃，不要求每片写 Surface／Content，也不新增本配置 Frame。这类易失呈现不推进正式快照修订，不开放依赖正文的输入，不代表任务完成或费用已结清。正式发布或最终结算尚未确认时回查原 owner、展示对应缺口；费用未结不撤销已提交的任务终态。
+
+debounce 只用于状态标签、临时片段等呈现增量的刷新，最终呈现从已发布版本取得；合并同 Surface Change 仍保留重读义务及明确缺口。输入接纳、决定、撤回、取消、确认、业务回执与持久快照提交不等待 debounce，也不按“最后一条”丢弃。正例：连续十条进度合为一次刷新，仍保存每份业务决定；反例：新页面已展示 v8 后旧连接 v7 返回把页面降级，或合并两个 confirm／deny 决定为一个本端结果。
+
+<a id="sdk-original-decision"></a>
+### 6.3 SDK 存储失败与原决定查询
+
+可恢复写入先把完整原 Command、规范摘要、原 logical_service_id／服务地址、准确对象与负载引用保存到宿主耐久记录，再首发。输入同时保存 input_id、请求和 Surface 引用；确认同时保存 confirmation_id、决定命令与完整 consumer Command。保存认证定位关系，不把 bearer 原文写入通用日志。新 request_seq 只关联网络尝试，重试不补默认值、换预期修订、改变正文或延长原命令期限。
+
+| 本端故障点 | SDK 行为与可观察事实 |
+| --- | --- |
+| 首发前原命令保存失败／配额满 | 不发可恢复写入，只显示“本端待发送／存储失败”；可交给具备耐久能力的宿主保存同一原命令后发送，不声称服务已接纳 |
+| 首发后、答复未知或保存答复失败 | 保留原待核对记录和身份，不清理为完成、不换命令；本端写失败不生成业务 rejected。已观察到的原业务决定可显示，同时明确本端恢复记录尚未更新 |
+| 重启只剩首发前记录 | 先按原地址／服务查原决定；已 applied／rejected／accepted 分别恢复结果或继续有限等待，不因旧本端状态重新消费 |
+| 原 owner 明确未接纳 | 原完整命令仍在首次接纳期限内且前提允许时原样重投；期限届满不新建替代命令来掩盖未知。原命令已 accepted 则继续查原决定，不把截止解释为责任消失 |
+| 原身份记录损坏或丢失 | 已知 Task／Surface 可经获准目录与原 owner 找回；无法定位的写入保持未知。表单消失或当前任务列表为空不证明原输入未消费，禁止自动生成另一份答案／许可 |
+
+恢复按对象选择既有路径：交互输入查 `interaction.input_read(input_id)`，由交互服务沿固定 target_command_id 查询；直接业务写入查原逻辑服务的 `receipt_lookup(command_id)`，再按获准 Task／请求读取核对；确认查原决定回执、`confirmation.read` 与 consumer Command 回执。读请求返回 consumed_by 可核对原消费，不能从它猜测仍未接纳的另一份输入。Query 可重新发起有界读取，不生成新业务命令。
+
+当前读取无权限时仅披露获准最小状态；未知、dependency_unavailable、not_found 与 gone 分开处理。只有原权威明确未接纳才能考虑原样重投；gone 禁止复用原 command_id，转查保留的业务／终态事实，仍无依据时保持未知。确认 approved 只恢复批准事实，不能报告 Grant 已产生。答复成功保存后才条件清理本端待核对记录；持续存储故障停止新增可恢复写入，并保留原记录查询与必要受信管理路径，不静默降成内存队列。
+
+正例：服务消费回答后 SDK 写答复失败，重启以已保存 input_id 查到同一 applied；反例：SDK 抛存储异常便以新 input_id 再发回答，或对一次丢回复的批准重签 Grant。此合同不要求每份渲染增量建本端账本；原写入身份和未结查询复用宿主原命令记录，设备意图由既有 Presentation 恢复，不另建运行或呈现账本。
 
 <a id="production"></a>
 ## 7. 生产部署、可用性与性能
@@ -463,6 +561,7 @@ surface_read 的 not_modified 和 Query 重放都须重新证明当前披露；�
 第 6 节限额是待测初值；验收加入断线集中重连、热点任务更新、预览来源同时失效及通知层停机，
 据实测调整查询频率与连接分片，不以降低内容状态与当前授权的核验频率换吞吐。
 
+<a id="input-recovery-validation"></a>
 ## 8. 故障实验与检查边界
 
 | 实验 | 输入与注入 | 必须观察到的结果 |
@@ -486,7 +585,20 @@ surface_read 的 not_modified 和 Query 重放都须重新证明当前披露；�
 | II-17 预览保证边界 | 截断下载或呈现失败；另以认证旁路客户端复制正确 preview_refs | 受信 Renderer 不开放失败预览的输入；旁路正确引用不被误报为已证明预览，业务端仍只依准确版本、覆盖、请求、内容状态及当前授权裁决 |
 | II-18 转交作业接替 | sending 后远端消费但答复延迟，旧 worker 租约失效并重领，再送达旧回执与 ReplyAck | 接替者查询同服务和 target_command_id；旧领取不能结束作业，独立归并可保存原消费事实，ReplyAck 不证明业务成功 |
 | II-19 投影中新责任与无通知发现 | 旧投影取源时先提交较新来源与待处理工作，再让旧 worker 结束；另在当前已追平后关闭全部通知，使远端再次更新 | 快照不倒退，旧结束不覆盖新责任；原 waiting 核对作业在声明间隔内发现远端新修订，不靠扫描补齐作业记录；重复 Change 不增作业版本，关窗不终止投影 |
+| II-20 Claim 后撤回 | 领取 job 但保持 queued；先提交撤回，再让旧 worker 竞争 sending | withdrawn 可查询且无目标发送；对照 sending 先提交时只得到 withdrawal_requested，不以 Claim／网络沉默宣称未消费 |
+| II-21 accepted 未推进即取消 | task.submit 已创建 Task、目标 job 尚未领取；另令目标输入命令 accepted 尚未消费，再先提交 task.cancel | 原 Task cancelled 可读；启动与输入消费均被门禁阻断，原输入决定可查；不能等待循环开始才取消，也不能由旧输入重开 Task |
+| II-22 后来独立 Task | T1 取消后创建 T2，再送达 T1 输入、控制和退出回调 | T1 保持终态且原效果继续核对，T2 正常推进；旧控制不解析为“当前任务”，旧 Surface 不改绑 T2 |
+| II-23 队列交接与旧退出 | 活动 Task 的新输入保存新工作；旧领取结束，同时替换本端取消句柄 | 新责任不被旧 Finish 清掉；旧 defer 只清自己，不能清用户队列或取消替代句柄；持久结果以 Guard／work_revision 裁决 |
+| II-24 双端 confirm／deny | 两端读取同一 pending 修订，分别抢先 approve 或 deny；再重复原决定命令和另 ID 点击 | 一份本人决定，原重放返回固定结果，新命令受当前修订约束；败方零 Grant／自动许可，批准本身不是消费 |
+| II-25 确认消费边界 | approved 后撤权、到期或变更意图；另在原业务与 consumed 写入间注入提交失败及失回执 | 前者拒绝且不消费／不产许可；事务失败两者都不提交，失回执沿原 consumer 查同一业务；不能复用确认给新命令 |
+| II-26 预览过期与旁路 | 准确字节已呈现后修订请求／撤权；下载成功但呈现失败；旁路复制正确 preview_refs | 受信 Renderer 禁用失效依赖，业务拒绝旧版本／无当前资格；不把正确引用判为已证明呈现，不为无法识别的旁路虚构错误 |
+| II-27 旧世代回调 | 切换 Surface、关闭页面、重连／换订阅或撤权后交回旧快照、正文与 not_modified | 旧 connection／binding／subscription 或本端读取标记不能更新当前页面、seen_revision 或按钮；原业务事实仍在原服务可查 |
+| II-28 终结提示与持久失败 | 正式快照提交失败时准备 Change；成功后丢弃全部提示，另使 Task 先终态而 Surface 暂落后 | 失败不发对应 Change；成功后查询恢复；落后显示更新中，不从提示猜成功，不重发原动作 |
+| II-29 SDK 两处存储失败 | 首发前保存原命令失败；服务消费后保存答复失败，再重启 SDK | 前者无网络写入，只显示本端待发送；后者沿首发前记录查同一 applied，无新 input_id／Grant，不改成业务 rejected |
+| II-30 原身份不可恢复 | 损坏本端记录，模拟原查询 unavailable／gone／not_found，以及 accepted 后接纳期限届满 | 原 owner 明确未接纳且原期限有效才原样重投；gone 不复用，无法定位保持未知；accepted 继续原查询，不造替代命令 |
+| II-31 仅呈现 debounce | 临时片段先显示后丢弃，合并多条进度；同时连续提交输入、取消和两端确认，正式发布／结算失败 | 临时显示明确尚未发布，无逐片持久要求；业务决定不合并丢失，最终从原事实恢复缺口，片段不开放预览按钮或声明费用已结清 |
 
 交互 JobStore 适配器须运行[公共故障套件](../reliable-work.md#validation)，II-02、II-18、II-19 再验证发送／撤回竞争、跨数据库事务边界消费与投影新责任。静态协议检查覆盖字段、绑定和有限状态序列，不能证明浏览器确实取得字节或用户理解内容。
+II-20～31 是本轮补充的设计验收向量；须分别在业务事务、worker 接替及 CLI／Web 宿主注入故障验证，文档中的正反例不记为运行通过。数据库不可写、提交结果未知和本端存储失败均须观察原记录与网络出口，而不能只断言界面文案。
 旁路客户端原样复制正确引用属于该保证的边界；不将它登记为业务端可识别的“未预览”错误，也不把下载回执、ETag 或 seen_revision 当作用户阅读证明。
 CLI、生产／本地 Web 和任何后续原生适配器分别完成预览、缓存、恢复及权限实验，不相互外推通过结论。

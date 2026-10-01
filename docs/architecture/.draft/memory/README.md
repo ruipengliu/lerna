@@ -6,6 +6,8 @@
 
 本页与实现设计构成现行设计基线，参考实现和运行验收仍待交付。owner、来源、许可、修订、分页与清理语义是替换实现必须保持的契约；字面召回和初始配额是默认实现选择。中文词法、混合检索、候选质量检查和经验整理属于待评测策略，文档整理不使它们自动成为默认。
 
+任务经验先形成[准确候选](implementation.md#experience-candidate)，区分原条目与修改结果，应用时检查并发纠正和当前来源。跨任务保存与改善发布分别满足其用途和证据条件。
+
 ## 阅读路径与规则归属
 
 先用本页理解保存、查询和关闭的完整行为，再按实现职责进入后续文档。完整规则在下表所列位置维护，研究证据和检查记录不另行定义运行契约。
@@ -17,7 +19,7 @@
 | 3 | [质量优化策略](optimization-plan.md) | 写入保真、B0／B1／B2 检索、显式关联、本地嵌入和读时整理的候选机制及采用边界 |
 | 4 | [容量、验收与建设顺序](validation.md) | 配额起点、行为与故障用例、质量对照、指标、启用与回退门槛、阶段退出证据 |
 
-精确协议字段以[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)为准；领域含义在本页[集中定义](#memory-contracts)。外部依据见[近半年论文](../../research/agent-memory-papers-2026-09-28.md)与[开源实现](../../research/agent-memory-libraries-2026-09-28.md)。研究结论不表示本项目已实现相应能力。
+精确协议字段以[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)为准；领域含义在本页[集中定义](#memory-contracts)。外部依据见[近半年论文](../../../research/agent-memory-papers-2026-09-28.md)与[开源实现](../../../research/agent-memory-libraries-2026-09-28.md)。研究结论不表示本项目已实现相应能力。
 
 ## 1. 边界与选择
 

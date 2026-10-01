@@ -6,6 +6,8 @@
 
 长连接缩短交互等待并允许服务端主动交付，持久责任仍由原命令和业务记录承担。本页是拟实现的互操作契约；结构用例与密码学向量不代表网络、服务或恢复机制已经运行。
 
+输入接纳／消费、两端确认、取消与 SDK 存储失败是[交互业务合同](../interaction/implementation.md#input-durable-boundaries)，本页只规定它们如何沿原身份与连接恢复；传输世代不创建新的业务运行权威。
+
 ## 1. 连接与发现
 
 调用方从用户或受信装配提供的 HTTPS 服务地址开始，验证服务器证书及主机名，不跟随跨源重定向转交凭据。`GET /.well-known/harness` 未认证时只返回协议、传输配置、固定连接路径及登录／配对能力；已认证后返回下表的完整 Discovery。未认证请求不披露租户、设备、内部路由或活动任务。
@@ -220,6 +222,8 @@ owner 丢失控制答复时重投绑定原 ticket_id 的同一 MirrorControl，�
 
 集合恢复明确保留 partial、gaps、不可达端及容量截断，不把 Surface 的 200 项冻结集合或 Memory 的有限集合当作无限目录；固定截断不触发同样全量查询的立即循环。领域页游标和订阅水位独立，任务创建时间上界也不等于提示切点；客户端需先订阅、后枚举，再读取水位之后的未知及已知对象提示。具体预算、完整条件和有限重试见[集合恢复](protocol.md#collection-snapshots)。通知丢失可恢复查询，服务端推送的控制命令仍须经原 Delivery／Receipt 持久链路，不能降成可丢 Change。
 
+结果与业务状态的 Change 只在对应持久事实／快照可读后发送，沿[快照发布合同](../interaction/implementation.md#surface-publication)恢复终结提示丢失；宿主临时片段、旧世代回调和仅呈现 debounce 见[呈现合同](../interaction/implementation.md#surface-generation)，不新增 token／RunComplete Frame。多端输入与旧控制见[业务竞争](../interaction/implementation.md#input-control-races)，confirm／deny 见[受信确认](../interaction/implementation.md#confirmation-races)，本端持久失败按[SDK 原决定查询](../interaction/implementation.md#sdk-original-decision)处理，不能从断线或发送成功推导消费。
+
 | 情况 | 线返回 | 调用方动作 |
 | --- | --- | --- |
 | 已保存业务决定 | response.result 或 Reply.result 中的 Receipt | 读取 stage；连接正常或 gRPC OK 不裁决业务效果 |
@@ -245,5 +249,6 @@ owner 丢失控制答复时重投绑定原 ticket_id 的同一 MirrorControl，�
 | 伪造或移用控制证明 | ES256签名向量、错误kid／受众／租户／快照拒绝 | 密钥轮换、撤销、时钟不可信和离线窗口 |
 | 上传截断／换字节／孤儿清理 | hash／长度／上传与引用关联拒绝 | 磁盘满、提交未知、清理与引用并发 |
 | 下载资格撤回 | 过期定位、错误副本与引用拒绝 | 发送前及发送中撤权、持有者清理回执 |
+| 输入、确认与呈现恢复 | 复用现有身份和状态，不新增公开运行／取阅字段 | [II-20～31](../interaction/implementation.md#input-recovery-validation)：未领取取消、旧退出、双端决定、快照可读后提示、旧世代及 SDK 存储失败 |
 
 机器资产与复现入口见[传输用例](examples/transport/README.md)。字段和签名向量检查只验证给定数据；认证主体是否真实、持久提交是否成立、隔离是否有效以及异构服务是否互操作，都必须另外运行验证。

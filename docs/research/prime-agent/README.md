@@ -1,5 +1,7 @@
 # Prime Agent 技术调研与 Harness 架构对照
 
+补充：[同场景数据对象与读写比较](../agent-harness-comparison/data-flow-io-comparison.md)；[Prime 消息、同步与附加快照路径](../agent-harness-comparison/io/codex-prime.md)。
+
 Prime Agent 的主要参考价值是把持续目标、后台会话、程序化工具、递归子 Agent 和可编辑经验连成工作链。它采用 Rust 会话宿主与 Python REPL：模型面对较小的工具入口，复杂工具组合、材料处理和子任务控制由代码表达。对本项目，最值得借鉴的是这些机制的组合方式和可恢复记录；采用时仍须保持 Orchestrator 的唯一裁决、逐行动授权和外部效果核对。
 
 本文依据 2026-10-01 拉取的默认分支快照，分析实际源码，未运行上游测试、模型请求或性能实验。代码证明实现机制存在；README 中的“自我改善”、后台连续运行等产品主张不作为质量或容灾实测结论。版本与全项目基线见[来源清单](../agent-harness-comparison/sources.json)，跨项目结论见[架构优化分析](../agent-harness-comparison/architecture-optimization.md)。

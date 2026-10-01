@@ -4,4 +4,4 @@
 
 用户在 2026-09-26 的详细设计访谈中确认该选择。代价由权威账本的存储与备份承担，不承诺身份元数据的固定期限全量删除。可验证身份代际或不可延长的接纳期限能支持进一步回收，但会增加跨端发放、验证和恢复协议；出现必须物理删除全部身份的明确需求时再评估该替代方案。
 
-具体规则见[共同调用契约](../architecture/contracts/README.md)与[执行设计](../architecture/execution/README.md)。
+具体规则见[共同调用契约](../architecture/.draft/contracts/README.md)与[执行设计](../architecture/.draft/execution/README.md)。

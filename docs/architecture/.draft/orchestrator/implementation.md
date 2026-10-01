@@ -76,7 +76,7 @@ CommandHandler 使用公共接纳模板，JobRunner 将下文各 kind 的处理�
 | task_results | task_id、goal_revision、固定 Result、所选 coverage_revision／check_id 集合及完成时门禁修订 | 每任务最多一个成功结果；原 Result 不因后续缺陷或账单修改 |
 | evaluator_evidence_gates / evidence_defects | 准确 evaluator_ref 的固定门禁行及单调修订；缺陷 ID、准确规则与影响范围、依据、受信登记身份 | 登记缺陷和核验完成锁同一实现门禁；缺陷原事实与分页影响责任共同提交，不等待任务投影追上 |
 | result_evidence_notices | task_id、依据类型（condition／coverage）、原 check_id 或 goal_revision／coverage_revision、defect_id、说明引用 | 关联唯一；在固定 Result 之外保存已成功任务的证据失效说明，不生成新成功结果 |
-| task_snapshots | task_id、snapshot_revision、精确依赖摘要、content_ref | 同任务快照修订唯一，不原地更新 |
+| task_snapshots | task_id、snapshot_revision、精确依赖摘要、content_ref；内部组装依据含策略、owner 水位、准确材料及保留／排除原因 | 同任务快照修订唯一，不原地更新；不是另一个目标或效果权威 |
 | task_plans | task_id、plan_id、plan_revision、goal_revision、正文引用 | 计划版本唯一；当前可用指针由 tasks 保存 |
 | decision_consumptions | task_id、decision_id、输入修订、采纳／失效原因 | decision 只消费一次 |
 | plan_step_admissions | task_id、plan_id、plan_revision、step_id、固定候选摘要、operation／delegation 关联 | 同计划版本每步骤只准入一次，不复用 decision 消费键 |
@@ -263,7 +263,7 @@ accept_task(command):
 
 ## 4. 一轮工作如何形成行动
 
-领取 decide job 后，工作者读取任务及祖先有效控制，形成快照。快照保存目标修订、策略、能力绑定、可用证据修订与材料准确版本；组装过程中权限改变或必需材料不可读时，保存具体等待原因。
+领取 decide job 后，工作者读取任务及祖先有效控制，从 Task、Requirement、原未结意图和可信 owner 事实机械重建硬约束，再选取获准正文、近期事实及候选摘要。快照保存目标修订、策略、能力绑定、证据修订、材料准确版本与组装依据；组装过程中权限改变或必需材料不可读时保存具体等待原因。投影落后不得省略未知效果，快照提交前重查依赖修订；细化集中在[上下文组装](../brain/implementation.md#snapshot-reconstruction)，最终供应商字段另由[编码核验](../brain/implementation.md#final-request-provenance)负责。
 
 Brain 调用有固定 decision_id。调用在任务暂停之后才返回时，仍保存模型费用和原决策记录；旧提案不获得行动效力。新的决策需要新的快照和新的 decision_id。
 
@@ -436,6 +436,39 @@ TaskCoordinator 在新增意图、控制、条件或可信来源事实的事务�
 
 恢复适配器分页枚举未完成 jobs，以及已有任务、意图、逐端控制、条件与未结账务中缺少作业记录的责任；按原业务键补齐，不重新发明命令或操作身份。补扫用于程序缺陷或迁移后的修复，正常唤醒仍由领域事实和 `Raise` 共同提交。需要保持未知的记录返回具体等待依据，不能用无限到期扫描维持忙循环。共同恢复调度见[公共恢复](../reliable-work.md#recovery)。
 
+<a id="bounded-progress"></a>
+### 7.1 持久进展与有界续行
+
+TaskCoordinator 判断“是否有可继续使用的新输入”和“是否还允许自主续行”，不新增 Goal 权威。进展依据来自原 owner 的正式事实、已消费输入和当前条件；生成一段更长的回答、改变计划措辞、创建 Intent 或声称完成都不证明目标已推进。借鉴[持久有界推进调研](../../../research/agent-harness-comparison/architecture-optimization.md)的反馈去重，但上限不能替代本项目的成功核验。
+
+计数作为既有记录的内部元数据实现，不要求新表、注册表或服务：
+
+| 附着记录 | 内部字段与约束 |
+| --- | --- |
+| 原 Task／TaskPolicy | 固定策略版本和有限的续行、连续无进展、修复上限；累计 `continuation_count`、`repair_count`、连续 `no_progress_count`、最后有效输入摘要及原来源关联。累计值不因重启、目标修订、暂停／恢复、作业重开或更换 Brain 重置；这些字段不加入公共 Task |
+| 原快照的 Decision 关联／plan_step_admissions | 已计数的推进身份与原提交决定；每个新 Decision 或实际准入的计划步骤占用一次续行额度，重复派发／重领沿同身份不再占用。这个次数是逻辑推进数，物理模型请求、工具尝试和费用仍分别计量 |
+| received_facts／decision_consumptions／输入命令回执 | 在已有唯一来源键上保存进展分类、是否已归并及所依据的输入摘要；来源键为受信 owner／对象／修订，或原 decision_id／已消费的 input 命令。反馈正文仍归原 owner，不再复制一套事件账本 |
+
+最后有效输入摘要按当前目标／条件、可用证据、有效人工输入、必要能力及未结效果的**语义依赖**形成，保留准确版本和适用范围；不包含通知 ID、领取代次、轮询时间、token 累计或仅为账务变化而增加的 Task 修订。受信规则先判定哪些字段与本次推进相关，再比较摘要；不能由模型自行宣称“有新信息”。摘要仅作比较索引，核验仍读取关联的原事实。
+
+<a id="progress-feedback"></a>
+### 7.2 反馈归并与继续事务
+
+| 反馈 | 持久处理与计数 |
+| --- | --- |
+| 当前目标真正修订、新的可用结果、原 unknown 被核清、有效回答补齐参数 | 按原来源消费一次，更新准确输入依据；可清零连续无进展数，累计续行／修复、费用和期限保持。新目标不改原操作及其责任；条件相同或同一回答重投不制造进展 |
+| 同对象同修订、同 Decision 重报、重复通知、仅变消息／会话／worker 身份 | 返回原归并结果；同修订不同摘要拒绝冲突。不增加进展或无进展次数，不创建新 Decision |
+| 新 Decision 的格式错误、合法拒判、重复 need_context／无可准入建议 | 每个原 Decision 的消费最多增加一次连续无进展数，并保存拒绝类型与恢复条件；需新修复／升级时同时占用累计额度，仍按 Brain 的固定升级链和新 Decision 准入 |
+| 原效果仍 unknown、原来的子任务无新结果、账单或控制尚未核清 | poll／settle／control 按原对象有界核对，尝试计入其原作业；相同读取不增加无进展数，也不把它当进展。只有可信输入实际改变才唤醒目标推进，不调用 Brain 探活 |
+
+远端读取在事务外。归并事务按既有锁序锁原 Task，先检查原来源／消费键，核验反馈身份、准确目标与当前适用性，再归并事实／费用、分类反馈及更新内部计数。旧租约不能修改 Task；可信原事实可由有效领取或独立事实归并入口收取。同事务保存等待／失败或下一责任并调用 `Raise`，不能先递增计数后靠可丢通知补 job。
+
+允许下一次自主推进时，在创建原快照／decision_id 或准入计划步骤的同一条件事务中核验当前控制、预算、期限和限额，写已计数身份与累计值；派发丢答复只查原决定。并发 worker 不能各自占用最后一个名额。连续无进展数仅在上述已核验输入变化时清零；有效新目标允许在**剩余累计额度**内重新判断，不能用新 goal_revision 或新升级链无限续行。内部计数不独立制造目标／控制修订，等待和领域事实变化仍按原 Task 修订规则提交。
+
+达到连续上限后，有明确可恢复对象时保存现有 `input / authorization / dependency / effect / budget` 等等待项及可检查的 `resume_condition`，原 job 保存有限下次 `due_at`／来源条件；不能新增公开 `no_progress` 枚举或伪称容量不足。没有可恢复条件、期限已到或固定累计额度不允许继续时，按 TaskPolicy 保存失败原因并关闭新目标推进；先处理已在途工作和已有充分完成证据，不因“最后一个名额已用”提前覆盖其合法结果。无进展上限不产生成功依据。
+
+停止自主续行后，原 unknown、预留、失联子任务、待传播控制与迟到费用仍由 poll／control／settle 及协作闭合责任承接。自动查询耗尽只降低频率或转受信核对，不能改为 not_applied、归还未结预算或删除原去重键。用户可见的等待项／结果说明通过既有 Task、内容及 Surface 通路表达实际进展、停止原因和补齐条件，不新增进展百分比或消费计数协议。
+
 ## 8. 预算分配与最终结算
 
 金额和用量采用精确十进制字符串，按声明单位独立比较。修改预算、预留调用和接收累计费用都锁对应 balance 行。严格额度的每项调用先预留可信最大费用，正常供应商合同下维持 `spent + reserved ≤ limit`；未知费用仍占上界，账单迟到只应用累计差额。明确获准的估算模式只允许未通过 allocation 分配、且费用 Grant owner 与原 Task 处于同一受信本地事务范围内的直接调用：以有限估算额决定是否启动，未知账单保持该笔预留，自动核对耗尽后仍需可信最终账单或可验证不计费证明才能结清。最终账单若超估算仍全额记入 spent，允许账面超过 limit，并立即封闭新的计费准入；不得因违反严格模式的数据库检查而丢弃真实账单或释放其他未知预留。若提供方实际收费突破其声明的可信上界，同样全额记账、停止该适配器的新计费调用并报告合同违约，不以不变量拒收账单。`budget.allocate` 及其接收方始终要求严格上界，直到另有可验证的超额交接合同。
@@ -573,5 +606,10 @@ Orchestrator Store 先通过[公共接纳与工作故障用例](../reliable-work
 | RT-17 | allocation 已 settled 并释放余量；父用该余量接纳新工作后，原接收方以上调账单更新 closed Closure，对账唤醒过期未获答复、继任命令与父结算答复先后丢失 | 接收方 outbox 保留旧唤醒并用同修订继任 task.billing_reconcile 取得同 JobAck，父 durable job 保存结算命令尝试并从原回执／当前 allocation 恢复，过期未应用才建同账单继任命令；只追原 allocation 的累计差额一次，已释放数值不倒流；父超预算记债并停新计费，未突破原 allocation 上界时不误判违约 |
 | RT-18 | Task／Decision／Operation／Use 已终态且首次 settle job 已 done，原计费 owner 保存上调账单后通知丢失，随后 O 重启 | 源 outbox 保留旧未知尝试，命令过期后以同修订继任 task.billing_reconcile 交回同 JobAck；O 在终态 Task 重开原计费作业，主动读原账并只记一次上调差额，原 Task 目标和已释放额度不重开；同物理账单的 Brain／Grant 双投影不双扣 |
 | RT-19 | 两笔各自未超过可信单次上界的调用被接收方错误地接纳，总额超原 allocation；另一笔同时出现提供方单次上界违约 | 父凭原账单记全部真实费用，不因总额超限拒收；分别保存 receiver_allocation_breach 与 provider_bound_breach，二者可并存；一项证据暂缺时 incident_pending=true 与已知原因并列，停受影响新计费并继续核证 |
+| RT-20 | 一个 Decision 拒判已消费，同来源反馈多次通知；归并提交后失答复，重启并重复领取 | 原反馈只计一次，续行／修复／连续无进展数不重置；有剩余额度的新 Decision 只创建一次，账单不重复 |
+| RT-21 | 无进展上限将到时有效人工输入／目标修订与旧反馈竞争；另重投相同条件、回答或暂停／恢复 | 合法变化只按原身份归并一次，可清连续数但不清累计额度；旧目标建议不准入，重复或只换控制身份不解上限，原 unknown 保留 |
+| RT-22 | 子任务失联且原效果 unknown，重复 poll 无新结果；再恢复可信原结果 | poll 不触发 Brain、不累加无进展判罚，查询保留原对象与有限退避；恢复只归并同一 child／operation，是否闭合另核验，合法新结果可推进 |
+| RT-23 | 最后一个续行名额被两个 worker 竞争，模型拒绝／格式错误又重复交回 | 最多一项新推进获准；同 Decision 只计一次拒绝，固定升级链及累计修复上限保持，无透明模型重试 |
+| RT-24 | 无进展与预算耗尽同时出现，停止后账单上调、效果晚到且唤醒丢失 | 保存具体等待／失败与原收尾 job；原效果核对及累计账单归并继续，目标终态不重开；不凭停止原因成功或结清未知预留 |
 
 实现交付应同时记录表约束、事务故障结果和调度负载。静态方法序列覆盖见[20-budget-allocation](../contracts/examples/protocol/20-budget-allocation.json)；它不能证明上述并发和磁盘故障已经通过。

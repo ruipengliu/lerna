@@ -223,6 +223,15 @@ ImprovementPolicy 在第一项正式计划前由受信维护者确认，不由�
 计划保存后不得换样本、阈值、种子、候选或统计方法。
 修改只能建新计划，并保留原尝试关系。
 
+<a id="experience-release"></a>
+### 4.1 从经验提案进入发布
+
+Memory 产出的候选说明可以继续修改；candidate_register 接收的制品必须已经冻结。登记保留 before／after、原条目版本、来源、适用范围、父候选和同一 improvement_id，后续修改形成新候选。候选形成阶段的费用与失败保留在原 Task、Decision、Operation 和用量记录中，Evaluation 引用这些原账，不另记一笔重复消费。
+
+选择集可以用于修改候选，未暴露的正式样本不能回流为精炼提示；候选形成、选择、正式计划、独立判断、受信批准及目标 ready 依次满足原门槛。回归通过、自评或预期收益只能成为选择依据，不能代替正式改善结论。来源关闭或 local_only 不满足部署条件时，即使历史分数足够也不得新使用该制品；回退同样检查当前批准和来源。常规用户记忆更新仍走 Memory，不为其强制创建 EvaluationPlan。
+
+自动精炼按[独立实验 X-07](../validation/optimization-evidence.md#experiments)固定形成方法、触发时机和全部尝试；不得把 X-02 的读时整理成绩或 X-03 的 Skill 选择成绩当作自动精炼的收益。
+
 ## 5. 运行与环境交接
 
 run 接纳固定 run_id、plan_id 和 plan_digest；先查询原命令及 plan_id 的唯一运行绑定。相同 run_id 和准确绑定返回原运行；不同 run_id 请求同一 plan 返回 precondition_failed，related_id 指向原 run。计划内重试和分批不新建 run，另一轮实验须新计划；正式用途还须重新占用正式尝试次数和独立测试集。

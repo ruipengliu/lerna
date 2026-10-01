@@ -4,6 +4,8 @@ Harness 是面向个人智能应用的开源任务运行框架。它接收用户
 
 任务编排器（Orchestrator）负责组织一次任务，保存目标、进展和完成结果。每一轮，它把当前目标与可用资料交给大脑（Brain），检查大脑的建议是否符合目标、授权与预算，再将获准行动交给执行系统（Executor）。记忆系统（Memory）提供相关资料及其来源，执行系统回传行动的实际效果与证据。这些新事实成为下一轮决策的依据，直到满足完成条件，或进入需要用户输入、授权或依赖恢复的等待状态。
 
+应用以 **Session** 组织连续对话及关联任务。同一对话可以产生多个 Task；关闭对话不会取消任务。首版只保存消息顺序和原任务引用，暂不增加会话级预算或另一套 Turn／Run 状态机，详见 [Session 与 Task](.draft/interaction/session-and-task.md)。
+
 ```mermaid
 %%{init: {"flowchart": {"defaultRenderer": "elk", "nodeSpacing": 60, "rankSpacing": 80}}}%%
 flowchart TB
@@ -225,4 +227,12 @@ PostgreSQL 保存业务事实和需要继续履行的工作，对象存储保存
 
 本文描述的是目标架构。可运行内核、默认组件和 SDK 仍待实现，故障恢复、授权隔离、组件互操作以及质量、时延、费用和容量都需要运行验收。联网问答和多个有状态模拟手机分别设有专项验收；真实手机支持需要另行取得对应平台的验证证据。
 
-TODO：待其他正式章节完成后，补充对应的阅读入口与引用。
+| 阅读目的 | 入口 |
+| --- | --- |
+| 连续理解一项任务 | [详细方案](.draft/README.md) → [贯穿场景](.draft/walkthrough.md) → [任务生命周期](ochestrator/task-lifecycle.md) |
+| 理解对象、主循环和复杂度 | [Session 与 Task](.draft/interaction/session-and-task.md) · [数据对象与同场景读写比较](../research/agent-harness-comparison/data-flow-io-comparison.md) |
+| 实现与存储 | [工程切片](.draft/engineering.md#minimum-profile) · [可靠工作](.draft/reliable-work.md) · [存储](.draft/storage-and-middleware.md) |
+| 定位各模块 | [编排](.draft/orchestrator/README.md) · [大脑](.draft/brain/README.md) · [执行](.draft/execution/README.md) · [记忆](.draft/memory/README.md) · [授权](.draft/security/README.md) · [协作](.draft/collaboration/README.md) · [交互](.draft/interaction/README.md) · [扩展](.draft/extensions/README.md) · [评测](.draft/evaluation/README.md) |
+| 对照研究与验收 | [五项目调研](../research/agent-harness-comparison/README.md) · [本轮采用映射](.draft/validation/optimization-evidence.md#harness-adoption) · [组合故障](.draft/validation/harness-scenarios.md) · [交付审查](.draft/review.md) |
+
+实现先完成一条单进程的任务链，再验证本机多进程与生产装配。九模块表示事实职责；逻辑记录可共表、同库步骤可共事务，正文保存一次并引用，界面增量可以合并。只有授权、外部发送和效果确认等必要边界要求独立确认，不能按图上的框和箭头逐一制造数据库与 RPC。

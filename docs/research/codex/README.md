@@ -1,5 +1,7 @@
 # OpenAI Codex 技术调研与本项目架构映射
 
+补充：[同场景数据对象与读写比较](../agent-harness-comparison/data-flow-io-comparison.md)；[Codex 写入路径与完整公式](../agent-harness-comparison/io/codex-prime.md)。
+
 ## 1. 调研边界与结论
 
 本报告分析 `.reference/codex` 的[固定提交 `d4a475adda850d80b6149c76454de94e0cf4fd51`](https://github.com/openai/codex/commit/d4a475adda850d80b6149c76454de94e0cf4fd51)，提交时间为 2026-10-01 UTC。研究对象是该仓库提供的本地 coding agent、Rust 运行时、CLI/TUI、app-server、工具和扩展基础设施；README 中链接的云端产品、专有桌面应用及 IDE 前端不能视为本仓库完整提供的实现。许可证为 Apache-2.0。工作区采用 Rust 2024，多 crate 组织；该提交的 workspace 版本 `0.0.0` 不能作为发布版本使用。[产品范围][许可证][工作区]
@@ -69,7 +71,7 @@ flowchart TB
 
 ### 4.1 三种不同的数据职责
 
-**历史权威是 JSONL。** `ThreadStore` 区分低层 canonical history 和高层策略；启用分页历史的本地 LiveWriter 先把 JSONL 写入并 flush，再更新 SQLite history projection；Legacy 模式不走该投影分支。投影失败记录 warning，不推翻已成功的 JSONL 屏障。因此 history SQLite 是可重建查询视图，不能把两次写入描述成一个跨介质事务。投影内部用 `BEGIN IMMEDIATE` 将行变更和字节/ordinal 游标共同提交，防止游标宣称已物化实际上未提交的历史。[本地存储边界][历史写入顺序][投影事务]
+**历史权威是 JSONL。** `ThreadStore` 区分低层 canonical history 和高层策略；启用分页历史的本地 LiveWriter 先把 JSONL 写入并 flush，再更新 SQLite history projection；Legacy 模式不走该投影分支。当前 `LocalThreadStore` 的[实际默认实现](https://github.com/openai/codex/blob/d4a475adda850d80b6149c76454de94e0cf4fd51/codex-rs/thread-store/src/local/mod.rs#L478-L481)为 Paginated，覆盖 trait 的 Legacy 默认，恢复已有会话时需按原模式判断。投影失败记录 warning，不推翻已成功的 JSONL 屏障。因此 history SQLite 是可重建查询视图，不能把两次写入描述成一个跨介质事务。投影内部用 `BEGIN IMMEDIATE` 将行变更和字节/ordinal 游标共同提交，防止游标宣称已物化实际上未提交的历史。[本地存储边界][历史写入顺序][投影事务]
 
 **SQLite 也包含独立业务状态，不能一概称为缓存。** `state_5.sqlite` 包含线程元数据；`thread_history_1.sqlite` 包含分页回合/项目及物化游标；`goals_1.sqlite`、`queue_1.sqlite`、`memories_1.sqlite`、`memoryv2_1.sqlite`、`logs_2.sqlite` 分别服务目标、持久队列、记忆工作等。记忆表中有 worker、ownership token、lease、retry、watermark，队列表有线程内唯一顺序；这些并不是仅凭对话 UI 列表就能重建的同一种投影。[SQLite配置][线程元数据表][分页历史表][队列表][记忆任务表]
 

@@ -10,6 +10,8 @@
 
 实现阅读：[模块结构与依赖](implementation.md#module-shape) → [可靠工作接入](implementation.md#reliable-work-integration) → [委派对象流转](implementation.md#data-flow) → [内部创建事务时序](implementation.md#key-sequence) → [生产部署和容量](implementation.md#production)。本页定义委派行为，实现篇集中规定子任务事务、外部映射、控制、封账及故障实验。
 
+应用可通过 SDK 的[异步读取与有界等待](implementation.md#async-child)取得原委派快照。接纳句柄只定位 Delegation；目标完成、效果核清与费用封账仍分别读取原事实。内部子任务冷恢复沿原 Task 和安装组合继续，不能以重建子会话代替恢复原委派。
+
 协作复用[可靠接纳与持久工作框架](../reliable-work.md)的公共模板。内部委派仍由父 Orchestrator 在同一事务创建子任务与预算；外部工作沿原创建键恢复，完成一次作业不代表子目标、效果或费用已经结清。公共模板和协作适配器均需按实现篇的故障实验验收，当前仍为设计规格。
 
 <a id="1-把内部协作留在一个任务提交域"></a>

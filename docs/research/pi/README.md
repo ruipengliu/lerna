@@ -1,5 +1,7 @@
 # Pi Agent Harness 技术调研与本项目架构对照
 
+补充：[同场景数据对象与读写比较](../agent-harness-comparison/data-flow-io-comparison.md)；[Pi 经典 CLI 与变体的读写边界](../agent-harness-comparison/io/pi-crush.md)。
+
 调研日期：2026-10-01。对象为 `earendil-works/pi`，源码固定于 `8ce69e9d2b171d173fe4b6b2b6256f1f4411e69d`，本地位于 `.reference/pi`。工作区包版本为 `0.99.2`，根工作区元数据版本为 `0.0.3`；根许可证为 MIT，运行要求 Node.js ≥22.19.0。[版本与工作区][workspace]、[许可证][license]
 
 本报告依据固定源码和仓库内测试做静态研究；没有安装依赖、运行测试、调用模型或启动服务。**事实**表示可直接追到实现，**推断／建议**表示对本项目的设计判断。“存在测试”不表示本次测试通过；未发现能力只限定于下文指出的入口与组件。共同来源快照见[调研元数据](../agent-harness-comparison/sources.json)。

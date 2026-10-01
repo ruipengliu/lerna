@@ -14,7 +14,7 @@ Brain 根据当前目标、约束和事实提出下一步；Orchestrator（下�
 | 2 | [决策路径](decision-paths.md) | 规则覆盖、候选构造与答案映射、拒判升级、调用成本及启用评测 |
 | 3 | [实现设计](implementation.md) | 组件、输入正文、持久记录、事务、内容发布、有限计划、部署及故障实验 |
 
-精确协议字段查[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)；外部模型事实与性能证据查[System One 调研](../../research/system-one-models-2026-09-28.md)。任务条件与完成规则归[任务运行](../orchestrator/README.md)，工具契约归[执行](../execution/README.md)，内容来源与用途归[记忆](../memory/README.md)。
+精确协议字段查[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)；外部模型事实与性能证据查[System One 调研](../../../research/system-one-models-2026-09-28.md)。任务条件与完成规则归[任务运行](../orchestrator/README.md)，工具契约归[执行](../execution/README.md)，内容来源与用途归[记忆](../memory/README.md)。
 
 <a id="dual-system"></a>
 ## 1. 模块分工与双系统选择
@@ -98,6 +98,8 @@ S2 可以借条件、计划和逐步取证，使下一阶段进入 S1 的覆盖�
 
 两种角色读取同一任务事实的不同获准视图：S1 取当前问题、完整约束、候选与必要事实，S2 按理解或综合需要读取更广材料。目标和计划归 Orchestrator，操作事实归原 owner，Decision／ModelCall 归 Brain，长期经验归 Memory；不各自维护另一份真实状态。旧结果只在准确版本、来源限制及当前用途授权均满足时复用，曾经高分不构成跨快照缓存规则。
 
+长任务先从当前权威记录[机械重建不可裁剪区](implementation.md#snapshot-reconstruction)，再选择正文、近期事实和获准摘要；摘要与会话历史不能修改目标或消除未知效果。随后按[最终请求来源核验](implementation.md#final-request-provenance)固定供应商编码的全部实际字段及接收方，包括附加日志、metadata、媒体和插件字段。核验依据复用 Snapshot／Decision／ModelCall，发送门禁后不允许包装器再追加数据；辅助摘要另行准入和计费。具体正反例见实现中的 BI-17～20。
+
 ### 3.1 上下文补充与能力选择
 
 上下文按“用户目标和硬约束 → 当前控制与未知效果 → 必需事实与证据 → 相关记忆 → 可用能力 → 辅助历史”组织。超出模型窗口时先裁掉无关材料，保留内容引用及摘要来源；硬约束、当前未决事实或必要契约仍放不下便返回缺口，不能截断后假装输入完整。摘要是派生内容，不继承比原文更宽的使用权限。
@@ -107,6 +109,8 @@ S2 可以借条件、计划和逐步取证，使下一阶段进入 S1 的覆盖�
 `need_context` 用于请求记忆、能力声明、已有操作事实或已知内容片段。Orchestrator 的组装器只执行有界、只读且获准的补充；新的网页搜索、内容抓取、设备观察等外部取证通过普通执行操作取得，以保存用量、来源和失败事实。大脑不得借补充上下文通道自动运行工具。
 
 Orchestrator 对补充请求按查询、范围、已有版本组成摘要去重，记录结果为新增、为空、拒绝或不可用。相同快照下重复相同请求不重新查询；没有新事实却重复索取材料时返回一次该事实供大脑选择改写问题、请求用户输入或失败。外部依赖暂时离线由持久工作等待恢复，不能靠反复模型调用探活。
+
+后续修复、升级或重新决策还须通过 Orchestrator 的[持久续行限额](../orchestrator/implementation.md#bounded-progress)：按原 Decision／可信反馈只计一次，重启、会话切换或新目标修订不清累计次数。正常原效果核对按独立责任继续，不能因无进展而补出“未执行”的模型输入。
 
 ### 3.2 证据、个性化与完成建议
 

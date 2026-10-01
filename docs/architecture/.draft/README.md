@@ -6,6 +6,8 @@
 
 首次阅读先用本页建立分工，再沿[贯穿场景](walkthrough.md)看一次任务从正文形成到执行、核验和异常收尾。实现入口集中在本页第 4、5 节；[技术总览](technical-overview.md)补充抽象依据和全景图导读，可在需要理解建模理由时查阅。
 
+连续对话由 Interaction 的 [Session](interaction/session-and-task.md) 组织，Task 保存具体目标与执行责任；Session 可关联多个任务，归档不影响原任务。实现先采用[最小装配](engineering.md#minimum-profile)，按需要启用恢复、协作和候选策略。五个参考项目的建议已映射到[采用与实验清单](validation/optimization-evidence.md#harness-adoption)，对象和读写代价见[同场景比较](../../research/agent-harness-comparison/data-flow-io-comparison.md)。
+
 ## 1. 要解决的核心问题
 
 一个用户可能让 Agent 核实信息、保存文档，再在手机上执行操作。模型可以提出错误步骤，工具可能已经产生效果却丢失答复，端点也可能在执行中失联。Harness 必须把这几件事分开处理：是否接受了目标、是否获准行动、行动发生了什么、结果达到什么质量、失败后由谁继续。

@@ -1,5 +1,7 @@
 # DeepSeek Harness：源码架构与本项目优化映射
 
+补充：[同场景数据对象与读写比较](../agent-harness-comparison/data-flow-io-comparison.md)；[DeepSeek 事件、批写与 checkpoint 推导](../agent-harness-comparison/io/deepseek.md)。
+
 研究日期：2026-10-01。本文分析 `deepseek-ai/deepseek-harness` 的 `master` 固定提交 `639ed015397290b3745d163aafe02ffee4aa3f84`，根 manifest 版本 `0.2.0-rc.2`；分支名只说明采样入口，以下 GitHub 引用均固定到该提交。源码快照、树摘要与本项目基线摘要见[来源清单](../agent-harness-comparison/sources.json)，跨项目取舍由[综合优化报告](../agent-harness-comparison/architecture-optimization.md)汇总。[S01]
 
 结论是：DeepSeek Harness 最有借鉴价值的是可替换的能力 seam、明确的进程生命周期、事件与模型可见历史分离、语义持久化检查点，以及从同一配置组合出多种产品入口的工程组织。它的中心对象是有事件历史的 `Session` 和进程内 `Agent`，不是本项目的跨进程 Task、固定逻辑 Orchestrator 和有持久核对责任的 Operation。移植时应把机制放入本项目既定的事实负责层，不直接搬入完整 AgentLoop。

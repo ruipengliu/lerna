@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-01",
+  "status": "PASS",
+  "scope": "Documentation, original repository commits, pinned source paths/line ranges and ticket completion; no runtime guarantee.",
+  "document_checks": [
+    {
+      "scope": "docs/architecture",
+      "output": "PASS: 55 Markdown files; 1605 local links; 124 Mermaid blocks; 0 errors\nScope: local links and Markdown structure; no semantic or rendering guarantee"
+    },
+    {
+      "scope": "docs/adr",
+      "output": "PASS: 10 Markdown files; 13 local links; 0 Mermaid blocks; 0 errors\nScope: local links and Markdown structure; no semantic or rendering guarantee"
+    },
+    {
+      "scope": "docs/research/agent-harness-comparison",
+      "output": "PASS: 8 Markdown files; 134 local links; 1 Mermaid blocks; 0 errors\nScope: local links and Markdown structure; no semantic or rendering guarantee"
+    },
+    {
+      "scope": "docs/research/codex",
+      "output": "PASS: 1 Markdown files; 47 local links; 3 Mermaid blocks; 0 errors\nScope: local links and Markdown structure; no semantic or rendering guarantee"
+    },
+    {
+      "scope": "docs/research/pi",
+      "output": "PASS: 1 Markdown files; 45 local links; 2 Mermaid blocks; 0 errors\nScope: local links and Markdown structure; no semantic or rendering guarantee"
+    },
+    {
+      "scope": "docs/research/deepseek-harness",
+      "output": "PASS: 1 Markdown files; 12 local links; 2 Mermaid blocks; 0 errors\nScope: local links and Markdown structure; no semantic or rendering guarantee"
+    },
+    {
+      "scope": "docs/research/prime-agent",
+      "output": "PASS: 1 Markdown files; 28 local links; 4 Mermaid blocks; 0 errors\nScope: local links and Markdown structure; no semantic or rendering guarantee"
+    },
+    {
+      "scope": "docs/research/crush",
+      "output": "PASS: 1 Markdown files; 30 local links; 4 Mermaid blocks; 0 errors\nScope: local links and Markdown structure; no semantic or rendering guarantee"
+    },
+    {
+      "scope": ".scratch/harness-architecture-refresh",
+      "output": "PASS: 17 Markdown files; 39 local links; 0 Mermaid blocks; 0 errors\nScope: local links and Markdown structure; no semantic or rendering guarantee"
+    }
+  ],
+  "pinned_repositories": 5,
+  "unique_source_locations": 162,
+  "problems": []
+}

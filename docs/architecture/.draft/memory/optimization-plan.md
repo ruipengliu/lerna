@@ -1,6 +1,6 @@
 # 记忆质量优化：候选提取、检索与经验复用
 
-[模块主线](README.md) · [实现机制](implementation.md) · [对照与建设顺序](validation.md#experiments) · [论文依据](../../research/agent-memory-papers-2026-09-28.md) · [开源实现](../../research/agent-memory-libraries-2026-09-28.md)
+[模块主线](README.md) · [实现机制](implementation.md) · [对照与建设顺序](validation.md#experiments) · [论文依据](../../../research/agent-memory-papers-2026-09-28.md) · [开源实现](../../../research/agent-memory-libraries-2026-09-28.md)
 
 本页细化 [MEM-01～03、X-02](../validation/optimization-evidence.md) 的建设方向，集中定义待评测的提取、检索与经验策略。现行字面匹配仍是默认；B1 中文词法、B2 混合检索、显式关联扩展和模型质量检查都须分别取得证据后启用。公共 Schema、候选发布、来源关闭与稳定分页沿[模块契约](README.md)，本文不新增协议方法或改变成功含义。
 
@@ -28,11 +28,11 @@
 
 ### 1.1 研究支持的范围
 
-[论文调研](../../research/agent-memory-papers-2026-09-28.md)按首次提交日期核对近半年工作，集中保存阅读版本、实验设置和限制。StateMem 支持显式替代及依赖检查，TRUSTMEM 支持把覆盖、保留、支撑分开审核；MemoryCPT 支持比较建设与在线整理的总成本，AMD 支持按工作流、子任务和函数粒度组织经验。它们没有证明本项目需要逐轮建图、训练专用模型或采用固定的性能目标。
+[论文调研](../../../research/agent-memory-papers-2026-09-28.md)按首次提交日期核对近半年工作，集中保存阅读版本、实验设置和限制。StateMem 支持显式替代及依赖检查，TRUSTMEM 支持把覆盖、保留、支撑分开审核；MemoryCPT 支持比较建设与在线整理的总成本，AMD 支持按工作流、子任务和函数粒度组织经验。它们没有证明本项目需要逐轮建图、训练专用模型或采用固定的性能目标。
 
 来源撤销与派生残留论文用于扩展失败用例：文本里声明撤销、停止再次输出敏感词和物理清理是不同证据。相应反例集中在[策略验收](validation.md#strategy-cases)，事实与许可仍由原 owner 裁决。
 
-开源实现优先作为算法参考或隔离对照：LangMem 的纯提取接口适合候选流程，Graphiti 的时间与检索配方适合关系密集任务比较，Mem0 的轻量事实流程可作对照；Letta、memU 和 OpenViking 的材料组织与后台整理不直接替代 Memory owner。具体提交、许可证、流程漂移及治理差距在[开源库调研](../../research/agent-memory-libraries-2026-09-28.md)集中定义。首选仍是现有 Go 组件和存储上的小型策略实现，尚未选定生产第三方依赖。
+开源实现优先作为算法参考或隔离对照：LangMem 的纯提取接口适合候选流程，Graphiti 的时间与检索配方适合关系密集任务比较，Mem0 的轻量事实流程可作对照；Letta、memU 和 OpenViking 的材料组织与后台整理不直接替代 Memory owner。具体提交、许可证、流程漂移及治理差距在[开源库调研](../../../research/agent-memory-libraries-2026-09-28.md)集中定义。首选仍是现有 Go 组件和存储上的小型策略实现，尚未选定生产第三方依赖。
 
 <a id="write-quality"></a>
 ## 2. 写入：候选内容与质量检查

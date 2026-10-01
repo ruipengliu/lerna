@@ -1,5 +1,7 @@
 # Crush 技术调研与 Harness 架构对照
 
+补充：[同场景数据对象与读写比较](../agent-harness-comparison/data-flow-io-comparison.md)；[Crush 流式更新与 SQL 计数](../agent-harness-comparison/io/pi-crush.md)。
+
 Crush 最适合参考的是 Go 工程组织、终端交互、结构化会话存储和工具生态。当前版本同时保留进程内工作区与可选的客户端/服务器工作区，并围绕接纳、排队、取消、流式写入和多客户端确认处理了具体竞态。它的 `RunComplete` 是一次模型工具循环结束的信号；本项目还须独立保存任务完成依据、未决效果与后续核对责任。
 
 本报告依据 2026-10-01 拉取的固定源码快照，未运行上游测试、模型请求、服务器或性能实验。实现存在、产品主张和本项目建议分别陈述；未发现某能力只表示所检查执行链没有提供等价证据。完整版本清单见[来源清单](../agent-harness-comparison/sources.json)，综合结论见[架构优化分析](../agent-harness-comparison/architecture-optimization.md)。

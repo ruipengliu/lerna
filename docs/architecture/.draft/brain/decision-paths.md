@@ -1,7 +1,7 @@
 <a id="brain-决策路径规则类型化推理与升级"></a>
 # Brain 决策路径：规则、固定答案类型的模型判断与升级
 
-[模块主线与双系统分工](README.md#dual-system) · [实现与恢复](implementation.md) · [外部模型调研](../../research/system-one-models-2026-09-28.md)
+[模块主线与双系统分工](README.md#dual-system) · [实现与恢复](implementation.md) · [外部模型调研](../../../research/system-one-models-2026-09-28.md)
 
 本文定义单轮选择、规则覆盖、固定类型答案映射及跨轮升级的完整行为。S1 包括规则快速路径和固定答案类型的模型判断两条路径，S2 使用通用模型；总体职责和任务交接见模块主线。规则命中不创建 ModelCall，任一模型路径每个 Decision 至多一次模型调用。
 
@@ -45,7 +45,7 @@ flowchart TB
 
 蓝牙 D1 的自然语言理解保留；若条件在 D1 后更新为 g2，D1 携带的行动和计划全部丢弃，D2 只从 g2 重建。报告 D1 的条件理解、D4 的正文综合，以及独立质量／引用语义评估（原样例 O7）保留。计划实例化、引用回填和文件读回比较继续由现有代码处理。
 
-原[调用分析与逐字段样例](../../../.scratch/architecture-review/model-call-optimization-2026-09-28.md)给出限定 fixture 上的正常路径：蓝牙 2／3 次降为 1 次，报告 5 次降为 4 次，另命中有界选页规则时为 3 次。这些是加入独立目标覆盖门禁前的历史合成对照，不是现行方案完整任务的调用上限或实际费用结论。原报告只有四个可按规则筛选的候选，给它另加固定答案类型的判断模型没有必要。
+原[调用分析与逐字段样例](../../../../.scratch/architecture-review/model-call-optimization-2026-09-28.md)给出限定 fixture 上的正常路径：蓝牙 2／3 次降为 1 次，报告 5 次降为 4 次，另命中有界选页规则时为 3 次。这些是加入独立目标覆盖门禁前的历史合成对照，不是现行方案完整任务的调用上限或实际费用结论。原报告只有四个可按规则筛选的候选，给它另加固定答案类型的判断模型没有必要。
 
 规则未覆盖和规则错误分别处理：前者可走本轮指定模型，冲突或无效规则产物须先修复策略。错误记录及后续责任集中在[异常与升级](#43-拒判错误和升级分别处理)。
 
@@ -73,7 +73,7 @@ O7 的质量与引用语义仍是独立评估操作；将来替换限定子判�
 
 ### 3.3 选型与概率接纳
 
-首轮选 Jev 是因为它直接提供 Choice、Score、Noul 三种判断接口，便于在相同候选上测试，无需先维护自托管推理栈；这不是已证实的成本最优结论。AnyJev 的固定问题 head 更适合高频稳定问题、有领域标注及本地部署要求的场景；TypeLLM 保留生成模型及类型约束，适合作为受限输出对照。三者的机制和实验条件不同，具体证据见[路线对比](../../research/system-one-models-2026-09-28.md#5-相邻路线不能按产品名视作等价模型)。
+首轮选 Jev 是因为它直接提供 Choice、Score、Noul 三种判断接口，便于在相同候选上测试，无需先维护自托管推理栈；这不是已证实的成本最优结论。AnyJev 的固定问题 head 更适合高频稳定问题、有领域标注及本地部署要求的场景；TypeLLM 保留生成模型及类型约束，适合作为受限输出对照。三者的机制和实验条件不同，具体证据见[路线对比](../../../research/system-one-models-2026-09-28.md#5-相邻路线不能按产品名视作等价模型)。
 
 Jev Choice 给选项概率，Score 给有序等级的期望，Noul 给真假概率。Choice／Score 另有分布形状 `confidence`，不能当成该答案正确率；Noul 没有这个独立字段。首轮按任务定义是否采用 Score 的等级期望、分布或供应方 confidence，绑定具体题目及标注结果校准，不设置脱离验证集的统一“0.95 即安全”。[Score 定义](https://docs.typesafe.ai/primitives/score)、[Confidence 定义](https://docs.typesafe.ai/confidence)
 
@@ -103,7 +103,7 @@ ModelProfile 的 `typed_decision` 编码及 `decision_spec_ref` 字段见[对外
 
 本文按适配器可观测边界统计模型调用：远端模型的一次供应商请求，或本地模型的一次独立执行，分别记为一个 ModelCall。该口径包括不生成自由文本的 Jev 请求，不代表供应商内部的推理、采样或前向计算次数。一个 SDK 方法若展开成多次供应商请求，必须分别计量，不能登记成一个 ModelCall。AnyJev 的多候选旋转及 TypeLLM 的多字段请求须核对实际请求数；适配器或本地代理即使再包一层 HTTP，也不能把其发出的多个请求计为一次。不符合单次调用边界的模式不进入本版 profile。
 
-Jev 适配器须关闭 SDK 和代理的透明重试，固定模型版本并核对返回版本；初始实验可用调研时的 `jev-1.13.0`，不以 `jev-latest` 作为冻结评估对象。HTTP 返回的输入／输出 token 按实际保留；输出当前免费不表示 output_tokens 为零，用量缺失不能填零，也不自动意味着 `usage_final=true`。[版本与限制](https://docs.typesafe.ai/models)、[SDK 与恢复缺口](../../research/system-one-models-2026-09-28.md#4-与-harness-调用契约的适配缺口)
+Jev 适配器须关闭 SDK 和代理的透明重试，固定模型版本并核对返回版本；初始实验可用调研时的 `jev-1.13.0`，不以 `jev-latest` 作为冻结评估对象。HTTP 返回的输入／输出 token 按实际保留；输出当前免费不表示 output_tokens 为零，用量缺失不能填零，也不自动意味着 `usage_final=true`。[版本与限制](https://docs.typesafe.ai/models)、[SDK 与恢复缺口](../../../research/system-one-models-2026-09-28.md#4-与-harness-调用契约的适配缺口)
 
 本次未找到服务端幂等、查询原结果、取消后结算终结或可信单次费用上界的完整公开承诺。严格预算模式下，上界未核实便不激活该 profile。估算模式须满足[资源边界](README.md#model-recovery)中的全部既有前提，不新增估算授权，也不把牌价乘输入上限视为硬上界。发送后失联且不可查原结果，沿[原模型恢复](README.md#model-recovery)结束为 `provider_result_unknown`，保留费用责任。
 

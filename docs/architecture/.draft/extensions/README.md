@@ -12,6 +12,10 @@
 
 最小宿主将[可靠接纳与持久工作框架](../reliable-work.md)装入自己的管理入口和有限管理池，在受管组件未 ready 时仍能诊断、停用并恢复原管理步骤。公共领取只授权当前 worker 处理作业，版本切换、迁移和当前实例 ready 仍由 LifecycleManager 与实际入口核验；这些接口及故障行为尚需运行实现验收。
 
+实例初始化使用[暂存装配与配置检查](implementation.md#staged-readiness)：实际字节、依赖、配置和当前批准共同决定是否可发布 ready。暂存注册项不能被新调用发现，配置已变时旧初始化结果不能覆盖当前实例；失败清理继续保留原效果与费用责任。
+
+能力与 Skill 的[渐进式发现对照](progressive-discovery.md)沿准确安装组合比较召回、加载时机与最终收益；经验提案沿[候选发布](../evaluation/implementation.md#experience-release)形成固定制品，不由活动实例自行改写配置。
+
 ## 1. 扩展点保持行为契约，宿主负责装配
 
 默认实现以 Go interface 表达进程内 Brain、Memory、Executor ports；独立组件进程通过 gRPC + Protobuf 提供相同公共契约。安装锁定清单（InstallLock）是一份不可变记录，固定实现版本、完整依赖、配置、目标平台、数据格式和权限声明。任务开始时引用这份清单固定所需版本。替换一个 port 不应修改其他模块的任务状态或完成规则。

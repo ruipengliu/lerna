@@ -22,6 +22,8 @@
 
 ## 2. 正常主链
 
+若从对话入口提交，应用先保存 [Session 的消息与原命令关联](interaction/session-and-task.md)，再调用 task.submit；Task 已接纳而关联答复丢失时按原命令补齐，不另建任务。之后的模型正文、效果和结果由原 owner 保存，Session 展示准确引用；归档对话不会取消本例任务。
+
 图按持久交接顺序表达本例，节点是处理阶段，不是独立服务。条件补全的分支只改变当前目标；后续动作重新从新快照准入。质量未通过、效果未知及权限缺失的分支在后文展开。
 
 ```mermaid
@@ -44,6 +46,8 @@ flowchart TD
 用户目标先成为准确 `goal_ref`；应用保存原服务与完整 `task.submit` 命令，Orchestrator 共同保存 Task、预算、原回执和首 decide job。目录不明确时，应用转交绑定原 `request_id` 和 `request_revision` 的回答，Orchestrator 消费后固定保存位置；这个回答不授予永久记忆保存权。
 
 Brain 根据固定快照提出搜索。Orchestrator 准入搜索操作，取得结果后才能选择来源，再分别准入内容获取操作。Executor 保存实际正文、来源和限制，返回精确内容引用；Orchestrator 保存这些事实后创建新快照，Brain 才形成候选报告。搜索命中、正文取得和候选生成是三个交接点，不能把搜索摘要当成已经读取的来源。
+
+每次模型请求同时核验消息之外的附件、metadata 与可选日志；工具参数在所有替换和规范化后固定准确绑定。原输出与有限呈现分开，丢页或截断不能作为完整比较证据；重复同一结果不算新进展。崩溃时先恢复原账和未决工作，再开放依赖它们的新行动，新增断点见 [HAR-01～05](validation/harness-scenarios.md)。图中的阶段不强制各自建表或跨进程调用，读写成本沿[统一口径](../../research/agent-harness-comparison/data-flow-io-comparison.md)记录。
 
 本轮 `decision_id=d1` 的模型输出采用内部 `brain-generation/1`：报告正文放在 `contents` 中，`local_id=report`，提案模板用 `{"$local_ref":"report"}` 引用它。Brain 的内容 port 从实际字节、完整处理来源和当前保存许可形成原保存命令，沿同一 `content.put` 恢复并取得 `report_ref`；随后回填模板，校验公共 Proposal，才保存 `DecisionRecord.status=completed`。公共提案不交付局部标识或让模型自报的摘要。部分保存、保存答复丢失与取消的处理见[新正文保存](brain/implementation.md#generated-content)。
 

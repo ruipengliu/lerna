@@ -5,7 +5,7 @@
 [整体设计](../README.md) · [目标](../goals.md) · [公共契约](../contracts/README.md) · [记忆与来源](../memory/README.md)
 
 
-实现阅读：[模块结构与依赖](implementation.md#module-shape) → [公共框架接入](implementation.md#reliable-work-integration) → [许可对象流转](implementation.md#data-flow) → [在线结算内部时序](implementation.md#key-sequence) → [生产可用性与容量](implementation.md#production)。先阅读本页行为契约，再按实现页落实持久化与恢复；接纳和工作领取复用[公共框架](../reliable-work.md)，许可消费、撤权和结算仍由原 owner 裁决，协议字段及正反例继续由公共契约资产维护。
+实现阅读：[模块结构与依赖](implementation.md#module-shape) → [公共框架接入](implementation.md#reliable-work-integration) → [许可对象流转](implementation.md#data-flow) → [最后工具意图与使用依据](implementation.md#final-tool-use-check) → [在线结算内部时序](implementation.md#key-sequence) → [生产可用性与容量](implementation.md#production)。先阅读本页行为契约，再按实现页落实持久化与恢复；接纳和工作领取复用[公共框架](../reliable-work.md)，许可消费、撤权和结算仍由原 owner 裁决，协议字段及正反例继续由公共契约资产维护。
 本模块使每次读取、处理、保存、同步、披露和外部行动受用户许可约束，并保证用户能够中断和撤权。覆盖 C5、C7 与 A4；隔离约束同时适用于工具、记忆、模型、Agent 和后台改进。本文规定设计行为，平台隔离、身份接入和离线能力均需运行验收后开放。
 
 ## 1. 权限由谁决定
@@ -114,6 +114,7 @@ UseRequest 的 `operation_id` 是调用方已持久保存的有限业务操作�
 
 ## 4. 撤权、离线与时间边界
 
+<a id="online-revocation"></a>
 ### 4.1 在线撤权
 
 `grant.revoke` 在 Grant owner 保存撤销修订及后续通知责任后返回 `applied`。此后新 `grant.use` 必须拒绝；撤销前已核准的有限使用不被改写成“从未批准”。同库处理端可把使用检查与启动登记放入共同事务；远端使用回执必须有有限 `start_before`，收到撤销或本端接管后，即使回执未到期也禁止新启动。
@@ -184,6 +185,17 @@ Skill、网页、文件、模型生成和外部 Agent 返回始终是数据。�
 控制、撤权、效果查询和清理保留独立有限配额，过载先拒绝未接纳的目标工作，不能丢弃已接纳收尾责任。等待队列满时返回 `quota_exceeded` 与可用的重试信息；没有持久保存等待责任就不能显示“已排队”。恶意用户不能通过不断创建 Orchestrator、连接或小任务绕过用户级限额。
 
 WSS 连接数、每连接发送队列、在途请求和重连速率均有用户级及服务级上限。慢客户端的变化提示可以合并或丢弃，业务回执与已接纳 Delivery 留在原持久记录；取消、撤权和回执核对优先使用保留容量，不能被普通快照扇出阻塞。持续慢端可被断开，恢复后查询原 command_id／delivery_id 及当前快照；控制得到传输确认仍不代表各业务入口已经落实。
+
+<a id="final-tool-use"></a>
+### 6.1 最后工具意图与实际出口核查
+
+工具候选的 hook、模板和 wrapper 变换先完成，再由准确能力 Schema 与受信规范化器确定资源、动作、正文来源、用途、接收方、位置和成本范围。Orchestrator 对这一最后意图准入；Grant owner 对同一意图 check／use。`allow`、插件装载成功、工具 consent 或模型判断都不能生成 Grant，也不能替代有效的本人确认。若变换改变了已确认的许可意图，原确认不能套到新命令；若原 Grant 本已合法覆盖最后意图，仍允许其按范围使用，不能因存在 hook 一律拒绝。
+
+处理端把授权检查依据关联原 Operation 和固定 `use_id`，实际入口核对同一意图、当前已知 Grant／端点代次与使用窗口、任务控制、费用依据、准确安装和资源状态。当前检查沿[在线撤权](#online-revocation)及有限使用窗口执行，不承诺跨 Grant owner、Orchestrator 与资源 owner 的全局原子启动；已知撤权立即关闭新启动，未知授权决定先查原 use，不以旧 check 或 hook 的 allow 放行。
+
+准入后的 driver 编码、凭据注入和协议签名不得扩大语义。网络解析与重定向逐跳检查目标及凭据可交付范围，不能把绑定服务的凭据交给另一个接收方；分页、附件下载、错误上报和 wrapper 辅助请求也属于实际出口，均须已有准确声明、必要用途和有限额度。执行端不因“主调用已授权”接受附加正文或另一设备动作。文件检查固定受控根和实际句柄对象，不能只比字符串前缀。
+
+结果返回不自动取得保存或披露全部媒体的权限。原结果、派生摘要和流片段各自在实际保存或交付处核验当前用途；无法保存必要证据时报告复核缺口，不丢弃已发生效果或费用。具体内部依据、重查次序及失败后收尾见[工具使用实现](implementation.md#final-tool-use-check)，准确参数与原结果仍以[Execution](../execution/README.md#final-tool-admission)为准。
 
 ## 7. 集中字段与接口
 
