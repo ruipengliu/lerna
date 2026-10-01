@@ -4,9 +4,9 @@
 
 本目录是独立的设计基线。需求、术语、规则和验收方法均在目录内定义。技术方案、已冻结范围的机器契约及示例共同约束参考实现；未纳入公开协议的能力明确保留为设计接口，不能宣称已经互操作。内核、SDK、默认组件和运行验收仍须实现，具体状态见[交付审查](review.md)。
 
-首次阅读先用本页建立分工，再沿[贯穿场景](walkthrough.md)看一次任务从正文形成到执行、核验和异常收尾。实现入口集中在本页第 4、5 节；[技术总览](technical-overview.md)补充抽象依据和全景图导读，可在需要理解建模理由时查阅。
+首次接入先沿[六组对象目录](core-data-model.md) → [默认应用工作流](application-workflow.md) → [四类请求读写](request-data-flows.md) → [参考语义覆盖矩阵](../../research/agent-harness-comparison/core-model-semantic-coverage.md) → [17 组行为验收](validation/core-model-scenarios.md)阅读，再用[贯穿场景](walkthrough.md)查看搜索、质量评估和设备操作的组合。实现入口集中在第 4、5 节；[技术总览](technical-overview.md)解释抽象依据及图册。
 
-连续对话由 Interaction 的 [Session](interaction/session-and-task.md) 组织，Task 保存具体目标与执行责任；Session 可关联多个任务，归档不影响原任务。实现先采用[最小装配](engineering.md#minimum-profile)，按需要启用恢复、协作和候选策略。五个参考项目的建议已映射到[采用与实验清单](validation/optimization-evidence.md#harness-adoption)，对象和读写代价见[同场景比较](../../research/agent-harness-comparison/data-flow-io-comparison.md)。
+Session、Task、Decision、Operation、Content、Grant 六组对象组织请求主线，内部记录由原模块管理。Session 可关联多个 Task，归档不影响任务责任；应用组合既有接口，具体行为和成功点仍归九模块及共同契约。实现先采用[最小装配](engineering.md#minimum-profile)，保留必需的接纳、控制和恢复，协作及其他扩展按能力启用。准确配置可以静态装配，动态发现不成为普通请求前提。
 
 ## 1. 要解决的核心问题
 
@@ -70,15 +70,15 @@ flowchart TB
 <a id="reading-path"></a>
 ## 4. 连续阅读路径
 
-跨模块处理例子在[贯穿场景](walkthrough.md#2-正常主链)连续展开；行为规则在所属模块集中定义，场景和图册链接这些规则。完成这条主线后，按负责的实现范围进入下表，无需先通读所有专题。
+对象清单、应用工作流和读写流程分别回答“需要理解什么”“如何接入”“哪些事实必须保存”。跨模块例子在[贯穿场景](walkthrough.md#2-正常主链)连续展开；行为规则在所属模块集中定义，场景和图册链接这些规则。完成这条主线后，按负责的实现范围进入下表。
 
 | 顺序 | 文档 | 阅读所得 |
 | --- | --- | --- |
-| 1．建立主线 | 本页 → [贯穿场景](walkthrough.md) → [任务编排器](orchestrator/README.md)及[实现](orchestrator/implementation.md) | 谁形成提案、谁准入，正文、效果和完成证据如何交接，异常后谁继续 |
+| 1．建立主线 | [应用工作流](application-workflow.md) → [请求读写](request-data-flows.md) → [贯穿场景](walkthrough.md) → [任务编排器](orchestrator/README.md)及[实现](orchestrator/implementation.md) | 应用如何提交、观察和恢复，谁形成提案、谁准入，正文、效果和完成证据如何交接 |
 | 2．落实负责的模块 | [大脑](brain/README.md)／[执行](execution/README.md)／[记忆与内容](memory/README.md)／[权限](security/README.md)／[交互](interaction/README.md)／[协作](collaboration/README.md) | 按主链的交接点查完整规则，再进入本页第 5 节对应的实现章节 |
 | 3．连接独立实现 | [共同契约](contracts/README.md) → [方法索引](contracts/methods.md) → [协议编码格式与机器资产](contracts/protocol.md) | 输入输出、成功点、错误、按原命令或对象标识恢复及对应构造序列 |
 | 4．装配与运行 | [宿主装配](deployment.md) → [可靠接纳与持久工作框架](reliable-work.md) → [生产部署](deployment-production.md) → [存储与中间件](storage-and-middleware.md)；按需查[扩展](extensions/README.md)与[评测改进](evaluation/README.md) | 公共模板与领域处理器、事务及作业记录、生产故障边界、安装切换及隔离评测 |
-| 5．交付切片 | [工程落地方案](engineering.md) → [验收建设顺序](validation/README.md#5-建设顺序与退出条件) → [交付审查](review.md) | 技术栈、代码目录、开发切片、生产准入及当前实际检查范围 |
+| 5．交付切片 | [工程落地方案](engineering.md) → [核心模型验收](validation/core-model-scenarios.md)及[验收建设顺序](validation/README.md#5-建设顺序与退出条件) → [交付审查](review.md) | 技术栈、开发切片、能力缺口、生产准入及当前实际检查范围 |
 
 [目标与功能](goals.md)保存范围和指标，[设计决策](decisions.md)保存关键选择及改选条件；[技术总览](technical-overview.md)解释四种边界和建模依据。图形查阅使用[架构图集](diagrams/architecture-atlas.html)、[可编辑全景图](diagrams/system-panorama.drawio)及[UML 导读](uml-models.md)，不以图中容器数量决定服务数量。
 
@@ -87,6 +87,8 @@ flowchart TB
 已确认的九模块优化按[预期效果、组件对照与验收](validation/optimization-evidence.md)查阅：24 项工作映射到所属模块，重点补齐原目标覆盖、输入与工具结果语义、实际制品及失败归因。规则进入方案，压缩、记忆整理、Skill、规划与协作候选保留实验验收条件；方案采用与运行收益分别记录。
 
 第三方实现从同一方法索引进入 [Schema](contracts/schemas/protocol.schema.json)、[登记表](contracts/schemas/methods.json)及[协议序列](contracts/examples/protocol/README.md)；跨端再查[WSS](contracts/transport.md)或[gRPC](contracts/grpc.md)。声明一个方法须同时承担其查询、错误和恢复义务，参考实现表结构不属于替换要求。
+
+模型收敛保留既有 105 个领域方法。完整分支、自由输入调度、可复用子会话、Schedule 和执行环境的公开差异见[能力缺口 G-01～05](../../research/agent-harness-comparison/core-model-semantic-coverage.md#4-需要独立交付的合同差异)；Memory 与动态扩展按既有合同和启用条件实施。规格范围与当前证据分别查[追踪表](../../../.scratch/harness-core-model-simplification/traceability.md)和[本轮验证](../../../.scratch/harness-core-model-simplification/verification.md)。
 
 ### 目录与后续细化
 
