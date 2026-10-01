@@ -163,7 +163,9 @@ SQLite 在宿主写队列内执行这些短事务；PostgreSQL 按固定 grant_i
 <a id="data-flow"></a>
 ### 核心对象关系与流转
 
-下图聚焦在线许可从决定到封账的关系。连线表示持久引用，数量关系通过中间明细表达；一次使用可以同时依赖多条必要许可。
+GrantLedger 统一管理许可、原使用和结算查询；UseReceipt 是不可变使用决定，UseSettlement 是后续累计核对，不能合成一条随结算改写的批准记录。任务结束和 Grant 撤销不删除已经发生的使用或待交回账务。同 owner 的合法阶段可共同提交相关记录，跨 owner 的原使用仍逐项核对。
+
+下图聚焦 Grant 签发及在线使用，不表示所有 Confirmation 都归 Grant owner。任务结果接受、发布批准等确认继续由实际业务 owner 保存并在原事务一次消费；普通 Message、Session 历史或预览引用不能代替受信决定。连线表示持久引用，数量关系通过中间明细表达；一次使用可以同时依赖多条必要许可。
 
 ```mermaid
 flowchart LR

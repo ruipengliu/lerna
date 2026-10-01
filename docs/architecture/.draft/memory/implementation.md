@@ -136,6 +136,8 @@ MemoryWriter、ExtractionCoordinator 和 ContentStore 复用[可靠接纳模板]
 每个表的唯一键都包含 tenant_id；owner 从受信路由与认证确定。
 业务记录使用单调修订，内容字节使用不可变版本，两者不互相代替。
 
+以下为记录与索引的逻辑布局，不要求每项独立服务或管理入口。正文只由 Content owner 保存，MemoryStore 统一管理记忆修订、来源及本次修改的索引责任；查询集合、索引水位和副本状态不能另行修改记忆真值。只启用内容存储的装配不创建 memory／extraction 记录，也不运行跨任务提取。
+
 | 记录 | 约束与索引 | 保留责任 |
 | --- | --- | --- |
 | memories | owner、memory_id 主键；current_revision 单调；state 独立于清理 | 当前可管理元数据 |
@@ -461,7 +463,7 @@ create 事务同时写正式记忆、candidate.saved、实际 memory_id/revision
 
 1. 准备时按当前读取与处理用途取得准确材料，保存输入清单；局部任务材料没有跨任务保存许可时，只能形成有期限的局部候选。
 2. 应用前重查来源、local_only、保存范围与原条目修订。条目在准备后被纠正时，按既有 expected_revision 冲突返回，不覆盖新版本；重新分析产生关联原候选的新版本。
-3. 新记忆沿已有 create 与候选一次消费提交；明确的用户修订沿 update 提交。批量提案只是若干原命令的清单，各项分别列 saved、rejected、conflict 或尚未决定及原修订，不能把部分成功包装为原子整批保存。
+3. 新记忆沿已有 create 与候选一次消费提交；明确的用户修订沿 replace 提交并比较 expected_revision。批量提案只是若干原命令的清单，各项分别列 saved、rejected、conflict 或尚未决定及原修订，不能把部分成功包装为原子整批保存。
 4. 来源关闭、用途撤回和纠正继续约束候选及已生成的摘要、索引和发布材料。先封闭新使用，再沿原持有者与清理责任收尾；旧批准不能解除来源约束。
 
 普通用户偏好和事实修订按 Memory 原规则保存，不要求每项走软件发布。若候选改变 Skill、Agent 配置或执行策略，或要宣称普遍改善，则将准确制品交给[Evaluation 候选准入](../evaluation/implementation.md#experience-release)，取得独立证据和发布批准后再由 Extensions 激活。读时整理沿 X-02；自动生成经验的因素另按 X-07 冻结。模型提取、失败候选、选择、评测、维护与回退费用全部计入，净收益不足或不确定时保留原策略。

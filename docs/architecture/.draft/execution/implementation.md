@@ -85,6 +85,8 @@ execution.list 由现有查询入口读取本 owner 的 Operation 仓储，复�
 
 ## 2. 持久记录和并发边界
 
+ExecutionStore 通过原 Operation 入口统一管理接纳、尝试、效果与返回内容；下表记录不要求应用逐项 CRUD 或各自提交。Attempt、Effect 和费用必须能分别表达，且终态后仍可能有核对责任。Orchestrator 的 OperationIntent 属于另一份准入事实；组合查询或同进程装配不能把两端交接伪装成跨库原子写入。
+
 | 记录 | 必要数据 | 并发及保留约束 |
 | --- | --- | --- |
 | capabilities | 行为版本、摘要、完整 Schema、授权、效果与重复合同 | 版本不可原地改义；被原操作引用时保留 |
@@ -387,6 +389,8 @@ FactStore 在同一本地事务提交原效果／结果引用、累计用量、�
 取消或流错误时，先关闭本次后续发送并记录边界，再归并已取得结果／用量和未决责任。合成 interrupted 可以让模型输入配对完整，但原 Operation 仍保留 unknown、可能迟到、覆盖缺口与费用范围。目标后来给出可靠回执时沿原 Operation 追加事实，旧占位与曾展示的进度都不阻止归并。模型 stream 与其物理请求 settlement 由[Brain](../brain/README.md)保存，Interaction 的连接水位与终态 hint 依[原呈现合同](../interaction/README.md)，本节不新增跨模块流权威。
 
 ## 7. 资源占用、观察和接管
+
+本节规定现有资源合同。可跨 Operation 存活的 kernel、后台进程及有状态工作区另按[可复用执行环境](programmatic-tools.md#reusable-environment)记录环境身份、占用与实际退出；只有使用该能力才需要这些内部记录，当前 resource 方法不自动构成通用 kernel 管理协议。
 
 Capability.semantic_operation_id 标识提供方命名空间中的语义业务操作；版本、驱动和账号变更不增加这个计数身份。resource.observe 必须绑定该字段为 `harness.gui.observe` 且 effect_class=read_only 的准确声明，不能用便利入口调用普通写工具。
 
