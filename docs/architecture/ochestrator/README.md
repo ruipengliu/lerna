@@ -4,6 +4,8 @@
 
 每个任务由唯一且固定的编排器负责。同一编排器可以由多个共享持久任务记录的服务实例承载；工作进程重启或替换后，接替者读取原记录继续处理，任务归属保持不变。同一用户的不同任务可以归属不同编排器，各项任务的状态变更和完成裁决由各自的编排器负责。
 
+应用先沿[六组核心对象](../.draft/core-data-model.md)与[默认工作流](../.draft/application-workflow.md)提交、观察和控制任务。Session 组织对话关联，Task 保存目标责任，Decision 与 Operation 由 Brain 和 Executor 推进，Content 与 Grant 分别提供材料和许可；编排器组合这些事实，内部作业无需应用逐项操作。各对象的字段和完整行为仍归原模块及[共同契约](../.draft/contracts/README.md)。
+
 ## 协作边界
 
 ```mermaid
@@ -169,10 +171,12 @@ flowchart TB
 | --- | --- |
 | [任务推进与控制](task-lifecycle.md) | 任务对象与修订、默认 ReAct、可选结构化计划、用户输入、控制传播及旧委派处理 |
 | [持久工作与恢复](durable-work.md) | 命令接纳、短事务、作业领取与接替、事实归并、失败恢复 |
-| 完成核验 | 目标覆盖、条件检查、证据适用性、用户验收与结果提交 |
-| 预算结算 | 调用预留、子任务额度、跨编排器交接、费用未知与账单更正 |
-| 存储与运行 | 持久对象、查询路径、锁顺序、工作池与容量、故障验收 |
+| [完成核验](../.draft/orchestrator/verification.md) | 目标覆盖、条件检查、证据适用性、用户验收与结果提交 |
+| [预算结算](../.draft/orchestrator/README.md#budget) | 调用预留、子任务额度、跨编排器交接、费用未知与账单更正 |
+| [存储与运行](../.draft/orchestrator/implementation.md)及[访问路径](../.draft/orchestrator/access-paths.md) | 持久对象、查询路径、锁顺序、工作池与容量、故障验收 |
+| [四类请求读写](../.draft/request-data-flows.md) | 直接回答、读取后回答、冷恢复和保存后读回的提交及恢复边界 |
+| [参考语义矩阵](../../research/agent-harness-comparison/core-model-semantic-coverage.md) → [17 组验收](../.draft/validation/core-model-scenarios.md) | 原身份、当前继续权与按需能力的设计覆盖、合同缺口和待运行断言 |
 
 本文描述设计约束与参考实现方案。提交原子性、并发控制、故障恢复、授权隔离及容量，需要通过实际实现与运行验收取得证据。
 
-TODO：其余专题完成后补充阅读链接；待大脑、记忆、执行、权限及公共持久作业框架的正式章节完成后，补充对应引用。
+完整设计继续从[任务编排器入口](../.draft/orchestrator/README.md)进入[大脑](../.draft/brain/README.md)、[记忆与内容](../.draft/memory/README.md)、[执行](../.draft/execution/README.md)、[权限](../.draft/security/README.md)及[可靠工作框架](../.draft/reliable-work.md)。开发与生产的装配边界见[工程方案](../.draft/engineering.md#minimum-profile)，本页提供导读，完整规则仍以上述入口为准。

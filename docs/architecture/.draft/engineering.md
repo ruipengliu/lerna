@@ -1,10 +1,12 @@
 # 工程落地：技术栈、代码目录与实施计划
 
-[方案入口](README.md) · [宿主装配](deployment.md) · [验收规则](validation/README.md) · [生产准入](deployment-production.md)
+[方案入口](README.md) · [应用工作流](application-workflow.md) · [请求读写](request-data-flows.md) · [宿主装配](deployment.md) · [验收规则](validation/README.md) · [生产准入](deployment-production.md)
 
 本页把现行架构落实到一个可编码的工程方案，不估算工时。2026-09-28 已确认单仓、Go 初期单 module、显式 SQL 与独立 PostgreSQL/SQLite 适配，以及 React/TypeScript/Vite。模型使用火山方舟的 OpenAI 兼容接口，搜索使用豆包搜索；开发采用受限测试身份，生产预留公司身份适配器。生产由公司自有平台承载，开发先完成单体和本机多进程集成，只为公司平台保留必要接入边界。
 
 目前仓库交付的是设计与静态契约，以下目录、运行入口和测试均是待实现方案。现有静态检查不能作为数据库、驱动或生产运行证据。领域规则、字段与恢复语义继续归各专题及 [contracts](contracts/README.md)，本页只定义工程组织与交付顺序。
+
+工程按[六组核心对象](core-data-model.md)组织应用理解，按原九模块实现事实裁决。runtime／SDK 组合现有端口；决策、操作、授权使用及可靠工作的子记录由内核管理，不增加另一套运行循环或完成权威。
 
 ## 1. 从可运行闭环推进到生产
 
@@ -172,16 +174,20 @@ flowchart TB
 
 105 个领域方法按切片逐步实现，首轮围绕任务、权限、内容和文件链路；通用编码与对应方法的正反例同步接入。未实现方法不宣称可互操作，入口明确返回不支持。契约资产保持同版完整，不要求第一条任务运行之前实现全部方法。
 
+每个切片从[CM-01～17](validation/core-model-scenarios.md)选择适用的应用工作流验收，复用已有 HAR／FW／领域向量；[规格追踪](../../../.scratch/harness-core-model-simplification/traceability.md)连接故事、设计和断言。新公开能力须同步方法、Schema、示例及互操作验证，应用动作名称本身不发布新协议。
+
 <a id="minimum-profile"></a>
 ### 最小装配与复杂度预算
 
-第一条用户链是“Session 保存输入关联 → Task 固定目标 → Brain 形成内容 → Executor 保存文件并独立读回 → Task 提交结果 → Session 展示原引用”。没有对话入口的 API 可以直接提交 Task。先交付单进程、一个本地事务范围、受信静态组件和一个文件驱动，再按下表增加真实模型、Web、多进程和生产证据；阶段一的两种数据库及恢复退出要求仍保留。
+第一条用户链沿[默认应用工作流](application-workflow.md)完成“Session 保存输入关联 → Task 固定目标 → Brain 推进 Decision 并形成 Content → Executor 推进获准 Operation、保存文件并独立读回 → Task 提交结果 → Session 展示原引用”，每次使用都核对适用 Grant。没有对话入口的 API 可以直接提交 Task。先交付单进程、一个本地事务范围、受信静态组件和一个文件驱动，再按下表增加真实模型、Web、多进程和生产证据；阶段一的两种数据库及恢复退出要求仍保留。
 
-逻辑对象表是责任清单，DDL 依据共同写入、保留期限、访问及索引选择，不为每个名词单建表。同次接纳的业务、回执、预算和 Raise 共同提交，结果与 Finish 尽量共同提交；可重建 UI／上下文投影不再拥有一套权威状态。原正文只保存一份准确 Content，诊断清单放原 Decision／Operation，不复制完整请求到多份日志。流式片段在有限内存缓冲展示，正式事实提交后才发对应状态提示。
+逻辑对象表是[责任清单](core-data-model.md#storage-boundaries)，DDL 依据共同写入、保留期限、访问及索引选择，不为每个名词单建表。同次接纳的业务、回执、预算和 Raise 共同提交，结果与 Finish 尽量共同提交；可重建 UI／上下文投影不再拥有一套权威状态。原正文只保存一份准确 Content，诊断清单放原 Decision／Operation，不复制完整请求到多份日志。流式片段在有限内存缓冲展示，正式事实提交后才发对应状态提示。
 
-每条首批链记录逻辑事件数、存储读写语句、事务提交、追加／flush／sync、字节及 WAL，分别测稳态与恢复；计数口径见[数据流比较](../../research/agent-harness-comparison/data-flow-io-comparison.md)。共享库可合并接口往返，独立 owner 仍保留原命令交接；不能为减少提交而合并本来有外部调用隔开的成功点。
+首批链沿[四类请求](request-data-flows.md#scenarios)冻结输入、历史、模型回放、输出分块和存储配置，分别记录实际调用、逻辑记录、SQL／追加、事务提交、flush／sync、字节、WAL 与物理 IO。初始化、暖路径、C 的重建与后续续行、辅助调用及收尾分别计量；[历史比较](../../research/agent-harness-comparison/data-flow-io-comparison.md)只提供固定源码口径。共享库可合并接口往返，独立 owner 仍保留原命令交接；不能为减少提交而合并本来有外部调用隔开的成功点。
 
-初版不要求分布式协作、自动经验精炼、程序化 cell、动态发现、Session 分支和任意不可信插件。受信组件仍满足兼容与当前批准；普通记忆修订不强制运行正式改善评测。只有已开放能力的必要合同进入请求热路径，软件发布和跨任务学习不随每条聊天自动执行。
+初版不要求分布式协作、自动经验精炼、程序化 cell、动态发现、Session 分支和任意不可信插件。Capability、Binding、模型配置与 InstallLock 可静态装配，受信组件仍满足兼容、当前批准和实例就绪。普通记忆修订沿原授权处理；只有已开放能力的必要合同进入请求路径，软件发布和跨任务学习不随每条聊天自动执行。
+
+完整分支、自由输入调度、可复用子会话、Schedule 及执行环境的剩余合同见[能力缺口 G-01～05](../../research/agent-harness-comparison/core-model-semantic-coverage.md#4-需要独立交付的合同差异)。这些能力在独立切片中开放；普通请求的原命令、接纳、未知效果与费用恢复责任从最小装配起保留。单进程便利不降低 [ADR-0003](../../adr/0003-production-distributed.md) 的生产进程分工与恢复目标。
 
 ### 阶段一：可运行闭环与本机多进程恢复
 

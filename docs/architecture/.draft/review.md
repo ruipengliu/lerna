@@ -10,6 +10,8 @@
 
 2026-09-28 的工程选型、目录、外部服务及开发／生产验收分界见[工程落地记录](#engineering-review)。
 
+2026-10-01 的六组核心对象、默认应用工作流和参考语义覆盖见[模型收敛整合记录](#core-model-review)；最终双轴审查与规格关闭状态另由本轮实施记录维护。
+
 ## 1. 首次成稿的设计基线与独立阅读
 
 方案保留 C1–C9、A1–A4、联网问答 V1、模拟手机 V2，以及 API 数量、调用质量和最终服务规模目标。建设顺序从本地完整闭环开始，再取得替换、端云、改进与容量证据；分阶段交付不等于降低最终目标。
@@ -501,3 +503,19 @@ Mermaid 的最终源摘要、渲染输入和目视结果在 `.scratch/architectu
 | 运行证据 | 尚无本轮真实服务、数据库／平台故障、模型质量或 IO benchmark；不能以文档及构造检查替代运行验收 |
 
 实际命令、输出、票据及边界见[交付验证记录](../../../.scratch/harness-architecture-refresh/verification.md)。原调研 sources.json 和 verification 保留优化前的历史基线，未修改原哈希使它们冒充当前架构快照。
+
+<a id="core-model-review"></a>
+## 27. 核心对象、应用工作流与语义覆盖整合（2026-10-01）
+
+本轮以 Session、Task、Decision、Operation、Content、Grant 六组对象组织请求主线。[对象目录](core-data-model.md)记录归属、身份、生命周期、事务与保留；[应用工作流](application-workflow.md)组合既有端口；[四类读写](request-data-flows.md)区分直接回答、读后回答、冷恢复和保存后独立读回。九模块继续裁决原事实，目录、总览与矩阵只提供映射和导航。
+
+[参考语义矩阵](../../research/agent-harness-comparison/core-model-semantic-coverage.md)按五个固定项目的七条实际装配路径比较十六类语义，列出 G-01～07 的启用边界与合同差异；[17 组行为验收](validation/core-model-scenarios.md)及[规格追踪](../../../.scratch/harness-core-model-simplification/traceability.md)连接 54 条用户故事和 24 项实施决策。所有运行场景仍为未验证，设计映射不表示已开放全部参考能力。
+
+| 本次整合检查 | 实际范围与边界 |
+| --- | --- |
+| 导航与设计边界 | 主入口、详细总览、工程、贯穿场景和既有 Orchestrator 门面接通上述阅读路径；保留原模块权威、105 方法、开发／生产 ADR 及按需能力缺口 |
+| Markdown 与链接 | 全部现行架构、ADR、综合研究及五份项目报告、本规格目录分别检查；准确范围、计数和复现命令见[本轮验证记录](../../../.scratch/harness-core-model-simplification/verification.md) |
+| 兼容与历史基线 | 从固定 review base 比较契约、验证程序、ADR、历史 sources.json 和 architecture-baseline；只记录差异核对，未重跑未变化的机器向量 |
+| 运行、性能与渲染 | 未运行 Harness／SDK、数据库、模型、平台或性能实验；Mermaid 仅随 Markdown 检查围栏，未作渲染验收 |
+
+本节记录设计整合与静态交付证据。标准／规格双轴审查、发现项统一修复及整个规格的关闭仍待根协调者完成，最终结论由[实施图](../../../.scratch/harness-core-model-simplification/README.md)及该目录的审查记录维护；此前各节的运行或渲染结果不能扩展到本轮。

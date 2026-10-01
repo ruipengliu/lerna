@@ -1,8 +1,10 @@
 # 一次任务如何完成，以及中断后谁继续
 
-[总览](README.md) · [任务编排器](orchestrator/README.md) · [验收](validation/README.md)
+[总览](README.md) · [应用工作流](application-workflow.md) · [四类请求读写](request-data-flows.md) · [任务编排器](orchestrator/README.md) · [验收](validation/README.md)
 
 贯穿目标：“查清 A 与 B 两个软件版本的差异，附来源，保存到我指定的目录；随后在模拟手机中建立一条提醒。”例子同时包含开放质量与客观效果。它是设计推演，不表示搜索服务、模型或模拟器已经实现。
+
+首次接入先读[六组对象目录](core-data-model.md)及默认工作流，再用本例检查模块交接。Session 关联输入与 Task，Task 组织 Decision 和获准 Operation，Content 保存准确材料，Grant 约束使用；应用读取原对象，内部记录由各负责模块管理。本例增加搜索、质量评估和手机动作，不能套用[场景 D](request-data-flows.md#scenario-d)为保存后读回固定的模型与操作计数。
 
 ## 1. 场景装配与用户可见承诺
 
@@ -47,7 +49,7 @@ flowchart TD
 
 Brain 根据固定快照提出搜索。Orchestrator 准入搜索操作，取得结果后才能选择来源，再分别准入内容获取操作。Executor 保存实际正文、来源和限制，返回精确内容引用；Orchestrator 保存这些事实后创建新快照，Brain 才形成候选报告。搜索命中、正文取得和候选生成是三个交接点，不能把搜索摘要当成已经读取的来源。
 
-每次模型请求同时核验消息之外的附件、metadata 与可选日志；工具参数在所有替换和规范化后固定准确绑定。原输出与有限呈现分开，丢页或截断不能作为完整比较证据；重复同一结果不算新进展。崩溃时先恢复原账和未决工作，再开放依赖它们的新行动，新增断点见 [HAR-01～05](validation/harness-scenarios.md)。图中的阶段不强制各自建表或跨进程调用，读写成本沿[统一口径](../../research/agent-harness-comparison/data-flow-io-comparison.md)记录。
+每次模型请求同时核验消息之外的附件、metadata 与可选日志；工具参数在所有替换和规范化后固定准确绑定。原输出与有限呈现分开，丢页或截断不能作为完整比较证据；重复同一结果不算新进展。崩溃时先恢复原账和未决工作，再开放依赖它们的新行动，新增断点见 [HAR-01～05](validation/harness-scenarios.md)。图中的阶段不强制各自建表或跨进程调用，读写成本沿[请求流程与计量边界](request-data-flows.md#measurement)记录。
 
 本轮 `decision_id=d1` 的模型输出采用内部 `brain-generation/1`：报告正文放在 `contents` 中，`local_id=report`，提案模板用 `{"$local_ref":"report"}` 引用它。Brain 的内容 port 从实际字节、完整处理来源和当前保存许可形成原保存命令，沿同一 `content.put` 恢复并取得 `report_ref`；随后回填模板，校验公共 Proposal，才保存 `DecisionRecord.status=completed`。公共提案不交付局部标识或让模型自报的摘要。部分保存、保存答复丢失与取消的处理见[新正文保存](brain/implementation.md#generated-content)。
 
@@ -190,3 +192,5 @@ Executor 收到更高控制修订后，在实际入口封闭后续发送并回�
 即使写入、读回和报告质量都通过，也须确认没有漏掉原目标要求；覆盖报告缺失或仍有缺口时继续原核验，详细链路与新增成本见[目标覆盖](orchestrator/verification.md#goal-coverage)。模型总结、UI 完成标记与原 Result 不一致时，以原负责方事实展示缺口，组合反例见[优化验收](validation/optimization-evidence.md#scenarios)。
 
 以上正常与异常路径对应[系统测试](validation/README.md#scenarios)的持久接纳、未知效果、控制竞争和隐私检查。贯穿场景通过不能替代联网问答或手机 GUI 的独立质量验收。
+
+核心模型的[CM-04 保存读回](validation/core-model-scenarios.md#cm-04)、[CM-09 未知效果](validation/core-model-scenarios.md#cm-09)及其余场景通过应用／SDK 和原领域查询观察这些行为，当前均待运行。按需能力先查[参考语义覆盖与合同差异](../../research/agent-harness-comparison/core-model-semantic-coverage.md)，再按对应 CM 场景验收；六组对象本身不授予未启用能力。

@@ -12,7 +12,9 @@ Harness 接纳用户目标，组织大脑、记忆、执行与其他 Agent 持�
 
 概念图用直白标题和一句行为说明解释各项原则，再串起建模顺序与模块分工；双向联系概括请求和事实回传，治理连线作用于相应参与者。内部组件和具体交接继续按第 2 节进入可编辑全景图查阅。
 
-[Session](interaction/session-and-task.md) 是应用连续对话的容器，Task 是目标与执行责任；消息、实际模型输入和原效果各自有来源，正文通过准确引用复用。对象不同不要求表、事务和服务逐一不同。流程是否值得付出代价，应按[同场景读写模型](../../research/agent-harness-comparison/data-flow-io-comparison.md)审查真实提交边界，不按逻辑对象数量推断性能。
+[核心数据模型](core-data-model.md)用 Session、Task、Decision、Operation、Content、Grant 六组对象组织请求，列明内部子记录、独立辅助责任、投影、配置与扩展。应用沿[默认工作流](application-workflow.md)操作已有入口，内核管理模型调用、尝试及持久作业；这些记录的原身份和收尾责任仍保留。消息、实际模型输入和原效果各自有来源，正文通过准确引用复用。
+
+对象不同不要求表、事务和服务逐一不同。流程代价沿[四类请求读写](request-data-flows.md)及[参考项目计量口径](../../research/agent-harness-comparison/data-flow-io-comparison.md)检查，物理提交次数与收益须由实际适配器测量。
 
 ## 1. 从用户目标看决定架构形状的矛盾
 
@@ -126,14 +128,14 @@ Brain、Memory、Executor 以及 Agent、UI 和生命周期适配器可以改变
 
 以保存报告为例，首先区分“候选质量达到要求”和“指定文件已保存该候选”两个必要条件。再问谁能分别证明它们，哪个版本的候选被评估和写入，答复丢失时能查到哪个原对象。由此得到 ConditionResult、OperationIntent、Operation 和 Result 的分工，而非先设计一个把全部状态塞进去的任务日志。
 
-| 要裁决的问题 | 分开的对象 | 分开之后能解释什么 | 完整规则 |
+| 要裁决的问题 | 核心对象中的记录或独立辅助对象 | 保留后能解释什么 | 完整规则 |
 | --- | --- | --- | --- |
-| 模型建议是否已成为获准行动 | DecisionRecord、OperationIntent、Operation | 提案已返回，仍可能因目标或控制变化而没有行动效力 | [提案消费](orchestrator/implementation.md#proposal-consumption) |
-| 同一份报告是否既有质量依据，又已保存到目标 | ContentRef、ConditionResult、Operation、Result | 候选版本、条件判断、外部效果与任务成功各自有据 | [条件核验](orchestrator/verification.md) |
-| 许可已使用，为何零费用也不能再用一次 | Grant、UseReceipt、UseSettlement | 一次性授权的消费与数值费用结算分别记录 | [授权结算](security/implementation.md) |
-| 用户点过按钮，业务是否已经消费 | Surface、InputSubmission、InputRequest、ConfirmationRecord | 呈现、转交、准确预览和本人确认分别由实际负责方保存 | [输入交接](interaction/implementation.md) |
+| 模型建议是否已成为获准行动 | Decision 的提案；Orchestrator 的 OperationIntent 与 Executor 的 Operation | 提案已返回，仍可能因目标或控制变化而没有行动效力 | [提案消费](orchestrator/implementation.md#proposal-consumption) |
+| 同一份报告是否既有质量依据，又已保存到目标 | Content 引用、Operation；Task 的 ConditionResult 与 Result | 候选版本、条件判断、外部效果与任务成功各自有据 | [条件核验](orchestrator/verification.md) |
+| 许可已使用，为何零费用也不能再用一次 | Grant 的 UseReceipt 与 UseSettlement | 一次性授权的消费与数值费用结算分别记录 | [授权结算](security/implementation.md) |
+| 用户点过按钮，业务是否已经消费 | Session 的输入关联；Surface、InputSubmission、InputRequest 与业务 ConfirmationRecord | 呈现、转交、准确预览和本人确认分别由实际负责方保存 | [输入交接](interaction/implementation.md) |
 
-这些对象由裁决问题推导出来。只有身份、变化和继续责任确实不同，才需要拆分；准确字段查所属模块及 [Schema](contracts/schemas/protocol.schema.json)，不从此处的解释表生成另一份领域定义。
+这些记录由裁决问题推导出来。需要独立身份、并发修改、权限、保留规则或后续责任时保留相应记录，由所属接口统一管理；普通应用无需逐项 CRUD。完整分类查[对象归属清单](core-data-model.md)，准确字段查所属模块及 [Schema](contracts/schemas/protocol.schema.json)。
 
 ### 4.2 互斥状态与独立维度分别表达
 
@@ -159,8 +161,12 @@ Brain、Memory、Executor 以及 Agent、UI 和生命周期适配器可以改变
 
 同宿主、同信任边界且共库时可以合并适用事务，逻辑成功含义仍保留。拆到无法共享本地事务的数据库后，发起方保存原请求与查询 job，处理方保存决定与自己的后续工作；返回已收到也不能让处理方丢弃尚未完成的效果核对。
 
+直接回答、读取后回答、冷恢复和保存后读回的逐阶段落点见[请求数据流程](request-data-flows.md#transaction-boundaries)。正文先耐久再被权威引用，必要的发送前屏障继续保留；持久阶段、SQL／追加调用、事务、sync 和物理 IO 分开计量。
+
 ## 5. 从模型回到处理链
 
 沿[贯穿场景](walkthrough.md)可以检查这些对象是否足够：同一份报告先成为已保存内容，再被提案和条件记录引用，随后形成独立写入与读回操作；写入答复丢失和取消分别依靠原效果及控制责任收束。正常链和两种丢答复的位置集中在该场景，本页不再复述。
 
 逻辑模块映射到生产进程时，继续区分“哪个 owner 裁决”和“哪个进程承载”。具体进程、存储及故障域归[生产部署](deployment-production.md)，同进程事务与接口归[宿主装配](deployment.md)。实现与机器契约的查阅路径统一回到[方案入口](README.md#4-连续阅读路径)。
+
+[参考语义矩阵](../../research/agent-harness-comparison/core-model-semantic-coverage.md)沿五个固定项目、七条实际装配路径核对十六类行为和能力缺口；[CM-01～17](validation/core-model-scenarios.md)将这些边界落实为待运行验收。设计映射、静态检查和运行结果分别登记，不能从对象已经归类推定功能或性能已经达到。
