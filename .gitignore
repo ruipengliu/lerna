@@ -2,3 +2,4 @@ scripts/architecture/node_modules/
 docs/architecture/html/
 docs/archive/architecture-2026-09-22/architecture/html/
 __pycache__/
+.reference/
