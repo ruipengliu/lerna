@@ -11,7 +11,7 @@ Review base: `1b647dc970317173f349296e47efd41a4cf3a23c`
 
 | 票据 | 依赖 | Progress |
 | --- | --- | --- |
-| [01 核心对象与数据归属](issues/01-core-object-ownership.md) | 无 | in-progress |
+| [01 核心对象与数据归属](issues/01-core-object-ownership.md) | 无 | completed |
 | [02 参考语义覆盖矩阵](issues/02-reference-semantic-coverage.md) | 无 | in-progress |
 | [03 应用入口与四类数据流程](issues/03-application-workflows.md) | 01 | pending |
 | [04 领域规则与扩展生命周期](issues/04-domain-and-extension-semantics.md) | 01、02 | pending |
