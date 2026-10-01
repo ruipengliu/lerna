@@ -518,4 +518,4 @@ Mermaid 的最终源摘要、渲染输入和目视结果在 `.scratch/architectu
 | 兼容与历史基线 | 从固定 review base 比较契约、验证程序、ADR、历史 sources.json 和 architecture-baseline；只记录差异核对，未重跑未变化的机器向量 |
 | 运行、性能与渲染 | 未运行 Harness／SDK、数据库、模型、平台或性能实验；Mermaid 仅随 Markdown 检查围栏，未作渲染验收 |
 
-本节记录设计整合与静态交付证据。标准／规格双轴审查、发现项统一修复及整个规格的关闭仍待根协调者完成，最终结论由[实施图](../../../.scratch/harness-core-model-simplification/README.md)及该目录的审查记录维护；此前各节的运行或渲染结果不能扩展到本轮。
+本节记录设计整合与静态交付证据。标准／规格双轴初审与统一修复结论见[审查记录](../../../.scratch/harness-core-model-simplification/review.md)，完整交付状态见[实施图](../../../.scratch/harness-core-model-simplification/README.md)及[最终核对](../../../.scratch/harness-core-model-simplification/verification.md)；此前各节的运行或渲染结果不能扩展到本轮。

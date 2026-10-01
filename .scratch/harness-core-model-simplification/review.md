@@ -28,14 +28,14 @@
 
 | 编号 | 位置与修正范围 | 状态 |
 | --- | --- | --- |
-| C-1 | [对象目录](../../docs/architecture/.draft/core-data-model.md)：InputRequest 的读取入口应为 interaction.request_read；input_read 读取 InputSubmission | 待统一修复 |
-| C-2 | [请求流程](../../docs/architecture/.draft/request-data-flows.md)：把 CM-03 已明确的 C 重建计量终点与后续续行，同步到流程定义及计量正文；不改变恢复规则或历史研究 | 待统一修复 |
-| C-3 | [追踪表](traceability.md)：ID-24 及当前整合状态须反映票据 06 已完成，运行状态仍未验证 | 待统一修复 |
-| C-4 | [票据 05](issues/05-acceptance-traceability.md)：保留全部 Comments，按创建、开始、完成及检查的顺序组织 | 待统一修复 |
-| C-5 | [验证记录](verification.md)：将未重跑机器向量的说明限定到票据 06，保留票据 04 实际执行过协议／Brain 静态检查的事实 | 待统一修复 |
+| C-1 | [对象目录](../../docs/architecture/.draft/core-data-model.md)：InputRequest 的读取入口应为 interaction.request_read；input_read 读取 InputSubmission | 已修复 |
+| C-2 | [请求流程](../../docs/architecture/.draft/request-data-flows.md)：把 CM-03 已明确的 C 重建计量终点与后续续行，同步到流程定义及计量正文；不改变恢复规则或历史研究 | 已修复 |
+| C-3 | [追踪表](traceability.md)：ID-24 及当前整合状态须反映票据 06 已完成，运行状态仍未验证 | 已修复 |
+| C-4 | [票据 05](issues/05-acceptance-traceability.md)：保留全部 Comments，按创建、开始、完成及检查的顺序组织 | 已修复 |
+| C-5 | [验证记录](verification.md)：将未重跑机器向量的说明限定到票据 06，保留票据 04 实际执行过协议／Brain 静态检查的事实 | 已修复 |
 
 ## 修复与复核
 
-所有修复由同一个实现代理在独立工作树和 `codex/core-model-review-fix` 分支完成。当前待修复合入、针对性复核与最终静态检查；整个规格尚未关闭。完成记录将保留修复提交和实际证据。
+所有修复由同一个实现代理在独立工作树和 `codex/core-model-review-fix` 分支完成。修复提交为 `cae439f77fc0f7cc1a60ebd67226699e8f2fcc2d`，合入集成分支的提交为 `6f211941cfd2f2fa5cc00ce133fc7ee61c046258`。根协调者已逐项复核六份文件的完整修复差异：S-1 的实施评论已追加到原历史末尾；C-1～C-5 均符合上表修正范围。规格原有 3 条、票据 05 原有 6 条 Comments 完整保留；追踪中的运行状态仍未验证。最终静态检查、关闭及工作树清理记录见[验证记录](verification.md)。
 
-初审：Standards 1 项，最严重为 P3 评论追加顺序；Spec 0 项，无严重项。协调补充另计 5 项。
+初审：Standards 1 项，最严重为 P3；Spec 0 项，无严重项。修复后两轴均无遗留；协调补充 5 项已全部修复。

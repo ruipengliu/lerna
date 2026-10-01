@@ -1,6 +1,8 @@
 # 核心数据模型收敛实施
 
-[规格](spec.md) · [领域词汇](../../CONTEXT.md) · [规格追踪](traceability.md) · [交付核对](verification.md)
+[规格](spec.md) · [领域词汇](../../CONTEXT.md) · [规格追踪](traceability.md) · [交付核对](verification.md) · [双轴审查](review.md)
+
+Progress: completed
 
 Integration branch: `codex/harness-core-model-simplification`
 Review base: `1b647dc970317173f349296e47efd41a4cf3a23c`
@@ -24,3 +26,5 @@ Review base: `1b647dc970317173f349296e47efd41a4cf3a23c`
 - 2026-10-01：实施前静态检查通过：架构 55 篇／1605 本地链接，ADR 10 篇／13 链接，综合研究 8 篇／134 链接；方法登记仍为 105 项。01、02 已在独立工作树并行启动，后续差异以 Review base 为固定比较点。
 - 2026-10-01：05 已合入集成分支，01～05 全部完成，06 的阻塞依赖已解除，可进入实施。
 - 2026-10-01：06 已合入集成分支，六张实施票据全部完成。标准／规格双轴审查、发现问题修复与规格关闭仍待根协调者完成。
+
+- 2026-10-01：双轴初审结束，Standards 的 1 项 P3 与协调补充的 5 项均由同一修复代理处理并合入 `6f211941cfd2f2fa5cc00ce133fc7ee61c046258`；Spec 轴 0 项发现。原始报告和针对性复核分别保留。七个本轮实施工作树已确认归档，原有无关工作树保持；本规格按设计交付范围关闭，运行与实测状态仍未验证。
