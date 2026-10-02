@@ -1,0 +1,714 @@
+[
+  {
+    "case_id": "cancelled-with-unknown",
+    "record_type": "Task",
+    "record": {
+      "tenant_id": "tenant_00000000000000000000000000000001",
+      "task_id": "task_00000000000000000000000000000001",
+      "orchestrator_id": "orch_00000000000000000000000000000001",
+      "submit_command_id": "command_00000000000000000000000000000001",
+      "goal_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "goal_revision": 1,
+      "control_revision": 2,
+      "revision": 3,
+      "policy_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "requirements": [],
+      "deadline": "2026-10-02T13:00:00Z",
+      "status": "cancelled",
+      "control": "running",
+      "wait_reasons": [
+        {
+          "kind": "effect",
+          "resume_condition": "查询原Operation；未知效果不重做"
+        }
+      ],
+      "budget": [
+        {
+          "unit": "USD",
+          "limit": "10",
+          "reserved": "4",
+          "spent": "6"
+        }
+      ],
+      "open_effects": {
+        "collection_revision": 1,
+        "total_count": 1,
+        "unresolved_count": 1,
+        "complete": true
+      },
+      "accounting_open": true
+    }
+  },
+  {
+    "case_id": "closed-but-unknown",
+    "record_type": "Operation",
+    "record": {
+      "operation_id": "operation_00000000000000000000000000000001",
+      "owner_id": "executor_00000000000000000000000000000001",
+      "task_ref": {
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "task_00000000000000000000000000000001",
+        "revision": 3
+      },
+      "revision": 2,
+      "execution_state": "closed",
+      "effect": "unknown",
+      "may_apply_later": "unknown",
+      "attempts": {
+        "collection_revision": 1,
+        "total_count": 1,
+        "unresolved_count": 1,
+        "complete": true
+      },
+      "evidence_refs": [],
+      "usage": [
+        {
+          "unit": "USD",
+          "value": "6"
+        }
+      ],
+      "usage_final": false,
+      "next_action": "query_original"
+    }
+  },
+  {
+    "case_id": "succeeded-accounting-open",
+    "record_type": "Task",
+    "record": {
+      "tenant_id": "tenant_00000000000000000000000000000001",
+      "task_id": "task_00000000000000000000000000000002",
+      "orchestrator_id": "orch_00000000000000000000000000000001",
+      "submit_command_id": "command_00000000000000000000000000000002",
+      "goal_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "goal_revision": 1,
+      "control_revision": 2,
+      "revision": 3,
+      "policy_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "requirements": [
+        {
+          "requirement_id": "requirement_00000000000000000000000000000001",
+          "kind": "effect",
+          "source_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "required": true
+        },
+        {
+          "requirement_id": "requirement_00000000000000000000000000000002",
+          "kind": "quality",
+          "source_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "required": false
+        }
+      ],
+      "deadline": "2026-10-02T13:00:00Z",
+      "status": "succeeded",
+      "control": "running",
+      "wait_reasons": [],
+      "budget": [
+        {
+          "unit": "USD",
+          "limit": "10",
+          "reserved": "4",
+          "spent": "6"
+        }
+      ],
+      "open_effects": {
+        "collection_revision": 3,
+        "total_count": 0,
+        "unresolved_count": 0,
+        "complete": true
+      },
+      "accounting_open": true,
+      "result_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      }
+    }
+  },
+  {
+    "case_id": "fixed-result",
+    "record_type": "Result",
+    "record": {
+      "task_id": "task_00000000000000000000000000000002",
+      "goal_revision": 1,
+      "artifact_refs": [
+        {
+          "tenant_id": "tenant_00000000000000000000000000000001",
+          "owner_id": "contentowner_00000000000000000000000000000001",
+          "content_id": "content_00000000000000000000000000000001",
+          "version": 1,
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "text/plain",
+          "byte_length": 42
+        }
+      ],
+      "completion_basis": "verified",
+      "condition_results": [
+        {
+          "check_id": "check_00000000000000000000000000000001",
+          "task_id": "task_00000000000000000000000000000002",
+          "goal_revision": 1,
+          "requirement_id": "requirement_00000000000000000000000000000001",
+          "artifact_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "evaluator_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "verdict": "pass",
+          "applicability": "usable",
+          "basis": "verified",
+          "evidence_refs": [
+            {
+              "tenant_id": "tenant_00000000000000000000000000000001",
+              "owner_id": "contentowner_00000000000000000000000000000001",
+              "content_id": "content_00000000000000000000000000000001",
+              "version": 1,
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/plain",
+              "byte_length": 42
+            }
+          ]
+        },
+        {
+          "check_id": "check_00000000000000000000000000000002",
+          "task_id": "task_00000000000000000000000000000002",
+          "goal_revision": 1,
+          "requirement_id": "requirement_00000000000000000000000000000002",
+          "artifact_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "evaluator_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "verdict": "fail",
+          "applicability": "usable",
+          "basis": "assessed",
+          "evidence_refs": [
+            {
+              "tenant_id": "tenant_00000000000000000000000000000001",
+              "owner_id": "contentowner_00000000000000000000000000000001",
+              "content_id": "content_00000000000000000000000000000001",
+              "version": 1,
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/plain",
+              "byte_length": 42
+            }
+          ]
+        }
+      ],
+      "coverage_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "limitations": [
+        "示例仅有构造证据，未证明任何真实文件已保存"
+      ],
+      "completed_at": "2026-10-02T12:30:00Z"
+    }
+  },
+  {
+    "case_id": "once-confirmation-consumed",
+    "record_type": "Confirmation",
+    "record": {
+      "request_id": "confirmation_00000000000000000000000000000001",
+      "owner_id": "orch_00000000000000000000000000000001",
+      "revision": 3,
+      "original_command_id": "command_00000000000000000000000000000003",
+      "intent_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "preview_refs": [
+        {
+          "tenant_id": "tenant_00000000000000000000000000000001",
+          "owner_id": "contentowner_00000000000000000000000000000001",
+          "content_id": "content_00000000000000000000000000000001",
+          "version": 1,
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "text/plain",
+          "byte_length": 42
+        }
+      ],
+      "expires_at": "2026-10-02T13:00:00Z",
+      "state": "consumed",
+      "consumed_by": "command_00000000000000000000000000000003",
+      "consumed_at": "2026-10-02T12:00:00Z",
+      "challenge": "constructedsingleusechallenge00000001",
+      "trusted_user_session_ref": {
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "session_00000000000000000000000000000001",
+        "revision": 1
+      },
+      "decided_by": "user_00000000000000000000000000000001",
+      "decided_at": "2026-10-02T11:59:00Z",
+      "original_command_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      }
+    }
+  },
+  {
+    "case_id": "late-bill-can-exceed-limit",
+    "record_type": "BudgetBalance",
+    "record": {
+      "unit": "USD",
+      "limit": "10",
+      "reserved": "0",
+      "spent": "11.5"
+    }
+  },
+  {
+    "case_id": "original-cancel-command",
+    "record_type": "Command",
+    "record": {
+      "protocol": "harness/1",
+      "profile": "architecture-2026-10",
+      "logical_service_id": "orch_00000000000000000000000000000001",
+      "command_id": "command_00000000000000000000000000000004",
+      "method": "task.cancel",
+      "target_id": "task_00000000000000000000000000000001",
+      "expires_at": "2026-10-02T13:00:00Z",
+      "expected_revision": 2,
+      "payload": {
+        "task_id": "task_00000000000000000000000000000001",
+        "reason": "用户取消原目标"
+      }
+    }
+  },
+  {
+    "case_id": "closed-allocation-correction",
+    "record_type": "AllocationClosure",
+    "record": {
+      "allocation_id": "allocation_00000000000000000000000000000001",
+      "parent_owner_id": "orch_00000000000000000000000000000001",
+      "receiver_id": "orch_00000000000000000000000000000002",
+      "spending_closed": true,
+      "closed_at": "2026-10-02T12:00:00Z",
+      "usage_revision": 2,
+      "final_usage": [
+        {
+          "unit": "USD",
+          "value": "11.5"
+        }
+      ],
+      "proof_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      }
+    }
+  },
+  {
+    "case_id": "leased-old-work-revision",
+    "record_type": "Job",
+    "record": {
+      "job_id": "job_00000000000000000000000000000001",
+      "owner_id": "orch_00000000000000000000000000000001",
+      "tenant_id": "tenant_00000000000000000000000000000001",
+      "responsibility_key": "task:1:control:executor:1",
+      "kind": "control",
+      "source_ref": {
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "task_00000000000000000000000000000001",
+        "revision": 3
+      },
+      "state": "leased",
+      "due_at": "2026-10-02T12:00:00Z",
+      "work_revision": 13,
+      "lease_epoch": 7,
+      "holder_id": "boot_00000000000000000000000000000001",
+      "lease_until": "2026-10-02T12:00:15Z"
+    }
+  },
+  {
+    "case_id": "independent-submit",
+    "record_type": "Command",
+    "record": {
+      "protocol": "harness/1",
+      "profile": "architecture-2026-10",
+      "logical_service_id": "orch_00000000000000000000000000000001",
+      "command_id": "command_00000000000000000000000000000005",
+      "method": "task.submit",
+      "target_id": "orch_00000000000000000000000000000001",
+      "expires_at": "2026-10-02T13:00:00Z",
+      "payload": {
+        "orchestrator_id": "orch_00000000000000000000000000000001",
+        "goal_ref": {
+          "tenant_id": "tenant_00000000000000000000000000000001",
+          "owner_id": "contentowner_00000000000000000000000000000001",
+          "content_id": "content_00000000000000000000000000000001",
+          "version": 1,
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "text/plain",
+          "byte_length": 42
+        },
+        "policy_ref": {
+          "component_id": "component_00000000000000000000000000000001",
+          "version": "1.0.0",
+          "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "deadline": "2026-10-02T13:00:00Z",
+        "budget": [
+          {
+            "unit": "USD",
+            "value": "10"
+          }
+        ],
+        "requirements": [
+          {
+            "requirement_id": "requirement_00000000000000000000000000000001",
+            "kind": "effect",
+            "source_ref": {
+              "tenant_id": "tenant_00000000000000000000000000000001",
+              "owner_id": "contentowner_00000000000000000000000000000001",
+              "content_id": "content_00000000000000000000000000000001",
+              "version": 1,
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/plain",
+              "byte_length": 42
+            },
+            "rule_ref": {
+              "component_id": "component_00000000000000000000000000000001",
+              "version": "1.0.0",
+              "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "required": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "delegated-submit",
+    "record_type": "Command",
+    "record": {
+      "protocol": "harness/1",
+      "profile": "architecture-2026-10",
+      "logical_service_id": "orch_00000000000000000000000000000002",
+      "command_id": "command_00000000000000000000000000000006",
+      "method": "task.submit",
+      "target_id": "orch_00000000000000000000000000000002",
+      "expires_at": "2026-10-02T13:00:00Z",
+      "payload": {
+        "orchestrator_id": "orch_00000000000000000000000000000002",
+        "goal_ref": {
+          "tenant_id": "tenant_00000000000000000000000000000001",
+          "owner_id": "contentowner_00000000000000000000000000000001",
+          "content_id": "content_00000000000000000000000000000001",
+          "version": 1,
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "text/plain",
+          "byte_length": 42
+        },
+        "policy_ref": {
+          "component_id": "component_00000000000000000000000000000001",
+          "version": "1.0.0",
+          "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "deadline": "2026-10-02T13:00:00Z",
+        "budget": [
+          {
+            "unit": "USD",
+            "value": "10"
+          }
+        ],
+        "requirements": [
+          {
+            "requirement_id": "requirement_00000000000000000000000000000001",
+            "kind": "effect",
+            "source_ref": {
+              "tenant_id": "tenant_00000000000000000000000000000001",
+              "owner_id": "contentowner_00000000000000000000000000000001",
+              "content_id": "content_00000000000000000000000000000001",
+              "version": 1,
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/plain",
+              "byte_length": 42
+            },
+            "rule_ref": {
+              "component_id": "component_00000000000000000000000000000001",
+              "version": "1.0.0",
+              "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "required": true
+          }
+        ],
+        "delegation_context": {
+          "delegation_id": "delegation_00000000000000000000000000000001",
+          "parent_task_ref": {
+            "owner_id": "orch_00000000000000000000000000000001",
+            "object_id": "task_00000000000000000000000000000001",
+            "revision": 1
+          },
+          "parent_goal_revision": 1,
+          "ancestor_task_refs": [
+            {
+              "owner_id": "orch_00000000000000000000000000000001",
+              "object_id": "task_00000000000000000000000000000001",
+              "revision": 1
+            }
+          ],
+          "agent_binding_ref": {
+            "owner_id": "orch_00000000000000000000000000000002",
+            "object_id": "binding_00000000000000000000000000000001",
+            "revision": 1
+          },
+          "allocation_ref": {
+            "owner_id": "orch_00000000000000000000000000000001",
+            "object_id": "allocation_00000000000000000000000000000001",
+            "revision": 1
+          },
+          "permission_refs": [
+            {
+              "owner_id": "orch_00000000000000000000000000000001",
+              "object_id": "grant_00000000000000000000000000000001",
+              "revision": 1
+            }
+          ],
+          "parent_control_snapshot": {
+            "orchestrator_id": "orch_00000000000000000000000000000001",
+            "task_id": "task_00000000000000000000000000000001",
+            "goal_revision": 1,
+            "control_revision": 1,
+            "status": "active",
+            "control": "running",
+            "issued_at": "2026-10-02T12:00:00Z",
+            "start_before": "2026-10-02T12:00:05Z",
+            "proof_ref": {
+              "tenant_id": "tenant_00000000000000000000000000000001",
+              "owner_id": "contentowner_00000000000000000000000000000001",
+              "content_id": "content_00000000000000000000000000000001",
+              "version": 1,
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/plain",
+              "byte_length": 42
+            }
+          },
+          "context_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "parent_proof_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          }
+        }
+      }
+    }
+  },
+  {
+    "case_id": "fixed-execution-intent",
+    "record_type": "Command",
+    "record": {
+      "protocol": "harness/1",
+      "profile": "architecture-2026-10",
+      "logical_service_id": "executor_00000000000000000000000000000001",
+      "command_id": "command_00000000000000000000000000000007",
+      "method": "execution.invoke",
+      "target_id": "executor_00000000000000000000000000000001",
+      "expires_at": "2026-10-02T13:00:00Z",
+      "payload": {
+        "operation_id": "operation_00000000000000000000000000000001",
+        "task_ref": {
+          "owner_id": "orch_00000000000000000000000000000001",
+          "object_id": "task_00000000000000000000000000000001",
+          "revision": 1
+        },
+        "goal_revision": 1,
+        "control_revision": 1,
+        "capability_ref": {
+          "component_id": "component_00000000000000000000000000000001",
+          "version": "1.0.0",
+          "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "binding_ref": {
+          "owner_id": "executor_00000000000000000000000000000001",
+          "object_id": "binding_00000000000000000000000000000001",
+          "revision": 1
+        },
+        "intent_ref": {
+          "tenant_id": "tenant_00000000000000000000000000000001",
+          "owner_id": "contentowner_00000000000000000000000000000001",
+          "content_id": "content_00000000000000000000000000000001",
+          "version": 1,
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "text/plain",
+          "byte_length": 42
+        },
+        "intent_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "use_refs": [
+          {
+            "owner_id": "orch_00000000000000000000000000000001",
+            "object_id": "use_00000000000000000000000000000001",
+            "revision": 1
+          }
+        ],
+        "deadline": "2026-10-02T13:00:00Z",
+        "control_snapshot": {
+          "orchestrator_id": "orch_00000000000000000000000000000001",
+          "task_id": "task_00000000000000000000000000000001",
+          "goal_revision": 1,
+          "control_revision": 1,
+          "status": "active",
+          "control": "running",
+          "issued_at": "2026-10-02T12:00:00Z",
+          "start_before": "2026-10-02T12:00:05Z",
+          "proof_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          }
+        },
+        "reservation_ref": {
+          "owner_id": "orch_00000000000000000000000000000001",
+          "object_id": "reservation_00000000000000000000000000000001",
+          "revision": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "cancel-before-invoke-binding",
+    "record_type": "Command",
+    "record": {
+      "protocol": "harness/1",
+      "profile": "architecture-2026-10",
+      "logical_service_id": "executor_00000000000000000000000000000001",
+      "command_id": "command_00000000000000000000000000000008",
+      "method": "execution.cancel",
+      "target_id": "executor_00000000000000000000000000000001",
+      "expires_at": "2026-10-02T13:00:00Z",
+      "payload": {
+        "operation_id": "operation_00000000000000000000000000000001",
+        "reason": "原目标已取消",
+        "task_ref": {
+          "owner_id": "orch_00000000000000000000000000000001",
+          "object_id": "task_00000000000000000000000000000001",
+          "revision": 1
+        },
+        "orchestrator_id": "orch_00000000000000000000000000000001"
+      }
+    }
+  },
+  {
+    "case_id": "billing-is-only-a-wakeup",
+    "record_type": "Command",
+    "record": {
+      "protocol": "harness/1",
+      "profile": "architecture-2026-10",
+      "logical_service_id": "orch_00000000000000000000000000000001",
+      "command_id": "command_00000000000000000000000000000009",
+      "method": "task.billing_reconcile",
+      "target_id": "task_00000000000000000000000000000001",
+      "expires_at": "2026-10-02T13:00:00Z",
+      "payload": {
+        "task_id": "task_00000000000000000000000000000001",
+        "source_ref": {
+          "owner_id": "executor_00000000000000000000000000000001",
+          "object_id": "operation_00000000000000000000000000000001",
+          "revision": 3
+        },
+        "source_kind": "execution_operation",
+        "usage_revision": 3,
+        "usage_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    }
+  }
+]

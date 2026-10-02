@@ -1,0 +1,22 @@
+digraph Harness {
+ graph [rankdir=LR, bgcolor="#fffefa", fontname="Noto Sans CJK SC", nodesep=0.5, ranksep=0.8, pad=0.28];
+ node [shape=box, style="rounded,filled", fontname="Noto Sans CJK SC", fontsize=17, color="#cad8da", fillcolor="#f0f6f5", fontcolor="#15343b", margin="0.22,0.16"];
+ edge [fontname="Noto Sans CJK SC", fontsize=14, color="#628a8b", fontcolor="#34575c", arrowsize=0.7];
+ user [label="用户与应用\n目标、输入、控制", fillcolor="#fff5e7"];
+ orch [label="Orchestrator\n目标、准入、完成裁决",fillcolor="#d8eee9",penwidth=2];
+ brain [label="Brain\n固定输入 → 下一步提案"];
+ executor [label="Executor\n行动、效果与费用"];
+ memory [label="Memory / Content\n获准材料、准确版本"];
+ grant [label="Grant / Confirmation\n许可、准确本人决定"];
+ user -> orch [label="提交目标"];
+ orch -> user [label="结果、依据、限制"];
+ orch -> brain [label="固定Snapshot"];
+ brain -> orch [label="提案，不是许可"];
+ orch -> executor [label="固定Operation"];
+ executor -> orch [label="实际事实与未决项"];
+ memory -> orch [label="带来源的材料"];
+ grant -> orch [label="准入依据"];
+ grant -> executor [label="真实启动门禁"];
+ {rank=same; memory;user;grant;}
+ {rank=same;brain;executor;}
+}
