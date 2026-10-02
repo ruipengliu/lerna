@@ -33,7 +33,7 @@ if (process.argv.includes('--canonical')) {
   // The Python caller rejects duplicate keys and unsafe integers before this bridge.
   process.stdout.write(canonical(JSON.parse(readFileSync(0, 'utf8'))));
 } else {
-  const fixturePath = new URL('../contracts/examples/transport/proofs.json', import.meta.url);
+  const fixturePath = new URL('../../../contracts/examples/transport/proofs.json', import.meta.url);
   const fixtures = JSON.parse(readFileSync(fixturePath, 'utf8'));
   function check(item) {
     const [header64, payload64, sig64, extra] = item.proof.split('.');

@@ -79,7 +79,7 @@
       "sha256": "63b32e798a48359a794fbc0dca26d5e8eff1ea3526adaae248367e058bcf0440",
       "kind": "markdown",
       "lines": 31,
-      "formal_target": "docs/architecture/contracts/examples/README.md",
+      "formal_target": "contracts/examples/README.md",
       "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
     },
     {
@@ -88,7 +88,7 @@
       "sha256": "2f1f14a82324109dfd4c946b844c415dfdfa61d49fb93d34ff1b75ad8a352034",
       "kind": "asset",
       "lines": 24,
-      "formal_target": "docs/architecture/contracts/examples/active-unknown-effect.json",
+      "formal_target": "contracts/examples/active-unknown-effect.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -97,7 +97,7 @@
       "sha256": "3ef381e71db818f990a9b19611d8c082031fe4ff1a5cc11087d3e47aebdfa9b6",
       "kind": "markdown",
       "lines": 13,
-      "formal_target": "docs/architecture/contracts/examples/brain/README.md",
+      "formal_target": "contracts/examples/brain/README.md",
       "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
     },
     {
@@ -106,7 +106,7 @@
       "sha256": "ef3cbf7cd54bc66dd286269d4b8d7480526ca2109f48855f8d47eaa021f25f17",
       "kind": "asset",
       "lines": 222,
-      "formal_target": "docs/architecture/contracts/examples/brain/generation-and-plan.json",
+      "formal_target": "contracts/examples/brain/generation-and-plan.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -115,7 +115,7 @@
       "sha256": "ad70ad8206bf838ac535ea4a05ac7c56fa02671b037b2e285b44604d23b99c32",
       "kind": "asset",
       "lines": 170,
-      "formal_target": "docs/architecture/contracts/examples/brain/invalid-generation.json",
+      "formal_target": "contracts/examples/brain/invalid-generation.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -124,7 +124,7 @@
       "sha256": "b8c3ee4efb23aefbfc284799a01d2d5c4b04c71aab742b739ed65066f812b8ae",
       "kind": "asset",
       "lines": 648,
-      "formal_target": "docs/architecture/contracts/examples/brain/plan-materialization.json",
+      "formal_target": "contracts/examples/brain/plan-materialization.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -133,7 +133,7 @@
       "sha256": "dec8dbfa1745ca32691b6c9bef41863a9a128b0868d7909c042c4d17f3e12119",
       "kind": "asset",
       "lines": 24,
-      "formal_target": "docs/architecture/contracts/examples/cancelled-late-effect.json",
+      "formal_target": "contracts/examples/cancelled-late-effect.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -142,7 +142,7 @@
       "sha256": "bb66deddf3d261f6aefbcb0fe81ee0b94ef4da375b7245b1dcb0f6af32a81f33",
       "kind": "asset",
       "lines": 970,
-      "formal_target": "docs/architecture/contracts/examples/invalid-cases.json",
+      "formal_target": "contracts/examples/invalid-cases.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -151,7 +151,7 @@
       "sha256": "25ec5ba384d4c46abc119c2a07b9c8b6c4406623a6fe8bc98464aa6d1314adb3",
       "kind": "asset",
       "lines": 668,
-      "formal_target": "docs/architecture/contracts/examples/protocol/01-task-loop.json",
+      "formal_target": "contracts/examples/protocol/01-task-loop.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -160,7 +160,7 @@
       "sha256": "115a02117aaa16a0bad70c2fba9cfae7fe6bbcebecf58b7ea8d28235cf13c820",
       "kind": "asset",
       "lines": 511,
-      "formal_target": "docs/architecture/contracts/examples/protocol/02-original-command.json",
+      "formal_target": "contracts/examples/protocol/02-original-command.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -169,7 +169,7 @@
       "sha256": "7c2bf57dfd9994cc0c0d1fdb957f2d5ba156c305445dc484ef5b9e8475a2a866",
       "kind": "asset",
       "lines": 365,
-      "formal_target": "docs/architecture/contracts/examples/protocol/03-control-order.json",
+      "formal_target": "contracts/examples/protocol/03-control-order.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -178,7 +178,7 @@
       "sha256": "9a42581ebfe9a998343a98a534ace223ba0dd856540e63942bac86603b26845a",
       "kind": "asset",
       "lines": 189,
-      "formal_target": "docs/architecture/contracts/examples/protocol/04-cancel-before-invoke.json",
+      "formal_target": "contracts/examples/protocol/04-cancel-before-invoke.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -187,7 +187,7 @@
       "sha256": "e454d7accfdfee9b787eacb27807ada52da58986cbed8783beb883543492e91b",
       "kind": "asset",
       "lines": 259,
-      "formal_target": "docs/architecture/contracts/examples/protocol/05-task-control.json",
+      "formal_target": "contracts/examples/protocol/05-task-control.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -196,7 +196,7 @@
       "sha256": "fb49dc669273d95a53d93a0b6a283d5e19f1f47d15e6d0a59a366b16e014ef64",
       "kind": "asset",
       "lines": 420,
-      "formal_target": "docs/architecture/contracts/examples/protocol/06-goal-revision.json",
+      "formal_target": "contracts/examples/protocol/06-goal-revision.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -205,7 +205,7 @@
       "sha256": "59e33b3f993c9b05f28d6a4b988bce8b218085d5d89e81330cffcc54abf5500c",
       "kind": "asset",
       "lines": 387,
-      "formal_target": "docs/architecture/contracts/examples/protocol/07-input-consumption.json",
+      "formal_target": "contracts/examples/protocol/07-input-consumption.json",
       "disposition": "正式回答引用与真实input-answer/1字节例证对齐；原源文件保留"
     },
     {
@@ -214,7 +214,7 @@
       "sha256": "ca507c394f2dd7a77f77ad6985f321b941eb0f3d69a012ebc3a275a562ea462b",
       "kind": "asset",
       "lines": 141,
-      "formal_target": "docs/architecture/contracts/examples/protocol/08-acceptance.json",
+      "formal_target": "contracts/examples/protocol/08-acceptance.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -223,7 +223,7 @@
       "sha256": "007421d9206d913a8e8557315cd04f27b7d705d3c897411ac09a3e1f14a13823",
       "kind": "asset",
       "lines": 368,
-      "formal_target": "docs/architecture/contracts/examples/protocol/09-brain-recovery.json",
+      "formal_target": "contracts/examples/protocol/09-brain-recovery.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -232,7 +232,7 @@
       "sha256": "753306aa654aa41f0bb58cbeaa166b3e16f099aae8569e1134cba5c7180051dc",
       "kind": "asset",
       "lines": 255,
-      "formal_target": "docs/architecture/contracts/examples/protocol/10-use-recovery.json",
+      "formal_target": "contracts/examples/protocol/10-use-recovery.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -241,7 +241,7 @@
       "sha256": "f8b8a67cffb4724b3db540aeade970e1cf51fa1c3ec3d1a226ca97e79e3fe461",
       "kind": "asset",
       "lines": 469,
-      "formal_target": "docs/architecture/contracts/examples/protocol/11-memory-management.json",
+      "formal_target": "contracts/examples/protocol/11-memory-management.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -250,7 +250,7 @@
       "sha256": "a4eeacc4e187ad8d782242f844f898420c6ee6727e4a78bb263583892a05f235",
       "kind": "asset",
       "lines": 405,
-      "formal_target": "docs/architecture/contracts/examples/protocol/12-delegation-mapping.json",
+      "formal_target": "contracts/examples/protocol/12-delegation-mapping.json",
       "disposition": "正式委派回答引用与真实input-answer/1字节例证对齐；原源文件保留"
     },
     {
@@ -259,7 +259,7 @@
       "sha256": "37ac67bc2d7a299238a4bf88562061a2b2ca2fc20e4453d824958d2cd78c36cc",
       "kind": "asset",
       "lines": 230,
-      "formal_target": "docs/architecture/contracts/examples/protocol/13-activation-online.json",
+      "formal_target": "contracts/examples/protocol/13-activation-online.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -268,7 +268,7 @@
       "sha256": "c95973a52c00c0e9eaaf83a656866e9b1aaeab993da5d18fa9d51adffc62fe75",
       "kind": "asset",
       "lines": 85,
-      "formal_target": "docs/architecture/contracts/examples/protocol/14-approval-offline.json",
+      "formal_target": "contracts/examples/protocol/14-approval-offline.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -277,7 +277,7 @@
       "sha256": "3b799919cee46cdd20c17a2821ff3186f831c066df0862434bdfda100f032791",
       "kind": "asset",
       "lines": 157,
-      "formal_target": "docs/architecture/contracts/examples/protocol/15-rejected-branches.json",
+      "formal_target": "contracts/examples/protocol/15-rejected-branches.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -286,7 +286,7 @@
       "sha256": "734a589bd346e0d0dc60da233389552c847adc8a32b6649b79acd8d316b0fd82",
       "kind": "asset",
       "lines": 668,
-      "formal_target": "docs/architecture/contracts/examples/protocol/16-active-to-result.json",
+      "formal_target": "contracts/examples/protocol/16-active-to-result.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -295,7 +295,7 @@
       "sha256": "7972de412410014b4a75cb1252900a134e2b032faec168ed2c9b0a410c607cf9",
       "kind": "asset",
       "lines": 737,
-      "formal_target": "docs/architecture/contracts/examples/protocol/17-optional-condition.json",
+      "formal_target": "contracts/examples/protocol/17-optional-condition.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -304,7 +304,7 @@
       "sha256": "1464ccd5a3842e9e4df1560e168bed6bd7215092fc0d89a2574c1fba47704751",
       "kind": "asset",
       "lines": 703,
-      "formal_target": "docs/architecture/contracts/examples/protocol/18-unrelated-effect.json",
+      "formal_target": "contracts/examples/protocol/18-unrelated-effect.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -313,7 +313,7 @@
       "sha256": "99763e0764394de7f5606dce64294351e1e3150a8e70aa265e3ea08bb33c0674",
       "kind": "asset",
       "lines": 398,
-      "formal_target": "docs/architecture/contracts/examples/protocol/20-budget-allocation.json",
+      "formal_target": "contracts/examples/protocol/20-budget-allocation.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -322,7 +322,7 @@
       "sha256": "f647221ccfc4c23563977588c345190fbd94bcfe04bfdd6a5a040a118485da5c",
       "kind": "asset",
       "lines": 221,
-      "formal_target": "docs/architecture/contracts/examples/protocol/21-capability-catalog.json",
+      "formal_target": "contracts/examples/protocol/21-capability-catalog.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -331,7 +331,7 @@
       "sha256": "49a10d741ae618545c415eaefe03f28d2308d1afd7b80d7957943aa5cd974ee9",
       "kind": "asset",
       "lines": 389,
-      "formal_target": "docs/architecture/contracts/examples/protocol/22-resource-lifecycle.json",
+      "formal_target": "contracts/examples/protocol/22-resource-lifecycle.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -340,7 +340,7 @@
       "sha256": "0a4cc3925675834c8d6ae8ed07cc5d9d0277eca68fd2b1118c6aa0132118f366",
       "kind": "asset",
       "lines": 405,
-      "formal_target": "docs/architecture/contracts/examples/protocol/23-cross-orchestrator-budget.json",
+      "formal_target": "contracts/examples/protocol/23-cross-orchestrator-budget.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -349,7 +349,7 @@
       "sha256": "09b55b771b8bf257537cc568bbf476bc3742fc44288598bdd0d03d78ba59745b",
       "kind": "asset",
       "lines": 462,
-      "formal_target": "docs/architecture/contracts/examples/protocol/30-grant-lifecycle.json",
+      "formal_target": "contracts/examples/protocol/30-grant-lifecycle.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -358,7 +358,7 @@
       "sha256": "89970b5afebe039c7020dc8e1dcc8cd9afce8ce49ecfc67570f9bc4b598b624d",
       "kind": "asset",
       "lines": 408,
-      "formal_target": "docs/architecture/contracts/examples/protocol/31-pairing-lifecycle.json",
+      "formal_target": "contracts/examples/protocol/31-pairing-lifecycle.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -367,7 +367,7 @@
       "sha256": "99da3f374422560fab657efe566a14eccf059d671132395e60d49c8f9e62c7b3",
       "kind": "asset",
       "lines": 639,
-      "formal_target": "docs/architecture/contracts/examples/protocol/32-lease-settlement.json",
+      "formal_target": "contracts/examples/protocol/32-lease-settlement.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -376,7 +376,7 @@
       "sha256": "93aeb0afc6e0383dafda59c4f17c9000784ded8da4e7f4868f234e69afd6e4a2",
       "kind": "asset",
       "lines": 304,
-      "formal_target": "docs/architecture/contracts/examples/protocol/33-installation-lifecycle.json",
+      "formal_target": "contracts/examples/protocol/33-installation-lifecycle.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -385,7 +385,7 @@
       "sha256": "ee08afc816ec7fbf2cf102a64ca95015c559f0fec7071280b57ae989e7231c41",
       "kind": "asset",
       "lines": 820,
-      "formal_target": "docs/architecture/contracts/examples/protocol/34-compatibility-release.json",
+      "formal_target": "contracts/examples/protocol/34-compatibility-release.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -394,7 +394,7 @@
       "sha256": "07e4700e4ef443e1b3f703a1a23fe0059668eb624ed6a469bb4e1d61214f2c99",
       "kind": "asset",
       "lines": 3124,
-      "formal_target": "docs/architecture/contracts/examples/protocol/35-improvement-exposure.json",
+      "formal_target": "contracts/examples/protocol/35-improvement-exposure.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -403,7 +403,7 @@
       "sha256": "f335a9d849de0da4cd06fec18727aa05583da111bce516d48394a446cd6f0aaf",
       "kind": "asset",
       "lines": 876,
-      "formal_target": "docs/architecture/contracts/examples/protocol/36-local-install-restart.json",
+      "formal_target": "contracts/examples/protocol/36-local-install-restart.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -412,7 +412,7 @@
       "sha256": "72cce5ab45cbcc7735248a8439c847a3d844fa1c17fd49a042c096f71a918d51",
       "kind": "asset",
       "lines": 980,
-      "formal_target": "docs/architecture/contracts/examples/protocol/37-remote-instance-reopen.json",
+      "formal_target": "contracts/examples/protocol/37-remote-instance-reopen.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -421,7 +421,7 @@
       "sha256": "d5c3495126d042fa9f9104dde75952adfdd0df0632d797bdb241bee6dfe0783f",
       "kind": "asset",
       "lines": 993,
-      "formal_target": "docs/architecture/contracts/examples/protocol/38-revoked-approval-startup.json",
+      "formal_target": "contracts/examples/protocol/38-revoked-approval-startup.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -430,7 +430,7 @@
       "sha256": "1ccbe755d84beb706b5c4e125a3ebaa5a0b54b20daf47947b45da163d0975879",
       "kind": "asset",
       "lines": 418,
-      "formal_target": "docs/architecture/contracts/examples/protocol/39-evaluation-cancel.json",
+      "formal_target": "contracts/examples/protocol/39-evaluation-cancel.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -439,7 +439,7 @@
       "sha256": "7e6353a45f3e5fbc3ed700f25388c0352b6a28e9e710b352307c6af8b2abef5e",
       "kind": "asset",
       "lines": 385,
-      "formal_target": "docs/architecture/contracts/examples/protocol/40-content-lifecycle.json",
+      "formal_target": "contracts/examples/protocol/40-content-lifecycle.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -448,7 +448,7 @@
       "sha256": "0d750a82c7ffdc415f2f08000491e3a14ff20a93b207074c242019b0e39c9b6b",
       "kind": "asset",
       "lines": 280,
-      "formal_target": "docs/architecture/contracts/examples/protocol/41-memory-query-list.json",
+      "formal_target": "contracts/examples/protocol/41-memory-query-list.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -457,7 +457,7 @@
       "sha256": "d4a93a1ce996366d0b2c61d8664212d5e3d4f3be5cf02274471691acd40de67d",
       "kind": "asset",
       "lines": 201,
-      "formal_target": "docs/architecture/contracts/examples/protocol/42-memory-extraction.json",
+      "formal_target": "contracts/examples/protocol/42-memory-extraction.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -466,7 +466,7 @@
       "sha256": "09c20234968d7b709c0797a86f6c0003b4854f4ff9e5ac283b92485e5a179f9b",
       "kind": "asset",
       "lines": 231,
-      "formal_target": "docs/architecture/contracts/examples/protocol/43-memory-view-sync.json",
+      "formal_target": "contracts/examples/protocol/43-memory-view-sync.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -475,7 +475,7 @@
       "sha256": "10ba383171235d87f72827a6fe370205832e5c43491068c39ee283bbfd7f58d8",
       "kind": "asset",
       "lines": 287,
-      "formal_target": "docs/architecture/contracts/examples/protocol/44-surface-lifecycle.json",
+      "formal_target": "contracts/examples/protocol/44-surface-lifecycle.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -484,7 +484,7 @@
       "sha256": "df1a16d21c1999b26ea8c5cec60fc3e932c8be39020d904cd8617d6213c1858d",
       "kind": "asset",
       "lines": 140,
-      "formal_target": "docs/architecture/contracts/examples/protocol/45-application-delivery.json",
+      "formal_target": "contracts/examples/protocol/45-application-delivery.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -493,7 +493,7 @@
       "sha256": "3638e46d7bc02cb20627b94e33d821f11041f19547e51be67c25bafa0fd56c29",
       "kind": "asset",
       "lines": 348,
-      "formal_target": "docs/architecture/contracts/examples/protocol/46-content-restriction.json",
+      "formal_target": "contracts/examples/protocol/46-content-restriction.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -502,7 +502,7 @@
       "sha256": "192a72bb78b8e2cf361ae94de6053006c3b04ffab3a75b1a09ecf157e4ccdf29",
       "kind": "asset",
       "lines": 399,
-      "formal_target": "docs/architecture/contracts/examples/protocol/47-declarative-form.json",
+      "formal_target": "contracts/examples/protocol/47-declarative-form.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -511,7 +511,7 @@
       "sha256": "2f238e5e32845b2f4ac464afb3f24744812362857e6d612c79bb7a01c9895575",
       "kind": "asset",
       "lines": 448,
-      "formal_target": "docs/architecture/contracts/examples/protocol/48-memory-changed-pages.json",
+      "formal_target": "contracts/examples/protocol/48-memory-changed-pages.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -520,7 +520,7 @@
       "sha256": "c824185ca0fd25cd6b1f5b42b269d49318e2cc55fe2612c3daf26bb1d181a149",
       "kind": "asset",
       "lines": 218,
-      "formal_target": "docs/architecture/contracts/examples/protocol/49-source-projection.json",
+      "formal_target": "contracts/examples/protocol/49-source-projection.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -529,7 +529,7 @@
       "sha256": "95ba7f3f4a74989e36aacea5ee1ed7eadcd6aa897467109407765562d3077b7f",
       "kind": "asset",
       "lines": 802,
-      "formal_target": "docs/architecture/contracts/examples/protocol/50-online-use-settlement.json",
+      "formal_target": "contracts/examples/protocol/50-online-use-settlement.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -538,7 +538,7 @@
       "sha256": "68ed772add7bd811a0bd9bb73932f2c84e2770836830b79b71ddda76a824c2bb",
       "kind": "asset",
       "lines": 708,
-      "formal_target": "docs/architecture/contracts/examples/protocol/51-online-use-once-zero.json",
+      "formal_target": "contracts/examples/protocol/51-online-use-once-zero.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -547,7 +547,7 @@
       "sha256": "10f120570325498d6b1dbfe659350c23144bc64cdfccc9d2dbac1c62659aafbe",
       "kind": "asset",
       "lines": 701,
-      "formal_target": "docs/architecture/contracts/examples/protocol/52-confirmation-grant.json",
+      "formal_target": "contracts/examples/protocol/52-confirmation-grant.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -556,7 +556,7 @@
       "sha256": "4a6a25847eba082276e5401fffb4fbbb60f9b43e6410d14a58ff0d8c40f3551c",
       "kind": "asset",
       "lines": 1156,
-      "formal_target": "docs/architecture/contracts/examples/protocol/53-confirmation-release.json",
+      "formal_target": "contracts/examples/protocol/53-confirmation-release.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -565,7 +565,7 @@
       "sha256": "cda484f3c9d80d1f754270b59e82268dc1d93ca8ef000488bc8402b0d173afb3",
       "kind": "asset",
       "lines": 408,
-      "formal_target": "docs/architecture/contracts/examples/protocol/54-confirmation-acceptance.json",
+      "formal_target": "contracts/examples/protocol/54-confirmation-acceptance.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -574,7 +574,7 @@
       "sha256": "2193a6889c6ad630854047c9bc6f7edd727d8754f793e8dc6d5003bc44462f04",
       "kind": "asset",
       "lines": 1218,
-      "formal_target": "docs/architecture/contracts/examples/protocol/55-content-holder-control.json",
+      "formal_target": "contracts/examples/protocol/55-content-holder-control.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -583,7 +583,7 @@
       "sha256": "45d5fc139fc7e953305b63581bca7abd2d64a97e3f5b9318e3700c5fcbd6ffa4",
       "kind": "asset",
       "lines": 914,
-      "formal_target": "docs/architecture/contracts/examples/protocol/56-owner-collection-pages.json",
+      "formal_target": "contracts/examples/protocol/56-owner-collection-pages.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -592,7 +592,7 @@
       "sha256": "0684b7f82768ef7d505105c81cbd802bce1a43f6e2c309dc419eb0078fc02204",
       "kind": "asset",
       "lines": 352,
-      "formal_target": "docs/architecture/contracts/examples/protocol/57-collection-authorization-reset.json",
+      "formal_target": "contracts/examples/protocol/57-collection-authorization-reset.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -601,7 +601,7 @@
       "sha256": "a09368abf386c67c725818404577164da1b04db52a247b4a00106c6e7fc2af04",
       "kind": "asset",
       "lines": 915,
-      "formal_target": "docs/architecture/contracts/examples/protocol/58-lease-open-close-ledger.json",
+      "formal_target": "contracts/examples/protocol/58-lease-open-close-ledger.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -610,7 +610,7 @@
       "sha256": "8435d90b99ba5af725eb55376c894690f52583aa4c214d8fbc7d56940fc49512",
       "kind": "asset",
       "lines": 906,
-      "formal_target": "docs/architecture/contracts/examples/protocol/59-delegation-phase-projection.json",
+      "formal_target": "contracts/examples/protocol/59-delegation-phase-projection.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -619,7 +619,7 @@
       "sha256": "43666416d0bbfa9f6318be80b44a55d5fcbb870fc59e1d18ead8cc102445ad71",
       "kind": "asset",
       "lines": 764,
-      "formal_target": "docs/architecture/contracts/examples/protocol/60-task-billing-reconcile.json",
+      "formal_target": "contracts/examples/protocol/60-task-billing-reconcile.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -628,7 +628,7 @@
       "sha256": "dd3571a634696a0dd81975f5cde7f36430c47a02e227ee8e2158b47c0e1ec334",
       "kind": "asset",
       "lines": 1211,
-      "formal_target": "docs/architecture/contracts/examples/protocol/61-lease-final-correction.json",
+      "formal_target": "contracts/examples/protocol/61-lease-final-correction.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -637,7 +637,7 @@
       "sha256": "31c2502b352fec27da5e55b2da03ea15d9f10553eef66abec65bb3f9e65b58a9",
       "kind": "asset",
       "lines": 2145,
-      "formal_target": "docs/architecture/contracts/examples/protocol/65-approved-rollback.json",
+      "formal_target": "contracts/examples/protocol/65-approved-rollback.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -646,7 +646,7 @@
       "sha256": "79b2b8e62376b3572354f208179acb6eaf7d8887f956c35a4239fb44149d20ed",
       "kind": "markdown",
       "lines": 85,
-      "formal_target": "docs/architecture/contracts/examples/protocol/README.md",
+      "formal_target": "contracts/examples/protocol/README.md",
       "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
     },
     {
@@ -655,7 +655,7 @@
       "sha256": "e233fb2ba06030233dce8c67f17e6313bb94116888e760059d6b97b53f7d0f43",
       "kind": "asset",
       "lines": 5890,
-      "formal_target": "docs/architecture/contracts/examples/protocol/invalid-mutations.json",
+      "formal_target": "contracts/examples/protocol/invalid-mutations.json",
       "disposition": "正式字段约束提升至Schema后的反例期望同步；原源文件保留"
     },
     {
@@ -664,7 +664,7 @@
       "sha256": "d847cad870ce318806562ff066031b988ec0130e43eb91b9fd5a7df73b5cfac9",
       "kind": "asset",
       "lines": 107,
-      "formal_target": "docs/architecture/contracts/examples/succeeded-assessed.json",
+      "formal_target": "contracts/examples/succeeded-assessed.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -673,7 +673,7 @@
       "sha256": "1c844871b73206087e7e52db9073de9d897509d99a21a00593bf9d99ecf66317",
       "kind": "asset",
       "lines": 107,
-      "formal_target": "docs/architecture/contracts/examples/succeeded-user-accepted.json",
+      "formal_target": "contracts/examples/succeeded-user-accepted.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -682,7 +682,7 @@
       "sha256": "7825778d645a7e38160167ccd46e4e1558d962b87226137758160e134fbb512f",
       "kind": "asset",
       "lines": 73,
-      "formal_target": "docs/architecture/contracts/examples/succeeded-verified.json",
+      "formal_target": "contracts/examples/succeeded-verified.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -691,7 +691,7 @@
       "sha256": "88f460e05065ba3e96b2b56c06baf3c983369c3af93e4e82ffe0306750e7b31f",
       "kind": "markdown",
       "lines": 38,
-      "formal_target": "docs/architecture/contracts/examples/transport/README.md",
+      "formal_target": "contracts/examples/transport/README.md",
       "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
     },
     {
@@ -700,7 +700,7 @@
       "sha256": "603a3d2a492f27045e8cc073a912377d189f9d1e4f30a065d6333f8b7e63b92c",
       "kind": "asset",
       "lines": 2931,
-      "formal_target": "docs/architecture/contracts/examples/transport/invalid-mutations.json",
+      "formal_target": "contracts/examples/transport/invalid-mutations.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -709,7 +709,7 @@
       "sha256": "f788175157448aed3ea05f9ca09ddce6e55f5a0c45afd4344ef016779ca0894f",
       "kind": "asset",
       "lines": 55,
-      "formal_target": "docs/architecture/contracts/examples/transport/proofs.json",
+      "formal_target": "contracts/examples/transport/proofs.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -718,7 +718,7 @@
       "sha256": "dd64f04bcb7385ce60f3aa5c199f7cda2942ce845fc5718cd2edcaa4c0c042fa",
       "kind": "asset",
       "lines": 467,
-      "formal_target": "docs/architecture/contracts/examples/transport/request-sequences.json",
+      "formal_target": "contracts/examples/transport/request-sequences.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -727,7 +727,7 @@
       "sha256": "b4562617dc51439089a190e286ae44468861e8c34cec23770508c1c0fea2da21",
       "kind": "asset",
       "lines": 6150,
-      "formal_target": "docs/architecture/contracts/examples/transport/vectors.json",
+      "formal_target": "contracts/examples/transport/vectors.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -745,7 +745,7 @@
       "sha256": "fd1bbca9dfd9ab11047e703044c1f402c70c58d76344bea9bbf2c098c10f272d",
       "kind": "asset",
       "lines": 44,
-      "formal_target": "docs/architecture/contracts/harness.proto",
+      "formal_target": "contracts/harness.proto",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -772,7 +772,7 @@
       "sha256": "cbc5556e1dc3db88d7cf6c003ad48ddeb59876969e324d8b112e776d72520d39",
       "kind": "asset",
       "lines": 59,
-      "formal_target": "docs/architecture/contracts/schemas/brain-generation.schema.json",
+      "formal_target": "contracts/schemas/brain-generation.schema.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -781,7 +781,7 @@
       "sha256": "e7bae72df35d8f19748b9fb7a706f09750673da778c5c82abce6e17f0569eb7c",
       "kind": "asset",
       "lines": 10979,
-      "formal_target": "docs/architecture/contracts/schemas/methods.json",
+      "formal_target": "contracts/schemas/methods.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -790,7 +790,7 @@
       "sha256": "1d59d6fc2bbfd5a6aba7f6327cf3540b3526709f4e7939c8b186a1324674f5f9",
       "kind": "asset",
       "lines": 12588,
-      "formal_target": "docs/architecture/contracts/schemas/protocol.schema.json",
+      "formal_target": "contracts/schemas/protocol.schema.json",
       "disposition": "正式共同Schema补 input等待准确引用、InputAnswerContentRef、回答字段类型关联和验收专属请求约束；原源文件保留"
     },
     {
@@ -799,7 +799,7 @@
       "sha256": "5a2702a6fb8d5817a06c10a262d3e43ef682e5280a5e8733fc21b50e91073332",
       "kind": "asset",
       "lines": 337,
-      "formal_target": "docs/architecture/contracts/schemas/task-outcome.schema.json",
+      "formal_target": "contracts/schemas/task-outcome.schema.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -808,7 +808,7 @@
       "sha256": "d0abd3bd65080aef35e17ce2204ccd5028664c43b48ea7cef4fffafeff82dba4",
       "kind": "asset",
       "lines": 2009,
-      "formal_target": "docs/architecture/contracts/schemas/transport.schema.json",
+      "formal_target": "contracts/schemas/transport.schema.json",
       "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
     },
     {
@@ -1713,10 +1713,10 @@
     }
   ],
   "new_contract_assets": {
-    "schema": "docs/architecture/contracts/schemas/input-answer.schema.json",
-    "examples": "docs/architecture/contracts/examples/input-answers/README.md",
+    "schema": "contracts/schemas/input-answer.schema.json",
+    "examples": "contracts/examples/input-answers/README.md",
     "checker": "docs/architecture/validation/validate_input_answers.py",
     "scope": "独立应用读者反馈后补齐既有结构化回答编码与受信验收交付；不新增领域方法",
-    "discovery_example": "docs/architecture/contracts/examples/protocol/66-input-request-discovery.json"
+    "discovery_example": "contracts/examples/protocol/66-input-request-discovery.json"
   }
 }

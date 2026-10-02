@@ -4,7 +4,7 @@
 
 普通应用负责组织 Session、提交与控制 Task、读取 Content 和显示授权需求。Decision、Operation 及其子记录由内核推进，应用无需逐项创建 Snapshot、ModelCall、Attempt 或 Job。需要说明某次行动时，应用组合读取原对象，不维护另一份可独立修改的“整体运行状态”。
 
-本页定义默认应用／SDK 的组合设计，尚无可运行 SDK。下文动作名称是应用交互，不是新增 RPC；线协议仍使用[方法登记](contracts/schemas/methods.json)的 105 个领域方法及[公共调用契约](contracts/README.md)。Session 是应用内部对象；没有新增 Session、Turn、Run 或任意聊天队列协议。精确输入字段以同版 [Schema](contracts/schemas/protocol.schema.json)为准。
+本页定义默认应用／SDK 的组合设计，尚无可运行 SDK。下文动作名称是应用交互，不是新增 RPC；线协议仍使用[方法登记](../../contracts/schemas/methods.json)的 105 个领域方法及[公共调用契约](contracts/README.md)。Session 是应用内部对象；没有新增 Session、Turn、Run 或任意聊天队列协议。精确输入字段以同版 [Schema](../../contracts/schemas/protocol.schema.json)为准。
 
 <a id="entry-points"></a>
 ## 1. 调用者需要哪些入口
@@ -92,6 +92,6 @@ Session 消息、原命令和待交付关系在应用自己的本地事务共同
 
 ## 6. 验收与计量入口
 
-主验收从上表应用动作开始，读取原 Task／Result、输入及外部目标证据，观察实际出站次数和费用归属。沿用[HAR-04／05／11](validation/harness-scenarios.md)、交互 II-20～31 及[协议序列](contracts/examples/protocol/README.md)，不为六组对象新增六套测试专用 CRUD。
+主验收从上表应用动作开始，读取原 Task／Result、输入及外部目标证据，观察实际出站次数和费用归属。沿用[HAR-04／05／11](validation/harness-scenarios.md)、交互 II-20～31 及[协议序列](../../contracts/examples/protocol/README.md)，不为六组对象新增六套测试专用 CRUD。
 
 [四类数据流程](request-data-flows.md)固定直接回答、读后回答、冷恢复、保存后读回的对象与持久阶段。静态检查可以核对文档、方法名称和字段；队列竞争、真实持久性、出站次数及性能仍是待运行验收，未由本文证明。

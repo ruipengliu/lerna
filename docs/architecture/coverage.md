@@ -10,7 +10,7 @@
 | --- | --- | --- | --- |
 | 消息→原提交→Task | 应用消息／完整Command／outbox同域提交；Task接纳后补原关联 | [应用提交](application-workflow.md#original-submission)、[会话存储](interaction/implementation.md) | [CM-03／05](validation/core-model-scenarios.md#cm-05) |
 | Task→Decision | Orchestrator固定输入、decision_id、预留与派发；Brain独立接纳 | [固定输入](brain/implementation.md#snapshot-reconstruction)、[A路径](request-data-flows.md#scenario-a) | [CM-08](validation/core-model-scenarios.md#cm-08)、Brain BI向量 |
-| Decision→模型出口 | Brain prepared与send_started分开；实际来源与当前资格固定 | [Brain实现](brain/implementation.md) | [静态生成例证](contracts/examples/brain/README.md)、真实发送BI向量 |
+| Decision→模型出口 | Brain prepared与send_started分开；实际来源与当前资格固定 | [Brain实现](brain/implementation.md) | [静态生成例证](../../contracts/examples/brain/README.md)、真实发送BI向量 |
 | Proposal→当前任务裁决 | Orchestrator一次消费，条件变化先修订并废弃余部 | [提案采纳](orchestrator/implementation.md#proposal-consumption) | [条件变更故障](validation/fault-experiments.md#implementation-clarity) |
 | 准入意图→原操作 | Orchestrator意图／预留／派发job同域；Executor接纳／回执／job同域 | [B路径](request-data-flows.md#scenario-b)、[执行实现](execution/implementation.md) | [CM-09](validation/core-model-scenarios.md#cm-09)、执行EX向量 |
 | 操作→目标效果→Task | Executor核对原Attempt和目标事实；Orchestrator按原修订归并 | [效果恢复](walkthrough.md#write-recovery)、[D路径](request-data-flows.md#scenario-d) | [CM-04](validation/core-model-scenarios.md#cm-04)、[故障实验](validation/fault-experiments.md) |
@@ -25,68 +25,68 @@
 
 ## 2. 原设计正文的覆盖
 
-源材料保持原样。各源设计全文的正式对应位置如下；原审查流水留作历史，不把旧检查数抄入当前结果。
+来源路径与摘要保留在 source-map 和 Git 历史。各源设计全文的正式对应位置如下；原审查流水留作历史，不把旧检查数抄入当前结果。
 
 [机器来源映射](source-map.json)固定 185 项原材料的摘要及当前维护位置，其中四份既有正式正文另记录原 Git 修订，迁移后仍能核对；54 条行为要求、逐项追踪及 gRPC 封装检查的补充来源也单列。结构化回答的新资产记录读者修订的范围，不冒充原草稿已有规则。
 
 | 来源 | 正式维护位置 | 处理 |
 | --- | --- | --- |
-| [README.md](.draft/README.md) | [README.md](README.md) | 总览重写为完整任务入口；详细规则由正式专题维护 |
-| [application-workflow.md](.draft/application-workflow.md) | [application-workflow.md](application-workflow.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [brain/README.md](.draft/brain/README.md) | [brain/README.md](brain/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [brain/decision-paths.md](.draft/brain/decision-paths.md) | [brain/decision-paths.md](brain/decision-paths.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [brain/implementation.md](.draft/brain/implementation.md) | [brain/implementation.md](brain/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [collaboration/README.md](.draft/collaboration/README.md) | [collaboration/README.md](collaboration/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [collaboration/implementation.md](.draft/collaboration/implementation.md) | [collaboration/implementation.md](collaboration/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [contracts/README.md](.draft/contracts/README.md) | [contracts/README.md](contracts/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [contracts/examples/README.md](.draft/contracts/examples/README.md) | [contracts/examples/README.md](contracts/examples/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [contracts/examples/brain/README.md](.draft/contracts/examples/brain/README.md) | [contracts/examples/brain/README.md](contracts/examples/brain/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [contracts/examples/protocol/README.md](.draft/contracts/examples/protocol/README.md) | [contracts/examples/protocol/README.md](contracts/examples/protocol/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [contracts/examples/transport/README.md](.draft/contracts/examples/transport/README.md) | [contracts/examples/transport/README.md](contracts/examples/transport/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [contracts/grpc.md](.draft/contracts/grpc.md) | [contracts/grpc.md](contracts/grpc.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [contracts/methods.md](.draft/contracts/methods.md) | [contracts/methods.md](contracts/methods.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [contracts/protocol.md](.draft/contracts/protocol.md) | [contracts/protocol.md](contracts/protocol.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [contracts/transport.md](.draft/contracts/transport.md) | [contracts/transport.md](contracts/transport.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [core-data-model.md](.draft/core-data-model.md) | [core-data-model.md](core-data-model.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [decisions.md](.draft/decisions.md) | [decisions.md](decisions.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [deployment-production.md](.draft/deployment-production.md) | [deployment-production.md](deployment-production.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [deployment.md](.draft/deployment.md) | [deployment.md](deployment.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [engineering.md](.draft/engineering.md) | [engineering.md](engineering.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [evaluation/README.md](.draft/evaluation/README.md) | [evaluation/README.md](evaluation/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [evaluation/implementation.md](.draft/evaluation/implementation.md) | [evaluation/implementation.md](evaluation/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [execution/README.md](.draft/execution/README.md) | [execution/README.md](execution/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [execution/implementation.md](.draft/execution/implementation.md) | [execution/implementation.md](execution/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [execution/programmatic-tools.md](.draft/execution/programmatic-tools.md) | [execution/programmatic-tools.md](execution/programmatic-tools.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [extensions/README.md](.draft/extensions/README.md) | [extensions/README.md](extensions/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [extensions/implementation.md](.draft/extensions/implementation.md) | [extensions/implementation.md](extensions/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [extensions/progressive-discovery.md](.draft/extensions/progressive-discovery.md) | [extensions/progressive-discovery.md](extensions/progressive-discovery.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [goals.md](.draft/goals.md) | [goals.md](goals.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [interaction/README.md](.draft/interaction/README.md) | [interaction/README.md](interaction/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [interaction/implementation.md](.draft/interaction/implementation.md) | [interaction/implementation.md](interaction/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [interaction/session-and-task.md](.draft/interaction/session-and-task.md) | [interaction/session-and-task.md](interaction/session-and-task.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [memory/README.md](.draft/memory/README.md) | [memory/README.md](memory/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [memory/implementation.md](.draft/memory/implementation.md) | [memory/implementation.md](memory/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [memory/optimization-plan.md](.draft/memory/optimization-plan.md) | [memory/optimization-plan.md](memory/optimization-plan.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [memory/validation.md](.draft/memory/validation.md) | [memory/validation.md](memory/validation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [orchestrator/README.md](.draft/orchestrator/README.md) | [orchestrator/README.md](orchestrator/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [orchestrator/access-paths.md](.draft/orchestrator/access-paths.md) | [orchestrator/access-paths.md](orchestrator/access-paths.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [orchestrator/implementation.md](.draft/orchestrator/implementation.md) | [orchestrator/implementation.md](orchestrator/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [orchestrator/scheduled-triggers.md](.draft/orchestrator/scheduled-triggers.md) | [orchestrator/scheduled-triggers.md](orchestrator/scheduled-triggers.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [orchestrator/verification.md](.draft/orchestrator/verification.md) | [orchestrator/verification.md](orchestrator/verification.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [reliable-work.md](.draft/reliable-work.md) | [reliable-work.md](reliable-work.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [request-data-flows.md](.draft/request-data-flows.md) | [request-data-flows.md](request-data-flows.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [review.md](.draft/review.md) | [review.md](review.md) | 原编写流水保留为历史；当前检查结果独立重新登记 |
-| [security/README.md](.draft/security/README.md) | [security/README.md](security/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [security/implementation.md](.draft/security/implementation.md) | [security/implementation.md](security/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [storage-and-middleware.md](.draft/storage-and-middleware.md) | [storage-and-middleware.md](storage-and-middleware.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [technical-overview.md](.draft/technical-overview.md) | [technical-overview.md](technical-overview.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [uml-models.md](.draft/uml-models.md) | [uml-models.md](uml-models.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [validation/README.md](.draft/validation/README.md) | [validation/README.md](validation/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [validation/core-model-scenarios.md](.draft/validation/core-model-scenarios.md) | [validation/core-model-scenarios.md](validation/core-model-scenarios.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [validation/fault-experiments.md](.draft/validation/fault-experiments.md) | [validation/fault-experiments.md](validation/fault-experiments.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [validation/harness-scenarios.md](.draft/validation/harness-scenarios.md) | [validation/harness-scenarios.md](validation/harness-scenarios.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [validation/optimization-evidence.md](.draft/validation/optimization-evidence.md) | [validation/optimization-evidence.md](validation/optimization-evidence.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
-| [walkthrough.md](.draft/walkthrough.md) | [walkthrough.md](walkthrough.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `README.md` | [README.md](README.md) | 总览重写为完整任务入口；详细规则由正式专题维护 |
+| `application-workflow.md` | [application-workflow.md](application-workflow.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `brain/README.md` | [brain/README.md](brain/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `brain/decision-paths.md` | [brain/decision-paths.md](brain/decision-paths.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `brain/implementation.md` | [brain/implementation.md](brain/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `collaboration/README.md` | [collaboration/README.md](collaboration/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `collaboration/implementation.md` | [collaboration/implementation.md](collaboration/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `contracts/README.md` | [contracts/README.md](contracts/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `contracts/examples/README.md` | [contracts/examples/README.md](../../contracts/examples/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `contracts/examples/brain/README.md` | [contracts/examples/brain/README.md](../../contracts/examples/brain/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `contracts/examples/protocol/README.md` | [contracts/examples/protocol/README.md](../../contracts/examples/protocol/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `contracts/examples/transport/README.md` | [contracts/examples/transport/README.md](../../contracts/examples/transport/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `contracts/grpc.md` | [contracts/grpc.md](contracts/grpc.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `contracts/methods.md` | [contracts/methods.md](contracts/methods.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `contracts/protocol.md` | [contracts/protocol.md](contracts/protocol.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `contracts/transport.md` | [contracts/transport.md](contracts/transport.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `core-data-model.md` | [core-data-model.md](core-data-model.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `decisions.md` | [decisions.md](decisions.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `deployment-production.md` | [deployment-production.md](deployment-production.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `deployment.md` | [deployment.md](deployment.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `engineering.md` | [engineering.md](engineering.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `evaluation/README.md` | [evaluation/README.md](evaluation/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `evaluation/implementation.md` | [evaluation/implementation.md](evaluation/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `execution/README.md` | [execution/README.md](execution/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `execution/implementation.md` | [execution/implementation.md](execution/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `execution/programmatic-tools.md` | [execution/programmatic-tools.md](execution/programmatic-tools.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `extensions/README.md` | [extensions/README.md](extensions/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `extensions/implementation.md` | [extensions/implementation.md](extensions/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `extensions/progressive-discovery.md` | [extensions/progressive-discovery.md](extensions/progressive-discovery.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `goals.md` | [goals.md](goals.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `interaction/README.md` | [interaction/README.md](interaction/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `interaction/implementation.md` | [interaction/implementation.md](interaction/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `interaction/session-and-task.md` | [interaction/session-and-task.md](interaction/session-and-task.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `memory/README.md` | [memory/README.md](memory/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `memory/implementation.md` | [memory/implementation.md](memory/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `memory/optimization-plan.md` | [memory/optimization-plan.md](memory/optimization-plan.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `memory/validation.md` | [memory/validation.md](memory/validation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `orchestrator/README.md` | [orchestrator/README.md](orchestrator/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `orchestrator/access-paths.md` | [orchestrator/access-paths.md](orchestrator/access-paths.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `orchestrator/implementation.md` | [orchestrator/implementation.md](orchestrator/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `orchestrator/scheduled-triggers.md` | [orchestrator/scheduled-triggers.md](orchestrator/scheduled-triggers.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `orchestrator/verification.md` | [orchestrator/verification.md](orchestrator/verification.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `reliable-work.md` | [reliable-work.md](reliable-work.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `request-data-flows.md` | [request-data-flows.md](request-data-flows.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `review.md` | [review.md](review.md) | 原编写流水保留为历史；当前检查结果独立重新登记 |
+| `security/README.md` | [security/README.md](security/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `security/implementation.md` | [security/implementation.md](security/implementation.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `storage-and-middleware.md` | [storage-and-middleware.md](storage-and-middleware.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `technical-overview.md` | [technical-overview.md](technical-overview.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `uml-models.md` | [uml-models.md](uml-models.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `validation/README.md` | [validation/README.md](validation/README.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `validation/core-model-scenarios.md` | [validation/core-model-scenarios.md](validation/core-model-scenarios.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `validation/fault-experiments.md` | [validation/fault-experiments.md](validation/fault-experiments.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `validation/harness-scenarios.md` | [validation/harness-scenarios.md](validation/harness-scenarios.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `validation/optimization-evidence.md` | [validation/optimization-evidence.md](validation/optimization-evidence.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
+| `walkthrough.md` | [walkthrough.md](walkthrough.md) | 完整迁入并按章节重组；字段、事务、恢复及验收保留 |
 
 ## 3. 机器资产与既有正文
 

@@ -1,0 +1,13 @@
+-- Read the application password without embedding it in a versioned SQL file.
+\getenv app_password LERNA_PG_APP_PASSWORD
+CREATE ROLE lerna_app LOGIN PASSWORD :'app_password'
+    NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+CREATE DATABASE lerna OWNER postgres;
+GRANT CONNECT ON DATABASE lerna TO lerna_app;
+\connect lerna
+REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+GRANT USAGE ON SCHEMA public TO lerna_app;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO lerna_app;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public
+    GRANT USAGE, SELECT ON SEQUENCES TO lerna_app;

@@ -369,7 +369,7 @@ sequenceDiagram
 <a id="generated-content"></a>
 ### 4.1 新正文保存与准确引用
 
-模型生成报告时，正文还没有内容 owner 分配的版本和摘要，不能要求它直接返回准确 ContentRef。默认适配器使用独立的 [brain-generation.schema.json](../contracts/schemas/brain-generation.schema.json)：`schema_version=brain-generation/1`、有限 `contents[]` 和 `proposal` 模板。
+模型生成报告时，正文还没有内容 owner 分配的版本和摘要，不能要求它直接返回准确 ContentRef。默认适配器使用独立的 [brain-generation.schema.json](../../../contracts/schemas/brain-generation.schema.json)：`schema_version=brain-generation/1`、有限 `contents[]` 和 `proposal` 模板。
 
 `contents` 每项只有本轮唯一 `local_id`、`media_type` 与 `body`；文本正文使用 UTF-8，JSON 正文在引用回填后按共同 JCS 编码。模板和 JSON 正文用 `{"$local_ref":"report"}` 引用同轮新正文，已有引用仍使用完整 ContentRef。局部引用只在内部有效，不能经 brain.get 交付，也不能出现在最终能力参数或 Proposal 中。
 

@@ -489,4 +489,4 @@ approval_lease 对改善发布同样先依据原暴露记录和 formal_quarantin
 运行报告固定环境、全部样本、费用、原命令、证据摘要和异常注入位置。
 评测 JobStore 适配器须运行[公共故障用例](../reliable-work.md#validation)，将 V-I05／09／16／22／23 作为环境身份、暴露及分母断言；按[观测约定](../reliable-work.md#observability)分别记录领取／回写事务、分页扫描和实际环境调用成本，不能用逻辑样本数或 job 数代替物理尝试量。
 本页不提供实际成功率、隔离通过或容量达标结论。
-[回退记录序列](../contracts/examples/protocol/65-approved-rollback.json)和[定向静态校验](../validation/validate_release_recovery.py)检查独立批准、原回退重放及单计划唯一 Run；环境隔离、并发竞争和实际 Renderer 行为仍须上述运行实验。
+[回退记录序列](../../../contracts/examples/protocol/65-approved-rollback.json)和[定向静态校验](../validation/validate_release_recovery.py)检查独立批准、原回退重放及单计划唯一 Run；环境隔离、并发竞争和实际 Renderer 行为仍须上述运行实验。

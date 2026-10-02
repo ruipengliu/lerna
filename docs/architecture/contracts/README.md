@@ -14,7 +14,7 @@
 
 一个字段的业务含义归所属模块，协议编码格式的类型和必填性归同版 Schema；二者冲突时该草案组合不能发布，不允许实现自行挑选更宽松的一方。安装和发布清单同时固定这些文档、资产和递归引用的版本及摘要，避免正文更新改变未决命令的解释。
 
-实现一个方法时，先读本页共同语义，再从[方法索引](methods.md)找到输入／输出定义及所属模块；准确字段查[Schema](schemas/protocol.schema.json)，种类、目标、错误与恢复动作查[方法登记](schemas/methods.json)，跨调用关系查[协议序列](examples/protocol/README.md)。[协议编码格式说明](protocol.md)定义这些资产的组合方式；[validation](../validation/README.md)区分静态校验和运行验收，模块内部机制仍在所属实现篇。
+实现一个方法时，先读本页共同语义，再从[方法索引](methods.md)找到输入／输出定义及所属模块；准确字段查[Schema](../../../contracts/schemas/protocol.schema.json)，种类、目标、错误与恢复动作查[方法登记](../../../contracts/schemas/methods.json)，跨调用关系查[协议序列](../../../contracts/examples/protocol/README.md)。[协议编码格式说明](protocol.md)定义这些资产的组合方式；[validation](../validation/README.md)区分静态校验和运行验收，模块内部机制仍在所属实现篇。
 
 ## 1. 从持久命令而非连接恢复
 
@@ -141,4 +141,4 @@ Change 提示客户端重新读取当前对象，不携带执行许可或成功�
 
 最小跨端用例为同命令重复、同键不同参数、提交后断线、回应转交丢失、旧修订竞争、事件乱序／游标过期、权限撤回及接纳过载。每例同时检查发起方 job、处理方原回执和领域状态，不能只检查网络返回。
 
-[协议编码格式与关联用例](protocol.md)验证已冻结方法的精确结构、回执阶段、原命令与业务对象关联；[完成判断示例](examples/README.md)另验证完成依据与未知效果的状态投影。两组检查分别报告覆盖，未纳入 profile 的方法不能借其他方法通过宣称符合。SDK、认证、原子提交、异构互操作及运行故障仍按[系统验收](../validation/README.md)取得独立证据。
+[协议编码格式与关联用例](protocol.md)验证已冻结方法的精确结构、回执阶段、原命令与业务对象关联；[完成判断示例](../../../contracts/examples/README.md)另验证完成依据与未知效果的状态投影。两组检查分别报告覆盖，未纳入 profile 的方法不能借其他方法通过宣称符合。SDK、认证、原子提交、异构互操作及运行故障仍按[系统验收](../validation/README.md)取得独立证据。

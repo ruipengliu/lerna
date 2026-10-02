@@ -1030,7 +1030,7 @@
             <mxPoint as="offset" x="-53.0" y="-36.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="task" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Task" schemaRef="Task" tooltip="">
+        <mxCell id="task" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Task" schemaRef="Task" tooltip="">
           <mxGeometry as="geometry" x="760" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="task-head" value="" style="fillColor=#fcf0e9;strokeColor=none;" vertex="1" parent="task" semanticKind="header">
@@ -1192,7 +1192,7 @@
         <mxCell id="reservation-attr-2" value="unit: String" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="reservation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="168" width="368" height="30" />
         </mxCell>
-        <mxCell id="result" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Result" schemaRef="Result" tooltip="">
+        <mxCell id="result" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Result" schemaRef="Result" tooltip="">
           <mxGeometry as="geometry" x="120" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="result-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="result" semanticKind="header">
@@ -1557,7 +1557,7 @@
             <mxPoint as="offset" x="-53.0" y="8.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="request" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/DecisionRequest" schemaRef="DecisionRequest" tooltip="">
+        <mxCell id="request" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/DecisionRequest" schemaRef="DecisionRequest" tooltip="">
           <mxGeometry as="geometry" x="120" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="request-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="request" semanticKind="header">
@@ -1587,7 +1587,7 @@
         <mxCell id="request-attr-4" value="model_profile_ref: ComponentRef" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=17;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="request" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="context" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/BrainContext" schemaRef="BrainContext" tooltip="">
+        <mxCell id="context" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/BrainContext" schemaRef="BrainContext" tooltip="">
           <mxGeometry as="geometry" x="120" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="context-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="context" semanticKind="header">
@@ -1617,7 +1617,7 @@
         <mxCell id="context-attr-4" value="input_manifest: ContentRef[0..100]" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="context" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="decision" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/DecisionRecord" schemaRef="DecisionRecord" tooltip="">
+        <mxCell id="decision" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/DecisionRecord" schemaRef="DecisionRecord" tooltip="">
           <mxGeometry as="geometry" x="760" y="280" width="400" height="232" />
         </mxCell>
         <mxCell id="decision-head" value="" style="fillColor=#fcf0e9;strokeColor=none;" vertex="1" parent="decision" semanticKind="header">
@@ -1644,7 +1644,7 @@
         <mxCell id="decision-attr-3" value="status: DecisionStatus" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="decision" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="200" width="368" height="30" />
         </mxCell>
-        <mxCell id="call" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/ModelCall" schemaRef="ModelCall" tooltip="">
+        <mxCell id="call" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/ModelCall" schemaRef="ModelCall" tooltip="">
           <mxGeometry as="geometry" x="760" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="call-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="call" semanticKind="header">
@@ -1674,7 +1674,7 @@
         <mxCell id="call-attr-4" value="usage_final: Boolean" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="call" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="proposal" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Proposal" schemaRef="Proposal" tooltip="">
+        <mxCell id="proposal" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Proposal" schemaRef="Proposal" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="232" />
         </mxCell>
         <mxCell id="proposal-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="proposal" semanticKind="header">
@@ -1970,7 +1970,7 @@
         <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;" edge="1" parent="1" source="operation" target="attempt" semanticKind="association" sourceDoc="execution/implementation.md#data-flow" tooltip="接纳未启动时可为 0；每次实际请求独立记录，原业务键不变。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="resource" target="lease" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/RuntimeResourceState" tooltip="此边建模当前投影 lease，不包括历史 resource_leases；过期按 expires_at 另行判断。">
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="resource" target="lease" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/RuntimeResourceState" tooltip="此边建模当前投影 lease，不包括历史 resource_leases；过期按 expires_at 另行判断。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="capability" target="binding" semanticKind="association" sourceDoc="execution/README.md" tooltip="">
@@ -2104,7 +2104,7 @@
             <mxPoint as="offset" x="8.0" y="-14.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="capability" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Capability" schemaRef="Capability" tooltip="">
+        <mxCell id="capability" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Capability" schemaRef="Capability" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="capability-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="capability" semanticKind="header">
@@ -2134,7 +2134,7 @@
         <mxCell id="capability-attr-4" value="effect_class: EffectClass" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="capability" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="binding" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Binding" schemaRef="Binding" tooltip="">
+        <mxCell id="binding" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Binding" schemaRef="Binding" tooltip="">
           <mxGeometry as="geometry" x="760" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="binding-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="binding" semanticKind="header">
@@ -2164,7 +2164,7 @@
         <mxCell id="binding-attr-4" value="driver_ref: ComponentRef" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="binding" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="operation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Operation" schemaRef="Operation" tooltip="">
+        <mxCell id="operation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Operation" schemaRef="Operation" tooltip="">
           <mxGeometry as="geometry" x="760" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="operation-head" value="" style="fillColor=#fcf0e9;strokeColor=none;" vertex="1" parent="operation" semanticKind="header">
@@ -2194,7 +2194,7 @@
         <mxCell id="operation-attr-4" value="may_apply_later: Boolean | unknown" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="operation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="attempt" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Attempt" schemaRef="Attempt" tooltip="">
+        <mxCell id="attempt" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Attempt" schemaRef="Attempt" tooltip="">
           <mxGeometry as="geometry" x="760" y="1144" width="400" height="232" />
         </mxCell>
         <mxCell id="attempt-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="attempt" semanticKind="header">
@@ -2221,7 +2221,7 @@
         <mxCell id="attempt-attr-3" value="target_key: String?" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="attempt" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="200" width="368" height="30" />
         </mxCell>
-        <mxCell id="gate" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/TaskGate" schemaRef="TaskGate" tooltip="">
+        <mxCell id="gate" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/TaskGate" schemaRef="TaskGate" tooltip="">
           <mxGeometry as="geometry" x="1400" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="gate-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="gate" semanticKind="header">
@@ -2251,7 +2251,7 @@
         <mxCell id="gate-attr-4" value="control: running | paused" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="gate" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="resource" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/RuntimeResourceState" schemaRef="RuntimeResourceState" tooltip="">
+        <mxCell id="resource" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/RuntimeResourceState" schemaRef="RuntimeResourceState" tooltip="">
           <mxGeometry as="geometry" x="120" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="resource-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="resource" semanticKind="header">
@@ -2281,7 +2281,7 @@
         <mxCell id="resource-attr-4" value="inflight_operation_ids: ID[0..100]" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="resource" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="lease" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/ResourceLease" schemaRef="ResourceLease" tooltip="">
+        <mxCell id="lease" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/ResourceLease" schemaRef="ResourceLease" tooltip="">
           <mxGeometry as="geometry" x="120" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="lease-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="lease" semanticKind="header">
@@ -2439,7 +2439,7 @@
             <mxPoint as="offset" x="8.0" y="-14.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="memory_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#2e5aa8;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="contracts/schemas/methods.json" schemaRef="" tooltip="">
+        <mxCell id="memory_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#2e5aa8;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="../../contracts/schemas/methods.json" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="120" y="280" width="400" height="200" />
         </mxCell>
         <mxCell id="memory_api-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="memory_api" semanticKind="text">
@@ -2457,7 +2457,7 @@
         <mxCell id="memory_api-method-2" value="memory.extract" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=17;fontColor=#2e5aa8;fontStyle=0;" vertex="1" parent="memory_api" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="134" width="368" height="24" />
         </mxCell>
-        <mxCell id="content_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#2e5aa8;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="contracts/schemas/methods.json" schemaRef="" tooltip="">
+        <mxCell id="content_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#2e5aa8;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="../../contracts/schemas/methods.json" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="760" y="280" width="400" height="200" />
         </mxCell>
         <mxCell id="content_api-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="content_api" semanticKind="text">
@@ -2535,7 +2535,7 @@
         <mxCell id="workers-role" value="内部职责" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=16;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="workers" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="148" width="368" height="24" />
         </mxCell>
-        <mxCell id="grant_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="contracts/schemas/methods.json" schemaRef="" tooltip="">
+        <mxCell id="grant_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="../../contracts/schemas/methods.json" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="120" y="1144" width="400" height="176" />
         </mxCell>
         <mxCell id="grant_api-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="grant_api" semanticKind="text">
@@ -2573,13 +2573,13 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="memory" target="content_ref" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json" tooltip="可跨内容 owner；不代表本地外键、字节仍存在或当前可读。">
+        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="memory" target="content_ref" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json" tooltip="可跨内容 owner；不代表本地外键、字节仍存在或当前可读。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="candidate" target="memory" semanticKind="association" sourceDoc="memory/implementation.md" tooltip="decision=saved 时指向唯一发布的 memory_id/revision；pending 或 rejected 时不产生正式记忆。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="memory" target="source" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json" tooltip="SourceBinding 是引用值；数组长度不证明其反向唯一归属。">
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="memory" target="source" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json" tooltip="SourceBinding 是引用值；数组长度不证明其反向唯一归属。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="content_control" target="content_ref" semanticKind="association" sourceDoc="memory/implementation.md" tooltip="content_controls 以精确内容版本为键；引用可以在完整控制记录不可取时继续保留。">
@@ -2591,7 +2591,7 @@
         <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="memory_control" target="memory" semanticKind="association" sourceDoc="memory/README.md#memory-contracts" tooltip="按 owner_id、memory_id、revision 对应；deleted 只保留控制／墓碑，不构造 deleted 的 MemoryRecord。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.12121212121212122;exitPerimeter=0;entryX=0.14;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="candidate" target="content_ref" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json" tooltip="候选取消／拒绝不撤销已独立保存的正式记忆；引用本身不授予保存资格。">
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.12121212121212122;exitPerimeter=0;entryX=0.14;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="candidate" target="content_ref" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json" tooltip="候选取消／拒绝不撤销已独立保存的正式记忆；引用本身不授予保存资格。">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="104" y="1176" />
@@ -2600,7 +2600,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.86;exitY=0.0;exitPerimeter=0;entryX=0.26;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="source" target="content_ref" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json" tooltip="源引用可跨 owner；来源关系须无环。">
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.86;exitY=0.0;exitPerimeter=0;entryX=0.26;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="source" target="content_ref" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json" tooltip="源引用可跨 owner；来源关系须无环。">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="464" y="576" />
@@ -2737,7 +2737,7 @@
             <mxPoint as="offset" x="8.0" y="-14.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="memory" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="MemoryRecord" tooltip="">
+        <mxCell id="memory" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="MemoryRecord" tooltip="">
           <mxGeometry as="geometry" x="760" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="memory-head" value="" style="fillColor=#fcf0e9;strokeColor=none;" vertex="1" parent="memory" semanticKind="header">
@@ -2767,7 +2767,7 @@
         <mxCell id="memory-attr-4" value="state: Enum" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="memory" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="memory_control" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="MemoryControl" tooltip="">
+        <mxCell id="memory_control" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="MemoryControl" tooltip="">
           <mxGeometry as="geometry" x="1400" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="memory_control-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="memory_control" semanticKind="header">
@@ -2797,7 +2797,7 @@
         <mxCell id="memory_control-attr-4" value="cleanup_ref: ObjectRef [0..1]" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="memory_control" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="candidate" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="ExtractionCandidate" tooltip="">
+        <mxCell id="candidate" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="ExtractionCandidate" tooltip="">
           <mxGeometry as="geometry" x="760" y="1144" width="400" height="264" />
         </mxCell>
         <mxCell id="candidate-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="candidate" semanticKind="header">
@@ -2827,7 +2827,7 @@
         <mxCell id="candidate-attr-4" value="memory_ref: ObjectRef [0..1]" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="candidate" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="content_ref" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="ContentRef" tooltip="">
+        <mxCell id="content_ref" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="ContentRef" tooltip="">
           <mxGeometry as="geometry" x="760" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="content_ref-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="content_ref" semanticKind="header">
@@ -2857,7 +2857,7 @@
         <mxCell id="content_ref-attr-4" value="byte_length: Integer" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="content_ref" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="source" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="SourceBinding" tooltip="">
+        <mxCell id="source" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="SourceBinding" tooltip="">
           <mxGeometry as="geometry" x="120" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="source-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="source" semanticKind="header">
@@ -2887,7 +2887,7 @@
         <mxCell id="source-attr-4" value="policy_ref: ObjectRef" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="source" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="content_control" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="ContentControl" tooltip="">
+        <mxCell id="content_control" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="ContentControl" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="content_control-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="content_control" semanticKind="header">
@@ -2917,7 +2917,7 @@
         <mxCell id="content_control-attr-4" value="cleanup_ref: ObjectRef [0..1]" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="content_control" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="copy" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="ContentCopy" tooltip="">
+        <mxCell id="copy" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="ContentCopy" tooltip="">
           <mxGeometry as="geometry" x="120" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="copy-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="copy" semanticKind="header">
@@ -3098,7 +3098,7 @@
             <mxPoint as="offset" x="-53.0" y="-36.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="contracts/schemas/methods.json" schemaRef="" tooltip="">
+        <mxCell id="api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="../../contracts/schemas/methods.json" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="200" />
         </mxCell>
         <mxCell id="api-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="api" semanticKind="text">
@@ -3246,13 +3246,13 @@
         <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;" edge="1" parent="1" source="settlement" target="use" semanticKind="association" sourceDoc="security/implementation.md#data-flow" tooltip="decision=allowed 时恰有 1 份结算；decision=denied 时为 0。结算不改写原 UseReceipt。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.26;exitY=1.0;exitPerimeter=0;entryX=0.26;entryY=0.0;entryPerimeter=0;" edge="1" parent="1" source="lease" target="grant" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json" tooltip="租约从这些许可预留额度；不因到期自动返还未知用量。">
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.26;exitY=1.0;exitPerimeter=0;entryX=0.26;entryY=0.0;entryPerimeter=0;" edge="1" parent="1" source="lease" target="grant" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json" tooltip="租约从这些许可预留额度；不因到期自动返还未知用量。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=0.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="grant" target="confirmation" semanticKind="association" sourceDoc="security/implementation.md#data-flow" tooltip="仅 consumer_method=grant.issue 的确认可产生此 Grant；确认和签发同 owner、同事务消费。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=0.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="use" target="grant" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json" tooltip="一个 UseReceipt 可依赖多条 Grant；同 owner 全部必要许可一起裁决，占用不做局部成功。">
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=0.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="use" target="grant" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json" tooltip="一个 UseReceipt 可依赖多条 Grant；同 owner 全部必要许可一起裁决，占用不做局部成功。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=0.0;entryY=0.4827586206896552;entryPerimeter=0;" edge="1" parent="1" source="lease" target="endpoint" semanticKind="association" sourceDoc="security/implementation.md#data-flow" tooltip="绑定签发时实例资格；端点当前实例改变不把旧租约迁给新实例。">
@@ -3385,7 +3385,7 @@
             <mxPoint as="offset" x="-35.0" y="8.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="confirmation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="ConfirmationRecord" tooltip="">
+        <mxCell id="confirmation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="ConfirmationRecord" tooltip="">
           <mxGeometry as="geometry" x="1400" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="confirmation-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="confirmation" semanticKind="header">
@@ -3415,7 +3415,7 @@
         <mxCell id="confirmation-attr-4" value="state: Enum" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="confirmation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="grant" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="GrantRecord" tooltip="">
+        <mxCell id="grant" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="GrantRecord" tooltip="">
           <mxGeometry as="geometry" x="760" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="grant-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="grant" semanticKind="header">
@@ -3445,7 +3445,7 @@
         <mxCell id="grant-attr-4" value="state: active | revoked" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="grant" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="use" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="UseReceipt" tooltip="">
+        <mxCell id="use" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="UseReceipt" tooltip="">
           <mxGeometry as="geometry" x="120" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="use-head" value="" style="fillColor=#fcf0e9;strokeColor=none;" vertex="1" parent="use" semanticKind="header">
@@ -3475,7 +3475,7 @@
         <mxCell id="use-attr-4" value="start_before: Timestamp" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="use" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="settlement" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="UseSettlementRecord" tooltip="">
+        <mxCell id="settlement" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="UseSettlementRecord" tooltip="">
           <mxGeometry as="geometry" x="120" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="settlement-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="settlement" semanticKind="header">
@@ -3505,7 +3505,7 @@
         <mxCell id="settlement-attr-4" value="state: open | final" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="settlement" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="lease" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="OfflineLeaseRecord" tooltip="">
+        <mxCell id="lease" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="OfflineLeaseRecord" tooltip="">
           <mxGeometry as="geometry" x="760" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="lease-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="lease" semanticKind="header">
@@ -3535,7 +3535,7 @@
         <mxCell id="lease-attr-4" value="state: Enum" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="lease" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="endpoint" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="EndpointRecord" tooltip="">
+        <mxCell id="endpoint" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="EndpointRecord" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="232" />
         </mxCell>
         <mxCell id="endpoint-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="endpoint" semanticKind="header">
@@ -3710,7 +3710,7 @@
             <mxPoint as="offset" x="-62.0" y="-36.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="surface_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#2e5aa8;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="contracts/schemas/methods.json" schemaRef="" tooltip="">
+        <mxCell id="surface_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#2e5aa8;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="../../contracts/schemas/methods.json" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="200" />
         </mxCell>
         <mxCell id="surface_api-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="surface_api" semanticKind="text">
@@ -3728,7 +3728,7 @@
         <mxCell id="surface_api-method-2" value="interaction.surface_update" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=17;fontColor=#2e5aa8;fontStyle=0;" vertex="1" parent="surface_api" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="134" width="368" height="24" />
         </mxCell>
-        <mxCell id="input_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#2e5aa8;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="contracts/schemas/methods.json" schemaRef="" tooltip="">
+        <mxCell id="input_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#2e5aa8;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="../../contracts/schemas/methods.json" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="120" y="280" width="400" height="200" />
         </mxCell>
         <mxCell id="input_api-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="input_api" semanticKind="text">
@@ -3818,7 +3818,7 @@
         <mxCell id="trusted-role" value="" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=16;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="trusted" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="140" width="368" height="24" />
         </mxCell>
-        <mxCell id="owner_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="contracts/schemas/methods.json" schemaRef="" tooltip="">
+        <mxCell id="owner_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="../../contracts/schemas/methods.json" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="760" y="1144" width="400" height="200" />
         </mxCell>
         <mxCell id="owner_api-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="owner_api" semanticKind="text">
@@ -3859,7 +3859,7 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="surface" target="snapshot" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json" tooltip="快照是值投影；不由字段嵌入推导独立持久身份、唯一反向归属或级联生命周期。">
+        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="surface" target="snapshot" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json" tooltip="快照是值投影；不由字段嵌入推导独立持久身份、唯一反向归属或级联生命周期。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;" edge="1" parent="1" source="surface" target="presentation" semanticKind="association" sourceDoc="interaction/implementation.md" tooltip="(surface_id, endpoint_id) 唯一；没有记录时使用 closed 的初始意图。">
@@ -3868,10 +3868,10 @@
         <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="submission" target="request" semanticKind="association" sourceDoc="interaction/implementation.md" tooltip="多份回答可竞争同一原请求；实际业务 owner 最多消费一个有效回答，交互接纳不等于消费。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="snapshot" target="request" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json" tooltip="可跨 owner；必须覆盖所有 input/action 引用；同请求可在多个页面展示。">
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="snapshot" target="request" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json" tooltip="可跨 owner；必须覆盖所有 input/action 引用；同请求可在多个页面展示。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="surface" target="submission" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json" tooltip="清理 Surface 不删除未结目标映射与转交责任；此为原身份引用，非级联删除。">
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="surface" target="submission" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json" tooltip="清理 Surface 不删除未结目标映射与转交责任；此为原身份引用，非级联删除。">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=0.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="surface" target="event" semanticKind="association" sourceDoc="interaction/implementation.md" tooltip="仅 Surface.task_ref 缺省时可接纳 application_event；固定 surface_revision 与 app_binding。">
@@ -3999,7 +3999,7 @@
             <mxPoint as="offset" x="8.0" y="-14.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="surface" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="Surface" tooltip="">
+        <mxCell id="surface" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="Surface" tooltip="">
           <mxGeometry as="geometry" x="760" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="surface-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="surface" semanticKind="header">
@@ -4029,7 +4029,7 @@
         <mxCell id="surface-attr-4" value="revision: Revision" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="surface" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="snapshot" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="SurfaceSnapshot" tooltip="">
+        <mxCell id="snapshot" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="SurfaceSnapshot" tooltip="">
           <mxGeometry as="geometry" x="760" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="snapshot-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="snapshot" semanticKind="header">
@@ -4089,7 +4089,7 @@
         <mxCell id="presentation-attr-4" value="seen_revision: Integer ≥ 0" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="presentation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="request" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="InputRequestView" tooltip="">
+        <mxCell id="request" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="InputRequestView" tooltip="">
           <mxGeometry as="geometry" x="120" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="request-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="request" semanticKind="header">
@@ -4119,7 +4119,7 @@
         <mxCell id="request-attr-4" value="state: Enum" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="request" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="submission" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="InputSubmission" tooltip="">
+        <mxCell id="submission" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="InputSubmission" tooltip="">
           <mxGeometry as="geometry" x="120" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="submission-head" value="" style="fillColor=#fcf0e9;strokeColor=none;" vertex="1" parent="submission" semanticKind="header">
@@ -4149,7 +4149,7 @@
         <mxCell id="submission-attr-4" value="state: Enum" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="submission" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="event" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="ApplicationEventSubmission" tooltip="">
+        <mxCell id="event" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="ApplicationEventSubmission" tooltip="">
           <mxGeometry as="geometry" x="1400" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="event-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="event" semanticKind="header">
@@ -4179,7 +4179,7 @@
         <mxCell id="event-attr-4" value="state: Enum" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="event" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="confirmation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json" schemaRef="ConfirmationRecord" tooltip="">
+        <mxCell id="confirmation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json" schemaRef="ConfirmationRecord" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="confirmation-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="confirmation" semanticKind="header">
@@ -4352,7 +4352,7 @@
             <mxPoint as="offset" x="-44.0" y="-36.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="contracts/schemas/methods.json" schemaRef="" tooltip="">
+        <mxCell id="api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="../../contracts/schemas/methods.json" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="200" />
         </mxCell>
         <mxCell id="api-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="api" semanticKind="text">
@@ -4498,7 +4498,7 @@
         <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;" edge="1" parent="1" source="delegation" target="allocation" semanticKind="association" sourceDoc="collaboration/implementation.md#data-flow" tooltip="仅展示已分配给协作委派的额度；一般预算分配不在此关系范围">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.72;entryPerimeter=0;" edge="1" parent="1" source="delegation" target="binding" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Delegation" tooltip="">
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.72;entryPerimeter=0;" edge="1" parent="1" source="delegation" target="binding" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Delegation" tooltip="">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="536" y="840" />
@@ -4644,7 +4644,7 @@
             <mxPoint as="offset" x="8.0" y="-14.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="task" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Task" schemaRef="Task" tooltip="">
+        <mxCell id="task" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Task" schemaRef="Task" tooltip="">
           <mxGeometry as="geometry" x="760" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="task-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="task" semanticKind="header">
@@ -4674,7 +4674,7 @@
         <mxCell id="task-attr-4" value="open_effects: ID[0..100]" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="task" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="delegation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Delegation" schemaRef="Delegation" tooltip="">
+        <mxCell id="delegation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Delegation" schemaRef="Delegation" tooltip="">
           <mxGeometry as="geometry" x="760" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="delegation-head" value="" style="fillColor=#fcf0e9;strokeColor=none;" vertex="1" parent="delegation" semanticKind="header">
@@ -4704,7 +4704,7 @@
         <mxCell id="delegation-attr-4" value="effects_pending: Boolean" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="delegation" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="binding" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/AgentBinding" schemaRef="AgentBinding" tooltip="">
+        <mxCell id="binding" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/AgentBinding" schemaRef="AgentBinding" tooltip="">
           <mxGeometry as="geometry" x="120" y="712" width="400" height="200" />
         </mxCell>
         <mxCell id="binding-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="binding" semanticKind="header">
@@ -4809,7 +4809,7 @@
         <mxCell id="external-attr-3" value="remote_task_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="external" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="200" width="368" height="30" />
         </mxCell>
-        <mxCell id="allocation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/RuntimeBudgetAllocation" schemaRef="RuntimeBudgetAllocation" tooltip="">
+        <mxCell id="allocation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/RuntimeBudgetAllocation" schemaRef="RuntimeBudgetAllocation" tooltip="">
           <mxGeometry as="geometry" x="760" y="1144" width="400" height="264" />
         </mxCell>
         <mxCell id="allocation-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="allocation" semanticKind="header">
@@ -4978,7 +4978,7 @@
             <mxPoint as="offset" x="-53.0" y="-36.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="contracts/schemas/methods.json" schemaRef="" tooltip="">
+        <mxCell id="api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="../../contracts/schemas/methods.json" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="120" y="280" width="400" height="200" />
         </mxCell>
         <mxCell id="api-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="api" semanticKind="text">
@@ -5080,7 +5080,7 @@
         <mxCell id="environment-role" value="所需边界" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=16;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="environment" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="140" width="368" height="24" />
         </mxCell>
-        <mxCell id="extensions" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="contracts/schemas/methods.json" schemaRef="" tooltip="">
+        <mxCell id="extensions" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="../../contracts/schemas/methods.json" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="120" y="1144" width="400" height="200" />
         </mxCell>
         <mxCell id="extensions-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="extensions" semanticKind="text">
@@ -5121,10 +5121,10 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;" edge="1" parent="1" source="plan" target="run" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/EvaluationRunRecord" tooltip="">
+        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;" edge="1" parent="1" source="plan" target="run" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/EvaluationRunRecord" tooltip="">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="plan" target="report" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/EvaluationReport" tooltip="">
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="plan" target="report" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/EvaluationReport" tooltip="">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="eligibility" target="exposure" semanticKind="association" sourceDoc="evaluation/README.md#4-不可变计划与可更新运行记录" tooltip="按来源组及发生时点判断；正常封存后反馈不使原报告失效">
@@ -5136,10 +5136,10 @@
         <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=1.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=0.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="plan" target="eligibility" semanticKind="association" sourceDoc="evaluation/implementation.md#data-flow" tooltip="plan_id 唯一；文档未规定每种用途的计划都必须具有此内部记录">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="exposure" target="report" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/FeedbackExposure" tooltip="暴露可先于报告；本边不代表受影响报告的完整集合">
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="exposure" target="report" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/FeedbackExposure" tooltip="暴露可先于报告；本边不代表受影响报告的完整集合">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="report" target="approval" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/ReleaseApproval" tooltip="批准时同步核原暴露门禁；PlanEligibility 仅作可滞后投影">
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="report" target="approval" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/ReleaseApproval" tooltip="批准时同步核原暴露门禁；PlanEligibility 仅作可滞后投影">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="eyebrow" value="HARNESS  /  UML ATLAS  /  18" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=14;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="1" semanticKind="text">
@@ -5256,7 +5256,7 @@
             <mxPoint as="offset" x="-44.0" y="-36.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="plan" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/EvaluationPlan" schemaRef="EvaluationPlan" tooltip="">
+        <mxCell id="plan" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/EvaluationPlan" schemaRef="EvaluationPlan" tooltip="">
           <mxGeometry as="geometry" x="760" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="plan-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="plan" semanticKind="header">
@@ -5286,7 +5286,7 @@
         <mxCell id="plan-attr-4" value="partition_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="plan" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="run" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/EvaluationRunRecord" schemaRef="EvaluationRunRecord" tooltip="">
+        <mxCell id="run" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/EvaluationRunRecord" schemaRef="EvaluationRunRecord" tooltip="">
           <mxGeometry as="geometry" x="760" y="1144" width="400" height="264" />
         </mxCell>
         <mxCell id="run-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="run" semanticKind="header">
@@ -5316,7 +5316,7 @@
         <mxCell id="run-attr-4" value="cleanup_state: pending | cleaned | residual" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=12;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="run" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="report" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/EvaluationReport" schemaRef="EvaluationReport" tooltip="">
+        <mxCell id="report" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/EvaluationReport" schemaRef="EvaluationReport" tooltip="">
           <mxGeometry as="geometry" x="760" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="report-head" value="" style="fillColor=#fcf0e9;strokeColor=none;" vertex="1" parent="report" semanticKind="header">
@@ -5376,7 +5376,7 @@
         <mxCell id="eligibility-attr-4" value="reason: String" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="eligibility" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="exposure" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/FeedbackExposure" schemaRef="FeedbackExposure" tooltip="">
+        <mxCell id="exposure" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/FeedbackExposure" schemaRef="FeedbackExposure" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="exposure-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="exposure" semanticKind="header">
@@ -5406,7 +5406,7 @@
         <mxCell id="exposure-attr-4" value="report_id: ID [0..1]" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="exposure" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="approval" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/ReleaseApproval" schemaRef="ReleaseApproval" tooltip="">
+        <mxCell id="approval" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/ReleaseApproval" schemaRef="ReleaseApproval" tooltip="">
           <mxGeometry as="geometry" x="120" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="approval-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="approval" semanticKind="header">
@@ -5436,7 +5436,7 @@
         <mxCell id="approval-attr-4" value="rollback_approval_ref: ObjectRef?" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="approval" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="activation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Activation" schemaRef="Activation" tooltip="">
+        <mxCell id="activation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Activation" schemaRef="Activation" tooltip="">
           <mxGeometry as="geometry" x="120" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="activation-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="activation" semanticKind="header">
@@ -5592,7 +5592,7 @@
             <mxPoint as="offset" x="-53.0" y="-36.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="contracts/schemas/methods.json" schemaRef="" tooltip="">
+        <mxCell id="api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="../../contracts/schemas/methods.json" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="200" />
         </mxCell>
         <mxCell id="api-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="api" semanticKind="text">
@@ -5694,7 +5694,7 @@
         <mxCell id="content-role" value="所需边界" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=16;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="content" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="140" width="368" height="24" />
         </mxCell>
-        <mxCell id="approval_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="contracts/schemas/methods.json" schemaRef="" tooltip="">
+        <mxCell id="approval_api" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="interface" sourceDoc="../../contracts/schemas/methods.json" schemaRef="" tooltip="">
           <mxGeometry as="geometry" x="1400" y="1144" width="400" height="208" />
         </mxCell>
         <mxCell id="approval_api-kind" value="«interface»" style="text;html=0;whiteSpace=wrap;overflow=hidden;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacing=0;fontFamily=Geist, PingFang SC, Microsoft YaHei;fontSize=17;fontColor=#4f5d75;fontStyle=0;" vertex="1" parent="approval_api" semanticKind="text">
@@ -5732,16 +5732,16 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="lock" target="activation" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Activation" tooltip="">
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0.0;exitPerimeter=0;entryX=0.5;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="lock" target="activation" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Activation" tooltip="">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.38;exitY=0.0;exitPerimeter=0;entryX=0.38;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="lock" target="activation" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Activation" tooltip="首次安装 old_lock_id=null">
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.38;exitY=0.0;exitPerimeter=0;entryX=0.38;entryY=1.0;entryPerimeter=0;" edge="1" parent="1" source="lock" target="activation" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Activation" tooltip="首次安装 old_lock_id=null">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1.0;exitPerimeter=0;entryX=0.5;entryY=0.0;entryPerimeter=0;" edge="1" parent="1" source="lock" target="binding" semanticKind="association" sourceDoc="extensions/implementation.md#4-管理账本与索引" tooltip="每 target_id / port 仅一个当前 generation">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.4827586206896552;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="manifest" target="lock" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/InstallLock" tooltip="">
+        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.4827586206896552;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="manifest" target="lock" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/InstallLock" tooltip="">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="1176" y="824" />
@@ -5749,10 +5749,10 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="approval" target="activation" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Activation" tooltip="跨 owner；当前有效性由 Evaluation 裁决，历史引用不授予新启动资格">
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.48484848484848486;entryPerimeter=0;" edge="1" parent="1" source="approval" target="activation" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Activation" tooltip="跨 owner；当前有效性由 Evaluation 裁决，历史引用不授予新启动资格">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.4827586206896552;entryPerimeter=0;" edge="1" parent="1" source="activation" target="readiness" semanticKind="association" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Activation" tooltip="仅当前查询投影；phase=active 必须存在且为本实例 ready">
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=8;jettySize=0;html=0;strokeColor=#4f5d75;strokeWidth=1.7;endArrow=none;endFill=0;endSize=12;jumpStyle=arc;jumpSize=8;exitX=0.0;exitY=0.48484848484848486;exitPerimeter=0;entryX=1.0;entryY=0.4827586206896552;entryPerimeter=0;" edge="1" parent="1" source="activation" target="readiness" semanticKind="association" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Activation" tooltip="仅当前查询投影；phase=active 必须存在且为本实例 ready">
           <mxGeometry as="geometry" relative="1">
             <Array as="points">
               <mxPoint x="536" y="408" />
@@ -5882,7 +5882,7 @@
             <mxPoint as="offset" x="-44.0" y="-36.0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="manifest" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/PackageManifest" schemaRef="PackageManifest" tooltip="">
+        <mxCell id="manifest" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/PackageManifest" schemaRef="PackageManifest" tooltip="">
           <mxGeometry as="geometry" x="1400" y="712" width="400" height="232" />
         </mxCell>
         <mxCell id="manifest-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="manifest" semanticKind="header">
@@ -5909,7 +5909,7 @@
         <mxCell id="manifest-attr-3" value="kind: plugin | skill | agent_config" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=15;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="manifest" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="200" width="368" height="30" />
         </mxCell>
-        <mxCell id="lock" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/InstallLock" schemaRef="InstallLock" tooltip="">
+        <mxCell id="lock" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/InstallLock" schemaRef="InstallLock" tooltip="">
           <mxGeometry as="geometry" x="760" y="712" width="400" height="264" />
         </mxCell>
         <mxCell id="lock-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="lock" semanticKind="header">
@@ -5939,7 +5939,7 @@
         <mxCell id="lock-attr-4" value="reference_revision: Revision" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="lock" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="232" width="368" height="30" />
         </mxCell>
-        <mxCell id="activation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/Activation" schemaRef="Activation" tooltip="">
+        <mxCell id="activation" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#eb6c36;strokeWidth=1.8;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/Activation" schemaRef="Activation" tooltip="">
           <mxGeometry as="geometry" x="760" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="activation-head" value="" style="fillColor=#fcf0e9;strokeColor=none;" vertex="1" parent="activation" semanticKind="header">
@@ -5996,7 +5996,7 @@
         <mxCell id="binding-attr-3" value="lock_id: ID" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=18;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="binding" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="200" width="368" height="30" />
         </mxCell>
-        <mxCell id="readiness" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/InstanceReadiness" schemaRef="InstanceReadiness" tooltip="">
+        <mxCell id="readiness" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/InstanceReadiness" schemaRef="InstanceReadiness" tooltip="">
           <mxGeometry as="geometry" x="120" y="280" width="400" height="232" />
         </mxCell>
         <mxCell id="readiness-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="readiness" semanticKind="header">
@@ -6023,7 +6023,7 @@
         <mxCell id="readiness-attr-3" value="startup_evidence: StartupEvidence" style="text;html=0;whiteSpace=nowrap;overflow=hidden;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=Geist Mono, Menlo, PingFang SC;fontSize=16;fontColor=#2d3142;fontStyle=0;" vertex="1" parent="readiness" semanticKind="text">
           <mxGeometry as="geometry" x="16" y="200" width="368" height="30" />
         </mxCell>
-        <mxCell id="approval" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="contracts/schemas/protocol.schema.json#/$defs/ReleaseApproval" schemaRef="ReleaseApproval" tooltip="">
+        <mxCell id="approval" value="" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#ffffff;strokeColor=#aeb7c3;strokeWidth=1.3;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1" semanticKind="class" sourceDoc="../../contracts/schemas/protocol.schema.json#/$defs/ReleaseApproval" schemaRef="ReleaseApproval" tooltip="">
           <mxGeometry as="geometry" x="1400" y="280" width="400" height="264" />
         </mxCell>
         <mxCell id="approval-head" value="" style="fillColor=#f1f3f5;strokeColor=none;" vertex="1" parent="approval" semanticKind="header">

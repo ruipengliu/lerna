@@ -1,0 +1,15 @@
+{
+  "role": "all",
+  "instance_id": "dev-single",
+  "admin_addr": "127.0.0.1:18080",
+  "root": "../..",
+  "database": {
+    "driver": "sqlite",
+    "path": "dev/.state/single/database/harness.db",
+    "max_connections": 1
+  },
+  "content_root": "dev/.state/single/content",
+  "managed_root": "dev/.state/single/managed-files",
+  "probe_timeout": "2s",
+  "shutdown_timeout": "5s"
+}

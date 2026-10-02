@@ -1,0 +1,15 @@
+{
+  "role": "application",
+  "instance_id": "dev-application",
+  "admin_addr": "127.0.0.1:18081",
+  "root": "../..",
+  "database": {
+    "driver": "postgres",
+    "url_env": "LERNA_DATABASE_URL",
+    "max_connections": 2
+  },
+  "content_root": "dev/.state/multiprocess/content",
+  "managed_root": "dev/.state/multiprocess/managed-files",
+  "probe_timeout": "2s",
+  "shutdown_timeout": "5s"
+}

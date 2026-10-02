@@ -543,4 +543,4 @@ flowchart TD
 | EX-30 | 最小可信写回执已保存而大结果 Content 保存失败；另测试完整读取缺媒体及合法完整保存 | 写效果不因正文缺口被删除，完整读取不伪报 applied；缺保存用途不落禁止正文，合法引用先耐久再与原事实／jobs 共同提交 |
 | EX-31 | 分页／下载／轮询达到请求、字节或费用上限；正例原声明内有限完成 | 每个实际请求沿原身份计量；达到上限停止新增请求、保留覆盖／unknown 与恢复条件，合法序列通过，无隐含业务动作 |
 
-[目录序列](../contracts/examples/protocol/21-capability-catalog.json)和[资源序列](../contracts/examples/protocol/22-resource-lifecycle.json)覆盖精确字段、绑定、占用修订和接管关联；签名、门禁原子性、设备效果与磁盘故障须通过以上运行实验。上述补充复用既有 EXE-01～03、SEC-01／02、UI-01／02 和全成本要求，不改变共享实验分母或公共协议。
+[目录序列](../../../contracts/examples/protocol/21-capability-catalog.json)和[资源序列](../../../contracts/examples/protocol/22-resource-lifecycle.json)覆盖精确字段、绑定、占用修订和接管关联；签名、门禁原子性、设备效果与磁盘故障须通过以上运行实验。上述补充复用既有 EXE-01～03、SEC-01／02、UI-01／02 和全成本要求，不改变共享实验分母或公共协议。

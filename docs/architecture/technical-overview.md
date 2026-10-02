@@ -135,7 +135,7 @@ Brain、Memory、Executor 以及 Agent、UI 和生命周期适配器可以改变
 | 许可已使用，为何零费用也不能再用一次 | Grant 的 UseReceipt 与 UseSettlement | 一次性授权的消费与数值费用结算分别记录 | [授权结算](security/implementation.md) |
 | 用户点过按钮，业务是否已经消费 | Session 的输入关联；Surface、InputSubmission、InputRequest 与业务 ConfirmationRecord | 呈现、转交、准确预览和本人确认分别由实际负责方保存 | [输入交接](interaction/implementation.md) |
 
-这些记录由裁决问题推导出来。需要独立身份、并发修改、权限、保留规则或后续责任时保留相应记录，由所属接口统一管理；普通应用无需逐项 CRUD。完整分类查[对象归属清单](core-data-model.md)，准确字段查所属模块及 [Schema](contracts/schemas/protocol.schema.json)。
+这些记录由裁决问题推导出来。需要独立身份、并发修改、权限、保留规则或后续责任时保留相应记录，由所属接口统一管理；普通应用无需逐项 CRUD。完整分类查[对象归属清单](core-data-model.md)，准确字段查所属模块及 [Schema](../../contracts/schemas/protocol.schema.json)。
 
 ### 4.2 互斥状态与独立维度分别表达
 

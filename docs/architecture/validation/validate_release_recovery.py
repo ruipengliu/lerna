@@ -8,7 +8,7 @@ from protocol.governance_rules import confirmation_intent_hash
 from protocol.schema import validate
 from protocol.traces import check_trace
 
-FIXTURES = Path(__file__).resolve().parents[1] / 'contracts/examples/protocol'
+FIXTURES = Path(__file__).resolve().parents[3] / 'contracts/examples/protocol'
 
 
 def refresh_confirmation(trace, command):

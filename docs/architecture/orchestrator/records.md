@@ -71,7 +71,7 @@ flowchart TB
 <a id="records"></a>
 ## 对外字段与方法
 
-字段编码、必填性和数组上限以[同版 Schema](../contracts/schemas/protocol.schema.json)为准。本节说明字段对应的业务责任；表中的内部 OperationIntent 不增加公共 Invoke 字段。Task 当前 requirements 为 0–100 项，Result 的条件结果和成果引用各为 1–100 项；这些响应上限不截断内部历史或未结全集。
+字段编码、必填性和数组上限以[同版 Schema](../../../contracts/schemas/protocol.schema.json)为准。本节说明字段对应的业务责任；表中的内部 OperationIntent 不增加公共 Invoke 字段。Task 当前 requirements 为 0–100 项，Result 的条件结果和成果引用各为 1–100 项；这些响应上限不截断内部历史或未结全集。
 
 下表集中定义业务字段；大对象均使用获准 ContentRef。
 

@@ -4,9 +4,9 @@
 
 第一项工程交付是一条能重启恢复的报告任务：应用保存并提交原目标，内核形成报告，执行端写入指定受管目录，独立读回确认结果。任一步丢失答复或进程退出后，都能查明原任务、原操作和下一责任。先把这条链连到真实数据库和文件，再逐项接入真实模型、浏览器、多进程与生产平台。
 
-工程采用单仓、初期一个 Go module、显式 SQL 及独立 PostgreSQL／SQLite 适配，浏览器采用 React／TypeScript／Vite。模型接火山方舟 OpenAI 兼容接口，搜索接独立豆包搜索。公司平台承载生产；开发先用受限身份和本地装配，预留相同的发现、身份、健康和排空接口。
+工程采用单仓、初期一个 Go module、显式 SQL 及独立 PostgreSQL／SQLite 适配，浏览器采用 React／TypeScript／Vite。模型接火山方舟 OpenAI 兼容接口，搜索接独立豆包搜索。公司平台承载生产；开发默认采用本机多进程、Docker PostgreSQL 与受限身份，预留相同的发现、身份、健康和排空接口。
 
-本篇定义代码组织、实现顺序和退出证据，不估算工时。仓库当前交付设计与静态契约，下面的源码目录、运行入口和运行测试均待实现。业务仍按[核心对象](core-data-model.md)和九模块裁决，runtime／SDK 组合既有端口，领域字段与恢复语义归各专题及 [contracts](contracts/README.md)。静态检查与数据库、驱动及生产运行分别取证。
+本篇定义代码组织、实现顺序和退出证据，不估算工时。仓库现已建立下述工程骨架、开发角色入口与静态契约检查。骨架只提供真实依赖探测和生命周期，业务接纳保持关闭；领域实现、严格 Go/TS 线协议、数据库恢复与生产测试仍待相应切片交付。业务仍按[核心对象](core-data-model.md)和九模块裁决，runtime／SDK 组合既有端口，领域字段与恢复语义归各专题及 [contracts](contracts/README.md)。静态检查与数据库、驱动及生产运行分别取证。
 
 ## 1. 从可运行闭环推进到生产
 
@@ -49,7 +49,7 @@ flowchart TB
 | 前端校验与测试 | Ajv 2020-12、Vitest、React Testing Library、Playwright | SDK 运行时校验与 Go 使用同版 Schema；入站严格解析须在 JSON.parse 丢失重复键前处理。浏览器测试覆盖刷新、断连、确认过期和本地存储失败 |
 | 登录 | 开发固定测试身份；生产 OIDC 公司身份适配器 | 开发无需 IdP 服务，测试身份仅对受限本机入口生效；生产禁止使用 dev 身份。认证结果映射主体和租户，业务权限仍按原 Grant/Use 裁决 |
 | 观测 | Go slog + OpenTelemetry | 开发先输出结构化日志和有限诊断，生产配置公司已有收集端。Span、日志及指标不替代业务账本或最终计费 |
-| 开发装配 | 单体默认；本机进程脚本和可选 Compose | Compose 只提供本地依赖及便捷启动。无需 Kubernetes、Helm、服务网格或本地全套监控集群 |
+| 开发装配 | 本机多进程默认；Docker Compose 提供 PostgreSQL；SQLite 单体为显式入口 | 本机脚本管理网关、应用、两个 worker、执行宿主和 Vite。无需 Kubernetes、Helm、服务网格或本地全套监控集群 |
 | 生产装配 | 公司自有平台及第 3 节的宿主接口 | 公司平台实现与故障验证独立安排，项目不建设公司调度／扩缩控制面 |
 
 显式 SQL 的主要代价是维护两种方言。领域规则与可观察行为共用，行锁、单写队列、迁移及领取查询分别实现；不能用一套 SQLite 测试推定 PostgreSQL 并发正确，也不让 ORM 或驱动自动重跑可能已提交的业务闭包。
@@ -83,7 +83,7 @@ flowchart TB
 <a id="layout"></a>
 ## 4. 代码目录及依赖方向
 
-以下是未来实现仓库的布局，不表示本次已创建源码工程。现有文档与机器契约迁入实现仓库时保留一份维护源；当前 [contracts](contracts/README.md) 继续权威，迁移时统一更新引用和生成入口，不能在新旧目录各维护一份 Schema。
+以下目录已在当前仓库根建立；`harness/` 表示仓库根，不另嵌套一层。机器资产的唯一维护源为根 [contracts](../../contracts/README.md)，共同调用规范正文保留在 [架构契约](contracts/README.md)。角色入口和依赖探测已可运行，其余目录只固定实现边界；运行命令与实际范围见 [本地开发手册](../../dev/README.md)。
 
 ```text
 harness/
@@ -137,7 +137,7 @@ harness/
 │   ├── quality/               # 冻结任务、完整样本清单与质量报告
 │   ├── capacity/              # 初始负载、逐级规模及恢复积压
 │   └── fixtures/              # 回放、有限模拟源和受限测试身份
-├── dev/                       # 单体、多进程、可选 Compose 与本地配置
+├── dev/                       # 默认多进程、Docker PG、显式单体与本地配置
 ├── packaging/                 # 制品、摘要、安装锁定清单及平台启动示例
 ├── tools/                     # 契约生成与验证、构建和报告工具
 └── docs/                      # 架构、ADR、接入说明与运行手册
@@ -179,7 +179,7 @@ flowchart TB
 <a id="minimum-profile"></a>
 ### 最小装配与复杂度预算
 
-第一条用户链沿[默认应用工作流](application-workflow.md)完成“Session 保存输入关联 → Task 固定目标 → Brain 推进 Decision 并形成 Content → Executor 推进获准 Operation、保存文件并独立读回 → Task 提交结果 → Session 展示原引用”，每次使用都核对适用 Grant。没有对话入口的 API 可以直接提交 Task。先交付单进程、一个本地事务范围、受信静态组件和一个文件驱动，再按下表增加真实模型、Web、多进程和生产证据；阶段一的两种数据库及恢复退出要求仍保留。
+第一条用户链沿[默认应用工作流](application-workflow.md)完成“Session 保存输入关联 → Task 固定目标 → Brain 推进 Decision 并形成 Content → Executor 推进获准 Operation、保存文件并独立读回 → Task 提交结果 → Session 展示原引用”，每次使用都核对适用 Grant。没有对话入口的 API 可以直接提交 Task。领域闭环先在单进程、一个本地事务范围、受信静态组件和一个文件驱动上取证，再按下表增加真实模型、Web、多进程和生产证据；日常工程入口已默认启动多进程骨架，两者分别记录；阶段一的两种数据库及恢复退出要求仍保留。
 
 逻辑对象表是[责任清单](core-data-model.md#storage-boundaries)，DDL 依据共同写入、保留期限、访问及索引选择，不为每个名词单建表。同次接纳的业务、回执、预算和 Raise 共同提交，结果与 Finish 尽量共同提交；可重建 UI／上下文投影不再拥有一套权威状态。原正文只保存一份准确 Content，诊断清单放原 Decision／Operation，不复制完整请求到多份日志。流式片段在有限内存缓冲展示，正式事实提交后才发对应状态提示。
 

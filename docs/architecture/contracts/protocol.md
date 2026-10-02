@@ -1,6 +1,6 @@
 # 协议字段、方法登记与恢复一致性
 
-[共同调用语义](README.md) · [传输配置](transport.md) · [方法查阅](methods.md) · [序列用例](examples/protocol/README.md)
+[共同调用语义](README.md) · [传输配置](transport.md) · [方法查阅](methods.md) · [序列用例](../../../contracts/examples/protocol/README.md)
 
 本页与机器资产定义未发布的 `harness/1`、`full-harness-draft-2` 配置。当前 105 个领域方法包括预算关闭、输入读取、费用结算、可信确认，以及 Operation／Activation／Grant 集合恢复所需的三个枚举查询；当前登记无 reserved 方法。发现、WSS 双向交接、认证证明与内容字节另由传输配置规定，服务间 RPC 另由[gRPC 绑定](grpc.md)规定，不能把领域方法数量当作完整服务互操作证据。
 
@@ -10,15 +10,15 @@
 
 | 资产 | 权威内容 | 实际检查 |
 | --- | --- | --- |
-| [protocol.schema.json](schemas/protocol.schema.json) | 共同对象、全部领域输入输出、正文类型与序列容器 | JSON Schema 2020-12、日期格式及封闭业务对象 |
-| [input-answer.schema.json](schemas/input-answer.schema.json)及[回答字节例证](examples/input-answers/README.md) | `input-answer/1` 回答正文、结构化字段和验收的完整原命令 | [回答校验](../validation/validate_input_answers.py)检查实际字节、引用、当前请求字段及给定确认关联 |
-| [methods.json](schemas/methods.json) | 方法种类、输入输出映射、目标、条件修订、回执阶段、错误与恢复动作 | 按具体方法分派，不接受同名异义或自由字段 |
-| [transport.schema.json](schemas/transport.schema.json) | 发现、WSS 帧、投递、回复、上传、去重与终态索引查询和证明载荷 | 独立结构与跨字段向量；共享对象引用领域Schema |
+| [protocol.schema.json](../../../contracts/schemas/protocol.schema.json) | 共同对象、全部领域输入输出、正文类型与序列容器 | JSON Schema 2020-12、日期格式及封闭业务对象 |
+| [input-answer.schema.json](../../../contracts/schemas/input-answer.schema.json)及[回答字节例证](../../../contracts/examples/input-answers/README.md) | `input-answer/1` 回答正文、结构化字段和验收的完整原命令 | [回答校验](../validation/validate_input_answers.py)检查实际字节、引用、当前请求字段及给定确认关联 |
+| [methods.json](../../../contracts/schemas/methods.json) | 方法种类、输入输出映射、目标、条件修订、回执阶段、错误与恢复动作 | 按具体方法分派，不接受同名异义或自由字段 |
+| [transport.schema.json](../../../contracts/schemas/transport.schema.json) | 发现、WSS 帧、投递、回复、上传、去重与终态索引查询和证明载荷 | 独立结构与跨字段向量；共享对象引用领域Schema |
 | [领域校验](../validation/validate_protocol.py) | 有限记录序列的身份、版本、状态及恢复关系 | 每个方法至少一项有效调用，新增方法有结构与关联反例 |
-| [Brain 内部生成格式](schemas/brain-generation.schema.json)及[构造校验](../validation/validate_brain.py) | 新正文局部引用、准确保存结果及有限计划前序输出 | 宿主内部适配规格；最终 Proposal 仍须通过公共 Schema，不作为另一条领域线接口 |
+| [Brain 内部生成格式](../../../contracts/schemas/brain-generation.schema.json)及[构造校验](../validation/validate_brain.py) | 新正文局部引用、准确保存结果及有限计划前序输出 | 宿主内部适配规格；最终 Proposal 仍须通过公共 Schema，不作为另一条领域线接口 |
 | [传输校验](../validation/validate_transport.py) | 原请求／回复摘要、三类交接、内容发布及去重与终态记录 | 结构与关联校验，另运行公开密码学向量 |
-| [harness.proto](harness.proto) | 服务间 Call 与 EndpointChannel 的 Protobuf 消息封装；JSON 内层复用以上 Schema | 描述符编译与消息映射检查；不等同于 gRPC 服务互操作 |
-| [完成判断投影](schemas/task-outcome.schema.json) | 独立结果与效果关系 | 保持原5正例／9反例，不作为完整协议 |
+| [harness.proto](../../../contracts/harness.proto) | 服务间 Call 与 EndpointChannel 的 Protobuf 消息封装；JSON 内层复用以上 Schema | 描述符编译与消息映射检查；不等同于 gRPC 服务互操作 |
+| [完成判断投影](../../../contracts/schemas/task-outcome.schema.json) | 独立结果与效果关系 | 保持原5正例／9反例，不作为完整协议 |
 
 这些资产可以指导两个实现交换同义数据，但没有服务、数据库或驱动。身份、许可、实际效果和来源关系的夹具是构造前提；字段合法不能证明这些前提在运行环境真实成立。安装、签发、创建界面及内容交接已经有精确方法，不再以“预先装配”替代其协议定义；部署缺少相应适配器时按所属模块拒绝或等待。
 
@@ -128,7 +128,7 @@ Invoke.arguments和行动模板最终参数仍按准确Capability版本、摘要
 
 字段之外的不可机械证明条件仍需真实实现裁决，例如来源限制的子集关系、可信用户确认、Grant是否有效、独立真值是否存在。序列容器里的已知许可、请求、批准或环境是显式测试前提；报告必须说明它们未由该静态工具自行建立。
 
-`content.get` 保持同一查询方法，按输入分成互斥的 bytes／control 模式。省略 mode 或 mode=bytes 沿原输入返回 ContentBytesGetOutput 下载定位；mode=control 只携带准确 content_ref 与 copy_id，向当前认证 holder 返回 `{mode:control, control:ContentControl, copy:ContentCopyControl}`。后者仅供自身持有者停止／清理恢复，正文关闭后仍可查询，不含 download_id，不授予读取或保存资格。输出必须与请求模式关联，镜像读取只能采用 bytes 分支；完整字段和恢复机制见[内容接口](../memory/implementation.md#51-小元数据与大字节分开)，正反关联见[持有者控制序列](examples/protocol/55-content-holder-control.json)。
+`content.get` 保持同一查询方法，按输入分成互斥的 bytes／control 模式。省略 mode 或 mode=bytes 沿原输入返回 ContentBytesGetOutput 下载定位；mode=control 只携带准确 content_ref 与 copy_id，向当前认证 holder 返回 `{mode:control, control:ContentControl, copy:ContentCopyControl}`。后者仅供自身持有者停止／清理恢复，正文关闭后仍可查询，不含 download_id，不授予读取或保存资格。输出必须与请求模式关联，镜像读取只能采用 bytes 分支；完整字段和恢复机制见[内容接口](../memory/implementation.md#51-小元数据与大字节分开)，正反关联见[持有者控制序列](../../../contracts/examples/protocol/55-content-holder-control.json)。
 
 <a id="input-answer-body"></a>
 ### 结构化回答正文：input-answer/1

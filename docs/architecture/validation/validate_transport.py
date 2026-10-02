@@ -12,7 +12,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 from protocol.schema import METHODS, SCHEMA
 
-ROOT = Path(__file__).resolve().parents[1] / 'contracts'
+ROOT = Path(__file__).resolve().parents[3] / 'contracts'
 TRANSPORT = json.loads((ROOT / 'schemas/transport.schema.json').read_text())
 REGISTRY = Registry().with_resources([
     ('https://harness.invalid/schema/protocol.schema.json', Resource.from_contents(SCHEMA)),

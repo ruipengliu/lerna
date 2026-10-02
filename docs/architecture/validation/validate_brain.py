@@ -13,7 +13,7 @@ from jsonschema import Draft202012Validator
 from protocol.schema import validate
 from protocol.runtime_rules import check_brain_plan, check_plan_installation, check_plan_expansion, inspect_plan_materialization
 
-ROOT = Path(__file__).resolve().parents[1] / 'contracts'
+ROOT = Path(__file__).resolve().parents[3] / 'contracts'
 GENERATION = json.loads((ROOT / 'schemas/brain-generation.schema.json').read_text())
 Draft202012Validator.check_schema(GENERATION)
 

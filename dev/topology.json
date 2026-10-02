@@ -1,0 +1,13 @@
+{
+  "multiprocess": [
+    { "name": "gateway", "config": "dev/config/gateway.json", "admin_url": "http://127.0.0.1:18080" },
+    { "name": "application", "config": "dev/config/application.json", "admin_url": "http://127.0.0.1:18081" },
+    { "name": "worker-1", "config": "dev/config/worker-1.json", "admin_url": "http://127.0.0.1:18082" },
+    { "name": "worker-2", "config": "dev/config/worker-2.json", "admin_url": "http://127.0.0.1:18083" },
+    { "name": "executor", "config": "dev/config/executor.json", "admin_url": "http://127.0.0.1:18084" }
+  ],
+  "single": [
+    { "name": "single", "config": "dev/config/single.json", "admin_url": "http://127.0.0.1:18080" }
+  ],
+  "web_url": "http://127.0.0.1:5173"
+}

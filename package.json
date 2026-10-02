@@ -1,0 +1,17 @@
+{
+  "name": "lerna-workspace",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.7.0",
+  "engines": { "node": ">=22.12.0", "pnpm": "10.7.0" },
+  "scripts": {
+    "dev": "node dev/run.mjs up",
+    "dev:single": "node dev/run.mjs single",
+    "dev:stop": "node dev/run.mjs stop",
+    "deps:up": "node dev/run.mjs deps-up",
+    "deps:down": "node dev/run.mjs deps-down",
+    "build": "pnpm -r run build",
+    "typecheck": "pnpm -r run typecheck",
+    "contracts:check": "node tools/check-contracts.mjs"
+  }
+}

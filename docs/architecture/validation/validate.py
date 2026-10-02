@@ -5,7 +5,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-ROOT = Path(__file__).resolve().parents[1] / "contracts"
+ROOT = Path(__file__).resolve().parents[3] / "contracts"
 SCHEMA = json.loads((ROOT / "schemas/task-outcome.schema.json").read_text())
 Draft202012Validator.check_schema(SCHEMA)
 VALIDATOR = Draft202012Validator(SCHEMA, format_checker=FormatChecker())

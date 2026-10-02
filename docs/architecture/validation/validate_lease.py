@@ -7,7 +7,7 @@ from protocol.traces import check_trace
 
 
 def main():
-    path = Path(__file__).resolve().parents[1] / 'contracts/examples/protocol/61-lease-final-correction.json'
+    path = Path(__file__).resolve().parents[3] / 'contracts/examples/protocol/61-lease-final-correction.json'
     trace = json.loads(path.read_text())
     errors = check_trace(trace)
     if errors:

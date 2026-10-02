@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+REPO = Path(__file__).resolve().parents[3]
 
 
 def anchors(text):
@@ -24,10 +25,16 @@ def main():
     problems = []
     paths = sorted(path for path in ROOT.rglob("*.md")
                    if ".draft" not in path.relative_to(ROOT).parts)
+    paths += sorted((REPO / "contracts").rglob("*.md"))
+    for directory in ["dev", "api", "runtime", "sdk", "apps", "cmd", "internal", "migrations", "tests", "packaging", "tools"]:
+        paths += sorted(path for path in (REPO / directory).rglob("*.md")
+                        if not {"node_modules", ".state", "dist"}.intersection(path.parts))
+    if (REPO / "README.md").exists():
+        paths.append(REPO / "README.md")
     link_count = diagram_count = 0
     for path in paths:
         text = path.read_text()
-        name = str(path.relative_to(ROOT))
+        name = str(path.relative_to(REPO))
         if re.search(r"(?:docs/|\.\./)(?:architecture-v2/|archive/architecture-)", text):
             problems.append(f"{name}: reference to another architecture baseline")
         fence = None

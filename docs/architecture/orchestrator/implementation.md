@@ -2,7 +2,7 @@
 
 [模块主线](README.md) · [大脑实现](../brain/implementation.md) · [执行实现](../execution/implementation.md) · [协作实现](../collaboration/implementation.md)
 
-本页给出参考实现的内部组织和算法。Task、Result 和方法含义见[记录与字段](records.md)，控制见[任务生命周期](task-lifecycle.md)，费用模式及交接见[预算合同](budget.md)；精确消息字段由[共同 Schema](../contracts/schemas/protocol.schema.json)定义。实现可以改变表名、调度器和存储布局，但必须保留相同提交点、命令及业务对象标识和恢复结果。
+本页给出参考实现的内部组织和算法。Task、Result 和方法含义见[记录与字段](records.md)，控制见[任务生命周期](task-lifecycle.md)，费用模式及交接见[预算合同](budget.md)；精确消息字段由[共同 Schema](../../../contracts/schemas/protocol.schema.json)定义。实现可以改变表名、调度器和存储布局，但必须保留相同提交点、命令及业务对象标识和恢复结果。
 
 生产由独立应用与工作进程共享原 Orchestrator 的 PostgreSQL 权威与持久 jobs；跨本地事务边界沿原命令交接，开发单体复用相同规则。没有可写权威存储、准确能力、可核对授权或有限费用边界时，不接纳依赖该前提的新行动。已经接纳的任务可以等待，原操作与收尾责任继续保存。本文的表和伪代码是实现规格，尚非运行代码或持久性验证结果。
 
@@ -645,4 +645,4 @@ Orchestrator Store 先通过[公共接纳与工作故障用例](../reliable-work
 | RT-26 | A 只有说明，B 依赖 A 并引用 step_output；展开决策返回直接行动、旧计划基线或合法下一版，计划安装后失答复 | 直接行动不映射旧 A；旧基线拒绝；合法新计划只安装一次，后续按新版 A/B 准入一次，旧已准入步骤沿原对象收尾，不跨版本借步骤映射 |
 | RT-27 | 非必要只读取证未知，替代证据满足全部必要条件；另去掉准确 read_only 声明或令必要条件依赖原读取 | 前者不进业务 open_effects，可固定 Result，原 unknown／费用／停止／内容收尾仍可查；后两者保持可能副作用或条件缺证，不成功；不靠工具名猜只读 |
 
-实现交付应同时记录表约束、事务故障结果和调度负载。静态方法序列覆盖见[20-budget-allocation](../contracts/examples/protocol/20-budget-allocation.json)；它不能证明上述并发和磁盘故障已经通过。
+实现交付应同时记录表约束、事务故障结果和调度负载。静态方法序列覆盖见[20-budget-allocation](../../../contracts/examples/protocol/20-budget-allocation.json)；它不能证明上述并发和磁盘故障已经通过。

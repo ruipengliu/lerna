@@ -23,7 +23,7 @@ Brain 把一次固定输入的判断保存为 **Decision**。它可以用确定�
 | 2 | [决策路径](decision-paths.md) | 规则覆盖、候选构造与答案映射、拒判升级、调用成本及启用评测 |
 | 3 | [实现设计](implementation.md) | 组件、输入正文、持久记录、事务、内容发布、有限计划、部署及故障实验 |
 
-精确协议字段查[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)；外部模型事实与性能证据查[System One 调研](../../research/system-one-models-2026-09-28.md)。任务条件与完成规则归[任务运行](../orchestrator/README.md)，工具契约归[执行](../execution/README.md)，内容来源与用途归[记忆](../memory/README.md)。
+精确协议字段查[机器契约](../../../contracts/schemas/protocol.schema.json)和[方法登记](../../../contracts/schemas/methods.json)；外部模型事实与性能证据查[System One 调研](../../research/system-one-models-2026-09-28.md)。任务条件与完成规则归[任务运行](../orchestrator/README.md)，工具契约归[执行](../execution/README.md)，内容来源与用途归[记忆](../memory/README.md)。
 
 <a id="dual-system"></a>
 ## 1. 模块分工与双系统选择

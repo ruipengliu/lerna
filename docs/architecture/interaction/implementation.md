@@ -179,7 +179,7 @@ surface_update 校验组件格式与请求引用覆盖。请求修订已改变�
 <a id="input-answer-content"></a>
 #### 回答正文的编码与校验
 
-`answer_ref` 的 `media_type` 固定为 `application/json`，字节是无 BOM 的 UTF-8 JCS 编码，顶层遵循[回答正文 Schema](../contracts/schemas/input-answer.schema.json)。默认正文上限为 1 MiB；ContentPolicy、宿主与处理器声明的更小上限继续有效，取其中最小值。先严格解析并校验，再按 JCS 发布准确字节，由这些字节确定 ContentRef.hash 和 byte_length。重复键、非法 Unicode、非有限数值、整数舍入及额外顶层键均拒绝；字段值不裁剪、不转换类型、不注入默认值，也不做 Unicode 正规化。
+`answer_ref` 的 `media_type` 固定为 `application/json`，字节是无 BOM 的 UTF-8 JCS 编码，顶层遵循[回答正文 Schema](../../../contracts/schemas/input-answer.schema.json)。默认正文上限为 1 MiB；ContentPolicy、宿主与处理器声明的更小上限继续有效，取其中最小值。先严格解析并校验，再按 JCS 发布准确字节，由这些字节确定 ContentRef.hash 和 byte_length。重复键、非法 Unicode、非有限数值、整数舍入及额外顶层键均拒绝；字段值不裁剪、不转换类型、不注入默认值，也不做 Unicode 正规化。
 
 普通 clarification／application 的封闭正文恰含 `format="input-answer/1"`、`action_id`、`fields`。action_id 必须在这份准确 InputRequest.allowed_actions 中；fields 是按 schema.fields[].name 建键的对象，不能提交 label、数组位置或未声明字段。required=true 的字段必须存在；optional 未答时省略，显式 null 不代表未答。空字符串和空多选集合是已经提交的值，分别按该字段的约束判断，不能静默改成省略。
 
@@ -197,7 +197,7 @@ surface_update 校验组件格式与请求引用覆盖。请求修订已改变�
 {"action_id":"submit","fields":{"directory":"/reports","file_type":"pdf"},"format":"input-answer/1"}
 ```
 
-同一请求下，纯文本 `/reports`、`{"directory":"/reports"}`、file_type 的显示标签、未知字段或 `directory=null` 都不是合法回答。[回答字节用例](../contracts/examples/input-answers/README.md)将请求声明、实际字节、ContentRef 和字段校验一起检查；只构造一个形式正确的 ContentRef 不能证明字段可解释。
+同一请求下，纯文本 `/reports`、`{"directory":"/reports"}`、file_type 的显示标签、未知字段或 `directory=null` 都不是合法回答。[回答字节用例](../../../contracts/examples/input-answers/README.md)将请求声明、实际字节、ContentRef 和字段校验一起检查；只构造一个形式正确的 ContentRef 不能证明字段可解释。
 
 Renderer 从请求 owner 读取准确修订后按此合同生成正文并发布 Content；InputService 取得同一字节，核对摘要、长度、格式、字段、action_id、预览及当前请求资格后才接纳。普通澄清的 task.input 和已登记 application 处理器在消费前再次读取该原 answer_ref 并独立校验，不信任“宿主已校验”标志。后续读取仍受当前内容状态与用途许可约束，正确摘要不替代当前资格。重投使用原 ContentRef 和原 Command，不重新序列化一个带新默认值的回答。
 
@@ -712,7 +712,7 @@ surface_read 的 not_modified 和 Query 重放都须重新证明当前披露；�
 | II-37 验收资格变化 | 交互接纳后改变请求／候选、到期或撤权；另在原请求消费与 Confirmation 消费之间注入事务失败 | 原业务独立复核并拒绝失效意图；提交失败不留下部分消费；原拒绝和未知沿同命令恢复，不由交互服务的早先校验覆盖当前门禁 |
 
 交互 JobStore 适配器须运行[公共故障套件](../reliable-work.md#validation)，II-02、II-18、II-19 再验证发送／撤回竞争、跨数据库事务边界消费与投影新责任。静态协议检查覆盖字段、绑定和有限状态序列，不能证明浏览器确实取得字节或用户理解内容。
-II-20～37 分别在业务事务、worker 接替及 CLI／Web 宿主注入故障验证，文档中的正反例不记为运行通过。II-32～37 同时使用[实际回答字节与关联用例](../contracts/examples/input-answers/README.md)验证格式和映射；静态通过不代替真实读取、授权和事务竞争。数据库不可写、提交结果未知和本端存储失败均须观察原记录与网络出口，而不能只断言界面文案。
+II-20～37 分别在业务事务、worker 接替及 CLI／Web 宿主注入故障验证，文档中的正反例不记为运行通过。II-32～37 同时使用[实际回答字节与关联用例](../../../contracts/examples/input-answers/README.md)验证格式和映射；静态通过不代替真实读取、授权和事务竞争。数据库不可写、提交结果未知和本端存储失败均须观察原记录与网络出口，而不能只断言界面文案。
 旁路客户端原样复制正确引用属于该保证的边界；不将它登记为业务端可识别的“未预览”错误，也不把下载回执、ETag 或 seen_revision 当作用户阅读证明。
 CLI、生产／本地 Web 和任何后续原生适配器分别完成预览、缓存、恢复及权限实验，不相互外推通过结论。
 

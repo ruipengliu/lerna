@@ -464,4 +464,4 @@ SDK 在原委派方法之上提供接纳句柄、读取、等待和有限批量�
 | CL-21 | 外部创建 worker 领取后停顿，另一 worker 接替；旧 worker 带远端真实答复返回 | 旧领取不能写映射或结束工作；原来源事实可由归并入口核验后保存，仍只有原 creation_key 对应的一个远端任务 |
 | CL-22 | 结算 worker 读取账单修订后收到更高可信用量，旧 worker 随后完成或退避 | 新账务责任及 work_revision 共同提交；旧回写不能清掉或推迟新责任，父按原 allocation 只追累计差额且不重开目标 |
 
-[跨 Orchestrator 额度序列](../contracts/examples/protocol/23-cross-orchestrator-budget.json)检验当前分配、接收方的消费状态与封账关联。既有[委派协议序列](../contracts/examples/protocol/12-delegation-mapping.json)检验映射、控制和输入的字段关联。JobStore 适配器还须运行[公共故障用例](../reliable-work.md#validation)，以 CL-01／02 覆盖接纳原子性，以 CL-21／22 覆盖协作事实与领取的交接。上述事务、独立远端及真实效果实验仍须由参考实现和至少一个独立适配器提供运行证据。
+[跨 Orchestrator 额度序列](../../../contracts/examples/protocol/23-cross-orchestrator-budget.json)检验当前分配、接收方的消费状态与封账关联。既有[委派协议序列](../../../contracts/examples/protocol/12-delegation-mapping.json)检验映射、控制和输入的字段关联。JobStore 适配器还须运行[公共故障用例](../reliable-work.md#validation)，以 CL-01／02 覆盖接纳原子性，以 CL-21／22 覆盖协作事实与领取的交接。上述事务、独立远端及真实效果实验仍须由参考实现和至少一个独立适配器提供运行证据。

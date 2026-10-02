@@ -17,7 +17,7 @@ from protocol.governance_rules import confirmation_intent_hash
 from protocol.schema import METHODS, SCHEMA, validate
 from validate_transport import canonical_bytes, strict_pairs
 
-ROOT = Path(__file__).resolve().parents[1] / 'contracts'
+ROOT = Path(__file__).resolve().parents[3] / 'contracts'
 FIXTURES = ROOT / 'examples/input-answers'
 BODY_SCHEMA = json.loads((ROOT / 'schemas/input-answer.schema.json').read_text())
 MAX_BYTES = 1048576

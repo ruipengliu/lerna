@@ -19,7 +19,7 @@
 | 3 | [质量优化策略](optimization-plan.md) | 写入保真、B0／B1／B2 检索、显式关联、本地嵌入和读时整理的候选机制及采用边界 |
 | 4 | [容量、验收与建设顺序](validation.md) | 配额起点、行为与故障用例、质量对照、指标、启用与回退门槛、阶段退出证据 |
 
-精确协议字段以[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)为准；领域含义在本页[集中定义](#memory-contracts)。外部依据见[近半年论文](../../research/agent-memory-papers-2026-09-28.md)与[开源实现](../../research/agent-memory-libraries-2026-09-28.md)。研究结论不表示本项目已实现相应能力。
+精确协议字段以[机器契约](../../../contracts/schemas/protocol.schema.json)和[方法登记](../../../contracts/schemas/methods.json)为准；领域含义在本页[集中定义](#memory-contracts)。外部依据见[近半年论文](../../research/agent-memory-papers-2026-09-28.md)与[开源实现](../../research/agent-memory-libraries-2026-09-28.md)。研究结论不表示本项目已实现相应能力。
 
 ## 1. 边界与选择
 

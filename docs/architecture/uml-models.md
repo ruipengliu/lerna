@@ -10,7 +10,7 @@
 
 组件以 `«component»` 标注，接口以 `«interface»` 标注；合并框保留原文中的职责名称。公共接口最多摘录三个已登记方法，空方法区的内部 port 表示实现适配边界。未画出的依赖、方法和记录仍须满足原契约。
 
-领域类每个仅选三至五个关键属性。公共对象对应协议 Schema，内部记录来自实现文档；每组导读分别给出 Schema 链接与内部记录来源。它们不表示新增代码类或公共 Schema。`ID`、`Revision`、`Ref`、`Enum`、`Set` 等是排版简写，完整类型、必填性及数组上限以同版 [Schema](contracts/schemas/protocol.schema.json) 为准；字段省略不表示可选。属性名前的 `/` 表示派生值，`{readOnly}` 表示调用方不能独立修改。
+领域类每个仅选三至五个关键属性。公共对象对应协议 Schema，内部记录来自实现文档；每组导读分别给出 Schema 链接与内部记录来源。它们不表示新增代码类或公共 Schema。`ID`、`Revision`、`Ref`、`Enum`、`Set` 等是排版简写，完整类型、必填性及数组上限以同版 [Schema](../../contracts/schemas/protocol.schema.json) 为准；字段省略不表示可选。属性名前的 `/` 表示派生值，`{readOnly}` 表示调用方不能独立修改。
 
 | UML 关系 | 线型与端点 | 含义及本册用法 |
 | --- | --- | --- |
@@ -62,7 +62,7 @@
 <a id="core"></a>
 ## 02 · 跨 owner 核心对象
 
-本页沿 Orchestrator 固定意图、Executor 保存效果、Orchestrator 固定成功成果阅读。`OperationIntent` 是 [Orchestrator 内部记录](orchestrator/README.md#records)；公共对象为 [Task](contracts/schemas/protocol.schema.json#/$defs/Task)、[Operation](contracts/schemas/protocol.schema.json#/$defs/Operation)、[Attempt](contracts/schemas/protocol.schema.json#/$defs/Attempt)、[Result](contracts/schemas/protocol.schema.json#/$defs/Result) 与 [ContentRef](contracts/schemas/protocol.schema.json#/$defs/ContentRef)。
+本页沿 Orchestrator 固定意图、Executor 保存效果、Orchestrator 固定成功成果阅读。`OperationIntent` 是 [Orchestrator 内部记录](orchestrator/README.md#records)；公共对象为 [Task](../../contracts/schemas/protocol.schema.json#/$defs/Task)、[Operation](../../contracts/schemas/protocol.schema.json#/$defs/Operation)、[Attempt](../../contracts/schemas/protocol.schema.json#/$defs/Attempt)、[Result](../../contracts/schemas/protocol.schema.json#/$defs/Result) 与 [ContentRef](../../contracts/schemas/protocol.schema.json#/$defs/ContentRef)。
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
@@ -83,7 +83,7 @@
 
 组件页先看 CommandHandler 与 TaskCoordinator／BudgetLedger 的同步裁决，再看 JobRunner、SnapshotAssembler／PlanMaterializer 和 FactReducer 的持续工作。默认参考实现共用 Orchestrator 的本地事务范围；Brain、远端 Executor 等调用在短事务之外。领取 job 只取得本轮处理租约，不证明任务成功。
 
-公共对象：[Task](contracts/schemas/protocol.schema.json#/$defs/Task)、[Result](contracts/schemas/protocol.schema.json#/$defs/Result)。内部记录：Snapshot、OperationIntent、ReceivedFact、Job、BudgetReservation，见[记录结构](orchestrator/implementation.md#data-flow)；ReceivedFact 是 Orchestrator 的归并副本，其 `owner` 字段仍指原事实权威。
+公共对象：[Task](../../contracts/schemas/protocol.schema.json#/$defs/Task)、[Result](../../contracts/schemas/protocol.schema.json#/$defs/Result)。内部记录：Snapshot、OperationIntent、ReceivedFact、Job、BudgetReservation，见[记录结构](orchestrator/implementation.md#data-flow)；ReceivedFact 是 Orchestrator 的归并副本，其 `owner` 字段仍指原事实权威。
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
@@ -105,7 +105,7 @@
 
 DecisionService 接纳固定请求，ContextReader 校验准确输入与来源，RecoveryWorker 沿原阶段调用策略、校验器和 ModelAdapter。DecisionStore 保存原决策及继续责任；模型、内容调用在事务外。Brain 无 Task 写权，ModelAdapter 不执行模型返回的工具调用。
 
-公共对象：[DecisionRequest](contracts/schemas/protocol.schema.json#/$defs/DecisionRequest)、[BrainContext](contracts/schemas/protocol.schema.json#/$defs/BrainContext)、[DecisionRecord](contracts/schemas/protocol.schema.json#/$defs/DecisionRecord)、[ModelCall](contracts/schemas/protocol.schema.json#/$defs/ModelCall)、[Proposal](contracts/schemas/protocol.schema.json#/$defs/Proposal)。DecisionRecord 是协议响应视图，底层接纳、输入、输出与 jobs 见[持久记录](brain/implementation.md#data-flow)。
+公共对象：[DecisionRequest](../../contracts/schemas/protocol.schema.json#/$defs/DecisionRequest)、[BrainContext](../../contracts/schemas/protocol.schema.json#/$defs/BrainContext)、[DecisionRecord](../../contracts/schemas/protocol.schema.json#/$defs/DecisionRecord)、[ModelCall](../../contracts/schemas/protocol.schema.json#/$defs/ModelCall)、[Proposal](../../contracts/schemas/protocol.schema.json#/$defs/Proposal)。DecisionRecord 是协议响应视图，底层接纳、输入、输出与 jobs 见[持久记录](brain/implementation.md#data-flow)。
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
@@ -125,7 +125,7 @@ BrainContext 由 Orchestrator 固定，正文由内容 owner 保存；每次实�
 
 先区分接纳与控制入口、执行工作者和实际发送前置检查。StartBarrier 在实际入口检查最新 TaskGate、资源状态及使用依据；Driver 按固定版本发请求或查询原目标。Executor 与资源 owner 各保存自身事实，共进程或共库也不把外部目标纳入本地原子提交。
 
-公共对象：[Capability](contracts/schemas/protocol.schema.json#/$defs/Capability)、[Binding](contracts/schemas/protocol.schema.json#/$defs/Binding)、[Operation](contracts/schemas/protocol.schema.json#/$defs/Operation)、[Attempt](contracts/schemas/protocol.schema.json#/$defs/Attempt)、[TaskGate](contracts/schemas/protocol.schema.json#/$defs/TaskGate)、[RuntimeResourceState](contracts/schemas/protocol.schema.json#/$defs/RuntimeResourceState)、[ResourceLease](contracts/schemas/protocol.schema.json#/$defs/ResourceLease)。
+公共对象：[Capability](../../contracts/schemas/protocol.schema.json#/$defs/Capability)、[Binding](../../contracts/schemas/protocol.schema.json#/$defs/Binding)、[Operation](../../contracts/schemas/protocol.schema.json#/$defs/Operation)、[Attempt](../../contracts/schemas/protocol.schema.json#/$defs/Attempt)、[TaskGate](../../contracts/schemas/protocol.schema.json#/$defs/TaskGate)、[RuntimeResourceState](../../contracts/schemas/protocol.schema.json#/$defs/RuntimeResourceState)、[ResourceLease](../../contracts/schemas/protocol.schema.json#/$defs/ResourceLease)。
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
@@ -148,7 +148,7 @@ Attempt 有 `prepared_at` 不证明已发送，缺 `sent_at` 也不证明未跨�
 
 Memory facade 管理记忆修订、查询、提取与视图，ContentStore 管理准确正文及内容控制。MetadataStore 封装各自元数据边界，同名不要求 Memory owner 与内容 owner 共库。先持久正文，再提交业务引用；跨 owner 不承诺原子提交。索引只提供候选，处理许可与结果披露许可分别成立。
 
-公共对象：[MemoryRecord](contracts/schemas/protocol.schema.json#/$defs/MemoryRecord)、[MemoryControl](contracts/schemas/protocol.schema.json#/$defs/MemoryControl)、[ExtractionCandidate](contracts/schemas/protocol.schema.json#/$defs/ExtractionCandidate)、[ContentRef](contracts/schemas/protocol.schema.json#/$defs/ContentRef)、[SourceBinding](contracts/schemas/protocol.schema.json#/$defs/SourceBinding)、[ContentControl](contracts/schemas/protocol.schema.json#/$defs/ContentControl)、[ContentCopy](contracts/schemas/protocol.schema.json#/$defs/ContentCopy)。
+公共对象：[MemoryRecord](../../contracts/schemas/protocol.schema.json#/$defs/MemoryRecord)、[MemoryControl](../../contracts/schemas/protocol.schema.json#/$defs/MemoryControl)、[ExtractionCandidate](../../contracts/schemas/protocol.schema.json#/$defs/ExtractionCandidate)、[ContentRef](../../contracts/schemas/protocol.schema.json#/$defs/ContentRef)、[SourceBinding](../../contracts/schemas/protocol.schema.json#/$defs/SourceBinding)、[ContentControl](../../contracts/schemas/protocol.schema.json#/$defs/ContentControl)、[ContentCopy](../../contracts/schemas/protocol.schema.json#/$defs/ContentCopy)。
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
@@ -172,7 +172,7 @@ Memory facade 管理记忆修订、查询、提取与视图，ContentStore 管�
 
 GrantLedger／LeaseLedger 裁决许可占用与结算，PairingController 管理端点，RevocationWorker 保存并履行撤销传播责任。ConfirmationStore 由实际 consumer owner 在自身数据库内装配并参加本地事务；通用代码不形成跨库确认中心。身份适配、资源规范化与实际资源入口各有边界，不能替代许可裁决。
 
-公共对象：[ConfirmationRecord](contracts/schemas/protocol.schema.json#/$defs/ConfirmationRecord)、[GrantRecord](contracts/schemas/protocol.schema.json#/$defs/GrantRecord)、[UseReceipt](contracts/schemas/protocol.schema.json#/$defs/UseReceipt)、[UseSettlementRecord](contracts/schemas/protocol.schema.json#/$defs/UseSettlementRecord)、[OfflineLeaseRecord](contracts/schemas/protocol.schema.json#/$defs/OfflineLeaseRecord)、[EndpointRecord](contracts/schemas/protocol.schema.json#/$defs/EndpointRecord)。
+公共对象：[ConfirmationRecord](../../contracts/schemas/protocol.schema.json#/$defs/ConfirmationRecord)、[GrantRecord](../../contracts/schemas/protocol.schema.json#/$defs/GrantRecord)、[UseReceipt](../../contracts/schemas/protocol.schema.json#/$defs/UseReceipt)、[UseSettlementRecord](../../contracts/schemas/protocol.schema.json#/$defs/UseSettlementRecord)、[OfflineLeaseRecord](../../contracts/schemas/protocol.schema.json#/$defs/OfflineLeaseRecord)、[EndpointRecord](../../contracts/schemas/protocol.schema.json#/$defs/EndpointRecord)。
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
@@ -197,7 +197,7 @@ OfflineLeaseRecord 的生命周期为 open、closed、reconciled；open 同时�
 
 SurfaceService 保存页面快照，InputService 与 DeliveryWorker 保存输入及固定目标命令并恢复投递。Renderer、TrustedConfirmationHost 属于 CLI／Web 宿主；请求和确认的消费归实际业务 owner。`interaction.request_read` 按请求 owner 路由，方法前缀不改变写权。
 
-公共对象：[Surface](contracts/schemas/protocol.schema.json#/$defs/Surface)、[SurfaceSnapshot](contracts/schemas/protocol.schema.json#/$defs/SurfaceSnapshot)、[InputRequestView](contracts/schemas/protocol.schema.json#/$defs/InputRequestView)、[InputSubmission](contracts/schemas/protocol.schema.json#/$defs/InputSubmission)、[ApplicationEventSubmission](contracts/schemas/protocol.schema.json#/$defs/ApplicationEventSubmission)、[ConfirmationRecord](contracts/schemas/protocol.schema.json#/$defs/ConfirmationRecord)。Presentation 是[设备呈现内部记录](interaction/implementation.md)。
+公共对象：[Surface](../../contracts/schemas/protocol.schema.json#/$defs/Surface)、[SurfaceSnapshot](../../contracts/schemas/protocol.schema.json#/$defs/SurfaceSnapshot)、[InputRequestView](../../contracts/schemas/protocol.schema.json#/$defs/InputRequestView)、[InputSubmission](../../contracts/schemas/protocol.schema.json#/$defs/InputSubmission)、[ApplicationEventSubmission](../../contracts/schemas/protocol.schema.json#/$defs/ApplicationEventSubmission)、[ConfirmationRecord](../../contracts/schemas/protocol.schema.json#/$defs/ConfirmationRecord)。Presentation 是[设备呈现内部记录](interaction/implementation.md)。
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
@@ -222,7 +222,7 @@ SurfaceSnapshot 的 input 块只持有准确 request_ref；Renderer 经业务 ow
 
 DelegationAdmission 固定有界委派，InternalChildFactory 在父 Orchestrator 内建子，ExternalAgentAdapter 沿原外部创建键交接。DelegationReducer 归并原生事实，ControlPropagator／SettlementCoordinator 继续控制与收尾。图中依赖不表示时序；两个 required port 是内部实现边界。
 
-公共对象：[Task](contracts/schemas/protocol.schema.json#/$defs/Task)、[Delegation](contracts/schemas/protocol.schema.json#/$defs/Delegation)、[AgentBinding](contracts/schemas/protocol.schema.json#/$defs/AgentBinding)、[RuntimeBudgetAllocation](contracts/schemas/protocol.schema.json#/$defs/RuntimeBudgetAllocation)。AgentDescriptor、InternalChildLink、ExternalTaskLink 为[内部记录](collaboration/implementation.md#data-flow)。
+公共对象：[Task](../../contracts/schemas/protocol.schema.json#/$defs/Task)、[Delegation](../../contracts/schemas/protocol.schema.json#/$defs/Delegation)、[AgentBinding](../../contracts/schemas/protocol.schema.json#/$defs/AgentBinding)、[RuntimeBudgetAllocation](../../contracts/schemas/protocol.schema.json#/$defs/RuntimeBudgetAllocation)。AgentDescriptor、InternalChildLink、ExternalTaskLink 为[内部记录](collaboration/implementation.md#data-flow)。
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
@@ -245,7 +245,7 @@ DelegationAdmission 固定有界委派，InternalChildFactory 在父 Orchestrato
 
 组件页沿冻结计划、隔离运行、证据封存、适用性检查与批准、逐目标发布阅读。各工作者共享评测 owner 的 repositories 与 jobs，分进程不产生新的写权威。隔离环境及独立判定器是内部 port；目标实际激活与就绪由 Extensions 裁决。
 
-公共对象：[EvaluationPlan](contracts/schemas/protocol.schema.json#/$defs/EvaluationPlan)、[EvaluationRunRecord](contracts/schemas/protocol.schema.json#/$defs/EvaluationRunRecord)、[EvaluationReport](contracts/schemas/protocol.schema.json#/$defs/EvaluationReport)、[FeedbackExposure](contracts/schemas/protocol.schema.json#/$defs/FeedbackExposure)、[ReleaseApproval](contracts/schemas/protocol.schema.json#/$defs/ReleaseApproval)、[Activation](contracts/schemas/protocol.schema.json#/$defs/Activation)。PlanEligibility 是[正式评测资格的派生记录](evaluation/implementation.md#data-flow)。
+公共对象：[EvaluationPlan](../../contracts/schemas/protocol.schema.json#/$defs/EvaluationPlan)、[EvaluationRunRecord](../../contracts/schemas/protocol.schema.json#/$defs/EvaluationRunRecord)、[EvaluationReport](../../contracts/schemas/protocol.schema.json#/$defs/EvaluationReport)、[FeedbackExposure](../../contracts/schemas/protocol.schema.json#/$defs/FeedbackExposure)、[ReleaseApproval](../../contracts/schemas/protocol.schema.json#/$defs/ReleaseApproval)、[Activation](../../contracts/schemas/protocol.schema.json#/$defs/Activation)。PlanEligibility 是[正式评测资格的派生记录](evaluation/implementation.md#data-flow)。
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
@@ -269,7 +269,7 @@ DelegationAdmission 固定有界委派，InternalChildFactory 在父 Orchestrato
 
 LifecycleManager 组织准备、切换、停用和恢复，PackageVerifier／ArtifactReader 核验准确内容，ReferenceCollector 查询各持有者，BindingRouter 控制实际入口。management jobs 恢复原步骤；下载、装载、排空及远端核对在事务外。内容 port 是内部边界，不新增公开协议方法。
 
-公共对象：[PackageManifest](contracts/schemas/protocol.schema.json#/$defs/PackageManifest)、[InstallLock](contracts/schemas/protocol.schema.json#/$defs/InstallLock)、[Activation](contracts/schemas/protocol.schema.json#/$defs/Activation)、[InstanceReadiness](contracts/schemas/protocol.schema.json#/$defs/InstanceReadiness)、[ReleaseApproval](contracts/schemas/protocol.schema.json#/$defs/ReleaseApproval)。ActiveBinding、LockReference 是[宿主内部记录](extensions/implementation.md#4-管理账本与索引)。
+公共对象：[PackageManifest](../../contracts/schemas/protocol.schema.json#/$defs/PackageManifest)、[InstallLock](../../contracts/schemas/protocol.schema.json#/$defs/InstallLock)、[Activation](../../contracts/schemas/protocol.schema.json#/$defs/Activation)、[InstanceReadiness](../../contracts/schemas/protocol.schema.json#/$defs/InstanceReadiness)、[ReleaseApproval](../../contracts/schemas/protocol.schema.json#/$defs/ReleaseApproval)。ActiveBinding、LockReference 是[宿主内部记录](extensions/implementation.md#4-管理账本与索引)。
 
 | 关联（左 — 右） | 左端 | 右端 | 条件与边界 |
 | --- | --- | --- | --- |
@@ -291,6 +291,6 @@ LockReference 是跨 owner 索引，释放事实仍由任务、原操作、迁�
 
 ## 定义与验证边界
 
-方法名称、输入输出与公共字段以[方法登记](contracts/schemas/methods.json)、[协议 Schema](contracts/schemas/protocol.schema.json)及[方法与协议编码格式](contracts/protocol.md)为准；模块 README 定义行为与保证，implementation 文档定义参考职责、内部记录和提交机制。跨模块取舍查阅[设计决策](decisions.md)，动态过程查阅[贯穿场景](walkthrough.md)。
+方法名称、输入输出与公共字段以[方法登记](../../contracts/schemas/methods.json)、[协议 Schema](../../contracts/schemas/protocol.schema.json)及[方法与协议编码格式](contracts/protocol.md)为准；模块 README 定义行为与保证，implementation 文档定义参考职责、内部记录和提交机制。跨模块取舍查阅[设计决策](decisions.md)，动态过程查阅[贯穿场景](walkthrough.md)。
 
 图册是当前设计基线的静态投影，不新增类继承、ORM、外键或部署承诺。图文一致、链接和实际渲染检查只能验证文档资产；耐久提交、隔离、恢复、当前授权、状态检查与外部效果仍需运行证据。交付状态及运行验收范围分别见[交付审查](review.md)与[验收设计](validation/README.md)。

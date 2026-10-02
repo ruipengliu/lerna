@@ -60,7 +60,7 @@ python3 -m venv /tmp/harness-architecture-checks
 /tmp/harness-architecture-checks/bin/python docs/architecture/validation/validate_release_recovery.py
 node docs/architecture/validation/verify_transport_proofs.mjs
 mkdir -p .scratch/architecture-formalization/proto
-/tmp/harness-architecture-checks/bin/python -m grpc_tools.protoc -I docs/architecture/contracts --descriptor_set_out=.scratch/architecture-formalization/proto/harness.pb --python_out=.scratch/architecture-formalization/proto docs/architecture/contracts/harness.proto
+/tmp/harness-architecture-checks/bin/python -m grpc_tools.protoc -I contracts --descriptor_set_out=.scratch/architecture-formalization/proto/harness.pb --python_out=.scratch/architecture-formalization/proto contracts/harness.proto
 /tmp/harness-architecture-checks/bin/python docs/architecture/validation/check_grpc_envelope.py .scratch/architecture-formalization/proto
 ```
 

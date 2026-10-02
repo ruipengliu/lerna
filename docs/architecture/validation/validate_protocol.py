@@ -7,7 +7,7 @@ from protocol.schema import METHODS, validate
 from protocol.governance_rules import _exposure_affects_plan, confirmation_intent_hash
 from protocol.traces import check_trace
 
-ROOT=Path(__file__).resolve().parents[1] / 'contracts'
+ROOT=Path(__file__).resolve().parents[3] / 'contracts'
 
 
 def mutate(value, edits):

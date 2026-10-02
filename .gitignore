@@ -19,3 +19,11 @@ __pycache__/
 
 # Local reference checkouts; .scratch/ contains versioned issues and specs
 /.reference/
+
+# Local development credentials, state and build output
+/dev/.env
+/dev/.state/
+/build/
+/apps/web/dist/
+/sdk/ts/dist/
+*.tsbuildinfo

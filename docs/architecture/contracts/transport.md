@@ -51,7 +51,7 @@
 
 外连接重建不会创造新的 endpoint instance；内外连接均不决定业务唯一执行权。重复投递即使经过不同连接仍按 delivery_id／command_id 去重。外断线释放连接、序号高水位、在途关联和订阅状态，不释放业务责任；指数退避并加入抖动后重连，参考从 1 秒增长至 30 秒上限，认证失败先重新认证，不无限重试旧凭据。重连先恢复已保存的原逻辑服务／命令，再按其当前放置映射、健康网关和应用建立新连接；Ready 后先查未知原回执或 Task，再恢复订阅。旧连接尚未回收且身份额度已满时，新握手可暂拒，客户端继续抖动重试；正常网关排空主动释放旧额度，实例崩溃才依赖租约回收。若本地原命令与服务记录均失，受信用户来源目录最多找回已接纳且当前可披露的 Task，未能定位的提交保持未知，不自动改投。
 
-发现字段和 Frame 完整结构见 [transport.schema.json](schemas/transport.schema.json)。服务只能声明已安装并通过对应配置验证的方法，未知 profile、资产摘要或必要方法缺失时停止集成。没有任务的第二裁决中心：受信装配保存逻辑服务及认证关系，身份权威保存可重建的用户来源集合，跨 Orchestrator 任务目录按[应用查询契约](../interaction/README.md#cross-orchestrator-list)聚合原负责方。
+发现字段和 Frame 完整结构见 [transport.schema.json](../../../contracts/schemas/transport.schema.json)。服务只能声明已安装并通过对应配置验证的方法，未知 profile、资产摘要或必要方法缺失时停止集成。没有任务的第二裁决中心：受信装配保存逻辑服务及认证关系，身份权威保存可重建的用户来源集合，跨 Orchestrator 任务目录按[应用查询契约](../interaction/README.md#cross-orchestrator-list)聚合原负责方。
 
 ## 2. 认证主体和有限配对入口
 
@@ -251,4 +251,4 @@ owner 丢失控制答复时重投绑定原 ticket_id 的同一 MirrorControl，�
 | 下载资格撤回 | 过期定位、错误副本与引用拒绝 | 发送前及发送中撤权、持有者清理回执 |
 | 输入、确认与呈现恢复 | 复用现有身份和状态，不新增公开运行／取阅字段 | [II-20～31](../interaction/implementation.md#input-recovery-validation)：未领取取消、旧退出、双端决定、快照可读后提示、旧世代及 SDK 存储失败 |
 
-机器资产与复现入口见[传输用例](examples/transport/README.md)。字段和签名向量检查只验证给定数据；认证主体是否真实、持久提交是否成立、隔离是否有效以及异构服务是否互操作，都必须另外运行验证。
+机器资产与复现入口见[传输用例](../../../contracts/examples/transport/README.md)。字段和签名向量检查只验证给定数据；认证主体是否真实、持久提交是否成立、隔离是否有效以及异构服务是否互操作，都必须另外运行验证。

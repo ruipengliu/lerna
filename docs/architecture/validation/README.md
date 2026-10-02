@@ -6,7 +6,7 @@
 
 本目录同时保存[文档检查](check_documents.py)、[完成判断校验](validate.py)、[协议序列校验](validate_protocol.py)和[结构化回答字节校验](validate_input_answers.py)。这些工具读取 [contracts](../contracts/README.md) 中的共享资产，执行命令及已取得的结果见[交付审查](../review.md)。后续跨模块验收在本目录细化，模块专属机制和用例在对应模块目录维护。
 
-完整字段补齐后，领域序列覆盖全部登记方法；[传输与关闭记录校验](validate_transport.py)另检查基础入口及公开签名向量。[gRPC 绑定](../contracts/grpc.md)另提供 [.proto 描述符](../contracts/harness.proto)，[封装检查器](check_grpc_envelope.py)读取由该文件生成的 Python 类型，检查原 JSON 的往返映射；编译与静态封装检查不替代服务间认证或网络互操作。参考实现的接纳、未知写入、控制竞争、长期关闭、首装重启和内容交接实验已展开为[故障步骤与断言](fault-experiments.md)，须由实际服务取得运行证据。
+完整字段补齐后，领域序列覆盖全部登记方法；[传输与关闭记录校验](validate_transport.py)另检查基础入口及公开签名向量。[gRPC 绑定](../contracts/grpc.md)另提供 [.proto 描述符](../../../contracts/harness.proto)，[封装检查器](check_grpc_envelope.py)读取由该文件生成的 Python 类型，检查原 JSON 的往返映射；编译与静态封装检查不替代服务间认证或网络互操作。参考实现的接纳、未知写入、控制竞争、长期关闭、首装重启和内容交接实验已展开为[故障步骤与断言](fault-experiments.md)，须由实际服务取得运行证据。
 
 生产分布式配置是首次生产上线的验收基线，按开放能力及冻结负载选择[生产部署验收](../deployment-production.md#6-发布观测与生产验收)执行 PROD-01～32：覆盖单区失效、旧工作者复活、热点租户、设备重连、内容故障、分片扩容、缺历史灾备、跨分片配额、慢端控制竞争、gRPC 提交后断连，以及内部通道重绑、跨实例投递丢唤醒、连接租约、内容分库竞争、滚动格式历史和积压排空。PROD-23～27 追加映射换版／回退、跨分片列表、冷缓存重连、满额滚动发布与 500 新任务／秒压力场景；PROD-28～32 核验[全量复核发现的交接边界](fault-experiments.md#full-review-boundaries)。这些均为实验要求，尚无运行结果。宿主时钟、长流扩容、SLO 口径、作业记录合并、Memory 提交水位及集合快照恢复的步骤见[故障步骤](fault-experiments.md#job-merge)。[存储与中间件](../storage-and-middleware.md)规定托管基础设施的必要能力与失效边界。正常高峰、单区失效和积压恢复分别报告性能，不能以静态协议或开发单体通过替代生产可用性。
 

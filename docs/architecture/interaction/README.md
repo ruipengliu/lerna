@@ -14,7 +14,7 @@
 
 ## 实现阅读路径
 
-先阅读本页的职责与行为，再读[实现设计](implementation.md)：声明式快照、可靠输入与受信确认。[Session 与 Task](session-and-task.md)说明应用内部对话归组；[会话记录与原命令存储](implementation.md#session-storage)给出消息、创建来源和交付 outbox 的唯一约束与恢复。实现设计规定内部记录、事务、算法与故障实验；[机器契约](../contracts/schemas/protocol.schema.json)和[方法登记](../contracts/schemas/methods.json)提供精确协议字段。
+先阅读本页的职责与行为，再读[实现设计](implementation.md)：声明式快照、可靠输入与受信确认。[Session 与 Task](session-and-task.md)说明应用内部对话归组；[会话记录与原命令存储](implementation.md#session-storage)给出消息、创建来源和交付 outbox 的唯一约束与恢复。实现设计规定内部记录、事务、算法与故障实验；[机器契约](../../../contracts/schemas/protocol.schema.json)和[方法登记](../../../contracts/schemas/methods.json)提供精确协议字段。
 
 普通应用接入先读[默认应用与 SDK 工作流](../application-workflow.md)：用现有提交、查询、控制和结果端口完成工作，Decision／Operation 子记录由内核管理。[四类数据流程](../request-data-flows.md)列出直接回答、读后回答、冷恢复及保存读回的读取、写入与可合并事务；这些是组合设计，尚无运行 SDK。
 

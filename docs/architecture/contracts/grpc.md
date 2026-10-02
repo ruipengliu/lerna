@@ -1,6 +1,6 @@
 # 服务间 gRPC 绑定
 
-[共同语义](README.md) · [端云 WSS](transport.md) · [Protobuf 定义](harness.proto) · [生产部署](../deployment-production.md)
+[共同语义](README.md) · [端云 WSS](transport.md) · [Protobuf 定义](../../../contracts/harness.proto) · [生产部署](../deployment-production.md)
 
 本页固定未发布的 `harness-grpc-draft-1`：Harness 服务跨进程使用 gRPC over HTTP/2 + TLS，同进程使用 Go interface；需要共同事务的组件继续传递同一事务句柄。端侧宿主、CLI 和浏览器对云建立 WSS，连接接入层再向负责服务发起 gRPC。模型供应商、第三方工具、数据库和对象存储沿用自身协议。
 
@@ -29,7 +29,7 @@ flowchart LR
 <a id="channel-rebind"></a>
 ### 1.1 内部绑定与外连接分别恢复
 
-EndpointChannel metadata 除第 3 节的身份头外，必须携带下表字段。`ChannelBinding` 是这些 metadata 解码后的严格投影，字段归[传输 Schema](schemas/transport.schema.json)；它不是新增业务方法。
+EndpointChannel metadata 除第 3 节的身份头外，必须携带下表字段。`ChannelBinding` 是这些 metadata 解码后的严格投影，字段归[传输 Schema](../../../contracts/schemas/transport.schema.json)；它不是新增业务方法。
 
 | metadata | 精确含义 |
 | --- | --- |
@@ -116,7 +116,7 @@ flowchart LR
 
 ## 2. Protobuf 与领域字段的权威
 
-[harness.proto](harness.proto) 定义 RPC 外壳，`bytes` 中放 UTF-8 严格 JSON。Command、Query、Receipt、QueryResult 和 Error 继续由[领域 Schema](schemas/protocol.schema.json)及[方法登记](schemas/methods.json)裁决；Lookup、Frame 由[传输 Schema](schemas/transport.schema.json)裁决。这样不用为领域方法维护两套可漂移的字段定义，代价是仍需 JSON 解码与运行时校验，不能声称已经具备逐方法 Protobuf 强类型或二进制压缩收益。只有测量表明编码成本主导时，才另定完整字段映射及兼容 profile。
+[harness.proto](../../../contracts/harness.proto) 定义 RPC 外壳，`bytes` 中放 UTF-8 严格 JSON。Command、Query、Receipt、QueryResult 和 Error 继续由[领域 Schema](../../../contracts/schemas/protocol.schema.json)及[方法登记](../../../contracts/schemas/methods.json)裁决；Lookup、Frame 由[传输 Schema](../../../contracts/schemas/transport.schema.json)裁决。这样不用为领域方法维护两套可漂移的字段定义，代价是仍需 JSON 解码与运行时校验，不能声称已经具备逐方法 Protobuf 强类型或二进制压缩收益。只有测量表明编码成本主导时，才另定完整字段映射及兼容 profile。
 
 | Protobuf 字段 | 内层对象及关联检查 |
 | --- | --- |

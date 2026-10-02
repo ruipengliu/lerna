@@ -12,7 +12,7 @@ spec = importlib.util.spec_from_file_location('harness_pb2', args.generated_dir 
 pb = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pb)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 VECTORS = ROOT / 'contracts/examples/transport/vectors.json'
 request_fields = {
     'command': 'command_json',
