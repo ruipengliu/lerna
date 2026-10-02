@@ -52,7 +52,7 @@ Temporal/DBOS可以运行Agent工作流，不是技术上不适合。当前不�
 
 Pi恢复effect_pending同时检查保存的与当前工具的safe replay声明，不能只信旧配置。[Pi replay，8ce69e9，L478–539](https://github.com/earendil-works/pi/blob/8ce69e9d2b171d173fe4b6b2b6256f1f4411e69d/packages/agent/src/harness/runtime/drive/tools.ts#L478-L539) DeepSeek区分未启动与结果未知，但修补对话不等于建立目标效果账本。[DeepSeek repair，639ed01，L14–97](https://github.com/deepseek-ai/deepseek-harness/blob/639ed015397290b3745d163aafe02ffee4aa3f84/packages/core/session/src/repair.ts#L14-L97)
 
-近期exactly-once预印本说明：超时和空读回可能同时对应未执行与延迟提交。要安全重发须目标提供足够幂等/查询前提，不能只靠调用者观察。[Where Does Exactly-Once Live，v1](https://arxiv.org/html/2609.29095v1#S3) 本设计宁可保留unknown和预留，也不冒险创建第二次非幂等效果；代价是有些任务不能自动收束。
+近期exactly-once预印本说明：超时和空读回可能同时对应未执行与延迟提交。要安全重发须目标提供足够幂等/查询前提，不能只靠调用者观察。[Where Does Exactly-Once Live，v1](https://arxiv.org/html/2609.29095v1#S3) 本设计宁可保留unknown和预留，也不冒险创建第二次非幂等效果；代价是有些任务不得自动收束。
 
 ## 5 上下文和能力策略的借鉴
 

@@ -48,7 +48,9 @@
         "unresolved_count": 1,
         "complete": true
       },
-      "accounting_open": true
+      "accounting_open": true,
+      "requirements_state": "collecting",
+      "requirements_digest": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     }
   },
   {
@@ -60,7 +62,8 @@
       "task_ref": {
         "owner_id": "orch_00000000000000000000000000000001",
         "object_id": "task_00000000000000000000000000000001",
-        "revision": 3
+        "revision": 3,
+        "tenant_id": "tenant_00000000000000000000000000000001"
       },
       "revision": 2,
       "execution_state": "closed",
@@ -112,7 +115,14 @@
         {
           "requirement_id": "requirement_00000000000000000000000000000001",
           "kind": "effect",
-          "source_ref": {
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "required": true,
+          "revision": 1,
+          "statement_ref": {
             "tenant_id": "tenant_00000000000000000000000000000001",
             "owner_id": "contentowner_00000000000000000000000000000001",
             "content_id": "content_00000000000000000000000000000001",
@@ -121,17 +131,41 @@
             "media_type": "text/plain",
             "byte_length": 42
           },
-          "rule_ref": {
-            "component_id": "component_00000000000000000000000000000001",
-            "version": "1.0.0",
-            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-          },
-          "required": true
+          "source_refs": [
+            {
+              "content_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "contentowner_00000000000000000000000000000001",
+                "content_id": "content_00000000000000000000000000000001",
+                "version": 1,
+                "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "media_type": "text/plain",
+                "byte_length": 42
+              },
+              "source_kind": "user_input",
+              "submission_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "app_00000000000000000000000000000001",
+                "object_id": "submission_00000000000000000000000000000001",
+                "revision": 1
+              },
+              "locator": "text:0:20"
+            }
+          ],
+          "origin": "explicit_user",
+          "adoption_id": "adoption_00000000000000000000000000000001"
         },
         {
           "requirement_id": "requirement_00000000000000000000000000000002",
           "kind": "quality",
-          "source_ref": {
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "required": false,
+          "revision": 1,
+          "statement_ref": {
             "tenant_id": "tenant_00000000000000000000000000000001",
             "owner_id": "contentowner_00000000000000000000000000000001",
             "content_id": "content_00000000000000000000000000000001",
@@ -140,12 +174,29 @@
             "media_type": "text/plain",
             "byte_length": 42
           },
-          "rule_ref": {
-            "component_id": "component_00000000000000000000000000000001",
-            "version": "1.0.0",
-            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-          },
-          "required": false
+          "source_refs": [
+            {
+              "content_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "contentowner_00000000000000000000000000000001",
+                "content_id": "content_00000000000000000000000000000001",
+                "version": 1,
+                "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "media_type": "text/plain",
+                "byte_length": 42
+              },
+              "source_kind": "user_input",
+              "submission_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "app_00000000000000000000000000000001",
+                "object_id": "submission_00000000000000000000000000000001",
+                "revision": 1
+              },
+              "locator": "text:0:20"
+            }
+          ],
+          "origin": "explicit_user",
+          "adoption_id": "adoption_00000000000000000000000000000001"
         }
       ],
       "deadline": "2026-10-02T13:00:00Z",
@@ -169,12 +220,17 @@
       "accounting_open": true,
       "result_ref": {
         "tenant_id": "tenant_00000000000000000000000000000001",
-        "owner_id": "contentowner_00000000000000000000000000000001",
-        "content_id": "content_00000000000000000000000000000001",
-        "version": 1,
-        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "media_type": "text/plain",
-        "byte_length": 42
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "result_00000000000000000000000000000001",
+        "revision": 1
+      },
+      "requirements_state": "ready",
+      "requirements_digest": "sha256:418b890b269a765d0e6e5a7313ced4284cf6fe259084207229472f44c3979fda",
+      "current_coverage_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "coverage_00000000000000000000000000000002",
+        "revision": 1
       }
     }
   },
@@ -234,7 +290,19 @@
               "media_type": "text/plain",
               "byte_length": 42
             }
-          ]
+          ],
+          "requirement_revision": 1,
+          "observed_at": "2026-10-02T12:10:00Z",
+          "checked_at": "2026-10-02T12:20:00Z",
+          "scope_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          }
         },
         {
           "check_id": "check_00000000000000000000000000000002",
@@ -273,22 +341,33 @@
               "media_type": "text/plain",
               "byte_length": 42
             }
-          ]
+          ],
+          "requirement_revision": 1,
+          "observed_at": "2026-10-02T12:10:00Z",
+          "checked_at": "2026-10-02T12:20:00Z",
+          "scope_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          }
         }
       ],
       "coverage_ref": {
         "tenant_id": "tenant_00000000000000000000000000000001",
-        "owner_id": "contentowner_00000000000000000000000000000001",
-        "content_id": "content_00000000000000000000000000000001",
-        "version": 1,
-        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "media_type": "text/plain",
-        "byte_length": 42
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "coverage_00000000000000000000000000000002",
+        "revision": 1
       },
       "limitations": [
         "示例仅有构造证据，未证明任何真实文件已保存"
       ],
-      "completed_at": "2026-10-02T12:30:00Z"
+      "completed_at": "2026-10-02T12:30:00Z",
+      "result_id": "result_00000000000000000000000000000001",
+      "revision": 1
     }
   },
   {
@@ -319,7 +398,8 @@
       "trusted_user_session_ref": {
         "owner_id": "orch_00000000000000000000000000000001",
         "object_id": "session_00000000000000000000000000000001",
-        "revision": 1
+        "revision": 1,
+        "tenant_id": "tenant_00000000000000000000000000000001"
       },
       "decided_by": "user_00000000000000000000000000000001",
       "decided_at": "2026-10-02T11:59:00Z",
@@ -349,7 +429,7 @@
     "record_type": "Command",
     "record": {
       "protocol": "harness/1",
-      "profile": "architecture-2026-10",
+      "profile": "architecture-2026-10-data1",
       "logical_service_id": "orch_00000000000000000000000000000001",
       "command_id": "command_00000000000000000000000000000004",
       "method": "task.cancel",
@@ -401,7 +481,8 @@
       "source_ref": {
         "owner_id": "orch_00000000000000000000000000000001",
         "object_id": "task_00000000000000000000000000000001",
-        "revision": 3
+        "revision": 3,
+        "tenant_id": "tenant_00000000000000000000000000000001"
       },
       "state": "leased",
       "due_at": "2026-10-02T12:00:00Z",
@@ -416,7 +497,7 @@
     "record_type": "Command",
     "record": {
       "protocol": "harness/1",
-      "profile": "architecture-2026-10",
+      "profile": "architecture-2026-10-data1",
       "logical_service_id": "orch_00000000000000000000000000000001",
       "command_id": "command_00000000000000000000000000000005",
       "method": "task.submit",
@@ -445,11 +526,11 @@
             "value": "10"
           }
         ],
-        "requirements": [
+        "requirement_candidates": [
           {
-            "requirement_id": "requirement_00000000000000000000000000000001",
+            "candidate_key": "c1",
             "kind": "effect",
-            "source_ref": {
+            "statement_ref": {
               "tenant_id": "tenant_00000000000000000000000000000001",
               "owner_id": "contentowner_00000000000000000000000000000001",
               "content_id": "content_00000000000000000000000000000001",
@@ -458,14 +539,43 @@
               "media_type": "text/plain",
               "byte_length": 42
             },
+            "source_refs": [
+              {
+                "content_ref": {
+                  "tenant_id": "tenant_00000000000000000000000000000001",
+                  "owner_id": "contentowner_00000000000000000000000000000001",
+                  "content_id": "content_00000000000000000000000000000001",
+                  "version": 1,
+                  "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "media_type": "text/plain",
+                  "byte_length": 42
+                },
+                "source_kind": "user_input",
+                "submission_ref": {
+                  "tenant_id": "tenant_00000000000000000000000000000001",
+                  "owner_id": "app_00000000000000000000000000000001",
+                  "object_id": "submission_00000000000000000000000000000001",
+                  "revision": 1
+                },
+                "locator": "text:0:20"
+              }
+            ],
+            "origin": "explicit_user",
             "rule_ref": {
               "component_id": "component_00000000000000000000000000000001",
               "version": "1.0.0",
               "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             },
-            "required": true
+            "required": true,
+            "open_questions": []
           }
-        ]
+        ],
+        "source_submission_ref": {
+          "tenant_id": "tenant_00000000000000000000000000000001",
+          "owner_id": "app_00000000000000000000000000000001",
+          "object_id": "submission_00000000000000000000000000000001",
+          "revision": 1
+        }
       }
     }
   },
@@ -474,7 +584,7 @@
     "record_type": "Command",
     "record": {
       "protocol": "harness/1",
-      "profile": "architecture-2026-10",
+      "profile": "architecture-2026-10-data1",
       "logical_service_id": "orch_00000000000000000000000000000002",
       "command_id": "command_00000000000000000000000000000006",
       "method": "task.submit",
@@ -503,57 +613,41 @@
             "value": "10"
           }
         ],
-        "requirements": [
-          {
-            "requirement_id": "requirement_00000000000000000000000000000001",
-            "kind": "effect",
-            "source_ref": {
-              "tenant_id": "tenant_00000000000000000000000000000001",
-              "owner_id": "contentowner_00000000000000000000000000000001",
-              "content_id": "content_00000000000000000000000000000001",
-              "version": 1,
-              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-              "media_type": "text/plain",
-              "byte_length": 42
-            },
-            "rule_ref": {
-              "component_id": "component_00000000000000000000000000000001",
-              "version": "1.0.0",
-              "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-            },
-            "required": true
-          }
-        ],
         "delegation_context": {
           "delegation_id": "delegation_00000000000000000000000000000001",
           "parent_task_ref": {
             "owner_id": "orch_00000000000000000000000000000001",
             "object_id": "task_00000000000000000000000000000001",
-            "revision": 1
+            "revision": 1,
+            "tenant_id": "tenant_00000000000000000000000000000001"
           },
           "parent_goal_revision": 1,
           "ancestor_task_refs": [
             {
               "owner_id": "orch_00000000000000000000000000000001",
               "object_id": "task_00000000000000000000000000000001",
-              "revision": 1
+              "revision": 1,
+              "tenant_id": "tenant_00000000000000000000000000000001"
             }
           ],
           "agent_binding_ref": {
             "owner_id": "orch_00000000000000000000000000000002",
             "object_id": "binding_00000000000000000000000000000001",
-            "revision": 1
+            "revision": 1,
+            "tenant_id": "tenant_00000000000000000000000000000001"
           },
           "allocation_ref": {
             "owner_id": "orch_00000000000000000000000000000001",
             "object_id": "allocation_00000000000000000000000000000001",
-            "revision": 1
+            "revision": 1,
+            "tenant_id": "tenant_00000000000000000000000000000001"
           },
           "permission_refs": [
             {
               "owner_id": "orch_00000000000000000000000000000001",
               "object_id": "grant_00000000000000000000000000000001",
-              "revision": 1
+              "revision": 1,
+              "tenant_id": "tenant_00000000000000000000000000000001"
             }
           ],
           "parent_control_snapshot": {
@@ -573,7 +667,8 @@
               "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
               "media_type": "text/plain",
               "byte_length": 42
-            }
+            },
+            "window_id": "window_00000000000000000000000000000001"
           },
           "context_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
           "parent_proof_ref": {
@@ -585,6 +680,56 @@
             "media_type": "text/plain",
             "byte_length": 42
           }
+        },
+        "requirement_candidates": [
+          {
+            "candidate_key": "c1",
+            "kind": "effect",
+            "statement_ref": {
+              "tenant_id": "tenant_00000000000000000000000000000001",
+              "owner_id": "contentowner_00000000000000000000000000000001",
+              "content_id": "content_00000000000000000000000000000001",
+              "version": 1,
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/plain",
+              "byte_length": 42
+            },
+            "source_refs": [
+              {
+                "content_ref": {
+                  "tenant_id": "tenant_00000000000000000000000000000001",
+                  "owner_id": "contentowner_00000000000000000000000000000001",
+                  "content_id": "content_00000000000000000000000000000001",
+                  "version": 1,
+                  "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "media_type": "text/plain",
+                  "byte_length": 42
+                },
+                "source_kind": "user_input",
+                "submission_ref": {
+                  "tenant_id": "tenant_00000000000000000000000000000001",
+                  "owner_id": "app_00000000000000000000000000000001",
+                  "object_id": "submission_00000000000000000000000000000001",
+                  "revision": 1
+                },
+                "locator": "text:0:20"
+              }
+            ],
+            "origin": "explicit_user",
+            "rule_ref": {
+              "component_id": "component_00000000000000000000000000000001",
+              "version": "1.0.0",
+              "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "required": true,
+            "open_questions": []
+          }
+        ],
+        "source_submission_ref": {
+          "tenant_id": "tenant_00000000000000000000000000000001",
+          "owner_id": "app_00000000000000000000000000000001",
+          "object_id": "submission_00000000000000000000000000000001",
+          "revision": 1
         }
       }
     }
@@ -594,7 +739,7 @@
     "record_type": "Command",
     "record": {
       "protocol": "harness/1",
-      "profile": "architecture-2026-10",
+      "profile": "architecture-2026-10-data1",
       "logical_service_id": "executor_00000000000000000000000000000001",
       "command_id": "command_00000000000000000000000000000007",
       "method": "execution.invoke",
@@ -605,7 +750,8 @@
         "task_ref": {
           "owner_id": "orch_00000000000000000000000000000001",
           "object_id": "task_00000000000000000000000000000001",
-          "revision": 1
+          "revision": 1,
+          "tenant_id": "tenant_00000000000000000000000000000001"
         },
         "goal_revision": 1,
         "control_revision": 1,
@@ -617,7 +763,8 @@
         "binding_ref": {
           "owner_id": "executor_00000000000000000000000000000001",
           "object_id": "binding_00000000000000000000000000000001",
-          "revision": 1
+          "revision": 1,
+          "tenant_id": "tenant_00000000000000000000000000000001"
         },
         "intent_ref": {
           "tenant_id": "tenant_00000000000000000000000000000001",
@@ -633,7 +780,8 @@
           {
             "owner_id": "orch_00000000000000000000000000000001",
             "object_id": "use_00000000000000000000000000000001",
-            "revision": 1
+            "revision": 1,
+            "tenant_id": "tenant_00000000000000000000000000000001"
           }
         ],
         "deadline": "2026-10-02T13:00:00Z",
@@ -654,12 +802,14 @@
             "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             "media_type": "text/plain",
             "byte_length": 42
-          }
+          },
+          "window_id": "window_00000000000000000000000000000001"
         },
         "reservation_ref": {
           "owner_id": "orch_00000000000000000000000000000001",
           "object_id": "reservation_00000000000000000000000000000001",
-          "revision": 1
+          "revision": 1,
+          "tenant_id": "tenant_00000000000000000000000000000001"
         }
       }
     }
@@ -669,7 +819,7 @@
     "record_type": "Command",
     "record": {
       "protocol": "harness/1",
-      "profile": "architecture-2026-10",
+      "profile": "architecture-2026-10-data1",
       "logical_service_id": "executor_00000000000000000000000000000001",
       "command_id": "command_00000000000000000000000000000008",
       "method": "execution.cancel",
@@ -681,7 +831,8 @@
         "task_ref": {
           "owner_id": "orch_00000000000000000000000000000001",
           "object_id": "task_00000000000000000000000000000001",
-          "revision": 1
+          "revision": 1,
+          "tenant_id": "tenant_00000000000000000000000000000001"
         },
         "orchestrator_id": "orch_00000000000000000000000000000001"
       }
@@ -692,7 +843,7 @@
     "record_type": "Command",
     "record": {
       "protocol": "harness/1",
-      "profile": "architecture-2026-10",
+      "profile": "architecture-2026-10-data1",
       "logical_service_id": "orch_00000000000000000000000000000001",
       "command_id": "command_00000000000000000000000000000009",
       "method": "task.billing_reconcile",
@@ -703,12 +854,1386 @@
         "source_ref": {
           "owner_id": "executor_00000000000000000000000000000001",
           "object_id": "operation_00000000000000000000000000000001",
-          "revision": 3
+          "revision": 3,
+          "tenant_id": "tenant_00000000000000000000000000000001"
         },
         "source_kind": "execution_operation",
         "usage_revision": 3,
         "usage_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
       }
+    }
+  },
+  {
+    "case_id": "coverage-task-1",
+    "record_type": "GoalCoverage",
+    "record": {
+      "coverage_id": "coverage_00000000000000000000000000000001",
+      "task_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "task_00000000000000000000000000000001",
+        "revision": 3
+      },
+      "goal_revision": 1,
+      "goal_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "requirements_digest": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "mapping_report_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "rule_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "evaluator_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "verdict": "unknown",
+      "applicability": "unknown",
+      "checked_at": "2026-10-02T12:05:00Z",
+      "revision": 1
+    }
+  },
+  {
+    "case_id": "coverage-task-2",
+    "record_type": "GoalCoverage",
+    "record": {
+      "coverage_id": "coverage_00000000000000000000000000000002",
+      "task_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "task_00000000000000000000000000000002",
+        "revision": 3
+      },
+      "goal_revision": 1,
+      "goal_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "requirements_digest": "sha256:418b890b269a765d0e6e5a7313ced4284cf6fe259084207229472f44c3979fda",
+      "mapping_report_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "rule_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "evaluator_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "verdict": "pass",
+      "applicability": "usable",
+      "checked_at": "2026-10-02T12:05:00Z",
+      "revision": 1
+    }
+  },
+  {
+    "case_id": "claim-fixed-observed-work",
+    "record_type": "Claim",
+    "record": {
+      "job_id": "job_00000000000000000000000000000001",
+      "tenant_id": "tenant_00000000000000000000000000000001",
+      "owner_id": "orch_00000000000000000000000000000001",
+      "holder_id": "boot_00000000000000000000000000000001",
+      "lease_epoch": 7,
+      "lease_until": "2026-10-02T12:00:15Z",
+      "observed_work_revision": 12
+    }
+  },
+  {
+    "case_id": "input-session",
+    "record_type": "Session",
+    "record": {
+      "session_id": "session_00000000000000000000000000000001",
+      "tenant_id": "tenant_00000000000000000000000000000001",
+      "owner_id": "app_00000000000000000000000000000001",
+      "revision": 1,
+      "state": "open",
+      "default_branch_id": "branch_00000000000000000000000000000001",
+      "created_at": "2026-10-02T12:00:00Z"
+    }
+  },
+  {
+    "case_id": "input-branch",
+    "record_type": "Branch",
+    "record": {
+      "branch_id": "branch_00000000000000000000000000000001",
+      "session_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "app_00000000000000000000000000000001",
+        "object_id": "session_00000000000000000000000000000001",
+        "revision": 1
+      },
+      "revision": 1,
+      "head_message_id": "message_00000000000000000000000000000001",
+      "history_cutoff": 1,
+      "config_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    }
+  },
+  {
+    "case_id": "original-message",
+    "record_type": "Message",
+    "record": {
+      "message_id": "message_00000000000000000000000000000001",
+      "session_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "app_00000000000000000000000000000001",
+        "object_id": "session_00000000000000000000000000000001",
+        "revision": 1
+      },
+      "branch_id": "branch_00000000000000000000000000000001",
+      "seq": 1,
+      "role": "user",
+      "content_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "submission_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "app_00000000000000000000000000000001",
+        "object_id": "submission_00000000000000000000000000000001",
+        "revision": 1
+      },
+      "created_at": "2026-10-02T12:00:00Z"
+    }
+  },
+  {
+    "case_id": "original-submission",
+    "record_type": "Submission",
+    "record": {
+      "submission_id": "submission_00000000000000000000000000000001",
+      "tenant_id": "tenant_00000000000000000000000000000001",
+      "owner_id": "app_00000000000000000000000000000001",
+      "revision": 3,
+      "session_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "app_00000000000000000000000000000001",
+        "object_id": "session_00000000000000000000000000000001",
+        "revision": 1
+      },
+      "branch_id": "branch_00000000000000000000000000000001",
+      "message_id": "message_00000000000000000000000000000001",
+      "seq": 1,
+      "kind": "submit_goal",
+      "content_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "history_cutoff": 1,
+      "dispatch_command_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "command_0000000000000000000000000000000a",
+        "revision": 1
+      },
+      "state": "applied",
+      "withdrawal_requested": false,
+      "task_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "task_00000000000000000000000000000003",
+        "revision": 1
+      },
+      "created_at": "2026-10-02T12:00:00Z"
+    }
+  },
+  {
+    "case_id": "raw-submit-without-conditions",
+    "record_type": "Command",
+    "record": {
+      "protocol": "harness/1",
+      "profile": "architecture-2026-10-data1",
+      "logical_service_id": "orch_00000000000000000000000000000001",
+      "command_id": "command_0000000000000000000000000000000a",
+      "method": "task.submit",
+      "target_id": "orch_00000000000000000000000000000001",
+      "expires_at": "2026-10-02T13:00:00Z",
+      "payload": {
+        "orchestrator_id": "orch_00000000000000000000000000000001",
+        "goal_ref": {
+          "tenant_id": "tenant_00000000000000000000000000000001",
+          "owner_id": "contentowner_00000000000000000000000000000001",
+          "content_id": "content_00000000000000000000000000000001",
+          "version": 1,
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "text/plain",
+          "byte_length": 42
+        },
+        "policy_ref": {
+          "component_id": "component_00000000000000000000000000000001",
+          "version": "1.0.0",
+          "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "deadline": "2026-10-02T13:00:00Z",
+        "budget": [
+          {
+            "unit": "USD",
+            "value": "10"
+          }
+        ],
+        "source_submission_ref": {
+          "tenant_id": "tenant_00000000000000000000000000000001",
+          "owner_id": "app_00000000000000000000000000000001",
+          "object_id": "submission_00000000000000000000000000000001",
+          "revision": 1
+        }
+      }
+    }
+  },
+  {
+    "case_id": "initial-empty-goal",
+    "record_type": "GoalRevision",
+    "record": {
+      "task_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "task_00000000000000000000000000000003",
+        "revision": 1
+      },
+      "goal_revision": 1,
+      "goal_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "source_refs": [
+        {
+          "content_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_kind": "user_input",
+          "submission_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "app_00000000000000000000000000000001",
+            "object_id": "submission_00000000000000000000000000000001",
+            "revision": 1
+          },
+          "locator": "text:0:20"
+        }
+      ],
+      "requirements": [],
+      "requirements_digest": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "change_kind": "initial",
+      "cause_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "app_00000000000000000000000000000001",
+        "object_id": "submission_00000000000000000000000000000001",
+        "revision": 1
+      },
+      "created_at": "2026-10-02T12:00:01Z"
+    }
+  },
+  {
+    "case_id": "candidate-conditions",
+    "record_type": "RequirementDelta",
+    "record": {
+      "base_goal_revision": 1,
+      "candidates": [
+        {
+          "candidate_key": "c1",
+          "kind": "quality",
+          "statement_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_0000000000000000000000000000000b",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_refs": [
+            {
+              "content_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "contentowner_00000000000000000000000000000001",
+                "content_id": "content_00000000000000000000000000000001",
+                "version": 1,
+                "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "media_type": "text/plain",
+                "byte_length": 42
+              },
+              "source_kind": "user_input",
+              "submission_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "app_00000000000000000000000000000001",
+                "object_id": "submission_00000000000000000000000000000001",
+                "revision": 1
+              },
+              "locator": "text:0:20"
+            }
+          ],
+          "origin": "explicit_user",
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "required": true,
+          "open_questions": []
+        },
+        {
+          "candidate_key": "c2",
+          "kind": "quality",
+          "statement_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_0000000000000000000000000000000c",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_refs": [
+            {
+              "content_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "contentowner_00000000000000000000000000000001",
+                "content_id": "content_00000000000000000000000000000001",
+                "version": 1,
+                "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "media_type": "text/plain",
+                "byte_length": 42
+              },
+              "source_kind": "user_input",
+              "submission_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "app_00000000000000000000000000000001",
+                "object_id": "submission_00000000000000000000000000000001",
+                "revision": 1
+              },
+              "locator": "text:0:20"
+            }
+          ],
+          "origin": "explicit_user",
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "required": true,
+          "open_questions": []
+        },
+        {
+          "candidate_key": "c3",
+          "kind": "effect",
+          "statement_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_0000000000000000000000000000000d",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_refs": [
+            {
+              "content_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "contentowner_00000000000000000000000000000001",
+                "content_id": "content_00000000000000000000000000000001",
+                "version": 1,
+                "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "media_type": "text/plain",
+                "byte_length": 42
+              },
+              "source_kind": "user_input",
+              "submission_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "app_00000000000000000000000000000001",
+                "object_id": "submission_00000000000000000000000000000001",
+                "revision": 1
+              },
+              "locator": "text:0:20"
+            }
+          ],
+          "origin": "explicit_user",
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "required": true,
+          "open_questions": []
+        },
+        {
+          "candidate_key": "c4",
+          "kind": "effect",
+          "statement_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_0000000000000000000000000000000e",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_refs": [
+            {
+              "content_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "contentowner_00000000000000000000000000000001",
+                "content_id": "content_00000000000000000000000000000001",
+                "version": 1,
+                "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "media_type": "text/plain",
+                "byte_length": 42
+              },
+              "source_kind": "user_input",
+              "submission_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "app_00000000000000000000000000000001",
+                "object_id": "submission_00000000000000000000000000000001",
+                "revision": 1
+              },
+              "locator": "text:0:20"
+            }
+          ],
+          "origin": "explicit_user",
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "required": true,
+          "open_questions": []
+        }
+      ],
+      "reason_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000014",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      }
+    }
+  },
+  {
+    "case_id": "accepted-original-decision",
+    "record_type": "RequirementAdoption",
+    "record": {
+      "adoption_id": "adoption_00000000000000000000000000000003",
+      "task_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "task_00000000000000000000000000000003",
+        "revision": 2
+      },
+      "source_kind": "decision",
+      "source_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "brain_00000000000000000000000000000001",
+        "object_id": "decision_00000000000000000000000000000003",
+        "revision": 1
+      },
+      "base_goal_revision": 1,
+      "result_goal_revision": 2,
+      "outcome": "accepted",
+      "mappings": [
+        {
+          "candidate_key": "c1",
+          "requirement_id": "requirement_0000000000000000000000000000000b",
+          "revision": 1
+        },
+        {
+          "candidate_key": "c2",
+          "requirement_id": "requirement_0000000000000000000000000000000c",
+          "revision": 1
+        },
+        {
+          "candidate_key": "c3",
+          "requirement_id": "requirement_0000000000000000000000000000000d",
+          "revision": 1
+        },
+        {
+          "candidate_key": "c4",
+          "requirement_id": "requirement_0000000000000000000000000000000e",
+          "revision": 1
+        }
+      ],
+      "validation_report_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000015",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "reason_codes": [
+        "source_verified",
+        "no_scope_expansion"
+      ],
+      "decided_at": "2026-10-02T12:01:00Z"
+    }
+  },
+  {
+    "case_id": "adopted-condition-1",
+    "record_type": "Requirement",
+    "record": {
+      "kind": "quality",
+      "statement_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_0000000000000000000000000000000b",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "source_refs": [
+        {
+          "content_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_kind": "user_input",
+          "submission_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "app_00000000000000000000000000000001",
+            "object_id": "submission_00000000000000000000000000000001",
+            "revision": 1
+          },
+          "locator": "text:0:20"
+        }
+      ],
+      "origin": "explicit_user",
+      "rule_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "required": true,
+      "requirement_id": "requirement_0000000000000000000000000000000b",
+      "revision": 1,
+      "adoption_id": "adoption_00000000000000000000000000000003"
+    }
+  },
+  {
+    "case_id": "adopted-condition-2",
+    "record_type": "Requirement",
+    "record": {
+      "kind": "quality",
+      "statement_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_0000000000000000000000000000000c",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "source_refs": [
+        {
+          "content_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_kind": "user_input",
+          "submission_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "app_00000000000000000000000000000001",
+            "object_id": "submission_00000000000000000000000000000001",
+            "revision": 1
+          },
+          "locator": "text:0:20"
+        }
+      ],
+      "origin": "explicit_user",
+      "rule_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "required": true,
+      "requirement_id": "requirement_0000000000000000000000000000000c",
+      "revision": 1,
+      "adoption_id": "adoption_00000000000000000000000000000003"
+    }
+  },
+  {
+    "case_id": "adopted-condition-3",
+    "record_type": "Requirement",
+    "record": {
+      "kind": "effect",
+      "statement_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_0000000000000000000000000000000d",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "source_refs": [
+        {
+          "content_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_kind": "user_input",
+          "submission_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "app_00000000000000000000000000000001",
+            "object_id": "submission_00000000000000000000000000000001",
+            "revision": 1
+          },
+          "locator": "text:0:20"
+        }
+      ],
+      "origin": "explicit_user",
+      "rule_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "required": true,
+      "requirement_id": "requirement_0000000000000000000000000000000d",
+      "revision": 1,
+      "adoption_id": "adoption_00000000000000000000000000000003"
+    }
+  },
+  {
+    "case_id": "adopted-condition-4",
+    "record_type": "Requirement",
+    "record": {
+      "kind": "effect",
+      "statement_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_0000000000000000000000000000000e",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "source_refs": [
+        {
+          "content_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_kind": "user_input",
+          "submission_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "app_00000000000000000000000000000001",
+            "object_id": "submission_00000000000000000000000000000001",
+            "revision": 1
+          },
+          "locator": "text:0:20"
+        }
+      ],
+      "origin": "explicit_user",
+      "rule_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "required": true,
+      "requirement_id": "requirement_0000000000000000000000000000000e",
+      "revision": 1,
+      "adoption_id": "adoption_00000000000000000000000000000003"
+    }
+  },
+  {
+    "case_id": "adopted-goal",
+    "record_type": "GoalRevision",
+    "record": {
+      "task_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "task_00000000000000000000000000000003",
+        "revision": 2
+      },
+      "goal_revision": 2,
+      "goal_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "source_refs": [
+        {
+          "content_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_00000000000000000000000000000001",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_kind": "user_input",
+          "submission_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "app_00000000000000000000000000000001",
+            "object_id": "submission_00000000000000000000000000000001",
+            "revision": 1
+          },
+          "locator": "text:0:20"
+        }
+      ],
+      "requirements": [
+        {
+          "requirement_id": "requirement_0000000000000000000000000000000b",
+          "revision": 1
+        },
+        {
+          "requirement_id": "requirement_0000000000000000000000000000000c",
+          "revision": 1
+        },
+        {
+          "requirement_id": "requirement_0000000000000000000000000000000d",
+          "revision": 1
+        },
+        {
+          "requirement_id": "requirement_0000000000000000000000000000000e",
+          "revision": 1
+        }
+      ],
+      "requirements_digest": "sha256:32d2e18b8fe0c26cfb81a9e202cd2265197ff6d6299e192fdf91908e8af1f8f4",
+      "change_kind": "requirements_adopted",
+      "cause_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "brain_00000000000000000000000000000001",
+        "object_id": "decision_00000000000000000000000000000003",
+        "revision": 1
+      },
+      "created_at": "2026-10-02T12:01:00Z"
+    }
+  },
+  {
+    "case_id": "ready-after-intake",
+    "record_type": "Task",
+    "record": {
+      "tenant_id": "tenant_00000000000000000000000000000001",
+      "task_id": "task_00000000000000000000000000000003",
+      "orchestrator_id": "orch_00000000000000000000000000000001",
+      "submit_command_id": "command_0000000000000000000000000000000a",
+      "goal_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "goal_revision": 2,
+      "control_revision": 2,
+      "revision": 3,
+      "policy_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "requirements": [
+        {
+          "kind": "quality",
+          "statement_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_0000000000000000000000000000000b",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_refs": [
+            {
+              "content_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "contentowner_00000000000000000000000000000001",
+                "content_id": "content_00000000000000000000000000000001",
+                "version": 1,
+                "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "media_type": "text/plain",
+                "byte_length": 42
+              },
+              "source_kind": "user_input",
+              "submission_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "app_00000000000000000000000000000001",
+                "object_id": "submission_00000000000000000000000000000001",
+                "revision": 1
+              },
+              "locator": "text:0:20"
+            }
+          ],
+          "origin": "explicit_user",
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "required": true,
+          "requirement_id": "requirement_0000000000000000000000000000000b",
+          "revision": 1,
+          "adoption_id": "adoption_00000000000000000000000000000003"
+        },
+        {
+          "kind": "quality",
+          "statement_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_0000000000000000000000000000000c",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_refs": [
+            {
+              "content_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "contentowner_00000000000000000000000000000001",
+                "content_id": "content_00000000000000000000000000000001",
+                "version": 1,
+                "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "media_type": "text/plain",
+                "byte_length": 42
+              },
+              "source_kind": "user_input",
+              "submission_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "app_00000000000000000000000000000001",
+                "object_id": "submission_00000000000000000000000000000001",
+                "revision": 1
+              },
+              "locator": "text:0:20"
+            }
+          ],
+          "origin": "explicit_user",
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "required": true,
+          "requirement_id": "requirement_0000000000000000000000000000000c",
+          "revision": 1,
+          "adoption_id": "adoption_00000000000000000000000000000003"
+        },
+        {
+          "kind": "effect",
+          "statement_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_0000000000000000000000000000000d",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_refs": [
+            {
+              "content_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "contentowner_00000000000000000000000000000001",
+                "content_id": "content_00000000000000000000000000000001",
+                "version": 1,
+                "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "media_type": "text/plain",
+                "byte_length": 42
+              },
+              "source_kind": "user_input",
+              "submission_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "app_00000000000000000000000000000001",
+                "object_id": "submission_00000000000000000000000000000001",
+                "revision": 1
+              },
+              "locator": "text:0:20"
+            }
+          ],
+          "origin": "explicit_user",
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "required": true,
+          "requirement_id": "requirement_0000000000000000000000000000000d",
+          "revision": 1,
+          "adoption_id": "adoption_00000000000000000000000000000003"
+        },
+        {
+          "kind": "effect",
+          "statement_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "contentowner_00000000000000000000000000000001",
+            "content_id": "content_0000000000000000000000000000000e",
+            "version": 1,
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/plain",
+            "byte_length": 42
+          },
+          "source_refs": [
+            {
+              "content_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "contentowner_00000000000000000000000000000001",
+                "content_id": "content_00000000000000000000000000000001",
+                "version": 1,
+                "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "media_type": "text/plain",
+                "byte_length": 42
+              },
+              "source_kind": "user_input",
+              "submission_ref": {
+                "tenant_id": "tenant_00000000000000000000000000000001",
+                "owner_id": "app_00000000000000000000000000000001",
+                "object_id": "submission_00000000000000000000000000000001",
+                "revision": 1
+              },
+              "locator": "text:0:20"
+            }
+          ],
+          "origin": "explicit_user",
+          "rule_ref": {
+            "component_id": "component_00000000000000000000000000000001",
+            "version": "1.0.0",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "required": true,
+          "requirement_id": "requirement_0000000000000000000000000000000e",
+          "revision": 1,
+          "adoption_id": "adoption_00000000000000000000000000000003"
+        }
+      ],
+      "deadline": "2026-10-02T13:00:00Z",
+      "status": "active",
+      "control": "running",
+      "wait_reasons": [],
+      "budget": [
+        {
+          "unit": "USD",
+          "limit": "10",
+          "reserved": "4",
+          "spent": "6"
+        }
+      ],
+      "open_effects": {
+        "collection_revision": 1,
+        "total_count": 0,
+        "unresolved_count": 0,
+        "complete": true
+      },
+      "accounting_open": false,
+      "requirements_state": "ready",
+      "requirements_digest": "sha256:32d2e18b8fe0c26cfb81a9e202cd2265197ff6d6299e192fdf91908e8af1f8f4",
+      "current_coverage_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "coverage_00000000000000000000000000000003",
+        "revision": 1
+      }
+    }
+  },
+  {
+    "case_id": "intake-coverage",
+    "record_type": "GoalCoverage",
+    "record": {
+      "coverage_id": "coverage_00000000000000000000000000000003",
+      "task_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "task_00000000000000000000000000000003",
+        "revision": 3
+      },
+      "goal_revision": 2,
+      "goal_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "requirements_digest": "sha256:32d2e18b8fe0c26cfb81a9e202cd2265197ff6d6299e192fdf91908e8af1f8f4",
+      "mapping_report_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000016",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "rule_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "evaluator_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "verdict": "pass",
+      "applicability": "usable",
+      "checked_at": "2026-10-02T12:02:00Z",
+      "revision": 1
+    }
+  },
+  {
+    "case_id": "clarification-pending",
+    "record_type": "InputRequest",
+    "record": {
+      "request_id": "input_00000000000000000000000000000001",
+      "tenant_id": "tenant_00000000000000000000000000000001",
+      "owner_id": "orch_00000000000000000000000000000001",
+      "revision": 1,
+      "target_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "task_00000000000000000000000000000004",
+        "revision": 1
+      },
+      "goal_revision": 1,
+      "purpose": "clarify_goal",
+      "question_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_0000000000000000000000000000001e",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "answer_schema_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "preview_refs": [
+        {
+          "tenant_id": "tenant_00000000000000000000000000000001",
+          "owner_id": "contentowner_00000000000000000000000000000001",
+          "content_id": "content_00000000000000000000000000000001",
+          "version": 1,
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "text/plain",
+          "byte_length": 42
+        }
+      ],
+      "expires_at": "2026-10-02T13:00:00Z",
+      "state": "pending"
+    }
+  },
+  {
+    "case_id": "interpretation-dispatch",
+    "record_type": "DecisionDispatchIntent",
+    "record": {
+      "decision_id": "decision_00000000000000000000000000000003",
+      "task_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "orch_00000000000000000000000000000001",
+        "object_id": "task_00000000000000000000000000000003",
+        "revision": 1
+      },
+      "snapshot_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000018",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "snapshot_revision": 1,
+      "model_profile_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "brain_owner_id": "brain_00000000000000000000000000000001",
+      "command_id": "command_0000000000000000000000000000000b",
+      "intent_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  },
+  {
+    "case_id": "interpretation-decision",
+    "record_type": "DecisionRecord",
+    "record": {
+      "decision_id": "decision_00000000000000000000000000000003",
+      "owner_id": "brain_00000000000000000000000000000001",
+      "revision": 1,
+      "snapshot_revision": 1,
+      "status": "completed",
+      "send_started": true,
+      "physical_request_count": 1,
+      "proposal_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000017",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "usage": [
+        {
+          "unit": "USD",
+          "value": "0.02"
+        }
+      ],
+      "usage_final": true
+    }
+  },
+  {
+    "case_id": "awaiting-original-clarification",
+    "record_type": "Task",
+    "record": {
+      "tenant_id": "tenant_00000000000000000000000000000001",
+      "task_id": "task_00000000000000000000000000000004",
+      "orchestrator_id": "orch_00000000000000000000000000000001",
+      "submit_command_id": "command_0000000000000000000000000000000c",
+      "goal_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "goal_revision": 1,
+      "control_revision": 1,
+      "revision": 2,
+      "policy_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "requirements": [],
+      "deadline": "2026-10-02T13:00:00Z",
+      "status": "active",
+      "control": "running",
+      "wait_reasons": [
+        {
+          "kind": "input",
+          "object_ref": {
+            "tenant_id": "tenant_00000000000000000000000000000001",
+            "owner_id": "orch_00000000000000000000000000000001",
+            "object_id": "input_00000000000000000000000000000001",
+            "revision": 1
+          },
+          "resume_condition": "原版本澄清请求由本人有效回答"
+        }
+      ],
+      "budget": [
+        {
+          "unit": "USD",
+          "limit": "10",
+          "reserved": "4",
+          "spent": "6"
+        }
+      ],
+      "open_effects": {
+        "collection_revision": 1,
+        "total_count": 0,
+        "unresolved_count": 0,
+        "complete": true
+      },
+      "accounting_open": false,
+      "requirements_state": "awaiting_input",
+      "requirements_digest": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  },
+  {
+    "case_id": "registered-effect-rule",
+    "record_type": "RuleDefinition",
+    "record": {
+      "rule_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "kind": "effect",
+      "parameters_schema_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "predicate": "current_state",
+      "allowed_basis": [
+        "verified"
+      ],
+      "allow_user_acceptance": false,
+      "required_evidence_schema_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "scope_schema_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "max_observation_age_seconds": 60,
+      "risk_class": "ordinary",
+      "applicability_policy_ref": {
+        "component_id": "component_00000000000000000000000000000001",
+        "version": "1.0.0",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    }
+  },
+  {
+    "case_id": "ordered-goal-document",
+    "record_type": "GoalDocument",
+    "record": {
+      "format_version": 1,
+      "initial_goal_ref": {
+        "tenant_id": "tenant_00000000000000000000000000000001",
+        "owner_id": "contentowner_00000000000000000000000000000001",
+        "content_id": "content_00000000000000000000000000000001",
+        "version": 1,
+        "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "text/plain",
+        "byte_length": 42
+      },
+      "amendment_refs": [
+        {
+          "tenant_id": "tenant_00000000000000000000000000000001",
+          "owner_id": "contentowner_00000000000000000000000000000001",
+          "content_id": "content_00000000000000000000000000000031",
+          "version": 1,
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "text/plain",
+          "byte_length": 42
+        }
+      ]
+    }
+  },
+  {
+    "case_id": "schedule-once_at",
+    "record_type": "ScheduleSpec",
+    "record": {
+      "type": "once_at",
+      "at": "2026-10-03T09:00:00Z"
+    }
+  },
+  {
+    "case_id": "schedule-interval",
+    "record_type": "ScheduleSpec",
+    "record": {
+      "type": "interval",
+      "anchor_at": "2026-10-02T09:00:00Z",
+      "every_seconds": 3600
+    }
+  },
+  {
+    "case_id": "schedule-daily",
+    "record_type": "ScheduleSpec",
+    "record": {
+      "type": "daily",
+      "local_time": "09:00:00"
+    }
+  },
+  {
+    "case_id": "schedule-weekly",
+    "record_type": "ScheduleSpec",
+    "record": {
+      "type": "weekly",
+      "local_time": "09:00:00",
+      "weekdays": [
+        1,
+        3,
+        5
+      ]
+    }
+  },
+  {
+    "case_id": "schedule-monthly",
+    "record_type": "ScheduleSpec",
+    "record": {
+      "type": "monthly",
+      "local_time": "09:00:00",
+      "monthdays": [
+        1,
+        31
+      ]
     }
   }
 ]

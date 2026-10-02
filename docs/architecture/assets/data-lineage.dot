@@ -1,0 +1,24 @@
+digraph DataLineage {
+ graph [rankdir=LR,bgcolor="#fffefa",fontname="Noto Sans CJK SC",nodesep=0.5,ranksep=0.6,pad=0.25,label="数据交接保留原身份，各 owner 只裁决自己的事实",labelloc=t,fontsize=21];
+ node [shape=box,style="rounded,filled",fontname="Noto Sans CJK SC",fontsize=15,color="#cad8da",fillcolor="#eef5f3",fontcolor="#173c42",margin="0.2,0.16"];
+ edge [fontname="Noto Sans CJK SC",fontsize=12,color="#617e85",fontcolor="#355c65",arrowsize=0.7];
+ input [label="Interaction\nMessage / Submission\n原文、分支、原投递",fillcolor="#fff1dc"];
+ task [label="Orchestrator\nTask / GoalRevision\n条件、采纳、覆盖",fillcolor="#dceee7"];
+ decision [label="O 固定 Snapshot\nBrain 保存 Decision\n提案不能自行生效"];
+ operation [label="O 固定 Intent\nExecutor 保存 Operation\n尝试、效果、未知"];
+ result [label="Orchestrator\nConditionCheck / Result\n逐项核验后固定完成",fillcolor="#dceee7"];
+ content [label="Content / Memory\n准确内容、全部来源\n副本与当前使用权限",fillcolor="#e7edf8"];
+ authority [label="Grant / Confirmation\n独立许可和本人决定\n有限 use，不由模型生成",fillcolor="#f4e7ec"];
+ settlement [label="各原计费与业务 owner\n累计费用、Job、关闭记录\n终态后仍可继续收尾",fillcolor="#f4e7ec"];
+ input -> task [label="原 command"];
+ task -> decision [label="固定版本"];
+ decision -> operation [label="O 准入"];
+ operation -> result [label="准确证据"];
+ content -> decision [label="获准材料",style=dashed];
+ authority -> operation [label="启动门禁",style=dashed];
+ operation -> settlement [label="原费用/效果",style=dashed];
+ result -> settlement [label="保留未结责任",style=dashed];
+ {rank=same;task;content;}
+ {rank=same;decision;authority;}
+ {rank=same;result;settlement;}
+}

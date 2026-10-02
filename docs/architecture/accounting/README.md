@@ -4,6 +4,8 @@
 
 默认采用 strict 模式：只准入有可信单次费用上界的能力。estimate 仅在本人接受非硬上限、Task 与相关 Grant owner 同事务可核验接受事实时启用；跨 owner 分配和离线使用保持 strict。
 
+字段、来源与存储关系统一见[本模块数据记录](../data/module-records.md#6-授权与费用)和[存储附录](../data/storage.md)。本章集中说明业务裁决与恢复。
+
 ## 1 三种额度不能混为一项
 
 | 记录 | 控制什么 | 何时释放 |
@@ -18,7 +20,7 @@ BudgetBalance 为每 Task/单位保存 limit、reserved、spent。准入检查 `
 
 ## 2 预留与来源绑定
 
-每项 Reservation 固定 task_id、reservation_id、unit、original_reserved，以及唯一计费源 `(source_owner,source_kind,source_id)`。Decision、Operation、Grant use 和 allocation 可以提供相关证据，但只能选择一份实际来源作为 Task 计费权威。
+每项 Reservation 固定 task_id、reservation_id 及唯一计费源 `(source_owner,source_kind,source_id)`。同源的 USD、token 等单位明细按 `(reservation_id,unit)` 唯一，分别保存 original_reserved、剩余预留和已记累计量；账单修订与所有单位差额同事务归并。Decision、Operation、Grant use 和 allocation 可以提供相关证据，但只能选择一份实际来源作为 Task 计费权威。
 
 首次发送前固定可信上界及计费来源。远端身份尚未确定时，先保存未绑定预留和交接责任；取得可核验原对象后唯一绑定。绑定冲突不猜来源结清。
 
@@ -36,7 +38,11 @@ flowchart LR
 
 设原预留为10，累计账单从0到6：spent 增6，尚未最终核清时剩余预留保持4。重复6不再扣费。最终账单8时 spent 再增2并释放剩余2。若之后可信更正为9，只补1，不重新扣9、不重开 once、不倒回已释放额度。
 
-每次归并原费用修订、累计差额、余额、事故与 Job 在同事务提交。同修订异摘要冲突；旧修订不能倒退累计额。退款/贷记新增独立BillingAdjustment：adjustment_id、original_billing_source_ref、provider_adjustment_key、kind=refund/credit、unit、正amount、evidence_refs、verified_by/at、pending/applied/rejected。只接受原计费owner的认证提交并核供应商凭据，(source,provider_adjustment_key)唯一，同键异内容拒绝。退款累计不得超过可核实原charge，其他补贴另分类。应用时调整、净成本投影与交回outbox共同提交，父方按原键去重。spent保持gross_spent单调，credit_total单调，net_cost=gross_spent-credit_total；准入仍用gross_spent+reserved，默认不自动返可花预算，也不恢复once或allocation。pending不改账。
+计费owner在同一事务保存费用修订、累计差额、余额、事故记录和Job。同修订异摘要必须报冲突；旧修订不得下调累计费用。
+
+退款或贷记单独保存为BillingAdjustment。系统只接受原计费owner的认证提交，并核验供应商凭据。按原来源和provider_adjustment_key去重；同键异内容拒绝。退款累计不得超过可核实的原收费，其他补贴另行分类。pending不改账。应用调整时，调整记录、净成本投影和交回outbox共同提交，父方按原键去重。字段见[账务记录](../data/module-records.md#6-授权与费用)。
+
+gross_spent和credit_total分别单调累计，net_cost=gross_spent-credit_total。新行动仍按gross_spent+reserved检查预算。退款不自动增加可花预算，也不恢复once或已关闭的allocation。
 
 ## 3 strict 与 estimate 的真实边界
 
@@ -44,7 +50,7 @@ strict 的上界须覆盖全部物理请求、输出 token、必要分页、取�
 
 estimate 需要[策略接受合同](../security/README.md#policy-acceptance)：准确策略摘要、适用任务/能力、每次预留方法、任务预算、单位、期限和非硬上限说明。每次新计费重新查当前接受记录。只授权自动任务不等于接受未知超额。
 
-实际超额区分：estimate 偏差、provider_bound_breach、receiver_allocation_breach。可以同时发生。未查清原因记录 incident_pending，不能把真实费用截到预算以内。用户调高 limit 是新命令，不改变历史许可、账单或首次预算。
+实际超额区分：estimate 偏差、provider_bound_breach、receiver_allocation_breach。可以同时发生。未查清原因记录 incident_pending，不得把真实费用截到预算以内。用户调高 limit 是新命令，不改变历史许可、账单或首次预算。
 
 ## 4 父子预算跨域交接
 
@@ -73,6 +79,19 @@ Closure 固定 allocation/receiver、spending_closed、closed_at、usage_revisio
 
 closed 后原账单可以上调，receiver 增 usage_revision、保留原关闭时刻，并同事务重开交回 outbox。父方对 settled allocation 追记差额；既有 Task 和消费门禁均不重开。接收方合规单次调用合计超 allocation 是接收准入缺陷，不能都归咎供应商。
 
+
+### 分配与结算方法
+
+| 方法及负责方 | 准确payload | applied含义与恢复 |
+| --- | --- | --- |
+| budget.allocate；父owner | allocation_id、parent_task_ref、receiver_id、limits:Amount[]、deadline | 原分配与父预留共同提交；不表示子Task已创建 |
+| budget.close；receiver | allocation_ref、parent_task_ref、reason | 原IncomingAllocation门禁closing/closed和收尾已存。未知分配先保存原父绑定的关闭记录，迟到创建不能open |
+| budget.settle；父owner | allocation_ref、closure_ref | 保存核对原receiver Closure的责任；主动取原累计值，A不等于已释放预留 |
+| budget.read | 原allocation或task/单位 | 原门禁、累计用量、预留与当前未结范围；不得只返回一项available掩盖未知 |
+| billing.adjustment.submit；原计费owner | adjustment_id、original_source_ref、provider_adjustment_key、kind、unit、amount、evidence_refs | 固定原调整及核验责任；只有验证后的applied调整改变净成本，不返once或自动返预算 |
+
+close必须核验认证父owner、原allocation/receiver范围和准确Task关系。父方失联时，receiver只能收紧自己已接纳的门禁，不推测允许新消费。settle和adjustment按原计费源及业务键去重；同来源修订异摘要、未知来源绑定、伪造关闭或超过可核实退款范围分别返回digest_conflict、unknown_billing_binding、closure_unverified、adjustment_exceeds_charge。跨单位金额不得抵扣。临时依赖不可达保留原核对责任，不固定一个虚假的零账单。
+
 ## 5 迟到账单必须主动找回父方
 
 计费 owner 取得可信新累计事实时，将原账单修订和 correction outbox 同事务保存。`task.billing_reconcile` 只唤醒原来源的结算 Job，回执 applied 表示责任已耐久登记，不表示账已结清。
@@ -85,7 +104,7 @@ Orchestrator 核对认证 sender、原 source→Task 绑定、usage_revision 和
 
 不同 Task 的总额不能各自复制。首版由受信配置为每用户/租户、供应商和维度分配保守的固定 owner 份额，所有份额之和不超过总量。进程副本共享原库计数，不因增副本获得新额度。
 
-转移份额先在旧 owner 降低可准入上限并证明已释放，再增加新 owner。未知调用、未结预留和旧计量窗口均计入；旧 owner 失联不能把其份额重复分配。代价是有空闲仍可能排队，后续只有测得闲置成为主要成本才增加独立配额协议。
+转移份额先在旧 owner 降低可准入上限并证明已释放，再增加新 owner。未知调用、未结预留和旧计量窗口均计入；旧 owner 失联不得把其份额重复分配。代价是有空闲仍可能排队，后续只有测得闲置成为主要成本才增加独立配额协议。
 
 模型和工具的实际账单、调度并发、请求速率及设备占用分别限制。请求超时仍占未知费用；无远端关闭查询时不能宣称硬限制供应商真实在途并发。
 

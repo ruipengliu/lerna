@@ -4,6 +4,8 @@
 
 默认Go内核与审核组件静态构建，独立可替换组件通过受控进程或服务装配。不用Go热卸载插件建立恢复保证，也不因为一个包自称sandbox就给它宿主权限。
 
+字段、来源与存储关系统一见[本模块数据记录](../data/module-records.md#8-能力安装与发布)和[存储附录](../data/storage.md)。本章集中说明业务裁决与恢复。
+
 ## 1 三份准确声明
 
 | 声明 | 固定内容 |
@@ -34,6 +36,27 @@ extensions.prepare 保存原命令、准确锁定清单、准备阶段与Job。�
 Activation保存activation_id、InstallLock、目标范围、generation和可见revision。generation表示当前绑定代际，revision随可见状态、readiness、残留和禁用变化递增。历史激活不变，当前InstanceReadiness绑定本次随机instance_id、配置/制品摘要、自检、批准及期限。
 
 异步初始化回调只可CAS更新自己原instance/generation；旧A回调不能覆盖新B，旧清理也不能删除B的句柄。handler对外可见必须晚于readiness事务确认。adapter构造、自检或恢复对象不得隐式发模型或目标请求。
+
+### 当前目标槽和方法
+
+DeploymentTarget/BindingHead是既有部署目标的稳定本域记录。受信管理入口必须先登记目标，初始revision=1、generation=0、enabled=false；普通activate不得通过payload临时创建目标。键为tenant/owner/target_id，保存revision、enabled门禁、current_activation_ref、generation（空槽为0）、binding_ref及当前readiness。target_scope先解析为准确有界target集合；首版activate每次只裁决一个target，批次是多个原命令的集合，不宣称跨target原子切换。
+
+prepare可并发，但不能发布当前handler。activate在原target锁下比较expected_generation，固定候选及准备责任；准备只保存候选，不修改当前绑定头。初始化完成后再次比较同一target的原head revision、generation和启停门禁，才共同提交当前Activation、Binding和InstanceReadiness。A/B不能各锁自己的activation_id就都成为当前版本。CAS失败的候选只清理自己的实例；旧ready回调和旧cleanup不能改新绑定。
+
+| 方法 | 固定payload与前态 | 成功点及特有reason |
+| --- | --- | --- |
+| extensions.prepare；A | install_lock_ref、target_ref、config_ref | 保存准备责任，read报告依赖/隔离/兼容结果；artifact_unavailable、format_incompatible |
+| extensions.activate；CAS；P→A/R | target_id、expected_generation:Count、install_lock_ref、approval_ref、config_ref、prepare_deadline | 当前目标头、readiness、Binding同事务后A；generation_changed、approval_invalid、instance_not_ready |
+| extensions.deactivate；CAS；A | target_id、activation_ref、expected_generation | 只封该当前激活的新使用，保存停止/核对；迟到原activation不得停新实例 |
+| extensions.dispose；A | install_lock_ref、expected_revision | 封新holder并保存清理责任；完整holder/真实退出确认前不报disposed |
+| extensions.reopen；CAS；P→A/R | target_id、activation_ref、expected_generation、expected_instance_ref、old_instance_fence_ref、prepare_deadline | 同激活新instance/readiness，generation不变、不重迁移；old_instance_not_fenced、activation_replaced |
+| extensions.read/list | 原目标/激活/制品及分页 | 当前头、原准备/批准、逐实例ready与残留；读取不触发初始化 |
+
+activate/deactivate/reopen的Command.expected_revision都指向稳定BindingHead，不能指向各自新Activation。reopen最终事务还必须比较原expected_instance_ref，重新核验fence、当前批准和readiness。每次实例切换或启停都增加head revision；generation不变也不能越过竞争中的deactivate。失败者仅清自己的候选。
+
+重启和新激活分别幂等。reopen的原命令预先固定新instance_id，答复丢失不再造替身。自动回退仍是新的activate，必须引用准确旧InstallLock与独立旧Approval；当前目标已被第三版替换时返回冲突，不刷新expected_generation。
+
+Migration还固定target_id、from_format/to_format、migration_id、制品摘要及checkpoint。只有该目标的旧实例已退出、未结责任可恢复且回退保留期结束，才contract旧格式。准备、激活及回退均不得把业务数据回滚到旧事实。
 
 ## 3 发布和在途工作
 

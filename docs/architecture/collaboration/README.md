@@ -2,6 +2,8 @@
 
 委派转交一个有界子目标，父Task继续承担整体目标。子Agent只能使用收缩后的权限、资料、预算和期限；它报告成功不等于父目标完成。生命周期由同一Orchestrator管理的是内部子任务，另一Orchestrator或独立运行时一律按外部委派处理。
 
+字段、来源与存储关系统一见[本模块数据记录](../data/module-records.md#7-协作和可复用子会话)和[存储附录](../data/storage.md)。本章集中说明业务裁决与恢复。
+
 ## 1 Delegation 固定哪些关联
 
 Delegation固定delegation_id、父Task及goal_revision、准确子目标/输入、Agent/adapter/端点配置、真实祖先链、deadline、allocation和权限引用。远端任务映射一旦建立，不得用新远端Task覆盖原身份。
@@ -35,7 +37,7 @@ sequenceDiagram
     participant A as 外部适配器
     participant C as 子owner
     P->>P: 固定委派、allocation和原创建命令
-    P->>A: 创建原子目标
+    P->>A: 创建该委派的子目标
     A->>C: 原creation_key
     C->>C: 唯一接纳子Task与消费门禁
     C--xA: 创建答复丢失
@@ -57,7 +59,7 @@ sequenceDiagram
 
 父Task成功要求前两层及自己的条件通过。第三层可以在父终态后继续，不让纯账务延迟阻塞已达成目标。Closure建立后，可信原账单更正仍沿原allocation追差额，不重开目标或返还一次许可。
 
-父取消/目标修订：未发送创建在本地封闭；可能发送则继续查原键，立即按原allocation发送budget.close，关闭可先于迟到子创建；找到原子Task后再发送对应取消，不能等取得task_ref才关闭消费。目标取消与消费关闭是不同命令，逐项报告已落实范围。外部不支持pause就明确拒绝暂停保证，不能把未确认写成已停。
+父取消/目标修订：未发送创建在本地封闭；可能发送则继续查原键，立即按原allocation发送budget.close，关闭可先于迟到子创建；找到该委派原先创建的子 Task 后再发送对应取消，不能等取得task_ref才关闭消费。目标取消与消费关闭是不同命令，逐项报告已落实范围。外部不支持pause就明确拒绝暂停保证，不得把未确认写成已停。
 
 输入转交绑定原请求/修订、原命令及委派目标版本。关闭时还要封闭未消费输入，否则一条迟到回答可能让旧目标重新行动。等待超时只结束本次等待，不暗中cancel。
 
@@ -71,13 +73,26 @@ sequenceDiagram
 
 ## 6 可复用子会话
 
-复用ChildHandle意味着保留获准Session历史和固定Agent配置，不意味着复用旧Task、预算或一次性许可。新增child.create/read/send/wait/close是Session与委派的组合端口，无独立调度权威。
+复用ChildHandle只复用获准Session历史和准确Agent配置。新目标必须建立新的Delegation、Task与预算，旧一次许可不能复用。
 
-ChildHandle保存child_id、child_session_ref、agent_binding、install_lock、access_scope、revision及active_delegation_ref。同一child默认一个活动目标，用CAS裁决。
+ChildHandle 固定在原父owner，不支持跨owner迁移。换父Task只允许同一owner、当前active且权限范围仍包含该handle；跨owner需求建立新handle并明确引用获准历史，不把旧权威搬过去。
 
-send必须明确continue_existing或new_goal。同目标沿原InputRequest/steer继续，但补充必须仍在原委派有界目标、父goal_revision、预算和权限范围内。保存不可变amendment及其对应child goal_revision，不改写原委派意图；改变目标或扩大范围必须new_goal。终态之后的新工作建立新的Delegation、Task和allocation，固定新history_cutoff。新父须仍active且有当前权限。旧激活结果或取消只影响原映射，不能结束新目标。
+| 方法 | 准确输入与并发前提 | 成功点及输出 |
+| --- | --- | --- |
+| child.create；P→A/R | child_id、session_owner_id、session_config_ref、agent_binding_ref、install_lock_ref、access_scope_ref、prepare_deadline | 先保存preparing、原session.create命令与Job；原session.create明确applied后open，返回child_ref/child_session_ref。未知不新建第二Session |
+| child.read/list | 原handle/统一分页 | 当前revision、state、原session及active_delegation_ref、历史映射分页 |
+| child.send new_goal；CAS | child_id、expected_active_delegation_ref?、parent_task_ref/parent_goal_revision、goal_ref、input_refs、history_cutoff、permission_refs、budget、deadline | A保存新Delegation/Allocation及交接责任，返回child_ref/delegation_ref；不承诺远端Task已ready |
+| child.send continue_existing；CAS | child_id、delegation_ref、parent_goal_revision；input为answer_request或steer | A固定amendment及原输入转交；回答带request_ref/answer_ref，steer带child_goal_revision/content_ref；不扩大原范围 |
+| child.wait；查询 | child_id、delegation_ref、wait_for=goal_closed/effects_closed/closure、timeout_ms≤5000 | 固定原delegation_ref，返回observed_revision、condition_met及原事实/缺口；超时只结束等待 |
+| child.close；CAS | child_id、cancel_active:boolean、reason | A封新send，返回child_ref与逐委派continuing/cancel_requested/closed/unknown集合；false不暗中取消已接纳工作 |
 
-close先封新send，保留原查询；是否取消活动工作用明确选项，并返回实际落实范围。可复用计算环境仅引用Executor的environment_ref/generation，停止和检查点按[执行合同](../execution/README.md)；会话复用不隐式重建环境或恢复外部效果。
+new_goal替换active_delegation之前，必须取得旧委派goal_work_closed=true且effects_closed=true；旧Task仅cancelled/failed不够，旧费用未结则可以继续。CAS同时比较handle revision和调用方见到的旧映射；两次并发new_goal只能接纳一次。新Delegate和活动映射本方同事务，远端Task仍独立交接。
+
+create的Session若跨owner，沿同一原创建命令恢复；preparing不能send。接口超时不撤销原创建。close后已接纳的原创建/发送仍逐项查询及按cancel_active处理，迟到结果不能重新打开handle或覆盖较新映射。child.wait不得随active指针变化偷偷改等另一目标。
+
+特有错误reason为 child_not_open、active_mapping_changed、previous_goal_open、previous_effect_unknown、parent_owner_mismatch、delegation_scope_exceeded、request_version_changed。没有旧活动映射时expected_active_delegation_ref必须省略；存在时必须精确匹配，不能用省略表示“任意当前目标”。
+
+计算环境另归Executor。ChildHandle只引用environment_ref/generation；关闭会话不隐式销毁环境，也不恢复外部效果。
 
 ## 7 互操作验收
 

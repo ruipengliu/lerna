@@ -1,6 +1,6 @@
 syntax = "proto3";
 package harness.rpc.v1;
-// Unpublished architecture-2026-10 binding. JSON semantics live in the same profile.
+// Unpublished architecture-2026-10-data1 binding. JSON semantics live in the same profile.
 service HarnessService {
   rpc Call(CallRequest) returns (CallResponse);
   rpc EndpointChannel(stream ChannelFrame) returns (stream ChannelFrame);

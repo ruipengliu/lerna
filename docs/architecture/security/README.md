@@ -4,6 +4,8 @@
 
 默认每次用途分别授权。读取不自动允许提取、长期保存、同步、向模型披露或执行写动作。插件安装、Skill 指令、模型自述和子 Agent 请求均不能扩大权限。
 
+字段、来源与存储关系统一见[本模块数据记录](../data/module-records.md#6-授权与费用)和[存储附录](../data/storage.md)。本章集中说明业务裁决与恢复。
+
 ## 1 信任边界
 
 外部文档、工具返回、网页和普通模型输出均是数据。只有受信身份入口、准确策略和显式本人决定可以提供授权依据。租户来自认证上下文，正文中的 tenant_id 仅供核对，不能选择数据域。
@@ -33,7 +35,19 @@ Grant 固定 subject、resources、actions、purpose、处理/存储位置、rec
 
 UseReceipt 只允许原主体、原操作、原接收方和有限窗口启动。新操作不能复用；零调用、失败或退款也不能恢复已经消费的 once。用量结算由独立 `grant.use.settle` 保存，使用回执不可变。
 
-实际启动取所有截止最小值：Task/Operation期限、TaskGate.start_before、UseReceipt、ApprovalUse、资源租约、观察窗口和宿主安全截止。当前已知撤销或控制更高修订立即阻断新入口。无法核验原 authority 时等待，不缓存永久 allowed。
+实际启动取所有截止最小值：Task/Operation期限、ControlSnapshot.start_before、UseReceipt、ApprovalUse、资源租约、观察窗口和宿主安全截止。当前已知撤销或控制更高修订立即阻断新入口。无法核验原 authority 时等待，不缓存永久 allowed。
+
+### 启动窗口到期后
+
+UseReceipt 的 start_before 过期不自动续长。首版不支持修改原use的启动窗口：
+
+- 能证明原使用在所有登记入口都未越过StartBarrier，且旧发送已永久封闭：Executor 保存原操作closed/not_started、may_apply_later=false和零用量依据；授权/预算方按原来源结算可释放的数值预留。once保持已消费
+- 是否启动仍未知：保留原Operation、use、预留和核对责任。时间过去、丢回执、设备离线都不证明未启动
+- 后续仍需行动：先取得必要的新本人批准或Grant，再由当前Task重新决策并持久准入后续Intent/operation_id与预留，然后为这个已存在的准确身份取得新的UseReceipt；记录retry_of_operation_ref/原逻辑步骤关联，保留累计尝试和续行限制。continuous许可在当前范围内可签新use；once必须取得新的本人批准/许可，不得自动返还旧once
+
+后续行动只允许在原发送关闭、无未知或迟到可能且当前条件允许时准入。它不是“换ID重发未知”。正常同Operation的安全Attempt仍受原UseReceipt窗口和总次数约束；过期后不借重试扩大时间。
+
+grant.use payload 固定 use_id、target_ref/target_kind、intent_hash、grant_refs、requested_units:Amount[]、recipient、location、purposes、start_before；applied返回不可变UseReceipt（allowed或denied）。grant.use.settle 固定原use_id与原来源UsageSnapshot，按源修订归并并返回UseSettlement；不得让调用方自报零费用释放未知。grant.issue/revoke 的变更必须走受信业务策略和准确Confirmation；公开创建不接受任意主体自授权限。特有reason为 scope_exceeded、once_consumed、use_intent_mismatch、window_expired、settlement_unverified。use.get/settlement.read 是原身份查询，不重新消费或续期。
 
 ## 3 确认由真正的业务 owner 消费
 
@@ -49,6 +63,23 @@ Confirmation 固定 request_id/revision、business_owner、original_command、ca
 依 [ADR 0008](../../adr/0008-trusted-renderer-preview.md)，preview_refs 表达准确版本关联，不是“用户看过”的密码学证明。受信 Renderer 负责取得和显示；业务端无法仅凭引用识别绕过界面的客户端，更不能证明用户理解。这一限制在高风险入口选择时必须显式评估。
 
 <a id="policy-acceptance"></a>
+
+### 等待本人决定的原命令
+
+需要 Confirmation 的业务方法允许 P→A/R。首次收到准确待批准命令时，原 owner 同事务保存该命令的 accepted/pending_confirmation、Confirmation 与恢复 Job；不能先固定 rejected 再把确认改绑到新命令。确认创建必须在本方法的受信策略要求内，不接受模型自报“用户同意”。
+
+`confirmation.decide` 是独立命令，payload 为 request_id、request_revision、decision=approved/denied、challenge、preview_refs；target 为原确认 owner。认证主体必须与请求本人一致。applied 输出 confirmation_ref/state，只表示本人决定已存。owner 与决定同事务唤醒原业务准备；客户端不重建原业务命令。读取原确认和原命令都检查当前披露。
+
+| 确认/当前业务事实 | 原业务命令下一步 |
+| --- | --- |
+| pending且未过期 | 保持accepted，等待原请求；无忙轮询或隐式行动 |
+| approved，版本、内容、当前权限、预算、目标均有效 | 原事务一次consume并提交业务决定与Job，原命令applied |
+| approved但目标/输入已变或权限失效 | 固定rejected，reason为confirmation_stale或authorization_changed；已批准不保证能执行 |
+| denied / expired | 原命令固定rejected，reason为confirmation_denied / confirmation_expired；保留原身份 |
+| consumed或同命令重交 | 查原consumed_by与原回执；不恢复challenge或once |
+
+Confirmation.expires_at 是最晚决定且消费的时间；原命令及时accepted后不靠Command.expires_at延长这个时间。新意图或新确认必须是新的明确业务请求，不改旧拒绝。
+
 ## 4 估算费用的本人接受合同
 
 本系列新增 `policy.acceptance.create/read/revoke`，由原 Orchestrator 的受信策略入口保存，不另设批准服务。
@@ -57,7 +88,7 @@ create 输入为准确 policy_ref/digest、subject、task/能力范围、计价�
 
 Task.submit 固定 acceptance_ref。每次新的 estimate 计费准入直接检查该记录当前有效，并取 Task、Grant和能力范围交集。撤回只停止后续使用，不清原账单或已发生费用。
 
-这项合同只在 Task 与相关 Grant owner 可共享同一受信事务时开放。跨事务域、经allocation分配和离线采用strict，避免把只有 policy_ref 的远端请求误当“用户接受了无限风险”。若以后要跨域估算，必须增加独立的准确接受凭据、撤回窗口与验证协议，不能偷偷复制本地 allowed。
+这项合同只在 Task 与相关 Grant owner 可共享同一受信事务时开放。跨事务域、经allocation分配和离线采用strict，避免把只有 policy_ref 的远端请求误当“用户接受了无限风险”。若以后要跨域估算，必须增加独立的准确接受凭据、撤回窗口与验证协议，不得偷偷复制本地 allowed。
 
 ## 5 离线许可是有限窗口
 
@@ -65,9 +96,9 @@ Task.submit 固定 acceptance_ref。每次新的 estimate 计费准入直接检�
 
 端侧原账本是该 lease 的唯一累计报告者。每次 use 在端侧事务中核对剩余额度、once、任务控制和期限，保存原操作绑定。重新配对或新实例不能继承旧 lease。
 
-撤权提交后，在线新许可拒绝；已签有限离线窗口内的旧实例可能继续。因此 UI 同时显示撤销决定、已确认停止的入口和仍在窗口内的范围，不宣称瞬时全局撤回。需要更强撤回的用途不允许离线。
+撤权提交后，在线新许可拒绝；已签有限离线窗口内的旧实例可能继续。因此 UI 同时显示撤销决定、已确认停止的入口和仍在窗口内的范围，不宣称瞬时全局撤回。需要更强撤回的用途不得离线。
 
-重连先核身份代次、撤权、TaskGate 和原使用，再封账。lease 为 open/closed/reconciled；closed 禁止新 use，reconciled 需 spending_closed 与可信完整累计费用。失联或自然到期不能自动释放未知额度。后续更正只更新原已知用量，不新增 use、不恢复一次资格、不再释放第二遍余额。
+重连先核身份代次、撤权、TaskGate 和原使用，再封账。lease 为 open/closed/reconciled；closed 禁止新 use，reconciled 需 spending_closed 与可信完整累计费用。失联或自然到期不得自动释放未知额度。后续更正只更新原已知用量，不新增 use、不恢复一次资格、不再释放第二遍余额。
 
 ## 6 内容披露和设备入口
 

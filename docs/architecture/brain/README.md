@@ -19,6 +19,8 @@ flowchart TB
     A --> B[至多一个物理模型请求]
 ```
 
+Snapshot 由 Orchestrator 保存，DecisionRecord/ModelCall 由 Brain 保存。完整字段与派生边界见[数据字典](../data/module-records.md#3-brain-与固定上下文)。
+
 Snapshot 至少绑定 task/goal/control/snapshot revision、goal_ref、完整条件与当前判断、未结效果和委派集合的准确版本、TaskPolicy、InstallLock、ModelProfile、准确 Capability/Binding、材料引用及选择记录。
 
 不可裁剪部分包括用户硬约束、金额/目标/收件人、当前控制、原未知效果、必要条件和本轮实际可调用的完整能力契约。摘要只补充历史解释，不能承担唯一事实保存。
@@ -47,7 +49,7 @@ brain.decide 接纳固定 decision_id 和 Snapshot 后保存 accepted。工作�
 | 取得输出但正文发布失败 | 保存原调用和用量，恢复原发布身份；不能重新推理生成替代结果 |
 | 提案已发布但 Orchestrator 未收到 | brain.get 返回原提案和用量，Orchestrator 按 decision_id 唯一消费 |
 
-每个 Decision 至多一个物理模型请求是有意选择：它使计费和恢复边界清楚，代价是供应商无法查原调用时会留下 provider_result_unknown。是否新建后续 Decision，由 TaskPolicy 在保留原费用占用后明确决定；不能将它伪装成原调用重试。
+每个 Decision 至多一个物理模型请求是有意选择：它使计费和恢复边界清楚，代价是供应商无法查原调用时会留下 provider_result_unknown。是否新建后续 Decision，由 TaskPolicy 在保留原费用占用后明确决定；不得将它伪装成原调用重试。
 
 ModelAdapter 枚举完整发送字段、工具声明、媒体、metadata、缓存字段、插件字段及日志计划。它把每项关联到准确材料或固定配置，核对实际接收方、处理位置和大小，固定编码摘要。发送门禁后不得追加材料或换接收方；真实出口检查摘要一致。SDK、代理和认证刷新造成的自动重发必须关闭。
 
@@ -55,19 +57,33 @@ ModelAdapter 枚举完整发送字段、工具声明、媒体、metadata、缓�
 
 ### 产出发布也有原身份
 
-模型生成采用受限local_id，不自行生成真实Content owner/hash或上传地址。Brain取得合法输出后先按保存许可暂存，并持久固定publication及每个local_id对应的content_id/version/upload_id/content.put原命令和Job。局部依赖必须为有界DAG，拓扑发布后回填准确ContentRef；全部必需内容可查询才将Decision记为completed。部分发布失答复查原命令，失败保留孤儿清理和原费用；取消后不发布可采纳提案。无法保留最低恢复记录时不启用该生成路径。
+模型只为产物提供受限local_id，不生成真实Content owner、hash或上传地址。Brain按保存许可暂存合法输出，再持久保存publication和每个local_id对应的content_id、version、upload_id、原content.put命令及Job。
+
+Brain按有界依赖DAG的拓扑顺序发布内容，再填入准确ContentRef。全部必需内容可查询后，Decision才进入completed。发布答复丢失时查询原命令；发布失败时保留孤儿清理责任和原费用。取消后不发布可被采纳的提案。无法保存最低恢复记录时，不启用这条生成路径。
+
+### 决策方法
+
+brain.decide 为 A 方法，payload 固定 decision_id、task_ref、snapshot_ref/snapshot_revision、model_profile_ref、use_refs、limits:Amount[]、deadline；输出 decision_ref/status=accepted。Task 的 DispatchIntent 与该 payload 摘要一致；同 decision_id 异内容为 idempotency_conflict。brain.cancel 绑定原 decision_id/task_ref，输出停止决定及 usage 状态；未开始模型发送可封闭，已可能发送继续核原调用。brain.get 返回原 DecisionRecord、准确 proposal_ref（完成后才有）、publication状态和原用量。特有 reason 为 snapshot_unavailable、profile_not_supported、input_over_limit、publication_incomplete、provider_result_unknown；前两种依事实选择明确拒绝或等待，unknown不触发透明重发。
+
+每个 Decision 的输出身份、失败及用量必须可查询。无模型输出时不伪造 Proposal；需要重新推理时由 Task 创建新的 Decision，保留旧费用和累计额度。提案Schema化与真实供应商模型质量分别验收。
 
 ## 4 提案合同
 
-Proposal.kind 为 act、need_context、request_input、complete 或 fail。外层DecisionRecord绑定decision_id和原Snapshot；提案保存理由/依据引用、相关缺口和种类专属字段。理由可以用于解释，不能成为授权凭据。
+Proposal 只表达建议，不能直接含 Grant、已消费确认或最终 Task 状态。首版通用提案使用下列闭合字段；可选功能未启用时返回 unsupported，不能以任意JSON隐藏流程。
 
-- act：给出准确能力候选与参数，或互斥的 plan_delta。每项经过 Orchestrator 统一准入
-- need_context：指明已有材料的缺口与有界查询，不能夹带新的网页抓取或目标动作
-- request_input：提出问题及允许回答范围，由原业务 owner 生成 InputRequest
-- complete：引用准确成果并提出条件判断建议，最终完成仍由 Orchestrator 核验
-- fail：说明原要求、失败证据和恢复条件，不能用模型断言消除未结效果
+| kind | 必填字段 | 可选字段及边界 |
+| --- | --- | --- |
+| 共同字段 | kind、reason_ref:ContentRef | requirement_delta；绑定外层原Decision/Snapshot，不能自报较新版本 |
+| refine_requirements | requirement_delta | 只用于interpret_requirements；不包含其他种类字段；无法形成候选时明确request_input/need_context/fail |
+| act | actions:ActionCandidate[1..4] | 首个闭环不接受plan_delta；其扩展Schema与功能声明单独发布 |
+| need_context | lookups:ContextLookup[1..3] | 仅existing_content、memory_query、capability_describe、original_fact；固定ref/登记查询Schema和累计限制，无任意URL/代码 |
+| request_input | question_ref、answer_schema_ref:ComponentRef、preview_refs:ContentRef[]、purpose | purpose只允许clarify_goal/supply_context；owner裁决真实请求期限/目标，不让Brain创建Confirmation |
+| complete | artifact_refs:ContentRef[1..100]、check_suggestions:CheckSuggestion[] | suggestion仅有requirement_ref和evidence_refs；不接受模型自报权威pass |
+| fail | reason_code、evidence_refs:ContentRef[]、explanation_ref:ContentRef | resume_condition_ref?；owner核实失败或等待，不自动消除未知效果 |
 
-Schema 合法只证明结构。Orchestrator 还检查语义、资源、版本、当前控制、来源、预算及完整性。有效条件补全优先提交，旧提案其余部分失效。
+ActionCandidate 固定 local_key、capability_ref、binding_ref、arguments_ref 及 processed_source_refs/disclosed_source_refs；local_key 在 Decision 内唯一。prepare 后的准确业务输入由 owner 固定，若规范化改变金额、目标或正文等含义，必须重新取原授权，不能称作机械编码。ContextLookup 的 query_ref 必须使用所选 Memory/Capability 方法的闭合 Schema。不同查找共享本轮总字节/token/调用上限。
+
+Schema合法只证明结构。Orchestrator还检查当前版本、控制、来源、权限、预算及完整性。条件实质变化先提交，旧提案其余建议失效。
 
 ## 5 能力和 Skill 的渐进发现
 
