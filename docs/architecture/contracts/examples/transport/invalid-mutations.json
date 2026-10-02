@@ -1,0 +1,2931 @@
+[
+  {
+    "name": "public-discovery-unknown-field",
+    "vector": "public-discovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "discovery-unknown-field",
+    "vector": "discovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "command-delivery-unknown-field",
+    "vector": "command-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "command-reply-unknown-field",
+    "vector": "command-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "command-ack-unknown-field",
+    "vector": "command-ack",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "query-delivery-unknown-field",
+    "vector": "query-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "query-reply-unknown-field",
+    "vector": "query-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "query-ack-unknown-field",
+    "vector": "query-ack",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "receipt_lookup-delivery-unknown-field",
+    "vector": "receipt_lookup-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "receipt_lookup-reply-unknown-field",
+    "vector": "receipt_lookup-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "receipt_lookup-ack-unknown-field",
+    "vector": "receipt_lookup-ack",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "purged-receipt-reply-unknown-field",
+    "vector": "purged-receipt-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "upload-intent-unknown-field",
+    "vector": "upload-intent",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "ready-upload-unknown-field",
+    "vector": "ready-upload",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "committed-upload-unknown-field",
+    "vector": "committed-upload",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "change-hint-unknown-field",
+    "vector": "change-hint",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "closed-command-unknown-field",
+    "vector": "closed-command",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "closed-command-conflict-unknown-field",
+    "vector": "closed-command-conflict",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "closed-operation-unknown-field",
+    "vector": "closed-operation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "closed-task-unknown-field",
+    "vector": "closed-task",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "unknown-discovered-method",
+    "vector": "discovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/methods/0",
+        "value": "task.launch_anything"
+      }
+    ],
+    "expect": "discovery_method"
+  },
+  {
+    "name": "changed-query-kind",
+    "vector": "query-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/kind",
+        "value": "command"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "query-with-command-id",
+    "vector": "query-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/command_id",
+        "value": "command_5d347fd948b66308f502c3f65c8f7e12"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wrong-command-reply",
+    "vector": "command-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/command_id",
+        "value": "other_d9298a10d1b0735837dc4bd85dac641b"
+      }
+    ],
+    "expect": "delivery_command"
+  },
+  {
+    "name": "wrong-query-digest",
+    "vector": "query-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "delivery_binding"
+  },
+  {
+    "name": "wrong-ack",
+    "vector": "command-ack",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "reply_digest"
+  },
+  {
+    "name": "upload-length-change",
+    "vector": "committed-upload",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/content_ref/byte_length",
+        "value": 999
+      }
+    ],
+    "expect": "content_upload"
+  },
+  {
+    "name": "upload-hash-change",
+    "vector": "committed-upload",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/content_ref/hash",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "content_upload"
+  },
+  {
+    "name": "closed-command-loses-identity",
+    "vector": "closed-command",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/response_code",
+        "value": "precondition_failed"
+      }
+    ],
+    "expect": "closed_identity"
+  },
+  {
+    "name": "closed-command-hash-conflict",
+    "vector": "closed-command-conflict",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/response_code",
+        "value": "gone"
+      }
+    ],
+    "expect": "closed_identity"
+  },
+  {
+    "name": "closed-operation-not-found",
+    "vector": "closed-operation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/response_code",
+        "value": "not_found"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wrong-delivery-digest",
+    "vector": "query-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "request_digest"
+  },
+  {
+    "name": "command transport error cannot claim receipt stage",
+    "vector": "purged-command-reply",
+    "edits": [
+      {
+        "op": "add",
+        "path": "/value/result/stage",
+        "value": "rejected"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "command error remains bound to delivery",
+    "vector": "unavailable-command-reply",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/request_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "delivery_binding"
+  },
+  {
+    "name": "command error needs recovery rule",
+    "vector": "unavailable-command-reply",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/value/result/error/retry"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "revoked reply cache cannot disclose old output",
+    "vector": "query-reply",
+    "edits": [
+      {
+        "op": "add",
+        "path": "/context/disclosure_allowed",
+        "value": false
+      }
+    ],
+    "expect": "reply_disclosure"
+  },
+  {
+    "name": "closed delivery cannot later resend cached content",
+    "vector": "command-reply",
+    "edits": [
+      {
+        "op": "add",
+        "path": "/context/disclosure_closed",
+        "value": true
+      }
+    ],
+    "expect": "reply_disclosure"
+  },
+  {
+    "name": "withheld is a strict disclosure denial",
+    "vector": "query-replay-withheld",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/result/error/code",
+        "value": "not_found"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "withheld cannot attach business output",
+    "vector": "query-replay-withheld",
+    "edits": [
+      {
+        "op": "add",
+        "path": "/value/result/output",
+        "value": {}
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "ticket cannot change original owner",
+    "vector": "reverse-mirror-ticket",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/content_ref/owner_id",
+        "value": "different_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "mirror_binding"
+  },
+  {
+    "name": "ticket cannot choose arbitrary remote URL",
+    "vector": "reverse-mirror-ticket",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/upload_url",
+        "value": "https://untrusted.invalid/upload"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "mirror sender must be paired endpoint",
+    "vector": "reverse-mirror-ready",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/context/authenticated_sender",
+        "value": "different_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "mirror_binding"
+  },
+  {
+    "name": "mirror sender must be paired instance",
+    "vector": "reverse-mirror-ready",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/context/authenticated_instance",
+        "value": "different_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "mirror_binding"
+  },
+  {
+    "name": "mirror cannot upload closed copy",
+    "vector": "reverse-mirror-ready",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/context/registered_copy/use_stopped",
+        "value": true
+      }
+    ],
+    "expect": "mirror_binding"
+  },
+  {
+    "name": "mirror must keep original copy identity",
+    "vector": "reverse-mirror-read",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/source_download/copy_id",
+        "value": "different_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "mirror_read"
+  },
+  {
+    "name": "mirror must use current source revision",
+    "vector": "reverse-mirror-read",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/source_download/control_revision",
+        "value": 2
+      }
+    ],
+    "expect": "mirror_read"
+  },
+  {
+    "name": "offline basic mirror cannot read",
+    "vector": "reverse-mirror-offline-blocked",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/allowed",
+        "value": true
+      }
+    ],
+    "expect": "mirror_read"
+  },
+  {
+    "name": "closed mirror cannot read",
+    "vector": "reverse-mirror-closed",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/allowed",
+        "value": true
+      }
+    ],
+    "expect": "mirror_read"
+  },
+  {
+    "name": "expired source read cannot replay",
+    "vector": "reverse-mirror-expired",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/allowed",
+        "value": true
+      }
+    ],
+    "expect": "mirror_read"
+  },
+  {
+    "name": "mirror control authenticates source owner",
+    "vector": "reverse-mirror-control",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/context/authenticated_owner_id",
+        "value": "owner_cccccccccccccccccccccccccccccccc"
+      }
+    ],
+    "expect": "mirror_control"
+  },
+  {
+    "name": "mirror control cannot target another copy",
+    "vector": "reverse-mirror-control",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/copy_id",
+        "value": "copy_cccccccccccccccccccccccccccccccc"
+      }
+    ],
+    "expect": "mirror_control"
+  },
+  {
+    "name": "mirror control cannot roll back known revision",
+    "vector": "reverse-mirror-control",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/control_revision",
+        "value": 1
+      }
+    ],
+    "expect": "mirror_control"
+  },
+  {
+    "name": "mirror control cannot reopen closed content",
+    "vector": "reverse-mirror-control",
+    "edits": [
+      {
+        "op": "replace",
+        "path": "/value/cause",
+        "value": "active"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "old transport profile rejected",
+    "vector": "discovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/transport_profile",
+        "value": "harness-http-draft-2"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "polling limit rejected",
+    "vector": "discovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits/max_wait_ms",
+        "value": 25000
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "control reserve must fit full frame",
+    "vector": "discovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits/control_reserve_bytes",
+        "value": 262144
+      }
+    ],
+    "expect": "connection_limits"
+  },
+  {
+    "name": "control reserve cannot consume all queue",
+    "vector": "discovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits/max_queue_bytes",
+        "value": 1048576
+      }
+    ],
+    "expect": "connection_limits"
+  },
+  {
+    "name": "heartbeat timeout exceeds interval",
+    "vector": "discovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits/heartbeat_timeout_ms",
+        "value": 30000
+      }
+    ],
+    "expect": "connection_limits"
+  },
+  {
+    "name": "control item reserve leaves ordinary slots",
+    "vector": "discovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits/max_inflight_requests",
+        "value": 4
+      }
+    ],
+    "expect": "connection_limits"
+  },
+  {
+    "name": "Ready service matches discovery",
+    "vector": "wss-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/logical_service_id",
+        "value": "other_service_810f110d292872996975ed6df18f0908"
+      }
+    ],
+    "expect": "frame_service"
+  },
+  {
+    "name": "identity connection quota",
+    "vector": "wss-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/existing_connections",
+        "value": 2
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "Ready before application frames",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/ready_received",
+        "value": false
+      }
+    ],
+    "expect": "frame_ready"
+  },
+  {
+    "name": "request direction",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/direction",
+        "value": "server_to_client"
+      }
+    ],
+    "expect": "frame_direction"
+  },
+  {
+    "name": "old socket cannot supply frame",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/connection_id",
+        "value": "old_connection_3007b90667388f8741479eb649062f15"
+      }
+    ],
+    "expect": "frame_connection"
+  },
+  {
+    "name": "request sequence is socket monotonic",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/request_seq_before",
+        "value": 1
+      }
+    ],
+    "expect": "frame_sequence"
+  },
+  {
+    "name": "old credential cannot use live socket",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/credential_revoked",
+        "value": true
+      }
+    ],
+    "expect": "frame_auth"
+  },
+  {
+    "name": "ordinary request leaves control slots",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/inflight_requests",
+        "value": 28
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "control requests remain bounded",
+    "vector": "wss-cancel-reserve",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/inflight_requests",
+        "value": 32
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "ordinary frame leaves control bytes",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/queued_bytes",
+        "value": 3145728
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "control queue remains bounded",
+    "vector": "wss-control-reserve",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/queued_bytes",
+        "value": 4194304
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "full frame byte ceiling",
+    "vector": "wss-command-error",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/limits/max_frame_bytes",
+        "value": 1024
+      },
+      {
+        "op": "set",
+        "path": "/context/limits/max_json_bytes",
+        "value": 512
+      },
+      {
+        "op": "set",
+        "path": "/value/result/error/message",
+        "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "request JSON byte ceiling",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/limits/max_json_bytes",
+        "value": 128
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "response request sequence match",
+    "vector": "wss-command-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": 13
+      }
+    ],
+    "expect": "frame_response"
+  },
+  {
+    "name": "response cannot borrow other socket",
+    "vector": "wss-command-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/request_frame/connection_id",
+        "value": "old_connection_3007b90667388f8741479eb649062f15"
+      }
+    ],
+    "expect": "frame_response"
+  },
+  {
+    "name": "command receipt identity retained",
+    "vector": "wss-command-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/command_id",
+        "value": "other_command_c2f6c91958d33d8d226951af4964582f"
+      }
+    ],
+    "expect": "frame_command"
+  },
+  {
+    "name": "response error cannot accompany output",
+    "vector": "wss-query-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/error",
+        "value": {
+          "code": "forbidden",
+          "message": "已撤回",
+          "retry": "after_change"
+        }
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "response output rechecks disclosure",
+    "vector": "wss-query-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/disclosure_allowed",
+        "value": false
+      }
+    ],
+    "expect": "frame_disclosure"
+  },
+  {
+    "name": "delivery instance matches socket",
+    "vector": "wss-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/authenticated_instance",
+        "value": "other_instance_d5b4c9dcc4e6e0e925128e65042982ad"
+      }
+    ],
+    "expect": "frame_endpoint"
+  },
+  {
+    "name": "delivery slots leave control reserve",
+    "vector": "wss-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/pending_deliveries",
+        "value": 28
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "delivery request digest preserved",
+    "vector": "wss-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/envelope/delivery/request_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "request_digest"
+  },
+  {
+    "name": "reply sender matches original instance",
+    "vector": "wss-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/authenticated_instance",
+        "value": "other_instance_d5b4c9dcc4e6e0e925128e65042982ad"
+      }
+    ],
+    "expect": "frame_endpoint"
+  },
+  {
+    "name": "reply original request digest",
+    "vector": "wss-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/reply/request_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "delivery_binding"
+  },
+  {
+    "name": "reply cached disclosure is current",
+    "vector": "wss-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/disclosure_allowed",
+        "value": false
+      }
+    ],
+    "expect": "reply_disclosure"
+  },
+  {
+    "name": "ReplyAck is durable original result",
+    "vector": "wss-reply-ack",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/ack/result_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "reply_digest"
+  },
+  {
+    "name": "mirror ticket cannot change sender",
+    "vector": "wss-mirror-ticket",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/ticket/sender_instance_id",
+        "value": "other_instance_d5b4c9dcc4e6e0e925128e65042982ad"
+      }
+    ],
+    "expect": "mirror_binding"
+  },
+  {
+    "name": "mirror ticket disclosure is current",
+    "vector": "wss-mirror-ticket",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/disclosure_allowed",
+        "value": false
+      }
+    ],
+    "expect": "frame_disclosure"
+  },
+  {
+    "name": "subscription remains bounded",
+    "vector": "wss-subscribe",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/subscription_count",
+        "value": 8
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "subscription filters must be unique",
+    "vector": "wss-subscribe",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/object_types",
+        "value": [
+          "task",
+          "task"
+        ]
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "Change subscription identity",
+    "vector": "wss-change",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/subscription_id",
+        "value": "other_subscription_3f5c5863bbd419d8ae177d63e0918c94"
+      }
+    ],
+    "expect": "frame_subscription"
+  },
+  {
+    "name": "Change cannot bypass snapshot gap",
+    "vector": "wss-change",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/subscription/paused_for_gap",
+        "value": true
+      }
+    ],
+    "expect": "frame_subscription"
+  },
+  {
+    "name": "Change obeys exact filter",
+    "vector": "wss-change",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/subscription/object_types",
+        "value": [
+          "surface"
+        ]
+      }
+    ],
+    "expect": "frame_subscription"
+  },
+  {
+    "name": "Change rechecks current disclosure",
+    "vector": "wss-change",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/disclosure_allowed",
+        "value": false
+      }
+    ],
+    "expect": "frame_disclosure"
+  },
+  {
+    "name": "unknown gap reason rejected",
+    "vector": "wss-gap-queue_overflow",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/reason",
+        "value": "silent_drop"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "heartbeat nonce must match",
+    "vector": "wss-pong",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/nonce",
+        "value": "other-heartbeat"
+      }
+    ],
+    "expect": "frame_heartbeat"
+  },
+  {
+    "name": "heartbeat in flight remains bounded",
+    "vector": "wss-ping",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/pending_ping_nonce",
+        "value": "heartbeat-0"
+      }
+    ],
+    "expect": "frame_heartbeat"
+  },
+  {
+    "name": "wss-ready rejects unknown field",
+    "vector": "wss-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-command-request rejects unknown field",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-command-response rejects unknown field",
+    "vector": "wss-command-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-command-error rejects unknown field",
+    "vector": "wss-command-error",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-query-request rejects unknown field",
+    "vector": "wss-query-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-query-response rejects unknown field",
+    "vector": "wss-query-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-query-error rejects unknown field",
+    "vector": "wss-query-error",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-receipt_lookup-request rejects unknown field",
+    "vector": "wss-receipt_lookup-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-receipt_lookup-response rejects unknown field",
+    "vector": "wss-receipt_lookup-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-receipt_lookup-error rejects unknown field",
+    "vector": "wss-receipt_lookup-error",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-subscribe rejects unknown field",
+    "vector": "wss-subscribe",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-subscribed rejects unknown field",
+    "vector": "wss-subscribed",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-subscribe-resume rejects unknown field",
+    "vector": "wss-subscribe-resume",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-subscription-resumed rejects unknown field",
+    "vector": "wss-subscription-resumed",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-delivery rejects unknown field",
+    "vector": "wss-delivery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-reply rejects unknown field",
+    "vector": "wss-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-reply-withheld rejects unknown field",
+    "vector": "wss-reply-withheld",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-reply-ack rejects unknown field",
+    "vector": "wss-reply-ack",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-mirror-ticket rejects unknown field",
+    "vector": "wss-mirror-ticket",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-change rejects unknown field",
+    "vector": "wss-change",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-gap-cursor_expired rejects unknown field",
+    "vector": "wss-gap-cursor_expired",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-gap-queue_overflow rejects unknown field",
+    "vector": "wss-gap-queue_overflow",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-ping rejects unknown field",
+    "vector": "wss-ping",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-pong rejects unknown field",
+    "vector": "wss-pong",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-control-reserve rejects unknown field",
+    "vector": "wss-control-reserve",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-cancel-reserve rejects unknown field",
+    "vector": "wss-cancel-reserve",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "upload reserve preserves metadata",
+    "vector": "wss-upload_reserve",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/hash",
+        "value": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      }
+    ],
+    "expect": "upload_identity"
+  },
+  {
+    "name": "upload lookup belongs to current subject",
+    "vector": "wss-upload_lookup",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/authenticated_subject",
+        "value": "another_subject_cbf53f61165e7ed2293c6cf9958a292f"
+      }
+    ],
+    "expect": "upload_owner"
+  },
+  {
+    "name": "upload lookup identifies original upload",
+    "vector": "wss-upload_lookup",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/upload_id",
+        "value": "another_upload_d80cba109e82574a23b2d5612b1d4acd"
+      }
+    ],
+    "expect": "upload_identity"
+  },
+  {
+    "name": "upload response keeps original id",
+    "vector": "wss-upload_lookup-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/upload_id",
+        "value": "another_upload_d80cba109e82574a23b2d5612b1d4acd"
+      }
+    ],
+    "expect": "upload_identity"
+  },
+  {
+    "name": "upload reserve response keeps metadata",
+    "vector": "wss-upload_reserve-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/hash",
+        "value": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      }
+    ],
+    "expect": "upload_identity"
+  },
+  {
+    "name": "mirror reserve cannot self-authorize",
+    "vector": "wss-mirror_reserve",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/reservation_authorized",
+        "value": false
+      }
+    ],
+    "expect": "mirror_reserve"
+  },
+  {
+    "name": "mirror reserve sender is paired",
+    "vector": "wss-mirror_reserve",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/paired_sender_instance",
+        "value": "another_instance_d7dc9bba427ef8ebb11a0598b018022b"
+      }
+    ],
+    "expect": "mirror_reserve"
+  },
+  {
+    "name": "mirror reserve response keeps full ticket",
+    "vector": "wss-mirror_reserve-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/ticket/copy_id",
+        "value": "another_copy_3d447b09113345f01719b9bcc6f8033e"
+      }
+    ],
+    "expect": "mirror_identity"
+  },
+  {
+    "name": "mirror lookup checks current access",
+    "vector": "wss-mirror_lookup",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/metadata_access_allowed",
+        "value": false
+      }
+    ],
+    "expect": "mirror_identity"
+  },
+  {
+    "name": "mirror lookup response keeps ticket",
+    "vector": "wss-mirror_lookup-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/ticket/ticket_id",
+        "value": "another_ticket_52e2460ac6695620fa99062f33b1ba25"
+      }
+    ],
+    "expect": "mirror_identity"
+  },
+  {
+    "name": "mirror control keeps exact ticket",
+    "vector": "wss-mirror_control",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/ticket_id",
+        "value": "another_ticket_52e2460ac6695620fa99062f33b1ba25"
+      }
+    ],
+    "expect": "mirror_control"
+  },
+  {
+    "name": "mirror control checks original owner",
+    "vector": "wss-mirror_control",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/authenticated_owner_id",
+        "value": "another_owner_dcec12a9fa909c29cf35ca31e41df4d5"
+      }
+    ],
+    "expect": "mirror_control"
+  },
+  {
+    "name": "mirror control response confirms closure",
+    "vector": "wss-mirror_control-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/state",
+        "value": "ready"
+      }
+    ],
+    "expect": "control_identity"
+  },
+  {
+    "name": "mirror control response confirms revision",
+    "vector": "wss-mirror_control-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/control_revision",
+        "value": 1
+      }
+    ],
+    "expect": "control_identity"
+  },
+  {
+    "name": "mirror control response keeps copy",
+    "vector": "wss-mirror_control-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/ticket/copy_id",
+        "value": "another_copy_3d447b09113345f01719b9bcc6f8033e"
+      }
+    ],
+    "expect": "control_identity"
+  },
+  {
+    "name": "mirror control replay is immutable",
+    "vector": "wss-mirror-control-replay",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/cause",
+        "value": "closed"
+      }
+    ],
+    "expect": "control_identity"
+  },
+  {
+    "name": "mirror control still obeys total slots",
+    "vector": "wss-mirror_control",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/inflight_requests",
+        "value": 32
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "metadata response rechecks disclosure",
+    "vector": "wss-mirror_lookup-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/disclosure_allowed",
+        "value": false
+      }
+    ],
+    "expect": "frame_disclosure"
+  },
+  {
+    "name": "metadata response cannot carry error and result",
+    "vector": "wss-upload_lookup-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/error",
+        "value": {
+          "code": "forbidden",
+          "message": "已撤回",
+          "retry": "after_change"
+        }
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "metadata response matches original kind",
+    "vector": "wss-upload_lookup-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/kind",
+        "value": "upload_reserve"
+      }
+    ],
+    "expect": "frame_response"
+  },
+  {
+    "name": "wss-upload_reserve rejects unknown field",
+    "vector": "wss-upload_reserve",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-upload_reserve-response rejects unknown field",
+    "vector": "wss-upload_reserve-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-upload_reserve-error rejects unknown field",
+    "vector": "wss-upload_reserve-error",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-upload_lookup rejects unknown field",
+    "vector": "wss-upload_lookup",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-upload_lookup-response rejects unknown field",
+    "vector": "wss-upload_lookup-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-upload_lookup-error rejects unknown field",
+    "vector": "wss-upload_lookup-error",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-mirror_reserve rejects unknown field",
+    "vector": "wss-mirror_reserve",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-mirror_reserve-response rejects unknown field",
+    "vector": "wss-mirror_reserve-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-mirror_reserve-error rejects unknown field",
+    "vector": "wss-mirror_reserve-error",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-mirror_lookup rejects unknown field",
+    "vector": "wss-mirror_lookup",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-mirror_lookup-response rejects unknown field",
+    "vector": "wss-mirror_lookup-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-mirror_lookup-error rejects unknown field",
+    "vector": "wss-mirror_lookup-error",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-mirror_control rejects unknown field",
+    "vector": "wss-mirror_control",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-mirror_control-response rejects unknown field",
+    "vector": "wss-mirror_control-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-mirror_control-error rejects unknown field",
+    "vector": "wss-mirror_control-error",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-mirror-control-replay rejects unknown field",
+    "vector": "wss-mirror-control-replay",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-mirror-control-replay-response rejects unknown field",
+    "vector": "wss-mirror-control-replay-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "external Ready cannot be repeated",
+    "vector": "wss-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/ready_received",
+        "value": true
+      }
+    ],
+    "expect": "frame_ready"
+  },
+  {
+    "name": "identity across services total connection quota",
+    "vector": "wss-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/existing_total_connections",
+        "value": 16
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "rebind metadata authenticates gateway",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/authenticated_gateway",
+        "value": false
+      }
+    ],
+    "expect": "channel_auth"
+  },
+  {
+    "name": "rebind cannot refresh revoked identity",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/current_identity_valid",
+        "value": false
+      }
+    ],
+    "expect": "channel_auth"
+  },
+  {
+    "name": "rebind gets new binding id",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_id",
+        "value": "binding_initial_39e335c1cb0608d3d7a3d21405050f07"
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "rebind preserves external connection",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/connection_id",
+        "value": "another_connection_74926fa97833153f3b2f6a2f498da05f"
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "rebind preserves logical service",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/logical_service_id",
+        "value": "another_service_f83925522a90e5a3976b076f17ea20f6"
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "rebind digest covers exact limits",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "channel_limits"
+  },
+  {
+    "name": "rebind cannot change limits",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits/max_subscriptions",
+        "value": 7
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "rebind does not acquire external slot",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/external_slots_after",
+        "value": 3
+      }
+    ],
+    "expect": "channel_quota"
+  },
+  {
+    "name": "rebind does not reset request high-watermark",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/request_seq_after",
+        "value": 0
+      }
+    ],
+    "expect": "channel_quota"
+  },
+  {
+    "name": "rebind does not duplicate request high-watermark",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/request_seq_after",
+        "value": 43
+      }
+    ],
+    "expect": "channel_quota"
+  },
+  {
+    "name": "old internal binding output is ignored",
+    "vector": "channel-rebound-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_id",
+        "value": "binding_initial_39e335c1cb0608d3d7a3d21405050f07"
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "unrelated binding output is ignored",
+    "vector": "channel-rebound-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_id",
+        "value": "unrelated_binding_309e1b4d91a4ac172be062e830b3e97d"
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "internal Ready must echo fixed limits",
+    "vector": "channel-rebound-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/frame/limits/max_subscriptions",
+        "value": 7
+      }
+    ],
+    "expect": "channel_limits"
+  },
+  {
+    "name": "internal Ready must echo fixed service",
+    "vector": "channel-rebound-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/frame/logical_service_id",
+        "value": "another_service_f83925522a90e5a3976b076f17ea20f6"
+      }
+    ],
+    "expect": "channel_limits"
+  },
+  {
+    "name": "internal Ready not forwarded twice",
+    "vector": "channel-rebound-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/forward_to_client",
+        "value": true
+      }
+    ],
+    "expect": "channel_ready"
+  },
+  {
+    "name": "internal frame binds external connection",
+    "vector": "channel-rebound-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/frame/connection_id",
+        "value": "another_connection_74926fa97833153f3b2f6a2f498da05f"
+      }
+    ],
+    "expect": "channel_binding"
+  },
+  {
+    "name": "internal recovery keeps request sequence",
+    "vector": "wss-query-internal-recovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": 14
+      }
+    ],
+    "expect": "frame_recovery_identity"
+  },
+  {
+    "name": "internal recovery keeps input",
+    "vector": "wss-query-internal-recovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/target_id",
+        "value": "another_task_70bab38202a9389961c200a3b1f695ba"
+      }
+    ],
+    "expect": "frame_recovery_identity"
+  },
+  {
+    "name": "internal recovery does not consume another request",
+    "vector": "wss-query-internal-recovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/request_seq_after",
+        "value": 10001
+      }
+    ],
+    "expect": "frame_recovery_sequence"
+  },
+  {
+    "name": "uncertain write is not automatically replayed",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/internal_request_replay",
+        "value": true
+      }
+    ],
+    "expect": "frame_recovery_identity"
+  },
+  {
+    "name": "channel-initial-binding rejects unknown field",
+    "vector": "channel-initial-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "channel-rebound-binding rejects unknown field",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "channel-initial-ready rejects unknown field",
+    "vector": "channel-initial-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "channel-rebound-ready rejects unknown field",
+    "vector": "channel-rebound-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "channel-rebound-response rejects unknown field",
+    "vector": "channel-rebound-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "channel-rebound-reply rejects unknown field",
+    "vector": "channel-rebound-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "channel-rebound-reply-ack rejects unknown field",
+    "vector": "channel-rebound-reply-ack",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-gap-backend-rebind rejects unknown field",
+    "vector": "wss-gap-backend-rebind",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-query-internal-recovery rejects unknown field",
+    "vector": "wss-query-internal-recovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-final-ordinary-request rejects unknown field",
+    "vector": "wss-high-sequence-ordinary-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-final-control-request rejects unknown field",
+    "vector": "wss-last-safe-control-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/extra",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "initial binding starts at revision one",
+    "vector": "channel-initial-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_revision",
+        "value": 2
+      }
+    ],
+    "expect": "channel_revision"
+  },
+  {
+    "name": "binding revision is positive",
+    "vector": "channel-initial-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_revision",
+        "value": 0
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "binding revision stays a safe integer",
+    "vector": "channel-initial-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_revision",
+        "value": 9007199254740992
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "binding revision is required",
+    "vector": "channel-initial-binding",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/value/binding_revision"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "new candidate increments prior allocated revision",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_revision",
+        "value": 3
+      }
+    ],
+    "expect": "channel_revision"
+  },
+  {
+    "name": "new candidate cannot reuse previous revision",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_revision",
+        "value": 1
+      }
+    ],
+    "expect": "channel_revision"
+  },
+  {
+    "name": "late second registration cannot replace third",
+    "vector": "channel-rebound-binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/stored_binding",
+        "value": {
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "connection_id": "connection_4717d53ebfdfea8477f780ec66151dcb",
+          "binding_id": "binding_third_123456789012345678901234567890ab",
+          "limits": {
+            "max_json_bytes": 262144,
+            "max_frame_bytes": 1048576,
+            "max_page_items": 100,
+            "max_inflight_requests": 32,
+            "max_pending_deliveries": 32,
+            "max_queue_bytes": 4194304,
+            "control_reserve_bytes": 1048576,
+            "control_reserve_items": 4,
+            "max_subscriptions": 8,
+            "heartbeat_interval_ms": 30000,
+            "heartbeat_timeout_ms": 90000,
+            "max_content_bytes": 16777216,
+            "max_connections_per_identity_service": 2,
+            "max_connections_per_identity_total": 16
+          },
+          "limits_digest": "sha256:bebe2699fe2ce323c306642b153b7986dd0e46e1726a5b0e858d50f5a83133c0",
+          "binding_revision": 3
+        }
+      }
+    ],
+    "expect": "channel_revision"
+  },
+  {
+    "name": "same revision rejects a different binding id",
+    "vector": "channel-rebound-binding-retry",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/binding_id",
+        "value": "binding_other_abcdefabcdefabcdefabcdefabcdefab"
+      }
+    ],
+    "expect": "channel_revision"
+  },
+  {
+    "name": "retry cannot change fields at the same revision",
+    "vector": "channel-rebound-binding-retry",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits_digest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "expect": "channel_revision"
+  },
+  {
+    "name": "content control query is not a mirror read permit",
+    "vector": "reverse-mirror-read",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/source_download",
+        "value": {
+          "mode": "control",
+          "control": {
+            "content_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "control_revision": 1,
+            "state": "active",
+            "policy_ref": {
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "id": "policy_11111111111111111111111111111111",
+              "revision": 1
+            }
+          },
+          "copy": {
+            "copy_id": "copy_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "content_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+              "version": 1,
+              "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "holder_id": "orchestrator_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "revision": 1,
+            "use_stopped": false,
+            "physical_state": "pending"
+          }
+        }
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "wss-content-bytes-response rejects wrong content query mode",
+    "vector": "wss-content-bytes-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result",
+        "value": {
+          "output": {
+            "mode": "control",
+            "control": {
+              "content_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                "version": 1,
+                "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "policy_ref": {
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+                "revision": 1
+              },
+              "control_revision": 1,
+              "state": "active"
+            },
+            "copy": {
+              "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+              "content_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                "version": 1,
+                "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+              "revision": 1,
+              "use_stopped": false,
+              "physical_state": "pending"
+            }
+          },
+          "observed_at": "2026-09-26T00:00:04Z"
+        }
+      }
+    ],
+    "expect": "content_get_mode"
+  },
+  {
+    "name": "content-bytes-reply rejects wrong content query mode",
+    "vector": "content-bytes-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result",
+        "value": {
+          "output": {
+            "mode": "control",
+            "control": {
+              "content_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                "version": 1,
+                "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "policy_ref": {
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+                "revision": 1
+              },
+              "control_revision": 1,
+              "state": "active"
+            },
+            "copy": {
+              "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+              "content_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                "version": 1,
+                "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+              "revision": 1,
+              "use_stopped": false,
+              "physical_state": "pending"
+            }
+          },
+          "observed_at": "2026-09-26T00:00:04Z"
+        }
+      }
+    ],
+    "expect": "content_get_mode"
+  },
+  {
+    "name": "wss-content-control-response rejects wrong content query mode",
+    "vector": "wss-content-control-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result",
+        "value": {
+          "output": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "control_revision": 1,
+            "download_id": "download_fd456406745d816a45cae554c788e754",
+            "expires_at": "2026-09-26T00:10:00Z",
+            "range_supported": true
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      }
+    ],
+    "expect": "content_get_mode"
+  },
+  {
+    "name": "content-control-reply rejects wrong content query mode",
+    "vector": "content-control-reply",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result",
+        "value": {
+          "output": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "control_revision": 1,
+            "download_id": "download_fd456406745d816a45cae554c788e754",
+            "expires_at": "2026-09-26T00:10:00Z",
+            "range_supported": true
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      }
+    ],
+    "expect": "content_get_mode"
+  },
+  {
+    "name": "authorization-changed subscription cannot emit Change",
+    "vector": "wss-change",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/subscription/authorization_changed",
+        "value": true
+      }
+    ],
+    "expect": "frame_subscription"
+  },
+  {
+    "name": "authorization-changed gap retains explicit reason",
+    "vector": "wss-gap-authorization-changed",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/reason",
+        "value": "queue_overflow"
+      }
+    ],
+    "expect": "frame_subscription"
+  },
+  {
+    "name": "execution.list rejects owner rebound",
+    "vector": "wss-execution.list-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/output/owner_id",
+        "value": "owner_ffffffffffffffffffffffffffffffff"
+      }
+    ],
+    "expect": "collection_result"
+  },
+  {
+    "name": "execution.list rejects query rebound",
+    "vector": "wss-execution.list-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/output/query_id",
+        "value": "query_ffffffffffffffffffffffffffffffff"
+      }
+    ],
+    "expect": "collection_result"
+  },
+  {
+    "name": "execution.list rejects unbounded page",
+    "vector": "wss-execution.list-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/payload/limit",
+        "value": 101
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "extensions.list rejects owner rebound",
+    "vector": "wss-extensions.list-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/output/owner_id",
+        "value": "owner_ffffffffffffffffffffffffffffffff"
+      }
+    ],
+    "expect": "collection_result"
+  },
+  {
+    "name": "extensions.list rejects query rebound",
+    "vector": "wss-extensions.list-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/output/query_id",
+        "value": "query_ffffffffffffffffffffffffffffffff"
+      }
+    ],
+    "expect": "collection_result"
+  },
+  {
+    "name": "extensions.list rejects unbounded page",
+    "vector": "wss-extensions.list-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/payload/limit",
+        "value": 101
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "grant.list rejects owner rebound",
+    "vector": "wss-grant.list-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/output/owner_id",
+        "value": "owner_ffffffffffffffffffffffffffffffff"
+      }
+    ],
+    "expect": "collection_result"
+  },
+  {
+    "name": "grant.list rejects query rebound",
+    "vector": "wss-grant.list-response",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/result/output/query_id",
+        "value": "query_ffffffffffffffffffffffffffffffff"
+      }
+    ],
+    "expect": "collection_result"
+  },
+  {
+    "name": "grant.list rejects unbounded page",
+    "vector": "wss-grant.list-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request/payload/limit",
+        "value": 101
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "request sequence rejects zero",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": 0
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "request sequence rejects negative",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": -1
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "request sequence rejects fractional",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": 1.5
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "request sequence rejects unsafe-integer",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": 9007199254740992
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "request sequence rejects string",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": "1"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "request sequence rejects boolean",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_seq",
+        "value": true
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "new request cannot leave high-water unchanged",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/request_seq_after",
+        "value": 0
+      }
+    ],
+    "expect": "frame_sequence"
+  },
+  {
+    "name": "ordinary in-flight slots retain control reserve",
+    "vector": "wss-high-sequence-ordinary-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/inflight_requests",
+        "value": 28
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "control in-flight slots remain bounded",
+    "vector": "wss-last-safe-control-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/inflight_requests",
+        "value": 32
+      }
+    ],
+    "expect": "frame_capacity"
+  },
+  {
+    "name": "client cannot self-claim internal recovery",
+    "vector": "wss-query-internal-recovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/context/internal_binding",
+        "value": false
+      }
+    ],
+    "expect": "frame_recovery_identity"
+  },
+  {
+    "name": "old request_id is not an accepted frame alias",
+    "vector": "wss-command-request",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/request_id",
+        "value": "request_00000000000000000000000000000001"
+      }
+    ],
+    "expect": "transport_schema"
+  },
+  {
+    "name": "old request lifetime limit is not negotiated",
+    "vector": "wss-ready",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/value/limits/max_requests_per_connection",
+        "value": 10000
+      }
+    ],
+    "expect": "transport_schema"
+  }
+]

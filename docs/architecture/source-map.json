@@ -1,0 +1,1722 @@
+{
+  "scope": "原材料校对和当前正式维护位置；哈希固定来源，不表示运行通过",
+  "entries": [
+    {
+      "path": "docs/architecture/.draft/README.md",
+      "bytes": 19115,
+      "sha256": "37caffaf309a37667e651fe57d44a6b9ef72621ca76b8831a24169712c3076f4",
+      "kind": "markdown",
+      "lines": 128,
+      "formal_target": "docs/architecture/README.md",
+      "disposition": "总览重写为完整任务入口；详细规则由正式专题维护"
+    },
+    {
+      "path": "docs/architecture/.draft/application-workflow.md",
+      "bytes": 13357,
+      "sha256": "ee05ff286ece4870ab6f50319c22d5726aa5213e73074325e0c9f6135dbd213a",
+      "kind": "markdown",
+      "lines": 93,
+      "formal_target": "docs/architecture/application-workflow.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/brain/README.md",
+      "bytes": 30813,
+      "sha256": "02758130e9024cf405b42eccc049e9494f984ef34c1cc56890e9b677f0ae9cfa",
+      "kind": "markdown",
+      "lines": 226,
+      "formal_target": "docs/architecture/brain/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/brain/decision-paths.md",
+      "bytes": 26366,
+      "sha256": "b05fdaf5cc9c240868798f93e797e778b482225a4a52ce0bab53082dae994227",
+      "kind": "markdown",
+      "lines": 186,
+      "formal_target": "docs/architecture/brain/decision-paths.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/brain/implementation.md",
+      "bytes": 57083,
+      "sha256": "4f28a15394c4082210fedda699a48f836f8b7d5a4096662c2b6509f69dc4077a",
+      "kind": "markdown",
+      "lines": 567,
+      "formal_target": "docs/architecture/brain/implementation.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/collaboration/README.md",
+      "bytes": 20873,
+      "sha256": "93f2e6478f6f9fb3743f4819f9133341f2925565a7da942c7c49f2b0400e2d34",
+      "kind": "markdown",
+      "lines": 157,
+      "formal_target": "docs/architecture/collaboration/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/collaboration/implementation.md",
+      "bytes": 52475,
+      "sha256": "913e05676d9e31451bb182c6ef1748661a8479ae396eb3e3ec327871fce9ef4c",
+      "kind": "markdown",
+      "lines": 465,
+      "formal_target": "docs/architecture/collaboration/implementation.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/README.md",
+      "bytes": 17089,
+      "sha256": "f7157956f52dc83e451f9ff276dca5017ecd8184f38f5a537e6b289426743e8f",
+      "kind": "markdown",
+      "lines": 144,
+      "formal_target": "docs/architecture/contracts/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/README.md",
+      "bytes": 3323,
+      "sha256": "63b32e798a48359a794fbc0dca26d5e8eff1ea3526adaae248367e058bcf0440",
+      "kind": "markdown",
+      "lines": 31,
+      "formal_target": "docs/architecture/contracts/examples/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/active-unknown-effect.json",
+      "bytes": 441,
+      "sha256": "2f1f14a82324109dfd4c946b844c415dfdfa61d49fb93d34ff1b75ad8a352034",
+      "kind": "asset",
+      "lines": 24,
+      "formal_target": "docs/architecture/contracts/examples/active-unknown-effect.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/brain/README.md",
+      "bytes": 1590,
+      "sha256": "3ef381e71db818f990a9b19611d8c082031fe4ff1a5cc11087d3e47aebdfa9b6",
+      "kind": "markdown",
+      "lines": 13,
+      "formal_target": "docs/architecture/contracts/examples/brain/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/brain/generation-and-plan.json",
+      "bytes": 7928,
+      "sha256": "ef3cbf7cd54bc66dd286269d4b8d7480526ca2109f48855f8d47eaa021f25f17",
+      "kind": "asset",
+      "lines": 222,
+      "formal_target": "docs/architecture/contracts/examples/brain/generation-and-plan.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/brain/invalid-generation.json",
+      "bytes": 4218,
+      "sha256": "ad70ad8206bf838ac535ea4a05ac7c56fa02671b037b2e285b44604d23b99c32",
+      "kind": "asset",
+      "lines": 170,
+      "formal_target": "docs/architecture/contracts/examples/brain/invalid-generation.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/brain/plan-materialization.json",
+      "bytes": 20588,
+      "sha256": "b8c3ee4efb23aefbfc284799a01d2d5c4b04c71aab742b739ed65066f812b8ae",
+      "kind": "asset",
+      "lines": 648,
+      "formal_target": "docs/architecture/contracts/examples/brain/plan-materialization.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/cancelled-late-effect.json",
+      "bytes": 439,
+      "sha256": "dec8dbfa1745ca32691b6c9bef41863a9a128b0868d7909c042c4d17f3e12119",
+      "kind": "asset",
+      "lines": 24,
+      "formal_target": "docs/architecture/contracts/examples/cancelled-late-effect.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/invalid-cases.json",
+      "bytes": 32325,
+      "sha256": "bb66deddf3d261f6aefbcb0fe81ee0b94ef4da375b7245b1dcb0f6af32a81f33",
+      "kind": "asset",
+      "lines": 970,
+      "formal_target": "docs/architecture/contracts/examples/invalid-cases.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/01-task-loop.json",
+      "bytes": 25917,
+      "sha256": "25ec5ba384d4c46abc119c2a07b9c8b6c4406623a6fe8bc98464aa6d1314adb3",
+      "kind": "asset",
+      "lines": 668,
+      "formal_target": "docs/architecture/contracts/examples/protocol/01-task-loop.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/02-original-command.json",
+      "bytes": 19618,
+      "sha256": "115a02117aaa16a0bad70c2fba9cfae7fe6bbcebecf58b7ea8d28235cf13c820",
+      "kind": "asset",
+      "lines": 511,
+      "formal_target": "docs/architecture/contracts/examples/protocol/02-original-command.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/03-control-order.json",
+      "bytes": 13541,
+      "sha256": "7c2bf57dfd9994cc0c0d1fdb957f2d5ba156c305445dc484ef5b9e8475a2a866",
+      "kind": "asset",
+      "lines": 365,
+      "formal_target": "docs/architecture/contracts/examples/protocol/03-control-order.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/04-cancel-before-invoke.json",
+      "bytes": 6927,
+      "sha256": "9a42581ebfe9a998343a98a534ace223ba0dd856540e63942bac86603b26845a",
+      "kind": "asset",
+      "lines": 189,
+      "formal_target": "docs/architecture/contracts/examples/protocol/04-cancel-before-invoke.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/05-task-control.json",
+      "bytes": 9175,
+      "sha256": "e454d7accfdfee9b787eacb27807ada52da58986cbed8783beb883543492e91b",
+      "kind": "asset",
+      "lines": 259,
+      "formal_target": "docs/architecture/contracts/examples/protocol/05-task-control.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/06-goal-revision.json",
+      "bytes": 16204,
+      "sha256": "fb49dc669273d95a53d93a0b6a283d5e19f1f47d15e6d0a59a366b16e014ef64",
+      "kind": "asset",
+      "lines": 420,
+      "formal_target": "docs/architecture/contracts/examples/protocol/06-goal-revision.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/07-input-consumption.json",
+      "bytes": 15711,
+      "sha256": "59e33b3f993c9b05f28d6a4b988bce8b218085d5d89e81330cffcc54abf5500c",
+      "kind": "asset",
+      "lines": 387,
+      "formal_target": "docs/architecture/contracts/examples/protocol/07-input-consumption.json",
+      "disposition": "正式回答引用与真实input-answer/1字节例证对齐；原源文件保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/08-acceptance.json",
+      "bytes": 5352,
+      "sha256": "ca507c394f2dd7a77f77ad6985f321b941eb0f3d69a012ebc3a275a562ea462b",
+      "kind": "asset",
+      "lines": 141,
+      "formal_target": "docs/architecture/contracts/examples/protocol/08-acceptance.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/09-brain-recovery.json",
+      "bytes": 14002,
+      "sha256": "007421d9206d913a8e8557315cd04f27b7d705d3c897411ac09a3e1f14a13823",
+      "kind": "asset",
+      "lines": 368,
+      "formal_target": "docs/architecture/contracts/examples/protocol/09-brain-recovery.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/10-use-recovery.json",
+      "bytes": 9148,
+      "sha256": "753306aa654aa41f0bb58cbeaa166b3e16f099aae8569e1134cba5c7180051dc",
+      "kind": "asset",
+      "lines": 255,
+      "formal_target": "docs/architecture/contracts/examples/protocol/10-use-recovery.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/11-memory-management.json",
+      "bytes": 17730,
+      "sha256": "f8b8a67cffb4724b3db540aeade970e1cf51fa1c3ec3d1a226ca97e79e3fe461",
+      "kind": "asset",
+      "lines": 469,
+      "formal_target": "docs/architecture/contracts/examples/protocol/11-memory-management.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/12-delegation-mapping.json",
+      "bytes": 16245,
+      "sha256": "a4eeacc4e187ad8d782242f844f898420c6ee6727e4a78bb263583892a05f235",
+      "kind": "asset",
+      "lines": 405,
+      "formal_target": "docs/architecture/contracts/examples/protocol/12-delegation-mapping.json",
+      "disposition": "正式委派回答引用与真实input-answer/1字节例证对齐；原源文件保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/13-activation-online.json",
+      "bytes": 9378,
+      "sha256": "37ac67bc2d7a299238a4bf88562061a2b2ca2fc20e4453d824958d2cd78c36cc",
+      "kind": "asset",
+      "lines": 230,
+      "formal_target": "docs/architecture/contracts/examples/protocol/13-activation-online.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/14-approval-offline.json",
+      "bytes": 2958,
+      "sha256": "c95973a52c00c0e9eaaf83a656866e9b1aaeab993da5d18fa9d51adffc62fe75",
+      "kind": "asset",
+      "lines": 85,
+      "formal_target": "docs/architecture/contracts/examples/protocol/14-approval-offline.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/15-rejected-branches.json",
+      "bytes": 5654,
+      "sha256": "3b799919cee46cdd20c17a2821ff3186f831c066df0862434bdfda100f032791",
+      "kind": "asset",
+      "lines": 157,
+      "formal_target": "docs/architecture/contracts/examples/protocol/15-rejected-branches.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/16-active-to-result.json",
+      "bytes": 25871,
+      "sha256": "734a589bd346e0d0dc60da233389552c847adc8a32b6649b79acd8d316b0fd82",
+      "kind": "asset",
+      "lines": 668,
+      "formal_target": "docs/architecture/contracts/examples/protocol/16-active-to-result.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/17-optional-condition.json",
+      "bytes": 29383,
+      "sha256": "7972de412410014b4a75cb1252900a134e2b032faec168ed2c9b0a410c607cf9",
+      "kind": "asset",
+      "lines": 737,
+      "formal_target": "docs/architecture/contracts/examples/protocol/17-optional-condition.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/18-unrelated-effect.json",
+      "bytes": 26982,
+      "sha256": "1464ccd5a3842e9e4df1560e168bed6bd7215092fc0d89a2574c1fba47704751",
+      "kind": "asset",
+      "lines": 703,
+      "formal_target": "docs/architecture/contracts/examples/protocol/18-unrelated-effect.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/20-budget-allocation.json",
+      "bytes": 15570,
+      "sha256": "99763e0764394de7f5606dce64294351e1e3150a8e70aa265e3ea08bb33c0674",
+      "kind": "asset",
+      "lines": 398,
+      "formal_target": "docs/architecture/contracts/examples/protocol/20-budget-allocation.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/21-capability-catalog.json",
+      "bytes": 8026,
+      "sha256": "f647221ccfc4c23563977588c345190fbd94bcfe04bfdd6a5a040a118485da5c",
+      "kind": "asset",
+      "lines": 221,
+      "formal_target": "docs/architecture/contracts/examples/protocol/21-capability-catalog.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/22-resource-lifecycle.json",
+      "bytes": 15967,
+      "sha256": "49a10d741ae618545c415eaefe03f28d2308d1afd7b80d7957943aa5cd974ee9",
+      "kind": "asset",
+      "lines": 389,
+      "formal_target": "docs/architecture/contracts/examples/protocol/22-resource-lifecycle.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/23-cross-orchestrator-budget.json",
+      "bytes": 16823,
+      "sha256": "0a4cc3925675834c8d6ae8ed07cc5d9d0277eca68fd2b1118c6aa0132118f366",
+      "kind": "asset",
+      "lines": 405,
+      "formal_target": "docs/architecture/contracts/examples/protocol/23-cross-orchestrator-budget.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/30-grant-lifecycle.json",
+      "bytes": 16095,
+      "sha256": "09b55b771b8bf257537cc568bbf476bc3742fc44288598bdd0d03d78ba59745b",
+      "kind": "asset",
+      "lines": 462,
+      "formal_target": "docs/architecture/contracts/examples/protocol/30-grant-lifecycle.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/31-pairing-lifecycle.json",
+      "bytes": 15342,
+      "sha256": "89970b5afebe039c7020dc8e1dcc8cd9afce8ce49ecfc67570f9bc4b598b624d",
+      "kind": "asset",
+      "lines": 408,
+      "formal_target": "docs/architecture/contracts/examples/protocol/31-pairing-lifecycle.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/32-lease-settlement.json",
+      "bytes": 22363,
+      "sha256": "99da3f374422560fab657efe566a14eccf059d671132395e60d49c8f9e62c7b3",
+      "kind": "asset",
+      "lines": 639,
+      "formal_target": "docs/architecture/contracts/examples/protocol/32-lease-settlement.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/33-installation-lifecycle.json",
+      "bytes": 12331,
+      "sha256": "93aeb0afc6e0383dafda59c4f17c9000784ded8da4e7f4868f234e69afd6e4a2",
+      "kind": "asset",
+      "lines": 304,
+      "formal_target": "docs/architecture/contracts/examples/protocol/33-installation-lifecycle.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/34-compatibility-release.json",
+      "bytes": 32496,
+      "sha256": "ee08afc816ec7fbf2cf102a64ca95015c559f0fec7071280b57ae989e7231c41",
+      "kind": "asset",
+      "lines": 820,
+      "formal_target": "docs/architecture/contracts/examples/protocol/34-compatibility-release.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/35-improvement-exposure.json",
+      "bytes": 138921,
+      "sha256": "07e4700e4ef443e1b3f703a1a23fe0059668eb624ed6a469bb4e1d61214f2c99",
+      "kind": "asset",
+      "lines": 3124,
+      "formal_target": "docs/architecture/contracts/examples/protocol/35-improvement-exposure.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/36-local-install-restart.json",
+      "bytes": 35524,
+      "sha256": "f335a9d849de0da4cd06fec18727aa05583da111bce516d48394a446cd6f0aaf",
+      "kind": "asset",
+      "lines": 876,
+      "formal_target": "docs/architecture/contracts/examples/protocol/36-local-install-restart.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/37-remote-instance-reopen.json",
+      "bytes": 39991,
+      "sha256": "72cce5ab45cbcc7735248a8439c847a3d844fa1c17fd49a042c096f71a918d51",
+      "kind": "asset",
+      "lines": 980,
+      "formal_target": "docs/architecture/contracts/examples/protocol/37-remote-instance-reopen.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/38-revoked-approval-startup.json",
+      "bytes": 40024,
+      "sha256": "d5c3495126d042fa9f9104dde75952adfdd0df0632d797bdb241bee6dfe0783f",
+      "kind": "asset",
+      "lines": 993,
+      "formal_target": "docs/architecture/contracts/examples/protocol/38-revoked-approval-startup.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/39-evaluation-cancel.json",
+      "bytes": 16202,
+      "sha256": "1ccbe755d84beb706b5c4e125a3ebaa5a0b54b20daf47947b45da163d0975879",
+      "kind": "asset",
+      "lines": 418,
+      "formal_target": "docs/architecture/contracts/examples/protocol/39-evaluation-cancel.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/40-content-lifecycle.json",
+      "bytes": 15707,
+      "sha256": "7e6353a45f3e5fbc3ed700f25388c0352b6a28e9e710b352307c6af8b2abef5e",
+      "kind": "asset",
+      "lines": 385,
+      "formal_target": "docs/architecture/contracts/examples/protocol/40-content-lifecycle.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/41-memory-query-list.json",
+      "bytes": 10659,
+      "sha256": "0d750a82c7ffdc415f2f08000491e3a14ff20a93b207074c242019b0e39c9b6b",
+      "kind": "asset",
+      "lines": 280,
+      "formal_target": "docs/architecture/contracts/examples/protocol/41-memory-query-list.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/42-memory-extraction.json",
+      "bytes": 8239,
+      "sha256": "d4a93a1ce996366d0b2c61d8664212d5e3d4f3be5cf02274471691acd40de67d",
+      "kind": "asset",
+      "lines": 201,
+      "formal_target": "docs/architecture/contracts/examples/protocol/42-memory-extraction.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/43-memory-view-sync.json",
+      "bytes": 8008,
+      "sha256": "09c20234968d7b709c0797a86f6c0003b4854f4ff9e5ac283b92485e5a179f9b",
+      "kind": "asset",
+      "lines": 231,
+      "formal_target": "docs/architecture/contracts/examples/protocol/43-memory-view-sync.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/44-surface-lifecycle.json",
+      "bytes": 10003,
+      "sha256": "10ba383171235d87f72827a6fe370205832e5c43491068c39ee283bbfd7f58d8",
+      "kind": "asset",
+      "lines": 287,
+      "formal_target": "docs/architecture/contracts/examples/protocol/44-surface-lifecycle.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/45-application-delivery.json",
+      "bytes": 5617,
+      "sha256": "df1a16d21c1999b26ea8c5cec60fc3e932c8be39020d904cd8617d6213c1858d",
+      "kind": "asset",
+      "lines": 140,
+      "formal_target": "docs/architecture/contracts/examples/protocol/45-application-delivery.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/46-content-restriction.json",
+      "bytes": 14242,
+      "sha256": "3638e46d7bc02cb20627b94e33d821f11041f19547e51be67c25bafa0fd56c29",
+      "kind": "asset",
+      "lines": 348,
+      "formal_target": "docs/architecture/contracts/examples/protocol/46-content-restriction.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/47-declarative-form.json",
+      "bytes": 14715,
+      "sha256": "192a72bb78b8e2cf361ae94de6053006c3b04ffab3a75b1a09ecf157e4ccdf29",
+      "kind": "asset",
+      "lines": 399,
+      "formal_target": "docs/architecture/contracts/examples/protocol/47-declarative-form.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/48-memory-changed-pages.json",
+      "bytes": 17234,
+      "sha256": "2f238e5e32845b2f4ac464afb3f24744812362857e6d612c79bb7a01c9895575",
+      "kind": "asset",
+      "lines": 448,
+      "formal_target": "docs/architecture/contracts/examples/protocol/48-memory-changed-pages.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/49-source-projection.json",
+      "bytes": 8413,
+      "sha256": "c824185ca0fd25cd6b1f5b42b269d49318e2cc55fe2612c3daf26bb1d181a149",
+      "kind": "asset",
+      "lines": 218,
+      "formal_target": "docs/architecture/contracts/examples/protocol/49-source-projection.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/50-online-use-settlement.json",
+      "bytes": 27431,
+      "sha256": "95ba7f3f4a74989e36aacea5ee1ed7eadcd6aa897467109407765562d3077b7f",
+      "kind": "asset",
+      "lines": 802,
+      "formal_target": "docs/architecture/contracts/examples/protocol/50-online-use-settlement.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/51-online-use-once-zero.json",
+      "bytes": 24325,
+      "sha256": "68ed772add7bd811a0bd9bb73932f2c84e2770836830b79b71ddda76a824c2bb",
+      "kind": "asset",
+      "lines": 708,
+      "formal_target": "docs/architecture/contracts/examples/protocol/51-online-use-once-zero.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/52-confirmation-grant.json",
+      "bytes": 27948,
+      "sha256": "10f120570325498d6b1dbfe659350c23144bc64cdfccc9d2dbac1c62659aafbe",
+      "kind": "asset",
+      "lines": 701,
+      "formal_target": "docs/architecture/contracts/examples/protocol/52-confirmation-grant.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/53-confirmation-release.json",
+      "bytes": 48894,
+      "sha256": "4a6a25847eba082276e5401fffb4fbbb60f9b43e6410d14a58ff0d8c40f3551c",
+      "kind": "asset",
+      "lines": 1156,
+      "formal_target": "docs/architecture/contracts/examples/protocol/53-confirmation-release.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/54-confirmation-acceptance.json",
+      "bytes": 17788,
+      "sha256": "cda484f3c9d80d1f754270b59e82268dc1d93ca8ef000488bc8402b0d173afb3",
+      "kind": "asset",
+      "lines": 408,
+      "formal_target": "docs/architecture/contracts/examples/protocol/54-confirmation-acceptance.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/55-content-holder-control.json",
+      "bytes": 50513,
+      "sha256": "2193a6889c6ad630854047c9bc6f7edd727d8754f793e8dc6d5003bc44462f04",
+      "kind": "asset",
+      "lines": 1218,
+      "formal_target": "docs/architecture/contracts/examples/protocol/55-content-holder-control.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/56-owner-collection-pages.json",
+      "bytes": 31282,
+      "sha256": "45d5fc139fc7e953305b63581bca7abd2d64a97e3f5b9318e3700c5fcbd6ffa4",
+      "kind": "asset",
+      "lines": 914,
+      "formal_target": "docs/architecture/contracts/examples/protocol/56-owner-collection-pages.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/57-collection-authorization-reset.json",
+      "bytes": 11587,
+      "sha256": "0684b7f82768ef7d505105c81cbd802bce1a43f6e2c309dc419eb0078fc02204",
+      "kind": "asset",
+      "lines": 352,
+      "formal_target": "docs/architecture/contracts/examples/protocol/57-collection-authorization-reset.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/58-lease-open-close-ledger.json",
+      "bytes": 32064,
+      "sha256": "a09368abf386c67c725818404577164da1b04db52a247b4a00106c6e7fc2af04",
+      "kind": "asset",
+      "lines": 915,
+      "formal_target": "docs/architecture/contracts/examples/protocol/58-lease-open-close-ledger.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/59-delegation-phase-projection.json",
+      "bytes": 36105,
+      "sha256": "8435d90b99ba5af725eb55376c894690f52583aa4c214d8fbc7d56940fc49512",
+      "kind": "asset",
+      "lines": 906,
+      "formal_target": "docs/architecture/contracts/examples/protocol/59-delegation-phase-projection.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/60-task-billing-reconcile.json",
+      "bytes": 29979,
+      "sha256": "43666416d0bbfa9f6318be80b44a55d5fcbb870fc59e1d18ead8cc102445ad71",
+      "kind": "asset",
+      "lines": 764,
+      "formal_target": "docs/architecture/contracts/examples/protocol/60-task-billing-reconcile.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/61-lease-final-correction.json",
+      "bytes": 42570,
+      "sha256": "dd3571a634696a0dd81975f5cde7f36430c47a02e227ee8e2158b47c0e1ec334",
+      "kind": "asset",
+      "lines": 1211,
+      "formal_target": "docs/architecture/contracts/examples/protocol/61-lease-final-correction.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/65-approved-rollback.json",
+      "bytes": 88046,
+      "sha256": "31c2502b352fec27da5e55b2da03ea15d9f10553eef66abec65bb3f9e65b58a9",
+      "kind": "asset",
+      "lines": 2145,
+      "formal_target": "docs/architecture/contracts/examples/protocol/65-approved-rollback.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/README.md",
+      "bytes": 10633,
+      "sha256": "79b2b8e62376b3572354f208179acb6eaf7d8887f956c35a4239fb44149d20ed",
+      "kind": "markdown",
+      "lines": 85,
+      "formal_target": "docs/architecture/contracts/examples/protocol/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/protocol/invalid-mutations.json",
+      "bytes": 172725,
+      "sha256": "e233fb2ba06030233dce8c67f17e6313bb94116888e760059d6b97b53f7d0f43",
+      "kind": "asset",
+      "lines": 5890,
+      "formal_target": "docs/architecture/contracts/examples/protocol/invalid-mutations.json",
+      "disposition": "正式字段约束提升至Schema后的反例期望同步；原源文件保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/succeeded-assessed.json",
+      "bytes": 3245,
+      "sha256": "d847cad870ce318806562ff066031b988ec0130e43eb91b9fd5a7df73b5cfac9",
+      "kind": "asset",
+      "lines": 107,
+      "formal_target": "docs/architecture/contracts/examples/succeeded-assessed.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/succeeded-user-accepted.json",
+      "bytes": 3189,
+      "sha256": "1c844871b73206087e7e52db9073de9d897509d99a21a00593bf9d99ecf66317",
+      "kind": "asset",
+      "lines": 107,
+      "formal_target": "docs/architecture/contracts/examples/succeeded-user-accepted.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/succeeded-verified.json",
+      "bytes": 2015,
+      "sha256": "7825778d645a7e38160167ccd46e4e1558d962b87226137758160e134fbb512f",
+      "kind": "asset",
+      "lines": 73,
+      "formal_target": "docs/architecture/contracts/examples/succeeded-verified.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/transport/README.md",
+      "bytes": 5544,
+      "sha256": "88f460e05065ba3e96b2b56c06baf3c983369c3af93e4e82ffe0306750e7b31f",
+      "kind": "markdown",
+      "lines": 38,
+      "formal_target": "docs/architecture/contracts/examples/transport/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/transport/invalid-mutations.json",
+      "bytes": 69925,
+      "sha256": "603a3d2a492f27045e8cc073a912377d189f9d1e4f30a065d6333f8b7e63b92c",
+      "kind": "asset",
+      "lines": 2931,
+      "formal_target": "docs/architecture/contracts/examples/transport/invalid-mutations.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/transport/proofs.json",
+      "bytes": 3520,
+      "sha256": "f788175157448aed3ea05f9ca09ddce6e55f5a0c45afd4344ef016779ca0894f",
+      "kind": "asset",
+      "lines": 55,
+      "formal_target": "docs/architecture/contracts/examples/transport/proofs.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/transport/request-sequences.json",
+      "bytes": 14381,
+      "sha256": "dd64f04bcb7385ce60f3aa5c199f7cda2942ce845fc5718cd2edcaa4c0c042fa",
+      "kind": "asset",
+      "lines": 467,
+      "formal_target": "docs/architecture/contracts/examples/transport/request-sequences.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/examples/transport/vectors.json",
+      "bytes": 228498,
+      "sha256": "b4562617dc51439089a190e286ae44468861e8c34cec23770508c1c0fea2da21",
+      "kind": "asset",
+      "lines": 6150,
+      "formal_target": "docs/architecture/contracts/examples/transport/vectors.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/grpc.md",
+      "bytes": 25597,
+      "sha256": "bca27f6b22554d9d7784782f1f3b7e72ee3deb5343918cc2eb56da8e37e70cfc",
+      "kind": "markdown",
+      "lines": 174,
+      "formal_target": "docs/architecture/contracts/grpc.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/harness.proto",
+      "bytes": 1285,
+      "sha256": "fd1bbca9dfd9ab11047e703044c1f402c70c58d76344bea9bbf2c098c10f272d",
+      "kind": "asset",
+      "lines": 44,
+      "formal_target": "docs/architecture/contracts/harness.proto",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/methods.md",
+      "bytes": 13285,
+      "sha256": "6b567ea7c93a92711ae9081e22e960f901441bd15e1471d4383c79a3cfbd3b90",
+      "kind": "markdown",
+      "lines": 173,
+      "formal_target": "docs/architecture/contracts/methods.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/protocol.md",
+      "bytes": 24873,
+      "sha256": "cb675876fd3955b48825e41f604602cc957ca3ab1656fbf75a139d3703b02d51",
+      "kind": "markdown",
+      "lines": 152,
+      "formal_target": "docs/architecture/contracts/protocol.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/schemas/brain-generation.schema.json",
+      "bytes": 2091,
+      "sha256": "cbc5556e1dc3db88d7cf6c003ad48ddeb59876969e324d8b112e776d72520d39",
+      "kind": "asset",
+      "lines": 59,
+      "formal_target": "docs/architecture/contracts/schemas/brain-generation.schema.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/schemas/methods.json",
+      "bytes": 258189,
+      "sha256": "e7bae72df35d8f19748b9fb7a706f09750673da778c5c82abce6e17f0569eb7c",
+      "kind": "asset",
+      "lines": 10979,
+      "formal_target": "docs/architecture/contracts/schemas/methods.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/schemas/protocol.schema.json",
+      "bytes": 294998,
+      "sha256": "1d59d6fc2bbfd5a6aba7f6327cf3540b3526709f4e7939c8b186a1324674f5f9",
+      "kind": "asset",
+      "lines": 12588,
+      "formal_target": "docs/architecture/contracts/schemas/protocol.schema.json",
+      "disposition": "正式共同Schema补 input等待准确引用、InputAnswerContentRef、回答字段类型关联和验收专属请求约束；原源文件保留"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/schemas/task-outcome.schema.json",
+      "bytes": 6950,
+      "sha256": "5a2702a6fb8d5817a06c10a262d3e43ef682e5280a5e8733fc21b50e91073332",
+      "kind": "asset",
+      "lines": 337,
+      "formal_target": "docs/architecture/contracts/schemas/task-outcome.schema.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/schemas/transport.schema.json",
+      "bytes": 50443,
+      "sha256": "d0abd3bd65080aef35e17ce2204ccd5028664c43b48ea7cef4fffafeff82dba4",
+      "kind": "asset",
+      "lines": 2009,
+      "formal_target": "docs/architecture/contracts/schemas/transport.schema.json",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/contracts/transport.md",
+      "bytes": 44946,
+      "sha256": "4b04d37d81b1622c1940120c0943971ba341d829a26729e9d75ffb9d6316f842",
+      "kind": "markdown",
+      "lines": 254,
+      "formal_target": "docs/architecture/contracts/transport.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/core-data-model.md",
+      "bytes": 33478,
+      "sha256": "ed003342b36470cd1433a15a83f7d8c02d1dadbb6b75629d5043f9763c5cd718",
+      "kind": "markdown",
+      "lines": 169,
+      "formal_target": "docs/architecture/core-data-model.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/decisions.md",
+      "bytes": 21474,
+      "sha256": "84bbd4fdc0100783d5f5d8b26f3ff0313416f3c0c9ee40c80ccdac3aa70ec3ae",
+      "kind": "markdown",
+      "lines": 117,
+      "formal_target": "docs/architecture/decisions.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/deployment-production.md",
+      "bytes": 78770,
+      "sha256": "d60db83dc390224169edf851e545402f8ca4216ee6169dcbe9ead04c108c00e2",
+      "kind": "markdown",
+      "lines": 536,
+      "formal_target": "docs/architecture/deployment-production.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/deployment.md",
+      "bytes": 24890,
+      "sha256": "d6f84356e89a459bb5ea22773968257e65f6eada2403a6855f00148a8279c5fb",
+      "kind": "markdown",
+      "lines": 180,
+      "formal_target": "docs/architecture/deployment.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/diagrams/architecture-atlas.html",
+      "bytes": 195523,
+      "sha256": "66897e128151e63eb0a696a384d07216289d30fb7b23c04392cf4d24635cb3ba",
+      "kind": "asset",
+      "lines": 130,
+      "formal_target": "docs/architecture/diagrams/architecture-atlas.html",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/diagrams/design-concepts.png",
+      "bytes": 1733967,
+      "sha256": "858f56f61615651e37075e4f9d4ab9193b52f87a87dddfb86eca731e954861ca",
+      "kind": "asset",
+      "lines": null,
+      "formal_target": "docs/architecture/diagrams/design-concepts.png",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/diagrams/system-panorama.drawio",
+      "bytes": 108841,
+      "sha256": "783c3de182e7b31bfda560f22008b236363e0a3292f64e6feb45739755b16178",
+      "kind": "asset",
+      "lines": null,
+      "formal_target": "docs/architecture/diagrams/system-panorama.drawio",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/diagrams/uml-models.drawio",
+      "bytes": 750480,
+      "sha256": "b8a48be8dc48df30f7ccfb4f4e8f2cf106f7beaffba9b759e8c1ddbee199a8ad",
+      "kind": "asset",
+      "lines": null,
+      "formal_target": "docs/architecture/diagrams/uml-models.drawio",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/engineering.md",
+      "bytes": 34457,
+      "sha256": "35743a67e2db59c65cbc5c6ef5fab95e455da1405915eff64ad72ad8c4cf384c",
+      "kind": "markdown",
+      "lines": 273,
+      "formal_target": "docs/architecture/engineering.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/evaluation/README.md",
+      "bytes": 45149,
+      "sha256": "348ce51ef9f36643b6bdf7f9455846d8324e9ec7e6fcd90cb795dd288954d4e7",
+      "kind": "markdown",
+      "lines": 256,
+      "formal_target": "docs/architecture/evaluation/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/evaluation/implementation.md",
+      "bytes": 50453,
+      "sha256": "b0c86f3142693dc180dcd89b9697d4e1f4677f31e03b3e60b3922b98d9510eb5",
+      "kind": "markdown",
+      "lines": 471,
+      "formal_target": "docs/architecture/evaluation/implementation.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/execution/README.md",
+      "bytes": 45352,
+      "sha256": "6ff132c2ec592dab497cdd65fc6ce8a02e695015d999ae7a9c80907daab611b8",
+      "kind": "markdown",
+      "lines": 308,
+      "formal_target": "docs/architecture/execution/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/execution/implementation.md",
+      "bytes": 72989,
+      "sha256": "338501e9807266630e5d238385d8d8ecf755ccfd9370e837e665396604727952",
+      "kind": "markdown",
+      "lines": 542,
+      "formal_target": "docs/architecture/execution/implementation.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/execution/programmatic-tools.md",
+      "bytes": 7780,
+      "sha256": "dc5c137db7da19df6cd03691a9a599d2f3a2b04f221637b19648466273972936",
+      "kind": "markdown",
+      "lines": 60,
+      "formal_target": "docs/architecture/execution/programmatic-tools.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/extensions/README.md",
+      "bytes": 23172,
+      "sha256": "811a1bd49988b302470efecf3cd38262253dba8a3b5326e5873a4b9f7ee192b7",
+      "kind": "markdown",
+      "lines": 172,
+      "formal_target": "docs/architecture/extensions/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/extensions/implementation.md",
+      "bytes": 39849,
+      "sha256": "10f00a323c4a76d45a8d4ed29bfb106a1e7a97a0ebad51286a3a7a4312930f3e",
+      "kind": "markdown",
+      "lines": 454,
+      "formal_target": "docs/architecture/extensions/implementation.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/extensions/progressive-discovery.md",
+      "bytes": 3038,
+      "sha256": "ef9d90ac00c64608f4684c5d8cdd9335c8c643d05077c73fbd7ee9d54dc9cdf4",
+      "kind": "markdown",
+      "lines": 25,
+      "formal_target": "docs/architecture/extensions/progressive-discovery.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/goals.md",
+      "bytes": 9211,
+      "sha256": "4b971ea08bc2d7ef0d79be5907baf73b72446be746c7f3eac3f7bd172a3d7a03",
+      "kind": "markdown",
+      "lines": 77,
+      "formal_target": "docs/architecture/goals.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/interaction/README.md",
+      "bytes": 32137,
+      "sha256": "5674774edbde8e15d6aa8e2286b32ab45a4668cd27014439a3889c4018399dd8",
+      "kind": "markdown",
+      "lines": 222,
+      "formal_target": "docs/architecture/interaction/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/interaction/implementation.md",
+      "bytes": 67833,
+      "sha256": "094006a749c1b4a65d314fc268cb27d087a125b69d11605d7f78a769069014d4",
+      "kind": "markdown",
+      "lines": 617,
+      "formal_target": "docs/architecture/interaction/implementation.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/interaction/session-and-task.md",
+      "bytes": 15769,
+      "sha256": "47ad201ad6886fc3e2bdc4bb4cdbc009a7a388342a324cf870341984dc13101f",
+      "kind": "markdown",
+      "lines": 123,
+      "formal_target": "docs/architecture/interaction/session-and-task.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/memory/README.md",
+      "bytes": 31621,
+      "sha256": "7b5fa8dcfc6c81e4479e4961a8a5a6f99425df3c0125c06a2185b627d314d820",
+      "kind": "markdown",
+      "lines": 258,
+      "formal_target": "docs/architecture/memory/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/memory/implementation.md",
+      "bytes": 64669,
+      "sha256": "8febb7d544982d2a9273aab0b830483e2062c190003c2d95a561e886057efec1",
+      "kind": "markdown",
+      "lines": 665,
+      "formal_target": "docs/architecture/memory/implementation.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/memory/optimization-plan.md",
+      "bytes": 26111,
+      "sha256": "305f82a629ed62413f4185c440b6d061a8d5c270486a0b121cb58a6a7daf1005",
+      "kind": "markdown",
+      "lines": 181,
+      "formal_target": "docs/architecture/memory/optimization-plan.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/memory/validation.md",
+      "bytes": 20211,
+      "sha256": "6bf35c7ada6cc6f8371f058d266572069e6b8929dc0c69bac5129b793088409b",
+      "kind": "markdown",
+      "lines": 146,
+      "formal_target": "docs/architecture/memory/validation.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/orchestrator/README.md",
+      "bytes": 37871,
+      "sha256": "1722d5de028542d4c097f8653a63cc096e2f2b7f45f44af0cf7a51970471a3be",
+      "kind": "markdown",
+      "lines": 391,
+      "formal_target": "docs/architecture/orchestrator/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留",
+      "additional_formal_targets": [
+        "docs/architecture/orchestrator/records.md",
+        "docs/architecture/orchestrator/budget.md",
+        "docs/architecture/orchestrator/verification.md",
+        "docs/architecture/orchestrator/task-lifecycle.md",
+        "docs/architecture/orchestrator/implementation.md"
+      ]
+    },
+    {
+      "path": "docs/architecture/.draft/orchestrator/access-paths.md",
+      "bytes": 15457,
+      "sha256": "0ee8ad93fd8728122fd62c95cd9cffdad6f72b00ce5a2932b009df28f12c9f1c",
+      "kind": "markdown",
+      "lines": 75,
+      "formal_target": "docs/architecture/orchestrator/access-paths.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/orchestrator/implementation.md",
+      "bytes": 89144,
+      "sha256": "4d02097c07c5e20903a433a56a14e54c09f0a3ba48e19503409a9b64776742df",
+      "kind": "markdown",
+      "lines": 626,
+      "formal_target": "docs/architecture/orchestrator/implementation.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/orchestrator/scheduled-triggers.md",
+      "bytes": 5808,
+      "sha256": "f00b23722d0ee2019db5e9fcc2aa20f94f5a2efe896918d98dd435f93795854d",
+      "kind": "markdown",
+      "lines": 41,
+      "formal_target": "docs/architecture/orchestrator/scheduled-triggers.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/orchestrator/verification.md",
+      "bytes": 29121,
+      "sha256": "901ace5591cfd87e682b384bfc4dca0fb89ab32c1513997305b4865ad03c1ee5",
+      "kind": "markdown",
+      "lines": 207,
+      "formal_target": "docs/architecture/orchestrator/verification.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/reliable-work.md",
+      "bytes": 40590,
+      "sha256": "5fe6415bde201fcd90bfe115e710bc62f4d6f948809f6619a95827d69e35cd19",
+      "kind": "markdown",
+      "lines": 313,
+      "formal_target": "docs/architecture/reliable-work.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/request-data-flows.md",
+      "bytes": 19451,
+      "sha256": "bb0c898b72a87ccbc4b373299e612237fd70723fadcfe971436487621b0e6b50",
+      "kind": "markdown",
+      "lines": 126,
+      "formal_target": "docs/architecture/request-data-flows.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/review.md",
+      "bytes": 79259,
+      "sha256": "cb2597b20c38a28b7c48c46b68d16fcabec64fb811a6cce996e8d46b01f94be5",
+      "kind": "markdown",
+      "lines": 521,
+      "formal_target": "docs/architecture/review.md",
+      "disposition": "原编写流水保留为历史；当前检查结果独立重新登记"
+    },
+    {
+      "path": "docs/architecture/.draft/security/README.md",
+      "bytes": 38786,
+      "sha256": "2738f1bf855955a02801efde62966c9ab85f310b41987ce057df02c2cb72d39b",
+      "kind": "markdown",
+      "lines": 256,
+      "formal_target": "docs/architecture/security/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/security/implementation.md",
+      "bytes": 58868,
+      "sha256": "8eea3c30fe36b3a673d608703cf699be724695c233763cc0f153a9a3687b26b8",
+      "kind": "markdown",
+      "lines": 527,
+      "formal_target": "docs/architecture/security/implementation.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/storage-and-middleware.md",
+      "bytes": 24088,
+      "sha256": "ddd693f1d3fa73d1c2af09ac2cf98a2ab66a14c2fcf72698145dd433e0dea805",
+      "kind": "markdown",
+      "lines": 160,
+      "formal_target": "docs/architecture/storage-and-middleware.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/technical-overview.md",
+      "bytes": 23901,
+      "sha256": "45bd8000e532424e55ce0e7b3146d67cf680ec0173fb79a4b5d55f8bf87f4a81",
+      "kind": "markdown",
+      "lines": 172,
+      "formal_target": "docs/architecture/technical-overview.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/uml-models.md",
+      "bytes": 35086,
+      "sha256": "cd8f1fb4dcf94f3de46b338c0272f798ce9ca69c725d0c1f13bfdffea06b43fa",
+      "kind": "markdown",
+      "lines": 296,
+      "formal_target": "docs/architecture/uml-models.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/README.md",
+      "bytes": 31953,
+      "sha256": "eddfd53bf67821bfff6ef26212343a0b858fc7e69ca7d565a4f278a42aaca422",
+      "kind": "markdown",
+      "lines": 202,
+      "formal_target": "docs/architecture/validation/README.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/check_documents.py",
+      "bytes": 3317,
+      "sha256": "7d98a40c94831c513f0703e2a3fe29e0db620ec3f5573cf7a651ecb0e68281fb",
+      "kind": "asset",
+      "lines": 80,
+      "formal_target": "docs/architecture/validation/check_documents.py",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/core-model-scenarios.md",
+      "bytes": 31107,
+      "sha256": "ccbabec3b45a79e643d64f9997f79310e4ee80f73fbc733317fad594d265910a",
+      "kind": "markdown",
+      "lines": 237,
+      "formal_target": "docs/architecture/validation/core-model-scenarios.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/fault-experiments.md",
+      "bytes": 58168,
+      "sha256": "b9f0e11a0e9d239a68ebc1c2c5fd16d2103db7649965e715cc73f711a5e2fe7c",
+      "kind": "markdown",
+      "lines": 408,
+      "formal_target": "docs/architecture/validation/fault-experiments.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/harness-scenarios.md",
+      "bytes": 6727,
+      "sha256": "292d8657edda79f19579b964db8f63207145fe3d9cc54ac09c89715c761d6aec",
+      "kind": "markdown",
+      "lines": 66,
+      "formal_target": "docs/architecture/validation/harness-scenarios.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/optimization-evidence.md",
+      "bytes": 23205,
+      "sha256": "47b35142f073cb48390718fc445ec98eafeb9989d38a24eee7a72b92424ff7ce",
+      "kind": "markdown",
+      "lines": 138,
+      "formal_target": "docs/architecture/validation/optimization-evidence.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/protocol/collection_rules.py",
+      "bytes": 7346,
+      "sha256": "97814f5b416750cb5bc7c0570acd57ddbf14cca20fe637fe79bee40485c2f2df",
+      "kind": "asset",
+      "lines": 94,
+      "formal_target": "docs/architecture/validation/protocol/collection_rules.py",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/protocol/content_rules.py",
+      "bytes": 27895,
+      "sha256": "86b864cbdc76eebf024b97e5cf86f0dcb9bd5987095c981f48d030a98724fd3b",
+      "kind": "asset",
+      "lines": 399,
+      "formal_target": "docs/architecture/validation/protocol/content_rules.py",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/protocol/exchanges.py",
+      "bytes": 14778,
+      "sha256": "8b5c917e04162c7eb238e59559ae1ee8693009d92e8973a18358c0e80bca5700",
+      "kind": "asset",
+      "lines": 243,
+      "formal_target": "docs/architecture/validation/protocol/exchanges.py",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/protocol/governance_rules.py",
+      "bytes": 51510,
+      "sha256": "b9b3c39ee73527662fc8fe870ae22628aa3682612cba1526e7e931cac6e70a2a",
+      "kind": "asset",
+      "lines": 564,
+      "formal_target": "docs/architecture/validation/protocol/governance_rules.py",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/protocol/runtime_rules.py",
+      "bytes": 41337,
+      "sha256": "aa66b195a6cbf76b6d705870a6d93c0881294dbb36974b8661ae4cfef5a55f32",
+      "kind": "asset",
+      "lines": 569,
+      "formal_target": "docs/architecture/validation/protocol/runtime_rules.py",
+      "disposition": "正式静态规则补说明步骤展开的计划基线与单一来源；原源文件保留"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/protocol/schema.py",
+      "bytes": 1013,
+      "sha256": "59a64424684a5d78acec0b5ad3a1ba18222b89a948e6b5340a06338a85ffceb3",
+      "kind": "asset",
+      "lines": 29,
+      "formal_target": "docs/architecture/validation/protocol/schema.py",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/protocol/traces.py",
+      "bytes": 20182,
+      "sha256": "7bf548e0e5fd560144f9e09f8503bad5f731698802577dbd63219e42f638c2d6",
+      "kind": "asset",
+      "lines": 243,
+      "formal_target": "docs/architecture/validation/protocol/traces.py",
+      "disposition": "正式静态规则按原成功接纳的准确能力区别只读未知与业务副作用；拒绝调用不改变原操作身份；原源文件保留"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/requirements.txt",
+      "bytes": 19,
+      "sha256": "cb9e5058abe248be8579db704a1c9e30e655b30cb7d5dd093bebf97f44766591",
+      "kind": "asset",
+      "lines": null,
+      "formal_target": "docs/architecture/validation/requirements.txt",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/validate.py",
+      "bytes": 3280,
+      "sha256": "3efbc806a91e127452fa3808afad2eeb2b6f9254c5e5ad5dfff58179bfea2873",
+      "kind": "asset",
+      "lines": 74,
+      "formal_target": "docs/architecture/validation/validate.py",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/validate_brain.py",
+      "bytes": 9763,
+      "sha256": "dd132213576e1a8dd9ec80655746300c992c3008dffd8ced35c310f38acdce24",
+      "kind": "asset",
+      "lines": 196,
+      "formal_target": "docs/architecture/validation/validate_brain.py",
+      "disposition": "正式静态入口补七项说明步骤展开／新修订依赖向量；原源文件保留"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/validate_lease.py",
+      "bytes": 3166,
+      "sha256": "973478de76555edf798123b52449b2ce2acbefde9dd095b63765fff84d222100",
+      "kind": "asset",
+      "lines": 61,
+      "formal_target": "docs/architecture/validation/validate_lease.py",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/validate_protocol.py",
+      "bytes": 17056,
+      "sha256": "783c8281254f599422a42213d1ab4b080aff6ea399f6c5968c9334433580c527",
+      "kind": "asset",
+      "lines": 232,
+      "formal_target": "docs/architecture/validation/validate_protocol.py",
+      "disposition": "正式静态入口补冗余未知读取、准确声明、必要证据和拒绝重分类向量；原源文件保留"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/validate_release_recovery.py",
+      "bytes": 5160,
+      "sha256": "449f40c248892463bc328460ac6c3555c82f6cce89a81cf14a76147e236d9b88",
+      "kind": "asset",
+      "lines": 112,
+      "formal_target": "docs/architecture/validation/validate_release_recovery.py",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/validate_transport.py",
+      "bytes": 34190,
+      "sha256": "ac8d0c2fc70be8bb6bce8b6d3484a0a47ad9a1306d7b0641e038723f1125dc6d",
+      "kind": "asset",
+      "lines": 539,
+      "formal_target": "docs/architecture/validation/validate_transport.py",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/validation/verify_transport_proofs.mjs",
+      "bytes": 4598,
+      "sha256": "2e1fda6950b0ee6b57e7589f251afda3f5fd0d63c79b49a79722e19c38bcf7c7",
+      "kind": "asset",
+      "lines": null,
+      "formal_target": "docs/architecture/validation/verify_transport_proofs.mjs",
+      "disposition": "机器契约／例证／图册资产迁入；当前版静态检查单独登记"
+    },
+    {
+      "path": "docs/architecture/.draft/walkthrough.md",
+      "bytes": 19111,
+      "sha256": "46d539432002f59f1378bee5ef204453044b705849ab905419b8207f5d549667",
+      "kind": "markdown",
+      "lines": 196,
+      "formal_target": "docs/architecture/walkthrough.md",
+      "disposition": "完整迁入并按章节重组；字段、事务、恢复及验收保留"
+    },
+    {
+      "path": "docs/research/agent-harness-comparison/README.md",
+      "bytes": 5802,
+      "sha256": "2508b4186158424b90478f84656f3665eb92ea08dfd9ce448e3aba4b56f09202",
+      "kind": "markdown",
+      "lines": 42,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-harness-comparison/architecture-baseline.md",
+      "bytes": 10334,
+      "sha256": "63842632654e6a37ee7ba96c159bed6365578f8870a03e17e3b9575d7aaaf942",
+      "kind": "markdown",
+      "lines": 71,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-harness-comparison/architecture-optimization.md",
+      "bytes": 38273,
+      "sha256": "1454659ab33076c8fe0766207c304baad26782fcbdc8e75c66280a47f6146e19",
+      "kind": "markdown",
+      "lines": 276,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-harness-comparison/core-model-semantic-coverage.md",
+      "bytes": 76401,
+      "sha256": "9ca04f7825e3b84d247dda4cc5cab389ad8bfe85942a2e545a62394b4d178c7c",
+      "kind": "markdown",
+      "lines": 508,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-harness-comparison/data-flow-io-comparison.md",
+      "bytes": 22049,
+      "sha256": "c6fe2815e00c6c5689fbf24402ab437d8ba875cce43fb752c08f0f74734ef677",
+      "kind": "markdown",
+      "lines": 141,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-harness-comparison/io/codex-prime.md",
+      "bytes": 22616,
+      "sha256": "1551530330bd6bdff10820916cc32674a0507dae268f89d7d0f9f217314b3f84",
+      "kind": "markdown",
+      "lines": 134,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-harness-comparison/io/deepseek.md",
+      "bytes": 23547,
+      "sha256": "9a83c4c7f86a19d163a449ef1d6e7e80ccdd460df536b7a083d839a9476f3f21",
+      "kind": "markdown",
+      "lines": 202,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-harness-comparison/io/pi-crush.md",
+      "bytes": 26983,
+      "sha256": "04efed1f2a9888a067e41273610b368fe7622da3f98b74ef42e5eafea334ad3d",
+      "kind": "markdown",
+      "lines": 157,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-harness-comparison/sources.json",
+      "bytes": 24592,
+      "sha256": "59c2478b61f2710ab31aa3e759f91c654cdd40a3210adea50389d510294afebd",
+      "kind": "asset",
+      "lines": 233,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-harness-comparison/verification.json",
+      "bytes": 3236,
+      "sha256": "fe313678628e028e24baeeedbeb065fe34640cef20be8aad4540dea8abc03b14",
+      "kind": "asset",
+      "lines": 111,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-harness-comparison/verification.md",
+      "bytes": 2759,
+      "sha256": "9166aa257c034f88a52adf151a7c07067fd7f412398b68c5f1c0bfc8a5609e39",
+      "kind": "markdown",
+      "lines": 29,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-harness-comparison/verify-research.py",
+      "bytes": 8424,
+      "sha256": "86f064be65faecfe3047977cd9552f338c89763ef796467949a9161146fdc094",
+      "kind": "asset",
+      "lines": 195,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-memory-libraries-2026-09-28.md",
+      "bytes": 32661,
+      "sha256": "4ac8534abb1a57b8a1b956bfcc71771a83998f8a951bc3aaea72885792a436df",
+      "kind": "markdown",
+      "lines": 196,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/agent-memory-papers-2026-09-28.md",
+      "bytes": 20137,
+      "sha256": "9c06b6be886d3a5d1ac46f8693e3fc47f7e97ed5a89935411815b6695f743c67",
+      "kind": "markdown",
+      "lines": 155,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/ai-report-2026-09-project-implications.md",
+      "bytes": 28652,
+      "sha256": "a92f1b0a9cdaad9d589b2d031c7f768100470ba1ac461d7ba4ed01e632461fdc",
+      "kind": "markdown",
+      "lines": 220,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/ai-report-2026-09-source-check.md",
+      "bytes": 13917,
+      "sha256": "7f605e0cff1406d8481b03650d0d01ae6ce7b1bb83c025b566c8fabab92bc85d",
+      "kind": "markdown",
+      "lines": 49,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/all-mechanisms-coverage.md",
+      "bytes": 57167,
+      "sha256": "2594e4dd9ac5efc31a15fc63efad2f3d55923a2f5292496701c33ce9d5b173ca",
+      "kind": "markdown",
+      "lines": 483,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/all-mechanisms-verification-results.md",
+      "bytes": 16381,
+      "sha256": "5c654d53ae97cd362d6f39756449e7d308c5f3abbeea7e7f1edae7ea7e4ece0a",
+      "kind": "markdown",
+      "lines": 134,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/codex/README.md",
+      "bytes": 65762,
+      "sha256": "620fd248f7d8c8d856913583622b6bd2ea27cae4fd009818ab2e26fb36e09e0e",
+      "kind": "markdown",
+      "lines": 405,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/crush/README.md",
+      "bytes": 35899,
+      "sha256": "21265d73c65f42552034b8f32fa969b7c8095a1db1478d8c3bf80fdc658aa0a8",
+      "kind": "markdown",
+      "lines": 302,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/deepseek-harness/README.md",
+      "bytes": 72895,
+      "sha256": "6b8ee0120ff065eed63d85c8d1847e1d0edd48d517e4118fdde22ebb628f8457",
+      "kind": "markdown",
+      "lines": 515,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/formal-methods-for-architecture.md",
+      "bytes": 15921,
+      "sha256": "26afbc4786dd18cb563395c6227d15b001b1314083465116bcd551f84ac96df0",
+      "kind": "markdown",
+      "lines": 100,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/handoff-verification-results.md",
+      "bytes": 18201,
+      "sha256": "4defd3a6c5fcf8ca0b760bcd3e08d0f4b3b72ae927c2dc63aafbb879358eaf05",
+      "kind": "markdown",
+      "lines": 165,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/model-taste-x-2026-09-25.md",
+      "bytes": 7548,
+      "sha256": "4f04647be8c65348fcf549d4c059c12d3e83996271ca42db495cd7a72c08f11f",
+      "kind": "markdown",
+      "lines": 54,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/module-design-workflow-check-2026-09-25.md",
+      "bytes": 3337,
+      "sha256": "bd0493215d0f9a48c05f171772f40e71e062c981ba4cf38768be5eaa8d8b1d2b",
+      "kind": "markdown",
+      "lines": 28,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/opus-5-5-document-samples-2026-09-25.md",
+      "bytes": 8057,
+      "sha256": "27f5183d32cffddc5ab72b1b1b7b1613b16cafb6e30e1e77f0cff9d0df2231c0",
+      "kind": "markdown",
+      "lines": 67,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/pi/README.md",
+      "bytes": 58838,
+      "sha256": "6bcf107b5f5c89c026787f74fcd5138e6d398dd341d0973c40b01a2396443349",
+      "kind": "markdown",
+      "lines": 367,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/prime-agent/README.md",
+      "bytes": 38876,
+      "sha256": "69358c176f20722e900ea7b677611a9a992494d9d2403be1076baae8793f9221",
+      "kind": "markdown",
+      "lines": 311,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/public-technical-docs-comparison-2026-09-25.md",
+      "bytes": 9307,
+      "sha256": "e53a1a57f7237b97de94ea0e427adda58ea425654b54e02dbe5c453fa36b11b1",
+      "kind": "markdown",
+      "lines": 67,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/research/system-one-models-2026-09-28.md",
+      "bytes": 18473,
+      "sha256": "ad5420a44ca839782b520d7926ae73b630cfdc7d4c15042f2d04d9431701317b",
+      "kind": "markdown",
+      "lines": 109,
+      "formal_target": "docs/architecture/research-basis.md",
+      "disposition": "保留固定研究原文；采用、候选或历史证据范围见研究索引"
+    },
+    {
+      "path": "docs/architecture/README.md",
+      "sha256": "c8575dac79e4bcfedc5a31fdc797b0412a05561826d038064b35d553384bb0dd",
+      "lines": 464,
+      "formal_target": "docs/architecture/README.md",
+      "disposition": "保留既有正式成果并整合；精确规范分配到对应主题",
+      "source_revision": "987e5939dc5cf963cc128114c30c44070807372b",
+      "additional_formal_targets": [
+        "docs/architecture/core-data-model.md",
+        "docs/architecture/request-data-flows.md",
+        "docs/architecture/application-workflow.md",
+        "docs/architecture/orchestrator/records.md",
+        "docs/architecture/orchestrator/budget.md",
+        "docs/architecture/orchestrator/verification.md",
+        "docs/architecture/reliable-work.md"
+      ]
+    },
+    {
+      "path": "docs/architecture/ochestrator/README.md",
+      "sha256": "5480aee857edc76053bea6d9fe185c7ccd0b6434b475359a0361fd49a8864910",
+      "lines": 333,
+      "formal_target": "docs/architecture/orchestrator/README.md",
+      "disposition": "保留既有正式成果并整合；精确规范分配到对应主题",
+      "source_revision": "987e5939dc5cf963cc128114c30c44070807372b",
+      "additional_formal_targets": [
+        "docs/architecture/orchestrator/records.md",
+        "docs/architecture/orchestrator/budget.md",
+        "docs/architecture/orchestrator/verification.md",
+        "docs/architecture/orchestrator/task-lifecycle.md",
+        "docs/architecture/orchestrator/implementation.md"
+      ]
+    },
+    {
+      "path": "docs/architecture/ochestrator/durable-work.md",
+      "sha256": "d5791407a463ddeca6a66e711cfd21ca848126e50fabdd4350a8aaada194f1c8",
+      "lines": 257,
+      "formal_target": "docs/architecture/orchestrator/durable-work.md",
+      "disposition": "保留既有正式成果并整合；精确规范分配到对应主题",
+      "source_revision": "987e5939dc5cf963cc128114c30c44070807372b",
+      "additional_formal_targets": [
+        "docs/architecture/reliable-work.md",
+        "docs/architecture/storage-and-middleware.md",
+        "docs/architecture/deployment.md",
+        "docs/architecture/engineering.md"
+      ]
+    },
+    {
+      "path": "docs/architecture/ochestrator/task-lifecycle.md",
+      "sha256": "fcca7dbdbaa53d8bce90da3166be877f39605b298afcce9f04aeb1a5e2a76c18",
+      "lines": 431,
+      "formal_target": "docs/architecture/orchestrator/task-lifecycle.md",
+      "disposition": "保留既有正式成果并整合；精确规范分配到对应主题",
+      "source_revision": "987e5939dc5cf963cc128114c30c44070807372b"
+    }
+  ],
+  "supplemental_sources": [
+    {
+      "source": ".scratch/harness-core-model-simplification/spec.md",
+      "formal_target": "docs/architecture/validation/core-model-requirements.md",
+      "scope": "54条行为与24项实施选择，移除历史工作流水",
+      "sha256": "e0e3ab4c44be65ee8f04e88de4c25bb51e07c9377e8718083565339d40744881"
+    },
+    {
+      "source": ".scratch/harness-core-model-simplification/traceability.md",
+      "formal_target": "docs/architecture/validation/core-model-traceability.md",
+      "scope": "完整逐项设计与验收定位",
+      "sha256": "b376fcd8a7e53e174cead6e48e965ae627d2a4b831008c754d2e66f3da3a67ec"
+    },
+    {
+      "source": ".scratch/production-distributed/check_grpc_envelope.py",
+      "sha256": "ae59825378b6b9ddd3c74b0656dd0a1abfafd48576b5e24a1130f8eba9ccdbc1",
+      "formal_target": "docs/architecture/validation/check_grpc_envelope.py",
+      "scope": "移入描述符封装检查，生成类型路径改为显式参数；不验证真实服务互操作"
+    }
+  ],
+  "new_contract_assets": {
+    "schema": "docs/architecture/contracts/schemas/input-answer.schema.json",
+    "examples": "docs/architecture/contracts/examples/input-answers/README.md",
+    "checker": "docs/architecture/validation/validate_input_answers.py",
+    "scope": "独立应用读者反馈后补齐既有结构化回答编码与受信验收交付；不新增领域方法",
+    "discovery_example": "docs/architecture/contracts/examples/protocol/66-input-request-discovery.json"
+  }
+}

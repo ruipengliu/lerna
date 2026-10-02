@@ -1,0 +1,26 @@
+sequenceDiagram
+    participant U as 受信入口
+    participant M as Memory owner
+    participant A as Grant owner
+    participant H as Orchestrator
+    participant C as 内容 owner
+    Note over U,C: 偏好字节已完整上传并耐久就绪
+    U->>C: content.put 原上传、来源与保存依据
+    C->>C: 提交准确正文引用、来源和策略
+    C-->>U: 原回执与 ContentRef
+    U->>M: memory.create 原命令与准确 ContentRef
+    M->>A: grant.use 保存用途及来源
+    A-->>M: 有界使用许可
+    M->>M: 提交记忆修订、变化、回执与索引工作
+    M-->>U: applied 与精确修订
+    H->>M: memory.query 任务用途与接收方
+    M->>A: 取得有限库范围的处理许可
+    A-->>M: 原处理使用依据
+    M->>M: 在获准范围形成有限候选
+    M->>A: 按精确来源取得结果披露许可
+    A-->>M: 原披露使用依据或拒绝
+    M-->>H: 候选修订、来源、缺口
+    H->>C: content.register_copy 原引用、持有者、用途与保留期
+    C-->>H: 原副本登记回执
+    H->>C: content.get 精确引用及处理用途
+    C-->>H: 当前获准正文或拒绝

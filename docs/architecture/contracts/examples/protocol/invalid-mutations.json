@@ -1,0 +1,5890 @@
+[
+  {
+    "name": "task.submit rejects undeclared payload field",
+    "fixture": "01-task-loop.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "brain.decide rejects undeclared payload field",
+    "fixture": "01-task-loop.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "grant.use rejects undeclared payload field",
+    "fixture": "01-task-loop.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "execution.invoke rejects undeclared payload field",
+    "fixture": "01-task-loop.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "execution.get rejects undeclared payload field",
+    "fixture": "01-task-loop.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "task.read rejects undeclared payload field",
+    "fixture": "01-task-loop.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "task.result rejects undeclared payload field",
+    "fixture": "01-task-loop.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "execution.control rejects undeclared payload field",
+    "fixture": "03-control-order.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "execution.control.get rejects undeclared payload field",
+    "fixture": "03-control-order.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "execution.cancel rejects undeclared payload field",
+    "fixture": "04-cancel-before-invoke.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "execution.reconcile rejects undeclared payload field",
+    "fixture": "04-cancel-before-invoke.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "task.pause rejects undeclared payload field",
+    "fixture": "05-task-control.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "task.resume rejects undeclared payload field",
+    "fixture": "05-task-control.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "task.cancel rejects undeclared payload field",
+    "fixture": "05-task-control.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "task.revise rejects undeclared payload field",
+    "fixture": "06-goal-revision.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "task.attach_evidence rejects undeclared payload field",
+    "fixture": "06-goal-revision.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "interaction.input rejects undeclared payload field",
+    "fixture": "07-input-consumption.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "interaction.input_read rejects undeclared payload field",
+    "fixture": "07-input-consumption.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "interaction.input_withdraw rejects undeclared payload field",
+    "fixture": "07-input-consumption.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "task.input rejects undeclared payload field",
+    "fixture": "07-input-consumption.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "task.accept_result rejects undeclared payload field",
+    "fixture": "08-acceptance.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "brain.get rejects undeclared payload field",
+    "fixture": "09-brain-recovery.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "brain.cancel rejects undeclared payload field",
+    "fixture": "09-brain-recovery.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "grant.check rejects undeclared payload field",
+    "fixture": "10-use-recovery.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "grant.use.get rejects undeclared payload field",
+    "fixture": "10-use-recovery.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "memory.create rejects undeclared payload field",
+    "fixture": "11-memory-management.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "memory.read rejects undeclared payload field",
+    "fixture": "11-memory-management.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "memory.replace rejects undeclared payload field",
+    "fixture": "11-memory-management.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "memory.restrict rejects undeclared payload field",
+    "fixture": "11-memory-management.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "memory.delete rejects undeclared payload field",
+    "fixture": "11-memory-management.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "memory.inspect rejects undeclared payload field",
+    "fixture": "11-memory-management.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "collaboration.delegate rejects undeclared payload field",
+    "fixture": "12-delegation-mapping.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "collaboration.read rejects undeclared payload field",
+    "fixture": "12-delegation-mapping.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "collaboration.submit_input rejects undeclared payload field",
+    "fixture": "12-delegation-mapping.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "collaboration.control rejects undeclared payload field",
+    "fixture": "12-delegation-mapping.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "collaboration.reconcile rejects undeclared payload field",
+    "fixture": "12-delegation-mapping.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.approval_check rejects undeclared payload field",
+    "fixture": "13-activation-online.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "extensions.activate rejects undeclared payload field",
+    "fixture": "13-activation-online.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "extensions.read rejects undeclared payload field",
+    "fixture": "13-activation-online.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.approval_lease rejects undeclared payload field",
+    "fixture": "14-approval-offline.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "unknown method",
+    "fixture": "01-task-loop.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/method",
+        "value": "task.teleport"
+      }
+    ]
+  },
+  {
+    "name": "query method cannot use command envelope",
+    "fixture": "01-task-loop.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/method",
+        "value": "task.list"
+      }
+    ]
+  },
+  {
+    "name": "tenant body cannot choose authentication",
+    "fixture": "01-task-loop.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/tenant_id",
+        "value": "other_tenant_edbe7f77a17daeda451ea19f9d750b57"
+      }
+    ]
+  },
+  {
+    "name": "content tenant mismatch",
+    "fixture": "01-task-loop.json",
+    "expect": "tenant_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/goal_ref/tenant_id",
+        "value": "other_tenant_edbe7f77a17daeda451ea19f9d750b57"
+      }
+    ]
+  },
+  {
+    "name": "receipt wrong command",
+    "fixture": "01-task-loop.json",
+    "expect": "command_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/command_id",
+        "value": "other_command_d0ca0c66d22109199e141c6e3ee41c1e"
+      }
+    ]
+  },
+  {
+    "name": "submit cannot use accepted",
+    "fixture": "01-task-loop.json",
+    "expect": "receipt_stage",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response",
+        "value": {
+          "command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "stage": "accepted",
+          "accepted_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    ]
+  },
+  {
+    "name": "changed input cannot replace original decision",
+    "fixture": "02-original-command.json",
+    "expect": "idempotency_conflict",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/constraints",
+        "value": [
+          "changed"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "recovery looks up another identity",
+    "fixture": "02-original-command.json",
+    "expect": "recovery_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/recovery/lookup/command_id",
+        "value": "other_command_d0ca0c66d22109199e141c6e3ee41c1e"
+      }
+    ]
+  },
+  {
+    "name": "recovery another owner",
+    "fixture": "02-original-command.json",
+    "expect": "recovery_original",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/recovery/auth/logical_service_id",
+        "value": "other_owner_39a5e4926150a56030eda0cbb72d22b5"
+      }
+    ]
+  },
+  {
+    "name": "original terminal decision changes",
+    "fixture": "02-original-command.json",
+    "expect": "receipt_immutable",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/revision",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "redaction cannot smuggle arbitrary output",
+    "fixture": "01-task-loop.json",
+    "expect": "redaction",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/redacted",
+        "value": true
+      },
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output",
+        "value": {
+          "untyped": "value"
+        }
+      }
+    ]
+  },
+  {
+    "name": "request checks remain with redacted response",
+    "fixture": "01-task-loop.json",
+    "expect": "gate_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/task_id",
+        "value": "wrong_task_d8edd675dd265f61002a362c3a322992"
+      },
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response",
+        "value": {
+          "command_id": "execution_invoke_df5d3e7b68cf0fdb78ae40a4da19ca19",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "redacted": true
+        }
+      }
+    ]
+  },
+  {
+    "name": "empty gate window",
+    "fixture": "01-task-loop.json",
+    "expect": "control_window",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/control_snapshot/start_before",
+        "value": "2026-09-26T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "name": "unknown capability version",
+    "fixture": "01-task-loop.json",
+    "expect": "capability_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/capability_ref/version",
+        "value": "2.0.0"
+      }
+    ]
+  },
+  {
+    "name": "unknown tool argument",
+    "fixture": "01-task-loop.json",
+    "expect": "capability_arguments",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/arguments/secret_url",
+        "value": "https://example.invalid"
+      }
+    ]
+  },
+  {
+    "name": "unfrozen external schema reference",
+    "fixture": "01-task-loop.json",
+    "expect": "capability_schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/capabilities/0/input_schema/properties/text",
+        "value": {
+          "$ref": "https://example.invalid/schema"
+        }
+      }
+    ]
+  },
+  {
+    "name": "brain applied while running",
+    "fixture": "09-brain-recovery.json",
+    "expect": "brain_terminal",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output",
+        "value": {
+          "decision_id": "decision_86ae35d58a6aa3b5742df94ef9d71622",
+          "revision": 2,
+          "snapshot_revision": 1,
+          "status": "running"
+        }
+      }
+    ]
+  },
+  {
+    "name": "same decision rebound to other snapshot",
+    "fixture": "09-brain-recovery.json",
+    "expect": "decision_snapshot",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/snapshot_revision",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "same decision starts second physical call",
+    "fixture": "09-brain-recovery.json",
+    "expect": "decision_physical_call",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/model_call/model_call_id",
+        "value": "other_call_86e7e6e8c7d334af7dcb8af5159d9b43"
+      }
+    ]
+  },
+  {
+    "name": "brain exceeds admitted action budget",
+    "fixture": "01-task-loop.json",
+    "expect": "brain_bound",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/limits/max_actions",
+        "value": 0
+      }
+    ]
+  },
+  {
+    "name": "grant use owner mismatch",
+    "fixture": "10-use-recovery.json",
+    "expect": "grant_owner",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/owner_id",
+        "value": "other_owner_39a5e4926150a56030eda0cbb72d22b5"
+      }
+    ]
+  },
+  {
+    "name": "grant use version mismatch",
+    "fixture": "10-use-recovery.json",
+    "expect": "grant_version",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/grant_revisions/0/revision",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "grant use replay extends startup",
+    "fixture": "10-use-recovery.json",
+    "expect": "use_immutable",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/start_before",
+        "value": "2026-09-26T00:01:00Z"
+      }
+    ]
+  },
+  {
+    "name": "grant use over-reserves requested maximum",
+    "fixture": "10-use-recovery.json",
+    "expect": "usage_bound",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/reserved_cost/amount",
+        "value": "2"
+      }
+    ]
+  },
+  {
+    "name": "old pause overwrites later resume",
+    "fixture": "03-control-order.json",
+    "expect": "control_order",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/gate/control_revision",
+        "value": 8
+      },
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/gate/control",
+        "value": "paused"
+      },
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/enforced_control_revision",
+        "value": 8
+      },
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/entrances/0/enforced_control_revision",
+        "value": 8
+      }
+    ]
+  },
+  {
+    "name": "control applied with unfinished entrance",
+    "fixture": "03-control-order.json",
+    "expect": "control_enforcement",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/entrances/0/enforced_control_revision",
+        "value": 8
+      },
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/enforced_control_revision",
+        "value": 8
+      }
+    ]
+  },
+  {
+    "name": "new gate decreases goal",
+    "fixture": "03-control-order.json",
+    "expect": "goal_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/gate/goal_revision",
+        "value": 2
+      },
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/gate/goal_revision",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "cancel-before-invoke bypass",
+    "fixture": "04-cancel-before-invoke.json",
+    "expect": "cancel_or_goal_gate",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response",
+        "value": {
+          "command_id": "execution_invoke_df5d3e7b68cf0fdb78ae40a4da19ca19",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "operation_id": "operation_9bf5a24e4aa779981ac41f1a0f8713ec",
+            "revision": 1,
+            "execution_state": "accepted",
+            "effect": "not_started",
+            "may_apply_later": false,
+            "attempts": [],
+            "evidence_refs": [],
+            "usage": [
+              {
+                "unit": "request",
+                "amount": "1"
+              }
+            ],
+            "usage_final": false,
+            "next_action": "query_original"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "old goal invocation allowed",
+    "fixture": "06-goal-revision.json",
+    "expect": "cancel_or_goal_gate",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response",
+        "value": {
+          "command_id": "execution_invoke_df5d3e7b68cf0fdb78ae40a4da19ca19",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "operation_id": "operation_9bf5a24e4aa779981ac41f1a0f8713ec",
+            "revision": 1,
+            "execution_state": "accepted",
+            "effect": "not_started",
+            "may_apply_later": false,
+            "attempts": [],
+            "evidence_refs": [],
+            "usage": [
+              {
+                "unit": "request",
+                "amount": "1"
+              }
+            ],
+            "usage_final": false,
+            "next_action": "query_original"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "not applied with possible delayed effect",
+    "fixture": "01-task-loop.json",
+    "expect": "operation_effect",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/effect",
+        "value": "not_applied"
+      },
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/may_apply_later",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "task result with unresolved effect",
+    "fixture": "01-task-loop.json",
+    "expect": "result_effect",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/effect",
+        "value": "unknown"
+      },
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/may_apply_later",
+        "value": "unknown"
+      }
+    ]
+  },
+  {
+    "name": "succeeded without control revision advance",
+    "fixture": "01-task-loop.json",
+    "expect": "task_control_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/control_revision",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "result contradicts cancellation",
+    "fixture": "01-task-loop.json",
+    "expect": "result_status",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/status",
+        "value": "cancelled"
+      }
+    ]
+  },
+  {
+    "name": "result has stale artifact evidence",
+    "fixture": "01-task-loop.json",
+    "expect": "result_version",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/result/condition_results/0/artifact_ref/version",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "required condition fails",
+    "fixture": "01-task-loop.json",
+    "expect": "result_conditions",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/result/condition_results/0/verdict",
+        "value": "fail"
+      }
+    ]
+  },
+  {
+    "name": "assessed evidence upgraded to verified",
+    "fixture": "01-task-loop.json",
+    "expect": "result_basis",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/result/condition_results/0/basis",
+        "value": "assessed"
+      }
+    ]
+  },
+  {
+    "name": "input belongs to another task",
+    "fixture": "07-input-consumption.json",
+    "expect": "input_version",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/input_requests/0/task_id",
+        "value": "wrong_task_d8edd675dd265f61002a362c3a322992"
+      }
+    ]
+  },
+  {
+    "name": "required preview missing",
+    "fixture": "07-input-consumption.json",
+    "expect": "input_version",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/preview_refs",
+        "value": []
+      },
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/preview_refs",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "old request revision consumed",
+    "fixture": "07-input-consumption.json",
+    "expect": "input_version",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/request_revision",
+        "value": 1
+      },
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/request_revision",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "two commands consume same input",
+    "fixture": "07-input-consumption.json",
+    "expect": "input_consumption",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response",
+        "value": {
+          "command_id": "other_answer_2991ed42c81b88e5368aa2ec914452e9",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+            "request_revision": 2,
+            "consumed_by": "other_answer_2991ed42c81b88e5368aa2ec914452e9",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "sending withdrawal claims prevented consumption",
+    "fixture": "07-input-consumption.json",
+    "expect": "withdrawal_race",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/state",
+        "value": "withdrawn"
+      }
+    ]
+  },
+  {
+    "name": "forwarded input changes original target command",
+    "fixture": "07-input-consumption.json",
+    "expect": "input_identity",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/target_command_id",
+        "value": "replacement_95713e9cbdd1dfcb2d4080c2537f418d"
+      }
+    ]
+  },
+  {
+    "name": "acceptance wrong candidate hash",
+    "fixture": "08-acceptance.json",
+    "expect": "input_version",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/candidate_hash",
+        "value": "sha256:9d6f965ac832e40a5df6c06afe983e3b449c07b843ff51ce76204de05c690d11"
+      }
+    ]
+  },
+  {
+    "name": "acceptance signed for different request",
+    "fixture": "08-acceptance.json",
+    "expect": "input_version",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/confirmation_ref/id",
+        "value": "forged_confirmation_068faacf6615a48b61a86e112ada8210"
+      }
+    ]
+  },
+  {
+    "name": "memory read silently returns newer revision",
+    "fixture": "11-memory-management.json",
+    "expect": "exact_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/revision",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "memory replace did not advance",
+    "fixture": "11-memory-management.json",
+    "expect": "revision_progress",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/revision",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "memory deletion reports active",
+    "fixture": "11-memory-management.json",
+    "expect": "deletion_state",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/state",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "external task silently remapped",
+    "fixture": "12-delegation-mapping.json",
+    "expect": "delegation_identity",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/remote_binding/remote_task_id",
+        "value": "other_remote_task_ffe85290a1c99b1f0e667d9760848bd2"
+      }
+    ]
+  },
+  {
+    "name": "active delegate has no mapping",
+    "fixture": "12-delegation-mapping.json",
+    "expect": "delegation_mapping",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/phase",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "activation has no ready instance",
+    "fixture": "13-activation-online.json",
+    "expect": "activation_readiness",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/ready_instance",
+        "value": null
+      }
+    ]
+  },
+  {
+    "name": "activation use binds wrong version",
+    "fixture": "13-activation-online.json",
+    "expect": "activation_approval",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/new_lock_id",
+        "value": "different_lock_7ef3fc5d90cc8bef139ac12912a28d70"
+      }
+    ]
+  },
+  {
+    "name": "approval use replay extends window",
+    "fixture": "13-activation-online.json",
+    "expect": "approval_use_immutable",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/start_before",
+        "value": "2026-09-26T00:01:00Z"
+      }
+    ]
+  },
+  {
+    "name": "revoked approval issues use",
+    "fixture": "13-activation-online.json",
+    "expect": "approval_authority",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/approvals/0/state",
+        "value": "revoked"
+      }
+    ]
+  },
+  {
+    "name": "offline lease with zero window",
+    "fixture": "14-approval-offline.json",
+    "expect": "approval_authority",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/approvals/0/max_offline_window_ms",
+        "value": 0
+      }
+    ]
+  },
+  {
+    "name": "offline lease tries fresh activation",
+    "fixture": "14-approval-offline.json",
+    "expect": "approval_authority",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/approvals/0/already_active",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "offline lease exceeds requested limit",
+    "fixture": "14-approval-offline.json",
+    "expect": "approval_window",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/continue_until",
+        "value": "2026-09-26T00:01:00Z"
+      }
+    ]
+  },
+  {
+    "name": "unsafe idempotency error recovery",
+    "fixture": "02-original-command.json",
+    "expect": "error_recovery",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/error/retry",
+        "value": "same_command"
+      }
+    ]
+  },
+  {
+    "name": "conditional write requires revision",
+    "fixture": "11-memory-management.json",
+    "expect": "expected_revision",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/events/2/exchange/request/expected_revision"
+      }
+    ]
+  },
+  {
+    "name": "nested Brain error must be declared",
+    "fixture": "09-brain-recovery.json",
+    "expect": "error_code",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output",
+        "value": {
+          "decision_id": "decision_86ae35d58a6aa3b5742df94ef9d71622",
+          "revision": 2,
+          "snapshot_revision": 1,
+          "status": "failed",
+          "error": {
+            "code": "unregistered_error",
+            "message": "not registered",
+            "retry": "none"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "budget adjustment cannot resume task",
+    "fixture": "20-budget-allocation.json",
+    "expect": "budget_adjust_scope",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/control",
+        "value": "paused"
+      }
+    ]
+  },
+  {
+    "name": "allocation cannot transfer beyond parent obligation bound",
+    "fixture": "20-budget-allocation.json",
+    "expect": "allocation_budget",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/limits/0/limit",
+        "value": "25"
+      },
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/limits/0/limit",
+        "value": "25"
+      }
+    ]
+  },
+  {
+    "name": "settlement cannot change original receiver",
+    "fixture": "20-budget-allocation.json",
+    "expect": "allocation_identity",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/receiver_id",
+        "value": "wrong_receiver_cadafe9a8186b237db7b8cbe55a71caf"
+      },
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/closure/receiver_id",
+        "value": "wrong_receiver_cadafe9a8186b237db7b8cbe55a71caf"
+      },
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/closure/receiver_id",
+        "value": "wrong_receiver_cadafe9a8186b237db7b8cbe55a71caf"
+      }
+    ]
+  },
+  {
+    "name": "task list cannot include another Orchestrator",
+    "fixture": "20-budget-allocation.json",
+    "expect": "task_list_orchestrator",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/items/0/task/orchestrator_id",
+        "value": "wrong_orchestrator_a97bb4f247fefa51818e58892928be22"
+      }
+    ]
+  },
+  {
+    "name": "catalog cannot invent a capability version",
+    "fixture": "21-capability-catalog.json",
+    "expect": "catalog_reference",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/candidates/0/capability_ref/version",
+        "value": "2.0.0"
+      }
+    ]
+  },
+  {
+    "name": "describe cannot switch pinned binding executor",
+    "fixture": "21-capability-catalog.json",
+    "expect": "catalog_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/binding/executor_id",
+        "value": "other_executor_bff6cb8aa63b32491fc9e95ceb6dc7ed"
+      }
+    ]
+  },
+  {
+    "name": "resource acquire cannot change holder",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "lease_holder",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/holder_id",
+        "value": "other_holder_88f455527b18964f65bbdbea8876a27f"
+      }
+    ]
+  },
+  {
+    "name": "resource renew cannot change original instance",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "lease_renewal",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/instance_id",
+        "value": "other_instance_47c3a3cf7d30b574438d3da6a8a673d2"
+      }
+    ]
+  },
+  {
+    "name": "resource get cannot attach a foreign lease",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "resource_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/lease/resource_id",
+        "value": "other_device_409ff36b0991870818ac055610ba808c"
+      }
+    ]
+  },
+  {
+    "name": "observation cannot use stale control generation",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "observation_epoch",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/observation/control_epoch",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "takeover must advance current resource epoch",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "resource_epoch",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/control_epoch",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "release cannot erase newer holder generation",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "resource_epoch",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/request/payload/expected_control_epoch",
+        "value": 1
+      },
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/control_epoch",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "budget.read cannot substitute receiver view",
+    "fixture": "23-cross-orchestrator-budget.json",
+    "expect": "budget_read_role",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/role",
+        "value": "receiver"
+      }
+    ]
+  },
+  {
+    "name": "delegated task cannot invent authenticated sender",
+    "fixture": "23-cross-orchestrator-budget.json",
+    "expect": "delegation_sender",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/delegation_context/sender_orchestrator_id",
+        "value": "wrong_sender_9acbe3f0bc5c5ae8446287e187b3c862"
+      }
+    ]
+  },
+  {
+    "name": "delegated task must match current allocation revision",
+    "fixture": "23-cross-orchestrator-budget.json",
+    "expect": "receiver_admission",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/delegation_context/allocation_ref/revision",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "budget.close must seal receiver gate",
+    "fixture": "23-cross-orchestrator-budget.json",
+    "expect": "receiver_closure",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/state",
+        "value": "open"
+      }
+    ]
+  },
+  {
+    "name": "closed receiver cannot omit final proof association",
+    "fixture": "23-cross-orchestrator-budget.json",
+    "expect": "receiver_closure",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/receiver/closure/receiver_id",
+        "value": "wrong_receiver_cadafe9a8186b237db7b8cbe55a71caf"
+      }
+    ]
+  },
+  {
+    "name": "closed receiver refuses late new child under same allocation",
+    "fixture": "23-cross-orchestrator-budget.json",
+    "expect": "receiver_reopen",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5",
+        "value": {
+          "at": "2026-09-26T00:00:00Z",
+          "exchange": {
+            "auth": {
+              "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+              "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+              "logical_service_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+              "sender_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
+            },
+            "request": {
+              "command_id": "runtime_late_child_submit_44123c6ca28a7a947e639a7e3a1746b9",
+              "method": "task.submit",
+              "target_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+              "expires_at": "2026-09-26T00:10:00Z",
+              "payload": {
+                "goal_ref": {
+                  "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+                  "owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+                  "content_id": "runtime_goal_0c5023d93ab8136450bf0456bd5cbaf7",
+                  "version": 1,
+                  "hash": "sha256:0c5023d93ab8136450bf0456bd5cbaf705a27b81bf47c32421d1f245838a85b3",
+                  "media_type": "application/json",
+                  "byte_length": 16
+                },
+                "orchestrator_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+                "constraints": [],
+                "policy_ref": {
+                  "id": "policy_823412d1eacb67956220e532959f0104",
+                  "version": "1.0.0",
+                  "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+                },
+                "budget": [
+                  {
+                    "unit": "request",
+                    "limit": "5"
+                  }
+                ],
+                "deadline": "2026-09-26T00:10:00Z",
+                "delegation_context": {
+                  "sender_orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                  "parent_delegation_id": "runtime_other_delegation_ec1fc1a0790346cc589e2530b1881508",
+                  "allocation_ref": {
+                    "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                    "id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+                    "revision": 1
+                  },
+                  "allocation_command_id": "budget_allocate_0_83af66b0e00120c8f590ba69968c2a44",
+                  "permission_refs": [
+                    {
+                      "kind": "grant",
+                      "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                      "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
+                      "revision": 1
+                    }
+                  ],
+                  "ancestor_ids": [
+                    "runtime_task_2f19394d42a7706fc18f2a1683b8745c"
+                  ]
+                }
+              }
+            },
+            "response": {
+              "command_id": "runtime_late_child_submit_44123c6ca28a7a947e639a7e3a1746b9",
+              "stage": "applied",
+              "decided_at": "2026-09-26T00:00:00Z",
+              "output": {
+                "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+                "task_id": "runtime_other_child_29e347c482902f5591a1abaadc0b9c26",
+                "orchestrator_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+                "submit_command_id": "runtime_late_child_submit_44123c6ca28a7a947e639a7e3a1746b9",
+                "goal_ref": {
+                  "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+                  "owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+                  "content_id": "runtime_goal_0c5023d93ab8136450bf0456bd5cbaf7",
+                  "version": 1,
+                  "hash": "sha256:0c5023d93ab8136450bf0456bd5cbaf705a27b81bf47c32421d1f245838a85b3",
+                  "media_type": "application/json",
+                  "byte_length": 16
+                },
+                "goal_revision": 1,
+                "requirements": [],
+                "policy_ref": {
+                  "id": "policy_823412d1eacb67956220e532959f0104",
+                  "version": "1.0.0",
+                  "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+                },
+                "revision": 1,
+                "control_revision": 1,
+                "status": "active",
+                "control": "running",
+                "wait_reasons": [],
+                "deadline": "2026-09-26T00:10:00Z",
+                "budget": [
+                  {
+                    "unit": "request",
+                    "limit": {
+                      "unit": "request",
+                      "amount": "5"
+                    },
+                    "spent": {
+                      "unit": "request",
+                      "amount": "0"
+                    },
+                    "reserved": {
+                      "unit": "request",
+                      "amount": "0"
+                    }
+                  }
+                ],
+                "open_effects": [],
+                "accounting_open": true
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "observation convenience cannot run a write capability",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "observation_capability",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/capabilities/0/effect_class",
+        "value": "no_idempotency_guarantee"
+      }
+    ]
+  },
+  {
+    "name": "observation convenience honors original cancellation tombstone",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "observation_start",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2",
+        "value": {
+          "at": "2026-09-26T00:00:00Z",
+          "exchange": {
+            "auth": {
+              "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+              "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+              "logical_service_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a"
+            },
+            "request": {
+              "method": "execution.cancel",
+              "target_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+              "payload": {
+                "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                "task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
+                "operation_id": "runtime_observation_operation_bf6e6909c7a8043ee562de1ee2796e98",
+                "reason": "先取消原观察"
+              },
+              "command_id": "execution_cancel_6_c3acea660948346ee25519540559118a",
+              "expires_at": "2026-09-26T00:10:00Z"
+            },
+            "response": {
+              "command_id": "execution_cancel_6_c3acea660948346ee25519540559118a",
+              "stage": "applied",
+              "decided_at": "2026-09-26T00:00:00Z",
+              "output": {
+                "orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                "task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
+                "operation_id": "runtime_observation_operation_bf6e6909c7a8043ee562de1ee2796e98",
+                "cancel_command_id": "execution_cancel_6_c3acea660948346ee25519540559118a",
+                "cancelled_at": "2026-09-26T00:00:00Z"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "receiver closure before first child wins permanently",
+    "fixture": "23-cross-orchestrator-budget.json",
+    "expect": "receiver_reopen",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2",
+        "value": {
+          "at": "2026-09-26T00:00:00Z",
+          "exchange": {
+            "auth": {
+              "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+              "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+              "logical_service_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+              "sender_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
+            },
+            "request": {
+              "method": "budget.close",
+              "target_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+              "payload": {
+                "sender_orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                "parent_delegation_id": "runtime_cross_delegation_1a4b4a26818204b0d8fcad76f63f6d63",
+                "allocation_ref": {
+                  "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                  "id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+                  "revision": 1
+                },
+                "allocation_command_id": "budget_allocate_0_83af66b0e00120c8f590ba69968c2a44",
+                "reason": "父任务取消，关闭原接收额度"
+              },
+              "command_id": "budget_close_3_82c9c206099a258f8580523b0ba00804",
+              "expires_at": "2026-09-26T00:10:00Z"
+            },
+            "response": {
+              "command_id": "budget_close_3_82c9c206099a258f8580523b0ba00804",
+              "stage": "applied",
+              "decided_at": "2026-09-26T00:00:00Z",
+              "output": {
+                "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+                "parent_owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+                "parent_delegation_id": "runtime_cross_delegation_1a4b4a26818204b0d8fcad76f63f6d63",
+                "revision": 2,
+                "state": "closing",
+                "final_usage": []
+              }
+            }
+          }
+        }
+      },
+      {
+        "op": "set",
+        "path": "/events/3",
+        "value": {
+          "at": "2026-09-26T00:00:00Z",
+          "exchange": {
+            "auth": {
+              "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+              "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+              "logical_service_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+              "sender_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
+            },
+            "request": {
+              "command_id": "runtime_child_submit_536d9ce73d0afd22a76d622c82c78aa3",
+              "method": "task.submit",
+              "target_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+              "expires_at": "2026-09-26T00:10:00Z",
+              "payload": {
+                "goal_ref": {
+                  "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+                  "owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+                  "content_id": "runtime_goal_0c5023d93ab8136450bf0456bd5cbaf7",
+                  "version": 1,
+                  "hash": "sha256:0c5023d93ab8136450bf0456bd5cbaf705a27b81bf47c32421d1f245838a85b3",
+                  "media_type": "application/json",
+                  "byte_length": 16
+                },
+                "orchestrator_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+                "constraints": [],
+                "policy_ref": {
+                  "id": "policy_823412d1eacb67956220e532959f0104",
+                  "version": "1.0.0",
+                  "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+                },
+                "budget": [
+                  {
+                    "unit": "request",
+                    "limit": "5"
+                  }
+                ],
+                "deadline": "2026-09-26T00:10:00Z",
+                "delegation_context": {
+                  "sender_orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                  "parent_delegation_id": "runtime_cross_delegation_1a4b4a26818204b0d8fcad76f63f6d63",
+                  "allocation_ref": {
+                    "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                    "id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+                    "revision": 1
+                  },
+                  "allocation_command_id": "budget_allocate_0_83af66b0e00120c8f590ba69968c2a44",
+                  "permission_refs": [
+                    {
+                      "kind": "grant",
+                      "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                      "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
+                      "revision": 1
+                    }
+                  ],
+                  "ancestor_ids": [
+                    "runtime_task_2f19394d42a7706fc18f2a1683b8745c"
+                  ]
+                }
+              }
+            },
+            "response": {
+              "command_id": "runtime_child_submit_536d9ce73d0afd22a76d622c82c78aa3",
+              "stage": "applied",
+              "decided_at": "2026-09-26T00:00:00Z",
+              "output": {
+                "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+                "task_id": "runtime_cross_child_570c389baa993585090ef866cbd955ae",
+                "orchestrator_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+                "submit_command_id": "runtime_child_submit_536d9ce73d0afd22a76d622c82c78aa3",
+                "goal_ref": {
+                  "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+                  "owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+                  "content_id": "runtime_goal_0c5023d93ab8136450bf0456bd5cbaf7",
+                  "version": 1,
+                  "hash": "sha256:0c5023d93ab8136450bf0456bd5cbaf705a27b81bf47c32421d1f245838a85b3",
+                  "media_type": "application/json",
+                  "byte_length": 16
+                },
+                "goal_revision": 1,
+                "requirements": [],
+                "policy_ref": {
+                  "id": "policy_823412d1eacb67956220e532959f0104",
+                  "version": "1.0.0",
+                  "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+                },
+                "revision": 1,
+                "control_revision": 1,
+                "status": "active",
+                "control": "running",
+                "wait_reasons": [],
+                "deadline": "2026-09-26T00:10:00Z",
+                "budget": [
+                  {
+                    "unit": "request",
+                    "limit": {
+                      "unit": "request",
+                      "amount": "5"
+                    },
+                    "spent": {
+                      "unit": "request",
+                      "amount": "0"
+                    },
+                    "reserved": {
+                      "unit": "request",
+                      "amount": "0"
+                    }
+                  }
+                ],
+                "open_effects": [],
+                "accounting_open": true
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "receiver close validates original allocation revision",
+    "fixture": "23-cross-orchestrator-budget.json",
+    "expect": "receiver_allocation_original",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/allocation_ref/revision",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "parent cannot settle while known receiver still closing",
+    "fixture": "23-cross-orchestrator-budget.json",
+    "expect": "allocation_closure",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/receiver",
+        "value": {
+          "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+          "parent_owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+          "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+          "parent_delegation_id": "runtime_cross_delegation_1a4b4a26818204b0d8fcad76f63f6d63",
+          "revision": 2,
+          "state": "closing",
+          "task_id": "runtime_cross_child_570c389baa993585090ef866cbd955ae",
+          "final_usage": []
+        }
+      }
+    ]
+  },
+  {
+    "name": "task.adjust_budget rejects undeclared payload field",
+    "fixture": "20-budget-allocation.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "budget.allocate rejects undeclared payload field",
+    "fixture": "20-budget-allocation.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "budget.settle rejects undeclared payload field",
+    "fixture": "20-budget-allocation.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "task.list rejects undeclared payload field",
+    "fixture": "20-budget-allocation.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "capability.search rejects undeclared payload field",
+    "fixture": "21-capability-catalog.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "capability.describe rejects undeclared payload field",
+    "fixture": "21-capability-catalog.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "resource.acquire rejects undeclared payload field",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "resource.renew rejects undeclared payload field",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "resource.get rejects undeclared payload field",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "resource.observe rejects undeclared payload field",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "resource.takeover rejects undeclared payload field",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "resource.release rejects undeclared payload field",
+    "fixture": "22-resource-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "budget.read rejects undeclared payload field",
+    "fixture": "23-cross-orchestrator-budget.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "budget.close rejects undeclared payload field",
+    "fixture": "23-cross-orchestrator-budget.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/undeclared",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "grant issue binds original intent",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/intent_hash",
+        "value": "sha256:9d6f965ac832e40a5df6c06afe983e3b449c07b843ff51ce76204de05c690d11"
+      }
+    ]
+  },
+  {
+    "name": "grant read binds target",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/grant_id",
+        "value": "grant_d130289529636aef4e84d85458e664c7"
+      }
+    ]
+  },
+  {
+    "name": "grant revoke closes policy",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "grant_revocation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/state",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "grant cannot reopen after revocation",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "grant_reopen",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/state",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "pair begin stays pending",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "pairing_state",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/session/state",
+        "value": "approved"
+      }
+    ]
+  },
+  {
+    "name": "pair approve matches decision",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "pairing_decision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/state",
+        "value": "denied"
+      }
+    ]
+  },
+  {
+    "name": "claim endpoint mapping fixed",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/session/endpoint_id",
+        "value": "endpoint_d025e1b84c9b033fec8df9812f7bbbbb"
+      }
+    ]
+  },
+  {
+    "name": "endpoint revoke closes credential",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "endpoint_revocation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/state",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "allocation cannot switch instance",
+    "fixture": "32-lease-settlement.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/instance_id",
+        "value": "instance_2f58dd76c411e699f7b7bc2d4ec749e1"
+      }
+    ]
+  },
+  {
+    "name": "final settlement requires closed use",
+    "fixture": "32-lease-settlement.json",
+    "expect": "lease_final",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/uses/0/closed",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "prepare digest matches artifact",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "package_digest",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/artifact_ref/hash",
+        "value": "sha256:2b64eaadff58068f5695b65b6fd86742a36a6e2f7ce1bfc662dc1df4da580f97"
+      }
+    ]
+  },
+  {
+    "name": "lock query cannot change identity",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "extension_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/lock_id",
+        "value": "lock_071591d5c545e42c62028a421e339d7e"
+      }
+    ]
+  },
+  {
+    "name": "deactivate names original activation",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/activation_id",
+        "value": "activation_5326eb34e1ab2065090ee822c0a97057"
+      }
+    ]
+  },
+  {
+    "name": "dispose cannot drop live references",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "extension_references",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/blocking_refs",
+        "value": [
+          {
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "id": "task_512a371366df8f5336d749938702b42c",
+            "revision": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "candidate output stays exact",
+    "fixture": "34-compatibility-release.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/digest",
+        "value": "sha256:8810ad581e59f2bc3928b261707a71308f7e139eb04820366dc4d5c18d980225"
+      }
+    ]
+  },
+  {
+    "name": "partition groups cover samples",
+    "fixture": "34-compatibility-release.json",
+    "expect": "partition_sources",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/source_groups/0/sample_ids",
+        "value": [
+          "sample_e93511a42dd30f2c121e5a4e4802b9fb"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "plan output cannot change seed",
+    "fixture": "34-compatibility-release.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/seed",
+        "value": "changed"
+      }
+    ]
+  },
+  {
+    "name": "run uses frozen plan digest",
+    "fixture": "34-compatibility-release.json",
+    "expect": "run_plan",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/plan_digest",
+        "value": "sha256:bc4f39fa6e1ffb56ee9c7f56928a1c2933f16a264efe4aa4caa29f7979287745"
+      }
+    ]
+  },
+  {
+    "name": "evaluation query projection matches kind",
+    "fixture": "34-compatibility-release.json",
+    "expect": "governance_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/record/plan_id",
+        "value": "plan_2517e4c7dbfe692648c05add022b91ea"
+      }
+    ]
+  },
+  {
+    "name": "feedback report must be sealed",
+    "fixture": "34-compatibility-release.json",
+    "expect": "feedback_sealed",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/report/sealed",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "approval batches cover targets",
+    "fixture": "34-compatibility-release.json",
+    "expect": "approval_targets",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/batches/0/targets",
+        "value": [
+          "target_39c92e42d22a31ecc679df69b6d375e7"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "rollout finished needs ready",
+    "fixture": "34-compatibility-release.json",
+    "expect": "rollout_completion",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/exchange/response/output/targets/0/ready",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "approval revoke cannot remain active",
+    "fixture": "34-compatibility-release.json",
+    "expect": "approval_revocation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/response/output/state",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "grant use cannot change trusted cost mode in receipt",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "usage_cost_bound",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/cost_bound",
+        "value": "estimate"
+      }
+    ]
+  },
+  {
+    "name": "exposure must retain one durable impact job",
+    "fixture": "35-improvement-exposure.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/events/8/exchange/response/output/impact_job_id"
+      }
+    ]
+  },
+  {
+    "name": "formal plan needs positive gain",
+    "fixture": "35-improvement-exposure.json",
+    "expect": "improvement_plan",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/minimum_practical_gain/amount",
+        "value": "0"
+      }
+    ]
+  },
+  {
+    "name": "formal approval cannot accept failed improvement gate",
+    "fixture": "35-improvement-exposure.json",
+    "expect": "improvement_approval",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/report/improvement_gate/result",
+        "value": "fail"
+      }
+    ]
+  },
+  {
+    "name": "restart preserves original activation evidence",
+    "fixture": "36-local-install-restart.json",
+    "expect": "activation_history",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/10/exchange/response/output/startup_evidence/commit_id",
+        "value": "commit_a8a2edbcdb4ed63198dc5fd812acf80e"
+      }
+    ]
+  },
+  {
+    "name": "current readiness binds actual instance",
+    "fixture": "36-local-install-restart.json",
+    "expect": "activation_readiness",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/10/exchange/response/output/instance_readiness/instance_id",
+        "value": "instance_6212a06cac8b50f7a9f4a2667fb81787"
+      }
+    ]
+  },
+  {
+    "name": "remote reopen cannot use prior instance receipt",
+    "fixture": "37-remote-instance-reopen.json",
+    "expect": "activation_approval",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/12/exchange/response/output/instance_readiness/startup_evidence/use_id",
+        "value": "use_506a671c1a69760b9f5bbb57d8b5db08"
+      }
+    ]
+  },
+  {
+    "name": "new startup cannot bypass observed revocation",
+    "fixture": "38-revoked-approval-startup.json",
+    "expect": "approval_current",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/12/exchange/response",
+        "value": {
+          "command_id": "command_2cd4bcb95f005e6054d257219b1502d2",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:12Z",
+          "output": {
+            "use_id": "use_c7516127e031d212343ca980794eaacd",
+            "approval_id": "approval_4a457bb1b19ce2f34b5bee0d824ed181",
+            "target_id": "target_3f85a1dd2e76294278410e755dfd783e",
+            "lock_id": "lock_028a1428d14b945fae7a36dfdf704fea",
+            "instance_id": "instance_6212a06cac8b50f7a9f4a2667fb81787",
+            "action_kind": "reopen",
+            "action_id": "reopen_8222b9a511958e29b64a3064b0fb2c80",
+            "approval_revision": 1,
+            "start_before": "2026-09-26T00:00:30Z"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "cancel preserves intention and original run",
+    "fixture": "39-evaluation-cancel.json",
+    "expect": "evaluation_cancel",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/cancel_requested",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "grant.issue rejects unknown payload field",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "grant.read rejects unknown payload field",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "grant.revoke rejects unknown payload field",
+    "fixture": "30-grant-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "grant.lease.allocate rejects unknown payload field",
+    "fixture": "32-lease-settlement.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "grant.lease.settle rejects unknown payload field",
+    "fixture": "32-lease-settlement.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "endpoint.pair.begin rejects unknown payload field",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "endpoint.pair.approve rejects unknown payload field",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "endpoint.pair.claim rejects unknown payload field",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "endpoint.revoke rejects unknown payload field",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "extensions.prepare rejects unknown payload field",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "extensions.deactivate rejects unknown payload field",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "extensions.dispose rejects unknown payload field",
+    "fixture": "33-installation-lifecycle.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.candidate_register rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.partition_register rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.plan_create rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.run rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.cancel rejects unknown payload field",
+    "fixture": "39-evaluation-cancel.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.read rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.exposure_record rejects unknown payload field",
+    "fixture": "35-improvement-exposure.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.feedback_open rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.approve rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.revoke rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "evaluation.rollout_read rejects unknown payload field",
+    "fixture": "34-compatibility-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/exchange/request/payload/unexpected_field",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "claim requires original private nonce",
+    "fixture": "31-pairing-lifecycle.json",
+    "expect": "pairing_identity",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/client_nonce",
+        "value": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      }
+    ]
+  },
+  {
+    "name": "formal report retains frozen denominator",
+    "fixture": "35-improvement-exposure.json",
+    "expect": "report_denominator",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/report/paired_counts/b",
+        "value": 99
+      }
+    ]
+  },
+  {
+    "name": "compatibility approval requires conformance evidence",
+    "fixture": "34-compatibility-release.json",
+    "expect": "compatibility_approval",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/report/evidence_class",
+        "value": "formal"
+      }
+    ]
+  },
+  {
+    "name": "reopen evidence cannot precede original use",
+    "fixture": "37-remote-instance-reopen.json",
+    "expect": "approval_window",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/12/exchange/response/output/instance_readiness/startup_evidence/checked_at",
+        "value": "2026-09-26T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "name": "50: unknown open use retains all unspent reservation",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "use_settlement_unknown",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/released_cost/amount",
+        "value": "1"
+      }
+    ]
+  },
+  {
+    "name": "50: grant.use.settle rejects unknown field",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/unknown",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "50: grant.use.settlement rejects unknown field",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unknown",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "50: settlement requires authenticated usage owner",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "usage_owner",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/auth/sender_service_id",
+        "value": "usageowner_c1185e7038e90f35ebe5c0d79970f9e4"
+      }
+    ]
+  },
+  {
+    "name": "50: settlement preserves original operation",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "use_settlement_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/operation_id",
+        "value": "operation_1305ee4239221ef027cbf3e9a1b88c9f"
+      }
+    ]
+  },
+  {
+    "name": "50: settlement preserves exact accounting unit",
+    "fixture": "50-online-use-settlement.json",
+    "expect": "use_settlement_unit",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/spent_cost/unit",
+        "value": "EUR"
+      }
+    ]
+  },
+  {
+    "name": "51: final zero never refunds once identity",
+    "fixture": "51-online-use-once-zero.json",
+    "expect": "once_not_refunded",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/consumed_once",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation request rejects arbitrary intent payload 0",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/consumer_command/payload/extra",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation caller cannot switch consumer owner 0",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "confirmation_owner",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/target_id",
+        "value": "owner_264c6328703eb15d164b185f6aff17f7"
+      }
+    ]
+  },
+  {
+    "name": "52: model cannot certify trusted user approval 2",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "confirmation_actor",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/auth/actor_kind",
+        "value": "agent"
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation cannot change original consumer command 2",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "confirmation_decision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/consumer_command_id",
+        "value": "command_7028e1f75a1656cca3db94ad4ae56b25"
+      }
+    ]
+  },
+  {
+    "name": "52: business consumption must be visible at owner 5",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "confirmation_observation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/state",
+        "value": "approved"
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation.request rejects unknown payload",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/extra",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation.read rejects unknown payload",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/extra",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation.decide rejects unknown payload",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/extra",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "52: confirmation hash must bind exact normalized intent",
+    "fixture": "52-confirmation-grant.json",
+    "expect": "confirmation_intent",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/intent_hash",
+        "value": "sha256:2f05d4b689d270cafb02285f35f44866f7dc8a2d368a3f9d1124373eeab31fb1"
+      }
+    ]
+  },
+  {
+    "name": "53: confirmation request rejects arbitrary intent payload 7",
+    "fixture": "53-confirmation-release.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/request/payload/consumer_command/payload/extra",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "53: confirmation caller cannot switch consumer owner 7",
+    "fixture": "53-confirmation-release.json",
+    "expect": "confirmation_owner",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/request/target_id",
+        "value": "owner_264c6328703eb15d164b185f6aff17f7"
+      }
+    ]
+  },
+  {
+    "name": "53: model cannot certify trusted user approval 9",
+    "fixture": "53-confirmation-release.json",
+    "expect": "confirmation_actor",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/auth/actor_kind",
+        "value": "agent"
+      }
+    ]
+  },
+  {
+    "name": "53: confirmation cannot change original consumer command 9",
+    "fixture": "53-confirmation-release.json",
+    "expect": "confirmation_decision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/request/payload/consumer_command_id",
+        "value": "command_7028e1f75a1656cca3db94ad4ae56b25"
+      }
+    ]
+  },
+  {
+    "name": "53: business consumption must be visible at owner 12",
+    "fixture": "53-confirmation-release.json",
+    "expect": "confirmation_observation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/12/exchange/response/output/state",
+        "value": "approved"
+      }
+    ]
+  },
+  {
+    "name": "54: confirmation request rejects arbitrary intent payload 0",
+    "fixture": "54-confirmation-acceptance.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/consumer_command/payload/extra",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "54: confirmation caller cannot switch consumer owner 0",
+    "fixture": "54-confirmation-acceptance.json",
+    "expect": "confirmation_owner",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/target_id",
+        "value": "owner_264c6328703eb15d164b185f6aff17f7"
+      }
+    ]
+  },
+  {
+    "name": "54: model cannot certify trusted user approval 2",
+    "fixture": "54-confirmation-acceptance.json",
+    "expect": "confirmation_actor",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/auth/actor_kind",
+        "value": "agent"
+      }
+    ]
+  },
+  {
+    "name": "54: confirmation cannot change original consumer command 2",
+    "fixture": "54-confirmation-acceptance.json",
+    "expect": "confirmation_decision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/consumer_command_id",
+        "value": "command_7028e1f75a1656cca3db94ad4ae56b25"
+      }
+    ]
+  },
+  {
+    "name": "54: business consumption must be visible at owner 5",
+    "fixture": "54-confirmation-acceptance.json",
+    "expect": "confirmation_observation",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/state",
+        "value": "approved"
+      }
+    ]
+  },
+  {
+    "name": "54: accepted result cannot switch confirmed goal",
+    "fixture": "54-confirmation-acceptance.json",
+    "expect": "confirmation_consumer",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/goal_revision",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "content.put rejects unknown request field",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "content.put rejects unknown response field",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "content.register_copy rejects unknown request field",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "content.register_copy rejects unknown response field",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "content.get rejects unknown request field",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "content.get rejects unknown response field",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "content.close rejects unknown request field",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "content.close rejects unknown response field",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "content.release_copy rejects unknown request field",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "content.release_copy rejects unknown response field",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.cleanup.get rejects unknown request field",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.cleanup.get rejects unknown response field",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.query rejects unknown request field",
+    "fixture": "41-memory-query-list.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.query rejects unknown response field",
+    "fixture": "41-memory-query-list.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.list rejects unknown request field",
+    "fixture": "41-memory-query-list.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.list rejects unknown response field",
+    "fixture": "41-memory-query-list.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.extract rejects unknown request field",
+    "fixture": "42-memory-extraction.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.extract rejects unknown response field",
+    "fixture": "42-memory-extraction.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.view.open rejects unknown request field",
+    "fixture": "43-memory-view-sync.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.view.open rejects unknown response field",
+    "fixture": "43-memory-view-sync.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.view.pull rejects unknown request field",
+    "fixture": "43-memory-view-sync.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.view.pull rejects unknown response field",
+    "fixture": "43-memory-view-sync.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.view.ack rejects unknown request field",
+    "fixture": "43-memory-view-sync.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "memory.view.ack rejects unknown response field",
+    "fixture": "43-memory-view-sync.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.surface_create rejects unknown request field",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.surface_create rejects unknown response field",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.surface_read rejects unknown request field",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.surface_read rejects unknown response field",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.surface_update rejects unknown request field",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.surface_update rejects unknown response field",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.surface_list rejects unknown request field",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.surface_list rejects unknown response field",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.present rejects unknown request field",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.present rejects unknown response field",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.application_event rejects unknown request field",
+    "fixture": "45-application-delivery.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.application_event rejects unknown response field",
+    "fixture": "45-application-delivery.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.request_read rejects unknown request field",
+    "fixture": "47-declarative-form.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.request_read rejects unknown response field",
+    "fixture": "47-declarative-form.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/unknown_field",
+        "value": true
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "content.put content_binding 38",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/content_ref/hash",
+        "value": "sha256:d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed"
+      }
+    ],
+    "expect": "content_binding"
+  },
+  {
+    "name": "content.get content_binding 39",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/copy_id",
+        "value": "wrong_copy_f2dbf5356a40bb3cb7208bce793755cb"
+      }
+    ],
+    "expect": "content_binding"
+  },
+  {
+    "name": "content.register_copy copy_binding 40",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/holder_id",
+        "value": "wrong_holder_a77f8c2b0de75a2d73b1bfbb12d4ee25"
+      }
+    ],
+    "expect": "copy_binding"
+  },
+  {
+    "name": "content.release_copy copy_cleanup 41",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/use_stopped",
+        "value": false
+      }
+    ],
+    "expect": "copy_cleanup"
+  },
+  {
+    "name": "content.close content_closure 42",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/state",
+        "value": "active"
+      }
+    ],
+    "expect": "content_closure"
+  },
+  {
+    "name": "memory.query query_active 43",
+    "fixture": "41-memory-query-list.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/items/0/state",
+        "value": "disabled"
+      }
+    ],
+    "expect": "query_active"
+  },
+  {
+    "name": "memory.list query_binding 44",
+    "fixture": "41-memory-query-list.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/items/0/owner_id",
+        "value": "other_owner_3775c9cc5379cd95743ca76d62b9d4ca"
+      }
+    ],
+    "expect": "query_binding"
+  },
+  {
+    "name": "memory.extract preserves original task mapping",
+    "fixture": "42-memory-extraction.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1",
+        "value": {
+          "at": "2026-09-26T00:00:00Z",
+          "exchange": {
+            "auth": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "logical_service_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+              "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+            },
+            "request": {
+              "command_id": "repeat_extraction_command_0c04b47945cb630399eb2950d2ea250d",
+              "method": "memory.extract",
+              "target_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+              "payload": {
+                "extraction_id": "extraction_868994937b1c6f12924fa744402f419e",
+                "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+                "input_refs": [
+                  {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "source_36cd38f49b9afa08222c0dc9ebfe35eb",
+                    "version": 1,
+                    "hash": "sha256:41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  }
+                ],
+                "rule_ref": {
+                  "id": "extraction_policy_497000049e8ce2a4b94b1bf03217d3c3",
+                  "version": "1.0.0",
+                  "digest": "sha256:f93e1c5d1b161decc5af28d3fe399c0f4fe5d643c04c59733fc5eb220b55502b"
+                },
+                "save_mode": "confirm",
+                "usage_authorization_refs": [
+                  {
+                    "kind": "use",
+                    "owner_id": "grant_owner_912c54b3a5faa1717e21484ac5b3bde9",
+                    "id": "extraction_use_baa4b2d28d2607386303abb54a398ad1",
+                    "revision": 1
+                  }
+                ],
+                "limits": {
+                  "max_candidates": 10,
+                  "max_input_bytes": 1024,
+                  "deadline": "2026-09-26T00:10:00Z",
+                  "cost_reservation_ref": {
+                    "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+                    "id": "extraction_budget_5a20b0fc6137bbf795fdd328a6d7a3b3",
+                    "revision": 1
+                  }
+                }
+              },
+              "expires_at": "2026-09-26T00:10:00Z"
+            },
+            "response": {
+              "command_id": "repeat_extraction_command_0c04b47945cb630399eb2950d2ea250d",
+              "stage": "applied",
+              "decided_at": "2026-09-26T00:00:00Z",
+              "output": {
+                "extraction_id": "extraction_868994937b1c6f12924fa744402f419e",
+                "extraction_task_id": "new_task_d0d3104edbb2f1b1ef875372aeeb7d29",
+                "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+                "owner_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+                "input_digest": "sha256:4570a4ac24eded98fd4b3db2dd19a59db807acfe4ad5b8adc96571de6dc093a4",
+                "state": "queued"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "expect": "extraction_immutable"
+  },
+  {
+    "name": "memory.view.open view_binding 46",
+    "fixture": "43-memory-view-sync.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/recipient_id",
+        "value": "wrong_recipient_fb9fce49b287602219e2dfadf949a06a"
+      }
+    ],
+    "expect": "view_binding"
+  },
+  {
+    "name": "memory.view.pull view_cursor 47",
+    "fixture": "43-memory-view-sync.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/from_cursor",
+        "value": "not-original"
+      }
+    ],
+    "expect": "view_cursor"
+  },
+  {
+    "name": "memory.view.ack view_ack 48",
+    "fixture": "43-memory-view-sync.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/acked_cursor",
+        "value": "not-original"
+      }
+    ],
+    "expect": "view_ack"
+  },
+  {
+    "name": "memory.cleanup.get cleanup_complete 49",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/holders/0/physical_state",
+        "value": "unknown"
+      }
+    ],
+    "expect": "cleanup_complete"
+  },
+  {
+    "name": "interaction.surface_create surface_binding 50",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/app_binding/id",
+        "value": "wrong_app_c2b36d971593d5411b6b3700ad10d4b7"
+      }
+    ],
+    "expect": "surface_binding"
+  },
+  {
+    "name": "interaction.surface_read surface_binding 51",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/surface/surface_id",
+        "value": "wrong_surface_e9d726afad804ed969842a88d2e154b7"
+      }
+    ],
+    "expect": "surface_binding"
+  },
+  {
+    "name": "interaction.surface_update schema 52",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/revision",
+        "value": 0
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "interaction.surface_list query_binding 53",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/items/0/surface_owner_id",
+        "value": "wrong_owner_8c481c7d3afab2d67e99cdcb73e4393a"
+      }
+    ],
+    "expect": "query_binding"
+  },
+  {
+    "name": "interaction.present schema 54",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/intent_revision",
+        "value": 0
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "application event target cannot change",
+    "fixture": "45-application-delivery.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events",
+        "value": [
+          {
+            "at": "2026-09-26T00:00:00Z",
+            "exchange": {
+              "auth": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+                "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+              },
+              "request": {
+                "command_id": "command_23_10158c206243cff1bd709f7b0ff66906",
+                "method": "interaction.surface_create",
+                "target_id": "surface_owner_d3414792361b69866f486d865962ff08",
+                "payload": {
+                  "surface_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+                  "app_binding": {
+                    "id": "memory_candidates_2abcaedbfa786b162ca9aec5c1d1b625",
+                    "version": "1.0.0",
+                    "digest": "sha256:603ab6d2c4fa8044197df7ae87121edd9e39bbb866c388825eacc7ebbfbda2b7"
+                  },
+                  "snapshot": {
+                    "title": "Document review",
+                    "blocks": [
+                      {
+                        "kind": "status",
+                        "block_id": "progress",
+                        "code": "working",
+                        "label": "Ready"
+                      }
+                    ],
+                    "request_refs": [],
+                    "expires_at": "2026-09-27T00:00:00Z"
+                  }
+                },
+                "expires_at": "2026-09-26T00:10:00Z"
+              },
+              "response": {
+                "command_id": "command_23_10158c206243cff1bd709f7b0ff66906",
+                "stage": "applied",
+                "decided_at": "2026-09-26T00:00:00Z",
+                "output": {
+                  "surface_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+                  "surface_owner_id": "surface_owner_d3414792361b69866f486d865962ff08",
+                  "app_binding": {
+                    "id": "memory_candidates_2abcaedbfa786b162ca9aec5c1d1b625",
+                    "version": "1.0.0",
+                    "digest": "sha256:603ab6d2c4fa8044197df7ae87121edd9e39bbb866c388825eacc7ebbfbda2b7"
+                  },
+                  "revision": 1,
+                  "snapshot": {
+                    "title": "Document review",
+                    "blocks": [
+                      {
+                        "kind": "status",
+                        "block_id": "progress",
+                        "code": "working",
+                        "label": "Ready"
+                      }
+                    ],
+                    "request_refs": [],
+                    "expires_at": "2026-09-27T00:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "at": "2026-09-26T00:00:00Z",
+            "exchange": {
+              "auth": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+                "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+              },
+              "request": {
+                "command_id": "command_24_c38d3b5578c83c1078f35c31bb3eadb6",
+                "method": "interaction.application_event",
+                "target_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+                "payload": {
+                  "event_id": "event_4119639092e62c55ea8be348e4d9260d",
+                  "surface_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+                  "surface_revision": 1,
+                  "app_binding": {
+                    "id": "memory_candidates_2abcaedbfa786b162ca9aec5c1d1b625",
+                    "version": "1.0.0",
+                    "digest": "sha256:603ab6d2c4fa8044197df7ae87121edd9e39bbb866c388825eacc7ebbfbda2b7"
+                  },
+                  "event_type": "candidate.reject",
+                  "payload_ref": {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "candidate_rejection_2b9a61a6ba2a1aac1d4ee30b5bdeb9dc",
+                    "version": 1,
+                    "hash": "sha256:acc475091707fe4ad81a7e38e2bfd16f5aaf9d59e84fcbe0e4341b223f85b7a3",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "preview_refs": []
+                },
+                "expires_at": "2026-09-26T00:10:00Z"
+              },
+              "response": {
+                "command_id": "command_24_c38d3b5578c83c1078f35c31bb3eadb6",
+                "stage": "applied",
+                "decided_at": "2026-09-26T00:00:00Z",
+                "output": {
+                  "event_id": "event_4119639092e62c55ea8be348e4d9260d",
+                  "surface_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+                  "surface_revision": 1,
+                  "app_binding": {
+                    "id": "memory_candidates_2abcaedbfa786b162ca9aec5c1d1b625",
+                    "version": "1.0.0",
+                    "digest": "sha256:603ab6d2c4fa8044197df7ae87121edd9e39bbb866c388825eacc7ebbfbda2b7"
+                  },
+                  "event_type": "candidate.reject",
+                  "payload_ref": {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "candidate_rejection_2b9a61a6ba2a1aac1d4ee30b5bdeb9dc",
+                    "version": 1,
+                    "hash": "sha256:acc475091707fe4ad81a7e38e2bfd16f5aaf9d59e84fcbe0e4341b223f85b7a3",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "preview_refs": [],
+                  "target_service_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+                  "target_command_id": "candidate_command_3cbfd492cbcb033fc4ba2fab9ad30385",
+                  "state": "queued"
+                }
+              }
+            }
+          },
+          {
+            "at": "2026-09-26T00:00:00Z",
+            "exchange": {
+              "auth": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "logical_service_id": "surface_owner_d3414792361b69866f486d865962ff08",
+                "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+              },
+              "request": {
+                "command_id": "event_replayed_new_command_a311511ac75bed4f33aa59008309c75e",
+                "method": "interaction.application_event",
+                "target_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+                "payload": {
+                  "event_id": "event_4119639092e62c55ea8be348e4d9260d",
+                  "surface_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+                  "surface_revision": 1,
+                  "app_binding": {
+                    "id": "memory_candidates_2abcaedbfa786b162ca9aec5c1d1b625",
+                    "version": "1.0.0",
+                    "digest": "sha256:603ab6d2c4fa8044197df7ae87121edd9e39bbb866c388825eacc7ebbfbda2b7"
+                  },
+                  "event_type": "candidate.reject",
+                  "payload_ref": {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "candidate_rejection_2b9a61a6ba2a1aac1d4ee30b5bdeb9dc",
+                    "version": 1,
+                    "hash": "sha256:acc475091707fe4ad81a7e38e2bfd16f5aaf9d59e84fcbe0e4341b223f85b7a3",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "preview_refs": []
+                },
+                "expires_at": "2026-09-26T00:10:00Z"
+              },
+              "response": {
+                "command_id": "event_replayed_new_command_a311511ac75bed4f33aa59008309c75e",
+                "stage": "applied",
+                "decided_at": "2026-09-26T00:00:00Z",
+                "output": {
+                  "event_id": "event_4119639092e62c55ea8be348e4d9260d",
+                  "surface_id": "app_surface_6deac385bd2f7cae704e3232afad2280",
+                  "surface_revision": 1,
+                  "app_binding": {
+                    "id": "memory_candidates_2abcaedbfa786b162ca9aec5c1d1b625",
+                    "version": "1.0.0",
+                    "digest": "sha256:603ab6d2c4fa8044197df7ae87121edd9e39bbb866c388825eacc7ebbfbda2b7"
+                  },
+                  "event_type": "candidate.reject",
+                  "payload_ref": {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "candidate_rejection_2b9a61a6ba2a1aac1d4ee30b5bdeb9dc",
+                    "version": 1,
+                    "hash": "sha256:acc475091707fe4ad81a7e38e2bfd16f5aaf9d59e84fcbe0e4341b223f85b7a3",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "preview_refs": [],
+                  "target_service_id": "new_service_e63c6321ad593116b9f4452743b81738",
+                  "target_command_id": "candidate_command_3cbfd492cbcb033fc4ba2fab9ad30385",
+                  "state": "queued"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "expect": "application_immutable"
+  },
+  {
+    "name": "interaction.request_read request_owner 56",
+    "fixture": "47-declarative-form.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/request/owner_id",
+        "value": "wrong_request_owner_6c23bc9ad61d78974bd35de0ec6bb5bb"
+      }
+    ],
+    "expect": "request_owner"
+  },
+  {
+    "name": "download requires previously registered copy",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/events/1"
+      }
+    ],
+    "expect": "copy_access"
+  },
+  {
+    "name": "late download after source close is rejected",
+    "fixture": "40-content-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events",
+        "value": [
+          {
+            "at": "2026-09-26T00:00:00Z",
+            "exchange": {
+              "auth": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "logical_service_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+              },
+              "request": {
+                "command_id": "command_1_f05fcffbb5df52fb0b59f812338d4911",
+                "method": "content.put",
+                "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "payload": {
+                  "upload_id": "upload_76ee3de97a1b8b903319b7c013d8c877",
+                  "content_ref": {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                    "version": 1,
+                    "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "sources": [
+                    {
+                      "source_ref": {
+                        "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                        "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                        "content_id": "source_36cd38f49b9afa08222c0dc9ebfe35eb",
+                        "version": 1,
+                        "hash": "sha256:41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+                        "media_type": "text/plain",
+                        "byte_length": 16
+                      },
+                      "relation": "user_statement",
+                      "observed_at": "2026-09-26T00:00:00Z",
+                      "policy_ref": {
+                        "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                        "id": "source_policy_b16ea25b47516c0e521510b7343a0afd",
+                        "revision": 1
+                      }
+                    }
+                  ],
+                  "policy": {
+                    "classification": "controlled_remote",
+                    "allowed_locations": [
+                      "local_endpoint_d4c8a1d28797a577ca99cd17c0d64bb1",
+                      "remote_endpoint_eda42d4d388dfe34938b3216c8be5012"
+                    ],
+                    "allowed_recipients": [
+                      "actor_8e62561c3ac6d3fb0016e9a34a2caa5d",
+                      "model_20f35e630daf44dbfa4c3f68f5399d8c"
+                    ],
+                    "allowed_purposes": [
+                      "review",
+                      "memory"
+                    ],
+                    "retention_until": "2026-09-27T00:00:00Z",
+                    "offline_allowed": false
+                  }
+                },
+                "expires_at": "2026-09-26T00:10:00Z"
+              },
+              "response": {
+                "command_id": "command_1_f05fcffbb5df52fb0b59f812338d4911",
+                "stage": "applied",
+                "decided_at": "2026-09-26T00:00:00Z",
+                "output": {
+                  "content_ref": {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                    "version": 1,
+                    "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "policy_ref": {
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+                    "revision": 1
+                  },
+                  "control_revision": 1,
+                  "state": "active"
+                }
+              }
+            }
+          },
+          {
+            "at": "2026-09-26T00:00:00Z",
+            "exchange": {
+              "auth": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "logical_service_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+              },
+              "request": {
+                "command_id": "command_2_9b7be021a917c322c220dc9a521c9176",
+                "method": "content.register_copy",
+                "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "payload": {
+                  "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+                  "content_ref": {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                    "version": 1,
+                    "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+                  "purpose": "review",
+                  "recipient_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d",
+                  "retention_until": "2026-09-27T00:00:00Z"
+                },
+                "expires_at": "2026-09-26T00:10:00Z"
+              },
+              "response": {
+                "command_id": "command_2_9b7be021a917c322c220dc9a521c9176",
+                "stage": "applied",
+                "decided_at": "2026-09-26T00:00:00Z",
+                "output": {
+                  "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+                  "content_ref": {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                    "version": 1,
+                    "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+                  "purpose": "review",
+                  "recipient_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d",
+                  "retention_until": "2026-09-27T00:00:00Z",
+                  "revision": 1,
+                  "use_stopped": false,
+                  "physical_state": "pending",
+                  "evidence_refs": []
+                }
+              }
+            }
+          },
+          {
+            "at": "2026-09-26T00:00:00Z",
+            "exchange": {
+              "auth": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "logical_service_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+              },
+              "request": {
+                "command_id": "command_4_61a530ccf1f6146a9ece3418a1df8959",
+                "method": "content.close",
+                "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "payload": {
+                  "content_ref": {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                    "version": 1,
+                    "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "mode": "close",
+                  "reason": "User closed the original source."
+                },
+                "expires_at": "2026-09-26T00:10:00Z",
+                "expected_revision": 1
+              },
+              "response": {
+                "command_id": "command_4_61a530ccf1f6146a9ece3418a1df8959",
+                "stage": "applied",
+                "decided_at": "2026-09-26T00:00:00Z",
+                "output": {
+                  "content_ref": {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                    "version": 1,
+                    "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "control_revision": 2,
+                  "state": "closed",
+                  "policy_ref": {
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+                    "revision": 1
+                  },
+                  "cleanup_ref": {
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "id": "cleanup_ecfb9f08f09baba9587e427bc8a820b1",
+                    "revision": 2
+                  }
+                }
+              }
+            }
+          },
+          {
+            "at": "2026-09-26T00:00:00Z",
+            "exchange": {
+              "auth": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "logical_service_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "actor_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d"
+              },
+              "request": {
+                "method": "content.get",
+                "target_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "payload": {
+                  "content_ref": {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                    "version": 1,
+                    "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+                  "purpose": "review",
+                  "recipient_id": "actor_8e62561c3ac6d3fb0016e9a34a2caa5d",
+                  "usage_authorization_refs": [
+                    {
+                      "kind": "use",
+                      "owner_id": "grant_owner_912c54b3a5faa1717e21484ac5b3bde9",
+                      "id": "use_5ef76d30bf9232902687324b5bfa0bd2",
+                      "revision": 1
+                    }
+                  ]
+                }
+              },
+              "response": {
+                "output": {
+                  "content_ref": {
+                    "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                    "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                    "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+                    "version": 1,
+                    "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+                    "media_type": "text/plain",
+                    "byte_length": 16
+                  },
+                  "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+                  "control_revision": 1,
+                  "download_id": "download_fd456406745d816a45cae554c788e754",
+                  "expires_at": "2026-09-26T00:10:00Z",
+                  "range_supported": true
+                },
+                "observed_at": "2026-09-26T00:00:00Z"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "expect": "content_closed"
+  },
+  {
+    "name": "cannot widen policy in restriction",
+    "fixture": "46-content-restriction.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/policy/offline_allowed",
+        "value": true
+      }
+    ],
+    "expect": "content_policy_widening"
+  },
+  {
+    "name": "ACK must name a delivered page",
+    "fixture": "43-memory-view-sync.json",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/events/1"
+      }
+    ],
+    "expect": "view_ack_page"
+  },
+  {
+    "name": "metadata view cannot disclose memory content",
+    "fixture": "43-memory-view-sync.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/items/0/record",
+        "value": {
+          "memory_id": "preference_042740c402a7681b79544c560701e3ee",
+          "owner_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+          "revision": 1,
+          "type": "preference",
+          "content_ref": {
+            "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+            "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+            "content_id": "preference_content_cdf2b9cb7fab68e1025ac9f215a2db46",
+            "version": 1,
+            "hash": "sha256:139778e654ae23dd9d4555d123c6b53cf4cb4da64396df435ea21a596398a0c8",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "sources": [
+            {
+              "source_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "source_36cd38f49b9afa08222c0dc9ebfe35eb",
+                "version": 1,
+                "hash": "sha256:41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "relation": "user_statement",
+              "observed_at": "2026-09-26T00:00:00Z",
+              "policy_ref": {
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "id": "source_policy_b16ea25b47516c0e521510b7343a0afd",
+                "revision": 1
+              }
+            }
+          ],
+          "scope": {
+            "task_types": [
+              "technical_review"
+            ],
+            "resource_ids": [],
+            "purpose_tags": [
+              "personalization"
+            ]
+          },
+          "observed_at": "2026-09-26T00:00:00Z",
+          "state": "active",
+          "policy_ref": {
+            "owner_id": "memory_owner_e6fdf371cdaf31bf64645924eec521a2",
+            "id": "memory_policy_b25c180c5a018ddb3f4eeccf5592120a",
+            "revision": 1
+          }
+        }
+      }
+    ],
+    "expect": "view_projection"
+  },
+  {
+    "name": "task source projection cannot move backward",
+    "fixture": "49-source-projection.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/snapshot/source_revision",
+        "value": 2
+      },
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/snapshot/source_revision",
+        "value": 2
+      }
+    ],
+    "expect": "surface_source_order"
+  },
+  {
+    "name": "surface update cannot replace the original handler",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/app_binding/id",
+        "value": "another_handler_77e371f45bb628cac1ee8a5f9b6876e1"
+      }
+    ],
+    "expect": "surface_immutable_binding"
+  },
+  {
+    "name": "presentation cannot claim a future snapshot",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/request/payload/seen_revision",
+        "value": 9
+      },
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/seen_revision",
+        "value": 9
+      }
+    ],
+    "expect": "presentation_seen"
+  },
+  {
+    "name": "not modified requires exact known revision",
+    "fixture": "44-surface-lifecycle.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/known_revision",
+        "value": 1
+      }
+    ],
+    "expect": "surface_not_modified"
+  },
+  {
+    "name": "input component must bind a listed request",
+    "fixture": "47-declarative-form.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/snapshot/request_refs",
+        "value": []
+      },
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/snapshot/request_refs",
+        "value": []
+      }
+    ],
+    "expect": "surface_request"
+  },
+  {
+    "name": "bounded field type needs the correct constraints",
+    "fixture": "47-declarative-form.json",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/events/2/exchange/response/output/request/schema/fields/0/max_length"
+      }
+    ],
+    "expect": "schema"
+  },
+  {
+    "name": "empty skipped page still consumes original positions",
+    "fixture": "48-memory-changed-pages.json",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/position",
+        "value": 0
+      }
+    ],
+    "expect": "query_continuity"
+  },
+  {
+    "name": "control query cannot disclose another holder copy",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_control_holder",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/auth/sender_service_id",
+        "value": "other_holder_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    ]
+  },
+  {
+    "name": "forged matching output holder does not change registered ownership",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_control_holder",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/auth/sender_service_id",
+        "value": "other_holder_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/copy/holder_id",
+        "value": "other_holder_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    ]
+  },
+  {
+    "name": "control response cannot create a download locator",
+    "fixture": "55-content-holder-control.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/download_id",
+        "value": "download_cccccccccccccccccccccccccccccccc"
+      }
+    ]
+  },
+  {
+    "name": "control mode cannot request a storage or processing purpose",
+    "fixture": "55-content-holder-control.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/request/payload/purpose",
+        "value": "memory"
+      }
+    ]
+  },
+  {
+    "name": "control response cannot grant storage qualification",
+    "fixture": "55-content-holder-control.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/store_allowed",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "control response cannot add use authorization",
+    "fixture": "55-content-holder-control.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/usage_authorization_refs",
+        "value": [
+          {
+            "kind": "use",
+            "owner_id": "grant_owner_912c54b3a5faa1717e21484ac5b3bde9",
+            "id": "use_5ef76d30bf9232902687324b5bfa0bd2",
+            "revision": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "control query cannot return bytes result",
+    "fixture": "55-content-holder-control.json",
+    "expect": "content_get_mode",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output",
+        "value": {
+          "content_ref": {
+            "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+            "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+            "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+            "version": 1,
+            "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+          "control_revision": 1,
+          "download_id": "download_fd456406745d816a45cae554c788e754",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "range_supported": true
+        }
+      }
+    ]
+  },
+  {
+    "name": "default bytes query cannot return control result",
+    "fixture": "55-content-holder-control.json",
+    "expect": "content_get_mode",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output",
+        "value": {
+          "mode": "control",
+          "control": {
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "policy_ref": {
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+              "revision": 1
+            },
+            "control_revision": 1,
+            "state": "active"
+          },
+          "copy": {
+            "copy_id": "copy_12cba3ee81cf4a793796a51b6327c678",
+            "content_ref": {
+              "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+              "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+              "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+              "version": 1,
+              "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+              "media_type": "text/plain",
+              "byte_length": 16
+            },
+            "holder_id": "ui_holder_b0e7b35130c563522eb225d54dfc50f8",
+            "revision": 1,
+            "use_stopped": false,
+            "physical_state": "pending"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "late old control cannot reopen persisted holder gate",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_gate_monotonic",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/holder_gate/control_revision",
+        "value": 1
+      },
+      {
+        "op": "set",
+        "path": "/events/7/holder_gate/state",
+        "value": "open"
+      }
+    ]
+  },
+  {
+    "name": "current control query cannot report a known pre-close snapshot",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_control_current",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/control",
+        "value": {
+          "content_ref": {
+            "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+            "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+            "content_id": "report_e98d2f001da5678b39482efbdf5770dc",
+            "version": 1,
+            "hash": "sha256:845e91831319e89c4d656bdb80c278ac09a7230d61e5dfd2e1b1fbb436ac8917",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "policy_ref": {
+            "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+            "id": "content_policy_52ab7ffb725321dfbcf29a31f337808b",
+            "revision": 1
+          },
+          "control_revision": 1,
+          "state": "active"
+        }
+      }
+    ]
+  },
+  {
+    "name": "control query cannot rebind the exact content of a copy",
+    "fixture": "55-content-holder-control.json",
+    "expect": "content_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/copy/content_ref/content_id",
+        "value": "content_dddddddddddddddddddddddddddddddd"
+      }
+    ]
+  },
+  {
+    "name": "stopped copy control cannot forget recorded cleanup",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_control_record",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/11/exchange/response/output/copy/use_stopped",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "active source does not reopen released copy",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_gate_monotonic",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/16/holder_gate/state",
+        "value": "open"
+      }
+    ]
+  },
+  {
+    "name": "late older copy cannot reduce stored copy revision",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_gate_monotonic",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/17/holder_gate/copy_revision",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "late older copy cannot reopen stopped use",
+    "fixture": "55-content-holder-control.json",
+    "expect": "copy_gate_monotonic",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/17/holder_gate/state",
+        "value": "open"
+      }
+    ]
+  },
+  {
+    "name": "execution.list rejects undeclared input",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/object_ids",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "execution.list bounds requested page",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/limit",
+        "value": 101
+      }
+    ]
+  },
+  {
+    "name": "execution.list binds owner",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/owner_id",
+        "value": "owner_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "execution.list binds query identity",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/query_id",
+        "value": "query_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "execution.list cannot invent a member",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_membership",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/items/0/operation_id",
+        "value": "operation_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "extensions.list rejects undeclared input",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/request/payload/object_ids",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "extensions.list bounds requested page",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/request/payload/limit",
+        "value": 101
+      }
+    ]
+  },
+  {
+    "name": "extensions.list binds owner",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/owner_id",
+        "value": "owner_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "extensions.list binds query identity",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/query_id",
+        "value": "query_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "extensions.list cannot invent a member",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_membership",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/items/0/activation_id",
+        "value": "activation_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "grant.list rejects undeclared input",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/request/payload/object_ids",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "grant.list bounds requested page",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/request/payload/limit",
+        "value": 101
+      }
+    ]
+  },
+  {
+    "name": "grant.list binds owner",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/response/output/owner_id",
+        "value": "owner_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "grant.list binds query identity",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/response/output/query_id",
+        "value": "query_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "grant.list cannot invent a member",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_membership",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/response/output/items/0/grant_id",
+        "value": "grant_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "collection does not extend expiry across pages",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_snapshot",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/expires_at",
+        "value": "2026-09-26T00:10:02Z"
+      }
+    ]
+  },
+  {
+    "name": "collection does not change frozen members",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_snapshot",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/collection/member_ids",
+        "value": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065",
+          "operation_ffffffffffffffffffffffffffffffff"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "collection does not disclose a currently denied member",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_membership",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/collection/readable_ids",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "collection cannot reuse cursor across actors",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/auth/actor_id",
+        "value": "actor_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "collection cannot reuse cursor across senders",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/auth/sender_service_id",
+        "value": "service_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "collection rejects changed permission scope",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/collection/authorization_scope",
+        "value": "scope-b"
+      }
+    ]
+  },
+  {
+    "name": "collection rejects changed original limit",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/limit",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "collection rejects unknown cursor",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/request/payload/cursor",
+        "value": "foreign-cursor"
+      }
+    ]
+  },
+  {
+    "name": "collection nonterminal scan must advance",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_progress",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/collection/scan_end",
+        "value": 0
+      }
+    ]
+  },
+  {
+    "name": "collection cannot claim exhausted before member end",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_progress",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/exhausted",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "collection capacity truncation stays partial",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_gap",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/partial",
+        "value": false
+      },
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/gaps",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "collection cannot silently lose a gap",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_gap",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/gaps",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "collection cannot resurrect expired cursor after query slot reuse",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/14/exchange/response",
+        "value": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000064",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000065",
+                "revision": 3,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": true,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z"
+          },
+          "observed_at": "2026-09-26T00:00:03Z"
+        }
+      }
+    ]
+  },
+  {
+    "name": "activation late read cannot lower displayed revision",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "activation_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/12/activation_view/revision",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "activation late read cannot reopen an old phase",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "activation_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/12/activation_view/phase",
+        "value": "prepared"
+      }
+    ]
+  },
+  {
+    "name": "activation same revision cannot describe changed phase",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "activation_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/11/exchange/response/output/revision",
+        "value": 1
+      },
+      {
+        "op": "set",
+        "path": "/events/11/exchange/response/resource_revision",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "activation requires revision independent of generation",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "remove",
+        "path": "/events/7/exchange/response/output/items/0/revision"
+      }
+    ]
+  },
+  {
+    "name": "grant.list cannot mix another owner record",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "collection_binding",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/response/output/items/0/owner_id",
+        "value": "service_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "collection old authorization scope cannot revive cursor",
+    "fixture": "57-collection-authorization-reset.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response",
+        "value": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000064",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000065",
+                "revision": 3,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": true,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z"
+          },
+          "observed_at": "2026-09-26T00:00:03Z"
+        }
+      }
+    ]
+  },
+  {
+    "name": "collection old authorization scope cannot revive first-page",
+    "fixture": "57-collection-authorization-reset.json",
+    "expect": "collection_context",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response",
+        "value": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000064",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000064",
+                "revision": 2,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": false,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z",
+            "next_cursor": "page-0-1"
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      }
+    ]
+  },
+  {
+    "name": "execution.list gaps cannot leak inaccessible object IDs",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/response/output/gaps",
+        "value": [
+          "object_ffffffffffffffffffffffffffffffff"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "extensions.list gaps cannot leak inaccessible object IDs",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/gaps",
+        "value": [
+          "object_ffffffffffffffffffffffffffffffff"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "grant.list gaps cannot leak inaccessible object IDs",
+    "fixture": "56-owner-collection-pages.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/9/exchange/response/output/gaps",
+        "value": [
+          "object_ffffffffffffffffffffffffffffffff"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "surface input cannot carry a second field schema",
+    "fixture": "47-declarative-form.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/0/exchange/request/payload/snapshot/blocks/0/input_schema",
+        "value": {
+          "fields": [
+            {
+              "name": "directory",
+              "label": "Directory",
+              "type": "text",
+              "required": true,
+              "max_length": 10
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "old request cannot return a schema after current version advanced",
+    "fixture": "47-declarative-form.json",
+    "expect": "request_current_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response",
+        "value": {
+          "output": {
+            "request": {
+              "request_id": "request_10573b873d2fa5a365d558a45e328e47",
+              "owner_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+              "revision": 2,
+              "kind": "clarification",
+              "task_ref": {
+                "orchestrator_id": "orchestrator_106a6c241b8797f52e1e77317b96a201",
+                "task_id": "task_478f3a4c51824ad23cb50c1c60670c0f"
+              },
+              "schema": {
+                "fields": [
+                  {
+                    "name": "directory",
+                    "label": "Directory",
+                    "type": "text",
+                    "required": true,
+                    "max_length": 512
+                  }
+                ]
+              },
+              "question_ref": {
+                "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                "content_id": "directory_question_e7609d8d9e0ed2db104cb5a181d2612c",
+                "version": 1,
+                "hash": "sha256:05066ea0342859d25abd6d01da301060987f18e8810a6c1e2b4b75ba0e2c9e4e",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "deadline": "2026-09-26T00:10:00Z",
+              "required_content_refs": [
+                {
+                  "tenant_id": "tenant_adfb689897b2b5255adcaee72945c791",
+                  "owner_id": "content_owner_f97703051bc8b3453eb99b0df4753e19",
+                  "content_id": "directory_preview_693e6ee93550a09b8851b607e0cd5886",
+                  "version": 1,
+                  "hash": "sha256:215af688042ea122c577db8b06d2921a57cbe31aa2f1496ee7fd81676ff428b7",
+                  "media_type": "text/plain",
+                  "byte_length": 16
+                }
+              ],
+              "allowed_actions": [
+                "submit"
+              ],
+              "state": "open"
+            },
+            "gaps": []
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      }
+    ]
+  },
+  {
+    "name": "request read cannot substitute another revision schema",
+    "fixture": "47-declarative-form.json",
+    "expect": "request_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/request/revision",
+        "value": 3
+      }
+    ]
+  },
+  {
+    "name": "same request revision cannot change field constraints",
+    "fixture": "47-declarative-form.json",
+    "expect": "request_revision_immutable",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/request/payload/request_ref/revision",
+        "value": 2
+      },
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/request/revision",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "offline lease rejects removed state allocated",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/state",
+        "value": "allocated"
+      }
+    ]
+  },
+  {
+    "name": "offline lease rejects removed state in_use",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "schema",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/state",
+        "value": "in_use"
+      }
+    ]
+  },
+  {
+    "name": "closed lease cannot reopen on later usage reporting",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "lease_reopen",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/final",
+        "value": false
+      },
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/state",
+        "value": "open"
+      }
+    ]
+  },
+  {
+    "name": "closed unknown lease cannot claim final release",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "lease_final",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/state",
+        "value": "reconciled"
+      }
+    ]
+  },
+  {
+    "name": "known unfinished use cannot disappear from final settlement",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "lease_final",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/uses",
+        "value": []
+      }
+    ]
+  },
+  {
+    "name": "lease cannot admit a new use after known closure",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "lease_use_after_close",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/uses/0/use_id",
+        "value": "use_efc196f46f1429b0a4387f41426caf78"
+      },
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/uses/0/started_at",
+        "value": "2026-09-26T00:10:02Z"
+      }
+    ]
+  },
+  {
+    "name": "lease final total cannot omit a recorded use cost",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "lease_use_total",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/request/payload/cumulative_cost/amount",
+        "value": "0.2"
+      },
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/settled_cost/amount",
+        "value": "0.2"
+      }
+    ]
+  },
+  {
+    "name": "lease recorded use cannot grow after closed",
+    "fixture": "58-lease-open-close-ledger.json",
+    "expect": "lease_use_closed",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/request/payload/uses/0/closed",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "unknown creation must project reconciliation",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/1/exchange/response/output/phase",
+        "value": "preparing"
+      }
+    ]
+  },
+  {
+    "name": "ordinary nonfinal running usage must remain active",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/phase",
+        "value": "reconciling"
+      }
+    ]
+  },
+  {
+    "name": "cancelled delegation with unknown fees cannot be active",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/5/exchange/response/output/phase",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "Closure takes priority over a later query gap",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/phase",
+        "value": "reconciling"
+      }
+    ]
+  },
+  {
+    "name": "same delegation revision cannot change phase",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_revision",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/3/exchange/response/output/phase",
+        "value": "reconciling"
+      },
+      {
+        "op": "set",
+        "path": "/events/3/delegation_facts/query_gap",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "known control gap cannot project active",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/4/exchange/response/output/phase",
+        "value": "active"
+      }
+    ]
+  },
+  {
+    "name": "known effect gap cannot project active",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/2/exchange/response/output/effects_pending",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "closed delegation cannot retain pending control",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_closure",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/exchange/response/output/control_pending",
+        "value": true
+      }
+    ]
+  },
+  {
+    "name": "closed delegation requires final settlement fact",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_closure",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/delegation_facts/settlement_final",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "final settlement without Closure cannot project closed",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "delegation_projection",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/6/delegation_facts/closure_saved",
+        "value": false
+      }
+    ]
+  },
+  {
+    "name": "current phase cannot replace the original creation receipt",
+    "fixture": "59-delegation-phase-projection.json",
+    "expect": "recovery_original",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/recovery/response/output",
+        "value": {
+          "delegation_id": "delegation_5214bf637717ddb480ecc554b2ec4c3f",
+          "parent_task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "agent_binding": {
+            "agent_ref": {
+              "id": "agent_d4f0bc5a29de06b510f9aa428f1eedba",
+              "version": "1.0.0",
+              "digest": "sha256:d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824"
+            },
+            "adapter_ref": {
+              "id": "agent_adapter_bd0ef18530e218ba018e4a7f34b94050",
+              "version": "1.0.0",
+              "digest": "sha256:bd0ef18530e218ba018e4a7f34b94050e27bd84b8fd8cea3e272f863930625f9"
+            },
+            "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1"
+          },
+          "goal_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "child_goal_0a47e149e77d62c190b94b8dfab51dda",
+            "version": 1,
+            "hash": "sha256:5527029d176a5fd3907532d20eff56db020aec193aa7d3665b39be8d024fddf9",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "input_refs": [
+            {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+              "version": 1,
+              "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+              "media_type": "text/plain",
+              "byte_length": 16
+            }
+          ],
+          "constraints": [
+            "只读研究"
+          ],
+          "deadline": "2026-09-26T00:10:00Z",
+          "allocation_id": "allocation_165f0f8e557c430929784035df7eeacf",
+          "permission_refs": [
+            {
+              "kind": "grant",
+              "owner_id": "owner_4c1029697ee358715d3a14a2add817c4",
+              "id": "grant_3492ad65d05a973fef8c825521eeb41a",
+              "revision": 1
+            }
+          ],
+          "ancestor_ids": [
+            "task_0ebb429fa86d481c2630fac53db1c91c"
+          ],
+          "revision": 6,
+          "phase": "closed",
+          "remote_revision": 1,
+          "control_pending": false,
+          "usage_revision": 1,
+          "effects_pending": false,
+          "remote_binding": {
+            "endpoint_id": "remote_b71199ebd070b36beab7317920c2c2f1",
+            "remote_task_id": "remote_task_74abd92cd79df34d45f9b8d4710ecd8c",
+            "creation_key": "delegation_5214bf637717ddb480ecc554b2ec4c3f"
+          },
+          "settlement_ref": {
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "id": "settlement_49cedf5bde86598f4926fbc53ca5383b",
+            "revision": 1
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "billing wakeup must come from authenticated original source",
+    "fixture": "60-task-billing-reconcile.json",
+    "expect": "billing_source",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/auth/sender_service_id",
+        "value": "service_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "billing wakeup must name original Task",
+    "fixture": "60-task-billing-reconcile.json",
+    "expect": "billing_source",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/7/exchange/request/target_id",
+        "value": "task_ffffffffffffffffffffffffffffffff"
+      },
+      {
+        "op": "set",
+        "path": "/events/7/exchange/response/output/resource_id",
+        "value": "task_ffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "name": "same source revision cannot carry another bill digest",
+    "fixture": "60-task-billing-reconcile.json",
+    "expect": "billing_revision_conflict",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/exchange/request/payload/usage_digest",
+        "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    ]
+  },
+  {
+    "name": "same billing source must retain one reconcile job",
+    "fixture": "60-task-billing-reconcile.json",
+    "expect": "billing_job",
+    "edits": [
+      {
+        "op": "set",
+        "path": "/events/8/exchange/response/output/job_id",
+        "value": "billing_job_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    ]
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "scope": "Final document structure, Brain static vectors, original-source audit and diff hygiene; no runtime proof",
+  "checks": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "a7b411",
+        "wall_time_seconds": 0.154620458,
+        "exit_code": 0,
+        "original_token_count": 38,
+        "output": "PASS: 65 Markdown files; 2206 local links; 112 Mermaid blocks; 0 errors\nScope: local links and Markdown structure; no semantic or rendering guarantee\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "ff6cc5",
+        "wall_time_seconds": 0.331842917,
+        "exit_code": 0,
+        "original_token_count": 88,
+        "output": "Brain static vectors passed: generation/recovery, 5 plan-install checks, 11 rejected generations, 15 plan branches. No service or fault experiment executed.\nInstruction-only expansion: full successor plan accepted; direct actions, stale baseline, absent/template steps and cross-revision predecessor reuse rejected; current revision output resolves\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "48b446",
+        "wall_time_seconds": 0.000006,
+        "exit_code": 0,
+        "original_token_count": 3,
+        "output": "     174\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "566825",
+        "wall_time_seconds": 0.000005875,
+        "exit_code": 0,
+        "original_token_count": 205,
+        "output": "{\n  \"source_count\": 185,\n  \"supplemental_count\": 3,\n  \"unchanged_non_markdown_assets\": 86,\n  \"adapted_non_markdown_assets\": [\n    \"docs/architecture/contracts/examples/protocol/07-input-consumption.json\",\n    \"docs/architecture/contracts/examples/protocol/12-delegation-mapping.json\",\n    \"docs/architecture/contracts/examples/protocol/invalid-mutations.json\",\n    \"docs/architecture/contracts/schemas/protocol.schema.json\",\n    \"docs/architecture/validation/check_documents.py\",\n    \"docs/architecture/validation/protocol/runtime_rules.py\",\n    \"docs/architecture/validation/protocol/traces.py\",\n    \"docs/architecture/validation/validate_brain.py\",\n    \"docs/architecture/validation/validate_protocol.py\"\n  ],\n  \"errors\": [],\n  \"scope\": \"Original bytes and current target existence; semantic coverage is separate\"\n}\n"
+      }
+    }
+  ]
+}

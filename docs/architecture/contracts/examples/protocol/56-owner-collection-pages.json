@@ -1,0 +1,914 @@
+{
+  "name": "owner-collection-pages",
+  "description": "Recorded authority premises exercise owner-scoped Operation, Activation and Grant enumeration, fixed membership with current values, cursor continuation, authorization restart, capacity partial and expiry. This is not a database or authorization integration test.",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 1
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000064",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000064",
+                "revision": 2,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": false,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z",
+            "next_cursor": "page-0-1"
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 1,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:03Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 1,
+            "cursor": "page-0-1"
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000064",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000065",
+                "revision": 3,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": true,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z"
+          },
+          "observed_at": "2026-09-26T00:00:03Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 2,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 1
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000064",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000064",
+                "revision": 3,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": false,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z",
+            "next_cursor": "page-0-1"
+          },
+          "observed_at": "2026-09-26T00:00:04Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 1,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:05Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 1,
+            "cursor": "page-0-1"
+          }
+        },
+        "response": {
+          "error": {
+            "code": "query_conflict",
+            "message": "Original collection cannot continue; restart within the current authorized scope.",
+            "retry": "after_change"
+          }
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-b",
+        "scan_end": 1,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:06Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_000000000000000000000000000000c8",
+            "limit": 1
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_000000000000000000000000000000c8",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000065",
+                "revision": 3,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": true,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z"
+          },
+          "observed_at": "2026-09-26T00:00:06Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-b",
+        "scan_end": 1,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:07Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_000000000000000000000000000000c9",
+            "limit": 1
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_000000000000000000000000000000c9",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000064",
+                "revision": 3,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": true,
+            "partial": true,
+            "gaps": [
+              "membership_limit"
+            ],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z"
+          },
+          "observed_at": "2026-09-26T00:00:07Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 1,
+        "truncated": true
+      }
+    },
+    {
+      "at": "2026-09-26T00:11:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 1,
+            "cursor": "page-0-1"
+          }
+        },
+        "response": {
+          "error": {
+            "code": "cursor_expired",
+            "message": "Original collection cannot continue; restart within the current authorized scope.",
+            "retry": "after_change"
+          }
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 1,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "extensions.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000065",
+            "limit": 1
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000065",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "activation_id": "activation_0000000000000000000000000000006e",
+                "target_id": "target_34a04005bcaf206eec990bd9637d9fdb",
+                "old_lock_id": null,
+                "new_lock_id": "lock_0c030586945fe504b604ecc2e875c38e",
+                "approval_id": "approval_9deb65b8788f41ff94a217842017db2f",
+                "phase": "prepared",
+                "generation": 1,
+                "ready_instance": null,
+                "last_observed_at": "2026-09-26T00:00:00Z",
+                "new_use_disabled": false,
+                "previous_version_ready": false,
+                "residual_work": [],
+                "revision": 1
+              }
+            ],
+            "exhausted": false,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z",
+            "next_cursor": "page-1-1"
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "activation_0000000000000000000000000000006e",
+          "activation_0000000000000000000000000000006f"
+        ],
+        "readable_ids": [
+          "activation_0000000000000000000000000000006e",
+          "activation_0000000000000000000000000000006f"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 1,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:03Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "extensions.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000065",
+            "limit": 1,
+            "cursor": "page-1-1"
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000065",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "activation_id": "activation_0000000000000000000000000000006f",
+                "target_id": "target_34a04005bcaf206eec990bd9637d9fdb",
+                "old_lock_id": null,
+                "new_lock_id": "lock_0c030586945fe504b604ecc2e875c38e",
+                "approval_id": "approval_9deb65b8788f41ff94a217842017db2f",
+                "phase": "prepared",
+                "generation": 1,
+                "ready_instance": null,
+                "last_observed_at": "2026-09-26T00:00:03Z",
+                "new_use_disabled": false,
+                "previous_version_ready": false,
+                "residual_work": [],
+                "revision": 1
+              }
+            ],
+            "exhausted": true,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z"
+          },
+          "observed_at": "2026-09-26T00:00:03Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "activation_0000000000000000000000000000006e",
+          "activation_0000000000000000000000000000006f"
+        ],
+        "readable_ids": [
+          "activation_0000000000000000000000000000006e",
+          "activation_0000000000000000000000000000006f"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 2,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:02Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "grant.list",
+          "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000066",
+            "limit": 1
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000066",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "items": [
+              {
+                "grant_id": "grant_00000000000000000000000000000078",
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "revision": 1,
+                "policy": {
+                  "subject": {
+                    "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                    "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+                    "actor_kind": "user"
+                  },
+                  "resources": [
+                    {
+                      "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                      "resource_type": "content",
+                      "selector": {
+                        "object_ids": [
+                          "resource_03c9f206d1c2afd64261a5bbab141a54"
+                        ]
+                      },
+                      "normalizer_version": "1.0.0"
+                    }
+                  ],
+                  "actions": [
+                    "read"
+                  ],
+                  "purposes": [
+                    "research"
+                  ],
+                  "recipients": [
+                    "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+                  ],
+                  "locations": [
+                    "owner_283a5912588ab6ee40efdbd083ba2f25"
+                  ],
+                  "mode": "continuous",
+                  "valid_from": "2026-09-26T00:00:00Z",
+                  "expires_at": "2026-09-26T01:00:00Z",
+                  "limits": [
+                    {
+                      "unit": "calls",
+                      "limit": "10"
+                    },
+                    {
+                      "unit": "USD",
+                      "limit": "5"
+                    }
+                  ],
+                  "max_offline_window_ms": 600000
+                },
+                "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+                "confirmation_ref": {
+                  "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+                  "revision": 2
+                },
+                "state": "active",
+                "issued_at": "2026-09-26T00:00:00Z",
+                "propagation": []
+              }
+            ],
+            "exhausted": false,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z",
+            "next_cursor": "page-2-1"
+          },
+          "observed_at": "2026-09-26T00:00:02Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "grant_00000000000000000000000000000078",
+          "grant_00000000000000000000000000000079"
+        ],
+        "readable_ids": [
+          "grant_00000000000000000000000000000078",
+          "grant_00000000000000000000000000000079"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 1,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:03Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+          "logical_service_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+        },
+        "request": {
+          "method": "grant.list",
+          "target_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000066",
+            "limit": 1,
+            "cursor": "page-2-1"
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000066",
+            "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+            "items": [
+              {
+                "grant_id": "grant_00000000000000000000000000000079",
+                "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                "revision": 2,
+                "policy": {
+                  "subject": {
+                    "tenant_id": "tenant_a23a9c9abe96fac82e41678c6ca1d3ba",
+                    "actor_id": "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09",
+                    "actor_kind": "user"
+                  },
+                  "resources": [
+                    {
+                      "resource_owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                      "resource_type": "content",
+                      "selector": {
+                        "object_ids": [
+                          "resource_03c9f206d1c2afd64261a5bbab141a54"
+                        ]
+                      },
+                      "normalizer_version": "1.0.0"
+                    }
+                  ],
+                  "actions": [
+                    "read"
+                  ],
+                  "purposes": [
+                    "research"
+                  ],
+                  "recipients": [
+                    "actor_b7e9ac6f9c0ab37f9524a4b7cf2b4d09"
+                  ],
+                  "locations": [
+                    "owner_283a5912588ab6ee40efdbd083ba2f25"
+                  ],
+                  "mode": "continuous",
+                  "valid_from": "2026-09-26T00:00:00Z",
+                  "expires_at": "2026-09-26T01:00:00Z",
+                  "limits": [
+                    {
+                      "unit": "calls",
+                      "limit": "10"
+                    },
+                    {
+                      "unit": "USD",
+                      "limit": "5"
+                    }
+                  ],
+                  "max_offline_window_ms": 600000
+                },
+                "intent_hash": "sha256:499f51b4ca9f64b6262c1674151f83569da8928fe5ed7398475f07758d622d93",
+                "confirmation_ref": {
+                  "owner_id": "owner_283a5912588ab6ee40efdbd083ba2f25",
+                  "id": "confirmation_19a36928719b4ab90a995a0d3f195776",
+                  "revision": 2
+                },
+                "state": "active",
+                "issued_at": "2026-09-26T00:00:00Z",
+                "propagation": []
+              }
+            ],
+            "exhausted": true,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:00:01Z",
+            "expires_at": "2026-09-26T00:10:01Z"
+          },
+          "observed_at": "2026-09-26T00:00:03Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "grant_00000000000000000000000000000078",
+          "grant_00000000000000000000000000000079"
+        ],
+        "readable_ids": [
+          "grant_00000000000000000000000000000078",
+          "grant_00000000000000000000000000000079"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 2,
+        "truncated": false
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:09Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "extensions.read",
+          "target_id": "activation_0000000000000000000000000000006e",
+          "payload": {
+            "kind": "activation"
+          }
+        },
+        "response": {
+          "output": {
+            "activation_id": "activation_0000000000000000000000000000006e",
+            "target_id": "target_34a04005bcaf206eec990bd9637d9fdb",
+            "old_lock_id": null,
+            "new_lock_id": "lock_0c030586945fe504b604ecc2e875c38e",
+            "approval_id": "approval_9deb65b8788f41ff94a217842017db2f",
+            "phase": "blocked",
+            "generation": 1,
+            "ready_instance": null,
+            "last_observed_at": "2026-09-26T00:00:00Z",
+            "new_use_disabled": false,
+            "previous_version_ready": false,
+            "residual_work": [],
+            "revision": 2
+          },
+          "observed_at": "2026-09-26T00:00:08Z",
+          "resource_revision": 2
+        }
+      },
+      "activation_view": {
+        "activation_id": "activation_0000000000000000000000000000006e",
+        "revision": 2,
+        "phase": "blocked"
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:09Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "extensions.read",
+          "target_id": "activation_0000000000000000000000000000006e",
+          "payload": {
+            "kind": "activation"
+          }
+        },
+        "response": {
+          "output": {
+            "activation_id": "activation_0000000000000000000000000000006e",
+            "target_id": "target_34a04005bcaf206eec990bd9637d9fdb",
+            "old_lock_id": null,
+            "new_lock_id": "lock_0c030586945fe504b604ecc2e875c38e",
+            "approval_id": "approval_9deb65b8788f41ff94a217842017db2f",
+            "phase": "prepared",
+            "generation": 1,
+            "ready_instance": null,
+            "last_observed_at": "2026-09-26T00:00:00Z",
+            "new_use_disabled": false,
+            "previous_version_ready": false,
+            "residual_work": [],
+            "revision": 1
+          },
+          "observed_at": "2026-09-26T00:00:08Z",
+          "resource_revision": 1
+        }
+      },
+      "activation_view": {
+        "activation_id": "activation_0000000000000000000000000000006e",
+        "revision": 2,
+        "phase": "blocked"
+      }
+    },
+    {
+      "at": "2026-09-26T00:11:03Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 1
+          }
+        },
+        "response": {
+          "output": {
+            "query_id": "query_00000000000000000000000000000064",
+            "owner_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+            "items": [
+              {
+                "operation_id": "operation_00000000000000000000000000000064",
+                "revision": 3,
+                "execution_state": "closed",
+                "effect": "applied",
+                "may_apply_later": false,
+                "attempts": [],
+                "evidence_refs": [],
+                "usage": [
+                  {
+                    "unit": "request",
+                    "amount": "1"
+                  }
+                ],
+                "usage_final": false,
+                "next_action": "query_original"
+              }
+            ],
+            "exhausted": false,
+            "partial": false,
+            "gaps": [],
+            "snapshot_at": "2026-09-26T00:11:03Z",
+            "expires_at": "2026-09-26T00:21:03Z",
+            "next_cursor": "page-reclaimed-1"
+          },
+          "observed_at": "2026-09-26T00:11:03Z"
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 1,
+        "truncated": false,
+        "state_reclaimed": true
+      }
+    },
+    {
+      "at": "2026-09-26T00:11:04Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "logical_service_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "actor_id": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0"
+        },
+        "request": {
+          "method": "execution.list",
+          "target_id": "service_9df6b026a8c6c26e3c3acd2370a16e93",
+          "payload": {
+            "query_id": "query_00000000000000000000000000000064",
+            "limit": 1,
+            "cursor": "page-0-1"
+          }
+        },
+        "response": {
+          "error": {
+            "code": "cursor_expired",
+            "message": "Original collection cannot continue; restart within the current authorized scope.",
+            "retry": "after_change"
+          }
+        }
+      },
+      "collection": {
+        "member_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "readable_ids": [
+          "operation_00000000000000000000000000000064",
+          "operation_00000000000000000000000000000065"
+        ],
+        "authorization_scope": "scope-a",
+        "scan_end": 1,
+        "truncated": false
+      }
+    }
+  ]
+}

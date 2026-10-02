@@ -1,0 +1,18 @@
+{
+  "source_count": 185,
+  "supplemental_count": 3,
+  "unchanged_non_markdown_assets": 86,
+  "adapted_non_markdown_assets": [
+    "docs/architecture/contracts/examples/protocol/07-input-consumption.json",
+    "docs/architecture/contracts/examples/protocol/12-delegation-mapping.json",
+    "docs/architecture/contracts/examples/protocol/invalid-mutations.json",
+    "docs/architecture/contracts/schemas/protocol.schema.json",
+    "docs/architecture/validation/check_documents.py",
+    "docs/architecture/validation/protocol/runtime_rules.py",
+    "docs/architecture/validation/protocol/traces.py",
+    "docs/architecture/validation/validate_brain.py",
+    "docs/architecture/validation/validate_protocol.py"
+  ],
+  "errors": [],
+  "scope": "Original bytes and current target existence; semantic coverage is separate"
+}

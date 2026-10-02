@@ -2,7 +2,7 @@
 
 Harness 接纳用户目标，组织大脑、记忆、工具和其他 Agent 持续工作。以下术语沿用现行架构中已经确定的领域含义。
 
-请求主线用 Session、Task、Decision、Operation、Content、Grant 六组对象组织。组内记录由所属接口统一管理；这不限定物理表数量，也不改变各记录的写入负责方。可信确认、界面对象、内容副本和使用结算仍按各自责任保留。完整分类、身份、生命周期与持久边界见[核心数据模型](docs/architecture/.draft/core-data-model.md)。
+请求主线用 Session、Task、Decision、Operation、Content、Grant 六组对象组织。组内记录由所属接口统一管理；这不限定物理表数量，也不改变各记录的写入负责方。可信确认、界面对象、内容副本和使用结算仍按各自责任保留。完整分类、身份、生命周期与持久边界见[核心数据模型](docs/architecture/core-data-model.md)。
 
 ## Language
 

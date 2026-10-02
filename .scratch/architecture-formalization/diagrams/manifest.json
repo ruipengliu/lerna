@@ -1,0 +1,36 @@
+{
+  "changed_diagrams": [
+    {
+      "source": "docs/architecture/README.md",
+      "diagram": 1,
+      "sha256": "faa96126151a2178f890a98b4683e1ceb07a13509752ba4d8a8c3bcdfd0b0752",
+      "mermaid": ".scratch/architecture-formalization/diagrams/README-1.mmd",
+      "render": ".scratch/architecture-formalization/diagrams/README-1.png",
+      "render_status": "passed",
+      "log": "Reused matching current-source render.",
+      "visual_review": "inspected: normal optional-action branch and write/read admission gates are legible and agree with the task narrative"
+    },
+    {
+      "source": "docs/architecture/memory/README.md",
+      "diagram": 2,
+      "sha256": "3c2d9ec49f0127e1f1224c8c7f7ff54058fdbdae9c35a9dc46d4944df66c8530",
+      "mermaid": ".scratch/architecture-formalization/diagrams/memory-README-2.mmd",
+      "render": ".scratch/architecture-formalization/diagrams/memory-README-2.png",
+      "render_status": "passed",
+      "log": "Reused matching current-source render.",
+      "visual_review": "inspected: labels legible, lines and stages distinguish the described responsibilities"
+    },
+    {
+      "source": "docs/architecture/memory/README.md",
+      "diagram": 3,
+      "sha256": "0f5601740cc7cfef01f5c2c963771bcb279575aa0e08b0f9596de27c7067a1bd",
+      "mermaid": ".scratch/architecture-formalization/diagrams/memory-README-3.mmd",
+      "render": ".scratch/architecture-formalization/diagrams/memory-README-3.png",
+      "render_status": "passed",
+      "log": "Reused matching current-source render.",
+      "visual_review": "inspected: labels legible, lines and stages distinguish the described responsibilities"
+    }
+  ],
+  "unchanged_bodies_skipped": 109,
+  "scope": "Rendering verifies Mermaid syntax for changed bodies; semantic and visual review are separate."
+}

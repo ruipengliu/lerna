@@ -1,0 +1,970 @@
+[
+  {
+    "name": "unknown-effect-cannot-succeed",
+    "reason": "未知效果不能被质量评估覆盖",
+    "snapshot": {
+      "task": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "status": "succeeded",
+        "required_requirement_ids": [
+          "quality",
+          "file_saved"
+        ],
+        "tenant_id": "tenant_demo"
+      },
+      "result": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "artifact_refs": [
+          {
+            "tenant_id": "tenant_demo",
+            "owner_id": "orchestrator_demo",
+            "content_id": "report_demo",
+            "version": "1",
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/markdown",
+            "byte_length": 128
+          }
+        ],
+        "completion_basis": "assessed",
+        "condition_results": [
+          {
+            "requirement_id": "quality",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "assessed",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          },
+          {
+            "requirement_id": "file_saved",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "verified",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        ],
+        "limitations": [
+          "研究质量依赖声明的评估方法，文件保存有客观证据。"
+        ],
+        "completed_at": "2026-09-25T15:00:00Z"
+      },
+      "operations": [
+        {
+          "operation_id": "write_demo",
+          "execution_state": "closed",
+          "effect": "unknown",
+          "may_apply_later": false
+        }
+      ],
+      "accounting_open": [
+        "model_bill_demo"
+      ]
+    }
+  },
+  {
+    "name": "late-effect-cannot-succeed",
+    "reason": "仍可能在外部生效时不能完成",
+    "snapshot": {
+      "task": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "status": "succeeded",
+        "required_requirement_ids": [
+          "quality",
+          "file_saved"
+        ],
+        "tenant_id": "tenant_demo"
+      },
+      "result": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "artifact_refs": [
+          {
+            "tenant_id": "tenant_demo",
+            "owner_id": "orchestrator_demo",
+            "content_id": "report_demo",
+            "version": "1",
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/markdown",
+            "byte_length": 128
+          }
+        ],
+        "completion_basis": "assessed",
+        "condition_results": [
+          {
+            "requirement_id": "quality",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "assessed",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          },
+          {
+            "requirement_id": "file_saved",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "verified",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        ],
+        "limitations": [
+          "研究质量依赖声明的评估方法，文件保存有客观证据。"
+        ],
+        "completed_at": "2026-09-25T15:00:00Z"
+      },
+      "operations": [
+        {
+          "operation_id": "write_demo",
+          "execution_state": "closed",
+          "effect": "applied",
+          "may_apply_later": true
+        }
+      ],
+      "accounting_open": [
+        "model_bill_demo"
+      ]
+    }
+  },
+  {
+    "name": "basis-cannot-overstate",
+    "reason": "评估不能标为客观验证",
+    "snapshot": {
+      "task": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "status": "succeeded",
+        "required_requirement_ids": [
+          "quality",
+          "file_saved"
+        ],
+        "tenant_id": "tenant_demo"
+      },
+      "result": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "artifact_refs": [
+          {
+            "tenant_id": "tenant_demo",
+            "owner_id": "orchestrator_demo",
+            "content_id": "report_demo",
+            "version": "1",
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/markdown",
+            "byte_length": 128
+          }
+        ],
+        "completion_basis": "verified",
+        "condition_results": [
+          {
+            "requirement_id": "quality",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "assessed",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          },
+          {
+            "requirement_id": "file_saved",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "verified",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        ],
+        "limitations": [
+          "研究质量依赖声明的评估方法，文件保存有客观证据。"
+        ],
+        "completed_at": "2026-09-25T15:00:00Z"
+      },
+      "operations": [
+        {
+          "operation_id": "write_demo",
+          "execution_state": "closed",
+          "effect": "applied",
+          "may_apply_later": false
+        }
+      ],
+      "accounting_open": [
+        "model_bill_demo"
+      ]
+    }
+  },
+  {
+    "name": "missing-required-condition",
+    "reason": "不能遗漏必要条件再报告成功",
+    "snapshot": {
+      "task": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "status": "succeeded",
+        "required_requirement_ids": [
+          "quality",
+          "file_saved"
+        ],
+        "tenant_id": "tenant_demo"
+      },
+      "result": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "artifact_refs": [
+          {
+            "tenant_id": "tenant_demo",
+            "owner_id": "orchestrator_demo",
+            "content_id": "report_demo",
+            "version": "1",
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/markdown",
+            "byte_length": 128
+          }
+        ],
+        "completion_basis": "assessed",
+        "condition_results": [
+          {
+            "requirement_id": "quality",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "assessed",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        ],
+        "limitations": [
+          "研究质量依赖声明的评估方法，文件保存有客观证据。"
+        ],
+        "completed_at": "2026-09-25T15:00:00Z"
+      },
+      "operations": [
+        {
+          "operation_id": "write_demo",
+          "execution_state": "closed",
+          "effect": "applied",
+          "may_apply_later": false
+        }
+      ],
+      "accounting_open": [
+        "model_bill_demo"
+      ]
+    }
+  },
+  {
+    "name": "stale-goal-evidence",
+    "reason": "条件证据须对应当前目标修订",
+    "snapshot": {
+      "task": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "status": "succeeded",
+        "required_requirement_ids": [
+          "quality",
+          "file_saved"
+        ],
+        "tenant_id": "tenant_demo"
+      },
+      "result": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "artifact_refs": [
+          {
+            "tenant_id": "tenant_demo",
+            "owner_id": "orchestrator_demo",
+            "content_id": "report_demo",
+            "version": "1",
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/markdown",
+            "byte_length": 128
+          }
+        ],
+        "completion_basis": "assessed",
+        "condition_results": [
+          {
+            "requirement_id": "quality",
+            "goal_revision": 2,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "assessed",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          },
+          {
+            "requirement_id": "file_saved",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "verified",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        ],
+        "limitations": [
+          "研究质量依赖声明的评估方法，文件保存有客观证据。"
+        ],
+        "completed_at": "2026-09-25T15:00:00Z"
+      },
+      "operations": [
+        {
+          "operation_id": "write_demo",
+          "execution_state": "closed",
+          "effect": "applied",
+          "may_apply_later": false
+        }
+      ],
+      "accounting_open": [
+        "model_bill_demo"
+      ]
+    }
+  },
+  {
+    "name": "wrong-artifact-version",
+    "reason": "旧版本证据不能验证新成果",
+    "snapshot": {
+      "task": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "status": "succeeded",
+        "required_requirement_ids": [
+          "quality",
+          "file_saved"
+        ],
+        "tenant_id": "tenant_demo"
+      },
+      "result": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "artifact_refs": [
+          {
+            "tenant_id": "tenant_demo",
+            "owner_id": "orchestrator_demo",
+            "content_id": "report_demo",
+            "version": "1",
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/markdown",
+            "byte_length": 128
+          }
+        ],
+        "completion_basis": "assessed",
+        "condition_results": [
+          {
+            "requirement_id": "quality",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "2",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "assessed",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          },
+          {
+            "requirement_id": "file_saved",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "verified",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        ],
+        "limitations": [
+          "研究质量依赖声明的评估方法，文件保存有客观证据。"
+        ],
+        "completed_at": "2026-09-25T15:00:00Z"
+      },
+      "operations": [
+        {
+          "operation_id": "write_demo",
+          "execution_state": "closed",
+          "effect": "applied",
+          "may_apply_later": false
+        }
+      ],
+      "accounting_open": [
+        "model_bill_demo"
+      ]
+    }
+  },
+  {
+    "name": "failed-condition",
+    "reason": "必要条件失败不能完成",
+    "snapshot": {
+      "task": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "status": "succeeded",
+        "required_requirement_ids": [
+          "quality",
+          "file_saved"
+        ],
+        "tenant_id": "tenant_demo"
+      },
+      "result": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "artifact_refs": [
+          {
+            "tenant_id": "tenant_demo",
+            "owner_id": "orchestrator_demo",
+            "content_id": "report_demo",
+            "version": "1",
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/markdown",
+            "byte_length": 128
+          }
+        ],
+        "completion_basis": "assessed",
+        "condition_results": [
+          {
+            "requirement_id": "quality",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "fail",
+            "basis": "assessed",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          },
+          {
+            "requirement_id": "file_saved",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "verified",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        ],
+        "limitations": [
+          "研究质量依赖声明的评估方法，文件保存有客观证据。"
+        ],
+        "completed_at": "2026-09-25T15:00:00Z"
+      },
+      "operations": [
+        {
+          "operation_id": "write_demo",
+          "execution_state": "closed",
+          "effect": "applied",
+          "may_apply_later": false
+        }
+      ],
+      "accounting_open": [
+        "model_bill_demo"
+      ]
+    }
+  },
+  {
+    "name": "cancelled-with-success-result",
+    "reason": "取消任务不能同时发布成功结果",
+    "snapshot": {
+      "task": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "status": "cancelled",
+        "required_requirement_ids": [
+          "quality",
+          "file_saved"
+        ],
+        "tenant_id": "tenant_demo"
+      },
+      "result": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "artifact_refs": [
+          {
+            "tenant_id": "tenant_demo",
+            "owner_id": "orchestrator_demo",
+            "content_id": "report_demo",
+            "version": "1",
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/markdown",
+            "byte_length": 128
+          }
+        ],
+        "completion_basis": "assessed",
+        "condition_results": [
+          {
+            "requirement_id": "quality",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "assessed",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          },
+          {
+            "requirement_id": "file_saved",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "verified",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        ],
+        "limitations": [
+          "研究质量依赖声明的评估方法，文件保存有客观证据。"
+        ],
+        "completed_at": "2026-09-25T15:00:00Z"
+      },
+      "operations": [
+        {
+          "operation_id": "write_demo",
+          "execution_state": "closed",
+          "effect": "applied",
+          "may_apply_later": false
+        }
+      ],
+      "accounting_open": [
+        "model_bill_demo"
+      ]
+    }
+  },
+  {
+    "name": "cross-tenant-artifact",
+    "reason": "证据与成果须属于任务视图同一租户",
+    "snapshot": {
+      "task": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "status": "succeeded",
+        "required_requirement_ids": [
+          "quality",
+          "file_saved"
+        ],
+        "tenant_id": "tenant_demo"
+      },
+      "result": {
+        "task_id": "task_demo",
+        "goal_revision": 1,
+        "artifact_refs": [
+          {
+            "tenant_id": "tenant_demo",
+            "owner_id": "orchestrator_demo",
+            "content_id": "report_demo",
+            "version": "1",
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "text/markdown",
+            "byte_length": 128
+          }
+        ],
+        "completion_basis": "assessed",
+        "condition_results": [
+          {
+            "requirement_id": "quality",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "other_tenant",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "assessed",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          },
+          {
+            "requirement_id": "file_saved",
+            "goal_revision": 1,
+            "artifact_ref": {
+              "tenant_id": "tenant_demo",
+              "owner_id": "orchestrator_demo",
+              "content_id": "report_demo",
+              "version": "1",
+              "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "media_type": "text/markdown",
+              "byte_length": 128
+            },
+            "verdict": "pass",
+            "basis": "verified",
+            "evidence_refs": [
+              {
+                "tenant_id": "tenant_demo",
+                "owner_id": "orchestrator_demo",
+                "content_id": "evidence_demo",
+                "version": "1",
+                "hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "media_type": "text/markdown",
+                "byte_length": 128
+              }
+            ],
+            "evaluator_ref": {
+              "id": "verifier_demo",
+              "version": "1",
+              "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          }
+        ],
+        "limitations": [
+          "研究质量依赖声明的评估方法，文件保存有客观证据。"
+        ],
+        "completed_at": "2026-09-25T15:00:00Z"
+      },
+      "operations": [
+        {
+          "operation_id": "write_demo",
+          "execution_state": "closed",
+          "effect": "applied",
+          "may_apply_later": false
+        }
+      ],
+      "accounting_open": [
+        "model_bill_demo"
+      ]
+    }
+  }
+]

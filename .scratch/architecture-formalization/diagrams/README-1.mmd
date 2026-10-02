@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant A as 用户与应用
+    participant H as Orchestrator
+    participant B as Brain
+    participant E as Executor
+    participant F as 文件目标
+    A->>A: 保存目标、原命令与交付责任
+    A->>H: 提交原目标
+    H->>H: Task、回执与首项工作共同提交
+    loop 获准取证与形成报告
+        H->>B: 固定本轮目标与获准材料
+        B-->>H: 下一步提案和准确产物
+        H->>H: 核对当前目标与提案
+        opt 本轮需要行动
+            H->>H: 当前资格检查与行动准入
+            H->>E: 原操作
+            E-->>H: 结果、来源、效果与费用
+        end
+    end
+    H->>H: 准入写入，固定报告与目标
+    H->>E: 保存准确报告版本
+    E->>F: 写入文件
+    E-->>H: 原写入效果证据
+    H->>H: 当前资格检查与读回准入
+    H->>E: 独立读回
+    E->>F: 读取实际目标字节
+    E-->>H: 读回内容与目标身份
+    H->>H: 核验全部条件，固定 Result 与终态
+    A->>H: 查询原任务与结果
+    H-->>A: 成果、依据和未结事项

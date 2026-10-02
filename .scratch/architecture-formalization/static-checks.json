@@ -1,0 +1,127 @@
+{
+  "checked_at": {
+    "current_time": "2026-10-02 02:31:20 UTC"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "node": "25.9.0",
+    "jsonschema": "4.23.0",
+    "grpcio_tools": "1.80.0",
+    "protobuf": "6.33.6"
+  },
+  "scope": "Static documentation, recorded contracts and generated envelope checks; no live Harness service, database, authority or performance tested.",
+  "checks": [
+    {
+      "i": 0,
+      "r": {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "fc5679",
+          "wall_time_seconds": 6.914011458,
+          "exit_code": 0,
+          "original_token_count": 397,
+          "output": "PASS: 56 valid traces; 371 invalid mutations rejected for their stated rule; 105 frozen methods exercised\nRead-only completion: one redundant unknown read with an exact declaration preserves proven success; missing/write declarations, absent required evidence and rejected reclassification cannot bypass the effect gate\nExposure boundary: one impact job covers a constructed 101-plan overlap; no bounded affected-ID response list\nBudget boundary: a 7-unit actual bill against a 5-unit allocation remains recordable with provider, receiver, both, or pending incident cause; proof remains a runtime prerequisite\nBudget correction: a parent recovery scan reads settled and closed records, receives one durable billing wakeup, and settles a newer bill; stale revision is rejected and original receipt replay is stable\nBilling wakeup: source r2 is visible before r1 notice; r1, r2, then r1 retains one job, and same-revision digest conflict is rejected\nTask listing: equal-time IDs and older timestamps paginate in documented descending-time order; reverse order is rejected\nUse boundary: a constructed final-to-final cost correction keeps the original use and released reserve; bill authenticity remains a runtime prerequisite\nEstimate boundary: a hard Grant cost limit rejects estimate; without it, constructed actual cost 6 exceeds reserved 4 without dropping the bill\nRegistry: 105 methods, 0 reserved; protocol is an unpublished draft profile\nScope: structure and recorded semantic relations only; no authentication, service, concurrency, durability or interoperability runtime tested\n"
+        }
+      },
+      "entry_point": "docs/architecture/validation/validate_protocol.py"
+    },
+    {
+      "i": 1,
+      "r": {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "a7a6c0",
+          "wall_time_seconds": 5.931229125,
+          "exit_code": 0,
+          "original_token_count": 71,
+          "output": "PASS: 9 real input-answer byte fixtures, 112 rejected answer mutations, 3 input discovery projections, 10 rejected discovery mutations, 9 protocol answer_ref byte bindings, 1 protocol input wait bindings; local schema/JCS/recorded relations only, no live authority or commit proof\n"
+        }
+      },
+      "entry_point": "docs/architecture/validation/validate_input_answers.py"
+    },
+    {
+      "i": 2,
+      "r": {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "f3e980",
+          "wall_time_seconds": 1.120200209,
+          "exit_code": 0,
+          "original_token_count": 110,
+          "output": "PASS: 2 ES256 public vectors; 3 canonical vectors; 23 negative checks\nScope: constructed bytes, signatures and pinned bindings; no live identity, key custody, revocation or interoperability tested\nPASS: 100 transport/closure vectors; 228 directed invalid mutations\nPASS: 8 request-sequence traces; 12 directed invalid mutations\nScope: bounded recorded structures and bindings; no network, storage, authentication or byte transfer executed\n"
+        }
+      },
+      "entry_point": "docs/architecture/validation/validate_transport.py"
+    },
+    {
+      "i": 3,
+      "r": {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "f077a3",
+          "wall_time_seconds": 1.15e-05,
+          "exit_code": 0,
+          "original_token_count": 33,
+          "output": "PASS: 5 valid examples; 9 invalid examples rejected\nScope: schema and document fixture semantics only; runtime behavior not tested\n"
+        }
+      },
+      "entry_point": "docs/architecture/validation/validate.py"
+    },
+    {
+      "i": 4,
+      "r": {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "a80027",
+          "wall_time_seconds": 0.9005315,
+          "exit_code": 0,
+          "original_token_count": 33,
+          "output": "Offline lease corrections: 2 valid traces, 11 invalid mutations passed; bill authenticity and durable delivery are not exercised.\n"
+        }
+      },
+      "entry_point": "docs/architecture/validation/validate_lease.py"
+    },
+    {
+      "i": 5,
+      "r": {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "9d9d8e",
+          "wall_time_seconds": 1.310517916,
+          "exit_code": 0,
+          "original_token_count": 55,
+          "output": "PASS: 13 targeted release/run cases; replay, rollback work and reopen use the independent old approval\nScope: recorded identities, evidence and refusal rules; no live UI, environment isolation or durable recovery tested\n"
+        }
+      },
+      "entry_point": "docs/architecture/validation/validate_release_recovery.py"
+    },
+    {
+      "i": 6,
+      "r": {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "ef0288",
+          "wall_time_seconds": 7.75e-06,
+          "exit_code": 0,
+          "original_token_count": 50,
+          "output": "PASS: 2 ES256 public vectors; 3 canonical vectors; 23 negative checks\nScope: constructed bytes, signatures and pinned bindings; no live identity, key custody, revocation or interoperability tested\n"
+        }
+      },
+      "entry_point": "docs/architecture/validation/verify_transport_proofs.mjs"
+    },
+    {
+      "i": 7,
+      "r": {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "13fe8d",
+          "wall_time_seconds": 8e-06,
+          "exit_code": 0,
+          "original_token_count": 59,
+          "output": "PASS: 2 RPC descriptors; 16 Call requests; 22 Call responses; 57 ChannelFrame JSON round trips\nScope: generated Protobuf bytes preserve recorded JSON; no service, metadata authentication, ingress rejection or fault recovery executed\n"
+        }
+      },
+      "entry_point": "docs/architecture/validation/check_grpc_envelope.py"
+    }
+  ]
+}

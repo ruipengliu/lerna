@@ -1,0 +1,2763 @@
+{
+  "format": "input-answer-fixtures/1",
+  "description": "Static exact-byte examples and recorded request/approval/queue premises; not runtime authorization or atomic consume evidence. Negative mutations recompute content hash/length unless explicitly mutated.",
+  "valid_answers": [
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "request": {
+        "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "revision": 2,
+        "kind": "clarification",
+        "task_ref": {
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+        },
+        "schema": {
+          "fields": [
+            {
+              "name": "directory",
+              "label": "Directory",
+              "type": "text",
+              "required": true,
+              "max_length": 512
+            }
+          ]
+        },
+        "question_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+          "version": 1,
+          "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "deadline": "2026-09-26T00:10:00Z",
+        "required_content_refs": [
+          {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+            "version": 1,
+            "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+            "media_type": "text/plain",
+            "byte_length": 16
+          }
+        ],
+        "allowed_actions": [
+          "submit"
+        ],
+        "state": "open"
+      },
+      "request_ref": {
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "revision": 2
+      },
+      "request_gaps": [],
+      "name": "directory-text",
+      "body_path": "directory-text.json",
+      "answer_ref": {
+        "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+        "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+        "content_id": "answer_0db52f4076c082518412afd3dd3576e2",
+        "version": 1,
+        "hash": "sha256:eb22c42cb93fae427f313e98591d2043ee5a0ebf340a0970d1dc0be012ecd267",
+        "media_type": "application/json",
+        "byte_length": 95
+      },
+      "queue": {
+        "request": {
+          "command_id": "interaction_input_e974420583af6a6e70a30253f13e5fe3",
+          "method": "interaction.input",
+          "target_id": "surface_763cdc62a869262b6ff432a40eae29a0",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "input_id": "input_c96c6d5be8d08a12e7b5cdc1b207fa6b",
+            "surface_id": "surface_763cdc62a869262b6ff432a40eae29a0",
+            "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+            "request_revision": 2,
+            "answer_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "answer_0db52f4076c082518412afd3dd3576e2",
+              "version": 1,
+              "hash": "sha256:eb22c42cb93fae427f313e98591d2043ee5a0ebf340a0970d1dc0be012ecd267",
+              "media_type": "application/json",
+              "byte_length": 95
+            },
+            "preview_refs": [
+              {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+                "version": 1,
+                "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ]
+          }
+        },
+        "submission": {
+          "input_id": "input_c96c6d5be8d08a12e7b5cdc1b207fa6b",
+          "surface_id": "surface_763cdc62a869262b6ff432a40eae29a0",
+          "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+          "request_revision": 2,
+          "answer_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "answer_0db52f4076c082518412afd3dd3576e2",
+            "version": 1,
+            "hash": "sha256:eb22c42cb93fae427f313e98591d2043ee5a0ebf340a0970d1dc0be012ecd267",
+            "media_type": "application/json",
+            "byte_length": 95
+          },
+          "preview_refs": [
+            {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+              "version": 1,
+              "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+              "media_type": "text/plain",
+              "byte_length": 16
+            }
+          ],
+          "revision": 1,
+          "target_command_id": "answer_command_9bb98eb61e0d67ebe978881926600623",
+          "state": "queued",
+          "withdrawal_requested": false
+        }
+      },
+      "delivery_command": {
+        "command_id": "answer_command_9bb98eb61e0d67ebe978881926600623",
+        "method": "task.input",
+        "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+        "expires_at": "2026-09-26T00:10:00Z",
+        "payload": {
+          "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+          "request_revision": 2,
+          "answer_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "answer_0db52f4076c082518412afd3dd3576e2",
+            "version": 1,
+            "hash": "sha256:eb22c42cb93fae427f313e98591d2043ee5a0ebf340a0970d1dc0be012ecd267",
+            "media_type": "application/json",
+            "byte_length": 95
+          },
+          "preview_refs": [
+            {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+              "version": 1,
+              "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+              "media_type": "text/plain",
+              "byte_length": 16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "request": {
+        "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "revision": 2,
+        "kind": "clarification",
+        "task_ref": {
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+        },
+        "schema": {
+          "fields": [
+            {
+              "name": "directory",
+              "label": "报告目录",
+              "type": "choice",
+              "required": true,
+              "options": [
+                {
+                  "id": "personal",
+                  "label": "个人报告"
+                },
+                {
+                  "id": "shared",
+                  "label": "共享报告"
+                }
+              ]
+            }
+          ]
+        },
+        "question_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+          "version": 1,
+          "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "deadline": "2026-09-26T00:10:00Z",
+        "required_content_refs": [
+          {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+            "version": 1,
+            "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+            "media_type": "text/plain",
+            "byte_length": 16
+          }
+        ],
+        "allowed_actions": [
+          "submit"
+        ],
+        "state": "open"
+      },
+      "request_ref": {
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "revision": 2
+      },
+      "request_gaps": [],
+      "name": "directory-choice",
+      "body_path": "directory-choice.json",
+      "answer_ref": {
+        "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+        "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+        "content_id": "answer_1adb00242c5648587c8b1b6c724bbf03",
+        "version": 1,
+        "hash": "sha256:0262050f3317aaee291fd7bce26e72a2c6339af636c32ffd5ea7ad16e6b5569c",
+        "media_type": "application/json",
+        "byte_length": 80
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "request": {
+        "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "revision": 2,
+        "kind": "clarification",
+        "task_ref": {
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+        },
+        "schema": {
+          "fields": [
+            {
+              "name": "label",
+              "label": "三字符标签",
+              "type": "text",
+              "required": true,
+              "max_length": 3
+            },
+            {
+              "name": "count",
+              "label": "安全整数",
+              "type": "integer",
+              "required": true,
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            {
+              "name": "enabled",
+              "label": "启用",
+              "type": "boolean",
+              "required": true
+            },
+            {
+              "name": "color",
+              "label": "颜色",
+              "type": "choice",
+              "required": true,
+              "options": [
+                {
+                  "id": "red",
+                  "label": "红色"
+                },
+                {
+                  "id": "blue",
+                  "label": "蓝色"
+                }
+              ]
+            },
+            {
+              "name": "checks",
+              "label": "检查项目",
+              "type": "choices",
+              "required": true,
+              "options": [
+                {
+                  "id": "zeta",
+                  "label": "最后命名，最先声明"
+                },
+                {
+                  "id": "alpha",
+                  "label": "第一项"
+                },
+                {
+                  "id": "beta",
+                  "label": "第二项"
+                }
+              ],
+              "max_choices": 2
+            },
+            {
+              "name": "note",
+              "label": "可选备注",
+              "type": "text",
+              "required": false,
+              "max_length": 30
+            },
+            {
+              "name": "small",
+              "label": "有界整数",
+              "type": "integer",
+              "required": true,
+              "minimum": -2,
+              "maximum": 2
+            }
+          ]
+        },
+        "question_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+          "version": 1,
+          "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "deadline": "2026-09-26T00:10:00Z",
+        "required_content_refs": [
+          {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+            "version": 1,
+            "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+            "media_type": "text/plain",
+            "byte_length": 16
+          }
+        ],
+        "allowed_actions": [
+          "submit"
+        ],
+        "state": "open"
+      },
+      "request_ref": {
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "revision": 2
+      },
+      "request_gaps": [],
+      "name": "five-types",
+      "body_path": "five-types.json",
+      "answer_ref": {
+        "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+        "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+        "content_id": "answer_ae5b75489b2790bf6df2aa50e9f239bb",
+        "version": 1,
+        "hash": "sha256:6038d23b66237d0b644885dff62739319a5fbcbb13a64a31cff28d8cab090d9a",
+        "media_type": "application/json",
+        "byte_length": 169
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "request": {
+        "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "revision": 2,
+        "kind": "clarification",
+        "task_ref": {
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+        },
+        "schema": {
+          "fields": [
+            {
+              "name": "label",
+              "label": "三字符标签",
+              "type": "text",
+              "required": true,
+              "max_length": 3
+            },
+            {
+              "name": "count",
+              "label": "安全整数",
+              "type": "integer",
+              "required": true,
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            {
+              "name": "enabled",
+              "label": "启用",
+              "type": "boolean",
+              "required": true
+            },
+            {
+              "name": "color",
+              "label": "颜色",
+              "type": "choice",
+              "required": true,
+              "options": [
+                {
+                  "id": "red",
+                  "label": "红色"
+                },
+                {
+                  "id": "blue",
+                  "label": "蓝色"
+                }
+              ]
+            },
+            {
+              "name": "checks",
+              "label": "检查项目",
+              "type": "choices",
+              "required": true,
+              "options": [
+                {
+                  "id": "zeta",
+                  "label": "最后命名，最先声明"
+                },
+                {
+                  "id": "alpha",
+                  "label": "第一项"
+                },
+                {
+                  "id": "beta",
+                  "label": "第二项"
+                }
+              ],
+              "max_choices": 2
+            },
+            {
+              "name": "note",
+              "label": "可选备注",
+              "type": "text",
+              "required": false,
+              "max_length": 30
+            },
+            {
+              "name": "small",
+              "label": "有界整数",
+              "type": "integer",
+              "required": true,
+              "minimum": -2,
+              "maximum": 2
+            }
+          ]
+        },
+        "question_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+          "version": 1,
+          "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "deadline": "2026-09-26T00:10:00Z",
+        "required_content_refs": [
+          {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+            "version": 1,
+            "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+            "media_type": "text/plain",
+            "byte_length": 16
+          }
+        ],
+        "allowed_actions": [
+          "submit"
+        ],
+        "state": "open"
+      },
+      "request_ref": {
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "revision": 2
+      },
+      "request_gaps": [],
+      "name": "five-types-empty-selection",
+      "body_path": "five-types-empty-selection.json",
+      "answer_ref": {
+        "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+        "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+        "content_id": "answer_3d3ad17c48f7fd89ddec4c28e32b42e3",
+        "version": 1,
+        "hash": "sha256:52a9858b8715e0a873c3d0ea7297da8728c00f4c2345d1101ca15d51d741f20a",
+        "media_type": "application/json",
+        "byte_length": 160
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "request": {
+        "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "revision": 2,
+        "kind": "clarification",
+        "task_ref": {
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+        },
+        "schema": {
+          "fields": [
+            {
+              "name": "directory",
+              "label": "Directory",
+              "type": "text",
+              "required": true,
+              "max_length": 512
+            }
+          ]
+        },
+        "question_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+          "version": 1,
+          "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "deadline": "2026-09-26T00:10:00Z",
+        "required_content_refs": [
+          {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+            "version": 1,
+            "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+            "media_type": "text/plain",
+            "byte_length": 16
+          }
+        ],
+        "allowed_actions": [
+          "submit"
+        ],
+        "state": "open"
+      },
+      "request_ref": {
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "revision": 2
+      },
+      "request_gaps": [],
+      "name": "text-preserves-whitespace",
+      "body_path": "text-preserves-whitespace.json",
+      "answer_ref": {
+        "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+        "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+        "content_id": "answer_99e011cf773a8e6bc456e8091e2f0c28",
+        "version": 1,
+        "hash": "sha256:3f3b549f1bf05b803792481d61c6f214a774c44d726627583018a329d2ac6666",
+        "media_type": "application/json",
+        "byte_length": 89
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "request": {
+        "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "revision": 2,
+        "kind": "clarification",
+        "task_ref": {
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+        },
+        "schema": {
+          "fields": [
+            {
+              "name": "directory",
+              "label": "Directory",
+              "type": "text",
+              "required": true,
+              "max_length": 512
+            }
+          ]
+        },
+        "question_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+          "version": 1,
+          "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "deadline": "2026-09-26T00:10:00Z",
+        "required_content_refs": [
+          {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+            "version": 1,
+            "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+            "media_type": "text/plain",
+            "byte_length": 16
+          }
+        ],
+        "allowed_actions": [
+          "submit"
+        ],
+        "state": "open"
+      },
+      "request_ref": {
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "revision": 2
+      },
+      "request_gaps": [],
+      "name": "text-empty",
+      "body_path": "text-empty.json",
+      "answer_ref": {
+        "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+        "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+        "content_id": "answer_522eed5e02c3bc5d470bec27a814dc36",
+        "version": 1,
+        "hash": "sha256:e6d0cf5ae2831fe56372646087abf8b6f0548bedab8307d96cb59d0e05885eb0",
+        "media_type": "application/json",
+        "byte_length": 74
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "request": {
+        "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "revision": 2,
+        "kind": "clarification",
+        "task_ref": {
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+        },
+        "schema": {
+          "fields": [
+            {
+              "name": "directory",
+              "label": "Directory",
+              "type": "text",
+              "required": false,
+              "max_length": 512
+            }
+          ]
+        },
+        "question_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+          "version": 1,
+          "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "deadline": "2026-09-26T00:10:00Z",
+        "required_content_refs": [
+          {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+            "version": 1,
+            "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+            "media_type": "text/plain",
+            "byte_length": 16
+          }
+        ],
+        "allowed_actions": [
+          "submit"
+        ],
+        "state": "open"
+      },
+      "request_ref": {
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "revision": 2
+      },
+      "request_gaps": [],
+      "name": "optional-field-omitted",
+      "body_path": "optional-field-omitted.json",
+      "answer_ref": {
+        "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+        "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+        "content_id": "answer_3a7bfc448264f75ed6d6547790ee5c81",
+        "version": 1,
+        "hash": "sha256:610fb40046a0e36623010d92538e97d37bb8ef9647616cb8b0c662dfc8da7200",
+        "media_type": "application/json",
+        "byte_length": 60
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "request": {
+        "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "revision": 2,
+        "kind": "application",
+        "schema": {
+          "fields": [
+            {
+              "name": "label",
+              "label": "三字符标签",
+              "type": "text",
+              "required": true,
+              "max_length": 3
+            },
+            {
+              "name": "count",
+              "label": "安全整数",
+              "type": "integer",
+              "required": true,
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            {
+              "name": "enabled",
+              "label": "启用",
+              "type": "boolean",
+              "required": true
+            },
+            {
+              "name": "color",
+              "label": "颜色",
+              "type": "choice",
+              "required": true,
+              "options": [
+                {
+                  "id": "red",
+                  "label": "红色"
+                },
+                {
+                  "id": "blue",
+                  "label": "蓝色"
+                }
+              ]
+            },
+            {
+              "name": "checks",
+              "label": "检查项目",
+              "type": "choices",
+              "required": true,
+              "options": [
+                {
+                  "id": "zeta",
+                  "label": "最后命名，最先声明"
+                },
+                {
+                  "id": "alpha",
+                  "label": "第一项"
+                },
+                {
+                  "id": "beta",
+                  "label": "第二项"
+                }
+              ],
+              "max_choices": 2
+            },
+            {
+              "name": "note",
+              "label": "可选备注",
+              "type": "text",
+              "required": false,
+              "max_length": 30
+            },
+            {
+              "name": "small",
+              "label": "有界整数",
+              "type": "integer",
+              "required": true,
+              "minimum": -2,
+              "maximum": 2
+            }
+          ]
+        },
+        "question_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+          "version": 1,
+          "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "deadline": "2026-09-26T00:10:00Z",
+        "required_content_refs": [
+          {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+            "version": 1,
+            "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+            "media_type": "text/plain",
+            "byte_length": 16
+          }
+        ],
+        "allowed_actions": [
+          "submit"
+        ],
+        "state": "open"
+      },
+      "request_ref": {
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "revision": 2
+      },
+      "request_gaps": [],
+      "name": "application-fields",
+      "body_path": "application-fields.json",
+      "answer_ref": {
+        "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+        "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+        "content_id": "answer_931b0811c50f6b97e12e48dbf661955f",
+        "version": 1,
+        "hash": "sha256:6038d23b66237d0b644885dff62739319a5fbcbb13a64a31cff28d8cab090d9a",
+        "media_type": "application/json",
+        "byte_length": 169
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:04Z",
+      "request": {
+        "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "revision": 2,
+        "kind": "acceptance",
+        "task_ref": {
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+        },
+        "schema": {
+          "fields": [
+            {
+              "name": "decision",
+              "label": "验收该报告版本",
+              "type": "choice",
+              "required": true,
+              "options": [
+                {
+                  "id": "accept",
+                  "label": "确认接受"
+                }
+              ]
+            }
+          ]
+        },
+        "question_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+          "version": 1,
+          "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+          "media_type": "text/plain",
+          "byte_length": 16
+        },
+        "deadline": "2026-09-26T00:10:00Z",
+        "required_content_refs": [
+          {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+            "version": 1,
+            "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+            "media_type": "text/plain",
+            "byte_length": 16
+          }
+        ],
+        "allowed_actions": [
+          "accept"
+        ],
+        "state": "open",
+        "goal_revision": 1,
+        "candidate_hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+        "candidate_ref": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+          "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+          "version": 1,
+          "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+          "media_type": "text/plain",
+          "byte_length": 16
+        }
+      },
+      "request_ref": {
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+        "revision": 2
+      },
+      "request_gaps": [],
+      "confirmation": {
+        "confirmation_id": "confirmation_93cdccc66f8c7f8e670f513593663b24",
+        "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+        "revision": 2,
+        "consumer_method": "task.accept_result",
+        "consumer_command_id": "task_accept_result_70f34c3179446425839c9546d04f5f2e",
+        "consumer_target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+        "consumer_command": {
+          "command_id": "task_accept_result_70f34c3179446425839c9546d04f5f2e",
+          "method": "task.accept_result",
+          "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+            "request_revision": 2,
+            "candidate_hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+            "goal_revision": 1,
+            "decision": "accept",
+            "confirmation_ref": {
+              "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+              "id": "confirmation_93cdccc66f8c7f8e670f513593663b24",
+              "revision": 2
+            }
+          }
+        },
+        "intent_hash": "sha256:db6a14a2053d1f638753599796a5eb0abafac0ea99bd7675bc1babb681a9f76f",
+        "challenge": "sha256:e6852a059307fa7ce990435bdb13daf2fe570fb8e9677ad599204f5377e4b472",
+        "expires_at": "2026-09-26T00:05:00Z",
+        "state": "approved",
+        "decided_at": "2026-09-26T00:00:02Z",
+        "decided_by": "actor_50c9c4aeb40b5b206b6d98f516f8b8c0",
+        "trusted_user_session_ref": {
+          "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "id": "session_ee45623509c368fecef7b4b0d8f49980",
+          "revision": 1
+        }
+      },
+      "delivery_command": {
+        "command_id": "task_accept_result_70f34c3179446425839c9546d04f5f2e",
+        "method": "task.accept_result",
+        "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+        "expires_at": "2026-09-26T00:10:00Z",
+        "payload": {
+          "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+          "request_revision": 2,
+          "candidate_hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+          "goal_revision": 1,
+          "decision": "accept",
+          "confirmation_ref": {
+            "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+            "id": "confirmation_93cdccc66f8c7f8e670f513593663b24",
+            "revision": 2
+          }
+        }
+      },
+      "name": "acceptance-approved",
+      "body_path": "acceptance-approved.json",
+      "answer_ref": {
+        "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+        "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+        "content_id": "answer_d151f4e334bc8eb4db077fb1e555ab4c",
+        "version": 1,
+        "hash": "sha256:abd04122b47476a85505eedaf497f427dece6ead3e3452c5fc06d96a2a87eedb",
+        "media_type": "application/json",
+        "byte_length": 649
+      },
+      "queue": {
+        "request": {
+          "command_id": "interaction_input_ae346b3af8dbe14ed6f8fbdbcadea06b",
+          "method": "interaction.input",
+          "target_id": "surface_763cdc62a869262b6ff432a40eae29a0",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "input_id": "input_ae346b3af8dbe14ed6f8fbdbcadea06b",
+            "surface_id": "surface_763cdc62a869262b6ff432a40eae29a0",
+            "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+            "request_revision": 2,
+            "answer_ref": {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "answer_d151f4e334bc8eb4db077fb1e555ab4c",
+              "version": 1,
+              "hash": "sha256:abd04122b47476a85505eedaf497f427dece6ead3e3452c5fc06d96a2a87eedb",
+              "media_type": "application/json",
+              "byte_length": 649
+            },
+            "preview_refs": [
+              {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+                "version": 1,
+                "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+                "media_type": "text/plain",
+                "byte_length": 16
+              }
+            ]
+          }
+        },
+        "submission": {
+          "input_id": "input_ae346b3af8dbe14ed6f8fbdbcadea06b",
+          "surface_id": "surface_763cdc62a869262b6ff432a40eae29a0",
+          "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+          "request_revision": 2,
+          "answer_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "answer_d151f4e334bc8eb4db077fb1e555ab4c",
+            "version": 1,
+            "hash": "sha256:abd04122b47476a85505eedaf497f427dece6ead3e3452c5fc06d96a2a87eedb",
+            "media_type": "application/json",
+            "byte_length": 649
+          },
+          "preview_refs": [
+            {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "report_845e91831319e89c4d656bdb80c278ac",
+              "version": 1,
+              "hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+              "media_type": "text/plain",
+              "byte_length": 16
+            }
+          ],
+          "revision": 1,
+          "target_command_id": "task_accept_result_70f34c3179446425839c9546d04f5f2e",
+          "state": "queued",
+          "withdrawal_requested": false
+        }
+      }
+    }
+  ],
+  "invalid_answers": [
+    {
+      "name": "plain text media",
+      "base": "directory-text",
+      "expect": "answer_ref_schema",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/answer_ref/media_type",
+          "value": "text/plain"
+        }
+      ]
+    },
+    {
+      "name": "media parameters are not exact media type",
+      "base": "directory-text",
+      "expect": "answer_ref_schema",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/answer_ref/media_type",
+          "value": "application/json; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "name": "wrong content hash",
+      "base": "directory-text",
+      "expect": "answer_bytes",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/answer_ref/hash",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "wrong byte length",
+      "base": "directory-text",
+      "expect": "answer_bytes",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/answer_ref/byte_length",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "declared byte bound",
+      "base": "directory-text",
+      "expect": "answer_ref_schema",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/answer_ref/byte_length",
+          "value": 1048577
+        }
+      ]
+    },
+    {
+      "name": "duplicate top key",
+      "base": "directory-text",
+      "expect": "answer_json",
+      "raw_utf8": "{\"format\":\"input-answer/1\",\"format\":\"input-answer/1\",\"action_id\":\"submit\",\"fields\":{}}"
+    },
+    {
+      "name": "duplicate field key",
+      "base": "directory-text",
+      "expect": "answer_json",
+      "raw_utf8": "{\"format\":\"input-answer/1\",\"action_id\":\"submit\",\"fields\":{\"directory\":\"a\",\"directory\":\"b\"}}"
+    },
+    {
+      "name": "NaN is not JSON",
+      "base": "directory-text",
+      "expect": "answer_json",
+      "raw_utf8": "{\"format\":\"input-answer/1\",\"action_id\":\"submit\",\"fields\":{\"directory\":NaN}}"
+    },
+    {
+      "name": "Infinity is not JSON",
+      "base": "directory-text",
+      "expect": "answer_json",
+      "raw_utf8": "{\"format\":\"input-answer/1\",\"action_id\":\"submit\",\"fields\":{\"directory\":Infinity}}"
+    },
+    {
+      "name": "overflowed exponent",
+      "base": "directory-text",
+      "expect": "answer_number",
+      "raw_utf8": "{\"format\":\"input-answer/1\",\"action_id\":\"submit\",\"fields\":{\"directory\":1e400}}"
+    },
+    {
+      "name": "unsafe positive integer",
+      "base": "directory-text",
+      "expect": "answer_number",
+      "raw_utf8": "{\"format\":\"input-answer/1\",\"action_id\":\"submit\",\"fields\":{\"directory\":9007199254740992}}"
+    },
+    {
+      "name": "unsafe negative integer",
+      "base": "directory-text",
+      "expect": "answer_number",
+      "raw_utf8": "{\"format\":\"input-answer/1\",\"action_id\":\"submit\",\"fields\":{\"directory\":-9007199254740992}}"
+    },
+    {
+      "name": "huge integer rejected before float conversion",
+      "base": "directory-text",
+      "expect": "answer_number",
+      "raw_utf8": "{\"format\":\"input-answer/1\",\"action_id\":\"submit\",\"fields\":{\"directory\":9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999}}"
+    },
+    {
+      "name": "lone high surrogate",
+      "base": "directory-text",
+      "expect": "answer_unicode",
+      "raw_utf8": "{\"format\":\"input-answer/1\",\"action_id\":\"submit\",\"fields\":{\"directory\":\"\\ud800\"}}"
+    },
+    {
+      "name": "lone low surrogate",
+      "base": "directory-text",
+      "expect": "answer_unicode",
+      "raw_utf8": "{\"format\":\"input-answer/1\",\"action_id\":\"submit\",\"fields\":{\"directory\":\"\\udfff\"}}"
+    },
+    {
+      "name": "surrogate object key",
+      "base": "directory-text",
+      "expect": "answer_unicode",
+      "raw_utf8": "{\"format\":\"input-answer/1\",\"action_id\":\"submit\",\"fields\":{\"\\ud800\":\"x\"}}"
+    },
+    {
+      "name": "noncanonical key order",
+      "base": "directory-text",
+      "expect": "answer_canonical",
+      "raw_utf8": "{\"format\":\"input-answer/1\",\"action_id\":\"submit\",\"fields\":{\"directory\":\"x\"}}"
+    },
+    {
+      "name": "noncanonical whitespace",
+      "base": "directory-text",
+      "expect": "answer_canonical",
+      "raw_utf8": "{ \"action_id\":\"submit\",\"fields\":{\"directory\":\"x\"},\"format\":\"input-answer/1\"}"
+    },
+    {
+      "name": "noncanonical escaped scalar",
+      "base": "directory-text",
+      "expect": "answer_canonical",
+      "raw_utf8": "{\"action_id\":\"submit\",\"fields\":{\"directory\":\"\\u0061\"},\"format\":\"input-answer/1\"}"
+    },
+    {
+      "name": "noncanonical negative zero",
+      "base": "directory-text",
+      "expect": "answer_canonical",
+      "raw_utf8": "{\"action_id\":\"submit\",\"fields\":{\"small\":-0},\"format\":\"input-answer/1\"}"
+    },
+    {
+      "name": "JSON root is an array",
+      "base": "directory-text",
+      "expect": "answer_schema",
+      "raw_utf8": "[]"
+    },
+    {
+      "name": "invalid JSON syntax",
+      "base": "directory-text",
+      "expect": "answer_json",
+      "raw_utf8": "{\"format\":"
+    },
+    {
+      "name": "UTF8 BOM",
+      "base": "directory-text",
+      "expect": "answer_encoding",
+      "raw_hex": "efbbbf7b7d"
+    },
+    {
+      "name": "invalid UTF8",
+      "base": "directory-text",
+      "expect": "answer_encoding",
+      "raw_hex": "fffe"
+    },
+    {
+      "name": "overlong UTF8",
+      "base": "directory-text",
+      "expect": "answer_encoding",
+      "raw_hex": "c0af"
+    },
+    {
+      "name": "encoded surrogate bytes",
+      "base": "directory-text",
+      "expect": "answer_encoding",
+      "raw_hex": "eda080"
+    },
+    {
+      "name": "actual one MiB bound",
+      "base": "directory-text",
+      "expect": "answer_size",
+      "oversize": true
+    },
+    {
+      "name": "unknown top member",
+      "base": "five-types",
+      "expect": "answer_schema",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/task_id",
+          "value": "task_0ebb429fa86d481c2630fac53db1c91c"
+        }
+      ]
+    },
+    {
+      "name": "wrong format",
+      "base": "five-types",
+      "expect": "answer_schema",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/format",
+          "value": "input-answer/2"
+        }
+      ]
+    },
+    {
+      "name": "null optional field",
+      "base": "five-types",
+      "expect": "answer_schema",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/note",
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "object field",
+      "base": "five-types",
+      "expect": "answer_schema",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/note",
+          "value": {}
+        }
+      ]
+    },
+    {
+      "name": "fraction field",
+      "base": "five-types",
+      "expect": "answer_schema",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/count",
+          "value": 1.5
+        }
+      ]
+    },
+    {
+      "name": "non-string choices item",
+      "base": "five-types",
+      "expect": "answer_schema",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/checks",
+          "value": [
+            true
+          ]
+        }
+      ]
+    },
+    {
+      "name": "duplicate selected id",
+      "base": "five-types",
+      "expect": "answer_schema",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/checks",
+          "value": [
+            "beta",
+            "beta"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "required field omitted",
+      "base": "five-types",
+      "expect": "answer_required",
+      "body_edits": [
+        {
+          "op": "remove",
+          "path": "/fields/count"
+        }
+      ]
+    },
+    {
+      "name": "unknown input field",
+      "base": "five-types",
+      "expect": "answer_fields",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/extra",
+          "value": "x"
+        }
+      ]
+    },
+    {
+      "name": "unknown action",
+      "base": "five-types",
+      "expect": "answer_action",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/action_id",
+          "value": "cancel"
+        }
+      ]
+    },
+    {
+      "name": "text receives boolean",
+      "base": "five-types",
+      "expect": "answer_type",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/label",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "integer receives boolean",
+      "base": "five-types",
+      "expect": "answer_type",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/count",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "integer receives decimal text",
+      "base": "five-types",
+      "expect": "answer_type",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/count",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "name": "boolean receives integer",
+      "base": "five-types",
+      "expect": "answer_type",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/enabled",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "boolean receives text",
+      "base": "five-types",
+      "expect": "answer_type",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/enabled",
+          "value": "false"
+        }
+      ]
+    },
+    {
+      "name": "choice receives array",
+      "base": "five-types",
+      "expect": "answer_type",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/color",
+          "value": [
+            "blue"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "choices receives scalar",
+      "base": "five-types",
+      "expect": "answer_type",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/checks",
+          "value": "beta"
+        }
+      ]
+    },
+    {
+      "name": "Unicode code point bound",
+      "base": "five-types",
+      "expect": "answer_text_length",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/label",
+          "value": "😀éx"
+        }
+      ]
+    },
+    {
+      "name": "integer below minimum",
+      "base": "five-types",
+      "expect": "answer_integer_range",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/small",
+          "value": -3
+        }
+      ]
+    },
+    {
+      "name": "integer above maximum",
+      "base": "five-types",
+      "expect": "answer_integer_range",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/small",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "name": "choice label is not id",
+      "base": "five-types",
+      "expect": "answer_option",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/color",
+          "value": "蓝色"
+        }
+      ]
+    },
+    {
+      "name": "choices label is not id",
+      "base": "five-types",
+      "expect": "answer_option",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/checks",
+          "value": [
+            "第二项"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unknown option",
+      "base": "five-types",
+      "expect": "answer_option",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/color",
+          "value": "green"
+        }
+      ]
+    },
+    {
+      "name": "selection maximum",
+      "base": "five-types",
+      "expect": "answer_choices",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/checks",
+          "value": [
+            "zeta",
+            "alpha",
+            "beta"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "declaration order differs from lexical order",
+      "base": "five-types",
+      "expect": "answer_choices_order",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/checks",
+          "value": [
+            "beta",
+            "zeta"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stale request revision",
+      "base": "five-types",
+      "expect": "answer_request_binding",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request_ref/revision",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "wrong request owner",
+      "base": "five-types",
+      "expect": "answer_request_binding",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request_ref/owner_id",
+          "value": "orchestrator_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ]
+    },
+    {
+      "name": "wrong request id",
+      "base": "five-types",
+      "expect": "answer_request_binding",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request_ref/id",
+          "value": "request_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ]
+    },
+    {
+      "name": "task belongs to other owner",
+      "base": "five-types",
+      "expect": "answer_request_binding",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/task_ref/orchestrator_id",
+          "value": "orchestrator_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ]
+    },
+    {
+      "name": "already consumed request",
+      "base": "five-types",
+      "expect": "answer_request_state",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/state",
+          "value": "consumed"
+        }
+      ]
+    },
+    {
+      "name": "superseded request",
+      "base": "five-types",
+      "expect": "answer_request_state",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/state",
+          "value": "superseded"
+        }
+      ]
+    },
+    {
+      "name": "expired request deadline",
+      "base": "five-types",
+      "expect": "answer_request_window",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/deadline",
+          "value": "2026-09-26T00:00:04Z"
+        }
+      ]
+    },
+    {
+      "name": "incomplete request disclosure",
+      "base": "five-types",
+      "expect": "answer_disclosure",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request_gaps",
+          "value": [
+            "question not disclosed"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "type-associated constraint forbidden",
+      "base": "five-types",
+      "expect": "answer_request_schema",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/schema/fields/2/max_length",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "integer declaration unsafe",
+      "base": "five-types",
+      "expect": "answer_request_schema",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/schema/fields/1/minimum",
+          "value": -9007199254740992
+        }
+      ]
+    },
+    {
+      "name": "reversed integer declaration",
+      "base": "five-types",
+      "expect": "request_fields",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/schema/fields/6/minimum",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "name": "duplicate field names",
+      "base": "five-types",
+      "expect": "request_fields",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/schema/fields/5/name",
+          "value": "label"
+        }
+      ]
+    },
+    {
+      "name": "duplicate option ids",
+      "base": "five-types",
+      "expect": "request_fields",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/schema/fields/3/options/1/id",
+          "value": "red"
+        }
+      ]
+    },
+    {
+      "name": "max choices exceeds declaration",
+      "base": "five-types",
+      "expect": "request_fields",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/schema/fields/4/max_choices",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "name": "action ids duplicate",
+      "base": "five-types",
+      "expect": "answer_request_schema",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/allowed_actions",
+          "value": [
+            "submit",
+            "submit"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "missing text bound",
+      "base": "five-types",
+      "expect": "answer_request_schema",
+      "context_edits": [
+        {
+          "op": "remove",
+          "path": "/request/schema/fields/0/max_length"
+        }
+      ]
+    },
+    {
+      "name": "directory-text forbids consumer",
+      "base": "directory-text",
+      "expect": "answer_consumer",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/action_id",
+          "value": "accept"
+        },
+        {
+          "op": "set",
+          "path": "/fields",
+          "value": {
+            "decision": "accept"
+          }
+        },
+        {
+          "op": "set",
+          "path": "/consumer_command",
+          "value": {
+            "command_id": "task_accept_result_70f34c3179446425839c9546d04f5f2e",
+            "method": "task.accept_result",
+            "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "expires_at": "2026-09-26T00:10:00Z",
+            "payload": {
+              "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+              "request_revision": 2,
+              "candidate_hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+              "goal_revision": 1,
+              "decision": "accept",
+              "confirmation_ref": {
+                "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+                "id": "confirmation_93cdccc66f8c7f8e670f513593663b24",
+                "revision": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "application-fields forbids consumer",
+      "base": "application-fields",
+      "expect": "answer_consumer",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/action_id",
+          "value": "accept"
+        },
+        {
+          "op": "set",
+          "path": "/fields",
+          "value": {
+            "decision": "accept"
+          }
+        },
+        {
+          "op": "set",
+          "path": "/consumer_command",
+          "value": {
+            "command_id": "task_accept_result_70f34c3179446425839c9546d04f5f2e",
+            "method": "task.accept_result",
+            "target_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+            "expires_at": "2026-09-26T00:10:00Z",
+            "payload": {
+              "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+              "request_revision": 2,
+              "candidate_hash": "sha256:5b20204fff3e3af9f20f3f9141ce1eb26fb687aad894d951290f8f211b615678",
+              "goal_revision": 1,
+              "decision": "accept",
+              "confirmation_ref": {
+                "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+                "id": "confirmation_93cdccc66f8c7f8e670f513593663b24",
+                "revision": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "acceptance needs consumer",
+      "base": "acceptance-approved",
+      "expect": "answer_consumer",
+      "body_edits": [
+        {
+          "op": "remove",
+          "path": "/consumer_command"
+        }
+      ]
+    },
+    {
+      "name": "consumer method replaced",
+      "base": "acceptance-approved",
+      "expect": "answer_schema",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/method",
+          "value": "task.input"
+        }
+      ]
+    },
+    {
+      "name": "consumer command id replaced",
+      "base": "acceptance-approved",
+      "expect": "answer_consumer_identity",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/command_id",
+          "value": "task_accept_result_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ]
+    },
+    {
+      "name": "consumer expiry replaced",
+      "base": "acceptance-approved",
+      "expect": "answer_consumer_identity",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/expires_at",
+          "value": "2026-09-26T00:09:00Z"
+        }
+      ]
+    },
+    {
+      "name": "consumer target replaced",
+      "base": "acceptance-approved",
+      "expect": "answer_consumer_binding",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/target_id",
+          "value": "task_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ]
+    },
+    {
+      "name": "consumer request replaced",
+      "base": "acceptance-approved",
+      "expect": "answer_consumer_binding",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/payload/request_id",
+          "value": "request_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ]
+    },
+    {
+      "name": "consumer request revision replaced",
+      "base": "acceptance-approved",
+      "expect": "answer_consumer_binding",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/payload/request_revision",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "name": "consumer goal revision replaced",
+      "base": "acceptance-approved",
+      "expect": "answer_consumer_binding",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/payload/goal_revision",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "consumer candidate hash replaced",
+      "base": "acceptance-approved",
+      "expect": "answer_consumer_binding",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/payload/candidate_hash",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "consumer confirmation revision replaced",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/payload/confirmation_ref/revision",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "name": "consumer confirmation owner replaced",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/payload/confirmation_ref/owner_id",
+          "value": "orchestrator_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ]
+    },
+    {
+      "name": "consumer confirmation id replaced",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/payload/confirmation_ref/id",
+          "value": "confirmation_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ]
+    },
+    {
+      "name": "consumer already expired",
+      "base": "acceptance-approved",
+      "expect": "answer_consumer_window",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/expires_at",
+          "value": "2026-09-26T00:00:04Z"
+        }
+      ]
+    },
+    {
+      "name": "consumer extra payload member",
+      "base": "acceptance-approved",
+      "expect": "answer_schema",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/consumer_command/payload/answer_ref",
+          "value": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "answer_0db52f4076c082518412afd3dd3576e2",
+            "version": 1,
+            "hash": "sha256:eb22c42cb93fae427f313e98591d2043ee5a0ebf340a0970d1dc0be012ecd267",
+            "media_type": "application/json",
+            "byte_length": 95
+          }
+        }
+      ]
+    },
+    {
+      "name": "acceptance action changed",
+      "base": "acceptance-approved",
+      "expect": "answer_schema",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/action_id",
+          "value": "submit"
+        }
+      ]
+    },
+    {
+      "name": "acceptance decision changed",
+      "base": "acceptance-approved",
+      "expect": "answer_schema",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/decision",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "name": "acceptance adds fields",
+      "base": "acceptance-approved",
+      "expect": "answer_schema",
+      "body_edits": [
+        {
+          "op": "set",
+          "path": "/fields/comment",
+          "value": "looks good"
+        }
+      ]
+    },
+    {
+      "name": "unapproved confirmation",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/confirmation/state",
+          "value": "pending"
+        }
+      ]
+    },
+    {
+      "name": "denied confirmation",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/confirmation/state",
+          "value": "denied"
+        }
+      ]
+    },
+    {
+      "name": "approval revision not exact",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/confirmation/revision",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "name": "approval owner changed",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/confirmation/owner_id",
+          "value": "orchestrator_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ]
+    },
+    {
+      "name": "approved command changed",
+      "base": "acceptance-approved",
+      "expect": "answer_consumer_identity",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/confirmation/consumer_command/expires_at",
+          "value": "2026-09-26T00:09:00Z"
+        }
+      ]
+    },
+    {
+      "name": "confirmation metadata changed",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation_binding",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/confirmation/consumer_command_id",
+          "value": "task_accept_result_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ]
+    },
+    {
+      "name": "confirmation intent changed",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation_intent",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/confirmation/intent_hash",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "confirmation expired",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation_window",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/confirmation/expires_at",
+          "value": "2026-09-26T00:00:04Z"
+        }
+      ]
+    },
+    {
+      "name": "confirmation exceeds admission",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation_window",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/confirmation/expires_at",
+          "value": "2026-09-26T00:11:00Z"
+        }
+      ]
+    },
+    {
+      "name": "approval not yet decided",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation_window",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/confirmation/decided_at",
+          "value": "2026-09-26T00:00:05Z"
+        }
+      ]
+    },
+    {
+      "name": "candidate reference changed",
+      "base": "acceptance-approved",
+      "expect": "answer_candidate",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/candidate_ref/hash",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "acceptance allows another action",
+      "base": "acceptance-approved",
+      "expect": "answer_request_schema",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/allowed_actions",
+          "value": [
+            "accept",
+            "submit"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "acceptance decision optional",
+      "base": "acceptance-approved",
+      "expect": "answer_request_schema",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/schema/fields/0/required",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "acceptance option id changed",
+      "base": "acceptance-approved",
+      "expect": "answer_request_schema",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/schema/fields/0/options/0/id",
+          "value": "approve"
+        }
+      ]
+    },
+    {
+      "name": "acceptance field renamed",
+      "base": "acceptance-approved",
+      "expect": "answer_request_schema",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/request/schema/fields/0/name",
+          "value": "approved"
+        }
+      ]
+    },
+    {
+      "name": "queue target command replaced",
+      "base": "acceptance-approved",
+      "expect": "answer_handoff",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/queue/submission/target_command_id",
+          "value": "task_accept_result_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ]
+    },
+    {
+      "name": "queue answer reference changed",
+      "base": "acceptance-approved",
+      "expect": "answer_handoff",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/queue/submission/answer_ref/hash",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "queue request revision changed",
+      "base": "acceptance-approved",
+      "expect": "answer_handoff",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/queue/request/payload/request_revision",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "name": "queue preview omitted",
+      "base": "acceptance-approved",
+      "expect": "answer_preview",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/queue/request/payload/preview_refs",
+          "value": []
+        }
+      ]
+    },
+    {
+      "name": "delivery rebuilt expiry",
+      "base": "acceptance-approved",
+      "expect": "answer_handoff",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/delivery_command/expires_at",
+          "value": "2026-09-26T00:09:00Z"
+        }
+      ]
+    },
+    {
+      "name": "delivery replaced command id",
+      "base": "acceptance-approved",
+      "expect": "answer_handoff",
+      "context_edits": [
+        {
+          "op": "set",
+          "path": "/delivery_command/command_id",
+          "value": "task_accept_result_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ]
+    },
+    {
+      "name": "approval missing",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation",
+      "context_edits": [
+        {
+          "op": "remove",
+          "path": "/confirmation"
+        }
+      ]
+    },
+    {
+      "name": "approval trusted session missing",
+      "base": "acceptance-approved",
+      "expect": "answer_confirmation_schema",
+      "context_edits": [
+        {
+          "op": "remove",
+          "path": "/confirmation/trusted_user_session_ref"
+        }
+      ]
+    },
+    {
+      "name": "acceptance task missing",
+      "base": "acceptance-approved",
+      "expect": "answer_request_schema",
+      "context_edits": [
+        {
+          "op": "remove",
+          "path": "/request/task_ref"
+        }
+      ]
+    },
+    {
+      "name": "acceptance candidate missing",
+      "base": "acceptance-approved",
+      "expect": "answer_request_schema",
+      "context_edits": [
+        {
+          "op": "remove",
+          "path": "/request/candidate_ref"
+        }
+      ]
+    }
+  ],
+  "valid_discoveries": [
+    {
+      "name": "exact-request-without-surface",
+      "query_result": {
+        "output": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "goal_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "goal_revision": 1,
+          "requirements": [
+            {
+              "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+              "kind": "effect",
+              "source_ref": {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                "version": 1,
+                "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "rule_ref": {
+                "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                "version": "1.0.0",
+                "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+              },
+              "required": true
+            }
+          ],
+          "policy_ref": {
+            "id": "policy_823412d1eacb67956220e532959f0104",
+            "version": "1.0.0",
+            "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+          },
+          "revision": 2,
+          "control_revision": 1,
+          "status": "active",
+          "control": "running",
+          "wait_reasons": [
+            {
+              "kind": "input",
+              "object_ref": {
+                "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+                "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+                "revision": 2
+              },
+              "resume_condition": "Provide the exact current directory answer",
+              "deadline": "2026-09-26T00:10:00Z"
+            }
+          ],
+          "deadline": "2026-09-26T00:10:00Z",
+          "budget": [
+            {
+              "unit": "request",
+              "limit": {
+                "unit": "request",
+                "amount": "10"
+              },
+              "spent": {
+                "unit": "request",
+                "amount": "0"
+              },
+              "reserved": {
+                "unit": "request",
+                "amount": "1"
+              }
+            }
+          ],
+          "open_effects": [],
+          "accounting_open": true
+        },
+        "observed_at": "2026-09-26T00:00:00Z"
+      },
+      "requests": [
+        {
+          "request_id": "request_1f58b9145b24d108d7ac38887338b3ea",
+          "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "revision": 2,
+          "kind": "clarification",
+          "task_ref": {
+            "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+            "task_id": "task_0ebb429fa86d481c2630fac53db1c91c"
+          },
+          "schema": {
+            "fields": [
+              {
+                "name": "directory",
+                "label": "Directory",
+                "type": "text",
+                "required": true,
+                "max_length": 512
+              }
+            ]
+          },
+          "question_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+            "version": 1,
+            "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "deadline": "2026-09-26T00:10:00Z",
+          "required_content_refs": [
+            {
+              "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+              "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+              "content_id": "preview_5975cf1bba432391c94667f5886225f6",
+              "version": 1,
+              "hash": "sha256:8d3e21a1266ae2aa48cfcf1e594667fb62d79ebfb0625489b33fedca963dbb69",
+              "media_type": "text/plain",
+              "byte_length": 16
+            }
+          ],
+          "allowed_actions": [
+            "submit"
+          ],
+          "state": "open"
+        }
+      ],
+      "answerable_request_refs": [
+        {
+          "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+          "revision": 2
+        }
+      ]
+    },
+    {
+      "name": "withheld-request-uses-gaps",
+      "query_result": {
+        "output": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "goal_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "goal_revision": 1,
+          "requirements": [
+            {
+              "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+              "kind": "effect",
+              "source_ref": {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                "version": 1,
+                "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "rule_ref": {
+                "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                "version": "1.0.0",
+                "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+              },
+              "required": true
+            }
+          ],
+          "policy_ref": {
+            "id": "policy_823412d1eacb67956220e532959f0104",
+            "version": "1.0.0",
+            "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+          },
+          "revision": 2,
+          "control_revision": 1,
+          "status": "active",
+          "control": "running",
+          "wait_reasons": [],
+          "deadline": "2026-09-26T00:10:00Z",
+          "budget": [
+            {
+              "unit": "request",
+              "limit": {
+                "unit": "request",
+                "amount": "10"
+              },
+              "spent": {
+                "unit": "request",
+                "amount": "0"
+              },
+              "reserved": {
+                "unit": "request",
+                "amount": "1"
+              }
+            }
+          ],
+          "open_effects": [],
+          "accounting_open": true
+        },
+        "observed_at": "2026-09-26T00:00:00Z",
+        "gaps": [
+          "InputRequest reference is not currently disclosed"
+        ]
+      },
+      "requests": [],
+      "answerable_request_refs": [],
+      "withheld_request_refs": [
+        {
+          "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+          "revision": 2
+        }
+      ]
+    },
+    {
+      "name": "non-input-wait-may-omit-reference",
+      "query_result": {
+        "output": {
+          "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+          "task_id": "task_0ebb429fa86d481c2630fac53db1c91c",
+          "orchestrator_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+          "submit_command_id": "submit_75490bd7b93e6fa7d18cfdea90cc6bcb",
+          "goal_ref": {
+            "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+            "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+            "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+            "version": 1,
+            "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+            "media_type": "text/plain",
+            "byte_length": 16
+          },
+          "goal_revision": 1,
+          "requirements": [
+            {
+              "requirement_id": "requirement_f8dcb7a13bf4991a7d7969ea1c8add14",
+              "kind": "effect",
+              "source_ref": {
+                "tenant_id": "tenant_e9da86d351cf9a7642d8c50195c3f466",
+                "owner_id": "content_owner_03efd4ddfc88e9b299a17e363d90ed7d",
+                "content_id": "goal_0304523efff53f243d76dc81b7c271f9",
+                "version": 1,
+                "hash": "sha256:8cd7bb07cc764ababb55b7fcbb00762aae81fa2d60f532b526ac3eeb013387a2",
+                "media_type": "text/plain",
+                "byte_length": 16
+              },
+              "rule_ref": {
+                "id": "verifier_88c9eae68eb300b2971a2bec9e5a26ff",
+                "version": "1.0.0",
+                "digest": "sha256:88c9eae68eb300b2971a2bec9e5a26ff4179fd661d6b7d861e4c6557b9aaee14"
+              },
+              "required": true
+            }
+          ],
+          "policy_ref": {
+            "id": "policy_823412d1eacb67956220e532959f0104",
+            "version": "1.0.0",
+            "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+          },
+          "revision": 2,
+          "control_revision": 1,
+          "status": "active",
+          "control": "running",
+          "wait_reasons": [
+            {
+              "kind": "capacity",
+              "resume_condition": "Owner admits another bounded request"
+            }
+          ],
+          "deadline": "2026-09-26T00:10:00Z",
+          "budget": [
+            {
+              "unit": "request",
+              "limit": {
+                "unit": "request",
+                "amount": "10"
+              },
+              "spent": {
+                "unit": "request",
+                "amount": "0"
+              },
+              "reserved": {
+                "unit": "request",
+                "amount": "1"
+              }
+            }
+          ],
+          "open_effects": [],
+          "accounting_open": true
+        },
+        "observed_at": "2026-09-26T00:00:00Z",
+        "gaps": []
+      },
+      "requests": [],
+      "answerable_request_refs": [],
+      "withheld_request_refs": []
+    }
+  ],
+  "invalid_discoveries": [
+    {
+      "name": "wrong input owner",
+      "base": "exact-request-without-surface",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/query_result/output/wait_reasons/0/object_ref/owner_id",
+          "value": "orchestrator_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ],
+      "expect": "input_wait_binding"
+    },
+    {
+      "name": "wrong input request id",
+      "base": "exact-request-without-surface",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/query_result/output/wait_reasons/0/object_ref/id",
+          "value": "request_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ],
+      "expect": "input_wait_binding"
+    },
+    {
+      "name": "old input request revision",
+      "base": "exact-request-without-surface",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/query_result/output/wait_reasons/0/object_ref/revision",
+          "value": 1
+        }
+      ],
+      "expect": "input_wait_binding"
+    },
+    {
+      "name": "input reference absent",
+      "base": "exact-request-without-surface",
+      "edits": [
+        {
+          "op": "remove",
+          "path": "/query_result/output/wait_reasons/0/object_ref"
+        }
+      ],
+      "expect": "input_wait_schema"
+    },
+    {
+      "name": "input reference partial",
+      "base": "exact-request-without-surface",
+      "edits": [
+        {
+          "op": "remove",
+          "path": "/query_result/output/wait_reasons/0/object_ref/revision"
+        }
+      ],
+      "expect": "input_wait_schema"
+    },
+    {
+      "name": "request belongs to another task",
+      "base": "exact-request-without-surface",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/requests/0/task_ref/task_id",
+          "value": "task_d9298a10d1b0735837dc4bd85dac641b"
+        }
+      ],
+      "expect": "input_wait_binding"
+    },
+    {
+      "name": "request is closed",
+      "base": "exact-request-without-surface",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/requests/0/state",
+          "value": "expired"
+        }
+      ],
+      "expect": "input_wait_binding"
+    },
+    {
+      "name": "visible request wait omitted",
+      "base": "exact-request-without-surface",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/query_result/output/wait_reasons",
+          "value": []
+        }
+      ],
+      "expect": "input_wait_binding"
+    },
+    {
+      "name": "hidden request has no gap",
+      "base": "withheld-request-uses-gaps",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/query_result/gaps",
+          "value": []
+        }
+      ],
+      "expect": "input_disclosure"
+    },
+    {
+      "name": "hidden request enables answer",
+      "base": "withheld-request-uses-gaps",
+      "edits": [
+        {
+          "op": "set",
+          "path": "/answerable_request_refs",
+          "value": [
+            {
+              "owner_id": "orchestrator_4ea140588150773ce3aace786aeef7f4",
+              "id": "request_1f58b9145b24d108d7ac38887338b3ea",
+              "revision": 2
+            }
+          ]
+        }
+      ],
+      "expect": "input_disclosure"
+    }
+  ]
+}

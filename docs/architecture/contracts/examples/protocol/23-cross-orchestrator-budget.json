@@ -1,0 +1,405 @@
+{
+  "name": "23-cross-orchestrator-budget",
+  "description": "另一Orchestrator校验原额度命令及当前分配，唯一子接纳与额度关闭竞争；原接收方最终封账才允许父结算。",
+  "capabilities": [],
+  "input_requests": [],
+  "approvals": [],
+  "events": [
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+          "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+          "logical_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
+        },
+        "request": {
+          "method": "budget.allocate",
+          "target_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
+          "payload": {
+            "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+            "parent_task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
+            "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+            "limits": [
+              {
+                "unit": "request",
+                "limit": "5"
+              }
+            ],
+            "expires_at": "2026-09-26T00:10:00Z"
+          },
+          "command_id": "budget_allocate_0_83af66b0e00120c8f590ba69968c2a44",
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "budget_allocate_0_83af66b0e00120c8f590ba69968c2a44",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+            "parent_task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
+            "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+            "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+            "revision": 1,
+            "limits": [
+              {
+                "unit": "request",
+                "limit": "5"
+              }
+            ],
+            "expires_at": "2026-09-26T00:10:00Z",
+            "state": "allocated",
+            "final_usage": []
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+          "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+          "logical_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
+        },
+        "request": {
+          "method": "budget.read",
+          "target_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+          "payload": {
+            "role": "owner"
+          }
+        },
+        "response": {
+          "output": {
+            "role": "owner",
+            "allocation": {
+              "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+              "parent_task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
+              "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+              "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+              "revision": 1,
+              "limits": [
+                {
+                  "unit": "request",
+                  "limit": "5"
+                }
+              ],
+              "expires_at": "2026-09-26T00:10:00Z",
+              "state": "allocated",
+              "final_usage": []
+            }
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+          "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+          "logical_service_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+          "sender_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
+        },
+        "request": {
+          "command_id": "runtime_child_submit_536d9ce73d0afd22a76d622c82c78aa3",
+          "method": "task.submit",
+          "target_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "payload": {
+            "goal_ref": {
+              "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+              "owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+              "content_id": "runtime_goal_0c5023d93ab8136450bf0456bd5cbaf7",
+              "version": 1,
+              "hash": "sha256:0c5023d93ab8136450bf0456bd5cbaf705a27b81bf47c32421d1f245838a85b3",
+              "media_type": "application/json",
+              "byte_length": 16
+            },
+            "orchestrator_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+            "constraints": [],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "budget": [
+              {
+                "unit": "request",
+                "limit": "5"
+              }
+            ],
+            "deadline": "2026-09-26T00:10:00Z",
+            "delegation_context": {
+              "sender_orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+              "parent_delegation_id": "runtime_cross_delegation_1a4b4a26818204b0d8fcad76f63f6d63",
+              "allocation_ref": {
+                "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                "id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+                "revision": 1
+              },
+              "allocation_command_id": "budget_allocate_0_83af66b0e00120c8f590ba69968c2a44",
+              "permission_refs": [
+                {
+                  "kind": "grant",
+                  "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+                  "id": "runtime_grant_3b457f45f78ff0b30a594ff5f12edf51",
+                  "revision": 1
+                }
+              ],
+              "ancestor_ids": [
+                "runtime_task_2f19394d42a7706fc18f2a1683b8745c"
+              ]
+            }
+          }
+        },
+        "response": {
+          "command_id": "runtime_child_submit_536d9ce73d0afd22a76d622c82c78aa3",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+            "task_id": "runtime_cross_child_570c389baa993585090ef866cbd955ae",
+            "orchestrator_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+            "submit_command_id": "runtime_child_submit_536d9ce73d0afd22a76d622c82c78aa3",
+            "goal_ref": {
+              "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+              "owner_id": "runtime_executor_4820d1a8f5352f95212bc13bc64d5b9a",
+              "content_id": "runtime_goal_0c5023d93ab8136450bf0456bd5cbaf7",
+              "version": 1,
+              "hash": "sha256:0c5023d93ab8136450bf0456bd5cbaf705a27b81bf47c32421d1f245838a85b3",
+              "media_type": "application/json",
+              "byte_length": 16
+            },
+            "goal_revision": 1,
+            "requirements": [],
+            "policy_ref": {
+              "id": "policy_823412d1eacb67956220e532959f0104",
+              "version": "1.0.0",
+              "digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812"
+            },
+            "revision": 1,
+            "control_revision": 1,
+            "status": "active",
+            "control": "running",
+            "wait_reasons": [],
+            "deadline": "2026-09-26T00:10:00Z",
+            "budget": [
+              {
+                "unit": "request",
+                "limit": {
+                  "unit": "request",
+                  "amount": "5"
+                },
+                "spent": {
+                  "unit": "request",
+                  "amount": "0"
+                },
+                "reserved": {
+                  "unit": "request",
+                  "amount": "0"
+                }
+              }
+            ],
+            "open_effects": [],
+            "accounting_open": true
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+          "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+          "logical_service_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+          "sender_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
+        },
+        "request": {
+          "method": "budget.close",
+          "target_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+          "payload": {
+            "sender_orchestrator_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+            "parent_delegation_id": "runtime_cross_delegation_1a4b4a26818204b0d8fcad76f63f6d63",
+            "allocation_ref": {
+              "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+              "id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+              "revision": 1
+            },
+            "allocation_command_id": "budget_allocate_0_83af66b0e00120c8f590ba69968c2a44",
+            "reason": "父任务取消，关闭原接收额度"
+          },
+          "command_id": "budget_close_3_82c9c206099a258f8580523b0ba00804",
+          "expires_at": "2026-09-26T00:10:00Z"
+        },
+        "response": {
+          "command_id": "budget_close_3_82c9c206099a258f8580523b0ba00804",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+            "parent_owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+            "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+            "parent_delegation_id": "runtime_cross_delegation_1a4b4a26818204b0d8fcad76f63f6d63",
+            "revision": 2,
+            "state": "closing",
+            "task_id": "runtime_cross_child_570c389baa993585090ef866cbd955ae",
+            "final_usage": []
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+          "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+          "logical_service_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a"
+        },
+        "request": {
+          "method": "budget.read",
+          "target_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+          "payload": {
+            "role": "receiver"
+          }
+        },
+        "response": {
+          "output": {
+            "role": "receiver",
+            "receiver": {
+              "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+              "parent_owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+              "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+              "parent_delegation_id": "runtime_cross_delegation_1a4b4a26818204b0d8fcad76f63f6d63",
+              "revision": 3,
+              "state": "closed",
+              "task_id": "runtime_cross_child_570c389baa993585090ef866cbd955ae",
+              "final_usage": [
+                {
+                  "unit": "request",
+                  "amount": "3"
+                }
+              ],
+              "closure": {
+                "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+                "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+                "usage_revision": 1,
+                "final_usage": [
+                  {
+                    "unit": "request",
+                    "amount": "3"
+                  }
+                ],
+                "spending_closed": true,
+                "closed_at": "2026-09-26T00:00:00Z",
+                "proof_ref": {
+                  "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+                  "owner_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+                  "content_id": "runtime_closure_2a95f4dc3818fc4b8b3fa28530edd172",
+                  "version": 1,
+                  "hash": "sha256:2a95f4dc3818fc4b8b3fa28530edd17281bccc9fc8d7eaf1a42d11f5bd0d3a11",
+                  "media_type": "application/json",
+                  "byte_length": 16
+                }
+              }
+            }
+          },
+          "observed_at": "2026-09-26T00:00:00Z"
+        }
+      }
+    },
+    {
+      "at": "2026-09-26T00:00:00Z",
+      "exchange": {
+        "auth": {
+          "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+          "actor_id": "runtime_actor_565005adbdb5a45629023bedfede6644",
+          "logical_service_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2"
+        },
+        "request": {
+          "method": "budget.settle",
+          "target_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+          "payload": {
+            "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+            "closure": {
+              "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+              "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+              "usage_revision": 1,
+              "final_usage": [
+                {
+                  "unit": "request",
+                  "amount": "3"
+                }
+              ],
+              "spending_closed": true,
+              "closed_at": "2026-09-26T00:00:00Z",
+              "proof_ref": {
+                "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+                "owner_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+                "content_id": "runtime_closure_2a95f4dc3818fc4b8b3fa28530edd172",
+                "version": 1,
+                "hash": "sha256:2a95f4dc3818fc4b8b3fa28530edd17281bccc9fc8d7eaf1a42d11f5bd0d3a11",
+                "media_type": "application/json",
+                "byte_length": 16
+              }
+            }
+          },
+          "command_id": "budget_settle_5_cebe9c50b38bcf832d78ddca55e876d5",
+          "expires_at": "2026-09-26T00:10:00Z",
+          "expected_revision": 1
+        },
+        "response": {
+          "command_id": "budget_settle_5_cebe9c50b38bcf832d78ddca55e876d5",
+          "stage": "applied",
+          "decided_at": "2026-09-26T00:00:00Z",
+          "output": {
+            "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+            "parent_task_id": "runtime_task_2f19394d42a7706fc18f2a1683b8745c",
+            "owner_id": "runtime_orchestrator_71e2c886fdf12492a7f5b682f27652c2",
+            "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+            "revision": 2,
+            "limits": [
+              {
+                "unit": "request",
+                "limit": "5"
+              }
+            ],
+            "expires_at": "2026-09-26T00:10:00Z",
+            "state": "settled",
+            "final_usage": [
+              {
+                "unit": "request",
+                "amount": "3"
+              }
+            ],
+            "closure": {
+              "allocation_id": "runtime_cross_allocation_0f667cdf0ad8acaf003e27561f1e0cf7",
+              "receiver_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+              "usage_revision": 1,
+              "final_usage": [
+                {
+                  "unit": "request",
+                  "amount": "3"
+                }
+              ],
+              "spending_closed": true,
+              "closed_at": "2026-09-26T00:00:00Z",
+              "proof_ref": {
+                "tenant_id": "runtime_tenant_79fb894d35281e66e619676686d1f75c",
+                "owner_id": "runtime_receiver_orchestrator_38551d9a7118629c2cb13f59d43c490a",
+                "content_id": "runtime_closure_2a95f4dc3818fc4b8b3fa28530edd172",
+                "version": 1,
+                "hash": "sha256:2a95f4dc3818fc4b8b3fa28530edd17281bccc9fc8d7eaf1a42d11f5bd0d3a11",
+                "media_type": "application/json",
+                "byte_length": 16
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

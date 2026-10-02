@@ -1,0 +1,82 @@
+[
+  {
+    "path": "docs/architecture/orchestrator/README.draft-source.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/orchestrator/README.draft-source.md",
+    "sha256": "1722d5de028542d4c097f8653a63cc096e2f2b7f45f44af0cf7a51970471a3be"
+  },
+  {
+    "path": "docs/architecture/orchestrator/README.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/orchestrator/README.md",
+    "sha256": "5480aee857edc76053bea6d9fe185c7ccd0b6434b475359a0361fd49a8864910"
+  },
+  {
+    "path": "docs/architecture/orchestrator/access-paths.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/orchestrator/access-paths.md",
+    "sha256": "0ee8ad93fd8728122fd62c95cd9cffdad6f72b00ce5a2932b009df28f12c9f1c"
+  },
+  {
+    "path": "docs/architecture/orchestrator/durable-work.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/orchestrator/durable-work.md",
+    "sha256": "d5791407a463ddeca6a66e711cfd21ca848126e50fabdd4350a8aaada194f1c8"
+  },
+  {
+    "path": "docs/architecture/orchestrator/implementation.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/orchestrator/implementation.md",
+    "sha256": "7a1fde6e5704d6e066043b0f6ae4d1cf0c8ce863ab6a5cb164d25edf29e6c8d6"
+  },
+  {
+    "path": "docs/architecture/orchestrator/scheduled-triggers.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/orchestrator/scheduled-triggers.md",
+    "sha256": "ea3135450555ffc60725ae8093ccd943d31f08e5eae3d2a9acb4b4b558e3b04d"
+  },
+  {
+    "path": "docs/architecture/orchestrator/task-lifecycle.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/orchestrator/task-lifecycle.md",
+    "sha256": "fcca7dbdbaa53d8bce90da3166be877f39605b298afcce9f04aeb1a5e2a76c18"
+  },
+  {
+    "path": "docs/architecture/orchestrator/verification.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/orchestrator/verification.md",
+    "sha256": "901ace5591cfd87e682b384bfc4dca0fb89ab32c1513997305b4865ad03c1ee5"
+  },
+  {
+    "path": "docs/architecture/brain/README.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/brain/README.md",
+    "sha256": "ffc6e8d4bf1b1cbc4c363a75dd3e18d7f7151f0121868418252f4cc2759ffc0c"
+  },
+  {
+    "path": "docs/architecture/brain/decision-paths.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/brain/decision-paths.md",
+    "sha256": "660157c9caacf8855a87d52da665c286d4686d550bf7e55eabdad90d453cbd33"
+  },
+  {
+    "path": "docs/architecture/brain/implementation.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/brain/implementation.md",
+    "sha256": "2c5b42a415940dcbd45126639f7e3e234bfec78ceb0f8109d899330454c484fd"
+  },
+  {
+    "path": "docs/architecture/execution/README.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/execution/README.md",
+    "sha256": "6ff132c2ec592dab497cdd65fc6ce8a02e695015d999ae7a9c80907daab611b8"
+  },
+  {
+    "path": "docs/architecture/execution/implementation.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/execution/implementation.md",
+    "sha256": "d33c8368898a4f2470efa6affffe70ec2fb3cd0b0cf599147715cf8731537490"
+  },
+  {
+    "path": "docs/architecture/execution/programmatic-tools.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/execution/programmatic-tools.md",
+    "sha256": "dc5c137db7da19df6cd03691a9a599d2f3a2b04f221637b19648466273972936"
+  },
+  {
+    "path": "docs/architecture/collaboration/README.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/collaboration/README.md",
+    "sha256": "93f2e6478f6f9fb3743f4819f9133341f2925565a7da942c7c49f2b0400e2d34"
+  },
+  {
+    "path": "docs/architecture/collaboration/implementation.md",
+    "snapshot": ".scratch/architecture-formalization/core-before-shaping/collaboration/implementation.md",
+    "sha256": "913e05676d9e31451bb182c6ef1748661a8479ae396eb3e3ec327871fce9ef4c"
+  }
+]

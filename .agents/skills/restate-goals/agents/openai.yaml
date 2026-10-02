@@ -1,0 +1,3 @@
+interface:
+  display_name: "复述目标"
+  short_description: "用自己的话复述用户目标、待解决的问题和关键约束，标明推测与缺口"

@@ -1,0 +1,11 @@
+stateDiagram-v2
+    direction LR
+    [*] --> active: 获准创建
+    active --> needs_review: 来源待核
+    active --> disabled: 禁用或来源关闭
+    needs_review --> active: 以新依据发布修订
+    disabled --> active: 新修订及有效来源
+    active --> deleted: 用户删除
+    needs_review --> deleted: 用户删除
+    disabled --> deleted: 用户删除
+    deleted --> [*]
