@@ -385,7 +385,7 @@ SYS-30／32 的内部草稿和计划序列、SYS-33／34 的协议夹具只能�
 <a id="reliable-work-framework"></a>
 ## 27. 公共接纳与持久工作框架
 
-本组执行[框架共用用例 FW-01～09](../reliable-work.md#validation)，验证统一逻辑 JobStore 和模板在各领域的实际接入。全部**待运行**。先以真实 PostgreSQL、SQLite 分别验收唯一键、短事务、领取、续约、责任合并与条件结束，再在每种实际使用的领域物理映射上重复适用用例；同一表的测试通过不能证明另一存储适配已经符合。
+本组执行[框架共用用例 FW-01～09](../reliable-work.md#validation)，验证统一逻辑 JobStore 和模板在各领域的实际接入。2026-10-02 的[公共探针](../../../tests/integration/README.md)已取得真实 PG/SQLite 的机械约束及独立进程/网络断点证据，[报告](../../../.scratch/reliable-work/evidence.md)分别列公共 pass 和领域/生产 inconclusive。下表各领域实际接入仍**待运行**；同一公共表的结果不能证明另一物理映射或目标效果已经符合。
 
 固定两个可暂停 worker、原本地事务范围、受控外部 port、可信时间前提、有限并发及故障屏障。通过真实领域入口提交原命令和新事实，分别在 before_commit、after_commit_before_reply、after_claim_commit、外部不可撤回入口、before_finish 暂停；FW-04 交换新责任与旧完成的先后，并增加归并事务内再次 Raise 当前作业记录的情况。完全关闭通知，检查正常责任无需补建缺失作业记录的扫描仍可及时领取。不得直接修改 job 行制造新责任。
 

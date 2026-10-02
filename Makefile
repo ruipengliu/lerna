@@ -1,4 +1,4 @@
-.PHONY: setup dev dev-single dev-stop deps-up deps-down build check contracts-check
+.PHONY: setup dev dev-single dev-stop deps-up deps-down build check contracts-check sql-generate sql-check durable-check migrate-postgres migrate-sqlite
 
 setup:
 	node dev/run.mjs init
@@ -27,13 +27,30 @@ build:
 	go build -o build/harness ./cmd/harness
 	go build -o build/harnessd ./cmd/harnessd
 	go build -o build/harness-sim ./cmd/harness-sim
+	go build -o build/harness-migrate ./cmd/harness-migrate
 	pnpm -r run build
 
 check:
 	go test -race ./...
 	go vet ./...
 	pnpm -r run typecheck
+	$(MAKE) sql-check
 	$(MAKE) contracts-check
 
 contracts-check:
 	node tools/check-contracts.mjs
+
+sql-generate:
+	node tools/generate-sql.mjs
+
+sql-check:
+	node tools/generate-sql.mjs --check
+
+durable-check:
+	node tools/test-durable.mjs -v
+
+migrate-postgres:
+	node tools/migrate-local.mjs postgres
+
+migrate-sqlite:
+	node tools/migrate-local.mjs sqlite

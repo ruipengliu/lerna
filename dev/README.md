@@ -47,12 +47,12 @@ Ctrl-C/SIGTERM 触发有界退出，宿主先关闭启动可用状态，再排�
 | `GET /status` | 有限本地诊断 | 返回角色、boot_id、依赖状态和缺失项 |
 | 其他路径 | 当前未支持 | 501，无业务回执或副作用 |
 
-两个 worker 目前各自打开受限连接池，不领取业务 jobs，因此启动成功不证明领取竞争或故障恢复已经通过。数据库中只有开发连接角色和空业务库，启动不执行业务迁移；迁移将沿 `migrations/` 在显式控制步骤中交付。
+两个默认 worker 各自打开诊断连接池，领域 handlers 尚未装配。公共[持久工作库](../internal/durable/README.md)通过隔离数据库与独立测试进程验证；默认启动成功仍不证明领域就绪。原开发数据库可显式建立公共命令/作业表，启动不自动迁移。
 
 ## 数据、权限与恢复
 
 - PostgreSQL 使用命名卷 `lerna-dev_postgres-data`，PG18 的挂载目标为 `/var/lib/postgresql`；数据库提升和跨可用区恢复未在本机模拟。[官方镜像卷规则](https://github.com/docker-library/docs/tree/master/postgres#pgdata)
-- 初次初始化的 [SQL](postgres/init.sql) 创建 `lerna_app`，它没有 superuser、建库、建角色、复制或 BYPASSRLS 权限，也没有公共 schema 的 CREATE 权限。`postgres` 只用于开发初始化和未来显式迁移，应用进程使用独立凭据。
+- 初次初始化的 [SQL](postgres/init.sql) 创建 `lerna_app`，它没有 superuser、建库、建角色、复制或 BYPASSRLS 权限，也没有公共 schema 的 CREATE 权限。`postgres` 只用于开发初始化和显式迁移，应用进程使用独立凭据。
 - 多进程内容根为 `dev/.state/multiprocess/content/`，受管文件目标为 `dev/.state/multiprocess/managed-files/`；它们是两个不同目标，当前没有实现内容发布或文件操作。
 - 单体使用 `dev/.state/single/database/harness.db`、独立内容和文件根。SQLite 启用 WAL、FULL、foreign_keys 和一个连接，并以覆盖生命周期的 OS 排他锁限制单实例；PG 进程不共用此锁。
 - 日志保存在 `dev/.state/logs/`。已启动宿主不会在根目录失联时另建空目录；`make setup` 是显式初始准备，不是旧任务恢复命令。
@@ -64,8 +64,16 @@ Ctrl-C/SIGTERM 触发有界退出，宿主先关闭启动可用状态，再排�
 ```sh
 make build
 make check
+make durable-check
+make migrate-postgres
+# 单体停止后：make migrate-sqlite
+make sql-check
 build/harness version
 build/harness status --url http://127.0.0.1:18080
 ```
 
-构建三项 Go 命令及 TS SDK/Web。`make check` 运行 Go race 测试与 vet、TS 检查、全部现有静态契约校验、Proto 编译及封装检查。契约生成输出位于忽略目录 `dev/.state/generated/proto/`。实际本机验证记录见 [本轮规格](../.scratch/project-bootstrap/spec.md)；这些检查不代替业务、数据库故障、质量或生产容量验收。
+构建四项 Go 命令及 TS SDK/Web，新增 harness-migrate。`make check` 运行 Go race/vet、TS、两方言 SQL 生成差异、静态契约/Proto 检查；未提供测试 PG 配置时 Go 套件跳过 PG 部分，真实 PG 必须另运行 `make durable-check`。
+
+`make durable-check` 复用或启动 Docker PG，读取 dev/.env 而不打印凭据；每个用例创建随机隔离 PG 数据库并只清理自己创建的库，SQLite 使用临时原文件。测试不迁移主库、不清理原卷；小负载原始计量写入忽略的 dev/.state/durable-cost.jsonl。[当前证据](../.scratch/reliable-work/evidence.md)分别报告公共约束与未实现的领域/生产边界。
+
+迁移通过 `make migrate-postgres` / `make migrate-sqlite` 独立执行，重复升级幂等；它们不启动宿主。PG 使用独立迁移身份，SQLite 要求原单体停止并持有原文件锁。契约 Proto 输出仍在 dev/.state/generated/proto/，SQL 产物分别进入适配器的 querygen/。

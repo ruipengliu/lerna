@@ -83,7 +83,7 @@ flowchart TB
 <a id="layout"></a>
 ## 4. 代码目录及依赖方向
 
-以下目录已在当前仓库根建立；`harness/` 表示仓库根，不另嵌套一层。机器资产的唯一维护源为根 [contracts](../../contracts/README.md)，共同调用规范正文保留在 [架构契约](contracts/README.md)。角色入口和依赖探测已可运行，其余目录只固定实现边界；运行命令与实际范围见 [本地开发手册](../../dev/README.md)。
+以下目录已在当前仓库根建立；`harness/` 表示仓库根，不另嵌套一层。机器资产的唯一维护源为根 [contracts](../../contracts/README.md)，共同调用规范正文保留在 [架构契约](contracts/README.md)。角色入口、依赖探测与公共持久框架已可运行，领域目录仍固定后续实现边界；运行命令与实际范围见 [本地开发手册](../../dev/README.md)。
 
 ```text
 harness/
@@ -98,7 +98,8 @@ harness/
 ├── cmd/
 │   ├── harness/               # CLI：任务、控制、输入、安装及诊断
 │   ├── harnessd/              # 宿主：单体或指定生产角色
-│   └── harness-sim/           # 有状态模拟设备，可独立启动和注入故障
+│   ├── harness-sim/           # 有状态模拟设备，可独立启动和注入故障
+│   └── harness-migrate/        # 独立显式数据库升级入口
 ├── internal/
 │   ├── orchestrator/          # 以下九目录按现行模块负责事实和业务规则
 │   ├── brain/
@@ -190,6 +191,8 @@ flowchart TB
 完整分支、自由输入调度、可复用子会话、Schedule 及执行环境的剩余合同见[能力缺口 G-01～05](../research/agent-harness-comparison/core-model-semantic-coverage.md#4-需要独立交付的合同差异)。这些能力在独立切片中开放；普通请求的原命令、接纳、未知效果与费用恢复责任从最小装配起保留。单进程便利不降低 [ADR-0003](../adr/0003-production-distributed.md) 的生产进程分工与恢复目标。
 
 ### 阶段一：可运行闭环与本机多进程恢复
+
+2026-10-02 已交付 1.2 中的公共 Tx/原命令/JobStore/工作模板、显式双数据库迁移及真实故障探针，见[接入说明](../../internal/durable/README.md)与[证据](../../.scratch/reliable-work/evidence.md)。领域 repositories、身份/批准、正式时钟与默认宿主恢复尚待接入，1.2 未整体退出；现有五进程继续提供诊断且业务 ready 为 503。
 
 | 切片 | 交付内容与先决依赖 | 退出证据 |
 | --- | --- | --- |

@@ -4,4 +4,6 @@
 
 [check-asset-locations.py](check-asset-locations.py) 核对唯一维护源、source-map 当前目标和 UML sourceDoc。历史 `.scratch` roundtrip、渲染 manifest 与原材料摘要保留，不把旧生成器作为当前图的维护入口。
 
-Go 线协议生成、严格解析和 SQL 生成随实现切片引入。将来 protoc-gen-go 输出到 `internal/wire/rpc/v1/`，它不是 `api/` 的领域类型；PG/SQLite 的 sqlc 查询和产物各自保存在对应存储适配器。
+`make sql-generate` 使用固定 sqlc v1.31.1 从两方言 SQL 生成各自 querygen；`make sql-check` 重新生成并检查差异，生成物只由工具维护。Go 线协议生成与传输严格 codec 随后续切片引入，Proto 仍不作为 api 领域类型。
+
+`make durable-check` 经 test-durable.mjs 运行真实数据库 race 套件；durable-env.mjs 只向子进程环境提供本机连接凭据。原始小负载证据写入忽略的 dev/.state/durable-cost.jsonl。migrate-local.mjs 对应两项显式迁移命令，使用独立迁移身份或原 SQLite 文件锁；角色启动不会调用它。

@@ -1,6 +1,6 @@
 # 项目开发指引
 
-本仓库是 Harness 的 Go/TypeScript monorepo。当前可运行角色生命周期、数据库探测与本地诊断 SDK/Web；Task、Decision、Operation、WSS/gRPC 和业务恢复仍待后续切片交付。实际运行范围见[开发手册](dev/README.md)。
+本仓库是 Harness 的 Go/TypeScript monorepo。当前有角色生命周期、诊断 SDK/Web 和内部可靠接纳/持久作业框架；Task、Decision、Operation、WSS/gRPC 与领域恢复仍待后续切片。实际范围见[开发手册](dev/README.md)。
 
 ## 开始工作
 
@@ -16,7 +16,7 @@
 | --- | --- |
 | `api/` | 公开 Go 领域值类型与组件 ports |
 | `runtime/` | 公开嵌入与装配入口，组合默认实现与替换组件 |
-| `cmd/harness/`、`cmd/harnessd/`、`cmd/harness-sim/` | CLI、角色宿主、模拟设备入口；当前模拟设备尚未实现 |
+| `cmd/harness/`、`cmd/harnessd/`、`cmd/harness-sim/`、`cmd/harness-migrate/` | CLI、角色宿主、模拟设备、显式迁移；模拟设备待实现 |
 | `sdk/go/`、`sdk/ts/` | Go/TypeScript 客户端与扩展辅助 |
 | `apps/web/` | React/TypeScript/Vite 参考应用，通过 TS SDK 访问服务 |
 | `internal/{orchestrator,brain,execution,memory,security,interaction,collaboration,extensions,evaluation}/` | 九模块的领域规则与所属事实 |
@@ -44,11 +44,12 @@
 - 修改协议时同步维护根 [contracts](contracts/README.md) 的机器资产与 [架构契约](docs/architecture/contracts/README.md) 的规范正文，补齐适用正反例；使用同版契约验证实现与 SDK。
 - DTO、SDK 类型和方法映射从固定契约生成。修改源契约或生成器后重新生成，保持产物可复现；生成文件由生成流程维护。
 - 实现线协议入口时，按[协议编码规则](docs/architecture/contracts/protocol.md)在普通反序列化之前校验原始字节；类型生成和 Schema 校验之外的领域规则仍由负责模块裁决。
-- 当前工具入口见 [tools/README.md](tools/README.md)。Go/SQL 生成随切片引入；当前 Proto 检查产物写入忽略目录 `dev/.state/generated/proto/`。
+- 当前工具入口见 [tools/README.md](tools/README.md)。SQL 使用固定 sqlc，修改源后运行 `make sql-generate`；Go 线协议生成待引入，Proto 检查产物在忽略的 `dev/.state/generated/proto/`。
 
 ### 持久化与外部调用
 
 - PostgreSQL/SQLite 使用显式 SQL、独立查询与迁移。SQL 生成物保留在对应存储适配器，迁移通过显式受控步骤执行，角色启动不自动执行业务迁移。
+- 修改持久框架先读[接入约束](internal/durable/README.md)：领域只取 Tx/Work，Engine 与 SQL handle 留在可信装配/适配器；事实、决定与新责任共同提交，闭包不执行外部动作。
 - 提交结果未知或外部答复丢失时，沿原 Command/Task/Operation 身份恢复和核对。数据库驱动及供应商 SDK 的透明重试不得重复可能已提交的业务或外部效果。
 - 内容存储与受管文件效果目标分别维护。恢复使用原数据根与原账本；依赖缺失时保持业务不接纳。
 - 依赖版本由 manifests、锁文件和 Docker 镜像摘要维护，变更时同步更新。凭据与运行状态保存在忽略的 `dev/.env`、`dev/.state/`，日志仅输出有限诊断。
@@ -67,6 +68,9 @@ make deps-down       # 停止中间件，保留数据卷
 make build           # 构建 Go 命令、TS SDK 与 Web
 make check           # Go race/vet、TS 类型及静态契约检查
 make contracts-check # 单独运行静态契约与 Proto 检查
+make durable-check   # 真实 PG/SQLite、独立进程与故障/小负载证据
+make sql-check       # 独立 SQL 方言生成差异
+make migrate-postgres # 显式升级原 PG；SQLite 用 make migrate-sqlite（先停单体）
 ```
 
 默认角色为 gateway、application、两个 worker、executor；[topology.json](dev/topology.json) 是脚本与前端代理共用的实例清单。中间件由 Compose 提供 PostgreSQL。
@@ -76,7 +80,7 @@ make contracts-check # 单独运行静态契约与 Proto 检查
 ## 验证要求
 
 - Go 规则单元测试就近放在源码旁，TS 规则测试同样就近组织；跨包、跨进程和验收资产放 `tests/` 对应目录。
-- 代码变更完成适用的构建与检查；共用入口为 `make build`、`make check`。涉及事务、领取竞争或恢复时，分别取得真实 PostgreSQL/SQLite 及适用多进程证据，SQLite 结果不能推定 PG 并发正确。
+- 代码变更完成适用的构建与检查；共用入口为 `make build`、`make check`。涉及事务、领取竞争或恢复时运行 `make durable-check`，取得真实 PostgreSQL/SQLite 及适用多进程证据；普通 Go 检查跳过的 PG 不算通过。
 - 契约变更运行 `make contracts-check`。静态向量、Proto 编译与本地探测分别报告，业务互操作、故障恢复和生产容量按对应验收规则取证。
 - 文档变更检查本地链接、锚点与 Markdown 结构；架构及当前资产使用 `python3 docs/architecture/validation/check_documents.py`。该脚本尚未扫描根 `AGENTS.md`，修改本文件时另行检查其引用。
 

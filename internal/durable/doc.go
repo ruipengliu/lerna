@@ -1,3 +1,5 @@
-// Package durable reserves the implementation boundary for Transactions, durable admission, JobStore and conditional completion.
-// Implementation is introduced by the corresponding architecture slice.
+// Package durable implements local transaction outcomes, original command
+// admission, revision-aware leased jobs and bounded work. Trusted assembly owns
+// Engine; domain repositories receive Tx and handlers receive scope-bound Work.
+// Domain authorization, effects, success and safe retry remain domain ports.
 package durable

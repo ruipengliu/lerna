@@ -1,6 +1,6 @@
 # Lerna / Harness
 
-按 [技术架构](docs/architecture/README.md) 建立的 Go/TypeScript monorepo。当前可运行开发角色、数据库探测、健康检查与退出处理；Task、Decision、Operation、WSS/gRPC 和业务恢复随后续切片交付。业务就绪入口始终返回未就绪。
+按 [技术架构](docs/architecture/README.md) 建立的 Go/TypeScript monorepo。已实现开发角色生命周期和[可靠接纳与持久作业框架](internal/durable/README.md)，含 PostgreSQL/SQLite 适配、显式迁移及真实故障套件。Task、Decision、Operation、WSS/gRPC 和领域恢复随后续切片交付；默认业务就绪入口仍为 503。
 
 在仓库根执行：
 
@@ -16,6 +16,9 @@ make dev         # Docker PostgreSQL + 五个本机后端进程 + Vite
 ```sh
 make build
 make check
+make durable-check    # 真实 PG/SQLite、独立 worker 与故障证据
+make migrate-postgres # 显式升级原开发 PG；启动不自动迁移
+# 单体停止后使用 make migrate-sqlite
 build/harness status --url http://127.0.0.1:18080
 ```
 
