@@ -7,6 +7,7 @@ package querygen
 
 import (
 	"context"
+	"encoding/json"
 )
 
 const ClaimCandidates = `-- name: ClaimCandidates :many
@@ -238,6 +239,92 @@ func (q *Queries) LookupCommand(ctx context.Context, arg LookupCommandParams) (L
 	return i, err
 }
 
+const LookupJobKey = `-- name: LookupJobKey :one
+SELECT tenant_id,owner_id,kind,responsibility_key,job_id,source_ref,state,due_at,work_revision,lease_epoch,lease_until,holder_id,wait_reason FROM durable_jobs WHERE tenant_id=$1 AND owner_id=$2 AND kind=$3 AND responsibility_key=$4 FOR UPDATE
+`
+
+type LookupJobKeyParams struct {
+	TenantID          string
+	OwnerID           string
+	Kind              string
+	ResponsibilityKey string
+}
+
+func (q *Queries) LookupJobKey(ctx context.Context, arg LookupJobKeyParams) (DurableJob, error) {
+	row := q.db.QueryRowContext(ctx, LookupJobKey,
+		arg.TenantID,
+		arg.OwnerID,
+		arg.Kind,
+		arg.ResponsibilityKey,
+	)
+	var i DurableJob
+	err := row.Scan(
+		&i.TenantID,
+		&i.OwnerID,
+		&i.Kind,
+		&i.ResponsibilityKey,
+		&i.JobID,
+		&i.SourceRef,
+		&i.State,
+		&i.DueAt,
+		&i.WorkRevision,
+		&i.LeaseEpoch,
+		&i.LeaseUntil,
+		&i.HolderID,
+		&i.WaitReason,
+	)
+	return i, err
+}
+
+const LookupJobKeys = `-- name: LookupJobKeys :many
+SELECT j.tenant_id,j.owner_id,j.kind,j.responsibility_key,j.job_id,j.source_ref,j.state,j.due_at,j.work_revision,j.lease_epoch,j.lease_until,j.holder_id,j.wait_reason FROM durable_jobs j
+JOIN jsonb_array_elements($3::jsonb) AS x ON j.kind=x->>'Kind' AND j.responsibility_key=x->>'Responsibility'
+WHERE j.tenant_id=$1 AND j.owner_id=$2 ORDER BY j.kind,j.responsibility_key FOR UPDATE OF j
+`
+
+type LookupJobKeysParams struct {
+	TenantID string
+	OwnerID  string
+	Column3  json.RawMessage
+}
+
+func (q *Queries) LookupJobKeys(ctx context.Context, arg LookupJobKeysParams) ([]DurableJob, error) {
+	rows, err := q.db.QueryContext(ctx, LookupJobKeys, arg.TenantID, arg.OwnerID, arg.Column3)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []DurableJob
+	for rows.Next() {
+		var i DurableJob
+		if err := rows.Scan(
+			&i.TenantID,
+			&i.OwnerID,
+			&i.Kind,
+			&i.ResponsibilityKey,
+			&i.JobID,
+			&i.SourceRef,
+			&i.State,
+			&i.DueAt,
+			&i.WorkRevision,
+			&i.LeaseEpoch,
+			&i.LeaseUntil,
+			&i.HolderID,
+			&i.WaitReason,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const OpenJobs = `-- name: OpenJobs :one
 SELECT count(*) AS open_count,COALESCE(min(due_at),0) AS oldest_due FROM durable_jobs WHERE tenant_id=$1 AND owner_id=$2 AND state<>'done'
 `
@@ -307,6 +394,65 @@ func (q *Queries) RaiseJob(ctx context.Context, arg RaiseJobParams) (DurableJob,
 		&i.WaitReason,
 	)
 	return i, err
+}
+
+const RepairJob = `-- name: RepairJob :execrows
+INSERT INTO durable_jobs(tenant_id,owner_id,kind,responsibility_key,job_id,source_ref,state,due_at,work_revision,lease_epoch,lease_until,holder_id,wait_reason) VALUES($1,$2,$3,$4,$5,$6,'ready',$7,1,0,0,'','')
+ON CONFLICT(tenant_id,owner_id,kind,responsibility_key) DO UPDATE SET work_revision=durable_jobs.work_revision+1,state='ready',due_at=excluded.due_at,wait_reason=''
+WHERE durable_jobs.source_ref=excluded.source_ref AND durable_jobs.state='done'
+`
+
+type RepairJobParams struct {
+	TenantID          string
+	OwnerID           string
+	Kind              string
+	ResponsibilityKey string
+	JobID             string
+	SourceRef         string
+	DueAt             int64
+}
+
+func (q *Queries) RepairJob(ctx context.Context, arg RepairJobParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, RepairJob,
+		arg.TenantID,
+		arg.OwnerID,
+		arg.Kind,
+		arg.ResponsibilityKey,
+		arg.JobID,
+		arg.SourceRef,
+		arg.DueAt,
+	)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
+const RepairJobs = `-- name: RepairJobs :execrows
+INSERT INTO durable_jobs(tenant_id,owner_id,kind,responsibility_key,job_id,source_ref,state,due_at,work_revision,lease_epoch,lease_until,holder_id,wait_reason)
+SELECT $1,$2,x->>'Kind',x->>'Responsibility',x->>'ID',x->>'Source','ready',$4,1,0,0,'','' FROM jsonb_array_elements($3::jsonb) AS x WHERE true
+ON CONFLICT(tenant_id,owner_id,kind,responsibility_key) DO UPDATE SET work_revision=durable_jobs.work_revision+1,state='ready',due_at=excluded.due_at,wait_reason=''
+WHERE durable_jobs.source_ref=excluded.source_ref AND durable_jobs.state='done'
+`
+
+type RepairJobsParams struct {
+	TenantID string
+	OwnerID  string
+	Column3  json.RawMessage
+	DueAt    int64
+}
+
+func (q *Queries) RepairJobs(ctx context.Context, arg RepairJobsParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, RepairJobs,
+		arg.TenantID,
+		arg.OwnerID,
+		arg.Column3,
+		arg.DueAt,
+	)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
 }
 
 const ReserveCommand = `-- name: ReserveCommand :execrows

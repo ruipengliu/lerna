@@ -35,3 +35,87 @@ type DurableJob struct {
 	HolderID          string
 	WaitReason        string
 }
+
+type OrchestratorBalance struct {
+	TenantID   string
+	OwnerID    string
+	TaskID     string
+	Unit       string
+	LimitValue string
+	Spent      string
+	Reserved   string
+}
+
+type OrchestratorGate struct {
+	TenantID string
+	OwnerID  string
+	GateKey  string
+	Revision int64
+}
+
+type OrchestratorReceiver struct {
+	TenantID     string
+	OwnerID      string
+	AllocationID string
+	Data         string
+}
+
+type OrchestratorRecord struct {
+	TenantID   string
+	OwnerID    string
+	Kind       string
+	ID         string
+	TaskID     string
+	Revision   int64
+	State      string
+	CurrentKey string
+	Immutable  bool
+	Data       string
+}
+
+type OrchestratorScheduleTurn struct {
+	TenantID  string
+	OwnerID   string
+	Kind      string
+	Dimension string
+	EntityID  string
+	Turn      int64
+}
+
+type OrchestratorScheduler struct {
+	TenantID string
+	OwnerID  string
+	Kind     string
+	Turn     int64
+}
+
+type OrchestratorTask struct {
+	TenantID     string
+	OwnerID      string
+	TaskID       string
+	SubjectID    string
+	ParentTaskID string
+	Depth        int64
+	CreatedAt    int64
+	Revision     int64
+	Status       string
+	Data         string
+}
+
+type OrchestratorUserCapacity struct {
+	TenantID    string
+	OwnerID     string
+	SubjectID   string
+	ActiveCount int64
+}
+
+type OrchestratorWorkRoute struct {
+	TenantID          string
+	OwnerID           string
+	Kind              string
+	ResponsibilityKey string
+	SubjectID         string
+	TaskID            string
+	ProviderID        string
+	ResourceID        string
+}

@@ -133,6 +133,36 @@ func (t *Tx) reserve(record CommandRecord) (CommandRecord, bool, error) {
 	}
 	return r, created, nil
 }
+
+// ReserveLocal uses the same command ledger for an atomic local handoff. Trusted
+// domain assembly validates its command before reserving; all newly reserved
+// identities must be decided in this transaction. Call before business locks.
+func (t *Tx) ReserveLocal(service string, intent FixedIntent) (CommandRecord, bool, error) {
+	p, ok := contracts.CommandPolicy(intent.Method())
+	if !ok || !validName(service) || intent.digest == "" || p.ExpectedRevision != (intent.intent.ExpectedRevision != nil) {
+		return CommandRecord{}, false, t.fail(ErrPrecondition)
+	}
+	r, created, err := t.reserve(CommandRecord{Key: CommandKey{service, intent.CommandID()}, Digest: intent.digest, Method: intent.Method(), TargetID: intent.TargetID(), State: "reserved", ExpiresAt: intent.expires})
+	if err != nil {
+		return r, false, err
+	}
+	if r.Digest != intent.digest {
+		return r, false, t.fail(ErrConflict)
+	}
+	if r.State == "gone" {
+		return r, false, t.fail(ErrGone)
+	}
+	if created {
+		now, err := t.Now()
+		if err != nil {
+			return r, false, err
+		}
+		if !now.Before(time.UnixMilli(intent.expires)) {
+			return r, false, t.fail(ErrExpired)
+		}
+	}
+	return r, created, nil
+}
 func (t *Tx) Lookup(key CommandKey) (CommandRecord, error) {
 	if err := t.enter(); err != nil {
 		return CommandRecord{}, err

@@ -66,7 +66,7 @@ func NewID(prefix string) string {
 	return prefix + "_" + hex.EncodeToString(b[:])
 }
 
-var idPattern = regexp.MustCompile(`^[a-z][a-z0-9]*_[0-9a-f]{32}$`)
+var idPattern = regexp.MustCompile(`^[a-z][a-z0-9_]*_[0-9a-f]{32}$`)
 
 type CommandKey struct{ ServiceID, CommandID string }
 
@@ -138,6 +138,8 @@ type Session interface {
 	Lookup(context.Context, Scope, CommandKey) (CommandRecord, error)
 	Save(context.Context, Scope, CommandRecord) error
 	Raise(context.Context, Scope, JobKey, string, string, int64) (Job, error)
+	Repair(context.Context, Scope, JobKey, string, string, int64) (Job, bool, error)
+	RepairMany(context.Context, Scope, []JobRepair, int64) ([]Job, bool, error)
 	Hint(context.Context, Scope, JobKey, int64) error
 	LockJob(context.Context, Scope, string) (Job, error)
 	Candidates(context.Context, Scope, string, int) ([]Job, error)

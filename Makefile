@@ -31,6 +31,7 @@ build:
 	pnpm -r run build
 
 check:
+	$(MAKE) domain-check
 	go test -race ./...
 	go vet ./...
 	pnpm -r run typecheck
@@ -45,6 +46,12 @@ sql-generate:
 
 sql-check:
 	node tools/generate-sql.mjs --check
+
+domain-generate:
+	python3 tools/generate-domain.py
+
+domain-check:
+	python3 tools/generate-domain.py --check
 
 durable-check:
 	node tools/test-durable.mjs -v

@@ -45,3 +45,22 @@ DELETE FROM durable_jobs WHERE tenant_id=$1 AND owner_id=$2 AND kind=$3 AND resp
 -- name: OpenJobs :one
 SELECT count(*) AS open_count,COALESCE(min(due_at),0) AS oldest_due FROM durable_jobs WHERE tenant_id=$1 AND owner_id=$2 AND state<>'done';
 
+
+-- name: RepairJob :execrows
+INSERT INTO durable_jobs(tenant_id,owner_id,kind,responsibility_key,job_id,source_ref,state,due_at,work_revision,lease_epoch,lease_until,holder_id,wait_reason) VALUES($1,$2,$3,$4,$5,$6,'ready',$7,1,0,0,'','')
+ON CONFLICT(tenant_id,owner_id,kind,responsibility_key) DO UPDATE SET work_revision=durable_jobs.work_revision+1,state='ready',due_at=excluded.due_at,wait_reason=''
+WHERE durable_jobs.source_ref=excluded.source_ref AND durable_jobs.state='done';
+
+-- name: LookupJobKey :one
+SELECT tenant_id,owner_id,kind,responsibility_key,job_id,source_ref,state,due_at,work_revision,lease_epoch,lease_until,holder_id,wait_reason FROM durable_jobs WHERE tenant_id=$1 AND owner_id=$2 AND kind=$3 AND responsibility_key=$4 FOR UPDATE;
+
+-- name: RepairJobs :execrows
+INSERT INTO durable_jobs(tenant_id,owner_id,kind,responsibility_key,job_id,source_ref,state,due_at,work_revision,lease_epoch,lease_until,holder_id,wait_reason)
+SELECT $1,$2,x->>'Kind',x->>'Responsibility',x->>'ID',x->>'Source','ready',$4,1,0,0,'','' FROM jsonb_array_elements($3::jsonb) AS x WHERE true
+ON CONFLICT(tenant_id,owner_id,kind,responsibility_key) DO UPDATE SET work_revision=durable_jobs.work_revision+1,state='ready',due_at=excluded.due_at,wait_reason=''
+WHERE durable_jobs.source_ref=excluded.source_ref AND durable_jobs.state='done';
+
+-- name: LookupJobKeys :many
+SELECT j.tenant_id,j.owner_id,j.kind,j.responsibility_key,j.job_id,j.source_ref,j.state,j.due_at,j.work_revision,j.lease_epoch,j.lease_until,j.holder_id,j.wait_reason FROM durable_jobs j
+JOIN jsonb_array_elements($3::jsonb) AS x ON j.kind=x->>'Kind' AND j.responsibility_key=x->>'Responsibility'
+WHERE j.tenant_id=$1 AND j.owner_id=$2 ORDER BY j.kind,j.responsibility_key FOR UPDATE OF j;

@@ -125,9 +125,9 @@ func (s *suite) reopen(t *testing.T) {
 	}
 	var err error
 	if s.driver == "postgres" {
-		s.store, err = pg.Open(ctx(), s.appURL, []durable.Scope{scope, other}, 4, false)
+		s.store, err = pg.Open(ctx(), s.appURL, []durable.Scope{scope, other, taskScope}, 4, false)
 	} else {
-		s.store, err = filedb.Open(ctx(), s.path, []durable.Scope{scope, other})
+		s.store, err = filedb.Open(ctx(), s.path, []durable.Scope{scope, other, taskScope})
 	}
 	if err != nil {
 		t.Fatal(err)
@@ -547,6 +547,16 @@ func TestDurableConformance(t *testing.T) {
 							t.Fatal("hint raised work")
 						}
 					})
+				}
+			})
+			t.Run("FW04_ElapsedWaitReturnsToReady", func(t *testing.T) {
+				s := newSuite(t, driver)
+				s.submit(t, "elapsed-wait")
+				claim := s.claim(t, durable.NewID("boot"), time.Second)
+				mustCommit(t, s.finish(t, claim, durable.Waiting(time.Now().Add(-time.Second), "dependency"), false))
+				job := s.job(t, "elapsed-wait")
+				if job.State != "ready" || job.DueAt > time.Now().UnixMilli() || job.WaitReason != "" {
+					t.Fatalf("elapsed wait was not made ready: %+v", job)
 				}
 			})
 			t.Run("FW07_RetainedIdentityAndJobRebuild", func(t *testing.T) {

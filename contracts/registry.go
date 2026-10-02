@@ -12,8 +12,18 @@ var methodsJSON []byte
 
 type MethodPolicy struct {
 	Kind             string
+	Input            string
+	Output           string
+	Target           string
 	Stages           []string
 	ExpectedRevision bool `json:"expected_revision"`
+}
+
+// Method returns a copy of the frozen command or query definition.
+func Method(name string) (MethodPolicy, bool) {
+	p, ok := registry()[name]
+	p.Stages = append([]string(nil), p.Stages...)
+	return p, ok
 }
 
 var registry = sync.OnceValue(func() map[string]MethodPolicy {

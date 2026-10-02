@@ -80,6 +80,17 @@ type Tx struct {
 
 func (t *Tx) Scope() Scope             { return t.scope }
 func (t *Tx) Context() context.Context { return t.ctx }
+
+// Now reads the authority clock of this transaction. Domain deadlines use it;
+// an external action still requires the configured clock/authorization ports.
+func (t *Tx) Now() (time.Time, error) {
+	if err := t.enter(); err != nil {
+		return time.Time{}, err
+	}
+	defer t.leave()
+	n, err := t.session.Now(t.ctx)
+	return time.UnixMilli(n).UTC(), t.fail(err)
+}
 func (t *Tx) fail(err error) error {
 	if err != nil && t.poison == nil {
 		t.poison = err

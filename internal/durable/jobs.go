@@ -3,8 +3,62 @@ package durable
 import (
 	"context"
 	"errors"
+	"sort"
 	"time"
 )
+
+type JobRepair struct{ Kind, Responsibility, Source, ID string }
+
+// RepairMany checks a finite, sorted set in two storage statements. It preserves
+// unfinished revisions, claims and due times; only domain-proven lost work reopens.
+func (t *Tx) RepairMany(items []JobRepair, due time.Time) ([]Job, error) {
+	if e := t.enter(); e != nil {
+		return nil, e
+	}
+	defer t.leave()
+	if len(items) == 0 {
+		return []Job{}, nil
+	}
+	if len(items) > 2048 || due.IsZero() {
+		return nil, t.fail(ErrPrecondition)
+	}
+	all := append([]JobRepair(nil), items...)
+	sort.Slice(all, func(i, j int) bool {
+		return (JobKey{all[i].Kind, all[i].Responsibility}).order() < (JobKey{all[j].Kind, all[j].Responsibility}).order()
+	})
+	for i := range all {
+		key := JobKey{all[i].Kind, all[i].Responsibility}
+		if e := t.jobOrder(key); e != nil {
+			return nil, e
+		}
+		if !validName(all[i].Source) || i > 0 && all[i].Kind == all[i-1].Kind && all[i].Responsibility == all[i-1].Responsibility {
+			return nil, t.fail(ErrPrecondition)
+		}
+		all[i].ID = NewID("job")
+	}
+	batch, ok := t.session.(interface {
+		RepairMany(context.Context, Scope, []JobRepair, int64) ([]Job, bool, error)
+	})
+	if !ok {
+		return nil, t.fail(ErrUnsupported)
+	}
+	jobs, changed, e := batch.RepairMany(t.ctx, t.scope, all, due.UnixMilli())
+	if e != nil {
+		return nil, t.fail(e)
+	}
+	if len(jobs) != len(all) {
+		return nil, t.fail(ErrInvariant)
+	}
+	for i, j := range jobs {
+		if j.Scope != t.scope || j.Key != (JobKey{all[i].Kind, all[i].Responsibility}) || j.SourceRef != all[i].Source {
+			return nil, t.fail(ErrConflict)
+		}
+	}
+	if changed {
+		t.wake = true
+	}
+	return jobs, nil
+}
 
 func (t *Tx) Raise(key JobKey, source string, due time.Time) (Job, error) {
 	if err := t.enter(); err != nil {
@@ -41,6 +95,29 @@ func (t *Tx) Hint(key JobKey, due time.Time) error {
 	}
 	t.wake = true
 	return nil
+}
+
+// Repair supplies a missing/lost responsibility from a complete domain
+// projection. An unfinished job retains revision, lease and existing backoff.
+func (t *Tx) Repair(key JobKey, source string, due time.Time) (Job, error) {
+	if e := t.enter(); e != nil {
+		return Job{}, e
+	}
+	defer t.leave()
+	if e := t.jobOrder(key); e != nil {
+		return Job{}, e
+	}
+	if !validName(source) || due.IsZero() {
+		return Job{}, t.fail(ErrPrecondition)
+	}
+	j, changed, e := t.session.Repair(t.ctx, t.scope, key, source, NewID("job"), due.UnixMilli())
+	if e != nil {
+		return Job{}, t.fail(e)
+	}
+	if changed {
+		t.wake = true
+	}
+	return j, nil
 }
 func (t *Tx) guard(claim Claim) (Job, error) {
 	if claim.Scope() != t.scope || claim.JobID() == "" {
@@ -93,17 +170,33 @@ func (t *Tx) Finish(claim Claim, disposition Disposition) (string, error) {
 		j.State = "ready"
 		t.wake = true
 	} else {
-		j.State = disposition.State
-		if j.State == "waiting" {
+		if disposition.State == "waiting" {
+			if disposition.Reason == "" || disposition.DueAt.IsZero() {
+				return "", t.fail(ErrPrecondition)
+			}
 			now, err := t.session.Now(t.ctx)
 			if err != nil {
 				return "", t.fail(err)
 			}
-			if disposition.Reason == "" || disposition.DueAt.UnixMilli() <= now || disposition.DueAt.UnixMilli() > now+int64(time.Hour/time.Millisecond) {
+			due := disposition.DueAt.UnixMilli()
+			if due > now+int64(time.Hour/time.Millisecond) {
 				return "", t.fail(ErrPrecondition)
 			}
-			j.DueAt = disposition.DueAt.UnixMilli()
-			j.WaitReason = disposition.Reason
+			if due <= now {
+				// A bounded handler may finish its transaction after the requested
+				// backoff expires. The elapsed wait is ready work, not a failed
+				// disposition that should roll the domain transaction back.
+				j.State = "ready"
+				j.DueAt = now
+				j.WaitReason = ""
+				t.wake = true
+			} else {
+				j.State = "waiting"
+				j.DueAt = due
+				j.WaitReason = disposition.Reason
+			}
+		} else {
+			j.State = disposition.State
 		}
 	}
 	j.HolderID = ""

@@ -13,6 +13,8 @@ import (
 
 var ErrSchema = errors.New("durable schema is missing or incompatible; run explicit migrations")
 
+const SchemaVersion int64 = 2
+
 func Migrate(ctx context.Context, db *sql.DB, driver string) error {
 	steps, err := fs.Sub(migrations.Files, driver)
 	if err != nil {
@@ -45,7 +47,7 @@ func Migrate(ctx context.Context, db *sql.DB, driver string) error {
 func CheckVersion(ctx context.Context, db *sql.DB) error {
 	var version int64
 	var applied bool
-	if err := db.QueryRowContext(ctx, "SELECT version_id,is_applied FROM durable_schema_version ORDER BY id DESC LIMIT 1").Scan(&version, &applied); err != nil || version != 1 || !applied {
+	if err := db.QueryRowContext(ctx, "SELECT version_id,is_applied FROM durable_schema_version ORDER BY id DESC LIMIT 1").Scan(&version, &applied); err != nil || version != SchemaVersion || !applied {
 		return ErrSchema
 	}
 	return nil
