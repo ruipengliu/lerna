@@ -18,6 +18,11 @@ import (
 
 const AddressSpaceBytes = 1 << 30
 
+// JournalPhase 只供宿主故障验证准确原日志的持久边界，不替换执行结果。
+type JournalPhase string
+
+const AfterJournalRename JournalPhase = "after_rename_before_directory_sync"
+
 type Config struct {
 	Root          string
 	WorkerPath    string
@@ -27,6 +32,7 @@ type Config struct {
 	Scope         rt.Scope
 	Location      string
 	MaxConcurrent int
+	JournalFault  func(JournalPhase, string) error
 }
 
 type Manifest struct {

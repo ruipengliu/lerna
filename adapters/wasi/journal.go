@@ -130,6 +130,11 @@ func (r *Runtime) writeJSON(name string, value any) error {
 	if err = r.root.Rename(tmp, name); err != nil {
 		return err
 	}
+	if r.cfg.JournalFault != nil {
+		if err = r.cfg.JournalFault(AfterJournalRename, name); err != nil {
+			return err
+		}
+	}
 	dir, err := r.root.Open(".")
 	if err != nil {
 		return err
@@ -163,10 +168,12 @@ func (r *Runtime) createRecord(record runRecord) error {
 	if r.journalCount >= maxJournals {
 		return api.E("overloaded", "wasi_journal_capacity_exhausted")
 	}
+	// rename 后的目录同步失败可能已经留下原责任；写入前保守占额，未知不释放。
+	// 即使明确早期失败，本进程也可提前耗尽；重开只沿原目录实际日志重新计数。
+	r.journalCount++
 	if err = r.writeJSON(record.AttemptID+".json", record); err != nil {
 		return err
 	}
-	r.journalCount++
 	return nil
 }
 func (r *Runtime) updateRecord(record runRecord) error {

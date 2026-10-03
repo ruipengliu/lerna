@@ -47,6 +47,10 @@ cells 与平台 probes 共享有界活动槽，只有实际 wait 完成才释放
 持有所有权。Prepare 只固定准确代码/输入/namespace、generation、CAS 和完整来源；原
 数据库 barrier 提交成功后，fsync 原 Attempt 入口 journal 才允许一次 spawn。
 提交未知不 spawn；原 journal 最多 10000 项。spawn 次数未知时明确标记未知，不填确定零次。
+原日志写入前保守占目录额度；rename 已完成后的目录同步失败仍保留该额度，当前进程
+的早期失败也可提前耗尽。重开按原独占目录实际日志计数，已有 Attempt 核对/更新不追加
+额度，不删除原终态日志。`Config.JournalFault` 只用于准确 native rename 后的目录同步
+故障验收；默认未配置，不替换程序效果或使用量。
 
 成功输出、准确来源、新 namespace head、原 Operation 和 Job 在原短事务共同 CAS 提交。
 trap、OOM 拒绝、超限和取消都丢弃 provisional stdout。当前 generation/namespace 冲突不发布
@@ -63,5 +67,10 @@ PID/start-time fence，不能仅凭 context 取消报告退出。实际退出已
 内存/CPU/wall/输出限制、旧 CAS、原控制取消、丢内容答复后删原代码并重开恢复。
 [真实宿主 SIGKILL 验收](../../conformance/integration/wasi_crash_test.go)独立观察内核
 PID/start-time，确认旧 worker 已退出，重开原 Attempt 保留未知与原 namespace，不重放。
+[目录容量故障验收](../../conformance/integration/wasi_journal_capacity_test.go)用有界历史文件
+预置 9999 项目录前态，准确 rename 后注入 EIO，核下一新 ID 拒绝、原日志及重开核对。
+该前态不代表实际运行过 9999 次程序。[环境收尾故障验收](../../conformance/integration/environment_cleanup_fault_test.go)
+使用原 SQLite 文件的真实 INSERT trigger 故障，核环境、原拒绝回执及必需 cleanup Job
+共同回滚；移除故障后同一 Claim 完成准确拒绝和实际关闭。
 这支持选定本机 Linux profile；其他 OS/架构、任意原生程序、自定义 guest hostcall、
 跨设备/跨 owner 权威、生产 AZ/断电与多物理 Attempt 未由这些测试证明。
