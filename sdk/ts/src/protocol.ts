@@ -93,6 +93,8 @@ export interface Ready {
   profile: typeof PROFILE;
   transport_profile: typeof TRANSPORT_PROFILE;
   methods_digest: string;
+  identity_scope: string;
+  identity_revision: number;
   limits: Limits;
 }
 export interface RequestFrame {

@@ -60,7 +60,10 @@ export function TrustedPreview({
       .then((values) =>
         values.map(({ ref, bytes }): Body => {
           if (["text/plain", "text/markdown", "application/json"].includes(ref.media_type))
-            return { ref, text: new TextDecoder("utf-8", { fatal: true }).decode(bytes) };
+            return {
+              ref,
+              text: new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(bytes),
+            };
           if (["image/png", "image/jpeg"].includes(ref.media_type)) {
             const encoded = btoa(Array.from(bytes, (entry) => String.fromCharCode(entry)).join(""));
             const image = `data:${ref.media_type};base64,${encoded}`;

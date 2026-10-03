@@ -148,6 +148,8 @@ const readySchema = object({
   profile: { const: PROFILE },
   transport_profile: { const: TRANSPORT_PROFILE },
   methods_digest: hash,
+  identity_scope: hash,
+  identity_revision: count,
   limits: limitsSchema,
 });
 const responseSchema = object({
@@ -315,7 +317,19 @@ export class ContractRegistry {
     return receipt;
   }
   ready(value: unknown): Ready {
+    if (
+      !value ||
+      typeof value !== "object" ||
+      !Object.hasOwn(value, "identity_scope") ||
+      !Object.hasOwn(value, "identity_revision")
+    )
+      throw new ProtocolError("unsupported_ready_identity_binding");
     const ready = checked<Ready>(validateReady, value, "ready_schema_violation");
+    if (
+      ready.identity_scope !== this.discovery.identity_scope ||
+      ready.identity_revision !== this.discovery.identity_revision
+    )
+      throw new ProtocolError("ready_identity_mismatch");
     if (
       ready.logical_service_id !== this.discovery.logical_service_id ||
       ready.methods_digest !== this.methodsDigest ||

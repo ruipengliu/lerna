@@ -17,6 +17,8 @@ await client.close();
 
 `command()` 在首次连接或发送前提交 IndexedDB 原命令、JCS 摘要、固定 owner、身份 scope、core 摘要和原方法 Schema。存储失败不首次发送。同 ID 的异内容拒绝；重连不刷新 CAS、默认值、截止或逻辑 owner。回执只有在本地事务 complete 后交付调用者。请求等待覆盖响应验证和耐久提交；超时保留原责任。
 
+每次连接的 `ready` 必须声明该连接实际认证的 `identity_scope` 和 `identity_revision`，并与认证发现精确匹配。旧协议缺少此绑定、主体切换或凭据修订变化都会在发请求前关闭连接。原账本责任保留在原 scope；调用方须重新读取认证发现，不能把旧回调迁移到新身份。
+
 `preparePublication()` 一次形成 ContentRef、准确原字节、reserve/put 和可选后续命令。`publishOriginal()` 在共同保存后执行原票据上传、发布和后续提交。相同意图可在重开后恢复；accepted 后续命令继续留在 pending。业务拒绝、正文出版、Task 完成和服务端清理分别报告。
 
 当前支持 `harness/1`、`architecture-2026-10-data1` 和 `harness-wss/1`。使用原生 WebSocket，子协议为 `harness-wss.v1`。同 core/profile 的旧方法 Schema 随原命令保存，即使认证发现移除方法仍可解释其原回执。不同 core/profile 需要对应发布版解码器；本 SDK 会明确拒绝，保留原命令，不转换到新版本。
