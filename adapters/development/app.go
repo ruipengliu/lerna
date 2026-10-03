@@ -191,6 +191,21 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e = a.configureActionRegistry(drivers); e != nil {
 		return nil, e
 	}
+	if c.InformationReferenceAnswer {
+		if len(a.information) == 0 {
+			return nil, api.E("unsupported", "reference_information_source_required")
+		}
+		lock := a.InstallLock
+		a.InstallLock = component("development-reference-answer-assembly")
+		a.InstallLock.Digest, e = api.Digest(struct {
+			Actions  api.ComponentRef `json:"actions"`
+			Rule     api.ComponentRef `json:"rule"`
+			Question api.Schema       `json:"question"`
+		}{lock, component("source-reference-answer"), InformationQuestionSchema()})
+		if e != nil {
+			return nil, e
+		}
+	}
 	var resources execution.ResourceDriver = a.Phones
 	if !a.OwnsTargets {
 		for i, driver := range drivers {
@@ -227,6 +242,9 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 			rule.MaxObservationAgeSeconds = &age
 		}
 		rules = append(rules, rule)
+	}
+	if c.InformationReferenceAnswer {
+		rules = append(rules, api.RuleDefinition{RuleRef: component("source-reference-answer"), Kind: "quality", ParametersSchemaRef: component("information-reference-question"), Predicate: "quality", AllowedBasis: []string{"verified"}, RequiredEvidenceSchemaRef: component("information-reference-evidence"), ScopeSchemaRef: component("information-reference-scope"), RiskClass: "ordinary", ApplicabilityPolicyRef: a.TaskPolicy.PolicyRef})
 	}
 	cooperation, e := collaboration.New(collaboration.Config{Store: st, Registry: a.Registry, OwnerID: c.OwnerID, Auth: a.ServiceAuth, SubjectGate: taskGate{a}, Participants: []string{"collaboration", "task", "platform"}})
 	if e != nil {

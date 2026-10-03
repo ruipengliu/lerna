@@ -3,6 +3,7 @@ package development
 import (
 	"context"
 	"encoding/json"
+	"github.com/ruipengliu/lerna/adapters/providers"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
 	"github.com/ruipengliu/lerna/internal/interaction"
@@ -78,6 +79,11 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 		}
 	}
 	processed = append(processed, facts.Artifacts...)
+	information, informationSources, e := c.a.informationContext(ctx, scope, t, facts)
+	if e != nil {
+		return task.PreparedDecision{}, e
+	}
+	processed = append(processed, informationSources...)
 	for _, check := range facts.Checks {
 		processed = append(processed, check.ArtifactRef, check.ScopeRef)
 		processed = append(processed, check.EvidenceRefs...)
@@ -106,14 +112,17 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 	}
 	if c.a.Model != nil {
 		packet, err := c.a.Publish(ctx, scope, c.a.ServiceAuth, stableID("content", "context-facts/"+key), "application/vnd.harness.context+json", api.Raw(struct {
-			Facts        task.ContextFacts         `json:"facts"`
-			History      []interaction.HistoryView `json:"history"`
-			ArtifactRule api.ComponentRef          `json:"artifact_rule"`
-			SavedRule    api.ComponentRef          `json:"saved_rule"`
-			AnswerSchema api.ComponentRef          `json:"answer_schema_ref"`
-			GoalSchema   api.Schema                `json:"goal_schema"`
-			Actions      []actionDeclaration       `json:"actions"`
-		}{facts, histories, c.a.ArtifactRule, c.a.SavedRule, c.a.AnswerSchema, brain.GoalSchema(), registered.declarations()}), processed, []api.ContentRef{})
+			Facts                   task.ContextFacts                  `json:"facts"`
+			History                 []interaction.HistoryView          `json:"history"`
+			ArtifactRule            api.ComponentRef                   `json:"artifact_rule"`
+			SavedRule               api.ComponentRef                   `json:"saved_rule"`
+			AnswerSchema            api.ComponentRef                   `json:"answer_schema_ref"`
+			GoalSchema              api.Schema                         `json:"goal_schema"`
+			Actions                 []actionDeclaration                `json:"actions"`
+			InformationQuestion     *InformationQuestion               `json:"information_question,omitempty"`
+			InformationRule         *api.ComponentRef                  `json:"information_rule,omitempty"`
+			InformationObservations []providers.InformationObservation `json:"information_observations,omitempty"`
+		}{facts, histories, c.a.ArtifactRule, c.a.SavedRule, c.a.AnswerSchema, brain.GoalSchema(), registered.declarations(), information.Question, information.Rule, information.Observations}), processed, []api.ContentRef{})
 		if err != nil {
 			return task.PreparedDecision{}, err
 		}
