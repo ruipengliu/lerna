@@ -9,6 +9,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -291,7 +292,9 @@ func (e *OpenAI) verify(ctx context.Context, callID string, enc brain.Encoding) 
 	if err != nil {
 		return err
 	}
-	if !api.Equal(expected, enc) {
+	// 原Body合法时，私有Encoding的base64容器仍可能超过公开JSON上界。
+	// 全类型/准确字节比较保留receiver、计数与每个来源的冻结门禁。
+	if !reflect.DeepEqual(expected, enc) {
 		return api.E("forbidden", "encoded_model_request_changed")
 	}
 	return nil

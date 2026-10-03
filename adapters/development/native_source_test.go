@@ -73,4 +73,26 @@ func TestConfiguredForeignConsumerOpensOriginalSourceContracts(t *testing.T) {
 	if reopened.Scope != app.Scope {
 		t.Fatal("source construction replaced its original database identity")
 	}
+	if err = reopened.Close(); err != nil {
+		t.Fatal(err)
+	}
+	changed := cfg
+	changed.ForeignConsumers = append([]development.ForeignConsumerConfig{}, cfg.ForeignConsumers...)
+	changed.ForeignConsumers[0].DatabaseID = api.NewID("database")
+	if replacement, err := development.OpenApp(ctx, changed, false); !api.IsCode(err, "idempotency_conflict") {
+		if replacement != nil {
+			_ = replacement.Close()
+		}
+		t.Fatalf("another consumer database replaced the original paired responsibility: %v", err)
+	}
+	disabled := cfg
+	disabled.ForeignConsumers = nil
+	closed, err := development.OpenApp(ctx, disabled, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer closed.Close()
+	if _, open := closed.Registry.Method("content.foreign.current"); open {
+		t.Fatal("missing explicit consumer configuration opened Source transport")
+	}
 }

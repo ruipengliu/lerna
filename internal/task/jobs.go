@@ -51,6 +51,8 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 	}
 	expired := false
 	completionHandled := false
+	var completionPreparation *completionPreparation
+	completionPreparer, hasCompletionPreparer := s.ports.Context.(CompletionGatePreparer)
 	guardrailHandled := false
 	err = s.transaction(ctx, store, scope, func(tx runtime.Tx) error {
 		if e := tx.Guard(ctx, work.Claim); e != nil {
@@ -68,9 +70,19 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 			if e = s.lockTaskTree(ctx, tx, current.Task.TaskID); e != nil {
 				return e
 			}
-			completionHandled, e = s.resumeCompletionTx(ctx, tx, &current)
-			if e != nil {
-				return e
+			if hasCompletionPreparer {
+				completionPreparation, e = s.completionPreparationTx(ctx, tx, current)
+				if e != nil {
+					return e
+				}
+			}
+			if completionPreparation != nil {
+				completionHandled = true
+			} else {
+				completionHandled, e = s.resumeCompletionTx(ctx, tx, &current)
+				if e != nil {
+					return e
+				}
 			}
 		}
 		if !expired && !completionHandled {
@@ -87,6 +99,9 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 	})
 	if err != nil {
 		return err
+	}
+	if completionPreparation != nil {
+		return s.prepareCompletionJob(ctx, store, scope, work, *completionPreparation, completionPreparer)
 	}
 	if expired || completionHandled || guardrailHandled {
 		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
