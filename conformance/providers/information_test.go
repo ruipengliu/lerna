@@ -235,6 +235,9 @@ func (f informationFixture) request(t *testing.T, d execution.Driver, args any, 
 	if err != nil {
 		t.Fatal(err)
 	}
+	if p.Digest != api.Hash(p.Encoded) {
+		t.Fatal("Driver.Prepare must bind the original encoded bytes required by Execution")
+	}
 	return execution.AttemptRequest{Scope: f.scope, Auth: f.auth, Invoke: invoke, Intent: intent, Attempt: execution.Attempt{AttemptID: api.NewID("attempt"), OperationID: intent.OperationID, AttemptNo: 1, Prepared: p}}
 }
 
