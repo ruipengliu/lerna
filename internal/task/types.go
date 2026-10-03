@@ -387,6 +387,8 @@ type PreparedAction struct {
 	Independent          bool                 `json:"independent"`
 	SafeRequirementCheck bool                 `json:"safe_requirement_check"`
 	CommandID            string               `json:"command_id"`
+	// 受信准备方从原有限控制交集提供；0 保持旧 Task 期限，不由 Brain 草稿自报。
+	MaxDurationSeconds uint64 `json:"max_duration_seconds,omitempty"`
 }
 type OperationIntent struct {
 	PreparedAction
