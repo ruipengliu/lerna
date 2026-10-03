@@ -40,3 +40,9 @@
 票02 writer源码 `f4fb057` 已锁定；两库共享接纳套件、SQLite文件/配置/进程排除/Busy/取消/Close与真实v1恢复已本地通过。必需make集成及CI集成race已使用-count=1，并同时执行PG与SQLite；新版远端tip仍由root后续核实，不能引用上面的PG-only历史run当两库成功。详细本地命令/运行时/来源见[票02 Comments](issues/02-sqlite-durable-admission.md#comments)。
 
 SQLite票02合并最新 `6ccdb6d` 后的本地准确检查：make check/test-race成功；两库make test-integration顺序执行成功（7.501s），随后两库integration-race成功（15.058s），均-count=1。一次同时运行普通/race遇到现有PG跨schema advisory锁域耦合的合法skip导致测试失败，已如实记入票02 Comments并交独立决策；随机schema仅证明数据及清理隔离，未声称锁域完全隔离。新两库远端CI仍待root实际核实。
+
+## 双库修订领取检查点
+
+2026-10-03，准确提交 `b1674b2d0252da73f3dfd753857484597dc0a080` 的 push run [37149178541](https://github.com/ruipengliu/lerna/actions/runs/37149178541) 已 `completed / success`。实际 `contracts` job `111279225885`、`durable-admission` job `111279226000` 均 success。
+
+两库必需集成 `8.417s`、race `15.292s`，均 `-count=1` 重新执行，十项 v1 artifact 校验和全部 OK。包含04 SQLite Claim、PG/SQLite共享13项工作行为与09锁范围修复；05调度、07完整升级/清理及08进程故障仍由后续准确提交验证。04失败轮留下的无法确认归属scope限制保留，成功CI不追溯证明该轮已清理。整片02仍未退出。

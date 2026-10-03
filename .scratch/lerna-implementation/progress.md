@@ -70,3 +70,7 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 票02已 resolved；实际 v1 writer `f4fb057` 在代码提交后从历史 Git archive 构建，完整 SQLite file 与 checksum/provenance 保留。PG与SQLite共同运行13项同版接纳行为；SQLite WAL/FULL运行时核验、Linux跨进程写Host排除/关闭接替、busy、取消、完整Tx关闭生命周期、scope和真实v1文件恢复通过。实际内置SQLite3.53.4/go-sqlite3v1.14.52/CGO，不依赖个人头文件。有限Close失败时保留锁，回调退出后可重试。具体命令与范围见[票02 Comments](../lerna-02-durable-work/issues/02-sqlite-durable-admission.md#comments)。
 
 切片02仍 in-progress；票03 PG Claim已合入，SQLite Claim留给04，调度/SIGKILL/完整升级出口尚未完成。两库必需integration与CI race已加-count=1；缺PG配置/服务或CGO均硬失败。新SQLite远端tip CI待root核实，历史PG成功不替代新两库CI。默认/tmp为tmpfs，实际最终两库integration/race和v1writer另在/workspace下本轮自登记overlayfs临时范围运行；未宣称断电或生产故障域耐久。
+
+04双库领取检查点 `b1674b2` 的准确远端 [CI 37149178541](https://github.com/ruipengliu/lerna/actions/runs/37149178541) 已 success：必需真实集成8.417s/race15.292s均-count=1，原十项v1校验和不变。
+
+05补充采用[legacy策略](../lerna-02-durable-work/legacy-scheduling-decisions.md)及[实际处理门禁](../lerna-02-durable-work/processing-gate-decisions.md)：新接纳及首次接管legacy均绑定5分钟/最多3次启动，重开不刷新；实际Host成功提交必须经过真实Start/权限/期限，旧Complete不得绕过。纯hash及可信runtime存储机制保持各自职责，04/07/08在05整合时更新实际调用与同owner Clock，依赖图不变。07/08本票完成不关闭05或整片02。
