@@ -60,3 +60,9 @@ SQLite票02合并最新 `6ccdb6d` 后的本地准确检查：make check/test-rac
 2026-10-03，准确提交 `418415fa7ce11ee163607ced2c09714a4722544e` 的 push run [37152615344](https://github.com/ruipengliu/lerna/actions/runs/37152615344) 为 `completed / success`。`contracts` job `111289412432`、`durable-admission` job `111289412231` 均 success，实际新恢复客户端步骤全部success。
 
 日志确认固定镜像client为psql18.6；显式必跑containerpsql生命周期race `2.378s`，完整双库必需集成 `11.242s`、race `28.948s`，全部-count=1，十项v1校验和全部OK。包含07完整v1来源恢复/真正v2+v3迁移/版本保存拒绝回滚重试、清理/墓碑，以及08进程故障。CID登记后取消清理已真实执行；未知CREATE未启动容器的历史限制保留。这一提交尚不包含随后05严格Start/等待迁移与新v2来源，05的准确新CI仍待核验。
+
+## 持久等待与严格处理门禁检查点
+
+2026-10-03，准确提交 `7fa7594ff213a23c1cf156187cf70295c9270db4` 的 push run [37153111359](https://github.com/ruipengliu/lerna/actions/runs/37153111359) 为 `completed / success`。`contracts` job `111290867825`、`durable-admission` job `111290867962` 均 success。
+
+固定18.6工具生命周期race `1.567s`，完整PG/SQLite必需集成 `14.404s`、race `34.816s`，全部-count=1。四份真实v1/v2来源manifest共27项全部OK，包含共享v2 writer源校验；root全range Git diff也通过，原始dump字节及已发布001–004未变。此检查点包含05与07/08真实Start/Clock整合、legacy真实v2 Claim/work恢复、持久等待/退避/期限及固定回执；06配额/公平及整片退出仍待后续。
