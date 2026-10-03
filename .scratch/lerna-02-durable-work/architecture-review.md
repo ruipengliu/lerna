@@ -136,3 +136,55 @@ psql/docker client process 生命周期、DB scope 归属、历史 artifact 装�
 已生成临时HTML `/tmp/architecture-review-1791066712436.html`，包含before/after、Tailwind/Mermaid CDN和静态样式；实际xdg-open exit3，无GUI，不声称浏览器渲染。用户授权的Astra代理经5轮11项frontier确认现在实施唯一候选，详见[采用决定](architecture-decision.md)与[票10](issues/10-owned-fixture-lifetime.md)。不新增领域ADR或第二词汇表。
 
 当前仅完成探索、选择与发布；票10实际重构/证据/独立复核和准确新CI仍待完成。02核心与修复的6783307真实CI已success，不冒充票10验证；历史未知scope/CID限制保持。
+
+## c52e68b结构收益独立复核
+
+# 02 architecture benefit — FINAL READONLY（结构收益已实现，cleanup 正确性待修）
+
+准确 inspected root/code pin：`c52e68b46c619df0c8e5df1b27a0b5dded3ef65f`，工作区 clean。产品测试代码提交：`1863fc49a0e57c087ee599a8296c2ccdfcf96a6e`。比较范围：`c6220fdf194e1f954f3b2c65d1cf31fc839c359c...c52e68b46c619df0c8e5df1b27a0b5dded3ef65f`；核对原 `/tmp/lerna-02-architecture-exploration-final.md`、采用的 architecture-decision、票10 Comments、18个 recovery 测试文件的变化与新三个文件。只读代码/文档，无测试、DB、服务、secret读取或repo修改。
+
+**结论：唯一候选 structurally closed；确有 depth/interface 简化，超过 helpers 搬移。Cleanup 正确性尚不能退出。** 两个独立审查轴已报告“已确认 holder 退出但返回历史错误”会阻断后续清理；root 正交单一 fixer。这个已批准失败收尾规则的实现缺口，不是新架构候选。本报告不自动提新 refactor，不宣称 whole02 完成。
+
+## 已取得的结构收益
+
+Before：普通行为 caller 以实际 Store 指针追踪配置/reopener，在各故事维持 PG creator、replacement登记、SQLite先关旧writer、parent/child交接和Cleanup次序。
+
+After：普通行为 caller 以稳定 `ownedFixture` 取得实际 Store，调用 CloseWriter/Replace；fixture 持有确证 scope 与writer generations，并协作现有 child/PG holder 模块完成有限退出。具体后端故障与历史加载知识仍留原故事。
+
+| caller family：最终路径/行 | caller 不再承担的知识 |
+| --- | --- |
+| admission：`conformance/recovery/admission_test.go:30`；`adapter_admission_test.go:38`、`:560`、`:562`、`:572` | factory 返回稳定handle；原map/reopener helper删除，重复接替不登记新的Store指针。原 receipt/Host/query assertions保留。 |
+| work：`conformance/recovery/adapter_work_test.go:612`、`:614`、`:629`、`:632`；`:566` | Close/reopen故事删除PG creator保活分支；并发故事用ConcurrentWriter取得真实后端差异，不自己判PG开peer。 |
+| wait：`conformance/recovery/wait_test.go:29`、`:31`、`:32`、`:236`、`:298`、`:389` | single-connection PG setup仍明确1连接和显式Migrate，但不再保独立creator、手工注册replacement及Cleanup。共享wait故事只Replace。 |
+| retention：`conformance/recovery/retention_test.go:93`、`:106`、`:146` | backend type-switch reopen与两种配置map、replacement Cleanup全部删除；原body-gone/原receipt/新revision事实仍经Host观察。 |
+| process：`conformance/recovery/process_fixture_test.go:297`、`:300`、`:304`、`:326` | parent不再从map找schema/path或区分PG creator/SQLite Close；统一释放父writer，原observer通过同handle接替。 |
+| historical lifecycle：`conformance/recovery/migration_test.go:47`、`:161`、`:188`、`:271`、`:337`、`:373` | 原PG admin独立清理、SQLitecurrent闭包及自写Reopen移入fixture生命周期；loader仍自己载入准确历史字节、完成restore后Open。 |
+| pool：`conformance/recovery/pool_test.go:466`、`:720`、`:1141`、`:1158`、`:1270`、`:1271` | FIFO/maintenance接替用同handle；same-scope PG peer自动登记，真实SQLite完整闭库复制进入新owned scope，不自己取map/关库/注册清理。 |
+
+对整个 `conformance/recovery` 搜索，`configurations`、`sqliteConfigurations`、`admissionReopeners`、`reopenAdmissionStore`、`retentionReopen` 与 `sync.Map` 均无匹配。新 `registerOwnedScope`（`owned_fixture_test.go:199`）仅将确证scope写入外部审计文件，包含实际Sync/Close；不是Store-pointer lookup/reopener registry的搬家。
+
+## module、seam 与真实 adapter
+
+`conformance/recovery/owned_fixture_test.go:23` 持有 scope、admin、current、peers及窄的holder/child状态。`:102` Store直接返回actual writer，`:105` Open真实PG/SQLite Store，`:128` CloseWriter只在成功后清空current，`:138` Replace同scope接替。没有Record/Observe/SQL业务CRUD proxy；same-Store/owner/active Tx约束和Host/public command.get seam保持。
+
+PG adapter在`:69`–`:76`由私有admin实际CREATE成功后置owns；所有业务writer和peer均另开（`:118`、`:225`），admin/owns使用仅在fixture文件，普通caller不获得删除权。最终Drop使用admin（`:181`），不是某个已关闭writer或schema名称猜测。
+
+SQLite adapter持本轮owned目录（`:80`、`:84`）。Close返回错误时current仍保留（`:132`–`:135`）；Cleanup在Close错误后不RemoveAll（`:162`–`:176`）。真实失败故事 `owned_lifetime_test.go:140` 驱动Close timeout、目录保留、排他peer拒绝、回调退出后重复cleanup成功。CopySQLite（`owned_fixture_test.go:244`）先确认Close，再读取完整file、写新owned path并实际Open；原nonce被复制的scope拒绝故事仍在pool测试。
+
+两个adapter为真实PG与文件SQLite，其删除归属与writer排他确实不同，既有seam有必要；不因“两个”机械创建一套新Go interface。PGPeer参数只供当前连接/有限holder故事。没有泛用resource callbacks、ORM、未来03或产品cleanup framework。
+
+## locality 与删除测试
+
+删掉新fixture module，多个当前caller必须重新实现CREATE归属、creator/writer分离、replacement登记、成功Close后接替、child/holder退出后清理，因此它赚取depth；这是跨六类caller与pool的实际leverage。生命周期知识在一个module具有locality，业务断言与后端故障仍各自集中。
+
+OS退出实现仍在process module：`process_fixture_test.go:153`关联实际child；`:547`只有Wait获得ProcessState才确认退出，`:556`有限Kill/Wait保留未知状态；fixture的`:112`/`:156`不允许未确认child时重开/删除。PG实际锁callback仍由故事声明（`pool_test.go:973`、`:974`），窄fault adapter（`owned_pg_fault_test.go:29`、`:78`）登记、release、11s join。实际holder10s、业务writer3s没有变。
+
+历史loader的hash/source、COPY/metacommands、准确schema替换与真实迁移fault仍在 `migration_test.go:224`、`:268`、`:291`、`:323`、`:347`、`:362`、`:387` 等原模块；Open/Replace不隐式Migrate。新interface测试 `owned_lifetime_test.go:20` 经真实Record→Claim/Start→两次替换→public query/Host→准确hello hash→ownscope消失→neighbor仍可读，不以字段布局、map数或调用次数证明。
+
+## 正确性与证据限制
+
+**尚待修复的cleanup退出项**：当前 `owned_fixture_test.go:153`–`:155` 对joinPGHolders任意error立即return；`owned_pg_fault_test.go:80`–`:81` 在joined后反复返回历史result。实际Within已退出且result非nil时，所有writer/peer和knownscope因此永远到不了Close/Drop；重复Cleanup也无法推进。两轴已确认；结构收益不能替代此Round4/Q8聚合/可重试要求。最终fixSHA须窄确认“退出已证实”与“历史业务错误”分开处理，未知退出仍保留scope；不退回caller排Cleanup次序。
+
+票10报告的真实red0.554s→green0.553s、完整顺序count1 normal52.406s/race93.619s（各timeout120）、make checks与27 frozen hashes是实施者证据，本agent未重跑。实际diff的runtime/internal/host/adapters/contract/frozen fixture路径为空，符合无产品/0001–0005/合同/来源变化；不据duration声称性能收益。
+
+初版可运行red还留下**两个失去准确名称的PG scopes**，与旧04未知schema、07 unknown CREATE/CID分别保留。实施者实际321 known PG namespaces与319 registered owned dirs absence，只覆盖登记范围，不能宣称新两scope/全部资源清零；不得按prefix、时间或行形状猜删。本轮结构closed不抹去这些真实失败。Whole02退出仍待cleanup修复、独立两轴报告及准确新CI。

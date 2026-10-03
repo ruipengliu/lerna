@@ -73,3 +73,35 @@ Baseline `8e7438e071727e25aa69e17fb81b2e53c416b78e`；final pin `6783307ebe7d802
 已读最终顺序count1正常50.359s/race103.345s及27hash记录，未冒充独立重跑。SQLite storage-port unknown、SIGKILL及历史未知schema/CID限制保持；不宣称原生SQLite Commit故障、断电或资源全零。whole02仍待architecture review与准确最终CI。
 
 Standards：原3项关闭，新增0项；Spec：原1项关闭，新增0项。两轴结论分别保留，整片02仍待架构选择/实施与准确最终CI。
+
+## 票10架构实施后的 Standards 复核
+
+# Standards architecture followup — 8e7438e…c52e68b
+
+准确 head：c52e68b46c619df0c8e5df1b27a0b5dded3ef65f，工作区 clean。重新取得完整 baseline..head commit list，核对完整 three-dot 范围；审阅 c6220fd…head 全部18个 recovery 文件及票10 Comments。6783307 两轴原四项关闭结论保持，产品/迁移/冻结来源无新变更；不重排其它 axis。
+
+**[P2，新增硬规则偏离] 已退出但失败的 PG holder 永久阻断整个 fixture cleanup。** `/workspace/lerna/conformance/recovery/owned_fixture_test.go:153`–154 的 `if err := f.joinPGHolders(); err != nil { return err }`，结合 `owned_pg_fault_test.go:80`–81 的 `if h.joined { return h.result }`。
+
+触发：真实 lock callback 失败或 holder TransactionTimeout 到期，Within 返回错误；ReleaseAndJoin 已收到 done 并将 joined=true/result=err。此时 holder 已确认退出，但 Cleanup 立即返回，未关闭 current/peers/admin，也未删除确证自有 schema。每次重试仍返回同一保存错误，清理永远无法推进；Check 因到期 Fatal 后的自动清理同样受影响。正常绿色套件未覆盖这个已确认失败退出路径。本结论由代码路径确认，未运行数据库实验。
+
+违反采用的 `/workspace/lerna/.scratch/lerna-02-durable-work/architecture-decision.md:54` 的明确 lifecycle 规则：“join现有process/holder、逐一Close登记writer/peer，确认后Drop…最后Close admin。失败聚合报告…未完成步骤…可…重试”；该规则只在停止未确认时要求保留资源。AGENTS.md:104 的有限生命周期要求也应在故障收尾落实。最小修复：将 holder 的事务结果与退出确认状态分开；已 joined 的错误聚合保留，但继续关闭已知安全的句柄和清理自有 scope；只有未确认退出才阻断删除。补真实 holder 期限失败后 namespace 消失、邻近 scope 不受伤、错误原因仍可判断的有限对照。不要丢弃错误，也不要猜删未知资源。
+
+**新增需处理的 Fowler smell：0。** 十二项启发式结合仓库 overrides 检查；实际 Store 仍直传 Host、scope/admin 与 writer 分离，三张 pointer maps 已删除，history restore 与 ProcessState/Wait 责任保留。后端专有能力没有扩大成通用 resource registry。
+
+只读，未改repo、读凭据或复跑测试。52.406s正常/93.619s race为记录的count1/timeout120结果；321PG/319目录 absent仅覆盖准确登记项。首版red新增两个未知PG名称、旧04未知schema、07无CID与先前holder失败限制全部保留。whole02仍待本问题修复/复核、架构收益复核及准确新CI。
+
+## 票10架构实施后的 Spec 复核
+
+# Slice 02 — independent Spec architecture followup
+
+Baseline `8e7438e071727e25aa69e17fb81b2e53c416b78e` → pin `c52e68b46c619df0c8e5df1b27a0b5dded3ef65f`。读取完整68项commit list及three-dot范围，逐项核对原58 AC、票10新增10 AC与全部采用决定；重点复核`c6220fd...c52`的18个recovery文件。只读审查，未运行测试或操作数据库。
+
+**[P2] 已确认退出但失败的PG holder永久阻断scope清理。** `/workspace/lerna/conformance/recovery/owned_fixture_test.go:153`遇到任何join错误立即返回；`/workspace/lerna/conformance/recovery/owned_pg_fault_test.go:80`对已joined holder永久返回原result。真实lock callback返回SQL错误时，`:56`已经接收事务完成并记录错误；或者实际pool holder的10秒Tx到期，ReleaseAndJoin确认结束并保存deadline错误。随后每次Cleanup仍提前返回，无法Close业务writer/peer、Drop本轮确证namespace或Close admin；正常holder返回nil才能完整清理。
+
+这违反票10 AC8 `/workspace/lerna/.scratch/lerna-02-durable-work/issues/10-owned-fixture-lifetime.md:20`的“重复调用安全”，及采用决定 `/workspace/lerna/.scratch/lerna-02-durable-work/architecture-decision.md:54`：“失败聚合报告而非吞掉…成功的步骤不重复制造故障，未完成步骤仍有归属并可在期限内重试。” 最小修复：区分退出未确认与已确认完成但事务失败；后者聚合诊断并继续安全的writer/peer/scope/admin收尾，已完成步骤不永久阻断重试。增加真实PG holder失败与正常对照，验证错误可判断、准确owned scope最终消失且邻scope不受损；无需放宽产品期限或引入通用资源框架。
+
+**其余覆盖。** AC1–2稳定handle/实际Store、独立PG admin与SQLite成功Close后接替成立；AC3真实双库两次替换保留原receipt/Start/Job/hash且邻scope正常；AC4专有peer/单连接/完整copy与既有互斥断言保留；AC5实际ProcessState确认后重开/删除；AC6历史完整loader保留且Open不隐式Migrate；AC7取消/迁移拒绝/SQLite失败Close保留句柄；AC8存在上述缺口；AC9旧业务/故障断言与产品/公共1.0/0001–0005/四组27来源的增量未变；AC10读取真实normal52.406s/race93.619s、red与失败证据，未冒充独立重跑。
+
+原Pool Run P2关闭仍有效；未发现新增scope creep或其它原58 AC回归。仅已登记321 PG/319目录的清理可确证；首次prototype两未知PG名、较早04未知schema及07无完整CID限制保留，不宣称资源全零。whole02仍待本项修复、architecture benefit复核及准确最终CI。
+
+Standards：新增1项，轴内最严重P2；Spec：新增1项，轴内最严重P2。分别保留原结论，全部交原单一review fixer；whole02未退出。

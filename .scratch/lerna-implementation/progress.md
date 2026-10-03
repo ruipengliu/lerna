@@ -111,3 +111,7 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 ## 切片 02 后置 fixture 架构任务
 
 准确6783307只读架构探索保留1 Worth exploring（0 Strong/Speculative）；授权Astra经5轮11项grilling选择现在实施，root采用[决定](../lerna-02-durable-work/architecture-decision.md)并发布唯一[票10](../lerna-02-durable-work/issues/10-owned-fixture-lifetime.md)，目前claimed。稳定fixture handle将统一本轮确证scope归属、writer接替与有限退出；历史来源/故障loader、process Kill/Wait和backend专有故障仍各自负责。待实施后证明普通caller已移除creator保活与指针登记知识，不能只移动helpers/maps。Whole02仍in-progress，03仅准备。
+
+## 切片02架构实施后审查待修复
+
+票10代码1863fc4、clean worker c5d5d40经merger合入c52e68b；完整顺序双库集成52.406s/race93.619s通过，产品/合同/001–005及27来源不变。准确[CI37160694293](https://github.com/ruipengliu/lerna/actions/runs/37160694293)已success。独立收益复核确认稳定fixture handle消除了六类caller及pool的生命周期知识和三张指针maps。两轴各新增1项P2：已确认退出但失败holder的历史错误永久阻断清理。票10重新claimed，原单一review fixer负责全部新增发现，whole02继续in-progress。首版red新遗留两个无法按准确名称确认的PG scopes，与旧04未知schema/07无CID限制独立保留；321PG/319目录absent仅指确证登记项。03/04/05仍仅/tmp准备。
