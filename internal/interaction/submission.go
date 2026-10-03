@@ -271,7 +271,7 @@ func (s *Service) ReadSubmission(ctx context.Context, store runtime.Store, scope
 	if _, err := store.Read(ctx, scope, submissions, id, 0, &r); err != nil {
 		return SubmissionView{}, err
 	}
-	if err := access(a, r.Auth.SubjectID); err != nil {
+	if err := access(a, scope, r.Auth.SubjectID); err != nil {
 		return SubmissionView{}, api.E("forbidden", "submission_redacted")
 	}
 	return r.SubmissionView, nil
@@ -387,7 +387,7 @@ func (s *Service) WithdrawTx(ctx context.Context, tx runtime.Tx, a runtime.Auth,
 	if err != nil {
 		return SubmissionOutput{}, err
 	}
-	if err := access(a, r.Auth.SubjectID); err != nil {
+	if err := access(a, tx.Scope(), r.Auth.SubjectID); err != nil {
 		return SubmissionOutput{}, err
 	}
 	if c.ExpectedRevision == nil || *c.ExpectedRevision != r.Submission.Revision {
@@ -434,8 +434,8 @@ func (s *Service) ForwardInputTx(ctx context.Context, tx runtime.Tx, a runtime.A
 		return SubmissionOutput{}, err
 	}
 	request := view.Request
-	if request.RequestID != in.RequestRef.ObjectID || request.Revision != in.RequestRef.Revision || request.OwnerID != in.RequestRef.OwnerID || request.TenantID != in.RequestRef.TenantID || view.Method == "" || request.State != "pending" {
-		return SubmissionOutput{}, api.E("invalid_state", "request_target_mismatch")
+	if err = currentRequest(ctx, tx, in.RequestRef, view); err != nil {
+		return SubmissionOutput{}, err
 	}
 	now, err := tx.Now(ctx)
 	if err != nil {

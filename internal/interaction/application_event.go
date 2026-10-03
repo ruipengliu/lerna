@@ -60,7 +60,7 @@ func (s *Service) ReadApplicationEvent(ctx context.Context, store runtime.Store,
 	if _, err := store.Read(ctx, scope, applicationEvents, id, 0, &r); err != nil {
 		return ApplicationEvent{}, err
 	}
-	if err := access(a, r.Auth.SubjectID); err != nil {
+	if err := access(a, scope, r.Auth.SubjectID); err != nil {
 		return ApplicationEvent{}, api.E("forbidden", "application_event_redacted")
 	}
 	return r.ApplicationEvent, nil
