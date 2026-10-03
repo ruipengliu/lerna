@@ -30,9 +30,10 @@ type Method struct {
 }
 type JobHandler func(context.Context, Store, Scope, Work) error
 type Registry struct {
-	mu      sync.RWMutex
-	methods map[string]Method
-	jobs    map[string]JobHandler
+	mu             sync.RWMutex
+	methods        map[string]Method
+	jobs           map[string]JobHandler
+	contextFactory ContextFactory
 }
 
 func NewRegistry() *Registry {
@@ -97,9 +98,15 @@ func (r *Registry) Method(name string) (Method, bool) {
 }
 func (r *Registry) Job(kind string) (JobHandler, bool) {
 	r.mu.RLock()
-	defer r.mu.RUnlock()
 	h, ok := r.jobs[kind]
-	return h, ok
+	r.mu.RUnlock()
+	if !ok {
+		return nil, false
+	}
+	return func(ctx context.Context, store Store, scope Scope, work Work) error {
+		ctx = r.entryContext(ctx, Flow{Kind: "job", Scope: scope, Work: &work})
+		return h(ctx, store, scope, work)
+	}, true
 }
 func (r *Registry) JobKinds() []string {
 	r.mu.RLock()
@@ -173,6 +180,7 @@ func (d *Dispatcher) Command(ctx context.Context, auth Auth, raw []byte) (api.Re
 	}
 	digest := api.Hash(canonical)
 	m, exists := d.Registry.Method(c.Method)
+	ctx = d.Registry.entryContext(ctx, Flow{Kind: "command", Scope: d.Scope(auth), Auth: auth, Command: &c})
 	parts := []string{}
 	if exists {
 		parts = m.Participants
@@ -294,6 +302,7 @@ func (d *Dispatcher) Query(ctx context.Context, auth Auth, raw []byte) (json.Raw
 	if err := m.input.Validate(q.Payload); err != nil {
 		return nil, err
 	}
+	ctx = d.Registry.entryContext(ctx, Flow{Kind: "query", Scope: d.Scope(auth), Auth: auth, Query: &q})
 	bindings, ok := d.Store.(QueryBindingStore)
 	if !ok {
 		return nil, api.E("unsupported", "query_identity_store_unavailable")
