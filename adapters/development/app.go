@@ -39,6 +39,7 @@ type App struct {
 	Execution                                                        *execution.Service
 	Interaction                                                      *interaction.Service
 	Governance                                                       *governance.Service
+	Knowledge                                                        *KnowledgeAssembly
 	Objects                                                          *objectstore.Local
 	Files                                                            *execadapter.ManagedFiles
 	Phones                                                           *execadapter.SimulatedPhones
@@ -134,6 +135,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if len(c.Information) > 0 {
 		purposes = append(purposes, providers.InformationPurpose, providers.InformationSearch, providers.InformationBody)
 	}
+	purposes = append(purposes, RequiredKnowledgeContentPurposes()...)
 	pv := memory.PolicyValues{Subjects: []string{c.SubjectID, c.OwnerID}, Purposes: purposes, Locations: []string{"cloud", "device"}, RetainUntil: c.PolicyExpiresAt, Continuous: true, IndependentDerived: false}
 	policyRef := component("content-policy")
 	policyRef.Digest, _ = api.Digest(pv)
@@ -155,7 +157,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		return nil, err
 	}
 	a.closeGovernance = closeGovernance
-	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, ResultNotices: resultNoticeBridge{a}, Lifecycle: lifecycle, Runner: evaluation, Participants: []string{"content", "memory", "platform", "task"}})
+	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, KnowledgeGate: knowledgeContentGate{a}, ResultNotices: resultNoticeBridge{a}, Lifecycle: lifecycle, Runner: evaluation, Participants: []string{"content", "memory", "platform", "task"}})
 	if e = os.MkdirAll(filepath.Join(c.DataRoot, "files"), 0700); e != nil {
 		return nil, e
 	}
@@ -190,6 +192,21 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e = a.configureActionRegistry(drivers); e != nil {
 		return nil, e
 	}
+	if c.InformationReferenceAnswer {
+		if len(a.information) == 0 {
+			return nil, api.E("unsupported", "reference_information_source_required")
+		}
+		lock := a.InstallLock
+		a.InstallLock = component("development-reference-answer-assembly")
+		a.InstallLock.Digest, e = api.Digest(struct {
+			Actions  api.ComponentRef `json:"actions"`
+			Rule     api.ComponentRef `json:"rule"`
+			Question api.Schema       `json:"question"`
+		}{lock, component("source-reference-answer"), InformationQuestionSchema()})
+		if e != nil {
+			return nil, e
+		}
+	}
 	var resources execution.ResourceDriver = a.Phones
 	if !a.OwnsTargets {
 		for i, driver := range drivers {
@@ -212,6 +229,10 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	}
 	a.TaskPolicy = task.TaskPolicy{PolicyRef: component("task-policy"), ContinuationLimit: 30, RepairLimit: 3, NoProgressLimit: 8, ContextRoundLimit: 3, SafeAttemptLimit: 1, MaxRequirements: 20, MaxDelegations: 20, MaxDepth: 4, CostMode: "strict", BudgetLimits: []api.Amount{{Unit: "USD", Value: "100"}}, MaxEvidenceStalenessSeconds: 300, MaxDurationSeconds: 3600, InputPolicyRef: a.AnswerSchema, RuleRegistryRef: component("rule-registry")}
 	a.TaskPolicy.PolicyRef.Digest, _ = api.Digest(a.TaskPolicy)
+	a.Knowledge, e = configureKnowledge(a, c.Knowledge)
+	if e != nil {
+		return nil, e
+	}
 	rules := []api.RuleDefinition{}
 	for _, ref := range []api.ComponentRef{a.ArtifactRule, a.SavedRule, a.CoverageRule} {
 		kind := "quality"
@@ -226,6 +247,9 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 			rule.MaxObservationAgeSeconds = &age
 		}
 		rules = append(rules, rule)
+	}
+	if c.InformationReferenceAnswer {
+		rules = append(rules, api.RuleDefinition{RuleRef: component("source-reference-answer"), Kind: "quality", ParametersSchemaRef: component("information-reference-question"), Predicate: "quality", AllowedBasis: []string{"verified"}, RequiredEvidenceSchemaRef: component("information-reference-evidence"), ScopeSchemaRef: component("information-reference-scope"), RiskClass: "ordinary", ApplicabilityPolicyRef: a.TaskPolicy.PolicyRef})
 	}
 	cooperation, e := collaboration.New(collaboration.Config{Store: st, Registry: a.Registry, OwnerID: c.OwnerID, Auth: a.ServiceAuth, SubjectGate: taskGate{a}, Participants: []string{"collaboration", "task", "platform"}})
 	if e != nil {

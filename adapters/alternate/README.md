@@ -75,3 +75,5 @@ pnpm generate:check
 ```
 
 `conformance/alternate` 使用真实独立子进程、临时私有数据库、实际 ES256/JWS、原生 Go WSS 与真实磁盘文件。它验证准确正常正文、Memory 更正/撤回/cleanup/View、原回执丢失和 SIGKILL 恢复、当前 Use purpose/撤权、原签名暂停、伪签名拒绝、target start barrier 后不再次读取、坏 cursor/未知方法、credential 撤销持久性、cookie logout 和原到期工作。每轮日志记录实际 owner/scope、原引用、core/method digest、Node/SQLite 版本；夹具 authority 只签原合同，没有替代任何业务 Service 或目标真值。
+
+准确运行版本、制品摘要、保留的失败和前提见 [VALIDATION.md](VALIDATION.md)。

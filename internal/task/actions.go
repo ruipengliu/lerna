@@ -3,6 +3,7 @@ package task
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/runtime"
@@ -368,6 +369,9 @@ func (s *Service) admitBatchTx(ctx context.Context, tx runtime.Tx, auth runtime.
 	ids := []string{}
 	seen := map[string]bool{}
 	for index, a := range actions {
+		if a.MaxDurationSeconds > 3600 {
+			return nil, invalid("action_duration_limit")
+		}
 		if !a.Independent || len(a.ResourceKeys) > 32 {
 			return nil, invalid("dependent_action_batch")
 		}
@@ -380,8 +384,11 @@ func (s *Service) admitBatchTx(ctx context.Context, tx runtime.Tx, auth runtime.
 				return nil, e
 			}
 		}
-		if e = runtime.CheckRef(tx.Scope(), a.BindingRef); e != nil {
+		if e = api.ValidateRecord("ObjectRef", a.BindingRef); e != nil {
 			return nil, e
+		}
+		if a.BindingRef.TenantID != tx.Scope().TenantID || a.BindingRef.OwnerID != a.ExecutorID {
+			return nil, api.E("forbidden", "executor_binding_scope_mismatch")
 		}
 		for _, key := range a.ResourceKeys {
 			if key == "" || len(key) > 512 {
@@ -419,6 +426,19 @@ func (s *Service) admitBatchTx(ctx context.Context, tx runtime.Tx, auth runtime.
 			return nil, e
 		}
 		intent := OperationIntent{PreparedAction: a, TaskRef: taskRef(tx, *t), GoalRevision: t.Task.GoalRevision, ControlRevision: t.Task.ControlRevision, AdmissionSourceKind: "decision", AdmissionSourceRef: tx.Scope().Ref(d.Intent.DecisionID, 1), SourcePosition: fmt.Sprintf("%d", index), AdmissionPurpose: purpose, ReservationRef: tx.Scope().Ref(reservation.ReservationID, 1), CommandRef: tx.Scope().Ref(a.CommandID, 1), Deadline: t.Task.Deadline}
+		if a.MaxDurationSeconds != 0 {
+			now, err := tx.Now(ctx)
+			if err != nil {
+				return nil, err
+			}
+			deadline, err := api.ParseTime(t.Task.Deadline)
+			if err != nil {
+				return nil, err
+			}
+			if narrower := now.Add(time.Duration(a.MaxDurationSeconds) * time.Second); narrower.Before(deadline) {
+				intent.Deadline = api.Time(narrower)
+			}
+		}
 		intent.IntentHash, e = api.Digest(intent)
 		if e != nil {
 			return nil, e

@@ -15,6 +15,9 @@ import (
 type evidenceBridge struct{ a *App }
 
 func (e evidenceBridge) ValidateRequirements(ctx context.Context, s runtime.Scope, t api.Task, d api.RequirementDelta) (task.ValidationReport, error) {
+	if out, handled, err := e.a.validateInformationRequirements(ctx, s, t, d); handled || err != nil {
+		return out, err
+	}
 	out := task.ValidationReport{Valid: true, SemanticKeys: []string{}, ReasonCodes: []string{}}
 	facts, er := e.a.Task.ContextFacts(ctx, e.a.Store, s, e.a.ServiceAuth, t.TaskID)
 	if er != nil {
@@ -95,6 +98,9 @@ func (e evidenceBridge) ValidateRequirements(ctx context.Context, s runtime.Scop
 	return out, er
 }
 func (e evidenceBridge) Coverage(ctx context.Context, s runtime.Scope, t api.Task) (api.GoalCoverage, error) {
+	if out, handled, err := e.a.informationCoverage(ctx, s, t); handled || err != nil {
+		return out, err
+	}
 	raw, er := e.a.goalBytes(ctx, s, e.a.ServiceAuth, t.GoalRef)
 	if er != nil {
 		return api.GoalCoverage{}, er
@@ -130,6 +136,9 @@ func (e evidenceBridge) Coverage(ctx context.Context, s runtime.Scope, t api.Tas
 	return api.GoalCoverage{CoverageID: stableID("coverage", t.TaskID+"/"+t.RequirementsDigest), TaskRef: s.Ref(t.TaskID, t.Revision), GoalRevision: t.GoalRevision, GoalRef: t.GoalRef, RequirementsDigest: t.RequirementsDigest, MappingReportRef: report, RuleRef: e.a.CoverageRule, EvaluatorRef: e.a.CoverageRule, Verdict: verdict, Applicability: "usable", CheckedAt: api.Time(now), Revision: 1}, nil
 }
 func (e evidenceBridge) Check(ctx context.Context, s runtime.Scope, t api.Task, req task.CheckRequest) (api.ConditionResult, error) {
+	if out, handled, err := e.a.checkInformationAnswer(ctx, s, t, req); handled || err != nil {
+		return out, err
+	}
 	in := req.Input
 	var requirement *api.Requirement
 	for i := range t.Requirements {

@@ -2,7 +2,7 @@
 
 本开发参考宿主可将固定公开 HTTP 源的 `information.search`／`information.body` 装配至真实 Task 行动。配置只登记当前候选；Task 仍以原 Grant 使用记录准入，Execution 在原启动栅栏与实际 HTTP 出口重新核验。免费源仍需明确的数据用途和保存许可。
 
-本切片已实现实际取得、当前许可缓存读取、明确披露拒绝和原账务恢复。默认 File RuleEngine 不生成信息源行动；完整参考问答条件和成功 Result 尚在下一切片，不把 HTTP 已取得当作用户问题已答对。供应商账户、通用自然语言质量、跨 owner 和独立 Executor 装配另行验证。
+本切片已实现实际取得、当前许可缓存读取、明确披露拒绝和原账务恢复。显式参考问答已取得首个真实SQLite完整Task/条件/成功Result与错答拒绝证据；PostgreSQL、来源时效和撤回矩阵继续验证。默认 File RuleEngine 不生成信息源行动。供应商账户、通用自然语言质量、跨 owner 和独立 Executor 装配另行验证。
 
 ## 配置与依赖
 
@@ -72,6 +72,24 @@ HTTP 的固定 IP、路径、请求摘要和原 Attempt 仅执行一次。正文
 
 最低 `execution_usage_proof` 只由原公开执行账本、原 encodedIntent、准确 Attempt、原 source／revision／digest 和实际已记费用形成。有限 authority-only policy 允许其原 publication 的 `content.write` 与 `execution_usage_proof`，不包含正文、标题、snippets 或 quote，不挂数据来源 DAG。读取还要求本 owner 的当前 `usage_reporter`，用户和普通 Context 无该资格。数据许可撤回不会改写已知费用、释放未知预留或使这个最低证明取得正文资格。Task 和 Grant 各自在原账本归并，重开仍核原上传／ProofRef／累计用量，0 新 HTTP。
 
+## 显式参考问答
+
+`information_reference_answer:true` 额外登记 `source-reference-answer` 质量规则，要求已有明确Source/ActionBinding/Grant与实际模型配置；不开这个选项时，参考profile明确返回unsupported。普通GoalSchema保持原 `kind:"answer"`，Body保存以下闭合问题的JSON字符串：
+
+```go
+question := development.InformationQuestion{
+    Profile: providers.ReferenceProfile,
+    Sources: []development.InformationQuestionSource{{SourceRef: sourceRef, URL: sourceOrigin + "/facts/version.json"}},
+    Claims: []providers.ReferenceClaim{{Key: "version", JSONPointer: "/version"}},
+    MaxAgeSeconds: 300, ObservedAtPointer: "/observed_at",
+}
+goal := brain.GoalSpec{Kind: "answer", Body: string(api.Raw(question))}
+```
+
+本参考范围只核JSON字符串leaf，不核通用自然语言质量。问题至多32KiB、8个准确SourceRef/URL、16个唯一key/JSONPointer；字段和可选expected_value按[InformationQuestionSchema](information_evidence.go)闭合。观察时间来自原源数据的准确pointer，或原HTTP观察依据；不能用新下载时间刷新旧事实。原要求参数必须与整个问题一致；缺源、未知原取得、截断、冲突、时效或当前许可不成立都不能生成成功Result。
+
+Context从该Task当前GoalRevision的原closed Operation/Attempt/journal读取准确BodyRef和字节作为普通材料，模型只能提出 `InformationAnswer`（同profile、准确答案与来源/BodyRef/URL/获取时间/观察时间/pointer/quote引用）。Task独立从原源重新读取当前获准缓存并核叶值、引用和时效；严格参考profile要求每个列出的源都支持每项，引用按原集合完整排序。Task随后走正常要求覆盖、条件检查、完成与不可变Result；模型不能自报pass，HTTP已取得不代表问题答对。QA总InstallLock与准确规则/问题Schema一起固定，原行动叶lock仍保留。
+
 ## 验证边界
 
-[真实 App 测试](information_test.go) 使用独立 HTTP 源与模型、真实 SQLite／PostgreSQL、实际对象介质和公开 Task／Grant／Execution 方法；最小账务测试在原 1 GET 和 applied Fact 后、首次 billing 前公开撤回许可并取消 Task，核已知费用、最低证明用途拒绝、数据库重开和原身份无重发。它们不替代完整问答成功条件或真实供应商质量。受影响 race 与原 File 行为回归的实际结果记录在工单 15 与执行环境制品。
+[真实 App 行动测试](information_test.go) 使用独立 HTTP 源与模型、真实 SQLite／PostgreSQL、实际对象介质和公开 Task／Grant／Execution 方法；最小账务测试在原 1 GET 和 applied Fact 后、首次 billing 前公开撤回许可并取消 Task，核已知费用、最低证明用途拒绝、数据库重开和原身份无重发。[参考问答测试](information_evidence_test.go) 另核真实材料、独立质量条件、成功Result、错答不完成与重开；当前数据库/故障通过边界记录在工单15，未把新测试存在当作全部矩阵已通过。真实供应商质量与生产资格另行取证。
