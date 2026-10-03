@@ -11,6 +11,7 @@ import { RecoveryPanel } from "./features/RecoveryPanel";
 import { ReportForm } from "./features/ReportForm";
 import { TaskInspector } from "./features/TaskInspector";
 import { TrustedRequest } from "./features/TrustedRequest";
+import { PresentationRenderer } from "./features/PresentationRenderer";
 import { ContentPublisher } from "./features/ContentPublisher";
 import type { TrustedSelection } from "./features/TrustedRequest";
 import { initialPayload } from "./components/RestrictedForm";
@@ -77,6 +78,7 @@ export function App() {
   const [taskError, setTaskError] = useState("");
   const [refresh, setRefresh] = useState(0);
   const [trusted, setTrusted] = useState<TrustedSelection>();
+  const [presentation, setPresentation] = useState<TrustedSelection>();
   const selectionGeneration = useRef(0);
   const [control, setControl] = useState<{
     method: string;
@@ -95,12 +97,15 @@ export function App() {
   const task = selected?.identity === identity ? selected.value : undefined;
   const identityRef = useRef(identity);
   identityRef.current = identity;
+  const contextGeneration = selectionGeneration.current;
   const taskID = task ? recordID(task) : "";
   const inputQuery = useMemo<JSONValue | undefined>(
     () => (taskID ? { task_id: taskID, limit: 20 } : undefined),
     [taskID],
   );
   const publications = usePublications(client, (receipt, ref) => {
+    if (contextGeneration !== selectionGeneration.current || identityRef.current !== identity)
+      return;
     setPreview([ref]);
     setRefresh((value) => value + 1);
     if (
@@ -113,6 +118,7 @@ export function App() {
   });
   const selectTask = async (value: JSONValue) => {
     if (!client) return;
+    if (task && recordID(task) !== recordID(value)) setTrusted(undefined);
     const originalIdentity = identity;
     const generation = ++selectionGeneration.current;
     setTaskError("");
@@ -158,6 +164,20 @@ export function App() {
   const showRequest = async (method: string, value: JSONValue) => {
     if (!client) return;
     const originalIdentity = identity;
+    const generation = selectionGeneration.current;
+    if (method === "session.branch.select" && isObject(value) && value.stage === "applied") {
+      selectionGeneration.current++;
+      setTrusted(undefined);
+      setPreview([]);
+      setPresentation(undefined);
+      return;
+    }
+    if (method.startsWith("surface.") || method.startsWith("presentation.")) {
+      setPresentation({ identity: originalIdentity, method, value });
+      setTrusted(undefined);
+      setPreview([]);
+      return;
+    }
     if (["confirmation.read", "input_request.read", "task.input_requests.list"].includes(method)) {
       setTrusted({ identity: originalIdentity, method, value });
       return;
@@ -173,10 +193,10 @@ export function App() {
       try {
         const id = value.output.confirmation_ref.object_id;
         const result = await client.query(client.makeQuery("confirmation.read", id, { id }));
-        if (identityRef.current === originalIdentity)
+        if (identityRef.current === originalIdentity && generation === selectionGeneration.current)
           setTrusted({ identity: originalIdentity, method: "confirmation.read", value: result });
       } catch (failure) {
-        if (identityRef.current === originalIdentity)
+        if (identityRef.current === originalIdentity && generation === selectionGeneration.current)
           setTaskError(failure instanceof Error ? failure.message : "原本人确认当前不能读取");
       }
     }
@@ -202,6 +222,7 @@ export function App() {
     setPreview([]);
     setControl(undefined);
     setTrusted(undefined);
+    setPresentation(undefined);
     selectionGeneration.current++;
   };
   return (
@@ -209,17 +230,26 @@ export function App() {
       selected={area}
       onSelect={navigate}
       connection={harness.connection}
-      onReconnect={() => void harness.reconnect()}
+      onReconnect={() => {
+        selectionGeneration.current++;
+        setTrusted(undefined);
+        setPresentation(undefined);
+        void harness.reconnect();
+      }}
       onDisconnect={() => {
+        selectionGeneration.current++;
         setPreview([]);
         setSelected(undefined);
         setTrusted(undefined);
+        setPresentation(undefined);
         void harness.disconnect();
       }}
       onLogout={() => {
+        selectionGeneration.current++;
         setPreview([]);
         setSelected(undefined);
         setTrusted(undefined);
+        setPresentation(undefined);
         void harness.logout();
       }}
     >
@@ -231,6 +261,7 @@ export function App() {
             key={identity}
             client={client}
             onRecovered={() => setRefresh((value) => value + 1)}
+            onClearContent={publications.clearCompleted}
           />
           {area === "work" ? (
             <>
@@ -296,6 +327,11 @@ export function App() {
                   preferred={control.method}
                   preset={control}
                   onResult={() => {
+                    if (
+                      contextGeneration !== selectionGeneration.current ||
+                      identityRef.current !== identity
+                    )
+                      return;
                     setRefresh((value) => value + 1);
                     if (task) void selectTask(task);
                   }}
@@ -307,6 +343,11 @@ export function App() {
                     client={client}
                     methods={taskMethods}
                     onResult={(method, value) => {
+                      if (
+                        contextGeneration !== selectionGeneration.current ||
+                        identityRef.current !== identity
+                      )
+                        return;
                       setRefresh((item) => item + 1);
                       void showRequest(method, value as JSONValue);
                     }}
@@ -329,7 +370,14 @@ export function App() {
                 client={client}
                 area={area}
                 onPreview={setPreview}
-                onRequest={(method, value) => void showRequest(method, value)}
+                onRequest={(method, value) => {
+                  if (
+                    contextGeneration !== selectionGeneration.current ||
+                    identityRef.current !== identity
+                  )
+                    return;
+                  void showRequest(method, value);
+                }}
               />
             </>
           )}
@@ -340,9 +388,24 @@ export function App() {
               selection={trusted}
               publish={publications.publish}
               onDone={() => {
+                if (
+                  contextGeneration !== selectionGeneration.current ||
+                  identityRef.current !== identity
+                )
+                  return;
                 setRefresh((value) => value + 1);
                 if (task) void selectTask(task);
               }}
+            />
+          )}
+          {presentation?.identity === identity && (
+            <PresentationRenderer
+              key={`${presentation.identity}:${area}`}
+              client={client}
+              selection={presentation}
+              publish={publications.publish}
+              {...(publications.config ? { development: publications.config } : {})}
+              onDone={() => setRefresh((value) => value + 1)}
             />
           )}
         </>

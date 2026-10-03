@@ -134,7 +134,9 @@ export function TaskInspector({
             className="button secondary"
             type="button"
             disabled={
-              !taskID || !client?.registry.discovery.methods.some((entry) => entry.name === method)
+              !taskID ||
+              task?.status !== "active" ||
+              !client?.registry.discovery.methods.some((entry) => entry.name === method)
             }
             onClick={() => {
               if (method)

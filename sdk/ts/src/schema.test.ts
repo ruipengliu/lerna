@@ -68,3 +68,64 @@ it("只开放发现中摘要验证过的闭合方法，拒绝未知字段和不�
     ),
   ).rejects.toThrow(/method_digest/);
 });
+
+it("accepted 回执同样必须通过原方法输出 Schema，不能保存任意准备正文", async () => {
+  const method: MethodContract = {
+    ...contract,
+    name: "probe.prepare",
+    kind: "command",
+    allows_accepted: true,
+    input_schema: { type: "object", properties: {}, additionalProperties: false },
+    output_schema: {
+      type: "object",
+      properties: { state: { const: "prepared" } },
+      required: ["state"],
+      additionalProperties: false,
+    },
+  };
+  method.schema_digest = await digest([method.input_schema, method.output_schema]);
+  const discovery: Discovery = {
+    protocol: "harness/1",
+    profile: "architecture-2026-10-data1",
+    logical_service_id: owner,
+    identity_scope: `sha256:${"1".repeat(64)}`,
+    identity_revision: 1,
+    schema_digest: CORE_SCHEMA_DIGEST,
+    core_schema_path: "/api/schema/core",
+    methods: [method],
+    methods_digest: await digest([method]),
+    limits: { max_domain_bytes: 262144, max_frame_bytes: 1048576, max_pending: 32 },
+  };
+  const raw = new Uint8Array(
+    await readFile(
+      new URL("../../../docs/architecture/protocol/core.schema.json", import.meta.url),
+    ),
+  );
+  const registry = await ContractRegistry.create(discovery, raw);
+  const original = {
+    protocol: "harness/1" as const,
+    profile: "architecture-2026-10-data1" as const,
+    logical_service_id: owner,
+    command_id: "command_00000000000000000000000000000001",
+    method: method.name,
+    target_id: owner,
+    expires_at: "2026-10-03T23:59:00Z",
+    payload: {},
+  };
+  const requestDigest = await digest(original);
+  const accepted = {
+    command_id: original.command_id,
+    request_digest: requestDigest,
+    stage: "accepted",
+    accepted_at: "2026-10-03T00:00:00Z",
+    output: { state: "prepared" },
+  };
+  expect(registry.receipt(accepted, original, requestDigest)).toEqual(accepted);
+  expect(() =>
+    registry.receipt(
+      { ...accepted, output: { state: "prepared", remote_script: "forbidden" } },
+      original,
+      requestDigest,
+    ),
+  ).toThrow(/output_schema/);
+});

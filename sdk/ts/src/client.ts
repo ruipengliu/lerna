@@ -214,13 +214,13 @@ export class HarnessClient {
           const waiting = this.waiting.get(response.request_seq);
           if (!waiting) return; // 原已过等待期限的序号不能完成任何新请求。
           this.waiting.delete(response.request_seq);
-          clearTimeout(waiting.timer);
           const bytes = jsonBytes(
             response.payload,
             this.registry.discovery.limits.max_domain_bytes,
           ).byteLength;
           this.incomingBytes += bytes;
           if (this.incomingBytes > MAX_QUEUE_BYTES) {
+            clearTimeout(waiting.timer);
             waiting.reject(new ProtocolError("inbound_backpressure"));
             throw new ProtocolError("inbound_backpressure");
           }
@@ -234,6 +234,7 @@ export class HarnessClient {
             } catch (error) {
               waiting.reject(error);
             } finally {
+              clearTimeout(waiting.timer);
               this.incomingBytes -= bytes;
             }
           })();

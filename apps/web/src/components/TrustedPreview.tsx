@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { canonical, fetchContent } from "@harness/sdk";
-import type { ContentRef } from "@harness/sdk";
+import { useEffect, useId, useRef, useState } from "react";
+import { canonical, fetchContent, verifyRenderBodies } from "@harness/sdk";
+import type { ContentRef, InlineRenderBody } from "@harness/sdk";
 interface Body {
   ref: ContentRef;
   text?: string;
@@ -10,11 +10,14 @@ export function TrustedPreview({
   refs,
   generation,
   onVerified,
+  inlineBodies,
 }: {
   refs: ContentRef[];
   generation: string;
   onVerified?: (key: string | undefined) => void;
+  inlineBodies?: readonly InlineRenderBody[];
 }) {
+  const titleID = useId();
   const [state, setState] = useState<{
     key: string;
     bodies: Body[];
@@ -25,7 +28,8 @@ export function TrustedPreview({
   const callback = useRef(onVerified);
   callback.current = onVerified;
   const referenceKey = canonical(refs);
-  const key = `${generation}:${referenceKey}`;
+  const previewKey = `${generation}:${referenceKey}`;
+  const key = `${previewKey}:${inlineBodies ? canonical(inlineBodies) : "content"}`;
   useEffect(() => {
     const controller = new AbortController();
     callback.current?.(undefined);
@@ -44,19 +48,27 @@ export function TrustedPreview({
       return () => controller.abort();
     }
     setState({ key, bodies: [], status: "loading", error: "" });
-    void Promise.all(
-      refs.map(async (ref): Promise<Body> => {
-        const bytes = await fetchContent(ref, { signal: controller.signal });
-        if (["text/plain", "text/markdown", "application/json"].includes(ref.media_type))
-          return { ref, text: new TextDecoder("utf-8", { fatal: true }).decode(bytes) };
-        if (["image/png", "image/jpeg"].includes(ref.media_type)) {
-          const encoded = btoa(Array.from(bytes, (entry) => String.fromCharCode(entry)).join(""));
-          const image = `data:${ref.media_type};base64,${encoded}`;
-          return { ref, image };
-        }
-        throw new Error("该媒体类型尚无受信 Renderer，不能据此确认");
-      }),
-    )
+    const readBodies = inlineBodies
+      ? verifyRenderBodies(refs, inlineBodies)
+      : Promise.all(
+          refs.map(async (ref) => ({
+            ref,
+            bytes: await fetchContent(ref, { signal: controller.signal }),
+          })),
+        );
+    void readBodies
+      .then((values) =>
+        values.map(({ ref, bytes }): Body => {
+          if (["text/plain", "text/markdown", "application/json"].includes(ref.media_type))
+            return { ref, text: new TextDecoder("utf-8", { fatal: true }).decode(bytes) };
+          if (["image/png", "image/jpeg"].includes(ref.media_type)) {
+            const encoded = btoa(Array.from(bytes, (entry) => String.fromCharCode(entry)).join(""));
+            const image = `data:${ref.media_type};base64,${encoded}`;
+            return { ref, image };
+          }
+          throw new Error("该媒体类型尚无受信 Renderer，不能据此确认");
+        }),
+      )
       .then((bodies) => {
         if (!controller.signal.aborted) setState({ key, bodies, status: "ready", error: "" });
       })
@@ -73,18 +85,18 @@ export function TrustedPreview({
       controller.abort();
       callback.current?.(undefined);
     };
-  }, [key, refs]);
+  }, [key, refs, inlineBodies]);
   useEffect(() => {
     const ready =
       state.key === key &&
       state.status === "ready" &&
       state.bodies.every((body) => !body.image || images.has(body.image));
-    callback.current?.(ready ? key : undefined);
-  }, [key, state, images]);
+    callback.current?.(ready ? previewKey : undefined);
+  }, [key, previewKey, state, images]);
   const current = state.key === key;
   return (
-    <section className="panel preview-panel" aria-labelledby="preview-title">
-      <h2 id="preview-title">准确正文预览</h2>
+    <section className="panel preview-panel" aria-labelledby={titleID}>
+      <h2 id={titleID}>准确正文预览</h2>
       {!refs.length ? (
         <div className="preview-empty">选择正文引用后核对准确版本与摘要。</div>
       ) : !current || state.status === "loading" ? (

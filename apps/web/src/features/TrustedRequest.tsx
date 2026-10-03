@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   canonical,
   digest,
@@ -10,6 +10,7 @@ import {
 import type {
   ContentRef,
   HarnessClient,
+  InlineRenderBody,
   InputRequest,
   JSONValue,
   ObjectRef,
@@ -29,6 +30,7 @@ export function TrustedRequest({
   selection,
   publish,
   onDone,
+  presentation,
 }: {
   client: HarnessClient;
   selection: TrustedSelection;
@@ -37,6 +39,7 @@ export function TrustedRequest({
     next: (ref: ContentRef) => ReturnType<HarnessClient["makeCommand"]>,
   ) => Promise<{ content_ref: ContentRef; receipt?: Receipt }>;
   onDone: () => void;
+  presentation?: { generation: string; rendered: boolean; bodies: readonly InlineRenderBody[] };
 }) {
   const confirmation =
     selection.method === "confirmation.read" &&
@@ -46,7 +49,9 @@ export function TrustedRequest({
       ? selection.value
       : undefined;
   const inputView =
-    ["input_request.read", "task.input_requests.list"].includes(selection.method) &&
+    ["input_request.read", "task.input_requests.list", "presentation.read"].includes(
+      selection.method,
+    ) &&
     isObject(selection.value) &&
     isObject(selection.value.request) &&
     isObject(selection.value.answer_schema)
@@ -59,6 +64,16 @@ export function TrustedRequest({
     if (inputView) {
       request = validateRecord<InputRequest>("InputRequest", inputView.request);
       requestRef = validateRecord<ObjectRef>("ObjectRef", inputView.request_ref);
+      if (
+        requestRef.object_id !== request.request_id ||
+        requestRef.revision !== request.revision ||
+        requestRef.tenant_id !== request.tenant_id ||
+        requestRef.owner_id !== request.owner_id ||
+        request.owner_id !== client.registry.discovery.logical_service_id ||
+        request.target_ref.owner_id !== request.owner_id ||
+        request.target_ref.tenant_id !== request.tenant_id
+      )
+        invalidRequest = true;
     }
   } catch {
     invalidRequest = true;
@@ -77,7 +92,7 @@ export function TrustedRequest({
     confirmation && typeof confirmation.expires_at === "string"
       ? confirmation.expires_at
       : request?.expires_at;
-  const key = `${selection.identity}:${requestID}:${revision}:${confirmation?.intent_hash ?? request?.goal_revision ?? ""}`;
+  const key = `${selection.identity}:${presentation?.generation ?? "owner"}:${requestID}:${revision}:${confirmation?.intent_hash ?? request?.goal_revision ?? ""}`;
   const [verified, setVerified] = useState<string>();
   const [original, setOriginal] = useState<{ key: string; value: JSONValue }>();
   const [answer, setAnswer] = useState<JSONValue>({});
@@ -87,6 +102,14 @@ export function TrustedRequest({
   const [decided, setDecided] = useState("");
   const [outcome, setOutcome] = useState("");
   const [refs, setRefs] = useState<ContentRef[]>([]);
+  const inlineBodies = useMemo(
+    () =>
+      presentation?.bodies.filter((body) =>
+        refs.some((ref) => canonical(ref) === canonical(body.content_ref)),
+      ),
+    [presentation?.bodies, refs],
+  );
+  const [schemaVerified, setSchemaVerified] = useState("");
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 1000);
@@ -95,6 +118,7 @@ export function TrustedRequest({
   useEffect(() => {
     let active = true;
     setVerified(undefined);
+    setSchemaVerified("");
     setOriginal(undefined);
     setError("");
     setOutcome("");
@@ -112,6 +136,20 @@ export function TrustedRequest({
       setError(failure instanceof Error ? failure.message : "原受信表单不可呈现");
       setRefs([]);
       setValid(false);
+    }
+    if (inputView && request) {
+      const schemaRef = request.answer_schema_ref;
+      void digest(inputView.answer_schema)
+        .then((hash) => {
+          if (!active) return;
+          if (hash !== schemaRef.digest)
+            throw new Error("回答 Schema 与原请求固定摘要不符，不能提交");
+          setSchemaVerified(key);
+        })
+        .catch((failure: unknown) => {
+          if (active)
+            setError(failure instanceof Error ? failure.message : "回答 Schema 当前不可核验");
+        });
     }
     if (confirmation) {
       void (async () => {
@@ -156,7 +194,12 @@ export function TrustedRequest({
   const previewKey = `${key}:${canonical(refs)}`;
   const bodyReady = refs.length > 0 && verified === previewKey;
   const allowed =
-    current && state === "pending" && Date.parse(expiresAt) > now && decided !== key && !running;
+    current &&
+    (!presentation || presentation.rendered) &&
+    state === "pending" &&
+    Date.parse(expiresAt) > now &&
+    decided !== key &&
+    !running;
   const expires = () => new Date(Math.min(Date.now() + 60000, Date.parse(expiresAt))).toISOString();
   const decide = async (decision: "approved" | "denied") => {
     if (
@@ -196,7 +239,16 @@ export function TrustedRequest({
     }
   };
   const submit = async () => {
-    if (!request || !requestRef || !inputView || !allowed || !bodyReady || !valid) return;
+    if (
+      !request ||
+      !requestRef ||
+      !inputView ||
+      !allowed ||
+      !bodyReady ||
+      !valid ||
+      schemaVerified !== key
+    )
+      return;
     const boundRequest = request;
     const boundRef = requestRef;
     setRunning(true);
@@ -268,6 +320,12 @@ export function TrustedRequest({
           <p>
             <code>{requestID}</code> · r{revision} · {state}
           </p>
+          {request && (
+            <p>
+              固定业务对象 <code>{request.target_ref.object_id}</code> · 目标修订{" "}
+              {request.goal_revision ?? "未提供"}
+            </p>
+          )}
           <p className="field-hint">
             固定截止 {expiresAt}。改版、过期或权限变化由原 owner
             拒绝；本界面不自动改写答案或请求版本。
@@ -298,7 +356,12 @@ export function TrustedRequest({
           </p>
         )}
       </div>
-      <TrustedPreview refs={refs} generation={key} onVerified={setVerified} />
+      <TrustedPreview
+        refs={refs}
+        generation={key}
+        onVerified={setVerified}
+        {...(inlineBodies ? { inlineBodies } : {})}
+      />
       <div className="trusted-actions">
         {confirmation ? (
           <>
@@ -323,7 +386,7 @@ export function TrustedRequest({
           <button
             className="button primary"
             type="button"
-            disabled={!allowed || !bodyReady || !valid}
+            disabled={!allowed || !bodyReady || !valid || schemaVerified !== key}
             onClick={() => void submit()}
           >
             {request?.purpose === "accept_quality" ? "确认此准确成果及限制" : "保存准确回答并提交"}
