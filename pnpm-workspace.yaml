@@ -1,5 +1,6 @@
 packages:
   - sdk/ts
   - apps/web
+  - adapters/alternate/ts
 onlyBuiltDependencies:
   - esbuild

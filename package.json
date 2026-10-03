@@ -8,11 +8,11 @@
     "node": "24.19.0"
   },
   "scripts": {
-    "generate": "node sdk/ts/scripts/generate-contracts.mjs",
-    "generate:check": "node sdk/ts/scripts/generate-contracts.mjs --check",
-    "fmt": "biome format --write sdk/ts apps/web package.json pnpm-workspace.yaml biome.json vitest.config.ts",
-    "fmt:check": "biome format sdk/ts apps/web package.json pnpm-workspace.yaml biome.json vitest.config.ts",
-    "lint": "biome lint sdk/ts apps/web vitest.config.ts",
+    "generate": "node sdk/ts/scripts/generate-contracts.mjs && go run ./adapters/alternate/cmd/generate",
+    "generate:check": "node sdk/ts/scripts/generate-contracts.mjs --check && go run ./adapters/alternate/cmd/generate --check",
+    "fmt": "biome format --write sdk/ts apps/web adapters/alternate/ts package.json pnpm-workspace.yaml biome.json vitest.config.ts",
+    "fmt:check": "biome format sdk/ts apps/web adapters/alternate/ts package.json pnpm-workspace.yaml biome.json vitest.config.ts",
+    "lint": "biome lint sdk/ts apps/web adapters/alternate/ts vitest.config.ts",
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run",
     "build": "pnpm -r build",
