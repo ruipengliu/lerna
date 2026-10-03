@@ -25,6 +25,7 @@ type ForeignReference struct {
 type ForeignProof struct {
 	ContentRef         api.ContentRef   `json:"content_ref"`
 	PolicyRef          api.ComponentRef `json:"policy_ref"`
+	PolicyValues       PolicyValues     `json:"policy_values"`
 	SourceDatabaseID   string           `json:"source_database_id"`
 	ControlRevision    uint64           `json:"control_revision"`
 	RetainUntil        string           `json:"retain_until"`
@@ -46,6 +47,12 @@ type ForeignProof struct {
 	Continuous         bool             `json:"continuous"`
 	IndependentDerived bool             `json:"independent_derived"`
 	Proof              string           `json:"proof"`
+}
+
+// ForeignUse 仅在本次有界请求中传递新取得的准确证明；磁盘镜像不是新读取许可。
+type ForeignUse struct {
+	Reference ForeignReference `json:"reference"`
+	Proof     ForeignProof     `json:"proof"`
 }
 
 // ForeignContentPort 的所有 RPC/字节 IO 都在 Tx 外；VerifyTx 不得出站。
