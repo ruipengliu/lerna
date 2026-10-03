@@ -69,8 +69,9 @@ Task 原准入事务调用一次 `AllocateLeaseTx`，不另做普通 Use。默�
 本地 Content policy 或读取旧镜像取得权限。
 
 完整写入后独立读回的显式 profile 还须声明原设备事实可以用于后继参数：
-宿主参数读取是 `execution.arguments`／`cloud`，传往设备是
-`execution_arguments`／`device`；这是两个准确用途，不作拼写别名。文件介质的
+宿主参数读取是 `execution.arguments`／`cloud`，设备参数输入是
+`execution_arguments`／`device`，后继编码意图是 `execution_intent`／`device`；
+三个准确用途分别声明，不作拼写别名。文件介质的
 `managed_file_write`／`managed_file_read` 用途也分别核验。上述用途须同时在真实
 输入源策略和设备输出上限内，且各自使用原 Service/User holder 的当前证明。
 新配置不能补权已经出版的旧结果，缺用途的原登记回执仍为 rejected。

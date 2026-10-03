@@ -129,7 +129,7 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport boo
 	dc := executor.Config{Development: true, TenantID: cfg.TenantID, OwnerID: deviceOwner, InstanceID: instance, DatabasePath: filepath.Join(deviceRoot, "device.sqlite"), DataRoot: deviceRoot, SigningKeyFile: filepath.Join(deviceRoot, "device-key.pem"), PeerTokenFile: peerToken, Authority: executor.TrustedAuthority{KeyID: "development-es256", OwnerID: cfg.OwnerID, PublicX: authority.X, PublicY: authority.Y}, Bindings: deviceBindings, GRPCAddr: address, TLSCertificateFile: cert, TLSKeyFile: key, OutputSubjectRefs: []api.ObjectRef{{TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.OwnerID, Revision: 1}, {TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.SubjectID, Revision: 1}}, OutputPurposes: []string{"execution_result", "content.read", "content.write", "task.context", "task.snapshot", "task.dispatch", "task.action", "brain.input", "brain.output", "task.evidence", "task.attach_evidence", "task.complete", "task.goal", "task.result", "result", "memory.save", "memory.read", "memory.query"}, OutputLocations: []string{"cloud", "device"}}
 	if saveReport {
 		// 后继参数确实派生自原设备写入事实；宿主读取与设备传送用途分别登记。
-		dc.OutputPurposes = append(dc.OutputPurposes, "managed_file_read", "managed_file_write", "execution_arguments", "execution.arguments")
+		dc.OutputPurposes = append(dc.OutputPurposes, "managed_file_read", "managed_file_write", "execution_arguments", "execution.arguments", "execution_intent")
 	}
 	device, err := executor.Open(ctx, dc, true)
 	if err != nil {
