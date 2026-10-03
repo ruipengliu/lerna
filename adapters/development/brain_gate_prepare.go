@@ -19,7 +19,9 @@ func (g brainGate) PrepareGate(ctx context.Context, scope runtime.Scope, auth ru
 	if err != nil {
 		return ctx, err
 	}
-	participants := []string{"task", "platform"}
+	// 当前Task的普通材料门禁同库核Memory head、准确版本及来源许可。
+	// 这些参与者仍只读元数据；外部来源准备保留在短Tx之后。
+	participants := []string{"task", "memory", "content", "governance", "platform"}
 	if g.a.RemoteAgent != nil {
 		participants = append(participants, "collaboration")
 	}
