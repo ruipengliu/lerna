@@ -241,6 +241,72 @@ func TestExecutionDurableFileEffectAndIndependentReadOperation(t *testing.T) {
 	}
 }
 
+func TestExecutionEarlyAndFreeUsageHaveFrozenZeroUnitsAndIndependentProof(t *testing.T) {
+	f := newExecutionFixture(t)
+	in := f.invokeInput(t, false)
+	raw, err := f.content.ReadBytes(context.Background(), f.sc, f.auth, in.IntentRef, "execution_intent", "device")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var intent domain.ExecutionIntent
+	if err = api.Decode(raw, &intent); err != nil {
+		t.Fatal(err)
+	}
+	intent.CostBound = []api.Amount{{Unit: "usd", Value: "0"}}
+	in.IntentRef = f.put(t, api.Raw(intent))
+	in.IntentHash, _ = api.Digest(intent)
+	if r := f.command(t, "execution.invoke", in.OperationID, in, nil); r.Stage != "applied" {
+		t.Fatalf("invoke: %+v", r)
+	}
+	for _, ready := range []bool{false, true} {
+		if ready {
+			f.drain(t)
+		}
+		var usage api.UsageSnapshot
+		f.query(t, "execution.usage.get", in.OperationID, domain.OperationIDInput{OperationID: in.OperationID}, &usage)
+		if len(usage.Cumulative) != 1 || usage.Cumulative[0].Unit != "usd" || usage.Cumulative[0].Value != "0" || len(usage.ProofRefs) != 1 {
+			t.Fatalf("zero bill must cover frozen units and original proof: %+v", usage)
+		}
+		copyUsage := usage
+		copyUsage.UsageDigest = ""
+		digest, _ := api.Digest(copyUsage)
+		if digest != usage.UsageDigest || usage.SpendingClosed != ready || usage.UsageFinal != ready {
+			t.Fatalf("full bill digest/finality: %+v", usage)
+		}
+		proofBytes, err := f.content.ReadBytes(context.Background(), f.sc, f.auth, usage.ProofRefs[0], "usage_proof", "device")
+		if err != nil {
+			t.Fatal(err)
+		}
+		var proof struct {
+			OperationRef     api.ObjectRef        `json:"operation_ref"`
+			IntentHash       string               `json:"intent_hash"`
+			UsageRevision    uint64               `json:"usage_revision"`
+			Cumulative       []api.Amount         `json:"cumulative"`
+			SpendingClosed   bool                 `json:"spending_closed"`
+			UsageFinal       bool                 `json:"usage_final"`
+			SendStartedCount uint64               `json:"send_started_count"`
+			PhysicalCountMin uint64               `json:"physical_count_min"`
+			PhysicalCountMax uint64               `json:"physical_count_max"`
+			Attempts         []domain.AttemptView `json:"attempts"`
+		}
+		if err = api.Decode(proofBytes, &proof); err != nil || !api.Equal(proof.OperationRef, usage.SourceRef) || proof.IntentHash != in.IntentHash {
+			t.Fatalf("independent original fact proof: %+v %v", proof, err)
+		}
+		wantCount := uint64(0)
+		if ready {
+			wantCount = 1
+		}
+		if proof.PhysicalCountMin != wantCount || proof.PhysicalCountMax != wantCount || proof.SendStartedCount != wantCount {
+			t.Fatalf("physical count proof %+v", proof)
+		}
+		var again api.UsageSnapshot
+		f.query(t, "execution.usage.get", in.OperationID, domain.OperationIDInput{OperationID: in.OperationID}, &again)
+		if !api.Equal(usage, again) {
+			t.Fatal("unchanged fact changed proof identity or full digest")
+		}
+	}
+}
+
 func TestExecutionCancellationBeforeInvokeSurvivesRestart(t *testing.T) {
 	f := newExecutionFixture(t)
 	input := f.invokeInput(t, false)
