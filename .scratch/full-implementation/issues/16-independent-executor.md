@@ -1,7 +1,7 @@
 # 16 independent-executor
 
 Status: in-progress
-Blocked by: 01, 02, 04, 08
+Blocked by: 01, 02, 04, 08, 23
 Implementer: execution_impl
 
 依据：A3、生产端侧 SQLite 权威边界、有限 GrantLease、真实发送门禁和 F07／F08／F21。

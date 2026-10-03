@@ -13,12 +13,16 @@ func (s *Service) PrepareDecision(ctx context.Context, store runtime.Store, scop
 	err := s.transaction(ctx, store, scope, func(tx runtime.Tx) error { var e error; out, e = s.PrepareDecisionTx(ctx, tx, auth, in); return e })
 	return out, err
 }
-func (s *Service) PrepareDecisionTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, in PreparedDecision) (api.DecisionDispatchIntent, error) {
+func (s *Service) prepareDecisionTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, in PreparedDecision) (api.DecisionDispatchIntent, error) {
 	if !auth.HasRole("service") && !auth.HasRole("task_admin") {
 		return api.DecisionDispatchIntent{}, api.E("forbidden", "trusted_context_compiler_required")
 	}
+	t, e := getTask(ctx, tx, in.Snapshot.TaskRef.ObjectID)
+	if e != nil {
+		return api.DecisionDispatchIntent{}, e
+	}
 	var existing decisionState
-	_, e := tx.Get(ctx, decisions, in.DecisionID, &existing)
+	_, e = tx.Get(ctx, decisions, in.DecisionID, &existing)
 	if e == nil {
 		if !api.Equal(existing.Snapshot, in.Snapshot) || existing.Intent.CommandID != in.CommandID || existing.Intent.BrainOwnerID != in.BrainOwnerID {
 			return api.DecisionDispatchIntent{}, api.E("idempotency_conflict", "digest_conflict")
@@ -26,10 +30,6 @@ func (s *Service) PrepareDecisionTx(ctx context.Context, tx runtime.Tx, auth run
 		return existing.Intent, nil
 	}
 	if !api.IsCode(e, "not_found") {
-		return api.DecisionDispatchIntent{}, e
-	}
-	t, e := getTask(ctx, tx, in.Snapshot.TaskRef.ObjectID)
-	if e != nil {
 		return api.DecisionDispatchIntent{}, e
 	}
 	if e = s.CheckCurrent(ctx, tx, t, true); e != nil {
@@ -91,7 +91,7 @@ func (s *Service) PrepareDecisionTx(ctx context.Context, tx runtime.Tx, auth run
 	if e = s.saveTask(ctx, tx, &t); e != nil {
 		return intent, e
 	}
-	if _, e = raise(ctx, tx, JobDispatchDecision, "decision/"+in.DecisionID, tx.Scope().Ref(in.DecisionID, 1)); e != nil {
+	if e = queueJob(ctx, tx, JobDispatchDecision, "decision/"+in.DecisionID, tx.Scope().Ref(in.DecisionID, 1)); e != nil {
 		return intent, e
 	}
 	return intent, nil
@@ -105,9 +105,24 @@ func (s *Service) ConsumeProposal(ctx context.Context, store runtime.Store, scop
 	})
 	return out, err
 }
-func (s *Service) ConsumeProposalTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, p Proposal, report *ValidationReport) (Consumption, error) {
+func (s *Service) consumeProposalTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, p Proposal, report *ValidationReport) (Consumption, error) {
 	if !auth.HasRole("service") && !auth.HasRole("task_admin") {
 		return Consumption{}, api.E("forbidden", "trusted_preparer_required")
+	}
+	if p.Kind == "fail" || p.Kind == "complete" {
+		var birth decisionState
+		if e := tx.GetVersion(ctx, decisions, p.DecisionID, 1, &birth); e != nil {
+			return Consumption{}, e
+		}
+		if e := runtime.CheckRef(tx.Scope(), birth.Intent.TaskRef); e != nil {
+			return Consumption{}, e
+		}
+		if birth.Intent.TaskRef.OwnerID != tx.Scope().OwnerID {
+			return Consumption{}, api.E("forbidden", "decision_task_scope_mismatch")
+		}
+		if e := s.lockTaskTree(ctx, tx, birth.Intent.TaskRef.ObjectID); e != nil {
+			return Consumption{}, e
+		}
 	}
 	t, d, e := decisionForTaskTx(ctx, tx, p.DecisionID)
 	if e != nil {
@@ -152,7 +167,7 @@ func (s *Service) ConsumeProposalTx(ctx context.Context, tx runtime.Tx, auth run
 			if err != nil {
 				return out, err
 			}
-			if _, err = raise(ctx, tx, JobAdvance, "advance/"+out.TaskID, taskRef(tx, current)); err != nil {
+			if err = queueJob(ctx, tx, JobAdvance, "advance/"+out.TaskID, taskRef(tx, current)); err != nil {
 				return out, err
 			}
 		}
@@ -241,7 +256,7 @@ func (s *Service) ConsumeProposalTx(ctx context.Context, tx runtime.Tx, auth run
 			if e = s.saveTask(ctx, tx, &t); e != nil {
 				return out, e
 			}
-			if _, e = raise(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
+			if e = queueJob(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
 				return out, e
 			}
 		}
@@ -382,7 +397,7 @@ func (s *Service) admitBatchTx(ctx context.Context, tx runtime.Tx, auth runtime.
 		if e = tx.Create(ctx, relations, relation.ID, t.Task.TaskID, relation); e != nil {
 			return nil, e
 		}
-		if _, e = raise(ctx, tx, JobDispatchOperation, "operation/"+a.OperationID, tx.Scope().Ref(a.OperationID, 1)); e != nil {
+		if e = queueJob(ctx, tx, JobDispatchOperation, "operation/"+a.OperationID, tx.Scope().Ref(a.OperationID, 1)); e != nil {
 			return nil, e
 		}
 		ids = append(ids, a.OperationID)
@@ -401,7 +416,7 @@ func (s *Service) admitBatchTx(ctx context.Context, tx runtime.Tx, auth runtime.
 func (s *Service) MergeOperation(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, operation api.Operation) error {
 	return s.transaction(ctx, store, scope, func(tx runtime.Tx) error { return s.MergeOperationTx(ctx, tx, auth, operation) })
 }
-func (s *Service) MergeOperationTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, operation api.Operation) error {
+func (s *Service) mergeOperationTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, operation api.Operation) error {
 	if !auth.HasRole("service") && auth.SubjectID != operation.OwnerID {
 		return api.E("forbidden", "executor_identity_required")
 	}
@@ -470,10 +485,10 @@ func (s *Service) MergeOperationTx(ctx context.Context, tx runtime.Tx, auth runt
 	if e = s.saveTask(ctx, tx, &t); e != nil {
 		return e
 	}
-	if _, e = raise(ctx, tx, JobReconcileOperation, "reconcile/"+operation.OperationID, tx.Scope().Ref(operation.OperationID, operation.Revision)); e != nil {
+	if e = queueJob(ctx, tx, JobReconcileOperation, "reconcile/"+operation.OperationID, tx.Scope().Ref(operation.OperationID, operation.Revision)); e != nil {
 		return e
 	}
-	if _, e = raise(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
+	if e = queueJob(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
 		return e
 	}
 	return nil

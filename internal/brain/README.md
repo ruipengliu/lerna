@@ -7,3 +7,11 @@ Brain 保留原 Decision、冻结编码、至多一次物理模型请求、原�
 读取和恢复先核租户、owner、Decision、分片原身份与 revision、索引、长度及整体摘要，再解码固定私有类型。原分片保留到原责任清理规则允许释放，不能在新主头提交时删掉并发旧读者仍引用的分片。缺片或损坏明确失败，不从当前 Content 重建原编码，不重新发送原模型请求；历史 inline 格式仍可恢复。
 
 `payload_test.go` 使用真实 SQLite、HTTP Provider 合同服务、持久文件内容边界和原提交故障点，验证 180 KiB 回复与大编码、数据库重开、原 Lookup、一次 POST、公开 Usage 的实际已知费用、提交前回滚/提交后失回执、原分片损坏及 inline 兼容。该证据不声明真实供应商账户、自然语言质量或未配置的生产部署能力。
+
+正准入门禁的确定关闭会封闭原 accepted 决策和原回执。Task 终态、旧目标/控制及撤权后不发布可采纳提案；数据库、依赖、原 Claim 或提交未知错误保持原责任，不能被转换为业务取消。未物理发送可记录准确零用量；已可能发送只核原 CallID，未知回复与未知费用保留占用。取消、已出版和明确失败的 Decision 仍以独立原 Job 取得迟到的累计用量和 `usage_final`，不重发模型，不改已发布提案或原终态回执。
+
+`terminal_task_test.go` 在真实 SQLite/PG、一次 HTTP Provider、持久文件内容边界上核验公开 Task/Brain 取消、原 accepted 回执关闭、重复负控制、临时 Task 门禁数据库失败回滚恢复、未知返回及迟到 final。开发装配的 `brain_terminal_test.go` 另核原 Task 投递责任、实际 0.00024 USD、固定原 `brain.cancel` 命令及数据库重开；账务 Job 独立于投递关闭。这里的 HTTP 费用来自明确 token/rate 合同夹具，不代表生产供应商账单或自然语言质量。
+
+行动候选机械继承原 `arguments_local_id` publication 的明确 `disclosed_sources`。草稿可额外声明 `disclosed_local_ids`（最多 20 个、同一 Generated 内已存在且不重复），在全部内容出版后映射为原准确引用；可明确声明参数自身，不能猜测所有参数均公开。缺字段的旧草稿不增加披露。Provider 草稿 Schema/解析与 Brain 校验同版，未知、重复和超界本地引用被拒绝；`disclosure_test.go` 使用实际 HTTP、SQLite 与文件出版重开验证原源声明、原参数自身声明、两者并存及无声明保持空。
+
+`complete` 提案即使没有检查建议也保存必填 `check_suggestions: []`；此字段的结构合法不代表 Task 完成，空条件仍由 Task 的完成门禁拒绝。

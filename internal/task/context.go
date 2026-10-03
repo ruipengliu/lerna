@@ -34,12 +34,29 @@ type ContextFacts struct {
 
 // OperationIntentTx 只读本方已耐久准入的准确意图，供受信机械编码装配核对。
 func (s *Service) OperationIntentTx(ctx context.Context, tx runtime.Tx, operationID string) (OperationIntent, error) {
+	var birth OperationIntent
+	if err := tx.GetVersion(ctx, intents, operationID, 1, &birth); err != nil {
+		return OperationIntent{}, err
+	}
+	if err := runtime.CheckRef(tx.Scope(), birth.TaskRef); err != nil {
+		return OperationIntent{}, err
+	}
+	if birth.OperationID != operationID || birth.TaskRef.OwnerID != tx.Scope().OwnerID {
+		return OperationIntent{}, api.E("forbidden", "operation_intent_scope_mismatch")
+	}
+	// 原意图的不可变 birth 只负责路由；先锁完整 Task 路径及其预算。
+	if _, err := getTask(ctx, tx, birth.TaskRef.ObjectID); err != nil {
+		return OperationIntent{}, err
+	}
 	var intent OperationIntent
 	if _, err := tx.Get(ctx, intents, operationID, &intent); err != nil {
 		return intent, err
 	}
 	if intent.OperationID != operationID || intent.TaskRef.TenantID != tx.Scope().TenantID || intent.TaskRef.OwnerID != tx.Scope().OwnerID {
 		return OperationIntent{}, api.E("forbidden", "operation_intent_scope_mismatch")
+	}
+	if !api.Equal(intent, birth) {
+		return OperationIntent{}, api.E("idempotency_conflict", "original_operation_intent_changed")
 	}
 	return intent, nil
 }
