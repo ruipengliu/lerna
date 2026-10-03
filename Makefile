@@ -28,6 +28,8 @@ test-integration:
 	@test -n "$$LERNA_TEST_POSTGRES_DSN" || { echo "LERNA_TEST_POSTGRES_DSN is required (dedicated PostgreSQL test database)" >&2; exit 1; }
 	cd conformance/fixtures/durable-work/pg-v1 && sha256sum -c SHA256SUMS
 	cd conformance/fixtures/durable-work/sqlite-v1 && sha256sum -c SHA256SUMS
+	cd conformance/fixtures/durable-work/pg-v2 && sha256sum -c SHA256SUMS
+	cd conformance/fixtures/durable-work/sqlite-v2 && sha256sum -c SHA256SUMS
 	go test -count=1 -tags=integration -timeout=120s ./conformance/recovery/...
 test-contract:
 	node scripts/test-contract.mjs

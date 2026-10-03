@@ -56,7 +56,7 @@ func (s *Store) Claim(ctx context.Context, token runtime.Tx, candidate runtime.J
 	}
 	claim := runtime.Claim{JobID: candidate.ID, Object: candidate.Object, Phase: candidate.Phase, Worker: worker}
 	// The owner writer serializes this short conditional update with admission.
-	err = tx.QueryRowContext(ctx, `UPDATE jobs SET state='leased',worker_id=?8,claimed_revision=work_revision,lease_epoch=lease_epoch+1,lease_until=?9 WHERE tenant_id=?1 AND owner_id=?2 AND job_id=?3 AND object_kind=?4 AND object_id=?5 AND phase=?6 AND due_at <= ?7 AND (state='ready' OR (state='leased' AND lease_until <= ?7)) AND lease_epoch < ?10 RETURNING claimed_revision,lease_epoch,lease_until`, owner.TenantID, owner.OwnerID, candidate.ID, candidate.Object.Kind, candidate.Object.ID, candidate.Phase, sqlTime(now), worker, sqlTime(until), int64(math.MaxInt64)).Scan(&claim.ClaimedRevision, &claim.Epoch, &claim.LeaseUntil)
+	err = tx.QueryRowContext(ctx, `UPDATE jobs SET state='leased',worker_id=?8,claimed_revision=work_revision,lease_epoch=lease_epoch+1,lease_until=?9 WHERE tenant_id=?1 AND owner_id=?2 AND job_id=?3 AND object_kind=?4 AND object_id=?5 AND phase=?6 AND due_at <= ?7 AND (state IN ('ready','waiting') OR (state='leased' AND lease_until <= ?7)) AND lease_epoch < ?10 RETURNING claimed_revision,lease_epoch,lease_until`, owner.TenantID, owner.OwnerID, candidate.ID, candidate.Object.Kind, candidate.Object.ID, candidate.Phase, sqlTime(now), worker, sqlTime(until), int64(math.MaxInt64)).Scan(&claim.ClaimedRevision, &claim.Epoch, &claim.LeaseUntil)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}

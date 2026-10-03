@@ -184,7 +184,7 @@ func TestSQLiteMigrationRecordsExactVersionAndRejectsAlteredChecksum(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-	if status.Version != 2 || status.Checksum != "sha256:3791b3fc5ca49c18eee04b2afcaa54c2aae9c5afbf3f1e3fd98f5cce8715e01c" {
+	if status.Version != 3 || status.Checksum != sqlite.MigrationV3Checksum() {
 		t.Fatalf("missing real v2 migration record: %+v", status)
 	}
 	// Deliberate corruption is a storage fault fixture, not a business observation.
@@ -599,11 +599,11 @@ func TestSQLiteHistoricalV1FileRestoresOriginalDecisionsAndPendingJob(t *testing
 		t.Fatal(err)
 	}
 	status, err := store.MigrationStatus(contextFor(t))
-	if err != nil || status.Version != 2 || status.Checksum != sqlite.MigrationV2Checksum() {
+	if err != nil || status.Version != 3 || status.Checksum != sqlite.MigrationV3Checksum() {
 		t.Fatalf("restored migration changed: %+v %v", status, err)
 	}
 	versions, err := store.MigrationVersions(contextFor(t))
-	if err != nil || len(versions) != 2 || versions[0] != report.Migration || versions[1] != status {
+	if err != nil || len(versions) != 3 || versions[0] != report.Migration || versions[1].Version != 2 || versions[1].Checksum != sqlite.MigrationV2Checksum() || versions[2] != status {
 		t.Fatalf("actual historical v1/v2 identity: %+v %v", versions, err)
 	}
 	scope := contract.OwnerRef{TenantID: "fixture-tenant", OwnerID: "fixture-owner"}
@@ -654,11 +654,12 @@ func TestSQLiteHistoricalV1FileRestoresOriginalDecisionsAndPendingJob(t *testing
 		t.Fatalf("historical retransmission changed responsibility: %+v %v", after, err)
 	}
 
-	worker := durablework.NewWorker(scope, store, store, store, store)
+	worker := conformanceWorker(t, scope, store, store, store, store)
 	batch, err := worker.Claim(ctx, "historical-v2", 1, time.Minute)
 	if err != nil || len(batch) != 1 || batch[0].Claim.JobID != report.Observation.Job.ID || batch[0].Claim.Epoch != 1 || batch[0].Input.Text != "PG v1 portable input 🌍" {
 		t.Fatalf("historical v2 claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	if err = worker.Complete(ctx, batch[0].Claim, durablework.Project(batch[0])); err != nil {
 		t.Fatal(err)
 	}
@@ -674,7 +675,7 @@ func TestSQLiteWorkBusyAndCanceledQueueRetainNormalResponsibility(t *testing.T) 
 	h := hostFor(store, owner, principal)
 	out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
 	assertReceived(t, out, err)
-	worker := durablework.NewWorker(owner, store, store, store, store)
+	worker := conformanceWorker(t, owner, store, store, store, store)
 	cfg, _ := sqliteConfigurations.Load(store)
 	releaseBusy := holdSQLiteProcessLock(t, cfg.(sqlite.Config).Path)
 	_, err = worker.Claim(ctx, "busy", 1, time.Minute)
@@ -714,6 +715,7 @@ func TestSQLiteWorkBusyAndCanceledQueueRetainNormalResponsibility(t *testing.T) 
 	if err != nil || len(batch) != 1 || batch[0].Claim.Epoch != 1 {
 		t.Fatalf("normal claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	if err = worker.Complete(ctx, batch[0].Claim, durablework.Project(batch[0])); err != nil {
 		t.Fatal(err)
 	}

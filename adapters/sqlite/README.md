@@ -85,3 +85,16 @@ corpus, migration, Host observation and exact checksums. It needs no SQLite CLI.
 The retained v1 file is copied into a fresh owned file and upgraded through the
 actual v2 migration, preserving its original receipt/input/Job and completing
 its project Claim. Full migration failure/reopen recovery remains ticket07.
+
+The next forward wait migration adds waiting state, per-input-revision immutable
+policy/anchor/deadline, durable start/attempt/outcome/due facts and same-owner gates.
+It preserves every existing Claim/lease binding and all published V1/V2 bytes.
+Legacy policy binds only at first eligible Claim in the same short transaction;
+new admission binds policy with input/Job/receipt. Defer/retry/stop release the
+original Claim without closing newer work or inventing successful projection.
+NextWake observes the earliest relevant future due/lease/deadline and finite
+fallback. All mutating consumer paths preserve input -> Job lock order and use
+one trusted owner Clock. Deploy by draining/isolating the old binary; mixed
+old/new processing is unsupported. Both real adapters run one shared wait suite,
+including frozen actual V1/V2 writer upgrades. No production/external-effect or
+fair-quota guarantee is implied.

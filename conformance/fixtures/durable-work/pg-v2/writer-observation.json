@@ -1,0 +1,49 @@
+{
+  "claim": {
+    "Claim": {
+      "JobID": "job-afee007508d4f54e0dc0793934d5671b",
+      "Object": {
+        "tenant_id": "tenant-one",
+        "owner_id": "owner-one",
+        "kind": "durable_work",
+        "id": "input"
+      },
+      "Phase": "project",
+      "Worker": "v2-old",
+      "ClaimedRevision": 1,
+      "Epoch": 1,
+      "LeaseUntil": "2026-10-03T20:00:01Z"
+    },
+    "Input": {
+      "ID": "input",
+      "Revision": 1,
+      "Text": "hello",
+      "CreatedAt": "2026-10-03T20:00:00Z",
+      "UpdatedAt": "2026-10-03T20:00:00Z"
+    }
+  },
+  "observation": {
+    "Input": {
+      "ID": "input",
+      "Revision": 2,
+      "Text": "hello",
+      "CreatedAt": "2026-10-03T20:00:00Z",
+      "UpdatedAt": "2026-10-03T20:00:00Z"
+    },
+    "Job": {
+      "ID": "job-afee007508d4f54e0dc0793934d5671b",
+      "Object": {
+        "tenant_id": "tenant-one",
+        "owner_id": "owner-one",
+        "kind": "durable_work",
+        "id": "input"
+      },
+      "Phase": "project",
+      "WorkRevision": 2,
+      "CompletedRevision": 0,
+      "State": "leased",
+      "DueAt": "2026-10-03T20:00:00Z"
+    },
+    "Projection": null
+  }
+}

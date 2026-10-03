@@ -51,11 +51,12 @@ func behaviorScanClaimsSnapshotAndProjectsOutsideTransaction(t *testing.T, newSt
 	ctx := contextFor(t)
 	out, err := h.Record(ctx, command("claim-source", "input", "hello", nil, future()), &principal)
 	assertReceived(t, out, err)
-	worker := durablework.NewWorker(owner, store, store, store, store)
+	worker := conformanceWorker(t, owner, store, store, store, store)
 	batch, err := worker.Claim(ctx, "worker-a", 1, time.Minute)
 	if err != nil || len(batch) != 1 {
 		t.Fatalf("claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	work := batch[0]
 	if work.Input.Text != "hello" || work.Input.Revision != 1 || work.Claim.ClaimedRevision != 1 || work.Claim.Epoch != 1 || work.Claim.Worker != "worker-a" {
 		t.Fatalf("snapshot: %+v", work)
@@ -80,7 +81,7 @@ func behaviorScanClaimsSnapshotAndProjectsOutsideTransaction(t *testing.T, newSt
 func behaviorOldCompletionPreservesNewRevisionAndExactSnapshot(t *testing.T, newStore func(*testing.T) workStore) {
 	store := newStore(t)
 	h := hostFor(store, owner, principal)
-	worker := durablework.NewWorker(owner, store, store, store, store)
+	worker := conformanceWorker(t, owner, store, store, store, store)
 	ctx := contextFor(t)
 	out, err := h.Record(ctx, command("original", "input", "hello", nil, future()), &principal)
 	original := assertReceived(t, out, err)
@@ -88,6 +89,7 @@ func behaviorOldCompletionPreservesNewRevisionAndExactSnapshot(t *testing.T, new
 	if err != nil || len(batch) != 1 {
 		t.Fatalf("claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	old := batch[0]
 	revision := contract.Revision("1")
 	out, err = h.Record(ctx, command("new-work", "input", "你好🌍\x00", &revision, future()), &principal)
@@ -106,6 +108,7 @@ func behaviorOldCompletionPreservesNewRevisionAndExactSnapshot(t *testing.T, new
 	if err != nil || len(next) != 1 || next[0].Claim.JobID != old.Claim.JobID || next[0].Claim.Object != old.Claim.Object || next[0].Claim.ClaimedRevision != 2 || next[0].Input.Text != "你好🌍\x00" {
 		t.Fatalf("new snapshot/identity: %+v %v", next, err)
 	}
+	startWork(t, worker, next[0])
 	if err = worker.Complete(ctx, next[0].Claim, durablework.Project(next[0])); err != nil {
 		t.Fatal(err)
 	}
@@ -181,14 +184,16 @@ func behaviorRenewBindsClaimAndExpiresWithoutReplacement(t *testing.T, newStore 
 	store := newStore(t)
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
+	clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
+	h.Clock = clock
 	out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
 	assertReceived(t, out, err)
-	clock := &workClock{now: time.Date(2100, 1, 1, 0, 0, 0, 0, time.UTC)}
-	worker := durablework.NewWorker(owner, store, store, store, clock)
+	worker := conformanceWorker(t, owner, store, store, store, clock)
 	batch, err := worker.Claim(ctx, "first", 1, time.Minute)
 	if err != nil || len(batch) != 1 {
 		t.Fatalf("claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	old := batch[0]
 	clock.Advance(30 * time.Second)
 	renewed, err := worker.Renew(ctx, old.Claim, time.Minute)
@@ -227,7 +232,7 @@ func behaviorRenewBindsClaimAndExpiresWithoutReplacement(t *testing.T, newStore 
 	}
 	clock.Advance(time.Minute - time.Microsecond)
 	shadowStore := store
-	shadow := durablework.NewWorker(owner, shadowStore, shadowStore, shadowStore, clock)
+	shadow := conformanceWorker(t, owner, shadowStore, shadowStore, shadowStore, clock)
 	live, err := shadow.Claim(ctx, "too-early", 1, time.Minute)
 	if err != nil || len(live) != 0 {
 		t.Fatalf("reopen lost live lease: %+v %v", live, err)
@@ -240,11 +245,12 @@ func behaviorRenewBindsClaimAndExpiresWithoutReplacement(t *testing.T, newStore 
 		t.Fatalf("expired unreplaced claim renewed: %v", err)
 	}
 	replacementStore := store
-	replacement := durablework.NewWorker(owner, replacementStore, replacementStore, replacementStore, clock)
+	replacement := conformanceWorker(t, owner, replacementStore, replacementStore, replacementStore, clock)
 	next, err := replacement.Claim(ctx, "second", 1, time.Minute)
 	if err != nil || len(next) != 1 || next[0].Claim.Epoch != renewed.Epoch+1 || next[0].Claim.JobID != renewed.JobID || next[0].Claim.Object != renewed.Object {
 		t.Fatalf("replacement: %+v %v", next, err)
 	}
+	startWork(t, replacement, next[0])
 	if err = worker.Complete(ctx, renewed, durablework.Project(old)); !errors.Is(err, runtime.ErrClaim) {
 		t.Fatalf("replaced claim complete: %v", err)
 	}
@@ -279,11 +285,12 @@ func behaviorTriggerRejectsRegressingAndOutOfRangeRevisions(t *testing.T, newSto
 	if err != nil || got.Job.WorkRevision != 2 || got.Input.Revision != 2 {
 		t.Fatalf("revision regressed: %+v %v", got, err)
 	}
-	worker := durablework.NewWorker(owner, store, store, store, store)
+	worker := conformanceWorker(t, owner, store, store, store, store)
 	batch, err := worker.Claim(ctx, "normal", 1, time.Minute)
 	if err != nil || len(batch) != 1 || batch[0].Claim.ClaimedRevision != 2 {
 		t.Fatalf("normal claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	for _, value := range []int64{-1, 0, 9223372036854775807} {
 		claim := batch[0].Claim
 		claim.Epoch = value
@@ -314,11 +321,12 @@ func behaviorConcurrentNewWorkAndCompletionBothCommitOrders(t *testing.T, newSto
 			ctx := contextFor(t)
 			out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
 			assertReceived(t, out, err)
-			worker := durablework.NewWorker(owner, store, store, store, store)
+			worker := conformanceWorker(t, owner, store, store, store, store)
 			batch, err := worker.Claim(ctx, "first", 1, time.Minute)
 			if err != nil || len(batch) != 1 {
 				t.Fatalf("claim: %+v %v", batch, err)
 			}
+			startWork(t, worker, batch[0])
 			old := batch[0]
 			gate := &transactionGate{runner: store, ready: make(chan struct{}), release: make(chan struct{})}
 			started := make(chan struct{})
@@ -375,6 +383,7 @@ func behaviorConcurrentNewWorkAndCompletionBothCommitOrders(t *testing.T, newSto
 			if err != nil || len(next) != 1 || next[0].Input.Revision != 2 || next[0].Input.Text != "second" {
 				t.Fatalf("latest work: %+v %v", next, err)
 			}
+			startWork(t, worker, next[0])
 			if err = worker.Complete(ctx, next[0].Claim, durablework.Project(next[0])); err != nil {
 				t.Fatal(err)
 			}
@@ -391,7 +400,7 @@ func behaviorClaimRequestBoundsAndFailedProjectionRollBackCompletion(t *testing.
 	ctx := contextFor(t)
 	out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
 	assertReceived(t, out, err)
-	worker := durablework.NewWorker(owner, store, store, store, store)
+	worker := conformanceWorker(t, owner, store, store, store, store)
 	for _, limit := range []int{-1, 0, 65} {
 		if _, err = worker.Claim(ctx, "bounded", limit, time.Minute); !errors.Is(err, runtime.ErrWorkBounds) {
 			t.Fatalf("limit %d: %v", limit, err)
@@ -412,6 +421,7 @@ func behaviorClaimRequestBoundsAndFailedProjectionRollBackCompletion(t *testing.
 	if err != nil || len(batch) != 1 {
 		t.Fatalf("normal claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	bad := durablework.Project(batch[0])
 	bad.TextDigest = "sha256:invalid"
 	if err = worker.Complete(ctx, batch[0].Claim, bad); err == nil {
@@ -447,11 +457,12 @@ func behaviorMaximumRevisionClaimsAndCompletesWithoutOverflow(t *testing.T, newS
 	if err != nil {
 		t.Fatal(err)
 	}
-	worker := durablework.NewWorker(owner, store, store, store, store)
+	worker := conformanceWorker(t, owner, store, store, store, store)
 	batch, err := worker.Claim(ctx, "maximum", 1, time.Minute)
 	if err != nil || len(batch) != 1 || batch[0].Claim.ClaimedRevision != math.MaxInt64 {
 		t.Fatalf("maximum claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	if err = worker.Complete(ctx, batch[0].Claim, durablework.Project(batch[0])); err != nil {
 		t.Fatal(err)
 	}
@@ -471,14 +482,16 @@ func behaviorLeaseExpiryIsCheckedAfterWaitingForObjectLock(t *testing.T, newStor
 	store := newStore(t)
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
+	clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
+	h.Clock = clock
 	out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
 	assertReceived(t, out, err)
-	clock := &workClock{now: time.Date(2100, 1, 1, 0, 0, 0, 0, time.UTC)}
-	worker := durablework.NewWorker(owner, store, store, store, clock)
+	worker := conformanceWorker(t, owner, store, store, store, clock)
 	batch, err := worker.Claim(ctx, "old", 1, time.Minute)
 	if err != nil || len(batch) != 1 {
 		t.Fatalf("claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	ready := make(chan struct{})
 	release := make(chan struct{})
 	held := make(chan error, 1)
@@ -521,6 +534,7 @@ func behaviorLeaseExpiryIsCheckedAfterWaitingForObjectLock(t *testing.T, newStor
 	if err != nil || len(next) != 1 || next[0].Claim.Epoch != 2 {
 		t.Fatalf("replacement: %+v %v", next, err)
 	}
+	startWork(t, worker, next[0])
 	if err = worker.Complete(ctx, next[0].Claim, durablework.Project(next[0])); err != nil {
 		t.Fatal(err)
 	}
@@ -551,7 +565,7 @@ func behaviorConcurrentWorkersClaimOneOriginalJobAndCompleteNormally(t *testing.
 				answers <- answer{err: ctx.Err()}
 				return
 			}
-			worker := durablework.NewWorker(owner, adapter, adapter, adapter, adapter)
+			worker := conformanceWorker(t, owner, adapter, adapter, adapter, adapter)
 			batch, err := worker.Claim(ctx, name, 1, time.Minute)
 			answers <- answer{work: batch, err: err}
 		}()
@@ -568,7 +582,8 @@ func behaviorConcurrentWorkersClaimOneOriginalJobAndCompleteNormally(t *testing.
 	if len(claimed) != 1 {
 		t.Fatalf("one Job assigned to %d workers", len(claimed))
 	}
-	worker := durablework.NewWorker(owner, store, store, store, store)
+	worker := conformanceWorker(t, owner, store, store, store, store)
+	startWork(t, worker, claimed[0])
 	if err = worker.Complete(ctx, claimed[0].Claim, durablework.Project(claimed[0])); err != nil {
 		t.Fatal(err)
 	}
@@ -599,21 +614,24 @@ func behaviorCloseReopenRetainsClaimAndOriginalReceipt(t *testing.T, newStore fu
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	wire := command("original", "input", "hello", nil, future())
+	clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 123456000, time.UTC)}
+	h.Clock = clock
 	out, err := h.Record(ctx, wire, &principal)
 	original := assertReceived(t, out, err)
-	clock := &workClock{now: time.Date(2100, 1, 1, 0, 0, 0, 123456000, time.UTC)}
-	worker := durablework.NewWorker(owner, store, store, store, clock)
+	worker := conformanceWorker(t, owner, store, store, store, clock)
 	batch, err := worker.Claim(ctx, "old", 1, time.Minute)
 	if err != nil || len(batch) != 1 {
 		t.Fatalf("claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	old := batch[0]
 	if err = store.Close(); err != nil {
 		t.Fatal(err)
 	}
 	replacement := reopenAdmissionStore(t, store).(workStore)
 	h = hostFor(replacement, owner, principal)
-	worker = durablework.NewWorker(owner, replacement, replacement, replacement, clock)
+	h.Clock = clock
+	worker = conformanceWorker(t, owner, replacement, replacement, replacement, clock)
 	got, err := h.Observe(ctx, "input", &principal)
 	if err != nil || got.Job.ID != old.Claim.JobID || got.Input.Text != "hello" || got.Input.Revision != 1 || got.Job.WorkRevision != 1 || got.Job.CompletedRevision != 0 || got.Job.State != "leased" || got.Projection != nil {
 		t.Fatalf("reopened claim: %+v %v", got, err)
@@ -632,6 +650,7 @@ func behaviorCloseReopenRetainsClaimAndOriginalReceipt(t *testing.T, newStore fu
 	if err != nil || len(next) != 1 || next[0].Claim.Epoch != 2 || next[0].Claim.JobID != old.Claim.JobID || next[0].Input.Text != "hello" {
 		t.Fatalf("replacement: %+v %v", next, err)
 	}
+	startWork(t, worker, next[0])
 	if err = worker.Complete(ctx, old.Claim, durablework.Project(old)); !errors.Is(err, runtime.ErrClaim) {
 		t.Fatalf("old persisted token accepted: %v", err)
 	}
@@ -666,13 +685,13 @@ func behaviorExactOwnerTimeBoundaries(t *testing.T, newStore func(*testing.T) wo
 				t.Run(fmt.Sprintf("%d/%s/%s", fraction, operation, boundary.name), func(t *testing.T) {
 					store := newStore(t)
 					ctx := contextFor(t)
-					start := time.Date(2100, 1, 1, 0, 0, 0, fraction, time.UTC)
+					start := time.Date(2026, 10, 3, 0, 0, 0, fraction, time.UTC)
 					clock := &workClock{now: start}
 					h := hostFor(store, owner, principal)
 					h.Clock = clock
 					out, err := h.Record(ctx, command("source", "input", "hello", nil, "2101-01-01T00:00:00.000000Z"), &principal)
 					assertReceived(t, out, err)
-					worker := durablework.NewWorker(owner, store, store, store, clock)
+					worker := conformanceWorker(t, owner, store, store, store, clock)
 					clock.Advance(-time.Microsecond)
 					batch, err := worker.Claim(ctx, "before-due", 1, time.Millisecond)
 					if err != nil || len(batch) != 0 {
@@ -683,6 +702,7 @@ func behaviorExactOwnerTimeBoundaries(t *testing.T, newStore func(*testing.T) wo
 					if err != nil || len(batch) != 1 {
 						t.Fatalf("at exact due: %+v %v", batch, err)
 					}
+					startWork(t, worker, batch[0])
 					work := batch[0]
 					if !work.Claim.LeaseUntil.Equal(start.Add(time.Millisecond)) {
 						t.Fatalf("lease precision: %+v", work.Claim)
@@ -705,6 +725,7 @@ func behaviorExactOwnerTimeBoundaries(t *testing.T, newStore func(*testing.T) wo
 						if err != nil || len(next) != 1 || next[0].Claim.JobID != work.Claim.JobID || next[0].Claim.Epoch != 2 {
 							t.Fatalf("expiry replacement: %+v %v", next, err)
 						}
+						startWork(t, worker, next[0])
 						if err = worker.Complete(ctx, next[0].Claim, durablework.Project(next[0])); err != nil {
 							t.Fatal(err)
 						}
@@ -721,11 +742,12 @@ func behaviorClaimStorageScopeAndBounds(t *testing.T, newStore func(*testing.T) 
 	h := hostFor(store, owner, principal)
 	out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
 	assertReceived(t, out, err)
-	worker := durablework.NewWorker(owner, store, store, store, store)
+	worker := conformanceWorker(t, owner, store, store, store, store)
 	batch, err := worker.Claim(ctx, "normal", 1, time.Minute)
 	if err != nil || len(batch) != 1 {
 		t.Fatalf("claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	claim := batch[0].Claim
 	var expired runtime.Tx
 	err = store.Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
@@ -789,7 +811,7 @@ func behaviorBoundedBatchRetainsEveryOriginalResponsibility(t *testing.T, newSto
 		out, err := h.Record(ctx, command(id, id, "hello", nil, future()), &principal)
 		assertReceived(t, out, err)
 	}
-	worker := durablework.NewWorker(owner, store, store, store, store)
+	worker := conformanceWorker(t, owner, store, store, store, store)
 	seen := map[contract.ID]bool{}
 	for round := 0; round < 4; round++ {
 		batch, err := worker.Claim(ctx, "bounded", 2, time.Minute)
@@ -801,6 +823,7 @@ func behaviorBoundedBatchRetainsEveryOriginalResponsibility(t *testing.T, newSto
 				t.Fatal("original responsibility claimed twice")
 			}
 			seen[work.Claim.JobID] = true
+			startWork(t, worker, work)
 			if err = worker.Complete(ctx, work.Claim, durablework.Project(work)); err != nil {
 				t.Fatal(err)
 			}
@@ -814,5 +837,26 @@ func behaviorBoundedBatchRetainsEveryOriginalResponsibility(t *testing.T, newSto
 		if err != nil || got.Job.WorkRevision != 1 || got.Job.CompletedRevision != 1 || got.Job.State != "done" || got.Projection == nil || got.Projection.TextDigest != "sha256:2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824" {
 			t.Fatalf("normal bounded progress: %+v %v", got, err)
 		}
+	}
+}
+
+// conformanceWorker explicitly trusts only this finite suite worker set.
+func conformanceWorker(t *testing.T, owner contract.OwnerRef, runner runtime.TxRunner, claims runtime.ClaimStore, repository demo.WorkRepository, clock runtime.Clock) *durablework.Worker {
+	t.Helper()
+	permissions, err := demo.NewWorkerPermissions([]string{"at-due", "before-due", "bounded", "busy", "first", "historical-v2", "independent-schema", "maximum", "normal", "old", "replacement", "same-schema", "second", "too-early", "v2", "worker-00", "worker-01", "worker-02", "worker-03", "worker-04", "worker-05", "worker-06", "worker-07", "worker-08", "worker-09", "worker-10", "worker-11", "worker-a", "worker-b"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	worker, err := durablework.NewScheduledWorker(owner, runner, claims, repository, clock, permissions)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return worker
+}
+func startWork(t *testing.T, worker *durablework.Worker, work durablework.Work) {
+	t.Helper()
+	state, started, err := worker.Start(contextFor(t), work)
+	if err != nil || !started {
+		t.Fatalf("explicit durable start: %+v %v %v", state, started, err)
 	}
 }
