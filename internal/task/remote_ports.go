@@ -13,6 +13,103 @@ func WithJobIntents(ctx context.Context, tx runtime.Tx, fn func(runtime.Tx) erro
 	return withTaskJobs(ctx, tx, fn)
 }
 
+type DelegationScope struct {
+	Delegation    Delegation           `json:"delegation"`
+	Allocation    Allocation           `json:"allocation"`
+	SubjectRef    api.ObjectRef        `json:"subject_ref"`
+	ParentTask    api.Task             `json:"parent_task"`
+	ParentSources []api.SourceEvidence `json:"parent_sources"`
+}
+
+// ReadIncomingSourceTx 只投影已登记的原allocation负责方，不授开始权。
+func (s *Service) ReadIncomingSourceTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, taskID string) (api.ObjectRef, bool, error) {
+	t, err := getTask(ctx, tx, taskID)
+	if err != nil {
+		return api.ObjectRef{}, false, err
+	}
+	if err = principal(auth, t); err != nil {
+		return api.ObjectRef{}, false, err
+	}
+	if t.IncomingAllocationID == "" {
+		return api.ObjectRef{}, false, nil
+	}
+	var original IncomingAllocation
+	if _, err = tx.Get(ctx, incoming, t.IncomingAllocationID, &original); err != nil {
+		return api.ObjectRef{}, false, err
+	}
+	ref := api.ObjectRef{TenantID: tx.Scope().TenantID, OwnerID: original.ParentOwner, ObjectID: original.AllocationID, Revision: 1}
+	if api.ValidateRecord("ObjectRef", ref) != nil || original.ReceiverID != tx.Scope().OwnerID || original.TaskRef == nil || original.TaskRef.ObjectID != taskID || original.TaskRef.OwnerID != tx.Scope().OwnerID || original.ParentTaskRef.OwnerID != original.ParentOwner {
+		return api.ObjectRef{}, false, api.E("idempotency_conflict", "original_incoming_scope_changed")
+	}
+	return ref, true, nil
+}
+
+// CheckTaskCurrentTx 保持原根、预算、主体与 Incoming 门禁；不读取字节或外部证明。
+func (s *Service) CheckTaskCurrentTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, id string, requireRunning bool) error {
+	t, err := getTask(ctx, tx, id)
+	if err != nil {
+		return err
+	}
+	if err = principal(auth, t); err != nil {
+		return err
+	}
+	return s.CheckCurrent(ctx, tx, t, requireRunning)
+}
+
+// ReadTaskTx 只投影当前 Task；调用方仍须另核本次接纳、当前主体及来源门禁。
+func (s *Service) ReadTaskTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, id string) (api.Task, error) {
+	t, err := getTask(ctx, tx, id)
+	if err != nil {
+		return api.Task{}, err
+	}
+	if err = principal(auth, t); err != nil {
+		return api.Task{}, err
+	}
+	return t.Task, nil
+}
+
+// ReadTaskTreeTx 在 adapter 读取自己的控制门禁前锁定有界本域子树。
+// 它仍只读事实，不代替当前开始许可，也不执行外部控制。
+func (s *Service) ReadTaskTreeTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, id string) (api.Task, error) {
+	t, err := getTask(ctx, tx, id)
+	if err != nil {
+		return api.Task{}, err
+	}
+	if err = principal(auth, t); err != nil {
+		return api.Task{}, err
+	}
+	if err = s.lockTaskTree(ctx, tx, id); err != nil {
+		return api.Task{}, err
+	}
+	return t.Task, nil
+}
+
+// ReadAllocationTx 保持原根 Task/预算锁序，只返回准确账务事实。
+// 读取原关闭或终态责任不重新授予开始许可。
+func (s *Service) ReadAllocationTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, id string) (Allocation, error) {
+	t, a, err := allocationForTaskTx(ctx, tx, id)
+	if err != nil {
+		return Allocation{}, err
+	}
+	if err = principal(auth, t); err != nil {
+		return Allocation{}, err
+	}
+	return a, nil
+}
+
+// CheckDelegationScopeTx 投影已经核验的原提交主体，不从工作者 Auth 推断模型或子 Agent 权限。
+func (s *Service) CheckDelegationScopeTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, id string) (DelegationScope, error) {
+	d, a, gateErr := s.CheckDelegationTx(ctx, tx, auth, id)
+	if gateErr != nil && d.DelegationID == "" {
+		return DelegationScope{}, gateErr
+	}
+	t, err := getTask(ctx, tx, d.ParentTaskRef.ObjectID)
+	if err != nil {
+		return DelegationScope{}, err
+	}
+	return DelegationScope{Delegation: d, Allocation: a, SubjectRef: submitterAuth(tx.Scope(), t).Ref(tx.Scope().OwnerID), ParentTask: t.Task, ParentSources: append([]api.SourceEvidence{}, t.SourceRefs...)}, gateErr
+}
+
 // CheckDelegationTx 只核原负责方当前门禁，不执行传输或读取Content字节。
 // 开始新使用时仍按原Task提交者检查许可，不从工作者角色推断原主体获权。
 func (s *Service) CheckDelegationTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, id string) (Delegation, Allocation, error) {

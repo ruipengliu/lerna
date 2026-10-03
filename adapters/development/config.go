@@ -48,6 +48,7 @@ type Config struct {
 	WorkerPool                 *ClassifiedWorkerConfig   `json:"worker_pool,omitempty"`
 	EndpointChannels           *EndpointChannelConfig    `json:"endpoint_channels,omitempty"`
 	WASI                       *WASIConfig               `json:"wasi,omitempty"`
+	RemoteAgent                *RemoteAgentConfig        `json:"remote_agent,omitempty"`
 }
 
 func LoadConfig(path string) (Config, error) {
@@ -61,6 +62,9 @@ func LoadConfig(path string) (Config, error) {
 		return c, e
 	}
 	if e = validateEndpointChannels(c); e != nil {
+		return c, e
+	}
+	if e = validateRemoteAgent(c); e != nil {
 		return c, e
 	}
 	if !api.ValidID(c.TenantID) || !api.ValidID(c.OwnerID) || !api.ValidID(c.SubjectID) || !filepath.IsAbs(c.DataRoot) || c.DatabaseID == "" {

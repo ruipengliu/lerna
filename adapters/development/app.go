@@ -43,6 +43,7 @@ type App struct {
 	Governance                                                       *governance.Service
 	Knowledge                                                        *KnowledgeAssembly
 	WASI                                                             *WASIAssembly
+	RemoteAgent                                                      *collaboration.Remote
 	Objects                                                          *objectstore.Local
 	Files                                                            *execadapter.ManagedFiles
 	Phones                                                           *execadapter.SimulatedPhones
@@ -68,6 +69,7 @@ type App struct {
 	endpointAuthority                                                *rpcadapter.StaticEndpointAuthority
 	endpointRouter                                                   *endpointchannel.Router
 	endpointServerTLS                                                *tls.Config
+	remoteAgents                                                     *remoteAgentAssembly
 }
 
 func component(name string) api.ComponentRef {
@@ -82,6 +84,9 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		return nil, api.E("unsupported", "process_role_not_configured")
 	}
 	if err = validateEndpointChannels(c); err != nil {
+		return nil, err
+	}
+	if err = validateRemoteAgent(c); err != nil {
 		return nil, err
 	}
 	st, e := OpenStore(ctx, c, false)
@@ -112,6 +117,11 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		return nil, e
 	}
 	a.Identity = &platform.DevIdentity{Store: st, OwnerID: c.OwnerID, Principals: []platform.Principal{{Auth: a.UserAuth, TokenHash: api.Hash([]byte(strings.TrimSpace(string(token))))}, {Auth: a.ServiceAuth, TokenHash: api.Hash(serviceSecret)}}, SessionTTL: 8 * time.Hour}
+	remotePrincipals, e := remoteAgentPrincipals(c)
+	if e != nil {
+		return nil, e
+	}
+	a.Identity.Principals = append(a.Identity.Principals, remotePrincipals...)
 	if initialize {
 		if e = a.Identity.Initialize(ctx); e != nil {
 			return nil, e
@@ -121,7 +131,11 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 			return nil, e
 		}
 	}
-	a.Keys, e = platform.OpenDevelopmentKey(c.KeyFile, c.TenantID, c.OwnerID, []string{"control", "closure", "grant_use", "delivery", "rpc_sender", "evidence_changes", "grant_lease", "allocation_closure", "evaluation_prepare", "evaluation_start"})
+	keyPurposes := []string{"control", "closure", "grant_use", "delivery", "rpc_sender", "evidence_changes", "grant_lease", "allocation_closure", "evaluation_prepare", "evaluation_start"}
+	if c.RemoteAgent != nil {
+		keyPurposes = append(keyPurposes, "agent_allocation", "agent_state", "foreign_content")
+	}
+	a.Keys, e = platform.OpenDevelopmentKey(c.KeyFile, c.TenantID, c.OwnerID, keyPurposes)
 	if e != nil {
 		return nil, e
 	}
@@ -146,6 +160,13 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	}
 	purposes = append(purposes, RequiredKnowledgeContentPurposes()...)
 	pv := memory.PolicyValues{Subjects: []string{c.SubjectID, c.OwnerID}, Purposes: purposes, Locations: []string{"cloud", "device"}, RetainUntil: c.PolicyExpiresAt, Continuous: true, IndependentDerived: false}
+	if c.RemoteAgent != nil {
+		for _, subject := range c.RemoteAgent.SourceSubjectRefs {
+			if !containsString(pv.Subjects, subject.ObjectID) {
+				pv.Subjects = append(pv.Subjects, subject.ObjectID)
+			}
+		}
+	}
 	policyRef := component("content-policy")
 	policyRef.Digest, _ = api.Digest(pv)
 	a.ContentPolicy = memory.Policy{PolicyRef: policyRef, Values: pv, Revision: 1, State: "active"}
@@ -233,7 +254,13 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		}
 		resources = contractOnlyResources{}
 	}
-	a.Execution, e = execution.New(execution.Config{OwnerID: c.OwnerID, Content: execContent, Authority: executionAuthority{a}, AuthorityParticipants: []string{"task", "governance", "content", "memory", "platform"}, Drivers: drivers, ResourceDriver: resources, EnvironmentAdmission: environmentAdmission, Location: "cloud"})
+	remoteParts := func(parts []string) []string {
+		if c.RemoteAgent != nil {
+			parts = append(parts, "collaboration")
+		}
+		return parts
+	}
+	a.Execution, e = execution.New(execution.Config{OwnerID: c.OwnerID, Content: execContent, Authority: executionAuthority{a}, AuthorityParticipants: remoteParts([]string{"task", "governance", "content", "memory", "platform"}), Drivers: drivers, ResourceDriver: resources, EnvironmentAdmission: environmentAdmission, Location: "cloud"})
 	if e != nil {
 		return nil, fmt.Errorf("construct Execution: %w", e)
 	}
@@ -242,7 +269,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e = a.configureModel(); e != nil {
 		return nil, e
 	}
-	a.Brain, e = brain.New(brain.Config{Profiles: []brain.Profile{a.Profile}, Content: brainContent{a}, Engine: a.Engine, Gate: brainGate{a}, Participants: []string{"content", "memory", "task", "platform", "governance"}})
+	a.Brain, e = brain.New(brain.Config{Profiles: []brain.Profile{a.Profile}, Content: brainContent{a}, Engine: a.Engine, Gate: brainGate{a}, Participants: remoteParts([]string{"content", "memory", "task", "platform", "governance"})})
 	if e != nil {
 		return nil, fmt.Errorf("construct Brain: %w", e)
 	}
@@ -274,24 +301,45 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e != nil {
 		return nil, e
 	}
-	a.Task, e = task.New(task.Config{Policies: []task.TaskPolicy{a.TaskPolicy}, Rules: rules, ControlWindow: 5 * time.Second, Participants: []string{"task", "content", "memory", "governance", "platform"}, AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: a.AnswerSchema, Schema: brain.GoalSchema()}}}, task.Ports{Content: taskContent{a}, Context: contextCompiler{a}, Gate: taskGate{a}, Evidence: evidenceBridge{a}, ControlProof: controlProof{a}, ClosureProof: closureProof{a}, ActionAuthorization: actionAuthorization{a}, Brain: brainBridge{a}, Execution: executionBridge{a}, Collaboration: cooperation})
+	a.RemoteAgent, e = a.configureRemoteAgent(cooperation)
+	if e != nil {
+		return nil, e
+	}
+	var collaborationPort task.CollaborationPort = cooperation
+	if a.RemoteAgent != nil {
+		collaborationPort = a.RemoteAgent
+	}
+	a.Task, e = task.New(task.Config{Policies: []task.TaskPolicy{a.TaskPolicy}, Rules: rules, ControlWindow: 5 * time.Second, Participants: remoteParts([]string{"task", "content", "memory", "governance", "platform"}), AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: a.AnswerSchema, Schema: brain.GoalSchema()}}}, task.Ports{Content: taskContent{a}, Context: contextCompiler{a}, Gate: taskGate{a}, Evidence: evidenceBridge{a}, ControlProof: controlProof{a}, ClosureProof: closureProof{a}, ActionAuthorization: actionAuthorization{a}, Brain: brainBridge{a}, Execution: executionBridge{a}, Collaboration: collaborationPort})
 	if e != nil {
 		return nil, fmt.Errorf("construct Task: %w", e)
 	}
 	if e = cooperation.BindTask(a.Task); e != nil {
 		return nil, e
 	}
+	if a.RemoteAgent != nil {
+		if e = a.RemoteAgent.BindTask(a.Task); e != nil {
+			return nil, e
+		}
+		if e = a.RemoteAgent.Register(); e != nil {
+			return nil, e
+		}
+	}
 	calendar, e := interaction.OpenTZDB(c.TZDBRoot, c.TZDBVersion, []string{"UTC", "Asia/Shanghai", "America/New_York", "Europe/London"})
 	if e != nil {
 		return nil, e
 	}
 	one := uint64(1)
-	a.Interaction, e = interaction.New(interaction.Config{DiscoveryOwnerID: c.OwnerID, Participants: []string{"interaction", "content", "memory", "task", "platform", "governance"}, CursorKey: []byte(strings.TrimSpace(string(token))), EventBindings: []interaction.EventBinding{{BindingRef: a.ApplicationBinding, Events: []interaction.EventRule{{Name: "archive_demo_session", Schema: api.Raw(a.ApplicationEventSchema), OwnerID: c.OwnerID, Method: "session.archive", TargetID: platform.StableDevelopmentID("session", "development-surface"), AcceptForSeconds: 60, ExpectedRevision: &one, RequiresRendered: true}}}}}, interaction.Ports{Content: interactionContent{a}, Delivery: localDelivery{a}, Closure: localClosure{a}, Requests: requestBridge{a}, Calendar: calendar, ScheduleGate: scheduleGate{a}})
+	a.Interaction, e = interaction.New(interaction.Config{DiscoveryOwnerID: c.OwnerID, Participants: remoteParts([]string{"interaction", "content", "memory", "task", "platform", "governance"}), CursorKey: []byte(strings.TrimSpace(string(token))), EventBindings: []interaction.EventBinding{{BindingRef: a.ApplicationBinding, Events: []interaction.EventRule{{Name: "archive_demo_session", Schema: api.Raw(a.ApplicationEventSchema), OwnerID: c.OwnerID, Method: "session.archive", TargetID: platform.StableDevelopmentID("session", "development-surface"), AcceptForSeconds: 60, ExpectedRevision: &one, RequiresRendered: true}}}}}, interaction.Ports{Content: interactionContent{a}, Delivery: localDelivery{a}, Closure: localClosure{a}, Requests: requestBridge{a}, Calendar: calendar, ScheduleGate: scheduleGate{a}})
 	if e != nil {
 		return nil, fmt.Errorf("construct Interaction: %w", e)
 	}
 	a.Dispatcher = &runtime.Dispatcher{Store: st, OwnerID: c.OwnerID, Registry: a.Registry}
 	a.Memory.Register(a.Registry)
+	if a.remoteAgents != nil {
+		if e = a.remoteAgents.source.Register(a.Registry); e != nil {
+			return nil, e
+		}
+	}
 	if e = a.Registry.RegisterJob(proofJob, a.publishProof); e != nil {
 		return nil, e
 	}
@@ -387,6 +435,10 @@ func (a *App) Close() error {
 	if a.Model != nil {
 		err = errors.Join(err, a.Model.Close())
 		a.Model = nil
+	}
+	if a.remoteAgents != nil {
+		err = errors.Join(err, a.remoteAgents.close())
+		a.remoteAgents = nil
 	}
 	if a.Files != nil {
 		err = errors.Join(err, a.Files.Close())
