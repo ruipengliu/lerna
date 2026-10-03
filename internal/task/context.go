@@ -30,6 +30,9 @@ type ContextFacts struct {
 	UnresolvedCollections []api.CollectionSummary
 	SourceRefs            []api.SourceEvidence
 	Delegations           []Delegation
+	ContextMaterials      []ContextMaterial
+	ContextBudget         ContextBudget
+	ContextPending        bool
 }
 
 // OperationIntentTx 只读本方已耐久准入的准确意图，供受信机械编码装配核对。
@@ -93,6 +96,9 @@ func (s *Service) CheckDecisionTx(ctx context.Context, tx runtime.Tx, auth runti
 	if t.PendingCompletionID != "" {
 		return api.E("invalid_state", "completion_checks_pending")
 	}
+	if t.PendingContextID != "" {
+		return api.E("invalid_state", "context_lookup_pending")
+	}
 	if d.Intent.TaskRef.TenantID != tx.Scope().TenantID || d.Intent.TaskRef.OwnerID != tx.Scope().OwnerID || d.Snapshot.GoalRevision != t.Task.GoalRevision || d.Snapshot.ControlRevision != t.Task.ControlRevision || !api.Equal(d.Snapshot.GoalRef, t.Task.GoalRef) || d.Snapshot.RequirementsDigest != t.Task.RequirementsDigest || !api.Equal(d.Snapshot.PolicyRef, t.Task.PolicyRef) {
 		return api.E("revision_conflict", "decision_control_stale")
 	}
@@ -116,6 +122,9 @@ func (s *Service) ContextFacts(ctx context.Context, store runtime.Store, scope r
 		out.Task = t.Task
 		out.Artifacts = t.CurrentArtifactRefs
 		out.SourceRefs = t.SourceRefs
+		out.ContextMaterials = append([]ContextMaterial{}, t.ContextMaterials...)
+		out.ContextBudget = t.ContextBudget
+		out.ContextPending = t.PendingContextID != ""
 		rows, e := s.fullRelations(ctx, tx, taskID)
 		if e != nil {
 			return e

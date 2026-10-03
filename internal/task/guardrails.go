@@ -12,7 +12,7 @@ const noProgressResume = "no_progress_limit: valid new input, goal change, usabl
 
 // guardrailTx只结束新推进；原执行效果与账务Job仍按其身份恢复。
 func (s *Service) guardrailTx(ctx context.Context, tx runtime.Tx, t *taskState) (bool, error) {
-	if terminal(*t) {
+	if terminal(*t) || t.PendingContextID != "" {
 		return true, nil
 	}
 	if t.Continuations >= t.Policy.ContinuationLimit {
