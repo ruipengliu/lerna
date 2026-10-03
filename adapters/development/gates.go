@@ -153,11 +153,11 @@ func (g previewGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 
 type scheduleGate struct{ a *App }
 
-func (g scheduleGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, policy, model api.ComponentRef, budget []api.Amount) error {
+func (g scheduleGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, policy, installLock api.ComponentRef, budget []api.Amount) error {
 	if e := currentCredentialTx(ctx, tx, auth); e != nil {
 		return e
 	}
-	if !api.Equal(policy, g.a.TaskPolicy.PolicyRef) || !api.Equal(model, g.a.Profile.Ref) {
+	if !api.Equal(policy, g.a.TaskPolicy.PolicyRef) || !api.Equal(installLock, g.a.InstallLock) {
 		return api.E("unsupported", "schedule_profiles_not_configured")
 	}
 	if e := api.ValidateAmounts(budget); e != nil {
