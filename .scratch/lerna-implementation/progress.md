@@ -7,7 +7,7 @@
 ## 当前状态
 
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
-- 切片 02：**in-progress**。八张核心票的 53 条验收与额外票 09 的 5 条验收均已 resolved；最终容量产品 `06ab246`、worker `cdc7ae6` 经 merger 合入 `96a0ecc`。本地完整双库集成 60.305s、竞态 91.786s，通过有限队列、共享配额、动态公平次序、独立类别运行、无执行额度维护及真实旧数据恢复。准确审查前提交 `26c9100` 的远端 CI success；独立两轴审查发现4项，单一分支修复中。整片仍待修复复核、架构审查和准确修复后 CI，详见[审查记录](../lerna-02-durable-work/code-review.md)与[票06证据](../lerna-02-durable-work/issues/06-fair-capacity-and-quotas.md#comments)。
+- 切片 02：**in-progress**。八张核心票的 53 条验收与额外票 09 的 5 条验收均已 resolved；最终容量产品 `06ab246`、worker `cdc7ae6` 经 merger 合入 `96a0ecc`。本地完整双库集成 60.305s、竞态 91.786s，通过有限队列、共享配额、动态公平次序、独立类别运行、无执行额度维护及真实旧数据恢复。准确审查前提交 `26c9100` 的远端 CI success；独立两轴发现4项，单一修复 `4311585` 已合入 `6783307`，独立复核全部关闭且新增0项。整片仍待架构审查和准确最终 CI，详见[审查记录](../lerna-02-durable-work/code-review.md)与[票06证据](../lerna-02-durable-work/issues/06-fair-capacity-and-quotas.md#comments)。
 - 切片 03–22：**not-started**。03当前端口复核和04决策纲要仅在/tmp，前置整片退出后再采用、发布和实施。
 
 ## 切片 01 过程检查点（历史记录）
@@ -101,3 +101,9 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 06最终worker cdc7ae6 经merger合入96a0ecc；原八张核心票53条AC与额外09的5条AC均resolved。本地必需两库count1集成60.305s、race91.786s，来源27项hash不变。准确根检查点26c9100的[CI37156883508](https://github.com/ruipengliu/lerna/actions/runs/37156883508)实际success：工具生命周期race1.569s、两库集成21.892s/race47.390s、27项来源校验全部OK。
 
 独立Standards/Spec分别3/1项发现，原报告见[两轴审查](../lerna-02-durable-work/code-review.md)。单一实现分支正在修复全部发现；实际Run固定fallback可能使500ms期限内100ms退避的合法重试错过，PG启动错误也丢失可判断原因。绿色审查前CI不关闭发现。整片02仍等待修复后独立复核、最终架构审查、准确新CI与退出证据；03/04仅/tmp准备未开始。
+
+## 切片 02 审查修复与独立复核
+
+单一修复产品4311585、clean workercc6a053经merger合入6783307；check/base-race、完整count1两库集成50.359s/race103.345s在原timeout120通过，27历史源hash及001–005不变。原Standards三项与Spec一项经同两位独立审查者按完整baseline8e7438e...6783307复核均关闭，新增0项；原因、失败轮诊断与验证细节见[审查记录](../lerna-02-durable-work/code-review.md)。
+
+架构只读探索按6783307最终刷新，保留一个Worth exploring候选：测试fixture稳定scope归属与writer generations。临时HTML已生成，xdg-open因无GUI实际失败；授权代理正在选择/grill，不据此宣称重构已实现。6783307已push，准确[CI37158656088](https://github.com/ruipengliu/lerna/actions/runs/37158656088)已实际success：工具race1.560s、两库集成21.011s/race46.969s，27源hash不变。整片02未退出，03及以后未开始。
