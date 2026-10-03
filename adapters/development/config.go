@@ -45,6 +45,7 @@ type Config struct {
 	Information                []InformationSourceConfig `json:"information,omitempty"`
 	InformationReferenceAnswer bool                      `json:"information_reference_answer,omitempty"`
 	Knowledge                  *KnowledgeConfig          `json:"knowledge,omitempty"`
+	WorkerPool                 *ClassifiedWorkerConfig   `json:"worker_pool,omitempty"`
 }
 
 func LoadConfig(path string) (Config, error) {
