@@ -479,7 +479,17 @@ try {
       .fill(JSON.stringify(config.application_binding_ref));
     await surfaceConsole.getByLabel("snapshot_ref", { exact: true }).fill(JSON.stringify(snapshot));
     await surfaceConsole.getByLabel("request_refs", { exact: true }).fill("[]");
+    const surfaceOffset = replies.length;
     await surfaceConsole.getByRole("button", { name: "耐久保存并提交", exact: true }).click();
+    const createdSurface = await until(
+      () => lastReceipt("surface.create", surfaceOffset),
+      "actual surface.create business decision",
+    );
+    assert.equal(
+      createdSurface.response.payload.stage,
+      "applied",
+      `surface.create: ${JSON.stringify(createdSurface.response.payload.error ?? {})}`,
+    );
     const renderer = page.locator(".presentation-renderer");
     await renderer.getByRole("button", { name: "打开此准确 Surface" }).click();
     assert.equal(
@@ -635,8 +645,22 @@ try {
     "narrow view must not horizontally overflow",
   );
   for (const name of ["输入与分支", "内容与记忆", "授权与治理", "安装与评测", "工作台"]) {
+    const navigationOffset = replies.length;
     await page.getByRole("button", { name, exact: true }).click();
     await page.getByRole("heading", { name, exact: true, level: 1 }).waitFor();
+    if (name === "内容与记忆") {
+      const listedMemory = await until(
+        () =>
+          replies
+            .slice(navigationOffset)
+            .find(({ request }) => request?.payload.method === "memory.list"),
+        "authoritative memory list with an explicit read purpose",
+      );
+      assert.equal(listedMemory.request.payload.payload.purpose, "memory.read");
+      assert.equal(listedMemory.request.payload.payload.limit, 20);
+      assert.equal(listedMemory.response.result_kind, "query_result");
+      checks.push("original authorized Memory collection with a fixed read purpose");
+    }
   }
   await page.getByRole("button", { name: "退出登录", exact: true }).click();
   await page.getByLabel("开发凭据").waitFor();
