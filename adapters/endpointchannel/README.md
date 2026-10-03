@@ -16,4 +16,6 @@ Router 实现 WSS 的可选 `ConnectionProcessor`。`Open` 使用原外 connecti
 
 多实例迟到输出以实际原应用完成后、外回复写入前的公共 PendingResponse seam 延迟取证：SIGKILL 原进程并取得新 binding Ready 后释放旧结果，WSS 实际写门禁丢弃旧结果，原 journal 仍能查询原 receipt。SQLite／PG 的真实原生 WSS consumer 验证准确 ES256 Delivery、fsync ReplyJournal 重开、外 Ack 丢失后内部重绑／同 Reply 恢复、错误 Ack 和篡改原 Reply 拒绝。故障点是外 EmitChecked 在实际 socket 写入前返回失败，源 owner 的实际持久 Reply 已确认；不宣称该点等于任意网络故障。
 
-默认 Processor 的实际 TLS 丢回复／logout 回归通过。Go SDK 可选端点 consumer 的准确合同见 `sdk/go/ENDPOINT.md`：实际 SQLite／PG 通过 journal prepare／started／Reply fsync、提交后丢结果只查询原 receipt、丢外 Ack 后显式恢复原 Reply，以及错误 key／scope／过期／current 撤权拒绝；物理 handler 总次数保持一次。`development` 公共入口接线仍由宿主片负责，不能据 adapter／SDK 参考合同替代验收。
+默认 Processor 的实际 TLS 丢回复／logout 回归通过。Go SDK 可选端点 consumer 的准确合同见 `sdk/go/ENDPOINT.md`：实际 SQLite／PG 通过 journal prepare／started／Reply fsync、提交后丢结果只查询原 receipt、丢外 Ack 后显式恢复原 Reply，以及错误 key／scope／过期／current 撤权拒绝；物理 handler 总次数保持一次。
+
+公开宿主已有独立实际进程证据：PG `cmd/gateway` HTTPS/WSS → 两个 mTLS `cmd/application`，原应用 SIGKILL 后保持原外连接、递增 binding、原回执／TTL 与单调序号，全部正常进程 SIGTERM 实际退出。联合两分类 `cmd/worker` 不占文件／手机锁，不领取 execution 类别；独立 SQLite `cmd/executor` 沿明确预批准准入夹具和真实有限云 Lease 完成一次文件写入／独立读回／用量闭合。准确配置与夹具边界见 `adapters/development/ENDPOINT_CHANNELS.md`；公开 App 没有原业务 Delivery receiver/proof 时仍关闭 Delivery，不以普通 request/receipt 装配替代双向业务权限。
