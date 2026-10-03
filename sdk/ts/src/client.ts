@@ -204,7 +204,7 @@ export class HarnessClient {
             if (
               Object.keys(frame).length !== 2 ||
               typeof frame.nonce !== "string" ||
-              frame.nonce.length > 256
+              new TextEncoder().encode(frame.nonce).byteLength > 256
             )
               throw new ProtocolError("invalid_heartbeat");
             if (frame.type === "ping") this.sendControl({ type: "pong", nonce: frame.nonce });

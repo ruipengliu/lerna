@@ -25,7 +25,7 @@ func TestScheduleKeepsUnknownSlotAcrossPauseAndClosesOnlyFromTask(t *testing.T) 
 	id := api.NewID("schedule")
 	template := f.upload(t, "原定时目标")
 	planned := time.Now().Add(15 * time.Second).Truncate(time.Second)
-	r := f.command(t, "schedule.create", id, nil, interaction.ScheduleInput{Spec: interaction.ScheduleSpec{Type: "once_at", At: api.Time(planned)}, Timezone: "Etc/UTC", TZDBVersion: "2026b", TemplateRef: template, PolicyRef: f.policy, InstallLockRef: f.config, TaskTimeoutSeconds: 120, Budget: []api.Amount{{Unit: "USD", Value: "20"}}})
+	r := f.command(t, "schedule.create", id, nil, interaction.ScheduleInput{Spec: interaction.ScheduleSpec{Type: "interval", AnchorAt: api.Time(planned), EverySeconds: 1}, Timezone: "Etc/UTC", TZDBVersion: "2026b", TemplateRef: template, PolicyRef: f.policy, InstallLockRef: f.config, TaskTimeoutSeconds: 120, Budget: []api.Amount{{Unit: "USD", Value: "20"}}})
 	var out interaction.ScheduleOutput
 	if e := api.Decode(r.Output, &out); e != nil {
 		t.Fatal(e)
@@ -41,8 +41,16 @@ func TestScheduleKeepsUnknownSlotAcrossPauseAndClosesOnlyFromTask(t *testing.T) 
 	if e != nil {
 		t.Fatal(e)
 	}
-	if view.ActiveOccurrenceID == "" || !view.Exhausted {
+	if view.ActiveOccurrenceID == "" || view.Exhausted {
 		t.Fatalf("occurrence not recorded %+v", view)
+	}
+	newTemplate := f.upload(t, "编辑只影响未来的定时目标")
+	newAnchor := time.Now().Add(2 * time.Second).Truncate(time.Second)
+	rev := view.Revision
+	f.command(t, "schedule.update", id, &rev, interaction.ScheduleInput{Spec: interaction.ScheduleSpec{Type: "interval", AnchorAt: api.Time(newAnchor), EverySeconds: 1}, Timezone: "Etc/UTC", TZDBVersion: "2026b", TemplateRef: newTemplate, PolicyRef: f.policy, InstallLockRef: f.config, TaskTimeoutSeconds: 300, Budget: []api.Amount{{Unit: "USD", Value: "10"}}})
+	view, e = f.s.ReadSchedule(f.ctx, f.store, f.scope, f.auth, id)
+	if e != nil || view.RuleRevision != 2 || view.NextDueAt == nil || *view.NextDueAt != api.Time(newAnchor) {
+		t.Fatalf("new rule not fixed %+v %v", view, e)
 	}
 	f.delivery.drop = true
 	f.stepKind(t, interaction.JobOccurrence)
@@ -50,7 +58,7 @@ func TestScheduleKeepsUnknownSlotAcrossPauseAndClosesOnlyFromTask(t *testing.T) 
 	if e != nil {
 		t.Fatal(e)
 	}
-	if occ.Phase != "sending" || occ.Command == nil {
+	if occ.Phase != "sending" || occ.Command == nil || occ.RuleRevision != 1 || occ.Frozen.TemplateRef != template || occ.Frozen.TaskTimeoutSeconds != 120 {
 		t.Fatalf("unknown original send %+v", occ)
 	}
 	original := *occ.Command
@@ -59,7 +67,29 @@ func TestScheduleKeepsUnknownSlotAcrossPauseAndClosesOnlyFromTask(t *testing.T) 
 	if e != nil {
 		t.Fatal(e)
 	}
-	rev := view.Revision
+	if wait := time.Until(newAnchor) + 20*time.Millisecond; wait > 0 {
+		timer.Reset(wait)
+		<-timer.C
+	}
+	beforeSends := f.delivery.sends
+	f.stepKind(t, interaction.JobTrigger)
+	overlaps, e := f.s.ListOccurrences(f.ctx, f.store, f.scope, f.auth, id, api.ListInput{Limit: 100})
+	if e != nil || len(overlaps.Items) != 2 || f.delivery.sends != beforeSends {
+		t.Fatalf("unknown original slot was overlapped %+v %v", overlaps, e)
+	}
+	for _, skipped := range overlaps.Items {
+		if skipped.OccurrenceID == occ.OccurrenceID {
+			continue
+		}
+		if skipped.RuleRevision != 2 || skipped.PlannedAt != api.Time(newAnchor) || skipped.Phase != "skipped" || skipped.SkipReason != "overlap" || !skipped.SlotClosed || skipped.Command != nil {
+			t.Fatalf("overlap was not durably skipped %+v", skipped)
+		}
+	}
+	view, e = f.s.ReadSchedule(f.ctx, f.store, f.scope, f.auth, id)
+	if e != nil || view.ActiveOccurrenceID != occ.OccurrenceID {
+		t.Fatalf("overlap replaced persistent slot %+v %v", view, e)
+	}
+	rev = view.Revision
 	f.command(t, "schedule.pause", id, &rev, interaction.ScheduleControlInput{Reason: "停止未来触发"})
 	f.stepKind(t, interaction.JobOccurrence)
 	occ, e = f.s.ReadOccurrence(f.ctx, f.store, f.scope, f.auth, occ.OccurrenceID)
@@ -73,7 +103,7 @@ func TestScheduleKeepsUnknownSlotAcrossPauseAndClosesOnlyFromTask(t *testing.T) 
 	if e != nil {
 		t.Fatal(e)
 	}
-	if taskFact.Deadline != api.Time(planned.Add(120*time.Second)) {
+	if taskFact.Deadline != api.Time(planned.Add(120*time.Second)) || taskFact.GoalRef != template {
 		t.Fatalf("retry prolonged deadline %s", taskFact.Deadline)
 	}
 	if original.ExpiresAt != api.Time(planned.Add(60*time.Second)) {

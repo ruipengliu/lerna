@@ -82,6 +82,52 @@ it("每次 ready 必须声明原认证身份；旧无身份协议明确拒绝", 
   const { identity_scope: _scope, identity_revision: _revision, ...legacy } = ready(contract);
   expect(() => contract.ready(legacy)).toThrow(/unsupported_ready_identity_binding/);
 });
+it("真实心跳 nonce 按 Go 的 UTF-8 字节上限核验，控制帧不占业务序号", async () => {
+  const contract = await registry({ query: true });
+  const server = new WebSocketServer({ host: "127.0.0.1", port: 0 });
+  await once(server, "listening");
+  const address = server.address();
+  if (!address || typeof address === "string") throw new Error("no address");
+  server.on("connection", (socket) => socket.send(JSON.stringify(ready(contract))));
+  const connected = once(server, "connection");
+  const client = new HarnessClient({
+    registry: contract,
+    store: new IndexedDBCommands(identity, { factory: new IDBFactory(), name: "nonce-bytes" }),
+    url: `ws://127.0.0.1:${address.port}`,
+  });
+  try {
+    await client.connect();
+    const [socket] = await connected;
+    const reply = once(socket, "message");
+    const nonce = "😀".repeat(64);
+    socket.send(JSON.stringify({ type: "ping", nonce }));
+    const [raw] = await reply;
+    expect(parseStrict(String(raw))).toEqual({ type: "pong", nonce });
+    expect(client.connectionState).toBe("ready");
+    const sent = once(socket, "message");
+    const query = client.query(client.makeQuery("probe.read", owner, { text: "after heartbeat" }));
+    const [request] = await sent;
+    expect(parseStrict(String(request))).toMatchObject({
+      type: "request",
+      kind: "query",
+      request_seq: 1,
+    });
+    socket.send(
+      JSON.stringify({
+        type: "response",
+        request_seq: 1,
+        result_kind: "query_result",
+        payload: { saved: true },
+      }),
+    );
+    expect(await query).toEqual({ saved: true });
+    socket.send(JSON.stringify({ type: "ping", nonce: "😀".repeat(65) }));
+    await expect.poll(() => client.connectionState, { timeout: 1000 }).toBe("disconnected");
+  } finally {
+    await client.close();
+    server.close();
+  }
+});
 it("新连接身份 scope 或凭据修订改变时不能发送旧账本请求，原责任仍留原scope", async () => {
   const contract = await registry();
   for (const replacement of [
