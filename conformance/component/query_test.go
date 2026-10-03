@@ -53,7 +53,15 @@ func queryResult(t *testing.T, result contract.CommandGetResponse, err error, wa
 	if err != nil {
 		t.Fatal(err)
 	}
-	if string(wire) != want {
+	actual, err := contract.ParseJSON(wire)
+	if err != nil {
+		t.Fatal(err)
+	}
+	expected, err := contract.ParseJSON([]byte(want))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(actual, expected) {
 		t.Fatalf("got %s want %s", wire, want)
 	}
 }

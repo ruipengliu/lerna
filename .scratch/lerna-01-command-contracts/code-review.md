@@ -1,6 +1,6 @@
 # 切片 01 两轴代码审查
 
-状态：修复中。两轴独立审查固定提交 `b825c2d`；后续验证结果追加到本记录。
+状态：发现项已修复，等待主任务合入与整体退出验收。两轴独立审查固定提交 `b825c2d`；修复与验证结果追加如下。
 
 ## Standards
 
@@ -29,3 +29,17 @@ Reviewed SHA: `b825c2d59b7b58fd360dd7200d8783a159732de2`。Baseline: `1c042ec983
 ## 汇总与处理
 
 Standards：1 项行为问题、1 项判断性 smell；本轴最严重问题为 Go 编码膨胀。Spec：1 项行为问题；本轴最严重问题为可变 Schema 与协商摘要不一致。全部交由同一修复任务处理。
+
+## 修复与回归证据
+
+2026-10-03，单一实施者在 `codex/contract-review-fixes` 依据 `review-fix-decisions.md` 处理全部三个发现，不改变准确 1.0.0 机器合同或 Schema 摘要。
+
+- Standards P2：保留 typed 原值预检，将 `json.Marshal` 的本地临时表示交给同一私有 strict parser（有限 6 × 1 MiB 预算），验证 Schema / 跨字段规则后复用 canonical writer 输出紧凑 UTF-8，再检查最终正文 1 MiB。公开 ParseJSON / Decode 上限仍为 1 MiB。回归先 red：`<`、`>`、`&`、U+2028、U+2029 五种准确 1 MiB 正文均可 Decode 却不能 Encode；修复后全部正常往返，增加一字节仍在 Decode 与 Encode 拒绝。字面量反斜杠转义与真实 Unicode 分隔符保持不同。
+- Spec P1：生成器在导出 Schema 前递归冻结所有嵌套对象与数组。独立 node:test 进程在首次 command.get compile 前尝试把公开 additionalProperties 改成 true，旧实现接受额外字段，回归 red；修复后额外字段被拒绝、合法对照成功，继续改嵌套 const、required 数组和输出 oneOf 数组也不能改变公开源 Schema 或固定摘要。由生成器产生冻结代码，不手改生成物。
+- Standards possible duplicated code：codec 原值检查复用已有 json.assertUnicode，并保持 boolean 返回；没有新增 barrel / 公共接口，也没有为这个内部去重增加镜像测试。
+
+新增跨语言公开回归经 Go typed valuerunner 与 TS encode / decode 驱动准确 1 MiB 混合 HTML 字符、Unicode 分隔符与字面量转义，验证 Go→TS 和 TS→Go 的文本与大小，以及真实超限拒绝。既有 queryResult helper 曾比较 JSON 对象键顺序；紧凑 canonical 输出导致五个测试失败，已改为比较公开 ParseJSON 后的值，不把未承诺的键顺序当合同。
+
+整片 01 保持 in-progress；这里的修复完成不替代主任务的架构优化和最终验收。
+
+验证全部通过：锁定 `make bootstrap`、`make check`、`make test-race` 和 `git diff --check`。环境为 Go 1.27.1、Node 24.19.0、pnpm 12.8.1／TypeScript 7.0.2。check 包含格式 / vet / strict typecheck、生成零差异、13 个 generator 拒绝及 8 个 Schema 变更 goldens、全部 Go suite、34 个 TS tests、158 个共同编解码夹具双向往返、46 个独立命令 digest 案例、28 个受信读取场景、15 个协商案例和两个独立 Schema digest goldens，以及两语言构建。修复没有改变既有 command / Schema golden。原 200223 字节 Go probe 现可 Decode 和 Encode，最终输出仍为 200223 字节。真实数据库／网络／生产认证仍不在本次证据范围。

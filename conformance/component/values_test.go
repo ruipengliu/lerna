@@ -119,3 +119,46 @@ func TestRawJSONBodyAndDepthLimits(t *testing.T) {
 		t.Fatal("accepted container depth 65")
 	}
 }
+
+func TestCommandEncodingPreservesCompactUnicodeAtBodyLimit(t *testing.T) {
+	prefix := `{"contract_version":"1.0.0","profile":"command","method":"fixture.write","command_id":"x","target":{"tenant_id":"t","owner_id":"o","kind":"task","id":"x"},"payload":{"text":"`
+	suffix := `"},"accept_before":"2026-10-03T01:00:00.000000Z"}`
+	// Literal escape text must remain distinct from real Unicode separators.
+	literal := `\\u2028\\u2029`
+	for _, scalar := range []string{"<", ">", "&", "\u2028", "\u2029"} {
+		t.Run(scalar, func(t *testing.T) {
+			room := contract.MaxBodyBytes - len(prefix) - len(suffix) - len(literal)
+			text := strings.Repeat(scalar, room/len(scalar)) + strings.Repeat("x", room%len(scalar))
+			wire := []byte(prefix + text + literal + suffix)
+			value, err := contract.Decode[contract.CommandEnvelope](wire)
+			if err != nil {
+				t.Fatal(err)
+			}
+			encoded, err := contract.Encode(value)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(encoded) != contract.MaxBodyBytes {
+				t.Fatalf("compact body length: %d", len(encoded))
+			}
+			decoded, err := contract.Decode[contract.CommandEnvelope](encoded)
+			if err != nil {
+				t.Fatal(err)
+			}
+			payload, err := contract.ParseJSON(decoded.Payload)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if payload.(map[string]any)["text"] != text+`\u2028\u2029` {
+				t.Fatal("changed Unicode or literal escape text")
+			}
+			if _, err := contract.Decode[contract.CommandEnvelope]([]byte(prefix + text + "x" + literal + suffix)); err == nil {
+				t.Fatal("accepted oversized wire body")
+			}
+			value.Payload = contract.CommandPayload([]byte(`{"text":"` + text + "x" + literal + `"}`))
+			if _, err := contract.Encode(value); err == nil {
+				t.Fatal("encoded oversized final body")
+			}
+		})
+	}
+}

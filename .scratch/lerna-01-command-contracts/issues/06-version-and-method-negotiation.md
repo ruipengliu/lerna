@@ -33,3 +33,5 @@ Schema摘要使用独立域 `lerna-schema-digest-1\n`，从根及全部可达本
 验证：`make check`通过（只读format、Go vet／test、TS strict与32个测试、生成零差异、158个共同值／命令／响应夹具的Go→TS及TS→Go真实往返、独立46个命令digest案例、28个受信query场景、协商和Schema goldens、双语言构建）。`go test -race ./conformance/component`通过；最后再次运行 `go test ./conformance/component -run Negotiation`、`pnpm check:generated`和`git diff --check`通过。合同1.0.0与生成器1.0.0；环境为锁定Go1.27.1、Node24.19.0、pnpm12.8.1／TypeScript7.0.2。准确代码提交由本票据resolved提交及后续集成merge定位。
 
 证据仅覆盖共同信封、command.get机器合同、受信注入事实源与本地合同验证；本版未发布，生产认证、持久命令账本、网络发现／传输和完整Application SDK均不在交付范围。新增字段即使可选，也不能扩宽已发布旧版含义。票据06完成不替代票据03的命令摘要证据；整片01仍需父任务核对全部六票据、双轴审查与架构优化后记录退出证据。
+
+切片双轴审查回归：生成 Schema 在注册前递归冻结，首次惰性编译前无法改写嵌套额外字段规则，正常请求仍接受、额外字段拒绝，公开 Schema 与固定摘要不变。独立进程公开回归、既有两个 Schema digest goldens、完整 make check / make test-race 均通过，详见 ../code-review.md；不改变准确版本或广告方法。

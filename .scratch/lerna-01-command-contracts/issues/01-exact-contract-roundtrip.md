@@ -45,3 +45,5 @@ TDD 均经已确认的 Application / Component 编解码／验证 seam：
 - 自评覆盖七项验收、领域边界、闭合 Schema 与词法拒绝；没有为后续 profile 添加占位实现或空集成目标。
 
 限制：本票仅公共值与工具链，没有命令方法、回执、真实网络、持久去重或 Task 推进。GitHub CI 配置复用本地入口；本记录不把本地执行宣称为远端 CI 已运行。整个 spec 仍由后续 02..06 tickets 完成。
+
+切片双轴审查回归：紧凑 Go 编码现保留临近 1 MiB 的 HTML / U+2028 / U+2029 与字面转义，公开正文限制没有放宽；新增准确边界及真正超限拒绝的 Go / TS 双向测试通过。完整 make check（34 TS tests / 158 共同往返夹具）与 make test-race 通过，详见 ../code-review.md。
