@@ -88,7 +88,7 @@ export function FixedApplicationEvent({
       if (!event) return;
       const captured = epoch.current;
       const value = await client.query(
-        client.makeQuery("application_event.read", event.ref.object_id, {}),
+        client.makeQuery("application_event.read", event.ref.object_id, { revision: 0 }),
       );
       if (captured === epoch.current) setEvent({ ref: event.ref, view: value });
     });

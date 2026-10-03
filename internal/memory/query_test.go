@@ -211,3 +211,66 @@ func testFrozenQueryRejectsSnapshotPartDigestChanges(t *testing.T, createFixture
 		})
 	}
 }
+
+func TestFrozenQueryReservesRoomForLaterPermissionGaps(t *testing.T) {
+	testFrozenQueryReservesRoomForLaterPermissionGaps(t, newFixture)
+}
+
+func testFrozenQueryReservesRoomForLaterPermissionGaps(t *testing.T, createFixture func(*testing.T) fixture) {
+	f := createFixture(t)
+	text := strings.Repeat("a", 4096-len("literal:"))
+	queryID := api.NewID("query")
+	ids := []string{api.NewID("memory"), api.NewID("memory"), api.NewID("memory"), api.NewID("memory"), api.NewID("memory"), api.NewID("memory")}
+	ref := api.ContentRef{TenantID: f.scope.TenantID, OwnerID: f.scope.OwnerID, ContentID: api.NewID("content"), Version: 1, Hash: api.Hash([]byte(text)), ByteLength: uint64(len(text)), MediaType: "text/a"}
+	probe := api.Page[memory.Match]{Items: []memory.Match{}, CollectionRevision: 6, Gaps: []string{}, NextCursor: queryID + ":" + strings.Repeat("a", 64) + ":3"}
+	for _, id := range ids[:3] {
+		probe.Items = append(probe.Items, memory.Match{MemoryRef: f.scope.Ref(id, 1), ContentRef: ref, Score: 1, Explanation: []string{"term:" + text}})
+	}
+	// 合法 ContentRef 原字段使三项回复落在 256 KiB 边缘，留下不足一个 gap 的空间。
+	additional := (api.MaxJSONBytes - len(api.Raw(probe)) - 1) / 3
+	ref.MediaType = "text/" + strings.Repeat("a", 1+additional)
+	policyDeadline, _ := api.ParseTime(f.policy.Values.RetainUntil)
+	_, err := f.service.Upload(f.ctx, f.scope, f.auth, memory.PublicationRequest{ContentRef: ref, TransferID: api.NewID("upload"), ReserveCommandID: api.NewID("command"), PutCommandID: api.NewID("command"), PolicyRef: f.policy.PolicyRef, ProcessedSources: []api.ContentRef{}, DisclosedSources: []api.ContentRef{}, RetentionUntil: api.Time(policyDeadline.Add(-20 * time.Minute)), TransferDeadline: api.Time(time.Now().Add(10 * time.Minute))}, []byte(text))
+	if err != nil {
+		t.Fatal(err)
+	}
+	values := memory.MemoryValues{Type: "fact", ContentRef: ref, Sources: []api.SourceEvidence{}, ScopeRef: f.upload(t, "原有限查询范围"), PolicyRef: f.policy.PolicyRef, ObservedAt: api.Time(time.Now().Add(-time.Hour))}
+	for _, id := range ids {
+		if receipt := f.command(t, "memory.create", id, nil, memory.CreateInput{MemoryID: id, Values: values}); receipt.Stage != "applied" {
+			t.Fatalf("create: %+v", receipt)
+		}
+	}
+	textRef := f.upload(t, text)
+	specRef := f.upload(t, string(api.Raw(memory.MemoryQuerySpec{TextRef: textRef, TypeFilter: []string{}, RankingProfileRef: memory.LexicalProfile()})))
+	in := memory.QueryInput{QueryRef: specRef, ScopeRef: values.ScopeRef, Purposes: []string{"memory.query"}, Limits: memory.QueryLimits{MaxCandidates: 200, MaxReadBytes: 1 << 20, MaxPermissionChecks: 100000, Deadline: api.Time(time.Now().Add(4 * time.Minute))}, Limit: 5}
+	authority := &queryRecheckAuthority{}
+	f.service.Authorization = authority
+	page := f.queryMemoryPage(t, queryID, in)
+	if len(page.Items) != 3 || page.Exhausted || page.NextCursor == "" {
+		t.Fatal("no original bounded three-match page")
+	}
+	var original memory.QueryView
+	if _, err = f.service.Store.Read(f.ctx, f.scope, "memory.queries", queryID, 1, &original); err != nil {
+		t.Fatal(err)
+	}
+	before := authority.checks
+	if _, err = f.service.ReadMemory(f.ctx, f.scope, f.auth, memory.ReadMemoryInput{MemoryID: ids[0]}); err != nil {
+		t.Fatal(err)
+	}
+	checksPerMemory := authority.checks - before
+	// 原 SQL 快照给出冻结前真实消费；另预留准确三个来源和三项当前许可，再多一个检查。
+	// 第四项发生累计预算不足时，已发三项的 JSON 也必须仍然合法。
+	in.Limits.MaxPermissionChecks = 100000 - original.RemainingPermissionChecks + uint64(len(original.SourceParts)) + 3*uint64(1+len(in.Purposes))*checksPerMemory + 1
+	page = f.queryMemoryPage(t, api.NewID("query"), in)
+	if len(page.Items) != 3 || page.Exhausted || page.NextCursor == "" {
+		t.Fatalf("permission tail changed first page: items=%d exhausted=%t partial=%t gaps=%v bytes=%d budget=%d perMemory=%d frozenSpent=%d", len(page.Items), page.Exhausted, page.Partial, page.Gaps, len(api.Raw(page)), in.Limits.MaxPermissionChecks, checksPerMemory, 100000-original.RemainingPermissionChecks)
+	}
+	if _, err = api.Canonical(api.Raw(page)); err != nil {
+		t.Fatalf("later permission metadata exceeded the public byte bound: %v", err)
+	}
+	in.Cursor = page.NextCursor
+	next := f.queryMemoryPage(t, api.NewID("query"), in)
+	if len(next.Items) != 0 || !next.Partial || next.Exhausted || next.NextCursor != in.Cursor || len(next.Gaps) != 1 || next.Gaps[0] != "permission_budget" {
+		t.Fatalf("actual remaining budget did not preserve the unvisited cursor: count=%d partial=%t exhausted=%t gaps=%v", len(next.Items), next.Partial, next.Exhausted, next.Gaps)
+	}
+}
