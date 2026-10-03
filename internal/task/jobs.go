@@ -213,7 +213,7 @@ func (s *Service) decisionJob(ctx context.Context, store runtime.Store, scope ru
 	}
 	if !send {
 		if !sent {
-			return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+			return s.finishClosedDecision(ctx, store, scope, work, d.Intent.TaskRef.ObjectID)
 		}
 		if cancellation, ok := s.ports.Brain.(BrainCancellation); ok {
 			if e := s.preIO(ctx, store, scope, work); e != nil {
@@ -225,7 +225,7 @@ func (s *Service) decisionJob(ctx context.Context, store runtime.Store, scope ru
 				}
 				return e
 			}
-			return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+			return s.finishClosedDecision(ctx, store, scope, work, d.Intent.TaskRef.ObjectID)
 		}
 	}
 	if e := s.preIO(ctx, store, scope, work); e != nil {

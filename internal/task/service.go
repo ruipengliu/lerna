@@ -526,6 +526,9 @@ func (s *Service) submitTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if e = queueJob(ctx, tx, JobAdvance, "advance/"+c.TargetID, taskRef(tx, t)); e != nil {
 		return TaskOutput{}, e
 	}
+	if e = s.scheduleDeadlineTx(ctx, tx, t); e != nil {
+		return TaskOutput{}, e
+	}
 	return output(tx, t), nil
 }
 func checkLimits(limits, policy []api.Amount) error {
