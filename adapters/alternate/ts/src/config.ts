@@ -62,8 +62,28 @@ const schema = closed(
     install_lock_ref: component,
     keys: list(key, 32),
     uses: list(manifest.schemas.use_receipt, 100),
+    foreign_sources: list(
+      closed({
+        origin: string,
+        owner_id: id,
+        database_id: { type: "string", minLength: 1, maxLength: 160 },
+        token_file: string,
+        ca_file: string,
+        key_id: string,
+        peer_subject_id: id,
+        peer_generation: count,
+        purposes: { ...list(string, 16), minItems: 1 },
+        location: { enum: ["local", "cloud"] },
+      }),
+      4,
+    ),
     fault: closed(
-      { drop_response_method: string, pause_jobs: boolean, crash_after_start: boolean },
+      {
+        drop_response_method: string,
+        pause_jobs: boolean,
+        crash_after_start: boolean,
+        crash_after_foreign_write: boolean,
+      },
       [],
     ),
   },
@@ -109,8 +129,8 @@ export function readConfig(path: string): Config {
       reject("invalid_request", "invalid_verification_key");
     }
   }
-  if (c.memory) {
-    const url = new URL(c.memory.origin);
+  for (const endpoint of [...(c.memory ? [c.memory] : []), ...(c.foreign_sources ?? [])]) {
+    const url = new URL(endpoint.origin);
     if (
       url.protocol !== "https:" ||
       url.pathname !== "/" ||
@@ -120,8 +140,24 @@ export function readConfig(path: string): Config {
       url.hash
     )
       reject("invalid_request", "fixed_https_origin_required");
-    for (const path of [c.memory.token_file, c.memory.ca_file])
+    for (const path of [endpoint.token_file, endpoint.ca_file])
       if (!isAbsolute(path)) reject("invalid_request", "absolute_path_required");
+  }
+  if (c.foreign_sources?.length && c.system !== "memory")
+    reject("unsupported", "foreign_host_only_for_memory_profile");
+  if (new Set(c.foreign_sources?.map((s) => s.owner_id)).size !== (c.foreign_sources?.length ?? 0))
+    reject("invalid_request", "duplicate_foreign_source_owner");
+  for (const source of c.foreign_sources ?? []) {
+    const key = c.keys?.find((k) => k.kid === source.key_id);
+    if (
+      source.owner_id === c.owner_id ||
+      !key ||
+      key.issuer !== source.owner_id ||
+      key.tenant_id !== c.tenant_id ||
+      !key.purposes.includes("foreign_content") ||
+      new Set(source.purposes).size !== source.purposes.length
+    )
+      reject("invalid_request", "fixed_foreign_source_authority_required");
   }
   if (c.system === "brain" && (!c.memory || !c.model_profile_ref || !c.answer_schema_ref))
     reject("invalid_request", "brain_configuration_required");

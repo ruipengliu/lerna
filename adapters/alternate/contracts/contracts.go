@@ -2,10 +2,12 @@
 package contracts
 
 import (
+	"context"
 	"sort"
 
 	file "github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/adapters/platform"
+	"github.com/ruipengliu/lerna/adapters/providers"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
 	"github.com/ruipengliu/lerna/internal/execution"
@@ -24,6 +26,7 @@ type Manifest struct {
 	RankingProfile api.ComponentRef                `json:"ranking_profile"`
 	BrainProfile   api.ComponentRef                `json:"brain_profile"`
 	AnswerSchema   api.ComponentRef                `json:"answer_schema"`
+	SourceMethods  []api.MethodContract            `json:"source_methods"`
 }
 
 func Build() (Manifest, error) {
@@ -32,6 +35,31 @@ func Build() (Manifest, error) {
 	m.Schemas["goal"] = brain.GoalSchema()
 	m.Schemas["use_receipt"] = api.SchemaFor[governance.UseReceipt]()
 	m.Schemas["proof_claims"] = api.SchemaFor[platform.ProofClaims]()
+	sourceRegistry := rt.NewRegistry()
+	for _, contract := range providers.ForeignSourceContracts() {
+		method := rt.Method{Contract: contract}
+		if contract.Kind == "command" {
+			method.Apply = func(_ context.Context, _ rt.Tx, _ rt.Auth, _ api.Command) (rt.Outcome, error) {
+				return rt.Outcome{}, api.E("unsupported", "schema_generator_has_no_runtime")
+			}
+		} else {
+			method.Query = func(_ context.Context, _ rt.Store, _ rt.Scope, _ rt.Auth, _ api.Query) (any, error) {
+				return nil, api.E("unsupported", "schema_generator_has_no_runtime")
+			}
+		}
+		if err := sourceRegistry.Register(method); err != nil {
+			return Manifest{}, err
+		}
+	}
+	m.SourceMethods = sourceRegistry.Contracts()
+	for _, method := range m.SourceMethods {
+		if method.Name == "content.foreign.register" {
+			m.Schemas["foreign_reference"] = method.InputSchema
+		}
+		if method.Name == "content.foreign.current" {
+			m.Schemas["foreign_proof"] = method.OutputSchema
+		}
+	}
 	m.BrainProfile = api.ComponentRef{ComponentID: "model_00000000000000000000000000000021", Version: "alternate-answer1", Digest: api.Hash([]byte("alternate-ts-answer1/jcs(snapshot.InputTokens=0,EncodedDigest='')+goal_bytes_base64/upper_bound/v1"))}
 	goalDigest, err := api.Digest(m.Schemas["goal"])
 	if err != nil {

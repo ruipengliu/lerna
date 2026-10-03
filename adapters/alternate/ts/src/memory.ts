@@ -1,6 +1,8 @@
 import type { Command, Query, JSONValue } from "@harness/sdk";
 import { canonical, parseStrict, validateSchema } from "@harness/sdk";
 import { createHmac, randomBytes } from "node:crypto";
+import { AsyncLocalStorage } from "node:async_hooks";
+import { ForeignCopies, type ForeignContext } from "./foreign";
 import { current, hash, role, same } from "./authority";
 import { reject, Rejection } from "./error";
 import { manifest, type Handler } from "./runtime";
@@ -39,13 +41,17 @@ interface View {
 
 // 独立的内容/记忆权威；不调用 Go Memory Service，也不把索引视为正文授权。
 export class Memory implements Handler {
+  readonly foreign: ForeignCopies;
+  private readonly context = new AsyncLocalStorage<ForeignContext>();
   private timer: ReturnType<typeof setInterval> | undefined;
   private permissionRemaining: number | undefined;
   constructor(readonly store: Store) {
+    this.foreign = new ForeignCopies(store, (ref) => this.impact(this.foreign.key(ref)));
     if (!store.meta("cursor_key"))
       store.tx(() => store.meta("cursor_key", randomBytes(32).toString("hex")));
   }
   start(): void {
+    this.foreign.start();
     this.timer = setInterval(() => {
       try {
         this.expire();
@@ -56,6 +62,101 @@ export class Memory implements Handler {
   }
   async stop(): Promise<void> {
     if (this.timer) clearInterval(this.timer);
+    await this.foreign.close();
+  }
+  private uses(input: Document, method: string): { ref: unknown; purpose: string }[] {
+    const uses: { ref: unknown; purpose: string }[] = [],
+      seen = new Set<string>();
+    const add = (ref: unknown, purpose: string) => {
+      if (!ref) return;
+      const r = object(ref),
+        key = `${canonical(r)}/${purpose}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      if (seen.size > 256) reject("overloaded", "source_preparation_graph_limit");
+      uses.push({ ref, purpose });
+      if (r.owner_id === this.store.config.owner_id) {
+        const c = this.store.get("contents", this.key(r));
+        if (c) for (const source of array(c.processed_sources)) add(source, purpose);
+      }
+    };
+    const values = (v: Document, purpose: string) => {
+      for (const ref of [
+        v.content_ref,
+        v.scope_ref,
+        ...array(v.sources).map((s) => object(s).content_ref),
+      ])
+        add(ref, purpose);
+    };
+    if (["memory.create", "memory.replace"].includes(method))
+      values(object(input.values), "memory.save");
+    if (method === "memory.read") {
+      const record = this.store.require("memories", text(input.memory_id));
+      values(object(record.values), input.purpose ? text(input.purpose) : "memory.read");
+    }
+    if (["memory.list", "memory.query", "memory.view.open", "memory.view.pull"].includes(method)) {
+      const purposes =
+        method === "memory.query"
+          ? ["memory.query", ...strings(input.purposes)]
+          : method === "memory.view.open"
+            ? ["memory.sync", ...strings(input.purposes)]
+            : method === "memory.view.pull"
+              ? ["memory.sync", ...this.store.require<View>("views", text(input.view_id)).purposes]
+              : [text(input.purpose)];
+      const maxCandidates =
+        method === "memory.query"
+          ? Math.min(200, integer(object(input.limits).max_candidates))
+          : method === "memory.view.open"
+            ? Math.min(200, integer(input.max_candidates))
+            : 200;
+      for (const purpose of purposes) {
+        add(input.scope_ref, purpose);
+        if (method === "memory.view.pull")
+          add(this.store.require<View>("views", text(input.view_id)).scope, purpose);
+        add(input.query_ref, purpose);
+        for (const record of this.store.list("memories", "", 200).slice(0, maxCandidates))
+          values(object(record.values), purpose);
+      }
+    }
+    if (method === "content.get" && input.mode === "bytes")
+      add(input.content_ref, text(input.purpose));
+    if (["content.upload_reserve", "content.put"].includes(method))
+      for (const ref of [
+        ...array(input.processed_sources),
+        ...array(input.disclosed_sources ?? []),
+      ])
+        add(ref, "content.write");
+    return uses;
+  }
+  prepare(p: Principal, command: Command): Promise<ForeignContext> {
+    return this.foreign.context(p, this.uses(object(command.payload), command.method));
+  }
+  async prepareQuery(p: Principal, query: Query): Promise<ForeignContext> {
+    const input = object(query.payload),
+      context = await this.foreign.context(p, this.uses(input, query.method));
+    if (query.method !== "memory.query") return context;
+    // query_spec 是准确正文；获准读取并校验后才能机械展开其 text_ref。
+    const spec = this.context.run(context, () =>
+      this.store.tx(() => {
+        const value = object(parseStrict(this.bytes(p, input.query_ref, "memory.query", true)));
+        validateSchema(manifest.schemas.query_spec, value);
+        return value;
+      }),
+    );
+    const textContext = await this.foreign.context(
+      p,
+      this.uses(
+        { mode: "bytes", content_ref: spec.text_ref ?? null, purpose: "memory.query" },
+        "content.get",
+      ),
+    );
+    for (const [id, proof] of textContext.proofs) context.proofs.set(id, proof);
+    for (const [key, error] of textContext.errors) context.errors.set(key, error);
+    return context;
+  }
+  async readBytes(p: Principal, ref: unknown, purpose: string): Promise<Buffer> {
+    const context = await this.foreign.context(p, [{ ref, purpose }]);
+    return this.context.run(context, () => this.store.tx(() => this.bytes(p, ref, purpose)));
   }
   private expire(): void {
     const due = this.store
@@ -130,6 +231,15 @@ export class Memory implements Handler {
         this.store
           .list("contents")
           .map((c) => [c.content_ref, c.state, c.control_revision, c.retention_until]),
+        this.store.list("foreign_sources", "", 100),
+        this.store
+          .list("foreign_held", "", 100)
+          .map((h) => [
+            object(h.reference).copy_id,
+            h.phase,
+            h.known_deny,
+            object(h.proof ?? {}).policy_values ?? null,
+          ]),
       ]),
     );
   }
@@ -170,6 +280,8 @@ export class Memory implements Handler {
     continuous = false,
     visited = new Set<string>(),
   ): Document {
+    if (object(ref).owner_id !== this.store.config.owner_id)
+      return this.foreign.content(p, ref, purpose, this.context.getStore(), continuous);
     const key = this.key(ref);
     if (visited.has(key) || visited.size >= 64) reject("invalid_request", "source_cycle_or_depth");
     visited.add(key);
@@ -183,6 +295,8 @@ export class Memory implements Handler {
     return c;
   }
   bytes(p: Principal, ref: unknown, purpose: string, continuous = false): Buffer {
+    if (object(ref).owner_id !== this.store.config.owner_id)
+      return this.foreign.bytes(p, ref, purpose, this.context.getStore(), continuous);
     this.content(p, ref, purpose, continuous);
     const r = object(ref),
       row = this.store.db.prepare("SELECT body FROM content_bytes WHERE key=?").get(this.key(ref));
@@ -271,13 +385,20 @@ export class Memory implements Handler {
     if (refs.length > 32) reject("invalid_request", "source_count_limit");
     for (const r of refs) {
       const content = this.content(p, r, "memory.save"),
-        source = this.allowed(p, content.policy_ref, "memory.save");
+        source = content.foreign_policy_values
+          ? object(content.foreign_policy_values)
+          : this.allowed(p, content.policy_ref, "memory.save");
       for (const property of ["subjects", "purposes", "locations"]) {
         if (strings(policy[property]).some((s) => !strings(source[property]).includes(s)))
           reject("forbidden", "source_scope_expansion");
       }
       if (Date.parse(text(policy.retain_until)) > Date.parse(text(source.retain_until)))
         reject("forbidden", "source_retention_expansion");
+      if (
+        content.foreign_policy_values &&
+        Date.parse(text(policy.retain_until)) > Date.parse(text(content.retention_until))
+      )
+        reject("forbidden", "source_copy_retention_expansion");
     }
     const seen = new Set<string>();
     for (const s of array(v.sources)) {
@@ -316,7 +437,10 @@ export class Memory implements Handler {
     });
     return head;
   }
-  command(p: Principal, c: Command): { output: unknown; accepted?: boolean } {
+  command(p: Principal, c: Command, prepared?: unknown): { output: unknown; accepted?: boolean } {
+    return this.context.run(prepared as ForeignContext, () => this.commandNow(p, c));
+  }
+  private commandNow(p: Principal, c: Command): { output: unknown; accepted?: boolean } {
     const i = object(c.payload);
     switch (c.method) {
       case "content.policy.install": {
@@ -681,7 +805,8 @@ export class Memory implements Handler {
     };
   }
   private depends(ref: unknown, key: string, visited = new Set<string>()): boolean {
-    const id = this.key(ref);
+    const id =
+      object(ref).owner_id === this.store.config.owner_id ? this.key(ref) : this.foreign.key(ref);
     if (id === key) return true;
     if (visited.has(id) || visited.size >= 64) return false;
     visited.add(id);
@@ -711,7 +836,10 @@ export class Memory implements Handler {
       this.change(record, "restricted");
     }
   }
-  query(p: Principal, q: Query): unknown {
+  query(p: Principal, q: Query, prepared?: unknown): unknown {
+    return this.context.run(prepared as ForeignContext, () => this.queryNow(p, q));
+  }
+  private queryNow(p: Principal, q: Query): unknown {
     if (q.method === "memory.query")
       this.permissionRemaining = integer(object(object(q.payload).limits).max_permission_checks);
     try {
@@ -1062,7 +1190,10 @@ export class Memory implements Handler {
     this.store.put("views", id, v);
     return result;
   }
-  disclose(p: Principal, q: Query, result: unknown): void {
+  disclose(p: Principal, q: Query, result: unknown, prepared?: unknown): void {
+    this.context.run(prepared as ForeignContext, () => this.discloseNow(p, q, result));
+  }
+  private discloseNow(p: Principal, q: Query, result: unknown): void {
     const i = object(q.payload);
     if (q.method === "memory.read") {
       const r = object(result),

@@ -55,6 +55,9 @@ export class Store {
       keys: config.keys ?? [],
       core_digest: manifest.core_digest,
       methods_digest: `sha256:${createHash("sha256").update(canonical(manifest.methods[config.system])).digest("hex")}`,
+      ...(config.foreign_sources?.length
+        ? { foreign_sources: config.foreign_sources, source_methods: manifest.source_methods }
+        : {}),
     });
     if (migrate) {
       this.db.exec(
