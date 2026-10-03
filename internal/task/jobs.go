@@ -259,6 +259,17 @@ func (s *Service) operationJob(ctx context.Context, store runtime.Store, scope r
 	if s.ports.Execution == nil {
 		return s.wait(ctx, store, scope, work)
 	}
+	if preparation, ok := s.ports.Execution.(ExecutionPreparation); ok {
+		if e := s.preIO(ctx, store, scope, work); e != nil {
+			return e
+		}
+		if e := preparation.PrepareDispatch(ctx, scope, intent); e != nil {
+			if deferred(e) {
+				return s.wait(ctx, store, scope, work)
+			}
+			return e
+		}
+	}
 	var window api.ControlSnapshot
 	send := false
 	err := s.transaction(ctx, store, scope, func(tx runtime.Tx) error {
