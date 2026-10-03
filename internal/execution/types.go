@@ -117,6 +117,7 @@ type Attempt struct {
 	AttemptNo         uint64              `json:"attempt_no"`
 	Phase             string              `json:"phase"`
 	Prepared          PreparedRequest     `json:"prepared"`
+	PreparedBytes     []byte              `json:"prepared_bytes,omitempty"`
 	Permit            StartPermit         `json:"permit"`
 	PreparedAuthority PreparedStart       `json:"prepared_authority"`
 	ControlWindowID   string              `json:"control_window_id"`

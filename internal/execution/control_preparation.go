@@ -76,6 +76,9 @@ func (s *Service) prepareAttemptControl(ctx context.Context, st rt.Store, sc rt.
 		if err != nil {
 			return err
 		}
+		if err = restorePreparedBytes(&prepared); err != nil {
+			return err
+		}
 		if updated.NewAttemptsClosed || prepared.Phase != "prepared" {
 			return api.E("invalid_state", "operation_permanently_closed")
 		}
