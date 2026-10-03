@@ -88,6 +88,14 @@ func (c deviceContent) ReadBytes(ctx context.Context, s runtime.Scope, a runtime
 	if s != c.h.Scope || location != "device" || a.TenantID != s.TenantID {
 		return nil, api.E("forbidden", "device_content_scope_mismatch")
 	}
+	if purpose != "execution_result" {
+		entry, _ := ctx.Value(deviceContentEntryKey{}).(deviceContentEntry)
+		rec, err := c.inputBytes(ctx, s, a, r, purpose, entry)
+		if err != nil {
+			return nil, err
+		}
+		return c.h.Objects.Read(ctx, memory.ObjectLocation{Key: rec.ObjectKey, Version: r.Hash, Durability: "local_fsync"}, r, MaxContentBytes)
+	}
 	var rec contentRecord
 	if _, err := c.h.Store.Read(ctx, s, Namespace+".contents", contentKey(r), 0, &rec); err != nil {
 		return nil, api.E("dependency_unavailable", "original_content_not_cached")
@@ -95,7 +103,11 @@ func (c deviceContent) ReadBytes(ctx context.Context, s runtime.Scope, a runtime
 	if !rec.Complete || !api.Equal(rec.Permission.ContentRef, r) || !api.Equal(rec.Principal, PrincipalOf(a)) {
 		return nil, api.E("forbidden", "original_content_permission_mismatch")
 	}
-	// 账务/原Attempt恢复仍需准确输入依据；它们不能开启新行动。其余读取受原保留期限约束。
+	// 原 Attempt 可读已耐久的本方结果来核对原责任；结果不要求在输入 bundle 中。
+	// 这不为普通输入选择缓存的首次许可，也不允许读取尚未实际出版的材料。
+	if !rec.Published {
+		return nil, api.E("forbidden", "original_published_result_required")
+	}
 	if err := before(time.Now(), rec.Permission.RetainUntil); err != nil {
 		return nil, err
 	}

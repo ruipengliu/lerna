@@ -14,6 +14,10 @@
 
 `ContentPermission.SourcePolicy/SubjectRefs` 是原云端 Authority 对准确输入来源的当前策略和主体代次快照，由原 AdmissionBundle 整体签名。`SourcePolicySnapshot` 必须来自原 Memory 当前读取用例；不能由适配器猜测其他主体代次。输出许可取全部 processed/disclosed 来源的主体、用途、地点及保留期交集，再受显式 `OutputSubjectRefs/OutputPurposes/OutputLocations` 配置收窄。省略配置只选择原 Authority 主体、该结果原用途和 cloud。旧 bundle 缺策略快照仍能恢复原缓存、Attempt 和账务；它不能新登记普通外部副本。每个输入至多 16 MiB，原 bundle 输入总量至多 32 MiB。
 
+不可变字节缓存可以被另一条已获准 Operation 复用，普通输入读取必须按本次 `execution.run/reconcile` Job 的原 Operation 定位唯一 AdmissionBundle。每次读取核原签名、主体、准确 ContentRef/来源、该 bundle 的用途、保留期及本机已知撤权，再读取并核准确字节。ContextFactory 只投影当前入口路由，不读库或授予用途；不选择缓存首次 bundle，也不汇总其他操作的许可。旧缓存的策略及身份保持原样。已知拒绝可发生在准备 Attempt 之前；`not_started` 依据是未越过实际入口，不要求制造一条 Attempt。
+
+原 `execution.usage.get` 只可恢复其准确原 intent 的账务依据，不读参数或正文、不消费新 Use。原 Attempt 核对自己的已出版 `execution_result` 时沿准确结果引用恢复；结果不必列在输入 bundle。真实 TLS、SQLite 设备和 SQLite/PG Authority 用例覆盖先写入再以另一原签名许可读同字节、当前用途未授、主体撤权、原结果核对与回执重放；Authority 夹具预置了有限批准，不替代完整公开 Task 的授权验收。
+
 `executor.content.get` 的普通正文必须附准确已登记 `ForeignReference`，每个块重新核源 gate，最后独立核全量 hash/size。没有副本登记的查询仅允许原执行账务证据的窄用途。设备源 owner 的 `ClosePublishedContent` 管理端口先原子保存关闭与有界 holder 影响 Job；有限传输 peer 无此管理权。数据过期、停止及物理清理分别记账：实际 cleanup 未有源端可核的准确证据时报告 pending/unknown/residual，不能标 complete。收尾第一次实际报告先由 SDK journal 保存有限十分钟命令，重放保留原 TTL，与正文 retention 独立。
 
 主体撤权的 `Revocation.ObjectRef.Revision` 明确表示实际被撤销的 credential generation 上界。旧代和旧签名准入继续拒绝；更高代必须重新取得完整 Authority 签名准入、原 lease 和配置上限。Grant/Task/lease 撤回继续封原责任。当前同主体较新代只可收尾原 holder，其签名仍固定原 holder 代次；它不能用旧副本许可取得正文。
