@@ -94,6 +94,12 @@ type BrainPort interface {
 	ReadProposal(context.Context, runtime.Scope, api.DecisionDispatchIntent) (Proposal, error)
 	Usage(context.Context, runtime.Scope, api.ObjectRef) (api.UsageSnapshot, error)
 }
+
+// BrainCancellation 关闭原已投递决策的新发布责任；原费用仍由独立 Billing Job 核对。
+// 宿主必须先持久冻结原 brain.cancel 命令，再在 Tx 外发送或查询，不能刷新其期限。
+type BrainCancellation interface {
+	CancelDecision(context.Context, runtime.Scope, api.DecisionDispatchIntent) error
+}
 type ExecutionPort interface {
 	Dispatch(context.Context, runtime.Scope, OperationIntent, api.ControlSnapshot) error
 	Read(context.Context, runtime.Scope, api.ObjectRef) (api.Operation, error)

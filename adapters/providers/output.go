@@ -30,7 +30,7 @@ func ModelOutputSchema() api.Schema {
 	}
 	draft := api.Schema{"oneOf": []any{
 		variant("refine_requirements", map[string]any{"requirements": api.Array(api.SchemaFor[brain.DraftRequirement](), 1, 100)}, "requirements"),
-		variant("act", map[string]any{"actions": api.Array(api.SchemaFor[brain.DraftAction](), 1, 4)}, "actions"),
+		variant("act", map[string]any{"actions": api.Array(brain.DraftActionSchema(), 1, 4)}, "actions"),
 		variant("complete", map[string]any{"artifact_local_ids": api.Array(localSchema(), 0, 100), "existing_artifact_refs": api.Array(api.Ref("ContentRef"), 0, 100)}),
 		variant("request_input", map[string]any{"question_local_id": localSchema(), "answer_schema_ref": api.Ref("ComponentRef"), "purpose": api.Enum("clarify_goal", "supply_context")}, "question_local_id", "answer_schema_ref", "purpose"),
 		variant("fail", map[string]any{"reason_code": api.String()}, "reason_code"),
@@ -88,6 +88,9 @@ func ParseGenerated(raw []byte) (brain.Generated, error) {
 			return brain.Generated{}, api.E("invalid_request", "output_action_invalid")
 		}
 		keys[a.LocalKey] = true
+	}
+	if err := brain.ValidateLocalDisclosures(d.Actions, input.Contents); err != nil {
+		return brain.Generated{}, err
 	}
 	if d.Kind == "request_input" && !found[d.QuestionLocalID] {
 		return brain.Generated{}, api.E("invalid_request", "output_question_missing")

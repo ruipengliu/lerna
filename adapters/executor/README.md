@@ -1,0 +1,15 @@
+# 独立设备 Executor
+
+此 adapter 把 Execution、有限 GrantLease、本机 Content 缓存和补传装配到独立 SQLite。设备不注册 Task/Brain/云端 Memory participant，不连接云端 PostgreSQL，也不决定云端 Task 成功。受信静态设备、P-256 密钥和 TLS peer 配对必须在管理配置中给出；缺失时在接纳业务前拒绝。
+
+云端先在原 Task 准入事务中调用原 `AllocateLeaseTx`，固定一次预留。`SealAdmissionTx` 只签名和保存原准入：它同时绑定原 Orchestrator OperationIntent 摘要、Executor ExecutionIntent 摘要、原命令 ID、Capability/Binding/InstallLock、设备 owner/instance、原 GrantLease 和每个准确 Content 的用途及来源。它不再调用普通 Grant Use。传输凭据仅赋予 `executor_peer`；设备消费签名的原主体与代次，不复制用户或父服务的完整 token。
+
+`executor.admission.install` 安装闭合签名 bundle。`executor.content.stage` 以原命令身份暂存最多 96 KiB 的原字节块；Job 在事务外核全量 hash/size 并完成 fsync，不提供任意内容签名入口。云端通过 `executor.admission.get` 确认原输入全部就绪，随后才签发原五秒 ControlWindow。`executor.control.install` 安装该准确 JWS；设备保留原 source/audience，不把本机 owner 冒充签发者。原 `execution.invoke` 原样进入设备 Dispatcher，其 principal 来自准确 bundle。
+
+实际 StartBarrier 在设备事务内只核静态已登记签名、原 Task/Operation/lease/主体、最紧截止、本机已知撤权、Control/TaskGate 和资源 epoch。离线仅能运行已经完整缓存并接纳的原行动；五秒控制窗口、原 TTL 和有限分配均不刷新。过期后可以查询原 Attempt、迟到效果与用量；查询不再执行物理动作。
+
+输出、证据和 UsageProof 保留设备的原 ContentRef 与准确来源。云端按原设备 owner 查询和补传，Task 与 Grant 只归并自己的账本。缺失来源正文必须返回明确缺口，不能生成同名替代 Content 或把 GoalRef 当作计费证明。真实双进程及故障验收结果将在工单 16 的完成依据中记录；本文的实现结构不代表外部真机、三 AZ 或生产资格。
+
+`executor.lease.usage.get` 先取得同一本机 Execution 的实际累计用量，按原 use/source/revision 归并本机 lease，再发布独立 LeaseUsageProof 和原闭合引用。报告签名包含原设备 database_id、endpoint/instance、Cloud LeaseRef 和完整 UsageSnapshot 摘要。云端只调用原 `ApplyLeaseReportTx` 归并这一分配；同一个原 Cloud lease use 不再调用普通 `ApplySettlementTx`。Task 预算仍单独消费原 Operation Usage，不能把 lease 的源身份替代 Operation。
+
+[独立进程入口](../../cmd/executor/README.md) 与 `Dial/Client` 使用真实 TLS、固定设备 owner/instance/database、有限 peer 文件凭据及 GoSDK fsync journal。已验证实际 CLI 子进程 SIGTERM 退出、丢回复后原回执恢复，以及 PostgreSQL Authority 的原一次 USD 1 预留与 SQLite 设备零费用闭合补传、不重复扣费。该 PG 用例预置了受信批准的 Grant 和准入 Task 引用；完整公开 Task/Brain 装配及普通 foreign Content 的来源登记由工单 16／23 后续共同验证，尚未据此宣称完成。
