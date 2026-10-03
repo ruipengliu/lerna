@@ -334,6 +334,21 @@ func (s *Service) CheckCurrent(ctx context.Context, tx runtime.Tx, t taskState, 
 		return api.E("invalid_state", "task_not_running")
 	}
 	if requireRunning {
+		if gate, ok := s.ports.ContextLookup.(ContextMaterialGate); ok {
+			// 所有材料的专门锁先于任一原提交者当前凭据锁。
+			if e = gate.CheckMaterialsTx(ctx, tx, submitterAuth(tx.Scope(), t), t.ContextMaterials); e != nil {
+				return e
+			}
+			for _, id := range t.Ancestors {
+				a, err := getTask(ctx, tx, id)
+				if err != nil {
+					return err
+				}
+				if e = gate.CheckMaterialsTx(ctx, tx, submitterAuth(tx.Scope(), a), a.ContextMaterials); e != nil {
+					return e
+				}
+			}
+		}
 		if e = s.checkSubmitterTx(ctx, tx, t); e != nil {
 			return e
 		}

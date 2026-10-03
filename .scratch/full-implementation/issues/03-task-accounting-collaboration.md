@@ -1,7 +1,7 @@
 # 03 task-accounting-collaboration
 
 Status: partial
-Blocked by: C3 搜索/正文获取与 V2 完整手势的本地实现缺口，及跨 owner 权威与交接、外部 Agent、独立设备和生产部署的后续装配及验收
+Blocked by: 工单 11–24 新增本地切片的剩余集成验收，跨 owner 权威与交接、外部 Agent、独立设备及生产部署资格
 
 依据 [实施规格](../spec.md) 与根 AGENTS.md，保留准确身份、负责方、事务、门禁和恢复。实际编译、公开接口行为、正反例及所需平台证据均通过后才关闭。
 
@@ -17,7 +17,7 @@ Blocked by: C3 搜索/正文获取与 V2 完整手势的本地实现缺口，及
 | 控制、Result、恢复 | 当前 Task/祖先门禁、根到叶及源记录锁序、最多五秒签名控制窗口。输入先准备，再核当前门禁签首窗；原 invoke 重放不刷新窗口、命令或预留。终态 Result 不可变，Content 导出有独立 Job，治理缺陷沿原 Result 保存 notice |
 | 内部协作、ChildHandle、受信装配 | 显式同库创建子 Task/额度并核完整有界子树效果；ChildHandle 先准备原 Session 命令，新目标 CAS 需旧目标和效果关闭。实际本地 Session/steer/answer 转交仅据原消费方回执归并。批请求视图先锁全部 Task 再锁准确请求；ContextFacts、冻结 Decision/Snapshot/上界及原意图等 typed 用例供宿主装配，不是新增公开线方法 |
 
-公开方法以闭合 `api.Contract[I,O]` 登记；16 类 Task Job 均有实际 handler。跨模块仅使用消费方小端口；同库参与者由宿主显式声明，外部准备、字节读取、发送和取证在 Tx 外。缺少实际端口、签名或当前资格时关闭相应入口或保持准确等待，不以目标正文冒充证明。
+公开方法以闭合 `api.Contract[I,O]` 登记；17 类 Task Job 均有实际 handler，新增 `context_lookup` 不承担隐藏工具行动。原 deadline 唤醒沿独立键使用既有 `task.advance`，不是新 Job kind。跨模块仅使用消费方小端口；同库参与者由宿主显式声明，外部准备、字节读取、发送和取证在 Tx 外。缺少实际端口、签名或当前资格时关闭相应入口或保持准确等待，不以目标正文冒充证明。
 
 ## 已运行证据
 
@@ -28,14 +28,14 @@ Blocked by: C3 搜索/正文获取与 V2 完整手势的本地实现缺口，及
 - 原始文本 RuleEngine 编码 panic 经 [公开编码与旧编码恢复](../../../internal/brain/rules_encoding_test.go) RED→GREEN。私有 base64 信封保留非 JSON 原字节和原 ContentRef 摘要；合法 JSON 保持旧格式逐字节不变。双表示、缺表示及无效 bytes 被拒绝；真实 SQLite 在 encoded 阶段重开、移除原 Goal 字节且禁止再次 Encode 后仍消费原保存编码和命令。Brain 全包 PASS 12.311s、race PASS 28.996s。没有新增公开协议方法或扩大全局字节/计费限额。
 - 宿主 [Schedule 安装锁正反例](../../../adapters/development/schedule_gate_test.go) 通过实际 Dispatcher、未来 timer 与交付 Job，证明正确安装锁的 create/update applied，模型 profile 放入安装锁字段被拒绝且无新 Schedule/触发责任。旧门禁曾 RED（错误模型引用 applied），改核实际 InstallLock 后 SQLite 与 PostgreSQL race PASS 51.286s；合法更新仍复用原 trigger，已冻结 occurrence 沿旧规则/准确锁和原 Task 命令交付。
 
-development 全包 SQLite race 首次实际运行 376.293s 未通过：原报告与两条新澄清链各耗尽 90s 测试外层 context，没有 race detector 报告。根据公开阶段实际耗时，报告及澄清 fixture 的外层等候调整为有限 180s；Task 的五分钟期限、原命令一分钟期限、五秒控制窗口及浏览器补充后 90s 验收保持原值。之后分别串行隔离的 Report race PASS 109.808s、JSON 澄清加来源拒绝 race PASS 161.932s、原始文本澄清 race PASS 145.002s；原 376.293s 失败不改记通过。两库多段 fixture 会使整个 development 包累计超过五分钟，检查入口与 CI 的 Go 单包等待有界设为十分钟，仅是测试 runner 上限，完整入口与托管 CI 实际运行仍由集成工单另行记录。
+development 全包 SQLite race 首次实际运行 376.293s 未通过：原报告与两条新澄清链各耗尽 90s 测试外层 context，没有 race detector 报告。根据公开阶段实际耗时，报告及澄清 fixture 的外层等候调整为有限 180s；Task 的五分钟期限、原命令一分钟期限、五秒控制窗口及浏览器补充后 90s 验收保持原值。之后分别串行隔离的 Report race PASS 109.808s、JSON 澄清加来源拒绝 race PASS 161.932s、原始文本澄清 race PASS 145.002s；原 376.293s 失败不改记通过。两库多段 fixture 使整个 development 包累计超过五分钟，当时检查入口及 CI runner 等待有界设为十分钟；后续新增切片后的当前入口以 `scripts/check` 与同版 CI 为准，完整入口实际运行由集成工单记录。这些均不改变业务期限。
 
 有界条件检查使用准确、预批准规则；默认报告闭环是明确正文/保存路径/读回要求的受信结构化目标，执行及许可费用明确为零。上述行为证明本方 Task 消费、账务和恢复，不证明自然语言规划质量、真实付费供应商账单或所有外部工具。可配置模型的实际 HTTP 协议/非零费用测试属于宿主与供应商合同的另项证据。
 
 ## 剩余边界
 
-C3 尚无可替换的 Search/Body adapter 与其来源/时间合同；V2 模拟手机只开放四项较窄动作，完整 swipe/back 手势仍未实现。这是本地参考能力缺口，不能归因于真实账户或独立设备尚未配置。
+Search/Body、扩展模拟 GUI、隔离 WASI、独立设备、远端 Agent、Skill/AgentConfig、Channel 和第二实现的新增本地范围分别由工单 11–24 记录实际方法及未完成验收。它们的本地编码范围不能归因于缺生产账户；本工单既有 Task 证据也不能替代这些切片的实际验证。工单 14 的四种只读 resolver、普通材料持久责任/当前撤回门禁和有限偏好实际结果已完成：固定源码 SQLite C2 race PASS 623.820s，三原 Result/回执重开及费用闭合；两库 resolver race 与 PostgreSQL C2 normal 分别记录准确范围。总体实施覆盖仍是完整项目完成状态的依据。
 
-跨 owner Delegation/Allocation、远端 Evidence/Grant authority、外部 Agent、独立设备有限授权和断网端云闭环尚未完成装配验收；当前本地协作 adapter 对未配置对端在新增责任前返回 unsupported。云端 Task 权威没有移交设备缓存，本机同 owner/同库与三角色 PG 进程的通过不能证明跨主机或独立设备部署。
+跨 owner Delegation/Allocation、远端 Evidence/Grant authority、外部 Agent、独立设备有限授权和断网端云闭环按各自工单继续取证；当前本地方与远端小端口不能作为对端部署或生产资格证明。未配置对端仍在新增责任之前关闭入口。云端 Task 权威没有移交设备缓存，本机同 owner/同库与三角色 PG 进程的通过不能证明跨主机或独立设备部署。
 
 真实公司身份/密钥基础设施、任意目标的语义条件与检查质量、真实供应商迟到账单/退款、三 AZ、时间异常、生产容量/历史增长及灾备目标继续按实施覆盖保留 blocked/partial。完整浏览器故障矩阵由集成工单继续记录，原 Result/全文单项通过不关闭其全部范围。本工单没有将完整架构标记 resolved。

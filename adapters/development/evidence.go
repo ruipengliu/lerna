@@ -55,7 +55,12 @@ func (e evidenceBridge) ValidateRequirements(ctx context.Context, s runtime.Scop
 			if err != nil {
 				return out, err
 			}
-			if api.Decode(bytes, &params) != nil || params.ExpectedHash != api.Hash(brain.ReportBytes(goal)) || params.ExpectedLength != uint64(len(brain.ReportBytes(goal))) || params.SavePath != goal.SavePath {
+			decodeErr := api.Decode(bytes, &params)
+			expected, preferenceErr := e.a.validatePreferenceParameters(ctx, facts, goal, params)
+			if preferenceErr != nil && !api.IsCode(preferenceErr, "forbidden") {
+				return out, preferenceErr
+			}
+			if decodeErr != nil || preferenceErr != nil || params.Kind != goal.Kind || params.ExpectedHash != api.Hash(expected) || params.ExpectedLength != uint64(len(expected)) || params.SavePath != goal.SavePath {
 				out.Valid = false
 				out.ReasonCodes = append(out.ReasonCodes, "requirement_changes_original_goal")
 			}

@@ -4,13 +4,17 @@
 
 ## 实现与装配
 
-`task.New(Config, Ports)` 接收明确登记的政策、规则与答案 Schema，`Register` 同版登记闭合方法和 16 类工作。目标原文、完整 GoalDocument、条件及准确语义采纳、Task 控制、预留、累计费用、当前检查选择、不可变 Result 与独立出版责任保存在固定 Task owner 的原库。内部实现只依赖 `api`、`runtime` 和消费方小端口。
+`task.New(Config, Ports)` 接收明确登记的政策、规则与答案 Schema，`Register` 同版登记闭合方法和 17 类工作。目标原文、完整 GoalDocument、条件及准确语义采纳、Task 控制、预留、累计费用、当前检查选择、不可变 Result 与独立出版责任保存在固定 Task owner 的原库。内部实现只依赖 `api`、`runtime` 和消费方小端口。
 
 公开方法包含 Task 提交、控制、修订、输入、质量接受、预算调整、证据附加、费用通知、控制窗口与查询；额度 allocate/close/settle/read；账单调整提交；ChildHandle create/send/close/read/list/wait，以及准确 InputRequest read/list。`task.input` 的 accepted 表示准确答案已耐久排队，最终 applied 才表示原请求已消费。坏答案不消费请求，修正答案可以重新提交。
 
-16 类工作为 advance、dispatch_decision、dispatch_operation、reconcile_operation、check、coverage、control、billing、publish_result、steer、delegation、allocation、child_prepare、child_transfer、input、adjustment，均以 `task.` 为前缀。外部读取、出版和发送在事务外；Claim 先于出站重核，资格和最终归并在有 Guard 的短事务中重新核验。
+17 类工作为 advance、dispatch_decision、dispatch_operation、reconcile_operation、check、coverage、control、billing、publish_result、steer、delegation、allocation、child_prepare、child_transfer、input、adjustment、context_lookup，均以 `task.` 为前缀。外部读取、出版和发送在事务外；Claim 先于出站重核，资格和最终归并在有 Guard 的短事务中重新核验。
+
+`need_context` 接纳一次固定批次内的 1–3 项只读查找。每次领取只处理一个原查询，恢复沿原 LookupID、QueryRef、Snapshot、目标/控制与有限期限；累计 calls/bytes/tokens 上界在批次准入时预扣，不因等待、控制或目标变化返还。批内前项与本次新材料共同重核当前资格，全部完成后才进入下一份 Snapshot。普通材料与本人原文 SourceEvidence 分开保存，不提升指令或授权等级；已撤回的准确 Memory 版本不能成为新 Decision 的材料。依赖等待原 Job，确定拒绝保留准确等待原因，不能通过新模型请求探测依赖。宿主 resolver、有限偏好模板及其真实结果验证范围见[工单 14](../../../.scratch/full-implementation/issues/14-context-lookups.md)。
 
 Context 编译完成后若原 Task 已变化，仅在准入闭包明确 `stale_snapshot` 且事务确认回滚时重调度原 advance Job；没有新的 Decision 或执行意图准入。外部编译错误、失去领取及 CommitUnknown 不进入该路径，未知提交沿原身份核查，不能伪报已回滚或另造决策责任。
+
+Task 提交同时保存以 `deadline/<TaskID>` 为键的独立 advance 责任，due 为原 Task deadline。它与立即推进的 `advance/<TaskID>` 分开，后者完成或重调度不能吞掉到期唤醒；仍使用同版 `task.advance` handler，不新增 Job kind。等待输入、暂停和重开均不续期，到期关闭原目标并取消原 Decision，未知效果及费用继续核对。受信维护用例 `RecoverDeadline` 只为已知旧 Task 补原期限责任或执行到期关闭，不扫描或重置目标。
 
 受信内部用例 `AdoptRequirements`、`StoreCoverage`、`RecordCheck`、`Complete`、`PrepareDecision`、`ConsumeProposal`、`ContextFacts`、`CheckDecisionTx`、`DecisionSnapshotTx`、`DecisionCostBoundTx`、`OperationIntentTx`、`Closure`、`RequestViewTx`、`RecordResultNoticeTx` 等供宿主装配。它们不构成新公开线方法，也不允许 Brain 自报已消费 Grant、原 Operation 身份或已发生效果。决策读取从原准入 birth 返回冻结 Snapshot 和原 Reservation 的准确上界；当前账务已结或变化不能重新定价或降低该原上界，当前发送资格仍须单独调用 `CheckDecisionTx`。
 
@@ -21,9 +25,13 @@ Context 编译完成后若原 Task 已变化，仅在准入闭包明确 `stale_s
 宿主必须显式声明共享数据库与 Tx participants，并提供：
 
 - Content 字节读取及固定出版；Context 编译；Brain、Execution、外部取证及协作端口。
+- Context 可实现纯 Tx `ContextCommitter`，在原 Snapshot/Decision/Reservation 和 Job 意图的共同事务登记准确材料持有者。ContextLookup 可实现 `ContextMaterialGate`，在同库 Memory 变更头及当前来源门禁核验准确材料，不进行网络读取；缺少对端装配不能声称验证了远端当前许可。
+- Context 可实现 `CompletionGatePreparer`，在本次原 completion 的准确检查已完成且已知效果关闭之后，先核 Task/控制/原主体元数据，再于 Tx 外为原成果取得当前来源依据。准备不能重建成果、续期或开始新行动；最终仍经原 `CompleteTx` 和 Claim Guard 全量裁决。缺少本次外部依据不能继承磁盘上的旧 positive。
 - Execution 可实现 `ExecutionPreparation.PrepareDispatch`，在事务外按原 Operation/Command/IntentHash 冻结和出版准确输入，然后才重新核当前目标、控制及凭据并签发短窗口。准备不能创建 Attempt、调用模型/工具、改变目标效果或追加预算；临时不可用沿原派发 Job 等待，旧端口保持兼容。
 - 同库 `LocalGate`；需要准确证据治理副本时，该 Gate 同时实现 `EvidenceRegistration`。检查和完整覆盖登记及 Result 持有者绑定均在原 Task 事务中完成。
 - 原提交者凭据代次与角色冻结在 Task 中；Context 编译沿用该身份。Gate 可同时实现纯 Tx `SubjectGate.CheckSubjectTx`，在当前 Task 与每层祖先正门禁核验撤权。缺少该端口不能宣称验证了当前身份；旧记录缺少代次时新准入关闭，负控制和迟到账务仍保留。
+- Gate 可实现 `CurrentTaskGate.CheckTaskCurrentTx`，复核远端父范围的准确当前控制和原 incoming allocation；有限签名准备在事务外完成。最终 input 消费与 steer 目标提交在实际字节读取或出版之后重核关闭门禁，不能以较早的 accepted 代替最终消费资格。
+- Gate 可实现 `AdvanceGatePreparer`，仅为本次正向 advance 在原主体元数据与 Claim 核验后取得有限当前证明。工厂不执行该端口；终态、过期、暂停及账务收尾保留原处理，不借准备读取新正文或取得行动权。
 - `ActionAuthorization.AuthorizeAction`。它在封存原 IntentHash 后运行，与整批 ActionConsumption、预留、意图共同提交；整批拒绝会回滚一次授权使用。
 - `ControlProofPort`、`ClosureProofPort`，以及后者可实现的 `AllocationProofPort`。seal 只能本地签名并保存准确证明字节和出版意图，不得出站。缺少 seal 不得以 GoalRef 冒充控制或关闭证明。
 - 配置协作接收方的本地 `CollaborationAdmission`。未配置协作时，创建方法在新增会话、额度或委派责任之前返回 unsupported；已存责任仍可读取、控制及恢复。
@@ -56,9 +64,19 @@ Task 测试使用持久 SQLite、真实 PostgreSQL、实际 Memory/ObjectStore�
 
 执行准备回归以真实 SQLite 原 Service/Dispatcher/Job 边界复现实际 5.2 秒输入准备耗尽原五秒窗口，再验证准备完成后的首窗口。期间取消、真实 DevIdentity 撤权均阻止派发；实际 Memory/ObjectStore 出版后丢失准备回执，恢复得到同一 ContentRef 和预留；接纳 invoke 后丢回执并跨原窗口期限重放，准确原命令和窗口仍保留。该准备边界不提供真实模型或工具执行效果。
 
+独立 deadline 回归在 SQLite、PostgreSQL 的公开提交、暂停、输入等待、原命令提交答复丢失及重开边界通过，选定双库 race 实际 exit 0（47.056s）。未知账务不被到期清零，迟到原累计费用按差额关闭。此前偏好测试保留的原 active Task 在修复后沿同一身份到期 failed，原 Goal、Submit applied 回执、已闭操作和无 Result 事实保持；该恢复不是新的偏好成功验收。
+
+完成来源准备的 SQLite 正反例 race 实际 exit 0（18.906s），覆盖本次依据、准备期间取消、暂停 fencing 和无可选端口的原行为。它证明 Task 端口与原完成事务的交接，不能替代独立设备宿主的完整成果链验收。
+
+Source 撤回后的原模型最低账务依据由 Brain 原账本与宿主的受限 accounting Content 端口提供，保持原 CallID、Decision、UseRef、累计金额和回执，不读取或携带已撤回的正文。开发宿主四条路径的最终双库 race 实际 exit 0（375.051s）：已知费用结清、旧 applied 依据重用、丢回复仍未知，以及停用当前模型配置后归并原 Use。原 USD0.00024 及未知预留分别保留；31min 后只能重用原 applied 出版回执，不能刷新原上传责任。固定源码、八个原 Scope/Call/Use 与日志摘要见 `/workspace/harness-dev-environment/model-minimum-invoice-final-1a47477-verification.json`。这不能由 Task 差额算法夹具代替，也不能替代 WASI 整链撤源验收。
+
+工单 14 的四种 resolver/当前材料正反例两库 race 实际通过（SQLite 107.919s、PostgreSQL 108.683s）；有限普通偏好三报告最终 SQLite race 实际通过 623.820s。原偏好、更正、撤回分别影响真实文件的 bullet/plain/default 格式，九项真实操作、六项独立 verified 检查、三次原查询、原 Result/submit 回执重开均完整；退出后的只读原账务核对为 spent/reserved=0、accounting_open=false。原 Task CompletedAt 均早于各自五分钟 deadline。准确源码 477 文件摘要与原引用索引在 `/workspace/harness-dev-environment/context14-preference-final-1a47477-sqlite-race/context14-final-verification-v2.json`；此前 PostgreSQL normal 432.301s 与两次 SQLite 观察失败按各自实现记录，原失败不复活。本轮只增加测试观察者的有限等待，没有放宽 Task、命令、控制窗口或 Lookup 期限。
+
 运行入口：`go test ./internal/task -count=1`、`go vet ./internal/task`、`go test -race ./internal/task -count=1`。PostgreSQL 测试只在 `HARNESS_TEST_POSTGRES_DSN` 配置时运行；未配置时明确 skip，不计为 PostgreSQL 通过。密码从运行环境取得，不进仓库或输出。
 
 本轮开发闭环采用受限确定性规则、托管文件真实写入及独立读回；模型物理调用未启用，执行和许可费用明确为零。付费模型、工具和 Grant authority 的真实账户未配置，对应出站不启用。累计费用及退款算法测试使用字面金额夹具，不能作为真实供应商费用证据。
+
+上段指工单 03 的首个零费用报告夹具。后续工单通过实际 loopback HTTP、设备文件、模拟 GUI、WASI 及其原账务取得的证据分别记录；它们不等于真实供应商账户、物理手机或生产配置已验证。工单 14 的有限普通偏好只在原用户允许的 plain/bullet 选项内改变报告格式，原标题、正文、路径和本人 SourceEvidence 不变，仍需实际文件及独立条件核验。
 
 ## 证据边界
 

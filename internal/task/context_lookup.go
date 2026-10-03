@@ -260,6 +260,21 @@ func (s *Service) finishContextLookup(ctx context.Context, store runtime.Store, 
 			if declaredBytes > result.ReadBytesUpperBound {
 				readErr = invalid("context_result_read_bound")
 			}
+			if readErr == nil && len(t.ContextMaterials)+len(b.Materials)+len(result.Materials) > 64 {
+				readErr = invalid("context_material_capacity")
+			}
+			if readErr == nil {
+				if gate, ok := s.ports.ContextLookup.(ContextMaterialGate); ok {
+					// 尚未发布的前序查找仍属于原batch；完成下一项前重核其准确材料。
+					materials := append(append([]ContextMaterial{}, b.Materials...), result.Materials...)
+					if err = gate.CheckMaterialsTx(ctx, tx, submitterAuth(scope, t), materials); err != nil {
+						if !contextDefinitive(err) {
+							return err
+						}
+						readErr = err
+					}
+				}
+			}
 			if readErr == nil {
 				if err = s.authorize(ctx, tx, submitterAuth(scope, t), "task.context", refs, objects); err != nil {
 					if !contextDefinitive(err) {
@@ -267,9 +282,6 @@ func (s *Service) finishContextLookup(ctx context.Context, store runtime.Store, 
 					}
 					readErr = err
 				}
-			}
-			if readErr == nil && len(t.ContextMaterials)+len(b.Materials)+len(result.Materials) > 64 {
-				readErr = api.E("overloaded", "context_material_capacity")
 			}
 		}
 		if readErr != nil {
