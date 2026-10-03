@@ -54,6 +54,21 @@ func New(config Config, ports Ports) (*Service, error) {
 	if len(config.Policies) == 0 {
 		return nil, fmt.Errorf("task policies must be explicitly configured")
 	}
+	if config.ContextLimits.MaxCalls == 0 {
+		config.ContextLimits.MaxCalls = 9
+	}
+	if config.ContextLimits.MaxBytes == 0 {
+		config.ContextLimits.MaxBytes = api.MaxJSONBytes
+	}
+	if config.ContextLimits.MaxTokens == 0 {
+		config.ContextLimits.MaxTokens = config.ContextLimits.MaxBytes
+	}
+	if config.ContextLimits.PerLookupBytes == 0 {
+		config.ContextLimits.PerLookupBytes = min(16<<10, config.ContextLimits.MaxBytes, config.ContextLimits.MaxTokens)
+	}
+	if config.ContextLimits.MaxCalls > 9 || config.ContextLimits.MaxBytes > api.MaxJSONBytes || config.ContextLimits.MaxTokens > api.MaxJSONBytes || config.ContextLimits.PerLookupBytes > min(config.ContextLimits.MaxBytes, config.ContextLimits.MaxTokens) {
+		return nil, fmt.Errorf("unbounded context lookup configuration")
+	}
 	if config.MaxTasksPerSubject == 0 {
 		config.MaxTasksPerSubject = 64
 	}
@@ -454,6 +469,8 @@ func (s *Service) submitTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 		return TaskOutput{}, e
 	}
 	t := taskState{Task: api.Task{TenantID: tx.Scope().TenantID, TaskID: c.TargetID, OrchestratorID: tx.Scope().OwnerID, SubmitCommandID: c.CommandID, GoalRef: in.GoalRef, GoalRevision: 1, ControlRevision: 1, Revision: 1, PolicyRef: in.PolicyRef, Requirements: []api.Requirement{}, Deadline: in.Deadline, Status: "active", Control: "running", WaitReasons: []api.WaitReason{}, Budget: balances, OpenEffects: api.CollectionSummary{CollectionRevision: 1, Complete: true}, RequirementsState: "collecting", RequirementsDigest: digest, AcceptanceRef: in.AcceptanceRef}, SubjectID: auth.SubjectID, SubmitterGeneration: auth.CredentialGeneration, SubmitterRoles: append([]string{}, auth.Roles...), Policy: p, InitialGoalRef: in.GoalRef, Amendments: []api.ContentRef{}, Ancestors: []string{}, SemanticKeys: []string{}, CurrentArtifactRefs: []api.ContentRef{}, ControlTargets: []string{}, Credits: []api.Amount{}, RelationRevision: 1}
+	t.ContextBudget = ContextBudget{Limits: s.config.ContextLimits}
+	t.ContextMaterials = []ContextMaterial{}
 	sourceKind := "user_input"
 	source := tx.Scope().Ref(c.CommandID, 1)
 	if in.SourceSubmissionRef != nil {

@@ -144,11 +144,17 @@ type DraftAction struct {
 	// 明确披露本轮已出版的准确本地内容，允许声明尚未分配真实引用的参数自身。
 	DisclosedLocalIDs []string `json:"disclosed_local_ids,omitempty"`
 }
+type DraftLookup struct {
+	Kind         string        `json:"kind"`
+	TargetRef    api.ObjectRef `json:"target_ref"`
+	QueryLocalID string        `json:"query_local_id"`
+}
 type Draft struct {
 	Kind                 string             `json:"kind"`
 	ReasonLocalID        string             `json:"reason_local_id"`
 	Requirements         []DraftRequirement `json:"requirements,omitempty"`
 	Actions              []DraftAction      `json:"actions,omitempty"`
+	Lookups              []DraftLookup      `json:"lookups,omitempty"`
 	ArtifactLocalIDs     []string           `json:"artifact_local_ids,omitempty"`
 	ExistingArtifactRefs []api.ContentRef   `json:"existing_artifact_refs,omitempty"`
 	QuestionLocalID      string             `json:"question_local_id,omitempty"`

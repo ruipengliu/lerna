@@ -15,3 +15,5 @@ Implementer: task_impl
 ## Comments
 
 2026-10-03：全项目范围复核后补入原实施任务图，未改变用户授权或领域裁决。
+
+2026-10-03，第一垂直片（仍 claimed）：Brain/provider 已接闭合四 kind / 1..3 lookup 草稿，本方准确 publication query_local_id 转成原 QueryRef；真实 HTTP 模型一次请求及 SQLite 重开保留原 CallID/查询字节。Task 保存原查询 batch/Job、固定目标/控制、期限与累计 calls/bytes/tokens 保守上界；依赖只重试原查询，等待禁止新 Decision，已读材料保留而本人 SourceEvidence 不变。当前只有这些责任与 typed resolver/ContextCommitter seam 通过，开发宿主四 resolver 和实际 C2 偏好产物尚未完成，不能据此声称完整 need_context。选定 Brain/Task 正反例 race 实际 exit 0：4.323s / 46.465s；`need_context` 丢原材料 / 未接原查询责任 RED 分别 1.236s / 2.095s。
