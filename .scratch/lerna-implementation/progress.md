@@ -6,7 +6,12 @@
 
 ## 当前状态
 
-- 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。切片02开始，03–22仍未开始。
+- 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
+- 切片 02：**in-progress**。八张核心票的 53 条验收与额外票 09 的 5 条验收均已 resolved；最终容量产品 `06ab246`、worker `cdc7ae6` 经 merger 合入 `96a0ecc`。本地完整双库集成 60.305s、竞态 91.786s，通过有限队列、共享配额、动态公平次序、独立类别运行、无执行额度维护及真实旧数据恢复。整片仍待两轴审查、架构审查和准确最终 CI，详见[票06证据](../lerna-02-durable-work/issues/06-fair-capacity-and-quotas.md#comments)。
+- 切片 03–22：**not-started**。03当前端口复核和04决策纲要仅在/tmp，前置整片退出后再采用、发布和实施。
+
+## 切片 01 过程检查点（历史记录）
+
 - 任务 01 证据：锁定依赖干净重装、`make check`、`make test-race` 通过；41 项共同正反夹具及合法值的真实 Go→TS／TS→Go 往返通过。详细记录见[任务 01](../lerna-01-command-contracts/issues/01-exact-contract-roundtrip.md#comments)。这些只证明公共值合同范围。
 - 任务 02 证据：`make bootstrap`、`make check`、`make test-race` 通过；共同语料共 109 项（41 值、68 命令），两端错误分类及合法输入真实往返通过；6 项生成器拒绝探针通过。详细记录见[任务 02](../lerna-01-command-contracts/issues/02-strict-command-validation.md#comments)。已按决策消除 TypeScript 内部模块反向导入公共 facade 的循环依赖。
 - 任务 03 证据：`make check` 通过；46 项共同摘要案例（31 独立预期、15 拒绝），覆盖 UTF-16 键排序、业务／主体变化、重传及 1 MiB 边界。详细记录见[任务 03](../lerna-01-command-contracts/issues/03-canonical-command-digest.md#comments)。

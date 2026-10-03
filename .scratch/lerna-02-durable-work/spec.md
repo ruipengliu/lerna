@@ -57,6 +57,8 @@ Depends on: [01](../lerna-01-command-contracts/spec.md)
 
 ## Further Notes
 
+2026-10-03，全部八张核心票及额外锁范围票09已 resolved。最终容量产品 `06ab246`、worker `cdc7ae6` 经 merger 合入 `96a0ecc`；双库 mandatory count1 完整集成60.305s、integration-race91.786s，基础check/race、模块与27项冻结历史manifest通过。真实等待/配额/公平/类别执行机会及到期维护已经验证，具体正常、故障、历史来源和范围见[票06证据](issues/06-fair-capacity-and-quotas.md#comments)及其引用。原已发布0001–0004和四组历史夹具保持，追加0005；内部Host版本host-durable-work-1，公共1.0.0仍仅command.get。本片仍in-progress，整片两轴审查、架构审查与准确最终远端CI尚待完成；历史未知schema/CREATE容器限制保持。
+
 2026-10-03，票02 SQLite 接纳已完成；实际 v1 writer `f4fb057`、两库共同接纳套件、真实文件/进程排除/busy/取消/关闭生命周期及 v1 恢复来源见 [票02证据](issues/02-sqlite-durable-admission.md#comments)。本片仍 in-progress，未把部分接纳出口当全部领取、调度或崩溃恢复完成。
 
 进程崩溃测试不等于断电或可用区耐久证明。首次生产的同步提交、故障域和旧主隔离在 17 验收。

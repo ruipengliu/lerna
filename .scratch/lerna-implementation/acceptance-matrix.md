@@ -83,7 +83,19 @@ F23 的实际 cell 崩溃恢复尚未实现，不能标记为通过；22 只验�
 
 F01/F02仅完成本票的原回执/原责任/同键冲突与重开范围；SIGKILL、SQLite Claim、调度、正文清理后的墓碑和整个G2出口仍需后票。TMPDIR指向本轮自登记overlayfs目录的真实两库integration/race通过；未宣称断电或生产故障域耐久。
 
-## 切片02票03的PG证据（切片仍在进行）
+## 切片02票06完整本地检查点（整片仍在进行）
+
+2026-10-03，产品06ab246、worker cdc7ae6经merger合入96a0ecc。八张核心票53项及额外09五项验收已resolved；最终完整mandatory双库count1集成60.305s、integration-race91.786s通过，来源27项checksum不变。以下是本机Host范围证据，整片尚待两轴审查、架构审查和准确最终CI。
+
+- 普通有效Claim饱和时，真实三类别运行循环仍完成control/reconciliation的Start、literal hello hash及Finish；跨tenant、同tenant多owner和8并发worker共享数据库配额。
+- 有限queue最后位置竞争只接纳一份，落败原身份可重试；活跃原Job的新revision复用位置，done重触发背压，缩容overhang保责任。
+- 持久tenant FIFO、等待/分配观察、due/Job有界分页和高水位通过：新/恢复者进入现等待者尾部，重开仍保序；PG真实65个锁前缀另验证跳锁后的健康后缀，SQLite保留实际单writer范围。
+- quota0到期和attempt耗尽维护无需新执行Claim，准确关闭原revision并保留新工作、异revision活Claim和原成功Projection；正常最后Start不会被提前关闭。
+- 原04/07/08业务恢复已经统一实际Start、pool门禁与Clock，真实v1/v2来源在0005升级后继续原身份/Job。scope错装及完整SQLite副本反例有正常对照；路由/部署fork仍依赖可信装配与drain。
+
+准确版本、全部正常/故障观察、命令和限制见[06 Comments](../lerna-02-durable-work/issues/06-fair-capacity-and-quotas.md#comments)。04历史未知schema和07未知CREATE容器未猜删；这些证据不关闭真实外部效果、生产故障域或G2的其他切片。
+
+## 切片02票03的PG证据（历史检查点）
 
 2026-10-03，准确实现 `18b80ce`，Go1.27.1/pgx5.11.0/PostgreSQL18.6，READ COMMITTED、同步提交和有限事务/statement/lock期限；全部29个真实PG测试、基础check/race及integration-race通过。详情见[票03 Comments](../lerna-02-durable-work/issues/03-pg-revision-claims.md#comments)。
 
