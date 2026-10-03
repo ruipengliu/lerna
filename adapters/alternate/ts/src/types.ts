@@ -1,6 +1,39 @@
-import type { ComponentRef, JSONValue, ObjectRef } from "@harness/sdk";
+import type { ComponentRef, ContentRef, JSONValue, ObjectRef } from "@harness/sdk";
 import { ProtocolError } from "@harness/sdk";
 export type Document = Record<string, JSONValue>;
+export interface PeerEndpoint {
+  origin: string;
+  owner_id: string;
+  token_file: string;
+  ca_file: string;
+  location: "local" | "cloud";
+  policy_ref?: ComponentRef;
+  peer_subject_id?: string;
+  peer_generation?: number;
+}
+export interface ForeignSource extends PeerEndpoint {
+  database_id: string;
+  key_id: string;
+  peer_subject_id: string;
+  peer_generation: number;
+  purposes: string[];
+}
+// Runtime Schema 由 Go 实际 Source.Register 的单一合同源派生。
+export interface ForeignReference {
+  content_ref: ContentRef;
+  copy_id: string;
+  register_command_id: string;
+  release_command_id: string;
+  reference_intent_ref: ObjectRef;
+  holder_ref: ObjectRef;
+  purpose: string;
+  location: string;
+  retain_until: string;
+}
+export interface ForeignUse {
+  reference: ForeignReference;
+  proof: Document;
+}
 export interface Principal {
   subject_id: string;
   generation: number;
@@ -14,6 +47,7 @@ export interface Config {
   tenant_id: string;
   owner_id: string;
   database: string;
+  expected_database_id?: string;
   port: number;
   tls_cert_file: string;
   tls_key_file: string;
@@ -39,7 +73,13 @@ export interface Config {
     jwk: { kty: "EC"; crv: "P-256"; x: string; y: string };
   }[];
   uses?: Document[];
-  fault?: { drop_response_method?: string; pause_jobs?: boolean; crash_after_start?: boolean };
+  foreign_sources?: ForeignSource[];
+  fault?: {
+    drop_response_method?: string;
+    pause_jobs?: boolean;
+    crash_after_start?: boolean;
+    crash_after_foreign_write?: boolean;
+  };
 }
 export function object(value: unknown): Document {
   if (!value || typeof value !== "object" || Array.isArray(value))

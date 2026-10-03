@@ -370,9 +370,10 @@ async function http(runtime: Runtime, req: IncomingMessage, res: ServerResponse)
       if (url.searchParams.get("location") !== "local" || !url.searchParams.get("purpose"))
         reject("invalid_request", "read_scope_required");
       const ref = parseStrict(Buffer.from(url.searchParams.get("ref") ?? "", "base64url")),
-        body = runtime.store.tx(() =>
-          runtime.handler.bytes?.(p, ref, url.searchParams.get("purpose") ?? ""),
-        );
+        purpose = url.searchParams.get("purpose") ?? "",
+        body = runtime.handler.readBytes
+          ? await runtime.handler.readBytes(p, ref, purpose)
+          : runtime.store.tx(() => runtime.handler.bytes?.(p, ref, purpose));
       resolve();
       res.writeHead(200, {
         "Content-Type": "application/octet-stream",
