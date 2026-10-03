@@ -6,6 +6,7 @@ import (
 	filedriver "github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
+	"github.com/ruipengliu/lerna/internal/interaction"
 	"github.com/ruipengliu/lerna/internal/task"
 	"github.com/ruipengliu/lerna/runtime"
 )
@@ -26,11 +27,56 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 		}
 	}
 	processed := []api.ContentRef{t.GoalRef}
+	histories := []interaction.HistoryView{}
+	requiredHistory := ""
+	original, e := c.a.Store.LookupCommand(ctx, scope, t.SubmitCommandID)
+	if e != nil {
+		return task.PreparedDecision{}, e
+	}
+	var submitted task.SubmitInput
+	if original.Command.Method == "task.submit" {
+		if e = api.Decode(original.Command.Payload, &submitted); e != nil {
+			return task.PreparedDecision{}, e
+		}
+		if submitted.SourceSubmissionRef != nil {
+			requiredHistory = submitted.SourceSubmissionRef.ObjectID
+		}
+	}
+	seenHistory := map[string]bool{}
 	for _, source := range facts.SourceRefs {
 		processed = append(processed, source.ContentRef)
+		if source.SubmissionRef == nil || source.SubmissionRef.ObjectID == t.SubmitCommandID || seenHistory[source.SubmissionRef.ObjectID] {
+			continue
+		}
+		seenHistory[source.SubmissionRef.ObjectID] = true
+		history, err := c.a.Interaction.History(ctx, c.a.Store, scope, auth, *source.SubmissionRef)
+		if api.IsCode(err, "not_found") && source.SubmissionRef.ObjectID != requiredHistory {
+			continue // 非Session的原输入/修订依据由Task自己的源事实核验。
+		}
+		if err != nil {
+			return task.PreparedDecision{}, err
+		}
+		if !history.Complete {
+			return task.PreparedDecision{}, api.E("dependency_unavailable", "history_incomplete")
+		}
+		histories = append(histories, history)
+		processed = append(processed, history.Submission.Submission.ContentRef)
+		processed = append(processed, history.Submission.AttachmentRefs...)
+		for _, message := range history.Messages {
+			processed = append(processed, message.ContentRef)
+		}
 	}
 	for _, op := range facts.Operations {
 		processed = append(processed, op.Intent.ProcessedSourceRefs...)
+		if c.a.Model != nil {
+			operation, err := (executionBridge{c.a}).Read(ctx, scope, op.Fact.Ref)
+			if err != nil {
+				return task.PreparedDecision{}, err
+			}
+			if operation.ResultRef != nil {
+				processed = append(processed, *operation.ResultRef)
+			}
+		}
 	}
 	processed = append(processed, facts.Artifacts...)
 	for _, check := range facts.Checks {
@@ -49,6 +95,20 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 	}
 	key := t.TaskID + "/" + string(api.Raw([]uint64{t.GoalRevision, t.ControlRevision, t.Revision}))
 	snapshotID := stableID("snapshot", key)
+	if c.a.Model != nil {
+		packet, err := c.a.Publish(ctx, scope, c.a.ServiceAuth, stableID("content", "context-facts/"+key), "application/vnd.harness.context+json", api.Raw(struct {
+			Facts        task.ContextFacts         `json:"facts"`
+			History      []interaction.HistoryView `json:"history"`
+			ArtifactRule api.ComponentRef          `json:"artifact_rule"`
+			SavedRule    api.ComponentRef          `json:"saved_rule"`
+			AnswerSchema api.ComponentRef          `json:"answer_schema_ref"`
+			GoalSchema   api.Schema                `json:"goal_schema"`
+		}{facts, histories, c.a.ArtifactRule, c.a.SavedRule, c.a.AnswerSchema, brain.GoalSchema()}), processed, []api.ContentRef{})
+		if err != nil {
+			return task.PreparedDecision{}, err
+		}
+		processed = append(processed, packet)
+	}
 	selection, e := c.a.Publish(ctx, scope, c.a.ServiceAuth, stableID("content", "selection/"+key), "application/json", api.Raw(struct {
 		TaskRef         api.ObjectRef    `json:"task_ref"`
 		RequiredSources []api.ContentRef `json:"required_sources"`
@@ -58,23 +118,31 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 	if e != nil {
 		return task.PreparedDecision{}, e
 	}
-	snap := api.Snapshot{SnapshotID: snapshotID, Revision: 1, TaskRef: scope.Ref(t.TaskID, t.Revision), GoalRevision: t.GoalRevision, ControlRevision: t.ControlRevision, GoalRef: t.GoalRef, Requirements: t.Requirements, RequirementsDigest: t.RequirementsDigest, CoverageRef: t.CurrentCoverageRef, RequirementsState: t.RequirementsState, Purpose: purpose, FactRefs: facts.FactRefs, UnresolvedCollections: facts.UnresolvedCollections, PolicyRef: t.PolicyRef, InstallLockRef: c.a.InstallLock, ModelProfileRef: c.a.Profile.Ref, CapabilityRefs: []api.ComponentRef{filedriver.FileReadCapability().Ref, filedriver.FileWriteCapability().Ref}, BindingRefs: []api.ObjectRef{c.a.ReadBinding, c.a.WriteBinding}, MaterialRefs: processed, SelectionReportRef: selection, ProcessedSources: processed, ReservedOutputTokens: 4096, SafetyMarginTokens: c.a.Profile.SafetyMargin, CountMode: "upper_bound", TokenizerRef: component("rule-byte-count")}
+	reservedOutput := uint64(4096)
+	if reservedOutput > c.a.Profile.MaxOutputTokens {
+		reservedOutput = c.a.Profile.MaxOutputTokens
+	}
+	snap := api.Snapshot{SnapshotID: snapshotID, Revision: 1, TaskRef: scope.Ref(t.TaskID, t.Revision), GoalRevision: t.GoalRevision, ControlRevision: t.ControlRevision, GoalRef: t.GoalRef, Requirements: t.Requirements, RequirementsDigest: t.RequirementsDigest, CoverageRef: t.CurrentCoverageRef, RequirementsState: t.RequirementsState, Purpose: purpose, FactRefs: facts.FactRefs, UnresolvedCollections: facts.UnresolvedCollections, PolicyRef: t.PolicyRef, InstallLockRef: c.a.InstallLock, ModelProfileRef: c.a.Profile.Ref, CapabilityRefs: []api.ComponentRef{filedriver.FileReadCapability().Ref, filedriver.FileWriteCapability().Ref}, BindingRefs: []api.ObjectRef{c.a.ReadBinding, c.a.WriteBinding}, MaterialRefs: processed, SelectionReportRef: selection, ProcessedSources: processed, ReservedOutputTokens: reservedOutput, SafetyMarginTokens: c.a.Profile.SafetyMargin, CountMode: "upper_bound", TokenizerRef: c.a.TokenizerRef}
 	goal, e := c.a.Memory.Read(ctx, scope, auth, t.GoalRef, "brain.input")
 	if e != nil {
 		return task.PreparedDecision{}, e
 	}
-	engine := &brain.RuleEngine{}
-	encoding, e := engine.Encode(ctx, snap, goal, c.a.Profile)
+	encoding, e := c.a.Engine.Encode(ctx, snap, goal, c.a.Profile)
 	if e != nil {
 		return task.PreparedDecision{}, e
 	}
 	snap.InputTokens = encoding.InputTokens
 	snap.EncodedDigest = encoding.Digest
+	snap.CountMode = encoding.CountMode
 	ref, e := c.a.Publish(ctx, scope, c.a.ServiceAuth, stableID("content", "snapshot/"+key), "application/vnd.harness.snapshot+json", api.Raw(snap), processed, []api.ContentRef{})
 	if e != nil {
 		return task.PreparedDecision{}, e
 	}
-	return task.PreparedDecision{Snapshot: snap, SnapshotRef: ref, BrainOwnerID: scope.OwnerID, CostBound: []api.Amount{{Unit: "USD", Value: "0"}}, DecisionID: stableID("decision", key), CommandID: stableID("command", "decision/"+key)}, nil
+	bound, e := c.a.decisionCost(snap)
+	if e != nil {
+		return task.PreparedDecision{}, e
+	}
+	return task.PreparedDecision{Snapshot: snap, SnapshotRef: ref, BrainOwnerID: scope.OwnerID, CostBound: bound, DecisionID: stableID("decision", key), CommandID: stableID("command", "decision/"+key)}, nil
 }
 func stableID(prefix, key string) string { return prefix + "_" + api.Hash([]byte(key))[7:39] }
 

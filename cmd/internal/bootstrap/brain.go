@@ -16,7 +16,15 @@ func (b brainBridge) Dispatch(ctx context.Context, s runtime.Scope, i api.Decisi
 	if e != nil {
 		return e
 	}
-	c := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: i.BrainOwnerID, CommandID: i.CommandID, TargetID: i.DecisionID, Method: "brain.decide", ExpiresAt: t.Deadline, Payload: api.Raw(brain.DecideInput{DecisionID: i.DecisionID, TaskRef: i.TaskRef, SnapshotRef: i.SnapshotRef, SnapshotRevision: i.SnapshotRevision, ModelProfileRef: i.ModelProfileRef, UseRefs: []api.ObjectRef{}, Limits: []api.Amount{{Unit: "USD", Value: "0"}}, Deadline: t.Deadline})}
+	limits, e := b.a.decisionCost(snap)
+	if e != nil {
+		return e
+	}
+	uses := []api.ObjectRef{}
+	if b.a.Model != nil {
+		uses = append(uses, s.Ref(modelUseID(i.DecisionID), 1))
+	}
+	c := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: i.BrainOwnerID, CommandID: i.CommandID, TargetID: i.DecisionID, Method: "brain.decide", ExpiresAt: t.Deadline, Payload: api.Raw(brain.DecideInput{DecisionID: i.DecisionID, TaskRef: i.TaskRef, SnapshotRef: i.SnapshotRef, SnapshotRevision: i.SnapshotRevision, ModelProfileRef: i.ModelProfileRef, UseRefs: uses, Limits: limits, Deadline: t.Deadline})}
 	r, e := b.a.Dispatcher.Command(ctx, b.a.ServiceAuth, api.Raw(c))
 	if e != nil {
 		return e

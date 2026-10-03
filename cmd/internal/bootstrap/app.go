@@ -7,8 +7,10 @@ import (
 	"fmt"
 	"github.com/ruipengliu/lerna/adapters/collaboration"
 	execadapter "github.com/ruipengliu/lerna/adapters/execution"
+	rpcadapter "github.com/ruipengliu/lerna/adapters/grpc"
 	"github.com/ruipengliu/lerna/adapters/objectstore"
 	"github.com/ruipengliu/lerna/adapters/platform"
+	"github.com/ruipengliu/lerna/adapters/providers"
 	"github.com/ruipengliu/lerna/adapters/wss"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
@@ -45,12 +47,16 @@ type App struct {
 	ContentPolicy                                                    memory.Policy
 	TaskPolicy                                                       task.TaskPolicy
 	Profile                                                          brain.Profile
+	Engine                                                           brain.Engine
+	Model                                                            *providers.OpenAI
+	TokenizerRef                                                     api.ComponentRef
 	ArtifactRule, SavedRule, CoverageRule, AnswerSchema, InstallLock api.ComponentRef
 	ReadBinding, WriteBinding                                        api.ObjectRef
 	ApplicationBinding                                               api.ObjectRef
 	ApplicationEventSchema                                           api.Schema
 	GrantID                                                          string
 	OwnsTargets                                                      bool
+	Role                                                             string
 }
 
 func component(name string) api.ComponentRef {
@@ -68,7 +74,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e != nil {
 		return nil, e
 	}
-	a := &App{Config: c, Store: st, Registry: runtime.NewRegistry(), OwnsTargets: role == "dev" || role == "worker"}
+	a := &App{Config: c, Store: st, Registry: runtime.NewRegistry(), OwnsTargets: role == "dev" || role == "worker", Role: role}
 	ok := false
 	defer func() {
 		if !ok {
@@ -165,8 +171,12 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e != nil {
 		return nil, fmt.Errorf("construct Execution: %w", e)
 	}
-	engine := &brain.RuleEngine{Facts: factSource{a}, Goals: factSource{a}, ArtifactRule: a.ArtifactRule, SavedRule: a.SavedRule, AnswerSchema: a.AnswerSchema, ReadCapability: execadapter.FileReadCapability().Ref, WriteCapability: execadapter.FileWriteCapability().Ref, ReadBinding: a.ReadBinding, WriteBinding: a.WriteBinding}
-	a.Brain, e = brain.New(brain.Config{Profiles: []brain.Profile{a.Profile}, Content: brainContent{a}, Engine: engine, Gate: brainGate{a}, Participants: []string{"content", "memory", "task", "platform"}})
+	a.Engine = &brain.RuleEngine{Facts: factSource{a}, Goals: factSource{a}, ArtifactRule: a.ArtifactRule, SavedRule: a.SavedRule, AnswerSchema: a.AnswerSchema, ReadCapability: execadapter.FileReadCapability().Ref, WriteCapability: execadapter.FileWriteCapability().Ref, ReadBinding: a.ReadBinding, WriteBinding: a.WriteBinding}
+	a.TokenizerRef = component("rule-byte-count")
+	if e = a.configureModel(); e != nil {
+		return nil, e
+	}
+	a.Brain, e = brain.New(brain.Config{Profiles: []brain.Profile{a.Profile}, Content: brainContent{a}, Engine: a.Engine, Gate: brainGate{a}, Participants: []string{"content", "memory", "task", "platform", "governance"}})
 	if e != nil {
 		return nil, fmt.Errorf("construct Brain: %w", e)
 	}
@@ -240,7 +250,7 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 			return e
 		}
 		if exists {
-			return nil
+			return a.provisionModelGrantTx(ctx, tx)
 		}
 		now, e := tx.Now(ctx)
 		if e != nil {
@@ -249,7 +259,7 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 		if e = a.Governance.ProvisionGrantTx(ctx, tx, a.ServiceAuth, api.Grant{GrantID: a.GrantID, OwnerID: a.Scope.OwnerID, Revision: 1, SubjectRef: a.ServiceAuth.Ref(a.Scope.OwnerID), Resources: []string{"managed-files"}, Actions: []string{"file.read", "file.write"}, Purposes: []string{"goal_action", "requirement_check"}, Recipients: []string{a.Scope.OwnerID}, Locations: []string{"cloud"}, Mode: "continuous", State: "active", NotBefore: api.Time(now), ExpiresAt: a.Config.PolicyExpiresAt, Limits: []api.Amount{{Unit: "USD", Value: "100"}}}); e != nil {
 			return fmt.Errorf("provision development grant: %w", e)
 		}
-		return nil
+		return a.provisionModelGrantTx(ctx, tx)
 	})
 	if status == runtime.CommitUnknown {
 		return runtime.ErrCommitUnknown
@@ -270,8 +280,12 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 }
 func (a *App) Close() error {
 	var err error
+	if a.Model != nil {
+		err = a.Model.Close()
+		a.Model = nil
+	}
 	if a.Files != nil {
-		err = a.Files.Close()
+		err = errors.Join(err, a.Files.Close())
 		a.Files = nil
 	}
 	if a.Phones != nil {
@@ -285,5 +299,13 @@ func (a *App) Close() error {
 	return err
 }
 func (a *App) Gateway() (*wss.Server, error) {
-	return wss.New(wss.Config{OwnerID: a.Config.OwnerID, Store: a.Store, Registry: a.Registry, Identity: a.Identity, Processor: wss.LocalProcessor{Dispatcher: a.Dispatcher}, Content: a.Memory, Uploader: a.Memory, Development: &wss.DevelopmentConfiguration{TenantID: a.Config.TenantID, ContentPolicyRef: a.ContentPolicy.PolicyRef, TaskPolicyRef: a.TaskPolicy.PolicyRef, Budget: []api.Amount{{Unit: "USD", Value: "20"}}, GoalSchema: brain.GoalSchema(), RetentionSeconds: 86400, TaskDeadlineSeconds: 1800, ApplicationBindingRef: &a.ApplicationBinding, ApplicationEvents: []wss.DevelopmentEvent{{Name: "archive_demo_session", Schema: a.ApplicationEventSchema, RequiresRendered: true}}}, Origins: a.Config.Origins, AllowInsecureLoopback: a.Config.Development, StaticDir: a.Config.StaticDir, Location: "cloud", MaxConnections: 128, MaxQueuedBytes: 64 << 20})
+	var processor wss.Processor = wss.LocalProcessor{Dispatcher: a.Dispatcher}
+	if a.Role == "gateway" {
+		forward, err := rpcadapter.NewForwardProcessor("grpc://"+a.Config.GRPCAddr, a.Config.OwnerID, a.Registry.Contracts(), a.forwardCredential, a.Config.Development)
+		if err != nil {
+			return nil, err
+		}
+		processor = forward
+	}
+	return wss.New(wss.Config{OwnerID: a.Config.OwnerID, Store: a.Store, Registry: a.Registry, Identity: a.Identity, Processor: processor, Content: a.Memory, Uploader: a.Memory, Development: &wss.DevelopmentConfiguration{TenantID: a.Config.TenantID, ContentPolicyRef: a.ContentPolicy.PolicyRef, TaskPolicyRef: a.TaskPolicy.PolicyRef, Budget: []api.Amount{{Unit: "USD", Value: "20"}}, GoalSchema: brain.GoalSchema(), RetentionSeconds: 86400, TaskDeadlineSeconds: 1800, ApplicationBindingRef: &a.ApplicationBinding, ApplicationEvents: []wss.DevelopmentEvent{{Name: "archive_demo_session", Schema: a.ApplicationEventSchema, RequiresRendered: true}}}, Origins: a.Config.Origins, AllowInsecureLoopback: a.Config.Development, StaticDir: a.Config.StaticDir, Location: "cloud", MaxConnections: 128, MaxQueuedBytes: 64 << 20})
 }
