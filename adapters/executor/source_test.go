@@ -116,6 +116,10 @@ func TestTLSForeignSourceGateClosesNewReadsButRetainsOriginalCopyControl(t *test
 	if err != nil {
 		t.Fatalf("pure signature gate: %v", err)
 	}
+	_, err = consumer.Within(ctx, s, []string{"content"}, func(tx runtime.Tx) error { return port.VerifyTx(ctx, tx, a, r, metadata) })
+	if err != nil {
+		t.Fatalf("pure control signature gate: %v", err)
+	}
 	modified := proof
 	modified.PolicyValues.Subjects = []string{api.NewID("user")}
 	_, err = consumer.Within(ctx, s, []string{"content"}, func(tx runtime.Tx) error { return port.VerifyTx(ctx, tx, a, r, modified) })
