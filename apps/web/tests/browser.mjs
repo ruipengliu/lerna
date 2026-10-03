@@ -10,6 +10,11 @@ const flow = process.env.HARNESS_BROWSER_FLOW ?? "full";
 assert(["full", "surface", "control"].includes(flow), "unsupported HARNESS_BROWSER_FLOW");
 const expectedEvent = process.env.HARNESS_EXPECT_EVENT ?? "applied";
 assert(["applied", "rejected"].includes(expectedEvent), "unsupported HARNESS_EXPECT_EVENT");
+const existingControlTask = process.env.HARNESS_CONTROL_TASK;
+if (existingControlTask) {
+  assert.equal(flow, "control", "HARNESS_CONTROL_TASK only applies to the control slice");
+  assert.match(existingControlTask, /^task_[0-9a-f]{32}$/);
+}
 const implementation = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 const artifacts = resolve(process.env.HARNESS_BROWSER_ARTIFACTS ?? "/tmp/harness-web-browser");
 const token = (
@@ -27,6 +32,7 @@ const sent = [];
 const replies = [];
 const connections = [];
 const pageErrors = [];
+const controlDecisions = [];
 let dropNextSubmit = false;
 let dropped;
 let corruptNextRender = false;
@@ -153,23 +159,36 @@ function lastReceipt(method, offset = 0) {
     );
 }
 async function control(id, label, method, gate) {
-  await selectTask(id);
-  await page.locator(".inspector").getByRole("button", { name: label, exact: true }).click();
-  const offset = replies.length;
-  await page
-    .locator(".method-console")
-    .getByRole("button", { name: "耐久保存并提交", exact: true })
-    .click();
-  const decided = await until(() => lastReceipt(method, offset), method);
-  assert.equal(
-    decided.response.payload.stage,
-    "applied",
-    `${method} must have a real business decision`,
-  );
-  await until(
-    async () => (await page.locator(".inspector").innerText()).includes(gate),
-    `${method} original authority state`,
-  );
+  for (let attempt = 0; attempt < 4; attempt++) {
+    // Each click is a fresh user intent after an authoritative read. The SDK never changes CAS.
+    await selectTask(id);
+    await page.locator(".inspector").getByRole("button", { name: label, exact: true }).click();
+    const offset = replies.length;
+    await page
+      .locator(".method-console")
+      .getByRole("button", { name: "耐久保存并提交", exact: true })
+      .click();
+    const decided = await until(() => lastReceipt(method, offset), method);
+    const command = decided.request.payload;
+    const receipt = decided.response.payload;
+    assert(!controlDecisions.some((decision) => decision.command_id === command.command_id));
+    controlDecisions.push({
+      command_id: command.command_id,
+      method,
+      target_id: id,
+      expected_revision: command.expected_revision,
+      stage: receipt.stage,
+      ...(receipt.error ? { error: receipt.error } : {}),
+    });
+    if (receipt.stage === "rejected" && receipt.error.code === "revision_conflict") continue;
+    assert.equal(receipt.stage, "applied", `${method} must have a real business decision`);
+    await until(
+      async () => (await page.locator(".inspector").innerText()).includes(gate),
+      `${method} original authority state`,
+    );
+    return;
+  }
+  throw new Error(`${method}: four explicit fresh control intents met concurrent revisions`);
 }
 async function publishText(value, media = "text/plain") {
   await page.getByRole("button", { name: "内容与记忆", exact: true }).click();
@@ -335,8 +354,16 @@ try {
 
   // A free goal stays incomplete until an exact registered answer is consumed.
   if (flow !== "surface") {
-    waitingID = await freeGoal(runID, config, discovery);
+    waitingID = existingControlTask ?? (await freeGoal(runID, config, discovery));
     taskIDs.push(waitingID);
+    if (existingControlTask) {
+      await selectTask(waitingID);
+      const existing = JSON.parse(await page.locator(".inspector details pre").textContent());
+      const controlState = (existing.task ?? existing).control;
+      if (controlState === "paused") await control(waitingID, "恢复", "task.resume", "running");
+      else assert.equal(controlState, "running", "existing control responsibility must be open");
+      checks.push("original paused control Task resumed with a new explicit CAS intent");
+    }
     await control(waitingID, "暂停", "task.pause", "paused");
     await control(waitingID, "恢复", "task.resume", "running");
     if (flow === "full") {
@@ -452,7 +479,17 @@ try {
       .fill(JSON.stringify(config.application_binding_ref));
     await surfaceConsole.getByLabel("snapshot_ref", { exact: true }).fill(JSON.stringify(snapshot));
     await surfaceConsole.getByLabel("request_refs", { exact: true }).fill("[]");
+    const surfaceOffset = replies.length;
     await surfaceConsole.getByRole("button", { name: "耐久保存并提交", exact: true }).click();
+    const createdSurface = await until(
+      () => lastReceipt("surface.create", surfaceOffset),
+      "actual surface.create business decision",
+    );
+    assert.equal(
+      createdSurface.response.payload.stage,
+      "applied",
+      `surface.create: ${JSON.stringify(createdSurface.response.payload.error ?? {})}`,
+    );
     const renderer = page.locator(".presentation-renderer");
     await renderer.getByRole("button", { name: "打开此准确 Surface" }).click();
     assert.equal(
@@ -608,8 +645,22 @@ try {
     "narrow view must not horizontally overflow",
   );
   for (const name of ["输入与分支", "内容与记忆", "授权与治理", "安装与评测", "工作台"]) {
+    const navigationOffset = replies.length;
     await page.getByRole("button", { name, exact: true }).click();
     await page.getByRole("heading", { name, exact: true, level: 1 }).waitFor();
+    if (name === "内容与记忆") {
+      const listedMemory = await until(
+        () =>
+          replies
+            .slice(navigationOffset)
+            .find(({ request }) => request?.payload.method === "memory.list"),
+        "authoritative memory list with an explicit read purpose",
+      );
+      assert.equal(listedMemory.request.payload.payload.purpose, "memory.read");
+      assert.equal(listedMemory.request.payload.payload.limit, 20);
+      assert.equal(listedMemory.response.result_kind, "query_result");
+      checks.push("original authorized Memory collection with a fixed read purpose");
+    }
   }
   await page.getByRole("button", { name: "退出登录", exact: true }).click();
   await page.getByLabel("开发凭据").waitFor();
@@ -625,8 +676,18 @@ try {
   );
   const reportData = {
     implementation,
+    declared_backend_commit: process.env.HARNESS_BACKEND_COMMIT ?? null,
     base_url: baseURL,
     flow,
+    identity_scope: discovery.identity_scope,
+    identity_revision: discovery.identity_revision,
+    logical_service_id: discovery.logical_service_id,
+    tenant_id: config.tenant_id,
+    content_policy_ref: config.content_policy_ref,
+    task_policy_ref: config.task_policy_ref,
+    application_binding_ref: config.application_binding_ref,
+    node_version: process.version,
+    chromium_version: browser.version(),
     schema_digest: discovery.schema_digest,
     methods_digest: discovery.methods_digest,
     methods_count: discovery.methods.length,
@@ -635,6 +696,7 @@ try {
     content_security_policy: contentSecurityPolicy,
     profile: discovery.profile,
     task_ids: taskIDs,
+    control_decisions: controlDecisions,
     presentation_id: currentPresentation?.presentation_id,
     application_event_id: eventView?.event_id,
     application_event_stage: eventView?.receipt.stage,
@@ -650,7 +712,7 @@ try {
     .catch(() => {});
   await writeFile(
     resolve(artifacts, "failure-trace.json"),
-    `${JSON.stringify({ implementation, base_url: baseURL, connections, commands, replies, page_errors: pageErrors }, null, 2).replaceAll(token, "[redacted credential]")}\n`,
+    `${JSON.stringify({ implementation, declared_backend_commit: process.env.HARNESS_BACKEND_COMMIT ?? null, base_url: baseURL, flow, connections, commands, replies, control_decisions: controlDecisions, page_errors: pageErrors }, null, 2).replaceAll(token, "[redacted credential]")}\n`,
   );
   process.stderr.write(`${String(failure).replaceAll(token, "[redacted credential]")}\n`);
   process.exitCode = 1;

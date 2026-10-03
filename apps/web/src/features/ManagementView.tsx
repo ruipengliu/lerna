@@ -82,6 +82,10 @@ export function ManagementView({
     (method) => method.kind === "query" && method.name.endsWith(".list"),
   );
   const list = lists.find((method) => method.name === config.list) ?? lists[0];
+  const listInput = useMemo<JSONValue | undefined>(
+    () => (list?.name === "memory.list" ? { purpose: "memory.read", limit: 20 } : undefined),
+    [list?.name],
+  );
   return (
     <>
       <p className="area-description">{config.description}</p>
@@ -92,6 +96,7 @@ export function ManagementView({
               client={client}
               methodName={list.name}
               title="当前授权集合"
+              {...(listInput ? { input: listInput } : {})}
               onSelect={(value) => {
                 setSelected(value);
                 onRequest(list.name, value);

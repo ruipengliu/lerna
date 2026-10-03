@@ -29,4 +29,8 @@ pnpm test:browser
 
 由 Gateway 提供生产构建时可设置 `HARNESS_REQUIRE_CSP=1`，要求页面使用禁止内联脚本及动态求值的同源 CSP。`HARNESS_REQUIRE_LARGE_MANIFEST=1` 要求实际方法清单超过 256 KiB 且不超过 1 MiB。报告记录真实方法数量、字节数、摘要和连接身份绑定。
 
+验证报告保存脚本实现 commit、实际身份 scope/修订、服务与租户、策略准确引用、Schema 摘要以及 Node/Chromium 版本。`HARNESS_BACKEND_COMMIT` 可记录操作者已核实的后端构建 commit；该字段明确标记为声明信息，不能由方法摘要反推实现版本。
+
+`HARNESS_BROWSER_FLOW=surface` 或 `control` 可单独验证相应链路；完整流程的失败记录仍保留。控制遇到真实版本冲突时，脚本重新读取原 Task，显式点击产生不同 ID 的新意图，最多四次；SDK 不修改已保存命令的 CAS。`HARNESS_CONTROL_TASK` 可在 control 分段中恢复并最终取消原未结测试 Task，不另建目标。固定示例会话首次归档要求 applied；后续重复运行必须显式设置 `HARNESS_EXPECT_EVENT=rejected`，核验旧 CAS 被拒以及原会话仍已归档，不能重置历史。
+
 `HARNESS_ORIGINAL_TASK` 指定实际已发布 Task 后，`node apps/web/tests/read-original.mjs` 只读原 Task、原 Result 与准确全文，不提交新业务命令。探针跨两个真实服务端心跳后继续查询，并核每次刷新使用新 query_id。`HARNESS_EXPECTED_ARTIFACT_FILE` 可指定原报告文件核对全文；`HARNESS_PROXY_OBSERVE=1` 对比透明 WebSocket 转发边界。其余地址、凭据及产物环境变量与完整脚本一致。
