@@ -1,6 +1,6 @@
 # 2026 年 9 月 AI 调研：各模块优化项
 
-整理日期：2026-09-28。对照[项目目标](../harness-project-goals.md)、[现行架构](../architecture/README.md)及[交付审查](../architecture/review.md)，将调研启发拆为九个模块、24 项优化工作。用户已确认按这些方向优化方案；正式规则、预期效果和验收落点见[采用清单](../architecture/validation/optimization-evidence.md)。本文保留研究动机、原编号与优先级，行为以所属模块现行方案为准。
+整理日期：2026-09-28。对照[项目目标](../harness-project-goals.md)、[现行架构](../architecture/README.md)及[交付审查](https://github.com/ruipengliu/lerna/blob/da9208c9fb24715d5509782e594981f08713cc54/docs/architecture/review.md)，将调研启发拆为九个模块、24 项优化工作。用户已确认按这些方向优化方案；正式规则、预期效果和验收落点见[采用清单](https://github.com/ruipengliu/lerna/blob/da9208c9fb24715d5509782e594981f08713cc54/docs/architecture/validation/optimization-evidence.md)。本文保留研究动机、原编号与优先级，行为以所属模块现行方案为准。
 
 材料范围为[《AI领域调研报告》](chatgpt-conversation://6a5f09b7-ea50-83ec-bf6d-26a2576aac1d)当前可读取的 9 月 18—27 日 10 期日报，其中 7 期末尾被截断；未取得 9 月 1—17 日内容。[19 项一手来源核验](ai-report-2026-09-source-check.md)保留论文版本、核验深度及适用限制。优化方向来自本项目推论，论文成绩不作为项目收益承诺。
 
@@ -53,7 +53,7 @@ flowchart TB
 <a id="orchestrator"></a>
 ### 3.1 Orchestrator：把目标、事实和下一步连接准确
 
-现有基础：[任务运行](../architecture/orchestrator/README.md)、[任务验证](../architecture/orchestrator/verification.md)、[有限计划物化](../architecture/orchestrator/implementation.md#finite-plan)。本模块裁决条件、行动准入和完成，负责组装固定上下文；Brain 的提案和交互的呈现不取得这些裁决权。
+现有基础：[任务运行](../architecture/orchestrator/README.md)、[任务验证](https://github.com/ruipengliu/lerna/blob/da9208c9fb24715d5509782e594981f08713cc54/docs/architecture/orchestrator/verification.md)、[有限计划物化](https://github.com/ruipengliu/lerna/blob/da9208c9fb24715d5509782e594981f08713cc54/docs/architecture/orchestrator/implementation.md#finite-plan)。本模块裁决条件、行动准入和完成，负责组装固定上下文；Brain 的提案和交互的呈现不取得这些裁决权。
 
 | 编号／优先级／性质 | 优化动作与交付物 | 协作依赖 | 验收重点 |
 | --- | --- | --- | --- |
@@ -66,7 +66,7 @@ ORC-01 的覆盖检查不预设每个任务都需用户逐项批准；能确定�
 <a id="brain"></a>
 ### 3.2 Brain：提高提案质量并减少无效推理
 
-现有基础：[大脑行为](../architecture/brain/README.md)及[上下文读取、编码和来源](../architecture/brain/implementation.md#2-上下文正文与资料来源)。上下文组装、裁剪归 ORC-02；Brain 校验固定输入和最终编码，不反向修改快照，也不在模型适配器里执行工具。
+现有基础：[大脑行为](../architecture/brain/README.md)及[上下文读取、编码和来源](https://github.com/ruipengliu/lerna/blob/da9208c9fb24715d5509782e594981f08713cc54/docs/architecture/brain/implementation.md#2-上下文正文与资料来源)。上下文组装、裁剪归 ORC-02；Brain 校验固定输入和最终编码，不反向修改快照，也不在模型适配器里执行工具。
 
 | 编号／优先级／性质 | 优化动作与交付物 | 协作依赖 | 验收重点 |
 | --- | --- | --- | --- |
@@ -79,7 +79,7 @@ ORC-01 的覆盖检查不预设每个任务都需用户逐项批准；能确定�
 <a id="execution"></a>
 ### 3.3 执行：让能力声明经得起实际调用
 
-现有基础：[执行合同](../architecture/execution/README.md)及[目录与驱动装配](../architecture/execution/implementation.md#6-能力目录与-api-驱动装配)。能力目录归本模块；搜索只给候选，完整描述和实例绑定才是准入依据。
+现有基础：[执行合同](../architecture/execution/README.md)及[目录与驱动装配](https://github.com/ruipengliu/lerna/blob/da9208c9fb24715d5509782e594981f08713cc54/docs/architecture/execution/implementation.md#6-能力目录与-api-驱动装配)。能力目录归本模块；搜索只给候选，完整描述和实例绑定才是准入依据。
 
 | 编号／优先级／性质 | 优化动作与交付物 | 协作依赖 | 验收重点 |
 | --- | --- | --- | --- |
@@ -166,7 +166,7 @@ SEC-02 是开放相应不可信执行能力的前置验收，P1 不允许先开�
 
 ## 4. 关键跨模块交接与异常继续者
 
-下表索引优化项之间的交付关系，实施时以[各模块现行规则](../architecture/validation/optimization-evidence.md#1-采用范围与实施前提)为准。
+下表索引优化项之间的交付关系，实施时以[各模块现行规则](https://github.com/ruipengliu/lerna/blob/da9208c9fb24715d5509782e594981f08713cc54/docs/architecture/validation/optimization-evidence.md#1-采用范围与实施前提)为准。
 
 | 链路 | 正常交接与可确认的结果 | 最可能推翻方案的异常 | 继续责任 |
 | --- | --- | --- | --- |
@@ -179,7 +179,7 @@ SEC-02 是开放相应不可信执行能力的前置验收，P1 不允许先开�
 
 ## 5. 建设顺序与暂缓项
 
-按既定[建设阶段](../architecture/validation/README.md#5-建设顺序与退出条件)推进。以下是优化项的依赖顺序，不重排已确认的生产与故障域建设。
+按既定[建设阶段](https://github.com/ruipengliu/lerna/blob/da9208c9fb24715d5509782e594981f08713cc54/docs/architecture/validation/README.md#5-建设顺序与退出条件)推进。以下是优化项的依赖顺序，不重排已确认的生产与故障域建设。
 
 | 顺序 | 组合工作包 | 退出证据 |
 | --- | --- | --- |
@@ -211,7 +211,7 @@ SEC-02 是开放相应不可信执行能力的前置验收，P1 不允许先开�
 
 语义审查围绕目标漏项、输入超窗、工具静默失败、延迟提交、子结果缺口、计划误接管、来源失效和发布撤回，核对牵头模块、原事实 owner、成功依据及失败继续者。优化项没有移动上下文组装、能力目录、任务内验证、授权或激活的归属。
 
-初次整理只重组研究建议并保留来源追溯；用户确认后已更新九模块相关方案和验收设计，公共线 Schema、示例及发布权限保持。采用后的检查记录见[交付审查](../architecture/review.md#module-optimization-review)。
+初次整理只重组研究建议并保留来源追溯；用户确认后已更新九模块相关方案和验收设计，公共线 Schema、示例及发布权限保持。采用后的检查记录见[交付审查](https://github.com/ruipengliu/lerna/blob/da9208c9fb24715d5509782e594981f08713cc54/docs/architecture/review.md#module-optimization-review)。
 
 初稿静态检查：建议稿与来源记录共 2 份文档的表格、围栏、空白及 32 处本地引用／锚点通过检查；24 个优化编号唯一，覆盖 9 个模块，15 项 P0、9 项 P1 与总表一致。后续新增采用链接的检查归上述交付审查。
 

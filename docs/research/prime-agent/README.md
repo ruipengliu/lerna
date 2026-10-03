@@ -11,7 +11,7 @@ Prime Agent 的主要参考价值是把持续目标、后台会话、程序化�
 | 项目事实 | 本次范围 |
 | --- | --- |
 | 仓库 | `PrimeIntellect-ai/prime-agent` |
-| 本地源码 | `.reference/prime-agent`，深度为 1 的 Git 快照 |
+| 研究时缓存 | `.reference/prime-agent`，当时使用深度为 1 的 Git 快照；当前无需常驻 |
 | 分支与 commit | `main`，`5784abc2aef523a78d5a8850a0c0be89883388b2` |
 | commit 时间 | `2026-09-30T18:56:08-07:00`，即北京时间 2026-10-01 |
 | 主要语言与模块 | Rust workspace 的九个 crate；Python `prime-agent-runtime` 和可执行 Skill |
@@ -170,7 +170,7 @@ cron 文件保存 job 和 dispatch claim，scheduler/worker 负责把到期工�
 
 refine 先生成可审查 CRUD 提案，再在重新读取的 harness state 上应用。local 是默认 scope，global 用于跨会话材料；规划阶段基线与实际应用时条目不同时拒绝该项编辑。逐项 applied/error、before/after、rationale 和 expected outcome 支持回退及解释，同时允许部分编辑成功，因此不是整组编辑全有或全无。[精炼规划和应用][PA37]、[版本竞争][PA38]
 
-对本项目，应把这条链拆为“经验候选形成→准确版本固定→隔离评测→受信发布→应用到后续任务”。Prime 的 auto refine review 与 expectedOutcome 只能提供候选理由，不能替代 EvaluationRun、未暴露测试集、ReleaseApproval 和旧版独立批准；也不应允许 session-local 状态静默影响同租户其他任务。[现行评测](../../architecture/.draft/evaluation/README.md)、[现行发布](../../architecture/.draft/extensions/implementation.md)
+对本项目，应把这条链拆为“经验候选形成→准确版本固定→隔离评测→受信发布→应用到后续任务”。Prime 的 auto refine review 与 expectedOutcome 只能提供候选理由，不能替代 EvaluationRun、未暴露测试集、ReleaseApproval 和旧版独立批准；也不应允许 session-local 状态静默影响同租户其他任务。[现行评测](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/evaluation/README.md)、[现行发布](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/extensions/implementation.md)
 
 ## 8. 断线恢复、界面与观测
 
@@ -220,20 +220,20 @@ sequenceDiagram
 
 | 本项目基线 | Prime 对应实现 | 判断与反推 |
 | --- | --- | --- |
-| [Orchestrator](../../architecture/.draft/orchestrator/implementation.md) | GoalDriver、queue、autonomous driver [PA11][PA34][PA35] | 需改造：使用 JobStore 持久保存无进展及下一次推进责任；模型 stop 不能裁决 Task |
-| [Brain](../../architecture/.draft/brain/implementation.md#context-optimization) | pa-agent、prompt layers、compaction [PA20][PA25][PA26] | 借鉴内部编码与摘要组装；Brain 仍返回单轮 Proposal，不能接管 Python 的长行动循环 |
-| [Execution](../../architecture/.draft/execution/implementation.md#key-sequence) | ipython、kernel id、interrupt/restore [PA28][PA30][PA31] | 需改造：代码运行是有界 Operation，内部对外发送仍逐项准入及保留原效果；默认用户权限直接执行不适用 |
-| [Security](../../architecture/.draft/security/README.md#boundary-validation) | MCP auth、private 文件、用户进程权限 [PA02][PA32] | 不等价：认证不是用途授权；平台受限出口、凭证、文件和预算不能靠 Python 包声明兑现 |
-| [Memory](../../architecture/.draft/memory/README.md) | HarnessEntry local/global、搜索/CRUD、摘要 [PA09][PA17] | 借鉴材料种类与局部范围；来源、用途、纠正、派生关闭和副本清理沿当前 Memory 规则，不能把 namespace snapshot 当长期记忆 |
-| [Collaboration](../../architecture/.draft/collaboration/implementation.md) | RLM ledger、spawn/collect、child usage 类型 [PA07][PA10][PA29] | 借鉴 SDK 的异步 handle 与批量有界读；内部唯一子映射、收缩授权、预算封账已规定，应具体实现 |
-| [Interaction](../../architecture/.draft/interaction/implementation.md) | queue lanes、attach snapshot/chunk、ownership [PA11][PA39][PA40] | 借鉴事件关联与大历史加载；输入消费、准确预览和可信确认由本项目原业务 owner 保存 |
-| [Extensions](../../architecture/.draft/extensions/implementation.md#artifact-integrity) | Skill discovery、Python package、静态 prompt layers [PA25][PA33] | 借鉴可发现材料元数据；依赖、精确字节和平台由 InstallLock 固定，package 可导入不证明 ready |
-| [Evaluation](../../architecture/.draft/evaluation/README.md) | autonomous gates、refine plan、faux/CI/trace [PA35][PA36][PA37][PA41][PA42] | 借鉴 gate runner 与可回放失败材料；自评理由不具备正式改善资格 |
-| [共同契约](../../architecture/.draft/contracts/README.md) | pa-types 与 kernel JSONL v3 [PA07][PA08][PA28] | 借鉴共享类型与严格 correlator；不把开放 rest Map 或内部协议字段并入已冻结 harness/1 |
-| [可靠工作框架](../../architecture/.draft/reliable-work.md) | command journal、lease、cron claim [PA15][PA16][PA18] | 需改造为共事务接纳/JobStore；pending uncertain 可作反例，不替代本项目继续核对责任 |
-| [存储](../../architecture/.draft/storage-and-middleware.md) | JSONL 权威、window cache、多个 state 文件 [PA13][PA14][PA17] | 权威与可丢缓存分离值得借鉴；生产 PG 账本及对象存储既定，不改为文件型多写者存储 |
-| [部署](../../architecture/.draft/deployment-production.md) | supervisor/worker/kernel [PA03][PA30] | 借鉴生命周期和排空顺序；沿既定 gateway/application/worker/execution 角色，不逐会话复制生产进程 |
-| [工程组织](../../architecture/.draft/engineering.md#layout) | Rust workspace、共享 types 与 UI 分开 [PA01][PA03][PA04] | 借鉴代码依赖；本项目一个 Go module 和公开 facade 已确定，不据 crate 数新增微服务或 module |
+| [Orchestrator](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/orchestrator/implementation.md) | GoalDriver、queue、autonomous driver [PA11][PA34][PA35] | 需改造：使用 JobStore 持久保存无进展及下一次推进责任；模型 stop 不能裁决 Task |
+| [Brain](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/brain/implementation.md#context-optimization) | pa-agent、prompt layers、compaction [PA20][PA25][PA26] | 借鉴内部编码与摘要组装；Brain 仍返回单轮 Proposal，不能接管 Python 的长行动循环 |
+| [Execution](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/execution/implementation.md#key-sequence) | ipython、kernel id、interrupt/restore [PA28][PA30][PA31] | 需改造：代码运行是有界 Operation，内部对外发送仍逐项准入及保留原效果；默认用户权限直接执行不适用 |
+| [Security](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/security/README.md#boundary-validation) | MCP auth、private 文件、用户进程权限 [PA02][PA32] | 不等价：认证不是用途授权；平台受限出口、凭证、文件和预算不能靠 Python 包声明兑现 |
+| [Memory](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/memory/README.md) | HarnessEntry local/global、搜索/CRUD、摘要 [PA09][PA17] | 借鉴材料种类与局部范围；来源、用途、纠正、派生关闭和副本清理沿当前 Memory 规则，不能把 namespace snapshot 当长期记忆 |
+| [Collaboration](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/collaboration/implementation.md) | RLM ledger、spawn/collect、child usage 类型 [PA07][PA10][PA29] | 借鉴 SDK 的异步 handle 与批量有界读；内部唯一子映射、收缩授权、预算封账已规定，应具体实现 |
+| [Interaction](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/interaction/implementation.md) | queue lanes、attach snapshot/chunk、ownership [PA11][PA39][PA40] | 借鉴事件关联与大历史加载；输入消费、准确预览和可信确认由本项目原业务 owner 保存 |
+| [Extensions](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/extensions/implementation.md#artifact-integrity) | Skill discovery、Python package、静态 prompt layers [PA25][PA33] | 借鉴可发现材料元数据；依赖、精确字节和平台由 InstallLock 固定，package 可导入不证明 ready |
+| [Evaluation](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/evaluation/README.md) | autonomous gates、refine plan、faux/CI/trace [PA35][PA36][PA37][PA41][PA42] | 借鉴 gate runner 与可回放失败材料；自评理由不具备正式改善资格 |
+| [共同契约](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/contracts/README.md) | pa-types 与 kernel JSONL v3 [PA07][PA08][PA28] | 借鉴共享类型与严格 correlator；不把开放 rest Map 或内部协议字段并入已冻结 harness/1 |
+| [可靠工作框架](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/reliable-work.md) | command journal、lease、cron claim [PA15][PA16][PA18] | 需改造为共事务接纳/JobStore；pending uncertain 可作反例，不替代本项目继续核对责任 |
+| [存储](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/storage-and-middleware.md) | JSONL 权威、window cache、多个 state 文件 [PA13][PA14][PA17] | 权威与可丢缓存分离值得借鉴；生产 PG 账本及对象存储既定，不改为文件型多写者存储 |
+| [部署](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/deployment-production.md) | supervisor/worker/kernel [PA03][PA30] | 借鉴生命周期和排空顺序；沿既定 gateway/application/worker/execution 角色，不逐会话复制生产进程 |
+| [工程组织](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/engineering.md#layout) | Rust workspace、共享 types 与 UI 分开 [PA01][PA03][PA04] | 借鉴代码依赖；本项目一个 Go module 和公开 facade 已确定，不据 crate 数新增微服务或 module |
 
 ## 11. 可执行优化建议
 
@@ -241,13 +241,13 @@ sequenceDiagram
 
 | 建议与优先级 | 具体改变与参考 | 代价、约束及验收 |
 | --- | --- | --- |
-| R-01 上下文机械重建 P0 | 在 [Brain 组装](../../architecture/.draft/brain/implementation.md#context-optimization)把不可压缩目标/控制/unknown、准确事实引用、近期上下文和候选摘要分栏；借鉴 digest/fingerprint 与 recent-state anchor [PA26][PA54]，保存编码配置和材料版本 | 细化 ORC-02/BRN-01。三次压缩、目标修订和未知写入后仍保留硬约束，摘要污染不可改变权威事实；最终编码超窗不发送 |
-| R-02 无进展持续推进 P0 | 在 [任务 jobs](../../architecture/.draft/orchestrator/implementation.md#job-completion)及 TaskPolicy 内实现持久 no-progress 计数、已计数事实标识、下一次 wake 和原因；参考 goal driver [PA08][PA34] | 属有界自治实现细化。进程重启/重复领取不能重置预算或双计一次反馈；无新事实不得反复花模型费探活。需要定义业务进展口径 |
-| R-03 异步子 Agent SDK P1 | 在 [协作](../../architecture/.draft/collaboration/implementation.md#phase-projection)之上提供 admission handle、read/wait/batch read 辅助，参考 spawn/collect [PA29]；直接复用已固定 Delegation 和子映射 | 细化 COL-01/02。handle 不含伪造子答案；timeout 返回已知状态和缺口；父取消/子晚到/未结费仍按原映射继续，SDK 不新增负责方 |
-| R-04 代码组合执行候选 P1 实验 | 在 [Executor driver](../../architecture/.draft/execution/implementation.md)做受限程序化组合适配器候选，代码、材料与输出固定 ContentRef；借鉴 REPL request id、明确中断和 snapshot skip [PA28][PA30][PA31] | 必须先满足 SEC-02/EXE-03；代码内对外效果继续逐项准入，不允许一个无限制 cell 隐藏多次物理调用。编译为既有有界计划时可纳入 X-06；交互 cell 则另冻结策略实验，不能混用有限计划分母。失败即不启用 |
-| R-05 精炼变成候选 P1 | 在 [Evaluation](../../architecture/.draft/evaluation/README.md)和 [Extensions](../../architecture/.draft/extensions/README.md)复用 typed CRUD、scope、before/after、竞争检测 [PA09][PA37][PA38]生成准确候选内容，随后走现有评测/批准 | 细化 EXT-02/03、EVA-01/03。local 经验未经独立保存许可不可进入跨任务记忆；计划后材料变更时拒绝应用；旧版回退检查 ADR-0007 的独立批准 |
-| R-06 呈现与耐久状态分开 P0 | 在 [交互缺口视图](../../architecture/.draft/interaction/README.md#completion-view)明确“已呈现”“输入接纳”“业务消费”“运行中断”“原效果未知”；用 retained write、kernel abort 反例做联调 [PA13][PA30] | 细化 UI-01/02、EXE-03。写盘失败和终端断线不得显示已完成；取消 cell 但旧网络动作迟到时仍显示原 Operation 的 unknown |
-| R-07 大历史恢复预算 P1 | 在 [WSS 传输](../../architecture/.draft/contracts/transport.md)现有快照读取路径借鉴 snapshot id、generation、chunk failure 和图片元数据省略 [PA39]，只优化内部装配和呈现 | 需与原协议字节上限、当前权限及 HTTPS 大内容路径一起验收；不增加第二套事件权威。跨代次、少块、重复块、受限内容撤权时拒绝完整恢复声明 |
+| R-01 上下文机械重建 P0 | 在 [Brain 组装](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/brain/implementation.md#context-optimization)把不可压缩目标/控制/unknown、准确事实引用、近期上下文和候选摘要分栏；借鉴 digest/fingerprint 与 recent-state anchor [PA26][PA54]，保存编码配置和材料版本 | 细化 ORC-02/BRN-01。三次压缩、目标修订和未知写入后仍保留硬约束，摘要污染不可改变权威事实；最终编码超窗不发送 |
+| R-02 无进展持续推进 P0 | 在 [任务 jobs](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/orchestrator/implementation.md#job-completion)及 TaskPolicy 内实现持久 no-progress 计数、已计数事实标识、下一次 wake 和原因；参考 goal driver [PA08][PA34] | 属有界自治实现细化。进程重启/重复领取不能重置预算或双计一次反馈；无新事实不得反复花模型费探活。需要定义业务进展口径 |
+| R-03 异步子 Agent SDK P1 | 在 [协作](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/collaboration/implementation.md#phase-projection)之上提供 admission handle、read/wait/batch read 辅助，参考 spawn/collect [PA29]；直接复用已固定 Delegation 和子映射 | 细化 COL-01/02。handle 不含伪造子答案；timeout 返回已知状态和缺口；父取消/子晚到/未结费仍按原映射继续，SDK 不新增负责方 |
+| R-04 代码组合执行候选 P1 实验 | 在 [Executor driver](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/execution/implementation.md)做受限程序化组合适配器候选，代码、材料与输出固定 ContentRef；借鉴 REPL request id、明确中断和 snapshot skip [PA28][PA30][PA31] | 必须先满足 SEC-02/EXE-03；代码内对外效果继续逐项准入，不允许一个无限制 cell 隐藏多次物理调用。编译为既有有界计划时可纳入 X-06；交互 cell 则另冻结策略实验，不能混用有限计划分母。失败即不启用 |
+| R-05 精炼变成候选 P1 | 在 [Evaluation](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/evaluation/README.md)和 [Extensions](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/extensions/README.md)复用 typed CRUD、scope、before/after、竞争检测 [PA09][PA37][PA38]生成准确候选内容，随后走现有评测/批准 | 细化 EXT-02/03、EVA-01/03。local 经验未经独立保存许可不可进入跨任务记忆；计划后材料变更时拒绝应用；旧版回退检查 ADR-0007 的独立批准 |
+| R-06 呈现与耐久状态分开 P0 | 在 [交互缺口视图](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/interaction/README.md#completion-view)明确“已呈现”“输入接纳”“业务消费”“运行中断”“原效果未知”；用 retained write、kernel abort 反例做联调 [PA13][PA30] | 细化 UI-01/02、EXE-03。写盘失败和终端断线不得显示已完成；取消 cell 但旧网络动作迟到时仍显示原 Operation 的 unknown |
+| R-07 大历史恢复预算 P1 | 在 [WSS 传输](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/contracts/transport.md)现有快照读取路径借鉴 snapshot id、generation、chunk failure 和图片元数据省略 [PA39]，只优化内部装配和呈现 | 需与原协议字节上限、当前权限及 HTTPS 大内容路径一起验收；不增加第二套事件权威。跨代次、少块、重复块、受限内容撤权时拒绝完整恢复声明 |
 
 本报告支持优先实现 R-01、R-02、R-06，再对 R-03～05 和 R-07 取得运行与配对成本证据。没有源码或测量支撑的部分保留为建议；尤其不主张采用默认无限制 Python、直接全局 auto-refine、透明模型重试，或用本地后台进程替代 ADR-0003 的生产恢复要求。
 

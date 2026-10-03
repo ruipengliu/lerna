@@ -112,7 +112,7 @@ rollout 同时保存模型 ResponseItem、经过策略筛选的 EventMsg，以�
 | Task 核验／Result／费用收尾 | 按目标与实际账单触发 | 完成证据、目标覆盖及未决责任满足后才提交 Result；最终答复不是自动成功。迟到账单另增原修订，不重做模型／工具 |
 | JobStore／Surface | 按领取、有限续约、正式快照触发 | 领取有事务；Raise 与领域事实同事务，Finish 与结果尽量同事务，不每个状态空建 job。临时流式输出不逐片写库 |
 
-依据：[任务事务与逻辑表](../../architecture/.draft/orchestrator/implementation.md#2-持久表与索引)、[Brain 接纳与发送](../../architecture/.draft/brain/implementation.md#32-接纳事务)、[正文发布](../../architecture/.draft/brain/implementation.md#generated-content)、[执行持久边界](../../architecture/.draft/execution/implementation.md#reliable-work-integration)、[原使用与结算](../../architecture/.draft/security/implementation.md#5-一次使用与并发裁决)、[公共工作计量](../../architecture/.draft/reliable-work.md#10-观测与成本计量)。
+依据：[任务事务与逻辑表](https://github.com/ruipengliu/lerna/blob/1b647dc970317173f349296e47efd41a4cf3a23c/docs/architecture/.draft/orchestrator/implementation.md#2-持久表与索引)、[Brain 接纳与发送](https://github.com/ruipengliu/lerna/blob/1b647dc970317173f349296e47efd41a4cf3a23c/docs/architecture/.draft/brain/implementation.md#32-接纳事务)、[正文发布](https://github.com/ruipengliu/lerna/blob/1b647dc970317173f349296e47efd41a4cf3a23c/docs/architecture/.draft/brain/implementation.md#generated-content)、[执行持久边界](https://github.com/ruipengliu/lerna/blob/1b647dc970317173f349296e47efd41a4cf3a23c/docs/architecture/.draft/execution/implementation.md#reliable-work-integration)、[原使用与结算](https://github.com/ruipengliu/lerna/blob/1b647dc970317173f349296e47efd41a4cf3a23c/docs/architecture/.draft/security/implementation.md#5-一次使用与并发裁决)、[公共工作计量](https://github.com/ruipengliu/lerna/blob/1b647dc970317173f349296e47efd41a4cf3a23c/docs/architecture/.draft/reliable-work.md#10-观测与成本计量)。
 
 因此，单看 Brain 域，A 有 4 个、B 有 8 个基本持久阶段，另加实际内容发布等责任；B 的 Executor 再有 3 个基本阶段及适用的资源入口。它们说明本项目比简单追加消息承担更多确认工作，**不能相加后宣称已经得到请求总 Tx／SQL／fsync 数**。Task、内容、权限、领取、结算及合法合并都尚未完成物理映射。
 
@@ -132,7 +132,7 @@ rollout 同时保存模型 ResponseItem、经过策略筛选的 EventMsg，以�
 | 可独立替换与生产恢复目标 | 初版一个进程及少量 facade；按真实隔离、归属、伸缩边界拆分，不按九模块部署九套服务 |
 | 经验、协作、动态扩展和程序工具 | 按需启用，各自证据充分再开放；没有使用时不进入请求热路径 |
 
-落实位置：[Session 与 Task](../../architecture/.draft/interaction/session-and-task.md)、[最小工程装配](../../architecture/.draft/engineering.md#minimum-profile)、[新增故障与计量向量](../../architecture/.draft/validation/harness-scenarios.md)。首个性能原型应只贯通 A／B 及文件保存读回，先验证实际提交数量和恢复正确性，再决定还需不需要拆更多边界。
+落实位置：[Session 与 Task](https://github.com/ruipengliu/lerna/blob/1b647dc970317173f349296e47efd41a4cf3a23c/docs/architecture/.draft/interaction/session-and-task.md)、[最小工程装配](https://github.com/ruipengliu/lerna/blob/1b647dc970317173f349296e47efd41a4cf3a23c/docs/architecture/.draft/engineering.md#minimum-profile)、[新增故障与计量向量](https://github.com/ruipengliu/lerna/blob/1b647dc970317173f349296e47efd41a4cf3a23c/docs/architecture/.draft/validation/harness-scenarios.md)。首个性能原型应只贯通 A／B 及文件保存读回，先验证实际提交数量和恢复正确性，再决定还需不需要拆更多边界。
 
 ## 6. 如何获得可横向使用的实测数据
 

@@ -2,7 +2,7 @@
 
 此次调研支持的主要判断是：本项目已有的九模块、固定逻辑 Orchestrator、独立 Operation/Effect、用途授权、共事务持久工作和评测发布链应继续保留。参考项目最有用的增量是把这些设计落实为可审查的内部次序、适配器和故障语料：上下文投影与原事实分开，最终参数及目录绑定重新核验，先恢复原责任再开放新执行，多端输入与运行状态有准确关联。程序化工具、渐进式工具发现、读时整理和经验精炼需另取冻结对照证据。
 
-这是一份架构分析，不修改 `.draft`、ADR 或公开协议。比较基线、24 项已采用方向与术语见[基线说明](architecture-baseline.md)；源码版本与内容摘要见[sources.json](sources.json)。五份完整报告分别为 [Codex](../codex/README.md)、[Pi](../pi/README.md)、[DeepSeek Harness](../deepseek-harness/README.md)、[Prime Agent](../prime-agent/README.md)、[Crush](../crush/README.md)。所有质量、费用、延迟和容灾收益仍待运行验证；下文的优先级是实现依赖判断，不是 benchmark 排名。
+这是一份架构分析，不修改 `.draft`、ADR 或公开协议。比较基线、24 项已采用方向与术语见[基线说明](architecture-baseline.md)；源码版本与许可边界见[sources.json](sources.json)。五份完整报告分别为 [Codex](../codex/README.md)、[Pi](../pi/README.md)、[DeepSeek Harness](../deepseek-harness/README.md)、[Prime Agent](../prime-agent/README.md)、[Crush](../crush/README.md)。所有质量、费用、延迟和容灾收益仍待运行验证；下文的优先级是实现依赖判断，不是 benchmark 排名。
 
 ## 1. 先按运行主线比较
 
@@ -69,7 +69,7 @@ flowchart TB
     EXT --> EXE
 ```
 
-这里的“投影”包括用途不同的模型输入、UI 读模型与诊断材料：它们可引用原事实和准确 Content，不能更新 Task/Effect/Grant 的真值。底层 PG/SQLite adapter 内部承接 SQL、领取、版本检查和重建，调用者不必知道生成 query 或每条锁序。共同工作模板的 interface 隐藏重复领取/旧完成等复杂性，同时保留领域成功点；这符合深模块（deep module）的组织方式。[工程布局](../../architecture/.draft/engineering.md#layout)、[可靠工作](../../architecture/.draft/reliable-work.md)
+这里的“投影”包括用途不同的模型输入、UI 读模型与诊断材料：它们可引用原事实和准确 Content，不能更新 Task/Effect/Grant 的真值。底层 PG/SQLite adapter 内部承接 SQL、领取、版本检查和重建，调用者不必知道生成 query 或每条锁序。共同工作模板的 interface 隐藏重复领取/旧完成等复杂性，同时保留领域成功点；这符合深模块（deep module）的组织方式。[工程布局](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/engineering.md#layout)、[可靠工作](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/reliable-work.md)
 
 不需要为了参考项目新增 seam：PG/SQLite、模型 adapter、Executor driver、内部/外部 Agent、local/remote SDK 已有真实可变实现。能力 seam 在原接口上补足不变量、错误、恢复、配置和性能范围，比按每个目录再加一层 registry 更能集中复杂性。具体 import 门禁属于 O-08/12。
 
@@ -80,7 +80,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 <a id="o-01"></a>
 ### O-01：把上下文组织成有来源的纯投影（P0，落实＋细化）
 
-**修改位置。** [Brain context optimization](../../architecture/.draft/brain/implementation.md#context-optimization)、Orchestrator 的快照组装、Memory 来源与 Interaction 读取。沿现有 DecisionRecord/ContentRef 记录准确输入材料、来源/使用范围、配置与编码参数；内部将权威硬约束、获准正文、近期事实、候选摘要和最后 provider 编码分别组织。硬约束由原事实机械重建，摘要不能覆盖它们；最终来源覆盖附加日志/插件字段，不能只登记模型 messages。
+**修改位置。** [Brain context optimization](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/brain/implementation.md#context-optimization)、Orchestrator 的快照组装、Memory 来源与 Interaction 读取。沿现有 DecisionRecord/ContentRef 记录准确输入材料、来源/使用范围、配置与编码参数；内部将权威硬约束、获准正文、近期事实、候选摘要和最后 provider 编码分别组织。硬约束由原事实机械重建，摘要不能覆盖它们；最终来源覆盖附加日志/插件字段，不能只登记模型 messages。
 
 **依据。** Codex canonical history 与 SQLite projection；Pi 的 session projection；DeepSeek log/surface 与可挂载的请求附加字段；Prime 的机械 digest、fingerprint 和 retained-tail anchor；Crush 的 tool adjacency。[E01][E05][E09][E22][E25]、[Pi](../pi/README.md)、[Crush](../crush/README.md)
 
@@ -89,7 +89,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 <a id="o-02"></a>
 ### O-02：持久保存有界推进与无进展依据（P0，细化）
 
-**修改位置。** [Orchestrator jobs/TaskPolicy](../../architecture/.draft/orchestrator/implementation.md)、[可靠工作](../../architecture/.draft/reliable-work.md)。将推进次数、已计数反馈、无进展原因与下一次可检查条件按原 Task 保存，唤醒依赖原 JobStore；区分新目标事实、新结果、新人工输入和纯重复通知。重启或重复领取不重置预算，也不把一次反馈计两次。
+**修改位置。** [Orchestrator jobs/TaskPolicy](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/orchestrator/implementation.md)、[可靠工作](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/reliable-work.md)。将推进次数、已计数反馈、无进展原因与下一次可检查条件按原 Task 保存，唤醒依赖原 JobStore；区分新目标事实、新结果、新人工输入和纯重复通知。重启或重复领取不重置预算，也不把一次反馈计两次。
 
 **依据。** Prime 的持久 no_progress_streak/turn 与 owed/pending continuation、Crush 的输入/输出工具签名检测、Codex/DeepSeek 的独立 Goal 状态。[E08]、[Crush](../crush/README.md)、[Codex](../codex/README.md)、[DeepSeek](../deepseek-harness/README.md)
 
@@ -98,7 +98,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 <a id="o-03"></a>
 ### O-03：固定最终参数与能力绑定后再准入（P0，落实＋细化）
 
-**修改位置。** [Execution catalog](../../architecture/.draft/execution/implementation.md#catalog-conformance)、[Security 入口](../../architecture/.draft/security/README.md#boundary-validation)、Extensions hook 合同。hook、模板、MCP wrapper 和脚本对候选的变换全部在准入前完成；随后严格 Schema 校验、资源规范化、准确 CatalogVersion/InstallLock 绑定。实际入口再次核查当前控制、Grant、预算及资源。Brain 最后编码同样覆盖每个实际出站字段的来源、接收方和用途，诊断/日志字段不因模型 messages 已获准而豁免。
+**修改位置。** [Execution catalog](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/execution/implementation.md#catalog-conformance)、[Security 入口](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/security/README.md#boundary-validation)、Extensions hook 合同。hook、模板、MCP wrapper 和脚本对候选的变换全部在准入前完成；随后严格 Schema 校验、资源规范化、准确 CatalogVersion/InstallLock 绑定。实际入口再次核查当前控制、Grant、预算及资源。Brain 最后编码同样覆盖每个实际出站字段的来源、接收方和用途，诊断/日志字段不因模型 messages 已获准而豁免。
 
 **依据。** Codex PreparedMcpCall 在捕获目录 lease 内执行；Pi 三条 hook 路径的不同重验证行为；Crush allow hook 可绕本机 permission 的反例；DeepSeek 附加日志字段显示最终请求核验的必要性。[E02][E04][E16][E23][E24][E25]
 
@@ -107,7 +107,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 <a id="o-04"></a>
 ### O-04：恢复原责任与开放新执行分别完成（P0，落实＋细化）
 
-**修改位置。** [host 重启](../../architecture/.draft/deployment.md)、[可靠工作](../../architecture/.draft/reliable-work.md)、Brain/Executor 的实际出站 gate。启动先加载原事实/未决工作，核验旧实例已隔离及当前批准/权限/存储资格，再开放新派发；恢复完成是可观察状态。提交 unknown 按原 command 查账，不以新身份补发。
+**修改位置。** [host 重启](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/deployment.md)、[可靠工作](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/reliable-work.md)、Brain/Executor 的实际出站 gate。启动先加载原事实/未决工作，核验旧实例已隔离及当前批准/权限/存储资格，再开放新派发；恢复完成是可观察状态。提交 unknown 按原 command 查账，不以新身份补发。
 
 **依据。** Pi create 返回 open 而不自动 drive；Codex 取得写权、核对 revision 再恢复；DeepSeek semantic checkpoint 失败阻止下游；Prime cron 锁失败/写失败仍可能返回派发项是负例。[E06][E14][E26]、[Codex 恢复](../codex/README.md)
 
@@ -116,7 +116,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 <a id="o-05"></a>
 ### O-05：统一 adapter 的原始输出与覆盖诊断（P0，落实＋细化）
 
-**修改位置。** [Execution 输出](../../architecture/.draft/execution/implementation.md#output-coverage)、Brain ModelAdapter、Interaction 结果投影。逻辑调用源序与实际完成序分别关联；保留原始准确结果、大字节引用、截断/分页/过滤/时间及 partial 范围。实时 token、物理尝试 settlement、模型兼容占位与权威 Operation 结果分开，费用沿原来源累计。
+**修改位置。** [Execution 输出](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/execution/implementation.md#output-coverage)、Brain ModelAdapter、Interaction 结果投影。逻辑调用源序与实际完成序分别关联；保留原始准确结果、大字节引用、截断/分页/过滤/时间及 partial 范围。实时 token、物理尝试 settlement、模型兼容占位与权威 Operation 结果分开，费用沿原来源累计。
 
 **依据。** Pi/Prime 并行完成顺序与 transcript 源序分开；DeepSeek live frame/settlement；Crush 的第一份媒体转换及消息 debounce/final flush。[E17][E12]、[Pi](../pi/README.md)、[Prime](../prime-agent/README.md)、[Crush](../crush/README.md)
 
@@ -125,7 +125,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 <a id="o-06"></a>
 ### O-06：在原 Delegation 之上提供异步子 Agent 辅助（P1，落实＋细化）
 
-**修改位置。** [Collaboration](../../architecture/.draft/collaboration/implementation.md)、sdk/go 与 sdk/ts。提供 admission handle、read/wait/batch read 等薄辅助，引用现有 Delegation 和唯一子 Task；handle 表示已接纳。内部冷恢复引用精确 InstallLock/组合和原父子映射，current capabilities 不足时拒绝新 activation，仍可查原责任。
+**修改位置。** [Collaboration](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/collaboration/implementation.md)、sdk/go 与 sdk/ts。提供 admission handle、read/wait/batch read 等薄辅助，引用现有 Delegation 和唯一子 Task；handle 表示已接纳。内部冷恢复引用精确 InstallLock/组合和原父子映射，current capabilities 不足时拒绝新 activation，仍可查原责任。
 
 **依据。** Prime spawn/collect、Pi durable Reporter、DeepSeek durable child/Activation、Codex 冷子恢复；Crush 子 cost best-effort 是封账反例。[E10][E18]、[Pi](../pi/README.md)、[Codex](../codex/README.md)、[Crush](../crush/README.md)
 
@@ -134,7 +134,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 <a id="o-07"></a>
 ### O-07：把多端输入与运行呈现的竞态写成合同（P0，细化）
 
-**修改位置。** [Interaction](../../architecture/.draft/interaction/implementation.md)、原业务 owner 的输入消费、[WSS](../../architecture/.draft/contracts/transport.md)及 SDK。使用现行 command/InputSubmission/InputRequest/Surface 世代，不另造 RunID 权威。持久记录 input 接纳和消费；取消只覆盖规定范围，后来的独立输入按规则处理。投影 commit 可读后发送可丢 hint，断线重读原快照。
+**修改位置。** [Interaction](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/interaction/implementation.md)、原业务 owner 的输入消费、[WSS](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/contracts/transport.md)及 SDK。使用现行 command/InputSubmission/InputRequest/Surface 世代，不另造 RunID 权威。持久记录 input 接纳和消费；取消只覆盖规定范围，后来的独立输入按规则处理。投影 commit 可读后发送可丢 hint，断线重读原快照。
 
 **依据。** Crush accepted/cancel 水位、first-winner deny/confirm 和 RunComplete flush；Pi attachment fence/Chord revisions；Prime 分块快照；DeepSeek 实时/提交结果分离。[E11][E12][E13][E17]、[Pi](../pi/README.md)、[Prime](../prime-agent/README.md)
 
@@ -143,7 +143,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 <a id="o-08"></a>
 ### O-08：集中安装 staging、配置世代和能力就绪（P1，落实＋细化）
 
-**修改位置。** [Extensions](../../architecture/.draft/extensions/implementation.md#artifact-integrity)、runtime 组合根、adapter readiness。按已有 InstallLock 实际字节/依赖 stage 实例和工具注册，核验 current approval、健康、平台、配置世代后开放 ready；失败释放暂存 handler，原失败与恢复责任仍可查。Go 内置静态组合、第三方受控进程/服务的既定选择不变。
+**修改位置。** [Extensions](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/extensions/implementation.md#artifact-integrity)、runtime 组合根、adapter readiness。按已有 InstallLock 实际字节/依赖 stage 实例和工具注册，核验 current approval、健康、平台、配置世代后开放 ready；失败释放暂存 handler，原失败与恢复责任仍可查。Go 内置静态组合、第三方受控进程/服务的既定选择不变。
 
 **依据。** Codex 类型化贡献点/plugin staging、Pi loader commit/discard、DeepSeek Definition/Provider/Consumer、Crush PendingConfig/Config 的 reconcile。[E19]、[Codex](../codex/README.md)、[Pi](../pi/README.md)、[DeepSeek](../deepseek-harness/README.md)
 
@@ -152,7 +152,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 <a id="o-09"></a>
 ### O-09：经验精炼形成准确候选，再走既有评测发布（P1，实验＋落实）
 
-**修改位置。** Memory/Extensions 的候选形成与 [Evaluation](../../architecture/.draft/evaluation/README.md)。借鉴 kind/scope/version、来源、before/after、竞争检测和 rollback 关联；产生准确 Content 候选，未经独立保存许可的任务局部材料不进入跨任务 Memory。选择后冻结候选，经未暴露正式样本、独立判断与受信批准才影响后续任务。
+**修改位置。** Memory/Extensions 的候选形成与 [Evaluation](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/evaluation/README.md)。借鉴 kind/scope/version、来源、before/after、竞争检测和 rollback 关联；产生准确 Content 候选，未经独立保存许可的任务局部材料不进入跨任务 Memory。选择后冻结候选，经未暴露正式样本、独立判断与受信批准才影响后续任务。
 
 **依据。** Prime continual harness/refinement 的可审查编辑链，Codex 记忆提取/合并，以及 Pi/DeepSeek Skill 发现与加载来源。Prime expected_outcome 与 shell gate 通过只是候选理由/特定检查，不是改善资格。[E20]、[Codex](../codex/README.md)、[Pi](../pi/README.md)、[DeepSeek](../deepseek-harness/README.md)
 
@@ -179,7 +179,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 <a id="o-12"></a>
 ### O-12：共享可回放语料，保持机制与质量证据分离（P0，落实＋细化）
 
-**修改位置。** [tests/conformance、integration、faults、quality](../../architecture/.draft/engineering.md#layout)、Evaluation 与各 adapter。从参考仓库抽取故障刺激方式，构造本项目统一 vector；真实 PG/SQLite 通过同语义 interface 分别执行，固定 stream 仅验证 ModelAdapter。公开契约生成结果要保持新鲜，consumer 不导入具体 backend。
+**修改位置。** [tests/conformance、integration、faults、quality](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/engineering.md#layout)、Evaluation 与各 adapter。从参考仓库抽取故障刺激方式，构造本项目统一 vector；真实 PG/SQLite 通过同语义 interface 分别执行，固定 stream 仅验证 ModelAdapter。公开契约生成结果要保持新鲜，consumer 不导入具体 backend。
 
 **依据。** Pi backend conformance/paired eval、Codex 目录刷新/压缩重放/写失败、DeepSeek 历史格式 corpus、Prime goal/queue/kernel/faux、Crush race/多客户端/取消测试。[E21]、[Codex](../codex/README.md)、[DeepSeek](../deepseek-harness/README.md)、[Prime](../prime-agent/README.md)、[Crush](../crush/README.md)
 
@@ -196,7 +196,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 | Extensions、runtime、packaging | staging、当前配置世代、精确安装/健康/批准，明确能力降级 | 动态 Go plugin、任意宿主 JS/Python 默认执行权限 |
 | tests 与 Evaluation | 共享故障语料、跨 backend conformance、独立质量与全成本报告 | 以 CI 或 README 指标替代 EvaluationRun/ReleaseApproval |
 
-所有位置均沿[现有布局](../../architecture/.draft/engineering.md#layout)，不是此次创建的代码目录。PG/SQLite 方言仍分别组织显式 SQL 与受控迁移；只有业务事实存在新归属或真实隔离/伸缩需求才拆分事务范围。代码规模、上游 crate 数量和 UI 目录数量不是拆服务的理由。
+所有位置均沿[现有布局](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/engineering.md#layout)，不是此次创建的代码目录。PG/SQLite 方言仍分别组织显式 SQL 与受控迁移；只有业务事实存在新归属或真实隔离/伸缩需求才拆分事务范围。代码规模、上游 crate 数量和 UI 目录数量不是拆服务的理由。
 
 ## 6. 建设顺序与退出证据
 
@@ -207,7 +207,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 | 1.5 Web/多进程与后续能力 | O-06/07/08、后台有界输出、真实能力覆盖 | 两端确认/撤权竞争、断连旧流、快照恢复、子原效果/费用、配置世代与排空；公司平台另验生产指标 |
 | 长任务与选择/改善实验 | O-09/10/11 及 O-01 的候选策略 | 冻结样本/各臂/阈值，独立真值，全部物理尝试/完整成本，未暴露证据与批准，旧版独立回退资格 |
 
-顺序是建议映射到[现有阶段](../../architecture/.draft/engineering.md#phases)，不估算工期，也不要求在最小任务前实现所有 105 方法。某项候选有静态结构但缺运行证据时，只交付诊断或实验材料；原 unknown、预算预留与清理责任继续存在。
+顺序是建议映射到[现有阶段](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/engineering.md#phases)，不估算工期，也不要求在最小任务前实现所有 105 方法。某项候选有静态结构但缺运行证据时，只交付诊断或实验材料；原 unknown、预算预留与清理责任继续存在。
 
 ## 7. 故障和实验的补充向量
 
@@ -223,7 +223,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 | refinement 计划后基线变动、部分应用，选择样本暴露，旧版批准失效 | OPT-09/10/11、O-08/09 | 候选准确版本及范围；证据不重用作正式未暴露样本；不能仅恢复旧文件就 ready |
 | 平台 runner/probe 失败，VM helper 可访问宿主，程序中再发网络/子进程 | OPT-08/09、O-10 | 具体能力失败关闭，无裸执行；每个真实出口可追责，不用 VM 名字作为隔离证明 |
 
-这些是拟加入现有套件的验收刺激，本次没有运行。X-01～06 的预先冻结和统计定义继续见[优化证据](../../architecture/.draft/validation/optimization-evidence.md#experiments)。新增程序化 cell 或精炼候选若不符合既有实验因素，单独冻结对照，不隐式扩展原实验含义。
+这些是拟加入现有套件的验收刺激，本次没有运行。X-01～06 的预先冻结和统计定义继续见[优化证据](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/validation/optimization-evidence.md#experiments)。新增程序化 cell 或精炼候选若不符合既有实验因素，单独冻结对照，不隐式扩展原实验含义。
 
 ## 8. 局部建议到综合方案的追踪
 
@@ -246,7 +246,7 @@ P0 先进入最小可靠闭环，P1 随能力和实验开放；任何依赖隔�
 
 ## 固定提交关键证据
 
-完整源码索引在每份项目报告；这里仅列影响综合判断的机制。所有引用使用固定 commit；范围核验见[验证记录](verification.md)。
+完整源码索引在每份项目报告；这里仅列影响综合判断的机制。所有引用使用固定 commit；范围核验见[验证记录](https://github.com/ruipengliu/lerna/blob/f6b8f300dc034817cfcdac9c95ce6cfa3ee6a986/docs/research/agent-harness-comparison/verification.md)。
 
 [E01]: https://github.com/openai/codex/blob/d4a475adda850d80b6149c76454de94e0cf4fd51/codex-rs/thread-store/src/local/live_writer.rs#L327-L382
 [E02]: https://github.com/openai/codex/blob/d4a475adda850d80b6149c76454de94e0cf4fd51/codex-rs/core/src/mcp_tool_call.rs#L436-L480

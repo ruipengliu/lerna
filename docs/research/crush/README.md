@@ -11,7 +11,7 @@ Crush 最适合参考的是 Go 工程组织、终端交互、结构化会话存�
 | 项目事实 | 本次范围 |
 | --- | --- |
 | 仓库 | `charmbracelet/crush` |
-| 本地源码 | `.reference/crush`，深度为 1 的 Git 快照 |
+| 研究时缓存 | `.reference/crush`，当时使用深度为 1 的 Git 快照；当前无需常驻 |
 | 分支与 commit | `main`，`76cc5c574e15072b15aaed0f4f843a5711fae0d9` |
 | commit 时间 | `2026-09-30T20:25:14-04:00`，即北京时间 2026-10-01 |
 | 主语言与组织 | 一个 Go module，manifest 要求 Go `1.27.0`，主要模块在 `internal/` |
@@ -59,7 +59,7 @@ flowchart TB
 | `internal/config`、`skills`、`lsp`、`agent/tools/mcp` | 配置来源及热更新、Skill 元数据、语言服务器和 MCP 生命周期 |
 | `internal/db`、`pubsub` | SQLite schema/query/迁移与进程内通知 |
 
-Workspace 接口把许多 UI 所需能力集中起来，适合作为消费端 facade，但接口本身较宽。移植到本项目时可在 SDK/交互侧提供组合入口，内部仍由九个领域负责自己的事实；不需要把所有核心服务合成一个大接口。[Workspace 定义][CR05]、[现行工程组织](../../architecture/.draft/engineering.md#layout)
+Workspace 接口把许多 UI 所需能力集中起来，适合作为消费端 facade，但接口本身较宽。移植到本项目时可在 SDK/交互侧提供组合入口，内部仍由九个领域负责自己的事实；不需要把所有核心服务合成一个大接口。[Workspace 定义][CR05]、[现行工程组织](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/engineering.md#layout)
 
 服务器默认支持本机 Unix socket 或 Windows named pipe，也有 TCP host；客户端 HTTP transport 支持相应 dial。这里的“远程适配”解决前后端与进程生命周期，不等价于本项目 WSS/gRPC、可信发现、多租户身份及受限执行部署。[server][CR08]、[client][CR09]
 
@@ -145,7 +145,7 @@ sequenceDiagram
 
 循环由 Fantasy 执行，Crush 回调负责准备步骤、消息落库、工具结果、usage、错误呈现及停止条件。工具目录会在 PrepareStep 重读并按 channel 与工作区禁用配置过滤，MCP instructions 会加入 system prompt；这对动态工具体验有用，但本项目必须在 Decision/Operation 准入时冻结 CatalogVersion 和准确安装事实，不能把“现在 tools map 中存在”当原调用的绑定。[流调用][CR24]、[system/MCP][CR20]、[内置目录][CR45]
 
-代码包含 OAuth 刷新后的透明请求重试和额外的摘要、标题模型请求。它们适合交互宿主，但本项目 Brain 一次 Decision 零次或一次物理调用的约束仍应保留；辅助调用必须单独准入、记录预算和原请求未知状态。[调用合同][CR18]、[摘要][CR27]、[现行 Brain](../../architecture/.draft/brain/implementation.md)
+代码包含 OAuth 刷新后的透明请求重试和额外的摘要、标题模型请求。它们适合交互宿主，但本项目 Brain 一次 Decision 零次或一次物理调用的约束仍应保留；辅助调用必须单独准入、记录预算和原请求未知状态。[调用合同][CR18]、[摘要][CR27]、[现行 Brain](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/brain/implementation.md)
 
 重复工具循环检测在最近 10 个 step 内，按名称、输入和匹配结果形成 hash，签名出现超过 5 次触发停止。它检测机械空转，不证明目标成功；相同输入得到变化结果、合理重复轮询和有新事实的推进也应分别处理。对本项目可细化 TaskPolicy 的有界无进展规则，不宜把该启发式放进 Brain 自行循环。[loop detection][CR25]
 
@@ -155,7 +155,7 @@ sequenceDiagram
 
 自动摘要依据模型配置的 context window 与会话 usage 留出余量，未知 window 时不自动摘要。摘要使用单独模型调用，包含 todos，设置 summary_message_id 后后续仅读该边界后的消息；未完成工具工作可把原请求排回继续。该链展示了“保留摘要边界、单独存摘要、继续原运行”的做法，实际余量估算与自由摘要仍不足以证明硬约束完整、最后编码未超窗。[阈值和 stop][CR32]、[摘要保存][CR27]、[查询界限][CR28]
 
-本项目可在 ModelAdapter 中建立纯转换：来源事实引用、工具配对关系、最终 request bytes/token 参数和材料版本均可追溯。兼容占位只能在模型编码层产生，附带明确缺口，不能回写为 ToolResult 或 Effect；撤权、控制事实、预算和目标变更按现行 ORC-02/BRN-01 保留。[现有上下文要求](../../architecture/.draft/brain/implementation.md#context-optimization)
+本项目可在 ModelAdapter 中建立纯转换：来源事实引用、工具配对关系、最终 request bytes/token 参数和材料版本均可追溯。兼容占位只能在模型编码层产生，附带明确缺口，不能回写为 ToolResult 或 Effect；撤权、控制事实、预算和目标变更按现行 ORC-02/BRN-01 保留。[现有上下文要求](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/brain/implementation.md#context-optimization)
 
 ## 7. 工具、权限与扩展
 
@@ -165,7 +165,7 @@ bash 工具在部分只读命令判断之外请求 permission，支持显式后�
 
 PreToolUse hook 仅包裹顶层工具；子 Agent 不重复执行 hooks，其入口工具在父端包裹。hook 可改参数、阻断工具或整轮停止，allow 会标记 context 跳过常规 permission 请求；hook 执行错误记录后继续工具调用。它是强影响的可执行扩展点，本项目若提供对应机制，参数变更必须发生在原 Operation 准入之前并重新检查，hook 声明 allow 不能产生 Grant，子 Agent 也必须在自己的准入边界校验授权。[hook aggregation][CR35]、[wrapper][CR38]
 
-MCP 管理连接与工具列表，runTool 转换多种 content，但当前适配保留第一份 image/audio 并拼接文本，不能推断其覆盖任意多资源结果。本项目应据原始输出给完整/部分/截断/陈旧覆盖信息，并把大字节放入准确 ContentRef。[MCP result][CR44]、[现行 EXE-02](../../architecture/.draft/validation/optimization-evidence.md)
+MCP 管理连接与工具列表，runTool 转换多种 content，但当前适配保留第一份 image/audio 并拼接文本，不能推断其覆盖任意多资源结果。本项目应据原始输出给完整/部分/截断/陈旧覆盖信息，并把大字节放入准确 ContentRef。[MCP result][CR44]、[现行 EXE-02](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/validation/optimization-evidence.md)
 
 MCP 的 reconcile 是纯配置差异函数，区分 starting 使用的 PendingConfig 与 connected 使用的 Config；变化时 restart/remove/disable，重复更新通过单次协调合并。LSP manager 按文件类型懒启动，可跟踪已配置但未连接状态，启动后通知 coordinator 增加工具。Skill 从 SKILL.md frontmatter/body 解析 name/description/compatibility，目录配置解析后发现并发布 states。它们提供可用状态及低成本发现线索，尚不能替代 InstallLock 的精确字节、依赖闭包、健康与批准条件。[MCP lifecycle][CR46]、[LSP][CR47]、[Skill][CR41][CR42]
 
@@ -188,7 +188,7 @@ sequenceDiagram
     S-->>C2: 已解析 不写 session permission
 ```
 
-该图反映确认竞争，适合作为本项目 UserAction 接纳/消费的验收反例；移植时需落入原 owner 的数据库事务而非内存 Take，并绑定准确 preview、用户身份、当前权限和 command id。[CR31]、[本项目交互契约](../../architecture/.draft/interaction/implementation.md)
+该图反映确认竞争，适合作为本项目 UserAction 接纳/消费的验收反例；移植时需落入原 owner 的数据库事务而非内存 Take，并绑定准确 preview、用户身份、当前权限和 command id。[CR31]、[本项目交互契约](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/interaction/implementation.md)
 
 服务器在 AttachClient 前先订阅 broker，避免 presence 显示已连接但尚未有订阅；SSE 帧发送 `data:`，检查的 handler 没有事件 id/Last-Event-ID 重放协议。ClientWorkspace 断开后按 250 ms 到 10 s 退避重连，workspace 丢失可重新注册，恢复后重申当前会话并通知 UI 重读状态。会话历史由 DB 恢复；active run、permission waiter 和已丢终结事件不会自然由 SSE 重现。[SSE][CR50]、[重连][CR51]
 
@@ -213,19 +213,19 @@ Run 退出 flush 失败会记日志，仍可能发布 RunComplete；Pubsub.Publi
 
 | 本项目模块或基线 | Crush 对应实现 | 判断与反推 |
 | --- | --- | --- |
-| [Orchestrator](../../architecture/.draft/orchestrator/implementation.md) | Coordinator、session 队列、accepted/cancel [CR18][CR22][CR23] | 借鉴交互竞态，需改造为原 Task owner 的持久控制；Coordinator 不能成为另一完成裁决者 |
-| [Brain](../../architecture/.draft/brain/implementation.md) | Fantasy loop、prompt、摘要/邻接修复 [CR24][CR26][CR27] | 借鉴 ModelAdapter 转换；默认单轮 Proposal 与无隐藏请求仍成立 |
-| [Execution](../../architecture/.draft/execution/implementation.md) | 工具、后台 shell、MCP [CR30][CR33][CR44] | 借鉴后台 read/kill 分离和结果覆盖诊断；效果未知必须保留原 Operation 和核对 job |
-| [Security](../../architecture/.draft/security/README.md) | permission、hook、command blocker [CR31][CR34][CR38] | 不等价：确认竞争可借鉴，allowlist/hook 不构成 Grant/平台隔离 |
-| [Memory](../../architecture/.draft/memory/README.md) | 摘要、上下文文件、Skill、file history [CR15][CR27][CR41] | 会话材料与工具历史；不能自动作为跨任务长期记忆或授权材料 |
-| [Collaboration](../../architecture/.draft/collaboration/implementation.md) | agent tool、子 session、best-effort cost [CR39][CR49] | 借鉴父调用关联；phase/effect/control/预算封账独立实现，不能只收一段文本 |
-| [Interaction](../../architecture/.draft/interaction/implementation.md) | Workspace、RunComplete、question、确认竞争、SSE [CR05][CR31][CR36][CR37][CR50] | 借鉴前端 facade 和准确 correlator；Surface/UserAction 仍按可信渲染与原 owner 消费 |
-| [Extensions](../../architecture/.draft/extensions/implementation.md) | Skill manager、MCP reconcile、LSP 懒启动、hook [CR35][CR41][CR46][CR47] | 借鉴状态观测；批准、精确依赖及 InstallLock-ready 不由连接状态替代 |
-| [Evaluation](../../architecture/.draft/evaluation/README.md) | race/多客户端/取消测试、Skill diagnostics [CR52][CR25] | 可扩充失败语料；不是 formal EvaluationRun、改善资格或发布证明 |
-| [可靠工作](../../architecture/.draft/reliable-work.md) | 内存预约、pubsub、后台 job [CR18][CR30][CR40] | 局部机制反推故障用例；坚持事实与 jobs 共事务、有限扫描，不添加另一个事件权威 |
-| [存储](../../architecture/.draft/storage-and-middleware.md) | SQLite、sqlc/goose、JSON parts [CR12][CR13][CR14] | 本地开发 adapter 可参考；生产 PG 多 AZ 与对象存储按 ADR-0003 保留 |
-| [部署](../../architecture/.draft/deployment-production.md) | server、Backend/workspace 生命周期 [CR07][CR08] | 借鉴排空和连接 grace；不能由当前 presence 改变固定逻辑负责方 |
-| [工程组织](../../architecture/.draft/engineering.md#layout) | 一个 Go module，App/Backend/transport/workspace 分层 [CR01][CR05][CR06] | 与既有布局相容；只细化组合根和 SDK 适配，不增加九套存储或服务 |
+| [Orchestrator](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/orchestrator/implementation.md) | Coordinator、session 队列、accepted/cancel [CR18][CR22][CR23] | 借鉴交互竞态，需改造为原 Task owner 的持久控制；Coordinator 不能成为另一完成裁决者 |
+| [Brain](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/brain/implementation.md) | Fantasy loop、prompt、摘要/邻接修复 [CR24][CR26][CR27] | 借鉴 ModelAdapter 转换；默认单轮 Proposal 与无隐藏请求仍成立 |
+| [Execution](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/execution/implementation.md) | 工具、后台 shell、MCP [CR30][CR33][CR44] | 借鉴后台 read/kill 分离和结果覆盖诊断；效果未知必须保留原 Operation 和核对 job |
+| [Security](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/security/README.md) | permission、hook、command blocker [CR31][CR34][CR38] | 不等价：确认竞争可借鉴，allowlist/hook 不构成 Grant/平台隔离 |
+| [Memory](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/memory/README.md) | 摘要、上下文文件、Skill、file history [CR15][CR27][CR41] | 会话材料与工具历史；不能自动作为跨任务长期记忆或授权材料 |
+| [Collaboration](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/collaboration/implementation.md) | agent tool、子 session、best-effort cost [CR39][CR49] | 借鉴父调用关联；phase/effect/control/预算封账独立实现，不能只收一段文本 |
+| [Interaction](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/interaction/implementation.md) | Workspace、RunComplete、question、确认竞争、SSE [CR05][CR31][CR36][CR37][CR50] | 借鉴前端 facade 和准确 correlator；Surface/UserAction 仍按可信渲染与原 owner 消费 |
+| [Extensions](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/extensions/implementation.md) | Skill manager、MCP reconcile、LSP 懒启动、hook [CR35][CR41][CR46][CR47] | 借鉴状态观测；批准、精确依赖及 InstallLock-ready 不由连接状态替代 |
+| [Evaluation](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/evaluation/README.md) | race/多客户端/取消测试、Skill diagnostics [CR52][CR25] | 可扩充失败语料；不是 formal EvaluationRun、改善资格或发布证明 |
+| [可靠工作](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/reliable-work.md) | 内存预约、pubsub、后台 job [CR18][CR30][CR40] | 局部机制反推故障用例；坚持事实与 jobs 共事务、有限扫描，不添加另一个事件权威 |
+| [存储](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/storage-and-middleware.md) | SQLite、sqlc/goose、JSON parts [CR12][CR13][CR14] | 本地开发 adapter 可参考；生产 PG 多 AZ 与对象存储按 ADR-0003 保留 |
+| [部署](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/deployment-production.md) | server、Backend/workspace 生命周期 [CR07][CR08] | 借鉴排空和连接 grace；不能由当前 presence 改变固定逻辑负责方 |
+| [工程组织](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/engineering.md#layout) | 一个 Go module，App/Backend/transport/workspace 分层 [CR01][CR05][CR06] | 与既有布局相容；只细化组合根和 SDK 适配，不增加九套存储或服务 |
 
 ## 11. 可执行优化建议
 
@@ -233,13 +233,13 @@ Run 退出 flush 失败会记日志，仍可能发布 RunComplete；Pubsub.Publi
 
 | 建议与优先级 | 具体改变与参考 | 代价、约束及验收 |
 | --- | --- | --- |
-| K-01 接纳与取消竞态 P0 | 在 [共事务接纳](../../architecture/.draft/reliable-work.md)和原业务 owner 中细化 accepted 尚未领取、active 刚退出、queue 转下一条、cancel 后新输入等状态；参考 accept sequence 与 watermark [CR22][CR23] | 持久 command/control id 已有，不新增第二套 RunID 权威；重复/乱序/跨 worker 消息不得误取消后来的独立输入 |
-| K-02 可读状态与通知次序 P0 | 在 [交互](../../architecture/.draft/interaction/implementation.md)及 storage adapter 写路径明确“commit 成功→可读投影→可丢 hint”，借鉴 debounce/final flush/文本对齐 [CR16][CR21][CR37] | 仅呈现增量可缓冲；Operation/Grant/UserAction/完成依据不能 debounce。注入 flush 错误和 broker 丢失后读取原事实仍能解释状态 |
-| K-03 模型兼容转换 P0 | 在 [Brain](../../architecture/.draft/brain/implementation.md#context-optimization)建立纯工具配对/邻接转换，记录孤立/缺失覆盖，参考 preparePrompt [CR26][CR29] | 缺结果必须带原 Operation 的 unknown，不把 synthetic error 存成已失败事实；重试同义动作被原效果责任阻挡 |
-| K-04 多界面确认竞争 P0 | 在 [UserAction 消费](../../architecture/.draft/interaction/implementation.md)验收 deny/confirm、旧 preview/new version、两个设备与撤权同时发生；借鉴 first-winner [CR31] | 使用现行 command 去重及原 owner Tx，准确预览/当前权限仍是必要条件；败方不能写入下一次自动许可 |
-| K-05 编程工具覆盖 P1 | 在 [Execution](../../architecture/.draft/execution/implementation.md)adapter 增加 LSP/MCP/文件读取与输出覆盖诊断，参考 read tracker 与 MCP content 转换 [CR17][CR44][CR47] | 时间戳不等于准确版本；多资源输出截断须显式 partial/缺失，所有派生材料继承用途限制 |
-| K-06 Hook 准入位置 P0 | 在 [Extensions](../../architecture/.draft/extensions/implementation.md)只允许有明确合同的 hook 改写准入前候选；参考 input rewrite、allow bypass、子端 skip 三种边界 [CR35][CR38] | SEC-01 与 EXE-01 的实现细化。准确版本、最终参数、Grant 和预算在实际发送前重新核查，不能用 hook 成功替代业务授权 |
-| K-07 SDK 与故障语料 P1 | 在 [SDK/host](../../architecture/.draft/engineering.md#layout)提供薄的 local/remote facade，并把 queued run、SSE 断线、通知过载、子 cost 保存失败形成 [Evaluation](../../architecture/.draft/evaluation/implementation.md)样本 [CR05][CR49][CR51][CR52] | facade 不包含另一状态机；样本必须冻结版本、声明已暴露情况并统计所有尝试/完整成本。只观察到实现便利，未证明效果提升 |
+| K-01 接纳与取消竞态 P0 | 在 [共事务接纳](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/reliable-work.md)和原业务 owner 中细化 accepted 尚未领取、active 刚退出、queue 转下一条、cancel 后新输入等状态；参考 accept sequence 与 watermark [CR22][CR23] | 持久 command/control id 已有，不新增第二套 RunID 权威；重复/乱序/跨 worker 消息不得误取消后来的独立输入 |
+| K-02 可读状态与通知次序 P0 | 在 [交互](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/interaction/implementation.md)及 storage adapter 写路径明确“commit 成功→可读投影→可丢 hint”，借鉴 debounce/final flush/文本对齐 [CR16][CR21][CR37] | 仅呈现增量可缓冲；Operation/Grant/UserAction/完成依据不能 debounce。注入 flush 错误和 broker 丢失后读取原事实仍能解释状态 |
+| K-03 模型兼容转换 P0 | 在 [Brain](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/brain/implementation.md#context-optimization)建立纯工具配对/邻接转换，记录孤立/缺失覆盖，参考 preparePrompt [CR26][CR29] | 缺结果必须带原 Operation 的 unknown，不把 synthetic error 存成已失败事实；重试同义动作被原效果责任阻挡 |
+| K-04 多界面确认竞争 P0 | 在 [UserAction 消费](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/interaction/implementation.md)验收 deny/confirm、旧 preview/new version、两个设备与撤权同时发生；借鉴 first-winner [CR31] | 使用现行 command 去重及原 owner Tx，准确预览/当前权限仍是必要条件；败方不能写入下一次自动许可 |
+| K-05 编程工具覆盖 P1 | 在 [Execution](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/execution/implementation.md)adapter 增加 LSP/MCP/文件读取与输出覆盖诊断，参考 read tracker 与 MCP content 转换 [CR17][CR44][CR47] | 时间戳不等于准确版本；多资源输出截断须显式 partial/缺失，所有派生材料继承用途限制 |
+| K-06 Hook 准入位置 P0 | 在 [Extensions](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/extensions/implementation.md)只允许有明确合同的 hook 改写准入前候选；参考 input rewrite、allow bypass、子端 skip 三种边界 [CR35][CR38] | SEC-01 与 EXE-01 的实现细化。准确版本、最终参数、Grant 和预算在实际发送前重新核查，不能用 hook 成功替代业务授权 |
+| K-07 SDK 与故障语料 P1 | 在 [SDK/host](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/engineering.md#layout)提供薄的 local/remote facade，并把 queued run、SSE 断线、通知过载、子 cost 保存失败形成 [Evaluation](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/evaluation/implementation.md)样本 [CR05][CR49][CR51][CR52] | facade 不包含另一状态机；样本必须冻结版本、声明已暴露情况并统计所有尝试/完整成本。只观察到实现便利，未证明效果提升 |
 
 建议优先把 K-01～04、K-06 写入现有 L2 验收细化，再实现 K-05/K-07 的 adapter 与语料。依据本报告，不应把内存 accepted/broker/后台 job 作为生产恢复基础，也不应将本机工具确认直接替换本项目 Grant。
 

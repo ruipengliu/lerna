@@ -4,4 +4,4 @@
 
 普通退役、到期或升级只封闭新调用；受信维护者确认判断缺陷且命中规则、实现版本和适用范围时，活动任务保留旧记录但不得再靠该记录通过条件，须补证或重核。已成功任务保留固定 Result 与终态，另展示证据失效说明。相比所有撤回都重核，这避免正常维护使有效成果失效；相比旧证据永远有效，这要求宿主维护当前缺陷检查及可恢复的影响处理。跨域缺陷的即时可见性不能由安装批准协议推导。
 
-用户于 2026-09-27 确认以上两项取舍。完整行为与依赖边界见[任务验证](../architecture/.draft/orchestrator/verification.md)，内部持久化见[实现篇](../architecture/.draft/orchestrator/implementation.md#condition-storage)。
+用户于 2026-09-27 确认以上两项取舍。完整行为与依赖边界见[证据资格](../architecture/evaluation/README.md)，内部持久化见[证据治理记录](../architecture/data/module-records.md#9-证据治理与实验)。

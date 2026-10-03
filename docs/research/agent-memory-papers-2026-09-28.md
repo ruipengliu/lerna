@@ -1,6 +1,6 @@
 # Agent Memory 近半年 arXiv 论文调研
 
-[优化方案](../architecture/memory/optimization-plan.md) · [开源库调研](agent-memory-libraries-2026-09-28.md)
+[优化方案](https://github.com/ruipengliu/lerna/blob/99c6298a8beb2da5a65decfe925bb5e212ac2dc5/docs/architecture/memory/optimization-plan.md) · [开源库调研](agent-memory-libraries-2026-09-28.md)
 
 调研日期：2026-09-28。新论文窗口按 arXiv **首次提交日期**确定，为 **2026-03-28—2026-09-28**；修订日期只用于确定阅读版本。本文精读 12 篇直接影响本项目设计选择的论文，另记录被排除的候选和窗口外基础工作。这里的实验结果均为作者报告，本轮未复现实验。
 
@@ -8,7 +8,7 @@
 
 ## 1. 对本项目选择的影响
 
-仓库已经规定：复合正文各断言保留独立时间与范围；明确 replace 后旧修订退出当前查询；派生物进入 `needs_review`；查询先限定获准处理范围；读时整理复用现有索引和 ContentRef；关闭沿 `source_edges` 传播。因此，下表是落实和验证这些规则的建议，不把既有保证列为新增能力。依据见[模块契约](../architecture/memory/README.md#temporal-conflicts)与[实现设计](../architecture/memory/implementation.md#read-time-curation)。
+仓库已经规定：复合正文各断言保留独立时间与范围；明确 replace 后旧修订退出当前查询；派生物进入 `needs_review`；查询先限定获准处理范围；读时整理复用现有索引和 ContentRef；关闭沿 `source_edges` 传播。因此，下表是落实和验证这些规则的建议，不把既有保证列为新增能力。依据见[模块契约](https://github.com/ruipengliu/lerna/blob/99c6298a8beb2da5a65decfe925bb5e212ac2dc5/docs/architecture/memory/README.md#temporal-conflicts)与[实现设计](https://github.com/ruipengliu/lerna/blob/99c6298a8beb2da5a65decfe925bb5e212ac2dc5/docs/architecture/memory/implementation.md#read-time-curation)。
 
 | 关键选择 | 论文提供的证据 | 推荐的实现方向与边界 |
 | --- | --- | --- |

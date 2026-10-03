@@ -4,7 +4,7 @@
 
 **建议把 Jev 作为 Brain 中有界语义判断的候选实现，优先评估只读候选选择。** 它能够替换原本需要生成模型判断的一处调用，但不能把模型判断变成确定规则，也不会直接生成完整计划、任意参数或报告正文。确定字段已有且规则可以裁决时，继续使用零模型 shortcut。部署和恢复能力尚有公开资料缺口，不能仅凭低价格和类型正确保证进入严格预算的正式调用链。
 
-本文集中保存外部证据；Brain 的接入职责、异常行为与评估方案由 [Brain 应用方案](../architecture/brain/decision-paths.md)定义，不在这里改变现行架构契约。
+本文集中保存外部证据；Brain 的接入职责、异常行为与评估方案由 [Brain 应用方案](https://github.com/ruipengliu/lerna/blob/8df44606ea09a9a869be84153c0782d3106ebefb/docs/architecture/brain/decision-paths.md)定义，不在这里改变现行架构契约。
 
 ## 1. 身份与产品边界
 

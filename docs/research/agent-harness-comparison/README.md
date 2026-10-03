@@ -1,6 +1,6 @@
 # Agent Harness 参考项目调研
 
-研究日期：2026-10-01，时区 Asia/Shanghai。五个参考仓库已拉取到 `.reference/`，各项目报告分别保存在 `docs/research/<project>/`；共同基线与反推架构建议保存在本目录。
+研究日期：2026-10-01，时区 Asia/Shanghai。各项目报告分别保存在 `docs/research/<project>/`；共同基线与架构建议保存在本目录。源码按固定版本引用，当前不要求本地保留参考仓库。
 
 建议先读[架构优化分析](architecture-optimization.md)，再按模块打开对应项目报告。综合判断是保留本项目既有九模块和可靠任务基线，吸收上游的内部组织、恢复检查点与故障语料；程序化工具、渐进式发现和经验精炼以候选实验验证。
 
@@ -17,17 +17,16 @@
 
 每份报告覆盖架构与模块依赖、核心数据结构、存储/提交/恢复、核心流程与时序、模型/工具/安全/协作/记忆/交互/扩展/评测、优势及代价、九模块与共同工程基线对照。51 项局部建议在综合分析中归并为 12 项，保留出处和既有优化关联；数量不代表已采用或测得收益。
 
-原仓库分别为 [openai/codex](https://github.com/openai/codex)、[earendil-works/pi](https://github.com/earendil-works/pi)、[deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)、[PrimeIntellect-ai/prime-agent](https://github.com/PrimeIntellect-ai/prime-agent)、[charmbracelet/crush](https://github.com/charmbracelet/crush)。本地目录依次是 `.reference/codex`、`.reference/pi`、`.reference/deepseek-harness`、`.reference/prime-agent`、`.reference/crush`；采用深度 1 的默认分支快照，不声称覆盖提交历史。`.reference/` 由仓库已有规则忽略。
+原仓库分别为 [openai/codex](https://github.com/openai/codex)、[earendil-works/pi](https://github.com/earendil-works/pi)、[deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)、[PrimeIntellect-ai/prime-agent](https://github.com/PrimeIntellect-ai/prime-agent)、[charmbracelet/crush](https://github.com/charmbracelet/crush)。研究当时使用固定提交快照，不声称覆盖完整提交历史。后续复核按[来源清单](sources.json)的仓库地址和准确 commit 下载到独立缓存，不把默认分支最新内容当成报告依据。
 
-## 2. 共同分析与复核资产
+## 2. 共同分析与来源
 
 - [六组核心对象与参考语义覆盖](core-model-semantic-coverage.md)：16 类语义逐项对照五个项目的七条实际路径，区分设计覆盖、内部记录、可选能力和未公开合同；运行能力仍待实现与验证。
 - [数据对象与同场景读写对比](data-flow-io-comparison.md)：补充连续对话、模型—工具循环的对象组织、逻辑记录与实际持久化边界，以及本项目的复杂度收敛。
 - [本项目架构比较基线](architecture-baseline.md)：九模块事实归属、ADR、工程选型与 24 项已采用方向。
 - [架构优化分析](architecture-optimization.md)：逐模块对照、12 项建议、工程影响、实施依赖、验收/实验及局部编号追踪。
-- [来源与基线清单](sources.json)：remote、branch、commit、tree、提交时间、文件数，以及 154 个本项目基线文件的 SHA-256。
-- [静态验证记录](verification.md)：源码固定提交/路径/行号、本地链接、文档结构、引用完整性与快照一致性检查范围及结果。
-- [复核脚本](verify-research.py)：读取上述快照和报告重新核查引用与基线，输出机器可读结果。
+- [来源与基线清单](sources.json)：保留项目 remote、准确 commit、许可来源及核对边界，以及本项目当时的基线 commit。
+- [日常检查说明](../../architecture/validation/README.md#6-全仓链接与研究来源维护)：核对保留文档、链接与来源元数据；参考源码只在需要时另行获取和验证。
 
 ## 3. 如何使用这些结论
 
@@ -37,6 +36,6 @@
 
 本次采用源码静态追踪及多智能体分项目研究、根侧综合与交叉复核。没有安装上游依赖、启动模型/外部服务或执行上游测试/benchmark；不提供跨项目质量、延迟、费用或容灾排名。研究时的架构草案和 ADR 是比较依据，此次交付是研究报告及建议，运行实现和真实收益仍需后续取证。
 
-用户随后确认据此刷新架构；原设计采用映射随架构草案移除，可通过 Git 历史查看。模型收敛的研究目标、约束及语义覆盖保留在[语义覆盖研究](core-model-semantic-coverage.md#core-model-scope)。上列 sources.json、architecture-baseline 与原 verification 保留调研时的历史快照；架构文件在优化后发生变化，不重写原哈希来伪装仍与旧基线一致。新增读写对比区分参考源码行为与更新后本项目的设计阶段，不表示已运行性能测试。
+用户随后确认据此刷新架构；原设计采用映射随架构草案移除，可通过 Git 历史查看。模型收敛的研究目标、约束及语义覆盖保留在[语义覆盖研究](core-model-semantic-coverage.md#core-model-scope)。来源清单与 architecture-baseline 保留调研时的准确版本；完整旧哈希及原验证输出可从[历史来源清单](https://github.com/ruipengliu/lerna/blob/f6b8f300dc034817cfcdac9c95ce6cfa3ee6a986/docs/research/agent-harness-comparison/sources.json)与[历史验证记录](https://github.com/ruipengliu/lerna/blob/f6b8f300dc034817cfcdac9c95ce6cfa3ee6a986/docs/research/agent-harness-comparison/verification.md)恢复。历史记录不能代替当前源码重验。新增读写对比区分参考源码行为与更新后本项目的设计阶段，不表示已运行性能测试。
 
 源码复用还需按固定版本的实际许可判断。尤其 Crush 当前根许可为 FSL-1.1-MIT，含未来 MIT 条款，不能按“当前全部 MIT”复制；具体定位见[Crush 报告](../crush/README.md#1-定位版本与复用范围)。其他项目许可也在对应报告说明。

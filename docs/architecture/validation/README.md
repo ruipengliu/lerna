@@ -93,3 +93,22 @@ lab_checks.cjs 检查解释工具的状态函数、默认值和参数边界，�
 上述检查的运行结果随本次交付报告说明。它们不能替代F01–F25实现实验，也不能据此把RPO=0、RTO≤60秒或质量目标写成已达标。若形式化进一步展开，应绑定新模型/性质/公平性假设和哈希，并提供错误变体与可达见证；完整成功轨迹不是条件活性的证明。
 
 本轮未执行HTML的浏览器点击验收，旧交付记录中的浏览器限制也未重新核验。已有解释工具仅重跑函数测试；新增数据SVG已渲染并目视检查。函数通过不表示布局、键盘或交互已验证。
+
+## 6 全仓链接与研究来源维护
+
+以下检查仅使用 Python 3.10+ 标准库和本地 Git，不安装依赖、不联网、不执行参考项目代码：
+
+```sh
+python docs/architecture/validation/check_links.py
+python -m unittest discover -s docs/architecture/validation -p 'test_*.py'
+```
+
+[check_links.py](check_links.py) 扫描 Git 已跟踪文件及未被忽略的新文件中的 Markdown、HTML、SVG；不扫描代码文件。检查内联、完整/折叠引用、已定义快捷引用、图片及 HTML 的 href/src，支持 URL 解码、Unicode 标题、重复标题、Setext 标题和显式 id/name。代码围栏、行内/缩进代码、HTML 注释及 script/style/pre/code 内容被排除；未定义的完整引用报错，普通未定义的方括号文本不当成链接。根相对路径按仓库根解析，越界路径报错。输出包含文件、行号、目标和原因的 JSON；有错误退出 1，通过退出 0，可用 --output 保存新报告。
+
+此脚本不承诺完整 CommonMark 渲染一致性，不解析模板、动态 JavaScript、CSS URL、srcset 或非文档片段语义。普通远程链接只计为跳过，不宣称在线有效。若 GitHub 链接与本仓 origin 对应且固定完整 40 位 commit，则直接读取该版本 Git 对象校验路径、类型、文档锚点或源码行号；即使文件在当前工作区已删除也能复核。缺少历史对象会报错，不自动拉取或改用当前文件。
+
+[来源清单](../../research/agent-harness-comparison/sources.json)保留五个项目的仓库地址、固定 commit、已有许可证依据，以及本项目的历史比较 commit/path。[来源测试](test_research_sources.py)随上述 unittest 运行，只检查清单必要字段、研究引用与固定 commit 一致，以及本仓历史基线目录存在；不要求参考源码常驻，不验证外部源码内容或许可证正文。
+
+需要重新核对某条源码结论时，再按清单的 remote 和 commit 下载到仓库外的独立缓存。先确认缓存的 origin 和固定 commit，再从该 commit 的 Git 对象读取引用路径与行号，并重读相关实现；不得用默认分支最新版或当前工作区代替原版本。无需常驻 `.reference/`，不自动下载或执行上游代码。历史 SHA-256 清单、clone 元数据和一次性核验报告不作为日常检查依赖；旧研究检查可从 Git 历史追溯。
+
+交付时分别说明文档/来源元数据检查和按需源码复核的实际范围。没有下载或读取源码时，源码复核应记为“未执行”；链接或元数据检查通过不表示上游测试、性能实验或本项目运行验证通过。

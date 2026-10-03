@@ -4,9 +4,9 @@
 
 ## 1. 调研边界与结论
 
-本报告分析 `.reference/codex` 的[固定提交 `d4a475adda850d80b6149c76454de94e0cf4fd51`](https://github.com/openai/codex/commit/d4a475adda850d80b6149c76454de94e0cf4fd51)，提交时间为 2026-10-01 UTC。研究对象是该仓库提供的本地 coding agent、Rust 运行时、CLI/TUI、app-server、工具和扩展基础设施；README 中链接的云端产品、专有桌面应用及 IDE 前端不能视为本仓库完整提供的实现。许可证为 Apache-2.0。工作区采用 Rust 2024，多 crate 组织；该提交的 workspace 版本 `0.0.0` 不能作为发布版本使用。[产品范围][许可证][工作区]
+本报告分析研究时缓存于 `.reference/codex` 的[固定提交 `d4a475adda850d80b6149c76454de94e0cf4fd51`](https://github.com/openai/codex/commit/d4a475adda850d80b6149c76454de94e0cf4fd51)，提交时间为 2026-10-01 UTC。研究对象是该仓库提供的本地 coding agent、Rust 运行时、CLI/TUI、app-server、工具和扩展基础设施；README 中链接的云端产品、专有桌面应用及 IDE 前端不能视为本仓库完整提供的实现。许可证为 Apache-2.0。工作区采用 Rust 2024，多 crate 组织；该提交的 workspace 版本 `0.0.0` 不能作为发布版本使用。[产品范围][许可证][工作区]
 
-采用一手源码静态追踪：从输入、模型请求、工具调用、持久化屏障到重放和 UI 事件，核对类型及实现。没有启动模型、外部 MCP 服务或沙箱，也没有运行全量测试，因此下文的“优势”指代码可证实的机制，“未发现”限定于本次审阅范围；静态阅读没有证明性能、任务质量、跨节点高可用或恰好一次执行。本项目比较基线为 [架构草稿](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/README.md)、[优化证据](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/validation/optimization-evidence.md)及 [来源清单](/Volumes/Data/proj/lerna-docs/docs/research/agent-harness-comparison/sources.json)。
+采用一手源码静态追踪：从输入、模型请求、工具调用、持久化屏障到重放和 UI 事件，核对类型及实现。没有启动模型、外部 MCP 服务或沙箱，也没有运行全量测试，因此下文的“优势”指代码可证实的机制，“未发现”限定于本次审阅范围；静态阅读没有证明性能、任务质量、跨节点高可用或恰好一次执行。本项目比较基线为 [架构草稿](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/README.md)、[优化证据](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/validation/optimization-evidence.md)及 [来源清单](../agent-harness-comparison/sources.json)。
 
 最值得借鉴的三个设计是：**按采样步骤冻结模型、工具目录和环境配置；把原始历史与可重建查询视图区分；把恢复定义成重新取得写入权、重建上下文并继续原回合。** 但 Codex 的本地线程运行时不等于本项目的 Task/Decision/Operation/Effect 账本：助手消息结束一轮、取消请求得到确认、补出 `aborted` 工具结果，都不能单独证明任务成功、外部效果撤销或副作用从未发生。[步骤冻结][本地存储边界][状态映射][提示归一化]
 
@@ -65,7 +65,7 @@ flowchart TB
 | `RolloutPayload` | tagged payload：响应项、回合上下文、压缩、token usage、agent 通信、保留上下文、world state、安全评分和事件等。 | 原始模型内容、系统事件和工具结果各有语义，不能都当成可信控制命令。 |
 | `AgentStatus` / `TurnStatus` | 由事件映射 pending/running/completed/interrupted/errored 等；TurnStatus 有 completed/interrupted/failed/in_progress。 | `TurnComplete` 没有错误即可映射 Completed，不包含本项目 AcceptanceRule 所需独立成功证明。 |
 
-证据分别为 [线程入口][会话类型][回合运行类型][步骤冻结][线程身份][历史位置][会话元数据][回合快照][历史载荷][状态映射][前端回合状态]。本项目应把这些会话/历史结构映射到 [Task / Operation 模型](/Volumes/Data/proj/lerna-docs/CONTEXT.md)，而不是照搬名称。
+证据分别为 [线程入口][会话类型][回合运行类型][步骤冻结][线程身份][历史位置][会话元数据][回合快照][历史载荷][状态映射][前端回合状态]。本项目应把这些会话/历史结构映射到 [Task / Operation 模型](../../../CONTEXT.md)，而不是照搬名称。
 
 ## 4. 存储、事务与恢复
 
@@ -159,7 +159,7 @@ sequenceDiagram
 
 `ModelClient` 提供线程级连接和路由状态，`ModelClientSession` 提供回合级 WebSocket 连接复用；增量输入只有在前后请求兼容且历史为前缀扩展时采用，必要时回到完整请求/HTTP。`ResponsesApiRequest` 使用 `store:false` 和 prompt cache 信息。这里能确认“有减少重复输入/重连的机制”，无法从静态源码给出延迟收益数字。[模型连接][增量请求][请求编码]
 
-采样层存在受 provider `stream_max_retries` 控制的内部 stream 重试，并携带已执行工具调用以处理部分响应。此机制和本项目 Brain 的“一次 Decision 对应 0/1 次模型物理请求”不同：移植时必须由上层显式决定新 Decision，并分开计费、结果不明与已执行工具，禁止 SDK 隐式替换请求。[采样重试] 本项目现有 [BRN-01/EXE-03](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/validation/optimization-evidence.md) 已明确这些约束；建议是将案例转成验证，非宣布缺少该机制。
+采样层存在受 provider `stream_max_retries` 控制的内部 stream 重试，并携带已执行工具调用以处理部分响应。此机制和本项目 Brain 的“一次 Decision 对应 0/1 次模型物理请求”不同：移植时必须由上层显式决定新 Decision，并分开计费、结果不明与已执行工具，禁止 SDK 隐式替换请求。[采样重试] 本项目现有 [BRN-01/EXE-03](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/validation/optimization-evidence.md) 已明确这些约束；建议是将案例转成验证，非宣布缺少该机制。
 
 ## 6. 工具执行、审批、隔离及并行
 
@@ -167,7 +167,7 @@ sequenceDiagram
 
 `ToolOrchestrator` 把审批要求分为 Skip、NeedsApproval、Forbidden，再选择沙箱执行；只有特定 SandboxDenied 分支允许按审批策略考虑提权重试，其他错误不自动采用该路径。审批缓存按工具序列化键保存 ApprovedForSession，可由用户或 Guardian reviewer 决定。它减少重复交互，但不同于本项目 exact bindings、受信 Confirmation、Grant 消耗和可撤销账本。[审批编排][审批升级][审批缓存][审批评审者]
 
-平台策略支持 macOS Seatbelt、Linux 沙箱、Windows RestrictedToken 等，由执行边界把 `PathUri` 转成本机路径；网络代理提供域 allow/deny、私网目标及 limited HTTP method 策略；文档明确某些直连 loopback 阻断还依赖沙箱。GET/HEAD/OPTIONS 的“limited”机制不能证明目标 API 没有语义副作用。应以实际平台和启动参数验证限制是否生效。进程沙箱也不能代替对远程 MCP 服务内部行为的约束。[沙箱选择][网络代理] 本项目 [SEC-02](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/security/implementation.md) 已要求实际平台证据。
+平台策略支持 macOS Seatbelt、Linux 沙箱、Windows RestrictedToken 等，由执行边界把 `PathUri` 转成本机路径；网络代理提供域 allow/deny、私网目标及 limited HTTP method 策略；文档明确某些直连 loopback 阻断还依赖沙箱。GET/HEAD/OPTIONS 的“limited”机制不能证明目标 API 没有语义副作用。应以实际平台和启动参数验证限制是否生效。进程沙箱也不能代替对远程 MCP 服务内部行为的约束。[沙箱选择][网络代理] 本项目 [SEC-02](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/security/implementation.md) 已要求实际平台证据。
 
 Code mode 在 V8 isolate 中运行短程序，将可用工具经 host callback 暴露；去除若干危险/不需要的全局对象，禁用 module import，工具集来自允许目录。它把多次工具调用的控制流留在一个程序内，方便数据处理和并行组合，但权限仍应由宿主工具入口执行。不能把 V8 的脚本边界描述为任意原生插件的 OS 隔离。[Code模式全局][Code模式导入]
 
@@ -179,7 +179,7 @@ fork 与 spawn 的关系、历史模式和继承边界在类型上分开，这�
 
 本提交还实现了持久目标：`thread_goals` 保存 objective、active/paused/blocked/usage_limited/budget_limited/complete、token budget、usage 与时间。Goal 工具通过状态枚举限制 complete/blocked/paused 更新，并直接更新目标、发出事件和完成预算报告；本次该路径未发现本项目 Requirement 覆盖/AcceptanceRule 外部证据校验，不能把 goal complete 作为等价 Task succeeded 依据。存在目标机制与存在独立成功核验是不同事实。[目标表][目标更新]
 
-共享预算有 rollout token usage 记录，适合 coding agent 的执行控制；这不等于跨 Orchestrator 金额预留、模型物理请求结算或 Effect 的持久归属。[子线程预算] 本项目 [COL-01/COL-02](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/collaboration/implementation.md) 已规定委派闭合证据与成本收益验证，Codex 可作为具体反例/负载来源。
+共享预算有 rollout token usage 记录，适合 coding agent 的执行控制；这不等于跨 Orchestrator 金额预留、模型物理请求结算或 Effect 的持久归属。[子线程预算] 本项目 [COL-01/COL-02](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/collaboration/implementation.md) 已规定委派闭合证据与成本收益验证，Codex 可作为具体反例/负载来源。
 
 ## 8. 记忆与扩展
 
@@ -187,7 +187,7 @@ fork 与 spawn 的关系、历史模式和继承边界在类型上分开，这�
 
 记忆写入是独立后台管线：非临时根会话、feature gate 和 memory store 可用时启动；先选取符合更新时间/空闲条件的 rollout，并行 phase1 提取 raw memory 与 summary，记录源快照与任务所有权；phase2 取得全局 consolidation job，准备文件和 Git 基线，启动专用 agent 合并，检查产物并续租/更新水位。库内任务 lease 与 ownership token、产物文件和 Git 基线提供可恢复步骤，但不是一个覆盖模型请求、SQLite、文件与 Git 的原子事务。[记忆启动][记忆一阶段][记忆任务表][记忆二阶段][记忆完成]
 
-phase2 通常采用不交互审批和限定记忆目录的写策略；代码对 `External` 权限配置保留 network 取值，不能笼统声称 consolidation 永远没有网络权限。自动提取是否等于用户授予长期保存权限、源撤销如何传播到派生记忆和副本，本次未发现与本项目 Memory/Grant/source closure 等价的完整账本；须保持本项目 MEM-01/02/03，而不是照搬“后台自动整理即可”。[记忆权限] 本项目 [Memory 设计](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/memory/README.md) 与 [优化计划](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/memory/optimization-plan.md) 已有相应要求。
+phase2 通常采用不交互审批和限定记忆目录的写策略；代码对 `External` 权限配置保留 network 取值，不能笼统声称 consolidation 永远没有网络权限。自动提取是否等于用户授予长期保存权限、源撤销如何传播到派生记忆和副本，本次未发现与本项目 Memory/Grant/source closure 等价的完整账本；须保持本项目 MEM-01/02/03，而不是照搬“后台自动整理即可”。[记忆权限] 本项目 [Memory 设计](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/memory/README.md) 与 [优化计划](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/memory/optimization-plan.md) 已有相应要求。
 
 读取侧与写入管线分离：feature/`use_memories` 开启时，MemoriesExtension 从版本目录读取 `memory_summary.md`，按 token 限额截断后作为有类型的上下文片段注入；V2 进一步按片段字节上限拆分。专用 backend 声明 list/read/search，带 path、cursor、行位置、匹配模式、truncated/next_cursor 等字段。此机制提供渐进读取及可解释覆盖信息，不能凭摘要注入就推断全部记忆均已检索，也不能替代本项目读时许可检查。[记忆读取扩展][记忆摘要][记忆读取契约]
 
@@ -203,7 +203,7 @@ Skill 模型含名称、描述、路径、scope、plugin 身份、依赖工具�
 
 app-server 将请求处理/分派与可能较慢的 outgoing 写任务拆开；初始化前拒绝业务请求，实验协议必须显式启用。协议采用 request/notification/response/error 类型，但源码说明**并非完整 JSON-RPC 2.0，省略 `jsonrpc` 字段**；不可复制协议名称而假设 wire 格式兼容。Thread/Turn/Timeline API 支持历史模式、设置、位置与时间，审批请求通过 server-to-client 回调保持交互。[服务任务][服务准入][RPC格式][时间线]
 
-outgoing 可重放当前线程尚未响应的 server request，回调还绑定 connection 和 request_id；这有利于 UI 断线重连，但 pending 回调是运行实例中的状态。实验 `userVerification/cancel` 的 acknowledgment 表示信号已接收，不等待 OS 提示退出，也不回滚已完成效果；本项目 UI 的 accepted/observed/published/用户已读更不能合并成一个状态。[待审批重放][取消说明] 此结论与现有 [interaction](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/interaction/implementation.md)、[ADR-0008](/Volumes/Data/proj/lerna-docs/docs/adr/0008-trusted-renderer-preview.md) 的方向一致。
+outgoing 可重放当前线程尚未响应的 server request，回调还绑定 connection 和 request_id；这有利于 UI 断线重连，但 pending 回调是运行实例中的状态。实验 `userVerification/cancel` 的 acknowledgment 表示信号已接收，不等待 OS 提示退出，也不回滚已完成效果；本项目 UI 的 accepted/observed/published/用户已读更不能合并成一个状态。[待审批重放][取消说明] 此结论与现有 [interaction](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/interaction/implementation.md)、[ADR-0008](../../adr/0008-trusted-renderer-preview.md) 的方向一致。
 
 Rust 类型导出 TS 与 JSON Schema，fixture 测试重新生成产物并比较，能约束协议漂移。SDK TypeScript 的 `Codex`/`Thread` 入口还包装本地 `codex exec` 子进程，而不是承诺整个 app-server 协议的对等 SDK。可见的前端源码主要为 TUI 和协议能力，不能据此称专有 Codex 桌面/IDE 的所有前端都开放在仓库。[协议导出][协议Fixture][SDK子进程][工作区][产品范围]
 
@@ -235,31 +235,31 @@ OTel 记录会话、请求及工具事件；Skill invocation 带显式/隐式、
 
 ## 11. 对本项目草稿的模块对应与建议
 
-本项目已经规定 24 项优化，覆盖目标保留、上下文来源、目录绑定、未知效果、沙箱证据、记忆权限、协作闭合、交付语义、制品和评测。下列建议以这些规定为基线：**“落实”是实现/验收具体化；“可选新增”是内部实现选项，不代表原架构缺少相应不变量。** 约束继续依据 [ADR 目录](/Volumes/Data/proj/lerna-docs/docs/adr)、[工程基线](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/engineering.md#stack)及 [优化证据](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/validation/optimization-evidence.md)。
+本项目已经规定 24 项优化，覆盖目标保留、上下文来源、目录绑定、未知效果、沙箱证据、记忆权限、协作闭合、交付语义、制品和评测。下列建议以这些规定为基线：**“落实”是实现/验收具体化；“可选新增”是内部实现选项，不代表原架构缺少相应不变量。** 约束继续依据 [ADR 目录](../../adr)、[工程基线](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/engineering.md#stack)及 [优化证据](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/validation/optimization-evidence.md)。
 
 ### 11.1 九模块对应实现
 
 | 本项目模块与准确位置 | Codex 对应符号 / 实现 | 适用判断及反推方向 |
 | --- | --- | --- |
-| [orchestrator：提案消费](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/orchestrator/implementation.md#proposal-consumption)、[核验](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/orchestrator/verification.md) | `Session`、`run_turn`、Goal tool / `thread_goals`。[会话类型][回合循环][目标表][目标更新] | **需改造；未发现等价完整成功链。** 借鉴回合/步骤区分及目标独立存储；保留 TaskCoordinator 和条件事务，完成须满足本项目 Acceptance。见 C-01。 |
-| [brain：压缩策略](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/brain/implementation.md#context-optimization)、[原调用恢复](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/brain/implementation.md#key-sequence) | `ContextManager`、`capture_step`、CompactedHistoryMetadata、`normalize`、`run_sampling_request`。[上下文宿主事实][步骤冻结][本地压缩][提示归一化][采样重试] | **直接借鉴快照思路；需改造；隐式提示修复与内部 stream retry 不适用。** 从权威事实重建不可裁剪区，原始输入与模型传输派生项可追溯；压缩另建有界 Decision。见 C-02。 |
-| [execution：目录](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/execution/implementation.md#catalog-conformance)、[发送门禁](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/execution/implementation.md#key-sequence)、[返回覆盖](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/execution/implementation.md#output-coverage) | `ToolCallRuntime`、`McpBinding` / PreparedMcpCall、`unified_exec`。[工具并行][MCP绑定][MCP准备调用][进程限额] | **直接借鉴 immutable binding；需改造执行账本。** 目录刷新不改绑原 Operation；并行能力须核验 mutex_domains，进程输出截断明确返回。见 C-03。 |
-| [security：确认与使用](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/security/implementation.md#key-sequence)、[设计](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/security/README.md) | `ExecApprovalRequirement`、ToolOrchestrator、approved-for-session cache、SandboxManager、网络策略。[审批编排][审批升级][审批缓存][沙箱选择][网络代理] | **需改造；审批缓存作为授权权威不适用。** 可缓存展示与审阅建议，实际发送仍用原 Grant/Use/Confirmation 与当前撤权核验；沙箱按平台验证。见 C-04。 |
-| [memory：候选与读时整理](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/memory/implementation.md#read-time-curation)、[写入水位](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/memory/implementation.md#memory-change-head) | phase1 extraction、phase2 consolidation、`stage1_outputs/jobs`、源更新时间和 lease。[记忆一阶段][记忆二阶段][记忆任务表][记忆权限] | **需改造。** 借鉴后台选取/提取/合并分段及源版本水位；独立长期保存许可、事实/推断/时间/范围和来源关闭不让模型补全。见 C-05。 |
-| [collaboration：闭合](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/collaboration/implementation.md#delegation-closure)、[原子子创建](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/collaboration/implementation.md#key-sequence) | AgentControl、parent-child graph、spawn reservation、child config、best-effort result delivery。[父子图][子线程启动][子线程配置][子线程完成] | **需改造；单纯最终消息关闭委派不适用。** 子配置与继承快照有价值，结果通知只是唤醒；Closure 继续以效果、控制和费用证明为准。见 C-06。 |
-| [interaction：输入转交](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/interaction/implementation.md#key-sequence)、[预览/用户证据 ADR](/Volumes/Data/proj/lerna-docs/docs/adr/0008-trusted-renderer-preview.md) | app-server OutgoingMessage、TimelineEntry、server approval callbacks、userVerification cancellation。[待审批重放][时间线][取消说明] | **需改造。** 借鉴时序位置、待请求展示和有限队列；恢复由原 Command/Surface/Input 权威读取驱动，信号/入队/显示/已读分别呈现。见 C-07。 |
-| [extensions：制品完整性](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/extensions/implementation.md#artifact-integrity)、[最小宿主](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/extensions/implementation.md#module-shape) | typed extension registry、skill metadata/dependencies、plugin staged replacement/version dirs。[扩展注册][技能类型][插件存储][插件替换] | **需改造；版本目录替代 InstallLock 不适用。** 保持实际字节/入口/依赖校验和受信批准，read-only 贡献点可用类型化注册降低耦合。见 C-08。 |
-| [evaluation：计划和证据](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/evaluation/implementation.md)、[优化实验](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/validation/optimization-evidence.md#experiments) | fixture drift tests、mock stream/history tests、OTel Skill event。[协议Fixture][压缩重放测试][观测Skill] | **直接借鉴故障构造；未发现等价冻结评测/发布资格链。** 回归通过与模型成功率分开，运行次数、实际请求和费用分母固定。见 C-09。 |
+| [orchestrator：提案消费](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/orchestrator/implementation.md#proposal-consumption)、[核验](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/orchestrator/verification.md) | `Session`、`run_turn`、Goal tool / `thread_goals`。[会话类型][回合循环][目标表][目标更新] | **需改造；未发现等价完整成功链。** 借鉴回合/步骤区分及目标独立存储；保留 TaskCoordinator 和条件事务，完成须满足本项目 Acceptance。见 C-01。 |
+| [brain：压缩策略](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/brain/implementation.md#context-optimization)、[原调用恢复](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/brain/implementation.md#key-sequence) | `ContextManager`、`capture_step`、CompactedHistoryMetadata、`normalize`、`run_sampling_request`。[上下文宿主事实][步骤冻结][本地压缩][提示归一化][采样重试] | **直接借鉴快照思路；需改造；隐式提示修复与内部 stream retry 不适用。** 从权威事实重建不可裁剪区，原始输入与模型传输派生项可追溯；压缩另建有界 Decision。见 C-02。 |
+| [execution：目录](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/execution/implementation.md#catalog-conformance)、[发送门禁](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/execution/implementation.md#key-sequence)、[返回覆盖](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/execution/implementation.md#output-coverage) | `ToolCallRuntime`、`McpBinding` / PreparedMcpCall、`unified_exec`。[工具并行][MCP绑定][MCP准备调用][进程限额] | **直接借鉴 immutable binding；需改造执行账本。** 目录刷新不改绑原 Operation；并行能力须核验 mutex_domains，进程输出截断明确返回。见 C-03。 |
+| [security：确认与使用](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/security/implementation.md#key-sequence)、[设计](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/security/README.md) | `ExecApprovalRequirement`、ToolOrchestrator、approved-for-session cache、SandboxManager、网络策略。[审批编排][审批升级][审批缓存][沙箱选择][网络代理] | **需改造；审批缓存作为授权权威不适用。** 可缓存展示与审阅建议，实际发送仍用原 Grant/Use/Confirmation 与当前撤权核验；沙箱按平台验证。见 C-04。 |
+| [memory：候选与读时整理](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/memory/implementation.md#read-time-curation)、[写入水位](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/memory/implementation.md#memory-change-head) | phase1 extraction、phase2 consolidation、`stage1_outputs/jobs`、源更新时间和 lease。[记忆一阶段][记忆二阶段][记忆任务表][记忆权限] | **需改造。** 借鉴后台选取/提取/合并分段及源版本水位；独立长期保存许可、事实/推断/时间/范围和来源关闭不让模型补全。见 C-05。 |
+| [collaboration：闭合](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/collaboration/implementation.md#delegation-closure)、[原子子创建](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/collaboration/implementation.md#key-sequence) | AgentControl、parent-child graph、spawn reservation、child config、best-effort result delivery。[父子图][子线程启动][子线程配置][子线程完成] | **需改造；单纯最终消息关闭委派不适用。** 子配置与继承快照有价值，结果通知只是唤醒；Closure 继续以效果、控制和费用证明为准。见 C-06。 |
+| [interaction：输入转交](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/interaction/implementation.md#key-sequence)、[预览/用户证据 ADR](../../adr/0008-trusted-renderer-preview.md) | app-server OutgoingMessage、TimelineEntry、server approval callbacks、userVerification cancellation。[待审批重放][时间线][取消说明] | **需改造。** 借鉴时序位置、待请求展示和有限队列；恢复由原 Command/Surface/Input 权威读取驱动，信号/入队/显示/已读分别呈现。见 C-07。 |
+| [extensions：制品完整性](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/extensions/implementation.md#artifact-integrity)、[最小宿主](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/extensions/implementation.md#module-shape) | typed extension registry、skill metadata/dependencies、plugin staged replacement/version dirs。[扩展注册][技能类型][插件存储][插件替换] | **需改造；版本目录替代 InstallLock 不适用。** 保持实际字节/入口/依赖校验和受信批准，read-only 贡献点可用类型化注册降低耦合。见 C-08。 |
+| [evaluation：计划和证据](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/evaluation/implementation.md)、[优化实验](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/validation/optimization-evidence.md#experiments) | fixture drift tests、mock stream/history tests、OTel Skill event。[协议Fixture][压缩重放测试][观测Skill] | **直接借鉴故障构造；未发现等价冻结评测/发布资格链。** 回归通过与模型成功率分开，运行次数、实际请求和费用分母固定。见 C-09。 |
 
 ### 11.2 共享架构对应实现
 
 | 本项目边界 | Codex 对应实现 | 判断与建议 |
 | --- | --- | --- |
-| [contracts](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/contracts/README.md)、[wire 规则](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/contracts/protocol.md) | Rust types → TS/Schema export、fixture 测试；自定义 RPC envelope。[RPC格式][协议导出][协议Fixture] | **直接借鉴派生产物漂移检查；Codex wire 不适用。** 保持本项目 JSON Schema/严格 JSON 和 Proto 外壳真源、WSS/gRPC 传输。见 C-10。 |
-| [storage](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/storage-and-middleware.md#data-placement)、[索引水位](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/memory/implementation.md#index-watermarks) | JSONL canonical → SQLite view，投影行/游标一个事务，库按职责分离。[历史写入顺序][投影事务][SQLite配置] | **直接借鉴权威/视图区别；本地耐久参数需改造。** 本项目 PG 业务权威和不可变 ContentStore 保持；本地 SQLite 按 FULL 验收。见 C-11。 |
-| [deployment](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/deployment.md)、[production](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/deployment-production.md#availability) | suspend → flush → cancel → shutdown；本地 writer lock 和冷 resume。[暂停移交][写入锁][恢复取得写入权] | **借鉴有序排空；文件锁替代分布式 owner 不适用。** 保持固定逻辑 Orchestrator 与 PG/角色部署，按现有可用性目标实测。见 C-12。 |
-| [durable / reliable-work](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/reliable-work.md#admission)、[领域恢复](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/reliable-work.md#recovery) | append/persist/flush 不同屏障、resume revision、memory ownership token/job lease。[后台写入][恢复取得写入权][记忆任务表] | **需改造为现有公共模板。** 命令 accepted 只在领域事实、原回执与 jobs 共同提交后发；notify 和租约不决定 Effect。见 C-13。 |
-| [engineering](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/engineering.md#layout)、[实施阶段](/Volumes/Data/proj/lerna-docs/docs/architecture/.draft/engineering.md#phases) | Rust 多 crate、tools 渐进抽取、immutable registry 与协议 fixtures。[工作区][工具边界][扩展注册][协议Fixture] | **直接借鉴依赖方向；Rust/Bazel 技术栈不适用。** 保持一 go.mod、公契约集中与 internal 深模块；按闭环阶段验证后再抽共享包。见 C-14。 |
+| [contracts](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/contracts/README.md)、[wire 规则](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/contracts/protocol.md) | Rust types → TS/Schema export、fixture 测试；自定义 RPC envelope。[RPC格式][协议导出][协议Fixture] | **直接借鉴派生产物漂移检查；Codex wire 不适用。** 保持本项目 JSON Schema/严格 JSON 和 Proto 外壳真源、WSS/gRPC 传输。见 C-10。 |
+| [storage](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/storage-and-middleware.md#data-placement)、[索引水位](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/memory/implementation.md#index-watermarks) | JSONL canonical → SQLite view，投影行/游标一个事务，库按职责分离。[历史写入顺序][投影事务][SQLite配置] | **直接借鉴权威/视图区别；本地耐久参数需改造。** 本项目 PG 业务权威和不可变 ContentStore 保持；本地 SQLite 按 FULL 验收。见 C-11。 |
+| [deployment](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/deployment.md)、[production](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/deployment-production.md#availability) | suspend → flush → cancel → shutdown；本地 writer lock 和冷 resume。[暂停移交][写入锁][恢复取得写入权] | **借鉴有序排空；文件锁替代分布式 owner 不适用。** 保持固定逻辑 Orchestrator 与 PG/角色部署，按现有可用性目标实测。见 C-12。 |
+| [durable / reliable-work](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/reliable-work.md#admission)、[领域恢复](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/reliable-work.md#recovery) | append/persist/flush 不同屏障、resume revision、memory ownership token/job lease。[后台写入][恢复取得写入权][记忆任务表] | **需改造为现有公共模板。** 命令 accepted 只在领域事实、原回执与 jobs 共同提交后发；notify 和租约不决定 Effect。见 C-13。 |
+| [engineering](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/engineering.md#layout)、[实施阶段](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/engineering.md#phases) | Rust 多 crate、tools 渐进抽取、immutable registry 与协议 fixtures。[工作区][工具边界][扩展注册][协议Fixture] | **直接借鉴依赖方向；Rust/Bazel 技术栈不适用。** 保持一 go.mod、公契约集中与 internal 深模块；按闭环阶段验证后再抽共享包。见 C-14。 |
 
 ### 11.3 可实施的 C-* 建议与验收条件
 
@@ -281,13 +281,13 @@ OTel 记录会话、请求及工具事件；Skill invocation 带显式/隐式、
 
 - **C-09｜行为回归与模型评测分开，落实 EVA-01/02/03。** EvaluationPlan 明确普通协议/历史回归与独立任务质量集；复用 Codex 的故障注入方法，记录每项 pass/fail/inconclusive、实际请求/尝试与环境版本。Skill 被调用、日志已上报或 mock history 正确不是成功标签。[观测Skill][压缩重放测试][协议Fixture] 代价是独立目标 oracle、运行预算和证据封存。验收固定分母下把 timeout、取消、恢复额外请求与重试全部计入，按质量/成本/延迟配对比较，探索材料不进入独立 qualification 集。
 
-- **C-10｜契约派生产物漂移检查，落实既有 contracts / [ADR-0010](/Volumes/Data/proj/lerna-docs/docs/adr/0010-monorepo-shared-contract-release.md)。** 借鉴 Codex TS/Schema fixture 对照，但本项目由已有权威 Schema/方法资产生成 Go/TS/文档，不倒置成 Rust/Go struct 第二真源。严格 raw JSON/Proto 检查先于普通解码，WSS/gRPC 继续使用本项目 envelope。[RPC格式][协议导出][协议Fixture] 代价是生成器维护和稳定/实验资产分别冻结。验收 CI 再生成无差异，并让 Go/TS/原始 gRPC 入口共同拒绝重复键、未知字段、数字/Unicode 变形和错误绑定；仅类型编译通过不合格。
+- **C-10｜契约派生产物漂移检查，落实既有 contracts / [ADR-0010](../../adr/0010-monorepo-shared-contract-release.md)。** 借鉴 Codex TS/Schema fixture 对照，但本项目由已有权威 Schema/方法资产生成 Go/TS/文档，不倒置成 Rust/Go struct 第二真源。严格 raw JSON/Proto 检查先于普通解码，WSS/gRPC 继续使用本项目 envelope。[RPC格式][协议导出][协议Fixture] 代价是生成器维护和稳定/实验资产分别冻结。验收 CI 再生成无差异，并让 Go/TS/原始 gRPC 入口共同拒绝重复键、未知字段、数字/Unicode 变形和错误绑定；仅类型编译通过不合格。
 
 - **C-11｜可重建视图的提交边界，落实 storage / Memory 水位；可选新增投影健康指标。** PG 仍保存业务权威；ContentStore 的耐久字节先就绪，再提交引用。借鉴 `apply_projection` 将投影行与扫描水位在同一本地事务保存；视图追赶失败记录 lag 与恢复责任，不回滚或重写原事实。SQLite 用本项目 WAL/FULL/foreign_keys/单写队列，不照抄 Codex Normal。[投影事务][SQLite运行配置][历史写入顺序] 代价是两方言查询与视图重建空间。验收在字节持久后、业务提交后、投影行写后/游标提交前分别崩溃；查询明确滞后，恢复不漏原事实、重复收费或误报未提交视图已最新。
 
 - **C-12｜有序排空及 owner 接替，落实 deployment。** 拆出“停止新接纳—持久保存当前责任—发取消—等待实际本地工作退出—释放进程资源”阶段，沿原 Command/Operation 恢复；受限等待结束只能移交责任，不能关闭未知效果。Codex writer lock 可用于本地开发适配，本项目分布式权限仍由固定逻辑 Orchestrator 和 PG 裁决。[暂停移交][写入锁] 代价是关停延迟、保留控制/收尾容量。验收本机多进程和生产故障拓扑：旧 worker 晚回写、连接迁移与单区故障；分别取得 RPO/RTO/容量证据，不能借本地 suspend 测试声称跨AZ通过。
 
-- **C-13｜准入、屏障和领域恢复，落实 durable / [ADR-0009](/Volumes/Data/proj/lerna-docs/docs/adr/0009-reliable-work-framework.md)。** 为各 storage/queue adapter 明确 enqueue/accepted/commit/flush 的不同语义，公共模板仅在原回执、领域责任与 job 同事务提交后发布 accepted。源码的 buffered write retry、resume revision 与记忆 lease 是具体失败场景来源；外部目标发送不套用“写入文件失败可重试”的推理。[后台写入][写入故障测试][恢复取得写入权][记忆任务表] 代价是提交未知处理和各领域独立 recovery probe。验收 FW-01/03/04/05/06 覆盖断线、失答复、旧租约和全部通知丢失，观察目标真值而非仅本地 job done。
+- **C-13｜准入、屏障和领域恢复，落实 durable / [ADR-0009](../../adr/0009-reliable-work-framework.md)。** 为各 storage/queue adapter 明确 enqueue/accepted/commit/flush 的不同语义，公共模板仅在原回执、领域责任与 job 同事务提交后发布 accepted。源码的 buffered write retry、resume revision 与记忆 lease 是具体失败场景来源；外部目标发送不套用“写入文件失败可重试”的推理。[后台写入][写入故障测试][恢复取得写入权][记忆任务表] 代价是提交未知处理和各领域独立 recovery probe。验收 FW-01/03/04/05/06 覆盖断线、失答复、旧租约和全部通知丢失，观察目标真值而非仅本地 job done。
 
 - **C-14｜深模块与阶段退出，落实 engineering。** 复用 tools 的渐进抽取原则：先保持核心运行闭环与同一事务范围，再把确有多个消费者的纯模型/Schema/快照帮助类抽到 internal 公共包；不为了模仿 crate 数新增服务或拆 Go module。[工具边界][工作区] 代价是维护依赖检查、生成物和双数据库测试。验收按工程阶段完成同宿主→本机多进程→WSS/gRPC→端云真实故障的递进证据，禁止内部包成为扩展公共依赖，跨模块业务写入必须经过既定领域接口。
 

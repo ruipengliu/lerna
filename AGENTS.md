@@ -123,6 +123,8 @@ scripts/                 已实现、可复现的生成/检查/开发辅助入�
 以下命令已存在，从仓库根目录执行。Python 检查需要现有 `jsonschema`；解释工具检查需要 Node.js。依赖缺失必须报告，不把未运行写成通过。
 
 ```sh
+python docs/architecture/validation/check_links.py
+python -m unittest discover -s docs/architecture/validation -p 'test_*.py'
 python docs/architecture/validation/check_architecture.py
 python docs/architecture/validation/model_checks.py
 python docs/architecture/validation/data_flow_checks.py
@@ -133,6 +135,8 @@ git diff --check
 ```
 
 修改本文件或架构设计时必须运行以上检查，并单独核对本文件的新链接、目录现状及命令。修改核心 Schema 后先运行 `python docs/architecture/validation/build_field_reference.py` 更新字典，再执行检查。
+
+链接检查覆盖全仓文档的本地目标与本仓固定提交引用；外部 URL 不联网验证。研究来源元数据和按需源码复核说明见[检查说明](docs/architecture/validation/README.md#6-全仓链接与研究来源维护)。
 
 这些脚本只检验设计资产、有限模型与解释工具函数，不执行真实数据库、服务或浏览器。当前尚无项目级构建、Go/前端测试或代码生成总入口；不得声称不存在的 `make`、Go 或 pnpm 项目命令已经可用。
 

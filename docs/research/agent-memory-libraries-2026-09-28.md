@@ -1,10 +1,10 @@
 # Agent Memory 开源实现与接入边界
 
-[优化方案](../architecture/memory/optimization-plan.md) · [Memory 模块](../architecture/memory/README.md) · [实现设计](../architecture/memory/implementation.md) · [存储基线](../architecture/storage-and-middleware.md)
+[优化方案](https://github.com/ruipengliu/lerna/blob/99c6298a8beb2da5a65decfe925bb5e212ac2dc5/docs/architecture/memory/optimization-plan.md) · [Memory 模块](../architecture/memory/README.md) · [实现设计](https://github.com/ruipengliu/lerna/blob/99c6298a8beb2da5a65decfe925bb5e212ac2dc5/docs/architecture/memory/implementation.md) · [存储基线](https://github.com/ruipengliu/lerna/blob/99c6298a8beb2da5a65decfe925bb5e212ac2dc5/docs/architecture/storage-and-middleware.md)
 
 调研日期：2026-09-28。本篇比较七组代表实现的当前开源代码，服务于本项目 Memory 优化；论文时窗与论文实验另行整理。库不要求在近半年内创建，比较对象是检索当日固定提交中的实际流程。只使用官方仓库、官方文档与已定位源码；没有安装这些库，没有运行其服务或复现其性能数字。
 
-**建议保留 Go Memory owner、PostgreSQL 权威记录、ContentRef 与现有来源和清理契约，把外部实现用于算法参考和隔离评测。** 优先吸收 LangMem 的结构化提取接口、Graphiti 的时间建模与混合检索配方、memU 的外部合成与存储分工；Letta 和 OpenViking 的分层载入、后台整理适合作为后续对照组。整体替换会把本项目已经明确的修订、原命令、处理前授权和派生清理责任重新分散到多个运行时与存储中。[本项目职责与事务边界](../architecture/memory/implementation.md#module-shape)是这个判断的依据。
+**建议保留 Go Memory owner、PostgreSQL 权威记录、ContentRef 与现有来源和清理契约，把外部实现用于算法参考和隔离评测。** 优先吸收 LangMem 的结构化提取接口、Graphiti 的时间建模与混合检索配方、memU 的外部合成与存储分工；Letta 和 OpenViking 的分层载入、后台整理适合作为后续对照组。整体替换会把本项目已经明确的修订、原命令、处理前授权和派生清理责任重新分散到多个运行时与存储中。[本项目职责与事务边界](https://github.com/ruipengliu/lerna/blob/99c6298a8beb2da5a65decfe925bb5e212ac2dc5/docs/architecture/memory/implementation.md#module-shape)是这个判断的依据。
 
 ## 1. 版本、许可证与证据边界
 
@@ -102,7 +102,7 @@ MemOS 当前仓库包含两种明显不同的部署：Python Self-Host 路径列
 
 `progressive_retrieve` 的当前实现是单次 query embedding、segment 向量召回、把命中片段汇总到文件以及 workspace resource 向量召回。代码注释明确没有意图路由、充分性判断或摘要循环。它说明可先保留简单可测的检索路径；“progressive”名称不保证存在自适应多轮搜索。[检索实现][mu-retrieve]
 
-**本项目选择：** 参考合成与存储解耦、增量索引和文件／片段追踪，生成式提取与整理由现有 Brain／Orchestrator 完成；本地嵌入按[优化方案](../architecture/memory/optimization-plan.md)的受控索引／查询适配器处理。将全文 wiki 的可读性用于用户管理视图，不把 wiki 文本覆盖升级成事实修订或来源合并机制。
+**本项目选择：** 参考合成与存储解耦、增量索引和文件／片段追踪，生成式提取与整理由现有 Brain／Orchestrator 完成；本地嵌入按[优化方案](https://github.com/ruipengliu/lerna/blob/99c6298a8beb2da5a65decfe925bb5e212ac2dc5/docs/architecture/memory/optimization-plan.md)的受控索引／查询适配器处理。将全文 wiki 的可读性用于用户管理视图，不把 wiki 文本覆盖升级成事实修订或来源合并机制。
 
 ### 3.7 OpenViking：分层上下文可试验，ACL 一致性直接影响替换结论
 
