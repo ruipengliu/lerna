@@ -21,6 +21,17 @@ func (a *App) Run(ctx context.Context, serve, work bool) error {
 	if work && !a.OwnsTargets && a.Config.WorkerPool == nil {
 		return api.E("unsupported", "worker_target_ownership_required")
 	}
+	var worker runtime.Worker
+	if work {
+		worker = runtime.Worker{Store: a.Store, Registry: a.Registry, Scopes: []runtime.Scope{a.Scope}, Kinds: a.Registry.JobKinds(), Concurrency: 8, Lease: 30 * time.Second, Poll: 25 * time.Millisecond}
+		if a.Config.WorkerPool != nil {
+			var err error
+			worker, err = a.classifiedWorker()
+			if err != nil {
+				return err
+			}
+		}
+	}
 	runCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
 	failures := make(chan error, 2)
@@ -43,10 +54,15 @@ func (a *App) Run(ctx context.Context, serve, work bool) error {
 		if err != nil {
 			return errors.Join(err, gateway.Close())
 		}
-		server = &http.Server{Handler: gateway.Handler(), BaseContext: func(net.Listener) context.Context { return runCtx }, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second, WriteTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
+		server = &http.Server{Handler: gateway.Handler(), TLSConfig: a.endpointServerTLS, BaseContext: func(net.Listener) context.Context { return runCtx }, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second, WriteTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
 		count++
 		go func() {
-			err := server.Serve(listener)
+			var err error
+			if a.endpointServerTLS != nil {
+				err = server.ServeTLS(listener, "", "")
+			} else {
+				err = server.Serve(listener)
+			}
 			if errors.Is(err, http.ErrServerClosed) {
 				err = nil
 			}
@@ -54,14 +70,6 @@ func (a *App) Run(ctx context.Context, serve, work bool) error {
 		}()
 	}
 	if work {
-		worker := runtime.Worker{Store: a.Store, Registry: a.Registry, Scopes: []runtime.Scope{a.Scope}, Kinds: a.Registry.JobKinds(), Concurrency: 8, Lease: 30 * time.Second, Poll: 25 * time.Millisecond}
-		if a.Config.WorkerPool != nil {
-			var err error
-			worker, err = a.classifiedWorker()
-			if err != nil {
-				return err
-			}
-		}
 		count++
 		go func() { failures <- worker.Run(runCtx) }()
 	}
@@ -88,9 +96,24 @@ func (a *App) Run(ctx context.Context, serve, work bool) error {
 }
 
 // RunRPC exposes the same current authenticated contracts to the application
-// process. EndpointChannel remains closed until a real endpoint authority exists.
+// process. Configured static channels use mTLS and original endpoint pairing;
+// Delivery remains closed without the original business receiver/proof ports.
 func (a *App) RunRPC(ctx context.Context) error {
-	server, err := rpcadapter.New(rpcadapter.Config{OwnerID: a.Config.OwnerID, Identity: a.Identity, Processor: wss.LocalProcessor{Dispatcher: a.Dispatcher}, AllowInsecureLoopback: a.Config.Development})
+	config := rpcadapter.Config{OwnerID: a.Config.OwnerID, Identity: a.Identity, Processor: wss.LocalProcessor{Dispatcher: a.Dispatcher}, AllowInsecureLoopback: a.Config.Development}
+	if p := a.Config.EndpointChannels; p != nil {
+		if a.Role != "application" || a.endpointAuthority == nil || a.endpointServerTLS == nil {
+			return api.E("forbidden", "static_endpoint_application_configuration_required")
+		}
+		digest, err := api.DigestLimit(a.Registry.Contracts(), 1<<20)
+		if err != nil {
+			return err
+		}
+		config.Store, config.MethodsDigest = a.Store, digest
+		config.ApplicationInstanceID, config.EndpointAuthority = p.ApplicationInstanceID, a.endpointAuthority
+		config.GatewayIdentities = append([]string{}, p.GatewayIdentities...)
+		config.AllowInsecureLoopback = false
+	}
+	server, err := rpcadapter.New(config)
 	if err != nil {
 		return err
 	}
@@ -98,5 +121,5 @@ func (a *App) RunRPC(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	return server.Serve(ctx, listener, nil)
+	return server.Serve(ctx, listener, a.endpointServerTLS)
 }

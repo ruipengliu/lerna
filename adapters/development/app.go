@@ -3,9 +3,11 @@ package development
 import (
 	"context"
 	"crypto/rand"
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"github.com/ruipengliu/lerna/adapters/collaboration"
+	"github.com/ruipengliu/lerna/adapters/endpointchannel"
 	execadapter "github.com/ruipengliu/lerna/adapters/execution"
 	rpcadapter "github.com/ruipengliu/lerna/adapters/grpc"
 	"github.com/ruipengliu/lerna/adapters/objectstore"
@@ -62,6 +64,9 @@ type App struct {
 	closeGovernance                                                  func() error
 	actions                                                          *actionRegistry
 	information                                                      []configuredInformation
+	endpointAuthority                                                *rpcadapter.StaticEndpointAuthority
+	endpointRouter                                                   *endpointchannel.Router
+	endpointServerTLS                                                *tls.Config
 }
 
 func component(name string) api.ComponentRef {
@@ -74,6 +79,9 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string) (app *App, err error) {
 	if role != "dev" && role != "worker" && role != "gateway" && role != "application" && role != "management" {
 		return nil, api.E("unsupported", "process_role_not_configured")
+	}
+	if err = validateEndpointChannels(c); err != nil {
+		return nil, err
 	}
 	st, e := OpenStore(ctx, c, false)
 	if e != nil {
@@ -286,6 +294,9 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 			return nil, e
 		}
 	}
+	if e = a.configureEndpointChannels(); e != nil {
+		return nil, e
+	}
 	if initialize {
 		if e = a.initialize(ctx, rules); e != nil {
 			return nil, e
@@ -342,6 +353,10 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 }
 func (a *App) Close() error {
 	var err error
+	if a.endpointRouter != nil {
+		err = errors.Join(err, a.endpointRouter.Close())
+		a.endpointRouter = nil
+	}
 	for _, source := range a.Information {
 		err = errors.Join(err, source.Close())
 	}
@@ -381,7 +396,9 @@ func containsString(values []string, expected string) bool {
 }
 func (a *App) Gateway() (*wss.Server, error) {
 	var processor wss.Processor = wss.LocalProcessor{Dispatcher: a.Dispatcher}
-	if a.Role == "gateway" {
+	if a.Role == "gateway" && a.endpointRouter != nil {
+		processor = a.endpointRouter
+	} else if a.Role == "gateway" {
 		forward, err := rpcadapter.NewForwardProcessor("grpc://"+a.Config.GRPCAddr, a.Config.OwnerID, a.Registry.Contracts(), a.forwardCredential, a.Config.Development)
 		if err != nil {
 			return nil, err

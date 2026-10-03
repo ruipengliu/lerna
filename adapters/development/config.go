@@ -46,6 +46,7 @@ type Config struct {
 	InformationReferenceAnswer bool                      `json:"information_reference_answer,omitempty"`
 	Knowledge                  *KnowledgeConfig          `json:"knowledge,omitempty"`
 	WorkerPool                 *ClassifiedWorkerConfig   `json:"worker_pool,omitempty"`
+	EndpointChannels           *EndpointChannelConfig    `json:"endpoint_channels,omitempty"`
 }
 
 func LoadConfig(path string) (Config, error) {
@@ -56,6 +57,9 @@ func LoadConfig(path string) (Config, error) {
 	var c Config
 	e = api.Decode(b, &c)
 	if e != nil {
+		return c, e
+	}
+	if e = validateEndpointChannels(c); e != nil {
 		return c, e
 	}
 	if !api.ValidID(c.TenantID) || !api.ValidID(c.OwnerID) || !api.ValidID(c.SubjectID) || !filepath.IsAbs(c.DataRoot) || c.DatabaseID == "" {
