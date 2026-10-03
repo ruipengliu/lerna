@@ -12,6 +12,7 @@
 - 受信 `TrustedComputeDriver` 只解释闭合的 `add_decimal/concat/not/copy` 纯计算指令，输入和代码均为准确 ContentRef。输出、命名空间 head 和 Operation 结果一起 CAS 提交；旧查询不重新计算。停止等到实际运行退出才报告退出。
 - 受信宿主在父 Operation 事务中分配 hostcall position，分别映射 `operation/decision/delegation` 的原命令、回执和目标。可能已送出的恢复只 Resolve 原命令；未知映射阻止下一 cell，环境关闭保留未退出子责任。默认没有 HostCallPort，未配置时在新责任产生前拒绝。
 - Operation 和 Environment 列表返回持久的、有期限且绑定租户、主体、凭据代次与 collection revision 的 cursor。集合变化要求重读 snapshot，不混合两代快照。
+- `execution.usage.get` 按固定 CostBound 的每个单位报告准确累计值，免费能力和尚未入口的责任也有明确的零值。独立 `UsageProof` Content 固定原 Operation/Attempt 修订、累计值、封闭及费用最终事实、send_started 次数与物理请求计数范围；未知不被填成确定零次。ProofRef 与全 Snapshot（先置 `usage_digest=""`）共同参与摘要，同一版本查询不改证明身份。没有原意图或固定费用单位的责任返回 `accounting_unknown`，不猜单位或最终性。
 
 ## 宿主装配端口
 
