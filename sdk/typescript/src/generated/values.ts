@@ -96,6 +96,15 @@ export type CommandTarget = {
   kind: 'command';
   id: ID;
 };
+export type DelegatedSubject = {
+  tenant_id: ID;
+  subject_id: ID;
+};
+export type SubjectBinding = {
+  tenant_id: ID;
+  subject_id: ID;
+  delegation_chain: Array<DelegatedSubject>;
+};
 export const inputSchemas = [
   {
     version: '1.0.0',
@@ -128,6 +137,8 @@ export interface Values {
   CommandGetPayload: CommandGetPayload;
   CommandGetRequest: CommandGetRequest;
   CommandTarget: CommandTarget;
+  DelegatedSubject: DelegatedSubject;
+  SubjectBinding: SubjectBinding;
 }
 export const schema = {
   $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -533,6 +544,39 @@ export const schema = {
       },
       required: ['tenant_id', 'owner_id', 'kind', 'id'],
       additionalProperties: false,
+    },
+    DelegatedSubject: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        tenant_id: {
+          $ref: '#/$defs/ID',
+        },
+        subject_id: {
+          $ref: '#/$defs/ID',
+        },
+      },
+      required: ['tenant_id', 'subject_id'],
+    },
+    SubjectBinding: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        tenant_id: {
+          $ref: '#/$defs/ID',
+        },
+        subject_id: {
+          $ref: '#/$defs/ID',
+        },
+        delegation_chain: {
+          type: 'array',
+          items: {
+            $ref: '#/$defs/DelegatedSubject',
+          },
+          maxItems: 16,
+        },
+      },
+      required: ['tenant_id', 'subject_id', 'delegation_chain'],
     },
   },
 } as const;

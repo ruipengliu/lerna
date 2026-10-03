@@ -1,0 +1,357 @@
+[
+  {
+    "name": "unicode-exact-golden",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:2c240fd757749175c02af6565039d06d8dcf7b4849f19843b253bcc941d0ea8f",
+    "valid": true
+  },
+  {
+    "name": "reversed-keys-and-wire-whitespace",
+    "wire": " \n{\n   \"trace_context\": {\n      \"trace_id\": \"trace-a\"\n   },\n   \"command_id\": \"cmd-original\",\n   \"target\": {\n      \"id\": \"object-a\",\n      \"kind\": \"task\",\n      \"owner_id\": \"owner-a\",\n      \"tenant_id\": \"tenant-a\"\n   },\n   \"profile\": \"fixture\",\n   \"payload\": {\n      \"body\": \"<\\u62a5\\u544a>\\u2028\\ud83d\\ude00\",\n      \"revision\": \"9007199254740993\"\n   },\n   \"method\": \"fixture.write\",\n   \"contract_version\": \"1.0.0\",\n   \"accept_before\": \"2026-10-03T10:00:00.000001Z\"\n}\t",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:2c240fd757749175c02af6565039d06d8dcf7b4849f19843b253bcc941d0ea8f",
+    "valid": true
+  },
+  {
+    "name": "trace-and-key-are-outside-content-digest",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-retry\",\"trace_context\":{\"trace_id\":\"trace-b\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:2c240fd757749175c02af6565039d06d8dcf7b4849f19843b253bcc941d0ea8f",
+    "valid": true
+  },
+  {
+    "name": "contract-version-changes-digest",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.1.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.1.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:72ac3507e927a32902b24477919e92531f52504262ddea332e8c6cdfcc38c1e6",
+    "valid": true
+  },
+  {
+    "name": "profile-changes-digest",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"other\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"other\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:6d3267eb17889cf6bfd0e94f8e8bb60f4454cd74520a9a77af497a3f52bf04ff",
+    "valid": true
+  },
+  {
+    "name": "method-changes-digest",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.other\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.other\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:ee6eaa1ef6b3c87f254d8e82a9cf15c1e8764ed97a60fbfcca08469f32bfa973",
+    "valid": true
+  },
+  {
+    "name": "deadline-changes-digest",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000002Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000002Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:a1598a581cb802d3a56a0c6297d1a382a49e102611c40ae539ab295f01ad9268",
+    "valid": true
+  },
+  {
+    "name": "target-owner_id-changes-digest",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-b\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-b\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:3b04c02a305a7f84e4fdffd02e321d0076f93eba04ccd3be818b2fa17a80a4d0",
+    "valid": true
+  },
+  {
+    "name": "target-tenant_id-changes-digest",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-b\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-b\"}}",
+    "digest": "sha256:478733f1a12f65dd2c6be130bea293e49bb875bce6f243bcfcda27092f399cd6",
+    "valid": true
+  },
+  {
+    "name": "target-id-changes-digest",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-b\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-b\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:f1012d0f7dc7b04f4466349825b1b71fc102eea93bc951ef40dae9ccd4c2ca01",
+    "valid": true
+  },
+  {
+    "name": "target-kind-changes-digest",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"content\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"content\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:7840b92fb564c60bb551c6701388c85d3392213db8af97c10ff7758111ad3c3e",
+    "valid": true
+  },
+  {
+    "name": "trusted-subject_id-changes-digest",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject_id-b\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject_id-b\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:874d8de33cc188ce7a9fcce7da4750bf085517f95826f3f6a210609ef2ecf4e9",
+    "valid": true
+  },
+  {
+    "name": "trusted-tenant_id-changes-digest",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant_id-b\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant_id-b\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:23497d58e61b583ad024fcffcee7330ca1356a9106b21a6ee42b6ba541d83d28",
+    "valid": true
+  },
+  {
+    "name": "expected-revision-0",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"},\"expected_revision\":\"0\"}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"expected_revision\":\"0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:bfa47a29c19c928d26cee58a858179f18e69c0f8b32f558fe9b1f26205754d14",
+    "valid": true
+  },
+  {
+    "name": "expected-revision-9007199254740993",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"},\"expected_revision\":\"9007199254740993\"}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"expected_revision\":\"9007199254740993\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:22a5f84b3ef61a0c820a26390eec4cad290846a58c5a852f1993d645193e2454",
+    "valid": true
+  },
+  {
+    "name": "expected-revision-9223372036854775807",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"},\"expected_revision\":\"9223372036854775807\"}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"expected_revision\":\"9223372036854775807\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:2765cb539f44b89bf3d726d2fe3f6b74358a77d7223c8001a3594a8dcc09dc0c",
+    "valid": true
+  },
+  {
+    "name": "target-revision-bound",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\",\"revision\":\"9007199254740993\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"revision\":\"9007199254740993\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:197a17b48ec645fd9ce5e0c8e3fa7a3e17816aa81c8514f21336f64676cde841",
+    "valid": true
+  },
+  {
+    "name": "business-text-whitespace",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\" <报告> 😀 \",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\" <报告> 😀 \",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:a4ab62804c1925de2a172c987b3db07742b2870a60580da5d50453897be4b160",
+    "valid": true
+  },
+  {
+    "name": "business-text-unicode-decomposed",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"é\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"é\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:59fb28d33494e979af51e812b2270e2948103ae15047685f9f24ca4d028c824b",
+    "valid": true
+  },
+  {
+    "name": "business-text-unicode-composed",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"é\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"é\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:fce37e1429b6eda698a3780233dcfe4230e017f6f5e3a45d01c9069448eceebd",
+    "valid": true
+  },
+  {
+    "name": "business-text-path-and-case",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"/A/../a\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"/A/../a\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:998abba3bad88de859b498978eaa721925d410eb082ca420018656f23cb2dcb8",
+    "valid": true
+  },
+  {
+    "name": "business-text-control-characters",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"\\\"\\\\\\b\\t\\n\\f\\r\\u0000\\u0001  /<>\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"\\\"\\\\\\b\\t\\n\\f\\r\\u0000\\u0001  /<>\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:167d32f5be2473bd11f96a4123c8ba6d2b880abb2db3905a413ad0f69cedf62f",
+    "valid": true
+  },
+  {
+    "name": "trusted-delegation-chain-0",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"}],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"}],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:5299e65458a95872cfea16a5670310bf6c8da3864eae314584d6df8528b1d71e",
+    "valid": true
+  },
+  {
+    "name": "trusted-delegation-chain-1",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-b\"}],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-b\",\"tenant_id\":\"tenant-a\"}],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:2e88e07a0a8849774db313d7d075437e8e57e52895ed76da6207cb5a46244156",
+    "valid": true
+  },
+  {
+    "name": "trusted-delegation-chain-2",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-b\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"}],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[{\"subject_id\":\"delegate-b\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"}],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:c95ce4b39602341722d54228dcfea887d3fa523981abd1a0b8cd4da58b819c9c",
+    "valid": true
+  },
+  {
+    "name": "trusted-delegation-chain-3",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"},{\"tenant_id\":\"tenant-a\",\"subject_id\":\"delegate-a\"}],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"<报告> 😀\",\"revision\":\"9007199254740993\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"},{\"subject_id\":\"delegate-a\",\"tenant_id\":\"tenant-a\"}],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:e15ab6a470e12ae290d5d875f370e66673e5170c6edfbc5ef707e80a811b1f66",
+    "valid": true
+  },
+  {
+    "name": "utf16-order-arrays-null-bool-prototype-keys",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"\":\"bmp\",\"😀\":\"astral\",\"a\":[false,null,true],\"10\":\"ten\",\"2\":\"two\",\"__proto__\":{\"constructor\":\"literal\"}},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"10\":\"ten\",\"2\":\"two\",\"__proto__\":{\"constructor\":\"literal\"},\"a\":[false,null,true],\"😀\":\"astral\",\"\":\"bmp\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:2a5f9cc5bfa6096bbb3e6f53b8519a3fa297c0bbe143b18b71fda7f00ba7d9d1",
+    "valid": true
+  },
+  {
+    "name": "array-original-order",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"order\":[\"a\",\"b\"]},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"order\":[\"a\",\"b\"]},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:3b71b38a7b74995ed597c160cf4c0c4ed05fbed047ce0877eb00c966b4fe4db0",
+    "valid": true
+  },
+  {
+    "name": "array-reversal-changes-digest",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"order\":[\"b\",\"a\"]},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"order\":[\"b\",\"a\"]},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:bfeba8e04bb73abd50586b2f0f056ff2579a563e46daf658c3b54ce1e53b2a54",
+    "valid": true
+  },
+  {
+    "name": "payload-subject-does-not-replace-trusted-subject",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"subject_binding\":{\"tenant_id\":\"forged\",\"subject_id\":\"forged\"}},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"subject_binding\":{\"subject_id\":\"forged\",\"tenant_id\":\"forged\"}},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "digest": "sha256:c9e312b08317f50a2b2fc10d5ea95fb23fba201fdd07da96fb756a9545b8bd41",
+    "valid": true
+  },
+  {
+    "name": "duplicate-command-key",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\":{},\"payload\": {\"body\": \"<\\u62a5\\u544a>\\u2028\\ud83d\\ude00\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\": [], \"subject_id\": \"subject-a\", \"tenant_id\": \"tenant-a\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "number-in-payload",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\": {\"body\": \"<\\u62a5\\u544a>\\u2028\\ud83d\\ude00\", \"revision\": 9007199254740993}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\": [], \"subject_id\": \"subject-a\", \"tenant_id\": \"tenant-a\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "invalid-time",
+    "wire": "{\"accept_before\": \"2026-02-30T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\": {\"body\": \"<\\u62a5\\u544a>\\u2028\\ud83d\\ude00\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\": [], \"subject_id\": \"subject-a\", \"tenant_id\": \"tenant-a\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "explicit-null-revision",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"expected_revision\":null,\"payload\": {\"body\": \"<\\u62a5\\u544a>\\u2028\\ud83d\\ude00\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\": [], \"subject_id\": \"subject-a\", \"tenant_id\": \"tenant-a\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "raw-subject-number",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\": {\"body\": \"<报告> 😀\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"tenant_id\":\"tenant-a\",\"subject_id\":1,\"delegation_chain\":[]}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "duplicate-subject-decoded-key",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\": {\"body\": \"<报告> 😀\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"tenant_id\":\"tenant-a\",\"subject_id\":\"subject-a\",\"delegation_chain\":[],\"subject_\\u0069d\":\"forged\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "untrusted-subject-field",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\": {\"body\": \"<报告> 😀\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"tenant_id\":\"tenant-a\",\"subject_id\":\"subject-a\",\"delegation_chain\":[],\"role\":\"admin\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "missing-subject-chain",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\": {\"body\": \"<报告> 😀\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"tenant_id\":\"tenant-a\",\"subject_id\":\"subject-a\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "null-subject-chain",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\": {\"body\": \"<报告> 😀\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"tenant_id\":\"tenant-a\",\"subject_id\":\"subject-a\",\"delegation_chain\":null}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "subject-id-over-bound",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\": {\"body\": \"<报告> 😀\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\": [], \"subject_id\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"tenant_id\": \"tenant-a\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "subject-chain-over-bound",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\": {\"body\": \"<报告> 😀\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\": [{\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}, {\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\"}], \"subject_id\": \"subject-a\", \"tenant_id\": \"tenant-a\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "unknown-delegation-field",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\": {\"body\": \"<报告> 😀\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\": [{\"tenant_id\": \"tenant-a\", \"subject_id\": \"delegate-a\", \"role\": \"admin\"}], \"subject_id\": \"subject-a\", \"tenant_id\": \"tenant-a\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "subject-invalid-surrogate",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\": {\"body\": \"<报告> 😀\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"tenant_id\":\"tenant-a\",\"subject_id\":\"\\ud800\",\"delegation_chain\":[]}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "subject-trailing-json",
+    "wire": "{\"accept_before\": \"2026-10-03T10:00:00.000001Z\", \"contract_version\": \"1.0.0\", \"method\": \"fixture.write\", \"payload\": {\"body\": \"<报告> 😀\", \"revision\": \"9007199254740993\"}, \"profile\": \"fixture\", \"target\": {\"id\": \"object-a\", \"kind\": \"task\", \"owner_id\": \"owner-a\", \"tenant_id\": \"tenant-a\"}, \"command_id\": \"cmd-original\", \"trace_context\": {\"trace_id\": \"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\": [], \"subject_id\": \"subject-a\", \"tenant_id\": \"tenant-a\"}{}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "one-mib-body-remains-valid-with-internal-identity",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"@B@\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "canonical": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"@B@\"},\"profile\":\"fixture\",\"subject_binding\":{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"},\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"}}",
+    "body_repeat_count": 1048283,
+    "digest": "sha256:b4dda9b67895c8f81ceb084f593f76b74782021a47a20cf09ce8df3c82a38e94",
+    "valid": true
+  },
+  {
+    "name": "one-mib-plus-one-wire-refused",
+    "wire": "{\"accept_before\":\"2026-10-03T10:00:00.000001Z\",\"contract_version\":\"1.0.0\",\"method\":\"fixture.write\",\"payload\":{\"body\":\"@B@\"},\"profile\":\"fixture\",\"target\":{\"id\":\"object-a\",\"kind\":\"task\",\"owner_id\":\"owner-a\",\"tenant_id\":\"tenant-a\"},\"command_id\":\"cmd-original\",\"trace_context\":{\"trace_id\":\"trace-a\"}}",
+    "subject_wire": "{\"delegation_chain\":[],\"subject_id\":\"subject-a\",\"tenant_id\":\"tenant-a\"}",
+    "body_repeat_count": 1048284,
+    "valid": false,
+    "code": "schema_invalid"
+  }
+]
