@@ -1,13 +1,79 @@
 package memory_test
 
 import (
+	"context"
+	"errors"
 	"testing"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/memory"
 	"github.com/ruipengliu/lerna/runtime"
 )
+
+type queryRecheckAuthority struct {
+	checks  uint64
+	failure error
+}
+
+func (a *queryRecheckAuthority) Check(context.Context, runtime.Tx, runtime.Auth, api.ComponentRef, string, string, bool) (uint64, error) {
+	a.checks++
+	return 1, a.failure
+}
+
+func (*queryRecheckAuthority) Visibility(context.Context, runtime.Tx, runtime.Auth) (string, error) {
+	return "original-current-authority", nil
+}
+
+func TestFrozenInputRecheckPreservesTraversalAndUnderlyingErrors(t *testing.T) {
+	testFrozenInputRecheckErrors(t, newFixture)
+}
+
+func testFrozenInputRecheckErrors(t *testing.T, createFixture func(*testing.T) fixture) {
+	t.Helper()
+	for _, kind := range []string{"permission_budget", "context_cancelled", "sql_deadlock"} {
+		t.Run(kind, func(t *testing.T) {
+			f := createFixture(t)
+			for i := 0; i < 2; i++ {
+				id := api.NewID("memory")
+				if receipt := f.command(t, "memory.create", id, nil, memory.CreateInput{MemoryID: id, Values: f.values(t, "checked query")}); receipt.Stage != "applied" {
+					t.Fatalf("create: %+v", receipt)
+				}
+			}
+			text := f.upload(t, "checked query")
+			query := f.upload(t, string(api.Raw(memory.MemoryQuerySpec{TextRef: text, TypeFilter: []string{}, RankingProfileRef: memory.LexicalProfile()})))
+			in := memory.QueryInput{QueryRef: query, ScopeRef: f.upload(t, "原当前查询范围"), Purposes: []string{"memory.query"}, Limits: memory.QueryLimits{MaxCandidates: 200, MaxReadBytes: 1 << 20, MaxPermissionChecks: 10000, Deadline: api.Time(time.Now().Add(time.Minute))}, Limit: 1}
+			authority := &queryRecheckAuthority{}
+			f.service.Authorization = authority
+			page, err := f.service.QueryMemory(f.ctx, f.scope, f.auth, api.NewID("query"), in)
+			if err != nil || len(page.Items) != 1 || page.NextCursor == "" {
+				t.Fatalf("original page: %+v %v", page, err)
+			}
+			if kind == "permission_budget" {
+				// 许可端口实际计数给出首轮消费上限；新查询只预留这一轮检查。
+				in.Limits.MaxPermissionChecks = authority.checks
+				page, err = f.service.QueryMemory(f.ctx, f.scope, f.auth, api.NewID("query"), in)
+				if err != nil || len(page.Items) != 1 || page.NextCursor == "" {
+					t.Fatalf("bounded first page: %+v %v", page, err)
+				}
+			} else if kind == "context_cancelled" {
+				authority.failure = context.Canceled
+			} else {
+				authority.failure = &pgconn.PgError{Code: "40P01", Message: "injected current authority deadlock"}
+			}
+			in.Cursor = page.NextCursor
+			next, err := f.service.QueryMemory(f.ctx, f.scope, f.auth, api.NewID("query"), in)
+			if kind == "permission_budget" {
+				if err != nil || len(next.Items) != 0 || next.Exhausted || !next.Partial || next.NextCursor != in.Cursor || len(next.Gaps) == 0 {
+					t.Fatalf("unchecked candidates falsely exhausted: %+v %v", next, err)
+				}
+			} else if !errors.Is(err, authority.failure) {
+				t.Fatalf("underlying current source failure replaced: %v", err)
+			}
+		})
+	}
+}
 
 func TestMemoryPagesUseOriginalQueryBindingDeadline(t *testing.T) {
 	for _, kind := range []string{"query", "list"} {
