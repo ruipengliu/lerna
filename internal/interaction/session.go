@@ -5,7 +5,6 @@ import (
 	"errors"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/runtime"
-	"time"
 )
 
 func invalid(reason string) error { return api.E("invalid_request", reason) }
@@ -132,8 +131,12 @@ func (s *Service) ReadSession(ctx context.Context, store runtime.Store, scope ru
 			if e != nil {
 				return e
 			}
+			expiry, e := pageExpiry(ctx, now)
+			if e != nil {
+				return e
+			}
 			roles, _ := api.Digest(auth.Roles)
-			view.BranchesCursor = s.encodeCursor(pageCursor{TenantID: scope.TenantID, OwnerID: scope.OwnerID, DatabaseID: scope.DatabaseID, SubjectID: auth.SubjectID, CredentialGeneration: auth.CredentialGeneration, RolesDigest: roles, Kind: "branches", Parent: id, Revision: revision, Last: rows[99].ID, ExpiresAt: api.Time(now.Add(10 * time.Minute))})
+			view.BranchesCursor = s.encodeCursor(pageCursor{TenantID: scope.TenantID, OwnerID: scope.OwnerID, DatabaseID: scope.DatabaseID, SubjectID: auth.SubjectID, CredentialGeneration: auth.CredentialGeneration, RolesDigest: roles, Kind: "branches", Parent: id, Revision: revision, Last: rows[99].ID, ExpiresAt: api.Time(expiry)})
 		}
 		for _, row := range rows {
 			var branch branchRecord

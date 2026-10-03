@@ -429,7 +429,24 @@ func (s *Service) ChildSendTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		if e := s.authorize(ctx, tx, auth, "child.continue", content, refs); e != nil {
 			return out, e
 		}
-		tr := Transfer{TransferID: api.NewID("transfer"), Revision: 1, DelegationID: d.DelegationID, Kind: "input", CommandRef: tx.Scope().Ref(api.NewID("command"), 1), State: "queued", Input: in}
+		now, e := tx.Now(ctx)
+		if e != nil {
+			return out, e
+		}
+		deadline, e := api.ParseTime(d.Deadline)
+		if e != nil {
+			return out, e
+		}
+		expires := now.Add(time.Minute)
+		if deadline.Before(expires) {
+			expires = deadline
+		}
+		if !now.Before(expires) {
+			return out, api.E("invalid_state", "delegation_deadline_exceeded")
+		}
+		frozenAuth := auth
+		frozenAuth.Roles = append([]string{}, auth.Roles...)
+		tr := Transfer{TransferID: api.NewID("transfer"), Revision: 1, DelegationID: d.DelegationID, Kind: "input", CommandRef: tx.Scope().Ref(api.NewID("command"), 1), State: "queued", Input: in, ActorAuth: frozenAuth, SourceSubmissionRef: tx.Scope().Ref(c.CommandID, 1), ExpiresAt: api.Time(expires)}
 		if e := tx.Create(ctx, transfers, tr.TransferID, h.ChildID, tr); e != nil {
 			return out, e
 		}
@@ -454,6 +471,41 @@ func (s *Service) collaborationAdmission(ctx context.Context, tx runtime.Tx, aut
 	}
 	if gate, ok := s.ports.Collaboration.(CollaborationAdmission); ok {
 		return gate.CheckCollaborationTx(ctx, tx, auth, kind, receiver)
+	}
+	return nil
+}
+
+// CheckTransferTx供本方adapter在原转交首次发送前核当前源门禁，不执行出站。
+// 沿不可变Birth定位父Task，先锁父Task再锁委派及转交；恢复已接纳原命令无需重授开始权。
+func (s *Service) CheckTransferTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, transferID string) error {
+	var birth Transfer
+	if err := tx.GetVersion(ctx, transfers, transferID, 1, &birth); err != nil {
+		return err
+	}
+	var original Delegation
+	if err := tx.GetVersion(ctx, delegations, birth.DelegationID, 1, &original); err != nil {
+		return err
+	}
+	parent, err := getTask(ctx, tx, original.ParentTaskRef.ObjectID)
+	if err != nil {
+		return err
+	}
+	if err = principal(auth, parent); err != nil {
+		return err
+	}
+	if err = s.CheckCurrent(ctx, tx, parent, true); err != nil {
+		return err
+	}
+	var delegation Delegation
+	if _, err = tx.Get(ctx, delegations, original.DelegationID, &delegation); err != nil {
+		return err
+	}
+	var transfer Transfer
+	if _, err = tx.Get(ctx, transfers, transferID, &transfer); err != nil {
+		return err
+	}
+	if transfer.DelegationID != delegation.DelegationID || transfer.State != "queued" || delegation.GoalWorkClosed || delegation.CloseRequested || transfer.Input.ParentGoalRevision != parent.Task.GoalRevision || !api.Equal(transfer.ActorAuth, auth) {
+		return api.E("invalid_state", "transfer_source_closed")
 	}
 	return nil
 }

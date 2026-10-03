@@ -2,6 +2,7 @@ package task
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -45,6 +46,7 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 	}
 	expired := false
 	completionHandled := false
+	guardrailHandled := false
 	err = s.transaction(ctx, store, scope, func(tx runtime.Tx) error {
 		if e := tx.Guard(ctx, work.Claim); e != nil {
 			return e
@@ -63,8 +65,14 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 				return e
 			}
 		}
+		if !expired && !completionHandled {
+			guardrailHandled, e = s.guardrailTx(ctx, tx, &current)
+			if e != nil {
+				return e
+			}
+		}
 		t = current
-		if !completionHandled && !expired && !terminal(current) && current.Task.Control == "running" && current.PendingGoalCommand == "" && current.Task.RequirementsState != "awaiting_input" {
+		if !guardrailHandled && !completionHandled && !expired && !terminal(current) && current.Task.Control == "running" && current.PendingGoalCommand == "" && current.Task.RequirementsState != "awaiting_input" {
 			return s.CheckCurrent(ctx, tx, current, true)
 		}
 		return nil
@@ -72,7 +80,7 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 	if err != nil {
 		return err
 	}
-	if expired || completionHandled {
+	if expired || completionHandled || guardrailHandled {
 		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
 	}
 	if t.Task.Control != "running" || t.PendingGoalCommand != "" || t.Task.RequirementsState == "awaiting_input" {
@@ -637,6 +645,25 @@ func (s *Service) childPrepareJob(ctx context.Context, store runtime.Store, scop
 	}
 	ref, err := s.ports.Collaboration.CreateSession(ctx, scope, h)
 	if err != nil {
+		var rejected *OriginalCommandRejection
+		if errors.As(err, &rejected) && rejected.Receipt.Stage == "rejected" && rejected.Receipt.CommandID == h.SessionCommandRef.ObjectID && rejected.Receipt.Error != nil {
+			return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+				var current ChildHandle
+				rev, err := tx.Get(ctx, children, h.ChildID, &current)
+				if err != nil {
+					return err
+				}
+				if current.ChildSessionRef != nil {
+					return api.E("idempotency_conflict", "original_session_receipt_changed")
+				}
+				current.State = "closed"
+				current.Revision++
+				if err = tx.Put(ctx, children, h.ChildID, rev, current); err != nil {
+					return err
+				}
+				return runtime.Decide(ctx, tx, workCommandID(ctx, tx, h.ChildID), nil, rejected.Receipt.Error)
+			})
+		}
 		if deferred(err) {
 			return s.wait(ctx, store, scope, work)
 		}
@@ -690,7 +717,7 @@ func (s *Service) transferJob(ctx context.Context, store runtime.Store, scope ru
 	if _, e := store.Read(ctx, scope, transfers, work.Job.SourceRef.ObjectID, 0, &tr); e != nil {
 		return e
 	}
-	if tr.State == "closed" || tr.State == "applied" {
+	if tr.State == "closed" || tr.State == "applied" || tr.State == "rejected" {
 		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
 	}
 	if s.ports.Collaboration == nil {
@@ -700,6 +727,26 @@ func (s *Service) transferJob(ctx context.Context, store runtime.Store, scope ru
 		return e
 	}
 	if e := s.ports.Collaboration.Transfer(ctx, scope, tr); e != nil {
+		var rejected *OriginalCommandRejection
+		if errors.As(e, &rejected) && rejected.Receipt.Stage == "rejected" && rejected.Receipt.CommandID == tr.CommandRef.ObjectID && rejected.Receipt.Error != nil {
+			return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+				var current Transfer
+				rev, err := tx.Get(ctx, transfers, tr.TransferID, &current)
+				if err != nil {
+					return err
+				}
+				if current.State == "closed" {
+					return nil
+				}
+				if current.State == "applied" {
+					return api.E("idempotency_conflict", "original_transfer_receipt_changed")
+				}
+				current.State = "rejected"
+				current.RejectedReceipt = &rejected.Receipt
+				current.Revision++
+				return tx.Put(ctx, transfers, tr.TransferID, rev, current)
+			})
+		}
 		if deferred(e) {
 			return s.wait(ctx, store, scope, work)
 		}

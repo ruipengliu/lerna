@@ -3,6 +3,8 @@ package runtime
 import (
 	"context"
 	"time"
+
+	"github.com/ruipengliu/lerna/api"
 )
 
 // QueryBindingStore 是短期查询身份端口。实现只保存摘要，查询仍必须执行当前披露门禁。
@@ -11,6 +13,23 @@ type QueryBindingStore interface {
 	BindQuery(context.Context, Scope, QueryBindingInput) (QueryBinding, CommitStatus, error)
 	SealQuery(context.Context, Scope, QueryBinding, string) (QueryBinding, CommitStatus, error)
 	PruneQueries(context.Context, Scope, int) (int, CommitStatus, error)
+}
+
+type queryBindingContextKey struct{}
+
+// WithQueryBinding 由 Dispatcher 在当前查询方法调用前固定；这里只传元数据，不授予披露资格。
+func WithQueryBinding(ctx context.Context, binding QueryBinding) context.Context {
+	return context.WithValue(ctx, queryBindingContextKey{}, binding)
+}
+
+// QueryBindingExpiry 让同 query_id 的临时游标保持原期限。当前门禁仍各自读取数据库时间。
+func QueryBindingExpiry(ctx context.Context) (time.Time, bool) {
+	binding, ok := ctx.Value(queryBindingContextKey{}).(QueryBinding)
+	if !ok {
+		return time.Time{}, false
+	}
+	expiry, err := api.ParseTime(binding.ExpiresAt)
+	return expiry, err == nil
 }
 
 type QueryBindingInput struct {

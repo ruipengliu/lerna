@@ -2,9 +2,11 @@ package interaction_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/interaction"
+	"github.com/ruipengliu/lerna/runtime"
 )
 
 func TestSessionCursorRejectsCollectionChangeSubjectAndTampering(t *testing.T) {
@@ -12,12 +14,36 @@ func TestSessionCursorRejectsCollectionChangeSubjectAndTampering(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		f.command(t, "session.create", f.scope.OwnerID, nil, interaction.CreateSessionInput{SessionID: api.NewID("session"), DefaultBranchID: api.NewID("branch"), ConfigRef: f.config})
 	}
-	page, e := f.s.ListSessions(f.ctx, f.store, f.scope, f.auth, api.ListInput{Limit: 1})
+	roles, _ := api.Digest(f.auth.Roles)
+	queryDigest, _ := api.Digest(api.ListInput{Limit: 1})
+	bindings := f.store.(runtime.QueryBindingStore)
+	binding, status, e := bindings.BindQuery(f.ctx, f.scope, runtime.QueryBindingInput{QueryID: api.NewID("query"), PrincipalID: f.auth.SubjectID, CredentialGeneration: f.auth.CredentialGeneration, RolesDigest: roles, QueryDigest: queryDigest, TTL: 5 * time.Minute})
+	if e != nil || status != runtime.Committed {
+		t.Fatalf("bind query %s %v", status, e)
+	}
+	ctx := runtime.WithQueryBinding(f.ctx, binding)
+	page, e := f.s.ListSessions(ctx, f.store, f.scope, f.auth, api.ListInput{Limit: 1})
 	if e != nil {
 		t.Fatal(e)
 	}
 	if len(page.Items) != 1 || page.Exhausted || page.NextCursor == "" {
 		t.Fatalf("incomplete first page %+v", page)
+	}
+	digest, _ := api.Digest(page)
+	if _, status, e = bindings.SealQuery(f.ctx, f.scope, binding, digest); e != nil || status != runtime.Committed {
+		t.Fatalf("seal query %s %v", status, e)
+	}
+	time.Sleep(10 * time.Millisecond)
+	repeated, e := f.s.ListSessions(ctx, f.store, f.scope, f.auth, api.ListInput{Limit: 1})
+	if e != nil {
+		t.Fatal(e)
+	}
+	repeatedDigest, _ := api.Digest(repeated)
+	if repeatedDigest != digest || repeated.NextCursor != page.NextCursor {
+		t.Fatal("unchanged page drifted on the same bound query")
+	}
+	if _, status, e = bindings.SealQuery(f.ctx, f.scope, binding, repeatedDigest); e != nil || status != runtime.Committed {
+		t.Fatalf("repeated result changed %s %v", status, e)
 	}
 	wrong := f.auth
 	wrong.SubjectID = api.NewID("subject")

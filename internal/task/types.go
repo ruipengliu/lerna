@@ -123,6 +123,18 @@ type CollaborationAdmission interface {
 type AllocationReporter interface {
 	ReportClosure(context.Context, runtime.Scope, string, api.ObjectRef, api.AllocationClosure) error
 }
+
+// OriginalCommandRejection只携带原消费方已耐久rejected回执；网络错误不能构造此事实。
+type OriginalCommandRejection struct{ Receipt api.Receipt }
+
+func (r *OriginalCommandRejection) Error() string {
+	if r.Receipt.Error != nil {
+		return r.Receipt.Error.Error()
+	}
+	return "original collaboration command rejected"
+}
+func (r *OriginalCommandRejection) Unwrap() error { return r.Receipt.Error }
+
 type AdjustmentVerifier interface {
 	VerifyAdjustment(context.Context, runtime.Scope, BillingAdjustment) (bool, error)
 }
@@ -587,13 +599,17 @@ type ChildCloseOutput struct {
 	Targets  []CloseTarget `json:"targets"`
 }
 type Transfer struct {
-	TransferID   string         `json:"transfer_id"`
-	Revision     uint64         `json:"revision"`
-	DelegationID string         `json:"delegation_id"`
-	Kind         string         `json:"kind"`
-	CommandRef   api.ObjectRef  `json:"command_ref"`
-	State        string         `json:"state"`
-	Input        ChildSendInput `json:"input"`
+	TransferID          string         `json:"transfer_id"`
+	Revision            uint64         `json:"revision"`
+	DelegationID        string         `json:"delegation_id"`
+	Kind                string         `json:"kind"`
+	CommandRef          api.ObjectRef  `json:"command_ref"`
+	State               string         `json:"state"`
+	Input               ChildSendInput `json:"input"`
+	ActorAuth           runtime.Auth   `json:"actor_auth"`
+	SourceSubmissionRef api.ObjectRef  `json:"source_submission_ref"`
+	ExpiresAt           string         `json:"expires_at"`
+	RejectedReceipt     *api.Receipt   `json:"rejected_receipt,omitempty"`
 }
 
 // 只读关系投影保持源的版本和摘要；unknown 不能改成 closed。

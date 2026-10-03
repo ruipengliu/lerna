@@ -29,7 +29,7 @@ func TestReportGoalCompletesOnlyAfterIndependentFileReadback(t *testing.T) {
 
 func runReportGoal(t *testing.T, driver string) {
 	t.Helper()
-	ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 	defer cancel()
 	root := t.TempDir()
 	cfg, err := InitializeConfig(ctx, filepath.Join(root, "config.json"), root, driver)

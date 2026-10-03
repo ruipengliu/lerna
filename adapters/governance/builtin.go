@@ -29,6 +29,9 @@ type BuiltinHost struct {
 	allow     map[string]domain.Installation
 	ttl       time.Duration
 	mu        sync.Mutex
+	closeMu   sync.Mutex
+	closing   bool
+	closed    bool
 	instances map[string]*liveInstance
 }
 type liveInstance struct {
@@ -213,6 +216,12 @@ func (h *BuiltinHost) Initialize(ctx context.Context, r domain.InstanceRequest) 
 		return out, api.E("expired", "instance_prepare_deadline")
 	}
 	err = h.w.lock(ctx, func() error {
+		h.mu.Lock()
+		closing := h.closing
+		h.mu.Unlock()
+		if closing {
+			return api.E("invalid_state", "builtin_host_closing")
+		}
 		var install installJournal
 		if e := h.w.readJSON(installPath(r.Installation)+"/journal.json", &install); e != nil {
 			return e
@@ -434,20 +443,42 @@ func (h *BuiltinHost) Dispose(ctx context.Context, in domain.Installation) (out 
 }
 
 func (h *BuiltinHost) Close() error {
+	h.closeMu.Lock()
+	defer h.closeMu.Unlock()
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	h.mu.Lock()
-	requests := make([]domain.InstanceRequest, 0, len(h.instances))
-	for _, live := range h.instances {
-		requests = append(requests, live.request)
+	if h.closed {
+		h.mu.Unlock()
+		return nil
 	}
+	h.closing = true
 	h.mu.Unlock()
+	var requests []domain.InstanceRequest
+	// 与原 Initialize 同一锁域收敛；启动在注册 handle 前不能被 Close 漏掉。
+	if e := h.w.lock(ctx, func() error {
+		h.mu.Lock()
+		defer h.mu.Unlock()
+		requests = make([]domain.InstanceRequest, 0, len(h.instances))
+		for _, live := range h.instances {
+			requests = append(requests, live.request)
+		}
+		return nil
+	}); e != nil {
+		return e
+	}
 	for _, r := range requests {
 		if _, e := h.Fence(ctx, r); e != nil {
 			return e
 		}
 	}
-	return h.w.root.Close()
+	if e := h.w.root.Close(); e != nil {
+		return e
+	}
+	h.mu.Lock()
+	h.closed = true
+	h.mu.Unlock()
+	return nil
 }
 
 var _ domain.LifecyclePort = (*BuiltinHost)(nil)

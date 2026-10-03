@@ -125,7 +125,7 @@ func (t *HTTPTransport) Discover(ctx context.Context) (Discovery, error) {
 	if e = api.DecodeLimit(b, &d, 1<<20); e != nil {
 		return d, e
 	}
-	hash, e := api.Digest(d.Methods)
+	hash, e := api.DigestLimit(d.Methods, 1<<20)
 	if e != nil || hash != d.MethodsDigest || d.Protocol != api.Protocol || d.Profile != api.Profile || d.IdentityScope == "" {
 		return d, api.E("unsupported", "discovery_mismatch")
 	}

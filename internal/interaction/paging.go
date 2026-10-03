@@ -15,6 +15,17 @@ import (
 
 const collections = "interaction.collections"
 
+func pageExpiry(ctx context.Context, now time.Time) (time.Time, error) {
+	expiry := now.Add(10 * time.Minute)
+	if fixed, ok := runtime.QueryBindingExpiry(ctx); ok {
+		expiry = fixed
+	}
+	if !now.Before(expiry) {
+		return time.Time{}, api.E("cursor_expired", "query_binding_expired")
+	}
+	return expiry, nil
+}
+
 type collectionMarker struct {
 	Revision uint64 `json:"revision"`
 }
@@ -128,6 +139,10 @@ func ownedPage[T any](ctx context.Context, s *Service, store runtime.Store, scop
 		if e != nil {
 			return e
 		}
+		expiry, e := pageExpiry(ctx, now)
+		if e != nil {
+			return e
+		}
 		last, e := s.parseCursor(in.Cursor, scope, a, kind, parent, revision, now)
 		if e != nil {
 			return e
@@ -150,7 +165,7 @@ func ownedPage[T any](ctx context.Context, s *Service, store runtime.Store, scop
 		}
 		if !page.Exhausted {
 			roles, _ := api.Digest(a.Roles)
-			page.NextCursor = s.encodeCursor(pageCursor{TenantID: scope.TenantID, OwnerID: scope.OwnerID, DatabaseID: scope.DatabaseID, SubjectID: a.SubjectID, CredentialGeneration: a.CredentialGeneration, RolesDigest: roles, Kind: kind, Parent: parent, Revision: revision, Last: rows[len(rows)-1].ID, ExpiresAt: api.Time(now.Add(10 * time.Minute))})
+			page.NextCursor = s.encodeCursor(pageCursor{TenantID: scope.TenantID, OwnerID: scope.OwnerID, DatabaseID: scope.DatabaseID, SubjectID: a.SubjectID, CredentialGeneration: a.CredentialGeneration, RolesDigest: roles, Kind: kind, Parent: parent, Revision: revision, Last: rows[len(rows)-1].ID, ExpiresAt: api.Time(expiry)})
 		}
 		return nil
 	})

@@ -133,7 +133,7 @@ func OpenStore(ctx context.Context, c Config, migration bool) (runtime.Store, er
 			return nil, e
 		}
 		options := []postgres.Option{postgres.WithMaxConnections(32)}
-		if !migration {
+		if c.DatabaseID != "" {
 			options = append(options, postgres.WithExpectedDatabaseID(c.DatabaseID))
 		}
 		s, e := postgres.Open(ctx, dsn, options...)
@@ -149,7 +149,7 @@ func OpenStore(ctx context.Context, c Config, migration bool) (runtime.Store, er
 		return s, nil
 	case "sqlite":
 		options := []sqlite.Option{}
-		if !migration {
+		if c.DatabaseID != "" {
 			options = append(options, sqlite.WithExpectedDatabaseID(c.DatabaseID))
 		}
 		s, e := sqlite.Open(c.DatabasePath, options...)
@@ -169,7 +169,15 @@ func OpenStore(ctx context.Context, c Config, migration bool) (runtime.Store, er
 }
 func InitializeConfig(ctx context.Context, path, root, driver string) (Config, error) {
 	if _, e := os.Stat(path); e == nil {
-		return LoadConfig(path)
+		c, err := LoadConfig(path)
+		if err != nil {
+			return c, err
+		}
+		store, err := OpenStore(ctx, c, true)
+		if err != nil {
+			return c, err
+		}
+		return c, store.Close()
 	} else if !os.IsNotExist(e) {
 		return Config{}, e
 	}
