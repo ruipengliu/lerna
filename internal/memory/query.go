@@ -402,10 +402,7 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 					sourcesAllowed = false
 					break
 				}
-				if isUnavailable(err) {
-					return err
-				}
-				return api.E("snapshot_required", "query_source_changed")
+				return queryRecheckError(err, "query_source_changed")
 			}
 		}
 		end := position
@@ -436,14 +433,14 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 						out.Gaps = unique(append(out.Gaps, "permission_authority_unavailable"))
 						break
 					}
-					return api.E("snapshot_required", "query_scope_changed")
+					return queryRecheckError(err, "query_scope_changed")
 				}
 			}
 			if err == nil {
 				out.Items = append(out.Items, match)
 			}
 		}
-		out.Exhausted = !sourcesAllowed || end == len(view.Matches)
+		out.Exhausted = end == len(view.Matches)
 		if !out.Exhausted {
 			out.NextCursor = cursorFor(id, view.Digest, end)
 		}
@@ -454,6 +451,15 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 		return tx.Put(ctx, "memory.queries", id, viewRevision, view)
 	})
 	return out, err
+}
+
+func queryRecheckError(err error, reason string) error {
+	for _, code := range []string{"forbidden", "gone", "expired", "not_found", "idempotency_conflict", "revision_conflict"} {
+		if api.IsCode(err, code) {
+			return api.E("snapshot_required", reason)
+		}
+	}
+	return err
 }
 
 type ListMemoryInput struct {
