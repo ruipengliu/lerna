@@ -230,6 +230,10 @@ func (tx *transaction) guarded(ctx context.Context, claim api.Claim) (storedJob,
 	if job.job.WorkRevision < claim.ObservedWorkRevision {
 		return job, fmt.Errorf("job work revision regressed")
 	}
+	if tx.guards == nil {
+		tx.guards = make(map[string]api.Claim)
+	}
+	tx.guards[claim.JobID] = claim
 	return job, nil
 }
 func (tx *transaction) Guard(ctx context.Context, claim api.Claim) error {
