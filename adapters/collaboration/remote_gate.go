@@ -22,6 +22,17 @@ type parentScopeCarrier struct {
 func NewParentScopeContext(ctx context.Context) context.Context {
 	return context.WithValue(ctx, parentScopeKey{}, &parentScopeCarrier{values: map[string]RemoteAllocationSnapshot{}})
 }
+
+// CloneParentScopeContext 只深拷显式宿主同一调用树已经取得的控制证明。
+// 新Job/网络入口必须New；准确Child/subject/期限仍由纯Task门禁重核。
+func CloneParentScopeContext(ctx context.Context) (context.Context, error) {
+	values := parentScopeValues(ctx)
+	proofs := make([]RemoteAllocationSnapshot, 0, len(values))
+	for _, value := range values {
+		proofs = append(proofs, value)
+	}
+	return WithParentScopes(NewParentScopeContext(ctx), proofs)
+}
 func parentScopeValues(ctx context.Context) map[string]RemoteAllocationSnapshot {
 	if carrier, ok := ctx.Value(parentScopeKey{}).(*parentScopeCarrier); ok {
 		carrier.mu.Lock()

@@ -34,6 +34,9 @@ func deferred(err error) bool {
 func (s *Service) registerJobs(r *runtime.Registry) error {
 	handlers := map[string]runtime.JobHandler{JobContextLookup: s.contextLookupJob, JobAdjustment: s.adjustmentJob, JobInput: s.inputJob, JobAdvance: s.advanceJob, JobDispatchDecision: s.decisionJob, JobDispatchOperation: s.operationJob, JobReconcileOperation: s.reconcileOperationJob, JobCoverage: s.coverageJob, JobCheck: s.checkJob, JobControl: s.controlJob, JobBilling: s.billingJob, JobPublishResult: s.publishResultJob, JobSteer: s.steerJob, JobDelegation: s.delegationJob, JobAllocation: s.allocationJob, JobChildPrepare: s.childPrepareJob, JobChildTransfer: s.transferJob}
 	for kind, h := range handlers {
+		if kind == JobAdvance {
+			h = s.prepareAdvanceEntry(h)
+		}
 		if e := r.RegisterJob(kind, h); e != nil {
 			return e
 		}
