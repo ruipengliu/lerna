@@ -1,4 +1,4 @@
-import { decode, version } from './index.ts';
+import { decode, version } from './codec.ts';
 import {
   type ErrorCode,
   inputSchemas,
