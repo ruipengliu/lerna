@@ -193,16 +193,23 @@ type Match struct {
 	Explanation []string       `json:"explanation"`
 }
 
+type QueryPart struct {
+	ObjectID string `json:"object_id"`
+	Digest   string `json:"digest"`
+}
+
 type QueryView struct {
 	QueryID                   string           `json:"query_id"`
 	Revision                  uint64           `json:"revision"`
 	PrincipalID               string           `json:"principal_id"`
 	Digest                    string           `json:"digest"`
 	VisibilityToken           string           `json:"visibility_token"`
-	SourceRefs                []api.ContentRef `json:"source_refs"`
+	SourceRefs                []api.ContentRef `json:"source_refs,omitempty"`
+	SourceParts               []QueryPart      `json:"source_parts,omitempty"`
 	ExpiresAt                 string           `json:"expires_at"`
 	ChangeHead                uint64           `json:"change_head"`
-	Matches                   []Match          `json:"matches"`
+	Matches                   []Match          `json:"matches,omitempty"`
+	MatchParts                []QueryPart      `json:"match_parts,omitempty"`
 	Partial                   bool             `json:"partial"`
 	Gaps                      []string         `json:"gaps"`
 	RemainingPermissionChecks uint64           `json:"remaining_permission_checks"`
