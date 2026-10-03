@@ -152,12 +152,23 @@ func (h *Host) verifyBundle(b AdmissionBundle, now time.Time, current bool) erro
 func (h *Host) checkDenyTx(ctx context.Context, tx runtime.Tx, b AdmissionBundle) error {
 	refs := append([]api.ObjectRef{b.Lease.Scope.SubjectRef, b.Principal.Auth().Ref(b.AuthorityID), b.LeaseRef, b.Intent.TaskRef}, b.Lease.GrantRefs...)
 	for _, ref := range refs {
-		var denied denyRecord
-		if _, err := tx.Get(ctx, Namespace+".denials", denyKey(ref), &denied); err == nil {
-			return api.E("forbidden", "known_authority_revocation")
-		} else if !api.IsCode(err, "not_found") {
+		if err := h.knownDenyTx(ctx, tx, ref); err != nil {
 			return err
 		}
+	}
+	return nil
+}
+func (h *Host) knownDenyTx(ctx context.Context, tx runtime.Tx, ref api.ObjectRef) error {
+	var denied denyRecord
+	if _, err := tx.Get(ctx, Namespace+".denials", denyKey(ref), &denied); err == nil {
+		// subject revision 是实际被撤销的 credential generation 上界。
+		// 更高代必须另有新签名依据；这里绝不复活旧bundle/旧holder。
+		if denied.Revocation.Kind == "subject" && ref.Revision > denied.Revocation.ObjectRef.Revision {
+			return nil
+		}
+		return api.E("forbidden", "known_authority_revocation")
+	} else if !api.IsCode(err, "not_found") {
+		return err
 	}
 	return nil
 }

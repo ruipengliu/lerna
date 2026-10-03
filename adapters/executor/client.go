@@ -242,7 +242,7 @@ func (c *Client) ReadBytes(ctx context.Context, ref api.ContentRef) ([]byte, Con
 	var permission ContentPermission
 	for index := uint64(0); index < chunkCount(ref.ByteLength); index++ {
 		var chunk ContentChunk
-		if err := c.query(ctx, "executor.content.get", ref.ContentID, ContentGet{ref, index}, &chunk); err != nil {
+		if err := c.query(ctx, "executor.content.get", ref.ContentID, ContentGet{ContentRef: ref, ChunkIndex: index}, &chunk); err != nil {
 			return nil, permission, err
 		}
 		if !api.Equal(chunk.Permission.ContentRef, ref) || chunk.ChunkIndex != index || chunk.ChunkCount != chunkCount(ref.ByteLength) {
