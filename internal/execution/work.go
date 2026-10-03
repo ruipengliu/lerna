@@ -37,6 +37,9 @@ func (s *Service) run(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work) 
 		if _, err = st.Read(ctx, sc, Namespace+".attempts", op.AttemptIDs[len(op.AttemptIDs)-1], 0, &attempt); err != nil {
 			return err
 		}
+		if err = restorePreparedBytes(&attempt); err != nil {
+			return err
+		}
 		if attempt.Phase != "prepared" {
 			return s.reconcileWork(ctx, st, sc, w)
 		}
@@ -106,6 +109,7 @@ func (s *Service) run(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work) 
 		return s.closeUnstarted(ctx, st, sc, w, err)
 	}
 	attempt := Attempt{AttemptID: api.NewID("attempt"), OperationID: op.Operation.OperationID, Revision: 1, AttemptNo: 1, Phase: "prepared", Prepared: prepared, Permit: StartPermit{ProofRefs: []api.ContentRef{}}, Effect: "not_started", MayApplyLater: false, ControlWindowID: window.WindowID, ControlWindow: window, EvidenceRefs: []api.ContentRef{}, Usage: []api.Amount{}, ActuallyStopped: true}
+	attempt.PreparedBytes = append([]byte{}, prepared.Encoded...)
 	if _, independent := s.cfg.Authority.(ControlWindowSource); !independent {
 		authority, err := s.cfg.Authority.PrepareStart(ctx, sc, StartRequest{ControlWindow: window, Invoke: op.Invoke, Intent: intent, AttemptID: attempt.AttemptID, Auth: op.Principal})
 		if err != nil {
@@ -192,6 +196,9 @@ func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w
 			var a Attempt
 			ar, err := tx.Get(callCtx, Namespace+".attempts", attempt.AttemptID, &a)
 			if err != nil {
+				return err
+			}
+			if err = restorePreparedBytes(&a); err != nil {
 				return err
 			}
 			if a.Phase != "prepared" || current.NewAttemptsClosed {
@@ -344,6 +351,9 @@ func (s *Service) reconcileWork(ctx context.Context, st rt.Store, sc rt.Scope, w
 		}
 		if a.Phase == "prepared" {
 			continue
+		}
+		if err = restorePreparedBytes(&a); err != nil {
+			return err
 		}
 		fact, err := d.Reconcile(ctx, AttemptRequest{Scope: sc, Invoke: op.Invoke, Intent: *op.Intent, Attempt: a, Auth: op.Principal})
 		if err != nil {
@@ -615,6 +625,9 @@ func (s *Service) stopWork(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 		}
 		if a.Phase == "prepared" {
 			continue
+		}
+		if err = restorePreparedBytes(&a); err != nil {
+			return err
 		}
 		f, err := d.Stop(ctx, AttemptRequest{Scope: sc, Invoke: op.Invoke, Intent: *op.Intent, Attempt: a, Auth: op.Principal})
 		if err != nil {
