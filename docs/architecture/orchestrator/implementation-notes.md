@@ -25,6 +25,8 @@
 
 完成提案中的准确检查建议同事务变成去重的 CheckRequest 和 Job，并固定原成果、目标及控制版本的 completion intent。实际检查未完成时保留等待，不消费无进展额度或开启新 Decision；RecordCheck 唤醒原完成责任，只有当前完整门禁通过才保存 Result。建议本身不能替代观察。坏建议整批回滚后有限拒绝，目标或控制改变则废止旧完成意图。
 
+同 owner 的 [collaboration adapter](../../../adapters/collaboration/README.md) 已接实际 Session 和内部 Task 转交。它冻结原主体与 Command，在未配置跨 owner 接收方时于准入前关闭入口。原转交只有消费方实际 applied 才记录完成；准确 rejected 保留原回执，不能以暂时读取失败伪造拒绝。
+
 控制窗口最多五秒，正控制还截于 Task deadline。原 invoke 答复丢失时重发固定的原窗口、证明、时间及输入；新的窗口通过单独原控制窗口责任取得。负控制在 deadline 之后可以签发有限传播窗口，仍不授予行动入口。关闭视图包含完整有界本方子树、准确关系摘要和依据引用；超出已配置完整性界时明确保留缺口，不截断后宣称关闭。额度关闭先到时保留永久门禁，迟到创建不得重开。
 
 ## 已运行证据

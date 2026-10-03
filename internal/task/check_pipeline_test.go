@@ -95,3 +95,51 @@ func TestCompleteProposalInvalidCheckRollsBackEntireEvidenceBatch(t *testing.T) 
 		t.Fatalf("rejected batch leaked partial check responsibility: %+v %v", work, err)
 	}
 }
+
+func TestPendingCompletionCannotCrossPauseResumeControlRevision(t *testing.T) {
+	ctx := context.Background()
+	rule := fixtureRule()
+	gate := &evidenceBridge{rules: map[string]api.RuleDefinition{rule.RuleRef.ComponentID: rule}}
+	source := &preapprovedCheckSource{rule: rule}
+	h := newHarness(t, task.Ports{Gate: gate, Evidence: source}, rule)
+	gate.service = governance.New(h.store, governance.Options{})
+	source.scopeRef = h.content("explicit original observation scope")
+	current := readyTask(t, h, rule)
+	prepared := h.prepared(current, "0")
+	prepared.Snapshot.Purpose = "decide"
+	prepared.Snapshot.CoverageRef = current.CurrentCoverageRef
+	if _, err := h.service.PrepareDecision(ctx, h.store, h.scope, h.trusted(), prepared); err != nil {
+		t.Fatal(err)
+	}
+	artifact := h.content("original completion artifact")
+	out, err := h.service.ConsumeProposal(ctx, h.store, h.scope, h.trusted(), task.Proposal{DecisionID: prepared.DecisionID, Kind: "complete", ReasonRef: current.GoalRef, ArtifactRefs: []api.ContentRef{artifact}, CheckRequests: []task.AttachInput{{TaskID: current.TaskID, GoalRevision: current.GoalRevision, RequirementRef: api.RequirementRef{RequirementID: current.Requirements[0].RequirementID, Revision: 1}, ArtifactRef: artifact, EvidenceRefs: []api.ContentRef{h.content("explicit check observation")}}}}, nil)
+	if err != nil || out.Outcome != "awaiting_checks" {
+		t.Fatalf("prepare complete: %+v %v", out, err)
+	}
+	for _, method := range []string{"task.pause", "task.resume"} {
+		current, err = h.service.Read(ctx, h.store, h.scope, h.auth, current.TaskID)
+		if err != nil {
+			t.Fatal(err)
+		}
+		r, err := h.dispatch.Command(ctx, h.auth, api.Raw(h.command(method, current.TaskID, &current.Revision, task.ControlInput{TaskID: current.TaskID, Reason: "change control while observing"})))
+		if err != nil || r.Stage != "applied" {
+			t.Fatalf("control: %+v %v", r, err)
+		}
+	}
+	drainKind(t, h, task.JobCheck)
+	drainKind(t, h, task.JobAdvance)
+	current, err = h.service.Read(ctx, h.store, h.scope, h.auth, current.TaskID)
+	if err != nil || current.Status == "succeeded" {
+		t.Fatalf("old completion crossed a control fence: %+v %v", current, err)
+	}
+	fresh := h.prepared(current, "0")
+	fresh.Snapshot.Purpose = "decide"
+	fresh.Snapshot.CoverageRef = current.CurrentCoverageRef
+	if _, err = h.service.PrepareDecision(ctx, h.store, h.scope, h.trusted(), fresh); err != nil {
+		t.Fatalf("superseded completion blocked a fresh snapshot: %v", err)
+	}
+	out, err = h.service.ConsumeProposal(ctx, h.store, h.scope, h.trusted(), task.Proposal{DecisionID: fresh.DecisionID, Kind: "complete", ReasonRef: current.GoalRef, ArtifactRefs: []api.ContentRef{artifact}}, nil)
+	if err != nil || out.Outcome != "completed" {
+		t.Fatalf("fresh complete could not consume actual current checks: %+v %v", out, err)
+	}
+}
