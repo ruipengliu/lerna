@@ -119,6 +119,14 @@ func (s *Service) prepare(ctx context.Context, tx runtime.Tx, a runtime.Auth, c 
 	if err := requireRole(a, "maintainer"); err != nil {
 		return runtime.Outcome{}, err
 	}
+	if s.Ports.Lifecycle == nil {
+		return runtime.Outcome{}, api.E("unsupported", "trusted_lifecycle_unavailable")
+	}
+	if admission, ok := s.Ports.Lifecycle.(InstallationAdmission); ok {
+		if err := admission.CheckInstallation(in.Installation); err != nil {
+			return runtime.Outcome{}, err
+		}
+	}
 	if err := ownerRef(tx.Scope(), in.TargetRef); err != nil {
 		return runtime.Outcome{}, err
 	}

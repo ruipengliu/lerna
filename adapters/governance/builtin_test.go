@@ -266,3 +266,43 @@ func TestBuiltinCloseWaitsAndFencesConcurrentOriginalStartup(t *testing.T) {
 		t.Fatal("closed original instance restarted")
 	}
 }
+
+func TestBuiltinCapacityReleasesOnlyAfterActualOriginalExit(t *testing.T) {
+	ctx := context.Background()
+	scope, content, install := fixture(t)
+	host, e := adapter.NewBuiltinHost(adapter.BuiltinHostConfig{Root: t.TempDir(), Scope: scope, Content: content, Clock: time.Now, Installations: []domain.Installation{install}, ReadinessTTL: time.Minute, InstanceLimit: 2})
+	if e != nil {
+		t.Fatal(e)
+	}
+	defer host.Close()
+	if _, e = host.Prepare(ctx, install); e != nil {
+		t.Fatal(e)
+	}
+	request := func() domain.InstanceRequest {
+		return domain.InstanceRequest{TargetID: api.NewID("target"), ActivationID: api.NewID("activation"), InstanceID: api.NewID("instance"), Generation: 1, Installation: install, ConfigRef: install.ConfigRef, Deadline: api.Time(time.Now().Add(time.Minute))}
+	}
+	first, second, third := request(), request(), request()
+	caller, cancel := context.WithCancel(ctx)
+	if _, e = host.Initialize(caller, first); e != nil {
+		t.Fatal(e)
+	}
+	cancel() // 调用方停止等候不代表原实例实际退出。
+	if _, e = host.Initialize(ctx, second); e != nil {
+		t.Fatal(e)
+	}
+	if _, e = host.Initialize(ctx, third); !api.IsCode(e, "capacity_exhausted") {
+		t.Fatalf("live original capacity bypassed: %v", e)
+	}
+	if _, e = host.Fence(ctx, third); !os.IsNotExist(e) {
+		t.Fatalf("capacity rejection created a third original instance: %v", e)
+	}
+	if fenced, e := host.Fence(ctx, first); e != nil || !fenced.Exited {
+		t.Fatalf("actual original exit: %+v %v", fenced, e)
+	}
+	if _, e = host.Initialize(ctx, third); e != nil {
+		t.Fatalf("actual exited capacity not released: %v", e)
+	}
+	if _, e = host.Initialize(ctx, first); e == nil {
+		t.Fatal("capacity recovery revived the exited original")
+	}
+}
