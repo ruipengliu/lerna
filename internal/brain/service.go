@@ -224,6 +224,24 @@ func (s *Service) advance(ctx context.Context, store runtime.Store, scope runtim
 	if e := hydrateStoredDecision(ctx, store, scope, &d); e != nil {
 		return e
 	}
+	if !d.CancelRequested && (d.Phase == "accepted" || d.Phase == "encoded" || d.Phase == "publishing") {
+		if preparer, ok := s.config.Gate.(GatePreparer); ok {
+			if e := store.CheckClaim(ctx, scope, w.Claim); e != nil {
+				return e
+			}
+			prepared, e := preparer.PrepareGate(ctx, scope, d.Principal, d.Input, d.Encoding)
+			if e != nil {
+				return s.closeAfterGateError(ctx, store, scope, w, d, gateFailure(e))
+			}
+			if prepared == nil {
+				return api.E("dependency_unavailable", "current_gate_context_unavailable")
+			}
+			ctx = prepared
+			if e = store.CheckClaim(ctx, scope, w.Claim); e != nil {
+				return e
+			}
+		}
+	}
 	p := s.profiles[key(d.Input.ModelProfileRef)]
 	switch d.Phase {
 	case "completed", "failed":

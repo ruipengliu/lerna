@@ -30,6 +30,13 @@ type Gate interface {
 	CheckTx(context.Context, runtime.Tx, runtime.Auth, DecideInput, *Encoding) error
 }
 
+// GatePreparer 在本次领取的 Tx 外取得准确当前来源证明；不签新模型身份、
+// 不发送模型请求。返回的本次 ctx 仍须通过后续完整 CheckTx。
+// 宿主必须先核原 Task/主体/控制的元数据门禁；nil 端口保持原 profile。
+type GatePreparer interface {
+	PrepareGate(context.Context, runtime.Scope, runtime.Auth, DecideInput, *Encoding) (context.Context, error)
+}
+
 // Engine 的真实出口须比较完整编码摘要；Lookup 只能核原调用，绝不重发。
 type Engine interface {
 	Physical() bool
