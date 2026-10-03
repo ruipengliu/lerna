@@ -34,6 +34,8 @@ type FileJournal struct {
 	scope string
 }
 
+const journalDirectoryLimit = 4096
+
 func OpenJournal(path, identityScope string) (*FileJournal, error) {
 	if identityScope == "" {
 		return nil, api.E("invalid_request", "identity_scope_required")
@@ -120,6 +122,8 @@ func (j *FileJournal) Save(ctx context.Context, entry Entry) error {
 		}
 	} else if !errors.Is(e, os.ErrNotExist) {
 		return e
+	} else if e = j.admitNew(); e != nil {
+		return e
 	}
 	name := entry.Command.CommandID + ".json"
 	tmp := entry.Command.CommandID + "." + api.NewID("write") + ".tmp"
@@ -159,6 +163,25 @@ func (j *FileJournal) Save(ctx context.Context, entry Entry) error {
 	}
 	return e
 }
+
+// 在原 flock 内限制新责任；已存在 ID 的核对、回执更新与重传保留原容量。
+func (j *FileJournal) admitNew() error {
+	dir, err := j.root.Open(".")
+	if err != nil {
+		return err
+	}
+	names, err := dir.ReadDir(journalDirectoryLimit)
+	if err == io.EOF {
+		err = nil
+	}
+	if err = errors.Join(err, dir.Close()); err != nil {
+		return err
+	}
+	if len(names) >= journalDirectoryLimit {
+		return api.E("overloaded", "journal_capacity")
+	}
+	return nil
+}
 func (j *FileJournal) Read(ctx context.Context, id string) (Entry, error) {
 	if e := ctx.Err(); e != nil {
 		return Entry{}, e
@@ -186,11 +209,11 @@ func (j *FileJournal) Pending(ctx context.Context, max int) ([]Entry, bool, erro
 		return nil, false, e
 	}
 	defer dir.Close()
-	names, e := dir.ReadDir(4097)
+	names, e := dir.ReadDir(journalDirectoryLimit + 1)
 	if e != nil && e != io.EOF {
 		return nil, false, e
 	}
-	if len(names) > 4096 {
+	if len(names) > journalDirectoryLimit {
 		return nil, false, api.E("overloaded", "journal_scan_limit")
 	}
 	sort.Slice(names, func(i, k int) bool { return names[i].Name() < names[k].Name() })
