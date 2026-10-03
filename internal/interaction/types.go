@@ -38,10 +38,10 @@ type DeliveryPort interface {
 	Lookup(context.Context, runtime.Scope, runtime.Auth, string, string) (api.Receipt, error)
 }
 type Closure struct {
-	TaskRef        api.ObjectRef `json:"task_ref"`
-	GoalWorkClosed bool          `json:"goal_work_closed"`
-	EffectsClosed  bool          `json:"effects_closed"`
-	ClosureRef     api.ObjectRef `json:"closure_ref"`
+	TaskRef        api.ObjectRef  `json:"task_ref"`
+	GoalWorkClosed bool           `json:"goal_work_closed"`
+	EffectsClosed  bool           `json:"effects_closed"`
+	ClosureRef     api.ContentRef `json:"closure_ref"`
 }
 type ClosurePort interface {
 	Closure(context.Context, runtime.Scope, runtime.Auth, api.ObjectRef) (Closure, error)
@@ -116,7 +116,11 @@ func New(config Config, ports Ports) (*Service, error) {
 		return nil, fmt.Errorf("cursor key requires at least 32 bytes")
 	}
 	config.CursorKey = append([]byte(nil), config.CursorKey...)
-	s := &Service{config: config, ports: ports, bindings: map[string]EventBinding{}}
+	bindings, err := validateBindings(config.EventBindings)
+	if err != nil {
+		return nil, err
+	}
+	s := &Service{config: config, ports: ports, bindings: bindings}
 	return s, nil
 }
 
@@ -159,8 +163,9 @@ type sessionRecord struct {
 	ConfigRef       api.ComponentRef `json:"config_ref"`
 }
 type branchRecord struct {
-	Branch api.Branch `json:"branch"`
-	Queued uint64     `json:"queued"`
+	Branch  api.Branch `json:"branch"`
+	Queued  uint64     `json:"queued"`
+	Pending []string   `json:"pending"`
 }
 type queueRecord struct {
 	SubjectID string `json:"subject_id"`
@@ -201,15 +206,18 @@ type SubmissionView struct {
 	Receipt        *api.Receipt     `json:"receipt,omitempty"`
 	AttachmentRefs []api.ContentRef `json:"attachment_refs"`
 	QueueDeadline  string           `json:"queue_deadline"`
+	Error          *api.Error       `json:"error,omitempty"`
 }
 type submissionRecord struct {
 	SubmissionView
-	Auth       runtime.Auth   `json:"auth"`
-	Goal       *GoalInput     `json:"goal,omitempty"`
-	Input      *InputInput    `json:"input,omitempty"`
-	InputView  *RequestView   `json:"input_view,omitempty"`
-	ClosureRef *api.ObjectRef `json:"closure_ref,omitempty"`
-	GoalQueue  bool           `json:"goal_queue"`
+	Auth             runtime.Auth    `json:"auth"`
+	Goal             *GoalInput      `json:"goal,omitempty"`
+	Input            *InputInput     `json:"input,omitempty"`
+	InputView        *RequestView    `json:"input_view,omitempty"`
+	ClosureRef       *api.ContentRef `json:"closure_ref,omitempty"`
+	GoalQueue        bool            `json:"goal_queue"`
+	OrderKey         string          `json:"order_key,omitempty"`
+	CreatedCommandID string          `json:"created_command_id"`
 }
 
 // EventBinding 由受信配置登记；调用方不能提供 method、URL 或目标。
@@ -220,6 +228,8 @@ type EventRule struct {
 	Method           string          `json:"method"`
 	TargetID         string          `json:"target_id"`
 	AcceptForSeconds uint64          `json:"accept_for_seconds"`
+	ExpectedRevision *uint64         `json:"expected_revision,omitempty"`
+	RequiresRendered bool            `json:"requires_rendered"`
 }
 type EventBinding struct {
 	BindingRef api.ObjectRef `json:"binding_ref"`

@@ -3,7 +3,6 @@ package brain
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/runtime"
 	"time"
@@ -39,7 +38,7 @@ type Engine interface {
 	Lookup(context.Context, string, Encoding) (Generated, error)
 }
 type Encoding struct {
-	Body             json.RawMessage  `json:"body"`
+	Body             []byte           `json:"body"`
 	Digest           string           `json:"digest"`
 	Receiver         string           `json:"receiver"`
 	Location         string           `json:"location"`

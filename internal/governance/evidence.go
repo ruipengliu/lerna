@@ -20,7 +20,7 @@ type DefectImpact struct {
 func (s *Service) registerEvidence(r *runtime.Registry) error {
 	for _, fn := range []func() error{
 		func() error {
-			return registerCommand[RuleDefinition, StateOutput](r, "evidence.rule.register", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in RuleDefinition) (runtime.Outcome, error) {
+			return registerCommand[RuleDefinition, StateOutput](s, r, "evidence.rule.register", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in RuleDefinition) (runtime.Outcome, error) {
 				if err := requireRole(a, "maintainer"); err != nil {
 					return runtime.Outcome{}, err
 				}
@@ -29,7 +29,7 @@ func (s *Service) registerEvidence(r *runtime.Registry) error {
 			})
 		},
 		func() error {
-			return registerCommand[ConditionCheck, StateOutput](r, "evidence.check.register", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in ConditionCheck) (runtime.Outcome, error) {
+			return registerCommand[ConditionCheck, StateOutput](s, r, "evidence.check.register", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in ConditionCheck) (runtime.Outcome, error) {
 				if err := requireRole(a, "evidence_reporter"); err != nil {
 					return runtime.Outcome{}, err
 				}
@@ -38,10 +38,10 @@ func (s *Service) registerEvidence(r *runtime.Registry) error {
 			})
 		},
 		func() error {
-			return registerCommand[DefectRegister, DefectOutput](r, "evidence.defect.register", false, false, s.registerDefect)
+			return registerCommand[DefectRegister, DefectOutput](s, r, "evidence.defect.register", false, false, s.registerDefect)
 		},
 		func() error {
-			return registerCommand[EligibilityRequest, EligibilityReceipt](r, "evidence.eligibility.check", false, false, s.eligibility)
+			return registerCommand[EligibilityRequest, EligibilityReceipt](s, r, "evidence.eligibility.check", false, false, s.eligibility)
 		},
 		func() error {
 			return registerQuery[IDInput, ConditionCheck](r, "evidence.check.read", queryByID[ConditionCheck]("checks", nil))
@@ -56,7 +56,7 @@ func (s *Service) registerEvidence(r *runtime.Registry) error {
 			return registerQuery[ChangesRequest, ChangesOutput](r, "evidence.defect.changes", s.changes)
 		},
 		func() error {
-			return registerCommand[HolderAck, StateOutput](r, "evidence.holder.ack", false, false, s.ackHolder)
+			return registerCommand[HolderAck, StateOutput](s, r, "evidence.holder.ack", false, false, s.ackHolder)
 		},
 		func() error {
 			return registerQuery[api.ListInput, api.Page[ResultNotice]](r, "evidence.notice.list", queryPage[ResultNotice]("notices", "evidence_consumer"))
@@ -83,6 +83,9 @@ func (s *Service) RegisterRuleTx(ctx context.Context, tx runtime.Tx, in RuleDefi
 	}
 	if in.Predicate == "current_state" && in.MaxObservationAgeSeconds == 0 {
 		return api.ObjectRef{}, api.E("invalid_request", "observation_age_required")
+	}
+	if in.MaxObservationAgeSeconds > 31536000 {
+		return api.ObjectRef{}, api.E("invalid_request", "observation_age_out_of_range")
 	}
 	if !subset(in.AllowedBasis, []string{"verified", "assessed", "user_accepted"}) {
 		return api.ObjectRef{}, api.E("invalid_request", "invalid_rule_basis")
@@ -142,7 +145,7 @@ func (s *Service) RegisterCheckTx(ctx context.Context, tx runtime.Tx, check Cond
 		return api.ObjectRef{}, api.E("invalid_request", "dependency_limit")
 	}
 	var rule RuleDefinition
-	if _, err := tx.Get(ctx, ns("rules"), componentKey(check.RuleRef), &rule); err != nil {
+	if err := tx.GetVersion(ctx, ns("rules"), componentKey(check.RuleRef), 1, &rule); err != nil {
 		return api.ObjectRef{}, err
 	}
 	if !contains(rule.AllowedBasis, check.Basis) || check.Basis == "user_accepted" && !rule.AllowUserAcceptance {
@@ -165,7 +168,9 @@ func (s *Service) RegisterCheckTx(ctx context.Context, tx runtime.Tx, check Cond
 	if !errMissing(err) {
 		return api.ObjectRef{}, err
 	}
-	for _, impl := range []api.ComponentRef{check.RuleRef, check.EvaluatorRef} {
+	implementations := []api.ComponentRef{check.RuleRef, check.EvaluatorRef}
+	sort.Slice(implementations, func(i, j int) bool { return componentKey(implementations[i]) < componentKey(implementations[j]) })
+	for _, impl := range implementations {
 		if _, err = s.ensureGate(ctx, tx, impl); err != nil {
 			return api.ObjectRef{}, err
 		}
@@ -262,11 +267,19 @@ func (s *Service) checkCurrent(ctx context.Context, tx runtime.Tx, checks []Cond
 			return nil, "", api.E("invalid_state", "evidence_not_pass")
 		}
 		var rule RuleDefinition
-		if _, err = tx.Get(ctx, ns("rules"), componentKey(check.RuleRef), &rule); err != nil {
+		if err = tx.GetVersion(ctx, ns("rules"), componentKey(check.RuleRef), 1, &rule); err != nil {
 			return nil, "", err
 		}
 		if rule.RiskClass == "high_impact" && (!rule.Calibrated || maxAge != 0) {
 			return nil, "", api.E("unsupported", "high_impact_requires_calibrated_zero_staleness")
+		}
+		if rule.RiskClass == "high_impact" {
+			if s.Ports.CalibrationGate == nil {
+				return nil, "", api.E("unsupported", "independent_calibration_unavailable")
+			}
+			if err = s.Ports.CalibrationGate.CheckTx(ctx, tx, rule); err != nil {
+				return nil, "", err
+			}
 		}
 		if !contains(rule.AllowedBasis, check.Basis) || rule.Kind == "effect" && check.Basis != "verified" {
 			return nil, "", api.E("invalid_state", "basis_not_allowed")
@@ -303,7 +316,7 @@ func (s *Service) registerHolder(ctx context.Context, tx runtime.Tx, consumer, c
 	if err != nil {
 		return EvidenceHolder{}, err
 	}
-	id := digestID("holder", []any{consumer.TenantID, consumer.OwnerID, consumer.ObjectID, checkRef, digest})
+	id := digestID("holder", []any{consumer.TenantID, consumer.OwnerID, consumer.ObjectID, checkRef, digest, head.Epoch})
 	var holder EvidenceHolder
 	rev, err := tx.Get(ctx, ns("evidence_holders"), id, &holder)
 	if err == nil {
@@ -346,7 +359,21 @@ func (s *Service) CheckEvidenceTx(ctx context.Context, tx runtime.Tx, in Evidenc
 	if len(in.Checks) == 0 || len(in.Checks) > 128 {
 		return EvidenceDecision{}, api.E("invalid_request", "dependency_incomplete")
 	}
+	if in.ResultRef != nil {
+		if err := ownerRef(tx.Scope(), *in.ResultRef); err != nil {
+			return EvidenceDecision{}, err
+		}
+	}
 	out := EvidenceDecision{Eligible: true, GateRefs: []api.ObjectRef{}, HolderRefs: []api.ObjectRef{}, Limitations: []string{}}
+	type localRoot struct {
+		ref    api.ObjectRef
+		root   ConditionCheck
+		deps   []ConditionCheck
+		digest string
+	}
+	roots := []localRoot{}
+	all := []ConditionCheck{}
+	seen := map[string]bool{}
 	for _, input := range in.Checks {
 		if input.CheckRef.OwnerID != tx.Scope().OwnerID {
 			if in.MaxStalenessSeconds == 0 {
@@ -373,19 +400,53 @@ func (s *Service) CheckEvidenceTx(ctx context.Context, tx runtime.Tx, in Evidenc
 		if root.TaskID != in.ConsumerTaskRef.ObjectID {
 			return out, api.E("forbidden", "check_task_mismatch")
 		}
-		gates, expires, err := s.checkCurrent(ctx, tx, deps, in.MaxStalenessSeconds)
+		for _, check := range deps {
+			if !seen[check.CheckID] {
+				seen[check.CheckID] = true
+				all = append(all, check)
+			}
+		}
+		if len(all) > 128 {
+			return out, api.E("invalid_request", "dependency_limit")
+		}
+		roots = append(roots, localRoot{input.CheckRef, root, deps, digest})
+	}
+	// 完整集合先按统一顺序锁所有 gate，随后才允许 authority head/holder。
+	// 分别逐根查 gate 再登记 holder 会在第二个根颠倒锁序。
+	if len(roots) == 0 {
+		return out, nil
+	}
+	gates, expires, err := s.checkCurrent(ctx, tx, all, in.MaxStalenessSeconds)
+	if err != nil {
+		return out, err
+	}
+	out.GateRefs = append(out.GateRefs, gates...)
+	out.ExpiresAt = minTime(out.ExpiresAt, expires)
+	sort.Slice(roots, func(i, j int) bool { return refKey(roots[i].ref) < refKey(roots[j].ref) })
+	for _, root := range roots {
+		holder, err := s.registerHolder(ctx, tx, in.ConsumerTaskRef, root.ref, root.root, root.deps, root.digest, in.ResultRef)
 		if err != nil {
 			return out, err
 		}
-		holder, err := s.registerHolder(ctx, tx, in.ConsumerTaskRef, input.CheckRef, root, deps, digest, in.ResultRef)
-		if err != nil {
-			return out, err
-		}
-		out.GateRefs = append(out.GateRefs, gates...)
 		out.HolderRefs = append(out.HolderRefs, tx.Scope().Ref(holder.HolderID, holder.Revision))
-		out.ExpiresAt = minTime(out.ExpiresAt, expires)
 	}
 	return out, nil
+}
+
+// AdvanceAuthorityEpochTx 仅供受信宿主在实际负责方切换时调用。
+// 全局 cursor 和 holder 截止永久保留；旧 epoch 不能以查询延长资格。
+func (s *Service) AdvanceAuthorityEpochTx(ctx context.Context, tx runtime.Tx, expectedRevision, nextEpoch uint64) (AuthorityHead, error) {
+	head, err := s.ensureHead(ctx, tx)
+	if err != nil {
+		return head, err
+	}
+	if head.Revision != expectedRevision || nextEpoch <= head.Epoch {
+		return head, api.E("revision_conflict", "authority_epoch_conflict")
+	}
+	head.Epoch = nextEpoch
+	head.Revision++
+	err = tx.Put(ctx, ns("authority"), head.ID, expectedRevision, head)
+	return head, err
 }
 
 func (s *Service) registerDefect(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in DefectRegister) (runtime.Outcome, error) {
@@ -470,6 +531,9 @@ func (s *Service) eligibility(ctx context.Context, tx runtime.Tx, auth runtime.A
 	if in.RequestedMaxAgeSeconds == 0 {
 		return runtime.Outcome{}, api.E("unsupported", "remote_zero_staleness_not_supported")
 	}
+	if in.RequestedMaxAgeSeconds > 31536000 {
+		return runtime.Outcome{}, api.E("invalid_request", "staleness_out_of_range")
+	}
 	gates, expires, err := s.checkCurrent(ctx, tx, deps, in.RequestedMaxAgeSeconds)
 	if err != nil {
 		return runtime.Outcome{}, err
@@ -502,8 +566,19 @@ func (s *Service) eligibility(ctx context.Context, tx runtime.Tx, auth runtime.A
 		}
 	}
 	receipt := EligibilityReceipt{ReceiptID: c.CommandID, CheckRef: in.CheckRef, ConsumerRef: in.ConsumerTaskRef, RequestDigest: requestDigest, RuleRef: in.RuleRef, EvaluatorRef: in.EvaluatorRef, ReportRef: in.ReportRef, DependencyDigest: digest, Verdict: "eligible", AuthorityEpoch: head.Epoch, DefectRevision: revision, Cursor: head.Cursor, CheckedAt: api.Time(now), IssuedAt: api.Time(now), ExpiresAt: expires, HolderRef: tx.Scope().Ref(holder.HolderID, holder.Revision)}
+	receipt.DependencyBindings = make([]EvidenceBinding, 0, len(deps))
+	for _, d := range deps {
+		receipt.DependencyBindings = append(receipt.DependencyBindings, EvidenceBinding{CheckRef: tx.Scope().Ref(d.CheckID, d.Revision), RuleRef: d.RuleRef, EvaluatorRef: d.EvaluatorRef, ScopeRef: d.ScopeRef})
+	}
+	sort.Slice(receipt.DependencyBindings, func(i, j int) bool {
+		return refKey(receipt.DependencyBindings[i].CheckRef) < refKey(receipt.DependencyBindings[j].CheckRef)
+	})
 	if s.Ports.Proof != nil {
-		receipt.Proof, err = s.Ports.Proof.SignLocal(ProofStatement{TenantID: tx.Scope().TenantID, IssuerID: tx.Scope().OwnerID, AudienceID: in.ConsumerTaskRef.OwnerID, Purpose: "evidence_eligibility", ObjectRef: tx.Scope().Ref(receipt.ReceiptID, 1), Digest: requestDigest, IssuedAt: receipt.IssuedAt, StartBefore: expires})
+		proofDigest, digestErr := EligibilityReceiptDigest(receipt)
+		if digestErr != nil {
+			return runtime.Outcome{}, digestErr
+		}
+		receipt.Proof, err = s.Ports.Proof.SignLocal(ProofStatement{TenantID: tx.Scope().TenantID, IssuerID: tx.Scope().OwnerID, AudienceID: in.ConsumerTaskRef.OwnerID, Purpose: "evidence_eligibility", ObjectRef: tx.Scope().Ref(receipt.ReceiptID, 1), Digest: proofDigest, IssuedAt: receipt.IssuedAt, StartBefore: expires})
 		if err != nil {
 			return runtime.Outcome{}, err
 		}
@@ -526,7 +601,11 @@ func changePage(ctx context.Context, tx runtime.Tx, holder EvidenceHolder, epoch
 	if limit < 1 || limit > 100 || cursor < holder.RegistrationCursor || cursor > head.Cursor {
 		return ChangesOutput{}, api.E("snapshot_required", "change_cursor_gap")
 	}
-	out := ChangesOutput{Changes: []Defect{}, Head: head.Cursor, NextCursor: cursor, AuthorityEpoch: epoch}
+	now, err := tx.Now(ctx)
+	if err != nil {
+		return ChangesOutput{}, err
+	}
+	out := ChangesOutput{HolderRef: tx.Scope().Ref(holder.HolderID, holder.Revision), FromCursor: cursor, Changes: []Defect{}, Head: head.Cursor, NextCursor: cursor, AuthorityEpoch: epoch, IssuedAt: api.Time(now), ExpiresAt: api.Time(now.Add(5 * time.Minute))}
 	through := cursor + limit
 	if through > head.Cursor {
 		through = head.Cursor
@@ -552,8 +631,11 @@ func (s *Service) changes(ctx context.Context, store runtime.Store, scope runtim
 		return ChangesOutput{}, err
 	}
 	var out ChangesOutput
-	status, err := store.Within(ctx, scope, []string{Namespace}, func(tx runtime.Tx) error {
+	status, err := store.Within(ctx, scope, s.participants(), func(tx runtime.Tx) error {
 		if err := ownerRef(scope, in.HolderRef); err != nil {
+			return err
+		}
+		if _, err := s.ensureHead(ctx, tx); err != nil {
 			return err
 		}
 		var holder EvidenceHolder
@@ -562,6 +644,13 @@ func (s *Service) changes(ctx context.Context, store runtime.Store, scope runtim
 		}
 		var err error
 		out, err = changePage(ctx, tx, holder, in.AuthorityEpoch, in.Cursor, in.Limit)
+		if err == nil && s.Ports.Proof != nil {
+			digest, digestErr := EvidenceChangesDigest(out)
+			if digestErr != nil {
+				return digestErr
+			}
+			out.Proof, err = s.Ports.Proof.SignLocal(ProofStatement{TenantID: scope.TenantID, IssuerID: scope.OwnerID, AudienceID: holder.ConsumerTaskRef.OwnerID, Purpose: "evidence_changes", ObjectRef: out.HolderRef, Digest: digest, IssuedAt: out.IssuedAt, StartBefore: out.ExpiresAt})
+		}
 		return err
 	})
 	if status == runtime.CommitUnknown {
@@ -575,6 +664,13 @@ func (s *Service) ackHolder(ctx context.Context, tx runtime.Tx, auth runtime.Aut
 	}
 	if err := ownerRef(tx.Scope(), in.HolderRef); err != nil {
 		return runtime.Outcome{}, err
+	}
+	head, err := s.ensureHead(ctx, tx)
+	if err != nil {
+		return runtime.Outcome{}, err
+	}
+	if head.Epoch != in.AuthorityEpoch {
+		return runtime.Outcome{}, api.E("authority_changed", "authority_epoch_changed")
 	}
 	var holder EvidenceHolder
 	rev, err := tx.Get(ctx, ns("evidence_holders"), in.HolderRef.ObjectID, &holder)
@@ -614,7 +710,7 @@ func (s *Service) ackHolder(ctx context.Context, tx runtime.Tx, auth runtime.Aut
 }
 
 func (s *Service) continueDefect(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
-	return runtime.Finish(ctx, store, scope, []string{Namespace}, work, runtime.Done(), func(tx runtime.Tx) error {
+	return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
 		var impact DefectImpact
 		rev, err := tx.Get(ctx, ns("defect_impacts"), work.Job.ResponsibilityKey, &impact)
 		if err != nil {
@@ -679,11 +775,60 @@ func (s *Service) continueDefect(ctx context.Context, store runtime.Store, scope
 	})
 }
 
-// InstallEvidenceBaselineTx 由调用者在 Tx 外核验 authority 签名后导入。
+// EligibilityReceiptDigest 绑定整份闭合资格事实，排除承载签名的字段。
+func EligibilityReceiptDigest(receipt EligibilityReceipt) (string, error) {
+	receipt.Proof = ""
+	receipt.ProofRef = nil
+	return api.Digest(receipt)
+}
+func EvidenceChangesDigest(page ChangesOutput) (string, error) {
+	page.Proof = ""
+	return api.Digest(page)
+}
+
+// InstallEvidenceBaselineTx 在本地登记密钥下核验完整 authority 事实。
+// verified 是宿主已完成准入的标记，不能代替此处原签名核验。
 // receipt 和连续水位同消费方 gate 原子提交，缺口不会被新 receipt 查询掩盖。
 func (s *Service) InstallEvidenceBaselineTx(ctx context.Context, tx runtime.Tx, receipt EligibilityReceipt, verified bool) error {
 	if !verified || receipt.ConsumerRef.OwnerID != tx.Scope().OwnerID || receipt.ConsumerRef.TenantID != tx.Scope().TenantID || receipt.Verdict != "eligible" {
 		return api.E("forbidden", "eligibility_unverified")
+	}
+	if s.Ports.Proof == nil || receipt.Proof == "" {
+		return api.E("unsupported", "authority_signature_unavailable")
+	}
+	now, err := tx.Now(ctx)
+	if err != nil {
+		return err
+	}
+	digest, err := EligibilityReceiptDigest(receipt)
+	if err != nil {
+		return err
+	}
+	statement := ProofStatement{TenantID: tx.Scope().TenantID, IssuerID: receipt.CheckRef.OwnerID, AudienceID: tx.Scope().OwnerID, Purpose: "evidence_eligibility", ObjectRef: api.ObjectRef{TenantID: tx.Scope().TenantID, OwnerID: receipt.CheckRef.OwnerID, ObjectID: receipt.ReceiptID, Revision: 1}, Digest: digest, IssuedAt: receipt.IssuedAt, StartBefore: receipt.ExpiresAt}
+	if err = s.Ports.Proof.VerifyLocal(receipt.Proof, statement, now); err != nil {
+		return err
+	}
+	if len(receipt.DependencyBindings) == 0 || len(receipt.DependencyBindings) > 128 {
+		return api.E("invalid_request", "dependency_incomplete")
+	}
+	refs := make([]api.ObjectRef, 0, len(receipt.DependencyBindings))
+	rootFound := false
+	for _, binding := range receipt.DependencyBindings {
+		if binding.CheckRef.OwnerID != receipt.CheckRef.OwnerID || binding.CheckRef.TenantID != tx.Scope().TenantID {
+			return api.E("unsupported", "unsupported_multi_authority")
+		}
+		refs = append(refs, binding.CheckRef)
+		if api.Equal(binding.CheckRef, receipt.CheckRef) {
+			rootFound = true
+		}
+	}
+	sort.Slice(refs, func(i, j int) bool { return refKey(refs[i]) < refKey(refs[j]) })
+	depsDigest, err := api.Digest(refs)
+	if err != nil {
+		return err
+	}
+	if !rootFound || depsDigest != receipt.DependencyDigest {
+		return api.E("invalid_request", "dependency_incomplete")
 	}
 	id := digestID("import", receipt.CheckRef)
 	old := EvidenceImport{}
@@ -695,11 +840,34 @@ func (s *Service) InstallEvidenceBaselineTx(ctx context.Context, tx runtime.Tx, 
 	if err != nil {
 		return err
 	}
-	if old.AuthorityEpoch == receipt.AuthorityEpoch && receipt.Cursor < old.ImportedCursor {
+	if receipt.AuthorityEpoch < old.AuthorityEpoch || old.AuthorityEpoch == receipt.AuthorityEpoch && receipt.Cursor < old.ImportedCursor {
 		return api.E("snapshot_required", "baseline_cursor_regressed")
 	}
 	next.Revision = rev + 1
 	return tx.Put(ctx, ns("evidence_imports"), id, rev, next)
+}
+
+// MarkEvidenceGapTx 由受信源传输在收到 authority_changed/snapshot_required
+// 后同库关闭已知旧基线；刷新原 receipt 查询不能清除此门禁。
+func (s *Service) MarkEvidenceGapTx(ctx context.Context, tx runtime.Tx, checkRef api.ObjectRef, observedEpoch uint64) error {
+	if err := runtime.CheckRef(tx.Scope(), checkRef); err != nil {
+		return err
+	}
+	id := digestID("import", checkRef)
+	var imported EvidenceImport
+	rev, err := tx.Get(ctx, ns("evidence_imports"), id, &imported)
+	if err != nil {
+		return err
+	}
+	if !api.Equal(imported.Receipt.CheckRef, checkRef) {
+		return api.E("forbidden", "eligibility_binding_mismatch")
+	}
+	imported.Gap = true
+	if observedEpoch > imported.AuthorityEpoch {
+		imported.AuthorityEpoch = observedEpoch
+	}
+	imported.Revision = rev + 1
+	return tx.Put(ctx, ns("evidence_imports"), id, rev, imported)
 }
 func (s *Service) ImportEvidenceChangesTx(ctx context.Context, tx runtime.Tx, checkRef api.ObjectRef, page ChangesOutput) error {
 	id := digestID("import", checkRef)
@@ -711,7 +879,39 @@ func (s *Service) ImportEvidenceChangesTx(ctx context.Context, tx runtime.Tx, ch
 	if page.AuthorityEpoch != imported.AuthorityEpoch {
 		return api.E("authority_changed", "authority_epoch_changed")
 	}
+	if s.Ports.Proof == nil || page.Proof == "" {
+		return api.E("unsupported", "authority_signature_unavailable")
+	}
+	if page.HolderRef.OwnerID != checkRef.OwnerID || page.HolderRef.TenantID != tx.Scope().TenantID || page.HolderRef.ObjectID != imported.Receipt.HolderRef.ObjectID {
+		return api.E("forbidden", "change_holder_binding_mismatch")
+	}
+	now, err := tx.Now(ctx)
+	if err != nil {
+		return err
+	}
+	digest, err := EvidenceChangesDigest(page)
+	if err != nil {
+		return err
+	}
+	if err = s.Ports.Proof.VerifyLocal(page.Proof, ProofStatement{TenantID: tx.Scope().TenantID, IssuerID: checkRef.OwnerID, AudienceID: tx.Scope().OwnerID, Purpose: "evidence_changes", ObjectRef: page.HolderRef, Digest: digest, IssuedAt: page.IssuedAt, StartBefore: page.ExpiresAt}, now); err != nil {
+		return err
+	}
+	exactDigest, err := api.Digest([]any{page.HolderRef.ObjectID, page.AuthorityEpoch, page.FromCursor, page.NextCursor, page.Changes})
+	if err != nil {
+		return err
+	}
+	if exactDigest != page.Digest || page.NextCursor > page.Head || len(page.Changes) > 100 {
+		return api.E("invalid_request", "change_page_binding_mismatch")
+	}
 	cursor := imported.ImportedCursor
+	if page.NextCursor == cursor && page.Digest == imported.Digest {
+		return nil
+	}
+	if page.FromCursor != cursor {
+		imported.Gap = true
+		imported.Revision = rev + 1
+		return tx.Put(ctx, ns("evidence_imports"), id, rev, imported)
+	}
 	for _, defect := range page.Changes {
 		if defect.Cursor != cursor+1 {
 			imported.Gap = true
@@ -730,6 +930,9 @@ func (s *Service) ImportEvidenceChangesTx(ctx context.Context, tx runtime.Tx, ch
 	return tx.Put(ctx, ns("evidence_imports"), id, rev, imported)
 }
 func (s *Service) checkImported(ctx context.Context, tx runtime.Tx, in EvidenceCompletion, check api.ObjectRef) (EvidenceDecision, error) {
+	if in.MaxStalenessSeconds > 31536000 {
+		return EvidenceDecision{}, api.E("invalid_request", "staleness_out_of_range")
+	}
 	var imported EvidenceImport
 	if _, err := tx.Get(ctx, ns("evidence_imports"), digestID("import", check), &imported); err != nil {
 		return EvidenceDecision{}, err
@@ -747,8 +950,12 @@ func (s *Service) checkImported(ctx context.Context, tx runtime.Tx, in EvidenceC
 	if imported.Gap || imported.AuthorityEpoch != r.AuthorityEpoch || !api.Equal(r.ConsumerRef, in.ConsumerTaskRef) || r.Verdict != "eligible" || before(now, expires) != nil {
 		return EvidenceDecision{}, api.E("snapshot_required", "eligibility_baseline_stale")
 	}
-	if len(imported.Defects) > 0 {
-		return EvidenceDecision{}, api.E("invalid_state", "remote_evidence_defect_requires_new_baseline")
+	for _, defect := range imported.Defects {
+		for _, binding := range r.DependencyBindings {
+			if api.Equal(defect.RuleRef, binding.RuleRef) && api.Equal(defect.EvaluatorRef, binding.EvaluatorRef) && api.Equal(defect.ScopeRef, binding.ScopeRef) {
+				return EvidenceDecision{}, api.E("invalid_state", "remote_evidence_defect_requires_new_baseline")
+			}
+		}
 	}
 	return EvidenceDecision{Eligible: true, ExpiresAt: expires, GateRefs: []api.ObjectRef{tx.Scope().Ref(imported.ID, imported.Revision)}, HolderRefs: []api.ObjectRef{r.HolderRef}, Limitations: []string{}}, nil
 }

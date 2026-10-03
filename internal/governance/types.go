@@ -41,6 +41,7 @@ type ConfirmationView struct {
 	ConsumedAt            string           `json:"consumed_at,omitempty"`
 	DecidedBy             string           `json:"decided_by,omitempty"`
 	DecidedAt             string           `json:"decided_at,omitempty"`
+	OriginalCommand       api.Command      `json:"original_command"`
 }
 type GrantIssue struct {
 	Grant                 api.Grant        `json:"grant"`
@@ -176,21 +177,26 @@ type AcceptanceCheck struct {
 	Mode          string           `json:"mode"`
 }
 type GrantLease struct {
-	LeaseID        string          `json:"lease_id"`
-	Revision       uint64          `json:"revision"`
-	EndpointID     string          `json:"endpoint_id"`
-	InstanceID     string          `json:"instance_id"`
-	GrantRefs      []api.ObjectRef `json:"grant_refs"`
-	Scope          UseRequest      `json:"scope"`
-	Limits         []api.Amount    `json:"limits"`
-	ExpiresAt      string          `json:"expires_at"`
-	State          string          `json:"state"`
-	Cumulative     []api.Amount    `json:"cumulative"`
-	Reserved       []api.Amount    `json:"reserved"`
-	UsageRevision  uint64          `json:"usage_revision"`
-	ClosureRef     *api.ObjectRef  `json:"closure_ref,omitempty"`
-	SpendingClosed bool            `json:"spending_closed"`
-	UsageFinal     bool            `json:"usage_final"`
+	Mode             string          `json:"mode"`
+	OnceConsumed     bool            `json:"once_consumed"`
+	IssuedAt         string          `json:"issued_at"`
+	AllocationDigest string          `json:"allocation_digest"`
+	Proof            string          `json:"proof,omitempty"`
+	LeaseID          string          `json:"lease_id"`
+	Revision         uint64          `json:"revision"`
+	EndpointID       string          `json:"endpoint_id"`
+	InstanceID       string          `json:"instance_id"`
+	GrantRefs        []api.ObjectRef `json:"grant_refs"`
+	Scope            UseRequest      `json:"scope"`
+	Limits           []api.Amount    `json:"limits"`
+	ExpiresAt        string          `json:"expires_at"`
+	State            string          `json:"state"`
+	Cumulative       []api.Amount    `json:"cumulative"`
+	Reserved         []api.Amount    `json:"reserved"`
+	UsageRevision    uint64          `json:"usage_revision"`
+	ClosureRef       *api.ObjectRef  `json:"closure_ref,omitempty"`
+	SpendingClosed   bool            `json:"spending_closed"`
+	UsageFinal       bool            `json:"usage_final"`
 }
 type LeaseAllocate struct {
 	LeaseID    string       `json:"lease_id"`
@@ -307,24 +313,31 @@ type EligibilityRequest struct {
 	PrepareDeadline        string           `json:"prepare_deadline"`
 }
 type EligibilityReceipt struct {
-	ReceiptID        string           `json:"receipt_id"`
-	CheckRef         api.ObjectRef    `json:"check_ref"`
-	ConsumerRef      api.ObjectRef    `json:"consumer_ref"`
-	RequestDigest    string           `json:"request_digest"`
-	RuleRef          api.ComponentRef `json:"rule_ref"`
-	EvaluatorRef     api.ComponentRef `json:"evaluator_ref"`
-	ReportRef        api.ContentRef   `json:"report_ref"`
-	DependencyDigest string           `json:"dependency_digest"`
-	Verdict          string           `json:"verdict"`
-	AuthorityEpoch   uint64           `json:"authority_epoch"`
-	DefectRevision   uint64           `json:"defect_revision"`
-	Cursor           uint64           `json:"cursor"`
-	CheckedAt        string           `json:"checked_at"`
-	IssuedAt         string           `json:"issued_at"`
-	ExpiresAt        string           `json:"expires_at"`
-	HolderRef        api.ObjectRef    `json:"holder_ref"`
-	Proof            string           `json:"proof,omitempty"`
-	ProofRef         *api.ContentRef  `json:"proof_ref,omitempty"`
+	ReceiptID          string            `json:"receipt_id"`
+	CheckRef           api.ObjectRef     `json:"check_ref"`
+	ConsumerRef        api.ObjectRef     `json:"consumer_ref"`
+	RequestDigest      string            `json:"request_digest"`
+	RuleRef            api.ComponentRef  `json:"rule_ref"`
+	EvaluatorRef       api.ComponentRef  `json:"evaluator_ref"`
+	ReportRef          api.ContentRef    `json:"report_ref"`
+	DependencyDigest   string            `json:"dependency_digest"`
+	DependencyBindings []EvidenceBinding `json:"dependency_bindings"`
+	Verdict            string            `json:"verdict"`
+	AuthorityEpoch     uint64            `json:"authority_epoch"`
+	DefectRevision     uint64            `json:"defect_revision"`
+	Cursor             uint64            `json:"cursor"`
+	CheckedAt          string            `json:"checked_at"`
+	IssuedAt           string            `json:"issued_at"`
+	ExpiresAt          string            `json:"expires_at"`
+	HolderRef          api.ObjectRef     `json:"holder_ref"`
+	Proof              string            `json:"proof,omitempty"`
+	ProofRef           *api.ContentRef   `json:"proof_ref,omitempty"`
+}
+type EvidenceBinding struct {
+	CheckRef     api.ObjectRef    `json:"check_ref"`
+	RuleRef      api.ComponentRef `json:"rule_ref"`
+	EvaluatorRef api.ComponentRef `json:"evaluator_ref"`
+	ScopeRef     api.ContentRef   `json:"scope_ref"`
 }
 type ChangesRequest struct {
 	HolderRef      api.ObjectRef `json:"holder_ref"`
@@ -333,12 +346,17 @@ type ChangesRequest struct {
 	Limit          uint64        `json:"limit"`
 }
 type ChangesOutput struct {
-	Changes        []Defect `json:"changes"`
-	Head           uint64   `json:"head"`
-	NextCursor     uint64   `json:"next_cursor"`
-	AuthorityEpoch uint64   `json:"authority_epoch"`
-	Partial        bool     `json:"partial"`
-	Digest         string   `json:"digest"`
+	HolderRef      api.ObjectRef `json:"holder_ref"`
+	FromCursor     uint64        `json:"from_cursor"`
+	Changes        []Defect      `json:"changes"`
+	Head           uint64        `json:"head"`
+	NextCursor     uint64        `json:"next_cursor"`
+	AuthorityEpoch uint64        `json:"authority_epoch"`
+	Partial        bool          `json:"partial"`
+	Digest         string        `json:"digest"`
+	IssuedAt       string        `json:"issued_at"`
+	ExpiresAt      string        `json:"expires_at"`
+	Proof          string        `json:"proof,omitempty"`
 }
 type HolderAck struct {
 	HolderRef      api.ObjectRef `json:"holder_ref"`
@@ -472,6 +490,7 @@ type InstanceReadiness struct {
 	ArtifactDigest string         `json:"artifact_digest"`
 	SelfTestRef    api.ContentRef `json:"self_test_ref"`
 	ApprovalRef    api.ObjectRef  `json:"approval_ref"`
+	IssuedAt       string         `json:"issued_at"`
 	ExpiresAt      string         `json:"expires_at"`
 	State          string         `json:"state"`
 }
@@ -576,4 +595,17 @@ type ExtensionRead struct {
 	Activation   *Activation        `json:"activation,omitempty"`
 	Installation *PreparedInstall   `json:"installation,omitempty"`
 	Readiness    *InstanceReadiness `json:"readiness,omitempty"`
+	Preparation  *PreparedInstall   `json:"preparation,omitempty"`
+	Pending      *PendingActivation `json:"pending,omitempty"`
+}
+
+type LeaseUseRequest struct {
+	LeaseRef api.ObjectRef `json:"lease_ref"`
+	Use      UseRequest    `json:"use"`
+}
+type LeaseReportPending struct {
+	ID        string      `json:"id"`
+	Revision  uint64      `json:"revision"`
+	CommandID string      `json:"command_id"`
+	Request   LeaseReport `json:"request"`
 }

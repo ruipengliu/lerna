@@ -58,15 +58,38 @@ type LifecyclePort interface {
 type EvaluationRunner interface {
 	PreparePair(context.Context, RunnerPair) (PairEvidence, error)
 	Run(context.Context, RunnerAttempt) (AttemptObservation, error)
+	Lookup(context.Context, RunnerAttempt) (AttemptObservation, bool, error)
 	Seal(context.Context, RunnerPair) (PairStopEvidence, error)
 }
 
+// PreviewGate 同库核验准确预览的当前披露，不证明用户已阅读。
+type PreviewGate interface {
+	CheckTx(context.Context, runtime.Tx, runtime.Auth, []api.ContentRef) error
+}
+
+// OfflineGate 仅核设备本库已知撤权、原 Orchestrator 准入、Control /
+// TaskGate / 资源代次，返回这些依据的最紧截止，不能在 Tx 内 RPC。
+type OfflineGate interface {
+	CheckTx(context.Context, runtime.Tx, runtime.Auth, GrantLease, UseRequest) (string, error)
+}
+
+// CalibrationGate 核验高影响规则当前独立校准依据；布尔自述不能替代它。
+type CalibrationGate interface {
+	CheckTx(context.Context, runtime.Tx, RuleDefinition) error
+}
+
 type Options struct {
-	Content       ContentPort
-	UsageVerifier UsageVerifier
-	Proof         ProofPort
-	Lifecycle     LifecyclePort
-	Runner        EvaluationRunner
+	PreviewGate     PreviewGate
+	Participants    []string
+	OfflineGate     OfflineGate
+	CalibrationGate CalibrationGate
+	EndpointID      string
+	InstanceID      string
+	Content         ContentPort
+	UsageVerifier   UsageVerifier
+	Proof           ProofPort
+	Lifecycle       LifecyclePort
+	Runner          EvaluationRunner
 }
 
 type Service struct {
@@ -100,3 +123,13 @@ type EvidenceDecision struct {
 
 // tx 调用者必须由宿主显式声明同数据库、同租户/owner及 governance
 // participant；这些入口不会偷偷跨域读取或 RPC。
+
+func (s *Service) participants() []string {
+	out := []string{Namespace}
+	for _, part := range s.Ports.Participants {
+		if !contains(out, part) {
+			out = append(out, part)
+		}
+	}
+	return out
+}

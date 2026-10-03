@@ -49,16 +49,19 @@ type Authorization interface {
 }
 
 type ContentVersion struct {
-	ContentRef       api.ContentRef   `json:"content_ref"`
-	ObjectLocation   ObjectLocation   `json:"object_location"`
-	State            string           `json:"state"`
-	ControlRevision  uint64           `json:"control_revision"`
-	PolicyRef        api.ComponentRef `json:"policy_ref"`
-	RetentionUntil   string           `json:"retention_until"`
-	PublishedAt      string           `json:"published_at,omitempty"`
-	ProcessedSources []api.ContentRef `json:"processed_sources"`
-	DisclosedSources []api.ContentRef `json:"disclosed_sources"`
-	PublisherID      string           `json:"publisher_id"`
+	ContentRef         api.ContentRef   `json:"content_ref"`
+	ObjectLocation     ObjectLocation   `json:"object_location"`
+	State              string           `json:"state"`
+	ControlRevision    uint64           `json:"control_revision"`
+	PolicyRef          api.ComponentRef `json:"policy_ref"`
+	RetentionUntil     string           `json:"retention_until"`
+	PublishedAt        string           `json:"published_at,omitempty"`
+	ProcessedSources   []api.ContentRef `json:"processed_sources"`
+	DisclosedSources   []api.ContentRef `json:"disclosed_sources"`
+	PublisherID        string           `json:"publisher_id"`
+	ClosureKind        string           `json:"closure_kind,omitempty"`
+	ExperienceOutcome  string           `json:"experience_outcome,omitempty"`
+	ExperienceProofRef *api.ObjectRef   `json:"experience_proof_ref,omitempty"`
 }
 
 type Transfer struct {
@@ -78,6 +81,11 @@ type Transfer struct {
 	TargetHolder       api.ObjectRef    `json:"target_holder"`
 	ReferenceIntentRef api.ObjectRef    `json:"reference_intent_ref"`
 	MaxBytes           uint64           `json:"max_bytes"`
+	Purpose            string           `json:"purpose,omitempty"`
+	TargetLocation     string           `json:"target_location,omitempty"`
+	CompletionCopyID   string           `json:"completion_copy_id,omitempty"`
+	ExperienceOutcome  string           `json:"experience_outcome,omitempty"`
+	ExperienceProofRef *api.ObjectRef   `json:"experience_proof_ref,omitempty"`
 }
 
 type CopyHolder struct {
@@ -144,18 +152,20 @@ type ExtractionLimits struct {
 }
 
 type Extraction struct {
-	ExtractionID   string           `json:"extraction_id"`
-	Revision       uint64           `json:"revision"`
-	InputRefs      []api.ContentRef `json:"input_refs"`
-	ExtractorRef   api.ComponentRef `json:"extractor_ref"`
-	Limits         ExtractionLimits `json:"limits"`
-	Deadline       string           `json:"deadline"`
-	SavingMode     string           `json:"saving_mode"`
-	SavingGrantRef *api.ObjectRef   `json:"saving_grant_ref,omitempty"`
-	State          string           `json:"state"`
-	PrincipalID    string           `json:"principal_id"`
-	CheckpointRef  *api.ContentRef  `json:"checkpoint_ref,omitempty"`
-	CandidateCount uint64           `json:"candidate_count"`
+	ExtractionID        string           `json:"extraction_id"`
+	Revision            uint64           `json:"revision"`
+	InputRefs           []api.ContentRef `json:"input_refs"`
+	ExtractorRef        api.ComponentRef `json:"extractor_ref"`
+	Limits              ExtractionLimits `json:"limits"`
+	Deadline            string           `json:"deadline"`
+	SavingMode          string           `json:"saving_mode"`
+	SavingGrantRef      *api.ObjectRef   `json:"saving_grant_ref,omitempty"`
+	State               string           `json:"state"`
+	PrincipalID         string           `json:"principal_id"`
+	CheckpointRef       *api.ContentRef  `json:"checkpoint_ref,omitempty"`
+	CandidateCount      uint64           `json:"candidate_count"`
+	PrincipalGeneration uint64           `json:"principal_generation"`
+	FailureReason       string           `json:"failure_reason,omitempty"`
 }
 
 type ExtractionCandidate struct {
@@ -184,32 +194,40 @@ type Match struct {
 }
 
 type QueryView struct {
-	QueryID         string   `json:"query_id"`
-	Revision        uint64   `json:"revision"`
-	PrincipalID     string   `json:"principal_id"`
-	Digest          string   `json:"digest"`
-	VisibilityToken string   `json:"visibility_token"`
-	ExpiresAt       string   `json:"expires_at"`
-	ChangeHead      uint64   `json:"change_head"`
-	Matches         []Match  `json:"matches"`
-	Partial         bool     `json:"partial"`
-	Gaps            []string `json:"gaps"`
+	QueryID                   string   `json:"query_id"`
+	Revision                  uint64   `json:"revision"`
+	PrincipalID               string   `json:"principal_id"`
+	Digest                    string   `json:"digest"`
+	VisibilityToken           string   `json:"visibility_token"`
+	ExpiresAt                 string   `json:"expires_at"`
+	ChangeHead                uint64   `json:"change_head"`
+	Matches                   []Match  `json:"matches"`
+	Partial                   bool     `json:"partial"`
+	Gaps                      []string `json:"gaps"`
+	RemainingPermissionChecks uint64   `json:"remaining_permission_checks"`
 }
 
 type View struct {
-	ViewID          string          `json:"view_id"`
-	Revision        uint64          `json:"revision"`
-	PrincipalID     string          `json:"principal_id"`
-	VisibilityToken string          `json:"visibility_token"`
-	ExpiresAt       string          `json:"expires_at"`
-	SnapshotHead    uint64          `json:"snapshot_head"`
-	Snapshot        []api.ObjectRef `json:"snapshot"`
-	AckCursor       string          `json:"ack_cursor"`
-	IssuedCursor    string          `json:"issued_cursor"`
-	PullCursor      string          `json:"pull_cursor"`
-	IssuedPage      *ViewPage       `json:"issued_page,omitempty"`
-	Partial         bool            `json:"partial"`
-	Gaps            []string        `json:"gaps"`
+	ViewID             string          `json:"view_id"`
+	Revision           uint64          `json:"revision"`
+	PrincipalID        string          `json:"principal_id"`
+	VisibilityToken    string          `json:"visibility_token"`
+	ExpiresAt          string          `json:"expires_at"`
+	SnapshotHead       uint64          `json:"snapshot_head"`
+	Snapshot           []api.ObjectRef `json:"snapshot"`
+	AckCursor          string          `json:"ack_cursor"`
+	IssuedCursor       string          `json:"issued_cursor"`
+	PullCursor         string          `json:"pull_cursor"`
+	IssuedPage         *ViewPage       `json:"issued_page,omitempty"`
+	Partial            bool            `json:"partial"`
+	Gaps               []string        `json:"gaps"`
+	Purposes           []string        `json:"purposes"`
+	ScopeRef           api.ContentRef  `json:"scope_ref"`
+	HolderRef          api.ObjectRef   `json:"holder_ref"`
+	Location           string          `json:"location"`
+	IssuedFromCursor   string          `json:"issued_from_cursor"`
+	IssuedAcknowledged bool            `json:"issued_acknowledged"`
+	LastReceiptRef     *api.ObjectRef  `json:"last_receipt_ref,omitempty"`
 }
 
 type ViewPage struct {

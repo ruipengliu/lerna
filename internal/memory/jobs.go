@@ -3,6 +3,7 @@ package memory
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/ruipengliu/lerna/api"
@@ -54,7 +55,7 @@ type Projection struct {
 }
 
 func (s *Service) indexJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
-	return runtime.Finish(ctx, store, scope, Participants, work, runtime.Done(), func(tx runtime.Tx) error {
+	return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
 		head, err := loadHead(ctx, tx)
 		if err != nil {
 			return err
@@ -114,7 +115,7 @@ func (s *Service) indexJob(ctx context.Context, store runtime.Store, scope runti
 }
 
 func (s *Service) impactJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
-	return runtime.Finish(ctx, store, scope, Participants, work, runtime.Done(), func(tx runtime.Tx) error {
+	return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
 		if _, err := loadHead(ctx, tx); err != nil {
 			return err
 		}
@@ -142,7 +143,9 @@ func (s *Service) impactJob(ctx context.Context, store runtime.Store, scope runt
 				continue
 			}
 			if record.State == "active" {
-				record.State = "needs_review"
+				if work.Job.Kind != "memory.restrict_impact" {
+					record.State = "needs_review"
+				}
 				record.ReviewReason = work.Job.Kind
 				record.Revision = rev + 1
 				if err = tx.Put(ctx, "memory.records", record.MemoryID, rev, record); err != nil {
@@ -185,7 +188,7 @@ func (s *Service) impactJob(ctx context.Context, store runtime.Store, scope runt
 }
 
 func (s *Service) contentImpactJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
-	return runtime.Finish(ctx, store, scope, Participants, work, runtime.Done(), func(tx runtime.Tx) error {
+	return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
 		head, err := loadHead(ctx, tx)
 		if err != nil {
 			return err
@@ -233,6 +236,9 @@ func (s *Service) contentImpactJob(ctx context.Context, store runtime.Store, sco
 				}
 			}
 			kind := "memory.correction_impact"
+			if strings.HasPrefix(work.Job.ResponsibilityKey, "memory.restrict_impact:") {
+				kind = "memory.restrict_impact"
+			}
 			if closed {
 				kind = "memory.source_impact"
 			}
@@ -258,7 +264,10 @@ func (s *Service) contentImpactJob(ctx context.Context, store runtime.Store, sco
 }
 
 func (s *Service) memoryCleanupJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
-	return runtime.Finish(ctx, store, scope, Participants, work, runtime.Done(), func(tx runtime.Tx) error {
+	return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, err := loadHead(ctx, tx); err != nil {
+			return err
+		}
 		id := work.Job.SourceRef.ObjectID
 		var record MemoryRecord
 		rev, err := tx.Get(ctx, "memory.records", id, &record)
@@ -373,6 +382,14 @@ func (s *Service) contentCleanupJob(ctx context.Context, store runtime.Store, sc
 			if err = row.Decode(&holder); err != nil {
 				return err
 			}
+			if content.ClosureKind == "retention" && holder.Kind == "metadata_reference" {
+				holder.UseState = "use_stopped"
+				holder.CleanupState = "complete"
+				holder.Revision = row.Revision + 1
+				if err = tx.Put(ctx, "content.holders", holder.CopyID, row.Revision, holder); err != nil {
+					return err
+				}
+			}
 			if holder.UseState != "use_stopped" {
 				holder.UseState = "closing"
 				holder.ControlRevision = content.ControlRevision
@@ -411,10 +428,10 @@ func (s *Service) contentCleanupJob(ctx context.Context, store runtime.Store, sc
 		return err
 	}
 	if more {
-		return runtime.Finish(ctx, store, scope, Participants, work, runtime.Ready(due), nil)
+		return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Ready(due), nil)
 	}
 	if !ready {
-		return finishWork(ctx, store, scope, work, func(tx runtime.Tx) (runtime.Disposition, error) {
+		return finishWork(s, ctx, store, scope, work, func(tx runtime.Tx) (runtime.Disposition, error) {
 			now, err := tx.Now(ctx)
 			return runtime.Waiting(now.Add(time.Second)), err
 		})
@@ -425,7 +442,7 @@ func (s *Service) contentCleanupJob(ctx context.Context, store runtime.Store, sc
 	if err = s.Objects.Delete(ctx, content.ObjectLocation); err != nil {
 		return err
 	}
-	return finishWork(ctx, store, scope, work, func(tx runtime.Tx) (runtime.Disposition, error) {
+	return finishWork(s, ctx, store, scope, work, func(tx runtime.Tx) (runtime.Disposition, error) {
 		var current ContentVersion
 		rev, err := tx.Get(ctx, "content.versions", work.Job.ResponsibilityKey, &current)
 		if err != nil {
@@ -492,10 +509,10 @@ func (s *Service) transferCleanupJob(ctx context.Context, store runtime.Store, s
 		return err
 	}
 	if done {
-		return runtime.Finish(ctx, store, scope, Participants, work, runtime.Done(), nil)
+		return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), nil)
 	}
 	if !waitUntil.IsZero() {
-		return runtime.Finish(ctx, store, scope, Participants, work, runtime.Waiting(waitUntil), nil)
+		return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Waiting(waitUntil), nil)
 	}
 	if err = store.CheckClaim(ctx, scope, work.Claim); err != nil {
 		return err
@@ -504,7 +521,7 @@ func (s *Service) transferCleanupJob(ctx context.Context, store runtime.Store, s
 	if loc.Key == "" {
 		loc, err = s.Objects.Locate(ctx, transfer.ContentRef)
 		if api.IsCode(err, "gone") {
-			return runtime.Finish(ctx, store, scope, Participants, work, runtime.Done(), nil)
+			return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), nil)
 		}
 		if err != nil {
 			return err
@@ -513,11 +530,14 @@ func (s *Service) transferCleanupJob(ctx context.Context, store runtime.Store, s
 	if err = s.Objects.Delete(ctx, loc); err != nil {
 		return err
 	}
-	return runtime.Finish(ctx, store, scope, Participants, work, runtime.Done(), nil)
+	return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), nil)
 }
 
-func finishWork(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work, fn func(runtime.Tx) (runtime.Disposition, error)) error {
-	status, err := store.Within(ctx, scope, Participants, func(tx runtime.Tx) error {
+func finishWork(s *Service, ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work, fn func(runtime.Tx) (runtime.Disposition, error)) error {
+	status, err := store.Within(ctx, scope, s.participants(), func(tx runtime.Tx) error {
+		if _, err := loadHead(ctx, tx); err != nil {
+			return err
+		}
 		if err := tx.Guard(ctx, work.Claim); err != nil {
 			return err
 		}
@@ -543,4 +563,6 @@ func (s *Service) registerJobs(registry *runtime.Registry) {
 	registry.MustRegisterJob("content.source_impact", s.contentImpactJob)
 	registry.MustRegisterJob("content.cleanup", s.contentCleanupJob)
 	registry.MustRegisterJob("content.transfer_cleanup", s.transferCleanupJob)
+	registry.MustRegisterJob("content.expire", s.expireJob)
+	registry.MustRegisterJob("content.copy_expire", s.copyExpireJob)
 }

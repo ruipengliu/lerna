@@ -44,10 +44,17 @@ type FactSource interface {
 	Operations(context.Context, api.Snapshot) ([]ActionFact, error)
 }
 type RuleEngine struct {
+	Goals                                 GoalResolver
 	Facts                                 FactSource
 	ArtifactRule, SavedRule, AnswerSchema api.ComponentRef
 	ReadCapability, WriteCapability       api.ComponentRef
 	ReadBinding, WriteBinding             api.ObjectRef
+}
+
+// GoalResolver follows only the immutable GoalDocument references declared in
+// the snapshot; the original document bytes remain part of the sealed encoding.
+type GoalResolver interface {
+	ResolveGoal(context.Context, api.Snapshot, json.RawMessage) (json.RawMessage, error)
 }
 type ruleEncoding struct {
 	Snapshot api.Snapshot    `json:"snapshot"`
@@ -56,6 +63,8 @@ type ruleEncoding struct {
 
 func (*RuleEngine) Physical() bool { return false }
 func (e *RuleEngine) Encode(_ context.Context, s api.Snapshot, goal []byte, p Profile) (Encoding, error) {
+	s.EncodedDigest = ""
+	s.InputTokens = 0
 	raw := api.Raw(ruleEncoding{s, append([]byte(nil), goal...)})
 	return Encoding{Body: raw, Digest: api.Hash(raw), Receiver: "builtin-rule-engine", Location: "cloud", InputTokens: uint64(len(raw)), CountMode: "upper_bound", ProcessedSources: append([]api.ContentRef{}, s.ProcessedSources...)}, nil
 }
@@ -70,11 +79,18 @@ func (e *RuleEngine) Request(ctx context.Context, _ string, enc Encoding) (Gener
 	if er := api.Decode(enc.Body, &input); er != nil {
 		return Generated{}, er
 	}
+	if e.Goals != nil {
+		goal, er := e.Goals.ResolveGoal(ctx, input.Snapshot, input.Goal)
+		if er != nil {
+			return Generated{}, er
+		}
+		input.Goal = goal
+	}
 	v, er := api.NewValidator(GoalSchema())
 	if er != nil {
 		return Generated{}, er
 	}
-	out := Generated{Usage: []api.Amount{}, UsageFinal: true, Contents: []GeneratedContent{}}
+	out := Generated{Usage: []api.Amount{{Unit: "USD", Value: "0"}}, UsageFinal: true, Contents: []GeneratedContent{}}
 	add := func(id, media, body string) {
 		out.Contents = append(out.Contents, GeneratedContent{LocalID: id, MediaType: media, Body: body, DisclosedSources: []api.ContentRef{}})
 	}

@@ -139,7 +139,7 @@ func materialize(d decision) (Proposal, error) {
 	case "refine_requirements":
 		delta := api.RequirementDelta{BaseGoalRevision: d.Snapshot.GoalRevision, ReasonRef: out.ReasonRef, Candidates: []api.RequirementCandidate{}}
 		for _, r := range draft.Requirements {
-			c := api.RequirementCandidate{CandidateKey: r.CandidateKey, Kind: r.Kind, StatementRef: refs[r.StatementLocalID], SourceRefs: []api.SourceEvidence{{ContentRef: d.Snapshot.GoalRef, SourceKind: "original_goal"}}, Origin: "interpreted", RuleRef: r.RuleRef, Required: r.Required, OpenQuestions: []string{}}
+			c := api.RequirementCandidate{CandidateKey: r.CandidateKey, Kind: r.Kind, StatementRef: refs[r.StatementLocalID], SourceRefs: []api.SourceEvidence{{ContentRef: d.Snapshot.GoalRef, SourceKind: "user_input"}}, Origin: "derived", RuleRef: r.RuleRef, Required: r.Required, OpenQuestions: []string{}}
 			if r.ParametersLocalID != "" {
 				ref := refs[r.ParametersLocalID]
 				c.RuleParametersRef = &ref

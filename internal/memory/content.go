@@ -119,7 +119,7 @@ func reserveResult(t Transfer) ReserveOutput {
 // WriteTransfer 先提交原 writing 身份，再写介质；ready 的元数据提交未知时不发布。
 func (s *Service) WriteTransfer(ctx context.Context, scope runtime.Scope, auth runtime.Auth, transferID string, src io.Reader) error {
 	var t Transfer
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}
@@ -130,17 +130,14 @@ func (s *Service) WriteTransfer(ctx context.Context, scope runtime.Scope, auth r
 		if t.PublisherID != auth.SubjectID {
 			return api.E("forbidden", "transfer_principal_mismatch")
 		}
+		if err = s.checkTransfer(ctx, tx, auth, t); err != nil {
+			return err
+		}
 		if t.Phase == "published" || t.Phase == "ready" {
 			return nil
 		}
 		if t.Phase != "reserved" && t.Phase != "writing" {
 			return api.E("invalid_state", "transfer_closed")
-		}
-		if _, err = future(ctx, tx, t.ExpiresAt); err != nil {
-			return api.E("expired", "transfer_expired")
-		}
-		if _, err = s.allowed(ctx, tx, auth, t.PolicyRef, "content.write", s.Location, false); err != nil {
-			return err
 		}
 		t.Phase = "writing"
 		t.Revision = rev + 1
@@ -152,11 +149,25 @@ func (s *Service) WriteTransfer(ctx context.Context, scope runtime.Scope, auth r
 	if t.Phase == "published" || t.Phase == "ready" {
 		return nil
 	}
+	if t.ContentRef.MediaType == ExperienceMediaType {
+		body, readErr := io.ReadAll(io.LimitReader(src, int64(t.ContentRef.ByteLength)+1))
+		if readErr != nil {
+			return readErr
+		}
+		if uint64(len(body)) != t.ContentRef.ByteLength || api.Hash(body) != t.ContentRef.Hash {
+			return api.E("invalid_request", "content_hash_or_length_mismatch")
+		}
+		t.ExperienceOutcome, t.ExperienceProofRef, err = s.validateExperience(ctx, scope, auth, t, body)
+		if err != nil {
+			return err
+		}
+		src = bytes.NewReader(body)
+	}
 	loc, err := s.Objects.Write(ctx, t.ContentRef, src)
 	if err != nil {
 		return err
 	}
-	return s.within(ctx, scope, func(tx runtime.Tx) error {
+	return s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		var current Transfer
 		rev, err := tx.Get(ctx, "content.transfers", transferID, &current)
 		if err != nil {
@@ -164,6 +175,9 @@ func (s *Service) WriteTransfer(ctx context.Context, scope runtime.Scope, auth r
 		}
 		if current.PublisherID != auth.SubjectID || !api.Equal(t.ContentRef, current.ContentRef) {
 			return api.E("idempotency_conflict", "transfer_input_changed")
+		}
+		if err = s.checkTransfer(ctx, tx, auth, current); err != nil {
+			return err
 		}
 		if current.Phase == "published" || current.Phase == "ready" {
 			if !api.Equal(current.ObjectLocation, loc) {
@@ -174,18 +188,54 @@ func (s *Service) WriteTransfer(ctx context.Context, scope runtime.Scope, auth r
 		if current.Phase != "writing" {
 			return api.E("invalid_state", "transfer_closed")
 		}
-		if _, err = s.allowed(ctx, tx, auth, current.PolicyRef, "content.write", s.Location, false); err != nil {
-			return err
-		}
 		current.Phase = "ready"
 		current.ObjectLocation = loc
+		current.ExperienceOutcome = t.ExperienceOutcome
+		current.ExperienceProofRef = t.ExperienceProofRef
 		current.Revision = rev + 1
 		return tx.Put(ctx, "content.transfers", transferID, rev, current)
 	})
 }
 
+func (s *Service) checkTransfer(ctx context.Context, tx runtime.Tx, auth runtime.Auth, transfer Transfer) error {
+	if transfer.PublisherID != auth.SubjectID || transfer.TargetHolder.Revision != auth.CredentialGeneration {
+		return api.E("forbidden", "transfer_principal_mismatch")
+	}
+	if _, err := future(ctx, tx, transfer.ExpiresAt); err != nil {
+		return api.E("expired", "transfer_expired")
+	}
+	if _, err := future(ctx, tx, transfer.RetentionUntil); err != nil {
+		return err
+	}
+	if transfer.Kind == "mirror" {
+		if transfer.Purpose == "" || transfer.TargetLocation != s.Location {
+			return api.E("unsupported", "mirror_target_location_unconfigured")
+		}
+		_, err := s.CheckContentTx(ctx, tx, auth, transfer.ContentRef, transfer.Purpose, s.Location, false)
+		return err
+	}
+	if _, err := s.allowed(ctx, tx, auth, transfer.PolicyRef, "content.write", s.Location, false); err != nil {
+		return err
+	}
+	for _, ref := range transfer.ProcessedSources {
+		if err := s.checkSourceGate(ctx, tx, auth, ref, "content.write", s.Location, false); err != nil {
+			return err
+		}
+		if _, err := s.CheckContentTx(ctx, tx, auth, ref, "content.write", s.Location, false); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // PublishInTx 只发布已经 ready 的原准确版本，不读取或写入对象介质。
 func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, in PutInput) (api.ContentRef, error) {
+	if _, err := loadHead(ctx, tx); err != nil {
+		return api.ContentRef{}, err
+	}
+	if err := s.currentAuth(ctx, tx, auth); err != nil {
+		return api.ContentRef{}, err
+	}
 	if err := checkContentRef(tx.Scope(), in.ContentRef); err != nil {
 		return api.ContentRef{}, err
 	}
@@ -215,6 +265,9 @@ func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		if old.State != "published" {
 			return api.ContentRef{}, api.E("invalid_state", "source_closed")
 		}
+		if _, err = s.CheckContentTx(ctx, tx, auth, old.ContentRef, "content.write", s.Location, false); err != nil {
+			return api.ContentRef{}, err
+		}
 		return old.ContentRef, nil
 	}
 	if !api.IsCode(err, "not_found") {
@@ -240,6 +293,9 @@ func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		return api.ContentRef{}, err
 	}
 	for _, source := range in.ProcessedSources {
+		if err = s.checkSourceGate(ctx, tx, auth, source, "content.write", s.Location, false); err != nil {
+			return api.ContentRef{}, err
+		}
 		if source.ContentID == in.ContentRef.ContentID && source.Version == in.ContentRef.Version {
 			return api.ContentRef{}, api.E("invalid_request", "source_cycle")
 		}
@@ -255,7 +311,7 @@ func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 			return api.ContentRef{}, api.E("forbidden", "source_scope_expansion")
 		}
 		expires, _ := api.ParseTime(v.RetentionUntil)
-		if retention.After(expires) && !p.Values.IndependentDerived {
+		if retention.After(expires) && (!p.Values.IndependentDerived || !sp.Values.IndependentDerived) {
 			return api.ContentRef{}, api.E("forbidden", "retention_scope_expansion")
 		}
 	}
@@ -264,7 +320,12 @@ func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		return api.ContentRef{}, err
 	}
 	v := ContentVersion{ContentRef: in.ContentRef, ObjectLocation: t.ObjectLocation, State: "published", ControlRevision: 1, PolicyRef: in.PolicyRef, RetentionUntil: in.RetentionUntil, PublishedAt: api.Time(now), ProcessedSources: in.ProcessedSources, DisclosedSources: in.DisclosedSources, PublisherID: auth.SubjectID}
+	v.ExperienceOutcome = t.ExperienceOutcome
+	v.ExperienceProofRef = t.ExperienceProofRef
 	if err = tx.Create(ctx, "content.versions", contentKey(in.ContentRef), in.ContentRef.ContentID, v); err != nil {
+		return api.ContentRef{}, err
+	}
+	if _, err = tx.Raise(ctx, "content.expire", contentKey(in.ContentRef), tx.Scope().Ref(in.ContentRef.ContentID, in.ContentRef.Version), retention); err != nil {
 		return api.ContentRef{}, err
 	}
 	for _, source := range in.ProcessedSources {
@@ -289,14 +350,25 @@ type SourceEdge struct {
 
 // CheckContentTx 用于显式共同 Tx 的引用门禁；跨 owner 不作临时网络查询。
 func (s *Service) CheckContentTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous bool) (ContentVersion, error) {
-	return s.checkContent(ctx, tx, auth, ref, purpose, location, continuous, map[string]bool{}, 0)
+	if _, err := loadHead(ctx, tx); err != nil {
+		return ContentVersion{}, err
+	}
+	if err := s.currentAuth(ctx, tx, auth); err != nil {
+		return ContentVersion{}, err
+	}
+	return s.checkContent(ctx, tx, auth, ref, purpose, location, continuous, map[string]bool{}, 0, false)
 }
-func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous bool, seen map[string]bool, depth int) (ContentVersion, error) {
+func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous bool, seen map[string]bool, depth int, independent bool) (ContentVersion, error) {
 	if err := checkContentRef(tx.Scope(), ref); err != nil {
 		return ContentVersion{}, err
 	}
 	if depth > 32 || len(seen) >= 200 {
 		return ContentVersion{}, api.E("dependency_unavailable", "source_closure_limit")
+	}
+	if depth > 0 {
+		if err := s.checkSourceGate(ctx, tx, auth, ref, purpose, location, continuous); err != nil {
+			return ContentVersion{}, err
+		}
 	}
 	key := contentKey(ref)
 	var v ContentVersion
@@ -307,13 +379,22 @@ func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.
 	if !api.Equal(ref, v.ContentRef) {
 		return v, api.E("idempotency_conflict", "content_reference_changed")
 	}
-	if v.State != "published" {
-		return v, api.E("forbidden", "source_closed")
-	}
-	if _, err = future(ctx, tx, v.RetentionUntil); err != nil {
+	p, err := s.policy(ctx, tx, v.PolicyRef)
+	if err != nil {
 		return v, err
 	}
-	if _, err = s.allowed(ctx, tx, auth, v.PolicyRef, purpose, location, continuous); err != nil {
+	historical := independent && depth > 0 && p.Values.IndependentDerived && (v.State == "published" || v.ClosureKind == "retention")
+	if v.State != "published" && !historical {
+		return v, api.E("forbidden", "source_closed")
+	}
+	if _, err = future(ctx, tx, v.RetentionUntil); err != nil && !historical {
+		return v, err
+	}
+	if historical {
+		if err = s.allowedHistorical(ctx, tx, auth, p, purpose, location, continuous); err != nil {
+			return v, err
+		}
+	} else if _, err = s.allowed(ctx, tx, auth, v.PolicyRef, purpose, location, continuous); err != nil {
 		return v, err
 	}
 	if seen[key] {
@@ -321,7 +402,7 @@ func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.
 	}
 	seen[key] = true
 	for _, source := range v.ProcessedSources {
-		if _, err = s.checkContent(ctx, tx, auth, source, purpose, location, continuous, seen, depth+1); err != nil {
+		if _, err = s.checkContent(ctx, tx, auth, source, purpose, location, continuous, seen, depth+1, p.Values.IndependentDerived); err != nil {
 			return v, err
 		}
 	}
@@ -365,9 +446,15 @@ func (s *Service) Read(ctx context.Context, scope runtime.Scope, auth runtime.Au
 }
 func (s *Service) ReadBytes(ctx context.Context, scope runtime.Scope, auth runtime.Auth, ref api.ContentRef, purpose, location string) ([]byte, error) {
 	var v ContentVersion
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		var err error
 		v, err = s.CheckContentTx(ctx, tx, auth, ref, purpose, location, false)
+		if err != nil {
+			return err
+		}
+		if location != s.Location {
+			_, err = s.CheckContentTx(ctx, tx, auth, ref, purpose, s.Location, false)
+		}
 		return err
 	})
 	if err != nil {
@@ -377,13 +464,19 @@ func (s *Service) ReadBytes(ctx context.Context, scope runtime.Scope, auth runti
 	if err != nil {
 		return nil, err
 	}
-	err = s.within(ctx, scope, func(tx runtime.Tx) error {
+	err = s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		current, err := s.CheckContentTx(ctx, tx, auth, ref, purpose, location, false)
 		if err != nil {
 			return err
 		}
 		if current.ControlRevision != v.ControlRevision {
 			return api.E("forbidden", "source_closed")
+		}
+		if location != s.Location {
+			_, err = s.CheckContentTx(ctx, tx, auth, ref, purpose, s.Location, false)
+			if err != nil {
+				return err
+			}
 		}
 		return nil
 	})
@@ -449,6 +542,9 @@ func (s *Service) RegisterCopyTx(ctx context.Context, tx runtime.Tx, auth runtim
 	if err = tx.Create(ctx, "content.holders", h.CopyID, contentKey(in.ContentRef), h); err != nil {
 		return CopyOutput{}, err
 	}
+	if _, err = tx.Raise(ctx, "content.copy_expire", h.CopyID, tx.Scope().Ref(h.CopyID, 1), retain); err != nil {
+		return CopyOutput{}, err
+	}
 	return copyOutput(h), nil
 }
 
@@ -488,11 +584,14 @@ func (s *Service) close(ctx context.Context, tx runtime.Tx, auth runtime.Auth, e
 	if err = compareExpected(expected, v.ControlRevision); err != nil {
 		return CloseOutput{}, err
 	}
-	if v.State == "closed" || v.State == "deleted" {
+	if (v.State == "closed" || v.State == "deleted") && v.ClosureKind != "retention" {
 		return CloseOutput{v.ControlRevision, v.State, "pending"}, nil
 	}
-	v.State = "closed"
-	v.ControlRevision = rev + 1
+	if v.State != "deleted" {
+		v.State = "closed"
+	}
+	v.ClosureKind = "active_close"
+	v.ControlRevision++
 	if err = tx.Put(ctx, "content.versions", contentKey(in.ContentRef), rev, v); err != nil {
 		return CloseOutput{}, err
 	}
@@ -510,7 +609,7 @@ func (s *Service) close(ctx context.Context, tx runtime.Tx, auth runtime.Auth, e
 	if _, err = tx.Raise(ctx, "memory.source_impact", contentKey(in.ContentRef), tx.Scope().Ref(in.ContentRef.ContentID, in.ContentRef.Version), now); err != nil {
 		return CloseOutput{}, err
 	}
-	return CloseOutput{v.ControlRevision, "closed", "pending"}, nil
+	return CloseOutput{v.ControlRevision, v.State, "pending"}, nil
 }
 
 type ReleaseCopyInput struct {
@@ -555,6 +654,13 @@ func (s *Service) releaseCopy(ctx context.Context, tx runtime.Tx, auth runtime.A
 	for _, evidence := range in.EvidenceRefs {
 		if err = checkContentRef(tx.Scope(), evidence); err != nil {
 			return CopyOutput{}, err
+		}
+		var receipt ContentVersion
+		if _, err = tx.Get(ctx, "content.versions", contentKey(evidence), &receipt); err != nil {
+			return CopyOutput{}, err
+		}
+		if !api.Equal(receipt.ContentRef, evidence) {
+			return CopyOutput{}, api.E("idempotency_conflict", "cleanup_evidence_changed")
 		}
 	}
 	h.ControlRevision = v.ControlRevision
@@ -615,7 +721,7 @@ func (s *Service) getContent(ctx context.Context, scope runtime.Scope, auth runt
 		return GetContentOutput{}, api.E("invalid_request", "control_copy_required")
 	}
 	var out GetContentOutput
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}
@@ -633,7 +739,15 @@ func (s *Service) getContent(ctx context.Context, scope runtime.Scope, auth runt
 			return err
 		}
 		state := h.UseState
-		if v.State != "published" && state == "allowed" {
+		now, err := tx.Now(ctx)
+		if err != nil {
+			return err
+		}
+		deadline, err := api.ParseTime(h.RetainUntil)
+		if err != nil {
+			return err
+		}
+		if (v.State != "published" || !now.Before(deadline)) && state == "allowed" {
 			state = "closing"
 		}
 		out = GetContentOutput{ContentRef: h.ContentRef, Mode: "control", ControlRevision: v.ControlRevision, UseState: state, CleanupState: h.CleanupState}
@@ -664,8 +778,11 @@ func (s *Service) mirror(ctx context.Context, tx runtime.Tx, auth runtime.Auth, 
 	if err := runtime.CheckRef(tx.Scope(), in.ReferenceIntentRef); err != nil {
 		return ReserveOutput{}, err
 	}
-	if in.SourceHolder.ObjectID != auth.SubjectID || in.TargetHolder.ObjectID != auth.SubjectID || !api.ValidID(in.TransferID) || in.MaxBytes < in.ContentRef.ByteLength || in.MaxBytes > MaxContentBytes {
+	if in.SourceHolder.ObjectID != auth.SubjectID || in.TargetHolder.ObjectID != auth.SubjectID || in.SourceHolder.Revision != auth.CredentialGeneration || in.TargetHolder.Revision != auth.CredentialGeneration || !api.ValidID(in.TransferID) || in.MaxBytes < in.ContentRef.ByteLength || in.MaxBytes > MaxContentBytes {
 		return ReserveOutput{}, api.E("forbidden", "mirror_scope_mismatch")
+	}
+	if in.Location != s.Location {
+		return ReserveOutput{}, api.E("unsupported", "mirror_target_location_unconfigured")
 	}
 	v, err := s.CheckContentTx(ctx, tx, auth, in.ContentRef, in.Purpose, in.Location, false)
 	if err != nil {
@@ -694,7 +811,7 @@ func (s *Service) mirror(ctx context.Context, tx runtime.Tx, auth runtime.Auth, 
 	if !api.IsCode(err, "not_found") {
 		return ReserveOutput{}, err
 	}
-	t := Transfer{TransferID: in.TransferID, Revision: 1, Kind: "mirror", CommandRef: tx.Scope().Ref(c.CommandID, 1), ContentRef: in.ContentRef, PolicyRef: v.PolicyRef, ProcessedSources: v.ProcessedSources, RetentionUntil: v.RetentionUntil, ExpiresAt: in.ExpiresAt, Phase: "reserved", PublisherID: auth.SubjectID, SourceHolder: &in.SourceHolder, TargetHolder: in.TargetHolder, ReferenceIntentRef: in.ReferenceIntentRef, MaxBytes: in.MaxBytes}
+	t := Transfer{TransferID: in.TransferID, Revision: 1, Kind: "mirror", CommandRef: tx.Scope().Ref(c.CommandID, 1), ContentRef: in.ContentRef, PolicyRef: v.PolicyRef, ProcessedSources: v.ProcessedSources, RetentionUntil: v.RetentionUntil, ExpiresAt: in.ExpiresAt, Phase: "reserved", PublisherID: auth.SubjectID, SourceHolder: &in.SourceHolder, TargetHolder: in.TargetHolder, ReferenceIntentRef: in.ReferenceIntentRef, MaxBytes: in.MaxBytes, Purpose: in.Purpose, TargetLocation: in.Location}
 	if err = tx.Create(ctx, "content.transfers", in.TransferID, contentKey(in.ContentRef), t); err != nil {
 		return ReserveOutput{}, err
 	}

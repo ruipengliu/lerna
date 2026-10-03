@@ -51,6 +51,7 @@ const discoverySchema = object(
     identity_revision: count,
     schema_digest: hash,
     methods: { type: "array", items: methodSchema, maxItems: 1000 },
+    methods_digest: hash,
     limits: limitsSchema,
     core_schema_path: text,
     core_schema: {},
@@ -63,6 +64,7 @@ const discoverySchema = object(
     "identity_revision",
     "schema_digest",
     "methods",
+    "methods_digest",
     "limits",
     "core_schema_path",
   ],
@@ -238,6 +240,8 @@ export class ContractRegistry {
       input.set(method.name, ajv.compile({ ...method.input_schema, $defs: core.$defs }));
       output.set(method.name, ajv.compile({ ...method.output_schema, $defs: core.$defs }));
     }
+    if ((await digest(discovery.methods)) !== discovery.methods_digest)
+      throw new ProtocolError("methods_digest_mismatch");
     return new ContractRegistry(
       discovery,
       await digest(discovery.methods),
@@ -247,7 +251,10 @@ export class ContractRegistry {
     );
   }
   async original(contract: MethodContract): Promise<ContractRegistry> {
-    return ContractRegistry.create({ ...this.discovery, methods: [contract] }, this.coreBytes);
+    return ContractRegistry.create(
+      { ...this.discovery, methods: [contract], methods_digest: await digest([contract]) },
+      this.coreBytes,
+    );
   }
   method(name: string, kind?: "command" | "query"): MethodContract {
     const method = this.discovery.methods.find((value) => value.name === name);
@@ -346,4 +353,14 @@ export function validateRecord<T = unknown>(name: string, value: unknown): T {
     recordValidators.set(name, validator);
   }
   return checked<T>(validator, value, "record_schema_violation");
+}
+
+export function validateSchema(schema: unknown, value: unknown): void {
+  jsonBytes(schema, 262144);
+  jsonBytes(value, 262144);
+  localReferences(schema);
+  if (!schema || Array.isArray(schema) || typeof schema !== "object")
+    throw new ProtocolError("invalid_local_schema");
+  const validator = compiler().compile({ ...schema, $defs: CORE_SCHEMA.$defs });
+  if (!validator(value)) throw new ProtocolError("schema_violation");
 }

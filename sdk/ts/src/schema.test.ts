@@ -33,6 +33,7 @@ it("只开放发现中摘要验证过的闭合方法，拒绝未知字段和不�
     schema_digest: CORE_SCHEMA_DIGEST,
     core_schema_path: "/api/schema/core",
     methods: [contract],
+    methods_digest: await digest([contract]),
     limits: { max_domain_bytes: 262144, max_frame_bytes: 1048576, max_pending: 32 },
   };
   const raw = new Uint8Array(

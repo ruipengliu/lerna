@@ -34,11 +34,11 @@ const command: Command = {
   expires_at: "2026-10-03T23:59:00Z",
   payload: { text: "准确原输入" },
 };
-async function registry() {
+async function registry(options: { query?: boolean; removed?: boolean } = {}) {
   const contract: MethodContract = {
-    name: "probe.save",
+    name: options.query ? "probe.read" : "probe.save",
     owner: "probe",
-    kind: "command",
+    kind: options.query ? "query" : "command",
     cas: false,
     allows_accepted: false,
     input_schema: input,
@@ -54,7 +54,8 @@ async function registry() {
     identity_revision: 1,
     schema_digest: CORE_SCHEMA_DIGEST,
     core_schema_path: "/api/schema/core",
-    methods: [contract],
+    methods: options.removed ? [] : [contract],
+    methods_digest: await digest(options.removed ? [] : [contract]),
     limits: { max_domain_bytes: 262144, max_frame_bytes: 1048576, max_pending: 32 },
   };
   const core = new Uint8Array(
@@ -94,7 +95,7 @@ it("耐久存储拒绝时不连接与首次发送，返回真实存储失败", a
 });
 
 it("业务已决定但丢答复后重开 SDK 查原命令，不产生新的命令或刷新期限", async () => {
-  const contract = await registry();
+  let contract = await registry();
   const factory = new IDBFactory();
   const server = new WebSocketServer({ host: "127.0.0.1", port: 0 });
   await once(server, "listening");
@@ -150,6 +151,7 @@ it("业务已决定但丢答复后重开 SDK 查原命令，不产生新的命�
   });
   await expect(client.command(command)).rejects.toThrow();
   await client.close();
+  contract = await registry({ removed: true });
   const reopened = new HarnessClient({
     registry: contract,
     store: new IndexedDBCommands(identity, { factory, name: "lost-reply" }),
@@ -158,5 +160,130 @@ it("业务已决定但丢答复后重开 SDK 查原命令，不产生新的命�
   expect(await reopened.recover()).toEqual([{ command_id: command.command_id, receipt }]);
   expect(seen).toEqual(["command", "receipt_lookup"]);
   await reopened.close();
+  server.close();
+});
+
+it("原 owner 确定尚未接纳时只重传原字节，过期拒绝沿原命令落账", async () => {
+  const contract = await registry();
+  const store = new IndexedDBCommands(identity, { factory: new IDBFactory(), name: "unsent" });
+  const originalDigest = await digest(command);
+  await store.save({
+    version: 1,
+    identity_scope: identity,
+    logical_service_id: owner,
+    command_id: command.command_id,
+    command_json: canonical(command),
+    request_digest: originalDigest,
+    core_schema_digest: CORE_SCHEMA_DIGEST,
+    contract: contract.method(command.method),
+    status: "pending",
+  });
+  const server = new WebSocketServer({ host: "127.0.0.1", port: 0 });
+  await once(server, "listening");
+  const address = server.address();
+  if (!address || typeof address === "string") throw new Error("no address");
+  const seen: string[] = [];
+  const receipt = {
+    command_id: command.command_id,
+    request_digest: originalDigest,
+    stage: "rejected",
+    decided_at: "2026-10-03T00:00:00Z",
+    error: {
+      code: "expired",
+      scope: "command",
+      reason: "first_acceptance_deadline",
+      retry: "none",
+    },
+  };
+  server.on("connection", (socket) => {
+    socket.send(
+      JSON.stringify({
+        type: "ready",
+        connection_id: "connection_00000000000000000000000000000001",
+        logical_service_id: owner,
+        profile: command.profile,
+        transport_profile: "harness-wss/1",
+        methods_digest: contract.methodsDigest,
+        limits: contract.discovery.limits,
+      }),
+    );
+    socket.on("message", (raw) => {
+      const frame = parseStrict(raw.toString()) as {
+        kind: string;
+        request_seq: number;
+        payload: unknown;
+      };
+      seen.push(frame.kind);
+      if (frame.kind === "command") expect(canonical(frame.payload)).toBe(canonical(command));
+      socket.send(
+        JSON.stringify({
+          type: "response",
+          request_seq: frame.request_seq,
+          result_kind: frame.kind === "command" ? "receipt" : "error",
+          payload:
+            frame.kind === "command"
+              ? receipt
+              : {
+                  code: "not_found",
+                  scope: "command",
+                  reason: "not_accepted",
+                  retry: "same_request",
+                },
+        }),
+      );
+    });
+  });
+  const client = new HarnessClient({
+    registry: contract,
+    store,
+    url: `ws://127.0.0.1:${address.port}`,
+  });
+  expect(await client.recover()).toEqual([{ command_id: command.command_id, receipt }]);
+  expect(seen).toEqual(["receipt_lookup", "command"]);
+  expect(await client.pending()).toEqual([]);
+  await client.close();
+  server.close();
+});
+
+it("真实 WebSocket 上普通查询最多占 28 个槽，背压与等待都有限", async () => {
+  const contract = await registry({ query: true });
+  const server = new WebSocketServer({ host: "127.0.0.1", port: 0 });
+  await once(server, "listening");
+  const address = server.address();
+  if (!address || typeof address === "string") throw new Error("no address");
+  let transmitted = 0;
+  server.on("connection", (socket) => {
+    socket.send(
+      JSON.stringify({
+        type: "ready",
+        connection_id: "connection_00000000000000000000000000000001",
+        logical_service_id: owner,
+        profile: command.profile,
+        transport_profile: "harness-wss/1",
+        methods_digest: contract.methodsDigest,
+        limits: contract.discovery.limits,
+      }),
+    );
+    socket.on("message", () => transmitted++);
+  });
+  const client = new HarnessClient({
+    registry: contract,
+    store: new IndexedDBCommands(identity, { factory: new IDBFactory(), name: "pressure" }),
+    url: `ws://127.0.0.1:${address.port}`,
+    requestTimeoutMs: 150,
+  });
+  await client.connect();
+  const results = await Promise.all(
+    Array.from({ length: 40 }, () =>
+      client.query(client.makeQuery("probe.read", owner, { text: "bounded" })).then(
+        () => "unexpected",
+        (failure: unknown) => (failure instanceof Error ? failure.message : "unknown"),
+      ),
+    ),
+  );
+  expect(results.filter((value) => value === "outbound_backpressure")).toHaveLength(12);
+  expect(results.filter((value) => value === "query_original:response_timeout")).toHaveLength(28);
+  expect(transmitted).toBe(28);
+  await client.close();
   server.close();
 });

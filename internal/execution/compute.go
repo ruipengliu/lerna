@@ -6,6 +6,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/ruipengliu/lerna/api"
@@ -18,6 +19,8 @@ type TrustedComputeDriver struct {
 	Content  ContentPort
 	Store    rt.Store
 	Location string
+	mu       sync.Mutex
+	active   map[string]chan struct{}
 }
 type ComputeArguments struct {
 	EnvironmentRef            api.ObjectRef    `json:"environment_ref"`
@@ -231,7 +234,7 @@ func (d *TrustedComputeDriver) Prepare(ctx context.Context, sc rt.Scope, a rt.Au
 		}
 	}
 	encoded := api.Raw(args)
-	return PreparedRequest{Encoded: encoded, Digest: api.Hash(encoded), Cell: &CellPreparation{EnvironmentRef: args.EnvironmentRef, ExpectedGeneration: env.Generation, ExpectedNamespaceRevision: env.NamespaceRevision, Namespace: ns, Sources: sources}}, nil
+	return PreparedRequest{Encoded: encoded, Digest: api.Hash(encoded), Cell: &CellPreparation{EnvironmentRef: args.EnvironmentRef, InstanceID: env.InstanceID, ExpectedGeneration: env.Generation, ExpectedNamespaceRevision: env.NamespaceRevision, Namespace: ns, Sources: sources}}, nil
 }
 func appendUniqueSources(sources []api.ContentRef, refs ...api.ContentRef) []api.ContentRef {
 	for _, r := range refs {
@@ -249,6 +252,18 @@ func (d *TrustedComputeDriver) Start(ctx context.Context, q AttemptRequest, barr
 	if q.Attempt.Prepared.Cell == nil {
 		return Fact{}, api.E("invalid_state", "cell_preparation_missing")
 	}
+	d.mu.Lock()
+	if d.active == nil {
+		d.active = map[string]chan struct{}{}
+	}
+	if d.active[q.Attempt.AttemptID] != nil {
+		d.mu.Unlock()
+		return Fact{}, api.E("invalid_state", "environment_busy")
+	}
+	exit := make(chan struct{})
+	d.active[q.Attempt.AttemptID] = exit
+	d.mu.Unlock()
+	defer func() { d.mu.Lock(); delete(d.active, q.Attempt.AttemptID); close(exit); d.mu.Unlock() }()
 	if err := barrier(ctx); err != nil {
 		return Fact{}, err
 	}
@@ -269,6 +284,16 @@ func (d *TrustedComputeDriver) Reconcile(ctx context.Context, q AttemptRequest) 
 	return Fact{Revision: q.Attempt.FactRevision + 1, Effect: "not_applied", MayApplyLater: false, Evidence: []api.ContentRef{}, Usage: []api.Amount{}, UsageFinal: true}, nil
 }
 func (d *TrustedComputeDriver) Stop(ctx context.Context, q AttemptRequest) (StopFact, error) {
+	d.mu.Lock()
+	exit := d.active[q.Attempt.AttemptID]
+	d.mu.Unlock()
+	if exit != nil {
+		select {
+		case <-exit:
+		case <-ctx.Done():
+			return StopFact{ActuallyStopped: false, MayApplyLater: "unknown"}, ctx.Err()
+		}
+	}
 	return StopFact{ActuallyStopped: true, MayApplyLater: false}, nil
 }
 
@@ -282,7 +307,7 @@ func (s *Service) cellBarrier(ctx context.Context, tx rt.Tx, op operationRecord,
 	if err != nil {
 		return err
 	}
-	if env.Generation != cell.ExpectedGeneration {
+	if env.Generation != cell.ExpectedGeneration || env.InstanceID != cell.InstanceID {
 		return api.E("revision_conflict", "generation_changed")
 	}
 	if env.NamespaceRevision != cell.ExpectedNamespaceRevision {
@@ -298,7 +323,7 @@ func (s *Service) cellBarrier(ctx context.Context, tx rt.Tx, op operationRecord,
 	env.ActuallyExited = false
 	env.ActiveOperationIDs = append(env.ActiveOperationIDs, op.Operation.OperationID)
 	env.Revision = rev + 1
-	return tx.Put(ctx, Namespace+".environments", env.EnvironmentID, rev, env)
+	return putEnvironment(ctx, tx, env.EnvironmentID, rev, env)
 }
 func (s *Service) commitCell(ctx context.Context, tx rt.Tx, op operationRecord, a Attempt, namespaceRef *api.ContentRef) (bool, error) {
 	cell := a.Prepared.Cell
@@ -309,6 +334,9 @@ func (s *Service) commitCell(ctx context.Context, tx rt.Tx, op operationRecord, 
 	rev, err := tx.Get(ctx, Namespace+".environments", cell.EnvironmentRef.ObjectID, &env)
 	if err != nil {
 		return false, err
+	}
+	if env.InstanceID != cell.InstanceID {
+		return false, nil
 	}
 	valid := env.Generation == cell.ExpectedGeneration && env.NamespaceRevision == cell.ExpectedNamespaceRevision && env.Phase == "active"
 	if valid && namespaceRef != nil {
@@ -324,7 +352,11 @@ func (s *Service) commitCell(ctx context.Context, tx rt.Tx, op operationRecord, 
 	}
 	env.ActiveOperationIDs = remaining
 	env.ActuallyExited = len(remaining) == 0
-	env.ReadyForCell = env.Phase == "active" && env.ActuallyExited && len(env.StopResiduals) == 0
+	ready, err := hostMappingsKnown(ctx, tx, env)
+	if err != nil {
+		return false, err
+	}
+	env.ReadyForCell = env.Phase == "active" && env.ActuallyExited && len(env.StopResiduals) == 0 && ready
 	env.Revision = rev + 1
-	return valid, tx.Put(ctx, Namespace+".environments", env.EnvironmentID, rev, env)
+	return valid, putEnvironment(ctx, tx, env.EnvironmentID, rev, env)
 }
