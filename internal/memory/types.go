@@ -42,7 +42,8 @@ type Policy struct {
 	State     string           `json:"state"`
 }
 
-// Authorization 只检查显式同库的当前授权，不能在 Tx 内 RPC。返回修订参与分页失效。
+// Authorization 只读检查显式同库的当前授权，不能在 Tx 内 RPC，
+// 也不得在回调中修改 ContentVersion、Policy 或来源门禁。返回修订参与分页失效。
 type Authorization interface {
 	Check(context.Context, runtime.Tx, runtime.Auth, api.ComponentRef, string, string, bool) (uint64, error)
 	Visibility(context.Context, runtime.Tx, runtime.Auth) (string, error)

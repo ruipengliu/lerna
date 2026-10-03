@@ -6,7 +6,7 @@
 
 `New(store, objects)` 不安装许可，也不发送外部请求。宿主在登记方法和启动 worker 前固定 `Location`、`Authorization` 和 `ConfigureParticipants("platform", "governance")` 等同库参与者。默认参与者为 `content`、`memory`，默认处理地点为 `local`。
 
-`InstallPolicy` / `InstallPolicyTx` 是受信管理入口。`PolicyValues` 显式固定 subject、purpose、location、最晚保留期、continuous 和 independent_derived；`PolicyRef.Digest` 必须等于这些值的 JCS 摘要。未知许可不允许读取。额外授权端口的 `Check` / `Visibility` 必须在同一 Tx 读取当前凭据及授权代次，不能 RPC。所有管理、控制和普通数据入口都核当前凭据；数据读取还逐项核当前用途及来源。跨 owner 引用缺少权威接入时返回 `dependency_unavailable`。
+`InstallPolicy` / `InstallPolicyTx` 是受信管理入口。`PolicyValues` 显式固定 subject、purpose、location、最晚保留期、continuous 和 independent_derived；`PolicyRef.Digest` 必须等于这些值的 JCS 摘要。未知许可不允许读取。额外授权端口的 `Check` / `Visibility` 必须在同一 Tx 只读核对当前凭据及授权代次，不能 RPC，也不得在门禁回调内修改 ContentVersion、Policy 或来源门禁。所有管理、控制和普通数据入口都核当前凭据；数据读取还逐项核当前用途及来源。跨 owner 引用缺少权威接入时返回 `dependency_unavailable`。
 
 可调用的正文端口：
 
@@ -21,6 +21,8 @@ CheckContentTx(ctx, tx, auth, ref, purpose, location, continuous) (ContentVersio
 ```
 
 `PublicationRequest` 的 content/version/hash、原 reserve/put CommandID、TransferID、来源、许可和期限必须在首次调用前固定。协议路径是原 `content.upload_reserve` → HTTPS 准确字节上传 → 原 `content.put`。字节最多 16 MiB；`ready` 尚不等于已发布。ObjectStore 的写入、读回和删除均在元数据事务外；读回后再次核当前控制门禁。`ReadBytes` 同时核服务实际处理地点和接收地点，参数不能改变实际处理地点。
+
+每个来源门禁入口可复用本次遍历中已经强读并由同一 Tx 锁定的准确 ContentVersion 和 Policy，仍沿原深度 32、最多 200 个节点的限制；入口返回即丢弃。每条重复来源路径仍核完整引用、来源断言门禁、当前授权、保留期限、该路径的 independent_derived 条件并扣原累计许可预算，然后才按已访问节点停止子图递归。同一 Tx 的下一入口、介质读取后的再核验及下一请求均重新取得当前元数据。该复用不保存许可肯定，也不复用外来来源的当前证明。
 
 上传写入或 ready 提交未知时停止发布，沿原 TransferID 查询并恢复。发布、不可变版本、来源边、到期 Job 和原命令回执在短事务共同保存。同一 content/version 不接受不同摘要。只有已发布的准确来源可加入 processed DAG；disclosed 必须是 processed 子集。未引用输出中已处理的来源仍参与限制交集、撤销和纠正。
 
@@ -100,9 +102,12 @@ go test -race ./internal/memory ./adapters/objectstore
 go vet ./internal/memory ./adapters/objectstore
 go build ./internal/memory ./adapters/objectstore
 HARNESS_TEST_POSTGRES_DSN=... go test ./internal/memory -run TestPostgres -count=1 -v
+HARNESS_TEST_POSTGRES_DSN=... go test -race ./internal/memory -run '^TestSharedSourceClosure' -count=1 -v
 HARNESS_FOREIGN_TEST_DRIVER=postgres HARNESS_TEST_POSTGRES_DSN=... go test -race ./internal/memory -run '^(TestForeign|TestMemoryKeepsForeign)' -count=1
 ```
 
 普通行为测试使用迁移后的真实 SQLite 文件与本地准确介质。PG 测试使用真实连接，未提供 DSN 时明确 skip，不能记为数据库验证通过。测试显式安装有 subject/purpose/local 约束的一小时许可；撤权端口和时钟只替换已授权的外部权限/可信时间边界。提交未知注入位于真实 SQLite COMMIT 之后；介质删除丢回复注入发生在实际 unlink/fsync 之后。验证覆盖原票据重开恢复、清理幂等、来源主动关闭、自然到期与独立派生、准确 hash、权限先于正文读取、权限扩张后的旧页拒绝、固定 TTL、单候选唯一保存、经验未知状态和清理墓碑。
 
 跨 owner 矩阵每例使用两个实际 owner 和独立数据库；PG 选项为每方创建并迁移各自的临时数据库，缺少配置会失败。源端命令和正文由真实 Memory 服务处理，准确证明使用 ES256 签名。测试覆盖登记丢回复、当前关闭及失联拒读、control 证明不得授权正文、原 intent 提交未知后零出站及重开、主体代次边界、原来源限制交集和 Memory 删除仅清理本方元数据。该矩阵的源调用端口直接连接两服务，不替代独立传输宿主的 TLS 或完整 Task 接线验收。
+
+来源图成本回归通过公开 Upload、Read、QueryMemory 和共同 Tx 的 CheckContentTx 测试真实 SQLite、PostgreSQL；观测器只记录真实 Tx.Get，原样保留锁和提交。4 节点、5 边的读取前后两入口原有 Content 强读 12 次、Policy 强读 24 次，修复后分别为 8 次和 2 次；12 次当前许可核验保持。实际字节读取间隙的公开撤源拒绝返回正文，新的入口重新拒绝；同一来源先按历史再按当前路径访问、相反路径顺序、入口内时间前进、原许可预算和准确引用变动分别验证。这些成本及门禁回归不等于完整 WASI Task 在原期限内完成的验收，后者须用宿主 Worker 独立复验。
