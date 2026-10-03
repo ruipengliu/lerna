@@ -684,6 +684,14 @@ func (s *Service) steerJob(ctx context.Context, store runtime.Store, scope runti
 		if terminal(current) || current.PendingGoalCommand != pending.CommandID || current.Task.GoalRevision != pending.Input.BaseGoalRevision {
 			return api.E("revision_conflict", "goal_changed")
 		}
+		// 准确GoalDocument已经出版不代表原父仍授予改变Goal的权利。
+		currentErr := s.CheckCurrent(ctx, tx, current, false)
+		if currentErr != nil {
+			var business *api.Error
+			if !errors.As(currentErr, &business) || deferred(currentErr) {
+				return currentErr
+			}
+		}
 		var lockedPending pendingSteer
 		rev, e := tx.Get(ctx, steers, pending.CommandID, &lockedPending)
 		if e != nil {
@@ -691,6 +699,22 @@ func (s *Service) steerJob(ctx context.Context, store runtime.Store, scope runti
 		}
 		if lockedPending.CommandID != pending.CommandID || !api.Equal(lockedPending.Input, pending.Input) || lockedPending.State != "pending" {
 			return api.E("revision_conflict", "original_steer_changed")
+		}
+		if currentErr != nil {
+			lockedPending.State = "rejected"
+			lockedPending.Revision++
+			if e = tx.Put(ctx, steers, pending.CommandID, rev, lockedPending); e != nil {
+				return e
+			}
+			current.PendingGoalCommand = ""
+			if e = s.saveTask(ctx, tx, &current); e != nil {
+				return e
+			}
+			var business *api.Error
+			if !errors.As(currentErr, &business) {
+				return currentErr
+			}
+			return runtime.Decide(ctx, tx, pending.CommandID, nil, business)
 		}
 		current.Task.GoalRef = ref
 		current.Amendments = document.AmendmentRefs

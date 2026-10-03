@@ -373,6 +373,10 @@ func (s *Service) consumeInputTx(ctx context.Context, tx runtime.Tx, auth runtim
 	if e = s.lockTaskTree(ctx, tx, t.Task.TaskID); e != nil {
 		return InputOutput{}, e
 	}
+	// 回答正文读取/完整Goal出版在Tx外；最终一次消费仍须核原父/额度门禁。
+	if e = s.CheckCurrent(ctx, tx, t, false); e != nil {
+		return InputOutput{}, e
+	}
 	var req api.InputRequest
 	rev, e := tx.Get(ctx, inputs, in.RequestRef.ObjectID, &req)
 	if e != nil {
