@@ -179,6 +179,12 @@ var _ task.EvidenceRegistration = taskGate{}
 
 type usageVerifier struct{ a *App }
 
+type resultNoticeBridge struct{ a *App }
+
+func (b resultNoticeBridge) RecordNoticeTx(ctx context.Context, tx runtime.Tx, notice governance.ResultNotice) error {
+	return b.a.Task.RecordResultNoticeTx(ctx, tx, b.a.ServiceAuth, task.ResultNotice{NoticeRef: tx.Scope().Ref(notice.NoticeID, 1), ConsumerTaskRef: notice.ConsumerTaskRef, ResultRef: notice.ResultRef, HolderRef: notice.HolderRef, DefectRef: notice.DefectRef, Reason: notice.Reason, RegisteredAt: notice.RegisteredAt})
+}
+
 func (v usageVerifier) Verify(ctx context.Context, s runtime.Scope, ref api.ObjectRef, u api.UsageSnapshot) error {
 	var actual api.UsageSnapshot
 	var e error

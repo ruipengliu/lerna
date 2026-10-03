@@ -16,6 +16,12 @@ type TokenCounter interface {
 	Count(context.Context, []byte) (uint64, string, error)
 }
 
+// MaterialResolver 由宿主绑定准确 scope、主体与用途；只读已声明的准确 Content。
+// Encode 在 Tx 外调用；原请求发送与 Lookup 不重新读取这些字节。
+type MaterialResolver interface {
+	ReadMaterial(context.Context, api.ContentRef) ([]byte, error)
+}
+
 // UTF8UpperBound 只适用于每个 token 消耗至少一个 UTF-8 字节、两条消息
 // 的额外 framing 不超过 64 token 的明确模型合同；不是精确 tokenizer。
 type UTF8UpperBound struct{}
@@ -39,6 +45,7 @@ type OpenAIConfig struct {
 	Endpoint, Model, Receiver, Location                               string
 	APIKey, CredentialID                                              string
 	Tokenizer                                                         TokenCounter
+	MaterialResolver                                                  MaterialResolver
 	InputUSDPerMillion, OutputUSDPerMillion, CachedInputUSDPerMillion string
 	// BillingFinal 仅在宿主确认冻结费率和供应商 usage 是最终账单合同后启用。
 	// 默认 false 保留未结费用，不能凭 token 猜测结清。

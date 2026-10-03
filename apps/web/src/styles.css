@@ -598,9 +598,8 @@ details pre {
   }
   .header-actions {
     gap: 10px;
-  }
-  .header-actions .text-button {
-    display: none;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
   .workspace-grid {
     grid-template-columns: minmax(0, 3fr) minmax(260px, 2fr);
@@ -709,6 +708,7 @@ details pre {
   .app-header {
     margin-bottom: 20px;
     gap: 12px;
+    flex-wrap: wrap;
   }
   .app-header p {
     font-size: 12px;
@@ -718,12 +718,16 @@ details pre {
     font-size: 25px;
   }
   .header-actions {
-    align-items: flex-start;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
   }
   .header-actions .button {
     font-size: 12px;
     padding: 10px 12px;
     min-height: 38px;
+    margin-left: auto;
   }
   .panel {
     padding: 18px 16px;
