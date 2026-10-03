@@ -140,6 +140,9 @@ func (c brainContent) Read(ctx context.Context, s runtime.Scope, a runtime.Auth,
 func (c brainContent) Publish(ctx context.Context, s runtime.Scope, a runtime.Auth, p brain.Publication, b []byte) (api.ContentRef, error) {
 	return c.a.Publish(ctx, s, a, p.ContentID, p.MediaType, b, p.ProcessedSources, p.DisclosedSources)
 }
+func (c brainContent) PublishUsageProof(ctx context.Context, s runtime.Scope, a runtime.Auth, p brain.Publication, facts brain.AccountingFacts) (api.ContentRef, error) {
+	return c.a.publishModelAccounting(ctx, s, a, p, facts)
+}
 
 type executionContent struct{ a *App }
 

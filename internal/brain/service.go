@@ -168,24 +168,24 @@ func (s *Service) Usage(ctx context.Context, store runtime.Store, scope runtime.
 	if _, e := store.Read(ctx, scope, records, ref.ObjectID, 0, &d); e != nil {
 		return api.UsageSnapshot{}, e
 	}
-	if e := hydrateStoredDecision(ctx, store, scope, &d); e != nil {
-		return api.UsageSnapshot{}, e
-	}
-	u := api.UsageSnapshot{SourceRef: scope.Ref(ref.ObjectID, d.Record.Revision), UsageRevision: d.Record.Revision, Cumulative: append([]api.Amount{}, d.Record.Usage...), SpendingClosed: d.Record.Status == "completed" || d.Record.Status == "cancelled" || d.Record.Status == "failed", UsageFinal: d.Record.UsageFinal, ProofRefs: []api.ContentRef{}}
-	if len(u.Cumulative) == 0 {
-		for _, unit := range d.Input.Limits {
-			u.Cumulative = append(u.Cumulative, api.Amount{Unit: unit.Unit, Value: "0"})
+	minimum, hasMinimum := s.config.Content.(AccountingContent)
+	if !hasMinimum {
+		// 旧profile保留原私有载荷完整性核验；最低invoice不读取原正文。
+		if e := hydrateStoredDecision(ctx, store, scope, &d); e != nil {
+			return api.UsageSnapshot{}, e
 		}
 	}
-	proofBody := api.Raw(struct {
-		Snapshot         api.UsageSnapshot `json:"snapshot"`
-		CallID           string            `json:"call_id"`
-		PhysicalRequests uint64            `json:"physical_requests"`
-		SendStarted      bool              `json:"send_started"`
-		Phase            string            `json:"phase"`
-	}{u, d.CallID, d.Record.PhysicalRequestCount, d.Record.SendStarted, d.Phase})
+	facts := accountingFacts(scope, d)
+	u := facts.Proof.Snapshot
 	proofID := "content_" + api.Hash([]byte(d.Input.DecisionID + "/usage/" + fmt.Sprint(d.Record.Revision)))[7:39]
-	proof, err := s.config.Content.Publish(ctx, scope, d.Principal, Publication{ContentID: proofID, MediaType: "application/vnd.harness.usage-proof+json", ProcessedSources: []api.ContentRef{d.Input.SnapshotRef}, DisclosedSources: []api.ContentRef{}}, proofBody)
+	publication := Publication{ContentID: proofID, MediaType: "application/vnd.harness.usage-proof+json", ProcessedSources: []api.ContentRef{d.Input.SnapshotRef}, DisclosedSources: []api.ContentRef{}}
+	var proof api.ContentRef
+	var err error
+	if hasMinimum {
+		proof, err = minimum.PublishUsageProof(ctx, scope, d.Principal, publication, facts)
+	} else {
+		proof, err = s.config.Content.Publish(ctx, scope, d.Principal, publication, api.Raw(facts.Proof))
+	}
 	if err != nil {
 		return api.UsageSnapshot{}, err
 	}

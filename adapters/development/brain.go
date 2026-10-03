@@ -191,8 +191,13 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 }
 func (b brainBridge) Usage(ctx context.Context, s runtime.Scope, r api.ObjectRef) (api.UsageSnapshot, error) {
 	u, err := b.a.Brain.Usage(ctx, b.a.Store, s, r)
-	if err == nil && b.a.Model != nil {
-		err = b.a.settleUses(ctx, s, []api.ObjectRef{s.Ref(modelUseID(r.ObjectID), 1)}, u)
+	if err != nil {
+		return u, err
 	}
-	return u, err
+	// 已发生费用沿原Decision的Use身份收尾，不依赖当前模型是否仍启用。
+	facts, err := b.a.Brain.AccountingFacts(ctx, b.a.Store, s, b.a.ServiceAuth, u.SourceRef)
+	if err != nil {
+		return u, err
+	}
+	return u, b.a.settleUses(ctx, s, facts.UseRefs, u)
 }
