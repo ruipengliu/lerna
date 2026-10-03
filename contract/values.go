@@ -92,6 +92,8 @@ func NewTransportOutcomeCommitUnknown(value TransportOutcomeCommitUnknown) Trans
 }
 
 type TransportOutcome = wire.TransportOutcome
+type DelegatedSubject = wire.DelegatedSubject
+type SubjectBinding = wire.SubjectBinding
 type Value interface {
-	ID | Revision | Time | Kind | OwnerRef | ObjectRef | ContentRef | Amount | Gap | ReadScope | CollectionView | ErrorCode | PublicError | MethodName | ProfileName | ContractVersion | TraceContext | CommandPayload | CommandEnvelope | CommandRef | CommandGetPayload | CommandGetRequest | CommandTarget | NextAction | CommandReceiptAccepted | CommandReceiptApplied | CommandReceiptRejected | CommandReceipt | TaskObjectRef | CommandProgressNone | CommandProgressUnavailable | CommandProgressTask | CommandProgress | CommandGetResponseFound | CommandGetResponseNotFound | CommandGetResponseGone | CommandGetResponseUnavailable | CommandGetResponseRejected | CommandGetResponse | TransportOutcomeReceived | TransportOutcomeCommitUnknown | TransportOutcome
+	ID | Revision | Time | Kind | OwnerRef | ObjectRef | ContentRef | Amount | Gap | ReadScope | CollectionView | ErrorCode | PublicError | MethodName | ProfileName | ContractVersion | TraceContext | CommandPayload | CommandEnvelope | CommandRef | CommandGetPayload | CommandGetRequest | CommandTarget | NextAction | CommandReceiptAccepted | CommandReceiptApplied | CommandReceiptRejected | CommandReceipt | TaskObjectRef | CommandProgressNone | CommandProgressUnavailable | CommandProgressTask | CommandProgress | CommandGetResponseFound | CommandGetResponseNotFound | CommandGetResponseGone | CommandGetResponseUnavailable | CommandGetResponseRejected | CommandGetResponse | TransportOutcomeReceived | TransportOutcomeCommitUnknown | TransportOutcome | DelegatedSubject | SubjectBinding
 }

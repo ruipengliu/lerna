@@ -66,6 +66,13 @@ try {
       );
     }
   }
+  // Shared independent goldens test the public digest in each implementation.
+  execFileSync('go', ['test', './conformance/component', '-run', 'Digest'], {
+    stdio: 'inherit',
+  });
+  execFileSync('node', ['--test', 'sdk/typescript/src/digests.test.ts'], {
+    stdio: 'inherit',
+  });
   console.log(
     `${fixtures.length} shared fixtures passed; all positive values completed real Go→TS and TS→Go roundtrips.`,
   );

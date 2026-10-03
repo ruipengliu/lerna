@@ -99,6 +99,10 @@ func run(name string, data []byte) ([]byte, error) {
 		return roundtrip[contract.TransportOutcomeCommitUnknown](data)
 	case "TransportOutcome":
 		return roundtrip[contract.TransportOutcome](data)
+	case "DelegatedSubject":
+		return roundtrip[contract.DelegatedSubject](data)
+	case "SubjectBinding":
+		return roundtrip[contract.SubjectBinding](data)
 	default:
 		return nil, fmt.Errorf("unknown value schema %q", name)
 	}

@@ -6,8 +6,9 @@
 
 ## 当前状态
 
-- 切片 01：6 个 tickets 已确认。任务 01 已 resolved 并合入集成分支（`45b90ad`）；任务 02 正在实现；其余任务等待依赖。其他切片仍为 not-started。
+- 切片 01：6 个 tickets 已确认。任务 01、02 已 resolved 并合入集成分支（`45b90ad`、`c0e12f7`）；任务 03、04 按依赖允许并行实现；任务 05、06 等待依赖。其他切片仍为 not-started。
 - 任务 01 证据：锁定依赖干净重装、`make check`、`make test-race` 通过；41 项共同正反夹具及合法值的真实 Go→TS／TS→Go 往返通过。详细记录见[任务 01](../lerna-01-command-contracts/issues/01-exact-contract-roundtrip.md#comments)。这些只证明公共值合同范围。
+- 任务 02 证据：`make bootstrap`、`make check`、`make test-race` 通过；共同语料共 109 项（41 值、68 命令），两端错误分类及合法输入真实往返通过；6 项生成器拒绝探针通过。详细记录见[任务 02](../lerna-01-command-contracts/issues/02-strict-command-validation.md#comments)。已按决策消除 TypeScript 内部模块反向导入公共 facade 的循环依赖。
 - 切片完成必须有实际验收证据；规格明确、任务发布和代码合并均不等于验收完成。
 - 真实外部接入、独立组件、生产故障域、评测样本与容量结论按验收矩阵分别记录，不用本地模拟结果代替。
 

@@ -50,3 +50,26 @@ Go `DecodeCommandResponse` / `EncodeCommandResponse` 与 TS `decodeCommandRespon
 Go `ReadCommandFacts` 是供已授权装配调用的低层事实原语；TS 同类 primitive 留在 `readfacts.ts`，没有作为 SDK 业务入口导出。它注入只有读取方法的事实源、context / AbortSignal 与可控时钟，验证原身份和完整结果；后端故障或无可信一致观察返回原引用的 unavailable / dependency_unavailable，不泄漏后端字符串。not_found 仅表示当前原 owner 未找到；gone 保留最小原身份；两者都不授权新建同义工作。read accept_before 只约束这次读取开始，不用于判断原写入记录是否仍能查询。
 
 受信租户、读取授权与准确 owner 的目录解析由 ticket05 在事实读取前提供。此处共同 forbidden 夹具只证明拒绝视图不携带原决定或对象内容，不宣称生产权限已实现。低层读取测试比较公开事实快照前后不变，没有以内部调用次数证明只读。共同 `responses.json` 驱动真正 Go→TS / TS→Go 编解码；这些是合同和注入事实源证据，不是持久命令账本、接纳事务或网络恢复证据。
+## 原命令摘要
+
+Go `CommandDigest(commandJSON, trustedSubjectJSON)` 与 TS `await commandDigest(commandWire, trustedSubjectWire)` 从原始 JSON 边界验证通用信封和闭合 `SubjectBinding`，然后产生 `sha256:` 加小写十六进制摘要。宿主必须从受信认证上下文提供主体绑定；调用方提交的 payload 不得替代该上下文。主体格式为 `{tenant_id, subject_id, delegation_chain:[{tenant_id, subject_id}]}`，链最多 16 项、顺序保留。这验证结构，实际身份认证、委托签名及查询权限由读取入口承担。
+
+算法固定为 `lerna-command-digest-1`：SHA-256 输入是 UTF-8 `lerna-command-digest-1\n` 前缀加规范 JSON。字段包括 `contract_version / profile / method / target / payload / accept_before / subject_binding`；原字段存在时加入 `expected_revision`。`command_id` 是原命令键，不进入业务内容摘要；`trace_context` 不进入摘要。连接、发送次数位于传输层，不属于命令字段。更换版本、主体、owner、参数、期限或修订产生不同摘要；改变 trace 或编码空白不会改变它。
+
+规范 JSON 使用 RFC 8785 的无数字子集：键按 UTF-16 代码单元排序，数组原序；字符串仅转义引号、反斜杠与控制字符，其他 Unicode 标量原样保留。不得 trim、NFC/NFD 转换、HTML 或 U+2028/U+2029 转义、金额换算、路径清理或浮点转换。缺省 `expected_revision` 与显式值不同，显式 null 仍属无效输入。格式验证不检查当前时钟，已过截止的原请求仍能计算原摘要。
+
+```ts
+const subject = encode('SubjectBinding', {
+  tenant_id: 'tenant-a', subject_id: 'subject-a', delegation_chain: [],
+}); // 宿主从已认证上下文生成；不得取自请求 payload。
+const original = parseCommand(originalWire);
+const digest = await commandDigest(originalWire, subject);
+const retransmit = encode('CommandEnvelope', {
+  ...original, trace_context: { trace_id: 'trace-next' },
+}); // 原 command_id、target owner、accept_before 全部保留。
+if (await commandDigest(retransmit, subject) !== digest) throw new Error('changed request');
+```
+
+修改业务内容时调用方必须创建新 command_id；本入口计算摘要，不检测数据库原键冲突。摘要可用于保存尚未开放方法的准确原内容，`fixture.write` 夹具始终未登记，不能因计算摘要成功获得执行资格；业务执行仍须完整方法 Schema、授权和接纳检查。两个原始输入各自受 1 MiB 线正文上限约束；加入主体后的内部哈希输入不是新的网络正文，不能使合法原命令被错误拒绝。
+
+[`digests.json`](../conformance/fixtures/1.0.0/digests.json) 保存独立规范字面量与 Python hashlib 预期摘要；Go 与 TS 分别经公开入口匹配这些预期，包含非 BMP 键的 UTF-16 排序、准确大整数、控制字符、字段变化及严格反例。`make test-contract` 同时运行此套件。边界夹具的 `@B@` 以 `body_repeat_count` 个 `x` 展开，线上命令仍不包含 JSON number。
