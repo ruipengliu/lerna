@@ -2,7 +2,6 @@ package execution
 
 import (
 	"context"
-	"strconv"
 	"time"
 
 	"github.com/ruipengliu/lerna/api"
@@ -13,7 +12,7 @@ const EnvironmentPrepareJob = "execution.environment.prepare"
 const EnvironmentCleanupJob = "execution.environment.cleanup"
 const HostCallJob = "execution.environment.hostcall"
 
-// 首版环境只保存被动数据；不开放任何用户程序、原生进程、网络或宿主文件能力。
+// 命名空间仅保存被动数据；用户程序须通过宿主登记的独立隔离运行时准备。
 const PassiveEnvironmentFormat = "harness-passive-namespace/1"
 
 type NamespaceBinding struct {
@@ -140,8 +139,17 @@ func (s *Service) environmentCreate(ctx context.Context, tx rt.Tx, a rt.Auth, c 
 	if p.EnvironmentID != c.TargetID || !api.ValidID(p.EnvironmentID) {
 		return Environment{}, api.E("invalid_request", "environment_identity_mismatch")
 	}
-	if p.ConfigRef.ComponentID != BuiltinComponentID("environment.passive") || p.ConfigRef.Version != "1" || p.ConfigRef.Digest != api.Hash([]byte(PassiveEnvironmentFormat)) {
-		return Environment{}, api.E("unsupported", "untrusted_program_isolation_not_verified")
+	passive := p.ConfigRef.ComponentID == BuiltinComponentID("environment.passive") && p.ConfigRef.Version == "1" && p.ConfigRef.Digest == api.Hash([]byte(PassiveEnvironmentFormat))
+	isolation := EnvironmentIsolation{RuntimeKind: "trusted_passive_data", IsolationDigest: p.ConfigRef.Digest}
+	if !passive {
+		if s.cfg.EnvironmentAdmission == nil {
+			return Environment{}, api.E("unsupported", "untrusted_program_isolation_not_verified")
+		}
+		var err error
+		isolation, err = s.cfg.EnvironmentAdmission.Check(p.ConfigRef, p.InstallLockRef, p.Limits)
+		if err != nil {
+			return Environment{}, err
+		}
 	}
 	if s.cfg.Content == nil {
 		return Environment{}, api.E("dependency_unavailable", "content_not_configured")
@@ -149,12 +157,11 @@ func (s *Service) environmentCreate(ctx context.Context, tx rt.Tx, a rt.Auth, c 
 	if err := api.ValidateAmounts(p.Limits); err != nil {
 		return Environment{}, err
 	}
-	if len(p.Limits) != 1 || p.Limits[0].Unit != "namespace_bytes" {
+	if passive && (len(p.Limits) != 1 || p.Limits[0].Unit != "namespace_bytes") {
 		return Environment{}, api.E("unsupported", "passive_environment_limits_not_supported")
 	}
-	n, err := strconv.ParseUint(p.Limits[0].Value, 10, 64)
-	if err != nil || n < 1 || n > 65536 {
-		return Environment{}, api.E("invalid_request", "invalid_namespace_byte_limit")
+	if _, err := NamespaceByteLimit(p.Limits); err != nil {
+		return Environment{}, err
 	}
 	now, err := tx.Now(ctx)
 	if err != nil {
@@ -164,7 +171,7 @@ func (s *Service) environmentCreate(ctx context.Context, tx rt.Tx, a rt.Auth, c 
 	if err != nil || !expires.After(now) {
 		return Environment{}, api.E("expired", "environment_expired")
 	}
-	env := Environment{EnvironmentID: p.EnvironmentID, Revision: 1, ConfigRef: p.ConfigRef, IsolationDigest: p.ConfigRef.Digest, InstallLockRef: p.InstallLockRef, InstanceID: api.NewID("instance"), Generation: 1, Phase: "preparing", RuntimeKind: "trusted_passive_data", Limits: p.Limits, ExpiresAt: p.ExpiresAt, ProcessedSources: p.SourceRefs, ActiveOperationIDs: []string{}, StopResiduals: []string{}, HostCallIDs: []string{}, HostCallParents: []string{}, Principal: a, PreparationCommandID: c.CommandID, ActuallyExited: true}
+	env := Environment{EnvironmentID: p.EnvironmentID, Revision: 1, ConfigRef: p.ConfigRef, IsolationDigest: isolation.IsolationDigest, InstallLockRef: p.InstallLockRef, InstanceID: api.NewID("instance"), Generation: 1, Phase: "preparing", RuntimeKind: isolation.RuntimeKind, Limits: p.Limits, ExpiresAt: p.ExpiresAt, ProcessedSources: p.SourceRefs, ActiveOperationIDs: []string{}, StopResiduals: []string{}, HostCallIDs: []string{}, HostCallParents: []string{}, Principal: a, PreparationCommandID: c.CommandID, ActuallyExited: true}
 	if err = tx.Create(ctx, Namespace+".environments", p.EnvironmentID, "", env); err != nil {
 		return env, err
 	}
@@ -374,6 +381,17 @@ func (s *Service) environmentPrepareWork(ctx context.Context, st rt.Store, sc rt
 	if env.Phase != "preparing" {
 		return s.finish(ctx, st, sc, w, rt.Done(), nil)
 	}
+	if env.RuntimeKind != "trusted_passive_data" {
+		if s.cfg.EnvironmentAdmission == nil {
+			return s.failEnvironmentPreparation(ctx, st, sc, w, env, api.E("unsupported", "runtime_not_ready"))
+		}
+		if err := s.cfg.EnvironmentAdmission.Prepare(ctx, sc, env.Principal, env); err != nil {
+			if businessError(err) {
+				return s.failEnvironmentPreparation(ctx, st, sc, w, env, err)
+			}
+			return err
+		}
+	}
 	var ref api.ContentRef
 	var err error
 	if env.NamespaceRef != nil {
@@ -548,6 +566,6 @@ func (s *Service) failEnvironmentPreparation(ctx context.Context, st rt.Store, s
 			}
 		}
 		_, err = tx.Raise(ctx, EnvironmentCleanupJob, current.EnvironmentID, sc.Ref(current.EnvironmentID, current.Revision), now)
-		return nil
+		return err
 	})
 }

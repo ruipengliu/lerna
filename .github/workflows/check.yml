@@ -45,6 +45,15 @@ jobs:
           go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.6.2
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
           pnpm install --frozen-lockfile
+      - name: Install and qualify the selected Linux WASI platform
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends bubblewrap util-linux
+          bwrap --version
+          prlimit --version
+          # RuntimeManifest binds actual binaries/kernel/probe independently of the generator lock.
+          # A failed namespace/resource probe fails qualification; it is never counted as a skipped pass.
+          go test -v ./conformance/integration -run '^TestRestrictedWASIEnvironmentRequiresActualPinnedRuntimeBeforeReady$' -count=1
       - name: Generate, validate and run real SQLite and PostgreSQL checks
         run: scripts/check
       - name: Run reference race checks

@@ -30,7 +30,7 @@
 
 ## 明确未开放的能力
 
-- 不可信程序 `environment.run_cell` 没有可验证的真实隔离 WASI 引擎、CPU/内存/宿主调用隔离及取消证据，因此不注册并保持 `unsupported`。受信纯计算不声明 WASI profile。
+- 不可信程序 `environment.run_cell` 可通过 [选定 Linux WASI adapter](../../adapters/wasi/README.md)显式配置开放：wazero v1.10.1 解释器、真实 bwrap/prlimit 探针、独立进程与准确 InstallLock，成功完整 namespace 与原 Operation 同事务 CAS。未配置或平台探针不合格时保持 `unsupported`；其他平台/原生程序/自定义 guest hostcall 不由该 profile 声明。受信纯计算仍有独立 Capability。
 - 本次发布的驱动均 `MaxAttempts=1`。多物理 Attempt 的目标幂等、有限安全重试与累计费用合同未验证，构造时明确拒绝 `MaxAttempts != 1`；查询原 Attempt 不算重发。
 - 真机、生产外部工具、跨设备恢复、Windows 或其他未探测文件系统、断电稳定性、规模与跨 AZ 容灾没有本轮证据。当前 native 文件合同只由本机 Linux 文件系统的真实 fsync/rename/reopen 探针支持。
 - 一个任务门禁的窗口和一次控制批次的 Operation 扫描限额为 100。达到限额时新开始或控制批次返回 `overloaded`；`control.get` 明示 `windows_complete=false` 与缺口，不能称全集。hostcall、命名空间 binding 与活动设备也有闭合的 100 项额度；cursor 同类最多 100 个同时有效。

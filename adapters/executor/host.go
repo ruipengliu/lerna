@@ -42,6 +42,9 @@ type Config struct {
 	GRPCAddr           string           `json:"grpc_addr"`
 	TLSCertificateFile string           `json:"tls_certificate_file"`
 	TLSKeyFile         string           `json:"tls_key_file"`
+	OutputSubjectRefs  []api.ObjectRef  `json:"output_subject_refs,omitempty"`
+	OutputPurposes     []string         `json:"output_purposes,omitempty"`
+	OutputLocations    []string         `json:"output_locations,omitempty"`
 }
 type Host struct {
 	Config     Config
@@ -61,6 +64,9 @@ type Host struct {
 func Open(ctx context.Context, c Config, initialize bool) (host *Host, err error) {
 	if !c.Development || !api.ValidID(c.TenantID) || !api.ValidID(c.OwnerID) || !api.ValidID(c.InstanceID) || !api.ValidID(c.Authority.OwnerID) || c.Authority.OwnerID == c.OwnerID || c.Authority.KeyID == "" || !filepath.IsAbs(c.DatabasePath) || !filepath.IsAbs(c.DataRoot) || !filepath.IsAbs(c.SigningKeyFile) || !filepath.IsAbs(c.PeerTokenFile) || len(c.Bindings) == 0 || len(c.Bindings) > 32 {
 		return nil, api.E("unsupported", "independent_executor_unconfigured")
+	}
+	if err := validateOutputConfig(c); err != nil {
+		return nil, err
 	}
 	public, e := platform.ParsePublicKey(c.Authority.PublicX, c.Authority.PublicY)
 	if e != nil {
