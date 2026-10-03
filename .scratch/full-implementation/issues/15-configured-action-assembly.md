@@ -26,4 +26,6 @@ Implementer: storage_impl
 
 2026-10-03 Source首片验证：`go test -mod=mod -race ./adapters/development -run '^(TestExplicitInformation|TestConfiguredInformation)' -count=1 -timeout=15m -v`，真实SQLite/PG及HTTP完整矩阵PASS880.295s；`-run '^TestInformationConfigurationKeepsUnknownOriginalFilePublicationPolicy$'` 两库race PASS149.615s；默认File完整Report两库normal PASS163.287s。测试进程统一使用既有3分钟fixture限时，原Task5分钟、控制窗5秒及数据许可不变；原丢失exec session不记为PASS。完整日志及实际exit保存在执行环境action-information-source-matrix，制品action-information-assembly-verification.json绑定该片及其验证边界。此矩阵不裁定参考问题已答对。
 
-整体15保持partial：Source参考问答的独立条件、成功Result、WASI及独立Executor公共Task装配仍待本地后续切片；原driver功能证据不代替完整链，尚未完成项不归因为外部凭据缺口。
+2026-10-03 Source参考问答中间片：显式information_reference_answer登记闭合JSON字符串事实问题，原Goal.Body的sources/claims/时效固定；不接受模型自报Observation/pass。Context只从本Task原closed Operation/Attempt读准确journal/current Content，真实BodyRef/字节进入Snapshot材料。原要求参数与问题准确一致，独立ReferenceEvaluator读取原源JSONPointer、当前许可、获取／观察时效及完整引用后形成ConditionResult，Task走正常coverage/check/complete/Result；默认File规则不变。真实SQLite首次完整链PASS17.431s（原3模型POST/1GET、verified Result/DB重开原回执无新HTTP），错答公开fail check、禁止Result与取消后原费用结清PASS13.443s。一次测试wire漏goal_utf8导致的180s失败保留，修正fixture后重跑通过，不记失败为PASS；PostgreSQL/race、旧来源时间、当前撤回及冲突／缺口反例正在下一片验证。
+
+整体15保持partial：参考问答其余数据库／故障矩阵、WASI及独立Executor公共Task装配仍待本地后续切片；原driver功能证据不代替完整链，尚未完成项不归因为外部凭据缺口。
