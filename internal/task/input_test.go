@@ -13,9 +13,12 @@ import (
 )
 
 type contentBridge struct {
-	service *memory.Service
-	auth    runtime.Auth
-	policy  memory.Policy
+	service          *memory.Service
+	auth             runtime.Auth
+	policy           memory.Policy
+	retentionUntil   string
+	transferDeadline string
+	objectRoot       string
 }
 
 func (b *contentBridge) Read(ctx context.Context, scope runtime.Scope, auth runtime.Auth, ref api.ContentRef) ([]byte, error) {
@@ -24,17 +27,20 @@ func (b *contentBridge) Read(ctx context.Context, scope runtime.Scope, auth runt
 func derivedID(prefix, value string) string { return prefix + "_" + api.Hash([]byte(value))[7:39] }
 func (b *contentBridge) Publish(ctx context.Context, scope runtime.Scope, id, media string, body []byte) (api.ContentRef, error) {
 	ref := api.ContentRef{TenantID: scope.TenantID, OwnerID: scope.OwnerID, ContentID: derivedID("content", id), Version: 1, Hash: api.Hash(body), MediaType: media, ByteLength: uint64(len(body))}
-	return b.service.Upload(ctx, scope, b.auth, memory.PublicationRequest{ContentRef: ref, TransferID: id, ReserveCommandID: derivedID("command", id+"/reserve"), PutCommandID: derivedID("command", id+"/put"), PolicyRef: b.policy.PolicyRef, ProcessedSources: []api.ContentRef{}, DisclosedSources: []api.ContentRef{}, RetentionUntil: api.Time(time.Now().Add(20 * time.Minute)), TransferDeadline: api.Time(time.Now().Add(10 * time.Minute))}, body)
+	return b.service.Upload(ctx, scope, b.auth, memory.PublicationRequest{ContentRef: ref, TransferID: id, ReserveCommandID: derivedID("command", id+"/reserve"), PutCommandID: derivedID("command", id+"/put"), PolicyRef: b.policy.PolicyRef, ProcessedSources: []api.ContentRef{}, DisclosedSources: []api.ContentRef{}, RetentionUntil: b.retentionUntil, TransferDeadline: b.transferDeadline}, body)
 }
 func configureContent(t *testing.T, h *harness, b *contentBridge) {
 	t.Helper()
-	objects, err := objectstore.OpenLocal(t.TempDir(), memory.MaxContentBytes)
+	b.objectRoot = t.TempDir()
+	objects, err := objectstore.OpenLocal(b.objectRoot, memory.MaxContentBytes)
 	if err != nil {
 		t.Fatal(err)
 	}
 	b.service = memory.New(h.store, objects)
 	b.auth = h.auth
 	b.auth.Roles = []string{"content_admin"}
+	b.retentionUntil = api.Time(time.Now().Add(20 * time.Minute))
+	b.transferDeadline = api.Time(time.Now().Add(10 * time.Minute))
 	values := memory.PolicyValues{Subjects: []string{h.auth.SubjectID}, Purposes: []string{"content.write", "task.input"}, Locations: []string{"local"}, RetainUntil: api.Time(time.Now().Add(time.Hour)), Continuous: true}
 	digest, _ := api.Digest(values)
 	b.policy, err = memory.NewPolicy(api.ComponentRef{ComponentID: api.NewID("policy"), Version: "1.0.0", Digest: digest}, values)

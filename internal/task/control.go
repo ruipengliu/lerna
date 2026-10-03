@@ -134,11 +134,12 @@ func (s *Service) controlDescendants(ctx context.Context, tx runtime.Tx, root *t
 }
 
 type operationDispatch struct {
-	OperationID       string `json:"operation_id"`
-	Revision          uint64 `json:"revision"`
-	Sent              bool   `json:"sent"`
-	PermanentlyClosed bool   `json:"permanently_closed"`
-	ReceiptKnown      bool   `json:"receipt_known"`
+	OperationID       string               `json:"operation_id"`
+	Revision          uint64               `json:"revision"`
+	Sent              bool                 `json:"sent"`
+	PermanentlyClosed bool                 `json:"permanently_closed"`
+	ReceiptKnown      bool                 `json:"receipt_known"`
+	Window            *api.ControlSnapshot `json:"window,omitempty"`
 }
 
 const dispatches = "task.operation_dispatches"
