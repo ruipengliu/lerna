@@ -2,7 +2,7 @@
 
 Lerna 是面向智能应用开发者的 Agent 运行框架：在用户授权、预算和期限内持续推进目标，并以实际效果和证据判断是否完成。Task、效果、权限和完成依据采用稳定语义，决策、上下文、记忆检索与协作策略允许独立替换。
 
-本仓库采用单一上下文，本文件是领域语言与关键约束的入口。依据为 2026-10-03 的 [架构设计](docs/architecture/README.md)；切片 01 已完成共同命令、固定回执、command.get 受信注入读取、准确版本协商、Go／TypeScript 严格编解码及共同验证入口。切片02的PG同事务接纳、固定回执和真实v1恢复输入已合入；SQLite、Claim、完整持久恢复、业务内核、完整SDK及生产指标仍待后续切片实现验证；准确进度与证据见[实现进度](.scratch/lerna-implementation/progress.md)。下文描述领域设计要求，不表示全部能力已实现。
+本仓库采用单一上下文，本文件是领域语言与关键约束的入口。依据为 2026-10-03 的 [架构设计](docs/architecture/README.md)；切片 01 已完成共同命令、固定回执、command.get 受信注入读取、准确版本协商、Go／TypeScript 严格编解码及共同验证入口。切片02已实现 PG/SQLite 同事务接纳、固定回执与真实v1恢复输入，以及 PG 修订领取／续租／条件完成；SQLite Claim、调度、完整持久恢复、业务内核、完整SDK及生产指标仍待后续切片实现验证；准确进度与证据见[实现进度](.scratch/lerna-implementation/progress.md)。下文描述领域设计要求，不表示全部能力已实现。
 
 ## 目标与范围
 
@@ -105,18 +105,18 @@ _Avoid_：任意远程调用、可直接决定父 Task 成功的远端任务。
 
 四层依次为应用层、Agent 领域层、可靠运行层和平台适配层。业务责任、代码依赖和部署进程分别划分；一个模块不必是一个进程，同机部署也不自动共享事务。完整分工见 [架构与模块](docs/architecture/architecture.md)。
 
-| 负责模块 | 权威事实或职责 | 边界 |
-| --- | --- | --- |
-| Interaction | Session、原始输入、投递和受信呈现 | 界面关闭、归档或断线不能裁决 Task |
-| Orchestrator | Task、目标与条件、行动准入、正式 Result | 唯一任务控制与完成裁决者；不伪造外部效果 |
-| ContextCompiler | 在 Orchestrator 管理下形成 Snapshot | 不建立第二套目标权威；不得静默裁掉必要约束 |
-| 决策引擎（Decision Engine，`decision_engine`） | Decision、Proposal、模型请求与用量 | 只提建议；不直接执行行动或写 Task 终态 |
-| Executor | Operation 接纳、Attempt、Effect、资源占用 | 保存实际执行事实；不改变用户目标 |
-| Evaluator | 按准确规则作出 ConditionResult | 判断条件，不裁决整个 Task |
-| Memory / Content | 可复用语义 / 准确版本字节与来源 | 长期保存、当前读取和派生使用分别受控 |
-| 授权与预算模块 | Grant、有限使用、预留与结算 | 在准入与真实入口落实，不交给提示词执行 |
-| 扩展与评测模块 | 安装、批准、就绪、实验与发布 | 评测通过、发布批准和实例就绪分别成立 |
-| 可靠运行层（`runtime`） | 命令接纳、事务、Job、领取与恢复 | 不判断任务成功，不自行决定重发外部动作 |
+| 负责模块                                       | 权威事实或职责                            | 边界                                       |
+| ---------------------------------------------- | ----------------------------------------- | ------------------------------------------ |
+| Interaction                                    | Session、原始输入、投递和受信呈现         | 界面关闭、归档或断线不能裁决 Task          |
+| Orchestrator                                   | Task、目标与条件、行动准入、正式 Result   | 唯一任务控制与完成裁决者；不伪造外部效果   |
+| ContextCompiler                                | 在 Orchestrator 管理下形成 Snapshot       | 不建立第二套目标权威；不得静默裁掉必要约束 |
+| 决策引擎（Decision Engine，`decision_engine`） | Decision、Proposal、模型请求与用量        | 只提建议；不直接执行行动或写 Task 终态     |
+| Executor                                       | Operation 接纳、Attempt、Effect、资源占用 | 保存实际执行事实；不改变用户目标           |
+| Evaluator                                      | 按准确规则作出 ConditionResult            | 判断条件，不裁决整个 Task                  |
+| Memory / Content                               | 可复用语义 / 准确版本字节与来源           | 长期保存、当前读取和派生使用分别受控       |
+| 授权与预算模块                                 | Grant、有限使用、预留与结算               | 在准入与真实入口落实，不交给提示词执行     |
+| 扩展与评测模块                                 | 安装、批准、就绪、实验与发布              | 评测通过、发布批准和实例就绪分别成立       |
+| 可靠运行层（`runtime`）                        | 命令接纳、事务、Job、领取与恢复           | 不判断任务成功，不自行决定重发外部动作     |
 
 “任务运行内核”包括任务控制、必要共同领域规则和可靠运行机制；代码中的 `runtime` 仅指可靠运行层。领域声明接口，平台适配器实现接口，宿主注入；Orchestrator 不导入默认能力实现的内部存储。
 
@@ -139,13 +139,13 @@ _Avoid_：任意远程调用、可直接决定父 Task 成功的远端任务。
 
 ## 按工作查阅
 
-| 要处理的问题 | 入口 |
-| --- | --- |
-| 理解关键选择及其理由，评估是否需要改变 | [ADR 索引](docs/adr/README.md)、[原设计取舍](docs/architecture/decisions.md) |
-| 实现目标、控制、完成和失败处理 | [任务生命周期](docs/architecture/task-lifecycle.md) |
-| 实现持久工作、事务和效果恢复 | [可靠运行](docs/architecture/runtime.md)、[数据与存储](docs/architecture/data-model.md) |
-| 接入应用或替换组件 | [接口与协议](docs/architecture/contracts.md)、[能力模块](docs/architecture/capabilities.md) |
-| 处理权限、来源、预算和版本生命周期 | [授权与扩展](docs/architecture/governance.md) |
-| 规划实施、故障实验和优化验收 | [实施与验证](docs/architecture/validation.md)、[ADR-0010](docs/adr/0010-evidence-gated-improvement.md) |
+| 要处理的问题                           | 入口                                                                                                   |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| 理解关键选择及其理由，评估是否需要改变 | [ADR 索引](docs/adr/README.md)、[原设计取舍](docs/architecture/decisions.md)                           |
+| 实现目标、控制、完成和失败处理         | [任务生命周期](docs/architecture/task-lifecycle.md)                                                    |
+| 实现持久工作、事务和效果恢复           | [可靠运行](docs/architecture/runtime.md)、[数据与存储](docs/architecture/data-model.md)                |
+| 接入应用或替换组件                     | [接口与协议](docs/architecture/contracts.md)、[能力模块](docs/architecture/capabilities.md)            |
+| 处理权限、来源、预算和版本生命周期     | [授权与扩展](docs/architecture/governance.md)                                                          |
+| 规划实施、故障实验和优化验收           | [实施与验证](docs/architecture/validation.md)、[ADR-0010](docs/adr/0010-evidence-gated-improvement.md) |
 
 修改领域规则时同步本文件、相关详细设计与 ADR。与现有 ADR 冲突的方案必须明确指出冲突及理由；改变决定时新增记录并关联被替代记录，保留原取舍依据。用语强度沿用架构文档的“必须／不得”“建议／不建议”“可选”。

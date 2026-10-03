@@ -1,4 +1,4 @@
-# PostgreSQL admission storage
+# PostgreSQL durable work storage
 
 This adapter implements runtime Command/Job/Tx/Clock ports and the internal
 Host demonstration consumer's Repository. The root Go module locks
@@ -30,3 +30,21 @@ Other COMMIT failures conservatively return runtime `ErrCommitUnknown`, which
 Host maps to the validated public outcome. No new command identity is generated.
 The integration wire fixture drops a server-confirmed COMMIT response; it does
 not prove SIGKILL, power loss, failover or production durability.
+
+V2 is the real forward migration `0002_claims.sql`: it adds lease/worker/claimed
+revision/epoch fields, leased/done states, binding/progress constraints, a stored
+scan eligibility time with an indexed owner scope, and the demo projection fields.
+`Migrate` applies V1 then V2 transactionally and verifies both stored checksums on
+rerun; `MigrationVersions` reports the applied versions/checksums. Published V1,
+its historical writer and dump remain unchanged. Full historical-writer upgrade
+and recovery acceptance belongs to ticket 07.
+
+`ClaimStore.Scan` uses the owner-scoped eligibility index and a LIMIT of at most
+64, without first taking Job locks. The consumer tries the existing object
+advisory lock, fixes the input, then conditionally leases its Job using SKIP LOCKED.
+Complete and renew take object/input before Job and sample trusted owner time
+after acquiring the object lock. Completion updates only completed_revision;
+Trigger requires strictly newer work and preserves an active claim. Epoch increase
+is guarded at bigint maximum. Expired leases cannot renew or complete; replacement
+keeps Job/object identity and increments the epoch. A late claim cannot alter the
+current projection. This fences only controlled database writes, not external I/O.

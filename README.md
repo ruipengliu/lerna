@@ -1,6 +1,7 @@
 # Lerna
 
-Lerna 是按明确合同构建的 Agent 执行框架。领域规则见 [CONTEXT.md](CONTEXT.md)，模块及运行设计见 [docs/architecture](docs/architecture/README.md)。按[实现切片](.scratch/lerna-implementation/README.md)逐步交付；切片 01 已完成：当前可执行范围为共同信封、固定回执、command.get 受信注入读取、准确版本协商及 Go / TypeScript 严格编解码，切片02已实现 PG 与文件 SQLite 同版原子接纳，Claim、调度与进程崩溃恢复仍待实现；尚无生产运行服务。
+Lerna 是按明确合同构建的 Agent 执行框架。领域规则见 [CONTEXT.md](CONTEXT.md)，模块及运行设计见 [docs/architecture](docs/architecture/README.md)。按[实现切片](.scratch/lerna-implementation/README.md)逐步交付；切片 01 已完成：当前可执行范围为共同信封、固定回执、command.get 受信注入读取、准确版本协商及 Go / TypeScript 严格编解码，切片02已实现 PG 与文件 SQLite 同版原子接纳，以及 PG 领取、续租与条件完成演示；SQLite Claim、调度与进程崩溃恢复仍待实现；尚无生产运行服务。
+
 
 ## 开发
 
@@ -22,6 +23,7 @@ SQLite 适配器使用锁定的 go-sqlite3 v1.14.52、CGO 和驱动自带 SQLite
 
 工作区使用根目录一个 Go module 和 pnpm 工作区；基础 make check 不需要外部凭据、数据库或个人环境脚本。Make 固定 `GOTOOLCHAIN=local` 和只读模块解析；`bootstrap` 会对工具版本不符或锁文件缺失报错，不自动升级系统。
 
-`make test-contract` 在临时目录构建 Go 运行器，驱动真实 Go 编码 → TypeScript 解码／编码及反向路径，并比较共同夹具的准确值。CI 运行同一 `make bootstrap` 和 `make check`。`make test-integration` 必跑真实 PG 与文件 SQLite 同版接纳、回滚、重开和存储专属故障；必须显式设置专用测试库的 LERNA_TEST_POSTGRES_DSN，缺配置／服务硬失败。配置、隔离与清理见 [PG适配器说明](adapters/postgres/README.md)。CI另有锁定PG18.6服务的两库集成／race任务，真实集成使用 -count=1 禁用测试结果缓存，准确远端状态记录在实现进度。Claim、完整持久工作、进程崩溃与网络能力尚未验收。
+`make test-contract` 在临时目录构建 Go 运行器，驱动真实 Go 编码 → TypeScript 解码／编码及反向路径，并比较共同夹具的准确值。CI 运行同一 `make bootstrap` 和 `make check`。`make test-integration` 必跑真实 PG 与文件 SQLite 同版接纳、回滚、重开、PG 修订工作和存储专属故障；必须显式设置专用测试库的 LERNA_TEST_POSTGRES_DSN，缺配置／服务硬失败。配置、隔离与清理见 [PG适配器说明](adapters/postgres/README.md)。CI另有锁定PG18.6服务的两库集成／race任务，真实集成使用 -count=1 禁用测试结果缓存，准确远端状态记录在实现进度。SQLite Claim、完整持久工作、进程崩溃与网络能力尚未验收。
+
 
 已生成公共类型纳入 Git；仅编辑 Schema 和生成器，不手工修改生成物。`make check` 检测生成物与当前输入的一致性。合同版本 `1.0.0` 的精度与边界见 [contract/README.md](contract/README.md)。实现提交 `23bac17` 的本地检查及 [GitHub CI](https://github.com/ruipengliu/lerna/actions/runs/37141974245) 全部通过，范围与退出证据见[规格](.scratch/lerna-01-command-contracts/spec.md)。这不表示完整 Application SDK、持久恢复或网络认证已经实现。

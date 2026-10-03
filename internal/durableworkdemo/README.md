@@ -9,9 +9,15 @@ The current consumers are `host/durablework` and the fixture/real-database harne
 PostgreSQL and SQLite implement the consumer-owned Repository alongside runtime ports;
 the host explicitly injects the same owner/database transaction bundle. This
 package imports neither host/cmd nor a concrete adapter. It preserves exact
-text and creates pending project responsibility without executing a worker.
+text and creates pending project responsibility. `Worker` consumes its separate
+`WorkRepository` and runtime ClaimStore ports. It fixes a project input snapshot
+in the claim transaction, then `Project` computes SHA256 of the exact UTF-8 bytes
+outside any transaction. `Complete` writes `inputRevision`/`textDigest` and advances
+only the claimed Job revision in one short transaction. Derived work never
+increments the input revision.
 
 See the [Host seam](../../host/durablework/README.md) for accepted commands,
 query authorization and tests, and [storage](../../adapters/postgres/README.md)
 and [SQLite storage](../../adapters/sqlite/README.md) for transaction/SQL behavior.
-Claim and scheduling remain later tickets.
+The current Worker implementation uses PostgreSQL; SQLite Claim and scheduling
+remain later tickets.

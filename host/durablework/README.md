@@ -18,7 +18,20 @@ callback. Repositories reuse it; callbacks may not wait on external I/O or users
 The default PG clock reads database `clock_timestamp()` after original-key locking.
 SQLite uses the trusted device UTC wall clock. Tests may replace only the clock boundary with a deterministic shared clock.
 
-`Observe` returns input and pending Job revisions. `contract.GetCommand` resolves
+`NewWorker` assembles a separate Claim consumer; admission-only adapters need
+not implement it. It uses one trusted owner clock shared by all workers, with
+PostgreSQL database time as the default. A worker-local wall clock is not an
+expiry authority. Claims use microsecond UTC precision, a batch of 1–64 candidates,
+and a lease of 1ms–5min. Caller contexts must have finite deadlines.
+
+`Claim` returns immutable stage input and the original Job/worker/revision/epoch/
+lease binding. `Project` computes exact UTF-8 SHA256 outside the transaction.
+`Renew` returns the new lease token; further renewal/completion must use that token.
+`Complete` conditionally commits the projection and only the claimed revision;
+newer work remains ready. Expired unreplaced and replaced claims are rejected.
+The demonstration has no external actions; leases do not fence external effects.
+
+`Observe` returns input, Job revisions and the optional project observation. `contract.GetCommand` resolves
 the exact original owner and returns its fixed receipt with progress `none`.
 `none` says nothing about completed work. A lost COMMIT confirmation retains the
 original command reference and `query_or_retransmit_original`; pre-COMMIT errors

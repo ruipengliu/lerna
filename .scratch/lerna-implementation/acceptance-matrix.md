@@ -81,4 +81,12 @@ F23 的实际 cell 崩溃恢复尚未实现，不能标记为通过；22 只验�
 
 2026-10-03，票02已 resolved；v1实际 writer `f4fb057` 及完整真实 file 来源已保留。两库复用13项 Host接纳行为，SQLite正常/跨进程第二Host排除/关闭接替、busy、取消、scope、迁移checksum与文件恢复均通过；准确版本、命令和限制见[票02 Comments](../lerna-02-durable-work/issues/02-sqlite-durable-admission.md#comments)。
 
-F01/F02仅完成本票的原回执/原责任/同键冲突与重开范围；SIGKILL、Claim、调度、正文清理后的墓碑和整个G2出口仍需后票。TMPDIR指向本轮自登记overlayfs目录的真实两库integration/race通过；未宣称断电或生产故障域耐久。
+F01/F02仅完成本票的原回执/原责任/同键冲突与重开范围；SIGKILL、SQLite Claim、调度、正文清理后的墓碑和整个G2出口仍需后票。TMPDIR指向本轮自登记overlayfs目录的真实两库integration/race通过；未宣称断电或生产故障域耐久。
+
+## 切片02票03的PG证据（切片仍在进行）
+
+2026-10-03，准确实现 `18b80ce`，Go1.27.1/pgx5.11.0/PostgreSQL18.6，READ COMMITTED、同步提交和有限事务/statement/lock期限；全部29个真实PG测试、基础check/race及integration-race通过。详情见[票03 Comments](../lerna-02-durable-work/issues/03-pg-revision-claims.md#comments)。
+
+- **F03：PG受控数据库路径已验证。** 领取一致输入快照；新工作先提交与旧完成先提交两种真实并发顺序都只推进 claimed_revision，保留原 Job 的新修订及原固定回执；新 worker 正常完成。SQLite同套路径仍待票04。
+- **F04：PG Claim受控数据库写入已验证。** 续租/完成核验原 Job、对象、worker、revision、epoch和有效租约；过期尚未被替代也拒绝，接替保留身份并递增epoch；并发/锁等待到期与准确整数上界有正常对照。无外部动作，不证明外部旧进程或效果隔离。
+- **遗漏通知恢复：PG基础领取已验证。** 持久有界索引扫描不依赖通知，锁竞争可少领且责任保留。持久等待/退避、公平/配额、真实旧 writer 完整迁移恢复和SIGKILL仍留给后票，不关闭G2或切片02整体。
