@@ -32,7 +32,7 @@ type EndpointConfig struct {
 	Current                                       func(context.Context) error
 	Receiver                                      EndpointReceiver
 	Journal                                       *ReplyJournal
-	// ReceiptDecoder是原接收owner的明确原receipt_lookup输出解码器；缺少时该kind关闭。
+	// ReceiptDecoder是原接收owner的纯receipt_lookup输出解码器，不得执行I/O；缺少时该kind关闭。
 	ReceiptDecoder func(context.Context, api.ReceiptLookup, api.Receipt) error
 }
 type EndpointInvocation struct {

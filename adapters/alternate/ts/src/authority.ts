@@ -38,7 +38,7 @@ export function same(a: unknown, b: unknown): boolean {
   return canonical(a) === canonical(b);
 }
 
-function instant(value: string): bigint {
+export function instant(value: string): bigint {
   validateSchema({ $ref: "#/$defs/Time" }, value);
   const match = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,9}))?Z$/.exec(value);
   if (!match?.[1]) reject("invalid_request", "invalid_utc_time");

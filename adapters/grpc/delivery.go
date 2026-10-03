@@ -101,14 +101,15 @@ func (s *Server) Deliver(ctx context.Context, tenantID string, d grpcwire.Delive
 	}
 	return e
 }
-func (c *channelSession) prepareDeliverySend(ctx context.Context, d grpcwire.Delivery) error {
+func (c *channelSession) prepareDeliverySend(ctx context.Context, d grpcwire.Delivery) (bool, error) {
 	if e := c.s.cfg.EndpointAuthority.VerifyDelivery(ctx, c.reg, d); e != nil {
-		return e
+		return false, e
 	}
 	deadline, e := api.ParseTime(d.DeliverBefore)
 	if e != nil || !time.Now().Before(deadline) {
-		return api.E("expired", "delivery_window_expired")
+		return false, api.E("expired", "delivery_window_expired")
 	}
+	send := false
 	state, e := c.s.cfg.Store.Within(ctx, c.scope(), []string{"grpc"}, func(tx rt.Tx) error {
 		var binding bindingRecord
 		if _, e := tx.Get(ctx, "grpc.bindings", c.bind.Bind.ConnectionID, &binding); e != nil {
@@ -126,16 +127,17 @@ func (c *channelSession) prepareDeliverySend(ctx context.Context, d grpcwire.Del
 			return api.E("idempotency_conflict", "delivery_changed")
 		}
 		if record.Reply != nil || record.StoredByOwner {
-			return api.E("invalid_state", "delivery_already_replied")
+			return nil
 		}
 		record.Revision = rev + 1
 		record.Phase = "possibly_sent"
+		send = true
 		return tx.Put(ctx, "grpc.deliveries", d.DeliveryID, rev, record)
 	})
 	if state == rt.CommitUnknown {
-		return rt.ErrCommitUnknown
+		return false, rt.ErrCommitUnknown
 	}
-	return e
+	return send && e == nil, e
 }
 func (c *channelSession) recoverDeliveries() error {
 	records, e := c.s.cfg.Store.List(c.ctx, c.scope(), "grpc.deliveries", c.reg.EndpointID, "", 100)
@@ -189,6 +191,18 @@ func (c *channelSession) storeReply(ctx context.Context, reply grpcwire.Reply) e
 	if e != nil {
 		return e
 	}
+	var original deliveryRecord
+	if _, e = c.s.cfg.Store.Read(ctx, c.scope(), "grpc.deliveries", reply.DeliveryID, 0, &original); e != nil {
+		return e
+	}
+	if !api.Equal(original.Registration, c.reg) {
+		return api.E("forbidden", "reply_endpoint_mismatch")
+	}
+	if validator, ok := c.s.cfg.EndpointAuthority.(EndpointReplyValidator); ok {
+		if e = validator.ValidateReply(ctx, c.reg, original.Delivery, reply); e != nil {
+			return e
+		}
+	}
 	var record deliveryRecord
 	state, e := c.s.cfg.Store.Within(ctx, c.scope(), []string{"grpc"}, func(tx rt.Tx) error {
 		var binding bindingRecord
@@ -204,6 +218,9 @@ func (c *channelSession) storeReply(ctx context.Context, reply grpcwire.Reply) e
 		}
 		if !api.Equal(record.Registration, c.reg) {
 			return api.E("forbidden", "reply_endpoint_mismatch")
+		}
+		if record.DeliveryDigest != original.DeliveryDigest || !api.Equal(record.Delivery, original.Delivery) {
+			return api.E("idempotency_conflict", "reply_original_delivery_changed")
 		}
 		if e = grpcwire.ValidateReply(record.Delivery, reply); e != nil {
 			return e

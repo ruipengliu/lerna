@@ -233,3 +233,13 @@ func (t *WSTransport) RecoverEndpoint(ctx context.Context) (bool, error) {
 	}
 	return partial, nil
 }
+
+// EndpointError返回当前传输关闭原因；未知业务结果仍保留在原Journal。
+func (t *WSTransport) EndpointError() error {
+	if t.endpoint == nil {
+		return api.E("unsupported", "endpoint_receiver_not_configured")
+	}
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	return t.closeReason
+}

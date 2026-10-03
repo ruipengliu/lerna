@@ -14,7 +14,7 @@ import {
 import { hash, current, same } from "./authority";
 import { privateFile } from "./config";
 import { Rejection, reject } from "./error";
-import { object, text, integer, type Document, type Principal } from "./types";
+import { object, text, integer, type Document, type Principal, type PeerEndpoint } from "./types";
 import type { Store } from "./store";
 
 interface Outbox {
@@ -45,9 +45,12 @@ export function stable(prefix: string, key: string): string {
 export class ContentPeer {
   private registry?: ContractRegistry;
   private readonly controller = new AbortController();
-  constructor(readonly store: Store) {}
-  private settings() {
-    const m = this.store.config.memory;
+  constructor(
+    readonly store: Store,
+    readonly endpoint?: PeerEndpoint,
+  ) {}
+  private settings(): PeerEndpoint {
+    const m = this.endpoint ?? this.store.config.memory;
     if (!m) reject("dependency_unavailable", "content_owner_unconfigured");
     return m;
   }
@@ -61,7 +64,7 @@ export class ContentPeer {
         new URL(path, m.origin),
         {
           method: body ? "POST" : "GET",
-          signal: this.controller.signal,
+          signal: AbortSignal.any([this.controller.signal, AbortSignal.timeout(5000)]),
           ca: readFileSync(m.ca_file),
           minVersion: "TLSv1.2",
           headers: {
@@ -139,8 +142,9 @@ export class ContentPeer {
       m = this.settings();
     if (
       d.logical_service_id !== m.owner_id ||
-      d.identity_scope !== hash(canonical([this.store.config.tenant_id, p.subject_id])) ||
-      d.identity_revision !== p.generation
+      d.identity_scope !==
+        hash(canonical([this.store.config.tenant_id, m.peer_subject_id ?? p.subject_id])) ||
+      d.identity_revision !== (m.peer_generation ?? p.generation)
     )
       reject("forbidden", "content_owner_mismatch");
     const registry = await ContractRegistry.create(d, await this.http("/api/schema/core"));
@@ -175,6 +179,10 @@ export class ContentPeer {
     if (b.length !== r.byte_length || hash(b) !== r.hash)
       reject("forbidden", "content_integrity_mismatch");
     return b;
+  }
+  async sourceContracts(p: Principal): Promise<ContractRegistry> {
+    const registry = await this.contracts(p);
+    return registry;
   }
   async send(
     p: Principal,
@@ -298,6 +306,7 @@ export class ContentPeer {
     const pub = this.store.require<Publication>("publications", id);
     if (pub.published) return pub.ref;
     const policy = this.settings().policy_ref;
+    if (!policy) reject("unsupported", "peer_publication_not_configured");
     const reserve = await this.send(
       p,
       pub.reserve,

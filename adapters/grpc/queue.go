@@ -190,6 +190,7 @@ func (c *channelSession) writeLoop() {
 			return
 		}
 		ctx, cancel := context.WithTimeout(c.ctx, 5*time.Second)
+		send := true
 		e = c.gate.lock(ctx)
 		if e == nil {
 			e = c.current(ctx)
@@ -203,10 +204,10 @@ func (c *channelSession) writeLoop() {
 				if frame, err := grpcwire.DecodeFrame(item.body); err != nil {
 					e = err
 				} else if delivery, ok := frame.(*grpcwire.Delivery); ok {
-					e = c.prepareDeliverySend(ctx, *delivery)
+					send, e = c.prepareDeliverySend(ctx, *delivery)
 				}
 			}
-			if e == nil {
+			if e == nil && send {
 				c.sendStarted.Store(time.Now().UnixNano())
 				e = c.stream.Send(&rpcv1.ChannelFrame{BindingId: c.bind.BindingID, BindingRevision: c.bind.BindingRevision, FrameJson: item.body})
 				c.sendStarted.Store(0)

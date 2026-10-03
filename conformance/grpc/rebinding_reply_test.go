@@ -70,14 +70,18 @@ func realDeliveryApplications(t *testing.T, f *unaryFixture, authority transport
 	}
 	return servers, addresses
 }
-func signedStaticDelivery(t *testing.T, f *unaryFixture, reg transport.EndpointRegistration, keys *platform.Keyring, proofRoot string) grpcwire.Delivery {
+func signedStaticDelivery(t *testing.T, f *unaryFixture, reg transport.EndpointRegistration, keys *platform.Keyring, proofRoot string, windows ...time.Time) grpcwire.Delivery {
 	t.Helper()
 	command := commandFor(f)
 	digest, err := api.Digest(command)
 	if err != nil {
 		t.Fatal(err)
 	}
-	d := grpcwire.Delivery{Type: "delivery", DeliveryID: api.NewID("delivery"), SenderServiceID: f.owner, RecipientEndpointID: reg.EndpointID, RecipientInstanceID: reg.InstanceID, RequestDigest: digest, Kind: "command", Request: api.Raw(command), DeliverBefore: api.Time(time.Now().Add(time.Minute))}
+	until := time.Now().Add(time.Minute)
+	if len(windows) == 1 {
+		until = windows[0]
+	}
+	d := grpcwire.Delivery{Type: "delivery", DeliveryID: api.NewID("delivery"), SenderServiceID: f.owner, RecipientEndpointID: reg.EndpointID, RecipientInstanceID: reg.InstanceID, RequestDigest: digest, Kind: "command", Request: api.Raw(command), DeliverBefore: api.Time(until)}
 	intentDigest, err := transport.DeliveryIntentDigest(d)
 	if err != nil {
 		t.Fatal(err)

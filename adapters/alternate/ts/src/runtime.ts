@@ -23,10 +23,12 @@ export interface Ledger {
 export interface Handler {
   command(p: Principal, c: Command, prepared?: unknown): { output: unknown; accepted?: boolean };
   prepare?(p: Principal, c: Command): Promise<unknown>;
-  query(p: Principal, q: Query): unknown | Promise<unknown>;
-  disclose?(p: Principal, q: Query, result: unknown): void;
+  prepareQuery?(p: Principal, q: Query): Promise<unknown>;
+  query(p: Principal, q: Query, prepared?: unknown): unknown | Promise<unknown>;
+  disclose?(p: Principal, q: Query, result: unknown, prepared?: unknown): void;
   receive?(p: Principal, id: string, body: Buffer): unknown;
   bytes?(p: Principal, ref: unknown, purpose: string): Buffer;
+  readBytes?(p: Principal, ref: unknown, purpose: string): Promise<Buffer>;
   advance?(id: string): Promise<void>;
   stop?(): Promise<void>;
 }
@@ -166,12 +168,13 @@ export class Runtime {
     if (prior && (prior.digest !== digest || prior.subject !== p.subject_id))
       reject("idempotency_conflict", "query_input_changed");
     // 当前披露门禁即使在原 query_id 已封存时也重新执行。
-    const result = await this.handler.query(p, q);
+    const prepared = await this.handler.prepareQuery?.(p, q);
+    const result = await this.handler.query(p, q, prepared);
     current(this.store, p);
     this.registry.validateOutput(q.method, result);
     return this.store.tx(() => {
       current(this.store, p);
-      this.handler.disclose?.(p, q, result);
+      this.handler.disclose?.(p, q, result, prepared);
       const sealed = this.store.get<{ digest: string; subject: string; result: unknown }>(
         "queries",
         q.query_id,
@@ -179,7 +182,7 @@ export class Runtime {
       if (sealed) {
         if (sealed.digest !== digest || sealed.subject !== p.subject_id)
           reject("idempotency_conflict", "query_input_changed");
-        this.handler.disclose?.(p, q, sealed.result);
+        this.handler.disclose?.(p, q, sealed.result, prepared);
         if (canonical(sealed.result) !== canonical(result))
           reject("revision_conflict", "original_query_changed_new_query_required");
         return sealed.result;

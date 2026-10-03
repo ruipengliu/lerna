@@ -66,6 +66,17 @@ func TestConfiguredKnowledgeUsesActualTaskSnapshotAndOrdinaryModelMaterial(t *te
 	}
 }
 
+func TestConfiguredKnowledgeKeepsBothOriginalBindingsOfTheSameCandidateCapability(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) {
+			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
+				t.Skip("actual PostgreSQL DSN required")
+			}
+			runConfiguredKnowledge(t, driver, "pairs")
+		})
+	}
+}
+
 func TestConfiguredKnowledgeInputLimitPreventsAnyPhysicalModelRequest(t *testing.T) {
 	for _, driver := range []string{"sqlite", "postgres"} {
 		t.Run(driver, func(t *testing.T) {
@@ -192,6 +203,15 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 		t.Fatal(err)
 	}
 	cfg.TenantID, cfg.OwnerID, cfg.SubjectID = api.NewID("tenant"), api.NewID("owner"), api.NewID("subject")
+	extraBindings := []api.ObjectRef{}
+	if blockedControl == "pairs" {
+		cfg.UserRoles = append(cfg.UserRoles, "device_controller")
+		for n := 0; n < 2; n++ {
+			binding := api.ObjectRef{TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: api.NewID("binding"), Revision: 1}
+			extraBindings = append(extraBindings, binding)
+			cfg.ActionBindings = append(cfg.ActionBindings, ActionBindingConfig{CapabilityRef: execadapter.PhoneGUICapability().Ref, BindingRef: binding, InstallLockRef: component("builtin-install-lock"), Grant: api.Grant{GrantID: api.NewID("grant"), OwnerID: cfg.OwnerID, Revision: 1, SubjectRef: api.ObjectRef{TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.OwnerID, Revision: 1}, Resources: []string{developmentPhoneIDs()[n]}, Actions: []string{"gui.click"}, Purposes: []string{"goal_action"}, Recipients: []string{cfg.OwnerID}, Locations: []string{"cloud"}, Mode: "continuous", State: "active", NotBefore: api.Time(time.Now().Add(-time.Minute)), ExpiresAt: cfg.PolicyExpiresAt, Limits: []api.Amount{{Unit: "USD", Value: "1"}}}})
+		}
+	}
 	t.Setenv("HARNESS_CONTRACT_MODEL_CREDENTIAL", "synthetic-contract-token")
 	cfg.Model = contractModelConfig(server.URL)
 	a, err := OpenApp(ctx, cfg, true)
@@ -212,9 +232,26 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	agent, err := governance.SealAgentConfig(governance.AgentConfigDefinition{AgentConfigRef: api.ComponentRef{ComponentID: api.NewID("agent"), Version: "1"}, BrainRef: a.Profile.Ref, CapabilityRefs: []api.ComponentRef{execadapter.FileReadCapability().Ref}, ControlLimitsRef: limits, SourceRefs: []api.ContentRef{}})
+	agentCaps := []api.ComponentRef{execadapter.FileReadCapability().Ref}
+	if blockedControl == "pairs" {
+		agentCaps = append(agentCaps, execadapter.PhoneGUICapability().Ref)
+	}
+	agent, err := governance.SealAgentConfig(governance.AgentConfigDefinition{AgentConfigRef: api.ComponentRef{ComponentID: api.NewID("agent"), Version: "1"}, BrainRef: a.Profile.Ref, CapabilityRefs: agentCaps, ControlLimitsRef: limits, SourceRefs: []api.ContentRef{}})
 	if err != nil {
 		t.Fatal(err)
+	}
+	if blockedControl == "pairs" {
+		duplicate := agent
+		duplicate.AgentConfigRef.ComponentID = api.NewID("agent")
+		duplicate.CapabilityRefs = append(append([]api.ComponentRef{}, agentCaps...), execadapter.PhoneGUICapability().Ref)
+		duplicate, err = governance.SealAgentConfig(duplicate)
+		if err != nil {
+			t.Fatal(err)
+		}
+		refusal, err := a.Dispatcher.Command(ctx, a.UserAuth, api.Raw(api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.Scope.OwnerID, CommandID: api.NewID("command"), TargetID: duplicate.AgentConfigRef.ComponentID, Method: "agent_config.register", ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(duplicate)}))
+		if err != nil || refusal.Stage != "rejected" || refusal.Error == nil || refusal.Error.Reason != "duplicate_knowledge_component" {
+			t.Fatalf("candidate bindings relaxed the AgentConfig capability set: %v %+v", err, refusal)
+		}
 	}
 	knowledgePublicCommand(t, ctx, a, "agent_config.register", agent.AgentConfigRef.ComponentID, agent, nil)
 	if err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 200); err != nil {
@@ -400,8 +437,24 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 	if strings.Contains(wire.Messages[0].Content, skillBody) {
 		t.Fatal("ordinary Skill body became a system instruction")
 	}
-	if wire.MaxCompletionTokens != 128 || input.Snapshot.ReservedOutputTokens != 128 || len(input.Snapshot.CapabilityRefs) != 1 || !api.Equal(input.Snapshot.CapabilityRefs[0], execadapter.FileReadCapability().Ref) || len(input.Snapshot.BindingRefs) != 1 || !api.Equal(input.Snapshot.BindingRefs[0], a.ReadBinding) {
+	capCount := 1
+	if blockedControl == "pairs" {
+		capCount = 3
+	}
+	if wire.MaxCompletionTokens != 128 || input.Snapshot.ReservedOutputTokens != 128 || len(input.Snapshot.CapabilityRefs) != capCount || len(input.Snapshot.BindingRefs) != capCount {
 		t.Fatalf("physical output/capability intersection was not narrowed: %+v", input.Snapshot)
+	}
+	seenBindings := map[string]bool{}
+	for n, cap := range input.Snapshot.CapabilityRefs {
+		binding := input.Snapshot.BindingRefs[n]
+		paired := api.Equal(cap, execadapter.FileReadCapability().Ref) && api.Equal(binding, a.ReadBinding)
+		for _, extra := range extraBindings {
+			paired = paired || api.Equal(cap, execadapter.PhoneGUICapability().Ref) && api.Equal(binding, extra)
+		}
+		if !paired || seenBindings[binding.ObjectID] {
+			t.Fatalf("original capability/binding pair was replaced, merged or repeated: %+v", input.Snapshot)
+		}
+		seenBindings[binding.ObjectID] = true
 	}
 	var packetRef api.ContentRef
 	for _, material := range input.Materials {

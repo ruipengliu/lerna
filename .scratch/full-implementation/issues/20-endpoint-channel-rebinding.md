@@ -2,7 +2,7 @@
 
 Status: in-progress
 Blocked by: 01, 02, 07, 08
-Implementer: execution_impl (adapter/router); storage_impl (development装配/分类worker)
+Implementer: execution_impl
 
 依据：A3／A4、协议 EndpointChannel 原连接／绑定合同，以及工程方案的分类 worker 和分布式装配。
 
@@ -13,6 +13,8 @@ Implementer: execution_impl (adapter/router); storage_impl (development装配/�
 实现、公开行为、真实负责方和必要故障正反例通过后记录准确提交与制品。尚未完成的本地路径保持 partial，不与外部资格混写。
 
 ## Comments
+
+2026-10-03：Root将public App/config/分类worker及实际cmd进程验收完整交给execution_impl；storage_impl确认20没有WIP，继续保留16远端Executor桥和solemerger。Config/App/Run仅20字段、初始化、角色与TLS/Channel精确hunks由execution_impl维护；RemoteExecutors/RuntimeFactory/Foreign/WASI不改。public路径仍待实际正反例，不能据adapter/SDK证据宣称公开装配完成。双向Delivery在public App缺原业务Reply接收者和proof端口时保持关闭，不制造泛用Reply账本。
 
 2026-10-03：固定源码复核 a5410e4 确认核心 Channel 已存在，但默认宿主未装配，补入原实施任务图。
 

@@ -6,6 +6,7 @@ import (
 
 	file "github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/adapters/platform"
+	"github.com/ruipengliu/lerna/adapters/providers"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
 	"github.com/ruipengliu/lerna/internal/execution"
@@ -24,6 +25,7 @@ type Manifest struct {
 	RankingProfile api.ComponentRef                `json:"ranking_profile"`
 	BrainProfile   api.ComponentRef                `json:"brain_profile"`
 	AnswerSchema   api.ComponentRef                `json:"answer_schema"`
+	SourceMethods  []api.MethodContract            `json:"source_methods"`
 }
 
 func Build() (Manifest, error) {
@@ -32,6 +34,16 @@ func Build() (Manifest, error) {
 	m.Schemas["goal"] = brain.GoalSchema()
 	m.Schemas["use_receipt"] = api.SchemaFor[governance.UseReceipt]()
 	m.Schemas["proof_claims"] = api.SchemaFor[platform.ProofClaims]()
+	m.SourceMethods = providers.ForeignSourceContracts()
+	sort.Slice(m.SourceMethods, func(i, j int) bool { return m.SourceMethods[i].Name < m.SourceMethods[j].Name })
+	for _, method := range m.SourceMethods {
+		if method.Name == "content.foreign.register" {
+			m.Schemas["foreign_reference"] = method.InputSchema
+		}
+		if method.Name == "content.foreign.current" {
+			m.Schemas["foreign_proof"] = method.OutputSchema
+		}
+	}
 	m.BrainProfile = api.ComponentRef{ComponentID: "model_00000000000000000000000000000021", Version: "alternate-answer1", Digest: api.Hash([]byte("alternate-ts-answer1/jcs(snapshot.InputTokens=0,EncodedDigest='')+goal_bytes_base64/upper_bound/v1"))}
 	goalDigest, err := api.Digest(m.Schemas["goal"])
 	if err != nil {
