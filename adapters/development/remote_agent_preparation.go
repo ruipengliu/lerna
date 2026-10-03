@@ -19,7 +19,9 @@ func (a *App) prepareRemoteAgentDecisionParent(ctx context.Context, scope runtim
 	var taskID string
 	var needsPreparation bool
 	status, err := a.Store.Within(ctx, scope, []string{"task", "platform"}, func(tx runtime.Tx) error {
-		snapshot, err := a.Task.DecisionSnapshotTx(ctx, tx, auth, decisionID)
+		// 原Snapshot只通过本宿主配置的受信元数据身份读取。Task端口
+		// 传入的原提交者仍单独核Task访问和当前凭据，不继承service角色。
+		snapshot, err := a.Task.DecisionSnapshotTx(ctx, tx, a.ServiceAuth, decisionID)
 		if err != nil {
 			return err
 		}
@@ -28,6 +30,9 @@ func (a *App) prepareRemoteAgentDecisionParent(ctx context.Context, scope runtim
 			return err
 		}
 		if err = currentCredentialTx(ctx, tx, auth); err != nil {
+			return err
+		}
+		if err = currentCredentialTx(ctx, tx, a.ServiceAuth); err != nil {
 			return err
 		}
 		incoming, found, err := a.Task.ReadIncomingSourceTx(ctx, tx, auth, actual.TaskID)
