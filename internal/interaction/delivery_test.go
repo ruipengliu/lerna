@@ -81,6 +81,15 @@ func (b requestBridge) CheckTx(ctx context.Context, tx runtime.Tx, a runtime.Aut
 	return interaction.RequestView{Request: v.Request, AnswerSchema: v.AnswerSchema, Method: "task.input"}, e
 }
 
+func (b requestBridge) CheckBatchTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, refs []api.ObjectRef) ([]interaction.RequestView, error) {
+	views, err := b.s.RequestViewsTx(ctx, tx, a, refs)
+	out := make([]interaction.RequestView, len(views))
+	for i, v := range views {
+		out[i] = interaction.RequestView{Request: v.Request, AnswerSchema: v.AnswerSchema, Method: "task.input"}
+	}
+	return out, err
+}
+
 type applicationFixture struct {
 	ctx              context.Context
 	store            runtime.Store

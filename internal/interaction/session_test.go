@@ -12,6 +12,22 @@ import (
 	"github.com/ruipengliu/lerna/runtime"
 )
 
+// 会话行为使用固定受信时间端口，数据库、原 query_id 绑定和所有写入仍是真实 SQLite。
+type sessionClockStore struct {
+	runtime.Store
+	runtime.QueryBindingStore
+	now time.Time
+}
+type sessionClockTx struct {
+	runtime.Tx
+	now time.Time
+}
+
+func (tx sessionClockTx) Now(context.Context) (time.Time, error) { return tx.now, nil }
+func (s sessionClockStore) Within(ctx context.Context, scope runtime.Scope, participants []string, fn func(runtime.Tx) error) (runtime.CommitStatus, error) {
+	return s.Store.Within(ctx, scope, participants, func(tx runtime.Tx) error { return fn(sessionClockTx{tx, s.now}) })
+}
+
 func TestSessionBranchChangesFutureContextWithoutCreatingTask(t *testing.T) {
 	store, err := sqlite.Open(filepath.Join(t.TempDir(), "interaction.sqlite"))
 	if err != nil {
@@ -23,6 +39,8 @@ func TestSessionBranchChangesFutureContextWithoutCreatingTask(t *testing.T) {
 		t.Fatal(err)
 	}
 	scope := runtime.Scope{TenantID: api.NewID("tenant"), OwnerID: api.NewID("owner"), DatabaseID: store.ID()}
+	now := time.Now().UTC().Truncate(time.Millisecond)
+	clock := sessionClockStore{Store: store, QueryBindingStore: store, now: now}
 	auth := runtime.Auth{TenantID: scope.TenantID, SubjectID: api.NewID("subject"), CredentialGeneration: 1}
 	s, err := interaction.New(interaction.Config{DiscoveryOwnerID: scope.OwnerID}, interaction.Ports{})
 	if err != nil {
@@ -32,12 +50,12 @@ func TestSessionBranchChangesFutureContextWithoutCreatingTask(t *testing.T) {
 	if err = s.Register(registry); err != nil {
 		t.Fatal(err)
 	}
-	d := runtime.Dispatcher{Store: store, OwnerID: scope.OwnerID, Registry: registry}
+	d := runtime.Dispatcher{Store: clock, OwnerID: scope.OwnerID, Registry: registry}
 	config := api.ComponentRef{ComponentID: api.NewID("config"), Version: "1.0.0", Digest: api.Hash([]byte("session-test"))}
 	session, branch := api.NewID("session"), api.NewID("branch")
 	command := func(method, target string, revision *uint64, input any) api.Receipt {
 		t.Helper()
-		c := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: scope.OwnerID, CommandID: api.NewID("command"), Method: method, TargetID: target, ExpectedRevision: revision, ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(input)}
+		c := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: scope.OwnerID, CommandID: api.NewID("command"), Method: method, TargetID: target, ExpectedRevision: revision, ExpiresAt: api.Time(now.Add(time.Minute)), Payload: api.Raw(input)}
 		r, err := d.Command(ctx, auth, api.Raw(c))
 		if err != nil || r.Stage != "applied" {
 			t.Fatalf("%s %+v %v", method, r, err)
@@ -61,6 +79,7 @@ func TestSessionBranchChangesFutureContextWithoutCreatingTask(t *testing.T) {
 	command("session.branch.create", session, nil, interaction.CreateBranchInput{BranchID: newBranch, SourceBranchRef: scope.Ref(branch, 1), ExpectedSourceRevision: 1, ConfigRef: config})
 	revision := uint64(2)
 	command("session.branch.select", session, &revision, interaction.SelectBranchInput{BranchID: newBranch})
+	q.QueryID = api.NewID("query")
 	raw, err = d.Query(ctx, auth, api.Raw(q))
 	if err != nil {
 		t.Fatal(err)
@@ -80,6 +99,7 @@ func TestSessionBranchChangesFutureContextWithoutCreatingTask(t *testing.T) {
 	}
 	other := auth
 	other.SubjectID = api.NewID("subject")
+	q.QueryID = api.NewID("query")
 	if _, err = d.Query(ctx, other, api.Raw(q)); !api.IsCode(err, "forbidden") {
 		t.Fatalf("session crossed subject: %v", err)
 	}
