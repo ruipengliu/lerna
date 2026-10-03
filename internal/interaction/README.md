@@ -18,6 +18,6 @@ Renderer 支持受限闭合对象、有限 oneOf、字符串/数值/布尔及显
 
 `NewTZDB` 接受宿主锁定版本的有限 TZif；`OpenTZDB` 显式验证本地版本并载入指定区域。有限规则为 once_at、interval、daily、weekly、monthly；UTC interval 不漂移，夏令时 gap 跳过、fold 取较早时刻，不存在的月日跳过。Occurrence 在 planned_at 冻结规则版本、模板与 `deadline=planned_at+timeout`、`accept_before=min(deadline, planned_at+60s)`，更新、暂停、重开和重试均不延长。unknown delivery 占用原槽；释放必须比较 occurrence_id 并持有原 Task 的 goal_work_closed 与 effects_closed 及准确 closure 证明。纯迟到账务不阻塞。停机扫描每批至多 100 项或 10ms，保存原游标与 skipped range 后由 Job 续页。
 
-集合分页上限 100，明确 exhausted/partial/gaps。游标绑定 scope、主体、凭据代次、角色、集合版本和首次截止；Dispatcher 提供 QueryBinding 时使用该原截止，不刷新签名或 TTL。跨 Orchestrator 全局来源聚合需要宿主另行声明完整来源目录，本包的本方索引不能证明全局 coverage_complete。
+集合分页上限 100，明确 exhausted/partial/gaps。游标绑定 scope、主体、凭据代次、角色、集合版本和首次截止；Dispatcher 提供 QueryBinding 时首屏使用该原截止。续页保留解析出的原游标截止，并与当前 QueryBinding 截止取更早值，后续查询不能延长期限。跨 Orchestrator 全局来源聚合需要宿主另行声明完整来源目录，本包的本方索引不能证明全局 coverage_complete。
 
 验证入口为 `go test -race ./internal/interaction`。设置 `HARNESS_INTERACTION_STORE=postgres` 与 `HARNESS_TEST_POSTGRES_DSN` 后，同一公开命令与 typed use-case 套件使用真实 PG；默认使用 WAL/FULL/FK 的持久 SQLite。合同覆盖 DB 重开、回复丢失、未知提交、FIFO/steer、固定期限与 overlap、真实签名 closure、当前请求/正文拒绝及两个实际 PG 反序锁场景。日历正反例使用固定计划时点；会话行为使用固定受信时间端口，未扩大业务 TTL。实际浏览器与 WSS 交接由 Web/宿主集成套件另行取证；外部平台账户、跨 AZ 容量和生产恢复目标尚需部署验证。

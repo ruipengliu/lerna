@@ -78,43 +78,43 @@ func (s *Service) encodeCursor(cursor pageCursor) string {
 	_, _ = mac.Write(body)
 	return base64.RawURLEncoding.EncodeToString(body) + "." + base64.RawURLEncoding.EncodeToString(mac.Sum(nil))
 }
-func (s *Service) parseCursor(raw string, scope runtime.Scope, a runtime.Auth, kind, parent string, revision uint64, now time.Time) (string, error) {
+func (s *Service) parseCursor(raw string, scope runtime.Scope, a runtime.Auth, kind, parent string, revision uint64, now time.Time) (string, time.Time, error) {
 	if raw == "" {
-		return "", nil
+		return "", time.Time{}, nil
 	}
 	if len(raw) > 4096 {
-		return "", api.E("cursor_expired", "cursor_invalid")
+		return "", time.Time{}, api.E("cursor_expired", "cursor_invalid")
 	}
 	body, signature, ok := strings.Cut(raw, ".")
 	if !ok {
-		return "", api.E("cursor_expired", "cursor_invalid")
+		return "", time.Time{}, api.E("cursor_expired", "cursor_invalid")
 	}
 	decoded, e := base64.RawURLEncoding.DecodeString(body)
 	if e != nil {
-		return "", api.E("cursor_expired", "cursor_invalid")
+		return "", time.Time{}, api.E("cursor_expired", "cursor_invalid")
 	}
 	signed, e := base64.RawURLEncoding.DecodeString(signature)
 	if e != nil {
-		return "", api.E("cursor_expired", "cursor_invalid")
+		return "", time.Time{}, api.E("cursor_expired", "cursor_invalid")
 	}
 	mac := hmac.New(sha256.New, s.config.CursorKey)
 	_, _ = mac.Write(decoded)
 	if !hmac.Equal(mac.Sum(nil), signed) {
-		return "", api.E("cursor_expired", "cursor_invalid")
+		return "", time.Time{}, api.E("cursor_expired", "cursor_invalid")
 	}
 	var c pageCursor
 	if e = api.Decode(decoded, &c); e != nil {
-		return "", api.E("cursor_expired", "cursor_invalid")
+		return "", time.Time{}, api.E("cursor_expired", "cursor_invalid")
 	}
 	roles, _ := api.Digest(a.Roles)
 	expiry, e := api.ParseTime(c.ExpiresAt)
 	if e != nil || !now.Before(expiry) || c.TenantID != scope.TenantID || c.OwnerID != scope.OwnerID || c.DatabaseID != scope.DatabaseID || c.SubjectID != a.SubjectID || c.CredentialGeneration != a.CredentialGeneration || c.RolesDigest != roles || c.Kind != kind || c.Parent != parent {
-		return "", api.E("cursor_expired", "cursor_scope_changed")
+		return "", time.Time{}, api.E("cursor_expired", "cursor_scope_changed")
 	}
 	if c.Revision != revision {
-		return "", api.E("snapshot_required", "collection_changed")
+		return "", time.Time{}, api.E("snapshot_required", "collection_changed")
 	}
-	return c.Last, nil
+	return c.Last, expiry, nil
 }
 func ownedPage[T any](ctx context.Context, s *Service, store runtime.Store, scope runtime.Scope, a runtime.Auth, in api.ListInput, namespace, kind, parent string, gate func(runtime.Tx) error, decode func(runtime.Record) (T, error)) (api.Page[T], error) {
 	page := api.Page[T]{Items: []T{}, Gaps: []string{}}
@@ -143,9 +143,12 @@ func ownedPage[T any](ctx context.Context, s *Service, store runtime.Store, scop
 		if e != nil {
 			return e
 		}
-		last, e := s.parseCursor(in.Cursor, scope, a, kind, parent, revision, now)
+		last, originalExpiry, e := s.parseCursor(in.Cursor, scope, a, kind, parent, revision, now)
 		if e != nil {
 			return e
+		}
+		if !originalExpiry.IsZero() && originalExpiry.Before(expiry) {
+			expiry = originalExpiry
 		}
 		rows, e := tx.List(ctx, namespace, parent, last, int(in.Limit)+1)
 		if e != nil {
