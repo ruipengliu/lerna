@@ -539,7 +539,7 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 		default:
 		}
 		if !reserved {
-			if !enqueue(harness.WSResponse{Type: "response", RequestSeq: frame.RequestSeq, Kind: "error", Payload: api.Raw(api.E("overloaded", "pending_request_limit"))}, true) {
+			if !enqueue(harness.WSResponse{Type: "response", RequestSeq: frame.RequestSeq, ResultKind: "error", Payload: api.Raw(api.E("overloaded", "pending_request_limit"))}, true) {
 				return
 			}
 			continue
@@ -555,7 +555,7 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 				kind = "error"
 				body = api.Raw(publicError(e))
 			}
-			if !enqueue(harness.WSResponse{Type: "response", RequestSeq: frame.RequestSeq, Kind: kind, Payload: body}, priority) {
+			if !enqueue(harness.WSResponse{Type: "response", RequestSeq: frame.RequestSeq, ResultKind: kind, Payload: body}, priority) {
 				cancel()
 				conn.CloseNow()
 			}
