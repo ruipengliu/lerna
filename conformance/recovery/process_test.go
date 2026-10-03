@@ -134,7 +134,7 @@ func TestSQLiteStoragePortConfirmationLossRecoversOriginal(t *testing.T) {
 			// withholds a successful transaction confirmation.
 			_, conflict := h.Record(contextFor(t), command("storage-port-original", "input", "changed", nil, "2026-10-03T02:00:00.000000Z"), &principal)
 			assertReason(t, conflict, "idempotency_conflict")
-			if err := store.Close(); err != nil {
+			if err := cfg.fixture.CloseWriter(); err != nil {
 				t.Fatal(err)
 			}
 			_, replacement, worker := processObserver(t, cfg)
@@ -225,10 +225,10 @@ func TestProcessClaimTakeoverRejectsBufferedOldCompletion(t *testing.T) {
 }
 func seedProcessInput(t *testing.T, cfg processConfig) {
 	t.Helper()
-	store, h, _ := processObserver(t, cfg)
+	_, h, _ := processObserver(t, cfg)
 	out, err := h.Record(contextFor(t), command("process-source", "input", "hello", nil, "2026-10-03T02:00:00.000000Z"), &principal)
 	assertReceived(t, out, err)
-	if err = store.Close(); err != nil {
+	if err = cfg.fixture.CloseWriter(); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -373,7 +373,9 @@ func TestProcessHarnessStopsBlockedPipeAtTransactionDeadline(t *testing.T) {
 	defer cancel()
 	select {
 	case err := <-child.done:
-		child.waited = true
+		if e := child.confirmExit(err); e != nil {
+			t.Fatal(e)
+		}
 		var exit *exec.ExitError
 		if !errors.As(err, &exit) || exit.ExitCode() != 1 {
 			t.Fatalf("blocked child did not fail at transaction deadline: %v %s", err, child.output.String())

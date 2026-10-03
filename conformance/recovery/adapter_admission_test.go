@@ -35,20 +35,10 @@ type controlledClock struct {
 
 func (c *controlledClock) Now(context.Context, runtime.Tx) (time.Time, error) { return c.instant, nil }
 
-var admissionReopeners sync.Map
-
-func reopenAdmissionStore(t *testing.T, store admissionStore) admissionStore {
-	t.Helper()
-	reopen, _ := admissionReopeners.Load(store)
-	if reopen == nil {
-		t.Fatal("missing adapter reopen registration")
-	}
-	return reopen.(func(*testing.T) admissionStore)(t)
-}
-func runAdmissionBehaviors(t *testing.T, newStore func(*testing.T) admissionStore) {
+func runAdmissionBehaviors(t *testing.T, newStore func(*testing.T) *ownedFixture) {
 	behaviors := []struct {
 		name string
-		run  func(*testing.T, func(*testing.T) admissionStore)
+		run  func(*testing.T, func(*testing.T) *ownedFixture)
 	}{
 		{"AdmissionCommitsFixedReceiptInputAndPendingJob", behaviorAdmissionCommitsFixedReceiptInputAndPendingJob},
 		{"TransactionsRejectForeignOwnerDatabaseAndExpiredTokens", behaviorTransactionsRejectForeignOwnerDatabaseAndExpiredTokens},
@@ -69,11 +59,12 @@ func runAdmissionBehaviors(t *testing.T, newStore func(*testing.T) admissionStor
 	}
 }
 func TestPGSharedAdmissionBehaviors(t *testing.T) {
-	runAdmissionBehaviors(t, func(t *testing.T) admissionStore { return database(t) })
+	runAdmissionBehaviors(t, func(t *testing.T) *ownedFixture { return database(t) })
 }
 
-func behaviorAdmissionCommitsFixedReceiptInputAndPendingJob(t *testing.T, newStore func(*testing.T) admissionStore) {
-	store := newStore(t)
+func behaviorAdmissionCommitsFixedReceiptInputAndPendingJob(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
 	data := command("original", "input", "  e\u0301🌍  ", nil, future())
@@ -115,9 +106,10 @@ func behaviorAdmissionCommitsFixedReceiptInputAndPendingJob(t *testing.T, newSto
 	}
 }
 
-func behaviorTransactionsRejectForeignOwnerDatabaseAndExpiredTokens(t *testing.T, newStore func(*testing.T) admissionStore) {
-	store := newStore(t)
-	other := newStore(t)
+func behaviorTransactionsRejectForeignOwnerDatabaseAndExpiredTokens(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
+	other := newStore(t).Store()
 	ctx := contextFor(t)
 	var captured runtime.Tx
 	err := store.Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
@@ -140,8 +132,9 @@ func behaviorTransactionsRejectForeignOwnerDatabaseAndExpiredTokens(t *testing.T
 	}
 }
 
-func behaviorAdmissionPreservesZeroUnicodeScalar(t *testing.T, newStore func(*testing.T) admissionStore) {
-	store := newStore(t)
+func behaviorAdmissionPreservesZeroUnicodeScalar(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
 	result, err := h.Record(ctx, command("zero-scalar", "input", "before\x00after", nil, future()), &principal)
@@ -157,8 +150,9 @@ func behaviorAdmissionPreservesZeroUnicodeScalar(t *testing.T, newStore func(*te
 	}
 }
 
-func behaviorOriginalIdentitySurvivesRetransmissionAndRejectsChangedMeaning(t *testing.T, newStore func(*testing.T) admissionStore) {
-	store := newStore(t)
+func behaviorOriginalIdentitySurvivesRetransmissionAndRejectsChangedMeaning(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	ctx := contextFor(t)
 	bob := principal
 	bob.SubjectID = "bob"
@@ -203,8 +197,9 @@ func behaviorOriginalIdentitySurvivesRetransmissionAndRejectsChangedMeaning(t *t
 	assertReceiptSame(t, first, assertReceived(t, out, err))
 }
 
-func behaviorTransactionRollbackLeavesNoPartialAdmission(t *testing.T, newStore func(*testing.T) admissionStore) {
-	store := newStore(t)
+func behaviorTransactionRollbackLeavesNoPartialAdmission(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	ref := contract.CommandRef{Owner: owner, CommandID: "rolled-back"}
@@ -254,8 +249,9 @@ func behaviorTransactionRollbackLeavesNoPartialAdmission(t *testing.T, newStore 
 	}
 }
 
-func behaviorCommandStoreRetainsMinimalOriginalMetadata(t *testing.T, newStore func(*testing.T) admissionStore) {
-	store := newStore(t)
+func behaviorCommandStoreRetainsMinimalOriginalMetadata(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	cutoff := future()
@@ -279,8 +275,9 @@ func behaviorCommandStoreRetainsMinimalOriginalMetadata(t *testing.T, newStore f
 	}
 }
 
-func behaviorOriginalKeyPrecedesDeadlineAndNewExpiryIsFixed(t *testing.T, newStore func(*testing.T) admissionStore) {
-	store := newStore(t)
+func behaviorOriginalKeyPrecedesDeadlineAndNewExpiryIsFixed(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	ctx := contextFor(t)
 	clock := &controlledClock{admissionStore: store, instant: time.Date(2026, 10, 3, 1, 0, 0, 0, time.UTC)}
 	permissions := durablework.NewPermissions([]durablework.Permission{{Subject: principal, Owner: owner, Record: true, Read: true}})
@@ -329,8 +326,9 @@ func behaviorOriginalKeyPrecedesDeadlineAndNewExpiryIsFixed(t *testing.T, newSto
 	}
 }
 
-func behaviorRecordEnforcesFixedRevisionPreconditionsAndStableJob(t *testing.T, newStore func(*testing.T) admissionStore) {
-	store := newStore(t)
+func behaviorRecordEnforcesFixedRevisionPreconditionsAndStableJob(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	cutoff := future()
@@ -368,8 +366,9 @@ func behaviorRecordEnforcesFixedRevisionPreconditionsAndStableJob(t *testing.T, 
 	}
 }
 
-func behaviorMaximumRevisionRefusesWithoutOverflow(t *testing.T, newStore func(*testing.T) admissionStore) {
-	store := newStore(t)
+func behaviorMaximumRevisionRefusesWithoutOverflow(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	err := store.Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
@@ -401,8 +400,9 @@ func behaviorMaximumRevisionRefusesWithoutOverflow(t *testing.T, newStore func(*
 	}
 }
 
-func behaviorTrustedPermissionAndTenantOwnerIsolation(t *testing.T, newStore func(*testing.T) admissionStore) {
-	store := newStore(t)
+func behaviorTrustedPermissionAndTenantOwnerIsolation(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	ctx := contextFor(t)
 	cutoff := future()
 	for _, scope := range []contract.OwnerRef{owner, {TenantID: owner.TenantID, OwnerID: "owner-two"}, {TenantID: "tenant-two", OwnerID: owner.OwnerID}} {
@@ -442,8 +442,9 @@ func behaviorTrustedPermissionAndTenantOwnerIsolation(t *testing.T, newStore fun
 	assertReceived(t, out, err)
 }
 
-func behaviorConcurrentOriginalKeyHasOneDurableResponsibility(t *testing.T, newStore func(*testing.T) admissionStore) {
-	store := newStore(t)
+func behaviorConcurrentOriginalKeyHasOneDurableResponsibility(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	original := command("concurrent", "input", "one", nil, future())
@@ -497,8 +498,9 @@ func behaviorConcurrentOriginalKeyHasOneDurableResponsibility(t *testing.T, newS
 	}
 }
 
-func behaviorConcurrentNewCommandsSerializeObjectPrecondition(t *testing.T, newStore func(*testing.T) admissionStore) {
-	store := newStore(t)
+func behaviorConcurrentNewCommandsSerializeObjectPrecondition(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	cutoff := future()
@@ -555,19 +557,19 @@ func behaviorConcurrentNewCommandsSerializeObjectPrecondition(t *testing.T, newS
 	}
 }
 
-func behaviorLostHostReplyAndClosedConnectionRecoverOriginal(t *testing.T, newStore func(*testing.T) admissionStore) {
-	setup := newStore(t)
-	writer := reopenAdmissionStore(t, setup)
+func behaviorLostHostReplyAndClosedConnectionRecoverOriginal(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	writer := fixture.Replace(t)
 	ctx := contextFor(t)
 	h := hostFor(writer, owner, principal)
 	original := command("lost-reply", "input", "persisted", nil, future())
 	out, err := h.Record(ctx, original, &principal)
 	receipt := assertReceived(t, out, err)
 	// The confirmed response is deliberately not delivered to any caller.
-	if err = writer.Close(); err != nil {
+	if err = fixture.CloseWriter(); err != nil {
 		t.Fatal(err)
 	}
-	replacement := reopenAdmissionStore(t, setup)
+	replacement := fixture.Replace(t)
 	h = hostFor(replacement, owner, principal)
 	out, err = h.Record(ctx, original, &principal)
 	assertReceiptSame(t, receipt, assertReceived(t, out, err))

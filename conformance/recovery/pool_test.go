@@ -7,22 +7,18 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/ruipengliu/lerna/adapters/postgres"
-	"github.com/ruipengliu/lerna/adapters/sqlite"
 	"github.com/ruipengliu/lerna/contract"
 	"github.com/ruipengliu/lerna/host/durablework"
 	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
 	"github.com/ruipengliu/lerna/runtime"
-	"os"
-	"path/filepath"
 	"sort"
 	"sync"
 	"testing"
 	"time"
 )
 
-func TestPGPoolBehaviors(t *testing.T)     { poolTracer(t, database(t)) }
-func TestSQLitePoolBehaviors(t *testing.T) { poolTracer(t, sqliteDatabase(t)) }
+func TestPGPoolBehaviors(t *testing.T)     { poolTracer(t, database(t).Store()) }
+func TestSQLitePoolBehaviors(t *testing.T) { poolTracer(t, sqliteDatabase(t).Store()) }
 func poolTracer(t *testing.T, store workStore) {
 	ctx := contextFor(t)
 	h := rawHostFor(store, owner, principal)
@@ -71,14 +67,15 @@ func poolTracer(t *testing.T, store workStore) {
 }
 
 func TestPGPoolAdmission(t *testing.T) {
-	runPoolAdmission(t, func(t *testing.T) workStore { return database(t) })
+	runPoolAdmission(t, func(t *testing.T) *ownedFixture { return database(t) })
 }
 func TestSQLitePoolAdmission(t *testing.T) {
-	runPoolAdmission(t, func(t *testing.T) workStore { return sqliteDatabase(t) })
+	runPoolAdmission(t, func(t *testing.T) *ownedFixture { return sqliteDatabase(t) })
 }
-func runPoolAdmission(t *testing.T, newStore func(*testing.T) workStore) {
+func runPoolAdmission(t *testing.T, newStore func(*testing.T) *ownedFixture) {
 	t.Run("MissingConfigurationPreservesOriginalKeyAndNoNewFacts", func(t *testing.T) {
-		store := newStore(t)
+		fixture := newStore(t)
+		store := fixture.Store()
 		h := rawHostFor(store, owner, principal)
 		ctx := contextFor(t)
 		data := command("missing", "input", "hello", nil, future())
@@ -119,7 +116,8 @@ func runPoolAdmission(t *testing.T, newStore func(*testing.T) workStore) {
 		assertReceiptSame(t, original, assertReceived(t, replay, err))
 	})
 	t.Run("QueueBackpressureRollsBackAndReusesActiveJob", func(t *testing.T) {
-		store := newStore(t)
+		fixture := newStore(t)
+		store := fixture.Store()
 		h := rawHostFor(store, owner, principal)
 		ctx := contextFor(t)
 		h.PoolControl = true
@@ -180,8 +178,8 @@ func assertReceivedResult(t *testing.T, h *durablework.Host, ctx context.Context
 	return assertReceived(t, out, err)
 }
 
-func TestPGPoolFairness(t *testing.T)     { poolFairness(t, database(t)) }
-func TestSQLitePoolFairness(t *testing.T) { poolFairness(t, sqliteDatabase(t)) }
+func TestPGPoolFairness(t *testing.T)     { poolFairness(t, database(t).Store()) }
+func TestSQLitePoolFairness(t *testing.T) { poolFairness(t, sqliteDatabase(t).Store()) }
 func poolFairness(t *testing.T, store workStore) {
 	ctx := contextFor(t)
 	h := rawHostFor(store, owner, principal)
@@ -255,8 +253,8 @@ func poolFairness(t *testing.T, store workStore) {
 	}
 }
 
-func TestPGPoolZeroQuotaExpiry(t *testing.T)     { poolZeroQuotaExpiry(t, database(t)) }
-func TestSQLitePoolZeroQuotaExpiry(t *testing.T) { poolZeroQuotaExpiry(t, sqliteDatabase(t)) }
+func TestPGPoolZeroQuotaExpiry(t *testing.T)     { poolZeroQuotaExpiry(t, database(t).Store()) }
+func TestSQLitePoolZeroQuotaExpiry(t *testing.T) { poolZeroQuotaExpiry(t, sqliteDatabase(t).Store()) }
 func poolZeroQuotaExpiry(t *testing.T, store workStore) {
 	ctx := contextFor(t)
 	clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
@@ -313,14 +311,15 @@ func poolZeroQuotaExpiry(t *testing.T, store workStore) {
 }
 
 func TestPGPoolCompetition(t *testing.T) {
-	runPoolCompetition(t, func(t *testing.T) workStore { return database(t) })
+	runPoolCompetition(t, func(t *testing.T) *ownedFixture { return database(t) })
 }
 func TestSQLitePoolCompetition(t *testing.T) {
-	runPoolCompetition(t, func(t *testing.T) workStore { return sqliteDatabase(t) })
+	runPoolCompetition(t, func(t *testing.T) *ownedFixture { return sqliteDatabase(t) })
 }
-func runPoolCompetition(t *testing.T, newStore func(*testing.T) workStore) {
+func runPoolCompetition(t *testing.T, newStore func(*testing.T) *ownedFixture) {
 	t.Run("ConcurrentLastQueueSlotHasOneReceiptAndOriginalRetry", func(t *testing.T) {
-		store := newStore(t)
+		fixture := newStore(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := rawHostFor(store, owner, principal)
 		h.PoolControl = true
@@ -378,7 +377,8 @@ func runPoolCompetition(t *testing.T, newStore func(*testing.T) workStore) {
 		assertReceivedResult(t, h, ctx, data[loser])
 	})
 	t.Run("ConcurrentWorkersAndOwnersShareOneTenantReservation", func(t *testing.T) {
-		store := newStore(t)
+		fixture := newStore(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		second := contract.OwnerRef{TenantID: owner.TenantID, OwnerID: "second-owner"}
 		h := rawHostFor(store, owner, principal)
@@ -447,7 +447,8 @@ func runPoolCompetition(t *testing.T, newStore func(*testing.T) workStore) {
 		}
 	})
 	t.Run("PoolReopenRetainsCursorAndConfiguration", func(t *testing.T) {
-		store := newStore(t)
+		fixture := newStore(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := rawHostFor(store, owner, principal)
 		h.PoolControl = true
@@ -462,10 +463,7 @@ func runPoolCompetition(t *testing.T, newStore func(*testing.T) workStore) {
 			t.Fatalf("claim: %+v %v", batch, err)
 		}
 		startWork(t, w, batch[0])
-		next, ok := reopenAdmissionStore(t, store).(workStore)
-		if !ok {
-			t.Fatal("missing reopened work store")
-		}
+		next := fixture.Replace(t)
 		hh := rawHostFor(next, owner, principal)
 		hh.PoolControl = true
 		observed, err := hh.ObservePool(ctx)
@@ -478,7 +476,8 @@ func runPoolCompetition(t *testing.T, newStore func(*testing.T) workStore) {
 		}
 	})
 	t.Run("ConfigurationRevisionDrainAndQueueOverhang", func(t *testing.T) {
-		store := newStore(t)
+		fixture := newStore(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := rawHostFor(store, owner, principal)
 		h.PoolControl = true
@@ -568,14 +567,15 @@ func runPoolCompetition(t *testing.T, newStore func(*testing.T) workStore) {
 }
 
 func TestPGPoolMaintenance(t *testing.T) {
-	runPoolMaintenance(t, func(t *testing.T) workStore { return database(t) })
+	runPoolMaintenance(t, func(t *testing.T) *ownedFixture { return database(t) })
 }
 func TestSQLitePoolMaintenance(t *testing.T) {
-	runPoolMaintenance(t, func(t *testing.T) workStore { return sqliteDatabase(t) })
+	runPoolMaintenance(t, func(t *testing.T) *ownedFixture { return sqliteDatabase(t) })
 }
-func runPoolMaintenance(t *testing.T, newStore func(*testing.T) workStore) {
+func runPoolMaintenance(t *testing.T, newStore func(*testing.T) *ownedFixture) {
 	t.Run("ExpiredStartedClaimIsFencedWithoutErasingNewRevision", func(t *testing.T) {
-		store := newStore(t)
+		fixture := newStore(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
 		h := rawHostFor(store, owner, principal)
@@ -635,7 +635,8 @@ func runPoolMaintenance(t *testing.T, newStore func(*testing.T) workStore) {
 		}
 	})
 	t.Run("LatestExpiryPreservesDifferentRevisionValidClaim", func(t *testing.T) {
-		store := newStore(t)
+		fixture := newStore(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
 		h := rawHostFor(store, owner, principal)
@@ -680,7 +681,8 @@ func runPoolMaintenance(t *testing.T, newStore func(*testing.T) workStore) {
 		}
 	})
 	t.Run("ZeroQuotaMaintenancePagesAndReopensPast64", func(t *testing.T) {
-		store := newStore(t)
+		fixture := newStore(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
 		h := rawHostFor(store, owner, principal)
@@ -715,7 +717,7 @@ func runPoolMaintenance(t *testing.T, newStore func(*testing.T) workStore) {
 		if err != nil || observation.Queued["ordinary"] < 1 || observation.State.Cursors["maintenance:"+string(owner.TenantID)+"/"+string(owner.OwnerID)].After == "" {
 			t.Fatalf("maintenance page bound: %+v %v", observation, err)
 		}
-		next := reopenAdmissionStore(t, store).(workStore)
+		next := fixture.Replace(t)
 		hh := rawHostFor(next, owner, principal)
 		hh.Clock = clock
 		hh.PoolControl = true
@@ -747,10 +749,10 @@ func runPoolMaintenance(t *testing.T, newStore func(*testing.T) workStore) {
 }
 
 func TestPGPoolRawClaimCannotAcquireReservationOnReconfigure(t *testing.T) {
-	poolRawClaim(t, database(t))
+	poolRawClaim(t, database(t).Store())
 }
 func TestSQLitePoolRawClaimCannotAcquireReservationOnReconfigure(t *testing.T) {
-	poolRawClaim(t, sqliteDatabase(t))
+	poolRawClaim(t, sqliteDatabase(t).Store())
 }
 func poolRawClaim(t *testing.T, store workStore) {
 	ctx := contextFor(t)
@@ -797,8 +799,10 @@ func poolRawClaim(t *testing.T, store workStore) {
 	}
 }
 
-func TestPGPoolEligibilityReturnsAtTail(t *testing.T)     { poolEligibilityTail(t, database(t)) }
-func TestSQLitePoolEligibilityReturnsAtTail(t *testing.T) { poolEligibilityTail(t, sqliteDatabase(t)) }
+func TestPGPoolEligibilityReturnsAtTail(t *testing.T) { poolEligibilityTail(t, database(t).Store()) }
+func TestSQLitePoolEligibilityReturnsAtTail(t *testing.T) {
+	poolEligibilityTail(t, sqliteDatabase(t).Store())
+}
 func poolEligibilityTail(t *testing.T, store workStore) {
 	ctx := contextFor(t)
 	clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
@@ -860,8 +864,10 @@ func poolEligibilityTail(t *testing.T, store workStore) {
 	consume(members[0])
 }
 
-func TestPGPoolRunReservedLaneProgress(t *testing.T)     { poolRunReservedLanes(t, database(t)) }
-func TestSQLitePoolRunReservedLaneProgress(t *testing.T) { poolRunReservedLanes(t, sqliteDatabase(t)) }
+func TestPGPoolRunReservedLaneProgress(t *testing.T) { poolRunReservedLanes(t, database(t).Store()) }
+func TestSQLitePoolRunReservedLaneProgress(t *testing.T) {
+	poolRunReservedLanes(t, sqliteDatabase(t).Store())
+}
 func poolRunReservedLanes(t *testing.T, store workStore) {
 	ctx := contextFor(t)
 	h := rawHostFor(store, owner, principal)
@@ -934,7 +940,8 @@ func poolRunReservedLanes(t *testing.T, store workStore) {
 }
 
 func TestPGPoolLockedPagePreservesFairHeadAndMaintenanceCursor(t *testing.T) {
-	store := database(t)
+	fixture := database(t)
+	store := fixture.PG()
 	ctx := contextFor(t)
 	clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
 	h := rawHostFor(store, owner, principal)
@@ -963,69 +970,16 @@ func TestPGPoolLockedPagePreservesFairHeadAndMaintenanceCursor(t *testing.T) {
 	// The fault holder must stay live throughout the assertions. Its larger,
 	// still finite transaction limit is test infrastructure only; the business
 	// Store keeps its normal 3s transaction limit and execution policies.
-	configuration, _ := configurations.Load(store)
-	holderConfig := configuration.(postgres.Config)
-	holderConfig.TransactionTimeout = 10 * time.Second
-	holder, err := postgres.Open(ctx, holderConfig)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() {
-		if err := holder.Close(); err != nil {
-			t.Error(err)
+	holder := fixture.PGPeer(t, 0, 10*time.Second)
+	held := fixture.holdPGTransaction(t, holder, func(ctx context.Context, tx runtime.Tx) error {
+		for _, item := range items[:64] {
+			if _, err := holder.LockInput(ctx, tx, owner, item.id); err != nil {
+				return err
+			}
 		}
+		return nil
 	})
-	ready := make(chan struct{})
-	var heldContext context.Context
-	release := make(chan struct{})
-	done := make(chan error, 1)
-	var once sync.Once
-	unblock := func() { once.Do(func() { close(release) }) }
-	joined := false
-	defer func() {
-		unblock()
-		if joined {
-			return
-		}
-		cleanup, cancel := context.WithTimeout(context.Background(), 11*time.Second)
-		defer cancel()
-		select {
-		case <-done:
-			joined = true
-		case <-cleanup.Done():
-			t.Error("finite input-lock holder did not exit")
-		}
-	}()
-	checkHeld := func() {
-		t.Helper()
-		if err := heldContext.Err(); err != nil {
-			t.Fatalf("input-lock holder authority expired before release: %v", err)
-		}
-		select {
-		case err := <-done:
-			joined = true
-			t.Fatalf("input-lock holder exited before release: %v", err)
-		default:
-		}
-	}
-	go func() {
-		done <- holder.Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
-			for _, item := range items[:64] {
-				if _, err := holder.LockInput(ctx, tx, owner, item.id); err != nil {
-					return err
-				}
-			}
-			heldContext = ctx
-			close(ready)
-			select {
-			case <-release:
-				return nil
-			case <-ctx.Done():
-				return ctx.Err()
-			}
-		})
-	}()
-	awaitStage(t, ctx, ready)
+	checkHeld := func() { held.Check(t) }
 	checkHeld()
 	w := conformanceWorker(t, owner, store, store, store, clock)
 	pool, _ := durablework.NewPoolWorker(h, []*durablework.Worker{w})
@@ -1068,9 +1022,7 @@ func TestPGPoolLockedPagePreservesFairHeadAndMaintenanceCursor(t *testing.T) {
 		t.Fatalf("maintenance suffix behind real locks: %+v %v", expired, err)
 	}
 	checkHeld()
-	unblock()
-	err = <-done
-	joined = true
+	err = held.ReleaseAndJoin()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1080,14 +1032,14 @@ func TestPGPoolLockedPagePreservesFairHeadAndMaintenanceCursor(t *testing.T) {
 }
 
 func TestPGPoolRejectsForeignStorageDispatch(t *testing.T) {
-	poolForeignDispatch(t, func(t *testing.T) workStore { return database(t) })
+	poolForeignDispatch(t, func(t *testing.T) *ownedFixture { return database(t) })
 }
 func TestSQLitePoolRejectsForeignStorageDispatch(t *testing.T) {
-	poolForeignDispatch(t, func(t *testing.T) workStore { return sqliteDatabase(t) })
+	poolForeignDispatch(t, func(t *testing.T) *ownedFixture { return sqliteDatabase(t) })
 }
-func poolForeignDispatch(t *testing.T, newStore func(*testing.T) workStore) {
+func poolForeignDispatch(t *testing.T, newStore func(*testing.T) *ownedFixture) {
 	ctx := contextFor(t)
-	first, second := newStore(t), newStore(t)
+	first, second := newStore(t).Store(), newStore(t).Store()
 	h := rawHostFor(first, owner, principal)
 	foreign := rawHostFor(second, owner, principal)
 	h.PoolControl = true
@@ -1116,13 +1068,14 @@ func poolForeignDispatch(t *testing.T, newStore func(*testing.T) workStore) {
 }
 
 func TestPGPoolNewTenantJoinsExistingTailAfterReopen(t *testing.T) {
-	poolNewTenantTail(t, func(t *testing.T) workStore { return database(t) })
+	poolNewTenantTail(t, func(t *testing.T) *ownedFixture { return database(t) })
 }
 func TestSQLitePoolNewTenantJoinsExistingTailAfterReopen(t *testing.T) {
-	poolNewTenantTail(t, func(t *testing.T) workStore { return sqliteDatabase(t) })
+	poolNewTenantTail(t, func(t *testing.T) *ownedFixture { return sqliteDatabase(t) })
 }
-func poolNewTenantTail(t *testing.T, newStore func(*testing.T) workStore) {
-	store := newStore(t)
+func poolNewTenantTail(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	ctx := contextFor(t)
 	clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
 	members := []contract.OwnerRef{owner, {TenantID: "tenant-two", OwnerID: "two"}, {TenantID: "tenant-three", OwnerID: "three"}}
@@ -1185,7 +1138,7 @@ func poolNewTenantTail(t *testing.T, newStore func(*testing.T) workStore) {
 	// Existing C then A retain their order. New B joins behind both, even
 	// though B's lexical identity would be reached earlier in a static ring.
 	consume(pool, members[2])
-	store = reopenAdmissionStore(t, store).(workStore)
+	store = fixture.Replace(t)
 	h = rawHostFor(store, owner, principal)
 	h.Clock = clock
 	h.PoolControl = true
@@ -1200,8 +1153,9 @@ func poolNewTenantTail(t *testing.T, newStore func(*testing.T) workStore) {
 
 func TestPGPoolIndependentStoresShareCapacityAndSchemasKeepLockScope(t *testing.T) {
 	t.Run("SameScopeIndependentStores", func(t *testing.T) {
-		first := database(t)
-		second := reopen(t, first)
+		fixture := database(t)
+		first := fixture.PG()
+		second := fixture.PGPeer(t, 0, 0)
 		ctx := contextFor(t)
 		h := rawHostFor(first, owner, principal)
 		h.PoolControl = true
@@ -1255,7 +1209,7 @@ func TestPGPoolIndependentStoresShareCapacityAndSchemasKeepLockScope(t *testing.
 		}
 	})
 	t.Run("DifferentSchemasDoNotShareRegistryLock", func(t *testing.T) {
-		first, second := database(t), database(t)
+		first, second := database(t).PG(), database(t).PG()
 		ctx := contextFor(t)
 		h := rawHostFor(first, owner, principal)
 		other := rawHostFor(second, owner, principal)
@@ -1304,7 +1258,8 @@ func TestPGPoolIndependentStoresShareCapacityAndSchemasKeepLockScope(t *testing.
 }
 
 func TestSQLitePoolRejectsIdenticalDatabaseCopiedToAnotherFile(t *testing.T) {
-	original := sqliteDatabase(t)
+	fixture := sqliteDatabase(t)
+	original := fixture.Store()
 	ctx := contextFor(t)
 	h := rawHostFor(original, owner, principal)
 	h.PoolControl = true
@@ -1312,32 +1267,9 @@ func TestSQLitePoolRejectsIdenticalDatabaseCopiedToAnotherFile(t *testing.T) {
 		t.Fatal(err)
 	}
 	assertReceivedResult(t, h, ctx, command("original", "input", "hello", nil, future()))
-	configAny, _ := sqliteConfigurations.Load(original)
-	cfg := configAny.(sqlite.Config)
-	if err := original.Close(); err != nil {
-		t.Fatal(err)
-	}
-	// Copy the actual, closed complete DB, including its durable pool nonce;
-	// no private row is manufactured or used to assert business success.
-	bytes, err := os.ReadFile(cfg.Path)
-	if err != nil {
-		t.Fatal(err)
-	}
-	copyConfig := cfg
-	copyConfig.Path = filepath.Join(t.TempDir(), "copied.sqlite")
-	if err = os.WriteFile(copyConfig.Path, bytes, 0600); err != nil {
-		t.Fatal(err)
-	}
-	copied, err := sqlite.Open(ctx, copyConfig)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() {
-		if err := copied.Close(); err != nil {
-			t.Error(err)
-		}
-	})
-	restored := reopenAdmissionStore(t, original).(workStore)
+	copied := fixture.CopySQLite(t).Store()
+	restored := fixture.Replace(t)
+	var err error
 	anchor := rawHostFor(restored, owner, principal)
 	anchor.PoolControl = true
 	worker := conformanceWorker(t, owner, copied, copied, copied, copied)
@@ -1360,10 +1292,10 @@ func TestSQLitePoolRejectsIdenticalDatabaseCopiedToAnotherFile(t *testing.T) {
 }
 
 func TestPGPoolLastStartExhaustionRequiresNoNewQuota(t *testing.T) {
-	poolLastStartExhaustion(t, database(t))
+	poolLastStartExhaustion(t, database(t).Store())
 }
 func TestSQLitePoolLastStartExhaustionRequiresNoNewQuota(t *testing.T) {
-	poolLastStartExhaustion(t, sqliteDatabase(t))
+	poolLastStartExhaustion(t, sqliteDatabase(t).Store())
 }
 func poolLastStartExhaustion(t *testing.T, store workStore) {
 	ctx := contextFor(t)

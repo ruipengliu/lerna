@@ -4,8 +4,6 @@ package recovery_test
 
 import (
 	"context"
-	"github.com/ruipengliu/lerna/adapters/postgres"
-	"github.com/ruipengliu/lerna/adapters/sqlite"
 	"github.com/ruipengliu/lerna/contract"
 	"github.com/ruipengliu/lerna/host/durablework"
 	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
@@ -14,8 +12,8 @@ import (
 	"time"
 )
 
-func TestPGRetention(t *testing.T)     { retentionBehavior(t, database(t)) }
-func TestSQLiteRetention(t *testing.T) { retentionBehavior(t, sqliteDatabase(t)) }
+func TestPGRetention(t *testing.T)     { retentionBehavior(t, database(t).Store()) }
+func TestSQLiteRetention(t *testing.T) { retentionBehavior(t, sqliteDatabase(t).Store()) }
 func retentionBehavior(t *testing.T, store workStore) {
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
@@ -92,7 +90,8 @@ func TestPGRetentionNewRevisionAndReopen(t *testing.T) { retentionNewRevision(t,
 func TestSQLiteRetentionNewRevisionAndReopen(t *testing.T) {
 	retentionNewRevision(t, sqliteDatabase(t))
 }
-func retentionNewRevision(t *testing.T, store workStore) {
+func retentionNewRevision(t *testing.T, fixture *ownedFixture) {
+	store := fixture.Store()
 	ctx := contextFor(t)
 	h := retentionHost(store)
 	raw := command("old", "input", "hello", nil, future())
@@ -104,7 +103,7 @@ func retentionNewRevision(t *testing.T, store workStore) {
 	if err != nil || result != demo.Cleaned {
 		t.Fatalf("clean: %s %v", result, err)
 	}
-	store = retentionReopen(t, store)
+	store = fixture.Replace(t)
 	h = retentionHost(store)
 	retentionQuery(t, h, "old", true)
 	h.Clock = &workClock{now: time.Date(2200, 1, 1, 0, 0, 0, 0, time.UTC)}
@@ -144,7 +143,7 @@ func retentionNewRevision(t *testing.T, store workStore) {
 	if nextWork.Claim.JobID != work.Claim.JobID || nextWork.Input.Text != "new body" || nextWork.Claim.ClaimedRevision != 2 {
 		t.Fatalf("new responsibility: %+v", nextWork)
 	}
-	store = retentionReopen(t, store)
+	store = fixture.Replace(t)
 	h = retentionHost(store)
 	retentionQuery(t, h, "old", true)
 	assertReceiptSame(t, next, retentionQuery(t, h, "new", false))
@@ -153,9 +152,11 @@ func retentionNewRevision(t *testing.T, store workStore) {
 		t.Fatalf("new after restart: %+v %v", got, err)
 	}
 }
-func TestPGRetentionEmptyPendingAndAuthority(t *testing.T) { retentionEligibility(t, database(t)) }
+func TestPGRetentionEmptyPendingAndAuthority(t *testing.T) {
+	retentionEligibility(t, database(t).Store())
+}
 func TestSQLiteRetentionEmptyPendingAndAuthority(t *testing.T) {
-	retentionEligibility(t, sqliteDatabase(t))
+	retentionEligibility(t, sqliteDatabase(t).Store())
 }
 func retentionEligibility(t *testing.T, store workStore) {
 	ctx := contextFor(t)
@@ -239,48 +240,17 @@ func retentionEligibility(t *testing.T, store workStore) {
 	}
 }
 
-func retentionReopen(t *testing.T, store workStore) workStore {
-	t.Helper()
-	if pg, ok := store.(*postgres.Store); ok {
-		cfg, ok := configurations.Load(pg)
-		if !ok {
-			t.Fatal("missing registered postgres scope")
-		}
-		replacement, err := postgres.Open(contextFor(t), cfg.(postgres.Config))
-		if err != nil {
-			t.Fatal(err)
-		}
-		configurations.Store(replacement, cfg)
-		t.Cleanup(func() { replacement.Close() })
-		return replacement
-	}
-	sqliteStore := store.(*sqlite.Store)
-	cfg, ok := sqliteConfigurations.Load(sqliteStore)
-	if !ok {
-		t.Fatal("missing registered sqlite file")
-	}
-	if err := sqliteStore.Close(); err != nil {
-		t.Fatal(err)
-	}
-	replacement, err := sqlite.Open(contextFor(t), cfg.(sqlite.Config))
-	if err != nil {
-		t.Fatal(err)
-	}
-	sqliteConfigurations.Store(replacement, cfg)
-	t.Cleanup(func() { replacement.Close() })
-	return replacement
-}
-
 func TestPGRetentionConcurrentRevision(t *testing.T) {
-	retentionConcurrentRevision(t, func(t *testing.T) workStore { return database(t) })
+	retentionConcurrentRevision(t, func(t *testing.T) *ownedFixture { return database(t) })
 }
 func TestSQLiteRetentionConcurrentRevision(t *testing.T) {
-	retentionConcurrentRevision(t, func(t *testing.T) workStore { return sqliteDatabase(t) })
+	retentionConcurrentRevision(t, func(t *testing.T) *ownedFixture { return sqliteDatabase(t) })
 }
-func retentionConcurrentRevision(t *testing.T, newStore func(*testing.T) workStore) {
+func retentionConcurrentRevision(t *testing.T, newStore func(*testing.T) *ownedFixture) {
 	for _, first := range []string{"cleanup", "record"} {
 		t.Run(first, func(t *testing.T) {
-			store := newStore(t)
+			fixture := newStore(t)
+			store := fixture.Store()
 			h := retentionHost(store)
 			ctx := contextFor(t)
 			raw := command("old", "input", "hello", nil, future())
@@ -361,15 +331,16 @@ func retentionConcurrentRevision(t *testing.T, newStore func(*testing.T) workSto
 	}
 }
 func TestPGRetentionConcurrentCompletion(t *testing.T) {
-	retentionConcurrentCompletion(t, func(t *testing.T) workStore { return database(t) })
+	retentionConcurrentCompletion(t, func(t *testing.T) *ownedFixture { return database(t) })
 }
 func TestSQLiteRetentionConcurrentCompletion(t *testing.T) {
-	retentionConcurrentCompletion(t, func(t *testing.T) workStore { return sqliteDatabase(t) })
+	retentionConcurrentCompletion(t, func(t *testing.T) *ownedFixture { return sqliteDatabase(t) })
 }
-func retentionConcurrentCompletion(t *testing.T, newStore func(*testing.T) workStore) {
+func retentionConcurrentCompletion(t *testing.T, newStore func(*testing.T) *ownedFixture) {
 	for _, first := range []string{"cleanup", "completion", "claim"} {
 		t.Run(first, func(t *testing.T) {
-			store := newStore(t)
+			fixture := newStore(t)
+			store := fixture.Store()
 			h := retentionHost(store)
 			ctx := contextFor(t)
 			out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
@@ -463,9 +434,11 @@ func retentionConcurrentCompletion(t *testing.T, newStore func(*testing.T) workS
 	}
 }
 
-func TestPGRetentionStorageAndRollback(t *testing.T) { retentionStorageAndRollback(t, database(t)) }
+func TestPGRetentionStorageAndRollback(t *testing.T) {
+	retentionStorageAndRollback(t, database(t).Store())
+}
 func TestSQLiteRetentionStorageAndRollback(t *testing.T) {
-	retentionStorageAndRollback(t, sqliteDatabase(t))
+	retentionStorageAndRollback(t, sqliteDatabase(t).Store())
 }
 func retentionStorageAndRollback(t *testing.T, store workStore) {
 	ctx := contextFor(t)
@@ -543,15 +516,16 @@ func (g *retentionReaderGate) ReadCommand(ctx context.Context, ref contract.Comm
 	return result, err
 }
 func TestPGRetentionConcurrentQueryAndReplay(t *testing.T) {
-	retentionConcurrentReads(t, func(t *testing.T) workStore { return database(t) })
+	retentionConcurrentReads(t, func(t *testing.T) *ownedFixture { return database(t) })
 }
 func TestSQLiteRetentionConcurrentQueryAndReplay(t *testing.T) {
-	retentionConcurrentReads(t, func(t *testing.T) workStore { return sqliteDatabase(t) })
+	retentionConcurrentReads(t, func(t *testing.T) *ownedFixture { return sqliteDatabase(t) })
 }
-func retentionConcurrentReads(t *testing.T, newStore func(*testing.T) workStore) {
+func retentionConcurrentReads(t *testing.T, newStore func(*testing.T) *ownedFixture) {
 	for _, first := range []string{"cleanup", "query", "replay"} {
 		t.Run(first, func(t *testing.T) {
-			store := newStore(t)
+			fixture := newStore(t)
+			store := fixture.Store()
 			h := retentionHost(store)
 			ctx := contextFor(t)
 			raw := command("source", "input", "hello", nil, future())

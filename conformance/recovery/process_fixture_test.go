@@ -34,6 +34,7 @@ const processDeadline = 12 * time.Second
 // or printed. Only the parent creates/registers/drops the PostgreSQL scope.
 type processConfig struct {
 	Backend, Schema, Path, Scenario, Gate string
+	fixture                               *ownedFixture
 	Generation                            int
 	Now                                   time.Time
 	Raw                                   json.RawMessage `json:",omitempty"`
@@ -144,11 +145,19 @@ type hostProcess struct {
 	done                   chan error
 	output                 *processOutput
 	waited                 bool
+	waitObserved           bool
+	waitError              error
 	cfg                    processConfig
 }
 
 func startHostProcess(t *testing.T, cfg processConfig) *hostProcess {
 	t.Helper()
+	if cfg.fixture == nil {
+		t.Fatal("parent process requires owned fixture")
+	}
+	if err := cfg.fixture.prepareChild(); err != nil {
+		t.Fatal(err)
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), processDeadline)
 	executable, err := os.Executable()
 	if err != nil {
@@ -184,6 +193,13 @@ func startHostProcess(t *testing.T, cfg processConfig) *hostProcess {
 	cmd.Stdout, cmd.Stderr = output, output
 	cmd.WaitDelay = time.Second
 	if err = cmd.Start(); err != nil {
+		// A reported spawn failure with an OS handle is not proof of exit.
+		// Preserve that borrow and let bounded Kill/Wait establish its state.
+		if cmd.Process != nil {
+			child := &hostProcess{cmd: cmd, ctx: ctx, cancel: cancel, control: controlWrite, events: eventRead, reply: replyRead, done: make(chan error, 1), output: output, cfg: cfg}
+			cfg.fixture.child = child
+			go func() { child.done <- cmd.Wait() }()
+		}
 		for _, f := range []*os.File{controlRead, controlWrite, eventRead, eventWrite, replyRead, replyWrite} {
 			f.Close()
 		}
@@ -194,21 +210,14 @@ func startHostProcess(t *testing.T, cfg processConfig) *hostProcess {
 	eventWrite.Close()
 	replyWrite.Close()
 	child := &hostProcess{cmd: cmd, ctx: ctx, cancel: cancel, control: controlWrite, events: eventRead, reply: replyRead, done: make(chan error, 1), output: output, cfg: cfg}
+	cfg.fixture.child = child
 	go func() { child.done <- cmd.Wait() }()
 	t.Cleanup(func() {
-		if !child.waited {
-			_ = cmd.Process.Kill()
-			select {
-			case <-child.done:
-				child.waited = true
-			case <-time.After(2 * time.Second):
-				t.Error("child failed finite cleanup kill/Wait")
-			}
+		cleanup, stop := context.WithTimeout(context.Background(), 2*time.Second)
+		defer stop()
+		if err := child.stop(cleanup); err != nil {
+			t.Error(err)
 		}
-		controlWrite.Close()
-		eventRead.Close()
-		replyRead.Close()
-		cancel()
 	})
 	if err = writeProcessFrame(ctx, controlWrite, cfg); err != nil {
 		t.Fatal(err)
@@ -250,10 +259,14 @@ func (p *hostProcess) wait(t *testing.T, killed bool) {
 		case <-time.After(2 * time.Second):
 			t.Fatal("child failed finite kill/Wait cleanup")
 		}
-		p.waited = true
+		if e := p.confirmExit(err); e != nil {
+			t.Fatal(e)
+		}
 		t.Fatalf("child exceeded physical deadline: %v %s", err, p.output.String())
 	}
-	p.waited = true
+	if e := p.confirmExit(err); e != nil {
+		t.Fatal(e)
+	}
 	if killed {
 		var exit *exec.ExitError
 		if !errors.As(err, &exit) {
@@ -284,20 +297,12 @@ func (p *hostProcess) kill(t *testing.T) {
 func processFixture(t *testing.T, backend, scenario string) processConfig {
 	t.Helper()
 	cfg := processConfig{Backend: backend, Scenario: scenario, Generation: 1, Now: time.Date(2026, 10, 3, 1, 0, 0, 0, time.UTC)}
-	switch backend {
-	case "postgres":
-		creator := database(t)
-		value, _ := configurations.Load(creator)
-		cfg.Schema = value.(postgres.Config).Schema
-	case "sqlite":
-		store := sqliteDatabase(t)
-		value, _ := sqliteConfigurations.Load(store)
-		cfg.Path = value.(sqlite.Config).Path
-		if err := store.Close(); err != nil {
-			t.Fatal(err)
-		}
-	default:
-		t.Fatal("unsupported backend")
+	f := newOwnedFixture(t, backend, true)
+	cfg.fixture = f
+	cfg.Schema = f.pg.Schema
+	cfg.Path = f.sq.Path
+	if err := f.CloseWriter(); err != nil {
+		t.Fatal(err)
 	}
 	return cfg
 }
@@ -315,15 +320,10 @@ func openProcessStore(ctx context.Context, cfg processConfig) (workStore, error)
 }
 func processObserver(t *testing.T, cfg processConfig) (workStore, *durablework.Host, *durablework.Worker) {
 	t.Helper()
-	store, err := openProcessStore(contextFor(t), cfg)
-	if err != nil {
-		t.Fatal(err)
+	if cfg.fixture == nil {
+		t.Fatal("parent observer requires owned fixture")
 	}
-	t.Cleanup(func() {
-		if err := store.Close(); err != nil {
-			t.Error(err)
-		}
-	})
+	store := cfg.fixture.Replace(t)
 	clock := &controlledClock{admissionStore: store, instant: cfg.Now}
 	h := hostFor(store, owner, principal)
 	h.Clock = clock
@@ -540,4 +540,42 @@ func processWorker(t *testing.T, store workStore, clock runtime.Clock) *durablew
 		t.Fatal(err)
 	}
 	return worker
+}
+
+// Wait belongs to this process module. The fixture only asks it for bounded
+// release and joins its actual exit before reopening or deleting its scope.
+func (p *hostProcess) confirmExit(err error) error {
+	p.waitObserved = true
+	p.waitError = err
+	if p.cmd.ProcessState == nil {
+		return errors.Join(errors.New("child Wait exit unconfirmed"), err)
+	}
+	p.waited = true
+	return nil
+}
+func (p *hostProcess) stop(ctx context.Context) error {
+	if !p.waited {
+		if p.waitObserved {
+			return errors.Join(errors.New("child Wait exit unconfirmed"), p.waitError)
+		}
+		if err := p.cmd.Process.Kill(); err != nil && !errors.Is(err, os.ErrProcessDone) {
+			return fmt.Errorf("child Kill: %w", err)
+		}
+		select {
+		case err := <-p.done:
+			if err = p.confirmExit(err); err != nil {
+				return err
+			}
+		case <-ctx.Done():
+			return fmt.Errorf("child cleanup Wait unconfirmed: %w", ctx.Err())
+		}
+	}
+	var errs []error
+	for _, file := range []*os.File{p.control, p.events, p.reply} {
+		if err := file.Close(); err != nil && !errors.Is(err, os.ErrClosed) {
+			errs = append(errs, err)
+		}
+	}
+	p.cancel()
+	return errors.Join(errs...)
 }

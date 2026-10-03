@@ -14,8 +14,10 @@ import (
 	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
 )
 
-func TestPGPoolRunPreservesRetryWindow(t *testing.T)     { poolRunRetryWindow(t, database(t)) }
-func TestSQLitePoolRunPreservesRetryWindow(t *testing.T) { poolRunRetryWindow(t, sqliteDatabase(t)) }
+func TestPGPoolRunPreservesRetryWindow(t *testing.T) { poolRunRetryWindow(t, database(t).Store()) }
+func TestSQLitePoolRunPreservesRetryWindow(t *testing.T) {
+	poolRunRetryWindow(t, sqliteDatabase(t).Store())
+}
 func poolRunRetryWindow(t *testing.T, store workStore) {
 	ctx := contextFor(t)
 	clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
@@ -134,9 +136,11 @@ func (timer *poolTimer) Wait(ctx context.Context, delay time.Duration) error {
 	}
 }
 
-func TestPGPoolRunCurrentRevisionDeadlineAndZeroQuota(t *testing.T) { poolRunDeadline(t, database(t)) }
+func TestPGPoolRunCurrentRevisionDeadlineAndZeroQuota(t *testing.T) {
+	poolRunDeadline(t, database(t).Store())
+}
 func TestSQLitePoolRunCurrentRevisionDeadlineAndZeroQuota(t *testing.T) {
-	poolRunDeadline(t, sqliteDatabase(t))
+	poolRunDeadline(t, sqliteDatabase(t).Store())
 }
 func poolRunDeadline(t *testing.T, store workStore) {
 	ctx := contextFor(t)
@@ -329,9 +333,11 @@ func poolRunDeadline(t *testing.T, store workStore) {
 	}
 }
 
-func TestPGPoolWakeKeepsEarlierClaimedDeadline(t *testing.T) { poolClaimedDeadline(t, database(t)) }
+func TestPGPoolWakeKeepsEarlierClaimedDeadline(t *testing.T) {
+	poolClaimedDeadline(t, database(t).Store())
+}
 func TestSQLitePoolWakeKeepsEarlierClaimedDeadline(t *testing.T) {
-	poolClaimedDeadline(t, sqliteDatabase(t))
+	poolClaimedDeadline(t, sqliteDatabase(t).Store())
 }
 func poolClaimedDeadline(t *testing.T, store workStore) {
 	ctx := contextFor(t)
