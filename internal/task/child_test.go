@@ -181,3 +181,81 @@ func TestAllocationCloseBeforeCreationNeverReopensIncomingGate(t *testing.T) {
 		t.Fatalf("closed tombstone lost %+v %v", incoming, err)
 	}
 }
+
+func TestInternalChildCancellationProducesSignedOriginalAllocationClosure(t *testing.T) {
+	rule := fixtureRule()
+	gate := &evidenceBridge{rules: map[string]api.RuleDefinition{rule.RuleRef.ComponentID: rule}}
+	proof := &localProofFixture{}
+	h := newHarness(t, task.Ports{Gate: gate, ClosureProof: proof}, rule)
+	proof.install(t, h.scope)
+	gate.service = governance.New(h.store, governance.Options{})
+	parent := readyTask(t, h, rule)
+	in := task.DelegateInput{DelegationID: api.NewID("delegation"), ParentTaskRef: h.scope.Ref(parent.TaskID, parent.Revision), ParentGoalRevision: parent.GoalRevision, GoalRef: h.content("exact bounded child goal"), InputRefs: []api.ContentRef{}, AgentBindingRef: h.scope.Ref(api.NewID("binding"), 1), PermissionRefs: []api.ObjectRef{}, Budget: []api.Amount{{Unit: "USD", Value: "3"}}, Deadline: parent.Deadline, PolicyRef: h.policy.PolicyRef, ReceiverID: h.scope.OwnerID, Internal: true}
+	out, err := h.service.Delegate(context.Background(), h.store, h.scope, h.auth, h.command("trusted.delegate", in.DelegationID, nil, in), in)
+	if err != nil || out.ChildTaskRef == nil {
+		t.Fatalf("internal creation %+v %v", out, err)
+	}
+	child, err := h.service.Read(context.Background(), h.store, h.scope, h.auth, out.ChildTaskRef.ObjectID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	decision := h.prepared(child, "2")
+	if _, err = h.service.PrepareDecision(context.Background(), h.store, h.scope, h.trusted(), decision); err != nil {
+		t.Fatal(err)
+	}
+	usage := api.UsageSnapshot{SourceRef: h.scope.Ref(decision.DecisionID, 1), UsageRevision: 1, Cumulative: []api.Amount{{Unit: "USD", Value: "1"}}, SpendingClosed: true, UsageFinal: true, ProofRefs: []api.ContentRef{h.content("accurate literal original paid source fixture")}}
+	usage.UsageDigest, _ = task.UsageDigest(usage)
+	if _, err = h.service.ReconcileUsage(context.Background(), h.store, h.scope, h.trusted(), "brain_decision", usage); err != nil {
+		t.Fatal(err)
+	}
+	child, err = h.service.Read(context.Background(), h.store, h.scope, h.auth, child.TaskID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	r, err := h.dispatch.Command(context.Background(), h.auth, api.Raw(h.command("task.cancel", child.TaskID, &child.Revision, task.ControlInput{TaskID: child.TaskID, Reason: "close bounded original child"})))
+	if err != nil || r.Stage != "applied" {
+		t.Fatalf("child cancel %+v %v", r, err)
+	}
+	drainKind(t, h, task.JobDelegation)
+	d, err := h.service.DelegationRead(context.Background(), h.store, h.scope, h.auth, in.DelegationID)
+	if err != nil || d.Phase != "closed" || !d.GoalWorkClosed || !d.EffectsClosed || d.ClosureRef == nil {
+		t.Fatalf("truthful delegation closure %+v %v", d, err)
+	}
+	a, err := h.service.AllocationRead(context.Background(), h.store, h.scope, h.auth, out.AllocationRef.ObjectID)
+	if err != nil || a.State != "settled" || a.ClosureRef == nil {
+		t.Fatalf("allocation closure not settled %+v %v", a, err)
+	}
+	closure, err := h.service.AllocationClosureRead(context.Background(), h.store, h.scope, h.trusted(), *a.ClosureRef)
+	if err != nil || api.Equal(closure.ProofRef, child.GoalRef) {
+		t.Fatalf("unsigned allocation closure %+v %v", closure, err)
+	}
+	var sealed sealedSource
+	if _, err = h.store.Read(context.Background(), h.scope, "task.test_source_proofs", closure.ProofRef.ContentID, 1, &sealed); err != nil {
+		t.Fatal(err)
+	}
+	body := closure
+	body.ProofRef = api.ContentRef{}
+	digest, _ := api.Digest(body)
+	if digest != sealed.Claims.Digest {
+		t.Fatal("allocation proof does not bind exact cumulative usage")
+	}
+	if _, err = proof.keys.Verify(sealed.JWS, sealed.Claims, time.Now()); err != nil {
+		t.Fatal(err)
+	}
+	b, err := h.service.BudgetRead(context.Background(), h.store, h.scope, h.auth, parent.TaskID)
+	if err != nil || b.Budget[0].Spent != "1" || b.Budget[0].Reserved != "0" || b.AccountingOpen {
+		t.Fatalf("original parent reservation not released %+v %v", b, err)
+	}
+	usage.UsageRevision = 2
+	usage.SourceRef.Revision = 2
+	usage.Cumulative[0].Value = "2"
+	usage.UsageDigest, _ = task.UsageDigest(usage)
+	if _, err = h.service.ReconcileUsage(context.Background(), h.store, h.scope, h.trusted(), "brain_decision", usage); err != nil {
+		t.Fatal(err)
+	}
+	drainKind(t, h, task.JobAllocation)
+	b, err = h.service.BudgetRead(context.Background(), h.store, h.scope, h.auth, parent.TaskID)
+	if err != nil || b.Budget[0].Spent != "2" || b.Budget[0].Reserved != "0" || b.AccountingOpen {
+		t.Fatalf("receiver late cumulative correction did not add exact parent delta %+v %v", b, err)
+	}
+}

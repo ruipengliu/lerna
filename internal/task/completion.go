@@ -181,7 +181,7 @@ func (s *Service) CompleteTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 		return api.Result{}, e
 	}
 	ref := tx.Scope().Ref(result.ResultID, 1)
-	publication := resultPublication{ResultRef: ref, Revision: 1, UploadID: api.NewID("upload"), State: "pending", Notices: []string{}}
+	publication := resultPublication{ResultRef: ref, Revision: 1, UploadID: api.NewID("upload"), State: "pending", Notices: []string{}, NoticeRefs: []api.ObjectRef{}}
 	if e = tx.Create(ctx, publications, result.ResultID, t.Task.TaskID, publication); e != nil {
 		return api.Result{}, e
 	}
@@ -221,7 +221,86 @@ func (s *Service) Result(ctx context.Context, store runtime.Store, scope runtime
 	if _, e = store.Read(ctx, scope, publications, ref.ObjectID, 0, &pub); e != nil {
 		return ResultOutput{}, e
 	}
-	return ResultOutput{Result: result, Publication: pub.State, ContentRef: pub.ContentRef, Notices: pub.Notices}, nil
+	if pub.NoticeRefs == nil {
+		pub.NoticeRefs = []api.ObjectRef{}
+	}
+	return ResultOutput{Result: result, Publication: pub.State, ContentRef: pub.ContentRef, Notices: pub.Notices, NoticeRefs: pub.NoticeRefs}, nil
+}
+
+const resultNotices = "task.result_notices"
+
+// RecordResultNoticeTx 只在受信通知接收事务内登记附注，不重写最终Result或Task终态。
+func (s *Service) RecordResultNoticeTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, notice ResultNotice) error {
+	if !auth.HasRole("service") && auth.SubjectID != notice.NoticeRef.OwnerID {
+		return api.E("forbidden", "evidence_owner_required")
+	}
+	for _, ref := range []api.ObjectRef{notice.NoticeRef, notice.ConsumerTaskRef, notice.ResultRef, notice.HolderRef, notice.DefectRef} {
+		if err := runtime.CheckRef(tx.Scope(), ref); err != nil {
+			return err
+		}
+	}
+	if notice.ConsumerTaskRef.OwnerID != tx.Scope().OwnerID || notice.ResultRef.OwnerID != tx.Scope().OwnerID || notice.NoticeRef.OwnerID != notice.HolderRef.OwnerID || notice.NoticeRef.OwnerID != notice.DefectRef.OwnerID || notice.Reason == "" || len(notice.Reason) > 512 {
+		return api.E("forbidden", "result_notice_scope_mismatch")
+	}
+	when, err := api.ParseTime(notice.RegisteredAt)
+	if err != nil {
+		return err
+	}
+	now, err := tx.Now(ctx)
+	if err != nil {
+		return err
+	}
+	if when.After(now) {
+		return invalid("future_notice")
+	}
+	t, err := getTask(ctx, tx, notice.ConsumerTaskRef.ObjectID)
+	if err != nil {
+		return err
+	}
+	if t.Task.Status != "succeeded" || t.Task.ResultRef == nil || !api.Equal(*t.Task.ResultRef, notice.ResultRef) {
+		return api.E("revision_conflict", "result_notice_target_mismatch")
+	}
+	key := refKey(notice.NoticeRef)
+	digest, err := api.Digest(notice)
+	if err != nil {
+		return err
+	}
+	binding, err := tx.LookupKey(ctx, resultNotices, key)
+	if err == nil {
+		if binding.Digest != digest {
+			return api.E("idempotency_conflict", "result_notice_conflict")
+		}
+		return nil
+	}
+	if !confirmedNotFound(err) {
+		return err
+	}
+	var pub resultPublication
+	rev, err := tx.Get(ctx, publications, notice.ResultRef.ObjectID, &pub)
+	if err != nil {
+		return err
+	}
+	if len(pub.NoticeRefs) >= 100 {
+		return api.E("overloaded", "result_notice_capacity")
+	}
+	if err = tx.Create(ctx, resultNotices, key, t.Task.TaskID, notice); err != nil {
+		return err
+	}
+	if err = tx.Bind(ctx, resultNotices, key, key, digest); err != nil {
+		return err
+	}
+	pub.NoticeRefs = append(pub.NoticeRefs, notice.NoticeRef)
+	found := false
+	for _, reason := range pub.Notices {
+		if reason == notice.Reason {
+			found = true
+		}
+	}
+	if !found {
+		pub.Notices = append(pub.Notices, notice.Reason)
+	}
+	pub.Revision++
+	return tx.Put(ctx, publications, notice.ResultRef.ObjectID, rev, pub)
 }
 
 const acceptanceRequests = "task.acceptance_requests"

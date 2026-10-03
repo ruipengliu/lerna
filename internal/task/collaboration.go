@@ -18,6 +18,11 @@ func (s *Service) DelegateTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 	if !api.ValidID(in.DelegationID) || !api.ValidID(in.ReceiverID) || c.TargetID != in.DelegationID {
 		return DelegateOutput{}, invalid("invalid_delegation_identity")
 	}
+	if !in.Internal {
+		if e := s.collaborationAdmission(ctx, tx, auth, "delegate", in.ReceiverID); e != nil {
+			return DelegateOutput{}, e
+		}
+	}
 	if in.ParentTaskRef.OwnerID != tx.Scope().OwnerID || in.ParentTaskRef.TenantID != tx.Scope().TenantID {
 		return DelegateOutput{}, api.E("forbidden", "parent_owner_mismatch")
 	}
@@ -108,7 +113,7 @@ func (s *Service) DelegateTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 			return DelegateOutput{}, e
 		}
 		childCommand := api.Command{TargetID: childID, CommandID: api.NewID("command")}
-		sub, e := s.SubmitTx(ctx, tx, auth, childCommand, SubmitInput{OrchestratorID: tx.Scope().OwnerID, GoalRef: in.GoalRef, PolicyRef: in.PolicyRef, Deadline: in.Deadline, Budget: in.Budget})
+		sub, e := s.SubmitTx(ctx, tx, submitterAuth(tx.Scope(), t), childCommand, SubmitInput{OrchestratorID: tx.Scope().OwnerID, GoalRef: in.GoalRef, PolicyRef: in.PolicyRef, Deadline: in.Deadline, Budget: in.Budget})
 		if e != nil {
 			return DelegateOutput{}, e
 		}
@@ -295,6 +300,9 @@ func (s *Service) ChildCreateTx(ctx context.Context, tx runtime.Tx, auth runtime
 	if c.TargetID != in.ChildID || !api.ValidID(in.ChildID) || !api.ValidID(in.SessionOwnerID) {
 		return ChildOutput{}, invalid("invalid_child_identity")
 	}
+	if e := s.collaborationAdmission(ctx, tx, auth, "session", in.SessionOwnerID); e != nil {
+		return ChildOutput{}, e
+	}
 	now, e := tx.Now(ctx)
 	if e != nil {
 		return ChildOutput{}, e
@@ -392,6 +400,9 @@ func (s *Service) ChildSendTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		if _, e := tx.Get(ctx, delegations, in.DelegationRef.ObjectID, &d); e != nil {
 			return out, e
 		}
+		if e := s.collaborationAdmission(ctx, tx, auth, "transfer", d.ReceiverID); e != nil {
+			return out, e
+		}
 		if d.GoalWorkClosed || d.CloseRequested {
 			return out, api.E("invalid_state", "delegation_closed")
 		}
@@ -435,6 +446,16 @@ func (s *Service) ChildSendTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 	}
 	out.ChildRef = tx.Scope().Ref(h.ChildID, h.Revision)
 	return out, nil
+}
+
+func (s *Service) collaborationAdmission(ctx context.Context, tx runtime.Tx, auth runtime.Auth, kind, receiver string) error {
+	if s.ports.Collaboration == nil {
+		return api.E("unsupported", "collaboration_not_configured")
+	}
+	if gate, ok := s.ports.Collaboration.(CollaborationAdmission); ok {
+		return gate.CheckCollaborationTx(ctx, tx, auth, kind, receiver)
+	}
+	return nil
 }
 func (s *Service) ChildCloseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ChildCloseInput) (ChildCloseOutput, error) {
 	if e := target(c, in.ChildID); e != nil {
