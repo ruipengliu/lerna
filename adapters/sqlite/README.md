@@ -10,9 +10,15 @@
 
 原命令、纯数据库 SAVEPOINT 中的领域写入、回执和 Job 同库提交。业务拒绝回滚 SAVEPOINT 后仍保存固定 rejected 回执。墓碑永久占用原身份。Tx 不跨库、tenant 或 owner，不逃逸到 goroutine，也不包含外部调用；事务关闭后使用被拒绝。
 
+命令与回执各自保留 256 KiB 的严格字节边界，保存两者的 `StoredCommand` 聚合封套上限为 1 MiB。独立 `003_command_envelopes.sql` 在管理事务中替换命令表的字节约束并保留原数据、复合键及 FK；已应用制品只核摘要，不重复替换，也不改旧迁移摘要。
+
+`TxSnapshotReader.Peek` 仅提供加上游锁前的当前路由，调用方仍须用 `Get` 核原 revision 和当前资格。Guard 先核原 Claim 并登记，Within 在领域闭包结束后强核全部领取；Finish 已保护的原 Job 保持到提交。SAVEPOINT 回滚撤销其中的保护登记，实际提交前重新核数据库时间与原确认截止。SQLite 仍由本机单写队列和跨进程文件锁串行，无 PG 行锁假设。
+
 时间裁决每次重新读取 SQLite 当前 UTC，不使用事务开始时间。Job 时间按准确纳秒保存，支持 1970 至 2261 年。Claim 保留领取观察值；续租不刷新它，未知续租不延长原确认截止。新 source_ref 的 Raise 推进工作版本，相同事实重传不会增加责任；Hint 不创建、不增版本、不重开 done。过期 worker 的受保护写入整笔回滚，新 Raise 不会被旧 done 或等待覆盖。
 
 Within 的提交结果为 committed/rolled_back/commit_unknown；未知结果必须沿原命令/阶段查询。`WithCommitFault` 为管理验证提供 before/after commit 故障，不能作为普通业务配置。合同测试还在提交边界实际 SIGKILL 写者，以重开原库后的公开接口读回证明 record/receipt/Job 的原子集合。
+
+Within 不自动重跑闭包。调用方只在确认回滚且没有外部行为时，重建全部捕获状态后有限重试；失败尝试的发送标记与输出不能充当提交依据。
 
 `QueryBindingStore` 将原 query_id、主体、凭据代次、角色与准确查询摘要、结果摘要和首次截止保存为短期元数据，不缓存披露正文。TTL 为 1 秒至 5 分钟且不刷新；再次查询仍执行当前门禁，摘要变化返回 `query_snapshot_changed`。过期原身份可重用，旧生命周期不能封存新查询。`PruneQueries` 每次只清理本 tenant/owner 的 1–1000 条已过期绑定；宿主显式调用，没有隐式清理线程。查询迁移是独立的 `002_query_bindings.sql`，原迁移制品摘要保持不变。
 
