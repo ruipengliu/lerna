@@ -96,4 +96,7 @@ func TestPostgresFrozenQueryPageChecksCurrentSourceRetention(t *testing.T) {
 	t.Run("exact_snapshot_piece_digest", func(t *testing.T) {
 		testFrozenQueryRejectsSnapshotPartDigestChanges(t, createFixture)
 	})
+	t.Run("later_permission_gap_bound", func(t *testing.T) {
+		testFrozenQueryReservesRoomForLaterPermissionGaps(t, createFixture)
+	})
 }
