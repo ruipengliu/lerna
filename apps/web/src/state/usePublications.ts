@@ -2,58 +2,22 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   getJSON,
   endpoint,
-  isObject,
   jsonBytes,
   IndexedDBPublications,
   preparePublication,
   publishOriginal,
-  validateRecord,
   validateSchema,
   newID,
+  developmentConfig,
 } from "@harness/sdk";
 import type {
-  Amount,
-  ComponentRef,
   ContentRef,
   HarnessClient,
   JSONValue,
   Receipt,
-  Schema,
+  DevelopmentConfig,
 } from "@harness/sdk";
 import type { ReportInput } from "../features/ReportForm";
-export interface DevelopmentConfig {
-  tenant_id: string;
-  content_policy_ref: ComponentRef;
-  task_policy_ref: ComponentRef;
-  budget: Amount[];
-  goal_schema: Schema;
-  retention_seconds: number;
-  task_deadline_seconds: number;
-}
-function configView(value: JSONValue): DevelopmentConfig {
-  if (
-    !isObject(value) ||
-    typeof value.tenant_id !== "string" ||
-    !Number.isSafeInteger(value.retention_seconds) ||
-    typeof value.retention_seconds !== "number" ||
-    value.retention_seconds < 60 ||
-    value.retention_seconds > 31536000 ||
-    !Number.isSafeInteger(value.task_deadline_seconds) ||
-    typeof value.task_deadline_seconds !== "number" ||
-    value.task_deadline_seconds < 1 ||
-    value.task_deadline_seconds > 31536000 ||
-    !Array.isArray(value.budget) ||
-    value.budget.length < 1 ||
-    value.budget.length > 100 ||
-    !isObject(value.goal_schema)
-  )
-    throw new Error("开发配置缺少准确策略、预算或有界期限");
-  validateRecord("Id", value.tenant_id);
-  validateRecord("ComponentRef", value.content_policy_ref);
-  validateRecord("ComponentRef", value.task_policy_ref);
-  for (const amount of value.budget) validateRecord("Amount", amount);
-  return value as unknown as DevelopmentConfig;
-}
 export function usePublications(
   client: HarnessClient | undefined,
   onGoal: (receipt: Receipt | undefined, ref: ContentRef) => void,
@@ -83,7 +47,7 @@ export function usePublications(
     setStore(next);
     void getJSON(fetch, endpoint(new URL(location.origin), "/api/development/config"), 262144)
       .then((value) => {
-        if (active) setConfig({ identity, value: configView(value) });
+        if (active) setConfig({ identity, value: developmentConfig(value) });
       })
       .catch(() => {
         if (active) setConfig(undefined);

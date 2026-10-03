@@ -233,6 +233,19 @@ export function RestrictedForm({
                   />
                   启用该声明
                 </label>
+              ) : field.type === "string" &&
+                (key === "body" ||
+                  (typeof field.maxLength === "number" && field.maxLength > 4096)) ? (
+                <textarea
+                  id={title}
+                  aria-label={label}
+                  value={typeof fieldValue === "string" ? fieldValue : ""}
+                  rows={6}
+                  maxLength={
+                    typeof field.maxLength === "number" ? Math.min(field.maxLength, 65536) : 4096
+                  }
+                  onChange={(event) => update(event.target.value)}
+                />
               ) : field.type === "string" ? (
                 <input
                   id={title}

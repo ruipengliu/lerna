@@ -6,6 +6,10 @@
 
 受信输入/确认绑定身份 scope、当前凭据修订、原请求版本、目标版本与固定截止。回答 Schema 必须匹配原 ComponentRef 摘要；确认原命令必须匹配原 intent 摘要。必需全文按准确 ContentRef 取回、核对字节数/哈希并成功呈现后，依赖按钮才可用。表单仅支持有界闭合字段和闭合 oneOf；不执行脚本、远程 Schema、HTML 或 Markdown HTML。图像只呈现验真后的 PNG/JPEG 原字节。
 
+Surface 通过 `presentation.open/begin/read/rendered/close` 维护准确呈现。`read` 返回的有限内联原字节必须与全部必需引用逐一匹配；本窗口无缓存时不接受缺正文的 `not_modified`。身份、凭据修订、窗口代数、意图与 Surface 修订共同绑定呈现资格。固定应用事件只来自已认证配置，Schema 和 binding_ref 精确相等时才呈现表单；事件接纳、固定业务消费与呈现分别显示。示例归档入口只作用于配置登记的示例会话。
+
+SDK 的 JSON Schema 验证器解释已验摘要的同版合同，不使用 `eval` 或 `new Function`，可在 Gateway 的 `script-src 'self'` 约束下运行。
+
 关闭界面不取消 Task；退出登录只注销浏览器会话。恢复出版沿原身份查询并推进；已结浏览器副本可显式清除，未结责任仍保留。
 
 ## 验证

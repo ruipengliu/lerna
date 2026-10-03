@@ -226,7 +226,7 @@ export class ContractRegistry {
       typeof core.$defs !== "object"
     )
       throw new ProtocolError("invalid_core_schema");
-    const ajv = compiler();
+    const validator = compiler();
     const input = new Map<string, ValidateFunction>();
     const output = new Map<string, ValidateFunction>();
     for (const method of discovery.methods) {
@@ -234,8 +234,8 @@ export class ContractRegistry {
       if ((await digest([method.input_schema, method.output_schema])) !== method.schema_digest)
         throw new ProtocolError("method_digest_mismatch");
       for (const schema of [method.input_schema, method.output_schema]) localReferences(schema);
-      input.set(method.name, ajv.compile({ ...method.input_schema, $defs: core.$defs }));
-      output.set(method.name, ajv.compile({ ...method.output_schema, $defs: core.$defs }));
+      input.set(method.name, validator.compile({ ...method.input_schema, $defs: core.$defs }));
+      output.set(method.name, validator.compile({ ...method.output_schema, $defs: core.$defs }));
     }
     if ((await digest(discovery.methods)) !== discovery.methods_digest)
       throw new ProtocolError("methods_digest_mismatch");

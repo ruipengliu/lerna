@@ -11,6 +11,7 @@ import { RecoveryPanel } from "./features/RecoveryPanel";
 import { ReportForm } from "./features/ReportForm";
 import { TaskInspector } from "./features/TaskInspector";
 import { TrustedRequest } from "./features/TrustedRequest";
+import { PresentationRenderer } from "./features/PresentationRenderer";
 import { ContentPublisher } from "./features/ContentPublisher";
 import type { TrustedSelection } from "./features/TrustedRequest";
 import { initialPayload } from "./components/RestrictedForm";
@@ -77,6 +78,7 @@ export function App() {
   const [taskError, setTaskError] = useState("");
   const [refresh, setRefresh] = useState(0);
   const [trusted, setTrusted] = useState<TrustedSelection>();
+  const [presentation, setPresentation] = useState<TrustedSelection>();
   const selectionGeneration = useRef(0);
   const [control, setControl] = useState<{
     method: string;
@@ -167,6 +169,13 @@ export function App() {
       selectionGeneration.current++;
       setTrusted(undefined);
       setPreview([]);
+      setPresentation(undefined);
+      return;
+    }
+    if (method.startsWith("surface.") || method.startsWith("presentation.")) {
+      setPresentation({ identity: originalIdentity, method, value });
+      setTrusted(undefined);
+      setPreview([]);
       return;
     }
     if (["confirmation.read", "input_request.read", "task.input_requests.list"].includes(method)) {
@@ -213,6 +222,7 @@ export function App() {
     setPreview([]);
     setControl(undefined);
     setTrusted(undefined);
+    setPresentation(undefined);
     selectionGeneration.current++;
   };
   return (
@@ -223,6 +233,7 @@ export function App() {
       onReconnect={() => {
         selectionGeneration.current++;
         setTrusted(undefined);
+        setPresentation(undefined);
         void harness.reconnect();
       }}
       onDisconnect={() => {
@@ -230,6 +241,7 @@ export function App() {
         setPreview([]);
         setSelected(undefined);
         setTrusted(undefined);
+        setPresentation(undefined);
         void harness.disconnect();
       }}
       onLogout={() => {
@@ -237,6 +249,7 @@ export function App() {
         setPreview([]);
         setSelected(undefined);
         setTrusted(undefined);
+        setPresentation(undefined);
         void harness.logout();
       }}
     >
@@ -383,6 +396,16 @@ export function App() {
                 setRefresh((value) => value + 1);
                 if (task) void selectTask(task);
               }}
+            />
+          )}
+          {presentation?.identity === identity && (
+            <PresentationRenderer
+              key={`${presentation.identity}:${area}`}
+              client={client}
+              selection={presentation}
+              publish={publications.publish}
+              {...(publications.config ? { development: publications.config } : {})}
+              onDone={() => setRefresh((value) => value + 1)}
             />
           )}
         </>

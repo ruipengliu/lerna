@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   canonical,
   digest,
@@ -10,6 +10,7 @@ import {
 import type {
   ContentRef,
   HarnessClient,
+  InlineRenderBody,
   InputRequest,
   JSONValue,
   ObjectRef,
@@ -29,6 +30,7 @@ export function TrustedRequest({
   selection,
   publish,
   onDone,
+  presentation,
 }: {
   client: HarnessClient;
   selection: TrustedSelection;
@@ -37,6 +39,7 @@ export function TrustedRequest({
     next: (ref: ContentRef) => ReturnType<HarnessClient["makeCommand"]>,
   ) => Promise<{ content_ref: ContentRef; receipt?: Receipt }>;
   onDone: () => void;
+  presentation?: { generation: string; rendered: boolean; bodies: readonly InlineRenderBody[] };
 }) {
   const confirmation =
     selection.method === "confirmation.read" &&
@@ -46,7 +49,9 @@ export function TrustedRequest({
       ? selection.value
       : undefined;
   const inputView =
-    ["input_request.read", "task.input_requests.list"].includes(selection.method) &&
+    ["input_request.read", "task.input_requests.list", "presentation.read"].includes(
+      selection.method,
+    ) &&
     isObject(selection.value) &&
     isObject(selection.value.request) &&
     isObject(selection.value.answer_schema)
@@ -87,7 +92,7 @@ export function TrustedRequest({
     confirmation && typeof confirmation.expires_at === "string"
       ? confirmation.expires_at
       : request?.expires_at;
-  const key = `${selection.identity}:${requestID}:${revision}:${confirmation?.intent_hash ?? request?.goal_revision ?? ""}`;
+  const key = `${selection.identity}:${presentation?.generation ?? "owner"}:${requestID}:${revision}:${confirmation?.intent_hash ?? request?.goal_revision ?? ""}`;
   const [verified, setVerified] = useState<string>();
   const [original, setOriginal] = useState<{ key: string; value: JSONValue }>();
   const [answer, setAnswer] = useState<JSONValue>({});
@@ -97,6 +102,13 @@ export function TrustedRequest({
   const [decided, setDecided] = useState("");
   const [outcome, setOutcome] = useState("");
   const [refs, setRefs] = useState<ContentRef[]>([]);
+  const inlineBodies = useMemo(
+    () =>
+      presentation?.bodies.filter((body) =>
+        refs.some((ref) => canonical(ref) === canonical(body.content_ref)),
+      ),
+    [presentation?.bodies, refs],
+  );
   const [schemaVerified, setSchemaVerified] = useState("");
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
@@ -182,7 +194,12 @@ export function TrustedRequest({
   const previewKey = `${key}:${canonical(refs)}`;
   const bodyReady = refs.length > 0 && verified === previewKey;
   const allowed =
-    current && state === "pending" && Date.parse(expiresAt) > now && decided !== key && !running;
+    current &&
+    (!presentation || presentation.rendered) &&
+    state === "pending" &&
+    Date.parse(expiresAt) > now &&
+    decided !== key &&
+    !running;
   const expires = () => new Date(Math.min(Date.now() + 60000, Date.parse(expiresAt))).toISOString();
   const decide = async (decision: "approved" | "denied") => {
     if (
@@ -339,7 +356,12 @@ export function TrustedRequest({
           </p>
         )}
       </div>
-      <TrustedPreview refs={refs} generation={key} onVerified={setVerified} />
+      <TrustedPreview
+        refs={refs}
+        generation={key}
+        onVerified={setVerified}
+        {...(inlineBodies ? { inlineBodies } : {})}
+      />
       <div className="trusted-actions">
         {confirmation ? (
           <>
