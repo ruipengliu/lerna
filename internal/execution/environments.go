@@ -2,7 +2,6 @@ package execution
 
 import (
 	"context"
-	"strconv"
 	"time"
 
 	"github.com/ruipengliu/lerna/api"
@@ -13,7 +12,7 @@ const EnvironmentPrepareJob = "execution.environment.prepare"
 const EnvironmentCleanupJob = "execution.environment.cleanup"
 const HostCallJob = "execution.environment.hostcall"
 
-// 首版环境只保存被动数据；不开放任何用户程序、原生进程、网络或宿主文件能力。
+// 命名空间仅保存被动数据；用户程序须通过宿主登记的独立隔离运行时准备。
 const PassiveEnvironmentFormat = "harness-passive-namespace/1"
 
 type NamespaceBinding struct {
@@ -140,8 +139,17 @@ func (s *Service) environmentCreate(ctx context.Context, tx rt.Tx, a rt.Auth, c 
 	if p.EnvironmentID != c.TargetID || !api.ValidID(p.EnvironmentID) {
 		return Environment{}, api.E("invalid_request", "environment_identity_mismatch")
 	}
-	if p.ConfigRef.ComponentID != BuiltinComponentID("environment.passive") || p.ConfigRef.Version != "1" || p.ConfigRef.Digest != api.Hash([]byte(PassiveEnvironmentFormat)) {
-		return Environment{}, api.E("unsupported", "untrusted_program_isolation_not_verified")
+	passive := p.ConfigRef.ComponentID == BuiltinComponentID("environment.passive") && p.ConfigRef.Version == "1" && p.ConfigRef.Digest == api.Hash([]byte(PassiveEnvironmentFormat))
+	isolation := EnvironmentIsolation{RuntimeKind: "trusted_passive_data", IsolationDigest: p.ConfigRef.Digest}
+	if !passive {
+		if s.cfg.EnvironmentAdmission == nil {
+			return Environment{}, api.E("unsupported", "untrusted_program_isolation_not_verified")
+		}
+		var err error
+		isolation, err = s.cfg.EnvironmentAdmission.Check(p.ConfigRef, p.InstallLockRef, p.Limits)
+		if err != nil {
+			return Environment{}, err
+		}
 	}
 	if s.cfg.Content == nil {
 		return Environment{}, api.E("dependency_unavailable", "content_not_configured")
@@ -149,12 +157,11 @@ func (s *Service) environmentCreate(ctx context.Context, tx rt.Tx, a rt.Auth, c 
 	if err := api.ValidateAmounts(p.Limits); err != nil {
 		return Environment{}, err
 	}
-	if len(p.Limits) != 1 || p.Limits[0].Unit != "namespace_bytes" {
+	if passive && (len(p.Limits) != 1 || p.Limits[0].Unit != "namespace_bytes") {
 		return Environment{}, api.E("unsupported", "passive_environment_limits_not_supported")
 	}
-	n, err := strconv.ParseUint(p.Limits[0].Value, 10, 64)
-	if err != nil || n < 1 || n > 65536 {
-		return Environment{}, api.E("invalid_request", "invalid_namespace_byte_limit")
+	if _, err := NamespaceByteLimit(p.Limits); err != nil {
+		return Environment{}, err
 	}
 	now, err := tx.Now(ctx)
 	if err != nil {
@@ -164,7 +171,7 @@ func (s *Service) environmentCreate(ctx context.Context, tx rt.Tx, a rt.Auth, c 
 	if err != nil || !expires.After(now) {
 		return Environment{}, api.E("expired", "environment_expired")
 	}
-	env := Environment{EnvironmentID: p.EnvironmentID, Revision: 1, ConfigRef: p.ConfigRef, IsolationDigest: p.ConfigRef.Digest, InstallLockRef: p.InstallLockRef, InstanceID: api.NewID("instance"), Generation: 1, Phase: "preparing", RuntimeKind: "trusted_passive_data", Limits: p.Limits, ExpiresAt: p.ExpiresAt, ProcessedSources: p.SourceRefs, ActiveOperationIDs: []string{}, StopResiduals: []string{}, HostCallIDs: []string{}, HostCallParents: []string{}, Principal: a, PreparationCommandID: c.CommandID, ActuallyExited: true}
+	env := Environment{EnvironmentID: p.EnvironmentID, Revision: 1, ConfigRef: p.ConfigRef, IsolationDigest: isolation.IsolationDigest, InstallLockRef: p.InstallLockRef, InstanceID: api.NewID("instance"), Generation: 1, Phase: "preparing", RuntimeKind: isolation.RuntimeKind, Limits: p.Limits, ExpiresAt: p.ExpiresAt, ProcessedSources: p.SourceRefs, ActiveOperationIDs: []string{}, StopResiduals: []string{}, HostCallIDs: []string{}, HostCallParents: []string{}, Principal: a, PreparationCommandID: c.CommandID, ActuallyExited: true}
 	if err = tx.Create(ctx, Namespace+".environments", p.EnvironmentID, "", env); err != nil {
 		return env, err
 	}
@@ -216,6 +223,7 @@ func (s *Service) environmentStop(ctx context.Context, tx rt.Tx, a rt.Auth, c ap
 	if err != nil {
 		return env, err
 	}
+	stopRefs := make([]api.ObjectRef, 0, len(env.ActiveOperationIDs))
 	for _, id := range env.ActiveOperationIDs {
 		var op operationRecord
 		or, err := tx.Get(ctx, Namespace+".operations", id, &op)
@@ -227,10 +235,9 @@ func (s *Service) environmentStop(ctx context.Context, tx rt.Tx, a rt.Auth, c ap
 		if err = putOperation(ctx, tx, &op, or); err != nil {
 			return env, err
 		}
-		if _, err = tx.Raise(ctx, StopJob, id, tx.Scope().Ref(id, op.Revision), now); err != nil {
-			return env, err
-		}
+		stopRefs = append(stopRefs, tx.Scope().Ref(id, op.Revision))
 	}
+	callRefs := make([]api.ObjectRef, 0, len(env.HostCallIDs))
 	for _, id := range env.HostCallIDs {
 		var call HostCall
 		callRevision, e := tx.Get(ctx, Namespace+".hostcalls", id, &call)
@@ -241,7 +248,15 @@ func (s *Service) environmentStop(ctx context.Context, tx rt.Tx, a rt.Auth, c ap
 		if e = tx.Put(ctx, Namespace+".hostcalls", id, callRevision, call); e != nil {
 			return env, e
 		}
-		if _, err = tx.Raise(ctx, HostCallJob, id, tx.Scope().Ref(id, call.Revision), now); err != nil {
+		callRefs = append(callRefs, tx.Scope().Ref(id, call.Revision))
+	}
+	for _, ref := range stopRefs {
+		if _, err = tx.Raise(ctx, StopJob, ref.ObjectID, ref, now); err != nil {
+			return env, err
+		}
+	}
+	for _, ref := range callRefs {
+		if _, err = tx.Raise(ctx, HostCallJob, ref.ObjectID, ref, now); err != nil {
 			return env, err
 		}
 	}
@@ -366,6 +381,17 @@ func (s *Service) environmentPrepareWork(ctx context.Context, st rt.Store, sc rt
 	if env.Phase != "preparing" {
 		return s.finish(ctx, st, sc, w, rt.Done(), nil)
 	}
+	if env.RuntimeKind != "trusted_passive_data" {
+		if s.cfg.EnvironmentAdmission == nil {
+			return s.failEnvironmentPreparation(ctx, st, sc, w, env, api.E("unsupported", "runtime_not_ready"))
+		}
+		if err := s.cfg.EnvironmentAdmission.Prepare(ctx, sc, env.Principal, env); err != nil {
+			if businessError(err) {
+				return s.failEnvironmentPreparation(ctx, st, sc, w, env, err)
+			}
+			return err
+		}
+	}
 	var ref api.ContentRef
 	var err error
 	if env.NamespaceRef != nil {
@@ -389,6 +415,11 @@ func (s *Service) environmentPrepareWork(ctx context.Context, st rt.Store, sc rt
 		return err
 	}
 	return s.finish(ctx, st, sc, w, rt.Done(), func(tx rt.Tx) error {
+		if env.PreparationCommandID != "" {
+			if _, err := tx.LoadCommand(ctx, env.PreparationCommandID); err != nil {
+				return err
+			}
+		}
 		var current Environment
 		rev, err := tx.Get(ctx, Namespace+".environments", env.EnvironmentID, &current)
 		if err != nil {
@@ -396,6 +427,9 @@ func (s *Service) environmentPrepareWork(ctx context.Context, st rt.Store, sc rt
 		}
 		if current.Generation != env.Generation || current.Phase != "preparing" {
 			return nil
+		}
+		if current.PreparationCommandID != env.PreparationCommandID {
+			return api.E("idempotency_conflict", "environment_preparation_command_changed")
 		}
 		now, err := tx.Now(ctx)
 		if err != nil {
@@ -492,6 +526,11 @@ func (s *Service) environmentCleanupWork(ctx context.Context, st rt.Store, sc rt
 
 func (s *Service) failEnvironmentPreparation(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work, env Environment, cause error) error {
 	return s.finish(ctx, st, sc, w, rt.Done(), func(tx rt.Tx) error {
+		if env.PreparationCommandID != "" {
+			if _, err := tx.LoadCommand(ctx, env.PreparationCommandID); err != nil {
+				return err
+			}
+		}
 		var current Environment
 		rev, err := tx.Get(ctx, Namespace+".environments", env.EnvironmentID, &current)
 		if err != nil {
@@ -499,6 +538,9 @@ func (s *Service) failEnvironmentPreparation(ctx context.Context, st rt.Store, s
 		}
 		if current.Generation != env.Generation || current.Phase != "preparing" {
 			return nil
+		}
+		if current.PreparationCommandID != env.PreparationCommandID {
+			return api.E("idempotency_conflict", "environment_preparation_command_changed")
 		}
 		current.Revision = rev + 1
 		current.Generation++
@@ -512,9 +554,6 @@ func (s *Service) failEnvironmentPreparation(ctx context.Context, st rt.Store, s
 		if err != nil {
 			return err
 		}
-		if _, err = tx.Raise(ctx, EnvironmentCleanupJob, current.EnvironmentID, sc.Ref(current.EnvironmentID, current.Revision), now); err != nil {
-			return err
-		}
 		if current.PreparationCommandID != "" {
 			var rejection *api.Error
 			if e, ok := cause.(*api.Error); ok {
@@ -522,8 +561,11 @@ func (s *Service) failEnvironmentPreparation(ctx context.Context, st rt.Store, s
 			} else {
 				rejection = api.E("invalid_state", "runtime_not_ready")
 			}
-			return rt.Decide(ctx, tx, current.PreparationCommandID, nil, rejection)
+			if err = rt.Decide(ctx, tx, current.PreparationCommandID, nil, rejection); err != nil {
+				return err
+			}
 		}
-		return nil
+		_, err = tx.Raise(ctx, EnvironmentCleanupJob, current.EnvironmentID, sc.Ref(current.EnvironmentID, current.Revision), now)
+		return err
 	})
 }

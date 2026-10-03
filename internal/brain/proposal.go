@@ -32,6 +32,33 @@ func ProposalSchema() api.Schema {
 
 var localName = regexp.MustCompile(`^[a-z][a-z0-9_]{0,63}$`)
 
+func DraftActionSchema() api.Schema {
+	schema := api.SchemaFor[DraftAction]()
+	schema["properties"].(map[string]any)["disclosed_local_ids"] = api.Array(api.Schema{"type": "string", "pattern": localName.String(), "minLength": 1, "maxLength": 64}, 0, 20)
+	return schema
+}
+
+// 同版草稿的共同门禁；原显式 local_id 只能指向这一份 Generated 的内容。
+func ValidateLocalDisclosures(actions []DraftAction, contents []GeneratedContent) error {
+	known := make(map[string]bool, len(contents))
+	for _, content := range contents {
+		known[content.LocalID] = true
+	}
+	for _, action := range actions {
+		if len(action.DisclosedLocalIDs) > 20 {
+			return api.E("invalid_request", "disclosed_local_id_limit")
+		}
+		seen := make(map[string]bool, len(action.DisclosedLocalIDs))
+		for _, id := range action.DisclosedLocalIDs {
+			if !localName.MatchString(id) || !known[id] || seen[id] {
+				return api.E("invalid_request", "invalid_disclosed_local_id")
+			}
+			seen[id] = true
+		}
+	}
+	return nil
+}
+
 func validateGenerated(g Generated) error {
 	if len(g.Contents) == 0 || len(g.Contents) > 20 {
 		return api.E("invalid_request", "publication_limit")
@@ -71,6 +98,9 @@ func validateGenerated(g Generated) error {
 	case "act":
 		if len(d.Actions) < 1 || len(d.Actions) > 4 || len(d.Requirements) > 0 || len(d.ArtifactLocalIDs) > 0 {
 			return api.E("invalid_request", "invalid_action_count")
+		}
+		if err := ValidateLocalDisclosures(d.Actions, g.Contents); err != nil {
+			return err
 		}
 		keys := map[string]bool{}
 		for _, a := range d.Actions {
@@ -127,11 +157,13 @@ func publicationBytes(d decision, c pendingContent) ([]byte, error) {
 }
 func materialize(d decision) (Proposal, error) {
 	refs := map[string]api.ContentRef{}
+	disclosures := map[string][]api.ContentRef{}
 	for _, p := range d.Publications {
 		if p.Ref == nil {
 			return Proposal{}, fmt.Errorf("unpublished local content")
 		}
 		refs[p.LocalID] = *p.Ref
+		disclosures[p.LocalID] = append([]api.ContentRef{}, p.DisclosedSources...)
 	}
 	draft := d.Generated.Draft
 	out := Proposal{Kind: draft.Kind, ReasonRef: refs[draft.ReasonLocalID]}
@@ -150,7 +182,21 @@ func materialize(d decision) (Proposal, error) {
 	case "act":
 		out.Actions = []ActionCandidate{}
 		for _, a := range draft.Actions {
-			out.Actions = append(out.Actions, ActionCandidate{LocalKey: a.LocalKey, CapabilityRef: a.CapabilityRef, BindingRef: a.BindingRef, ArgumentsRef: refs[a.ArgumentsLocalID], ProcessedSourceRefs: append(append([]api.ContentRef{}, d.Encoding.ProcessedSources...), publicationRefs(d)...), DisclosedSourceRefs: []api.ContentRef{}})
+			disclosed := append([]api.ContentRef{}, disclosures[a.ArgumentsLocalID]...)
+			for _, id := range a.DisclosedLocalIDs {
+				ref, exists := refs[id]
+				if !exists {
+					return Proposal{}, api.E("invalid_request", "invalid_disclosed_local_id")
+				}
+				duplicate := false
+				for _, prior := range disclosed {
+					duplicate = duplicate || api.Equal(prior, ref)
+				}
+				if !duplicate {
+					disclosed = append(disclosed, ref)
+				}
+			}
+			out.Actions = append(out.Actions, ActionCandidate{LocalKey: a.LocalKey, CapabilityRef: a.CapabilityRef, BindingRef: a.BindingRef, ArgumentsRef: refs[a.ArgumentsLocalID], ProcessedSourceRefs: append(append([]api.ContentRef{}, d.Encoding.ProcessedSources...), publicationRefs(d)...), DisclosedSourceRefs: disclosed})
 		}
 	case "complete":
 		out.ArtifactRefs = append([]api.ContentRef{}, draft.ExistingArtifactRefs...)

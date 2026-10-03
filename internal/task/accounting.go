@@ -99,12 +99,12 @@ func (s *Service) reserveTx(ctx context.Context, tx runtime.Tx, t *taskState, ki
 		return r, e
 	}
 	t.Task.AccountingOpen = true
-	if _, e = raise(ctx, tx, JobBilling, "billing/"+r.ReservationID, tx.Scope().Ref(r.ReservationID, 1)); e != nil {
+	if e = queueJob(ctx, tx, JobBilling, "billing/"+r.ReservationID, tx.Scope().Ref(r.ReservationID, 1)); e != nil {
 		return r, e
 	}
 	return r, nil
 }
-func (s *Service) AdjustBudgetTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in BudgetInput) (TaskOutput, error) {
+func (s *Service) adjustBudgetTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in BudgetInput) (TaskOutput, error) {
 	if e := target(c, in.TaskID); e != nil {
 		return TaskOutput{}, e
 	}
@@ -156,7 +156,7 @@ func (s *Service) AdjustBudgetTx(ctx context.Context, tx runtime.Tx, auth runtim
 	if e = s.saveTask(ctx, tx, &t); e != nil {
 		return TaskOutput{}, e
 	}
-	if _, e = raise(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
+	if e = queueJob(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
 		return TaskOutput{}, e
 	}
 	return output(tx, t), nil
@@ -209,7 +209,7 @@ func (s *Service) ReconcileUsage(ctx context.Context, store runtime.Store, scope
 	})
 	return out, err
 }
-func (s *Service) ReconcileUsageTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, kind string, u api.UsageSnapshot) (Reservation, error) {
+func (s *Service) reconcileUsageTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, kind string, u api.UsageSnapshot) (Reservation, error) {
 	if !auth.HasRole("service") && auth.SubjectID != u.SourceRef.OwnerID {
 		return Reservation{}, api.E("forbidden", "billing_owner_required")
 	}
@@ -399,7 +399,7 @@ func (s *Service) BudgetRead(ctx context.Context, store runtime.Store, scope run
 	}
 	return out, nil
 }
-func (s *Service) AdjustmentTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in AdjustmentInput) (AdjustmentOutput, error) {
+func (s *Service) adjustmentTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in AdjustmentInput) (AdjustmentOutput, error) {
 	if c.TargetID != in.AdjustmentID {
 		return AdjustmentOutput{}, invalid("target_mismatch")
 	}
@@ -450,7 +450,7 @@ func (s *Service) AdjustmentTx(ctx context.Context, tx runtime.Tx, auth runtime.
 	if e = tx.Bind(ctx, adjustments, semantic, in.AdjustmentID, digest); e != nil {
 		return AdjustmentOutput{}, e
 	}
-	if _, e = raise(ctx, tx, JobAdjustment, "adjustment/"+in.AdjustmentID, tx.Scope().Ref(in.AdjustmentID, 1)); e != nil {
+	if e = queueJob(ctx, tx, JobAdjustment, "adjustment/"+in.AdjustmentID, tx.Scope().Ref(in.AdjustmentID, 1)); e != nil {
 		return AdjustmentOutput{}, e
 	}
 	return AdjustmentOutput{AdjustmentRef: tx.Scope().Ref(in.AdjustmentID, 1), State: "pending"}, nil

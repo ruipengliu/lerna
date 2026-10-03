@@ -41,6 +41,7 @@ type Config struct {
 	TZDBVersion        string                   `json:"tzdb_version"`
 	Model              *ModelConfig             `json:"model,omitempty"`
 	Governance         *BuiltinGovernanceConfig `json:"governance,omitempty"`
+	ActionBindings     []ActionBindingConfig    `json:"action_bindings,omitempty"`
 }
 
 func LoadConfig(path string) (Config, error) {

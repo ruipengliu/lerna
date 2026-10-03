@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sync"
 	"testing"
 	"time"
 
@@ -138,5 +139,101 @@ func TestPhoneGUISchemaRejectsWrongShapeCoordinatesAndText(t *testing.T) {
 				t.Fatalf("invalid shape reached prepared action: %v", err)
 			}
 		})
+	}
+}
+
+func TestPhoneGUIAtomicGestureAndIndependentHumanChangeShareTargetEntry(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	root := t.TempDir()
+	id := api.NewID("resource")
+	phones, err := target.NewSimulatedPhones(root, []string{id})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if err := phones.Close(); err != nil {
+			t.Error(err)
+		}
+	})
+	scope := rt.Scope{TenantID: api.NewID("tenant"), OwnerID: api.NewID("executor")}
+	lease := domain.ResourceLease{ResourceID: id, HolderID: api.NewID("holder"), InstanceID: api.NewID("instance"), ControlEpoch: 1, State: "held", LeaseUntil: api.Time(time.Now().Add(time.Minute))}
+	if _, err = phones.Fence(ctx, scope, lease); err != nil {
+		t.Fatal(err)
+	}
+	observation, err := phones.Observe(ctx, scope, lease, api.NewID("observation"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	driver := &target.PhoneGUIDriver{Phones: phones}
+	args := target.PhoneGUIArguments{ResourceID: id, InstanceID: lease.InstanceID, ControlEpoch: 1, ObservationID: observation.ObservationID, TargetVersion: observation.TargetVersion, ActionBefore: observation.ActionBefore, Action: "click", Point: &target.PhonePoint{X: 180, Y: 160}}
+	prepared, err := driver.Prepare(ctx, scope, rt.Auth{}, domain.InvokeInput{}, domain.ExecutionIntent{}, api.Raw(args))
+	if err != nil {
+		t.Fatal(err)
+	}
+	original := domain.AttemptRequest{Scope: scope, Invoke: domain.InvokeInput{OperationID: api.NewID("operation")}, Attempt: domain.Attempt{AttemptID: api.NewID("attempt"), Prepared: prepared}}
+	entered := make(chan struct{})
+	release := make(chan struct{})
+	var releaseOnce sync.Once
+	defer releaseOnce.Do(func() { close(release) })
+	completed := make(chan error, 1)
+	go func() {
+		fact, err := driver.Start(ctx, original, func(ctx context.Context) error {
+			close(entered)
+			select {
+			case <-release:
+				return nil
+			case <-ctx.Done():
+				return ctx.Err()
+			}
+		})
+		if err == nil && fact.Effect != "applied" {
+			err = fmt.Errorf("valid atomic click has effect %s", fact.Effect)
+		}
+		completed <- err
+	}()
+	select {
+	case <-entered:
+	case <-ctx.Done():
+		t.Fatal(ctx.Err())
+	}
+	humanStarted := make(chan struct{})
+	humanResult := make(chan error, 1)
+	go func() {
+		close(humanStarted)
+		humanResult <- phones.HumanChange(ctx, id, "settings")
+	}()
+	<-humanStarted
+	select {
+	case err := <-humanResult:
+		t.Fatalf("human target mutation escaped held atomic entry: %v", err)
+	default:
+	}
+	releaseOnce.Do(func() { close(release) })
+	for _, result := range []<-chan error{completed, humanResult} {
+		select {
+		case err := <-result:
+			if err != nil {
+				t.Fatal(err)
+			}
+		case <-ctx.Done():
+			t.Fatal(ctx.Err())
+		}
+	}
+	body, err := os.ReadFile(filepath.Join(root, id+".json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var physical struct {
+		State struct {
+			Screen  string `json:"screen"`
+			Version uint64 `json:"version"`
+		} `json:"state"`
+		Attempts []struct {
+			AttemptID string `json:"attempt_id"`
+		} `json:"attempts"`
+	}
+	if err = json.Unmarshal(body, &physical); err != nil || physical.State.Screen != "settings" || physical.State.Version != 3 || len(physical.Attempts) != 1 || physical.Attempts[0].AttemptID != original.Attempt.AttemptID {
+		t.Fatalf("atomic gesture and human change lost serial target truth: %+v %v", physical, err)
 	}
 }

@@ -282,7 +282,7 @@ func raise(ctx context.Context, tx runtime.Tx, kind, key string, ref api.ObjectR
 	return tx.Raise(ctx, kind, key, ref, now)
 }
 func (s *Service) transaction(ctx context.Context, store runtime.Store, scope runtime.Scope, fn func(runtime.Tx) error) error {
-	status, err := store.Within(ctx, scope, s.config.Participants, fn)
+	status, err := store.Within(ctx, scope, s.config.Participants, func(tx runtime.Tx) error { return withTaskJobs(ctx, tx, fn) })
 	if status == runtime.CommitUnknown {
 		return runtime.ErrCommitUnknown
 	}
@@ -380,7 +380,7 @@ func (s *Service) saveGoal(ctx context.Context, tx runtime.Tx, t taskState, kind
 	g := api.GoalRevision{TaskRef: taskRef(tx, t), GoalRevision: t.Task.GoalRevision, GoalRef: t.Task.GoalRef, SourceRefs: t.SourceRefs, Requirements: refsFor(t.Task.Requirements), RequirementsDigest: t.Task.RequirementsDigest, ChangeKind: kind, CauseRef: cause, CreatedAt: api.Time(now)}
 	return tx.Create(ctx, goals, fmt.Sprintf("%s/%020d", t.Task.TaskID, t.Task.GoalRevision), t.Task.TaskID, g)
 }
-func (s *Service) SubmitTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in SubmitInput) (TaskOutput, error) {
+func (s *Service) submitTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in SubmitInput) (TaskOutput, error) {
 	if in.OrchestratorID != tx.Scope().OwnerID {
 		return TaskOutput{}, invalid("wrong_orchestrator")
 	}
@@ -503,7 +503,7 @@ func (s *Service) SubmitTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 			return TaskOutput{}, e
 		}
 	}
-	if _, e = raise(ctx, tx, JobAdvance, "advance/"+c.TargetID, taskRef(tx, t)); e != nil {
+	if e = queueJob(ctx, tx, JobAdvance, "advance/"+c.TargetID, taskRef(tx, t)); e != nil {
 		return TaskOutput{}, e
 	}
 	return output(tx, t), nil
@@ -576,7 +576,7 @@ func (s *Service) updateSummary(ctx context.Context, tx runtime.Tx, t *taskState
 }
 func (s *Service) controlJobs(ctx context.Context, tx runtime.Tx, t taskState) error {
 	for _, owner := range t.ControlTargets {
-		if _, e := raise(ctx, tx, JobControl, "control/"+t.Task.TaskID+"/"+owner, taskRef(tx, t)); e != nil {
+		if e := queueJob(ctx, tx, JobControl, "control/"+t.Task.TaskID+"/"+owner, taskRef(tx, t)); e != nil {
 			return e
 		}
 	}

@@ -10,6 +10,8 @@
 
 `grant.issue`、`grant.revoke`、`policy.acceptance.create`、`release.approval.create` 先接纳原命令，再由准确本人会话确认。`confirmation.read` 返回原完整闭合命令及其 JCS 摘要，Renderer 必须准确展示完整输入和全部预览字节。批准回执只记录决定；原业务消费确认、当前预览披露门禁与业务写入共同提交后，原命令才 applied。`PreviewGate` 只证明当前允许披露，不声称本人已阅读。
 
+撤回先沿不可变出生版本定位，核准确预览的当前来源门禁，再锁当前 Grant 并校验原 CAS；首次 pending 也拒绝旧 GrantRef。预览门禁的数据库、context、依赖或效果未知错误保留原原因与 accepted 责任，恢复仍消费原确认、原命令和原 Job；确定撤回的预览继续拒绝。公共 Dispatcher 与真实 SQLite/PG 观察门禁覆盖该锁序和恢复，不把锁观察夹具称为已测死锁。
+
 Use 的原 ID、请求摘要、准确目标与有限窗口不变。父许可链按统一顺序锁当前许可及账本，任一父撤回、到期、once 已消费或累计金额不足都会阻断子使用。结算只归并核验过的原计费源修订；实际超额和迟到费用保留。数额预留可在确认关闭且费用 final 后释放，once 永不复活。派生许可当前只支持同 owner、同 subject 的交集。
 
 Estimate acceptance 必须预览准确范围和非硬上限解释，逐计费准入同库核当前 subject/policy/Task/能力/数额范围；跨 owner、allocation 和离线仍只支持 strict。

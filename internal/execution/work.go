@@ -163,6 +163,12 @@ func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w
 		}
 		called = true
 		status, err := st.Within(callCtx, sc, s.participants(), func(tx rt.Tx) error {
+			// 外部准备已固定原输入；同库 Authority 先取得上游 Task/预算锁。
+			// 随后锁执行门禁并重验这些准确字段，不能沿旧快照绕过当前门禁。
+			permit, err := s.cfg.Authority.VerifyStart(callCtx, tx, StartRequest{ControlWindow: attempt.ControlWindow, Invoke: op.Invoke, Intent: *op.Intent, AttemptID: attempt.AttemptID, Auth: op.Principal}, attempt.PreparedAuthority)
+			if err != nil {
+				return err
+			}
 			if err := lockAttemptGates(callCtx, tx, op.Invoke, attempt, true); err != nil {
 				return err
 			}
@@ -179,6 +185,9 @@ func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w
 			if a.Phase != "prepared" || current.NewAttemptsClosed {
 				return api.E("invalid_state", "operation_permanently_closed")
 			}
+			if current.Operation.OperationID != op.Operation.OperationID || !api.Equal(current.Invoke, op.Invoke) || !api.Equal(current.Principal, op.Principal) || !api.Equal(current.Intent, op.Intent) || !api.Equal(a, attempt) {
+				return api.E("revision_conflict", "prepared_start_changed")
+			}
 			var gate TaskGate
 			if _, err = tx.Get(callCtx, Namespace+".gates", gateID(op.Invoke.TaskRef.OwnerID, op.Invoke.TaskRef.ObjectID), &gate); err != nil {
 				return err
@@ -194,10 +203,6 @@ func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w
 				return api.E("forbidden", "control_window_binding_mismatch")
 			}
 			now, err := tx.Now(callCtx)
-			if err != nil {
-				return err
-			}
-			permit, err := s.cfg.Authority.VerifyStart(callCtx, tx, StartRequest{ControlWindow: a.ControlWindow, Invoke: op.Invoke, Intent: *op.Intent, AttemptID: a.AttemptID, Auth: op.Principal}, a.PreparedAuthority)
 			if err != nil {
 				return err
 			}
@@ -353,6 +358,9 @@ func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 	}
 	var namespaceRef *api.ContentRef
 	if a.Prepared.Cell != nil && !a.CellCommitted && f.Effect == "applied" {
+		if !noLater(f.MayApplyLater) {
+			return api.E("invalid_state", "cell_process_exit_not_confirmed")
+		}
 		cell := a.Prepared.Cell
 		namespace, err := cellNamespace(cell, f)
 		if err != nil {
@@ -433,7 +441,7 @@ func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 			}
 			return nil
 		}
-		if a.Prepared.Cell != nil && !old.CellCommitted {
+		if a.Prepared.Cell != nil && !old.CellCommitted && noLater(f.MayApplyLater) {
 			valid, err := s.commitCell(ctx, tx, current, old, namespaceRef)
 			if err != nil {
 				return err

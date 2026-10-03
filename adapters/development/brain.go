@@ -2,7 +2,6 @@ package development
 
 import (
 	"context"
-	filedriver "github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
 	"github.com/ruipengliu/lerna/internal/task"
@@ -110,41 +109,19 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 		}
 		original.CheckRequests = append(original.CheckRequests, task.AttachInput{TaskID: snap.TaskRef.ObjectID, GoalRevision: snap.GoalRevision, RequirementRef: suggestion.RequirementRef, ArtifactRef: suggestion.EvidenceRefs[0], EvidenceRefs: suggestion.EvidenceRefs})
 	}
+	admissions := []actionAdmission{}
 	if p.Kind == "act" {
 		for _, candidate := range p.Actions {
-			if !api.Equal(candidate.BindingRef, b.a.ReadBinding) && !api.Equal(candidate.BindingRef, b.a.WriteBinding) {
-				return original, api.E("forbidden", "binding_not_registered")
-			}
-			if !api.Equal(candidate.CapabilityRef, filedriver.FileReadCapability().Ref) && !api.Equal(candidate.CapabilityRef, filedriver.FileWriteCapability().Ref) {
-				return original, api.E("unsupported", "capability_not_configured")
-			}
-			args, e := b.a.Memory.Read(ctx, s, b.a.ServiceAuth, candidate.ArgumentsRef, "execution.arguments")
-			if e != nil {
-				return original, e
-			}
-			var path string
-			if api.Equal(candidate.CapabilityRef, filedriver.FileReadCapability().Ref) {
-				var in filedriver.FileReadArguments
-				if e = api.Decode(args, &in); e != nil {
-					return original, e
-				}
-				path = in.Path
-			} else {
-				var in filedriver.FileWriteArguments
-				if e = api.Decode(args, &in); e != nil {
-					return original, e
-				}
-				path = in.Path
-			}
-			resources, e := b.a.Publish(ctx, s, b.a.ServiceAuth, stableID("content", "resources/"+i.DecisionID+"/"+candidate.LocalKey), "application/json", api.Raw([]api.ObjectRef{}), candidate.ProcessedSourceRefs, []api.ContentRef{})
-			if e != nil {
-				return original, e
-			}
 			reqs := []api.RequirementRef{}
 			for _, r := range snap.Requirements {
 				reqs = append(reqs, api.RequirementRef{RequirementID: r.RequirementID, Revision: r.Revision})
 			}
-			original.Actions = append(original.Actions, task.PreparedAction{OperationID: stableID("operation", i.DecisionID+"/"+candidate.LocalKey), ExecutorID: s.OwnerID, CapabilityRef: candidate.CapabilityRef, BindingRef: candidate.BindingRef, InstallLockRef: b.a.InstallLock, ArgumentsRef: candidate.ArgumentsRef, ResourcesRef: resources, RequirementRefs: reqs, UseIntentRefs: []api.ObjectRef{s.Ref(stableID("use", i.DecisionID+"/"+candidate.LocalKey), 1)}, CostBound: []api.Amount{{Unit: "USD", Value: "0"}}, LogicalStepKey: snap.TaskRef.ObjectID + "/" + candidate.LocalKey, ProcessedSourceRefs: candidate.ProcessedSourceRefs, DisclosedSourceRefs: candidate.DisclosedSourceRefs, ResourceKeys: []string{"file:" + path}, Independent: true, SafeRequirementCheck: false, CommandID: stableID("command", "invoke/"+i.DecisionID+"/"+candidate.LocalKey)})
+			prepared, admission, err := b.a.prepareAction(ctx, s, i, snap, candidate, reqs)
+			if err != nil {
+				return original, err
+			}
+			original.Actions = append(original.Actions, prepared)
+			admissions = append(admissions, admission)
 		}
 	}
 	if p.Kind == "request_input" {
@@ -173,6 +150,22 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 		}
 		if !api.IsCode(e, "not_found") {
 			return e
+		}
+		for _, admission := range admissions {
+			var fixed actionAdmission
+			_, err := tx.Get(ctx, "platform.action_admissions", admission.Prepared.OperationID, &fixed)
+			if err == nil {
+				if !api.Equal(fixed, admission) {
+					return api.E("idempotency_conflict", "action_admission_changed")
+				}
+				continue
+			}
+			if !api.IsCode(err, "not_found") {
+				return err
+			}
+			if err = tx.Create(ctx, "platform.action_admissions", admission.Prepared.OperationID, i.TaskRef.ObjectID, admission); err != nil {
+				return err
+			}
 		}
 		return tx.Create(ctx, "platform.prepared_proposals", i.DecisionID, i.TaskRef.ObjectID, original)
 	})

@@ -9,7 +9,7 @@ import (
 	"github.com/ruipengliu/lerna/runtime"
 )
 
-func (s *Service) AllocateTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in AllocateInput) (AllocationOutput, error) {
+func (s *Service) allocateTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in AllocateInput) (AllocationOutput, error) {
 	if c.TargetID != in.AllocationID || !api.ValidID(in.AllocationID) || !api.ValidID(in.ReceiverID) {
 		return AllocationOutput{}, invalid("invalid_allocation_identity")
 	}
@@ -78,7 +78,7 @@ func (s *Service) ReceiveAllocation(ctx context.Context, store runtime.Store, sc
 	})
 	return out, err
 }
-func (s *Service) ReceiveAllocationTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ObjectRef, a Allocation) (IncomingAllocation, error) {
+func (s *Service) receiveAllocationTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ObjectRef, a Allocation) (IncomingAllocation, error) {
 	if !auth.HasRole("service") && auth.SubjectID != ref.OwnerID {
 		return IncomingAllocation{}, api.E("forbidden", "parent_identity_required")
 	}
@@ -123,7 +123,7 @@ func (s *Service) ReceiveAllocationTx(ctx context.Context, tx runtime.Tx, auth r
 	}
 	return old, nil
 }
-func (s *Service) CloseAllocationTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in AllocationCloseInput) (AllocationOutput, error) {
+func (s *Service) closeAllocationTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in AllocationCloseInput) (AllocationOutput, error) {
 	if in.AllocationRef.TenantID != tx.Scope().TenantID || in.ParentTaskRef.TenantID != tx.Scope().TenantID || in.ParentTaskRef.OwnerID != in.AllocationRef.OwnerID || c.TargetID != in.AllocationRef.ObjectID {
 		return AllocationOutput{}, api.E("forbidden", "allocation_scope_mismatch")
 	}
@@ -174,7 +174,7 @@ func (s *Service) CloseAllocationTx(ctx context.Context, tx runtime.Tx, auth run
 			return AllocationOutput{}, e
 		}
 	}
-	if _, e = raise(ctx, tx, JobAllocation, "incoming/"+id, tx.Scope().Ref(a.AllocationID, a.Revision)); e != nil {
+	if e = queueJob(ctx, tx, JobAllocation, "incoming/"+id, tx.Scope().Ref(a.AllocationID, a.Revision)); e != nil {
 		return AllocationOutput{}, e
 	}
 	return AllocationOutput{AllocationRef: tx.Scope().Ref(a.AllocationID, a.Revision), State: "closing"}, nil
@@ -243,7 +243,7 @@ func (s *Service) refreshIncomingTx(ctx context.Context, tx runtime.Tx, t taskSt
 			sealer, ok := s.ports.ClosureProof.(AllocationProofPort)
 			if !ok {
 				if !a.ClosurePending {
-					if _, e = raise(ctx, tx, JobAllocation, "incoming/"+t.IncomingAllocationID, tx.Scope().Ref(a.AllocationID, a.UsageRevision)); e != nil {
+					if e = queueJob(ctx, tx, JobAllocation, "incoming/"+t.IncomingAllocationID, tx.Scope().Ref(a.AllocationID, a.UsageRevision)); e != nil {
 						return e
 					}
 				}
@@ -294,7 +294,7 @@ func (s *Service) refreshIncomingTx(ctx context.Context, tx runtime.Tx, t taskSt
 		a.ClosurePending = false
 
 		if changed {
-			if _, e = raise(ctx, tx, JobAllocation, "correction/"+t.IncomingAllocationID, tx.Scope().Ref(a.AllocationID, a.UsageRevision)); e != nil {
+			if e = queueJob(ctx, tx, JobAllocation, "correction/"+t.IncomingAllocationID, tx.Scope().Ref(a.AllocationID, a.UsageRevision)); e != nil {
 				return e
 			}
 		}
@@ -302,7 +302,7 @@ func (s *Service) refreshIncomingTx(ctx context.Context, tx runtime.Tx, t taskSt
 	a.Revision++
 	return tx.Put(ctx, incoming, t.IncomingAllocationID, a.Revision-1, a)
 }
-func (s *Service) SettleTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in SettleInput) (AllocationOutput, error) {
+func (s *Service) settleTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in SettleInput) (AllocationOutput, error) {
 	if in.AllocationRef.OwnerID != tx.Scope().OwnerID || in.AllocationRef.TenantID != tx.Scope().TenantID || c.TargetID != in.AllocationRef.ObjectID {
 		return AllocationOutput{}, api.E("forbidden", "allocation_scope_mismatch")
 	}
@@ -321,7 +321,7 @@ func (s *Service) SettleTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if e = tx.Put(ctx, allocations, a.AllocationID, a.Revision-1, a); e != nil {
 		return AllocationOutput{}, e
 	}
-	if _, e = raise(ctx, tx, JobAllocation, "settle/"+a.AllocationID, tx.Scope().Ref(a.AllocationID, a.Revision)); e != nil {
+	if e = queueJob(ctx, tx, JobAllocation, "settle/"+a.AllocationID, tx.Scope().Ref(a.AllocationID, a.Revision)); e != nil {
 		return AllocationOutput{}, e
 	}
 	return AllocationOutput{AllocationRef: tx.Scope().Ref(a.AllocationID, a.Revision), State: a.State}, nil
@@ -331,7 +331,7 @@ func (s *Service) ReconcileClosure(ctx context.Context, store runtime.Store, sco
 		return s.ReconcileClosureTx(ctx, tx, auth, allocationID, closure, sourceRefs...)
 	})
 }
-func (s *Service) ReconcileClosureTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, allocationID string, closure api.AllocationClosure, sourceRefs ...api.ObjectRef) error {
+func (s *Service) reconcileClosureTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, allocationID string, closure api.AllocationClosure, sourceRefs ...api.ObjectRef) error {
 
 	if !auth.HasRole("service") && auth.SubjectID != closure.ReceiverID {
 		return api.E("forbidden", "receiver_identity_required")
