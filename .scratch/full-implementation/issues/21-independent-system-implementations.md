@@ -1,8 +1,8 @@
 # 21 independent-system-implementations
 
-Status: ready-for-agent
+Status: claimed
 Blocked by: 01, 02, 23
-Implementer: unassigned
+Implementer: web_impl
 
 依据：A2 与扩展合同要求 Brain、Memory、Executor 各有第二种独立实现，至少一个异构语言组件走真实 WSS／gRPC。
 

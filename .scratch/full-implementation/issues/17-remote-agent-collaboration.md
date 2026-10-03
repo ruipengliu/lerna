@@ -1,8 +1,8 @@
 # 17 remote-agent-collaboration
 
-Status: ready-for-agent
+Status: claimed
 Blocked by: 01, 02, 23
-Implementer: unassigned
+Implementer: memory_impl
 
 依据：C5、C6、Collaboration 的外部原创建键、消费先关闭与三层收束。
 

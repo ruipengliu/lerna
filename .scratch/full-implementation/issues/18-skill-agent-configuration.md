@@ -1,8 +1,8 @@
 # 18 skill-agent-configuration
 
-Status: ready-for-agent
+Status: claimed
 Blocked by: 01, 05, 06, 08
-Implementer: unassigned
+Implementer: governance_impl
 
 依据：C6、Extensions 的 Skill／AgentConfig 精确记录，以及 Brain 第 5 节的渐进发现。
 
