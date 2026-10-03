@@ -256,9 +256,6 @@ func (s *Service) observeForeignProof(ctx context.Context, scope runtime.Scope, 
 		if err := s.verifyForeignProof(ctx, tx, auth, in, proof); err != nil {
 			return err
 		}
-		if err := observeForeignSource(ctx, tx, proof); err != nil {
-			return err
-		}
 		rev, err := tx.Get(ctx, "content.held_copies", in.CopyID, &held)
 		if err != nil {
 			return err
@@ -287,6 +284,10 @@ func (s *Service) observeForeignProof(ctx context.Context, scope runtime.Scope, 
 		}
 		held.Revision = rev + 1
 		if err = tx.Put(ctx, "content.held_copies", in.CopyID, rev, held); err != nil {
+			return err
+		}
+		// 来源关闭 notice 的 Job 只在全部 holder/来源对象写入之后领取锁。
+		if err = observeForeignSource(ctx, tx, proof); err != nil {
 			return err
 		}
 		_, err = tx.Raise(ctx, "content.foreign_reconcile", in.CopyID, in.ReferenceIntentRef, now.Add(30*time.Second))
