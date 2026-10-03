@@ -165,7 +165,7 @@ func (s *Service) ListSessions(ctx context.Context, store runtime.Store, scope r
 		if e := row.Decode(&r); e != nil {
 			return api.Session{}, e
 		}
-		return r.Session, access(a, r.SubjectID)
+		return r.Session, access(a, scope, r.SubjectID)
 	})
 }
 func (s *Service) ListBranches(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, id string, in api.ListInput) (api.Page[api.Branch], error) {
@@ -190,7 +190,7 @@ func (s *Service) ListSchedules(ctx context.Context, store runtime.Store, scope 
 		if e := row.Decode(&r); e != nil {
 			return Schedule{}, e
 		}
-		return r.Schedule, access(a, r.Auth.SubjectID)
+		return r.Schedule, access(a, scope, r.Auth.SubjectID)
 	})
 }
 func (s *Service) ListOccurrences(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, id string, in api.ListInput) (api.Page[Occurrence], error) {
@@ -235,7 +235,7 @@ func (s *Service) ListSubmissions(ctx context.Context, store runtime.Store, scop
 		if e := row.Decode(&r); e != nil {
 			return SubmissionView{}, e
 		}
-		return r.SubmissionView, access(a, r.Auth.SubjectID)
+		return r.SubmissionView, access(a, scope, r.Auth.SubjectID)
 	})
 }
 
@@ -256,7 +256,7 @@ func (s *Service) History(ctx context.Context, store runtime.Store, scope runtim
 		if _, e := tx.Get(ctx, submissions, ref.ObjectID, &current); e != nil {
 			return e
 		}
-		if e := access(a, current.Auth.SubjectID); e != nil {
+		if e := access(a, scope, current.Auth.SubjectID); e != nil {
 			return e
 		}
 		var r submissionRecord

@@ -12,6 +12,9 @@ func command[I, O any](s *Service, name string, cas bool, handler func(context.C
 		contract.InputSchema["properties"].(map[string]any)["spec"] = api.Ref("ScheduleSpec")
 	}
 	return runtime.Method{Contract: contract, Participants: s.config.Participants, Apply: func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command) (runtime.Outcome, error) {
+		if err := identity(a, tx.Scope()); err != nil {
+			return runtime.Outcome{}, err
+		}
 		var in I
 		if err := api.Decode(c.Payload, &in); err != nil {
 			return runtime.Outcome{}, err

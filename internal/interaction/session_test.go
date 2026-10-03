@@ -83,4 +83,9 @@ func TestSessionBranchChangesFutureContextWithoutCreatingTask(t *testing.T) {
 	if _, err = d.Query(ctx, other, api.Raw(q)); !api.IsCode(err, "forbidden") {
 		t.Fatalf("session crossed subject: %v", err)
 	}
+	other = auth
+	other.TenantID = api.NewID("tenant")
+	if _, err = s.ReadSession(ctx, store, scope, other, session, interaction.ReadInput{}); !api.IsCode(err, "forbidden") {
+		t.Fatalf("typed read crossed authenticated tenant: %v", err)
+	}
 }
