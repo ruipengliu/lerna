@@ -22,5 +22,7 @@ type Storage interface {
 }
 
 func New(owner contract.OwnerRef, runner runtime.TxRunner, commands runtime.CommandStore, jobs runtime.JobStore, storage Storage, permissions *Permissions) *Host {
-	return &demo.Service{Owner: owner, Runner: runner, Commands: commands, Jobs: jobs, Clock: storage, Repository: storage, Permissions: permissions, Reader: storage}
+	service := &demo.Service{Owner: owner, Runner: runner, Commands: commands, Jobs: jobs, Clock: storage, Repository: storage, Permissions: permissions, Reader: storage}
+	service.Retention, _ = storage.(demo.RetentionRepository)
+	return service
 }

@@ -59,3 +59,19 @@ Trigger requires strictly newer work and preserves an active claim. Epoch increa
 is guarded at bigint maximum. Expired leases cannot renew or complete; replacement
 keeps Job/object identity and increments the epoch. A late claim cannot alter the
 current projection. This fences only controlled database writes, not external I/O.
+
+
+The real retention migration adds independently retained command body tombstones
+and input body state without rewriting published v1/v2 migrations. Cleanup writes
+zero-length bytea and checks the successfully projected current input and done Job in
+the same short transaction. The database enforces gone ⇒ stored length zero;
+Host observations additionally validate the bytes actually read. command.get
+reads receipt and its command-specific marker consistently; preserved v1 receipts
+remain queryable after a migration failure before the new column exists.
+
+The integration entry requires actual psql for the full PG historical dump,
+checks both immutable v1 artifact manifests and records client/server versions.
+Historical upgrade/failure/retry/reopen and cleanup have a common two-adapter
+behavior suite; no database is dropped and checked-in fixtures are never opened
+writable. Local SQLite TMPDIR should be a caller-owned local durable filesystem;
+CI uses its explicit runner temporary directory.

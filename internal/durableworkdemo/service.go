@@ -14,6 +14,8 @@ type Input struct {
 	ID                   contract.ID
 	Revision             int64
 	Text                 string
+	BodyGone             bool
+	StoredTextBytes      int64
 	CreatedAt, UpdatedAt time.Time
 }
 type Observation struct {
@@ -38,6 +40,7 @@ type Service struct {
 	Repository  Repository
 	Permissions *Permissions
 	Reader      contract.CommandFactReader
+	Retention   RetentionRepository
 }
 
 func (s *Service) Record(ctx context.Context, data []byte, trusted *contract.SubjectBinding) (contract.TransportOutcome, error) {
@@ -86,6 +89,8 @@ func (s *Service) Record(ctx context.Context, data []byte, trusted *contract.Sub
 		}
 		input.Revision++
 		input.Text = record.Text
+		input.BodyGone = false
+		input.StoredTextBytes = int64(len(record.Text))
 		input.UpdatedAt = now
 		if err = s.Repository.SaveInput(ctx, tx, s.Owner, *input); err != nil {
 			return contract.CommandReceipt{}, err
