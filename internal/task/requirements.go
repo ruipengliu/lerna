@@ -19,7 +19,7 @@ func (s *Service) AdoptRequirements(ctx context.Context, store runtime.Store, sc
 	})
 	return out, err
 }
-func (s *Service) AdoptRequirementsTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, taskID, sourceKind string, source api.ObjectRef, delta api.RequirementDelta, report ValidationReport) (api.RequirementAdoption, error) {
+func (s *Service) adoptRequirementsTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, taskID, sourceKind string, source api.ObjectRef, delta api.RequirementDelta, report ValidationReport) (api.RequirementAdoption, error) {
 	t, e := getTask(ctx, tx, taskID)
 	if e != nil {
 		return api.RequirementAdoption{}, e
@@ -224,7 +224,7 @@ func (s *Service) AdoptRequirementsTx(ctx context.Context, tx runtime.Tx, auth r
 		if e = s.controlJobs(ctx, tx, t); e != nil {
 			return a, e
 		}
-		if _, e = raise(ctx, tx, JobCoverage, "coverage/"+taskID, taskRef(tx, t)); e != nil {
+		if e = queueJob(ctx, tx, JobCoverage, "coverage/"+taskID, taskRef(tx, t)); e != nil {
 			return a, e
 		}
 	}
@@ -241,7 +241,7 @@ func (s *Service) StoreCoverage(ctx context.Context, store runtime.Store, scope 
 	err := s.transaction(ctx, store, scope, func(tx runtime.Tx) error { var e error; out, e = s.StoreCoverageTx(ctx, tx, auth, coverage); return e })
 	return out, err
 }
-func (s *Service) StoreCoverageTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.GoalCoverage) (api.ObjectRef, error) {
+func (s *Service) storeCoverageTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.GoalCoverage) (api.ObjectRef, error) {
 	if !auth.HasRole("service") && !auth.HasRole("evidence") {
 		return api.ObjectRef{}, api.E("forbidden", "trusted_evidence_required")
 	}
@@ -306,12 +306,12 @@ func (s *Service) StoreCoverageTx(ctx context.Context, tx runtime.Tx, auth runti
 	if e = s.saveTask(ctx, tx, &t); e != nil {
 		return api.ObjectRef{}, e
 	}
-	if _, e = raise(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
+	if e = queueJob(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
 		return api.ObjectRef{}, e
 	}
 	return ref, nil
 }
-func (s *Service) AttachTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in AttachInput) (AttachOutput, error) {
+func (s *Service) attachTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in AttachInput) (AttachOutput, error) {
 	if e := target(c, in.TaskID); e != nil {
 		return AttachOutput{}, e
 	}
@@ -367,7 +367,7 @@ func (s *Service) AttachTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if e = tx.Bind(ctx, checkRequests, digest, req.CheckID, digest); e != nil {
 		return AttachOutput{}, e
 	}
-	if _, e = raise(ctx, tx, JobCheck, "check/"+req.CheckID, tx.Scope().Ref(req.CheckID, 1)); e != nil {
+	if e = queueJob(ctx, tx, JobCheck, "check/"+req.CheckID, tx.Scope().Ref(req.CheckID, 1)); e != nil {
 		return AttachOutput{}, e
 	}
 	if e = s.saveTask(ctx, tx, &t); e != nil {
@@ -380,7 +380,7 @@ func (s *Service) RecordCheck(ctx context.Context, store runtime.Store, scope ru
 	err := s.transaction(ctx, store, scope, func(tx runtime.Tx) error { var e error; out, e = s.RecordCheckTx(ctx, tx, auth, c); return e })
 	return out, err
 }
-func (s *Service) RecordCheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.ConditionResult) (api.ObjectRef, error) {
+func (s *Service) recordCheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.ConditionResult) (api.ObjectRef, error) {
 	if !auth.HasRole("service") && !auth.HasRole("evidence") {
 		return api.ObjectRef{}, api.E("forbidden", "trusted_evidence_required")
 	}
@@ -465,7 +465,7 @@ func (s *Service) RecordCheckTx(ctx context.Context, tx runtime.Tx, auth runtime
 	if e = s.saveTask(ctx, tx, &t); e != nil {
 		return api.ObjectRef{}, e
 	}
-	if _, e = raise(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
+	if e = queueJob(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
 		return api.ObjectRef{}, e
 	}
 	return ref, nil

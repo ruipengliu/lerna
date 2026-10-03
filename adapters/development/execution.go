@@ -226,11 +226,11 @@ func (e executionAuthority) PrepareStart(ctx context.Context, s runtime.Scope, r
 	return execution.PreparedStart{OperationID: r.Invoke.OperationID, IntentHash: r.Invoke.IntentHash, Recipient: s.OwnerID, UseRefs: r.Invoke.UseRefs, ApprovalRefs: []api.ObjectRef{}, AuthorityRevision: 1, StartBefore: r.ControlWindow.StartBefore, ProofRef: proofs[0]}, nil
 }
 func (e executionAuthority) VerifyStart(ctx context.Context, tx runtime.Tx, r execution.StartRequest, p execution.PreparedStart) (execution.StartPermit, error) {
-	if er := currentCredentialTx(ctx, tx, r.Auth); er != nil {
-		return execution.StartPermit{}, er
-	}
 	original, er := e.a.Task.OperationIntentTx(ctx, tx, r.Invoke.OperationID)
 	if er != nil {
+		return execution.StartPermit{}, er
+	}
+	if er := currentCredentialTx(ctx, tx, r.Auth); er != nil {
 		return execution.StartPermit{}, er
 	}
 	var fixed encodedIntent

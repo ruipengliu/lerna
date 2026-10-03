@@ -11,6 +11,14 @@ import (
 
 const proofJob = "platform.publish_proof"
 
+func raiseProofJob(ctx context.Context, tx runtime.Tx, id string, at time.Time) error {
+	if plan, ok := tx.(task.JobIntentPlanner); ok {
+		return plan.AddJobIntent(ctx, proofJob, "proof/"+id, tx.Scope().Ref(id, 1), at)
+	}
+	_, err := tx.Raise(ctx, proofJob, "proof/"+id, tx.Scope().Ref(id, 1), at)
+	return err
+}
+
 type sealedProof struct {
 	Ref        api.ContentRef         `json:"ref"`
 	Compact    string                 `json:"compact"`
@@ -41,7 +49,7 @@ func (p controlProof) SealControl(ctx context.Context, tx runtime.Tx, c api.Cont
 	}
 	now, e := tx.Now(ctx)
 	if e == nil {
-		_, e = tx.Raise(ctx, proofJob, "proof/"+id, tx.Scope().Ref(id, 1), now)
+		e = raiseProofJob(ctx, tx, id, now)
 	}
 	return ref, e
 }
@@ -75,7 +83,7 @@ func (p closureProof) SealAllocationClosureTx(ctx context.Context, tx runtime.Tx
 	ref := api.ContentRef{TenantID: tx.Scope().TenantID, OwnerID: tx.Scope().OwnerID, ContentID: id, Version: 1, Hash: api.Hash([]byte(compact)), MediaType: "application/jose", ByteLength: uint64(len(compact))}
 	err = tx.Create(ctx, "platform.proofs", id, c.AllocationID, sealedProof{Ref: ref, Compact: compact, Allocation: &c, Revision: 1})
 	if err == nil {
-		_, err = tx.Raise(ctx, proofJob, "proof/"+id, tx.Scope().Ref(id, 1), now)
+		err = raiseProofJob(ctx, tx, id, now)
 	}
 	return ref, err
 }
@@ -104,7 +112,7 @@ func (p closureProof) SealClosureTx(ctx context.Context, tx runtime.Tx, c task.C
 	ref := api.ContentRef{TenantID: tx.Scope().TenantID, OwnerID: tx.Scope().OwnerID, ContentID: id, Version: 1, Hash: api.Hash([]byte(compact)), MediaType: "application/jose", ByteLength: uint64(len(compact))}
 	e = tx.Create(ctx, "platform.proofs", id, c.TaskRef.ObjectID, sealedProof{Ref: ref, Compact: compact, Closure: &c, Revision: 1})
 	if e == nil {
-		_, e = tx.Raise(ctx, proofJob, "proof/"+id, tx.Scope().Ref(id, 1), now)
+		e = raiseProofJob(ctx, tx, id, now)
 	}
 	return ref, e
 }

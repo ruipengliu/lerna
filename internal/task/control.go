@@ -9,7 +9,7 @@ import (
 	"github.com/ruipengliu/lerna/runtime"
 )
 
-func (s *Service) ControlTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ControlInput) (TaskOutput, error) {
+func (s *Service) controlTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ControlInput) (TaskOutput, error) {
 	if e := target(c, in.TaskID); e != nil {
 		return TaskOutput{}, e
 	}
@@ -51,6 +51,9 @@ func (s *Service) ControlTx(ctx context.Context, tx runtime.Tx, auth runtime.Aut
 		t.Task.Control = desired
 	}
 	t.Task.ControlRevision++
+	if e = s.lockTaskTree(ctx, tx, t.Task.TaskID); e != nil {
+		return TaskOutput{}, e
+	}
 	if e = s.closeUnsent(ctx, tx, &t); e != nil {
 		return TaskOutput{}, e
 	}
@@ -63,7 +66,7 @@ func (s *Service) ControlTx(ctx context.Context, tx runtime.Tx, auth runtime.Aut
 	if e = s.controlJobs(ctx, tx, t); e != nil {
 		return TaskOutput{}, e
 	}
-	if _, e = raise(ctx, tx, JobAdvance, "advance/"+in.TaskID, taskRef(tx, t)); e != nil {
+	if e = queueJob(ctx, tx, JobAdvance, "advance/"+in.TaskID, taskRef(tx, t)); e != nil {
 		return TaskOutput{}, e
 	}
 	return output(tx, t), nil
@@ -93,7 +96,7 @@ func (s *Service) controlDescendants(ctx context.Context, tx runtime.Tx, root *t
 					if e = tx.Put(ctx, delegations, d.DelegationID, d.Revision-1, d); e != nil {
 						return e
 					}
-					if _, e = raise(ctx, tx, JobDelegation, "delegation/"+d.DelegationID, tx.Scope().Ref(d.DelegationID, d.Revision)); e != nil {
+					if e = queueJob(ctx, tx, JobDelegation, "delegation/"+d.DelegationID, tx.Scope().Ref(d.DelegationID, d.Revision)); e != nil {
 						return e
 					}
 				}
@@ -175,7 +178,7 @@ func (s *Service) closeUnsent(ctx context.Context, tx runtime.Tx, t *taskState) 
 	}
 	return s.updateSummary(ctx, tx, t)
 }
-func (s *Service) ReviseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ReviseInput) (TaskOutput, error) {
+func (s *Service) reviseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ReviseInput) (TaskOutput, error) {
 	if e := target(c, in.TaskID); e != nil {
 		return TaskOutput{}, e
 	}
@@ -197,6 +200,9 @@ func (s *Service) ReviseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	}
 	if t.PendingGoalCommand != "" {
 		return TaskOutput{}, api.E("invalid_state", "goal_update_pending")
+	}
+	if e = s.lockTaskTree(ctx, tx, t.Task.TaskID); e != nil {
+		return TaskOutput{}, e
 	}
 	if e = s.authorize(ctx, tx, auth, "task.revise", []api.ContentRef{in.GoalRef}, []api.ObjectRef{in.SourceRef}); e != nil {
 		return TaskOutput{}, e
@@ -244,10 +250,10 @@ func (s *Service) reviseGoal(ctx context.Context, tx runtime.Tx, t *taskState, c
 	if e = s.controlJobs(ctx, tx, *t); e != nil {
 		return e
 	}
-	_, e = raise(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, *t))
+	e = queueJob(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, *t))
 	return e
 }
-func (s *Service) SteerTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in SteerInput) (TaskOutput, error) {
+func (s *Service) steerTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in SteerInput) (TaskOutput, error) {
 	if e := target(c, in.TaskID); e != nil {
 		return TaskOutput{}, e
 	}
@@ -297,7 +303,7 @@ func (s *Service) SteerTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 	if e = s.controlJobs(ctx, tx, t); e != nil {
 		return TaskOutput{}, e
 	}
-	if _, e = raise(ctx, tx, JobSteer, "steer/"+c.CommandID, tx.Scope().Ref(c.CommandID, 1)); e != nil {
+	if e = queueJob(ctx, tx, JobSteer, "steer/"+c.CommandID, tx.Scope().Ref(c.CommandID, 1)); e != nil {
 		return TaskOutput{}, e
 	}
 	return output(tx, t), nil
@@ -343,7 +349,7 @@ func (s *Service) CreateInputTx(ctx context.Context, tx runtime.Tx, auth runtime
 	}
 	return tx.Scope().Ref(req.RequestID, 1), nil
 }
-func (s *Service) ConsumeInputTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in InputAnswer, completeGoal *api.ContentRef) (InputOutput, error) {
+func (s *Service) consumeInputTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in InputAnswer, completeGoal *api.ContentRef) (InputOutput, error) {
 	if e := target(c, in.TaskID); e != nil {
 		return InputOutput{}, e
 	}
@@ -359,6 +365,9 @@ func (s *Service) ConsumeInputTx(ctx context.Context, tx runtime.Tx, auth runtim
 	}
 	if in.GoalRevision != t.Task.GoalRevision {
 		return InputOutput{}, api.E("revision_conflict", "wrong_goal")
+	}
+	if e = s.lockTaskTree(ctx, tx, t.Task.TaskID); e != nil {
+		return InputOutput{}, e
 	}
 	var req api.InputRequest
 	rev, e := tx.Get(ctx, inputs, in.RequestRef.ObjectID, &req)
@@ -416,7 +425,7 @@ func (s *Service) ConsumeInputTx(ctx context.Context, tx runtime.Tx, auth runtim
 		if e = s.saveTask(ctx, tx, &t); e != nil {
 			return InputOutput{}, e
 		}
-		if _, e = raise(ctx, tx, JobAdvance, "advance/"+in.TaskID, taskRef(tx, t)); e != nil {
+		if e = queueJob(ctx, tx, JobAdvance, "advance/"+in.TaskID, taskRef(tx, t)); e != nil {
 			return InputOutput{}, e
 		}
 	}
@@ -558,6 +567,9 @@ func (s *Service) expireTx(ctx context.Context, tx runtime.Tx, t *taskState) (bo
 	}
 	if now.Before(deadline) {
 		return false, nil
+	}
+	if e = s.lockTaskTree(ctx, tx, t.Task.TaskID); e != nil {
+		return false, e
 	}
 	t.Task.Status = "failed"
 	t.Task.ControlRevision++

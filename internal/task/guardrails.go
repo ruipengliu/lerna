@@ -43,6 +43,9 @@ func (s *Service) guardrailTx(ctx context.Context, tx runtime.Tx, t *taskState) 
 				return true, s.saveTask(ctx, tx, t)
 			}
 		}
+		if err := s.lockTaskTree(ctx, tx, t.Task.TaskID); err != nil {
+			return false, err
+		}
 		t.Task.Status = "failed"
 		t.Task.ControlRevision++
 		t.Task.WaitReasons = []api.WaitReason{{Kind: "dependency", ResumeCondition: "goal closed: continuation_limit"}}
