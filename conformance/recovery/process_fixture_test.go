@@ -327,7 +327,7 @@ func processObserver(t *testing.T, cfg processConfig) (workStore, *durablework.H
 	clock := &controlledClock{admissionStore: store, instant: cfg.Now}
 	h := hostFor(store, owner, principal)
 	h.Clock = clock
-	return store, h, durablework.NewWorker(owner, store, store, store, clock)
+	return store, h, processWorker(t, store, clock)
 }
 
 // gateBeforeCommit wraps the actual callback and all actual SQL writes. It
@@ -451,12 +451,13 @@ func TestDurableWorkHostProcess(t *testing.T) {
 				t.Fatal("worker update did not apply")
 			}
 		}
-		worker := durablework.NewWorker(owner, store, store, store, clock)
+		worker := processWorker(t, store, clock)
 		batch, err := worker.Claim(ctx, fmt.Sprintf("process-worker-%d", cfg.Generation), 1, time.Minute)
 		if err != nil || len(batch) != 1 {
 			t.Fatalf("process Claim: %+v %v", batch, err)
 		}
 		work := batch[0]
+		startWork(t, worker, work)
 		projection := durablework.Project(work) // Claim Tx has already committed.
 		value := frame("work_computed")
 		value.Work = &work
@@ -526,4 +527,17 @@ func TestDurableWorkHostProcess(t *testing.T) {
 	if err := writeProcessFrame(ctx, reply, value); err != nil {
 		t.Fatal(err)
 	}
+}
+
+func processWorker(t *testing.T, store workStore, clock runtime.Clock) *durablework.Worker {
+	t.Helper()
+	permissions, err := demo.NewWorkerPermissions([]string{"process-worker-1", "process-worker-2", "process-worker-3", "recovery-observer", "normal-recovery", "after-successor", "new-revision"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	worker, err := durablework.NewScheduledWorker(owner, store, store, store, clock, permissions)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return worker
 }
