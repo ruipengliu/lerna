@@ -79,7 +79,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e != nil {
 		return nil, e
 	}
-	a := &App{Config: c, Store: st, Registry: runtime.NewRegistry(), OwnsTargets: role == "dev" || role == "worker", Role: role}
+	a := &App{Config: c, Store: st, Registry: runtime.NewRegistry(), OwnsTargets: role == "dev" || role == "worker" && c.WorkerPool == nil, Role: role}
 	ok := false
 	defer func() {
 		if !ok {
@@ -278,6 +278,11 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	}
 	for _, register := range []func(*runtime.Registry) error{a.Task.Register, a.Brain.Register, a.Execution.Register, a.Governance.Register, a.Interaction.Register} {
 		if e = register(a.Registry); e != nil {
+			return nil, e
+		}
+	}
+	if role == "worker" && c.WorkerPool != nil {
+		if _, e = a.classifiedWorker(); e != nil {
 			return nil, e
 		}
 	}

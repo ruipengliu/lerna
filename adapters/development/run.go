@@ -18,7 +18,7 @@ func (a *App) Run(ctx context.Context, serve, work bool) error {
 	if !serve && !work {
 		return api.E("invalid_request", "process_role_required")
 	}
-	if work && !a.OwnsTargets {
+	if work && !a.OwnsTargets && a.Config.WorkerPool == nil {
 		return api.E("unsupported", "worker_target_ownership_required")
 	}
 	runCtx, cancel := context.WithCancel(ctx)
@@ -55,6 +55,13 @@ func (a *App) Run(ctx context.Context, serve, work bool) error {
 	}
 	if work {
 		worker := runtime.Worker{Store: a.Store, Registry: a.Registry, Scopes: []runtime.Scope{a.Scope}, Kinds: a.Registry.JobKinds(), Concurrency: 8, Lease: 30 * time.Second, Poll: 25 * time.Millisecond}
+		if a.Config.WorkerPool != nil {
+			var err error
+			worker, err = a.classifiedWorker()
+			if err != nil {
+				return err
+			}
+		}
 		count++
 		go func() { failures <- worker.Run(runCtx) }()
 	}
