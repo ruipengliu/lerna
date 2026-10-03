@@ -70,7 +70,9 @@ func TestRestrictedWASIHostCrashFencesOriginalProcessWithoutReplayingAttempt(t *
 			child.Wait()
 		}
 	})
-	deadline := time.Now().Add(5 * time.Second)
+	// race runner 下独立宿主先编译登记全部闭合 Schema；这里只放宽有界观测等待，
+	// 原 invoke/control/claim/CPU/wall 的业务期限全部保持原值。
+	deadline := time.Now().Add(25 * time.Second)
 	var family map[int]string
 	for {
 		f.query(t, "environment.get", env.EnvironmentID, domain.EnvironmentIDInput{EnvironmentID: env.EnvironmentID}, &env)
