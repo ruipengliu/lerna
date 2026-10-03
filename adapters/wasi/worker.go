@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"runtime/debug"
 	"time"
 
 	"github.com/ruipengliu/lerna/api"
@@ -34,6 +35,46 @@ type WorkerResult struct {
 	Success  bool   `json:"success"`
 	Reason   string `json:"reason"`
 	Output   []byte `json:"output"`
+}
+
+type WorkerProbe struct {
+	Protocol       string `json:"protocol"`
+	RuntimeVersion string `json:"runtime_version"`
+	ModuleVersion  string `json:"module_version"`
+	ModuleSum      string `json:"module_sum"`
+	GoVersion      string `json:"go_version"`
+	Answer         uint64 `json:"answer"`
+}
+
+// ProbeWorker 只执行内置固定探针，不接收用户代码或业务输入。
+func ProbeWorker(out io.Writer) error {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return api.E("unsupported", "worker_build_identity_missing")
+	}
+	probe := WorkerProbe{Protocol: WorkerProtocol, RuntimeVersion: RuntimeVersion, GoVersion: info.GoVersion}
+	for _, dep := range info.Deps {
+		if dep.Path == "github.com/tetratelabs/wazero" && dep.Replace == nil {
+			probe.ModuleVersion, probe.ModuleSum = dep.Version, dep.Sum
+		}
+	}
+	if probe.ModuleVersion != "v1.10.1" || probe.ModuleSum != "h1:2DugeJf6VVk58KTPszlNfeeN8AhhpwcZqkJj2wwFuH8=" {
+		return api.E("unsupported", "worker_runtime_lock_changed")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	runtime := wazero.NewRuntimeWithConfig(ctx, wazero.NewRuntimeConfigInterpreter().WithMemoryLimitPages(1).WithCloseOnContextDone(true))
+	defer runtime.Close(context.Background())
+	module, err := runtime.InstantiateWithConfig(ctx, []byte{0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 96, 0, 1, 127, 3, 2, 1, 0, 7, 9, 1, 5, 112, 114, 111, 98, 101, 0, 0, 10, 6, 1, 4, 0, 65, 42, 11}, wazero.NewModuleConfig().WithStartFunctions())
+	if err != nil {
+		return err
+	}
+	values, err := module.ExportedFunction("probe").Call(ctx)
+	if err != nil || len(values) != 1 || values[0] != 42 {
+		return api.E("unsupported", "worker_probe_failed")
+	}
+	probe.Answer = values[0]
+	return json.NewEncoder(out).Encode(probe)
 }
 
 func RunWorker(in io.Reader, out io.Writer) error {
