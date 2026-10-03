@@ -98,12 +98,15 @@ func reserveAddress(t *testing.T) string {
 	return address
 }
 func startTLSHost(t *testing.T, f *deviceFixture) (*Client, context.Context) {
+	return startTLSHostFor(t, f, 30*time.Second)
+}
+func startTLSHostFor(t *testing.T, f *deviceFixture, timeout time.Duration) (*Client, context.Context) {
 	t.Helper()
 	ca, cert, key := deviceTLSFiles(t, f.root)
 	f.h.Config.TLSCertificateFile = cert
 	f.h.Config.TLSKeyFile = key
 	f.h.Config.GRPCAddr = reserveAddress(t)
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	done := make(chan error, 1)
 	go func() { done <- f.h.Run(ctx) }()
 	t.Cleanup(func() {

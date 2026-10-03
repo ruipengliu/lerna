@@ -31,6 +31,7 @@ func ModelOutputSchema() api.Schema {
 	draft := api.Schema{"oneOf": []any{
 		variant("refine_requirements", map[string]any{"requirements": api.Array(api.SchemaFor[brain.DraftRequirement](), 1, 100)}, "requirements"),
 		variant("act", map[string]any{"actions": api.Array(brain.DraftActionSchema(), 1, 4)}, "actions"),
+		variant("need_context", map[string]any{"lookups": api.Array(brain.DraftLookupSchema(), 1, 3)}, "lookups"),
 		variant("complete", map[string]any{"artifact_local_ids": api.Array(localSchema(), 0, 100), "existing_artifact_refs": api.Array(api.Ref("ContentRef"), 0, 100)}),
 		variant("request_input", map[string]any{"question_local_id": localSchema(), "answer_schema_ref": api.Ref("ComponentRef"), "purpose": api.Enum("clarify_goal", "supply_context")}, "question_local_id", "answer_schema_ref", "purpose"),
 		variant("fail", map[string]any{"reason_code": api.String()}, "reason_code"),
@@ -73,6 +74,11 @@ func ParseGenerated(raw []byte) (brain.Generated, error) {
 		}
 	}
 	d := input.Draft
+	if d.Kind == "need_context" {
+		if err := brain.ValidateDraftLookups(d.Lookups, input.Contents); err != nil {
+			return brain.Generated{}, err
+		}
+	}
 	if !found[d.ReasonLocalID] {
 		return brain.Generated{}, api.E("invalid_request", "output_reason_missing")
 	}

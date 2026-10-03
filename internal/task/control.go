@@ -51,6 +51,7 @@ func (s *Service) controlTx(ctx context.Context, tx runtime.Tx, auth runtime.Aut
 		t.Task.Control = desired
 	}
 	t.Task.ControlRevision++
+	clearContextWait(&t)
 	if e = s.lockTaskTree(ctx, tx, t.Task.TaskID); e != nil {
 		return TaskOutput{}, e
 	}
@@ -122,6 +123,7 @@ func (s *Service) controlDescendants(ctx context.Context, tx runtime.Tx, root *t
 				child.Task.Status = "cancelled"
 			}
 			child.Task.ControlRevision++
+			clearContextWait(&child)
 			if e = s.closeUnsent(ctx, tx, &child); e != nil {
 				return e
 			}
@@ -221,6 +223,8 @@ func (s *Service) reviseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 }
 func (s *Service) reviseGoal(ctx context.Context, tx runtime.Tx, t *taskState, cause api.ObjectRef) error {
 	t.PendingCompletionID = ""
+	clearContextWait(t)
+	t.ContextMaterials = []ContextMaterial{}
 	t.Task.GoalRevision++
 	t.Task.ControlRevision++
 	t.Task.Requirements = []api.Requirement{}
@@ -417,6 +421,7 @@ func (s *Service) consumeInputTx(ctx context.Context, tx runtime.Tx, auth runtim
 			return InputOutput{}, e
 		}
 	} else {
+		clearContextWait(&t)
 		t.Task.ControlRevision++
 		t.NoProgress = 0
 		if e = s.closeUnsent(ctx, tx, &t); e != nil {
