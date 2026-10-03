@@ -484,3 +484,38 @@ func (s *Store) PoolScope(ctx context.Context, token runtime.Tx) (string, error)
 	binding, err := json.Marshal([]any{"postgres", cfg.Host, cfg.Port, cfg.Database, s.config.Schema, scope})
 	return string(binding), err
 }
+
+// PoolNextWake observes runtime scheduling boundaries across explicitly declared
+// members, including both revisions while a newer input has a live old Claim.
+func (s *Store) PoolNextWake(ctx context.Context, token runtime.Tx, state demo.PoolState, lane string, now, fallback time.Time) (time.Time, error) {
+	tx, err := s.localToken(ctx, token)
+	if err != nil {
+		return time.Time{}, err
+	}
+	if _, err = state.Config.Limit(lane); err != nil {
+		return time.Time{}, err
+	}
+	if !fallback.After(now) || fallback.Sub(now) > time.Second {
+		return time.Time{}, runtime.ErrWorkBounds
+	}
+	var next sql.NullTime
+	err = tx.QueryRowContext(ctx, `SELECT MIN(boundary) FROM (
+ SELECT j.scan_at AS boundary FROM `+s.table("jobs")+` j JOIN `+s.table("durable_pool_members")+` m ON m.tenant_id=j.tenant_id AND m.owner_id=j.owner_id
+ WHERE m.pool_id=$1 AND j.lane=$2 AND j.state<>'done' AND j.scan_at>$3 AND j.lease_epoch<9223372036854775807
+ UNION ALL SELECT s.deadline FROM `+s.table("durable_schedules")+` s JOIN `+s.table("jobs")+` j ON j.tenant_id=s.tenant_id AND j.owner_id=s.owner_id AND j.object_id=s.object_id
+ JOIN `+s.table("durable_pool_members")+` m ON m.tenant_id=j.tenant_id AND m.owner_id=j.owner_id
+ WHERE m.pool_id=$1 AND j.lane=$2 AND j.object_kind='durable_work' AND j.phase='project' AND j.state<>'done'
+ AND (s.input_revision=j.work_revision OR (j.state='leased' AND s.input_revision=j.claimed_revision))
+ AND s.input_revision>j.completed_revision AND s.deadline>$3 AND s.outcome NOT IN ('success','permanent','expired','stopped')
+ ) wake`, state.Config.ID, lane, now).Scan(&next)
+	if err != nil {
+		return time.Time{}, err
+	}
+	if next.Valid {
+		due := next.Time
+		if due.Before(fallback) {
+			return due, nil
+		}
+	}
+	return fallback, nil
+}

@@ -107,37 +107,8 @@ func (w *Worker) Start(ctx context.Context, work Work) (ScheduleState, bool, err
 		return state, false, ErrPolicy
 	}
 	err := w.Runner.Within(ctx, w.Owner, func(ctx context.Context, tx runtime.Tx) error {
-		poolRepo, pool, err := poolLock(ctx, tx, w.Repository)
+		now, allowed, err := w.prepareClaim(ctx, tx, work, schedule)
 		if err != nil {
-			return err
-		}
-		input, err := w.Repository.LockInput(ctx, tx, w.Owner, work.Claim.Object.ID)
-		if err != nil {
-			return err
-		}
-		if input == nil {
-			return runtime.ErrClaim
-		}
-		now, err := w.Clock.Now(ctx, tx)
-		if err != nil {
-			return err
-		}
-		if err = poolRepo.ValidatePoolClaim(ctx, tx, pool, work.Claim, now); err != nil {
-			return err
-		}
-		if err = schedule.ValidateClaim(ctx, tx, work.Claim, now); err != nil {
-			return err
-		}
-		// Job locking can itself wait after the object lock. Sample authority time
-		// again while both locks are held before permitting a real start/finish.
-		now, err = w.Clock.Now(ctx, tx)
-		if err != nil {
-			return err
-		}
-		if err = poolRepo.ValidatePoolClaim(ctx, tx, pool, work.Claim, now); err != nil {
-			return err
-		}
-		if err = schedule.ValidateClaim(ctx, tx, work.Claim, now); err != nil {
 			return err
 		}
 		stored, err := repo.LoadSchedule(ctx, tx, w.Owner, work.Input.ID, work.Claim.ClaimedRevision)
@@ -148,7 +119,7 @@ func (w *Worker) Start(ctx context.Context, work Work) (ScheduleState, bool, err
 			return ErrPolicy
 		}
 		state = *stored
-		if !w.Permissions.Allows(work.Claim.Worker) {
+		if !allowed {
 			return w.closeState(ctx, tx, work, &state, "permanent", "forbidden", now, nil)
 		}
 		if state.Stopped {
@@ -188,6 +159,45 @@ func (w *Worker) Start(ctx context.Context, work Work) (ScheduleState, bool, err
 	})
 	return state, started, err
 }
+
+// prepareClaim shares the Start/Finish transaction lock order and authority
+// checks. Job acquisition may wait, so both Claim gates must be repeated with
+// trusted time after the input and Job locks have been acquired.
+func (w *Worker) prepareClaim(ctx context.Context, tx runtime.Tx, work Work, schedule runtime.ScheduleStore) (time.Time, bool, error) {
+	poolRepo, pool, err := poolLock(ctx, tx, w.Repository)
+	if err != nil {
+		return time.Time{}, false, err
+	}
+	input, err := w.Repository.LockInput(ctx, tx, w.Owner, work.Input.ID)
+	if err != nil {
+		return time.Time{}, false, err
+	}
+	if input == nil {
+		return time.Time{}, false, runtime.ErrClaim
+	}
+	now, err := w.Clock.Now(ctx, tx)
+	if err != nil {
+		return time.Time{}, false, err
+	}
+	if err = poolRepo.ValidatePoolClaim(ctx, tx, pool, work.Claim, now); err != nil {
+		return time.Time{}, false, err
+	}
+	if err = schedule.ValidateClaim(ctx, tx, work.Claim, now); err != nil {
+		return time.Time{}, false, err
+	}
+	now, err = w.Clock.Now(ctx, tx)
+	if err != nil {
+		return time.Time{}, false, err
+	}
+	if err = poolRepo.ValidatePoolClaim(ctx, tx, pool, work.Claim, now); err != nil {
+		return time.Time{}, false, err
+	}
+	if err = schedule.ValidateClaim(ctx, tx, work.Claim, now); err != nil {
+		return time.Time{}, false, err
+	}
+	return now, w.Permissions.Allows(work.Claim.Worker), nil
+}
+
 func boundedDue(now time.Time, delay time.Duration, deadline time.Time) time.Time {
 	due := now.Add(delay)
 	if due.After(deadline) {
@@ -214,37 +224,8 @@ func (w *Worker) Finish(ctx context.Context, work Work, outcome, reason string, 
 		return ErrPolicy
 	}
 	return w.Runner.Within(ctx, w.Owner, func(ctx context.Context, tx runtime.Tx) error {
-		poolRepo, pool, err := poolLock(ctx, tx, w.Repository)
+		now, allowed, err := w.prepareClaim(ctx, tx, work, schedule)
 		if err != nil {
-			return err
-		}
-		input, err := w.Repository.LockInput(ctx, tx, w.Owner, work.Input.ID)
-		if err != nil {
-			return err
-		}
-		if input == nil {
-			return runtime.ErrClaim
-		}
-		now, err := w.Clock.Now(ctx, tx)
-		if err != nil {
-			return err
-		}
-		if err = poolRepo.ValidatePoolClaim(ctx, tx, pool, work.Claim, now); err != nil {
-			return err
-		}
-		if err = schedule.ValidateClaim(ctx, tx, work.Claim, now); err != nil {
-			return err
-		}
-		// Job locking can itself wait after the object lock. Sample authority time
-		// again while both locks are held before permitting a real start/finish.
-		now, err = w.Clock.Now(ctx, tx)
-		if err != nil {
-			return err
-		}
-		if err = poolRepo.ValidatePoolClaim(ctx, tx, pool, work.Claim, now); err != nil {
-			return err
-		}
-		if err = schedule.ValidateClaim(ctx, tx, work.Claim, now); err != nil {
 			return err
 		}
 		state, err := repo.LoadSchedule(ctx, tx, w.Owner, work.Input.ID, work.Claim.ClaimedRevision)
@@ -254,7 +235,7 @@ func (w *Worker) Finish(ctx context.Context, work Work, outcome, reason string, 
 		if state == nil || state.Stopped || state.StartEpoch != work.Claim.Epoch {
 			return runtime.ErrClaim
 		}
-		if !w.Permissions.Allows(work.Claim.Worker) {
+		if !allowed {
 			outcome = "permanent"
 			reason = "forbidden"
 			projection = nil

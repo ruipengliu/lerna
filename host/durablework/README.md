@@ -84,8 +84,9 @@ Upgrade requires draining or isolating the old binary. Legacy policy is absent
 until first eligible takeover, then binds once at trusted `adopted_at` + 5min;
 it never uses old command acceptance time or refreshes on restart. Existing v2
 Claims/epochs survive migration and wait until their original lease expires.
-No missing policy permits execution. Lane capacity, quotas and fairness remain
-spec02 ticket06. Public 1.0.0 and record receipts/progress `none` remain unchanged.
+No missing policy permits execution. Current finite pool assembly enforces lane
+capacity, tenant quotas, bounded queues and conditional FIFO fairness; see the
+pool assembly below. Public 1.0.0 and record receipts/progress `none` remain unchanged.
 
 Cleanup is a separate trusted internal capability, default denied by the exact
 SubjectBinding/OwnerRef permission table. `Host.Cleanup(ctx, originalCommandRef,
@@ -118,3 +119,7 @@ See [finite pool behavior and scope limits](../../internal/durableworkdemo/READM
 Read/replay authorization and original digest decisions remain independent of new
 pool registration. This is internal demonstration behavior; public contract
 1.0.0 remains command.get only.
+
+Slice 02 as a whole still awaits review closure, architecture review and final CI.
+Local recovery evidence and its historical resource/fault-domain limits remain
+in the [slice specification](../../.scratch/lerna-02-durable-work/spec.md).

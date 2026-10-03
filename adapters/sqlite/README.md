@@ -4,7 +4,10 @@ This adapter implements the same internal Host admission ports as PostgreSQL:
 Tx, Clock, CommandStore, JobStore.Trigger and the demonstration consumer's
 Repository, plus the separate ClaimStore and project WorkRepository. It
 claims exact stage input, renews bound leases and commits projection progress.
-Persistent waiting and bounded retry are implemented; quotas remain ticket06. The public 1.0.0 contract is unchanged.
+Persistent waiting, bounded retry, finite queues, lane limits and tenant quotas
+are implemented. New admission and processing require an explicitly installed
+finite pool; see the [consumer pool contract](../../internal/durableworkdemo/README.md).
+The public 1.0.0 contract is unchanged.
 
 The root module locks `github.com/mattn/go-sqlite3 v1.14.52`. Build with Go 1.27.1,
 `CGO_ENABLED=1` and a C compiler using the driver's bundled SQLite amalgamation.
@@ -127,3 +130,7 @@ Claims; later reconfiguration cannot bless unregistered raw Claims. Expiry and
 exact stop maintenance needs no execution Claim and preserves other revisions.
 See [consumer pool contract](../../internal/durableworkdemo/README.md) for limits,
 conditional fairness, trusted assembly, restoration and scope-binding limits.
+
+Slice 02 as a whole still awaits review closure, architecture review and final CI.
+Local recovery evidence and its historical resource/fault-domain limits remain
+in the [slice specification](../../.scratch/lerna-02-durable-work/spec.md).

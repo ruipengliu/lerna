@@ -22,4 +22,9 @@ before a replacement exists. ScheduleStore now validates/defers/releases origina
 revision and computes finite future wakes. The consumer supplies durable wait,
 retry and closure meaning; runtime does not classify business errors. Timers wait
 outside Tx using a positive relative delay derived from the trusted Clock.
-Fairness and quotas remain ticket06. Adapter details live in their READMEs.
+Current processing requires an explicitly installed finite pool, with durable
+lane limits, tenant quotas and conditional tenant FIFO fairness. See the
+[consumer pool contract](../internal/durableworkdemo/README.md) and adapter READMEs.
+
+Slice 02 still awaits review closure, architecture review and final CI; see the
+[slice specification](../.scratch/lerna-02-durable-work/spec.md) for evidence limits.

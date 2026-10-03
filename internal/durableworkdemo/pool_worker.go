@@ -12,6 +12,7 @@ import (
 // Selection is advisory; the selected owner's transaction rechecks the same
 // persistent cursor and quota before creating an actual Claim.
 type PoolWorker struct {
+	Timer   runtime.Timer
 	anchor  *Service
 	workers map[contract.OwnerRef]*Worker
 }
@@ -27,7 +28,7 @@ func NewPoolWorker(anchor *Service, workers []*Worker) (*PoolWorker, error) {
 	if _, ok := anchor.Repository.(PoolRepository); !ok {
 		return nil, ErrPoolMissing
 	}
-	pool := &PoolWorker{anchor: anchor, workers: map[contract.OwnerRef]*Worker{}}
+	pool := &PoolWorker{Timer: runtime.WallTimer{}, anchor: anchor, workers: map[contract.OwnerRef]*Worker{}}
 	for _, worker := range workers {
 		if worker == nil || worker.Permissions == nil || pool.workers[worker.Owner] != nil {
 			return nil, ErrPoolConfig
@@ -125,13 +126,39 @@ func (p *PoolWorker) StepLane(ctx context.Context, lane, worker string, lease ti
 	return true, dispatch.Worker.Process(ctx, dispatch.Work)
 }
 
+// NextWake reads only declared pool scheduling facts. Already-due work that
+// cannot acquire quota/locks waits for the finite fallback instead of spinning.
+func (p *PoolWorker) NextWake(ctx context.Context, lane string, fallback time.Duration) (runtime.StepResult, error) {
+	result := runtime.StepResult{}
+	if err := workContext(ctx); err != nil {
+		return result, err
+	}
+	if fallback < time.Millisecond || fallback > time.Second {
+		return result, runtime.ErrWorkBounds
+	}
+	err := p.anchor.Runner.Within(ctx, p.anchor.Owner, func(ctx context.Context, tx runtime.Tx) error {
+		repo, pool, err := poolLock(ctx, tx, p.anchor.Repository)
+		if err != nil {
+			return err
+		}
+		now, err := p.anchor.Clock.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		result.NextWake, err = repo.PoolNextWake(ctx, tx, pool, lane, now, now.Add(fallback))
+		result.WaitFor = result.NextWake.Sub(now)
+		return err
+	})
+	return result, err
+}
+
 // Run owns one independently cancellable loop per lane. It never waits for
 // ordinary computation before allowing control/reconciliation service.
 func (p *PoolWorker) Run(ctx context.Context, worker string, lease, fallback time.Duration) error {
 	if err := workContext(ctx); err != nil {
 		return err
 	}
-	if fallback < time.Millisecond || fallback > time.Second {
+	if p.Timer == nil || fallback < time.Millisecond || fallback > time.Second {
 		return runtime.ErrWorkBounds
 	}
 	ctx, cancel := context.WithCancel(ctx)
@@ -143,9 +170,18 @@ func (p *PoolWorker) Run(ctx context.Context, worker string, lease, fallback tim
 		go func(lane string) {
 			defer wg.Done()
 			for {
-				_, err := p.StepLane(ctx, lane, worker, lease)
+				processed, err := p.StepLane(ctx, lane, worker, lease)
+				// A completed/deferred dispatch is bounded real progress. Drain
+				// another opportunity before parking; an empty/blocked step parks.
+				if err == nil && processed {
+					continue
+				}
 				if err == nil {
-					err = (runtime.WallTimer{}).Wait(ctx, fallback)
+					var result runtime.StepResult
+					result, err = p.NextWake(ctx, lane, fallback)
+					if err == nil {
+						err = p.Timer.Wait(ctx, result.WaitFor)
+					}
 				}
 				if err != nil {
 					errors <- err

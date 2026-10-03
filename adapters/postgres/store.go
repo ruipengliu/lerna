@@ -30,6 +30,16 @@ type Store struct {
 
 var identifier = regexp.MustCompile(`^[a-z][a-z0-9_]{0,62}$`)
 
+// connectionError keeps driver classification available without putting
+// connection credentials or untrusted driver text into default error output.
+type connectionError struct {
+	message string
+	cause   error
+}
+
+func (e *connectionError) Error() string { return e.message }
+func (e *connectionError) Unwrap() error { return e.cause }
+
 func Open(ctx context.Context, cfg Config) (*Store, error) {
 	if ctx == nil || cfg.DSN == "" || !identifier.MatchString(cfg.Schema) || cfg.TransactionTimeout <= 0 || cfg.StatementTimeout < time.Millisecond || cfg.LockTimeout < time.Millisecond || cfg.StatementTimeout > cfg.TransactionTimeout || cfg.LockTimeout > cfg.StatementTimeout {
 		return nil, errors.New("invalid PostgreSQL configuration")
@@ -41,7 +51,7 @@ func Open(ctx context.Context, cfg Config) (*Store, error) {
 	defer cancel()
 	db, err := sql.Open("pgx", cfg.DSN)
 	if err != nil {
-		return nil, errors.New("PostgreSQL connection configuration rejected")
+		return nil, &connectionError{message: "PostgreSQL connection configuration rejected", cause: err}
 	}
 	connections := cfg.MaxOpenConnections
 	if connections == 0 {
@@ -51,7 +61,7 @@ func Open(ctx context.Context, cfg Config) (*Store, error) {
 	db.SetMaxIdleConns(min(connections, 4))
 	if err = db.PingContext(bounded); err != nil {
 		db.Close()
-		return nil, errors.New("PostgreSQL connection unavailable")
+		return nil, &connectionError{message: "PostgreSQL connection unavailable", cause: err}
 	}
 	return &Store{db: db, config: cfg}, nil
 }
