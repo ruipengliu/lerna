@@ -44,9 +44,9 @@ func (s *Service) Register(r *runtime.Registry) error {
 			out, e := s.SteerTx(ctx, tx, a, c, in)
 			return runtime.Accepted(out), e
 		}),
-		command[InputAnswer, InputOutput](s, "task.input", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in InputAnswer) (runtime.Outcome, error) {
-			out, e := s.InputTx(ctx, tx, a, c, in)
-			return runtime.Applied(out), e
+		command[InputAnswer, InputOutput](s, "task.input", false, true, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in InputAnswer) (runtime.Outcome, error) {
+			out, e := s.PrepareInputTx(ctx, tx, a, c, in)
+			return runtime.Accepted(out), e
 		}),
 		command[AcceptInput, AcceptOutput](s, "task.accept_result", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in AcceptInput) (runtime.Outcome, error) {
 			out, e := s.AcceptTx(ctx, tx, a, c, in)
@@ -67,6 +67,15 @@ func (s *Service) Register(r *runtime.Registry) error {
 		command[ControlWindowInput, api.ControlSnapshot](s, "task.control_window", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in ControlWindowInput) (runtime.Outcome, error) {
 			out, e := s.ControlWindowTx(ctx, tx, a, c, in)
 			return runtime.Applied(out), e
+		}),
+		query[ReadInput, InputRequestView](s, "input_request.read", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in ReadInput) (InputRequestView, error) {
+			return s.InputRequestRead(ctx, store, scope, a, q.TargetID, in.Revision)
+		}),
+		query[InputRequestListInput, api.Page[InputRequestView]](s, "task.input_requests.list", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in InputRequestListInput) (api.Page[InputRequestView], error) {
+			if q.TargetID != in.TaskID {
+				return api.Page[InputRequestView]{}, invalid("target_mismatch")
+			}
+			return s.InputRequestList(ctx, store, scope, a, in)
 		}),
 		query[ResultInput, ResultOutput](s, "task.result", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in ResultInput) (ResultOutput, error) {
 			return s.Result(ctx, store, scope, a, q.TargetID, in)

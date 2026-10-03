@@ -19,6 +19,7 @@ type EvaluationThresholds struct {
 	ConfidenceLevel      string `json:"confidence_level"`
 	StatisticalMethod    string `json:"statistical_method"`
 	MinimumSamples       uint64 `json:"minimum_samples"`
+	CostUnit             string `json:"cost_unit"`
 }
 type EvaluationSample struct {
 	SampleID string         `json:"sample_id"`
@@ -50,7 +51,6 @@ type EvaluationPlan struct {
 	FullDenominator      uint64               `json:"full_denominator"`
 	ExposureRevision     uint64               `json:"exposure_revision"`
 	FormalEligible       bool                 `json:"formal_eligible"`
-	Samples              []EvaluationSample   `json:"samples"`
 }
 type PlanCreate struct {
 	Plan EvaluationPlan `json:"plan"`
@@ -89,6 +89,8 @@ type SampleRun struct {
 	StopConfirmed        bool            `json:"stop_confirmed"`
 	MayApplyLater        bool            `json:"may_apply_later"`
 	EnvironmentDestroyed bool            `json:"environment_destroyed"`
+	SafeRetry            bool            `json:"safe_retry"`
+	ObservedAt           string          `json:"observed_at,omitempty"`
 	TruthRef             *api.ContentRef `json:"truth_ref,omitempty"`
 	OperationRefs        []api.ObjectRef `json:"operation_refs"`
 	AttemptRefs          []api.ObjectRef `json:"attempt_refs"`
@@ -104,6 +106,7 @@ type RunnerPair struct {
 	CandidateEnvironmentKey string           `json:"candidate_environment_key"`
 	BaselineEnvironmentKey  string           `json:"baseline_environment_key"`
 	StartBefore             string           `json:"start_before"`
+	Permit                  string           `json:"permit,omitempty"`
 }
 type PairEvidence struct {
 	CandidatePrepared       bool           `json:"candidate_prepared"`
@@ -125,6 +128,7 @@ type RunnerAttempt struct {
 	StartBefore       string           `json:"start_before"`
 	Seed              uint64           `json:"seed"`
 	Permit            string           `json:"permit,omitempty"`
+	Budget            []api.Amount     `json:"budget"`
 }
 type AttemptObservation struct {
 	Outcome              string         `json:"outcome"`
@@ -138,6 +142,8 @@ type AttemptObservation struct {
 	MayApplyLater        bool           `json:"may_apply_later"`
 	OperationRef         api.ObjectRef  `json:"operation_ref"`
 	ProofRef             api.ContentRef `json:"proof_ref"`
+	SafeRetry            bool           `json:"safe_retry"`
+	ObservedAt           string         `json:"observed_at"`
 }
 type SampleAttempt struct {
 	AttemptID   string              `json:"attempt_id"`
@@ -162,11 +168,13 @@ type SamplePageRequest struct {
 	Limit  uint64 `json:"limit"`
 }
 type ExposureGate struct {
-	ID            string `json:"id"`
-	Revision      uint64 `json:"revision"`
-	SourceGroup   string `json:"source_group"`
-	Cursor        uint64 `json:"cursor"`
-	KnownExposure bool   `json:"known_exposure"`
+	ID                 string `json:"id"`
+	Revision           uint64 `json:"revision"`
+	SourceGroup        string `json:"source_group"`
+	Cursor             uint64 `json:"cursor"`
+	KnownExposure      bool   `json:"known_exposure"`
+	EarliestOccurredAt string `json:"earliest_occurred_at,omitempty"`
+	UnknownTime        bool   `json:"unknown_time"`
 }
 type Exposure struct {
 	ExposureID  string         `json:"exposure_id"`

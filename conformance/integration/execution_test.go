@@ -67,7 +67,7 @@ func (a *executionAuthority) VerifyControl(ctx context.Context, tx rt.Tx, p rt.A
 	return nil
 }
 func (a *executionAuthority) PrepareStart(ctx context.Context, sc rt.Scope, r domain.StartRequest) (domain.PreparedStart, error) {
-	return domain.PreparedStart{OperationID: r.Invoke.OperationID, IntentHash: r.Invoke.IntentHash, Recipient: sc.OwnerID, UseRefs: r.Invoke.UseRefs, ApprovalRefs: []api.ObjectRef{}, AuthorityRevision: 1, StartBefore: r.Invoke.ControlSnapshot.StartBefore, ProofRef: r.Invoke.ControlSnapshot.ProofRef}, nil
+	return domain.PreparedStart{OperationID: r.Invoke.OperationID, IntentHash: r.Invoke.IntentHash, Recipient: sc.OwnerID, UseRefs: r.Invoke.UseRefs, ApprovalRefs: []api.ObjectRef{}, AuthorityRevision: 1, StartBefore: r.Invoke.Deadline, ProofRef: r.ControlWindow.ProofRef}, nil
 }
 func (a *executionAuthority) VerifyStart(ctx context.Context, tx rt.Tx, r domain.StartRequest, p domain.PreparedStart) (domain.StartPermit, error) {
 	if a.denied {
@@ -447,5 +447,316 @@ func TestTrustedPureComputePublishesOneNamespaceCASAndRetainsHistoricalEffect(t 
 	f.query(t, "environment.get", id, domain.EnvironmentIDInput{EnvironmentID: id}, &env)
 	if env.NamespaceRevision != 2 {
 		t.Fatalf("reconcile replayed cell %+v", env)
+	}
+}
+
+func TestExecutorDeviceResourceObservationAndTakeoverSeparateSavedFromStopped(t *testing.T) {
+	f := newExecutionFixture(t)
+	ids := []string{api.NewID("resource"), api.NewID("resource"), api.NewID("resource")}
+	phones, err := target.NewSimulatedPhones(t.TempDir(), ids)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer phones.Close()
+	service, err := domain.New(domain.Config{OwnerID: f.sc.OwnerID, Content: f.content, Authority: f.authority, Location: "device", Drivers: []domain.Driver{phones}, ResourceDriver: phones})
+	if err != nil {
+		t.Fatal(err)
+	}
+	registry := rt.NewRegistry()
+	if err = service.Register(registry); err != nil {
+		t.Fatal(err)
+	}
+	f.registry = registry
+	f.dispatcher.Registry = registry
+	for index, id := range ids {
+		holder := api.NewID("holder")
+		instance := api.NewID("instance")
+		r := f.command(t, "resource.acquire", id, domain.AcquireInput{ResourceID: id, HolderID: holder, InstanceID: instance, LeaseUntil: api.Time(time.Now().Add(time.Minute))}, nil)
+		if r.Stage != "applied" {
+			t.Fatalf("acquire %+v", r)
+		}
+		var lease domain.ResourceLease
+		api.Decode(r.Output, &lease)
+		if lease.ActuallyStopped {
+			t.Fatal("saved acquisition falsely claims host has stopped old actions")
+		}
+		f.drain(t)
+		observationID := api.NewID("observation")
+		r = f.command(t, "resource.observe", id, domain.ObserveInput{ResourceID: id, ObservationID: observationID, HolderID: holder, InstanceID: instance, ControlEpoch: 1}, nil)
+		if r.Stage != "accepted" {
+			t.Fatalf("observe %+v", r)
+		}
+		f.drain(t)
+		var observed domain.ObserveOutput
+		f.query(t, "resource.observation.get", observationID, domain.ObservationIDInput{ObservationID: observationID}, &observed)
+		if !observed.Ready || observed.Observation == nil {
+			t.Fatalf("observation %+v", observed)
+		}
+		invoke := f.invokeInput(t, false)
+		var intent domain.ExecutionIntent
+		raw, _ := f.content.ReadBytes(context.Background(), f.sc, f.auth, invoke.IntentRef, "prepare", "device")
+		api.Decode(raw, &intent)
+		args := target.PhoneActionArguments{ResourceID: id, InstanceID: instance, ControlEpoch: 1, ObservationID: observationID, TargetVersion: observed.Observation.TargetVersion, ActionBefore: observed.Observation.ActionBefore, Action: "set_note", Value: "distinct controlled phone"}
+		intent.ArgumentsRef = f.put(t, api.Raw(args))
+		invoke.CapabilityRef = target.PhoneCapability().Ref
+		intent.CapabilityRef = invoke.CapabilityRef
+		intent.ResourceRefs = []api.ObjectRef{observed.Observation.ResourceRef}
+		intent.ProcessedSourceRefs = []api.ContentRef{}
+		invoke.IntentRef = f.put(t, api.Raw(intent))
+		invoke.IntentHash, _ = api.Digest(intent)
+		r = f.command(t, "execution.invoke", invoke.OperationID, invoke, nil)
+		if r.Stage != "applied" {
+			t.Fatalf("phone %d invoke %+v", index, r)
+		}
+		f.drain(t)
+		afterID := api.NewID("observation")
+		r = f.command(t, "resource.observe", id, domain.ObserveInput{ResourceID: id, ObservationID: afterID, HolderID: holder, InstanceID: instance, ControlEpoch: 1}, nil)
+		if r.Stage != "accepted" {
+			t.Fatalf("new observe %+v", r)
+		}
+		f.drain(t)
+		f.query(t, "resource.observation.get", afterID, domain.ObservationIDInput{ObservationID: afterID}, &observed)
+		var state target.PhoneState
+		if err = api.Decode(observed.Observation.Data, &state); err != nil || state.Note != "distinct controlled phone" || state.Version != 2 {
+			t.Fatalf("actual device %d %+v %v", index, state, err)
+		}
+		f.query(t, "resource.get", id, domain.ResourceInput{ResourceID: id}, &lease)
+		rev := lease.Revision
+		r = f.command(t, "resource.takeover", id, domain.TakeoverInput{ResourceID: id, Reason: "device owner takes over"}, &rev)
+		if r.Stage != "applied" {
+			t.Fatalf("takeover %+v", r)
+		}
+		api.Decode(r.Output, &lease)
+		if lease.ControlEpoch != 2 || lease.ActuallyStopped {
+			t.Fatalf("saved takeover conflates stopped %+v", lease)
+		}
+		f.drain(t)
+		f.query(t, "resource.get", id, domain.ResourceInput{ResourceID: id}, &lease)
+		if !lease.ActuallyStopped || lease.State != "released" {
+			t.Fatalf("physical takeover residual %+v", lease)
+		}
+		r = f.command(t, "resource.acquire", id, domain.AcquireInput{ResourceID: id, HolderID: holder, InstanceID: api.NewID("instance"), ExpectedControlEpoch: 1, LeaseUntil: api.Time(time.Now().Add(time.Minute))}, nil)
+		if r.Stage != "rejected" {
+			t.Fatalf("old epoch reacquired %+v", r)
+		}
+	}
+}
+
+type blockedCompute struct {
+	*domain.TrustedComputeDriver
+	entered chan struct{}
+	resume  chan struct{}
+}
+
+func (d *blockedCompute) Start(ctx context.Context, q domain.AttemptRequest, barrier func(context.Context) error) (domain.Fact, error) {
+	return d.TrustedComputeDriver.Start(ctx, q, func(ctx context.Context) error {
+		if err := barrier(ctx); err != nil {
+			return err
+		}
+		close(d.entered)
+		select {
+		case <-d.resume:
+			return nil
+		case <-ctx.Done():
+			return ctx.Err()
+		}
+	})
+}
+
+type hostAdmission struct {
+	root      string
+	mu        sync.Mutex
+	loseFirst bool
+}
+type admittedChild struct {
+	Kind       string        `json:"kind"`
+	TargetRef  api.ObjectRef `json:"target_ref"`
+	ReceiptRef api.ObjectRef `json:"receipt_ref"`
+	Closed     bool          `json:"closed"`
+}
+
+func (h *hostAdmission) Admit(ctx context.Context, sc rt.Scope, call domain.HostCall) (domain.HostCallDecision, error) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	p := filepath.Join(h.root, call.CommandRef.ObjectID)
+	if _, err := os.Stat(p); err == nil {
+		return domain.HostCallDecision{}, api.E("idempotency_conflict", "fixture_should_query_original")
+	}
+	child := admittedChild{Kind: call.Kind, TargetRef: sc.Ref(api.NewID(call.Kind), 1), ReceiptRef: call.CommandRef}
+	if err := os.WriteFile(p, api.Raw(child), 0600); err != nil {
+		return domain.HostCallDecision{}, err
+	}
+	if h.loseFirst {
+		h.loseFirst = false
+		return domain.HostCallDecision{}, context.Canceled
+	}
+	return domain.HostCallDecision{TargetKind: child.Kind, TargetRef: child.TargetRef, ReceiptRef: child.ReceiptRef}, nil
+}
+func (h *hostAdmission) Resolve(ctx context.Context, sc rt.Scope, call domain.HostCall) (domain.HostCallDecision, error) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	b, err := os.ReadFile(filepath.Join(h.root, call.CommandRef.ObjectID))
+	if err != nil {
+		return domain.HostCallDecision{}, err
+	}
+	var child admittedChild
+	if err = api.Decode(b, &child); err != nil {
+		return domain.HostCallDecision{}, err
+	}
+	return domain.HostCallDecision{TargetKind: child.Kind, TargetRef: child.TargetRef, ReceiptRef: child.ReceiptRef}, nil
+}
+func (h *hostAdmission) Close(ctx context.Context, sc rt.Scope, call domain.HostCall) (bool, error) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	p := filepath.Join(h.root, call.CommandRef.ObjectID)
+	b, err := os.ReadFile(p)
+	if err != nil {
+		return false, err
+	}
+	var child admittedChild
+	if err = api.Decode(b, &child); err != nil {
+		return false, err
+	}
+	if call.TargetRef == nil || !api.Equal(child.TargetRef, *call.TargetRef) {
+		return false, api.E("invalid_request", "child_mapping_mismatch")
+	}
+	child.Closed = true
+	return true, os.WriteFile(p, api.Raw(child), 0600)
+}
+
+func TestEnvironmentDurableHostCallsKeepThreeKindsAndRecoverLostAdmission(t *testing.T) {
+	f := newExecutionFixture(t)
+	blocked := &blockedCompute{TrustedComputeDriver: &domain.TrustedComputeDriver{Content: f.content, Store: f.st, Location: "device"}, entered: make(chan struct{}), resume: make(chan struct{})}
+	admission := &hostAdmission{root: t.TempDir(), loseFirst: true}
+	service, err := domain.New(domain.Config{OwnerID: f.sc.OwnerID, Content: f.content, Authority: f.authority, Location: "device", Drivers: []domain.Driver{blocked}, HostCalls: admission})
+	if err != nil {
+		t.Fatal(err)
+	}
+	registry := rt.NewRegistry()
+	if err = service.Register(registry); err != nil {
+		t.Fatal(err)
+	}
+	f.registry = registry
+	f.dispatcher.Registry = registry
+	id := api.NewID("environment")
+	config := api.ComponentRef{ComponentID: domain.BuiltinComponentID("environment.passive"), Version: "1", Digest: api.Hash([]byte(domain.PassiveEnvironmentFormat))}
+	r := f.command(t, "environment.create", id, domain.EnvironmentCreateInput{EnvironmentID: id, ConfigRef: config, InstallLockRef: f.install, Limits: []api.Amount{{Unit: "namespace_bytes", Value: "65536"}}, ExpiresAt: api.Time(time.Now().Add(time.Hour)), SourceRefs: []api.ContentRef{}}, nil)
+	if r.Stage != "accepted" {
+		t.Fatalf("create %+v", r)
+	}
+	f.drain(t)
+	var env domain.Environment
+	f.query(t, "environment.get", id, domain.EnvironmentIDInput{EnvironmentID: id}, &env)
+	code := f.put(t, api.Raw(domain.ComputeProgram{Opcode: "copy", TargetName: "result", InputNames: []string{"value"}}))
+	inputRef := f.put(t, api.Raw(domain.PassiveNamespace{Format: domain.PassiveEnvironmentFormat, Bindings: []domain.NamespaceBinding{{Name: "value", Kind: "string", String: "passive"}}}))
+	invoke := f.invokeInput(t, false)
+	var intent domain.ExecutionIntent
+	raw, _ := f.content.ReadBytes(context.Background(), f.sc, f.auth, invoke.IntentRef, "prepare", "device")
+	api.Decode(raw, &intent)
+	args := domain.ComputeArguments{EnvironmentRef: f.sc.Ref(id, env.Revision), ExpectedGeneration: 1, ExpectedNamespaceRevision: 1, CodeRef: code, InputRef: inputRef, OutputSchemaRef: domain.NamespaceOutputSchemaRef()}
+	intent.ArgumentsRef = f.put(t, api.Raw(args))
+	invoke.CapabilityRef = domain.TrustedComputeCapability().Ref
+	intent.CapabilityRef = invoke.CapabilityRef
+	intent.ProcessedSourceRefs = []api.ContentRef{code, inputRef, *env.NamespaceRef}
+	invoke.IntentRef = f.put(t, api.Raw(intent))
+	invoke.IntentHash, _ = api.Digest(intent)
+	r = f.command(t, "execution.invoke", invoke.OperationID, invoke, nil)
+	if r.Stage != "applied" {
+		t.Fatalf("invoke %+v", r)
+	}
+	works, status, err := f.st.Claim(context.Background(), f.sc, api.NewID("holder"), []string{domain.RunJob}, 1, 30*time.Second)
+	if err != nil || status != rt.Committed || len(works) != 1 {
+		t.Fatalf("cell claim %v %v", status, err)
+	}
+	run, _ := registry.Job(domain.RunJob)
+	finished := make(chan error, 1)
+	go func() { finished <- run(context.Background(), f.st, f.sc, works[0]) }()
+	select {
+	case <-blocked.entered:
+	case <-time.After(5 * time.Second):
+		t.Fatal("cell never reached actual entry")
+	}
+	for _, kind := range []string{"operation", "decision", "delegation"} {
+		input := f.put(t, api.Raw(struct {
+			Kind string `json:"kind"`
+		}{kind}))
+		status, err = f.st.Within(context.Background(), f.sc, []string{domain.Namespace}, func(tx rt.Tx) error {
+			_, err := service.AllocateHostCallTx(context.Background(), tx, id, invoke.OperationID, domain.HostCallInput{Kind: kind, TypedInputRef: input, InputDigest: input.Hash, ExpectedGeneration: 1})
+			return err
+		})
+		if err != nil || status != rt.Committed {
+			t.Fatalf("allocate kind %s: %s %v", kind, status, err)
+		}
+	}
+	hostWorks, status, err := f.st.Claim(context.Background(), f.sc, api.NewID("holder"), []string{domain.HostCallJob}, 3, 30*time.Second)
+	if err != nil || status != rt.Committed || len(hostWorks) != 3 {
+		t.Fatalf("host claim %s %v", status, err)
+	}
+	hostRun, _ := registry.Job(domain.HostCallJob)
+	for i, work := range hostWorks {
+		err = hostRun(context.Background(), f.st, f.sc, work)
+		if i == 0 {
+			if err == nil {
+				t.Fatal("expected lost admission reply")
+			}
+			err = hostRun(context.Background(), f.st, f.sc, work)
+		}
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	actual, err := os.ReadDir(admission.root)
+	if err != nil || len(actual) != 3 {
+		t.Fatalf("host admission duplicated: %d %v", len(actual), err)
+	}
+	close(blocked.resume)
+	if err = <-finished; err != nil {
+		t.Fatal(err)
+	}
+	f.query(t, "environment.get", id, domain.EnvironmentIDInput{EnvironmentID: id}, &env)
+	rev := env.Revision
+	r = f.command(t, "environment.stop", id, domain.EnvironmentStopInput{EnvironmentID: id, ExpectedGeneration: 1, Reason: "close all child responsibility kinds"}, &rev)
+	if r.Stage != "applied" {
+		t.Fatalf("stop %+v", r)
+	}
+	f.drain(t)
+	f.query(t, "environment.get", id, domain.EnvironmentIDInput{EnvironmentID: id}, &env)
+	if env.Phase != "closed" || len(env.StopResiduals) != 0 {
+		t.Fatalf("host mappings lost stop responsibility %+v", env)
+	}
+	for _, entry := range actual {
+		b, err := os.ReadFile(filepath.Join(admission.root, entry.Name()))
+		if err != nil {
+			t.Fatal(err)
+		}
+		var child admittedChild
+		if err = api.Decode(b, &child); err != nil || !child.Closed {
+			t.Fatalf("original child not closed %+v %v", child, err)
+		}
+	}
+}
+
+func TestExecutionUsesNewIndependentControlWindowWithoutChangingOriginalIntent(t *testing.T) {
+	f := newExecutionFixture(t)
+	input := f.invokeInput(t, false)
+	input.ControlSnapshot.IssuedAt = api.Time(time.Now().Add(-3 * time.Second))
+	input.ControlSnapshot.StartBefore = api.Time(time.Now().Add(-time.Second))
+	r := f.command(t, "execution.invoke", input.OperationID, input, nil)
+	if r.Stage != "applied" {
+		t.Fatalf("accepted original intent %+v", r)
+	}
+	window := input.ControlSnapshot
+	window.WindowID = api.NewID("window")
+	window.IssuedAt = api.Time(time.Now().Add(-time.Millisecond))
+	window.StartBefore = input.Deadline
+	r = f.command(t, "execution.control", input.TaskRef.ObjectID, domain.ControlInput{TaskRef: input.TaskRef, Snapshot: window}, nil)
+	if r.Stage != "applied" {
+		t.Fatalf("fresh window %+v", r)
+	}
+	f.drain(t)
+	var view domain.OperationView
+	f.query(t, "execution.get", input.OperationID, domain.OperationIDInput{OperationID: input.OperationID}, &view)
+	if view.Operation.Effect != "applied" || len(view.Attempts.Items) != 1 || view.Attempts.Items[0].ControlWindowID != window.WindowID {
+		t.Fatalf("fresh window not bound to physical attempt %+v", view)
 	}
 }

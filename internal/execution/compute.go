@@ -4,6 +4,7 @@ import (
 	"context"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -213,6 +214,10 @@ func (d *TrustedComputeDriver) Prepare(ctx context.Context, sc rt.Scope, a rt.Au
 	sort.Slice(ns.Bindings, func(i, j int) bool { return ns.Bindings[i].Name < ns.Bindings[j].Name })
 	if err = validateNamespace(ns); err != nil {
 		return PreparedRequest{}, err
+	}
+	limit, err := strconv.ParseUint(env.Limits[0].Value, 10, 64)
+	if err != nil || uint64(len(api.Raw(ns))) > limit {
+		return PreparedRequest{}, api.E("overloaded", "namespace_byte_limit")
 	}
 	sources := append([]api.ContentRef{}, env.ProcessedSources...)
 	sources = appendUniqueSources(sources, args.CodeRef, args.InputRef, *env.NamespaceRef)

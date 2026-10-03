@@ -174,9 +174,10 @@ func (s *Service) subtreeCount(ctx context.Context, tx runtime.Tx, root string) 
 		if e != nil {
 			return 0, e
 		}
-		if !terminal(t) {
-			count++
+		if terminal(t) {
+			continue
 		}
+		count++
 		rows, e := s.fullRelations(ctx, tx, id)
 		if e != nil {
 			return 0, e
@@ -378,6 +379,9 @@ func (s *Service) ChildSendTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		if e != nil {
 			return out, e
 		}
+		if e = tx.Create(ctx, childMappings, childCollectionKey(h.ChildID, accepted.DelegationRef.ObjectID), h.ChildID, accepted.DelegationRef); e != nil {
+			return out, e
+		}
 		h.ActiveDelegationRef = &accepted.DelegationRef
 		out.DelegationRef = &accepted.DelegationRef
 	case "continue_existing":
@@ -523,6 +527,10 @@ func (s *Service) ChildWait(ctx context.Context, store runtime.Store, scope runt
 		return ChildWaitOutput{}, api.E("forbidden", "delegation_scope_mismatch")
 	}
 	// 固定原delegation，active指针后续改变不会改变本次等待对象。
+	var mapped api.ObjectRef
+	if _, e = store.Read(ctx, scope, childMappings, childCollectionKey(h.ChildID, in.DelegationRef.ObjectID), 0, &mapped); e != nil {
+		return ChildWaitOutput{}, api.E("forbidden", "delegation_not_owned_by_child")
+	}
 	var d Delegation
 	if _, e = store.Read(ctx, scope, delegations, in.DelegationRef.ObjectID, 0, &d); e != nil {
 		return ChildWaitOutput{}, e
@@ -579,3 +587,5 @@ func (s *Service) DelegationClosureRead(ctx context.Context, store runtime.Store
 func childCollectionKey(childID, delegationID string) string {
 	return fmt.Sprintf("%s/%s", childID, delegationID)
 }
+
+const childMappings = "task.child_mappings"

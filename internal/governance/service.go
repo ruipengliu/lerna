@@ -183,8 +183,8 @@ func errMissing(err error) bool {
 	return errors.Is(err, runtime.ErrNotFound) || api.IsCode(err, "not_found")
 }
 
-func registerCommand[I, O any](registry *runtime.Registry, name string, cas, accepted bool, fn func(context.Context, runtime.Tx, runtime.Auth, api.Command, I) (runtime.Outcome, error)) error {
-	return registry.Register(runtime.Method{Contract: api.Contract[I, O](name, Namespace, "command", cas, accepted), Participants: []string{Namespace}, Apply: func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command) (runtime.Outcome, error) {
+func registerCommand[I, O any](service *Service, registry *runtime.Registry, name string, cas, accepted bool, fn func(context.Context, runtime.Tx, runtime.Auth, api.Command, I) (runtime.Outcome, error)) error {
+	return registry.Register(runtime.Method{Contract: api.Contract[I, O](name, Namespace, "command", cas, accepted), Participants: service.participants(), Apply: func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command) (runtime.Outcome, error) {
 		var input I
 		if err := api.Decode(c.Payload, &input); err != nil {
 			return runtime.Outcome{}, err
@@ -254,12 +254,12 @@ func (s *Service) Register(registry *runtime.Registry) error {
 		return fmt.Errorf("governance store required")
 	}
 	s.registry = registry
-	for _, register := range []func(*runtime.Registry) error{s.registerGrants, s.registerEvidence} {
+	for _, register := range []func(*runtime.Registry) error{s.registerGrants, s.registerEvidence, s.registerExtensions, s.registerEvaluation} {
 		if err := register(registry); err != nil {
 			return err
 		}
 	}
-	for kind, handler := range map[string]runtime.JobHandler{"governance.confirmation": s.continueConfirmation, "governance.settle": s.continueSettlement, "governance.defect": s.continueDefect} {
+	for kind, handler := range map[string]runtime.JobHandler{"governance.confirmation": s.continueConfirmation, "governance.settle": s.continueSettlement, "governance.defect": s.continueDefect, "governance.prepare": s.continuePrepare, "governance.activate": s.continueActivate, "governance.stop": s.continueStop, "governance.dispose": s.continueDispose, "governance.approval_stop": s.continueApprovalStop, "governance.plan": s.continuePlan, "governance.evaluation": s.continueEvaluation, "governance.eval_cancel": s.continueEvaluationCancel, "governance.exposure": s.continueExposure} {
 		if err := registry.RegisterJob(kind, handler); err != nil {
 			return err
 		}

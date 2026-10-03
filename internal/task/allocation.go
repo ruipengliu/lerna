@@ -301,34 +301,36 @@ func (s *Service) SettleTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	return AllocationOutput{AllocationRef: tx.Scope().Ref(a.AllocationID, a.Revision), State: a.State}, nil
 }
 func (s *Service) ReconcileClosure(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, allocationID string, closure api.AllocationClosure) error {
-	return s.transaction(ctx, store, scope, func(tx runtime.Tx) error {
-		if !auth.HasRole("service") && auth.SubjectID != closure.ReceiverID {
-			return api.E("forbidden", "receiver_identity_required")
-		}
-		var a Allocation
-		if _, e := tx.Get(ctx, allocations, allocationID, &a); e != nil {
-			return e
-		}
-		if closure.AllocationID != allocationID || closure.ParentOwnerID != scope.OwnerID || closure.ReceiverID != a.ReceiverID || !closure.SpendingClosed {
-			return api.E("invalid_request", "closure_unverified")
-		}
-		if e := api.ValidateRecord("AllocationClosure", closure); e != nil {
-			return e
-		}
-		source := api.ObjectRef{TenantID: scope.TenantID, OwnerID: closure.ReceiverID, ObjectID: allocationID, Revision: closure.UsageRevision}
-		usage := api.UsageSnapshot{SourceRef: source, UsageRevision: closure.UsageRevision, Cumulative: closure.FinalUsage, SpendingClosed: true, UsageFinal: true, ProofRefs: []api.ContentRef{closure.ProofRef}}
-		var e error
-		usage.UsageDigest, e = UsageDigest(usage)
-		if e != nil {
-			return e
-		}
-		if _, e = s.ReconcileUsageTx(ctx, tx, auth, "budget_allocation", usage); e != nil {
-			return e
-		}
-		a.State = "settled"
-		a.Revision++
-		return tx.Put(ctx, allocations, a.AllocationID, a.Revision-1, a)
-	})
+	return s.transaction(ctx, store, scope, func(tx runtime.Tx) error { return s.ReconcileClosureTx(ctx, tx, auth, allocationID, closure) })
+}
+func (s *Service) ReconcileClosureTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, allocationID string, closure api.AllocationClosure) error {
+
+	if !auth.HasRole("service") && auth.SubjectID != closure.ReceiverID {
+		return api.E("forbidden", "receiver_identity_required")
+	}
+	var a Allocation
+	if _, e := tx.Get(ctx, allocations, allocationID, &a); e != nil {
+		return e
+	}
+	if closure.AllocationID != allocationID || closure.ParentOwnerID != tx.Scope().OwnerID || closure.ReceiverID != a.ReceiverID || !closure.SpendingClosed {
+		return api.E("invalid_request", "closure_unverified")
+	}
+	if e := api.ValidateRecord("AllocationClosure", closure); e != nil {
+		return e
+	}
+	source := api.ObjectRef{TenantID: tx.Scope().TenantID, OwnerID: closure.ReceiverID, ObjectID: allocationID, Revision: closure.UsageRevision}
+	usage := api.UsageSnapshot{SourceRef: source, UsageRevision: closure.UsageRevision, Cumulative: closure.FinalUsage, SpendingClosed: true, UsageFinal: true, ProofRefs: []api.ContentRef{closure.ProofRef}}
+	var e error
+	usage.UsageDigest, e = UsageDigest(usage)
+	if e != nil {
+		return e
+	}
+	if _, e = s.ReconcileUsageTx(ctx, tx, auth, "budget_allocation", usage); e != nil {
+		return e
+	}
+	a.State = "settled"
+	a.Revision++
+	return tx.Put(ctx, allocations, a.AllocationID, a.Revision-1, a)
 }
 func (s *Service) AllocationRead(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, id string) (Allocation, error) {
 	var a Allocation

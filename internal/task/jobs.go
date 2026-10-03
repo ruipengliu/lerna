@@ -2,7 +2,7 @@ package task
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -26,7 +26,7 @@ func deferred(err error) bool {
 	return api.IsCode(err, "dependency_unavailable") || api.IsCode(err, "not_found") || api.IsCode(err, "effect_unknown") || api.IsCode(err, "accounting_unknown") || api.IsCode(err, "overloaded")
 }
 func (s *Service) registerJobs(r *runtime.Registry) error {
-	handlers := map[string]runtime.JobHandler{JobAdvance: s.advanceJob, JobDispatchDecision: s.decisionJob, JobDispatchOperation: s.operationJob, JobReconcileOperation: s.reconcileOperationJob, JobCoverage: s.coverageJob, JobCheck: s.checkJob, JobControl: s.controlJob, JobBilling: s.billingJob, JobPublishResult: s.publishResultJob, JobSteer: s.steerJob, JobDelegation: s.delegationJob, JobAllocation: s.allocationJob, JobChildPrepare: s.childPrepareJob, JobChildTransfer: s.transferJob}
+	handlers := map[string]runtime.JobHandler{JobAdjustment: s.adjustmentJob, JobInput: s.inputJob, JobAdvance: s.advanceJob, JobDispatchDecision: s.decisionJob, JobDispatchOperation: s.operationJob, JobReconcileOperation: s.reconcileOperationJob, JobCoverage: s.coverageJob, JobCheck: s.checkJob, JobControl: s.controlJob, JobBilling: s.billingJob, JobPublishResult: s.publishResultJob, JobSteer: s.steerJob, JobDelegation: s.delegationJob, JobAllocation: s.allocationJob, JobChildPrepare: s.childPrepareJob, JobChildTransfer: s.transferJob}
 	for kind, h := range handlers {
 		if e := r.RegisterJob(kind, h); e != nil {
 			return e
@@ -796,7 +796,7 @@ func (s *Service) internalDelegationJob(ctx context.Context, store runtime.Store
 				return e
 			}
 		}
-		if d.CloseRequested {
+		if d.CloseRequested || terminal(current) {
 			var inc IncomingAllocation
 			if _, e = tx.Get(ctx, incoming, current.IncomingAllocationID, &inc); e != nil {
 				return e
@@ -831,7 +831,38 @@ func (s *Service) internalDelegationJob(ctx context.Context, store runtime.Store
 			if _, e = tx.Get(ctx, incoming, current.IncomingAllocationID, &inc); e != nil {
 				return e
 			}
-			fact.ClosureRef = inc.ClosureRef
+			if inc.ClosureRef != nil && fact.GoalWorkClosed && fact.EffectsClosed && !current.Task.AccountingOpen {
+				var allocationClosure api.AllocationClosure
+				if e = tx.GetVersion(ctx, closures, inc.ClosureRef.ObjectID, inc.ClosureRef.Revision, &allocationClosure); e != nil {
+					return e
+				}
+				if e = s.ReconcileClosureTx(ctx, tx, serviceAuth(scope), d.AllocationRef.ObjectID, allocationClosure); e != nil {
+					return e
+				}
+				closureKey := d.DelegationID + "/" + fmt.Sprintf("%020d", inc.UsageRevision)
+				binding, e := tx.LookupKey(ctx, delegationClosures, closureKey)
+				var closureRef api.ObjectRef
+				if confirmedNotFound(e) {
+					closureID := api.NewID("closure")
+					c := DelegationClosure{DelegationID: d.DelegationID, Revision: 1, GoalWorkClosed: true, EffectsClosed: true, AllocationClosureRef: *inc.ClosureRef, TransfersClosed: true, ProofRefs: []api.ContentRef{allocationClosure.ProofRef}, ClosedAt: allocationClosure.ClosedAt}
+					if e = tx.Create(ctx, delegationClosures, closureID, d.ParentTaskRef.ObjectID, c); e != nil {
+						return e
+					}
+					digest, e := api.Digest(c)
+					if e != nil {
+						return e
+					}
+					if e = tx.Bind(ctx, delegationClosures, closureKey, closureID, digest); e != nil {
+						return e
+					}
+					closureRef = scope.Ref(closureID, 1)
+				} else if e != nil {
+					return e
+				} else {
+					closureRef = scope.Ref(binding.ObjectID, 1)
+				}
+				fact.ClosureRef = &closureRef
+			}
 		}
 		return s.MergeDelegationTx(ctx, tx, serviceAuth(scope), fact)
 	})
@@ -859,10 +890,9 @@ func (s *Service) allocationJob(ctx context.Context, store runtime.Store, scope 
 			}
 			return err
 		}
-		if err = s.ReconcileClosure(ctx, store, scope, serviceAuth(scope), a.AllocationID, closure); err != nil {
-			return err
-		}
-		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+		return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+			return s.ReconcileClosureTx(ctx, tx, serviceAuth(scope), a.AllocationID, closure)
+		})
 	}
 	if parts[0] == "incoming" {
 		var a IncomingAllocation
@@ -883,8 +913,32 @@ func (s *Service) allocationJob(ctx context.Context, store runtime.Store, scope 
 			return s.refreshIncomingTx(ctx, tx, t)
 		})
 	}
-	// correction outbox 保留原责任，宿主传输沿原 allocation 修订重投。
-	return s.wait(ctx, store, scope, work)
+	if parts[0] == "correction" {
+		var a IncomingAllocation
+		if _, e := store.Read(ctx, scope, incoming, parts[1], 0, &a); e != nil {
+			return e
+		}
+		if a.ClosureRef == nil {
+			return s.wait(ctx, store, scope, work)
+		}
+		reporter, ok := s.ports.Collaboration.(AllocationReporter)
+		if !ok {
+			return s.wait(ctx, store, scope, work)
+		}
+		var closure api.AllocationClosure
+		if _, e := store.Read(ctx, scope, closures, a.ClosureRef.ObjectID, a.ClosureRef.Revision, &closure); e != nil {
+			return e
+		}
+		if e := s.preIO(ctx, store, scope, work); e != nil {
+			return e
+		}
+		if e := reporter.ReportClosure(ctx, scope, a.ParentOwner, *a.ClosureRef, closure); e != nil {
+			if deferred(e) {
+				return s.wait(ctx, store, scope, work)
+			}
+			return e
+		}
+		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+	}
+	return invalid("allocation_job_kind")
 }
-
-var _ = errors.Is

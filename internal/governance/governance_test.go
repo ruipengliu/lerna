@@ -2,10 +2,12 @@ package governance_test
 
 import (
 	"context"
+	"os"
 	"path/filepath"
 	"testing"
 	"time"
 
+	"github.com/ruipengliu/lerna/adapters/postgres"
 	"github.com/ruipengliu/lerna/adapters/sqlite"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/governance"
@@ -14,7 +16,7 @@ import (
 
 type fixture struct {
 	ctx        context.Context
-	store      *sqlite.Store
+	store      runtime.Store
 	scope      runtime.Scope
 	auth       runtime.Auth
 	svc        *governance.Service
@@ -22,23 +24,61 @@ type fixture struct {
 	dispatcher *runtime.Dispatcher
 }
 
+// 预览来源门禁的数据库边界夹具；由测试受信预置，公开 API 无写权。
+type previewControl struct {
+	Ref        api.ContentRef `json:"ref"`
+	SubjectID  string         `json:"subject_id"`
+	Generation uint64         `json:"generation"`
+}
+type previewGate struct{}
+
+func (previewGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, refs []api.ContentRef) error {
+	for _, ref := range refs {
+		var p previewControl
+		if _, err := tx.Get(ctx, "governance/fixture_preview", ref.ContentID, &p); err != nil {
+			return err
+		}
+		if p.SubjectID != auth.SubjectID || p.Generation != auth.CredentialGeneration || !api.Equal(p.Ref, ref) {
+			return api.E("forbidden", "preview_revoked")
+		}
+	}
+	return nil
+}
+
 func environment(t *testing.T, options governance.Options) *fixture {
 	t.Helper()
 	ctx := context.Background()
-	store, err := sqlite.Open(filepath.Join(t.TempDir(), "governance.db"))
-	if err != nil {
-		t.Fatal(err)
+	var store runtime.Store
+	var err error
+	if dsn := os.Getenv("HARNESS_GOVERNANCE_POSTGRES_DSN"); dsn != "" {
+		pg, e := postgres.Open(ctx, dsn)
+		if e != nil {
+			t.Fatal(e)
+		}
+		if e = pg.Migrate(ctx); e != nil {
+			t.Fatal(e)
+		}
+		store = pg
+	} else {
+		local, e := sqlite.Open(filepath.Join(t.TempDir(), "governance.db"))
+		if e != nil {
+			t.Fatal(e)
+		}
+		if e = local.Migrate(ctx); e != nil {
+			t.Fatal(e)
+		}
+		store = local
 	}
 	t.Cleanup(func() {
 		if err := store.Close(); err != nil {
 			t.Error(err)
 		}
 	})
-	if err = store.Migrate(ctx); err != nil {
-		t.Fatal(err)
-	}
 	f := &fixture{ctx: ctx, store: store, scope: runtime.Scope{TenantID: api.NewID("tenant"), OwnerID: api.NewID("owner"), DatabaseID: store.ID()}, registry: runtime.NewRegistry()}
 	f.auth = runtime.Auth{TenantID: f.scope.TenantID, SubjectID: api.NewID("user"), CredentialGeneration: 1, Roles: []string{"trusted_renderer", "grant_authority", "maintainer", "release_approver", "evaluation_authority"}}
+	if options.PreviewGate == nil {
+		options.PreviewGate = previewGate{}
+	}
 	f.svc = governance.New(store, options)
 	if err = f.svc.Register(f.registry); err != nil {
 		t.Fatal(err)
@@ -70,7 +110,14 @@ func query[T any](t *testing.T, f *fixture, method string, in any) T {
 }
 func ref(t *testing.T, f *fixture, prefix string) api.ContentRef {
 	t.Helper()
-	return api.ContentRef{TenantID: f.scope.TenantID, OwnerID: f.scope.OwnerID, ContentID: api.NewID(prefix), Version: 1, Hash: api.Hash([]byte(prefix)), MediaType: "text/plain", ByteLength: uint64(len(prefix))}
+	r := api.ContentRef{TenantID: f.scope.TenantID, OwnerID: f.scope.OwnerID, ContentID: api.NewID(prefix), Version: 1, Hash: api.Hash([]byte(prefix)), MediaType: "text/plain", ByteLength: uint64(len(prefix))}
+	status, err := f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error {
+		return tx.Create(f.ctx, "governance/fixture_preview", r.ContentID, f.auth.SubjectID, previewControl{Ref: r, SubjectID: f.auth.SubjectID, Generation: f.auth.CredentialGeneration})
+	})
+	if err != nil || status != runtime.Committed {
+		t.Fatalf("preview fixture: %s %v", status, err)
+	}
+	return r
 }
 func TestOrdinarySubjectCannotIssuePermission(t *testing.T) {
 	f := environment(t, governance.Options{})
@@ -84,7 +131,7 @@ func TestOrdinarySubjectCannotIssuePermission(t *testing.T) {
 
 func drain(t *testing.T, f *fixture, kind string) {
 	t.Helper()
-	for pass := 0; pass < 30; pass++ {
+	for pass := 0; pass < 100; pass++ {
 		jobs, status, err := f.store.Claim(f.ctx, f.scope, api.NewID("worker"), []string{kind}, 100, time.Minute)
 		if err != nil || status != runtime.Committed {
 			t.Fatalf("claim: %s %v", status, err)

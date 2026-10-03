@@ -58,6 +58,8 @@ type Config struct {
 	Identity              *platform.DevIdentity
 	Processor             Processor
 	Content               ContentReader
+	Uploader              ContentUploader
+	Development           *DevelopmentConfiguration
 	Origins               []string
 	AllowInsecureLoopback bool
 	StaticDir             string
@@ -83,6 +85,10 @@ func New(config Config) (*Server, error) {
 	s.mux.HandleFunc("GET /api/schema/core", s.schema)
 	s.mux.HandleFunc("GET /api/discovery", s.discovery)
 	s.mux.HandleFunc("POST /auth/session", s.login)
+	s.mux.HandleFunc("GET /auth/session", s.currentSession)
+	s.mux.HandleFunc("POST /auth/logout", s.logout)
+	s.mux.HandleFunc("GET /api/development/config", s.development)
+	s.mux.HandleFunc("POST /api/transfers/{transfer_id}", s.upload)
 	s.mux.HandleFunc("POST /api/call", s.call)
 	s.mux.HandleFunc("GET /api/content", s.content)
 	s.mux.HandleFunc("GET /connect", s.connect)

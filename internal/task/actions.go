@@ -274,6 +274,9 @@ func (s *Service) admitBatchTx(ctx context.Context, tx runtime.Tx, auth runtime.
 	if len(actions) < 1 || len(actions) > 4 {
 		return nil, invalid("action_batch_limit")
 	}
+	if s.ports.ActionAuthorization == nil {
+		return nil, api.E("unsupported", "action_authorization_not_configured")
+	}
 	if e := s.CheckCurrent(ctx, tx, *t, true); e != nil {
 		return nil, e
 	}
@@ -303,6 +306,14 @@ func (s *Service) admitBatchTx(ctx context.Context, tx runtime.Tx, auth runtime.
 			return nil, invalid("invalid_action_identity")
 		}
 		seen[a.OperationID] = true
+		for _, ref := range []api.ComponentRef{a.CapabilityRef, a.InstallLockRef} {
+			if e = api.ValidateRecord("ComponentRef", ref); e != nil {
+				return nil, e
+			}
+		}
+		if e = runtime.CheckRef(tx.Scope(), a.BindingRef); e != nil {
+			return nil, e
+		}
 		for _, key := range a.ResourceKeys {
 			if key == "" || len(key) > 512 {
 				return nil, invalid("resource_key_invalid")
@@ -341,6 +352,9 @@ func (s *Service) admitBatchTx(ctx context.Context, tx runtime.Tx, auth runtime.
 		intent := OperationIntent{PreparedAction: a, TaskRef: taskRef(tx, *t), GoalRevision: t.Task.GoalRevision, ControlRevision: t.Task.ControlRevision, AdmissionSourceKind: "decision", AdmissionSourceRef: tx.Scope().Ref(d.Intent.DecisionID, 1), SourcePosition: fmt.Sprintf("%d", index), AdmissionPurpose: purpose, ReservationRef: tx.Scope().Ref(reservation.ReservationID, 1), CommandRef: tx.Scope().Ref(a.CommandID, 1), Deadline: t.Task.Deadline}
 		intent.IntentHash, e = api.Digest(intent)
 		if e != nil {
+			return nil, e
+		}
+		if e = s.ports.ActionAuthorization.AuthorizeAction(ctx, tx, auth, intent); e != nil {
 			return nil, e
 		}
 		if e = tx.Create(ctx, intents, a.OperationID, t.Task.TaskID, intent); e != nil {
@@ -405,7 +419,10 @@ func (s *Service) MergeOperationTx(ctx context.Context, tx runtime.Tx, auth runt
 	}
 	mayApply, ok := operation.MayApplyLater.(bool)
 	if !ok {
-		return invalid("effect_lateness_unknown")
+		if text, valid := operation.MayApplyLater.(string); !valid || text != "unknown" {
+			return invalid("invalid_effect_lateness")
+		}
+		mayApply = true
 	}
 	r.SourceRevision = operation.Revision
 	r.SourceDigest = digest
@@ -423,11 +440,11 @@ func (s *Service) MergeOperationTx(ctx context.Context, tx runtime.Tx, auth runt
 	if r.Closed && r.Effect != "unknown" && !r.MayApplyLater {
 		t.NoProgress = 0
 	}
-	if e = s.saveTask(ctx, tx, &t); e != nil {
-		return e
-	}
 	if operation.ResultRef != nil {
 		t.CurrentArtifactRefs = appendUniqueContent(t.CurrentArtifactRefs, *operation.ResultRef)
+	}
+	if e = s.saveTask(ctx, tx, &t); e != nil {
+		return e
 	}
 	if _, e = raise(ctx, tx, JobReconcileOperation, "reconcile/"+operation.OperationID, tx.Scope().Ref(operation.OperationID, operation.Revision)); e != nil {
 		return e

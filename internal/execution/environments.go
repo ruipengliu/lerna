@@ -2,6 +2,7 @@ package execution
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"github.com/ruipengliu/lerna/api"
@@ -147,6 +148,13 @@ func (s *Service) environmentCreate(ctx context.Context, tx rt.Tx, a rt.Auth, c 
 	if err := api.ValidateAmounts(p.Limits); err != nil {
 		return Environment{}, err
 	}
+	if len(p.Limits) != 1 || p.Limits[0].Unit != "namespace_bytes" {
+		return Environment{}, api.E("unsupported", "passive_environment_limits_not_supported")
+	}
+	n, err := strconv.ParseUint(p.Limits[0].Value, 10, 64)
+	if err != nil || n < 1 || n > 65536 {
+		return Environment{}, api.E("invalid_request", "invalid_namespace_byte_limit")
+	}
 	now, err := tx.Now(ctx)
 	if err != nil {
 		return Environment{}, err
@@ -220,7 +228,16 @@ func (s *Service) environmentStop(ctx context.Context, tx rt.Tx, a rt.Auth, c ap
 		}
 	}
 	for _, id := range env.HostCallIDs {
-		if _, err = tx.Raise(ctx, HostCallJob, id, tx.Scope().Ref(id, 1), now); err != nil {
+		var call HostCall
+		callRevision, e := tx.Get(ctx, Namespace+".hostcalls", id, &call)
+		if e != nil {
+			return env, e
+		}
+		call.Revision = callRevision + 1
+		if e = tx.Put(ctx, Namespace+".hostcalls", id, callRevision, call); e != nil {
+			return env, e
+		}
+		if _, err = tx.Raise(ctx, HostCallJob, id, tx.Scope().Ref(id, call.Revision), now); err != nil {
 			return env, err
 		}
 	}
@@ -371,6 +388,9 @@ func (s *Service) environmentPrepareWork(ctx context.Context, st rt.Store, sc rt
 		ref, err = s.cfg.Content.Publish(ctx, sc, env.Principal, Publication{ContentID: stableID("content", env.EnvironmentID+":namespace:1"), MediaType: "application/json", Purpose: "environment_namespace", Location: s.cfg.Location, ProcessedSources: env.ProcessedSources, DisclosedSources: []api.ContentRef{}}, api.Raw(PassiveNamespace{Format: PassiveEnvironmentFormat, Bindings: []NamespaceBinding{}}))
 	}
 	if err != nil {
+		if businessError(err) {
+			return s.failEnvironmentPreparation(ctx, st, sc, w, env, err)
+		}
 		return err
 	}
 	return s.finish(ctx, st, sc, w, rt.Done(), func(tx rt.Tx) error {
@@ -460,5 +480,43 @@ func (s *Service) environmentCleanupWork(ctx context.Context, st rt.Store, sc rt
 			}
 		}
 		return tx.Put(ctx, Namespace+".environments", current.EnvironmentID, rev, current)
+	})
+}
+
+func (s *Service) failEnvironmentPreparation(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work, env Environment, cause error) error {
+	return s.finish(ctx, st, sc, w, rt.Done(), func(tx rt.Tx) error {
+		var current Environment
+		rev, err := tx.Get(ctx, Namespace+".environments", env.EnvironmentID, &current)
+		if err != nil {
+			return err
+		}
+		if current.Generation != env.Generation || current.Phase != "preparing" {
+			return nil
+		}
+		current.Revision = rev + 1
+		current.Generation++
+		current.Phase = "closing"
+		current.ReadyForCell = false
+		current.StopResiduals = []string{}
+		if err = tx.Put(ctx, Namespace+".environments", current.EnvironmentID, rev, current); err != nil {
+			return err
+		}
+		now, err := tx.Now(ctx)
+		if err != nil {
+			return err
+		}
+		if _, err = tx.Raise(ctx, EnvironmentCleanupJob, current.EnvironmentID, sc.Ref(current.EnvironmentID, current.Revision), now); err != nil {
+			return err
+		}
+		if current.PreparationCommandID != "" {
+			var rejection *api.Error
+			if e, ok := cause.(*api.Error); ok {
+				rejection = e
+			} else {
+				rejection = api.E("invalid_state", "runtime_not_ready")
+			}
+			return rt.Decide(ctx, tx, current.PreparationCommandID, nil, rejection)
+		}
+		return nil
 	})
 }

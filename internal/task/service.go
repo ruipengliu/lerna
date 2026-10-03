@@ -43,10 +43,11 @@ const (
 )
 
 type Service struct {
-	config   Config
-	ports    Ports
-	policies map[string]TaskPolicy
-	rules    map[string]api.RuleDefinition
+	config        Config
+	ports         Ports
+	policies      map[string]TaskPolicy
+	rules         map[string]api.RuleDefinition
+	answerSchemas map[string]api.Schema
 }
 
 func New(config Config, ports Ports) (*Service, error) {
@@ -86,7 +87,7 @@ func New(config Config, ports Ports) (*Service, error) {
 	if !found {
 		config.Participants = append(config.Participants, Namespace)
 	}
-	s := &Service{config: config, ports: ports, policies: map[string]TaskPolicy{}, rules: map[string]api.RuleDefinition{}}
+	s := &Service{config: config, ports: ports, policies: map[string]TaskPolicy{}, rules: map[string]api.RuleDefinition{}, answerSchemas: map[string]api.Schema{}}
 	for _, p := range config.Policies {
 		if err := api.ValidateRecord("ComponentRef", p.PolicyRef); err != nil {
 			return nil, err
@@ -108,6 +109,25 @@ func New(config Config, ports Ports) (*Service, error) {
 			return nil, err
 		}
 		s.rules[componentKey(rule.RuleRef)] = rule
+	}
+	for _, definition := range config.AnswerSchemas {
+		if err := api.ValidateRecord("ComponentRef", definition.Ref); err != nil {
+			return nil, err
+		}
+		if err := closedAnswerSchema(definition.Schema); err != nil {
+			return nil, err
+		}
+		if _, err := api.NewValidator(definition.Schema); err != nil {
+			return nil, err
+		}
+		digest, err := api.Digest(definition.Schema)
+		if err != nil {
+			return nil, err
+		}
+		if digest != definition.Ref.Digest {
+			return nil, fmt.Errorf("answer schema digest mismatch")
+		}
+		s.answerSchemas[componentKey(definition.Ref)] = definition.Schema
 	}
 	return s, nil
 }
@@ -178,6 +198,28 @@ func (s *Service) authorize(ctx context.Context, tx runtime.Tx, auth runtime.Aut
 }
 func (s *Service) saveTask(ctx context.Context, tx runtime.Tx, t *taskState) error {
 	old := t.Task.Revision
+	var previous taskState
+	if _, e := tx.Get(ctx, tasks, t.Task.TaskID, &previous); e != nil {
+		return e
+	}
+	if previous.Task.Revision != old {
+		return runtime.ErrConflict
+	}
+	if previous.Task.Status == "active" && t.Task.Status != "active" {
+		var capacity subjectCapacity
+		rev, e := tx.Get(ctx, subjectCapacities, t.SubjectID, &capacity)
+		if e != nil {
+			return e
+		}
+		if capacity.Active == 0 {
+			return api.E("dependency_unavailable", "active_task_counter_incomplete")
+		}
+		capacity.Active--
+		capacity.Revision++
+		if e = tx.Put(ctx, subjectCapacities, t.SubjectID, rev, capacity); e != nil {
+			return e
+		}
+	}
 	t.Task.Revision++
 	if err := tx.Put(ctx, tasks, t.Task.TaskID, old, *t); err != nil {
 		return err
@@ -328,23 +370,28 @@ func (s *Service) SubmitTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if e = s.authorize(ctx, tx, auth, "task.submit", []api.ContentRef{in.GoalRef}, refs); e != nil {
 		return TaskOutput{}, e
 	}
-	list, e := tx.List(ctx, tasks, auth.SubjectID, "", int(s.config.MaxTasksPerSubject)+1)
-	if e != nil {
+	var capacity subjectCapacity
+	capacityRevision, e := tx.Get(ctx, subjectCapacities, auth.SubjectID, &capacity)
+	if confirmedNotFound(e) {
+		capacity = subjectCapacity{Revision: 1, Active: 0}
+	} else if e != nil {
 		return TaskOutput{}, e
 	}
-	active := uint64(0)
-	for _, r := range list {
-		var old taskState
-		if e = r.Decode(&old); e != nil {
-			return TaskOutput{}, e
-		}
-		if !terminal(old) {
-			active++
-		}
-	}
-	if active >= s.config.MaxTasksPerSubject {
+	if capacity.Active >= s.config.MaxTasksPerSubject {
 		return TaskOutput{}, api.E("overloaded", "active_task_limit")
 	}
+	capacity.Active++
+	if capacityRevision == 0 {
+		if e = tx.Create(ctx, subjectCapacities, auth.SubjectID, auth.SubjectID, capacity); e != nil {
+			return TaskOutput{}, e
+		}
+	} else {
+		capacity.Revision++
+		if e = tx.Put(ctx, subjectCapacities, auth.SubjectID, capacityRevision, capacity); e != nil {
+			return TaskOutput{}, e
+		}
+	}
+
 	balances := []api.BudgetBalance{}
 	for _, a := range in.Budget {
 		balances = append(balances, api.BudgetBalance{Unit: a.Unit, Limit: a.Value, Reserved: "0", Spent: "0"})
@@ -493,3 +540,10 @@ func statusAllowed(status string) bool {
 }
 
 func incomingID(ref api.ObjectRef) string { return ref.OwnerID + "/" + ref.ObjectID }
+
+const subjectCapacities = "task.subject_capacities"
+
+type subjectCapacity struct {
+	Revision uint64 `json:"revision"`
+	Active   uint64 `json:"active"`
+}

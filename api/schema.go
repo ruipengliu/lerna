@@ -33,6 +33,9 @@ func definitions() map[string]any {
 type Schema = map[string]any
 
 func Object(properties map[string]any, required ...string) Schema {
+	if required == nil {
+		required = []string{}
+	}
 	return Schema{"type": "object", "properties": properties, "required": required, "additionalProperties": false}
 }
 func Ref(name string) Schema       { return Schema{"$ref": "#/$defs/" + name} }
