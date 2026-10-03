@@ -88,9 +88,10 @@ func Drain(ctx context.Context, store Store, scope Scope, registry *Registry, ma
 	if max < 1 || max > 10000 {
 		return api.E("invalid_request", "invalid_drain_limit")
 	}
+	worker := Worker{Store: store, Lease: 30 * time.Second}
 	holder := api.NewID("boot")
 	for i := 0; i < max; i++ {
-		works, status, err := store.Claim(ctx, scope, holder, registry.JobKinds(), 1, 30*time.Second)
+		works, status, err := store.Claim(ctx, scope, holder, registry.JobKinds(), 1, worker.Lease)
 		if err != nil {
 			return err
 		}
@@ -104,7 +105,7 @@ func Drain(ctx context.Context, store Store, scope Scope, registry *Registry, ma
 		if !ok {
 			return api.E("unsupported", "recovery_handler_missing")
 		}
-		if err = h(ctx, store, scope, works[0]); err != nil {
+		if err = worker.runOwned(ctx, scope, works[0], h); err != nil {
 			return fmt.Errorf("job %s: %w", works[0].Job.Kind, err)
 		}
 	}
