@@ -113,6 +113,12 @@ type ContextLookupPort interface {
 	Resolve(context.Context, runtime.Scope, runtime.Auth, ContextLookupRequest) (ContextLookupResult, error)
 }
 
+// ContextMaterialGate 核普通材料的当前获准版本/来源；只能同库读元数据，不能 IO。
+// Task 根链/预算先锁，材料的专门 head 门禁先于主体和其它领域门禁。
+type ContextMaterialGate interface {
+	CheckMaterialsTx(context.Context, runtime.Tx, runtime.Auth, []ContextMaterial) error
+}
+
 type ContentPort interface {
 	Read(context.Context, runtime.Scope, runtime.Auth, api.ContentRef) ([]byte, error)
 	Publish(context.Context, runtime.Scope, string, string, []byte) (api.ContentRef, error)

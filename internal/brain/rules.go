@@ -10,28 +10,75 @@ import (
 
 // GoalSpec 是已登记报告/答案模板；自然语言目标需明确补充或配置模型。
 type GoalSpec struct {
-	Kind     string `json:"kind"`
-	Title    string `json:"title,omitempty"`
-	Body     string `json:"body"`
-	SavePath string `json:"save_path,omitempty"`
+	Kind       string            `json:"kind"`
+	Title      string            `json:"title,omitempty"`
+	Body       string            `json:"body"`
+	SavePath   string            `json:"save_path,omitempty"`
+	Preference *ReportPreference `json:"preference,omitempty"`
 }
 
-func GoalSchema() api.Schema {
+// ReportPreference 是原用户明确允许的有限格式选择，普通 Memory 不改正文/路径或规则。
+type ReportPreference struct {
+	QueryRef       api.ContentRef `json:"query_ref"`
+	ScopeRef       api.ContentRef `json:"scope_ref"`
+	AllowedFormats []string       `json:"allowed_formats"`
+	DefaultFormat  string         `json:"default_format"`
+}
+type PreferenceSelection struct {
+	QueryRef  api.ContentRef `json:"query_ref"`
+	ScopeRef  api.ContentRef `json:"scope_ref"`
+	ReportRef api.ContentRef `json:"report_ref"`
+	MemoryRef *api.ObjectRef `json:"memory_ref,omitempty"`
+	Format    string         `json:"format"`
+}
+type PreferenceResolution struct {
+	Selection PreferenceSelection
+	Ready     bool
+	// 受信 owner 从原 Snapshot 固定有限查询输入；不是模型可提供的新授权。
+	Query json.RawMessage
+}
+type PreferenceSource interface {
+	Preference(context.Context, api.Snapshot, ReportPreference) (PreferenceResolution, error)
+}
+
+func LegacyGoalSchema() api.Schema {
 	text := api.Schema{"type": "string", "minLength": 1, "maxLength": 65536}
 	return api.Schema{"oneOf": []any{api.Object(map[string]any{"kind": api.Schema{"const": "answer"}, "body": text}, "kind", "body"), api.Object(map[string]any{"kind": api.Schema{"const": "report"}, "title": api.String(), "body": text, "save_path": api.String()}, "kind", "title", "body", "save_path")}}
 }
+func GoalSchema() api.Schema {
+	schema := LegacyGoalSchema()
+	report := schema["oneOf"].([]any)[1].(api.Schema)
+	pref := api.SchemaFor[ReportPreference]()
+	properties := pref["properties"].(map[string]any)
+	// Renderer 的 answer schema 必须自包含，不能让它解析核心 $ref。
+	// 实际引用仍由读取负责方按 ContentRef/当前许可逐项核验。
+	reference := api.Object(map[string]any{"tenant_id": api.String(), "owner_id": api.String(), "content_id": api.String(), "version": api.Schema{"type": "integer", "minimum": 1}, "hash": api.Schema{"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}, "media_type": api.String(), "byte_length": api.Schema{"type": "integer", "minimum": 0, "maximum": 16 << 20}}, "tenant_id", "owner_id", "content_id", "version", "hash", "media_type", "byte_length")
+	properties["query_ref"], properties["scope_ref"] = reference, reference
+	properties["allowed_formats"] = api.Schema{"type": "array", "items": api.Enum("plain", "bullet"), "minItems": 1, "maxItems": 2, "uniqueItems": true}
+	properties["default_format"] = api.Enum("plain", "bullet")
+	report["properties"].(map[string]any)["preference"] = pref
+	return schema
+}
 func ReportBytes(g GoalSpec) []byte {
+	return ReportBytesForFormat(g, "plain")
+}
+func ReportBytesForFormat(g GoalSpec, format string) []byte {
 	if g.Kind == "report" {
-		return []byte("# " + g.Title + "\n\n" + g.Body + "\n")
+		body := g.Body
+		if format == "bullet" {
+			body = "- " + strings.ReplaceAll(body, "\n", "\n- ")
+		}
+		return []byte("# " + g.Title + "\n\n" + body + "\n")
 	}
 	return []byte(g.Body)
 }
 
 type RuleParameters struct {
-	Kind           string `json:"kind"`
-	ExpectedHash   string `json:"expected_hash"`
-	ExpectedLength uint64 `json:"expected_length"`
-	SavePath       string `json:"save_path,omitempty"`
+	Kind           string               `json:"kind"`
+	ExpectedHash   string               `json:"expected_hash"`
+	ExpectedLength uint64               `json:"expected_length"`
+	SavePath       string               `json:"save_path,omitempty"`
+	Preference     *PreferenceSelection `json:"preference,omitempty"`
 }
 type ActionFact struct {
 	Ref            api.ObjectRef
@@ -46,6 +93,7 @@ type FactSource interface {
 type RuleEngine struct {
 	Goals                                 GoalResolver
 	Facts                                 FactSource
+	Preferences                           PreferenceSource
 	ArtifactRule, SavedRule, AnswerSchema api.ComponentRef
 	ReadCapability, WriteCapability       api.ComponentRef
 	ReadBinding, WriteBinding             api.ObjectRef
@@ -77,7 +125,13 @@ func (e *RuleEngine) Encode(_ context.Context, s api.Snapshot, goal []byte, p Pr
 	if err != nil {
 		return Encoding{}, err
 	}
-	return Encoding{Body: raw, Digest: api.Hash(raw), Receiver: "builtin-rule-engine", Location: "cloud", InputTokens: uint64(len(raw)), CountMode: "upper_bound", ProcessedSources: append([]api.ContentRef{}, s.ProcessedSources...)}, nil
+	bound := uint64(len(raw))
+	for _, ref := range s.MaterialRefs {
+		if !api.Equal(ref, s.GoalRef) {
+			bound += ref.ByteLength // 普通材料完整 bytes 也计入，引用数不代表其大小。
+		}
+	}
+	return Encoding{Body: raw, Digest: api.Hash(raw), Receiver: "builtin-rule-engine", Location: "cloud", InputTokens: bound, CountMode: "upper_bound", ProcessedSources: append([]api.ContentRef{}, s.ProcessedSources...)}, nil
 }
 func (e *RuleEngine) Lookup(context.Context, string, Encoding) (Generated, error) {
 	return Generated{}, api.E("unsupported", "rule_call_has_no_external_lookup")
@@ -125,8 +179,38 @@ func (e *RuleEngine) Request(ctx context.Context, _ string, enc Encoding) (Gener
 	if er = api.Decode(input.Goal, &goal); er != nil {
 		return out, er
 	}
-	body := ReportBytes(goal)
+	format := "plain"
+	var selection *PreferenceSelection
+	if goal.Preference != nil {
+		if e.Preferences == nil {
+			return out, api.E("dependency_unavailable", "ordinary_preference_source_unavailable")
+		}
+		resolution, err := e.Preferences.Preference(ctx, input.Snapshot, *goal.Preference)
+		if err != nil {
+			return out, err
+		}
+		if !resolution.Ready {
+			if len(resolution.Query) == 0 {
+				return out, api.E("dependency_unavailable", "ordinary_preference_query_unavailable")
+			}
+			add("query", "application/json", string(resolution.Query))
+			p := goal.Preference.ScopeRef
+			out.Draft = Draft{Kind: "need_context", ReasonLocalID: "reason", Lookups: []DraftLookup{{Kind: "memory_query", TargetRef: api.ObjectRef{TenantID: p.TenantID, OwnerID: p.OwnerID, ObjectID: p.ContentID, Revision: p.Version}, QueryLocalID: "query"}}}
+			return out, nil
+		}
+		format = resolution.Selection.Format
+		allowed := false
+		for _, candidate := range goal.Preference.AllowedFormats {
+			allowed = allowed || candidate == format
+		}
+		if !allowed || !api.Equal(resolution.Selection.QueryRef, goal.Preference.QueryRef) || !api.Equal(resolution.Selection.ScopeRef, goal.Preference.ScopeRef) {
+			return out, api.E("forbidden", "ordinary_preference_changes_original_template")
+		}
+		selection = &resolution.Selection
+	}
+	body := ReportBytesForFormat(goal, format)
 	params := RuleParameters{Kind: goal.Kind, ExpectedHash: api.Hash(body), ExpectedLength: uint64(len(body)), SavePath: goal.SavePath}
+	params.Preference = selection
 	if input.Snapshot.Purpose == "interpret_requirements" {
 		add("statement", "text/plain", "产物必须与原模板指定的准确正文和摘要一致。")
 		add("parameters", "application/json", string(api.Raw(params)))

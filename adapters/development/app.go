@@ -310,7 +310,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e != nil {
 		return nil, fmt.Errorf("construct Execution: %w", e)
 	}
-	a.Engine = &brain.RuleEngine{Facts: factSource{a}, Goals: factSource{a}, ArtifactRule: a.ArtifactRule, SavedRule: a.SavedRule, AnswerSchema: a.AnswerSchema, ReadCapability: execadapter.FileReadCapability().Ref, WriteCapability: execadapter.FileWriteCapability().Ref, ReadBinding: a.ReadBinding, WriteBinding: a.WriteBinding}
+	a.Engine = &brain.RuleEngine{Facts: factSource{a}, Goals: factSource{a}, Preferences: factSource{a}, ArtifactRule: a.ArtifactRule, SavedRule: a.SavedRule, AnswerSchema: a.AnswerSchema, ReadCapability: execadapter.FileReadCapability().Ref, WriteCapability: execadapter.FileWriteCapability().Ref, ReadBinding: a.ReadBinding, WriteBinding: a.WriteBinding}
 	a.TokenizerRef = component("rule-byte-count")
 	if e = a.configureModel(); e != nil {
 		return nil, e
@@ -366,7 +366,16 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if a.RemoteAgent != nil {
 		taskAuthority = remoteTaskGate{taskGate{a}}
 	}
-	a.Task, e = task.New(task.Config{Policies: []task.TaskPolicy{a.TaskPolicy}, Rules: rules, ControlWindow: 5 * time.Second, Participants: remoteParts([]string{"task", "content", "memory", "governance", "platform"}), AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: a.AnswerSchema, Schema: brain.GoalSchema()}}}, task.Ports{Content: taskContent{a}, Context: contextCompiler{a}, Gate: taskAuthority, Evidence: evidenceBridge{a}, ControlProof: controlProof{a}, ClosureProof: closureProof{a}, ActionAuthorization: actionAuthorization{a}, Brain: brainBridge{a}, Execution: executionBridge{a}, Collaboration: collaborationPort})
+	answerSchemas := []task.AnswerSchemaDefinition{{Ref: a.AnswerSchema, Schema: brain.GoalSchema()}}
+	legacyAnswer := a.AnswerSchema
+	legacyAnswer.Digest, e = api.Digest(brain.LegacyGoalSchema())
+	if e != nil {
+		return nil, e
+	}
+	if !api.Equal(legacyAnswer, a.AnswerSchema) {
+		answerSchemas = append(answerSchemas, task.AnswerSchemaDefinition{Ref: legacyAnswer, Schema: brain.LegacyGoalSchema()})
+	}
+	a.Task, e = task.New(task.Config{Policies: []task.TaskPolicy{a.TaskPolicy}, Rules: rules, ControlWindow: 5 * time.Second, Participants: remoteParts([]string{"task", "content", "memory", "governance", "platform"}), AnswerSchemas: answerSchemas}, task.Ports{Content: taskContent{a}, Context: contextCompiler{a}, ContextLookup: contextLookup{a}, Gate: taskAuthority, Evidence: evidenceBridge{a}, ControlProof: controlProof{a}, ClosureProof: closureProof{a}, ActionAuthorization: actionAuthorization{a}, Brain: brainBridge{a}, Execution: executionBridge{a}, Collaboration: collaborationPort})
 	if e != nil {
 		return nil, fmt.Errorf("construct Task: %w", e)
 	}

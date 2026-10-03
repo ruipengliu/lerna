@@ -96,6 +96,11 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 		processed = append(processed, check.ArtifactRef, check.ScopeRef)
 		processed = append(processed, check.EvidenceRefs...)
 	}
+	ordinary, e := c.a.contextMaterialSources(ctx, scope, auth, facts)
+	if e != nil {
+		return task.PreparedDecision{}, e
+	}
+	processed = append(processed, ordinary...)
 	processed = uniqueSources(processed)
 	for _, r := range processed {
 		if _, e = c.a.ReadContent(ctx, scope, auth, r, "task.context"); e != nil {
@@ -108,6 +113,9 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 	}
 	key := t.TaskID + "/" + string(api.Raw([]uint64{t.GoalRevision, t.ControlRevision, t.Revision}))
 	snapshotID := stableID("snapshot", key)
+	if _, e = c.a.freezeContextLookupDeadline(ctx, scope, snapshotID, t.Deadline); e != nil {
+		return task.PreparedDecision{}, e
+	}
 	registered, e := c.a.prepareActionSnapshot(ctx, snapshotID, t.Deadline)
 	if e != nil {
 		return task.PreparedDecision{}, e
@@ -157,10 +165,11 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 			AnswerSchema            api.ComponentRef                   `json:"answer_schema_ref"`
 			GoalSchema              api.Schema                         `json:"goal_schema"`
 			Actions                 []actionDeclaration                `json:"actions"`
+			LookupSchemas           map[string]api.Schema              `json:"lookup_schemas"`
 			InformationQuestion     *InformationQuestion               `json:"information_question,omitempty"`
 			InformationRule         *api.ComponentRef                  `json:"information_rule,omitempty"`
 			InformationObservations []providers.InformationObservation `json:"information_observations,omitempty"`
-		}{facts, histories, c.a.ArtifactRule, c.a.SavedRule, c.a.AnswerSchema, brain.GoalSchema(), registered.declarations(), information.Question, information.Rule, information.Observations}), processed, []api.ContentRef{})
+		}{facts, histories, c.a.ArtifactRule, c.a.SavedRule, c.a.AnswerSchema, brain.GoalSchema(), registered.declarations(), ContextLookupSchemas(), information.Question, information.Rule, information.Observations}), processed, []api.ContentRef{})
 		if err != nil {
 			return task.PreparedDecision{}, err
 		}

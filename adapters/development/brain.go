@@ -81,6 +81,9 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 		return original, e
 	}
 	original = task.Proposal{DecisionID: i.DecisionID, Kind: p.Kind, ReasonRef: p.ReasonRef, RequirementDelta: p.RequirementDelta, ArtifactRefs: p.ArtifactRefs, Limitations: []string{}}
+	for _, lookup := range p.Lookups {
+		original.Lookups = append(original.Lookups, task.ContextLookup{Kind: lookup.Kind, TargetRef: lookup.TargetRef, QueryRef: lookup.QueryRef})
+	}
 	if original.RequirementDelta != nil {
 		facts, err := b.a.Task.ContextFacts(ctx, b.a.Store, s, b.a.ServiceAuth, snap.TaskRef.ObjectID)
 		if err != nil {
