@@ -143,6 +143,7 @@ type PoolRepository interface {
 	LockPool(context.Context, runtime.Tx) (PoolState, error)
 	InstallPool(context.Context, runtime.Tx, PoolConfig, int64, time.Time) error
 	SavePoolCursor(context.Context, runtime.Tx, PoolState, string, PoolCursor) error
+	PoolNextWake(context.Context, runtime.Tx, PoolState, string, time.Time, time.Time) (time.Time, error)
 	PoolReadyTenants(context.Context, runtime.Tx, PoolState, string, time.Time) (map[contract.ID]time.Time, error)
 	PoolCounts(context.Context, runtime.Tx, PoolState, string, contract.ID, time.Time) (int64, int64, int64, error)
 	PoolQueue(context.Context, runtime.Tx, PoolState, contract.ID, string) (string, bool, error)

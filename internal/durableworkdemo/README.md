@@ -109,3 +109,11 @@ fencing still needs trusted deployment/drain; no physical identity probe or
 production isolation claim is added. Deploy by draining older binaries without
 these gates. Current command fixture assemblers install an explicit finite pool;
 historical export scripts still build their immutable V1/V2 source commits.
+
+Pool Run drains bounded dispatch opportunities, then each independent lane parks
+on its injected `Timer` (default `runtime.WallTimer`). `NextWake` observes only
+runtime scheduling facts for all declared pool members: future due/lease and
+both current and live claimed revisions' original deadlines, capped by the
+positive finite fallback. Quota-zero and locked already-due work still parks;
+maintenance remains bounded and requires no execution Claim. The pool read does
+not authorize any cross-owner input/projection transaction. No new DDL is needed.

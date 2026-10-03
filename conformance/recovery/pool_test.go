@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/ruipengliu/lerna/adapters/postgres"
 	"github.com/ruipengliu/lerna/adapters/sqlite"
 	"github.com/ruipengliu/lerna/contract"
 	"github.com/ruipengliu/lerna/host/durablework"
@@ -959,19 +960,62 @@ func TestPGPoolLockedPagePreservesFairHeadAndMaintenanceCursor(t *testing.T) {
 		items = append(items, item{contract.ID(id), got.Job.ID})
 	}
 	sort.Slice(items, func(i, j int) bool { return items[i].job < items[j].job })
+	// The fault holder must stay live throughout the assertions. Its larger,
+	// still finite transaction limit is test infrastructure only; the business
+	// Store keeps its normal 3s transaction limit and execution policies.
+	configuration, _ := configurations.Load(store)
+	holderConfig := configuration.(postgres.Config)
+	holderConfig.TransactionTimeout = 10 * time.Second
+	holder, err := postgres.Open(ctx, holderConfig)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if err := holder.Close(); err != nil {
+			t.Error(err)
+		}
+	})
 	ready := make(chan struct{})
+	var heldContext context.Context
 	release := make(chan struct{})
 	done := make(chan error, 1)
 	var once sync.Once
 	unblock := func() { once.Do(func() { close(release) }) }
-	defer unblock()
+	joined := false
+	defer func() {
+		unblock()
+		if joined {
+			return
+		}
+		cleanup, cancel := context.WithTimeout(context.Background(), 11*time.Second)
+		defer cancel()
+		select {
+		case <-done:
+			joined = true
+		case <-cleanup.Done():
+			t.Error("finite input-lock holder did not exit")
+		}
+	}()
+	checkHeld := func() {
+		t.Helper()
+		if err := heldContext.Err(); err != nil {
+			t.Fatalf("input-lock holder authority expired before release: %v", err)
+		}
+		select {
+		case err := <-done:
+			joined = true
+			t.Fatalf("input-lock holder exited before release: %v", err)
+		default:
+		}
+	}
 	go func() {
-		done <- store.Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
+		done <- holder.Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
 			for _, item := range items[:64] {
-				if _, err := store.LockInput(ctx, tx, owner, item.id); err != nil {
+				if _, err := holder.LockInput(ctx, tx, owner, item.id); err != nil {
 					return err
 				}
 			}
+			heldContext = ctx
 			close(ready)
 			select {
 			case <-release:
@@ -982,9 +1026,11 @@ func TestPGPoolLockedPagePreservesFairHeadAndMaintenanceCursor(t *testing.T) {
 		})
 	}()
 	awaitStage(t, ctx, ready)
+	checkHeld()
 	w := conformanceWorker(t, owner, store, store, store, clock)
 	pool, _ := durablework.NewPoolWorker(h, []*durablework.Worker{w})
 	blocked, err := pool.ClaimLane(ctx, "ordinary", "worker-a", time.Minute)
+	checkHeld()
 	if err != nil || blocked != nil {
 		t.Fatalf("bounded locked prefix: %+v %v", blocked, err)
 	}
@@ -993,6 +1039,7 @@ func TestPGPoolLockedPagePreservesFairHeadAndMaintenanceCursor(t *testing.T) {
 		t.Fatalf("unresolved head discarded: %+v %v", state, err)
 	}
 	healthy, err := pool.ClaimLane(ctx, "ordinary", "worker-a", time.Minute)
+	checkHeld()
 	if err != nil || healthy == nil || healthy.Work.Input.ID != items[64].id {
 		t.Fatalf("healthy suffix starved: %+v %v", healthy, err)
 	}
@@ -1015,12 +1062,16 @@ func TestPGPoolLockedPagePreservesFairHeadAndMaintenanceCursor(t *testing.T) {
 	if err = pool.Maintain(ctx); err != nil {
 		t.Fatal(err)
 	}
+	checkHeld()
 	expired, err := h.ObserveSchedule(ctx, items[64].id, 2, &principal)
 	if err != nil || expired.State.Outcome != "expired" || expired.State.Attempts != 0 || expired.Job.CompletedRevision != 2 {
 		t.Fatalf("maintenance suffix behind real locks: %+v %v", expired, err)
 	}
+	checkHeld()
 	unblock()
-	if err = <-done; err != nil {
+	err = <-done
+	joined = true
+	if err != nil {
 		t.Fatal(err)
 	}
 	// One real SQL input-lock prefix is PG-only. SQLite's single BEGIN IMMEDIATE
