@@ -100,6 +100,13 @@ type ExecutionPort interface {
 	Control(context.Context, runtime.Scope, string, api.ControlSnapshot) error
 	Usage(context.Context, runtime.Scope, api.ObjectRef) (api.UsageSnapshot, error)
 }
+
+// ExecutionPreparation 可在短控制窗口签发前冻结/出版原执行意图的惰性输入。
+// 它只能以原 OperationID/CommandID/IntentHash 恢复，不得接纳执行、创建 Attempt、
+// 调用模型/工具、改变目标效果或追加预算。实现须在原身份下幂等，所有 I/O 在 Tx 外。
+type ExecutionPreparation interface {
+	PrepareDispatch(context.Context, runtime.Scope, OperationIntent) error
+}
 type EvidencePort interface {
 	ValidateRequirements(context.Context, runtime.Scope, api.Task, api.RequirementDelta) (ValidationReport, error)
 	Coverage(context.Context, runtime.Scope, api.Task) (api.GoalCoverage, error)

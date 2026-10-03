@@ -21,6 +21,7 @@ Context 编译完成后若原 Task 已变化，仅在准入闭包明确 `stale_s
 宿主必须显式声明共享数据库与 Tx participants，并提供：
 
 - Content 字节读取及固定出版；Context 编译；Brain、Execution、外部取证及协作端口。
+- Execution 可实现 `ExecutionPreparation.PrepareDispatch`，在事务外按原 Operation/Command/IntentHash 冻结和出版准确输入，然后才重新核当前目标、控制及凭据并签发短窗口。准备不能创建 Attempt、调用模型/工具、改变目标效果或追加预算；临时不可用沿原派发 Job 等待，旧端口保持兼容。
 - 同库 `LocalGate`；需要准确证据治理副本时，该 Gate 同时实现 `EvidenceRegistration`。检查和完整覆盖登记及 Result 持有者绑定均在原 Task 事务中完成。
 - 原提交者凭据代次与角色冻结在 Task 中；Context 编译沿用该身份。Gate 可同时实现纯 Tx `SubjectGate.CheckSubjectTx`，在当前 Task 与每层祖先正门禁核验撤权。缺少该端口不能宣称验证了当前身份；旧记录缺少代次时新准入关闭，负控制和迟到账务仍保留。
 - `ActionAuthorization.AuthorizeAction`。它在封存原 IntentHash 后运行，与整批 ActionConsumption、预留、意图共同提交；整批拒绝会回滚一次授权使用。
@@ -39,6 +40,8 @@ Context 编译完成后若原 Task 已变化，仅在准入闭包明确 `stale_s
 
 控制窗口最多五秒，正控制还截于 Task deadline。原 invoke 答复丢失时重发固定的原窗口、证明、时间及输入；新的窗口通过单独原控制窗口责任取得。负控制在 deadline 之后可以签发有限传播窗口，仍不授予行动入口。关闭视图包含完整有界本方子树、准确关系摘要和依据引用；超出已配置完整性界时明确保留缺口，不截断后宣称关闭。额度关闭先到时保留永久门禁，迟到创建不得重开。
 
+惰性执行输入准备完成之前不签首个控制窗口。准备后取消或撤权的 Task 不能派发；已经固定的原窗口仍随原 invoke 重放，准备重入不能刷新时间、原命令或预留。Claim 在准备前及后续受保护事务重新核验，准备造成的领取失效不授予执行入口。
+
 ## 已运行证据
 
 Task 测试使用持久 SQLite、真实 PostgreSQL、实际 Memory/ObjectStore、同库 Governance 和真实 ES256；报告、文本语义等非本切片负责的事实由准确、明确预批准夹具提供。它们证明 Task 的消费和原子性，不证明文本质量或供应商行为。
@@ -50,6 +53,8 @@ Task 测试使用持久 SQLite、真实 PostgreSQL、实际 Memory/ObjectStore�
 批量请求回归使用真实 PostgreSQL 两个并发事务反序读取两个 Task 的请求：逐个调用的旧实现实际触发 SQLSTATE 40P01；统一完整锁集合后两者均提交，准确原输入顺序和答案 Schema 保留。测试只以有界延迟放大实际行锁交错，未用包装 Tx 替代数据库。
 
 原费用归并与新决策准入的真实 PostgreSQL 竞争也复现并消除 SQLSTATE 40P01；账务准确提交一次，过期的决策快照按原版本门禁拒绝。预批准观察夹具以 SQLite 权威时钟的毫秒精度向下声明时间，避免纳秒墙钟落在同毫秒权威时间之后；未放宽规则或 Task 的有限陈旧期限。
+
+执行准备回归以真实 SQLite 原 Service/Dispatcher/Job 边界复现实际 5.2 秒输入准备耗尽原五秒窗口，再验证准备完成后的首窗口。期间取消、真实 DevIdentity 撤权均阻止派发；实际 Memory/ObjectStore 出版后丢失准备回执，恢复得到同一 ContentRef 和预留；接纳 invoke 后丢回执并跨原窗口期限重放，准确原命令和窗口仍保留。该准备边界不提供真实模型或工具执行效果。
 
 运行入口：`go test ./internal/task -count=1`、`go vet ./internal/task`、`go test -race ./internal/task -count=1`。PostgreSQL 测试只在 `HARNESS_TEST_POSTGRES_DSN` 配置时运行；未配置时明确 skip，不计为 PostgreSQL 通过。密码从运行环境取得，不进仓库或输出。
 
