@@ -26,6 +26,7 @@ func (a *App) Run(ctx context.Context, serve, work bool) error {
 	failures := make(chan error, 2)
 	count := 0
 	var server *http.Server
+	var gateway *wss.Server
 	if serve {
 		if a.Config.Development {
 			host, _, err := net.SplitHostPort(a.Config.HTTPAddr)
@@ -33,15 +34,16 @@ func (a *App) Run(ctx context.Context, serve, work bool) error {
 				return api.E("forbidden", "development_requires_loopback")
 			}
 		}
-		gateway, err := a.Gateway()
+		var err error
+		gateway, err = a.Gateway()
 		if err != nil {
 			return err
 		}
 		listener, err := net.Listen("tcp", a.Config.HTTPAddr)
 		if err != nil {
-			return err
+			return errors.Join(err, gateway.Close())
 		}
-		server = &http.Server{Handler: gateway.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second, WriteTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
+		server = &http.Server{Handler: gateway.Handler(), BaseContext: func(net.Listener) context.Context { return runCtx }, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second, WriteTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
 		count++
 		go func() {
 			err := server.Serve(listener)
@@ -67,14 +69,13 @@ func (a *App) Run(ctx context.Context, serve, work bool) error {
 		stopCtx, stop := context.WithTimeout(context.Background(), 5*time.Second)
 		err := server.Shutdown(stopCtx)
 		stop()
-		if first == nil {
-			first = err
+		if err != nil {
+			err = errors.Join(err, server.Close())
 		}
+		first = errors.Join(first, err, gateway.Close())
 	}
 	for ; count > 0; count-- {
-		if err := <-failures; first == nil {
-			first = err
-		}
+		first = errors.Join(first, <-failures)
 	}
 	return first
 }
