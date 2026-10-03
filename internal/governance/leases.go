@@ -276,11 +276,20 @@ func (s *Service) continueLeaseReport(ctx context.Context, store runtime.Store, 
 		return err
 	}
 	if err := s.Ports.UsageVerifier.Verify(ctx, scope, pending.Request.Usage.SourceRef, pending.Request.Usage); err != nil {
+		if !usageVerificationRejected(err) {
+			return err
+		}
 		return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+			if _, err := tx.LoadCommand(ctx, pending.CommandID); err != nil {
+				return err
+			}
 			return runtime.Decide(ctx, tx, pending.CommandID, nil, api.E("forbidden", "settlement_unverified"))
 		})
 	}
 	return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, err := tx.LoadCommand(ctx, pending.CommandID); err != nil {
+			return err
+		}
 		out, err := s.ApplyLeaseReportTx(ctx, tx, pending.Request)
 		if err != nil {
 			return err

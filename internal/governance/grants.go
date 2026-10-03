@@ -874,17 +874,33 @@ func (s *Service) continueSettlement(ctx context.Context, store runtime.Store, s
 		return err
 	}
 	if err := s.Ports.UsageVerifier.Verify(ctx, scope, use.TargetRef, pending.Request.Usage); err != nil {
+		if !usageVerificationRejected(err) {
+			// 原来源尚不可核验，保留同一 accepted 命令和待结算责任。
+			return err
+		}
 		return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+			if _, err := tx.LoadCommand(ctx, pending.CommandID); err != nil {
+				return err
+			}
 			return runtime.Decide(ctx, tx, pending.CommandID, nil, api.E("forbidden", "settlement_unverified"))
 		})
 	}
 	return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, err := tx.LoadCommand(ctx, pending.CommandID); err != nil {
+			return err
+		}
 		out, err := s.ApplySettlementTx(ctx, tx, pending.Request)
 		if err != nil {
 			return err
 		}
 		return runtime.Decide(ctx, tx, pending.CommandID, out, nil)
 	})
+}
+
+// 只有核验器明确确认原冻结证明非法，才裁决终态拒绝。
+// 依赖、效果、context 和持久化异常不证明用量为假。
+func usageVerificationRejected(err error) bool {
+	return api.IsCode(err, "forbidden") || api.IsCode(err, "invalid_request")
 }
 func (s *Service) readSettlement(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, q api.Query, in IDInput) (UseSettlement, error) {
 	var use UseReceipt
