@@ -84,7 +84,11 @@ func (a *App) Publish(ctx context.Context, scope runtime.Scope, auth runtime.Aut
 		if e != nil {
 			return e
 		}
-		plan = publicationPlan{Ref: ref, TransferID: api.NewID("transfer"), ReserveID: api.NewID("command"), PutID: api.NewID("command"), Processed: processed, Disclosed: disclosed, Retention: api.Time(retain), Deadline: api.Time(now.Add(30 * time.Minute)), SubjectID: auth.SubjectID, PolicyRef: &policy.PolicyRef}
+		deadline := now.Add(30 * time.Minute)
+		if retain.Before(deadline) {
+			deadline = retain
+		}
+		plan = publicationPlan{Ref: ref, TransferID: api.NewID("transfer"), ReserveID: api.NewID("command"), PutID: api.NewID("command"), Processed: processed, Disclosed: disclosed, Retention: api.Time(retain), Deadline: api.Time(deadline), SubjectID: auth.SubjectID, PolicyRef: &policy.PolicyRef}
 		return tx.Create(ctx, "platform.publications", id, auth.SubjectID, plan)
 	})
 	if status == runtime.CommitUnknown {
