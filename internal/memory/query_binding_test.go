@@ -63,3 +63,45 @@ func TestMemoryPagesUseOriginalQueryBindingDeadline(t *testing.T) {
 		})
 	}
 }
+
+func TestFrozenQueryPageRechecksActualQuerySourceRetentionWithoutTimerProjection(t *testing.T) {
+	testFrozenQueryPageSourceRetention(t, newFixture)
+}
+
+func testFrozenQueryPageSourceRetention(t *testing.T, createFixture func(*testing.T) fixture) {
+	t.Helper()
+	for _, source := range []string{"text", "query", "scope"} {
+		t.Run(source, func(t *testing.T) {
+			f := createFixture(t)
+			for i := 0; i < 2; i++ {
+				id := api.NewID("memory")
+				if receipt := f.command(t, "memory.create", id, nil, memory.CreateInput{MemoryID: id, Values: f.values(t, "retention query")}); receipt.Stage != "applied" {
+					t.Fatalf("create: %+v", receipt)
+				}
+			}
+			expires := time.Now().Add(2 * time.Minute)
+			upload := func(kind, body string) api.ContentRef {
+				if source == kind {
+					return f.uploadUntil(t, body, expires, expires)
+				}
+				return f.upload(t, body)
+			}
+			text := upload("text", "retention query")
+			spec := upload("query", string(api.Raw(memory.MemoryQuerySpec{TextRef: text, TypeFilter: []string{}, RankingProfileRef: memory.LexicalProfile()})))
+			scope := upload("scope", "当前查询使用范围")
+			now := time.Now()
+			f.service.Store = clockStore{Store: f.service.Store, now: &now}
+			input := memory.QueryInput{QueryRef: spec, ScopeRef: scope, Purposes: []string{"memory.query"}, Limits: memory.QueryLimits{MaxCandidates: 200, MaxReadBytes: 1 << 20, MaxPermissionChecks: 10000, Deadline: api.Time(now.Add(4 * time.Minute))}, Limit: 1}
+			page, err := f.service.QueryMemory(f.ctx, f.scope, f.auth, api.NewID("query"), input)
+			if err != nil || page.NextCursor == "" {
+				t.Fatalf("original page: %+v %v", page, err)
+			}
+			// 到期 Job 没有运行；当前权限必须直接查来源保留期，不能借旧水位披露。
+			now = expires.Add(time.Second)
+			input.Cursor = page.NextCursor
+			if _, err = f.service.QueryMemory(f.ctx, f.scope, f.auth, api.NewID("query"), input); !api.IsCode(err, "snapshot_required") {
+				t.Fatalf("expired %s input still used by frozen ranking: %v", source, err)
+			}
+		})
+	}
+}

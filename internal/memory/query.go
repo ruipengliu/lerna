@@ -314,7 +314,7 @@ func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth run
 		}
 		return matches[i].MemoryRef.ObjectID < matches[j].MemoryRef.ObjectID
 	})
-	view := QueryView{QueryID: queryID, Revision: 1, PrincipalID: auth.SubjectID, Digest: digest, VisibilityToken: token, ExpiresAt: api.Time(expires), ChangeHead: head.ChangeHead, Matches: matches, Partial: partial, Gaps: unique(gaps), RemainingPermissionChecks: ctx.Value(permissionBudgetKey{}).(*permissionBudget).remaining}
+	view := QueryView{QueryID: queryID, Revision: 1, PrincipalID: auth.SubjectID, Digest: digest, VisibilityToken: token, SourceRefs: []api.ContentRef{in.QueryRef, in.ScopeRef, spec.TextRef}, ExpiresAt: api.Time(expires), ChangeHead: head.ChangeHead, Matches: matches, Partial: partial, Gaps: unique(gaps), RemainingPermissionChecks: ctx.Value(permissionBudgetKey{}).(*permissionBudget).remaining}
 	err = s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		current, err := s.visibility(ctx, tx, auth)
 		if err != nil {
@@ -387,10 +387,31 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 		if token != view.VisibilityToken {
 			return api.E("snapshot_required", "query_scope_changed")
 		}
+		if len(view.SourceRefs) != 3 || !api.Equal(view.SourceRefs[0], in.QueryRef) || !api.Equal(view.SourceRefs[1], in.ScopeRef) {
+			return api.E("snapshot_required", "query_sources_unavailable")
+		}
 		out = api.Page[Match]{Items: []Match{}, CollectionRevision: view.ChangeHead, Partial: view.Partial, Gaps: append([]string{}, view.Gaps...)}
 		budget := &permissionBudget{remaining: view.RemainingPermissionChecks}
 		pageContext := context.WithValue(ctx, permissionBudgetKey{}, budget)
-		end := position + int(in.Limit)
+		sourcesAllowed := true
+		for _, ref := range view.SourceRefs {
+			if _, err = s.CheckContentTx(pageContext, tx, auth, ref, "memory.query", s.Location, true); err != nil {
+				if api.IsCode(err, "overloaded") {
+					out.Partial = true
+					out.Gaps = unique(append(out.Gaps, "permission_budget"))
+					sourcesAllowed = false
+					break
+				}
+				if isUnavailable(err) {
+					return err
+				}
+				return api.E("snapshot_required", "query_source_changed")
+			}
+		}
+		end := position
+		if sourcesAllowed {
+			end += int(in.Limit)
+		}
 		if end > len(view.Matches) {
 			end = len(view.Matches)
 		}
@@ -422,7 +443,7 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 				out.Items = append(out.Items, match)
 			}
 		}
-		out.Exhausted = end == len(view.Matches)
+		out.Exhausted = !sourcesAllowed || end == len(view.Matches)
 		if !out.Exhausted {
 			out.NextCursor = cursorFor(id, view.Digest, end)
 		}

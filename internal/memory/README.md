@@ -44,6 +44,9 @@ CheckContentTx(ctx, tx, auth, ref, purpose, location, continuous) (ContentVersio
 
 统一 Dispatcher 提供原 QueryBinding 时，query/list 首次快照期限还取该绑定
 期限与 5 分钟上限的较早者。后续分页或更晚的查询绑定不能延长原快照。
+每页还在同一 Tx 核对冻结的 QueryRef、ScopeRef、TextRef 及其实际来源闭包。
+自然到期直接依据当前保留期限拒绝旧页，不等待到期 Job 或权限水位投影；
+缺少冻结输入来源的旧快照必须重新查询。输入门禁检查也计入原累计权限预算。
 
 事实、偏好、推断和经验分别保留 Type。默认 `RuleExtractor()` 只接受闭合的 `ExtractionDocument`，是有限的显式值导入器；没有配置模型提取器。默认 review_only；preapproved 需要显式 `SavingAuthorization` 验证原 SavingGrant，未配置返回 `unsupported`。保存同一候选的 Memory、候选状态、去重键、变化头、回执和 Job 一起提交。
 
