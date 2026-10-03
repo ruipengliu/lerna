@@ -91,7 +91,7 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 	}
 	processed = uniqueSources(processed)
 	for _, r := range processed {
-		if _, e = c.a.Memory.Read(ctx, scope, auth, r, "task.context"); e != nil {
+		if _, e = c.a.ReadContent(ctx, scope, auth, r, "task.context"); e != nil {
 			return task.PreparedDecision{}, e
 		}
 	}
@@ -172,7 +172,7 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 		reservedOutput = knowledge.Selection.EffectiveControls.MaxOutputTokens
 	}
 	snap := api.Snapshot{SnapshotID: snapshotID, Revision: 1, TaskRef: scope.Ref(t.TaskID, t.Revision), GoalRevision: t.GoalRevision, ControlRevision: t.ControlRevision, GoalRef: t.GoalRef, Requirements: t.Requirements, RequirementsDigest: t.RequirementsDigest, CoverageRef: t.CurrentCoverageRef, RequirementsState: t.RequirementsState, Purpose: purpose, FactRefs: facts.FactRefs, UnresolvedCollections: facts.UnresolvedCollections, PolicyRef: t.PolicyRef, InstallLockRef: installLock, ModelProfileRef: c.a.Profile.Ref, CapabilityRefs: caps, BindingRefs: bindings, MaterialRefs: processed, SelectionReportRef: selection, ProcessedSources: processed, ReservedOutputTokens: reservedOutput, SafetyMarginTokens: c.a.Profile.SafetyMargin, CountMode: "upper_bound", TokenizerRef: c.a.TokenizerRef}
-	goal, e := c.a.Memory.Read(ctx, scope, auth, t.GoalRef, "brain.input")
+	goal, e := c.a.ReadContent(ctx, scope, auth, t.GoalRef, "brain.input")
 	if e != nil {
 		return task.PreparedDecision{}, e
 	}
@@ -202,6 +202,12 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 			return task.PreparedDecision{}, e
 		}
 	}
+	if _, e = c.a.prepareForeignSources(ctx, scope, auth, processed, "task.snapshot", "cloud"); e != nil {
+		return task.PreparedDecision{}, e
+	}
+	if _, e = c.a.prepareForeignSources(ctx, scope, c.a.ServiceAuth, processed, "task.snapshot", "cloud"); e != nil {
+		return task.PreparedDecision{}, e
+	}
 	return prepared, nil
 }
 
@@ -212,7 +218,7 @@ func stableID(prefix, key string) string { return prefix + "_" + api.Hash([]byte
 
 // 完整GoalDocument保持来源；仅完整准确GoalSpec替换可走已登记规则，其余请求补充。
 func (a *App) goalBytes(ctx context.Context, s runtime.Scope, auth runtime.Auth, ref api.ContentRef) ([]byte, error) {
-	raw, e := a.Memory.Read(ctx, s, auth, ref, "brain.input")
+	raw, e := a.ReadContent(ctx, s, auth, ref, "brain.input")
 	if e != nil {
 		return nil, e
 	}
@@ -222,7 +228,7 @@ func (a *App) goalBytes(ctx context.Context, s runtime.Scope, auth runtime.Auth,
 		if len(doc.AmendmentRefs) > 0 {
 			last = doc.AmendmentRefs[len(doc.AmendmentRefs)-1]
 		}
-		return a.Memory.Read(ctx, s, auth, last, "brain.input")
+		return a.ReadContent(ctx, s, auth, last, "brain.input")
 	}
 	return raw, nil
 }
@@ -246,7 +252,7 @@ func (a *App) goalSourceEvidence(ctx context.Context, scope runtime.Scope, goalR
 	if !declared(goalRef) {
 		return nil, api.E("forbidden", "goal_source_not_declared")
 	}
-	raw, err := a.Memory.Read(ctx, scope, a.ServiceAuth, goalRef, "task.context")
+	raw, err := a.ReadContent(ctx, scope, a.ServiceAuth, goalRef, "task.context")
 	if err != nil {
 		return nil, err
 	}
@@ -306,7 +312,7 @@ func (f factSource) ResolveGoal(ctx context.Context, snap api.Snapshot, original
 	if len(doc.AmendmentRefs) > 0 {
 		ref = doc.AmendmentRefs[len(doc.AmendmentRefs)-1]
 	}
-	return f.a.Memory.Read(ctx, f.a.Scope, f.a.ServiceAuth, ref, "brain.input")
+	return f.a.ReadContent(ctx, f.a.Scope, f.a.ServiceAuth, ref, "brain.input")
 }
 
 func (f factSource) Operations(ctx context.Context, snap api.Snapshot) ([]brain.ActionFact, error) {
@@ -328,7 +334,7 @@ func (f factSource) Operations(ctx context.Context, snap api.Snapshot) ([]brain.
 		}
 		var bytes []byte
 		if operation.ResultRef != nil {
-			bytes, e = f.a.Memory.Read(ctx, f.a.Scope, f.a.ServiceAuth, *operation.ResultRef, "brain.input")
+			bytes, e = f.a.ReadContent(ctx, f.a.Scope, f.a.ServiceAuth, *operation.ResultRef, "brain.input")
 			if e != nil {
 				return nil, e
 			}

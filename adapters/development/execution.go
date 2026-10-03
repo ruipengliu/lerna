@@ -45,9 +45,12 @@ func (e executionBridge) PrepareDispatch(ctx context.Context, s runtime.Scope, i
 		if er != nil {
 			return er
 		}
-		proofs, er := e.prepareUseProofs(ctx, s, i.UseIntentRefs, i.IntentHash)
-		if er != nil {
-			return er
+		proofs := []api.ContentRef{}
+		if i.ExecutorID == s.OwnerID {
+			proofs, er = e.prepareUseProofs(ctx, s, i.UseIntentRefs, i.IntentHash)
+			if er != nil {
+				return er
+			}
 		}
 		fixed = encodedIntent{AdmissionHash: i.IntentHash, Domain: domain, Ref: ref, Hash: hash, UseProofRefs: proofs}
 		status, er := e.a.Store.Within(ctx, s, []string{"platform"}, func(tx runtime.Tx) error {
@@ -72,6 +75,12 @@ func (e executionBridge) PrepareDispatch(ctx context.Context, s runtime.Scope, i
 	}
 	if fixed.AdmissionHash != i.IntentHash {
 		return api.E("idempotency_conflict", "admission_changed")
+	}
+	if i.ExecutorID != s.OwnerID {
+		if err := e.a.freezeRemoteSubmitter(ctx, s, i); err != nil {
+			return err
+		}
+		return e.prepareRemoteDispatch(ctx, s, i, fixed)
 	}
 	return nil
 }
@@ -142,6 +151,9 @@ func (e executionBridge) Dispatch(ctx context.Context, s runtime.Scope, i task.O
 		}
 	}
 	// 不论新的调用携带什么窗口，都只投递首次耐久冻结的原命令。
+	if i.ExecutorID != s.OwnerID {
+		return e.dispatchRemote(ctx, s, i, fixed)
+	}
 	receipt, err := e.a.Dispatcher.Command(ctx, e.a.ServiceAuth, api.Raw(*fixed.Command))
 	if err != nil {
 		return err
@@ -152,6 +164,9 @@ func (e executionBridge) Dispatch(ctx context.Context, s runtime.Scope, i task.O
 	return nil
 }
 func (e executionBridge) Read(ctx context.Context, s runtime.Scope, ref api.ObjectRef) (api.Operation, error) {
+	if ref.OwnerID != s.OwnerID {
+		return e.readRemote(ctx, s, ref)
+	}
 	raw, er := e.a.query(ctx, "execution.get", ref.ObjectID, execution.OperationIDInput{OperationID: ref.ObjectID})
 	if er != nil {
 		return api.Operation{}, er
@@ -164,6 +179,9 @@ func (e executionBridge) Read(ctx context.Context, s runtime.Scope, ref api.Obje
 }
 func (e executionBridge) Control(ctx context.Context, s runtime.Scope, owner string, c api.ControlSnapshot) error {
 	command := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: owner, CommandID: stableID("command", "control/"+c.WindowID), TargetID: c.TaskID, Method: "execution.control", ExpiresAt: c.StartBefore, Payload: api.Raw(execution.ControlInput{TaskRef: s.Ref(c.TaskID, 1), Snapshot: c})}
+	if owner != s.OwnerID {
+		return e.controlRemote(ctx, s, owner, command, c)
+	}
 	r, er := e.a.Dispatcher.Command(ctx, e.a.ServiceAuth, api.Raw(command))
 	if er != nil {
 		return er
@@ -174,6 +192,9 @@ func (e executionBridge) Control(ctx context.Context, s runtime.Scope, owner str
 	return nil
 }
 func (e executionBridge) Usage(ctx context.Context, s runtime.Scope, ref api.ObjectRef) (api.UsageSnapshot, error) {
+	if ref.OwnerID != s.OwnerID {
+		return e.remoteBillingUsage(ctx, s, ref)
+	}
 	u, err := e.rawUsage(ctx, s, ref)
 	if err != nil {
 		return u, err
@@ -185,6 +206,9 @@ func (e executionBridge) Usage(ctx context.Context, s runtime.Scope, ref api.Obj
 	return u, e.a.settleUses(ctx, s, intent.UseIntentRefs, u)
 }
 func (e executionBridge) rawUsage(ctx context.Context, s runtime.Scope, ref api.ObjectRef) (api.UsageSnapshot, error) {
+	if ref.OwnerID != s.OwnerID {
+		return e.remoteUsage(ctx, s, ref)
+	}
 	raw, er := e.a.query(ctx, "execution.usage.get", ref.ObjectID, execution.OperationIDInput{OperationID: ref.ObjectID})
 	if er != nil {
 		return api.UsageSnapshot{}, er
@@ -266,7 +290,7 @@ func (e executionAuthority) VerifyStart(ctx context.Context, tx runtime.Tx, r ex
 type actionAuthorization struct{ a *App }
 
 func (a actionAuthorization) AuthorizeAction(ctx context.Context, tx runtime.Tx, auth runtime.Auth, i task.OperationIntent) error {
-	if len(i.UseIntentRefs) != 1 || i.ExecutorID != tx.Scope().OwnerID {
+	if len(i.UseIntentRefs) != 1 {
 		return api.E("forbidden", "operation_authority_missing")
 	}
 	admission, er := a.a.readActionAdmissionTx(ctx, tx, i)
@@ -278,6 +302,9 @@ func (a actionAuthorization) AuthorizeAction(ctx context.Context, tx runtime.Tx,
 	}
 	if er := a.a.Knowledge.CheckActionTx(ctx, tx, auth, i); er != nil {
 		return er
+	}
+	if i.ExecutorID != tx.Scope().OwnerID {
+		return a.a.authorizeRemoteActionTx(ctx, tx, auth, i, admission)
 	}
 	use, er := a.a.Governance.UseTx(ctx, tx, auth, governance.UseRequest{UseID: i.UseIntentRefs[0].ObjectID, SubjectRef: auth.Ref(tx.Scope().OwnerID), TargetRef: tx.Scope().Ref(i.OperationID, 1), TargetKind: "operation", IntentHash: i.IntentHash, GrantRefs: []api.ObjectRef{admission.Descriptor.GrantRef}, RequestedUnits: i.CostBound, Resources: admission.Resources, Actions: admission.Actions, Recipient: admission.Descriptor.Recipient, Location: admission.Descriptor.Location, Purposes: []string{i.AdmissionPurpose}, StartBefore: i.Deadline})
 	if er != nil {

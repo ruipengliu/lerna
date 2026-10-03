@@ -11,6 +11,10 @@ import (
 type brainBridge struct{ a *App }
 
 func (b brainBridge) Dispatch(ctx context.Context, s runtime.Scope, i api.DecisionDispatchIntent, snap api.Snapshot) error {
+	ctx, e := b.a.prepareForeignSources(ctx, s, b.a.ServiceAuth, append(append([]api.ContentRef{}, snap.ProcessedSources...), i.SnapshotRef), "brain.input", "cloud")
+	if e != nil {
+		return e
+	}
 	t, e := b.a.Task.Read(ctx, b.a.Store, s, b.a.ServiceAuth, i.TaskRef.ObjectID)
 	if e != nil {
 		return e
@@ -44,7 +48,7 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 	if view.Decision.Status != "completed" || view.Decision.ProposalRef == nil {
 		return task.Proposal{}, api.E("dependency_unavailable", "proposal_not_ready")
 	}
-	raw, e := b.a.Memory.Read(ctx, s, b.a.ServiceAuth, *view.Decision.ProposalRef, "brain.output")
+	raw, e := b.a.ReadContent(ctx, s, b.a.ServiceAuth, *view.Decision.ProposalRef, "brain.output")
 	if e != nil {
 		return task.Proposal{}, e
 	}
@@ -63,12 +67,12 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 	var original task.Proposal
 	_, e = b.a.Store.Read(ctx, s, "platform.prepared_proposals", i.DecisionID, 0, &original)
 	if e == nil {
-		return original, nil
+		return original, b.a.prepareProposalSources(ctx, s, original)
 	}
 	if !api.IsCode(e, "not_found") {
 		return original, e
 	}
-	snapshotBytes, e := b.a.Memory.Read(ctx, s, b.a.ServiceAuth, i.SnapshotRef, "brain.input")
+	snapshotBytes, e := b.a.ReadContent(ctx, s, b.a.ServiceAuth, i.SnapshotRef, "brain.input")
 	if e != nil {
 		return original, e
 	}
@@ -180,7 +184,10 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 	if status == runtime.CommitUnknown {
 		return original, runtime.ErrCommitUnknown
 	}
-	return original, e
+	if e != nil {
+		return original, e
+	}
+	return original, b.a.prepareProposalSources(ctx, s, original)
 }
 func (b brainBridge) Usage(ctx context.Context, s runtime.Scope, r api.ObjectRef) (api.UsageSnapshot, error) {
 	u, err := b.a.Brain.Usage(ctx, b.a.Store, s, r)

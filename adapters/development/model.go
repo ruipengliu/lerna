@@ -42,7 +42,7 @@ type ModelConfig struct {
 type modelMaterials struct{ a *App }
 
 func (m modelMaterials) ReadMaterial(ctx context.Context, ref api.ContentRef) ([]byte, error) {
-	return m.a.Memory.Read(ctx, m.a.Scope, m.a.ServiceAuth, ref, "brain.input")
+	return m.a.ReadContent(ctx, m.a.Scope, m.a.ServiceAuth, ref, "brain.input")
 }
 
 func (a *App) configureModel() error {
