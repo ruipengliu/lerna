@@ -226,9 +226,17 @@ func (s *Service) advance(ctx context.Context, store runtime.Store, scope runtim
 	}
 	p := s.profiles[key(d.Input.ModelProfileRef)]
 	switch d.Phase {
-	case "completed", "failed", "cancelled":
+	case "completed", "failed":
+		if d.Record.SendStarted && !d.Record.UsageFinal {
+			return s.reconcileClosed(ctx, store, scope, w, d, p)
+		}
 		return s.finish(ctx, store, scope, w, runtime.Done(), nil)
+	case "cancelled":
+		return s.reconcileClosed(ctx, store, scope, w, d, p)
 	case "accepted":
+		if e := s.currentGate(ctx, store, scope, w, d); e != nil {
+			return s.closeAfterGateError(ctx, store, scope, w, d, e)
+		}
 		raw, e := s.config.Content.Read(ctx, scope, d.Principal, d.Input.SnapshotRef, "brain.input")
 		if e != nil {
 			return s.wait(ctx, store, scope, w)
@@ -257,10 +265,10 @@ func (s *Service) advance(ctx context.Context, store runtime.Store, scope runtim
 		if e = validateEncoding(snap, p, encoding); e != nil {
 			return e
 		}
-		return s.finish(ctx, store, scope, w, runtime.Ready(time.Now()), func(tx runtime.Tx) error {
+		err := s.finish(ctx, store, scope, w, runtime.Ready(time.Now()), func(tx runtime.Tx) error {
 			// 当前 Task/预算门禁先于 Decision 行锁；只使用事务外已读的原冻结输入。
 			if e := s.config.Gate.CheckTx(ctx, tx, d.Principal, d.Input, &encoding); e != nil {
-				return e
+				return gateFailure(e)
 			}
 			return s.change(ctx, tx, id, func(next *decision) error {
 				if !sameFrozenDecision(*next, d) || next.Phase != "accepted" || next.CancelRequested {
@@ -272,30 +280,27 @@ func (s *Service) advance(ctx context.Context, store runtime.Store, scope runtim
 				return nil
 			})
 		})
+		return s.closeAfterGateError(ctx, store, scope, w, d, err)
 	case "encoded":
 		if d.Encoding == nil || d.Snapshot == nil {
 			return fmt.Errorf("brain sealed encoding missing")
 		}
 		if d.CancelRequested {
-			return s.finish(ctx, store, scope, w, runtime.Done(), func(tx runtime.Tx) error {
-				return s.change(ctx, tx, id, func(n *decision) error {
-					n.Phase = "cancelled"
-					n.Record.Status = "cancelled"
-					n.Record.UsageFinal = true
-					return nil
-				})
-			})
+			return s.finishCancelled(ctx, store, scope, w, d)
 		}
 		status, e := store.Within(ctx, scope, s.participants(), func(tx runtime.Tx) error {
 			if e := s.config.Gate.CheckTx(ctx, tx, d.Principal, d.Input, d.Encoding); e != nil {
-				return e
+				return gateFailure(e)
 			}
 			if e := tx.Guard(ctx, w.Claim); e != nil {
 				return e
 			}
 			return s.change(ctx, tx, id, func(n *decision) error {
-				if !sameFrozenDecision(*n, d) || n.Phase != "encoded" || n.CancelRequested {
+				if !sameFrozenDecision(*n, d) || n.Phase != "encoded" {
 					return api.E("revision_conflict", "decision_changed")
+				}
+				if n.CancelRequested {
+					return gateFailure(api.E("invalid_state", "decision_cancelled"))
 				}
 				now, e := tx.Now(ctx)
 				if e != nil {
@@ -303,7 +308,7 @@ func (s *Service) advance(ctx context.Context, store runtime.Store, scope runtim
 				}
 				deadline, e := api.ParseTime(n.Input.Deadline)
 				if e != nil || !now.Before(deadline) {
-					return api.E("expired", "decision_expired")
+					return gateFailure(api.E("expired", "decision_expired"))
 				}
 				if s.config.Engine.Physical() {
 					n.Record.SendStarted = true
@@ -317,7 +322,7 @@ func (s *Service) advance(ctx context.Context, store runtime.Store, scope runtim
 			return runtime.ErrCommitUnknown
 		}
 		if e != nil {
-			return e
+			return s.closeAfterGateError(ctx, store, scope, w, d, e)
 		}
 		callCtx, cancel := context.WithTimeout(ctx, p.RequestTimeout)
 		generated, e := s.config.Engine.Request(callCtx, d.CallID, *d.Encoding)
@@ -381,7 +386,11 @@ func validateEncoding(snap api.Snapshot, p Profile, e Encoding) error {
 }
 func (s *Service) saveGenerated(ctx context.Context, store runtime.Store, scope runtime.Scope, w runtime.Work, d decision, out Generated) error {
 	if e := validateGenerated(out); e != nil {
-		return s.finish(ctx, store, scope, w, runtime.Done(), func(tx runtime.Tx) error {
+		disposition := runtime.Done()
+		if s.config.Engine.Physical() && !out.UsageFinal {
+			disposition = runtime.Waiting(time.Now().Add(time.Second))
+		}
+		return s.finish(ctx, store, scope, w, disposition, func(tx runtime.Tx) error {
 			if _, e := tx.LoadCommand(ctx, d.CommandID); e != nil {
 				return e
 			}
@@ -391,6 +400,7 @@ func (s *Service) saveGenerated(ctx context.Context, store runtime.Store, scope 
 				}
 				n.Phase = "failed"
 				n.Record.Status = "failed"
+				n.Generated = &out
 				n.Record.Usage = out.Usage
 				n.Record.UsageFinal = out.UsageFinal
 				return runtime.Decide(ctx, tx, n.CommandID, nil, api.E("invalid_request", "model_output_invalid"))
@@ -418,9 +428,10 @@ func (s *Service) saveGenerated(ctx context.Context, store runtime.Store, scope 
 }
 func (s *Service) publish(ctx context.Context, store runtime.Store, scope runtime.Scope, w runtime.Work, d decision) error {
 	if d.CancelRequested {
-		return s.finish(ctx, store, scope, w, runtime.Done(), func(tx runtime.Tx) error {
-			return s.change(ctx, tx, d.Input.DecisionID, func(n *decision) error { n.Phase = "cancelled"; n.Record.Status = "cancelled"; return nil })
-		})
+		return s.finishCancelled(ctx, store, scope, w, d)
+	}
+	if e := s.currentGate(ctx, store, scope, w, d); e != nil {
+		return s.closeAfterGateError(ctx, store, scope, w, d, e)
 	}
 	for i, c := range d.Publications {
 		if c.Ref != nil {
@@ -463,16 +474,23 @@ func (s *Service) publish(ctx context.Context, store runtime.Store, scope runtim
 	if e != nil {
 		return s.wait(ctx, store, scope, w)
 	}
-	return s.finish(ctx, store, scope, w, runtime.Done(), func(tx runtime.Tx) error {
+	disposition := runtime.Done()
+	if d.Record.SendStarted && !d.Record.UsageFinal {
+		disposition = runtime.Waiting(time.Now().Add(time.Second))
+	}
+	err := s.finish(ctx, store, scope, w, disposition, func(tx runtime.Tx) error {
 		if _, e := tx.LoadCommand(ctx, d.CommandID); e != nil {
 			return e
 		}
 		if e := s.config.Gate.CheckTx(ctx, tx, d.Principal, d.Input, d.Encoding); e != nil {
-			return e
+			return gateFailure(e)
 		}
 		return s.change(ctx, tx, d.Input.DecisionID, func(n *decision) error {
-			if !sameFrozenDecision(*n, d) || n.Phase != "publishing" || n.CancelRequested {
-				return api.E("revision_conflict", "decision_cancelled")
+			if !sameFrozenDecision(*n, d) || n.Phase != "publishing" {
+				return api.E("revision_conflict", "decision_changed")
+			}
+			if n.CancelRequested {
+				return gateFailure(api.E("invalid_state", "decision_cancelled"))
 			}
 			n.Record.ProposalRef = &ref
 			n.Record.Status = "completed"
@@ -480,4 +498,5 @@ func (s *Service) publish(ctx context.Context, store runtime.Store, scope runtim
 			return runtime.Decide(ctx, tx, n.CommandID, Output{scope.Ref(n.Input.DecisionID, n.Record.Revision+1), "completed"}, nil)
 		})
 	})
+	return s.closeAfterGateError(ctx, store, scope, w, d, err)
 }

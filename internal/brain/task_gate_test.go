@@ -49,6 +49,10 @@ type taskProviderFixture struct {
 
 // 准入、账务和原命令使用实际数据库；替换的供应商边界是一次真实 HTTP 请求。
 func originalTaskProvider(t *testing.T, driver string, paused bool) *taskProviderFixture {
+	return originalTaskProviderEngine(t, driver, paused, func(engine brain.Engine) brain.Engine { return engine })
+}
+
+func originalTaskProviderEngine(t *testing.T, driver string, paused bool, wrap func(brain.Engine) brain.Engine) *taskProviderFixture {
 	t.Helper()
 	ctx := context.Background()
 	root := t.TempDir()
@@ -135,7 +139,7 @@ func originalTaskProvider(t *testing.T, driver string, paused bool) *taskProvide
 		t.Fatal(err)
 	}
 	f.gate = &originalTaskGate{service: f.task}
-	f.brain, err = brain.New(brain.Config{Profiles: []brain.Profile{provider.Profile()}, Content: f.content, Engine: provider, Gate: f.gate, Participants: []string{"task"}})
+	f.brain, err = brain.New(brain.Config{Profiles: []brain.Profile{provider.Profile()}, Content: f.content, Engine: wrap(provider), Gate: f.gate, Participants: []string{"task"}})
 	if err != nil {
 		t.Fatal(err)
 	}
