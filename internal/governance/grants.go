@@ -13,6 +13,12 @@ import (
 func (s *Service) registerGrants(r *runtime.Registry) error {
 	registrations := []func() error{
 		func() error {
+			return registerCommand[LeaseUseRequest, UseReceipt](s, r, "grant.lease.use", false, false, s.useLease)
+		},
+		func() error {
+			return registerCommand[LeaseReport, GrantLease](s, r, "grant.lease.report", false, true, s.reportLease)
+		},
+		func() error {
 			return registerCommand[GrantIssue, ConfirmedOutput](s, r, "grant.issue", false, true, s.issueGrant)
 		},
 		func() error {
@@ -660,6 +666,12 @@ func (s *Service) ApplySettlementTx(ctx context.Context, tx runtime.Tx, in Settl
 	if _, err := tx.Get(ctx, ns("uses"), in.UseID, &use); err != nil {
 		return UseSettlement{}, err
 	}
+	var leaseLink LeaseUseLink
+	if _, e := tx.Get(ctx, ns("lease_use_links"), in.UseID, &leaseLink); e == nil {
+		return s.applyLeaseUseSettlement(ctx, tx, use, in.Usage)
+	} else if !errMissing(e) {
+		return UseSettlement{}, e
+	}
 	var old UseSettlement
 	rev, err := tx.Get(ctx, ns("settlements"), in.UseID, &old)
 	if err != nil {
@@ -875,6 +887,27 @@ func (s *Service) allocateLease(ctx context.Context, tx runtime.Tx, auth runtime
 		return runtime.Outcome{}, api.E("forbidden", use.Reason)
 	}
 	out := GrantLease{LeaseID: in.LeaseID, Revision: 1, EndpointID: in.EndpointID, InstanceID: in.InstanceID, GrantRefs: request.GrantRefs, Scope: request, Limits: in.Limits, ExpiresAt: use.StartBefore, State: "open", Cumulative: []api.Amount{}, Reserved: in.Limits}
+	out.Mode = "continuous"
+	out.IssuedAt = use.IssuedAt
+	for _, gr := range request.GrantRefs {
+		var grant api.Grant
+		if _, err = tx.Get(ctx, ns("grants"), gr.ObjectID, &grant); err != nil {
+			return runtime.Outcome{}, err
+		}
+		if grant.Mode == "once" {
+			out.Mode = "once"
+		}
+	}
+	out.AllocationDigest, err = api.Digest(out)
+	if err != nil {
+		return runtime.Outcome{}, err
+	}
+	if s.Ports.Proof != nil {
+		out.Proof, err = s.Ports.Proof.SignLocal(ProofStatement{TenantID: tx.Scope().TenantID, IssuerID: tx.Scope().OwnerID, AudienceID: in.EndpointID, Purpose: "grant_lease", ObjectRef: tx.Scope().Ref(in.LeaseID, 1), Digest: out.AllocationDigest, IssuedAt: out.IssuedAt, StartBefore: out.ExpiresAt})
+		if err != nil {
+			return runtime.Outcome{}, err
+		}
+	}
 	if err = tx.Create(ctx, ns("leases"), in.LeaseID, in.EndpointID, out); err != nil {
 		return runtime.Outcome{}, err
 	}

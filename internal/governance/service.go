@@ -259,7 +259,7 @@ func (s *Service) Register(registry *runtime.Registry) error {
 			return err
 		}
 	}
-	for kind, handler := range map[string]runtime.JobHandler{"governance.confirmation": s.continueConfirmation, "governance.settle": s.continueSettlement, "governance.defect": s.continueDefect, "governance.prepare": s.continuePrepare, "governance.activate": s.continueActivate, "governance.stop": s.continueStop, "governance.dispose": s.continueDispose, "governance.approval_stop": s.continueApprovalStop, "governance.plan": s.continuePlan, "governance.evaluation": s.continueEvaluation, "governance.eval_cancel": s.continueEvaluationCancel, "governance.exposure": s.continueExposure} {
+	for kind, handler := range map[string]runtime.JobHandler{"governance.lease_report": s.continueLeaseReport, "governance.confirmation": s.continueConfirmation, "governance.settle": s.continueSettlement, "governance.defect": s.continueDefect, "governance.prepare": s.continuePrepare, "governance.activate": s.continueActivate, "governance.stop": s.continueStop, "governance.dispose": s.continueDispose, "governance.approval_stop": s.continueApprovalStop, "governance.plan": s.continuePlan, "governance.evaluation": s.continueEvaluation, "governance.eval_cancel": s.continueEvaluationCancel, "governance.exposure": s.continueExposure} {
 		if err := registry.RegisterJob(kind, handler); err != nil {
 			return err
 		}

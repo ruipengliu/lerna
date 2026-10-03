@@ -566,6 +566,14 @@ func (s *Service) readEvaluation(ctx context.Context, store runtime.Store, scope
 			return out, err
 		}
 		out.Qualification = &qualification
+		gate, err := s.exposeRead(ctx, store, scope, a, out.Plan, report.ReportID, "feedback", out.Run.ReportRef)
+		if err != nil {
+			return EvaluationRead{}, err
+		}
+		if gateInvalidatesReport(gate, report) {
+			out.Qualification.Eligible = false
+			out.Qualification.Reason = "exposure_invalidated"
+		}
 	}
 	return out, nil
 }
@@ -579,6 +587,13 @@ func (s *Service) readSamples(ctx context.Context, store runtime.Store, scope ru
 	}
 	var run EvaluationRun
 	if _, err := store.Read(ctx, scope, ns("runs"), in.RunID, 0, &run); err != nil {
+		return out, err
+	}
+	var plan EvaluationPlan
+	if _, err := store.Read(ctx, scope, ns("plans"), run.PlanID, 0, &plan); err != nil {
+		return out, err
+	}
+	if _, err := s.exposeRead(ctx, store, scope, a, plan, run.RunID+"/samples", "debug", run.ReportRef); err != nil {
 		return out, err
 	}
 	rows, err := store.List(ctx, scope, ns("sample_runs"), in.RunID, in.Cursor, int(in.Limit)+1)
