@@ -434,8 +434,11 @@ func (s *Service) RecordCheckTx(ctx context.Context, tx runtime.Tx, auth runtime
 		}
 	}
 	ref := tx.Scope().Ref(c.CheckID, 1)
-	if e = s.ports.Gate.Evidence(ctx, tx, t.Task, []api.ObjectRef{ref}, []api.ComponentRef{c.RuleRef, c.EvaluatorRef}); e != nil {
-		return api.ObjectRef{}, e
+	// 负观察是受信原报告，必须能够落库；完成资格只核当前可用的pass。
+	if c.Verdict == "pass" && c.Applicability == "usable" {
+		if e = s.ports.Gate.Evidence(ctx, tx, t.Task, []api.ObjectRef{ref}, []api.ComponentRef{c.RuleRef, c.EvaluatorRef}); e != nil {
+			return api.ObjectRef{}, e
+		}
 	}
 	if e = tx.Create(ctx, checks, c.CheckID, t.Task.TaskID, c); e != nil {
 		return api.ObjectRef{}, e

@@ -15,6 +15,7 @@ import (
 type preapprovedCheckSource struct {
 	rule     api.RuleDefinition
 	scopeRef api.ContentRef
+	verdict  string
 }
 
 func (p preapprovedCheckSource) ValidateRequirements(context.Context, runtime.Scope, api.Task, api.RequirementDelta) (task.ValidationReport, error) {
@@ -25,7 +26,63 @@ func (p preapprovedCheckSource) Coverage(context.Context, runtime.Scope, api.Tas
 }
 func (p preapprovedCheckSource) Check(_ context.Context, _ runtime.Scope, t api.Task, request task.CheckRequest) (api.ConditionResult, error) {
 	observed := api.Time(time.Now())
-	return api.ConditionResult{CheckID: request.CheckID, TaskID: t.TaskID, GoalRevision: t.GoalRevision, RequirementID: request.Input.RequirementRef.RequirementID, RequirementRevision: request.Input.RequirementRef.Revision, ArtifactRef: request.Input.ArtifactRef, RuleRef: p.rule.RuleRef, EvaluatorRef: p.rule.RuleRef, Verdict: "pass", Applicability: "usable", Basis: "verified", EvidenceRefs: request.Input.EvidenceRefs, ScopeRef: p.scopeRef, ObservedAt: observed, CheckedAt: observed}, nil
+	verdict := p.verdict
+	if verdict == "" {
+		verdict = "pass"
+	}
+	return api.ConditionResult{CheckID: request.CheckID, TaskID: t.TaskID, GoalRevision: t.GoalRevision, RequirementID: request.Input.RequirementRef.RequirementID, RequirementRevision: request.Input.RequirementRef.Revision, ArtifactRef: request.Input.ArtifactRef, RuleRef: p.rule.RuleRef, EvaluatorRef: p.rule.RuleRef, Verdict: verdict, Applicability: "usable", Basis: "verified", EvidenceRefs: request.Input.EvidenceRefs, ScopeRef: p.scopeRef, ObservedAt: observed, CheckedAt: observed}, nil
+}
+
+func TestFailedCheckFinishesOriginalJobAndRejectsPendingCompletion(t *testing.T) {
+	ctx := context.Background()
+	rule := fixtureRule()
+	gate := &evidenceBridge{rules: map[string]api.RuleDefinition{rule.RuleRef.ComponentID: rule}}
+	source := &preapprovedCheckSource{rule: rule, verdict: "fail"}
+	h := newHarness(t, task.Ports{}, rule)
+	h.policy.NoProgressLimit = 1
+	service, err := task.New(task.Config{Policies: []task.TaskPolicy{h.policy}, Rules: []api.RuleDefinition{rule}, Participants: []string{"task", "governance"}}, task.Ports{Gate: gate, Evidence: source})
+	if err != nil {
+		t.Fatal(err)
+	}
+	h.service = service
+	h.dispatch.Registry = runtime.NewRegistry()
+	if err = service.Register(h.dispatch.Registry); err != nil {
+		t.Fatal(err)
+	}
+	gate.service = governance.New(h.store, governance.Options{})
+	source.scopeRef = h.content("explicit preapproved negative observation scope")
+	current := readyTask(t, h, rule)
+	prepared := h.prepared(current, "0")
+	prepared.Snapshot.Purpose = "decide"
+	prepared.Snapshot.CoverageRef = current.CurrentCoverageRef
+	if _, err = service.PrepareDecision(ctx, h.store, h.scope, h.trusted(), prepared); err != nil {
+		t.Fatal(err)
+	}
+	artifact := h.content("original artifact with preapproved unmet condition")
+	out, err := service.ConsumeProposal(ctx, h.store, h.scope, h.trusted(), task.Proposal{DecisionID: prepared.DecisionID, Kind: "complete", ReasonRef: current.GoalRef, ArtifactRefs: []api.ContentRef{artifact}, CheckRequests: []task.AttachInput{{TaskID: current.TaskID, GoalRevision: current.GoalRevision, RequirementRef: api.RequirementRef{RequirementID: current.Requirements[0].RequirementID, Revision: 1}, ArtifactRef: artifact, EvidenceRefs: []api.ContentRef{h.content("preapproved exact negative report")}}}}, nil)
+	if err != nil || out.Outcome != "awaiting_checks" {
+		t.Fatalf("negative observation preparation: %+v %v", out, err)
+	}
+	drainKind(t, h, task.JobCheck)
+	drainKind(t, h, task.JobAdvance)
+	facts, err := service.ContextFacts(ctx, h.store, h.scope, h.auth, current.TaskID)
+	if err != nil || len(facts.Checks) != 1 || facts.Checks[0].Verdict != "fail" || !api.Equal(facts.Checks[0].ArtifactRef, artifact) {
+		t.Fatalf("accurate failed check was lost: %+v %v", facts, err)
+	}
+	current, err = service.Read(ctx, h.store, h.scope, h.auth, current.TaskID)
+	if err != nil || current.Status != "active" {
+		t.Fatalf("negative check invented a terminal result: %+v %v", current, err)
+	}
+	if _, err = service.PrepareDecision(ctx, h.store, h.scope, h.trusted(), h.prepared(current, "0")); !api.IsCode(err, "invalid_state") {
+		t.Fatalf("negative completion did not consume exactly one no-progress fact: %v", err)
+	}
+	if _, err = service.Result(ctx, h.store, h.scope, h.auth, current.TaskID, task.ResultInput{}); !api.IsCode(err, "invalid_state") {
+		t.Fatalf("failed check created a success Result: %v", err)
+	}
+	work, status, err := h.store.Claim(ctx, h.scope, api.NewID("worker"), []string{task.JobCheck, task.JobAdvance}, 2, time.Minute)
+	if err != nil || status != runtime.Committed || len(work) != 0 {
+		t.Fatalf("negative fact retained a timer-driven retry: %+v %v", work, err)
+	}
 }
 
 func TestCompletionProposalWaitsForRealCheckJobAndPreservesOriginalArtifact(t *testing.T) {
