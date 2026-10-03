@@ -451,6 +451,9 @@ func (s *Service) AdjustmentTx(ctx context.Context, tx runtime.Tx, auth runtime.
 	if e = tx.Bind(ctx, adjustments, semantic, in.AdjustmentID, digest); e != nil {
 		return AdjustmentOutput{}, e
 	}
+	if _, e = raise(ctx, tx, JobAdjustment, "adjustment/"+in.AdjustmentID, tx.Scope().Ref(in.AdjustmentID, 1)); e != nil {
+		return AdjustmentOutput{}, e
+	}
 	return AdjustmentOutput{AdjustmentRef: tx.Scope().Ref(in.AdjustmentID, 1), State: "pending"}, nil
 }
 func sourceKeyFromAny(ctx context.Context, tx runtime.Tx, ref api.ObjectRef) string {
@@ -465,102 +468,134 @@ func sourceKeyFromAny(ctx context.Context, tx runtime.Tx, ref api.ObjectRef) str
 // VerifyAdjustment 在可信提供方核验完成后调用；pending 永不改 gross_spent 或预算。
 func (s *Service) VerifyAdjustment(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, id string, approved bool) (BillingAdjustment, error) {
 	var out BillingAdjustment
-	err := s.transaction(ctx, store, scope, func(tx runtime.Tx) error {
-		if !auth.HasRole("service") && !auth.HasRole("billing") {
-			return api.E("forbidden", "billing_verifier_required")
-		}
-		var a BillingAdjustment
-		if _, e := tx.Get(ctx, adjustments, id, &a); e != nil {
-			return e
-		}
-		if a.State != "pending" {
-			out = a
-			return nil
-		}
-		key, e := tx.LookupKey(ctx, reservations, sourceKeyFromAny(ctx, tx, a.OriginalSourceRef))
-		if e != nil {
-			return e
-		}
-		var r Reservation
-		if _, e = tx.Get(ctx, reservations, key.ObjectID, &r); e != nil {
-			return e
-		}
-		t, e := getTask(ctx, tx, r.TaskID)
-		if e != nil {
-			return e
-		}
-		a.State = "rejected"
-		if approved {
-			charge := ""
-			for _, u := range r.Units {
-				if u.Unit == a.Unit {
-					charge = u.AppliedCumulative
-				}
-			}
-			if charge == "" {
-				return invalid("adjustment_unknown_unit")
-			}
-			rows, e := tx.List(ctx, adjustments, t.Task.TaskID, "", int(s.config.MaxRelations)+1)
-			if e != nil {
-				return e
-			}
-			if uint64(len(rows)) > s.config.MaxRelations {
-				return api.E("dependency_unavailable", "adjustment_index_capacity")
-			}
-			total := a.Amount
-			for _, row := range rows {
-				var prior BillingAdjustment
-				if e = row.Decode(&prior); e != nil {
-					return e
-				}
-				if prior.State == "applied" && prior.Unit == a.Unit && refKey(prior.OriginalSourceRef) == refKey(a.OriginalSourceRef) {
-					total, e = api.AddDecimal(total, prior.Amount)
-					if e != nil {
-						return e
-					}
-				}
-			}
-			cmp, e := api.CompareDecimal(total, charge)
-			if e != nil {
-				return e
-			}
-			if cmp > 0 {
-				return api.E("invalid_request", "adjustment_exceeds_charge")
-			}
-			credits := amountMap(t.Credits)
-			old := credits[a.Unit]
-			if old == "" {
-				old = "0"
-			}
-			credits[a.Unit], e = api.AddDecimal(old, a.Amount)
-			if e != nil {
-				return e
-			}
-			t.Credits = []api.Amount{}
-			for unit, value := range credits {
-				t.Credits = append(t.Credits, api.Amount{Unit: unit, Value: value})
-			}
-			sort.Slice(t.Credits, func(i, j int) bool { return t.Credits[i].Unit < t.Credits[j].Unit })
-			if e = s.saveTask(ctx, tx, &t); e != nil {
-				return e
-			}
-			a.State = "applied"
-		}
-		now, e := tx.Now(ctx)
-		if e != nil {
-			return e
-		}
-		a.VerifiedBy = auth.SubjectID
-		a.VerifiedAt = api.Time(now)
-		a.Revision++
-		if e = tx.Put(ctx, adjustments, id, a.Revision-1, a); e != nil {
-			return e
-		}
-		out = a
-		return nil
-	})
+	err := s.transaction(ctx, store, scope, func(tx runtime.Tx) error { return s.verifyAdjustmentTx(ctx, tx, auth, id, approved, &out) })
 	return out, err
 }
+func (s *Service) verifyAdjustmentTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, id string, approved bool, out *BillingAdjustment) error {
+
+	if !auth.HasRole("service") && !auth.HasRole("billing") {
+		return api.E("forbidden", "billing_verifier_required")
+	}
+	var a BillingAdjustment
+	if _, e := tx.Get(ctx, adjustments, id, &a); e != nil {
+		return e
+	}
+	if a.State != "pending" {
+		*out = a
+		return nil
+	}
+	key, e := tx.LookupKey(ctx, reservations, sourceKeyFromAny(ctx, tx, a.OriginalSourceRef))
+	if e != nil {
+		return e
+	}
+	var r Reservation
+	if _, e = tx.Get(ctx, reservations, key.ObjectID, &r); e != nil {
+		return e
+	}
+	t, e := getTask(ctx, tx, r.TaskID)
+	if e != nil {
+		return e
+	}
+	a.State = "rejected"
+	if approved {
+		charge := ""
+		for _, u := range r.Units {
+			if u.Unit == a.Unit {
+				charge = u.AppliedCumulative
+			}
+		}
+		if charge == "" {
+			return invalid("adjustment_unknown_unit")
+		}
+		rows, e := tx.List(ctx, adjustments, t.Task.TaskID, "", int(s.config.MaxRelations)+1)
+		if e != nil {
+			return e
+		}
+		if uint64(len(rows)) > s.config.MaxRelations {
+			return api.E("dependency_unavailable", "adjustment_index_capacity")
+		}
+		total := a.Amount
+		for _, row := range rows {
+			var prior BillingAdjustment
+			if e = row.Decode(&prior); e != nil {
+				return e
+			}
+			if prior.State == "applied" && prior.Unit == a.Unit && refKey(prior.OriginalSourceRef) == refKey(a.OriginalSourceRef) {
+				total, e = api.AddDecimal(total, prior.Amount)
+				if e != nil {
+					return e
+				}
+			}
+		}
+		cmp, e := api.CompareDecimal(total, charge)
+		if e != nil {
+			return e
+		}
+		if cmp > 0 {
+			return api.E("invalid_request", "adjustment_exceeds_charge")
+		}
+		credits := amountMap(t.Credits)
+		old := credits[a.Unit]
+		if old == "" {
+			old = "0"
+		}
+		credits[a.Unit], e = api.AddDecimal(old, a.Amount)
+		if e != nil {
+			return e
+		}
+		t.Credits = []api.Amount{}
+		for unit, value := range credits {
+			t.Credits = append(t.Credits, api.Amount{Unit: unit, Value: value})
+		}
+		sort.Slice(t.Credits, func(i, j int) bool { return t.Credits[i].Unit < t.Credits[j].Unit })
+		if e = s.saveTask(ctx, tx, &t); e != nil {
+			return e
+		}
+		a.State = "applied"
+	}
+	now, e := tx.Now(ctx)
+	if e != nil {
+		return e
+	}
+	a.VerifiedBy = auth.SubjectID
+	a.VerifiedAt = api.Time(now)
+	a.Revision++
+	if e = tx.Put(ctx, adjustments, id, a.Revision-1, a); e != nil {
+		return e
+	}
+	*out = a
+	return nil
+}
+
 func confirmedNotFound(err error) bool {
 	return errors.Is(err, runtime.ErrNotFound) || api.IsCode(err, "not_found")
+}
+
+const JobAdjustment = "task.adjustment"
+
+func (s *Service) adjustmentJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
+	var a BillingAdjustment
+	if _, e := store.Read(ctx, scope, adjustments, work.Job.SourceRef.ObjectID, 0, &a); e != nil {
+		return e
+	}
+	if a.State != "pending" {
+		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+	}
+	if s.ports.AdjustmentVerifier == nil {
+		return s.wait(ctx, store, scope, work)
+	}
+	if e := s.preIO(ctx, store, scope, work); e != nil {
+		return e
+	}
+	approved, e := s.ports.AdjustmentVerifier.VerifyAdjustment(ctx, scope, a)
+	if e != nil {
+		if deferred(e) {
+			return s.wait(ctx, store, scope, work)
+		}
+		return e
+	}
+	return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+		var out BillingAdjustment
+		return s.verifyAdjustmentTx(ctx, tx, serviceAuth(scope), a.AdjustmentID, approved, &out)
+	})
 }
