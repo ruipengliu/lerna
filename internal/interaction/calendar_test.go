@@ -2,6 +2,7 @@ package interaction_test
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -10,11 +11,15 @@ import (
 )
 
 func TestPinnedCalendarSkipsGapChoosesEarlierFoldAndAbsentMonthDay(t *testing.T) {
-	zone, e := os.ReadFile("/usr/share/zoneinfo/America/New_York")
+	root := os.Getenv("HARNESS_TEST_TZDB_ROOT")
+	if root == "" {
+		root = "/usr/share/zoneinfo"
+	}
+	zone, e := os.ReadFile(filepath.Join(root, "America/New_York"))
 	if e != nil {
 		t.Fatal(e)
 	}
-	utc, e := os.ReadFile("/usr/share/zoneinfo/Etc/UTC")
+	utc, e := os.ReadFile(filepath.Join(root, "Etc/UTC"))
 	if e != nil {
 		t.Fatal(e)
 	}

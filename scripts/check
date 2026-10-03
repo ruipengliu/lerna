@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+if [[ $# -ne 0 ]]; then
+  echo 'scripts/check takes no arguments' >&2
+  exit 2
+fi
+export GOTOOLCHAIN=local
+export HARNESS_TEST_TZDB_ROOT="${HARNESS_TEST_TZDB_ROOT:-$repo_root/conformance/testdata/tzdb/2026b}"
+python3 scripts/check_toolchain.py
+python3 scripts/generate_core.py --check
+node sdk/ts/scripts/generate-contracts.mjs --check
+python3 docs/architecture/validation/build_field_reference.py --check
+python3 scripts/check_generated.py
+python3 docs/check_documentation.py
+python3 docs/architecture/validation/check_architecture.py
+mapfile -d '' go_files < <(rg --files -0 -g '*.go' -g '!node_modules/**')
+unformatted="$(gofmt -l "${go_files[@]}")"
+if [[ -n "$unformatted" ]]; then
+  echo 'Go sources require gofmt:' >&2
+  echo "$unformatted" >&2
+  exit 1
+fi
+go vet ./...
+go test -p 2 -count=1 -timeout=5m ./...
+if [[ -n "${HARNESS_TEST_POSTGRES_DSN:-}" ]]; then
+  HARNESS_TEST_EXECUTION_BACKEND=postgres HARNESS_TEST_PROCESS_BACKEND=postgres go test -p 2 -count=1 -timeout=5m ./conformance/integration ./cmd/internal/runner
+else
+  echo 'PostgreSQL verification was not selected; provide HARNESS_TEST_POSTGRES_DSN to run it.'
+fi
+pnpm fmt:check
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+echo 'Reference checks passed; external provider, device, browser and production qualification remain separate.'
