@@ -38,3 +38,5 @@
 六项AC已满足，06frontier现在打开；切片02整体未退出，06实际配额/公平门禁、两轴审查/架构优化及准确最终远端CI仍由后续承担。本票只commit自己的branch，未push、未rootmerge、未PR、未cleanup worktree。
 
 Root合入f28b69d后按整个切片基线8e7438e复核diff，发现pg-v2/database.sql原始pg_dump末尾空行触发Git whitespace检查。本地working-tree diff空并不能替代该全range检查；已沿原pg-v1的精确.gitattributes保留策略为pg-v2增加-text/仅免blank-at-eof规则，未改dump任何字节或SHA256SUMS。全range diff随后通过，不改动其他代码的空白规则。
+
+Root准确7fa7594的远端CI37153111359已核实success：固定工具race1.567s、两库必需-count1集成14.404s/race34.816s、全部27项v1/v2来源校验通过，详见[CI证据](../ci-verification.md#持久等待与严格处理门禁检查点)。06仍实施，不以此关闭整片。

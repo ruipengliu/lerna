@@ -86,3 +86,5 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 07整合准确418415f的[CI37152615344](https://github.com/ruipengliu/lerna/actions/runs/37152615344)已success：固定18.6工具取消race2.378s、真实两库集成11.242s/race28.948s均-count=1，十项v1源hash不变。
 
 05已resolved并经merger合入f28b69d（tested8a1df46/tip887e839）：0004wait、有限policy/legacy首次接管、等待/退避/丢通知、严格Start/Finish及07/08真实处理整合通过两库whole26.132s/race57.172s；真实v2旧writer b1674b2的完整PG dump/SQLite file另行冻结，原v1/已发布001–003不变。根全range diff核验补齐v2原始dump的窄.gitattributes，dump字节不改。06已claimed，按scheduling/capacity-handoff实际入口门禁开始独立worktree实施；原八票只有06尚未完成，额外09已完成。整片退出仍待06、两轴审查、架构优化和准确最终CI。
+
+05整合准确7fa7594的[CI37153111359](https://github.com/ruipengliu/lerna/actions/runs/37153111359)已success：工具race1.567s、两库-count1集成14.404s/race34.816s及27项真实v1/v2来源manifest OK。06额外采用[无执行额度时的到期关闭](../lerna-02-durable-work/capacity-expiry-decisions.md)：可信维护短Tx无需新执行Claim即可按原policy/revision准确关闭到期责任；不算hash/attempt/公平执行机会，不抹新修订或异revision Claim。有限维护服务机会与配置可用前提明确；仅决定，等待真实实施验证。
