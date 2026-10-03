@@ -125,6 +125,29 @@ func (s *Service) ProvisionGrantTx(ctx context.Context, tx runtime.Tx, auth runt
 	return tx.Create(ctx, ns("grant_usage"), g.GrantID, g.SubjectRef.ObjectID, GrantUsage{GrantID: g.GrantID, Revision: 1, Spent: []api.Amount{}, Reserved: []api.Amount{}})
 }
 
+// GrantExistsTx 供受信初始化沿本库原 ID 核对；撤回或已消费仍然存在。
+// 不开放权限重置，宿主必须显式声明治理 participant 与准确 scope。
+func (s *Service) GrantExistsTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, id string) (bool, error) {
+	if err := requireRole(auth, "grant_authority"); err != nil {
+		return false, err
+	}
+	if auth.TenantID != tx.Scope().TenantID || !api.ValidID(id) {
+		return false, api.E("forbidden", "grant_management_scope_mismatch")
+	}
+	var grant api.Grant
+	_, err := tx.Get(ctx, ns("grants"), id, &grant)
+	if errMissing(err) {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	if grant.OwnerID != tx.Scope().OwnerID || grant.GrantID != id {
+		return false, api.E("forbidden", "grant_management_scope_mismatch")
+	}
+	return true, nil
+}
+
 func (s *Service) beginConfirmed(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, previews []api.ContentRef, expires string) (*api.Confirmation, runtime.Outcome, error) {
 	now, err := tx.Now(ctx)
 	if err != nil {
