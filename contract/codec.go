@@ -65,7 +65,18 @@ func Validate(name string, value any) error {
 		}
 		compiled, _ = schemas.LoadOrStore(name, schema)
 	}
-	return compiled.(*jsonschema.Schema).Validate(value)
+	if err := compiled.(*jsonschema.Schema).Validate(value); err != nil {
+		if responseSchema(name) {
+			return refusal("schema_invalid", err)
+		}
+		return err
+	}
+	if responseSchema(name) {
+		if err := semanticResponse(name, value); err != nil {
+			return refusal("schema_invalid", err)
+		}
+	}
+	return nil
 }
 
 // Decode validates JSON before producing the public generated value type.
@@ -73,14 +84,14 @@ func Decode[T Value](data []byte) (T, error) {
 	var result T
 	raw, err := ParseJSON(data)
 	if err != nil {
-		return result, err
+		return result, valueError[T](err)
 	}
 	name := reflect.TypeFor[T]().Name()
 	if err := Validate(name, raw); err != nil {
-		return result, err
+		return result, valueError[T](err)
 	}
 	if err := json.Unmarshal(data, &result); err != nil {
-		return result, err
+		return result, valueError[T](err)
 	}
 	return result, nil
 }
@@ -88,14 +99,14 @@ func Decode[T Value](data []byte) (T, error) {
 // Encode validates a public generated value before serializing it.
 func Encode[T Value](value T) ([]byte, error) {
 	if err := validateWireValue(reflect.ValueOf(value)); err != nil {
-		return nil, err
+		return nil, valueError[T](err)
 	}
 	encoded, err := json.Marshal(value)
 	if err != nil {
-		return nil, err
+		return nil, valueError[T](err)
 	}
 	if _, err := Decode[T](encoded); err != nil {
-		return nil, err
+		return nil, valueError[T](err)
 	}
 	return encoded, nil
 }
