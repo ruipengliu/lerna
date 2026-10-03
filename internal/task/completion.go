@@ -172,6 +172,11 @@ func (s *Service) CompleteTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 	if e = api.ValidateRecord("Result", result); e != nil {
 		return api.Result{}, e
 	}
+	if gate, ok := s.ports.Gate.(EvidenceRegistration); ok {
+		if e = gate.BindResult(ctx, tx, t.Task, result, checkRefs); e != nil {
+			return api.Result{}, e
+		}
+	}
 	if e = tx.Create(ctx, results, result.ResultID, t.Task.TaskID, result); e != nil {
 		return api.Result{}, e
 	}
