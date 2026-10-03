@@ -402,6 +402,39 @@
       },
       "required": ["tenant_id", "owner_id", "kind", "id"],
       "additionalProperties": false
+    },
+    "DelegatedSubject": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tenant_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "subject_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": ["tenant_id", "subject_id"]
+    },
+    "SubjectBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tenant_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "subject_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "delegation_chain": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DelegatedSubject"
+          },
+          "maxItems": 16
+        }
+      },
+      "required": ["tenant_id", "subject_id", "delegation_chain"]
     }
   }
 }

@@ -61,6 +61,10 @@ func run(name string, data []byte) ([]byte, error) {
 		return roundtrip[contract.CommandGetRequest](data)
 	case "CommandTarget":
 		return roundtrip[contract.CommandTarget](data)
+	case "DelegatedSubject":
+		return roundtrip[contract.DelegatedSubject](data)
+	case "SubjectBinding":
+		return roundtrip[contract.SubjectBinding](data)
 	default:
 		return nil, fmt.Errorf("unknown value schema %q", name)
 	}

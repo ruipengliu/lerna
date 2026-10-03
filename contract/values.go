@@ -26,6 +26,8 @@ type CommandRef = wire.CommandRef
 type CommandGetPayload = wire.CommandGetPayload
 type CommandGetRequest = wire.CommandGetRequest
 type CommandTarget = wire.CommandTarget
+type DelegatedSubject = wire.DelegatedSubject
+type SubjectBinding = wire.SubjectBinding
 type Value interface {
-	ID | Revision | Time | Kind | OwnerRef | ObjectRef | ContentRef | Amount | Gap | ReadScope | CollectionView | ErrorCode | PublicError | MethodName | ProfileName | ContractVersion | TraceContext | CommandPayload | CommandEnvelope | CommandRef | CommandGetPayload | CommandGetRequest | CommandTarget
+	ID | Revision | Time | Kind | OwnerRef | ObjectRef | ContentRef | Amount | Gap | ReadScope | CollectionView | ErrorCode | PublicError | MethodName | ProfileName | ContractVersion | TraceContext | CommandPayload | CommandEnvelope | CommandRef | CommandGetPayload | CommandGetRequest | CommandTarget | DelegatedSubject | SubjectBinding
 }
