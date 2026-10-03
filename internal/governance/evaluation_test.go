@@ -201,6 +201,7 @@ func TestFormalPlanWithoutIndependentRegistryCannotCreateFormalResponsibility(t 
 func TestFormalAttemptAndHoldoutRemainOccupiedAfterCancellation(t *testing.T) {
 	content := contentFiles{root: t.TempDir()}
 	f := environment(t, governance.Options{Content: content})
+	f.svc.Ports.Runner = &independentRunner{root: t.TempDir(), content: content, scope: f.scope, proof: ref(t, f, "runner_proof")}
 	policy := governance.ImprovementPolicy{ID: api.NewID("policy"), Revision: 1, PolicyRef: component("policy"), LineageID: api.NewID("lineage"), FormalAttemptLimit: 1}
 	_, r := command(t, f, "evaluation.improvement_policy.create", policy.ID, policy, nil)
 	if r.Stage != "applied" {
@@ -234,6 +235,7 @@ func TestFormalAttemptAndHoldoutRemainOccupiedAfterCancellation(t *testing.T) {
 func TestThousandSampleCancellationKeepsFullDenominatorAndNotRunOutcomes(t *testing.T) {
 	content := contentFiles{root: t.TempDir()}
 	f := environment(t, governance.Options{Content: content})
+	f.svc.Ports.Runner = &independentRunner{root: t.TempDir(), content: content, scope: f.scope, proof: ref(t, f, "runner_proof")}
 	plan := evaluationPlan(t, f, content, 1001, "conformance", time.Now().Add(time.Minute), nil)
 	freezePlan(t, f, plan)
 	runID := api.NewID("run")

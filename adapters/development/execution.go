@@ -1,0 +1,220 @@
+package development
+
+import (
+	"context"
+	filedriver "github.com/ruipengliu/lerna/adapters/execution"
+	"github.com/ruipengliu/lerna/api"
+	"github.com/ruipengliu/lerna/internal/execution"
+	"github.com/ruipengliu/lerna/internal/governance"
+	"github.com/ruipengliu/lerna/internal/task"
+	"github.com/ruipengliu/lerna/runtime"
+)
+
+type encodedIntent struct {
+	AdmissionHash string                    `json:"admission_hash"`
+	Domain        execution.ExecutionIntent `json:"domain"`
+	Ref           api.ContentRef            `json:"ref"`
+	Hash          string                    `json:"hash"`
+	Command       api.Command               `json:"command"`
+}
+type executionBridge struct{ a *App }
+
+func (e executionBridge) Dispatch(ctx context.Context, s runtime.Scope, i task.OperationIntent, window api.ControlSnapshot) error {
+	var fixed encodedIntent
+	_, er := e.a.Store.Read(ctx, s, "platform.execution_intents", i.OperationID, 0, &fixed)
+	if er != nil && !api.IsCode(er, "not_found") {
+		return er
+	}
+	if api.IsCode(er, "not_found") {
+		resourcesBytes, er := e.a.Memory.Read(ctx, s, e.a.ServiceAuth, i.ResourcesRef, "execution.arguments")
+		if er != nil {
+			return er
+		}
+		var resources []api.ObjectRef
+		if er = api.Decode(resourcesBytes, &resources); er != nil {
+			return er
+		}
+		domain := execution.ExecutionIntent{OperationID: i.OperationID, TaskRef: i.TaskRef, GoalRevision: i.GoalRevision, ControlRevision: i.ControlRevision, AdmissionSourceKind: i.AdmissionSourceKind, AdmissionSourceRef: i.AdmissionSourceRef, SourcePosition: i.SourcePosition, AdmissionPurpose: i.AdmissionPurpose, CapabilityRef: i.CapabilityRef, BindingRef: i.BindingRef, InstallLockRef: i.InstallLockRef, ArgumentsRef: i.ArgumentsRef, ResourceRefs: resources, RequirementRefs: i.RequirementRefs, CostBound: i.CostBound, ExecutorID: i.ExecutorID, Deadline: i.Deadline, TaskDeadline: i.Deadline, LogicalStepKey: i.LogicalStepKey, ProcessedSourceRefs: i.ProcessedSourceRefs, DisclosedSourceRefs: i.DisclosedSourceRefs}
+		body := api.Raw(domain)
+		hash, er := api.Digest(domain)
+		if er != nil {
+			return er
+		}
+		ref, er := e.a.Publish(ctx, s, e.a.ServiceAuth, stableID("content", "executor-intent/"+i.OperationID), "application/vnd.harness.execution-intent+json", body, append(append([]api.ContentRef{}, i.ProcessedSourceRefs...), i.ArgumentsRef, i.ResourcesRef), []api.ContentRef{})
+		if er != nil {
+			return er
+		}
+		input := execution.InvokeInput{OperationID: i.OperationID, TaskRef: i.TaskRef, GoalRevision: i.GoalRevision, ControlRevision: i.ControlRevision, CapabilityRef: i.CapabilityRef, BindingRef: i.BindingRef, IntentRef: ref, IntentHash: hash, UseRefs: i.UseIntentRefs, Deadline: i.Deadline, ControlSnapshot: window, ReservationRef: i.ReservationRef}
+		command := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: i.ExecutorID, CommandID: i.CommandID, TargetID: i.OperationID, Method: "execution.invoke", ExpiresAt: i.Deadline, Payload: api.Raw(input)}
+		fixed = encodedIntent{AdmissionHash: i.IntentHash, Domain: domain, Ref: ref, Hash: hash, Command: command}
+		status, er := e.a.Store.Within(ctx, s, []string{"platform"}, func(tx runtime.Tx) error {
+			var old encodedIntent
+			if _, er := tx.Get(ctx, "platform.execution_intents", i.OperationID, &old); er == nil {
+				if old.AdmissionHash != i.IntentHash {
+					return api.E("idempotency_conflict", "admission_changed")
+				}
+				fixed = old
+				return nil
+			} else if !api.IsCode(er, "not_found") {
+				return er
+			}
+			return tx.Create(ctx, "platform.execution_intents", i.OperationID, i.TaskRef.ObjectID, fixed)
+		})
+		if status == runtime.CommitUnknown {
+			return runtime.ErrCommitUnknown
+		}
+		if er != nil {
+			return er
+		}
+	}
+	if fixed.AdmissionHash != i.IntentHash {
+		return api.E("idempotency_conflict", "admission_changed")
+	}
+	receipt, er := e.a.Dispatcher.Command(ctx, e.a.ServiceAuth, api.Raw(fixed.Command))
+	if er != nil {
+		return er
+	}
+	if receipt.Error != nil {
+		return receipt.Error
+	}
+	return nil
+}
+func (e executionBridge) Read(ctx context.Context, s runtime.Scope, ref api.ObjectRef) (api.Operation, error) {
+	raw, er := e.a.query(ctx, "execution.get", ref.ObjectID, execution.OperationIDInput{OperationID: ref.ObjectID})
+	if er != nil {
+		return api.Operation{}, er
+	}
+	var v execution.OperationView
+	if er = api.Decode(raw, &v); er != nil {
+		return api.Operation{}, er
+	}
+	return v.Operation, nil
+}
+func (e executionBridge) Control(ctx context.Context, s runtime.Scope, owner string, c api.ControlSnapshot) error {
+	command := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: owner, CommandID: stableID("command", "control/"+c.WindowID), TargetID: c.TaskID, Method: "execution.control", ExpiresAt: c.StartBefore, Payload: api.Raw(execution.ControlInput{TaskRef: s.Ref(c.TaskID, 1), Snapshot: c})}
+	r, er := e.a.Dispatcher.Command(ctx, e.a.ServiceAuth, api.Raw(command))
+	if er != nil {
+		return er
+	}
+	if r.Error != nil {
+		return r.Error
+	}
+	return nil
+}
+func (e executionBridge) Usage(ctx context.Context, s runtime.Scope, ref api.ObjectRef) (api.UsageSnapshot, error) {
+	u, err := e.rawUsage(ctx, s, ref)
+	if err != nil {
+		return u, err
+	}
+	intent, err := e.a.Task.ReadOperationIntent(ctx, e.a.Store, s, e.a.ServiceAuth, ref.ObjectID)
+	if err != nil {
+		return u, err
+	}
+	return u, e.a.settleUses(ctx, s, intent.UseIntentRefs, u)
+}
+func (e executionBridge) rawUsage(ctx context.Context, s runtime.Scope, ref api.ObjectRef) (api.UsageSnapshot, error) {
+	raw, er := e.a.query(ctx, "execution.usage.get", ref.ObjectID, execution.OperationIDInput{OperationID: ref.ObjectID})
+	if er != nil {
+		return api.UsageSnapshot{}, er
+	}
+	var u api.UsageSnapshot
+	er = api.Decode(raw, &u)
+	return u, er
+}
+func (a *App) query(ctx context.Context, method, target string, payload any) ([]byte, error) {
+	return a.Dispatcher.Query(ctx, a.ServiceAuth, api.Raw(api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.Scope.OwnerID, QueryID: api.NewID("query"), TargetID: target, Method: method, Payload: api.Raw(payload)}))
+}
+
+type executionAuthority struct{ a *App }
+
+func (e executionAuthority) VerifyControl(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.ControlSnapshot) error {
+	return e.a.verifyControlTx(ctx, tx, auth, c)
+}
+func (e executionAuthority) PrepareStart(ctx context.Context, s runtime.Scope, r execution.StartRequest) (execution.PreparedStart, error) {
+	var fixed encodedIntent
+	if _, er := e.a.Store.Read(ctx, s, "platform.execution_intents", r.Invoke.OperationID, 0, &fixed); er != nil {
+		return execution.PreparedStart{}, er
+	}
+	if fixed.Hash != r.Invoke.IntentHash || !api.Equal(fixed.Domain, r.Intent) {
+		return execution.PreparedStart{}, api.E("forbidden", "intent_encoding_changed")
+	}
+	var proofRef api.ContentRef
+	for _, u := range r.Invoke.UseRefs {
+		raw, er := e.a.query(ctx, "grant.use.get", u.ObjectID, governance.IDInput{ID: u.ObjectID})
+		if er != nil {
+			return execution.PreparedStart{}, er
+		}
+		var receipt governance.UseReceipt
+		if er = api.Decode(raw, &receipt); er != nil {
+			return execution.PreparedStart{}, er
+		}
+		if receipt.Decision != "allowed" || receipt.IntentHash != fixed.AdmissionHash {
+			return execution.PreparedStart{}, api.E("forbidden", "use_binding_mismatch")
+		}
+		proofRef, er = e.a.Publish(ctx, s, e.a.ServiceAuth, stableID("content", "use-proof/"+u.ObjectID), "application/jose", []byte(receipt.Proof), []api.ContentRef{}, []api.ContentRef{})
+		if er != nil {
+			return execution.PreparedStart{}, er
+		}
+	}
+	return execution.PreparedStart{OperationID: r.Invoke.OperationID, IntentHash: r.Invoke.IntentHash, Recipient: s.OwnerID, UseRefs: r.Invoke.UseRefs, ApprovalRefs: []api.ObjectRef{}, AuthorityRevision: 1, StartBefore: r.ControlWindow.StartBefore, ProofRef: proofRef}, nil
+}
+func (e executionAuthority) VerifyStart(ctx context.Context, tx runtime.Tx, r execution.StartRequest, p execution.PreparedStart) (execution.StartPermit, error) {
+	if er := currentCredentialTx(ctx, tx, r.Auth); er != nil {
+		return execution.StartPermit{}, er
+	}
+	original, er := e.a.Task.OperationIntentTx(ctx, tx, r.Invoke.OperationID)
+	if er != nil {
+		return execution.StartPermit{}, er
+	}
+	var fixed encodedIntent
+	if _, er = tx.Get(ctx, "platform.execution_intents", r.Invoke.OperationID, &fixed); er != nil {
+		return execution.StartPermit{}, er
+	}
+	if fixed.AdmissionHash != original.IntentHash || fixed.Hash != r.Invoke.IntentHash || !api.Equal(fixed.Domain, r.Intent) || !api.Equal(original.UseIntentRefs, r.Invoke.UseRefs) || !api.Equal(original.CapabilityRef, r.Invoke.CapabilityRef) || !api.Equal(original.BindingRef, r.Invoke.BindingRef) || !api.Equal(original.InstallLockRef, e.a.InstallLock) {
+		return execution.StartPermit{}, api.E("forbidden", "original_admission_mismatch")
+	}
+	if er = e.VerifyControl(ctx, tx, r.Auth, r.ControlWindow); er != nil {
+		return execution.StartPermit{}, er
+	}
+	now, er := tx.Now(ctx)
+	if er != nil {
+		return execution.StartPermit{}, er
+	}
+	if len(r.Invoke.UseRefs) != 1 {
+		return execution.StartPermit{}, api.E("forbidden", "authorization_missing")
+	}
+	for _, ref := range r.Invoke.UseRefs {
+		if er = e.a.Governance.CheckUseTx(ctx, tx, r.Auth, ref, tx.Scope().Ref(r.Invoke.OperationID, 1), original.IntentHash, now); er != nil {
+			return execution.StartPermit{}, er
+		}
+	}
+	return execution.StartPermit{StartBefore: p.StartBefore, ProofRefs: []api.ContentRef{p.ProofRef}}, nil
+}
+
+type actionAuthorization struct{ a *App }
+
+func (a actionAuthorization) AuthorizeAction(ctx context.Context, tx runtime.Tx, auth runtime.Auth, i task.OperationIntent) error {
+	if len(i.UseIntentRefs) != 1 || i.ExecutorID != tx.Scope().OwnerID {
+		return api.E("forbidden", "operation_authority_missing")
+	}
+	action := "file.read"
+	if api.Equal(i.CapabilityRef, filedriver.FileWriteCapability().Ref) {
+		action = "file.write"
+	} else if !api.Equal(i.CapabilityRef, filedriver.FileReadCapability().Ref) {
+		return api.E("unsupported", "capability_not_configured")
+	}
+	if action == "file.read" && !api.Equal(i.BindingRef, a.a.ReadBinding) || action == "file.write" && !api.Equal(i.BindingRef, a.a.WriteBinding) || !api.Equal(i.InstallLockRef, a.a.InstallLock) {
+		return api.E("forbidden", "binding_not_registered")
+	}
+	if er := currentCredentialTx(ctx, tx, auth); er != nil {
+		return er
+	}
+	use, er := a.a.Governance.UseTx(ctx, tx, auth, governance.UseRequest{UseID: i.UseIntentRefs[0].ObjectID, SubjectRef: auth.Ref(tx.Scope().OwnerID), TargetRef: tx.Scope().Ref(i.OperationID, 1), TargetKind: "operation", IntentHash: i.IntentHash, GrantRefs: []api.ObjectRef{tx.Scope().Ref(a.a.GrantID, 1)}, RequestedUnits: i.CostBound, Resources: []string{"managed-files"}, Actions: []string{action}, Recipient: i.ExecutorID, Location: "cloud", Purposes: []string{i.AdmissionPurpose}, StartBefore: i.Deadline})
+	if er != nil {
+		return er
+	}
+	if use.Decision != "allowed" {
+		return api.E("forbidden", "operation_grant_denied")
+	}
+	return nil
+}

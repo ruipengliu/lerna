@@ -35,7 +35,7 @@ func DialGRPC(ctx context.Context, address, token string, expected Discovery, tl
 	if expected.Protocol != api.Protocol || expected.Profile != api.Profile || expected.SchemaDigest != api.CoreDigest() || !api.ValidID(expected.LogicalServiceID) || expected.IdentityScope == "" {
 		return nil, api.E("unsupported", "discovery_mismatch")
 	}
-	digest, e := api.Digest(expected.Methods)
+	digest, e := api.DigestLimit(expected.Methods, grpcwire.MaxFrameBytes)
 	if e != nil || digest != expected.MethodsDigest {
 		return nil, api.E("unsupported", "method_schema_mismatch")
 	}

@@ -22,12 +22,14 @@ type BuiltinHostConfig struct {
 	Clock         func() time.Time
 	Installations []domain.Installation
 	ReadinessTTL  time.Duration
+	InstanceLimit uint64
 }
 
 type BuiltinHost struct {
 	w         *workspace
-	allow     map[string]domain.Installation
+	registry  *BuiltinRegistry
 	ttl       time.Duration
+	limit     uint64
 	mu        sync.Mutex
 	closeMu   sync.Mutex
 	closing   bool
@@ -54,42 +56,26 @@ type instanceJournal struct {
 }
 
 func NewBuiltinHost(c BuiltinHostConfig) (*BuiltinHost, error) {
-	if len(c.Installations) == 0 || len(c.Installations) > 128 || c.ReadinessTTL <= 0 || c.ReadinessTTL > 10*time.Minute {
+	if c.InstanceLimit == 0 {
+		c.InstanceLimit = 128
+	}
+	if c.ReadinessTTL <= 0 || c.ReadinessTTL > 10*time.Minute || c.InstanceLimit > 128 {
 		return nil, api.E("invalid_request", "finite_builtin_allowlist_and_readiness_required")
 	}
-	allow := map[string]domain.Installation{}
-	for _, original := range c.Installations {
-		var in domain.Installation
-		if e := api.Decode(api.Raw(original), &in); e != nil {
-			return nil, e
-		}
-		if !in.TrustedBuiltin || in.ABI != "go-static-v1" || in.Profile != api.Profile || len(in.Artifacts) == 0 || len(in.Artifacts) > 32 {
-			return nil, api.E("unsupported", "only_registered_static_builtin_supported")
-		}
-		for _, r := range []api.ComponentRef{in.InstallLockRef, in.ConfigRef, in.PlatformRef} {
-			if e := api.ValidateRecord("ComponentRef", r); e != nil {
-				return nil, e
-			}
-		}
-		key := directory(in.InstallLockRef)
-		if _, exists := allow[key]; exists {
-			return nil, api.E("invalid_request", "duplicate_builtin_install_lock")
-		}
-		allow[key] = in
+	registry, e := NewBuiltinRegistry(c.Installations)
+	if e != nil {
+		return nil, e
 	}
 	w, e := openWorkspace(c.Root, c.Scope, c.Content, c.Clock)
 	if e != nil {
 		return nil, e
 	}
-	return &BuiltinHost{w: w, allow: allow, ttl: c.ReadinessTTL, instances: map[string]*liveInstance{}}, nil
+	return &BuiltinHost{w: w, registry: registry, ttl: c.ReadinessTTL, limit: c.InstanceLimit, instances: map[string]*liveInstance{}}, nil
 }
 func (h *BuiltinHost) allowed(in domain.Installation) error {
-	original, ok := h.allow[directory(in.InstallLockRef)]
-	if !ok || !api.Equal(original, in) {
-		return api.E("unsupported", "installation_not_in_trusted_builtin_allowlist")
-	}
-	return nil
+	return h.registry.CheckInstallation(in)
 }
+func (h *BuiltinHost) CheckInstallation(in domain.Installation) error { return h.allowed(in) }
 func installPath(in domain.Installation) string {
 	return "installations/" + directory(in.InstallLockRef)
 }
@@ -251,6 +237,36 @@ func (h *BuiltinHost) Initialize(ctx context.Context, r domain.InstanceRequest) 
 			return api.E("invalid_state", "original_instance_cannot_be_restarted_requires_reopen")
 		}
 		if !errors.Is(e, os.ErrNotExist) {
+			return e
+		}
+		h.mu.Lock()
+		activeCount := uint64(0)
+		for _, live := range h.instances {
+			select {
+			case <-live.done:
+			default:
+				activeCount++
+			}
+		}
+		full := activeCount >= h.limit
+		h.mu.Unlock()
+		if full {
+			return api.E("capacity_exhausted", "builtin_instance_limit")
+		}
+		entries, e := h.w.root.Open("instances")
+		if e == nil {
+			rows, readErr := entries.ReadDir(maxRecords + 1)
+			closeErr := entries.Close()
+			if readErr != nil && !errors.Is(readErr, io.EOF) {
+				return readErr
+			}
+			if closeErr != nil {
+				return closeErr
+			}
+			if len(rows) >= maxRecords {
+				return api.E("capacity_exhausted", "builtin_instance_journal_limit")
+			}
+		} else if !errors.Is(e, os.ErrNotExist) {
 			return e
 		}
 		start, e := processStart(os.Getpid())
