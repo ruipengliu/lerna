@@ -452,6 +452,13 @@ try {
       assert(clarifiedTask.goal_revision >= inputView.request.goal_revision + 1);
       assert.equal(clarifiedTask.status, "succeeded");
       await page.locator(".inspector").getByRole("button", { name: "预览当前准确正文" }).click();
+      await until(
+        async () =>
+          (await page.locator(".exact-body").allTextContents()).includes(
+            `# 澄清报告 ${runID}\n\n保留初始目标与准确补充，随后实际写入及独立读回。\n`,
+          ),
+        "clarified report publishes the exact consumed answer artifact",
+      );
       const document = await until(async () => {
         for (const body of await page.locator(".exact-body").allTextContents()) {
           try {
