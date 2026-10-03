@@ -37,13 +37,18 @@ type Option func(*Store)
 
 func WithCommitFault(f CommitFault) Option { return func(s *Store) { s.fault = f } }
 
+// WithMaxConnections 为此 Store 实例设置独立有界连接池。
+// 控制及收尾由宿主分别 Open 独立池，所有实例仍读取同一个数据库身份。
+func WithMaxConnections(limit int) Option { return func(s *Store) { s.maxConnections = limit } }
+
 type Store struct {
-	db     *sql.DB
-	writer chan struct{}
-	mu     sync.RWMutex
-	id     string
-	fault  CommitFault
-	closed atomic.Bool
+	db             *sql.DB
+	writer         chan struct{}
+	mu             sync.RWMutex
+	id             string
+	fault          CommitFault
+	closed         atomic.Bool
+	maxConnections int
 }
 
 var _ runtime.Store = (*Store)(nil)
@@ -60,13 +65,18 @@ func Open(ctx context.Context, dsn string, options ...Option) (*Store, error) {
 	if err != nil {
 		return nil, err
 	}
-	db.SetMaxOpenConns(32)
-	db.SetMaxIdleConns(8)
-	db.SetConnMaxLifetime(30 * time.Minute)
-	s := &Store{db: db, writer: make(chan struct{}, 32)}
+	s := &Store{db: db, maxConnections: 32}
 	for _, option := range options {
 		option(s)
 	}
+	if s.maxConnections < 1 || s.maxConnections > 128 {
+		db.Close()
+		return nil, api.E("invalid_request", "invalid_postgres_connection_limit")
+	}
+	db.SetMaxOpenConns(s.maxConnections)
+	db.SetMaxIdleConns(min(8, s.maxConnections))
+	db.SetConnMaxLifetime(30 * time.Minute)
+	s.writer = make(chan struct{}, s.maxConnections)
 	if err = db.PingContext(ctx); err != nil {
 		db.Close()
 		return nil, err
@@ -383,18 +393,20 @@ func (tx *transaction) Bind(ctx context.Context, ns, key, id, digest string) err
 			return err
 		}
 	}
-	old, err := tx.LookupKey(ctx, ns, key)
-	if err == nil {
-		if old.ObjectID == id && old.Digest == digest {
-			return nil
-		}
-		return api.E("idempotency_conflict", "semantic_key_input_changed")
+	// 未存在的键也必须串行；ON CONFLICT 等待原写者后在新快照读原绑定。
+	_, err := tx.db.ExecContext(ctx, "INSERT INTO runtime_semantic_keys(tenant_id,owner_id,namespace,semantic_key,object_id,digest) VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT(tenant_id,owner_id,namespace,semantic_key) DO NOTHING", tx.scope.TenantID, tx.scope.OwnerID, ns, key, id, digest)
+	if err != nil {
+		return recordError(err)
 	}
-	if !errors.Is(err, runtime.ErrNotFound) {
-		return err
+	var old runtime.SemanticKey
+	err = tx.db.QueryRowContext(ctx, "SELECT object_id,digest FROM runtime_semantic_keys WHERE tenant_id=$1 AND owner_id=$2 AND namespace=$3 AND semantic_key=$4 FOR UPDATE", tx.scope.TenantID, tx.scope.OwnerID, ns, key).Scan(&old.ObjectID, &old.Digest)
+	if err != nil {
+		return recordError(err)
 	}
-	_, err = tx.db.ExecContext(ctx, "INSERT INTO runtime_semantic_keys(tenant_id,owner_id,namespace,semantic_key,object_id,digest) VALUES($1,$2,$3,$4,$5,$6)", tx.scope.TenantID, tx.scope.OwnerID, ns, key, id, digest)
-	return recordError(err)
+	if old.ObjectID == id && old.Digest == digest {
+		return nil
+	}
+	return api.E("idempotency_conflict", "semantic_key_input_changed")
 }
 
 func (tx *transaction) Savepoint(ctx context.Context, fn func(runtime.Tx) error) error {

@@ -18,20 +18,23 @@ import (
 )
 
 type storageFixture struct {
-	store runtime.Store
-	scope runtime.Scope
-	open  func(func(string) error) runtime.Store
+	store    runtime.Store
+	scope    runtime.Scope
+	open     func(func(string) error) runtime.Store
+	location string
 }
 
 func fixture(t *testing.T, backend string, fault func(string) error) storageFixture {
 	t.Helper()
 	ctx := context.Background()
 	var open func(func(string) error) runtime.Store
+	var location string
 	if backend == "postgres" {
 		dsn := os.Getenv("HARNESS_TEST_POSTGRES_DSN")
 		if dsn == "" {
 			t.Skip("HARNESS_TEST_POSTGRES_DSN must point to an actual PostgreSQL database")
 		}
+		location = dsn
 		open = func(f func(string) error) runtime.Store {
 			s, err := postgres.Open(ctx, dsn, postgres.WithCommitFault(func(p postgres.CommitPhase) error {
 				if f != nil {
@@ -55,6 +58,7 @@ func fixture(t *testing.T, backend string, fault func(string) error) storageFixt
 		}
 	} else {
 		path := filepath.Join(t.TempDir(), "original.sqlite")
+		location = path
 		open = func(f func(string) error) runtime.Store {
 			s, err := sqlite.Open(path, sqlite.WithCommitFault(func(p sqlite.CommitPhase) error {
 				if f != nil {
@@ -78,7 +82,7 @@ func fixture(t *testing.T, backend string, fault func(string) error) storageFixt
 		}
 	}
 	s := open(fault)
-	return storageFixture{store: s, scope: runtime.Scope{TenantID: api.NewID("tenant"), OwnerID: api.NewID("owner"), DatabaseID: s.ID()}, open: open}
+	return storageFixture{store: s, scope: runtime.Scope{TenantID: api.NewID("tenant"), OwnerID: api.NewID("owner"), DatabaseID: s.ID()}, open: open, location: location}
 }
 func commit(t *testing.T, f storageFixture, fn func(runtime.Tx) error) {
 	t.Helper()
