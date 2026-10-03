@@ -68,6 +68,8 @@ type CellPreparation struct {
 	ExpectedNamespaceRevision uint64           `json:"expected_namespace_revision"`
 	Namespace                 PassiveNamespace `json:"namespace"`
 	Sources                   []api.ContentRef `json:"sources"`
+	DynamicNamespace          bool             `json:"dynamic_namespace,omitempty"`
+	NamespaceByteLimit        uint64           `json:"namespace_byte_limit,omitempty"`
 }
 type PreparedRequest struct {
 	Encoded           json.RawMessage  `json:"encoded"`
@@ -100,6 +102,7 @@ type Fact struct {
 	Usage         []api.Amount
 	UsageFinal    bool
 	Disputed      bool
+	Namespace     *PassiveNamespace
 }
 type StopFact struct {
 	ActuallyStopped bool
@@ -115,6 +118,17 @@ type Driver interface {
 	Reconcile(context.Context, AttemptRequest) (Fact, error)
 	Stop(context.Context, AttemptRequest) (StopFact, error)
 }
+
+// EnvironmentAdmission 只接受宿主登记的准确运行时。Check 不做 IO；Prepare 在 Tx 外实际探针。
+// 输入中的隔离布尔或任意 ComponentRef 不能替代此受信端口。
+type EnvironmentAdmission interface {
+	Check(api.ComponentRef, api.ComponentRef, []api.Amount) (EnvironmentIsolation, error)
+	Prepare(context.Context, rt.Scope, rt.Auth, Environment) error
+}
+type EnvironmentIsolation struct {
+	RuntimeKind     string
+	IsolationDigest string
+}
 type Config struct {
 	OwnerID               string
 	Content               ContentPort
@@ -124,4 +138,5 @@ type Config struct {
 	Location              string
 	ResourceDriver        ResourceDriver
 	HostCalls             HostCallPort
+	EnvironmentAdmission  EnvironmentAdmission
 }
