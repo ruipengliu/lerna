@@ -2,7 +2,7 @@
 // the authenticated command.get service must authorize before calling this.
 import { decode } from './codec.ts';
 import { decodeCommand } from './commands.ts';
-import { encodeCommandResponse } from './receipts.ts';
+import { encodeCommandResponse, decodeCommandResponse } from './receipts.ts';
 import type { CommandGetResponse, CommandRef } from './generated/values.ts';
 export interface CommandFactReader {
   readCommand(
@@ -35,10 +35,10 @@ export async function readCommandFacts(
     return { status: 'rejected', reason: 'expired' };
   if (signal.aborted) return unavailable;
   try {
-    const result = await reader.readCommand(signal, ref);
+    const result = await reader.readCommand(signal, structuredClone(ref));
     if (signal.aborted) return unavailable;
-    encodeCommandResponse(result, ref);
-    return result;
+    const encoded = encodeCommandResponse(result, ref);
+    return decodeCommandResponse(encoded, ref);
   } catch {
     return unavailable;
   }

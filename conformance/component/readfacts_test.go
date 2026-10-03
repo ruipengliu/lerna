@@ -92,3 +92,31 @@ func TestReadOnlyFactsSeparateAbsenceAndUnavailability(t *testing.T) {
 		t.Fatal("deadline not enforced")
 	}
 }
+
+type staticFacts struct{ result contract.CommandGetResponse }
+
+func (s staticFacts) ReadCommand(context.Context, contract.CommandRef) (contract.CommandGetResponse, error) {
+	return s.result, nil
+}
+func TestReturnedReadCannotMutateRetainedFactRevision(t *testing.T) {
+	ref := contract.CommandRef{Owner: contract.OwnerRef{TenantID: "t", OwnerID: "o"}, CommandID: "c"}
+	revision := contract.Revision("5")
+	receipt := contract.NewCommandReceiptAccepted(contract.CommandReceiptAccepted{CommandRef: ref, ObjectRef: contract.ObjectRef{TenantID: "t", OwnerID: "tasks", Kind: "task", ID: "x", Revision: &revision}})
+	source := staticFacts{result: contract.NewCommandGetResponseFound(contract.CommandGetResponseFound{CommandRef: ref, Receipt: receipt, Progress: contract.NewCommandProgressNone(contract.CommandProgressNone{})})}
+	result, err := contract.ReadCommandFacts(context.Background(), []byte(readWire), source, func() time.Time { return time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC) })
+	if err != nil {
+		t.Fatal(err)
+	}
+	found, ok := result.AsFound()
+	if !ok {
+		t.Fatal("not found")
+	}
+	observed, ok := found.Receipt.AsAccepted()
+	if !ok {
+		t.Fatal("not accepted")
+	}
+	*observed.ObjectRef.Revision = "6"
+	if revision != "5" {
+		t.Fatal("caller mutation changed retained fixed receipt")
+	}
+}

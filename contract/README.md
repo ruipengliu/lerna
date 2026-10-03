@@ -47,7 +47,7 @@ Go 错误可使用 `errors.As(err, &contractError)` 后判断 `Code`；TS 使用
 
 Go `DecodeCommandResponse` / `EncodeCommandResponse` 与 TS `decodeCommandResponse` / `encodeCommandResponse` 同时验证本次查询指向的原 CommandRef。查询信封的 command_id 可以不同。found 外层、receipt 与原引用必须完全相同；对象比较 tenant_id / owner_id / kind / id 四元身份，原 receipt 修订 5 与当前 progress 修订 6 合法。各自内外修订存在时必须匹配，当前修订不得低于同一对象的原已知基线，比较精确十进制整数。原 command owner 可以与关联 object owner 不同。违反规则返回 schema_invalid，不修补事实。
 
-Go `ReadCommandFacts` 是供已授权装配调用的低层事实原语；TS 同类 primitive 留在 `readfacts.ts`，没有作为 SDK 业务入口导出。它注入只有读取方法的事实源、context / AbortSignal 与可控时钟，验证原身份和完整结果；后端故障或无可信一致观察返回原引用的 unavailable / dependency_unavailable，不泄漏后端字符串。not_found 仅表示当前原 owner 未找到；gone 保留最小原身份；两者都不授权新建同义工作。read accept_before 只约束这次读取开始，不用于判断原写入记录是否仍能查询。
+Go `ReadCommandFacts` 是供已授权装配调用的低层事实原语；TS 同类 primitive 留在 `readfacts.ts`，没有作为 SDK 业务入口导出。它注入只有读取方法的事实源、context / AbortSignal 与可控时钟，验证原身份和完整结果；后端故障或无可信一致观察返回原引用的 unavailable / dependency_unavailable，不泄漏后端字符串。返回观察与事实源保留的对象独立；事实源也不能借修改传入引用来改写原 owner。not_found 仅表示当前原 owner 未找到；gone 保留最小原身份；两者都不授权新建同义工作。read accept_before 只约束这次读取开始，不用于判断原写入记录是否仍能查询。
 
 受信租户、读取授权与准确 owner 的目录解析由 ticket05 在事实读取前提供。此处共同 forbidden 夹具只证明拒绝视图不携带原决定或对象内容，不宣称生产权限已实现。低层读取测试比较公开事实快照前后不变，没有以内部调用次数证明只读。共同 `responses.json` 驱动真正 Go→TS / TS→Go 编解码；这些是合同和注入事实源证据，不是持久命令账本、接纳事务或网络恢复证据。
 ## 原命令摘要

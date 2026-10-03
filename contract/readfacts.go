@@ -43,8 +43,11 @@ func ReadCommandFacts(ctx context.Context, data []byte, reader CommandFactReader
 	if ctx.Err() != nil {
 		return unavailable(), nil
 	}
-	if _, err = EncodeCommandResponse(result, request.Payload.CommandRef); err != nil {
+	encoded, err := EncodeCommandResponse(result, request.Payload.CommandRef)
+	if err != nil {
 		return unavailable(), nil
 	}
-	return result, nil
+	// Return an independent wire observation; callers cannot mutate pointers
+	// retained by an injected fact reader through the returned receipt.
+	return DecodeCommandResponse(encoded, request.Payload.CommandRef)
 }

@@ -62,7 +62,7 @@ test('fact seam keeps receipt fixed across current task outcomes and remains rea
     };
     const response = await readCommandFacts(signal, request, reader, clock);
     assert.equal(response.status, 'found');
-    if (response.status === 'found') assert.deepEqual(response.receipt, fixed);
+    if (response.status === 'found') same(response.receipt, fixed);
     assert.deepEqual(facts, snapshot);
   }
 });
@@ -72,7 +72,7 @@ test('fact seam separates absence, retention, faults and untrusted bindings', as
       status === 'unavailable'
         ? { status, command_ref: ref, reason: 'dependency_unavailable' }
         : { status, command_ref: ref };
-    assert.deepEqual(
+    same(
       await readCommandFacts(
         signal,
         request,
@@ -148,4 +148,57 @@ test('fact seam separates absence, retention, faults and untrusted bindings', as
     ),
     unavailable,
   );
+});
+
+test('returned observation cannot mutate facts retained by an injected reader', async () => {
+  const receipt: CommandReceipt = {
+    state: 'accepted',
+    command_ref: ref,
+    object_ref: {
+      tenant_id: 't',
+      owner_id: 'tasks',
+      kind: 'task',
+      id: 'original',
+    },
+  };
+  const source: CommandGetResponse = {
+    status: 'found',
+    command_ref: ref,
+    receipt,
+    progress: { kind: 'none' },
+  };
+  const snapshot = structuredClone(source);
+  const result = await readCommandFacts(
+    signal,
+    request,
+    {
+      async readCommand() {
+        return source;
+      },
+    },
+    clock,
+  );
+  assert.equal(result.status, 'found');
+  if (result.status === 'found' && result.receipt.state === 'accepted')
+    result.receipt.object_ref.id = 'caller-local';
+  assert.deepEqual(source, snapshot);
+});
+
+test('reader cannot rewrite the original reference by mutating its input', async () => {
+  const response = await readCommandFacts(
+    signal,
+    request,
+    {
+      async readCommand(_signal, original) {
+        original.owner.owner_id = 'other';
+        return { status: 'gone', command_ref: original };
+      },
+    },
+    clock,
+  );
+  same(response, {
+    status: 'unavailable',
+    command_ref: ref,
+    reason: 'dependency_unavailable',
+  });
 });
