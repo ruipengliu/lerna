@@ -151,6 +151,9 @@ func ForeignSourceContracts() []api.MethodContract {
 	}
 	contracts[2].OutputSchema["properties"].(map[string]any)["proof"] = api.Schema{"type": "string", "maxLength": 32768}
 	contracts[3].OutputSchema["properties"].(map[string]any)["data_base64"] = api.Schema{"type": "string", "maxLength": (ForeignContentChunkBytes + 2) / 3 * 4}
+	for i := range contracts {
+		contracts[i].SchemaDigest, _ = api.Digest([]any{contracts[i].InputSchema, contracts[i].OutputSchema})
+	}
 	return contracts
 }
 
