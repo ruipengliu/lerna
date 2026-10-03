@@ -127,7 +127,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	a.ApplicationEventSchema = api.Object(map[string]any{"reason": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "reason")
 	a.GrantID = platform.StableDevelopmentID("grant", "development-file-goal")
 	a.Profile = brain.Profile{Ref: component("rule-bytes-profile"), ContextLimit: 262144, MaxInputTokens: 250000, MaxOutputTokens: 8192, SafetyMargin: 100, MaxInputBytes: 262144, RequestTimeout: 5 * time.Second}
-	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, Participants: []string{"content", "memory", "platform", "task"}})
+	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, ResultNotices: resultNoticeBridge{a}, Participants: []string{"content", "memory", "platform", "task"}})
 	if e = os.MkdirAll(filepath.Join(c.DataRoot, "files"), 0700); e != nil {
 		return nil, e
 	}
