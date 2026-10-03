@@ -240,6 +240,37 @@ func (k *KnowledgeAssembly) CheckActionTx(ctx context.Context, tx runtime.Tx, au
 	return nil
 }
 
+// CheckActionSnapshotLock 核复合数据锁的原父程序资格；数据锁不能替换 executable leaf。
+func (k *KnowledgeAssembly) CheckActionSnapshotLock(ctx context.Context, scope runtime.Scope, auth runtime.Auth, intent api.DecisionDispatchIntent, snapshot api.Snapshot, parent api.ComponentRef) error {
+	if k == nil {
+		if !api.Equal(parent, snapshot.InstallLockRef) {
+			return api.E("forbidden", "original_action_snapshot_mismatch")
+		}
+		return nil
+	}
+	status, err := k.a.Store.Within(ctx, scope, []string{"content", "memory", "governance", "platform"}, func(tx runtime.Tx) error {
+		commit, found, err := k.a.Governance.FindDecisionSelectionTx(ctx, tx, auth, intent.DecisionID)
+		if err != nil {
+			return err
+		}
+		if !found {
+			if !api.Equal(parent, snapshot.InstallLockRef) {
+				return api.E("forbidden", "original_action_snapshot_mismatch")
+			}
+			return nil
+		}
+		body := api.Raw(snapshot)
+		if !api.Equal(commit.SnapshotRef, intent.SnapshotRef) || !api.Equal(commit.Selection.Request.TaskRef, intent.TaskRef) || snapshot.SnapshotID != commit.Selection.Request.SnapshotID || snapshot.Revision != intent.SnapshotRevision || api.Hash(body) != commit.SnapshotRef.Hash || uint64(len(body)) != commit.SnapshotRef.ByteLength || !api.Equal(snapshot.InstallLockRef, commit.Selection.InstallLockRef) || !api.Equal(parent, commit.Selection.Request.ParentInstallLockRef) {
+			return api.E("forbidden", "knowledge_original_action_snapshot_mismatch")
+		}
+		return nil
+	})
+	if status == runtime.CommitUnknown {
+		return runtime.ErrCommitUnknown
+	}
+	return err
+}
+
 // CheckBrainTx 同样核已保存的历史 selection，即使配置已停用；原账单恢复另由 Brain 负责。
 func (k *KnowledgeAssembly) CheckBrainTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, in brain.DecideInput, encoding *brain.Encoding) error {
 	if k == nil {
@@ -274,13 +305,13 @@ func (k *KnowledgeAssembly) CheckBrainTx(ctx context.Context, tx runtime.Tx, aut
 }
 
 // ProposalLimits 在已解析原 Proposal 之后、任何 Use/准入之前校验行动数量与准确能力。
-func (k *KnowledgeAssembly) ProposalLimits(ctx context.Context, scope runtime.Scope, auth runtime.Auth, intent api.DecisionDispatchIntent, proposal task.Proposal) (*governance.KnowledgeCommit, error) {
+func (k *KnowledgeAssembly) ProposalLimits(ctx context.Context, scope runtime.Scope, auth runtime.Auth, intent api.DecisionDispatchIntent, proposal brain.Proposal) (*governance.KnowledgeCommit, error) {
 	if k == nil {
 		return nil, nil
 	}
 	var commit governance.KnowledgeCommit
 	var found bool
-	status, err := k.a.Store.Within(ctx, scope, []string{"content", "governance", "platform"}, func(tx runtime.Tx) error {
+	status, err := k.a.Store.Within(ctx, scope, []string{"content", "memory", "governance", "platform"}, func(tx runtime.Tx) error {
 		var err error
 		commit, found, err = k.a.Governance.FindSelectionTx(ctx, tx, auth, intent.SnapshotRef, intent.DecisionID)
 		return err
@@ -302,7 +333,7 @@ func (k *KnowledgeAssembly) ProposalLimits(ctx context.Context, scope runtime.Sc
 		for _, cap := range commit.Selection.EffectiveCapabilityRefs {
 			allowed = allowed || api.Equal(cap, action.CapabilityRef)
 		}
-		if !allowed || !knowledgeCostsBounded(action.CostBound, commit.Selection.EffectiveControls.MaxCallCostBound) {
+		if !allowed {
 			return nil, api.E("forbidden", "knowledge_action_control_exceeded")
 		}
 	}
