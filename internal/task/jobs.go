@@ -166,11 +166,7 @@ func (s *Service) decisionJob(ctx context.Context, store runtime.Store, scope ru
 		if e := tx.Guard(ctx, work.Claim); e != nil {
 			return e
 		}
-		var current decisionState
-		if _, e := tx.Get(ctx, decisions, d.Intent.DecisionID, &current); e != nil {
-			return e
-		}
-		t, e := getTask(ctx, tx, d.Snapshot.TaskRef.ObjectID)
+		t, current, e := decisionForTaskTx(ctx, tx, d.Intent.DecisionID)
 		if e != nil {
 			return e
 		}
@@ -269,16 +265,16 @@ func (s *Service) operationJob(ctx context.Context, store runtime.Store, scope r
 		if e := tx.Guard(ctx, work.Claim); e != nil {
 			return e
 		}
+		t, e := getTask(ctx, tx, intent.TaskRef.ObjectID)
+		if e != nil {
+			return e
+		}
 		var d operationDispatch
 		if _, e := tx.Get(ctx, dispatches, intent.OperationID, &d); e != nil {
 			return e
 		}
 		if d.PermanentlyClosed {
 			return nil
-		}
-		t, e := getTask(ctx, tx, intent.TaskRef.ObjectID)
-		if e != nil {
-			return e
 		}
 		if t.Task.GoalRevision != intent.GoalRevision || t.Task.ControlRevision != intent.ControlRevision || s.CheckCurrent(ctx, tx, t, true) != nil {
 			if !d.Sent {
@@ -828,16 +824,12 @@ func (s *Service) delegationJob(ctx context.Context, store runtime.Store, scope 
 			if e := tx.Guard(ctx, work.Claim); e != nil {
 				return e
 			}
-			var current Delegation
-			if _, e := tx.Get(ctx, delegations, d.DelegationID, &current); e != nil {
+			t, current, e := delegationForTaskTx(ctx, tx, d.DelegationID)
+			if e != nil {
 				return e
 			}
 			if current.CloseRequested {
 				return api.E("invalid_state", "delegation_closed")
-			}
-			t, e := getTask(ctx, tx, d.ParentTaskRef.ObjectID)
-			if e != nil {
-				return e
 			}
 			if e = s.CheckCurrent(ctx, tx, t, true); e != nil {
 				return e

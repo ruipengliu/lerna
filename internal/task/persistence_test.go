@@ -95,7 +95,7 @@ func resultForPublisher(t *testing.T, h *harness, gate *evidenceBridge, rule api
 	gate.service = governance.New(h.store, governance.Options{})
 	current := readyTask(t, h, rule)
 	artifact := h.content("independently observed artifact fixture")
-	now := api.Time(time.Now())
+	now := fixtureObservedAt()
 	check := api.ConditionResult{CheckID: api.NewID("check"), TaskID: current.TaskID, GoalRevision: current.GoalRevision, RequirementID: current.Requirements[0].RequirementID, RequirementRevision: 1, ArtifactRef: artifact, RuleRef: rule.RuleRef, EvaluatorRef: rule.RuleRef, Verdict: "pass", Applicability: "usable", Basis: "verified", EvidenceRefs: []api.ContentRef{h.content("accurate observation fixture")}, ScopeRef: h.content("fixed path/hash scope"), ObservedAt: now, CheckedAt: now}
 	if _, err := h.service.RecordCheck(context.Background(), h.store, h.scope, h.trusted(), check); err != nil {
 		t.Fatal(err)
@@ -240,7 +240,7 @@ func TestPostgresTaskLifecycleEvidenceAndCumulativeAccounting(t *testing.T) {
 	}
 	current = readyTask(t, h, rule)
 	artifact := h.content("preapproved independently observed report fixture")
-	now := api.Time(time.Now())
+	now := fixtureObservedAt()
 	check := api.ConditionResult{CheckID: api.NewID("check"), TaskID: current.TaskID, GoalRevision: current.GoalRevision, RequirementID: current.Requirements[0].RequirementID, RequirementRevision: 1, ArtifactRef: artifact, RuleRef: rule.RuleRef, EvaluatorRef: rule.RuleRef, Verdict: "pass", Applicability: "usable", Basis: "verified", EvidenceRefs: []api.ContentRef{h.content("preapproved observation")}, ScopeRef: h.content("accurate path/hash scope"), ObservedAt: now, CheckedAt: now}
 	if _, err = h.service.RecordCheck(context.Background(), store, h.scope, h.trusted(), check); err != nil {
 		t.Fatal(err)

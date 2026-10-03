@@ -131,8 +131,8 @@ func (s *Service) CloseAllocationTx(ctx context.Context, tx runtime.Tx, auth run
 		return AllocationOutput{}, api.E("forbidden", "parent_identity_required")
 	}
 	id := incomingID(in.AllocationRef)
-	var a IncomingAllocation
-	rev, e := tx.Get(ctx, incoming, id, &a)
+	a, e := incomingForTaskTx(ctx, tx, id)
+	rev := a.Revision
 	if confirmedNotFound(e) {
 		a = IncomingAllocation{AllocationID: in.AllocationRef.ObjectID, Revision: 1, ParentOwner: in.AllocationRef.OwnerID, ReceiverID: tx.Scope().OwnerID, ParentTaskRef: in.ParentTaskRef, Limits: []api.Amount{}, Gate: "closed", UsageRevision: 1, Cumulative: []api.Amount{}}
 		now, e := tx.Now(ctx)
@@ -306,11 +306,7 @@ func (s *Service) SettleTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if in.AllocationRef.OwnerID != tx.Scope().OwnerID || in.AllocationRef.TenantID != tx.Scope().TenantID || c.TargetID != in.AllocationRef.ObjectID {
 		return AllocationOutput{}, api.E("forbidden", "allocation_scope_mismatch")
 	}
-	var a Allocation
-	if _, e := tx.Get(ctx, allocations, in.AllocationRef.ObjectID, &a); e != nil {
-		return AllocationOutput{}, e
-	}
-	t, e := getTask(ctx, tx, a.ParentTaskRef.ObjectID)
+	t, a, e := allocationForTaskTx(ctx, tx, in.AllocationRef.ObjectID)
 	if e != nil {
 		return AllocationOutput{}, e
 	}
@@ -340,8 +336,8 @@ func (s *Service) ReconcileClosureTx(ctx context.Context, tx runtime.Tx, auth ru
 	if !auth.HasRole("service") && auth.SubjectID != closure.ReceiverID {
 		return api.E("forbidden", "receiver_identity_required")
 	}
-	var a Allocation
-	if _, e := tx.Get(ctx, allocations, allocationID, &a); e != nil {
+	_, a, e := allocationForTaskTx(ctx, tx, allocationID)
+	if e != nil {
 		return e
 	}
 	if len(sourceRefs) > 1 {
@@ -377,7 +373,6 @@ func (s *Service) ReconcileClosureTx(ctx context.Context, tx runtime.Tx, auth ru
 	}
 	source := api.ObjectRef{TenantID: tx.Scope().TenantID, OwnerID: closure.ReceiverID, ObjectID: allocationID, Revision: closure.UsageRevision}
 	usage := api.UsageSnapshot{SourceRef: source, UsageRevision: closure.UsageRevision, Cumulative: closure.FinalUsage, SpendingClosed: true, UsageFinal: true, ProofRefs: []api.ContentRef{closure.ProofRef}}
-	var e error
 	usage.UsageDigest, e = UsageDigest(usage)
 	if e != nil {
 		return e
