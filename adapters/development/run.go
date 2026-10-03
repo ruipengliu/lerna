@@ -18,6 +18,9 @@ func (a *App) Run(ctx context.Context, serve, work bool) error {
 	if !serve && !work {
 		return api.E("invalid_request", "process_role_required")
 	}
+	if serve && len(a.Config.ForeignConsumers) > 0 && a.endpointServerTLS == nil {
+		return api.E("unsupported", "foreign_source_https_not_configured")
+	}
 	if work && !a.OwnsTargets && a.Config.WorkerPool == nil {
 		return api.E("unsupported", "worker_target_ownership_required")
 	}

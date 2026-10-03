@@ -50,6 +50,7 @@ type Config struct {
 	WASI                       *WASIConfig               `json:"wasi,omitempty"`
 	RemoteAgent                *RemoteAgentConfig        `json:"remote_agent,omitempty"`
 	ForeignConsumers           []ForeignConsumerConfig   `json:"foreign_consumers,omitempty"`
+	ForeignSourceTLS           *ForeignSourceTLSConfig   `json:"foreign_source_tls,omitempty"`
 }
 
 func LoadConfig(path string) (Config, error) {

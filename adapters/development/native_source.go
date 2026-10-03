@@ -38,6 +38,9 @@ type foreignConsumerPair struct {
 var foreignConsumerEnv = regexp.MustCompile(`^[A-Z][A-Z0-9_]{0,127}$`)
 
 func validateForeignConsumers(c Config) error {
+	if err := validateForeignSourceTLS(c); err != nil {
+		return err
+	}
 	if len(c.ForeignConsumers) > 4 {
 		return api.E("invalid_request", "foreign_consumer_configuration_bounds")
 	}
