@@ -9,3 +9,7 @@
 实际 StartBarrier 在设备事务内只核静态已登记签名、原 Task/Operation/lease/主体、最紧截止、本机已知撤权、Control/TaskGate 和资源 epoch。离线仅能运行已经完整缓存并接纳的原行动；五秒控制窗口、原 TTL 和有限分配均不刷新。过期后可以查询原 Attempt、迟到效果与用量；查询不再执行物理动作。
 
 输出、证据和 UsageProof 保留设备的原 ContentRef 与准确来源。云端按原设备 owner 查询和补传，Task 与 Grant 只归并自己的账本。缺失来源正文必须返回明确缺口，不能生成同名替代 Content 或把 GoalRef 当作计费证明。真实双进程及故障验收结果将在工单 16 的完成依据中记录；本文的实现结构不代表外部真机、三 AZ 或生产资格。
+
+`executor.lease.usage.get` 先取得同一本机 Execution 的实际累计用量，按原 use/source/revision 归并本机 lease，再发布独立 LeaseUsageProof 和原闭合引用。报告签名包含原设备 database_id、endpoint/instance、Cloud LeaseRef 和完整 UsageSnapshot 摘要。云端只调用原 `ApplyLeaseReportTx` 归并这一分配；同一个原 Cloud lease use 不再调用普通 `ApplySettlementTx`。Task 预算仍单独消费原 Operation Usage，不能把 lease 的源身份替代 Operation。
+
+[独立进程入口](../../cmd/executor/README.md) 与 `Dial/Client` 使用真实 TLS、固定设备 owner/instance/database、有限 peer 文件凭据及 GoSDK fsync journal。已验证实际 CLI 子进程 SIGTERM 退出、丢回复后原回执恢复，以及 PostgreSQL Authority 的原一次 USD 1 预留与 SQLite 设备零费用闭合补传、不重复扣费。该 PG 用例预置了受信批准的 Grant 和准入 Task 引用；完整公开 Task/Brain 装配及普通 foreign Content 的来源登记由工单 16／23 后续共同验证，尚未据此宣称完成。

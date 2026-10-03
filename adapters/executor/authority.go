@@ -123,7 +123,7 @@ func (a deviceAuthority) CheckTx(ctx context.Context, tx runtime.Tx, _ runtime.A
 	return earliest(b.StartBefore, u.StartBefore, l.ExpiresAt), nil
 }
 func (h *Host) verifyBundle(b AdmissionBundle, now time.Time, current bool) error {
-	if b.Principal.TenantID != h.Scope.TenantID || b.AuthorityID != h.Config.Authority.OwnerID || b.EndpointID != h.Scope.OwnerID || b.InstanceID != h.Config.InstanceID {
+	if b.Principal.TenantID != h.Scope.TenantID || b.AuthorityID != h.Config.Authority.OwnerID || b.EndpointID != h.Scope.OwnerID || b.InstanceID != h.Config.InstanceID || b.DeviceDatabaseID != h.Scope.DatabaseID {
 		return api.E("forbidden", "device_admission_instance_mismatch")
 	}
 	if err := validateBundle(b); err != nil {
@@ -150,7 +150,7 @@ func (h *Host) verifyBundle(b AdmissionBundle, now time.Time, current bool) erro
 	return err
 }
 func (h *Host) checkDenyTx(ctx context.Context, tx runtime.Tx, b AdmissionBundle) error {
-	refs := append([]api.ObjectRef{b.Lease.Scope.SubjectRef, b.LeaseRef, b.Intent.TaskRef}, b.Lease.GrantRefs...)
+	refs := append([]api.ObjectRef{b.Lease.Scope.SubjectRef, b.Principal.Auth().Ref(b.AuthorityID), b.LeaseRef, b.Intent.TaskRef}, b.Lease.GrantRefs...)
 	for _, ref := range refs {
 		var denied denyRecord
 		if _, err := tx.Get(ctx, Namespace+".denials", denyKey(ref), &denied); err == nil {
