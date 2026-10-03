@@ -515,18 +515,35 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 			conn.Close(websocket.StatusUnsupportedData, "text frames required")
 			return
 		}
-		var frame harness.WSRequest
-		if e = api.DecodeLimit(b, &frame, 1<<20); e != nil || frame.Type != "request" || frame.RequestSeq <= last || frame.RequestSeq > api.MaxSafeInteger {
-			conn.Close(websocket.StatusPolicyViolation, "invalid frame or sequence")
-			return
-		}
-		last = frame.RequestSeq
 		if e = s.config.Identity.CheckCurrent(ctx, a); e != nil {
 			return
 		}
 		if e = s.config.Identity.RefreshConnection(ctx, a, s.config.OwnerID, connectionID); e != nil {
 			return
 		}
+		value, err := api.ParseJSONLimit(b, 1<<20)
+		object, validObject := value.(map[string]any)
+		if err != nil || !validObject {
+			conn.Close(websocket.StatusPolicyViolation, "invalid frame")
+			return
+		}
+		if object["type"] == "ping" || object["type"] == "pong" {
+			nonce, validNonce := object["nonce"].(string)
+			if len(object) != 2 || !validNonce || len(nonce) > 256 {
+				conn.Close(websocket.StatusPolicyViolation, "invalid heartbeat")
+				return
+			}
+			if object["type"] == "ping" && !enqueue(map[string]string{"type": "pong", "nonce": nonce}, true) {
+				return
+			}
+			continue
+		}
+		var frame harness.WSRequest
+		if e = api.DecodeLimit(b, &frame, 1<<20); e != nil || frame.Type != "request" || frame.RequestSeq <= last || frame.RequestSeq > api.MaxSafeInteger {
+			conn.Close(websocket.StatusPolicyViolation, "invalid frame or sequence")
+			return
+		}
+		last = frame.RequestSeq
 		priority := isControl(frame.Kind, frame.Payload)
 		slots := ordinarySlots
 		if priority {
