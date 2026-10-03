@@ -82,6 +82,7 @@ function JSONField({
         aria-label={name}
         value={text}
         rows={Math.min(8, Math.max(3, text.split("\n").length))}
+        maxLength={262144}
         spellCheck={false}
         onChange={(event) => {
           const next = event.target.value;

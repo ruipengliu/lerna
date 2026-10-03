@@ -110,6 +110,7 @@ export function usePublications(
     ) => {
       if (!client || !store || !current) throw new Error("当前未开放准确出版配置");
       const originalIdentity = identity;
+      const onPublished = callback.current;
       setError("");
       setStatus("");
       const now = Date.now();
@@ -135,7 +136,7 @@ export function usePublications(
         if (identityRef.current === originalIdentity) {
           setPending((await store.pending()).length);
           if (identityRef.current === originalIdentity)
-            callback.current(result.receipt, result.content_ref);
+            onPublished(result.receipt, result.content_ref);
         }
         return result;
       } catch (failure) {
@@ -186,6 +187,7 @@ export function usePublications(
   const recover = useCallback(async () => {
     if (!client || !store) return;
     const originalIdentity = identity;
+    const onRecovered = callback.current;
     setError("");
     for (const intent of await store.pending()) {
       if (identityRef.current !== originalIdentity) return;
@@ -196,7 +198,7 @@ export function usePublications(
           },
         });
         if (identityRef.current === originalIdentity)
-          callback.current(result.receipt, result.content_ref);
+          onRecovered(result.receipt, result.content_ref);
       } catch (failure) {
         if (identityRef.current !== originalIdentity) return;
         setError(failure instanceof Error ? failure.message : "原出版当前不能核验");
@@ -204,6 +206,7 @@ export function usePublications(
     }
     if (identityRef.current === originalIdentity) setPending((await store.pending()).length);
   }, [client, store, identity]);
+  const clearCompleted = useCallback(async () => (store ? store.clearCompleted() : 0), [store]);
   return {
     config: current,
     available:
@@ -220,5 +223,6 @@ export function usePublications(
     publishRaw,
     submitReport,
     recover,
+    clearCompleted,
   };
 }

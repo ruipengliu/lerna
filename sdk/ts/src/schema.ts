@@ -308,6 +308,7 @@ export class ContractRegistry {
         receipt.output === undefined
       )
         throw new ProtocolError("invalid_accepted_receipt");
+      this.validateOutput(command.method, receipt.output);
     } else if (receipt.stage === "applied") {
       if (!receipt.decided_at || receipt.error || receipt.output === undefined)
         throw new ProtocolError("invalid_applied_receipt");

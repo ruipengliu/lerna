@@ -16,6 +16,15 @@ export default defineConfig(({ mode }) => {
         "/connect": { target, ws: true },
       },
     },
-    build: { sourcemap: true },
+    build: {
+      sourcemap: true,
+      rolldownOptions: {
+        output: {
+          codeSplitting: {
+            groups: [{ name: "vendor", test: /\/node_modules\// }],
+          },
+        },
+      },
+    },
   };
 });

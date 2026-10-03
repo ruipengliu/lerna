@@ -131,6 +131,26 @@ export class IndexedDBPublications implements PublicationStore {
   async close(): Promise<void> {
     (await this.database).close();
   }
+  async clearCompleted(): Promise<number> {
+    const database = await this.database;
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction("publications", "readwrite", { durability: "strict" });
+      let removed = 0;
+      const read = tx
+        .objectStore("publications")
+        .index("pending")
+        .openCursor([this.identityScope, "done"]);
+      read.onsuccess = () => {
+        const cursor = read.result;
+        if (!cursor) return;
+        cursor.delete();
+        removed++;
+        cursor.continue();
+      };
+      tx.oncomplete = () => resolve(removed);
+      tx.onabort = () => reject(tx.error ?? new ProtocolError("durable_storage_failed"));
+    });
+  }
 }
 export async function preparePublication(
   client: HarnessClient,
@@ -245,6 +265,9 @@ export async function publishOriginal(
   intent: PublicationIntent,
   options: { baseURL?: string; fetcher?: typeof fetch; onStage?: (stage: string) => void } = {},
 ): Promise<{ content_ref: ContentRef; receipt?: Receipt }> {
+  if (!(intent.bytes instanceof Uint8Array) || intent.bytes.byteLength > 262144)
+    throw new ProtocolError("publication_bytes_too_large");
+  intent = structuredClone(intent);
   if (
     store.identityScope !== client.registry.discovery.identity_scope ||
     intent.identity_scope !== store.identityScope ||
@@ -255,7 +278,9 @@ export async function publishOriginal(
     throw new ProtocolError("publication_original_identity_mismatch");
   const original = await store.save(intent);
   options.onStage?.("准确原文与投递意图已耐久保存");
-  requireApplied(await client.command(original.reserve_command));
+  const reserved = await client.command(original.reserve_command);
+  if (reserved.stage === "rejected") await store.finish(original.transfer_id);
+  requireApplied(reserved);
   options.onStage?.("原上传额度与票据已接纳；正文尚未发布");
   const transferMethod = client.registry.method("content.transfer.read", "query");
   const transfer = await client.query(
@@ -294,7 +319,9 @@ export async function publishOriginal(
       throw new ProtocolError("transfer_not_durable");
   }
   options.onStage?.("准确 bytes 已耐久；等待 Content 发布决定");
-  requireApplied(await client.command(original.put_command));
+  const published = await client.command(original.put_command);
+  if (published.stage === "rejected") await store.finish(original.transfer_id);
+  requireApplied(published);
   options.onStage?.("准确 Content 已发布；尚未代表 Task 接纳或完成");
   let receipt: Receipt | undefined;
   if (original.next_command) {

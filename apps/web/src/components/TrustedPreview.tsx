@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { canonical, fetchContent } from "@harness/sdk";
 import type { ContentRef } from "@harness/sdk";
 interface Body {
@@ -15,6 +15,7 @@ export function TrustedPreview({
   generation: string;
   onVerified?: (key: string | undefined) => void;
 }) {
+  const titleID = useId();
   const [state, setState] = useState<{
     key: string;
     bodies: Body[];
@@ -83,8 +84,8 @@ export function TrustedPreview({
   }, [key, state, images]);
   const current = state.key === key;
   return (
-    <section className="panel preview-panel" aria-labelledby="preview-title">
-      <h2 id="preview-title">准确正文预览</h2>
+    <section className="panel preview-panel" aria-labelledby={titleID}>
+      <h2 id={titleID}>准确正文预览</h2>
       {!refs.length ? (
         <div className="preview-empty">选择正文引用后核对准确版本与摘要。</div>
       ) : !current || state.status === "loading" ? (

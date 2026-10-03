@@ -12,11 +12,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "a11y": {
-        "noStaticElementInteractions": "off",
-        "useKeyWithClickEvents": "off"
-      }
+      "recommended": true
     }
   },
   "javascript": {

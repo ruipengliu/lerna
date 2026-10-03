@@ -59,6 +59,16 @@ export function TrustedRequest({
     if (inputView) {
       request = validateRecord<InputRequest>("InputRequest", inputView.request);
       requestRef = validateRecord<ObjectRef>("ObjectRef", inputView.request_ref);
+      if (
+        requestRef.object_id !== request.request_id ||
+        requestRef.revision !== request.revision ||
+        requestRef.tenant_id !== request.tenant_id ||
+        requestRef.owner_id !== request.owner_id ||
+        request.owner_id !== client.registry.discovery.logical_service_id ||
+        request.target_ref.owner_id !== request.owner_id ||
+        request.target_ref.tenant_id !== request.tenant_id
+      )
+        invalidRequest = true;
     }
   } catch {
     invalidRequest = true;
@@ -87,6 +97,7 @@ export function TrustedRequest({
   const [decided, setDecided] = useState("");
   const [outcome, setOutcome] = useState("");
   const [refs, setRefs] = useState<ContentRef[]>([]);
+  const [schemaVerified, setSchemaVerified] = useState("");
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 1000);
@@ -95,6 +106,7 @@ export function TrustedRequest({
   useEffect(() => {
     let active = true;
     setVerified(undefined);
+    setSchemaVerified("");
     setOriginal(undefined);
     setError("");
     setOutcome("");
@@ -112,6 +124,20 @@ export function TrustedRequest({
       setError(failure instanceof Error ? failure.message : "原受信表单不可呈现");
       setRefs([]);
       setValid(false);
+    }
+    if (inputView && request) {
+      const schemaRef = request.answer_schema_ref;
+      void digest(inputView.answer_schema)
+        .then((hash) => {
+          if (!active) return;
+          if (hash !== schemaRef.digest)
+            throw new Error("回答 Schema 与原请求固定摘要不符，不能提交");
+          setSchemaVerified(key);
+        })
+        .catch((failure: unknown) => {
+          if (active)
+            setError(failure instanceof Error ? failure.message : "回答 Schema 当前不可核验");
+        });
     }
     if (confirmation) {
       void (async () => {
@@ -196,7 +222,16 @@ export function TrustedRequest({
     }
   };
   const submit = async () => {
-    if (!request || !requestRef || !inputView || !allowed || !bodyReady || !valid) return;
+    if (
+      !request ||
+      !requestRef ||
+      !inputView ||
+      !allowed ||
+      !bodyReady ||
+      !valid ||
+      schemaVerified !== key
+    )
+      return;
     const boundRequest = request;
     const boundRef = requestRef;
     setRunning(true);
@@ -268,6 +303,12 @@ export function TrustedRequest({
           <p>
             <code>{requestID}</code> · r{revision} · {state}
           </p>
+          {request && (
+            <p>
+              固定业务对象 <code>{request.target_ref.object_id}</code> · 目标修订{" "}
+              {request.goal_revision ?? "未提供"}
+            </p>
+          )}
           <p className="field-hint">
             固定截止 {expiresAt}。改版、过期或权限变化由原 owner
             拒绝；本界面不自动改写答案或请求版本。
@@ -323,7 +364,7 @@ export function TrustedRequest({
           <button
             className="button primary"
             type="button"
-            disabled={!allowed || !bodyReady || !valid}
+            disabled={!allowed || !bodyReady || !valid || schemaVerified !== key}
             onClick={() => void submit()}
           >
             {request?.purpose === "accept_quality" ? "确认此准确成果及限制" : "保存准确回答并提交"}

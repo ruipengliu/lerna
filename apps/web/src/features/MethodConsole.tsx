@@ -27,7 +27,7 @@ export function MethodConsole({
   const [error, setError] = useState("");
   const [running, setRunning] = useState("");
   const [result, setResult] = useState<{ binding: string; value: JSONValue | Receipt }>();
-  const binding = `${client.registry.discovery.identity_scope}:${client.registry.discovery.identity_revision}:${method?.name ?? ""}:${target}`;
+  const binding = `${client.registry.discovery.identity_scope}:${client.registry.discovery.identity_revision}:${method?.name ?? ""}:${target}:${revision}:${expires}:${JSON.stringify(payload)}`;
   useEffect(() => {
     try {
       setPayload(preset?.payload ?? (method ? initialPayload(method.input_schema) : {}));
