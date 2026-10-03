@@ -24,6 +24,24 @@ Lerna 的控制约束必须在模型之外执行。模型可以建议行动，�
 
 **实际启动时**，Executor 检查当前资源门禁、准确行动摘要、TaskGate、GrantUse、组件就绪和资源占用。检查通过并保存 Attempt 后才允许发送。任何改变收件人、路径、金额或正文的准备逻辑必须在这一身份固定前完成。
 
+准入和发送可能相隔较长时间，因此两处检查各有责任。下图展示一项行动通过检查或被阻止的路径。
+
+```mermaid
+%%{init: {"theme": "neutral", "fontFamily": "Arial, PingFang SC, Microsoft YaHei, sans-serif", "flowchart": {"defaultRenderer": "elk", "nodeSpacing": 32, "rankSpacing": 40}}}%%
+flowchart TB
+    accTitle: 行动准入与真实启动的两处检查
+    accDescr: Orchestrator 检查并保存准入事实，Executor 在发送前再次检查，失败路径阻止本次准入或发送。
+    P["准确行动候选<br/>参数准备已完成"] --> A{"准入条件有效？<br/>Orchestrator"}
+    A -->|否| R["拒绝本次准入<br/>保存明确原因"]
+    A -->|是| I["持久保存准入事实<br/>意图、授权使用依据、预算预留"]
+    I --> E{"启动条件有效？<br/>Executor"}
+    E -->|否| W["阻止本次发送<br/>保存原因，按领域规则处理"]
+    E -->|是| T["保存 Attempt<br/>固定发送前记录"]
+    T --> X["调用外部目标<br/>结果与效果另行核对"]
+```
+
+可打开[行动授权检查图](assets/action-authorization.svg)。箭头表示处理顺序，不表示跨 owner 的原子事务。图只展示尚未发送的启动路径；已可能发送的操作继续核对，不能因检查失败而当作未发生。准入成功也不保证等待后的启动检查通过。
+
 远端 Grant 不参与本地原子事务。授权 owner 先签发绑定准确行动、有截止时间和额度的有限使用凭据，并从可用范围扣除；Orchestrator 保存该凭据后才准入。若后续准入失败，释放按原使用身份处理，不能让同一额度同时出现在两端。
 
 一次性许可被消费后，即使调用失败、任务取消或预留释放，也不得重新变为未消费。确需再次授权时，由受信主体形成新的明确许可。

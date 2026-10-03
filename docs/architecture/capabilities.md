@@ -26,6 +26,25 @@ Lerna 让能力模块独立演进，同时要求它们保留共同的身份、�
 
 ContextCompiler 由 Orchestrator 管理；内部选择、摘要和排序策略可替换。它的首要职责是保持目标与事实一致，然后才优化 token 使用。
 
+下图把构造过程分为材料选择、容量检查和提交前复核。只有这三步完成，决策引擎才接收固定 Snapshot。
+
+```mermaid
+%%{init: {"theme": "neutral", "fontFamily": "Arial, PingFang SC, Microsoft YaHei, sans-serif", "flowchart": {"defaultRenderer": "elk", "nodeSpacing": 32, "rankSpacing": 40}}}%%
+flowchart TB
+    accTitle: 上下文构造与提交检查
+    accDescr: ContextCompiler 保留强制信息，筛选补充材料，检查容量与当前来源资格后提交 Snapshot；强制信息超限时不调用模型。
+    M["强制信息<br/>目标、条件、控制、预算、期限、未决效果"] --> C["构造候选上下文<br/>筛选获准材料<br/>裁剪可省略部分"]
+    H["补充材料<br/>进展、历史、记忆、能力说明与 Skill"] --> C
+    C --> L{"强制信息能否容纳？<br/>已预留输出空间"}
+    L -->|否| F["返回 context_overflow<br/>不调用模型"]
+    L -->|是| V{"目标与来源资格<br/>仍有效？"}
+    V -->|依赖已变化| C
+    V -->|有效| S["提交不可变 Snapshot<br/>固定输入、版本与来源<br/>保留省略清单"]
+    S --> D["调用决策引擎<br/>形成下一步提案"]
+```
+
+可打开[上下文构造图](assets/context-construction.svg)。补充材料不等于全部可删除：影响当前判断的事实和证据仍需保留。重建受原预算与期限约束；超限后的模型切换或目标拆分见下文，不在图中展开。
+
 默认构造顺序如下：
 
 1. 放入当前目标、必要条件、控制、剩余预算、期限和所有相关未决效果。这部分不得被摘要策略删掉。

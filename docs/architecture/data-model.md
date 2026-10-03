@@ -33,6 +33,27 @@
 
 表中引用可能在生命周期早期为空，例如未完成 Task 没有 result_ref。实现 Schema 必须按状态定义可空条件，不能用空字符串代替不存在的对象。
 
+### 从目标追溯到决策、行动和结果
+
+沿下图可以找到一项决策使用哪个快照、由谁保存执行事实，以及正式结果归属哪个 Task。箭头从保存引用的记录指向被引用的记录；框内第二行标明负责方。
+
+```mermaid
+%%{init: {"theme": "neutral", "fontFamily": "Arial, PingFang SC, Microsoft YaHei, sans-serif", "flowchart": {"defaultRenderer": "elk", "nodeSpacing": 32, "rankSpacing": 40}}}%%
+flowchart TB
+    accTitle: 核心对象引用与负责方
+    accDescr: Session 引用 Task，Decision 引用 Task 与 Snapshot，执行记录沿 OperationIntent 和 Operation 保留各自负责方。
+    S["Session<br/>Interaction"] -->|task_refs| T["Task<br/>Orchestrator"]
+    T -->|result_ref| R["Result<br/>Orchestrator"]
+    D["Decision<br/>决策引擎"] -->|task_ref| T
+    D -->|snapshot_ref| N["Snapshot<br/>Orchestrator"]
+    I["OperationIntent<br/>Orchestrator"] -->|task_ref| T
+    O["Operation<br/>Executor"] -->|intent_ref| I
+    A["Attempt<br/>Executor"] -->|operation_id| O
+    E["EffectObservation<br/>Executor"] -->|operation_id| O
+```
+
+可打开[核心对象引用图](assets/object-relations.svg)。图只展示主要引用，不表示调用顺序、物理外键或共同事务。一个 Task 可以有多个 Decision 和 OperationIntent，最多一个正式终态 Result；一个 Operation 可以有多个 Attempt 和效果观察。Content、Grant、Job 及其余字段仍以本章表格为准。
+
 ## 策略与能力声明
 
 TaskPolicy 是受信配置的准确版本，创建 Task 时固定。模型可以提出资源使用建议，不能修改策略。策略升级默认只影响新任务；收紧当前任务限制需要受信控制命令，扩大权限或预算需要新的授权与分配。

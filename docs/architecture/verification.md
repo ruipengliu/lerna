@@ -8,13 +8,22 @@
 | --- | --- |
 | 本地引用 | 本目录 Markdown 的文件、锚点和图资源引用均可解析；没有指向旧项目架构材料的相对引用 |
 | 格式与示例 | Markdown 代码围栏闭合，未发现行尾空白；JSON 示例可解析。示例是设计示意，未通过尚未交付的完整线协议 Schema |
-| 图示渲染 | 六个 Mermaid 图均已实际渲染为 SVG，保存在 assets；正文保留对应图源 |
-| 图示可读性 | 对四层架构、报告恢复时序和生产部署进行了渲染后视觉检查；未发现文字缺失或关键关系不可读 |
+| 图示渲染 | 十个 Mermaid 图均已实际渲染为 SVG，保存在 assets；正文保留对应图源。新增四图的布局、字体和主题配置随图源保存 |
+| 图示可读性 | 对四层架构、报告恢复时序、生产部署及本次新增四图进行了渲染后视觉检查；检查文字换行、连线方向、遮挡和图文一致性 |
 | 研究依据 | 两份研究说明使用外部一手来源，记录研究日期、固定论文版本或动态文档访问日，并区分来源事实与设计推断 |
 | 术语与职责 | 核对 Task、Session、Decision、Operation、Effect、Grant、Content 和各负责方在章节间的使用；决策引擎统一使用 Decision Engine／decision_engine，与单次 Decision 记录区分 |
 | 重点契约 | 核对接纳与执行状态分离、提前取消身份绑定、控制修订单调、旧版本服务资格、硬预算前提、上下文超限、父目标变化后的委派处理 |
 
-六张图分别是[四层架构](assets/layers.svg)、[任务推进](assets/task-flow.svg)、[报告恢复时序](assets/report-sequence.svg)、[效果恢复](assets/effect-recovery.svg)、[插件启用](assets/plugin-lifecycle.svg)和[生产部署](assets/production.svg)。SVG 可直接用浏览器打开，或在支持 Markdown 的阅读器中从各章链接查看。
+原有六张图分别是[四层架构](assets/layers.svg)、[任务推进](assets/task-flow.svg)、[报告恢复时序](assets/report-sequence.svg)、[效果恢复](assets/effect-recovery.svg)、[插件启用](assets/plugin-lifecycle.svg)和[生产部署](assets/production.svg)。本次补充以下四张图：
+
+| 阅读问题 | 图示与正文 |
+| --- | --- |
+| 决策、行动和结果分别引用谁，由谁保存？ | [核心对象引用图](assets/object-relations.svg)；[数据关系说明](data-model.md#从目标追溯到决策行动和结果) |
+| 哪些材料进入决策，超限或来源变化时如何处理？ | [上下文构造图](assets/context-construction.svg)；[构造规则](capabilities.md#上下文构造与按需读取) |
+| 服务已提交但调用方未收到回执，怎样恢复？ | [命令恢复时序图](assets/command-recovery.svg)；[回执恢复规则](contracts.md#回执丢失后沿原命令恢复) |
+| 为什么准入后还要在发送前检查？ | [行动授权检查图](assets/action-authorization.svg)；[两处检查的责任](governance.md#授权的两个检查点) |
+
+支持 Mermaid 的阅读器可直接显示正文图源；SVG 可用浏览器打开。新增流程图使用 ELK 布局；阅读器不支持该布局时，可使用对应 SVG。图旁说明了简化范围，图示不替代字段合同、异常规则或实现验证。
 
 研究核查不等于对所有外部链接做持续可用性监测。动态官网可能更新，论文和协议也可能有新版本；选型实施时必须重新固定实际采用版本、检查许可证并验证相应能力。
 

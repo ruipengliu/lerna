@@ -64,6 +64,32 @@ Host 是内部同版接口，不要求远程第三方组件采用。Component �
 
 `command.get` 返回原决定及当前异步进展；`not_found` 只表示该负责方在当前查询中未找到，不能证明别的 owner 未处理。SDK 不得自动更换 owner。`gone` 表示正文已按策略清理但保留最小身份；无权查询时返回不泄露对象存在性的拒绝或 redacted 视图。
 
+### 回执丢失后沿原命令恢复
+
+下图展示“接纳已提交，但成功回执未送达”的情况。调用方保留原身份，向同一 owner 查询；接纳回执与后续执行进展分别返回。
+
+```mermaid
+%%{init: {"theme": "neutral", "fontFamily": "Arial, PingFang SC, Microsoft YaHei, sans-serif", "sequence": {"wrap": true, "actorMargin": 96}, "themeVariables": {"noteBkgColor": "#eeeeee", "noteTextColor": "#222222", "noteBorderColor": "#999999"}}}%%
+sequenceDiagram
+    accTitle: 命令接纳回执丢失后的恢复
+    accDescr: 接纳事务提交后回执丢失，调用方向原 owner 查询原命令，取得固定接纳回执与当前业务进展。
+    participant C as 调用方／SDK
+    participant O as 原 owner
+    participant B as owner 所属数据库
+    Note over C: 先持久保存<br/>完整原命令
+    C->>O: 发送 command_id 与固定请求内容
+    O->>B: 同事务保存回执、业务记录<br/>和必要 Job
+    B-->>O: 确认提交
+    Note over C,O: 成功回执丢失<br/>调用方只能判断为提交未知
+    C->>O: command.get（原命令引用）
+    O->>B: 读取原回执与当前进展
+    B-->>O: 返回已持久化的事实
+    O-->>C: 原 accepted／applied 回执与当前进展
+    Note over C,O: 接纳回执不随后续执行成功或失败改写
+```
+
+可打开[命令恢复时序图](assets/command-recovery.svg)。图假定原提交已经成功，省略业务执行过程。查询不可用时有界等待；需重传时保持完整原命令、owner 和 accept_before 不变。查询未找到不能作为更换身份、延长期限或创建同义工作的依据；完整接纳规则见[命令接纳算法](runtime.md#命令接纳算法)。
+
 ## 应用接入方法
 
 以下“成功点”均表示 applied；需要后台处理的部分同时保存 Job。表中“原引用”包含准确 owner 和对象 ID；修改方法共同携带 expected_revision。
