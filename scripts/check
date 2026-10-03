@@ -10,7 +10,7 @@ export GOTOOLCHAIN=local
 export HARNESS_TEST_TZDB_ROOT="${HARNESS_TEST_TZDB_ROOT:-$repo_root/conformance/testdata/tzdb/2026b}"
 python3 scripts/check_toolchain.py
 python3 scripts/generate_core.py --check
-node sdk/ts/scripts/generate-contracts.mjs --check
+pnpm generate:check
 python3 docs/architecture/validation/build_field_reference.py --check
 python3 scripts/check_generated.py
 python3 docs/check_documentation.py
