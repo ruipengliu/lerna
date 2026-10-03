@@ -4,6 +4,8 @@
 
 浏览器通过同源 HttpOnly Cookie 认证；凭据不进入 SDK 账本。`HarnessClient.fromServer()` 获取认证发现、下载原始 core Schema 字节并核对 SHA-256，再编译闭合方法合同。只接受当前发现登记的方法。
 
+完整发现清单及方法集 JCS 摘要允许最多 1 MiB；业务请求、响应与默认 `digest()` 仍限 256 KiB。两者使用相同的重复键、UTF-8、Unicode、安全数值和规范化规则，容量例外不适用于业务正文。
+
 ```ts
 import { HarnessClient } from "@harness/sdk";
 
@@ -16,6 +18,8 @@ await client.close();
 ```
 
 `command()` 在首次连接或发送前提交 IndexedDB 原命令、JCS 摘要、固定 owner、身份 scope、core 摘要和原方法 Schema。存储失败不首次发送。同 ID 的异内容拒绝；重连不刷新 CAS、默认值、截止或逻辑 owner。回执只有在本地事务 complete 后交付调用者。请求等待覆盖响应验证和耐久提交；超时保留原责任。
+
+每次连接的 `ready` 必须声明该连接实际认证的 `identity_scope` 和 `identity_revision`，并与认证发现精确匹配。旧协议缺少此绑定、主体切换或凭据修订变化都会在发请求前关闭连接。原账本责任保留在原 scope；调用方须重新读取认证发现，不能把旧回调迁移到新身份。
 
 `preparePublication()` 一次形成 ContentRef、准确原字节、reserve/put 和可选后续命令。`publishOriginal()` 在共同保存后执行原票据上传、发布和后续提交。相同意图可在重开后恢复；accepted 后续命令继续留在 pending。业务拒绝、正文出版、Task 完成和服务端清理分别报告。
 

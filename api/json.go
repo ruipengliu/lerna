@@ -163,7 +163,10 @@ func DecodeLimit(raw []byte, v any, limit int) error {
 	return nil
 }
 func Canonical(raw []byte) ([]byte, error) {
-	v, err := ParseJSON(raw)
+	return CanonicalLimit(raw, MaxJSONBytes)
+}
+func CanonicalLimit(raw []byte, limit int) ([]byte, error) {
+	v, err := ParseJSONLimit(raw, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -172,11 +175,14 @@ func Canonical(raw []byte) ([]byte, error) {
 	return b.Bytes(), nil
 }
 func Digest(v any) (string, error) {
+	return DigestLimit(v, MaxJSONBytes)
+}
+func DigestLimit(v any, limit int) (string, error) {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return "", err
 	}
-	b, err = Canonical(b)
+	b, err = CanonicalLimit(b, limit)
 	if err != nil {
 		return "", err
 	}

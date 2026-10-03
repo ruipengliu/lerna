@@ -65,6 +65,58 @@ async function registry(options: { query?: boolean; removed?: boolean } = {}) {
   );
   return ContractRegistry.create(discovery, core);
 }
+const ready = (contract: ContractRegistry) => ({
+  type: "ready",
+  connection_id: "connection_00000000000000000000000000000001",
+  logical_service_id: owner,
+  profile: command.profile,
+  transport_profile: "harness-wss/1",
+  methods_digest: contract.methodsDigest,
+  identity_scope: contract.discovery.identity_scope,
+  identity_revision: contract.discovery.identity_revision,
+  limits: contract.discovery.limits,
+});
+it("每次 ready 必须声明原认证身份；旧无身份协议明确拒绝", async () => {
+  const contract = await registry();
+  expect(() => contract.ready(ready(contract))).not.toThrow();
+  const { identity_scope: _scope, identity_revision: _revision, ...legacy } = ready(contract);
+  expect(() => contract.ready(legacy)).toThrow(/unsupported_ready_identity_binding/);
+});
+it("新连接身份 scope 或凭据修订改变时不能发送旧账本请求，原责任仍留原scope", async () => {
+  const contract = await registry();
+  for (const replacement of [
+    { identity_scope: `sha256:${"2".repeat(64)}`, identity_revision: 1 },
+    { identity_scope: identity, identity_revision: 2 },
+  ]) {
+    const server = new WebSocketServer({ host: "127.0.0.1", port: 0 });
+    await once(server, "listening");
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("no address");
+    let messages = 0;
+    server.on("connection", (socket) => {
+      socket.send(JSON.stringify({ ...ready(contract), ...replacement }));
+      socket.on("message", () => messages++);
+    });
+    const store = new IndexedDBCommands(identity, {
+      factory: new IDBFactory(),
+      name: "changed-connection-identity",
+    });
+    const client = new HarnessClient({
+      registry: contract,
+      store,
+      url: `ws://127.0.0.1:${address.port}`,
+    });
+    await expect(client.command(command)).rejects.toThrow(/ready_identity_mismatch/);
+    expect(messages).toBe(0);
+    const pending = await client.pending();
+    expect(pending).toHaveLength(1);
+    expect(pending[0]?.identity_scope).toBe(identity);
+    expect(pending[0]?.command_json).toBe(canonical(command));
+    expect(pending[0]?.request_digest).toBe(await digest(command));
+    await client.close();
+    server.close();
+  }
+});
 it("耐久存储拒绝时不连接与首次发送，返回真实存储失败", async () => {
   const contract = await registry();
   const server = new WebSocketServer({ host: "127.0.0.1", port: 0 });
@@ -119,6 +171,8 @@ it("业务已决定但丢答复后重开 SDK 查原命令，不产生新的命�
         profile: command.profile,
         transport_profile: "harness-wss/1",
         methods_digest: contract.methodsDigest,
+        identity_scope: contract.discovery.identity_scope,
+        identity_revision: contract.discovery.identity_revision,
         limits: contract.discovery.limits,
       }),
     );
@@ -204,6 +258,8 @@ it("原 owner 确定尚未接纳时只重传原字节，过期拒绝沿原命令
         profile: command.profile,
         transport_profile: "harness-wss/1",
         methods_digest: contract.methodsDigest,
+        identity_scope: contract.discovery.identity_scope,
+        identity_revision: contract.discovery.identity_revision,
         limits: contract.discovery.limits,
       }),
     );
@@ -261,6 +317,8 @@ it("真实 WebSocket 上普通查询最多占 28 个槽，背压与等待都有�
         profile: command.profile,
         transport_profile: "harness-wss/1",
         methods_digest: contract.methodsDigest,
+        identity_scope: contract.discovery.identity_scope,
+        identity_revision: contract.discovery.identity_revision,
         limits: contract.discovery.limits,
       }),
     );
@@ -316,6 +374,8 @@ it("收到回执后本地耐久提交停滞，等待仍有界且原命令保留�
         profile: command.profile,
         transport_profile: "harness-wss/1",
         methods_digest: contract.methodsDigest,
+        identity_scope: contract.discovery.identity_scope,
+        identity_revision: contract.discovery.identity_revision,
         limits: contract.discovery.limits,
       }),
     );

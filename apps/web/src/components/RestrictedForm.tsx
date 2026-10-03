@@ -14,7 +14,7 @@ const labels: Record<string, string> = {
   goal_ref: "准确目标正文引用",
   policy_ref: "固定策略引用",
   deadline: "领域截止（UTC）",
-  budget: "分单位预算",
+  budget: "预算金额",
   values: "准确记忆值",
   limit: "每页数量",
   cursor: "原分页游标",

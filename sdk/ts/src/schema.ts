@@ -1,7 +1,15 @@
 import { Validator } from "@cfworker/json-schema";
 import type { Schema as ValidationSchema } from "@cfworker/json-schema";
 import { CORE_SCHEMA, CORE_SCHEMA_DIGEST } from "./contracts.gen";
-import { canonical, digest, jsonBytes, parseStrict, ProtocolError, sha256 } from "./json";
+import {
+  canonical,
+  digest,
+  digestLimit,
+  jsonBytes,
+  parseStrict,
+  ProtocolError,
+  sha256,
+} from "./json";
 import type {
   APIError,
   Command,
@@ -15,6 +23,7 @@ import type {
   Schema,
 } from "./protocol";
 import { PROFILE, PROTOCOL, TRANSPORT_PROFILE } from "./protocol";
+const MAX_MANIFEST_BYTES = 1024 * 1024;
 const id = { type: "string", pattern: "^[a-z][a-z0-9_]*_[0-9a-f]{32}$" };
 const hash = { type: "string", pattern: "^sha256:[0-9a-f]{64}$" };
 const count = { type: "integer", minimum: 1, maximum: Number.MAX_SAFE_INTEGER };
@@ -148,6 +157,8 @@ const readySchema = object({
   profile: { const: PROFILE },
   transport_profile: { const: TRANSPORT_PROFILE },
   methods_digest: hash,
+  identity_scope: hash,
+  identity_revision: count,
   limits: limitsSchema,
 });
 const responseSchema = object({
@@ -237,19 +248,18 @@ export class ContractRegistry {
       input.set(method.name, validator.compile({ ...method.input_schema, $defs: core.$defs }));
       output.set(method.name, validator.compile({ ...method.output_schema, $defs: core.$defs }));
     }
-    if ((await digest(discovery.methods)) !== discovery.methods_digest)
+    const methodsDigest = await digestLimit(discovery.methods, MAX_MANIFEST_BYTES);
+    if (methodsDigest !== discovery.methods_digest)
       throw new ProtocolError("methods_digest_mismatch");
-    return new ContractRegistry(
-      discovery,
-      await digest(discovery.methods),
-      input,
-      output,
-      new Uint8Array(coreBytes),
-    );
+    return new ContractRegistry(discovery, methodsDigest, input, output, new Uint8Array(coreBytes));
   }
   async original(contract: MethodContract): Promise<ContractRegistry> {
     return ContractRegistry.create(
-      { ...this.discovery, methods: [contract], methods_digest: await digest([contract]) },
+      {
+        ...this.discovery,
+        methods: [contract],
+        methods_digest: await digestLimit([contract], MAX_MANIFEST_BYTES),
+      },
       this.coreBytes,
     );
   }
@@ -315,7 +325,19 @@ export class ContractRegistry {
     return receipt;
   }
   ready(value: unknown): Ready {
+    if (
+      !value ||
+      typeof value !== "object" ||
+      !Object.hasOwn(value, "identity_scope") ||
+      !Object.hasOwn(value, "identity_revision")
+    )
+      throw new ProtocolError("unsupported_ready_identity_binding");
     const ready = checked<Ready>(validateReady, value, "ready_schema_violation");
+    if (
+      ready.identity_scope !== this.discovery.identity_scope ||
+      ready.identity_revision !== this.discovery.identity_revision
+    )
+      throw new ProtocolError("ready_identity_mismatch");
     if (
       ready.logical_service_id !== this.discovery.logical_service_id ||
       ready.methods_digest !== this.methodsDigest ||

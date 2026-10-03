@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import { execFileSync } from "node:child_process";
 import { chromium } from "playwright";
 
-// Tests the real configured Go service. Only the WebSocket boundary drops one reply.
+// Uses the real configured Go service; boundary faults drop a reply or corrupt exact body bytes.
 const baseURL = process.env.HARNESS_BROWSER_URL ?? "http://127.0.0.1:5173";
 const artifacts = resolve(process.env.HARNESS_BROWSER_ARTIFACTS ?? "/tmp/harness-web-browser");
 const token = (
@@ -19,6 +19,7 @@ const browser = await chromium.launch({
 const context = await browser.newContext({ viewport: { width: 1536, height: 1024 } });
 const commands = [];
 const replies = [];
+const connections = [];
 const pageErrors = [];
 let dropNextSubmit = false;
 let dropped;
@@ -36,6 +37,7 @@ await context.routeWebSocket("**/connect", (route) => {
   });
   remote.onMessage((message) => {
     const frame = JSON.parse(String(message));
+    if (frame.type === "ready") connections.push(frame);
     const request = requests.get(frame.request_seq);
     if (frame.type === "response") replies.push({ request, response: frame });
     if (
@@ -179,7 +181,7 @@ async function freeGoal(runID, config, discovery) {
   await console
     .getByLabel("固定策略引用", { exact: true })
     .fill(JSON.stringify(config.task_policy_ref));
-  await console.getByLabel("分单位预算", { exact: true }).fill(JSON.stringify(config.budget));
+  await console.getByLabel("预算金额", { exact: true }).fill(JSON.stringify(config.budget));
   await console
     .getByLabel("领域截止（UTC）", { exact: true })
     .fill(new Date(Date.now() + 600000).toISOString());
@@ -216,7 +218,13 @@ async function awaitResult(id) {
   assert.match(await page.locator(".inspector").innerText(), /succeeded/);
 }
 try {
-  await page.goto(baseURL);
+  const navigation = await page.goto(baseURL);
+  const contentSecurityPolicy = navigation?.headers()["content-security-policy"] ?? "";
+  if (process.env.HARNESS_REQUIRE_CSP === "1") {
+    assert.match(contentSecurityPolicy, /default-src 'self'/);
+    assert(!contentSecurityPolicy.includes("unsafe-eval"));
+    assert(!contentSecurityPolicy.includes("unsafe-inline"));
+  }
   await page.getByLabel("开发凭据").fill(token);
   await page.getByRole("button", { name: "认证并连接" }).click();
   await page.locator(".connection.ready").waitFor();
@@ -239,6 +247,7 @@ try {
       ),
     "accurate artifact bytes and rendered full body",
   );
+  await page.evaluate(() => scrollTo(0, 0));
   await page.screenshot({ path: resolve(artifacts, "desktop-report.png"), fullPage: true });
 
   // A real backend decision exists, but its first receipt never reaches the browser.
@@ -273,6 +282,17 @@ try {
 
   const config = await page.evaluate(async () => (await fetch("/api/development/config")).json());
   const discovery = await page.evaluate(async () => (await fetch("/api/discovery")).json());
+  const methodsBytes = Buffer.byteLength(JSON.stringify(discovery.methods));
+  if (process.env.HARNESS_REQUIRE_LARGE_MANIFEST === "1") {
+    assert(methodsBytes > 262144);
+    assert(methodsBytes <= 1048576);
+  }
+  assert(connections.length > 0);
+  for (const connection of connections) {
+    assert.equal(connection.identity_scope, discovery.identity_scope);
+    assert.equal(connection.identity_revision, discovery.identity_revision);
+    assert.equal(connection.methods_digest, discovery.methods_digest);
+  }
 
   // A free goal stays incomplete until an exact registered answer is consumed.
   const waitingID = await freeGoal(runID, config, discovery);
@@ -368,6 +388,10 @@ try {
       corruptedRender && (await renderer.innerText()).includes("render_body_digest_mismatch"),
     "corrupt exact inline snapshot remains unrendered",
   );
+  const fixedEvent = renderer.locator(".fixed-application-event");
+  await fixedEvent
+    .getByLabel("理由", { exact: true })
+    .fill("本人通过当前准确呈现归档明确登记的示例会话。");
   assert.equal(await renderer.getByRole("button", { name: "记录当前准确呈现" }).isEnabled(), false);
   assert.equal(
     await renderer.getByRole("button", { name: "保存并提交固定事件" }).isEnabled(),
@@ -426,10 +450,6 @@ try {
     "fresh full read restores presentation eligibility",
   );
   await renderer.getByRole("button", { name: "记录当前准确呈现" }).click();
-  const fixedEvent = renderer.locator(".fixed-application-event");
-  await fixedEvent
-    .getByLabel("理由", { exact: true })
-    .fill("本人通过当前准确呈现归档明确登记的示例会话。");
   await fixedEvent.getByRole("button", { name: "保存并提交固定事件" }).click();
   await until(async () => {
     const read = fixedEvent.getByRole("button", { name: "查询原事件消费" });
@@ -477,12 +497,18 @@ try {
     implementation: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(),
     base_url: baseURL,
     schema_digest: discovery.schema_digest,
+    methods_digest: discovery.methods_digest,
+    methods_count: discovery.methods.length,
+    methods_bytes: methodsBytes,
+    connection_count: connections.length,
+    content_security_policy: contentSecurityPolicy,
     profile: discovery.profile,
     task_ids: [taskID, recoveredTaskID, waitingID, cancellationID],
     presentation_id: currentPresentation.presentation_id,
     application_event_id: eventView.event_id,
     checks: [
       "actual report file and independent readback",
+      "complete authenticated manifest and connection identity binding",
       "accurate full artifact preview",
       "lost applied receipt + reload + original lookup",
       "single task.submit identity",

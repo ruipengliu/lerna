@@ -1,7 +1,7 @@
 import { expect, it } from "vitest";
 import { readFile } from "node:fs/promises";
 import { CORE_SCHEMA_DIGEST } from "./contracts.gen";
-import { digest, parseStrict } from "./json";
+import { digest, jsonBytes, MAX_DOMAIN_BYTES, parseStrict, sha256 } from "./json";
 import { ContractRegistry } from "./schema";
 import type { Discovery, MethodContract } from "./protocol";
 const owner = "service_00000000000000000000000000000001";
@@ -128,4 +128,62 @@ it("accepted 回执同样必须通过原方法输出 Schema，不能保存任意
       requestDigest,
     ),
   ).toThrow(/output_schema/);
+});
+
+it("完整发现清单可到 1 MiB，但业务域仍限 256 KiB，严格原字节规则保持一致", async () => {
+  const method: MethodContract = {
+    ...contract,
+    name: "probe.manifest",
+    input_schema: { type: "object", properties: {}, additionalProperties: false },
+    output_schema: { type: "object", properties: {}, additionalProperties: false },
+    recovery: "r".repeat(4096),
+  };
+  method.schema_digest = await digest([method.input_schema, method.output_schema]);
+  const methods = Array.from({ length: 80 }, (_, index) => ({
+    ...method,
+    name: `probe.manifest_${index}`,
+  }));
+  const manifestBytes = jsonBytes(methods, 1048576);
+  expect(manifestBytes.byteLength).toBeGreaterThan(MAX_DOMAIN_BYTES);
+  const discovery: Discovery = {
+    protocol: "harness/1",
+    profile: "architecture-2026-10-data1",
+    logical_service_id: owner,
+    identity_scope: `sha256:${"1".repeat(64)}`,
+    identity_revision: 1,
+    schema_digest: CORE_SCHEMA_DIGEST,
+    core_schema_path: "/api/schema/core",
+    methods,
+    methods_digest: await sha256(manifestBytes),
+    limits: { max_domain_bytes: 262144, max_frame_bytes: 1048576, max_pending: 32 },
+  };
+  const raw = new Uint8Array(
+    await readFile(
+      new URL("../../../docs/architecture/protocol/core.schema.json", import.meta.url),
+    ),
+  );
+  const discoveryText = JSON.stringify(discovery);
+  const registry = await ContractRegistry.create(parseStrict(discoveryText, 1048576), raw);
+  const firstMethod = methods[0];
+  if (!firstMethod) throw new Error("expected nonempty fixture manifest");
+  expect(registry.methodsDigest).toBe(discovery.methods_digest);
+  expect(registry.validateInput(firstMethod.name, {}, "query")).toEqual({});
+  expect(() => registry.validateOutput(firstMethod.name, { extra: true })).toThrow(/output_schema/);
+  await expect(digest(methods)).rejects.toThrow(/invalid_json_bytes/);
+  expect(() => parseStrict(discoveryText)).toThrow(/invalid_json_bytes/);
+  expect(() =>
+    registry.validateInput(firstMethod.name, { body: "x".repeat(MAX_DOMAIN_BYTES) }, "query"),
+  ).toThrow(/invalid_json_bytes/);
+  expect(() =>
+    parseStrict(discoveryText.replace('"profile":', '"protocol":"harness/1","profile":'), 1048576),
+  ).toThrow(/duplicate_key/);
+  expect(() => parseStrict('{"recovery":"\\ud800"}', 1048576)).toThrow(/invalid_unicode/);
+  const tooMany = Array.from({ length: 260 }, (_, index) => ({
+    ...method,
+    name: `probe.too_large_${index}`,
+  }));
+  expect(() => jsonBytes(tooMany, 1048576)).toThrow(/invalid_json_bytes/);
+  await expect(ContractRegistry.create({ ...discovery, methods: tooMany }, raw)).rejects.toThrow(
+    /invalid_json_bytes/,
+  );
 });

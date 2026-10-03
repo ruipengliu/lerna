@@ -49,17 +49,25 @@ type App struct {
 	ApplicationBinding                                               api.ObjectRef
 	ApplicationEventSchema                                           api.Schema
 	GrantID                                                          string
+	OwnsTargets                                                      bool
 }
 
 func component(name string) api.ComponentRef {
 	return api.ComponentRef{ComponentID: platform.StableDevelopmentID("component", name), Version: "1.0.0", Digest: api.Hash([]byte("harness-builtin/" + name + "/1"))}
 }
 func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
+	return OpenAppForRole(ctx, c, initialize, "dev")
+}
+
+func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string) (*App, error) {
+	if role != "dev" && role != "worker" && role != "gateway" && role != "application" && role != "management" {
+		return nil, api.E("unsupported", "process_role_not_configured")
+	}
 	st, e := OpenStore(ctx, c, false)
 	if e != nil {
 		return nil, e
 	}
-	a := &App{Config: c, Store: st, Registry: runtime.NewRegistry()}
+	a := &App{Config: c, Store: st, Registry: runtime.NewRegistry(), OwnsTargets: role == "dev" || role == "worker"}
 	ok := false
 	defer func() {
 		if !ok {
@@ -127,20 +135,32 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 			return nil, e
 		}
 	}
-	a.Files, e = execadapter.NewManagedFiles(filepath.Join(c.DataRoot, "files"))
-	if e != nil {
-		return nil, e
+	if a.OwnsTargets {
+		a.Files, e = execadapter.NewManagedFiles(filepath.Join(c.DataRoot, "files"))
+		if e != nil {
+			return nil, e
+		}
 	}
 	phoneIDs := []string{platform.StableDevelopmentID("resource", "phone-one"), platform.StableDevelopmentID("resource", "phone-two"), platform.StableDevelopmentID("resource", "phone-three")}
 	if e = os.MkdirAll(filepath.Join(c.DataRoot, "phones"), 0700); e != nil {
 		return nil, e
 	}
-	a.Phones, e = execadapter.NewSimulatedPhones(filepath.Join(c.DataRoot, "phones"), phoneIDs)
-	if e != nil {
-		return nil, e
+	if a.OwnsTargets {
+		a.Phones, e = execadapter.NewSimulatedPhones(filepath.Join(c.DataRoot, "phones"), phoneIDs)
+		if e != nil {
+			return nil, e
+		}
 	}
 	execContent := executionContent{a}
-	a.Execution, e = execution.New(execution.Config{OwnerID: c.OwnerID, Content: execContent, Authority: executionAuthority{a}, AuthorityParticipants: []string{"task", "governance", "content", "memory", "platform"}, Drivers: []execution.Driver{&execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud"}, &execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud", ReadOnly: true}, a.Phones, &execution.TrustedComputeDriver{Content: execContent, Store: st, Location: "cloud"}}, ResourceDriver: a.Phones, Location: "cloud"})
+	drivers := []execution.Driver{&execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud"}, &execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud", ReadOnly: true}, a.Phones, &execution.TrustedComputeDriver{Content: execContent, Store: st, Location: "cloud"}}
+	var resources execution.ResourceDriver = a.Phones
+	if !a.OwnsTargets {
+		for i, driver := range drivers {
+			drivers[i] = contractOnlyDriver{capability: driver.Capability()}
+		}
+		resources = contractOnlyResources{}
+	}
+	a.Execution, e = execution.New(execution.Config{OwnerID: c.OwnerID, Content: execContent, Authority: executionAuthority{a}, AuthorityParticipants: []string{"task", "governance", "content", "memory", "platform"}, Drivers: drivers, ResourceDriver: resources, Location: "cloud"})
 	if e != nil {
 		return nil, fmt.Errorf("construct Execution: %w", e)
 	}
@@ -204,20 +224,24 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 	status, e := a.Store.Within(ctx, a.Scope, []string{"governance"}, func(tx runtime.Tx) error {
 		for _, r := range rules {
 			if _, e := a.Governance.RegisterRuleTx(ctx, tx, governance.RuleDefinition{ComponentRef: r.RuleRef, Kind: r.Kind, Predicate: r.Predicate, AllowedBasis: r.AllowedBasis, RiskClass: "ordinary", MaxObservationAgeSeconds: 300, Calibrated: true}); e != nil {
-				return e
+				return fmt.Errorf("register development rule: %w", e)
 			}
 		}
-		var existing api.Grant
-		if _, e := tx.Get(ctx, "governance.grants", a.GrantID, &existing); e == nil {
-			return nil
-		} else if !api.IsCode(e, "not_found") {
+		exists, e := a.Governance.GrantExistsTx(ctx, tx, a.ServiceAuth, a.GrantID)
+		if e != nil {
 			return e
+		}
+		if exists {
+			return nil
 		}
 		now, e := tx.Now(ctx)
 		if e != nil {
 			return e
 		}
-		return a.Governance.ProvisionGrantTx(ctx, tx, a.ServiceAuth, api.Grant{GrantID: a.GrantID, OwnerID: a.Scope.OwnerID, Revision: 1, SubjectRef: a.ServiceAuth.Ref(a.Scope.OwnerID), Resources: []string{"managed-files"}, Actions: []string{"file.read", "file.write"}, Purposes: []string{"goal_action", "requirement_check"}, Recipients: []string{a.Scope.OwnerID}, Locations: []string{"cloud"}, Mode: "continuous", State: "active", NotBefore: api.Time(now), ExpiresAt: a.Config.PolicyExpiresAt, Limits: []api.Amount{{Unit: "USD", Value: "100"}}})
+		if e = a.Governance.ProvisionGrantTx(ctx, tx, a.ServiceAuth, api.Grant{GrantID: a.GrantID, OwnerID: a.Scope.OwnerID, Revision: 1, SubjectRef: a.ServiceAuth.Ref(a.Scope.OwnerID), Resources: []string{"managed-files"}, Actions: []string{"file.read", "file.write"}, Purposes: []string{"goal_action", "requirement_check"}, Recipients: []string{a.Scope.OwnerID}, Locations: []string{"cloud"}, Mode: "continuous", State: "active", NotBefore: api.Time(now), ExpiresAt: a.Config.PolicyExpiresAt, Limits: []api.Amount{{Unit: "USD", Value: "100"}}}); e != nil {
+			return fmt.Errorf("provision development grant: %w", e)
+		}
+		return nil
 	})
 	if status == runtime.CommitUnknown {
 		return runtime.ErrCommitUnknown
@@ -240,9 +264,15 @@ func (a *App) Close() error {
 	var err error
 	if a.Files != nil {
 		err = a.Files.Close()
+		a.Files = nil
+	}
+	if a.Phones != nil {
+		err = errors.Join(err, a.Phones.Close())
+		a.Phones = nil
 	}
 	if a.Store != nil {
 		err = errors.Join(err, a.Store.Close())
+		a.Store = nil
 	}
 	return err
 }

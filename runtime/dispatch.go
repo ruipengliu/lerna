@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"sort"
 	"sync"
+	"time"
 
 	"github.com/ruipengliu/lerna/api"
 )
@@ -293,6 +294,32 @@ func (d *Dispatcher) Query(ctx context.Context, auth Auth, raw []byte) (json.Raw
 	if err := m.input.Validate(q.Payload); err != nil {
 		return nil, err
 	}
+	bindings, ok := d.Store.(QueryBindingStore)
+	if !ok {
+		return nil, api.E("unsupported", "query_identity_store_unavailable")
+	}
+	if _, status, err := bindings.PruneQueries(ctx, d.Scope(auth), 16); status == CommitUnknown {
+		return nil, ErrCommitUnknown
+	} else if err != nil {
+		return nil, err
+	}
+	digest, err := api.Digest(q)
+	if err != nil {
+		return nil, err
+	}
+	roles := append([]string{}, auth.Roles...)
+	sort.Strings(roles)
+	rolesDigest, err := api.Digest(roles)
+	if err != nil {
+		return nil, err
+	}
+	binding, status, err := bindings.BindQuery(ctx, d.Scope(auth), QueryBindingInput{QueryID: q.QueryID, PrincipalID: auth.SubjectID, CredentialGeneration: auth.CredentialGeneration, RolesDigest: rolesDigest, QueryDigest: digest, TTL: 5 * time.Minute})
+	if status == CommitUnknown {
+		return nil, ErrCommitUnknown
+	}
+	if err != nil {
+		return nil, err
+	}
 	v, err := m.Query(ctx, d.Store, d.Scope(auth), auth, q)
 	if err != nil {
 		return nil, err
@@ -300,6 +327,15 @@ func (d *Dispatcher) Query(ctx context.Context, auth Auth, raw []byte) (json.Raw
 	b := api.Raw(v)
 	if err := m.output.Validate(b); err != nil {
 		return nil, fmt.Errorf("invalid query output for %s: %w", q.Method, err)
+	}
+	resultDigest, err := api.Digest(v)
+	if err != nil {
+		return nil, err
+	}
+	if _, status, err := bindings.SealQuery(ctx, d.Scope(auth), binding, resultDigest); status == CommitUnknown {
+		return nil, ErrCommitUnknown
+	} else if err != nil {
+		return nil, err
 	}
 	return b, nil
 }

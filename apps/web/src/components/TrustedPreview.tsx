@@ -30,6 +30,8 @@ export function TrustedPreview({
   const referenceKey = canonical(refs);
   const previewKey = `${generation}:${referenceKey}`;
   const key = `${previewKey}:${inlineBodies ? canonical(inlineBodies) : "content"}`;
+  const currentKey = useRef(key);
+  currentKey.current = key;
   useEffect(() => {
     const controller = new AbortController();
     callback.current?.(undefined);
@@ -60,7 +62,10 @@ export function TrustedPreview({
       .then((values) =>
         values.map(({ ref, bytes }): Body => {
           if (["text/plain", "text/markdown", "application/json"].includes(ref.media_type))
-            return { ref, text: new TextDecoder("utf-8", { fatal: true }).decode(bytes) };
+            return {
+              ref,
+              text: new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(bytes),
+            };
           if (["image/png", "image/jpeg"].includes(ref.media_type)) {
             const encoded = btoa(Array.from(bytes, (entry) => String.fromCharCode(entry)).join(""));
             const image = `data:${ref.media_type};base64,${encoded}`;
@@ -124,9 +129,11 @@ export function TrustedPreview({
                 src={body.image}
                 alt="准确版本的完整正文图像"
                 onLoad={() => {
+                  if (currentKey.current !== key) return;
                   if (body.image) setImages((previous) => new Set(previous).add(body.image ?? ""));
                 }}
                 onError={() => {
+                  if (currentKey.current !== key) return;
                   callback.current?.(undefined);
                   setState({
                     key,
