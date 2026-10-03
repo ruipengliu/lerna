@@ -2,6 +2,7 @@ package development
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"io"
@@ -17,6 +18,7 @@ import (
 	execadapter "github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
+	"github.com/ruipengliu/lerna/internal/execution"
 	"github.com/ruipengliu/lerna/internal/governance"
 	"github.com/ruipengliu/lerna/internal/task"
 	"github.com/ruipengliu/lerna/runtime"
@@ -96,12 +98,24 @@ func TestConfiguredKnowledgeActionCountRejectsOriginalTwoActionProposalBeforeUse
 	}
 }
 
+func TestConfiguredKnowledgeCompositeSnapshotKeepsActualLeafQualificationAndDuration(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) {
+			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
+				t.Skip("actual PostgreSQL DSN required")
+			}
+			runConfiguredKnowledge(t, driver, "action")
+		})
+	}
+}
+
 func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 	defer cancel()
 	var sends atomic.Int32
-	wireBody := make(chan []byte, 1)
+	var active atomic.Pointer[App]
+	wireBody := make(chan []byte, 3)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sends.Add(1)
 		body, err := io.ReadAll(io.LimitReader(r.Body, api.MaxJSONBytes+1))
@@ -112,7 +126,7 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 		wireBody <- body
 		w.Header().Set("Content-Type", "application/json")
 		reply := knowledgeContractReply()
-		if blockedControl == "count" {
+		if blockedControl == "count" || blockedControl == "action" {
 			var wire struct {
 				Messages []struct {
 					Content string `json:"content"`
@@ -125,7 +139,13 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 				t.Error("actual frozen capability/binding missing")
 				return
 			}
-			reply = knowledgeReadActionsReply(input.Snapshot, 2)
+			if blockedControl == "count" {
+				reply = knowledgeReadActionsReply(input.Snapshot, 2)
+			} else if input.Snapshot.Purpose == "interpret_requirements" {
+				reply = knowledgeRefinementReply(active.Load().ArtifactRule)
+			} else if sends.Load() == 2 {
+				reply = knowledgeReadActionsReply(input.Snapshot, 1)
+			}
 		}
 		_, _ = w.Write(reply)
 	}))
@@ -149,6 +169,8 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 		agentLimits.MaxInputBytes = 1
 	} else if blockedControl == "cost" {
 		agentLimits.MaxCallCostBound = []api.Amount{{Unit: "USD", Value: "0"}}
+	} else if blockedControl == "action" {
+		agentLimits.MaxActionDurationSeconds = 30
 	}
 	limits, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), "application/json", api.Raw(agentLimits), []api.ContentRef{}, []api.ContentRef{})
 	if err != nil {
@@ -166,12 +188,24 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 		t.Fatal(err)
 	}
 	cfg.Knowledge = &KnowledgeConfig{SkillRefs: []api.ComponentRef{skill.SkillRef}, AgentConfigRef: &agent.AgentConfigRef, ControlLimits: governance.KnowledgeControls{MaxInputBytes: api.MaxJSONBytes, MaxOutputTokens: 512, MaxActionsPerDecision: 4, MaxDelegationsPerDecision: 2, MaxDepth: 2, MaxActionDurationSeconds: 30, MaxCallCostBound: []api.Amount{{Unit: "USD", Value: "1"}}}}
+	const originalFile = "Exact original bytes from the managed target."
+	if blockedControl == "action" {
+		cfg.Knowledge.ControlLimits.MaxActionDurationSeconds = 60
+		if err = os.WriteFile(filepath.Join(root, "files", "knowledge-original.txt"), []byte(originalFile), 0600); err != nil {
+			t.Fatal(err)
+		}
+	}
 	a, err = OpenApp(ctx, cfg, false)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer a.Close()
-	goal, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), "text/plain", []byte("请依据准确知识检查报告是否可以继续。"), []api.ContentRef{}, []api.ContentRef{})
+	active.Store(a)
+	goalMedia, goalBody := "text/plain", []byte("请依据准确知识检查报告是否可以继续。")
+	if blockedControl == "action" {
+		goalMedia, goalBody = "application/json", api.Raw(brain.GoalSpec{Kind: "answer", Body: "knowledge contract"})
+	}
+	goal, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), goalMedia, goalBody, []api.ContentRef{}, []api.ContentRef{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -241,7 +275,11 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 			t.Fatal(err)
 		}
 		if got.Status == "failed" && !got.AccountingOpen {
-			if len(got.Budget) != 1 || got.Budget[0].Spent != "0.00024" || got.Budget[0].Reserved != "0" || got.ResultRef != nil {
+			spent := "0.00024"
+			if blockedControl == "action" {
+				spent = "0.00072"
+			}
+			if len(got.Budget) != 1 || got.Budget[0].Spent != spent || got.Budget[0].Reserved != "0" || got.ResultRef != nil {
 				t.Fatalf("knowledge changed actual failure or known fee: %+v", got)
 			}
 			break
@@ -251,6 +289,44 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 			t.Fatalf("original Task did not settle: %+v %v", got, ctx.Err())
 		case <-time.After(20 * time.Millisecond):
 		}
+	}
+	if blockedControl == "action" {
+		facts, err := a.Task.ContextFacts(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+		if err != nil || len(facts.Operations) != 1 || !facts.Operations[0].Fact.Closed || facts.Operations[0].Fact.MayApplyLater || sends.Load() != 3 {
+			t.Fatalf("qualified original action did not actually finish once: %v %+v sends=%d", err, facts.Operations, sends.Load())
+		}
+		intent, err := a.Task.ReadOperationIntent(ctx, a.Store, a.Scope, a.UserAuth, facts.Operations[0].Intent.OperationID)
+		if err != nil || intent.MaxDurationSeconds != 30 || !api.Equal(intent.InstallLockRef, component("builtin-install-lock")) || !api.Equal(intent.CapabilityRef, execadapter.FileReadCapability().Ref) {
+			t.Fatalf("knowledge replaced original program qualification or duration: %v %+v", err, intent)
+		}
+		deadline, _ := api.ParseTime(intent.Deadline)
+		taskDeadline, _ := api.ParseTime(facts.Task.Deadline)
+		if !deadline.Before(taskDeadline.Add(-2 * time.Minute)) {
+			t.Fatal("effective 30-second action duration did not tighten the five-minute Task deadline")
+		}
+		raw, err := a.query(ctx, "execution.get", intent.OperationID, execution.OperationIDInput{OperationID: intent.OperationID})
+		var operation execution.OperationView
+		if err != nil || api.Decode(raw, &operation) != nil || operation.Operation.ExecutionState != "closed" || operation.Operation.ResultRef == nil || len(operation.Attempts.Items) != 1 || operation.Attempts.Items[0].StartedAt == "" || !operation.Attempts.Items[0].ActuallyStopped || operation.Attempts.Items[0].MayApplyLater != false {
+			t.Fatalf("original target readback missing: %v %+v", err, operation)
+		}
+		bytes, err := a.Memory.Read(ctx, a.Scope, a.UserAuth, *operation.Operation.ResultRef, "execution_result")
+		var observed execadapter.FileReadResult
+		if err != nil || api.Decode(bytes, &observed) != nil || observed.DataBase64 != base64.StdEncoding.EncodeToString([]byte(originalFile)) {
+			t.Fatalf("actual target bytes differ: %v %+v", err, observed)
+		}
+		if err = a.Close(); err != nil {
+			t.Fatal(err)
+		}
+		reopened, err := OpenApp(ctx, cfg, false)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer reopened.Close()
+		after, err := reopened.Task.ReadOperationIntent(ctx, reopened.Store, reopened.Scope, reopened.UserAuth, intent.OperationID)
+		if err != nil || !api.Equal(after, intent) || sends.Load() != 3 {
+			t.Fatalf("reopen refreshed original action identity/deadline: %v %+v", err, after)
+		}
+		return
 	}
 	if sends.Load() != 1 {
 		t.Fatalf("actual physical requests=%d", sends.Load())
@@ -329,6 +405,22 @@ func knowledgeReadActionsReply(snapshot api.Snapshot, count int) []byte {
 	}
 	return api.Raw(map[string]any{
 		"id": "knowledge-actions-reply", "choices": []any{map[string]any{"index": 0, "finish_reason": "stop", "message": map[string]any{"role": "assistant", "content": string(api.Raw(struct {
+			Draft    brain.Draft              `json:"draft"`
+			Contents []brain.GeneratedContent `json:"contents"`
+		}{draft, contents}))}}},
+		"usage": map[string]any{"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120, "prompt_tokens_details": map[string]any{"cached_tokens": 40}},
+	})
+}
+
+func knowledgeRefinementReply(rule api.ComponentRef) []byte {
+	draft := brain.Draft{Kind: "refine_requirements", ReasonLocalID: "reason", Requirements: []brain.DraftRequirement{{CandidateKey: "original_answer", Kind: "quality", StatementLocalID: "statement", ParametersLocalID: "parameters", RuleRef: rule, Required: true}}}
+	contents := []brain.GeneratedContent{
+		{LocalID: "reason", MediaType: "text/plain", Body: "Preserve the original user goal before any tool admission.", DisclosedSources: []api.ContentRef{}},
+		{LocalID: "statement", MediaType: "text/plain", Body: "The answer must match the original knowledge contract.", DisclosedSources: []api.ContentRef{}},
+		{LocalID: "parameters", MediaType: "application/json", Body: string(api.Raw(brain.RuleParameters{Kind: "answer", ExpectedHash: api.Hash([]byte("knowledge contract")), ExpectedLength: 18})), DisclosedSources: []api.ContentRef{}},
+	}
+	return api.Raw(map[string]any{
+		"id": "knowledge-refinement-reply", "choices": []any{map[string]any{"index": 0, "finish_reason": "stop", "message": map[string]any{"role": "assistant", "content": string(api.Raw(struct {
 			Draft    brain.Draft              `json:"draft"`
 			Contents []brain.GeneratedContent `json:"contents"`
 		}{draft, contents}))}}},
