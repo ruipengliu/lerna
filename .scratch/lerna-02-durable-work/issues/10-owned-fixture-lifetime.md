@@ -4,7 +4,7 @@
 
 **Blocked by:** 02核心01–08、额外09与最终两轴review fixes已合入（当前实现基线`6783307ebe7d802f78f9aa7bdb1a1464ec5749e1`）。无03或后续切片依赖；root整片证据/最后CI不是隐藏业务验收。
 
-**Status:** claimed
+**Status:** resolved
 
 **Decision:** [采用的架构决定](../architecture-decision.md)。用户授权代理已完成5轮11项frontier选择并确认共享理解。唯一Worth exploring候选被选为本次可逆测试fixture deepening，无新增ADR/领域词汇。
 
@@ -17,9 +17,9 @@
 - [x] 现有process module继续处理实际private配置管道、帧、Kill/Wait/reap；fixture负责先释放父writer再交接准确scope，关联真实child的有限退出协作，child无创建/删除权限。正常/失败/取消后只有确认child退出才重开排他writer或清理scope；普通caller不再读map或分支处理PG creator/SQLite Close。启动/Wait结果未知不得当作已经退出。
 - [x] historicalFixture继续验证/恢复真实v1/v2 artifact及原dump/COPY/版本/fault；它只改用稳定scope与writer生命周期。支持其实际“创建空owned scope→历史恢复→打开当前writer”次序；不得在Reopen隐式Migrate，不把完整历史loader/psql/docker变成fixture通用资源插件，不制造历史业务行。
 - [x] setup的Open/Create/Migrate/首writer任一步失败均有有限收尾：未确认Create不获owns，确认Create后的失败可清理其scope；replacement Open失败不丢stable scope。真实取消/Close排空及既有迁移fault提供失败对照；失败报告保留可判断原因而不打印DSN/密码。错误或Close未完成不得静默变nil。
-- [ ] cleanup使用独立有限context，先封新writer、释放/join登记借用、Close所有writer/peer，确认后删除自有scope，最后Close admin；重复调用安全，部分失败保留真实归属/残留并报告。不得依赖普通caller安排creator cleanup次序，不增加无界后台goroutine、sleep、猜删scope或CID。基础设施观察只核验本轮确证scope，不读取私有业务表冒充业务断言。
+- [x] cleanup使用独立有限context，先封新writer、释放/join登记借用、Close所有writer/peer，确认后删除自有scope，最后Close admin；重复调用安全，部分失败保留真实归属/残留并报告。不得依赖普通caller安排creator cleanup次序，不增加无界后台goroutine、sleep、猜删scope或CID。基础设施观察只核验本轮确证scope，不读取私有业务表冒充业务断言。
 - [x] 旧Host/public command.get和明确storage机制测试surface、所有正常/故障断言保留。仅真正由新interface覆盖的浅helper镜像检查可以替换；不删唯一后端反例。当前产品代码、公开1.0、0001–0005及四组全部27项immutable来源校验均无改动；新module不抽取未来03的runtime/Decision实现。
-- [ ] 相关targeted双库生命周期/failure/process/pool tests、`make check`及受影响完整顺序count1 integration和race按现有必需入口通过（normal/race各timeout120）；记录真实命令、pin、duration、red/失败历史、scope cleanup证据和限制。必须依赖缺失时硬失败，不skip。后续review与准确push CI由root核实，不以此前核心CI冒充本票的新验证。
+- [x] 相关targeted双库生命周期/failure/process/pool tests、`make check`及受影响完整顺序count1 integration和race按现有必需入口通过（normal/race各timeout120）；记录真实命令、pin、duration、red/失败历史、scope cleanup证据和限制。必须依赖缺失时硬失败，不skip。后续review与准确push CI由root核实，不以此前核心CI冒充本票的新验证。
 
 ## Implementation guidance
 
@@ -54,3 +54,8 @@ Interface用当前真实需要的动作描述：获得当前实际Store、关闭
 
 
 2026-10-03，root整合至 `c52e68b46c619df0c8e5df1b27a0b5dded3ef65f`，准确远端 CI37160694293 success。后置两轴独立审查各发现1项P2：已确认退出但失败的PG holder历史事务错误永久阻断后续Cleanup。票10重新claimed，AC8及修复后的AC10待验证；先前通过与失败历史保留。交原单一review fixer处理全部新增发现，不以绿色CI关闭未覆盖路径。结构收益独立复核已实现，cleanup正确性尚未退出；未知资源限制保留。
+
+
+2026-10-03，新增两轴同一P2由原单一review fixer修复，实际代码 `f56d93095304f0956c23b5641d9b7b1e222c40c1`（仅三个recovery测试文件）。已确认退出的PG holder失败以errors.Is/As聚合报告，仍推进writer/peer、自有scope及admin收尾；未确认callback保留scope/句柄，确认后可重试。正常holder/两库接替对照、真实PgError42P01+取消聚合、真实短join未确认及重复cleanup、邻scope Host/public receipt均通过。核心runnable red0.328s→green0.302s；补测遗漏空schema显式Migrate的17.203s失败及修正保持记录。业务3s/holder10s/join11s/whole120s未放宽，没有泛用resource framework。
+
+AC8/10本地复验完成：makefmt/check/base-race、27来源/modverify、完整顺序count1 integration50.431s/race93.834s（各timeout120）通过，无DB/broad竞争或skip。独立有限观察本fix即时fsync registry，实际285个PG namespace及265个SQLite fixture目录全absent；仅清理自己7个准确登记overlay TMPDIR。单初始red残留1个已登记PG namespace早已精确回收，不扫描未知scope。详细命令、actualcode、real失败与限度见[本次修复证据](../fixture-cleanup-fix-evidence.md)及`/tmp/lerna-02-fixture-cleanup-fix-evidence.md`。先前两prototype未知PG名、旧04未知schema/07不完整CID及全部历史结果保持；本票实现resolved不代替独立两轴/结构收益确认和准确新CI，whole02仍未退出。
