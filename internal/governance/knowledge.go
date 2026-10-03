@@ -44,9 +44,18 @@ func (s *Service) registerKnowledge(r *runtime.Registry) error {
 			return registerQuery[AgentConfigReference, AgentConfigRecord](r, "agent_config.get", s.readAgentConfig)
 		},
 		func() error {
+			return registerCommand[KnowledgeChange, StateOutput](s, r, "agent_config.withdraw", true, false, s.withdrawAgentConfig)
+		},
+		func() error {
+			return registerCommand[KnowledgeChange, StateOutput](s, r, "agent_config.reopen", true, true, s.reopenAgentConfig)
+		},
+		func() error {
 			return registerQuery[KnowledgeRequest, KnowledgeBundle](r, "knowledge.load", func(ctx context.Context, _ runtime.Store, scope runtime.Scope, auth runtime.Auth, _ api.Query, in KnowledgeRequest) (KnowledgeBundle, error) {
 				return s.LoadKnowledge(ctx, scope, auth, in)
 			})
+		},
+		func() error {
+			return registerQuery[KnowledgeSelectionReference, KnowledgeCommit](r, "knowledge.selection.get", s.readKnowledgeSelection)
 		},
 	} {
 		if err := register(); err != nil {

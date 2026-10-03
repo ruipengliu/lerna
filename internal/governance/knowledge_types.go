@@ -109,6 +109,26 @@ type KnowledgeBundle struct {
 	Selection KnowledgeSelection `json:"selection"`
 	Packet    KnowledgePacket    `json:"packet"`
 }
+type KnowledgeAdmission struct {
+	Selection   KnowledgeSelection `json:"selection"`
+	Snapshot    api.Snapshot       `json:"snapshot"`
+	SnapshotRef api.ContentRef     `json:"snapshot_ref"`
+	PacketRef   api.ContentRef     `json:"packet_ref"`
+	DecisionID  string             `json:"decision_id"`
+}
+type KnowledgeCommit struct {
+	ID          string             `json:"id"`
+	Revision    uint64             `json:"revision"`
+	Selection   KnowledgeSelection `json:"selection"`
+	SnapshotRef api.ContentRef     `json:"snapshot_ref"`
+	PacketRef   api.ContentRef     `json:"packet_ref"`
+	DecisionID  string             `json:"decision_id"`
+	HolderRefs  []api.ObjectRef    `json:"holder_refs"`
+}
+type KnowledgeSelectionReference struct {
+	SnapshotRef api.ContentRef `json:"snapshot_ref"`
+	DecisionID  string         `json:"decision_id"`
+}
 type KnowledgeChange struct {
 	Ref    api.ObjectRef `json:"ref"`
 	Reason string        `json:"reason"`

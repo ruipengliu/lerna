@@ -187,6 +187,17 @@ func (s *Service) LoadKnowledge(ctx context.Context, scope runtime.Scope, auth r
 				return api.E("revision_conflict", "agent_config_changed_during_load")
 			}
 		}
+		var original KnowledgeSelection
+		_, err = tx.Get(ctx, ns("knowledge_candidates"), out.Selection.ID, &original)
+		if errMissing(err) {
+			return tx.Create(ctx, ns("knowledge_candidates"), out.Selection.ID, in.SnapshotID, out.Selection)
+		}
+		if err != nil {
+			return err
+		}
+		if !api.Equal(original, out.Selection) {
+			return api.E("idempotency_conflict", "original_knowledge_selection_changed")
+		}
 		return nil
 	})
 	if status == runtime.CommitUnknown {

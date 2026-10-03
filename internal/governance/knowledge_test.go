@@ -2,6 +2,7 @@ package governance_test
 
 import (
 	"context"
+	"errors"
 	"os"
 	"path/filepath"
 	"testing"
@@ -44,6 +45,24 @@ func TestAgentConfigFreezesBrainAndNarrowsParentCapabilityAndControlBounds(t *te
 	effective := bundle.Selection.EffectiveControls
 	if len(bundle.Selection.EffectiveCapabilityRefs) != 1 || !api.Equal(bundle.Selection.EffectiveCapabilityRefs[0], inspect) || effective.MaxInputBytes != 32768 || effective.MaxOutputTokens != 1000 || effective.MaxActionsPerDecision != 2 || effective.MaxDelegationsPerDecision != 0 || effective.MaxDepth != 1 || effective.MaxActionDurationSeconds != 10 || len(effective.MaxCallCostBound) != 1 || effective.MaxCallCostBound[0].Value != "0.01" || bundle.Packet.Kind != "ordinary_knowledge/1" {
 		t.Fatalf("configuration exceeded original parent ceiling %+v", bundle)
+	}
+	_, receipt = command(t, f, "agent_config.withdraw", record.ID, governance.KnowledgeChange{Ref: f.scope.Ref(record.ID, record.Revision), Reason: "withdraw original configuration"}, &record.Revision)
+	if receipt.Stage != "applied" {
+		t.Fatalf("agent withdrawal %+v", receipt)
+	}
+	q := api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: f.scope.OwnerID, QueryID: api.NewID("query"), Method: "knowledge.load", TargetID: f.scope.OwnerID, Payload: api.Raw(request)}
+	if _, err := f.dispatcher.Query(f.ctx, f.auth, api.Raw(q)); !api.IsCode(err, "invalid_state") {
+		t.Fatalf("withdrawn agent was selected %v", err)
+	}
+	record = query[governance.AgentConfigRecord](t, f, "agent_config.get", governance.AgentConfigReference{AgentConfigRef: agent.AgentConfigRef})
+	_, receipt = command(t, f, "agent_config.reopen", record.ID, governance.KnowledgeChange{Ref: f.scope.Ref(record.ID, record.Revision), Reason: "recheck original control bytes"}, &record.Revision)
+	if receipt.Stage != "accepted" {
+		t.Fatalf("agent reopen %+v", receipt)
+	}
+	drain(t, f, governance.KnowledgeValidationJob)
+	record = query[governance.AgentConfigRecord](t, f, "agent_config.get", governance.AgentConfigReference{AgentConfigRef: agent.AgentConfigRef})
+	if record.State != "active" || record.Revision != 5 || !api.Equal(record.Definition, agent) {
+		t.Fatalf("agent original version reopened %+v", record)
 	}
 }
 
@@ -125,5 +144,63 @@ func TestCustomSkillWithdrawsAndReopensOnlyOriginalAccurateVersion(t *testing.T)
 	state = query[governance.SkillRecord](t, f, "skill.get", governance.SkillReference{SkillRef: in.SkillRef})
 	if state.State != "active" || state.Revision != 5 || state.ValidationCommandID != c.CommandID || !api.Equal(state.Definition, in) {
 		t.Fatalf("original version reopened %+v", state)
+	}
+}
+
+func TestSnapshotKnowledgeAdmissionKeepsOriginalHoldersAndBlocksWithdrawnSkill(t *testing.T) {
+	root := t.TempDir()
+	f := environment(t, governance.Options{Content: knowledgeContent{root}, KnowledgeGate: knowledgeGate{}})
+	f.auth.Roles = nil
+	skill := exampleSkill(t, f, root)
+	command(t, f, "skill.register", skill.SkillRef.ComponentID, skill, nil)
+	drain(t, f, governance.KnowledgeValidationJob)
+	profile := api.ComponentRef{ComponentID: api.NewID("brain"), Version: "1", Digest: api.Hash([]byte("fixed-brain"))}
+	req := governance.KnowledgeRequest{TaskRef: f.scope.Ref(api.NewID("task"), 1), SnapshotID: api.NewID("snapshot"), BrainRef: profile, ParentInstallLockRef: profile, SkillRefs: []api.ComponentRef{skill.SkillRef}, CapabilityRefs: []api.ComponentRef{}, ControlLimits: governance.KnowledgeControls{MaxInputBytes: 65536, MaxOutputTokens: 1000, MaxActionsPerDecision: 2, MaxDelegationsPerDecision: 0, MaxDepth: 0, MaxActionDurationSeconds: 10, MaxCallCostBound: []api.Amount{}}, ExpiresAt: api.Time(time.Now().Add(time.Minute))}
+	bundle := query[governance.KnowledgeBundle](t, f, "knowledge.load", req)
+	packet := knowledgeBytes(t, f, root, api.Raw(bundle.Packet), "application/vnd.harness.knowledge+json")
+	goal := knowledgeBytes(t, f, root, []byte("inspect the original report"), "text/plain")
+	sources := append(append([]api.ContentRef{}, bundle.Selection.SourceRefs...), packet, goal)
+	snap := api.Snapshot{SnapshotID: req.SnapshotID, Revision: 1, TaskRef: req.TaskRef, GoalRevision: 1, ControlRevision: 1, GoalRef: goal, Requirements: []api.Requirement{}, RequirementsDigest: api.Hash([]byte("requirements")), RequirementsState: "ready", Purpose: "continue_task", FactRefs: []api.ObjectRef{}, UnresolvedCollections: []api.CollectionSummary{}, PolicyRef: profile, InstallLockRef: bundle.Selection.InstallLockRef, ModelProfileRef: profile, CapabilityRefs: []api.ComponentRef{}, BindingRefs: []api.ObjectRef{}, MaterialRefs: sources, SelectionReportRef: goal, ProcessedSources: sources, InputTokens: 100, ReservedOutputTokens: 100, SafetyMarginTokens: 10, CountMode: "upper_bound", TokenizerRef: profile, EncodedDigest: api.Hash([]byte("encoded"))}
+	snapshotRef := knowledgeBytes(t, f, root, api.Raw(snap), "application/vnd.harness.snapshot+json")
+	admission := governance.KnowledgeAdmission{Selection: bundle.Selection, Snapshot: snap, SnapshotRef: snapshotRef, PacketRef: packet, DecisionID: api.NewID("decision")}
+	stage := func() (governance.KnowledgeCommit, runtime.CommitStatus, error) {
+		var result governance.KnowledgeCommit
+		status, err := f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error {
+			var e error
+			result, e = f.svc.StageSelectionTx(f.ctx, tx, f.auth, admission)
+			return e
+		})
+		return result, status, err
+	}
+	rollback := errors.New("host business admission failed after staging knowledge")
+	status, err := f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error {
+		if _, err := f.svc.StageSelectionTx(f.ctx, tx, f.auth, admission); err != nil {
+			return err
+		}
+		return rollback
+	})
+	if status != runtime.RolledBack || !errors.Is(err, rollback) {
+		t.Fatalf("atomic rollback %s %v", status, err)
+	}
+	original, status, err := stage()
+	if err != nil || status != runtime.Committed || len(original.HolderRefs) != 4 {
+		t.Fatalf("original Task+Decision data holders %s %v %+v", status, err, original)
+	}
+	replay, status, err := stage()
+	if err != nil || status != runtime.Committed || !api.Equal(original, replay) {
+		t.Fatalf("same original snapshot must reuse holders %s %v %+v", status, err, replay)
+	}
+	public := query[governance.KnowledgeCommit](t, f, "knowledge.selection.get", governance.KnowledgeSelectionReference{SnapshotRef: snapshotRef, DecisionID: admission.DecisionID})
+	if !api.Equal(public, original) {
+		t.Fatalf("published original exact closure %+v", public)
+	}
+	state := query[governance.SkillRecord](t, f, "skill.get", governance.SkillReference{SkillRef: skill.SkillRef})
+	command(t, f, "skill.withdraw", state.ID, governance.KnowledgeChange{Ref: f.scope.Ref(state.ID, state.Revision), Reason: "withdraw before the next physical decision"}, &state.Revision)
+	status, err = f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error {
+		_, e := f.svc.CheckSelectionTx(f.ctx, tx, f.auth, snapshotRef, admission.DecisionID)
+		return e
+	})
+	if status != runtime.RolledBack || !api.IsCode(err, "invalid_state") {
+		t.Fatalf("withdrawn knowledge still dispatched %s %v", status, err)
 	}
 }

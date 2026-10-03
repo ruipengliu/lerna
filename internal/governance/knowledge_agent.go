@@ -7,6 +7,81 @@ import (
 	"github.com/ruipengliu/lerna/runtime"
 )
 
+func (s *Service) withdrawAgentConfig(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in KnowledgeChange) (runtime.Outcome, error) {
+	if err := knowledgeChange(tx.Scope(), auth, c, in); err != nil {
+		return runtime.Outcome{}, err
+	}
+	var current AgentConfigRecord
+	rev, err := tx.Get(ctx, ns("agent_configs"), in.Ref.ObjectID, &current)
+	if err != nil {
+		return runtime.Outcome{}, err
+	}
+	if err := knowledgeAuthor(auth, current.AuthorRef); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if err := requireCAS(c, rev); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if in.Ref.Revision != rev {
+		return runtime.Outcome{}, api.E("revision_conflict", "knowledge_ref_changed")
+	}
+	if current.State == "validating" {
+		return runtime.Outcome{}, api.E("invalid_state", "agent_config_validation_in_progress")
+	}
+	current.State, current.Revision, current.FailureReason = "withdrawn", rev+1, in.Reason
+	if err := tx.Put(ctx, ns("agent_configs"), current.ID, rev, current); err != nil {
+		return runtime.Outcome{}, err
+	}
+	return runtime.Applied(StateOutput{Ref: tx.Scope().Ref(current.ID, current.Revision), State: current.State}), nil
+}
+func (s *Service) reopenAgentConfig(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in KnowledgeChange) (runtime.Outcome, error) {
+	if err := knowledgeChange(tx.Scope(), auth, c, in); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if s.Ports.Content == nil {
+		return runtime.Outcome{}, api.E("unsupported", "knowledge_content_unavailable")
+	}
+	var birth AgentConfigRecord
+	if err := tx.GetVersion(ctx, ns("agent_configs"), in.Ref.ObjectID, 1, &birth); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if err := s.checkKnowledgeTx(ctx, tx, auth, agentContents(birth.Definition), "agent_config.reopen"); err != nil {
+		return runtime.Outcome{}, err
+	}
+	var current AgentConfigRecord
+	rev, err := tx.Get(ctx, ns("agent_configs"), in.Ref.ObjectID, &current)
+	if err != nil {
+		return runtime.Outcome{}, err
+	}
+	if err := knowledgeAuthor(auth, current.AuthorRef); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if err := requireCAS(c, rev); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if in.Ref.Revision != rev {
+		return runtime.Outcome{}, api.E("revision_conflict", "knowledge_ref_changed")
+	}
+	if current.State != "withdrawn" && current.State != "invalid" {
+		return runtime.Outcome{}, api.E("invalid_state", "agent_config_not_closed")
+	}
+	current.State, current.Revision, current.Controls, current.FailureReason, current.ValidationCommandID = "validating", rev+1, nil, "", c.CommandID
+	if err := tx.Put(ctx, ns("agent_configs"), current.ID, rev, current); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if err := tx.Create(ctx, ns("knowledge_validations"), c.CommandID, current.ID, knowledgeValidation{ID: c.CommandID, Revision: 1, RecordID: current.ID, Kind: "agent_config", Auth: auth}); err != nil {
+		return runtime.Outcome{}, err
+	}
+	now, err := tx.Now(ctx)
+	if err != nil {
+		return runtime.Outcome{}, err
+	}
+	if _, err := tx.Raise(ctx, KnowledgeValidationJob, c.CommandID, tx.Scope().Ref(current.ID, current.Revision), now); err != nil {
+		return runtime.Outcome{}, err
+	}
+	return runtime.Accepted(StateOutput{Ref: tx.Scope().Ref(current.ID, current.Revision), State: current.State}), nil
+}
+
 func agentContents(in AgentConfigDefinition) []api.ContentRef {
 	return append([]api.ContentRef{in.ControlLimitsRef}, in.SourceRefs...)
 }
