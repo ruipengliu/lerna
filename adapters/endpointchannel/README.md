@@ -14,4 +14,4 @@ Router 实现 WSS 的可选 `ConnectionProcessor`。`Open` 使用原外 connecti
 
 多实例迟到输出以实际原应用完成后、外回复写入前的公共 PendingResponse seam 延迟取证：SIGKILL 原进程并取得新 binding Ready 后释放旧结果，WSS 实际写门禁丢弃旧结果，原 journal 仍能查询原 receipt。SQLite／PG 的真实原生 WSS consumer 验证准确 ES256 Delivery、fsync ReplyJournal 重开、外 Ack 丢失后内部重绑／同 Reply 恢复、错误 Ack 和篡改原 Reply 拒绝。故障点是外 EmitChecked 在实际 socket 写入前返回失败，源 owner 的实际持久 Reply 已确认；不宣称该点等于任意网络故障。
 
-默认 Processor 的实际 TLS 丢回复／logout 回归通过。Go SDK 可选端点 consumer 和 `development` 公共入口接线仍待后续片；不据接口存在声明这些验收已完成。
+默认 Processor 的实际 TLS 丢回复／logout 回归通过。Go SDK 可选端点 consumer 的准确合同见 `sdk/go/ENDPOINT.md`：实际 SQLite／PG 通过 journal prepare／started／Reply fsync、提交后丢结果只查询原 receipt、丢外 Ack 后显式恢复原 Reply，以及错误 key／scope／过期／current 撤权拒绝；物理 handler 总次数保持一次。`development` 公共入口接线仍由宿主片负责，不能据 adapter／SDK 参考合同替代验收。
