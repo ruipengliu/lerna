@@ -12,6 +12,9 @@ func command[I, O any](s *Service, registry *runtime.Registry, name, owner strin
 		if _, err := loadHead(ctx, tx); err != nil {
 			return runtime.Outcome{}, err
 		}
+		if err := s.currentAuth(ctx, tx, auth); err != nil {
+			return runtime.Outcome{}, err
+		}
 		var in I
 		if err := api.Decode(c.Payload, &in); err != nil {
 			return runtime.Outcome{}, err
@@ -103,7 +106,7 @@ func (s *Service) Register(registry *runtime.Registry) {
 	})
 	query(s, registry, "content.transfer.read", "content", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in TransferStatusInput) (TransferStatus, error) {
 		var out TransferStatus
-		err := s.within(ctx, scope, func(tx runtime.Tx) error {
+		err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 			if err := checkAuth(scope, auth); err != nil {
 				return err
 			}

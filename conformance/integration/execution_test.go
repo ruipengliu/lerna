@@ -3,13 +3,16 @@ package integration_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
 	target "github.com/ruipengliu/lerna/adapters/execution"
+	"github.com/ruipengliu/lerna/adapters/postgres"
 	"github.com/ruipengliu/lerna/adapters/sqlite"
 	"github.com/ruipengliu/lerna/api"
 	domain "github.com/ruipengliu/lerna/internal/execution"
@@ -77,31 +80,52 @@ func (a *executionAuthority) VerifyStart(ctx context.Context, tx rt.Tx, r domain
 }
 
 type executionFixture struct {
-	st         *sqlite.Store
-	sc         rt.Scope
-	auth       rt.Auth
-	registry   *rt.Registry
-	dispatcher *rt.Dispatcher
-	content    *executionContent
-	authority  *executionAuthority
-	files      *target.ManagedFiles
-	root       string
-	binding    api.ObjectRef
-	install    api.ComponentRef
+	st           rt.Store
+	sc           rt.Scope
+	auth         rt.Auth
+	registry     *rt.Registry
+	dispatcher   *rt.Dispatcher
+	content      *executionContent
+	authority    *executionAuthority
+	files        *target.ManagedFiles
+	root         string
+	databasePath string
+	postgresDSN  string
+	binding      api.ObjectRef
+	install      api.ComponentRef
 }
 
 func newExecutionFixture(t *testing.T) *executionFixture {
 	t.Helper()
 	ctx := context.Background()
 	root := t.TempDir()
-	st, err := sqlite.Open(filepath.Join(t.TempDir(), "device.sqlite"))
+	databasePath := filepath.Join(t.TempDir(), "device.sqlite")
+	var st rt.Store
+	var err error
+	var postgresDSN string
+	if os.Getenv("HARNESS_TEST_EXECUTION_BACKEND") == "postgres" {
+		postgresDSN = os.Getenv("HARNESS_TEST_POSTGRES_DSN")
+		if postgresDSN == "" {
+			t.Skip("actual PostgreSQL DSN required")
+		}
+		pg, e := postgres.Open(ctx, postgresDSN)
+		err = e
+		if err == nil {
+			err = pg.Migrate(ctx)
+		}
+		st = pg
+	} else {
+		local, e := sqlite.Open(databasePath)
+		err = e
+		if err == nil {
+			err = local.Migrate(ctx)
+		}
+		st = local
+	}
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { st.Close() })
-	if err = st.Migrate(ctx); err != nil {
-		t.Fatal(err)
-	}
 	sc := rt.Scope{TenantID: api.NewID("tenant"), OwnerID: api.NewID("executor"), DatabaseID: st.ID()}
 	auth := rt.Auth{TenantID: sc.TenantID, SubjectID: api.NewID("orchestrator"), CredentialGeneration: 1, Roles: []string{"orchestrator", "admin"}}
 	content := &executionContent{root: t.TempDir(), tenant: sc.TenantID, owner: api.NewID("content_owner"), sources: map[string]api.ContentRef{}}
@@ -119,7 +143,7 @@ func newExecutionFixture(t *testing.T) *executionFixture {
 	if err = service.Register(registry); err != nil {
 		t.Fatal(err)
 	}
-	return &executionFixture{st: st, sc: sc, auth: auth, registry: registry, dispatcher: &rt.Dispatcher{Store: st, OwnerID: sc.OwnerID, Registry: registry}, content: content, authority: authority, files: files, root: root, binding: sc.Ref(api.NewID("binding"), 1), install: api.ComponentRef{ComponentID: api.NewID("component"), Version: "1", Digest: api.Hash([]byte("builtin"))}}
+	return &executionFixture{st: st, sc: sc, auth: auth, registry: registry, dispatcher: &rt.Dispatcher{Store: st, OwnerID: sc.OwnerID, Registry: registry}, content: content, authority: authority, files: files, root: root, databasePath: databasePath, postgresDSN: postgresDSN, binding: sc.Ref(api.NewID("binding"), 1), install: api.ComponentRef{ComponentID: api.NewID("component"), Version: "1", Digest: api.Hash([]byte("builtin"))}}
 }
 func (f *executionFixture) put(t *testing.T, b []byte) api.ContentRef {
 	t.Helper()
@@ -142,7 +166,11 @@ func (f *executionFixture) invokeInput(t *testing.T, read bool) domain.InvokeInp
 	if read {
 		cap = target.FileReadCapability().Ref
 		args = api.Raw(target.FileReadArguments{Path: "report.md"})
-		sources = []api.ContentRef{}
+		var err error
+		sources, err = f.files.ManagedSources(context.Background(), "report.md")
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 	argRef := f.put(t, args)
 	intent := domain.ExecutionIntent{OperationID: id, TaskRef: task, GoalRevision: 1, ControlRevision: 1, AdmissionSourceKind: "decision", AdmissionSourceRef: f.sc.Ref(api.NewID("decision"), 1), SourcePosition: "1", AdmissionPurpose: "goal_action", CapabilityRef: cap, BindingRef: f.binding, InstallLockRef: f.install, ArgumentsRef: argRef, ResourceRefs: []api.ObjectRef{}, RequirementRefs: []api.RequirementRef{}, CostBound: []api.Amount{}, ExecutorID: f.sc.OwnerID, Deadline: deadline, TaskDeadline: deadline, LogicalStepKey: "save-report", ProcessedSourceRefs: sources, DisclosedSourceRefs: []api.ContentRef{}}
@@ -213,6 +241,72 @@ func TestExecutionDurableFileEffectAndIndependentReadOperation(t *testing.T) {
 	}
 }
 
+func TestExecutionEarlyAndFreeUsageHaveFrozenZeroUnitsAndIndependentProof(t *testing.T) {
+	f := newExecutionFixture(t)
+	in := f.invokeInput(t, false)
+	raw, err := f.content.ReadBytes(context.Background(), f.sc, f.auth, in.IntentRef, "execution_intent", "device")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var intent domain.ExecutionIntent
+	if err = api.Decode(raw, &intent); err != nil {
+		t.Fatal(err)
+	}
+	intent.CostBound = []api.Amount{{Unit: "usd", Value: "0"}}
+	in.IntentRef = f.put(t, api.Raw(intent))
+	in.IntentHash, _ = api.Digest(intent)
+	if r := f.command(t, "execution.invoke", in.OperationID, in, nil); r.Stage != "applied" {
+		t.Fatalf("invoke: %+v", r)
+	}
+	for _, ready := range []bool{false, true} {
+		if ready {
+			f.drain(t)
+		}
+		var usage api.UsageSnapshot
+		f.query(t, "execution.usage.get", in.OperationID, domain.OperationIDInput{OperationID: in.OperationID}, &usage)
+		if len(usage.Cumulative) != 1 || usage.Cumulative[0].Unit != "usd" || usage.Cumulative[0].Value != "0" || len(usage.ProofRefs) != 1 {
+			t.Fatalf("zero bill must cover frozen units and original proof: %+v", usage)
+		}
+		copyUsage := usage
+		copyUsage.UsageDigest = ""
+		digest, _ := api.Digest(copyUsage)
+		if digest != usage.UsageDigest || usage.SpendingClosed != ready || usage.UsageFinal != ready {
+			t.Fatalf("full bill digest/finality: %+v", usage)
+		}
+		proofBytes, err := f.content.ReadBytes(context.Background(), f.sc, f.auth, usage.ProofRefs[0], "usage_proof", "device")
+		if err != nil {
+			t.Fatal(err)
+		}
+		var proof struct {
+			OperationRef     api.ObjectRef        `json:"operation_ref"`
+			IntentHash       string               `json:"intent_hash"`
+			UsageRevision    uint64               `json:"usage_revision"`
+			Cumulative       []api.Amount         `json:"cumulative"`
+			SpendingClosed   bool                 `json:"spending_closed"`
+			UsageFinal       bool                 `json:"usage_final"`
+			SendStartedCount uint64               `json:"send_started_count"`
+			PhysicalCountMin uint64               `json:"physical_count_min"`
+			PhysicalCountMax uint64               `json:"physical_count_max"`
+			Attempts         []domain.AttemptView `json:"attempts"`
+		}
+		if err = api.Decode(proofBytes, &proof); err != nil || !api.Equal(proof.OperationRef, usage.SourceRef) || proof.IntentHash != in.IntentHash {
+			t.Fatalf("independent original fact proof: %+v %v", proof, err)
+		}
+		wantCount := uint64(0)
+		if ready {
+			wantCount = 1
+		}
+		if proof.PhysicalCountMin != wantCount || proof.PhysicalCountMax != wantCount || proof.SendStartedCount != wantCount {
+			t.Fatalf("physical count proof %+v", proof)
+		}
+		var again api.UsageSnapshot
+		f.query(t, "execution.usage.get", in.OperationID, domain.OperationIDInput{OperationID: in.OperationID}, &again)
+		if !api.Equal(usage, again) {
+			t.Fatal("unchanged fact changed proof identity or full digest")
+		}
+	}
+}
+
 func TestExecutionCancellationBeforeInvokeSurvivesRestart(t *testing.T) {
 	f := newExecutionFixture(t)
 	input := f.invokeInput(t, false)
@@ -221,6 +315,7 @@ func TestExecutionCancellationBeforeInvokeSurvivesRestart(t *testing.T) {
 	if receipt.Stage != "applied" {
 		t.Fatalf("cancel %+v", receipt)
 	}
+	f.restartStore(t)
 	receipt = f.command(t, "execution.invoke", input.OperationID, input, nil)
 	if receipt.Stage != "rejected" || receipt.Error.Reason != "operation_permanently_cancelled" {
 		t.Fatalf("late invoke %+v", receipt)
@@ -758,5 +853,277 @@ func TestExecutionUsesNewIndependentControlWindowWithoutChangingOriginalIntent(t
 	f.query(t, "execution.get", input.OperationID, domain.OperationIDInput{OperationID: input.OperationID}, &view)
 	if view.Operation.Effect != "applied" || len(view.Attempts.Items) != 1 || view.Attempts.Items[0].ControlWindowID != window.WindowID {
 		t.Fatalf("fresh window not bound to physical attempt %+v", view)
+	}
+}
+
+func TestTrustedComputeStopDoesNotClaimActualExitWhileNativeEntryIsBusy(t *testing.T) {
+	driver := &domain.TrustedComputeDriver{}
+	entered := make(chan struct{})
+	resume := make(chan struct{})
+	finished := make(chan error, 1)
+	q := domain.AttemptRequest{Attempt: domain.Attempt{AttemptID: api.NewID("attempt"), Prepared: domain.PreparedRequest{Cell: &domain.CellPreparation{Namespace: domain.PassiveNamespace{Format: domain.PassiveEnvironmentFormat, Bindings: []domain.NamespaceBinding{}}}}}}
+	go func() {
+		_, err := driver.Start(context.Background(), q, func(context.Context) error { close(entered); <-resume; return nil })
+		finished <- err
+	}()
+	<-entered
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Millisecond)
+	defer cancel()
+	stop, err := driver.Stop(ctx, q)
+	if err == nil || stop.ActuallyStopped {
+		t.Fatalf("busy engine falsely exited %+v %v", stop, err)
+	}
+	close(resume)
+	if err = <-finished; err != nil {
+		t.Fatal(err)
+	}
+	stop, err = driver.Stop(context.Background(), q)
+	if err != nil || !stop.ActuallyStopped {
+		t.Fatalf("actual native exit missing %+v %v", stop, err)
+	}
+}
+
+func (f *executionFixture) restartStore(t *testing.T) {
+	t.Helper()
+	if err := f.st.Close(); err != nil {
+		t.Fatal(err)
+	}
+	var st rt.Store
+	var err error
+	if f.postgresDSN != "" {
+		st, err = postgres.Open(context.Background(), f.postgresDSN)
+	} else {
+		st, err = sqlite.Open(f.databasePath)
+	}
+	if err != nil {
+		t.Fatal(err)
+	}
+	if st.ID() != f.sc.DatabaseID {
+		t.Fatal("reopened a different ledger")
+	}
+	f.st = st
+	f.dispatcher.Store = st
+	t.Cleanup(func() { st.Close() })
+}
+
+type armCommitFaultDriver struct {
+	domain.Driver
+	armed *atomic.Bool
+}
+
+func (d *armCommitFaultDriver) Start(ctx context.Context, q domain.AttemptRequest, barrier func(context.Context) error) (domain.Fact, error) {
+	d.armed.Store(true)
+	return d.Driver.Start(ctx, q, barrier)
+}
+func TestExecutionCommitUnknownAtActualBarrierDoesNotCrossTarget(t *testing.T) {
+	f := newExecutionFixture(t)
+	armed := &atomic.Bool{}
+	if err := f.st.Close(); err != nil {
+		t.Fatal(err)
+	}
+	var st rt.Store
+	var err error
+	if f.postgresDSN != "" {
+		st, err = postgres.Open(context.Background(), f.postgresDSN, postgres.WithCommitFault(func(stage postgres.CommitPhase) error {
+			if stage == postgres.AfterCommit && armed.CompareAndSwap(true, false) {
+				return context.Canceled
+			}
+			return nil
+		}))
+	} else {
+		st, err = sqlite.Open(f.databasePath, sqlite.WithCommitFault(func(stage sqlite.CommitPhase) error {
+			if stage == sqlite.AfterCommit && armed.CompareAndSwap(true, false) {
+				return context.Canceled
+			}
+			return nil
+		}))
+	}
+	if err != nil {
+		t.Fatal(err)
+	}
+	f.st = st
+	f.dispatcher.Store = st
+	t.Cleanup(func() { st.Close() })
+	driver := &armCommitFaultDriver{Driver: &target.FileDriver{Files: f.files, Content: f.content, Location: "device"}, armed: armed}
+	service, err := domain.New(domain.Config{OwnerID: f.sc.OwnerID, Content: f.content, Authority: f.authority, Location: "device", Drivers: []domain.Driver{driver}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	registry := rt.NewRegistry()
+	if err = service.Register(registry); err != nil {
+		t.Fatal(err)
+	}
+	f.registry = registry
+	f.dispatcher.Registry = registry
+	input := f.invokeInput(t, false)
+	r := f.command(t, "execution.invoke", input.OperationID, input, nil)
+	if r.Stage != "applied" {
+		t.Fatalf("invoke %+v", r)
+	}
+	work, status, err := f.st.Claim(context.Background(), f.sc, api.NewID("holder"), []string{domain.RunJob}, 1, 30*time.Second)
+	if err != nil || status != rt.Committed || len(work) != 1 {
+		t.Fatalf("claim %s %v", status, err)
+	}
+	run, _ := registry.Job(domain.RunJob)
+	err = run(context.Background(), f.st, f.sc, work[0])
+	if !errors.Is(err, rt.ErrCommitUnknown) {
+		t.Fatalf("unknown barrier reply became %v", err)
+	}
+	if _, err = os.Stat(filepath.Join(f.root, "report.md")); !os.IsNotExist(err) {
+		t.Fatalf("unknown commit crossed native target %v", err)
+	}
+	var view domain.OperationView
+	f.query(t, "execution.get", input.OperationID, domain.OperationIDInput{OperationID: input.OperationID}, &view)
+	if view.Operation.Effect != "unknown" || len(view.Attempts.Items) != 1 || view.Attempts.Items[0].Phase != "possibly_sent" {
+		t.Fatalf("unknown durable stage lost %+v", view)
+	}
+	f.command(t, "execution.reconcile", input.OperationID, domain.ReconcileInput{OperationID: input.OperationID}, nil)
+	f.drain(t)
+	f.query(t, "execution.get", input.OperationID, domain.OperationIDInput{OperationID: input.OperationID}, &view)
+	if view.Operation.Effect != "not_started" || !view.NewAttemptsClosed || len(view.Attempts.Items) != 1 {
+		t.Fatalf("original query invented another send %+v", view)
+	}
+}
+
+type blockedFilePreparation struct {
+	domain.Driver
+	entered chan struct{}
+	resume  chan struct{}
+	first   atomic.Bool
+}
+
+func (d *blockedFilePreparation) Prepare(ctx context.Context, sc rt.Scope, a rt.Auth, p domain.InvokeInput, i domain.ExecutionIntent, b []byte) (domain.PreparedRequest, error) {
+	prepared, err := d.Driver.Prepare(ctx, sc, a, p, i, b)
+	if err != nil {
+		return prepared, err
+	}
+	if d.first.CompareAndSwap(false, true) {
+		close(d.entered)
+		select {
+		case <-d.resume:
+		case <-ctx.Done():
+			return domain.PreparedRequest{}, ctx.Err()
+		}
+	}
+	return prepared, nil
+}
+func TestExecutionOldWorkerCannotCrossEntryAfterClaimTakeover(t *testing.T) {
+	f := newExecutionFixture(t)
+	driver := &blockedFilePreparation{Driver: &target.FileDriver{Files: f.files, Content: f.content, Location: "device"}, entered: make(chan struct{}), resume: make(chan struct{})}
+	service, err := domain.New(domain.Config{OwnerID: f.sc.OwnerID, Content: f.content, Authority: f.authority, Location: "device", Drivers: []domain.Driver{driver}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	registry := rt.NewRegistry()
+	if err = service.Register(registry); err != nil {
+		t.Fatal(err)
+	}
+	f.registry = registry
+	f.dispatcher.Registry = registry
+	input := f.invokeInput(t, false)
+	r := f.command(t, "execution.invoke", input.OperationID, input, nil)
+	if r.Stage != "applied" {
+		t.Fatalf("invoke %+v", r)
+	}
+	old, status, err := f.st.Claim(context.Background(), f.sc, api.NewID("holder"), []string{domain.RunJob}, 1, time.Second)
+	if err != nil || status != rt.Committed || len(old) != 1 {
+		t.Fatalf("claim %s %v", status, err)
+	}
+	run, _ := registry.Job(domain.RunJob)
+	finished := make(chan error, 1)
+	go func() { finished <- run(context.Background(), f.st, f.sc, old[0]) }()
+	<-driver.entered
+	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Second)
+	defer cancel()
+	ticker := time.NewTicker(20 * time.Millisecond)
+	defer ticker.Stop()
+	var next []rt.Work
+	for len(next) == 0 {
+		select {
+		case <-ctx.Done():
+			t.Fatal("actual old claim did not expire")
+		case <-ticker.C:
+			next, status, err = f.st.Claim(ctx, f.sc, api.NewID("holder"), []string{domain.RunJob}, 1, 30*time.Second)
+			if err != nil || status != rt.Committed {
+				t.Fatalf("takeover %s %v", status, err)
+			}
+		}
+	}
+	if err = run(context.Background(), f.st, f.sc, next[0]); err != nil {
+		t.Fatal(err)
+	}
+	close(driver.resume)
+	err = <-finished
+	if !errors.Is(err, rt.ErrClaimLost) {
+		t.Fatalf("old worker retained entry: %v", err)
+	}
+	var view domain.OperationView
+	f.query(t, "execution.get", input.OperationID, domain.OperationIDInput{OperationID: input.OperationID}, &view)
+	if view.Operation.Effect != "applied" || len(view.Attempts.Items) != 1 {
+		t.Fatalf("stale worker created an attempt %+v", view)
+	}
+	actual, err := os.ReadFile(filepath.Join(f.root, "report.md"))
+	if err != nil || string(actual) != "report target truth\n" {
+		t.Fatalf("actual target %q %v", actual, err)
+	}
+}
+
+func TestExecutionLateAppliedFactDoesNotReopenCancelledOperation(t *testing.T) {
+	f := newExecutionFixture(t)
+	input := f.invokeInput(t, false)
+	f.files.Fault = func(stage string) error {
+		if stage == "renamed" {
+			return context.Canceled
+		}
+		return nil
+	}
+	r := f.command(t, "execution.invoke", input.OperationID, input, nil)
+	if r.Stage != "applied" {
+		t.Fatalf("invoke %+v", r)
+	}
+	f.drain(t)
+	r = f.command(t, "execution.cancel", input.OperationID, domain.CancelInput{OperationID: input.OperationID, TaskRef: input.TaskRef, OrchestratorID: input.TaskRef.OwnerID, Reason: "task cancelled after handoff"}, nil)
+	if r.Stage != "applied" {
+		t.Fatalf("cancel %+v", r)
+	}
+	f.files.Fault = nil
+	f.drain(t)
+	f.command(t, "execution.reconcile", input.OperationID, domain.ReconcileInput{OperationID: input.OperationID}, nil)
+	f.drain(t)
+	var view domain.OperationView
+	f.query(t, "execution.get", input.OperationID, domain.OperationIDInput{OperationID: input.OperationID}, &view)
+	if view.Operation.Effect != "applied" || !view.NewAttemptsClosed || view.Operation.ExecutionState != "closed" || len(view.Attempts.Items) != 1 {
+		t.Fatalf("late effect erased cancel facts %+v", view)
+	}
+}
+
+func TestExecutionPaginationPinsCollectionAndRejectsStaleOrForeignCursor(t *testing.T) {
+	f := newExecutionFixture(t)
+	one := f.invokeInput(t, false)
+	two := f.invokeInput(t, false)
+	for _, input := range []domain.InvokeInput{one, two} {
+		r := f.command(t, "execution.invoke", input.OperationID, input, nil)
+		if r.Stage != "applied" {
+			t.Fatalf("invoke %+v", r)
+		}
+	}
+	var first, second api.Page[domain.OperationOutput]
+	f.query(t, "execution.list", f.sc.OwnerID, api.ListInput{Limit: 1}, &first)
+	if first.Exhausted || first.Partial || first.NextCursor == "" || len(first.Items) != 1 {
+		t.Fatalf("first page %+v", first)
+	}
+	f.query(t, "execution.list", f.sc.OwnerID, api.ListInput{Limit: 1, Cursor: first.NextCursor}, &second)
+	if !second.Exhausted || second.CollectionRevision != first.CollectionRevision || len(second.Items) != 1 || second.Items[0].OperationRef.ObjectID == first.Items[0].OperationRef.ObjectID {
+		t.Fatalf("second page %+v", second)
+	}
+	q := api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: f.sc.OwnerID, QueryID: api.NewID("query"), Method: "execution.list", TargetID: f.sc.OwnerID, Payload: api.Raw(api.ListInput{Limit: 1, Cursor: first.NextCursor})}
+	other := f.auth
+	other.SubjectID = api.NewID("subject")
+	if _, err := f.dispatcher.Query(context.Background(), other, api.Raw(q)); !api.IsCode(err, "cursor_expired") {
+		t.Fatalf("foreign cursor accepted %v", err)
+	}
+	f.command(t, "execution.cancel", one.OperationID, domain.CancelInput{OperationID: one.OperationID, TaskRef: one.TaskRef, OrchestratorID: one.TaskRef.OwnerID, Reason: "mutation after first page"}, nil)
+	if _, err := f.dispatcher.Query(context.Background(), f.auth, api.Raw(q)); !api.IsCode(err, "snapshot_required") {
+		t.Fatalf("stale snapshot accepted %v", err)
 	}
 }

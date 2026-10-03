@@ -26,6 +26,9 @@ func New(c Config) (*Service, error) {
 		if cap.MaxAttempts < 1 || cap.MaxAttempts > 100 || cap.Ref.ComponentID == "" || cap.Ref.Digest == "" {
 			return nil, api.E("invalid_request", "invalid_capability")
 		}
+		if cap.MaxAttempts != 1 {
+			return nil, api.E("unsupported", "multi_attempt_target_contract_not_verified")
+		}
 		if cap.EffectClass != "read_only" && cap.EffectClass != "target_idempotent" && cap.EffectClass != "no_idempotency_guarantee" {
 			return nil, api.E("invalid_request", "invalid_effect_class")
 		}
@@ -226,6 +229,9 @@ func (s *Service) invoke(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command
 	if err = tx.Create(ctx, Namespace+".operations", p.OperationID, p.TaskRef.ObjectID, rec); err != nil {
 		return OperationOutput{}, err
 	}
+	if err = bumpCollection(ctx, tx, "operations", true); err != nil {
+		return OperationOutput{}, err
+	}
 	_, err = tx.Raise(ctx, RunJob, p.OperationID, tx.Scope().Ref(p.OperationID, 1), now)
 	return operationOutput(tx.Scope(), rec), err
 }
@@ -236,7 +242,7 @@ func (s *Service) cancel(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command
 	if p.OperationID != c.TargetID || p.OrchestratorID != p.TaskRef.OwnerID || p.TaskRef.TenantID != a.TenantID {
 		return OperationOutput{}, api.E("invalid_request", "cancel_binding_mismatch")
 	}
-	if !a.HasRole("orchestrator") && !a.HasRole("executor") && !a.HasRole("admin") && a.SubjectID != p.OrchestratorID {
+	if !a.HasRole("admin") && !(a.HasRole("orchestrator") && a.SubjectID == p.OrchestratorID) {
 		return OperationOutput{}, api.E("forbidden", "cancel_source_untrusted")
 	}
 	if err := rt.CheckRef(tx.Scope(), p.TaskRef); err != nil {
@@ -247,6 +253,9 @@ func (s *Service) cancel(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command
 	if api.IsCode(err, "not_found") {
 		rec = operationRecord{Operation: api.Operation{OperationID: p.OperationID, OwnerID: s.cfg.OwnerID, TaskRef: p.TaskRef, Revision: 1, ExecutionState: "closed", Effect: "not_started", MayApplyLater: false, Attempts: api.CollectionSummary{CollectionRevision: 1, Complete: true}, EvidenceRefs: []api.ContentRef{}, Usage: []api.Amount{}, UsageFinal: true, NextAction: "none"}, Revision: 1, Principal: a, NewAttemptsClosed: true, ActuallyStopped: true, CancelReason: p.Reason, Tombstone: true, AttemptIDs: []string{}}
 		if err = tx.Create(ctx, Namespace+".operations", p.OperationID, p.TaskRef.ObjectID, rec); err != nil {
+			return OperationOutput{}, err
+		}
+		if err = bumpCollection(ctx, tx, "operations", true); err != nil {
 			return OperationOutput{}, err
 		}
 		return operationOutput(tx.Scope(), rec), nil
@@ -281,7 +290,10 @@ func (s *Service) cancel(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command
 func putOperation(ctx context.Context, tx rt.Tx, r *operationRecord, old uint64) error {
 	r.Revision = old + 1
 	r.Operation.Revision = r.Revision
-	return tx.Put(ctx, Namespace+".operations", r.Operation.OperationID, old, *r)
+	if err := tx.Put(ctx, Namespace+".operations", r.Operation.OperationID, old, *r); err != nil {
+		return err
+	}
+	return bumpCollection(ctx, tx, "operations", false)
 }
 func (s *Service) control(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command, p ControlInput) (ControlView, error) {
 	if c.TargetID != p.TaskRef.ObjectID {
@@ -320,7 +332,7 @@ func (s *Service) control(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Comman
 			}
 		}
 	}
-	return ControlView{Gate: g, Windows: []api.ControlSnapshot{p.Snapshot}}, nil
+	return ControlView{Gate: g, Windows: []api.ControlSnapshot{p.Snapshot}, WindowsComplete: false, WindowsGaps: []string{"command_result_contains_submitted_window_only"}}, nil
 }
 func (s *Service) reconcile(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command, p ReconcileInput) (OperationOutput, error) {
 	var rec operationRecord
@@ -337,6 +349,7 @@ func (s *Service) reconcile(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Comm
 	if err != nil {
 		return OperationOutput{}, err
 	}
+	rec.ReconcileCount = 0
 	if err = putOperation(ctx, tx, &rec, rec.Revision); err != nil {
 		return OperationOutput{}, err
 	}
@@ -375,30 +388,21 @@ func (s *Service) get(ctx context.Context, st rt.Store, sc rt.Scope, a rt.Auth, 
 	return OperationView{Operation: rec.Operation, NewAttemptsClosed: rec.NewAttemptsClosed, ActuallyStopped: rec.ActuallyStopped, EffectDisputed: rec.EffectDisputed, Attempts: api.Page[AttemptView]{Items: attempts, CollectionRevision: rec.Operation.Attempts.CollectionRevision, Exhausted: len(records) < 100, Partial: len(records) == 100, Gaps: []string{}}}, nil
 }
 func (s *Service) list(ctx context.Context, st rt.Store, sc rt.Scope, a rt.Auth, q api.Query, p api.ListInput) (api.Page[OperationOutput], error) {
-	if p.Limit < 1 || p.Limit > 100 {
-		return api.Page[OperationOutput]{}, api.E("invalid_request", "invalid_page_limit")
-	}
-	records, err := st.List(ctx, sc, Namespace+".operations", "", p.Cursor, int(p.Limit)+1)
+	records, revision, next, exhausted, err := pageRecords(ctx, st, sc, a, "operations", p)
+	page := api.Page[OperationOutput]{Items: []OperationOutput{}, CollectionRevision: revision, NextCursor: next, Exhausted: exhausted, Gaps: []string{}}
 	if err != nil {
-		return api.Page[OperationOutput]{}, err
+		return page, err
 	}
-	page := api.Page[OperationOutput]{Items: []OperationOutput{}, CollectionRevision: 1, Gaps: []string{}}
-	for i, r := range records {
-		if i == int(p.Limit) {
-			page.NextCursor = records[i-1].ID
-			break
-		}
-		var x operationRecord
-		if err = r.Decode(&x); err != nil {
+	for _, r := range records {
+		var op operationRecord
+		if err = r.Decode(&op); err != nil {
 			return page, err
 		}
-		if err = disclose(a, x); err != nil {
+		if err = disclose(a, op); err != nil {
 			return page, err
 		}
-		page.Items = append(page.Items, operationOutput(sc, x))
-		page.CollectionRevision += r.Revision
+		page.Items = append(page.Items, operationOutput(sc, op))
 	}
-	page.Exhausted = len(records) <= int(p.Limit)
 	return page, nil
 }
 func (s *Service) controlGet(ctx context.Context, st rt.Store, sc rt.Scope, a rt.Auth, q api.Query, p ControlGetInput) (ControlView, error) {
@@ -423,7 +427,10 @@ func (s *Service) controlGet(ctx context.Context, st rt.Store, sc rt.Scope, a rt
 	if err != nil {
 		return ControlView{}, err
 	}
-	out := ControlView{Gate: g, Windows: []api.ControlSnapshot{}}
+	out := ControlView{Gate: g, Windows: []api.ControlSnapshot{}, WindowsComplete: len(windows) < 100, WindowsGaps: []string{}}
+	if !out.WindowsComplete {
+		out.WindowsGaps = append(out.WindowsGaps, "control_window_set_requires_batch")
+	}
 	for _, r := range windows {
 		var w api.ControlSnapshot
 		if err = r.Decode(&w); err != nil {

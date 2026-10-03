@@ -162,7 +162,7 @@ func (s *Service) PullView(ctx context.Context, scope runtime.Scope, auth runtim
 		return ViewPage{}, api.E("invalid_request", "invalid_page_limit")
 	}
 	var out ViewPage
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}

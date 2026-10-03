@@ -42,7 +42,7 @@ func (s *Service) validateExperience(ctx context.Context, scope runtime.Scope, a
 	}
 	refs := append([]api.ContentRef{spec.GoalRef, spec.ResultRef, spec.BoundaryRef}, spec.PrerequisiteRefs...)
 	refs = append(refs, spec.EvidenceRefs...)
-	err = s.within(ctx, scope, func(tx runtime.Tx) error {
+	err = s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		for _, ref := range refs {
 			present := false
 			for _, source := range transfer.ProcessedSources {
