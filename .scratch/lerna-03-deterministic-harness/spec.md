@@ -2,7 +2,7 @@
 
 Status: ready-for-agent
 Phase: A
-Implementation: not-started
+Implementation: in-progress
 Depends on: [01](../lerna-01-command-contracts/spec.md)、[02](../lerna-02-durable-work/spec.md)
 
 ## Problem Statement
@@ -54,6 +54,8 @@ Depends on: [01](../lerna-01-command-contracts/spec.md)、[02](../lerna-02-durab
 - 用模拟结果证明质量、生产容量或供应商幂等能力。
 
 ## Further Notes
+
+2026-10-03，前置01及02均完整退出；02受测源码f56d930、准确整合/CI5548744、退出文档df2dbe5。按授权代理批准的六票42AC与[最终接法](final-handoff.md)采用[决定](decisions.md)、[存储](storage-handoff.md)、[容量](capacity-handoff.md)，root发布独立issues并启动01与04；真实图whole02→01/04、01→02/03、04→05、01+05→06。1.1.0/Decision/独立目标尚未验收；对外完整范围仍为原1.0.0 command.get。完整profile广告/整片审查及最终CI由root在六票退出后核实，不是06隐藏业务依赖。
 
 A 阶段在 01–03 完成后退出：共同身份、两种数据库耐久工作与确定性故障设施均可运行，不开放真实副作用。
 

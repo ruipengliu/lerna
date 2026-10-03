@@ -8,7 +8,8 @@
 
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
 - 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
-- 切片 03–22：**not-started**。03依赖现已满足，TMP六票42AC待准确退出SHA的最终接法复核后发布；04/05/06的TMP准备仍不等于其依赖实现。
+- 切片 03：**in-progress**。前置01/02退出、df2dbe5最终接法复核已满足；六票42AC已发布，首个frontier01正常规则Decision/04独立SQLite目标已claimed。新1.1与组件行为尚未验收，当前公开完整支持仍为1.0 command.get。
+- 切片 04–22：**not-started**。04/05/06仅TMP准备，真实前置整片退出后再复核、发布和实施。
 
 ## 切片 01 过程检查点（历史记录）
 
@@ -119,3 +120,7 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 ## 切片02正式退出
 
 准确5548744 CI37162569420已success：工具race2.407s、两库count1集成20.985s/race45.463s、27源hash。十票68AC、双轴新增0和唯一架构收益闭合，最后fixer登记285PG/265目录全absent；未知两prototype/旧04schema/07CID限制保留。详见[完整退出](../lerna-02-durable-work/exit-evidence.md)。下一步只在安全确认clean且tip已整合后清理11个02实施工作树、保留分支；03再按最终SHA复核并发布。以下旧章节记录历史阶段，不改写当时失败或状态。
+
+## 切片03启动
+
+02的11个实施工作树均先核对clean且tip为df2dbe5祖先，再安全移除，所有分支保留；仅root工作树留存，未知DB/container不操作。记录/tmp/lerna-02-worktree-cleanup.txt。03最终授权交接见[final-handoff](../lerna-03-deterministic-harness/final-handoff.md)，六张独立issues总42AC，01+04是真正并行frontier；不把schema/表/worker拆成横向半票。实现采用独立owner真实事实、强类型新版codec/账本、actualStart和全members唤醒，独立目标不冒充Executor/Effect。
