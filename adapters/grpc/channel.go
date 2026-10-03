@@ -36,6 +36,12 @@ type EndpointAuthority interface {
 	VerifyDelivery(context.Context, EndpointRegistration, grpcwire.Delivery) error
 	ReceiveReply(context.Context, EndpointRegistration, grpcwire.Delivery, grpcwire.Reply) (bool, error)
 }
+
+// EndpointReplyValidator在冻结首份Reply前检查原recipient输出合同；不得写业务账本。
+// 验证运行在SQL Tx外，随后的本库Tx仍核原Delivery和当前binding。
+type EndpointReplyValidator interface {
+	ValidateReply(context.Context, EndpointRegistration, grpcwire.Delivery, grpcwire.Reply) error
+}
 type bindingRecord struct {
 	Revision              uint64               `json:"revision"`
 	Bind                  grpcwire.Bind        `json:"bind"`
