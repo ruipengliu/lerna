@@ -237,7 +237,7 @@ func containsRef(refs []api.ContentRef, ref api.ContentRef) bool {
 	}
 	return false
 }
-func (h *HTTPInformation) refs(intent execution.ExecutionIntent) error {
+func (h *HTTPInformation) refs(intent execution.ExecutionIntent, argumentsDisclosed bool) error {
 	if len(intent.ProcessedSourceRefs) > 100 || len(intent.DisclosedSourceRefs) > 100 {
 		return api.E("invalid_request", "information_sources_too_many")
 	}
@@ -259,7 +259,7 @@ func (h *HTTPInformation) refs(intent execution.ExecutionIntent) error {
 			return api.E("forbidden", "information_disclosed_source_undeclared")
 		}
 	}
-	if !containsRef(intent.ProcessedSourceRefs, intent.ArgumentsRef) || !containsRef(intent.DisclosedSourceRefs, intent.ArgumentsRef) {
+	if !containsRef(intent.ProcessedSourceRefs, intent.ArgumentsRef) || (argumentsDisclosed && !containsRef(intent.DisclosedSourceRefs, intent.ArgumentsRef)) {
 		return api.E("forbidden", "information_arguments_disclosure_undeclared")
 	}
 	return nil
@@ -292,7 +292,7 @@ func (d *informationDriver) Prepare(ctx context.Context, s runtime.Scope, a runt
 	if invoke.CapabilityRef != d.capability.Ref || intent.CapabilityRef != d.capability.Ref || invoke.OperationID != intent.OperationID || invoke.TaskRef != intent.TaskRef || intent.ArgumentsRef.Hash != api.Hash(args) || intent.ArgumentsRef.ByteLength != uint64(len(args)) || len(args) > 16384 {
 		return execution.PreparedRequest{}, api.E("invalid_request", "information_intent_changed")
 	}
-	if err := h.refs(intent); err != nil {
+	if err := h.refs(intent, d.action == InformationBody); err != nil {
 		return execution.PreparedRequest{}, err
 	}
 	wire := informationWire{SourceRef: h.cfg.Source.SourceRef, Action: d.action, Body: []byte{}}
@@ -344,7 +344,7 @@ func (d *informationDriver) request(r execution.AttemptRequest) (informationWire
 	if !api.ValidID(r.Attempt.AttemptID) || r.Attempt.OperationID != r.Intent.OperationID || r.Attempt.AttemptNo != 1 || r.Intent.CapabilityRef != d.capability.Ref || r.Invoke.CapabilityRef != d.capability.Ref {
 		return informationWire{}, "", api.E("invalid_request", "information_attempt_binding_changed")
 	}
-	if err := h.refs(r.Intent); err != nil {
+	if err := h.refs(r.Intent, d.action == InformationBody); err != nil {
 		return informationWire{}, "", err
 	}
 	var wire informationWire
@@ -508,6 +508,10 @@ func (d *informationDriver) Start(ctx context.Context, r execution.AttemptReques
 	if err != nil {
 		return execution.Fact{}, err
 	}
+	retainUntil, err := api.ParseTime(permit.RetainUntil)
+	if err != nil {
+		return execution.Fact{}, err
+	}
 	for _, deadline := range []string{r.Intent.Deadline, r.Intent.TaskDeadline, r.Invoke.Deadline} {
 		t, e := api.ParseTime(deadline)
 		if e != nil {
@@ -523,6 +527,9 @@ func (d *informationDriver) Start(ctx context.Context, r execution.AttemptReques
 	}
 	if !now.Before(startBefore) {
 		return execution.Fact{}, api.E("expired", "information_original_start_expired")
+	}
+	if !now.Before(retainUntil) {
+		return execution.Fact{}, api.E("expired", "information_retention_permission_expired")
 	}
 	if err = barrier(callCtx); err != nil {
 		return execution.Fact{}, err
@@ -611,6 +618,10 @@ func (d *informationDriver) Start(ctx context.Context, r execution.AttemptReques
 	}
 	ref := api.ContentRef{TenantID: r.Scope.TenantID, OwnerID: r.Scope.OwnerID, ContentID: api.NewID("content"), Version: 1, Hash: api.Hash(body), MediaType: media, ByteLength: uint64(len(body))}
 	publication := ReceivedPublication{ContentRef: ref, ObtainedAt: observation.ObtainedAt, ProcessedSources: append([]api.ContentRef{}, r.Intent.ProcessedSourceRefs...), DisclosedSources: append([]api.ContentRef{}, r.Intent.DisclosedSourceRefs...)}
+	publication.SourceRef = wire.SourceRef
+	publication.AttemptID = r.Attempt.AttemptID
+	publication.UseRefs = append([]api.ObjectRef{}, r.Invoke.UseRefs...)
+	publication.RetainUntil = permit.RetainUntil
 	if len(api.Raw(observation)) > 128<<10 {
 		observation.Items = []SearchItem{}
 		observation.Cursor = nil
