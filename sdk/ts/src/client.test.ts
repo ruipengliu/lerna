@@ -34,7 +34,7 @@ const command: Command = {
   expires_at: "2026-10-03T23:59:00Z",
   payload: { text: "准确原输入" },
 };
-async function registry(options: { query?: boolean; removed?: boolean } = {}) {
+async function registry(options: { query?: boolean; removed?: boolean; control?: string } = {}) {
   const contract: MethodContract = {
     name: options.query ? "probe.read" : "probe.save",
     owner: "probe",
@@ -46,6 +46,8 @@ async function registry(options: { query?: boolean; removed?: boolean } = {}) {
     schema_digest: await digest([input, output]),
     recovery: "query original",
   };
+  const methods = options.removed ? [] : [contract];
+  if (options.control) methods.push({ ...contract, name: options.control, kind: "command" });
   const discovery: Discovery = {
     protocol: "harness/1",
     profile: "architecture-2026-10-data1",
@@ -54,8 +56,8 @@ async function registry(options: { query?: boolean; removed?: boolean } = {}) {
     identity_revision: 1,
     schema_digest: CORE_SCHEMA_DIGEST,
     core_schema_path: "/api/schema/core",
-    methods: options.removed ? [] : [contract],
-    methods_digest: await digest(options.removed ? [] : [contract]),
+    methods,
+    methods_digest: await digest(methods),
     limits: { max_domain_bytes: 262144, max_frame_bytes: 1048576, max_pending: 32 },
   };
   const core = new Uint8Array(
@@ -75,6 +77,89 @@ const ready = (contract: ContractRegistry) => ({
   identity_scope: contract.discovery.identity_scope,
   identity_revision: contract.discovery.identity_revision,
   limits: contract.discovery.limits,
+});
+it("满普通队列仍发送 schedule.resume，原输入和存储责任保持准确", async () => {
+  const contract = await registry({ query: true, control: "schedule.resume" });
+  const server = new WebSocketServer({ host: "127.0.0.1", port: 0 });
+  await once(server, "listening");
+  const address = server.address();
+  if (!address || typeof address === "string") throw new Error("no address");
+  let held = 0;
+  let releaseHeld: () => void = () => {};
+  const allEntered = new Promise<void>((resolve) => {
+    releaseHeld = resolve;
+  });
+  let sentControl: unknown;
+  server.on("connection", (socket) => {
+    socket.send(JSON.stringify(ready(contract)));
+    socket.on("message", async (bytes) => {
+      const frame = parseStrict(bytes.toString());
+      if (
+        !frame ||
+        typeof frame !== "object" ||
+        Array.isArray(frame) ||
+        typeof frame.kind !== "string" ||
+        typeof frame.request_seq !== "number"
+      )
+        throw new Error("invalid actual request frame");
+      if (frame.kind === "query") {
+        held++;
+        if (held === 28) releaseHeld();
+        return;
+      }
+      const original = contract.command(frame.payload);
+      sentControl = original;
+      socket.send(
+        JSON.stringify({
+          type: "response",
+          request_seq: frame.request_seq,
+          result_kind: "receipt",
+          payload: {
+            command_id: original.command_id,
+            request_digest: await digest(original),
+            stage: "applied",
+            decided_at: "2026-10-03T00:00:00Z",
+            output: { saved: true },
+          },
+        }),
+      );
+    });
+  });
+  const client = new HarnessClient({
+    registry: contract,
+    store: new IndexedDBCommands(identity, {
+      factory: new IDBFactory(),
+      name: "schedule-control-capacity",
+    }),
+    url: `ws://127.0.0.1:${address.port}`,
+    requestTimeoutMs: 5000,
+  });
+  const pending: Promise<unknown>[] = [];
+  try {
+    await client.connect();
+    for (let i = 0; i < 28; i++)
+      pending.push(
+        client
+          .query(client.makeQuery("probe.read", owner, { text: "actual held query" }))
+          .catch((error: unknown) => error),
+      );
+    await allEntered;
+    await expect(
+      client.query(client.makeQuery("probe.read", owner, { text: "ordinary overflow" })),
+    ).rejects.toThrow("outbound_backpressure");
+    const original = { ...command, method: "schedule.resume" };
+    const receipt = await client.command(original);
+    expect(receipt.stage).toBe("applied");
+    expect(canonical(sentControl)).toBe(canonical(original));
+    expect(held).toBe(28);
+    expect(await client.pending()).toEqual([]);
+  } finally {
+    await client.close();
+    await Promise.all(pending);
+    await new Promise<void>((resolve, reject) =>
+      server.close((error) => (error ? reject(error) : resolve())),
+    );
+  }
 });
 it("每次 ready 必须声明原认证身份；旧无身份协议明确拒绝", async () => {
   const contract = await registry();
