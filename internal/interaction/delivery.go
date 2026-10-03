@@ -3,6 +3,7 @@ package interaction
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/ruipengliu/lerna/api"
@@ -22,12 +23,17 @@ func (s *Service) Dispatch(ctx context.Context, store runtime.Store, scope runti
 	}
 	var closure *Closure
 	var answerErr error
+	dependencyUnavailable := false
 	if snapshot.Submission.State == "queued" && snapshot.Input != nil {
 		body, err := s.ports.Content.Read(ctx, scope, snapshot.Auth, snapshot.Input.AnswerRef, "interaction.input")
 		if err != nil {
-			return s.deferDispatch(ctx, store, scope, work)
-		}
-		if uint64(len(body)) != snapshot.Input.AnswerRef.ByteLength || api.Hash(body) != snapshot.Input.AnswerRef.Hash {
+			var apiErr *api.Error
+			if errors.As(err, &apiErr) && apiErr.Code != "dependency_unavailable" && apiErr.Code != "overloaded" {
+				answerErr = apiErr
+			} else {
+				dependencyUnavailable = true
+			}
+		} else if uint64(len(body)) != snapshot.Input.AnswerRef.ByteLength || api.Hash(body) != snapshot.Input.AnswerRef.Hash {
 			answerErr = api.E("invalid_request", "answer_bytes_mismatch")
 		} else {
 			answerErr = validateAnswer(snapshot.InputView.AnswerSchema, body, snapshot.Input.AnswerRef.MediaType)
@@ -39,12 +45,10 @@ func (s *Service) Dispatch(ctx context.Context, store runtime.Store, scope runti
 		}
 		v, err := s.ports.Closure.Closure(ctx, scope, snapshot.Auth, *snapshot.Submission.PredecessorTaskRef)
 		if err != nil {
-			return s.deferDispatch(ctx, store, scope, work)
-		}
-		if v.TaskRef.TenantID != scope.TenantID || v.TaskRef.OwnerID != snapshot.Submission.PredecessorTaskRef.OwnerID || v.TaskRef.ObjectID != snapshot.Submission.PredecessorTaskRef.ObjectID {
+			dependencyUnavailable = true
+		} else if v.TaskRef.TenantID != scope.TenantID || v.TaskRef.OwnerID != snapshot.Submission.PredecessorTaskRef.OwnerID || v.TaskRef.ObjectID != snapshot.Submission.PredecessorTaskRef.ObjectID {
 			return api.E("forbidden", "closure_target_mismatch")
-		}
-		if v.GoalWorkClosed && v.EffectsClosed {
+		} else if v.GoalWorkClosed && v.EffectsClosed {
 			closure = &v
 		}
 	}
@@ -83,6 +87,9 @@ func (s *Service) Dispatch(ctx context.Context, store runtime.Store, scope runti
 			rejection := answerErr
 			if !now.Before(queueEnd) {
 				rejection = api.E("expired", "submission_queue_elapsed")
+			}
+			if rejection == nil && dependencyUnavailable {
+				return tx.Guard(ctx, work.Claim)
 			}
 			if rejection == nil && r.Submission.PredecessorTaskRef != nil && closure == nil {
 				return tx.Guard(ctx, work.Claim)
@@ -124,9 +131,7 @@ func (s *Service) Dispatch(ctx context.Context, store runtime.Store, scope runti
 			}
 			if rejection != nil {
 				var apiErr *api.Error
-				if e, ok := rejection.(*api.Error); ok {
-					apiErr = e
-				} else {
+				if !errors.As(rejection, &apiErr) {
 					return rejection
 				}
 				r.Error = apiErr
