@@ -54,6 +54,7 @@ func newDeviceFixture(t *testing.T) *deviceFixture {
 			t.Error(fErr)
 		}
 	})
+	b.DeviceDatabaseID = h.Scope.DatabaseID
 	f := &deviceFixture{ctx: context.Background(), h: h, b: b, keys: keys, peer: runtime.Auth{TenantID: b.Principal.TenantID, SubjectID: b.AuthorityID, CredentialGeneration: 1, Roles: []string{"executor_peer"}}, raw: map[string][]byte{}, root: root}
 	if err = os.Mkdir(filepath.Join(root, "files", "reports"), 0700); err != nil {
 		t.Fatal(err)
