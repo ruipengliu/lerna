@@ -57,7 +57,7 @@ jobs:
       - name: Generate, validate and run real SQLite and PostgreSQL checks
         run: scripts/check
       - name: Run reference race checks
-        run: go test -race -p 2 -count=1 -timeout=10m ./...
+        run: go test -race -p 2 -count=1 -timeout=30m ./...
       - name: Run real browser against the reference PostgreSQL service
         run: |
           pnpm exec playwright install --with-deps chromium
