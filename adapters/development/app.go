@@ -175,7 +175,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		}
 	}
 	execContent := executionContent{a}
-	drivers := []execution.Driver{&execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud"}, &execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud", ReadOnly: true}, a.Phones, &execution.TrustedComputeDriver{Content: execContent, Store: st, Location: "cloud"}}
+	drivers := []execution.Driver{&execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud"}, &execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud", ReadOnly: true}, a.Phones, &execadapter.PhoneGUIDriver{Phones: a.Phones}, &execution.TrustedComputeDriver{Content: execContent, Store: st, Location: "cloud"}}
 	var resources execution.ResourceDriver = a.Phones
 	if !a.OwnsTargets {
 		for i, driver := range drivers {
