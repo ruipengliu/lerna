@@ -29,6 +29,7 @@ func (s *Service) registerGrants(r *runtime.Registry) error {
 		},
 		func() error { return s.registerConfirmationRead(r) },
 		func() error { return registerQuery[IDInput, GrantRecord](r, "grant.read", s.readGrant) },
+		func() error { return s.registerGrantList(r) },
 		func() error {
 			return registerCommand[UseRequest, UseReceipt](s, r, "grant.use", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in UseRequest) (runtime.Outcome, error) {
 				out, err := s.UseTx(ctx, tx, a, in)

@@ -166,7 +166,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		return nil, err
 	}
 	a.closeGovernance = closeGovernance
-	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, KnowledgeGate: knowledgeContentGate{a}, ResultNotices: resultNoticeBridge{a}, Lifecycle: lifecycle, Runner: evaluation, Participants: []string{"content", "memory", "platform", "task"}})
+	a.Governance = governance.New(st, governance.Options{GrantMetadataGate: grantMetadataGate{}, Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, KnowledgeGate: knowledgeContentGate{a}, ResultNotices: resultNoticeBridge{a}, Lifecycle: lifecycle, Runner: evaluation, Participants: []string{"content", "memory", "platform", "task"}})
 	if e = os.MkdirAll(filepath.Join(c.DataRoot, "files"), 0700); e != nil {
 		return nil, e
 	}
