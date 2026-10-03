@@ -107,6 +107,10 @@ func (w *Worker) Start(ctx context.Context, work Work) (ScheduleState, bool, err
 		return state, false, ErrPolicy
 	}
 	err := w.Runner.Within(ctx, w.Owner, func(ctx context.Context, tx runtime.Tx) error {
+		poolRepo, pool, err := poolLock(ctx, tx, w.Repository)
+		if err != nil {
+			return err
+		}
 		input, err := w.Repository.LockInput(ctx, tx, w.Owner, work.Claim.Object.ID)
 		if err != nil {
 			return err
@@ -118,6 +122,9 @@ func (w *Worker) Start(ctx context.Context, work Work) (ScheduleState, bool, err
 		if err != nil {
 			return err
 		}
+		if err = poolRepo.ValidatePoolClaim(ctx, tx, pool, work.Claim, now); err != nil {
+			return err
+		}
 		if err = schedule.ValidateClaim(ctx, tx, work.Claim, now); err != nil {
 			return err
 		}
@@ -125,6 +132,9 @@ func (w *Worker) Start(ctx context.Context, work Work) (ScheduleState, bool, err
 		// again while both locks are held before permitting a real start/finish.
 		now, err = w.Clock.Now(ctx, tx)
 		if err != nil {
+			return err
+		}
+		if err = poolRepo.ValidatePoolClaim(ctx, tx, pool, work.Claim, now); err != nil {
 			return err
 		}
 		if err = schedule.ValidateClaim(ctx, tx, work.Claim, now); err != nil {
@@ -204,6 +214,10 @@ func (w *Worker) Finish(ctx context.Context, work Work, outcome, reason string, 
 		return ErrPolicy
 	}
 	return w.Runner.Within(ctx, w.Owner, func(ctx context.Context, tx runtime.Tx) error {
+		poolRepo, pool, err := poolLock(ctx, tx, w.Repository)
+		if err != nil {
+			return err
+		}
 		input, err := w.Repository.LockInput(ctx, tx, w.Owner, work.Input.ID)
 		if err != nil {
 			return err
@@ -215,6 +229,9 @@ func (w *Worker) Finish(ctx context.Context, work Work, outcome, reason string, 
 		if err != nil {
 			return err
 		}
+		if err = poolRepo.ValidatePoolClaim(ctx, tx, pool, work.Claim, now); err != nil {
+			return err
+		}
 		if err = schedule.ValidateClaim(ctx, tx, work.Claim, now); err != nil {
 			return err
 		}
@@ -222,6 +239,9 @@ func (w *Worker) Finish(ctx context.Context, work Work, outcome, reason string, 
 		// again while both locks are held before permitting a real start/finish.
 		now, err = w.Clock.Now(ctx, tx)
 		if err != nil {
+			return err
+		}
+		if err = poolRepo.ValidatePoolClaim(ctx, tx, pool, work.Claim, now); err != nil {
 			return err
 		}
 		if err = schedule.ValidateClaim(ctx, tx, work.Claim, now); err != nil {
@@ -307,7 +327,11 @@ func (w *Worker) returnClaim(claim runtime.Claim) {
 		return
 	}
 	_ = w.Runner.Within(ctx, w.Owner, func(ctx context.Context, tx runtime.Tx) error {
-		_, err := w.Repository.LockInput(ctx, tx, w.Owner, claim.Object.ID)
+		_, _, err := poolLock(ctx, tx, w.Repository)
+		if err != nil {
+			return err
+		}
+		_, err = w.Repository.LockInput(ctx, tx, w.Owner, claim.Object.ID)
 		if err != nil {
 			return err
 		}

@@ -21,6 +21,7 @@ import (
 
 // admissionStore contains only ports actually consumed by both Host adapters.
 type admissionStore interface {
+	demo.PoolRepository
 	durablework.Storage
 	runtime.TxRunner
 	runtime.CommandStore
@@ -163,6 +164,7 @@ func behaviorOriginalIdentitySurvivesRetransmissionAndRejectsChangedMeaning(t *t
 	bob.SubjectID = "bob"
 	permissions := durablework.NewPermissions([]durablework.Permission{{Subject: principal, Owner: owner, Record: true, Read: true}, {Subject: bob, Owner: owner, Record: true, Read: true}})
 	h := durablework.New(owner, store, store, store, store, permissions)
+	fixturePool(h)
 	cutoff := future()
 	original := command("original", "input", "first", nil, cutoff)
 	out, err := h.Record(ctx, original, &principal)
@@ -283,6 +285,7 @@ func behaviorOriginalKeyPrecedesDeadlineAndNewExpiryIsFixed(t *testing.T, newSto
 	clock := &controlledClock{admissionStore: store, instant: time.Date(2026, 10, 3, 1, 0, 0, 0, time.UTC)}
 	permissions := durablework.NewPermissions([]durablework.Permission{{Subject: principal, Owner: owner, Record: true, Read: true}})
 	h := durablework.New(owner, store, store, store, clock, permissions)
+	fixturePool(h)
 	cutoff := "2026-10-03T02:00:00.000000Z"
 	original := command("admitted", "input", "first", nil, cutoff)
 	out, err := h.Record(ctx, original, &principal)

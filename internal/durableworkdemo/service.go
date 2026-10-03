@@ -42,6 +42,7 @@ type Service struct {
 	Reader          contract.CommandFactReader
 	Policies        *Policies
 	ScheduleControl bool
+	PoolControl     bool
 	Retention       RetentionRepository
 }
 
@@ -75,7 +76,10 @@ func (s *Service) Record(ctx context.Context, data []byte, trusted *contract.Sub
 	}
 	ref := contract.CommandRef{Owner: targetOwner, CommandID: envelope.CommandID}
 	cutoff, _ := time.Parse("2006-01-02T15:04:05.000000Z", string(envelope.AcceptBefore))
-	result, err := runtime.Admit(ctx, s.Runner, s.Commands, s.Clock, ref, digest, runtime.CommandMetadata{Version: envelope.ContractVersion, Profile: envelope.Profile, Method: envelope.Method, Target: envelope.Target, Subject: subject, AcceptBefore: envelope.AcceptBefore, ExpectedRevision: envelope.ExpectedRevision}, cutoff, func(ctx context.Context, tx runtime.Tx, now time.Time) (contract.CommandReceipt, error) {
+	result, err := runtime.AdmitWithGate(ctx, s.Runner, s.Commands, s.Clock, ref, digest, runtime.CommandMetadata{Version: envelope.ContractVersion, Profile: envelope.Profile, Method: envelope.Method, Target: envelope.Target, Subject: subject, AcceptBefore: envelope.AcceptBefore, ExpectedRevision: envelope.ExpectedRevision}, cutoff, func(ctx context.Context, tx runtime.Tx) error {
+		_, _, err := poolLock(ctx, tx, s.Repository)
+		return err
+	}, func(ctx context.Context, tx runtime.Tx, now time.Time) (contract.CommandReceipt, error) {
 		input, err := s.Repository.LockInput(ctx, tx, s.Owner, envelope.Target.ID)
 		if err != nil {
 			return contract.CommandReceipt{}, err
@@ -85,6 +89,15 @@ func (s *Service) Record(ctx context.Context, data []byte, trusted *contract.Sub
 		}
 		if input != nil && input.Revision == math.MaxInt64 {
 			return runtime.Rejected(ref, "unsupported"), nil
+		}
+		poolRepo, pool, err := poolLock(ctx, tx, s.Repository)
+		if err != nil {
+			return contract.CommandReceipt{}, err
+		}
+		policy := s.Policies.For(s.Owner, envelope.Target.ID)
+		lane, newJob, err := poolRepo.PoolQueue(ctx, tx, pool, envelope.Target.ID, policy.Lane)
+		if err != nil {
+			return contract.CommandReceipt{}, err
 		}
 		if input == nil {
 			input = &Input{ID: envelope.Target.ID, CreatedAt: now}
@@ -98,13 +111,18 @@ func (s *Service) Record(ctx context.Context, data []byte, trusted *contract.Sub
 			return contract.CommandReceipt{}, err
 		}
 		if repo, ok := s.Repository.(ScheduleRepository); ok {
-			policy := s.Policies.For(s.Owner, input.ID)
+			policy.Lane = lane
 			if err = repo.BindSchedule(ctx, tx, s.Owner, input.ID, input.Revision, ScheduleState{Source: "admission", Policy: policy, AdoptedAt: now, Deadline: now.Add(policy.ExecutionLimit), Due: now}); err != nil {
 				return contract.CommandReceipt{}, err
 			}
 		}
 		if _, err = s.Jobs.Trigger(ctx, tx, envelope.Target, "project", input.Revision, now); err != nil {
 			return contract.CommandReceipt{}, err
+		}
+		if newJob {
+			if err = poolRepo.SetJobLane(ctx, tx, envelope.Target.ID, lane); err != nil {
+				return contract.CommandReceipt{}, err
+			}
 		}
 		revision := contract.Revision(strconv.FormatInt(input.Revision, 10))
 		object := envelope.Target

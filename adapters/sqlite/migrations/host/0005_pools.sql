@@ -1,0 +1,10 @@
+ALTER TABLE jobs ADD COLUMN lane text NOT NULL DEFAULT 'ordinary' CHECK(lane IN ('ordinary','control','reconciliation'));
+ALTER TABLE jobs ADD COLUMN pool_claim_epoch bigint CHECK(pool_claim_epoch IS NULL OR (pool_claim_epoch>0 AND pool_claim_epoch<=lease_epoch));
+CREATE TABLE durable_pools (pool_id text PRIMARY KEY, configuration text NOT NULL, cursors text NOT NULL);
+CREATE TABLE durable_pool_members (tenant_id text NOT NULL,owner_id text NOT NULL,pool_id text NOT NULL REFERENCES durable_pools(pool_id),PRIMARY KEY(tenant_id,owner_id));
+CREATE INDEX pool_jobs ON jobs(lane,tenant_id,owner_id,state,job_id);
+UPDATE jobs SET lane=COALESCE((SELECT json_extract(policy,'$.Lane') FROM durable_schedules s WHERE s.tenant_id=jobs.tenant_id AND s.owner_id=jobs.owner_id AND s.object_id=jobs.object_id ORDER BY input_revision LIMIT 1),'ordinary');
+CREATE TABLE durable_pool_scope (scope_id text PRIMARY KEY);
+INSERT INTO durable_pool_scope(scope_id) SELECT lower(hex(randomblob(16)));
+CREATE INDEX pool_members_scope ON durable_pool_members(pool_id,tenant_id,owner_id);
+CREATE INDEX pool_ready_order ON jobs(lane,tenant_id,owner_id,due_at,job_id) WHERE state<>'done';

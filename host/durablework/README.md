@@ -105,3 +105,16 @@ body and adds work to the original Job. Old command tombstones stay gone and
 repeated old Cleanup cannot touch the new body. No tombstone collection, history
 body table or generic TTL is provided. This clears live records, not forensic
 copies in WAL, MVCC pages, backups, replicas or caller memory.
+
+
+Current admission and processing require a durable finite pool. Trusted assembly
+sets `PoolControl` only on its configuration/control Host, explicitly installs
+`demo.DefaultPool(id, exactOwners)` or a validated shared configuration with an
+expected config revision, and then runs qualified workers. DefaultPool is a
+proposal, never implicit installation. `NewPoolWorker` composes declared owners
+into independent lane loops and trusted no-quota maintenance; its actual dispatch
+rechecks database membership/reservation/FIFO at the selected owner's transaction.
+See [finite pool behavior and scope limits](../../internal/durableworkdemo/README.md).
+Read/replay authorization and original digest decisions remain independent of new
+pool registration. This is internal demonstration behavior; public contract
+1.0.0 remains command.get only.

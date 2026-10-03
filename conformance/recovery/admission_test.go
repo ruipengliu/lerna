@@ -5,9 +5,12 @@ package recovery_test
 import (
 	"context"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
+	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
 	"os"
 	"strings"
 	"sync"
@@ -63,8 +66,51 @@ func database(t *testing.T) *postgres.Store {
 	}
 	return store
 }
-func hostFor(store admissionStore, o contract.OwnerRef, subject contract.SubjectBinding) *durablework.Host {
+func rawHostFor(store admissionStore, o contract.OwnerRef, subject contract.SubjectBinding) *durablework.Host {
 	return durablework.New(o, store, store, store, store, durablework.NewPermissions([]durablework.Permission{{Subject: subject, Owner: o, Record: true, Read: true}}))
+}
+
+// Normal fixture assembly explicitly installs one durable finite pool for the
+// given owner. It is not a runtime nil fallback; negative/competition suites
+// use rawHostFor and install their own declared shared pool.
+func fixturePool(host *durablework.Host) {
+	repo, ok := host.Repository.(demo.PoolRepository)
+	if !ok {
+		panic("mandatory pool adapter missing")
+	}
+	runner, ok := host.Repository.(runtime.TxRunner)
+	if !ok {
+		panic("mandatory real fixture runner missing")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	err := runner.Within(ctx, host.Owner, func(ctx context.Context, tx runtime.Tx) error {
+		_, err := repo.LockPool(ctx, tx)
+		if err == nil {
+			return nil
+		}
+		if !errors.Is(err, demo.ErrPoolMissing) {
+			return err
+		}
+		sum := sha256.Sum256([]byte(string(host.Owner.TenantID) + "/" + string(host.Owner.OwnerID)))
+		cfg := demo.DefaultPool(contract.ID("fixture-"+hex.EncodeToString(sum[:16])), []contract.OwnerRef{host.Owner})
+		cfg.Limits[0].Queue = 4096
+		cfg.Limits[0].Concurrent = 64
+		cfg.Quotas[0].Concurrent = 64
+		now, err := host.Clock.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		return repo.InstallPool(ctx, tx, cfg, 0, now)
+	})
+	if err != nil {
+		panic(fmt.Sprintf("mandatory explicit fixture pool: %v", err))
+	}
+}
+func hostFor(store admissionStore, o contract.OwnerRef, subject contract.SubjectBinding) *durablework.Host {
+	h := rawHostFor(store, o, subject)
+	fixturePool(h)
+	return h
 }
 func command(id, object, text string, revision *contract.Revision, deadline string) []byte {
 	value := contract.CommandEnvelope{ContractVersion: "host-durable-work-1", Profile: "host", Method: "durable_work.record", CommandID: contract.ID(id), Target: contract.ObjectRef{TenantID: owner.TenantID, OwnerID: owner.OwnerID, Kind: "durable_work", ID: contract.ID(object)}, ExpectedRevision: revision, AcceptBefore: contract.Time(deadline)}

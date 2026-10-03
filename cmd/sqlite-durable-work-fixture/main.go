@@ -15,6 +15,7 @@ import (
 	"github.com/ruipengliu/lerna/adapters/sqlite"
 	"github.com/ruipengliu/lerna/contract"
 	"github.com/ruipengliu/lerna/host/durablework"
+	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
 	"github.com/ruipengliu/lerna/runtime"
 )
 
@@ -47,6 +48,14 @@ func run() error {
 	owner := contract.OwnerRef{TenantID: "fixture-tenant", OwnerID: "fixture-owner"}
 	subject := contract.SubjectBinding{TenantID: owner.TenantID, SubjectID: "fixture-writer", DelegationChain: []contract.DelegatedSubject{}}
 	host := durablework.New(owner, store, store, store, store, durablework.NewPermissions([]durablework.Permission{{Subject: subject, Owner: owner, Record: true, Read: true}}))
+	// Current Host assembly requires a durable finite pool. The historical
+	// export scripts build their immutable source commits; frozen v1/v2 corpus
+	// bytes and original writers are unaffected by this current configuration.
+	host.PoolControl = true
+	if err = host.InstallPool(ctx, demo.DefaultPool("fixture-pool", []contract.OwnerRef{owner}), 0); err != nil {
+		return err
+	}
+	host.PoolControl = false
 	input, err := os.ReadFile(*commandsPath)
 	if err != nil {
 		return err

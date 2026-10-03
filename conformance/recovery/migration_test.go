@@ -163,6 +163,7 @@ func exerciseHistoricalUpgrade(t *testing.T, f *historicalFixture, fail bool) {
 	h = historicalHost(f.Store)
 	assertHistoricalQueries(t, h, f)
 	assertHistoricalReplay(t, h, f)
+	fixturePool(h)
 	worker := conformanceWorker(t, historicalOwner, f.Store, f.Store, f.Store, h.Clock)
 	batch, err := worker.Claim(contextFor(t), "historical-successor", 1, time.Minute)
 	if err != nil || len(batch) != 1 || batch[0].Claim.JobID != f.Report.Observation.Job.ID || batch[0].Claim.ClaimedRevision != 1 || batch[0].Input.Text != f.Report.Observation.Input.Text {
@@ -323,7 +324,7 @@ func restoreHistoricalSQLite(t *testing.T) *historicalFixture {
 		var actual sqlite3.Error
 		return errors.As(err, &actual) && actual.ExtendedCode == sqlite3.ErrConstraintTrigger
 	}
-	f.Expected = []historicalVersion{{1, "sha256:324dd9c72a00438095596b59c80bf21e66a02eb53d7182ddba67e4784e2c0203"}, {2, "sha256:3791b3fc5ca49c18eee04b2afcaa54c2aae9c5afbf3f1e3fd98f5cce8715e01c"}, {3, sqlite.MigrationV3Checksum()}, {4, sqlite.MigrationV4Checksum()}}
+	f.Expected = []historicalVersion{{1, "sha256:324dd9c72a00438095596b59c80bf21e66a02eb53d7182ddba67e4784e2c0203"}, {2, "sha256:3791b3fc5ca49c18eee04b2afcaa54c2aae9c5afbf3f1e3fd98f5cce8715e01c"}, {3, sqlite.MigrationV3Checksum()}, {4, sqlite.MigrationV4Checksum()}, {5, sqlite.MigrationV5Checksum()}}
 	if f.Report.Migration != f.Expected[0] {
 		t.Fatal("writer v1 migration identity mismatch")
 	}
@@ -470,7 +471,7 @@ func restoreHistoricalPG(t *testing.T) *historicalFixture {
 		var actual *pgconn.PgError
 		return errors.As(err, &actual) && actual.Code == "P0001" && actual.Message == "lerna_test_refuse_v2"
 	}
-	f.Expected = []historicalVersion{{1, "sha256:f8d04d373b039a425b4f6d0a7b7dd4410971c00faf91cdba3f68a9204579127e"}, {2, "sha256:cdb7dea9f55ee8ac9201a943cecf8096108b48bc208409e1372bbf17295b2297"}, {3, postgres.MigrationV3Checksum()}, {4, postgres.MigrationV4Checksum()}}
+	f.Expected = []historicalVersion{{1, "sha256:f8d04d373b039a425b4f6d0a7b7dd4410971c00faf91cdba3f68a9204579127e"}, {2, "sha256:cdb7dea9f55ee8ac9201a943cecf8096108b48bc208409e1372bbf17295b2297"}, {3, postgres.MigrationV3Checksum()}, {4, postgres.MigrationV4Checksum()}, {5, postgres.MigrationV5Checksum()}}
 	if f.Report.MigrationChecksum != f.Expected[0].Checksum {
 		t.Fatal("writer v1 migration identity mismatch")
 	}

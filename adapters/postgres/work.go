@@ -81,7 +81,7 @@ func (s *Store) Complete(ctx context.Context, token runtime.Tx, claim runtime.Cl
 	if !validClaim(claim) {
 		return runtime.ErrClaim
 	}
-	result, err := tx.ExecContext(ctx, `UPDATE `+s.table("jobs")+` SET completed_revision=$7,state=CASE WHEN work_revision>$7 THEN 'ready' ELSE 'done' END,claimed_revision=NULL,worker_id=NULL,lease_until=NULL WHERE tenant_id=$1 AND owner_id=$2 AND job_id=$3 AND object_kind=$4 AND object_id=$5 AND phase=$6 AND state='leased' AND claimed_revision=$7 AND lease_epoch=$8 AND worker_id=$9 AND lease_until=$10 AND lease_until>$11`, owner.TenantID, owner.OwnerID, claim.JobID, claim.Object.Kind, claim.Object.ID, claim.Phase, claim.ClaimedRevision, claim.Epoch, claim.Worker, claim.LeaseUntil, now)
+	result, err := tx.ExecContext(ctx, `UPDATE `+s.table("jobs")+` SET completed_revision=$7,state=CASE WHEN work_revision>$7 THEN 'ready' ELSE 'done' END,claimed_revision=NULL,worker_id=NULL,lease_until=NULL,pool_claim_epoch=NULL WHERE tenant_id=$1 AND owner_id=$2 AND job_id=$3 AND object_kind=$4 AND object_id=$5 AND phase=$6 AND state='leased' AND claimed_revision=$7 AND lease_epoch=$8 AND worker_id=$9 AND lease_until=$10 AND lease_until>$11`, owner.TenantID, owner.OwnerID, claim.JobID, claim.Object.Kind, claim.Object.ID, claim.Phase, claim.ClaimedRevision, claim.Epoch, claim.Worker, claim.LeaseUntil, now)
 	if err != nil {
 		return err
 	}

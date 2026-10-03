@@ -32,6 +32,9 @@ func NewScheduledWorker(owner contract.OwnerRef, runner runtime.TxRunner, claims
 	if _, ok := repository.(demo.ScheduleRepository); !ok {
 		return nil, demo.ErrPolicy
 	}
+	if _, ok := repository.(demo.PoolRepository); !ok {
+		return nil, demo.ErrPoolMissing
+	}
 	worker := NewWorker(owner, runner, claims, repository, clock)
 	worker.Permissions = permissions
 	return worker, nil

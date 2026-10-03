@@ -59,6 +59,12 @@ type JobStore interface {
 // decide owns business preconditions and uses this same short transaction.
 // It returns a fixed receipt only when the runner confirms COMMIT.
 func Admit(ctx context.Context, runner TxRunner, commands CommandStore, clock Clock, ref contract.CommandRef, digest string, metadata CommandMetadata, cutoff time.Time, decide func(context.Context, Tx, time.Time) (contract.CommandReceipt, error)) (contract.TransportOutcome, error) {
+	return AdmitWithGate(ctx, runner, commands, clock, ref, digest, metadata, cutoff, nil, decide)
+}
+
+// AdmitWithGate checks trusted dependencies after original-key resolution and
+// before creating any new fixed decision, including expiry rejection.
+func AdmitWithGate(ctx context.Context, runner TxRunner, commands CommandStore, clock Clock, ref contract.CommandRef, digest string, metadata CommandMetadata, cutoff time.Time, gate func(context.Context, Tx) error, decide func(context.Context, Tx, time.Time) (contract.CommandReceipt, error)) (contract.TransportOutcome, error) {
 	var receipt contract.CommandReceipt
 	err := runner.Within(ctx, ref.Owner, func(txctx context.Context, tx Tx) error {
 		original, err := commands.LockCommand(txctx, tx, ref)
@@ -71,6 +77,11 @@ func Admit(ctx context.Context, runner TxRunner, commands CommandStore, clock Cl
 			}
 			receipt = original.Receipt
 			return nil
+		}
+		if gate != nil {
+			if err = gate(txctx, tx); err != nil {
+				return err
+			}
 		}
 		now, err := clock.Now(txctx, tx)
 		if err != nil {

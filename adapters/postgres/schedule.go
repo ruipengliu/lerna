@@ -187,7 +187,7 @@ func (s *Store) DeferClaim(ctx context.Context, token runtime.Tx, claim runtime.
 	if err != nil {
 		return err
 	}
-	_, err = tx.ExecContext(ctx, `UPDATE `+s.table("jobs")+` SET state=CASE WHEN work_revision>$4 THEN 'ready' ELSE 'waiting' END,due_at=CASE WHEN work_revision>$4 THEN due_at ELSE $5 END,claimed_revision=NULL,worker_id=NULL,lease_until=NULL WHERE tenant_id=$1 AND owner_id=$2 AND job_id=$3`, owner.TenantID, owner.OwnerID, claim.JobID, claim.ClaimedRevision, (due))
+	_, err = tx.ExecContext(ctx, `UPDATE `+s.table("jobs")+` SET state=CASE WHEN work_revision>$4 THEN 'ready' ELSE 'waiting' END,due_at=CASE WHEN work_revision>$4 THEN due_at ELSE $5 END,claimed_revision=NULL,worker_id=NULL,lease_until=NULL,pool_claim_epoch=NULL WHERE tenant_id=$1 AND owner_id=$2 AND job_id=$3`, owner.TenantID, owner.OwnerID, claim.JobID, claim.ClaimedRevision, (due))
 	return err
 }
 func (s *Store) NextWake(ctx context.Context, token runtime.Tx, now, fallback time.Time) (time.Time, error) {
@@ -223,7 +223,7 @@ func (s *Store) StopRevision(ctx context.Context, token runtime.Tx, job runtime.
 	if revision < 1 || revision > job.WorkRevision {
 		return runtime.ErrWorkBounds
 	}
-	_, err = tx.ExecContext(ctx, `UPDATE `+s.table("jobs")+` SET completed_revision=$4,state=CASE WHEN work_revision>$4 THEN 'ready' ELSE 'done' END,claimed_revision=NULL,worker_id=NULL,lease_until=NULL WHERE tenant_id=$1 AND owner_id=$2 AND object_id=$3 AND object_kind='durable_work' AND phase='project' AND completed_revision<$4 AND (claimed_revision IS NULL OR claimed_revision=$4)`, owner.TenantID, owner.OwnerID, job.Object.ID, revision)
+	_, err = tx.ExecContext(ctx, `UPDATE `+s.table("jobs")+` SET completed_revision=$4,state=CASE WHEN work_revision>$4 THEN 'ready' ELSE 'done' END,claimed_revision=NULL,worker_id=NULL,lease_until=NULL,pool_claim_epoch=NULL WHERE tenant_id=$1 AND owner_id=$2 AND object_id=$3 AND object_kind='durable_work' AND phase='project' AND completed_revision<$4 AND (claimed_revision IS NULL OR claimed_revision=$4)`, owner.TenantID, owner.OwnerID, job.Object.ID, revision)
 	return err
 }
 func (s *Store) ReleaseClaim(ctx context.Context, token runtime.Tx, claim runtime.Claim, now time.Time) error {
@@ -235,6 +235,6 @@ func (s *Store) ReleaseClaim(ctx context.Context, token runtime.Tx, claim runtim
 	if err != nil {
 		return err
 	}
-	_, err = tx.ExecContext(ctx, `UPDATE `+s.table("jobs")+` SET state='ready',claimed_revision=NULL,worker_id=NULL,lease_until=NULL WHERE tenant_id=$1 AND owner_id=$2 AND job_id=$3`, owner.TenantID, owner.OwnerID, claim.JobID)
+	_, err = tx.ExecContext(ctx, `UPDATE `+s.table("jobs")+` SET state='ready',claimed_revision=NULL,worker_id=NULL,lease_until=NULL,pool_claim_epoch=NULL WHERE tenant_id=$1 AND owner_id=$2 AND job_id=$3`, owner.TenantID, owner.OwnerID, claim.JobID)
 	return err
 }

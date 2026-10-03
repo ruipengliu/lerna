@@ -13,6 +13,7 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/ruipengliu/lerna/contract"
+	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
 	"github.com/ruipengliu/lerna/runtime"
 )
 
@@ -104,10 +105,12 @@ func (s *Store) Close() error {
 }
 
 type transaction struct {
-	store  *Store
-	sql    *sql.Tx
-	owner  contract.OwnerRef
-	active atomic.Bool
+	pool       *demo.PoolState
+	poolLocked bool
+	store      *Store
+	sql        *sql.Tx
+	owner      contract.OwnerRef
+	active     atomic.Bool
 }
 
 func (t *transaction) Owner() contract.OwnerRef { return t.owner }

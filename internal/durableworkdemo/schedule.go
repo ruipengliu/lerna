@@ -184,6 +184,10 @@ func (s *Service) Stop(ctx context.Context, id contract.ID, revision int64) erro
 		return ErrPolicy
 	}
 	return s.Runner.Within(ctx, s.Owner, func(ctx context.Context, tx runtime.Tx) error {
+		_, _, err := poolLock(ctx, tx, s.Repository)
+		if err != nil {
+			return err
+		}
 		input, err := s.Repository.LockInput(ctx, tx, s.Owner, id)
 		if err != nil {
 			return err
