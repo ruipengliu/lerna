@@ -17,15 +17,20 @@ import type { ContentRef } from "./contracts.gen";
 const MAX_QUEUE_BYTES = 4 * 1024 * 1024;
 const CONTROL_BYTES = 1024 * 1024;
 const CONTROL_SLOTS = 4;
-const controlMethods = new Set([
-  "task.cancel",
-  "task.pause",
+const exactControlMethods = new Set([
   "task.resume",
-  "execution.cancel",
-  "grant.revoke",
-  "schedule.pause",
+  "schedule.resume",
   "schedule.delete",
+  "execution.control",
+  "resource.release",
 ]);
+// 同版 Go api.IsControlMethod 的容量分类；许可仍由原业务 owner 裁决。
+function isControlMethod(method: string): boolean {
+  return (
+    exactControlMethods.has(method) ||
+    /\.(cancel|pause|revoke|close|stop|takeover|deactivate|billing_reconcile)$/.test(method)
+  );
+}
 export function newID(prefix: string): string {
   if (!/^[a-z][a-z0-9_]*$/.test(prefix)) throw new ProtocolError("invalid_id_prefix");
   return `${prefix}_${Array.from(crypto.getRandomValues(new Uint8Array(16)), (x) => x.toString(16).padStart(2, "0")).join("")}`;
@@ -409,7 +414,7 @@ export class HarnessClient {
       "command",
       command,
       (frame) => this.decodeReceipt(frame, stored),
-      controlMethods.has(command.method),
+      isControlMethod(command.method),
     )) as Receipt;
   }
   private decoder(stored: StoredCommand): Promise<ContractRegistry> {
