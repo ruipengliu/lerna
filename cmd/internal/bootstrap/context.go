@@ -2,10 +2,10 @@ package bootstrap
 
 import (
 	"context"
+	"encoding/json"
 	filedriver "github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
-	"github.com/ruipengliu/lerna/internal/execution"
 	"github.com/ruipengliu/lerna/internal/task"
 	"github.com/ruipengliu/lerna/runtime"
 )
@@ -54,7 +54,7 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 		return task.PreparedDecision{}, e
 	}
 	snap := api.Snapshot{SnapshotID: snapshotID, Revision: 1, TaskRef: scope.Ref(t.TaskID, t.Revision), GoalRevision: t.GoalRevision, ControlRevision: t.ControlRevision, GoalRef: t.GoalRef, Requirements: t.Requirements, RequirementsDigest: t.RequirementsDigest, CoverageRef: t.CurrentCoverageRef, RequirementsState: t.RequirementsState, Purpose: purpose, FactRefs: facts.FactRefs, UnresolvedCollections: facts.UnresolvedCollections, PolicyRef: t.PolicyRef, InstallLockRef: c.a.InstallLock, ModelProfileRef: c.a.Profile.Ref, CapabilityRefs: []api.ComponentRef{filedriver.FileReadCapability().Ref, filedriver.FileWriteCapability().Ref}, BindingRefs: []api.ObjectRef{c.a.ReadBinding, c.a.WriteBinding}, MaterialRefs: processed, SelectionReportRef: selection, ProcessedSources: processed, ReservedOutputTokens: 4096, SafetyMarginTokens: c.a.Profile.SafetyMargin, CountMode: "upper_bound", TokenizerRef: component("rule-byte-count")}
-	goal, e := c.a.goalBytes(ctx, scope, auth, t.GoalRef)
+	goal, e := c.a.Memory.Read(ctx, scope, auth, t.GoalRef, "brain.input")
 	if e != nil {
 		return task.PreparedDecision{}, e
 	}
@@ -91,6 +91,28 @@ func (a *App) goalBytes(ctx context.Context, s runtime.Scope, auth runtime.Auth,
 }
 
 type factSource struct{ a *App }
+
+func (f factSource) ResolveGoal(ctx context.Context, snap api.Snapshot, original json.RawMessage) (json.RawMessage, error) {
+	if api.Hash(original) != snap.GoalRef.Hash {
+		return nil, api.E("invalid_request", "goal_digest_mismatch")
+	}
+	var doc api.GoalDocument
+	if api.Decode(original, &doc) != nil || doc.FormatVersion != 1 {
+		return original, nil
+	}
+	ref := doc.InitialGoalRef
+	if len(doc.AmendmentRefs) > 0 {
+		ref = doc.AmendmentRefs[len(doc.AmendmentRefs)-1]
+	}
+	found := false
+	for _, source := range snap.ProcessedSources {
+		found = found || api.Equal(ref, source)
+	}
+	if !found {
+		return nil, api.E("forbidden", "goal_source_not_declared")
+	}
+	return f.a.Memory.Read(ctx, f.a.Scope, f.a.ServiceAuth, ref, "brain.input")
+}
 
 func (f factSource) Operations(ctx context.Context, snap api.Snapshot) ([]brain.ActionFact, error) {
 	facts, e := f.a.Task.ContextFacts(ctx, f.a.Store, f.a.Scope, f.a.ServiceAuth, snap.TaskRef.ObjectID)

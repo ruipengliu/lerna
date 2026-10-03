@@ -39,7 +39,7 @@ func (a *App) Publish(ctx context.Context, scope runtime.Scope, auth runtime.Aut
 	processed = uniqueSources(processed)
 	disclosed = uniqueSources(disclosed)
 	var plan publicationPlan
-	status, e := a.Store.Within(ctx, scope, []string{"platform"}, func(tx runtime.Tx) error {
+	status, e := a.Store.Within(ctx, scope, []string{"platform", "content", "memory"}, func(tx runtime.Tx) error {
 		_, e := tx.Get(ctx, "platform.publications", id, &plan)
 		if e == nil {
 			if !api.Equal(plan.Ref, ref) || !api.Equal(plan.Processed, processed) || !api.Equal(plan.Disclosed, disclosed) || plan.SubjectID != auth.SubjectID {
@@ -54,7 +54,28 @@ func (a *App) Publish(ctx context.Context, scope runtime.Scope, auth runtime.Aut
 		if e != nil {
 			return e
 		}
-		plan = publicationPlan{Ref: ref, TransferID: api.NewID("transfer"), ReserveID: api.NewID("command"), PutID: api.NewID("command"), Processed: processed, Disclosed: disclosed, Retention: api.Time(now.Add(24 * time.Hour)), Deadline: api.Time(now.Add(30 * time.Minute)), SubjectID: auth.SubjectID}
+		retain := now.Add(24 * time.Hour)
+		policyUntil, e := api.ParseTime(a.ContentPolicy.Values.RetainUntil)
+		if e != nil {
+			return e
+		}
+		if policyUntil.Before(retain) {
+			retain = policyUntil
+		}
+		for _, source := range uniqueSources(append(append([]api.ContentRef{}, processed...), disclosed...)) {
+			value, e := a.Memory.CheckContentTx(ctx, tx, auth, source, "content.write", "cloud", true)
+			if e != nil {
+				return e
+			}
+			until, e := api.ParseTime(value.RetentionUntil)
+			if e != nil {
+				return e
+			}
+			if until.Before(retain) {
+				retain = until
+			}
+		}
+		plan = publicationPlan{Ref: ref, TransferID: api.NewID("transfer"), ReserveID: api.NewID("command"), PutID: api.NewID("command"), Processed: processed, Disclosed: disclosed, Retention: api.Time(retain), Deadline: api.Time(now.Add(30 * time.Minute)), SubjectID: auth.SubjectID}
 		return tx.Create(ctx, "platform.publications", id, auth.SubjectID, plan)
 	})
 	if status == runtime.CommitUnknown {
@@ -80,15 +101,7 @@ func (a *App) Publish(ctx context.Context, scope runtime.Scope, auth runtime.Aut
 type brainContent struct{ a *App }
 
 func (c brainContent) Read(ctx context.Context, s runtime.Scope, a runtime.Auth, r api.ContentRef, p string) ([]byte, error) {
-	b, err := c.a.Memory.Read(ctx, s, a, r, p)
-	if err != nil {
-		return nil, err
-	}
-	var doc api.GoalDocument
-	if api.Decode(b, &doc) == nil && doc.FormatVersion == 1 && api.ValidID(doc.InitialGoalRef.ContentID) {
-		return c.a.goalBytes(ctx, s, a, r)
-	}
-	return b, nil
+	return c.a.Memory.Read(ctx, s, a, r, p)
 }
 func (c brainContent) Publish(ctx context.Context, s runtime.Scope, a runtime.Auth, p brain.Publication, b []byte) (api.ContentRef, error) {
 	return c.a.Publish(ctx, s, a, p.ContentID, p.MediaType, b, p.ProcessedSources, p.DisclosedSources)
