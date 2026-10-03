@@ -62,6 +62,9 @@ func SealAdmissionTx(ctx context.Context, tx runtime.Tx, p Proof, b AdmissionBun
 }
 func validateBundle(b AdmissionBundle) error {
 	i, l := b.Intent, b.Lease
+	if !api.ValidID(b.DeviceDatabaseID) {
+		return api.E("forbidden", "original_device_database_required")
+	}
 	if b.ReservationRef.OwnerID != b.AuthorityID || b.ReservationRef.TenantID != i.TaskRef.TenantID || !api.ValidID(b.ReservationRef.ObjectID) || b.ReservationRef.Revision == 0 {
 		return api.E("forbidden", "original_reservation_binding_mismatch")
 	}
