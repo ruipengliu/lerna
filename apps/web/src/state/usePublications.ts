@@ -63,7 +63,7 @@ export function usePublications(
       });
     return () => {
       active = false;
-      void next.close();
+      void next.close().catch(() => undefined);
     };
   }, [client, identity]);
   const current = config?.identity === identity ? config.value : undefined;

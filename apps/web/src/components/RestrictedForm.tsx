@@ -1,5 +1,5 @@
-import { useEffect, useId, useState } from "react";
-import { CORE_SCHEMA, isObject, parseStrict } from "@harness/sdk";
+import { useCallback, useEffect, useId, useState } from "react";
+import { CORE_SCHEMA, isObject, parseStrict, validateSchema } from "@harness/sdk";
 import type { JSONValue, Schema } from "@harness/sdk";
 const labels: Record<string, string> = {
   reason: "理由",
@@ -122,6 +122,22 @@ export function RestrictedForm({
 }) {
   const prefix = useId();
   const [invalid, setInvalid] = useState<Record<string, boolean>>({});
+  const unionValidity = useCallback((valid: boolean) => {
+    setInvalid((previous) =>
+      previous.union === !valid ? previous : { ...previous, union: !valid },
+    );
+  }, []);
+  const [schemaError, setSchemaError] = useState(false);
+  useEffect(() => {
+    try {
+      validateSchema(schema, value);
+      setSchemaError(false);
+      onValidity?.(!Object.values(invalid).some(Boolean));
+    } catch {
+      setSchemaError(true);
+      onValidity?.(false);
+    }
+  }, [schema, value, invalid, onValidity]);
   let spec: Schema;
   try {
     spec = resolveSchema(schema);
@@ -131,14 +147,7 @@ export function RestrictedForm({
   if (Array.isArray(spec.oneOf)) {
     if (!spec.oneOf.length || spec.oneOf.length > 8)
       return <p className="notice">此表单的格式分支超过受信界面的上限。</p>;
-    return (
-      <UnionForm
-        schema={spec}
-        value={value}
-        onChange={onChange}
-        {...(onValidity ? { onValidity } : {})}
-      />
-    );
+    return <UnionForm schema={spec} value={value} onChange={onChange} onValidity={unionValidity} />;
   }
   if (
     spec.type !== "object" ||
@@ -172,7 +181,6 @@ export function RestrictedForm({
         const validity = (valid: boolean) => {
           const next = { ...invalid, [key]: !valid };
           setInvalid(next);
-          onValidity?.(!Object.values(next).some(Boolean));
         };
         const title = `${prefix}-${key}`;
         const fieldValue = value[key] ?? "";
@@ -291,6 +299,9 @@ export function RestrictedForm({
           </div>
         );
       })}
+      {schemaError && (
+        <p className="field-hint">请按原 Schema 填写完整必需字段和准确约束，合法输入后才可提交。</p>
+      )}
     </div>
   );
 }

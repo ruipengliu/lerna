@@ -6,6 +6,7 @@ import {
   parseStrict,
   validateRecord,
   validateSchema,
+  validateFormSchema,
 } from "@harness/sdk";
 import type {
   ContentRef,
@@ -131,7 +132,10 @@ export function TrustedRequest({
           ? confirmation.preview_refs.map((ref) => validateRecord<ContentRef>("ContentRef", ref))
           : contentRefs(request as unknown as JSONValue);
       setRefs(needed);
-      if (inputView) setAnswer(initialPayload(inputView.answer_schema));
+      if (inputView) {
+        validateFormSchema(inputView.answer_schema);
+        setAnswer(initialPayload(inputView.answer_schema));
+      }
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : "原受信表单不可呈现");
       setRefs([]);
