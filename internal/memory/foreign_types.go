@@ -23,6 +23,7 @@ type ForeignReference struct {
 // ForeignProof 与源 owner 的当前 Content/CopyHolder 同义，不重写引用的 owner。
 // Proof 是原 authority 的准确签名；宿主只装配固定 issuer/key/数据库与 audience。
 type ForeignProof struct {
+	Mode               string           `json:"mode"`
 	ContentRef         api.ContentRef   `json:"content_ref"`
 	PolicyRef          api.ComponentRef `json:"policy_ref"`
 	PolicyValues       PolicyValues     `json:"policy_values"`
@@ -53,6 +54,15 @@ type ForeignProof struct {
 type ForeignUse struct {
 	Reference ForeignReference `json:"reference"`
 	Proof     ForeignProof     `json:"proof"`
+}
+
+// ContentPolicySnapshot 固定原准确来源与本次已认证主体，不猜测其他主体的当前代次。
+type ContentPolicySnapshot struct {
+	ContentRef      api.ContentRef  `json:"content_ref"`
+	Policy          Policy          `json:"policy"`
+	SubjectRefs     []api.ObjectRef `json:"subject_refs"`
+	RetainUntil     string          `json:"retain_until"`
+	ControlRevision uint64          `json:"control_revision"`
 }
 
 // ForeignContentPort 的所有 RPC/字节 IO 都在 Tx 外；VerifyTx 不得出站。
