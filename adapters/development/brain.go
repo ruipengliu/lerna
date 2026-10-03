@@ -56,6 +56,10 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 	if e = v.Validate(raw); e != nil {
 		return task.Proposal{}, e
 	}
+	knowledge, e := b.a.Knowledge.ProposalLimits(ctx, s, b.a.ServiceAuth, i, p)
+	if e != nil {
+		return task.Proposal{}, e
+	}
 	var original task.Proposal
 	_, e = b.a.Store.Read(ctx, s, "platform.prepared_proposals", i.DecisionID, 0, &original)
 	if e == nil {
@@ -119,6 +123,10 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 			prepared, admission, err := b.a.prepareAction(ctx, s, i, snap, candidate, reqs)
 			if err != nil {
 				return original, err
+			}
+			if knowledge != nil {
+				prepared.MaxDurationSeconds = knowledge.Selection.EffectiveControls.MaxActionDurationSeconds
+				admission.Prepared = prepared
 			}
 			original.Actions = append(original.Actions, prepared)
 			admissions = append(admissions, admission)

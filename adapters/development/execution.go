@@ -276,6 +276,9 @@ func (a actionAuthorization) AuthorizeAction(ctx context.Context, tx runtime.Tx,
 	if er := currentCredentialTx(ctx, tx, auth); er != nil {
 		return er
 	}
+	if er := a.a.Knowledge.CheckActionTx(ctx, tx, auth, i); er != nil {
+		return er
+	}
 	use, er := a.a.Governance.UseTx(ctx, tx, auth, governance.UseRequest{UseID: i.UseIntentRefs[0].ObjectID, SubjectRef: auth.Ref(tx.Scope().OwnerID), TargetRef: tx.Scope().Ref(i.OperationID, 1), TargetKind: "operation", IntentHash: i.IntentHash, GrantRefs: []api.ObjectRef{admission.Descriptor.GrantRef}, RequestedUnits: i.CostBound, Resources: admission.Resources, Actions: admission.Actions, Recipient: admission.Descriptor.Recipient, Location: admission.Descriptor.Location, Purposes: []string{i.AdmissionPurpose}, StartBefore: i.Deadline})
 	if er != nil {
 		return er

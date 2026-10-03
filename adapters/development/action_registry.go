@@ -343,8 +343,11 @@ func (a *App) prepareAction(ctx context.Context, s runtime.Scope, i api.Decision
 	} else if err != nil {
 		return task.PreparedAction{}, actionAdmission{}, err
 	}
-	if !api.Equal(fixed.Scope, s) || !api.Equal(fixed.InstallLockRef, snap.InstallLockRef) {
+	if !api.Equal(fixed.Scope, s) || fixed.SnapshotID != snap.SnapshotID {
 		return task.PreparedAction{}, actionAdmission{}, api.E("forbidden", "original_action_snapshot_mismatch")
+	}
+	if err := a.Knowledge.CheckActionSnapshotLock(ctx, s, a.ServiceAuth, i, snap, fixed.InstallLockRef); err != nil {
+		return task.PreparedAction{}, actionAdmission{}, err
 	}
 	var descriptor actionDescriptor
 	matched := false

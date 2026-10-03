@@ -2,6 +2,7 @@ package development
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"io"
@@ -10,12 +11,15 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
 
 	execadapter "github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/api"
+	"github.com/ruipengliu/lerna/internal/brain"
+	"github.com/ruipengliu/lerna/internal/execution"
 	"github.com/ruipengliu/lerna/internal/governance"
 	"github.com/ruipengliu/lerna/internal/task"
 	"github.com/ruipengliu/lerna/runtime"
@@ -84,12 +88,61 @@ func TestConfiguredKnowledgeCallCostLimitPreventsAnyPhysicalModelRequest(t *test
 	}
 }
 
+func TestConfiguredKnowledgeActionCountRejectsOriginalTwoActionProposalBeforeUse(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) {
+			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
+				t.Skip("actual PostgreSQL DSN required")
+			}
+			runConfiguredKnowledge(t, driver, "count")
+		})
+	}
+}
+
+func TestConfiguredKnowledgeCapabilityIntersectionRejectsUnselectedWriteBeforeUse(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) {
+			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
+				t.Skip("actual PostgreSQL DSN required")
+			}
+			runConfiguredKnowledge(t, driver, "capability")
+		})
+	}
+}
+
+func TestConfiguredKnowledgeCompositeSnapshotKeepsActualLeafQualificationAndDuration(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) {
+			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
+				t.Skip("actual PostgreSQL DSN required")
+			}
+			runConfiguredKnowledge(t, driver, "action")
+		})
+	}
+}
+
+func TestConfiguredKnowledgeWithdrawalClosesOriginalDecisionAndPreservesActualFeeAfterReopen(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) {
+			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
+				t.Skip("actual PostgreSQL DSN required")
+			}
+			runConfiguredKnowledge(t, driver, "withdraw")
+		})
+	}
+}
+
 func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 	defer cancel()
 	var sends atomic.Int32
-	wireBody := make(chan []byte, 1)
+	var active atomic.Pointer[App]
+	wireBody := make(chan []byte, 3)
+	replyRelease := make(chan struct{})
+	var released sync.Once
+	release := func() { released.Do(func() { close(replyRelease) }) }
+	defer release()
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sends.Add(1)
 		body, err := io.ReadAll(io.LimitReader(r.Body, api.MaxJSONBytes+1))
@@ -98,8 +151,39 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 			return
 		}
 		wireBody <- body
+		if blockedControl == "withdraw" {
+			select {
+			case <-replyRelease:
+			case <-r.Context().Done():
+				return
+			}
+		}
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write(knowledgeContractReply())
+		reply := knowledgeContractReply()
+		if blockedControl == "count" || blockedControl == "action" || blockedControl == "capability" {
+			var wire struct {
+				Messages []struct {
+					Content string `json:"content"`
+				} `json:"messages"`
+			}
+			var input struct {
+				Snapshot api.Snapshot `json:"snapshot"`
+			}
+			if json.Unmarshal(body, &wire) != nil || len(wire.Messages) != 2 || json.Unmarshal([]byte(wire.Messages[1].Content), &input) != nil || len(input.Snapshot.BindingRefs) != 1 {
+				t.Error("actual frozen capability/binding missing")
+				return
+			}
+			if blockedControl == "count" {
+				reply = knowledgeReadActionsReply(input.Snapshot, 2)
+			} else if blockedControl == "capability" {
+				reply = knowledgeWriteActionReply(input.Snapshot, active.Load().WriteBinding)
+			} else if input.Snapshot.Purpose == "interpret_requirements" {
+				reply = knowledgeRefinementReply(active.Load().ArtifactRule)
+			} else if sends.Load() == 2 {
+				reply = knowledgeReadActionsReply(input.Snapshot, 1)
+			}
+		}
+		_, _ = w.Write(reply)
 	}))
 	defer server.Close()
 	root := t.TempDir()
@@ -121,6 +205,8 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 		agentLimits.MaxInputBytes = 1
 	} else if blockedControl == "cost" {
 		agentLimits.MaxCallCostBound = []api.Amount{{Unit: "USD", Value: "0"}}
+	} else if blockedControl == "action" {
+		agentLimits.MaxActionDurationSeconds = 30
 	}
 	limits, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), "application/json", api.Raw(agentLimits), []api.ContentRef{}, []api.ContentRef{})
 	if err != nil {
@@ -138,18 +224,34 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 		t.Fatal(err)
 	}
 	cfg.Knowledge = &KnowledgeConfig{SkillRefs: []api.ComponentRef{skill.SkillRef}, AgentConfigRef: &agent.AgentConfigRef, ControlLimits: governance.KnowledgeControls{MaxInputBytes: api.MaxJSONBytes, MaxOutputTokens: 512, MaxActionsPerDecision: 4, MaxDelegationsPerDecision: 2, MaxDepth: 2, MaxActionDurationSeconds: 30, MaxCallCostBound: []api.Amount{{Unit: "USD", Value: "1"}}}}
+	const originalFile = "Exact original bytes from the managed target."
+	if blockedControl == "action" {
+		cfg.Knowledge.ControlLimits.MaxActionDurationSeconds = 60
+		if err = os.WriteFile(filepath.Join(root, "files", "knowledge-original.txt"), []byte(originalFile), 0600); err != nil {
+			t.Fatal(err)
+		}
+	}
 	a, err = OpenApp(ctx, cfg, false)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer a.Close()
-	goal, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), "text/plain", []byte("请依据准确知识检查报告是否可以继续。"), []api.ContentRef{}, []api.ContentRef{})
+	active.Store(a)
+	goalMedia, goalBody := "text/plain", []byte("请依据准确知识检查报告是否可以继续。")
+	if blockedControl == "action" {
+		goalMedia, goalBody = "application/json", api.Raw(brain.GoalSpec{Kind: "answer", Body: "knowledge contract"})
+	}
+	goal, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), goalMedia, goalBody, []api.ContentRef{}, []api.ContentRef{})
 	if err != nil {
 		t.Fatal(err)
 	}
 	taskID := api.NewID("task")
 	knowledgePublicCommand(t, ctx, a, "task.submit", taskID, task.SubmitInput{OrchestratorID: a.Scope.OwnerID, GoalRef: goal, PolicyRef: a.TaskPolicy.PolicyRef, Deadline: api.Time(time.Now().Add(5 * time.Minute)), Budget: []api.Amount{{Unit: "USD", Value: "1"}}, RequirementCandidates: []api.RequirementCandidate{}}, nil)
-	if blockedControl != "" {
+	if blockedControl == "withdraw" {
+		runKnowledgeWithdrawnCall(t, ctx, cancel, a, cfg, taskID, skill, wireBody, release, &sends)
+		return
+	}
+	if blockedControl == "input" || blockedControl == "cost" {
 		err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 300)
 		var refusal *api.Error
 		if !errors.As(err, &refusal) || refusal.Code != "forbidden" || refusal.Reason != "knowledge_model_control_exceeded" {
@@ -166,6 +268,53 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 		}
 		return
 	}
+	if blockedControl == "count" || blockedControl == "capability" {
+		for {
+			err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 300)
+			if err != nil {
+				break
+			}
+			select {
+			case <-ctx.Done():
+				t.Fatal("original action proposal did not reach consumption", ctx.Err())
+			case <-time.After(20 * time.Millisecond):
+			}
+		}
+		var refusal *api.Error
+		code, reason, decisionStatus := "forbidden", "knowledge_action_count_exceeded", "completed"
+		keys := []string{"read1", "read2"}
+		if blockedControl == "capability" {
+			// 实际供应商 decoder 已按冻结 Snapshot 拒绝未声明的 cap/binding。
+			code, reason, decisionStatus, keys = "invalid_request", "model_output_invalid", "failed", []string{"write1"}
+		}
+		if !errors.As(err, &refusal) || refusal.Code != code || refusal.Reason != reason {
+			t.Fatalf("actual original proposal exceeded the selected %s control: %v sends=%d", blockedControl, err, sends.Load())
+		}
+		budgetRaw, err := a.query(ctx, "budget.read", taskID, task.BudgetReadInput{TaskID: taskID})
+		var budget task.BudgetReadResponse
+		if err != nil || api.Decode(budgetRaw, &budget) != nil || budget.Task == nil || len(budget.Task.Reservations) != 1 {
+			t.Fatalf("action refusal changed original model responsibility: %v %+v", err, budget)
+		}
+		decisionID := budget.Task.Reservations[0].SourceRef.ObjectID
+		decision, err := a.Brain.Get(ctx, a.Store, a.Scope, a.ServiceAuth, decisionID)
+		if err != nil || decision.Decision.Status != decisionStatus || blockedControl == "capability" && decision.Decision.ProposalRef != nil || !decision.Decision.UsageFinal || decision.Decision.PhysicalRequestCount != 1 || !api.Equal(decision.Decision.Usage, []api.Amount{{Unit: "USD", Value: "0.00024"}}) || sends.Load() != 1 {
+			t.Fatalf("known original model fee/request was lost: %v %+v sends=%d", err, decision, sends.Load())
+		}
+		for _, key := range keys {
+			operationID := stableID("operation", decisionID+"/"+key)
+			if _, err := a.Task.ReadOperationIntent(ctx, a.Store, a.Scope, a.UserAuth, operationID); !api.IsCode(err, "not_found") {
+				t.Fatalf("count refusal admitted an operation: %v", err)
+			}
+			useID := stableID("use", decisionID+"/"+key)
+			if _, err := a.query(ctx, "grant.use.get", useID, governance.IDInput{ID: useID}); !api.IsCode(err, "not_found") {
+				t.Fatalf("count refusal consumed a tool Grant: %v", err)
+			}
+		}
+		if _, err := os.ReadFile(filepath.Join(root, "files", "knowledge-forbidden.txt")); !os.IsNotExist(err) {
+			t.Fatalf("selected knowledge control allowed an unexpected native target write: %v", err)
+		}
+		return
+	}
 	for {
 		if err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 300); err != nil {
 			t.Fatal(err)
@@ -175,7 +324,11 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 			t.Fatal(err)
 		}
 		if got.Status == "failed" && !got.AccountingOpen {
-			if len(got.Budget) != 1 || got.Budget[0].Spent != "0.00024" || got.Budget[0].Reserved != "0" || got.ResultRef != nil {
+			spent := "0.00024"
+			if blockedControl == "action" {
+				spent = "0.00072"
+			}
+			if len(got.Budget) != 1 || got.Budget[0].Spent != spent || got.Budget[0].Reserved != "0" || got.ResultRef != nil {
 				t.Fatalf("knowledge changed actual failure or known fee: %+v", got)
 			}
 			break
@@ -185,6 +338,44 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 			t.Fatalf("original Task did not settle: %+v %v", got, ctx.Err())
 		case <-time.After(20 * time.Millisecond):
 		}
+	}
+	if blockedControl == "action" {
+		facts, err := a.Task.ContextFacts(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+		if err != nil || len(facts.Operations) != 1 || !facts.Operations[0].Fact.Closed || facts.Operations[0].Fact.MayApplyLater || sends.Load() != 3 {
+			t.Fatalf("qualified original action did not actually finish once: %v %+v sends=%d", err, facts.Operations, sends.Load())
+		}
+		intent, err := a.Task.ReadOperationIntent(ctx, a.Store, a.Scope, a.UserAuth, facts.Operations[0].Intent.OperationID)
+		if err != nil || intent.MaxDurationSeconds != 30 || !api.Equal(intent.InstallLockRef, component("builtin-install-lock")) || !api.Equal(intent.CapabilityRef, execadapter.FileReadCapability().Ref) {
+			t.Fatalf("knowledge replaced original program qualification or duration: %v %+v", err, intent)
+		}
+		deadline, _ := api.ParseTime(intent.Deadline)
+		taskDeadline, _ := api.ParseTime(facts.Task.Deadline)
+		if !deadline.Before(taskDeadline.Add(-2 * time.Minute)) {
+			t.Fatal("effective 30-second action duration did not tighten the five-minute Task deadline")
+		}
+		raw, err := a.query(ctx, "execution.get", intent.OperationID, execution.OperationIDInput{OperationID: intent.OperationID})
+		var operation execution.OperationView
+		if err != nil || api.Decode(raw, &operation) != nil || operation.Operation.ExecutionState != "closed" || operation.Operation.ResultRef == nil || len(operation.Attempts.Items) != 1 || operation.Attempts.Items[0].StartedAt == "" || !operation.Attempts.Items[0].ActuallyStopped || operation.Attempts.Items[0].MayApplyLater != false {
+			t.Fatalf("original target readback missing: %v %+v", err, operation)
+		}
+		bytes, err := a.Memory.Read(ctx, a.Scope, a.UserAuth, *operation.Operation.ResultRef, "execution_result")
+		var observed execadapter.FileReadResult
+		if err != nil || api.Decode(bytes, &observed) != nil || observed.DataBase64 != base64.StdEncoding.EncodeToString([]byte(originalFile)) {
+			t.Fatalf("actual target bytes differ: %v %+v", err, observed)
+		}
+		if err = a.Close(); err != nil {
+			t.Fatal(err)
+		}
+		reopened, err := OpenApp(ctx, cfg, false)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer reopened.Close()
+		after, err := reopened.Task.ReadOperationIntent(ctx, reopened.Store, reopened.Scope, reopened.UserAuth, intent.OperationID)
+		if err != nil || !api.Equal(after, intent) || sends.Load() != 3 {
+			t.Fatalf("reopen refreshed original action identity/deadline: %v %+v", err, after)
+		}
+		return
 	}
 	if sends.Load() != 1 {
 		t.Fatalf("actual physical requests=%d", sends.Load())
@@ -251,6 +442,147 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 	if err != nil || !api.Equal(after, decision) || sends.Load() != 1 {
 		t.Fatalf("original physical request changed after reopen: %v", err)
 	}
+}
+
+func runKnowledgeWithdrawnCall(t *testing.T, ctx context.Context, cancel context.CancelFunc, a *App, cfg Config, taskID string, skill governance.SkillDefinition, wire <-chan []byte, release func(), sends *atomic.Int32) {
+	t.Helper()
+	done := make(chan error, 1)
+	go func() { done <- runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 300) }()
+	joined := false
+	defer func() {
+		release()
+		cancel()
+		if !joined {
+			select {
+			case <-done:
+			case <-time.After(10 * time.Second):
+				t.Error("original model worker did not actually exit")
+			}
+		}
+	}()
+	select {
+	case <-wire:
+	case <-ctx.Done():
+		t.Fatal("original physical request never entered the actual HTTP target", ctx.Err())
+	}
+	raw, err := a.query(ctx, "skill.get", skill.SkillRef.ComponentID, governance.SkillReference{SkillRef: skill.SkillRef})
+	var current governance.SkillRecord
+	if err != nil || api.Decode(raw, &current) != nil || current.State != "active" {
+		t.Fatalf("actual selected Skill head unavailable: %v %+v", err, current)
+	}
+	knowledgePublicCommand(t, ctx, a, "skill.withdraw", current.ID, governance.KnowledgeChange{Ref: a.Scope.Ref(current.ID, current.Revision), Reason: "stop future selected knowledge consumption after the original model send"}, &current.Revision)
+	release()
+	drainErr := <-done
+	joined = true
+	if drainErr != nil && !api.IsCode(drainErr, "invalid_state") {
+		t.Fatalf("original physical response did not retain its responsibility: %v", drainErr)
+	}
+	budgetRaw, err := a.query(ctx, "budget.read", taskID, task.BudgetReadInput{TaskID: taskID})
+	var budget task.BudgetReadResponse
+	if err != nil || api.Decode(budgetRaw, &budget) != nil || budget.Task == nil || len(budget.Task.Reservations) != 1 {
+		t.Fatalf("withdrawal lost the original Task model reservation: %v %+v", err, budget)
+	}
+	decisionID := budget.Task.Reservations[0].SourceRef.ObjectID
+	decision, err := a.Brain.Get(ctx, a.Store, a.Scope, a.ServiceAuth, decisionID)
+	if err != nil || decision.Decision.Status != "cancelled" || decision.Decision.ProposalRef != nil || !decision.Decision.UsageFinal || decision.Decision.PhysicalRequestCount != 1 || decision.CallID == "" || !api.Equal(decision.Decision.Usage, []api.Amount{{Unit: "USD", Value: "0.00024"}}) || sends.Load() != 1 {
+		t.Fatalf("withdrawn original Decision published a proposal or lost its known fee/call: %v %+v sends=%d", err, decision, sends.Load())
+	}
+	if _, err = a.query(ctx, "knowledge.selection.get", decisionID, governance.KnowledgeSelectionReference{SnapshotRef: decision.SnapshotRef, DecisionID: decisionID}); !api.IsCode(err, "invalid_state") {
+		t.Fatalf("withdrawn Skill remained eligible in the original actual Snapshot: %v", err)
+	}
+	currentTask, err := a.Task.Read(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+	if err != nil || currentTask.ResultRef != nil || currentTask.Status == "succeeded" {
+		t.Fatalf("withdrawal created Task success: %v %+v", err, currentTask)
+	}
+	knowledgePublicCommand(t, ctx, a, "task.cancel", taskID, task.ControlInput{TaskID: taskID, Reason: "join original task while preserving the already observed model fee"}, &currentTask.Revision)
+	for {
+		if err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 300); err != nil {
+			t.Fatal(err)
+		}
+		currentTask, err = a.Task.Read(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if currentTask.Status == "cancelled" && !currentTask.AccountingOpen {
+			if currentTask.ResultRef != nil || len(currentTask.Budget) != 1 || currentTask.Budget[0].Spent != "0.00024" || currentTask.Budget[0].Reserved != "0" || sends.Load() != 1 {
+				t.Fatalf("negative Task control erased the original known fee or resent the call: %+v sends=%d", currentTask, sends.Load())
+			}
+			break
+		}
+		select {
+		case <-ctx.Done():
+			t.Fatal("original Task bill did not settle", ctx.Err())
+		case <-time.After(20 * time.Millisecond):
+		}
+	}
+	decision, err = a.Brain.Get(ctx, a.Store, a.Scope, a.ServiceAuth, decisionID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = a.Close(); err != nil {
+		t.Fatal(err)
+	}
+	cfg.Knowledge = nil
+	reopened, err := OpenApp(ctx, cfg, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer reopened.Close()
+	after, err := reopened.Brain.Get(ctx, reopened.Store, reopened.Scope, reopened.ServiceAuth, decisionID)
+	if err != nil || !api.Equal(after, decision) || sends.Load() != 1 {
+		t.Fatalf("disabled configuration/reopen changed original Decision/call/fee: %v %+v", err, after)
+	}
+	if _, err = reopened.query(ctx, "knowledge.selection.get", decisionID, governance.KnowledgeSelectionReference{SnapshotRef: after.SnapshotRef, DecisionID: decisionID}); !api.IsCode(err, "invalid_state") {
+		t.Fatalf("reopen revived the withdrawn original Skill selection: %v", err)
+	}
+}
+
+func knowledgeReadActionsReply(snapshot api.Snapshot, count int) []byte {
+	draft := brain.Draft{Kind: "act", ReasonLocalID: "reason", Actions: []brain.DraftAction{}}
+	contents := []brain.GeneratedContent{{LocalID: "reason", MediaType: "text/plain", Body: "Read original bytes without declaring Task success.", DisclosedSources: []api.ContentRef{}}}
+	for _, key := range []string{"read1", "read2"}[:count] {
+		args := "args_" + key
+		draft.Actions = append(draft.Actions, brain.DraftAction{LocalKey: key, CapabilityRef: execadapter.FileReadCapability().Ref, BindingRef: snapshot.BindingRefs[0], ArgumentsLocalID: args})
+		contents = append(contents, brain.GeneratedContent{LocalID: args, MediaType: "application/json", Body: string(api.Raw(execadapter.FileReadArguments{Path: "knowledge-original.txt"})), DisclosedSources: []api.ContentRef{}})
+	}
+	return api.Raw(map[string]any{
+		"id": "knowledge-actions-reply", "choices": []any{map[string]any{"index": 0, "finish_reason": "stop", "message": map[string]any{"role": "assistant", "content": string(api.Raw(struct {
+			Draft    brain.Draft              `json:"draft"`
+			Contents []brain.GeneratedContent `json:"contents"`
+		}{draft, contents}))}}},
+		"usage": map[string]any{"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120, "prompt_tokens_details": map[string]any{"cached_tokens": 40}},
+	})
+}
+
+func knowledgeWriteActionReply(snapshot api.Snapshot, binding api.ObjectRef) []byte {
+	draft := brain.Draft{Kind: "act", ReasonLocalID: "reason", Actions: []brain.DraftAction{{LocalKey: "write1", CapabilityRef: execadapter.FileWriteCapability().Ref, BindingRef: binding, ArgumentsLocalID: "arguments"}}}
+	contents := []brain.GeneratedContent{
+		{LocalID: "reason", MediaType: "text/plain", Body: "This proposal uses an original granted tool that the selected AgentConfig has excluded.", DisclosedSources: []api.ContentRef{}},
+		{LocalID: "arguments", MediaType: "application/json", Body: string(api.Raw(execadapter.FileWriteArguments{Path: "knowledge-forbidden.txt", ExpectedVersion: "absent", ContentRef: snapshot.GoalRef})), DisclosedSources: []api.ContentRef{}},
+	}
+	return api.Raw(map[string]any{
+		"id": "knowledge-unselected-write-reply", "choices": []any{map[string]any{"index": 0, "finish_reason": "stop", "message": map[string]any{"role": "assistant", "content": string(api.Raw(struct {
+			Draft    brain.Draft              `json:"draft"`
+			Contents []brain.GeneratedContent `json:"contents"`
+		}{draft, contents}))}}},
+		"usage": map[string]any{"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120, "prompt_tokens_details": map[string]any{"cached_tokens": 40}},
+	})
+}
+
+func knowledgeRefinementReply(rule api.ComponentRef) []byte {
+	draft := brain.Draft{Kind: "refine_requirements", ReasonLocalID: "reason", Requirements: []brain.DraftRequirement{{CandidateKey: "original_answer", Kind: "quality", StatementLocalID: "statement", ParametersLocalID: "parameters", RuleRef: rule, Required: true}}}
+	contents := []brain.GeneratedContent{
+		{LocalID: "reason", MediaType: "text/plain", Body: "Preserve the original user goal before any tool admission.", DisclosedSources: []api.ContentRef{}},
+		{LocalID: "statement", MediaType: "text/plain", Body: "The answer must match the original knowledge contract.", DisclosedSources: []api.ContentRef{}},
+		{LocalID: "parameters", MediaType: "application/json", Body: string(api.Raw(brain.RuleParameters{Kind: "answer", ExpectedHash: api.Hash([]byte("knowledge contract")), ExpectedLength: 18})), DisclosedSources: []api.ContentRef{}},
+	}
+	return api.Raw(map[string]any{
+		"id": "knowledge-refinement-reply", "choices": []any{map[string]any{"index": 0, "finish_reason": "stop", "message": map[string]any{"role": "assistant", "content": string(api.Raw(struct {
+			Draft    brain.Draft              `json:"draft"`
+			Contents []brain.GeneratedContent `json:"contents"`
+		}{draft, contents}))}}},
+		"usage": map[string]any{"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120, "prompt_tokens_details": map[string]any{"cached_tokens": 40}},
+	})
 }
 
 func knowledgeContractReply() []byte {
