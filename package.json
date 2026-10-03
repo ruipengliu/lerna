@@ -1,0 +1,22 @@
+{
+  "name": "lerna",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "packageManager": "pnpm@12.8.1",
+  "engines": {
+    "node": "24.19.0"
+  },
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "check:generated": "node scripts/generate.mjs --check",
+    "lint": "pnpm --filter @lerna/contract typecheck",
+    "test": "pnpm --filter @lerna/contract test",
+    "build": "pnpm --filter @lerna/contract build"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "prettier": "3.6.2",
+    "typescript": "7.0.2"
+  }
+}
