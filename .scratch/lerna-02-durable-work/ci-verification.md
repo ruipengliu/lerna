@@ -66,3 +66,11 @@ SQLite票02合并最新 `6ccdb6d` 后的本地准确检查：make check/test-rac
 2026-10-03，准确提交 `7fa7594ff213a23c1cf156187cf70295c9270db4` 的 push run [37153111359](https://github.com/ruipengliu/lerna/actions/runs/37153111359) 为 `completed / success`。`contracts` job `111290867825`、`durable-admission` job `111290867962` 均 success。
 
 固定18.6工具生命周期race `1.567s`，完整PG/SQLite必需集成 `14.404s`、race `34.816s`，全部-count=1。四份真实v1/v2来源manifest共27项全部OK，包含共享v2 writer源校验；root全range Git diff也通过，原始dump字节及已发布001–004未变。此检查点包含05与07/08真实Start/Clock整合、legacy真实v2 Claim/work恢复、持久等待/退避/期限及固定回执；06配额/公平及整片退出仍待后续。
+
+## 全部核心票整合检查点
+
+2026-10-03，准确提交 `26c91003e7cf09dcc42e8d8c90d0db7b65a915a5` 的 push run [37156883508](https://github.com/ruipengliu/lerna/actions/runs/37156883508) 为 `completed / success`。实际 `contracts` job `111301974773`、`durable-admission` job `111301974555` 的全部步骤 success。
+
+固定18.6恢复工具生命周期 race `1.569s`；完整PG/SQLite必需集成 `21.892s`、race `47.390s`，均以-count=1重新执行。四份真实v1/v2来源的27项manifest全部OK。包含06有限队列/共享配额、持久动态FIFO、三个独立lane、无执行额度维护及真实复制SQLite scope拒绝；此前05/07/08等既有路径一并执行。
+
+该提交是整片审查前检查点。独立[两轴审查](code-review.md)仍发现错误原因丢失、陈旧说明、重复门禁和Run固定fallback问题，当前交单一分支修复。此CI成功不证明发现已关闭，也不替代修复后新CI或架构审查；整片02仍in-progress。
