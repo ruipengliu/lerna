@@ -9,9 +9,10 @@ import (
 )
 
 type WASIConfig struct {
-	WorkerPath    string `json:"worker_path"`
-	WorkerHash    string `json:"worker_hash"`
-	MaxConcurrent int    `json:"max_concurrent"`
+	WorkerPath            string `json:"worker_path"`
+	WorkerHash            string `json:"worker_hash"`
+	MaxConcurrent         int    `json:"max_concurrent"`
+	CPUSecondsBudgetLimit string `json:"cpu_seconds_budget_limit,omitempty"`
 }
 
 type WASIAssembly struct {
@@ -31,6 +32,13 @@ func configureWASI(a *App, cfg *WASIConfig) (WASIAssembly, error) {
 	assembly := WASIAssembly{Close: func() error { return nil }}
 	if cfg == nil {
 		return assembly, nil
+	}
+	if cfg.CPUSecondsBudgetLimit != "" {
+		min, err := api.CompareDecimal(cfg.CPUSecondsBudgetLimit, "0")
+		max, maximumErr := api.CompareDecimal(cfg.CPUSecondsBudgetLimit, "3600")
+		if err != nil || maximumErr != nil || min <= 0 || max > 0 {
+			return WASIAssembly{}, api.E("invalid_request", "finite_wasi_task_cpu_limit_required")
+		}
 	}
 	if a == nil || a.Store == nil || a.Memory == nil || !filepath.IsAbs(a.Config.DataRoot) || a.ServiceAuth.TenantID != a.Scope.TenantID || a.ServiceAuth.SubjectID != a.Scope.OwnerID {
 		return WASIAssembly{}, api.E("invalid_request", "bound_wasi_worker_services_required")

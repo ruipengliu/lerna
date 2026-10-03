@@ -25,6 +25,7 @@ type ActionBindingConfig struct {
 	BindingRef     api.ObjectRef    `json:"binding_ref"`
 	InstallLockRef api.ComponentRef `json:"install_lock_ref"`
 	Grant          api.Grant        `json:"grant"`
+	Cell           *WASICellConfig  `json:"cell,omitempty"`
 }
 
 type actionDescriptor struct {
@@ -43,6 +44,8 @@ type actionDescriptor struct {
 	SourceRetainUntil string                                 `json:"source_retain_until,omitempty"`
 	ExecutorID        string                                 `json:"executor_id,omitempty"`
 	RemoteConfigHash  string                                 `json:"remote_config_hash,omitempty"`
+	Cell              *WASICellConfig                        `json:"cell,omitempty"`
+	PreparedCell      *wasiCellDeclaration                   `json:"prepared_cell,omitempty"`
 }
 
 type actionRegistry struct{ entries []actionDescriptor }
@@ -54,6 +57,7 @@ type actionDeclaration struct {
 	AllowedResources []string                      `json:"allowed_resources"`
 	AllowedActions   []string                      `json:"allowed_actions"`
 	Source           *informationSourceDeclaration `json:"source,omitempty"`
+	Cell             *wasiCellDeclaration          `json:"cell,omitempty"`
 }
 
 type informationSourceDeclaration struct {
@@ -68,7 +72,7 @@ type informationSourceDeclaration struct {
 func (v actionSnapshot) declarations() []actionDeclaration {
 	out := []actionDeclaration{}
 	for _, d := range v.Entries {
-		declaration := actionDeclaration{Capability: d.Capability, BindingRef: d.BindingRef, InstallLockRef: d.InstallLockRef, AllowedResources: d.Resources, AllowedActions: d.Actions}
+		declaration := actionDeclaration{Capability: d.Capability, BindingRef: d.BindingRef, InstallLockRef: d.InstallLockRef, AllowedResources: d.Resources, AllowedActions: d.Actions, Cell: d.PreparedCell}
 		if d.Source != nil {
 			s := d.Source
 			declaration.Source = &informationSourceDeclaration{s.SourceRef, s.Origin, s.SearchPath, s.FetchPathPrefixes, s.MaxQueryBytes, s.MaxItems}
@@ -126,6 +130,9 @@ func (a *App) configureActionRegistry(drivers []execution.Driver) error {
 			return err
 		}
 		configured = frozen
+		if configured.Cell != nil && !api.Equal(configured.CapabilityRef, execution.WASIRunCellCapability().Ref) {
+			return api.E("invalid_request", "cell_configuration_requires_wasi_capability")
+		}
 		if err := runtime.CheckRef(a.Scope, configured.BindingRef); err != nil {
 			return err
 		}
@@ -151,7 +158,7 @@ func (a *App) configureActionRegistry(drivers []execution.Driver) error {
 		if !found {
 			return api.E("unsupported", "action_driver_not_configured")
 		}
-		d := actionDescriptor{Capability: cap, BindingRef: configured.BindingRef, InstallLockRef: configured.InstallLockRef, GrantRef: a.Scope.Ref(g.GrantID, 1), Resources: append([]string{}, g.Resources...), Actions: append([]string{}, g.Actions...), Recipient: g.Recipients[0], Location: g.Locations[0], ConfiguredGrant: &g}
+		d := actionDescriptor{Capability: cap, BindingRef: configured.BindingRef, InstallLockRef: configured.InstallLockRef, GrantRef: a.Scope.Ref(g.GrantID, 1), Resources: append([]string{}, g.Resources...), Actions: append([]string{}, g.Actions...), Recipient: g.Recipients[0], Location: g.Locations[0], ConfiguredGrant: &g, Cell: configured.Cell}
 		if configured.BindingRef.OwnerID != a.Scope.OwnerID && (api.Equal(cap.Ref, target.FileReadCapability().Ref) || api.Equal(cap.Ref, target.FileWriteCapability().Ref)) {
 			route, err := a.remoteExecutors.binding(d.BindingRef, cap.Ref, d.InstallLockRef)
 			if err != nil {
@@ -165,6 +172,11 @@ func (a *App) configureActionRegistry(drivers []execution.Driver) error {
 				return api.E("forbidden", "device_grant_scope_mismatch")
 			}
 			d.ExecutorID, d.RemoteConfigHash = route.Config.OwnerID, route.Digest
+		} else if api.Equal(cap.Ref, execution.WASIRunCellCapability().Ref) {
+			if err := a.validateWASICellConfiguration(d); err != nil {
+				return err
+			}
+			d.Kind = "environment.run_cell"
 		} else if api.Equal(cap.Ref, target.PhoneGUICapability().Ref) {
 			d.Kind = "phone.gui"
 			if d.Recipient != a.Scope.OwnerID || d.Location != "cloud" {
@@ -322,6 +334,13 @@ func (a *App) prepareActionSnapshot(ctx context.Context, id string, deadline str
 			return view, err
 		}
 		if receipt.Decision == "allowed" {
+			if d.Kind == "environment.run_cell" {
+				declaration, err := a.freezeWASICell(ctx, a.Scope, d)
+				if err != nil {
+					return view, err
+				}
+				d.PreparedCell = &declaration
+			}
 			view.Entries = append(view.Entries, d)
 		}
 	}
@@ -411,6 +430,7 @@ func (a *App) prepareAction(ctx context.Context, s runtime.Scope, i api.Decision
 		}
 		executorID = descriptor.ExecutorID
 	}
+	costBound := []api.Amount{{Unit: "USD", Value: "0"}}
 	switch descriptor.Kind {
 	case "file.read":
 		var input target.FileReadArguments
@@ -455,6 +475,25 @@ func (a *App) prepareAction(ctx context.Context, s runtime.Scope, i api.Decision
 		resourceKeys = []string{"device:" + input.ResourceID}
 		resources = []string{input.ResourceID}
 		actions = []string{"gui." + input.Action}
+	case "environment.run_cell":
+		if descriptor.PreparedCell == nil || descriptor.Cell == nil || a.WASI == nil {
+			return task.PreparedAction{}, actionAdmission{}, api.E("unsupported", "original_wasi_cell_not_configured")
+		}
+		var input execution.ComputeArguments
+		if err = api.Decode(args, &input); err != nil {
+			return task.PreparedAction{}, actionAdmission{}, err
+		}
+		if !api.Equal(input, descriptor.PreparedCell.Arguments) {
+			return task.PreparedAction{}, actionAdmission{}, api.E("forbidden", "original_wasi_cell_arguments_changed")
+		}
+		costBound = descriptor.PreparedCell.CostBound
+		if err = a.prepareWASICell(ctx, s, snap, descriptor, candidate, args); err != nil {
+			return task.PreparedAction{}, actionAdmission{}, err
+		}
+		resourceRefs = []api.ObjectRef{input.EnvironmentRef}
+		resources = []string{"environment:" + input.EnvironmentRef.ObjectID}
+		resourceKeys = append([]string{}, resources...)
+		actions = []string{"environment.run_cell"}
 	case providers.InformationSearch, providers.InformationBody:
 		if descriptor.Source == nil {
 			return task.PreparedAction{}, actionAdmission{}, api.E("forbidden", "information_source_snapshot_missing")
@@ -490,7 +529,7 @@ func (a *App) prepareAction(ctx context.Context, s runtime.Scope, i api.Decision
 		}
 	}
 	if descriptor.ConfiguredGrant != nil {
-		raw, err := a.query(ctx, "grant.check", s.OwnerID, governance.UseRequest{UseID: stableID("use", "prepare/"+i.DecisionID+"/"+candidate.LocalKey), SubjectRef: a.ServiceAuth.Ref(s.OwnerID), TargetRef: s.Ref(stableID("operation", i.DecisionID+"/"+candidate.LocalKey), 1), TargetKind: "operation", IntentHash: descriptor.ConfigHash, GrantRefs: []api.ObjectRef{descriptor.GrantRef}, RequestedUnits: []api.Amount{{Unit: "USD", Value: "0"}}, Resources: resources, Actions: actions, Recipient: descriptor.Recipient, Location: descriptor.Location, Purposes: []string{"goal_action"}, StartBefore: descriptor.ConfiguredGrant.ExpiresAt})
+		raw, err := a.query(ctx, "grant.check", s.OwnerID, governance.UseRequest{UseID: stableID("use", "prepare/"+i.DecisionID+"/"+candidate.LocalKey), SubjectRef: a.ServiceAuth.Ref(s.OwnerID), TargetRef: s.Ref(stableID("operation", i.DecisionID+"/"+candidate.LocalKey), 1), TargetKind: "operation", IntentHash: descriptor.ConfigHash, GrantRefs: []api.ObjectRef{descriptor.GrantRef}, RequestedUnits: costBound, Resources: resources, Actions: actions, Recipient: descriptor.Recipient, Location: descriptor.Location, Purposes: []string{"goal_action"}, StartBefore: descriptor.ConfiguredGrant.ExpiresAt})
 		if err != nil {
 			return task.PreparedAction{}, actionAdmission{}, err
 		}
@@ -506,7 +545,7 @@ func (a *App) prepareAction(ctx context.Context, s runtime.Scope, i api.Decision
 	if err != nil {
 		return task.PreparedAction{}, actionAdmission{}, err
 	}
-	prepared := task.PreparedAction{OperationID: stableID("operation", i.DecisionID+"/"+candidate.LocalKey), ExecutorID: executorID, CapabilityRef: candidate.CapabilityRef, BindingRef: candidate.BindingRef, InstallLockRef: descriptor.InstallLockRef, ArgumentsRef: candidate.ArgumentsRef, ResourcesRef: resourceContent, RequirementRefs: reqs, UseIntentRefs: []api.ObjectRef{s.Ref(stableID("use", i.DecisionID+"/"+candidate.LocalKey), 1)}, CostBound: []api.Amount{{Unit: "USD", Value: "0"}}, LogicalStepKey: snap.TaskRef.ObjectID + "/" + candidate.LocalKey, ProcessedSourceRefs: candidate.ProcessedSourceRefs, DisclosedSourceRefs: candidate.DisclosedSourceRefs, ResourceKeys: resourceKeys, Independent: true, SafeRequirementCheck: false, CommandID: stableID("command", "invoke/"+i.DecisionID+"/"+candidate.LocalKey)}
+	prepared := task.PreparedAction{OperationID: stableID("operation", i.DecisionID+"/"+candidate.LocalKey), ExecutorID: executorID, CapabilityRef: candidate.CapabilityRef, BindingRef: candidate.BindingRef, InstallLockRef: descriptor.InstallLockRef, ArgumentsRef: candidate.ArgumentsRef, ResourcesRef: resourceContent, RequirementRefs: reqs, UseIntentRefs: []api.ObjectRef{s.Ref(stableID("use", i.DecisionID+"/"+candidate.LocalKey), 1)}, CostBound: costBound, LogicalStepKey: snap.TaskRef.ObjectID + "/" + candidate.LocalKey, ProcessedSourceRefs: candidate.ProcessedSourceRefs, DisclosedSourceRefs: candidate.DisclosedSourceRefs, ResourceKeys: resourceKeys, Independent: true, SafeRequirementCheck: false, CommandID: stableID("command", "invoke/"+i.DecisionID+"/"+candidate.LocalKey)}
 	return prepared, actionAdmission{Scope: s, DecisionID: i.DecisionID, SnapshotID: snap.SnapshotID, Descriptor: descriptor, Prepared: prepared, Resources: resources, Actions: actions}, nil
 }
 

@@ -137,6 +137,10 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 		registered.Entries = entries
 		processed = uniqueSources(append(append(processed, bundle.Selection.SourceRefs...), packet))
 	}
+	processed, materials, e := c.a.wasiContext(ctx, scope, facts, registered, processed)
+	if e != nil {
+		return task.PreparedDecision{}, e
+	}
 	if c.a.Model != nil {
 		packet, err := c.a.Publish(ctx, scope, c.a.ServiceAuth, stableID("content", "context-facts/"+key), "application/vnd.harness.context+json", api.Raw(struct {
 			Facts                   task.ContextFacts                  `json:"facts"`
@@ -154,6 +158,7 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 			return task.PreparedDecision{}, err
 		}
 		processed = append(processed, packet)
+		materials = append(materials, packet)
 	}
 	selection, e := c.a.Publish(ctx, scope, c.a.ServiceAuth, stableID("content", "selection/"+key), "application/json", api.Raw(struct {
 		TaskRef         api.ObjectRef    `json:"task_ref"`
@@ -171,7 +176,7 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 	if knowledge != nil && reservedOutput > knowledge.Selection.EffectiveControls.MaxOutputTokens {
 		reservedOutput = knowledge.Selection.EffectiveControls.MaxOutputTokens
 	}
-	snap := api.Snapshot{SnapshotID: snapshotID, Revision: 1, TaskRef: scope.Ref(t.TaskID, t.Revision), GoalRevision: t.GoalRevision, ControlRevision: t.ControlRevision, GoalRef: t.GoalRef, Requirements: t.Requirements, RequirementsDigest: t.RequirementsDigest, CoverageRef: t.CurrentCoverageRef, RequirementsState: t.RequirementsState, Purpose: purpose, FactRefs: facts.FactRefs, UnresolvedCollections: facts.UnresolvedCollections, PolicyRef: t.PolicyRef, InstallLockRef: installLock, ModelProfileRef: c.a.Profile.Ref, CapabilityRefs: caps, BindingRefs: bindings, MaterialRefs: processed, SelectionReportRef: selection, ProcessedSources: processed, ReservedOutputTokens: reservedOutput, SafetyMarginTokens: c.a.Profile.SafetyMargin, CountMode: "upper_bound", TokenizerRef: c.a.TokenizerRef}
+	snap := api.Snapshot{SnapshotID: snapshotID, Revision: 1, TaskRef: scope.Ref(t.TaskID, t.Revision), GoalRevision: t.GoalRevision, ControlRevision: t.ControlRevision, GoalRef: t.GoalRef, Requirements: t.Requirements, RequirementsDigest: t.RequirementsDigest, CoverageRef: t.CurrentCoverageRef, RequirementsState: t.RequirementsState, Purpose: purpose, FactRefs: facts.FactRefs, UnresolvedCollections: facts.UnresolvedCollections, PolicyRef: t.PolicyRef, InstallLockRef: installLock, ModelProfileRef: c.a.Profile.Ref, CapabilityRefs: caps, BindingRefs: bindings, MaterialRefs: materials, SelectionReportRef: selection, ProcessedSources: processed, ReservedOutputTokens: reservedOutput, SafetyMarginTokens: c.a.Profile.SafetyMargin, CountMode: "upper_bound", TokenizerRef: c.a.TokenizerRef}
 	goal, e := c.a.ReadContent(ctx, scope, auth, t.GoalRef, "brain.input")
 	if e != nil {
 		return task.PreparedDecision{}, e

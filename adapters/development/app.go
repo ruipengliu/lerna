@@ -181,6 +181,13 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		purposes = append(purposes, providers.InformationPurpose, providers.InformationSearch, providers.InformationBody)
 	}
 	purposes = append(purposes, RequiredKnowledgeContentPurposes()...)
+	if c.WASI != nil && c.WASI.CPUSecondsBudgetLimit != "" {
+		for _, purpose := range RequiredWASIContentPurposes() {
+			if !containsString(purposes, purpose) {
+				purposes = append(purposes, purpose)
+			}
+		}
+	}
 	pv := memory.PolicyValues{Subjects: []string{c.SubjectID, c.OwnerID}, Purposes: purposes, Locations: []string{"cloud", "device"}, RetainUntil: c.PolicyExpiresAt, Continuous: true, IndependentDerived: false}
 	if c.RemoteAgent != nil {
 		for _, subject := range c.RemoteAgent.SourceSubjectRefs {
@@ -313,6 +320,9 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		return nil, fmt.Errorf("construct Brain: %w", e)
 	}
 	a.TaskPolicy = task.TaskPolicy{PolicyRef: component("task-policy"), ContinuationLimit: 30, RepairLimit: 3, NoProgressLimit: 8, ContextRoundLimit: 3, SafeAttemptLimit: 1, MaxRequirements: 20, MaxDelegations: 20, MaxDepth: 4, CostMode: "strict", BudgetLimits: []api.Amount{{Unit: "USD", Value: "100"}}, MaxEvidenceStalenessSeconds: 300, MaxDurationSeconds: 3600, InputPolicyRef: a.AnswerSchema, RuleRegistryRef: component("rule-registry")}
+	if c.WASI != nil && c.WASI.CPUSecondsBudgetLimit != "" {
+		a.TaskPolicy.BudgetLimits = append(a.TaskPolicy.BudgetLimits, api.Amount{Unit: "cpu_seconds", Value: c.WASI.CPUSecondsBudgetLimit})
+	}
 	a.TaskPolicy.PolicyRef.Digest, _ = api.Digest(a.TaskPolicy)
 	a.Knowledge, e = configureKnowledge(a, c.Knowledge)
 	if e != nil {
