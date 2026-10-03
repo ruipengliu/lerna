@@ -75,6 +75,7 @@ export interface Discovery {
   identity_revision: number;
   schema_digest: string;
   methods: MethodContract[];
+  methods_digest: string;
   limits: Limits;
   core_schema_path: string;
   core_schema?: JSONValue;

@@ -27,7 +27,15 @@ const areas = {
   },
   governance: {
     title: "授权与治理",
-    prefixes: ["grant.", "confirmation.", "evidence.", "defect.", "authorization.", "release."],
+    prefixes: [
+      "grant.",
+      "confirmation.",
+      "evidence.",
+      "defect.",
+      "authorization.",
+      "release.",
+      "policy.",
+    ],
     list: "grant.list",
     description: "许可、本人确认、一次消费与效果独立成立。确认必须绑定准确原命令及当前请求版本。",
   },
@@ -41,6 +49,7 @@ const areas = {
       "evaluation_run.",
       "release_approval.",
       "install_lock.",
+      "plugin.",
     ],
     list: "evaluation.list",
     description: "安装锁固定准确制品；启用、回退批准与冻结评测分别核验。未开放能力保持不可用。",
@@ -55,7 +64,7 @@ export function ManagementView({
   client: HarnessClient;
   area: Exclude<NavigationID, "work">;
   onPreview: (refs: ContentRef[]) => void;
-  onRequest: (value: JSONValue) => void;
+  onRequest: (method: string, value: JSONValue) => void;
 }) {
   const config = areas[area];
   const [selected, setSelected] = useState<JSONValue>();
@@ -82,7 +91,7 @@ export function ManagementView({
               title="当前授权集合"
               onSelect={(value) => {
                 setSelected(value);
-                onRequest(value);
+                onRequest(list.name, value);
               }}
             />
           ) : (
@@ -108,9 +117,8 @@ export function ManagementView({
           key={area}
           client={client}
           methods={methods}
-          onResult={(_method, value) => {
-            if ("stage" in Object(value)) return;
-            onRequest(value as JSONValue);
+          onResult={(method, value) => {
+            onRequest(method, value as JSONValue);
           }}
         />
       </div>

@@ -28,7 +28,6 @@ export function TrustedPreview({
   const key = `${generation}:${referenceKey}`;
   useEffect(() => {
     const controller = new AbortController();
-    const urls: string[] = [];
     callback.current?.(undefined);
     setImages(new Set());
     if (!refs.length) {
@@ -51,10 +50,8 @@ export function TrustedPreview({
         if (["text/plain", "text/markdown", "application/json"].includes(ref.media_type))
           return { ref, text: new TextDecoder("utf-8", { fatal: true }).decode(bytes) };
         if (["image/png", "image/jpeg"].includes(ref.media_type)) {
-          const image = URL.createObjectURL(
-            new Blob([new Uint8Array(bytes).buffer], { type: ref.media_type }),
-          );
-          urls.push(image);
+          const encoded = btoa(Array.from(bytes, (entry) => String.fromCharCode(entry)).join(""));
+          const image = `data:${ref.media_type};base64,${encoded}`;
           return { ref, image };
         }
         throw new Error("该媒体类型尚无受信 Renderer，不能据此确认");
@@ -75,7 +72,6 @@ export function TrustedPreview({
     return () => {
       controller.abort();
       callback.current?.(undefined);
-      for (const url of urls) URL.revokeObjectURL(url);
     };
   }, [key, refs]);
   useEffect(() => {
