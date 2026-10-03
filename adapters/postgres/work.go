@@ -18,7 +18,7 @@ func (s *Store) TryLockInput(ctx context.Context, token runtime.Tx, owner contra
 		return nil, err
 	}
 	var locked bool
-	if err = tx.QueryRowContext(ctx, `SELECT pg_try_advisory_xact_lock(2,hashtext($1))`, lockKey("input", owner, string(id))).Scan(&locked); err != nil || !locked {
+	if err = tx.QueryRowContext(ctx, `SELECT pg_try_advisory_xact_lock(2,hashtext($1))`, s.lockKey("input", owner, string(id))).Scan(&locked); err != nil || !locked {
 		return nil, err
 	}
 	return s.LockInput(ctx, token, owner, id)

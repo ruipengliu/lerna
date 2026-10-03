@@ -10,9 +10,10 @@ import (
 	"github.com/ruipengliu/lerna/runtime"
 )
 
-func lockKey(namespace string, owner contract.OwnerRef, id string) string {
-	// JSON arrays are unambiguous even when IDs contain punctuation.
-	data, _ := json.Marshal([]string{namespace, string(owner.TenantID), string(owner.OwnerID), id})
+func (s *Store) lockKey(kind string, owner contract.OwnerRef, id string) string {
+	// Advisory locks belong to the database, so include this Store's validated
+	// schema. JSON arrays are unambiguous even when IDs contain punctuation.
+	data, _ := json.Marshal([]string{s.config.Schema, kind, string(owner.TenantID), string(owner.OwnerID), id})
 	return string(data)
 }
 func (s *Store) LockCommand(ctx context.Context, token runtime.Tx, ref contract.CommandRef) (*runtime.CommandRecord, error) {
@@ -20,7 +21,7 @@ func (s *Store) LockCommand(ctx context.Context, token runtime.Tx, ref contract.
 	if err != nil {
 		return nil, err
 	}
-	if _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(1,hashtext($1))`, lockKey("command", ref.Owner, string(ref.CommandID))); err != nil {
+	if _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(1,hashtext($1))`, s.lockKey("command", ref.Owner, string(ref.CommandID))); err != nil {
 		return nil, err
 	}
 	var digest string
