@@ -328,6 +328,9 @@ func (s *Service) observeWork(ctx context.Context, st rt.Store, sc rt.Scope, w r
 		return err
 	}
 	return s.finish(ctx, st, sc, w, rt.Done(), func(tx rt.Tx) error {
+		if _, err := tx.LoadCommand(ctx, req.CommandID); err != nil {
+			return err
+		}
 		var latest ResourceLease
 		if _, err := tx.Get(ctx, Namespace+".resources", lease.ResourceID, &latest); err != nil {
 			return err

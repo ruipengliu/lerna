@@ -117,6 +117,9 @@ func (s *Service) decide(ctx context.Context, tx runtime.Tx, a runtime.Auth, c a
 	if e != nil {
 		return Output{}, e
 	}
+	if e = s.config.Gate.CheckTx(ctx, tx, a, in, nil); e != nil {
+		return Output{}, e
+	}
 	var old decision
 	_, e = tx.Get(ctx, records, in.DecisionID, &old)
 	if e == nil {
@@ -135,9 +138,6 @@ func (s *Service) decide(ctx context.Context, tx runtime.Tx, a runtime.Auth, c a
 	deadline, e := api.ParseTime(in.Deadline)
 	if e != nil || !now.Before(deadline) {
 		return Output{}, api.E("expired", "decision_expired")
-	}
-	if e = s.config.Gate.CheckTx(ctx, tx, a, in, nil); e != nil {
-		return Output{}, e
 	}
 	d := decision{Revision: 1, Record: api.DecisionRecord{DecisionID: in.DecisionID, OwnerID: tx.Scope().OwnerID, Revision: 1, SnapshotRevision: in.SnapshotRevision, Status: "accepted", Usage: []api.Amount{}, UsageFinal: !s.config.Engine.Physical()}, Input: in, Principal: a, CommandID: c.CommandID, InputDigest: digest, Phase: "accepted", CallID: api.NewID("call"), Publications: []pendingContent{}, ProposalContentID: api.NewID("content")}
 	if e = tx.Create(ctx, records, in.DecisionID, in.TaskRef.ObjectID, d); e != nil {
@@ -208,6 +208,10 @@ func (s *Service) change(ctx context.Context, tx runtime.Tx, id string, fn func(
 	d.Record.Revision++
 	return putDecision(ctx, tx, id, rev, d)
 }
+
+func sameFrozenDecision(current, original decision) bool {
+	return current.CommandID == original.CommandID && current.InputDigest == original.InputDigest && api.Equal(current.Input, original.Input) && api.Equal(current.Principal, original.Principal) && (original.Encoding == nil || api.Equal(current.Encoding, original.Encoding))
+}
 func (s *Service) wait(ctx context.Context, store runtime.Store, scope runtime.Scope, w runtime.Work) error {
 	return s.finish(ctx, store, scope, w, runtime.Waiting(time.Now().Add(time.Second)), nil)
 }
@@ -254,9 +258,13 @@ func (s *Service) advance(ctx context.Context, store runtime.Store, scope runtim
 			return e
 		}
 		return s.finish(ctx, store, scope, w, runtime.Ready(time.Now()), func(tx runtime.Tx) error {
+			// 当前 Task/预算门禁先于 Decision 行锁；只使用事务外已读的原冻结输入。
+			if e := s.config.Gate.CheckTx(ctx, tx, d.Principal, d.Input, &encoding); e != nil {
+				return e
+			}
 			return s.change(ctx, tx, id, func(next *decision) error {
-				if e := s.config.Gate.CheckTx(ctx, tx, next.Principal, next.Input, &encoding); e != nil {
-					return e
+				if !sameFrozenDecision(*next, d) || next.Phase != "accepted" || next.CancelRequested {
+					return api.E("revision_conflict", "decision_changed")
 				}
 				next.Snapshot = &snap
 				next.Encoding = &encoding
@@ -279,11 +287,14 @@ func (s *Service) advance(ctx context.Context, store runtime.Store, scope runtim
 			})
 		}
 		status, e := store.Within(ctx, scope, s.participants(), func(tx runtime.Tx) error {
+			if e := s.config.Gate.CheckTx(ctx, tx, d.Principal, d.Input, d.Encoding); e != nil {
+				return e
+			}
 			if e := tx.Guard(ctx, w.Claim); e != nil {
 				return e
 			}
 			return s.change(ctx, tx, id, func(n *decision) error {
-				if n.Phase != "encoded" || n.CancelRequested {
+				if !sameFrozenDecision(*n, d) || n.Phase != "encoded" || n.CancelRequested {
 					return api.E("revision_conflict", "decision_changed")
 				}
 				now, e := tx.Now(ctx)
@@ -293,9 +304,6 @@ func (s *Service) advance(ctx context.Context, store runtime.Store, scope runtim
 				deadline, e := api.ParseTime(n.Input.Deadline)
 				if e != nil || !now.Before(deadline) {
 					return api.E("expired", "decision_expired")
-				}
-				if e = s.config.Gate.CheckTx(ctx, tx, n.Principal, n.Input, n.Encoding); e != nil {
-					return e
 				}
 				if s.config.Engine.Physical() {
 					n.Record.SendStarted = true
@@ -374,7 +382,13 @@ func validateEncoding(snap api.Snapshot, p Profile, e Encoding) error {
 func (s *Service) saveGenerated(ctx context.Context, store runtime.Store, scope runtime.Scope, w runtime.Work, d decision, out Generated) error {
 	if e := validateGenerated(out); e != nil {
 		return s.finish(ctx, store, scope, w, runtime.Done(), func(tx runtime.Tx) error {
+			if _, e := tx.LoadCommand(ctx, d.CommandID); e != nil {
+				return e
+			}
 			return s.change(ctx, tx, d.Input.DecisionID, func(n *decision) error {
+				if !sameFrozenDecision(*n, d) {
+					return api.E("idempotency_conflict", "original_decision_changed")
+				}
 				n.Phase = "failed"
 				n.Record.Status = "failed"
 				n.Record.Usage = out.Usage
@@ -450,12 +464,15 @@ func (s *Service) publish(ctx context.Context, store runtime.Store, scope runtim
 		return s.wait(ctx, store, scope, w)
 	}
 	return s.finish(ctx, store, scope, w, runtime.Done(), func(tx runtime.Tx) error {
+		if _, e := tx.LoadCommand(ctx, d.CommandID); e != nil {
+			return e
+		}
+		if e := s.config.Gate.CheckTx(ctx, tx, d.Principal, d.Input, d.Encoding); e != nil {
+			return e
+		}
 		return s.change(ctx, tx, d.Input.DecisionID, func(n *decision) error {
-			if n.CancelRequested {
+			if !sameFrozenDecision(*n, d) || n.Phase != "publishing" || n.CancelRequested {
 				return api.E("revision_conflict", "decision_cancelled")
-			}
-			if e := s.config.Gate.CheckTx(ctx, tx, n.Principal, n.Input, n.Encoding); e != nil {
-				return e
 			}
 			n.Record.ProposalRef = &ref
 			n.Record.Status = "completed"

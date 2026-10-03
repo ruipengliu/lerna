@@ -206,7 +206,7 @@ func (s *Service) InputRequestList(ctx context.Context, store runtime.Store, sco
 	}
 	return out, nil
 }
-func (s *Service) PrepareInputTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in InputAnswer) (InputOutput, error) {
+func (s *Service) prepareInputTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in InputAnswer) (InputOutput, error) {
 	if e := target(c, in.TaskID); e != nil {
 		return InputOutput{}, e
 	}
@@ -272,7 +272,7 @@ func (s *Service) PrepareInputTx(ctx context.Context, tx runtime.Tx, auth runtim
 		return InputOutput{}, e
 	}
 
-	if _, e = raise(ctx, tx, JobInput, "input/"+c.CommandID, tx.Scope().Ref(c.CommandID, 1)); e != nil {
+	if e = queueJob(ctx, tx, JobInput, "input/"+c.CommandID, tx.Scope().Ref(c.CommandID, 1)); e != nil {
 		return InputOutput{}, e
 	}
 	return InputOutput{TaskRef: taskRef(tx, t), RequestRef: in.RequestRef, State: "validating"}, nil
@@ -346,10 +346,19 @@ func (s *Service) inputJob(ctx context.Context, store runtime.Store, scope runti
 		completeGoal = &ref
 	}
 	return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, e := tx.LoadCommand(ctx, pending.CommandID); e != nil {
+			return e
+		}
+		if e := s.lockTaskTree(ctx, tx, pending.Input.TaskID); e != nil {
+			return e
+		}
 		var current pendingInput
 		rev, e := tx.Get(ctx, pendingInputs, pending.CommandID, &current)
 		if e != nil {
 			return e
+		}
+		if current.CommandID != pending.CommandID || current.UploadID != pending.UploadID || !api.Equal(current.Input, pending.Input) || !api.Equal(current.Auth, pending.Auth) {
+			return api.E("idempotency_conflict", "original_input_preparation_changed")
 		}
 		if current.State != "pending" {
 			return nil
