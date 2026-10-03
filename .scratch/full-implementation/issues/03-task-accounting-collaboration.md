@@ -12,7 +12,7 @@ Blocked by: 工单 11–24 新增本地切片的剩余集成验收，跨 owner �
 | 已实现责任 | 实际行为与门禁 |
 | --- | --- |
 | 目标、条件、输入、完成 | 冻结准确目标原文；条件候选按语义 upsert，保留未提及的硬条件；输入按原请求、Schema、goal/control 一次消费。完整当前覆盖、必要检查、证据 gate 和完整关系共同裁决；空条件、旧版本、负检查和未知效果不能产生成功 Result |
-| Snapshot、Decision、行动 | 固定 Snapshot、派发意图、原命令和预留；至多四个独立行动整批准入。GrantUse 与原 IntentHash、ActionConsumption、预算和 Job 同事务；冻结提交者代次与角色，当前门禁核撤权。无进展保存有限等待，确认回滚的 stale Context 沿原 Job 重调度，提交未知保留原身份 |
+| Snapshot、Decision、行动 | 固定 Snapshot、派发意图、原命令和预留；每个目标/控制代次等待原未消费 Decision，编译前及准入短事务双核，原意图重放不新增预留；至多四个独立行动整批准入。GrantUse 与原 IntentHash、ActionConsumption、预算和 Job 同事务；冻结提交者代次与角色，当前门禁核撤权。无进展保存有限等待，确认回滚的 stale Context 或 pending Decision 沿原 Job 重调度，提交未知保留原身份 |
 | Accounting、Allocation | 按准确源修订/摘要归并累计差额、原预留、迟到费用和独立退款。内部分配唯一接收、关闭先到永久门禁、签名原 closure 和迟到父预算差额；纯账务未结不等于目标或效果未关闭 |
 | 控制、Result、恢复 | 当前 Task/祖先门禁、根到叶及源记录锁序、最多五秒签名控制窗口。输入先准备，再核当前门禁签首窗；原 invoke 重放不刷新窗口、命令或预留。终态 Result 不可变，Content 导出有独立 Job，治理缺陷沿原 Result 保存 notice |
 | 内部协作、ChildHandle、受信装配 | 显式同库创建子 Task/额度并核完整有界子树效果；ChildHandle 先准备原 Session 命令，新目标 CAS 需旧目标和效果关闭。实际本地 Session/steer/answer 转交仅据原消费方回执归并。批请求视图先锁全部 Task 再锁准确请求；ContextFacts、冻结 Decision/Snapshot/上界及原意图等 typed 用例供宿主装配，不是新增公开线方法 |
@@ -27,6 +27,7 @@ Blocked by: 工单 11–24 新增本地切片的剩余集成验收，跨 owner �
 - 本人澄清后的派生目标来源已修复：宿主按冻结 GoalDocument 的完整组件和 Snapshot 的 MaterialRefs/ProcessedSources 双声明，展开 Task 保存的原 `SourceEvidence`，保留最初提交命令、原请求、类别及位置；验证器逐条核完整原依据，包装引用不成为新本人证明。真实 [公开澄清流程](../../../adapters/development/clarification_test.go) 首次提炼曾 RED（goal2、零要求），修复后 JSON 字符串与真正 `text/plain` 均沿原 submit/input、GoalDocument、两项要求、三个真实文件步骤、独立检查、verified Result 出版、原回执与 DB 重开通过。SQLite 两链及来源拒绝合集 PASS 76.539s；PG 原文本 PASS 77.59s、隔离 JSON 链 PASS 86.409s（补充后出版 75.664s）。缺少原组件声明、外来包装、伪造提交/类别/位置及混入外来来源均有真实拒绝反例；旧实现负例 RED，新版 GREEN。原浏览器 failed Task 与其拒绝事实不复活，首次 PG 外层 90s 超时仍保留为失败证据。
 - 原始文本 RuleEngine 编码 panic 经 [公开编码与旧编码恢复](../../../internal/brain/rules_encoding_test.go) RED→GREEN。私有 base64 信封保留非 JSON 原字节和原 ContentRef 摘要；合法 JSON 保持旧格式逐字节不变。双表示、缺表示及无效 bytes 被拒绝；真实 SQLite 在 encoded 阶段重开、移除原 Goal 字节且禁止再次 Encode 后仍消费原保存编码和命令。Brain 全包 PASS 12.311s、race PASS 28.996s。没有新增公开协议方法或扩大全局字节/计费限额。
 - 宿主 [Schedule 安装锁正反例](../../../adapters/development/schedule_gate_test.go) 通过实际 Dispatcher、未来 timer 与交付 Job，证明正确安装锁的 create/update applied，模型 profile 放入安装锁字段被拒绝且无新 Schedule/触发责任。旧门禁曾 RED（错误模型引用 applied），改核实际 InstallLock 后 SQLite 与 PostgreSQL race PASS 51.286s；合法更新仍复用原 trigger，已冻结 occurrence 沿旧规则/准确锁和原 Task 命令交付。
+- [当前 Decision 串行门禁](../../../internal/task/pending_decision_test.go) 两库公开 RED→GREEN：原效果事实唤醒同一 Job 不能在当前原提案待消费时再出版 Snapshot 或预留第二 Decision。五项两库矩阵及 stale/提交未知、原期限重开、护栏与准备取消的受影响 race 实际 exit 0（138.977s）；原 known/unknown 费用、迟到 final 差额、原意图重放、目标/控制改变及取消均保留。证据索引在 `/workspace/harness-dev-environment/task-pending-decision-verification/`，夹具使用真实 Task 数据库和 Content 文件，但未配置物理模型出口。此前 WASI 原 Task `41382c` 的完整 Worker PG 失败和只读诊断仍保留；此项修复不代表完整 WASI 或远端 Agent 验收完成，Task/Command/Control 有限期限没有改变。
 
 development 全包 SQLite race 首次实际运行 376.293s 未通过：原报告与两条新澄清链各耗尽 90s 测试外层 context，没有 race detector 报告。根据公开阶段实际耗时，报告及澄清 fixture 的外层等候调整为有限 180s；Task 的五分钟期限、原命令一分钟期限、五秒控制窗口及浏览器补充后 90s 验收保持原值。之后分别串行隔离的 Report race PASS 109.808s、JSON 澄清加来源拒绝 race PASS 161.932s、原始文本澄清 race PASS 145.002s；原 376.293s 失败不改记通过。两库多段 fixture 使整个 development 包累计超过五分钟，当时检查入口及 CI runner 等待有界设为十分钟；后续新增切片后的当前入口以 `scripts/check` 与同版 CI 为准，完整入口实际运行由集成工单记录。这些均不改变业务期限。
 
