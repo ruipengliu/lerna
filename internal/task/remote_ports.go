@@ -2,10 +2,57 @@ package task
 
 import (
 	"context"
+	"reflect"
 
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/runtime"
 )
+
+type TaskSnapshotView struct {
+	Snapshot api.Snapshot               `json:"snapshot"`
+	Intent   api.DecisionDispatchIntent `json:"intent"`
+}
+
+// LatestTaskSnapshotTx只投影当前Goal/Control/Policy对应的原准入Snapshot。
+// 无准确当前版本时不合成新权限；扫描、错误和同修订冲突均明确有界。
+func (s *Service) LatestTaskSnapshotTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, taskID string) (TaskSnapshotView, bool, error) {
+	t, err := getTask(ctx, tx, taskID)
+	if err != nil {
+		return TaskSnapshotView{}, false, err
+	}
+	if err = principal(auth, t); err != nil {
+		return TaskSnapshotView{}, false, err
+	}
+	rows, err := tx.List(ctx, decisions, taskID, "", int(s.config.MaxRelations)+1)
+	if err != nil {
+		return TaskSnapshotView{}, false, err
+	}
+	if len(rows) > int(s.config.MaxRelations) {
+		return TaskSnapshotView{}, false, api.E("overloaded", "task_snapshot_scan_limit")
+	}
+	var latest TaskSnapshotView
+	found := false
+	for _, row := range rows {
+		var d decisionState
+		if err = row.Decode(&d); err != nil {
+			return TaskSnapshotView{}, false, err
+		}
+		if d.Intent.TaskRef.TenantID != tx.Scope().TenantID || d.Intent.TaskRef.OwnerID != tx.Scope().OwnerID || d.Intent.TaskRef.ObjectID != taskID || d.Intent.DecisionID != row.ID || d.Intent.TaskRef != d.Snapshot.TaskRef || d.Intent.SnapshotRevision != d.Snapshot.Revision {
+			return TaskSnapshotView{}, false, api.E("idempotency_conflict", "original_snapshot_scope_changed")
+		}
+		snap := d.Snapshot
+		if snap.GoalRevision != t.Task.GoalRevision || snap.GoalRef != t.Task.GoalRef || snap.ControlRevision != t.Task.ControlRevision || snap.PolicyRef != t.Task.PolicyRef || snap.TaskRef.Revision > t.Task.Revision {
+			continue
+		}
+		candidate := TaskSnapshotView{Snapshot: snap, Intent: d.Intent}
+		if !found || candidate.Snapshot.TaskRef.Revision > latest.Snapshot.TaskRef.Revision {
+			latest, found = candidate, true
+		} else if candidate.Snapshot.TaskRef.Revision == latest.Snapshot.TaskRef.Revision && !reflect.DeepEqual(candidate, latest) {
+			return TaskSnapshotView{}, false, api.E("idempotency_conflict", "current_task_snapshot_ambiguous")
+		}
+	}
+	return latest, found, nil
+}
 
 // WithJobIntents 保持原Task事务模板，将已声明同库的Job意图留到领域对象之后。
 // 接收端可以在同一闭包保存IncomingAllocation、原子Task映射和原命令决定。
