@@ -14,7 +14,16 @@ func (g brainGate) PrepareGate(ctx context.Context, scope runtime.Scope, auth ru
 	if scope != g.a.Scope || !auth.HasRole("service") {
 		return ctx, api.E("forbidden", "trusted_brain_scope_required")
 	}
-	status, err := g.a.Store.Within(ctx, scope, []string{"task", "platform"}, func(tx runtime.Tx) error {
+	var err error
+	ctx, err = g.a.prepareRemoteAgentDecisionParent(ctx, scope, auth, in.DecisionID)
+	if err != nil {
+		return ctx, err
+	}
+	participants := []string{"task", "platform"}
+	if g.a.RemoteAgent != nil {
+		participants = append(participants, "collaboration")
+	}
+	status, err := g.a.Store.Within(ctx, scope, participants, func(tx runtime.Tx) error {
 		if err := g.a.Task.CheckDecisionTx(ctx, tx, auth, in.DecisionID); err != nil {
 			return err
 		}
