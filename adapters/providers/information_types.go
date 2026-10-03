@@ -53,6 +53,10 @@ type ReceivedPublication struct {
 	ObtainedAt       string           `json:"obtained_at"`
 	ProcessedSources []api.ContentRef `json:"processed_sources"`
 	DisclosedSources []api.ContentRef `json:"disclosed_sources"`
+	SourceRef        api.ComponentRef `json:"source_ref"`
+	AttemptID        string           `json:"attempt_id"`
+	UseRefs          []api.ObjectRef  `json:"use_refs"`
+	RetainUntil      string           `json:"retain_until"`
 }
 
 type InformationContent interface {
@@ -79,6 +83,7 @@ type InformationPermit struct {
 	StartBefore    string `json:"start_before"`
 	PolicyRevision uint64 `json:"policy_revision"`
 	RequestDigest  string `json:"request_digest"`
+	RetainUntil    string `json:"retain_until"`
 }
 type InformationEgress interface {
 	Check(context.Context, execution.AttemptRequest, HTTPOutRequest) (InformationPermit, error)

@@ -26,6 +26,9 @@ item 为 `{url, title, snippet, observed_at?}`。coverage 和 exhausted 只表�
 声明的索引范围，LIMIT、命中数量和取得成功不能证明全网穷尽或事实正确。
 
 Body 参数为 `{url}`，URL 必须位于 descriptor 的准确 origin 和路径前缀。
+因 URL 位于参数中，原 ArgumentsRef 必须被该 Action 明确披露；Brain 可用闭合的
+`disclosed_local_ids:["args"]` 映射已出版的原参数引用，不形成 Content 自引用。
+Search 只要求参数受信处理及 query_ref 双声明，不要求披露整个参数 JSON。
 请求只能 GET，不能携带任意查询参数、用户信息、代理、重定向、请求头或地址覆盖。
 实际 DNS 地址必须全部通过冻结 CIDR 和内网/link-local/metadata 地址门禁；仅显式
 开发配置允许 literal loopback。出口许可绑定准确地址、请求摘要、receiver/location、
@@ -52,6 +55,10 @@ upload/ready/put 身份恢复，不续 TTL、不补抓源。原字节缺失时�
 `ObtainedAt` 是实际收到该响应后的受信数据库时间；Last-Modified 和 JSON 中的时间
 是来源声明，不能把本次下载日期冒充事实更新日期。处理、披露的准确输入来源进入
 Content 来源 DAG；当前关闭、期限和主体授权仍影响恢复读取。
+
+出口许可另给有限 `RetainUntil`，publication 冻结原 SourceRef/AttemptID/UseRefs。
+宿主以它和全部真实输入来源的最紧期限保存原 publicationPlan；`StartBefore` 仅是
+开始窗口，不能用作另一次缓存续期或把免费访问推导为无限保存许可。
 
 `NewReferenceEvaluator` 的 profile 为 `reference-json-string-facts/1`。问题声明有限
 JSONPointer 与可选期望字符串；答案从实际 leaf 读取，引用带准确 BodyRef、来源、

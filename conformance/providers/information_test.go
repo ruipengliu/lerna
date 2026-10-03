@@ -65,6 +65,15 @@ func (m *informationMemory) PublishReceived(ctx context.Context, s runtime.Scope
 			return err
 		}
 		retain := now.Add(30 * time.Minute)
+		if p.RetainUntil != "" {
+			until, err := api.ParseTime(p.RetainUntil)
+			if err != nil {
+				return err
+			}
+			if until.Before(retain) {
+				retain = until
+			}
+		}
 		for _, ref := range p.ProcessedSources {
 			source, err := m.service.CheckContentTx(ctx, tx, a, ref, "content.write", "local", true)
 			if err != nil {
@@ -121,7 +130,7 @@ func (g *informationGate) Check(ctx context.Context, r execution.AttemptRequest,
 		if err != nil {
 			return err
 		}
-		permit = providers.InformationPermit{StartBefore: api.Time(now.Add(time.Minute)), PolicyRevision: 1, RequestDigest: out.RequestDigest}
+		permit = providers.InformationPermit{StartBefore: api.Time(now.Add(time.Minute)), PolicyRevision: 1, RequestDigest: out.RequestDigest, RetainUntil: api.Time(now.Add(10 * time.Minute))}
 		return nil
 	})
 	if status == runtime.CommitUnknown {
@@ -255,6 +264,8 @@ func TestInformationSearchUsesExactDeclaredQueryAndPreservesFiniteCoverage(t *te
 	}
 	defer source.Close()
 	r := f.request(t, source.SearchDriver(), providers.SearchArguments{QueryRef: ref, Limit: 2}, ref)
+	// 模型显式披露原 query_ref，未把整个参数 JSON 作为出站内容。
+	r.Intent.DisclosedSourceRefs = []api.ContentRef{ref}
 	out, err := source.SearchDriver().Start(f.ctx, r, func(context.Context) error { return nil })
 	if err != nil {
 		t.Fatal(err)
@@ -402,6 +413,11 @@ func TestInformationCurrentAuthorityAndOriginalDeadlinesPreventPhysicalHTTP(t *t
 	}
 	defer source.Close()
 	r := f.request(t, source.BodyDriver(), providers.BodyArguments{URL: server.URL + "/articles/denied"})
+	missing := r
+	missing.Intent.DisclosedSourceRefs = []api.ContentRef{}
+	if _, err = source.BodyDriver().Start(f.ctx, missing, func(context.Context) error { barriers.Add(1); return nil }); !api.IsCode(err, "forbidden") {
+		t.Fatalf("undeclared URL data disclosed: %v", err)
+	}
 	f.gate.denied.Store(true)
 	barrier := func(context.Context) error { barriers.Add(1); return nil }
 	if _, err = source.BodyDriver().Start(f.ctx, r, barrier); !api.IsCode(err, "forbidden") {
