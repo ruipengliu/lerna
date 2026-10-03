@@ -25,6 +25,8 @@
 
 完成提案中的准确检查建议同事务变成去重的 CheckRequest 和 Job，并固定原成果、目标及控制版本的 completion intent。实际检查未完成时保留等待，不消费无进展额度或开启新 Decision；RecordCheck 唤醒原完成责任，只有当前完整门禁通过才保存 Result。建议本身不能替代观察。坏建议整批回滚后有限拒绝，目标或控制改变则废止旧完成意图。
 
+受信负检查仍登记准确治理副本并保存原事实，完成资格核验只对可用 pass 执行。实际 fail 可以结束原 CheckRequest/Job，拒绝原完成意图并有限记一次无进展；不能因其不能通过完成门禁而丢弃负事实、反复执行原检查或生成 Result。
+
 连续无进展达到固定上限时，advance 在 Context 编译和 Content 出版之前于短事务保存准确等待原因并完成原 Job，不能靠计时重试持续生成 Decision。实际有效新输入、可用成果或原 unknown 核清可恢复推进；迟到费用、相同已知效果的 revision 更新不能清零连续计数。新 Decision 和新计划步骤分别消费累计续行额度，整批准入不足则原子拒绝；重派原身份不重复计数。累计额度耗尽后保留最后已准入 Decision 或 completion 的原消费责任，核清后结束目标，效果与账务仍沿原身份核对。
 
 同 owner 的 [collaboration adapter](../../../adapters/collaboration/README.md) 已接实际 Session 和内部 Task 转交。它冻结原主体与 Command，在未配置跨 owner 接收方时于准入前关闭入口。原转交只有消费方实际 applied 才记录完成；准确 rejected 保留原回执，不能以暂时读取失败伪造拒绝。
