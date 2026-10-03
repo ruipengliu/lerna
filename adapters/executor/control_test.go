@@ -1,6 +1,7 @@
 package executor
 
 import (
+	"encoding/base64"
 	"os"
 	"path/filepath"
 	"testing"
@@ -15,7 +16,7 @@ func TestKnownCloudRevocationPreventsDeviceStartWithoutCloudTaskRead(t *testing.
 	f := newDeviceFixture(t)
 	f.prepare(t)
 	window := f.control(t, "active", "running", 1)
-	f.invoke(t, window)
+	original := f.invoke(t, window)
 	in := Revocation{AuthorityID: f.b.AuthorityID, EndpointID: f.b.EndpointID, ObjectRef: f.b.Lease.GrantRefs[0], Kind: "grant", IssuedAt: api.Time(time.Now()), StartBefore: api.Time(time.Now().Add(time.Minute))}
 	digest, _ := api.Digest(in)
 	var err error
@@ -31,11 +32,62 @@ func TestKnownCloudRevocationPreventsDeviceStartWithoutCloudTaskRead(t *testing.
 		t.Fatal(err)
 	}
 	view := deviceQuery[execution.OperationView](t, f, "execution.get", f.b.Intent.OperationID, execution.OperationIDInput{OperationID: f.b.Intent.OperationID})
-	if view.Operation.Effect != "not_started" || !view.NewAttemptsClosed || len(view.Attempts.Items) != 1 || view.Attempts.Items[0].StartedAt != "" {
+	// 已知拒绝可以先于准备 Attempt；创建过的准备责任仍不能越过物理入口。
+	if view.Operation.Effect != "not_started" || !view.NewAttemptsClosed || !view.ActuallyStopped || !view.Operation.UsageFinal || !view.Attempts.Exhausted || view.Attempts.Partial || len(view.Attempts.Items) > 1 {
 		t.Fatalf("revoked entry: %+v", view)
+	}
+	for _, attempt := range view.Attempts.Items {
+		if attempt.StartedAt != "" || !attempt.ActuallyStopped || !attempt.UsageFinal {
+			t.Fatalf("known revocation reached original Attempt: %+v", attempt)
+		}
 	}
 	if _, err = os.Stat(filepath.Join(f.root, "files", "reports", "result.txt")); !os.IsNotExist(err) {
 		t.Fatal("known revoke reached physical file")
+	}
+	usage := deviceQuery[api.UsageSnapshot](t, f, "execution.usage.get", f.b.Intent.OperationID, execution.OperationIDInput{OperationID: f.b.Intent.OperationID})
+	if !usage.SpendingClosed || !usage.UsageFinal || !api.Equal(usage.Cumulative, []api.Amount{{Unit: "USD", Value: "0"}}) || len(usage.ProofRefs) != 1 {
+		t.Fatalf("original revoked usage: %+v", usage)
+	}
+	var proof execution.UsageProof
+	readDeviceAccountingProof(t, f, usage.ProofRefs[0], &proof)
+	if proof.SendStartedCount != 0 || proof.PhysicalCountMin != 0 || proof.PhysicalCountMax != 0 || !api.Equal(proof.Attempts, view.Attempts.Items) {
+		t.Fatalf("revoked physical entry evidence: %+v", proof)
+	}
+	report := deviceQuery[SignedLeaseReport](t, f, "executor.lease.usage.get", f.b.Lease.LeaseID, LeaseID{f.b.Lease.LeaseID})
+	if !report.Report.Usage.SpendingClosed || !report.Report.Usage.UsageFinal || len(report.Report.Usage.ProofRefs) != 1 {
+		t.Fatalf("original revoked lease: %+v", report.Report.Usage)
+	}
+	var leaseProof LeaseUsageProof
+	readDeviceAccountingProof(t, f, report.Report.Usage.ProofRefs[0], &leaseProof)
+	if leaseProof.LocalLease.LeaseID != f.b.Lease.LeaseID || leaseProof.LocalLease.AllocationDigest != f.b.Lease.AllocationDigest || leaseProof.LocalLease.OnceConsumed || len(leaseProof.LocalLease.Reserved) != 0 || !api.Equal(leaseProof.OperationUsage, usage) {
+		t.Fatalf("revocation changed original local allocation: %+v", leaseProof)
+	}
+	_, raw, err := f.h.Call(f.ctx, f.peer, "command", api.Raw(original))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = api.Decode(raw, &receipt); err != nil || receipt.Stage != "applied" {
+		t.Fatalf("original accepted receipt was lost: %+v %v", receipt, err)
+	}
+	if err = runtime.Drain(f.ctx, f.h.Store, f.h.Scope, f.h.Registry, 100); err != nil {
+		t.Fatal(err)
+	}
+	again := deviceQuery[execution.OperationView](t, f, "execution.get", f.b.Intent.OperationID, execution.OperationIDInput{OperationID: f.b.Intent.OperationID})
+	if !api.Equal(again, view) {
+		t.Fatal("original receipt replay changed revoked operation")
+	}
+	t.Logf("CACHE_GRANT_REVOCATION_EVIDENCE operation=%s command=%s attempts=%d physical_min=%d physical_max=%d local_once=%t local_reserved=%d", f.b.Intent.OperationID, original.CommandID, len(view.Attempts.Items), proof.PhysicalCountMin, proof.PhysicalCountMax, leaseProof.LocalLease.OnceConsumed, len(leaseProof.LocalLease.Reserved))
+}
+
+func readDeviceAccountingProof(t *testing.T, f *deviceFixture, ref api.ContentRef, out any) {
+	t.Helper()
+	chunk := deviceQuery[ContentChunk](t, f, "executor.content.get", ref.ContentID, ContentGet{ContentRef: ref})
+	raw, err := base64.StdEncoding.Strict().DecodeString(chunk.DataBase64)
+	if err != nil || chunk.ChunkCount != 1 || !api.Equal(chunk.Permission.ContentRef, ref) || uint64(len(raw)) != ref.ByteLength || api.Hash(raw) != ref.Hash {
+		t.Fatalf("original accounting proof bytes: %v", err)
+	}
+	if err = api.Decode(raw, out); err != nil {
+		t.Fatal(err)
 	}
 }
 func TestDeviceCachesOriginalControlWindowAndExpiresWithoutRefresh(t *testing.T) {

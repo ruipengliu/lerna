@@ -98,6 +98,7 @@ func Open(ctx context.Context, c Config, initialize bool) (host *Host, err error
 	}
 	h.Config.DatabaseID = st.ID()
 	h.Scope = runtime.Scope{TenantID: c.TenantID, OwnerID: c.OwnerID, DatabaseID: st.ID()}
+	h.Registry.SetContextFactory(h.contentEntry)
 	h.Keys, e = platform.OpenDevelopmentKey(c.SigningKeyFile, c.TenantID, c.OwnerID, []string{"grant_use", "executor_usage", "executor_content"})
 	if e != nil {
 		return nil, e
