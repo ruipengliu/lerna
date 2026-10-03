@@ -35,8 +35,8 @@ func (s *Service) reportEligibleTx(ctx context.Context, tx runtime.Tx, ref api.O
 	if _, err := tx.Get(ctx, ns("exposure_gates"), digestID("exposure_gate", plan.SourceGroup), &gate); err != nil {
 		return err
 	}
-	if gate.Revision > qualification.GateRevision {
-		return api.E("forbidden", "exposure_gate_requires_revalidation")
+	if gateInvalidatesReport(gate, report) {
+		return api.E("forbidden", "exposure_invalidated")
 	}
 	return nil
 }

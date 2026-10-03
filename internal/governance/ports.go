@@ -58,10 +58,18 @@ type LifecyclePort interface {
 type EvaluationRunner interface {
 	PreparePair(context.Context, RunnerPair) (PairEvidence, error)
 	Run(context.Context, RunnerAttempt) (AttemptObservation, error)
+	Lookup(context.Context, RunnerAttempt) (AttemptObservation, bool, error)
 	Seal(context.Context, RunnerPair) (PairStopEvidence, error)
 }
 
+// PreviewGate 同库核验准确预览的当前披露，不证明用户已阅读。
+type PreviewGate interface {
+	CheckTx(context.Context, runtime.Tx, runtime.Auth, []api.ContentRef) error
+}
+
 type Options struct {
+	PreviewGate   PreviewGate
+	Participants  []string
 	Content       ContentPort
 	UsageVerifier UsageVerifier
 	Proof         ProofPort
@@ -100,3 +108,13 @@ type EvidenceDecision struct {
 
 // tx 调用者必须由宿主显式声明同数据库、同租户/owner及 governance
 // participant；这些入口不会偷偷跨域读取或 RPC。
+
+func (s *Service) participants() []string {
+	out := []string{Namespace}
+	for _, part := range s.Ports.Participants {
+		if !contains(out, part) {
+			out = append(out, part)
+		}
+	}
+	return out
+}
