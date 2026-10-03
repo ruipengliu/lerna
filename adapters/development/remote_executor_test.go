@@ -300,6 +300,11 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport boo
 		}
 	}()
 	active.Store(a)
+	var progressStore *remoteProgressStore
+	if saveReport {
+		progressStore = &remoteProgressStore{Store: a.Store, QueryBindingStore: a.Store.(runtime.QueryBindingStore)}
+		a.Store = progressStore
+	}
 	goal, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), "application/json", api.Raw(goalSpec), []api.ContentRef{}, []api.ContentRef{})
 	if err != nil {
 		t.Fatal(err)
@@ -322,6 +327,19 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport boo
 				t.Logf("original billing Job remains recoverable after source head advanced: %v", err)
 			} else {
 				t.Fatal("actual remote public Task progress", err)
+			}
+		}
+		if progressStore != nil {
+			if refusal := progressStore.firstRefusal(); refusal != nil {
+				facts, factsErr := a.Task.ContextFacts(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+				if saveErr := privateFile(filepath.Join(root, "original-progress-refusal.json"), api.Raw(struct {
+					Refusal remoteProgressRefusal `json:"refusal"`
+					Facts   task.ContextFacts     `json:"facts"`
+					Posts   int32                 `json:"posts"`
+				}{*refusal, facts, posts.Load()})); saveErr != nil {
+					t.Error(saveErr)
+				}
+				t.Fatalf("original remote Task admission refused before independent readback: %s; work=%s facts_error=%v posts=%d operations=%d", api.Raw(refusal), refusal.Work.Job.SourceRef.ObjectID, factsErr, posts.Load(), len(facts.Operations))
 			}
 		}
 		got, e := a.Task.Read(ctx, a.Store, a.Scope, a.UserAuth, taskID)
