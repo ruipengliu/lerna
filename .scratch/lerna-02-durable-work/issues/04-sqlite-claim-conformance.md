@@ -13,7 +13,6 @@
 - [x] 真实 v2 领取迁移可从已保留的 v1 writer 输入向前升级；不改写已应用脚本、不删库重建，不用伪造旧 schema 代替旧版本。
 - [x] 记录两库实际版本、PG 隔离／同步提交、SQLite 每连接 WAL／FULL 和并发结果；为等待／配额／故障提供真实共同基础。
 
-
 ## Comments
 
 2026-10-03，票04完成。SQLite Claim 产品实现 `3376e08`；合入最新 integration `3a7f1f8`（含票09的 PG schema 锁域修复）并修复重启测试清理后的准确受测代码 `ff22936882a2f7b4404b943aadd2274ab0e506ea`。本票仅在自身 branch/worktree 提交；未 push、未合入 root、未创建 PR、未清理 worktree。切片02继续 in-progress，等待/退避、容量/配额、正文墓碑、完整迁移失败恢复与 SIGKILL 仍由后票承担。
@@ -33,3 +32,5 @@
 **版本、命令与范围。** 当前实际 Go1.27.1、pgx/v5 v5.11.0、go-sqlite3 v1.14.52、GCC14.2.0、pnpm12.8.1；PG18.6、READ COMMITTED、synchronous_commit on、statement_timeout2s/lock_timeout1s；driver bundled SQLite3.53.4，每个实际连接WAL/FULL(2)/foreign_keysON(1)/busy_timeout100ms经suite核验。Host Tx上限3s，测试context15s、PG清理5s、suite timeout120s，lease1ms–5min。真实SQLite各轮 TMPDIR 为本轮自登记 `/workspace` 本地overlayfs目录，测试文件不使用默认/tmp tmpfs；测试结束后该空临时目录已清理。PG每例只创建登记随机schema，DSN仅由程序从600保护文件读入明确测试环境，未打印/提交。
 
 实际通过 `make bootstrap`、`make fmt`、`make check`（不需要PG服务）、`make test-race`、两库 mandatory `make test-integration`（-count=1，11.269s）、`go test -race -count=1 -tags=integration -timeout=120s ./conformance/recovery/... ./internal/durableworkdemo/...`（22.544s/1.406s）、两库v1 SHA256SUMS、`go mod verify` 和 `git diff --check`；SQLite选择integration2.400s、选择integration-race10.559s先行通过。`env -u LERNA_TEST_POSTGRES_DSN make test-integration`按预期硬失败，不skip。准确最终feature tip远端CI仍由root整合后核验；这些本地结果不声称SIGKILL、native SQLite COMMIT答复未知、断电、外部效果隔离或生产故障域耐久。
+
+2026-10-03 root 核实整合提交 b1674b2 的远端 CI 37149178541 success：双库必需集成8.417s、race15.292s均-count=1，十项旧来源校验和不变，详见[准确CI证据](../ci-verification.md#双库修订领取检查点)。此证据不替代整片退出，也不改变失败轮scope限制。
