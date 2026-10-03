@@ -4,7 +4,7 @@
 
 ## 1 代码组织
 
-采用单monorepo、初期一个Go module，遵循[ADR 0010](../../adr/0010-monorepo-shared-contract-release.md)。下列是拟实现目录，不代表仓库已有运行内核：
+采用单monorepo、初期一个Go module，遵循[ADR 0010](../../adr/0010-monorepo-shared-contract-release.md)。仓库已建立有界参考实现；实际开放方法和运行证据见[实施覆盖报告](implementation-coverage.md)。下列目录说明目标组织，未开放切片按真实实现建立：
 
 ```text
 cmd/                  gateway / application / worker / executor / cli

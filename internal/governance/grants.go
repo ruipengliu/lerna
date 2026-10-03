@@ -1030,15 +1030,27 @@ func (s *Service) CheckAcceptanceTx(ctx context.Context, tx runtime.Tx, in Accep
 	return nil
 }
 
-func (s *Service) allocateLease(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in LeaseAllocate) (runtime.Outcome, error) {
+// AllocateLeaseTx 供宿主在已显式声明的同库准入事务中预留原有限 lease。
+// 签名计算纯本地；调用者不能另做 UseTx 来重复消费 once 或重复预留。
+func (s *Service) AllocateLeaseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, in LeaseAllocate) (GrantLease, error) {
+	if auth.TenantID != tx.Scope().TenantID {
+		return GrantLease{}, api.E("forbidden", "tenant_mismatch")
+	}
+	validator, err := api.NewValidator(api.SchemaFor[LeaseAllocate]())
+	if err != nil {
+		return GrantLease{}, err
+	}
+	if err = validator.Validate(api.Raw(in)); err != nil {
+		return GrantLease{}, err
+	}
 	if err := requireRole(auth, "grant_authority"); err != nil {
-		return runtime.Outcome{}, err
+		return GrantLease{}, err
 	}
 	if in.CostMode != "strict" {
-		return runtime.Outcome{}, api.E("unsupported", "offline_estimate_not_supported")
+		return GrantLease{}, api.E("unsupported", "offline_estimate_not_supported")
 	}
-	if !api.ValidID(in.EndpointID) || !api.ValidID(in.InstanceID) || in.LeaseID != c.TargetID {
-		return runtime.Outcome{}, api.E("invalid_request", "lease_endpoint_invalid")
+	if !api.ValidID(in.EndpointID) || !api.ValidID(in.InstanceID) || !api.ValidID(in.LeaseID) {
+		return GrantLease{}, api.E("invalid_request", "lease_endpoint_invalid")
 	}
 	request := in.Scope
 	request.UseID = in.LeaseID
@@ -1046,10 +1058,10 @@ func (s *Service) allocateLease(ctx context.Context, tx runtime.Tx, auth runtime
 	request.StartBefore = in.ExpiresAt
 	use, err := s.UseTx(ctx, tx, auth, request)
 	if err != nil {
-		return runtime.Outcome{}, err
+		return GrantLease{}, err
 	}
 	if use.Decision != "allowed" {
-		return runtime.Outcome{}, api.E("forbidden", use.Reason)
+		return GrantLease{}, api.E("forbidden", use.Reason)
 	}
 	request.GrantRefs = use.GrantRefs
 	out := GrantLease{LeaseID: in.LeaseID, Revision: 1, EndpointID: in.EndpointID, InstanceID: in.InstanceID, GrantRefs: request.GrantRefs, Scope: request, Limits: in.Limits, ExpiresAt: use.StartBefore, State: "open", Cumulative: []api.Amount{}, Reserved: in.Limits}
@@ -1058,7 +1070,7 @@ func (s *Service) allocateLease(ctx context.Context, tx runtime.Tx, auth runtime
 	for _, gr := range request.GrantRefs {
 		var grant api.Grant
 		if _, err = tx.Get(ctx, ns("grants"), gr.ObjectID, &grant); err != nil {
-			return runtime.Outcome{}, err
+			return GrantLease{}, err
 		}
 		if grant.Mode == "once" {
 			out.Mode = "once"
@@ -1066,18 +1078,25 @@ func (s *Service) allocateLease(ctx context.Context, tx runtime.Tx, auth runtime
 	}
 	out.AllocationDigest, err = api.Digest(out)
 	if err != nil {
-		return runtime.Outcome{}, err
+		return GrantLease{}, err
 	}
 	if s.Ports.Proof != nil {
 		out.Proof, err = s.Ports.Proof.SignLocal(ProofStatement{TenantID: tx.Scope().TenantID, IssuerID: tx.Scope().OwnerID, AudienceID: in.EndpointID, Purpose: "grant_lease", ObjectRef: tx.Scope().Ref(in.LeaseID, 1), Digest: out.AllocationDigest, IssuedAt: out.IssuedAt, StartBefore: out.ExpiresAt})
 		if err != nil {
-			return runtime.Outcome{}, err
+			return GrantLease{}, err
 		}
 	}
 	if err = tx.Create(ctx, ns("leases"), in.LeaseID, in.EndpointID, out); err != nil {
-		return runtime.Outcome{}, err
+		return GrantLease{}, err
 	}
-	return runtime.Applied(out), nil
+	return out, nil
+}
+func (s *Service) allocateLease(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in LeaseAllocate) (runtime.Outcome, error) {
+	if in.LeaseID != c.TargetID {
+		return runtime.Outcome{}, api.E("invalid_request", "lease_endpoint_invalid")
+	}
+	out, err := s.AllocateLeaseTx(ctx, tx, auth, in)
+	return runtime.Applied(out), err
 }
 func (s *Service) closeLease(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in RefInput) (runtime.Outcome, error) {
 	if err := requireRole(auth, "grant_authority"); err != nil {
