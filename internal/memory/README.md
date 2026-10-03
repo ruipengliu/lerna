@@ -42,6 +42,9 @@ CheckContentTx(ctx, tx, auth, ref, purpose, location, continuous) (ContentVersio
 
 查询在读取候选正文和计算相关性之前过滤当前许可。默认词法策略使用中文连续双字词、英文小写词和唯一重合计分，并以 MemoryID 固定同分顺序。查询文本最多 4088 字节、100 个解释项，候选最多 200；分页最多 20 条，冻结集合与 TTL 5 分钟不会随读取刷新。授权代次扩张、收窄或失联均不借用旧页面。读取字节、权限检查和截止时点有累计上限，未覆盖部分明确返回 `partial` / `gaps`。当前索引是连续元数据投影，查询采用 `metadata_authority_scan`；没有宣称向量质量或全集覆盖。
 
+统一 Dispatcher 提供原 QueryBinding 时，query/list 首次快照期限还取该绑定
+期限与 5 分钟上限的较早者。后续分页或更晚的查询绑定不能延长原快照。
+
 事实、偏好、推断和经验分别保留 Type。默认 `RuleExtractor()` 只接受闭合的 `ExtractionDocument`，是有限的显式值导入器；没有配置模型提取器。默认 review_only；preapproved 需要显式 `SavingAuthorization` 验证原 SavingGrant，未配置返回 `unsupported`。保存同一候选的 Memory、候选状态、去重键、变化头、回执和 Job 一起提交。
 
 经验正文须使用 `application/vnd.harness.experience+json`。`unknown` 可以明确保存；success/failure/cancelled 要求已配置 `ExperienceAuthority` 在 Tx 外核准确原效果及证据。文本不能自行成为成功依据。

@@ -46,6 +46,7 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 	}
 	expired := false
 	completionHandled := false
+	guardrailHandled := false
 	err = s.transaction(ctx, store, scope, func(tx runtime.Tx) error {
 		if e := tx.Guard(ctx, work.Claim); e != nil {
 			return e
@@ -64,8 +65,14 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 				return e
 			}
 		}
+		if !expired && !completionHandled {
+			guardrailHandled, e = s.guardrailTx(ctx, tx, &current)
+			if e != nil {
+				return e
+			}
+		}
 		t = current
-		if !completionHandled && !expired && !terminal(current) && current.Task.Control == "running" && current.PendingGoalCommand == "" && current.Task.RequirementsState != "awaiting_input" {
+		if !guardrailHandled && !completionHandled && !expired && !terminal(current) && current.Task.Control == "running" && current.PendingGoalCommand == "" && current.Task.RequirementsState != "awaiting_input" {
 			return s.CheckCurrent(ctx, tx, current, true)
 		}
 		return nil
@@ -73,7 +80,7 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 	if err != nil {
 		return err
 	}
-	if expired || completionHandled {
+	if expired || completionHandled || guardrailHandled {
 		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
 	}
 	if t.Task.Control != "running" || t.PendingGoalCommand != "" || t.Task.RequirementsState == "awaiting_input" {

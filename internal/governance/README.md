@@ -4,6 +4,8 @@
 
 `New(store, Options)` 由宿主装配。`Options.Participants` 必须列出实际共同数据库的 Content、当前凭据、TaskGate 等参与者；不能由 Go import 关系推断共享事务。Content、真实用量源、实例宿主和独立 runner 的 I/O 在事务之外执行。证明签名与验证只使用本地登记密钥。
 
+`Options.ResultNotices` 可装配纯同库 `ResultNoticeSink.RecordNoticeTx`，将缺陷命中的原通知机械转交 Task；通知、消费写入、扫描游标与原 Job 同时提交，失败共同回滚。重放沿完整原通知，不随 holder 后续 ACK 修订重写原依据。未配置时仍保存治理通知，不声称已经送至 Task。该分页工作通过明确 Ready/Waiting disposition 继续；仅 Hint 后提交 Done 不能承担续页责任。真实 SQLite/race 与 PG 验证覆盖 101 holder、接收故障回滚、原 Claim 重放及第二页。
+
 ## 权限与可信确认
 
 `grant.issue`、`grant.revoke`、`policy.acceptance.create`、`release.approval.create` 先接纳原命令，再由准确本人会话确认。`confirmation.read` 返回原完整闭合命令及其 JCS 摘要，Renderer 必须准确展示完整输入和全部预览字节。批准回执只记录决定；原业务消费确认、当前预览披露门禁与业务写入共同提交后，原命令才 applied。`PreviewGate` 只证明当前允许披露，不声称本人已阅读。

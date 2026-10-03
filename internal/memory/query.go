@@ -122,7 +122,10 @@ func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth run
 		if deadline.After(now.Add(5 * time.Minute)) {
 			return api.E("invalid_request", "query_deadline_exceeded")
 		}
-		expires = now.Add(5 * time.Minute)
+		expires, err = querySnapshotExpiry(ctx, now)
+		if err != nil {
+			return err
+		}
 		for _, ref := range []api.ContentRef{in.QueryRef, in.ScopeRef} {
 			if _, err = s.CheckContentTx(ctx, tx, auth, ref, "memory.query", s.Location, true); err != nil {
 				return err
@@ -438,6 +441,17 @@ type ListMemoryInput struct {
 	Cursor  string `json:"cursor,omitempty"`
 }
 
+func querySnapshotExpiry(ctx context.Context, now time.Time) (time.Time, error) {
+	expires := now.Add(5 * time.Minute)
+	if bound, ok := runtime.QueryBindingExpiry(ctx); ok && bound.Before(expires) {
+		expires = bound
+	}
+	if !expires.After(now) {
+		return time.Time{}, api.E("cursor_expired", "query_binding_expired")
+	}
+	return expires, nil
+}
+
 func (s *Service) ListMemory(ctx context.Context, scope runtime.Scope, auth runtime.Auth, in ListMemoryInput) (api.Page[MemoryRecord], error) {
 	return s.listMemory(ctx, scope, auth, api.NewID("list"), in)
 }
@@ -484,7 +498,11 @@ func (s *Service) listMemory(ctx context.Context, scope runtime.Scope, auth runt
 				if err != nil {
 					return err
 				}
-				view = listView{ListID: id, Revision: 1, PrincipalID: auth.SubjectID, Purpose: in.Purpose, VisibilityToken: token, ExpiresAt: api.Time(now.Add(5 * time.Minute)), Refs: []api.ObjectRef{}, ChangeHead: head.ChangeHead, Gaps: []string{}}
+				expires, err := querySnapshotExpiry(ctx, now)
+				if err != nil {
+					return err
+				}
+				view = listView{ListID: id, Revision: 1, PrincipalID: auth.SubjectID, Purpose: in.Purpose, VisibilityToken: token, ExpiresAt: api.Time(expires), Refs: []api.ObjectRef{}, ChangeHead: head.ChangeHead, Gaps: []string{}}
 				rows, err := tx.List(ctx, "memory.records", "", "", 201)
 				if err != nil {
 					return err
