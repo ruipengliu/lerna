@@ -540,7 +540,10 @@ func (s *Service) sourcePolicy(ctx context.Context, tx runtime.Tx, v ContentVers
 	if v.ContentRef.OwnerID == tx.Scope().OwnerID {
 		return s.policy(ctx, tx, v.PolicyRef)
 	}
-	uses, _ := ctx.Value(foreignContextKey{}).([]ForeignUse)
+	uses, err := foreignUses(ctx)
+	if err != nil {
+		return Policy{}, err
+	}
 	for _, use := range uses {
 		if use.Proof.ContentRef == v.ContentRef && api.Equal(use.Proof.PolicyRef, v.PolicyRef) {
 			return Policy{PolicyRef: v.PolicyRef, Values: use.Proof.PolicyValues, Revision: 1, State: "active"}, nil
@@ -577,7 +580,10 @@ func (s *Service) SourcePolicySnapshotTx(ctx context.Context, tx runtime.Tx, aut
 }
 
 func (s *Service) checkForeignContent(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous, historical, derived bool) (ContentVersion, error) {
-	uses, _ := ctx.Value(foreignContextKey{}).([]ForeignUse)
+	uses, err := foreignUses(ctx)
+	if err != nil {
+		return ContentVersion{}, err
+	}
 	for _, use := range uses {
 		if use.Reference.ContentRef != ref || use.Reference.Purpose != purpose || use.Reference.Location != location {
 			continue
