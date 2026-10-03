@@ -236,13 +236,21 @@ func (s *Service) consumeConfirmation(ctx context.Context, tx runtime.Tx, auth r
 		return api.E("unsupported", "confirmation_preview_gate_unavailable")
 	}
 	if err = s.Ports.PreviewGate.CheckTx(ctx, tx, auth, current.Confirmation.PreviewRefs); err != nil {
-		return api.E("forbidden", "confirmation_stale")
+		if confirmationPreviewRejected(err) {
+			return api.E("forbidden", "confirmation_stale")
+		}
+		return err
 	}
 	current.Confirmation.Revision = rev + 1
 	current.Confirmation.State = "consumed"
 	current.Confirmation.ConsumedBy = commandID
 	current.Confirmation.ConsumedAt = api.Time(now)
 	return tx.Put(ctx, ns("confirmations"), confirm.RequestID, rev, current)
+}
+
+// 当前预览的确定拒绝才令本人确认失效；暂时依赖或持久化异常不证明披露被撤回。
+func confirmationPreviewRejected(err error) bool {
+	return api.IsCode(err, "forbidden") || api.IsCode(err, "expired") || api.IsCode(err, "revision_conflict") || api.IsCode(err, "not_found") || api.IsCode(err, "gone") || api.IsCode(err, "invalid_state")
 }
 
 func (s *Service) issueGrant(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in GrantIssue) (runtime.Outcome, error) {
@@ -318,6 +326,24 @@ func (s *Service) revokeGrant(ctx context.Context, tx runtime.Tx, auth runtime.A
 	if err := ownerRef(tx.Scope(), in.GrantRef); err != nil {
 		return runtime.Outcome{}, err
 	}
+	if c.TargetID != in.GrantRef.ObjectID {
+		return runtime.Outcome{}, api.E("invalid_request", "target_mismatch")
+	}
+	// 不可变出生版本仅用于路由；当前预览可能先锁 Memory 变更头及其来源许可。
+	// 必须先取得这些上游门禁，再锁本次撤回的当前 Grant。初始 pending 同样核 CAS。
+	var birth api.Grant
+	if err := tx.GetVersion(ctx, ns("grants"), in.GrantRef.ObjectID, 1, &birth); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if birth.GrantID != in.GrantRef.ObjectID || birth.OwnerID != tx.Scope().OwnerID {
+		return runtime.Outcome{}, api.E("forbidden", "grant_management_scope_mismatch")
+	}
+	if s.Ports.PreviewGate == nil {
+		return runtime.Outcome{}, api.E("unsupported", "confirmation_preview_gate_unavailable")
+	}
+	if err := s.Ports.PreviewGate.CheckTx(ctx, tx, auth, in.PreviewRefs); err != nil {
+		return runtime.Outcome{}, err
+	}
 	var g api.Grant
 	rev, err := tx.Get(ctx, ns("grants"), in.GrantRef.ObjectID, &g)
 	if err != nil {
@@ -326,12 +352,12 @@ func (s *Service) revokeGrant(ctx context.Context, tx runtime.Tx, auth runtime.A
 	if err = requireCAS(c, rev); err != nil {
 		return runtime.Outcome{}, err
 	}
+	if g.Revision != in.GrantRef.Revision {
+		return runtime.Outcome{}, api.E("revision_conflict", "revision_changed")
+	}
 	confirm, pending, err := s.beginConfirmed(ctx, tx, auth, c, in.PreviewRefs, in.ConfirmationExpiresAt)
 	if err != nil || confirm == nil {
 		return pending, err
-	}
-	if g.Revision != in.GrantRef.Revision {
-		return runtime.Outcome{}, api.E("revision_conflict", "revision_changed")
 	}
 	if err = s.consumeConfirmation(ctx, tx, auth, confirm, c.CommandID); err != nil {
 		return runtime.Outcome{}, err
@@ -457,7 +483,7 @@ func (s *Service) continueConfirmation(ctx context.Context, store runtime.Store,
 		})
 		if applyErr != nil {
 			var e *api.Error
-			if !errors.As(applyErr, &e) || e.Code == "dependency_unavailable" {
+			if !errors.As(applyErr, &e) || e.Code == "dependency_unavailable" || e.Code == "overloaded" || e.Code == "effect_unknown" || e.Code == "accounting_unknown" {
 				return applyErr
 			}
 			return runtime.Decide(ctx, tx, pending.Command.CommandID, nil, e)
