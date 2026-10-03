@@ -106,17 +106,19 @@ func (s *Service) run(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work) 
 		return s.closeUnstarted(ctx, st, sc, w, err)
 	}
 	attempt := Attempt{AttemptID: api.NewID("attempt"), OperationID: op.Operation.OperationID, Revision: 1, AttemptNo: 1, Phase: "prepared", Prepared: prepared, Permit: StartPermit{ProofRefs: []api.ContentRef{}}, Effect: "not_started", MayApplyLater: false, ControlWindowID: window.WindowID, ControlWindow: window, EvidenceRefs: []api.ContentRef{}, Usage: []api.Amount{}, ActuallyStopped: true}
-	authority, err := s.cfg.Authority.PrepareStart(ctx, sc, StartRequest{ControlWindow: window, Invoke: op.Invoke, Intent: intent, AttemptID: attempt.AttemptID, Auth: op.Principal})
-	if err != nil {
-		if businessError(err) {
-			return s.closeUnstarted(ctx, st, sc, w, err)
+	if _, independent := s.cfg.Authority.(ControlWindowSource); !independent {
+		authority, err := s.cfg.Authority.PrepareStart(ctx, sc, StartRequest{ControlWindow: window, Invoke: op.Invoke, Intent: intent, AttemptID: attempt.AttemptID, Auth: op.Principal})
+		if err != nil {
+			if businessError(err) {
+				return s.closeUnstarted(ctx, st, sc, w, err)
+			}
+			return err
 		}
-		return err
+		if authority.AuthorityRevision == 0 || authority.ProofRef.TenantID != sc.TenantID || api.ValidateRecord("ContentRef", authority.ProofRef) != nil {
+			return s.closeUnstarted(ctx, st, sc, w, api.E("forbidden", "start_proof_missing"))
+		}
+		attempt.PreparedAuthority = authority
 	}
-	if authority.AuthorityRevision == 0 || authority.ProofRef.TenantID != sc.TenantID || api.ValidateRecord("ContentRef", authority.ProofRef) != nil {
-		return s.closeUnstarted(ctx, st, sc, w, api.E("forbidden", "start_proof_missing"))
-	}
-	attempt.PreparedAuthority = authority
 	if err = st.CheckClaim(ctx, sc, w.Claim); err != nil {
 		return err
 	}
@@ -154,6 +156,16 @@ func (s *Service) run(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work) 
 func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work, op operationRecord, attempt Attempt, d Driver) error {
 	if op.Intent == nil {
 		return api.E("invalid_state", "attempt_intent_missing")
+	}
+	if attempt.PreparedAuthority.AuthorityRevision == 0 {
+		var err error
+		op, attempt, err = s.prepareAttemptControl(ctx, st, sc, w, op, attempt)
+		if err != nil {
+			if definitiveControlFailure(err) {
+				return s.closeUnstarted(ctx, st, sc, w, err)
+			}
+			return err
+		}
 	}
 	entered := false
 	called := false
