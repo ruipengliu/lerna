@@ -1,7 +1,0 @@
-stateDiagram-v2
-    [*] --> ready: 业务责任与job共同提交
-    ready --> leased: 原子领取并递增代次
-    leased --> done: 业务交接或终结责任已保存
-    leased --> waiting: 明确依赖或有限退避
-    waiting --> ready: 到时或依赖变化
-    leased --> ready: 领取过期重新调度

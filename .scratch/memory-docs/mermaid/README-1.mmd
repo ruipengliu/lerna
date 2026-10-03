@@ -1,9 +1,0 @@
-flowchart LR
-    User[用户与受信管理入口] -->|纠正、限制、删除| Memory[Memory owner]
-    Orchestrator[Orchestrator] -->|查询获准记忆| Memory
-    Memory -->|精确内容引用| Orchestrator
-    Orchestrator -->|按用途读与处理| Content[内容 owner]
-    Memory -->|读取、写入正文| Content
-    Memory -->|获准视图| Replica[其他端的受管副本]
-    Auth[Grant owner] -->|许可与有限租约| Memory
-    Auth -->|许可与有限租约| Content

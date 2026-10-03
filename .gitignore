@@ -15,7 +15,6 @@ __pycache__/
 
 # Generated documentation
 /docs/architecture/html/
-/docs/archive/architecture-2026-09-22/architecture/html/
 
 # Local reference checkouts; .scratch/ contains versioned issues and specs
 /.reference/

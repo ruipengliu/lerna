@@ -1,8 +1,23 @@
 # 六组核心对象与参考项目语义覆盖
 
-研究日期：2026-10-01，Asia/Shanghai。本文按固定源码比较行为，服务于[核心模型收敛规格](../../../.scratch/harness-core-model-simplification/spec.md)。六组对象可以组织共同执行主线；完整承载参考语义还需要有身份的内部记录、准确配置及具有独立生命周期的扩展对象。下表不把同名类型、可序列化字段或设计映射计为运行能力。
+研究日期：2026-10-01，Asia/Shanghai。本文按固定源码比较行为，研究目标和约束见下文[核心模型收敛范围](#core-model-scope)。六组对象可以组织共同执行主线；完整承载参考语义还需要有身份的内部记录、准确配置及具有独立生命周期的扩展对象。下表不把同名类型、可序列化字段或设计映射计为运行能力。
 
 本文是研究映射，规则仍由各[架构模块](../../architecture/README.md)负责。默认应用入口、对象归属和逐请求读写分别由本轮架构设计收敛；本报告不发布新协议，不改写[历史研究基线](architecture-baseline.md)或 [sources.json](sources.json)。运行内核、SDK、数据库和上游运行均未在本轮实现或运行，所有本项目语义的**运行验证状态均为未验证**。
+
+<a id="core-model-scope"></a>
+## 核心模型收敛范围
+
+本节整理原核心模型收敛规格中支撑本研究的目标、约束和验证口径。原规格及任务记录已完成历史设计交付；2026-10-03 清理工作记录时将必要内容并入本文。原架构草案已从当前分支删除，下文的设计覆盖描述保留 2026-10-01 的研究口径，不能据此推断当前架构或运行实现已具备对应能力。历史设计与完整任务记录可通过 Git 历史查看。
+
+**研究目标。** 普通应用通过 Session、Task、Decision、Operation、Content、Grant 六组概念组织连续对话、提交目标、控制任务和读取结果；内部记录由所属模块管理。比较参考项目时，检查这种组织能否保留实际行为，逐项说明尚需独立合同的能力，避免仅按类型名称判断等价。
+
+**对象组织。** Session 保存对话与任务关联，Task 保存目标及推进责任，Decision 组织固定输入上的决策和实际模型用量，Operation 组织行动尝试及效果核对，Content 保存准确版本的材料，Grant 管理资源与用途授权。六组对象不限定六张表；Task 可以独立于 Session 存在，一个 Session 可以关联多个 Task，归档会话不取消任务。
+
+**保留的语义边界。** 原提交身份、排队与消费位置、当前继续权、未知效果、可信确认、实际费用和来源权限分别保留。每个 Decision 至多一次物理模型请求，额外推理独立记录；恢复不能透明重放可能已发送的模型请求或外部写入。跨负责方的交接不能因对象内聚而宣称原子提交，历史分支和界面回退也不代表外部效果回滚。
+
+**按需能力与公共合同。** Memory、Schedule、可复用子会话、执行环境、Skill 和 Plugin 可以拥有独立生命周期；未启用的能力不参与普通请求主流程。Capability、Binding、模型配置和 InstallLock 仍是必要配置。研究时既有的 105 个领域方法不因概念收敛自动删改，完整分支、自由输入调度等缺口按第 4 节单独列明。
+
+**验证口径。** 从应用提交、查询、控制、读取结果与冷恢复观察行为，核对原对象身份、准确结果、实际出站、权限和费用。直接回答、读取后回答、保存后读回及冷恢复分别比较逻辑记录、事务、flush/sync、字节和物理 IO；不预报固定性能收益。源码映射、设计覆盖、静态检查与运行验证分别登记，本研究未实现运行内核、SDK、数据库或部署，也未执行上游测试和性能试验。
 
 ## 1. 装配路径和判读口径
 
@@ -31,22 +46,22 @@
 
 | 语义族 | 六组对象及必要记录 | 设计覆盖和剩余差异 | 负责入口 / 运行验证 |
 | --- | --- | --- | --- |
-| [SM-01 会话历史](#sm-01) | Session + Content；消息身份/顺序/来源、原提交与 Task 关联 | 本轮补齐：线性对话、保存与接纳分开、归档不取消任务。完整分支另见 SM-09 | [Session](../../architecture/.draft/interaction/session-and-task.md)；未验证 |
-| [SM-02 Turn / Run](#sm-02) | Session/Task 的查询投影；Command、InputSubmission、InputRequest 保留原身份 | 本轮补齐：回合结束、目标完成、工作进程退出分别表达，不建平行 Run 目标状态机 | [Session](../../architecture/.draft/interaction/session-and-task.md)、[交互](../../architecture/.draft/interaction/implementation.md)；未验证 |
-| [SM-03 输入调度](#sm-03) | Task + 原提交子记录；排队/消费位置和控制范围 | 既有 InputRequest 回答的消费与 interaction.input_withdraw 已有设计；Session 自由输入的通用队列、steer/follow-up、多 Lane 按需扩展。全任务取消不能冒充单输入撤回 | [输入竞争](../../architecture/.draft/interaction/implementation.md#input-control-races)；公共差异 G-02，未验证 |
-| [SM-04 压缩与模型视图](#sm-04) | Decision 输入投影 + Content；摘要来源、覆盖范围、额外 ModelCall | 已有设计；本轮补齐 Session 历史与模型输入区别。摘要不能删去权威目标、授权、未知效果 | [Brain 重建](../../architecture/.draft/brain/implementation.md#snapshot-reconstruction)；未验证 |
-| [SM-05 模型步骤](#sm-05) | Decision；Snapshot/BrainContext、可选 ModelCall、Proposal、实际用量 | 已有设计；每 Decision 至多一次物理请求，辅助推理与透明重试须展开为独立责任 | [Brain](../../architecture/.draft/brain/README.md#model-recovery)；未验证 |
-| [SM-06 工具与未知效果](#sm-06) | Operation；原意图、Attempt、Effect、结果 Content、结算关联 | 已有设计；本轮补齐统一查询视图，不合并跨负责方交接为假原子事务；unknown 不因生成回复而消失 | [Executor](../../architecture/.draft/execution/implementation.md)、[可靠工作](../../architecture/.draft/reliable-work.md)；未验证 |
-| [SM-07 批准与隔离](#sm-07) | Grant + 使用/结算子记录；业务 Confirmation；准确 Binding/InstallLock | 已有设计；沙箱是执行机制，Skill/hook/目录声明不能授权，批准不证明物理启动或终止 | [权限](../../architecture/.draft/security/implementation.md#final-tool-use-check)；未验证 |
-| [SM-08 持续目标](#sm-08) | Task；目标修订/Requirement/控制/预算/推进计数/ConditionResult/Result | 已有设计 + 本轮补齐继续权：目标 active、工作存在、当前准许新费用/效果分别检查 | [有界推进](../../architecture/.draft/orchestrator/implementation.md#bounded-progress)；未验证 |
+| [SM-01 会话历史](#sm-01) | Session + Content；消息身份/顺序/来源、原提交与 Task 关联 | 本轮补齐：线性对话、保存与接纳分开、归档不取消任务。完整分支另见 SM-09 | Session（历史设计）；未验证 |
+| [SM-02 Turn / Run](#sm-02) | Session/Task 的查询投影；Command、InputSubmission、InputRequest 保留原身份 | 本轮补齐：回合结束、目标完成、工作进程退出分别表达，不建平行 Run 目标状态机 | Session（历史设计）、交互（历史设计）；未验证 |
+| [SM-03 输入调度](#sm-03) | Task + 原提交子记录；排队/消费位置和控制范围 | 既有 InputRequest 回答的消费与 interaction.input_withdraw 已有设计；Session 自由输入的通用队列、steer/follow-up、多 Lane 按需扩展。全任务取消不能冒充单输入撤回 | 输入竞争（历史设计）；公共差异 G-02，未验证 |
+| [SM-04 压缩与模型视图](#sm-04) | Decision 输入投影 + Content；摘要来源、覆盖范围、额外 ModelCall | 已有设计；本轮补齐 Session 历史与模型输入区别。摘要不能删去权威目标、授权、未知效果 | Brain 重建（历史设计）；未验证 |
+| [SM-05 模型步骤](#sm-05) | Decision；Snapshot/BrainContext、可选 ModelCall、Proposal、实际用量 | 已有设计；每 Decision 至多一次物理请求，辅助推理与透明重试须展开为独立责任 | Brain（历史设计）；未验证 |
+| [SM-06 工具与未知效果](#sm-06) | Operation；原意图、Attempt、Effect、结果 Content、结算关联 | 已有设计；本轮补齐统一查询视图，不合并跨负责方交接为假原子事务；unknown 不因生成回复而消失 | Executor（历史设计）、可靠工作（历史设计）；未验证 |
+| [SM-07 批准与隔离](#sm-07) | Grant + 使用/结算子记录；业务 Confirmation；准确 Binding/InstallLock | 已有设计；沙箱是执行机制，Skill/hook/目录声明不能授权，批准不证明物理启动或终止 | 权限（历史设计）；未验证 |
+| [SM-08 持续目标](#sm-08) | Task；目标修订/Requirement/控制/预算/推进计数/ConditionResult/Result | 已有设计 + 本轮补齐继续权：目标 active、工作存在、当前准许新费用/效果分别检查 | 有界推进（历史设计）；未验证 |
 | [SM-09 分支与回退](#sm-09) | Session 分支子记录 + Content；父链/分支头/来源截止/配置摘要范围 | 按需扩展；本轮补齐承载和禁止复制责任的规则。首版线性历史不具备完整分支功能，公共分支合同本阶段不交付 | 交互/应用 + 各原事实负责方；G-01，未验证 |
-| [SM-10 子 Agent](#sm-10) | 子 Task/子 Session + Delegation + 精确启动配置 | 委派恢复已有设计；可复用 child 的持续身份与激活分开为按需扩展。历史 fork 不等于创建委派 | [协作](../../architecture/.draft/collaboration/implementation.md#cold-child-recovery)；G-03，未验证 |
+| [SM-10 子 Agent](#sm-10) | 子 Task/子 Session + Delegation + 精确启动配置 | 委派恢复已有设计；可复用 child 的持续身份与激活分开为按需扩展。历史 fork 不等于创建委派 | 协作（历史设计）；G-03，未验证 |
 | [SM-11 定时与周期触发](#sm-11) | 独立 Schedule + occurrence；产生原 Command/Task 或输入 | 按需扩展；本轮补齐归属/去重/停用边界。JobStore 只提供可靠执行机制，公共 Schedule 协议本阶段不交付 | 应用调度能力 + 固定 Task 负责方；G-04，未验证 |
-| [SM-12 可复用执行环境](#sm-12) | Executor 环境资源记录；多个 Operation 引用同一环境，Content 保存受限检查点 | 按需扩展；本轮补齐占用、实际退出与恢复范围。cell 取消回执不释放仍忙的环境 | [程序化工具](../../architecture/.draft/execution/programmatic-tools.md)；G-05，未验证 |
-| [SM-13 长期记忆](#sm-13) | 独立 Memory + Content + Grant；来源/范围/版本/冲突/关闭记录 | 已有设计，按需启用；本轮明确 Content 不替代记忆生命周期，普通记忆纠正不必走软件发布 | [Memory](../../architecture/.draft/memory/implementation.md)；G-06，未验证 |
-| [SM-14 Skill / 插件](#sm-14) | 必要 Capability/Binding/InstallLock 配置；独立 Skill/Plugin/激活及发布记录 | 静态能力绑定已有设计；动态发现/安装按需扩展。正文和可执行代码、准备完成和已获准分别表达 | [扩展](../../architecture/.draft/extensions/implementation.md#staged-readiness)；G-07，未验证 |
-| [SM-15 流呈现](#sm-15) | Decision/Operation 的 provisional 流 + Surface/Session 投影 + Content 正式结果 | 已有设计；短暂片段有界且可丢/合并，宣称事实已提交的提示须在提交后；不逐 token 建作业 | [呈现边界](../../architecture/.draft/interaction/implementation.md#surface-publication)；未验证 |
-| [SM-16 重连与冷恢复](#sm-16) | 原 Command/Task/Decision/Operation/Grant、Surface 版本；Job/Claim/outbox 内部机制 | 已有设计；本轮补齐聚合后的原身份查询。重连不重放未知动作，快照不意味着外部世界恢复 | [恢复就绪](../../architecture/.draft/deployment.md#recovery-readiness)、[传输](../../architecture/.draft/contracts/transport.md)；未验证 |
+| [SM-12 可复用执行环境](#sm-12) | Executor 环境资源记录；多个 Operation 引用同一环境，Content 保存受限检查点 | 按需扩展；本轮补齐占用、实际退出与恢复范围。cell 取消回执不释放仍忙的环境 | 程序化工具（历史设计）；G-05，未验证 |
+| [SM-13 长期记忆](#sm-13) | 独立 Memory + Content + Grant；来源/范围/版本/冲突/关闭记录 | 已有设计，按需启用；本轮明确 Content 不替代记忆生命周期，普通记忆纠正不必走软件发布 | Memory（历史设计）；G-06，未验证 |
+| [SM-14 Skill / 插件](#sm-14) | 必要 Capability/Binding/InstallLock 配置；独立 Skill/Plugin/激活及发布记录 | 静态能力绑定已有设计；动态发现/安装按需扩展。正文和可执行代码、准备完成和已获准分别表达 | 扩展（历史设计）；G-07，未验证 |
+| [SM-15 流呈现](#sm-15) | Decision/Operation 的 provisional 流 + Surface/Session 投影 + Content 正式结果 | 已有设计；短暂片段有界且可丢/合并，宣称事实已提交的提示须在提交后；不逐 token 建作业 | 呈现边界（历史设计）；未验证 |
+| [SM-16 重连与冷恢复](#sm-16) | 原 Command/Task/Decision/Operation/Grant、Surface 版本；Job/Claim/outbox 内部机制 | 已有设计；本轮补齐聚合后的原身份查询。重连不重放未知动作，快照不意味着外部世界恢复 | 恢复就绪（历史设计）、传输（历史设计）；未验证 |
 
 ## 3. 十六类语义的固定源码对照
 
@@ -291,7 +306,7 @@ Task 的继续权、原模型调用、效果 unknown、可信确认及费用收�
 9. 记忆版本、来源许可或工具绑定已变；当前读取/发送重新核验，旧摘要、Skill 或缓存不绕过限制。
 10. live delta 丢失、正式通知重复或订阅断档；通过原业务查询和新的界面快照恢复，不能只看终结流帧判断已提交。
 
-这些是待运行场景，可与[既有 HAR 场景](../../architecture/.draft/validation/harness-scenarios.md)及 RT/BI/EX/权限/交互契约向量合并。结构、链接与固定源码路径/行号检查只说明材料可追溯；没有运行实现、数据库故障实验、真实平台隔离或性能测量，不能登记上述场景已通过。SQL、事务、flush/sync、字节和物理 IO 的口径继续按[同场景读写对照](data-flow-io-comparison.md)，不由对象数量推导下降比例。
+这些是待运行场景，可与既有 HAR 场景（历史设计）及 RT/BI/EX/权限/交互契约向量合并。结构、链接与固定源码路径/行号检查只说明材料可追溯；没有运行实现、数据库故障实验、真实平台隔离或性能测量，不能登记上述场景已通过。SQL、事务、flush/sync、字节和物理 IO 的口径继续按[同场景读写对照](data-flow-io-comparison.md)，不由对象数量推导下降比例。
 
 ## 6. 固定源码索引
 

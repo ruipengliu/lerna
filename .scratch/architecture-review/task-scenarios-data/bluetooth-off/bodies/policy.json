@@ -1,1 +1,0 @@
-{"description":"演示装配：规则集合固定、修订最多一次；不构成用户授权。","fixture_only":true,"max_candidate_revisions":1,"name":"task-policy","version":"1.0.0"}

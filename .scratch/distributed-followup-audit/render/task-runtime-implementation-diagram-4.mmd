@@ -1,9 +1,0 @@
-stateDiagram-v2
-    direction LR
-    [*] --> ready: 共同提交
-    ready --> leased: 领取并递增代次
-    leased --> done: 覆盖当前责任
-    leased --> waiting: 当前责任仍需等待
-    leased --> ready: 回写保留责任／领取过期
-    waiting --> ready: 到时或依赖变化
-    done --> ready: 新责任提交

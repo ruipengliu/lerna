@@ -1,8 +1,0 @@
-flowchart LR
-    P[平台实际实例集合] -->|持续更新| D[进程共享发现适配器]
-    D --> C[短 Call 连接组<br/>round_robin]
-    D --> S[EndpointChannel 连接池<br/>按后端剩余流槽选择]
-    C --> A[应用 A]
-    C --> B[应用 B／新增副本]
-    S --> A
-    S --> B

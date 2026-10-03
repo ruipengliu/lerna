@@ -1,7 +1,0 @@
-'Trust.scope_reachable_attenuates' does not depend on any axioms
-'Trust.gate_reachable_safe' depends on axioms: [propext, Quot.sound]
-'Trust.revoked_cannot_add_use' depends on axioms: [propext]
-'Trust.closed_cannot_add_use' depends on axioms: [propext]
-'Trust.stale_cache_cannot_add_use' depends on axioms: [propext, Quot.sound]
-'Trust.late_fact_without_new_use_witness' depends on axioms: [propext]
-'Trust.closed_dependency_blocks' does not depend on any axioms

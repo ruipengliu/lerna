@@ -1,14 +1,16 @@
 # 全机制与验收用例覆盖索引
 
+> 本文引用的历史归档已从当前分支移除，可通过 Git 历史查看；文中结论仍对应当时的方案与验证范围。
+
 > 归档说明（2026-09-26）：本文讨论与验证的对象是当时的架构及形式化模型，引用已转向对应归档；本文结果不表示现行架构已经通过验证。
 
 本索引由各组库存合并，逐项关联当前方案。**登记了覆盖关系不等于完整用例通过。** model-property 只表示已建模子性质；static-only 只表示结构／固定样本；runtime-required 表示需要实际提供方；uncovered 表示规则尚未进入模型。
 
-当前登记 104 个机制族、291 条模块原编号用例及 6 条内容专题本地编号用例。原始义务、模型属性和剩余边界见 [机器可读库存](../archive/formal-2026-09-26/mechanisms/evidence/coverage.json)。实际工具结果见 [总报告](all-mechanisms-verification-results.md)。
+当前登记 104 个机制族、291 条模块原编号用例及 6 条内容专题本地编号用例。原始义务、模型属性和剩余边界见 机器可读库存。实际工具结果见 [总报告](all-mechanisms-verification-results.md)。
 
 ## communication：机制
 
-[组内结果与模型边界](../archive/formal-2026-09-26/mechanisms/communication/README.md)
+组内结果与模型边界
 
 | ID | 机制 | 库存覆盖声明 |
 | --- | --- | --- |
@@ -36,22 +38,22 @@
 
 | 用例与原文 | 证据分类 | 抽象范围／剩余边界 |
 | --- | --- | --- |
-| [EC-01](../archive/architecture-2026-09-26/endpoint-communication/validation.md)（第 28 行） | model-property | partial; complete runtime case NOT executed |
-| [EC-02](../archive/architecture-2026-09-26/endpoint-communication/validation.md)（第 29 行） | model-property | partial; complete runtime case NOT executed |
-| [EC-03](../archive/architecture-2026-09-26/endpoint-communication/validation.md)（第 30 行） | model-property | partial; complete runtime case NOT executed |
-| [EC-04](../archive/architecture-2026-09-26/endpoint-communication/validation.md)（第 31 行） | model-property | partial; complete runtime case NOT executed |
-| [EC-05](../archive/architecture-2026-09-26/endpoint-communication/validation.md)（第 32 行） | model-property | partial; complete runtime case NOT executed |
-| [EC-06](../archive/architecture-2026-09-26/endpoint-communication/validation.md)（第 33 行） | model-property | partial; complete runtime case NOT executed |
-| [EC-13](../archive/architecture-2026-09-26/endpoint-communication/validation.md)（第 34 行） | model-property | partial; complete runtime case NOT executed |
-| [EC-14](../archive/architecture-2026-09-26/endpoint-communication/validation.md)（第 35 行） | model-property | partial; complete runtime case NOT executed |
-| [EC-15](../archive/architecture-2026-09-26/endpoint-communication/validation.md)（第 36 行） | model-property | partial; complete runtime case NOT executed |
-| [EC-16](../archive/architecture-2026-09-26/endpoint-communication/validation.md)（第 37 行） | model-property | partial; complete runtime case NOT executed |
-| [EC-17](../archive/architecture-2026-09-26/endpoint-communication/validation.md)（第 38 行） | model-property | partial; complete runtime case NOT executed |
-| [EC-19](../archive/architecture-2026-09-26/endpoint-communication/validation.md)（第 39 行） | model-property | partial; complete runtime case NOT executed |
+| EC-01（第 28 行） | model-property | partial; complete runtime case NOT executed |
+| EC-02（第 29 行） | model-property | partial; complete runtime case NOT executed |
+| EC-03（第 30 行） | model-property | partial; complete runtime case NOT executed |
+| EC-04（第 31 行） | model-property | partial; complete runtime case NOT executed |
+| EC-05（第 32 行） | model-property | partial; complete runtime case NOT executed |
+| EC-06（第 33 行） | model-property | partial; complete runtime case NOT executed |
+| EC-13（第 34 行） | model-property | partial; complete runtime case NOT executed |
+| EC-14（第 35 行） | model-property | partial; complete runtime case NOT executed |
+| EC-15（第 36 行） | model-property | partial; complete runtime case NOT executed |
+| EC-16（第 37 行） | model-property | partial; complete runtime case NOT executed |
+| EC-17（第 38 行） | model-property | partial; complete runtime case NOT executed |
+| EC-19（第 39 行） | model-property | partial; complete runtime case NOT executed |
 
 ## control：机制
 
-[组内结果与模型边界](../archive/formal-2026-09-26/mechanisms/control/README.md)
+组内结果与模型边界
 
 | ID | 机制 | 库存覆盖声明 |
 | --- | --- | --- |
@@ -88,131 +90,131 @@
 
 | 用例与原文 | 证据分类 | 抽象范围／剩余边界 |
 | --- | --- | --- |
-| [TK-01](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 113 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-01a](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 114 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-02](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 115 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-03](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 116 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-04](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 117 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-04a](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 118 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-04b](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 119 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-05](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 120 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-05a](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 121 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-06](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 122 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-07](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 123 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-07a](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 124 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-08](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 125 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-09](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 126 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-10](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 127 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-11](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 128 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-11a](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 129 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-12](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 130 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-13](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 131 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-13b](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 132 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-13c](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 133 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-13a](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 134 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-14](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 135 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-15](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 136 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-16](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 137 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-17](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 138 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-17a](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 139 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-18](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 140 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-19](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 141 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-20](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 142 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-21](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 143 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-22](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 144 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-23](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 145 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-24](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 146 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [TK-25](../archive/architecture-2026-09-26/task-kernel/recovery-and-validation.md)（第 147 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-01](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 49 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-02](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 50 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-03](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 51 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-04](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 52 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-05](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 53 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-06](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 54 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-07](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 55 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-08](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 56 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-09](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 57 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-10](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 58 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-11](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 59 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-12](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 60 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-13](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 61 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-14](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 62 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-15](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 63 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-16](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 64 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-17](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 65 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-18](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 66 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-19](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 67 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-20](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 68 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-21](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 69 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-22](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 70 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-23](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 71 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-24](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 72 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-P1](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 93 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-P2](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 94 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-25](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 101 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-26](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 102 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-27](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 103 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-28](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 104 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CE-29](../archive/architecture-2026-09-26/capability-and-execution/validation.md)（第 105 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-01](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 29 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-02](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 30 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-03](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 31 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-04](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 32 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-05](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 33 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-06](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 34 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-07](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 35 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-08](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 36 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-09](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 37 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-10](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 38 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-11](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 39 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-12](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 40 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-18](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 41 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-20](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 42 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-21](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 43 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-22](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 44 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-23](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 45 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-24](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 46 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-25](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 47 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-26](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 48 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-27](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 49 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-P1](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 69 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [CO-P2](../archive/architecture-2026-09-26/agent-coordination/validation.md)（第 71 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-01](../archive/architecture-2026-09-26/brain-system/validation.md)（第 39 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-02](../archive/architecture-2026-09-26/brain-system/validation.md)（第 40 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-03](../archive/architecture-2026-09-26/brain-system/validation.md)（第 41 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-04](../archive/architecture-2026-09-26/brain-system/validation.md)（第 42 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-05](../archive/architecture-2026-09-26/brain-system/validation.md)（第 43 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-06](../archive/architecture-2026-09-26/brain-system/validation.md)（第 44 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-07](../archive/architecture-2026-09-26/brain-system/validation.md)（第 45 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-08](../archive/architecture-2026-09-26/brain-system/validation.md)（第 46 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-09](../archive/architecture-2026-09-26/brain-system/validation.md)（第 47 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-10](../archive/architecture-2026-09-26/brain-system/validation.md)（第 48 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-11](../archive/architecture-2026-09-26/brain-system/validation.md)（第 49 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-12](../archive/architecture-2026-09-26/brain-system/validation.md)（第 50 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-13](../archive/architecture-2026-09-26/brain-system/validation.md)（第 51 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-14](../archive/architecture-2026-09-26/brain-system/validation.md)（第 52 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-15](../archive/architecture-2026-09-26/brain-system/validation.md)（第 53 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-16](../archive/architecture-2026-09-26/brain-system/validation.md)（第 54 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-17](../archive/architecture-2026-09-26/brain-system/validation.md)（第 55 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-18](../archive/architecture-2026-09-26/brain-system/validation.md)（第 56 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-19](../archive/architecture-2026-09-26/brain-system/validation.md)（第 57 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-20](../archive/architecture-2026-09-26/brain-system/validation.md)（第 58 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-21](../archive/architecture-2026-09-26/brain-system/validation.md)（第 59 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-22](../archive/architecture-2026-09-26/brain-system/validation.md)（第 60 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-23](../archive/architecture-2026-09-26/brain-system/validation.md)（第 61 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-24](../archive/architecture-2026-09-26/brain-system/validation.md)（第 62 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-25](../archive/architecture-2026-09-26/brain-system/validation.md)（第 63 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-26](../archive/architecture-2026-09-26/brain-system/validation.md)（第 64 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-27](../archive/architecture-2026-09-26/brain-system/validation.md)（第 65 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-28](../archive/architecture-2026-09-26/brain-system/validation.md)（第 86 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-29](../archive/architecture-2026-09-26/brain-system/validation.md)（第 87 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-30](../archive/architecture-2026-09-26/brain-system/validation.md)（第 88 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-31](../archive/architecture-2026-09-26/brain-system/validation.md)（第 89 行） | 逐义务分类见库存 | 逐义务见库存 |
-| [BS-32](../archive/architecture-2026-09-26/brain-system/validation.md)（第 90 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-01（第 113 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-01a（第 114 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-02（第 115 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-03（第 116 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-04（第 117 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-04a（第 118 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-04b（第 119 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-05（第 120 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-05a（第 121 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-06（第 122 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-07（第 123 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-07a（第 124 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-08（第 125 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-09（第 126 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-10（第 127 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-11（第 128 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-11a（第 129 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-12（第 130 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-13（第 131 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-13b（第 132 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-13c（第 133 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-13a（第 134 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-14（第 135 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-15（第 136 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-16（第 137 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-17（第 138 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-17a（第 139 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-18（第 140 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-19（第 141 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-20（第 142 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-21（第 143 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-22（第 144 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-23（第 145 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-24（第 146 行） | 逐义务分类见库存 | 逐义务见库存 |
+| TK-25（第 147 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-01（第 49 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-02（第 50 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-03（第 51 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-04（第 52 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-05（第 53 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-06（第 54 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-07（第 55 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-08（第 56 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-09（第 57 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-10（第 58 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-11（第 59 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-12（第 60 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-13（第 61 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-14（第 62 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-15（第 63 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-16（第 64 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-17（第 65 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-18（第 66 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-19（第 67 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-20（第 68 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-21（第 69 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-22（第 70 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-23（第 71 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-24（第 72 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-P1（第 93 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-P2（第 94 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-25（第 101 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-26（第 102 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-27（第 103 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-28（第 104 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CE-29（第 105 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-01（第 29 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-02（第 30 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-03（第 31 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-04（第 32 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-05（第 33 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-06（第 34 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-07（第 35 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-08（第 36 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-09（第 37 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-10（第 38 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-11（第 39 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-12（第 40 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-18（第 41 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-20（第 42 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-21（第 43 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-22（第 44 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-23（第 45 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-24（第 46 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-25（第 47 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-26（第 48 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-27（第 49 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-P1（第 69 行） | 逐义务分类见库存 | 逐义务见库存 |
+| CO-P2（第 71 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-01（第 39 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-02（第 40 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-03（第 41 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-04（第 42 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-05（第 43 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-06（第 44 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-07（第 45 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-08（第 46 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-09（第 47 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-10（第 48 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-11（第 49 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-12（第 50 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-13（第 51 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-14（第 52 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-15（第 53 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-16（第 54 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-17（第 55 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-18（第 56 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-19（第 57 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-20（第 58 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-21（第 59 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-22（第 60 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-23（第 61 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-24（第 62 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-25（第 63 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-26（第 64 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-27（第 65 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-28（第 86 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-29（第 87 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-30（第 88 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-31（第 89 行） | 逐义务分类见库存 | 逐义务见库存 |
+| BS-32（第 90 行） | 逐义务分类见库存 | 逐义务见库存 |
 
 ## lifecycle：机制
 
-[组内结果与模型边界](../archive/formal-2026-09-26/mechanisms/lifecycle/README.md)
+组内结果与模型边界
 
 | ID | 机制 | 库存覆盖声明 |
 | --- | --- | --- |
@@ -252,109 +254,109 @@
 
 | 用例与原文 | 证据分类 | 抽象范围／剩余边界 |
 | --- | --- | --- |
-| [ER-01](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 71 行） | model-property | abstract-partial |
-| [ER-02](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 72 行） | model-property | abstract-partial |
-| [ER-03](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 73 行） | runtime-required | not-formally-covered |
-| [ER-04](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 74 行） | runtime-required | not-formally-covered |
-| [ER-05](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 75 行） | model-property | abstract-partial |
-| [ER-06](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 76 行） | model-property | abstract-partial |
-| [ER-07](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 77 行） | model-property | abstract-partial |
-| [ER-08](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 78 行） | model-property | abstract-partial |
-| [ER-09](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 79 行） | model-property | abstract-partial |
-| [ER-10](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 80 行） | model-property | abstract-partial |
-| [ER-11](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 81 行） | model-property | abstract-partial |
-| [ER-12](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 82 行） | model-property | abstract-partial |
-| [ER-13](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 83 行） | model-property | abstract-partial |
-| [ER-14](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 84 行） | model-property | abstract-partial |
-| [ER-15](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 85 行） | model-property | abstract-partial |
-| [ER-16](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 86 行） | model-property | abstract-partial |
-| [ER-17](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 87 行） | model-property | abstract-partial |
-| [ER-18](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 88 行） | model-property | abstract-partial |
-| [ER-19](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 89 行） | model-property | abstract-partial |
-| [ER-20](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 90 行） | model-property | abstract-partial |
-| [ER-21](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 91 行） | model-property | abstract-partial |
-| [ER-22](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 92 行） | model-property | abstract-partial |
-| [ER-23](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 93 行） | model-property | abstract-partial |
-| [ER-24](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 94 行） | model-property | abstract-partial |
-| [ER-25](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 95 行） | model-property | abstract-partial |
-| [ER-26](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 96 行） | runtime-required | not-formally-covered |
-| [ER-27](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 97 行） | model-property | abstract-partial |
-| [ER-28](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 98 行） | model-property | abstract-partial |
-| [ER-29](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 99 行） | model-property | abstract-partial |
-| [ER-P1](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 110 行） | model-property | abstract-partial |
-| [ER-P2](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 111 行） | model-property | abstract-partial |
-| [ER-P3](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 112 行） | static-only | policy-exclusion-only |
-| [ER-30](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 118 行） | model-property | abstract-partial |
-| [ER-31](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 119 行） | model-property | abstract-partial |
-| [ER-32](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 120 行） | model-property | abstract-partial |
-| [ER-33](../archive/architecture-2026-09-26/extensions-and-runtime/validation.md)（第 121 行） | model-property | abstract-partial |
-| [UI-01](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 12 行） | model-property | abstract-partial |
-| [UI-02](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 13 行） | model-property | abstract-partial |
-| [UI-03](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 14 行） | model-property | abstract-partial |
-| [UI-04](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 15 行） | model-property | abstract-partial |
-| [UI-05](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 16 行） | model-property | abstract-partial |
-| [UI-06](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 17 行） | model-property | abstract-partial |
-| [UI-07](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 18 行） | model-property | abstract-partial |
-| [UI-08](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 19 行） | model-property | abstract-partial |
-| [UI-09](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 20 行） | model-property | abstract-partial |
-| [UI-10](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 21 行） | model-property | abstract-partial |
-| [UI-11](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 22 行） | model-property | abstract-partial |
-| [UI-12](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 23 行） | model-property | abstract-partial |
-| [UI-13](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 24 行） | model-property | abstract-partial |
-| [UI-14](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 25 行） | model-property | abstract-partial |
-| [UI-15](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 26 行） | model-property | abstract-partial |
-| [UI-16](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 27 行） | model-property | abstract-partial |
-| [UI-17](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 28 行） | model-property | abstract-partial |
-| [UI-18](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 29 行） | runtime-required | not-formally-covered |
-| [UI-19](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 30 行） | model-property | abstract-partial |
-| [UI-20](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 31 行） | model-property | abstract-partial |
-| [UI-21](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 32 行） | runtime-required | not-formally-covered |
-| [UI-22](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 33 行） | model-property | abstract-partial |
-| [UI-23](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 34 行） | model-property | abstract-partial |
-| [UI-24](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 35 行） | model-property | abstract-partial |
-| [UI-25](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 60 行） | model-property | abstract-partial |
-| [UI-26](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 61 行） | model-property | abstract-partial |
-| [UI-27](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 62 行） | model-property | abstract-partial |
-| [UI-28](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 63 行） | model-property | abstract-partial |
-| [UI-29](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 64 行） | model-property | abstract-partial |
-| [UI-30](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 65 行） | model-property | abstract-partial |
-| [UI-31](../archive/architecture-2026-09-26/application-and-interaction/validation.md)（第 66 行） | model-property | abstract-partial |
-| [OI-01](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 49 行） | model-property | abstract-partial |
-| [OI-02](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 50 行） | model-property | abstract-partial |
-| [OI-03](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 51 行） | runtime-required | not-formally-covered |
-| [OI-04](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 52 行） | model-property | abstract-partial |
-| [OI-05](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 53 行） | runtime-required | not-formally-covered |
-| [OI-06](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 54 行） | model-property | abstract-partial |
-| [OI-07](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 55 行） | model-property | abstract-partial |
-| [OI-08](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 56 行） | model-property | abstract-partial |
-| [OI-09](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 57 行） | model-property | abstract-partial |
-| [OI-10](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 58 行） | model-property | abstract-partial |
-| [OI-11](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 59 行） | model-property | abstract-partial |
-| [OI-12](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 60 行） | model-property | abstract-partial |
-| [OI-13](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 61 行） | model-property | abstract-partial |
-| [OI-14](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 62 行） | model-property | abstract-partial |
-| [OI-15](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 63 行） | model-property | abstract-partial |
-| [OI-16](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 64 行） | model-property | abstract-partial |
-| [OI-17](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 65 行） | model-property | abstract-partial |
-| [OI-18](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 66 行） | model-property | abstract-partial |
-| [OI-19](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 67 行） | model-property | abstract-partial |
-| [OI-20](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 68 行） | model-property | abstract-partial |
-| [OI-20a](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 69 行） | model-property | abstract-partial |
-| [OI-21](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 70 行） | model-property | abstract-partial |
-| [OI-22](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 71 行） | model-property | abstract-partial |
-| [OI-23](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 72 行） | model-property | abstract-partial |
-| [OI-24](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 73 行） | model-property | abstract-partial |
-| [OI-P1](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 89 行） | model-property | abstract-partial |
-| [OI-P2](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 90 行） | model-property | abstract-partial |
-| [MS-P3](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 91 行） | model-property | abstract-partial |
-| [OI-P3](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 92 行） | static-only | policy-exclusion-only |
-| [OI-25](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 98 行） | model-property | abstract-partial |
-| [OI-26](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 99 行） | model-property | abstract-partial |
-| [OI-27](../archive/architecture-2026-09-26/observation-and-improvement/validation.md)（第 100 行） | model-property | abstract-partial |
+| ER-01（第 71 行） | model-property | abstract-partial |
+| ER-02（第 72 行） | model-property | abstract-partial |
+| ER-03（第 73 行） | runtime-required | not-formally-covered |
+| ER-04（第 74 行） | runtime-required | not-formally-covered |
+| ER-05（第 75 行） | model-property | abstract-partial |
+| ER-06（第 76 行） | model-property | abstract-partial |
+| ER-07（第 77 行） | model-property | abstract-partial |
+| ER-08（第 78 行） | model-property | abstract-partial |
+| ER-09（第 79 行） | model-property | abstract-partial |
+| ER-10（第 80 行） | model-property | abstract-partial |
+| ER-11（第 81 行） | model-property | abstract-partial |
+| ER-12（第 82 行） | model-property | abstract-partial |
+| ER-13（第 83 行） | model-property | abstract-partial |
+| ER-14（第 84 行） | model-property | abstract-partial |
+| ER-15（第 85 行） | model-property | abstract-partial |
+| ER-16（第 86 行） | model-property | abstract-partial |
+| ER-17（第 87 行） | model-property | abstract-partial |
+| ER-18（第 88 行） | model-property | abstract-partial |
+| ER-19（第 89 行） | model-property | abstract-partial |
+| ER-20（第 90 行） | model-property | abstract-partial |
+| ER-21（第 91 行） | model-property | abstract-partial |
+| ER-22（第 92 行） | model-property | abstract-partial |
+| ER-23（第 93 行） | model-property | abstract-partial |
+| ER-24（第 94 行） | model-property | abstract-partial |
+| ER-25（第 95 行） | model-property | abstract-partial |
+| ER-26（第 96 行） | runtime-required | not-formally-covered |
+| ER-27（第 97 行） | model-property | abstract-partial |
+| ER-28（第 98 行） | model-property | abstract-partial |
+| ER-29（第 99 行） | model-property | abstract-partial |
+| ER-P1（第 110 行） | model-property | abstract-partial |
+| ER-P2（第 111 行） | model-property | abstract-partial |
+| ER-P3（第 112 行） | static-only | policy-exclusion-only |
+| ER-30（第 118 行） | model-property | abstract-partial |
+| ER-31（第 119 行） | model-property | abstract-partial |
+| ER-32（第 120 行） | model-property | abstract-partial |
+| ER-33（第 121 行） | model-property | abstract-partial |
+| UI-01（第 12 行） | model-property | abstract-partial |
+| UI-02（第 13 行） | model-property | abstract-partial |
+| UI-03（第 14 行） | model-property | abstract-partial |
+| UI-04（第 15 行） | model-property | abstract-partial |
+| UI-05（第 16 行） | model-property | abstract-partial |
+| UI-06（第 17 行） | model-property | abstract-partial |
+| UI-07（第 18 行） | model-property | abstract-partial |
+| UI-08（第 19 行） | model-property | abstract-partial |
+| UI-09（第 20 行） | model-property | abstract-partial |
+| UI-10（第 21 行） | model-property | abstract-partial |
+| UI-11（第 22 行） | model-property | abstract-partial |
+| UI-12（第 23 行） | model-property | abstract-partial |
+| UI-13（第 24 行） | model-property | abstract-partial |
+| UI-14（第 25 行） | model-property | abstract-partial |
+| UI-15（第 26 行） | model-property | abstract-partial |
+| UI-16（第 27 行） | model-property | abstract-partial |
+| UI-17（第 28 行） | model-property | abstract-partial |
+| UI-18（第 29 行） | runtime-required | not-formally-covered |
+| UI-19（第 30 行） | model-property | abstract-partial |
+| UI-20（第 31 行） | model-property | abstract-partial |
+| UI-21（第 32 行） | runtime-required | not-formally-covered |
+| UI-22（第 33 行） | model-property | abstract-partial |
+| UI-23（第 34 行） | model-property | abstract-partial |
+| UI-24（第 35 行） | model-property | abstract-partial |
+| UI-25（第 60 行） | model-property | abstract-partial |
+| UI-26（第 61 行） | model-property | abstract-partial |
+| UI-27（第 62 行） | model-property | abstract-partial |
+| UI-28（第 63 行） | model-property | abstract-partial |
+| UI-29（第 64 行） | model-property | abstract-partial |
+| UI-30（第 65 行） | model-property | abstract-partial |
+| UI-31（第 66 行） | model-property | abstract-partial |
+| OI-01（第 49 行） | model-property | abstract-partial |
+| OI-02（第 50 行） | model-property | abstract-partial |
+| OI-03（第 51 行） | runtime-required | not-formally-covered |
+| OI-04（第 52 行） | model-property | abstract-partial |
+| OI-05（第 53 行） | runtime-required | not-formally-covered |
+| OI-06（第 54 行） | model-property | abstract-partial |
+| OI-07（第 55 行） | model-property | abstract-partial |
+| OI-08（第 56 行） | model-property | abstract-partial |
+| OI-09（第 57 行） | model-property | abstract-partial |
+| OI-10（第 58 行） | model-property | abstract-partial |
+| OI-11（第 59 行） | model-property | abstract-partial |
+| OI-12（第 60 行） | model-property | abstract-partial |
+| OI-13（第 61 行） | model-property | abstract-partial |
+| OI-14（第 62 行） | model-property | abstract-partial |
+| OI-15（第 63 行） | model-property | abstract-partial |
+| OI-16（第 64 行） | model-property | abstract-partial |
+| OI-17（第 65 行） | model-property | abstract-partial |
+| OI-18（第 66 行） | model-property | abstract-partial |
+| OI-19（第 67 行） | model-property | abstract-partial |
+| OI-20（第 68 行） | model-property | abstract-partial |
+| OI-20a（第 69 行） | model-property | abstract-partial |
+| OI-21（第 70 行） | model-property | abstract-partial |
+| OI-22（第 71 行） | model-property | abstract-partial |
+| OI-23（第 72 行） | model-property | abstract-partial |
+| OI-24（第 73 行） | model-property | abstract-partial |
+| OI-P1（第 89 行） | model-property | abstract-partial |
+| OI-P2（第 90 行） | model-property | abstract-partial |
+| MS-P3（第 91 行） | model-property | abstract-partial |
+| OI-P3（第 92 行） | static-only | policy-exclusion-only |
+| OI-25（第 98 行） | model-property | abstract-partial |
+| OI-26（第 99 行） | model-property | abstract-partial |
+| OI-27（第 100 行） | model-property | abstract-partial |
 
 ## trust：机制
 
-[组内结果与模型边界](../archive/formal-2026-09-26/mechanisms/trust/README.md)
+组内结果与模型边界
 
 | ID | 机制 | 库存覆盖声明 |
 | --- | --- | --- |
@@ -397,69 +399,69 @@
 
 | 用例与原文 | 证据分类 | 抽象范围／剩余边界 |
 | --- | --- | --- |
-| [IA-01](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 30 行） | model-property | 不同身份类别不能获新消费/披露 |
-| [IA-02](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 31 行） | model-property | otherActor和otherProcessor与owner分离 |
-| [IA-03](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 32 行） | runtime-required | none |
-| [IA-04](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 33 行） | model-property | Evaluate不消费、BeginUse唯一绑定；完整确认绑定一次签发 |
-| [IA-05](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 34 行） | model-property | 不同用途和主体不能沿旧资格消费 |
-| [IA-06](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 35 行） | model-property | 集合范围只能收缩、撤销后旧缓存不能使用 |
-| [IA-07](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 36 行） | model-property | 两个原操作竞争once、相同操作重入不重分配 |
-| [IA-08](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 37 行） | model-property | 旧预检不替代当前判定、到期不再新消费 |
-| [IA-09](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 38 行） | runtime-required | none |
-| [IA-10](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 39 行） | model-property | 撤销与消费交错后新消费受限 |
-| [IA-11](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 40 行） | model-property | 撤权后接收历史事实、占用不退回 |
-| [IA-12](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 41 行） | model-property | 当前权限再次校验披露、旧缓存不能披露 |
-| [IA-13](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 42 行） | model-property | 保守区间全域在有效期内；缺时间锚/防回滚依据即不准使用 |
-| [IA-14](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 43 行） | model-property | 最短截止越过后不新增使用；时间/控制/预算等条件合取 |
-| [IA-15](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 44 行） | model-property | 完整页和覆盖区间、旧轮/owner增量拒绝 |
-| [IA-16](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 45 行） | runtime-required | none |
-| [IA-17](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 46 行） | runtime-required | none |
-| [IA-18](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 47 行） | model-property | 用途收缩、全部真实输入闭包不得遗漏 |
-| [IA-19](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 48 行） | runtime-required | none |
-| [IA-20](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 49 行） | model-property | 抽象已关闭原命令不能迟到提交 |
-| [IA-21](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 62 行） | model-property | 恢复白名单不能换正文/新行动/签发/确认/其他命令查询；绑定/host/子集/新鲜度必要 |
-| [IA-22](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 63 行） | model-property | 完整绑定不变、不同proof绑定拒绝、一次签发与已消费重入 |
-| [IA-23](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 64 行） | model-property | 切点连续覆盖与旧owner增量拒绝 |
-| [IA-24](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 65 行） | runtime-required | none |
-| [IA-25](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 66 行） | model-property | 逻辑关闭不能当物理完成 |
-| [IA-26](../archive/architecture-2026-09-26/identity-and-authorization/validation.md)（第 67 行） | runtime-required | none |
-| [MS-01](../archive/architecture-2026-09-26/memory-system/validation.md)（第 42 行） | model-property | 获准用途和记录修改的抽象规则 |
-| [MS-02](../archive/architecture-2026-09-26/memory-system/validation.md)（第 43 行） | runtime-required | none |
-| [MS-03](../archive/architecture-2026-09-26/memory-system/validation.md)（第 44 行） | model-property | 未批准用途不允许抽象使用/披露 |
-| [MS-04](../archive/architecture-2026-09-26/memory-system/validation.md)（第 45 行） | model-property | 实际private/public输入闭包不能由声称引用缩小 |
-| [MS-05](../archive/architecture-2026-09-26/memory-system/validation.md)（第 46 行） | model-property | 不同用户不得抽象使用/披露 |
-| [MS-06](../archive/architecture-2026-09-26/memory-system/validation.md)（第 47 行） | runtime-required | none |
-| [MS-07](../archive/architecture-2026-09-26/memory-system/validation.md)（第 48 行） | model-property | W..S逐步补扫、删除抑制旧候选、当前修订/许可复核；缺覆盖标partial |
-| [MS-08](../archive/architecture-2026-09-26/memory-system/validation.md)（第 49 行） | model-property | 两命令CAS竞争仅一条成功；原结果固定 |
-| [MS-09](../archive/architecture-2026-09-26/memory-system/validation.md)（第 50 行） | model-property | 抽象提交与结果状态共同变化 |
-| [MS-10](../archive/architecture-2026-09-26/memory-system/validation.md)（第 51 行） | model-property | 关闭早到阻止迟到提交，提交在先保持结果 |
-| [MS-11](../archive/architecture-2026-09-26/memory-system/validation.md)（第 52 行） | model-property | once固定占用、processor不同被拒 |
-| [MS-12](../archive/architecture-2026-09-26/memory-system/validation.md)（第 53 行） | model-property | 来源/版本变化后旧缓存拒绝新使用 |
-| [MS-13](../archive/architecture-2026-09-26/memory-system/validation.md)（第 54 行） | model-property | 真实依赖关闭即阻止新使用，与清理完成无关 |
-| [MS-14](../archive/architecture-2026-09-26/memory-system/validation.md)（第 55 行） | model-property | 墓碑阻止旧修改，旧视图不能代替当前版本 |
-| [MS-15](../archive/architecture-2026-09-26/memory-system/validation.md)（第 56 行） | model-property | 逻辑关闭与平台回执/物理完成分离 |
-| [MS-16](../archive/architecture-2026-09-26/memory-system/validation.md)（第 57 行） | model-property | 未完整页不可见，R..H连续覆盖后发布 |
-| [MS-17](../archive/architecture-2026-09-26/memory-system/validation.md)（第 58 行） | model-property | 空变化区间可覆盖、乱序不推进、旧owner增量拒绝 |
-| [MS-18](../archive/architecture-2026-09-26/memory-system/validation.md)（第 59 行） | model-property | 权限与数据版本独立变化时读取重核、清理另报 |
-| [MS-19](../archive/architecture-2026-09-26/memory-system/validation.md)（第 60 行） | model-property | 到期阻止新使用的离散抽象 |
-| [MS-20](../archive/architecture-2026-09-26/memory-system/validation.md)（第 61 行） | model-property | 派生不丢来源，未获准用途拒绝 |
-| [MS-21](../archive/architecture-2026-09-26/memory-system/validation.md)（第 62 行） | runtime-required | none |
-| [MS-22](../archive/architecture-2026-09-26/memory-system/validation.md)（第 63 行） | runtime-required | none |
-| [MS-23](../archive/architecture-2026-09-26/memory-system/validation.md)（第 64 行） | model-property | 四类消费者共同约束日志回收；先失效并登记重建责任，追平后恢复索引；索引内容水位同步推进 |
-| [MS-24](../archive/architecture-2026-09-26/memory-system/validation.md)（第 65 行） | model-property | 每个原命令结果固定且不会二次应用 |
-| [MS-25](../archive/architecture-2026-09-26/memory-system/validation.md)（第 66 行） | runtime-required | none |
-| [MS-26](../archive/architecture-2026-09-26/memory-system/validation.md)（第 67 行） | model-property | 实际读旧目标版本则自依赖拒绝，独立来源可保存 |
-| [MS-27](../archive/architecture-2026-09-26/memory-system/validation.md)（第 68 行） | model-property | 关闭不以旧正文可用为前提 |
-| [MS-28](../archive/architecture-2026-09-26/memory-system/validation.md)（第 87 行） | model-property | 连续页/轮次owner、完整闭包与CAS抽象 |
-| [MS-29](../archive/architecture-2026-09-26/memory-system/validation.md)（第 88 行） | model-property | 登记/关闭串行覆盖，未登记不能发布 |
-| [MS-30](../archive/architecture-2026-09-26/memory-system/validation.md)（第 89 行） | model-property | 无物理回执不报告清理完成 |
-| [MS-31](../archive/architecture-2026-09-26/memory-system/validation.md)（第 90 行） | model-property | 成功+optin+当前许可触发一次，使用独立预算 |
-| [MS-32](../archive/architecture-2026-09-26/memory-system/validation.md)（第 91 行） | model-property | 缓存候选遇关闭/撤权不新触发，原任务预算不变 |
-| [MS-33](../archive/architecture-2026-09-26/memory-system/validation.md)（第 92 行） | model-property | 自依赖/来源遗漏拒绝，清理不冒称已完成 |
+| IA-01（第 30 行） | model-property | 不同身份类别不能获新消费/披露 |
+| IA-02（第 31 行） | model-property | otherActor和otherProcessor与owner分离 |
+| IA-03（第 32 行） | runtime-required | none |
+| IA-04（第 33 行） | model-property | Evaluate不消费、BeginUse唯一绑定；完整确认绑定一次签发 |
+| IA-05（第 34 行） | model-property | 不同用途和主体不能沿旧资格消费 |
+| IA-06（第 35 行） | model-property | 集合范围只能收缩、撤销后旧缓存不能使用 |
+| IA-07（第 36 行） | model-property | 两个原操作竞争once、相同操作重入不重分配 |
+| IA-08（第 37 行） | model-property | 旧预检不替代当前判定、到期不再新消费 |
+| IA-09（第 38 行） | runtime-required | none |
+| IA-10（第 39 行） | model-property | 撤销与消费交错后新消费受限 |
+| IA-11（第 40 行） | model-property | 撤权后接收历史事实、占用不退回 |
+| IA-12（第 41 行） | model-property | 当前权限再次校验披露、旧缓存不能披露 |
+| IA-13（第 42 行） | model-property | 保守区间全域在有效期内；缺时间锚/防回滚依据即不准使用 |
+| IA-14（第 43 行） | model-property | 最短截止越过后不新增使用；时间/控制/预算等条件合取 |
+| IA-15（第 44 行） | model-property | 完整页和覆盖区间、旧轮/owner增量拒绝 |
+| IA-16（第 45 行） | runtime-required | none |
+| IA-17（第 46 行） | runtime-required | none |
+| IA-18（第 47 行） | model-property | 用途收缩、全部真实输入闭包不得遗漏 |
+| IA-19（第 48 行） | runtime-required | none |
+| IA-20（第 49 行） | model-property | 抽象已关闭原命令不能迟到提交 |
+| IA-21（第 62 行） | model-property | 恢复白名单不能换正文/新行动/签发/确认/其他命令查询；绑定/host/子集/新鲜度必要 |
+| IA-22（第 63 行） | model-property | 完整绑定不变、不同proof绑定拒绝、一次签发与已消费重入 |
+| IA-23（第 64 行） | model-property | 切点连续覆盖与旧owner增量拒绝 |
+| IA-24（第 65 行） | runtime-required | none |
+| IA-25（第 66 行） | model-property | 逻辑关闭不能当物理完成 |
+| IA-26（第 67 行） | runtime-required | none |
+| MS-01（第 42 行） | model-property | 获准用途和记录修改的抽象规则 |
+| MS-02（第 43 行） | runtime-required | none |
+| MS-03（第 44 行） | model-property | 未批准用途不允许抽象使用/披露 |
+| MS-04（第 45 行） | model-property | 实际private/public输入闭包不能由声称引用缩小 |
+| MS-05（第 46 行） | model-property | 不同用户不得抽象使用/披露 |
+| MS-06（第 47 行） | runtime-required | none |
+| MS-07（第 48 行） | model-property | W..S逐步补扫、删除抑制旧候选、当前修订/许可复核；缺覆盖标partial |
+| MS-08（第 49 行） | model-property | 两命令CAS竞争仅一条成功；原结果固定 |
+| MS-09（第 50 行） | model-property | 抽象提交与结果状态共同变化 |
+| MS-10（第 51 行） | model-property | 关闭早到阻止迟到提交，提交在先保持结果 |
+| MS-11（第 52 行） | model-property | once固定占用、processor不同被拒 |
+| MS-12（第 53 行） | model-property | 来源/版本变化后旧缓存拒绝新使用 |
+| MS-13（第 54 行） | model-property | 真实依赖关闭即阻止新使用，与清理完成无关 |
+| MS-14（第 55 行） | model-property | 墓碑阻止旧修改，旧视图不能代替当前版本 |
+| MS-15（第 56 行） | model-property | 逻辑关闭与平台回执/物理完成分离 |
+| MS-16（第 57 行） | model-property | 未完整页不可见，R..H连续覆盖后发布 |
+| MS-17（第 58 行） | model-property | 空变化区间可覆盖、乱序不推进、旧owner增量拒绝 |
+| MS-18（第 59 行） | model-property | 权限与数据版本独立变化时读取重核、清理另报 |
+| MS-19（第 60 行） | model-property | 到期阻止新使用的离散抽象 |
+| MS-20（第 61 行） | model-property | 派生不丢来源，未获准用途拒绝 |
+| MS-21（第 62 行） | runtime-required | none |
+| MS-22（第 63 行） | runtime-required | none |
+| MS-23（第 64 行） | model-property | 四类消费者共同约束日志回收；先失效并登记重建责任，追平后恢复索引；索引内容水位同步推进 |
+| MS-24（第 65 行） | model-property | 每个原命令结果固定且不会二次应用 |
+| MS-25（第 66 行） | runtime-required | none |
+| MS-26（第 67 行） | model-property | 实际读旧目标版本则自依赖拒绝，独立来源可保存 |
+| MS-27（第 68 行） | model-property | 关闭不以旧正文可用为前提 |
+| MS-28（第 87 行） | model-property | 连续页/轮次owner、完整闭包与CAS抽象 |
+| MS-29（第 88 行） | model-property | 登记/关闭串行覆盖，未登记不能发布 |
+| MS-30（第 89 行） | model-property | 无物理回执不报告清理完成 |
+| MS-31（第 90 行） | model-property | 成功+optin+当前许可触发一次，使用独立预算 |
+| MS-32（第 91 行） | model-property | 缓存候选遇关闭/撤权不新触发，原任务预算不变 |
+| MS-33（第 92 行） | model-property | 自依赖/来源遗漏拒绝，清理不冒称已完成 |
 
 ## 跨组通用规则复用
 
-以下映射补充原组未形式化的通用子规则，保留原库存与未建模边界，不增加检查次数。逐项性质、检查 ID 和假设见 [跨组映射](../archive/formal-2026-09-26/mechanisms/cross-group-mappings.json)。
+以下映射补充原组未形式化的通用子规则，保留原库存与未建模边界，不增加检查次数。逐项性质、检查 ID 和假设见 跨组映射。
 
 | 机制 | 可复用的局部规则 | 仍未覆盖 |
 | --- | --- | --- |

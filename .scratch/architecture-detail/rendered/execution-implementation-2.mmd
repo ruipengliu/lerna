@@ -1,9 +1,0 @@
-erDiagram
-    CapabilityVersion ||--o{ Operation : "固定行为"
-    BindingRevision ||--o{ Operation : "固定目标和驱动"
-    TaskGate ||--o{ Operation : "约束新启动"
-    Operation ||--o{ Attempt : "记录实际尝试"
-    Operation ||--o{ ExecutionJob : "保留处理责任"
-    ResourceState ||--o{ ResourceLease : "记录占用代次"
-    ResourceState ||--o{ Observation : "记录不可变观察"
-    Operation }o--o{ ResourceState : "按准确能力声明资源域"

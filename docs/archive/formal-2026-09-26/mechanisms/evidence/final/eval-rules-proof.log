@@ -1,8 +1,0 @@
-'EvaluationRules.pass_iff_all' depends on axioms: [propext, Quot.sound]
-'EvaluationRules.unknown_is_not_success' depends on axioms: [propext]
-'EvaluationRules.frozen_denominator' depends on axioms: [propext]
-'EvaluationRules.successes_bounded' depends on axioms: [propext, Quot.sound]
-'EvaluationRules.reachable_inv' depends on axioms: [propext, Quot.sound]
-'EvaluationRules.original_score_preserved' depends on axioms: [propext]
-'EvaluationRules.closing_monotone' depends on axioms: [propext]
-'EvaluationRules.old_report_survives_late_cost' depends on axioms: [propext]

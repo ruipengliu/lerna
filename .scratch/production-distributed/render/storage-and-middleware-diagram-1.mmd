@@ -1,9 +1,0 @@
-flowchart TB
-    H[稳定 Home 与领域 owner] -->|固定放置映射| P[数据库分区]
-    A[多个 Go 应用与工作进程] -->|短事务| W[(PostgreSQL 当前写主)]
-    P --> W
-    W --- B[业务记录 / commands / jobs / 关闭索引]
-    W -->|准确对象版本引用| O[(跨可用区对象存储)]
-    I[稳定 tenant / identity 归属] -->|当前身份核验| D[(所属身份权威分区)]
-    A --> I
-    A -.重建候选.-> X[词法索引与进程缓存]

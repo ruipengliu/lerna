@@ -1,8 +1,0 @@
-stateDiagram-v2
-    [*] --> active: 接纳及首次工作共同提交
-    active --> succeeded: 全部完成条件通过
-    active --> failed: 到期或不可恢复失败
-    active --> cancelled: 用户取消提交
-    succeeded --> [*]
-    failed --> [*]
-    cancelled --> [*]

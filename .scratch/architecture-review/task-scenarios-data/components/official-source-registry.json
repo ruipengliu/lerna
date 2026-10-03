@@ -1,1 +1,0 @@
-{"description":"受信来源登记的合成前提；不是互联网官方身份调查结果。","fixture_only":true,"name":"official-source-registry","products":[{"host":"atlas.example","product":"Atlas","version":"1.0"},{"host":"boreal.example","product":"Boreal","version":"1.0"}],"version":"1.0.0"}

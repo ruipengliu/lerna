@@ -1,6 +1,0 @@
-flowchart LR
-    U[持久 upload / ticket 与空间预留] --> B[写共享对象并核验摘要]
-    B --> R[保存 ready 与准确对象版本]
-    R --> C[事务发布 ContentRef / Memory 引用]
-    C --> G[关闭门禁后清理与逐副本核对]
-    B -.未引用或未完成.-> G

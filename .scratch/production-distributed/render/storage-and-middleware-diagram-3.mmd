@@ -1,5 +1,0 @@
-flowchart LR
-    A[有界应用池] --> P[托管事务连接池]
-    P --> D[(PostgreSQL 写主)]
-    L[每进程少量 LISTEN 连接] -->|绕开事务池| D
-    M[管理与恢复保留连接] --> D

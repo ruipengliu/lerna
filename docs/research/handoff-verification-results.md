@@ -1,8 +1,10 @@
 # 持久责任交接：TLC 检查与 Lean 证明结果
 
+> 本文引用的历史归档已从当前分支移除，可通过 Git 历史查看；文中结论仍对应当时的方案与验证范围。
+
 > 归档说明（2026-09-26）：本文讨论与验证的对象是当时的架构及形式化模型，引用已转向对应归档；本文结果不表示现行架构已经通过验证。
 
-验证日期：2026-09-25（Asia/Shanghai）。交付范围为两个持久提交域、一项固定身份与意图的交接。模型、配置、证明和运行记录见 [验证包](../archive/formal-2026-09-26/handoff/README.md)；方法选择背景见 [形式化方法研究](formal-methods-for-architecture.md)。
+验证日期：2026-09-25（Asia/Shanghai）。交付范围为两个持久提交域、一项固定身份与意图的交接。模型、配置、证明和运行记录见 验证包；方法选择背景见 [形式化方法研究](formal-methods-for-architecture.md)。
 
 后续已扩展到十个模块与内容来源专题，见 [全方案机制验证结果](all-mechanisms-verification-results.md)及[逐机制、逐用例覆盖索引](all-mechanisms-coverage.md)。本页保留两域交接样板的独立结论和原始证据。
 
@@ -33,11 +35,11 @@ sequenceDiagram
 
 | 现行契约 | 模型动作／状态 | 本次能够判断什么 |
 | --- | --- | --- |
-| [两处本地提交与确认顺序](../archive/architecture-2026-09-26/endpoint-communication/message-contract.md#handoff) | `SaveA`、`CommitB`、`ReadReceipt`、`SendAck`、`FinishA` | 每个实例内，卸责前接管事实与后续工作已经存在 |
-| [原身份去重、原决定恢复](../archive/architecture-2026-09-26/endpoint-communication/message-contract.md#handoff) | 一个固定操作；`DuplicateB` 消耗副本且不新建 Work | 该操作在 B 只创建一份后续工作 |
-| [本地事务及提交未知](../archive/architecture-2026-09-26/endpoint-communication/delivery-and-recovery.md)第 3 节 | `bAccepted/bWork` 是持久事实，`bKnown/ackSeen` 是易失知识 | 调用方未知与实际未提交有不同状态；崩溃只清除知识 |
-| [有限重试及迟到事实](../archive/architecture-2026-09-26/endpoint-communication/delivery-and-recovery.md#scheduling) | 持久预算、`DeclareGap`；缺口下仍允许接收确认 | 预算耗尽不释放责任；合法迟到确认仍可完成交接 |
-| [接纳与效果的区分](../archive/architecture-2026-09-26/endpoint-communication/message-contract.md#handoff) | `bWork` 表示后续责任，模型中没有执行动作 | 不能据此声称外部效果恰好一次 |
+| 两处本地提交与确认顺序 | `SaveA`、`CommitB`、`ReadReceipt`、`SendAck`、`FinishA` | 每个实例内，卸责前接管事实与后续工作已经存在 |
+| 原身份去重、原决定恢复 | 一个固定操作；`DuplicateB` 消耗副本且不新建 Work | 该操作在 B 只创建一份后续工作 |
+| 本地事务及提交未知第 3 节 | `bAccepted/bWork` 是持久事实，`bKnown/ackSeen` 是易失知识 | 调用方未知与实际未提交有不同状态；崩溃只清除知识 |
+| 有限重试及迟到事实 | 持久预算、`DeclareGap`；缺口下仍允许接收确认 | 预算耗尽不释放责任；合法迟到确认仍可完成交接 |
+| 接纳与效果的区分 | `bWork` 表示后续责任，模型中没有执行动作 | 不能据此声称外部效果恰好一次 |
 
 模型没有指定 Akka、消息中间件或部署拓扑。可提炼的核心机制是**独立持久状态机、由持久事实支持的确认、可恢复责任交接、按原身份去重、事实与知识分离，以及有界重试后保留缺口**。本次结果约束这些机制的组合，不决定它们应部署成几个进程。
 
@@ -79,14 +81,14 @@ B 已接纳的 Work 在本模型中持续保留，没有对其实际执行施加
 
 固定工具为官方 TLA+ 发布包 v1.7.4 中的 **TLC 2.19（2024-08-08，rev 5a47802）**；Java 为 OpenJDK 25.0.2。本次使用宽度优先完整探索，1 个 worker、seed 1、fp 0。没有随机模拟、状态截断条件、动作截断条件或对称约简。模型中的消息容量与发送预算是显式有限参数。
 
-所有配置允许静止状态，关闭一般死锁报警；需要推进的行为由下列活性性质单独约束。通过项日志均有完成标记且待探索队列为 0；状态指纹碰撞的工具估计也保存在日志中。TLC 的有限模型检查结果不等同于 Lean 内核证明。[运行清单及文件哈希](../archive/formal-2026-09-26/handoff/evidence/checked/manifest.json)
+所有配置允许静止状态，关闭一般死锁报警；需要推进的行为由下列活性性质单独约束。通过项日志均有完成标记且待探索队列为 0；状态指纹碰撞的工具估计也保存在日志中。TLC 的有限模型检查结果不等同于 Lean 内核证明。运行清单及文件哈希
 
 | 配置 | 请求／ACK 容量；A／B 预算 | 检查内容 | 实际结果 |
 | --- | --- | --- | --- |
-| [safety](../archive/formal-2026-09-26/handoff/safety.cfg) | 2／2；2／2 | 全部 `Safety` 不变量及 `PhaseMonotonic`，无公平性要求 | 通过；生成 17,941 状态，3,112 个不同状态，深度 18 |
-| [liveness](../archive/formal-2026-09-26/handoff/liveness.cfg) | 1／1；2／2 | `Safety`、稳定且额度足够时完成、最终完成或登记缺口 | 通过；生成 3,691 状态，868 个不同状态，深度 17 |
-| [healthy](../archive/formal-2026-09-26/handoff/healthy.cfg) | 1／1；1／1 | 初始即稳定，公平调度下最终完成，并检查 `Safety` | 通过；生成 48 状态，22 个不同状态，深度 9 |
-| [safety-recheck](../archive/formal-2026-09-26/handoff/evidence/checked/safety-recheck.log) | 2／2；2／2 | 错误变体检查后重新运行基准配置 | 通过；与 safety 的状态统计一致 |
+| safety | 2／2；2／2 | 全部 `Safety` 不变量及 `PhaseMonotonic`，无公平性要求 | 通过；生成 17,941 状态，3,112 个不同状态，深度 18 |
+| liveness | 1／1；2／2 | `Safety`、稳定且额度足够时完成、最终完成或登记缺口 | 通过；生成 3,691 状态，868 个不同状态，深度 17 |
+| healthy | 1／1；1／1 | 初始即稳定，公平调度下最终完成，并检查 `Safety` | 通过；生成 48 状态，22 个不同状态，深度 9 |
+| safety-recheck | 2／2；2／2 | 错误变体检查后重新运行基准配置 | 通过；与 safety 的状态统计一致 |
 
 `Safety` 包含以下性质；辅助约束的作用单独注明，避免把前提自身当作新的业务保证。
 
@@ -108,9 +110,9 @@ B 已接纳的 Work 在本模型中持续保留，没有对其实际执行施加
 
 | 配置 | 实际反例 | 应保留的规则／复检 |
 | --- | --- | --- |
-| [mutant-early-ack](../archive/formal-2026-09-26/handoff/evidence/checked/mutant-early-ack.log) | `SaveA → SendA → EarlyAckBug → SendAck → ReceiveAck → FinishA`；7 个状态即出现 A released、B 未接纳且无 Work；退出码 12 | B 只能从持久接纳记录取得确认依据；恢复 `Mutant="none"` 的基准后通过 |
-| [mutant-duplicate](../archive/formal-2026-09-26/handoff/evidence/checked/mutant-duplicate.log) | `SaveA → SendA → DuplicateReq → CommitB → DuplicateB`；6 个状态出现 `bCreates=2`；退出码 12 | 重复接纳恢复原决定，不再新建 Work；基准复检通过 |
-| [no-fairness](../archive/formal-2026-09-26/handoff/evidence/checked/no-fairness.log) | 即便环境初始稳定、预算为正，也存在开始后永久静止的时序反例；退出码 13 | 活性需要明确的调度前提，不能从安全不变量推出；加回 `LiveSpec` 的配置通过 |
+| mutant-early-ack | `SaveA → SendA → EarlyAckBug → SendAck → ReceiveAck → FinishA`；7 个状态即出现 A released、B 未接纳且无 Work；退出码 12 | B 只能从持久接纳记录取得确认依据；恢复 `Mutant="none"` 的基准后通过 |
+| mutant-duplicate | `SaveA → SendA → DuplicateReq → CommitB → DuplicateB`；6 个状态出现 `bCreates=2`；退出码 12 | 重复接纳恢复原决定，不再新建 Work；基准复检通过 |
+| no-fairness | 即便环境初始稳定、预算为正，也存在开始后永久静止的时序反例；退出码 13 | 活性需要明确的调度前提，不能从安全不变量推出；加回 `LiveSpec` 的配置通过 |
 
 提前确认变体有意不启用更早触发的 `AckProvenance`，让反例继续走到真正的提前卸责。基准配置仍启用完整 `Safety`。错误变体找到反例后停止，不能将它们的状态统计理解为完整探索。
 
@@ -118,15 +120,15 @@ B 已接纳的 Work 在本模型中持续保留，没有对其实际执行施加
 
 | 见证 | 方法与实际含义 |
 | --- | --- |
-| [witness-completion](../archive/formal-2026-09-26/handoff/evidence/checked/witness-completion.log) | 刻意断言“永不 released”，TLC 给出完成轨迹；说明模型允许成功 |
-| [witness-gap](../archive/formal-2026-09-26/handoff/evidence/checked/witness-gap.log) | 刻意断言“不存在尚未接纳的 gap”，TLC 给出最后额度用尽、请求仍在途的状态；说明缺口可达，不证明丢包已发生 |
-| [witness-live-premise](../archive/formal-2026-09-26/handoff/evidence/checked/witness-live-premise.log) | 刻意断言“没有稳定且双方预算为正的 pending”，TLC 给出反例；说明成功活性的前提可达 |
+| witness-completion | 刻意断言“永不 released”，TLC 给出完成轨迹；说明模型允许成功 |
+| witness-gap | 刻意断言“不存在尚未接纳的 gap”，TLC 给出最后额度用尽、请求仍在途的状态；说明缺口可达，不证明丢包已发生 |
+| witness-live-premise | 刻意断言“没有稳定且双方预算为正的 pending”，TLC 给出反例；说明成功活性的前提可达 |
 
 这三项退出码均为 12，是预期的可达性证据，不是基准安全失败。另有 Lean 检查的“B 接纳、ACK 丢失、B 崩溃恢复、A 重投、B 去重、最终完成”具体轨迹，覆盖上述短见证未展示的恢复组合。
 
 ## 4. Lean 证明结果
 
-证明源文件为 [Handoff.lean](../archive/formal-2026-09-26/handoff/lean/Handoff.lean)，固定 **Lean 4.19.0**，仅导入随工具链提供的 `Std`。`Reachable` 从初始状态与 `Step` 归纳定义，容量和初始预算取任意自然数；轨迹允许任意有限长度，没有 TLC 配置中的数值上限。`Step` 包含 21 种基准动作及不变动作，不包含两种错误变体。
+证明源文件为 Handoff.lean，固定 **Lean 4.19.0**，仅导入随工具链提供的 `Std`。`Reachable` 从初始状态与 `Step` 归纳定义，容量和初始预算取任意自然数；轨迹允许任意有限长度，没有 TLC 配置中的数值上限。`Step` 包含 21 种基准动作及不变动作，不包含两种错误变体。
 
 TLA+ 与 Lean 的字段及基准动作经过人工对照。Lean 分别证明安全不变量、容量／预算界限和生命周期一步保持；没有对两种语言做机器检查的语义等价或精化证明。
 
@@ -142,9 +144,9 @@ TLA+ 与 Lean 的字段及基准动作经过人工对照。Lean 分别证明安�
 | `restart_duplicate_witness`、`completion_after_restart_witness` | 具体的提交后崩溃、恢复去重及完成轨迹存在 |
 | `lost_ack_recovery_witness` | 确认丢失后仍可沿原责任和原记录恢复完成，最终只创建一份 Work |
 
-**实际编译退出码为 0，无错误或警告。** 最终统一复跑于 2026-09-25 00:21:56（Asia/Shanghai）完成，17 项 `#print axioms` 输出保存在 [lean.log](../archive/formal-2026-09-26/handoff/evidence/checked/lean.log)：安全、缺口及生命周期定理依赖 `propext`；容量／预算界限依赖 `propext` 与 `Quot.sound`；四项具体轨迹见证无公理依赖。这些是 Lean 标准逻辑公理，最终依赖没有 `sorryAx`，源码没有项目自定义公理、未完成证明占位或 `native_decide`。
+**实际编译退出码为 0，无错误或警告。** 最终统一复跑于 2026-09-25 00:21:56（Asia/Shanghai）完成，17 项 `#print axioms` 输出保存在 lean.log：安全、缺口及生命周期定理依赖 `propext`；容量／预算界限依赖 `propext` 与 `Quot.sound`；四项具体轨迹见证无公理依赖。这些是 Lean 标准逻辑公理，最终依赖没有 `sorryAx`，源码没有项目自定义公理、未完成证明占位或 `native_decide`。
 
-编写期间有一次 `CrashA` 分支的证明未完成，旧输出单独保留在 [失败证明记录](../archive/formal-2026-09-26/handoff/lean/lean.failed-proof.stdout.log)。补齐“遗忘一种确认知识后，剩余来源仍来自原持久接纳”的推导后，最终编译与统一复跑均通过；没有为通过检查增设假设或修改状态转移。该失败记录及 TLA+ 动作性质的语法修正记录属于模型／证明开发过程，不是架构缺陷证据。
+编写期间有一次 `CrashA` 分支的证明未完成，旧输出单独保留在 失败证明记录。补齐“遗忘一种确认知识后，剩余来源仍来自原持久接纳”的推导后，最终编译与统一复跑均通过；没有为通过检查增设假设或修改状态转移。该失败记录及 TLA+ 动作性质的语法修正记录属于模型／证明开发过程，不是架构缺陷证据。
 
 安全归纳不需要故障最终停止或调度公平性；允许无限执行的每个有限前缀同样受已证安全性质约束。存在一条恢复成功轨迹不能替代“所有公平执行最终成功”的命题，后者本次由 TLC 在所列有限配置与前提下检查，未提供 Lean 活性定理。
 
@@ -157,9 +159,9 @@ TLA+ 与 Lean 的字段及基准动作经过人工对照。Lean 分别证明安�
 | 文档与模型语义核对 | 对照现行契约、动作原子边界、事实／知识区分、异常恢复、成功含义；独立审查后补生命周期检查和 ACK 丢失恢复见证 |
 | TLC 实际运行 | 基准安全、条件活性、稳定环境完成、负面对照、非真空见证及基准复检；原始日志保留 |
 | Lean 实际运行 | 编译退出 0，17 项公理依赖审计完成；一般安全定理与四项具体见证通过 |
-| 文档静态检查与图示渲染 | 新增文档本地链接、证据源／日志哈希核对；Mermaid 时序图实际渲染并目视检查，结果另存 [静态检查记录](../archive/formal-2026-09-26/handoff/evidence/static-checks.json) |
+| 文档静态检查与图示渲染 | 新增文档本地链接、证据源／日志哈希核对；Mermaid 时序图实际渲染并目视检查，结果另存 静态检查记录 |
 | 生产运行验证 | 未执行数据库、消息通道或业务代码的故障注入；无实现精化证明 |
 
 未覆盖的后续范围包括多操作及多租户、完整发送端／中继／入站／业务的交接组合、owner 与 fencing、取消与迟到结果、授权变更、预算费用结算、窗口清理与备份恢复、外部副作用，以及多消息累计回执。这些需要各自的状态与假设，不能从本次单项交接证明自动推出。
 
-复跑入口、工具来源、首轮与最终版本索引见 [验证包说明](../archive/formal-2026-09-26/handoff/README.md)。本次没有改动架构中的职责和契约；“已证明”的范围以本页列出的命题、模型及环境条件为限。
+复跑入口、工具来源、首轮与最终版本索引见 验证包说明。本次没有改动架构中的职责和契约；“已证明”的范围以本页列出的命题、模型及环境条件为限。
