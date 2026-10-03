@@ -55,7 +55,7 @@ func remoteReportModelReply(t *testing.T, a *App, snapshot api.Snapshot, materia
 		}
 		if post <= 3 && !declared {
 			t.Error("original device capability/binding not declared in the real Snapshot")
-			return nil
+			return remoteReportKnownFailure("The original device capability and binding are unavailable.")
 		}
 		switch post {
 		case 2:
@@ -77,7 +77,7 @@ func remoteReportModelReply(t *testing.T, a *App, snapshot api.Snapshot, materia
 			}
 			if source.ContentID == "" {
 				t.Error("real model input lacks the original durable device write result")
-				return nil
+				return remoteReportKnownFailure("The original durable device write result is unavailable.")
 			}
 			generated.Draft = brain.Draft{Kind: "act", ReasonLocalID: "reason", Actions: []brain.DraftAction{{LocalKey: "verify_file", CapabilityRef: cap, BindingRef: binding, ArgumentsLocalID: "args"}}}
 			generated.Contents = append(generated.Contents, brain.GeneratedContent{LocalID: "args", MediaType: "application/json", Body: string(api.Raw(target.FileReadArguments{Path: goal.SavePath})), DisclosedSources: []api.ContentRef{source}})
@@ -91,15 +91,30 @@ func remoteReportModelReply(t *testing.T, a *App, snapshot api.Snapshot, materia
 			}
 			if source.ContentID == "" {
 				t.Error("real model input lacks the original independent device readback")
-				return nil
+				return remoteReportKnownFailure("The original independent device readback is unavailable.")
 			}
 			generated.Draft = brain.Draft{Kind: "complete", ReasonLocalID: "reason", ArtifactLocalIDs: []string{"artifact"}}
 			generated.Contents = append(generated.Contents, brain.GeneratedContent{LocalID: "artifact", MediaType: "text/markdown", Body: originalRemoteReport, DisclosedSources: []api.ContentRef{source}})
 		default:
 			t.Errorf("unexpected additional model physical request: %d", post)
-			return nil
+			return remoteReportKnownFailure("The original bounded report procedure has no further action.")
 		}
 	}
+	return remoteReportProviderReply(generated)
+}
+
+// 诊断失败也返回准确、可计费的供应商回复；首轮旧 nil 回复的未知责任仍保留，
+// 新 tracer 不以无效供应商正文遮住真实驱动/证据门禁的拒绝。
+func remoteReportKnownFailure(reason string) []byte {
+	return remoteReportProviderReply(brain.Generated{
+		Draft: brain.Draft{Kind: "fail", ReasonLocalID: "reason"},
+		Contents: []brain.GeneratedContent{{
+			LocalID: "reason", MediaType: "text/plain", Body: reason, DisclosedSources: []api.ContentRef{},
+		}},
+	})
+}
+
+func remoteReportProviderReply(generated brain.Generated) []byte {
 	return api.Raw(map[string]any{"id": "remote-report-original-reply", "choices": []any{map[string]any{"index": 0, "finish_reason": "stop", "message": map[string]any{"role": "assistant", "content": string(api.Raw(map[string]any{"draft": generated.Draft, "contents": generated.Contents}))}}}, "usage": map[string]any{"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120, "prompt_tokens_details": map[string]any{"cached_tokens": 40}}})
 }
 

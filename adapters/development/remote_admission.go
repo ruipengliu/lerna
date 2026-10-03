@@ -63,7 +63,15 @@ func (e executionBridge) prepareRemoteDispatch(ctx context.Context, s runtime.Sc
 	var bundle executor.AdmissionBundle
 	_, err = e.a.Store.Read(ctx, s, "platform.remote_bundles", i.OperationID, 0, &bundle)
 	if api.IsCode(err, "not_found") {
-		status, err := e.a.Store.Within(ctx, s, []string{"task", "content", "memory", "governance", "platform", executor.Namespace}, func(tx runtime.Tx) error {
+		filePermissions, err := e.a.remoteFilePermissions(ctx, s, i)
+		if err != nil {
+			return err
+		}
+		parts := []string{"task", "content", "memory", "governance", "platform", executor.Namespace}
+		if e.a.RemoteAgent != nil {
+			parts = append(parts, "collaboration")
+		}
+		status, err := e.a.Store.Within(ctx, s, parts, func(tx runtime.Tx) error {
 			original, err := e.a.Task.OperationIntentTx(ctx, tx, i.OperationID)
 			if err != nil {
 				return err
@@ -94,7 +102,7 @@ func (e executionBridge) prepareRemoteDispatch(ctx context.Context, s runtime.Sc
 			if allocation.AdmissionHash != i.IntentHash || allocation.RouteDigest != route.Digest {
 				return api.E("forbidden", "original_remote_allocation_mismatch")
 			}
-			contents, err := e.a.remoteInputPermissionsTx(ctx, tx, i, fixed, user)
+			contents, err := e.a.remoteInputPermissionsTx(ctx, tx, i, fixed, user, filePermissions)
 			if err != nil {
 				return err
 			}
@@ -185,28 +193,23 @@ func (a *App) freezeRemoteSubmitter(ctx context.Context, s runtime.Scope, i task
 	return err
 }
 
-func (a *App) remoteInputPermissionsTx(ctx context.Context, tx runtime.Tx, i task.OperationIntent, fixed encodedIntent, user runtime.Auth) ([]executor.ContentPermission, error) {
-	type requested struct {
-		ref     api.ContentRef
-		purpose string
-	}
-	queue := []requested{{fixed.Ref, "execution_intent"}, {i.ArgumentsRef, "execution_arguments"}}
+func (a *App) remoteInputPermissionsTx(ctx context.Context, tx runtime.Tx, i task.OperationIntent, fixed encodedIntent, user runtime.Auth, filePermissions []remoteSourcePermission) ([]executor.ContentPermission, error) {
+	queue := []remoteSourcePermission{{fixed.Ref, "execution_intent"}, {i.ArgumentsRef, "execution_arguments"}}
 	for _, ref := range uniqueSources(append(append([]api.ContentRef{}, i.ProcessedSourceRefs...), i.DisclosedSourceRefs...)) {
-		queue = append(queue, requested{ref, "execution_arguments"})
+		queue = append(queue, remoteSourcePermission{ref, "execution_arguments"})
 	}
+	queue = append(queue, filePermissions...)
 	result := []executor.ContentPermission{}
 	seen := map[api.ContentRef]int{}
 	var bytes uint64
 	for len(queue) > 0 {
 		next := queue[0]
 		queue = queue[1:]
-		if at, ok := seen[next.ref]; ok {
-			if !containsString(result[at].Purposes, next.purpose) {
-				result[at].Purposes = append(result[at].Purposes, next.purpose)
-			}
+		at, existing := seen[next.ref]
+		if existing && containsString(result[at].Purposes, next.purpose) {
 			continue
 		}
-		if len(result) >= 128 || len(queue) > 256 || next.ref.ByteLength > executor.MaxContentBytes || bytes+next.ref.ByteLength > 32<<20 {
+		if len(queue) > 256 || (!existing && (len(result) >= 128 || next.ref.ByteLength > executor.MaxContentBytes || bytes+next.ref.ByteLength > 32<<20)) {
 			return nil, api.E("overloaded", "remote_source_closure_limit")
 		}
 		service, err := a.Memory.SourcePolicySnapshotTx(ctx, tx, a.ServiceAuth, next.ref, next.purpose, "device")
@@ -235,11 +238,20 @@ func (a *App) remoteInputPermissionsTx(ctx context.Context, tx runtime.Tx, i tas
 			}
 		}
 		policy := service.Policy
+		if existing {
+			old := &result[at]
+			if old.SourcePolicy == nil || !api.Equal(*old.SourcePolicy, policy) || old.RetainUntil != service.RetainUntil || !api.Equal(old.SubjectRefs, subjects) || !api.Equal(old.ProcessedSources, v.ProcessedSources) || !api.Equal(old.DisclosedSources, v.DisclosedSources) {
+				return nil, api.E("revision_conflict", "original_source_policy_changed")
+			}
+			// 同一正文的新用途也先核全部来源/主体，不能因前一用途已出现就追加。
+			old.Purposes = append(old.Purposes, next.purpose)
+			continue
+		}
 		seen[next.ref] = len(result)
 		bytes += next.ref.ByteLength
 		result = append(result, executor.ContentPermission{ContentRef: next.ref, Purposes: []string{next.purpose}, ProcessedSources: v.ProcessedSources, DisclosedSources: v.DisclosedSources, RetainUntil: service.RetainUntil, SourcePolicy: &policy, SubjectRefs: subjects})
 		for _, ref := range uniqueSources(append(append([]api.ContentRef{}, v.ProcessedSources...), v.DisclosedSources...)) {
-			queue = append(queue, requested{ref, "execution_arguments"})
+			queue = append(queue, remoteSourcePermission{ref, "execution_arguments"})
 		}
 	}
 	sort.Slice(result, func(i, j int) bool {
@@ -302,7 +314,12 @@ func (e executionBridge) checkRemoteDispatch(ctx context.Context, s runtime.Scop
 		return ctx, err
 	}
 	var user runtime.Auth
-	metadata, err := e.a.Store.Within(ctx, s, []string{"task", "platform"}, func(tx runtime.Tx) error {
+	// Task 当前材料门禁也对空集合取得 Memory head；所有当前门禁所需参与者显式声明。
+	parts := []string{"task", "content", "memory", "governance", "platform"}
+	if e.a.RemoteAgent != nil {
+		parts = append(parts, "collaboration")
+	}
+	metadata, err := e.a.Store.Within(ctx, s, parts, func(tx runtime.Tx) error {
 		if err := e.a.Task.CheckTaskCurrentTx(ctx, tx, e.a.ServiceAuth, i.TaskRef.ObjectID, true); err != nil {
 			return err
 		}
@@ -350,7 +367,7 @@ func (e executionBridge) checkRemoteDispatch(ctx context.Context, s runtime.Scop
 			return ctx, err
 		}
 	}
-	status, err := e.a.Store.Within(ctx, s, []string{"task", "content", "memory", "governance", "platform"}, func(tx runtime.Tx) error {
+	status, err := e.a.Store.Within(ctx, s, parts, func(tx runtime.Tx) error {
 		original, err := e.a.Task.OperationIntentTx(ctx, tx, i.OperationID)
 		if err != nil {
 			return err
