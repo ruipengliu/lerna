@@ -48,6 +48,13 @@ type StartPermit struct {
 
 // AuthorityPort.Verify* 禁止网络 IO。云端只可读显式共库 namespace；
 // 设备在 Tx 内只验准确签名、原绑定、截止与本机已知撤权，不能裁决云端 Task。
+// ControlWindowSource 为已耐久 Prepared Attempt 取得独立的有限控制窗口。
+// 准备结束后才签窗；同一 Attempt 必须保存并查询/重传唯一原命令，丢回复不刷新。
+// 它不改原 Invoke、UseReceipt、业务参数或期限，也不执行目标动作。
+type ControlWindowSource interface {
+	PrepareControlWindow(context.Context, rt.Scope, StartRequest) (api.ControlSnapshot, error)
+}
+
 type AuthorityPort interface {
 	VerifyControl(context.Context, rt.Tx, rt.Auth, api.ControlSnapshot) error
 	PrepareStart(context.Context, rt.Scope, StartRequest) (PreparedStart, error)
