@@ -2,7 +2,7 @@
 
 本开发参考宿主可将固定公开 HTTP 源的 `information.search`／`information.body` 装配至真实 Task 行动。配置只登记当前候选；Task 仍以原 Grant 使用记录准入，Execution 在原启动栅栏与实际 HTTP 出口重新核验。免费源仍需明确的数据用途和保存许可。
 
-本切片已实现实际取得、当前许可缓存读取、明确披露拒绝和原账务恢复。显式参考问答已取得首个真实SQLite完整Task/条件/成功Result与错答拒绝证据；PostgreSQL、来源时效和撤回矩阵继续验证。默认 File RuleEngine 不生成信息源行动。供应商账户、通用自然语言质量、跨 owner 和独立 Executor 装配另行验证。
+本切片已实现实际取得、当前许可缓存读取、明确披露拒绝和原账务恢复。显式参考问答在真实 SQLite／PostgreSQL 的完整 Task 路径验证了独立条件、成功 Result、错答与陈旧来源拒绝、当前撤权阻断及原费用收尾。默认 File RuleEngine 不生成信息源行动。供应商账户、通用自然语言质量、跨 owner 和独立 Executor 装配另行验证。
 
 ## 配置与依赖
 
@@ -92,4 +92,8 @@ Context从该Task当前GoalRevision的原closed Operation/Attempt/journal读取�
 
 ## 验证边界
 
-[真实 App 行动测试](information_test.go) 使用独立 HTTP 源与模型、真实 SQLite／PostgreSQL、实际对象介质和公开 Task／Grant／Execution 方法；最小账务测试在原 1 GET 和 applied Fact 后、首次 billing 前公开撤回许可并取消 Task，核已知费用、最低证明用途拒绝、数据库重开和原身份无重发。[参考问答测试](information_evidence_test.go) 另核真实材料、独立质量条件、成功Result、错答不完成与重开；当前数据库/故障通过边界记录在工单15，未把新测试存在当作全部矩阵已通过。真实供应商质量与生产资格另行取证。
+[真实 App 行动测试](information_test.go) 使用独立 HTTP 源与模型、真实 SQLite／PostgreSQL、实际对象介质和公开 Task／Grant／Execution 方法；最小账务测试在原 1 GET 和 applied Fact 后、首次 billing 前公开撤回许可并取消 Task，核已知费用、最低证明用途拒绝、数据库重开和原身份无重发。
+
+[参考问答测试](information_evidence_test.go) 的四个公开用例均实际运行两种数据库，`go test -mod=readonly -race ./adapters/development -run '^TestInformationReference' -count=1 -timeout=30m -v` 通过 626.122 秒。成功路径只有原 1 GET／3 模型 POST，准确源字节进入普通模型材料，独立条件通过才出版 verified Result；原提交回执与数据库重开保持无新 HTTP。错答不产生 Result。两小时前观察的原事实即使刚下载，仍形成 stale 评估和失败条件。原 Source Grant 在真实取得后、答案模型发送前公开撤回时，只有原 1 GET／2 POST，无答案 Result，取消后原已知 USD 0.00048 结清。
+
+测试宿主沿既有三分钟期限等待真实责任收尾，原五分钟 Task、五秒控制窗口和许可截止不刷新。完整日志、实际退出码、测试源摘要与配置前提保存在执行环境 `action-information-reference-matrix`。该夹具是固定公开 HTTP JSON 字符串事实及合同模型；它不证明通用自然语言质量、供应商生产资格或所有跨 owner／WASI 路径。整体行动装配的剩余范围见工单15。
