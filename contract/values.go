@@ -14,6 +14,18 @@ type Amount = wire.Amount
 type Gap = wire.Gap
 type ReadScope = wire.ReadScope
 type CollectionView = wire.CollectionView
+type ErrorCode = wire.ErrorCode
+type PublicError = wire.PublicError
+type MethodName = wire.MethodName
+type ProfileName = wire.ProfileName
+type ContractVersion = wire.ContractVersion
+type TraceContext = wire.TraceContext
+type CommandPayload = wire.CommandPayload
+type CommandEnvelope = wire.CommandEnvelope
+type CommandRef = wire.CommandRef
+type CommandGetPayload = wire.CommandGetPayload
+type CommandGetRequest = wire.CommandGetRequest
+type CommandTarget = wire.CommandTarget
 type Value interface {
-	ID | Revision | Time | Kind | OwnerRef | ObjectRef | ContentRef | Amount | Gap | ReadScope | CollectionView
+	ID | Revision | Time | Kind | OwnerRef | ObjectRef | ContentRef | Amount | Gap | ReadScope | CollectionView | ErrorCode | PublicError | MethodName | ProfileName | ContractVersion | TraceContext | CommandPayload | CommandEnvelope | CommandRef | CommandGetPayload | CommandGetRequest | CommandTarget
 }

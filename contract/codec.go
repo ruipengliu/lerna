@@ -22,6 +22,10 @@ var utcPattern = regexp.MustCompile(`^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{
 
 // Validate rejects values that do not satisfy the named closed schema.
 func Validate(name string, value any) error {
+	if err := validateWireValue(reflect.ValueOf(value)); err != nil {
+		return err
+	}
+
 	compiled, ok := schemas.Load(name)
 	if !ok {
 		compiler := jsonschema.NewCompiler()
@@ -83,7 +87,7 @@ func Decode[T Value](data []byte) (T, error) {
 
 // Encode validates a public generated value before serializing it.
 func Encode[T Value](value T) ([]byte, error) {
-	if err := validUnicode(reflect.ValueOf(value)); err != nil {
+	if err := validateWireValue(reflect.ValueOf(value)); err != nil {
 		return nil, err
 	}
 	encoded, err := json.Marshal(value)
@@ -97,40 +101,63 @@ func Encode[T Value](value T) ([]byte, error) {
 }
 
 // Generated values contain only strings, booleans, arrays and finite structs.
-func validUnicode(value reflect.Value) error {
+func validateWireValue(value reflect.Value) error { return wireValue(value, 0, 0) }
+
+func wireValue(value reflect.Value, depth, steps int) error {
+	if steps > 4*MaxDepth {
+		return fmt.Errorf("cyclic or excessive JSON value indirection")
+	}
+
 	if !value.IsValid() {
 		return nil
 	}
+	if value.Type() == reflect.TypeFor[CommandPayload]() {
+		_, err := ParseJSON(value.Bytes())
+		return err
+	}
 	switch value.Kind() {
+	case reflect.Struct, reflect.Map, reflect.Array, reflect.Slice:
+		depth++
+		if depth > MaxDepth {
+			return fmt.Errorf("JSON nesting exceeds %d", MaxDepth)
+		}
+	}
+	switch value.Kind() {
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr, reflect.Float32, reflect.Float64, reflect.Complex64, reflect.Complex128:
+		return fmt.Errorf("JSON numeric values are forbidden by this contract")
+
 	case reflect.String:
 		if !utf8.ValidString(value.String()) {
 			return fmt.Errorf("invalid UTF-8 in value")
 		}
 	case reflect.Pointer, reflect.Interface:
 		if !value.IsNil() {
-			return validUnicode(value.Elem())
+			return wireValue(value.Elem(), depth, steps+1)
 		}
 	case reflect.Struct:
 		for i := 0; i < value.NumField(); i++ {
-			if err := validUnicode(value.Field(i)); err != nil {
+			if err := wireValue(value.Field(i), depth, steps+1); err != nil {
 				return err
 			}
 		}
 	case reflect.Slice, reflect.Array:
 		for i := 0; i < value.Len(); i++ {
-			if err := validUnicode(value.Index(i)); err != nil {
+			if err := wireValue(value.Index(i), depth, steps+1); err != nil {
 				return err
 			}
 		}
 	case reflect.Map:
 		for _, key := range value.MapKeys() {
-			if err := validUnicode(key); err != nil {
+			if err := wireValue(key, depth, steps+1); err != nil {
 				return err
 			}
-			if err := validUnicode(value.MapIndex(key)); err != nil {
+			if err := wireValue(value.MapIndex(key), depth, steps+1); err != nil {
 				return err
 			}
 		}
+	case reflect.Bool:
+	default:
+		return fmt.Errorf("value kind %s is not JSON", value.Kind())
 	}
 	return nil
 }

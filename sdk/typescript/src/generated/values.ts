@@ -42,6 +42,68 @@ export type CollectionView = {
   read_scope: ReadScope;
   watermark: Revision;
 };
+export type ErrorCode =
+  | 'schema_invalid'
+  | 'version_unsupported'
+  | 'forbidden'
+  | 'expired'
+  | 'idempotency_conflict'
+  | 'revision_changed'
+  | 'budget_exhausted'
+  | 'dependency_unavailable'
+  | 'unsupported';
+export type PublicError = {
+  code: ErrorCode;
+};
+export type MethodName = string;
+export type ProfileName = string;
+export type ContractVersion = string;
+export type TraceContext = {
+  trace_id: ID;
+};
+export type CommandPayload = Record<string, unknown>;
+export type CommandEnvelope = {
+  contract_version: ContractVersion;
+  profile: ProfileName;
+  command_id: ID;
+  target: ObjectRef;
+  method: MethodName;
+  payload: CommandPayload;
+  accept_before: Time;
+  expected_revision?: Revision;
+  trace_context?: TraceContext;
+};
+export type CommandRef = {
+  owner: OwnerRef;
+  command_id: ID;
+};
+export type CommandGetPayload = {
+  command_ref: CommandRef;
+};
+export type CommandGetRequest = {
+  contract_version: '1.0.0';
+  profile: 'command';
+  command_id: ID;
+  target: CommandTarget;
+  method: 'command.get';
+  payload: CommandGetPayload;
+  accept_before: Time;
+  trace_context?: TraceContext;
+};
+export type CommandTarget = {
+  tenant_id: ID;
+  owner_id: ID;
+  kind: 'command';
+  id: ID;
+};
+export const inputSchemas = [
+  {
+    version: '1.0.0',
+    profile: 'command',
+    method: 'command.get',
+    schema: 'CommandGetRequest',
+  },
+] as const;
 export interface Values {
   ID: ID;
   Revision: Revision;
@@ -54,6 +116,18 @@ export interface Values {
   Gap: Gap;
   ReadScope: ReadScope;
   CollectionView: CollectionView;
+  ErrorCode: ErrorCode;
+  PublicError: PublicError;
+  MethodName: MethodName;
+  ProfileName: ProfileName;
+  ContractVersion: ContractVersion;
+  TraceContext: TraceContext;
+  CommandPayload: CommandPayload;
+  CommandEnvelope: CommandEnvelope;
+  CommandRef: CommandRef;
+  CommandGetPayload: CommandGetPayload;
+  CommandGetRequest: CommandGetRequest;
+  CommandTarget: CommandTarget;
 }
 export const schema = {
   $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -281,6 +355,184 @@ export const schema = {
           },
         },
       ],
+    },
+    ErrorCode: {
+      type: 'string',
+      enum: [
+        'schema_invalid',
+        'version_unsupported',
+        'forbidden',
+        'expired',
+        'idempotency_conflict',
+        'revision_changed',
+        'budget_exhausted',
+        'dependency_unavailable',
+        'unsupported',
+      ],
+    },
+    PublicError: {
+      type: 'object',
+      properties: {
+        code: {
+          $ref: '#/$defs/ErrorCode',
+        },
+      },
+      required: ['code'],
+      additionalProperties: false,
+    },
+    MethodName: {
+      type: 'string',
+      pattern: '^[a-z][a-z0-9_]{0,31}\\.[a-z][a-z0-9_]{0,31}$',
+    },
+    ProfileName: {
+      type: 'string',
+      pattern: '^[a-z][a-z0-9_]{0,31}$',
+    },
+    ContractVersion: {
+      type: 'string',
+      pattern: '^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$',
+    },
+    TraceContext: {
+      type: 'object',
+      properties: {
+        trace_id: {
+          $ref: '#/$defs/ID',
+        },
+      },
+      required: ['trace_id'],
+      additionalProperties: false,
+    },
+    CommandPayload: {
+      type: 'object',
+      additionalProperties: true,
+      maxProperties: 1024,
+    },
+    CommandEnvelope: {
+      type: 'object',
+      properties: {
+        contract_version: {
+          $ref: '#/$defs/ContractVersion',
+        },
+        profile: {
+          $ref: '#/$defs/ProfileName',
+        },
+        command_id: {
+          $ref: '#/$defs/ID',
+        },
+        target: {
+          $ref: '#/$defs/ObjectRef',
+        },
+        method: {
+          $ref: '#/$defs/MethodName',
+        },
+        payload: {
+          $ref: '#/$defs/CommandPayload',
+        },
+        accept_before: {
+          $ref: '#/$defs/Time',
+        },
+        expected_revision: {
+          $ref: '#/$defs/Revision',
+        },
+        trace_context: {
+          $ref: '#/$defs/TraceContext',
+        },
+      },
+      required: [
+        'contract_version',
+        'profile',
+        'command_id',
+        'target',
+        'method',
+        'payload',
+        'accept_before',
+      ],
+      additionalProperties: false,
+    },
+    CommandRef: {
+      type: 'object',
+      properties: {
+        owner: {
+          $ref: '#/$defs/OwnerRef',
+        },
+        command_id: {
+          $ref: '#/$defs/ID',
+        },
+      },
+      required: ['owner', 'command_id'],
+      additionalProperties: false,
+    },
+    CommandGetPayload: {
+      type: 'object',
+      properties: {
+        command_ref: {
+          $ref: '#/$defs/CommandRef',
+        },
+      },
+      required: ['command_ref'],
+      additionalProperties: false,
+    },
+    CommandGetRequest: {
+      type: 'object',
+      properties: {
+        contract_version: {
+          type: 'string',
+          const: '1.0.0',
+        },
+        profile: {
+          type: 'string',
+          const: 'command',
+        },
+        command_id: {
+          $ref: '#/$defs/ID',
+        },
+        target: {
+          $ref: '#/$defs/CommandTarget',
+        },
+        method: {
+          type: 'string',
+          const: 'command.get',
+        },
+        payload: {
+          $ref: '#/$defs/CommandGetPayload',
+        },
+        accept_before: {
+          $ref: '#/$defs/Time',
+        },
+        trace_context: {
+          $ref: '#/$defs/TraceContext',
+        },
+      },
+      required: [
+        'contract_version',
+        'profile',
+        'command_id',
+        'target',
+        'method',
+        'payload',
+        'accept_before',
+      ],
+      additionalProperties: false,
+    },
+    CommandTarget: {
+      type: 'object',
+      properties: {
+        tenant_id: {
+          $ref: '#/$defs/ID',
+        },
+        owner_id: {
+          $ref: '#/$defs/ID',
+        },
+        kind: {
+          type: 'string',
+          const: 'command',
+        },
+        id: {
+          $ref: '#/$defs/ID',
+        },
+      },
+      required: ['tenant_id', 'owner_id', 'kind', 'id'],
+      additionalProperties: false,
     },
   },
 } as const;

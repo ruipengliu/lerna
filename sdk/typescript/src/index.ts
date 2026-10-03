@@ -1,4 +1,4 @@
-import { parseJSON } from './json.ts';
+import { parseJSON, maxDepth } from './json.ts';
 export { parseJSON, maxBodyBytes, maxDepth } from './json.ts';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import { schema, type Values } from './generated/values.ts';
@@ -54,10 +54,43 @@ ajv.addFormat('utc-microseconds', {
 });
 ajv.addSchema(schema);
 
+// Validate original JSON values before serialization can omit or coerce them.
+function isWireValue(value: unknown, depth = 0): boolean {
+  if (value === null || typeof value === 'boolean') return true;
+  if (typeof value === 'string') {
+    // A Unicode scalar cannot contain an unmatched UTF-16 surrogate.
+    for (let i = 0; i < value.length; i++) {
+      const code = value.charCodeAt(i);
+      if (code >= 0xd800 && code <= 0xdbff) {
+        const next = value.charCodeAt(++i);
+        if (!(next >= 0xdc00 && next <= 0xdfff)) return false;
+      } else if (code >= 0xdc00 && code <= 0xdfff) return false;
+    }
+    return true;
+  }
+  if (typeof value !== 'object' || depth >= maxDepth) return false;
+  if (Array.isArray(value))
+    return Array.from(value).every((item) => isWireValue(item, depth + 1));
+  const prototype: unknown = Object.getPrototypeOf(value);
+  if (prototype !== null && prototype !== Object.prototype) return false;
+  for (const key of Reflect.ownKeys(value)) {
+    if (typeof key !== 'string' || !isWireValue(key)) return false;
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    if (
+      !descriptor?.enumerable ||
+      !Object.hasOwn(descriptor, 'value') ||
+      !isWireValue(descriptor.value, depth + 1)
+    )
+      return false;
+  }
+  return true;
+}
+
 export function validate<K extends keyof Values>(
   name: K,
   value: unknown,
 ): value is Values[K] {
+  if (!isWireValue(value)) return false;
   const validator = ajv.getSchema(`${schema.$id}#/$defs/${name}`);
   if (!validator) throw new Error(`unsupported value type ${name}`);
   return validator(value) === true;
@@ -79,3 +112,4 @@ export function encode<K extends keyof Values>(
   decode(name, wire);
   return wire;
 }
+export { ContractError, parseCommand, decodeCommand } from './commands.ts';
