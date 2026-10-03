@@ -40,6 +40,9 @@ func (s *Service) registerJobs(r *runtime.Registry) error {
 		if kind == JobDispatchDecision {
 			h = s.prepareDecisionEntry(h)
 		}
+		if kind == JobSteer || kind == JobInput {
+			h = s.prepareInputEntry(kind, h)
+		}
 		if e := r.RegisterJob(kind, h); e != nil {
 			return e
 		}
