@@ -50,6 +50,13 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 			continue
 		}
 		seenHistory[source.SubmissionRef.ObjectID] = true
+		remoteCommand, err := c.a.isRemoteDelegationSubmission(ctx, scope, t, source)
+		if err != nil {
+			return task.PreparedDecision{}, err
+		}
+		if remoteCommand {
+			continue
+		}
 		history, err := c.a.Interaction.History(ctx, c.a.Store, scope, auth, *source.SubmissionRef)
 		if api.IsCode(err, "not_found") && source.SubmissionRef.ObjectID != requiredHistory {
 			continue // 非Session的原输入/修订依据由Task自己的源事实核验。

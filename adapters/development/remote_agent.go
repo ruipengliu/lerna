@@ -68,7 +68,7 @@ func validateRemoteAgent(c Config) error {
 	seen := map[string]bool{}
 	for _, peer := range p.Peers {
 		u, err := url.Parse(peer.Endpoint)
-		if peer.TenantID != c.TenantID || !api.ValidID(peer.OwnerID) || peer.OwnerID == c.OwnerID || !api.ValidID(peer.DatabaseID) || seen[peer.OwnerID] || err != nil || u.Scheme != "https" || u.Hostname() == "" || u.User != nil || u.RawQuery != "" || u.Fragment != "" || u.Path != "" && u.Path != "/" || !filepath.IsAbs(peer.CAFile) || !filepath.IsAbs(peer.SigningPublicKeyFile) || peer.SigningKeyID == "" || len(peer.SigningKeyID) > 128 || !remoteEnvRef.MatchString(peer.OutboundTokenEnvRef) || !remoteEnvRef.MatchString(peer.InboundTokenEnvRef) || !remoteKeyDigest.MatchString(peer.SigningPublicKeyDigest) || api.ValidateRecord("ObjectRef", peer.InboundSubjectRef) != nil || peer.InboundSubjectRef.OwnerID != c.OwnerID || peer.InboundSubjectRef.TenantID != c.TenantID || peer.InboundSubjectRef.ObjectID == c.SubjectID || peer.InboundSubjectRef.ObjectID == c.OwnerID {
+		if peer.TenantID != c.TenantID || !api.ValidID(peer.OwnerID) || peer.OwnerID == c.OwnerID || !api.ValidID(peer.DatabaseID) || seen[peer.OwnerID] || err != nil || u.Scheme != "https" || u.Hostname() == "" || u.User != nil || u.RawQuery != "" || u.Fragment != "" || u.Path != "" && u.Path != "/" || !filepath.IsAbs(peer.CAFile) || !filepath.IsAbs(peer.SigningPublicKeyFile) || peer.SigningKeyID == "" || len(peer.SigningKeyID) > 128 || !remoteEnvRef.MatchString(peer.OutboundTokenEnvRef) || !remoteEnvRef.MatchString(peer.InboundTokenEnvRef) || !remoteKeyDigest.MatchString(peer.SigningPublicKeyDigest) || api.ValidateRecord("ObjectRef", peer.InboundSubjectRef) != nil || peer.InboundSubjectRef.OwnerID != c.OwnerID || peer.InboundSubjectRef.TenantID != c.TenantID || peer.InboundSubjectRef.ObjectID != peer.OwnerID || peer.InboundSubjectRef.ObjectID == c.SubjectID {
 			return api.E("forbidden", "explicit_remote_agent_pair_required")
 		}
 		seen[peer.OwnerID] = true
@@ -111,6 +111,7 @@ func remoteAgentPrincipals(c Config) ([]platform.Principal, error) {
 		return nil, nil
 	}
 	principals := []platform.Principal{}
+	seen := map[string]bool{}
 	for _, peer := range c.RemoteAgent.Peers {
 		token := strings.TrimSpace(os.Getenv(peer.InboundTokenEnvRef))
 		if token == "" || len(token) > 4096 {
@@ -118,10 +119,10 @@ func remoteAgentPrincipals(c Config) ([]platform.Principal, error) {
 		}
 		auth := runtime.Auth{TenantID: c.TenantID, SubjectID: peer.InboundSubjectRef.ObjectID, CredentialGeneration: peer.InboundSubjectRef.Revision, Roles: []string{"paired_agent"}}
 		principals = append(principals, platform.Principal{Auth: auth, TokenHash: api.Hash([]byte(token))})
+		seen[auth.SubjectID] = true
 	}
 	// 外来处理主体只取得本方数据政策中的身份，不创建其可登录凭据或角色。
 	// 消费方自己的当前凭据仍在held_copy门禁另核；此处不是跨域登录系统。
-	seen := map[string]bool{}
 	for _, ref := range c.RemoteAgent.SourceSubjectRefs {
 		if ref.ObjectID == c.SubjectID || seen[ref.ObjectID] {
 			continue
@@ -214,7 +215,7 @@ func (a *App) configureRemoteAgent(local *collaboration.Adapter) (*collaboration
 		ports[scope.OwnerID] = &providers.ForeignSourceClient{SDK: client, Keys: keys, SourceScope: scope, ConsumerScope: a.Scope}
 		assembly.peers[scope.OwnerID] = cfg
 	}
-	remote, err := collaboration.NewRemote(collaboration.RemoteConfig{Store: a.Store, Scope: a.Scope, Registry: a.Registry, Memory: a.Memory, ProofPolicy: a.ContentPolicy, Keys: a.Keys, SigningKeyID: "development-es256", Auth: a.ServiceAuth, Authority: remoteAgentAuthority{a}, Profiles: a.Config.RemoteAgent.Profiles, Peers: peers, Participants: []string{"platform", "governance"}, Local: local})
+	remote, err := collaboration.NewRemote(collaboration.RemoteConfig{Store: a.Store, Scope: a.Scope, Registry: a.Registry, Memory: a.Memory, ProofPolicy: a.ContentPolicy, Keys: a.Keys, SigningKeyID: "development-es256", Auth: a.ServiceAuth, Authority: remoteAgentAuthority{a}, Profiles: a.Config.RemoteAgent.Profiles, Peers: peers, Participants: []string{"platform", "governance"}, Local: local, MaterialPrincipal: &a.ServiceAuth})
 	if err != nil {
 		return nil, err
 	}
@@ -346,6 +347,9 @@ func (r *remoteSourceRoutes) VerifyTx(ctx context.Context, tx runtime.Tx, a runt
 
 // CurrentTaskGate 不读网络，nil配置也不能把既有外来Incoming当成本机任务。
 func (g taskGate) CheckTaskCurrentTx(ctx context.Context, tx runtime.Tx, actual api.Task, requireRunning bool) error {
+	if err, ok := ctx.Value(remoteAgentContextErrorKey{}).(error); ok {
+		return err
+	}
 	if g.a.RemoteAgent != nil {
 		return g.a.RemoteAgent.CheckTaskCurrentTx(ctx, tx, actual, requireRunning)
 	}
@@ -360,3 +364,35 @@ func (g taskGate) CheckTaskCurrentTx(ctx context.Context, tx runtime.Tx, actual 
 }
 
 var _ task.CurrentTaskGate = taskGate{}
+
+func (a *App) isRemoteDelegationSubmission(ctx context.Context, scope runtime.Scope, actual api.Task, source api.SourceEvidence) (bool, error) {
+	if a.RemoteAgent == nil {
+		return false, nil
+	}
+	return a.RemoteAgent.IsDelegationSubmission(ctx, scope, actual, source)
+}
+
+type remoteTaskGate struct{ taskGate }
+
+func (g remoteTaskGate) PrepareTaskAdvance(ctx context.Context, scope runtime.Scope, auth runtime.Auth, actual api.Task) (context.Context, error) {
+	if scope != g.a.Scope || actual.OrchestratorID != scope.OwnerID {
+		return ctx, api.E("forbidden", "remote_advance_scope_mismatch")
+	}
+	var ref api.ObjectRef
+	var found bool
+	status, err := g.a.Store.Within(ctx, scope, []string{"task", "platform"}, func(tx runtime.Tx) error {
+		var err error
+		ref, found, err = g.a.Task.ReadIncomingSourceTx(ctx, tx, auth, actual.TaskID)
+		if err != nil {
+			return err
+		}
+		return currentCredentialTx(ctx, tx, auth)
+	})
+	if status == runtime.CommitUnknown {
+		return ctx, runtime.ErrCommitUnknown
+	}
+	if err != nil || !found || ref.OwnerID == scope.OwnerID {
+		return ctx, err
+	}
+	return g.a.RemoteAgent.PrepareChildContext(ctx, actual.TaskID)
+}

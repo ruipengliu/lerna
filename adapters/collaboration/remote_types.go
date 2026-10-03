@@ -74,11 +74,24 @@ func validateRemoteProfile(p RemoteAgentProfile) error {
 		}
 	}
 	for _, refs := range [][]api.ComponentRef{v.CapabilityRefs, v.ResourceRefs} {
+		seen := map[string]bool{}
 		for _, ref := range refs {
-			if api.ValidateRecord("ComponentRef", ref) != nil {
+			key, _ := api.Digest(ref)
+			if api.ValidateRecord("ComponentRef", ref) != nil || seen[key] {
 				return api.E("invalid_request", "remote_component_invalid")
 			}
+			seen[key] = true
 		}
+	}
+	if len(v.Location) > 128 || len(v.MaterialPurposes) > 16 {
+		return api.E("invalid_request", "remote_material_purpose_limit")
+	}
+	purposes := map[string]bool{}
+	for _, purpose := range v.MaterialPurposes {
+		if purpose == "" || len(purpose) > 128 || purposes[purpose] {
+			return api.E("invalid_request", "remote_material_purpose_invalid")
+		}
+		purposes[purpose] = true
 	}
 	return api.ValidateAmounts(v.BudgetLimits)
 }
@@ -107,6 +120,9 @@ type RemoteConfig struct {
 	Peers        []RemotePeer
 	Participants []string
 	Local        task.CollaborationPort
+	// MaterialPrincipal仅由受信宿主显式选择；原SourcePolicy必须分别允许它。
+	// nil不为另一个主体自动取得材料；普通远端合同和原user holder保持不变。
+	MaterialPrincipal *runtime.Auth
 }
 type Remote struct {
 	cfg      RemoteConfig
@@ -120,6 +136,14 @@ type Remote struct {
 func NewRemote(c RemoteConfig) (*Remote, error) {
 	if c.Store == nil || c.Scope.DatabaseID != c.Store.ID() || !api.ValidID(c.Scope.OwnerID) || !api.ValidID(c.Scope.TenantID) || c.Registry == nil || c.Keys == nil || c.SigningKeyID == "" || c.Authority == nil || c.Auth.TenantID != c.Scope.TenantID || !api.ValidID(c.Auth.SubjectID) || c.Auth.CredentialGeneration == 0 || !c.Auth.HasRole("service") || len(c.Profiles) == 0 || len(c.Profiles) > 64 || len(c.Peers) > 16 {
 		return nil, api.E("unsupported", "remote_agent_authority_unconfigured")
+	}
+	if c.MaterialPrincipal != nil {
+		if !api.Equal(*c.MaterialPrincipal, c.Auth) {
+			return nil, api.E("forbidden", "remote_material_principal_unpaired")
+		}
+		frozen := *c.MaterialPrincipal
+		frozen.Roles = append([]string{}, frozen.Roles...)
+		c.MaterialPrincipal = &frozen
 	}
 	key, ok := c.Keys.Keys[c.SigningKeyID]
 	if !ok || key.Private == nil || key.Issuer != c.Scope.OwnerID || key.TenantID != c.Scope.TenantID {

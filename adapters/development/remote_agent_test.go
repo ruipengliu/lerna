@@ -55,7 +55,7 @@ func TestConfiguredRemoteAgentConstructsWithoutOutbound(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	cfg.RemoteAgent = &RemoteAgentConfig{Profiles: []collaboration.RemoteAgentProfile{profile}, Peers: []RemoteAgentPeerConfig{{TenantID: cfg.TenantID, OwnerID: peer.OwnerID, DatabaseID: peer.DatabaseID, Endpoint: server.URL, CAFile: ca, SigningKeyID: "development-es256", SigningPublicKeyFile: publicFile, SigningPublicKeyDigest: api.Hash(der), OutboundTokenEnvRef: "HARNESS_AGENT_TEST_OUTBOUND", InboundTokenEnvRef: "HARNESS_AGENT_TEST_INBOUND", InboundSubjectRef: runtime.Scope{TenantID: cfg.TenantID, OwnerID: cfg.OwnerID}.Ref(api.NewID("subject"), 1)}}}
+	cfg.RemoteAgent = &RemoteAgentConfig{Profiles: []collaboration.RemoteAgentProfile{profile}, Peers: []RemoteAgentPeerConfig{{TenantID: cfg.TenantID, OwnerID: peer.OwnerID, DatabaseID: peer.DatabaseID, Endpoint: server.URL, CAFile: ca, SigningKeyID: "development-es256", SigningPublicKeyFile: publicFile, SigningPublicKeyDigest: api.Hash(der), OutboundTokenEnvRef: "HARNESS_AGENT_TEST_OUTBOUND", InboundTokenEnvRef: "HARNESS_AGENT_TEST_INBOUND", InboundSubjectRef: runtime.Scope{TenantID: cfg.TenantID, OwnerID: cfg.OwnerID}.Ref(peer.OwnerID, 1)}}}
 	app, err := OpenApp(ctx, cfg, true)
 	if err != nil {
 		t.Fatal(err)

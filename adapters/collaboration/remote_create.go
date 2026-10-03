@@ -52,6 +52,24 @@ func (r *Remote) createOriginal(ctx context.Context, store runtime.Store, scope 
 		}
 		uses = append(uses, use)
 	}
+	if r.cfg.MaterialPrincipal != nil {
+		// 服务发布与原user读取是两个holder。每项仍先原意图落库，再让源
+		// 以准确新holder/用途独立裁决；不继承user证明或刷新原保存期限。
+		if len(p.ForeignReferences)*2+1 > 100 {
+			return api.E("overloaded", "remote_material_holder_limit")
+		}
+		for _, original := range p.ForeignReferences {
+			if err = store.CheckClaim(ctx, scope, work.Claim); err != nil {
+				return err
+			}
+			ref := remoteMaterialReference(original, *r.cfg.MaterialPrincipal, scope)
+			use, err := r.cfg.Memory.PrepareForeignUse(ctx, scope, *r.cfg.MaterialPrincipal, ref)
+			if err != nil {
+				return err
+			}
+			uses = append(uses, use)
+		}
+	}
 	// 证明本身保留原 source owner；准确签封字节也由源端原副本合同读取。
 	proofReference := remoteForeignReference(p, parent.ProofRef, "task.goal", profile.Values.Location, p.Input.Deadline)
 	use, err := r.cfg.Memory.PrepareForeignUse(ctx, scope, actor, proofReference)
@@ -171,4 +189,16 @@ func (r *Remote) createOriginal(ctx context.Context, store runtime.Store, scope 
 			return runtime.Decide(prepared, tx, p.CreateCommandID, RemoteCreateOutput{p.CreationKey, "applied", &out.TaskRef}, nil)
 		})
 	})
+}
+
+func remoteMaterialReference(original memory.ForeignReference, actor runtime.Auth, scope runtime.Scope) memory.ForeignReference {
+	holder := actor.Ref(scope.OwnerID)
+	digest, _ := api.Digest(holder)
+	ref := original
+	ref.CopyID = remoteID("copy", original.CopyID, digest)
+	ref.RegisterCommandID = remoteID("command", ref.CopyID, "register")
+	ref.ReleaseCommandID = remoteID("command", ref.CopyID, "release")
+	ref.ReferenceIntentRef = scope.Ref(remoteID("intent", ref.CopyID), 1)
+	ref.HolderRef = holder
+	return ref
 }

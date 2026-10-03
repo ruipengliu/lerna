@@ -66,7 +66,18 @@ func (r *Remote) planCreate(ctx context.Context, d task.Delegation, a task.Alloc
 		}
 		packet := RemoteCreateInput{CreationKey: d.CreationKey, CreateCommandID: remoteID("command", id, "create"), ChildTaskID: remoteID("task", id, "child"), ProfileRef: profile.ProfileRef, DelegationRef: r.cfg.Scope.Ref(d.DelegationID, 1), AllocationRef: d.AllocationRef, SourceDatabaseID: r.cfg.Scope.DatabaseID, SubjectRef: current.SubjectRef, Input: d.DelegateInput, AncestorTaskRefs: append([]api.ObjectRef{}, d.AncestorTaskRefs...), ForeignReferences: []memory.ForeignReference{}}
 		packet.OriginalCommandRef, packet.ParentSources = d.CommandRef, current.ParentSources
-		for _, ref := range append([]api.ContentRef{d.GoalRef}, d.InputRefs...) {
+		pending := append([]api.ContentRef{d.GoalRef}, d.InputRefs...)
+		seen := map[api.ContentRef]bool{}
+		for len(pending) > 0 {
+			ref := pending[0]
+			pending = pending[1:]
+			if seen[ref] {
+				continue
+			}
+			seen[ref] = true
+			if len(seen) > 100 || len(pending) > 100 {
+				return api.E("overloaded", "remote_material_source_limit")
+			}
 			if ref.OwnerID == d.ReceiverID {
 				continue
 			}
@@ -75,6 +86,8 @@ func (r *Remote) planCreate(ctx context.Context, d task.Delegation, a task.Alloc
 				if err != nil {
 					return err
 				}
+				pending = append(pending, v.ProcessedSources...)
+				pending = append(pending, v.DisclosedSources...)
 				retain, err := api.ParseTime(v.RetentionUntil)
 				if err != nil {
 					return err
@@ -87,6 +100,9 @@ func (r *Remote) planCreate(ctx context.Context, d task.Delegation, a task.Alloc
 					retain = deadline
 				}
 				packet.ForeignReferences = append(packet.ForeignReferences, remoteForeignReference(packet, ref, purpose, profile.Values.Location, api.Time(retain)))
+				if len(packet.ForeignReferences) > 100 || r.cfg.MaterialPrincipal != nil && len(packet.ForeignReferences)*2+1 > 100 {
+					return api.E("overloaded", "remote_material_holder_limit")
+				}
 			}
 		}
 		if _, err = r.validatePacket(packet); err != nil {

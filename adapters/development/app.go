@@ -362,7 +362,11 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if a.RemoteAgent != nil {
 		collaborationPort = a.RemoteAgent
 	}
-	a.Task, e = task.New(task.Config{Policies: []task.TaskPolicy{a.TaskPolicy}, Rules: rules, ControlWindow: 5 * time.Second, Participants: remoteParts([]string{"task", "content", "memory", "governance", "platform"}), AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: a.AnswerSchema, Schema: brain.GoalSchema()}}}, task.Ports{Content: taskContent{a}, Context: contextCompiler{a}, Gate: taskGate{a}, Evidence: evidenceBridge{a}, ControlProof: controlProof{a}, ClosureProof: closureProof{a}, ActionAuthorization: actionAuthorization{a}, Brain: brainBridge{a}, Execution: executionBridge{a}, Collaboration: collaborationPort})
+	var taskAuthority task.LocalGate = taskGate{a}
+	if a.RemoteAgent != nil {
+		taskAuthority = remoteTaskGate{taskGate{a}}
+	}
+	a.Task, e = task.New(task.Config{Policies: []task.TaskPolicy{a.TaskPolicy}, Rules: rules, ControlWindow: 5 * time.Second, Participants: remoteParts([]string{"task", "content", "memory", "governance", "platform"}), AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: a.AnswerSchema, Schema: brain.GoalSchema()}}}, task.Ports{Content: taskContent{a}, Context: contextCompiler{a}, Gate: taskAuthority, Evidence: evidenceBridge{a}, ControlProof: controlProof{a}, ClosureProof: closureProof{a}, ActionAuthorization: actionAuthorization{a}, Brain: brainBridge{a}, Execution: executionBridge{a}, Collaboration: collaborationPort})
 	if e != nil {
 		return nil, fmt.Errorf("construct Task: %w", e)
 	}
