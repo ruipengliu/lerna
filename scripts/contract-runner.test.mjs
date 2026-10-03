@@ -71,6 +71,7 @@ test('actual typed Go and TS runners retain exact values after a public refusal'
       for (const input of [
         '{"id":"x","schema":"Revision"}\n',
         '{"ID":"x","schema":"Revision","wire_base64":"IjEi"}\n',
+        '\ufeff{"id":"x","schema":"Revision","wire_base64":"IjEi"}\n',
         Buffer.concat([
           Buffer.from('{"id":"'),
           Buffer.from([255]),
@@ -115,6 +116,13 @@ const faults = [
   ],
   ['illegal frame', response(`process.stdout.write('not JSON\\n')`), /JSON/],
   [
+    'BOM stdout',
+    response(
+      `process.stdout.write('\\ufeff' + JSON.stringify({ id: request.id, ok: false, error: { code: 'schema_invalid' } }) + '\\n')`,
+    ),
+    /JSON/,
+  ],
+  [
     'wrong shape',
     response(
       `process.stdout.write(JSON.stringify({ id: request.id, ok: false, error: { code: 'schema_invalid' }, unexpected: true }) + '\\n')`,
@@ -151,13 +159,20 @@ for (const [name, code, expected] of faults) {
     const runner = startRunner(process.execPath, ['-e', code], {
       timeoutMs: name === 'timeout' ? 200 : 10000,
     });
-    await assert.rejects(
-      runner.run('Revision', Buffer.from('"1"'), name),
-      expected,
-    );
-    await assert.rejects(runner.close());
-    assert.throws(() => process.kill(runner.pid, 0), { code: 'ESRCH' });
-    await assert.rejects(runner.run('Revision', Buffer.from('"1"')), expected);
+    try {
+      await assert.rejects(
+        runner.run('Revision', Buffer.from('"1"'), name),
+        expected,
+      );
+      await assert.rejects(runner.close());
+      assert.throws(() => process.kill(runner.pid, 0), { code: 'ESRCH' });
+      await assert.rejects(
+        runner.run('Revision', Buffer.from('"1"')),
+        expected,
+      );
+    } finally {
+      await runner.close().catch(() => {});
+    }
   });
 }
 

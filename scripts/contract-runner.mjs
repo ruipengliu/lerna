@@ -76,7 +76,7 @@ export function startRunner(command, args, { timeoutMs = 10000, signal } = {}) {
         throw Error('extra or oversized stdout frame');
       if (!pending) throw Error('unsolicited stdout frame');
       const value = JSON.parse(
-        new TextDecoder('utf-8', { fatal: true }).decode(line),
+        new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(line),
       );
       if (value?.id !== pending.id) throw Error('response id mismatch');
       let response;

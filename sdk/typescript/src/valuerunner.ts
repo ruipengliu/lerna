@@ -44,7 +44,9 @@ function batch(): void {
         if (line.length > maxFrameBytes)
           throw Error('request frame exceeds 8 MiB');
         const request: unknown = JSON.parse(
-          new TextDecoder('utf-8', { fatal: true }).decode(line),
+          new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(
+            line,
+          ),
         );
         if (
           request === null ||

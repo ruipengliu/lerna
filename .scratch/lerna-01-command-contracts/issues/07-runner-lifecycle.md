@@ -26,17 +26,19 @@
 
 Go / TS 增加私有 base64 bytes NDJSON batch mode，保留原单次 CLI；两个工具模式各自共用唯一 typed roundtrip。产品 Schema 和 wire 正文 / 深度限制不变。一次预期公开拒绝可继续，崩溃、超时、错 id、非法响应及协议污染均抛出 infrastructure failure。私有 Go frame decoder 的 missing wire_base64、非法 UTF-8 和大小写别名 ID 三个错误接纳在测试中依次取得 red，随后改为 hardfail；这不把 IPC 规则混入产品合同。
 
-可观察测试：私有 lifecycle 缺失先 red，正常 bytes / classified refusal / repeated bytes 实现后 green；真实 typed batch mode 缺失先因 10 秒截止 red，实施后两语言准确 Revision / 非法 Revision / 非法 UTF-8 正文 / 重复准确值均 green。15 个 lifecycle tests 配正常控制，覆盖超时、崩溃、错 id、坏 JSON / shape / base64、stdout 污染、帧 / stderr 越界、取消、单在途、断言失败 cleanup 和 stdin 不合作；通过已退出 pid 的独立 OS 观察验证没有残留测试进程。原 158 项、68 个正例保留真实双向 typed codec 和原始独立期待值；make test-contract 同时验证完整反序 corpus。Schema 初次编译不可变回归仍由新的 Node test 进程运行。
+可观察测试：私有 lifecycle 缺失先 red，正常 bytes / classified refusal / repeated bytes 实现后 green；真实 typed batch mode 缺失先因 10 秒截止 red，实施后两语言准确 Revision / 非法 Revision / 非法 UTF-8 正文 / 重复准确值均 green。16 个 lifecycle tests 配正常控制，覆盖超时、崩溃、错 id、坏 JSON / shape / base64、stdout 污染、帧 / stderr 越界、取消、单在途、断言失败 cleanup 和 stdin 不合作；通过已退出 pid 的独立 OS 观察验证没有残留测试进程。原 158 项、68 个正例保留真实双向 typed codec 和原始独立期待值；make test-contract 同时验证完整反序 corpus。Schema 初次编译不可变回归仍由新的 Node test 进程运行。
 
 同环境实际测量（Go 1.27.1、Node 24.19.0、pnpm 12.8.1 / TS 7.0.2）：
 
 | 工作量 | 完整 wall time | 实际 Go / TS fixture runner 启动 | 结果 |
 | --- | ---: | ---: | --- |
 | 基线前向：158 项 / 68 正例及既有摘要、读取、协商 suites | 119.217268 s | 226 / 226 | passed |
-| 本实现相同前向工作量 | 5.903860 s | 1 / 1 | passed |
-| 额外完整反序工作量及同样 suites | 5.470951 s | 1 / 1 | passed |
-| 新增 15 项 lifecycle tests（含真实工具 build 与协议 probes） | 6.294658 s | 另行测试设施，不混入配对启动数 | passed |
+| 本实现相同前向工作量 | 10.909816 s | 1 / 1 | passed |
+| 额外完整反序工作量及同样 suites | 6.406244 s | 1 / 1 | passed |
+| 新增 16 项 lifecycle tests（含真实工具 build 与协议 probes） | 6.378595 s | 另行测试设施，不混入配对启动数 | passed |
 
-相同前向工作量本次实测约 20.19 倍，减少 95.05% wall time。额外反序与生命周期测试约 11.765609 s，不隐藏新增测试成本，也不把相加的分项测量冒充 make check 的整次 wall time。一次本机配对测量包含 Go build 与原有辅助 suites；不是跨机器、CI 或生产容量保证。启动数由 Node preload 对实际 spawnSync pid / spawn 事件计数，仅匹配真实 typed fixture runner，不把 Go build 或辅助 go test / node --test 当 fixture runner。可重复命令为 node scripts/test-contract.mjs，额外反序为同命令 --reverse，生命周期为 node --test scripts/contract-runner.test.mjs；保留原单次 CLI供未来启动测量。
+相同前向工作量本次实测约 10.93 倍，减少 90.85% wall time。额外反序与生命周期测试约 12.784839 s，不隐藏新增测试成本，也不把相加的分项测量冒充 make check 的整次 wall time。一次本机配对测量包含 Go build 与原有辅助 suites；不是跨机器、CI 或生产容量保证。启动数由 Node preload 对实际 spawnSync pid / spawn 事件计数，仅匹配真实 typed fixture runner，不把 Go build 或辅助 go test / node --test 当 fixture runner。可重复命令为 node scripts/test-contract.mjs，额外反序为同命令 --reverse，生命周期为 node --test scripts/contract-runner.test.mjs；保留原单次 CLI供未来启动测量。
 
-验证：make bootstrap、最终 make check、go test -race ./... 与 git diff --check 全部通过。check 包含 15 lifecycle / 34 TS tests、13 generator 拒绝 / 8 Schema 变更 goldens、生成零差异、全部 Go tests、158 共同夹具前向与反向双语言往返、46 命令 digest / 28 受信 query / 15 协商案例及两个 Schema goldens，以及双语言构建。未增加产品方法或 public SDK interface，未新增 ADR；整片 01 退出仍由主任务统一核对。
+验证：make bootstrap、最终 make check、go test -race ./... 与 git diff --check 全部通过。check 包含 16 lifecycle / 34 TS tests、13 generator 拒绝 / 8 Schema 变更 goldens、生成零差异、全部 Go tests、158 共同夹具前向与反向双语言往返、46 命令 digest / 28 受信 query / 15 协商案例及两个 Schema goldens，以及双语言构建。未增加产品方法或 public SDK interface，未新增 ADR；整片 01 退出仍由主任务统一核对。
+
+后续 protocol probe 在本地复现 parent 默认 TextDecoder 会移除 stdout BOM，将污染的 ok:false 应答当普通拒绝；TS batch input decoder 同样接受带 BOM 的请求。两个极小公开工具边界回归均先 red，随后只把两个私有 control decoder 设为 ignoreBOM:true，使 BOM 原样进入 JSON.parse 并 hardfail；base64 产品正文与所有机器 Schema 保持原样。故障测试的 finally 同时保证这种未来 red 不遗留 child。修正后 make lint、16 个 lifecycle tests、相同前向 / 反序完整合同 suites 全部通过，表中更新为 BOM 修复后的实际计时；先前计时不作为最终收益数字。Go race 已在本架构 Go 最终源码通过，BOM 修正只涉及私有 JS / TS 工具及测试。
