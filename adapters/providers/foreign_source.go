@@ -118,8 +118,8 @@ func (s *ForeignSource) subject(ctx context.Context, tx runtime.Tx, peer runtime
 	}
 	return a, nil
 }
-func sourceCommand[I, O any](s *ForeignSource, r *runtime.Registry, name string, fn func(context.Context, runtime.Tx, runtime.Auth, api.Command, I) (runtime.Outcome, error)) error {
-	return r.Register(runtime.Method{Contract: api.Contract[I, O](name, "content", "command", false, false), Participants: s.parts, Apply: func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command) (runtime.Outcome, error) {
+func sourceCommand[I any](s *ForeignSource, r *runtime.Registry, contract api.MethodContract, fn func(context.Context, runtime.Tx, runtime.Auth, api.Command, I) (runtime.Outcome, error)) error {
+	return r.Register(runtime.Method{Contract: contract, Participants: s.parts, Apply: func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command) (runtime.Outcome, error) {
 		var in I
 		if err := api.Decode(c.Payload, &in); err != nil {
 			return runtime.Outcome{}, err
@@ -127,11 +127,7 @@ func sourceCommand[I, O any](s *ForeignSource, r *runtime.Registry, name string,
 		return fn(ctx, tx, a, c, in)
 	}})
 }
-func sourceQuery[I, O any](s *ForeignSource, r *runtime.Registry, name string, fn func(context.Context, runtime.Auth, api.Query, I) (O, error), adjust func(*api.MethodContract)) error {
-	contract := api.Contract[I, O](name, "content", "query", false, false)
-	if adjust != nil {
-		adjust(&contract)
-	}
+func sourceQuery[I, O any](s *ForeignSource, r *runtime.Registry, contract api.MethodContract, fn func(context.Context, runtime.Auth, api.Query, I) (O, error)) error {
 	return r.Register(runtime.Method{Contract: contract, Query: func(ctx context.Context, st runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query) (any, error) {
 		if scope != s.cfg.Scope || st.ID() != s.cfg.Store.ID() {
 			return nil, api.E("forbidden", "foreign_source_scope_mismatch")
@@ -143,6 +139,21 @@ func sourceQuery[I, O any](s *ForeignSource, r *runtime.Registry, name string, f
 		return fn(ctx, a, q, in)
 	}})
 }
+
+// ForeignSourceContracts 无构造、数据库或出站依赖；生成器和实际注册共用这一合同源。
+// 每次返回独立 Schema，调用方不能修改后续源端登记。
+func ForeignSourceContracts() []api.MethodContract {
+	contracts := []api.MethodContract{
+		api.Contract[memory.ForeignReference, memory.CopyOutput]("content.foreign.register", "content", "command", false, false),
+		api.Contract[ForeignSourceRelease, memory.CopyOutput]("content.foreign.release", "content", "command", false, false),
+		api.Contract[ForeignSourceCurrent, memory.ForeignProof]("content.foreign.current", "content", "query", false, false),
+		api.Contract[ForeignSourceGet, ForeignSourceChunk]("content.foreign.get", "content", "query", false, false),
+	}
+	contracts[2].OutputSchema["properties"].(map[string]any)["proof"] = api.Schema{"type": "string", "maxLength": 32768}
+	contracts[3].OutputSchema["properties"].(map[string]any)["data_base64"] = api.Schema{"type": "string", "maxLength": (ForeignContentChunkBytes + 2) / 3 * 4}
+	return contracts
+}
+
 func (s *ForeignSource) Register(r *runtime.Registry) error {
 	if r == nil || s.registry != nil {
 		return api.E("invalid_state", "foreign_source_registry_fixed")
@@ -153,20 +164,17 @@ func (s *ForeignSource) Register(r *runtime.Registry) error {
 		}
 	}
 	s.registry = r
-	if err := sourceCommand[memory.ForeignReference, memory.CopyOutput](s, r, "content.foreign.register", s.register); err != nil {
+	contracts := ForeignSourceContracts()
+	if err := sourceCommand(s, r, contracts[0], s.register); err != nil {
 		return err
 	}
-	if err := sourceCommand[ForeignSourceRelease, memory.CopyOutput](s, r, "content.foreign.release", s.release); err != nil {
+	if err := sourceCommand(s, r, contracts[1], s.release); err != nil {
 		return err
 	}
-	if err := sourceQuery[ForeignSourceCurrent, memory.ForeignProof](s, r, "content.foreign.current", s.current, func(c *api.MethodContract) {
-		c.OutputSchema["properties"].(map[string]any)["proof"] = api.Schema{"type": "string", "maxLength": 32768}
-	}); err != nil {
+	if err := sourceQuery(s, r, contracts[2], s.current); err != nil {
 		return err
 	}
-	return sourceQuery[ForeignSourceGet, ForeignSourceChunk](s, r, "content.foreign.get", s.get, func(c *api.MethodContract) {
-		c.OutputSchema["properties"].(map[string]any)["data_base64"] = api.Schema{"type": "string", "maxLength": (ForeignContentChunkBytes + 2) / 3 * 4}
-	})
+	return sourceQuery(s, r, contracts[3], s.get)
 }
 func (s *ForeignSource) applyOriginal(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, method string, payload any) (runtime.Outcome, error) {
 	m, ok := s.registry.Method(method)
