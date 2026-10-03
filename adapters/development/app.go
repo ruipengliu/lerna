@@ -392,6 +392,9 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e = a.configureEndpointChannels(); e != nil {
 		return nil, e
 	}
+	if e = a.configureForeignSourceTLS(); e != nil {
+		return nil, e
+	}
 	if initialize {
 		if e = a.initialize(ctx, rules); e != nil {
 			return nil, e

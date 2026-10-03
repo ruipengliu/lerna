@@ -7,8 +7,10 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"io"
+	"net"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,19 +20,19 @@ import (
 
 	"github.com/ruipengliu/lerna/adapters/development"
 	"github.com/ruipengliu/lerna/adapters/platform"
-	"github.com/ruipengliu/lerna/adapters/wss"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/memory"
 	"github.com/ruipengliu/lerna/runtime"
 	harness "github.com/ruipengliu/lerna/sdk/go"
 )
 
-type configuredSourceGateway struct{ server *wss.Server }
 type configuredNativeSource struct {
 	t                                *testing.T
 	cfg                              development.Config
 	app                              *development.App
-	gateway                          atomic.Pointer[configuredSourceGateway]
+	live                             atomic.Bool
+	cancel                           context.CancelFunc
+	runDone                          chan error
 	server                           *httptest.Server
 	gets, calls                      atomic.Int64
 	loseRegister                     atomic.Bool
@@ -59,8 +61,7 @@ func newConfiguredNativeSource(t *testing.T, driver string) *configuredNativeSou
 		t.Fatal(err)
 	}
 	s.server = httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		current := s.gateway.Load()
-		if current == nil {
+		if !s.live.Load() {
 			w.WriteHeader(http.StatusServiceUnavailable)
 			return
 		}
@@ -86,9 +87,18 @@ func newConfiguredNativeSource(t *testing.T, driver string) *configuredNativeSou
 				s.gets.Add(1)
 			}
 		}
+		// 业务 HTTPS 来自原 App.Run；外层只注入真实网络故障。
+		forward := r.Clone(r.Context())
+		forward.URL, _ = url.Parse("https://" + s.cfg.HTTPAddr + r.URL.RequestURI())
+		forward.RequestURI = ""
+		response, err := s.server.Client().Do(forward)
+		if err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			return
+		}
+		defer response.Body.Close()
 		if method == "content.foreign.register" && s.loseRegister.CompareAndSwap(true, false) {
-			capture := httptest.NewRecorder()
-			current.server.Handler().ServeHTTP(capture, r)
+			_, _ = io.Copy(io.Discard, response.Body)
 			conn, _, err := w.(http.Hijacker).Hijack()
 			if err != nil {
 				t.Error(err)
@@ -97,7 +107,11 @@ func newConfiguredNativeSource(t *testing.T, driver string) *configuredNativeSou
 			_ = conn.Close()
 			return
 		}
-		current.server.Handler().ServeHTTP(w, r)
+		for key, values := range response.Header {
+			w.Header()[key] = values
+		}
+		w.WriteHeader(response.StatusCode)
+		_, _ = io.Copy(w, response.Body)
 	}))
 	cert, key, _ := certificates(t, root)
 	pair, err := tls.LoadX509KeyPair(cert, key)
@@ -105,6 +119,15 @@ func newConfiguredNativeSource(t *testing.T, driver string) *configuredNativeSou
 		t.Fatal(err)
 	}
 	s.caFile = cert
+	s.cfg.ForeignSourceTLS = &development.ForeignSourceTLSConfig{CertificateFile: cert, KeyFile: key}
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.cfg.HTTPAddr = listener.Addr().String()
+	if err = listener.Close(); err != nil {
+		t.Fatal(err)
+	}
 	s.server.TLS = &tls.Config{Certificates: []tls.Certificate{pair}, MinVersion: tls.VersionTLS13}
 	s.server.StartTLS()
 	t.Cleanup(func() { s.server.Close(); s.close() })
@@ -140,19 +163,42 @@ func (s *configuredNativeSource) open(initialize bool) {
 	if err != nil {
 		s.t.Fatal(err)
 	}
-	gateway, err := app.Gateway()
-	if err != nil {
-		_ = app.Close()
-		s.t.Fatal(err)
-	}
 	s.app = app
-	s.gateway.Store(&configuredSourceGateway{gateway})
+	ctx, cancel := context.WithCancel(context.Background())
+	s.cancel, s.runDone = cancel, make(chan error, 1)
+	go func() { s.runDone <- app.Run(ctx, true, false) }()
+	deadline := time.Now().Add(10 * time.Second)
+	for time.Now().Before(deadline) {
+		response, err := s.server.Client().Get("https://" + s.cfg.HTTPAddr + "/health/ready")
+		if err == nil {
+			_, _ = io.Copy(io.Discard, response.Body)
+			_ = response.Body.Close()
+			if response.StatusCode == http.StatusOK {
+				s.live.Store(true)
+				return
+			}
+		}
+		select {
+		case err := <-s.runDone:
+			s.t.Fatalf("actual App.Run HTTPS exited before ready: %v", err)
+		case <-time.After(25 * time.Millisecond):
+		}
+	}
+	s.t.Fatal("actual App.Run HTTPS readiness timed out")
 }
 func (s *configuredNativeSource) close() {
-	if gateway := s.gateway.Swap(nil); gateway != nil {
-		if err := gateway.server.Close(); err != nil {
-			s.t.Error(err)
+	s.live.Store(false)
+	if s.cancel != nil {
+		s.cancel()
+		select {
+		case err := <-s.runDone:
+			if err != nil {
+				s.t.Error(err)
+			}
+		case <-time.After(10 * time.Second):
+			s.t.Error("actual App.Run HTTPS did not join")
 		}
+		s.cancel = nil
 	}
 	if s.app != nil {
 		if err := s.app.Close(); err != nil {

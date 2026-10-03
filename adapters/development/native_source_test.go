@@ -6,8 +6,10 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/ruipengliu/lerna/adapters/development"
+	rpc "github.com/ruipengliu/lerna/adapters/grpc"
 	"github.com/ruipengliu/lerna/adapters/providers"
 	"github.com/ruipengliu/lerna/adapters/sqlite"
 	"github.com/ruipengliu/lerna/api"
@@ -62,6 +64,13 @@ func TestConfiguredForeignConsumerOpensOriginalSourceContracts(t *testing.T) {
 			t.Fatalf("original Source contract %s missing or changed", expected.Name)
 		}
 	}
+	app.Config.HTTPAddr = "127.0.0.1:0"
+	serveContext, cancel := context.WithTimeout(ctx, 50*time.Millisecond)
+	err = app.Run(serveContext, true, false)
+	cancel()
+	if !api.IsCode(err, "unsupported") {
+		t.Fatalf("configured Source served without its required HTTPS authority: %v", err)
+	}
 	if err = app.Close(); err != nil {
 		t.Fatal(err)
 	}
@@ -94,5 +103,25 @@ func TestConfiguredForeignConsumerOpensOriginalSourceContracts(t *testing.T) {
 	defer closed.Close()
 	if _, open := closed.Registry.Method("content.foreign.current"); open {
 		t.Fatal("missing explicit consumer configuration opened Source transport")
+	}
+	// 同一 gateway 只能有一个准确 TLS 配对：同引用可复用，另一组不能并行。
+	combined := cfg
+	combined.Driver = "postgres"
+	files := &development.ForeignSourceTLSConfig{CertificateFile: filepath.Join(root, "paired-cert.pem"), KeyFile: filepath.Join(root, "paired-key.pem")}
+	combined.ForeignSourceTLS = files
+	combined.EndpointChannels = &development.EndpointChannelConfig{GatewayInstanceID: api.NewID("instance"), ApplicationInstanceID: api.NewID("instance"), ApplicationAddresses: []string{"grpcs://127.0.0.1:24433"}, GatewayIdentities: []string{"spiffe://harness.test/approved-gateway"}, Registrations: []rpc.EndpointRegistration{{TenantID: cfg.TenantID, SubjectID: cfg.SubjectID, CredentialGeneration: 1, EndpointID: api.NewID("endpoint"), InstanceID: api.NewID("instance"), Generation: 1, RecipientServiceID: cfg.OwnerID}}, GatewayTLS: development.EndpointTLSFiles{CertificateFile: files.CertificateFile, KeyFile: files.KeyFile}}
+	combinedPath := filepath.Join(root, "combined-source-endpoint.json")
+	if err = development.SaveConfig(combinedPath, combined); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = development.LoadConfig(combinedPath); err != nil {
+		t.Fatalf("same gateway TLS references were not reusable: %v", err)
+	}
+	combined.EndpointChannels.GatewayTLS.KeyFile = filepath.Join(root, "another-key.pem")
+	if err = development.SaveConfig(combinedPath, combined); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = development.LoadConfig(combinedPath); !api.IsCode(err, "forbidden") {
+		t.Fatalf("different endpoint/Source TLS references became parallel authority: %v", err)
 	}
 }
