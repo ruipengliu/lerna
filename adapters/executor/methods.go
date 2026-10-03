@@ -39,10 +39,19 @@ func (h *Host) register() error {
 	if err := registerQuery(h.Registry, "executor.content.get", h.contentGet); err != nil {
 		return err
 	}
+	if err := registerQuery(h.Registry, "executor.lease.usage.get", h.leaseUsage); err != nil {
+		return err
+	}
+	if err := h.registerSource(); err != nil {
+		return err
+	}
 	return h.Registry.RegisterJob(MaterializeJob, h.materialize)
 }
 func registerCommand[I, O any](r *runtime.Registry, name string, parts []string, fn func(context.Context, runtime.Tx, runtime.Auth, api.Command, I) (O, error)) error {
 	contract := api.Contract[I, O](name, "executor", "command", false, false)
+	if strings.HasPrefix(name, "content.") {
+		contract.Owner = "content"
+	}
 	if name == "executor.content.stage" {
 		contract.InputSchema["properties"].(map[string]any)["data_base64"] = api.Schema{"type": "string", "maxLength": ChunkBytes*4/3 + 4}
 	}
@@ -56,7 +65,11 @@ func registerCommand[I, O any](r *runtime.Registry, name string, parts []string,
 	}})
 }
 func registerQuery[I, O any](r *runtime.Registry, name string, fn func(context.Context, runtime.Store, runtime.Scope, runtime.Auth, api.Query, I) (O, error)) error {
-	return r.Register(runtime.Method{Contract: api.Contract[I, O](name, "executor", "query", false, false), Query: func(ctx context.Context, st runtime.Store, s runtime.Scope, a runtime.Auth, q api.Query) (any, error) {
+	contract := api.Contract[I, O](name, "executor", "query", false, false)
+	if strings.HasPrefix(name, "content.") {
+		contract.Owner = "content"
+	}
+	return r.Register(runtime.Method{Contract: contract, Query: func(ctx context.Context, st runtime.Store, s runtime.Scope, a runtime.Auth, q api.Query) (any, error) {
 		var in I
 		if err := api.Decode(q.Payload, &in); err != nil {
 			return nil, err
@@ -117,6 +130,13 @@ func (h *Host) install(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api
 		if _, err = tx.Get(ctx, Namespace+".contents", key, &old); err == nil {
 			if !api.Equal(old.Permission.ContentRef, permission.ContentRef) || !api.Equal(old.Permission.ProcessedSources, permission.ProcessedSources) || !api.Equal(old.Permission.DisclosedSources, permission.DisclosedSources) {
 				return AdmissionOutput{}, api.E("idempotency_conflict", "original_source_metadata_changed")
+			}
+			originalPolicy, subjects := old.Permission.SourcePolicy, old.Permission.SubjectRefs
+			if old.Published {
+				originalPolicy, subjects = old.SourcePolicy, old.SourceReaders
+			}
+			if permission.SourcePolicy != nil && (!api.Equal(originalPolicy, permission.SourcePolicy) || !api.Equal(subjects, permission.SubjectRefs)) {
+				return AdmissionOutput{}, api.E("idempotency_conflict", "original_cached_policy_changed")
 			}
 			continue
 		} else if !api.IsCode(err, "not_found") {
@@ -382,7 +402,7 @@ func (h *Host) Call(ctx context.Context, a runtime.Auth, kind string, payload js
 					}
 				}
 			}
-		} else if !strings.HasPrefix(c.Method, "executor.") {
+		} else if !strings.HasPrefix(c.Method, "executor.") && c.Method != "content.register_copy" && c.Method != "content.release_copy" {
 			return "", nil, api.E("unsupported", "device_method_not_configured")
 		}
 		r, err := h.Dispatcher.Command(ctx, principal, payload)
@@ -392,13 +412,17 @@ func (h *Host) Call(ctx context.Context, a runtime.Auth, kind string, payload js
 		if err := api.Decode(payload, &q); err != nil {
 			return "", nil, err
 		}
-		if strings.HasPrefix(q.Method, "execution.") {
+		if q.Method == "execution.control.get" {
+			// 原停止门禁可以先于任何Operation到达；TaskID不是admission键。
+			// peer只读设备本库已知控制事实，领域仍不暴露云端Task。
+			principal = runtime.Auth{TenantID: a.TenantID, SubjectID: a.SubjectID, CredentialGeneration: a.CredentialGeneration, Roles: []string{"orchestrator"}}
+		} else if strings.HasPrefix(q.Method, "execution.") {
 			var rec admissionRecord
 			if _, err := h.Store.Read(ctx, h.Scope, Namespace+".admissions", q.TargetID, 0, &rec); err != nil {
 				return "", nil, api.E("forbidden", "original_device_admission_required")
 			}
 			principal = rec.Bundle.Principal.Auth()
-		} else if !strings.HasPrefix(q.Method, "executor.") {
+		} else if !strings.HasPrefix(q.Method, "executor.") && q.Method != "content.get" {
 			return "", nil, api.E("unsupported", "device_method_not_configured")
 		}
 		out, err := h.Dispatcher.Query(ctx, principal, payload)

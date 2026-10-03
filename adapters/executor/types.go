@@ -5,6 +5,7 @@ import (
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/execution"
 	"github.com/ruipengliu/lerna/internal/governance"
+	"github.com/ruipengliu/lerna/internal/memory"
 	"github.com/ruipengliu/lerna/runtime"
 )
 
@@ -35,12 +36,16 @@ type ContentPermission struct {
 	ProcessedSources []api.ContentRef `json:"processed_sources"`
 	DisclosedSources []api.ContentRef `json:"disclosed_sources"`
 	RetainUntil      string           `json:"retain_until"`
+	// 原Authority当前来源策略与准确主体代次快照；旧nil仅保留原缓存/账务恢复。
+	SourcePolicy *memory.Policy  `json:"source_policy,omitempty"`
+	SubjectRefs  []api.ObjectRef `json:"subject_refs,omitempty"`
 }
 type AdmissionBundle struct {
 	BundleID          string                    `json:"bundle_id"`
 	Revision          uint64                    `json:"revision"`
 	AuthorityID       string                    `json:"authority_id"`
 	EndpointID        string                    `json:"endpoint_id"`
+	DeviceDatabaseID  string                    `json:"device_database_id"`
 	InstanceID        string                    `json:"instance_id"`
 	OriginalCommandID string                    `json:"original_command_id"`
 	AdmissionHash     string                    `json:"admission_hash"`
@@ -94,8 +99,16 @@ type ContentOutput struct {
 	StagedChunks uint64         `json:"staged_chunks"`
 }
 type ContentGet struct {
-	ContentRef api.ContentRef `json:"content_ref"`
-	ChunkIndex uint64         `json:"chunk_index"`
+	ContentRef api.ContentRef           `json:"content_ref"`
+	ChunkIndex uint64                   `json:"chunk_index"`
+	Reference  *memory.ForeignReference `json:"reference,omitempty"`
+}
+
+// CurrentContent 沿 Memory 的唯一外部来源合同；设备不另造第二份字段。
+type CurrentContent = memory.ForeignProof
+type SourceCurrent struct {
+	Reference memory.ForeignReference `json:"reference"`
+	Control   bool                    `json:"control"`
 }
 type ContentChunk struct {
 	Permission ContentPermission `json:"permission"`
@@ -109,6 +122,8 @@ type ControlDelivery struct {
 }
 
 // Revocation 用独立签名保存本机已知的原授权/主体撤权；不在设备裁决云端 Task。
+// Kind=subject 的 ObjectRef.Revision 是实际被撤销的 credential generation 上界，
+// 不是实体revision或将来有效的新代次。其它kind封原责任，不因新代次自行恢复。
 type Revocation struct {
 	AuthorityID string        `json:"authority_id"`
 	EndpointID  string        `json:"endpoint_id"`
@@ -123,19 +138,43 @@ type RevocationOutput struct {
 	Denied bool          `json:"denied"`
 }
 
+type LeaseID struct {
+	LeaseID string `json:"lease_id"`
+}
+type LeaseUsageProof struct {
+	LeaseRef         api.ObjectRef         `json:"lease_ref"`
+	EndpointID       string                `json:"endpoint_id"`
+	InstanceID       string                `json:"instance_id"`
+	AllocationDigest string                `json:"allocation_digest"`
+	LocalLease       governance.GrantLease `json:"local_lease"`
+	OperationUsage   api.UsageSnapshot     `json:"operation_usage"`
+}
+type SignedLeaseReport struct {
+	SourceDatabaseID string                 `json:"source_database_id"`
+	Report           governance.LeaseReport `json:"report"`
+	IssuedAt         string                 `json:"issued_at"`
+	StartBefore      string                 `json:"start_before"`
+	Proof            string                 `json:"proof"`
+}
+
 type admissionRecord struct {
 	Bundle AdmissionBundle `json:"bundle"`
 	Digest string          `json:"digest"`
 }
 type contentRecord struct {
-	Permission ContentPermission `json:"permission"`
-	BundleID   string            `json:"bundle_id"`
-	Principal  Principal         `json:"principal"`
-	Revision   uint64            `json:"revision"`
-	ChunkCount uint64            `json:"chunk_count"`
-	Complete   bool              `json:"complete"`
-	Published  bool              `json:"published"`
-	ObjectKey  string            `json:"object_key"`
+	Permission      ContentPermission `json:"permission"`
+	BundleID        string            `json:"bundle_id"`
+	Principal       Principal         `json:"principal"`
+	Revision        uint64            `json:"revision"`
+	ChunkCount      uint64            `json:"chunk_count"`
+	Complete        bool              `json:"complete"`
+	Published       bool              `json:"published"`
+	ObjectKey       string            `json:"object_key"`
+	SourcePolicy    *memory.Policy    `json:"source_policy,omitempty"`
+	SourceReaders   []api.ObjectRef   `json:"source_readers,omitempty"`
+	SourceState     string            `json:"source_state,omitempty"`
+	ControlRevision uint64            `json:"control_revision,omitempty"`
+	ClosureKind     string            `json:"closure_kind,omitempty"`
 }
 type stagedChunk struct {
 	Index      uint64 `json:"index"`
