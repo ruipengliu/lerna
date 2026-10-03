@@ -1,0 +1,568 @@
+//go:build integration
+
+package recovery_test
+
+import (
+	"bufio"
+	"bytes"
+	"context"
+	"database/sql"
+	"errors"
+	"fmt"
+	"github.com/mattn/go-sqlite3"
+	"github.com/ruipengliu/lerna/contract"
+	"github.com/ruipengliu/lerna/host/durablework"
+	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
+	"github.com/ruipengliu/lerna/runtime"
+	"io"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"sync"
+	"testing"
+	"time"
+
+	"github.com/ruipengliu/lerna/adapters/sqlite"
+)
+
+var sqliteConfigurations sync.Map
+
+func sqliteDatabase(t *testing.T) *sqlite.Store {
+	t.Helper()
+	cfg := sqlite.Config{Path: filepath.Join(t.TempDir(), "ledger.sqlite"), TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond}
+	store, err := sqlite.Open(contextFor(t), cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	sqliteConfigurations.Store(store, cfg)
+	admissionReopeners.Store(store, func(t *testing.T) admissionStore {
+		t.Helper()
+		if err := store.Close(); err != nil {
+			t.Fatal(err)
+		}
+		replacement, err := sqlite.Open(contextFor(t), cfg)
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Cleanup(func() { replacement.Close() })
+		return replacement
+	})
+	t.Cleanup(func() {
+		if err := store.Close(); err != nil {
+			t.Error(err)
+		}
+	})
+	if err = store.Migrate(contextFor(t)); err != nil {
+		t.Fatal(err)
+	}
+	return store
+}
+func TestSQLiteSharedAdmissionBehaviors(t *testing.T) {
+	runAdmissionBehaviors(t, func(t *testing.T) admissionStore { return sqliteDatabase(t) })
+}
+func TestSQLiteEveryTransactionChecksEffectiveDurability(t *testing.T) {
+	store := sqliteDatabase(t)
+	ctx := contextFor(t)
+	if err := store.Migrate(ctx); err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < 3; i++ {
+		if err := store.Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
+			settings, err := store.Settings(ctx, tx)
+			if err != nil {
+				return err
+			}
+			if settings.JournalMode != "wal" || settings.Synchronous != 2 || settings.ForeignKeys != 1 || settings.BusyTimeout != 100 || settings.SQLiteVersion == "" {
+				t.Fatalf("incorrect connection durability: %+v", settings)
+			}
+			version, number, source := sqlite3.Version()
+			if settings.SQLiteVersion != version {
+				t.Fatalf("runtime/library version mismatch: %+v %s %d", settings, version, number)
+			}
+			t.Logf("effective settings %+v; sqlite source %s version number %d", settings, source, number)
+			return nil
+		}); err != nil {
+			t.Fatal(err)
+		}
+		// Close/open forces a fresh product connection with the same actual file.
+		cfg, _ := sqliteConfigurations.Load(store)
+		if err := store.Close(); err != nil {
+			t.Fatal(err)
+		}
+		next, err := sqlite.Open(ctx, cfg.(sqlite.Config))
+		if err != nil {
+			t.Fatal(err)
+		}
+		sqliteConfigurations.Store(next, cfg)
+		t.Cleanup(func() { next.Close() })
+		store = next
+	}
+	if _, err := store.Settings(ctx, nil); !errors.Is(err, runtime.ErrScope) {
+		t.Fatalf("nil transaction accepted: %v", err)
+	}
+}
+
+// The helper is a real independent OS process, sharing only the database path
+// and the explicit fake command corpus. No private SQL is used for its verdict.
+func TestSQLiteWriterProcess(t *testing.T) {
+	path := os.Getenv("LERNA_SQLITE_PROCESS_PATH")
+	if path == "" {
+		return
+	}
+	store, err := sqlite.Open(contextFor(t), sqlite.Config{Path: path, TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond})
+	if os.Getenv("LERNA_SQLITE_PROCESS_ACTION") == "excluded" {
+		if !errors.Is(err, sqlite.ErrWriterActive) {
+			t.Fatalf("second process writer not excluded: %v", err)
+		}
+		return
+	}
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer store.Close()
+	if err = store.Migrate(contextFor(t)); err != nil {
+		t.Fatal(err)
+	}
+	out, err := hostFor(store, owner, principal).Record(contextFor(t), []byte(os.Getenv("LERNA_SQLITE_PROCESS_COMMAND")), &principal)
+	assertReceived(t, out, err)
+}
+func sqliteProcess(t *testing.T, path, action string, command []byte) {
+	t.Helper()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	child := exec.CommandContext(ctx, os.Args[0], "-test.run=^TestSQLiteWriterProcess$", "-test.v")
+	child.Env = append(os.Environ(), "LERNA_SQLITE_PROCESS_PATH="+path, "LERNA_SQLITE_PROCESS_ACTION="+action, "LERNA_SQLITE_PROCESS_COMMAND="+string(command))
+	output, err := child.CombinedOutput()
+	if err != nil {
+		t.Fatalf("real writer process %s failed: %v\n%s", action, err, output)
+	}
+}
+func TestSQLiteWriterExclusionAndNormalProcessReopen(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "ledger.sqlite")
+	cfg := sqlite.Config{Path: path, TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond}
+	store, err := sqlite.Open(contextFor(t), cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { store.Close() })
+	original := command("process-original", "process-input", "written by independent process", nil, future())
+	sqliteProcess(t, path, "excluded", original)
+	if err = store.Close(); err != nil {
+		t.Fatal(err)
+	}
+	sqliteProcess(t, path, "write", original)
+	replacement, err := sqlite.Open(contextFor(t), cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { replacement.Close() })
+	h := hostFor(replacement, owner, principal)
+	before, err := h.Observe(contextFor(t), "process-input", &principal)
+	if err != nil {
+		t.Fatal(err)
+	}
+	queried, err := contract.GetCommand(contextFor(t), readWire(contract.CommandRef{Owner: owner, CommandID: "process-original"}), &principal, h.Permissions, h, time.Now)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found, ok := queried.AsFound()
+	if !ok {
+		t.Fatal("closed process lost original receipt")
+	}
+	out, err := h.Record(contextFor(t), original, &principal)
+	assertReceiptSame(t, found.Receipt, assertReceived(t, out, err))
+	after, err := h.Observe(contextFor(t), "process-input", &principal)
+	if err != nil || after.Input.Text != "written by independent process" || after.Input.Revision != 1 || after.Job.ID != before.Job.ID || after.Job.WorkRevision != 1 || after.Job.CompletedRevision != 0 || after.Job.State != "ready" {
+		t.Fatalf("process replacement changed durable responsibility: %+v %v", after, err)
+	}
+}
+
+func TestSQLiteMigrationRecordsExactVersionAndRejectsAlteredChecksum(t *testing.T) {
+	store := sqliteDatabase(t)
+	status, err := store.MigrationStatus(contextFor(t))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if status.Version != 1 || status.Checksum != sqlite.MigrationV1Checksum() {
+		t.Fatalf("missing real v1 migration record: %+v", status)
+	}
+	// Deliberate corruption is a storage fault fixture, not a business observation.
+	cfg, _ := sqliteConfigurations.Load(store)
+	db, err := sql.Open("sqlite3", cfg.(sqlite.Config).Path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	if _, err = db.ExecContext(contextFor(t), "UPDATE schema_migrations SET checksum='corrupt' WHERE version=1"); err != nil {
+		t.Fatal(err)
+	}
+	if err = store.Migrate(contextFor(t)); err == nil {
+		t.Fatal("altered immutable migration was accepted")
+	}
+}
+
+func TestSQLiteUncoordinatedSQLLockProcess(t *testing.T) {
+	path := os.Getenv("LERNA_SQLITE_LOCK_PATH")
+	if path == "" {
+		return
+	}
+	ctx := contextFor(t)
+	// An intentionally uncoordinated raw SQL process injects a real SQLite write
+	// lock. Product Host writers are excluded earlier by the lifetime flock.
+	db, err := sql.Open("sqlite3", path+"?_txlock=immediate&_busy_timeout=100")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tx.Rollback()
+	fmt.Fprintln(os.Stdout, "SQL_WRITE_LOCK_HELD")
+	released := make(chan struct{})
+	go func() { bufio.NewReader(os.Stdin).ReadString('\n'); close(released) }()
+	select {
+	case <-released:
+	case <-ctx.Done():
+		t.Fatal(ctx.Err())
+	}
+	if err = tx.Commit(); err != nil {
+		t.Fatal(err)
+	}
+}
+func holdSQLiteProcessLock(t *testing.T, path string) func() {
+	t.Helper()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	child := exec.CommandContext(ctx, os.Args[0], "-test.run=^TestSQLiteUncoordinatedSQLLockProcess$", "-test.v")
+	child.Env = append(os.Environ(), "LERNA_SQLITE_LOCK_PATH="+path)
+	input, err := child.StdinPipe()
+	if err != nil {
+		cancel()
+		t.Fatal(err)
+	}
+	output, err := child.StdoutPipe()
+	if err != nil {
+		cancel()
+		t.Fatal(err)
+	}
+	var stderr bytes.Buffer
+	child.Stderr = &stderr
+	if err = child.Start(); err != nil {
+		cancel()
+		t.Fatal(err)
+	}
+	ready := make(chan struct{}, 1)
+	scanned := make(chan struct{})
+	go func() {
+		defer close(scanned)
+		scanner := bufio.NewScanner(output)
+		for scanner.Scan() {
+			if scanner.Text() == "SQL_WRITE_LOCK_HELD" {
+				ready <- struct{}{}
+			}
+		}
+	}()
+	var once sync.Once
+	release := func() {
+		once.Do(func() {
+			io.WriteString(input, "release\n")
+			input.Close()
+			<-scanned
+			err := child.Wait()
+			cancel()
+			if err != nil {
+				t.Errorf("SQL-lock process failed: %v %s", err, stderr.String())
+			}
+		})
+	}
+	t.Cleanup(release)
+	select {
+	case <-ready:
+	case <-ctx.Done():
+		release()
+		t.Fatal("SQL-lock process did not establish bounded lock")
+	}
+	return release
+}
+func TestSQLiteBusyDeadlineRollsBackAndNormalControlStillCommits(t *testing.T) {
+	store := sqliteDatabase(t)
+	cfg, _ := sqliteConfigurations.Load(store)
+	release := holdSQLiteProcessLock(t, cfg.(sqlite.Config).Path)
+	h := hostFor(store, owner, principal)
+	original := command("busy-original", "busy-input", "normal after real lock", nil, future())
+	start := time.Now()
+	_, err := h.Record(contextFor(t), original, &principal)
+	assertReason(t, err, "dependency_unavailable")
+	var lockError sqlite3.Error
+	if !errors.As(err, &lockError) || lockError.Code != sqlite3.ErrBusy {
+		t.Fatalf("fault was not real SQLite busy: %v", err)
+	}
+	if elapsed := time.Since(start); elapsed > time.Second {
+		t.Fatalf("busy deadline exceeded: %v", elapsed)
+	}
+	release()
+	queried, err := contract.GetCommand(contextFor(t), readWire(contract.CommandRef{Owner: owner, CommandID: "busy-original"}), &principal, h.Permissions, h, time.Now)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := queried.AsNotFound(); !ok {
+		t.Fatal("busy failure persisted a partial receipt")
+	}
+	if _, err = h.Observe(contextFor(t), "busy-input", &principal); err == nil {
+		t.Fatal("busy failure persisted input/Job")
+	}
+	out, err := h.Record(contextFor(t), original, &principal)
+	assertReceived(t, out, err)
+	got, err := h.Observe(contextFor(t), "busy-input", &principal)
+	if err != nil || got.Input.Revision != 1 || got.Job.WorkRevision != 1 {
+		t.Fatalf("normal control failed: %+v %v", got, err)
+	}
+}
+func TestSQLiteQueuedCancellationAndActiveTransactionRollback(t *testing.T) {
+	store := sqliteDatabase(t)
+	h := hostFor(store, owner, principal)
+	ctx := contextFor(t)
+	held := make(chan struct{})
+	release := make(chan struct{})
+	finished := make(chan error, 1)
+	go func() {
+		finished <- store.Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
+			close(held)
+			select {
+			case <-release:
+				return nil
+			case <-ctx.Done():
+				return ctx.Err()
+			}
+		})
+	}()
+	select {
+	case <-held:
+	case <-ctx.Done():
+		t.Fatal("writer coordinator control timed out")
+	}
+	canceled, cancel := context.WithCancel(ctx)
+	cancel()
+	original := command("queue-canceled", "cancel-input", "normal after cancel", nil, future())
+	start := time.Now()
+	_, err := h.Record(canceled, original, &principal)
+	assertReason(t, err, "dependency_unavailable")
+	if time.Since(start) > time.Second {
+		t.Fatal("canceled writer wait was unbounded")
+	}
+	queued, stop := context.WithTimeout(ctx, 50*time.Millisecond)
+	_, err = h.Record(queued, original, &principal)
+	stop()
+	assertReason(t, err, "dependency_unavailable")
+	close(release)
+	if err = <-finished; err != nil {
+		t.Fatal(err)
+	}
+	active, abort := context.WithCancel(ctx)
+	ref := contract.CommandRef{Owner: owner, CommandID: "active-canceled"}
+	err = store.Within(active, owner, func(txctx context.Context, tx runtime.Tx) error {
+		now, err := store.Now(txctx, tx)
+		if err != nil {
+			return err
+		}
+		if err = store.SaveInput(txctx, tx, owner, demo.Input{ID: "active-input", Revision: 1, Text: "must roll back", CreatedAt: now, UpdatedAt: now}); err != nil {
+			return err
+		}
+		object := contract.ObjectRef{TenantID: owner.TenantID, OwnerID: owner.OwnerID, Kind: "durable_work", ID: "active-input"}
+		if _, err = store.Trigger(txctx, tx, object, "project", 1, now); err != nil {
+			return err
+		}
+		if err = store.SaveCommand(txctx, tx, ref, runtime.CommandRecord{Digest: "fault-fixture", Receipt: contract.NewCommandReceiptApplied(contract.CommandReceiptApplied{CommandRef: ref, ObjectRef: object, Revision: "1"})}); err != nil {
+			return err
+		}
+		abort()
+		return nil
+	})
+	if !errors.Is(err, context.Canceled) {
+		t.Fatalf("active cancel did not roll back: %v", err)
+	}
+	for _, ref := range []contract.CommandRef{{Owner: owner, CommandID: "queue-canceled"}, ref} {
+		result, err := contract.GetCommand(ctx, readWire(ref), &principal, h.Permissions, h, time.Now)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, ok := result.AsNotFound(); !ok {
+			t.Fatal("canceled admission retained receipt")
+		}
+	}
+	if _, err = h.Observe(ctx, "active-input", &principal); err == nil {
+		t.Fatal("active cancel retained input/Job")
+	}
+	out, err := h.Record(ctx, original, &principal)
+	assertReceived(t, out, err)
+	out, err = h.Record(ctx, command("active-canceled", "active-input", "normal active control", nil, future()), &principal)
+	assertReceived(t, out, err)
+}
+
+func TestSQLiteCloseCancelsAndWaitsForEntireOwnerTransaction(t *testing.T) {
+	store := sqliteDatabase(t)
+	cfg, _ := sqliteConfigurations.Load(store)
+	ctx := contextFor(t)
+	staged := make(chan struct{})
+	unwinding := make(chan struct{})
+	permitExit := make(chan struct{})
+	finished := make(chan error, 1)
+	var permitOnce sync.Once
+	release := func() { permitOnce.Do(func() { close(permitExit) }) }
+	t.Cleanup(release)
+	go func() {
+		finished <- store.Within(ctx, owner, func(txctx context.Context, tx runtime.Tx) error {
+			now, err := store.Now(txctx, tx)
+			if err != nil {
+				return err
+			}
+			if err = store.SaveInput(txctx, tx, owner, demo.Input{ID: "closing-input", Revision: 1, Text: "must roll back", CreatedAt: now, UpdatedAt: now}); err != nil {
+				return err
+			}
+			if _, err = store.Trigger(txctx, tx, contract.ObjectRef{TenantID: owner.TenantID, OwnerID: owner.OwnerID, Kind: "durable_work", ID: "closing-input"}, "project", 1, now); err != nil {
+				return err
+			}
+			close(staged)
+			select {
+			case <-txctx.Done():
+				close(unwinding)
+			case <-permitExit:
+				return nil
+			}
+			select {
+			case <-permitExit:
+				return nil
+			case <-ctx.Done():
+				return ctx.Err()
+			}
+		})
+	}()
+	select {
+	case <-staged:
+	case <-ctx.Done():
+		t.Fatal("close fixture failed to stage real transaction")
+	}
+	closed := make(chan error, 1)
+	go func() { closed <- store.Close() }()
+	select {
+	case <-unwinding:
+	case err := <-closed:
+		release()
+		<-finished
+		t.Fatalf("Close released ownership while original Tx was active: %v", err)
+	case <-ctx.Done():
+		release()
+		t.Fatal("Close failed to cancel active owner transaction")
+	}
+	second, err := sqlite.Open(ctx, cfg.(sqlite.Config))
+	if second != nil {
+		second.Close()
+	}
+	if !errors.Is(err, sqlite.ErrWriterActive) {
+		release()
+		t.Fatalf("replacement writer entered during original Tx unwind: %v", err)
+	}
+	release()
+	if err = <-finished; !errors.Is(err, context.Canceled) {
+		t.Fatalf("closing owner transaction did not cancel: %v", err)
+	}
+	select {
+	case err = <-closed:
+		if err != nil {
+			t.Fatal(err)
+		}
+	case <-ctx.Done():
+		t.Fatal("Close did not finish after Tx exited")
+	}
+	replacement, err := sqlite.Open(ctx, cfg.(sqlite.Config))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { replacement.Close() })
+	h := hostFor(replacement, owner, principal)
+	if _, err = h.Observe(ctx, "closing-input", &principal); err == nil {
+		t.Fatal("closing transaction committed partial facts")
+	}
+	out, err := h.Record(ctx, command("closing-control", "closing-input", "normal replacement", nil, future()), &principal)
+	assertReceived(t, out, err)
+}
+
+func TestSQLiteCloseDeadlineRetainsOwnershipUntilCallbackExits(t *testing.T) {
+	cfg := sqlite.Config{Path: filepath.Join(t.TempDir(), "ledger.sqlite"), TransactionTimeout: 100 * time.Millisecond, BusyTimeout: 20 * time.Millisecond}
+	store, err := sqlite.Open(contextFor(t), cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { store.Close() })
+	entered := make(chan struct{})
+	permit := make(chan struct{})
+	finished := make(chan error, 1)
+	var releaseOnce sync.Once
+	release := func() { releaseOnce.Do(func() { close(permit) }) }
+	t.Cleanup(release)
+	// A deliberately invalid callback ignores its cancellation until explicitly
+	// released. Close must fail in a bounded time and retain the writer exclusion.
+	ctx := contextFor(t)
+	go func() {
+		finished <- store.Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error { close(entered); <-permit; return nil })
+	}()
+	select {
+	case <-entered:
+	case <-ctx.Done():
+		release()
+		t.Fatal("close deadline fixture failed")
+	}
+	start := time.Now()
+	if err = store.Close(); !errors.Is(err, sqlite.ErrCloseTimeout) {
+		release()
+		t.Fatalf("bad callback was not bounded: %v", err)
+	}
+	if time.Since(start) > time.Second {
+		release()
+		t.Fatal("Close wait exceeded finite bound")
+	}
+	second, err := sqlite.Open(contextFor(t), cfg)
+	if second != nil {
+		second.Close()
+	}
+	if !errors.Is(err, sqlite.ErrWriterActive) {
+		release()
+		t.Fatalf("timed-out Close released original ownership: %v", err)
+	}
+	release()
+	if err = <-finished; !errors.Is(err, context.Canceled) && !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatalf("invalid callback committed after shutdown: %v", err)
+	}
+	if err = store.Close(); err != nil {
+		t.Fatal(err)
+	}
+	replacement, err := sqlite.Open(contextFor(t), cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { replacement.Close() })
+	if err = replacement.Migrate(contextFor(t)); err != nil {
+		t.Fatal(err)
+	}
+}
+func TestSQLiteDeviceClockPreservesUTCNanosecondInstants(t *testing.T) {
+	store := sqliteDatabase(t)
+	clock := &controlledClock{admissionStore: store, instant: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
+	h := durablework.New(owner, store, store, store, clock, durablework.NewPermissions([]durablework.Permission{{Subject: principal, Owner: owner, Record: true, Read: true}}))
+	ctx := contextFor(t)
+	out, err := h.Record(ctx, command("time-zero", "time-input", "zero fraction", nil, "2026-10-03T00:00:00.000001Z"), &principal)
+	assertReceived(t, out, err)
+	got, err := h.Observe(ctx, "time-input", &principal)
+	if err != nil || !got.Input.CreatedAt.Equal(clock.instant) || !got.Input.UpdatedAt.Equal(clock.instant) || !got.Job.DueAt.Equal(clock.instant) {
+		t.Fatalf("whole second changed: %+v %v", got, err)
+	}
+	clock.instant = clock.instant.Add(100*time.Millisecond + time.Nanosecond)
+	one := contract.Revision("1")
+	out, err = h.Record(ctx, command("time-fraction", "time-input", "fraction", &one, "2026-10-03T00:00:01.000000Z"), &principal)
+	assertReceived(t, out, err)
+	got, err = h.Observe(ctx, "time-input", &principal)
+	if err != nil || !got.Input.UpdatedAt.Equal(clock.instant) || !got.Job.DueAt.Equal(clock.instant) || got.Input.CreatedAt.Nanosecond() != 0 {
+		t.Fatalf("accurate fractional instant changed: %+v %v", got, err)
+	}
+}

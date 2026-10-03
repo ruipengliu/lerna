@@ -4,6 +4,7 @@ go 1.27.1
 
 require (
 	github.com/jackc/pgx/v5 v5.11.0
+	github.com/mattn/go-sqlite3 v1.14.52
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2
 )
 

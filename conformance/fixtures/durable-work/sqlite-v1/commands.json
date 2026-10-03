@@ -1,0 +1,44 @@
+[
+  {
+    "contract_version": "host-durable-work-1",
+    "profile": "host",
+    "method": "durable_work.record",
+    "command_id": "applied-original",
+    "target": {
+      "tenant_id": "fixture-tenant",
+      "owner_id": "fixture-owner",
+      "kind": "durable_work",
+      "id": "v1-input"
+    },
+    "payload": { "text": "PG v1 portable input 🌍" },
+    "accept_before": "2099-01-01T00:00:00.000000Z"
+  },
+  {
+    "contract_version": "host-durable-work-1",
+    "profile": "host",
+    "method": "durable_work.record",
+    "command_id": "expired-original",
+    "target": {
+      "tenant_id": "fixture-tenant",
+      "owner_id": "fixture-owner",
+      "kind": "durable_work",
+      "id": "expired-input"
+    },
+    "payload": { "text": "never applied" },
+    "accept_before": "2000-01-01T00:00:00.000000Z"
+  },
+  {
+    "contract_version": "host-durable-work-1",
+    "profile": "host",
+    "method": "durable_work.record",
+    "command_id": "applied-original",
+    "target": {
+      "tenant_id": "fixture-tenant",
+      "owner_id": "fixture-owner",
+      "kind": "durable_work",
+      "id": "v1-input"
+    },
+    "payload": { "text": "PG v1 portable input 🌍" },
+    "accept_before": "2099-01-01T00:00:00.000000Z"
+  }
+]
