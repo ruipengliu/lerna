@@ -214,6 +214,7 @@ func (s *Service) ReviseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	return output(tx, t), nil
 }
 func (s *Service) reviseGoal(ctx context.Context, tx runtime.Tx, t *taskState, cause api.ObjectRef) error {
+	t.PendingCompletionID = ""
 	t.Task.GoalRevision++
 	t.Task.ControlRevision++
 	t.Task.Requirements = []api.Requirement{}

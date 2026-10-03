@@ -321,7 +321,7 @@ func (s *Service) ChildCreateTx(ctx context.Context, tx runtime.Tx, auth runtime
 	if uint64(len(rows)) >= s.config.MaxTasksPerSubject {
 		return ChildOutput{}, api.E("overloaded", "child_handle_limit")
 	}
-	h := ChildHandle{ChildCreateInput: in, Revision: 1, SubjectID: auth.SubjectID, State: "preparing", SessionCommandRef: api.ObjectRef{TenantID: tx.Scope().TenantID, OwnerID: in.SessionOwnerID, ObjectID: api.NewID("command"), Revision: 1}}
+	h := ChildHandle{ChildCreateInput: in, Revision: 1, SubjectID: auth.SubjectID, SubjectGeneration: auth.CredentialGeneration, SubjectRoles: append([]string{}, auth.Roles...), State: "preparing", SessionCommandRef: api.ObjectRef{TenantID: tx.Scope().TenantID, OwnerID: in.SessionOwnerID, ObjectID: api.NewID("command"), Revision: 1}}
 	if e = tx.Create(ctx, children, in.ChildID, auth.SubjectID, h); e != nil {
 		return ChildOutput{}, e
 	}
