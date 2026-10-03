@@ -37,6 +37,23 @@ func (s *Service) Register(r *runtime.Registry) error {
 	for _, name := range []string{"session.archive", "session.reopen", "session.delete"} {
 		methods = append(methods, command[SessionControlInput, SessionOutput](s, name, true, s.ControlSessionTx))
 	}
+	if s.ports.Content != nil && s.ports.Delivery != nil && api.ValidID(s.config.DiscoveryOwnerID) {
+		for _, name := range []string{"session.submit_goal", "session.steer"} {
+			methods = append(methods, command[GoalInput, SubmissionOutput](s, name, false, s.SubmitGoalTx))
+		}
+		if s.ports.Closure != nil {
+			methods = append(methods, command[GoalInput, SubmissionOutput](s, "session.enqueue_goal_after", false, s.SubmitGoalTx))
+		}
+		methods = append(methods, command[WithdrawInput, SubmissionOutput](s, "submission.withdraw", true, s.WithdrawTx), query[ReadInput, SubmissionView]("submission.read", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in ReadInput) (SubmissionView, error) {
+			return s.ReadSubmission(ctx, store, scope, a, q.TargetID)
+		}), command[ReplyInput, ReplyOutput](s, "session.reply", false, s.ReplyTx))
+		if s.ports.Requests != nil {
+			methods = append(methods, command[InputInput, SubmissionOutput](s, "interaction.input", false, s.ForwardInputTx))
+		}
+		if err := r.RegisterJob(JobDispatch, s.Dispatch); err != nil {
+			return err
+		}
+	}
 	for _, m := range methods {
 		if err := r.Register(m); err != nil {
 			return err
