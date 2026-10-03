@@ -40,8 +40,16 @@ func (c *Client) checkOriginal(entry Entry) error {
 	if entry.IdentityScope != c.Discovery.IdentityScope || entry.Command.LogicalServiceID != c.Discovery.LogicalServiceID {
 		return api.E("forbidden", "recovery_scope_mismatch")
 	}
-	if entry.SchemaDigest != c.Discovery.SchemaDigest || entry.Command.Protocol != c.Discovery.Protocol || entry.Command.Profile != c.Discovery.Profile || entry.MethodSchemaDigest == "" || entry.MethodSchemaDigest != c.methodSchemaDigest(entry.Command.Method) {
+	if entry.SchemaDigest != c.Discovery.SchemaDigest || entry.Command.Protocol != c.Discovery.Protocol || entry.Command.Profile != c.Discovery.Profile || entry.MethodSchemaDigest == "" {
 		return api.E("unsupported", "original_decoder_unavailable")
 	}
-	return nil
+	decoder, ok := c.entryDecoder(entry)
+	if !ok {
+		return api.E("unsupported", "original_decoder_unavailable")
+	}
+	digest, err := api.Digest(entry.Command)
+	if err != nil || digest != entry.Digest {
+		return api.E("invalid_request", "original_command_digest_mismatch")
+	}
+	return decoder.input.Validate(entry.Command.Payload)
 }

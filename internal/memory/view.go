@@ -140,8 +140,8 @@ func (s *Service) viewAllowed(ctx context.Context, tx runtime.Tx, auth runtime.A
 }
 
 func (s *Service) registerViewCopy(ctx context.Context, tx runtime.Tx, auth runtime.Auth, view View, record MemoryRecord) error {
-	var content ContentVersion
-	if _, err := tx.Get(ctx, "content.versions", contentKey(record.Values.ContentRef), &content); err != nil {
+	content, err := s.CheckContentTx(ctx, tx, auth, record.Values.ContentRef, "memory.sync", view.Location, true)
+	if err != nil {
 		return err
 	}
 	retention, _ := api.ParseTime(content.RetentionUntil)
@@ -150,7 +150,12 @@ func (s *Service) registerViewCopy(ctx context.Context, tx runtime.Tx, auth runt
 		until = retention
 	}
 	copyID := semanticID("copy", view.ViewID+":"+record.MemoryID+":"+fmt.Sprint(record.Revision))
-	_, err := s.RegisterCopyTx(ctx, tx, auth, RegisterCopyInput{CopyID: copyID, ContentRef: record.Values.ContentRef, HolderRef: view.HolderRef, Purpose: "memory.sync", Location: view.Location, RetainUntil: api.Time(until), ReferenceIntentRef: tx.Scope().Ref(view.ViewID, 1)})
+	in := RegisterCopyInput{CopyID: copyID, ContentRef: record.Values.ContentRef, HolderRef: view.HolderRef, Purpose: "memory.sync", Location: view.Location, RetainUntil: api.Time(until), ReferenceIntentRef: tx.Scope().Ref(view.ViewID, 1)}
+	if in.ContentRef.OwnerID != tx.Scope().OwnerID {
+		_, err = s.registerForeignMetadataRef(ctx, tx, auth, in)
+	} else {
+		_, err = s.RegisterCopyTx(ctx, tx, auth, in)
+	}
 	return err
 }
 

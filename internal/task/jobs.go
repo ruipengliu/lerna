@@ -32,7 +32,7 @@ func deferred(err error) bool {
 	return api.IsCode(err, "dependency_unavailable") || api.IsCode(err, "not_found") || api.IsCode(err, "effect_unknown") || api.IsCode(err, "accounting_unknown") || api.IsCode(err, "overloaded")
 }
 func (s *Service) registerJobs(r *runtime.Registry) error {
-	handlers := map[string]runtime.JobHandler{JobAdjustment: s.adjustmentJob, JobInput: s.inputJob, JobAdvance: s.advanceJob, JobDispatchDecision: s.decisionJob, JobDispatchOperation: s.operationJob, JobReconcileOperation: s.reconcileOperationJob, JobCoverage: s.coverageJob, JobCheck: s.checkJob, JobControl: s.controlJob, JobBilling: s.billingJob, JobPublishResult: s.publishResultJob, JobSteer: s.steerJob, JobDelegation: s.delegationJob, JobAllocation: s.allocationJob, JobChildPrepare: s.childPrepareJob, JobChildTransfer: s.transferJob}
+	handlers := map[string]runtime.JobHandler{JobContextLookup: s.contextLookupJob, JobAdjustment: s.adjustmentJob, JobInput: s.inputJob, JobAdvance: s.advanceJob, JobDispatchDecision: s.decisionJob, JobDispatchOperation: s.operationJob, JobReconcileOperation: s.reconcileOperationJob, JobCoverage: s.coverageJob, JobCheck: s.checkJob, JobControl: s.controlJob, JobBilling: s.billingJob, JobPublishResult: s.publishResultJob, JobSteer: s.steerJob, JobDelegation: s.delegationJob, JobAllocation: s.allocationJob, JobChildPrepare: s.childPrepareJob, JobChildTransfer: s.transferJob}
 	for kind, h := range handlers {
 		if e := r.RegisterJob(kind, h); e != nil {
 			return e
@@ -91,7 +91,7 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 	if expired || completionHandled || guardrailHandled {
 		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
 	}
-	if t.Task.Control != "running" || t.PendingGoalCommand != "" || t.Task.RequirementsState == "awaiting_input" {
+	if t.Task.Control != "running" || t.PendingGoalCommand != "" || t.PendingContextID != "" || t.Task.RequirementsState == "awaiting_input" {
 		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
 	}
 	var pending candidatePending

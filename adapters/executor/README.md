@@ -21,3 +21,5 @@
 `executor.lease.usage.get` 先取得同一本机 Execution 的实际累计用量，按原 use/source/revision 归并本机 lease，再发布独立 LeaseUsageProof 和原闭合引用。报告签名包含原设备 database_id、endpoint/instance、Cloud LeaseRef 和完整 UsageSnapshot 摘要。云端只调用原 `ApplyLeaseReportTx` 归并这一分配；同一个原 Cloud lease use 不再调用普通 `ApplySettlementTx`。Task 预算仍单独消费原 Operation Usage，不能把 lease 的源身份替代 Operation。
 
 [独立进程入口](../../cmd/executor/README.md) 与 `Dial/Client` 使用真实 TLS、固定设备 owner/instance/database、有限 peer 文件凭据及 GoSDK fsync journal。已验证实际 CLI 子进程 SIGTERM 退出、丢回复后原回执恢复，以及 PostgreSQL Authority 的原一次 USD 1 预留与 SQLite 设备零费用闭合补传、不重复扣费。该 PG 用例预置了受信批准的 Grant 和准入 Task 引用；设备来源登记另有真实 TLS/两个 SQLite owner 的正反例，完整公开 Task/Brain 与云端 Memory 的来源门禁由工单 16／23 后续共同验证，尚未据此宣称完成。
+
+升级后的 `Dial` 显式安装 [固定历史合同](legacy/README.md)。GoSDK `RetainDecoder` 只按原 journal 的 method/schema digest 选择受信合同，仍核当前 owner、profile、核心 Schema 和完整身份／数据库 scope。原命令先查询准确回执；只有来源明确返回 not_found 才发送原封套，不替换 payload、ID 或 TTL。旧输入和回执都使用原合同验证；未知摘要、错误 scope 或异参在出站前拒绝。历史合同只保留原责任，新命令仍按当前 Schema 与准入门禁处理。

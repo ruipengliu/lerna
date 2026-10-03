@@ -147,13 +147,15 @@ type Client struct {
 	Discovery Discovery
 	inputs    map[string]*api.Validator
 	outputs   map[string]*api.Validator
+	decoderMu sync.RWMutex
+	retained  map[string]originalDecoder
 }
 
 func NewClient(t Transport, j Journal, d Discovery) (*Client, error) {
 	if t == nil || j == nil || d.IdentityScope == "" || !api.ValidID(d.LogicalServiceID) {
 		return nil, api.E("invalid_request", "client_configuration_missing")
 	}
-	c := &Client{t, j, d, map[string]*api.Validator{}, map[string]*api.Validator{}}
+	c := &Client{Transport: t, Journal: j, Discovery: d, inputs: map[string]*api.Validator{}, outputs: map[string]*api.Validator{}, retained: map[string]originalDecoder{}}
 	for _, m := range d.Methods {
 		digest, e := api.Digest([]any{m.InputSchema, m.OutputSchema})
 		if e != nil || digest != m.SchemaDigest {
@@ -176,13 +178,6 @@ func (c *Client) Send(ctx context.Context, command api.Command) (api.Receipt, er
 	if command.LogicalServiceID != c.Discovery.LogicalServiceID || command.Protocol != api.Protocol || command.Profile != api.Profile {
 		return api.Receipt{}, api.E("invalid_request", "command_owner_mismatch")
 	}
-	v, ok := c.inputs[command.Method]
-	if !ok {
-		return api.Receipt{}, api.E("unsupported", "method_not_supported")
-	}
-	if e := v.Validate(command.Payload); e != nil {
-		return api.Receipt{}, e
-	}
 	digest, e := api.Digest(command)
 	if e != nil {
 		return api.Receipt{}, e
@@ -195,10 +190,16 @@ func (c *Client) Send(ctx context.Context, command api.Command) (api.Receipt, er
 		if e = c.checkOriginal(original); e != nil {
 			return api.Receipt{}, e
 		}
-		if original.Receipt != nil && original.Receipt.Stage != "accepted" {
-			return c.Receipt(ctx, command.CommandID)
-		}
+		// 已保留的原责任先查询准确receipt；不把它替换成当前方法的digest/TTL。
+		return c.recoverEntry(ctx, original)
 	} else if !errors.Is(e, os.ErrNotExist) && !api.IsCode(e, "not_found") {
+		return api.Receipt{}, e
+	}
+	v, ok := c.inputs[command.Method]
+	if !ok || c.methodSchemaDigest(command.Method) == "" {
+		return api.Receipt{}, api.E("unsupported", "method_not_supported")
+	}
+	if e = v.Validate(command.Payload); e != nil {
 		return api.Receipt{}, e
 	}
 	entry := Entry{IdentityScope: c.Discovery.IdentityScope, SchemaDigest: c.Discovery.SchemaDigest, MethodSchemaDigest: c.methodSchemaDigest(command.Method), Command: command, Digest: digest}
@@ -230,11 +231,11 @@ func (c *Client) saveReceipt(ctx context.Context, entry Entry, raw json.RawMessa
 		if receipt.Error != nil || len(receipt.Output) == 0 {
 			return receipt, api.E("invalid_request", "invalid_receipt")
 		}
-		v, ok := c.outputs[entry.Command.Method]
+		decoder, ok := c.entryDecoder(entry)
 		if !ok {
 			return receipt, api.E("unsupported", "original_decoder_unavailable")
 		}
-		if e := v.Validate(receipt.Output); e != nil {
+		if e := decoder.output.Validate(receipt.Output); e != nil {
 			return receipt, e
 		}
 	}
@@ -254,19 +255,23 @@ func (c *Client) Recover(ctx context.Context) ([]api.Receipt, bool, error) {
 		if e = c.checkOriginal(entry); e != nil {
 			return results, partial, e
 		}
-		raw, e := c.Transport.Call(ctx, "receipt_lookup", api.Raw(api.ReceiptLookup{LogicalServiceID: entry.Command.LogicalServiceID, CommandID: entry.Command.CommandID}))
-		var r api.Receipt
-		if api.IsCode(e, "not_found") {
-			r, e = c.sendEntry(ctx, entry)
-		} else if e == nil {
-			r, e = c.saveReceipt(ctx, entry, raw)
-		}
+		r, e := c.recoverEntry(ctx, entry)
 		if e != nil {
 			return results, partial, e
 		}
 		results = append(results, r)
 	}
 	return results, partial, nil
+}
+func (c *Client) recoverEntry(ctx context.Context, entry Entry) (api.Receipt, error) {
+	raw, err := c.Transport.Call(ctx, "receipt_lookup", api.Raw(api.ReceiptLookup{LogicalServiceID: entry.Command.LogicalServiceID, CommandID: entry.Command.CommandID}))
+	if api.IsCode(err, "not_found") {
+		return c.sendEntry(ctx, entry)
+	}
+	if err != nil {
+		return api.Receipt{}, err
+	}
+	return c.saveReceipt(ctx, entry, raw)
 }
 func (c *Client) Query(ctx context.Context, q api.Query) (json.RawMessage, error) {
 	if q.LogicalServiceID != c.Discovery.LogicalServiceID {

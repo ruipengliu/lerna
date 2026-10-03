@@ -71,7 +71,9 @@ func (c *SourceClient) VerifyTx(ctx context.Context, tx runtime.Tx, a runtime.Au
 	if err != nil {
 		return err
 	}
-	return c.verify(tx.Scope(), a, r, p, now, false)
+	// 验真同样用于原副本收尾；mode签入完整body，Memory自己的use gate
+	// 仍只接受mode=use。control证明只能保存原停止事实，不能升级成正文许可。
+	return c.verify(tx.Scope(), a, r, p, now, p.Mode == "control")
 }
 func (c *SourceClient) RegisterCopy(ctx context.Context, scope runtime.Scope, a runtime.Auth, r memory.ForeignReference) (memory.ForeignProof, error) {
 	if err := c.reference(scope, a, r, false); err != nil {

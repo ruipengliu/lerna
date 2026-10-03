@@ -412,7 +412,11 @@ func (h *Host) Call(ctx context.Context, a runtime.Auth, kind string, payload js
 		if err := api.Decode(payload, &q); err != nil {
 			return "", nil, err
 		}
-		if strings.HasPrefix(q.Method, "execution.") {
+		if q.Method == "execution.control.get" {
+			// 原停止门禁可以先于任何Operation到达；TaskID不是admission键。
+			// peer只读设备本库已知控制事实，领域仍不暴露云端Task。
+			principal = runtime.Auth{TenantID: a.TenantID, SubjectID: a.SubjectID, CredentialGeneration: a.CredentialGeneration, Roles: []string{"orchestrator"}}
+		} else if strings.HasPrefix(q.Method, "execution.") {
 			var rec admissionRecord
 			if _, err := h.Store.Read(ctx, h.Scope, Namespace+".admissions", q.TargetID, 0, &rec); err != nil {
 				return "", nil, api.E("forbidden", "original_device_admission_required")

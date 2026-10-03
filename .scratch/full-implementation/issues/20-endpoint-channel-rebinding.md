@@ -1,8 +1,8 @@
 # 20 endpoint-channel-rebinding
 
-Status: ready-for-agent
+Status: claimed
 Blocked by: 01, 02, 07, 08
-Implementer: unassigned
+Implementer: execution_impl (App/config/classified workers: storage_impl)
 
 依据：A3／A4、协议 EndpointChannel 原连接／绑定合同，以及工程方案的分类 worker 和分布式装配。
 

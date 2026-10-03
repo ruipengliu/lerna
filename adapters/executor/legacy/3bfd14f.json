@@ -1,0 +1,1120 @@
+[
+  {
+    "name": "executor.admission.get",
+    "owner": "executor",
+    "kind": "query",
+    "cas": false,
+    "allows_accepted": false,
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "bundle_id": {
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "bundle_id"
+      ],
+      "type": "object"
+    },
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "bundle": {
+          "additionalProperties": false,
+          "properties": {
+            "admission_hash": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "authority_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "bundle_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "contents": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "content_ref": {
+                    "$ref": "#/$defs/ContentRef"
+                  },
+                  "disclosed_sources": {
+                    "items": {
+                      "$ref": "#/$defs/ContentRef"
+                    },
+                    "maxItems": 100,
+                    "minItems": 0,
+                    "type": "array"
+                  },
+                  "processed_sources": {
+                    "items": {
+                      "$ref": "#/$defs/ContentRef"
+                    },
+                    "maxItems": 100,
+                    "minItems": 0,
+                    "type": "array"
+                  },
+                  "purposes": {
+                    "items": {
+                      "maxLength": 4096,
+                      "type": "string"
+                    },
+                    "maxItems": 100,
+                    "minItems": 0,
+                    "type": "array"
+                  },
+                  "retain_until": {
+                    "maxLength": 4096,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "content_ref",
+                  "purposes",
+                  "processed_sources",
+                  "disclosed_sources",
+                  "retain_until"
+                ],
+                "type": "object"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            },
+            "device_database_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "endpoint_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "execution_hash": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "instance_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "intent": {
+              "additionalProperties": false,
+              "properties": {
+                "admission_purpose": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "admission_source_kind": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "admission_source_ref": {
+                  "$ref": "#/$defs/ObjectRef"
+                },
+                "arguments_ref": {
+                  "$ref": "#/$defs/ContentRef"
+                },
+                "binding_ref": {
+                  "$ref": "#/$defs/ObjectRef"
+                },
+                "capability_ref": {
+                  "$ref": "#/$defs/ComponentRef"
+                },
+                "control_revision": {
+                  "maximum": 9007199254740991,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "cost_bound": {
+                  "items": {
+                    "$ref": "#/$defs/Amount"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "deadline": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "disclosed_source_refs": {
+                  "items": {
+                    "$ref": "#/$defs/ContentRef"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "executor_id": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "goal_revision": {
+                  "maximum": 9007199254740991,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "install_lock_ref": {
+                  "$ref": "#/$defs/ComponentRef"
+                },
+                "logical_step_key": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "operation_id": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "processed_source_refs": {
+                  "items": {
+                    "$ref": "#/$defs/ContentRef"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "requirement_refs": {
+                  "items": {
+                    "$ref": "#/$defs/RequirementRef"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "resource_refs": {
+                  "items": {
+                    "$ref": "#/$defs/ObjectRef"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "retry_of_operation_ref": {
+                  "$ref": "#/$defs/ObjectRef"
+                },
+                "source_position": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "task_deadline": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "task_ref": {
+                  "$ref": "#/$defs/ObjectRef"
+                }
+              },
+              "required": [
+                "operation_id",
+                "task_ref",
+                "goal_revision",
+                "control_revision",
+                "admission_source_kind",
+                "admission_source_ref",
+                "source_position",
+                "admission_purpose",
+                "capability_ref",
+                "binding_ref",
+                "install_lock_ref",
+                "arguments_ref",
+                "resource_refs",
+                "requirement_refs",
+                "cost_bound",
+                "executor_id",
+                "deadline",
+                "task_deadline",
+                "logical_step_key",
+                "processed_source_refs",
+                "disclosed_source_refs"
+              ],
+              "type": "object"
+            },
+            "intent_ref": {
+              "$ref": "#/$defs/ContentRef"
+            },
+            "issued_at": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "lease": {
+              "additionalProperties": false,
+              "properties": {
+                "allocation_digest": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "closure_ref": {
+                  "$ref": "#/$defs/ObjectRef"
+                },
+                "cumulative": {
+                  "items": {
+                    "$ref": "#/$defs/Amount"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "endpoint_id": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "expires_at": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "grant_refs": {
+                  "items": {
+                    "$ref": "#/$defs/ObjectRef"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "instance_id": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "issued_at": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "lease_id": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "limits": {
+                  "items": {
+                    "$ref": "#/$defs/Amount"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "mode": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "once_consumed": {
+                  "type": "boolean"
+                },
+                "proof": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "reserved": {
+                  "items": {
+                    "$ref": "#/$defs/Amount"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "revision": {
+                  "maximum": 9007199254740991,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "scope": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "actions": {
+                      "items": {
+                        "maxLength": 4096,
+                        "type": "string"
+                      },
+                      "maxItems": 100,
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "grant_refs": {
+                      "items": {
+                        "$ref": "#/$defs/ObjectRef"
+                      },
+                      "maxItems": 100,
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "intent_hash": {
+                      "maxLength": 4096,
+                      "type": "string"
+                    },
+                    "location": {
+                      "maxLength": 4096,
+                      "type": "string"
+                    },
+                    "purposes": {
+                      "items": {
+                        "maxLength": 4096,
+                        "type": "string"
+                      },
+                      "maxItems": 100,
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "recipient": {
+                      "maxLength": 4096,
+                      "type": "string"
+                    },
+                    "requested_units": {
+                      "items": {
+                        "$ref": "#/$defs/Amount"
+                      },
+                      "maxItems": 100,
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "resources": {
+                      "items": {
+                        "maxLength": 4096,
+                        "type": "string"
+                      },
+                      "maxItems": 100,
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "start_before": {
+                      "maxLength": 4096,
+                      "type": "string"
+                    },
+                    "subject_ref": {
+                      "$ref": "#/$defs/ObjectRef"
+                    },
+                    "target_kind": {
+                      "maxLength": 4096,
+                      "type": "string"
+                    },
+                    "target_ref": {
+                      "$ref": "#/$defs/ObjectRef"
+                    },
+                    "use_id": {
+                      "maxLength": 4096,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "use_id",
+                    "subject_ref",
+                    "target_ref",
+                    "target_kind",
+                    "intent_hash",
+                    "grant_refs",
+                    "requested_units",
+                    "resources",
+                    "actions",
+                    "recipient",
+                    "location",
+                    "purposes",
+                    "start_before"
+                  ],
+                  "type": "object"
+                },
+                "spending_closed": {
+                  "type": "boolean"
+                },
+                "state": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "usage_final": {
+                  "type": "boolean"
+                },
+                "usage_revision": {
+                  "maximum": 9007199254740991,
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "mode",
+                "once_consumed",
+                "issued_at",
+                "allocation_digest",
+                "lease_id",
+                "revision",
+                "endpoint_id",
+                "instance_id",
+                "grant_refs",
+                "scope",
+                "limits",
+                "expires_at",
+                "state",
+                "cumulative",
+                "reserved",
+                "usage_revision",
+                "spending_closed",
+                "usage_final"
+              ],
+              "type": "object"
+            },
+            "lease_ref": {
+              "$ref": "#/$defs/ObjectRef"
+            },
+            "original_command_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "principal": {
+              "additionalProperties": false,
+              "properties": {
+                "credential_generation": {
+                  "maximum": 9007199254740991,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "roles": {
+                  "items": {
+                    "maxLength": 4096,
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "subject_id": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "tenant_id": {
+                  "maxLength": 4096,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "tenant_id",
+                "subject_id",
+                "credential_generation",
+                "roles"
+              ],
+              "type": "object"
+            },
+            "proof": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "reservation_ref": {
+              "$ref": "#/$defs/ObjectRef"
+            },
+            "revision": {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "start_before": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "use_refs": {
+              "items": {
+                "$ref": "#/$defs/ObjectRef"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            }
+          },
+          "required": [
+            "bundle_id",
+            "revision",
+            "authority_id",
+            "endpoint_id",
+            "device_database_id",
+            "instance_id",
+            "original_command_id",
+            "admission_hash",
+            "execution_hash",
+            "intent_ref",
+            "reservation_ref",
+            "intent",
+            "principal",
+            "lease_ref",
+            "use_refs",
+            "lease",
+            "contents",
+            "issued_at",
+            "start_before",
+            "proof"
+          ],
+          "type": "object"
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "denied": {
+          "type": "boolean"
+        },
+        "missing": {
+          "items": {
+            "$ref": "#/$defs/ContentRef"
+          },
+          "maxItems": 100,
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "bundle",
+        "complete",
+        "missing",
+        "denied"
+      ],
+      "type": "object"
+    },
+    "schema_digest": "sha256:941dd3c646c2adfd3b2ef7800685334b4282e92b731b27aa9254c5dac6197665",
+    "recovery": "query original command/object; preserve exact owner, payload, revision and deadlines"
+  },
+  {
+    "name": "executor.admission.install",
+    "owner": "executor",
+    "kind": "command",
+    "cas": false,
+    "allows_accepted": false,
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "admission_hash": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "authority_id": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "bundle_id": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "contents": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "content_ref": {
+                "$ref": "#/$defs/ContentRef"
+              },
+              "disclosed_sources": {
+                "items": {
+                  "$ref": "#/$defs/ContentRef"
+                },
+                "maxItems": 100,
+                "minItems": 0,
+                "type": "array"
+              },
+              "processed_sources": {
+                "items": {
+                  "$ref": "#/$defs/ContentRef"
+                },
+                "maxItems": 100,
+                "minItems": 0,
+                "type": "array"
+              },
+              "purposes": {
+                "items": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "maxItems": 100,
+                "minItems": 0,
+                "type": "array"
+              },
+              "retain_until": {
+                "maxLength": 4096,
+                "type": "string"
+              }
+            },
+            "required": [
+              "content_ref",
+              "purposes",
+              "processed_sources",
+              "disclosed_sources",
+              "retain_until"
+            ],
+            "type": "object"
+          },
+          "maxItems": 100,
+          "minItems": 0,
+          "type": "array"
+        },
+        "device_database_id": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "endpoint_id": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "execution_hash": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "instance_id": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "intent": {
+          "additionalProperties": false,
+          "properties": {
+            "admission_purpose": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "admission_source_kind": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "admission_source_ref": {
+              "$ref": "#/$defs/ObjectRef"
+            },
+            "arguments_ref": {
+              "$ref": "#/$defs/ContentRef"
+            },
+            "binding_ref": {
+              "$ref": "#/$defs/ObjectRef"
+            },
+            "capability_ref": {
+              "$ref": "#/$defs/ComponentRef"
+            },
+            "control_revision": {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "cost_bound": {
+              "items": {
+                "$ref": "#/$defs/Amount"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            },
+            "deadline": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "disclosed_source_refs": {
+              "items": {
+                "$ref": "#/$defs/ContentRef"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            },
+            "executor_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "goal_revision": {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "install_lock_ref": {
+              "$ref": "#/$defs/ComponentRef"
+            },
+            "logical_step_key": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "operation_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "processed_source_refs": {
+              "items": {
+                "$ref": "#/$defs/ContentRef"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            },
+            "requirement_refs": {
+              "items": {
+                "$ref": "#/$defs/RequirementRef"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            },
+            "resource_refs": {
+              "items": {
+                "$ref": "#/$defs/ObjectRef"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            },
+            "retry_of_operation_ref": {
+              "$ref": "#/$defs/ObjectRef"
+            },
+            "source_position": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "task_deadline": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "task_ref": {
+              "$ref": "#/$defs/ObjectRef"
+            }
+          },
+          "required": [
+            "operation_id",
+            "task_ref",
+            "goal_revision",
+            "control_revision",
+            "admission_source_kind",
+            "admission_source_ref",
+            "source_position",
+            "admission_purpose",
+            "capability_ref",
+            "binding_ref",
+            "install_lock_ref",
+            "arguments_ref",
+            "resource_refs",
+            "requirement_refs",
+            "cost_bound",
+            "executor_id",
+            "deadline",
+            "task_deadline",
+            "logical_step_key",
+            "processed_source_refs",
+            "disclosed_source_refs"
+          ],
+          "type": "object"
+        },
+        "intent_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "issued_at": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "lease": {
+          "additionalProperties": false,
+          "properties": {
+            "allocation_digest": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "closure_ref": {
+              "$ref": "#/$defs/ObjectRef"
+            },
+            "cumulative": {
+              "items": {
+                "$ref": "#/$defs/Amount"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            },
+            "endpoint_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "expires_at": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "grant_refs": {
+              "items": {
+                "$ref": "#/$defs/ObjectRef"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            },
+            "instance_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "issued_at": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "lease_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "limits": {
+              "items": {
+                "$ref": "#/$defs/Amount"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            },
+            "mode": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "once_consumed": {
+              "type": "boolean"
+            },
+            "proof": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "reserved": {
+              "items": {
+                "$ref": "#/$defs/Amount"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            },
+            "revision": {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "scope": {
+              "additionalProperties": false,
+              "properties": {
+                "actions": {
+                  "items": {
+                    "maxLength": 4096,
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "grant_refs": {
+                  "items": {
+                    "$ref": "#/$defs/ObjectRef"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "intent_hash": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "location": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "purposes": {
+                  "items": {
+                    "maxLength": 4096,
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "recipient": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "requested_units": {
+                  "items": {
+                    "$ref": "#/$defs/Amount"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "resources": {
+                  "items": {
+                    "maxLength": 4096,
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "start_before": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "subject_ref": {
+                  "$ref": "#/$defs/ObjectRef"
+                },
+                "target_kind": {
+                  "maxLength": 4096,
+                  "type": "string"
+                },
+                "target_ref": {
+                  "$ref": "#/$defs/ObjectRef"
+                },
+                "use_id": {
+                  "maxLength": 4096,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "use_id",
+                "subject_ref",
+                "target_ref",
+                "target_kind",
+                "intent_hash",
+                "grant_refs",
+                "requested_units",
+                "resources",
+                "actions",
+                "recipient",
+                "location",
+                "purposes",
+                "start_before"
+              ],
+              "type": "object"
+            },
+            "spending_closed": {
+              "type": "boolean"
+            },
+            "state": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "usage_final": {
+              "type": "boolean"
+            },
+            "usage_revision": {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "mode",
+            "once_consumed",
+            "issued_at",
+            "allocation_digest",
+            "lease_id",
+            "revision",
+            "endpoint_id",
+            "instance_id",
+            "grant_refs",
+            "scope",
+            "limits",
+            "expires_at",
+            "state",
+            "cumulative",
+            "reserved",
+            "usage_revision",
+            "spending_closed",
+            "usage_final"
+          ],
+          "type": "object"
+        },
+        "lease_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "original_command_id": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "principal": {
+          "additionalProperties": false,
+          "properties": {
+            "credential_generation": {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "roles": {
+              "items": {
+                "maxLength": 4096,
+                "type": "string"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            },
+            "subject_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "tenant_id": {
+              "maxLength": 4096,
+              "type": "string"
+            }
+          },
+          "required": [
+            "tenant_id",
+            "subject_id",
+            "credential_generation",
+            "roles"
+          ],
+          "type": "object"
+        },
+        "proof": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "reservation_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "revision": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "start_before": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "use_refs": {
+          "items": {
+            "$ref": "#/$defs/ObjectRef"
+          },
+          "maxItems": 100,
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "bundle_id",
+        "revision",
+        "authority_id",
+        "endpoint_id",
+        "device_database_id",
+        "instance_id",
+        "original_command_id",
+        "admission_hash",
+        "execution_hash",
+        "intent_ref",
+        "reservation_ref",
+        "intent",
+        "principal",
+        "lease_ref",
+        "use_refs",
+        "lease",
+        "contents",
+        "issued_at",
+        "start_before",
+        "proof"
+      ],
+      "type": "object"
+    },
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "bundle_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "operation_ref": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "start_before": {
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "bundle_ref",
+        "operation_ref",
+        "start_before"
+      ],
+      "type": "object"
+    },
+    "schema_digest": "sha256:0c9769df5abe8a56baaa7f0b1e1910fe8e1340cbd4c661eada804c9580f5c50e",
+    "recovery": "query original command/object; preserve exact owner, payload, revision and deadlines"
+  }
+]

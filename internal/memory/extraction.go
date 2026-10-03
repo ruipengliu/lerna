@@ -148,7 +148,7 @@ func (s *Service) extract(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 	if c.TargetID != in.ExtractionID || !api.ValidID(in.ExtractionID) || len(in.InputRefs) == 0 || in.Limits.MaxCandidates < 1 || in.Limits.MaxCandidates > 100 || in.Limits.MaxInputBytes < 1 || in.Limits.MaxInputBytes > MaxContentBytes || in.Limits.MaxTokens > api.MaxSafeInteger {
 		return ExtractionOutput{}, api.E("invalid_request", "invalid_extraction_limits")
 	}
-	if err := validateSources(tx.Scope(), in.InputRefs); err != nil {
+	if err := s.validateSources(tx.Scope(), in.InputRefs); err != nil {
 		return ExtractionOutput{}, err
 	}
 	if !api.Equal(in.ExtractorRef, RuleExtractor()) {

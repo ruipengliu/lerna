@@ -23,7 +23,7 @@ func ProposalSchema() api.Schema {
 	return api.Schema{"oneOf": []any{
 		variant("refine_requirements", map[string]any{"requirement_delta": api.Ref("RequirementDelta")}, "requirement_delta"),
 		variant("act", map[string]any{"actions": api.Array(api.SchemaFor[ActionCandidate](), 1, 4), "requirement_delta": api.Ref("RequirementDelta")}, "actions"),
-		variant("need_context", map[string]any{"lookups": api.Array(api.SchemaFor[ContextLookup](), 1, 3)}, "lookups"),
+		variant("need_context", map[string]any{"lookups": api.Array(ContextLookupSchema(), 1, 3)}, "lookups"),
 		variant("request_input", map[string]any{"question_ref": api.Ref("ContentRef"), "answer_schema_ref": api.Ref("ComponentRef"), "preview_refs": api.Array(api.Ref("ContentRef"), 1, 100), "purpose": api.Enum("clarify_goal", "supply_context")}, "question_ref", "answer_schema_ref", "preview_refs", "purpose"),
 		variant("complete", map[string]any{"artifact_refs": api.Array(api.Ref("ContentRef"), 1, 100), "check_suggestions": api.Array(api.SchemaFor[CheckSuggestion](), 0, 100)}, "artifact_refs", "check_suggestions"),
 		variant("fail", map[string]any{"reason_code": api.String(), "evidence_refs": api.Array(api.Ref("ContentRef"), 1, 100), "explanation_ref": api.Ref("ContentRef"), "resume_condition_ref": api.Ref("ContentRef")}, "reason_code", "evidence_refs", "explanation_ref"),
@@ -31,6 +31,48 @@ func ProposalSchema() api.Schema {
 }
 
 var localName = regexp.MustCompile(`^[a-z][a-z0-9_]{0,63}$`)
+
+func ContextLookupSchema() api.Schema {
+	schema := api.SchemaFor[ContextLookup]()
+	schema["properties"].(map[string]any)["kind"] = api.Enum("existing_content", "memory_query", "capability_describe", "original_fact")
+	return schema
+}
+
+func DraftLookupSchema() api.Schema {
+	schema := api.SchemaFor[DraftLookup]()
+	props := schema["properties"].(map[string]any)
+	props["kind"] = api.Enum("existing_content", "memory_query", "capability_describe", "original_fact")
+	props["query_local_id"] = api.Schema{"type": "string", "pattern": localName.String(), "minLength": 1, "maxLength": 64}
+	return schema
+}
+
+func ValidateDraftLookups(lookups []DraftLookup, contents []GeneratedContent) error {
+	if len(lookups) < 1 || len(lookups) > 3 {
+		return api.E("invalid_request", "context_lookup_limit")
+	}
+	known := make(map[string]bool, len(contents))
+	for _, c := range contents {
+		known[c.LocalID] = true
+	}
+	seen := map[string]bool{}
+	for _, q := range lookups {
+		if q.Kind != "existing_content" && q.Kind != "memory_query" && q.Kind != "capability_describe" && q.Kind != "original_fact" || !known[q.QueryLocalID] || !localName.MatchString(q.QueryLocalID) {
+			return api.E("invalid_request", "invalid_context_lookup")
+		}
+		if err := api.ValidateRecord("ObjectRef", q.TargetRef); err != nil {
+			return err
+		}
+		digest, err := api.Digest(q)
+		if err != nil {
+			return err
+		}
+		if seen[digest] {
+			return api.E("invalid_request", "duplicate_context_lookup")
+		}
+		seen[digest] = true
+	}
+	return nil
+}
 
 func DraftActionSchema() api.Schema {
 	schema := api.SchemaFor[DraftAction]()
@@ -85,6 +127,9 @@ func validateGenerated(g Generated) error {
 		return api.E("invalid_request", "reason_missing")
 	}
 	d := g.Draft
+	if d.Kind != "need_context" && len(d.Lookups) != 0 {
+		return api.E("invalid_request", "context_lookup_kind_mismatch")
+	}
 	switch d.Kind {
 	case "refine_requirements":
 		if len(d.Requirements) == 0 || len(d.Requirements) > 100 || len(d.Actions) > 0 || len(d.ArtifactLocalIDs) > 0 {
@@ -108,6 +153,13 @@ func validateGenerated(g Generated) error {
 				return api.E("invalid_request", "invalid_action_local_key")
 			}
 			keys[a.LocalKey] = true
+		}
+	case "need_context":
+		if len(d.Actions) > 0 || len(d.Requirements) > 0 || len(d.ArtifactLocalIDs) > 0 || len(d.ExistingArtifactRefs) > 0 {
+			return api.E("invalid_request", "invalid_context_lookup")
+		}
+		if err := ValidateDraftLookups(d.Lookups, g.Contents); err != nil {
+			return err
 		}
 	case "complete":
 		if len(d.ArtifactLocalIDs)+len(d.ExistingArtifactRefs) == 0 || len(d.Actions) > 0 || len(d.Requirements) > 0 {
@@ -212,6 +264,15 @@ func materialize(d decision) (Proposal, error) {
 		out.AnswerSchemaRef = draft.AnswerSchemaRef
 		out.PreviewRefs = []api.ContentRef{question, d.Snapshot.GoalRef}
 		out.Purpose = draft.Purpose
+	case "need_context":
+		out.Lookups = []ContextLookup{}
+		for _, lookup := range draft.Lookups {
+			query, exists := refs[lookup.QueryLocalID]
+			if !exists {
+				return Proposal{}, api.E("invalid_request", "invalid_context_lookup")
+			}
+			out.Lookups = append(out.Lookups, ContextLookup{Kind: lookup.Kind, TargetRef: lookup.TargetRef, QueryRef: query})
+		}
 	case "fail":
 		out.ReasonCode = draft.ReasonCode
 		out.EvidenceRefs = []api.ContentRef{out.ReasonRef}
