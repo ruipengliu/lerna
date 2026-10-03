@@ -170,6 +170,7 @@ func (s *Service) decisionJob(ctx context.Context, store runtime.Store, scope ru
 		return s.wait(ctx, store, scope, work)
 	}
 	send := false
+	sent := d.Sent
 	err := s.transaction(ctx, store, scope, func(tx runtime.Tx) error {
 		if e := tx.Guard(ctx, work.Claim); e != nil {
 			return e
@@ -178,10 +179,14 @@ func (s *Service) decisionJob(ctx context.Context, store runtime.Store, scope ru
 		if e != nil {
 			return e
 		}
+		sent = current.Sent
 		if terminal(t) || t.Task.Control != "running" || t.Task.GoalRevision != d.Snapshot.GoalRevision || t.Task.ControlRevision != d.Snapshot.ControlRevision {
 			return nil
 		}
 		if e = s.CheckCurrent(ctx, tx, t, true); e != nil {
+			if api.IsCode(e, "invalid_state") || api.IsCode(e, "forbidden") || api.IsCode(e, "expired") {
+				return nil
+			}
 			return e
 		}
 		send = true
@@ -206,8 +211,22 @@ func (s *Service) decisionJob(ctx context.Context, store runtime.Store, scope ru
 			return e
 		}
 	}
-	if !send && !d.Sent {
-		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+	if !send {
+		if !sent {
+			return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+		}
+		if cancellation, ok := s.ports.Brain.(BrainCancellation); ok {
+			if e := s.preIO(ctx, store, scope, work); e != nil {
+				return e
+			}
+			if e := cancellation.CancelDecision(ctx, scope, d.Intent); e != nil {
+				if deferred(e) {
+					return s.wait(ctx, store, scope, work)
+				}
+				return e
+			}
+			return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+		}
 	}
 	if e := s.preIO(ctx, store, scope, work); e != nil {
 		return e
