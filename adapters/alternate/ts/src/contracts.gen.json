@@ -3414,7 +3414,12 @@
                 "additionalProperties": false,
                 "properties": {
                   "kind": {
-                    "maxLength": 4096,
+                    "enum": [
+                      "existing_content",
+                      "memory_query",
+                      "capability_describe",
+                      "original_fact"
+                    ],
                     "type": "string"
                   },
                   "query_ref": {
