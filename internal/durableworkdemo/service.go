@@ -32,15 +32,17 @@ type Repository interface {
 	ObserveInput(context.Context, contract.OwnerRef, contract.ID) (Observation, error)
 }
 type Service struct {
-	Owner       contract.OwnerRef
-	Runner      runtime.TxRunner
-	Commands    runtime.CommandStore
-	Jobs        runtime.JobStore
-	Clock       runtime.Clock
-	Repository  Repository
-	Permissions *Permissions
-	Reader      contract.CommandFactReader
-	Retention   RetentionRepository
+	Owner           contract.OwnerRef
+	Runner          runtime.TxRunner
+	Commands        runtime.CommandStore
+	Jobs            runtime.JobStore
+	Clock           runtime.Clock
+	Repository      Repository
+	Permissions     *Permissions
+	Reader          contract.CommandFactReader
+	Policies        *Policies
+	ScheduleControl bool
+	Retention       RetentionRepository
 }
 
 func (s *Service) Record(ctx context.Context, data []byte, trusted *contract.SubjectBinding) (contract.TransportOutcome, error) {
@@ -94,6 +96,12 @@ func (s *Service) Record(ctx context.Context, data []byte, trusted *contract.Sub
 		input.UpdatedAt = now
 		if err = s.Repository.SaveInput(ctx, tx, s.Owner, *input); err != nil {
 			return contract.CommandReceipt{}, err
+		}
+		if repo, ok := s.Repository.(ScheduleRepository); ok {
+			policy := s.Policies.For(s.Owner, input.ID)
+			if err = repo.BindSchedule(ctx, tx, s.Owner, input.ID, input.Revision, ScheduleState{Source: "admission", Policy: policy, AdoptedAt: now, Deadline: now.Add(policy.ExecutionLimit), Due: now}); err != nil {
+				return contract.CommandReceipt{}, err
+			}
 		}
 		if _, err = s.Jobs.Trigger(ctx, tx, envelope.Target, "project", input.Revision, now); err != nil {
 			return contract.CommandReceipt{}, err

@@ -1,6 +1,6 @@
 # Lerna
 
-Lerna 是按明确合同构建的 Agent 执行框架。领域规则见 [CONTEXT.md](CONTEXT.md)，模块及运行设计见 [docs/architecture](docs/architecture/README.md)。按[实现切片](.scratch/lerna-implementation/README.md)逐步交付；切片 01 已完成：当前可执行范围为共同信封、固定回执、command.get 受信注入读取、准确版本协商及 Go / TypeScript 严格编解码，切片02已实现 PG 与文件 SQLite 同版原子接纳，以及两库领取、续租与条件完成演示；正文清理、真实旧数据升级及有限进程故障恢复已通过本地验证；等待/配额调度及切片02整体退出仍在推进，尚无生产运行服务。
+Lerna 是按明确合同构建的 Agent 执行框架。领域规则见 [CONTEXT.md](CONTEXT.md)，模块及运行设计见 [docs/architecture](docs/architecture/README.md)。按[实现切片](.scratch/lerna-implementation/README.md)逐步交付；切片 01 已完成：当前可执行范围为共同信封、固定回执、command.get 受信注入读取、准确版本协商及 Go / TypeScript 严格编解码，切片02已实现 PG 与文件 SQLite 同版原子接纳，以及两库领取、续租与条件完成演示；正文清理、真实旧数据升级及有限进程故障恢复已通过本地验证；持久等待、有限退避与丢通知扫描也已通过双库验证；配额调度及切片02整体退出仍在推进，尚无生产运行服务。
 
 ## 开发
 

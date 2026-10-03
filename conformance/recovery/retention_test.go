@@ -24,11 +24,12 @@ func retentionBehavior(t *testing.T, store workStore) {
 	raw := command("original", "input", "hello", nil, future())
 	out, err := h.Record(ctx, raw, &principal)
 	original := assertReceived(t, out, err)
-	worker := durablework.NewWorker(owner, store, store, store, store)
+	worker := conformanceWorker(t, owner, store, store, store, h.Clock)
 	batch, err := worker.Claim(ctx, "worker", 1, time.Minute)
 	if err != nil || len(batch) != 1 {
 		t.Fatalf("claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	if err = worker.Complete(ctx, batch[0].Claim, durablework.Project(batch[0])); err != nil {
 		t.Fatal(err)
 	}
@@ -57,11 +58,12 @@ func retentionHost(store workStore) *durablework.Host {
 func retentionComplete(t *testing.T, store workStore, h *durablework.Host) durablework.Work {
 	t.Helper()
 	ctx := contextFor(t)
-	worker := durablework.NewWorker(owner, store, store, store, store)
+	worker := conformanceWorker(t, owner, store, store, store, h.Clock)
 	batch, err := worker.Claim(ctx, "normal", 1, time.Minute)
 	if err != nil || len(batch) != 1 {
 		t.Fatalf("normal claim: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	if err = worker.Complete(ctx, batch[0].Claim, durablework.Project(batch[0])); err != nil {
 		t.Fatal(err)
 	}
@@ -171,7 +173,7 @@ func retentionEligibility(t *testing.T, store workStore) {
 	if err != nil || result != demo.WorkPending {
 		t.Fatalf("pending: %s %v", result, err)
 	}
-	worker := durablework.NewWorker(owner, store, store, store, clock)
+	worker := conformanceWorker(t, owner, store, store, store, clock)
 	batch, err := worker.Claim(ctx, "first", 1, time.Millisecond)
 	if err != nil || len(batch) != 1 {
 		t.Fatalf("claim: %+v %v", batch, err)
@@ -189,6 +191,7 @@ func retentionEligibility(t *testing.T, store workStore) {
 	if err != nil || len(batch) != 1 {
 		t.Fatalf("replacement: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	if err = worker.Complete(ctx, batch[0].Claim, durablework.Project(batch[0])); err != nil {
 		t.Fatal(err)
 	}
@@ -371,7 +374,7 @@ func retentionConcurrentCompletion(t *testing.T, newStore func(*testing.T) workS
 			ctx := contextFor(t)
 			out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
 			original := assertReceived(t, out, err)
-			worker := durablework.NewWorker(owner, store, store, store, store)
+			worker := conformanceWorker(t, owner, store, store, store, h.Clock)
 			gate := &transactionGate{runner: store, ready: make(chan struct{}), release: make(chan struct{})}
 			secondGate := &transactionGate{runner: store, requested: make(chan struct{})}
 			ref := contract.CommandRef{Owner: owner, CommandID: "source"}
@@ -382,6 +385,7 @@ func retentionConcurrentCompletion(t *testing.T, newStore func(*testing.T) workS
 					t.Fatalf("claim: %+v %v", batch, err)
 				}
 				work = batch[0]
+				startWork(t, worker, work)
 			}
 			answer := make(chan struct {
 				result demo.CleanupResult
@@ -438,6 +442,7 @@ func retentionConcurrentCompletion(t *testing.T, newStore func(*testing.T) workS
 				if len(batch) != 1 {
 					t.Fatalf("claim competed: %+v", batch)
 				}
+				startWork(t, worker, batch[0])
 				if err = worker.Complete(ctx, batch[0].Claim, durablework.Project(batch[0])); err != nil {
 					t.Fatal(err)
 				}

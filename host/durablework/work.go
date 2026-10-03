@@ -17,3 +17,22 @@ func NewWorker(owner contract.OwnerRef, runner runtime.TxRunner, claims runtime.
 	return &demo.Worker{Owner: owner, Runner: runner, Claims: claims, Repository: repository, Clock: clock}
 }
 func Project(work Work) Projection { return demo.Project(work) }
+
+// NewScheduledWorker assembles processing with current trusted worker eligibility.
+func NewScheduledWorker(owner contract.OwnerRef, runner runtime.TxRunner, claims runtime.ClaimStore, repository demo.WorkRepository, clock runtime.Clock, permissions *demo.WorkerPermissions) (*Worker, error) {
+	if permissions == nil || runner == nil || claims == nil || repository == nil || clock == nil {
+		return nil, demo.ErrPolicy
+	}
+	if _, err := contract.Encode(owner); err != nil {
+		return nil, demo.ErrPolicy
+	}
+	if _, ok := claims.(runtime.ScheduleStore); !ok {
+		return nil, demo.ErrPolicy
+	}
+	if _, ok := repository.(demo.ScheduleRepository); !ok {
+		return nil, demo.ErrPolicy
+	}
+	worker := NewWorker(owner, runner, claims, repository, clock)
+	worker.Permissions = permissions
+	return worker, nil
+}

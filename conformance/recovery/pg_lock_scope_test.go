@@ -123,7 +123,7 @@ func TestPGSameSchemaStoresPreserveInputMutualExclusion(t *testing.T) {
 		_, err := a.LockInput(ctx, tx, owner, "input")
 		return err
 	})
-	worker := durablework.NewWorker(owner, b, b, b, b)
+	worker := conformanceWorker(t, owner, b, b, b, b)
 	batch, err := worker.Claim(ctx, "same-schema", 1, time.Minute)
 	if err != nil || len(batch) != 0 {
 		t.Fatalf("same schema bypassed held input: %+v %v", batch, err)
@@ -134,6 +134,7 @@ func TestPGSameSchemaStoresPreserveInputMutualExclusion(t *testing.T) {
 	if err != nil || len(batch) != 1 || batch[0].Claim.JobID != before.Job.ID {
 		t.Fatalf("released original work: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	if err = worker.Complete(ctx, batch[0].Claim, durablework.Project(batch[0])); err != nil {
 		t.Fatal(err)
 	}
@@ -201,11 +202,12 @@ func TestPGDifferentSchemasClaimAndCompleteWhileInputLocked(t *testing.T) {
 		_, err := a.LockInput(ctx, tx, owner, "input")
 		return err
 	})
-	worker := durablework.NewWorker(owner, b, b, b, b)
+	worker := conformanceWorker(t, owner, b, b, b, b)
 	batch, err := worker.Claim(ctx, "independent-schema", 1, time.Minute)
 	if err != nil || len(batch) != 1 {
 		t.Fatalf("independent schema claim while A holds input: %+v %v", batch, err)
 	}
+	startWork(t, worker, batch[0])
 	if batch[0].Claim.JobID != before.Job.ID || batch[0].Input.Text != "hello" || batch[0].Input.Revision != 1 {
 		t.Fatalf("independent original work changed: %+v", batch[0])
 	}

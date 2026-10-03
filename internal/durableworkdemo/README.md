@@ -12,7 +12,8 @@ package imports neither host/cmd nor a concrete adapter. It preserves exact
 text and creates pending project responsibility. `Worker` consumes its separate
 `WorkRepository` and runtime ClaimStore ports. It fixes a project input snapshot
 in the claim transaction, then `Project` computes SHA256 of the exact UTF-8 bytes
-outside any transaction. `Complete` writes `inputRevision`/`textDigest` and advances
+outside any transaction. Explicit qualified `Start` registers a durable attempt before computation.
+Strict `Complete` writes `inputRevision`/`textDigest` and advances
 only the claimed Job revision in one short transaction. Derived work never
 increments the input revision.
 
@@ -20,7 +21,10 @@ See the [Host seam](../../host/durablework/README.md) for accepted commands,
 query authorization and tests, and [storage](../../adapters/postgres/README.md)
 and [SQLite storage](../../adapters/sqlite/README.md) for transaction/SQL behavior.
 The same Worker runs against PostgreSQL and SQLite through these ports.
-Scheduling, waiting and quotas remain later tickets.
+Validated per-revision fixture policies, durable gates, finite retry/closure and
+Start/Finish consumer rules live here. runtime handles Claim scheduling mechanics;
+the host only assembles them. Quotas/fairness remain ticket06. Success projection
+and completed responsibility are separate observations; no Task is created.
 
 
 Cleanup is a separate trusted internal capability, default denied by the exact

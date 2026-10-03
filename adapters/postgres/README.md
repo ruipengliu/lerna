@@ -60,6 +60,21 @@ is guarded at bigint maximum. Expired leases cannot renew or complete; replaceme
 keeps Job/object identity and increments the epoch. A late claim cannot alter the
 current projection. This fences only controlled database writes, not external I/O.
 
+The version 4 forward wait migration adds waiting state, per-input-revision immutable
+policy/anchor/deadline, durable start/attempt/outcome/due facts and same-owner gates.
+It preserves every existing Claim/lease binding and all published V1/V2 bytes.
+Legacy policy binds only at first eligible Claim in the same short transaction;
+new admission binds policy with input/Job/receipt. Defer/retry/stop release the
+original Claim without closing newer work or inventing successful projection.
+NextWake observes the earliest relevant future due/lease/deadline and finite
+fallback. All mutating consumer paths preserve input -> Job lock order and use
+one trusted owner Clock. Deploy by draining/isolating the old binary; mixed
+old/new processing is unsupported. Both real adapters run one shared wait suite,
+including frozen actual V1/V2 writer upgrades. No production/external-effect or
+fair-quota guarantee is implied.
+
+MaxOpenConnections may explicitly bound the pool to 1–64 (0 selects 16). The wait
+suite uses one actual connection to prove waiting releases database resources.
 
 The real retention migration adds independently retained command body tombstones
 and input body state without rewriting published v1/v2 migrations. Cleanup writes

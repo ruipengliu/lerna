@@ -18,6 +18,7 @@ import (
 
 type Config struct {
 	DSN, Schema                                       string
+	MaxOpenConnections                                int
 	TransactionTimeout, StatementTimeout, LockTimeout time.Duration
 }
 type Store struct {
@@ -32,14 +33,21 @@ func Open(ctx context.Context, cfg Config) (*Store, error) {
 	if ctx == nil || cfg.DSN == "" || !identifier.MatchString(cfg.Schema) || cfg.TransactionTimeout <= 0 || cfg.StatementTimeout < time.Millisecond || cfg.LockTimeout < time.Millisecond || cfg.StatementTimeout > cfg.TransactionTimeout || cfg.LockTimeout > cfg.StatementTimeout {
 		return nil, errors.New("invalid PostgreSQL configuration")
 	}
+	if cfg.MaxOpenConnections < 0 || cfg.MaxOpenConnections > 64 {
+		return nil, errors.New("invalid PostgreSQL connection bounds")
+	}
 	bounded, cancel := context.WithTimeout(ctx, cfg.TransactionTimeout)
 	defer cancel()
 	db, err := sql.Open("pgx", cfg.DSN)
 	if err != nil {
 		return nil, errors.New("PostgreSQL connection configuration rejected")
 	}
-	db.SetMaxOpenConns(16)
-	db.SetMaxIdleConns(4)
+	connections := cfg.MaxOpenConnections
+	if connections == 0 {
+		connections = 16
+	}
+	db.SetMaxOpenConns(connections)
+	db.SetMaxIdleConns(min(connections, 4))
 	if err = db.PingContext(bounded); err != nil {
 		db.Close()
 		return nil, errors.New("PostgreSQL connection unavailable")

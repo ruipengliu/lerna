@@ -18,4 +18,8 @@ PostgreSQL and file SQLite implement the same admission ports. PG and SQLite V2 
 separate `ClaimStore` port and exact Job/worker/revision/epoch/lease bindings.
 Scan is bounded to 1–64 candidates and does not lock Job rows before the
 consumer's object/input lock. Renew and completion reject expired claims even
-before a replacement exists. Scheduling, waiting, fairness and quotas remain later tickets. Adapter details live in their READMEs.
+before a replacement exists. ScheduleStore now validates/defers/releases original Claims, stops an exact
+revision and computes finite future wakes. The consumer supplies durable wait,
+retry and closure meaning; runtime does not classify business errors. Timers wait
+outside Tx using a positive relative delay derived from the trusted Clock.
+Fairness and quotas remain ticket06. Adapter details live in their READMEs.

@@ -167,6 +167,7 @@ func TestSQLiteStoragePortConfirmationLossRecoversOriginal(t *testing.T) {
 			if err != nil || len(batch) != 1 || batch[0].Claim.JobID != before.Job.ID {
 				t.Fatalf("not one original Job: %+v %v", batch, err)
 			}
+			startWork(t, worker, batch[0])
 			if err = worker.Complete(ctx, batch[0].Claim, durablework.Project(batch[0])); err != nil {
 				t.Fatal(err)
 			}
@@ -316,6 +317,7 @@ func TestProcessBufferedOldRevisionAndNewTriggerBothOrders(t *testing.T) {
 					if err != nil || len(batch) != 1 || batch[0].Claim.JobID != message.Work.Claim.JobID || batch[0].Claim.ClaimedRevision != 2 || batch[0].Claim.Epoch != 2 {
 						t.Fatalf("new revision not reclaimable: %+v %v", batch, err)
 					}
+					startWork(t, worker, batch[0])
 					current := processFrame{Work: &batch[0]}
 					result := durablework.Project(batch[0])
 					current.Projection = &result

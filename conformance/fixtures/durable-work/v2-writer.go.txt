@@ -1,0 +1,158 @@
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"github.com/jackc/pgx/v5"
+	"github.com/ruipengliu/lerna/adapters/postgres"
+	"github.com/ruipengliu/lerna/adapters/sqlite"
+	"github.com/ruipengliu/lerna/contract"
+	"github.com/ruipengliu/lerna/host/durablework"
+	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
+	"github.com/ruipengliu/lerna/runtime"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strconv"
+	"time"
+)
+
+type storage interface {
+	runtime.TxRunner
+	runtime.CommandStore
+	runtime.JobStore
+	runtime.ClaimStore
+	durablework.Storage
+	demo.WorkRepository
+	Migrate(context.Context) error
+	Close() error
+}
+type clock struct{}
+
+func (clock) Now(context.Context, runtime.Tx) (time.Time, error) {
+	return time.Date(2026, 10, 3, 20, 0, 0, 0, time.UTC), nil
+}
+func run() (result error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	var store storage
+	var err error
+	if os.Getenv("LERNA_LEGACY_BACKEND") == "postgres" {
+		store, err = postgres.Open(ctx, postgres.Config{DSN: os.Getenv("LERNA_TEST_POSTGRES_DSN"), Schema: os.Getenv("LERNA_LEGACY_SCHEMA"), TransactionTimeout: 3 * time.Second, StatementTimeout: 2 * time.Second, LockTimeout: time.Second})
+	} else {
+		store, err = sqlite.Open(ctx, sqlite.Config{Path: os.Getenv("LERNA_LEGACY_PATH"), TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond})
+	}
+	if err != nil {
+		return err
+	}
+	defer store.Close()
+	if os.Getenv("LERNA_LEGACY_CREATE") == "1" {
+		if pg, ok := store.(*postgres.Store); ok {
+			if err = pg.CreateSchema(ctx); err != nil {
+				return err
+			}
+			defer func() {
+				clean, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+				defer cancel()
+				if err := pg.DropTestSchema(clean); err != nil {
+					result = err
+				}
+			}()
+		}
+	}
+	if err = store.Migrate(ctx); err != nil {
+		return err
+	}
+	owner := contract.OwnerRef{TenantID: "tenant-one", OwnerID: "owner-one"}
+	subject := contract.SubjectBinding{TenantID: "tenant-one", SubjectID: "alice", DelegationChain: []contract.DelegatedSubject{}}
+	h := durablework.New(owner, store, store, store, store, durablework.NewPermissions([]durablework.Permission{{Subject: subject, Owner: owner, Read: true, Record: true}}))
+	h.Clock = clock{}
+	record := func(id string, revision *contract.Revision) error {
+		payload, _ := json.Marshal(map[string]string{"text": "hello"})
+		wire, _ := json.Marshal(contract.CommandEnvelope{ContractVersion: "host-durable-work-1", Profile: "host", Method: "durable_work.record", CommandID: contract.ID(id), Target: contract.ObjectRef{TenantID: owner.TenantID, OwnerID: owner.OwnerID, Kind: "durable_work", ID: "input"}, ExpectedRevision: revision, AcceptBefore: "2101-01-01T00:00:00.000000Z", Payload: payload})
+		_, err := h.Record(ctx, wire, &subject)
+		return err
+	}
+	if err = record("v2-original", nil); err != nil {
+		return err
+	}
+	worker := durablework.NewWorker(owner, store, store, store, clock{})
+	batch, err := worker.Claim(ctx, "v2-old", 1, time.Second)
+	if err != nil {
+		return err
+	}
+	if len(batch) != 1 {
+		return runtime.ErrClaim
+	}
+	revision := contract.Revision("1")
+	if err = record("v2-new", &revision); err != nil {
+		return err
+	}
+	observation, err := h.Observe(ctx, "input", &subject)
+	if err != nil {
+		return err
+	}
+	output := os.Getenv("LERNA_LEGACY_EXPORT")
+	if output != "" {
+		if err = os.MkdirAll(output, 0755); err != nil {
+			return err
+		}
+		report := map[string]interface{}{"claim": batch[0], "observation": observation}
+		data, err := json.MarshalIndent(report, "", "  ")
+		if err != nil {
+			return err
+		}
+		if err = os.WriteFile(filepath.Join(output, "writer-observation.json"), append(data, '\n'), 0600); err != nil {
+			return err
+		}
+		if pg, ok := store.(*postgres.Store); ok {
+			dump, err := os.Create(filepath.Join(output, "database.sql"))
+			if err != nil {
+				return err
+			}
+			defer dump.Close()
+			command := exec.CommandContext(ctx, os.Getenv("LERNA_V2_PGDUMP"), "--format=plain", "--no-owner", "--no-privileges", "--restrict-key=lernav2fixture", "--strict-names", "--schema="+os.Getenv("LERNA_LEGACY_SCHEMA"))
+			command.Stdout = dump
+			parsed, err := pgx.ParseConfig(os.Getenv("LERNA_TEST_POSTGRES_DSN"))
+			if err != nil {
+				return err
+			}
+			command.Env = append(os.Environ(), "PGHOST="+parsed.Host, "PGPORT="+strconv.Itoa(int(parsed.Port)), "PGDATABASE="+parsed.Database, "PGUSER="+parsed.User, "PGPASSWORD="+parsed.Password)
+			if err = command.Run(); err != nil {
+				return err
+			}
+			if err = dump.Close(); err != nil {
+				return err
+			}
+			versions, err := pg.MigrationVersions(ctx)
+			if err != nil {
+				return err
+			}
+			data, err = json.MarshalIndent(versions, "", "  ")
+			if err != nil {
+				return err
+			}
+			if err = os.WriteFile(filepath.Join(output, "migrations.json"), append(data, '\n'), 0600); err != nil {
+				return err
+			}
+		} else if sq, ok := store.(*sqlite.Store); ok {
+			versions, err := sq.MigrationVersions(ctx)
+			if err != nil {
+				return err
+			}
+			data, err = json.MarshalIndent(versions, "", "  ")
+			if err != nil {
+				return err
+			}
+			if err = os.WriteFile(filepath.Join(output, "migrations.json"), append(data, '\n'), 0600); err != nil {
+				return err
+			}
+		}
+	}
+	return json.NewEncoder(os.Stdout).Encode(batch[0])
+}
+func main() {
+	if run() != nil {
+		os.Exit(1)
+	}
+}

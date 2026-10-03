@@ -30,6 +30,8 @@ test-integration:
 	psql --version
 	cd conformance/fixtures/durable-work/pg-v1 && sha256sum -c SHA256SUMS
 	cd conformance/fixtures/durable-work/sqlite-v1 && sha256sum -c SHA256SUMS
+	cd conformance/fixtures/durable-work/pg-v2 && sha256sum -c SHA256SUMS
+	cd conformance/fixtures/durable-work/sqlite-v2 && sha256sum -c SHA256SUMS
 	go test -count=1 -tags=integration -timeout=120s ./conformance/recovery/...
 test-contract:
 	node scripts/test-contract.mjs
