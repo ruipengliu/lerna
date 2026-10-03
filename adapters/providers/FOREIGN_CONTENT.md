@@ -23,7 +23,7 @@ holder/主体范围，以及宿主要求的原 Grant/委派门禁。它只能从
 不能从请求角色造 Auth，也不能出站。源 Memory 继续检查实际 PolicyValues、当前凭据、
 用途、处理/接收地点、保留期、所有实际来源及原 CopyHolder。
 
-current 签完整 ForeignProof 去掉 Proof 字段的 JCS 摘要。claims 的 purpose 为
+current 签完整 ForeignProof 将 proof 置为空串后的 JCS 摘要，仍保留该字段。claims 的 purpose 为
 `foreign_content`，issuer 为原 Content owner，audience 为原 Holder owner，ObjectRef
 为原 Content 的 owner/id/version，WindowID 为原 CopyID，control_revision 取实际源版本。
 SourceDatabaseID 固定真实源数据库，证明窗口三十秒。control 只提供原责任的控制和清理；
