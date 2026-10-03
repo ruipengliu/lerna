@@ -180,4 +180,5 @@ type decision struct {
 	Publications      []pendingContent   `json:"publications"`
 	ProposalContentID string             `json:"proposal_content_id"`
 	CancelRequested   bool               `json:"cancel_requested"`
+	Payload           *payloadManifest   `json:"payload,omitempty"`
 }
