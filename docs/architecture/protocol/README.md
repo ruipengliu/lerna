@@ -21,6 +21,13 @@ ContentRef固定owner/content/version/hash/media_type/byte_length及tenant。Com
 
 [核心示例](examples/core.json)给出取消后仍有unknown、成功后账务未结、一次性许可已消费以及费用更正超出原预算等合法记录。示例中的身份/摘要是构造数据，绝不是签名或真实执行凭据。
 
+<a id="schema-coverage"></a>
+### Schema 的准确覆盖范围
+
+当前 `Command.method` 仅允许 `task.submit`、`task.cancel`、`execution.invoke`、`execution.cancel` 和 `task.billing_reconcile`。Schema 固定这五条命令的外壳及请求载荷，并定义部分持久记录；它尚未提供完整 Receipt、Query、方法响应、错误载荷、发现及 WSS 帧的发布 Schema。`harness.proto` 只定义传输外壳。
+
+下文方法族和各模块接口表给出业务语义，不能直接作为完整代码生成输入。实现前按[实施覆盖清单](../engineering/implementation-readiness.md#coverage)选定开放子集，再按[方法共同合同](method-contract.md#5-规范与可发布范围)补齐请求、响应、错误、恢复入口和互操作证据。同版发布包必须能追踪到准确 profile、Schema 与方法登记摘要。
+
 ## 3 命令回执与查询
 
 Command固定protocol/profile、logical_service_id、command_id、method、target_id、expires_at、适用时expected_revision和payload。摘要按RFC8785规范化的完整业务请求计算；认证主体在受信上下文绑定，不从payload选租户。

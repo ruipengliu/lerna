@@ -24,7 +24,7 @@ Harness 把用户目标推进为可核验的结果。Brain 提出下一步，Orc
 4. 各模块详细设计：按下面导航进入关键算法、接口成功点、异常与恢复
 5. [部署与容量](production/README.md)、[工程落地](engineering/README.md)和[验证](validation/README.md)：检查实现顺序与生产证据
 
-查字段看[核心字典](data/field-reference.md)和[模块内部字段](data/module-records.md)；评审数据库看[存储与一致性](data/storage.md)。实现接口时，先读[共同方法合同](protocol/method-contract.md)，再读对应模块的方法表、处理流程和异常恢复。追踪Requirement的来源，看[原输入到条件](data/requirement-lifecycle.md)。实施范围和仍需验证的条件见[开发准备度](engineering/implementation-readiness.md)。
+查字段看[核心字典](data/field-reference.md)和[模块内部字段](data/module-records.md)；评审数据库看[存储与一致性](data/storage.md)。实现接口时，先读[共同方法合同](protocol/method-contract.md)，再读对应模块的方法表、处理流程和异常恢复。追踪Requirement的来源，看[原输入到条件](data/requirement-lifecycle.md)。开发前用[实施覆盖清单](engineering/implementation-readiness.md#coverage)确认语义、机器合同、代码和运行证据分别完成到哪一步。
 
 <a id="2-系统分工与事实归属"></a>
 ## 职责怎样合作

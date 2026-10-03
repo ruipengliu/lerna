@@ -74,6 +74,7 @@ API覆盖按语义不同操作计数。首次调用正确率≥90%同时检查�
 在仓库根目录运行：
 
 ```sh
+python docs/check_documentation.py
 python docs/architecture/validation/check_architecture.py
 python docs/architecture/validation/model_checks.py
 python docs/architecture/validation/data_flow_checks.py
@@ -82,7 +83,9 @@ python docs/architecture/validation/build_field_reference.py --check
 node docs/architecture/validation/lab_checks.cjs
 ```
 
-check_architecture.py 使用现有Python jsonschema包，检查正文独立性、相对链接/锚点、围栏、Schema与正反例以及关键跨记录关系。model_checks.py 仅用标准库，枚举小型原子步骤模型，检查旧Job结束、取消/成功竞争、账单累计与原操作未知，并证明故意移除门禁的错误变体会失败。
+check_documentation.py 要求 Python 3.10 或以上及 Git，扫描根文档、docs 和本地技能的链接、资源、锚点及固定历史引用。它排除代码示例，不检查外部 HTTP 可达性；缺历史提交时明确返回 blocked，不能按通过处理。日常检查不依赖上游源码检出；实际复核或移植时再按[源码下载说明](../../research/README.md#source-download)取得固定版本。
+
+check_architecture.py 使用现有 Python jsonschema 包，检查架构目录正文独立性、相对链接/锚点、围栏、Schema 与正反例以及关键跨记录关系；它不覆盖目录外文档。model_checks.py 仅用标准库，枚举小型原子步骤模型，检查旧Job结束、取消/成功竞争、账单累计与原操作未知，并证明故意移除门禁的错误变体会失败。
 
 implementation_contract_checks.py检查本轮固定的批量准入、控制窗口、确认、结果发布、只读效果、cell提交、child切换、Schedule槽、部署CAS和资格登记的有限模型。它不执行真实服务或数据库。
 

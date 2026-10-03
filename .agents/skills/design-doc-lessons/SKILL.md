@@ -1,11 +1,13 @@
 ---
 name: design-doc-lessons
-description: 复盘当前会话中的技术方案文档编写经验，提炼项目写作指引。用于用户要求沉淀写作经验或据此完善 module-design skill；先分析并输出草稿，确认后更新。
+description: 历史技术方案写作复盘流程。原写入目标 module-design 已移除；本文件保留原流程供追溯，当前项目写作规则见根 AGENTS.md。
 ---
 
 # 技术方案写作经验沉淀
 
-将当前会话中有依据、可复用的写作经验融入 [module-design](../module-design/SKILL.md) 的对应步骤。普通方案编写与修改沿用该 skill 的现有指引；本流程在用户要求复盘、沉淀经验时使用。
+> 状态：历史工作流。其写入目标 module-design 已从当前项目移除，以下步骤仅供追溯，当前不可直接执行。项目文档写作遵循 [AGENTS.md](../../../AGENTS.md)；只有用户另行指定现存目标后，才可重新安排经验沉淀。
+
+将当前会话中有依据、可复用的写作经验融入 [历史 module-design](https://github.com/ruipengliu/lerna/blob/2a191246cfe0792dc4372af80542a2a0dd88d692/.agents/skills/module-design/SKILL.md) 的对应步骤。普通方案编写与修改沿用该 skill 的现有指引；本流程在用户要求复盘、沉淀经验时使用。
 
 流程：分析会话 → 筛选经验 → 输出草稿并等待确认 → 应用确认内容。用户要求的确认门约束 `module-design/SKILL.md` 写入：确认前保持该文件不变，分析与草稿正常完成。
 

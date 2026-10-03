@@ -44,11 +44,28 @@
 
 这些限制允许先实现正确的分布式主线。它们不是必须新增全局服务的理由，也不将生产目标退回单进程。
 
-## 4 仍需实现或取得证据的事项
+<a id="coverage"></a>
+## 4 实施覆盖与开放条件
 
-### 线协议与代码
+本表是安排开发的索引。业务语义由所链章节定义；机器合同以同版 Schema 和方法登记为准。当前仓库提供设计文档、部分 Schema 和设计检查，以下处理器、SDK、存储适配和运行证据均待完成。
+
+| 实施切片与负责模块 | 已定义的语义与数据入口 | 当前机器合同覆盖 | 待交付内容与开放依据 |
+| --- | --- | --- | --- |
+| 接纳与恢复：Runtime、Orchestrator | [命令与 Job](../runtime/README.md)、[同库事务与锁序](../data/storage.md#3-同一数据库事务具体包含哪些记录) | Command、Job、Claim 等记录已有 Schema；回执、查询和完整方法登记待补 | 去重与领取处理器、PG/SQLite 各自适配及恢复 SDK；取得 F01–F04 的重复、提交未知和旧 worker 竞争证据 |
+| 输入与目标：Interaction、Orchestrator | [输入与任务](../interaction/README.md)、[条件形成](../data/requirement-lifecycle.md) | Session、Message、Submission、InputRequest、GoalRevision、候选与覆盖已有记录 Schema；task.submit/cancel 有请求载荷 | 应用输入、目标采纳和控制方法的完整请求/响应/错误及客户端；F05、F16、F25 证明原文可追溯、旧输入不误消费、空条件不能完成 |
+| 决策与行动：Brain、Execution、Security | [固定决策](../brain/README.md)、[真实执行入口](../execution/README.md)、[授权消费](../security/README.md) | DecisionRecord、Operation、Grant 等记录及 execution.invoke/cancel 载荷已定义；brain、resource、grant 方法族未完整形式化 | 模型与工具适配、真实出站计量、许可门禁；F03、F08、F14 及供应商探针验证单次请求、未知效果和资源隔离 |
+| 核验与交付：Orchestrator、Evaluation、Memory | [完成事务](../orchestrator/README.md#8-完成事务)、[证据资格](../evaluation/README.md)、[内容发布](../memory/README.md#2-发布准确内容) | ConditionResult、Result、ContentRef 等记录已有 Schema；核验、证据导入与内容发布方法待补 | 独立验证器、完整关系索引、当前资格与结果导出恢复；F05–F07、F11 证明完成门禁及导出失败后继续责任 |
+| 收尾与使用：Accounting、Security、Memory、Interaction | [账务](../accounting/README.md)、[清理与使用](../memory/README.md)、[准确输入](../interaction/README.md) | UsageSnapshot、BudgetBalance、Confirmation、AllocationClosure 及 task.billing_reconcile 载荷已定义；各方法的回执/查询与错误待补 | 账单差额、一次确认、清理和界面恢复；F08–F13、F16、F18 证明不返还已消费授权、未知费用持续占用、撤权后不披露 |
+| 可选能力：Schedule、Environment、Collaboration、Extensions、Evaluation | [模块内部字段](../data/module-records.md)、本文第 3 节及对应模块方法表 | ScheduleSpec 只定义时间规则；环境、子会话、发布、正式评测等完整机器合同待冻结 | 每次选定一项开放范围，补齐方法/状态、Schema、SDK 和平台前提；执行对应 F07、F10、F15、F17、F19–F20 后才声明支持 |
+| 传输与生产：Protocol、Production | [端云和 gRPC](../protocol/README.md)、[部署与恢复](../production/README.md) | harness.proto 提供外壳；领域响应、发现、传输帧及方法登记尚未形成完整发布包 | WSS/gRPC、发现/认证、背压、迁移和观测适配；F21–F24 取得通道恢复、跨区、容量和灾备证据 |
+
+F 编号的完整刺激和判断依据统一见[故障矩阵](../validation/README.md#2-关键故障矩阵)。表内列出开发关注点；能力还须满足其依赖的授权、来源、费用和故障要求，不能只通过表内几个编号就宣布全部支持。
+
+### 线协议怎样补齐
 
 core.schema.json只形式化了部分记录与五条命令。模块方法表已经规定其业务字段、回执和错误；正式开放前，开发者必须将选定方法转为同版闭合Schema、方法登记、Go/TS类型和SDK恢复代码。不得因为文档列有方法名就宣告支持完整profile。
+
+五条命令及其准确范围见[协议覆盖](../protocol/README.md#schema-coverage)。每个拟开放方法都须登记：负责方、所属 profile、请求/响应/错误 Schema、回执阶段、原命令查询方式、版本与权限前提、SDK 恢复行为和正反例。字段或语义出现缺口时先在所属模块补合同，再更新登记；新增业务取舍需进入明确的设计评审。
 
 Schema只能检查结构。来源认证、权限、事务、作用域、真实效果和当前证据资格必须由处理器及存储实现验证。状态模型与设计样例不能替代这些工作。
 

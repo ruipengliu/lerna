@@ -1,42 +1,61 @@
-# Agent Harness 参考项目调研
+# Agent Harness 比较：关键结论
 
-研究日期：2026-10-01，时区 Asia/Shanghai。五个参考仓库已拉取到 `.reference/`，各项目报告分别保存在 `docs/research/<project>/`；共同基线与反推架构建议保存在本目录。
+研究日期：2026-10-01。结论来自固定源码的静态追踪，没有运行上游测试、模型或跨项目性能实验。主要价值是借鉴内部组织与恢复机制；本项目的权威归属、授权、效果和费用规则由[现行架构](../../architecture/README.md)定义。
 
-建议先读[架构优化分析](architecture-optimization.md)，再按模块打开对应项目报告。综合判断是保留本项目既有九模块和可靠任务基线，吸收上游的内部组织、恢复检查点与故障语料；程序化工具、渐进式发现和经验精炼以候选实验验证。
+## 1 五个项目值得借鉴什么
+
+| 项目 | 关键结果 | 本项目采用时的边界 |
+| --- | --- | --- |
+| Codex | Session/Turn/Step 组织模型与工具；canonical rollout 与 SQLite 历史投影分开，工具调用可预先固定绑定。[持久写入][E01]、[准备调用][E02] | 另有独立元数据与后台责任；回合结束、取消回执和补出的 aborted 消息均不证明外部效果撤销或目标完成 |
+| Pi | 经典 CLI、公开 AgentHarness、独立 pi-durable 是不同运行与存储合同；open 恢复与再次 drive 分开。[恢复入口][E26]、[工具发送与重放][E03] | v3/v4/独立 durable 格式与保证不能混用；后端原子提交不提供外部副作用原子性 |
+| DeepSeek Harness | 原事件、模型视图、存储接纳与 flush 分开；checkpoint 保护已接入的实际出站路径。[接纳][E05]、[checkpoint][E06]、[恢复分类][E07] | base 与 sdk-minimal 装配不同；无 Session 和嵌套路径须另查，不因安装插件就推断所有出口均受保护 |
+| Prime Agent | 持续目标保存无进展依据；上下文使用机械摘要；RLM kernel 区分中断和可复用状态。[目标推进][E08]、[压缩][E09]、[kernel][E10] | 会话、队列、子任务和 cron 是不同文件提交；直接 core 调用不自动具有 daemon 的恢复保证 |
+| Crush | Go 分层、输入接纳/取消水位、流合并与终结 flush、多界面先到确认可作工程参考。[Agent][E11]、[发布通道][E12]、[确认][E13] | SQLite 消息与内存 queue/waiter 的耐久性不同；Accepted、SSE 或 RunComplete 不代表持久任务完成 |
+
+## 2 保留的工程建议
+
+编号用于追溯原研究建议，采用状态以对应模块为准。
+
+| 编号 | 建议与判断依据 | 实施入口 |
+| --- | --- | --- |
+| O-01 | 用有来源的投影组装上下文；目标、授权和未知效果从原事实重建，摘要不能覆盖它们 | [Brain](../../architecture/brain/README.md) |
+| O-02 | 持久记录推进次数、无进展原因和下一次可检查条件，重启不重置限额 | [任务编排](../../architecture/orchestrator/README.md) |
+| O-03 | 固定最终参数、能力版本和准确绑定后再准入；hook 改参须重新核验 | [执行](../../architecture/execution/README.md) |
+| O-04 | 先恢复原责任，再判断当前是否允许新调用；效果未知沿原 Operation 核对 | [持久工作](../../architecture/runtime/README.md) |
+| O-05 | 适配器分别提供原输出、覆盖/缺口和实际物理调用，不把合法 JSON 当成数据完整 | [执行](../../architecture/execution/README.md) |
+| O-06 | 子 Agent 辅助接口复用原 Delegation；取消、结果范围、未知效果和费用各自核清 | [协作](../../architecture/collaboration/README.md) |
+| O-07 | 写明多端输入、确认、旧流和分支的竞争规则，断线后读取原权威状态 | [交互](../../architecture/interaction/README.md) |
+| O-08 | 安装制品、依赖、配置代次、批准与当前实例就绪一起核对 | [扩展](../../architecture/extensions/README.md) |
+| O-09 | 经验精炼只形成准确候选，经独立保存许可、冻结评测与批准后采用 | [记忆](../../architecture/memory/README.md)、[评测](../../architecture/evaluation/README.md) |
+| O-10 | 程序化工具作为有界适配器实验；保留 hostcall 身份、隔离和实际退出证据 | [执行环境](../../architecture/execution/README.md#7-程序化工具与可复用环境) |
+| O-11 | 渐进目录发现与 Skill 加载独立对照，测召回、误选、额外调用和完整成本 | [渐进发现](../../architecture/brain/README.md#5-能力和-skill-的渐进发现) |
+| O-12 | 共享重复、乱序、丢回执、旧实例等故障语料；机制测试与质量实验分别取证 | [验收](../../architecture/validation/README.md) |
+
+首先完成可恢复主线，再按实际需要启用子任务、经验、程序工具与动态发现。六组对象和范围见[语义结论](core-model-semantic-coverage.md)，存储计量见[读写结论](data-flow-io-comparison.md)。
 
 <a id="reports"></a>
-## 1. 项目报告与源码快照
+## 3 源码版本与后续使用
 
-| 项目报告 | 分支 / 固定 commit | 报告重点及局部建议 |
+| 项目 | 固定源码版本 | 建议本地目录 |
 | --- | --- | --- |
-| [OpenAI Codex](../codex/README.md) | `main` / `d4a475adda850d80b6149c76454de94e0cf4fd51` | Rust Session/Turn/Step、目录绑定、rollout/SQLite 各类状态、平台执行、冷恢复、Agent/Memory/扩展；C-01～14 |
-| [Pi](../pi/README.md) | `main` / `8ce69e9d2b171d173fe4b6b2b6256f1f4411e69d` | 经典 CLI、公开 AgentHarness、独立 durable 三线，投影/存储/重放、hooks、MCP/Codemode、服务协议及评测；P-01～10 |
-| [DeepSeek Harness](../deepseek-harness/README.md) | `master` / `639ed015397290b3745d163aafe02ffee4aa3f84` | 能力 seam、SessionEvent、semantic checkpoint、unknown、Goal/Schedule、子恢复、native/VM/Python 及实际数据出口；D-01～13 |
-| [Prime Agent](../prime-agent/README.md) | `main` / `5784abc2aef523a78d5a8850a0c0be89883388b2` | Rust daemon/worker + Python RLM、持续目标、spawn/collect、kernel、harness/refine、文件提交与定时作业降级；R-01～07 |
-| [Crush](../crush/README.md) | `main` / `76cc5c574e15072b15aaed0f4f843a5711fae0d9` | Go App/Backend/Workspace、SQLite、终端/可选 HTTP-SSE、接纳取消、多端确认、tools/MCP/LSP/Skill；K-01～07 |
+| codex | [d4a475ad](https://github.com/openai/codex/tree/d4a475adda850d80b6149c76454de94e0cf4fd51) | `.reference/codex` |
+| pi | [8ce69e9d](https://github.com/earendil-works/pi/tree/8ce69e9d2b171d173fe4b6b2b6256f1f4411e69d) | `.reference/pi` |
+| deepseek-harness | [639ed015](https://github.com/deepseek-ai/deepseek-harness/tree/639ed015397290b3745d163aafe02ffee4aa3f84) | `.reference/deepseek-harness` |
+| prime-agent | [5784abc2](https://github.com/PrimeIntellect-ai/prime-agent/tree/5784abc2aef523a78d5a8850a0c0be89883388b2) | `.reference/prime-agent` |
+| crush | [76cc5c57](https://github.com/charmbracelet/crush/tree/76cc5c574e15072b15aaed0f4f843a5711fae0d9) | `.reference/crush` |
 
-每份报告覆盖架构与模块依赖、核心数据结构、存储/提交/恢复、核心流程与时序、模型/工具/安全/协作/记忆/交互/扩展/评测、优势及代价、九模块与共同工程基线对照。51 项局部建议在综合分析中归并为 12 项，保留出处和既有优化关联；数量不代表已采用或测得收益。
+机器可读版本见 [sources.json](sources.json)。后续复核或移植时再按[下载说明](../README.md#source-download)取得所需项目；当前文档不依赖本地源码副本。Crush 的研究版本为 FSL-1.1-MIT，复制代码前核对许可证及适用条件。
 
-原仓库分别为 [openai/codex](https://github.com/openai/codex)、[earendil-works/pi](https://github.com/earendil-works/pi)、[deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)、[PrimeIntellect-ai/prime-agent](https://github.com/PrimeIntellect-ai/prime-agent)、[charmbracelet/crush](https://github.com/charmbracelet/crush)。本地目录依次是 `.reference/codex`、`.reference/pi`、`.reference/deepseek-harness`、`.reference/prime-agent`、`.reference/crush`；采用深度 1 的默认分支快照，不声称覆盖提交历史。`.reference/` 由仓库已有规则忽略。
-
-## 2. 共同分析与复核资产
-
-- [六组核心对象与参考语义覆盖](core-model-semantic-coverage.md)：16 类语义逐项对照五个项目的七条实际路径，区分设计覆盖、内部记录、可选能力和未公开合同；运行能力仍待实现与验证。
-- [数据对象与同场景读写对比](data-flow-io-comparison.md)：补充连续对话、模型—工具循环的对象组织、逻辑记录与实际持久化边界，以及本项目的复杂度收敛。
-- [本项目架构比较基线](architecture-baseline.md)：九模块事实归属、ADR、工程选型与 24 项已采用方向。
-- [架构优化分析](architecture-optimization.md)：逐模块对照、12 项建议、工程影响、实施依赖、验收/实验及局部编号追踪。
-- [来源与基线清单](sources.json)：remote、branch、commit、tree、提交时间、文件数，以及 154 个本项目基线文件的 SHA-256。
-- [静态验证记录](verification.md)：源码固定提交/路径/行号、本地链接、文档结构、引用完整性与快照一致性检查范围及结果。
-- [复核脚本](verify-research.py)：读取上述快照和报告重新核查引用与基线，输出机器可读结果。
-
-## 3. 如何使用这些结论
-
-**首批可靠闭环。** 综合 O-01～05、O-07、O-12 细化上下文、准确绑定、出站前耐久资格、结果范围和输入竞争；O-08 中精确安装及失败关闭是相应能力的前提。各项复用原 Task、Operation、Grant、Content、Surface 和 JobStore，没有另建事实负责方。
-
-**后续能力。** O-06/08 按子 Agent 和扩展的真实能力开放；O-09～11 涉及经验候选、程序化工具和渐进式发现，只在独立权限/隔离/评测条件成立后实验。X-01～06 的既有统计含义保持，交互 code cell 等新因素另冻结对照。
-
-本次采用源码静态追踪及多智能体分项目研究、根侧综合与交叉复核。没有安装上游依赖、启动模型/外部服务或执行上游测试/benchmark；不提供跨项目质量、延迟、费用或容灾排名。研究时的架构草案和 ADR 是比较依据，此次交付是研究报告及建议，运行实现和真实收益仍需后续取证。
-
-用户随后确认据此刷新架构；原设计采用映射随架构草案移除，可通过 Git 历史查看。模型收敛的研究目标、约束及语义覆盖保留在[语义覆盖研究](core-model-semantic-coverage.md#core-model-scope)。上列 sources.json、architecture-baseline 与原 verification 保留调研时的历史快照；架构文件在优化后发生变化，不重写原哈希来伪装仍与旧基线一致。新增读写对比区分参考源码行为与更新后本项目的设计阶段，不表示已运行性能测试。
-
-源码复用还需按固定版本的实际许可判断。尤其 Crush 当前根许可为 FSL-1.1-MIT，含未来 MIT 条款，不能按“当前全部 MIT”复制；具体定位见[Crush 报告](../crush/README.md#1-定位版本与复用范围)。其他项目许可也在对应报告说明。
+[E01]: https://github.com/openai/codex/blob/d4a475adda850d80b6149c76454de94e0cf4fd51/codex-rs/thread-store/src/local/live_writer.rs#L327-L382
+[E02]: https://github.com/openai/codex/blob/d4a475adda850d80b6149c76454de94e0cf4fd51/codex-rs/core/src/mcp_tool_call.rs#L436-L480
+[E03]: https://github.com/earendil-works/pi/blob/8ce69e9d2b171d173fe4b6b2b6256f1f4411e69d/packages/agent/src/harness/runtime/drive/tools.ts#L478-L539
+[E05]: https://github.com/deepseek-ai/deepseek-harness/blob/639ed015397290b3745d163aafe02ffee4aa3f84/packages/core/session/src/index.ts#L711-L795
+[E06]: https://github.com/deepseek-ai/deepseek-harness/blob/639ed015397290b3745d163aafe02ffee4aa3f84/packages/session/session-checkpoint-policy/src/index.ts#L20-L82
+[E07]: https://github.com/deepseek-ai/deepseek-harness/blob/639ed015397290b3745d163aafe02ffee4aa3f84/packages/core/session/src/repair.ts#L14-L97
+[E08]: https://github.com/PrimeIntellect-ai/prime-agent/blob/5784abc2aef523a78d5a8850a0c0be89883388b2/crates/pa-core/src/session_engine/goal_driver.rs#L590-L688
+[E09]: https://github.com/PrimeIntellect-ai/prime-agent/blob/5784abc2aef523a78d5a8850a0c0be89883388b2/crates/pa-core/src/session_engine/compact_session/prepare.rs#L87-L149
+[E10]: https://github.com/PrimeIntellect-ai/prime-agent/blob/5784abc2aef523a78d5a8850a0c0be89883388b2/prime-agent-runtime/src/rlm/__init__.py#L390-L425
+[E11]: https://github.com/charmbracelet/crush/blob/76cc5c574e15072b15aaed0f4f843a5711fae0d9/internal/agent/agent.go#L1299-L1410
+[E12]: https://github.com/charmbracelet/crush/blob/76cc5c574e15072b15aaed0f4f843a5711fae0d9/internal/pubsub/broker.go#L1-L48
+[E13]: https://github.com/charmbracelet/crush/blob/76cc5c574e15072b15aaed0f4f843a5711fae0d9/internal/permission/permission.go#L111-L174
+[E26]: https://github.com/earendil-works/pi/blob/8ce69e9d2b171d173fe4b6b2b6256f1f4411e69d/packages/agent/src/harness/runtime/harness.ts#L375-L408
