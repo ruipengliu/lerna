@@ -58,6 +58,7 @@ type App struct {
 	OwnsTargets                                                      bool
 	Role                                                             string
 	closeGovernance                                                  func() error
+	actions                                                          *actionRegistry
 }
 
 func component(name string) api.ComponentRef {
@@ -176,6 +177,9 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	}
 	execContent := executionContent{a}
 	drivers := []execution.Driver{&execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud"}, &execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud", ReadOnly: true}, a.Phones, &execadapter.PhoneGUIDriver{Phones: a.Phones}, &execution.TrustedComputeDriver{Content: execContent, Store: st, Location: "cloud"}}
+	if e = a.configureActionRegistry(drivers); e != nil {
+		return nil, e
+	}
 	var resources execution.ResourceDriver = a.Phones
 	if !a.OwnsTargets {
 		for i, driver := range drivers {
@@ -256,6 +260,9 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 		return fmt.Errorf("install content policy: %w", e)
 	}
 	status, e := a.Store.Within(ctx, a.Scope, []string{"governance"}, func(tx runtime.Tx) error {
+		if e := a.provisionActionGrantsTx(ctx, tx); e != nil {
+			return e
+		}
 		for _, r := range rules {
 			if _, e := a.Governance.RegisterRuleTx(ctx, tx, governance.RuleDefinition{ComponentRef: r.RuleRef, Kind: r.Kind, Predicate: r.Predicate, AllowedBasis: r.AllowedBasis, RiskClass: "ordinary", MaxObservationAgeSeconds: 300, Calibrated: true}); e != nil {
 				return fmt.Errorf("register development rule: %w", e)
