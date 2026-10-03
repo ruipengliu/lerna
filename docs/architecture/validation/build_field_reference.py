@@ -9,7 +9,7 @@ GROUPS=[
  ('目标与条件','以下存储记录归原 Orchestrator。候选和引用是嵌入值，不能脱离 Task/原来源独立寻址。',['GoalDocument','RequirementCandidate','RequirementDelta','RequirementRef','Requirement','RequirementMapping','GoalRevision','RequirementAdoption','GoalCoverage','RuleDefinition','WaitReason','Task','ConditionResult','Result']),
  ('决策与执行','DispatchIntent 归 Orchestrator；DecisionRecord 归 Brain；Operation 归 Executor；ControlSnapshot 是原控制的传输值。',['DecisionDispatchIntent','DecisionRecord','Operation','ControlSnapshot']),
  ('授权预算和交接','Grant 归授权 owner，Confirmation 归原业务 owner；BudgetBalance 是 Task 每单位投影；UsageSnapshot 归实际计费源；Closure 和 DelegationContext 保持原双方身份。',['Grant','Confirmation','BudgetBalance','UsageSnapshot','AllocationClosure','DelegationContext']),
- ('持久责任与命令','Job 在每个业务 owner 本地保存；Claim 是固定领取凭据；Command 是跨网络不变的原请求。',['Job','Claim','Command'])]
+ ('持久责任与命令','Job 在每个业务 owner 的服务所属库保存；Claim 是固定领取凭据；Command 是跨网络不变的原请求。',['Job','Claim','Command'])]
 
 def typ(v):
  if '$ref' in v:return v['$ref'].split('/')[-1]

@@ -12,7 +12,7 @@ Orchestrator 的 OperationIntent 固定 task/goal/control、唯一准入来源�
 
 Operation 的执行状态为 accepted、started、closed；效果独立为 not_started、applied、not_applied、unknown。另存 may_apply_later=true/false/unknown、证据、准确结果、累计用量及 usage_final。
 
-- not_started：有可靠本地证据未越过实际入口
+- not_started：有可靠的执行宿主证据表明未越过实际入口
 - applied：目标证据证明声明效果发生。后来的目标变化不改写这项历史事实
 - not_applied：目标证据证明本次声明效果没有发生
 - unknown：现有材料不足以判断，包括回执丢失和目标不可查询
@@ -46,7 +46,7 @@ closed 表示该执行责任已封闭新的目标尝试，不保证 effect 已�
 
 目标幂等保留期届满、未知写入、目标只返回暂时 not_found，均不能支持无条件重发。SDK 的“safe retry”声明必须由准确驱动与当前工具合同共同核验。重新换 operation_id、执行端或参数不构成安全恢复。
 
-能力还明确 partial_read、完整遍历或当前状态读回的含义。空数组可能是过滤失败、权限缺口或真空集；每次结果须带实际筛选、分页覆盖、截断、目标观察时间、获取时间、缓存及媒体缺项。不能以本地 LIMIT 当全集完成。
+能力还明确 partial_read、完整遍历或当前状态读回的含义。空数组可能是过滤失败、权限缺口或真空集；每次结果须带实际筛选、分页覆盖、截断、目标观察时间、获取时间、缓存及媒体缺项。不得以查询中的 LIMIT 当全集完成。
 
 ## 3 从接纳到真实入口
 
@@ -67,11 +67,11 @@ sequenceDiagram
     E->>D: 归并效果、结果覆盖、用量与后续 Job
 ```
 
-StartBarrier是实际发送宿主内的受信入口。它与本地TaskGate、设备control_epoch和停止门禁串行裁决。宿主必须逐项核验Grant使用、发布批准、资源租约、观察窗口和可信时间，并采用Task、Operation、ControlSnapshot、UseReceipt及ApprovalUse中的最早截止。
+StartBarrier 是实际发送宿主内的受信入口。它与该 Executor 保存的 TaskGate、设备 control_epoch 和停止门禁串行裁决。云端 Executor 的账本在服务所属 PG，设备 Executor 的账本在端侧 SQLite。TaskGate 只保存原 Orchestrator 的控制事实并约束本机启动，不授权 Executor 改目标或裁决 Task 完成。宿主必须逐项核验Grant使用、发布批准、资源租约、观察窗口和可信时间，并采用Task、Operation、ControlSnapshot、UseReceipt及ApprovalUse中的最早截止。
 
 资源owner必须先持久保存原Attempt的在途记录和核对责任。确认提交后，宿主才允许真实交接。资源owner与Executor分库时分别提交；准备答复未知时，必须先查询原记录。控制在交接后到达，只能阻止后续交接；已经交出的Attempt必须继续核对。
 
-远端控制或撤权的提交不等于本地入口已知道。在线使用采用短的原 use 启动窗口；离线只按显式额度和期限继续。对完全即时撤回的需求，必须让真实入口和授权裁决共事务，或在撤权落实切点原子更新并由目标入口核验fence；远端Grant提交本身仍不等于目标已换代，否则拒绝提供该保证。
+远端控制或撤权的提交不等于执行入口已知道。在线使用采用短的原 use 启动窗口；离线只按显式额度和期限继续。对完全即时撤回的需求，必须让真实入口和授权裁决共事务，或在撤权落实切点原子更新并由目标入口核验fence；远端Grant提交本身仍不等于目标已换代，否则拒绝提供该保证。
 
 编码阶段只映射已固定意图：路径、参数位置、单位、正文及响应选择器来自准确版本。签名和临时认证可以刷新，不能改变业务对象或接收方。完整出口检查包括重定向、DNS实际连接、回调、分页和下载子请求；每个物理请求占原上限。封存后 hook 不能添加材料或动作。
 
@@ -129,7 +129,7 @@ Environment 保存 environment_id、tenant/owner、准确配置/隔离摘要、I
 
 hostcall已发生的外部效果不随cell变量回滚。它们仍是独立子Operation/Decision/Delegation，完整关联不能丢。宿主无法隔离部分变量、原进程未确认退出或hostcall启动仍未知时，环境不得接新cell；保留closing/待处置，不能仅因客户端取消完成就复用。
 
-| 方法与允许前态 | 必填payload（除?） | 本地决定及成功点 |
+| 方法与允许前态 | 必填payload（除?） | Executor 决定及成功点 |
 | --- | --- | --- |
 | environment.create；创建 | environment_id、config_ref、install_lock_ref、limits:Amount[]、expires_at、source_refs | A保存preparing与准备Job；仅read显示active/ready后可运行，不将A称ready |
 | environment.get/list；查询 | 原对象/分页 | phase、generation、instance、namespace_revision/ref、ready_for_cell、活动/残留集合 |

@@ -55,7 +55,7 @@ FIFO只约束同分支的新目标队列，默认每分支最多20项、每用�
 
 应用接口继承[共同方法合同](../protocol/method-contract.md)。`session.submit_goal` 固定 session_ref、branch_ref、expected_branch_revision、content_ref、attachment_refs、policy_ref、budget、task_deadline；`session.steer` 另固定 target_task_ref/expected_goal_revision；`interaction.input` 固定 request_ref、answer_ref、preview_refs。三者的 applied 只返回 submission_ref/state=queued 和原投递查询入口，不能直接承诺Task已消费。
 
-应用先在同一事务保存原Message/Submission、分支head及投递责任，再发原业务命令。内容尚不可取得、分支CAS冲突或本地耐久失败时不发送。state从queued经sending到applied/rejected；withdraw只在queued下可提交withdrawn，sending后返回withdrawal_requested并继续查原业务决定。错误reason为 branch_changed、input_unpublished、request_target_mismatch、queue_full、already_sending；表单服务端重新校验答案，不能相信renderer通过。
+应用先在同一事务保存原Message/Submission、分支head及投递责任，再发原业务命令。内容尚不可取得、分支 CAS 冲突或 Interaction 所属库耐久提交失败时不发送。state从queued经sending到applied/rejected；withdraw只在queued下可提交withdrawn，sending后返回withdrawal_requested并继续查原业务决定。错误reason为 branch_changed、input_unpublished、request_target_mismatch、queue_full、already_sending；表单服务端重新校验答案，不能相信renderer通过。
 
 `submission.read` 返回原输入、目标owner/command、当前投递阶段及原Task/请求消费映射；权限不足时返回redacted，不重投。明确区分task.input的“业务回答消费成功”与interaction.input的“应用转交已保存”。同一回复只归原分支。独立应用InputRequest可以没有Task，不能为了统一接口虚构Task。
 
@@ -65,7 +65,7 @@ InputRequest归实际消费它的业务owner，固定request_id/revision、targe
 
 独立应用请求可以没有Task；成果验收还固定candidate_ref/hash和准确可见限制。
 
-Surface可以关联Task，也可以独立存在。它保存准确app_binding、surface_id/revision、准确快照、请求引用和生命周期。application_event只进入该绑定登记的事件Schema/handler与固定目标Command，前端不能任意选择method/URL。Presentation保存端点、版本、open/close意图与intent_revision；本地每次读取generation绑定主体、Surface、意图和请求版本。关窗/换页/重连/撤权使旧snapshot/body/not_modified回调失效；正式快照先耐久再提示。not_modified也核当前披露和保留资格，不能只比Surface修订。显示或点击不直接证明消费。
+Surface可以关联Task，也可以独立存在。它保存准确app_binding、surface_id/revision、准确快照、请求引用和生命周期。application_event只进入该绑定登记的事件Schema/handler与固定目标Command，前端不能任意选择method/URL。Presentation保存端点、版本、open/close意图与intent_revision；呈现器每次读取的 generation 绑定主体、Surface、意图和请求版本。关窗/换页/重连/撤权使旧snapshot/body/not_modified回调失效；正式快照先耐久再提示。not_modified也核当前披露和保留资格，不能只比Surface修订。显示或点击不直接证明消费。
 
 输入块只引用request_ref，表单Schema只能来自原owner的InputRequestView。Renderer支持受限字段类型、选项和声明约束，不执行任意脚本或远端Schema。Renderer只有取得完整准确必需正文、校验摘要并成功呈现才启用依赖按钮；仅摘要、下载失败或渲染失败不满足，普通无依赖控制仍可用。提交携准确request_revision、结构化答案和预览引用；业务owner重新校验，不相信前端验证通过。
 

@@ -12,7 +12,7 @@
 | --- | --- | --- |
 | Grant 的 once/use | 某个主体是否可以进行这次使用 | once 消费不能因退款、零费用或取消恢复 |
 | Task 的 reserved/spent | 未来费用承诺与累计真实费用 | 有证据封闭新增费用且取得当前最终累计账单后释放剩余预留 |
-| Executor/提供方资源槽 | 实际并发、设备占用或环境资源 | 本地实际退出或远端可核验关闭，不能只凭 goroutine cancel |
+| Executor/提供方资源槽 | 实际并发、设备占用或环境资源 | 执行宿主确认实际执行已退出，或远端可核验关闭，不能只凭 goroutine cancel |
 
 金额使用准确单位和十进制定点表示，不能以 float 累加。不同币种、token、次数和时间分别计量，无固定兑换依据不相互抵扣。
 
@@ -54,7 +54,7 @@ estimate 需要[策略接受合同](../security/README.md#policy-acceptance)：�
 
 ## 4 父子预算跨域交接
 
-父方先在本地事务占用 reserved，并创建固定 Allocation：allocation_id、receiver_id、父 Task、严格单位上限、期限、原命令和发送 Job。接收方核验认证sender、原父当前分配、receiver/单位/范围/期限，以(tenant_id,parent_owner,allocation_id)唯一建立IncomingAllocation，与至多一个子Task及首Job同本地事务绑定；不能因父方失联再接受一份同义额度。
+父方先在自己服务所属库的事务中占用 reserved，并创建固定 Allocation：allocation_id、receiver_id、父 Task、严格单位上限、期限、原命令和发送 Job。接收方核验认证sender、原父当前分配、receiver/单位/范围/期限，以(tenant_id,parent_owner,allocation_id)唯一建立IncomingAllocation，与至多一个子 Task 及首 Job 在接收方的同一数据库事务中绑定；不能因父方失联再接受一份同义额度。
 
 ```mermaid
 sequenceDiagram

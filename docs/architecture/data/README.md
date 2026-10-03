@@ -42,7 +42,9 @@ Harness 的数据主线是：原始输入形成目标，目标形成可检查的
 | Evaluation owner | 冻结 Plan、Run、SampleRun、Exposure 和报告 | 候选/基线、样本与独立真值、原 Operation/费用 | 保持原分母与正式试验次数；取消后收束环境与费用 |
 | 每一个业务 owner | 本域 CommandReceipt、Job、outbox、最小去重/关闭记录 | 原领域对象 | 与业务事务同提交；按原身份恢复；最后去重依据长期保留 |
 
-同库部署可装配同一事务，但逻辑 owner 和允许写入的接口仍不合并。默认 Task、条件、任务预算、本地 Grant/Confirmation、证据 gate 在原 Orchestrator 分片；独立 Brain、Executor、Content、Memory 使用自己的账本。具体表与可共事务范围见[存储设计](storage.md)。
+默认云端 Orchestrator 在所属 PG 分片保存 Task、Requirement、目标版本、任务预算、Result，以及共同裁决的 Grant/Confirmation 和证据 gate。独立 Brain、Executor、Content、Memory 使用自己的服务所属库。端侧设备 SQLite 默认只保存本机执行、资源门禁及恢复补传记录；Task 缓存不取得完成裁决权。[端侧独立 Orchestrator](../production/README.md#optional-edge-orchestrator)是单独可选部署。
+
+装配到同一数据库的 owner 可显式共享一个事务，但逻辑职责和允许写入的接口仍不合并。具体表和事务范围见[存储设计](storage.md)。
 
 ## 3 身份与版本统一规则
 
@@ -110,7 +112,7 @@ erDiagram
 
 ## 6 读写与实现入口
 
-实现某个模块前，先从本章定位该事实的 owner，再查看该模块的业务流程和字段字典；不要从 JSON 名称推断它允许被谁更新。常见查询应有明确的本地索引路径。
+实现某个模块前，先从本章定位该事实的 owner，再查看该模块的业务流程和字段字典；不要从 JSON 名称推断它允许被谁更新。常见查询必须有明确的服务所属库索引路径。
 
 - 任务详情：当前 Task/GoalRevision、有效条件与选中检查、完整未结关联、预算摘要；不每轮扫描全部历史
 - 原输入追踪：Submission → 原 CommandReceipt → Task → 原分支回复；历史归档不抹掉映射

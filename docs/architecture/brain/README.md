@@ -32,7 +32,7 @@ Snapshot 至少绑定 task/goal/control/snapshot revision、goal_ref、完整条
 3. 取得必要字节，验证准确版本及摘要。记录全部实际处理来源，包括后来没有进入最终提示的材料
 4. 先保留事实核心，再装入当前证据、最近有效输入、相关记忆和历史摘要；记录裁剪与缺口
 5. 用准确 ModelProfile 的编码器计算输入，加上系统包装、工具 Schema、输出预留与安全余量
-6. 回到 Task 短事务复查依赖修订和使用资格，共同保存Snapshot、固定decision_id的DecisionDispatchIntent、原brain.decide命令、计数、预留和Job；Brain另在其本地接纳事务创建Decision
+6. 回到 Task 短事务复查依赖修订和使用资格，共同保存Snapshot、固定decision_id的DecisionDispatchIntent、原brain.decide命令、计数、预留和Job；Brain 另在自己服务所属库的接纳事务中创建 Decision
 
 先去重复和低相关可选历史，再缩短证据片段。必需输入仍超窗口时返回 context_incomplete，请求有界补证或任务拆分；不能截掉控制或必要条件继续。最终封存编码须满足 input_tokens + reserved_output_tokens + safety_margin_tokens ≤ context_limit，并另满足输入/输出独立限制。记录tokenizer/编码版本和计数模式exact/upper_bound/estimate；只有准确计数或可信上界可支持硬限额声明。图片、URL、metadata 和附件不一定计入同一 token 窗口，但都计入字节、用途和外发核查。
 

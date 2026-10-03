@@ -6,6 +6,8 @@ Orchestrator 持有目标推进责任。它把用户要求转成可检查的条�
 
 ## 1 持久模型
 
+默认 Orchestrator 运行在云端，Task、Requirement、目标版本、任务预算和 Result 的权威记录保存到其所属 PG 分片。本章的 Task 事务都指该数据库事务。端侧 SQLite 中的执行账本、TaskGate 或 Task 缓存不得代替完成裁决。只有显式启用[端侧独立 Orchestrator](../production/README.md#optional-edge-orchestrator)时，其自有 Task 才使用设备 SQLite。
+
 Task 至少保存：固定 task_id/orchestrator_id/submit_command_id，原 goal_ref，goal_revision、control_revision、revision，准确 TaskPolicy，deadline，状态、控制、等待、当前条件和预算关联；另存 requirements_state、requirements_digest 及 ready 时的 current_coverage_ref。完整字段见[字典](../data/field-reference.md)。
 
 - status 为 active、succeeded、failed、cancelled。后三者不可回到 active
@@ -78,14 +80,14 @@ Snapshot、固定decision_id的DecisionDispatchIntent、原 Brain 命令、计�
 
 1. 锁定 Task 及有界祖先链，验证有效领取、当前 goal/control/策略与期限
 2. 检查来源尚未消费、admission_purpose 与当前条件门禁一致，完整参数满足准确 Schema；确认不存在会阻塞本行动的未决效果或资源冲突
-3. 检查当前授权依据、预算、累计续行上限和本地容量
+3. 检查当前授权依据、预算、累计续行上限和本服务容量
 4. 同时保存不可变 OperationIntent、原执行命令、reservation、来源处理决定、未结集合关联与 dispatch Job
 
 并行准入只适用于独立且不冲突的行动。依赖前项输出时等真实结果；GUI 每次变更之后重新观察，不能批量预批一串点击。派发和实际启动分别再查当前门禁，事务外远端资格按其有限窗口使用，不伪装成跨库原子读。
 
 ### 一份提案的批量准入
 
-一个 Decision 的 actions 首版最多4项，只接受互相独立的行动。本方全收或全拒：在事务外准备全部准确输入；事务内一次核全部门禁、合计各单位预留，再共同保存全部 Intent、逐项原命令及 DecisionConsumption。任一成员不满足则不产生这批 Intent；保存固定拒绝/等待原因与原消费决定。条件实质变化仍优先只提交条件。远端 Grant 部分消费或各 Executor 结果可能不同，不能据本地原子准入宣称外部效果全成或全败。依赖前项结果的动作改为后续 Decision 或明确启用的 Plan。
+一个 Decision 的 actions 首版最多4项，只接受互相独立的行动。本方全收或全拒：在事务外准备全部准确输入；事务内一次核全部门禁、合计各单位预留，再共同保存全部 Intent、逐项原命令及 DecisionConsumption。任一成员不满足则不产生这批 Intent；保存固定拒绝/等待原因与原消费决定。条件实质变化仍优先只提交条件。远端 Grant 部分消费或各 Executor 结果可能不同，不得据 Orchestrator 数据库内的原子准入宣称外部效果全成或全败。依赖前项结果的动作改为后续 Decision 或明确启用的 Plan。
 
 ## 5 计划是候选生成器
 
@@ -144,7 +146,7 @@ Result.completion_basis 取必要条件中最弱依据：有用户验收则 user
 
 ## 9 接口与访问边界
 
-所有表项继承[共同方法合同](../protocol/method-contract.md)。A 为本地 applied；没有第二次任务成功状态机。
+所有表项继承[共同方法合同](../protocol/method-contract.md)。A 表示 Orchestrator 的业务决定已在服务所属库提交；没有第二次任务成功状态机。
 
 | 方法与并发前提 | 准确 payload | A 输出与业务决定 | 特有拒绝 reason / 恢复 |
 | --- | --- | --- | --- |

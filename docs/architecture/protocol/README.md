@@ -63,7 +63,7 @@ Query含query_id、method、target和有界payload，不建永久命令墓碑。
 
 实现时先按[方法共同合同](method-contract.md)选择回执阶段、裁决顺序与错误，再使用各模块接口表。修改型方法必须声明expected_revision是否必需。账单唤醒等无法知道Task当前版本的通知按原来源修订合并，不能强迫调用者先读再猜。新增field或method先冻结profile再开放，不用任意JSON逃逸字段承载新业务。
 
-跨域task.submit的可选delegation_context固定delegation、父Task/goal、真实祖先、准确Agent绑定、原allocation/许可、父ControlSnapshot及受信证明。接收方校验父Task、allocation owner、控制签发owner和目标版本一致，祖先来自可核原关系；再读取原父当前allocation、验证本receiver及权限/预算/期限，并唯一接纳IncomingAllocation与子Task。独立提交省略该字段，不得伪造父身份绕过本地预算。estimate任务另携acceptance_ref，实际准入仍查原策略接受记录。
+跨域task.submit的可选delegation_context固定delegation、父Task/goal、真实祖先、准确Agent绑定、原allocation/许可、父ControlSnapshot及受信证明。接收方校验父Task、allocation owner、控制签发owner和目标版本一致，祖先来自可核原关系；再读取原父当前allocation、验证本receiver及权限/预算/期限，并唯一接纳IncomingAllocation与子Task。独立提交省略该字段，不得伪造父身份绕过接收方的 Task 预算。estimate任务另携acceptance_ref，实际准入仍查原策略接受记录。
 
 ## 5 错误给出下一步而非猜测
 

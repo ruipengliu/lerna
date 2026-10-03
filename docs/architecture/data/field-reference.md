@@ -665,7 +665,7 @@ Grant 归授权 owner，Confirmation 归原业务 owner；BudgetBalance 是 Task
 
 ## 6 持久责任与命令
 
-Job 在每个业务 owner 本地保存；Claim 是固定领取凭据；Command 是跨网络不变的原请求。
+Job 在每个业务 owner 的服务所属库保存；Claim 是固定领取凭据；Command 是跨网络不变的原请求。
 
 ### Job
 

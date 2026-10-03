@@ -25,9 +25,10 @@ RuleDefinition 是既有规则注册表的不可变配置，不增加服务。�
 
 ConditionCheck执行前固定RuleDefinition、参数、evaluator/InstallLock、成果和scope。结果Schema必须满足rule的kind/basis/证据/时点要求。模型仅能选择当前登记规则，不能在Proposal中自建一个放宽门槛的规则。具体业务阈值是版本化配置，不能由实现者硬编码未审查默认值。
 
-## 2 本地缺陷与完成竞争
+<a id="2-本地缺陷与完成竞争"></a>
+## 2 同一数据库内的缺陷与完成竞争
 
-每个准确实现启用前建立evidence_gate。缺陷登记在同一原分片独占gate，提交缺陷原事实、gate_revision及分页影响Job；不锁全部Task。Task完成按Task→gate共享锁→当前checks→Job的顺序，直接查命中缺陷，不依赖异步影响投影。
+本节适用于缺陷权威与 Task 明确装配到同一数据库的情况，默认是云端 Orchestrator 所属 PG 分片。每个准确实现启用前建立 evidence_gate。缺陷登记在同一原分片独占gate，提交缺陷原事实、gate_revision及分页影响Job；不锁全部Task。Task完成按Task→gate共享锁→当前checks→Job的顺序，直接查命中缺陷，不依赖异步影响投影。
 
 缺陷先提交则旧pass不能完成；完成先提交则随后追加notice。影响扫描中断从原游标续行，包含GoalCoverage与组合检查。缺陷不可完整查询时保持unknown，不挑一个旧pass继续。
 
@@ -35,7 +36,7 @@ ConditionCheck执行前固定RuleDefinition、参数、evaluator/InstallLock、�
 
 资格authority按稳定实现ID顺序锁定完整有界依赖DAG的全部evidence_gate，在同一事务中检查当前缺陷、固定连续change_head/authority_epoch、登记EvidenceHolder、保存原EligibilityReceipt与回执/交回责任。不能先查缺陷、稍后才登记holder。需要外部签名时，先固定待签输入，在提交前复查同一gate/head；未确认提交的签名不得发给消费方，不在事务内调用网络KMS。
 
-EvidenceHolder最少保存holder_id、consumer_owner/task、check_ref/report_hash、scope/dependency_digest、authority_epoch、registration_cursor、last_acked_cursor、state与交回Job。它是既有holder责任的本域记录，不是新通知服务。缺陷事实、连续序号及一个带固定holder注册水位的分页交回Job共同提交。后台按原水位和稳定holder键分批生成outbox；不是在缺陷事务内枚举全部holder。检查注册与缺陷登记都在相关gate后锁同一authority change_head，保证切点连续；消费者保存导入事实、本地gate和影响Job后才ack。
+EvidenceHolder最少保存holder_id、consumer_owner/task、check_ref/report_hash、scope/dependency_digest、authority_epoch、registration_cursor、last_acked_cursor、state与交回Job。它是既有holder责任的本域记录，不是新通知服务。缺陷事实、连续序号及一个带固定holder注册水位的分页交回Job共同提交。后台按原水位和稳定holder键分批生成outbox；不是在缺陷事务内枚举全部holder。检查注册与缺陷登记都在相关gate后锁同一authority change_head，保证切点连续；消费者保存导入事实、消费方证据 gate 和影响 Job 后才 ack。
 
 | 方法 | payload | 原决定/查询输出与错误 |
 | --- | --- | --- |
@@ -44,17 +45,17 @@ EvidenceHolder最少保存holder_id、consumer_owner/task、check_ref/report_has
 | evidence.defect.read/changes；查询 | 原defect或holder_ref、authority_epoch、cursor、limit | 有界连续变更、head/next_cursor/partial；缺口snapshot_required，换代authority_changed |
 | evidence.holder.ack；源版本 | holder_ref、authority_epoch、through_cursor、import_digest | 原确认进度；只承认已完整导入切点，乱序不倒退，同切点异摘要冲突 |
 
-缺口或authority换代时，消费方停止依赖旧资格完成任务，以新的eligibility命令获取完整当前检查/缺陷基线，并在本地事务安装基线、epoch、连续水位和gate。查询旧receipt不能续期；旧流可以留审计，但不能覆盖新epoch/基线。签名只证明所属authority的声明，不能替其他owner断言无缺陷。
+缺口或authority换代时，消费方停止依赖旧资格完成任务，以新的eligibility命令获取完整当前检查/缺陷基线，并在消费方服务所属库的同一事务中安装基线、epoch、连续水位和 gate。查询旧receipt不能续期；旧流可以留审计，但不能覆盖新epoch/基线。签名只证明所属authority的声明，不能替其他owner断言无缺陷。
 
-首版一个组合ConditionCheck的完整依赖DAG最多128节点、深度8，且必须由同一个治理authority负责。跨authority的组合返回unsupported_multi_authority，不只验根节点。Task的不同必要检查可以各有自己的authority；最终事务分别验证每项完整依赖、所有本地gate/无缺口水位和凭据向量，取最紧期限。缺一项为unknown。以后要开放多authority组合，须另冻结完整依赖向量协议。
+首版一个组合ConditionCheck的完整依赖DAG最多128节点、深度8，且必须由同一个治理authority负责。跨authority的组合返回unsupported_multi_authority，不只验根节点。Task的不同必要检查可以各有自己的authority；最终事务分别验证每项完整依赖、所有消费方证据 gate/无缺口水位和凭据向量，取最紧期限。缺一项为unknown。以后要开放多authority组合，须另冻结完整依赖向量协议。
 
 receipt到期只终止当前完成资格，不停止后续缺陷通知。活动Task与已成功Result仍依赖该证据时holder保留。首版不自动释放成功Result的holder；只保留最小关联及授权范围内的notice，正文仍独立清理。未被任何Result/派生检查使用且目标已终结的holder，可由消费方持久关闭证明释放；authority保存最小关闭/ack依据。权限收紧不等于允许丢掉已发生效果的收尾记录。
 
 ### 消费方如何限制陈旧窗口
 
-TaskPolicy明确 `max_evidence_staleness`。最终完成同时检查本地gate、已知无缺口的导入水位、准确凭据绑定和最紧期限：
+TaskPolicy明确 `max_evidence_staleness`。最终完成同时检查 Task 所属库中的证据 gate、已知无缺口的导入水位、准确凭据绑定和最紧期限：
 
-- 窗口为0：必须同一个权威事务范围直接查当前缺陷；远程调用后回本地提交不能声称零陈旧
+- 窗口为0：必须同一个权威事务范围直接查当前缺陷；先调用远端再提交 Task 所属库，不能声称零陈旧
 - 窗口大于0：允许不超过策略规定的远端缺陷未知窗口，完成结果记该限制；实际截止不晚于min(原expires_at,checked_at+策略窗口)，查询原回执不续期；过期、时钟不可证、authority_epoch变化或交回链有缺口则等待并重建资格
 - 高影响自动判断默认0，部署不能提供同域门禁时不开启该保证
 

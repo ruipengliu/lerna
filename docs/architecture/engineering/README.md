@@ -22,13 +22,13 @@ apps/web/             受信Renderer与管理界面
 conformance/          同版正反例、跨实现和故障验收
 ```
 
-领域依赖小型port和显式repository，不依赖连接对象、SQL驱动或前端框架。Tx仅在声明的本地范围共享。公开SDK与内部领域包分开，不把所有内部结构承诺为稳定API。
+领域依赖小型port和显式repository，不依赖连接对象、SQL驱动或前端框架。Tx 仅在显式声明的同一数据库范围内共享。公开SDK与内部领域包分开，不把所有内部结构承诺为稳定API。
 
 ## 2 默认技术栈
 
 核心/宿主/CLI使用Go受支持稳定版本；实际补丁、生成器及依赖摘要通过构建和合同测试后固定InstallLock，不把研究日期的最新版抄成当前保证。
 
-PostgreSQL采用pgx/sqlc显式SQL；SQLite用独立database/sql适配、WAL/FULL/foreign_keys和单写队列，分别维护迁移。生产使用受限角色和事务池，本机PG集成先有界直连。迁移由独立管理命令执行，不让每个副本启动时竞争改表。
+默认云端 Orchestrator 的 Task 等权威记录使用 PG；端侧 SQLite 只实现本机执行、门禁、恢复和补传账本。端侧自有 Task 属于单独的可选 Orchestrator 部署，不能因适配器可用就默认启用。PG 采用 pgx/sqlc 显式 SQL；SQLite 用独立 database/sql 适配、WAL/FULL/foreign_keys 和单写队列，分别维护迁移。生产使用受限角色和事务池，本机PG集成先有界直连。迁移由独立管理命令执行，不让每个副本启动时竞争改表。
 
 WSS用Go适配器，服务间grpc-go/Protobuf外壳携严格JSON，同进程直接接口。浏览器为React/TypeScript/Vite与pnpm workspace，SDK用原生WebSocket及IndexedDB持久原命令。Schema2020-12和规范化规则跨Go/TS同版；原始JSON重复键、Unicode和数值检查早于普通解码。
 
@@ -40,7 +40,7 @@ WSS用Go适配器，服务间grpc-go/Protobuf外壳携严格JSON，同进程直�
 
 | 切片 | 交付与退出证据 |
 | --- | --- |
-| 真实基本闭环 | Task/Content/Grant、规则Brain、受管文件写和独立读回、当前条件核验；原命令/Job在PG与SQLite适用故障下恢复 |
+| 真实基本闭环 | Task/Content/Grant、规则Brain、受管文件写和独立读回、当前条件核验；云端 Task/原命令/Job 在 PG 恢复，设备执行/门禁/补传在 SQLite 恢复 |
 | 智能与交互 | 真实模型输出发布/费用、联网实际来源、Web持久输入与预览、Memory提取纠正、至少三台独立有状态模拟手机 |
 | 分布式与替换 | 本机独立网关/应用/两worker/执行宿主；真实WSS/gRPC丢答复、端云混合、三系统第二实现、外部委派与离线额度 |
 | 受控改进与规模 | 冻结实验、正式保留集、发布/独立旧批准回退、生产三AZ恢复、逐级容量与最终API/质量目标 |

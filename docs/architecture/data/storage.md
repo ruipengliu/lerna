@@ -6,49 +6,57 @@
 
 ## 1 存储介质与权威分工
 
-生产采用独立 WSS 网关、任务应用、分类工作池与执行宿主。PostgreSQL 分片保存业务事实和持久责任，对象存储保存不可变正文；端侧 owner 可用独立 SQLite 适配。一个逻辑 owner 同时只有一个可写存储位置；多个进程共享该权威，不各自保留可写真相。完整部署前提见[生产运行](../production/README.md)。
+默认生产部署中，云端 Orchestrator 在所属 PostgreSQL（PG）分片保存 Task、Requirement、目标版本、任务预算、Result 及其持久责任。端侧设备 SQLite 默认只保存本机执行、资源门禁、恢复和补传所需账本。对象存储保存不可变正文。
+
+一个逻辑 owner 同时只能有一个可写存储位置；多个进程共享该权威，不各自保留可写真相。本文的“服务所属库”指该 owner 的权威数据库，“原库”指原 owner 的服务所属库。“同一数据库事务”描述提交边界，不指定事务发生在云端还是设备。完整部署前提见[生产运行](../production/README.md)。
 
 | 介质 | 保存什么 | 不能据此推导什么 |
 | --- | --- | --- |
-| 原 owner 的 PostgreSQL | 业务记录、版本、准确关联、门禁、命令决定、Job、出入站交接记录及最小墓碑 | 不自动保证外部目标或对象字节已耐久 |
-| 原端侧 owner 的 SQLite | 本端拥有的 Task/Brain/Executor/Memory 等账本；设备 TaskGate、资源代次、Attempt、有限离线使用及待交回 Reply | 不是云端同名 owner 的可写副本；本端事务不能提交云端事实 |
-| 对象存储或受控本地内容介质 | 准确 Content 版本字节、冻结 manifest、模型产物、报告、截图、检查点及获准安装制品 | 有字节不等于已发布、仍有使用权或已被用户看见 |
-| 派生索引/物化投影 | 当前 Task 视图、Memory 检索、来源反向索引、聚合统计等 | 可以重建不等于可以在缺失时宣称全集为空 |
+| 云端 owner 所属的 PG 分片 | Orchestrator 的 Task、Requirement、目标版本、任务预算、Result；各云端服务的业务记录、门禁、命令决定、Job、交接记录和最小墓碑 | 不自动保证外部目标或对象字节已耐久 |
+| 端侧设备 SQLite，默认执行账本 | 本机 Executor 的 Operation/Attempt/Effect、TaskGate、资源代次、有限离线使用，以及恢复 Job、待交回 Reply 和清理记录 | 不保存云端 Task 的权威副本；TaskGate 只约束本机启动，不裁决 Task 完成；设备事务不能提交云端事实 |
+| 对象存储或受控文件介质 | 准确 Content 版本字节、冻结 manifest、模型产物、报告、截图、检查点及获准安装制品 | 有字节不等于已发布、仍有使用权或已被用户看见 |
+| 派生索引/物化投影 | 当前 Task 视图、Memory 检索、来源反向索引、聚合统计等；端侧可按需要缓存获准的云端 Task 视图 | 可以重建不等于可以在缺失时宣称全集为空；Task 缓存不得决定完成或转为可写权威 |
 | 有界内存与客户端缓存 | socket/请求等待、可丢唤醒、已授权显示缓存、短期查询页 | 不保存唯一命令决定、费用来源或未结责任 |
-| 浏览器 IndexedDB | 首次发送前的原 Command、固定 owner、Submission 与未决投递恢复记录 | 不是 Task 终态或授权权威；本地全部丢失不能按相似目标重新提交 |
+| 浏览器 IndexedDB | 首次发送前的原 Command、固定 owner、Submission 与未决投递恢复记录 | 不是 Task 终态或授权权威；浏览器记录全部丢失后，不得按相似目标重新提交 |
 
-SQLite 使用独立事务与迁移适配、WAL/FULL/foreign_keys 和单写队列；不照搬 PostgreSQL 的行锁、SKIP LOCKED 或多写者假设。云端单进程开发装配与本机多进程试验都不能替代跨可用区存储验收。
+端侧设备 SQLite 使用独立事务与迁移适配、WAL/FULL/foreign_keys 和单写队列；不得照搬 PG 的行锁、SKIP LOCKED 或多写者假设。默认部署断网后，设备只可继续原准入、原许可和有限窗口允许的执行与收尾，并保留待补传记录；不得创建接管云端目标的新 Task，或根据 Task 缓存提交完成。云端暂时无法取得设备事实时，按原任务记录等待或继续不依赖该设备的获准工作。
+
+### 可选部署：端侧独立 Orchestrator
+
+设备可显式运行独立 Orchestrator。只有首次提交就归该 Orchestrator 的自有 Task，才将 Task、Requirement、目标版本、任务预算和 Result 存入其 SQLite。可选的端侧 Brain、Memory、Content 也各自维护已声明的账本。启用条件、离线依赖和恢复限制见[可选部署合同](../production/README.md#optional-edge-orchestrator)。这不是云端 Task 的同步副本或断网接管机制。
+
+单进程开发装配、本机多进程试验及端侧 SQLite 验证，都不得代替云端生产的跨可用区存储验收。
 
 ## 2 全模块落位
 
-下表中的“PG”均指该 owner 被装配到的原 PostgreSQL 分片，不表示每行都需新建数据库或微服务。开启端侧部署的模块可以采用本端 SQLite；权威归属从创建时固定，不能因断网改写。
+下表按默认生产部署列出介质。“服务所属库”默认是云端 owner 的 PG 分片；运行在设备上的 Executor 使用该设备 SQLite。每行不要求新建数据库或微服务。可选端侧独立部署采用上一节的合同，不能把表中的云端 Task 改存为端侧权威。对象的 owner 从创建时固定，断网不得改变归属。
 
-| 模块/记录组 | 唯一写入负责方与默认介质 | 正文、投影及本地特例 |
+| 模块/记录组 | 唯一写入负责方与默认介质 | 正文、投影及设备记录 |
 | --- | --- | --- |
 | Session、Message、Branch、Submission、投递状态、会话任务关联 | Interaction owner 的 PG | Message 正文引用 Content；浏览器保存原提交副本，分支只复制历史引用，不复制 Task/费用/许可 |
 | InputRequest、输入一次消费、成果验收 | 真正消费输入的业务 owner 的原库 | Interaction 保存转交，不裁决消费；问题、答案、预览引用 Content |
 | Surface、Presentation、应用事件映射 | 应用 owner 的原库；业务请求仍归消费方 | 准确界面快照为 Content；本端显示 generation、窗口句柄和缓存不成为确认事实 |
-| Schedule、Occurrence、活动槽与触发 Job | Interaction owner 的同一本地库 | 冻结模板和历史截止引用 Content/版本记录；Occurrence 保存原 Task 创建命令和映射 |
-| Task、目标版本、输入关联、条件候选/采纳、Requirement、GoalCoverage、当前检查选择、Result、控制与续行计数 | 固定 Orchestrator 的 PG | 原输入、目标正文、覆盖报告与成果引用 Content；当前行与不可变历史分别保留，Result 由 Orchestrator 裁决 |
-| Snapshot、DecisionDispatchIntent、DecisionConsumption、Plan/步骤准入、OperationIntent、TaskGate 传播目标、未结关系 | Orchestrator 原分片 | Snapshot/计划正文可按准确 Content 版本保存；完整关系索引、来源消费键和派发责任必须可事务核验 |
+| Schedule、Occurrence、活动槽与触发 Job | Interaction owner 所属的同一 PG 分片 | 冻结模板和历史截止引用 Content/版本记录；Occurrence 保存原 Task 创建命令和映射 |
+| Task、目标版本、输入关联、条件候选/采纳、Requirement、GoalCoverage、当前检查选择、Result、控制与续行计数 | 云端固定 Orchestrator 所属的 PG 分片 | 原输入、目标正文、覆盖报告与成果引用 Content；当前行与不可变历史分别保留，Result 由 Orchestrator 裁决 |
+| Snapshot、DecisionDispatchIntent、DecisionConsumption、Plan/步骤准入、OperationIntent、TaskGate 传播目标、未结关系 | 云端 Orchestrator 所属的 PG 分片 | Snapshot/计划正文可按准确 Content 版本保存；完整关系索引、来源消费键和派发责任必须可事务核验 |
 | DecisionRecord、ModelCall、Proposal、发布 local_id 映射、模型用量 | Brain owner 的原库 | 模型正文、封存编码和提案引用 Content；发布身份与费用记录不依赖临时内存、流片段或模型 SDK 缓存 |
-| Operation、Attempt、Effect、TaskGate、资源租约/观察、文件 journal | Executor/资源 owner 的原库；端侧使用 SQLite 和原设备/文件介质 | 截图、读回、结果和证据引用 Content；受控文件与 journal 的刷盘/替换保证单独验收，不能只看 PG |
-| Environment、cell 关联、hostcall 意图/映射、generation、停止/清理残留 | Executor owner 原库 | 程序、数据输出、检查点为 Content；运行中进程和变量内存不能成为唯一外部调用账本 |
-| Content 元数据、准确版本、来源边、holder、副本控制、upload/mirror ticket、清理责任 | 原 Content owner 的原库 | 不可变字节在对象存储或受控本地介质；各 holder 另保存本地持有/停止/清理事实，不能修改源控制 |
+| Operation、Attempt、Effect、TaskGate、资源租约/观察、文件 journal | 云端 Executor/资源 owner 的 PG，或端侧 Executor 的设备 SQLite 与原设备/文件介质 | 截图、读回、结果和证据引用 Content；受控文件与 journal 的刷盘/替换保证单独验收，不能只看 PG |
+| Environment、cell 关联、hostcall 意图/映射、generation、停止/清理残留 | 相应 Executor 的服务所属库；设备上为 SQLite | 程序、数据输出、检查点为 Content；运行中进程和变量内存不能成为唯一外部调用账本 |
+| Content 元数据、准确版本、来源边、holder、副本控制、upload/mirror ticket、清理责任 | 原 Content owner 的原库 | 不可变字节在对象存储或受控文件介质；各 holder 另保存本方持有/停止/清理事实，不能修改源控制 |
 | MemoryRecord、ExtractionCandidate、提取进度、change_head、query/view 状态 | Memory owner 的原库 | 记忆正文引用 Content；词法/向量/切片投影单独带版本和水位，检索结果不是权威记录 |
-| Grant、UseReceipt、UseSettlement、Confirmation、PolicyAcceptance、离线 GrantLease | 各原业务/授权 owner 的原库；默认本地 Grant 与 Task 同分片 | Confirmation 归实际业务消费方；离线 lease 使用账本归固定 endpoint/instance，云端仅持原分配和结算投影 |
-| BudgetBalance、Reservation、计费源绑定、UsageSnapshot、BillingAdjustment、Allocation/IncomingAllocation/Closure | Task 预算归 Orchestrator；费用原事实归计费 owner；父分配与接收账本各归本方 | 原账单/关闭证明引用 Content；同一来源的汇总展示不产生第二次支出 |
+| Grant、UseReceipt、UseSettlement、Confirmation、PolicyAcceptance、离线 GrantLease | 各原业务/授权 owner 的服务所属库；默认任务 Grant/Confirmation 与 Task 同一云端 PG 分片 | Confirmation 归实际业务消费方；离线 lease 使用账本归固定 endpoint/instance，云端仅持原分配和结算投影 |
+| BudgetBalance、Reservation、计费源绑定、UsageSnapshot、BillingAdjustment、Allocation/IncomingAllocation/Closure | Task 预算在云端 Orchestrator 的 PG；费用原事实归计费 owner；父分配与接收账本各归本方 | 原账单/关闭证明引用 Content；同一来源的汇总展示不产生第二次支出 |
 | Delegation、ChildHandle、amendment、输入/控制转交、DelegationClosure | 父方 owner 保存交接与聚合；子 Task 仍在子 owner 原库 | 内部子与父同分片时可声明共事务；外部委派必须保存两方记录，不以父投影覆盖子事实 |
 | Capability、Binding、InstallLock、Skill/Agent 配置、Activation、InstanceReadiness、ReleaseApproval/ApprovalUse、holder 与迁移进度 | 原扩展/发布 owner 的原库；实例宿主持本次就绪事实 | 准确制品和声明正文引用不可变内容；安装目录和内存 handler 不是批准或持有关系权威 |
-| ConditionCheck 原判断、当前适用性、EvidenceGate、Defect、EligibilityReceipt、导入水位/notice | 检查消费方及原验证器治理 owner 分别保存本方事实 | 本地门禁与 Task 完成同事务；远端资格是有时限凭据，不是跨库即时快照 |
+| ConditionCheck 原判断、当前适用性、EvidenceGate、Defect、EligibilityReceipt、导入水位/notice | 检查消费方及原验证器治理 owner 分别保存本方事实 | Task 所属 PG 中的证据门禁与 Task 完成同一数据库事务；远端资格是有时限凭据，不是跨库即时快照 |
 | EvaluationPlan/Run、SampleRun/Attempt、ImprovementPolicy、Exposure、报告与取消责任 | 原评测 owner 的 PG | 冻结样本 manifest/报告为 Content；运行环境和目标效果仍归对应 Executor，实验日志不能替代目标真值 |
-| Command、Receipt、Job、Claim、outbox/inbox、Delivery、Reply/Ack | 每个业务 owner 在自己的本地库保存 | JobStore 是共同逻辑契约，不是集中表/服务；原 Reply 耐久交回后才结束投递责任 |
+| Command、Receipt、Job、Claim、outbox/inbox、Delivery、Reply/Ack | 每个业务 owner 在自己的服务所属库保存；设备执行责任留在设备 SQLite | JobStore 是共同逻辑契约，不是集中表/服务；原 Reply 耐久交回后才结束投递责任 |
 | 身份/配对/凭据代次、来源目录、授权 authority 集合、连接额度、逻辑放置 | 受信身份/宿主原负责方的持久库或公司平台权威 | socket/进程地址可以缓存；来源完整性、配对和撤权事实不可只在网关内存中 |
 | EndpointChannel 当前绑定与代次、订阅/查询游标 | 当前绑定归原逻辑服务，连接额度归身份权威；网关保存可丢连接状态 | 跨 owner 聚合游标为有界恢复状态，无全局原子快照；缓存失效只能重读原权威 |
 
 正文与领域对象分开：Content owner 只负责准确字节及其治理，不能因保存了一份 Result JSON 就取得 Task 完成裁决权。数据字典必须标清“完整持久记录”“公开读取投影”“不可变正文”三种表示，不能拿一个缩略响应代替完整表设计。
 
-## 3 本地事务具体包含哪些记录
+## 3 同一数据库事务具体包含哪些记录
 
 ### 3.1 默认共同裁决范围
 
@@ -67,9 +75,9 @@ SQLite 使用独立事务与迁移适配、WAL/FULL/foreign_keys 和单写队列
 | Schedule 到期 | 原规则版本与门禁、唯一 Occurrence、活动槽、原发送责任和 next_due_at |
 | 扩展激活/评测门禁 | 原代次或曝光/缺陷门禁、当前实例/正式占用决定、原回执和全部必须继续的责任 |
 
-默认 Task、条件、预算、控制、本地 Grant/Confirmation 和本地证据 gate 共用 Orchestrator 分片。共处一个主机、一个进程或同一 PG 集群都不足以推出共事务；宿主必须显式声明同一数据库、同一受信租户范围与同一 Tx participants。
+默认云端 Orchestrator 的 PG 分片共同保存 Task、Requirement、目标版本、任务预算、Result、控制，以及与 Task 共同裁决的 Grant/Confirmation 和证据 gate。云端的完成事务不包含端侧设备 SQLite。共处一个主机、一个进程或同一 PG 集群都不足以推出共事务；宿主必须显式声明同一数据库、同一受信租户范围与同一 Tx participants。
 
-内部子 Task/分配在同一原分片时共同创建；跨 Orchestrator 的 Task、Brain、Executor、Memory、Content、授权或证据治理均各自提交。estimate 准入仅在策略接受与相关 Grant 可同事务核验时开放；跨域 allocation 与离线仍为 strict。零陈旧证据要求同一权威事务，不得用“先远程检查、后本地提交”冒充。
+内部子 Task/分配在同一原分片时共同创建；跨 Orchestrator 的 Task、Brain、Executor、Memory、Content、授权或证据治理均各自提交。estimate 准入仅在策略接受与相关 Grant 可同事务核验时开放；跨域 allocation 与离线仍为 strict。零陈旧证据要求同一权威事务，不得用“先检查远端数据库、后提交消费方数据库”冒充。
 
 ### 3.2 锁序与受保护提交
 
@@ -132,7 +140,7 @@ outbox 是本方事务内的“尚需把原事实交给某个 owner”记录，�
 | --- | --- | --- |
 | 准备 | 原 Command/业务来源键、完整或可准确恢复的载荷、原 profile/摘要、固定逻辑目标、首次期限和 Job | 未提交不发送；提交未知先查原记录 |
 | 可能发送 | 原交接/Attempt 身份、发送阶段、费用/效果或回复核对责任 | 不从超时/无回执推导未发生；保持同命令同目标 |
-| 对方接纳 | 接收方在本地保存原决定/回执与必要后续责任 | 回执丢失查询原命令；重复交付只回原决定 |
+| 对方接纳 | 接收方在自己的服务所属库保存原决定/回执与必要后续责任 | 回执丢失查询原命令；重复交付只回原决定 |
 | 本方记账 | 原回执、准确远端对象映射、已完成的交付依据及仍未结的效果/结算责任 | 可以结束纯交付 Job，不能顺带结束领域效果/费用责任 |
 | 后续修订 | 原事实修订与 correction/控制/缺陷/清理 outbox 同事务 | 交回重投、乱序与重复按来源修订合并；不得将遗漏隐藏为最终 |
 

@@ -1,14 +1,14 @@
 # 端到端流程与时序
 
-一次目标从用户输入到交付，会经过多个 owner 的本地提交。系统保留每次交接的原身份，把“已保存输入、已接纳责任、实际发生效果、完成条件通过、费用结清”分别呈现。超时不改变这些事实。
+一次目标从用户输入到交付，会经过多个 owner 在各自服务所属库中的提交。系统保留每次交接的原身份，把“已保存输入、已接纳责任、实际发生效果、完成条件通过、费用结清”分别呈现。超时不改变这些事实。
 
 先看正常主线，再看同一数据在中断、修订和取消时如何收束。[整体数据设计](data/README.md)说明对象、基数和归责；[存储附录](data/storage.md)说明各次 Tx 的物理范围。以下时序是目标合同，不是已测运行结果。
 
 ## 1 完整任务链路
 
-以下以“比较两个软件版本，附来源，保存到指定目录并读回”为例。表中的 Tx 只包本 owner 的短事务。任何网络、模型或目标副作用都在事务之外。
+以下按默认生产部署，以“比较两个软件版本，附来源，保存到设备指定目录并读回”为例。O 是云端 Orchestrator，Task 相关事务在其所属 PG 分片；E 是端侧 Executor，其执行、门禁和补传账本在设备 SQLite。其他服务各用自己的服务所属库。表中的 Tx 只包已声明的同一数据库事务，任何网络、模型或目标副作用都在事务之外。
 
-| 阶段 | 输入与产生方式 | 权威输出及本地原子边界 | 下游交接和成功点 |
+| 阶段 | 输入与产生方式 | 权威输出及各库事务边界 | 下游交接和成功点 |
 | --- | --- | --- | --- |
 | 1 接收 | 本人原文、准确附件、受信身份、Session/Branch 截止 | 内容先耐久；应用 Tx 保存 Message、Submission、原 submit Command 和 Job | “已保存输入”；不代表 Task 已接纳 |
 | 2 建立目标 | 原 goal_ref、策略、期限、预算；可无候选条件 | O Tx 判重，创建 Task、GoalRevision 1、预算、回执、首 Job | task.submit applied 表示承担目标；requirements_state 可仍 collecting |
@@ -24,10 +24,10 @@
 ```mermaid
 sequenceDiagram
     participant A as Interaction
-    participant O as Orchestrator
+    participant O as 云端 Orchestrator / PG
     participant B as Brain
     participant G as Grant owner
-    participant E as Executor
+    participant E as 端侧 Executor / SQLite
     participant C as Content Memory
     A->>C: 发布准确原文和附件
     A->>A: Message Submission Command Job
@@ -77,7 +77,8 @@ sequenceDiagram
 | 模型发送后无回复 | Decision、ModelCall/send_started、用量占用 | 查原供应商调用；不可透明重新推理掩盖未知 |
 | 工具写入后失答复 | Intent、Operation、Attempt、目标幂等键/证据 | effect=unknown，继续核对；cancel ACK 不证明未写入 |
 | 来源关闭与上下文/发布竞争 | SourceEdge、held_copy gate、当前用途、原有限 use | 封新使用；跨库有限窗口明示；不能以缓存命中绕过撤权 |
-| 完成与缺陷/取消并发 | Task 锁、证据 gate、准确选中 checks、Result | 本地事务决定先后；旧 Result 追加 notice，不回滚历史 |
+| 完成与缺陷/取消并发 | Task 锁、证据 gate、准确选中 checks、Result | 云端 Orchestrator 所属 PG 的同一事务决定先后；旧 Result 追加 notice，不回滚历史 |
+| 云端与设备断网 | 云端 Task/Intent、设备 Operation/TaskGate/原有限许可、补传 Job | 设备只继续原准入与许可允许的工作及收尾；不得依据 Task 缓存准入新目标或裁决完成，重连沿原身份补传 |
 | 终态后到费用更正 | 原 source→reservation 绑定、usage_revision、outbox | 单次差额入账，保留 gross_spent；不复活 Task/once |
 | 删除/备份恢复 | 关闭/撤权/墓碑、holder 与清理状态 | 先恢复禁止事实再开放读取；缺历史只诊断 |
 
@@ -85,6 +86,6 @@ sequenceDiagram
 
 ## 3 如何查看图和解释工具
 
-上面的时序图从上到下阅读，每条本地保存只属于该 owner。跨线箭头是独立网络交接，不代表双方共事务。逐模块细节从[总导航](README.md)进入。
+上面的时序图从上到下阅读，每条库内保存只属于该 owner 的服务所属库。跨线箭头是独立网络交接，不代表双方共事务。逐模块细节从[总导航](README.md)进入。
 
 回执丢失、取消和迟到效果容易混淆时，可用已有[架构解释工具](assets/design-lab.html)。浏览器打开本地 HTML，在“回执丢失之后”逐步前进；切换“查询原操作”和“换标识重试”，观察为什么后者会重复副作用。工具不联网，也不模拟实际数据库；当前静态测试不能替代浏览器视觉和真实故障验收。

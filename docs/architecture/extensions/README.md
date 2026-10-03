@@ -78,7 +78,7 @@ ReleaseApproval固定批准者、准确InstallLock、用途/目标范围、评�
 
 ## 5 引用、停用和卸载
 
-Task、Decision、Operation、环境、Skill及评测运行对准确InstallLock建立holder引用；引用接纳与本地准入同事务。跨owner先完成可核验登记，再派发新工作，不能只靠内存refcount。
+Task、Decision、Operation、环境、Skill及评测运行对准确InstallLock建立holder引用；引用接纳与所属 owner 的业务准入在同一数据库事务中提交。跨owner先完成可核验登记，再派发新工作，不能只靠内存refcount。
 
 extensions.deactivate先封新使用、保存逐实例停止与原责任核对。dispose先封新引用，再检查完整既有/在途holder集合和实际实例退出，未知不当零引用。已停用记录及原回执可查询，未结账务和最小身份继续保留。
 
@@ -86,6 +86,6 @@ extensions.deactivate先封新使用、保存逐实例停止与原责任核对�
 
 ## 6 可替换实现的验收
 
-每个Brain、Memory、Executor都应有第二种独立实现通过合同；至少一个异构语言组件走真实WSS/gRPC。仅改变函数名或本地Brain调用云模型不等于远程Brain可替换。
+每个Brain、Memory、Executor都应有第二种独立实现通过合同；至少一个异构语言组件走真实WSS/gRPC。仅改变函数名或同进程 Brain 调用云模型不等于远程Brain可替换。
 
 发布验收覆盖：准备后重启、批准撤回与启动竞争、旧初始化回调、停用后原结果查询、旧批准失效回退、当前格式不兼容、跨owner holder登记丢答复和卸载大扇出。正式开放前版本锁定、方法登记、Schema、SDK和运行证据同版发布，遵循[ADR 0010](../../adr/0010-monorepo-shared-contract-release.md)。

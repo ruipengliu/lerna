@@ -51,25 +51,29 @@ Surface、Delegation、InstallLock、EvaluationRun 和 Schedule 只在相应能�
 
 ## 4 逻辑权威和物理位置分开
 
-一个 Task 终身归属同一个 orchestrator_id。该逻辑负责方可由多个应用副本和工作者提供服务。它们通过原分片短事务串行裁决同一 Task；无需指定一台永久存活的“主 Agent”。
+默认 Task 归云端 Orchestrator，Task、Requirement、目标版本、任务预算和 Result 存在其所属 PG 分片。一个 Task 终身归属同一个 orchestrator_id。该逻辑负责方可由多个应用副本和工作者提供服务，通过原分片短事务串行裁决同一 Task；无需指定一台永久存活的“主 Agent”。
 
 生产默认有四类在线角色：连接网关、任务应用、分类工作池、执行宿主。管理与评测另设隔离进程。模块多于进程角色，因为拆进程应解决伸缩、信任或故障隔离问题，而非照文档目录复制服务。
 
 ```mermaid
 flowchart TB
-    G[WSS 网关池] --> O[任务应用池]
-    O --> D[(一个逻辑 Orchestrator 的 PostgreSQL 分片)]
-    W[分类工作池] --> D
-    subgraph T[同一本地事务范围]
-        D --- K[Task、条件、预算、控制]
+    G[WSS 网关池] --> O[云端任务应用池]
+    O --> D[(云端 Orchestrator 所属 PG 分片)]
+    W[云端分类工作池] --> D
+    subgraph T[同一云端数据库事务范围]
+        D --- K[Task、Requirement、目标版本、预算、Result、控制]
         D --- J[Command 回执与 Job]
-        D --- L[默认本地 Grant 和证据门禁]
+        D --- L[共同裁决的 Grant、Confirmation 和证据门禁]
     end
-    W -->|持久命令与查询| E[独立 Executor owner]
+    W -->|持久命令与查询| E[云端 Executor]
+    E --> ED[(Executor 所属 PG)]
+    W -->|经 WSS 交接| X[端侧 Executor]
+    X --> XD[(设备 SQLite：执行、门禁、恢复与补传)]
     W -->|准确内容引用| M[Memory 或 Content owner]
-    E --> ED[(执行账本)]
-    M --> MD[(内容元数据与对象存储)]
+    M --> MD[(服务所属库与内容介质)]
 ```
+
+图示默认生产部署：云端保存任务权威，设备保存本机执行责任。设备 TaskGate 是原控制事实的启动门禁，不是第二个 Task。端侧缓存不得裁决云端 Task 完成，断网也不转移 owner。[端侧独立 Orchestrator](production/README.md#optional-edge-orchestrator)是单独可选部署，其自有 Task 才保存到设备 SQLite。
 
 事务范围由宿主明确装配，不能由图上的相邻关系推断。独立 owner 即使恰好运行在同一机器，也不自动共享事务。需要跨库时采用“本方固定意图与责任 → 对方持久接纳 → 本方记下原回执”的协议，允许中间未知但不得责任消失。
 

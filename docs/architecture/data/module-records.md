@@ -126,7 +126,7 @@ Snapshot 由 Orchestrator 创建；DecisionRecord、ModelCall 和产出发布由
 | Snapshot.selection_report_ref / processed_sources | ContentRef / ContentRef[] | 是 | 选择、裁剪及缺口；含处理后未进入最终提示的来源 |
 | Snapshot.input_tokens / reserved_output_tokens / safety_margin_tokens | Count | 是 | 完整编码后的预算 |
 | Snapshot.count_mode / tokenizer_ref / encoded_digest | exact/upper_bound/estimate / ComponentRef / Digest | 是 | 计数可信级别与实际出口编码；估算不支持硬上限 |
-| ModelCall.call_id / decision_id / provider_request_key | Id / Id / string | 是/是/条件 | 本地调用身份首发前固定；供应商支持预分配/幂等查询时才预存其键，回复后取得的键随后保存，无法查询时保留unknown |
+| ModelCall.call_id / decision_id / provider_request_key | Id / Id / string | 是/是/条件 | Brain 分配的调用身份在首发前固定；供应商支持预分配/幂等查询时才预存其键，回复后取得的键随后保存，无法查询时保留unknown |
 | ModelCall.phase / send_started_at | prepared/send_started/result_known/provider_result_unknown / Time | 是/条件 | send_started 提交后不透明重发 |
 | ModelCall.encoded_digest / receiver / model_profile_ref | Digest / string / ComponentRef | 是 | 实际接收方与准确输入/模型配置 |
 | ModelCall.response_ref / usage_ref | ContentRef / ObjectRef | 否/是 | 原输出与累计计费来源；未知仍保留费用占用 |
@@ -335,7 +335,7 @@ ConditionCheck 是完整检查记录；ConditionResult 是原判断加当前适�
 | ConditionCheck.operation_ref / dependent_check_refs | ObjectRef / ObjectRef[] | 条件/是 | 外部/模型评估有原获准 Operation；组合检查保留 DAG |
 | ConditionCheck.verdict / basis / report_ref / evidence_refs | pass/fail/unknown / verified/assessed/user_accepted / ContentRef / ContentRef[] | 是 | 不可变原判断；必要效果不得 user_accepted |
 | Applicability.check_id / revision / state / gate_refs / reason_ref | Id / Revision / usable/unknown/inapplicable / ObjectRef[] / ContentRef | 是 | 当前资格投影；变化不改原 verdict |
-| EvidenceGate.implementation_ref / gate_revision / authority_epoch / imported_cursor | ComponentRef / Revision / Revision / string | 是/是/是/条件 | 本地完成门禁；跨域游标不得跳缺口 |
+| EvidenceGate.implementation_ref / gate_revision / authority_epoch / imported_cursor | ComponentRef / Revision / Revision / string | 是/是/是/条件 | 消费方所属库中的完成门禁；跨域游标不得跳缺口 |
 | Defect.defect_id / rule_ref / evaluator_ref / scope_ref / evidence_ref / registered_at | Id / ComponentRef / ComponentRef / ContentRef / ContentRef / Time | 是 | 受信确认的缺陷及命中范围；普通退役不是缺陷 |
 | EvidenceHolder.holder_id / consumer_task_ref / check_ref / report_hash / dependency_digest / scope_ref | Id / ObjectRef / ObjectRef / Digest / Digest / ContentRef | 是 | 资格authority与检查同事务登记的持续交回责任 |
 | EvidenceHolder.authority_epoch / registration_cursor / last_acked_cursor / state | Revision / string / string / active或closed | 是 | 原登记切点与连续交回确认；凭据到期不删除Result缺陷责任 |
@@ -380,4 +380,4 @@ Command、Job、Claim、CollectionSummary 见核心字典。表中传输记录�
 | ConnectionBinding.connection_id / binding_id / binding_revision / endpoint_ref / owner_id | Id / Id / Revision / ObjectRef / Id | 是 | 内外连接和原逻辑服务分开；旧流不覆盖新代次 |
 | ConnectionQuota.scope_ref / limit / reserved / holder_refs | ObjectRef / Count / Count / ObjectRef[] | 是 | 身份分片统一额度，不能按进程复制 |
 
-端云本地账本与云端各自保存自己的权威，不以同步副本变成双主。上述身份/目录/连接记录只保存必要治理事实，身份供应商和凭据库继续负责认证秘密。
+默认云端 PG 保存 Task 权威，端侧设备 SQLite 保存本机执行、门禁、恢复和补传账本。两方只写各自负责的事实；端侧 Task 缓存不得变成可写权威。端侧自有 Task 仅属于显式启用的独立 Orchestrator 部署。上述身份/目录/连接记录只保存必要治理事实，身份供应商和凭据库继续负责认证秘密。
