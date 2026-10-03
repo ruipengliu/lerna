@@ -19,6 +19,7 @@ const browser = await chromium.launch({
 });
 const context = await browser.newContext({ viewport: { width: 1536, height: 1024 } });
 const commands = [];
+const sent = [];
 const replies = [];
 const connections = [];
 const pageErrors = [];
@@ -32,7 +33,10 @@ await context.routeWebSocket("**/connect", (route) => {
   const requests = new Map();
   route.onMessage((message) => {
     const frame = JSON.parse(String(message));
-    if (frame.type === "request") requests.set(frame.request_seq, frame);
+    if (frame.type === "request") {
+      requests.set(frame.request_seq, frame);
+      sent.push(frame);
+    }
     if (frame.type === "request" && frame.kind === "command") commands.push(frame.payload);
     remote.send(message);
   });
@@ -106,19 +110,26 @@ async function selectTask(id) {
     return false;
   }, "task in authoritative paginated collection");
   const offset = replies.length;
+  const sentOffset = sent.length;
   await row.getByRole("button", { name: "查看", exact: true }).click();
-  const read = await until(
-    () =>
-      replies
-        .slice(offset)
-        .find(
-          ({ request, response }) =>
-            request?.payload.method === "task.read" &&
-            request.payload.target_id === id &&
-            response.result_kind === "query_result",
-        ),
-    "fresh task.read response",
-  );
+  const read = await until(() => {
+    const fresh = sent
+      .slice(sentOffset)
+      .find(
+        (frame) =>
+          frame.kind === "query" &&
+          frame.payload.method === "task.read" &&
+          frame.payload.target_id === id,
+      );
+    return replies
+      .slice(offset)
+      .find(
+        ({ request, response }) =>
+          fresh &&
+          request?.payload.query_id === fresh.payload.query_id &&
+          response.result_kind === "query_result",
+      );
+  }, "fresh task.read response");
   await until(async () => {
     if ((await page.locator(".inspector .selected-id").textContent()) !== id) return false;
     const content = await page.locator(".inspector details pre").textContent();
