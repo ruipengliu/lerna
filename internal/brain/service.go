@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/runtime"
+	"reflect"
 	"time"
 )
 
@@ -210,7 +211,9 @@ func (s *Service) change(ctx context.Context, tx runtime.Tx, id string, fn func(
 }
 
 func sameFrozenDecision(current, original decision) bool {
-	return current.CommandID == original.CommandID && current.InputDigest == original.InputDigest && api.Equal(current.Input, original.Input) && api.Equal(current.Principal, original.Principal) && (original.Encoding == nil || api.Equal(current.Encoding, original.Encoding))
+	// Encoding的私有base64容器可超过公开256KiB；比较完整冻结类型和原字节，
+	// 不借公开JSON上界判断相等，也不只核Digest放过receiver/来源等字段变化。
+	return current.CommandID == original.CommandID && current.InputDigest == original.InputDigest && api.Equal(current.Input, original.Input) && api.Equal(current.Principal, original.Principal) && (original.Encoding == nil || reflect.DeepEqual(current.Encoding, original.Encoding))
 }
 func (s *Service) wait(ctx context.Context, store runtime.Store, scope runtime.Scope, w runtime.Work) error {
 	return s.finish(ctx, store, scope, w, runtime.Waiting(time.Now().Add(time.Second)), nil)
