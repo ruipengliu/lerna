@@ -17,6 +17,11 @@ func fixtureRule() api.RuleDefinition {
 	age := uint64(600)
 	return api.RuleDefinition{RuleRef: ref, Kind: "effect", ParametersSchemaRef: ref, Predicate: "current_state", AllowedBasis: []string{"verified"}, RequiredEvidenceSchemaRef: ref, ScopeSchemaRef: ref, MaxObservationAgeSeconds: &age, RiskClass: "ordinary", ApplicabilityPolicyRef: ref}
 }
+
+func fixtureObservedAt() string {
+	// 字面观察以SQLite权威时钟的毫秒精度声明，保留原有限陈旧期限。
+	return api.Time(time.Now().UTC().Truncate(time.Millisecond))
+}
 func candidate(h *harness, t api.Task, r api.RuleDefinition, key string) api.RequirementCandidate {
 	return api.RequirementCandidate{CandidateKey: key, Kind: r.Kind, StatementRef: h.content("exact task criterion"), SourceRefs: []api.SourceEvidence{{ContentRef: t.GoalRef, SourceKind: "user_input", Locator: "text:0:10"}}, Origin: "explicit_user", RuleRef: r.RuleRef, Required: true, OpenQuestions: []string{}}
 }
@@ -199,7 +204,7 @@ func readyTask(t *testing.T, h *harness, rule api.RuleDefinition) api.Task {
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, err = h.service.StoreCoverage(context.Background(), h.store, h.scope, h.trusted(), api.GoalCoverage{CoverageID: api.NewID("coverage"), Revision: 1, TaskRef: h.scope.Ref(current.TaskID, current.Revision), GoalRevision: current.GoalRevision, GoalRef: current.GoalRef, RequirementsDigest: current.RequirementsDigest, MappingReportRef: h.content("full-goal coverage fixture"), RuleRef: rule.RuleRef, EvaluatorRef: rule.RuleRef, Verdict: "pass", Applicability: "usable", CheckedAt: api.Time(time.Now())})
+	_, err = h.service.StoreCoverage(context.Background(), h.store, h.scope, h.trusted(), api.GoalCoverage{CoverageID: api.NewID("coverage"), Revision: 1, TaskRef: h.scope.Ref(current.TaskID, current.Revision), GoalRevision: current.GoalRevision, GoalRef: current.GoalRef, RequirementsDigest: current.RequirementsDigest, MappingReportRef: h.content("full-goal coverage fixture"), RuleRef: rule.RuleRef, EvaluatorRef: rule.RuleRef, Verdict: "pass", Applicability: "usable", CheckedAt: fixtureObservedAt()})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -216,7 +221,7 @@ func TestCurrentFullCoverageAndChecksCreateImmutableResultBeforePublication(t *t
 	bridge.service = governance.New(h.store, governance.Options{})
 	current := readyTask(t, h, rule)
 	artifact := h.content("independently verified artifact fixture")
-	now := api.Time(time.Now())
+	now := fixtureObservedAt()
 	check := api.ConditionResult{CheckID: api.NewID("check"), TaskID: current.TaskID, GoalRevision: current.GoalRevision, RequirementID: current.Requirements[0].RequirementID, RequirementRevision: 1, ArtifactRef: artifact, RuleRef: rule.RuleRef, EvaluatorRef: rule.RuleRef, Verdict: "pass", Applicability: "usable", Basis: "verified", EvidenceRefs: []api.ContentRef{h.content("independent readback fixture")}, ScopeRef: h.content("exact path/hash/observation scope fixture"), ObservedAt: now, CheckedAt: now}
 	if _, err := h.service.RecordCheck(context.Background(), h.store, h.scope, h.trusted(), check); err != nil {
 		t.Fatal(err)

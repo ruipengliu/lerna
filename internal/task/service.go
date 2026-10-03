@@ -142,9 +142,40 @@ func output(tx runtime.Tx, t taskState) TaskOutput {
 func invalid(reason string) error { return api.E("invalid_request", reason) }
 func terminal(t taskState) bool   { return t.Task.Status != "active" }
 func getTask(ctx context.Context, tx runtime.Tx, id string) (taskState, error) {
-	var t taskState
-	_, err := tx.Get(ctx, tasks, id, &t)
-	return t, err
+	// 内部子Task在创建事务的version2固定根路径，此后不允许改变。
+	var routing taskState
+	err := tx.GetVersion(ctx, tasks, id, 2, &routing)
+	if confirmedNotFound(err) {
+		err = tx.GetVersion(ctx, tasks, id, 1, &routing)
+	}
+	if err != nil {
+		return taskState{}, err
+	}
+	if len(routing.Ancestors) > 32 || routing.Task.TaskID != id {
+		return taskState{}, api.E("dependency_unavailable", "task_lineage_incomplete")
+	}
+	seen := map[string]bool{id: true}
+	for depth, ancestorID := range routing.Ancestors {
+		if seen[ancestorID] {
+			return taskState{}, api.E("invalid_state", "task_lineage_cycle")
+		}
+		seen[ancestorID] = true
+		var ancestor taskState
+		if _, err = tx.Get(ctx, tasks, ancestorID, &ancestor); err != nil {
+			return taskState{}, err
+		}
+		if !api.Equal(ancestor.Ancestors, routing.Ancestors[:depth]) {
+			return taskState{}, api.E("revision_conflict", "task_lineage_changed")
+		}
+	}
+	var current taskState
+	if _, err = tx.Get(ctx, tasks, id, &current); err != nil {
+		return taskState{}, err
+	}
+	if !api.Equal(current.Ancestors, routing.Ancestors) {
+		return taskState{}, api.E("revision_conflict", "task_lineage_changed")
+	}
+	return current, nil
 }
 func cas(c api.Command, t taskState) error {
 	if c.ExpectedRevision == nil || *c.ExpectedRevision != t.Task.Revision {

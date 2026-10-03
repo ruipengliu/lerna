@@ -233,11 +233,7 @@ func (s *Service) ReconcileUsageTx(ctx context.Context, tx runtime.Tx, auth runt
 	if e != nil {
 		return Reservation{}, api.E("invalid_request", "unknown_billing_binding")
 	}
-	var r Reservation
-	if _, e = tx.Get(ctx, reservations, key.ObjectID, &r); e != nil {
-		return r, e
-	}
-	t, e := getTask(ctx, tx, r.TaskID)
+	t, r, e := reservationForTaskTx(ctx, tx, key.ObjectID)
 	if e != nil {
 		return r, e
 	}
@@ -423,11 +419,7 @@ func (s *Service) AdjustmentTx(ctx context.Context, tx runtime.Tx, auth runtime.
 	if e != nil {
 		return AdjustmentOutput{}, api.E("invalid_request", "unknown_billing_binding")
 	}
-	var r Reservation
-	if _, e = tx.Get(ctx, reservations, key.ObjectID, &r); e != nil {
-		return AdjustmentOutput{}, e
-	}
-	t, e := getTask(ctx, tx, r.TaskID)
+	t, _, e := reservationForTaskTx(ctx, tx, key.ObjectID)
 	if e != nil {
 		return AdjustmentOutput{}, e
 	}
@@ -483,25 +475,28 @@ func (s *Service) verifyAdjustmentTx(ctx context.Context, tx runtime.Tx, auth ru
 	if !auth.HasRole("service") && !auth.HasRole("billing") {
 		return api.E("forbidden", "billing_verifier_required")
 	}
-	var a BillingAdjustment
-	if _, e := tx.Get(ctx, adjustments, id, &a); e != nil {
+	var birth BillingAdjustment
+	if e := tx.GetVersion(ctx, adjustments, id, 1, &birth); e != nil {
 		return e
+	}
+	key, e := tx.LookupKey(ctx, reservations, sourceKeyFromAny(ctx, tx, birth.OriginalSourceRef))
+	if e != nil {
+		return e
+	}
+	t, r, e := reservationForTaskTx(ctx, tx, key.ObjectID)
+	if e != nil {
+		return e
+	}
+	var a BillingAdjustment
+	if _, e = tx.Get(ctx, adjustments, id, &a); e != nil {
+		return e
+	}
+	if !api.Equal(a.AdjustmentInput, birth.AdjustmentInput) {
+		return api.E("idempotency_conflict", "adjustment_source_changed")
 	}
 	if a.State != "pending" {
 		*out = a
 		return nil
-	}
-	key, e := tx.LookupKey(ctx, reservations, sourceKeyFromAny(ctx, tx, a.OriginalSourceRef))
-	if e != nil {
-		return e
-	}
-	var r Reservation
-	if _, e = tx.Get(ctx, reservations, key.ObjectID, &r); e != nil {
-		return e
-	}
-	t, e := getTask(ctx, tx, r.TaskID)
-	if e != nil {
-		return e
 	}
 	a.State = "rejected"
 	if approved {
