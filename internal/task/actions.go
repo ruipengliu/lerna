@@ -384,8 +384,11 @@ func (s *Service) admitBatchTx(ctx context.Context, tx runtime.Tx, auth runtime.
 				return nil, e
 			}
 		}
-		if e = runtime.CheckRef(tx.Scope(), a.BindingRef); e != nil {
+		if e = api.ValidateRecord("ObjectRef", a.BindingRef); e != nil {
 			return nil, e
+		}
+		if a.BindingRef.TenantID != tx.Scope().TenantID || a.BindingRef.OwnerID != a.ExecutorID {
+			return nil, api.E("forbidden", "executor_binding_scope_mismatch")
 		}
 		for _, key := range a.ResourceKeys {
 			if key == "" || len(key) > 512 {
