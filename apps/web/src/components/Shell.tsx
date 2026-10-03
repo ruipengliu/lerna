@@ -38,6 +38,7 @@ export function Shell({
   connection,
   onReconnect,
   onDisconnect,
+  onLogout,
   children,
 }: {
   selected: NavigationID;
@@ -45,6 +46,7 @@ export function Shell({
   connection: ConnectionState;
   onReconnect: () => void;
   onDisconnect: () => void;
+  onLogout: () => void;
   children: ReactNode;
 }) {
   const title = navigation.find((entry) => entry.id === selected)?.title ?? "工作台";
@@ -101,6 +103,11 @@ export function Shell({
             >
               {connection === "ready" ? "断开界面" : "连接原服务"}
             </button>
+            {connection === "ready" && (
+              <button className="text-button" type="button" onClick={onLogout}>
+                退出登录
+              </button>
+            )}
             <button
               className="button primary"
               type="button"

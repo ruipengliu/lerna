@@ -75,5 +75,27 @@ export function useHarness() {
     setConnection("closed");
     if (previous) await previous.close();
   }, []);
-  return { client, connection, auth, error, login, reconnect: load, disconnect };
+  const logout = useCallback(async () => {
+    await disconnect();
+    try {
+      const session = await fetch("/auth/session", {
+        credentials: "same-origin",
+        redirect: "error",
+      });
+      const body = parseStrict(await readBounded(session, 16384));
+      if (!session.ok || !isObject(body) || typeof body.csrf_token !== "string")
+        throw new Error("无法取得当前浏览器会话注销凭据");
+      const response = await fetch("/auth/logout", {
+        method: "POST",
+        credentials: "same-origin",
+        redirect: "error",
+        headers: { "X-CSRF-Token": body.csrf_token },
+      });
+      if (!response.ok) throw new Error("浏览器会话注销尚未确认");
+      setError("");
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : "浏览器会话注销尚未确认");
+    }
+  }, [disconnect]);
+  return { client, connection, auth, error, login, reconnect: load, disconnect, logout };
 }

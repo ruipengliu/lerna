@@ -1,4 +1,4 @@
-import { isObject } from "@harness/sdk";
+import { canonical, isObject } from "@harness/sdk";
 import type { HarnessClient, JSONValue, ContentRef } from "@harness/sdk";
 import { recordID } from "./CollectionView";
 function record(value: JSONValue | undefined): Record<string, JSONValue> | undefined {
@@ -46,13 +46,7 @@ export function contentRefs(value: JSONValue | undefined): ContentRef[] {
   };
   walk(value, 0);
   return refs.filter(
-    (ref, index) =>
-      refs.findIndex(
-        (other) =>
-          other.hash === ref.hash &&
-          other.content_id === ref.content_id &&
-          other.version === ref.version,
-      ) === index,
+    (ref, index) => refs.findIndex((other) => canonical(other) === canonical(ref)) === index,
   );
 }
 export function TaskInspector({
@@ -60,11 +54,13 @@ export function TaskInspector({
   selected,
   onControl,
   onPreview,
+  readError,
 }: {
   client?: HarnessClient;
   selected?: JSONValue | undefined;
   onControl: (method: string, target: string, revision?: number) => void;
   onPreview: (refs: ContentRef[]) => void;
+  readError?: string;
 }) {
   const task = record(selected);
   const taskID = task ? recordID(task) : "";
@@ -88,7 +84,7 @@ export function TaskInspector({
     [
       "Result 发布",
       task?.result_ref
-        ? isObject(selected) && selected.export_state === "published"
+        ? isObject(selected) && selected.publication === "published"
           ? "准确导出已发布"
           : "权威 Result 已保存；导出另核"
         : "等待原服务",
@@ -113,6 +109,11 @@ export function TaskInspector({
   return (
     <section className="panel inspector">
       <h2>原任务事实</h2>
+      {readError && (
+        <p className="notice error" role="alert">
+          {readError}
+        </p>
+      )}
       {taskID && <code className="selected-id">{taskID}</code>}
       <dl className="facts">
         {facts.map(([label, value]) => (

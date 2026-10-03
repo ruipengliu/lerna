@@ -478,6 +478,20 @@ tbody tr:last-child td {
   background: #fff4f4;
   color: #933d3d;
 }
+.task-inputs,
+.trusted-request {
+  margin-top: 24px;
+}
+.request-facts {
+  margin: 16px 0;
+}
+.trusted-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 24px;
+}
 .login-panel {
   max-width: 600px;
   margin: 24px 0 32px;
