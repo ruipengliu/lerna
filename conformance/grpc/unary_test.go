@@ -40,7 +40,7 @@ type echoOutput struct {
 	SubjectID string `json:"subject_id"`
 }
 type unaryFixture struct {
-	store                *sqlite.Store
+	store                rt.Store
 	identity             *platform.DevIdentity
 	auth                 rt.Auth
 	owner, token         string
@@ -59,9 +59,13 @@ func newUnaryFixture(t *testing.T, maximumMessage ...int) *unaryFixture {
 	if err = st.Migrate(context.Background()); err != nil {
 		t.Fatal(err)
 	}
+	return newUnaryFixtureWithStore(t, st, maximumMessage...)
+}
+func newUnaryFixtureWithStore(t *testing.T, st rt.Store, maximumMessage ...int) *unaryFixture {
+	t.Helper()
 	f := &unaryFixture{store: st, owner: api.NewID("service"), token: api.NewID("token"), auth: rt.Auth{TenantID: api.NewID("tenant"), SubjectID: api.NewID("subject"), CredentialGeneration: 1, Roles: []string{"admin"}}}
 	f.identity = &platform.DevIdentity{Store: st, OwnerID: f.owner, SessionTTL: time.Hour, Principals: []platform.Principal{{Auth: f.auth, TokenHash: api.Hash([]byte(f.token))}}}
-	if err = f.identity.Initialize(context.Background()); err != nil {
+	if err := f.identity.Initialize(context.Background()); err != nil {
 		t.Fatal(err)
 	}
 	r := rt.NewRegistry()

@@ -2,10 +2,10 @@ package grpc_test
 
 import (
 	"context"
-	"crypto/tls"
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -14,6 +14,7 @@ import (
 
 	"github.com/ruipengliu/lerna/adapters/endpointchannel"
 	transport "github.com/ruipengliu/lerna/adapters/grpc"
+	"github.com/ruipengliu/lerna/adapters/postgres"
 	"github.com/ruipengliu/lerna/adapters/wss"
 	"github.com/ruipengliu/lerna/api"
 	rt "github.com/ruipengliu/lerna/runtime"
@@ -85,6 +86,25 @@ func newStaticChannel(t *testing.T, f *unaryFixture) (*transport.StaticEndpointA
 }
 func TestWSSStaticChannelRebindPreservesConnectionReceiptAndSequence(t *testing.T) {
 	f := newUnaryFixture(t)
+	verifyStaticChannelRebind(t, f)
+}
+func TestWSSPostgresStaticChannelRebindPreservesConnectionReceiptAndSequence(t *testing.T) {
+	dsn := os.Getenv("HARNESS_TEST_POSTGRES_DSN")
+	if dsn == "" {
+		t.Skip("actual PostgreSQL configuration required")
+	}
+	store, err := postgres.Open(context.Background(), dsn, postgres.WithMaxConnections(8))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { store.Close() })
+	if err = store.Migrate(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	verifyStaticChannelRebind(t, newUnaryFixtureWithStore(t, store))
+}
+func verifyStaticChannelRebind(t *testing.T, f *unaryFixture) {
+	t.Helper()
 	authority, registration := newStaticChannel(t, f)
 	addresses, stops := realChannelApplications(t, f, authority)
 	router, err := endpointchannel.NewRouter(endpointchannel.Config{OwnerID: f.owner, GatewayInstanceID: api.NewID("instance"), MethodsDigest: f.discovery.MethodsDigest, Applications: []endpointchannel.Application{{Address: addresses[0], ClientTLS: f.clientTLS}, {Address: addresses[1], ClientTLS: f.clientTLS}}, Registrations: []transport.EndpointRegistration{registration}, Identity: f.identity, Credentials: func(ctx context.Context, a rt.Auth) (string, error) {
@@ -175,5 +195,3 @@ func TestWSSStaticChannelRebindPreservesConnectionReceiptAndSequence(t *testing.
 		DatabaseID             string
 	}{first[0], states[0], original.CommandID, original.ExpiresAt, f.store.ID()}))
 }
-
-var _ *tls.Config
