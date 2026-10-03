@@ -193,7 +193,7 @@ func (v usageVerifier) Verify(ctx context.Context, s runtime.Scope, ref api.Obje
 	var e error
 	actual, e = v.a.Brain.Usage(ctx, v.a.Store, s, ref)
 	if api.IsCode(e, "not_found") {
-		actual, e = (executionBridge{v.a}).Usage(ctx, s, ref)
+		actual, e = (executionBridge{v.a}).rawUsage(ctx, s, ref)
 	}
 	if e != nil {
 		return e

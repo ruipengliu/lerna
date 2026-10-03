@@ -152,5 +152,9 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 	return original, e
 }
 func (b brainBridge) Usage(ctx context.Context, s runtime.Scope, r api.ObjectRef) (api.UsageSnapshot, error) {
-	return b.a.Brain.Usage(ctx, b.a.Store, s, r)
+	u, err := b.a.Brain.Usage(ctx, b.a.Store, s, r)
+	if err == nil && b.a.Model != nil {
+		err = b.a.settleUses(ctx, s, []api.ObjectRef{s.Ref(modelUseID(r.ObjectID), 1)}, u)
+	}
+	return u, err
 }
