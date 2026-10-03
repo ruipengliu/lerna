@@ -64,10 +64,25 @@ func TestBuiltinGovernanceNonWorkerOnlyValidatesSameAllowlist(t *testing.T) {
 }
 
 func TestBuiltinGovernanceWorkerBindsCurrentMemoryAndExclusiveOwnership(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) {
+			if driver == "postgres" {
+				if os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
+					t.Skip("requires actual HARNESS_TEST_POSTGRES_DSN")
+				}
+				t.Setenv("HARNESS_DATABASE_DSN", os.Getenv("HARNESS_TEST_POSTGRES_DSN"))
+			}
+			runBuiltinGovernanceWorker(t, driver)
+		})
+	}
+}
+
+func runBuiltinGovernanceWorker(t *testing.T, driver string) {
+	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
 	defer cancel()
 	root := t.TempDir()
-	c, e := InitializeConfig(ctx, filepath.Join(root, "config.json"), root, "sqlite")
+	c, e := InitializeConfig(ctx, filepath.Join(root, "config.json"), root, driver)
 	if e != nil {
 		t.Fatal(e)
 	}
