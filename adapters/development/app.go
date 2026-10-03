@@ -49,6 +49,7 @@ type App struct {
 	Profile                                                          brain.Profile
 	Engine                                                           brain.Engine
 	Model                                                            *providers.OpenAI
+	Information                                                      []*providers.HTTPInformation
 	TokenizerRef                                                     api.ComponentRef
 	ArtifactRule, SavedRule, CoverageRule, AnswerSchema, InstallLock api.ComponentRef
 	ReadBinding, WriteBinding                                        api.ObjectRef
@@ -59,6 +60,7 @@ type App struct {
 	Role                                                             string
 	closeGovernance                                                  func() error
 	actions                                                          *actionRegistry
+	information                                                      []configuredInformation
 }
 
 func component(name string) api.ComponentRef {
@@ -129,6 +131,10 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 			purposes = append(purposes, purpose)
 		}
 	}
+	if len(c.Information) > 0 {
+		purposes = append(purposes, providers.InformationPurpose, providers.InformationSearch, providers.InformationBody)
+	}
+	purposes = append(purposes, RequiredKnowledgeContentPurposes()...)
 	pv := memory.PolicyValues{Subjects: []string{c.SubjectID, c.OwnerID}, Purposes: purposes, Locations: []string{"cloud", "device"}, RetainUntil: c.PolicyExpiresAt, Continuous: true, IndependentDerived: false}
 	policyRef := component("content-policy")
 	policyRef.Digest, _ = api.Digest(pv)
@@ -150,7 +156,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		return nil, err
 	}
 	a.closeGovernance = closeGovernance
-	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, ResultNotices: resultNoticeBridge{a}, Lifecycle: lifecycle, Runner: evaluation, Participants: []string{"content", "memory", "platform", "task"}})
+	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, KnowledgeGate: knowledgeContentGate{a}, ResultNotices: resultNoticeBridge{a}, Lifecycle: lifecycle, Runner: evaluation, Participants: []string{"content", "memory", "platform", "task"}})
 	if e = os.MkdirAll(filepath.Join(c.DataRoot, "files"), 0700); e != nil {
 		return nil, e
 	}
@@ -177,6 +183,11 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	}
 	execContent := executionContent{a}
 	drivers := []execution.Driver{&execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud"}, &execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud", ReadOnly: true}, a.Phones, &execadapter.PhoneGUIDriver{Phones: a.Phones}, &execution.TrustedComputeDriver{Content: execContent, Store: st, Location: "cloud"}}
+	informationDrivers, err := a.configureInformation()
+	if err != nil {
+		return nil, err
+	}
+	drivers = append(drivers, informationDrivers...)
 	if e = a.configureActionRegistry(drivers); e != nil {
 		return nil, e
 	}
@@ -233,7 +244,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		return nil, e
 	}
 	one := uint64(1)
-	a.Interaction, e = interaction.New(interaction.Config{DiscoveryOwnerID: c.OwnerID, Participants: []string{"interaction", "content", "memory", "task", "platform"}, CursorKey: []byte(strings.TrimSpace(string(token))), EventBindings: []interaction.EventBinding{{BindingRef: a.ApplicationBinding, Events: []interaction.EventRule{{Name: "archive_demo_session", Schema: api.Raw(a.ApplicationEventSchema), OwnerID: c.OwnerID, Method: "session.archive", TargetID: platform.StableDevelopmentID("session", "development-surface"), AcceptForSeconds: 60, ExpectedRevision: &one, RequiresRendered: true}}}}}, interaction.Ports{Content: interactionContent{a}, Delivery: localDelivery{a}, Closure: localClosure{a}, Requests: requestBridge{a}, Calendar: calendar, ScheduleGate: scheduleGate{a}})
+	a.Interaction, e = interaction.New(interaction.Config{DiscoveryOwnerID: c.OwnerID, Participants: []string{"interaction", "content", "memory", "task", "platform", "governance"}, CursorKey: []byte(strings.TrimSpace(string(token))), EventBindings: []interaction.EventBinding{{BindingRef: a.ApplicationBinding, Events: []interaction.EventRule{{Name: "archive_demo_session", Schema: api.Raw(a.ApplicationEventSchema), OwnerID: c.OwnerID, Method: "session.archive", TargetID: platform.StableDevelopmentID("session", "development-surface"), AcceptForSeconds: 60, ExpectedRevision: &one, RequiresRendered: true}}}}}, interaction.Ports{Content: interactionContent{a}, Delivery: localDelivery{a}, Closure: localClosure{a}, Requests: requestBridge{a}, Calendar: calendar, ScheduleGate: scheduleGate{a}})
 	if e != nil {
 		return nil, fmt.Errorf("construct Interaction: %w", e)
 	}
@@ -303,14 +314,18 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 }
 func (a *App) Close() error {
 	var err error
+	for _, source := range a.Information {
+		err = errors.Join(err, source.Close())
+	}
+	a.Information = nil
 	if a.closeGovernance != nil {
-		if err = a.closeGovernance(); err != nil {
-			return err
+		if closeErr := a.closeGovernance(); closeErr != nil {
+			return errors.Join(err, closeErr)
 		}
 		a.closeGovernance = nil
 	}
 	if a.Model != nil {
-		err = a.Model.Close()
+		err = errors.Join(err, a.Model.Close())
 		a.Model = nil
 	}
 	if a.Files != nil {

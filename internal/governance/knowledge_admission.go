@@ -277,3 +277,41 @@ func (s *Service) readKnowledgeSelection(ctx context.Context, store runtime.Stor
 	}
 	return result, err
 }
+
+// FindSelectionTx 只允许原无知识 Snapshot 的兼容分支；有记录时全部当前门禁仍强核。
+func (s *Service) FindSelectionTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, snapshotRef api.ContentRef, decisionID string) (KnowledgeCommit, bool, error) {
+	if err := api.ValidateRecord("ContentRef", snapshotRef); err != nil {
+		return KnowledgeCommit{}, false, err
+	}
+	if snapshotRef.TenantID != tx.Scope().TenantID || snapshotRef.OwnerID != tx.Scope().OwnerID || !api.ValidID(decisionID) {
+		return KnowledgeCommit{}, false, api.E("forbidden", "knowledge_admission_scope_mismatch")
+	}
+	if _, err := tx.LookupKey(ctx, ns("knowledge_selections"), "snapshot/"+snapshotRef.ContentID); err != nil {
+		if err == runtime.ErrNotFound {
+			return KnowledgeCommit{}, false, nil
+		}
+		return KnowledgeCommit{}, false, err
+	}
+	out, err := s.CheckSelectionTx(ctx, tx, auth, snapshotRef, decisionID)
+	return out, true, err
+}
+
+// FindDecisionSelectionTx 供已持有原 Task/预算的行动准入核原 Decision 的选择。
+func (s *Service) FindDecisionSelectionTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, decisionID string) (KnowledgeCommit, bool, error) {
+	if !api.ValidID(decisionID) {
+		return KnowledgeCommit{}, false, api.E("invalid_request", "knowledge_decision_id_invalid")
+	}
+	key, err := tx.LookupKey(ctx, ns("knowledge_selections"), "decision/"+decisionID)
+	if err == runtime.ErrNotFound {
+		return KnowledgeCommit{}, false, nil
+	}
+	if err != nil {
+		return KnowledgeCommit{}, false, err
+	}
+	var original KnowledgeCommit
+	if err := tx.GetVersion(ctx, ns("knowledge_selections"), key.ObjectID, 1, &original); err != nil {
+		return KnowledgeCommit{}, true, err
+	}
+	out, err := s.CheckSelectionTx(ctx, tx, auth, original.SnapshotRef, decisionID)
+	return out, true, err
+}
