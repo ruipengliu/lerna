@@ -120,6 +120,10 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 	if e != nil {
 		return task.PreparedDecision{}, e
 	}
+	registered, parentAdmission, e := c.a.restrictRemoteAgentActions(ctx, scope, t, registered)
+	if e != nil {
+		return task.PreparedDecision{}, e
+	}
 	caps := []api.ComponentRef{}
 	bindings := []api.ObjectRef{}
 	for _, d := range registered.Entries {
@@ -192,6 +196,9 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 	if knowledge != nil && reservedOutput > knowledge.Selection.EffectiveControls.MaxOutputTokens {
 		reservedOutput = knowledge.Selection.EffectiveControls.MaxOutputTokens
 	}
+	if parentAdmission != nil && reservedOutput > parentAdmission.Controls.MaxOutputTokens {
+		reservedOutput = parentAdmission.Controls.MaxOutputTokens
+	}
 	snap := api.Snapshot{SnapshotID: snapshotID, Revision: 1, TaskRef: scope.Ref(t.TaskID, t.Revision), GoalRevision: t.GoalRevision, ControlRevision: t.ControlRevision, GoalRef: t.GoalRef, Requirements: t.Requirements, RequirementsDigest: t.RequirementsDigest, CoverageRef: t.CurrentCoverageRef, RequirementsState: t.RequirementsState, Purpose: purpose, FactRefs: facts.FactRefs, UnresolvedCollections: facts.UnresolvedCollections, PolicyRef: t.PolicyRef, InstallLockRef: installLock, ModelProfileRef: c.a.Profile.Ref, CapabilityRefs: caps, BindingRefs: bindings, MaterialRefs: materials, SelectionReportRef: selection, ProcessedSources: processed, ReservedOutputTokens: reservedOutput, SafetyMarginTokens: c.a.Profile.SafetyMargin, CountMode: "upper_bound", TokenizerRef: c.a.TokenizerRef}
 	goal, e := c.a.ReadContent(ctx, scope, auth, t.GoalRef, "brain.input")
 	if e != nil {
@@ -206,6 +213,9 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 	snap.CountMode = encoding.CountMode
 	bound, e := c.a.decisionCost(snap)
 	if e != nil {
+		return task.PreparedDecision{}, e
+	}
+	if e = c.a.checkRemoteEncoding(parentAdmission, snap, encoding, bound); e != nil {
 		return task.PreparedDecision{}, e
 	}
 	if knowledge != nil {

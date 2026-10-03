@@ -14,18 +14,19 @@ import (
 const JobRemoteProof = "collaboration.remote_proof"
 
 type RemoteState struct {
-	ParentOwnerID        string                 `json:"parent_owner_id"`
-	CreationKey          string                 `json:"creation_key"`
-	PacketDigest         string                 `json:"packet_digest"`
-	Fact                 task.DelegationFact    `json:"fact"`
-	Task                 *api.Task              `json:"task,omitempty"`
-	ResultRef            *api.ObjectRef         `json:"result_ref,omitempty"`
-	AllocationClosure    *api.AllocationClosure `json:"allocation_closure,omitempty"`
-	AllocationClosureRef *api.ObjectRef         `json:"allocation_closure_ref,omitempty"`
-	SourceDatabaseID     string                 `json:"source_database_id"`
-	IssuedAt             string                 `json:"issued_at"`
-	StartBefore          string                 `json:"start_before"`
-	Proof                string                 `json:"proof"`
+	ParentOwnerID        string                   `json:"parent_owner_id"`
+	CreationKey          string                   `json:"creation_key"`
+	PacketDigest         string                   `json:"packet_digest"`
+	Fact                 task.DelegationFact      `json:"fact"`
+	Task                 *api.Task                `json:"task,omitempty"`
+	ResultRef            *api.ObjectRef           `json:"result_ref,omitempty"`
+	AllocationClosure    *api.AllocationClosure   `json:"allocation_closure,omitempty"`
+	AllocationClosureRef *api.ObjectRef           `json:"allocation_closure_ref,omitempty"`
+	Incoming             *task.IncomingAllocation `json:"incoming,omitempty"`
+	SourceDatabaseID     string                   `json:"source_database_id"`
+	IssuedAt             string                   `json:"issued_at"`
+	StartBefore          string                   `json:"start_before"`
+	Proof                string                   `json:"proof"`
 }
 
 func remoteStateDigest(p RemoteState) (string, error) { p.Proof = ""; return api.Digest(p) }
@@ -80,6 +81,9 @@ func (r *Remote) state(ctx context.Context, peer runtime.Auth, q api.Query, in R
 		fact.EffectsClosed = closure.EffectsClosed
 	}
 	out = RemoteState{ParentOwnerID: in.ParentOwnerID, CreationKey: in.CreationKey, Fact: fact, Task: child, SourceDatabaseID: r.cfg.Scope.DatabaseID}
+	if inc.AllocationID != "" {
+		out.Incoming = &inc
+	}
 	out.PacketDigest, err = api.Digest(saved.Packet)
 	if err != nil {
 		return out, err
@@ -110,6 +114,15 @@ func (r *Remote) state(ctx context.Context, peer runtime.Auth, q api.Query, in R
 			}
 			if actual.Revision != child.Revision {
 				return api.E("snapshot_required", "child_state_changed")
+			}
+		}
+		if out.Incoming != nil {
+			actual, err := s.ReadIncomingAllocationTx(ctx, tx, r.cfg.Auth, saved.Packet.AllocationRef)
+			if err != nil {
+				return err
+			}
+			if !api.Equal(actual, *out.Incoming) {
+				return api.E("snapshot_required", "original_incoming_usage_changed")
 			}
 		}
 		if err := r.cfg.Authority.CheckPeerTx(ctx, tx, peer, in.ParentOwnerID); err != nil {
@@ -214,6 +227,17 @@ func (r *Remote) State(ctx context.Context, scope runtime.Scope, d task.Delegati
 	if out.ParentOwnerID != scope.OwnerID || out.CreationKey != d.CreationKey || out.SourceDatabaseID != peer.Scope.DatabaseID || out.PacketDigest != packetDigest || out.Fact.DelegationID != d.DelegationID || out.Fact.ChildTaskRef != nil && (out.Fact.ChildTaskRef.OwnerID != d.ReceiverID || out.Fact.ChildTaskRef.ObjectID != original.Packet.ChildTaskID) {
 		return out, api.E("forbidden", "original_child_state_scope_mismatch")
 	}
+	issued, err := api.ParseTime(out.IssuedAt)
+	if err != nil {
+		return out, err
+	}
+	until, err := api.ParseTime(out.StartBefore)
+	if err != nil || !issued.Before(until) || until.Sub(issued) > 30*time.Second {
+		return out, api.E("forbidden", "remote_child_state_window_invalid")
+	}
+	if err = r.validateStateUsage(original.Packet, out); err != nil {
+		return out, err
+	}
 	return out, nil
 }
 func (r *Remote) Read(ctx context.Context, scope runtime.Scope, d task.Delegation) (task.DelegationFact, error) {
@@ -221,7 +245,13 @@ func (r *Remote) Read(ctx context.Context, scope runtime.Scope, d task.Delegatio
 		return r.cfg.Local.Read(ctx, scope, d)
 	}
 	out, err := r.State(ctx, scope, d)
-	return out.Fact, err
+	if err != nil {
+		return out.Fact, err
+	}
+	if err = r.observeStateUsage(ctx, d, out); err != nil {
+		return out.Fact, err
+	}
+	return out.Fact, nil
 }
 
 // sealPublication 只保存准确签封字节及出版责任；实际ObjectStore在Job事务外。

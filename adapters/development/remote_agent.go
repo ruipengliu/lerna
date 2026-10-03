@@ -215,7 +215,7 @@ func (a *App) configureRemoteAgent(local *collaboration.Adapter) (*collaboration
 		ports[scope.OwnerID] = &providers.ForeignSourceClient{SDK: client, Keys: keys, SourceScope: scope, ConsumerScope: a.Scope}
 		assembly.peers[scope.OwnerID] = cfg
 	}
-	remote, err := collaboration.NewRemote(collaboration.RemoteConfig{Store: a.Store, Scope: a.Scope, Registry: a.Registry, Memory: a.Memory, ProofPolicy: a.ContentPolicy, Keys: a.Keys, SigningKeyID: "development-es256", Auth: a.ServiceAuth, Authority: remoteAgentAuthority{a}, Profiles: a.Config.RemoteAgent.Profiles, Peers: peers, Participants: []string{"platform", "governance"}, Local: local, MaterialPrincipal: &a.ServiceAuth})
+	remote, err := collaboration.NewRemote(collaboration.RemoteConfig{Store: a.Store, Scope: a.Scope, Registry: a.Registry, Memory: a.Memory, ProofPolicy: a.ContentPolicy, Keys: a.Keys, SigningKeyID: "development-es256", Auth: a.ServiceAuth, Authority: remoteAgentAuthority{a}, ScopeGate: remoteScopeAuthority{a}, Profiles: a.Config.RemoteAgent.Profiles, Peers: peers, Participants: []string{"platform", "governance"}, Local: local, MaterialPrincipal: &a.ServiceAuth})
 	if err != nil {
 		return nil, err
 	}

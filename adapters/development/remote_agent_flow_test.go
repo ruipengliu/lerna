@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/x509"
 	"encoding/pem"
+	"errors"
 	"io"
 	"net"
 	"net/http"
@@ -11,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -33,16 +35,133 @@ type configuredAgentEndpoint struct {
 	requests atomic.Int64
 }
 
+// 显式验收目录保留失败时的原数据库和journal。既有目录不能被重置为新身份。
+func configuredAgentDataRoot(t *testing.T, index int) string {
+	t.Helper()
+	root := os.Getenv("HARNESS_TEST_REMOTE_AGENT_EVIDENCE_ROOT")
+	if root == "" {
+		return t.TempDir()
+	}
+	if !filepath.IsAbs(root) || index < 0 || index > 1 {
+		t.Fatal("remote Agent evidence root must be absolute and bounded")
+	}
+	name := api.Hash([]byte(t.Name()))[len("sha256:"):]
+	path := filepath.Join(root, name, []string{"parent", "child"}[index])
+	if index == 0 {
+		if err := os.Mkdir(filepath.Dir(path), 0700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := os.Mkdir(path, 0700); err != nil {
+		t.Fatal(err)
+	}
+	return path
+}
+
+func (e *configuredAgentEndpoint) persistPrivateConfiguration(t *testing.T) {
+	t.Helper()
+	if os.Getenv("HARNESS_TEST_REMOTE_AGENT_EVIDENCE_ROOT") == "" {
+		return
+	}
+	if err := SaveConfig(filepath.Join(e.config.DataRoot, "active-config.json"), e.config); err != nil {
+		t.Fatal(err)
+	}
+	for _, peer := range e.config.RemoteAgent.Peers {
+		for _, ref := range []string{peer.InboundTokenEnvRef, peer.OutboundTokenEnvRef} {
+			secret := strings.TrimSpace(os.Getenv(ref))
+			if !remoteEnvRef.MatchString(ref) || secret == "" {
+				t.Fatal("private peer credential reference unavailable")
+			}
+			path := filepath.Join(e.config.DataRoot, "peer-token-"+ref)
+			f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+			if errors.Is(err, os.ErrExist) {
+				original, readErr := os.ReadFile(path)
+				if readErr != nil || api.Hash(original) != api.Hash([]byte(secret)) {
+					t.Fatal("original private peer credential changed")
+				}
+				continue
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, err = f.WriteString(secret)
+			err = errors.Join(err, f.Sync(), f.Close())
+			if err != nil {
+				t.Fatal(err)
+			}
+		}
+	}
+	dir, err := os.Open(e.config.DataRoot)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = errors.Join(dir.Sync(), dir.Close()); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func (e *configuredAgentEndpoint) reopenOriginal(t *testing.T) {
+	t.Helper()
+	e.stopRun(t)
+	if err := e.app.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if os.Getenv("HARNESS_TEST_REMOTE_AGENT_EVIDENCE_ROOT") != "" {
+		var err error
+		e.config, err = LoadConfig(filepath.Join(e.config.DataRoot, "active-config.json"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, peer := range e.config.RemoteAgent.Peers {
+			for _, ref := range []string{peer.InboundTokenEnvRef, peer.OutboundTokenEnvRef} {
+				secret, err := os.ReadFile(filepath.Join(e.config.DataRoot, "peer-token-"+ref))
+				if err != nil {
+					t.Fatal(err)
+				}
+				t.Setenv(ref, string(secret))
+			}
+		}
+	}
+	requests := e.requests.Load()
+	var err error
+	e.app, err = OpenApp(context.Background(), e.config, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if e.requests.Load() != requests {
+		t.Fatal("original App reopen implicitly sent network requests")
+	}
+	e.startRun(t)
+}
+
 // 两个App.Run HTTPS、SQL库、签名和对象介质均为实际实现；外层只计数/注入故障。
 func configuredAgentPair(t *testing.T) (*configuredAgentEndpoint, *configuredAgentEndpoint, collaboration.RemoteAgentProfile) {
+	return configuredAgentPairWithParentDriver(t, "sqlite")
+}
+
+func configuredAgentPairWithParentDriver(t *testing.T, parentDriver string) (*configuredAgentEndpoint, *configuredAgentEndpoint, collaboration.RemoteAgentProfile) {
 	t.Helper()
+	if parentDriver != "sqlite" && parentDriver != "postgres" {
+		t.Fatal("configured Agent requires an explicit SQLite or PostgreSQL parent")
+	}
+	if parentDriver == "postgres" {
+		dsn := os.Getenv("HARNESS_TEST_POSTGRES_DSN")
+		if dsn == "" {
+			t.Skip("actual PostgreSQL DSN required for the independent parent authority")
+		}
+		t.Setenv("HARNESS_DATABASE_DSN", dsn)
+	}
 	ctx := context.Background()
 	tenant, user := api.NewID("tenant"), api.NewID("subject")
 	endpoints := []*configuredAgentEndpoint{{}, {}}
 	for i, e := range endpoints {
-		root := t.TempDir()
+		root := configuredAgentDataRoot(t, i)
 		var err error
-		e.config, err = InitializeConfig(ctx, filepath.Join(root, "config.json"), root, "sqlite")
+		driver := "sqlite"
+		if i == 0 {
+			driver = parentDriver
+		}
+		e.config, err = InitializeConfig(ctx, filepath.Join(root, "config.json"), root, driver)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -144,6 +263,7 @@ func configuredAgentPair(t *testing.T) (*configuredAgentEndpoint, *configuredAge
 		if err != nil {
 			t.Fatal(err)
 		}
+		e.persistPrivateConfiguration(t)
 	}
 	if a.requests.Load() != 0 || b.requests.Load() != 0 {
 		t.Fatal("constructing/reopening paired App issued network requests")

@@ -133,6 +133,16 @@ func (r *Remote) closureRead(ctx context.Context, peer runtime.Auth, q api.Query
 	return out, err
 }
 func (r *Remote) receiveClosure(ctx context.Context, tx runtime.Tx, peerAuth runtime.Auth, c api.Command, in RemoteClosureReport) (runtime.Outcome, error) {
+	var out runtime.Outcome
+	err := task.WithJobIntents(ctx, tx, func(tx runtime.Tx) error {
+		var err error
+		out, err = r.receiveClosureTx(ctx, tx, peerAuth, c, in)
+		return err
+	})
+	return out, err
+}
+
+func (r *Remote) receiveClosureTx(ctx context.Context, tx runtime.Tx, peerAuth runtime.Auth, c api.Command, in RemoteClosureReport) (runtime.Outcome, error) {
 	if err := r.checkScope(tx.Scope()); err != nil {
 		return runtime.Outcome{}, err
 	}
@@ -164,8 +174,36 @@ func (r *Remote) receiveClosure(ctx context.Context, tx runtime.Tx, peerAuth run
 	if err = s.ReconcileClosureTx(ctx, tx, r.cfg.Auth, a.AllocationID, in.Closure, in.ClosureRef); err != nil {
 		return runtime.Outcome{}, err
 	}
+	if r.cfg.ScopeGate != nil {
+		if err = r.observeClosureUsageTx(ctx, tx, a, in); err != nil {
+			return runtime.Outcome{}, err
+		}
+	}
 	return runtime.Applied(task.AllocationOutput{AllocationRef: tx.Scope().Ref(a.AllocationID, a.Revision+1), State: "settled"}), nil
 }
+
+func (r *Remote) ensureClosureProofBytes(ctx context.Context, scope runtime.Scope, ref api.ContentRef) error {
+	if r.cfg.Memory == nil {
+		return api.E("unsupported", "agent_proof_publication_unconfigured")
+	}
+	var publication remoteProofPublication
+	_, err := r.cfg.Store.Read(ctx, scope, remoteProofs, ref.ContentID, 0, &publication)
+	if err == nil {
+		if publication.Request.ContentRef != ref {
+			return api.E("idempotency_conflict", "original_closure_proof_changed")
+		}
+		_, err = r.cfg.Memory.Upload(ctx, scope, r.cfg.Auth, publication.Request, publication.Bytes)
+		return err
+	}
+	if !api.IsCode(err, "not_found") {
+		return err
+	}
+	// Task宿主也可由自己的原Proof Job出版准确字节。这里不接管其
+	// journal或重封证明，只有当前Memory许可真实读到原Ref才允许报告。
+	_, err = r.cfg.Memory.ReadBytes(ctx, scope, r.cfg.Auth, ref, "content.read", r.cfg.Memory.Location)
+	return err
+}
+
 func (r *Remote) ReportClosure(ctx context.Context, scope runtime.Scope, parent string, ref api.ObjectRef, c api.AllocationClosure) error {
 	if err := r.checkScope(scope); err != nil {
 		return err
@@ -185,15 +223,8 @@ func (r *Remote) ReportClosure(ctx context.Context, scope runtime.Scope, parent 
 	if !api.Equal(original, c) || c.ParentOwnerID != parent || c.ReceiverID != scope.OwnerID {
 		return api.E("idempotency_conflict", "original_closure_changed")
 	}
-	// 原封存证明字节必须已实际出版；恢复只沿原准确上传身份。
-	var publication remoteProofPublication
-	if _, err = r.cfg.Store.Read(ctx, scope, remoteProofs, c.ProofRef.ContentID, 0, &publication); err != nil {
-		return err
-	}
-	if !api.Equal(publication.Request.ContentRef, c.ProofRef) {
-		return api.E("idempotency_conflict", "original_closure_proof_changed")
-	}
-	if _, err = r.cfg.Memory.Upload(ctx, scope, r.cfg.Auth, publication.Request, publication.Bytes); err != nil {
+	// 原封存证明字节必须已实际出版；恢复只沿原准确上传或读取身份。
+	if err = r.ensureClosureProofBytes(ctx, scope, c.ProofRef); err != nil {
 		return err
 	}
 	inc, err := s.IncomingRead(ctx, r.cfg.Store, scope, r.cfg.Auth, api.ObjectRef{TenantID: scope.TenantID, OwnerID: parent, ObjectID: c.AllocationID, Revision: 1})

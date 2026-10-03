@@ -68,6 +68,22 @@ type DelegationScope struct {
 	ParentSources []api.SourceEvidence `json:"parent_sources"`
 }
 
+// ReadIncomingAllocationTx只投影原接收额度及已观察累计费用，不授新开始权。
+// 复用version2/1路由，已绑定Child先持原完整Task根/预算，关闭先到可无Child。
+func (s *Service) ReadIncomingAllocationTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ObjectRef) (IncomingAllocation, error) {
+	if auth.TenantID != tx.Scope().TenantID || ref.TenantID != tx.Scope().TenantID || api.ValidateRecord("ObjectRef", ref) != nil || !auth.HasRole("service") && auth.SubjectID != ref.OwnerID {
+		return IncomingAllocation{}, api.E("forbidden", "parent_identity_required")
+	}
+	current, err := incomingForTaskTx(ctx, tx, incomingID(ref))
+	if err != nil {
+		return current, err
+	}
+	if current.AllocationID != ref.ObjectID || current.ParentOwner != ref.OwnerID || current.ReceiverID != tx.Scope().OwnerID || current.ParentTaskRef.TenantID != tx.Scope().TenantID || current.ParentTaskRef.OwnerID != ref.OwnerID || current.TaskRef != nil && (current.TaskRef.TenantID != tx.Scope().TenantID || current.TaskRef.OwnerID != tx.Scope().OwnerID || api.ValidateRecord("ObjectRef", *current.TaskRef) != nil) {
+		return IncomingAllocation{}, api.E("forbidden", "original_incoming_scope_changed")
+	}
+	return current, nil
+}
+
 // ReadIncomingSourceTx 只投影已登记的原allocation负责方，不授开始权。
 func (s *Service) ReadIncomingSourceTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, taskID string) (api.ObjectRef, bool, error) {
 	t, err := getTask(ctx, tx, taskID)

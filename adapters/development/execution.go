@@ -21,6 +21,11 @@ type executionBridge struct{ a *App }
 
 // PrepareDispatch 出版原惰性输入和原Use证明，尚不准入执行或签发控制窗口。
 func (e executionBridge) PrepareDispatch(ctx context.Context, s runtime.Scope, i task.OperationIntent) error {
+	prepared, err := e.a.prepareRemoteAgentOperationParent(ctx, s, i)
+	if err != nil {
+		return err
+	}
+	ctx = prepared
 	var fixed encodedIntent
 	_, er := e.a.Store.Read(ctx, s, "platform.execution_intents", i.OperationID, 0, &fixed)
 	if er != nil && !api.IsCode(er, "not_found") {
@@ -301,6 +306,9 @@ func (a actionAuthorization) AuthorizeAction(ctx context.Context, tx runtime.Tx,
 		return er
 	}
 	if er := a.a.Knowledge.CheckActionTx(ctx, tx, auth, i); er != nil {
+		return er
+	}
+	if er := a.a.checkRemoteActionTx(ctx, tx, auth, i, admission); er != nil {
 		return er
 	}
 	if i.ExecutorID != tx.Scope().OwnerID {
