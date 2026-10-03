@@ -161,6 +161,14 @@ func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w
 	if op.Intent == nil {
 		return api.E("invalid_state", "attempt_intent_missing")
 	}
+	prepared, err := s.prepareStartGate(ctx, st, sc, w, op, attempt)
+	if err != nil {
+		if definitiveControlFailure(err) {
+			return s.closeUnstarted(ctx, st, sc, w, err)
+		}
+		return err
+	}
+	ctx = prepared
 	if attempt.PreparedAuthority.AuthorityRevision == 0 {
 		var err error
 		op, attempt, err = s.prepareAttemptControl(ctx, st, sc, w, op, attempt)
