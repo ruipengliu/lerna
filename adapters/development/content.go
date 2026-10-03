@@ -100,7 +100,7 @@ func (a *App) Publish(ctx context.Context, scope runtime.Scope, auth runtime.Aut
 	policy := a.ContentPolicy.PolicyRef
 	if plan.PolicyRef != nil {
 		policy = *plan.PolicyRef
-	} else if len(a.information) > 0 {
+	} else {
 		// 旧内联plan只可从已保存的准确reserve恢复policy，不把新装配许可替换进去。
 		reserve, err := a.Store.LookupCommand(ctx, scope, plan.ReserveID)
 		if api.IsCode(err, "not_found") {
