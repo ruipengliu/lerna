@@ -10,7 +10,7 @@
 | --- | --- | --- |
 | Brain | `brain.decide/get/cancel` | 独立 Decision、call、提案出版和工作账本；只运行准确登记的 `alternate-answer1` 模板。`answer` 生成准确正文；自由文本提出 `clarify_goal` 输入请求。其他模型、report 工具编排和任意供应商请求均未开放，物理模型请求数与 USD 费用均为 0。Brain 提案不裁决 Task 成功 |
 | Executor | `execution.invoke/get/list/cancel/control/control.get/reconcile/usage.get` | 独立 Operation、原 Attempt、签名 Task gate 和用量依据；只开放准确登记的 Go `file.read` 合同和 InstallLock。Linux 私有根目录里读取单个普通文件，至多 64 KiB、至多一次 Attempt；不接受路径越界、符号链接、硬链接、FIFO、资源扩张或非零费用 |
-| Content / Memory | `content.policy.install/upload_reserve/put/close/get/transfer.read`；`memory.create/replace/delete/read/inspect/list/query/index.inspect/cleanup.get/view.open/view.pull/view.ack` | 独立准确正文、来源门、Memory 版本、变更头、检索快照和 View。同步元数据权威扫描与有限字面检索，不提供向量、Extraction、Experience、任意远端索引或可重命名 owner 的缓存 |
+| Content / Memory | `content.policy.install/upload_reserve/put/register_copy/close/release_copy/get/transfer.read`；`memory.create/replace/delete/read/inspect/list/query/index.inspect/cleanup.get/view.open/view.pull/view.ack` | 独立准确正文、来源门、原 CopyHolder/reference intent、Memory 版本、变更头、检索快照和 View。`content.get` 只开放原 bytes/control 模式；同步元数据权威扫描与有限字面检索，不提供向量、Extraction、Experience、任意远端索引或可重命名 owner 的缓存 |
 
 有界方法之外返回 `unsupported`。Memory 的更正、删除、inspect/read/list/query、cleanup 和 View 属于同一开放族；Executor 的 invoke 与 list 同时提供。`memory.cleanup.get` 返回当前获准管理的 `MemoryRecord` 元数据，不读取已撤回正文，也不触发清理。
 

@@ -78,6 +78,12 @@ export class Memory implements Handler {
               this.store.db.prepare("DELETE FROM content_bytes WHERE key=?").run(key);
               this.impact(key);
             }
+          } else if (kind === "copy") {
+            const holder = this.store.get("copies", text(work.key));
+            if (holder?.use_state === "allowed") {
+              holder.use_state = "closing";
+              this.store.put("copies", text(work.key), holder);
+            }
           } else {
             const t = this.store.get("transfers", text(work.key));
             if (t && t.phase !== "published" && t.phase !== "cleanup") {
@@ -131,6 +137,7 @@ export class Memory implements Handler {
     if (target !== text(id)) reject("invalid_request", "target_mismatch");
   }
   future(value: unknown): number {
+    validateSchema({ $ref: "#/$defs/Time" }, value);
     const n = Date.parse(text(value));
     if (!Number.isFinite(n) || n <= this.store.now()) reject("expired", "deadline_expired");
     return n;
@@ -463,6 +470,82 @@ export class Memory implements Handler {
           },
         };
       }
+      case "content.register_copy": {
+        const ref = object(i.content_ref),
+          holder = object(i.holder_ref),
+          intent = object(i.reference_intent_ref),
+          id = text(i.copy_id);
+        validateSchema({ $ref: "#/$defs/Id" }, id);
+        this.target(c.target_id, ref.content_id);
+        if (
+          holder.tenant_id !== this.store.config.tenant_id ||
+          intent.tenant_id !== this.store.config.tenant_id ||
+          holder.owner_id !== intent.owner_id ||
+          i.location !== "local"
+        )
+          reject("forbidden", "copy_scope_mismatch");
+        const source = this.content(p, ref, text(i.purpose)),
+          until = this.future(i.retain_until);
+        if (until > Date.parse(text(source.retention_until)))
+          reject("forbidden", "retention_scope_expansion");
+        const old = this.store.get("copies", id);
+        if (old && (old.principal !== p.subject_id || !same(old.input, i)))
+          reject("idempotency_conflict", "copy_input_changed");
+        const h = old ?? {
+          input: i,
+          principal: p.subject_id,
+          use_state: "allowed",
+          cleanup_state: "pending",
+          control_revision: source.control_revision ?? null,
+          evidence_refs: [],
+        };
+        if (!old) {
+          this.store.put("copies", id, h);
+          this.store.put("expiry_work", `copy:${id}`, {
+            id: `copy:${id}`,
+            kind: "copy",
+            key: id,
+            deadline: i.retain_until ?? null,
+            state: "pending",
+          });
+        }
+        return { output: this.copyOutput(id, h) };
+      }
+      case "content.release_copy": {
+        const id = text(i.copy_id),
+          ref = object(i.content_ref),
+          h = this.store.require("copies", id),
+          original = object(h.input),
+          source = this.store.require("contents", this.key(ref));
+        this.target(c.target_id, ref.content_id);
+        if (h.principal !== p.subject_id || !same(original.content_ref, ref))
+          reject("forbidden", "copy_holder_mismatch");
+        if (i.control_revision !== source.control_revision)
+          reject("revision_conflict", "content_control_revision_changed");
+        if (
+          !["pending", "complete", "residual", "unknown"].includes(text(i.cleanup_state)) ||
+          (i.cleanup_state === "complete" && (!i.use_stopped || !array(i.evidence_refs).length)) ||
+          (i.cleanup_state === "residual" && !i.residual_reason)
+        )
+          reject("invalid_request", "invalid_cleanup_report");
+        if (
+          (h.use_state === "use_stopped" && !i.use_stopped) ||
+          (h.cleanup_state === "complete" && i.cleanup_state !== "complete")
+        )
+          reject("invalid_state", "copy_cannot_resume_or_cleanup_regress");
+        for (const evidence of array(i.evidence_refs)) {
+          const held = this.store.require("contents", this.key(evidence));
+          if (!same(held.content_ref, evidence))
+            reject("idempotency_conflict", "cleanup_evidence_changed");
+        }
+        h.control_revision = source.control_revision ?? null;
+        h.cleanup_state = i.cleanup_state ?? null;
+        h.evidence_refs = i.evidence_refs ?? [];
+        h.residual_reason = i.residual_reason ?? "";
+        if (i.use_stopped) h.use_state = "use_stopped";
+        this.store.put("copies", id, h);
+        return { output: this.copyOutput(id, h) };
+      }
       case "memory.create":
       case "memory.replace":
       case "memory.delete": {
@@ -589,6 +672,14 @@ export class Memory implements Handler {
         reject("unsupported", "method_not_supported");
     }
   }
+  private copyOutput(id: string, holder: Document): Document {
+    return {
+      copy_id: id,
+      control_revision: holder.control_revision ?? null,
+      use_state: holder.use_state ?? null,
+      cleanup_state: holder.cleanup_state ?? null,
+    };
+  }
   private depends(ref: unknown, key: string, visited = new Set<string>()): boolean {
     const id = this.key(ref);
     if (id === key) return true;
@@ -647,21 +738,35 @@ export class Memory implements Handler {
                 control_revision: 0,
               };
             }
-            if (i.mode !== "metadata") reject("unsupported", "content_mode_not_in_profile");
-            const c = this.store.require("contents", this.key(r));
-            if (c.publisher !== p.subject_id && !p.roles.includes("memory_admin"))
-              reject("forbidden", "content_management_required");
+            if (i.mode !== "control" || !i.copy_id)
+              reject("unsupported", "content_mode_not_in_profile");
+            const h = this.store.require("copies", text(i.copy_id)),
+              original = object(h.input),
+              c = this.store.require("contents", this.key(r));
+            if (h.principal !== p.subject_id || !same(original.content_ref, r))
+              reject("forbidden", "copy_holder_mismatch");
             if (!same(c.content_ref, r))
               reject("idempotency_conflict", "content_reference_changed");
+            let state = text(h.use_state);
+            if (state === "allowed") {
+              try {
+                this.content(p, r, text(original.purpose));
+                this.future(original.retain_until);
+              } catch (error) {
+                if (
+                  !(error instanceof Rejection) ||
+                  !["forbidden", "gone", "expired"].includes(error.wire.code)
+                )
+                  throw error;
+                state = "closing";
+              }
+            }
             return {
               content_ref: r,
-              mode: "metadata",
+              mode: "control",
               control_revision: c.control_revision,
-              use_state:
-                c.state === "active" && Date.parse(text(c.retention_until)) > this.store.now()
-                  ? "active"
-                  : "closed",
-              cleanup_state: c.state === "active" ? "pending" : "residual",
+              use_state: state,
+              cleanup_state: h.cleanup_state,
             };
           }
           case "memory.read":

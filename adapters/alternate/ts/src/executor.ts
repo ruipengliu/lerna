@@ -299,6 +299,7 @@ export class Executor implements Handler {
     const i = object(c.payload);
     switch (c.method) {
       case "execution.invoke": {
+        validateSchema({ $ref: "#/$defs/Time" }, i.deadline);
         const id = text(i.operation_id);
         if (c.target_id !== id) reject("invalid_request", "target_mismatch");
         if (!same(i.capability_ref, manifest.read_capability))

@@ -15,7 +15,7 @@ import {
 import { authenticate, current } from "./authority";
 import { failure, reject } from "./error";
 import { object, text, integer, type Principal } from "./types";
-import { manifest, type Runtime } from "./runtime";
+import { manifest, controlMethod, type Runtime } from "./runtime";
 
 interface Session {
   principal: Principal;
@@ -65,11 +65,7 @@ function resolver(runtime: Runtime, req: IncomingMessage, write = false): () => 
   };
 }
 function control(method: unknown): boolean {
-  return (
-    typeof method === "string" &&
-    (method === "execution.control" ||
-      /\.(cancel|pause|revoke|close|stop|takeover|deactivate|billing_reconcile)$/.test(method))
-  );
+  return typeof method === "string" && controlMethod(method);
 }
 function send(ws: WebSocket, value: unknown, isControl = false): void {
   const body = canonical(value);

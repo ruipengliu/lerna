@@ -72,6 +72,7 @@ export class Brain implements Handler {
     if (c.target_id !== id) reject("invalid_request", "target_mismatch");
     if (c.method === "brain.decide") {
       role(p, "service");
+      validateSchema({ $ref: "#/$defs/Time" }, i.deadline);
       const task = object(i.task_ref);
       if (task.tenant_id !== this.store.config.tenant_id || task.owner_id !== p.subject_id)
         reject("forbidden", "original_orchestrator_required");

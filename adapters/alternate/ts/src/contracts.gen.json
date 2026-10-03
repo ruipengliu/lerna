@@ -1331,6 +1331,167 @@
         "recovery": "query original command/object; preserve exact owner, payload, revision and deadlines"
       },
       {
+        "name": "content.register_copy",
+        "owner": "content",
+        "kind": "command",
+        "cas": false,
+        "allows_accepted": false,
+        "input_schema": {
+          "additionalProperties": false,
+          "properties": {
+            "content_ref": {
+              "$ref": "#/$defs/ContentRef"
+            },
+            "copy_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "holder_ref": {
+              "$ref": "#/$defs/ObjectRef"
+            },
+            "location": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "purpose": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "reference_intent_ref": {
+              "$ref": "#/$defs/ObjectRef"
+            },
+            "retain_until": {
+              "maxLength": 4096,
+              "type": "string"
+            }
+          },
+          "required": [
+            "copy_id",
+            "content_ref",
+            "holder_ref",
+            "purpose",
+            "location",
+            "retain_until",
+            "reference_intent_ref"
+          ],
+          "type": "object"
+        },
+        "output_schema": {
+          "additionalProperties": false,
+          "properties": {
+            "cleanup_state": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "control_revision": {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "copy_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "use_state": {
+              "maxLength": 4096,
+              "type": "string"
+            }
+          },
+          "required": [
+            "copy_id",
+            "control_revision",
+            "use_state",
+            "cleanup_state"
+          ],
+          "type": "object"
+        },
+        "schema_digest": "sha256:da93b866a408a4c63e16784b2bff38666c28db821e60712446a92b62b36ec04a",
+        "recovery": "query original command/object; preserve exact owner, payload, revision and deadlines"
+      },
+      {
+        "name": "content.release_copy",
+        "owner": "content",
+        "kind": "command",
+        "cas": false,
+        "allows_accepted": false,
+        "input_schema": {
+          "additionalProperties": false,
+          "properties": {
+            "cleanup_state": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "content_ref": {
+              "$ref": "#/$defs/ContentRef"
+            },
+            "control_revision": {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "copy_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "evidence_refs": {
+              "items": {
+                "$ref": "#/$defs/ContentRef"
+              },
+              "maxItems": 100,
+              "minItems": 0,
+              "type": "array"
+            },
+            "residual_reason": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "use_stopped": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "copy_id",
+            "content_ref",
+            "control_revision",
+            "use_stopped",
+            "cleanup_state",
+            "evidence_refs"
+          ],
+          "type": "object"
+        },
+        "output_schema": {
+          "additionalProperties": false,
+          "properties": {
+            "cleanup_state": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "control_revision": {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "copy_id": {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "use_state": {
+              "maxLength": 4096,
+              "type": "string"
+            }
+          },
+          "required": [
+            "copy_id",
+            "control_revision",
+            "use_state",
+            "cleanup_state"
+          ],
+          "type": "object"
+        },
+        "schema_digest": "sha256:8b49893afca14971711f03f1ffaf59aa921ccbe5be5e59349879aeb5375e1e49",
+        "recovery": "query original command/object; preserve exact owner, payload, revision and deadlines"
+      },
+      {
         "name": "content.transfer.read",
         "owner": "content",
         "kind": "query",

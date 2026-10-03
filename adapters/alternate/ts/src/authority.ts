@@ -39,6 +39,7 @@ export function same(a: unknown, b: unknown): boolean {
 }
 
 function instant(value: string): bigint {
+  validateSchema({ $ref: "#/$defs/Time" }, value);
   const match = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,9}))?Z$/.exec(value);
   if (!match?.[1]) reject("invalid_request", "invalid_utc_time");
   const ms = Date.parse(`${match[1]}Z`);
@@ -79,7 +80,8 @@ export function signed(store: Store, compact: string, expected: Document, window
   const issued = instant(text(claims.issued_at)),
     until = instant(text(claims.start_before)),
     now = BigInt(store.now()) * 1000000n;
-  if (issued >= until || issued > now || (window && now >= until))
+  // 本机裁决时钟精度为毫秒；结束界取保守上界，不能扩张纳秒期限。
+  if (issued >= until || issued > now || (window && now + 999999n >= until))
     reject("expired", "proof_window_expired");
   return claims;
 }

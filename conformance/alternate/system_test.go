@@ -1272,7 +1272,7 @@ func TestIndependentCookieLogoutClosesCurrentSocketPreservesOriginalContent(t *t
 	if res.StatusCode != 200 {
 		t.Fatalf("original browser session logout: %d", res.StatusCode)
 	}
-	q := api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: f.owner, QueryID: api.NewID("query"), Method: "content.get", TargetID: ref.ContentID, Payload: api.Raw(memory.GetContentInput{ContentRef: ref, Mode: "metadata"})}
+	q := api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: f.owner, QueryID: api.NewID("query"), Method: "content.get", TargetID: ref.ContentID, Payload: api.Raw(memory.GetContentInput{ContentRef: ref, Mode: "bytes", Purpose: "read", Location: "local"})}
 	if e = conn.Write(ctx, websocket.MessageText, api.Raw(map[string]any{"type": "request", "request_seq": 1, "kind": "query", "payload": q})); e == nil {
 		if _, body, readErr := conn.Read(ctx); readErr == nil {
 			t.Fatalf("logged-out cookie still received business data: %s", body)
@@ -1327,6 +1327,12 @@ func TestIndependentMemoryExpiredOriginalSourceCleanupResumesAfterRestart(t *tes
 	scope := f.upload(t, policy, []byte("原长期范围"), "text/plain")
 	until := time.Now().Add(3 * time.Second)
 	source := f.uploadUntil(t, policy, []byte("原短期来源"), "text/plain", until)
+	copyID := api.NewID("copy")
+	holder := api.ObjectRef{TenantID: f.tenant, OwnerID: f.owner, ObjectID: api.NewID("holder"), Revision: 1}
+	intent := api.ObjectRef{TenantID: f.tenant, OwnerID: f.owner, ObjectID: api.NewID("reference"), Revision: 1}
+	if r := f.command(t, "content.register_copy", source.ContentID, nil, memory.RegisterCopyInput{CopyID: copyID, ContentRef: source, HolderRef: holder, ReferenceIntentRef: intent, Purpose: "read", Location: "local", RetainUntil: api.Time(until)}); r.Stage != "applied" {
+		t.Fatalf("original expiring copy holder: %+v", r)
+	}
 	id := api.NewID("memory")
 	values := memory.MemoryValues{Type: "fact", ContentRef: source, Sources: []api.SourceEvidence{{ContentRef: source, SourceKind: "user_input"}}, ScopeRef: scope, PolicyRef: policy, ObservedAt: api.Time(time.Now())}
 	r := f.command(t, "memory.create", id, nil, memory.CreateInput{MemoryID: id, Values: values})
@@ -1361,8 +1367,50 @@ func TestIndependentMemoryExpiredOriginalSourceCleanupResumesAfterRestart(t *tes
 	if cleanup.State != "quarantined" || cleanup.Revision != 2 || cleanup.Values.ContentRef != source {
 		t.Fatalf("durable original expiry did not retire local Memory holder: %+v", cleanup)
 	}
-	if e := f.query(t, "content.get", source.ContentID, memory.GetContentInput{ContentRef: source, Mode: "metadata"}, &body); e != nil || body.UseState != "closed" || body.CleanupState != "residual" {
-		t.Fatalf("local logical deletion was promoted to physical erasure: %+v %v", body, e)
+	if e := f.query(t, "content.get", source.ContentID, memory.GetContentInput{ContentRef: source, Mode: "control", CopyID: copyID}, &body); e != nil || body.UseState != "closing" || body.CleanupState != "pending" || body.BytesBase64 != "" {
+		t.Fatalf("source expiry lost original external holder responsibility: %+v %v", body, e)
 	}
 	t.Logf("original expiry facts: %s", api.Raw(map[string]any{"source_ref": source, "memory_id": id, "memory_revision": cleanup.Revision, "holder_state": cleanup.State, "content_use_state": body.UseState, "content_cleanup_state": body.CleanupState, "original_retention_until": api.Time(until)}))
+}
+
+func TestIndependentContentOriginalCopyControlAndResidualRelease(t *testing.T) {
+	f := newFixture(t, "memory")
+	p := f.policy(t)
+	source := f.upload(t, p, []byte("原来源准确正文"), "text/plain")
+	consumer := api.NewID("owner")
+	in := memory.RegisterCopyInput{CopyID: api.NewID("copy"), ContentRef: source, HolderRef: api.ObjectRef{TenantID: f.tenant, OwnerID: consumer, ObjectID: api.NewID("holder"), Revision: 1}, ReferenceIntentRef: api.ObjectRef{TenantID: f.tenant, OwnerID: consumer, ObjectID: api.NewID("reference"), Revision: 1}, Purpose: "read", Location: "local", RetainUntil: api.Time(time.Now().Add(time.Minute))}
+	r := f.command(t, "content.register_copy", source.ContentID, nil, in)
+	if r.Stage != "applied" {
+		t.Fatalf("original source copy registration: %+v", r)
+	}
+	var got memory.GetContentOutput
+	q := memory.GetContentInput{ContentRef: source, Mode: "control", CopyID: in.CopyID}
+	if e := f.query(t, "content.get", source.ContentID, q, &got); e != nil || got.UseState != "allowed" || got.ControlRevision != 1 || got.BytesBase64 != "" {
+		t.Fatalf("source holder current control: %+v %v", got, e)
+	}
+	altered := in
+	altered.ReferenceIntentRef.ObjectID = api.NewID("reference")
+	if r = f.command(t, "content.register_copy", source.ContentID, nil, altered); r.Stage != "rejected" || r.Error == nil || r.Error.Code != "idempotency_conflict" {
+		t.Fatalf("original reference intent changed: %+v", r)
+	}
+	rev := uint64(1)
+	if r = f.command(t, "content.close", source.ContentID, &rev, memory.CloseInput{ContentRef: source, Reason: "原来源撤回"}); r.Stage != "applied" {
+		t.Fatalf("source close: %+v", r)
+	}
+	if e := f.query(t, "content.get", source.ContentID, q, &got); e != nil || got.UseState != "closing" || got.ControlRevision != 2 || got.CleanupState != "pending" || got.BytesBase64 != "" {
+		t.Fatalf("closed source lost original holder cleanup responsibility: %+v %v", got, e)
+	}
+	report := memory.ReleaseCopyInput{CopyID: in.CopyID, ContentRef: source, ControlRevision: 2, UseStopped: true, CleanupState: "residual", EvidenceRefs: []api.ContentRef{}, ResidualReason: "原消费者保留法定元数据，未证明全部介质擦除"}
+	if r = f.command(t, "content.release_copy", source.ContentID, nil, report); r.Stage != "applied" {
+		t.Fatalf("holder current residual report: %+v", r)
+	}
+	f.restart(t, true, false)
+	if e := f.query(t, "content.get", source.ContentID, q, &got); e != nil || got.UseState != "use_stopped" || got.CleanupState != "residual" {
+		t.Fatalf("original copy responsibility disappeared after SIGKILL: %+v %v", got, e)
+	}
+	report.UseStopped = false
+	if r = f.command(t, "content.release_copy", source.ContentID, nil, report); r.Stage != "rejected" || r.Error == nil || r.Error.Code != "invalid_state" {
+		t.Fatalf("holder release reopened stopped original use: %+v", r)
+	}
+	t.Logf("original copy facts: %s", api.Raw(map[string]any{"registration": in, "current": got, "copy_release_command_id": r.CommandID}))
 }

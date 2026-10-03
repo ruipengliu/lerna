@@ -213,6 +213,8 @@ export class Runtime {
 export function controlMethod(method: string): boolean {
   return (
     method === "execution.control" ||
+    method === "content.release_copy" ||
+    method === "memory.delete" ||
     /\.(cancel|pause|revoke|close|stop|takeover|deactivate|billing_reconcile)$/.test(method)
   );
 }

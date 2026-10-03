@@ -11,6 +11,7 @@ import (
 	"github.com/ruipengliu/lerna/internal/execution"
 	"github.com/ruipengliu/lerna/internal/governance"
 	"github.com/ruipengliu/lerna/internal/memory"
+	rt "github.com/ruipengliu/lerna/runtime"
 )
 
 type Manifest struct {
@@ -47,6 +48,8 @@ func Build() (Manifest, error) {
 		api.Contract[memory.ReserveInput, memory.ReserveOutput]("content.upload_reserve", "content", "command", false, false),
 		api.Contract[memory.PutInput, memory.PutOutput]("content.put", "content", "command", false, false),
 		api.Contract[memory.CloseInput, memory.CloseOutput]("content.close", "content", "command", true, false),
+		api.Contract[memory.RegisterCopyInput, memory.CopyOutput]("content.register_copy", "content", "command", false, false),
+		api.Contract[memory.ReleaseCopyInput, memory.CopyOutput]("content.release_copy", "content", "command", false, false),
 		api.Contract[memory.GetContentInput, memory.GetContentOutput]("content.get", "content", "query", false, false),
 		api.Contract[memory.TransferStatusInput, memory.TransferStatus]("content.transfer.read", "content", "query", false, false),
 		api.Contract[memory.CreateInput, memory.MemoryOutput]("memory.create", "memory", "command", false, false),
@@ -62,23 +65,42 @@ func Build() (Manifest, error) {
 		api.Contract[memory.PullViewInput, memory.ViewPage]("memory.view.pull", "memory", "query", false, false),
 		api.Contract[memory.AckViewInput, memory.AckViewOutput]("memory.view.ack", "memory", "command", false, false),
 	}
-	m.Methods["executor"] = []api.MethodContract{
-		api.Contract[execution.InvokeInput, execution.OperationOutput]("execution.invoke", "execution", "command", false, false),
-		api.Contract[execution.CancelInput, execution.OperationOutput]("execution.cancel", "execution", "command", false, false),
-		api.Contract[execution.ControlInput, execution.ControlView]("execution.control", "execution", "command", false, false),
-		api.Contract[execution.ReconcileInput, execution.OperationOutput]("execution.reconcile", "execution", "command", false, false),
-		api.Contract[execution.OperationIDInput, execution.OperationView]("execution.get", "execution", "query", false, false),
-		api.Contract[api.ListInput, api.Page[execution.OperationOutput]]("execution.list", "execution", "query", false, false),
-		api.Contract[execution.ControlGetInput, execution.ControlView]("execution.control.get", "execution", "query", false, false),
-		api.Contract[execution.OperationIDInput, api.UsageSnapshot]("execution.usage.get", "execution", "query", false, false),
+	registered := rt.NewRegistry()
+	for _, register := range []func() error{
+		func() error {
+			return execution.RegisterCommand[execution.InvokeInput, execution.OperationOutput](registered, "execution.invoke", false, []string{execution.Namespace}, nil)
+		},
+		func() error {
+			return execution.RegisterCommand[execution.CancelInput, execution.OperationOutput](registered, "execution.cancel", false, []string{execution.Namespace}, nil)
+		},
+		func() error {
+			return execution.RegisterCommand[execution.ControlInput, execution.ControlView](registered, "execution.control", false, []string{execution.Namespace}, nil)
+		},
+		func() error {
+			return execution.RegisterCommand[execution.ReconcileInput, execution.OperationOutput](registered, "execution.reconcile", false, []string{execution.Namespace}, nil)
+		},
+		func() error {
+			return execution.RegisterQuery[execution.OperationIDInput, execution.OperationView](registered, "execution.get", nil)
+		},
+		func() error {
+			return execution.RegisterQuery[api.ListInput, api.Page[execution.OperationOutput]](registered, "execution.list", nil)
+		},
+		func() error {
+			return execution.RegisterQuery[execution.ControlGetInput, execution.ControlView](registered, "execution.control.get", nil)
+		},
+		func() error {
+			return execution.RegisterQuery[execution.OperationIDInput, api.UsageSnapshot](registered, "execution.usage.get", nil)
+		},
+	} {
+		if err := register(); err != nil {
+			return Manifest{}, err
+		}
 	}
-	for system, methods := range m.Methods {
+	// 这里只读取原登记器派生的闭合 Schema；nil handler 从不执行。
+	m.Methods["executor"] = registered.Contracts()
+	for _, methods := range m.Methods {
 		sort.Slice(methods, func(i, j int) bool { return methods[i].Name < methods[j].Name })
 		for i := range methods {
-			if system == "executor" {
-				closeExecution(methods[i].InputSchema)
-				closeExecution(methods[i].OutputSchema)
-			}
 			digest, err := api.Digest([]any{methods[i].InputSchema, methods[i].OutputSchema})
 			if err != nil {
 				return Manifest{}, err
@@ -108,28 +130,4 @@ func envelope(command bool) api.Schema {
 		p["expected_revision"] = api.Ref("Revision")
 	}
 	return s
-}
-
-func closeExecution(s api.Schema) {
-	if p, ok := s["properties"].(map[string]any); ok {
-		for name, value := range p {
-			child, ok := value.(map[string]any)
-			if !ok {
-				continue
-			}
-			switch name {
-			case "may_apply_later":
-				p[name] = api.Schema{"oneOf": []any{api.Schema{"type": "boolean"}, api.Schema{"const": "unknown"}}}
-			case "effect":
-				p[name] = api.Enum("not_started", "not_applied", "applied", "unknown")
-			case "execution_state":
-				p[name] = api.Enum("accepted", "started", "closed")
-			default:
-				closeExecution(child)
-			}
-		}
-	}
-	if items, ok := s["items"].(map[string]any); ok {
-		closeExecution(items)
-	}
 }
