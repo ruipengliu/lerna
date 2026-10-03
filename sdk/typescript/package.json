@@ -1,0 +1,15 @@
+{
+  "name": "@lerna/contract",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test src/*.test.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "ajv": "8.17.1"
+  }
+}
