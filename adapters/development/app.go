@@ -70,6 +70,7 @@ type App struct {
 	endpointRouter                                                   *endpointchannel.Router
 	endpointServerTLS                                                *tls.Config
 	remoteAgents                                                     *remoteAgentAssembly
+	foreignConsumerSource                                            *providers.ForeignSource
 }
 
 func component(name string) api.ComponentRef {
@@ -87,6 +88,9 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		return nil, err
 	}
 	if err = validateRemoteAgent(c); err != nil {
+		return nil, err
+	}
+	if err = validateForeignConsumers(c); err != nil {
 		return nil, err
 	}
 	st, e := OpenStore(ctx, c, false)
@@ -122,6 +126,11 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		return nil, e
 	}
 	a.Identity.Principals = append(a.Identity.Principals, remotePrincipals...)
+	foreignPrincipals, e := foreignConsumerPrincipals(c)
+	if e != nil {
+		return nil, e
+	}
+	a.Identity.Principals = append(a.Identity.Principals, foreignPrincipals...)
 	if initialize {
 		if e = a.Identity.Initialize(ctx); e != nil {
 			return nil, e
@@ -134,6 +143,9 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	keyPurposes := []string{"control", "closure", "grant_use", "delivery", "rpc_sender", "evidence_changes", "grant_lease", "allocation_closure", "evaluation_prepare", "evaluation_start"}
 	if c.RemoteAgent != nil {
 		keyPurposes = append(keyPurposes, "agent_allocation", "agent_state", "foreign_content")
+	}
+	if len(c.ForeignConsumers) > 0 && !containsString(keyPurposes, "foreign_content") {
+		keyPurposes = append(keyPurposes, "foreign_content")
 	}
 	a.Keys, e = platform.OpenDevelopmentKey(c.KeyFile, c.TenantID, c.OwnerID, keyPurposes)
 	if e != nil {
@@ -167,6 +179,23 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 			}
 		}
 	}
+	for _, consumer := range c.ForeignConsumers {
+		for _, holder := range consumer.Holders {
+			if !containsString(pv.Subjects, holder.SubjectRef.ObjectID) {
+				pv.Subjects = append(pv.Subjects, holder.SubjectRef.ObjectID)
+			}
+		}
+		for _, purpose := range consumer.Purposes {
+			if !containsString(pv.Purposes, purpose) {
+				pv.Purposes = append(pv.Purposes, purpose)
+			}
+		}
+		for _, location := range consumer.Locations {
+			if !containsString(pv.Locations, location) {
+				pv.Locations = append(pv.Locations, location)
+			}
+		}
+	}
 	policyRef := component("content-policy")
 	policyRef.Digest, _ = api.Digest(pv)
 	a.ContentPolicy = memory.Policy{PolicyRef: policyRef, Values: pv, Revision: 1, State: "active"}
@@ -187,7 +216,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		return nil, err
 	}
 	a.closeGovernance = closeGovernance
-	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, KnowledgeGate: knowledgeContentGate{a}, ResultNotices: resultNoticeBridge{a}, Lifecycle: lifecycle, Runner: evaluation, Participants: []string{"content", "memory", "platform", "task"}})
+	a.Governance = governance.New(st, governance.Options{GrantMetadataGate: grantMetadataGate{}, Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, KnowledgeGate: knowledgeContentGate{a}, ResultNotices: resultNoticeBridge{a}, Lifecycle: lifecycle, Runner: evaluation, Participants: []string{"content", "memory", "platform", "task"}})
 	if e = os.MkdirAll(filepath.Join(c.DataRoot, "files"), 0700); e != nil {
 		return nil, e
 	}
@@ -335,7 +364,14 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	}
 	a.Dispatcher = &runtime.Dispatcher{Store: st, OwnerID: c.OwnerID, Registry: a.Registry}
 	a.Memory.Register(a.Registry)
-	if a.remoteAgents != nil {
+	if e = a.configureForeignConsumerSource(ctx, initialize); e != nil {
+		return nil, e
+	}
+	if a.foreignConsumerSource != nil {
+		if e = a.foreignConsumerSource.Register(a.Registry); e != nil {
+			return nil, e
+		}
+	} else if a.remoteAgents != nil {
 		if e = a.remoteAgents.source.Register(a.Registry); e != nil {
 			return nil, e
 		}
