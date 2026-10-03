@@ -13,7 +13,11 @@ const implementation = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "u
 const token = (
   await readFile(process.env.HARNESS_TOKEN_FILE ?? "/workspace/lerna-dev/.identity-token", "utf8")
 ).trim();
-const browser = await chromium.launch({ executablePath: "/usr/bin/chromium", headless: true });
+assert(token.length > 0, "development credential file is empty");
+const browser = await chromium.launch({
+  executablePath: process.env.HARNESS_CHROMIUM ?? "/usr/bin/chromium",
+  headless: true,
+});
 const context = await browser.newContext({ viewport: { width: 1536, height: 1024 } });
 const requests = [];
 const responses = [];
@@ -94,7 +98,7 @@ try {
   assert.deepEqual(errors, []);
   await writeFile(
     resolve(artifacts, "original-result.json"),
-    `${JSON.stringify({ implementation, base_url: baseURL, proxy: process.env.HARNESS_PROXY_OBSERVE === "1", task_id: taskID, task_revision: value.task.revision, result_ref: value.task.result_ref, publication: value.publication, content_ref: value.content_ref, native_connection_heartbeats: 2, query_count: queries.length, commands: 0, page_errors: errors }, null, 2)}\n`,
+    `${JSON.stringify({ implementation, base_url: baseURL, proxy: process.env.HARNESS_PROXY_OBSERVE === "1", task_id: taskID, task_revision: value.task.revision, result_ref: value.task.result_ref, publication: value.publication, content_ref: value.content_ref, observed_heartbeats: 2, query_count: queries.length, commands: 0, page_errors: errors }, null, 2)}\n`,
   );
 } catch (failure) {
   await page
