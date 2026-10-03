@@ -1,6 +1,6 @@
 # Harness 全项目参考实现
 
-Status: ready-for-agent
+Status: partial
 
 本轮在 code-dev 实现现行技术设计及 C1–C9、A1–A4、V1–V2 的可运行参考实现。依据为 AGENTS.md、CONTEXT.md、docs/architecture/engineering/implementation-readiness.md 及其覆盖表；业务前态、负责方、原身份和恢复不得重新选择。
 
@@ -41,3 +41,15 @@ TaskPolicy、风险及阈值通过准确配置固定。仅测试/开发配置有
 ## 完成标准
 
 每个工单记录实际行为检查与未满足外部前提。代码可编译但方法未完成、扩展被关闭或验收没有运行的条目保持部分/blocked，不能记 resolved。完整项目完成状态由覆盖报告判断，不由目录数量判断。
+
+## 当前交付状态
+
+工程已建立可运行的有界参考实现，完成范围、真实运行证据与复现命令统一见
+[实施覆盖报告](../../docs/architecture/engineering/implementation-coverage.md)。状态保持
+partial：Search/Body 获取、完整模拟 GUI 手势、不可信 WASI、跨 owner 远端权威及
+完整 profile 仍有本地实现缺口；真实模型质量、公司身份、真机、生产规模与容灾还缺少
+独立外部验收。显式 unsupported 只防止错误接纳，不代表这些要求已经完成。
+
+工单中的 resolved 只对应其已定义参考切片，不能据此推断整个 C1–C9、A1–A4、V1–V2
+或 F01–F25 全部达标。已通过与未通过、实现证据与设计模型分别记录，不把丢回执后的
+同义新命令、重新初始化数据或增加业务期限作为恢复证据。
