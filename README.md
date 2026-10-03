@@ -1,6 +1,6 @@
 # Lerna
 
-Lerna 是按明确合同构建的 Agent 执行框架。领域规则见 [CONTEXT.md](CONTEXT.md)，模块及运行设计见 [docs/architecture](docs/architecture/README.md)。按[实现切片](.scratch/lerna-implementation/README.md)逐步交付；当前可执行范围是公共值合同和 Go / TypeScript 编解码，尚无持久运行服务。
+Lerna 是按明确合同构建的 Agent 执行框架。领域规则见 [CONTEXT.md](CONTEXT.md)，模块及运行设计见 [docs/architecture](docs/architecture/README.md)。按[实现切片](.scratch/lerna-implementation/README.md)逐步交付；切片 01 已完成：当前可执行范围为共同信封、固定回执、command.get 受信注入读取、准确版本协商及 Go / TypeScript 严格编解码，尚无持久运行服务。
 
 ## 开发
 
@@ -22,4 +22,4 @@ make test-race       # Go 公开边界的竞态检查
 
 `make test-contract` 在临时目录构建 Go 运行器，驱动真实 Go 编码 → TypeScript 解码／编码及反向路径，并比较共同夹具的准确值。CI 运行同一 `make bootstrap` 和 `make check`。目前未实现数据库／网络能力，故没有 `test-integration` 空目标；后续引入实际能力时一起添加。
 
-已生成公共类型纳入 Git；仅编辑 Schema 和生成器，不手工修改生成物。`make check` 检测生成物与当前输入的一致性。合同版本 `1.0.0` 的精度与边界见 [contract/README.md](contract/README.md)。本次 local `make check` 证明当前工具链、SDK、合同行为；GitHub CI 的远程执行状态另行确认。
+已生成公共类型纳入 Git；仅编辑 Schema 和生成器，不手工修改生成物。`make check` 检测生成物与当前输入的一致性。合同版本 `1.0.0` 的精度与边界见 [contract/README.md](contract/README.md)。实现提交 `23bac17` 的本地检查及 [GitHub CI](https://github.com/ruipengliu/lerna/actions/runs/37141974245) 全部通过，范围与退出证据见[规格](.scratch/lerna-01-command-contracts/spec.md)。这不表示完整 Application SDK、持久恢复或网络认证已经实现。

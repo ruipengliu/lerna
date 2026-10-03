@@ -1,6 +1,6 @@
 # 切片 01 两轴代码审查
 
-状态：发现项已修复并合入，后续两轴针对性审查无新增发现；整片等待新提交远端 CI 与退出记录。两轴独立审查固定提交 `b825c2d`；修复与验证结果追加如下。
+状态：发现项已修复并合入，后续两轴针对性审查无新增发现；新准确实现提交的远端 CI 通过，整片退出证据见 spec.md。两轴独立审查固定提交 `b825c2d`；修复与验证结果追加如下。
 
 ## Standards
 
@@ -75,3 +75,5 @@ Reviewed SHA: `bab6919b1a47152b4ac288c847e3a299cc4f4190`。Diff: `git diff b825c
 票据 07“错身份、非法／超限帧、stdout 污染、崩溃、缺答复和超时均是基础设施失败”及“有限清理”均有实际生命周期入口证据。BOM 保留至严格控制帧 JSON 解析，两个真实工具拒绝 BOM 输入，父 runner 拒绝 BOM 应答；错误不会伪装成普通负例。每调用截止、单在途、stderr 上限与有限 shutdown 分开处理，取消和断言失败仍清理 child／临时文件。
 
 核验退出 0：`node --test scripts/contract-runner.test.mjs`（16 项，含拒绝后正常、重复 bytes、基础设施故障与 PID 已退出观察）；`node --test sdk/typescript/src/schema-integrity.test.ts sdk/typescript/src/codec-boundary.test.ts`（2 项，首次编译不可变与准确 1 MiB Unicode 双向往返）；`go test ./conformance/component`；`node scripts/test-contract.mjs --reverse`（158 共同夹具两方向 typed 往返及命令摘要／受信 query／协商 suites）。本轮并行执行耗时不作为性能测量证据。只读仓库，无产品修改；私有 IPC 不等同产品无数字合同，持久 DB／网络仍排除。
+
+整片退出：实现提交 `23bac17` 的真实 push CI success，原六项与后置优化已验收；完整范围、独立证据和未开放边界记录在 [spec](spec.md#切片退出证据2026-10-03) 与 [CI记录](ci-verification.md)。
