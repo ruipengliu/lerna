@@ -47,6 +47,7 @@ type Config struct {
 	Knowledge                  *KnowledgeConfig          `json:"knowledge,omitempty"`
 	WorkerPool                 *ClassifiedWorkerConfig   `json:"worker_pool,omitempty"`
 	EndpointChannels           *EndpointChannelConfig    `json:"endpoint_channels,omitempty"`
+	WASI                       *WASIConfig               `json:"wasi,omitempty"`
 }
 
 func LoadConfig(path string) (Config, error) {

@@ -42,6 +42,7 @@ type App struct {
 	Interaction                                                      *interaction.Service
 	Governance                                                       *governance.Service
 	Knowledge                                                        *KnowledgeAssembly
+	WASI                                                             *WASIAssembly
 	Objects                                                          *objectstore.Local
 	Files                                                            *execadapter.ManagedFiles
 	Phones                                                           *execadapter.SimulatedPhones
@@ -192,6 +193,16 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	}
 	execContent := executionContent{a}
 	drivers := []execution.Driver{&execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud"}, &execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud", ReadOnly: true}, a.Phones, &execadapter.PhoneGUIDriver{Phones: a.Phones}, &execution.TrustedComputeDriver{Content: execContent, Store: st, Location: "cloud"}}
+	var environmentAdmission execution.EnvironmentAdmission
+	if c.WASI != nil {
+		assembly, err := configureWASI(a, c.WASI)
+		if err != nil {
+			return nil, err
+		}
+		a.WASI = &assembly
+		drivers = append(drivers, assembly.Driver)
+		environmentAdmission = assembly.Admission
+	}
 	informationDrivers, err := a.configureInformation()
 	if err != nil {
 		return nil, err
@@ -222,7 +233,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		}
 		resources = contractOnlyResources{}
 	}
-	a.Execution, e = execution.New(execution.Config{OwnerID: c.OwnerID, Content: execContent, Authority: executionAuthority{a}, AuthorityParticipants: []string{"task", "governance", "content", "memory", "platform"}, Drivers: drivers, ResourceDriver: resources, Location: "cloud"})
+	a.Execution, e = execution.New(execution.Config{OwnerID: c.OwnerID, Content: execContent, Authority: executionAuthority{a}, AuthorityParticipants: []string{"task", "governance", "content", "memory", "platform"}, Drivers: drivers, ResourceDriver: resources, EnvironmentAdmission: environmentAdmission, Location: "cloud"})
 	if e != nil {
 		return nil, fmt.Errorf("construct Execution: %w", e)
 	}
@@ -361,6 +372,12 @@ func (a *App) Close() error {
 		err = errors.Join(err, source.Close())
 	}
 	a.Information = nil
+	if a.WASI != nil {
+		if closeErr := a.WASI.Close(); closeErr != nil {
+			return errors.Join(err, closeErr)
+		}
+		a.WASI = nil
+	}
 	if a.closeGovernance != nil {
 		if closeErr := a.closeGovernance(); closeErr != nil {
 			return errors.Join(err, closeErr)
