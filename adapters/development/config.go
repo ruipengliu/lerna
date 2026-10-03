@@ -44,6 +44,7 @@ type Config struct {
 	ActionBindings             []ActionBindingConfig     `json:"action_bindings,omitempty"`
 	Information                []InformationSourceConfig `json:"information,omitempty"`
 	InformationReferenceAnswer bool                      `json:"information_reference_answer,omitempty"`
+	Knowledge                  *KnowledgeConfig          `json:"knowledge,omitempty"`
 }
 
 func LoadConfig(path string) (Config, error) {

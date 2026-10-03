@@ -98,9 +98,6 @@ func (g brainGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if e := currentCredentialTx(ctx, tx, auth); e != nil {
 		return e
 	}
-	if e := g.a.authorizeModelTx(ctx, tx, auth, in, encoding); e != nil {
-		return e
-	}
 	if _, e := g.a.Memory.CheckContentTx(ctx, tx, auth, in.SnapshotRef, "brain.input", "cloud", true); e != nil {
 		return e
 	}
@@ -114,7 +111,10 @@ func (g brainGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 			return api.E("forbidden", "model_recipient_not_configured")
 		}
 	}
-	return nil
+	if e := g.a.Knowledge.CheckBrainTx(ctx, tx, auth, in, encoding); e != nil {
+		return e
+	}
+	return g.a.authorizeModelTx(ctx, tx, auth, in, encoding)
 }
 
 func (g taskGate) RegisterCoverage(ctx context.Context, tx runtime.Tx, t api.Task, c api.GoalCoverage) error {
