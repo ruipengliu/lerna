@@ -21,6 +21,14 @@
 
 真实29项PG套件集成 `2.534s`、race `4.866s`，未显示 cached；原五项 v1 artifact 校验和仍全部 OK。票03的代码 `18b80ce` 已整合并在此远端提交验证。范围包括一致领取快照、修订竞争、续租、到期／接替及受控数据库写入隔离；SQLite、调度、完整历史数据升级、SIGKILL与切片02整体仍未退出。
 
+## SQLite 接纳与 PG 领取整合检查点
+
+2026-10-03，准确提交 `930d3cae32e674e6f1ca856b6b60fa198e1b1b5c` 的 push run [37147496071](https://github.com/ruipengliu/lerna/actions/runs/37147496071) 为 `completed / success`。实际 `contracts` job `111274354950`、`durable-admission` job `111274355135` 均 success。
+
+必需 PG+SQLite 集成和 race 都采用 `-count=1` 实际重新执行：`conformance/recovery` 集成 `2.868s`、race `8.739s`。PG／SQLite 两份真实 v1 artifact 的十项校验和全部 OK。配置缺失或服务不可用仍硬失败，基础 check 无外部服务。
+
+此范围是 SQLite v1 接纳、重开、单写和 PG v2 领取；尚不包含 SQLite Claim 或后合入的09锁范围修复。09的本地并行复验另见票09Comments，新准确远端提交仍待实际核验；整片02未退出。
+
 ## SQLite 接纳本地检查点
 
 票02 writer源码 `f4fb057` 已锁定；两库共享接纳套件、SQLite文件/配置/进程排除/Busy/取消/Close与真实v1恢复已本地通过。必需make集成及CI集成race已使用-count=1，并同时执行PG与SQLite；新版远端tip仍由root后续核实，不能引用上面的PG-only历史run当两库成功。详细本地命令/运行时/来源见[票02 Comments](issues/02-sqlite-durable-admission.md#comments)。

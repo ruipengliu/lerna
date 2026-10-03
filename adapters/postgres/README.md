@@ -13,10 +13,21 @@ finite context. Tests observe actual effective settings on transaction
 connections. The tested server is PostgreSQL 18.6.
 
 Lock order is original command key → input object → Job row. Separate advisory
-lock namespaces prevent hash collisions from crossing lock levels; collisions
-within a level only serialize unrelated keys. Unique keys and every lookup
+lock namespaces prevent hash collisions from crossing lock levels. Advisory keys
+encode `[schema, kind, tenant_id, owner_id, id]` using the Store's validated schema:
+different schemas no longer deterministically alias equal owner/object identities,
+while independent Stores and connections sharing a schema still share locks.
+The finite `hashtext` space can still collide and serialize unrelated keys; this
+does not promise collision-free progress. Unique keys and every lookup
 include tenant and owner. A Job is unique per owner/object/phase. New input
 advances the same Job without replacing its ID or completed revision.
+
+The schema-bearing advisory key is a runtime coordination protocol change. For
+an existing schema, stop and drain all old workers and transactions before starting
+this version. Old and new binaries compute different locks, so mixed-version
+rolling operation on one schema is not supported. Existing data can reopen normally;
+no published SQL migration, command identity or public contract changes. Separate
+schemas do not authorize two authoritative ledgers for one production owner.
 
 The immutable migration is `migrations/host/0001_admission.sql`; its SHA-256 is
 recorded by `schema_migrations` and checked on rerun. V1 contains no Claim/lease

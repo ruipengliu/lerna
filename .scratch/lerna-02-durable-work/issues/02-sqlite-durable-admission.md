@@ -35,3 +35,5 @@
 **最终整合复核。** 已合并最新集成 `6ccdb6df7901f721aeea0830c994d9e598ec7408`，保留03的PG真正v2 Claim及0002、原0001和988f8b7 artifact；解决的冲突仅为能力说明/验收记录，SQLite仍v1、没有实现Claim。组合后的 `make check`、`make test-race` 通过；按CI顺序并禁用结果缓存的 `make test-integration` 通过（recovery 7.501s），随后 integration-race 通过（recovery15.058s、consumer1.356s）。两库实际接纳仍共享13项同版断言，PG含03共29项行为，SQLite本票22项行为；两个子进程helper入口不另算验收能力。
 
 **实际并行失败记录。** 一次同时运行普通集成与integration-race时，03的 `TestPGConcurrentNewWorkAndCompletionBothCommitOrders/new-work-first` 初次Claim得到空batch、nil error，使普通套件失败；同轮race通过。当前PG advisory锁键未包含schema，同一专用DB内两套虽然数据各属随机schema，却仍使用相同owner/input锁域，Claim可合法跳过另一套所持锁；不能据此宣称工作修订丢失，也不能宣称随机schema实现了完整锁隔离。之后按真实CI顺序完整两库普通/race均通过，未放宽测试或重写03 product来掩盖；root已另委派授权决策判定是否把存储namespace纳入锁域。独立schema的清理/数据隔离事实保持，跨套件锁隔离限制明确保留。
+
+**远端与后续修复补记。** 准确整合提交 `930d3cae32e674e6f1ca856b6b60fa198e1b1b5c` 的 [push CI 37147496071](https://github.com/ruipengliu/lerna/actions/runs/37147496071) 已实际 success；两库必需集成2.868s/race8.739s都以-count=1重新执行，原十项fixture校验和OK，基础合同job也通过。详见[CI证据](../ci-verification.md#sqlite-接纳与-pg-领取整合检查点)。上段锁耦合是历史失败；额外[票09](09-pg-storage-lock-scope.md)后续实际red→green、并行复验并合入edb189e，准确范围与限制独立记录，不用串行成功冒充修复。
