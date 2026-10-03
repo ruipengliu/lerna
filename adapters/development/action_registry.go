@@ -6,6 +6,7 @@ import (
 
 	target "github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/adapters/platform"
+	"github.com/ruipengliu/lerna/adapters/providers"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
 	"github.com/ruipengliu/lerna/internal/execution"
@@ -27,33 +28,50 @@ type ActionBindingConfig struct {
 }
 
 type actionDescriptor struct {
-	Kind            string               `json:"kind"`
-	Capability      execution.Capability `json:"capability"`
-	BindingRef      api.ObjectRef        `json:"binding_ref"`
-	InstallLockRef  api.ComponentRef     `json:"install_lock_ref"`
-	GrantRef        api.ObjectRef        `json:"grant_ref"`
-	Resources       []string             `json:"resources"`
-	Actions         []string             `json:"actions"`
-	Recipient       string               `json:"recipient"`
-	Location        string               `json:"location"`
-	ConfigHash      string               `json:"config_hash"`
-	ConfiguredGrant *api.Grant           `json:"configured_grant,omitempty"`
+	Kind              string                                 `json:"kind"`
+	Capability        execution.Capability                   `json:"capability"`
+	BindingRef        api.ObjectRef                          `json:"binding_ref"`
+	InstallLockRef    api.ComponentRef                       `json:"install_lock_ref"`
+	GrantRef          api.ObjectRef                          `json:"grant_ref"`
+	Resources         []string                               `json:"resources"`
+	Actions           []string                               `json:"actions"`
+	Recipient         string                                 `json:"recipient"`
+	Location          string                                 `json:"location"`
+	ConfigHash        string                                 `json:"config_hash"`
+	ConfiguredGrant   *api.Grant                             `json:"configured_grant,omitempty"`
+	Source            *providers.InformationSourceDescriptor `json:"source,omitempty"`
+	SourceRetainUntil string                                 `json:"source_retain_until,omitempty"`
 }
 
 type actionRegistry struct{ entries []actionDescriptor }
 
 type actionDeclaration struct {
-	Capability       execution.Capability `json:"capability"`
-	BindingRef       api.ObjectRef        `json:"binding_ref"`
-	InstallLockRef   api.ComponentRef     `json:"install_lock_ref"`
-	AllowedResources []string             `json:"allowed_resources"`
-	AllowedActions   []string             `json:"allowed_actions"`
+	Capability       execution.Capability          `json:"capability"`
+	BindingRef       api.ObjectRef                 `json:"binding_ref"`
+	InstallLockRef   api.ComponentRef              `json:"install_lock_ref"`
+	AllowedResources []string                      `json:"allowed_resources"`
+	AllowedActions   []string                      `json:"allowed_actions"`
+	Source           *informationSourceDeclaration `json:"source,omitempty"`
+}
+
+type informationSourceDeclaration struct {
+	SourceRef         api.ComponentRef `json:"source_ref"`
+	Origin            string           `json:"origin"`
+	SearchPath        string           `json:"search_path,omitempty"`
+	FetchPathPrefixes []string         `json:"fetch_path_prefixes"`
+	MaxQueryBytes     uint64           `json:"max_query_bytes"`
+	MaxItems          uint64           `json:"max_items"`
 }
 
 func (v actionSnapshot) declarations() []actionDeclaration {
 	out := []actionDeclaration{}
 	for _, d := range v.Entries {
-		out = append(out, actionDeclaration{d.Capability, d.BindingRef, d.InstallLockRef, d.Resources, d.Actions})
+		declaration := actionDeclaration{Capability: d.Capability, BindingRef: d.BindingRef, InstallLockRef: d.InstallLockRef, AllowedResources: d.Resources, AllowedActions: d.Actions}
+		if d.Source != nil {
+			s := d.Source
+			declaration.Source = &informationSourceDeclaration{s.SourceRef, s.Origin, s.SearchPath, s.FetchPathPrefixes, s.MaxQueryBytes, s.MaxItems}
+		}
+		out = append(out, declaration)
 	}
 	return out
 }
@@ -116,7 +134,7 @@ func (a *App) configureActionRegistry(drivers []execution.Driver) error {
 			return err
 		}
 		g := configured.Grant
-		if g.OwnerID != a.Scope.OwnerID || g.Revision != 1 || g.State != "active" || !api.Equal(g.SubjectRef, a.ServiceAuth.Ref(a.Scope.OwnerID)) || len(g.Resources) == 0 || len(g.Resources) > 32 || len(g.Actions) == 0 || len(g.Actions) > 8 || len(g.Purposes) != 1 || g.Purposes[0] != "goal_action" || len(g.Recipients) != 1 || g.Recipients[0] != a.Scope.OwnerID || len(g.Locations) != 1 || g.Locations[0] != "cloud" {
+		if g.OwnerID != a.Scope.OwnerID || g.Revision != 1 || g.State != "active" || !api.Equal(g.SubjectRef, a.ServiceAuth.Ref(a.Scope.OwnerID)) || len(g.Resources) == 0 || len(g.Resources) > 32 || len(g.Actions) == 0 || len(g.Actions) > 8 || len(g.Purposes) != 1 || g.Purposes[0] != "goal_action" || len(g.Recipients) != 1 || len(g.Locations) != 1 {
 			return api.E("invalid_request", "action_grant_configuration_invalid")
 		}
 		var cap execution.Capability
@@ -134,6 +152,9 @@ func (a *App) configureActionRegistry(drivers []execution.Driver) error {
 		d := actionDescriptor{Capability: cap, BindingRef: configured.BindingRef, InstallLockRef: configured.InstallLockRef, GrantRef: a.Scope.Ref(g.GrantID, 1), Resources: append([]string{}, g.Resources...), Actions: append([]string{}, g.Actions...), Recipient: g.Recipients[0], Location: g.Locations[0], ConfiguredGrant: &g}
 		if api.Equal(cap.Ref, target.PhoneGUICapability().Ref) {
 			d.Kind = "phone.gui"
+			if d.Recipient != a.Scope.OwnerID || d.Location != "cloud" {
+				return api.E("invalid_request", "action_grant_configuration_invalid")
+			}
 			if !api.Equal(d.InstallLockRef, fileLock) {
 				return api.E("forbidden", "action_install_lock_mismatch")
 			}
@@ -148,7 +169,35 @@ func (a *App) configureActionRegistry(drivers []execution.Driver) error {
 				}
 			}
 		} else {
-			return api.E("unsupported", "action_projection_not_configured")
+			matched := false
+			for _, source := range a.information {
+				for _, driver := range source.Source.Drivers() {
+					if !api.Equal(driver.Capability().Ref, cap.Ref) {
+						continue
+					}
+					matched = true
+					d.Kind = providers.InformationBody
+					if source.Source.SearchDriver() != nil && api.Equal(source.Source.SearchDriver().Capability().Ref, cap.Ref) {
+						d.Kind = providers.InformationSearch
+					}
+					lock, err := InformationInstallLock(source.Source)
+					if err != nil {
+						return err
+					}
+					if !api.Equal(lock, d.InstallLockRef) {
+						return api.E("forbidden", "action_install_lock_mismatch")
+					}
+					s := source.Source.Descriptor()
+					if len(d.Resources) != 1 || d.Resources[0] != "source:"+s.SourceRef.ComponentID || len(d.Actions) != 1 || d.Actions[0] != d.Kind || d.Recipient != s.Receiver || d.Location != s.Location {
+						return api.E("invalid_request", "information_action_scope_invalid")
+					}
+					d.Source = &s
+					d.SourceRetainUntil = source.Config.RetainUntil
+				}
+			}
+			if !matched {
+				return api.E("unsupported", "action_projection_not_configured")
+			}
 		}
 		for _, existing := range r.entries {
 			if api.Equal(existing.BindingRef, d.BindingRef) {
@@ -157,9 +206,11 @@ func (a *App) configureActionRegistry(drivers []execution.Driver) error {
 		}
 		var err error
 		d.ConfigHash, err = api.Digest(struct {
-			Scope         runtime.Scope       `json:"scope"`
-			Configuration ActionBindingConfig `json:"configuration"`
-		}{a.Scope, configured})
+			Scope         runtime.Scope                          `json:"scope"`
+			Configuration ActionBindingConfig                    `json:"configuration"`
+			Source        *providers.InformationSourceDescriptor `json:"source,omitempty"`
+			RetainUntil   string                                 `json:"retain_until,omitempty"`
+		}{a.Scope, configured, d.Source, d.SourceRetainUntil})
 		if err != nil {
 			return err
 		}
@@ -220,9 +271,28 @@ func (a *App) prepareActionSnapshot(ctx context.Context, id string, deadline str
 		return original, err
 	}
 	view := actionSnapshot{Scope: a.Scope, SnapshotID: id, InstallLockRef: a.InstallLock, Entries: []actionDescriptor{}}
+	now, err := a.now(ctx, a.Scope)
+	if err != nil {
+		return view, err
+	}
 	for _, d := range a.actions.entries {
 		if d.Kind == "phone.gui" && !a.UserAuth.HasRole("device_controller") && !a.UserAuth.HasRole("executor") && !a.UserAuth.HasRole("admin") {
 			continue
+		}
+		if d.Source != nil {
+			if _, err := a.configuredInformation(d.Source.SourceRef); err != nil {
+				if api.IsCode(err, "unsupported") {
+					continue
+				}
+				return view, err
+			}
+			until, err := api.ParseTime(d.SourceRetainUntil)
+			if err != nil {
+				return view, err
+			}
+			if !now.Before(until) {
+				continue
+			}
 		}
 		in := governance.UseRequest{UseID: stableID("use", "context/"+id+"/"+d.BindingRef.ObjectID), SubjectRef: a.ServiceAuth.Ref(a.Scope.OwnerID), TargetRef: a.Scope.Ref(id, 1), TargetKind: "operation", IntentHash: d.ConfigHash, GrantRefs: []api.ObjectRef{d.GrantRef}, RequestedUnits: []api.Amount{}, Resources: d.Resources, Actions: d.Actions, Recipient: d.Recipient, Location: d.Location, Purposes: []string{"goal_action"}, StartBefore: deadline}
 		raw, err := a.query(ctx, "grant.check", a.Scope.OwnerID, in)
@@ -356,6 +426,32 @@ func (a *App) prepareAction(ctx context.Context, s runtime.Scope, i api.Decision
 		resourceKeys = []string{"device:" + input.ResourceID}
 		resources = []string{input.ResourceID}
 		actions = []string{"gui." + input.Action}
+	case providers.InformationSearch, providers.InformationBody:
+		if descriptor.Source == nil {
+			return task.PreparedAction{}, actionAdmission{}, api.E("forbidden", "information_source_snapshot_missing")
+		}
+		source, err := a.configuredInformation(descriptor.Source.SourceRef)
+		if err != nil {
+			return task.PreparedAction{}, actionAdmission{}, err
+		}
+		var driver execution.Driver
+		if descriptor.Kind == providers.InformationSearch {
+			driver = source.Source.SearchDriver()
+		} else {
+			driver = source.Source.BodyDriver()
+		}
+		if driver == nil || !api.Equal(driver.Capability().Ref, descriptor.Capability.Ref) {
+			return task.PreparedAction{}, actionAdmission{}, api.E("unsupported", "original_information_driver_not_configured")
+		}
+		opID := stableID("operation", i.DecisionID+"/"+candidate.LocalKey)
+		intent := execution.ExecutionIntent{OperationID: opID, TaskRef: snap.TaskRef, CapabilityRef: candidate.CapabilityRef, ArgumentsRef: candidate.ArgumentsRef, ProcessedSourceRefs: candidate.ProcessedSourceRefs, DisclosedSourceRefs: candidate.DisclosedSourceRefs}
+		// 真实驱动的纯准备验证准确 typed 参数、源 URL 或 query 许可；没有 DNS/HTTP。
+		if _, err = driver.Prepare(ctx, s, a.ServiceAuth, execution.InvokeInput{OperationID: opID, TaskRef: snap.TaskRef, CapabilityRef: candidate.CapabilityRef}, intent, args); err != nil {
+			return task.PreparedAction{}, actionAdmission{}, err
+		}
+		resources = []string{"source:" + descriptor.Source.SourceRef.ComponentID}
+		resourceKeys = append([]string{}, resources...)
+		actions = []string{descriptor.Kind}
 	default:
 		return task.PreparedAction{}, actionAdmission{}, api.E("unsupported", "action_projection_not_configured")
 	}

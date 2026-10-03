@@ -11,15 +11,16 @@ import (
 )
 
 type publicationPlan struct {
-	Ref        api.ContentRef   `json:"ref"`
-	TransferID string           `json:"transfer_id"`
-	ReserveID  string           `json:"reserve_id"`
-	PutID      string           `json:"put_id"`
-	Processed  []api.ContentRef `json:"processed"`
-	Disclosed  []api.ContentRef `json:"disclosed"`
-	Retention  string           `json:"retention"`
-	Deadline   string           `json:"deadline"`
-	SubjectID  string           `json:"subject_id"`
+	Ref        api.ContentRef    `json:"ref"`
+	TransferID string            `json:"transfer_id"`
+	ReserveID  string            `json:"reserve_id"`
+	PutID      string            `json:"put_id"`
+	Processed  []api.ContentRef  `json:"processed"`
+	Disclosed  []api.ContentRef  `json:"disclosed"`
+	Retention  string            `json:"retention"`
+	Deadline   string            `json:"deadline"`
+	SubjectID  string            `json:"subject_id"`
+	PolicyRef  *api.ComponentRef `json:"policy_ref,omitempty"`
 }
 
 func uniqueSources(xs []api.ContentRef) []api.ContentRef {
@@ -39,7 +40,7 @@ func (a *App) Publish(ctx context.Context, scope runtime.Scope, auth runtime.Aut
 	processed = uniqueSources(processed)
 	disclosed = uniqueSources(disclosed)
 	var plan publicationPlan
-	status, e := a.Store.Within(ctx, scope, []string{"platform", "content", "memory"}, func(tx runtime.Tx) error {
+	status, e := a.Store.Within(ctx, scope, []string{"platform", "content", "memory", "governance"}, func(tx runtime.Tx) error {
 		_, e := tx.Get(ctx, "platform.publications", id, &plan)
 		if e == nil {
 			if !api.Equal(plan.Ref, ref) || !api.Equal(plan.Processed, processed) || !api.Equal(plan.Disclosed, disclosed) || plan.SubjectID != auth.SubjectID {
@@ -75,7 +76,8 @@ func (a *App) Publish(ctx context.Context, scope runtime.Scope, auth runtime.Aut
 				retain = until
 			}
 		}
-		plan = publicationPlan{Ref: ref, TransferID: api.NewID("transfer"), ReserveID: api.NewID("command"), PutID: api.NewID("command"), Processed: processed, Disclosed: disclosed, Retention: api.Time(retain), Deadline: api.Time(now.Add(30 * time.Minute)), SubjectID: auth.SubjectID}
+		policy := a.ContentPolicy.PolicyRef
+		plan = publicationPlan{Ref: ref, TransferID: api.NewID("transfer"), ReserveID: api.NewID("command"), PutID: api.NewID("command"), Processed: processed, Disclosed: disclosed, Retention: api.Time(retain), Deadline: api.Time(now.Add(30 * time.Minute)), SubjectID: auth.SubjectID, PolicyRef: &policy}
 		return tx.Create(ctx, "platform.publications", id, auth.SubjectID, plan)
 	})
 	if status == runtime.CommitUnknown {
@@ -95,7 +97,28 @@ func (a *App) Publish(ctx context.Context, scope runtime.Scope, auth runtime.Aut
 	if e != nil && !api.IsCode(e, "not_found") {
 		return ref, e
 	}
-	return a.Memory.Upload(ctx, scope, auth, memory.PublicationRequest{ContentRef: plan.Ref, TransferID: plan.TransferID, ReserveCommandID: plan.ReserveID, PutCommandID: plan.PutID, PolicyRef: a.ContentPolicy.PolicyRef, ProcessedSources: plan.Processed, DisclosedSources: plan.Disclosed, RetentionUntil: plan.Retention, TransferDeadline: plan.Deadline}, b)
+	policy := a.ContentPolicy.PolicyRef
+	if plan.PolicyRef != nil {
+		policy = *plan.PolicyRef
+	} else if len(a.information) > 0 {
+		// 旧内联plan只可从已保存的准确reserve恢复policy，不把新装配许可替换进去。
+		reserve, err := a.Store.LookupCommand(ctx, scope, plan.ReserveID)
+		if api.IsCode(err, "not_found") {
+			return ref, api.E("unsupported", "original_publication_policy_unavailable")
+		}
+		if err != nil {
+			return ref, err
+		}
+		var in memory.ReserveInput
+		if err = api.Decode(reserve.Command.Payload, &in); err != nil {
+			return ref, err
+		}
+		if reserve.PrincipalID != plan.SubjectID || reserve.Command.Method != "content.upload_reserve" || reserve.Command.TargetID != plan.Ref.ContentID || reserve.Command.ExpiresAt != plan.Deadline || in.TransferID != plan.TransferID || !api.Equal(in.ContentRef, plan.Ref) || !api.Equal(in.ProcessedSources, plan.Processed) || in.RetentionUntil != plan.Retention || in.TransferDeadline != plan.Deadline {
+			return ref, api.E("idempotency_conflict", "original_publication_reserve_changed")
+		}
+		policy = in.PolicyRef
+	}
+	return a.Memory.Upload(ctx, scope, auth, memory.PublicationRequest{ContentRef: plan.Ref, TransferID: plan.TransferID, ReserveCommandID: plan.ReserveID, PutCommandID: plan.PutID, PolicyRef: policy, ProcessedSources: plan.Processed, DisclosedSources: plan.Disclosed, RetentionUntil: plan.Retention, TransferDeadline: plan.Deadline}, b)
 }
 
 type brainContent struct{ a *App }
@@ -113,6 +136,18 @@ func (c executionContent) ReadBytes(ctx context.Context, s runtime.Scope, a runt
 	return c.a.Memory.ReadBytes(ctx, s, a, r, p, l)
 }
 func (c executionContent) Publish(ctx context.Context, s runtime.Scope, a runtime.Auth, p execution.Publication, b []byte) (api.ContentRef, error) {
+	if p.Purpose == "execution_usage_proof" {
+		if ref, handled, err := c.a.publishInformationAccounting(ctx, s, a, p, b); handled || err != nil {
+			return ref, err
+		}
+	}
+	if p.Purpose == "execution_result" && len(c.a.information) > 0 {
+		var err error
+		p.ProcessedSources, err = c.a.informationOutputSources(ctx, s, a, p.ProcessedSources, b)
+		if err != nil {
+			return api.ContentRef{}, err
+		}
+	}
 	return c.a.Publish(ctx, s, a, p.ContentID, p.MediaType, b, p.ProcessedSources, p.DisclosedSources)
 }
 
