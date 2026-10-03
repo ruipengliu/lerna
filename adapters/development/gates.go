@@ -129,8 +129,14 @@ func (g taskGate) BindResult(ctx context.Context, tx runtime.Tx, t api.Task, r a
 
 type contentAuthority struct{ a *App }
 
-func (g contentAuthority) Check(ctx context.Context, tx runtime.Tx, auth runtime.Auth, _ api.ComponentRef, _, _ string, _ bool) (uint64, error) {
+func (g contentAuthority) Check(ctx context.Context, tx runtime.Tx, auth runtime.Auth, policyRef api.ComponentRef, _, _ string, _ bool) (uint64, error) {
 	if e := currentCredentialTx(ctx, tx, auth); e != nil {
+		return 0, e
+	}
+	if e := g.a.checkInformationPolicyTx(ctx, tx, policyRef); e != nil {
+		return 0, e
+	}
+	if e := g.a.checkInformationAccountingTx(ctx, tx, auth, policyRef); e != nil {
 		return 0, e
 	}
 	var c currentCredential
