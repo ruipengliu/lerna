@@ -250,7 +250,7 @@ func (s *Service) policy(ctx context.Context, tx runtime.Tx, ref api.ComponentRe
 	if err != nil {
 		return p, err
 	}
-	if !api.Equal(ref, p.PolicyRef) || p.State != "active" {
+	if ref != p.PolicyRef || p.State != "active" {
 		return p, api.E("forbidden", "policy_unavailable")
 	}
 	return p, nil
@@ -280,36 +280,52 @@ func narrower(next, previous PolicyValues) bool {
 }
 
 func (s *Service) allowed(ctx context.Context, tx runtime.Tx, auth runtime.Auth, policyRef api.ComponentRef, purpose, location string, continuous bool) (Policy, error) {
-	if budget, ok := ctx.Value(permissionBudgetKey{}).(*permissionBudget); ok {
-		if budget.remaining == 0 {
-			return Policy{}, api.E("overloaded", "query_permission_budget")
-		}
-		budget.remaining--
-	}
-	if err := checkAuth(tx.Scope(), auth); err != nil {
+	if err := beginPolicyPermission(ctx, tx, auth); err != nil {
 		return Policy{}, err
 	}
 	p, err := s.policy(ctx, tx, policyRef)
 	if err != nil {
 		return p, err
 	}
+	return p, s.checkCurrentPolicyPermission(ctx, tx, auth, p, purpose, location, continuous)
+}
+
+func beginPolicyPermission(ctx context.Context, tx runtime.Tx, auth runtime.Auth) error {
+	if budget, ok := ctx.Value(permissionBudgetKey{}).(*permissionBudget); ok {
+		if budget.remaining == 0 {
+			return api.E("overloaded", "query_permission_budget")
+		}
+		budget.remaining--
+	}
+	return checkAuth(tx.Scope(), auth)
+}
+
+// p 只能来自本次遍历中已经强读、核对准确引用并由同一 Tx 锁定的政策。
+func (s *Service) allowedLockedPolicy(ctx context.Context, tx runtime.Tx, auth runtime.Auth, p Policy, purpose, location string, continuous bool) error {
+	if err := beginPolicyPermission(ctx, tx, auth); err != nil {
+		return err
+	}
+	return s.checkCurrentPolicyPermission(ctx, tx, auth, p, purpose, location, continuous)
+}
+
+func (s *Service) checkCurrentPolicyPermission(ctx context.Context, tx runtime.Tx, auth runtime.Auth, p Policy, purpose, location string, continuous bool) error {
 	now, err := tx.Now(ctx)
 	if err != nil {
-		return p, err
+		return err
 	}
 	expiry, _ := api.ParseTime(p.Values.RetainUntil)
 	if !now.Before(expiry) {
-		return p, api.E("gone", "retention_expired")
+		return api.E("gone", "retention_expired")
 	}
 	if !contains(p.Values.Subjects, auth.SubjectID) || !contains(p.Values.Purposes, purpose) || !contains(p.Values.Locations, location) || continuous && !p.Values.Continuous {
-		return p, api.E("forbidden", "source_forbidden")
+		return api.E("forbidden", "source_forbidden")
 	}
 	if s.Authorization != nil {
-		if _, err = s.Authorization.Check(ctx, tx, auth, policyRef, purpose, location, continuous); err != nil {
-			return p, err
+		if _, err = s.Authorization.Check(ctx, tx, auth, p.PolicyRef, purpose, location, continuous); err != nil {
+			return err
 		}
 	}
-	return p, nil
+	return nil
 }
 
 func (s *Service) visibility(ctx context.Context, tx runtime.Tx, auth runtime.Auth) (string, error) {

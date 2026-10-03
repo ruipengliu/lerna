@@ -356,16 +356,29 @@ func (s *Service) CheckContentTx(ctx context.Context, tx runtime.Tx, auth runtim
 	if err := s.currentAuth(ctx, tx, auth); err != nil {
 		return ContentVersion{}, err
 	}
-	return s.checkContent(ctx, tx, auth, ref, purpose, location, continuous, map[string]bool{}, 0, false)
+	return s.checkContent(ctx, tx, auth, ref, purpose, location, continuous, newContentTraversal(), 0, false)
 }
-func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous bool, seen map[string]bool, depth int, independent bool) (ContentVersion, error) {
+
+// 每次门禁入口只复用已由本 Tx 强读并锁定的元数据；许可、时间和路径条件仍逐次核验。
+// 不把遍历状态带到另一入口、读取后的再核验或另一 Tx。
+type contentTraversal struct {
+	seen     map[string]bool
+	contents map[string]ContentVersion
+	policies map[api.ComponentRef]Policy
+}
+
+func newContentTraversal() *contentTraversal {
+	return &contentTraversal{seen: map[string]bool{}, contents: map[string]ContentVersion{}, policies: map[api.ComponentRef]Policy{}}
+}
+
+func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous bool, traversal *contentTraversal, depth int, independent bool) (ContentVersion, error) {
 	if ref.OwnerID != tx.Scope().OwnerID {
 		return s.checkForeignContent(ctx, tx, auth, ref, purpose, location, continuous, independent && depth > 0, depth > 0)
 	}
 	if err := checkContentRef(tx.Scope(), ref); err != nil {
 		return ContentVersion{}, err
 	}
-	if depth > 32 || len(seen) >= 200 {
+	if depth > 32 || len(traversal.seen) >= 200 {
 		return ContentVersion{}, api.E("dependency_unavailable", "source_closure_limit")
 	}
 	if depth > 0 {
@@ -374,38 +387,45 @@ func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.
 		}
 	}
 	key := contentKey(ref)
-	var v ContentVersion
-	_, err := tx.Get(ctx, "content.versions", key, &v)
-	if err != nil {
-		return v, err
+	v, loaded := traversal.contents[key]
+	if !loaded {
+		if _, err := tx.Get(ctx, "content.versions", key, &v); err != nil {
+			return v, err
+		}
+		traversal.contents[key] = v
 	}
-	if !api.Equal(ref, v.ContentRef) {
+	if ref != v.ContentRef {
 		return v, api.E("idempotency_conflict", "content_reference_changed")
 	}
-	p, err := s.policy(ctx, tx, v.PolicyRef)
-	if err != nil {
-		return v, err
+	p, loaded := traversal.policies[v.PolicyRef]
+	if !loaded {
+		var err error
+		p, err = s.policy(ctx, tx, v.PolicyRef)
+		if err != nil {
+			return v, err
+		}
+		traversal.policies[v.PolicyRef] = p
 	}
 	historical := independent && depth > 0 && p.Values.IndependentDerived && (v.State == "published" || v.ClosureKind == "retention")
 	if v.State != "published" && !historical {
 		return v, api.E("forbidden", "source_closed")
 	}
-	if _, err = future(ctx, tx, v.RetentionUntil); err != nil && !historical {
+	if _, err := future(ctx, tx, v.RetentionUntil); err != nil && !historical {
 		return v, err
 	}
 	if historical {
-		if err = s.allowedHistorical(ctx, tx, auth, p, purpose, location, continuous); err != nil {
+		if err := s.allowedHistorical(ctx, tx, auth, p, purpose, location, continuous); err != nil {
 			return v, err
 		}
-	} else if _, err = s.allowed(ctx, tx, auth, v.PolicyRef, purpose, location, continuous); err != nil {
+	} else if err := s.allowedLockedPolicy(ctx, tx, auth, p, purpose, location, continuous); err != nil {
 		return v, err
 	}
-	if seen[key] {
+	if traversal.seen[key] {
 		return v, nil
 	}
-	seen[key] = true
+	traversal.seen[key] = true
 	for _, source := range v.ProcessedSources {
-		if _, err = s.checkContent(ctx, tx, auth, source, purpose, location, continuous, seen, depth+1, p.Values.IndependentDerived); err != nil {
+		if _, err := s.checkContent(ctx, tx, auth, source, purpose, location, continuous, traversal, depth+1, p.Values.IndependentDerived); err != nil {
 			return v, err
 		}
 	}

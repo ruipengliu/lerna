@@ -227,10 +227,8 @@ func configuredAgentStep(ctx context.Context, t *testing.T, e *configuredAgentEn
 	return true
 }
 
-func TestConfiguredRemoteAgentCreatesAndRecoversOriginalChild(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
-	defer cancel()
-	a, b, profile := configuredAgentPair(t)
+func configuredAgentOriginalParent(ctx context.Context, t *testing.T, a *configuredAgentEndpoint) (api.ContentRef, api.Task) {
+	t.Helper()
 	goal, err := a.app.Publish(ctx, a.app.Scope, a.app.UserAuth, api.NewID("content"), "application/json", api.Raw(brain.GoalSpec{Kind: "report", Title: "Parent independently verifies", Body: "A child reply alone cannot complete this parent.", SavePath: "reports/parent.md"}), []api.ContentRef{}, []api.ContentRef{})
 	if err != nil {
 		t.Fatal(err)
@@ -248,7 +246,18 @@ func TestConfiguredRemoteAgentCreatesAndRecoversOriginalChild(t *testing.T) {
 			t.Fatal(err)
 		}
 		if parent.RequirementsState == "ready" {
-			break
+			var found bool
+			status, readErr := a.app.Store.Within(ctx, a.app.Scope, []string{"task"}, func(tx runtime.Tx) error {
+				_, actualFound, err := a.app.Task.LatestTaskSnapshotTx(ctx, tx, a.app.ServiceAuth, parentID)
+				found = actualFound
+				return err
+			})
+			if status != runtime.Committed || readErr != nil {
+				t.Fatalf("actual original parent snapshot: %v %v", status, readErr)
+			}
+			if found {
+				break
+			}
 		}
 		if ctx.Err() != nil {
 			t.Fatal(ctx.Err())
@@ -257,11 +266,21 @@ func TestConfiguredRemoteAgentCreatesAndRecoversOriginalChild(t *testing.T) {
 			time.Sleep(20 * time.Millisecond)
 		}
 	}
+	return goal, parent
+}
+
+func TestConfiguredRemoteAgentCreatesAndRecoversOriginalChild(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	a, b, profile := configuredAgentPair(t)
+	goal, parent := configuredAgentOriginalParent(ctx, t, a)
+	var err error
+	var receipt api.Receipt
 	if a.requests.Load() != 0 || b.requests.Load() != 0 {
 		t.Fatal("local parent Brain preparation contacted a remote Agent")
 	}
 	id := api.NewID("delegation")
-	in := task.DelegateInput{DelegationID: id, ParentTaskRef: a.app.Scope.Ref(parentID, parent.Revision), ParentGoalRevision: parent.GoalRevision, GoalRef: goal, InputRefs: []api.ContentRef{}, AgentBindingRef: profile.Values.AgentBindingRef, PermissionRefs: []api.ObjectRef{}, Budget: []api.Amount{{Unit: "USD", Value: "2"}}, Deadline: api.Time(time.Now().Add(3 * time.Minute)), PolicyRef: b.app.TaskPolicy.PolicyRef, ReceiverID: b.app.Scope.OwnerID}
+	in := task.DelegateInput{DelegationID: id, ParentTaskRef: a.app.Scope.Ref(parent.TaskID, parent.Revision), ParentGoalRevision: parent.GoalRevision, GoalRef: goal, InputRefs: []api.ContentRef{}, AgentBindingRef: profile.Values.AgentBindingRef, PermissionRefs: []api.ObjectRef{}, Budget: []api.Amount{{Unit: "USD", Value: "2"}}, Deadline: api.Time(time.Now().Add(3 * time.Minute)), PolicyRef: b.app.TaskPolicy.PolicyRef, ReceiverID: b.app.Scope.OwnerID}
 	delegate := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.app.Scope.OwnerID, CommandID: api.NewID("command"), Method: "collaboration.delegate", TargetID: id, ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(in)}
 	receipt, err = a.app.Dispatcher.Command(ctx, a.app.UserAuth, api.Raw(delegate))
 	if err != nil || receipt.Stage != "applied" {

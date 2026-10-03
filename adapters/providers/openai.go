@@ -130,7 +130,11 @@ func NewOpenAI(c OpenAIConfig) (*OpenAI, error) {
 	if err = api.ValidateRecord("ComponentRef", p.Ref); err != nil {
 		return nil, err
 	}
-	transport := http.DefaultTransport.(*http.Transport).Clone()
+	base, ok := http.DefaultTransport.(*http.Transport)
+	if !ok || base == nil {
+		return nil, api.E("unsupported", "model_transport_contract_unconfigured")
+	}
+	transport := base.Clone()
 	// HTTP/1 单次出口：无可重放 Body、无连接复用、无 HTTP/2 自动重试。
 	transport.DisableKeepAlives = true
 	transport.ForceAttemptHTTP2 = false

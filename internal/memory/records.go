@@ -142,7 +142,7 @@ func (s *Service) memoryAllowedAt(ctx context.Context, tx runtime.Tx, auth runti
 		return err
 	}
 	for _, ref := range sourceRefs(record.Values.Sources) {
-		if _, err = s.checkContent(ctx, tx, auth, ref, purpose, location, continuous, map[string]bool{}, 1, policy.Values.IndependentDerived); err != nil {
+		if _, err = s.checkContent(ctx, tx, auth, ref, purpose, location, continuous, newContentTraversal(), 1, policy.Values.IndependentDerived); err != nil {
 			return err
 		}
 	}

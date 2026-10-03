@@ -32,6 +32,7 @@ Task 提交同时保存以 `deadline/<TaskID>` 为键的独立 advance 责任，
 - 原提交者凭据代次与角色冻结在 Task 中；Context 编译沿用该身份。Gate 可同时实现纯 Tx `SubjectGate.CheckSubjectTx`，在当前 Task 与每层祖先正门禁核验撤权。缺少该端口不能宣称验证了当前身份；旧记录缺少代次时新准入关闭，负控制和迟到账务仍保留。
 - Gate 可实现 `CurrentTaskGate.CheckTaskCurrentTx`，复核远端父范围的准确当前控制和原 incoming allocation；有限签名准备在事务外完成。最终 input 消费与 steer 目标提交在实际字节读取或出版之后重核关闭门禁，不能以较早的 accepted 代替最终消费资格。
 - Gate 可实现 `AdvanceGatePreparer`，仅为本次正向 advance 在原主体元数据与 Claim 核验后取得有限当前证明。工厂不执行该端口；终态、过期、暂停及账务收尾保留原处理，不借准备读取新正文或取得行动权。
+- Gate 可实现 `DecisionGatePreparer.PrepareTaskDecision`，为本次原正向 dispatch_decision 取得当前父范围证明。原 birth 路由先锁 Task 根链与预算，核原提交者代次和冻结 Snapshot 的目标、控制、政策及派发身份；准备在 Tx 外执行，前后重核 Claim，之后仍执行原派发的完整当前门禁。终态、旧控制、已消费及待输入等分支不作新准备；端口不能刷新原 Decision、Command、预算或期限。此接口是受信宿主装配端口，不能由 Brain 提案代替。
 - `ActionAuthorization.AuthorizeAction`。它在封存原 IntentHash 后运行，与整批 ActionConsumption、预留、意图共同提交；整批拒绝会回滚一次授权使用。
 - `ControlProofPort`、`ClosureProofPort`，以及后者可实现的 `AllocationProofPort`。seal 只能本地签名并保存准确证明字节和出版意图，不得出站。缺少 seal 不得以 GoalRef 冒充控制或关闭证明。
 - 配置协作接收方的本地 `CollaborationAdmission`。未配置协作时，创建方法在新增会话、额度或委派责任之前返回 unsupported；已存责任仍可读取、控制及恢复。
@@ -67,6 +68,8 @@ Task 测试使用持久 SQLite、真实 PostgreSQL、实际 Memory/ObjectStore�
 独立 deadline 回归在 SQLite、PostgreSQL 的公开提交、暂停、输入等待、原命令提交答复丢失及重开边界通过，选定双库 race 实际 exit 0（47.056s）。未知账务不被到期清零，迟到原累计费用按差额关闭。此前偏好测试保留的原 active Task 在修复后沿同一身份到期 failed，原 Goal、Submit applied 回执、已闭操作和无 Result 事实保持；该恢复不是新的偏好成功验收。
 
 完成来源准备的 SQLite 正反例 race 实际 exit 0（18.906s），覆盖本次依据、准备期间取消、暂停 fencing 和无可选端口的原行为。它证明 Task 端口与原完成事务的交接，不能替代独立设备宿主的完整成果链验收。
+
+原决策派发准备的公开 SQLite 回归先保留实际 `remote_parent_scope_required` 拒绝（0.632s），再验证原 Decision/Command 派发、准备期间独立公开取消、终态和旧控制零准备，以及无可选端口的原行为；选定 race 实际 exit 0（13.969s）。准备仍使用原提交者代次和角色，不能增加预算责任。此 Task 小端口夹具只证明原库与最终门禁交接，实际 HTTPS、独立 owner 和父范围签名由协作装配另行验收。源码、日志与原身份索引位于 `/workspace/harness-dev-environment/task-decision-preparation-verification/`。
 
 Source 撤回后的原模型最低账务依据由 Brain 原账本与宿主的受限 accounting Content 端口提供，保持原 CallID、Decision、UseRef、累计金额和回执，不读取或携带已撤回的正文。开发宿主四条路径的最终双库 race 实际 exit 0（375.051s）：已知费用结清、旧 applied 依据重用、丢回复仍未知，以及停用当前模型配置后归并原 Use。原 USD0.00024 及未知预留分别保留；31min 后只能重用原 applied 出版回执，不能刷新原上传责任。固定源码、八个原 Scope/Call/Use 与日志摘要见 `/workspace/harness-dev-environment/model-minimum-invoice-final-1a47477-verification.json`。这不能由 Task 差额算法夹具代替，也不能替代 WASI 整链撤源验收。
 
