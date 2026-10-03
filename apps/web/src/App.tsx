@@ -272,6 +272,12 @@ export function App() {
                     onCreate={publications.submitReport}
                     status={publications.status}
                     error={publications.error}
+                    {...(publications.config
+                      ? {
+                          budget: publications.config.budget,
+                          deadlineSeconds: publications.config.task_deadline_seconds,
+                        }
+                      : {})}
                   />
                   {publications.pending > 0 && (
                     <p className="notice">

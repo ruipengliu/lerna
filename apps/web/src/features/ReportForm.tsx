@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { Amount } from "@harness/sdk";
 export interface ReportInput {
   kind: "report";
   title: string;
@@ -10,11 +11,15 @@ export function ReportForm({
   onCreate,
   status = "",
   error = "",
+  budget,
+  deadlineSeconds,
 }: {
   available: boolean;
   onCreate?: (input: ReportInput) => Promise<void>;
   status?: string;
   error?: string;
+  budget?: readonly Amount[];
+  deadlineSeconds?: number;
 }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -81,6 +86,12 @@ export function ReportForm({
           {available ? "原服务显式开发配置 · 固定版本与摘要" : "等待原服务的准确配置"}
         </p>
       </div>
+      {budget && (
+        <p className="field-hint">
+          固定预算上限：{budget.map((amount) => `${amount.unit} ${amount.value}`).join("、")}。
+          {deadlineSeconds ? `任务领域截止为提交后 ${deadlineSeconds} 秒。` : ""}
+        </p>
+      )}
       <button className="button primary" type="submit" disabled={!available || running}>
         {running ? "沿原投递推进…" : "保存并提交"}
       </button>

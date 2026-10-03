@@ -179,7 +179,7 @@ async function freeGoal(runID, config, discovery) {
   await console
     .getByLabel("固定策略引用", { exact: true })
     .fill(JSON.stringify(config.task_policy_ref));
-  await console.getByLabel("分单位预算", { exact: true }).fill(JSON.stringify(config.budget));
+  await console.getByLabel("预算金额", { exact: true }).fill(JSON.stringify(config.budget));
   await console
     .getByLabel("领域截止（UTC）", { exact: true })
     .fill(new Date(Date.now() + 600000).toISOString());
