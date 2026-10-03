@@ -16,6 +16,8 @@ Claim 的 holder/epoch/observed_work_revision 保持准确；Renew 不更新原�
 
 Within 返回 committed/rolled_back/commit_unknown。连接中断等未知提交按原命令或阶段核验；不能从错误推断失败。未知 Claim/Renew 仅能以保留下来的原候选进行 CheckClaim，不拼造新 Claim。原确认截止不会因未知续租自动延长。
 
+`QueryBindingStore` 保存短期原 query_id、主体、凭据代次、角色与准确查询摘要、结果摘要和首次截止，TTL 为 1 秒至 5 分钟且不刷新，不保存披露正文。同库其他副本读取同一绑定；当前鉴权和披露门禁每次执行，结果摘要变化返回 `query_snapshot_changed`。过期身份允许新查询，旧生命周期不能封存新的绑定。`PruneQueries` 按本 tenant/owner 的过期索引清理最多 1–1000 条，使用 `FOR UPDATE SKIP LOCKED` 避开正在裁决的行；宿主显式调用，没有后台清理线程。迁移 `002_query_bindings.sql` 独立核验制品，不改原 `001_runtime.sql`。
+
 生成查询执行 `sqlc generate`（锁定 v1.31.1），源为 [queries](queries/) 和 [migrations](migrations/)，生成物位于 [gen](gen/)。PG/SQLite SQL、锁、时钟及提交实现分别维护，共享包仅包含纯合同校验。
 
 真实数据库验证运行 `go test -race ./conformance/contract`；通过 HARNESS_TEST_POSTGRES_DSN 和 PGPASSWORD 提供测试库。未提供 PG 测试库时测试明确 skip，不能把 SQLite 通过算作 PG 通过。合同涵盖重复命令、历史/业务键/范围、Job 竞争、提交回复丢失及在真实提交边界 SIGKILL 写者后重开原库。

@@ -14,6 +14,8 @@
 
 Within 的提交结果为 committed/rolled_back/commit_unknown；未知结果必须沿原命令/阶段查询。`WithCommitFault` 为管理验证提供 before/after commit 故障，不能作为普通业务配置。合同测试还在提交边界实际 SIGKILL 写者，以重开原库后的公开接口读回证明 record/receipt/Job 的原子集合。
 
+`QueryBindingStore` 将原 query_id、主体、凭据代次、角色与准确查询摘要、结果摘要和首次截止保存为短期元数据，不缓存披露正文。TTL 为 1 秒至 5 分钟且不刷新；再次查询仍执行当前门禁，摘要变化返回 `query_snapshot_changed`。过期原身份可重用，旧生命周期不能封存新查询。`PruneQueries` 每次只清理本 tenant/owner 的 1–1000 条已过期绑定；宿主显式调用，没有隐式清理线程。查询迁移是独立的 `002_query_bindings.sql`，原迁移制品摘要保持不变。
+
 生成执行 `sqlc generate`（v1.31.1）；[queries](queries/) 与 [migrations](migrations/) 是 SQLite 独立源，[gen](gen/) 为派生资产。`go test -race ./conformance/contract` 运行真实持久文件测试，CGO 与 GCC 为当前 go-sqlite3 驱动的构建依赖。
 
 默认设备账本不裁决云端 Task，不提供断网接管。当前验证为本机文件；设备丢盘、文件系统掉电保证、磁盘保护、备份撤权完整性及可信时间异常需要对应真实平台实验。
