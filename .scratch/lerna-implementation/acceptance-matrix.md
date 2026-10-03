@@ -121,3 +121,14 @@ F01/F02仅完成本票的原回执/原责任/同键冲突与重开范围；SIGKI
 05/06仍未退出，最终必须在其真实Start及pool门禁下重跑这些旧业务路径，再进行两轴审查/架构优化和准确CI；这些检查点不关闭G2或切片02。04未知schema及07未知CREATE未启动容器的清理限制保持，不依据猜测删除。
 
 2026-10-03票05检查点：原Job在全部通知丢失后通过bounded scan恢复；future due与事务外finite Timer、waiting释放Claim/业务单连接/Tx、重开保留条件/有限attempt/deadline、旧失败/停止保留新work及旧成功Projection，均有PG/SQLite共同Host观察与public receipt正常对照。04/07/08现统一真实Start/资格/policy门禁与ownerClock，真实v2原r1 Claim/work r2升级保留且到期后首次adoption，详见[05完整证据](../lerna-02-durable-work/issues/05-persistent-wait-and-scan.md#comments)。准确受测8a1df46，本地count1 wholeintegration26.132s/race57.172s通过；06pool/公平/配额仍待实施，远端最终CI及整片两轴审查/优化待后续，不关闭G2或切片02。原04/07清理限制保持。
+
+## 切片02正式退出（DB/Host范围）
+
+2026-10-03，最终源码f56d930/整合5548744、10票68AC、双轴原问题关闭且新增0、fixture收益闭合、准确CI37162569420 success。原七项验收映射、环境/命令/限制见[退出证据](../lerna-02-durable-work/exit-evidence.md)。本地count1正常50.431s/race93.834s顺序timeout120；CI20.985s/45.463s，两库及27真实来源全执行。
+
+- **F01/F02：本片持久原键范围通过。** 真正提交/丢答复/重开、异摘要冲突及正文gone后墓碑恢复，原成功/拒绝不改写；其他Task/Operation/网络范围仍待各自切片。
+- **F03/F04：本片DB写入及进程接替范围通过。** 两种新旧修订先后、完整Claim/epoch门禁和新worker正常完成；不证明外部旧写端或迟到效果已停止。
+- **通知/等待/配额范围通过。** 丢通知仍扫描、Tx外等待、all-members due/lease/current+claimed期限、三独立lane、有限queue/tenant×lane、动态FIFO/有界页及quota0维护均有正常对照；服务机会前提保留，不是无条件墙钟SLA。
+- **G2整体及G3仍未完成。** 03/07/09/13/17的目标、外部责任/生产耐久与15真实第二业务实现待验；1.0 codec不是三个系统互操作。
+
+本fix285PG/265目录absence仅指准确登记项，原架构轮321/319另列；10两未知PG名、旧04未知schema和07unknownCREATE/CID不猜删。SIGKILL/postcommit-port fault不冒称断电/nativeSQLite Commit异常或跨区耐久。此前章节为历史检查点，状态以本节及progress当前记录为准。

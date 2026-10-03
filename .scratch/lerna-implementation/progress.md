@@ -7,8 +7,8 @@
 ## 当前状态
 
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
-- 切片 02：**in-progress**。八张核心票的 53 条验收与额外票 09 的 5 条验收均已 resolved；最终容量产品 `06ab246`、worker `cdc7ae6` 经 merger 合入 `96a0ecc`。本地完整双库集成 60.305s、竞态 91.786s，通过有限队列、共享配额、动态公平次序、独立类别运行、无执行额度维护及真实旧数据恢复。准确审查前提交 `26c9100` 的远端 CI success；独立两轴发现4项，单一修复 `4311585` 已合入 `6783307`，独立复核全部关闭且新增0项。架构候选已采用并发布额外票10；整片仍待票10实施/复核与准确最终 CI，详见[审查记录](../lerna-02-durable-work/code-review.md)与[票06证据](../lerna-02-durable-work/issues/06-fair-capacity-and-quotas.md#comments)。
-- 切片 03–22：**not-started**。03当前端口复核和04决策纲要仅在/tmp，前置整片退出后再采用、发布和实施。
+- 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
+- 切片 03–22：**not-started**。03依赖现已满足，TMP六票42AC待准确退出SHA的最终接法复核后发布；04/05/06的TMP准备仍不等于其依赖实现。
 
 ## 切片 01 过程检查点（历史记录）
 
@@ -115,3 +115,7 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 ## 切片02架构实施后审查待修复
 
 票10代码1863fc4、clean worker c5d5d40经merger合入c52e68b；完整顺序双库集成52.406s/race93.619s通过，产品/合同/001–005及27来源不变。准确[CI37160694293](https://github.com/ruipengliu/lerna/actions/runs/37160694293)已success。独立收益复核确认稳定fixture handle消除了六类caller及pool的生命周期知识和三张指针maps。两轴各新增1项P2：已确认退出但失败holder的历史错误永久阻断清理。票10重新claimed，原单一review fixer负责全部新增发现，whole02继续in-progress。首版red新遗留两个无法按准确名称确认的PG scopes，与旧04未知schema/07无CID限制独立保留；321PG/319目录absent仅指确证登记项。03/04/05仍仅/tmp准备。
+
+## 切片02正式退出
+
+准确5548744 CI37162569420已success：工具race2.407s、两库count1集成20.985s/race45.463s、27源hash。十票68AC、双轴新增0和唯一架构收益闭合，最后fixer登记285PG/265目录全absent；未知两prototype/旧04schema/07CID限制保留。详见[完整退出](../lerna-02-durable-work/exit-evidence.md)。下一步只在安全确认clean且tip已整合后清理11个02实施工作树、保留分支；03再按最终SHA复核并发布。以下旧章节记录历史阶段，不改写当时失败或状态。

@@ -112,3 +112,35 @@ Standards：新增1项，轴内最严重P2；Spec：新增1项，轴内最严重
 两轴同一P2已由原单一fixer在代码`f56d93095304f0956c23b5641d9b7b1e222c40c1`处理：真实确认Within退出与历史事务错误分开；已退出错误可Is/As聚合报告但不阻断safe Close/Drop/admin，未确认callback仍保留scope并可确认后重试。实际PgError42P01 red0.328s→green0.302s、取消聚合、实际50ms join两次保留scope/原public receipt、之后确认退出/重复cleanup及邻scope正常事实通过。补测遗漏显式Migrate的失败和修正如实保留，没有变更产品/公开1.0/0001–0005/27来源或放宽3s/10s/11s/120s。
 
 最终顺序完整normal50.431s/race93.834s、基础check/race及27来源/modverify通过；独立exact registry观察仅本轮285PG/265SQLite全absent，不包含历史未知资源。详见[修复证据](fixture-cleanup-fix-evidence.md)与[票10](issues/10-owned-fixture-lifetime.md)。原两个axis报告保留，当前为实现候选检查点，不冒充独立复审、新CI或whole02退出。
+
+## 最终 Standards 复核（5548744）
+
+# Standards cleanup final — merged 5548744
+
+Baseline `8e7438e071727e25aa69e17fb81b2e53c416b78e`；最终 merge pin `554874470d5abeb71fa743708580f3121b8944f1`，工作区 clean。重新核对完整 three-dot 范围及74项 commit list（与提供文件逐字一致）。f56d930…merge仅四份文档变化、源码零差异；三个修复测试文件 blob逐一一致。沿用此前全范围独立 Standards 审查与准确f56源码复核，本次只刷新文档增量，不将其它轴结论合并或重排。
+
+**原新增 P2 已闭合。** `/workspace/lerna/conformance/recovery/owned_pg_fault_test.go:104` 将 holder 退出确认与事务错误分开；`owned_fixture_test.go:159` 聚合诊断，`:166` 仅在退出未确认时阻断，随后逐一 Close writer/peer、Drop 确证 scope、Close admin；失败步骤仍保留句柄/所有权。这落实 `/workspace/lerna/.scratch/lerna-02-durable-work/architecture-decision.md:54` 的“失败聚合…未完成步骤…可…重试”，以及 AGENTS.md:104–105 的有限生命周期与可判断错误要求。重复 Cleanup 保留原失败原因，同时不再永久阻断安全收尾。
+
+`owned_cleanup_failure_test.go:40` 的真实 PgError42P01与`:53` 的真实取消通过`:74` 聚合；`:68`/`:82` 对照实际句柄正常事务与关闭后使用。`:137` 的真实锁 callback配合`:151` 的50ms独立 join故障，验证未确认scope/原公共回执仍存在、拒绝Open，实际退出后重试删除。准确namespace与邻scope Host/public command.get保留；默认holder10s/join11s/business3s/suite120未放宽。
+
+**新增硬标准偏离：0；新增需处理的 Fowler 判断建议：0。** 十二项启发式按仓库overrides检查；私有seam服务真实失败场景，无泛用resource registry。新增证据、票10、review与CI文档区分历史检查点、本地实现resolved、独立复核及待核新CI，未发现文档一致性缺陷。原startup原因、README一致性与prepareClaim重复三项关闭保持。
+
+读取准确f56本地证据：makecheck/base-race/modverify/27来源、最终顺序count1 normal50.431s/race93.834s（各timeout120）通过；本agent未重跑或访问DB/凭据。本fix仅285PG/265SQLite登记项absence；原321PG/319目录是另一历史轮。保留red0.328s、补测失败17.203s、旧118.936s/7.282s失败、旧04未知schema、初版10两未知PG名及07无完整CID限制。远端准确新CI由root核实，本报告不是CI证明；whole02未据此退出。
+
+## 最终 Spec 复核（5548744）
+
+# Slice 02 — independent Spec cleanup followup
+
+最终merge pin `554874470d5abeb71fa743708580f3121b8944f1`；baseline `8e7438e071727e25aa69e17fb81b2e53c416b78e`。读取完整74项commit list；沿用完整three-dot及`c52e68b...f56d930`审查，并独立核对`f56d930..5548744`仅四份文档变化，三份修复源码及全部产品/来源零差异。以下行号在最终merge保持相同。只读，未跑测试或操作数据库。
+
+**原P2关闭。** 采用决定 `/workspace/lerna/.scratch/lerna-02-durable-work/architecture-decision.md:54` 要求“失败聚合报告而非吞掉；重复cleanup安全，成功的步骤不重复制造故障，未完成步骤仍有归属并可在期限内重试”，并要求“未确认停止的writer/child存在时，不删除其DB/文件”。票10 AC8 `issues/10-owned-fixture-lifetime.md:20`重申该有限顺序。
+
+当前 `/workspace/lerna/conformance/recovery/owned_fixture_test.go:159`分别接收退出确认与事务诊断，已确认失败聚合原因并继续Close writer/peer、准确Drop、Close admin；`:166`仅未确认退出阻断后续。`/workspace/lerna/conformance/recovery/owned_pg_fault_test.go:104`逐holder聚合原因及确认状态。Close/Drop失败保留未完成步骤，重复cleanup可推进，同时准确保留历史诊断。
+
+`/workspace/lerna/conformance/recovery/owned_cleanup_failure_test.go:17`实际空schema触发SQL42P01，再用真实取消holder验证errors.As/Is聚合；`:67`验证writer/peer清理前实际Tx成功、清理后实际使用被拒，准确namespace消失、重复cleanup安全、邻Host及公共command.get原receipt保留。`:111`真实SQL持锁callback拒绝退出，两次50ms有限join仍保留namespace及原公共receipt、拒绝重开；实际确认退出后namespace消失且邻Host正常。没有字段镜像、假driver、私有业务行成功断言或期限放宽；3/10/11/120秒边界保持。
+
+(a) **新增实现缺失/部分要求：0。** 完整68 AC未见新缺口；票10 AC8实现已闭合，AC10本地完整验证证据现已齐全，准确新远端CI仍由root核实。(b) **未批准scope creep：0。** 增量只有三份recovery源码及审查文档，产品/runtime/公开1.0/0001–0005/四组27来源零变化。(c) **新增错误行为：0。** 原Pool Run关闭仍有效。
+
+已读tracked fixture-cleanup-fix-evidence.md及票10 Comments：准确代码f56的make check/base-race/modverify/27来源、完整顺序count1 normal50.431s/race93.834s各timeout120通过；本审查没有独立重跑。真实SQL runnable red0.328s→green0.302s与遗漏显式Migrate的17.203s失败均保留。285个PG/265个SQLite目录absent仅覆盖本fix确证登记项；首次票10两未知PG名、旧04未知schema及07未知CREATE/CID限制保留，不宣称资源全零。whole02仍待root准确新CI及exit汇总。
+
+Standards：原3项与后置1项关闭，新增0；Spec：原1项与后置1项关闭，新增0。root随后已核实5548744准确CI37162569420 success及整片退出；上文审查当时pending状态保留。[最终退出](exit-evidence.md)。

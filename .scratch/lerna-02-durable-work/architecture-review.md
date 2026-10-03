@@ -1,5 +1,7 @@
 # 切片 02 architecture exploration — FINAL READONLY
 
+**当前结论：唯一采用候选已实现且收益独立复核闭合；holder清理P2已修复。准确5548744的新CI已通过，whole02正式退出，详见[退出证据](exit-evidence.md)。以下探索/中间复核保留当时状态。**
+
 最终准确 inspected code SHA：`6783307ebe7d802f78f9aa7bdb1a1464ec5749e1`（`codex/lerna-implementation`），2026-10-03，工作区 clean。完整切片基线：`8e7438e071727e25aa69e17fb81b2e53c416b78e`。已从准备 pin `6211bff647c61d9c6a4994cfbf254bc26d9fba7a` 按实际 git diff 窄刷新；本报告可用于最终 HTML 和候选选择。**FINAL READONLY 表示架构探索已固定，不表示两轴复核或整片 02 已退出。**
 
 结论：**1 个 Worth exploring 候选，0 Strong，0 Speculative。** 候选仅深化真实数据库 conformance fixture 的 scope 归属与 writer 生命周期；当前产品 modules 的 depth 不支持额外重构。没有架构实现批准，也不把此候选列为切片 02 的正确性阻塞。
@@ -188,3 +190,43 @@ OS退出实现仍在process module：`process_fixture_test.go:153`关联实际ch
 票10报告的真实red0.554s→green0.553s、完整顺序count1 normal52.406s/race93.619s（各timeout120）、make checks与27 frozen hashes是实施者证据，本agent未重跑。实际diff的runtime/internal/host/adapters/contract/frozen fixture路径为空，符合无产品/0001–0005/合同/来源变化；不据duration声称性能收益。
 
 初版可运行red还留下**两个失去准确名称的PG scopes**，与旧04未知schema、07 unknown CREATE/CID分别保留。实施者实际321 known PG namespaces与319 registered owned dirs absence，只覆盖登记范围，不能宣称新两scope/全部资源清零；不得按prefix、时间或行形状猜删。本轮结构closed不抹去这些真实失败。Whole02退出仍待cleanup修复、独立两轴报告及准确新CI。
+
+## 最终merge收益与cleanup复核
+
+# 02 architecture benefit — FINAL READONLY cleanup fix check
+
+最终准确 inspected merge pin：`554874470d5abeb71fa743708580f3121b8944f1`，root 工作区 clean。此前逐行审查的代码 pin：`f56d93095304f0956c23b5641d9b7b1e222c40c1`。独立核对 `f56…554…`，仅四个 tracked 文档增量；conformance/runtime/internal/host/adapters/contract source diff 全为空，故已审源码与最终 merge 精确相同，本文源码行号仍准确。已核对新增 tracked fixture-cleanup-fix-evidence、code-review、票10 Comments/AC8/AC10及ci-verification增量。原检查比较 `c52e68b46c619df0c8e5df1b27a0b5dded3ef65f..f56…` 完整 diff、三个 recovery 代码文件、原 benefit report与review context；本次仅小刷新。只读，不跑测试、不访问 DB/服务/secret、不改 repo。
+
+**结论：原候选 structurally closed；最终合入代码关闭已报告的 confirmed-holder-error 清理阻断，并保留真实 unknown-active 的安全边界。结构收益没有倒退。** 这是已采用 Round4/Q8 聚合/可重试路径的正确性补足，不是新架构候选。完整本地验证证据已归属准确 f56 代码，且最终 merge source相同。Whole02 尚未退出；独立两轴与准确新 CI/整片退出仍由 root 汇总确认。
+
+## 清理责任与真实退出确认
+
+原实现把 holder 的任何 transaction error 当作仍未退出，永久提前返回；即使 Within 已完成，也无法 Close writer/peer 或 Drop 确证 scope。本次 `conformance/recovery/owned_pg_fault_test.go:104` 同时返回 all-holder exit confirmation 和聚合 diagnostic。`:96` 实际收到 Within 的返回值后才置 joined；`:100` deadline 只报告 exit unconfirmed，保持可重试。`:90` 重复 join 仍返回历史 cause，不伪造成功。
+
+`conformance/recovery/owned_fixture_test.go:159` 收集以上两种事实；`:166` 只在退出未确认时阻断后续清理。已确认的 SQL/cancellation error 被保留到最终 `errors.Join`（`:216`），同时推进实际 child、writers、scope、admin 收尾。Cleanup 返回非 nil 可以同时意味着“历史 transaction 失败已报告，scope 已成功删除”，不能用 err==nil 替代确切资源事实。
+
+具体 safety/retry 关系保持明确：`:171` child.stop error 聚合，`:174` 未确认 child 退出仍保留 scope；`:179`–`:196` 将真实 Close 成功与历史错误分开，任何 current/peer Close 失败都阻止删除，成功 peer 才置 nil。`:198`–`:214` 在 Drop/RemoveAll 成功后才撤 owns，admin Close 成功后才撤指针；失败保留未完成步骤并同时保留 holder cause，重试不重新创建已删除 scope。
+
+正常 Cleanup 在 `owned_fixture_test.go:149` 使用独立 11s join context；每个 releaseAndJoin 在 `owned_pg_fault_test.go:93` 仍最多 11s。确认 holder 后再创建独立 5s scope/child context（`owned_fixture_test.go:169`），不会把 join 消耗的期限复用于删除。业务 writer 3s、实际 fault holder 10s、whole mandatory 120s 不变。private `cleanup(ctx)` 仅让当前真实 PG lifecycle fault 提前耗尽 join 期限，不是新产品接口或通用 callback registry。
+
+## 原 depth、interface、locality 收益保持
+
+本次 recovery source diff 仅 `owned_fixture_test.go`、`owned_pg_fault_test.go` 和新增 `owned_cleanup_failure_test.go`；六类普通 caller 与 pool 原有简化没有变化。仍由稳定 owned handle 负责确证 scope 与历代 writer 的关系：admission `adapter_admission_test.go:562`/`:572`，work `adapter_work_test.go:629`/`:632`，wait `wait_test.go:236`，retention `retention_test.go:106`/`:146`，process `process_fixture_test.go:304`/`:326`，historical lifecycle `migration_test.go:161`/`:188`，pool `pool_test.go:466`/`:720`/`:1141`。caller 不再跟随 Store 指针登记配置或重新安排 creator/replacement/Close/Drop 次序。
+
+准确新 tree 中 `configurations`、`sqliteConfigurations`、`admissionReopeners`、`reopenAdmissionStore`、`retentionReopen`、`sync.Map` 无 recovery 匹配。`owned_fixture_test.go:219` 仅向外部审计文件写入确证 namespace/path并实际 Sync/Close，未把三张 pointer map 搬家。`:102` 返回实际 Store；`:118`/`:120` 打开实际 PG/SQLite Store，没有业务 CRUD proxy，Host/public query 和 same-Store transaction seam 保持。
+
+两个真实 adapter 的责任差异仍被覆盖：PG 私有 admin 在实际 CREATE 成功后取得 owns（`:69`–`:76`），与业务 writer/peer（`:118`、`:250`）独立；最终仅 admin Drop（`:201`）。SQLite CloseWriter 失败保留 current（`:128`–`:135`），cleanup 在失败 Close 后不会 RemoveAll；完整文件复制仍先成功 Close（`:264`–`:283`）。原 SQLite failed-Close/retry 测试 `owned_lifetime_test.go:140` 未变。
+
+child 的 actual Wait/ProcessState 证明仍集中在 process module（`process_fixture_test.go:547`），有限 Kill/Wait 在 `:556`；fixture 不接管 OS 协议。真实 PG lock callback 和历史 hash/source/COPY/schema/migration faults 仍在各自原故事；Open/Replace 不隐式 Migrate。删除测试结论保持：删掉 owned module，六类 caller 和 pool 必须重新承担 scope ownership、writer generations 与确认退出后删除的知识，因而这是 depth/locality 的实际收益，超过 helpers 搬移。没有增加 ORM、假想 adapter、框架或未来03工作。
+
+## 当前验证边界
+
+新增 `owned_cleanup_failure_test.go:17` 使用真实空 schema SELECT 的 PgError42P01（`:40`）、显式 Migrate 后实际 LockInput cancellation（`:49`–`:64`）。cleanup 必须保留两种 errors.Is/As cause（`:73`–`:79`），同时确证 namespace 消失（`:80`）、原本健康的实际 writer/peer Within→Now 再用被拒（`:67`–`:84`）、重复 cleanup 不复活 scope（`:86`–`:94`）和相邻 Host/public receipt 不损坏（`:96`–`:108`）。这不是以私有布尔字段、调用次数或 map 数证明。
+
+第二实际回归在 `:111` 先取得 PG lock，再阻塞真实 callback（`:137`–`:143`）；两次 50ms private cleanup 保留确证 namespace 与原 public receipt（`:150`–`:166`），拒绝新 writer，实际 cancellation/unblock/ReleaseAndJoin 后才删除（`:171`–`:181`），neighbor 仍可读。期限耗尽不能当作 Within 退出的证明。
+
+实施者 tracked `.scratch/lerna-02-durable-work/fixture-cleanup-fix-evidence.md` 证据报告：实际 runnable red0.328s→首绿0.302s；扩展用例曾因缺显式 Migrate 真实失败17.203s，修正明确保留在历史中。focused normal2.255s/race4.970s，最后实际 handle 再用加强用例0.514s通过。本agent未重跑。最终准确 f56 上 makefmt/check/base test-race/modverify、全部27 frozen manifest及完整顺序 count1/integration normal50.431s、race93.834s（各timeout120）全通过，无skip、放宽期限或竞争DB/broad check。完整 race 命令为 `go test -race -count=1 -tags=integration -timeout=120s ./conformance/recovery/...`。此证据可覆盖 source精确相同的最终 merge，不能把 c52 的 normal52.406s/race93.619s 或其旧 CI 当作本次验证。上述 duration 不代表性能收益。
+
+本次 runtime/internal/host/adapters/contract/frozen fixture source diff 为空。最终实施者证据中，测试结束后的独立有限30s观察仅核对本fix即时fsync registry：285个确证PG namespaces、265个登记SQLite fixture目录均absent，最终观察recovered=0；初始red的1个准确登记剩余namespace已在早期精确回收，记录保留；另7个准确自有顶层overlay TMPDIR在所有测试退出后清理。历史限制保留：旧04未知 schema、初版10两个失名 PG scopes、07未知 CREATE/不完整 CID；原321 known PG/319 registered directories absence仅覆盖原登记轮次。新登记轮次观察不扩大未知资源结论，不猜删未知资源，不宣称全部清零。准确最终新 CI 尚由 root 核实；本报告确认既有结构收益与cleanup修复closure，不提前宣称whole02退出。
+
+root已在此复核之后实际核实准确mergeCI success并关闭whole02；不抹去上述独立审查时pending或历史未知资源限制。

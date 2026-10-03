@@ -88,3 +88,7 @@ SQLite票02合并最新 `6ccdb6d` 后的本地准确检查：make check/test-rac
 2026-10-03，准确提交 `c52e68b46c619df0c8e5df1b27a0b5dded3ef65f` 的 push run [37160694293](https://github.com/ruipengliu/lerna/actions/runs/37160694293) 为 completed/success。实际 contracts job111313333681、durable-admission job111313333571均success。
 
 日志确认固定psql18.6客户端，工具生命周期race2.430s；完整PG/SQLite mandatory count1集成19.986s、race45.207s，全部27项来源manifest OK。本检查点包含票10真实writer接替及原全部业务恢复路径，不代表随后审查发现的已确认失败holder清理缺口已关闭。两轴各1项P2由原单一review fixer处理；修复后仍需准确新CI及独立复核，whole02未退出。初版red新增两个未知PG scope名称，与旧04未知schema及07无CID限制分别保留；成功CI不追溯清理未知资源。
+
+## 整片退出的最终准确CI
+
+2026-10-03，准确整合 `554874470d5abeb71fa743708580f3121b8944f1` 的[push run37162569420](https://github.com/ruipengliu/lerna/actions/runs/37162569420) completed/success。contracts111318872458、durable-admission111318872597及全部步骤success；日志固定psql18.6，工具生命周期race2.407s、完整双库count1 integration20.985s/race45.463s、27来源manifest全OK。源码与实际本地受测f56相同，原shared cleanup P2已经独立两轴关闭，收益复核保持。root据此及[退出证据](exit-evidence.md)正式关闭whole02，不使用此前绿色检查点证明此修复。历史未知schema/CID/过程失败及证据边界保留。

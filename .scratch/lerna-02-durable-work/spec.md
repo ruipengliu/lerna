@@ -2,7 +2,7 @@
 
 Status: ready-for-agent
 Phase: A
-Implementation: in-progress
+Implementation: completed
 Depends on: [01](../lerna-01-command-contracts/spec.md)
 
 ## Problem Statement
@@ -56,6 +56,12 @@ Depends on: [01](../lerna-01-command-contracts/spec.md)
 - 独立消息队列、全量事件溯源、任意程序栈恢复。
 
 ## Further Notes
+
+## 切片退出证据（2026-10-03）
+
+本片已completed，10票68项AC全部resolved。最终源码f56d930、整合5548744，完整顺序count1双库集成50.431s/race93.834s、两轴新增0与架构收益闭合、准确CI37162569420 success。原七项验收映射、环境、版本、真实命令与资源限制见[退出证据](exit-evidence.md)。仅内部持久演示范围；未知schema/CID、SQLite storage-port及进程故障边界保留，不声称生产或断电耐久。
+
+### 历史检查点（保留当时状态）
 
 2026-10-03，全部八张核心票及额外锁范围票09已 resolved。最终容量产品 `06ab246`、worker `cdc7ae6` 经 merger 合入 `96a0ecc`；双库 mandatory count1 完整集成60.305s、integration-race91.786s，基础check/race、模块与27项冻结历史manifest通过。真实等待/配额/公平/类别执行机会及到期维护已经验证，具体正常、故障、历史来源和范围见[票06证据](issues/06-fair-capacity-and-quotas.md#comments)及其引用。原已发布0001–0004和四组历史夹具保持，追加0005；内部Host版本host-durable-work-1，公共1.0.0仍仅command.get。本片仍in-progress，整片两轴审查、架构审查与准确最终远端CI尚待完成；历史未知schema/CREATE容器限制保持。
 
