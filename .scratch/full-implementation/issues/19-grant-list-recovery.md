@@ -2,7 +2,7 @@
 
 Status: claimed
 Blocked by: 01, 02, 06
-Implementer: task_impl
+Implementer: execution_impl
 
 依据：已开放 Grant 方法族必须具备 grant.read／list／check 恢复接口。
 
@@ -15,3 +15,5 @@ Implementer: task_impl
 ## Comments
 
 2026-10-03：全项目范围复核后补入原实施任务图，未改变用户授权或领域裁决。
+
+2026-10-03：Root 将新功能实现转交 execution_impl；Task 保留 14 和正式 review 修复。
