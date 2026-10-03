@@ -41,6 +41,8 @@ type actionDescriptor struct {
 	ConfiguredGrant   *api.Grant                             `json:"configured_grant,omitempty"`
 	Source            *providers.InformationSourceDescriptor `json:"source,omitempty"`
 	SourceRetainUntil string                                 `json:"source_retain_until,omitempty"`
+	ExecutorID        string                                 `json:"executor_id,omitempty"`
+	RemoteConfigHash  string                                 `json:"remote_config_hash,omitempty"`
 }
 
 type actionRegistry struct{ entries []actionDescriptor }
@@ -150,7 +152,20 @@ func (a *App) configureActionRegistry(drivers []execution.Driver) error {
 			return api.E("unsupported", "action_driver_not_configured")
 		}
 		d := actionDescriptor{Capability: cap, BindingRef: configured.BindingRef, InstallLockRef: configured.InstallLockRef, GrantRef: a.Scope.Ref(g.GrantID, 1), Resources: append([]string{}, g.Resources...), Actions: append([]string{}, g.Actions...), Recipient: g.Recipients[0], Location: g.Locations[0], ConfiguredGrant: &g}
-		if api.Equal(cap.Ref, target.PhoneGUICapability().Ref) {
+		if configured.BindingRef.OwnerID != a.Scope.OwnerID && (api.Equal(cap.Ref, target.FileReadCapability().Ref) || api.Equal(cap.Ref, target.FileWriteCapability().Ref)) {
+			route, err := a.remoteExecutors.binding(d.BindingRef, cap.Ref, d.InstallLockRef)
+			if err != nil {
+				return err
+			}
+			d.Kind = "file.read"
+			if api.Equal(cap.Ref, target.FileWriteCapability().Ref) {
+				d.Kind = "file.write"
+			}
+			if d.Recipient != route.Config.OwnerID || d.Location != "device" || !api.Equal(d.Resources, []string{"managed-files"}) || !api.Equal(d.Actions, []string{d.Kind}) {
+				return api.E("forbidden", "device_grant_scope_mismatch")
+			}
+			d.ExecutorID, d.RemoteConfigHash = route.Config.OwnerID, route.Digest
+		} else if api.Equal(cap.Ref, target.PhoneGUICapability().Ref) {
 			d.Kind = "phone.gui"
 			if d.Recipient != a.Scope.OwnerID || d.Location != "cloud" {
 				return api.E("invalid_request", "action_grant_configuration_invalid")
@@ -385,6 +400,17 @@ func (a *App) prepareAction(ctx context.Context, s runtime.Scope, i api.Decision
 	resources := []string{}
 	resourceKeys := []string{}
 	actions := []string{}
+	executorID := s.OwnerID
+	if descriptor.ExecutorID != "" {
+		route, err := a.remoteExecutors.binding(descriptor.BindingRef, descriptor.Capability.Ref, descriptor.InstallLockRef)
+		if err != nil {
+			return task.PreparedAction{}, actionAdmission{}, err
+		}
+		if descriptor.RemoteConfigHash != route.Digest || descriptor.ExecutorID != route.Config.OwnerID {
+			return task.PreparedAction{}, actionAdmission{}, api.E("forbidden", "original_device_route_changed")
+		}
+		executorID = descriptor.ExecutorID
+	}
 	switch descriptor.Kind {
 	case "file.read":
 		var input target.FileReadArguments
@@ -458,6 +484,11 @@ func (a *App) prepareAction(ctx context.Context, s runtime.Scope, i api.Decision
 	default:
 		return task.PreparedAction{}, actionAdmission{}, api.E("unsupported", "action_projection_not_configured")
 	}
+	if executorID != s.OwnerID {
+		for n, key := range resourceKeys {
+			resourceKeys[n] = "executor:" + executorID + "/" + key
+		}
+	}
 	if descriptor.ConfiguredGrant != nil {
 		raw, err := a.query(ctx, "grant.check", s.OwnerID, governance.UseRequest{UseID: stableID("use", "prepare/"+i.DecisionID+"/"+candidate.LocalKey), SubjectRef: a.ServiceAuth.Ref(s.OwnerID), TargetRef: s.Ref(stableID("operation", i.DecisionID+"/"+candidate.LocalKey), 1), TargetKind: "operation", IntentHash: descriptor.ConfigHash, GrantRefs: []api.ObjectRef{descriptor.GrantRef}, RequestedUnits: []api.Amount{{Unit: "USD", Value: "0"}}, Resources: resources, Actions: actions, Recipient: descriptor.Recipient, Location: descriptor.Location, Purposes: []string{"goal_action"}, StartBefore: descriptor.ConfiguredGrant.ExpiresAt})
 		if err != nil {
@@ -475,7 +506,7 @@ func (a *App) prepareAction(ctx context.Context, s runtime.Scope, i api.Decision
 	if err != nil {
 		return task.PreparedAction{}, actionAdmission{}, err
 	}
-	prepared := task.PreparedAction{OperationID: stableID("operation", i.DecisionID+"/"+candidate.LocalKey), ExecutorID: s.OwnerID, CapabilityRef: candidate.CapabilityRef, BindingRef: candidate.BindingRef, InstallLockRef: descriptor.InstallLockRef, ArgumentsRef: candidate.ArgumentsRef, ResourcesRef: resourceContent, RequirementRefs: reqs, UseIntentRefs: []api.ObjectRef{s.Ref(stableID("use", i.DecisionID+"/"+candidate.LocalKey), 1)}, CostBound: []api.Amount{{Unit: "USD", Value: "0"}}, LogicalStepKey: snap.TaskRef.ObjectID + "/" + candidate.LocalKey, ProcessedSourceRefs: candidate.ProcessedSourceRefs, DisclosedSourceRefs: candidate.DisclosedSourceRefs, ResourceKeys: resourceKeys, Independent: true, SafeRequirementCheck: false, CommandID: stableID("command", "invoke/"+i.DecisionID+"/"+candidate.LocalKey)}
+	prepared := task.PreparedAction{OperationID: stableID("operation", i.DecisionID+"/"+candidate.LocalKey), ExecutorID: executorID, CapabilityRef: candidate.CapabilityRef, BindingRef: candidate.BindingRef, InstallLockRef: descriptor.InstallLockRef, ArgumentsRef: candidate.ArgumentsRef, ResourcesRef: resourceContent, RequirementRefs: reqs, UseIntentRefs: []api.ObjectRef{s.Ref(stableID("use", i.DecisionID+"/"+candidate.LocalKey), 1)}, CostBound: []api.Amount{{Unit: "USD", Value: "0"}}, LogicalStepKey: snap.TaskRef.ObjectID + "/" + candidate.LocalKey, ProcessedSourceRefs: candidate.ProcessedSourceRefs, DisclosedSourceRefs: candidate.DisclosedSourceRefs, ResourceKeys: resourceKeys, Independent: true, SafeRequirementCheck: false, CommandID: stableID("command", "invoke/"+i.DecisionID+"/"+candidate.LocalKey)}
 	return prepared, actionAdmission{Scope: s, DecisionID: i.DecisionID, SnapshotID: snap.SnapshotID, Descriptor: descriptor, Prepared: prepared, Resources: resources, Actions: actions}, nil
 }
 

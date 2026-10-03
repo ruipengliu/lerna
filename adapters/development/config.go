@@ -51,6 +51,7 @@ type Config struct {
 	RemoteAgent                *RemoteAgentConfig        `json:"remote_agent,omitempty"`
 	ForeignConsumers           []ForeignConsumerConfig   `json:"foreign_consumers,omitempty"`
 	ForeignSourceTLS           *ForeignSourceTLSConfig   `json:"foreign_source_tls,omitempty"`
+	RemoteExecutors            []RemoteExecutorConfig    `json:"remote_executors,omitempty"`
 }
 
 func LoadConfig(path string) (Config, error) {

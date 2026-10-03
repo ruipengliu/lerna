@@ -71,6 +71,7 @@ type App struct {
 	endpointServerTLS                                                *tls.Config
 	remoteAgents                                                     *remoteAgentAssembly
 	foreignConsumerSource                                            *providers.ForeignSource
+	remoteExecutors                                                  *remoteExecutors
 }
 
 func component(name string) api.ComponentRef {
@@ -147,8 +148,14 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if len(c.ForeignConsumers) > 0 && !containsString(keyPurposes, "foreign_content") {
 		keyPurposes = append(keyPurposes, "foreign_content")
 	}
+	if len(c.RemoteExecutors) > 0 {
+		keyPurposes = append(keyPurposes, "executor_admission", "executor_revocation")
+	}
 	a.Keys, e = platform.OpenDevelopmentKey(c.KeyFile, c.TenantID, c.OwnerID, keyPurposes)
 	if e != nil {
+		return nil, e
+	}
+	if e = a.configureRemoteExecutors(); e != nil {
 		return nil, e
 	}
 	a.Objects, e = objectstore.OpenLocal(filepath.Join(c.DataRoot, "objects"), memory.MaxContentBytes)
@@ -161,6 +168,9 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		return nil, e
 	}
 	a.Memory.Authorization = contentAuthority{a}
+	if len(c.RemoteExecutors) > 0 {
+		a.Memory.Foreign = deviceSources{a}
+	}
 	purposes := []string{"read", "preview", "content.read", "content.write", "task.goal", "task.context", "task.result", "task.submit", "task.snapshot", "task.dispatch", "task.complete", "task.evidence", "task.input", "task.accept_result", "task.revise", "task.steer", "task.action", "task.attach_evidence", "task.adjust_budget", "task.need_context", "task.delegate", "child.create", "child.new_goal", "child.continue", "billing.adjustment", "brain.input", "brain.output", "result", "memory.save", "memory.read", "memory.query", "memory.extract", "memory.sync", "memory.view", "managed_file_write", "managed_file_read", "execution.intent", "execution.arguments", "execution.output", "execution.control", "execution_intent", "execution_arguments", "execution_result", "execution_usage_proof", "environment_namespace", "environment_input", "environment_compute_spec", "environment_restore", "interaction.input", "interaction.history", "interaction.surface", "schedule.template", "confirmation.preview", "evaluation.manifest"}
 	for _, purpose := range append([]string{"interaction.snapshot", "interaction.preview"}, RequiredContentPurposes()...) {
 		if !containsString(purposes, purpose) {
@@ -334,6 +344,10 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e != nil {
 		return nil, e
 	}
+	if a.Memory.Foreign != nil {
+		a.Memory.Foreign = flowSources{a.Memory.Foreign}
+		a.Registry.SetContextFactory(a.foreignContextFactory)
+	}
 	var collaborationPort task.CollaborationPort = cooperation
 	if a.RemoteAgent != nil {
 		collaborationPort = a.RemoteAgent
@@ -455,6 +469,7 @@ func (a *App) Close() error {
 		err = errors.Join(err, a.endpointRouter.Close())
 		a.endpointRouter = nil
 	}
+	err = errors.Join(err, a.remoteExecutors.close())
 	for _, source := range a.Information {
 		err = errors.Join(err, source.Close())
 	}

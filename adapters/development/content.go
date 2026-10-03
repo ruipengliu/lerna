@@ -39,6 +39,10 @@ func (a *App) Publish(ctx context.Context, scope runtime.Scope, auth runtime.Aut
 	ref := api.ContentRef{TenantID: scope.TenantID, OwnerID: scope.OwnerID, ContentID: id, Version: 1, Hash: api.Hash(b), MediaType: media, ByteLength: uint64(len(b))}
 	processed = uniqueSources(processed)
 	disclosed = uniqueSources(disclosed)
+	ctx, e := a.prepareForeignSources(ctx, scope, auth, uniqueSources(append(append([]api.ContentRef{}, processed...), disclosed...)), "content.write", "cloud")
+	if e != nil {
+		return ref, e
+	}
 	var plan publicationPlan
 	status, e := a.Store.Within(ctx, scope, []string{"platform", "content", "memory", "governance"}, func(tx runtime.Tx) error {
 		_, e := tx.Get(ctx, "platform.publications", id, &plan)
@@ -76,8 +80,11 @@ func (a *App) Publish(ctx context.Context, scope runtime.Scope, auth runtime.Aut
 				retain = until
 			}
 		}
-		policy := a.ContentPolicy.PolicyRef
-		plan = publicationPlan{Ref: ref, TransferID: api.NewID("transfer"), ReserveID: api.NewID("command"), PutID: api.NewID("command"), Processed: processed, Disclosed: disclosed, Retention: api.Time(retain), Deadline: api.Time(now.Add(30 * time.Minute)), SubjectID: auth.SubjectID, PolicyRef: &policy}
+		policy, e := a.publicationPolicyTx(ctx, tx, auth, uniqueSources(append(append([]api.ContentRef{}, processed...), disclosed...)))
+		if e != nil {
+			return e
+		}
+		plan = publicationPlan{Ref: ref, TransferID: api.NewID("transfer"), ReserveID: api.NewID("command"), PutID: api.NewID("command"), Processed: processed, Disclosed: disclosed, Retention: api.Time(retain), Deadline: api.Time(now.Add(30 * time.Minute)), SubjectID: auth.SubjectID, PolicyRef: &policy.PolicyRef}
 		return tx.Create(ctx, "platform.publications", id, auth.SubjectID, plan)
 	})
 	if status == runtime.CommitUnknown {
@@ -124,7 +131,7 @@ func (a *App) Publish(ctx context.Context, scope runtime.Scope, auth runtime.Aut
 type brainContent struct{ a *App }
 
 func (c brainContent) Read(ctx context.Context, s runtime.Scope, a runtime.Auth, r api.ContentRef, p string) ([]byte, error) {
-	return c.a.Memory.Read(ctx, s, a, r, p)
+	return c.a.ReadContent(ctx, s, a, r, p)
 }
 func (c brainContent) Publish(ctx context.Context, s runtime.Scope, a runtime.Auth, p brain.Publication, b []byte) (api.ContentRef, error) {
 	return c.a.Publish(ctx, s, a, p.ContentID, p.MediaType, b, p.ProcessedSources, p.DisclosedSources)
@@ -133,7 +140,7 @@ func (c brainContent) Publish(ctx context.Context, s runtime.Scope, a runtime.Au
 type executionContent struct{ a *App }
 
 func (c executionContent) ReadBytes(ctx context.Context, s runtime.Scope, a runtime.Auth, r api.ContentRef, p, l string) ([]byte, error) {
-	return c.a.Memory.ReadBytes(ctx, s, a, r, p, l)
+	return c.a.ReadContentBytes(ctx, s, a, r, p, l)
 }
 func (c executionContent) Publish(ctx context.Context, s runtime.Scope, a runtime.Auth, p execution.Publication, b []byte) (api.ContentRef, error) {
 	if p.Purpose == "execution_usage_proof" {
@@ -154,13 +161,13 @@ func (c executionContent) Publish(ctx context.Context, s runtime.Scope, a runtim
 type governanceContent struct{ a *App }
 
 func (c governanceContent) Read(ctx context.Context, s runtime.Scope, a runtime.Auth, r api.ContentRef, p string) ([]byte, error) {
-	return c.a.Memory.Read(ctx, s, a, r, p)
+	return c.a.ReadContent(ctx, s, a, r, p)
 }
 
 type interactionContent struct{ a *App }
 
 func (c interactionContent) Read(ctx context.Context, s runtime.Scope, a runtime.Auth, r api.ContentRef, p string) ([]byte, error) {
-	return c.a.Memory.Read(ctx, s, a, r, p)
+	return c.a.ReadContent(ctx, s, a, r, p)
 }
 func (c interactionContent) CheckTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, r api.ContentRef, p string) error {
 	if e := currentCredentialTx(ctx, tx, a); e != nil {
@@ -173,7 +180,7 @@ func (c interactionContent) CheckTx(ctx context.Context, tx runtime.Tx, a runtim
 type taskContent struct{ a *App }
 
 func (c taskContent) Read(ctx context.Context, s runtime.Scope, a runtime.Auth, r api.ContentRef) ([]byte, error) {
-	return c.a.Memory.Read(ctx, s, a, r, "task.goal")
+	return c.a.ReadContent(ctx, s, a, r, "task.goal")
 }
 func (c taskContent) Publish(ctx context.Context, s runtime.Scope, id, media string, b []byte) (api.ContentRef, error) {
 	sources := []api.ContentRef{}
