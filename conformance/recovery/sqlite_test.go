@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/mattn/go-sqlite3"
@@ -564,5 +565,88 @@ func TestSQLiteDeviceClockPreservesUTCNanosecondInstants(t *testing.T) {
 	got, err = h.Observe(ctx, "time-input", &principal)
 	if err != nil || !got.Input.UpdatedAt.Equal(clock.instant) || !got.Job.DueAt.Equal(clock.instant) || got.Input.CreatedAt.Nanosecond() != 0 {
 		t.Fatalf("accurate fractional instant changed: %+v %v", got, err)
+	}
+}
+
+func TestSQLiteHistoricalV1FileRestoresOriginalDecisionsAndPendingJob(t *testing.T) {
+	fixture := filepath.Join("..", "fixtures", "durable-work", "sqlite-v1")
+	data, err := os.ReadFile(filepath.Join(fixture, "database.sqlite"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(t.TempDir(), "restored.sqlite")
+	if err = os.WriteFile(path, data, 0600); err != nil {
+		t.Fatal(err)
+	}
+	reportData, err := os.ReadFile(filepath.Join(fixture, "writer-observation.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var report struct {
+		Observation demo.Observation
+		Outcomes    []contract.TransportOutcome
+		Migration   sqlite.Migration
+	}
+	if err = json.Unmarshal(reportData, &report); err != nil {
+		t.Fatal(err)
+	}
+	store, err := sqlite.Open(contextFor(t), sqlite.Config{Path: path, TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { store.Close() })
+	if err = store.Migrate(contextFor(t)); err != nil {
+		t.Fatal(err)
+	}
+	status, err := store.MigrationStatus(contextFor(t))
+	if err != nil || status.Version != 1 || status.Checksum != report.Migration.Checksum {
+		t.Fatalf("restored migration changed: %+v %v", status, err)
+	}
+	scope := contract.OwnerRef{TenantID: "fixture-tenant", OwnerID: "fixture-owner"}
+	subject := contract.SubjectBinding{TenantID: scope.TenantID, SubjectID: "fixture-writer", DelegationChain: []contract.DelegatedSubject{}}
+	h := hostFor(store, scope, subject)
+	ctx := contextFor(t)
+	before, err := h.Observe(ctx, "v1-input", &subject)
+	if err != nil || before.Input.Text != "PG v1 portable input 🌍" || before.Input.Revision != 1 || before.Job.ID != report.Observation.Job.ID || before.Job.WorkRevision != 1 || before.Job.CompletedRevision != 0 || before.Job.State != "ready" {
+		t.Fatalf("historical file lost pending original: %+v %v", before, err)
+	}
+	commandsData, err := os.ReadFile(filepath.Join(fixture, "commands.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var commands []json.RawMessage
+	if err = json.Unmarshal(commandsData, &commands); err != nil {
+		t.Fatal(err)
+	}
+	if len(commands) != 3 || len(report.Outcomes) != 3 {
+		t.Fatal("historical corpus/observation incomplete")
+	}
+	for i, data := range commands {
+		original, ok := report.Outcomes[i].AsReceived()
+		if !ok {
+			t.Fatal("historical writer outcome unconfirmed")
+		}
+		id := contract.ID("applied-original")
+		if i == 1 {
+			id = "expired-original"
+		}
+		result, err := contract.GetCommand(ctx, readWire(contract.CommandRef{Owner: scope, CommandID: id}), &subject, h.Permissions, h, time.Now)
+		if err != nil {
+			t.Fatal(err)
+		}
+		found, ok := result.AsFound()
+		if !ok {
+			t.Fatal("historical receipt unavailable")
+		}
+		assertReceiptSame(t, original.Receipt, found.Receipt)
+		out, err := h.Record(ctx, data, &subject)
+		assertReceiptSame(t, original.Receipt, assertReceived(t, out, err))
+	}
+	if _, err = h.Observe(ctx, "expired-input", &subject); err == nil {
+		t.Fatal("historical expired command acquired input/Job")
+	}
+	after, err := h.Observe(ctx, "v1-input", &subject)
+	if err != nil || after.Job.ID != before.Job.ID || after.Input.Revision != 1 || after.Job.WorkRevision != 1 {
+		t.Fatalf("historical retransmission changed responsibility: %+v %v", after, err)
 	}
 }
