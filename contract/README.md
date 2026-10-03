@@ -49,7 +49,8 @@ Go `DecodeCommandResponse` / `EncodeCommandResponse` 与 TS `decodeCommandRespon
 
 Go `ReadCommandFacts` 是供已授权装配调用的低层事实原语；TS 同类 primitive 留在 `readfacts.ts`，没有作为 SDK 业务入口导出。它注入只有读取方法的事实源、context / AbortSignal 与可控时钟，验证原身份和完整结果；后端故障或无可信一致观察返回原引用的 unavailable / dependency_unavailable，不泄漏后端字符串。返回观察与事实源保留的对象独立；事实源也不能借修改传入引用来改写原 owner。not_found 仅表示当前原 owner 未找到；gone 保留最小原身份；两者都不授权新建同义工作。read accept_before 只约束这次读取开始，不用于判断原写入记录是否仍能查询。
 
-受信租户、读取授权与准确 owner 的目录解析由 ticket05 在事实读取前提供。此处共同 forbidden 夹具只证明拒绝视图不携带原决定或对象内容，不宣称生产权限已实现。低层读取测试比较公开事实快照前后不变，没有以内部调用次数证明只读。共同 `responses.json` 驱动真正 Go→TS / TS→Go 编解码；这些是合同和注入事实源证据，不是持久命令账本、接纳事务或网络恢复证据。
+受信租户、读取授权与准确 owner 的目录解析通过下述公开 `GetCommand` / `getCommand` 入口在事实读取前提供。`responses.json` 中 forbidden 夹具只证明拒绝视图形状；实际入口的注入认证上下文与越权行为由共同 `queries.json` 验证，不宣称生产认证服务已实现。低层读取测试比较公开事实快照前后不变，没有以内部调用次数证明只读。共同 `responses.json` 驱动真正 Go→TS / TS→Go 编解码；这些是合同和注入事实源证据，不是持久命令账本、接纳事务或网络恢复证据。
+
 ## 原命令摘要
 
 Go `CommandDigest(commandJSON, trustedSubjectJSON)` 与 TS `await commandDigest(commandWire, trustedSubjectWire)` 从原始 JSON 边界验证通用信封和闭合 `SubjectBinding`，然后产生 `sha256:` 加小写十六进制摘要。宿主必须从受信认证上下文提供主体绑定；调用方提交的 payload 不得替代该上下文。主体格式为 `{tenant_id, subject_id, delegation_chain:[{tenant_id, subject_id}]}`，链最多 16 项、顺序保留。这验证结构，实际身份认证、委托签名及查询权限由读取入口承担。
@@ -73,3 +74,17 @@ if (await commandDigest(retransmit, subject) !== digest) throw new Error('change
 修改业务内容时调用方必须创建新 command_id；本入口计算摘要，不检测数据库原键冲突。摘要可用于保存尚未开放方法的准确原内容，`fixture.write` 夹具始终未登记，不能因计算摘要成功获得执行资格；业务执行仍须完整方法 Schema、授权和接纳检查。两个原始输入各自受 1 MiB 线正文上限约束；加入主体后的内部哈希输入不是新的网络正文，不能使合法原命令被错误拒绝。
 
 [`digests.json`](../conformance/fixtures/1.0.0/digests.json) 保存独立规范字面量与 Python hashlib 预期摘要；Go 与 TS 分别经公开入口匹配这些预期，包含非 BMP 键的 UTF-16 排序、准确大整数、控制字符、字段变化及严格反例。`make test-contract` 同时运行此套件。边界夹具的 `@B@` 以 `body_repeat_count` 个 `x` 展开，线上命令仍不包含 JSON number。
+
+## 受信原命令读取
+
+Go `GetCommand(ctx, wire, trusted, authorizer, directory, now)` 与 TypeScript `getCommand(signal, wire, trusted, authorizer, directory, now, options)` 是 Application / Component 的公开 `command.get` 入口。宿主必须从已认证上下文注入 `SubjectBinding`；形状有效的主体不等于身份已经验证。本合同包不读取令牌、验证 OIDC／委托签名，也不从请求 payload 构造可信主体。
+
+入口先严格验证完整方法及 target / 原 CommandRef 的一致性，保存独立请求快照，再验证受信主体并要求主体租户与目标租户一致。`ReadAuthorizer` 对准确原引用与主体裁决读取权限；缺失或非法主体、越权、自报 owner 和授权依赖失败均返回不带引用、原决定或进展的 `{status:"rejected",reason:"forbidden"}`。授权在解析目录、查事实之前进行，存在与不存在的未获准请求使用相同拒绝视图。委托链的真实授权规则由受信授权端口执行，结构或摘要不会自行授予权限。
+
+获准后，`OwnerDirectory` 仅解析原 `OwnerRef`，返回 `{Owner,Reader}`（TS 为 `{owner,reader}`）。这是宿主装配的只读路由，同一 owner 可以替换对应进程／Reader；它没有默认 owner 查询或回退 API。入口核验返回 owner 与原引用完全相同，才调用只读 `CommandFactReader`。目录或读取故障、owner 不匹配和不可信结果均返回保留原 CommandRef 的 unavailable；not_found / gone 保留原身份，不授权改 owner、延长原截止或重建同义命令。请求、主体委托链、注入端口输入与返回观察均隔离可变别名，回调不能通过改写传参或调用方原始字节迁移已授权请求。
+
+Go 调用方必须传递有有限 deadline 的非 nil context，所有注入端口必须遵守 context 取消合同；没有 deadline 或已取消则 fail closed。入口不生成无法回收的 goroutine 来强行停止不合作端口。TS 宿主必须提供 `{maxReadDurationMs}`，取整数 `1..60000`；全次读取共用一个计时器及派生 AbortSignal，在授权、目录和事实等待期间均可取消，完成时清理计时器和监听器。TS race 可以结束异步等待，但不保证停止不合作回调或同步阻塞。取消／读取资源期限耗尽属于 unavailable，授权基础设施失败仍为 forbidden；都不会提交业务工作。
+
+`accept_before` 仅检查本次读取开始时刻。受信时钟取样后固定，不因授权耗时重新延长或重新接纳；本地读资源 deadline 则覆盖整个过程。原写入记录即使截止已过，也继续按原引用查询其固定回执。
+
+共同 [`queries.json`](../conformance/fixtures/1.0.0/queries.json) 覆盖合法主体／委托正常读取、越权存在与不存在、跨租户、payload 身份伪造、授权故障、目录 owner 错配、不可用、未找到、保留清理与读取截止。`make test-contract` 经 Go 与 TS 公开入口运行同一场景；额外公开行为测试覆盖同 owner 进程接替、默认 owner 改变不迁移原命令、有限取消、恶意回调改写及事实快照不变。这些是注入身份与受信可控目录证据，不是生产身份、数据库恢复或分布式传输证据。

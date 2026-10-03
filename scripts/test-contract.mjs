@@ -73,6 +73,17 @@ try {
   execFileSync('node', ['--test', 'sdk/typescript/src/digests.test.ts'], {
     stdio: 'inherit',
   });
+  // The same authenticated query scenarios run through each public entry point.
+  execFileSync(
+    'go',
+    ['test', './conformance/component', '-run', 'AuthenticatedQuery'],
+    {
+      stdio: 'inherit',
+    },
+  );
+  execFileSync('node', ['--test', 'sdk/typescript/src/query.test.ts'], {
+    stdio: 'inherit',
+  });
   console.log(
     `${fixtures.length} shared fixtures passed; all positive values completed real Go→TS and TS→Go roundtrips.`,
   );
