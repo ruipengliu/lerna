@@ -137,7 +137,8 @@ func (r *ReferenceRunner) verifyPair(pair domain.RunnerPair) error {
 	var last error
 	// 调度器可能从任一臂进入，但必须绑定这对原样本的一个准确 SampleRun。
 	for _, arm := range []string{"candidate", "baseline"} {
-		_, e = r.keys.Verify(pair.Permit, platform.ProofClaims{TenantID: r.w.scope.TenantID, Issuer: r.w.scope.OwnerID, Audience: r.w.scope.OwnerID, Purpose: "evaluation_prepare", ObjectRef: domain.EvaluationSampleRunRef(r.w.scope, pair.Plan.PlanID, pair.Sample.SampleID, arm), Digest: digest, StartBefore: pair.StartBefore}, r.w.clock())
+		ref := domain.EvaluationSampleRunRef(r.w.scope, pair.Plan.PlanID, pair.Sample.SampleID, arm)
+		_, e = r.keys.Verify(pair.Permit, platform.ProofClaims{TenantID: r.w.scope.TenantID, Issuer: r.w.scope.OwnerID, Audience: r.w.scope.OwnerID, Purpose: "evaluation_prepare", ObjectRef: ref, WindowID: ref.ObjectID, Digest: digest, StartBefore: pair.StartBefore}, r.w.clock())
 		if e == nil {
 			return nil
 		}
@@ -155,7 +156,7 @@ func (r *ReferenceRunner) verifyAttempt(in domain.RunnerAttempt, start bool) err
 	if e != nil {
 		return e
 	}
-	expected := platform.ProofClaims{TenantID: r.w.scope.TenantID, Issuer: r.w.scope.OwnerID, Audience: r.w.scope.OwnerID, Purpose: "evaluation_start", ObjectRef: r.w.scope.Ref(in.AttemptID, 1), Digest: digest, StartBefore: in.StartBefore}
+	expected := platform.ProofClaims{TenantID: r.w.scope.TenantID, Issuer: r.w.scope.OwnerID, Audience: r.w.scope.OwnerID, Purpose: "evaluation_start", ObjectRef: r.w.scope.Ref(in.AttemptID, 1), WindowID: in.AttemptID, Digest: digest, StartBefore: in.StartBefore}
 	if start {
 		_, e = r.keys.Verify(in.Permit, expected, r.w.clock())
 	} else {
