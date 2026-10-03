@@ -32,6 +32,7 @@ Task 提交同时保存以 `deadline/<TaskID>` 为键的独立 advance 责任，
 - 原提交者凭据代次与角色冻结在 Task 中；Context 编译沿用该身份。Gate 可同时实现纯 Tx `SubjectGate.CheckSubjectTx`，在当前 Task 与每层祖先正门禁核验撤权。缺少该端口不能宣称验证了当前身份；旧记录缺少代次时新准入关闭，负控制和迟到账务仍保留。
 - Gate 可实现 `CurrentTaskGate.CheckTaskCurrentTx`，复核远端父范围的准确当前控制和原 incoming allocation；有限签名准备在事务外完成。最终 input 消费与 steer 目标提交在实际字节读取或出版之后重核关闭门禁，不能以较早的 accepted 代替最终消费资格。
 - Gate 可实现 `AdvanceGatePreparer`，仅为本次正向 advance 在原主体元数据与 Claim 核验后取得有限当前证明。工厂不执行该端口；终态、过期、暂停及账务收尾保留原处理，不借准备读取新正文或取得行动权。
+- Gate 可实现 `DecisionGatePreparer.PrepareTaskDecision`，为本次原正向 dispatch_decision 取得当前父范围证明。原 birth 路由先锁 Task 根链与预算，核原提交者代次和冻结 Snapshot 的目标、控制、政策及派发身份；准备在 Tx 外执行，前后重核 Claim，之后仍执行原派发的完整当前门禁。终态、旧控制、已消费及待输入等分支不作新准备；端口不能刷新原 Decision、Command、预算或期限。此接口是受信宿主装配端口，不能由 Brain 提案代替。
 - `ActionAuthorization.AuthorizeAction`。它在封存原 IntentHash 后运行，与整批 ActionConsumption、预留、意图共同提交；整批拒绝会回滚一次授权使用。
 - `ControlProofPort`、`ClosureProofPort`，以及后者可实现的 `AllocationProofPort`。seal 只能本地签名并保存准确证明字节和出版意图，不得出站。缺少 seal 不得以 GoalRef 冒充控制或关闭证明。
 - 配置协作接收方的本地 `CollaborationAdmission`。未配置协作时，创建方法在新增会话、额度或委派责任之前返回 unsupported；已存责任仍可读取、控制及恢复。

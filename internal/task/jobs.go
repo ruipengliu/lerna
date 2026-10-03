@@ -37,6 +37,9 @@ func (s *Service) registerJobs(r *runtime.Registry) error {
 		if kind == JobAdvance {
 			h = s.prepareAdvanceEntry(h)
 		}
+		if kind == JobDispatchDecision {
+			h = s.prepareDecisionEntry(h)
+		}
 		if e := r.RegisterJob(kind, h); e != nil {
 			return e
 		}
