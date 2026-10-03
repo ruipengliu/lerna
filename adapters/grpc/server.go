@@ -227,11 +227,7 @@ func isControl(kind string, b []byte) bool {
 		return false
 	}
 	m, _ := o["method"].(string)
-	switch m {
-	case "execution.cancel", "execution.control", "environment.stop", "resource.release", "resource.takeover", "task.control", "interaction.withdraw", "collaboration.control":
-		return true
-	}
-	return false
+	return api.IsControlMethod(m)
 }
 func (s *Server) Call(ctx context.Context, request *rpcv1.CallRequest) (*rpcv1.CallResponse, error) {
 	if !s.begin() {
