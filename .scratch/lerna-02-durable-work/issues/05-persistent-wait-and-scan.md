@@ -36,3 +36,5 @@
 最终实际通过 make fmt、make check（158共享fixtures正反序均Go→TS/TS→Go真实往返及build）、make test-race、go mod verify、git diff --check；mandatory make test-integration（-count=1，真实PG/SQLite whole recovery26.132s），以及 go test -race -count=1 -tags=integration -timeout=120s ./conformance/recovery/... ./internal/durableworkdemo/...（57.172s/1.658s）。07整合后首次whole integration编译red暴露自动合并产生的重复postgres import，修复后上述whole integration/race才green，未把失败轮记成通过。psql17.11版本工具前提仍由mandatory入口实际检查，原v1完整恢复路径保留；05新v2native loader不改变这一整体要求。最终各轮自己登记scope与overlay TMPDIR有限正常清理，04未知scope与07未知CREATE未启动容器限制仍保留。
 
 六项AC已满足，06frontier现在打开；切片02整体未退出，06实际配额/公平门禁、两轴审查/架构优化及准确最终远端CI仍由后续承担。本票只commit自己的branch，未push、未rootmerge、未PR、未cleanup worktree。
+
+Root合入f28b69d后按整个切片基线8e7438e复核diff，发现pg-v2/database.sql原始pg_dump末尾空行触发Git whitespace检查。本地working-tree diff空并不能替代该全range检查；已沿原pg-v1的精确.gitattributes保留策略为pg-v2增加-text/仅免blank-at-eof规则，未改dump任何字节或SHA256SUMS。全range diff随后通过，不改动其他代码的空白规则。

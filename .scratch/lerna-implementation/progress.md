@@ -82,3 +82,7 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 原八票现01/02/03/04/07/08完成，额外09完成；05仍实施并承担整合07/08真实Start/统一Clock，06仍等05。06提前采用[容量交接](../lerna-02-durable-work/capacity-handoff.md)：同库同schema/file≤64明确OwnerRef、统一command→pool→input→Job锁序、所有实际消费入口有限耐久pool门禁，历史鉴权查询/原键优先保留，未配置不产生新责任或无限处理；尚不表示06实现。整片仍待05/06、两轴审查、架构优化及真实CI退出。
 
 2026-10-03，票05已resolved，准确受测产品8a1df46（已merge root07/08及418415f）；显式Start/当前资格/immutable revision policy、持久gate wait/有限retry/deadline、原Job丢通知扫描与责任关闭/成功Projection分开在同一真实PG/SQLite suite通过。07/08业务fixture一并真实Start，root已发布v1/v2/v3原迁移及旧夹具保持，新增wait迁移v4。最终mandatory count1 integration26.132s、whole integration-race57.172s/消费者1.658s，fmt/check/test-race/module verify/checksum/diff check均通过；准确red/green、真实v2旧Claim来源、版本/限制见[05 Comments](../lerna-02-durable-work/issues/05-persistent-wait-and-scan.md#comments)。06frontier打开，whole02仍active，容量/配额与后续审查、架构、准确CI未退出。此前05未开始/实施中的记录为历史检查点，不代表当前状态。
+
+07整合准确418415f的[CI37152615344](https://github.com/ruipengliu/lerna/actions/runs/37152615344)已success：固定18.6工具取消race2.378s、真实两库集成11.242s/race28.948s均-count=1，十项v1源hash不变。
+
+05已resolved并经merger合入f28b69d（tested8a1df46/tip887e839）：0004wait、有限policy/legacy首次接管、等待/退避/丢通知、严格Start/Finish及07/08真实处理整合通过两库whole26.132s/race57.172s；真实v2旧writer b1674b2的完整PG dump/SQLite file另行冻结，原v1/已发布001–003不变。根全range diff核验补齐v2原始dump的窄.gitattributes，dump字节不改。06已claimed，按scheduling/capacity-handoff实际入口门禁开始独立worktree实施；原八票只有06尚未完成，额外09已完成。整片退出仍待06、两轴审查、架构优化和准确最终CI。

@@ -4,7 +4,7 @@
 
 **Blocked by:** 05 — 持久等待与有界扫描
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 内部 ordinary／control／reconciliation 类别具有明确独立容量，控制与核对保留正容量；不提前实现未来模型或 Task 服务。
 - [ ] 领取并发、租户 lane 配额与公平状态由真实数据库事务保证；在领取和实际处理入口校验资格与额度。多 worker 竞争不超额，不能仅靠进程内 semaphore 声称保证，也不把租约过期当作旧进程已停止。

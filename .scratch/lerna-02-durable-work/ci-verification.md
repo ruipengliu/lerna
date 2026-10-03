@@ -54,3 +54,9 @@ SQLite票02合并最新 `6ccdb6d` 后的本地准确检查：make check/test-rac
 必需真实两库集成 `9.718s`、race `26.419s`，均-count=1，十项v1校验和全部OK。包含08真实提交前/Host答复前SIGKILL、正常对照、跨进程原Claim接替及SQLite存储端口确认丢失；不声称SQLite原生Commit异常、断电或生产故障域。05严格Start/统一Clock整合和07当前新恢复工具仍待其各自准确远端提交验证。
 
 之前纯文档 `e0f3894` 的 push run [37150721321](https://github.com/ruipengliu/lerna/actions/runs/37150721321) 也实际success，未将该文档检查点当成08代码测试。
+
+## 正文清理与完整历史恢复检查点
+
+2026-10-03，准确提交 `418415fa7ce11ee163607ced2c09714a4722544e` 的 push run [37152615344](https://github.com/ruipengliu/lerna/actions/runs/37152615344) 为 `completed / success`。`contracts` job `111289412432`、`durable-admission` job `111289412231` 均 success，实际新恢复客户端步骤全部success。
+
+日志确认固定镜像client为psql18.6；显式必跑containerpsql生命周期race `2.378s`，完整双库必需集成 `11.242s`、race `28.948s`，全部-count=1，十项v1校验和全部OK。包含07完整v1来源恢复/真正v2+v3迁移/版本保存拒绝回滚重试、清理/墓碑，以及08进程故障。CID登记后取消清理已真实执行；未知CREATE未启动容器的历史限制保留。这一提交尚不包含随后05严格Start/等待迁移与新v2来源，05的准确新CI仍待核验。
