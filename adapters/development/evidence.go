@@ -178,31 +178,42 @@ func (e evidenceBridge) Check(ctx context.Context, s runtime.Scope, t api.Task, 
 		return api.ConditionResult{}, er
 	}
 	evidence := append([]api.ContentRef{in.ArtifactRef, *requirement.RuleParametersRef}, in.EvidenceRefs...)
+	var fileBasis *savedDeviceBasis
 	if api.Equal(requirement.RuleRef, e.a.SavedRule) {
 		facts, er := e.a.Task.ContextFacts(ctx, e.a.Store, s, e.a.ServiceAuth, t.TaskID)
 		if er != nil {
 			return api.ConditionResult{}, er
 		}
-		saved, readback := false, false
-		for _, op := range facts.Operations {
-			if strings.HasSuffix(op.Intent.LogicalStepKey, "/save_report") {
-				saved = op.Fact.Closed && op.Fact.Effect == "applied" && !op.Fact.MayApplyLater
-			}
-			if strings.HasSuffix(op.Intent.LogicalStepKey, "/verify_file") {
-				readback = op.Fact.Closed && op.Fact.Effect != "unknown" && !op.Fact.MayApplyLater
-			}
-		}
-		if !saved || !readback {
-			valid = false
-		}
-		actual, er := e.a.Files.Read(ctx, params.SavePath)
+		remote, er := e.a.savedDeviceEvidence(ctx, s, t, params, facts)
 		if er != nil {
 			return api.ConditionResult{}, er
 		}
-		valid = valid && api.Hash(actual.Data) == params.ExpectedHash
-		observedAt, er = api.ParseTime(actual.ObservedAt)
-		if er != nil {
-			return api.ConditionResult{}, er
+		if remote.Handled {
+			valid = valid && remote.Valid
+			evidence = append(evidence, remote.Evidence...)
+			fileBasis = remote.Basis
+			if !remote.ObservedAt.IsZero() {
+				observedAt = remote.ObservedAt
+			}
+		} else {
+			saved, readback := false, false
+			for _, op := range facts.Operations {
+				if strings.HasSuffix(op.Intent.LogicalStepKey, "/save_report") {
+					saved = op.Fact.Closed && op.Fact.Effect == "applied" && !op.Fact.MayApplyLater
+				}
+				if strings.HasSuffix(op.Intent.LogicalStepKey, "/verify_file") {
+					readback = op.Fact.Closed && op.Fact.Effect != "unknown" && !op.Fact.MayApplyLater
+				}
+			}
+			actual, er := e.a.Files.Read(ctx, params.SavePath)
+			if er != nil {
+				return api.ConditionResult{}, er
+			}
+			valid = valid && saved && readback && api.Hash(actual.Data) == params.ExpectedHash && uint64(len(actual.Data)) == params.ExpectedLength
+			observedAt, er = api.ParseTime(actual.ObservedAt)
+			if er != nil {
+				return api.ConditionResult{}, er
+			}
 		}
 	}
 	if valid {
@@ -219,7 +230,8 @@ func (e evidenceBridge) Check(ctx context.Context, s runtime.Scope, t api.Task, 
 		Artifact     api.ContentRef       `json:"artifact"`
 		Parameters   brain.RuleParameters `json:"parameters"`
 		Verdict      string               `json:"verdict"`
-	}{s.Ref(t.TaskID, t.Revision), t.GoalRevision, in.RequirementRef, in.ArtifactRef, params, verdict})
+		FileBasis    *savedDeviceBasis    `json:"file_basis,omitempty"`
+	}{s.Ref(t.TaskID, t.Revision), t.GoalRevision, in.RequirementRef, in.ArtifactRef, params, verdict, fileBasis})
 	scopeRef, er := e.a.Publish(ctx, s, e.a.ServiceAuth, stableID("content", "check/"+req.CheckID), "application/json", scopeBody, append(evidence, t.GoalRef), []api.ContentRef{})
 	if er != nil {
 		return api.ConditionResult{}, er
