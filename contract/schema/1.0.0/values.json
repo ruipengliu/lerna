@@ -752,6 +752,74 @@
         }
       },
       "required": ["tenant_id", "subject_id", "delegation_chain"]
+    },
+    "SchemaDigest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "MethodSupport": {
+      "type": "object",
+      "properties": {
+        "contract_version": {
+          "$ref": "#/$defs/ContractVersion"
+        },
+        "profile": {
+          "$ref": "#/$defs/ProfileName"
+        },
+        "method": {
+          "$ref": "#/$defs/MethodName"
+        },
+        "input_schema": {
+          "$ref": "#/$defs/ID"
+        },
+        "output_schema": {
+          "$ref": "#/$defs/ID"
+        },
+        "input_schema_digest": {
+          "$ref": "#/$defs/SchemaDigest"
+        },
+        "output_schema_digest": {
+          "$ref": "#/$defs/SchemaDigest"
+        }
+      },
+      "required": [
+        "contract_version",
+        "profile",
+        "method",
+        "input_schema",
+        "output_schema",
+        "input_schema_digest",
+        "output_schema_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NegotiationRequest": {
+      "type": "object",
+      "properties": {
+        "contract_version": {
+          "$ref": "#/$defs/ContractVersion"
+        },
+        "profile": {
+          "$ref": "#/$defs/ProfileName"
+        },
+        "method": {
+          "$ref": "#/$defs/MethodName"
+        },
+        "input_schema_digest": {
+          "$ref": "#/$defs/SchemaDigest"
+        },
+        "output_schema_digest": {
+          "$ref": "#/$defs/SchemaDigest"
+        }
+      },
+      "required": [
+        "contract_version",
+        "profile",
+        "method",
+        "input_schema_digest",
+        "output_schema_digest"
+      ],
+      "additionalProperties": false
     }
   }
 }

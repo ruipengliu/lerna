@@ -84,6 +84,14 @@ try {
   execFileSync('node', ['--test', 'sdk/typescript/src/query.test.ts'], {
     stdio: 'inherit',
   });
+  execFileSync(
+    'go',
+    ['test', './conformance/component', '-run', 'Negotiation'],
+    { stdio: 'inherit' },
+  );
+  execFileSync('node', ['--test', 'sdk/typescript/src/negotiation.test.ts'], {
+    stdio: 'inherit',
+  });
   console.log(
     `${fixtures.length} shared fixtures passed; all positive values completed real Go→TS and TS→Go roundtrips.`,
   );

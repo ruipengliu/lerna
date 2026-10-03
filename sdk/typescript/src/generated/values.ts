@@ -201,14 +201,55 @@ export type SubjectBinding = {
   subject_id: ID;
   delegation_chain: Array<DelegatedSubject>;
 };
-export const inputSchemas = [
-  {
-    version: '1.0.0',
-    profile: 'command',
-    method: 'command.get',
-    schema: 'CommandGetRequest',
-  },
-] as const;
+export type SchemaDigest = string;
+export type MethodSupport = {
+  contract_version: ContractVersion;
+  profile: ProfileName;
+  method: MethodName;
+  input_schema: ID;
+  output_schema: ID;
+  input_schema_digest: SchemaDigest;
+  output_schema_digest: SchemaDigest;
+};
+export type NegotiationRequest = {
+  contract_version: ContractVersion;
+  profile: ProfileName;
+  method: MethodName;
+  input_schema_digest: SchemaDigest;
+  output_schema_digest: SchemaDigest;
+};
+export const supportedMethods = Object.freeze(
+  [
+    {
+      contract_version: '1.0.0',
+      profile: 'command',
+      method: 'command.get',
+      input_schema: 'CommandGetRequest',
+      output_schema: 'CommandGetResponse',
+      input_schema_digest:
+        'sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b',
+      output_schema_digest:
+        'sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161',
+    },
+  ].map((method) => Object.freeze(method)),
+) as ReadonlyArray<Readonly<MethodSupport>>;
+export const inputSchemas = Object.freeze(
+  (
+    [
+      {
+        version: '1.0.0',
+        profile: 'command',
+        method: 'command.get',
+        schema: 'CommandGetRequest',
+        output: 'CommandGetResponse',
+        inputDigest:
+          'sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b',
+        outputDigest:
+          'sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161',
+      },
+    ] as const
+  ).map((entry) => Object.freeze(entry)),
+);
 export interface Values {
   ID: ID;
   Revision: Revision;
@@ -254,6 +295,9 @@ export interface Values {
   TransportOutcome: TransportOutcome;
   DelegatedSubject: DelegatedSubject;
   SubjectBinding: SubjectBinding;
+  SchemaDigest: SchemaDigest;
+  MethodSupport: MethodSupport;
+  NegotiationRequest: NegotiationRequest;
 }
 export const schema = {
   $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -1009,6 +1053,74 @@ export const schema = {
         },
       },
       required: ['tenant_id', 'subject_id', 'delegation_chain'],
+    },
+    SchemaDigest: {
+      type: 'string',
+      pattern: '^sha256:[0-9a-f]{64}$',
+    },
+    MethodSupport: {
+      type: 'object',
+      properties: {
+        contract_version: {
+          $ref: '#/$defs/ContractVersion',
+        },
+        profile: {
+          $ref: '#/$defs/ProfileName',
+        },
+        method: {
+          $ref: '#/$defs/MethodName',
+        },
+        input_schema: {
+          $ref: '#/$defs/ID',
+        },
+        output_schema: {
+          $ref: '#/$defs/ID',
+        },
+        input_schema_digest: {
+          $ref: '#/$defs/SchemaDigest',
+        },
+        output_schema_digest: {
+          $ref: '#/$defs/SchemaDigest',
+        },
+      },
+      required: [
+        'contract_version',
+        'profile',
+        'method',
+        'input_schema',
+        'output_schema',
+        'input_schema_digest',
+        'output_schema_digest',
+      ],
+      additionalProperties: false,
+    },
+    NegotiationRequest: {
+      type: 'object',
+      properties: {
+        contract_version: {
+          $ref: '#/$defs/ContractVersion',
+        },
+        profile: {
+          $ref: '#/$defs/ProfileName',
+        },
+        method: {
+          $ref: '#/$defs/MethodName',
+        },
+        input_schema_digest: {
+          $ref: '#/$defs/SchemaDigest',
+        },
+        output_schema_digest: {
+          $ref: '#/$defs/SchemaDigest',
+        },
+      },
+      required: [
+        'contract_version',
+        'profile',
+        'method',
+        'input_schema_digest',
+        'output_schema_digest',
+      ],
+      additionalProperties: false,
     },
   },
 } as const;

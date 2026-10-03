@@ -88,3 +88,22 @@ Go 调用方必须传递有有限 deadline 的非 nil context，所有注入端�
 `accept_before` 仅检查本次读取开始时刻。受信时钟取样后固定，不因授权耗时重新延长或重新接纳；本地读资源 deadline 则覆盖整个过程。原写入记录即使截止已过，也继续按原引用查询其固定回执。
 
 共同 [`queries.json`](../conformance/fixtures/1.0.0/queries.json) 覆盖合法主体／委托正常读取、越权存在与不存在、跨租户、payload 身份伪造、授权故障、目录 owner 错配、不可用、未找到、保留清理与读取截止。`make test-contract` 经 Go 与 TS 公开入口运行同一场景；额外公开行为测试覆盖同 owner 进程接替、默认 owner 改变不迁移原命令、有限取消、恶意回调改写及事实快照不变。这些是注入身份与受信可控目录证据，不是生产身份、数据库恢复或分布式传输证据。
+
+## 准确版本与方法协商
+
+`SupportedMethods()` / TS `supportedMethods` 仅列出本地已完成的 **1.0.0 / command / command.get** 合同路径。每项包含 `contract_version / profile / method`、输入根 `CommandGetRequest`、输出根 `CommandGetResponse` 以及各方向的 Schema digest。列表值由 [`methods.json`](schema/1.0.0/methods.json) 明确登记两个根，身份从输入 Schema 的 const 派生；存在某个请求类型或设计章节不会自动开放方法。Go 返回独立副本，TS 固定清单及条目不可变；协商返回的新描述符可以修改，不影响支持事实。
+
+Go `Negotiate(rawJSON)` / TS `negotiate(wire)` 接受仅含 `contract_version / profile / method / input_schema_digest / output_schema_digest` 的闭合请求。准确版本未知返回 version_unsupported；同版未登记 profile 或方法返回 unsupported；输入或输出摘要不一致返回 version_unsupported；未知／缺失字段、重复键或非法摘要格式返回 schema_invalid。没有默认版本、semver 范围或自动降级。协商只校验兼容性，不提供授权令牌；后续调用仍通过完整方法、受信身份、原 owner 及截止验证。读请求不提交业务工作。
+
+```ts
+const { input_schema, output_schema, ...desired } = supportedMethods[0];
+const method = negotiate(JSON.stringify(desired));
+// 将 method.contract_version / profile / method 用于构造 command.get。
+// 随后由受信宿主调用 getCommand，使用有限 maxReadDurationMs。
+```
+
+Schema 摘要算法为 **lerna-schema-digest-1**：每方向构建 `{$schema:source.$schema,$id:source.$id,$ref:"#/$defs/<root>",$defs:{根及所有递归可达定义}}`；完整保留 format、闭合字段、条件、oneOf 分支等规则。规范 JSON 采用 UTF-16 键排序、数组原序、Unicode 标量保留，然后哈希 UTF-8 `lerna-schema-digest-1\n` 前缀加规范内容，结果是 `sha256:` 加 64 位小写十六进制。Schema 元数据的数字只允许 `0..9007199254740991` 的安全非负整数，拒绝 -0；它不经过禁止线上 number 的原始负载入口。对象键顺序／空白不改变摘要，可达公共定义或新增可选字段会改变摘要；不可达定义不影响本方向。它与原命令业务内容摘要不同，不能互换，也不能替代实现正确性或共同夹具。
+
+[`schema-digests.json`](../conformance/fixtures/1.0.0/schema-digests.json) 保存独立 Python hashlib 黄金摘要，Go 与 TS 各自从嵌入 Schema 独立遍历和重新计算；[`negotiations.json`](../conformance/fixtures/1.0.0/negotiations.json) 是同版正常／拒绝案例。公开行为测试串起协商、命令构造、受信读取与固定回执／当前进展解码；真实生成命令测试验证根约束、深层公共引用、输出联合分支及可选字段变化的摘要敏感性。`make test-contract` 必须同时运行这些证据和独立的命令摘要套件。
+
+本版材料尚未作为发布包上线；设计占位 `v2-design-1`、core、task、memory、delegation、Schedule、Environment 等 profile 或方法均未开放。当前交付只有共同信封、command.get 机器合同、受信注入事实源与合同验证设施，无生产认证、网络发现、持久接纳／查询或完整 Application SDK。正式发布后扩展字段、枚举或方法必须发布新准确版本并保留旧版验证材料，不能原地扩大旧版含义。

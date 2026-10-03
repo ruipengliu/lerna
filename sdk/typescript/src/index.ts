@@ -12,3 +12,5 @@ export {
   type CommandReadOptions,
 } from './query.ts';
 export type { CommandFactReader } from './readfacts.ts';
+
+export { negotiate } from './negotiation.ts';

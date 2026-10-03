@@ -1,0 +1,12 @@
+[
+  {
+    "algorithm": "lerna-schema-digest-1",
+    "root": "CommandGetRequest",
+    "digest": "sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b"
+  },
+  {
+    "algorithm": "lerna-schema-digest-1",
+    "root": "CommandGetResponse",
+    "digest": "sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161"
+  }
+]
