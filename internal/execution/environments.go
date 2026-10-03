@@ -566,6 +566,6 @@ func (s *Service) failEnvironmentPreparation(ctx context.Context, st rt.Store, s
 			}
 		}
 		_, err = tx.Raise(ctx, EnvironmentCleanupJob, current.EnvironmentID, sc.Ref(current.EnvironmentID, current.Revision), now)
-		return nil
+		return err
 	})
 }
