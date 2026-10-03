@@ -59,7 +59,7 @@ func (s *Service) reserve(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 	if in.ContentRef.ByteLength > MaxContentBytes {
 		return ReserveOutput{}, api.E("invalid_request", "content_too_large")
 	}
-	if err := validateSources(tx.Scope(), in.ProcessedSources); err != nil {
+	if err := s.validateSources(tx.Scope(), in.ProcessedSources); err != nil {
 		return ReserveOutput{}, err
 	}
 	p, err := s.allowed(ctx, tx, auth, in.PolicyRef, "content.write", s.Location, false)
@@ -239,10 +239,10 @@ func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 	if err := checkContentRef(tx.Scope(), in.ContentRef); err != nil {
 		return api.ContentRef{}, err
 	}
-	if err := validateSources(tx.Scope(), in.ProcessedSources); err != nil {
+	if err := s.validateSources(tx.Scope(), in.ProcessedSources); err != nil {
 		return api.ContentRef{}, err
 	}
-	if err := validateSources(tx.Scope(), in.DisclosedSources); err != nil {
+	if err := s.validateSources(tx.Scope(), in.DisclosedSources); err != nil {
 		return api.ContentRef{}, err
 	}
 	for _, disclosed := range in.DisclosedSources {
@@ -296,14 +296,14 @@ func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		if err = s.checkSourceGate(ctx, tx, auth, source, "content.write", s.Location, false); err != nil {
 			return api.ContentRef{}, err
 		}
-		if source.ContentID == in.ContentRef.ContentID && source.Version == in.ContentRef.Version {
+		if source.OwnerID == in.ContentRef.OwnerID && source.ContentID == in.ContentRef.ContentID && source.Version == in.ContentRef.Version {
 			return api.ContentRef{}, api.E("invalid_request", "source_cycle")
 		}
 		v, err := s.CheckContentTx(ctx, tx, auth, source, "content.write", s.Location, false)
 		if err != nil {
 			return api.ContentRef{}, err
 		}
-		sp, err := s.policy(ctx, tx, v.PolicyRef)
+		sp, err := s.sourcePolicy(ctx, tx, v)
 		if err != nil {
 			return api.ContentRef{}, err
 		}
@@ -329,8 +329,8 @@ func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		return api.ContentRef{}, err
 	}
 	for _, source := range in.ProcessedSources {
-		edgeID := semanticID("edge", contentKey(in.ContentRef)+"/"+contentKey(source))
-		if err = tx.Create(ctx, "content.source_edges", edgeID, contentKey(source), SourceEdge{in.ContentRef, source, "processed"}); err != nil {
+		edgeID := semanticID("edge", contentKey(in.ContentRef)+"/"+sourceKey(tx.Scope(), source))
+		if err = tx.Create(ctx, "content.source_edges", edgeID, sourceKey(tx.Scope(), source), SourceEdge{in.ContentRef, source, "processed"}); err != nil {
 			return api.ContentRef{}, err
 		}
 	}
@@ -359,6 +359,9 @@ func (s *Service) CheckContentTx(ctx context.Context, tx runtime.Tx, auth runtim
 	return s.checkContent(ctx, tx, auth, ref, purpose, location, continuous, map[string]bool{}, 0, false)
 }
 func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous bool, seen map[string]bool, depth int, independent bool) (ContentVersion, error) {
+	if ref.OwnerID != tx.Scope().OwnerID {
+		return s.checkForeignContent(ctx, tx, auth, ref, purpose, location, continuous, independent && depth > 0, depth > 0)
+	}
 	if err := checkContentRef(tx.Scope(), ref); err != nil {
 		return ContentVersion{}, err
 	}
@@ -482,8 +485,15 @@ func (s *Service) Read(ctx context.Context, scope runtime.Scope, auth runtime.Au
 	return s.ReadBytes(ctx, scope, auth, ref, purpose, s.Location)
 }
 func (s *Service) ReadBytes(ctx context.Context, scope runtime.Scope, auth runtime.Auth, ref api.ContentRef, purpose, location string) ([]byte, error) {
+	var err error
+	if s.Foreign != nil {
+		ctx, err = s.PrepareForeignContext(ctx, scope, auth, []api.ContentRef{ref}, purpose, location)
+		if err != nil {
+			return nil, err
+		}
+	}
 	var v ContentVersion
-	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
+	err = s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		var err error
 		v, err = s.CheckContentTx(ctx, tx, auth, ref, purpose, location, false)
 		if err != nil {
@@ -500,6 +510,12 @@ func (s *Service) ReadBytes(ctx context.Context, scope runtime.Scope, auth runti
 	b, err := s.Objects.Read(ctx, v.ObjectLocation, ref, MaxContentBytes)
 	if err != nil {
 		return nil, err
+	}
+	if s.Foreign != nil {
+		ctx, err = s.PrepareForeignContext(ctx, scope, auth, []api.ContentRef{ref}, purpose, location)
+		if err != nil {
+			return nil, err
+		}
 	}
 	err = s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		current, err := s.CheckContentTx(ctx, tx, auth, ref, purpose, location, false)
@@ -546,10 +562,7 @@ func (s *Service) RegisterCopyTx(ctx context.Context, tx runtime.Tx, auth runtim
 	if !api.ValidID(in.CopyID) {
 		return CopyOutput{}, api.E("invalid_request", "invalid_copy_identity")
 	}
-	if err := runtime.CheckRef(tx.Scope(), in.HolderRef); err != nil {
-		return CopyOutput{}, err
-	}
-	if err := runtime.CheckRef(tx.Scope(), in.ReferenceIntentRef); err != nil {
+	if err := checkCopyOwnerRefs(tx.Scope(), in.HolderRef, in.ReferenceIntentRef); err != nil {
 		return CopyOutput{}, err
 	}
 	v, err := s.CheckContentTx(ctx, tx, auth, in.ContentRef, in.Purpose, in.Location, false)
