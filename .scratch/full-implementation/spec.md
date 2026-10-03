@@ -1,6 +1,6 @@
 # Harness 全项目参考实现
 
-Status: ready-for-agent
+Status: partial
 
 本轮在 code-dev 实现现行技术设计及 C1–C9、A1–A4、V1–V2 的可运行参考实现。依据为 AGENTS.md、CONTEXT.md、docs/architecture/engineering/implementation-readiness.md 及其覆盖表；业务前态、负责方、原身份和恢复不得重新选择。
 
@@ -38,6 +38,24 @@ TaskPolicy、风险及阈值通过准确配置固定。仅测试/开发配置有
 01 合同与 Runtime 端口 → 02 存储、03 Task、04 Execution、05 Memory、06 治理、07 SDK/Web。
 02–07 → 08 Brain/Interaction/传输/进程装配 → 09 集成故障验证/覆盖审查。
 
+完整范围复核增加的本地前沿：11 Search/Body、12 模拟 GUI、13 隔离 WASI → 15 配置行动闭环；
+14 上下文查找与 19 授权列表恢复归最后复核修复；16 独立设备 Executor、17 跨 owner Agent、
+18 Skill/AgentConfig、20 EndpointChannel 重绑与分类 worker、21 三系统第二实现分别保留独立工单。
+这些是本地编码与验证范围，不能以缺生产账户或设备作为完成依据。
+
 ## 完成标准
 
 每个工单记录实际行为检查与未满足外部前提。代码可编译但方法未完成、扩展被关闭或验收没有运行的条目保持部分/blocked，不能记 resolved。完整项目完成状态由覆盖报告判断，不由目录数量判断。
+
+## 当前交付状态
+
+工程已建立可运行的有界参考实现，完成范围、真实运行证据与复现命令统一见
+[实施覆盖报告](../../docs/architecture/engineering/implementation-coverage.md)。状态保持
+partial：Search/Body 获取、完整模拟 GUI 手势、不可信 WASI、上下文查找、授权列表恢复、
+独立设备权威、远端委派、Skill 配置、Channel 重绑与三系统第二实现仍在补齐；
+真实模型质量、公司身份、真机、生产规模与容灾还缺少
+独立外部验收。显式 unsupported 只防止错误接纳，不代表这些要求已经完成。
+
+工单中的 resolved 只对应其已定义参考切片，不能据此推断整个 C1–C9、A1–A4、V1–V2
+或 F01–F25 全部达标。已通过与未通过、实现证据与设计模型分别记录，不把丢回执后的
+同义新命令、重新初始化数据或增加业务期限作为恢复证据。

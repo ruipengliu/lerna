@@ -48,6 +48,26 @@ func TrustedComputeCapability() Capability {
 	digest, _ := api.Digest([]any{"environment.trusted_compute", "1", input, output, PassiveEnvironmentFormat})
 	return Capability{Ref: api.ComponentRef{ComponentID: BuiltinComponentID("environment.trusted_compute"), Version: "1", Digest: digest}, EffectClass: "no_idempotency_guarantee", MaxAttempts: 1, InputSchema: input, OutputSchema: output}
 }
+
+// WASIRunCellCapability 使用原 Invoke/Attempt/Cell 合同；准确运行时另由 InstallLock 固定。
+func WASIRunCellCapability() Capability {
+	input := api.SchemaFor[ComputeArguments]()
+	output := api.SchemaFor[CellResult]()
+	digest, _ := api.Digest([]any{"environment.run_cell", "1", input, output, PassiveEnvironmentFormat, "restricted-wasi-preview1-interpreter/1"})
+	return Capability{Ref: api.ComponentRef{ComponentID: BuiltinComponentID("environment.run_cell"), Version: "1", Digest: digest}, EffectClass: "no_idempotency_guarantee", MaxAttempts: 1, InputSchema: input, OutputSchema: output}
+}
+
+func NamespaceByteLimit(limits []api.Amount) (uint64, error) {
+	for _, amount := range limits {
+		if amount.Unit == "namespace_bytes" {
+			n, err := strconv.ParseUint(amount.Value, 10, 64)
+			if err == nil && n >= 1 && n <= 65536 {
+				return n, nil
+			}
+		}
+	}
+	return 0, api.E("invalid_request", "invalid_namespace_byte_limit")
+}
 func NamespaceOutputSchemaRef() api.ComponentRef {
 	digest, _ := api.Digest(api.SchemaFor[CellResult]())
 	return api.ComponentRef{ComponentID: BuiltinComponentID("environment.namespace.result"), Version: "1", Digest: digest}
@@ -56,7 +76,8 @@ func (d *TrustedComputeDriver) Capability() Capability { return TrustedComputeCa
 
 var bindingName = regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_]{0,63}$`)
 
-func validateNamespace(n PassiveNamespace) error {
+// ValidateNamespace 核验公开被动数据格式；程序输出不能携带句柄、代码或权威字段。
+func ValidateNamespace(n PassiveNamespace) error {
 	if n.Format != PassiveEnvironmentFormat || len(n.Bindings) > 100 {
 		return api.E("invalid_request", "invalid_passive_namespace")
 	}
@@ -126,7 +147,7 @@ func (d *TrustedComputeDriver) Prepare(ctx context.Context, sc rt.Scope, a rt.Au
 	if err = api.Decode(rawNamespace, &ns); err != nil {
 		return PreparedRequest{}, err
 	}
-	if err = validateNamespace(ns); err != nil {
+	if err = ValidateNamespace(ns); err != nil {
 		return PreparedRequest{}, err
 	}
 	inputRaw, err := d.Content.ReadBytes(ctx, sc, a, args.InputRef, "environment_input", d.Location)
@@ -137,7 +158,7 @@ func (d *TrustedComputeDriver) Prepare(ctx context.Context, sc rt.Scope, a rt.Au
 	if err = api.Decode(inputRaw, &input); err != nil {
 		return PreparedRequest{}, err
 	}
-	if err = validateNamespace(input); err != nil {
+	if err = ValidateNamespace(input); err != nil {
 		return PreparedRequest{}, err
 	}
 	code, err := d.Content.ReadBytes(ctx, sc, a, args.CodeRef, "environment_compute_spec", d.Location)
@@ -215,10 +236,10 @@ func (d *TrustedComputeDriver) Prepare(ctx context.Context, sc rt.Scope, a rt.Au
 		ns.Bindings = append(ns.Bindings, v)
 	}
 	sort.Slice(ns.Bindings, func(i, j int) bool { return ns.Bindings[i].Name < ns.Bindings[j].Name })
-	if err = validateNamespace(ns); err != nil {
+	if err = ValidateNamespace(ns); err != nil {
 		return PreparedRequest{}, err
 	}
-	limit, err := strconv.ParseUint(env.Limits[0].Value, 10, 64)
+	limit, err := NamespaceByteLimit(env.Limits)
 	if err != nil || uint64(len(api.Raw(ns))) > limit {
 		return PreparedRequest{}, api.E("overloaded", "namespace_byte_limit")
 	}
@@ -235,6 +256,23 @@ func (d *TrustedComputeDriver) Prepare(ctx context.Context, sc rt.Scope, a rt.Au
 	}
 	encoded := api.Raw(args)
 	return PreparedRequest{Encoded: encoded, Digest: api.Hash(encoded), Cell: &CellPreparation{EnvironmentRef: args.EnvironmentRef, InstanceID: env.InstanceID, ExpectedGeneration: env.Generation, ExpectedNamespaceRevision: env.NamespaceRevision, Namespace: ns, Sources: sources}}, nil
+}
+
+func cellNamespace(cell *CellPreparation, fact Fact) (PassiveNamespace, error) {
+	ns := cell.Namespace
+	if cell.DynamicNamespace {
+		if fact.Namespace == nil {
+			return PassiveNamespace{}, api.E("invalid_request", "cell_namespace_missing")
+		}
+		ns = *fact.Namespace
+	}
+	if err := ValidateNamespace(ns); err != nil {
+		return PassiveNamespace{}, err
+	}
+	if cell.DynamicNamespace && (cell.NamespaceByteLimit == 0 || uint64(len(api.Raw(ns))) > cell.NamespaceByteLimit) {
+		return PassiveNamespace{}, api.E("overloaded", "namespace_byte_limit")
+	}
+	return ns, nil
 }
 func appendUniqueSources(sources []api.ContentRef, refs ...api.ContentRef) []api.ContentRef {
 	for _, r := range refs {

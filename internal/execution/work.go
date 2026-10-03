@@ -359,7 +359,11 @@ func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 	var namespaceRef *api.ContentRef
 	if a.Prepared.Cell != nil && !a.CellCommitted && f.Effect == "applied" {
 		cell := a.Prepared.Cell
-		ref, err := s.cfg.Content.Publish(ctx, sc, op.Principal, Publication{ContentID: stableID("content", a.AttemptID+":namespace"), MediaType: "application/json", Purpose: "environment_namespace", Location: s.cfg.Location, ProcessedSources: cell.Sources, DisclosedSources: []api.ContentRef{}}, api.Raw(cell.Namespace))
+		namespace, err := cellNamespace(cell, f)
+		if err != nil {
+			return err
+		}
+		ref, err := s.cfg.Content.Publish(ctx, sc, op.Principal, Publication{ContentID: stableID("content", a.AttemptID+":namespace"), MediaType: "application/json", Purpose: "environment_namespace", Location: s.cfg.Location, ProcessedSources: cell.Sources, DisclosedSources: []api.ContentRef{}}, api.Raw(namespace))
 		if err != nil {
 			return err
 		}

@@ -370,7 +370,9 @@ func (s *Service) fenceWork(ctx context.Context, st rt.Store, sc rt.Scope, w rt.
 		if err != nil {
 			return err
 		}
-		if current.ControlEpoch != lease.ControlEpoch || current.Revision != lease.Revision {
+		// 原效果归并只会改变占用/集合修订，不推翻同一实例、epoch 与入口状态的实际 Fence。
+		// 比较真实 fence 绑定，不能因并发释放原写者而丢掉已获得的当前代次停止事实。
+		if current.ControlEpoch != lease.ControlEpoch || current.InstanceID != lease.InstanceID || current.HolderID != lease.HolderID || current.TakeoverRequested != lease.TakeoverRequested || (current.State == "held") != (lease.State == "held") {
 			return nil
 		}
 		current.Revision = rev + 1
@@ -400,7 +402,7 @@ func (s *Service) resourceBarrier(ctx context.Context, tx rt.Tx, op operationRec
 	if _, err = tx.Get(ctx, Namespace+".observations", a.Prepared.ObservationID, &obs); err != nil {
 		return err
 	}
-	if obs.Result == nil || obs.Result.ControlEpoch != lease.ControlEpoch || obs.Result.InstanceID != lease.InstanceID || obs.Result.ActionBefore != a.Prepared.ObservationBefore {
+	if obs.Result == nil || obs.Input.ResourceID != lease.ResourceID || obs.Result.ResourceRef.TenantID != tx.Scope().TenantID || obs.Result.ResourceRef.OwnerID != tx.Scope().OwnerID || obs.Result.ResourceRef.ObjectID != lease.ResourceID || obs.Result.ControlEpoch != lease.ControlEpoch || obs.Result.InstanceID != lease.InstanceID || obs.Result.ActionBefore != a.Prepared.ObservationBefore || a.Prepared.ObservationTargetVersion == "" || obs.Result.TargetVersion != a.Prepared.ObservationTargetVersion {
 		return api.E("revision_conflict", "observation_stale")
 	}
 	matched := false
@@ -437,7 +439,13 @@ func (s *Service) releaseInflight(ctx context.Context, tx rt.Tx, a Attempt) erro
 	}
 	if lease.InflightWrite == a.AttemptID {
 		lease.InflightWrite = ""
-		lease.ActuallyStopped = true
+		// 原 Attempt 的退出只证明其原 epoch；不能替新的接管 epoch 伪报 Fence 已落实。
+		if lease.ControlEpoch == a.Prepared.ResourceEpoch {
+			lease.ActuallyStopped = true
+		}
+		if lease.ActuallyStopped && lease.State != "held" {
+			lease.State = "released"
+		}
 		lease.Revision = rev + 1
 		return tx.Put(ctx, Namespace+".resources", lease.ResourceID, rev, lease)
 	}
