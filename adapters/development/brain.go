@@ -56,6 +56,9 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 	if e = v.Validate(raw); e != nil {
 		return task.Proposal{}, e
 	}
+	if _, e = b.a.Knowledge.ProposalLimits(ctx, s, b.a.ServiceAuth, i, p); e != nil {
+		return task.Proposal{}, e
+	}
 	var original task.Proposal
 	_, e = b.a.Store.Read(ctx, s, "platform.prepared_proposals", i.DecisionID, 0, &original)
 	if e == nil {

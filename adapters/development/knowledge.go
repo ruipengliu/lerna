@@ -274,13 +274,13 @@ func (k *KnowledgeAssembly) CheckBrainTx(ctx context.Context, tx runtime.Tx, aut
 }
 
 // ProposalLimits 在已解析原 Proposal 之后、任何 Use/准入之前校验行动数量与准确能力。
-func (k *KnowledgeAssembly) ProposalLimits(ctx context.Context, scope runtime.Scope, auth runtime.Auth, intent api.DecisionDispatchIntent, proposal task.Proposal) (*governance.KnowledgeCommit, error) {
+func (k *KnowledgeAssembly) ProposalLimits(ctx context.Context, scope runtime.Scope, auth runtime.Auth, intent api.DecisionDispatchIntent, proposal brain.Proposal) (*governance.KnowledgeCommit, error) {
 	if k == nil {
 		return nil, nil
 	}
 	var commit governance.KnowledgeCommit
 	var found bool
-	status, err := k.a.Store.Within(ctx, scope, []string{"content", "governance", "platform"}, func(tx runtime.Tx) error {
+	status, err := k.a.Store.Within(ctx, scope, []string{"content", "memory", "governance", "platform"}, func(tx runtime.Tx) error {
 		var err error
 		commit, found, err = k.a.Governance.FindSelectionTx(ctx, tx, auth, intent.SnapshotRef, intent.DecisionID)
 		return err
@@ -302,7 +302,7 @@ func (k *KnowledgeAssembly) ProposalLimits(ctx context.Context, scope runtime.Sc
 		for _, cap := range commit.Selection.EffectiveCapabilityRefs {
 			allowed = allowed || api.Equal(cap, action.CapabilityRef)
 		}
-		if !allowed || !knowledgeCostsBounded(action.CostBound, commit.Selection.EffectiveControls.MaxCallCostBound) {
+		if !allowed {
 			return nil, api.E("forbidden", "knowledge_action_control_exceeded")
 		}
 	}
