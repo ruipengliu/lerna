@@ -6,9 +6,11 @@
 
 ## 当前状态
 
-- 切片 01：6 个 tickets 已确认。任务 01、02 已 resolved 并合入集成分支（`45b90ad`、`c0e12f7`）；任务 03、04 按依赖允许并行实现；任务 05、06 等待依赖。其他切片仍为 not-started。
+- 切片 01：6 个 tickets 已确认。任务 01–04 已 resolved 并合入集成分支（`45b90ad`、`c0e12f7`、`3c156a6`、`a96f49d`）；任务 05 正在实现；任务 06 等待依赖。其他切片仍为 not-started。
 - 任务 01 证据：锁定依赖干净重装、`make check`、`make test-race` 通过；41 项共同正反夹具及合法值的真实 Go→TS／TS→Go 往返通过。详细记录见[任务 01](../lerna-01-command-contracts/issues/01-exact-contract-roundtrip.md#comments)。这些只证明公共值合同范围。
 - 任务 02 证据：`make bootstrap`、`make check`、`make test-race` 通过；共同语料共 109 项（41 值、68 命令），两端错误分类及合法输入真实往返通过；6 项生成器拒绝探针通过。详细记录见[任务 02](../lerna-01-command-contracts/issues/02-strict-command-validation.md#comments)。已按决策消除 TypeScript 内部模块反向导入公共 facade 的循环依赖。
+- 任务 03 证据：`make check` 通过；46 项共同摘要案例（31 独立预期、15 拒绝），覆盖 UTF-16 键排序、业务／主体变化、重传及 1 MiB 边界。详细记录见[任务 03](../lerna-01-command-contracts/issues/03-canonical-command-digest.md#comments)。
+- 任务 04 证据：合并后 `make check`、`make test-race`，最终别名修复后 `make lint test build` 与生成一致性通过。共同语料为 153 项值／命令／响应往返夹具，加 46 项摘要案例；最终 21 个 TS 测试。详细记录见[任务 04](../lerna-01-command-contracts/issues/04-receipt-and-readonly-query.md#comments)。只读接口返回独立观察，并保留独立的原输入引用，避免调用方或回调修改绑定及源事实；受信入口仍待任务 05。
 - 切片完成必须有实际验收证据；规格明确、任务发布和代码合并均不等于验收完成。
 - 真实外部接入、独立组件、生产故障域、评测样本与容量结论按验收矩阵分别记录，不用本地模拟结果代替。
 
