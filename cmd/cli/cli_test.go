@@ -217,9 +217,10 @@ func TestCLIOriginalCommandIsDurableBeforeIOAndRecoveredWithoutNewDeadline(t *te
 
 func invoke(t *testing.T, args ...string) ([]byte, []byte, error) {
 	t.Helper()
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	executable := cliBinary(t) // 构建时间不消费真实客户端的等待期限。
+	ctx, cancel := context.WithTimeout(context.Background(), 35*time.Second)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, cliBinary(t), args...)
+	cmd := exec.CommandContext(ctx, executable, args...)
 	var out, diagnostic strings.Builder
 	cmd.Stdout, cmd.Stderr = &out, &diagnostic
 	err := cmd.Run()
@@ -227,7 +228,7 @@ func invoke(t *testing.T, args ...string) ([]byte, []byte, error) {
 }
 
 func (f cliFixture) flags() []string {
-	return []string{"--endpoint", f.server.URL, "--ca-file", f.ca, "--token-file", f.config.TokenFile}
+	return []string{"--endpoint", f.server.URL, "--ca-file", f.ca, "--token-file", f.config.TokenFile, "--timeout", "30s"}
 }
 
 func TestCLIDiscoveryRequiresAuthenticatedTLS(t *testing.T) {

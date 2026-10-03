@@ -1123,6 +1123,7 @@ func TestExecutionPaginationPinsCollectionAndRejectsStaleOrForeignCursor(t *test
 		t.Fatalf("foreign cursor accepted %v", err)
 	}
 	f.command(t, "execution.cancel", one.OperationID, domain.CancelInput{OperationID: one.OperationID, TaskRef: one.TaskRef, OrchestratorID: one.TaskRef.OwnerID, Reason: "mutation after first page"}, nil)
+	q.QueryID = api.NewID("query") // 新主体的读取保留cursor，但不能复用另一主体的原query_id。
 	if _, err := f.dispatcher.Query(context.Background(), f.auth, api.Raw(q)); !api.IsCode(err, "snapshot_required") {
 		t.Fatalf("stale snapshot accepted %v", err)
 	}

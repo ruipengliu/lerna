@@ -1,0 +1,72 @@
+name: reference-conformance
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  linux-reference:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:17.11@sha256:639ab7ceb90e13123085b741fb31ef493fba25463002f6da665352e7b534b652
+        env:
+          POSTGRES_USER: harness_ci
+          POSTGRES_PASSWORD: harness_ci_ephemeral
+          POSTGRES_DB: harness_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U harness_ci -d harness_ci"
+          --health-interval 5s --health-timeout 3s --health-retries 12
+    env:
+      CGO_ENABLED: "1"
+      GOTOOLCHAIN: local
+      HARNESS_TEST_POSTGRES_DSN: postgres://harness_ci:harness_ci_ephemeral@127.0.0.1:5432/harness_ci?sslmode=disable
+      HARNESS_DATABASE_DSN: postgres://harness_ci:harness_ci_ephemeral@127.0.0.1:5432/harness_ci?sslmode=disable
+      HARNESS_TEST_TZDB_ROOT: ${{ github.workspace }}/conformance/testdata/tzdb/2026b
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32
+        with:
+          go-version: 1.26.8
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.19.0
+      - name: Install locked reference generators and workspace dependencies
+        run: |
+          npm install --global pnpm@11.19.0
+          python3 scripts/install_generators.py --destination "$RUNNER_TEMP/harness-tools"
+          echo "$RUNNER_TEMP/harness-tools/bin" >> "$GITHUB_PATH"
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.12
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.6.2
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+          pnpm install --frozen-lockfile
+      - name: Generate, validate and run real SQLite and PostgreSQL checks
+        run: scripts/check
+      - name: Run reference race checks
+        run: go test -race -p 2 -count=1 -timeout=7m ./...
+      - name: Run real browser against the reference PostgreSQL service
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          export HARNESS_CHROMIUM="$(node --input-type=module -e 'import { chromium } from "playwright"; process.stdout.write(chromium.executablePath())')"
+          export HARNESS_TOKEN_FILE="$RUNNER_TEMP/harness-browser/.identity-token"
+          export HARNESS_BROWSER_ARTIFACTS="$RUNNER_TEMP/harness-browser-artifacts"
+          mkdir -p "$RUNNER_TEMP/harness-bin"
+          go build -o "$RUNNER_TEMP/harness-bin/dev" ./cmd/harness-dev
+          "$RUNNER_TEMP/harness-bin/dev" --init --config "$RUNNER_TEMP/harness-browser/config.json" --data "$RUNNER_TEMP/harness-browser" --driver postgres >"$RUNNER_TEMP/harness-backend.log" 2>&1 &
+          backend_pid=$!
+          pnpm --filter @harness/web dev >"$RUNNER_TEMP/harness-frontend.log" 2>&1 &
+          frontend_pid=$!
+          cleanup() {
+            kill -TERM "$frontend_pid" "$backend_pid" 2>/dev/null || true
+            wait "$frontend_pid" 2>/dev/null || true
+            wait "$backend_pid" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+          python3 scripts/wait_http.py http://127.0.0.1:8080/health/ready
+          python3 scripts/wait_http.py http://127.0.0.1:5173
+          pnpm test:browser
