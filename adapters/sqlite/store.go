@@ -39,13 +39,17 @@ type Option func(*Store)
 
 func WithCommitFault(f CommitFault) Option { return func(s *Store) { s.fault = f } }
 
+// WithExpectedDatabaseID 从受信部署目录校验原库；恢复不得把空库当作原权威。
+func WithExpectedDatabaseID(id string) Option { return func(s *Store) { s.expectedID = id } }
+
 type Store struct {
-	db     *sql.DB
-	writer chan struct{}
-	mu     sync.RWMutex
-	id     string
-	fault  CommitFault
-	closed atomic.Bool
+	db         *sql.DB
+	writer     chan struct{}
+	mu         sync.RWMutex
+	id         string
+	fault      CommitFault
+	closed     atomic.Bool
+	expectedID string
 }
 
 var _ runtime.Store = (*Store)(nil)
@@ -109,6 +113,10 @@ func Open(path string, options ...Option) (*Store, error) {
 		db.Close()
 		return nil, err
 	}
+	if err = durable.DatabaseIdentity(s.id, s.expectedID); err != nil {
+		db.Close()
+		return nil, err
+	}
 	return s, nil
 }
 
@@ -160,6 +168,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 	if err = tx.QueryRowContext(ctx, "SELECT database_id FROM harness_store_metadata WHERE singleton=1").Scan(&id); err != nil {
 		return err
 	}
+	if err = durable.DatabaseIdentity(id, s.expectedID); err != nil {
+		return err
+	}
 	if err = tx.Commit(); err != nil {
 		return fmt.Errorf("migration commit: %w", err)
 	}
@@ -176,6 +187,7 @@ type transaction struct {
 	participants map[string]bool
 	active       bool
 	savepoint    uint64
+	guards       map[string]api.Claim
 }
 
 func (tx *transaction) Scope() runtime.Scope { return tx.scope }
@@ -222,6 +234,19 @@ func (s *Store) Within(ctx context.Context, scope runtime.Scope, participants []
 	if s.fault != nil {
 		if err = s.fault(BeforeCommit); err != nil {
 			return runtime.RolledBack, err
+		}
+	}
+	// Guard/Finish 之后进程仍可能暂停；真正提交前再核原确认截止。
+	if len(tx.guards) != 0 {
+		now, clockErr := tx.Now(ctx)
+		if clockErr != nil {
+			return runtime.RolledBack, clockErr
+		}
+		for _, claim := range tx.guards {
+			until, _ := api.ParseTime(claim.LeaseUntil)
+			if !now.Before(until) {
+				return runtime.RolledBack, runtime.ErrClaimLost
+			}
 		}
 	}
 	if err = dbtx.Commit(); err != nil {

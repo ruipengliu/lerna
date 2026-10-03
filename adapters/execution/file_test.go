@@ -117,3 +117,42 @@ func TestManagedFileRefusesSecondHostOwner(t *testing.T) {
 		t.Fatal("a second host owner acquired the same root")
 	}
 }
+
+func TestManagedFileRetainsPathIsolationWhileOriginalEffectIsUnknown(t *testing.T) {
+	root := t.TempDir()
+	driver, err := target.NewManagedFiles(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer driver.Close()
+	q := target.FileWrite{OperationID: api.NewID("operation"), AttemptID: api.NewID("attempt"), Path: "report", ExpectedVersion: "absent", Data: []byte("first")}
+	driver.Fault = func(stage string) error {
+		if stage == "renamed" {
+			return context.Canceled
+		}
+		return nil
+	}
+	if _, err = driver.Write(context.Background(), q); err == nil {
+		t.Fatal("expected lost reply")
+	}
+	// 模拟目标外部改变；当前摘要不能证明原写没有发生。
+	if err = os.Remove(filepath.Join(root, "report")); err != nil {
+		t.Fatal(err)
+	}
+	if err = os.WriteFile(filepath.Join(root, "report"), []byte("another version"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	recovered, err := driver.Recover(context.Background(), q.AttemptID)
+	if err != nil || recovered.Effect != "unknown" {
+		t.Fatalf("unknown target association %+v %v", recovered, err)
+	}
+	driver.Fault = nil
+	_, err = driver.Write(context.Background(), target.FileWrite{OperationID: api.NewID("operation"), AttemptID: api.NewID("attempt"), Path: "report", ExpectedVersion: api.Hash([]byte("another version")), Data: []byte("new action")})
+	if !api.IsCode(err, "invalid_state") {
+		t.Fatalf("unknown path isolation was released: %v", err)
+	}
+	actual, _ := os.ReadFile(filepath.Join(root, "report"))
+	if string(actual) != "another version" {
+		t.Fatalf("unknown path changed %q", actual)
+	}
+}

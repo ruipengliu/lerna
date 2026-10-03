@@ -109,28 +109,29 @@ type gateFact struct {
 	Control         string `json:"control"`
 }
 type Attempt struct {
-	AttemptID         string           `json:"attempt_id"`
-	OperationID       string           `json:"operation_id"`
-	Revision          uint64           `json:"revision"`
-	AttemptNo         uint64           `json:"attempt_no"`
-	Phase             string           `json:"phase"`
-	Prepared          PreparedRequest  `json:"prepared"`
-	Permit            StartPermit      `json:"permit"`
-	PreparedAuthority PreparedStart    `json:"prepared_authority"`
-	ControlWindowID   string           `json:"control_window_id"`
-	Effect            string           `json:"effect"`
-	MayApplyLater     any              `json:"may_apply_later"`
-	StartedAt         string           `json:"started_at,omitempty"`
-	ObservedAt        string           `json:"observed_at,omitempty"`
-	FactRevision      uint64           `json:"fact_revision"`
-	FactDigest        string           `json:"fact_digest,omitempty"`
-	EvidenceRefs      []api.ContentRef `json:"evidence_refs"`
-	ResultRef         *api.ContentRef  `json:"result_ref,omitempty"`
-	Usage             []api.Amount     `json:"usage"`
-	UsageFinal        bool             `json:"usage_final"`
-	EffectDisputed    bool             `json:"effect_disputed"`
-	ActuallyStopped   bool             `json:"actually_stopped"`
-	CellCommitted     bool             `json:"cell_committed"`
+	AttemptID         string              `json:"attempt_id"`
+	OperationID       string              `json:"operation_id"`
+	Revision          uint64              `json:"revision"`
+	AttemptNo         uint64              `json:"attempt_no"`
+	Phase             string              `json:"phase"`
+	Prepared          PreparedRequest     `json:"prepared"`
+	Permit            StartPermit         `json:"permit"`
+	PreparedAuthority PreparedStart       `json:"prepared_authority"`
+	ControlWindowID   string              `json:"control_window_id"`
+	ControlWindow     api.ControlSnapshot `json:"control_window"`
+	Effect            string              `json:"effect"`
+	MayApplyLater     any                 `json:"may_apply_later"`
+	StartedAt         string              `json:"started_at,omitempty"`
+	ObservedAt        string              `json:"observed_at,omitempty"`
+	FactRevision      uint64              `json:"fact_revision"`
+	FactDigest        string              `json:"fact_digest,omitempty"`
+	EvidenceRefs      []api.ContentRef    `json:"evidence_refs"`
+	ResultRef         *api.ContentRef     `json:"result_ref,omitempty"`
+	Usage             []api.Amount        `json:"usage"`
+	UsageFinal        bool                `json:"usage_final"`
+	EffectDisputed    bool                `json:"effect_disputed"`
+	ActuallyStopped   bool                `json:"actually_stopped"`
+	CellCommitted     bool                `json:"cell_committed"`
 }
 type operationRecord struct {
 	Operation         api.Operation    `json:"operation"`

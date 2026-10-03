@@ -79,6 +79,14 @@ func (k *Keyring) Sign(keyID string, claims ProofClaims) (string, error) {
 	return encoded + "." + base64.RawURLEncoding.EncodeToString(sig), nil
 }
 func (k *Keyring) Verify(compact string, expected ProofClaims, now time.Time) (ProofClaims, error) {
+	return k.verify(compact, expected, now, true)
+}
+
+// VerifySource 保存更高停止事实时只验来源与原绑定；启动仍使用 Verify 的有限窗口。
+func (k *Keyring) VerifySource(compact string, expected ProofClaims) (ProofClaims, error) {
+	return k.verify(compact, expected, time.Time{}, false)
+}
+func (k *Keyring) verify(compact string, expected ProofClaims, now time.Time, enforceWindow bool) (ProofClaims, error) {
 	if len(compact) > 32768 {
 		return ProofClaims{}, api.E("invalid_request", "proof_too_large")
 	}
@@ -125,7 +133,10 @@ func (k *Keyring) Verify(compact string, expected ProofClaims, now time.Time) (P
 	if e != nil {
 		return ProofClaims{}, e
 	}
-	if issued.After(now) || !now.Before(until) || !issued.Before(until) {
+	if (expected.IssuedAt != "" && c.IssuedAt != expected.IssuedAt) || (expected.StartBefore != "" && c.StartBefore != expected.StartBefore) {
+		return ProofClaims{}, api.E("forbidden", "proof_window_binding_mismatch")
+	}
+	if !issued.Before(until) || (enforceWindow && (issued.After(now) || !now.Before(until))) {
 		return ProofClaims{}, api.E("expired", "proof_window_expired")
 	}
 	return c, nil
