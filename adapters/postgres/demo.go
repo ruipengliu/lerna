@@ -19,7 +19,7 @@ func (s *Store) LockInput(ctx context.Context, token runtime.Tx, owner contract.
 		return nil, err
 	}
 	// Global admission order: original command key, business object, then Job.
-	if _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(2,hashtext($1))`, lockKey("input", owner, string(id))); err != nil {
+	if _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(2,hashtext($1))`, s.lockKey("input", owner, string(id))); err != nil {
 		return nil, err
 	}
 	input := demo.Input{ID: id}
