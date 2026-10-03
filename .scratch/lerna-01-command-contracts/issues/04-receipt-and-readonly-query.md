@@ -20,7 +20,7 @@
 
 ## Comments
 
-Implemented 2026-10-03 on isolated branch `codex/contract-ticket-04`, based on ticket02 integration exit `c0e12f7`. Exact unpublished machine contract and generated Go / TypeScript types remain version `1.0.0`; generator `1.0.0` now supports named, uniquely discriminated closed oneOf variants. No future Task method is registered. Shape and relationship details follow `receipt-decisions.md` and `query-shape-decisions.md`.
+Implemented 2026-10-03 on isolated branch `codex/contract-ticket-04`, based on ticket02 integration exit `c0e12f7`. Exact unpublished machine contract and generated Go / TypeScript types remain version `1.0.0`; generator `1.0.0` now supports named, uniquely discriminated closed oneOf variants. No future Task method is registered. Shape and relationship details follow `receipt-decisions.md` and `query-decisions.md`.
 
 Public result seams: generic Go Decode / Encode / Validate and TS decode / encode / validate, plus bound DecodeCommandResponse / EncodeCommandResponse and TS equivalents. Closed receipt states have distinct generated variants; Go's private union wrapper offers New / As functions and rejects an empty union. TS has genuine discriminated unions. Generic paths also enforce cross-field bindings, exact revision monotonicity and nested revision consistency; a special helper is not required to reject contradictory found results. The bound response helpers additionally verify the request's original command_ref, independently of its read association command_id. Backend invalidity returns unavailable / dependency_unavailable with the original reference and no backend detail.
 
