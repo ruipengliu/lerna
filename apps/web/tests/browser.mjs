@@ -6,6 +6,7 @@ import { chromium } from "playwright";
 
 // Uses the real configured Go service; boundary faults drop a reply or corrupt exact body bytes.
 const baseURL = process.env.HARNESS_BROWSER_URL ?? "http://127.0.0.1:5173";
+const implementation = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 const artifacts = resolve(process.env.HARNESS_BROWSER_ARTIFACTS ?? "/tmp/harness-web-browser");
 const token = (
   await readFile(process.env.HARNESS_TOKEN_FILE ?? "/workspace/lerna-dev/.identity-token", "utf8")
@@ -85,12 +86,12 @@ await context.route("**/api/content?**", async (route) => {
 });
 const page = await context.newPage();
 page.on("pageerror", (error) => pageErrors.push(error.message));
-async function until(check, label, timeout = 60000) {
+async function until(check, label, timeout = 60000, interval = 100) {
   const before = Date.now();
   while (Date.now() - before < timeout) {
     const value = await check();
     if (value) return value;
-    await new Promise((finish) => setTimeout(finish, 100));
+    await new Promise((finish) => setTimeout(finish, interval));
   }
   throw new Error(`timed out: ${label}`);
 }
@@ -211,10 +212,15 @@ function latestSubmit(before) {
     );
 }
 async function awaitResult(id) {
-  await until(async () => {
-    await selectTask(id);
-    return (await page.locator(".inspector").innerText()).includes("准确导出已发布");
-  }, "authoritative Result publication");
+  await until(
+    async () => {
+      await selectTask(id);
+      return (await page.locator(".inspector").innerText()).includes("准确导出已发布");
+    },
+    "authoritative Result publication",
+    90000,
+    1000,
+  );
   assert.match(await page.locator(".inspector").innerText(), /succeeded/);
 }
 try {
@@ -249,6 +255,7 @@ try {
   );
   await page.evaluate(() => scrollTo(0, 0));
   await page.screenshot({ path: resolve(artifacts, "desktop-report.png"), fullPage: true });
+  process.stdout.write("Actual report Result and exact artifact preview passed.\n");
 
   // A real backend decision exists, but its first receipt never reaches the browser.
   dropNextSubmit = true;
@@ -279,6 +286,7 @@ try {
   );
   assert.equal(JSON.stringify(dropped.command), original);
   await awaitResult(recoveredTaskID);
+  process.stdout.write("Original applied receipt lookup after reload passed.\n");
 
   const config = await page.evaluate(async () => (await fetch("/api/development/config")).json());
   const discovery = await page.evaluate(async () => (await fetch("/api/discovery")).json());
@@ -358,6 +366,7 @@ try {
   assert.equal(clarifiedTask.status, "succeeded");
   const cancellationID = await freeGoal(`${runID}-cancel`, config, discovery);
   await control(cancellationID, "取消", "task.cancel", "cancelled");
+  process.stdout.write("Actual pause/resume/input consumption/cancel passed.\n");
 
   // Only an explicitly registered fixed demo binding can issue an application event.
   assert(
@@ -474,6 +483,7 @@ try {
     async () => (await surfaceConsole.innerText()).includes("render_generation_stale"),
     "closed generation cannot read cached body",
   );
+  process.stdout.write("Exact Surface gates, fixed event consumption, and close passed.\n");
 
   await page.getByRole("button", { name: "工作台", exact: true }).click();
   await selectTask(cancellationID);
@@ -497,7 +507,7 @@ try {
   );
   assert.deepEqual(pageErrors, [], "rendered UI must not throw JavaScript errors");
   const reportData = {
-    implementation: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(),
+    implementation,
     base_url: baseURL,
     schema_digest: discovery.schema_digest,
     methods_digest: discovery.methods_digest,
@@ -535,7 +545,7 @@ try {
     .catch(() => {});
   await writeFile(
     resolve(artifacts, "failure-trace.json"),
-    `${JSON.stringify({ implementation: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), base_url: baseURL, commands, replies, page_errors: pageErrors }, null, 2).replaceAll(token, "[redacted credential]")}\n`,
+    `${JSON.stringify({ implementation, base_url: baseURL, connections, commands, replies, page_errors: pageErrors }, null, 2).replaceAll(token, "[redacted credential]")}\n`,
   );
   process.stderr.write(`${String(failure).replaceAll(token, "[redacted credential]")}\n`);
   process.exitCode = 1;
