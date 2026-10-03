@@ -36,6 +36,7 @@ function Login({
       <form
         onSubmit={(event) => {
           event.preventDefault();
+          if (loading || pending) return;
           setPending(true);
           setFailure("");
           void login(token)

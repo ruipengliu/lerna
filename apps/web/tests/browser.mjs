@@ -491,7 +491,10 @@ try {
   }
   await page.getByRole("button", { name: "退出登录", exact: true }).click();
   await page.getByLabel("开发凭据").waitFor();
-  assert.equal(await page.evaluate(async () => (await fetch("/api/discovery")).status), 403);
+  await until(
+    async () => (await page.evaluate(async () => (await fetch("/api/discovery")).status)) === 403,
+    "original browser session is actually revoked",
+  );
   assert.deepEqual(pageErrors, [], "rendered UI must not throw JavaScript errors");
   const reportData = {
     implementation: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(),

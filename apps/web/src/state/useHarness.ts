@@ -8,9 +8,11 @@ export function useHarness() {
   const [auth, setAuth] = useState<Authentication>("loading");
   const [error, setError] = useState("");
   const generation = useRef(0);
+  const logoutPending = useRef(false);
   const current = useRef<HarnessClient | undefined>(undefined);
   const unsubscribe = useRef<(() => void) | undefined>(undefined);
   const load = useCallback(async () => {
+    if (logoutPending.current) return;
     const original = ++generation.current;
     unsubscribe.current?.();
     if (current.current) void current.current.close().catch(() => undefined);
@@ -51,6 +53,7 @@ export function useHarness() {
   }, [load]);
   const login = useCallback(
     async (token: string) => {
+      if (logoutPending.current) throw new Error("当前浏览器会话正在注销，请等待原注销决定");
       const response = await fetch("/auth/session", {
         method: "POST",
         credentials: "same-origin",
@@ -65,13 +68,13 @@ export function useHarness() {
     },
     [load],
   );
-  const disconnect = useCallback(async () => {
+  const disconnect = useCallback(async (nextAuth: Authentication = "required") => {
     generation.current++;
     unsubscribe.current?.();
     const previous = current.current;
     current.current = undefined;
     setClient(undefined);
-    setAuth("required");
+    setAuth(nextAuth);
     setConnection("closed");
     if (previous) {
       try {
@@ -82,7 +85,11 @@ export function useHarness() {
     }
   }, []);
   const logout = useCallback(async () => {
-    await disconnect();
+    if (logoutPending.current) return;
+    logoutPending.current = true;
+    const closing = disconnect("loading");
+    const original = generation.current;
+    await closing;
     try {
       const session = await fetch("/auth/session", {
         credentials: "same-origin",
@@ -101,6 +108,9 @@ export function useHarness() {
       setError("");
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : "浏览器会话注销尚未确认");
+    } finally {
+      logoutPending.current = false;
+      if (generation.current === original) setAuth("required");
     }
   }, [disconnect]);
   return { client, connection, auth, error, login, reconnect: load, disconnect, logout };
