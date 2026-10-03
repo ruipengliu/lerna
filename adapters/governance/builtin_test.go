@@ -186,3 +186,83 @@ func TestBuiltinInstanceIsExactAndFencedBeforeDisposal(t *testing.T) {
 		t.Fatal("fenced original instance resurrected")
 	}
 }
+
+type startupContent struct {
+	*fileContent
+	entered chan struct{}
+	release chan struct{}
+	mu      sync.Mutex
+	calls   int
+}
+
+func (c *startupContent) Publish(ctx context.Context, p adapter.Publication, b []byte) (api.ContentRef, error) {
+	c.mu.Lock()
+	c.calls++
+	startup := c.calls == 2
+	c.mu.Unlock()
+	if startup {
+		close(c.entered)
+		select {
+		case <-c.release:
+		case <-ctx.Done():
+			return api.ContentRef{}, ctx.Err()
+		}
+	}
+	return c.fileContent.Publish(ctx, p, b)
+}
+
+func TestBuiltinCloseWaitsAndFencesConcurrentOriginalStartup(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	scope, content, install := fixture(t)
+	gate := &startupContent{fileContent: content, entered: make(chan struct{}), release: make(chan struct{})}
+	root := t.TempDir()
+	config := adapter.BuiltinHostConfig{Root: root, Scope: scope, Content: gate, Clock: time.Now, Installations: []domain.Installation{install}, ReadinessTTL: time.Minute}
+	host, e := adapter.NewBuiltinHost(config)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if _, e = host.Prepare(ctx, install); e != nil {
+		t.Fatal(e)
+	}
+	req := domain.InstanceRequest{TargetID: api.NewID("target"), ActivationID: api.NewID("activation"), InstanceID: api.NewID("instance"), Generation: 1, Installation: install, ConfigRef: install.ConfigRef, Deadline: api.Time(time.Now().Add(time.Minute))}
+	started := make(chan error, 1)
+	go func() {
+		_, e := host.Initialize(ctx, req)
+		started <- e
+	}()
+	select {
+	case <-gate.entered:
+	case <-ctx.Done():
+		t.Fatal(ctx.Err())
+	}
+	closed := make(chan error, 1)
+	go func() { closed <- host.Close() }()
+	select {
+	case e := <-closed:
+		close(gate.release)
+		<-started
+		t.Fatalf("Close returned before original startup was joined and fenced: %v", e)
+	case <-time.After(30 * time.Millisecond):
+	}
+	close(gate.release)
+	if e = <-started; e != nil {
+		t.Fatalf("original startup failed during graceful close: %v", e)
+	}
+	if e = <-closed; e != nil {
+		t.Fatalf("graceful close: %v", e)
+	}
+	// 独立重开宿主只读取原 fence；同 PID 的残留 handle 不能被伪称已退出。
+	again, e := adapter.NewBuiltinHost(config)
+	if e != nil {
+		t.Fatal(e)
+	}
+	defer again.Close()
+	fence, e := again.Fence(ctx, req)
+	if e != nil || !fence.Exited || fence.MayApplyLater {
+		t.Fatalf("original concurrent instance was not actually fenced: %+v %v", fence, e)
+	}
+	if _, e = again.Initialize(ctx, req); e == nil {
+		t.Fatal("closed original instance restarted")
+	}
+}
