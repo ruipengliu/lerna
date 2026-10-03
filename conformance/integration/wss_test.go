@@ -334,7 +334,11 @@ func TestRealTLSApplicationHeartbeatPreservesRequestSequence(t *testing.T) {
 			t.Fatal(err)
 		}
 		_, pong, err := conn.Read(ctx)
-		if err != nil || !api.Equal(pong, api.Raw(map[string]string{"type": "pong", "nonce": nonce})) {
+		var heartbeat struct {
+			Type  string `json:"type"`
+			Nonce string `json:"nonce"`
+		}
+		if err != nil || api.Decode(pong, &heartbeat) != nil || heartbeat.Type != "pong" || heartbeat.Nonce != nonce {
 			t.Fatalf("native browser application heartbeat closed: %v", err)
 		}
 	}
