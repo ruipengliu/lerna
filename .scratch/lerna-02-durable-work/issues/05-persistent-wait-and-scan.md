@@ -4,7 +4,7 @@
 
 **Blocked by:** 04 — 双适配器工作接替
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 丢弃全部唤醒通知后，真实 PG／SQLite 的有界扫描仍恢复已接纳工作，健康正常对照也完成。
 - [ ] 未来 due_at 不被立即领取或忙轮询；持久可检查等待条件／再检查时点，释放 Claim、worker 槽位、连接与事务。

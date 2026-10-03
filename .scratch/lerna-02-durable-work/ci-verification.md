@@ -29,6 +29,12 @@
 
 此范围是 SQLite v1 接纳、重开、单写和 PG v2 领取；尚不包含 SQLite Claim 或后合入的09锁范围修复。09的本地并行复验另见票09Comments，新准确远端提交仍待实际核验；整片02未退出。
 
+## PG 锁范围修复检查点
+
+2026-10-03，准确提交 `3a7f1f85c1c63204083232ef07122d394d8173ac` 的 push run [37148346512](https://github.com/ruipengliu/lerna/actions/runs/37148346512) 已 `completed / success`；`contracts` job `111276804410` 与 `durable-admission` job `111276804200` 全部 success。
+
+两库必需集成 `4.277s`、race `10.252s`，均以 `-count=1` 重新执行，原十项 v1 artifact 校验和全部 OK。包含09跨schema独立与同schema互斥回归；此前“新准确远端待核验”为历史检查点。当前受测提交尚不包含04 SQLite Claim；后合入04的准确CI另行核验，整片02仍未退出。
+
 ## SQLite 接纳本地检查点
 
 票02 writer源码 `f4fb057` 已锁定；两库共享接纳套件、SQLite文件/配置/进程排除/Busy/取消/Close与真实v1恢复已本地通过。必需make集成及CI集成race已使用-count=1，并同时执行PG与SQLite；新版远端tip仍由root后续核实，不能引用上面的PG-only历史run当两库成功。详细本地命令/运行时/来源见[票02 Comments](issues/02-sqlite-durable-admission.md#comments)。

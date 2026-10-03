@@ -59,6 +59,12 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 
 额外09已 resolved，feature `eed3ef8`经merger合入 `edb189e`：跨schema真实Claim空/Record锁超时先red，统一三路径schema tuple后四项正常与竞争green，完整两套integration/race并行9.583s/17.244s通过。09未修改迁移/源fixture/公开生成物，有限hash碰撞和同schema升级须排空旧协调协议的限制已记录；准确新远端CI待核验。04仍active，原八票01/02/03完成，不提前关闭整片。
 
+09整合检查点 `3a7f1f8` 真实 push [CI 37148346512](https://github.com/ruipengliu/lerna/actions/runs/37148346512) 已 success；两库实际集成4.277s/race10.252s均-count=1，v1校验和不变。
+
+04已 resolved，feature3376e08、准确受测修复ff22936、clean worker c235689经merger合入 `dcb6f44`。PG/SQLite共同13个工作行为、SQLite真实v1来源→v2→原Job Claim完成、UTC固定精度时间边界和关闭重开通过；最终两库integration11.269s、race22.544s通过。一个失败轮的PG cleanup连接已关闭问题修复后，当前成功轮登记scope正常清理；失败轮有一个名称只留在退出进程的schema无法重新确认归属，按安全裁决保留并注明，未按数据形状猜测删除。详见04Comments，尚不声称04远端CI成功。
+
+原八票01/02/03/04完成、额外09完成。05/07/08已 claimed，各从最新集成独立worktree开始：等待/退避采用scheduling-decisions，清理/真实升级采用新[retention-decisions](../lerna-02-durable-work/retention-decisions.md)，故障采用[process-fault-decisions](../lerna-02-durable-work/process-fault-decisions.md)。07的psql17.11完整恢复18.6 dump工具探针已实际通过并清理自己登记scope，不能替代07产品升级/清理验收；08的SQLite存储端口确认丢失不宣称原生COMMIT异常分支。06仍等05；整片退出等待全部核心票、额外修复、审查/架构和真实CI。
+
 ## 切片 02 SQLite 接纳票据检查点
 
 票02已 resolved；实际 v1 writer `f4fb057` 在代码提交后从历史 Git archive 构建，完整 SQLite file 与 checksum/provenance 保留。PG与SQLite共同运行13项同版接纳行为；SQLite WAL/FULL运行时核验、Linux跨进程写Host排除/关闭接替、busy、取消、完整Tx关闭生命周期、scope和真实v1文件恢复通过。实际内置SQLite3.53.4/go-sqlite3v1.14.52/CGO，不依赖个人头文件。有限Close失败时保留锁，回调退出后可重试。具体命令与范围见[票02 Comments](../lerna-02-durable-work/issues/02-sqlite-durable-admission.md#comments)。

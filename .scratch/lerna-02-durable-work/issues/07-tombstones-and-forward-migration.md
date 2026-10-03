@@ -4,7 +4,7 @@
 
 **Blocked by:** 04 — 双适配器工作接替与真实 v2
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 正文清理与最小去重保留分别建模；保留 tenant／owner／command_id、必要主体／目标、准确摘要、原期限和固定决定，不新增无用途敏感正文表。
 - [ ] 清理后公开查询可返回原引用 gone，原命令重传仍返回原固定决定，异摘要同键仍稳定冲突；gone、TTL 或完成不能授权重建同义责任。
