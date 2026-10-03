@@ -4,7 +4,7 @@
 
 **Blocked by:** 01 — PG 原命令原子接纳与恢复查询
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 使用与 PG 相同的 Host 接纳行为套件，证明正常接纳、原键重传、异摘要冲突、过期新／已有命令及固定回执，不以内存 SQLite 替代文件。
 - [ ] 每个相关连接显式配置并核验 WAL 与 FULL，记录驱动实际运行时 SQLite 版本；不把 CLI 或历史 smoke 设置当产品证据。

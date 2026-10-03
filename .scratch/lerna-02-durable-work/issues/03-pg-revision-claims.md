@@ -4,7 +4,7 @@
 
 **Blocked by:** 01 — PG 原命令原子接纳与恢复查询
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 真实 PG 的有界持久扫描可独立领取已提交 Job，通知不是唯一恢复路径；领取固定 worker、claimed_revision、epoch 与 lease 截止。
 - [ ] 领域阶段输入在领取事务中得到一致观察，处理在持锁事务外，结果用有限短事务核验 Claim 后提交；不把任意 worker 回调放入长期事务。

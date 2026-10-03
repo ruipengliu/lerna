@@ -40,6 +40,7 @@
 │   ├── memory/                   # 默认记忆、检索与可重建投影
 │   ├── execution/                # Operation、Attempt、Effect 与执行恢复
 │   └── evaluation/               # 逐条件核验，输出 ConditionResult
+├── internal/durableworkdemo/      # 当前内部持久演示消费者，不是公开领域或SDK
 ├── runtime/                      # Command 接纳、Tx、Job、Claim、Clock
 ├── adapters/
 │   ├── postgres/                 # PG 存储实现，按事实 owner 分包
@@ -76,7 +77,7 @@
 - 小范围单元测试与代码同目录：Go 使用 `*_test.go`，TypeScript 使用 `*.test.ts`；局部夹具放所属包 `testdata/`。跨实现复用的合同夹具放 `conformance/fixtures/`。
 - ContextCompiler 随 `domain/task/` 组织，不建立第二套目标权威。委派、激活管理、评测发布等按对应切片扩展职责所属目录，不预建通用框架。
 - 每个可独立运行的宿主、应用或合同包建立就近 README，说明入口、配置、公开边界和验证方式；根 `CONTEXT.md` 继续作为唯一领域上下文。
-- 包私有实现可放所属目录下的 `internal/`。不得因 Go 能导入一个目录，就将其认定为稳定公开 API；公开承诺以 Application / Component 合同和 SDK 为准。
+- 包私有实现可放所属目录下的 `internal/`。当前根 `internal/durableworkdemo` 保存持久演示的业务前态与消费方仓储接口；适配器可实现这些内部接口，runtime 不依赖演示业务，host/cmd 只装配。不得因 Go 能导入一个目录，就将其认定为稳定公开 API；公开承诺以 Application / Component 合同和 SDK 为准。
 
 ## 模块依赖与职责
 
