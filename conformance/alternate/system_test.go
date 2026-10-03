@@ -638,7 +638,8 @@ func executorCase(t *testing.T, fault map[string]any, path string) (*fixture, *f
 		t.Fatal(e)
 	}
 	x.admin(t, "uses", u)
-	window := api.ControlSnapshot{OrchestratorID: m.subject, TaskID: task.ObjectID, GoalRevision: 1, ControlRevision: 1, Status: "active", Control: "running", IssuedAt: api.Time(time.Now()), StartBefore: api.Time(time.Now().Add(5 * time.Second)), WindowID: api.NewID("window")}
+	issuedAt := time.Now()
+	window := api.ControlSnapshot{OrchestratorID: m.subject, TaskID: task.ObjectID, GoalRevision: 1, ControlRevision: 1, Status: "active", Control: "running", IssuedAt: api.Time(issuedAt), StartBefore: api.Time(issuedAt.Add(5 * time.Second)), WindowID: api.NewID("window")}
 	wd, e := api.Digest(window)
 	if e != nil {
 		t.Fatal(e)
@@ -1153,8 +1154,9 @@ func TestIndependentExecutorPauseIsCurrentSignedFactAndCannotReopenOriginal(t *t
 	w.ControlRevision++
 	w.Control = "paused"
 	w.WindowID = api.NewID("window")
-	w.IssuedAt = api.Time(time.Now())
-	w.StartBefore = api.Time(time.Now().Add(5 * time.Second))
+	issuedAt := time.Now()
+	w.IssuedAt = api.Time(issuedAt)
+	w.StartBefore = api.Time(issuedAt.Add(5 * time.Second))
 	w.ProofRef = api.ContentRef{}
 	digest, e := api.Digest(w)
 	if e != nil {
