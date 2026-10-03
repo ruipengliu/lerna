@@ -294,3 +294,84 @@ func TestDefectInFullDependencyBlocksCompletionAndNoticesExistingResult(t *testi
 		t.Fatalf("notice lost original result: %+v", notices)
 	}
 }
+
+func TestDerivedGrantUsesCurrentParentsAndCannotMultiplyOncePermission(t *testing.T) {
+	f := environment(t, governance.Options{})
+	parent := issue(t, f, "once")
+	children := []api.Grant{}
+	for i := 0; i < 2; i++ {
+		child := parent
+		child.GrantID = api.NewID("grant")
+		child.Limits = []api.Amount{{Unit: "USD", Value: "4"}}
+		c, r := command(t, f, "grant.issue", child.GrantID, governance.GrantIssue{Grant: child, PreviewRefs: []api.ContentRef{ref(t, f, "preview")}, ConfirmationExpiresAt: child.ExpiresAt, ParentGrantRefs: []api.ObjectRef{f.scope.Ref(parent.GrantID, 1)}}, nil)
+		approveOriginal(t, f, c, r)
+		children = append(children, child)
+	}
+	u := useRequest(f, children[0])
+	_, r := command(t, f, "grant.use", u.UseID, u, nil)
+	if r.Stage != "applied" {
+		t.Fatalf("derived use: %+v", r)
+	}
+	var used governance.UseReceipt
+	if err := api.Decode(r.Output, &used); err != nil {
+		t.Fatal(err)
+	}
+	if used.Decision != "allowed" || len(used.GrantRefs) != 2 {
+		t.Fatalf("original use omitted current parent: %+v", used)
+	}
+	v := useRequest(f, children[1])
+	_, r = command(t, f, "grant.use", v.UseID, v, nil)
+	if err := api.Decode(r.Output, &used); err != nil {
+		t.Fatal(err)
+	}
+	if used.Decision != "denied" || used.Reason != "once_consumed" {
+		t.Fatalf("sibling multiplied once permission: %+v", used)
+	}
+	readback := query[governance.GrantRecord](t, f, "grant.read", governance.IDInput{ID: parent.GrantID})
+	if !readback.OnceConsumed || len(readback.Reserved) != 1 || readback.Reserved[0].Value != "2" {
+		t.Fatalf("parent ledger bypassed: %+v", readback)
+	}
+}
+
+func TestEstimateAcceptanceRequiresAccurateRiskPreviewAndCurrentSameOwnerScope(t *testing.T) {
+	f := environment(t, governance.Options{})
+	scopeRef := ref(t, f, "acceptance_scope")
+	explanation := ref(t, f, "non_hard_limit_explanation")
+	taskRef := f.scope.Ref(api.NewID("task"), 1)
+	capability := component("capability")
+	in := governance.AcceptanceCreate{AcceptanceID: api.NewID("acceptance"), PolicyRef: component("policy"), ScopeRef: scopeRef, ExplanationRef: explanation, Scope: governance.AcceptanceScope{TaskRefs: []api.ObjectRef{taskRef}, CapabilityRefs: []api.ComponentRef{capability}, Units: []string{"USD"}, ReservationMethod: "finite_per_attempt", Budget: []api.Amount{{Unit: "USD", Value: "2"}}, NonHardLimitAcknowledged: true}, ExpiresAt: api.Time(time.Now().Add(time.Hour)), PreviewRefs: []api.ContentRef{scopeRef}}
+	_, r := command(t, f, "policy.acceptance.create", in.AcceptanceID, in, nil)
+	if r.Stage != "rejected" || r.Error.Reason != "acceptance_preview_incomplete" {
+		t.Fatalf("risk explanation absent from accurate previews: %+v", r)
+	}
+	in.AcceptanceID = api.NewID("acceptance")
+	in.PreviewRefs = append(in.PreviewRefs, explanation)
+	c, r := command(t, f, "policy.acceptance.create", in.AcceptanceID, in, nil)
+	approveOriginal(t, f, c, r)
+	request := governance.AcceptanceCheck{AcceptanceRef: f.scope.Ref(in.AcceptanceID, 1), SubjectRef: f.auth.Ref(f.scope.OwnerID), PolicyRef: in.PolicyRef, TaskRef: taskRef, CapabilityRef: capability, Requested: []api.Amount{{Unit: "USD", Value: "2"}}, Mode: "estimate"}
+	check := func(in governance.AcceptanceCheck) error {
+		_, err := f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error { return f.svc.CheckAcceptanceTx(f.ctx, tx, in) })
+		return err
+	}
+	if err := check(request); err != nil {
+		t.Fatal(err)
+	}
+	wrongTask := request
+	wrongTask.TaskRef = f.scope.Ref(api.NewID("task"), 1)
+	if err := check(wrongTask); err == nil || !api.IsCode(err, "forbidden") {
+		t.Fatalf("acceptance widened task: %v", err)
+	}
+	wrongMode := request
+	wrongMode.Mode = "unrecognized"
+	if err := check(wrongMode); err == nil {
+		t.Fatal("unknown mode skipped acceptance check")
+	}
+	revision := uint64(1)
+	_, r = command(t, f, "policy.acceptance.revoke", in.AcceptanceID, governance.RefInput{Ref: request.AcceptanceRef}, &revision)
+	if r.Stage != "applied" {
+		t.Fatalf("revoke: %+v", r)
+	}
+	if err := check(request); err == nil || !api.IsCode(err, "forbidden") {
+		t.Fatalf("retracted risk acceptance remained current: %v", err)
+	}
+}

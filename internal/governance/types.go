@@ -20,6 +20,10 @@ type GrantRecord struct {
 	Spent        []api.Amount `json:"spent"`
 	Reserved     []api.Amount `json:"reserved"`
 }
+type GrantParents struct {
+	GrantID string          `json:"grant_id"`
+	Refs    []api.ObjectRef `json:"refs"`
+}
 type GrantUsage struct {
 	GrantID      string       `json:"grant_id"`
 	Revision     uint64       `json:"revision"`

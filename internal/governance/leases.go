@@ -139,7 +139,11 @@ func (s *Service) UseLeaseTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 			return old, err
 		}
 		if s.Ports.Proof != nil {
-			out.Proof, err = s.Ports.Proof.SignLocal(ProofStatement{TenantID: tx.Scope().TenantID, IssuerID: tx.Scope().OwnerID, AudienceID: request.TargetRef.OwnerID, Purpose: "grant_use", ObjectRef: tx.Scope().Ref(out.UseID, 1), Digest: digest, IssuedAt: out.IssuedAt, StartBefore: out.StartBefore})
+			proofDigest, digestErr := UseReceiptDigest(out)
+			if digestErr != nil {
+				return old, digestErr
+			}
+			out.Proof, err = s.Ports.Proof.SignLocal(ProofStatement{TenantID: tx.Scope().TenantID, IssuerID: tx.Scope().OwnerID, AudienceID: request.TargetRef.OwnerID, Purpose: "grant_use", ObjectRef: tx.Scope().Ref(out.UseID, 1), Digest: proofDigest, IssuedAt: out.IssuedAt, StartBefore: out.StartBefore})
 			if err != nil {
 				return old, err
 			}
