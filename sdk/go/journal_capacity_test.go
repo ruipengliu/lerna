@@ -62,10 +62,6 @@ func TestFullFileJournalRejectsNewResponsibilityBeforeSendAndRecoversOriginal(t 
 	if _, err = journal.Read(ctx, newCommand.CommandID); !os.IsNotExist(err) {
 		t.Fatalf("rejected identity became a journal responsibility: %v", err)
 	}
-	// 原未结命令重传不创造身份、摘要或期限，也不被容量门禁拦住。
-	if _, err = client.Send(ctx, original); err == nil || transport.calls != 2 || !api.Equal(transport.command, original) {
-		t.Fatalf("original retransmission drifted at capacity: %d %v", transport.calls, err)
-	}
 	if err = journal.Close(); err != nil {
 		t.Fatal(err)
 	}
@@ -79,8 +75,12 @@ func TestFullFileJournalRejectsNewResponsibilityBeforeSendAndRecoversOriginal(t 
 		t.Fatal(err)
 	}
 	receipts, partial, err := client.Recover(ctx)
-	if err != nil || partial || len(receipts) != 1 || receipts[0].CommandID != original.CommandID || transport.calls != 2 {
+	if err != nil || partial || len(receipts) != 1 || receipts[0].CommandID != original.CommandID || transport.calls != 1 {
 		t.Fatalf("full journal lost original receipt recovery %+v %v %v calls=%d", receipts, partial, err, transport.calls)
+	}
+	// 满容量时的原 ID 仍先查询准确回执，不创造身份、摘要或期限。
+	if _, err = client.Send(ctx, original); err != nil || transport.calls != 1 || !api.Equal(transport.command, original) {
+		t.Fatalf("original receipt recovery drifted at capacity: %d %v", transport.calls, err)
 	}
 	retained, err := journal.Read(ctx, first.Command.CommandID)
 	if err != nil || !api.Equal(retained, first) {
