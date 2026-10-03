@@ -20,6 +20,6 @@ Implementer: governance_impl
 
 2026-10-03 验证事实：纯域原 holder/来源/CAS SQLite race 26.972s、PostgreSQL race 29.741s；公开配置正例、输入、费用、行动数、能力、真实读回/时长、两绑定及撤回均有两库 normal 证据。准备字节恢复的正式修复 d67e7a9 后，仅受影响 GUI、旧 leaf 和知识读回两库 normal PASS226.585s。知识 focused race 原745.229s 为失败：前八子例通过，撤回两子例最后重开查询超出90秒测试观察 context；保留完整日志，不记成功。仅撤回 observer 改为既有三分钟集成上限，原 Task/Grant/Content 期限不变；专项两库 race PASS174.234s。撤回保持原唯一 POST、无提案、原已知0.00024 USD费用与 cfg=nil 重开原账单。执行环境 knowledge18-verification.json、knowledge18-focused-race.log、knowledge18-withdraw-race.log 和 knowledge18-prepared-byte-regression.log 绑定证据；旧扩包20分钟 timeout及GUI失败也保留，不由后续绿覆盖。
 
-本票保持 partial：本轮开放固定小目录（Skill≤8、候选≤32、正文64KiB、普通Packet128KiB）的同库消费。大目录渐进检索、跨 owner holder 交接、外部 Agent 身份与执行、独立委派执行控制及生产规模/质量尚未由该片闭合；后续全范围双轴审查仍待执行。普通知识与数据锁不提供系统信任、程序 readiness、授权或 Task 成功裁决。
+本轮已实现 R4 规定的准确小目录直接装载（Skill≤8、候选≤32、正文64KiB、普通Packet128KiB）及本地同库消费；大目录渐进检索只列为未开放优化，不作为本票未完成理由。当前 partial 待工单17的内部/外部委派实际消费原父 selection 的 Agent 能力/控制与父 Grant 交集，以及最终双轴审查。准确纯Tx端口已交该负责方；未经实际委派验证不以控制元数据宣称接线完成。跨 owner 知识 holder 交接与生产规模/质量另列资格。普通知识与数据锁不提供系统信任、程序 readiness、授权或 Task 成功裁决。
 
 2026-10-03：全项目范围复核后补入原实施任务图，未改变用户授权或领域裁决。
