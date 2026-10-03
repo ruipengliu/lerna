@@ -20,18 +20,31 @@ type ScheduleInput struct {
 }
 type Schedule struct {
 	ScheduleInput
-	ScheduleID         string  `json:"schedule_id"`
-	TenantID           string  `json:"tenant_id"`
-	OwnerID            string  `json:"owner_id"`
-	Revision           uint64  `json:"revision"`
-	RuleRevision       uint64  `json:"rule_revision"`
-	State              string  `json:"state"`
-	CreatedAt          string  `json:"created_at"`
-	EffectiveAfter     string  `json:"effective_after"`
-	NextDueAt          *string `json:"next_due_at,omitempty"`
-	Exhausted          bool    `json:"exhausted"`
-	ActiveOccurrenceID string  `json:"active_occurrence_id,omitempty"`
-	ResumeAfter        *string `json:"resume_after,omitempty"`
+	ScheduleID         string       `json:"schedule_id"`
+	TenantID           string       `json:"tenant_id"`
+	OwnerID            string       `json:"owner_id"`
+	Revision           uint64       `json:"revision"`
+	RuleRevision       uint64       `json:"rule_revision"`
+	State              string       `json:"state"`
+	CreatedAt          string       `json:"created_at"`
+	EffectiveAfter     string       `json:"effective_after"`
+	NextDueAt          *string      `json:"next_due_at,omitempty"`
+	Exhausted          bool         `json:"exhausted"`
+	ActiveOccurrenceID string       `json:"active_occurrence_id,omitempty"`
+	ResumeAfter        *string      `json:"resume_after,omitempty"`
+	PausedRange        *PausedRange `json:"paused_range,omitempty"`
+}
+
+// PausedRange 保留尚未审计完的暂停时点，当前 NextDueAt 始终指向恢复后的未来。
+// 原规则单独冻结，编辑不能把这些时点解释为新规则。
+type PausedRange struct {
+	ScheduleRef   api.ObjectRef `json:"schedule_ref"`
+	RuleRevision  uint64        `json:"rule_revision"`
+	NextPlannedAt string        `json:"next_planned_at"`
+	Through       string        `json:"through"`
+	Spec          ScheduleSpec  `json:"spec"`
+	Timezone      string        `json:"timezone"`
+	TZDBVersion   string        `json:"tzdb_version"`
 }
 type scheduleRecord struct {
 	Schedule
@@ -133,6 +146,9 @@ func (s *Service) CreateScheduleTx(ctx context.Context, tx runtime.Tx, a runtime
 	if err = tx.Create(ctx, schedules, c.TargetID, a.SubjectID, r); err != nil {
 		return ScheduleOutput{}, err
 	}
+	if err = bumpCollection(ctx, tx, "schedules", a.SubjectID); err != nil {
+		return ScheduleOutput{}, err
+	}
 	if next != nil {
 		if _, err = tx.Raise(ctx, JobTrigger, c.TargetID, tx.Scope().Ref(c.TargetID, 1), *next); err != nil {
 			return ScheduleOutput{}, err
@@ -144,14 +160,17 @@ func getSchedule(ctx context.Context, tx runtime.Tx, a runtime.Auth, id string) 
 	var r scheduleRecord
 	_, err := tx.Get(ctx, schedules, id, &r)
 	if err == nil {
-		err = access(a, r.Auth.SubjectID)
+		err = access(a, tx.Scope(), r.Auth.SubjectID)
 	}
 	return r, err
 }
 func saveSchedule(ctx context.Context, tx runtime.Tx, r *scheduleRecord) error {
 	old := r.Revision
 	r.Revision++
-	return tx.Put(ctx, schedules, r.ScheduleID, old, *r)
+	if err := tx.Put(ctx, schedules, r.ScheduleID, old, *r); err != nil {
+		return err
+	}
+	return bumpCollection(ctx, tx, "schedules", r.Auth.SubjectID)
 }
 func scheduleOutput(scope runtime.Scope, r scheduleRecord) ScheduleOutput {
 	count := uint64(0)
@@ -229,18 +248,38 @@ func (s *Service) ControlScheduleTx(ctx context.Context, tx runtime.Tx, a runtim
 		if r.State != "paused" {
 			return ScheduleOutput{}, api.E("invalid_state", "schedule_not_paused")
 		}
+		if r.PausedRange != nil {
+			return ScheduleOutput{}, api.E("overloaded", "paused_skip_pending")
+		}
 		r.State = "enabled"
-		cutoff := api.Time(now)
-		r.ResumeAfter = &cutoff
+		r.ResumeAfter = nil
+		if r.NextDueAt != nil {
+			due, e := api.ParseTime(*r.NextDueAt)
+			if e != nil {
+				return ScheduleOutput{}, e
+			}
+			if !due.After(now) {
+				r.PausedRange = &PausedRange{ScheduleRef: tx.Scope().Ref(r.ScheduleID, r.Revision), RuleRevision: r.RuleRevision, NextPlannedAt: *r.NextDueAt, Through: api.Time(now), Spec: r.Spec, Timezone: r.Timezone, TZDBVersion: r.TZDBVersion}
+				if e = advanceSchedule(s, &r, now); e != nil {
+					return ScheduleOutput{}, e
+				}
+				if _, e = s.advancePaused(ctx, tx, &r, time.Now()); e != nil {
+					return ScheduleOutput{}, e
+				}
+			}
+		}
 	default:
 		return ScheduleOutput{}, invalid("unknown_schedule_control")
 	}
 	if err = saveSchedule(ctx, tx, &r); err != nil {
 		return ScheduleOutput{}, err
 	}
-	if r.NextDueAt != nil {
-		due, _ := api.ParseTime(*r.NextDueAt)
-		if c.Method == "schedule.resume" {
+	if r.NextDueAt != nil || r.PausedRange != nil {
+		due := now
+		if r.NextDueAt != nil {
+			due, _ = api.ParseTime(*r.NextDueAt)
+		}
+		if r.PausedRange != nil {
 			due = now
 		}
 		if _, err = tx.Raise(ctx, JobTrigger, r.ScheduleID, tx.Scope().Ref(r.ScheduleID, r.Revision), due); err != nil {
@@ -250,6 +289,10 @@ func (s *Service) ControlScheduleTx(ctx context.Context, tx runtime.Tx, a runtim
 	if r.ActiveOccurrenceID != "" {
 		var occ occurrenceRecord
 		if _, err = tx.Get(ctx, occurrences, r.ActiveOccurrenceID, &occ); err != nil {
+			return ScheduleOutput{}, err
+		}
+		// 控制是新的领域事实。原 source revision 的 Raise 只判重，不会唤醒等待作业。
+		if err = saveOccurrence(ctx, tx, &occ); err != nil {
 			return ScheduleOutput{}, err
 		}
 		if _, err = tx.Raise(ctx, JobOccurrence, occ.OccurrenceID, tx.Scope().Ref(occ.OccurrenceID, occ.Revision), now); err != nil {
@@ -263,7 +306,7 @@ func (s *Service) ReadSchedule(ctx context.Context, store runtime.Store, scope r
 	if _, err := store.Read(ctx, scope, schedules, id, 0, &r); err != nil {
 		return Schedule{}, err
 	}
-	if err := access(a, r.Auth.SubjectID); err != nil {
+	if err := access(a, scope, r.Auth.SubjectID); err != nil {
 		return Schedule{}, err
 	}
 	return r.Schedule, nil
@@ -273,7 +316,7 @@ func (s *Service) ReadOccurrence(ctx context.Context, store runtime.Store, scope
 	if _, err := store.Read(ctx, scope, occurrences, id, 0, &r); err != nil {
 		return Occurrence{}, err
 	}
-	if err := access(a, r.Auth.SubjectID); err != nil {
+	if err := access(a, scope, r.Auth.SubjectID); err != nil {
 		return Occurrence{}, api.E("forbidden", "occurrence_redacted")
 	}
 	return r.Occurrence, nil
@@ -300,12 +343,25 @@ func (s *Service) Trigger(ctx context.Context, store runtime.Store, scope runtim
 		if _, err := tx.Get(ctx, schedules, work.Job.SourceRef.ObjectID, &r); err != nil {
 			return runtime.Disposition{}, err
 		}
-		if r.State != "enabled" || r.NextDueAt == nil {
-			return runtime.Done(), nil
-		}
 		now, err := tx.Now(ctx)
 		if err != nil {
 			return runtime.Disposition{}, err
+		}
+		start := time.Now()
+		count, err := s.advancePaused(ctx, tx, &r, start)
+		if err != nil {
+			return runtime.Disposition{}, err
+		}
+		if r.State != "enabled" || r.NextDueAt == nil {
+			if count > 0 {
+				if err = saveSchedule(ctx, tx, &r); err != nil {
+					return runtime.Disposition{}, err
+				}
+			}
+			if r.PausedRange != nil {
+				return runtime.Ready(now), nil
+			}
+			return runtime.Done(), nil
 		}
 		due, err := api.ParseTime(*r.NextDueAt)
 		if err != nil {
@@ -316,8 +372,6 @@ func (s *Service) Trigger(ctx context.Context, store runtime.Store, scope runtim
 			pauseCutoff, _ = api.ParseTime(*r.ResumeAfter)
 		}
 		var skipped *SkipRange
-		start := time.Now()
-		count := 0
 		for r.NextDueAt != nil && count < 100 && time.Since(start) < 10*time.Millisecond {
 			due, _ = api.ParseTime(*r.NextDueAt)
 			reason := ""
@@ -346,6 +400,9 @@ func (s *Service) Trigger(ctx context.Context, store runtime.Store, scope runtim
 			if err = tx.Create(ctx, skips, skipped.SkipID, r.ScheduleID, *skipped); err != nil {
 				return runtime.Disposition{}, err
 			}
+			if err = bumpCollection(ctx, tx, "skips", r.ScheduleID); err != nil {
+				return runtime.Disposition{}, err
+			}
 		}
 		if r.NextDueAt != nil {
 			due, _ = api.ParseTime(*r.NextDueAt)
@@ -370,6 +427,9 @@ func (s *Service) Trigger(ctx context.Context, store runtime.Store, scope runtim
 				if err = tx.Create(ctx, occurrences, id, r.ScheduleID, o); err != nil {
 					return runtime.Disposition{}, err
 				}
+				if err = bumpCollection(ctx, tx, "occurrences", r.ScheduleID); err != nil {
+					return runtime.Disposition{}, err
+				}
 				if o.Phase == "recorded" {
 					if _, err = tx.Raise(ctx, JobOccurrence, id, scope.Ref(id, 1), now); err != nil {
 						return runtime.Disposition{}, err
@@ -386,6 +446,9 @@ func (s *Service) Trigger(ctx context.Context, store runtime.Store, scope runtim
 		if err = saveSchedule(ctx, tx, &r); err != nil {
 			return runtime.Disposition{}, err
 		}
+		if r.PausedRange != nil {
+			return runtime.Ready(now), nil
+		}
 		if r.NextDueAt == nil {
 			return runtime.Done(), nil
 		}
@@ -395,6 +458,54 @@ func (s *Service) Trigger(ctx context.Context, store runtime.Store, scope runtim
 		}
 		return runtime.Waiting(next), nil
 	})
+}
+
+func (s *Service) advancePaused(ctx context.Context, tx runtime.Tx, r *scheduleRecord, start time.Time) (int, error) {
+	pending := r.PausedRange
+	if pending == nil {
+		return 0, nil
+	}
+	through, err := api.ParseTime(pending.Through)
+	if err != nil {
+		return 0, err
+	}
+	var skipped *SkipRange
+	count := 0
+	for pending != nil && count < 100 && time.Since(start) < 10*time.Millisecond {
+		due, e := api.ParseTime(pending.NextPlannedAt)
+		if e != nil {
+			return 0, e
+		}
+		if due.After(through) {
+			r.PausedRange = nil
+			break
+		}
+		if skipped == nil {
+			skipped = &SkipRange{SkipID: api.NewID("skip"), ScheduleRef: pending.ScheduleRef, RuleRevision: pending.RuleRevision, FirstPlannedAt: api.Time(due), Reason: "paused"}
+		}
+		skipped.Count++
+		skipped.LastPlannedAt = api.Time(due)
+		count++
+		next, e := s.NextDue(pending.Spec, pending.Timezone, pending.TZDBVersion, due)
+		if e != nil {
+			return 0, e
+		}
+		if next == nil || next.After(through) {
+			r.PausedRange = nil
+			pending = nil
+		} else {
+			pending.NextPlannedAt = api.Time(*next)
+		}
+	}
+	if skipped != nil {
+		if err = tx.Create(ctx, skips, skipped.SkipID, r.ScheduleID, *skipped); err != nil {
+			return 0, err
+		}
+		if err = bumpCollection(ctx, tx, "skips", r.ScheduleID); err != nil {
+			return 0, err
+		}
+	}
+	return count, nil
 }
 func advanceSchedule(s *Service, r *scheduleRecord, after time.Time) error {
 	next, err := s.NextDue(r.Spec, r.Timezone, r.TZDBVersion, after)
@@ -412,7 +523,10 @@ func advanceSchedule(s *Service, r *scheduleRecord, after time.Time) error {
 func saveOccurrence(ctx context.Context, tx runtime.Tx, r *occurrenceRecord) error {
 	old := r.Revision
 	r.Revision++
-	return tx.Put(ctx, occurrences, r.OccurrenceID, old, *r)
+	if err := tx.Put(ctx, occurrences, r.OccurrenceID, old, *r); err != nil {
+		return err
+	}
+	return bumpCollection(ctx, tx, "occurrences", r.ScheduleRef.ObjectID)
 }
 func closeSlot(ctx context.Context, tx runtime.Tx, schedule *scheduleRecord, occ *occurrenceRecord) error {
 	occ.SlotClosed = true

@@ -13,6 +13,10 @@ import (
 
 type taskGate struct{ a *App }
 
+func (g taskGate) CheckSubjectTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth) error {
+	return currentCredentialTx(ctx, tx, auth)
+}
+
 func (g taskGate) Authorize(ctx context.Context, tx runtime.Tx, auth runtime.Auth, purpose string, contents []api.ContentRef, objects []api.ObjectRef) error {
 	if e := currentCredentialTx(ctx, tx, auth); e != nil {
 		return e

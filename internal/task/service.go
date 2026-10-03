@@ -287,6 +287,11 @@ func (s *Service) CheckCurrent(ctx context.Context, tx runtime.Tx, t taskState, 
 	if requireRunning && (t.Task.Control != "running" || t.PendingGoalCommand != "") {
 		return api.E("invalid_state", "task_not_running")
 	}
+	if requireRunning {
+		if e = s.checkSubmitterTx(ctx, tx, t); e != nil {
+			return e
+		}
+	}
 	for _, id := range t.Ancestors {
 		a, e := getTask(ctx, tx, id)
 		if e != nil {
@@ -294,6 +299,11 @@ func (s *Service) CheckCurrent(ctx context.Context, tx runtime.Tx, t taskState, 
 		}
 		if terminal(a) || requireRunning && a.Task.Control != "running" {
 			return api.E("invalid_state", "ancestor_control")
+		}
+		if requireRunning {
+			if e = s.checkSubmitterTx(ctx, tx, a); e != nil {
+				return e
+			}
 		}
 	}
 	if t.IncomingAllocationID != "" {
@@ -304,6 +314,18 @@ func (s *Service) CheckCurrent(ctx context.Context, tx runtime.Tx, t taskState, 
 		if a.Gate != "open" {
 			return api.E("invalid_state", "allocation_closed")
 		}
+	}
+	return nil
+}
+func submitterAuth(scope runtime.Scope, t taskState) runtime.Auth {
+	return runtime.Auth{TenantID: scope.TenantID, SubjectID: t.SubjectID, CredentialGeneration: t.SubmitterGeneration, Roles: append([]string{}, t.SubmitterRoles...)}
+}
+func (s *Service) checkSubmitterTx(ctx context.Context, tx runtime.Tx, t taskState) error {
+	if t.SubmitterGeneration == 0 {
+		return api.E("forbidden", "submitter_generation_unavailable")
+	}
+	if gate, ok := s.ports.Gate.(SubjectGate); ok {
+		return gate.CheckSubjectTx(ctx, tx, submitterAuth(tx.Scope(), t))
 	}
 	return nil
 }
@@ -400,7 +422,7 @@ func (s *Service) SubmitTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if e != nil {
 		return TaskOutput{}, e
 	}
-	t := taskState{Task: api.Task{TenantID: tx.Scope().TenantID, TaskID: c.TargetID, OrchestratorID: tx.Scope().OwnerID, SubmitCommandID: c.CommandID, GoalRef: in.GoalRef, GoalRevision: 1, ControlRevision: 1, Revision: 1, PolicyRef: in.PolicyRef, Requirements: []api.Requirement{}, Deadline: in.Deadline, Status: "active", Control: "running", WaitReasons: []api.WaitReason{}, Budget: balances, OpenEffects: api.CollectionSummary{CollectionRevision: 1, Complete: true}, RequirementsState: "collecting", RequirementsDigest: digest, AcceptanceRef: in.AcceptanceRef}, SubjectID: auth.SubjectID, Policy: p, InitialGoalRef: in.GoalRef, Amendments: []api.ContentRef{}, Ancestors: []string{}, SemanticKeys: []string{}, CurrentArtifactRefs: []api.ContentRef{}, ControlTargets: []string{}, Credits: []api.Amount{}, RelationRevision: 1}
+	t := taskState{Task: api.Task{TenantID: tx.Scope().TenantID, TaskID: c.TargetID, OrchestratorID: tx.Scope().OwnerID, SubmitCommandID: c.CommandID, GoalRef: in.GoalRef, GoalRevision: 1, ControlRevision: 1, Revision: 1, PolicyRef: in.PolicyRef, Requirements: []api.Requirement{}, Deadline: in.Deadline, Status: "active", Control: "running", WaitReasons: []api.WaitReason{}, Budget: balances, OpenEffects: api.CollectionSummary{CollectionRevision: 1, Complete: true}, RequirementsState: "collecting", RequirementsDigest: digest, AcceptanceRef: in.AcceptanceRef}, SubjectID: auth.SubjectID, SubmitterGeneration: auth.CredentialGeneration, SubmitterRoles: append([]string{}, auth.Roles...), Policy: p, InitialGoalRef: in.GoalRef, Amendments: []api.ContentRef{}, Ancestors: []string{}, SemanticKeys: []string{}, CurrentArtifactRefs: []api.ContentRef{}, ControlTargets: []string{}, Credits: []api.Amount{}, RelationRevision: 1}
 	sourceKind := "user_input"
 	source := tx.Scope().Ref(c.CommandID, 1)
 	if in.SourceSubmissionRef != nil {

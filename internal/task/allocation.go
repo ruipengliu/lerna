@@ -197,6 +197,10 @@ func (s *Service) refreshIncomingTx(ctx context.Context, tx runtime.Tx, t taskSt
 	a.Cumulative = usage
 	if changed {
 		a.UsageRevision++
+		if a.Gate == "closed" {
+			a.ClosureRef = nil
+			a.ClosurePending = false
+		}
 	}
 	if a.Gate == "closing" && !t.Task.AccountingOpen {
 		rows, e := s.fullRelations(ctx, tx, t.Task.TaskID)
@@ -231,12 +235,32 @@ func (s *Service) refreshIncomingTx(ctx context.Context, tx runtime.Tx, t taskSt
 		}
 	}
 	if a.Gate == "closed" && a.TaskRef != nil {
-		closure := api.AllocationClosure{AllocationID: a.AllocationID, ParentOwnerID: a.ParentOwner, ReceiverID: a.ReceiverID, SpendingClosed: true, ClosedAt: a.ClosedAt, UsageRevision: a.UsageRevision, FinalUsage: a.Cumulative, ProofRef: t.Task.GoalRef}
-		// 本库原 Closure 是权威事实；proof_ref 指向受信原目标及可核原账本，不靠正文证明关闭。
+		closure := api.AllocationClosure{AllocationID: a.AllocationID, ParentOwnerID: a.ParentOwner, ReceiverID: a.ReceiverID, SpendingClosed: true, ClosedAt: a.ClosedAt, UsageRevision: a.UsageRevision, FinalUsage: a.Cumulative}
 		semantic := fmt.Sprintf("%s/%020d", t.IncomingAllocationID, a.UsageRevision)
 		binding, e := tx.LookupKey(ctx, closures, semantic)
 		var ref api.ObjectRef
 		if confirmedNotFound(e) {
+			sealer, ok := s.ports.ClosureProof.(AllocationProofPort)
+			if !ok {
+				if !a.ClosurePending {
+					if _, e = raise(ctx, tx, JobAllocation, "incoming/"+t.IncomingAllocationID, tx.Scope().Ref(a.AllocationID, a.UsageRevision)); e != nil {
+						return e
+					}
+				}
+				a.ClosurePending = true
+				a.Revision++
+				return tx.Put(ctx, incoming, t.IncomingAllocationID, a.Revision-1, a)
+			}
+			closure.ProofRef, e = sealer.SealAllocationClosureTx(ctx, tx, closure)
+			if e != nil {
+				return e
+			}
+			if e = s.checkSourceProof(tx.Scope(), closure.ProofRef); e != nil {
+				return e
+			}
+			if e = api.ValidateRecord("AllocationClosure", closure); e != nil {
+				return e
+			}
 			closureID := api.NewID("closure")
 			if e = tx.Create(ctx, closures, closureID, t.Task.TaskID, closure); e != nil {
 				return e
@@ -256,12 +280,18 @@ func (s *Service) refreshIncomingTx(ctx context.Context, tx runtime.Tx, t taskSt
 			if _, e = tx.Get(ctx, closures, binding.ObjectID, &previous); e != nil {
 				return e
 			}
+			originalProof := previous.ProofRef
+			previous.ProofRef = api.ContentRef{}
 			if !api.Equal(previous, closure) {
 				return api.E("idempotency_conflict", "digest_conflict")
+			}
+			if e = s.checkSourceProof(tx.Scope(), originalProof); e != nil {
+				return e
 			}
 			ref = tx.Scope().Ref(binding.ObjectID, 1)
 		}
 		a.ClosureRef = &ref
+		a.ClosurePending = false
 
 		if changed {
 			if _, e = raise(ctx, tx, JobAllocation, "correction/"+t.IncomingAllocationID, tx.Scope().Ref(a.AllocationID, a.UsageRevision)); e != nil {
@@ -300,10 +330,12 @@ func (s *Service) SettleTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	}
 	return AllocationOutput{AllocationRef: tx.Scope().Ref(a.AllocationID, a.Revision), State: a.State}, nil
 }
-func (s *Service) ReconcileClosure(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, allocationID string, closure api.AllocationClosure) error {
-	return s.transaction(ctx, store, scope, func(tx runtime.Tx) error { return s.ReconcileClosureTx(ctx, tx, auth, allocationID, closure) })
+func (s *Service) ReconcileClosure(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, allocationID string, closure api.AllocationClosure, sourceRefs ...api.ObjectRef) error {
+	return s.transaction(ctx, store, scope, func(tx runtime.Tx) error {
+		return s.ReconcileClosureTx(ctx, tx, auth, allocationID, closure, sourceRefs...)
+	})
 }
-func (s *Service) ReconcileClosureTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, allocationID string, closure api.AllocationClosure) error {
+func (s *Service) ReconcileClosureTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, allocationID string, closure api.AllocationClosure, sourceRefs ...api.ObjectRef) error {
 
 	if !auth.HasRole("service") && auth.SubjectID != closure.ReceiverID {
 		return api.E("forbidden", "receiver_identity_required")
@@ -311,6 +343,31 @@ func (s *Service) ReconcileClosureTx(ctx context.Context, tx runtime.Tx, auth ru
 	var a Allocation
 	if _, e := tx.Get(ctx, allocations, allocationID, &a); e != nil {
 		return e
+	}
+	if len(sourceRefs) > 1 {
+		return invalid("one_closure_reference_required")
+	}
+	if len(sourceRefs) == 1 {
+		ref := sourceRefs[0]
+		if err := runtime.CheckRef(tx.Scope(), ref); err != nil {
+			return err
+		}
+		if ref.OwnerID != a.ReceiverID {
+			return api.E("forbidden", "closure_scope_mismatch")
+		}
+		if ref.OwnerID == tx.Scope().OwnerID {
+			var original api.AllocationClosure
+			if err := tx.GetVersion(ctx, closures, ref.ObjectID, ref.Revision, &original); err != nil {
+				return err
+			}
+			if !api.Equal(original, closure) {
+				return api.E("idempotency_conflict", "closure_reference_mismatch")
+			}
+		}
+		a.ClosureRef = &ref
+	}
+	if a.ClosureRef == nil {
+		return invalid("closure_reference_required")
 	}
 	if closure.AllocationID != allocationID || closure.ParentOwnerID != tx.Scope().OwnerID || closure.ReceiverID != a.ReceiverID || !closure.SpendingClosed {
 		return api.E("invalid_request", "closure_unverified")

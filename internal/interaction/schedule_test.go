@@ -23,8 +23,8 @@ func (b scheduleGateBridge) CheckTx(ctx context.Context, tx runtime.Tx, a runtim
 func TestScheduleKeepsUnknownSlotAcrossPauseAndClosesOnlyFromTask(t *testing.T) {
 	f := newApplication(t)
 	id := api.NewID("schedule")
-	planned := time.Now().Add(2 * time.Second).Truncate(time.Second)
 	template := f.upload(t, "原定时目标")
+	planned := time.Now().Add(15 * time.Second).Truncate(time.Second)
 	r := f.command(t, "schedule.create", id, nil, interaction.ScheduleInput{Spec: interaction.ScheduleSpec{Type: "once_at", At: api.Time(planned)}, Timezone: "Etc/UTC", TZDBVersion: "2026b", TemplateRef: template, PolicyRef: f.policy, InstallLockRef: f.config, TaskTimeoutSeconds: 120, Budget: []api.Amount{{Unit: "USD", Value: "20"}}})
 	var out interaction.ScheduleOutput
 	if e := api.Decode(r.Output, &out); e != nil {
@@ -54,6 +54,7 @@ func TestScheduleKeepsUnknownSlotAcrossPauseAndClosesOnlyFromTask(t *testing.T) 
 		t.Fatalf("unknown original send %+v", occ)
 	}
 	original := *occ.Command
+	f.reopen(t)
 	view, e = f.s.ReadSchedule(f.ctx, f.store, f.scope, f.auth, id)
 	if e != nil {
 		t.Fatal(e)
@@ -110,5 +111,47 @@ func (f *applicationFixture) stepKind(t *testing.T, kind string) {
 	}
 	if e = h(f.ctx, f.store, f.scope, works[0]); e != nil {
 		t.Fatal(e)
+	}
+}
+
+func TestResumeDurablySkipsPausedPointsBeforeReturningFutureCursor(t *testing.T) {
+	f := newApplication(t)
+	template := f.upload(t, "暂停区间不补跑")
+	id := api.NewID("schedule")
+	anchor := time.Now().Add(2 * time.Second).Truncate(time.Second)
+	f.command(t, "schedule.create", id, nil, interaction.ScheduleInput{Spec: interaction.ScheduleSpec{Type: "interval", AnchorAt: api.Time(anchor), EverySeconds: 1}, Timezone: "Etc/UTC", TZDBVersion: "2026b", TemplateRef: template, PolicyRef: f.policy, InstallLockRef: f.config, TaskTimeoutSeconds: 120, Budget: []api.Amount{{Unit: "USD", Value: "20"}}})
+	view, e := f.s.ReadSchedule(f.ctx, f.store, f.scope, f.auth, id)
+	if e != nil || view.NextDueAt == nil {
+		t.Fatalf("create interval %+v %v", view, e)
+	}
+	first := *view.NextDueAt
+	rev := view.Revision
+	f.command(t, "schedule.pause", id, &rev, interaction.ScheduleControlInput{Reason: "暂停至少两个计划点"})
+	point, _ := api.ParseTime(first)
+	timer := time.NewTimer(time.Until(point.Add(2*time.Second)) + 20*time.Millisecond)
+	defer timer.Stop()
+	<-timer.C
+	view, e = f.s.ReadSchedule(f.ctx, f.store, f.scope, f.auth, id)
+	if e != nil {
+		t.Fatal(e)
+	}
+	rev = view.Revision
+	before := time.Now()
+	f.command(t, "schedule.resume", id, &rev, interaction.ScheduleControlInput{Reason: "只恢复未来计划"})
+	view, e = f.s.ReadSchedule(f.ctx, f.store, f.scope, f.auth, id)
+	if e != nil || view.NextDueAt == nil {
+		t.Fatalf("resume %+v %v", view, e)
+	}
+	next, _ := api.ParseTime(*view.NextDueAt)
+	if !next.After(before) || view.RuleRevision != 1 {
+		t.Fatalf("resume returned paused cursor or changed rule %+v", view)
+	}
+	skipped, e := f.s.ListSkips(f.ctx, f.store, f.scope, f.auth, id, interaction.SkipListInput{ListInput: api.ListInput{Limit: 100}})
+	if e != nil || len(skipped.Items) == 0 || skipped.Items[0].Reason != "paused" || skipped.Items[0].FirstPlannedAt != first || skipped.Items[0].Count < 2 {
+		t.Fatalf("resume did not durably record paused points %+v %v", skipped, e)
+	}
+	occs, e := f.s.ListOccurrences(f.ctx, f.store, f.scope, f.auth, id, api.ListInput{Limit: 100})
+	if e != nil || len(occs.Items) != 0 || f.delivery.sends != 0 {
+		t.Fatalf("resume replayed paused work %+v %v", occs, e)
 	}
 }

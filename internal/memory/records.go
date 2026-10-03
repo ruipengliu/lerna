@@ -176,7 +176,7 @@ func appendChange(ctx context.Context, tx runtime.Tx, head ChangeHead, record Me
 	if err != nil {
 		return 0, err
 	}
-	if _, err = tx.Raise(ctx, "memory.index", record.MemoryID, tx.Scope().Ref(record.MemoryID, record.Revision), now); err != nil {
+	if _, err = tx.Raise(ctx, "memory.index", tx.Scope().OwnerID, tx.Scope().Ref(record.MemoryID, record.Revision), now); err != nil {
 		return 0, err
 	}
 	return head.ChangeHead, nil
@@ -364,7 +364,7 @@ func (s *Service) replace(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 	if err != nil {
 		return MemoryOutput{}, err
 	}
-	if _, err = tx.Raise(ctx, "memory.correction_impact", contentKey(oldContent), tx.Scope().Ref(oldContent.ContentID, oldContent.Version), now); err != nil {
+	if _, err = tx.Raise(ctx, "memory.correction_impact", contentKey(oldContent), tx.Scope().Ref(record.MemoryID, record.Revision), now); err != nil {
 		return MemoryOutput{}, err
 	}
 	if _, err = tx.Raise(ctx, "memory.cleanup", in.MemoryID, tx.Scope().Ref(in.MemoryID, record.Revision), now); err != nil {
@@ -422,7 +422,7 @@ func (s *Service) restrict(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if err != nil {
 		return MemoryOutput{}, err
 	}
-	if _, err = tx.Raise(ctx, "memory.restrict_impact", contentKey(record.Values.ContentRef), tx.Scope().Ref(record.Values.ContentRef.ContentID, record.Values.ContentRef.Version), now); err != nil {
+	if _, err = tx.Raise(ctx, "memory.restrict_impact", contentKey(record.Values.ContentRef), tx.Scope().Ref(record.MemoryID, record.Revision), now); err != nil {
 		return MemoryOutput{}, err
 	}
 	return MemoryOutput{tx.Scope().Ref(in.MemoryID, record.Revision), record.State, seq}, nil
@@ -470,7 +470,7 @@ func (s *Service) delete(ctx context.Context, tx runtime.Tx, auth runtime.Auth, 
 	if _, err = tx.Raise(ctx, "memory.cleanup", in.MemoryID, tx.Scope().Ref(in.MemoryID, record.Revision), now); err != nil {
 		return MemoryOutput{}, err
 	}
-	if _, err = tx.Raise(ctx, "memory.source_impact", contentKey(record.Values.ContentRef), tx.Scope().Ref(record.Values.ContentRef.ContentID, record.Values.ContentRef.Version), now); err != nil {
+	if _, err = tx.Raise(ctx, "memory.source_impact", contentKey(record.Values.ContentRef), tx.Scope().Ref(record.MemoryID, record.Revision), now); err != nil {
 		return MemoryOutput{}, err
 	}
 	return MemoryOutput{tx.Scope().Ref(in.MemoryID, record.Revision), "deleted", seq}, nil
@@ -478,7 +478,7 @@ func (s *Service) delete(ctx context.Context, tx runtime.Tx, auth runtime.Auth, 
 
 func (s *Service) ReadMemory(ctx context.Context, scope runtime.Scope, auth runtime.Auth, in ReadMemoryInput) (MemoryRecord, error) {
 	var out MemoryRecord
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}
@@ -501,7 +501,7 @@ func (s *Service) ReadMemory(ctx context.Context, scope runtime.Scope, auth runt
 
 func (s *Service) InspectMemory(ctx context.Context, scope runtime.Scope, auth runtime.Auth, id string) (MemoryRecord, error) {
 	var out MemoryRecord
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}

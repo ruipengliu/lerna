@@ -97,6 +97,12 @@ func (s *Service) createPlan(ctx context.Context, tx runtime.Tx, a runtime.Auth,
 	if p.Purpose == "formal" && (p.ImprovementPolicyRef == nil || !api.ValidID(p.ReleaseRequestID)) {
 		return runtime.Outcome{}, api.E("invalid_request", "formal_policy_required")
 	}
+	if p.Purpose == "formal" && s.Ports.FormalPlanGate == nil {
+		return runtime.Outcome{}, api.E("unsupported", "registered_formal_lineage_partition_unavailable")
+	}
+	if err := ownerRef(tx.Scope(), p.PartitionRef); err != nil {
+		return runtime.Outcome{}, api.E("unsupported", "cross_owner_partition_not_supported")
+	}
 	for _, rate := range []string{p.Thresholds.MinimumTargetRate, p.Thresholds.MinimumImprovement, p.Thresholds.ConfidenceLevel} {
 		cmp, err := api.CompareDecimal(rate, "1")
 		if err != nil || cmp > 0 {
@@ -278,6 +284,12 @@ func (s *Service) continuePlan(ctx context.Context, store runtime.Store, scope r
 			if p.Purpose == "formal" {
 				if !p.FormalEligible {
 					return api.E("forbidden", "exposure_invalidated")
+				}
+				if s.Ports.FormalPlanGate == nil {
+					return api.E("unsupported", "registered_formal_lineage_partition_unavailable")
+				}
+				if e = s.Ports.FormalPlanGate.CheckTx(ctx, inner, p); e != nil {
+					return e
 				}
 				if e = ownerRef(scope, *p.ImprovementPolicyRef); e != nil {
 					return e

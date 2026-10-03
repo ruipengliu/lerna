@@ -166,10 +166,44 @@ func restrictedFormSchema(schema api.Schema) error {
 		if depth > 8 || nodes > 256 {
 			return fmt.Errorf("form schema budget exceeded")
 		}
-		allowed := map[string]bool{"type": true, "properties": true, "required": true, "additionalProperties": true, "enum": true, "const": true, "minLength": true, "maxLength": true, "minimum": true, "maximum": true, "items": true, "minItems": true, "maxItems": true, "description": true, "title": true}
+		allowed := map[string]bool{"oneOf": true, "type": true, "properties": true, "required": true, "additionalProperties": true, "enum": true, "const": true, "minLength": true, "maxLength": true, "minimum": true, "maximum": true, "items": true, "minItems": true, "maxItems": true, "description": true, "title": true}
 		for k := range s {
 			if !allowed[k] {
 				return fmt.Errorf("unsupported form schema keyword %s", k)
+			}
+		}
+		if options, ok := s["oneOf"]; ok {
+			branches, ok := options.([]any)
+			if !ok || len(branches) < 2 || len(branches) > 8 || len(s) != 1 {
+				return fmt.Errorf("invalid bounded form variants")
+			}
+			for _, branch := range branches {
+				child, ok := branch.(map[string]any)
+				if !ok {
+					return fmt.Errorf("invalid form variant")
+				}
+				if err := inspect(child, depth+1); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+		if value, ok := s["const"]; ok {
+			switch v := value.(type) {
+			case string:
+				if len(v) > 65536 {
+					return fmt.Errorf("unbounded form const")
+				}
+			case float64:
+				if v < -float64(api.MaxSafeInteger) || v > float64(api.MaxSafeInteger) {
+					return fmt.Errorf("unbounded form const")
+				}
+			case bool:
+			default:
+				return fmt.Errorf("unsupported form const")
+			}
+			if len(s) == 1 {
+				return nil
 			}
 		}
 		kind, _ := s["type"].(string)
@@ -203,7 +237,7 @@ func restrictedFormSchema(schema api.Schema) error {
 			return inspect(child, depth+1)
 		case "string":
 			max, ok := schemaNumber(s["maxLength"])
-			if !ok || max < 1 || max > 4096 {
+			if !ok || max < 1 || max > 65536 {
 				return fmt.Errorf("unbounded form string")
 			}
 		case "integer", "number":
@@ -290,7 +324,7 @@ func getSurface(ctx context.Context, tx runtime.Tx, a runtime.Auth, id string) (
 	var r surfaceRecord
 	_, err := tx.Get(ctx, surfaces, id, &r)
 	if err == nil {
-		err = access(a, r.SubjectID)
+		err = access(a, tx.Scope(), r.SubjectID)
 	}
 	return r, err
 }
@@ -355,7 +389,7 @@ func getPresentation(ctx context.Context, tx runtime.Tx, a runtime.Auth, id stri
 	var r presentationRecord
 	_, err := tx.Get(ctx, presentations, id, &r)
 	if err == nil {
-		err = access(a, r.SubjectID)
+		err = access(a, tx.Scope(), r.SubjectID)
 	}
 	return r, err
 }
@@ -473,6 +507,9 @@ func (s *Service) renderGate(ctx context.Context, tx runtime.Tx, a runtime.Auth,
 		}
 		request, err := s.ports.Requests.CheckTx(ctx, tx, a, ref)
 		if err != nil {
+			return view, err
+		}
+		if err = currentRequest(ctx, tx, ref, request); err != nil {
 			return view, err
 		}
 		if err = restrictedSchemaRaw(request.AnswerSchema); err != nil {

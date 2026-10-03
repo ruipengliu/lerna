@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strings"
 	"time"
 )
 
@@ -106,4 +107,15 @@ type Page[T any] struct {
 type ListInput struct {
 	Limit  uint64 `json:"limit"`
 	Cursor string `json:"cursor,omitempty"`
+}
+
+// IsControlMethod reserves transport capacity; business authority is still
+// checked by the registered method in its original owner's transaction.
+func IsControlMethod(method string) bool {
+	for _, suffix := range []string{".cancel", ".pause", ".revoke", ".close", ".stop", ".takeover", ".deactivate", ".billing_reconcile"} {
+		if strings.HasSuffix(method, suffix) {
+			return true
+		}
+	}
+	return false
 }

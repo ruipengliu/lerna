@@ -44,6 +44,7 @@ func TestReportGoalCompletesOnlyAfterIndependentFileReadback(t *testing.T) {
 		if err = runtime.Drain(ctx, app.Store, app.Scope, app.Registry, 500); err != nil {
 			var business *api.Error
 			if errors.As(err, &business) {
+				debugReport(t, app, id)
 				t.Fatalf("%v; internal cause: %v", err, business.Cause)
 			}
 			t.Fatal(err)
@@ -90,8 +91,32 @@ func TestReportGoalCompletesOnlyAfterIndependentFileReadback(t *testing.T) {
 		}
 		select {
 		case <-ctx.Done():
+			debugCtx := context.Background()
+			facts, _ := app.Task.ContextFacts(debugCtx, app.Store, app.Scope, app.UserAuth, id)
+			for _, op := range facts.Operations {
+				raw, e := app.query(debugCtx, "execution.get", op.Fact.Ref.ObjectID, struct {
+					ID string `json:"operation_id"`
+				}{op.Fact.Ref.ObjectID})
+				t.Logf("executor fact=%s error=%v", raw, e)
+			}
 			t.Fatalf("pipeline stopped at %+v: %v", got, ctx.Err())
 		case <-time.After(50 * time.Millisecond):
 		}
+	}
+}
+
+func debugReport(t *testing.T, app *App, id string) {
+	t.Helper()
+	ctx := context.Background()
+	facts, e := app.Task.ContextFacts(ctx, app.Store, app.Scope, app.UserAuth, id)
+	t.Logf("facts error=%v requirements=%s checks=%d operations=%d", e, facts.Task.RequirementsState, len(facts.Checks), len(facts.Operations))
+	for _, op := range facts.Operations {
+		raw, e := app.query(ctx, "execution.get", op.Fact.Ref.ObjectID, struct {
+			ID string `json:"operation_id"`
+		}{op.Fact.Ref.ObjectID})
+		t.Logf("step=%s executor=%s error=%v", op.Intent.LogicalStepKey, raw, e)
+	}
+	for _, ch := range facts.Checks {
+		t.Logf("check %s %s %s", ch.RequirementID, ch.Verdict, ch.Applicability)
 	}
 }

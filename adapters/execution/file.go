@@ -187,7 +187,7 @@ func (d *ManagedFiles) observe(p string) (FileObservation, error) {
 	}
 	f, err := d.root.OpenFile(p, os.O_RDONLY|syscall.O_NOFOLLOW, 0)
 	if errors.Is(err, fs.ErrNotExist) {
-		return FileObservation{Path: p, Version: "absent", Data: []byte{}, ObservedAt: api.Time(time.Now())}, nil
+		return FileObservation{Path: p, Version: "absent", Data: []byte{}, ObservedAt: api.Time(time.Now()), ProcessedSources: []api.ContentRef{}}, nil
 	}
 	if err != nil {
 		return FileObservation{}, err

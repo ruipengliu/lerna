@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/ruipengliu/lerna/api"
@@ -242,7 +243,13 @@ func (s *Service) saveInput(ctx context.Context, tx runtime.Tx, session *session
 	if err := tx.Create(ctx, messages, message.MessageID, session.Session.SessionID, message); err != nil {
 		return err
 	}
+	if err := bumpCollection(ctx, tx, "messages", session.Session.SessionID); err != nil {
+		return err
+	}
 	if err := tx.Create(ctx, submissions, r.Submission.SubmissionID, session.Session.SessionID, *r); err != nil {
+		return err
+	}
+	if err := bumpCollection(ctx, tx, "submissions", session.Session.SessionID); err != nil {
 		return err
 	}
 	branch.Branch.HeadMessageID = message.MessageID
@@ -264,7 +271,7 @@ func (s *Service) ReadSubmission(ctx context.Context, store runtime.Store, scope
 	if _, err := store.Read(ctx, scope, submissions, id, 0, &r); err != nil {
 		return SubmissionView{}, err
 	}
-	if err := access(a, r.Auth.SubjectID); err != nil {
+	if err := access(a, scope, r.Auth.SubjectID); err != nil {
 		return SubmissionView{}, api.E("forbidden", "submission_redacted")
 	}
 	return r.SubmissionView, nil
@@ -272,13 +279,19 @@ func (s *Service) ReadSubmission(ctx context.Context, store runtime.Store, scope
 func saveSubmission(ctx context.Context, tx runtime.Tx, r *submissionRecord) error {
 	old := r.Submission.Revision
 	r.Submission.Revision++
-	return tx.Put(ctx, submissions, r.Submission.SubmissionID, old, *r)
+	if err := tx.Put(ctx, submissions, r.Submission.SubmissionID, old, *r); err != nil {
+		return err
+	}
+	return bumpCollection(ctx, tx, "submissions", r.Submission.SessionRef.ObjectID)
 }
 
 // 原生版本行不可变，可用于确定父锁；当前分支/保序门禁先于可变 Submission。
 func lockSubmission(ctx context.Context, tx runtime.Tx, id string) (submissionRecord, branchRecord, error) {
 	var birth submissionRecord
 	if err := tx.GetVersion(ctx, submissions, id, 1, &birth); err != nil {
+		return submissionRecord{}, branchRecord{}, err
+	}
+	if _, err := getSession(ctx, tx, birth.Auth, birth.Submission.SessionRef.ObjectID); err != nil {
 		return submissionRecord{}, branchRecord{}, err
 	}
 	branch, err := getBranch(ctx, tx, birth.Submission.SessionRef.ObjectID, birth.Submission.BranchID)
@@ -374,7 +387,7 @@ func (s *Service) WithdrawTx(ctx context.Context, tx runtime.Tx, a runtime.Auth,
 	if err != nil {
 		return SubmissionOutput{}, err
 	}
-	if err := access(a, r.Auth.SubjectID); err != nil {
+	if err := access(a, tx.Scope(), r.Auth.SubjectID); err != nil {
 		return SubmissionOutput{}, err
 	}
 	if c.ExpectedRevision == nil || *c.ExpectedRevision != r.Submission.Revision {
@@ -421,8 +434,8 @@ func (s *Service) ForwardInputTx(ctx context.Context, tx runtime.Tx, a runtime.A
 		return SubmissionOutput{}, err
 	}
 	request := view.Request
-	if request.RequestID != in.RequestRef.ObjectID || request.Revision != in.RequestRef.Revision || request.OwnerID != in.RequestRef.OwnerID || request.TenantID != in.RequestRef.TenantID || view.Method == "" || request.State != "pending" {
-		return SubmissionOutput{}, api.E("invalid_state", "request_target_mismatch")
+	if err = currentRequest(ctx, tx, in.RequestRef, view); err != nil {
+		return SubmissionOutput{}, err
 	}
 	now, err := tx.Now(ctx)
 	if err != nil {
@@ -481,7 +494,7 @@ func (s *Service) ReplyTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c 
 		return ReplyOutput{}, err
 	}
 	var r submissionRecord
-	if _, err := tx.Get(ctx, submissions, in.SubmissionRef.ObjectID, &r); err != nil {
+	if err := tx.GetVersion(ctx, submissions, in.SubmissionRef.ObjectID, in.SubmissionRef.Revision, &r); err != nil {
 		return ReplyOutput{}, err
 	}
 	if c.TargetID != r.Submission.SessionRef.ObjectID {
@@ -505,9 +518,15 @@ func (s *Service) ReplyTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c 
 	if err != nil {
 		return ReplyOutput{}, err
 	}
+	if session.Sequence >= api.MaxSafeInteger {
+		return ReplyOutput{}, api.E("overloaded", "session_sequence_exhausted")
+	}
 	session.Sequence++
 	message := api.Message{MessageID: api.NewID("message"), SessionRef: r.Submission.SessionRef, BranchID: r.Submission.BranchID, Seq: session.Sequence, ParentMessageID: r.Submission.MessageID, Role: in.Role, ContentRef: in.ContentRef, SubmissionRef: &in.SubmissionRef, CreatedAt: api.Time(now)}
 	if err = tx.Create(ctx, messages, message.MessageID, c.TargetID, message); err != nil {
+		return ReplyOutput{}, err
+	}
+	if err = bumpCollection(ctx, tx, "messages", c.TargetID); err != nil {
 		return ReplyOutput{}, err
 	}
 	if branch.Branch.HeadMessageID == r.Submission.MessageID {
@@ -524,7 +543,7 @@ func (s *Service) ReplyTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c 
 }
 
 // validateAnswer 从准确内容解码；Schema 由原请求 owner 的受信登记提供。
-func validateAnswer(schema json.RawMessage, body []byte) error {
+func validateAnswer(schema json.RawMessage, body []byte, media string) error {
 	var doc api.Schema
 	if err := api.Decode(schema, &doc); err != nil {
 		return err
@@ -532,6 +551,9 @@ func validateAnswer(schema json.RawMessage, body []byte) error {
 	v, err := api.NewValidator(doc)
 	if err != nil {
 		return invalid("answer_schema_invalid")
+	}
+	if strings.HasPrefix(media, "text/") {
+		body = api.Raw(string(body))
 	}
 	return v.Validate(body)
 }

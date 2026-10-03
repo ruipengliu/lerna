@@ -44,6 +44,7 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
 	}
 	expired := false
+	completionHandled := false
 	err = s.transaction(ctx, store, scope, func(tx runtime.Tx) error {
 		if e := tx.Guard(ctx, work.Claim); e != nil {
 			return e
@@ -53,12 +54,25 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 			return e
 		}
 		expired, e = s.expireTx(ctx, tx, &current)
-		return e
+		if e != nil {
+			return e
+		}
+		if !expired && current.PendingCompletionID != "" {
+			completionHandled, e = s.resumeCompletionTx(ctx, tx, &current)
+			if e != nil {
+				return e
+			}
+		}
+		t = current
+		if !completionHandled && !expired && !terminal(current) && current.Task.Control == "running" && current.PendingGoalCommand == "" && current.Task.RequirementsState != "awaiting_input" {
+			return s.CheckCurrent(ctx, tx, current, true)
+		}
+		return nil
 	})
 	if err != nil {
 		return err
 	}
-	if expired {
+	if expired || completionHandled {
 		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
 	}
 	if t.Task.Control != "running" || t.PendingGoalCommand != "" || t.Task.RequirementsState == "awaiting_input" {
@@ -100,7 +114,7 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 	if e := s.preIO(ctx, store, scope, work); e != nil {
 		return e
 	}
-	prepared, err := s.ports.Context.Prepare(ctx, scope, runtime.Auth{TenantID: scope.TenantID, SubjectID: t.SubjectID, CredentialGeneration: 1}, t.Task)
+	prepared, err := s.ports.Context.Prepare(ctx, scope, submitterAuth(scope, t), t.Task)
 	if err != nil {
 		if deferred(err) {
 			return s.wait(ctx, store, scope, work)
@@ -259,17 +273,30 @@ func (s *Service) operationJob(ctx context.Context, store runtime.Store, scope r
 		if e = s.authorize(ctx, tx, serviceAuth(scope), "task.dispatch", intent.ProcessedSourceRefs, intent.UseIntentRefs); e != nil {
 			return e
 		}
-		now, e := tx.Now(ctx)
-		if e != nil {
-			return e
-		}
-		window, e = s.controlSnapshot(ctx, tx, t, now)
-		if e != nil {
-			return e
+		changed := false
+		if d.Window == nil {
+			now, e := tx.Now(ctx)
+			if e != nil {
+				return e
+			}
+			window, e = s.controlSnapshot(ctx, tx, t, now)
+			if e != nil {
+				return e
+			}
+			if e = tx.Create(ctx, windows, window.WindowID, t.Task.TaskID, window); e != nil {
+				return e
+			}
+			d.Window = &window
+			changed = true
+		} else {
+			window = *d.Window
 		}
 		send = true
 		if !d.Sent {
 			d.Sent = true
+			changed = true
+		}
+		if changed {
 			d.Revision++
 			return tx.Put(ctx, dispatches, d.OperationID, d.Revision-1, d)
 		}
@@ -290,6 +317,20 @@ func (s *Service) operationJob(ctx context.Context, store runtime.Store, scope r
 		}
 	}
 	return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+		if send {
+			var d operationDispatch
+			rev, e := tx.Get(ctx, dispatches, intent.OperationID, &d)
+			if e != nil {
+				return e
+			}
+			if !d.ReceiptKnown {
+				d.ReceiptKnown = true
+				d.Revision++
+				if e = tx.Put(ctx, dispatches, intent.OperationID, rev, d); e != nil {
+					return e
+				}
+			}
+		}
 		_, e := raise(ctx, tx, JobReconcileOperation, "reconcile/"+intent.OperationID, scope.Ref(intent.OperationID, 1))
 		return e
 	})
@@ -836,7 +877,7 @@ func (s *Service) internalDelegationJob(ctx context.Context, store runtime.Store
 				if e = tx.GetVersion(ctx, closures, inc.ClosureRef.ObjectID, inc.ClosureRef.Revision, &allocationClosure); e != nil {
 					return e
 				}
-				if e = s.ReconcileClosureTx(ctx, tx, serviceAuth(scope), d.AllocationRef.ObjectID, allocationClosure); e != nil {
+				if e = s.ReconcileClosureTx(ctx, tx, serviceAuth(scope), d.AllocationRef.ObjectID, allocationClosure, *inc.ClosureRef); e != nil {
 					return e
 				}
 				closureKey := d.DelegationID + "/" + fmt.Sprintf("%020d", inc.UsageRevision)
@@ -899,7 +940,7 @@ func (s *Service) allocationJob(ctx context.Context, store runtime.Store, scope 
 		if _, e := store.Read(ctx, scope, incoming, parts[1], 0, &a); e != nil {
 			return e
 		}
-		if a.Gate == "closed" {
+		if a.Gate == "closed" && a.ClosureRef != nil {
 			return s.finish(ctx, store, scope, work, runtime.Done(), nil)
 		}
 		if a.TaskRef == nil {
@@ -920,6 +961,15 @@ func (s *Service) allocationJob(ctx context.Context, store runtime.Store, scope 
 		}
 		if a.ClosureRef == nil {
 			return s.wait(ctx, store, scope, work)
+		}
+		if a.ParentOwner == scope.OwnerID {
+			return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+				var closure api.AllocationClosure
+				if e := tx.GetVersion(ctx, closures, a.ClosureRef.ObjectID, a.ClosureRef.Revision, &closure); e != nil {
+					return e
+				}
+				return s.ReconcileClosureTx(ctx, tx, serviceAuth(scope), a.AllocationID, closure, *a.ClosureRef)
+			})
 		}
 		reporter, ok := s.ports.Collaboration.(AllocationReporter)
 		if !ok {

@@ -81,6 +81,9 @@ type Transfer struct {
 	TargetHolder       api.ObjectRef    `json:"target_holder"`
 	ReferenceIntentRef api.ObjectRef    `json:"reference_intent_ref"`
 	MaxBytes           uint64           `json:"max_bytes"`
+	Purpose            string           `json:"purpose,omitempty"`
+	TargetLocation     string           `json:"target_location,omitempty"`
+	CompletionCopyID   string           `json:"completion_copy_id,omitempty"`
 	ExperienceOutcome  string           `json:"experience_outcome,omitempty"`
 	ExperienceProofRef *api.ObjectRef   `json:"experience_proof_ref,omitempty"`
 }

@@ -73,6 +73,7 @@ type Config struct {
 	Participants      []string
 	BranchQueueLimit  uint64
 	SubjectQueueLimit uint64
+	MaxBranches       uint64
 	DeliveryTTL       time.Duration
 	QueueTTL          time.Duration
 	CursorKey         []byte
@@ -94,6 +95,12 @@ func New(config Config, ports Ports) (*Service, error) {
 	if config.BranchQueueLimit > 20 || config.SubjectQueueLimit > 100 {
 		return nil, fmt.Errorf("unbounded interaction queue")
 	}
+	if config.MaxBranches == 0 {
+		config.MaxBranches = 1000
+	}
+	if config.MaxBranches > 1000 {
+		return nil, fmt.Errorf("unbounded branch collection")
+	}
 	if config.DeliveryTTL == 0 {
 		config.DeliveryTTL = time.Minute
 	}
@@ -106,6 +113,7 @@ func New(config Config, ports Ports) (*Service, error) {
 	if len(config.Participants) == 0 {
 		config.Participants = []string{"interaction", "content"}
 	}
+	config.Participants = append([]string(nil), config.Participants...)
 	if len(config.CursorKey) == 0 {
 		config.CursorKey = make([]byte, 32)
 		if _, err := rand.Read(config.CursorKey); err != nil {
@@ -137,10 +145,13 @@ type SessionOutput struct {
 	BranchRef  api.ObjectRef `json:"branch_ref"`
 }
 type SessionView struct {
-	Session   api.Session  `json:"session"`
-	Branches  []api.Branch `json:"branches"`
-	Sequence  uint64       `json:"sequence"`
-	BodyState string       `json:"body_state"`
+	Session                    api.Session  `json:"session"`
+	Branches                   []api.Branch `json:"branches"`
+	Sequence                   uint64       `json:"sequence"`
+	BodyState                  string       `json:"body_state"`
+	BranchesComplete           bool         `json:"branches_complete"`
+	BranchesCursor             string       `json:"branches_cursor,omitempty"`
+	BranchesCollectionRevision uint64       `json:"branches_collection_revision"`
 }
 type SessionControlInput struct {
 	Reason string `json:"reason"`
