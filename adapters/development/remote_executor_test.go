@@ -38,21 +38,50 @@ func TestConfiguredRemoteExecutorTaskReadsOriginalDeviceBytesAndSettlesOnce(t *t
 			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
 				t.Skip("actual PostgreSQL DSN required")
 			}
-			runRemoteExecutorTask(t, driver)
+			runRemoteExecutorTask(t, driver, false)
 		})
 	}
 }
 
-func runRemoteExecutorTask(t *testing.T, driver string) {
+func TestConfiguredRemoteExecutorPublishesVerifiedTaskResultAndReopensOriginal(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) {
+			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
+				t.Skip("actual PostgreSQL DSN required")
+			}
+			runRemoteExecutorTask(t, driver, true)
+		})
+	}
+}
+
+func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), reportFixtureTimeout)
 	defer cancel()
 	root := t.TempDir()
+	keepFixture := os.Getenv("HARNESS_TEST_REMOTE_FIXTURE_ROOT")
+	if keepFixture != "" {
+		if !filepath.IsAbs(keepFixture) {
+			t.Fatal("private fixture root must be absolute")
+		}
+		if err := os.MkdirAll(keepFixture, 0700); err != nil {
+			t.Fatal(err)
+		}
+		var err error
+		root, err = os.MkdirTemp(keepFixture, "remote-task-")
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Logf("preserved private remote fixture: %s", root)
+	}
 	cfg, err := InitializeConfig(ctx, filepath.Join(root, "config.json"), root, driver)
 	if err != nil {
 		t.Fatal(err)
 	}
 	cfg.TenantID, cfg.OwnerID, cfg.SubjectID = api.NewID("tenant"), api.NewID("owner"), api.NewID("subject")
+	if err = SaveConfig(filepath.Join(root, "config.json"), cfg); err != nil {
+		t.Fatal(err)
+	}
 	cloud, err := OpenApp(ctx, cfg, true)
 	if err != nil {
 		t.Fatal(err)
@@ -70,6 +99,12 @@ func runRemoteExecutorTask(t *testing.T, driver string) {
 		t.Fatal(err)
 	}
 	deviceRoot := t.TempDir()
+	if keepFixture != "" {
+		deviceRoot = filepath.Join(root, "device")
+		if err = os.MkdirAll(deviceRoot, 0700); err != nil {
+			t.Fatal(err)
+		}
+	}
 	ca, cert, key := remoteTestTLS(t, deviceRoot)
 	deviceOwner, instance := api.NewID("owner"), api.NewID("instance")
 	binding := api.ObjectRef{TenantID: cfg.TenantID, OwnerID: deviceOwner, ObjectID: api.NewID("binding"), Revision: 1}
@@ -86,24 +121,39 @@ func runRemoteExecutorTask(t *testing.T, driver string) {
 	if err = listener.Close(); err != nil {
 		t.Fatal(err)
 	}
-	dc := executor.Config{Development: true, TenantID: cfg.TenantID, OwnerID: deviceOwner, InstanceID: instance, DatabasePath: filepath.Join(deviceRoot, "device.sqlite"), DataRoot: deviceRoot, SigningKeyFile: filepath.Join(deviceRoot, "device-key.pem"), PeerTokenFile: peerToken, Authority: executor.TrustedAuthority{KeyID: "development-es256", OwnerID: cfg.OwnerID, PublicX: authority.X, PublicY: authority.Y}, Bindings: []executor.Binding{deviceBinding}, GRPCAddr: address, TLSCertificateFile: cert, TLSKeyFile: key, OutputSubjectRefs: []api.ObjectRef{{TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.OwnerID, Revision: 1}, {TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.SubjectID, Revision: 1}}, OutputPurposes: []string{"execution_result", "content.read", "content.write", "task.context", "task.snapshot", "task.dispatch", "task.action", "brain.input", "brain.output", "task.evidence", "task.complete", "task.goal", "task.result", "result", "memory.save", "memory.read", "memory.query"}, OutputLocations: []string{"cloud", "device"}}
+	dc := executor.Config{Development: true, TenantID: cfg.TenantID, OwnerID: deviceOwner, InstanceID: instance, DatabasePath: filepath.Join(deviceRoot, "device.sqlite"), DataRoot: deviceRoot, SigningKeyFile: filepath.Join(deviceRoot, "device-key.pem"), PeerTokenFile: peerToken, Authority: executor.TrustedAuthority{KeyID: "development-es256", OwnerID: cfg.OwnerID, PublicX: authority.X, PublicY: authority.Y}, Bindings: []executor.Binding{deviceBinding}, GRPCAddr: address, TLSCertificateFile: cert, TLSKeyFile: key, OutputSubjectRefs: []api.ObjectRef{{TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.OwnerID, Revision: 1}, {TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.SubjectID, Revision: 1}}, OutputPurposes: []string{"execution_result", "content.read", "content.write", "task.context", "task.snapshot", "task.dispatch", "task.action", "brain.input", "brain.output", "task.evidence", "task.attach_evidence", "task.complete", "task.goal", "task.result", "result", "memory.save", "memory.read", "memory.query"}, OutputLocations: []string{"cloud", "device"}}
 	device, err := executor.Open(ctx, dc, true)
 	if err != nil {
 		t.Fatal(err)
 	}
+	dc.DatabaseID = device.Scope.DatabaseID
+	if err = privateFile(filepath.Join(deviceRoot, "config.json"), append(api.Raw(dc), '\n')); err != nil {
+		t.Fatal(err)
+	}
 	defer func() {
-		if err := device.Close(); err != nil {
-			t.Error(err)
+		if device != nil {
+			if err := device.Close(); err != nil {
+				t.Error(err)
+			}
 		}
 	}()
 	const original = "Actual independent device bytes; the cloud owns no target."
+	goalBody := "knowledge contract"
+	wantStatus := "failed"
+	if complete {
+		goalBody, wantStatus = original, "succeeded"
+	}
 	if err = os.WriteFile(filepath.Join(deviceRoot, "files", "remote-original.txt"), []byte(original), 0600); err != nil {
 		t.Fatal(err)
 	}
+	deviceCtx, deviceCancel := context.WithCancel(ctx)
 	done := make(chan error, 1)
-	go func() { done <- device.Run(ctx) }()
+	go func() { done <- device.Run(deviceCtx) }()
 	defer func() {
-		cancel()
+		if done == nil {
+			return
+		}
+		deviceCancel()
 		select {
 		case e := <-done:
 			if e != nil {
@@ -154,7 +204,11 @@ func runRemoteExecutorTask(t *testing.T, driver string) {
 			} `json:"messages"`
 		}
 		var input struct {
-			Snapshot api.Snapshot `json:"snapshot"`
+			Snapshot  api.Snapshot `json:"snapshot"`
+			Materials []struct {
+				Ref  api.ContentRef `json:"ref"`
+				Body string         `json:"body_utf8"`
+			} `json:"materials"`
 		}
 		if json.NewDecoder(r.Body).Decode(&wire) != nil || len(wire.Messages) != 2 || json.Unmarshal([]byte(wire.Messages[1].Content), &input) != nil {
 			t.Error("original model Snapshot missing")
@@ -163,6 +217,9 @@ func runRemoteExecutorTask(t *testing.T, driver string) {
 		reply := knowledgeContractReply()
 		if input.Snapshot.Purpose == "interpret_requirements" {
 			reply = knowledgeRefinementReply(active.Load().ArtifactRule)
+			if complete {
+				reply = remoteRefinementReply(active.Load().ArtifactRule, goalBody)
+			}
 		} else if post == 2 {
 			declared := false
 			for n, cap := range input.Snapshot.CapabilityRefs {
@@ -180,6 +237,26 @@ func runRemoteExecutorTask(t *testing.T, driver string) {
 				Contents []brain.GeneratedContent `json:"contents"`
 			}{g.Draft, g.Contents}
 			reply = api.Raw(map[string]any{"id": "remote-original-reply", "choices": []any{map[string]any{"index": 0, "finish_reason": "stop", "message": map[string]any{"role": "assistant", "content": string(api.Raw(output))}}}, "usage": map[string]any{"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120, "prompt_tokens_details": map[string]any{"cached_tokens": 40}}})
+		} else if complete && post == 3 {
+			var observed *target.FileReadResult
+			var source api.ContentRef
+			for _, material := range input.Materials {
+				var read target.FileReadResult
+				if material.Ref.OwnerID == deviceOwner && api.Decode([]byte(material.Body), &read) == nil && read.Path == "remote-original.txt" {
+					observed, source = &read, material.Ref
+				}
+			}
+			if observed == nil || observed.DataBase64 != base64.StdEncoding.EncodeToString([]byte(original)) {
+				t.Error("model did not receive the original actual device output bytes")
+				return
+			}
+			body, err := base64.StdEncoding.Strict().DecodeString(observed.DataBase64)
+			if err != nil {
+				t.Error(err)
+				return
+			}
+			generated := brain.Generated{Draft: brain.Draft{Kind: "complete", ReasonLocalID: "reason", ArtifactLocalIDs: []string{"artifact"}}, Contents: []brain.GeneratedContent{{LocalID: "reason", MediaType: "text/plain", Body: "The original read bytes are proposed; Task checks the exact requirement independently.", DisclosedSources: []api.ContentRef{}}, {LocalID: "artifact", MediaType: "text/plain", Body: string(body), DisclosedSources: []api.ContentRef{source}}}}
+			reply = api.Raw(map[string]any{"id": "remote-complete-reply", "choices": []any{map[string]any{"index": 0, "finish_reason": "stop", "message": map[string]any{"role": "assistant", "content": string(api.Raw(map[string]any{"draft": generated.Draft, "contents": generated.Contents}))}}}, "usage": map[string]any{"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120, "prompt_tokens_details": map[string]any{"cached_tokens": 40}}})
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write(reply)
@@ -187,22 +264,33 @@ func runRemoteExecutorTask(t *testing.T, driver string) {
 	defer model.Close()
 	t.Setenv("HARNESS_CONTRACT_MODEL_CREDENTIAL", "synthetic-contract-token")
 	cfg.Model = contractModelConfig(model.URL)
+	if err = SaveConfig(filepath.Join(root, "config.json"), cfg); err != nil {
+		t.Fatal(err)
+	}
 	a, err := OpenApp(ctx, cfg, true)
 	if err != nil {
 		t.Fatalf("explicit remote public Task assembly unavailable: %v", err)
 	}
 	defer func() {
-		if err := a.Close(); err != nil {
-			t.Error(err)
+		if a != nil {
+			if e := a.Close(); e != nil {
+				t.Error(e)
+			}
 		}
 	}()
 	active.Store(a)
-	goal, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), "application/json", api.Raw(brain.GoalSpec{Kind: "answer", Body: "knowledge contract"}), []api.ContentRef{}, []api.ContentRef{})
+	goal, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), "application/json", api.Raw(brain.GoalSpec{Kind: "answer", Body: goalBody}), []api.ContentRef{}, []api.ContentRef{})
 	if err != nil {
 		t.Fatal(err)
 	}
 	taskID := api.NewID("task")
 	knowledgePublicCommand(t, ctx, a, "task.submit", taskID, task.SubmitInput{OrchestratorID: a.Scope.OwnerID, GoalRef: goal, PolicyRef: a.TaskPolicy.PolicyRef, Deadline: api.Time(time.Now().Add(5 * time.Minute)), Budget: []api.Amount{{Unit: "USD", Value: "1"}}, RequirementCandidates: []api.RequirementCandidate{}}, nil)
+	if err = privateFile(filepath.Join(root, "original-task.json"), api.Raw(struct {
+		Scope  runtime.Scope `json:"scope"`
+		TaskID string        `json:"task_id"`
+	}{a.Scope, taskID})); err != nil {
+		t.Fatal(err)
+	}
 	nextProgress := time.Now().Add(10 * time.Second)
 	for {
 		if err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 300); err != nil {
@@ -222,19 +310,24 @@ func runRemoteExecutorTask(t *testing.T, driver string) {
 		if time.Now().After(nextProgress) {
 			t.Logf("public Task progress: status=%s requirements=%s accounting_open=%t posts=%d", got.Status, got.RequirementsState, got.AccountingOpen, posts.Load())
 			progress, readErr := a.Task.ContextFacts(ctx, a.Store, a.Scope, a.UserAuth, taskID)
-			t.Logf("public Task context facts: operations=%d error=%v", len(progress.Operations), readErr)
+			t.Logf("public Task context facts: operations=%d checks=%d error=%v", len(progress.Operations), len(progress.Checks), readErr)
+			for _, check := range progress.Checks {
+				t.Logf("public condition result: id=%s verdict=%s applicability=%s", check.CheckID, check.Verdict, check.Applicability)
+			}
 			if readErr == nil && len(progress.Operations) == 1 {
 				fact := progress.Operations[0]
 				t.Logf("public remote fact: effect=%s closed=%t", fact.Fact.Effect, fact.Fact.Closed)
-
 			}
 			nextProgress = time.Now().Add(10 * time.Second)
 		}
-		if got.Status == "failed" && !got.AccountingOpen {
+		if got.Status == wantStatus && !got.AccountingOpen {
 			if posts.Load() != 3 || got.Budget[0].Spent != "0.00072" || got.Budget[0].Reserved != "0" {
 				t.Fatalf("original known ledger changed: posts=%d %+v", posts.Load(), got)
 			}
 			break
+		}
+		if complete && (got.Status == "failed" || got.Status == "cancelled") {
+			t.Fatalf("original remote Task did not succeed: %+v", got)
 		}
 		select {
 		case <-ctx.Done():
@@ -285,7 +378,103 @@ func runRemoteExecutorTask(t *testing.T, driver string) {
 		ResultRef        api.ContentRef  `json:"result_ref"`
 		OriginalDeadline string          `json:"original_deadline"`
 	}{a.Scope, device.Scope, intent.TaskRef, intent.CommandID, op, view.Attempts.Items[0].AttemptID, view.Attempts.Items[0].ControlWindowID, intent.UseIntentRefs, intent.ReservationRef, *view.Operation.ResultRef, intent.Deadline}))
-	verifyForeignFlowIsolation(t, ctx, a, *view.Operation.ResultRef)
+	if !complete {
+		verifyForeignFlowIsolation(t, ctx, a, *view.Operation.ResultRef)
+	}
+	if complete {
+		var result task.ResultOutput
+		for {
+			result, err = a.Task.Result(ctx, a.Store, a.Scope, a.UserAuth, taskID, task.ResultInput{})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if result.Publication == "published" {
+				break
+			}
+			if err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 300); err != nil {
+				t.Fatal(err)
+			}
+			select {
+			case <-ctx.Done():
+				t.Fatal("original verified Result was not published", ctx.Err())
+			case <-time.After(20 * time.Millisecond):
+			}
+		}
+		if result.ContentRef == nil || result.Result.CompletionBasis != "verified" || len(result.Result.ConditionResults) != 1 || result.Result.ConditionResults[0].Verdict != "pass" {
+			t.Fatalf("device fact replaced verified Task Result: %+v", result)
+		}
+		published, e := a.ReadContent(ctx, a.Scope, a.UserAuth, *result.ContentRef, "task.result")
+		var exported api.Result
+		if e != nil || api.Decode(published, &exported) != nil || !api.Equal(exported, result.Result) {
+			t.Fatalf("original Result bytes unavailable: %v", e)
+		}
+		t.Logf("remote_verified_result_refs %s", api.Raw(struct {
+			TaskID     string         `json:"task_id"`
+			ResultRef  api.ObjectRef  `json:"result_ref"`
+			ContentRef api.ContentRef `json:"content_ref"`
+		}{taskID, a.Scope.Ref(result.Result.ResultID, result.Result.Revision), *result.ContentRef}))
+		if err = a.Close(); err != nil {
+			t.Fatal(err)
+		}
+		a = nil
+		a, err = OpenApp(ctx, cfg, false)
+		if err != nil {
+			t.Fatal(err)
+		}
+		active.Store(a)
+		if err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 500); err != nil {
+			t.Fatal(err)
+		}
+		after, e := a.Task.Result(ctx, a.Store, a.Scope, a.UserAuth, taskID, task.ResultInput{})
+		if e != nil || !api.Equal(after, result) || posts.Load() != 3 {
+			t.Fatalf("reopen replaced original Result or model call: %v %+v", e, after)
+		}
+		deviceCancel()
+		select {
+		case e := <-done:
+			if e != nil {
+				t.Fatal(e)
+			}
+		case <-time.After(10 * time.Second):
+			t.Fatal("original device did not actually exit before reopening")
+		}
+		done = nil
+		if err = device.Close(); err != nil {
+			t.Fatal(err)
+		}
+		device, err = executor.Open(ctx, dc, false)
+		if err != nil {
+			t.Fatal(err)
+		}
+		reopenedCtx, reopenedCancel := context.WithCancel(ctx)
+		defer reopenedCancel()
+		deviceCancel = reopenedCancel
+		done = make(chan error, 1)
+		go func() { done <- device.Run(reopenedCtx) }()
+		for {
+			conn, e := tls.DialWithDialer(&net.Dialer{Timeout: time.Second}, "tcp", address, &tls.Config{MinVersion: tls.VersionTLS13, RootCAs: roots})
+			if e == nil {
+				if e = conn.Close(); e != nil {
+					t.Fatal(e)
+				}
+				break
+			}
+			select {
+			case <-ctx.Done():
+				t.Fatal("reopened original device TLS readiness", ctx.Err())
+			case <-time.After(10 * time.Millisecond):
+			}
+		}
+		afterOp, e := client.Get(ctx, op)
+		if e != nil || len(afterOp.Attempts.Items) != 1 || !api.Equal(afterOp.Operation.ResultRef, view.Operation.ResultRef) {
+			t.Fatalf("reopen changed original device Attempt: %v", e)
+		}
+	}
+}
+
+func remoteRefinementReply(rule api.ComponentRef, expected string) []byte {
+	generated := brain.Generated{Draft: brain.Draft{Kind: "refine_requirements", ReasonLocalID: "reason", Requirements: []brain.DraftRequirement{{CandidateKey: "original_device_bytes", Kind: "quality", StatementLocalID: "statement", ParametersLocalID: "parameters", RuleRef: rule, Required: true}}}, Contents: []brain.GeneratedContent{{LocalID: "reason", MediaType: "text/plain", Body: "Preserve the exact original answer before device admission.", DisclosedSources: []api.ContentRef{}}, {LocalID: "statement", MediaType: "text/plain", Body: "The answer must equal the original actual device bytes.", DisclosedSources: []api.ContentRef{}}, {LocalID: "parameters", MediaType: "application/json", Body: string(api.Raw(brain.RuleParameters{Kind: "answer", ExpectedHash: api.Hash([]byte(expected)), ExpectedLength: uint64(len(expected))})), DisclosedSources: []api.ContentRef{}}}}
+	return api.Raw(map[string]any{"id": "remote-refinement-reply", "choices": []any{map[string]any{"index": 0, "finish_reason": "stop", "message": map[string]any{"role": "assistant", "content": string(api.Raw(map[string]any{"draft": generated.Draft, "contents": generated.Contents}))}}}, "usage": map[string]any{"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120, "prompt_tokens_details": map[string]any{"cached_tokens": 40}}})
 }
 
 func remoteTestTLS(t *testing.T, root string) (string, string, string) {

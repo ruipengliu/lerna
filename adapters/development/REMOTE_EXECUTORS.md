@@ -112,7 +112,22 @@ USD 0.00072 均结清。只读 Fact 的 `effect=not_applied` 是已完成读取�
 测试随后仅对此已回滚源 head 冲突沿原 Job/Claim 恢复，不新增行动或扩大期限；
 SQLite 独立 race 重跑实际通过 99.826 秒。它不证明任意错误都可重试。
 
-工单 16 保持 partial：成功 Result 的新完成 Job 需要显式取得本次来源证明，已保留
-三次 POST/原费用结清但原完成等待的真实 RED；可选 Completion preparation 与完整
-结果出版/重开在下一片验证。完整故障矩阵和最终统一 race/审查也待后续，不能把这些
-本地未完成路径归因于外部凭据。
+检查 Job 与完成 Job 各自按真实 `task.context`／`task.complete` 用途取得当次原来源
+证明，不继承上一 Job 的肯定证明。前者仅沿原 artifact/parameters/evidence；后者只在
+原全部检查已完成之后准备。Task/Governance 仍负责原检查选择、当前强门禁和最终 Result。
+
+`TestConfiguredRemoteExecutorPublishesVerifiedTaskResultAndReopensOriginal` 的 SQLite
+切片实际通过 25.603 秒：公开 Task 出版 verified Result，准确成果等于实际设备读取；
+三次 POST、原 USD 0.00072、零预留和唯一 Attempt 不变。云端与设备均实际关闭并等待
+退出，再沿原数据库、密钥、目标和配置重开，保持同一 Result／Operation／Attempt。
+此前真实 RED 180.050 秒的公开 Checks 为零，准确原因是检查用途的原 foreign copy 尚未
+登记；该 Task 沿保留的 SQLite 一致快照到原 deadline 关闭为 failed，原账务已闭合。
+这份最低责任恢复不冒称未保存的运行时 App 配置已经重开。
+
+测试可显式设置 `HARNESS_TEST_REMOTE_FIXTURE_ROOT` 为绝对路径，保留 0700 目录和
+0600 的准确 Cloud/Device 配置、原 Task 身份、目标、介质及 SDK journals；默认测试仍
+使用临时目录。日志只记录公开身份，不输出凭据。
+
+工单 16 保持 partial：成功 Result 的 PostgreSQL／race、必要拒绝故障矩阵和最终统一
+检查／审查仍待后续；完整 Task 写入链也尚未据此取证，不能把这些本地未完成路径归因于
+外部凭据。
