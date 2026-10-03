@@ -103,6 +103,7 @@ type ResultNoticeSink interface {
 }
 
 type Options struct {
+	KnowledgeGate   KnowledgeGate
 	ResultNotices   ResultNoticeSink
 	PreviewGate     PreviewGate
 	Participants    []string

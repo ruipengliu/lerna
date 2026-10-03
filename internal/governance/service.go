@@ -254,7 +254,7 @@ func (s *Service) Register(registry *runtime.Registry) error {
 		return fmt.Errorf("governance store required")
 	}
 	s.registry = registry
-	for _, register := range []func(*runtime.Registry) error{s.registerGrants, s.registerEvidence, s.registerExtensions, s.registerEvaluation} {
+	for _, register := range []func(*runtime.Registry) error{s.registerGrants, s.registerEvidence, s.registerExtensions, s.registerEvaluation, s.registerKnowledge} {
 		if err := register(registry); err != nil {
 			return err
 		}
@@ -263,6 +263,9 @@ func (s *Service) Register(registry *runtime.Registry) error {
 		if err := registry.RegisterJob(kind, handler); err != nil {
 			return err
 		}
+	}
+	if err := registry.RegisterJob(KnowledgeValidationJob, s.validateKnowledge); err != nil {
+		return err
 	}
 	return nil
 }
