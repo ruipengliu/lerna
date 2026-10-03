@@ -75,3 +75,28 @@ Historical upgrade/failure/retry/reopen and cleanup have a common two-adapter
 behavior suite; no database is dropped and checked-in fixtures are never opened
 writable. Local SQLite TMPDIR should be a caller-owned local durable filesystem;
 CI uses its explicit runner temporary directory.
+
+
+Native restoration requires executable psql, the dedicated PostgreSQL URI DSN
+and the existing Linux/CGO SQLite toolchain; it does not require Docker. The
+configured native client is bounded by a 30-second context, its own process
+group and a one-second pipe wait limit. A real SQL connection followed by
+cancellation verifies the client exits and is reaped.
+
+CI separately runs the explicit `integration,containerpsql` lifecycle suite;
+Docker absence is a hard failure for that tool suite. Its fixed-image launcher
+uses Docker's owned cidfile: CREATE must return a complete exact ID before
+psql is started. Host create/start commands are limited to 15 seconds plus a
+2-second kill grace; the container's psql runs under a total 10-second timeout
+plus 2-second kill grace, including the original dump's SET timeout=0 commands.
+The original dump is not rewritten to pretend those SETs retain PGOPTIONS
+limits. libpq connection setup is limited to 5 seconds. The Go caller separately
+cleans that exact registered container ID and confirms its absence within a
+10-second cleanup context, including after cancellation. No image/name/time
+scan is used to guess ownership.
+
+This is a bounded known-container guarantee. If CREATE's reply is unknown and
+a complete CID was never recorded, psql is not started, but an unstarted
+container can remain without confirmed ownership. That actual empty-cidfile
+failure window is retained as a limitation; it is not guessed or deleted and
+is not described as proving every cancelled CREATE leaves no container.

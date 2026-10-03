@@ -11,11 +11,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -344,7 +342,9 @@ func restoreHistoricalPG(t *testing.T) *historicalFixture {
 	if err != nil {
 		t.Fatal("psql is required to restore the complete real historical plain dump")
 	}
-	version, err := exec.CommandContext(contextFor(t), psql, "--version").CombinedOutput()
+	clientContext, clientCancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer clientCancel()
+	version, err := runHistoricalPsql(t, clientContext, psql, []string{"--version"}, os.Environ())
 	if err != nil {
 		t.Fatal("psql version check failed")
 	}
@@ -393,32 +393,13 @@ func restoreHistoricalPG(t *testing.T) *historicalFixture {
 	if err := os.WriteFile(path, []byte(dump), 0600); err != nil {
 		t.Fatal(err)
 	}
-	restore := exec.CommandContext(contextFor(t), psql, "-X", "-v", "ON_ERROR_STOP=1", "--single-transaction", "--file", path)
-	connection, err := pgconn.ParseConfig(dsn)
+	restoreEnvironmentEntries, err := historicalPsqlEnvironment(dsn)
 	if err != nil {
-		t.Fatal("invalid dedicated restore configuration")
+		t.Fatal(err)
 	}
-	restoreEnvironment := map[string]string{"PGHOST": connection.Host, "PGPORT": strconv.Itoa(int(connection.Port)), "PGUSER": connection.User, "PGPASSWORD": connection.Password, "PGDATABASE": connection.Database, "PGCONNECT_TIMEOUT": "5"}
-	// Preserve the caller's explicitly selected TLS mode without credentials in argv.
-	parsed, err := url.Parse(dsn)
-	if err != nil || (parsed.Scheme != "postgres" && parsed.Scheme != "postgresql") {
-		t.Fatal("historical psql restore requires a postgres URI DSN")
-	}
-	for key, value := range parsed.Query() {
-		if key == "sslmode" || key == "sslrootcert" || key == "sslcert" || key == "sslkey" {
-			restoreEnvironment["PG"+strings.ToUpper(key)] = value[len(value)-1]
-		}
-	}
-	for _, entry := range os.Environ() {
-		key, _, _ := strings.Cut(entry, "=")
-		if !strings.HasPrefix(key, "PG") && key != "LERNA_TEST_POSTGRES_DSN" {
-			restore.Env = append(restore.Env, entry)
-		}
-	}
-	for key, value := range restoreEnvironment {
-		restore.Env = append(restore.Env, key+"="+value)
-	}
-	output, err := restore.CombinedOutput()
+	restoreContext, restoreCancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer restoreCancel()
+	output, err := runHistoricalPsql(t, restoreContext, psql, []string{"-X", "-v", "ON_ERROR_STOP=1", "--single-transaction", "--file", path}, restoreEnvironmentEntries)
 	if err != nil {
 		t.Fatalf("full historical psql restore failed: %v (output intentionally withheld to protect connection credentials)", err)
 	}

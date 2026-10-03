@@ -46,6 +46,10 @@ jobs:
           echo "$RUNNER_TEMP/lerna-psql-bin" >> "$GITHUB_PATH"
           echo "TMPDIR=$RUNNER_TEMP/lerna-integration-tmp" >> "$GITHUB_ENV"
           TMPDIR="$RUNNER_TEMP/lerna-integration-tmp" scripts/ci-psql.sh --version
+      - name: Verify the immutable restore client lifecycle
+        run: go test -race -count=1 -tags=integration,containerpsql -timeout=120s ./conformance/recovery -run '^TestContainerPsql'
+        env:
+          LERNA_TEST_POSTGRES_DSN: postgres://lerna_test:fixture-only-password@127.0.0.1:5432/lerna_integration?sslmode=disable
       - run: make test-integration
         env:
           LERNA_TEST_POSTGRES_DSN: postgres://lerna_test:fixture-only-password@127.0.0.1:5432/lerna_integration?sslmode=disable
