@@ -18,6 +18,14 @@ var migrationV1 string
 //go:embed migrations/host/0002_claims.sql
 var migrationV2 string
 
+//go:embed migrations/host/0003_retention.sql
+var migrationV3 string
+
+func MigrationV3Checksum() string {
+	digest := sha256.Sum256([]byte(migrationV3))
+	return "sha256:" + hex.EncodeToString(digest[:])
+}
+
 func MigrationV2Checksum() string {
 	digest := sha256.Sum256([]byte(migrationV2))
 	return "sha256:" + hex.EncodeToString(digest[:])
@@ -43,7 +51,7 @@ func (s *Store) Migrate(ctx context.Context) error {
 		if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS schema_migrations (version bigint PRIMARY KEY, checksum text NOT NULL)`); err != nil {
 			return err
 		}
-		for index, migration := range []string{migrationV1, migrationV2} {
+		for index, migration := range []string{migrationV1, migrationV2, migrationV3} {
 			version := index + 1
 			digest := sha256.Sum256([]byte(migration))
 			expected := "sha256:" + hex.EncodeToString(digest[:])

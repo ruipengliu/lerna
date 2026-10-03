@@ -184,8 +184,8 @@ func TestSQLiteMigrationRecordsExactVersionAndRejectsAlteredChecksum(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-	if status.Version != 2 || status.Checksum != "sha256:3791b3fc5ca49c18eee04b2afcaa54c2aae9c5afbf3f1e3fd98f5cce8715e01c" {
-		t.Fatalf("missing real v2 migration record: %+v", status)
+	if status.Version != 3 || status.Checksum != sqlite.MigrationV3Checksum() {
+		t.Fatalf("missing current migration record: %+v", status)
 	}
 	// Deliberate corruption is a storage fault fixture, not a business observation.
 	cfg, _ := sqliteConfigurations.Load(store)
@@ -599,11 +599,11 @@ func TestSQLiteHistoricalV1FileRestoresOriginalDecisionsAndPendingJob(t *testing
 		t.Fatal(err)
 	}
 	status, err := store.MigrationStatus(contextFor(t))
-	if err != nil || status.Version != 2 || status.Checksum != sqlite.MigrationV2Checksum() {
+	if err != nil || status.Version != 3 || status.Checksum != sqlite.MigrationV3Checksum() {
 		t.Fatalf("restored migration changed: %+v %v", status, err)
 	}
 	versions, err := store.MigrationVersions(contextFor(t))
-	if err != nil || len(versions) != 2 || versions[0] != report.Migration || versions[1] != status {
+	if err != nil || len(versions) != 3 || versions[0] != report.Migration || versions[1].Version != 2 || versions[1].Checksum != "sha256:3791b3fc5ca49c18eee04b2afcaa54c2aae9c5afbf3f1e3fd98f5cce8715e01c" || versions[2] != status {
 		t.Fatalf("actual historical v1/v2 identity: %+v %v", versions, err)
 	}
 	scope := contract.OwnerRef{TenantID: "fixture-tenant", OwnerID: "fixture-owner"}
