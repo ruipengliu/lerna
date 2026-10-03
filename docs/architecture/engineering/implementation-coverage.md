@@ -4,6 +4,7 @@
 本表按[项目目标](../../harness-project-goals.md)、[故障矩阵](../validation/README.md)
 和[实施规格](../../../.scratch/full-implementation/spec.md)逐项记录。
 真实账户、身份基础设施、设备与规模前提缺失的条目保持 blocked；有限参考实现通过不能关闭这些条目。
+Search/Body 适配器、完整模拟手机手势和不可信 WASI 是本地实现缺口，不能归因于外部凭据未配置。
 
 ## 已取得的证据
 
@@ -18,13 +19,19 @@ ID 按各测试生成随机准确身份，不依赖固定种子，也不以 mock
 | --- | --- |
 | `/workspace/harness-dev-environment/environment.json` | 工具版本、实际 PG/SQLite 连通、生成与编译 smoke；早期环境探针不代替当前全项目回归 |
 | `/workspace/harness-dev-environment/storage-verification.json` | commit `1b1cad6`；PG/SQLite 真实原命令、历史、Job/Claim、提交回复丢失、SIGKILL 与恢复，race 通过 |
+| `/workspace/harness-dev-environment/storage-hardening-verification.json` | commit `ef2ae43`；真实 PG 反序锁红→绿、Peek 后当前锁重核、savepoint 后提交 Guard、各自合法的大命令/回执原子聚合与重开；双库 race，领域单条 256 KiB 不变 |
 | `/workspace/harness-dev-environment/query-binding-verification.json` | commit `87de73a`；原 query_id/结果摘要/固定期限、当前权限、PG 锁竞争与 Interaction 分页，真实双库与 race 通过 |
-| `/workspace/harness-dev-environment/execution-verification.json` | commit `a5451a3`；公开执行套件双库通过，native 文件、三台模拟设备、实际 TLS/mTLS 与 SDK 原责任恢复；限定单物理 Attempt |
-| `/workspace/harness-dev-environment/memory-providers-verification.json` | commit `418ed04` / 修复增量 `0220d89` / 有限快照 `9368334`，模型材料 `8febdd7`；Content/Memory 完整 SQLite 回归、逐页来源过期双库/race、未遍历预算与底层错误保留、200 候选长解释/实际 JSON 上限、模型原 HTTP 字节/回复恢复 |
+| `/workspace/harness-dev-environment/execution-verification.json` | commit `a5451a3`；公开执行套件双库、native 文件/三台模拟设备、实际 TLS/mTLS、SDK/CLI 原责任恢复。另有基线 `73141ed` / 最终切片 `7c7b8a7` 的独立三角色 PG 报告，75.821s 通过、真实 SIGTERM 退出；限定单物理 Attempt |
+| `/workspace/harness-dev-environment/interaction-verification.json` | commit `f243a4d` / 游标 `0004bb6` / 复核 `f0d761a`；Session/Submission/Surface/Schedule 双库 race、真实 PG 反序锁竞争与修复、101 分支分页、原期限重开后不续期；不代替完整浏览器验收 |
+| `/workspace/harness-dev-environment/memory-providers-verification.json` | commit `418ed04` / 修复 `0220d89` / 有限快照 `9368334` / 输出尾部 `d4ef33e`，模型材料 `8febdd7`；Content/Memory 完整 SQLite 回归、逐页来源过期双库/race、未遍历预算与底层错误保留、200 长解释与后续许可 gaps 的实际 JSON 上限、模型原 HTTP 字节/回复恢复 |
 | `/workspace/harness-dev-environment/model-assembly-verification.json` | commit `c5831ca`，开发宿主迁移 `6031797`；SQLite/PG 原历史/附件、先授权与预留再 POST、USD 0.00024 双方结账；SQLite 原回复丢失/缺凭据零出站。制品已保存实际 PG 原 Profile/Call/Decision 与双方账务结果 |
+| `/workspace/harness-dev-environment/report-assembly-verification.json` | commit `7232c31` / Task 准备 `3a2405f`；公开报告双库 68.697s，三个原操作已知关闭、独立 `os.ReadFile` 全文字面量核验、不可变 Result、原回执与重开；该制品未运行独立三角色 |
+| `/workspace/harness-dev-environment/gateway-lifecycle-verification.json` | 基线 `7232c31`；真实 TLS 升级连接、未退出调用与关闭竞争红→绿，race 2.588s；关闭等待原调用实际退出并释放连接/配额，关闭后拒绝新处理者，不外推至生产多实例 |
+| `/workspace/harness-dev-environment/source-checkpoint-build.json` | commit `877730f`；全项目 `go build -p 2 ./...` 与浏览器后端构建共 11.504s，制品记录实际 binary SHA256 与 `vcs.modified=false`；不代替全项目测试 |
+| `/workspace/harness-dev-environment/clarification-failure-verification.json` | 修复前派生目标来源被错误标为新 user_input，原 Task 失败/invalid_source 的真实记录；后续采用新 Task 复测，不复活旧失败或改记通过 |
 | `/workspace/harness-web-qa/original-native-6103c2e/original-result.json` | 文件中实际 commit `978cecf`；无代理的原生 WebSocket、持续报告、published Result、两次 heartbeat、无 page error。目录名不替代记录中的 commit |
 | `/workspace/harness-web-qa/control-original-a4cb917/report.json` | commit `a4cb917`；原 Task 的真实 pause/resume/cancel、明确旧 CAS 冲突、窄屏/导航/登出责任、实际 CSP，无 page error；只证明该有限 control 流程 |
-| `/workspace/harness-web-qa/` 中完整 Web 回归 | **pending**：当前正在验证长报告、回执丢失/reload、受信输入、Surface、管理与窄屏；失败 trace 保留，不能计作通过 |
+| `/workspace/harness-web-qa/fresh-full-877730f/report.json` | 前端与声明后端均 `877730f`；完整流程通过：三个 verified/published 准确 Result、原 submit 丢回执/reload 同 ID、澄清、真实控制、首 Surface event applied、close/Memory、390px/导航/登出，零 page error、实际 CSP 与 176 方法；Result 首读三项 AccountingOpen 均 true，不能称即时结清 |
 
 公开外壳采用 `harness/1`、profile `architecture-2026-10-data1`，gRPC 包为 `harness.v1`。
 共同 core Schema SHA256 为
@@ -42,9 +49,9 @@ ID 按各测试生成随机准确身份，不依赖固定种子，也不以 mock
 | --- | --- | --- |
 | C1 理解、规划、决策 | [Task](../../../internal/task/)、[Brain](../../../internal/brain/)、[报告闭环](../../../adapters/development/app_test.go)：准确 GoalDocument、语义条件/覆盖、固定 Snapshot/Decision、≤4 行动批次、当前控制与无进展门禁；[HTTP 模型](../../../conformance/providers/)冻结材料、严格草稿与原用量 | **部分**。闭合 report 模板可保存、执行、读回、核验和导出；可选模型协议已验证。通用自然语言规划、真实模型质量与付费账户尚未验收 |
 | C2 记忆与个性化 | [Memory](../../../internal/memory/README.md)，[纠正](../../../internal/memory/records_test.go)、[提取](../../../internal/memory/jobs_test.go)、[期限](../../../internal/memory/retention_test.go)、[分页](../../../internal/memory/query_binding_test.go)、[受控视图](../../../internal/memory/view_test.go)：事实/偏好/推断/经验、来源闭包、候选唯一保存、墓碑、词法排序和连续水位 | **部分**。许可先于读/排序；每页核原查询/text/scope 当前来源期限，不等 timer。默认提取是闭合值导入；自然语言提取、端侧挖掘、跨地点同步及个性化实际改善未验收 |
-| C3 获取内容与证据 | [Content](../../../internal/memory/content.go)准确上传/发布/读回、[证据 gate](../../../internal/governance/evidence.go)、[模型材料](../../../conformance/providers/materials_test.go)实际 bytes/hash/length/来源 | **部分/外部 blocked**。授权上传、真实本机目标内容和签名证据可用；真实搜索/网页正文 adapter 及取得时间、来源冲突专项尚未开放 |
+| C3 获取内容与证据 | [Content](../../../internal/memory/content.go)准确上传/发布/读回、[证据 gate](../../../internal/governance/evidence.go)、[模型材料](../../../conformance/providers/materials_test.go)实际 bytes/hash/length/来源 | **部分**。授权上传、真实本机目标内容和签名证据可用；可替换的 Search/Body adapter 及来源/取得时间合同尚未实现。真实供应商和来源冲突专项另待验收 |
 | C4 工具与设备 | [Execution](../../../internal/execution/README.md)、[执行集成](../../../conformance/integration/execution_test.go)、[native 文件](../../../adapters/execution/file_test.go)、[模拟设备](../../../adapters/execution/phone_test.go)：真实入口、原 Attempt/Effect、准确资源、独立读回与接管 | **部分**。本机 Linux 文件、三台持久模拟手机、被动 Environment 和受信纯计算有证据；不可信 WASI、真实外部 API、完整 GUI 动作、多 Attempt 安全重试和真机未开放 |
-| C5 持续运行与协同 | [Runtime](../../../runtime/)、[存储合同](../../../conformance/contract/)、[输入/触发](../../../internal/interaction/)、[本地协作](../../../internal/task/collaboration_adapter_test.go)：原命令、Job、取消、重启、未知责任、子 Task/预算/原输入转交 | **部分**。本机同 owner/显式同库参考责任可恢复；云端 Task 不由设备缓存完成。独立设备有限授权、外部 Agent、多 owner/跨主机闭环与断网部署未验收 |
+| C5 持续运行与协同 | [Runtime](../../../runtime/)、[存储合同](../../../conformance/contract/)、[输入/触发](../../../internal/interaction/)、[本地协作](../../../internal/task/collaboration_adapter_test.go)、[独立三角色](../../../cmd/internal/runner/process_test.go)：原命令、Job、取消、重启、未知责任、子 Task/预算/原输入转交 | **部分**。本机同 owner/显式同库及真实 PG 三进程报告可运行；云端 Task 不由设备缓存完成。独立设备有限授权、外部 Agent、多 owner/跨主机闭环与断网部署未验收 |
 | C6 扩展与互操作 | [Go SDK](../../../sdk/go/)、[TS SDK](../../../sdk/ts/README.md)、[WSS](../../../conformance/integration/wss_test.go)、[gRPC](../../../conformance/grpc/)、[扩展](../../../internal/governance/extensions_test.go)：严格同版 JSON/Schema、原 journal、真实 TLS/mTLS、绑定代次、独立批准回退 | **部分**。参考同版合同与 SDK 恢复有证据；三系统完整第二实现、自定义 Skill/外部 Agent、任意不可信插件与生产 gateway/channel 拓扑未全部验收 |
 | C7 权限与本人控制 | [授权](../../../internal/governance/governance_test.go)、[离线租约合同](../../../internal/governance/leases_test.go)、[原提交者](../../../internal/task/subject_test.go)、[内容门禁](../../../internal/memory/permissions_test.go)、[Surface](../../../internal/interaction/surface_test.go)：可信确认、用途交集、once 不返还、撤权、删除及设备 epoch | **参考范围通过；完整目标部分**。当前开发身份账本/已注册 ES256 key 可用；真实公司 OIDC、密钥发放、跨 owner 权威/真实设备离线租约部署继续 blocked |
 | C8 观测与评测 | [用量与独立证明](../../../conformance/integration/execution_test.go)、[治理评测](../../../internal/governance/evaluation_test.go)、[真实两臂运行器](../../../adapters/governance/reference_test.go)、上述 JSON 运行制品 | **部分**。原责任、实际字节与费用事实可查；严格区分接纳、效果、完成、导出与费用。生产完整遥测、真实供应商账单结清、开放任务质量/时延/成本目标未验收 |
@@ -56,7 +63,7 @@ ID 按各测试生成随机准确身份，不依赖固定种子，也不以 mock
 | --- | --- | --- |
 | A1 逻辑分工 | `internal/task/brain/execution/memory/interaction/governance` 各自负责原事实；Runtime 不裁决任务成功，宿主显式声明 Tx participants；[报告闭环](../../../adapters/development/app_test.go)跨真实组件推进 | 参考范围符合；不能由进程共置推断中央账本写权 |
 | A2 独立替换 | 消费方小型端口；RuleEngine/HTTP Engine 分别编码与执行；PG/SQLite 独立实现；排名策略固定 ComponentRef | 部分：端口及适用替换有证据，三系统完整第二实现尚未全部提供 |
-| A3 端云部署 | PG 云端权威与 SQLite 设备合同分别维护；独立 Gateway/Application/Worker 入口；Executor 不写云端 Task | 部分：本机进程与设备领域行为可运行，独立设备授权/远端 Authority、跨主机端云及生产发现/证书仍未完成部署验收 |
+| A3 端云部署 | PG 云端权威与 SQLite 设备合同分别维护；独立 Gateway/Application/Worker 入口；Executor 不写云端 Task | 部分：实际 PG 独立三进程经原 CLI 报告、字面量读回和真实退出已验收；独立设备授权/远端 Authority、跨主机端云及生产发现/证书仍未完成部署验收 |
 | A4 共同契约 | 唯一 core 源、typed `api.Contract[I,O]`、发现摘要、Go/TS Schema、原 profile/TTL、原 owner、WSS/gRPC 正反例与原回复恢复 | 参考同版方法符合；不覆盖未登记方法、历史 profile 全兼容或任意第三方扩展 |
 
 不为一整项授予笼统 L3/L4：局部故障与治理证据不能证明全部子能力、平台和目标质量。
@@ -74,11 +81,43 @@ Task 非零预留和准确 allowed Use 均提交后才发一个 POST；
 [开发宿主](../../../adapters/development/)保留 app/model/governance 参考规则，
 `cmd/internal/bootstrap` 仅保留入口装配 shim。
 
+报告装配与独立进程是两份证据：[报告公开测试](../../../adapters/development/app_test.go)
+双库验证原操作/Result/回执与重开；[三角色测试](../../../cmd/internal/runner/process_test.go)
+在隔离 PG 数据库运行 Application/Gateway/Worker 与原 CLI，并独立核精确 markdown 字节和真实 SIGTERM 退出。
+三角色成功路径未输出原对象 ID，临时数据库和目标目录随后按测试清理；这里只绑定真实命令、commit 和断言，
+不补造已无法取回的 command/task/result ID。此前失败仍保存在同一制品中，不计作通过。
+
+[Brain 私有载荷](../../../internal/brain/README.md)与[大回复测试](../../../internal/brain/payload_test.go)
+另覆盖真实 SQLite/HTTP 的 180 KiB 回复、准确原编码、已知 USD 0.00024、原 Call 重开不重发、
+载荷/phase 同事务提交未知及等长分片损坏拒绝。私有复合容器上限为 2 MiB/32×64 KiB；
+每份公开领域 JSON 仍为 256 KiB。该测试不建立大载荷 PG、live 供应商质量或生产容量结论。
+
+`9cbcbe5` 的[公开澄清流程](../../../adapters/development/clarification_test.go)将冻结 GoalDocument
+展开为 Task 已保存的完整原 SourceEvidence，保留最初 submit 与原 input request，
+要求 MaterialRefs/ProcessedSources 双声明；外来包装、未声明组件、伪造提交/类别/位置与混入外来来源均被拒绝。
+JSON 字符串与真正 `text/plain` 两链完成三个真实文件操作、独立检查、Result 出版、原回执和 DB 重开。
+SQLite normal 合集 76.539s，隔离 race 的 Report/JSON 加拒绝/原文本分别为 109.808s/161.932s/145.002s；
+PG 原文本 77.59s、隔离 JSON 86.409s。此前 PG 90s 外层超时和 development 整包 race 376.293s
+失败仍保留，不改记通过。只调整测试等待为有限 180s、runner 为十分钟；
+业务五分钟期限、原命令一分钟、五秒控制窗口与浏览器补充后 90s 均未扩大。
+[旧编码恢复](../../../internal/brain/rules_encoding_test.go)实际 SQLite 保留原非 JSON 字节，
+合法 JSON 保持旧格式逐字节不变，encoded 阶段重开后不重读或重编码；Brain normal/race 12.311s/28.996s。
+[Schedule 安装锁](../../../adapters/development/schedule_gate_test.go)另以两库公开 create/update、
+冻结 occurrence 和实际交付 Job 验证正确 InstallLock，拒绝将模型 Profile 作为安装锁，race 51.286s。
+这些是受信模板与来源合同证据，与后续 `877730f` 浏览器制品独立记录。
+
+完整浏览器制品 `877730f` 在实际原生连接、同版发现与开发身份下取得三个 verified/published Result，
+准确报告字节分别为 123、70、98。补充答案保留初始目标和 amendment 两个原来源；
+损坏 required body 阻止输入，准确修正后才消费原 request。丢 applied 回执与 reload 沿原 submit ID 恢复，
+pause/resume/cancel 及当前 Surface 应用、关闭代次、Memory 原用途、窄屏、管理导航和登出均有实际断言。
+这些 Result 首读时的 AccountingOpen 均为 true；目标效果与出版成立不等于费用立即关闭。
+该制品绑定 `877730f`，后续源修复与最终统一检查另以各自制品记录，不能用其覆盖未运行的版本或生产身份。
+
 ## V1–V2 专项
 
 | 专项 | 已有证据 | 未完成验收 |
 | --- | --- | --- |
-| V1 联网问答 | Content 原始来源、当前许可/保留期、模型实际声明材料与原 HTTP 字节，严格结果/费用事实 | **blocked**。没有真实 Search/Body 供应商及冻结联网任务集；无答案、冲突、时效、引用支撑和检索失败的整体质量尚未验证 |
+| V1 联网问答 | Content 原始来源、当前许可/保留期、模型实际声明材料与原 HTTP 字节，严格结果/费用事实 | **partial/blocked**。本地 Search/Body adapter 尚未实现；真实供应商及冻结联网任务集也未配置。无答案、冲突、时效、引用支撑和检索失败的整体质量尚未验证 |
 | V2 手机 GUI | 三台独立持久模拟手机；观察 → `set_note` → 再观察 → 真实状态核对；旧观察拒绝、epoch 接管和重启门禁 | **partial**。当前动作仅 `set_note/open_notes/press_home/set_wifi`；通用点击、滑动、返回和完整任务专项未全部实现/验收。Android/iOS 真机平台另行验收 |
 
 ## F01–F25 故障映射
@@ -88,14 +127,14 @@ Task 非零预留和准确 allowed Use 均提交后才发一个 POST；
 
 | 组 | 实际代码/测试 | 结论与缺口 |
 | --- | --- | --- |
-| F01 原命令 | [存储崩溃](../../../conformance/contract/storage_crash_test.go)、[Task 丢提交回复](../../../internal/task/persistence_test.go)、[Go 原 journal](../../../sdk/go/client_test.go)、[WSS 丢回执](../../../conformance/integration/wss_test.go) | 双库原子集合、实际 SIGKILL、重开原库与沿原 command 恢复通过；完整 Web reload 当前 pending |
+| F01 原命令 | [存储崩溃](../../../conformance/contract/storage_crash_test.go)、[Task 丢提交回复](../../../internal/task/persistence_test.go)、[Go 原 journal](../../../sdk/go/client_test.go)、[WSS 丢回执](../../../conformance/integration/wss_test.go)、上述完整 Web 制品 | 双库原子集合、实际 SIGKILL、重开原库与沿原 command 恢复通过；Web 原 submit 丢 applied 回执后 reload 同 ID 恢复通过 |
 | F02 Job 竞争 | [双库合同](../../../conformance/contract/durable_test.go)、[并发/过期](../../../conformance/contract/storage_concurrency_test.go)、[Worker 续租](../../../runtime/worker_test.go) | 原 epoch/work_revision、新 Raise 与提交前期限复核有真实双库/race 证据 |
 | F03 发送未知 | [模型丢回复](../../../conformance/providers/recovery_test.go)、[执行丢回复](../../../conformance/integration/execution_test.go)、[文件原 journal](../../../adapters/execution/file_test.go) | 实际目标/HTTP、持久 send_started、提交未知不出站、原查询不重发通过；远程供应商 CallID 查询与额外物理重试未开放 |
-| F04 控制竞争 | [Task 控制](../../../internal/task/service_test.go)、[完成提案](../../../internal/task/check_pipeline_test.go)、[Executor](../../../conformance/integration/execution_test.go)、上述 control Web 制品 | 早取消、pause/resume 旧提案/窗口、迟到效果不重开终态及真实 UI CAS 冲突有证据；完整 UI 控制矩阵 pending |
+| F04 控制竞争 | [Task 控制](../../../internal/task/service_test.go)、[完成提案](../../../internal/task/check_pipeline_test.go)、[Executor](../../../conformance/integration/execution_test.go)、上述 control/full Web 制品 | 早取消、pause/resume 旧提案/窗口、迟到效果不重开终态及真实 UI CAS 冲突、实际 pause/resume/cancel 有证据；全部 UI 控制故障组合未取证 |
 | F05 完成漏项 | [当前完整覆盖](../../../internal/task/behavior_test.go)、[真实检查流水](../../../internal/task/check_pipeline_test.go)、[闭环](../../../adapters/development/app_test.go) | 空条件/坏证据/未完成检查与旧控制阻止完成，文件必须独立读回；通用任务检查器仍按准确登记范围开放 |
 | F06 证据缺陷 | [缺陷与 Result](../../../internal/governance/governance_test.go)、[101 holder 通知](../../../internal/governance/notices_test.go)、[Task gate](../../../internal/task/check_pipeline_test.go) | 同库当前资格、完整依赖、Result notice/Job/游标同 Tx 和跨 100 项续页有证据；生产跨分片竞争未取证 |
 | F07 跨域资格 | [签名/epoch/连续导入](../../../internal/governance/evidence_test.go)、[准确 ES256](../../../adapters/platform/proof_test.go) | 有限签名合同、缺口关闭与原 receipt 不续期已验证；真实远端 authority、失信时钟/生产资格缓存部署 blocked |
-| F08 授权消费 | [Grant](../../../internal/governance/governance_test.go)、[本人答案](../../../internal/task/input_test.go)、[Surface](../../../internal/interaction/surface_test.go) | 当前父链交集、once 零账单不返还、准确确认/原请求消费有证据；公司本人身份与真实 GUI 全文呈现回归 pending |
+| F08 授权消费 | [Grant](../../../internal/governance/governance_test.go)、[本人答案](../../../internal/task/input_test.go)、[Surface](../../../internal/interaction/surface_test.go)、上述完整 Web 制品 | 当前父链交集、once 零账单不返还、准确 required body/修正/原请求消费与全文呈现有证据；公司本人身份、真实批准终端和全部确认竞争未验收 |
 | F09 账务 | [累计费用](../../../internal/task/behavior_test.go)、[独立 Usage](../../../conformance/integration/execution_test.go)、[模型费用](../../../conformance/providers/cost_test.go) | 累计差额、迟到更正、固定单位/预留与 USD 上取整有证据；真实供应商后续账单/退款争议未验收 |
 | F10 分配关闭 | [ChildHandle/Allocation](../../../internal/task/child_test.go)、[本地协作](../../../internal/task/collaboration_adapter_test.go) | 原子内部子任务、丢答复、先关闭与原 steer/answer 有证据；跨 owner receiver 失联、外部 Agent 额度转移 blocked |
 | F11 内容治理 | [准确出版](../../../internal/memory/content_test.go)、[ready/删除恢复](../../../internal/memory/recovery_test.go)、[holder](../../../internal/memory/permissions_test.go) | 实际对象字节/元数据发布、原票据提交未知、cleanup 幂等通过；跨库注册/关闭、真实外部副本/备份物理清除未验收 |
@@ -103,25 +142,26 @@ Task 非零预留和准确 allowed Use 均提交后才发一个 POST；
 | F13 私密派生 | [未披露来源](../../../internal/memory/content_test.go)、[独立派生期限](../../../internal/memory/retention_test.go)、[查询原来源到期](../../../internal/memory/query_binding_test.go)、[实际模型材料](../../../conformance/providers/materials_test.go) | processed 闭包、主动 close、读不延期限、timer 未跑也拒旧页、材料不自动扩展通过；跨位置同步/外部镜像残留为缺口 |
 | F14 GUI/文件 | [native 文件](../../../adapters/execution/file_test.go)、[旧观察/接管](../../../adapters/execution/phone_test.go)、[设备领域](../../../conformance/integration/execution_test.go) | os.Root 路径、symlink/hardlink 拒绝、版本 CAS、未知路径占用与三设备 epoch 有证据；完整 GUI 动作/其他平台与掉电未验收 |
 | F15 程序环境 | [hostcall/checkpoint/实际退出](../../../conformance/integration/execution_test.go)、[受信计算](../../../internal/execution/compute.go) | 被动数据恢复、原 hostcall、未知映射阻后续 cell 和取消不冒充退出有证据；不可信 `run_cell` 无合格 WASI 隔离，保持关闭 |
-| F16 输入与分支 | [queued/sending](../../../internal/interaction/submission_test.go)、[原输入](../../../internal/interaction/input_test.go)、[分支](../../../internal/interaction/session_test.go) | 当前准确消费、撤回竞争及迟到输出归原分支有证据；完整多窗口 UI 故障矩阵 pending |
-| F17 Schedule | [未知槽/暂停/恢复](../../../internal/interaction/schedule_test.go)、[锁定 tzdb/DST](../../../internal/interaction/calendar_test.go) | 原 occurrence、未知并发占用、resume 不补发暂停点和 gap/fold 规则有证据；跨主机冷恢复/长期时间异常未验收 |
+| F16 输入与分支 | [queued/sending](../../../internal/interaction/submission_test.go)、[原输入](../../../internal/interaction/input_test.go)、[分支](../../../internal/interaction/session_test.go)、上述完整 Web 制品 | 当前准确消费、撤回竞争、迟到输出归原分支与实际澄清/丢回执 reload 有证据；全部多窗口竞争故障组合未取证 |
+| F17 Schedule | [未知槽/暂停/恢复](../../../internal/interaction/schedule_test.go)、[锁定 tzdb/DST](../../../internal/interaction/calendar_test.go)、[实际安装锁](../../../adapters/development/schedule_gate_test.go) | 原 occurrence、未知并发占用、resume 不补发暂停点、gap/fold 和安装锁拒绝模型 Profile 有证据；跨主机冷恢复/长期时间异常未验收 |
 | F18 集合与订阅 | [原 query binding](../../../conformance/contract/query_binding_test.go)、[Memory list](../../../internal/memory/list_test.go)、[分页影响](../../../internal/memory/batch_test.go)、[Session](../../../internal/interaction/paging_test.go) | 有界持久 cursor、当前 scope、跨页变化和大于一页的数据控制有证据；完整订阅/Change 与大扇出 Task 控制仍受声明容量限制 |
 | F19 安装/回退 | [扩展当前代次](../../../internal/governance/extensions_test.go)、[实际宿主](../../../adapters/governance/builtin_test.go) | 迟到初始化、独立旧批准、原进程死亡与真实 fence 有证据；不可信恶意插件/跨宿主接管未开放 |
 | F20 实验污染 | [Formal/千样本取消](../../../internal/governance/evaluation_test.go)、[真实独立两臂](../../../adapters/governance/reference_test.go) | formal 次数与分母不返还、曝光/封存/迟到失效、真实字面真值有证据；千样本分页不表示千次 live API，真实 holdout/校准继续 blocked |
-| F21 通道恢复 | [真实 WSS](../../../conformance/integration/wss_test.go)、[gRPC 原 Reply/Ack](../../../conformance/grpc/channel_test.go)、[SDK](../../../sdk/go/grpc_reply.go) | 实际 TLS/mTLS、原序号/回执/重绑、普通槽饱和时控制可用有证据；生产 gateway 多实例 stale-output、PG channel SIGKILL 及完整 Web 长运行仍未全部取证 |
+| F21 通道恢复 | [真实 WSS](../../../conformance/integration/wss_test.go)、[实际关闭](../../../conformance/integration/gateway_shutdown_test.go)、[gRPC 原 Reply/Ack](../../../conformance/grpc/channel_test.go)、[SDK](../../../sdk/go/grpc_reply.go) | 实际 TLS/mTLS、原序号/回执/重绑、普通槽饱和时控制可用、关闭等待实际原调用退出有证据；生产 gateway 多实例 stale-output、PG channel SIGKILL 及完整 Web 长运行仍未全部取证 |
 | F22 AZ/时间 | [原 database_id](../../../conformance/contract/storage_concurrency_test.go)、[有限期限](../../../conformance/contract/query_binding_test.go) | 仅本机身份/期限合同；三 AZ 同步确认、旧主隔离、UTC 跳变/VM 暂停、RPO/RTO **blocked** |
 | F23 洪峰/容量 | [gRPC 控制份额](../../../conformance/grpc/unary_test.go)、[有界 Task 集合](../../../internal/task/bounds_test.go)、[传输队列](../../../adapters/grpc/queue.go) | 局部容量拒绝/控制份额有证据；10 倍租户洪峰、冷重连、单区损失与生产吞吐/积压收敛 **blocked** |
 | F24 灾备/增长 | [旧数据库身份拒绝](../../../conformance/contract/storage_concurrency_test.go)、[原墓碑](../../../internal/task/persistence_test.go)、[cleanup](../../../internal/memory/recovery_test.go) | 原身份/未知残留不复活有证据；旧备份最近撤权完整性、磁盘保护、历史增长计划/索引与灾备恢复 **blocked** |
-| F25 血缘/条件 | [目标语义 upsert](../../../internal/task/behavior_test.go)、[原答案](../../../internal/task/input_test.go)、[当前覆盖/完整检查](../../../internal/task/check_pipeline_test.go)、[租户/来源](../../../internal/memory/permissions_test.go) | 原文与来源、硬要求不被静默删除、旧修订/空条件/跨租户拒绝与当前覆盖有证据；开放自然语言候选正确率未验收 |
+| F25 血缘/条件 | [目标语义 upsert](../../../internal/task/behavior_test.go)、[原答案](../../../internal/task/input_test.go)、[澄清原来源](../../../adapters/development/clarification_test.go)、[当前覆盖/完整检查](../../../internal/task/check_pipeline_test.go)、[租户/来源](../../../internal/memory/permissions_test.go) | 原文与来源、派生目标保留完整原 submit/input 依据、伪造来源拒绝、硬要求不被静默删除、旧修订/空条件/跨租户拒绝与当前覆盖有证据；开放自然语言候选正确率未验收 |
 
 ## 未完成前提与收尾
 
+- 本地 Search/Body adapter、来源/取得时间合同与完整模拟手机手势；不能以外部配置缺失关闭这些实现缺口。
 - 真实模型/搜索/正文供应商凭据、原调用能力探针和最终计费对账；V1 真实来源任务集。
 - 公司 OIDC、密钥注册/轮换与真实本人身份；跨 owner 权威、独立设备有限 GrantLease 和远端门禁装配。
 - Android/iOS 真机及未测操作系统/文件系统；完整模拟 GUI 动作和不可信 WASI 隔离。
 - 三 AZ 同步 PG/对象耐久、主库隔离、可信时间异常、备份最近撤权、生产恢复与 RPO/RTO。
 - 1000 语义不同 API、首次正确率 ≥90%、有限重试成功率 ≥95%，以及最终用户规模、290/500 Task/s、20 万 WSS 的容量实验。以上均是设计目标，没有本轮达标结果。
-- 完整浏览器回归及三角色 PG 报告的最终 checkpoint/结果仍 pending；有限 control Web 和模型协议/账务整链已取得独立制品。
+- 固定 `877730f` 的完整浏览器流程已通过；后续审查修复的最终固定提交全项目检查仍 pending。公开报告双库、三角色 PG、有限 control/full Web 和模型协议/账务整链均有各自独立制品。
 
 默认适配保持缺前提的能力关闭，返回具体 `unsupported`、`blocked/not_run` 或原未知事实。
 工单只在自身范围真实验收完成后关闭；总体状态不能由目录数量、接口可编译或设计模型检查推导。
