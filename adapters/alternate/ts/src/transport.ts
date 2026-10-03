@@ -339,13 +339,21 @@ async function http(runtime: Runtime, req: IncomingMessage, res: ServerResponse)
     if (req.method === "POST" && url.pathname === "/api/call") {
       const i = object(parseStrict(await readBody(req)));
       if (Object.keys(i).length !== 2) reject("invalid_request", "invalid_call");
-      let result: unknown;
-      if (i.kind === "command") result = await runtime.command(p, i.payload);
-      else if (i.kind === "query") result = await runtime.query(p, i.payload);
-      else if (i.kind === "receipt_lookup") result = runtime.lookup(p, i.payload);
-      else reject("invalid_request", "invalid_request_kind");
+      let result: unknown,
+        kind: "receipt" | "query_result" | "error" = "receipt";
+      try {
+        if (i.kind === "command") result = await runtime.command(p, i.payload);
+        else if (i.kind === "query") {
+          kind = "query_result";
+          result = await runtime.query(p, i.payload);
+        } else if (i.kind === "receipt_lookup") result = runtime.lookup(p, i.payload);
+        else reject("invalid_request", "invalid_request_kind");
+      } catch (error) {
+        kind = "error";
+        result = failure(error);
+      }
       resolve();
-      json(res, result);
+      json(res, { result_kind: kind, payload: result });
       return;
     }
     if (

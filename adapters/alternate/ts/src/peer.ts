@@ -9,6 +9,7 @@ import {
   PROFILE,
   newID,
   apiError,
+  validateSchema,
 } from "@harness/sdk";
 import { hash, current, same } from "./authority";
 import { privateFile } from "./config";
@@ -109,6 +110,30 @@ export class ContentPeer {
   stop(): void {
     this.controller.abort();
   }
+  private async call(kind: "command" | "query" | "receipt_lookup", payload: JSONValue) {
+    const frame = object(
+      parseStrict(await this.http("/api/call", Buffer.from(canonical({ kind, payload }))), 1048576),
+    );
+    validateSchema(
+      {
+        type: "object",
+        properties: {
+          result_kind: { enum: ["receipt", "query_result", "error"] },
+          payload: {},
+        },
+        required: ["result_kind", "payload"],
+        additionalProperties: false,
+      },
+      frame,
+    );
+    if (frame.result_kind === "error") {
+      const problem = apiError(frame.payload);
+      throw new Rejection(problem.code, problem.reason);
+    }
+    if (frame.result_kind !== (kind === "query" ? "query_result" : "receipt"))
+      reject("invalid_request", "response_kind_mismatch");
+    return frame.payload;
+  }
   private async contracts(p: Principal): Promise<ContractRegistry> {
     const d = object(parseStrict(await this.http("/api/discovery"), 1048576)),
       m = this.settings();
@@ -200,24 +225,16 @@ export class ContentPeer {
     if (saved.receipt) return saved.receipt;
     let receipt: Receipt;
     try {
-      const body = await this.http(
-        "/api/call",
-        Buffer.from(
-          canonical({
-            kind: "receipt_lookup",
-            payload: { logical_service_id: saved.command.logical_service_id, command_id: id },
-          }),
-        ),
-      );
-      receipt = registry.receipt(parseStrict(body), saved.command, saved.digest);
+      const body = await this.call("receipt_lookup", {
+        logical_service_id: saved.command.logical_service_id,
+        command_id: id,
+      });
+      receipt = registry.receipt(body, saved.command, saved.digest);
     } catch (error) {
       if (!(error instanceof Rejection) || error.wire.code !== "not_found") throw error;
       current(this.store, p);
-      const body = await this.http(
-        "/api/call",
-        Buffer.from(canonical({ kind: "command", payload: saved.command })),
-      );
-      receipt = registry.receipt(parseStrict(body), saved.command, saved.digest);
+      const body = await this.call("command", saved.command as unknown as JSONValue);
+      receipt = registry.receipt(body, saved.command, saved.digest);
     }
     const original = saved;
     this.store.tx(() => {
@@ -343,11 +360,8 @@ export class ContentPeer {
         payload,
       };
     registry.query(q);
-    const body = await this.http(
-      "/api/call",
-      Buffer.from(canonical({ kind: "query", payload: q })),
-    );
+    const body = await this.call("query", q);
     current(this.store, p);
-    return registry.validateOutput(method, parseStrict(body));
+    return registry.validateOutput(method, body);
   }
 }
