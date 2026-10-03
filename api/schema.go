@@ -80,6 +80,26 @@ func schemaType(t reflect.Type, seen map[reflect.Type]bool) Schema {
 				continue
 			}
 			tag := f.Tag.Get("json")
+			if f.Anonymous && tag == "" {
+				embedded := schemaType(f.Type, seen)
+				if ref, ok := embedded["$ref"].(string); ok {
+					embedded = definitions()[strings.TrimPrefix(ref, "#/$defs/")].(map[string]any)
+				}
+				if properties, ok := embedded["properties"].(map[string]any); ok {
+					for name, value := range properties {
+						p[name] = value
+					}
+					switch values := embedded["required"].(type) {
+					case []string:
+						req = append(req, values...)
+					case []any:
+						for _, value := range values {
+							req = append(req, value.(string))
+						}
+					}
+					continue
+				}
+			}
 			if tag == "-" {
 				continue
 			}
@@ -107,6 +127,13 @@ func NewValidator(s Schema) (*Validator, error) {
 	}
 	doc["$schema"] = "https://json-schema.org/draft/2020-12/schema"
 	doc["$defs"] = definitions()
+	encoded, err := json.Marshal(doc)
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(encoded, &doc); err != nil {
+		return nil, err
+	}
 	c := jsonschema.NewCompiler()
 	c.AssertFormat()
 	if err := c.AddResource("https://harness.local/method", doc); err != nil {
