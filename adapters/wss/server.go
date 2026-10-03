@@ -387,7 +387,7 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
 	d := s.manifest(a)
-	ready := harness.WSReady{Type: "ready", ConnectionID: connectionID, LogicalServiceID: s.config.OwnerID, Profile: api.Profile, TransportProfile: "harness-wss/1", MethodsDigest: d.MethodsDigest, Limits: d.Limits}
+	ready := harness.WSReady{Type: "ready", ConnectionID: connectionID, LogicalServiceID: s.config.OwnerID, Profile: api.Profile, TransportProfile: "harness-wss/1", MethodsDigest: d.MethodsDigest, Limits: d.Limits, IdentityScope: d.IdentityScope, IdentityRevision: d.IdentityRevision}
 	if e = conn.Write(ctx, websocket.MessageText, api.Raw(ready)); e != nil {
 		return
 	}

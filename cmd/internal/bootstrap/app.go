@@ -204,7 +204,7 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 	status, e := a.Store.Within(ctx, a.Scope, []string{"governance"}, func(tx runtime.Tx) error {
 		for _, r := range rules {
 			if _, e := a.Governance.RegisterRuleTx(ctx, tx, governance.RuleDefinition{ComponentRef: r.RuleRef, Kind: r.Kind, Predicate: r.Predicate, AllowedBasis: r.AllowedBasis, RiskClass: "ordinary", MaxObservationAgeSeconds: 300, Calibrated: true}); e != nil {
-				return e
+				return fmt.Errorf("register development rule: %w", e)
 			}
 		}
 		var existing api.Grant
@@ -217,7 +217,10 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 		if e != nil {
 			return e
 		}
-		return a.Governance.ProvisionGrantTx(ctx, tx, a.ServiceAuth, api.Grant{GrantID: a.GrantID, OwnerID: a.Scope.OwnerID, Revision: 1, SubjectRef: a.ServiceAuth.Ref(a.Scope.OwnerID), Resources: []string{"managed-files"}, Actions: []string{"file.read", "file.write"}, Purposes: []string{"goal_action", "requirement_check"}, Recipients: []string{a.Scope.OwnerID}, Locations: []string{"cloud"}, Mode: "continuous", State: "active", NotBefore: api.Time(now), ExpiresAt: a.Config.PolicyExpiresAt, Limits: []api.Amount{{Unit: "USD", Value: "100"}}})
+		if e = a.Governance.ProvisionGrantTx(ctx, tx, a.ServiceAuth, api.Grant{GrantID: a.GrantID, OwnerID: a.Scope.OwnerID, Revision: 1, SubjectRef: a.ServiceAuth.Ref(a.Scope.OwnerID), Resources: []string{"managed-files"}, Actions: []string{"file.read", "file.write"}, Purposes: []string{"goal_action", "requirement_check"}, Recipients: []string{a.Scope.OwnerID}, Locations: []string{"cloud"}, Mode: "continuous", State: "active", NotBefore: api.Time(now), ExpiresAt: a.Config.PolicyExpiresAt, Limits: []api.Amount{{Unit: "USD", Value: "100"}}}); e != nil {
+			return fmt.Errorf("provision development grant: %w", e)
+		}
+		return nil
 	})
 	if status == runtime.CommitUnknown {
 		return runtime.ErrCommitUnknown
@@ -240,9 +243,15 @@ func (a *App) Close() error {
 	var err error
 	if a.Files != nil {
 		err = a.Files.Close()
+		a.Files = nil
+	}
+	if a.Phones != nil {
+		err = errors.Join(err, a.Phones.Close())
+		a.Phones = nil
 	}
 	if a.Store != nil {
 		err = errors.Join(err, a.Store.Close())
+		a.Store = nil
 	}
 	return err
 }

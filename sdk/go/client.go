@@ -281,6 +281,8 @@ type WSReady struct {
 	TransportProfile string `json:"transport_profile"`
 	MethodsDigest    string `json:"methods_digest"`
 	Limits           Limits `json:"limits"`
+	IdentityScope    string `json:"identity_scope"`
+	IdentityRevision uint64 `json:"identity_revision"`
 }
 type WSRequest struct {
 	Type       string          `json:"type"`
@@ -345,7 +347,7 @@ func DialWebSocketWithHTTP(ctx context.Context, address, token string, expected 
 		return nil, api.E("dependency_unavailable", "ready_missing")
 	}
 	var ready WSReady
-	if e = api.Decode(b, &ready); e != nil || ready.Type != "ready" || ready.LogicalServiceID != expected.LogicalServiceID || ready.Profile != api.Profile || ready.TransportProfile != "harness-wss/1" || ready.MethodsDigest != expected.MethodsDigest || ready.Limits != expected.Limits || ready.Limits.MaxPending != 32 || ready.Limits.MaxDomainBytes != api.MaxJSONBytes || ready.Limits.MaxFrameBytes != 1<<20 || conn.Subprotocol() != "harness-wss.v1" {
+	if e = api.Decode(b, &ready); e != nil || ready.Type != "ready" || ready.LogicalServiceID != expected.LogicalServiceID || ready.Profile != api.Profile || ready.TransportProfile != "harness-wss/1" || ready.MethodsDigest != expected.MethodsDigest || ready.IdentityScope != expected.IdentityScope || ready.IdentityRevision != expected.IdentityRevision || ready.Limits != expected.Limits || ready.Limits.MaxPending != 32 || ready.Limits.MaxDomainBytes != api.MaxJSONBytes || ready.Limits.MaxFrameBytes != 1<<20 || conn.Subprotocol() != "harness-wss.v1" {
 		conn.CloseNow()
 		return nil, api.E("unsupported", "ready_mismatch")
 	}
