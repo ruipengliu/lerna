@@ -63,7 +63,7 @@ Native Memory 可消费显式配对 Source 的原 ContentRef；准确 owner/hash
 
 Stop 先关闭本地门禁，原当前 control 不读正文，实际删除原 BLOB，再用原 release ID 报告。写责任早于物理写；写后 current 失败、进程丢失或原期限到期都保留 pending/unknown 清理，空 location 或 lease 到期不能证明清理完成。实际逻辑删除仍报告 SQLite 页/WAL 未擦除的 residual。持久 Job 恢复不会重新读取已关闭的源，known-deny 不因较新的许可变回 allowed。`control-foreign-copy`、`stop-foreign-copy` 和 `inspect-foreign-copy` 是受信 OS 宿主入口，维护原 copy 的独立事实。
 
-真实验收把独立 Go Source façade 和 Native owner 配对，source authority 明确配置原 peer/holder 与当前凭据许可；准确方法和签名不是 mock。默认 Go App 的 ForeignSources/Grant 装配仍由所属工单继续，尚未在此切片宣称已开放。这里的跨语言系统端口验证也不宣称默认 Go Orchestrator 的整个 report pipeline 已切换为本组件。
+真实验收把独立 Go Source façade 和 Native owner 配对，source authority 明确配置原 peer/holder 与当前凭据许可；准确方法和签名不是 mock。默认 Go App 现在可按[显式 Source 消费方装配](../development/NATIVE_SOURCE.md)配置准确 ForeignConsumers 与 HTTPS，并由原 App.Run 通过真实两库 Source 与 Native Memory 交接。此能力保留源 DataPolicy、当前凭据和原副本责任；不授予通用 Grant，也不声明默认 Go Orchestrator 的整个 report pipeline 已切换为本组件。
 
 真实供应商模型、远程写工具、任意重试、完整设备/多租户部署、异地复制、规模和灾备仍未开放。独立本地 TLS 进程证明异构系统交接；它不代表公网生产部署已验证。
 

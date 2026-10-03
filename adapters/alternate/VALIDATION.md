@@ -2,7 +2,7 @@
 
 2026-10-03，源码 `741dc214fe32839971c961bd735ff30ba87e5e29` 的 19 类场景、含子场景共 26 项，完整 `go test -race ./conformance/alternate -count=1 -json` 实际退出 0。Go 原输出用时 118.546 秒，JSON 包记录为 118.548 秒。三个组件均为独立 Node 进程和独立原生 SQLite 数据库，通过实际 TLS/WSS 与 Go SDK 交接；HTTP 也经真实 Go HTTPTransport 验证。
 
-这份最初的 19 类证据覆盖 [README 的有界 profile](README.md) 基础范围；后续外来 Memory 的显式宿主、准确 Source 登记与 held gate 验收见下文。默认 Go App 的 Source 配对／Grant 装配、默认 Go report 全链替换、供应商与生产运行均不能由本页的独立进程夹具推断。
+这份最初的 19 类证据覆盖 [README 的有界 profile](README.md) 基础范围；后续外来 Memory 的显式宿主、准确 Source 登记与 held gate 验收见下文。默认 Go App 的显式 Source 配对与 HTTPS 增量证据见末节；默认 Go report 全链替换、供应商与生产运行不能由独立进程夹具推断。
 
 ## 固定版本与制品
 
@@ -76,8 +76,7 @@ metadata 记录实际退出、每类结果、源码／bundle／contract／日志
 夹具声明固定 peer／holder 配对，并从实际 `platform.credentials` 检查当前身份和许可；
 CopyHolder、Policy、Source.current 整体 ES256 签名、回执和准确 Body 都由实际 Go Memory／Source 生成。
 Native 对每次业务使用在线查 current proof，Source I/O 在事务外；constructor 没有出站，
-OS 宿主只在显式 prepare 或恢复原 Job 时交接。默认云端 App 的 `ForeignSources`／真实 Grant
-装配仍由所属集成切片继续，本页不把此夹具当成默认 App 配置已经开放的证据。
+OS 宿主只在显式 prepare 或恢复原 Job 时交接。该历史 4840ccc 夹具自身不证明默认 App 配置已开放；默认 App 的显式消费方与 HTTPS 装配及准确证据见末节。通用 Grant 授予仍不能从 Source 配对推断。
 冻结的 peer generation／schema 不兼容时明确 fail closed，未实现自动凭据或旧 schema fallback。
 
 保留的新增失败在 `foreign-host/`：`public-cli-red.jsonl` 为未知 foreign_sources 的实际
@@ -91,3 +90,41 @@ OS 宿主只在显式 prepare 或恢复原 Job 时交接。默认云端 App 的 
 本轮重复完成根 fmt/lint、三个 workspace typecheck、8 文件 26 项 TS 测试、三个构建、
 同源生成漂移、受影响 Go vet／diff 和嵌套文档相对链接实际核对。最终全仓检查、最终冻结
 backend 的浏览器和生产验证仍各自取证，不由这轮 40 项推断。
+
+## 默认 App 的准确消费者与实际 HTTPS 增量
+
+源码 `7a050797946bec9f5aad1f18737eb6ede5dda21a` 开始、结束工作树均干净，
+`go test -race -p 2 ./adapters/development ./conformance/alternate -run '^(TestConfiguredForeignConsumerOpensOriginalSourceContracts|TestIndependentMemoryUsesConfiguredAppSourceOriginalCopyAndCurrentGate)$' -count=1 -v` 实际退出 **0**，墙钟 **245.487 秒**。
+配置／原库／另消费数据库拒绝／无 HTTPS 不服务／相同 Gateway TLS 引用复用与不同引用拒绝用时 **70.685 秒**；
+Native → 默认 App Source 两库实际互操作 **236.305 秒**（SQLite 121.55 秒、PostgreSQL 113.68 秒；包内总业务用时 235.23 秒）。
+
+默认 Source 由原 `App.Run` 提供实际 TLS 1.3 HTTPS（Go 测试宿主）。外层 TLS 代理只在源端原 register 已答复后断开连接，
+不调用或替代任何业务 Service；Native 是独立 Node/原生 SQLite 进程及实际 WSS。管理配置使用
+Native 原 `inspect-owner` scope、其私有配置的 `expected_database_id`、独立 peer 的环境凭据引用与
+准确 holder/generation；Source-local holder roles 为零，没有使用 Source 用户完整 token。
+四方法仍是唯一 Source 合同，原 DataPolicy/current credentials/roles/accounting 门禁均继续核。
+
+每库都观察到原 register 丢答复沿同 command/receipt 恢复、三种用途各两片的 **115000 原字节**、
+独立 Memory 准入和读取、Native 真正 SIGKILL、Source 同原 Scope 重开、原 receipt/ContentRef 保持、
+Source 公开关闭后新业务拒绝、原 release 回执和 SQLite residual。原正文片请求计数 **6 → 6**，
+重开、当前读取、Source 关闭与清理均没有再次取 Body。派生 Memory 政策取双方共同允许范围，
+原 Source 政策和已出版内容不放宽；历史 written 事实不删除以伪造当前清理状态。
+
+| 资产 | 准确绑定 |
+| --- | --- |
+| 执行源码 | `7a050797946bec9f5aad1f18737eb6ede5dda21a`；实现叶 `ecaf76e`、测试叶 `9f6be09`、HTTPS 叶 `a32d311` |
+| 过程元数据 | `/workspace/harness-dev-environment/configured-native-source-app-run-tls-verification.json`；before=after、clean/stable、actual exit=0 |
+| 完整日志 | `/workspace/harness-dev-environment/configured-native-source-app-run-tls-race.log` |
+| 日志 SHA-256 | `0f6871d59048096ccd9df56c9faa16940553fcb880d1b828c6507b010bea108c` |
+| 先前 Gateway TLS 增量 | clean `b2618456e9c9cad988adf190b9c4f5fa97f2019f`；actual exit=0、252.111 秒；独立 `configured-native-source-verification.json/log`，不作为后续 App.Run TLS 证据 |
+
+源配置原 unknown foreign_consumers 拒绝 RED 0.031 秒；四合同构造/原库重开 GREEN 11.849 秒。
+默认 Source 无 TLS 仍可明文服务的真实 RED 7.046 秒，封闭后 GREEN 23.140 秒；
+新实际 App.Run HTTPS SQLite 普通 tracer 98.319 秒，后以本节准确源码双库 race 完整验证。
+前期互操作 9.270 秒错误期待丢答复同步成功、38.270 秒 Native 通用 policy 的 control.proof 超出
+源政策被正确拒绝、72.410 秒错误期待历史 written=false，均是保留的夹具失败，不记为通过。
+业务原 retention、30 秒 Source proof、10 秒 Claim 和原 command deadline 没有扩张。
+
+这是 [NATIVE_SOURCE.md](../development/NATIVE_SOURCE.md) 的有限 Memory 外来消费 profile；
+Brain/Executor 独立实现的正常与故障证据仍绑定前文历史 SHA，不能把本轮消费方装配当成默认
+Orchestrator report pipeline 的全链组件替换，也不代表供应商质量、生产身份或跨 AZ 资格。

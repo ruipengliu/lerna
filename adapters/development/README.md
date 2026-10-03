@@ -6,6 +6,8 @@
 
 GUI v2 和明确配置的 Source Search／Body 当前可从真实 App → HTTP 模型 → Task／Governance → Execution 使用。Source 的配置、原披露与数据许可见 [信息源装配](INFORMATION.md)。Source 参考问答条件与最终成功 Result、WASI 和独立 Executor 的 Task 装配仍待后续切片；Agent 与 EndpointChannel 拓扑也须显式配置完成。
 
+显式外来 Memory 消费方可通过 [Native Source 装配](NATIVE_SOURCE.md)配置准确消费者 scope/database、入站 peer 与 holder/current generation、有限用途/位置及 HTTPS。无配置关闭，不改原 ContentRef/owner 或旧数据政策。
+
 ## GUI 配置与前提
 
 应使用独立开发配置目录，不修改已有演示 scope、token 或许可。先用 `InitializeConfig` 建真实 SQLite 或 PostgreSQL 数据库；SQLite 需 CGO，PostgreSQL需可用的明确 DSN。初始化目录、token、私钥和手机原日志为私有文件。下例是配置既有 `cfg` 的完整 GUI 叶配置；`ctx`、已初始化的 `cfg` 由调用方提供，`SaveConfig` 写回自己的绝对路径。
