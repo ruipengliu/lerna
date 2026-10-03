@@ -141,6 +141,8 @@ type DraftAction struct {
 	CapabilityRef    api.ComponentRef `json:"capability_ref"`
 	BindingRef       api.ObjectRef    `json:"binding_ref"`
 	ArgumentsLocalID string           `json:"arguments_local_id"`
+	// 明确披露本轮已出版的准确本地内容，允许声明尚未分配真实引用的参数自身。
+	DisclosedLocalIDs []string `json:"disclosed_local_ids,omitempty"`
 }
 type Draft struct {
 	Kind                 string             `json:"kind"`
