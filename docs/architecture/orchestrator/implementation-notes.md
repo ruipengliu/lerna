@@ -39,6 +39,8 @@ Task 提交同时保存以 `deadline/<TaskID>` 为键的独立 advance 责任，
 
 行动批次至多四项，必须独立且资源不冲突。当前完整目标覆盖、准确条件版本、观察期限、全部必要检查及同库证据 gate 共同裁决完成。空条件、旧控制、未知效果及未关闭子目标均不能完成。纯账务未结不阻止目标和效果关闭，迟到费用仍按原源累计差额归并。
 
+同一目标及控制代次已有未消费的原 Decision 时，advance 在当前来源准备和 Context 出版之前结束这次唤醒；原提案消费负责后续推进。最终 PrepareDecision 短事务再次有界核对，新身份返回 `invalid_state/decision_pending`，原身份重放仍返回已保存意图。已确认回滚的 stale Snapshot 或 pending Decision 只重调度原 Job；提交未知沿原记录恢复。目标或控制改变后旧轮不阻止新轮准入，原效果观察、账务核对与独立 deadline 责任继续保留。
+
 完成提案中的准确检查建议同事务变成去重的 CheckRequest 和 Job，并固定原成果、目标及控制版本的 completion intent。实际检查未完成时保留等待，不消费无进展额度或开启新 Decision；RecordCheck 唤醒原完成责任，只有当前完整门禁通过才保存 Result。建议本身不能替代观察。坏建议整批回滚后有限拒绝，目标或控制改变则废止旧完成意图。
 
 受信负检查仍登记准确治理副本并保存原事实，完成资格核验只对可用 pass 执行。实际 fail 可以结束原 CheckRequest/Job，拒绝原完成意图并有限记一次无进展；不能因其不能通过完成门禁而丢弃负事实、反复执行原检查或生成 Result。
@@ -62,6 +64,8 @@ Task 测试使用持久 SQLite、真实 PostgreSQL、实际 Memory/ObjectStore�
 批量请求回归使用真实 PostgreSQL 两个并发事务反序读取两个 Task 的请求：逐个调用的旧实现实际触发 SQLSTATE 40P01；统一完整锁集合后两者均提交，准确原输入顺序和答案 Schema 保留。测试只以有界延迟放大实际行锁交错，未用包装 Tx 替代数据库。
 
 原费用归并与新决策准入的真实 PostgreSQL 竞争也复现并消除 SQLSTATE 40P01；账务准确提交一次，过期的决策快照按原版本门禁拒绝。预批准观察夹具以 SQLite 权威时钟的毫秒精度向下声明时间，避免纳秒墙钟落在同毫秒权威时间之后；未放宽规则或 Task 的有限陈旧期限。
+
+当前待消费 Decision 的[公开回归](../../../internal/task/pending_decision_test.go)在真实 SQLite 和 PostgreSQL 首先 RED：原 Operation 新事实唤醒同一 advance 后，编译次数由一增至二、预留由三笔增至四笔。修复后两库 GREEN（2.581s），五项两库矩阵及受影响恢复 race 实际 exit 0（138.977s），覆盖已知/未知原费用、消费后下一轮、迟到 final 差额、旧目标/控制 fencing、取消、零新正向准备和准备返回前另一 Decision 先提交；既有提交未知、原期限重开和护栏检查也通过。Content 使用真实文件介质，上游费用/效果是明确受信夹具，Brain 只表示原接纳等待，没有物理模型请求。准确源码、原身份及实际进程退出索引位于 `/workspace/harness-dev-environment/task-pending-decision-verification/`。此前完整 WASI Worker PG 的原 Task `41382c` 仍按原期限 failed；这项门禁证据不将该失败改记成功，也不替代后续整链验收。
 
 执行准备回归以真实 SQLite 原 Service/Dispatcher/Job 边界复现实际 5.2 秒输入准备耗尽原五秒窗口，再验证准备完成后的首窗口。期间取消、真实 DevIdentity 撤权均阻止派发；实际 Memory/ObjectStore 出版后丢失准备回执，恢复得到同一 ContentRef 和预留；接纳 invoke 后丢回执并跨原窗口期限重放，准确原命令和窗口仍保留。该准备边界不提供真实模型或工具执行效果。
 

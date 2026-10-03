@@ -40,6 +40,13 @@ func (s *Service) prepareAdvanceEntry(handler runtime.JobHandler) runtime.JobHan
 			}
 			needsPreparation = !terminal(actual) && actual.Task.Control == "running" && now.Before(deadline) && actual.PendingGoalCommand == "" && actual.PendingContextID == "" && actual.PendingCompletionID == "" && actual.Task.RequirementsState != "awaiting_input"
 			if needsPreparation {
+				pending, err := s.currentDecisionPendingTx(ctx, tx, actual)
+				if err != nil {
+					return err
+				}
+				needsPreparation = !pending
+			}
+			if needsPreparation {
 				return s.checkSubmitterTx(ctx, tx, actual)
 			}
 			return nil

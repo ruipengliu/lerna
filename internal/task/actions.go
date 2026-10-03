@@ -46,6 +46,13 @@ func (s *Service) prepareDecisionTx(ctx context.Context, tx runtime.Tx, auth run
 	if snap.TaskRef.TenantID != tx.Scope().TenantID || snap.TaskRef.OwnerID != tx.Scope().OwnerID || snap.TaskRef.Revision != t.Task.Revision || snap.GoalRevision != t.Task.GoalRevision || snap.ControlRevision != t.Task.ControlRevision || !api.Equal(snap.GoalRef, t.Task.GoalRef) || snap.RequirementsDigest != t.Task.RequirementsDigest || !api.Equal(snap.Requirements, t.Task.Requirements) || !api.Equal(snap.PolicyRef, t.Task.PolicyRef) {
 		return api.DecisionDispatchIntent{}, api.E("revision_conflict", "stale_snapshot")
 	}
+	pending, e := s.currentDecisionPendingTx(ctx, tx, t)
+	if e != nil {
+		return api.DecisionDispatchIntent{}, e
+	}
+	if pending {
+		return api.DecisionDispatchIntent{}, api.E("invalid_state", "decision_pending")
+	}
 	if snap.Purpose != "interpret_requirements" && snap.Purpose != "decide" {
 		return api.DecisionDispatchIntent{}, invalid("invalid_snapshot_purpose")
 	}

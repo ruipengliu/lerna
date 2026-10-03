@@ -3469,6 +3469,134 @@
             "kind": {
               "const": "report"
             },
+            "preference": {
+              "additionalProperties": false,
+              "properties": {
+                "allowed_formats": {
+                  "items": {
+                    "enum": [
+                      "plain",
+                      "bullet"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 2,
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "default_format": {
+                  "enum": [
+                    "plain",
+                    "bullet"
+                  ],
+                  "type": "string"
+                },
+                "query_ref": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "byte_length": {
+                      "maximum": 16777216,
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "content_id": {
+                      "maxLength": 4096,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "hash": {
+                      "pattern": "^sha256:[a-f0-9]{64}$",
+                      "type": "string"
+                    },
+                    "media_type": {
+                      "maxLength": 4096,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "owner_id": {
+                      "maxLength": 4096,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "tenant_id": {
+                      "maxLength": 4096,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "version": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "tenant_id",
+                    "owner_id",
+                    "content_id",
+                    "version",
+                    "hash",
+                    "media_type",
+                    "byte_length"
+                  ],
+                  "type": "object"
+                },
+                "scope_ref": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "byte_length": {
+                      "maximum": 16777216,
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "content_id": {
+                      "maxLength": 4096,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "hash": {
+                      "pattern": "^sha256:[a-f0-9]{64}$",
+                      "type": "string"
+                    },
+                    "media_type": {
+                      "maxLength": 4096,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "owner_id": {
+                      "maxLength": 4096,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "tenant_id": {
+                      "maxLength": 4096,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "version": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "tenant_id",
+                    "owner_id",
+                    "content_id",
+                    "version",
+                    "hash",
+                    "media_type",
+                    "byte_length"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "query_ref",
+                "scope_ref",
+                "allowed_formats",
+                "default_format"
+              ],
+              "type": "object"
+            },
             "save_path": {
               "maxLength": 4096,
               "minLength": 1,
@@ -4184,7 +4312,7 @@
   "answer_schema": {
     "component_id": "schema_00000000000000000000000000000021",
     "version": "1",
-    "digest": "sha256:3f2b4bd8cff2ef936d369505ae250f61162c88e05d6ed54bb1a5acce54886598"
+    "digest": "sha256:f68c2f887852491154564cacaf9201187e1075164acb351b926a3d43fe6c89c4"
   },
   "source_methods": [
     {

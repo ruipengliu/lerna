@@ -60,6 +60,7 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 	var completionPreparation *completionPreparation
 	completionPreparer, hasCompletionPreparer := s.ports.Context.(CompletionGatePreparer)
 	guardrailHandled := false
+	decisionPending := false
 	err = s.transaction(ctx, store, scope, func(tx runtime.Tx) error {
 		if e := tx.Guard(ctx, work.Claim); e != nil {
 			return e
@@ -99,6 +100,10 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 		}
 		t = current
 		if !guardrailHandled && !completionHandled && !expired && !terminal(current) && current.Task.Control == "running" && current.PendingGoalCommand == "" && current.Task.RequirementsState != "awaiting_input" {
+			decisionPending, e = s.currentDecisionPendingTx(ctx, tx, current)
+			if e != nil || decisionPending {
+				return e
+			}
 			return s.CheckCurrent(ctx, tx, current, true)
 		}
 		return nil
@@ -109,7 +114,7 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 	if completionPreparation != nil {
 		return s.prepareCompletionJob(ctx, store, scope, work, *completionPreparation, completionPreparer)
 	}
-	if expired || completionHandled || guardrailHandled {
+	if expired || completionHandled || guardrailHandled || decisionPending {
 		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
 	}
 	if t.Task.Control != "running" || t.PendingGoalCommand != "" || t.PendingContextID != "" || t.Task.RequirementsState == "awaiting_input" {
@@ -173,9 +178,12 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 		return runtime.ErrCommitUnknown
 	}
 	var stale *api.Error
-	if status == runtime.RolledBack && !errors.Is(err, runtime.ErrCommitUnknown) && errors.As(preparationErr, &stale) && stale.Code == "revision_conflict" && stale.Reason == "stale_snapshot" && errors.Is(err, preparationErr) {
-		// 原准入确认回滚且没有新Intent；仅重调度原Job，不重派已准入调用。
-		return s.wait(ctx, store, scope, work)
+	if status == runtime.RolledBack && !errors.Is(err, runtime.ErrCommitUnknown) && errors.As(preparationErr, &stale) && errors.Is(err, preparationErr) {
+		if stale.Code == "revision_conflict" && stale.Reason == "stale_snapshot" || stale.Code == "invalid_state" && stale.Reason == "decision_pending" {
+			// 原准入确认回滚且没有新Intent；仅重调度原Job。
+			// 若另一原Decision仍待消费，下一次入口结束本次唤醒，不再编译。
+			return s.wait(ctx, store, scope, work)
+		}
 	}
 	return err
 }
