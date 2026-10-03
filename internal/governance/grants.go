@@ -13,10 +13,10 @@ import (
 func (s *Service) registerGrants(r *runtime.Registry) error {
 	registrations := []func() error{
 		func() error {
-			return registerCommand[LeaseUseRequest, UseReceipt](s, r, "grant.lease.use", false, false, s.useLease)
+			return registerOfflineLeaseCommand[LeaseUseRequest, UseReceipt](s, r, "grant.lease.use", false, false, s.useLease)
 		},
 		func() error {
-			return registerCommand[LeaseReport, GrantLease](s, r, "grant.lease.report", false, true, s.reportLease)
+			return registerOfflineLeaseCommand[LeaseReport, GrantLease](s, r, "grant.lease.report", false, true, s.reportLease)
 		},
 		func() error {
 			return registerCommand[GrantIssue, ConfirmedOutput](s, r, "grant.issue", false, true, s.issueGrant)
@@ -31,20 +31,10 @@ func (s *Service) registerGrants(r *runtime.Registry) error {
 		func() error { return registerQuery[IDInput, GrantRecord](r, "grant.read", s.readGrant) },
 		func() error { return s.registerGrantList(r) },
 		func() error {
-			return registerCommand[UseRequest, UseReceipt](s, r, "grant.use", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in UseRequest) (runtime.Outcome, error) {
-				out, err := s.UseTx(ctx, tx, a, in)
-				return runtime.Applied(out), err
-			})
+			return s.registerOnlineGrantUse(r)
 		},
-		func() error { return registerQuery[UseRequest, UseReceipt](r, "grant.check", s.checkGrantQuery) },
-		func() error {
-			return registerQuery[IDInput, UseReceipt](r, "grant.use.get", queryByID[UseReceipt]("uses", func(a runtime.Auth, u UseReceipt) error {
-				if a.SubjectID != u.SubjectRef.ObjectID && !a.HasRole("grant_authority") {
-					return api.E("forbidden", "use_redacted")
-				}
-				return nil
-			}))
-		},
+		func() error { return s.registerOnlineGrantCheck(r) },
+		func() error { return s.registerOnlineGrantUseRead(r) },
 		func() error {
 			return registerCommand[SettleRequest, UseSettlement](s, r, "grant.use.settle", false, true, s.requestSettlement)
 		},
@@ -66,13 +56,13 @@ func (s *Service) registerGrants(r *runtime.Registry) error {
 			}))
 		},
 		func() error {
-			return registerCommand[LeaseAllocate, GrantLease](s, r, "grant.lease.allocate", false, false, s.allocateLease)
+			return registerOfflineLeaseCommand[LeaseAllocate, GrantLease](s, r, "grant.lease.allocate", false, false, s.allocateLease)
 		},
 		func() error {
 			return registerCommand[RefInput, StateOutput](s, r, "grant.lease.close", true, false, s.closeLease)
 		},
 		func() error {
-			return registerQuery[IDInput, GrantLease](r, "grant.lease.read", queryByID[GrantLease]("leases", func(a runtime.Auth, l GrantLease) error {
+			return registerOfflineLeaseQuery[IDInput, GrantLease](r, "grant.lease.read", queryByID[GrantLease]("leases", func(a runtime.Auth, l GrantLease) error {
 				if a.SubjectID != l.Scope.SubjectRef.ObjectID && !a.HasRole("grant_authority") {
 					return api.E("forbidden", "lease_redacted")
 				}
@@ -526,7 +516,7 @@ func validateUse(scope runtime.Scope, auth runtime.Auth, in UseRequest) error {
 	if err := runtime.CheckRef(scope, in.TargetRef); err != nil {
 		return err
 	}
-	if in.TargetKind != "operation" && in.TargetKind != "decision" && in.TargetKind != "content_use" {
+	if in.TargetKind != "operation" && in.TargetKind != "decision" && in.TargetKind != "content_use" && in.TargetKind != "delegation" {
 		return api.E("invalid_request", "invalid_use_target")
 	}
 	if len(in.GrantRefs) == 0 || len(in.GrantRefs) > 32 || !subset(in.Resources, in.Resources) || !subset(in.Actions, in.Actions) || !subset(in.Purposes, in.Purposes) || in.Recipient == "" || in.Location == "" {
@@ -1083,6 +1073,11 @@ func (s *Service) CheckAcceptanceTx(ctx context.Context, tx runtime.Tx, in Accep
 func (s *Service) AllocateLeaseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, in LeaseAllocate) (GrantLease, error) {
 	if auth.TenantID != tx.Scope().TenantID {
 		return GrantLease{}, api.E("forbidden", "tenant_mismatch")
+	}
+	// 在线委派没有设备Lease合同。必须在原UseTx消费once/预留前拒绝，
+	// 不能留待设备收到一项已消费却无法执行的Lease再拒绝。
+	if !contains([]string{"operation", "decision", "content_use"}, in.Scope.TargetKind) {
+		return GrantLease{}, api.E("invalid_request", "invalid_use_target")
 	}
 	validator, err := api.NewValidator(api.SchemaFor[LeaseAllocate]())
 	if err != nil {

@@ -31,6 +31,7 @@ type RemoteCreateInput struct {
 	Input              task.DelegateInput        `json:"input"`
 	AncestorTaskRefs   []api.ObjectRef           `json:"ancestor_task_refs"`
 	ForeignReferences  []memory.ForeignReference `json:"foreign_references"`
+	ParentAdmission    *RemoteParentAdmission    `json:"parent_admission,omitempty"`
 }
 type RemoteCreateOutput struct {
 	CreationKey  string         `json:"creation_key"`
@@ -140,6 +141,9 @@ func (r *Remote) validatePacket(p RemoteCreateInput) (RemoteAgentProfile, error)
 	if _, err = api.ParseTime(p.Input.Deadline); err != nil {
 		return profile, err
 	}
+	if err = validateRemoteAdmission(p, profile); err != nil {
+		return profile, err
+	}
 	if _, err = api.Canonical(api.Raw(p)); err != nil {
 		return profile, err
 	}
@@ -204,6 +208,15 @@ func (r *Remote) delegate(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 		return runtime.Outcome{}, err
 	}
 	out, err := s.DelegateTx(ctx, tx, auth, c, in)
+	if err == nil && r.cfg.ScopeGate != nil && in.ReceiverID != tx.Scope().OwnerID {
+		current, scopeErr := s.CheckDelegationScopeTx(ctx, tx, r.cfg.Auth, in.DelegationID)
+		if scopeErr != nil {
+			return runtime.Outcome{}, scopeErr
+		}
+		if _, scopeErr = r.planCreateTx(ctx, tx, current.Delegation, current.Allocation); scopeErr != nil {
+			return runtime.Outcome{}, scopeErr
+		}
+	}
 	return runtime.Applied(out), err
 }
 func (r *Remote) receiveCreate(ctx context.Context, tx runtime.Tx, peer runtime.Auth, c api.Command, p RemoteCreateInput) (runtime.Outcome, error) {

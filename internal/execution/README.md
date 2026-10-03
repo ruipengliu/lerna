@@ -18,6 +18,8 @@
 
 `ContentPort.ReadBytes/Publish` 位于消费方；宿主桥接准确内容权利、来源闭包和字节摘要。`AuthorityPort.PrepareStart` 在事务外取得 `PreparedStart`，`VerifyStart/VerifyControl` 在事务内验真，不得在设备 Tx 中 RPC 云端或读第二库。Prepare 和 Verify 均使用 `StartRequest.ControlWindow`，不能以原 Invoke 中过期窗口刷新原 use 或 intent。Authority 还须检查准确 BindingRef、InstallLock、当前批准、原 recipient 与目标配置，不能仅凭同租户判断可用。
 
+可选 `Authority.StartGatePreparer` 在原 prepared Attempt 的每次启动入口、独立控制窗口准备之前取得本次当前证明。恢复已有 `PreparedAuthority` 也调用该端口；前后核原 Claim，最终仍由原启动事务检查全部门禁。宿主先核准确原 Task/主体/期限等元数据，再在事务外取有限证明；它不得执行目标动作、消费新授权或修改原 Attempt/Invoke/窗口/预算。已发送、未知效果与终态收尾不进入此正向路径。未配置该端口保留原流程；端口暂时不可用保留原 prepared 责任。此接线的当前父范围完整装配验收由远端 Agent 切片另行记录，编译不代表完整流程通过。
+
 驱动的 `Start` 必须在真实物理入口调用一次 barrier。`Prepare/Reconcile` 不能创建新的业务出口；`Stop` 返回实际退出依据。领域没有默认授权成功分支。
 
 ## 原生目标及验证

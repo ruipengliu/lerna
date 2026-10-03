@@ -10,6 +10,12 @@
 
 宿主为每次入口调用 `NewParentScopeContext`，该工厂只建立有界内存。`PrepareChildContext` 和 `PrepareInputContext` 必须在事务外取得当前有限父证明及真实来源证明；后续 `CheckTaskCurrentTx` 在原 Task／预算锁之后纯核验。磁盘保存的旧肯定证明不能授权新使用。Memory 的当前证明通过同一次入口的 `ForeignUseProvider` 交接；网络不能放进 Runtime 工厂或数据库事务。
 
-本切片的验收使用两个独立 SQLite 数据库、两个固定 owner、真实 TLS 请求、ES256、原 SDK fsync journal、真实 Memory／对象介质与 Task。身份／规则夹具只预批准有限主体及规则边界；它不证明公司的身份平台、任意自然语言质量或生产规模。实际覆盖原创建丢回执、唯一子身份、先关闭后创建、父暂停／子暂停、取消、迟到账单、原回答与 Steer、读回／出版在途时先关闭。
+公开参考宿主通过 `Config.RemoteAgent` 显式配对静态 peer、原主体／服务主体、签名 key 和 profile；`ForeignSourceTLS` 给真实 `App.Run` HTTPS 入口提供固定证书引用。构造、LoadConfig 与重开不读取正文或发送 RPC。Task 的 Decision、Operation、prepared Attempt 与完成阶段各自在新工作入口取得当前父证明，原 Claim 和最终短事务门禁继续强核；已发送或未知效果的核对不能被当成一次新的开始。
 
-当前适配器切片尚不构成完整公开参考部署：可复用远程 Session、既有 ChildHandle 的 Transfer 投递、行动权限上限与父独立最终 Result、PostgreSQL 双库矩阵及 Development 的真实配置／重开入口继续在工单 17 完成。不能由本目录或局部测试通过宣称这些路径已开放。
+行动上限来自原父 Decision／Snapshot 的能力、当前 Knowledge selection、原父许可与明确 Agent profile 的交集。Grant 的资源名必须与准确版本 ResourceRef 成对保存，不能从名字猜摘要。在线 `delegation` Use 在原委派事务消费 once 并预留真实有限预算；离线 Lease 的三种目标没有因此增加委派能力。`material_purposes` 最多32项且逐项显式声明，旧零用途或16项 profile 的值、摘要和许可不变；资料的原 policy 仍须单独允许每种实际用途。
+
+远端累计费用只接受原 child 签名 State／AllocationClosure，绑定原数据库、creation key、父 Delegation／Allocation、child Task 和原 Use。接收时在本方短事务保存准确原事实与本方连续投影，并结算原 Grant；迟到费用不被父终态抹掉，重复同一账单不再次扣费，once 不退款。普通费用证明必须由原出版 Job 真正保存准确字节，再经当前 Memory 门禁读取；只存在 ProofRef 不代表正文已出版。
+
+现有有限证据包括真实双 owner／独立数据库、TLS、ES256、原 SDK fsync journal、Memory／对象介质和 Task。原创建丢回执、关闭先到、暂停／取消、输入、显式 once 预留、签名迟到费用及 prepared Attempt 重开后的父暂停拒绝分别有公开正反例。两库 Knowledge fixture 已核原选定能力／控制与 Grant 交集；这些证据仍保留各自源码、二进制和夹具范围，不证明公司身份平台、供应商最终账单、任意自然语言或生产规模。
+
+工单17仍未整体通过。`remote-agent-17-completion-parent-gate-r5` 的 SQLite 双 owner 完整实跑已取得 child 和 parent 各自三项原 Operation、两项独立检查及已出版 Result；父方成功使用自己的条件和目标真值。该轮整体退出1：原 Incoming 仍 open，没有最终 Closure，父 Task 和 Grant 各自保留 USD2 预留，未到双方费用关闭／原完整结果重开断言。此失败及只读账务索引保存在 `/workspace/harness-dev-environment/remote-agent-17-completion-parent-gate-r5/`。正常成功后的原费用工作、完整 PostgreSQL parent／SQLite child 轨迹，以及可复用远程 Session／Transfer 的完整交接继续完成；不得把局部通过或可编译依赖 checkpoint 写成完整 profile 已受支持。

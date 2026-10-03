@@ -112,11 +112,22 @@ func (r *Remote) sourceAllocation(ctx context.Context, peer runtime.Auth, q api.
 		if current.SubjectRef != saved.Packet.SubjectRef || !api.Equal(current.Delegation.DelegateInput, saved.Packet.Input) || current.Delegation.AllocationRef != saved.Packet.AllocationRef {
 			return api.E("idempotency_conflict", "original_remote_scope_changed")
 		}
-		_, subjectErr := r.cfg.Authority.ResolveSubjectTx(ctx, tx, current.SubjectRef, r.profiles[profileKey(saved.Packet.ProfileRef)], false)
+		actor, subjectErr := r.cfg.Authority.ResolveSubjectTx(ctx, tx, current.SubjectRef, r.profiles[profileKey(saved.Packet.ProfileRef)], false)
 		if subjectErr != nil && !api.IsCode(subjectErr, "forbidden") && !api.IsCode(subjectErr, "expired") {
 			return subjectErr
 		}
 		allowed := gateErr == nil && subjectErr == nil
+		if allowed && r.cfg.ScopeGate != nil {
+			if saved.Packet.ParentAdmission == nil {
+				gateErr = api.E("unsupported", "original_parent_admission_unavailable")
+			} else {
+				gateErr = r.cfg.ScopeGate.CheckScopeTx(ctx, tx, actor, current, r.profiles[profileKey(saved.Packet.ProfileRef)], *saved.Packet.ParentAdmission)
+			}
+			if gateErr != nil && !api.IsCode(gateErr, "forbidden") && !api.IsCode(gateErr, "expired") && !api.IsCode(gateErr, "invalid_state") {
+				return gateErr
+			}
+			allowed = gateErr == nil
+		}
 		reason := ""
 		if !allowed {
 			var e *api.Error
@@ -135,6 +146,15 @@ func (r *Remote) sourceAllocation(ctx context.Context, peer runtime.Auth, q api.
 		}
 		if allowed && deadline.Before(until) {
 			until = deadline
+		}
+		if allowed && saved.Packet.ParentAdmission != nil {
+			bound, err := api.ParseTime(saved.Packet.ParentAdmission.ValidUntil)
+			if err != nil {
+				return err
+			}
+			if bound.Before(until) {
+				until = bound
+			}
 		}
 		out = RemoteAllocationSnapshot{Packet: saved.Packet, Allocation: current.Allocation, ParentTask: remoteParentTask(current.ParentTask), Allowed: allowed, Reason: reason, IssuedAt: api.Time(now), StartBefore: api.Time(until)}
 		semantic, err := remoteScopeDigest(out)

@@ -41,6 +41,10 @@ func (c contextCompiler) PrepareCompletionGate(ctx context.Context, scope runtim
 	if err != nil {
 		return ctx, err
 	}
+	ctx, err = c.a.prepareRemoteAgentCompletionParent(ctx, scope, auth, t, in)
+	if err != nil {
+		return ctx, err
+	}
 	return c.a.prepareForeignSources(ctx, scope, auth, in.ArtifactRefs, "task.complete", "cloud")
 }
 

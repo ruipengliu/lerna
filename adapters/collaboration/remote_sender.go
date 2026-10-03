@@ -30,6 +30,15 @@ func (r *Remote) outgoingProfile(d task.Delegation) (RemoteAgentProfile, error) 
 }
 func (r *Remote) planCreate(ctx context.Context, d task.Delegation, a task.Allocation) (remoteSent, error) {
 	var out remoteSent
+	err := r.within(ctx, func(tx runtime.Tx) error {
+		var err error
+		out, err = r.planCreateTx(ctx, tx, d, a)
+		return err
+	})
+	return out, err
+}
+func (r *Remote) planCreateTx(ctx context.Context, tx runtime.Tx, d task.Delegation, a task.Allocation) (remoteSent, error) {
+	var out remoteSent
 	profile, err := r.outgoingProfile(d)
 	if err != nil {
 		return out, err
@@ -42,7 +51,7 @@ func (r *Remote) planCreate(ctx context.Context, d task.Delegation, a task.Alloc
 		return out, err
 	}
 	id := remoteID("handoff", r.cfg.Scope.TenantID, r.cfg.Scope.OwnerID, d.CreationKey)
-	err = r.within(ctx, func(tx runtime.Tx) error {
+	err = func() error {
 		current, err := s.CheckDelegationScopeTx(ctx, tx, r.cfg.Auth, d.DelegationID)
 		if err != nil {
 			return err
@@ -105,12 +114,19 @@ func (r *Remote) planCreate(ctx context.Context, d task.Delegation, a task.Alloc
 				}
 			}
 		}
+		if r.cfg.ScopeGate != nil {
+			admission, err := r.cfg.ScopeGate.FreezeScopeTx(ctx, tx, actor, current, profile)
+			if err != nil {
+				return err
+			}
+			packet.ParentAdmission = &admission
+		}
 		if _, err = r.validatePacket(packet); err != nil {
 			return err
 		}
 		out = remoteSent{Packet: packet, Command: api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: d.ReceiverID, CommandID: packet.CreateCommandID, Method: "collaboration.create", TargetID: d.CreationKey, ExpiresAt: d.Deadline, Payload: api.Raw(packet)}}
 		return tx.Create(ctx, remoteOutgoing, id, d.ParentTaskRef.ObjectID, out)
-	})
+	}()
 	return out, err
 }
 func remoteForeignReference(p RemoteCreateInput, ref api.ContentRef, purpose, location, retain string) memory.ForeignReference {

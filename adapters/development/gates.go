@@ -114,6 +114,9 @@ func (g brainGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if e := g.a.Knowledge.CheckBrainTx(ctx, tx, auth, in, encoding); e != nil {
 		return e
 	}
+	if e := g.a.checkRemoteModelTx(ctx, tx, auth, in, encoding); e != nil {
+		return e
+	}
 	return g.a.authorizeModelTx(ctx, tx, auth, in, encoding)
 }
 
@@ -204,6 +207,15 @@ func (v usageVerifier) Verify(ctx context.Context, s runtime.Scope, ref api.Obje
 	var actual api.UsageSnapshot
 	var e error
 	actual, e = v.a.Brain.Usage(ctx, v.a.Store, s, ref)
+	if api.IsCode(e, "not_found") && v.a.RemoteAgent != nil {
+		remoteErr := v.a.RemoteAgent.VerifyDelegationUsage(ctx, s, ref, u)
+		if remoteErr == nil {
+			return nil
+		}
+		if !api.IsCode(remoteErr, "not_found") {
+			return remoteErr
+		}
+	}
 	if api.IsCode(e, "not_found") {
 		actual, e = (executionBridge{v.a}).rawUsage(ctx, s, ref)
 	}

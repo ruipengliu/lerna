@@ -15,25 +15,47 @@ import (
 
 // RemoteAgentValues 是显式配对的上限；正文和模型不能给远端增加权限。
 type RemoteAgentValues struct {
-	ParentOwnerID    string             `json:"parent_owner_id"`
-	ReceiverID       string             `json:"receiver_id"`
-	AgentBindingRef  api.ObjectRef      `json:"agent_binding_ref"`
-	PolicyRef        api.ComponentRef   `json:"policy_ref"`
-	InstallLockRef   api.ComponentRef   `json:"install_lock_ref"`
-	SubjectRefs      []api.ObjectRef    `json:"subject_refs"`
-	PermissionRefs   []api.ObjectRef    `json:"permission_refs"`
-	CapabilityRefs   []api.ComponentRef `json:"capability_refs"`
-	BindingRefs      []api.ObjectRef    `json:"binding_refs"`
-	ResourceRefs     []api.ComponentRef `json:"resource_refs"`
-	BudgetLimits     []api.Amount       `json:"budget_limits"`
-	MaxDepth         uint64             `json:"max_depth"`
-	MaxInputs        uint64             `json:"max_inputs"`
-	Location         string             `json:"location"`
-	MaterialPurposes []string           `json:"material_purposes"`
+	ParentOwnerID    string              `json:"parent_owner_id"`
+	ReceiverID       string              `json:"receiver_id"`
+	AgentBindingRef  api.ObjectRef       `json:"agent_binding_ref"`
+	PolicyRef        api.ComponentRef    `json:"policy_ref"`
+	InstallLockRef   api.ComponentRef    `json:"install_lock_ref"`
+	SubjectRefs      []api.ObjectRef     `json:"subject_refs"`
+	PermissionRefs   []api.ObjectRef     `json:"permission_refs"`
+	CapabilityRefs   []api.ComponentRef  `json:"capability_refs"`
+	BindingRefs      []api.ObjectRef     `json:"binding_refs"`
+	ResourceRefs     []api.ComponentRef  `json:"resource_refs"`
+	BudgetLimits     []api.Amount        `json:"budget_limits"`
+	MaxDepth         uint64              `json:"max_depth"`
+	MaxInputs        uint64              `json:"max_inputs"`
+	Location         string              `json:"location"`
+	MaterialPurposes []string            `json:"material_purposes"`
+	ActionScopes     []RemoteActionScope `json:"action_scopes,omitempty"`
+	ModelScope       *RemoteModelScope   `json:"model_scope,omitempty"`
 }
 type RemoteAgentProfile struct {
 	ProfileRef api.ComponentRef  `json:"profile_ref"`
 	Values     RemoteAgentValues `json:"values"`
+}
+
+const maxRemoteMaterialPurposes = 32
+
+// RemoteAgentProfileSchema 限定显式配对配置；用途仍逐项受原 source policy
+// 约束。上限允许完整执行/对账消费者，不自动为旧 profile 增加用途。
+func RemoteAgentProfileSchema() api.Schema {
+	schema := api.SchemaFor[RemoteAgentProfile]()
+	values := schema["properties"].(map[string]any)["values"].(api.Schema)
+	properties := values["properties"].(map[string]any)
+	for _, name := range []string{"permission_refs", "capability_refs", "binding_refs", "resource_refs"} {
+		array := properties[name].(api.Schema)
+		array["maxItems"] = 64
+		properties[name] = api.Schema{"anyOf": []any{array, api.Schema{"type": "null"}}}
+	}
+	purposes := api.Array(api.Schema{"type": "string", "minLength": 1, "maxLength": 128}, 0, maxRemoteMaterialPurposes)
+	purposes["uniqueItems"] = true
+	// 历史无材料用途配置的 nil 仍表示零用途，不改其原 digest/身份。
+	properties["material_purposes"] = api.Schema{"anyOf": []any{purposes, api.Schema{"type": "null"}}}
+	return schema
 }
 
 func NewRemoteAgentProfile(id, version string, v RemoteAgentValues) (RemoteAgentProfile, error) {
@@ -50,6 +72,13 @@ func NewRemoteAgentProfile(id, version string, v RemoteAgentValues) (RemoteAgent
 	return frozen, err
 }
 func validateRemoteProfile(p RemoteAgentProfile) error {
+	validator, err := api.NewValidator(RemoteAgentProfileSchema())
+	if err != nil {
+		return err
+	}
+	if err = validator.Validate(api.Raw(p)); err != nil {
+		return api.E("invalid_request", "remote_agent_profile_schema_invalid")
+	}
 	v := p.Values
 	digest, err := api.Digest(v)
 	if err != nil {
@@ -83,7 +112,7 @@ func validateRemoteProfile(p RemoteAgentProfile) error {
 			seen[key] = true
 		}
 	}
-	if len(v.Location) > 128 || len(v.MaterialPurposes) > 16 {
+	if len(v.Location) > 128 || len(v.MaterialPurposes) > maxRemoteMaterialPurposes {
 		return api.E("invalid_request", "remote_material_purpose_limit")
 	}
 	purposes := map[string]bool{}
@@ -92,6 +121,9 @@ func validateRemoteProfile(p RemoteAgentProfile) error {
 			return api.E("invalid_request", "remote_material_purpose_invalid")
 		}
 		purposes[purpose] = true
+	}
+	if err := validateRemoteActions(p); err != nil {
+		return err
 	}
 	return api.ValidateAmounts(v.BudgetLimits)
 }
@@ -116,6 +148,7 @@ type RemoteConfig struct {
 	SigningKeyID string
 	Auth         runtime.Auth
 	Authority    RemoteAuthority
+	ScopeGate    RemoteScopeAuthority
 	Profiles     []RemoteAgentProfile
 	Peers        []RemotePeer
 	Participants []string
