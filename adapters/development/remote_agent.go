@@ -33,9 +33,10 @@ var remoteKeyDigest = regexp.MustCompile(`^sha256:[0-9a-f]{64}$`)
 // RemoteAgentConfig 固定显式配对；正文、SDK调用和恢复不能添加地址或身份。
 // SourceSubjectRefs 只在管理初始化时批准有限消费主体，不能扩旧Content政策。
 type RemoteAgentConfig struct {
-	Profiles          []collaboration.RemoteAgentProfile `json:"profiles"`
-	Peers             []RemoteAgentPeerConfig            `json:"peers"`
-	SourceSubjectRefs []api.ObjectRef                    `json:"source_subject_refs"`
+	Sessions          []collaboration.RemoteSessionBinding `json:"sessions,omitempty"`
+	Profiles          []collaboration.RemoteAgentProfile   `json:"profiles"`
+	Peers             []RemoteAgentPeerConfig              `json:"peers"`
+	SourceSubjectRefs []api.ObjectRef                      `json:"source_subject_refs"`
 }
 type RemoteAgentPeerConfig struct {
 	TenantID               string        `json:"tenant_id"`
@@ -101,7 +102,7 @@ func validateRemoteAgent(c Config) error {
 		}
 		seenSubjects[key] = true
 	}
-	return nil
+	return validateRemoteSessions(c)
 }
 func remoteAgentPrincipals(c Config) ([]platform.Principal, error) {
 	if err := validateRemoteAgent(c); err != nil {
@@ -197,6 +198,7 @@ func (a *App) configureRemoteAgent(local *collaboration.Adapter) (*collaboration
 		assembly.transports = append(assembly.transports, transport)
 		scope := runtime.Scope{TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, DatabaseID: cfg.DatabaseID}
 		methods := append(collaboration.RemoteAgentContracts(), providers.ForeignSourceContracts()...)
+		methods = append(methods, remoteAgentSessionContracts(a.Config)...)
 		digest, err := api.DigestLimit(methods, 1<<20)
 		if err != nil {
 			return nil, err
@@ -369,7 +371,7 @@ func (a *App) isRemoteDelegationSubmission(ctx context.Context, scope runtime.Sc
 	if a.RemoteAgent == nil {
 		return false, nil
 	}
-	return a.RemoteAgent.IsDelegationSubmission(ctx, scope, actual, source)
+	return a.isOriginalRemoteInputSubmission(ctx, scope, actual, source)
 }
 
 type remoteTaskGate struct{ taskGate }

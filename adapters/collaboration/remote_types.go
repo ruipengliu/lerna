@@ -261,6 +261,9 @@ func (r *Remote) CheckCollaborationTx(ctx context.Context, tx runtime.Tx, a runt
 			return local.CheckCollaborationTx(ctx, tx, a, kind, receiver)
 		}
 	}
+	if kind == "session" {
+		return r.sessionAdmissionTx(ctx, tx, a, receiver)
+	}
 	if kind != "delegate" && kind != "transfer" {
 		return api.E("unsupported", "remote_reusable_session_unconfigured")
 	}

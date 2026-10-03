@@ -200,6 +200,9 @@ func (r *Remote) Register() error {
 	if err := r.cfg.Registry.RegisterJob(JobRemoteInputReceive, r.inputReceiveJob); err != nil {
 		return err
 	}
+	if err := r.registerRemoteSessions(); err != nil {
+		return err
+	}
 	return r.cfg.Registry.RegisterJob(JobRemoteProof, r.proofJob)
 }
 func (r *Remote) delegate(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in task.DelegateInput) (runtime.Outcome, error) {

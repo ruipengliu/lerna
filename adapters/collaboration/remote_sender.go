@@ -202,7 +202,7 @@ func (r *Remote) CreateSession(ctx context.Context, scope runtime.Scope, h task.
 	if h.SessionOwnerID == scope.OwnerID && r.cfg.Local != nil {
 		return r.cfg.Local.CreateSession(ctx, scope, h)
 	}
-	return api.ObjectRef{}, api.E("unsupported", "remote_reusable_session_unconfigured")
+	return r.createRemoteSession(ctx, scope, h)
 }
 func (r *Remote) ReadAllocation(ctx context.Context, scope runtime.Scope, ref api.ObjectRef) (task.Allocation, error) {
 	if err := r.checkScope(scope); err != nil {
@@ -250,8 +250,8 @@ func (r *Remote) ReadAllocation(ctx context.Context, scope runtime.Scope, ref ap
 	}
 	return out.Allocation, nil
 }
-func (r *Remote) Transfer(context.Context, runtime.Scope, task.Transfer) error {
-	return api.E("unsupported", "remote_input_not_yet_configured")
+func (r *Remote) Transfer(ctx context.Context, scope runtime.Scope, tr task.Transfer) error {
+	return r.transferRemoteChild(ctx, scope, tr)
 }
 
 var _ task.CollaborationPort = (*Remote)(nil)
