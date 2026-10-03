@@ -1,5 +1,5 @@
-// Package bootstrap 只装配明确端口、管理迁移及开发配置；业务裁决留在领域。
-package bootstrap
+// Package development 显式装配有界本机参考宿主、受信规则与领域端口。
+package development
 
 import (
 	"context"

@@ -7,7 +7,7 @@ Harness 将用户目标推进为可核验的结果。本文件规定代码落位
 - 必须先读根目录 [CONTEXT.md](CONTEXT.md)、[技术设计入口](docs/architecture/README.md)、与改动相关的模块章节和 [ADR](docs/adr/)。术语沿用领域词表，不能把 Session、Task、Decision、Operation 当作同一层状态。
 - 代码组织与技术栈遵循 [工程方案](docs/architecture/engineering/README.md)及 [ADR 0010](docs/adr/0010-monorepo-shared-contract-release.md)：单 monorepo、初期一个 Go module，Go/TypeScript SDK 与实现同仓维护、同版验证。拆 module、改协议或改变事实负责方时，必须说明与既有设计的冲突并记录决策。
 - 每次实现先在 [实施覆盖清单](docs/architecture/engineering/implementation-readiness.md#coverage)定位范围，明确负责方、原身份、输入输出、原子提交集合、失败恢复和验收证据。业务合同缺失时先补所属模块设计，不得在代码中另选一套语义。
-- 当前基线是设计文档、部分 Schema 和设计检查，尚无运行内核。下列目录树是目标结构，代码目录随真实实施切片创建；目录存在、接口可编译或文档检查通过都不代表能力已实现。
+- 当前已有有界参考实现，实际开放方法、验收证据和外部缺口见 [实施覆盖报告](docs/architecture/engineering/implementation-coverage.md)。下列目录树保留目标结构，尚未开放的目录随真实切片创建；目录存在、接口可编译或文档检查通过都不代表完整 profile 或生产能力已实现。
 
 ## 项目目录骨架
 
@@ -25,8 +25,8 @@ Harness 将用户目标推进为可核验的结果。本文件规定代码落位
 │   ├── executor/                   执行宿主
 │   ├── cli/                        命令行客户端
 │   ├── migrate/                    独立迁移管理命令
-│   └── dev/                        可选的单进程调试装配
-├── api/                            目标位置：同版公开合同
+│   └── harness-dev/                当前单进程参考装配
+├── api/                            同版公开合同与派生资产
 │   ├── schema/                     闭合 JSON Schema
 │   ├── methods/                    方法登记与 profile
 │   └── proto/                      承载严格 JSON 的 gRPC 外壳
@@ -105,7 +105,7 @@ Harness 将用户目标推进为可核验的结果。本文件规定代码落位
 
 ### 协议与生成资产
 
-- 当前机器合同源位于 [protocol](docs/architecture/protocol/README.md)：`core.schema.json` 是部分结构合同，`harness.proto` 是 gRPC 外壳；业务语义由模块设计和[共同方法合同](docs/architecture/protocol/method-contract.md)规定。`api/` 是未来代码工程的目标位置。
+- 当前机器合同源位于 [protocol](docs/architecture/protocol/README.md)：`core.schema.json` 是部分结构合同，`harness.proto` 是 gRPC 外壳；业务语义由模块设计和[共同方法合同](docs/architecture/protocol/method-contract.md)规定。`api/` 已保存由此源生成的记录、Schema 快照与协议外壳；生成流程见 [scripts](scripts/README.md)，不能独立手改。
 - 迁移到 `api/` 必须在同一变更中更新生成器、检查器和文档引用，只保留一份可手工维护的合同源。不得复制出两份独立演进的 Schema。
 - 开放一个方法前，必须同版补齐负责方、profile、请求/响应/错误 Schema、回执阶段、原命令查询、权限/版本前提、Go/TS 类型、SDK 恢复行为及正反例。未开放能力返回 `unsupported`；部分方法实现不得声明整个 profile 已受支持。
 - JSON 使用闭合 Schema；原始重复键、Unicode 和数值检查早于普通解码。Go/TS 使用同版规范化与摘要规则，Protobuf 外壳不得重新定义第二套领域字段。
@@ -155,7 +155,9 @@ Harness 将用户目标推进为可核验的结果。本文件规定代码落位
 
 文档检查需要 Python 3.10+ 和 Git，架构检查另需 `jsonschema`，解释工具检查需要 Node。缺本地历史提交导致的 `blocked` 不算通过。现有文档扫描不包含未来源码目录里的所有嵌套文档；新增这些文档时须明确补充检查范围。以上模型检查不运行真实数据库，Node 函数检查也不启动浏览器。完整边界见[验收设计](docs/architecture/validation/README.md#5-本系列附带的检查)。
 
-Go/前端工程建立后，必须提供并记录真实可运行的检查入口：Go 的格式检查（`gofmt -l` 无待格式化文件）、`go vet ./...`、`go test ./...` 和构建；并发改动增加受影响包的 race 检查。前端提供 pnpm 的格式、lint、严格类型、行为测试与构建入口。生成流程增加漂移检查，存储改动增加相应真实数据库合同测试。工具及脚本在首个真实工程中锁定，当前不得把尚不存在的命令或 CI 写成已通过。
+代码工程的共同检查入口为 `scripts/check`（无参数）；版本与生成器固定在 [toolchain-lock.json](scripts/toolchain-lock.json)，包括 Go 1.26.8、Node 24.19.0、pnpm 11.19.0。入口检查 Go 格式、vet、行为测试，前端格式、lint、严格类型、行为测试和构建，以及核心 Schema、proto/sqlc/TypeScript 的生成漂移；Go 编译另运行 `go build ./...`。并发改动增加受影响包的 `go test -race`。
+
+真实 PostgreSQL 验收读取 `HARNESS_TEST_POSTGRES_DSN`，进程装配读取 `HARNESS_DATABASE_DSN`；只通过环境变量或受控引用提供，不输出或提交值。未配置 PG 时的 skip 不算该数据库通过。日历测试读取固定的 `conformance/testdata/tzdb/2026b`；须同时核版本与原字节摘要。浏览器入口为 `pnpm test:browser`，需要实际运行的后端、前端和 Chromium；严格 CSP 验收使用后端静态服务及 `HARNESS_REQUIRE_CSP=1`。CI 定义在 [.github/workflows/check.yml](.github/workflows/check.yml)，本地通过不表示托管 CI 已执行。真实供应商、设备、规模与容灾仍须分别取证。
 
 ### 每次交付必须说明
 
