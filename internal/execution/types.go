@@ -81,11 +81,11 @@ type OperationOutput struct {
 	ActuallyStopped   bool          `json:"actually_stopped"`
 }
 type OperationView struct {
-	Operation         api.Operation     `json:"operation"`
-	NewAttemptsClosed bool              `json:"new_attempts_closed"`
-	ActuallyStopped   bool              `json:"actually_stopped"`
-	EffectDisputed    bool              `json:"effect_disputed"`
-	Attempts          api.Page[Attempt] `json:"attempts"`
+	Operation         api.Operation         `json:"operation"`
+	NewAttemptsClosed bool                  `json:"new_attempts_closed"`
+	ActuallyStopped   bool                  `json:"actually_stopped"`
+	EffectDisputed    bool                  `json:"effect_disputed"`
+	Attempts          api.Page[AttemptView] `json:"attempts"`
 }
 type TaskGate struct {
 	TaskRef         api.ObjectRef `json:"task_ref"`
@@ -130,6 +130,7 @@ type Attempt struct {
 	UsageFinal        bool             `json:"usage_final"`
 	EffectDisputed    bool             `json:"effect_disputed"`
 	ActuallyStopped   bool             `json:"actually_stopped"`
+	CellCommitted     bool             `json:"cell_committed"`
 }
 type operationRecord struct {
 	Operation         api.Operation    `json:"operation"`
@@ -169,4 +170,34 @@ type Observation struct {
 	ObservedAt    string           `json:"observed_at"`
 	ActionBefore  string           `json:"action_before"`
 	Data          json.RawMessage  `json:"data"`
+}
+
+// AttemptView 披露真实阶段与原证据；不披露内部编码正文、凭据/签名缓存。
+type AttemptView struct {
+	AttemptID        string           `json:"attempt_id"`
+	OperationID      string           `json:"operation_id"`
+	Revision         uint64           `json:"revision"`
+	AttemptNo        uint64           `json:"attempt_no"`
+	Phase            string           `json:"phase"`
+	RequestDigest    string           `json:"request_digest"`
+	TargetRequestKey string           `json:"target_request_key,omitempty"`
+	ResourceID       string           `json:"resource_id,omitempty"`
+	ResourceEpoch    uint64           `json:"resource_epoch,omitempty"`
+	ControlWindowID  string           `json:"control_window_id"`
+	Effect           string           `json:"effect"`
+	MayApplyLater    any              `json:"may_apply_later"`
+	StartedAt        string           `json:"started_at,omitempty"`
+	ObservedAt       string           `json:"observed_at,omitempty"`
+	FactRevision     uint64           `json:"fact_revision"`
+	EvidenceRefs     []api.ContentRef `json:"evidence_refs"`
+	ResultRef        *api.ContentRef  `json:"result_ref,omitempty"`
+	Usage            []api.Amount     `json:"usage"`
+	UsageFinal       bool             `json:"usage_final"`
+	EffectDisputed   bool             `json:"effect_disputed"`
+	ActuallyStopped  bool             `json:"actually_stopped"`
+	CellCommitted    bool             `json:"cell_committed"`
+}
+
+func publicAttempt(a Attempt) AttemptView {
+	return AttemptView{AttemptID: a.AttemptID, OperationID: a.OperationID, Revision: a.Revision, AttemptNo: a.AttemptNo, Phase: a.Phase, RequestDigest: a.Prepared.Digest, TargetRequestKey: a.Prepared.TargetRequestKey, ResourceID: a.Prepared.ResourceID, ResourceEpoch: a.Prepared.ResourceEpoch, ControlWindowID: a.ControlWindowID, Effect: a.Effect, MayApplyLater: a.MayApplyLater, StartedAt: a.StartedAt, ObservedAt: a.ObservedAt, FactRevision: a.FactRevision, EvidenceRefs: a.EvidenceRefs, ResultRef: a.ResultRef, Usage: a.Usage, UsageFinal: a.UsageFinal, EffectDisputed: a.EffectDisputed, ActuallyStopped: a.ActuallyStopped, CellCommitted: a.CellCommitted}
 }

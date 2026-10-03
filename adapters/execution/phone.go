@@ -359,3 +359,5 @@ func (s *SimulatedPhones) HumanChange(ctx context.Context, resourceID, screen st
 
 var _ domain.Driver = (*SimulatedPhones)(nil)
 var _ domain.ResourceDriver = (*SimulatedPhones)(nil)
+
+func (s *SimulatedPhones) ObservationSchema() api.Schema { return api.SchemaFor[PhoneState]() }

@@ -91,6 +91,19 @@ func NewManagedFiles(root string) (*ManagedFiles, error) {
 		return nil, api.E("invalid_state", "file_owner_already_active")
 	}
 	d.ownerLock = lock
+	if err = lock.Sync(); err == nil {
+		err = d.syncDir(".harness/journals")
+	}
+	if err == nil {
+		err = d.syncDir(".harness")
+	}
+	if err == nil {
+		err = d.syncDir(".")
+	}
+	if err != nil {
+		d.Close()
+		return nil, api.E("unsupported", "directory_sync_not_verified")
+	}
 	return d, nil
 }
 func (d *ManagedFiles) Close() error {
@@ -309,6 +322,9 @@ func (d *ManagedFiles) Write(ctx context.Context, q FileWrite) (FileReceipt, err
 		err = closeErr
 	}
 	if err != nil {
+		return FileReceipt{}, err
+	}
+	if err = d.syncDir(path.Dir(p)); err != nil {
 		return FileReceipt{}, err
 	}
 	j.Phase = "temp_synced"

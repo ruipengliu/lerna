@@ -14,6 +14,7 @@ type ResourceDriver interface {
 	Fence(context.Context, rt.Scope, ResourceLease) (StopFact, error)
 	Observe(context.Context, rt.Scope, ResourceLease, string) (Observation, error)
 }
+type ObservationSchemaDriver interface{ ObservationSchema() api.Schema }
 type AcquireInput struct {
 	ResourceID           string `json:"resource_id"`
 	HolderID             string `json:"holder_id"`
@@ -71,14 +72,23 @@ func (s *Service) registerResources(r *rt.Registry) error {
 		func() error { return RegisterCommand(r, "resource.release", true, []string{Namespace}, s.release) },
 		func() error { return RegisterCommand(r, "resource.takeover", true, []string{Namespace}, s.takeover) },
 		func() error { return RegisterQuery(r, "resource.get", s.resourceGet) },
-		func() error { return RegisterQuery(r, "resource.observation.get", s.observationGet) },
+		func() error {
+			m := rt.Method{Contract: s.observationContract("resource.observation.get", "query", false), Query: func(ctx context.Context, st rt.Store, sc rt.Scope, a rt.Auth, q api.Query) (any, error) {
+				var p ObservationIDInput
+				if err := api.Decode(q.Payload, &p); err != nil {
+					return nil, err
+				}
+				return s.observationGet(ctx, st, sc, a, q, p)
+			}}
+			return r.Register(m)
+		},
 	}
 	for _, f := range fs {
 		if err := f(); err != nil {
 			return err
 		}
 	}
-	if err := r.Register(rt.Method{Contract: api.Contract[ObserveInput, ObserveOutput]("resource.observe", Namespace, "command", false, true), Participants: []string{Namespace}, Apply: func(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command) (rt.Outcome, error) {
+	if err := r.Register(rt.Method{Contract: s.observationContract("resource.observe", "command", true), Participants: []string{Namespace}, Apply: func(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command) (rt.Outcome, error) {
 		var p ObserveInput
 		if err := api.Decode(c.Payload, &p); err != nil {
 			return rt.Outcome{}, err
@@ -429,4 +439,19 @@ func (s *Service) releaseInflight(ctx context.Context, tx rt.Tx, a Attempt) erro
 		return tx.Put(ctx, Namespace+".resources", lease.ResourceID, rev, lease)
 	}
 	return nil
+}
+
+func (s *Service) observationContract(name, kind string, accepted bool) api.MethodContract {
+	c := closedContract[ObserveInput, ObserveOutput](name, kind, false, accepted)
+	if kind == "query" {
+		c.InputSchema = api.SchemaFor[ObservationIDInput]()
+	}
+	properties := c.OutputSchema["properties"].(map[string]any)
+	observation := properties["observation"].(map[string]any)
+	data := api.Object(map[string]any{})
+	if d, ok := s.cfg.ResourceDriver.(ObservationSchemaDriver); ok {
+		data = d.ObservationSchema()
+	}
+	observation["properties"].(map[string]any)["data"] = data
+	return c
 }

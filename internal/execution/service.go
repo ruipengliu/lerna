@@ -53,7 +53,7 @@ func (s *Service) participants() []string {
 	return p
 }
 func RegisterCommand[I, O any](r *rt.Registry, name string, cas bool, parts []string, fn func(context.Context, rt.Tx, rt.Auth, api.Command, I) (O, error)) error {
-	return r.Register(rt.Method{Contract: api.Contract[I, O](name, Namespace, "command", cas, false), Participants: parts, Apply: func(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command) (rt.Outcome, error) {
+	return r.Register(rt.Method{Contract: closedContract[I, O](name, "command", cas, false), Participants: parts, Apply: func(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command) (rt.Outcome, error) {
 		var p I
 		if err := api.Decode(c.Payload, &p); err != nil {
 			return rt.Outcome{}, err
@@ -63,7 +63,7 @@ func RegisterCommand[I, O any](r *rt.Registry, name string, cas bool, parts []st
 	}})
 }
 func RegisterQuery[I, O any](r *rt.Registry, name string, fn func(context.Context, rt.Store, rt.Scope, rt.Auth, api.Query, I) (O, error)) error {
-	return r.Register(rt.Method{Contract: api.Contract[I, O](name, Namespace, "query", false, false), Query: func(ctx context.Context, st rt.Store, sc rt.Scope, a rt.Auth, q api.Query) (any, error) {
+	return r.Register(rt.Method{Contract: closedContract[I, O](name, "query", false, false), Query: func(ctx context.Context, st rt.Store, sc rt.Scope, a rt.Auth, q api.Query) (any, error) {
 		var p I
 		if err := api.Decode(q.Payload, &p); err != nil {
 			return nil, err
@@ -364,15 +364,15 @@ func (s *Service) get(ctx context.Context, st rt.Store, sc rt.Scope, a rt.Auth, 
 	if err != nil {
 		return OperationView{}, err
 	}
-	attempts := []Attempt{}
+	attempts := []AttemptView{}
 	for _, r := range records {
 		var x Attempt
 		if err = r.Decode(&x); err != nil {
 			return OperationView{}, err
 		}
-		attempts = append(attempts, x)
+		attempts = append(attempts, publicAttempt(x))
 	}
-	return OperationView{Operation: rec.Operation, NewAttemptsClosed: rec.NewAttemptsClosed, ActuallyStopped: rec.ActuallyStopped, EffectDisputed: rec.EffectDisputed, Attempts: api.Page[Attempt]{Items: attempts, CollectionRevision: rec.Operation.Attempts.CollectionRevision, Exhausted: len(records) < 100, Partial: len(records) == 100, Gaps: []string{}}}, nil
+	return OperationView{Operation: rec.Operation, NewAttemptsClosed: rec.NewAttemptsClosed, ActuallyStopped: rec.ActuallyStopped, EffectDisputed: rec.EffectDisputed, Attempts: api.Page[AttemptView]{Items: attempts, CollectionRevision: rec.Operation.Attempts.CollectionRevision, Exhausted: len(records) < 100, Partial: len(records) == 100, Gaps: []string{}}}, nil
 }
 func (s *Service) list(ctx context.Context, st rt.Store, sc rt.Scope, a rt.Auth, q api.Query, p api.ListInput) (api.Page[OperationOutput], error) {
 	if p.Limit < 1 || p.Limit > 100 {

@@ -371,3 +371,81 @@ func TestPassiveEnvironmentCheckpointRestoreDoesNotReplayTargetWrites(t *testing
 		t.Fatalf("checkpoint replayed target write %v", err)
 	}
 }
+
+func TestTrustedPureComputePublishesOneNamespaceCASAndRetainsHistoricalEffect(t *testing.T) {
+	f := newExecutionFixture(t)
+	compute := &domain.TrustedComputeDriver{Content: f.content, Store: f.st, Location: "device"}
+	service, err := domain.New(domain.Config{OwnerID: f.sc.OwnerID, Content: f.content, Authority: f.authority, Location: "device", Drivers: []domain.Driver{compute}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	registry := rt.NewRegistry()
+	if err = service.Register(registry); err != nil {
+		t.Fatal(err)
+	}
+	f.registry = registry
+	f.dispatcher.Registry = registry
+	id := api.NewID("environment")
+	config := api.ComponentRef{ComponentID: domain.BuiltinComponentID("environment.passive"), Version: "1", Digest: api.Hash([]byte(domain.PassiveEnvironmentFormat))}
+	r := f.command(t, "environment.create", id, domain.EnvironmentCreateInput{EnvironmentID: id, ConfigRef: config, InstallLockRef: f.install, Limits: []api.Amount{{Unit: "namespace_bytes", Value: "65536"}}, ExpiresAt: api.Time(time.Now().Add(time.Hour)), SourceRefs: []api.ContentRef{}}, nil)
+	if r.Stage != "accepted" {
+		t.Fatalf("create %+v", r)
+	}
+	f.drain(t)
+	var env domain.Environment
+	f.query(t, "environment.get", id, domain.EnvironmentIDInput{EnvironmentID: id}, &env)
+	code := f.put(t, api.Raw(domain.ComputeProgram{Opcode: "add_decimal", TargetName: "total", InputNames: []string{"a", "b"}}))
+	inputRef := f.put(t, api.Raw(domain.PassiveNamespace{Format: domain.PassiveEnvironmentFormat, Bindings: []domain.NamespaceBinding{{Name: "a", Kind: "decimal", Decimal: "0.1"}, {Name: "b", Kind: "decimal", Decimal: "0.2"}}}))
+	invoke := f.invokeInput(t, false)
+	args := domain.ComputeArguments{EnvironmentRef: f.sc.Ref(id, env.Revision), ExpectedGeneration: 1, ExpectedNamespaceRevision: 1, CodeRef: code, InputRef: inputRef, OutputSchemaRef: domain.NamespaceOutputSchemaRef()}
+	argRef := f.put(t, api.Raw(args))
+	var intent domain.ExecutionIntent
+	raw, _ := f.content.ReadBytes(context.Background(), f.sc, f.auth, invoke.IntentRef, "prepare", "device")
+	if err = api.Decode(raw, &intent); err != nil {
+		t.Fatal(err)
+	}
+	invoke.CapabilityRef = domain.TrustedComputeCapability().Ref
+	intent.CapabilityRef = invoke.CapabilityRef
+	intent.ArgumentsRef = argRef
+	intent.ProcessedSourceRefs = []api.ContentRef{code, inputRef, *env.NamespaceRef}
+	invoke.IntentRef = f.put(t, api.Raw(intent))
+	invoke.IntentHash, _ = api.Digest(intent)
+	r = f.command(t, "execution.invoke", invoke.OperationID, invoke, nil)
+	if r.Stage != "applied" {
+		t.Fatalf("cell invoke %+v", r)
+	}
+	f.drain(t)
+	f.query(t, "environment.get", id, domain.EnvironmentIDInput{EnvironmentID: id}, &env)
+	if env.NamespaceRevision != 2 || !env.ReadyForCell || !env.ActuallyExited {
+		t.Fatalf("cell did not commit %+v", env)
+	}
+	nsRaw, err := f.content.ReadBytes(context.Background(), f.sc, f.auth, *env.NamespaceRef, "verify", "device")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var ns domain.PassiveNamespace
+	if err = api.Decode(nsRaw, &ns); err != nil {
+		t.Fatal(err)
+	}
+	found := false
+	for _, v := range ns.Bindings {
+		if v.Name == "total" {
+			found = v.Kind == "decimal" && v.Decimal == "0.3"
+		}
+	}
+	if !found {
+		t.Fatalf("independent known decimal result missing %+v", ns)
+	}
+	// 原CAS不自动刷新；第二个原命令以旧namespace资格拒绝，并保留前次准确成果。
+	f.command(t, "execution.reconcile", invoke.OperationID, domain.ReconcileInput{OperationID: invoke.OperationID}, nil)
+	f.drain(t)
+	var view domain.OperationView
+	f.query(t, "execution.get", invoke.OperationID, domain.OperationIDInput{OperationID: invoke.OperationID}, &view)
+	if view.Operation.Effect != "applied" || view.EffectDisputed {
+		t.Fatalf("reconcile rewrote committed cell %+v", view)
+	}
+	f.query(t, "environment.get", id, domain.EnvironmentIDInput{EnvironmentID: id}, &env)
+	if env.NamespaceRevision != 2 {
+		t.Fatalf("reconcile replayed cell %+v", env)
+	}
+}

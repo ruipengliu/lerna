@@ -60,15 +60,23 @@ type Capability struct {
 	InputSchema  api.Schema
 	OutputSchema api.Schema
 }
+type CellPreparation struct {
+	EnvironmentRef            api.ObjectRef    `json:"environment_ref"`
+	ExpectedGeneration        uint64           `json:"expected_generation"`
+	ExpectedNamespaceRevision uint64           `json:"expected_namespace_revision"`
+	Namespace                 PassiveNamespace `json:"namespace"`
+	Sources                   []api.ContentRef `json:"sources"`
+}
 type PreparedRequest struct {
-	Encoded           json.RawMessage `json:"encoded"`
-	Digest            string          `json:"digest"`
-	TargetRequestKey  string          `json:"target_request_key,omitempty"`
-	IdempotencyUntil  string          `json:"idempotency_until,omitempty"`
-	ResourceID        string          `json:"resource_id,omitempty"`
-	ResourceEpoch     uint64          `json:"resource_epoch,omitempty"`
-	ObservationID     string          `json:"observation_id,omitempty"`
-	ObservationBefore string          `json:"observation_before,omitempty"`
+	Encoded           json.RawMessage  `json:"encoded"`
+	Cell              *CellPreparation `json:"cell,omitempty"`
+	Digest            string           `json:"digest"`
+	TargetRequestKey  string           `json:"target_request_key,omitempty"`
+	IdempotencyUntil  string           `json:"idempotency_until,omitempty"`
+	ResourceID        string           `json:"resource_id,omitempty"`
+	ResourceEpoch     uint64           `json:"resource_epoch,omitempty"`
+	ObservationID     string           `json:"observation_id,omitempty"`
+	ObservationBefore string           `json:"observation_before,omitempty"`
 }
 type AttemptRequest struct {
 	Scope   rt.Scope

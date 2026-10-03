@@ -43,6 +43,7 @@ type FileDriver struct {
 	ReadOnly bool
 	Location string
 	mu       sync.Mutex
+	targetMu sync.Mutex
 	reads    map[string]domain.Fact
 }
 
@@ -58,6 +59,7 @@ func fileCapability(read bool) domain.Capability {
 		effect = "read_only"
 		input = api.SchemaFor[FileReadArguments]()
 		output = api.SchemaFor[FileReadResult]()
+		output["properties"].(map[string]any)["data_base64"] = api.Schema{"type": "string", "maxLength": 174768}
 	}
 	digest, _ := api.Digest([]any{name, "1", input, output, effect})
 	return domain.Capability{Ref: api.ComponentRef{ComponentID: domain.BuiltinComponentID(name), Version: "1", Digest: digest}, EffectClass: effect, MaxAttempts: 1, InputSchema: input, OutputSchema: output}
@@ -107,6 +109,8 @@ func (d *FileDriver) Prepare(ctx context.Context, sc rt.Scope, a rt.Auth, p doma
 	return domain.PreparedRequest{Encoded: raw, Digest: api.Hash(raw)}, nil
 }
 func (d *FileDriver) Start(ctx context.Context, q domain.AttemptRequest, barrier func(context.Context) error) (domain.Fact, error) {
+	d.targetMu.Lock()
+	defer d.targetMu.Unlock()
 	var encoded fileEncoded
 	if err := api.Decode(q.Attempt.Prepared.Encoded, &encoded); err != nil {
 		return domain.Fact{}, err
@@ -116,6 +120,9 @@ func (d *FileDriver) Start(ctx context.Context, q domain.AttemptRequest, barrier
 	}
 	if d.ReadOnly {
 		observed, err := d.Files.Read(ctx, encoded.Path)
+		if err == nil && len(observed.Data) > 128<<10 {
+			err = api.E("overloaded", "file_read_limit")
+		}
 		if err != nil {
 			return domain.Fact{}, err
 		}
@@ -146,7 +153,16 @@ func fileFact(p string, r FileReceipt, prior uint64) domain.Fact {
 	return domain.Fact{Revision: revision, Effect: r.Effect, MayApplyLater: r.MayApplyLater, Output: api.Raw(FileWriteResult{Path: p, Version: r.Version, DirectorySynced: r.DirectorySynced, JournalID: r.JournalID}), MediaType: "application/json", Evidence: []api.ContentRef{}, Usage: []api.Amount{}, UsageFinal: !r.MayApplyLater}
 }
 func (d *FileDriver) Reconcile(ctx context.Context, q domain.AttemptRequest) (domain.Fact, error) {
+	d.targetMu.Lock()
+	defer d.targetMu.Unlock()
 	if d.ReadOnly {
+		if q.Attempt.ResultRef != nil && d.Content != nil {
+			raw, err := d.Content.ReadBytes(ctx, q.Scope, q.Auth, *q.Attempt.ResultRef, "execution_result", d.Location)
+			if err != nil {
+				return domain.Fact{}, err
+			}
+			return domain.Fact{Revision: q.Attempt.FactRevision + 1, Effect: "not_applied", MayApplyLater: false, Output: raw, MediaType: "application/json", Evidence: []api.ContentRef{}, Usage: []api.Amount{}, UsageFinal: true}, nil
+		}
 		d.mu.Lock()
 		f, ok := d.reads[q.Attempt.AttemptID]
 		d.mu.Unlock()
@@ -169,6 +185,8 @@ func (d *FileDriver) Reconcile(ctx context.Context, q domain.AttemptRequest) (do
 	return fileFact(encoded.Path, r, q.Attempt.FactRevision), nil
 }
 func (d *FileDriver) Stop(ctx context.Context, q domain.AttemptRequest) (domain.StopFact, error) {
+	d.targetMu.Lock()
+	defer d.targetMu.Unlock()
 	if d.ReadOnly {
 		return domain.StopFact{ActuallyStopped: true, MayApplyLater: false}, nil
 	}

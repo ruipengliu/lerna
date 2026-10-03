@@ -196,6 +196,9 @@ func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w
 			if err = s.resourceBarrier(callCtx, tx, current, a, now); err != nil {
 				return err
 			}
+			if err = s.cellBarrier(callCtx, tx, current, a, now); err != nil {
+				return err
+			}
 			a.Revision = ar + 1
 			a.Phase = "possibly_sent"
 			a.Permit = permit
@@ -325,6 +328,16 @@ func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 	if err := validFact(f); err != nil {
 		return err
 	}
+	var namespaceRef *api.ContentRef
+	if a.Prepared.Cell != nil && !a.CellCommitted && f.Effect == "applied" {
+		cell := a.Prepared.Cell
+		ref, err := s.cfg.Content.Publish(ctx, sc, op.Principal, Publication{ContentID: stableID("content", a.AttemptID+":namespace"), MediaType: "application/json", Purpose: "environment_namespace", Location: s.cfg.Location, ProcessedSources: cell.Sources, DisclosedSources: []api.ContentRef{}}, api.Raw(cell.Namespace))
+		if err != nil {
+			return err
+		}
+		namespaceRef = &ref
+		f.Output = api.Raw(CellResult{OperationRef: sc.Ref(op.Operation.OperationID, op.Revision+1), NamespaceRef: ref, NamespaceRevision: cell.ExpectedNamespaceRevision + 1, Generation: cell.ExpectedGeneration})
+	}
 	digest, err := api.Digest(struct {
 		Revision      uint64           `json:"revision"`
 		Effect        string           `json:"effect"`
@@ -389,6 +402,17 @@ func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 				return api.E("idempotency_conflict", "effect_fact_changed")
 			}
 			return nil
+		}
+		if a.Prepared.Cell != nil && !old.CellCommitted {
+			valid, err := s.commitCell(ctx, tx, current, old, namespaceRef)
+			if err != nil {
+				return err
+			}
+			old.CellCommitted = valid && namespaceRef != nil
+			if !valid && f.Effect == "applied" {
+				f.Effect = "not_applied"
+				outputRef = nil
+			}
 		}
 		if old.Effect == "applied" && f.Effect != "applied" {
 			old.EffectDisputed = true
