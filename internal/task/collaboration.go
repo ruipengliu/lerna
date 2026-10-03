@@ -199,8 +199,8 @@ func (s *Service) MergeDelegation(ctx context.Context, store runtime.Store, scop
 	return s.transaction(ctx, store, scope, func(tx runtime.Tx) error { return s.MergeDelegationTx(ctx, tx, auth, fact) })
 }
 func (s *Service) MergeDelegationTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, f DelegationFact) error {
-	var d Delegation
-	if _, e := tx.Get(ctx, delegations, f.DelegationID, &d); e != nil {
+	t, d, e := delegationForTaskTx(ctx, tx, f.DelegationID)
+	if e != nil {
 		return e
 	}
 	if !auth.HasRole("service") && auth.SubjectID != d.ReceiverID {
@@ -254,10 +254,6 @@ func (s *Service) MergeDelegationTx(ctx context.Context, tx runtime.Tx, auth run
 	}
 	d.Revision++
 	if e = tx.Put(ctx, delegations, d.DelegationID, d.Revision-1, d); e != nil {
-		return e
-	}
-	t, e := getTask(ctx, tx, d.ParentTaskRef.ObjectID)
-	if e != nil {
 		return e
 	}
 	id := relationID(t.Task.TaskID, "delegation", tx.Scope().OwnerID, d.DelegationID)

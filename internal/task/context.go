@@ -63,16 +63,12 @@ func (s *Service) CheckDecisionTx(ctx context.Context, tx runtime.Tx, auth runti
 	if !auth.HasRole("service") && !auth.HasRole("task_admin") {
 		return api.E("forbidden", "trusted_brain_gate_required")
 	}
-	var d decisionState
-	if _, err := tx.Get(ctx, decisions, decisionID, &d); err != nil {
+	t, d, err := decisionForTaskTx(ctx, tx, decisionID)
+	if err != nil {
 		return err
 	}
 	if d.Consumed {
 		return api.E("invalid_state", "decision_consumed")
-	}
-	t, err := getTask(ctx, tx, d.Intent.TaskRef.ObjectID)
-	if err != nil {
-		return err
 	}
 	if err = s.CheckCurrent(ctx, tx, t, true); err != nil {
 		return err

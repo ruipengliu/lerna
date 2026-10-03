@@ -109,11 +109,7 @@ func (s *Service) ConsumeProposalTx(ctx context.Context, tx runtime.Tx, auth run
 	if !auth.HasRole("service") && !auth.HasRole("task_admin") {
 		return Consumption{}, api.E("forbidden", "trusted_preparer_required")
 	}
-	var d decisionState
-	if _, e := tx.Get(ctx, decisions, p.DecisionID, &d); e != nil {
-		return Consumption{}, e
-	}
-	t, e := getTask(ctx, tx, d.Snapshot.TaskRef.ObjectID)
+	t, d, e := decisionForTaskTx(ctx, tx, p.DecisionID)
 	if e != nil {
 		return Consumption{}, e
 	}

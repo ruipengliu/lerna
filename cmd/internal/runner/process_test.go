@@ -7,23 +7,54 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
 	"github.com/ruipengliu/lerna/cmd/internal/bootstrap"
 )
 
+type executableBuild struct {
+	sync.Once
+	path   string
+	output []byte
+	err    error
+}
+
+var executableBuilds sync.Map
+
+func TestMain(m *testing.M) {
+	code := m.Run()
+	executableBuilds.Range(func(_, value any) bool {
+		if path := value.(*executableBuild).path; path != "" {
+			_ = os.RemoveAll(filepath.Dir(path))
+		}
+		return true
+	})
+	os.Exit(code)
+}
+
 func binary(t *testing.T, role string) string {
 	t.Helper()
-	path := filepath.Join(t.TempDir(), "harness-"+role)
-	ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
-	defer cancel()
-	cmd := exec.CommandContext(ctx, "go", "build", "-o", path, "./cmd/"+role)
-	cmd.Dir = "../../.."
-	if output, err := cmd.CombinedOutput(); err != nil {
-		t.Fatalf("build %s: %v %s", role, err, output)
+	value, _ := executableBuilds.LoadOrStore(role, &executableBuild{})
+	build := value.(*executableBuild)
+	build.Do(func() {
+		root, err := os.MkdirTemp("", "harness-role-test-*")
+		if err != nil {
+			build.err = err
+			return
+		}
+		build.path = filepath.Join(root, "harness-"+role)
+		ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
+		defer cancel()
+		cmd := exec.CommandContext(ctx, "go", "build", "-o", build.path, "./cmd/"+role)
+		cmd.Dir = "../../.."
+		build.output, build.err = cmd.CombinedOutput()
+	})
+	if build.err != nil {
+		t.Fatalf("build %s: %v %s", role, build.err, build.output)
 	}
-	return path
+	return build.path
 }
 
 func run(t *testing.T, executable string, args ...string) ([]byte, []byte, error) {

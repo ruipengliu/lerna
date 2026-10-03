@@ -54,6 +54,11 @@ type RequestView struct {
 type RequestPort interface {
 	CheckTx(context.Context, runtime.Tx, runtime.Auth, api.ObjectRef) (RequestView, error)
 }
+
+// 多个请求须由负责方一次确定全部上游锁；不能逐项追加 Task 锁。
+type RequestBatchPort interface {
+	CheckBatchTx(context.Context, runtime.Tx, runtime.Auth, []api.ObjectRef) ([]RequestView, error)
+}
 type ScheduleGate interface {
 	CheckTx(context.Context, runtime.Tx, runtime.Auth, api.ComponentRef, api.ComponentRef, []api.Amount) error
 }

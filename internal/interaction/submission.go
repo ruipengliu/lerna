@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"sort"
 	"strings"
 	"time"
 
@@ -58,6 +59,37 @@ func (s *Service) content(ctx context.Context, tx runtime.Tx, a runtime.Auth, re
 	}
 	return s.ports.Content.CheckTx(ctx, tx, a, ref, purpose)
 }
+
+// 同一批披露先按准确内容身份核门禁；呈现顺序和每项用途保持原输入。
+func (s *Service) contents(ctx context.Context, tx runtime.Tx, a runtime.Auth, refs []api.ContentRef, primaryPurpose, remainingPurpose string) error {
+	if len(refs) > 100 {
+		return invalid("content_limit")
+	}
+	order := make([]int, len(refs))
+	for i := range order {
+		order[i] = i
+	}
+	sort.Slice(order, func(i, j int) bool {
+		a, b := refs[order[i]], refs[order[j]]
+		if a.OwnerID != b.OwnerID {
+			return a.OwnerID < b.OwnerID
+		}
+		if a.ContentID != b.ContentID {
+			return a.ContentID < b.ContentID
+		}
+		return a.Version < b.Version
+	})
+	for _, i := range order {
+		purpose := remainingPurpose
+		if i == 0 {
+			purpose = primaryPurpose
+		}
+		if err := s.content(ctx, tx, a, refs[i], purpose); err != nil {
+			return err
+		}
+	}
+	return nil
+}
 func (s *Service) inputBranch(ctx context.Context, tx runtime.Tx, a runtime.Auth, target string, sessionRef, branchRef api.ObjectRef, expected uint64) (sessionRecord, branchRecord, error) {
 	if target != sessionRef.ObjectID {
 		return sessionRecord{}, branchRecord{}, invalid("target_mismatch")
@@ -88,20 +120,16 @@ func (s *Service) SubmitGoalTx(ctx context.Context, tx runtime.Tx, a runtime.Aut
 	if s.ports.Delivery == nil || !api.ValidID(s.config.DiscoveryOwnerID) {
 		return SubmissionOutput{}, api.E("unsupported", "delivery_unconfigured")
 	}
-	session, branch, err := s.inputBranch(ctx, tx, a, c.TargetID, in.SessionRef, in.BranchRef, in.ExpectedBranchRevision)
-	if err != nil {
-		return SubmissionOutput{}, err
-	}
 	if len(in.AttachmentRefs) > 20 {
 		return SubmissionOutput{}, invalid("attachment_limit")
 	}
-	if err = s.content(ctx, tx, a, in.ContentRef, "task.goal"); err != nil {
+	refs := append([]api.ContentRef{in.ContentRef}, in.AttachmentRefs...)
+	if err := s.contents(ctx, tx, a, refs, "task.goal", "task.goal"); err != nil {
 		return SubmissionOutput{}, err
 	}
-	for _, ref := range in.AttachmentRefs {
-		if err = s.content(ctx, tx, a, ref, "task.goal"); err != nil {
-			return SubmissionOutput{}, err
-		}
+	session, branch, err := s.inputBranch(ctx, tx, a, c.TargetID, in.SessionRef, in.BranchRef, in.ExpectedBranchRevision)
+	if err != nil {
+		return SubmissionOutput{}, err
 	}
 	if err = api.ValidateRecord("ComponentRef", in.PolicyRef); err != nil {
 		return SubmissionOutput{}, err
@@ -422,11 +450,7 @@ func (s *Service) ForwardInputTx(ctx context.Context, tx runtime.Tx, a runtime.A
 	if s.ports.Requests == nil || s.ports.Delivery == nil {
 		return SubmissionOutput{}, api.E("unsupported", "request_forwarding_unconfigured")
 	}
-	session, branch, err := s.inputBranch(ctx, tx, a, c.TargetID, in.SessionRef, in.BranchRef, in.ExpectedBranchRevision)
-	if err != nil {
-		return SubmissionOutput{}, err
-	}
-	if err = runtime.CheckRef(tx.Scope(), in.RequestRef); err != nil {
+	if err := runtime.CheckRef(tx.Scope(), in.RequestRef); err != nil {
 		return SubmissionOutput{}, err
 	}
 	view, err := s.ports.Requests.CheckTx(ctx, tx, a, in.RequestRef)
@@ -448,13 +472,13 @@ func (s *Service) ForwardInputTx(ctx context.Context, tx runtime.Tx, a runtime.A
 	if !api.Equal(in.PreviewRefs, request.PreviewRefs) {
 		return SubmissionOutput{}, invalid("preview_refs_mismatch")
 	}
-	if err = s.content(ctx, tx, a, in.AnswerRef, "interaction.input"); err != nil {
+	refs := append([]api.ContentRef{in.AnswerRef}, in.PreviewRefs...)
+	if err = s.contents(ctx, tx, a, refs, "interaction.input", "interaction.preview"); err != nil {
 		return SubmissionOutput{}, err
 	}
-	for _, ref := range in.PreviewRefs {
-		if err = s.content(ctx, tx, a, ref, "interaction.preview"); err != nil {
-			return SubmissionOutput{}, err
-		}
+	session, branch, err := s.inputBranch(ctx, tx, a, c.TargetID, in.SessionRef, in.BranchRef, in.ExpectedBranchRevision)
+	if err != nil {
+		return SubmissionOutput{}, err
 	}
 	id := api.NewID("submission")
 	ref := tx.Scope().Ref(id, 1)
@@ -500,15 +524,15 @@ func (s *Service) ReplyTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c 
 	if c.TargetID != r.Submission.SessionRef.ObjectID {
 		return ReplyOutput{}, invalid("target_mismatch")
 	}
+	if err := s.content(ctx, tx, r.Auth, in.ContentRef, "interaction.snapshot"); err != nil {
+		return ReplyOutput{}, err
+	}
 	session, err := getSession(ctx, tx, r.Auth, c.TargetID)
 	if err != nil {
 		return ReplyOutput{}, err
 	}
 	branch, err := getBranch(ctx, tx, c.TargetID, r.Submission.BranchID)
 	if err != nil {
-		return ReplyOutput{}, err
-	}
-	if err = s.content(ctx, tx, r.Auth, in.ContentRef, "interaction.snapshot"); err != nil {
 		return ReplyOutput{}, err
 	}
 	if in.Role != "assistant" && in.Role != "system" {

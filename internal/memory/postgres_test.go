@@ -80,7 +80,11 @@ func TestPostgresFrozenQueryPageChecksCurrentSourceRetention(t *testing.T) {
 	if err = store.Migrate(ctx); err != nil {
 		t.Fatal(err)
 	}
-	testFrozenQueryPageSourceRetention(t, func(t *testing.T) fixture {
-		return newFixtureWithStore(t, store)
+	createFixture := func(t *testing.T) fixture { return newFixtureWithStore(t, store) }
+	t.Run("source_retention", func(t *testing.T) {
+		testFrozenQueryPageSourceRetention(t, createFixture)
+	})
+	t.Run("budget_and_underlying_errors", func(t *testing.T) {
+		testFrozenInputRecheckErrors(t, createFixture)
 	})
 }

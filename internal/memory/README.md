@@ -47,6 +47,8 @@ CheckContentTx(ctx, tx, auth, ref, purpose, location, continuous) (ContentVersio
 每页还在同一 Tx 核对冻结的 QueryRef、ScopeRef、TextRef 及其实际来源闭包。
 自然到期直接依据当前保留期限拒绝旧页，不等待到期 Job 或权限水位投影；
 缺少冻结输入来源的旧快照必须重新查询。输入门禁检查也计入原累计权限预算。
+预算用尽返回无披露的 partial/gaps，保留未遍历位置，不把剩余候选称为 exhausted。
+当前来源门禁的 SQL、取消及提交未知错误保留原类别；只有明确来源业务拒绝要求重建快照。
 
 事实、偏好、推断和经验分别保留 Type。默认 `RuleExtractor()` 只接受闭合的 `ExtractionDocument`，是有限的显式值导入器；没有配置模型提取器。默认 review_only；preapproved 需要显式 `SavingAuthorization` 验证原 SavingGrant，未配置返回 `unsupported`。保存同一候选的 Memory、候选状态、去重键、变化头、回执和 Job 一起提交。
 

@@ -160,30 +160,50 @@ func (e *RuleEngine) Request(ctx context.Context, _ string, enc Encoding) (Gener
 		out.Contents[len(out.Contents)-1].ContentLocalID = dependency
 		out.Draft = Draft{Kind: "act", ReasonLocalID: "reason", Actions: []DraftAction{{LocalKey: local, CapabilityRef: cap, BindingRef: binding, ArgumentsLocalID: "arguments"}}}
 	}
+	fail := func(code string, fact *ActionFact, explanation string) (Generated, error) {
+		out.Contents[0].Body = "原步骤 " + fact.LogicalStepKey + "，Operation " + fact.Operation.OperationID + "：" + explanation + "。本次提案收束为失败，不重复该步骤。"
+		out.Draft = Draft{Kind: "fail", ReasonLocalID: "reason", ReasonCode: code}
+		return out, nil
+	}
+	// 只读成功可为 not_applied；但已知未开始或没有原 Result 的任一步
+	// 都不能被其他步骤的准确字节补成成功，也不能重复相同 logical step。
+	for _, step := range []struct {
+		fact   *ActionFact
+		prefix string
+	}{{inspected, "file_inspection"}, {saved, "file_write"}, {verified, "file_readback"}} {
+		if step.fact == nil {
+			continue
+		}
+		if step.fact.Operation.Effect == "not_started" {
+			return fail(step.prefix+"_not_started", step.fact, "效果已明确为 not_started 且执行已关闭，不存在成功执行依据")
+		}
+		if step.prefix == "file_write" && step.fact.Operation.Effect != "applied" {
+			return fail("file_write_not_applied", step.fact, "原写入效果为 "+step.fact.Operation.Effect+"，没有已写入依据")
+		}
+		if step.fact.Operation.ResultRef == nil || len(step.fact.ResultBytes) == 0 {
+			return fail(step.prefix+"_result_missing", step.fact, "执行已关闭，但缺少原 Result 引用或准确结果字节")
+		}
+	}
 	if inspected == nil {
 		act("inspect_file", e.ReadCapability, e.ReadBinding, struct {
 			Path string `json:"path"`
 		}{goal.SavePath}, "")
 		return out, nil
 	}
+	var observation struct {
+		Path       string `json:"path"`
+		Version    string `json:"version"`
+		DataBase64 string `json:"data_base64"`
+		ObservedAt string `json:"observed_at"`
+	}
+	if er = api.Decode(inspected.ResultBytes, &observation); er != nil || observation.Path != goal.SavePath {
+		return fail("file_observation_invalid", inspected, "原文件观察结果格式无效或路径与准确目标不一致")
+	}
 	if saved == nil {
-		var observation struct {
-			Path       string `json:"path"`
-			Version    string `json:"version"`
-			DataBase64 string `json:"data_base64"`
-			ObservedAt string `json:"observed_at"`
-		}
-		if er = api.Decode(inspected.ResultBytes, &observation); er != nil || observation.Path != goal.SavePath {
-			return out, api.E("invalid_request", "file_observation_invalid")
-		}
 		act("save_report", e.WriteCapability, e.WriteBinding, struct {
 			Path            string `json:"path"`
 			ExpectedVersion string `json:"expected_version"`
 		}{goal.SavePath, observation.Version}, "artifact")
-		return out, nil
-	}
-	if saved.Operation.Effect != "applied" {
-		out.Draft = Draft{Kind: "fail", ReasonLocalID: "reason", ReasonCode: "file_write_not_applied"}
 		return out, nil
 	}
 	if verified == nil {
@@ -199,12 +219,11 @@ func (e *RuleEngine) Request(ctx context.Context, _ string, enc Encoding) (Gener
 		ObservedAt string `json:"observed_at"`
 	}
 	if er = api.Decode(verified.ResultBytes, &readback); er != nil {
-		return out, er
+		return fail("file_readback_invalid", verified, "原读回结果格式无效，无法核验准确文件字节")
 	}
 	observed, er := base64.StdEncoding.DecodeString(readback.DataBase64)
 	if er != nil || readback.Path != goal.SavePath || api.Hash(observed) != params.ExpectedHash {
-		out.Draft = Draft{Kind: "fail", ReasonLocalID: "reason", ReasonCode: "file_readback_mismatch"}
-		return out, nil
+		return fail("file_readback_mismatch", verified, "原读回字节或路径与准确报告目标不一致")
 	}
 	return out, nil
 }

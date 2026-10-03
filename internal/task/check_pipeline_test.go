@@ -25,7 +25,7 @@ func (p preapprovedCheckSource) Coverage(context.Context, runtime.Scope, api.Tas
 	return api.GoalCoverage{}, api.E("unsupported", "no_coverage_fixture")
 }
 func (p preapprovedCheckSource) Check(_ context.Context, _ runtime.Scope, t api.Task, request task.CheckRequest) (api.ConditionResult, error) {
-	observed := api.Time(time.Now())
+	observed := fixtureObservedAt()
 	verdict := p.verdict
 	if verdict == "" {
 		verdict = "pass"

@@ -56,6 +56,33 @@ func (s *Service) Dispatch(ctx context.Context, store runtime.Store, scope runti
 	var now time.Time
 	ready := false
 	status, err := store.Within(ctx, scope, s.config.Participants, func(tx runtime.Tx) error {
+		// 原请求路由和正文引用不可变；先由真正负责方锁 Task/请求，再拿本方会话锁。
+		var inputView RequestView
+		var requestErr error
+		if snapshot.Submission.State == "queued" && snapshot.Input != nil {
+			inputView, requestErr = s.ports.Requests.CheckTx(ctx, tx, snapshot.Auth, snapshot.Input.RequestRef)
+			if requestErr != nil {
+				var apiErr *api.Error
+				if !errors.As(requestErr, &apiErr) {
+					return requestErr
+				}
+			}
+		}
+		var contentErr error
+		if snapshot.Submission.State == "queued" && answerErr == nil && requestErr == nil && !dependencyUnavailable {
+			purpose, restPurpose := "task.goal", "task.goal"
+			if snapshot.Input != nil {
+				purpose, restPurpose = "interaction.input", "interaction.preview"
+			}
+			refs := append([]api.ContentRef{snapshot.Submission.ContentRef}, snapshot.AttachmentRefs...)
+			contentErr = s.contents(ctx, tx, snapshot.Auth, refs, purpose, restPurpose)
+			if contentErr != nil {
+				var apiErr *api.Error
+				if !errors.As(contentErr, &apiErr) {
+					return contentErr
+				}
+			}
+		}
 		r, branch, e := lockSubmission(ctx, tx, work.Job.SourceRef.ObjectID)
 		if e != nil {
 			return e
@@ -94,37 +121,27 @@ func (s *Service) Dispatch(ctx context.Context, store runtime.Store, scope runti
 			if rejection == nil && r.Submission.PredecessorTaskRef != nil && closure == nil {
 				return tx.Guard(ctx, work.Claim)
 			}
-			purpose := "task.goal"
-			if r.Input != nil {
-				purpose = "interaction.input"
-			}
 			if rejection == nil {
-				if e = s.content(ctx, tx, r.Auth, r.Submission.ContentRef, purpose); e != nil {
-					if api.IsCode(e, "dependency_unavailable") {
-						return e
-					}
-					rejection = e
+				if r.Submission.ContentRef != snapshot.Submission.ContentRef || !api.Equal(r.AttachmentRefs, snapshot.AttachmentRefs) {
+					return api.E("invalid_state", "submission_route_changed")
 				}
-			}
-			if rejection == nil {
-				for _, ref := range r.AttachmentRefs {
-					purpose := "task.goal"
-					if r.Input != nil {
-						purpose = "interaction.preview"
-					}
-					if e = s.content(ctx, tx, r.Auth, ref, purpose); e != nil {
-						rejection = e
-						break
-					}
+				if api.IsCode(contentErr, "dependency_unavailable") || api.IsCode(contentErr, "overloaded") {
+					return tx.Guard(ctx, work.Claim)
 				}
+				rejection = contentErr
 			}
 			if rejection == nil && r.Input != nil {
-				view, e := s.ports.Requests.CheckTx(ctx, tx, r.Auth, r.Input.RequestRef)
-				if e != nil {
-					rejection = e
+				if snapshot.Input == nil || snapshot.Input.RequestRef != r.Input.RequestRef || snapshot.Auth.SubjectID != r.Auth.SubjectID {
+					return api.E("invalid_state", "submission_route_changed")
+				}
+				if api.IsCode(requestErr, "dependency_unavailable") || api.IsCode(requestErr, "overloaded") {
+					return tx.Guard(ctx, work.Claim)
+				}
+				if requestErr != nil {
+					rejection = requestErr
 				} else {
-					rejection = currentRequest(ctx, tx, r.Input.RequestRef, view)
-					if rejection == nil && !api.Equal(view.Request.PreviewRefs, r.Input.PreviewRefs) {
+					rejection = currentRequest(ctx, tx, r.Input.RequestRef, inputView)
+					if rejection == nil && !api.Equal(inputView.Request.PreviewRefs, r.Input.PreviewRefs) {
 						rejection = api.E("invalid_state", "request_target_mismatch")
 					}
 				}
