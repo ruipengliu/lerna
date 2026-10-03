@@ -27,7 +27,7 @@ export function MethodConsole({
   const [error, setError] = useState("");
   const [running, setRunning] = useState("");
   const [result, setResult] = useState<{ binding: string; value: JSONValue | Receipt }>();
-  const binding = `${client.registry.discovery.identity_scope}:${client.registry.discovery.identity_revision}:${method?.name ?? ""}:${target}`;
+  const binding = `${client.registry.discovery.identity_scope}:${client.registry.discovery.identity_revision}:${method?.name ?? ""}:${target}:${revision}:${expires}:${JSON.stringify(payload)}`;
   useEffect(() => {
     try {
       setPayload(preset?.payload ?? (method ? initialPayload(method.input_schema) : {}));
@@ -48,6 +48,8 @@ export function MethodConsole({
     "task.input",
     "task.accept_result",
     "interaction.input",
+    "presentation.rendered",
+    "application_event",
   ].includes(method.name);
   const invoke = async () => {
     if (!valid || requiresTrustedView) return;
@@ -155,8 +157,8 @@ export function MethodConsole({
       </button>
       {requiresTrustedView && (
         <p className="notice">
-          此方法需要完整原请求及必需正文。请先查询 confirmation.read 或 input_request.read，
-          在受信请求视图中核验准确版本后提交。
+          此方法需要完整原请求、必需正文或已登记事件绑定。请先查询 confirmation.read、
+          input_request.read 或打开 Surface，在受信视图中核验准确版本后提交。
         </p>
       )}
       {error && (

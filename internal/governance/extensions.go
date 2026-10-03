@@ -841,7 +841,7 @@ func (s *Service) ApprovalUseTx(ctx context.Context, tx runtime.Tx, in ApprovalU
 	}
 	out := ApprovalUse{UseID: in.UseID, ApprovalRef: in.ApprovalRef, TargetRef: in.TargetRef, InstallLockRef: in.InstallLockRef, IssuedAt: api.Time(now), StartBefore: expires, RequestDigest: digest}
 	if s.Ports.Proof != nil {
-		digest, e := api.Digest(in)
+		digest, e := ApprovalUseDigest(out)
 		if e != nil {
 			return old, e
 		}
@@ -852,6 +852,10 @@ func (s *Service) ApprovalUseTx(ctx context.Context, tx runtime.Tx, in ApprovalU
 	}
 	err = tx.Create(ctx, ns("approval_uses"), in.UseID, in.ApprovalRef.ObjectID, out)
 	return out, err
+}
+func ApprovalUseDigest(out ApprovalUse) (string, error) {
+	out.Proof = ""
+	return api.Digest(out)
 }
 func (s *Service) advanceRollout(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in RolloutObservation) (runtime.Outcome, error) {
 	if err := requireRole(a, "rollout_observer"); err != nil {

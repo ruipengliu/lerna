@@ -13,13 +13,21 @@ type ContentUploader interface {
 	ReceiveTransferBytes(context.Context, runtime.Scope, runtime.Auth, string, []byte) (memory.TransferStatus, error)
 }
 type DevelopmentConfiguration struct {
-	TenantID            string           `json:"tenant_id"`
-	ContentPolicyRef    api.ComponentRef `json:"content_policy_ref"`
-	TaskPolicyRef       api.ComponentRef `json:"task_policy_ref"`
-	Budget              []api.Amount     `json:"budget"`
-	GoalSchema          api.Schema       `json:"goal_schema"`
-	RetentionSeconds    uint64           `json:"retention_seconds"`
-	TaskDeadlineSeconds uint64           `json:"task_deadline_seconds"`
+	TenantID              string             `json:"tenant_id"`
+	ContentPolicyRef      api.ComponentRef   `json:"content_policy_ref"`
+	TaskPolicyRef         api.ComponentRef   `json:"task_policy_ref"`
+	Budget                []api.Amount       `json:"budget"`
+	GoalSchema            api.Schema         `json:"goal_schema"`
+	RetentionSeconds      uint64             `json:"retention_seconds"`
+	TaskDeadlineSeconds   uint64             `json:"task_deadline_seconds"`
+	ApplicationBindingRef *api.ObjectRef     `json:"application_binding_ref,omitempty"`
+	ApplicationEvents     []DevelopmentEvent `json:"application_events,omitempty"`
+}
+
+type DevelopmentEvent struct {
+	Name             string     `json:"name"`
+	Schema           api.Schema `json:"schema"`
+	RequiresRendered bool       `json:"requires_rendered"`
 }
 
 func (s *Server) currentSession(w http.ResponseWriter, r *http.Request) {

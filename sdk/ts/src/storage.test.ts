@@ -69,3 +69,25 @@ it("未结命令不能被清理，最终原回执不能被异内容或倒退阶�
   expect(await store.get(command.logical_service_id, command.command_id)).toBeUndefined();
   await store.close();
 });
+
+it("清除已结浏览器副本只影响当前主体，未结原命令继续可恢复", async () => {
+  const factory = new IDBFactory();
+  const store = new IndexedDBCommands("scope-a", { factory, name: "clear-completed" });
+  const other = new IndexedDBCommands("scope-b", { factory, name: "clear-completed" });
+  await store.save(command);
+  const complete = { ...command, command_id: "command_00000000000000000000000000000002" };
+  await store.save(complete);
+  await store.receipt(complete.logical_service_id, complete.command_id, {
+    command_id: complete.command_id,
+    request_digest: complete.request_digest,
+    stage: "rejected",
+    decided_at: "2026-10-03T00:00:00Z",
+    error: { code: "expired", scope: "command", reason: "expired", retry: "none" },
+  });
+  await other.save({ ...complete, identity_scope: "scope-b", status: "done" });
+  expect(await store.clearCompleted()).toBe(1);
+  expect(await store.pending()).toEqual([command]);
+  expect(await other.get(complete.logical_service_id, complete.command_id)).toBeDefined();
+  await store.close();
+  await other.close();
+});

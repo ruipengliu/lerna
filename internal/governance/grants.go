@@ -232,11 +232,21 @@ func (s *Service) issueGrant(ctx context.Context, tx runtime.Tx, auth runtime.Au
 	if in.Grant.GrantID != c.TargetID {
 		return runtime.Outcome{}, api.E("invalid_request", "target_mismatch")
 	}
+	if len(in.ParentGrantRefs) > 32 {
+		return runtime.Outcome{}, api.E("invalid_request", "parent_grant_limit")
+	}
 	confirm, pending, err := s.beginConfirmed(ctx, tx, auth, c, in.PreviewRefs, in.ConfirmationExpiresAt)
 	if err != nil || confirm == nil {
 		return pending, err
 	}
-	for _, pr := range in.ParentGrantRefs {
+	parentRefs, err := s.resolveGrantParents(ctx, tx, in.ParentGrantRefs)
+	if err != nil {
+		return runtime.Outcome{}, err
+	}
+	for _, pr := range parentRefs {
+		if pr.ObjectID == in.Grant.GrantID {
+			return runtime.Outcome{}, api.E("invalid_request", "grant_dependency_cycle")
+		}
 		if err = ownerRef(tx.Scope(), pr); err != nil {
 			return runtime.Outcome{}, err
 		}
@@ -254,11 +264,25 @@ func (s *Service) issueGrant(ctx context.Context, tx runtime.Tx, auth runtime.Au
 		if minTime(parent.ExpiresAt, in.Grant.ExpiresAt) != in.Grant.ExpiresAt {
 			return runtime.Outcome{}, api.E("forbidden", "scope_exceeded")
 		}
+		start, e := api.ParseTime(parent.NotBefore)
+		if e != nil {
+			return runtime.Outcome{}, e
+		}
+		childStart, e := api.ParseTime(in.Grant.NotBefore)
+		if e != nil {
+			return runtime.Outcome{}, e
+		}
+		if childStart.Before(start) || !api.Equal(parent.SubjectRef, in.Grant.SubjectRef) || parent.Mode == "once" && in.Grant.Mode != "once" {
+			return runtime.Outcome{}, api.E("forbidden", "scope_exceeded")
+		}
 	}
 	if err = s.consumeConfirmation(ctx, tx, auth, confirm, c.CommandID); err != nil {
 		return runtime.Outcome{}, err
 	}
 	if err = s.ProvisionGrantTx(ctx, tx, auth, in.Grant); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if err = tx.Create(ctx, ns("grant_parents"), in.Grant.GrantID, "", GrantParents{GrantID: in.Grant.GrantID, Refs: in.ParentGrantRefs}); err != nil {
 		return runtime.Outcome{}, err
 	}
 	ref := tx.Scope().Ref(in.Grant.GrantID, 1)
@@ -460,6 +484,66 @@ func validateUse(scope runtime.Scope, auth runtime.Auth, in UseRequest) error {
 	}
 	return api.ValidateAmounts(in.RequestedUnits)
 }
+
+// 原父边永久保留。使用时解析完整交集，并按稳定 grant ID 锁当前许可和账本。
+// 这样父撤回立即阻断子许可，once 与金额预留也无法经兄弟子许可复制。
+func (s *Service) resolveGrantParents(ctx context.Context, tx runtime.Tx, roots []api.ObjectRef) ([]api.ObjectRef, error) {
+	seen := map[string]api.ObjectRef{}
+	active := map[string]bool{}
+	var visit func(api.ObjectRef, int) error
+	visit = func(ref api.ObjectRef, depth int) error {
+		if depth > 8 {
+			return api.E("invalid_request", "grant_dependency_depth")
+		}
+		if err := ownerRef(tx.Scope(), ref); err != nil {
+			return err
+		}
+		if active[ref.ObjectID] {
+			return api.E("invalid_request", "grant_dependency_cycle")
+		}
+		if old, ok := seen[ref.ObjectID]; ok {
+			if !api.Equal(old, ref) {
+				return api.E("invalid_request", "grant_revision_conflict")
+			}
+			return nil
+		}
+		if len(seen) >= 128 {
+			return api.E("invalid_request", "grant_dependency_limit")
+		}
+		seen[ref.ObjectID] = ref
+		active[ref.ObjectID] = true
+		var parents GrantParents
+		err := tx.GetVersion(ctx, ns("grant_parents"), ref.ObjectID, 1, &parents)
+		if err != nil && !errMissing(err) {
+			return err
+		}
+		if err == nil {
+			for _, parent := range parents.Refs {
+				if e := visit(parent, depth+1); e != nil {
+					return e
+				}
+			}
+		}
+		active[ref.ObjectID] = false
+		return nil
+	}
+	rootSeen := map[string]bool{}
+	for _, root := range roots {
+		if rootSeen[root.ObjectID] {
+			return nil, api.E("invalid_request", "duplicate_grant")
+		}
+		rootSeen[root.ObjectID] = true
+		if err := visit(root, 1); err != nil {
+			return nil, err
+		}
+	}
+	refs := make([]api.ObjectRef, 0, len(seen))
+	for _, ref := range seen {
+		refs = append(refs, ref)
+	}
+	sort.Slice(refs, func(i, j int) bool { return refs[i].ObjectID < refs[j].ObjectID })
+	return refs, nil
+}
 func (s *Service) checkUse(ctx context.Context, tx runtime.Tx, auth runtime.Auth, in UseRequest, consume bool) (UseReceipt, error) {
 	if err := validateUse(tx.Scope(), auth, in); err != nil {
 		return UseReceipt{}, err
@@ -477,8 +561,11 @@ func (s *Service) checkUse(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 		out.Decision = "denied"
 		out.Reason = "window_expired"
 	}
-	refs := append([]api.ObjectRef(nil), in.GrantRefs...)
-	sort.Slice(refs, func(i, j int) bool { return refs[i].ObjectID < refs[j].ObjectID })
+	refs, err := s.resolveGrantParents(ctx, tx, in.GrantRefs)
+	if err != nil {
+		return UseReceipt{}, err
+	}
+	out.GrantRefs = refs
 	seen := map[string]bool{}
 	type update struct {
 		usage    GrantUsage
@@ -574,7 +661,11 @@ func (s *Service) UseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, i
 		return out, err
 	}
 	if s.Ports.Proof != nil && out.Decision == "allowed" {
-		out.Proof, err = s.Ports.Proof.SignLocal(ProofStatement{TenantID: tx.Scope().TenantID, IssuerID: tx.Scope().OwnerID, AudienceID: in.TargetRef.OwnerID, Purpose: "grant_use", ObjectRef: tx.Scope().Ref(in.UseID, 1), Digest: out.RequestDigest, IssuedAt: out.IssuedAt, StartBefore: out.StartBefore})
+		proofDigest, digestErr := UseReceiptDigest(out)
+		if digestErr != nil {
+			return out, digestErr
+		}
+		out.Proof, err = s.Ports.Proof.SignLocal(ProofStatement{TenantID: tx.Scope().TenantID, IssuerID: tx.Scope().OwnerID, AudienceID: in.TargetRef.OwnerID, Purpose: "grant_use", ObjectRef: tx.Scope().Ref(in.UseID, 1), Digest: proofDigest, IssuedAt: out.IssuedAt, StartBefore: out.StartBefore})
 		if err != nil {
 			return out, err
 		}
@@ -591,6 +682,13 @@ func (s *Service) UseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, i
 		return out, err
 	}
 	return out, nil
+}
+
+// UseReceiptDigest 包含完整父许可链、当前决定和原请求摘要，排除签名承载字段。
+func UseReceiptDigest(out UseReceipt) (string, error) {
+	out.Proof = ""
+	out.ProofRef = nil
+	return api.Digest(out)
 }
 func (s *Service) checkGrantQuery(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, q api.Query, in UseRequest) (UseReceipt, error) {
 	var out UseReceipt
@@ -785,6 +883,25 @@ func (s *Service) createAcceptance(ctx context.Context, tx runtime.Tx, auth runt
 	if !in.Scope.NonHardLimitAcknowledged || in.Scope.ReservationMethod == "" || len(in.Scope.Units) == 0 {
 		return runtime.Outcome{}, api.E("invalid_request", "estimate_risk_acceptance_required")
 	}
+	if in.AcceptanceID != c.TargetID || in.ScopeRef.TenantID != tx.Scope().TenantID || in.ExplanationRef.TenantID != tx.Scope().TenantID {
+		return runtime.Outcome{}, api.E("forbidden", "acceptance_scope_mismatch")
+	}
+	scopeSeen, explanationSeen := false, false
+	for _, preview := range in.PreviewRefs {
+		scopeSeen = scopeSeen || api.Equal(preview, in.ScopeRef)
+		explanationSeen = explanationSeen || api.Equal(preview, in.ExplanationRef)
+	}
+	if !scopeSeen || !explanationSeen {
+		return runtime.Outcome{}, api.E("invalid_request", "acceptance_preview_incomplete")
+	}
+	if len(in.Scope.TaskRefs) == 0 || len(in.Scope.TaskRefs) > 128 || len(in.Scope.CapabilityRefs) == 0 || len(in.Scope.CapabilityRefs) > 32 || !subset(in.Scope.Units, in.Scope.Units) {
+		return runtime.Outcome{}, api.E("invalid_request", "acceptance_scope_invalid")
+	}
+	for _, task := range in.Scope.TaskRefs {
+		if err := ownerRef(tx.Scope(), task); err != nil {
+			return runtime.Outcome{}, api.E("unsupported", "estimate_requires_same_owner_transaction")
+		}
+	}
 	if err := api.ValidateAmounts(in.Scope.Budget); err != nil {
 		return runtime.Outcome{}, err
 	}
@@ -825,8 +942,17 @@ func (s *Service) revokeAcceptance(ctx context.Context, tx runtime.Tx, auth runt
 	return runtime.Applied(StateOutput{Ref: tx.Scope().Ref(in.Ref.ObjectID, out.Revision), State: out.State}), nil
 }
 func (s *Service) CheckAcceptanceTx(ctx context.Context, tx runtime.Tx, in AcceptanceCheck) error {
-	if in.Mode != "estimate" {
+	if in.Mode == "strict" {
 		return nil
+	}
+	if in.Mode != "estimate" {
+		return api.E("invalid_request", "unsupported_cost_mode")
+	}
+	if err := ownerRef(tx.Scope(), in.TaskRef); err != nil {
+		return api.E("unsupported", "estimate_requires_same_owner_transaction")
+	}
+	if err := api.ValidateAmounts(in.Requested); err != nil {
+		return err
 	}
 	if err := ownerRef(tx.Scope(), in.AcceptanceRef); err != nil {
 		return api.E("unsupported", "estimate_requires_same_owner_transaction")
@@ -886,6 +1012,7 @@ func (s *Service) allocateLease(ctx context.Context, tx runtime.Tx, auth runtime
 	if use.Decision != "allowed" {
 		return runtime.Outcome{}, api.E("forbidden", use.Reason)
 	}
+	request.GrantRefs = use.GrantRefs
 	out := GrantLease{LeaseID: in.LeaseID, Revision: 1, EndpointID: in.EndpointID, InstanceID: in.InstanceID, GrantRefs: request.GrantRefs, Scope: request, Limits: in.Limits, ExpiresAt: use.StartBefore, State: "open", Cumulative: []api.Amount{}, Reserved: in.Limits}
 	out.Mode = "continuous"
 	out.IssuedAt = use.IssuedAt

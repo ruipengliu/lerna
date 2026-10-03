@@ -54,6 +54,10 @@ it("出版前共同保存准确bytes与固定原命令，重开后不换期限�
   ).rejects.toThrow(/identity_conflict/);
   await reopened.finish(fixture.transfer_id);
   expect(await reopened.pending()).toEqual([]);
+  const unfinished = { ...fixture, transfer_id: "transfer_00000000000000000000000000000002" };
+  await reopened.save(unfinished);
+  expect(await reopened.clearCompleted()).toBe(1);
+  expect(await reopened.pending()).toEqual([unfinished]);
   await reopened.close();
   await other.close();
 });

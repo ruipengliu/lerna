@@ -1,5 +1,5 @@
-import { Ajv2020, type ValidateFunction } from "ajv/dist/2020";
-import addFormats from "ajv-formats";
+import { Validator } from "@cfworker/json-schema";
+import type { Schema as ValidationSchema } from "@cfworker/json-schema";
 import { CORE_SCHEMA, CORE_SCHEMA_DIGEST } from "./contracts.gen";
 import { canonical, digest, jsonBytes, parseStrict, ProtocolError, sha256 } from "./json";
 import type {
@@ -156,17 +156,14 @@ const responseSchema = object({
   result_kind: { enum: ["receipt", "query_result", "error"] },
   payload: {},
 });
-function compiler(): Ajv2020 {
-  const ajv = new Ajv2020({
-    strict: false,
-    allErrors: false,
-    useDefaults: false,
-    coerceTypes: false,
-    removeAdditional: false,
-    validateFormats: true,
-  });
-  addFormats(ajv);
-  return ajv;
+type ValidateFunction = (value: unknown) => boolean;
+function compiler(): { compile: (schema: unknown) => ValidateFunction } {
+  return {
+    compile: (schema) => {
+      const validator = new Validator(structuredClone(schema) as ValidationSchema, "2020-12", true);
+      return (value) => validator.validate(value).valid;
+    },
+  };
 }
 const envelope = compiler();
 const validateError = envelope.compile(errorSchema);
@@ -229,7 +226,7 @@ export class ContractRegistry {
       typeof core.$defs !== "object"
     )
       throw new ProtocolError("invalid_core_schema");
-    const ajv = compiler();
+    const validator = compiler();
     const input = new Map<string, ValidateFunction>();
     const output = new Map<string, ValidateFunction>();
     for (const method of discovery.methods) {
@@ -237,8 +234,8 @@ export class ContractRegistry {
       if ((await digest([method.input_schema, method.output_schema])) !== method.schema_digest)
         throw new ProtocolError("method_digest_mismatch");
       for (const schema of [method.input_schema, method.output_schema]) localReferences(schema);
-      input.set(method.name, ajv.compile({ ...method.input_schema, $defs: core.$defs }));
-      output.set(method.name, ajv.compile({ ...method.output_schema, $defs: core.$defs }));
+      input.set(method.name, validator.compile({ ...method.input_schema, $defs: core.$defs }));
+      output.set(method.name, validator.compile({ ...method.output_schema, $defs: core.$defs }));
     }
     if ((await digest(discovery.methods)) !== discovery.methods_digest)
       throw new ProtocolError("methods_digest_mismatch");
@@ -308,6 +305,7 @@ export class ContractRegistry {
         receipt.output === undefined
       )
         throw new ProtocolError("invalid_accepted_receipt");
+      this.validateOutput(command.method, receipt.output);
     } else if (receipt.stage === "applied") {
       if (!receipt.decided_at || receipt.error || receipt.output === undefined)
         throw new ProtocolError("invalid_applied_receipt");

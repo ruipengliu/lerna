@@ -109,6 +109,23 @@ func TestOfflineLeaseBindsOriginalInstanceAndNeverRestoresOnceOnReconcile(t *tes
 	if err = api.Decode(used.Output, &receipt); err != nil || receipt.Decision != "allowed" {
 		t.Fatalf("lease use: %+v %v", receipt, err)
 	}
+	digest, err := governance.UseReceiptDigest(receipt)
+	if err != nil {
+		t.Fatal(err)
+	}
+	statement := governance.ProofStatement{TenantID: device.scope.TenantID, IssuerID: device.scope.OwnerID, AudienceID: receipt.TargetRef.OwnerID, Purpose: "grant_use", ObjectRef: device.scope.Ref(receipt.UseID, 1), Digest: digest, IssuedAt: receipt.IssuedAt, StartBefore: receipt.StartBefore}
+	if err = proof.VerifyLocal(receipt.Proof, statement, time.Now()); err != nil {
+		t.Fatal(err)
+	}
+	modified := receipt
+	modified.CostBound = []api.Amount{{Unit: "USD", Value: "0"}}
+	statement.Digest, err = governance.UseReceiptDigest(modified)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = proof.VerifyLocal(receipt.Proof, statement, time.Now()); err == nil {
+		t.Fatal("signed original use accepted altered cost bound")
+	}
 	device.auth.Roles = append(device.auth.Roles, "usage_reporter")
 	usage := api.UsageSnapshot{SourceRef: use.TargetRef, UsageRevision: 1, UsageDigest: api.Hash([]byte("device observed never started")), Cumulative: []api.Amount{{Unit: "USD", Value: "0"}}, SpendingClosed: true, UsageFinal: true, ProofRefs: []api.ContentRef{ref(t, device, "closure")}}
 	_, settling := command(t, device, "grant.use.settle", use.UseID, governance.SettleRequest{UseID: use.UseID, Usage: usage}, nil)

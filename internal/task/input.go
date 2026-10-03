@@ -50,6 +50,17 @@ func (s *Service) RequestViewTx(ctx context.Context, tx runtime.Tx, auth runtime
 		return InputRequestView{}, api.E("forbidden", "request_owner_mismatch")
 	}
 	var req api.InputRequest
+	var birth api.InputRequest
+	if err := tx.GetVersion(ctx, inputs, ref.ObjectID, 1, &birth); err != nil {
+		return InputRequestView{}, err
+	}
+	t, e := getTask(ctx, tx, birth.TargetRef.ObjectID)
+	if e != nil {
+		return InputRequestView{}, e
+	}
+	if e = principal(auth, t); e != nil {
+		return InputRequestView{}, e
+	}
 	rev, e := tx.Get(ctx, inputs, ref.ObjectID, &req)
 	if e != nil {
 		return InputRequestView{}, e
@@ -57,12 +68,8 @@ func (s *Service) RequestViewTx(ctx context.Context, tx runtime.Tx, auth runtime
 	if ref.Revision != rev {
 		return InputRequestView{}, api.E("revision_conflict", "wrong_request_version")
 	}
-	t, e := getTask(ctx, tx, req.TargetRef.ObjectID)
-	if e != nil {
-		return InputRequestView{}, e
-	}
-	if e = principal(auth, t); e != nil {
-		return InputRequestView{}, e
+	if req.TargetRef.ObjectID != birth.TargetRef.ObjectID {
+		return InputRequestView{}, api.E("invalid_state", "input_target_changed")
 	}
 	schema, ok := s.answerSchemas[componentKey(req.AnswerSchemaRef)]
 	if !ok {

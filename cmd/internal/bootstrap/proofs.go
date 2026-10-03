@@ -12,12 +12,13 @@ import (
 const proofJob = "platform.publish_proof"
 
 type sealedProof struct {
-	Ref       api.ContentRef       `json:"ref"`
-	Compact   string               `json:"compact"`
-	Control   *api.ControlSnapshot `json:"control,omitempty"`
-	Closure   *task.ClosureView    `json:"closure,omitempty"`
-	Published bool                 `json:"published"`
-	Revision  uint64               `json:"revision"`
+	Ref        api.ContentRef         `json:"ref"`
+	Compact    string                 `json:"compact"`
+	Control    *api.ControlSnapshot   `json:"control,omitempty"`
+	Closure    *task.ClosureView      `json:"closure,omitempty"`
+	Allocation *api.AllocationClosure `json:"allocation,omitempty"`
+	Published  bool                   `json:"published"`
+	Revision   uint64                 `json:"revision"`
 }
 type controlProof struct{ a *App }
 
@@ -46,6 +47,38 @@ func (p controlProof) SealControl(ctx context.Context, tx runtime.Tx, c api.Cont
 }
 
 type closureProof struct{ a *App }
+
+func (p closureProof) SealAllocationClosureTx(ctx context.Context, tx runtime.Tx, c api.AllocationClosure) (api.ContentRef, error) {
+	c.ProofRef = api.ContentRef{}
+	digest, err := api.Digest(c)
+	if err != nil {
+		return api.ContentRef{}, err
+	}
+	id := stableID("content", "allocation-closure/"+digest)
+	var old sealedProof
+	if _, err = tx.Get(ctx, "platform.proofs", id, &old); err == nil {
+		if old.Allocation == nil || !api.Equal(*old.Allocation, c) {
+			return api.ContentRef{}, api.E("idempotency_conflict", "allocation_closure_changed")
+		}
+		return old.Ref, nil
+	} else if !api.IsCode(err, "not_found") {
+		return api.ContentRef{}, err
+	}
+	now, err := tx.Now(ctx)
+	if err != nil {
+		return api.ContentRef{}, err
+	}
+	compact, err := p.a.Keys.Sign("development-es256", platform.ProofClaims{TenantID: tx.Scope().TenantID, Issuer: tx.Scope().OwnerID, Audience: c.ParentOwnerID, Purpose: "allocation_closure", ObjectRef: tx.Scope().Ref(c.AllocationID, c.UsageRevision), Digest: digest, WindowID: id, IssuedAt: api.Time(now), StartBefore: api.Time(now.Add(time.Hour))})
+	if err != nil {
+		return api.ContentRef{}, err
+	}
+	ref := api.ContentRef{TenantID: tx.Scope().TenantID, OwnerID: tx.Scope().OwnerID, ContentID: id, Version: 1, Hash: api.Hash([]byte(compact)), MediaType: "application/jose", ByteLength: uint64(len(compact))}
+	err = tx.Create(ctx, "platform.proofs", id, c.AllocationID, sealedProof{Ref: ref, Compact: compact, Allocation: &c, Revision: 1})
+	if err == nil {
+		_, err = tx.Raise(ctx, proofJob, "proof/"+id, tx.Scope().Ref(id, 1), now)
+	}
+	return ref, err
+}
 
 func (p closureProof) SealClosureTx(ctx context.Context, tx runtime.Tx, c task.ClosureView) (api.ContentRef, error) {
 	c.ProofRef = api.ContentRef{}

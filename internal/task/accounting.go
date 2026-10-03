@@ -43,6 +43,13 @@ func (s *Service) reserveTx(ctx context.Context, tx runtime.Tx, t *taskState, ki
 	if !api.IsCode(e, "not_found") {
 		return Reservation{}, e
 	}
+	rows, e := tx.List(ctx, reservations, t.Task.TaskID, "", int(s.config.MaxRelations)+1)
+	if e != nil {
+		return Reservation{}, e
+	}
+	if uint64(len(rows)) >= s.config.MaxRelations {
+		return Reservation{}, api.E("overloaded", "reservation_capacity")
+	}
 	r := Reservation{ReservationID: api.NewID("reservation"), Revision: 1, TaskID: t.Task.TaskID, SourceKind: kind, SourceRef: source, BindingState: "bound", State: "open", Units: []ReservationUnit{}, Incidents: []string{}}
 	for _, a := range bound {
 		index := -1

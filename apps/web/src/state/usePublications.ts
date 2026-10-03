@@ -2,57 +2,22 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   getJSON,
   endpoint,
-  isObject,
   jsonBytes,
   IndexedDBPublications,
   preparePublication,
   publishOriginal,
-  validateRecord,
   validateSchema,
+  newID,
+  developmentConfig,
 } from "@harness/sdk";
 import type {
-  Amount,
-  ComponentRef,
   ContentRef,
   HarnessClient,
   JSONValue,
   Receipt,
-  Schema,
+  DevelopmentConfig,
 } from "@harness/sdk";
 import type { ReportInput } from "../features/ReportForm";
-export interface DevelopmentConfig {
-  tenant_id: string;
-  content_policy_ref: ComponentRef;
-  task_policy_ref: ComponentRef;
-  budget: Amount[];
-  goal_schema: Schema;
-  retention_seconds: number;
-  task_deadline_seconds: number;
-}
-function configView(value: JSONValue): DevelopmentConfig {
-  if (
-    !isObject(value) ||
-    typeof value.tenant_id !== "string" ||
-    !Number.isSafeInteger(value.retention_seconds) ||
-    typeof value.retention_seconds !== "number" ||
-    value.retention_seconds < 60 ||
-    value.retention_seconds > 31536000 ||
-    !Number.isSafeInteger(value.task_deadline_seconds) ||
-    typeof value.task_deadline_seconds !== "number" ||
-    value.task_deadline_seconds < 1 ||
-    value.task_deadline_seconds > 31536000 ||
-    !Array.isArray(value.budget) ||
-    value.budget.length < 1 ||
-    value.budget.length > 100 ||
-    !isObject(value.goal_schema)
-  )
-    throw new Error("开发配置缺少准确策略、预算或有界期限");
-  validateRecord("Id", value.tenant_id);
-  validateRecord("ComponentRef", value.content_policy_ref);
-  validateRecord("ComponentRef", value.task_policy_ref);
-  for (const amount of value.budget) validateRecord("Amount", amount);
-  return value as unknown as DevelopmentConfig;
-}
 export function usePublications(
   client: HarnessClient | undefined,
   onGoal: (receipt: Receipt | undefined, ref: ContentRef) => void,
@@ -82,7 +47,7 @@ export function usePublications(
     setStore(next);
     void getJSON(fetch, endpoint(new URL(location.origin), "/api/development/config"), 262144)
       .then((value) => {
-        if (active) setConfig({ identity, value: configView(value) });
+        if (active) setConfig({ identity, value: developmentConfig(value) });
       })
       .catch(() => {
         if (active) setConfig(undefined);
@@ -110,6 +75,7 @@ export function usePublications(
     ) => {
       if (!client || !store || !current) throw new Error("当前未开放准确出版配置");
       const originalIdentity = identity;
+      const onPublished = callback.current;
       setError("");
       setStatus("");
       const now = Date.now();
@@ -135,7 +101,7 @@ export function usePublications(
         if (identityRef.current === originalIdentity) {
           setPending((await store.pending()).length);
           if (identityRef.current === originalIdentity)
-            callback.current(result.receipt, result.content_ref);
+            onPublished(result.receipt, result.content_ref);
         }
         return result;
       } catch (failure) {
@@ -165,7 +131,7 @@ export function usePublications(
         await publish(input as unknown as JSONValue, (ref) =>
           client.makeCommand(
             "task.submit",
-            client.registry.discovery.logical_service_id,
+            newID("task"),
             {
               orchestrator_id: client.registry.discovery.logical_service_id,
               goal_ref: ref as unknown as JSONValue,
@@ -186,6 +152,7 @@ export function usePublications(
   const recover = useCallback(async () => {
     if (!client || !store) return;
     const originalIdentity = identity;
+    const onRecovered = callback.current;
     setError("");
     for (const intent of await store.pending()) {
       if (identityRef.current !== originalIdentity) return;
@@ -196,7 +163,7 @@ export function usePublications(
           },
         });
         if (identityRef.current === originalIdentity)
-          callback.current(result.receipt, result.content_ref);
+          onRecovered(result.receipt, result.content_ref);
       } catch (failure) {
         if (identityRef.current !== originalIdentity) return;
         setError(failure instanceof Error ? failure.message : "原出版当前不能核验");
@@ -204,6 +171,7 @@ export function usePublications(
     }
     if (identityRef.current === originalIdentity) setPending((await store.pending()).length);
   }, [client, store, identity]);
+  const clearCompleted = useCallback(async () => (store ? store.clearCompleted() : 0), [store]);
   return {
     config: current,
     available:
@@ -220,5 +188,6 @@ export function usePublications(
     publishRaw,
     submitReport,
     recover,
+    clearCompleted,
   };
 }

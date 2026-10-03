@@ -24,6 +24,9 @@ const labels: Record<string, string> = {
   confirmation_id: "原确认 ID",
   decision: "本人决定",
   prepare_deadline: "准备完成截止（UTC）",
+  title: "报告标题",
+  body: "报告正文",
+  save_path: "输出文件",
 };
 export function resolveSchema(value: unknown, depth = 0): Schema {
   if (depth > 8 || !isObject(value)) throw new Error("不支持此表单 Schema");
@@ -82,6 +85,7 @@ function JSONField({
         aria-label={name}
         value={text}
         rows={Math.min(8, Math.max(3, text.split("\n").length))}
+        maxLength={262144}
         spellCheck={false}
         onChange={(event) => {
           const next = event.target.value;
@@ -229,6 +233,19 @@ export function RestrictedForm({
                   />
                   启用该声明
                 </label>
+              ) : field.type === "string" &&
+                (key === "body" ||
+                  (typeof field.maxLength === "number" && field.maxLength > 4096)) ? (
+                <textarea
+                  id={title}
+                  aria-label={label}
+                  value={typeof fieldValue === "string" ? fieldValue : ""}
+                  rows={6}
+                  maxLength={
+                    typeof field.maxLength === "number" ? Math.min(field.maxLength, 65536) : 4096
+                  }
+                  onChange={(event) => update(event.target.value)}
+                />
               ) : field.type === "string" ? (
                 <input
                   id={title}

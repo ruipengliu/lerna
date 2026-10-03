@@ -247,4 +247,45 @@ func TestCurrentFullCoverageAndChecksCreateImmutableResultBeforePublication(t *t
 	if !api.Equal(before, api.Raw(again.Result)) {
 		t.Fatal("pending publisher rewrote authoritative Result")
 	}
+	if err = bridge.service.Register(h.dispatch.Registry); err != nil {
+		t.Fatal(err)
+	}
+	maintainer := h.auth
+	maintainer.Roles = []string{"maintainer", "evidence_consumer"}
+	defectID := api.NewID("defect")
+	r, err := h.dispatch.Command(context.Background(), maintainer, api.Raw(h.command("evidence.defect.register", defectID, nil, governance.DefectRegister{DefectID: defectID, RuleRef: rule.RuleRef, EvaluatorRef: rule.RuleRef, ScopeRef: check.ScopeRef, EvidenceRef: h.content("late real defect registry fixture")})))
+	if err != nil || r.Stage != "applied" {
+		t.Fatalf("late defect %+v %v", r, err)
+	}
+	drainKind(t, h, "governance.defect")
+	pageBytes, err := h.dispatch.Query(context.Background(), maintainer, api.Raw(api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: h.scope.OwnerID, QueryID: api.NewID("query"), Method: "evidence.notice.list", TargetID: h.scope.OwnerID, Payload: api.Raw(api.ListInput{Limit: 100})}))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var notices api.Page[governance.ResultNotice]
+	if err = api.Decode(pageBytes, &notices); err != nil || len(notices.Items) != 1 {
+		t.Fatalf("original governance holder notice missing %s %v", pageBytes, err)
+	}
+	notice := notices.Items[0]
+	transfer := task.ResultNotice{NoticeRef: h.scope.Ref(notice.NoticeID, 1), ResultRef: notice.ResultRef, ConsumerTaskRef: notice.ConsumerTaskRef, HolderRef: notice.HolderRef, DefectRef: notice.DefectRef, Reason: notice.Reason, RegisteredAt: notice.RegisteredAt}
+	receive := func(n task.ResultNotice) error {
+		_, err := h.store.Within(context.Background(), h.scope, []string{"task"}, func(tx runtime.Tx) error {
+			return h.service.RecordResultNoticeTx(context.Background(), tx, h.trusted(), n)
+		})
+		return err
+	}
+	if err = receive(transfer); err != nil {
+		t.Fatal(err)
+	}
+	if err = receive(transfer); err != nil {
+		t.Fatal(err)
+	}
+	transfer.Reason = "different text at original notice identity"
+	if err = receive(transfer); !api.IsCode(err, "idempotency_conflict") {
+		t.Fatalf("original notice changed %+v %v", transfer, err)
+	}
+	view, err := h.service.Result(context.Background(), h.store, h.scope, h.auth, current.TaskID, task.ResultInput{})
+	if err != nil || !api.Equal(before, api.Raw(view.Result)) || len(view.NoticeRefs) != 1 || len(view.Notices) != 1 || view.Notices[0] != notice.Reason {
+		t.Fatalf("late defect lost or rewrote Result %+v %v", view, err)
+	}
 }

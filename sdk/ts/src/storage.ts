@@ -19,6 +19,7 @@ export interface CommandStore {
   pending(): Promise<StoredCommand[]>;
   get(owner: string, commandID: string): Promise<StoredCommand | undefined>;
   close(): Promise<void>;
+  clearCompleted?(): Promise<number>;
 }
 export interface IndexedDBOptions {
   name?: string;
@@ -189,5 +190,25 @@ export class IndexedDBCommands implements CommandStore {
   }
   async close(): Promise<void> {
     (await this.database).close();
+  }
+  async clearCompleted(): Promise<number> {
+    const database = await this.database;
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction("commands", "readwrite", { durability: "strict" });
+      let removed = 0;
+      const read = tx
+        .objectStore("commands")
+        .index("pending")
+        .openCursor([this.identityScope, "done"]);
+      read.onsuccess = () => {
+        const cursor = read.result;
+        if (!cursor) return;
+        cursor.delete();
+        removed++;
+        cursor.continue();
+      };
+      tx.oncomplete = () => resolve(removed);
+      tx.onabort = () => reject(tx.error ?? new ProtocolError("durable_storage_failed"));
+    });
   }
 }

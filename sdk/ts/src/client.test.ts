@@ -287,3 +287,67 @@ it("真实 WebSocket 上普通查询最多占 28 个槽，背压与等待都有�
   await client.close();
   server.close();
 });
+
+it("收到回执后本地耐久提交停滞，等待仍有界且原命令保留未结", async () => {
+  const contract = await registry();
+  const durable = new IndexedDBCommands(identity, {
+    factory: new IDBFactory(),
+    name: "receipt-stall",
+  });
+  const store: CommandStore = {
+    identityScope: identity,
+    save: (value) => durable.save(value),
+    get: (service, id) => durable.get(service, id),
+    pending: () => durable.pending(),
+    close: () => durable.close(),
+    receipt: async () => new Promise(() => {}),
+  };
+  const server = new WebSocketServer({ host: "127.0.0.1", port: 0 });
+  await once(server, "listening");
+  const address = server.address();
+  if (!address || typeof address === "string") throw new Error("no address");
+  const requestDigest = await digest(command);
+  server.on("connection", (socket) => {
+    socket.send(
+      JSON.stringify({
+        type: "ready",
+        connection_id: "connection_00000000000000000000000000000001",
+        logical_service_id: owner,
+        profile: command.profile,
+        transport_profile: "harness-wss/1",
+        methods_digest: contract.methodsDigest,
+        limits: contract.discovery.limits,
+      }),
+    );
+    socket.on("message", (raw) => {
+      const frame = parseStrict(raw.toString()) as { request_seq: number };
+      socket.send(
+        JSON.stringify({
+          type: "response",
+          request_seq: frame.request_seq,
+          result_kind: "receipt",
+          payload: {
+            command_id: command.command_id,
+            request_digest: requestDigest,
+            stage: "applied",
+            decided_at: "2026-10-03T00:00:00Z",
+            output: { saved: true },
+          },
+        }),
+      );
+    });
+  });
+  const client = new HarnessClient({
+    registry: contract,
+    store,
+    url: `ws://127.0.0.1:${address.port}`,
+    requestTimeoutMs: 100,
+  });
+  try {
+    await expect(client.command(command)).rejects.toThrow("response_timeout");
+    expect((await client.pending()).map((value) => value.command_id)).toEqual([command.command_id]);
+  } finally {
+    await client.close();
+    server.close();
+  }
+}, 1000);

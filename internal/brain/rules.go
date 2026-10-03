@@ -118,6 +118,15 @@ func (e *RuleEngine) Request(ctx context.Context, _ string, enc Encoding) (Gener
 	}
 	add("artifact", "text/markdown", string(body))
 	out.Draft = Draft{Kind: "complete", ReasonLocalID: "reason", ArtifactLocalIDs: []string{"artifact"}}
+	// Keep the original immutable artifact when a prior check names its exact
+	// bytes. A new publication identity would invalidate that accurate check.
+	for _, ref := range input.Snapshot.MaterialRefs {
+		if ref.MediaType == "text/markdown" && ref.Hash == api.Hash(body) && ref.ByteLength == uint64(len(body)) {
+			out.Draft.ArtifactLocalIDs = nil
+			out.Draft.ExistingArtifactRefs = []api.ContentRef{ref}
+			break
+		}
+	}
 	if goal.Kind == "answer" {
 		return out, nil
 	}

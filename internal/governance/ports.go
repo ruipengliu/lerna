@@ -78,11 +78,19 @@ type CalibrationGate interface {
 	CheckTx(context.Context, runtime.Tx, RuleDefinition) error
 }
 
+// FormalPlanGate 从独立受信登记核验原数据谱系、partition、candidate 谱系、
+// 准确 manifest 和预冻结政策；提供 ContentRef 或 evaluation_authority
+// 身份本身不能证明未暴露保留集。这里只能同库读事实，不可 Tx 内 RPC。
+type FormalPlanGate interface {
+	CheckTx(context.Context, runtime.Tx, EvaluationPlan) error
+}
+
 type Options struct {
 	PreviewGate     PreviewGate
 	Participants    []string
 	OfflineGate     OfflineGate
 	CalibrationGate CalibrationGate
+	FormalPlanGate  FormalPlanGate
 	EndpointID      string
 	InstanceID      string
 	Content         ContentPort
