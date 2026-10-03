@@ -33,6 +33,9 @@ func definitions() map[string]any {
 type Schema = map[string]any
 
 func Object(properties map[string]any, required ...string) Schema {
+	if required == nil {
+		required = []string{}
+	}
 	return Schema{"type": "object", "properties": properties, "required": required, "additionalProperties": false}
 }
 func Ref(name string) Schema       { return Schema{"$ref": "#/$defs/" + name} }
@@ -152,7 +155,7 @@ func (v *Validator) Validate(raw []byte) error {
 		return err
 	}
 	if err = v.schema.Validate(x); err != nil {
-		return E("invalid_request", "schema_violation")
+		return &Error{Code: "invalid_request", Scope: "request", Reason: "schema_violation", Cause: err}
 	}
 	return nil
 }
