@@ -7,7 +7,7 @@
 ## 当前状态
 
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
-- 切片 02：**in-progress**。八张核心票的 53 条验收与额外票 09 的 5 条验收均已 resolved；最终容量产品 `06ab246`、worker `cdc7ae6` 经 merger 合入 `96a0ecc`。本地完整双库集成 60.305s、竞态 91.786s，通过有限队列、共享配额、动态公平次序、独立类别运行、无执行额度维护及真实旧数据恢复。整片仍待两轴审查、架构审查和准确最终 CI，详见[票06证据](../lerna-02-durable-work/issues/06-fair-capacity-and-quotas.md#comments)。
+- 切片 02：**in-progress**。八张核心票的 53 条验收与额外票 09 的 5 条验收均已 resolved；最终容量产品 `06ab246`、worker `cdc7ae6` 经 merger 合入 `96a0ecc`。本地完整双库集成 60.305s、竞态 91.786s，通过有限队列、共享配额、动态公平次序、独立类别运行、无执行额度维护及真实旧数据恢复。准确审查前提交 `26c9100` 的远端 CI success；独立两轴审查发现4项，单一分支修复中。整片仍待修复复核、架构审查和准确修复后 CI，详见[审查记录](../lerna-02-durable-work/code-review.md)与[票06证据](../lerna-02-durable-work/issues/06-fair-capacity-and-quotas.md#comments)。
 - 切片 03–22：**not-started**。03当前端口复核和04决策纲要仅在/tmp，前置整片退出后再采用、发布和实施。
 
 ## 切片 01 过程检查点（历史记录）
@@ -95,3 +95,9 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 05整合准确7fa7594的[CI37153111359](https://github.com/ruipengliu/lerna/actions/runs/37153111359)已success：工具race1.567s、两库-count1集成14.404s/race34.816s及27项真实v1/v2来源manifest OK。06额外采用[无执行额度时的到期关闭](../lerna-02-durable-work/capacity-expiry-decisions.md)：可信维护短Tx无需新执行Claim即可按原policy/revision准确关闭到期责任；不算hash/attempt/公平执行机会，不抹新修订或异revision Claim。有限维护服务机会与配置可用前提明确；仅决定，等待真实实施验证。
 
 06继续实施；授权代理根据实际静态索引环的差距采用[动态资格公平次序](../lerna-02-durable-work/fair-eligibility-decisions.md)：每lane持久有界tenant FIFO、已等待者保序、新/恢复合格者入尾、分页解析绑定准确head、成功Claim同Tx移尾，配置变更按身份保序。已通过的固定N=2轮转不替代新增动态资格反例；尾部规则仍待真实两库实施验证。03当前端口复核与04准备仍仅在/tmp，不提前发布或启动依赖切片。
+
+## 切片 02 全部核心票与整片审查
+
+06最终worker cdc7ae6 经merger合入96a0ecc；原八张核心票53条AC与额外09的5条AC均resolved。本地必需两库count1集成60.305s、race91.786s，来源27项hash不变。准确根检查点26c9100的[CI37156883508](https://github.com/ruipengliu/lerna/actions/runs/37156883508)实际success：工具生命周期race1.569s、两库集成21.892s/race47.390s、27项来源校验全部OK。
+
+独立Standards/Spec分别3/1项发现，原报告见[两轴审查](../lerna-02-durable-work/code-review.md)。单一实现分支正在修复全部发现；实际Run固定fallback可能使500ms期限内100ms退避的合法重试错过，PG启动错误也丢失可判断原因。绿色审查前CI不关闭发现。整片02仍等待修复后独立复核、最终架构审查、准确新CI与退出证据；03/04仅/tmp准备未开始。
