@@ -150,6 +150,10 @@ func (e evidenceBridge) Check(ctx context.Context, s runtime.Scope, t api.Task, 
 	if requirement == nil || requirement.RuleParametersRef == nil {
 		return api.ConditionResult{}, api.E("revision_conflict", "requirement_changed")
 	}
+	ctx, er := e.a.prepareCompletionCheck(ctx, s, t, req, *requirement.RuleParametersRef)
+	if er != nil {
+		return api.ConditionResult{}, er
+	}
 	paramsBytes, er := e.a.Memory.Read(ctx, s, e.a.ServiceAuth, *requirement.RuleParametersRef, "task.context")
 	if er != nil {
 		return api.ConditionResult{}, er
