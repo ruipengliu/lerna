@@ -6,15 +6,23 @@ import (
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
 	"github.com/ruipengliu/lerna/internal/governance"
+	"github.com/ruipengliu/lerna/internal/task"
 	"github.com/ruipengliu/lerna/runtime"
 	"time"
 )
 
 type taskGate struct{ a *App }
 
+func (g taskGate) CheckSubjectTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth) error {
+	return currentCredentialTx(ctx, tx, auth)
+}
+
 func (g taskGate) Authorize(ctx context.Context, tx runtime.Tx, auth runtime.Auth, purpose string, contents []api.ContentRef, objects []api.ObjectRef) error {
 	if e := currentCredentialTx(ctx, tx, auth); e != nil {
 		return e
+	}
+	if purpose == "child.create" || purpose == "child.new_goal" || purpose == "child.continue" || purpose == "task.delegate" {
+		return api.E("unsupported", "collaboration_adapter_not_configured")
 	}
 	for _, r := range contents {
 		if _, e := g.a.Memory.CheckContentTx(ctx, tx, auth, r, purpose, "cloud", true); e != nil {
@@ -87,6 +95,9 @@ func (g brainGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if e := currentCredentialTx(ctx, tx, auth); e != nil {
 		return e
 	}
+	if e := g.a.Task.CheckDecisionTx(ctx, tx, auth, in.DecisionID); e != nil {
+		return e
+	}
 	if _, e := g.a.Memory.CheckContentTx(ctx, tx, auth, in.SnapshotRef, "brain.input", "cloud", true); e != nil {
 		return e
 	}
@@ -102,6 +113,72 @@ func (g brainGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	}
 	return nil
 }
+
+func (g taskGate) RegisterCoverage(ctx context.Context, tx runtime.Tx, t api.Task, c api.GoalCoverage) error {
+	return (evidenceBridge{g.a}).RegisterCoverage(ctx, tx, t, c)
+}
+func (g taskGate) RegisterCheck(ctx context.Context, tx runtime.Tx, t api.Task, c api.ConditionResult) error {
+	return (evidenceBridge{g.a}).RegisterCheck(ctx, tx, t, c)
+}
+func (g taskGate) BindResult(ctx context.Context, tx runtime.Tx, t api.Task, r api.Result, checks []api.ObjectRef) error {
+	return (evidenceBridge{g.a}).BindResult(ctx, tx, t, r, checks)
+}
+
+type contentAuthority struct{ a *App }
+
+func (g contentAuthority) Check(ctx context.Context, tx runtime.Tx, auth runtime.Auth, _ api.ComponentRef, _, _ string, _ bool) (uint64, error) {
+	if e := currentCredentialTx(ctx, tx, auth); e != nil {
+		return 0, e
+	}
+	var c currentCredential
+	_, e := tx.Get(ctx, "platform.credentials", auth.SubjectID, &c)
+	return c.Revision, e
+}
+func (g contentAuthority) Visibility(ctx context.Context, tx runtime.Tx, auth runtime.Auth) (string, error) {
+	if e := currentCredentialTx(ctx, tx, auth); e != nil {
+		return "", e
+	}
+	var c currentCredential
+	if _, e := tx.Get(ctx, "platform.credentials", auth.SubjectID, &c); e != nil {
+		return "", e
+	}
+	return api.Digest(c)
+}
+
+type previewGate struct{ a *App }
+
+func (g previewGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, refs []api.ContentRef) error {
+	return (taskGate{g.a}).Authorize(ctx, tx, auth, "confirmation.preview", refs, nil)
+}
+
+type scheduleGate struct{ a *App }
+
+func (g scheduleGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, policy, model api.ComponentRef, budget []api.Amount) error {
+	if e := currentCredentialTx(ctx, tx, auth); e != nil {
+		return e
+	}
+	if !api.Equal(policy, g.a.TaskPolicy.PolicyRef) || !api.Equal(model, g.a.Profile.Ref) {
+		return api.E("unsupported", "schedule_profiles_not_configured")
+	}
+	if e := api.ValidateAmounts(budget); e != nil {
+		return e
+	}
+	for _, b := range budget {
+		if b.Unit != "USD" {
+			return api.E("unsupported", "budget_unit_not_configured")
+		}
+		cmp, e := api.CompareDecimal(b.Value, "100")
+		if e != nil {
+			return e
+		}
+		if cmp > 0 {
+			return api.E("invalid_request", "budget_limit_exceeded")
+		}
+	}
+	return nil
+}
+
+var _ task.EvidenceRegistration = taskGate{}
 
 type usageVerifier struct{ a *App }
 

@@ -16,6 +16,13 @@ import (
 var coreSchema []byte
 var coreDefs map[string]any
 var schemaOnce sync.Once
+var recordValidators sync.Map
+
+type fixedValidator struct {
+	once      sync.Once
+	validator *Validator
+	err       error
+}
 
 func CoreDigest() string      { return Hash(coreSchema) }
 func CoreSchemaBytes() []byte { return append([]byte(nil), coreSchema...) }
@@ -155,20 +162,27 @@ func (v *Validator) Validate(raw []byte) error {
 		return err
 	}
 	if err = v.schema.Validate(x); err != nil {
-		return E("invalid_request", "schema_violation")
+		problem := E("invalid_request", "schema_violation")
+		problem.Cause = err
+		return problem
 	}
 	return nil
 }
 func ValidateRecord(name string, v any) error {
-	validator, err := NewValidator(Ref(name))
-	if err != nil {
-		return err
+	if _, ok := definitions()[name]; !ok {
+		return E("invalid_request", "unknown_record_schema")
+	}
+	entry, _ := recordValidators.LoadOrStore(name, &fixedValidator{})
+	fixed := entry.(*fixedValidator)
+	fixed.once.Do(func() { fixed.validator, fixed.err = NewValidator(Ref(name)) })
+	if fixed.err != nil {
+		return fixed.err
 	}
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
 	}
-	return validator.Validate(b)
+	return fixed.validator.Validate(b)
 }
 func Raw(v any) json.RawMessage {
 	b, err := json.Marshal(v)

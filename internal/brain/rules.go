@@ -44,10 +44,17 @@ type FactSource interface {
 	Operations(context.Context, api.Snapshot) ([]ActionFact, error)
 }
 type RuleEngine struct {
+	Goals                                 GoalResolver
 	Facts                                 FactSource
 	ArtifactRule, SavedRule, AnswerSchema api.ComponentRef
 	ReadCapability, WriteCapability       api.ComponentRef
 	ReadBinding, WriteBinding             api.ObjectRef
+}
+
+// GoalResolver follows only the immutable GoalDocument references declared in
+// the snapshot; the original document bytes remain part of the sealed encoding.
+type GoalResolver interface {
+	ResolveGoal(context.Context, api.Snapshot, json.RawMessage) (json.RawMessage, error)
 }
 type ruleEncoding struct {
 	Snapshot api.Snapshot    `json:"snapshot"`
@@ -72,11 +79,18 @@ func (e *RuleEngine) Request(ctx context.Context, _ string, enc Encoding) (Gener
 	if er := api.Decode(enc.Body, &input); er != nil {
 		return Generated{}, er
 	}
+	if e.Goals != nil {
+		goal, er := e.Goals.ResolveGoal(ctx, input.Snapshot, input.Goal)
+		if er != nil {
+			return Generated{}, er
+		}
+		input.Goal = goal
+	}
 	v, er := api.NewValidator(GoalSchema())
 	if er != nil {
 		return Generated{}, er
 	}
-	out := Generated{Usage: []api.Amount{}, UsageFinal: true, Contents: []GeneratedContent{}}
+	out := Generated{Usage: []api.Amount{{Unit: "USD", Value: "0"}}, UsageFinal: true, Contents: []GeneratedContent{}}
 	add := func(id, media, body string) {
 		out.Contents = append(out.Contents, GeneratedContent{LocalID: id, MediaType: media, Body: body, DisclosedSources: []api.ContentRef{}})
 	}
@@ -104,6 +118,15 @@ func (e *RuleEngine) Request(ctx context.Context, _ string, enc Encoding) (Gener
 	}
 	add("artifact", "text/markdown", string(body))
 	out.Draft = Draft{Kind: "complete", ReasonLocalID: "reason", ArtifactLocalIDs: []string{"artifact"}}
+	// Keep the original immutable artifact when a prior check names its exact
+	// bytes. A new publication identity would invalidate that accurate check.
+	for _, ref := range input.Snapshot.MaterialRefs {
+		if ref.MediaType == "text/markdown" && ref.Hash == api.Hash(body) && ref.ByteLength == uint64(len(body)) {
+			out.Draft.ArtifactLocalIDs = nil
+			out.Draft.ExistingArtifactRefs = []api.ContentRef{ref}
+			break
+		}
+	}
 	if goal.Kind == "answer" {
 		return out, nil
 	}

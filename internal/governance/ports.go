@@ -67,14 +67,37 @@ type PreviewGate interface {
 	CheckTx(context.Context, runtime.Tx, runtime.Auth, []api.ContentRef) error
 }
 
+// OfflineGate 仅核设备本库已知撤权、原 Orchestrator 准入、Control /
+// TaskGate / 资源代次，返回这些依据的最紧截止，不能在 Tx 内 RPC。
+type OfflineGate interface {
+	CheckTx(context.Context, runtime.Tx, runtime.Auth, GrantLease, UseRequest) (string, error)
+}
+
+// CalibrationGate 核验高影响规则当前独立校准依据；布尔自述不能替代它。
+type CalibrationGate interface {
+	CheckTx(context.Context, runtime.Tx, RuleDefinition) error
+}
+
+// FormalPlanGate 从独立受信登记核验原数据谱系、partition、candidate 谱系、
+// 准确 manifest 和预冻结政策；提供 ContentRef 或 evaluation_authority
+// 身份本身不能证明未暴露保留集。这里只能同库读事实，不可 Tx 内 RPC。
+type FormalPlanGate interface {
+	CheckTx(context.Context, runtime.Tx, EvaluationPlan) error
+}
+
 type Options struct {
-	PreviewGate   PreviewGate
-	Participants  []string
-	Content       ContentPort
-	UsageVerifier UsageVerifier
-	Proof         ProofPort
-	Lifecycle     LifecyclePort
-	Runner        EvaluationRunner
+	PreviewGate     PreviewGate
+	Participants    []string
+	OfflineGate     OfflineGate
+	CalibrationGate CalibrationGate
+	FormalPlanGate  FormalPlanGate
+	EndpointID      string
+	InstanceID      string
+	Content         ContentPort
+	UsageVerifier   UsageVerifier
+	Proof           ProofPort
+	Lifecycle       LifecyclePort
+	Runner          EvaluationRunner
 }
 
 type Service struct {

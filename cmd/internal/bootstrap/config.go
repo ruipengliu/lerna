@@ -69,15 +69,31 @@ func privateFile(path string, b []byte) error {
 	if e := os.MkdirAll(filepath.Dir(path), 0700); e != nil {
 		return e
 	}
-	f, e := os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0600)
+	f, e := os.CreateTemp(filepath.Dir(path), ".harness-private-*")
 	if e != nil {
 		return e
 	}
+	defer os.Remove(f.Name())
 	_, e = f.Write(b)
 	if e == nil {
 		e = f.Sync()
 	}
 	ce := f.Close()
+	if e == nil {
+		e = ce
+	}
+	if e == nil {
+		e = os.Rename(f.Name(), path)
+	}
+	if e != nil {
+		return e
+	}
+	dir, e := os.Open(filepath.Dir(path))
+	if e != nil {
+		return e
+	}
+	e = dir.Sync()
+	ce = dir.Close()
 	if e == nil {
 		e = ce
 	}

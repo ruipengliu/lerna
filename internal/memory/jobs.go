@@ -564,4 +564,5 @@ func (s *Service) registerJobs(registry *runtime.Registry) {
 	registry.MustRegisterJob("content.cleanup", s.contentCleanupJob)
 	registry.MustRegisterJob("content.transfer_cleanup", s.transferCleanupJob)
 	registry.MustRegisterJob("content.expire", s.expireJob)
+	registry.MustRegisterJob("content.copy_expire", s.copyExpireJob)
 }

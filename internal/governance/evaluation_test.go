@@ -133,6 +133,9 @@ func evaluationPlan(t *testing.T, f *fixture, c contentFiles, n int, purpose str
 }
 func freezePlan(t *testing.T, f *fixture, plan governance.EvaluationPlan) api.Command {
 	t.Helper()
+	if plan.Purpose == "formal" {
+		registerFormalPlanFixture(t, f, plan)
+	}
 	c, r := command(t, f, "evaluation.plan_create", plan.PlanID, governance.PlanCreate{Plan: plan}, nil)
 	if r.Stage != "accepted" {
 		t.Fatalf("plan: %+v", r)
@@ -143,6 +146,57 @@ func freezePlan(t *testing.T, f *fixture, plan governance.EvaluationPlan) api.Co
 		t.Fatalf("freeze: %+v %v", original, err)
 	}
 	return c
+}
+
+func registerFormalPlanFixture(t *testing.T, f *fixture, plan governance.EvaluationPlan) {
+	t.Helper()
+	// 数据管理边界夹具只由测试预置。公共 evaluation 输入无法登记它。
+	f.svc.Ports.FormalPlanGate = registeredFormalPlan{}
+	_, err := f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error {
+		return tx.Create(f.ctx, "governance/fixture_formal_registry", plan.PartitionRef.ObjectID, "", plan)
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+type registeredFormalPlan struct{}
+
+func formalBindings(p governance.EvaluationPlan) governance.EvaluationPlan {
+	p.PlanID = ""
+	p.ReleaseRequestID = ""
+	p.ManifestDigest = p.ManifestRef.Hash
+	p.Frozen = false
+	p.FullDenominator = 0
+	p.FormalAttemptIndex = 0
+	p.FormalEligible = false
+	p.ExposureRevision = 0
+	return p
+}
+func (registeredFormalPlan) CheckTx(ctx context.Context, tx runtime.Tx, p governance.EvaluationPlan) error {
+	var registered governance.EvaluationPlan
+	if _, err := tx.Get(ctx, "governance/fixture_formal_registry", p.PartitionRef.ObjectID, &registered); err != nil {
+		return err
+	}
+	if !api.Equal(formalBindings(p), formalBindings(registered)) {
+		return api.E("forbidden", "formal_registry_binding_mismatch")
+	}
+	return nil
+}
+
+func TestFormalPlanWithoutIndependentRegistryCannotCreateFormalResponsibility(t *testing.T) {
+	content := contentFiles{root: t.TempDir()}
+	f := environment(t, governance.Options{Content: content})
+	policy := f.scope.Ref(api.NewID("policy"), 1)
+	plan := evaluationPlan(t, f, content, 1, "formal", time.Now().Add(time.Minute), &policy)
+	_, r := command(t, f, "evaluation.plan_create", plan.PlanID, governance.PlanCreate{Plan: plan}, nil)
+	if r.Stage != "rejected" || r.Error.Code != "unsupported" || r.Error.Reason != "registered_formal_lineage_partition_unavailable" {
+		t.Fatalf("unregistered formal plan: %+v", r)
+	}
+	jobs, status, err := f.store.Claim(f.ctx, f.scope, api.NewID("worker"), []string{"governance.plan"}, 1, time.Minute)
+	if err != nil || status != runtime.Committed || len(jobs) != 0 {
+		t.Fatalf("unsupported plan created work: %+v %s %v", jobs, status, err)
+	}
 }
 func TestFormalAttemptAndHoldoutRemainOccupiedAfterCancellation(t *testing.T) {
 	content := contentFiles{root: t.TempDir()}
@@ -166,6 +220,7 @@ func TestFormalAttemptAndHoldoutRemainOccupiedAfterCancellation(t *testing.T) {
 	}
 	drain(t, f, "governance.eval_cancel")
 	next := evaluationPlan(t, f, content, 1, "formal", time.Now().Add(time.Minute), &pr)
+	registerFormalPlanFixture(t, f, next)
 	c, pending := command(t, f, "evaluation.plan_create", next.PlanID, governance.PlanCreate{Plan: next}, nil)
 	if pending.Stage != "accepted" {
 		t.Fatalf("second plan: %+v", pending)
@@ -237,6 +292,20 @@ func TestRealPairedRunSealsOriginalStatisticsAndLateFailureInvalidatesQualificat
 		t.Fatalf("run: %+v", r)
 	}
 	drain(t, f, "governance.evaluation")
+	if left := time.Until(cutoff) + 30*time.Millisecond; left > 0 {
+		time.Sleep(left)
+	}
+	_, r = command(t, f, "evaluation.seal", runID, governance.IDInput{ID: runID}, nil)
+	if r.Stage != "applied" {
+		t.Fatalf("seal: %+v", r)
+	}
+	var report governance.EvaluationReport
+	if err := api.Decode(r.Output, &report); err != nil {
+		t.Fatal(err)
+	}
+	if report.FullDenominator != 12 || report.CandidateSuccess != 12 || report.BaselineSuccess != 0 || report.TargetAttainment != "pass" || report.StatisticalGate != "pass" || report.ImprovementGate != "pass" || report.CandidateCost[0].Value != "1.2" {
+		t.Fatalf("independent paired report: %+v", report)
+	}
 	samples := query[api.Page[governance.SampleRun]](t, f, "evaluation.samples", governance.SamplePageRequest{RunID: runID, Limit: 100})
 	if len(samples.Items) != 24 {
 		t.Fatalf("sample-arm denominator: %+v", samples)
@@ -254,20 +323,6 @@ func TestRealPairedRunSealsOriginalStatisticsAndLateFailureInvalidatesQualificat
 		} else if sample.Outcome != "fail" {
 			t.Fatalf("baseline: %+v", sample)
 		}
-	}
-	if left := time.Until(cutoff) + 30*time.Millisecond; left > 0 {
-		time.Sleep(left)
-	}
-	_, r = command(t, f, "evaluation.seal", runID, governance.IDInput{ID: runID}, nil)
-	if r.Stage != "applied" {
-		t.Fatalf("seal: %+v", r)
-	}
-	var report governance.EvaluationReport
-	if err := api.Decode(r.Output, &report); err != nil {
-		t.Fatal(err)
-	}
-	if report.FullDenominator != 12 || report.CandidateSuccess != 12 || report.BaselineSuccess != 0 || report.TargetAttainment != "pass" || report.StatisticalGate != "pass" || report.ImprovementGate != "pass" || report.CandidateCost[0].Value != "1.2" {
-		t.Fatalf("independent paired report: %+v", report)
 	}
 	_, opened := command(t, f, "evaluation.feedback_open", report.ReportID, governance.FeedbackOpen{ReportRef: f.scope.Ref(report.ReportID, 1), ExposureID: api.NewID("exposure")}, nil)
 	if opened.Stage != "applied" {

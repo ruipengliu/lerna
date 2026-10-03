@@ -132,6 +132,13 @@ func (s *Service) Register(r *runtime.Registry) error {
 		}))
 	}
 	for _, m := range methods {
+		if m.Contract.Name == "budget.read" {
+			// 准确预留索引按明确配置完整返回，不能被通用数组默认100条裁断。
+			properties := m.Contract.OutputSchema["properties"].(map[string]any)
+			budget := properties["task"].(api.Schema)
+			budgetProperties := budget["properties"].(map[string]any)
+			budgetProperties["reservations"].(api.Schema)["maxItems"] = s.config.MaxRelations
+		}
 		if err := r.Register(m); err != nil {
 			return err
 		}

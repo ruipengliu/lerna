@@ -3,6 +3,8 @@ package bootstrap
 import (
 	"context"
 	"crypto/rand"
+	"errors"
+	"fmt"
 	execadapter "github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/adapters/objectstore"
 	"github.com/ruipengliu/lerna/adapters/platform"
@@ -44,6 +46,8 @@ type App struct {
 	Profile                                                          brain.Profile
 	ArtifactRule, SavedRule, CoverageRule, AnswerSchema, InstallLock api.ComponentRef
 	ReadBinding, WriteBinding                                        api.ObjectRef
+	ApplicationBinding                                               api.ObjectRef
+	ApplicationEventSchema                                           api.Schema
 	GrantID                                                          string
 }
 
@@ -83,7 +87,7 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 			return nil, e
 		}
 	}
-	a.Keys, e = platform.OpenDevelopmentKey(c.KeyFile, c.TenantID, c.OwnerID, []string{"control", "closure", "grant_use", "delivery", "rpc_sender"})
+	a.Keys, e = platform.OpenDevelopmentKey(c.KeyFile, c.TenantID, c.OwnerID, []string{"control", "closure", "grant_use", "delivery", "rpc_sender", "evidence_changes", "grant_lease", "allocation_closure"})
 	if e != nil {
 		return nil, e
 	}
@@ -93,7 +97,11 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 	}
 	a.Memory = memory.New(st, a.Objects)
 	a.Memory.Location = "cloud"
-	purposes := []string{"read", "preview", "content.read", "content.write", "task.goal", "task.context", "task.result", "task.submit", "task.snapshot", "task.dispatch", "task.complete", "task.evidence", "task.input", "task.accept_result", "task.revise", "task.steer", "brain.input", "brain.output", "result", "memory.save", "memory.read", "memory.query", "memory.extract", "memory.sync", "memory.view", "managed_file_write", "managed_file_read", "execution.intent", "execution.arguments", "execution.output", "execution.control", "interaction.input", "interaction.history", "interaction.surface", "schedule.template", "confirmation.preview", "evaluation.manifest"}
+	if e = a.Memory.ConfigureParticipants("platform", "governance"); e != nil {
+		return nil, e
+	}
+	a.Memory.Authorization = contentAuthority{a}
+	purposes := []string{"read", "preview", "content.read", "content.write", "task.goal", "task.context", "task.result", "task.submit", "task.snapshot", "task.dispatch", "task.complete", "task.evidence", "task.input", "task.accept_result", "task.revise", "task.steer", "task.action", "task.attach_evidence", "task.adjust_budget", "task.need_context", "task.delegate", "child.create", "child.new_goal", "child.continue", "billing.adjustment", "brain.input", "brain.output", "result", "memory.save", "memory.read", "memory.query", "memory.extract", "memory.sync", "memory.view", "managed_file_write", "managed_file_read", "execution.intent", "execution.arguments", "execution.output", "execution.control", "execution_intent", "execution_arguments", "execution_result", "execution_usage_proof", "environment_namespace", "environment_input", "environment_compute_spec", "environment_restore", "interaction.input", "interaction.history", "interaction.surface", "schedule.template", "confirmation.preview", "evaluation.manifest"}
 	pv := memory.PolicyValues{Subjects: []string{c.SubjectID, c.OwnerID}, Purposes: purposes, Locations: []string{"cloud", "device"}, RetainUntil: c.PolicyExpiresAt, Continuous: true, IndependentDerived: false}
 	policyRef := component("content-policy")
 	policyRef.Digest, _ = api.Digest(pv)
@@ -106,27 +114,40 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 	a.InstallLock = component("builtin-install-lock")
 	a.ReadBinding = a.Scope.Ref(platform.StableDevelopmentID("binding", "file-read"), 1)
 	a.WriteBinding = a.Scope.Ref(platform.StableDevelopmentID("binding", "file-write"), 1)
+	a.ApplicationBinding = a.Scope.Ref(platform.StableDevelopmentID("binding", "development-application"), 1)
+	a.ApplicationEventSchema = api.Object(map[string]any{"reason": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "reason")
 	a.GrantID = platform.StableDevelopmentID("grant", "development-file-goal")
 	a.Profile = brain.Profile{Ref: component("rule-bytes-profile"), ContextLimit: 262144, MaxInputTokens: 250000, MaxOutputTokens: 8192, SafetyMargin: 100, MaxInputBytes: 262144, RequestTimeout: 5 * time.Second}
-	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}})
+	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, Participants: []string{"content", "memory", "platform", "task"}})
+	if e = os.MkdirAll(filepath.Join(c.DataRoot, "files"), 0700); e != nil {
+		return nil, e
+	}
+	if initialize {
+		if e = os.MkdirAll(filepath.Join(c.DataRoot, "files", "reports"), 0700); e != nil {
+			return nil, e
+		}
+	}
 	a.Files, e = execadapter.NewManagedFiles(filepath.Join(c.DataRoot, "files"))
 	if e != nil {
 		return nil, e
 	}
 	phoneIDs := []string{platform.StableDevelopmentID("resource", "phone-one"), platform.StableDevelopmentID("resource", "phone-two"), platform.StableDevelopmentID("resource", "phone-three")}
+	if e = os.MkdirAll(filepath.Join(c.DataRoot, "phones"), 0700); e != nil {
+		return nil, e
+	}
 	a.Phones, e = execadapter.NewSimulatedPhones(filepath.Join(c.DataRoot, "phones"), phoneIDs)
 	if e != nil {
 		return nil, e
 	}
 	execContent := executionContent{a}
-	a.Execution, e = execution.New(execution.Config{OwnerID: c.OwnerID, Content: execContent, Authority: executionAuthority{a}, AuthorityParticipants: []string{"task", "governance", "content", "platform"}, Drivers: []execution.Driver{&execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud"}, &execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud", ReadOnly: true}, a.Phones, &execution.TrustedComputeDriver{Content: execContent, Store: st, Location: "cloud"}}, ResourceDriver: a.Phones, Location: "cloud"})
+	a.Execution, e = execution.New(execution.Config{OwnerID: c.OwnerID, Content: execContent, Authority: executionAuthority{a}, AuthorityParticipants: []string{"task", "governance", "content", "memory", "platform"}, Drivers: []execution.Driver{&execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud"}, &execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud", ReadOnly: true}, a.Phones, &execution.TrustedComputeDriver{Content: execContent, Store: st, Location: "cloud"}}, ResourceDriver: a.Phones, Location: "cloud"})
 	if e != nil {
-		return nil, e
+		return nil, fmt.Errorf("construct Execution: %w", e)
 	}
-	engine := &brain.RuleEngine{Facts: factSource{a}, ArtifactRule: a.ArtifactRule, SavedRule: a.SavedRule, AnswerSchema: a.AnswerSchema, ReadCapability: execadapter.FileReadCapability().Ref, WriteCapability: execadapter.FileWriteCapability().Ref, ReadBinding: a.ReadBinding, WriteBinding: a.WriteBinding}
-	a.Brain, e = brain.New(brain.Config{Profiles: []brain.Profile{a.Profile}, Content: brainContent{a}, Engine: engine, Gate: brainGate{a}, Participants: []string{"content", "task", "platform"}})
+	engine := &brain.RuleEngine{Facts: factSource{a}, Goals: factSource{a}, ArtifactRule: a.ArtifactRule, SavedRule: a.SavedRule, AnswerSchema: a.AnswerSchema, ReadCapability: execadapter.FileReadCapability().Ref, WriteCapability: execadapter.FileWriteCapability().Ref, ReadBinding: a.ReadBinding, WriteBinding: a.WriteBinding}
+	a.Brain, e = brain.New(brain.Config{Profiles: []brain.Profile{a.Profile}, Content: brainContent{a}, Engine: engine, Gate: brainGate{a}, Participants: []string{"content", "memory", "task", "platform"}})
 	if e != nil {
-		return nil, e
+		return nil, fmt.Errorf("construct Brain: %w", e)
 	}
 	a.TaskPolicy = task.TaskPolicy{PolicyRef: component("task-policy"), ContinuationLimit: 30, RepairLimit: 3, NoProgressLimit: 8, ContextRoundLimit: 3, SafeAttemptLimit: 1, MaxRequirements: 20, MaxDelegations: 20, MaxDepth: 4, CostMode: "strict", BudgetLimits: []api.Amount{{Unit: "USD", Value: "100"}}, MaxEvidenceStalenessSeconds: 300, MaxDurationSeconds: 3600, InputPolicyRef: a.AnswerSchema, RuleRegistryRef: component("rule-registry")}
 	a.TaskPolicy.PolicyRef.Digest, _ = api.Digest(a.TaskPolicy)
@@ -138,15 +159,25 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 			kind = "effect"
 			predicate = "current_state"
 		}
-		rules = append(rules, api.RuleDefinition{RuleRef: ref, Kind: kind, ParametersSchemaRef: component("rule-parameters"), Predicate: predicate, AllowedBasis: []string{"verified"}, RequiredEvidenceSchemaRef: component("file-evidence"), ScopeSchemaRef: component("scope"), RiskClass: "ordinary", ApplicabilityPolicyRef: a.TaskPolicy.PolicyRef})
+		age := uint64(300)
+		rule := api.RuleDefinition{RuleRef: ref, Kind: kind, ParametersSchemaRef: component("rule-parameters"), Predicate: predicate, AllowedBasis: []string{"verified"}, RequiredEvidenceSchemaRef: component("file-evidence"), ScopeSchemaRef: component("scope"), RiskClass: "ordinary", ApplicabilityPolicyRef: a.TaskPolicy.PolicyRef}
+		if predicate == "current_state" {
+			rule.MaxObservationAgeSeconds = &age
+		}
+		rules = append(rules, rule)
 	}
-	a.Task, e = task.New(task.Config{Policies: []task.TaskPolicy{a.TaskPolicy}, Rules: rules, ControlWindow: 5 * time.Second, Participants: []string{"task", "content", "governance", "platform"}, AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: a.AnswerSchema, Schema: brain.GoalSchema()}}}, task.Ports{Content: taskContent{a}, Context: contextCompiler{a}, Gate: taskGate{a}, Evidence: evidenceBridge{a}, EvidenceRegistration: evidenceBridge{a}, ControlProof: controlProof{a}, ClosureProof: closureProof{a}, ActionAuthorization: actionAuthorization{a}, Brain: brainBridge{a}, Execution: executionBridge{a}, Collaboration: collaborationBridge{a}})
+	a.Task, e = task.New(task.Config{Policies: []task.TaskPolicy{a.TaskPolicy}, Rules: rules, ControlWindow: 5 * time.Second, Participants: []string{"task", "content", "memory", "governance", "platform"}, AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: a.AnswerSchema, Schema: brain.GoalSchema()}}}, task.Ports{Content: taskContent{a}, Context: contextCompiler{a}, Gate: taskGate{a}, Evidence: evidenceBridge{a}, ControlProof: controlProof{a}, ClosureProof: closureProof{a}, ActionAuthorization: actionAuthorization{a}, Brain: brainBridge{a}, Execution: executionBridge{a}})
+	if e != nil {
+		return nil, fmt.Errorf("construct Task: %w", e)
+	}
+	calendar, e := interaction.OpenTZDB(c.TZDBRoot, c.TZDBVersion, []string{"UTC", "Asia/Shanghai", "America/New_York", "Europe/London"})
 	if e != nil {
 		return nil, e
 	}
-	a.Interaction, e = interaction.New(interaction.Config{DiscoveryOwnerID: c.OwnerID, Participants: []string{"interaction", "content", "task", "platform"}, CursorKey: []byte(strings.TrimSpace(string(token)))}, interaction.Ports{Content: interactionContent{a}, Delivery: localDelivery{a}, Closure: localClosure{a}, Requests: requestBridge{a}, Calendar: calendarBridge{c}})
+	one := uint64(1)
+	a.Interaction, e = interaction.New(interaction.Config{DiscoveryOwnerID: c.OwnerID, Participants: []string{"interaction", "content", "memory", "task", "platform"}, CursorKey: []byte(strings.TrimSpace(string(token))), EventBindings: []interaction.EventBinding{{BindingRef: a.ApplicationBinding, Events: []interaction.EventRule{{Name: "archive_demo_session", Schema: api.Raw(a.ApplicationEventSchema), OwnerID: c.OwnerID, Method: "session.archive", TargetID: platform.StableDevelopmentID("session", "development-surface"), AcceptForSeconds: 60, ExpectedRevision: &one, RequiresRendered: true}}}}}, interaction.Ports{Content: interactionContent{a}, Delivery: localDelivery{a}, Closure: localClosure{a}, Requests: requestBridge{a}, Calendar: calendar, ScheduleGate: scheduleGate{a}})
 	if e != nil {
-		return nil, e
+		return nil, fmt.Errorf("construct Interaction: %w", e)
 	}
 	a.Dispatcher = &runtime.Dispatcher{Store: st, OwnerID: c.OwnerID, Registry: a.Registry}
 	a.Memory.Register(a.Registry)
@@ -168,7 +199,7 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 }
 func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error {
 	if e := a.Memory.InstallPolicy(ctx, a.Scope, a.ServiceAuth, a.ContentPolicy); e != nil {
-		return e
+		return fmt.Errorf("install content policy: %w", e)
 	}
 	status, e := a.Store.Within(ctx, a.Scope, []string{"governance"}, func(tx runtime.Tx) error {
 		for _, r := range rules {
@@ -191,17 +222,30 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 	if status == runtime.CommitUnknown {
 		return runtime.ErrCommitUnknown
 	}
-	return e
-}
-func (a *App) Close() error {
-	if a.Files != nil {
-		a.Files.Close()
+	if e != nil {
+		return fmt.Errorf("install development governance: %w", e)
 	}
-	if a.Store != nil {
-		return a.Store.Close()
+	// Management reuses the original demo creation; restarting never resets it.
+	c := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.Scope.OwnerID, CommandID: platform.StableDevelopmentID("command", "development-surface-session"), Method: "session.create", TargetID: a.Scope.OwnerID, ExpiresAt: a.Config.PolicyExpiresAt, Payload: api.Raw(interaction.CreateSessionInput{SessionID: platform.StableDevelopmentID("session", "development-surface"), DefaultBranchID: platform.StableDevelopmentID("branch", "development-surface"), ConfigRef: component("development-surface-session")})}
+	r, e := a.Dispatcher.Command(ctx, a.UserAuth, api.Raw(c))
+	if e != nil {
+		return e
+	}
+	if r.Error != nil {
+		return r.Error
 	}
 	return nil
 }
+func (a *App) Close() error {
+	var err error
+	if a.Files != nil {
+		err = a.Files.Close()
+	}
+	if a.Store != nil {
+		err = errors.Join(err, a.Store.Close())
+	}
+	return err
+}
 func (a *App) Gateway() (*wss.Server, error) {
-	return wss.New(wss.Config{OwnerID: a.Config.OwnerID, Store: a.Store, Registry: a.Registry, Identity: a.Identity, Processor: wss.LocalProcessor{Dispatcher: a.Dispatcher}, Content: a.Memory, Uploader: a.Memory, Development: &wss.DevelopmentConfiguration{TenantID: a.Config.TenantID, ContentPolicyRef: a.ContentPolicy.PolicyRef, TaskPolicyRef: a.TaskPolicy.PolicyRef, Budget: []api.Amount{{Unit: "USD", Value: "20"}}, GoalSchema: brain.GoalSchema(), RetentionSeconds: 86400, TaskDeadlineSeconds: 1800}, Origins: a.Config.Origins, AllowInsecureLoopback: a.Config.Development, StaticDir: a.Config.StaticDir, Location: "cloud", MaxConnections: 128, MaxQueuedBytes: 64 << 20})
+	return wss.New(wss.Config{OwnerID: a.Config.OwnerID, Store: a.Store, Registry: a.Registry, Identity: a.Identity, Processor: wss.LocalProcessor{Dispatcher: a.Dispatcher}, Content: a.Memory, Uploader: a.Memory, Development: &wss.DevelopmentConfiguration{TenantID: a.Config.TenantID, ContentPolicyRef: a.ContentPolicy.PolicyRef, TaskPolicyRef: a.TaskPolicy.PolicyRef, Budget: []api.Amount{{Unit: "USD", Value: "20"}}, GoalSchema: brain.GoalSchema(), RetentionSeconds: 86400, TaskDeadlineSeconds: 1800, ApplicationBindingRef: &a.ApplicationBinding, ApplicationEvents: []wss.DevelopmentEvent{{Name: "archive_demo_session", Schema: a.ApplicationEventSchema, RequiresRendered: true}}}, Origins: a.Config.Origins, AllowInsecureLoopback: a.Config.Development, StaticDir: a.Config.StaticDir, Location: "cloud", MaxConnections: 128, MaxQueuedBytes: 64 << 20})
 }

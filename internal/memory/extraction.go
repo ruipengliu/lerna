@@ -65,7 +65,7 @@ func (s *Service) ListCandidates(ctx context.Context, scope runtime.Scope, auth 
 		return api.Page[ExtractionCandidate]{}, api.E("invalid_request", "invalid_page_limit")
 	}
 	var out api.Page[ExtractionCandidate]
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}
@@ -351,7 +351,7 @@ func (s *Service) registerExtraction(registry *runtime.Registry) {
 	})
 	query(s, registry, "memory.extract.read", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ReadExtractionInput) (Extraction, error) {
 		var out Extraction
-		err := s.within(ctx, scope, func(tx runtime.Tx) error {
+		err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 			_, err := tx.Get(ctx, "memory.extractions", in.ExtractionID, &out)
 			if err != nil {
 				return err
@@ -365,7 +365,7 @@ func (s *Service) registerExtraction(registry *runtime.Registry) {
 	})
 	query(s, registry, "memory.candidate.read", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ReadCandidateInput) (ExtractionCandidate, error) {
 		var out ExtractionCandidate
-		err := s.within(ctx, scope, func(tx runtime.Tx) error {
+		err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 			_, err := tx.Get(ctx, "memory.candidates", in.CandidateID, &out)
 			if err != nil {
 				return err

@@ -161,3 +161,127 @@ func TestActivationCallbackCannotOverwriteNewerCurrentInstance(t *testing.T) {
 		t.Fatalf("A cleanup removed B: %v", err)
 	}
 }
+
+func prepareForTarget(t *testing.T, f *fixture, install governance.Installation, target string) {
+	t.Helper()
+	c, r := command(t, f, "extensions.prepare", target, governance.PrepareRequest{Installation: install, TargetRef: f.scope.Ref(target, 1)}, nil)
+	if r.Stage != "accepted" {
+		t.Fatalf("prepare: %+v", r)
+	}
+	drain(t, f, "governance.prepare")
+	r, err := f.dispatcher.Lookup(f.ctx, f.auth, c.CommandID)
+	if err != nil || r.Stage != "applied" {
+		t.Fatalf("prepared: %+v %v", r, err)
+	}
+}
+func activateNow(t *testing.T, f *fixture, target string, install governance.Installation, approval api.ObjectRef, generation, revision uint64) governance.ExtensionRead {
+	t.Helper()
+	c, r := command(t, f, "extensions.activate", target, governance.ActivateRequest{TargetID: target, ExpectedGeneration: generation, InstallLockRef: install.InstallLockRef, ApprovalRef: approval, ConfigRef: install.ConfigRef, PrepareDeadline: api.Time(time.Now().Add(time.Hour))}, &revision)
+	if r.Stage != "accepted" {
+		t.Fatalf("activate: %+v", r)
+	}
+	drain(t, f, "governance.activate")
+	r, err := f.dispatcher.Lookup(f.ctx, f.auth, c.CommandID)
+	if err != nil || r.Stage != "applied" {
+		t.Fatalf("activation: %+v %v", r, err)
+	}
+	return query[governance.ExtensionRead](t, f, "extensions.read", governance.IDInput{ID: target})
+}
+func TestRolloutRequiresCurrentReadyObservationsForEveryOpenTarget(t *testing.T) {
+	h := &lifecycleHost{root: t.TempDir()}
+	f := environment(t, governance.Options{Lifecycle: h})
+	h.proof = ref(t, f, "selftest")
+	f.auth.Roles = append(f.auth.Roles, "rollout_observer")
+	targets := []string{api.NewID("target"), api.NewID("target"), api.NewID("target")}
+	for _, target := range targets {
+		_, r := command(t, f, "extensions.target.register", target, governance.TargetRegister{TargetID: target, DataFormat: "v1"}, nil)
+		if r.Stage != "applied" {
+			t.Fatalf("target: %+v", r)
+		}
+	}
+	install := installation(t, f, targets[0])
+	for _, target := range targets[1:] {
+		prepareForTarget(t, f, install, target)
+	}
+	id := api.NewID("approval")
+	c, r := command(t, f, "release.approval.create", id, governance.ApprovalCreate{ApprovalID: id, InstallLockRef: install.InstallLockRef, Purpose: "compatibility", EvidenceRefs: []api.ObjectRef{}, CompatibilityEvidenceRefs: []api.ContentRef{ref(t, f, "compatibility")}, Rollout: governance.RolloutPolicy{TargetIDs: targets, BatchSizes: []uint64{2, 1}, MinimumSamples: 1, ObservationSeconds: 1, MaxErrorRate: "0", MaximumStartWindowSeconds: 60}, ExpiresAt: api.Time(time.Now().Add(time.Hour)), PreviewRefs: []api.ContentRef{ref(t, f, "preview")}}, nil)
+	approveOriginal(t, f, c, r)
+	ap := f.scope.Ref(id, 1)
+	views := []governance.ExtensionRead{activateNow(t, f, targets[0], install, ap, 0, 1), activateNow(t, f, targets[1], install, ap, 0, 1)}
+	request := governance.ActivateRequest{TargetID: targets[2], ExpectedGeneration: 0, InstallLockRef: install.InstallLockRef, ApprovalRef: ap, ConfigRef: install.ConfigRef, PrepareDeadline: api.Time(time.Now().Add(time.Hour))}
+	firstRevision := uint64(1)
+	_, r = command(t, f, "extensions.activate", targets[2], request, &firstRevision)
+	if r.Stage != "rejected" || r.Error.Reason != "rollout_batch_not_open" {
+		t.Fatalf("unopened target: %+v", r)
+	}
+	time.Sleep(1100 * time.Millisecond)
+	observe := func(i int) api.Receipt {
+		_, r := command(t, f, "release.rollout.advance", id, governance.RolloutObservation{ApprovalRef: ap, TargetID: targets[i], Samples: 1, ObservationStartedAt: views[i].Readiness.IssuedAt, ErrorRate: "0", EvidenceRef: ref(t, f, "observation")}, &firstRevision)
+		return r
+	}
+	r = observe(0)
+	if r.Stage != "applied" {
+		t.Fatalf("first observation: %+v", r)
+	}
+	var first governance.StateOutput
+	if err := api.Decode(r.Output, &first); err != nil {
+		t.Fatal(err)
+	}
+	if first.State != "observed" {
+		t.Fatalf("single target expanded batch: %+v", first)
+	}
+	_, r = command(t, f, "extensions.activate", targets[2], request, &firstRevision)
+	if r.Stage != "rejected" || r.Error.Reason != "rollout_batch_not_open" {
+		t.Fatalf("partial observation opened target: %+v", r)
+	}
+	r = observe(1)
+	if r.Stage != "applied" {
+		t.Fatalf("complete batch: %+v", r)
+	}
+	var opened governance.StateOutput
+	if err := api.Decode(r.Output, &opened); err != nil {
+		t.Fatal(err)
+	}
+	if opened.State != "batch_open" || opened.Ref.Revision != 2 {
+		t.Fatalf("complete batch stayed closed: %+v", opened)
+	}
+	activateNow(t, f, targets[2], install, ap, 0, 1)
+}
+
+func TestRollbackUsesIndependentOldApprovalAndOldStopCannotDisableIt(t *testing.T) {
+	h := &lifecycleHost{root: t.TempDir()}
+	f := environment(t, governance.Options{Lifecycle: h})
+	h.proof = ref(t, f, "selftest")
+	target := api.NewID("target")
+	_, r := command(t, f, "extensions.target.register", target, governance.TargetRegister{TargetID: target, DataFormat: "v1"}, nil)
+	if r.Stage != "applied" {
+		t.Fatalf("target: %+v", r)
+	}
+	old := installation(t, f, target)
+	oldApproval := approval(t, f, old, target)
+	activateNow(t, f, target, old, oldApproval, 0, 1)
+	newInstall := installation(t, f, target)
+	newID := api.NewID("approval")
+	c, r := command(t, f, "release.approval.create", newID, governance.ApprovalCreate{ApprovalID: newID, InstallLockRef: newInstall.InstallLockRef, Purpose: "compatibility", EvidenceRefs: []api.ObjectRef{}, CompatibilityEvidenceRefs: []api.ContentRef{ref(t, f, "compatibility")}, Rollout: governance.RolloutPolicy{TargetIDs: []string{target}, BatchSizes: []uint64{1}, MinimumSamples: 1, ObservationSeconds: 1, MaxErrorRate: "0", MaximumStartWindowSeconds: 60}, ExpiresAt: api.Time(time.Now().Add(time.Hour)), RollbackInstallLockRef: &old.InstallLockRef, RollbackApprovalRef: &oldApproval, PreviewRefs: []api.ContentRef{ref(t, f, "preview")}}, nil)
+	approveOriginal(t, f, c, r)
+	newApproval := f.scope.Ref(newID, 1)
+	activateNow(t, f, target, newInstall, newApproval, 1, 2)
+	revision := uint64(1)
+	_, r = command(t, f, "release.approval.revoke", newID, governance.RefInput{Ref: newApproval}, &revision)
+	if r.Stage != "applied" {
+		t.Fatalf("revoke candidate: %+v", r)
+	}
+	rollback := activateNow(t, f, target, old, oldApproval, 2, 3)
+	if rollback.Head.Generation != 3 || !rollback.Head.Enabled || !api.Equal(rollback.Readiness.ApprovalRef, oldApproval) {
+		t.Fatalf("rollback: %+v", rollback)
+	}
+	drain(t, f, "governance.approval_stop")
+	drain(t, f, "governance.stop")
+	current := query[governance.ExtensionRead](t, f, "extensions.read", governance.IDInput{ID: target})
+	if !current.Head.Enabled || !api.Equal(current.Head, rollback.Head) {
+		t.Fatalf("old candidate stop disabled rollback: %+v", current)
+	}
+	if _, err := os.Stat(filepath.Join(h.root, current.Readiness.InstanceID)); err != nil {
+		t.Fatalf("rollback instance exited: %v", err)
+	}
+}

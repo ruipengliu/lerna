@@ -3,6 +3,7 @@ package runtime
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"sync"
 	"time"
@@ -74,7 +75,7 @@ func (w *Worker) Run(ctx context.Context) error {
 			go func() {
 				defer active.Done()
 				defer func() { <-slots }()
-				if err := h(ctx, w.Store, scope, work); err != nil && !errors.Is(err, context.Canceled) {
+				if err := w.runOwned(ctx, scope, work, h); err != nil && !errors.Is(err, context.Canceled) {
 					logger.Warn("job remains recoverable", "kind", work.Job.Kind, "claim_lost", errors.Is(err, ErrClaimLost))
 				}
 			}()
@@ -104,7 +105,7 @@ func Drain(ctx context.Context, store Store, scope Scope, registry *Registry, ma
 			return api.E("unsupported", "recovery_handler_missing")
 		}
 		if err = h(ctx, store, scope, works[0]); err != nil {
-			return err
+			return fmt.Errorf("job %s: %w", works[0].Job.Kind, err)
 		}
 	}
 	return api.E("overloaded", "drain_limit_reached")

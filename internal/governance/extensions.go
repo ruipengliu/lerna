@@ -2,6 +2,7 @@ package governance
 
 import (
 	"context"
+	"sort"
 	"time"
 
 	"github.com/ruipengliu/lerna/api"
@@ -35,6 +36,13 @@ type RolloutObservation struct {
 	UnknownEffects       uint64         `json:"unknown_effects"`
 	EvidenceRef          api.ContentRef `json:"evidence_ref"`
 }
+type rolloutFact struct {
+	Revision    uint64             `json:"revision"`
+	Observation RolloutObservation `json:"observation"`
+	InstanceRef api.ObjectRef      `json:"instance_ref"`
+	Generation  uint64             `json:"generation"`
+	BatchIndex  uint64             `json:"batch_index"`
+}
 
 func prepareKey(lock api.ComponentRef, target string) string {
 	return digestID("prepare", []any{lock, target})
@@ -62,6 +70,9 @@ func (s *Service) registerExtensions(r *runtime.Registry) error {
 		func() error { return registerQuery[IDInput, ExtensionRead](r, "extensions.read", s.readExtension) },
 		func() error {
 			return registerQuery[api.ListInput, api.Page[BindingHead]](r, "extensions.list", queryPage[BindingHead]("heads", "maintainer"))
+		},
+		func() error {
+			return registerQuery[IDInput, InstanceStop](r, "extensions.instance_stop.read", queryByID[InstanceStop]("instance_stops", func(a runtime.Auth, v InstanceStop) error { return requireRole(a, "maintainer") }))
 		},
 		func() error {
 			return registerCommand[ApprovalCreate, ConfirmedOutput](s, r, "release.approval.create", false, true, s.createApproval)
@@ -138,8 +149,25 @@ func (s *Service) prepare(ctx context.Context, tx runtime.Tx, a runtime.Auth, c 
 	}
 	id := prepareKey(in.Installation.InstallLockRef, in.TargetRef.ObjectID)
 	prepared := PreparedInstall{ID: id, Revision: 1, Installation: in.Installation, TargetRef: in.TargetRef, State: "preparing", CommandID: c.CommandID}
-	if err = tx.Create(ctx, ns("preparations"), id, c.CommandID, prepared); err != nil {
-		return runtime.Outcome{}, err
+	var prior PreparedInstall
+	prev, priorErr := tx.Get(ctx, ns("preparations"), id, &prior)
+	if priorErr == nil {
+		if prior.State == "prepared" {
+			return runtime.Applied(StateOutput{Ref: tx.Scope().Ref(prior.ID, prior.Revision), State: "prepared"}), nil
+		}
+		if prior.State == "preparing" {
+			return runtime.Outcome{}, api.E("revision_conflict", "preparation_in_progress")
+		}
+		prepared.Revision = prev + 1
+		if err = tx.Put(ctx, ns("preparations"), id, prev, prepared); err != nil {
+			return runtime.Outcome{}, err
+		}
+	} else if errMissing(priorErr) {
+		if err = tx.Create(ctx, ns("preparations"), id, c.CommandID, prepared); err != nil {
+			return runtime.Outcome{}, err
+		}
+	} else {
+		return runtime.Outcome{}, priorErr
 	}
 	now, err := tx.Now(ctx)
 	if err != nil {
@@ -316,6 +344,11 @@ func (s *Service) reopen(ctx context.Context, tx runtime.Tx, a runtime.Auth, c a
 	if err := requireRole(a, "maintainer"); err != nil {
 		return runtime.Outcome{}, err
 	}
+	for _, ref := range []api.ObjectRef{in.ActivationRef, in.ExpectedInstanceRef, in.OldInstanceFenceRef} {
+		if err := ownerRef(tx.Scope(), ref); err != nil {
+			return runtime.Outcome{}, err
+		}
+	}
 	var head BindingHead
 	rev, err := tx.Get(ctx, ns("heads"), in.TargetID, &head)
 	if err != nil {
@@ -331,7 +364,7 @@ func (s *Service) reopen(ctx context.Context, tx runtime.Tx, a runtime.Auth, c a
 	if _, err = tx.Get(ctx, ns("instance_stops"), in.OldInstanceFenceRef.ObjectID, &fence); err != nil {
 		return runtime.Outcome{}, api.E("invalid_state", "old_instance_not_fenced")
 	}
-	if fence.State != "stopped" || fence.InstanceID != in.ExpectedInstanceRef.ObjectID || fence.Generation != head.Generation || fence.Evidence == nil || !fence.Evidence.Exited || fence.Evidence.MayApplyLater {
+	if fence.Revision != in.OldInstanceFenceRef.Revision || fence.State != "stopped" || fence.InstanceID != in.ExpectedInstanceRef.ObjectID || fence.Generation != head.Generation || fence.Evidence == nil || !fence.Evidence.Exited || fence.Evidence.MayApplyLater {
 		return runtime.Outcome{}, api.E("invalid_state", "old_instance_not_fenced")
 	}
 	var original Activation
@@ -453,8 +486,12 @@ func (s *Service) continueActivate(ctx context.Context, store runtime.Store, sco
 			}
 			return runtime.Decide(ctx, tx, activation.CommandID, nil, api.E("revision_conflict", reason))
 		}
-		ready := InstanceReadiness{InstanceID: evidence.InstanceID, Revision: 1, TargetID: activation.TargetID, ActivationID: activation.ActivationID, Generation: activation.Generation, ConfigDigest: evidence.ConfigDigest, ArtifactDigest: evidence.ArtifactDigest, SelfTestRef: evidence.SelfTestRef, ApprovalRef: activation.ApprovalRef, ExpiresAt: minTime(evidence.ExpiresAt, activation.PrepareDeadline), State: "ready"}
+		ready := InstanceReadiness{InstanceID: evidence.InstanceID, Revision: 1, TargetID: activation.TargetID, ActivationID: activation.ActivationID, Generation: activation.Generation, ConfigDigest: evidence.ConfigDigest, ArtifactDigest: evidence.ArtifactDigest, SelfTestRef: evidence.SelfTestRef, ApprovalRef: activation.ApprovalRef, IssuedAt: api.Time(now), ExpiresAt: minTime(evidence.ExpiresAt, activation.PrepareDeadline), State: "ready"}
 		if err = tx.Create(ctx, ns("readiness"), ready.InstanceID, activation.ActivationID, ready); err != nil {
+			return err
+		}
+		holder := InstallHolder{HolderID: digestID("install_holder", ready.InstanceID), Revision: 1, InstallLockRef: activation.InstallLockRef, ConsumerRef: scope.Ref(ready.InstanceID, 1), State: "registered"}
+		if err = s.RegisterInstallHolderTx(ctx, tx, holder); err != nil {
 			return err
 		}
 		activation.State = "active"
@@ -518,6 +555,9 @@ func (s *Service) continueActivate(ctx context.Context, store runtime.Store, sco
 }
 func (s *Service) deactivate(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in DeactivateRequest) (runtime.Outcome, error) {
 	if err := requireRole(a, "maintainer"); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if err := ownerRef(tx.Scope(), in.ActivationRef); err != nil {
 		return runtime.Outcome{}, err
 	}
 	var head BindingHead
@@ -613,6 +653,19 @@ func (s *Service) continueStop(ctx context.Context, store runtime.Store, scope r
 		if err = tx.Put(ctx, ns("instance_stops"), stop.ID, rev, current); err != nil {
 			return err
 		}
+		if current.State == "stopped" {
+			holderID := digestID("install_holder", current.InstanceID)
+			var holder InstallHolder
+			if hrev, e := tx.Get(ctx, ns("install_holders"), holderID, &holder); e == nil {
+				holder.Revision = hrev + 1
+				holder.State = "released"
+				if err = tx.Put(ctx, ns("install_holders"), holderID, hrev, holder); err != nil {
+					return err
+				}
+			} else if !errMissing(e) {
+				return e
+			}
+		}
 		var ready InstanceReadiness
 		if rrev, e := tx.Get(ctx, ns("readiness"), current.InstanceID, &ready); e == nil {
 			ready.Revision = rrev + 1
@@ -622,6 +675,13 @@ func (s *Service) continueStop(ctx context.Context, store runtime.Store, scope r
 			}
 		} else if !errMissing(e) {
 			return e
+		}
+		if current.State == "unknown" {
+			now, err := tx.Now(ctx)
+			if err != nil {
+				return err
+			}
+			return tx.Hint(ctx, work.Job.JobID, now.Add(time.Second))
 		}
 		return nil
 	})
@@ -634,11 +694,16 @@ func (s *Service) createApproval(ctx context.Context, tx runtime.Tx, a runtime.A
 	if in.Purpose != "compatibility" && in.Purpose != "improvement" {
 		return runtime.Outcome{}, api.E("invalid_request", "invalid_release_purpose")
 	}
-	if in.ApprovalID != c.TargetID || len(in.Rollout.TargetIDs) == 0 || len(in.Rollout.TargetIDs) > 100 || len(in.Rollout.BatchSizes) == 0 || in.Rollout.MaximumStartWindowSeconds == 0 || in.Rollout.MaximumStartWindowSeconds > 3600 {
+	if in.ApprovalID != c.TargetID || len(in.Rollout.TargetIDs) == 0 || len(in.Rollout.TargetIDs) > 100 || len(in.Rollout.BatchSizes) == 0 || in.Rollout.MaximumStartWindowSeconds == 0 || in.Rollout.MaximumStartWindowSeconds > 3600 || in.Rollout.MinimumSamples == 0 || in.Rollout.ObservationSeconds == 0 || in.Rollout.ObservationSeconds > 31536000 {
 		return runtime.Outcome{}, api.E("invalid_request", "bounded_rollout_required")
 	}
+	if cmp, err := api.CompareDecimal(in.Rollout.MaxErrorRate, "1"); err != nil || cmp > 0 {
+		return runtime.Outcome{}, api.E("invalid_request", "invalid_error_rate")
+	}
 	seen := map[string]bool{}
-	for _, target := range in.Rollout.TargetIDs {
+	targets := append([]string{}, in.Rollout.TargetIDs...)
+	sort.Strings(targets)
+	for _, target := range targets {
 		if seen[target] || !api.ValidID(target) {
 			return runtime.Outcome{}, api.E("invalid_request", "duplicate_target")
 		}
@@ -650,7 +715,7 @@ func (s *Service) createApproval(ctx context.Context, tx runtime.Tx, a runtime.A
 	}
 	total := uint64(0)
 	for _, batch := range in.Rollout.BatchSizes {
-		if batch == 0 {
+		if batch == 0 || batch > 100 || total > 100-batch {
 			return runtime.Outcome{}, api.E("invalid_request", "invalid_batch")
 		}
 		total += batch
@@ -776,7 +841,7 @@ func (s *Service) ApprovalUseTx(ctx context.Context, tx runtime.Tx, in ApprovalU
 	}
 	out := ApprovalUse{UseID: in.UseID, ApprovalRef: in.ApprovalRef, TargetRef: in.TargetRef, InstallLockRef: in.InstallLockRef, IssuedAt: api.Time(now), StartBefore: expires, RequestDigest: digest}
 	if s.Ports.Proof != nil {
-		digest, e := api.Digest(in)
+		digest, e := ApprovalUseDigest(out)
 		if e != nil {
 			return old, e
 		}
@@ -788,9 +853,46 @@ func (s *Service) ApprovalUseTx(ctx context.Context, tx runtime.Tx, in ApprovalU
 	err = tx.Create(ctx, ns("approval_uses"), in.UseID, in.ApprovalRef.ObjectID, out)
 	return out, err
 }
+func ApprovalUseDigest(out ApprovalUse) (string, error) {
+	out.Proof = ""
+	return api.Digest(out)
+}
 func (s *Service) advanceRollout(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in RolloutObservation) (runtime.Outcome, error) {
 	if err := requireRole(a, "rollout_observer"); err != nil {
 		return runtime.Outcome{}, err
+	}
+	if err := ownerRef(tx.Scope(), in.ApprovalRef); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if c.ExpectedRevision == nil {
+		return runtime.Outcome{}, api.E("revision_conflict", "revision_required")
+	}
+	if in.EvidenceRef.TenantID != tx.Scope().TenantID {
+		return runtime.Outcome{}, api.E("forbidden", "observation_scope_mismatch")
+	}
+	var snapshot ReleaseApproval
+	if err := tx.GetVersion(ctx, ns("approvals"), in.ApprovalRef.ObjectID, *c.ExpectedRevision, &snapshot); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if snapshot.BatchIndex+1 >= uint64(len(snapshot.Rollout.BatchSizes)) {
+		return runtime.Outcome{}, api.E("invalid_state", "rollout_not_expandable")
+	}
+	open := uint64(0)
+	for i := uint64(0); i <= snapshot.BatchIndex; i++ {
+		open += snapshot.Rollout.BatchSizes[i]
+	}
+	if open > uint64(len(snapshot.Rollout.TargetIDs)) || !contains(snapshot.Rollout.TargetIDs[:open], in.TargetID) {
+		return runtime.Outcome{}, api.E("forbidden", "rollout_batch_not_open")
+	}
+	targets := append([]string{}, snapshot.Rollout.TargetIDs[:open]...)
+	sort.Strings(targets)
+	heads := map[string]BindingHead{}
+	for _, target := range targets {
+		var head BindingHead
+		if _, err := tx.Get(ctx, ns("heads"), target, &head); err != nil {
+			return runtime.Outcome{}, err
+		}
+		heads[target] = head
 	}
 	var approval ReleaseApproval
 	rev, err := tx.Get(ctx, ns("approvals"), in.ApprovalRef.ObjectID, &approval)
@@ -800,15 +902,22 @@ func (s *Service) advanceRollout(ctx context.Context, tx runtime.Tx, a runtime.A
 	if err = requireCAS(c, rev); err != nil {
 		return runtime.Outcome{}, err
 	}
-	if !contains(approval.Rollout.TargetIDs, in.TargetID) || approval.State != "active" || approval.BatchIndex+1 >= uint64(len(approval.Rollout.BatchSizes)) {
+	if approval.State != "active" || approval.BatchIndex != snapshot.BatchIndex {
 		return runtime.Outcome{}, api.E("invalid_state", "rollout_not_expandable")
 	}
-	var head BindingHead
-	if _, err = tx.Get(ctx, ns("heads"), in.TargetID, &head); err != nil {
-		return runtime.Outcome{}, err
-	}
+	head := heads[in.TargetID]
 	if !head.Enabled || head.ReadinessRef == nil {
 		return runtime.Outcome{}, api.E("invalid_state", "instance_not_ready")
+	}
+	var ready InstanceReadiness
+	if _, err = tx.Get(ctx, ns("readiness"), head.ReadinessRef.ObjectID, &ready); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if ready.State != "ready" || ready.Generation != head.Generation || ready.ApprovalRef.ObjectID != approval.ApprovalID || ready.ArtifactDigest != approval.InstallLockRef.Digest {
+		return runtime.Outcome{}, api.E("invalid_state", "instance_not_ready")
+	}
+	if _, err = s.currentApproval(ctx, tx, in.ApprovalRef, approval.InstallLockRef, in.TargetID); err != nil {
+		return runtime.Outcome{}, err
 	}
 	now, err := tx.Now(ctx)
 	if err != nil {
@@ -818,12 +927,48 @@ func (s *Service) advanceRollout(ctx context.Context, tx runtime.Tx, a runtime.A
 	if err != nil {
 		return runtime.Outcome{}, err
 	}
+	issued, err := api.ParseTime(ready.IssuedAt)
+	if err != nil || observed.Before(issued) || before(now, ready.ExpiresAt) != nil {
+		return runtime.Outcome{}, api.E("invalid_state", "observation_not_current")
+	}
 	cmp, err := api.CompareDecimal(in.ErrorRate, approval.Rollout.MaxErrorRate)
 	if err != nil {
 		return runtime.Outcome{}, err
 	}
 	if in.Samples < approval.Rollout.MinimumSamples || now.Before(observed.Add(time.Duration(approval.Rollout.ObservationSeconds)*time.Second)) || cmp > 0 || in.UnknownEffects > 0 {
 		return runtime.Outcome{}, api.E("invalid_state", "rollout_observation_insufficient")
+	}
+	key := digestID("rollout", []any{approval.ApprovalID, approval.BatchIndex, in.TargetID})
+	fact := rolloutFact{Revision: 1, Observation: in, InstanceRef: *head.ReadinessRef, Generation: head.Generation, BatchIndex: approval.BatchIndex}
+	var old rolloutFact
+	if fRev, e := tx.Get(ctx, ns("rollout_observations"), key, &old); errMissing(e) {
+		err = tx.Create(ctx, ns("rollout_observations"), key, approval.ApprovalID, fact)
+	} else if e != nil {
+		return runtime.Outcome{}, e
+	} else {
+		fact.Revision = fRev + 1
+		err = tx.Put(ctx, ns("rollout_observations"), key, fRev, fact)
+	}
+	if err != nil {
+		return runtime.Outcome{}, err
+	}
+	for _, target := range targets {
+		head := heads[target]
+		var observed rolloutFact
+		_, e := tx.Get(ctx, ns("rollout_observations"), digestID("rollout", []any{approval.ApprovalID, approval.BatchIndex, target}), &observed)
+		if errMissing(e) || !head.Enabled || head.ReadinessRef == nil || !api.Equal(head.ReadinessRef, observed.InstanceRef) || head.Generation != observed.Generation {
+			return runtime.Applied(StateOutput{Ref: tx.Scope().Ref(approval.ApprovalID, rev), State: "observed"}), nil
+		}
+		if e != nil {
+			return runtime.Outcome{}, e
+		}
+		var current InstanceReadiness
+		if _, e = tx.Get(ctx, ns("readiness"), head.ReadinessRef.ObjectID, &current); e != nil {
+			return runtime.Outcome{}, e
+		}
+		if current.State != "ready" || before(now, current.ExpiresAt) != nil {
+			return runtime.Outcome{}, api.E("invalid_state", "instance_not_ready")
+		}
 	}
 	approval.Revision = rev + 1
 	approval.BatchIndex++
@@ -972,6 +1117,20 @@ func (s *Service) readExtension(ctx context.Context, store runtime.Store, scope 
 			}
 			out.Readiness = &ready
 		}
+		return out, nil
+	} else if !errMissing(err) {
+		return out, err
+	}
+	var preparation PreparedInstall
+	if _, err := store.Read(ctx, scope, ns("preparations"), in.ID, 0, &preparation); err == nil {
+		out.Preparation = &preparation
+		return out, nil
+	} else if !errMissing(err) {
+		return out, err
+	}
+	var pending PendingActivation
+	if _, err := store.Read(ctx, scope, ns("activation_pending"), in.ID, 0, &pending); err == nil {
+		out.Pending = &pending
 		return out, nil
 	} else if !errMissing(err) {
 		return out, err

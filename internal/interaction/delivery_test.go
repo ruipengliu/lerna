@@ -2,9 +2,11 @@ package interaction_test
 
 import (
 	"context"
+	"github.com/ruipengliu/lerna/adapters/platform"
 	"github.com/ruipengliu/lerna/adapters/postgres"
 	"os"
 	"path/filepath"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -17,14 +19,21 @@ import (
 	"github.com/ruipengliu/lerna/runtime"
 )
 
-type contentBridge struct{ m *memory.Service }
+type contentBridge struct {
+	m    *memory.Service
+	hook func()
+}
 
 func (b contentBridge) CheckTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, ref api.ContentRef, purpose string) error {
 	_, e := b.m.CheckContentTx(ctx, tx, a, ref, purpose, "local", false)
 	return e
 }
 func (b contentBridge) Read(ctx context.Context, scope runtime.Scope, a runtime.Auth, ref api.ContentRef, purpose string) ([]byte, error) {
-	return b.m.Read(ctx, scope, a, ref, purpose)
+	body, e := b.m.Read(ctx, scope, a, ref, purpose)
+	if e == nil && b.hook != nil {
+		b.hook()
+	}
+	return body, e
 }
 
 type deliveryBridge struct {
@@ -52,10 +61,14 @@ func (b *deliveryBridge) Lookup(ctx context.Context, scope runtime.Scope, a runt
 type closureBridge struct {
 	s     *task.Service
 	store runtime.Store
+	proof *signedProofBridge
 }
 
 func (b closureBridge) Closure(ctx context.Context, scope runtime.Scope, a runtime.Auth, ref api.ObjectRef) (interaction.Closure, error) {
 	v, e := b.s.Closure(ctx, b.store, scope, a, ref)
+	if e == nil {
+		e = b.proof.publish(ctx, scope, b.store, v.ProofRef)
+	}
 	return interaction.Closure{TaskRef: v.TaskRef, GoalWorkClosed: v.GoalWorkClosed, EffectsClosed: v.EffectsClosed, ClosureRef: v.ProofRef}, e
 }
 
@@ -81,6 +94,10 @@ type applicationFixture struct {
 	config          api.ComponentRef
 	policy          api.ComponentRef
 	binding         api.ObjectRef
+	proof           *signedProofBridge
+	answerSchema    api.ComponentRef
+	content         *contentBridge
+	commitFault     *atomic.Bool
 	session, branch string
 }
 
@@ -89,10 +106,21 @@ func newApplication(t *testing.T) *applicationFixture {
 	ctx := context.Background()
 	var store runtime.Store
 	var e error
+	commitFault := &atomic.Bool{}
 	if os.Getenv("HARNESS_INTERACTION_STORE") == "postgres" {
-		store, e = postgres.Open(ctx, os.Getenv("HARNESS_TEST_POSTGRES_DSN"), postgres.WithMaxConnections(8))
+		store, e = postgres.Open(ctx, os.Getenv("HARNESS_TEST_POSTGRES_DSN"), postgres.WithMaxConnections(8), postgres.WithCommitFault(func(phase postgres.CommitPhase) error {
+			if phase == postgres.AfterCommit && commitFault.Swap(false) {
+				return runtime.ErrCommitUnknown
+			}
+			return nil
+		}))
 	} else {
-		store, e = sqlite.Open(filepath.Join(t.TempDir(), "application.sqlite"))
+		store, e = sqlite.Open(filepath.Join(t.TempDir(), "application.sqlite"), sqlite.WithCommitFault(func(phase sqlite.CommitPhase) error {
+			if phase == sqlite.AfterCommit && commitFault.Swap(false) {
+				return runtime.ErrCommitUnknown
+			}
+			return nil
+		}))
 	}
 	if e != nil {
 		t.Fatal(e)
@@ -118,7 +146,15 @@ func newApplication(t *testing.T) *applicationFixture {
 		t.Fatal(e)
 	}
 	policy := api.ComponentRef{ComponentID: api.NewID("policy"), Version: "1", Digest: api.Hash([]byte("application-task-policy"))}
-	ts, e := task.New(task.Config{Policies: []task.TaskPolicy{{PolicyRef: policy, ContinuationLimit: 100, RepairLimit: 3, NoProgressLimit: 5, ContextRoundLimit: 3, SafeAttemptLimit: 2, MaxRequirements: 100, MaxDelegations: 128, MaxDepth: 4, CostMode: "strict", BudgetLimits: []api.Amount{{Unit: "USD", Value: "100"}}, MaxEvidenceStalenessSeconds: 300, MaxDurationSeconds: 3600}}, Participants: []string{"task", "content", "interaction"}}, task.Ports{})
+	keys, e := platform.NewDevelopmentKey(scope.TenantID, scope.OwnerID, []string{"control", "task_closure"})
+	if e != nil {
+		t.Fatal(e)
+	}
+	proof := &signedProofBridge{keys: keys, m: m, auth: a, policy: cp}
+	schema := api.Object(map[string]any{"path": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "path")
+	schemaDigest, _ := api.Digest(schema)
+	schemaRef := api.ComponentRef{ComponentID: api.NewID("schema"), Version: "1", Digest: schemaDigest}
+	ts, e := task.New(task.Config{Policies: []task.TaskPolicy{{PolicyRef: policy, ContinuationLimit: 100, RepairLimit: 3, NoProgressLimit: 5, ContextRoundLimit: 3, SafeAttemptLimit: 2, MaxRequirements: 100, MaxDelegations: 128, MaxDepth: 4, CostMode: "strict", BudgetLimits: []api.Amount{{Unit: "USD", Value: "100"}}, MaxEvidenceStalenessSeconds: 300, MaxDurationSeconds: 3600}}, Participants: []string{"task", "content", "memory", "interaction"}, AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: schemaRef, Schema: schema}}}, task.Ports{ClosureProof: proof, ControlProof: proof, Content: taskPublicationBridge{m, a, cp}})
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -140,14 +176,15 @@ func newApplication(t *testing.T) *applicationFixture {
 	sessionID, branchID := api.NewID("session"), api.NewID("branch")
 	binding := scope.Ref(api.NewID("binding"), 1)
 	one := uint64(1)
-	s, e := interaction.New(interaction.Config{DiscoveryOwnerID: scope.OwnerID, Participants: []string{"interaction", "content", "task"}, EventBindings: []interaction.EventBinding{{BindingRef: binding, Events: []interaction.EventRule{{Name: "archive", Schema: api.Raw(api.Object(map[string]any{"reason": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "reason")), OwnerID: scope.OwnerID, Method: "session.archive", TargetID: sessionID, AcceptForSeconds: 60, ExpectedRevision: &one}}}}}, interaction.Ports{Content: contentBridge{m}, Delivery: delivery, Closure: closureBridge{ts, store}, Requests: requestBridge{ts}, Calendar: calendar, ScheduleGate: scheduleGateBridge{policy, policy}})
+	content := &contentBridge{m: m}
+	s, e := interaction.New(interaction.Config{DiscoveryOwnerID: scope.OwnerID, Participants: []string{"interaction", "content", "memory", "task"}, EventBindings: []interaction.EventBinding{{BindingRef: binding, Events: []interaction.EventRule{{Name: "archive", Schema: api.Raw(api.Object(map[string]any{"reason": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "reason")), OwnerID: scope.OwnerID, Method: "session.archive", TargetID: sessionID, AcceptForSeconds: 60, ExpectedRevision: &one, RequiresRendered: true}}}}}, interaction.Ports{Content: content, Delivery: delivery, Closure: closureBridge{ts, store, proof}, Requests: requestBridge{ts}, Calendar: calendar, ScheduleGate: scheduleGateBridge{policy, policy}})
 	if e != nil {
 		t.Fatal(e)
 	}
 	if e = s.Register(registry); e != nil {
 		t.Fatal(e)
 	}
-	f := &applicationFixture{ctx: ctx, store: store, scope: scope, auth: a, m: m, cp: cp, task: ts, s: s, d: d, registry: registry, delivery: delivery, policy: policy, config: policy, binding: binding, session: sessionID, branch: branchID}
+	f := &applicationFixture{ctx: ctx, store: store, scope: scope, auth: a, m: m, cp: cp, task: ts, s: s, d: d, registry: registry, delivery: delivery, policy: policy, config: policy, binding: binding, proof: proof, answerSchema: schemaRef, content: content, commitFault: commitFault, session: sessionID, branch: branchID}
 	f.command(t, "session.create", scope.OwnerID, nil, interaction.CreateSessionInput{SessionID: f.session, DefaultBranchID: f.branch, ConfigRef: policy})
 	return f
 }
@@ -164,8 +201,11 @@ func (f *applicationFixture) command(t *testing.T, method, target string, revisi
 	return r
 }
 func (f *applicationFixture) upload(t *testing.T, body string) api.ContentRef {
+	return f.uploadMedia(t, body, "text/plain")
+}
+func (f *applicationFixture) uploadMedia(t *testing.T, body, media string) api.ContentRef {
 	t.Helper()
-	ref := api.ContentRef{TenantID: f.scope.TenantID, OwnerID: f.scope.OwnerID, ContentID: api.NewID("content"), Version: 1, Hash: api.Hash([]byte(body)), ByteLength: uint64(len(body)), MediaType: "text/plain"}
+	ref := api.ContentRef{TenantID: f.scope.TenantID, OwnerID: f.scope.OwnerID, ContentID: api.NewID("content"), Version: 1, Hash: api.Hash([]byte(body)), ByteLength: uint64(len(body)), MediaType: media}
 	r, e := f.m.Upload(f.ctx, f.scope, f.auth, memory.PublicationRequest{ContentRef: ref, TransferID: api.NewID("upload"), ReserveCommandID: api.NewID("command"), PutCommandID: api.NewID("command"), PolicyRef: f.cp.PolicyRef, ProcessedSources: []api.ContentRef{}, DisclosedSources: []api.ContentRef{}, RetentionUntil: api.Time(time.Now().Add(30 * time.Minute)), TransferDeadline: api.Time(time.Now().Add(10 * time.Minute))}, []byte(body))
 	if e != nil {
 		t.Fatal(e)

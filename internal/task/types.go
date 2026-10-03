@@ -74,6 +74,9 @@ type LocalGate interface {
 	Authorize(context.Context, runtime.Tx, runtime.Auth, string, []api.ContentRef, []api.ObjectRef) error
 	Evidence(context.Context, runtime.Tx, api.Task, []api.ObjectRef, []api.ComponentRef) error
 }
+type SubjectGate interface {
+	CheckSubjectTx(context.Context, runtime.Tx, runtime.Auth) error
+}
 
 // EvidenceRegistration 供显式同库宿主从完整报告登记治理准确副本。
 // 这些入口只在调用方完成外部取证后运行，不读取网络或Content字节。
@@ -112,6 +115,11 @@ type CollaborationPort interface {
 	ReadClosure(context.Context, runtime.Scope, api.ObjectRef) (api.AllocationClosure, error)
 	Transfer(context.Context, runtime.Scope, Transfer) error
 }
+
+// 可选本地配置门禁，在创建任何会话/委派/预算责任前拒绝未配置的对端。
+type CollaborationAdmission interface {
+	CheckCollaborationTx(context.Context, runtime.Tx, runtime.Auth, string, string) error
+}
 type AllocationReporter interface {
 	ReportClosure(context.Context, runtime.Scope, string, api.ObjectRef, api.AllocationClosure) error
 }
@@ -125,6 +133,9 @@ type ControlProofPort interface {
 }
 type ClosureProofPort interface {
 	SealClosureTx(context.Context, runtime.Tx, ClosureView) (api.ContentRef, error)
+}
+type AllocationProofPort interface {
+	SealAllocationClosureTx(context.Context, runtime.Tx, api.AllocationClosure) (api.ContentRef, error)
 }
 type ActionAuthorization interface {
 	AuthorizeAction(context.Context, runtime.Tx, runtime.Auth, OperationIntent) error
@@ -241,6 +252,18 @@ type ResultOutput struct {
 	Publication string          `json:"publication"`
 	ContentRef  *api.ContentRef `json:"content_ref,omitempty"`
 	Notices     []string        `json:"notices"`
+	NoticeRefs  []api.ObjectRef `json:"notice_refs"`
+}
+
+// ResultNotice 是已核原证据治理通知的内部交接，保留其准确身份与依据。
+type ResultNotice struct {
+	NoticeRef       api.ObjectRef `json:"notice_ref"`
+	ConsumerTaskRef api.ObjectRef `json:"consumer_task_ref"`
+	ResultRef       api.ObjectRef `json:"result_ref"`
+	HolderRef       api.ObjectRef `json:"holder_ref"`
+	DefectRef       api.ObjectRef `json:"defect_ref"`
+	Reason          string        `json:"reason"`
+	RegisteredAt    string        `json:"registered_at"`
 }
 type TaskListInput struct {
 	Limit  uint64 `json:"limit"`
@@ -375,18 +398,19 @@ type Allocation struct {
 	ClosureRef    *api.ObjectRef `json:"closure_ref,omitempty"`
 }
 type IncomingAllocation struct {
-	AllocationID  string         `json:"allocation_id"`
-	Revision      uint64         `json:"revision"`
-	ParentOwner   string         `json:"parent_owner"`
-	ReceiverID    string         `json:"receiver_id"`
-	ParentTaskRef api.ObjectRef  `json:"parent_task_ref"`
-	TaskRef       *api.ObjectRef `json:"task_ref,omitempty"`
-	Limits        []api.Amount   `json:"limits"`
-	Gate          string         `json:"gate"`
-	UsageRevision uint64         `json:"usage_revision"`
-	Cumulative    []api.Amount   `json:"cumulative"`
-	ClosedAt      string         `json:"closed_at,omitempty"`
-	ClosureRef    *api.ObjectRef `json:"closure_ref,omitempty"`
+	AllocationID   string         `json:"allocation_id"`
+	Revision       uint64         `json:"revision"`
+	ParentOwner    string         `json:"parent_owner"`
+	ReceiverID     string         `json:"receiver_id"`
+	ParentTaskRef  api.ObjectRef  `json:"parent_task_ref"`
+	TaskRef        *api.ObjectRef `json:"task_ref,omitempty"`
+	Limits         []api.Amount   `json:"limits"`
+	Gate           string         `json:"gate"`
+	UsageRevision  uint64         `json:"usage_revision"`
+	Cumulative     []api.Amount   `json:"cumulative"`
+	ClosedAt       string         `json:"closed_at,omitempty"`
+	ClosureRef     *api.ObjectRef `json:"closure_ref,omitempty"`
+	ClosurePending bool           `json:"closure_pending"`
 }
 type AllocateInput struct {
 	AllocationID  string        `json:"allocation_id"`
@@ -587,6 +611,8 @@ type relation struct {
 type taskState struct {
 	Task                 api.Task             `json:"task"`
 	SubjectID            string               `json:"subject_id"`
+	SubmitterGeneration  uint64               `json:"submitter_generation"`
+	SubmitterRoles       []string             `json:"submitter_roles"`
 	Policy               TaskPolicy           `json:"policy"`
 	SourceRefs           []api.SourceEvidence `json:"source_refs"`
 	InitialGoalRef       api.ContentRef       `json:"initial_goal_ref"`
@@ -621,6 +647,7 @@ type resultPublication struct {
 	State      string          `json:"state"`
 	ContentRef *api.ContentRef `json:"content_ref,omitempty"`
 	Notices    []string        `json:"notices"`
+	NoticeRefs []api.ObjectRef `json:"notice_refs"`
 }
 type pendingSteer struct {
 	Input     SteerInput `json:"input"`

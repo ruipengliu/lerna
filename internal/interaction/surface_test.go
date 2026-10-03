@@ -5,6 +5,7 @@ import (
 
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/interaction"
+	"github.com/ruipengliu/lerna/internal/memory"
 )
 
 func TestClosedPresentationInvalidatesOldBodyAndNotModifiedCallbacks(t *testing.T) {
@@ -32,6 +33,37 @@ func TestClosedPresentationInvalidatesOldBodyAndNotModifiedCallbacks(t *testing.
 	f.command(t, "presentation.close", presentationID, &rev, interaction.ClosePresentationInput{Reason: "用户关窗"})
 	if _, e = f.s.ReadPresentation(f.ctx, f.store, f.scope, f.auth, presentationID, read); !api.IsCode(e, "invalid_state") {
 		t.Fatalf("old cache callback survived close %v", e)
+	}
+}
+
+func TestBodyDisclosureIsRecheckedAfterActualByteReadAndOnCacheHit(t *testing.T) {
+	f := newApplication(t)
+	snapshot := f.upload(t, "{\"title\":\"撤回披露\"}")
+	surfaceID := api.NewID("surface")
+	f.command(t, "surface.create", surfaceID, nil, interaction.SurfaceInput{BindingRef: f.binding, SnapshotRef: snapshot, RequestRefs: []api.ObjectRef{}})
+	id := api.NewID("presentation")
+	r := f.command(t, "presentation.open", id, nil, interaction.OpenPresentationInput{EndpointID: api.NewID("endpoint"), InstanceID: api.NewID("instance"), SurfaceRef: f.scope.Ref(surfaceID, 1)})
+	var p interaction.Presentation
+	if e := api.Decode(r.Output, &p); e != nil {
+		t.Fatal(e)
+	}
+	rev := p.Revision
+	r = f.command(t, "presentation.begin", id, &rev, interaction.BeginPresentationInput{IntentRevision: p.IntentRevision})
+	if e := api.Decode(r.Output, &p); e != nil {
+		t.Fatal(e)
+	}
+	read := interaction.RenderReadInput{Generation: p.Generation, IntentRevision: p.IntentRevision}
+	f.content.hook = func() {
+		f.content.hook = nil
+		one := uint64(1)
+		f.command(t, "content.close", snapshot.ContentID, &one, memory.CloseInput{ContentRef: snapshot, Reason: "正文取回期间撤回披露"})
+	}
+	if _, e := f.s.ReadPresentation(f.ctx, f.store, f.scope, f.auth, id, read); !api.IsCode(e, "forbidden") {
+		t.Fatalf("old body callback crossed content closure %v", e)
+	}
+	read.KnownHash = snapshot.Hash
+	if _, e := f.s.ReadPresentation(f.ctx, f.store, f.scope, f.auth, id, read); !api.IsCode(e, "forbidden") {
+		t.Fatalf("not_modified bypassed current qualification %v", e)
 	}
 }
 

@@ -66,6 +66,9 @@ func (s *Service) AllocateHostCallTx(ctx context.Context, tx rt.Tx, environmentI
 	if env.Generation != input.ExpectedGeneration {
 		return HostCall{}, api.E("revision_conflict", "generation_changed")
 	}
+	if len(env.HostCallIDs) >= 100 {
+		return HostCall{}, api.E("overloaded", "environment_hostcall_limit")
+	}
 	if env.Phase != "active" || len(env.StopResiduals) > 0 {
 		return HostCall{}, api.E("invalid_state", "environment_not_active")
 	}
@@ -97,8 +100,15 @@ func (s *Service) AllocateHostCallTx(ctx context.Context, tx rt.Tx, environmentI
 		return h, err
 	}
 	env.HostCallIDs = append(env.HostCallIDs, id)
+	foundParent := false
+	for _, id := range env.HostCallParents {
+		foundParent = foundParent || id == parentOperationID
+	}
+	if !foundParent {
+		env.HostCallParents = append(env.HostCallParents, parentOperationID)
+	}
 	env.Revision = rev + 1
-	if err = tx.Put(ctx, Namespace+".environments", environmentID, rev, env); err != nil {
+	if err = putEnvironment(ctx, tx, environmentID, rev, env); err != nil {
 		return h, err
 	}
 	now, err := tx.Now(ctx)
@@ -145,6 +155,9 @@ func (s *Service) hostCallWork(ctx context.Context, st rt.Store, sc rt.Scope, w 
 			disp = rt.Waiting(time.Now().UTC().Add(time.Minute))
 		}
 		return s.finish(ctx, st, sc, w, disp, func(tx rt.Tx) error {
+			if err := lockHostEnvironment(ctx, tx, h.EnvironmentID); err != nil {
+				return err
+			}
 			var current HostCall
 			rev, err := tx.Get(ctx, Namespace+".hostcalls", h.HostCallID, &current)
 			if err != nil {
@@ -172,6 +185,9 @@ func (s *Service) hostCallWork(ctx context.Context, st rt.Store, sc rt.Scope, w 
 	if h.Phase == "prepared" {
 		if closing {
 			return s.finish(ctx, st, sc, w, rt.Done(), func(tx rt.Tx) error {
+				if err := lockHostEnvironment(ctx, tx, h.EnvironmentID); err != nil {
+					return err
+				}
 				var current HostCall
 				rev, err := tx.Get(ctx, Namespace+".hostcalls", h.HostCallID, &current)
 				if err != nil {
@@ -184,8 +200,12 @@ func (s *Service) hostCallWork(ctx context.Context, st rt.Store, sc rt.Scope, w 
 			})
 		}
 		status, e := st.Within(ctx, sc, []string{Namespace}, func(tx rt.Tx) error {
-			if e := tx.Guard(ctx, w.Claim); e != nil {
+			var currentEnv Environment
+			if _, e := tx.Get(ctx, Namespace+".environments", h.EnvironmentID, &currentEnv); e != nil {
 				return e
+			}
+			if currentEnv.Phase != "active" || currentEnv.Generation != h.Generation {
+				return api.E("invalid_state", "environment_closed")
 			}
 			var current HostCall
 			rev, e := tx.Get(ctx, Namespace+".hostcalls", h.HostCallID, &current)
@@ -197,7 +217,10 @@ func (s *Service) hostCallWork(ctx context.Context, st rt.Store, sc rt.Scope, w 
 			}
 			current.Revision = rev + 1
 			current.Phase = "possibly_sent"
-			return tx.Put(ctx, Namespace+".hostcalls", h.HostCallID, rev, current)
+			if e = tx.Put(ctx, Namespace+".hostcalls", h.HostCallID, rev, current); e != nil {
+				return e
+			}
+			return tx.Guard(ctx, w.Claim)
 		})
 		if status == rt.CommitUnknown {
 			return rt.ErrCommitUnknown
@@ -217,6 +240,9 @@ func (s *Service) hostCallWork(ctx context.Context, st rt.Store, sc rt.Scope, w 
 		return api.E("invalid_request", "hostcall_target_kind_mismatch")
 	}
 	return s.finish(ctx, st, sc, w, rt.Done(), func(tx rt.Tx) error {
+		if err := lockHostEnvironment(ctx, tx, h.EnvironmentID); err != nil {
+			return err
+		}
 		var current HostCall
 		rev, err := tx.Get(ctx, Namespace+".hostcalls", h.HostCallID, &current)
 		if err != nil {
@@ -247,7 +273,7 @@ func (s *Service) hostCallWork(ctx context.Context, st rt.Store, sc rt.Scope, w 
 			_, err = tx.Raise(ctx, HostCallJob, h.HostCallID, sc.Ref(h.HostCallID, current.Revision), now)
 			return err
 		}
-		return nil
+		return s.refreshEnvironmentReady(ctx, tx, h.EnvironmentID)
 	})
 }
 
@@ -261,7 +287,7 @@ func (s *Service) wakeEnvironmentCleanup(ctx context.Context, tx rt.Tx, id strin
 		return nil
 	}
 	env.Revision = rev + 1
-	if err = tx.Put(ctx, Namespace+".environments", id, rev, env); err != nil {
+	if err = putEnvironment(ctx, tx, id, rev, env); err != nil {
 		return err
 	}
 	now, err := tx.Now(ctx)
@@ -270,4 +296,54 @@ func (s *Service) wakeEnvironmentCleanup(ctx context.Context, tx rt.Tx, id strin
 	}
 	_, err = tx.Raise(ctx, EnvironmentCleanupJob, id, tx.Scope().Ref(id, env.Revision), now)
 	return err
+}
+
+func lockHostEnvironment(ctx context.Context, tx rt.Tx, id string) error {
+	var env Environment
+	_, err := tx.Get(ctx, Namespace+".environments", id, &env)
+	return err
+}
+func hostMappingsKnown(ctx context.Context, tx rt.Tx, env Environment) (bool, error) {
+	needed := map[string]bool{}
+	for _, id := range env.HostCallIDs {
+		needed[id] = true
+	}
+	for _, parent := range env.HostCallParents {
+		records, err := tx.List(ctx, Namespace+".hostcalls", parent, "", 100)
+		if err != nil {
+			return false, err
+		}
+		for _, record := range records {
+			if !needed[record.ID] {
+				continue
+			}
+			var call HostCall
+			if err = record.Decode(&call); err != nil {
+				return false, err
+			}
+			delete(needed, record.ID)
+			if call.Phase == "prepared" || call.Phase == "possibly_sent" || call.Phase == "closing" {
+				return false, nil
+			}
+		}
+	}
+	return len(needed) == 0, nil
+}
+func (s *Service) refreshEnvironmentReady(ctx context.Context, tx rt.Tx, id string) error {
+	var env Environment
+	rev, err := tx.Get(ctx, Namespace+".environments", id, &env)
+	if err != nil {
+		return err
+	}
+	known, err := hostMappingsKnown(ctx, tx, env)
+	if err != nil {
+		return err
+	}
+	ready := env.Phase == "active" && env.ActuallyExited && len(env.ActiveOperationIDs) == 0 && len(env.StopResiduals) == 0 && known
+	if env.ReadyForCell == ready {
+		return nil
+	}
+	env.Revision = rev + 1
+	env.ReadyForCell = ready
+	return putEnvironment(ctx, tx, id, rev, env)
 }

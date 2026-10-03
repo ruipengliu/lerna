@@ -19,7 +19,7 @@ type IndexStatus struct {
 // IndexStatus 只报告已提交连续元数据投影；查询始终有界补扫当前权威。
 func (s *Service) IndexStatus(ctx context.Context, scope runtime.Scope, auth runtime.Auth) (IndexStatus, error) {
 	var out IndexStatus
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}

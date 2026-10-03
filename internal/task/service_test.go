@@ -64,7 +64,7 @@ func TestSubmitPreservesOriginalGoalAndDuplicateCommand(t *testing.T) {
 
 type harness struct {
 	service  *task.Service
-	store    *sqlite.Store
+	store    runtime.Store
 	scope    runtime.Scope
 	auth     runtime.Auth
 	policy   task.TaskPolicy
@@ -85,6 +85,11 @@ func newHarness(t *testing.T, ports task.Ports, rules ...api.RuleDefinition) *ha
 			t.Error(err)
 		}
 	})
+	return harnessForStore(t, store, ports, rules...)
+}
+
+func harnessForStore(t *testing.T, store runtime.Store, ports task.Ports, rules ...api.RuleDefinition) *harness {
+	t.Helper()
 	policy := fixturePolicy()
 	s, err := task.New(task.Config{Policies: []task.TaskPolicy{policy}, Rules: rules, Participants: []string{"task", "governance"}}, ports)
 	if err != nil {

@@ -117,10 +117,10 @@ func (s *Service) run(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work) 
 		return s.closeUnstarted(ctx, st, sc, w, api.E("forbidden", "start_proof_missing"))
 	}
 	attempt.PreparedAuthority = authority
+	if err = st.CheckClaim(ctx, sc, w.Claim); err != nil {
+		return err
+	}
 	status, err := st.Within(ctx, sc, s.participants(), func(tx rt.Tx) error {
-		if err := tx.Guard(ctx, w.Claim); err != nil {
-			return err
-		}
 		var current operationRecord
 		rev, err := tx.Get(ctx, Namespace+".operations", op.Operation.OperationID, &current)
 		if err != nil {
@@ -141,7 +141,7 @@ func (s *Service) run(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work) 
 			return err
 		}
 		op = current
-		return nil
+		return tx.Guard(ctx, w.Claim)
 	})
 	if status == rt.CommitUnknown {
 		return rt.ErrCommitUnknown
@@ -163,7 +163,7 @@ func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w
 		}
 		called = true
 		status, err := st.Within(callCtx, sc, s.participants(), func(tx rt.Tx) error {
-			if err := tx.Guard(callCtx, w.Claim); err != nil {
+			if err := lockAttemptGates(callCtx, tx, op.Invoke, attempt, true); err != nil {
 				return err
 			}
 			var current operationRecord
@@ -234,7 +234,10 @@ func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w
 			}
 			_, err = tx.Raise(callCtx, ReconcileJob, current.Operation.OperationID, sc.Ref(current.Operation.OperationID, current.Revision), now.Add(5*time.Second))
 			attempt = a
-			return err
+			if err != nil {
+				return err
+			}
+			return tx.Guard(callCtx, w.Claim)
 		})
 		if status == rt.CommitUnknown {
 			return rt.ErrCommitUnknown
@@ -339,6 +342,12 @@ func (s *Service) reconcileWork(ctx context.Context, st rt.Store, sc rt.Scope, w
 	return nil
 }
 func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work, op operationRecord, a Attempt, f Fact) error {
+	if f.Usage == nil {
+		f.Usage = []api.Amount{}
+	}
+	if f.Evidence == nil {
+		f.Evidence = []api.ContentRef{}
+	}
 	if err := validFact(f); err != nil {
 		return err
 	}
@@ -394,10 +403,13 @@ func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 		outputRef = &ref
 	}
 	disposition := rt.Done()
-	if f.Effect == "unknown" || !noLater(f.MayApplyLater) || !f.UsageFinal {
+	if w.Job.Kind == ReconcileJob && op.ReconcileCount < 9 && (f.Effect == "unknown" || !noLater(f.MayApplyLater) || !f.UsageFinal) {
 		disposition = rt.Waiting(time.Now().UTC().Add(30 * time.Second))
 	}
 	return s.finish(ctx, st, sc, w, disposition, func(tx rt.Tx) error {
+		if err := lockAttemptGates(ctx, tx, op.Invoke, a, false); err != nil {
+			return err
+		}
 		var current operationRecord
 		rev, err := tx.Get(ctx, Namespace+".operations", op.Operation.OperationID, &current)
 		if err != nil {
@@ -462,6 +474,12 @@ func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 		if err = s.aggregate(ctx, tx, &current); err != nil {
 			return err
 		}
+		if w.Job.Kind == ReconcileJob {
+			current.ReconcileCount++
+			if current.ReconcileCount >= 10 && current.Operation.Attempts.UnresolvedCount > 0 {
+				current.Operation.NextAction = "provide_evidence"
+			}
+		}
 		if old.Phase == "reconciled" {
 			if err = s.releaseInflight(ctx, tx, old); err != nil {
 				return err
@@ -470,7 +488,7 @@ func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 		if err = putOperation(ctx, tx, &current, rev); err != nil {
 			return err
 		}
-		if current.Operation.Effect == "unknown" || !noLater(current.Operation.MayApplyLater) || !current.Operation.UsageFinal {
+		if w.Job.Kind != ReconcileJob && (current.Operation.Effect == "unknown" || !noLater(current.Operation.MayApplyLater) || !current.Operation.UsageFinal) {
 			_, err = tx.Raise(ctx, ReconcileJob, current.Operation.OperationID, sc.Ref(current.Operation.OperationID, current.Revision), now.Add(30*time.Second))
 		}
 		return err
@@ -635,4 +653,27 @@ func (s *Service) selectControlWindow(ctx context.Context, st rt.Store, sc rt.Sc
 		}
 	}
 	return selected, nil
+}
+
+// 门禁→Operation→Attempt→Job。门禁预先锁定，避免 control/takeover/stop 与出口逆序。
+func lockAttemptGates(ctx context.Context, tx rt.Tx, p InvokeInput, a Attempt, task bool) error {
+	if task {
+		var gate TaskGate
+		if _, err := tx.Get(ctx, Namespace+".gates", gateID(p.TaskRef.OwnerID, p.TaskRef.ObjectID), &gate); err != nil {
+			return err
+		}
+	}
+	if a.Prepared.ResourceID != "" {
+		var resource ResourceLease
+		if _, err := tx.Get(ctx, Namespace+".resources", a.Prepared.ResourceID, &resource); err != nil {
+			return err
+		}
+	}
+	if a.Prepared.Cell != nil {
+		var env Environment
+		if _, err := tx.Get(ctx, Namespace+".environments", a.Prepared.Cell.EnvironmentRef.ObjectID, &env); err != nil {
+			return err
+		}
+	}
+	return nil
 }
