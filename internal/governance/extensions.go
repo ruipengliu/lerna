@@ -1031,11 +1031,17 @@ func (s *Service) dispose(ctx context.Context, tx runtime.Tx, a runtime.Auth, c 
 	if in.ExpectedRevision != rev {
 		return runtime.Outcome{}, api.E("revision_conflict", "revision_changed")
 	}
+	if catalog.Disposing {
+		return runtime.Outcome{}, api.E("invalid_state", "install_lock_disposal_already_started")
+	}
 	catalog.Revision = rev + 1
 	catalog.Disposing = true
 	catalog.State = "disposing"
 	catalog.CommandID = c.CommandID
 	if err = tx.Put(ctx, ns("installations"), id, rev, catalog); err != nil {
+		return runtime.Outcome{}, err
+	}
+	if err = tx.Create(ctx, ns("disposal_progress"), c.CommandID, id, disposalProgress{Revision: 1, CommandID: c.CommandID, InstallationID: id}); err != nil {
 		return runtime.Outcome{}, err
 	}
 	now, err := tx.Now(ctx)
@@ -1047,14 +1053,37 @@ func (s *Service) dispose(ctx context.Context, tx runtime.Tx, a runtime.Auth, c 
 	}
 	return runtime.Accepted(StateOutput{Ref: tx.Scope().Ref(id, catalog.Revision), State: "disposing"}), nil
 }
+
+// 原安装锁关闭后，新增 holder 被拒绝，released 不可逆；历史证明可逐页持久累计。
+type disposalProgress struct {
+	Revision       uint64 `json:"revision"`
+	CommandID      string `json:"command_id"`
+	InstallationID string `json:"installation_id"`
+	After          string `json:"after"`
+	Complete       bool   `json:"complete"`
+}
+
 func (s *Service) continueDispose(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
 	var catalog PreparedInstall
 	if _, err := store.Read(ctx, scope, ns("installations"), work.Job.ResponsibilityKey, 0, &catalog); err != nil {
 		return err
 	}
-	cursor := ""
-	for {
-		rows, err := store.List(ctx, scope, ns("install_holders"), componentKey(catalog.Installation.InstallLockRef), cursor, 100)
+	if catalog.State == "disposed" {
+		return finish(ctx, store, scope, s.participants(), work, runtime.Done(), nil)
+	}
+	if !catalog.Disposing || catalog.CommandID == "" {
+		return api.E("invalid_state", "install_lock_not_disposing")
+	}
+	progress := disposalProgress{CommandID: catalog.CommandID, InstallationID: catalog.ID}
+	_, err := store.Read(ctx, scope, ns("disposal_progress"), catalog.CommandID, 0, &progress)
+	if err != nil && !errMissing(err) {
+		return err
+	}
+	if progress.CommandID != catalog.CommandID || progress.InstallationID != catalog.ID {
+		return api.E("idempotency_conflict", "disposal_progress_changed")
+	}
+	if !progress.Complete {
+		rows, err := store.List(ctx, scope, ns("install_holders"), catalog.ID, progress.After, 100)
 		if err != nil {
 			return err
 		}
@@ -1066,27 +1095,70 @@ func (s *Service) continueDispose(ctx context.Context, store runtime.Store, scop
 			if holder.State != "released" {
 				return api.E("dependency_unavailable", "install_holder_unresolved")
 			}
-			cursor = row.ID
 		}
-		if len(rows) < 100 {
-			break
-		}
+		return finish(ctx, store, scope, s.participants(), work, runtime.Ready(time.Now()), func(tx runtime.Tx) error {
+			if _, err := tx.LoadCommand(ctx, catalog.CommandID); err != nil {
+				return err
+			}
+			var current PreparedInstall
+			if _, err := tx.Get(ctx, ns("installations"), catalog.ID, &current); err != nil {
+				return err
+			}
+			if !current.Disposing || current.CommandID != catalog.CommandID || !api.Equal(current.Installation, catalog.Installation) {
+				return api.E("revision_conflict", "disposal_installation_changed")
+			}
+			var saved disposalProgress
+			rev, err := tx.Get(ctx, ns("disposal_progress"), catalog.CommandID, &saved)
+			if err != nil && !errMissing(err) {
+				return err
+			}
+			if err == nil && !api.Equal(saved, progress) {
+				return api.E("revision_conflict", "disposal_progress_changed")
+			}
+			// 老格式 accepted 责任从第一页开始，绝不因升级跳过历史。
+			if errMissing(err) {
+				progress.Revision = 1
+				if err = tx.Create(ctx, ns("disposal_progress"), catalog.CommandID, catalog.ID, progress); err != nil {
+					return err
+				}
+				rev = 1
+			}
+			progress.Revision = rev + 1
+			if len(rows) > 0 {
+				progress.After = rows[len(rows)-1].ID
+			}
+			progress.Complete = len(rows) < 100
+			return tx.Put(ctx, ns("disposal_progress"), catalog.CommandID, rev, progress)
+		})
 	}
 	if s.Ports.Lifecycle == nil {
 		return api.E("dependency_unavailable", "trusted_lifecycle_unavailable")
+	}
+	if err = store.CheckClaim(ctx, scope, work.Claim); err != nil {
+		return err
 	}
 	evidence, err := s.Ports.Lifecycle.Dispose(ctx, catalog.Installation)
 	if err != nil {
 		return err
 	}
 	return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, err := tx.LoadCommand(ctx, catalog.CommandID); err != nil {
+			return err
+		}
 		var current PreparedInstall
 		rev, err := tx.Get(ctx, ns("installations"), catalog.ID, &current)
 		if err != nil {
 			return err
 		}
-		if !current.Disposing {
+		if !current.Disposing || current.CommandID != catalog.CommandID || !api.Equal(current.Installation, catalog.Installation) {
 			return api.E("invalid_state", "install_lock_not_disposing")
+		}
+		var saved disposalProgress
+		if _, err = tx.Get(ctx, ns("disposal_progress"), catalog.CommandID, &saved); err != nil {
+			return err
+		}
+		if !saved.Complete || !api.Equal(saved, progress) {
+			return api.E("revision_conflict", "disposal_history_not_closed")
 		}
 		current.Revision = rev + 1
 		if evidence.Exited && len(evidence.ResidualRefs) == 0 {
@@ -1098,7 +1170,7 @@ func (s *Service) continueDispose(ctx context.Context, store runtime.Store, scop
 			return err
 		}
 		if current.State != "disposed" {
-			return nil
+			return tx.Hint(ctx, work.Job.JobID, time.Now().Add(time.Second))
 		}
 		return runtime.Decide(ctx, tx, current.CommandID, StateOutput{Ref: scope.Ref(current.ID, current.Revision), State: current.State}, nil)
 	})

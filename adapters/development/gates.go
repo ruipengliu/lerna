@@ -53,7 +53,10 @@ type currentCredential struct {
 func currentCredentialTx(ctx context.Context, tx runtime.Tx, a runtime.Auth) error {
 	var c currentCredential
 	if _, e := tx.Get(ctx, "platform.credentials", a.SubjectID, &c); e != nil {
-		return api.E("forbidden", "identity_authority_unavailable")
+		if api.IsCode(e, "not_found") {
+			return api.E("forbidden", "identity_authority_unavailable")
+		}
+		return e
 	}
 	if c.State != "active" || c.Generation != a.CredentialGeneration {
 		return api.E("forbidden", "credential_revoked")
