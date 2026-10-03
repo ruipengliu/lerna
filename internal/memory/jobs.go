@@ -316,7 +316,7 @@ func (s *Service) memoryCleanupJob(ctx context.Context, store runtime.Store, sco
 			if err != nil {
 				return runtime.Disposition{}, err
 			}
-			if holder.Kind != "metadata_reference" {
+			if holder.Kind != "metadata_reference" && holder.Kind != "foreign_metadata_reference" {
 				return runtime.Disposition{}, api.E("invalid_state", "unowned_copy_cleanup")
 			}
 			holder.UseState = "use_stopped"
@@ -324,6 +324,9 @@ func (s *Service) memoryCleanupJob(ctx context.Context, store runtime.Store, sco
 			holder.Revision = holderRev + 1
 			if err = tx.Put(ctx, "content.holders", holder.CopyID, holderRev, holder); err != nil {
 				return runtime.Disposition{}, err
+			}
+			if holder.Kind == "foreign_metadata_reference" {
+				continue
 			}
 			var content ContentVersion
 			_, err = tx.Get(ctx, "content.versions", contentKey(holder.ContentRef), &content)
@@ -588,4 +591,5 @@ func (s *Service) registerJobs(registry *runtime.Registry) {
 	registry.MustRegisterJob("content.expire", s.expireJob)
 	registry.MustRegisterJob("content.copy_expire", s.copyExpireJob)
 	registry.MustRegisterJob("content.foreign_reconcile", s.foreignReconcileJob)
+	registry.MustRegisterJob("content.foreign_reference_expire", s.foreignReferenceExpireJob)
 }

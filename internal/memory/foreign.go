@@ -486,7 +486,7 @@ func (s *Service) SourcePolicySnapshotTx(ctx context.Context, tx runtime.Tx, aut
 	return ContentPolicySnapshot{ContentRef: ref, Policy: policy, SubjectRefs: []api.ObjectRef{auth.Ref(tx.Scope().OwnerID)}, RetainUntil: v.RetentionUntil, ControlRevision: v.ControlRevision}, nil
 }
 
-func (s *Service) checkForeignContent(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous, historical bool) (ContentVersion, error) {
+func (s *Service) checkForeignContent(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous, historical, derived bool) (ContentVersion, error) {
 	uses, _ := ctx.Value(foreignContextKey{}).([]ForeignUse)
 	for _, use := range uses {
 		if use.Reference.ContentRef != ref || use.Reference.Purpose != purpose || use.Reference.Location != location {
@@ -503,8 +503,10 @@ func (s *Service) checkForeignContent(ctx context.Context, tx runtime.Tx, auth r
 		if err = s.foreignUseAllowed(ctx, tx, auth, held, use.Proof, purpose, location, continuous, historical); err != nil {
 			return ContentVersion{}, err
 		}
-		if err = s.checkSourceGate(ctx, tx, auth, ref, purpose, location, continuous); err != nil {
-			return ContentVersion{}, err
+		if derived {
+			if err = s.checkSourceGate(ctx, tx, auth, ref, purpose, location, continuous); err != nil {
+				return ContentVersion{}, err
+			}
 		}
 		p := use.Proof
 		return ContentVersion{ContentRef: ref, ObjectLocation: held.ObjectLocation, State: p.SourceState, ControlRevision: p.ControlRevision, PolicyRef: p.PolicyRef, RetentionUntil: p.RetainUntil, ProcessedSources: p.ProcessedSources, DisclosedSources: p.DisclosedSources, ClosureKind: p.ClosureKind}, nil
@@ -674,6 +676,73 @@ func checkCopyOwnerRefs(scope runtime.Scope, holder, intent api.ObjectRef) error
 		return api.E("forbidden", "copy_reference_scope_mismatch")
 	}
 	return nil
+}
+
+// 派生记录只拥有本方元数据 holder；原远端登记/实际字节责任仍属于 ForeignHeldCopy。
+func (s *Service) registerForeignMetadataRef(ctx context.Context, tx runtime.Tx, auth runtime.Auth, in RegisterCopyInput) (CopyOutput, error) {
+	if err := runtime.CheckRef(tx.Scope(), in.HolderRef); err != nil {
+		return CopyOutput{}, err
+	}
+	if err := runtime.CheckRef(tx.Scope(), in.ReferenceIntentRef); err != nil {
+		return CopyOutput{}, err
+	}
+	v, err := s.CheckContentTx(ctx, tx, auth, in.ContentRef, in.Purpose, in.Location, false)
+	if err != nil {
+		return CopyOutput{}, err
+	}
+	until, err := future(ctx, tx, in.RetainUntil)
+	if err != nil {
+		return CopyOutput{}, err
+	}
+	maximum, _ := api.ParseTime(v.RetentionUntil)
+	if until.After(maximum) {
+		return CopyOutput{}, api.E("forbidden", "retention_scope_expansion")
+	}
+	var old CopyHolder
+	_, err = tx.Get(ctx, "content.holders", in.CopyID, &old)
+	if err == nil {
+		if old.ContentRef != in.ContentRef || old.PrincipalID != auth.SubjectID || !api.Equal(old.HolderRef, in.HolderRef) || old.Purpose != in.Purpose || old.Location != in.Location || old.RetainUntil != in.RetainUntil || !api.Equal(old.ReferenceIntentRef, in.ReferenceIntentRef) || old.Kind != "foreign_metadata_reference" {
+			return CopyOutput{}, api.E("idempotency_conflict", "copy_input_changed")
+		}
+		return copyOutput(old), nil
+	}
+	if !api.IsCode(err, "not_found") {
+		return CopyOutput{}, err
+	}
+	holder := CopyHolder{CopyID: in.CopyID, Revision: 1, ContentRef: in.ContentRef, HolderRef: in.HolderRef, Purpose: in.Purpose, Location: in.Location, PolicyRef: v.PolicyRef, RetainUntil: in.RetainUntil, ReferenceIntentRef: in.ReferenceIntentRef, UseState: "allowed", CleanupState: "pending", ControlRevision: v.ControlRevision, EvidenceRefs: []api.ContentRef{}, PrincipalID: auth.SubjectID, Kind: "foreign_metadata_reference"}
+	if err = tx.Create(ctx, "content.holders", in.CopyID, sourceKey(tx.Scope(), in.ContentRef), holder); err != nil {
+		return CopyOutput{}, err
+	}
+	_, err = tx.Raise(ctx, "content.foreign_reference_expire", in.CopyID, tx.Scope().Ref(in.CopyID, 1), until)
+	return copyOutput(holder), err
+}
+
+func (s *Service) foreignReferenceExpireJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
+	return finishWork(s, ctx, store, scope, work, func(tx runtime.Tx) (runtime.Disposition, error) {
+		var holder CopyHolder
+		rev, err := tx.Get(ctx, "content.holders", work.Job.ResponsibilityKey, &holder)
+		if err != nil {
+			return runtime.Disposition{}, err
+		}
+		if holder.Kind != "foreign_metadata_reference" {
+			return runtime.Disposition{}, api.E("invalid_state", "unowned_foreign_reference")
+		}
+		now, err := tx.Now(ctx)
+		if err != nil {
+			return runtime.Disposition{}, err
+		}
+		until, err := api.ParseTime(holder.RetainUntil)
+		if err != nil {
+			return runtime.Disposition{}, err
+		}
+		if now.Before(until) {
+			return runtime.Waiting(until), nil
+		}
+		holder.UseState = "use_stopped"
+		holder.CleanupState = "complete"
+		holder.Revision = rev + 1
+		return runtime.Done(), tx.Put(ctx, "content.holders", holder.CopyID, rev, holder)
+	})
 }
 
 func (s *Service) heldForeignCopy(ctx context.Context, scope runtime.Scope, auth runtime.Auth, copyID string) (ForeignHeldCopy, error) {

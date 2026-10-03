@@ -360,7 +360,7 @@ func (s *Service) CheckContentTx(ctx context.Context, tx runtime.Tx, auth runtim
 }
 func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous bool, seen map[string]bool, depth int, independent bool) (ContentVersion, error) {
 	if ref.OwnerID != tx.Scope().OwnerID {
-		return s.checkForeignContent(ctx, tx, auth, ref, purpose, location, continuous, independent && depth > 0)
+		return s.checkForeignContent(ctx, tx, auth, ref, purpose, location, continuous, independent && depth > 0, depth > 0)
 	}
 	if err := checkContentRef(tx.Scope(), ref); err != nil {
 		return ContentVersion{}, err
@@ -486,9 +486,11 @@ func (s *Service) Read(ctx context.Context, scope runtime.Scope, auth runtime.Au
 }
 func (s *Service) ReadBytes(ctx context.Context, scope runtime.Scope, auth runtime.Auth, ref api.ContentRef, purpose, location string) ([]byte, error) {
 	var err error
-	ctx, err = s.PrepareForeignContext(ctx, scope, auth, []api.ContentRef{ref}, purpose, location)
-	if err != nil {
-		return nil, err
+	if s.Foreign != nil {
+		ctx, err = s.PrepareForeignContext(ctx, scope, auth, []api.ContentRef{ref}, purpose, location)
+		if err != nil {
+			return nil, err
+		}
 	}
 	var v ContentVersion
 	err = s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
@@ -509,9 +511,11 @@ func (s *Service) ReadBytes(ctx context.Context, scope runtime.Scope, auth runti
 	if err != nil {
 		return nil, err
 	}
-	ctx, err = s.PrepareForeignContext(ctx, scope, auth, []api.ContentRef{ref}, purpose, location)
-	if err != nil {
-		return nil, err
+	if s.Foreign != nil {
+		ctx, err = s.PrepareForeignContext(ctx, scope, auth, []api.ContentRef{ref}, purpose, location)
+		if err != nil {
+			return nil, err
+		}
 	}
 	err = s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		current, err := s.CheckContentTx(ctx, tx, auth, ref, purpose, location, false)

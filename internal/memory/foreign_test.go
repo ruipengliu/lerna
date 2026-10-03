@@ -2,14 +2,72 @@ package memory_test
 
 import (
 	"context"
+	"errors"
+	"net/url"
+	"os"
+	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/ruipengliu/lerna/adapters/platform"
+	"github.com/ruipengliu/lerna/adapters/postgres"
+	"github.com/ruipengliu/lerna/adapters/sqlite"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/memory"
 	"github.com/ruipengliu/lerna/runtime"
 )
+
+// PostgreSQL 矩阵为每个 owner 建独立临时数据库，不把同库分区当跨库证据。
+func newForeignFixture(t *testing.T) fixture {
+	t.Helper()
+	if os.Getenv("HARNESS_FOREIGN_TEST_DRIVER") != "postgres" {
+		return newFixture(t)
+	}
+	dsn := os.Getenv("HARNESS_TEST_POSTGRES_DSN")
+	if dsn == "" {
+		t.Fatal("explicit PostgreSQL verification requires HARNESS_TEST_POSTGRES_DSN")
+	}
+	ctx := context.Background()
+	admin, err := pgx.Connect(ctx, dsn)
+	if err != nil {
+		t.Fatal(err)
+	}
+	name := strings.ToLower(api.NewID("foreign"))
+	if _, err = admin.Exec(ctx, "CREATE DATABASE "+pgx.Identifier{name}.Sanitize()); err != nil {
+		_ = admin.Close(ctx)
+		t.Fatal(err)
+	}
+	ownerDSN := dsn + " dbname=" + name
+	if strings.HasPrefix(dsn, "postgres://") || strings.HasPrefix(dsn, "postgresql://") {
+		u, err := url.Parse(dsn)
+		if err != nil {
+			t.Fatal("invalid configured PostgreSQL URL")
+		}
+		u.Path = "/" + name
+		ownerDSN = u.String()
+	}
+	store, err := postgres.Open(ctx, ownerDSN, postgres.WithMaxConnections(4))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if err := store.Close(); err != nil {
+			t.Error(err)
+		}
+		if _, err := admin.Exec(context.Background(), "DROP DATABASE "+pgx.Identifier{name}.Sanitize()+" WITH (FORCE)"); err != nil {
+			t.Error(err)
+		}
+		if err := admin.Close(context.Background()); err != nil {
+			t.Error(err)
+		}
+	})
+	if err = store.Migrate(ctx); err != nil {
+		t.Fatal(err)
+	}
+	return newFixtureWithStore(t, store)
+}
 
 // 测试 seam 是两个真实 Memory owner 的命令/字节入口与受信签名端口。
 // 端口直接转交原方法，后续故障只控制答复/可达性，不替代业务或 SQL。
@@ -55,7 +113,7 @@ func (p *foreignAuthority) RegisterCopy(ctx context.Context, scope runtime.Scope
 }
 
 func TestForeignRegistrationLostReplyRecoversOriginalAndOfflineStopsReads(t *testing.T) {
-	source, local := newFixture(t), newFixture(t)
+	source, local := newForeignFixture(t), newForeignFixture(t)
 	local.scope.TenantID, local.auth = source.scope.TenantID, source.auth
 	keys, err := platform.NewDevelopmentKey(source.scope.TenantID, source.scope.OwnerID, []string{"executor_content"})
 	if err != nil {
@@ -90,6 +148,11 @@ func TestForeignRegistrationLostReplyRecoversOriginalAndOfflineStopsReads(t *tes
 	control, err := local.service.ControlForeignCopy(local.ctx, local.scope, local.auth, in.CopyID)
 	if err != nil || control.Proof.ControlRevision != 2 || control.Proof.UseState != "closing" {
 		t.Fatalf("original control: %+v %v", control, err)
+	}
+	// 当前同主体新凭据只可收尾原 holder；它不能复用旧登记的新读取许可。
+	local.auth.CredentialGeneration = 2
+	if _, err = local.service.PrepareForeignUse(local.ctx, local.scope, local.auth, in); !api.IsCode(err, "forbidden") {
+		t.Fatalf("new credential opened original read registration: %v", err)
 	}
 	if err = local.service.StopForeignCopy(local.ctx, local.scope, local.auth, in.CopyID); err != nil {
 		t.Fatal(err)
@@ -131,7 +194,7 @@ func (p *foreignAuthority) VerifyTx(ctx context.Context, tx runtime.Tx, auth run
 }
 
 func TestForeignContentKeepsOriginalOwnerAndRequiresCurrentSource(t *testing.T) {
-	source, local := newFixture(t), newFixture(t)
+	source, local := newForeignFixture(t), newForeignFixture(t)
 	// 独立数据库、两个 owner；受信同一 tenant/原主体。
 	local.scope.TenantID, local.auth = source.scope.TenantID, source.auth
 	keys, err := platform.NewDevelopmentKey(source.scope.TenantID, source.scope.OwnerID, []string{"executor_content"})
@@ -176,7 +239,7 @@ func TestForeignContentKeepsOriginalOwnerAndRequiresCurrentSource(t *testing.T) 
 }
 
 func TestForeignSourcePublicationIntersectsOriginalPolicyAndOwnerKey(t *testing.T) {
-	source, local := newFixture(t), newFixture(t)
+	source, local := newForeignFixture(t), newForeignFixture(t)
 	local.scope.TenantID, local.auth = source.scope.TenantID, source.auth
 	if err := local.service.InstallPolicy(local.ctx, local.scope, local.auth, source.policy); err != nil {
 		t.Fatal(err)
@@ -223,5 +286,127 @@ func TestForeignSourcePublicationIntersectsOriginalPolicyAndOwnerKey(t *testing.
 	})
 	if !api.IsCode(err, "forbidden") {
 		t.Fatalf("old proof for another purpose reopened known-closed source: %v", err)
+	}
+}
+
+func TestForeignIntentCommitUnknownStopsRPCAndReopensOriginalIdentity(t *testing.T) {
+	source := newForeignFixture(t)
+	path := t.TempDir() + "/foreign.sqlite"
+	var lose atomic.Bool
+	store, err := sqlite.Open(path, sqlite.WithCommitFault(func(phase sqlite.CommitPhase) error {
+		if phase == sqlite.AfterCommit && lose.Swap(false) {
+			return errors.New("lost original reference-intent commit reply")
+		}
+		return nil
+	}))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = store.Close() })
+	if err = store.Migrate(source.ctx); err != nil {
+		t.Fatal(err)
+	}
+	local := newFixtureWithStore(t, store)
+	local.scope.TenantID, local.auth = source.scope.TenantID, source.auth
+	keys, err := platform.NewDevelopmentKey(source.scope.TenantID, source.scope.OwnerID, []string{"executor_content"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	port := &foreignAuthority{source: source, consumer: local.scope, keys: keys}
+	local.service.Foreign = port
+	ref := source.upload(t, "original intent must be confirmed before remote registration")
+	in := memory.ForeignReference{ContentRef: ref, CopyID: api.NewID("copy"), RegisterCommandID: api.NewID("command"), ReleaseCommandID: api.NewID("command"), ReferenceIntentRef: local.scope.Ref(api.NewID("intent"), 1), HolderRef: local.auth.Ref(local.scope.OwnerID), Purpose: "task.goal", Location: "local", RetainUntil: api.Time(time.Now().Add(20 * time.Minute))}
+	lose.Store(true)
+	if _, err = local.service.PrepareForeignUse(local.ctx, local.scope, local.auth, in); !errors.Is(err, runtime.ErrCommitUnknown) || port.registerCalls != 0 {
+		t.Fatalf("unknown local commit sent remote request: %v calls%d", err, port.registerCalls)
+	}
+	if err = store.Close(); err != nil {
+		t.Fatal(err)
+	}
+	reopened, err := sqlite.Open(path, sqlite.WithExpectedDatabaseID(local.scope.DatabaseID))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = reopened.Close() })
+	local.service = memory.New(reopened, local.service.Objects)
+	if port.registerCalls != 0 {
+		t.Fatal("construction sent registration")
+	}
+	local.service.Foreign = port
+	use, err := local.service.PrepareForeignUse(local.ctx, local.scope, local.auth, in)
+	if err != nil || use.Reference != in || port.registerCalls != 1 {
+		t.Fatalf("original reopened reference: %+v %v calls%d", use, err, port.registerCalls)
+	}
+	other := local.auth
+	other.SubjectID = api.NewID("subject")
+	if _, err = local.service.PrepareForeignUse(local.ctx, local.scope, other, in); !api.IsCode(err, "forbidden") {
+		t.Fatalf("other actor accepted original reference: %v", err)
+	}
+	foreignTenant := in
+	foreignTenant.ContentRef.TenantID = api.NewID("tenant")
+	if _, err = local.service.PrepareForeignUse(local.ctx, local.scope, local.auth, foreignTenant); !api.IsCode(err, "forbidden") {
+		t.Fatalf("cross tenant original reference: %v", err)
+	}
+	local.service.Foreign = nil
+	if _, err = local.service.ReadBytes(local.ctx, local.scope, local.auth, ref, "task.goal", "local"); !api.IsCode(err, "dependency_unavailable") {
+		t.Fatalf("nil port opened disk mirror: %v", err)
+	}
+}
+
+func TestMemoryKeepsForeignSourceRegistrationAndDeletesOnlyItsMetadata(t *testing.T) {
+	source, local := newForeignFixture(t), newForeignFixture(t)
+	local.scope.TenantID, local.auth = source.scope.TenantID, source.auth
+	local.policy = source.policy
+	if err := local.service.InstallPolicy(local.ctx, local.scope, local.auth, source.policy); err != nil {
+		t.Fatal(err)
+	}
+	keys, err := platform.NewDevelopmentKey(source.scope.TenantID, source.scope.OwnerID, []string{"executor_content"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	port := &foreignAuthority{source: source, consumer: local.scope, keys: keys}
+	local.service.Foreign = port
+	ref := source.upload(t, "可解释的外部事实原断言")
+	var uses []memory.ForeignUse
+	var copyID string
+	for _, purpose := range []string{"memory.save", "memory.read"} {
+		in := memory.ForeignReference{ContentRef: ref, CopyID: api.NewID("copy"), RegisterCommandID: api.NewID("command"), ReleaseCommandID: api.NewID("command"), ReferenceIntentRef: local.scope.Ref(api.NewID("intent"), 1), HolderRef: local.auth.Ref(local.scope.OwnerID), Purpose: purpose, Location: "local", RetainUntil: api.Time(time.Now().Add(20 * time.Minute))}
+		use, err := local.service.PrepareForeignUse(local.ctx, local.scope, local.auth, in)
+		if err != nil {
+			t.Fatal(err)
+		}
+		uses = append(uses, use)
+		copyID = in.CopyID
+	}
+	ctx, err := memory.WithForeignUses(local.ctx, uses)
+	if err != nil {
+		t.Fatal(err)
+	}
+	local.ctx = ctx
+	values := memory.MemoryValues{Type: "fact", ContentRef: ref, ScopeRef: local.upload(t, "外部事实保存范围"), PolicyRef: source.policy.PolicyRef, Sources: []api.SourceEvidence{}, ObservedAt: api.Time(time.Now())}
+	id := api.NewID("memory")
+	r := local.command(t, "memory.create", id, nil, memory.CreateInput{MemoryID: id, Values: values})
+	if r.Stage != "applied" {
+		t.Fatalf("foreign memory create: %+v", r)
+	}
+	record, err := local.service.ReadMemory(ctx, local.scope, local.auth, memory.ReadMemoryInput{MemoryID: id, Purpose: "memory.read"})
+	if err != nil || record.Values.ContentRef != ref {
+		t.Fatalf("foreign original memory: %+v %v", record, err)
+	}
+	one := uint64(1)
+	r = local.command(t, "memory.delete", id, &one, memory.DeleteInput{MemoryID: id, Reason: "删除记录不关闭独立源"})
+	if r.Stage != "applied" {
+		t.Fatal(r)
+	}
+	if err = runtime.Drain(local.ctx, local.service.Store, local.scope, local.dispatcher.Registry, 100); err != nil {
+		t.Fatal(err)
+	}
+	record, err = local.service.InspectMemory(local.ctx, local.scope, local.auth, id)
+	if err != nil || record.CleanupState != "complete" {
+		t.Fatalf("metadata cleanup: %+v %v", record, err)
+	}
+	control, err := local.service.ControlForeignCopy(local.ctx, local.scope, local.auth, copyID)
+	if err != nil || control.Proof.UseState != "allowed" {
+		t.Fatalf("deleting metadata closed separate original copy: %+v %v", control, err)
 	}
 }
