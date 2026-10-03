@@ -275,18 +275,10 @@ func (s *Service) checkSurfaceInput(ctx context.Context, tx runtime.Tx, a runtim
 			return err
 		}
 	}
-	if err := s.content(ctx, tx, a, in.SnapshotRef, "interaction.snapshot"); err != nil {
+	if _, err := s.requestViews(ctx, tx, a, in.RequestRefs); err != nil {
 		return err
 	}
-	for _, ref := range in.RequestRefs {
-		if s.ports.Requests == nil {
-			return api.E("unsupported", "request_views_unconfigured")
-		}
-		if _, err := s.ports.Requests.CheckTx(ctx, tx, a, ref); err != nil {
-			return err
-		}
-	}
-	return nil
+	return s.content(ctx, tx, a, in.SnapshotRef, "interaction.snapshot")
 }
 func (s *Service) CreateSurfaceTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in SurfaceInput) (Surface, error) {
 	if err := s.checkSurfaceInput(ctx, tx, a, in); err != nil {
@@ -299,6 +291,9 @@ func (s *Service) CreateSurfaceTx(ctx context.Context, tx runtime.Tx, a runtime.
 	return r.Surface, nil
 }
 func (s *Service) UpdateSurfaceTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in SurfaceInput) (Surface, error) {
+	if err := s.checkSurfaceInput(ctx, tx, a, in); err != nil {
+		return Surface{}, err
+	}
 	r, err := getSurface(ctx, tx, a, c.TargetID)
 	if err != nil {
 		return Surface{}, err
@@ -308,9 +303,6 @@ func (s *Service) UpdateSurfaceTx(ctx context.Context, tx runtime.Tx, a runtime.
 	}
 	if r.State != "open" {
 		return Surface{}, api.E("invalid_state", "surface_closed")
-	}
-	if err = s.checkSurfaceInput(ctx, tx, a, in); err != nil {
-		return Surface{}, err
 	}
 	r.SurfaceInput = in
 	old := r.Revision
@@ -323,6 +315,18 @@ func (s *Service) UpdateSurfaceTx(ctx context.Context, tx runtime.Tx, a runtime.
 func getSurface(ctx context.Context, tx runtime.Tx, a runtime.Auth, id string) (surfaceRecord, error) {
 	var r surfaceRecord
 	_, err := tx.Get(ctx, surfaces, id, &r)
+	if err == nil {
+		err = access(a, tx.Scope(), r.SubjectID)
+	}
+	return r, err
+}
+func peekSurface(ctx context.Context, tx runtime.Tx, a runtime.Auth, id string) (surfaceRecord, error) {
+	var r surfaceRecord
+	reader, ok := tx.(runtime.TxSnapshotReader)
+	if !ok {
+		return r, api.E("unsupported", "route_snapshot_unconfigured")
+	}
+	_, err := reader.Peek(ctx, surfaces, id, &r)
 	if err == nil {
 		err = access(a, tx.Scope(), r.SubjectID)
 	}
@@ -347,12 +351,19 @@ func (s *Service) CloseSurfaceTx(ctx context.Context, tx runtime.Tx, a runtime.A
 func (s *Service) ReadSurface(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, id string) (Surface, error) {
 	var out Surface
 	status, err := store.Within(ctx, scope, s.config.Participants, func(tx runtime.Tx) error {
+		route, e := peekSurface(ctx, tx, a, id)
+		if e != nil {
+			return e
+		}
+		if e = s.content(ctx, tx, a, route.SnapshotRef, "interaction.snapshot"); e != nil {
+			return e
+		}
 		r, e := getSurface(ctx, tx, a, id)
 		if e != nil {
 			return e
 		}
-		if e = s.content(ctx, tx, a, r.SnapshotRef, "interaction.snapshot"); e != nil {
-			return e
+		if r.Revision != route.Revision {
+			return api.E("revision_conflict", "surface_changed")
 		}
 		out = r.Surface
 		return nil
@@ -369,7 +380,7 @@ func (s *Service) OpenPresentationTx(ctx context.Context, tx runtime.Tx, a runti
 	if err := exactScope(tx.Scope(), in.SurfaceRef); err != nil {
 		return Presentation{}, err
 	}
-	surface, err := getSurface(ctx, tx, a, in.SurfaceRef.ObjectID)
+	surface, err := peekSurface(ctx, tx, a, in.SurfaceRef.ObjectID)
 	if err != nil {
 		return Presentation{}, err
 	}
@@ -378,6 +389,13 @@ func (s *Service) OpenPresentationTx(ctx context.Context, tx runtime.Tx, a runti
 	}
 	if err = s.content(ctx, tx, a, surface.SnapshotRef, "interaction.snapshot"); err != nil {
 		return Presentation{}, err
+	}
+	surface, err = getSurface(ctx, tx, a, in.SurfaceRef.ObjectID)
+	if err != nil {
+		return Presentation{}, err
+	}
+	if surface.Revision != in.SurfaceRef.Revision || surface.State != "open" {
+		return Presentation{}, api.E("revision_conflict", "surface_changed")
 	}
 	r := presentationRecord{Presentation: Presentation{PresentationID: c.TargetID, Revision: 1, EndpointID: in.EndpointID, InstanceID: in.InstanceID, SurfaceRef: in.SurfaceRef, State: "open", IntentRevision: 1, CredentialGeneration: a.CredentialGeneration}, SubjectID: a.SubjectID}
 	if err = tx.Create(ctx, presentations, c.TargetID, in.SurfaceRef.ObjectID, r); err != nil {
@@ -393,31 +411,57 @@ func getPresentation(ctx context.Context, tx runtime.Tx, a runtime.Auth, id stri
 	}
 	return r, err
 }
+func peekPresentation(ctx context.Context, tx runtime.Tx, a runtime.Auth, id string) (presentationRecord, error) {
+	var r presentationRecord
+	reader, ok := tx.(runtime.TxSnapshotReader)
+	if !ok {
+		return r, api.E("unsupported", "route_snapshot_unconfigured")
+	}
+	_, err := reader.Peek(ctx, presentations, id, &r)
+	if err == nil {
+		err = access(a, tx.Scope(), r.SubjectID)
+	}
+	return r, err
+}
 func savePresentation(ctx context.Context, tx runtime.Tx, r *presentationRecord) error {
 	old := r.Revision
 	r.Revision++
 	return tx.Put(ctx, presentations, r.PresentationID, old, *r)
 }
 func (s *Service) BeginPresentationTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in BeginPresentationInput) (Presentation, error) {
+	route, err := peekPresentation(ctx, tx, a, c.TargetID)
+	if err != nil {
+		return Presentation{}, err
+	}
+	if c.ExpectedRevision == nil || *c.ExpectedRevision != route.Revision || in.IntentRevision != route.IntentRevision {
+		return Presentation{}, api.E("revision_conflict", "presentation_changed")
+	}
+	if route.State != "open" {
+		return Presentation{}, api.E("invalid_state", "presentation_closed")
+	}
+	surfaceRoute, err := peekSurface(ctx, tx, a, route.SurfaceRef.ObjectID)
+	if err != nil {
+		return Presentation{}, err
+	}
+	if surfaceRoute.State != "open" {
+		return Presentation{}, api.E("invalid_state", "surface_closed")
+	}
+	if err = s.content(ctx, tx, a, surfaceRoute.SnapshotRef, "interaction.snapshot"); err != nil {
+		return Presentation{}, err
+	}
+	surface, err := getSurface(ctx, tx, a, route.SurfaceRef.ObjectID)
+	if err != nil {
+		return Presentation{}, err
+	}
+	if surface.Revision != surfaceRoute.Revision || surface.State != "open" {
+		return Presentation{}, api.E("revision_conflict", "surface_changed")
+	}
 	r, err := getPresentation(ctx, tx, a, c.TargetID)
 	if err != nil {
 		return Presentation{}, err
 	}
-	if c.ExpectedRevision == nil || *c.ExpectedRevision != r.Revision || in.IntentRevision != r.IntentRevision {
+	if r.Revision != route.Revision || r.SurfaceRef != route.SurfaceRef || r.State != "open" {
 		return Presentation{}, api.E("revision_conflict", "presentation_changed")
-	}
-	if r.State != "open" {
-		return Presentation{}, api.E("invalid_state", "presentation_closed")
-	}
-	surface, err := getSurface(ctx, tx, a, r.SurfaceRef.ObjectID)
-	if err != nil {
-		return Presentation{}, err
-	}
-	if surface.State != "open" {
-		return Presentation{}, api.E("invalid_state", "surface_closed")
-	}
-	if err = s.content(ctx, tx, a, surface.SnapshotRef, "interaction.snapshot"); err != nil {
-		return Presentation{}, err
 	}
 	r.SurfaceRef = tx.Scope().Ref(surface.SurfaceID, surface.Revision)
 	r.Generation++
@@ -429,14 +473,7 @@ func (s *Service) BeginPresentationTx(ctx context.Context, tx runtime.Tx, a runt
 	return r.Presentation, nil
 }
 func (s *Service) SwitchPresentationTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in OpenPresentationInput) (Presentation, error) {
-	r, err := getPresentation(ctx, tx, a, c.TargetID)
-	if err != nil {
-		return Presentation{}, err
-	}
-	if c.ExpectedRevision == nil || *c.ExpectedRevision != r.Revision {
-		return Presentation{}, api.E("revision_conflict", "presentation_changed")
-	}
-	if err = exactScope(tx.Scope(), in.SurfaceRef); err != nil {
+	if err := exactScope(tx.Scope(), in.SurfaceRef); err != nil {
 		return Presentation{}, err
 	}
 	surface, err := getSurface(ctx, tx, a, in.SurfaceRef.ObjectID)
@@ -448,6 +485,13 @@ func (s *Service) SwitchPresentationTx(ctx context.Context, tx runtime.Tx, a run
 	}
 	if !api.ValidID(in.EndpointID) || !api.ValidID(in.InstanceID) {
 		return Presentation{}, invalid("invalid_presentation_endpoint")
+	}
+	r, err := getPresentation(ctx, tx, a, c.TargetID)
+	if err != nil {
+		return Presentation{}, err
+	}
+	if c.ExpectedRevision == nil || *c.ExpectedRevision != r.Revision {
+		return Presentation{}, api.E("revision_conflict", "presentation_changed")
 	}
 	r.EndpointID = in.EndpointID
 	r.InstanceID = in.InstanceID
@@ -480,7 +524,7 @@ func (s *Service) ClosePresentationTx(ctx context.Context, tx runtime.Tx, a runt
 	return r.Presentation, nil
 }
 func (s *Service) renderGate(ctx context.Context, tx runtime.Tx, a runtime.Auth, id string, generation, intent uint64) (RenderView, error) {
-	p, err := getPresentation(ctx, tx, a, id)
+	p, err := peekPresentation(ctx, tx, a, id)
 	if err != nil {
 		return RenderView{}, err
 	}
@@ -490,7 +534,10 @@ func (s *Service) renderGate(ctx context.Context, tx runtime.Tx, a runtime.Auth,
 	if a.SubjectID != p.SubjectID || p.CredentialGeneration != a.CredentialGeneration {
 		return RenderView{}, api.E("forbidden", "render_identity_changed")
 	}
-	surface, err := getSurface(ctx, tx, a, p.SurfaceRef.ObjectID)
+	if err = exactScope(tx.Scope(), p.SurfaceRef); err != nil {
+		return RenderView{}, err
+	}
+	surface, err := peekSurface(ctx, tx, a, p.SurfaceRef.ObjectID)
 	if err != nil {
 		return RenderView{}, err
 	}
@@ -501,14 +548,12 @@ func (s *Service) renderGate(ctx context.Context, tx runtime.Tx, a runtime.Auth,
 		return RenderView{}, api.E("forbidden", "application_binding_unregistered")
 	}
 	view := RenderView{Presentation: p.Presentation, Surface: surface.Surface, Requests: []RequestView{}, RequiredRefs: []api.ContentRef{surface.SnapshotRef}, Bodies: []RenderBody{}}
-	for _, ref := range surface.RequestRefs {
-		if s.ports.Requests == nil {
-			return view, api.E("unsupported", "request_views_unconfigured")
-		}
-		request, err := s.ports.Requests.CheckTx(ctx, tx, a, ref)
-		if err != nil {
-			return view, err
-		}
+	requests, err := s.requestViews(ctx, tx, a, surface.RequestRefs)
+	if err != nil {
+		return view, err
+	}
+	for i, ref := range surface.RequestRefs {
+		request := requests[i]
 		if err = currentRequest(ctx, tx, ref, request); err != nil {
 			return view, err
 		}
@@ -524,15 +569,27 @@ func (s *Service) renderGate(ctx context.Context, tx runtime.Tx, a runtime.Auth,
 	if len(view.RequiredRefs) > 100 {
 		return view, invalid("render_content_limit")
 	}
-	for i, ref := range view.RequiredRefs {
-		purpose := "interaction.preview"
-		if i == 0 {
-			purpose = "interaction.snapshot"
-		}
-		if err = s.content(ctx, tx, a, ref, purpose); err != nil {
-			return view, err
-		}
+	if err = s.contents(ctx, tx, a, view.RequiredRefs, "interaction.snapshot", "interaction.preview"); err != nil {
+		return view, err
 	}
+	lockedSurface, err := getSurface(ctx, tx, a, p.SurfaceRef.ObjectID)
+	if err != nil {
+		return view, err
+	}
+	if lockedSurface.Revision != surface.Revision || lockedSurface.State != "open" {
+		return view, api.E("invalid_state", "render_surface_changed")
+	}
+	lockedPresentation, err := getPresentation(ctx, tx, a, id)
+	if err != nil {
+		return view, err
+	}
+	if lockedPresentation.Revision != p.Revision || lockedPresentation.SurfaceRef != p.SurfaceRef || lockedPresentation.State != "open" || lockedPresentation.Generation != generation || lockedPresentation.IntentRevision != intent {
+		return view, api.E("invalid_state", "render_generation_stale")
+	}
+	if lockedPresentation.CredentialGeneration != a.CredentialGeneration {
+		return view, api.E("forbidden", "render_identity_changed")
+	}
+	view.Presentation, view.Surface = lockedPresentation.Presentation, lockedSurface.Surface
 	return view, nil
 }
 func restrictedSchemaRaw(raw json.RawMessage) error {

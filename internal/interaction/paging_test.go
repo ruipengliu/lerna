@@ -59,3 +59,39 @@ func TestSessionCursorRejectsCollectionChangeSubjectAndTampering(t *testing.T) {
 		t.Fatalf("changed collection reused cursor %v", e)
 	}
 }
+
+func TestSessionReadPagesEveryBranchAndKeepsOriginalCursorAfterReopen(t *testing.T) {
+	f := newApplication(t)
+	for i := 0; i < 100; i++ {
+		f.command(t, "session.branch.create", f.session, nil, interaction.CreateBranchInput{BranchID: api.NewID("branch"), SourceBranchRef: f.scope.Ref(f.branch, 1), ExpectedSourceRevision: 1, ConfigRef: f.config})
+	}
+	roles, _ := api.Digest(f.auth.Roles)
+	queryDigest, _ := api.Digest(interaction.ReadInput{})
+	binding, status, e := f.store.(runtime.QueryBindingStore).BindQuery(f.ctx, f.scope, runtime.QueryBindingInput{QueryID: api.NewID("query"), PrincipalID: f.auth.SubjectID, CredentialGeneration: f.auth.CredentialGeneration, RolesDigest: roles, QueryDigest: queryDigest, TTL: 5 * time.Minute})
+	if e != nil || status != runtime.Committed {
+		t.Fatalf("bind session read %s %v", status, e)
+	}
+	ctx := runtime.WithQueryBinding(f.ctx, binding)
+	first, e := f.s.ReadSession(ctx, f.store, f.scope, f.auth, f.session, interaction.ReadInput{})
+	if e != nil || first.BranchesComplete || len(first.Branches) != 100 || first.BranchesCursor == "" || first.Sequence != 0 {
+		t.Fatalf("branches were silently truncated %+v %v", first, e)
+	}
+	f.reopen(t)
+	repeated, e := f.s.ReadSession(ctx, f.store, f.scope, f.auth, f.session, interaction.ReadInput{})
+	if e != nil || !api.Equal(first, repeated) {
+		t.Fatalf("unchanged bound read drifted after reopening %+v %v", repeated, e)
+	}
+	next, e := f.s.ListBranches(ctx, f.store, f.scope, f.auth, f.session, api.ListInput{Limit: 100, Cursor: first.BranchesCursor})
+	if e != nil || !next.Exhausted || len(next.Items) != 1 || next.CollectionRevision != first.BranchesCollectionRevision {
+		t.Fatalf("remaining branch was lost %+v %v", next, e)
+	}
+	for _, branch := range first.Branches {
+		if branch.BranchID == next.Items[0].BranchID {
+			t.Fatal("continuation returned a branch twice")
+		}
+	}
+	f.command(t, "session.branch.create", f.session, nil, interaction.CreateBranchInput{BranchID: api.NewID("branch"), SourceBranchRef: f.scope.Ref(f.branch, 1), ExpectedSourceRevision: 1, ConfigRef: f.config})
+	if _, e = f.s.ListBranches(ctx, f.store, f.scope, f.auth, f.session, api.ListInput{Limit: 100, Cursor: first.BranchesCursor}); !api.IsCode(e, "snapshot_required") {
+		t.Fatalf("old cursor crossed a branch collection change %v", e)
+	}
+}
