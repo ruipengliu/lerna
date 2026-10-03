@@ -16,15 +16,15 @@ import (
 )
 
 type Queries struct {
-	GetMany, PutMany, DeselectKeys, Routes                                                  string
-	Task, LockTask, SaveTask, Tree, Chain, List, Recovery                                   string
-	Balances, LockBalances, SaveBalance                                                     string
-	Record, Records, OpenRecords, SaveRecord, Deselect                                      string
-	GateCreate, LockGate, ReadGate, GateAdvance                                             string
-	CapacityCreate, LockCapacity, CapacityChange                                            string
-	Receiver, SaveReceiver                                                                  string
-	SaveRoute, ScheduleCreate, ScheduleLock, ScheduleAdvance, ScheduleTurns, FairCandidates string
-	BatchLockTasks, BatchLockBalances, CurrentRecords, OpenTaskRecords, SaveBalances        string
+	GetMany, PutMany, DeselectKeys, Routes                                           string
+	Task, SaveTask, Tree, Chain, List, Recovery                                      string
+	Balances                                                                         string
+	Record, Records, OpenRecords, SaveRecord, Deselect                               string
+	GateCreate, LockGate, ReadGate, GateAdvance                                      string
+	CapacityCreate, LockCapacity, CapacityChange                                     string
+	Receiver, SaveReceiver                                                           string
+	ScheduleCreate, ScheduleLock, ScheduleAdvance, ScheduleTurns, FairCandidates     string
+	BatchLockTasks, BatchLockBalances, CurrentRecords, OpenTaskRecords, SaveBalances string
 }
 type Store struct {
 	p durable.Participant
@@ -32,15 +32,6 @@ type Store struct {
 }
 
 func New(p durable.Participant, q Queries) *Store { return &Store{p: p, q: q} }
-func (r *Store) Participant() durable.Participant { return r.p }
-
-func (r *Store) Route(tx *durable.Tx, t *o.TaskState, w o.WorkRef) error {
-	return use(tx, r, taskKey(t), func(db sqlstore.DBTX) error {
-		key := o.WorkKey(w)
-		_, e := db.ExecContext(tx.Context(), r.q.SaveRoute, tx.Scope().TenantID, tx.Scope().OwnerID, w.Kind, key.Responsibility, w.SubjectID, w.TaskID, w.ProviderID, w.ResourceID)
-		return e
-	})
-}
 func (r *Store) Read(tx *durable.Tx) error {
 	return tx.Lock(r.p, "00-read", func(any) error { return nil })
 }
@@ -319,12 +310,6 @@ func (r *Store) Balances(tx *durable.Tx, id string) ([]api.BudgetBalance, error)
 	})
 	return out, err
 }
-func (r *Store) SaveBalance(tx *durable.Tx, id string, b api.BudgetBalance) error {
-	return use(tx, r, budgetKey(id), func(db sqlstore.DBTX) error {
-		_, err := db.ExecContext(tx.Context(), r.q.SaveBalance, tx.Scope().TenantID, tx.Scope().OwnerID, id, b.Unit, b.Limit.Amount, b.Spent.Amount, b.Reserved.Amount)
-		return err
-	})
-}
 
 type scanner interface{ Scan(...any) error }
 
@@ -577,7 +562,8 @@ func (r *Store) Routes(tx *durable.Tx, t *o.TaskState, works []o.WorkRef) error 
 	type route struct{ Kind, Responsibility, SubjectID, TaskID, ProviderID, ResourceID string }
 	rows := []route{}
 	for _, w := range works {
-		rows = append(rows, route{w.Kind, w.TaskID + "/" + w.Kind + "/" + w.ObjectKind + "/" + w.ObjectID, w.SubjectID, w.TaskID, w.ProviderID, w.ResourceID})
+		key := o.WorkKey(w)
+		rows = append(rows, route{key.Kind, key.Responsibility, w.SubjectID, w.TaskID, w.ProviderID, w.ResourceID})
 	}
 	b, e := json.Marshal(rows)
 	if e != nil {

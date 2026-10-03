@@ -36,13 +36,7 @@ func (t *Tx) RepairMany(items []JobRepair, due time.Time) ([]Job, error) {
 		}
 		all[i].ID = NewID("job")
 	}
-	batch, ok := t.session.(interface {
-		RepairMany(context.Context, Scope, []JobRepair, int64) ([]Job, bool, error)
-	})
-	if !ok {
-		return nil, t.fail(ErrUnsupported)
-	}
-	jobs, changed, e := batch.RepairMany(t.ctx, t.scope, all, due.UnixMilli())
+	jobs, changed, e := t.session.RepairMany(t.ctx, t.scope, all, due.UnixMilli())
 	if e != nil {
 		return nil, t.fail(e)
 	}

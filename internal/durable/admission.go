@@ -201,9 +201,9 @@ func (t *Tx) Decide(key CommandKey, receipt Receipt) error {
 	if err != nil {
 		return t.fail(err)
 	}
-	stages, ok := contracts.CommandStages(r.Method)
+	policy, ok := contracts.CommandPolicy(r.Method)
 	allowed := false
-	for _, s := range stages {
+	for _, s := range policy.Stages {
 		if s == receipt.Stage {
 			allowed = true
 		}

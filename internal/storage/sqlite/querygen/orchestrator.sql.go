@@ -614,51 +614,6 @@ func (q *Queries) OrchestratorList(ctx context.Context, arg OrchestratorListPara
 	return items, nil
 }
 
-const OrchestratorLockBalances = `-- name: OrchestratorLockBalances :many
-SELECT unit,limit_value,spent,reserved FROM orchestrator_balances WHERE tenant_id=?1 AND owner_id=?2 AND task_id=?3 ORDER BY unit LIMIT 101
-`
-
-type OrchestratorLockBalancesParams struct {
-	TenantID string
-	OwnerID  string
-	TaskID   string
-}
-
-type OrchestratorLockBalancesRow struct {
-	Unit       string
-	LimitValue string
-	Spent      string
-	Reserved   string
-}
-
-func (q *Queries) OrchestratorLockBalances(ctx context.Context, arg OrchestratorLockBalancesParams) ([]OrchestratorLockBalancesRow, error) {
-	rows, err := q.db.QueryContext(ctx, OrchestratorLockBalances, arg.TenantID, arg.OwnerID, arg.TaskID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []OrchestratorLockBalancesRow
-	for rows.Next() {
-		var i OrchestratorLockBalancesRow
-		if err := rows.Scan(
-			&i.Unit,
-			&i.LimitValue,
-			&i.Spent,
-			&i.Reserved,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const OrchestratorLockCapacity = `-- name: OrchestratorLockCapacity :one
 SELECT active_count FROM orchestrator_user_capacity WHERE tenant_id=?1 AND owner_id=?2 AND subject_id=?3
 `
@@ -691,23 +646,6 @@ func (q *Queries) OrchestratorLockGate(ctx context.Context, arg OrchestratorLock
 	var revision int64
 	err := row.Scan(&revision)
 	return revision, err
-}
-
-const OrchestratorLockTask = `-- name: OrchestratorLockTask :one
-SELECT data FROM orchestrator_tasks WHERE tenant_id=?1 AND owner_id=?2 AND task_id=?3
-`
-
-type OrchestratorLockTaskParams struct {
-	TenantID string
-	OwnerID  string
-	TaskID   string
-}
-
-func (q *Queries) OrchestratorLockTask(ctx context.Context, arg OrchestratorLockTaskParams) (string, error) {
-	row := q.db.QueryRowContext(ctx, OrchestratorLockTask, arg.TenantID, arg.OwnerID, arg.TaskID)
-	var data string
-	err := row.Scan(&data)
-	return data, err
 }
 
 const OrchestratorOpenRecords = `-- name: OrchestratorOpenRecords :many
@@ -964,34 +902,6 @@ func (q *Queries) OrchestratorRecovery(ctx context.Context, arg OrchestratorReco
 	return items, nil
 }
 
-const OrchestratorSaveBalance = `-- name: OrchestratorSaveBalance :exec
-INSERT INTO orchestrator_balances(tenant_id,owner_id,task_id,unit,limit_value,spent,reserved) VALUES(?1,?2,?3,?4,?5,?6,?7)
-ON CONFLICT(tenant_id,owner_id,task_id,unit) DO UPDATE SET limit_value=excluded.limit_value,spent=excluded.spent,reserved=excluded.reserved
-`
-
-type OrchestratorSaveBalanceParams struct {
-	TenantID   string
-	OwnerID    string
-	TaskID     string
-	Unit       string
-	LimitValue string
-	Spent      string
-	Reserved   string
-}
-
-func (q *Queries) OrchestratorSaveBalance(ctx context.Context, arg OrchestratorSaveBalanceParams) error {
-	_, err := q.db.ExecContext(ctx, OrchestratorSaveBalance,
-		arg.TenantID,
-		arg.OwnerID,
-		arg.TaskID,
-		arg.Unit,
-		arg.LimitValue,
-		arg.Spent,
-		arg.Reserved,
-	)
-	return err
-}
-
 const OrchestratorSaveBalances = `-- name: OrchestratorSaveBalances :exec
 INSERT INTO orchestrator_balances(tenant_id,owner_id,task_id,unit,limit_value,spent,reserved) SELECT ?1,?2,?3,json_extract(value,'$.unit'),json_extract(value,'$.limit.amount'),json_extract(value,'$.spent.amount'),json_extract(value,'$.reserved.amount') FROM json_each(?4) WHERE 1=1
 ON CONFLICT(tenant_id,owner_id,task_id,unit) DO UPDATE SET limit_value=excluded.limit_value,spent=excluded.spent,reserved=excluded.reserved
@@ -1095,35 +1005,6 @@ func (q *Queries) OrchestratorSaveRecords(ctx context.Context, arg OrchestratorS
 		return 0, err
 	}
 	return result.RowsAffected()
-}
-
-const OrchestratorSaveRoute = `-- name: OrchestratorSaveRoute :exec
-INSERT INTO orchestrator_work_routes(tenant_id,owner_id,kind,responsibility_key,subject_id,task_id,provider_id,resource_id) VALUES(?1,?2,?3,?4,?5,?6,?7,?8) ON CONFLICT DO NOTHING
-`
-
-type OrchestratorSaveRouteParams struct {
-	TenantID          string
-	OwnerID           string
-	Kind              string
-	ResponsibilityKey string
-	SubjectID         string
-	TaskID            string
-	ProviderID        string
-	ResourceID        string
-}
-
-func (q *Queries) OrchestratorSaveRoute(ctx context.Context, arg OrchestratorSaveRouteParams) error {
-	_, err := q.db.ExecContext(ctx, OrchestratorSaveRoute,
-		arg.TenantID,
-		arg.OwnerID,
-		arg.Kind,
-		arg.ResponsibilityKey,
-		arg.SubjectID,
-		arg.TaskID,
-		arg.ProviderID,
-		arg.ResourceID,
-	)
-	return err
 }
 
 const OrchestratorSaveRoutes = `-- name: OrchestratorSaveRoutes :execrows

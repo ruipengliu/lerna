@@ -11,6 +11,7 @@
 | runner_test.go | 取消后实际容量、请求独立、全丢通知扫描、独立控制池 |
 | reconcile_test.go | 领域未结索引/有限页修复、SKIP LOCKED、通知与监听重连 |
 | cost_test.go | 固定小负载的实际事务、SQL、p95/p99、连接等待、积压及 WAL 观测 |
+| orchestrator_scheduler_test.go | 真实领域准入产生派发作业，共享 provider/resource 限额、独立容量、领取结束后释放及旧路由投影恢复 |
 
 durable_probe 是测试专用领域事实表；新责任经真实事务入口产生。唯一直接删作业的用例明确注入迁移遗漏，用来验证有来源证明的修复；它不作为正常责任创建方式。断点/观察端口不暴露给产品 handler。FW-02/05/07 的真实发布、目标效果、费用与清理仍需要对应模块测试。
 

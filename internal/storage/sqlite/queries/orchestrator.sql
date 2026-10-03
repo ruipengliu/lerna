@@ -36,13 +36,6 @@ SELECT t.data FROM page p JOIN orchestrator_tasks t ON t.tenant_id=?1 AND t.owne
 -- name: OrchestratorBalances :many
 SELECT unit,limit_value,spent,reserved FROM orchestrator_balances WHERE tenant_id=?1 AND owner_id=?2 AND task_id=?3 ORDER BY unit LIMIT 101;
 
--- name: OrchestratorLockBalances :many
-SELECT unit,limit_value,spent,reserved FROM orchestrator_balances WHERE tenant_id=?1 AND owner_id=?2 AND task_id=?3 ORDER BY unit LIMIT 101;
-
--- name: OrchestratorSaveBalance :exec
-INSERT INTO orchestrator_balances(tenant_id,owner_id,task_id,unit,limit_value,spent,reserved) VALUES(?1,?2,?3,?4,?5,?6,?7)
-ON CONFLICT(tenant_id,owner_id,task_id,unit) DO UPDATE SET limit_value=excluded.limit_value,spent=excluded.spent,reserved=excluded.reserved;
-
 -- name: OrchestratorGetRecord :one
 SELECT kind,id,task_id,revision,state,current_key,immutable,data FROM orchestrator_records WHERE tenant_id=?1 AND owner_id=?2 AND kind=?3 AND id=?4;
 
@@ -85,9 +78,6 @@ SELECT data FROM orchestrator_receivers WHERE tenant_id=?1 AND owner_id=?2 AND a
 INSERT INTO orchestrator_receivers(tenant_id,owner_id,allocation_id,data) VALUES(?1,?2,?3,?4)
 ON CONFLICT(tenant_id,owner_id,allocation_id) DO UPDATE SET data=excluded.data;
 
--- name: OrchestratorLockTask :one
-SELECT data FROM orchestrator_tasks WHERE tenant_id=?1 AND owner_id=?2 AND task_id=?3;
-
 -- name: OrchestratorLockGate :one
 SELECT revision FROM orchestrator_gates WHERE tenant_id=?1 AND owner_id=?2 AND gate_key=?3;
 
@@ -96,9 +86,6 @@ SELECT revision FROM orchestrator_gates WHERE tenant_id=?1 AND owner_id=?2 AND g
 
 -- name: OrchestratorLockCapacity :one
 SELECT active_count FROM orchestrator_user_capacity WHERE tenant_id=?1 AND owner_id=?2 AND subject_id=?3;
-
--- name: OrchestratorSaveRoute :exec
-INSERT INTO orchestrator_work_routes(tenant_id,owner_id,kind,responsibility_key,subject_id,task_id,provider_id,resource_id) VALUES(?1,?2,?3,?4,?5,?6,?7,?8) ON CONFLICT DO NOTHING;
 
 -- name: OrchestratorScheduleCreate :exec
 INSERT INTO orchestrator_scheduler(tenant_id,owner_id,kind,turn) VALUES(?1,?2,?3,0) ON CONFLICT DO NOTHING;

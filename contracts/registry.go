@@ -36,11 +36,6 @@ var registry = sync.OnceValue(func() map[string]MethodPolicy {
 
 // CommandPolicy reads frozen metadata; method payload validation is a separate port.
 func CommandPolicy(method string) (MethodPolicy, bool) {
-	p, ok := registry()[method]
-	p.Stages = append([]string(nil), p.Stages...)
+	p, ok := Method(method)
 	return p, ok && p.Kind == "command"
-}
-func CommandStages(method string) ([]string, bool) {
-	p, ok := CommandPolicy(method)
-	return p.Stages, ok
 }

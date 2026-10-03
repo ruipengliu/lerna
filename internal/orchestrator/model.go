@@ -74,13 +74,11 @@ type Repository interface {
 	Capacity(*durable.Tx, string, int64, int) error
 	LockBalances(*durable.Tx, []string) (map[string][]api.BudgetBalance, error)
 	Balances(*durable.Tx, string) ([]api.BudgetBalance, error)
-	SaveBalance(*durable.Tx, string, api.BudgetBalance) error
 	SaveBalances(*durable.Tx, string, []api.BudgetBalance) error
 	Get(*durable.Tx, string, string) (*Record, error)
 	Records(*durable.Tx, Filter) ([]Record, error)
 	OpenRecords(*durable.Tx, string, string, int) ([]Record, error)
 	Put(*durable.Tx, *TaskState, Record) error
-	Route(*durable.Tx, *TaskState, WorkRef) error
 	Deselect(*durable.Tx, *TaskState, string, string) error
 	Gate(*durable.Tx, string, bool, bool) (int64, error)
 	AdvanceGate(*durable.Tx, string) error
