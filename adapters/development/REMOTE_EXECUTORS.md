@@ -21,8 +21,8 @@ public_x/public_y/bindings`。地址必须是显式 `grpcs://`，不带 userinfo
 Capability；BindingRef 仍归原设备 owner，InstallLock、`managed-files` 资源和
 `file.read/file.write` 动作必须与设备登记相同。该数组不自行授予权限；云端还须在
 `action_bindings` 中配置同一 cap/binding/leaf lock 和完整有限 Grant。
-完整 Cloud Task 的当前证据覆盖 File read；File write 配对已登记，完整 Task 写入链
-仍须单独取证，不能把设备独立驱动验收当作该装配的成功结果。
+完整 Cloud Task 的当前证据覆盖 File read，以及 File write 后由另一个原 Operation
+独立读回、条件核验和 verified Result 出版；实际数据库与测试范围见下文。
 
 以下片段配置已经管理初始化的 `cfg`。`deviceConfig` 是读取的原设备配置，
 `pairedKey` 是管理端核验的原设备 P-256 公钥登记；这些依赖不能由模型或请求填入。
@@ -153,6 +153,36 @@ SQLite 独立 race 重跑实际通过 99.826 秒。它不证明任意错误都�
 原 Job／Claim 恢复并结清；没有新 Use／Attempt。这轮与另一 minimum-invoice race
 有短暂并行，不能称为独占验证，外部制品保留此事实。
 
-工单 16 保持 partial：成功 Result 的 race、必要拒绝故障矩阵和最终统一
-检查／审查仍待后续；完整 Task 写入链也尚未据此取证，不能把这些本地未完成路径归因于
-外部凭据。
+`TestConfiguredRemoteExecutorTaskSavesReportReadsBackAndReopensOriginal` 在固定
+`9f533523fb86cccf2f92d29a7c20fe62d7694cb1`、854 项源码清单和同一测试 binary 下，
+SQLite 完整普通验证实际通过 36.368 秒，PostgreSQL 云端验证通过 51.997 秒。
+两者使用独立 SQLite 设备，实际四次模型 POST、两个不同 Operation／Attempt，
+设备写入与独立读回均为原 87 字节和同一摘要；Cloud 目标不存在。两项条件均为
+usable／verified／pass，原 immutable Result 与正文已出版，原 USD 0.00096
+结清且预留归零。云端与设备实际 Close/join，原配置、数据库、密钥、目标和 journals
+重开后保持同一 Result／Operation／Attempt，不增加模型请求。
+
+原源码另以 race binary 顺序验证 12 项 SQLite 边界和 6 项适用 PostgreSQL 边界，
+实际通过 102.646 秒和 60.134 秒，均无缺失或 skip。边界包括当前源关闭、主体／代次
+与用途匹配、新入口空证明、提交未知不出站、准备间取消／撤权、原窗口过期及旧 Claim
+不得开始；具体集合固定在执行环境的 `final-guards-frozen-hy788u1x/plan.json`。
+数据库范围如下，不能把固定 SQLite 用例当作 PostgreSQL 消费方验收：
+
+| 消费路径 | SQLite race 项数 | PostgreSQL race 项数与准确范围 |
+| --- | --- | --- |
+| 设备 Source／原缓存策略 | 2 | 未重复选入；设备为 SQLite |
+| Memory 当前 proof／准确 holder／提交未知 | 3 | 2 项独立 PG owner；1 项 PG source 加 SQLite consumer 的提交故障 |
+| Task 准备间控制／凭据／原窗口 | 3 | 未重复选入；Task／receiver 为 SQLite |
+| Execution 栅栏／旧 worker／取消／原准备恢复 | 4 | 3 项真实 PG Execution；准备 Attempt 的提交故障仅 SQLite |
+
+完整正例索引分别为执行环境 `device-task-regression/` 下
+`saved-rule-complete-frontier-142g56e5/verification.json` 与
+`saved-rule-postgres-driver-o9_snwbx/verification.json`；边界索引为
+`final-guards-frozen-hy788u1x/{sqlite,postgres}/verification.json`。
+每轮实际退出、全部源码摘要、binary 和 driver 的前后稳定性均已核对。正例配置及介质
+保存在私有 fixture，旧 180 秒 SavedRule 失败和早先参数／策略拒绝日志原样保留。
+这些证据绑定受测 `9f5335`，后续 CPU／Session 集成不冒称已经重跑本链。
+
+工单 16 保持 in-progress：完整报告的 race、SavedRule 专门拒绝矩阵、最终统一
+检查／双轴审查仍待后续。上述边界 race 不替代这些独立范围；外部真机、生产身份及跨
+AZ 资格另行验证。
