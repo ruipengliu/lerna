@@ -7,7 +7,11 @@ if [[ $# != 2 ]]; then
 fi
 revision=$(git rev-parse --verify "$1^{commit}")
 output=$(realpath -m "$2")
-pg_dump --version | rg '^pg_dump \(PostgreSQL\) 18\.6( |$)' >/dev/null
+dump_version=$(pg_dump --version)
+if [[ "$dump_version" != 'pg_dump (PostgreSQL) 18.6' && "$dump_version" != 'pg_dump (PostgreSQL) 18.6 '* ]]; then
+  echo 'PostgreSQL 18.6 pg_dump is required' >&2
+  exit 1
+fi
 source_directory=$(mktemp -d)
 trap 'rm -rf "$source_directory"' EXIT
 git archive "$revision" | tar -x -C "$source_directory"

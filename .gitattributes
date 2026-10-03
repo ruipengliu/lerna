@@ -1,0 +1,2 @@
+# Preserve the exact pg_dump export bytes, including its final empty line.
+conformance/fixtures/durable-work/pg-v1/database.sql whitespace=-blank-at-eof

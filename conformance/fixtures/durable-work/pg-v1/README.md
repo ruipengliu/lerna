@@ -20,7 +20,8 @@ scripts/generate-pg-v1-fixture.sh IMMUTABLE_V1_COMMIT /tmp/pg-v1-export
 
 The script archives the exact Git source into a separate temporary directory,
 builds the historical root-module writer with locked dependencies, runs it,
-and records the writer commit and SHA-256s. Go1.27.1 and pg_dump18.6 are required.
+and records the writer commit and SHA-256s. Go 1.27.1, Git, Bash, pg_dump 18.6 and standard Unix archive/hash/path tools
+are required.
 The writer creates only `lerna_test_000000000000000000000001`, fails if it already
 exists, exports that exact schema, and cleans only its own created schema with a
 separate finite cleanup context. It does not drop the caller's database.
