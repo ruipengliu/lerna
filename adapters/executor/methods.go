@@ -39,6 +39,9 @@ func (h *Host) register() error {
 	if err := registerQuery(h.Registry, "executor.content.get", h.contentGet); err != nil {
 		return err
 	}
+	if err := registerQuery(h.Registry, "executor.lease.usage.get", h.leaseUsage); err != nil {
+		return err
+	}
 	return h.Registry.RegisterJob(MaterializeJob, h.materialize)
 }
 func registerCommand[I, O any](r *runtime.Registry, name string, parts []string, fn func(context.Context, runtime.Tx, runtime.Auth, api.Command, I) (O, error)) error {

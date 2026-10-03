@@ -41,6 +41,7 @@ type AdmissionBundle struct {
 	Revision          uint64                    `json:"revision"`
 	AuthorityID       string                    `json:"authority_id"`
 	EndpointID        string                    `json:"endpoint_id"`
+	DeviceDatabaseID  string                    `json:"device_database_id"`
 	InstanceID        string                    `json:"instance_id"`
 	OriginalCommandID string                    `json:"original_command_id"`
 	AdmissionHash     string                    `json:"admission_hash"`
@@ -121,6 +122,25 @@ type Revocation struct {
 type RevocationOutput struct {
 	Ref    api.ObjectRef `json:"ref"`
 	Denied bool          `json:"denied"`
+}
+
+type LeaseID struct {
+	LeaseID string `json:"lease_id"`
+}
+type LeaseUsageProof struct {
+	LeaseRef         api.ObjectRef         `json:"lease_ref"`
+	EndpointID       string                `json:"endpoint_id"`
+	InstanceID       string                `json:"instance_id"`
+	AllocationDigest string                `json:"allocation_digest"`
+	LocalLease       governance.GrantLease `json:"local_lease"`
+	OperationUsage   api.UsageSnapshot     `json:"operation_usage"`
+}
+type SignedLeaseReport struct {
+	SourceDatabaseID string                 `json:"source_database_id"`
+	Report           governance.LeaseReport `json:"report"`
+	IssuedAt         string                 `json:"issued_at"`
+	StartBefore      string                 `json:"start_before"`
+	Proof            string                 `json:"proof"`
 }
 
 type admissionRecord struct {
