@@ -28,17 +28,20 @@ type ManagedFiles struct {
 	Fault     func(string) error
 }
 type FileWrite struct {
-	OperationID     string `json:"operation_id"`
-	AttemptID       string `json:"attempt_id"`
-	Path            string `json:"path"`
-	ExpectedVersion string `json:"expected_version"`
-	Data            []byte `json:"data"`
+	OperationID      string           `json:"operation_id"`
+	AttemptID        string           `json:"attempt_id"`
+	Path             string           `json:"path"`
+	ExpectedVersion  string           `json:"expected_version"`
+	Data             []byte           `json:"data"`
+	ProcessedSources []api.ContentRef `json:"processed_sources"`
 }
 type FileObservation struct {
-	Path       string `json:"path"`
-	Version    string `json:"version"`
-	Data       []byte `json:"data"`
-	ObservedAt string `json:"observed_at"`
+	Path             string           `json:"path"`
+	Version          string           `json:"version"`
+	Data             []byte           `json:"data"`
+	ObservedAt       string           `json:"observed_at"`
+	ProcessedSources []api.ContentRef `json:"processed_sources"`
+	SourceChanged    bool             `json:"source_changed"`
 }
 type FileReceipt struct {
 	Effect          string `json:"effect"`
@@ -48,15 +51,16 @@ type FileReceipt struct {
 	DirectorySynced bool   `json:"directory_synced"`
 }
 type fileJournal struct {
-	OperationID     string `json:"operation_id"`
-	AttemptID       string `json:"attempt_id"`
-	Path            string `json:"path"`
-	ExpectedVersion string `json:"expected_version"`
-	TempPath        string `json:"temp_path"`
-	TempIdentity    string `json:"temp_identity"`
-	AfterHash       string `json:"after_hash"`
-	Phase           string `json:"phase"`
-	DirectorySynced bool   `json:"directory_synced"`
+	OperationID      string           `json:"operation_id"`
+	AttemptID        string           `json:"attempt_id"`
+	Path             string           `json:"path"`
+	ExpectedVersion  string           `json:"expected_version"`
+	TempPath         string           `json:"temp_path"`
+	TempIdentity     string           `json:"temp_identity"`
+	AfterHash        string           `json:"after_hash"`
+	Phase            string           `json:"phase"`
+	DirectorySynced  bool             `json:"directory_synced"`
+	ProcessedSources []api.ContentRef `json:"processed_sources"`
 }
 
 func NewManagedFiles(root string) (*ManagedFiles, error) {
@@ -199,7 +203,15 @@ func (d *ManagedFiles) observe(p string) (FileObservation, error) {
 	if int64(len(data)) > d.MaxBytes {
 		return FileObservation{}, api.E("overloaded", "file_too_large")
 	}
-	return FileObservation{Path: p, Version: api.Hash(data), Data: data, ObservedAt: api.Time(time.Now())}, nil
+	observation := FileObservation{Path: p, Version: api.Hash(data), Data: data, ObservedAt: api.Time(time.Now()), ProcessedSources: []api.ContentRef{}}
+	j, err := d.pathJournal(p)
+	if err == nil {
+		observation.ProcessedSources = j.ProcessedSources
+		observation.SourceChanged = observation.Version != j.AfterHash
+	} else if !errors.Is(err, fs.ErrNotExist) {
+		return FileObservation{}, err
+	}
+	return observation, nil
 }
 
 // Read 每次打开真实介质，不使用写驱动缓存。
@@ -286,7 +298,7 @@ func (d *ManagedFiles) Write(ctx context.Context, q FileWrite) (FileReceipt, err
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if old, err := d.loadJournal(q.AttemptID); err == nil {
-		if old.OperationID != q.OperationID || old.Path != p || old.ExpectedVersion != q.ExpectedVersion || old.AfterHash != api.Hash(q.Data) {
+		if old.OperationID != q.OperationID || old.Path != p || old.ExpectedVersion != q.ExpectedVersion || old.AfterHash != api.Hash(q.Data) || !api.Equal(old.ProcessedSources, q.ProcessedSources) {
 			return FileReceipt{}, api.E("idempotency_conflict", "file_intent_changed")
 		}
 		return d.recoverLocked(old)
@@ -313,7 +325,7 @@ func (d *ManagedFiles) Write(ctx context.Context, q FileWrite) (FileReceipt, err
 		f.Close()
 		return FileReceipt{}, err
 	}
-	j := fileJournal{OperationID: q.OperationID, AttemptID: q.AttemptID, Path: p, ExpectedVersion: q.ExpectedVersion, TempPath: tmp, TempIdentity: ident, AfterHash: api.Hash(q.Data), Phase: "prepared"}
+	j := fileJournal{OperationID: q.OperationID, AttemptID: q.AttemptID, Path: p, ExpectedVersion: q.ExpectedVersion, TempPath: tmp, TempIdentity: ident, AfterHash: api.Hash(q.Data), Phase: "prepared", ProcessedSources: q.ProcessedSources}
 	if err = d.saveJournal(j); err != nil {
 		f.Close()
 		return FileReceipt{}, err
@@ -508,4 +520,45 @@ func (d *ManagedFiles) savePath(p, attemptID string) error {
 		return err
 	}
 	return d.syncDir(".harness/paths")
+}
+
+func (d *ManagedFiles) pathJournal(p string) (fileJournal, error) {
+	f, err := d.root.OpenFile(pathIndex(p), os.O_RDONLY|syscall.O_NOFOLLOW, 0)
+	if err != nil {
+		return fileJournal{}, err
+	}
+	defer f.Close()
+	b, err := io.ReadAll(io.LimitReader(f, 8192))
+	if err != nil {
+		return fileJournal{}, err
+	}
+	var index pathOccupation
+	if err = api.Decode(b, &index); err != nil {
+		return fileJournal{}, err
+	}
+	if index.Path != p {
+		return fileJournal{}, api.E("invalid_state", "file_path_index_conflict")
+	}
+	return d.loadJournal(index.AttemptID)
+}
+
+// ManagedSources 只读私有journal元数据，不读目标正文，不能冒充独立读回。
+func (d *ManagedFiles) ManagedSources(ctx context.Context, p string) ([]api.ContentRef, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	p, err := normalizeFile(p)
+	if err != nil {
+		return nil, err
+	}
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	j, err := d.pathJournal(p)
+	if errors.Is(err, fs.ErrNotExist) {
+		return []api.ContentRef{}, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return j.ProcessedSources, nil
 }

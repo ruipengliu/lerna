@@ -63,6 +63,7 @@ type Capability struct {
 }
 type CellPreparation struct {
 	EnvironmentRef            api.ObjectRef    `json:"environment_ref"`
+	InstanceID                string           `json:"instance_id"`
 	ExpectedGeneration        uint64           `json:"expected_generation"`
 	ExpectedNamespaceRevision uint64           `json:"expected_namespace_revision"`
 	Namespace                 PassiveNamespace `json:"namespace"`

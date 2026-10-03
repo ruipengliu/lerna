@@ -97,8 +97,10 @@ type TaskGate struct {
 	ControlDigest   string        `json:"control_digest"`
 }
 type ControlView struct {
-	Gate    TaskGate              `json:"gate"`
-	Windows []api.ControlSnapshot `json:"windows"`
+	Gate            TaskGate              `json:"gate"`
+	Windows         []api.ControlSnapshot `json:"windows"`
+	WindowsComplete bool                  `json:"windows_complete"`
+	WindowsGaps     []string              `json:"windows_gaps"`
 }
 type gateFact struct {
 	OrchestratorID  string `json:"orchestrator_id"`
@@ -146,6 +148,7 @@ type operationRecord struct {
 	CancelReason      string           `json:"cancel_reason,omitempty"`
 	Tombstone         bool             `json:"tombstone"`
 	AttemptIDs        []string         `json:"attempt_ids"`
+	ReconcileCount    uint64           `json:"reconcile_count"`
 }
 type ResourceLease struct {
 	ResourceID        string   `json:"resource_id"`
