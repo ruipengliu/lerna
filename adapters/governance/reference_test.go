@@ -53,7 +53,7 @@ func TestReferencePairExecutesSeparateFilesAndLooksUpOriginalAttempt(t *testing.
 	if e != nil {
 		t.Fatal(e)
 	}
-	pair.Permit, e = keys.Sign("development-es256", platform.ProofClaims{TenantID: scope.TenantID, Issuer: scope.OwnerID, Audience: scope.OwnerID, Purpose: "evaluation_prepare", ObjectRef: domain.EvaluationSampleRunRef(scope, plan.PlanID, sample.SampleID, "candidate"), Digest: digest, IssuedAt: api.Time(time.Now().Add(-time.Second)), StartBefore: pair.StartBefore})
+	pair.Permit, e = keys.Sign("development-es256", platform.ProofClaims{TenantID: scope.TenantID, Issuer: scope.OwnerID, Audience: scope.OwnerID, Purpose: "evaluation_prepare", ObjectRef: domain.EvaluationSampleRunRef(scope, plan.PlanID, sample.SampleID, "candidate"), WindowID: domain.EvaluationSampleRunRef(scope, plan.PlanID, sample.SampleID, "candidate").ObjectID, Digest: digest, IssuedAt: api.Time(time.Now().Add(-time.Second)), StartBefore: pair.StartBefore})
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -72,7 +72,7 @@ func TestReferencePairExecutesSeparateFilesAndLooksUpOriginalAttempt(t *testing.
 		if e != nil {
 			t.Fatal(e)
 		}
-		attempt.Permit, e = keys.Sign("development-es256", platform.ProofClaims{TenantID: scope.TenantID, Issuer: scope.OwnerID, Audience: scope.OwnerID, Purpose: "evaluation_start", ObjectRef: scope.Ref(attempt.AttemptID, 1), Digest: digest, IssuedAt: api.Time(time.Now().Add(-time.Second)), StartBefore: attempt.StartBefore})
+		attempt.Permit, e = keys.Sign("development-es256", platform.ProofClaims{TenantID: scope.TenantID, Issuer: scope.OwnerID, Audience: scope.OwnerID, Purpose: "evaluation_start", ObjectRef: scope.Ref(attempt.AttemptID, 1), WindowID: attempt.AttemptID, Digest: digest, IssuedAt: api.Time(time.Now().Add(-time.Second)), StartBefore: attempt.StartBefore})
 		if e != nil {
 			t.Fatal(e)
 		}
@@ -175,7 +175,7 @@ func referenceSetup(t *testing.T, after func(context.Context, domain.RunnerAttem
 	if e != nil {
 		t.Fatal(e)
 	}
-	pair.Permit, e = keys.Sign("development-es256", platform.ProofClaims{TenantID: scope.TenantID, Issuer: scope.OwnerID, Audience: scope.OwnerID, Purpose: "evaluation_prepare", ObjectRef: domain.EvaluationSampleRunRef(scope, plan.PlanID, sample.SampleID, "candidate"), Digest: digest, IssuedAt: api.Time(time.Now().Add(-time.Second)), StartBefore: pair.StartBefore})
+	pair.Permit, e = keys.Sign("development-es256", platform.ProofClaims{TenantID: scope.TenantID, Issuer: scope.OwnerID, Audience: scope.OwnerID, Purpose: "evaluation_prepare", ObjectRef: domain.EvaluationSampleRunRef(scope, plan.PlanID, sample.SampleID, "candidate"), WindowID: domain.EvaluationSampleRunRef(scope, plan.PlanID, sample.SampleID, "candidate").ObjectID, Digest: digest, IssuedAt: api.Time(time.Now().Add(-time.Second)), StartBefore: pair.StartBefore})
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -187,7 +187,7 @@ func referenceSetup(t *testing.T, after func(context.Context, domain.RunnerAttem
 	if e != nil {
 		t.Fatal(e)
 	}
-	attempt.Permit, e = keys.Sign("development-es256", platform.ProofClaims{TenantID: scope.TenantID, Issuer: scope.OwnerID, Audience: scope.OwnerID, Purpose: "evaluation_start", ObjectRef: scope.Ref(attempt.AttemptID, 1), Digest: digest, IssuedAt: api.Time(time.Now().Add(-time.Second)), StartBefore: attempt.StartBefore})
+	attempt.Permit, e = keys.Sign("development-es256", platform.ProofClaims{TenantID: scope.TenantID, Issuer: scope.OwnerID, Audience: scope.OwnerID, Purpose: "evaluation_start", ObjectRef: scope.Ref(attempt.AttemptID, 1), WindowID: attempt.AttemptID, Digest: digest, IssuedAt: api.Time(time.Now().Add(-time.Second)), StartBefore: attempt.StartBefore})
 	if e != nil {
 		t.Fatal(e)
 	}
