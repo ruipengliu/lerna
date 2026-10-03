@@ -1,0 +1,95 @@
+{
+  "Schema": "lerna_test_000000000000000000000001",
+  "MigrationChecksum": "sha256:f8d04d373b039a425b4f6d0a7b7dd4410971c00faf91cdba3f68a9204579127e",
+  "Settings": {
+    "Isolation": "read committed",
+    "SynchronousCommit": "on",
+    "StatementTimeout": "2s",
+    "LockTimeout": "1s",
+    "ServerVersion": "18.6 (Debian 18.6-1.pgdg12+2)"
+  },
+  "Outcomes": [
+    {
+      "status": "received",
+      "receipt": {
+        "state": "applied",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "fixture-tenant",
+            "owner_id": "fixture-owner"
+          },
+          "command_id": "applied-original"
+        },
+        "object_ref": {
+          "tenant_id": "fixture-tenant",
+          "owner_id": "fixture-owner",
+          "kind": "durable_work",
+          "id": "v1-input",
+          "revision": "1"
+        },
+        "revision": "1",
+        "next_action": "query_original"
+      }
+    },
+    {
+      "status": "received",
+      "receipt": {
+        "state": "rejected",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "fixture-tenant",
+            "owner_id": "fixture-owner"
+          },
+          "command_id": "expired-original"
+        },
+        "reason": "expired",
+        "next_action": "resolve_rejection"
+      }
+    },
+    {
+      "status": "received",
+      "receipt": {
+        "state": "applied",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "fixture-tenant",
+            "owner_id": "fixture-owner"
+          },
+          "command_id": "applied-original"
+        },
+        "object_ref": {
+          "tenant_id": "fixture-tenant",
+          "owner_id": "fixture-owner",
+          "kind": "durable_work",
+          "id": "v1-input",
+          "revision": "1"
+        },
+        "revision": "1",
+        "next_action": "query_original"
+      }
+    }
+  ],
+  "Observation": {
+    "Input": {
+      "ID": "v1-input",
+      "Revision": 1,
+      "Text": "PG v1 portable input 🌍",
+      "CreatedAt": "2026-10-03T18:25:35.081773Z",
+      "UpdatedAt": "2026-10-03T18:25:35.081773Z"
+    },
+    "Job": {
+      "ID": "job-6fecd7b3c21f82c899e8961852b58c4d",
+      "Object": {
+        "tenant_id": "fixture-tenant",
+        "owner_id": "fixture-owner",
+        "kind": "durable_work",
+        "id": "v1-input"
+      },
+      "Phase": "project",
+      "WorkRevision": 1,
+      "CompletedRevision": 0,
+      "State": "ready",
+      "DueAt": "2026-10-03T18:25:35.081773Z"
+    }
+  }
+}

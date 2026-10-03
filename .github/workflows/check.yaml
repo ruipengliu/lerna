@@ -19,3 +19,29 @@ jobs:
       - run: npm install --global pnpm@12.8.1
       - run: make bootstrap
       - run: make check
+  postgres-admission:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres@sha256:3725f4e2499eef5134592b3b4ab79a543ed7f8e533b05b5b637af926630f6650
+        env:
+          POSTGRES_USER: lerna_test
+          POSTGRES_PASSWORD: fixture-only-password
+          POSTGRES_DB: lerna_integration
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U lerna_test -d lerna_integration"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
+        with:
+          go-version: '1.27.1'
+          cache: true
+      - run: make test-integration
+        env:
+          LERNA_TEST_POSTGRES_DSN: postgres://lerna_test:fixture-only-password@127.0.0.1:5432/lerna_integration?sslmode=disable
+      - run: go test -race -tags=integration -timeout=120s ./conformance/recovery/...
+        env:
+          LERNA_TEST_POSTGRES_DSN: postgres://lerna_test:fixture-only-password@127.0.0.1:5432/lerna_integration?sslmode=disable
