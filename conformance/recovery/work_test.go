@@ -5,7 +5,6 @@ package recovery_test
 import (
 	"context"
 	"fmt"
-	"github.com/ruipengliu/lerna/adapters/postgres"
 	"github.com/ruipengliu/lerna/contract"
 	"github.com/ruipengliu/lerna/runtime"
 	"testing"

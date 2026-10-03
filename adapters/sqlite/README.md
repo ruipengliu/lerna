@@ -4,7 +4,7 @@ This adapter implements the same internal Host admission ports as PostgreSQL:
 Tx, Clock, CommandStore, JobStore.Trigger and the demonstration consumer's
 Repository, plus the separate ClaimStore and project WorkRepository. It
 claims exact stage input, renews bound leases and commits projection progress.
-Scheduling, waiting and quotas remain later tickets. The public 1.0.0 contract is unchanged.
+Persistent waiting and bounded retry are implemented; quotas remain ticket06. The public 1.0.0 contract is unchanged.
 
 The root module locks `github.com/mattn/go-sqlite3 v1.14.52`. Build with Go 1.27.1,
 `CGO_ENABLED=1` and a C compiler using the driver's bundled SQLite amalgamation.
@@ -84,9 +84,9 @@ its actual Host writer and retains the closed complete SQLite database, command
 corpus, migration, Host observation and exact checksums. It needs no SQLite CLI.
 The retained v1 file is copied into a fresh owned file and upgraded through the
 actual v2 migration, preserving its original receipt/input/Job and completing
-its project Claim. Full migration failure/reopen recovery remains ticket07.
+its project Claim. Historical forward migration failure/retry/reopen is covered by the shared recovery suite.
 
-The next forward wait migration adds waiting state, per-input-revision immutable
+The version 4 forward wait migration adds waiting state, per-input-revision immutable
 policy/anchor/deadline, durable start/attempt/outcome/due facts and same-owner gates.
 It preserves every existing Claim/lease binding and all published V1/V2 bytes.
 Legacy policy binds only at first eligible Claim in the same short transaction;

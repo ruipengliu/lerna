@@ -60,7 +60,7 @@ is guarded at bigint maximum. Expired leases cannot renew or complete; replaceme
 keeps Job/object identity and increments the epoch. A late claim cannot alter the
 current projection. This fences only controlled database writes, not external I/O.
 
-The next forward wait migration adds waiting state, per-input-revision immutable
+The version 4 forward wait migration adds waiting state, per-input-revision immutable
 policy/anchor/deadline, durable start/attempt/outcome/due facts and same-owner gates.
 It preserves every existing Claim/lease binding and all published V1/V2 bytes.
 Legacy policy binds only at first eligible Claim in the same short transaction;
