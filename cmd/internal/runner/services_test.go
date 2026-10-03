@@ -1,0 +1,247 @@
+package runner_test
+
+import (
+	"context"
+	"encoding/json"
+	"net"
+	"net/url"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
+	"sync"
+	"syscall"
+	"testing"
+	"time"
+
+	"github.com/jackc/pgx/v5"
+	"github.com/ruipengliu/lerna/api"
+	"github.com/ruipengliu/lerna/cmd/internal/bootstrap"
+	"github.com/ruipengliu/lerna/internal/brain"
+	"github.com/ruipengliu/lerna/internal/task"
+	harness "github.com/ruipengliu/lerna/sdk/go"
+)
+
+type processOutput struct {
+	sync.Mutex
+	strings.Builder
+}
+
+func (b *processOutput) Write(p []byte) (int, error) {
+	b.Lock()
+	defer b.Unlock()
+	return b.Builder.Write(p)
+}
+func (b *processOutput) Text() string { b.Lock(); defer b.Unlock(); return b.Builder.String() }
+
+func start(t *testing.T, executable string, env []string, args ...string) *exec.Cmd {
+	t.Helper()
+	cmd := exec.Command(executable, args...)
+	cmd.Env = env
+	output := &processOutput{}
+	cmd.Stdout, cmd.Stderr = output, output
+	if err := cmd.Start(); err != nil {
+		t.Fatal(err)
+	}
+	done := make(chan error, 1)
+	go func() { done <- cmd.Wait() }()
+	t.Cleanup(func() {
+		_ = cmd.Process.Signal(syscall.SIGTERM)
+		select {
+		case err := <-done:
+			if err != nil {
+				t.Errorf("process did not shut down cleanly: %v %s", err, output.Text())
+			}
+		case <-time.After(8 * time.Second):
+			_ = cmd.Process.Kill()
+			<-done
+			t.Errorf("process did not actually exit after stop: %s", output.Text())
+		}
+	})
+	return cmd
+}
+
+func freeAddress(t *testing.T) string {
+	t.Helper()
+	l, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	address := l.Addr().String()
+	if err = l.Close(); err != nil {
+		t.Fatal(err)
+	}
+	return address
+}
+
+func processEnvironment(t *testing.T) (string, []string) {
+	t.Helper()
+	if os.Getenv("HARNESS_TEST_PROCESS_BACKEND") != "postgres" {
+		return "sqlite", os.Environ()
+	}
+	dsn := os.Getenv("HARNESS_TEST_POSTGRES_DSN")
+	if dsn == "" {
+		t.Fatal("real PostgreSQL process tests require a private DSN environment reference")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	conn, err := pgx.Connect(ctx, dsn)
+	if err != nil {
+		t.Fatal("PostgreSQL administrative test connection unavailable")
+	}
+	defer conn.Close(context.Background())
+	name := api.NewID("harness_process")
+	if _, err = conn.Exec(ctx, "CREATE DATABASE "+pgx.Identifier{name}.Sanitize()); err != nil {
+		t.Fatal("isolated PostgreSQL test database creation failed")
+	}
+	t.Cleanup(func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		conn, err := pgx.Connect(ctx, dsn)
+		if err != nil {
+			t.Error("PostgreSQL test cleanup connection failed")
+			return
+		}
+		defer conn.Close(context.Background())
+		if _, err = conn.Exec(ctx, "DROP DATABASE "+pgx.Identifier{name}.Sanitize()+" WITH (FORCE)"); err != nil {
+			t.Error("isolated PostgreSQL test cleanup failed")
+		}
+	})
+	u, err := url.Parse(dsn)
+	if err != nil || (u.Scheme != "postgres" && u.Scheme != "postgresql") {
+		t.Fatal("test DSN must be a URL reference")
+	}
+	u.Path = "/" + name
+	t.Setenv("HARNESS_DATABASE_DSN", u.String())
+	return "postgres", os.Environ()
+}
+
+func TestIndependentApplicationGatewayAndWorkerCompleteReportAndActuallyStop(t *testing.T) {
+	driver, env := processEnvironment(t)
+	root := t.TempDir()
+	configPath := filepath.Join(root, "config.json")
+	migrate := binary(t, "migrate")
+	cmd := exec.Command(migrate, "--config", configPath, "--development-init", "--data", root, "--driver", driver)
+	cmd.Env = env
+	if out, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("management setup failed: %v %s", err, out)
+	}
+	c, err := bootstrap.LoadConfig(configPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c.HTTPAddr, c.GRPCAddr, c.StaticDir = freeAddress(t), freeAddress(t), ""
+	if path := os.Getenv("HARNESS_TEST_TZDB_ROOT"); path != "" {
+		c.TZDBRoot = path
+	}
+	if err = bootstrap.SaveConfig(configPath, c); err != nil {
+		t.Fatal(err)
+	}
+	start(t, binary(t, "worker"), env, "--config", configPath)
+	start(t, binary(t, "application"), env, "--config", configPath)
+	start(t, binary(t, "gateway"), env, "--config", configPath)
+	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
+	defer cancel()
+	token, err := os.ReadFile(c.TokenFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	httpTransport := &harness.HTTPTransport{BaseURL: "http://" + c.HTTPAddr, Token: strings.TrimSpace(string(token)), AllowInsecureLoopback: true}
+	var discovery harness.Discovery
+	for {
+		discovery, err = httpTransport.Discover(ctx)
+		if err == nil {
+			break
+		}
+		select {
+		case <-ctx.Done():
+			t.Fatal("gateway did not become currently authenticated and ready")
+		case <-time.After(100 * time.Millisecond):
+		}
+	}
+	// 受信发布在管理装配中完成；没有写入私有 Task/Decision/Operation 或预置效果。
+	a, err := bootstrap.OpenAppForRole(ctx, c, false, "management")
+	if err != nil {
+		t.Fatal(err)
+	}
+	goal := brain.GoalSpec{Kind: "report", Title: "Independent process report", Body: "Verified bytes from separate durable workers.", SavePath: "reports/process-proof.md"}
+	ref, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), "application/json", api.Raw(goal), []api.ContentRef{}, []api.ContentRef{})
+	policy := a.TaskPolicy.PolicyRef
+	if closeErr := a.Close(); err == nil {
+		err = closeErr
+	}
+	if err != nil {
+		t.Fatal(err)
+	}
+	id := api.NewID("task")
+	original := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: c.OwnerID, CommandID: api.NewID("command"), TargetID: id, Method: "task.submit", ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(task.SubmitInput{OrchestratorID: c.OwnerID, GoalRef: ref, PolicyRef: policy, Deadline: api.Time(time.Now().Add(2 * time.Minute)), Budget: []api.Amount{{Unit: "USD", Value: "20"}}, RequirementCandidates: []api.RequirementCandidate{}})}
+	request := filepath.Join(root, "submit.json")
+	if err = os.WriteFile(request, api.Raw(original), 0600); err != nil {
+		t.Fatal(err)
+	}
+	cli := exec.CommandContext(ctx, binary(t, "cli"), "--endpoint", "grpc://"+c.GRPCAddr, "--discovery", "http://"+c.HTTPAddr, "--development-loopback", "--token-envref", "HARNESS_CLI_CREDENTIAL", "--journal", filepath.Join(root, "cli-journal"), "--request", request, "command")
+	cli.Env = append(env, "HARNESS_CLI_CREDENTIAL="+strings.TrimSpace(string(token)))
+	out, err := cli.CombinedOutput()
+	if err != nil {
+		t.Fatalf("original command through application gRPC failed: %v %s", err, out)
+	}
+	var receipt api.Receipt
+	if err = api.Decode(out, &receipt); err != nil || receipt.Stage != "applied" || receipt.CommandID != original.CommandID {
+		t.Fatalf("application receipt: %s %v", out, err)
+	}
+	j, err := harness.OpenJournal(filepath.Join(root, "queries"), discovery.IdentityScope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer j.Close()
+	client, err := harness.NewClient(httpTransport, j, discovery)
+	if err != nil {
+		t.Fatal(err)
+	}
+	query := api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: c.OwnerID, QueryID: api.NewID("query"), Method: "task.read", TargetID: id, Payload: api.Raw(task.ReadInput{})}
+	for {
+		// 查询用新query_id代表新的读取；已发送原command_id始终保留。
+		query.QueryID = api.NewID("query")
+		out, err = client.Query(ctx, query)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var fact api.Task
+		if err = json.Unmarshal(out, &fact); err != nil {
+			t.Fatal(err)
+		}
+		if fact.Status == "succeeded" {
+			break
+		}
+		if fact.Status == "failed" || fact.Status == "cancelled" {
+			t.Fatalf("separate worker ended task without verified result: %s", out)
+		}
+		select {
+		case <-ctx.Done():
+			t.Fatalf("separate worker did not complete report: %s", out)
+		case <-time.After(100 * time.Millisecond):
+		}
+	}
+	actual, err := os.ReadFile(filepath.Join(root, "files", goal.SavePath))
+	if err != nil || string(actual) != string(brain.ReportBytes(goal)) {
+		t.Fatalf("independent target bytes: %q %v", actual, err)
+	}
+}
+
+func TestServiceRolesRefuseInitializationAndMissingConfiguration(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "missing-config.json")
+	for _, role := range []string{"gateway", "application", "worker"} {
+		b := binary(t, role)
+		_, diagnostic, err := run(t, b, "--config", path)
+		if err == nil || !strings.Contains(string(diagnostic), "dependency_unavailable") {
+			t.Fatalf("%s silently initialized: %v %s", role, err, diagnostic)
+		}
+		_, diagnostic, err = run(t, b, "--config", path, "--development-init")
+		if err == nil || !strings.Contains(string(diagnostic), "invalid_request") {
+			t.Fatalf("%s accepted management flag: %v %s", role, err, diagnostic)
+		}
+	}
+	if _, err := os.Stat(path); !os.IsNotExist(err) {
+		t.Fatal("a service created configuration")
+	}
+}
