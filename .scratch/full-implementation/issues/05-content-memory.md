@@ -47,6 +47,10 @@ Schema/profile 与完整命令保存在
 同范围 vet/build、gofmt、diff 检查通过。此前完整 Memory/objectstore race 亦已运行，
 最近新增行为另用真实 SQLite/PG 的公开接口过期反例验证。
 
-工单保持 partial：跨 owner 权威、跨位置对象传输、端侧挖掘/自然语言提取、真实外部镜像/SDK/备份
+`683bb2f` 补入显式跨 owner 当前来源门禁和 Memory 原引用 holder，范围及双库证据见
+[23 外来内容登记](23-foreign-content-registration.md)。领域矩阵已通过；独立设备/Task 的
+传输宿主装配仍独立验收，不把网络 adapter 接口可编译称为完整交接通过。
+
+工单保持 partial：生产跨位置对象传输、端侧挖掘/自然语言提取、真实外部镜像/SDK/备份
 物理清除和三 AZ 对象耐久未验收；相应入口未配置时明确拒绝。
 默认闭合 RuleExtractor 不宣称自然语言质量，未知经验不自报成功。

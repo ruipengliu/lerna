@@ -1,6 +1,6 @@
 # Content 与 Memory 参考实现
 
-本模块实现 [Memory 设计](../../docs/architecture/memory/README.md)中的同 owner、显式同数据库用例。准确正文由 ObjectStore 保存，Memory 保留断言、来源和版本；检索投影不成为权威。公开方法的闭合输入、输出和摘要由 `Service.Register` 登记并交给根生成器生成。
+本模块实现 [Memory 设计](../../docs/architecture/memory/README.md)中的同 owner 用例，以及显式跨 owner 在线副本门禁。准确正文由 ObjectStore 保存，Memory 保留断言、来源和版本；检索投影不成为权威。公开方法的闭合输入、输出和摘要由 `Service.Register` 登记并交给根生成器生成。
 
 ## 装配
 
@@ -23,6 +23,31 @@ CheckContentTx(ctx, tx, auth, ref, purpose, location, continuous) (ContentVersio
 `PublicationRequest` 的 content/version/hash、原 reserve/put CommandID、TransferID、来源、许可和期限必须在首次调用前固定。协议路径是原 `content.upload_reserve` → HTTPS 准确字节上传 → 原 `content.put`。字节最多 16 MiB；`ready` 尚不等于已发布。ObjectStore 的写入、读回和删除均在元数据事务外；读回后再次核当前控制门禁。`ReadBytes` 同时核服务实际处理地点和接收地点，参数不能改变实际处理地点。
 
 上传写入或 ready 提交未知时停止发布，沿原 TransferID 查询并恢复。发布、不可变版本、来源边、到期 Job 和原命令回执在短事务共同保存。同一 content/version 不接受不同摘要。只有已发布的准确来源可加入 processed DAG；disclosed 必须是 processed 子集。未引用输出中已处理的来源仍参与限制交集、撤销和纠正。
+
+## 跨 owner 的准确内容
+
+宿主显式配置 `Service.Foreign`；未配置时，外来引用仍返回 `dependency_unavailable`。`ForeignContentPort` 的 RegisterCopy、Current、Read、Control、Release 全部在 Tx 外调用；VerifyTx 只能核固定源 owner、公钥、数据库、接收者和准确签名，不能 RPC。构造和重开不会隐式联系源端。
+
+```go
+PrepareForeignUse(ctx, scope, auth, ForeignReference) (ForeignUse, error)
+PrepareForeignContext(ctx, scope, auth, refs, purpose, location) (context.Context, error)
+WithForeignUses(ctx, []ForeignUse) (context.Context, error)
+SourcePolicySnapshot(ctx, scope, auth, ref, purpose, location) (ContentPolicySnapshot, error)
+SourcePolicySnapshotTx(ctx, tx, auth, ref, purpose, location) (ContentPolicySnapshot, error)
+CurrentForeignCopy(ctx, sourceScope, auth, ForeignReference, control) (ForeignProof, error)
+ControlForeignCopy(ctx, scope, auth, copyID) (ForeignUse, error)
+StopForeignCopy(ctx, scope, auth, copyID) error
+```
+
+消费方先共同提交原 reference_intent、holder 和恢复 Job，再沿固定 CopyID、原登记命令调用源端 `content.register_copy`。提交未知不会启动登记。源登记答复丢失时仍查询或重放原身份；不替换内容 owner、版本或摘要。准确字节校验和本地介质写入发生在事务外，保存 held_copy_gate 前再次取得源端当前证明。
+
+`ForeignProof` 固定完整 PolicyValues、原主体代次、用途、地点、源数据库及 control_revision；整个闭合载荷由源权威签名。证明最多 128 KiB，每类来源最多 100 项，有效窗口最多一分钟。`mode=control` 仅用于原责任的控制和清理，不能授权正文。SourcePolicySnapshot 只返回本次确已认证主体的代次，不猜测其他主体的当前凭据。
+
+普通读取在读取本地字节前后都取得源当前依据；源失联拒绝新使用。事务内入口只消费预先取得的 WithForeignUses，并核本方当前凭据、准确 holder、用途、期限和已知撤回。源 owner 的较新关闭依据也会阻断其他用途保存的旧证明；跨库仍存在有限检查窗口，不声明瞬时撤回。外来来源键含原 owner，同 owner 的历史键保持原格式。派生发布按所有实际来源的主体、用途、地点和保留期交集核验。
+
+Memory 和 view 的 `foreign_metadata_reference` 只登记本方引用元数据；删除这些记录不关闭源原件或其它独立 holder。StopForeignCopy 先封本方新使用，再实际删除本地副本并提交原 release 报告。没有源可核验的清理证据时，源 cleanup 保持 pending；本地字节删除不等于源端或所有介质 complete。当前同主体较新凭据可以收尾旧 holder，不能凭此读取旧代次正文。
+
+当前外来普通使用需要在线证明；未实现离线新使用租约或跨 owner 的独立派生保留证明，缺少这类依据时拒绝使用。CurrentForeignCopy 是源领域元数据端口，签名和公开传输入口由明确的宿主 adapter 提供；它不会自行创建另一套来源权威。
 
 ## 方法范围
 
@@ -65,7 +90,7 @@ CheckContentTx(ctx, tx, auth, ref, purpose, location, continuous) (ContentVersio
 
 副本自身到期只关闭该副本，不关闭或删除原文。外部持有者未报告停止使用时，cleanup 保持待处理；`use_stopped`、`complete`、`residual`、`unknown` 分别保存。complete 报告必须含存在且摘要一致的 Content 证据。Memory 自有 `metadata_reference` 只表示原引用元数据，不宣称曾复制来源正文。关闭、全体停止使用、原介质删除和其它副本清理分别推进；其它副本报告未知时不能宣称全部清理完成。
 
-`adapters/objectstore.Local` 使用文件 fsync、不可覆盖链接和目录 fsync，并独立验证 hash/length。耐久等级仅 `local_fsync`，将服务地点设为 cloud 不会改变该事实。当前未接跨地点目标介质、跨 owner 权威凭据、SDK/备份物理擦除验证或三 AZ 对象存储；相应镜像或来源入口明确拒绝，外部清理报告不升级为全介质擦除证明。
+`adapters/objectstore.Local` 使用文件 fsync、不可覆盖链接和目录 fsync，并独立验证 hash/length。耐久等级仅 `local_fsync`，将服务地点设为 cloud 不会改变该事实。跨 owner 权威和传输须显式装配上述端口。当前未验证生产跨地点目标介质、SDK/备份物理擦除或三 AZ 对象存储；外部清理报告不升级为全介质擦除证明。
 
 ## 实际验证
 
@@ -75,6 +100,9 @@ go test -race ./internal/memory ./adapters/objectstore
 go vet ./internal/memory ./adapters/objectstore
 go build ./internal/memory ./adapters/objectstore
 HARNESS_TEST_POSTGRES_DSN=... go test ./internal/memory -run TestPostgres -count=1 -v
+HARNESS_FOREIGN_TEST_DRIVER=postgres HARNESS_TEST_POSTGRES_DSN=... go test -race ./internal/memory -run '^(TestForeign|TestMemoryKeepsForeign)' -count=1
 ```
 
 普通行为测试使用迁移后的真实 SQLite 文件与本地准确介质。PG 测试使用真实连接，未提供 DSN 时明确 skip，不能记为数据库验证通过。测试显式安装有 subject/purpose/local 约束的一小时许可；撤权端口和时钟只替换已授权的外部权限/可信时间边界。提交未知注入位于真实 SQLite COMMIT 之后；介质删除丢回复注入发生在实际 unlink/fsync 之后。验证覆盖原票据重开恢复、清理幂等、来源主动关闭、自然到期与独立派生、准确 hash、权限先于正文读取、权限扩张后的旧页拒绝、固定 TTL、单候选唯一保存、经验未知状态和清理墓碑。
+
+跨 owner 矩阵每例使用两个实际 owner 和独立数据库；PG 选项为每方创建并迁移各自的临时数据库，缺少配置会失败。源端命令和正文由真实 Memory 服务处理，准确证明使用 ES256 签名。测试覆盖登记丢回复、当前关闭及失联拒读、control 证明不得授权正文、原 intent 提交未知后零出站及重开、主体代次边界、原来源限制交集和 Memory 删除仅清理本方元数据。该矩阵的源调用端口直接连接两服务，不替代独立传输宿主的 TLS 或完整 Task 接线验收。
