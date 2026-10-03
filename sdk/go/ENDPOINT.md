@@ -6,8 +6,10 @@
 
 Invoke 的错误表示结果不明，SDK 保留 `started`，不猜成功／失败、不再调用 Invoke。重开或 `RecoverEndpoint` 只对原 `started` 调用 Receiver.Lookup；即使 Lookup 确认没找到，也保留责任，不盲重执行。已确认原 Reply 通过准确结果身份和输出 Schema 后先 fsync 再回交；只有匹配的 `stored=true` Ack 才持久标记结束。旧输入／期限／sequence／receiver／方法摘要不刷新。旧责任缺准确 decoder 时关闭，新 schema 不能替旧责任改写。
 
+外部重连会恢复原 journal 中的责任。内部 binding 重绑保持同一外 socket，不发送第二次 Ready；外 Ack 丢失时宿主显式调用 `RecoverEndpoint` 交回原 Reply。`EndpointError` 返回传输关闭的具体原因；业务 Invoke 结果不明仍保留在 journal，不据此伪造业务失败。
+
 既有 ReplyJournal 的已保存 Reply 可收尾，原档案仍保留；新增未完成调用必须具有明确 prepare／started 元数据。独立 `receipt_lookup` Delivery 必须显式配置原接收 owner 的纯 ReceiptDecoder，否则该 kind 关闭。Lookup 自身须沿业务 owner 的原授权读取结果；不能靠控制收尾资格重新披露已撤权正文。
 
 接收普通 28 项、控制 4 项，3 MiB／1 MiB 预留、总 4 MiB；持有到实际 handler 返回。两普通 worker 和一控制 worker 独立推进，读取循环持续接收。网络和 callback 等待各限五秒，Close 取消实际读写并观察 worker 退出；callback 不退出时返回 `endpoint_handlers_not_exited`，不宣告业务已停止。Journal 最多 128 个最小身份，恢复页 32；超过上限明确关闭，不静默丢弃责任。
 
-第一行为片以实际 WSS／TLS→Channel／mTLS、固定 ES256 和原 recipient Dispatcher 证明 handler 前 prepare／started fsync、Reply 在 owner I/O 前 fsync，以及 matching Ack 重开保留。SDK 的旧 unknown 复开／错误 key／scope／窗口与外 Ack 故障验证仍待后续片；平台生产资格不据此宣称完成。
+实际 WSS／TLS→Channel／mTLS、固定 ES256 和原 recipient Dispatcher 证明 handler 前 prepare／started fsync、Reply 在 owner I/O 前 fsync，以及 matching Ack 重开保留。SQLite／PostgreSQL 均验证原提交后丢结果、journal 重开只查询原 receipt，及外 Ack 丢失／内部重绑／原 Reply 恢复；两种故障 handler 实际调用次数均为一次，原 TTL 和 journal sequence 保持。错误 scope／profile／缺少受信配置在连线前关闭；实际错误公钥、过期证明和进入 handler 前 current 撤权拒绝副作用，晚撤权保留已 fsync 的 started 责任。公开 development 角色接线和生产资格分别验收，不能由这些 adapter／SDK 参考合同替代。

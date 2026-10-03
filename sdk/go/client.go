@@ -328,18 +328,19 @@ type wsPending struct {
 	kind    string
 }
 type WSTransport struct {
-	conn     *websocket.Conn
-	ready    WSReady
-	mu       sync.Mutex
-	write    sync.Mutex
-	seq      uint64
-	pending  map[uint64]wsPending
-	normal   int
-	controls map[string]bool
-	closed   bool
-	cancel   context.CancelFunc
-	endpoint *wsEndpoint
-	readDone chan struct{}
+	conn        *websocket.Conn
+	ready       WSReady
+	mu          sync.Mutex
+	write       sync.Mutex
+	seq         uint64
+	pending     map[uint64]wsPending
+	normal      int
+	controls    map[string]bool
+	closed      bool
+	cancel      context.CancelFunc
+	endpoint    *wsEndpoint
+	readDone    chan struct{}
+	closeReason error
 }
 
 func DialWebSocket(ctx context.Context, address, token string, expected Discovery, allowDev bool) (*WSTransport, error) {
@@ -409,6 +410,7 @@ func (t *WSTransport) fail(err error) {
 		return
 	}
 	t.closed = true
+	t.closeReason = err
 	t.cancel()
 	for seq, ch := range t.pending {
 		ch.result <- wsResult{err: err}
