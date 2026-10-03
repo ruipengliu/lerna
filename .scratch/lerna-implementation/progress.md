@@ -6,7 +6,7 @@
 
 ## 当前状态
 
-- 切片 01：6 个 tickets 已确认。任务 01–06 已 resolved 并合入集成分支（`45b90ad`、`c0e12f7`、`3c156a6`、`a96f49d`、`b414092`、`b825c2d`）；切片两轴审查发现项已统一修复并合入（`bb9241f`）；后置架构优化正在实施，远端 CI 的格式脚本依赖故障等待独立修复。其他切片仍为 not-started。
+- 切片 01：6 个 tickets 已确认。任务 01–06 已 resolved 并合入集成分支（`45b90ad`、`c0e12f7`、`3c156a6`、`a96f49d`、`b414092`、`b825c2d`）；切片两轴审查发现项已统一修复并合入（`bb9241f`）；后置架构优化已合入 `bab6919`，后续两轴复查均无新增发现；远端 CI 的格式脚本依赖故障正在独立修复。其他切片仍为 not-started。
 - 任务 01 证据：锁定依赖干净重装、`make check`、`make test-race` 通过；41 项共同正反夹具及合法值的真实 Go→TS／TS→Go 往返通过。详细记录见[任务 01](../lerna-01-command-contracts/issues/01-exact-contract-roundtrip.md#comments)。这些只证明公共值合同范围。
 - 任务 02 证据：`make bootstrap`、`make check`、`make test-race` 通过；共同语料共 109 项（41 值、68 命令），两端错误分类及合法输入真实往返通过；6 项生成器拒绝探针通过。详细记录见[任务 02](../lerna-01-command-contracts/issues/02-strict-command-validation.md#comments)。已按决策消除 TypeScript 内部模块反向导入公共 facade 的循环依赖。
 - 任务 03 证据：`make check` 通过；46 项共同摘要案例（31 独立预期、15 拒绝），覆盖 UTF-16 键排序、业务／主体变化、重传及 1 MiB 边界。详细记录见[任务 03](../lerna-01-command-contracts/issues/03-canonical-command-digest.md#comments)。
@@ -24,3 +24,7 @@
 - 任务依赖以实际完成记录为准；集成后运行相关验证及两轴代码审查，修复后关闭任务。
 - 每片结束执行架构审查，按用户授权由决策智能体选择需要立即解决的问题，保留审查报告与决定，不增加尚无使用者的抽象。
 - 记录命令、环境、准确版本、结果和限制后更新切片及验收索引，提交并推送。
+
+## 切片 01 后置优化检查点
+
+任务 07 已 resolved，基线同负载实测 119.217268 秒，最终 10.909816 秒；Go / TS fixture runner 各由 226 次启动降为 1 次。额外反序与 16 项生命周期测试成本单独记录，详见[架构审查](../lerna-01-command-contracts/architecture-review.md)；本机测量不作为生产容量保证。后续独立 Standards / Spec 审查均为 0 新发现，原问题已关闭；整片仍等待真实新 CI 成功与退出证据。
