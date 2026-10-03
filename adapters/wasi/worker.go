@@ -7,7 +7,11 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"net"
+	"os"
 	"runtime/debug"
+	"sort"
+	"strings"
 	"time"
 
 	"github.com/ruipengliu/lerna/api"
@@ -38,12 +42,18 @@ type WorkerResult struct {
 }
 
 type WorkerProbe struct {
-	Protocol       string `json:"protocol"`
-	RuntimeVersion string `json:"runtime_version"`
-	ModuleVersion  string `json:"module_version"`
-	ModuleSum      string `json:"module_sum"`
-	GoVersion      string `json:"go_version"`
-	Answer         uint64 `json:"answer"`
+	Protocol          string   `json:"protocol"`
+	RuntimeVersion    string   `json:"runtime_version"`
+	ModuleVersion     string   `json:"module_version"`
+	ModuleSum         string   `json:"module_sum"`
+	GoVersion         string   `json:"go_version"`
+	Answer            uint64   `json:"answer"`
+	RootEntries       []string `json:"root_entries"`
+	EnvironmentKeys   []string `json:"environment_keys"`
+	NetworkInterfaces []string `json:"network_interfaces"`
+	AddressSpaceBytes uint64   `json:"address_space_bytes"`
+	CPULimitSeconds   uint64   `json:"cpu_limit_seconds"`
+	OpenFileLimit     uint64   `json:"open_file_limit"`
 }
 
 // ProbeWorker 只执行内置固定探针，不接收用户代码或业务输入。
@@ -53,6 +63,32 @@ func ProbeWorker(out io.Writer) error {
 		return api.E("unsupported", "worker_build_identity_missing")
 	}
 	probe := WorkerProbe{Protocol: WorkerProtocol, RuntimeVersion: RuntimeVersion, GoVersion: info.GoVersion}
+	if cwd, err := os.Getwd(); err != nil || cwd != "/" || os.Getenv("PWD") != "/" {
+		return api.E("unsupported", "worker_directory_probe_failed")
+	}
+	entries, err := os.ReadDir("/")
+	if err != nil || len(entries) > 8 {
+		return api.E("unsupported", "worker_root_probe_failed")
+	}
+	for _, entry := range entries {
+		probe.RootEntries = append(probe.RootEntries, entry.Name())
+	}
+	for _, pair := range os.Environ() {
+		key, _, _ := strings.Cut(pair, "=")
+		probe.EnvironmentKeys = append(probe.EnvironmentKeys, key)
+	}
+	sort.Strings(probe.EnvironmentKeys)
+	interfaces, err := net.Interfaces()
+	if err != nil || len(interfaces) > 8 {
+		return api.E("unsupported", "worker_network_probe_failed")
+	}
+	for _, iface := range interfaces {
+		probe.NetworkInterfaces = append(probe.NetworkInterfaces, iface.Name)
+	}
+	sort.Strings(probe.NetworkInterfaces)
+	if err = probeResourceLimits(&probe); err != nil {
+		return err
+	}
 	for _, dep := range info.Deps {
 		if dep.Path == "github.com/tetratelabs/wazero" && dep.Replace == nil {
 			probe.ModuleVersion, probe.ModuleSum = dep.Version, dep.Sum
@@ -78,6 +114,7 @@ func ProbeWorker(out io.Writer) error {
 }
 
 func RunWorker(in io.Reader, out io.Writer) error {
+	debug.SetMaxThreads(16)
 	raw, err := io.ReadAll(io.LimitReader(in, (1<<20)+1))
 	if err != nil {
 		return err

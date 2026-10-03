@@ -358,6 +358,9 @@ func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 	}
 	var namespaceRef *api.ContentRef
 	if a.Prepared.Cell != nil && !a.CellCommitted && f.Effect == "applied" {
+		if !noLater(f.MayApplyLater) {
+			return api.E("invalid_state", "cell_process_exit_not_confirmed")
+		}
 		cell := a.Prepared.Cell
 		namespace, err := cellNamespace(cell, f)
 		if err != nil {
@@ -438,7 +441,7 @@ func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 			}
 			return nil
 		}
-		if a.Prepared.Cell != nil && !old.CellCommitted {
+		if a.Prepared.Cell != nil && !old.CellCommitted && noLater(f.MayApplyLater) {
 			valid, err := s.commitCell(ctx, tx, current, old, namespaceRef)
 			if err != nil {
 				return err

@@ -151,15 +151,28 @@ func New(cfg Config) (*Runtime, error) {
 func (r *Runtime) probe(parent context.Context) error {
 	ctx, cancel := context.WithTimeout(parent, 5*time.Second)
 	defer cancel()
+	key := api.NewID("probe")
+	p := &process{cancel: cancel, done: make(chan struct{})}
+	r.mu.Lock()
+	if r.closing || len(r.active) >= r.cfg.MaxConcurrent {
+		r.mu.Unlock()
+		return api.E("overloaded", "wasi_probe_capacity_unavailable")
+	}
+	r.active[key] = p
+	r.mu.Unlock()
+	defer func() { r.mu.Lock(); delete(r.active, key); close(p.done); r.mu.Unlock() }()
 	cmd := r.command(ctx, 2, "--probe")
 	stdout := limitedBuffer{limit: 4096}
 	stderr := limitedBuffer{limit: 4096}
 	cmd.Stdout, cmd.Stderr = &stdout, &stderr
 	if err := cmd.Run(); err != nil {
+		if ctx.Err() != nil {
+			return ctx.Err()
+		}
 		return api.E("unsupported", "wasi_isolation_probe_failed")
 	}
 	var probe WorkerProbe
-	if err := api.Decode(stdout.Bytes(), &probe); err != nil || probe.Protocol != WorkerProtocol || probe.RuntimeVersion != RuntimeVersion || probe.ModuleVersion != "v1.10.1" || probe.Answer != 42 {
+	if err := api.Decode(stdout.Bytes(), &probe); err != nil || !qualifiedProbe(probe) {
 		return api.E("unsupported", "wasi_runtime_probe_changed")
 	}
 	manifest := Manifest{RuntimeVersion: RuntimeVersion, WorkerHash: r.cfg.WorkerHash, BubblewrapHash: r.manifest.BubblewrapHash, PrlimitHash: r.manifest.PrlimitHash, Platform: runtime.GOOS + "/" + runtime.GOARCH, Kernel: kernelRelease(), AddressSpace: AddressSpaceBytes, Probe: probe, MaxConcurrent: uint64(r.cfg.MaxConcurrent), NamespaceFormat: execution.PassiveEnvironmentFormat}
@@ -173,23 +186,39 @@ func (r *Runtime) probe(parent context.Context) error {
 	return nil
 }
 
+func qualifiedProbe(p WorkerProbe) bool {
+	return p.Protocol == WorkerProtocol && p.RuntimeVersion == RuntimeVersion && p.ModuleVersion == "v1.10.1" && p.ModuleSum == "h1:2DugeJf6VVk58KTPszlNfeeN8AhhpwcZqkJj2wwFuH8=" && p.GoVersion != "" && p.Answer == 42 && api.Equal(p.RootEntries, []string{"worker"}) && api.Equal(p.EnvironmentKeys, []string{"GOMAXPROCS", "GOMEMLIMIT", "PWD"}) && api.Equal(p.NetworkInterfaces, []string{"lo"}) && p.AddressSpaceBytes == AddressSpaceBytes && p.CPULimitSeconds == 2 && p.OpenFileLimit == 64
+}
+
 func (r *Runtime) command(ctx context.Context, cpu uint64, args ...string) *exec.Cmd {
-	argv := []string{"--as=1073741824:1073741824", "--cpu=" + strconv.FormatUint(cpu, 10) + ":" + strconv.FormatUint(cpu, 10), "--core=0:0", "--", r.bwrap, "--unshare-all", "--die-with-parent", "--clearenv", "--cap-drop", "ALL", "--setenv", "GOMAXPROCS", "1", "--setenv", "GOMEMLIMIT", "67108864", "--ro-bind", r.cfg.WorkerPath, "/worker", "--", "/worker"}
+	argv := []string{"--as=1073741824:1073741824", "--cpu=" + strconv.FormatUint(cpu, 10) + ":" + strconv.FormatUint(cpu, 10), "--core=0:0", "--nofile=64:64", "--", r.bwrap, "--unshare-all", "--die-with-parent", "--clearenv", "--cap-drop", "ALL", "--chdir", "/", "--setenv", "GOMAXPROCS", "1", "--setenv", "GOMEMLIMIT", "67108864", "--ro-bind", r.cfg.WorkerPath, "/worker", "--", "/worker"}
 	cmd := exec.CommandContext(ctx, r.prlimit, append(argv, args...)...)
 	configureProcess(cmd)
 	return cmd
 }
 
 func (r *Runtime) EnvironmentConfigRef() api.ComponentRef {
-	digest, _ := api.Digest([]any{"environment.wasi", "1", r.manifest, "stdio-only;no-fs;no-network;no-credentials;no-subprocess"})
+	digest, _ := api.Digest([]any{"environment.wasi", "1", r.manifest, r.cfg.Scope, r.cfg.Root, "stdio-only;no-fs;no-network;no-credentials;no-subprocess"})
 	return api.ComponentRef{ComponentID: execution.BuiltinComponentID("environment.wasi"), Version: "1", Digest: digest}
 }
 func (r *Runtime) InstallLockRef() api.ComponentRef {
 	digest, _ := api.Digest(r.manifest)
 	return api.ComponentRef{ComponentID: execution.BuiltinComponentID("environment.wasi.install"), Version: "1", Digest: digest}
 }
-func (r *Runtime) Manifest() Manifest { return r.manifest }
+func cloneManifest(m Manifest) Manifest {
+	m.Probe.RootEntries = append([]string{}, m.Probe.RootEntries...)
+	m.Probe.EnvironmentKeys = append([]string{}, m.Probe.EnvironmentKeys...)
+	m.Probe.NetworkInterfaces = append([]string{}, m.Probe.NetworkInterfaces...)
+	return m
+}
+func (r *Runtime) Manifest() Manifest { return cloneManifest(r.manifest) }
 func (r *Runtime) Check(config, install api.ComponentRef, amounts []api.Amount) (execution.EnvironmentIsolation, error) {
+	r.mu.Lock()
+	closing := r.closing
+	r.mu.Unlock()
+	if closing {
+		return execution.EnvironmentIsolation{}, api.E("unsupported", "wasi_worker_closed")
+	}
 	if !api.Equal(config, r.EnvironmentConfigRef()) || !api.Equal(install, r.InstallLockRef()) {
 		return execution.EnvironmentIsolation{}, api.E("unsupported", "wasi_runtime_lock_changed")
 	}

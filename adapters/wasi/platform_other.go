@@ -4,14 +4,13 @@ package wasi
 
 import (
 	"context"
-	"errors"
 	"github.com/ruipengliu/lerna/api"
 	"os"
 	"os/exec"
 )
 
-func errorsJoin(a, b error) error { return errors.Join(a, b) }
-func kernelRelease() string       { return "unprobed" }
+func probeResourceLimits(*WorkerProbe) error { return api.E("unsupported", "wasi_platform_not_probed") }
+func kernelRelease() string                  { return "unprobed" }
 func acquireRuntimeLock(*os.Root) (*os.File, error) {
 	return nil, api.E("unsupported", "wasi_platform_not_probed")
 }

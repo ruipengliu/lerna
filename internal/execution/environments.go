@@ -12,7 +12,7 @@ const EnvironmentPrepareJob = "execution.environment.prepare"
 const EnvironmentCleanupJob = "execution.environment.cleanup"
 const HostCallJob = "execution.environment.hostcall"
 
-// 首版环境只保存被动数据；不开放任何用户程序、原生进程、网络或宿主文件能力。
+// 命名空间仅保存被动数据；用户程序须通过宿主登记的独立隔离运行时准备。
 const PassiveEnvironmentFormat = "harness-passive-namespace/1"
 
 type NamespaceBinding struct {

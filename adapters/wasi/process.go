@@ -71,7 +71,7 @@ func (r *Runtime) Start(ctx context.Context, q execution.AttemptRequest, barrier
 	cmd.Stdout, cmd.Stderr = &stdout, &stderr
 	startErr := cmd.Start()
 	if startErr == nil {
-		record.PID, record.SpawnCount = cmd.Process.Pid, 1
+		record.PID, record.SpawnCount, record.SpawnCountKnown = cmd.Process.Pid, 1, true
 		record.ProcessStart, err = processStart(record.PID)
 		if err != nil && !errors.Is(err, os.ErrNotExist) {
 			childCancel()
@@ -107,6 +107,7 @@ func (r *Runtime) Start(ctx context.Context, q execution.AttemptRequest, barrier
 			record.Result = WorkerResult{Protocol: WorkerProtocol, Reason: reason, Output: []byte{}}
 		}
 	} else {
+		record.SpawnCountKnown = true
 		record.Result.Reason = "cell_process_not_started"
 		record.Usage = []api.Amount{{Unit: "cpu_seconds", Value: "0"}}
 		record.UsageFinal = true
@@ -121,10 +122,14 @@ func (r *Runtime) Start(ctx context.Context, q execution.AttemptRequest, barrier
 func (r *Runtime) fact(ctx context.Context, q execution.AttemptRequest, record runRecord) (execution.Fact, error) {
 	fact := execution.Fact{Revision: q.Attempt.FactRevision + 1, Effect: "not_applied", MayApplyLater: false, Evidence: []api.ContentRef{}, Usage: record.Usage, UsageFinal: record.UsageFinal}
 	if record.Phase == "started" {
+		fact.Revision = 1
 		fact.Effect = "unknown"
 		fact.MayApplyLater = true
 		fact.UsageFinal = false
 		return fact, nil
+	}
+	if fact.Revision < 2 {
+		fact.Revision = 2
 	}
 	if record.Phase == "lost" {
 		fact.Effect = "unknown"
@@ -137,7 +142,7 @@ func (r *Runtime) fact(ctx context.Context, q execution.AttemptRequest, record r
 		fact.Effect = "applied"
 		fact.Namespace = &ns
 	}
-	receipt := Receipt{AttemptID: record.AttemptID, OperationID: q.Invoke.OperationID, BindingDigest: record.BindingDigest, InstallLock: r.InstallLockRef(), Phase: record.Phase, SpawnCount: record.SpawnCount, Reason: record.Result.Reason, OutputHash: api.Hash(record.Result.Output), ActuallyExited: true, Usage: record.Usage, UsageFinal: record.UsageFinal}
+	receipt := Receipt{AttemptID: record.AttemptID, OperationID: q.Invoke.OperationID, BindingDigest: record.BindingDigest, InstallLock: r.InstallLockRef(), Phase: record.Phase, SpawnCount: record.SpawnCount, SpawnCountKnown: record.SpawnCountKnown, Reason: record.Result.Reason, OutputHash: api.Hash(record.Result.Output), ActuallyExited: true, Usage: record.Usage, UsageFinal: record.UsageFinal}
 	b := api.Raw(receipt)
 	ref, err := r.cfg.Content.Publish(ctx, q.Scope, q.Auth, execution.Publication{ContentID: "content_" + strings.TrimPrefix(api.Hash(b), "sha256:")[:32], MediaType: "application/json", Purpose: "execution_wasi_receipt", Location: r.cfg.Location, ProcessedSources: q.Attempt.Prepared.Cell.Sources, DisclosedSources: []api.ContentRef{}}, b)
 	if err != nil {
@@ -157,7 +162,19 @@ func (r *Runtime) Reconcile(ctx context.Context, q execution.AttemptRequest) (ex
 	r.mu.Unlock()
 	record, err := r.record(q.Attempt.AttemptID, digest)
 	if errors.Is(err, os.ErrNotExist) {
-		return execution.Fact{Revision: q.Attempt.FactRevision + 1, Effect: "unknown", MayApplyLater: false, Evidence: []api.ContentRef{}, Usage: []api.Amount{}, UsageFinal: false}, nil
+		if active != nil {
+			return execution.Fact{Revision: 1, Effect: "unknown", MayApplyLater: true, Evidence: []api.ContentRef{}, Usage: []api.Amount{}, UsageFinal: false}, nil
+		}
+		if q.Attempt.CellCommitted || q.Attempt.ResultRef != nil || q.Attempt.UsageFinal {
+			return execution.Fact{}, api.E("invalid_state", "original_wasi_journal_missing")
+		}
+		// 原独占目录的持久入口日志总在 spawn 之前。当前没有原活动调用或日志，
+		// 表示原 barrier 后尚未越过入口；封存零次事实，不重新开始或继续旧调用。
+		record = runRecord{AttemptID: q.Attempt.AttemptID, BindingDigest: digest, Phase: "finished", SpawnCountKnown: true, Result: WorkerResult{Protocol: WorkerProtocol, Reason: "original_start_not_entered", Output: []byte{}}, Usage: []api.Amount{{Unit: "cpu_seconds", Value: "0"}}, UsageFinal: true}
+		if err = r.createRecord(record); err != nil {
+			return execution.Fact{}, err
+		}
+		return r.fact(ctx, q, record)
 	}
 	if err != nil {
 		return execution.Fact{}, err

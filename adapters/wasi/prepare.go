@@ -10,10 +10,11 @@ import (
 )
 
 type cellEncoding struct {
-	Arguments   execution.ComputeArguments `json:"arguments"`
-	Limits      Limits                     `json:"limits"`
-	InstallLock api.ComponentRef           `json:"install_lock"`
-	InputHash   string                     `json:"input_hash"`
+	Arguments         execution.ComputeArguments `json:"arguments"`
+	Limits            Limits                     `json:"limits"`
+	InstallLock       api.ComponentRef           `json:"install_lock"`
+	EnvironmentConfig api.ComponentRef           `json:"environment_config"`
+	InputHash         string                     `json:"input_hash"`
 }
 
 func (r *Runtime) Prepare(ctx context.Context, sc rt.Scope, auth rt.Auth, invoke execution.InvokeInput, intent execution.ExecutionIntent, raw []byte) (execution.PreparedRequest, error) {
@@ -132,7 +133,7 @@ func (r *Runtime) Prepare(ctx context.Context, sc rt.Scope, auth rt.Auth, invoke
 			return execution.PreparedRequest{}, api.E("forbidden", "compute_source_not_in_intent")
 		}
 	}
-	encoded, err := api.Canonical(api.Raw(cellEncoding{Arguments: args, Limits: limits, InstallLock: r.InstallLockRef(), InputHash: api.Hash(inputBytes)}))
+	encoded, err := api.Canonical(api.Raw(cellEncoding{Arguments: args, Limits: limits, InstallLock: r.InstallLockRef(), EnvironmentConfig: r.EnvironmentConfigRef(), InputHash: api.Hash(inputBytes)}))
 	if err != nil {
 		return execution.PreparedRequest{}, err
 	}
@@ -160,7 +161,7 @@ func (r *Runtime) decodeAttempt(q execution.AttemptRequest) (cellEncoding, strin
 	if err := api.Decode(q.Attempt.Prepared.Encoded, &encoded); err != nil {
 		return encoded, "", err
 	}
-	if !api.Equal(encoded.InstallLock, r.InstallLockRef()) || !api.Equal(q.Intent.InstallLockRef, r.InstallLockRef()) || !api.Equal(encoded.Arguments.EnvironmentRef, cell.EnvironmentRef) || encoded.Arguments.ExpectedGeneration != cell.ExpectedGeneration || encoded.Arguments.ExpectedNamespaceRevision != cell.ExpectedNamespaceRevision || encoded.InputHash != api.Hash(api.Raw(cell.Namespace)) || cell.NamespaceByteLimit != encoded.Limits.NamespaceBytes {
+	if !api.Equal(encoded.InstallLock, r.InstallLockRef()) || !api.Equal(q.Intent.InstallLockRef, r.InstallLockRef()) || !api.Equal(encoded.EnvironmentConfig, r.EnvironmentConfigRef()) || !api.Equal(encoded.Arguments.EnvironmentRef, cell.EnvironmentRef) || encoded.Arguments.ExpectedGeneration != cell.ExpectedGeneration || encoded.Arguments.ExpectedNamespaceRevision != cell.ExpectedNamespaceRevision || encoded.InputHash != api.Hash(api.Raw(cell.Namespace)) || cell.NamespaceByteLimit != encoded.Limits.NamespaceBytes {
 		return encoded, "", api.E("invalid_state", "wasi_attempt_binding_changed")
 	}
 	if _, err := parseLimits([]api.Amount{{Unit: "namespace_bytes", Value: decimalSeconds(encoded.Limits.NamespaceBytes, 0)}, {Unit: "memory_pages", Value: decimalSeconds(uint64(encoded.Limits.MemoryPages), 0)}, {Unit: "cpu_seconds", Value: decimalSeconds(encoded.Limits.CPUSeconds, 0)}, {Unit: "wall_millis", Value: decimalSeconds(encoded.Limits.WallMillis, 0)}, {Unit: "output_bytes", Value: decimalSeconds(encoded.Limits.OutputBytes, 0)}}); err != nil {

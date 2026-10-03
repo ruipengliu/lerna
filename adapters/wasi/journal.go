@@ -13,29 +13,31 @@ const maxJournals = 10000
 
 // 每个原 Attempt 的物理入口至多一次。日志在入口前耐久，恢复从不执行用户模块。
 type runRecord struct {
-	AttemptID     string       `json:"attempt_id"`
-	BindingDigest string       `json:"binding_digest"`
-	Phase         string       `json:"phase"`
-	PID           int          `json:"pid"`
-	ProcessStart  string       `json:"process_start"`
-	SpawnCount    uint64       `json:"spawn_count"`
-	Result        WorkerResult `json:"result"`
-	Usage         []api.Amount `json:"usage"`
-	UsageFinal    bool         `json:"usage_final"`
+	AttemptID       string       `json:"attempt_id"`
+	BindingDigest   string       `json:"binding_digest"`
+	Phase           string       `json:"phase"`
+	PID             int          `json:"pid"`
+	ProcessStart    string       `json:"process_start"`
+	SpawnCount      uint64       `json:"spawn_count"`
+	SpawnCountKnown bool         `json:"spawn_count_known"`
+	Result          WorkerResult `json:"result"`
+	Usage           []api.Amount `json:"usage"`
+	UsageFinal      bool         `json:"usage_final"`
 }
 
 type Receipt struct {
-	AttemptID      string           `json:"attempt_id"`
-	OperationID    string           `json:"operation_id"`
-	BindingDigest  string           `json:"binding_digest"`
-	InstallLock    api.ComponentRef `json:"install_lock"`
-	Phase          string           `json:"phase"`
-	SpawnCount     uint64           `json:"spawn_count"`
-	Reason         string           `json:"reason"`
-	OutputHash     string           `json:"output_hash"`
-	ActuallyExited bool             `json:"actually_exited"`
-	Usage          []api.Amount     `json:"usage"`
-	UsageFinal     bool             `json:"usage_final"`
+	AttemptID       string           `json:"attempt_id"`
+	OperationID     string           `json:"operation_id"`
+	BindingDigest   string           `json:"binding_digest"`
+	InstallLock     api.ComponentRef `json:"install_lock"`
+	Phase           string           `json:"phase"`
+	SpawnCount      uint64           `json:"spawn_count"`
+	SpawnCountKnown bool             `json:"spawn_count_known"`
+	Reason          string           `json:"reason"`
+	OutputHash      string           `json:"output_hash"`
+	ActuallyExited  bool             `json:"actually_exited"`
+	Usage           []api.Amount     `json:"usage"`
+	UsageFinal      bool             `json:"usage_final"`
 }
 
 func (r *Runtime) openJournal() error {

@@ -17,7 +17,22 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-func errorsJoin(a, b error) error { return errors.Join(a, b) }
+func probeResourceLimits(probe *WorkerProbe) error {
+	for _, item := range []struct {
+		resource int
+		value    *uint64
+	}{{unix.RLIMIT_AS, &probe.AddressSpaceBytes}, {unix.RLIMIT_CPU, &probe.CPULimitSeconds}, {unix.RLIMIT_NOFILE, &probe.OpenFileLimit}} {
+		var limit unix.Rlimit
+		if err := unix.Getrlimit(item.resource, &limit); err != nil {
+			return err
+		}
+		if limit.Cur != limit.Max || limit.Cur > api.MaxSafeInteger {
+			return api.E("unsupported", "worker_hard_limit_probe_failed")
+		}
+		*item.value = limit.Cur
+	}
+	return nil
+}
 func kernelRelease() string {
 	var n unix.Utsname
 	if unix.Uname(&n) != nil {
