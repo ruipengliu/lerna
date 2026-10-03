@@ -314,7 +314,22 @@ func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth run
 		}
 		return matches[i].MemoryRef.ObjectID < matches[j].MemoryRef.ObjectID
 	})
-	view := QueryView{QueryID: queryID, Revision: 1, PrincipalID: auth.SubjectID, Digest: digest, VisibilityToken: token, SourceRefs: []api.ContentRef{in.QueryRef, in.ScopeRef, spec.TextRef}, ExpiresAt: api.Time(expires), ChangeHead: head.ChangeHead, Matches: matches, Partial: partial, Gaps: unique(gaps), RemainingPermissionChecks: ctx.Value(permissionBudgetKey{}).(*permissionBudget).remaining}
+	// 每个冻结候选单独持久化，合法的 200 个长解释不挤进一条 256 KiB 记录。
+	// 准确输入引用也分别冻结，媒体类型等原字段不因快照聚合而改变上限。
+	sourceRefs := []api.ContentRef{in.QueryRef, in.ScopeRef, spec.TextRef}
+	view := QueryView{QueryID: queryID, Revision: 1, PrincipalID: auth.SubjectID, Digest: digest, VisibilityToken: token, SourceParts: make([]QueryPart, len(sourceRefs)), MatchParts: make([]QueryPart, len(matches)), ExpiresAt: api.Time(expires), ChangeHead: head.ChangeHead, Partial: partial, Gaps: unique(gaps), RemainingPermissionChecks: ctx.Value(permissionBudgetKey{}).(*permissionBudget).remaining}
+	for i, ref := range sourceRefs {
+		view.SourceParts[i], err = queryPart("querysource", ref)
+		if err != nil {
+			return api.Page[Match]{}, err
+		}
+	}
+	for i, match := range matches {
+		view.MatchParts[i], err = queryPart("querymatch", match)
+		if err != nil {
+			return api.Page[Match]{}, err
+		}
+	}
 	err = s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		current, err := s.visibility(ctx, tx, auth)
 		if err != nil {
@@ -322,6 +337,16 @@ func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth run
 		}
 		if current != token {
 			return api.E("snapshot_required", "query_scope_changed")
+		}
+		for i, ref := range sourceRefs {
+			if err = tx.Create(ctx, "memory.query_sources", view.SourceParts[i].ObjectID, queryID, ref); err != nil {
+				return err
+			}
+		}
+		for i, match := range matches {
+			if err = tx.Create(ctx, "memory.query_matches", view.MatchParts[i].ObjectID, queryID, match); err != nil {
+				return err
+			}
 		}
 		return tx.Create(ctx, "memory.queries", queryID, auth.SubjectID, view)
 	})
@@ -364,6 +389,9 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 		if err != nil {
 			return err
 		}
+		if len(view.MatchParts) > 200 || len(view.Matches) > 200 || len(view.SourceParts) != 0 && len(view.SourceParts) != 3 || len(view.MatchParts) != 0 && len(view.Matches) != 0 {
+			return api.E("invalid_state", "query_snapshot_limits_changed")
+		}
 		digestIn := in
 		digestIn.Limit = 0
 		digestIn.Cursor = ""
@@ -371,7 +399,8 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 		if err != nil {
 			return err
 		}
-		if view.PrincipalID != auth.SubjectID || view.Digest != digest || digestPart != strings.TrimPrefix(view.Digest, "sha256:") || position > len(view.Matches) {
+		matchCount := view.matchCount()
+		if view.PrincipalID != auth.SubjectID || view.Digest != digest || digestPart != strings.TrimPrefix(view.Digest, "sha256:") || position > matchCount {
 			return api.E("forbidden", "query_subject_or_parameters_changed")
 		}
 		if _, err = future(ctx, tx, view.ExpiresAt); err != nil {
@@ -387,14 +416,18 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 		if token != view.VisibilityToken {
 			return api.E("snapshot_required", "query_scope_changed")
 		}
-		if len(view.SourceRefs) != 3 || !api.Equal(view.SourceRefs[0], in.QueryRef) || !api.Equal(view.SourceRefs[1], in.ScopeRef) {
+		sourceRefs, err := view.sources(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if len(sourceRefs) != 3 || !api.Equal(sourceRefs[0], in.QueryRef) || !api.Equal(sourceRefs[1], in.ScopeRef) {
 			return api.E("snapshot_required", "query_sources_unavailable")
 		}
 		out = api.Page[Match]{Items: []Match{}, CollectionRevision: view.ChangeHead, Partial: view.Partial, Gaps: append([]string{}, view.Gaps...)}
 		budget := &permissionBudget{remaining: view.RemainingPermissionChecks}
 		pageContext := context.WithValue(ctx, permissionBudgetKey{}, budget)
 		sourcesAllowed := true
-		for _, ref := range view.SourceRefs {
+		for _, ref := range sourceRefs {
 			if _, err = s.CheckContentTx(pageContext, tx, auth, ref, "memory.query", s.Location, true); err != nil {
 				if api.IsCode(err, "overloaded") {
 					out.Partial = true
@@ -406,13 +439,11 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 			}
 		}
 		end := position
-		if sourcesAllowed {
-			end += int(in.Limit)
-		}
-		if end > len(view.Matches) {
-			end = len(view.Matches)
-		}
-		for _, match := range view.Matches[position:end] {
+		for sourcesAllowed && end < matchCount && end-position < int(in.Limit) {
+			match, err := view.match(ctx, tx, end)
+			if err != nil {
+				return err
+			}
 			var record MemoryRecord
 			_, err = tx.Get(ctx, "memory.records", match.MemoryRef.ObjectID, &record)
 			if err != nil {
@@ -437,10 +468,23 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 				}
 			}
 			if err == nil {
-				out.Items = append(out.Items, match)
+				candidate := out
+				candidate.Items = append(append([]Match{}, out.Items...), match)
+				candidate.Exhausted = end+1 == matchCount
+				if !candidate.Exhausted {
+					candidate.NextCursor = cursorFor(id, view.Digest, end+1)
+				}
+				if len(api.Raw(candidate)) > api.MaxJSONBytes {
+					if len(out.Items) == 0 {
+						return api.E("invalid_request", "query_match_output_over_limit")
+					}
+					break
+				}
+				out.Items = candidate.Items
 			}
+			end++
 		}
-		out.Exhausted = end == len(view.Matches)
+		out.Exhausted = end == matchCount
 		if !out.Exhausted {
 			out.NextCursor = cursorFor(id, view.Digest, end)
 		}
@@ -451,6 +495,57 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 		return tx.Put(ctx, "memory.queries", id, viewRevision, view)
 	})
 	return out, err
+}
+
+func (view QueryView) matchCount() int {
+	if len(view.MatchParts) != 0 {
+		return len(view.MatchParts)
+	}
+	return len(view.Matches)
+}
+
+func (view QueryView) match(ctx context.Context, tx runtime.Tx, position int) (Match, error) {
+	if len(view.MatchParts) == 0 {
+		return view.Matches[position], nil
+	}
+	var match Match
+	err := view.MatchParts[position].read(ctx, tx, "memory.query_matches", &match)
+	return match, err
+}
+
+func (view QueryView) sources(ctx context.Context, tx runtime.Tx) ([]api.ContentRef, error) {
+	if len(view.SourceParts) == 0 {
+		return view.SourceRefs, nil
+	}
+	sources := make([]api.ContentRef, len(view.SourceParts))
+	for i, part := range view.SourceParts {
+		if err := part.read(ctx, tx, "memory.query_sources", &sources[i]); err != nil {
+			return nil, err
+		}
+	}
+	return sources, nil
+}
+
+func queryPart(kind string, value any) (QueryPart, error) {
+	digest, err := api.Digest(value)
+	return QueryPart{ObjectID: api.NewID(kind), Digest: digest}, err
+}
+
+func (part QueryPart) read(ctx context.Context, tx runtime.Tx, namespace string, value any) error {
+	if !api.ValidID(part.ObjectID) {
+		return api.E("invalid_state", "query_snapshot_part_invalid")
+	}
+	if err := tx.GetVersion(ctx, namespace, part.ObjectID, 1, value); err != nil {
+		return err
+	}
+	digest, err := api.Digest(value)
+	if err != nil {
+		return err
+	}
+	if digest != part.Digest {
+		return api.E("invalid_state", "query_snapshot_digest_changed")
+	}
+	return nil
 }
 
 func queryRecheckError(err error, reason string) error {

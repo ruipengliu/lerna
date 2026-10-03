@@ -23,6 +23,14 @@ exhausted 只表示冻结候选已遍历完；SQL/取消/提交未知错误原�
 故障反例红→绿，受影响 normal/race 15.851s/61.788s、PG race 50.341s 通过。
 40P01 为获授权当前许可端口注入，不称真实数据库死锁实验。
 
+`9368334` 修复合法 200 候选和 4088-byte 长解释挤进单条 QueryView 后超过
+256 KiB 的持久上限。最多 200 Match 与三个准确来源各自固定 revision 1/JCS 摘要，
+全部与原快照头同 Tx 保存，恢复不读取 latest。公开分页同时依据实际 JSON 字节提前分小页，
+不丢候选、不改原游标位置/权限预算/TTL；词法与 literal 各遍历十页、原 query_id
+重读仍为相同 sealed 结果。转义解释的单页限额及损坏 manifest 的准确摘要反例也已验证。
+受影响 SQLite normal/race 30.329s/75.575s、实际 PG race 115.453s 通过；
+同范围 vet/build、gofmt 与 diff 检查通过。没有扩大 Runtime 的 256 KiB 上限。
+
 实际验收绑定 Go 1.26.8/Linux x86_64、真实持久 SQLite 和本机 PG 17.11；
 Schema/profile 与完整命令保存在
 `/workspace/harness-dev-environment/memory-providers-verification.json`。

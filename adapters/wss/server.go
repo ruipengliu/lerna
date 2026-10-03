@@ -68,14 +68,20 @@ type Config struct {
 	MaxQueuedBytes        int
 }
 type Server struct {
-	config        Config
-	mux           *http.ServeMux
-	connections   chan struct{}
-	bytesMu       sync.Mutex
-	queuedBytes   int
-	logger        *slog.Logger
-	methods       []api.MethodContract
-	methodsDigest string
+	config         Config
+	mux            *http.ServeMux
+	connections    chan struct{}
+	bytesMu        sync.Mutex
+	queuedBytes    int
+	logger         *slog.Logger
+	methods        []api.MethodContract
+	methodsDigest  string
+	lifecycleMu    sync.Mutex
+	closing        bool
+	handlers       sync.WaitGroup
+	handlerContext context.Context
+	stopHandlers   context.CancelFunc
+	closeOnce      sync.Once
 }
 
 func New(config Config) (*Server, error) {
@@ -83,6 +89,7 @@ func New(config Config) (*Server, error) {
 		return nil, api.E("invalid_request", "invalid_gateway_configuration")
 	}
 	s := &Server{config: config, mux: http.NewServeMux(), connections: make(chan struct{}, config.MaxConnections), logger: slog.Default()}
+	s.handlerContext, s.stopHandlers = context.WithCancel(context.Background())
 	s.methods = config.Registry.Contracts()
 	var err error
 	s.methodsDigest, err = api.DigestLimit(s.methods, 1<<20)
@@ -116,12 +123,38 @@ func (s *Server) Handler() http.Handler {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Cache-Control", "no-store")
 		w.Header().Set("Content-Security-Policy", "default-src 'self'; img-src 'self' data:; connect-src 'self'; style-src 'self'; frame-ancestors 'none'; base-uri 'none'")
+		s.lifecycleMu.Lock()
+		if s.closing {
+			s.lifecycleMu.Unlock()
+			problem(w, api.E("dependency_unavailable", "gateway_shutdown"))
+			return
+		}
+		s.handlers.Add(1)
+		s.lifecycleMu.Unlock()
+		defer s.handlers.Done()
+		ctx, cancel := context.WithCancel(r.Context())
+		stopCancellation := context.AfterFunc(s.handlerContext, cancel)
+		defer func() { stopCancellation(); cancel() }()
+		r = r.WithContext(ctx)
 		if !s.config.AllowInsecureLoopback && r.TLS == nil {
 			problem(w, api.E("forbidden", "tls_required"))
 			return
 		}
 		s.mux.ServeHTTP(w, r)
 	})
+}
+
+// Close 停止接纳并等待 HTTP、升级连接及其实际调用退出；取消不代替回收。
+// 宿主必须在关闭数据库前调用，且不得从本 Server 的 handler 内调用。
+func (s *Server) Close() error {
+	s.closeOnce.Do(func() {
+		s.lifecycleMu.Lock()
+		s.closing = true
+		s.lifecycleMu.Unlock()
+		s.stopHandlers()
+		s.handlers.Wait()
+	})
+	return nil
 }
 func write(w http.ResponseWriter, status int, v any) {
 	w.Header().Set("Content-Type", "application/json")

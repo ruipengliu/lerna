@@ -49,6 +49,10 @@ CheckContentTx(ctx, tx, auth, ref, purpose, location, continuous) (ContentVersio
 缺少冻结输入来源的旧快照必须重新查询。输入门禁检查也计入原累计权限预算。
 预算用尽返回无披露的 partial/gaps，保留未遍历位置，不把剩余候选称为 exhausted。
 当前来源门禁的 SQL、取消及提交未知错误保留原类别；只有明确来源业务拒绝要求重建快照。
+冻结候选和三个准确输入引用分条保存，每条固定原 revision 1 及 JCS 摘要；
+最多 203 条分片与快照头共同提交，读取分片时验证准确摘要，不读取 latest。
+解释文本不在单条记录中重复 200 次。每页最多 20 条，还按实际 JSON 字节上限提前分页，
+保留未发候选的游标位置；不能装入一份合法回复的单个匹配返回明确的输出限额错误。
 
 事实、偏好、推断和经验分别保留 Type。默认 `RuleExtractor()` 只接受闭合的 `ExtractionDocument`，是有限的显式值导入器；没有配置模型提取器。默认 review_only；preapproved 需要显式 `SavingAuthorization` 验证原 SavingGrant，未配置返回 `unsupported`。保存同一候选的 Memory、候选状态、去重键、变化头、回执和 Job 一起提交。
 
