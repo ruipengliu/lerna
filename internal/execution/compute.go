@@ -396,5 +396,17 @@ func (s *Service) commitCell(ctx context.Context, tx rt.Tx, op operationRecord, 
 	}
 	env.ReadyForCell = env.Phase == "active" && env.ActuallyExited && len(env.StopResiduals) == 0 && ready
 	env.Revision = rev + 1
-	return valid, putEnvironment(ctx, tx, env.EnvironmentID, rev, env)
+	if err = putEnvironment(ctx, tx, env.EnvironmentID, rev, env); err != nil {
+		return false, err
+	}
+	if env.Phase == "closing" || env.Phase == "destroying" {
+		now, err := tx.Now(ctx)
+		if err != nil {
+			return false, err
+		}
+		if _, err = tx.Raise(ctx, EnvironmentCleanupJob, env.EnvironmentID, tx.Scope().Ref(env.EnvironmentID, env.Revision), now); err != nil {
+			return false, err
+		}
+	}
+	return valid, nil
 }
