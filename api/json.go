@@ -15,7 +15,10 @@ import (
 
 // ParseJSON 在普通解码前拒绝原始重复键、非法 Unicode、不安全数值和超深输入。
 func ParseJSON(raw []byte) (any, error) {
-	if len(raw) == 0 || len(raw) > MaxJSONBytes || !utf8.Valid(raw) {
+	return ParseJSONLimit(raw, MaxJSONBytes)
+}
+func ParseJSONLimit(raw []byte, limit int) (any, error) {
+	if limit < 1 || limit > 1<<20 || len(raw) == 0 || len(raw) > limit || !utf8.Valid(raw) {
 		return nil, E("invalid_request", "invalid_json_bytes")
 	}
 	if err := checkStrings(raw); err != nil {
@@ -146,7 +149,10 @@ func checkStrings(b []byte) error {
 	return nil
 }
 func Decode(raw []byte, v any) error {
-	if _, err := ParseJSON(raw); err != nil {
+	return DecodeLimit(raw, v, MaxJSONBytes)
+}
+func DecodeLimit(raw []byte, v any, limit int) error {
+	if _, err := ParseJSONLimit(raw, limit); err != nil {
 		return err
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))

@@ -17,7 +17,8 @@ var coreSchema []byte
 var coreDefs map[string]any
 var schemaOnce sync.Once
 
-func CoreDigest() string { return Hash(coreSchema) }
+func CoreDigest() string      { return Hash(coreSchema) }
+func CoreSchemaBytes() []byte { return append([]byte(nil), coreSchema...) }
 func definitions() map[string]any {
 	schemaOnce.Do(func() {
 		var doc map[string]any
