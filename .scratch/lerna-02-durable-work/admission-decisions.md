@@ -96,3 +96,7 @@ public command.get仍使用准确1.0.0/read契约、有限context、当前查询
 下列事项不预造新接口或再请求用户决策：实际包/文件位置、Host启动与观察函数名、适配器私有Tx token实现、SQL表/索引布局、确定锁序的具体语句、是否缓存schema编译、fixture导出格式和临时schema命名、驱动准确锁定版本、可重复故障同步点实现。选择必须满足上述行为、真实并发及迁移证据；发现确切冲突再通过主任务委派决策。
 
 通用严格JSON、准确类型、CommandDigest、固定CommandReceipt、读授权与OwnerDirectory已足够复用，不再建设第二套公开合同、通用仓储/事务ORM、Grant服务或Task模型。首票无需后续lane/等待/Claim产品实现即可正确持久接纳。
+
+## 目录与职责补充
+
+首票布局遵守 [layout-decision](layout-decision.md)：根 internal/durableworkdemo 保存演示业务及消费方仓储接口，具体适配器可导入该内部包实现它；runtime 不依赖演示业务，host/cmd 仅装配。Host 测试 seam 不规定业务代码必须放在 host；Go 无环不豁免职责边界。这是当前演示消费者的目录细化，不新增领域模型或公开 SDK。
