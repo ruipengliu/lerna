@@ -588,7 +588,14 @@ func behaviorConcurrentWorkersClaimOneOriginalJobAndCompleteNormally(t *testing.
 }
 
 func behaviorCloseReopenRetainsClaimAndOriginalReceipt(t *testing.T, newStore func(*testing.T) workStore) {
-	store := newStore(t)
+	setup := newStore(t)
+	store := setup
+	// Keep the schema-creating PG connection alive solely for registered cleanup.
+	// SQLite instead excludes a second writable Host until the first closes.
+	if pg, ok := setup.(*postgres.Store); ok {
+		store = reopen(t, pg)
+		admissionReopeners.Store(store, func(t *testing.T) admissionStore { return reopen(t, pg) })
+	}
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	wire := command("original", "input", "hello", nil, future())
