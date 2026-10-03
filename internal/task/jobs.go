@@ -129,10 +129,26 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 		}
 		return err
 	}
-	return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
-		_, e := s.PrepareDecisionTx(ctx, tx, serviceAuth(scope), prepared)
-		return e
+	var preparationErr error
+	status, err := store.Within(ctx, scope, s.config.Participants, func(tx runtime.Tx) error {
+		_, preparationErr = s.PrepareDecisionTx(ctx, tx, serviceAuth(scope), prepared)
+		if preparationErr != nil {
+			return preparationErr
+		}
+		if err := tx.Guard(ctx, work.Claim); err != nil {
+			return err
+		}
+		return tx.Finish(ctx, work.Claim, runtime.Done())
 	})
+	if status == runtime.CommitUnknown {
+		return runtime.ErrCommitUnknown
+	}
+	var stale *api.Error
+	if status == runtime.RolledBack && !errors.Is(err, runtime.ErrCommitUnknown) && errors.As(preparationErr, &stale) && stale.Code == "revision_conflict" && stale.Reason == "stale_snapshot" && errors.Is(err, preparationErr) {
+		// 原准入确认回滚且没有新Intent；仅重调度原Job，不重派已准入调用。
+		return s.wait(ctx, store, scope, work)
+	}
+	return err
 }
 func (s *Service) decisionJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
 	var d decisionState
