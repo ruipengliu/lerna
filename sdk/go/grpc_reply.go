@@ -143,8 +143,7 @@ func (j *ReplyJournal) write(entry ReplyEntry) error {
 	if e != nil {
 		return e
 	}
-	defer dir.Close()
-	return dir.Sync()
+	return errors.Join(dir.Sync(), dir.Close())
 }
 func (j *ReplyJournal) Save(ctx context.Context, d grpcwire.Delivery, reply grpcwire.Reply) error {
 	if e := ctx.Err(); e != nil {

@@ -232,8 +232,7 @@ func (d *ManagedFiles) syncDir(p string) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
-	return f.Sync()
+	return errors.Join(f.Sync(), f.Close())
 }
 func (d *ManagedFiles) saveJournal(j fileJournal) error {
 	b, err := json.Marshal(j)
