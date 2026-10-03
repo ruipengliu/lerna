@@ -10,6 +10,8 @@ Router 实现 WSS 的可选 `ConnectionProcessor`。`Open` 使用原外 connecti
 
 `StaticEndpointAuthority` 接受显式配对、预登记 ES256 key、原准确 ProofReader 和 ReplyReceiver；签名固定原 owner、endpoint／instance／generation、Delivery 全摘要与有限窗口，Reply 再按原 recipient 方法输出合同核验。没有来源证明或原 owner 接收端口时 Delivery 保持关闭。Router 的 `EmitChecked`／`Receive` 可传闭合 Delivery／Reply／Ack；端点仍须持久保存原 Reply 到匹配 Ack，网关内存不代替端点账本。重连或 Ack 丢失后，gateway 没有原 Delivery 缓存的 Reply 只作为最多 32 项的准确待交回责任；当前静态配对 application 的原 ledger 复核 delivery／receiver／摘要与输出，确认原 owner 持久保存后才能 Ack。gateway 不为这些字节另造 Delivery 或业务授权。
 
+首次 Reply 的方法输出 Schema 在 transport ledger 冻结前验证，运行在 SQL Tx 外；本库短事务再核准确原 Delivery 和当前 binding。错误输出不占住原身份，重绑后仍能保存合法原 Reply。恢复排队的 Delivery 若已取得原 Reply 则跳过发送，避免先到的原 Reply 与恢复队列竞争时关闭合法连接。
+
 当前行为证据为真实 WSS／TLS＋gRPC／mTLS、两个独立 Server 实例共享原 SQLite／PostgreSQL，应用退出后原外连接／seq／receipt／领域事实保持。另以同版测试二进制启动两个独立应用参考进程，SIGKILL 原应用发生在原命令提交后、回复前；替代进程在原五秒等待内只查询同一回执，实际 command 入口次数为原进程一次、替代进程零次。记录原数据库／owner／连接与 binding／命令及 TTL／二进制摘要，SIGTERM 后观察替代进程实际退出。测试预置原开发身份、静态 endpoint 配对和 mTLS 信任；SQLite 临时库结束后删除，PG 使用独立原 owner。这些进程调用实际 Dispatcher 与 Channel adapter，但不是 `cmd/application` 公共装配。
 
 多实例迟到输出以实际原应用完成后、外回复写入前的公共 PendingResponse seam 延迟取证：SIGKILL 原进程并取得新 binding Ready 后释放旧结果，WSS 实际写门禁丢弃旧结果，原 journal 仍能查询原 receipt。SQLite／PG 的真实原生 WSS consumer 验证准确 ES256 Delivery、fsync ReplyJournal 重开、外 Ack 丢失后内部重绑／同 Reply 恢复、错误 Ack 和篡改原 Reply 拒绝。故障点是外 EmitChecked 在实际 socket 写入前返回失败，源 owner 的实际持久 Reply 已确认；不宣称该点等于任意网络故障。

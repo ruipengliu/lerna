@@ -211,49 +211,55 @@ func (s *StaticEndpointAuthority) VerifyDelivery(ctx context.Context, r Endpoint
 	_, err = s.cfg.Keys.Verify(string(bytes), DeliveryProofClaims(r, d, digest, ""), time.Now())
 	return err
 }
-func (s *StaticEndpointAuthority) ReceiveReply(ctx context.Context, r EndpointRegistration, d grpcwire.Delivery, reply grpcwire.Reply) (bool, error) {
+func (s *StaticEndpointAuthority) ValidateReply(ctx context.Context, r EndpointRegistration, d grpcwire.Delivery, reply grpcwire.Reply) error {
 	if err := s.Check(ctx, r); err != nil {
-		return false, err
+		return err
 	}
 	if err := grpcwire.ValidateReply(d, reply); err != nil {
-		return false, err
+		return err
 	}
 	p, err := s.pair(r)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if s.cfg.Replies == nil {
-		return false, api.E("unsupported", "endpoint_reply_owner_unconfigured")
+		return api.E("unsupported", "endpoint_reply_owner_unconfigured")
 	}
 	if reply.ResultKind == "error" {
 		if err = s.errorValidator.Validate(reply.Payload); err != nil {
-			return false, err
+			return err
 		}
 	} else if d.Kind != "receipt_lookup" {
 		v, e := api.ParseJSON(d.Request)
 		if e != nil {
-			return false, e
+			return e
 		}
 		o := v.(map[string]any)
 		method, _ := o["method"].(string)
 		output, ok := p.outputs[method]
 		if !ok {
-			return false, api.E("unsupported", "endpoint_reply_decoder_unconfigured")
+			return api.E("unsupported", "endpoint_reply_decoder_unconfigured")
 		}
 		body := reply.Payload
 		if reply.ResultKind == "receipt" {
 			var receipt api.Receipt
 			if err = api.Decode(body, &receipt); err != nil {
-				return false, err
+				return err
 			}
 			if receipt.Stage == "rejected" {
-				return s.cfg.Replies.ReceiveDeliveryReply(ctx, r, d, reply)
+				return nil
 			}
 			body = receipt.Output
 		}
 		if err = output.Validate(body); err != nil {
-			return false, err
+			return err
 		}
+	}
+	return nil
+}
+func (s *StaticEndpointAuthority) ReceiveReply(ctx context.Context, r EndpointRegistration, d grpcwire.Delivery, reply grpcwire.Reply) (bool, error) {
+	if err := s.ValidateReply(ctx, r, d, reply); err != nil {
+		return false, err
 	}
 	return s.cfg.Replies.ReceiveDeliveryReply(ctx, r, d, reply)
 }
