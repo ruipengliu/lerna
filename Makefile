@@ -17,6 +17,7 @@ lint:
 	go vet ./...
 	pnpm lint
 test:
+	node --test scripts/contract-runner.test.mjs
 	node scripts/test-generator.mjs
 	go test ./...
 	pnpm test
@@ -24,6 +25,7 @@ test-race:
 	go test -race ./...
 test-contract:
 	node scripts/test-contract.mjs
+	node scripts/test-contract.mjs --reverse
 build:
 	go build ./...
 	pnpm build
