@@ -39,6 +39,7 @@ type App struct {
 	Execution                                                        *execution.Service
 	Interaction                                                      *interaction.Service
 	Governance                                                       *governance.Service
+	Knowledge                                                        *KnowledgeAssembly
 	Objects                                                          *objectstore.Local
 	Files                                                            *execadapter.ManagedFiles
 	Phones                                                           *execadapter.SimulatedPhones
@@ -228,6 +229,10 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	}
 	a.TaskPolicy = task.TaskPolicy{PolicyRef: component("task-policy"), ContinuationLimit: 30, RepairLimit: 3, NoProgressLimit: 8, ContextRoundLimit: 3, SafeAttemptLimit: 1, MaxRequirements: 20, MaxDelegations: 20, MaxDepth: 4, CostMode: "strict", BudgetLimits: []api.Amount{{Unit: "USD", Value: "100"}}, MaxEvidenceStalenessSeconds: 300, MaxDurationSeconds: 3600, InputPolicyRef: a.AnswerSchema, RuleRegistryRef: component("rule-registry")}
 	a.TaskPolicy.PolicyRef.Digest, _ = api.Digest(a.TaskPolicy)
+	a.Knowledge, e = configureKnowledge(a, c.Knowledge)
+	if e != nil {
+		return nil, e
+	}
 	rules := []api.RuleDefinition{}
 	for _, ref := range []api.ComponentRef{a.ArtifactRule, a.SavedRule, a.CoverageRule} {
 		kind := "quality"

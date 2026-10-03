@@ -6,6 +6,7 @@ import (
 	"github.com/ruipengliu/lerna/adapters/providers"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
+	"github.com/ruipengliu/lerna/internal/governance"
 	"github.com/ruipengliu/lerna/internal/interaction"
 	"github.com/ruipengliu/lerna/internal/task"
 	"github.com/ruipengliu/lerna/runtime"
@@ -110,6 +111,32 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 		caps = append(caps, d.Capability.Ref)
 		bindings = append(bindings, d.BindingRef)
 	}
+	var knowledge *governance.KnowledgeBundle
+	var knowledgePacket api.ContentRef
+	installLock := registered.InstallLockRef
+	if c.a.Knowledge.Enabled() {
+		bundle, packet, err := c.a.Knowledge.Load(ctx, scope, auth, t, snapshotID, registered.InstallLockRef, caps)
+		if err != nil {
+			return task.PreparedDecision{}, err
+		}
+		knowledge, knowledgePacket = &bundle, packet
+		installLock = bundle.Selection.InstallLockRef
+		caps, bindings = []api.ComponentRef{}, []api.ObjectRef{}
+		entries := []actionDescriptor{}
+		for _, entry := range registered.Entries {
+			allowed := false
+			for _, cap := range bundle.Selection.EffectiveCapabilityRefs {
+				allowed = allowed || api.Equal(cap, entry.Capability.Ref)
+			}
+			if allowed {
+				caps = append(caps, entry.Capability.Ref)
+				bindings = append(bindings, entry.BindingRef)
+				entries = append(entries, entry)
+			}
+		}
+		registered.Entries = entries
+		processed = uniqueSources(append(append(processed, bundle.Selection.SourceRefs...), packet))
+	}
 	if c.a.Model != nil {
 		packet, err := c.a.Publish(ctx, scope, c.a.ServiceAuth, stableID("content", "context-facts/"+key), "application/vnd.harness.context+json", api.Raw(struct {
 			Facts                   task.ContextFacts                  `json:"facts"`
@@ -141,7 +168,10 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 	if reservedOutput > c.a.Profile.MaxOutputTokens {
 		reservedOutput = c.a.Profile.MaxOutputTokens
 	}
-	snap := api.Snapshot{SnapshotID: snapshotID, Revision: 1, TaskRef: scope.Ref(t.TaskID, t.Revision), GoalRevision: t.GoalRevision, ControlRevision: t.ControlRevision, GoalRef: t.GoalRef, Requirements: t.Requirements, RequirementsDigest: t.RequirementsDigest, CoverageRef: t.CurrentCoverageRef, RequirementsState: t.RequirementsState, Purpose: purpose, FactRefs: facts.FactRefs, UnresolvedCollections: facts.UnresolvedCollections, PolicyRef: t.PolicyRef, InstallLockRef: registered.InstallLockRef, ModelProfileRef: c.a.Profile.Ref, CapabilityRefs: caps, BindingRefs: bindings, MaterialRefs: processed, SelectionReportRef: selection, ProcessedSources: processed, ReservedOutputTokens: reservedOutput, SafetyMarginTokens: c.a.Profile.SafetyMargin, CountMode: "upper_bound", TokenizerRef: c.a.TokenizerRef}
+	if knowledge != nil && reservedOutput > knowledge.Selection.EffectiveControls.MaxOutputTokens {
+		reservedOutput = knowledge.Selection.EffectiveControls.MaxOutputTokens
+	}
+	snap := api.Snapshot{SnapshotID: snapshotID, Revision: 1, TaskRef: scope.Ref(t.TaskID, t.Revision), GoalRevision: t.GoalRevision, ControlRevision: t.ControlRevision, GoalRef: t.GoalRef, Requirements: t.Requirements, RequirementsDigest: t.RequirementsDigest, CoverageRef: t.CurrentCoverageRef, RequirementsState: t.RequirementsState, Purpose: purpose, FactRefs: facts.FactRefs, UnresolvedCollections: facts.UnresolvedCollections, PolicyRef: t.PolicyRef, InstallLockRef: installLock, ModelProfileRef: c.a.Profile.Ref, CapabilityRefs: caps, BindingRefs: bindings, MaterialRefs: processed, SelectionReportRef: selection, ProcessedSources: processed, ReservedOutputTokens: reservedOutput, SafetyMarginTokens: c.a.Profile.SafetyMargin, CountMode: "upper_bound", TokenizerRef: c.a.TokenizerRef}
 	goal, e := c.a.Memory.Read(ctx, scope, auth, t.GoalRef, "brain.input")
 	if e != nil {
 		return task.PreparedDecision{}, e
@@ -153,15 +183,30 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 	snap.InputTokens = encoding.InputTokens
 	snap.EncodedDigest = encoding.Digest
 	snap.CountMode = encoding.CountMode
-	ref, e := c.a.Publish(ctx, scope, c.a.ServiceAuth, stableID("content", "snapshot/"+key), "application/vnd.harness.snapshot+json", api.Raw(snap), processed, []api.ContentRef{})
-	if e != nil {
-		return task.PreparedDecision{}, e
-	}
 	bound, e := c.a.decisionCost(snap)
 	if e != nil {
 		return task.PreparedDecision{}, e
 	}
-	return task.PreparedDecision{Snapshot: snap, SnapshotRef: ref, BrainOwnerID: scope.OwnerID, CostBound: bound, DecisionID: stableID("decision", key), CommandID: stableID("command", "decision/"+key)}, nil
+	if knowledge != nil {
+		if e = c.a.Knowledge.CheckEncoding(*knowledge, snap, encoding, bound); e != nil {
+			return task.PreparedDecision{}, e
+		}
+	}
+	ref, e := c.a.Publish(ctx, scope, c.a.ServiceAuth, stableID("content", "snapshot/"+key), "application/vnd.harness.snapshot+json", api.Raw(snap), processed, []api.ContentRef{})
+	if e != nil {
+		return task.PreparedDecision{}, e
+	}
+	prepared := task.PreparedDecision{Snapshot: snap, SnapshotRef: ref, BrainOwnerID: scope.OwnerID, CostBound: bound, DecisionID: stableID("decision", key), CommandID: stableID("command", "decision/"+key)}
+	if knowledge != nil {
+		if e = c.a.Knowledge.Freeze(ctx, scope, auth, *knowledge, knowledgePacket, prepared); e != nil {
+			return task.PreparedDecision{}, e
+		}
+	}
+	return prepared, nil
+}
+
+func (c contextCompiler) CommitTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, prepared task.PreparedDecision) error {
+	return c.a.Knowledge.CommitTx(ctx, tx, auth, prepared)
 }
 func stableID(prefix, key string) string { return prefix + "_" + api.Hash([]byte(key))[7:39] }
 
