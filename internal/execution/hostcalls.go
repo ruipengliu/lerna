@@ -49,6 +49,9 @@ type HostCallPort interface {
 
 // AllocateHostCallTx 与调用方原准入/outbox共事务；participants 必须含 execution。
 func (s *Service) AllocateHostCallTx(ctx context.Context, tx rt.Tx, environmentID, parentOperationID string, input HostCallInput) (HostCall, error) {
+	if s.cfg.HostCalls == nil {
+		return HostCall{}, api.E("unsupported", "hostcall_admission_not_ready")
+	}
 	if input.Kind != "operation" && input.Kind != "decision" && input.Kind != "delegation" {
 		return HostCall{}, api.E("invalid_request", "invalid_hostcall_kind")
 	}
@@ -152,7 +155,13 @@ func (s *Service) hostCallWork(ctx context.Context, st rt.Store, sc rt.Scope, w 
 			if closed {
 				current.Phase = "closed"
 			}
-			return tx.Put(ctx, Namespace+".hostcalls", h.HostCallID, rev, current)
+			if err = tx.Put(ctx, Namespace+".hostcalls", h.HostCallID, rev, current); err != nil {
+				return err
+			}
+			if closed {
+				return s.wakeEnvironmentCleanup(ctx, tx, h.EnvironmentID)
+			}
+			return nil
 		})
 	}
 	if h.Phase == "closed" || h.Phase == "denied" || h.Phase == "mapped" {
@@ -240,4 +249,25 @@ func (s *Service) hostCallWork(ctx context.Context, st rt.Store, sc rt.Scope, w 
 		}
 		return nil
 	})
+}
+
+func (s *Service) wakeEnvironmentCleanup(ctx context.Context, tx rt.Tx, id string) error {
+	var env Environment
+	rev, err := tx.Get(ctx, Namespace+".environments", id, &env)
+	if err != nil {
+		return err
+	}
+	if env.Phase != "closing" && env.Phase != "destroying" {
+		return nil
+	}
+	env.Revision = rev + 1
+	if err = tx.Put(ctx, Namespace+".environments", id, rev, env); err != nil {
+		return err
+	}
+	now, err := tx.Now(ctx)
+	if err != nil {
+		return err
+	}
+	_, err = tx.Raise(ctx, EnvironmentCleanupJob, id, tx.Scope().Ref(id, env.Revision), now)
+	return err
 }

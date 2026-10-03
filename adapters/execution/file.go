@@ -73,7 +73,15 @@ func NewManagedFiles(root string) (*ManagedFiles, error) {
 		r.Close()
 		return nil, err
 	}
+	if err = r.Mkdir(".harness/paths", 0700); err != nil && !errors.Is(err, fs.ErrExist) {
+		r.Close()
+		return nil, err
+	}
 	if err = d.safePath(".harness/journals", true); err != nil {
+		r.Close()
+		return nil, err
+	}
+	if err = d.safePath(".harness/paths", true); err != nil {
 		r.Close()
 		return nil, err
 	}
@@ -93,6 +101,9 @@ func NewManagedFiles(root string) (*ManagedFiles, error) {
 	d.ownerLock = lock
 	if err = lock.Sync(); err == nil {
 		err = d.syncDir(".harness/journals")
+	}
+	if err == nil {
+		err = d.syncDir(".harness/paths")
 	}
 	if err == nil {
 		err = d.syncDir(".harness")
@@ -289,6 +300,9 @@ func (d *ManagedFiles) Write(ctx context.Context, q FileWrite) (FileReceipt, err
 	if before.Version != q.ExpectedVersion {
 		return FileReceipt{}, api.E("revision_conflict", "file_version_changed")
 	}
+	if err = d.claimPath(p, q.AttemptID); err != nil {
+		return FileReceipt{}, err
+	}
 	tmp := path.Join(path.Dir(p), ".harness-"+q.AttemptID+".tmp")
 	f, err := d.root.OpenFile(tmp, os.O_RDWR|os.O_CREATE|os.O_EXCL|syscall.O_NOFOLLOW, 0600)
 	if err != nil {
@@ -301,6 +315,10 @@ func (d *ManagedFiles) Write(ctx context.Context, q FileWrite) (FileReceipt, err
 	}
 	j := fileJournal{OperationID: q.OperationID, AttemptID: q.AttemptID, Path: p, ExpectedVersion: q.ExpectedVersion, TempPath: tmp, TempIdentity: ident, AfterHash: api.Hash(q.Data), Phase: "prepared"}
 	if err = d.saveJournal(j); err != nil {
+		f.Close()
+		return FileReceipt{}, err
+	}
+	if err = d.savePath(p, q.AttemptID); err != nil {
 		f.Close()
 		return FileReceipt{}, err
 	}
@@ -420,4 +438,74 @@ func (d *ManagedFiles) recoverLocked(j fileJournal) (FileReceipt, error) {
 		}
 	}
 	return result, nil
+}
+
+type pathOccupation struct {
+	Path      string `json:"path"`
+	AttemptID string `json:"attempt_id"`
+}
+
+func pathIndex(p string) string { return ".harness/paths/" + api.Hash([]byte(p))[7:] + ".json" }
+func (d *ManagedFiles) claimPath(p, attemptID string) error {
+	f, err := d.root.OpenFile(pathIndex(p), os.O_RDONLY|syscall.O_NOFOLLOW, 0)
+	if errors.Is(err, fs.ErrNotExist) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	if _, err = fileIdentity(f); err != nil {
+		return err
+	}
+	b, err := io.ReadAll(io.LimitReader(f, 8192))
+	if err != nil {
+		return err
+	}
+	var old pathOccupation
+	if err = api.Decode(b, &old); err != nil {
+		return err
+	}
+	if old.Path != p {
+		return api.E("invalid_state", "file_path_index_conflict")
+	}
+	if old.AttemptID == attemptID {
+		return nil
+	}
+	j, err := d.loadJournal(old.AttemptID)
+	if err != nil {
+		return api.E("invalid_state", "file_path_occupation_unknown")
+	}
+	r, err := d.recoverLocked(j)
+	if err != nil {
+		return err
+	}
+	if r.MayApplyLater || r.Effect == "unknown" {
+		return api.E("invalid_state", "resource_conflict")
+	}
+	return nil
+}
+func (d *ManagedFiles) savePath(p, attemptID string) error {
+	name := pathIndex(p)
+	f, err := d.root.OpenFile(name+".next", os.O_WRONLY|os.O_CREATE|os.O_TRUNC|syscall.O_NOFOLLOW, 0600)
+	if err != nil {
+		return err
+	}
+	if _, err = fileIdentity(f); err == nil {
+		_, err = f.Write(api.Raw(pathOccupation{Path: p, AttemptID: attemptID}))
+	}
+	if err == nil {
+		err = f.Sync()
+	}
+	closeErr := f.Close()
+	if err == nil {
+		err = closeErr
+	}
+	if err != nil {
+		return err
+	}
+	if err = d.root.Rename(name+".next", name); err != nil {
+		return err
+	}
+	return d.syncDir(".harness/paths")
 }

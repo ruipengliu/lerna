@@ -35,10 +35,11 @@ type PreparedStart struct {
 	ProofRef          api.ContentRef  `json:"proof_ref"`
 }
 type StartRequest struct {
-	Invoke    InvokeInput
-	Intent    ExecutionIntent
-	AttemptID string
-	Auth      rt.Auth
+	ControlWindow api.ControlSnapshot
+	Invoke        InvokeInput
+	Intent        ExecutionIntent
+	AttemptID     string
+	Auth          rt.Auth
 }
 type StartPermit struct {
 	StartBefore string           `json:"start_before"`

@@ -168,7 +168,7 @@ func (s *Service) saveControl(ctx context.Context, tx rt.Tx, a rt.Auth, task api
 	return g, nil
 }
 func permittedGate(g TaskGate) bool {
-	return g.Control == "running" || g.Control == "run" || g.Control == "active"
+	return g.Status == "active" && g.Control == "running"
 }
 func (s *Service) invoke(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command, p InvokeInput) (OperationOutput, error) {
 	if p.OperationID != c.TargetID || p.TaskRef.TenantID != a.TenantID || p.GoalRevision == 0 || p.ControlRevision == 0 || !api.ValidID(p.OperationID) {

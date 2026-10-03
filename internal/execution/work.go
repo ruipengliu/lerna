@@ -101,13 +101,20 @@ func (s *Service) run(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work) 
 	if len(prepared.Encoded) > api.MaxJSONBytes || prepared.Digest != api.Hash(prepared.Encoded) {
 		return s.closeUnstarted(ctx, st, sc, w, api.E("invalid_request", "encoded_request_mismatch"))
 	}
-	attempt := Attempt{AttemptID: api.NewID("attempt"), OperationID: op.Operation.OperationID, Revision: 1, AttemptNo: 1, Phase: "prepared", Prepared: prepared, Permit: StartPermit{ProofRefs: []api.ContentRef{}}, Effect: "not_started", MayApplyLater: false, ControlWindowID: op.Invoke.ControlSnapshot.WindowID, EvidenceRefs: []api.ContentRef{}, Usage: []api.Amount{}, ActuallyStopped: true}
-	authority, err := s.cfg.Authority.PrepareStart(ctx, sc, StartRequest{Invoke: op.Invoke, Intent: intent, AttemptID: attempt.AttemptID, Auth: op.Principal})
+	window, err := s.selectControlWindow(ctx, st, sc, op.Invoke)
+	if err != nil {
+		return s.closeUnstarted(ctx, st, sc, w, err)
+	}
+	attempt := Attempt{AttemptID: api.NewID("attempt"), OperationID: op.Operation.OperationID, Revision: 1, AttemptNo: 1, Phase: "prepared", Prepared: prepared, Permit: StartPermit{ProofRefs: []api.ContentRef{}}, Effect: "not_started", MayApplyLater: false, ControlWindowID: window.WindowID, ControlWindow: window, EvidenceRefs: []api.ContentRef{}, Usage: []api.Amount{}, ActuallyStopped: true}
+	authority, err := s.cfg.Authority.PrepareStart(ctx, sc, StartRequest{ControlWindow: window, Invoke: op.Invoke, Intent: intent, AttemptID: attempt.AttemptID, Auth: op.Principal})
 	if err != nil {
 		if businessError(err) {
 			return s.closeUnstarted(ctx, st, sc, w, err)
 		}
 		return err
+	}
+	if authority.AuthorityRevision == 0 || authority.ProofRef.TenantID != sc.TenantID || api.ValidateRecord("ContentRef", authority.ProofRef) != nil {
+		return s.closeUnstarted(ctx, st, sc, w, api.E("forbidden", "start_proof_missing"))
 	}
 	attempt.PreparedAuthority = authority
 	status, err := st.Within(ctx, sc, s.participants(), func(tx rt.Tx) error {
@@ -179,15 +186,22 @@ func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w
 			if gate.GoalRevision != op.Invoke.GoalRevision || gate.ControlRevision != op.Invoke.ControlRevision || !permittedGate(gate) || gate.Status == "cancelled" || gate.Status == "succeeded" || gate.Status == "failed" {
 				return api.E("invalid_state", "task_gate_stale")
 			}
+			var boundWindow api.ControlSnapshot
+			if _, err = tx.Get(callCtx, Namespace+".windows", a.ControlWindowID, &boundWindow); err != nil {
+				return err
+			}
+			if !api.Equal(boundWindow, a.ControlWindow) || boundWindow.TaskID != op.Invoke.TaskRef.ObjectID || boundWindow.OrchestratorID != op.Invoke.TaskRef.OwnerID || boundWindow.GoalRevision != op.Invoke.GoalRevision || boundWindow.ControlRevision != op.Invoke.ControlRevision {
+				return api.E("forbidden", "control_window_binding_mismatch")
+			}
 			now, err := tx.Now(callCtx)
 			if err != nil {
 				return err
 			}
-			permit, err := s.cfg.Authority.VerifyStart(callCtx, tx, StartRequest{Invoke: op.Invoke, Intent: *op.Intent, AttemptID: a.AttemptID, Auth: op.Principal}, a.PreparedAuthority)
+			permit, err := s.cfg.Authority.VerifyStart(callCtx, tx, StartRequest{ControlWindow: a.ControlWindow, Invoke: op.Invoke, Intent: *op.Intent, AttemptID: a.AttemptID, Auth: op.Principal}, a.PreparedAuthority)
 			if err != nil {
 				return err
 			}
-			if err = minDeadline(now, op.Invoke.Deadline, op.Intent.TaskDeadline, op.Invoke.ControlSnapshot.StartBefore, a.PreparedAuthority.StartBefore, permit.StartBefore); err != nil {
+			if err = minDeadline(now, op.Invoke.Deadline, op.Intent.TaskDeadline, a.ControlWindow.StartBefore, a.PreparedAuthority.StartBefore, permit.StartBefore); err != nil {
 				return err
 			}
 			if a.PreparedAuthority.OperationID != op.Operation.OperationID || a.PreparedAuthority.IntentHash != op.Invoke.IntentHash || a.PreparedAuthority.Recipient != sc.OwnerID || !api.Equal(a.PreparedAuthority.UseRefs, op.Invoke.UseRefs) {
@@ -422,9 +436,12 @@ func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 		}
 		old.EffectDisputed = old.EffectDisputed || f.Disputed
 		old.MayApplyLater = f.MayApplyLater
+		if old.EffectDisputed {
+			old.MayApplyLater = "unknown"
+		}
 		old.Usage = f.Usage
 		old.UsageFinal = f.UsageFinal
-		old.EvidenceRefs = f.Evidence
+		old.EvidenceRefs = appendUniqueSources(old.EvidenceRefs, f.Evidence...)
 		old.FactRevision = f.Revision
 		old.FactDigest = digest
 		old.ResultRef = outputRef
@@ -583,4 +600,39 @@ func (s *Service) stopWork(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 		}
 		return putOperation(ctx, tx, &current, rev)
 	})
+}
+
+func (s *Service) selectControlWindow(ctx context.Context, st rt.Store, sc rt.Scope, p InvokeInput) (api.ControlSnapshot, error) {
+	records, err := st.List(ctx, sc, Namespace+".windows", gateID(p.TaskRef.OwnerID, p.TaskRef.ObjectID), "", 100)
+	if err != nil {
+		return api.ControlSnapshot{}, err
+	}
+	if len(records) >= 100 {
+		return api.ControlSnapshot{}, api.E("overloaded", "control_window_set_requires_batch")
+	}
+	selected := p.ControlSnapshot
+	now := time.Now().UTC()
+	var latest time.Time
+	for _, r := range records {
+		var candidate api.ControlSnapshot
+		if err = r.Decode(&candidate); err != nil {
+			return api.ControlSnapshot{}, err
+		}
+		if candidate.ControlRevision != p.ControlRevision || candidate.GoalRevision != p.GoalRevision || candidate.Status != "active" || candidate.Control != "running" {
+			continue
+		}
+		issued, err := api.ParseTime(candidate.IssuedAt)
+		if err != nil {
+			return api.ControlSnapshot{}, err
+		}
+		before, err := api.ParseTime(candidate.StartBefore)
+		if err != nil {
+			return api.ControlSnapshot{}, err
+		}
+		if now.Before(before) && (latest.IsZero() || issued.After(latest)) {
+			latest = issued
+			selected = candidate
+		}
+	}
+	return selected, nil
 }
