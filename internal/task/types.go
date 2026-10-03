@@ -327,6 +327,7 @@ type Proposal struct {
 	RequirementDelta *api.RequirementDelta `json:"requirement_delta,omitempty"`
 	Actions          []PreparedAction      `json:"actions,omitempty"`
 	ArtifactRefs     []api.ContentRef      `json:"artifact_refs,omitempty"`
+	CheckRequests    []AttachInput         `json:"check_requests,omitempty"`
 	Limitations      []string              `json:"limitations,omitempty"`
 	FailureReason    string                `json:"failure_reason,omitempty"`
 	InputRequest     *api.InputRequest     `json:"input_request,omitempty"`
@@ -533,6 +534,8 @@ type ChildHandle struct {
 	ChildCreateInput
 	Revision            uint64         `json:"revision"`
 	SubjectID           string         `json:"subject_id"`
+	SubjectGeneration   uint64         `json:"subject_generation"`
+	SubjectRoles        []string       `json:"subject_roles"`
 	State               string         `json:"state"`
 	ChildSessionRef     *api.ObjectRef `json:"child_session_ref,omitempty"`
 	SessionCommandRef   api.ObjectRef  `json:"session_command_ref"`
@@ -618,6 +621,7 @@ type taskState struct {
 	InitialGoalRef       api.ContentRef       `json:"initial_goal_ref"`
 	Amendments           []api.ContentRef     `json:"amendments"`
 	PendingGoalCommand   string               `json:"pending_goal_command,omitempty"`
+	PendingCompletionID  string               `json:"pending_completion_id,omitempty"`
 	ParentTaskID         string               `json:"parent_task_id,omitempty"`
 	IncomingAllocationID string               `json:"incoming_allocation_id,omitempty"`
 	Ancestors            []string             `json:"ancestors"`

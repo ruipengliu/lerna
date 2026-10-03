@@ -75,7 +75,9 @@ func (t *HTTPTransport) request(ctx context.Context, method, path string, body [
 	if client == nil {
 		client = &http.Client{Timeout: 5 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}
 	}
-	response, e := client.Do(req)
+	bounded := *client
+	bounded.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
+	response, e := bounded.Do(req)
 	if e != nil {
 		return nil, e
 	}
@@ -102,7 +104,7 @@ func (t *HTTPTransport) Call(ctx context.Context, kind string, payload json.RawM
 		return nil, e
 	}
 	var result resultFrame
-	if e = api.Decode(b, &result); e != nil {
+	if e = api.DecodeLimit(b, &result, 1<<20); e != nil {
 		return nil, e
 	}
 	if result.ResultKind == "error" {
@@ -120,7 +122,7 @@ func (t *HTTPTransport) Discover(ctx context.Context) (Discovery, error) {
 		return Discovery{}, e
 	}
 	var d Discovery
-	if e = api.Decode(b, &d); e != nil {
+	if e = api.DecodeLimit(b, &d, 1<<20); e != nil {
 		return d, e
 	}
 	hash, e := api.Digest(d.Methods)
@@ -296,25 +298,43 @@ type wsResult struct {
 	body json.RawMessage
 	err  error
 }
+type wsPending struct {
+	result  chan wsResult
+	control bool
+	kind    string
+}
 type WSTransport struct {
-	conn    *websocket.Conn
-	ready   WSReady
-	mu      sync.Mutex
-	write   sync.Mutex
-	seq     uint64
-	pending map[uint64]chan wsResult
-	closed  bool
-	cancel  context.CancelFunc
+	conn     *websocket.Conn
+	ready    WSReady
+	mu       sync.Mutex
+	write    sync.Mutex
+	seq      uint64
+	pending  map[uint64]wsPending
+	normal   int
+	controls map[string]bool
+	closed   bool
+	cancel   context.CancelFunc
 }
 
 func DialWebSocket(ctx context.Context, address, token string, expected Discovery, allowDev bool) (*WSTransport, error) {
+	return DialWebSocketWithHTTP(ctx, address, token, expected, allowDev, nil)
+}
+
+// DialWebSocketWithHTTP uses an explicit TLS trust configuration without allowing
+// redirects or retries to move a command away from its fixed logical owner.
+func DialWebSocketWithHTTP(ctx context.Context, address, token string, expected Discovery, allowDev bool, httpClient *http.Client) (*WSTransport, error) {
 	u, e := url.Parse(address)
 	if e != nil || u.User != nil || u.RawQuery != "" || u.Fragment != "" || u.Scheme != "wss" && !(allowDev && u.Scheme == "ws" && loopback(u)) {
 		return nil, api.E("forbidden", "tls_required")
 	}
 	header := http.Header{}
 	header.Set("Authorization", "Bearer "+token)
-	conn, _, e := websocket.Dial(ctx, address, &websocket.DialOptions{HTTPHeader: header, Subprotocols: []string{"harness-wss.v1"}})
+	if httpClient != nil {
+		cloned := *httpClient
+		cloned.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
+		httpClient = &cloned
+	}
+	conn, _, e := websocket.Dial(ctx, address, &websocket.DialOptions{HTTPHeader: header, Subprotocols: []string{"harness-wss.v1"}, HTTPClient: httpClient})
 	if e != nil {
 		return nil, e
 	}
@@ -325,12 +345,15 @@ func DialWebSocket(ctx context.Context, address, token string, expected Discover
 		return nil, api.E("dependency_unavailable", "ready_missing")
 	}
 	var ready WSReady
-	if e = api.Decode(b, &ready); e != nil || ready.Type != "ready" || ready.LogicalServiceID != expected.LogicalServiceID || ready.Profile != api.Profile || ready.TransportProfile != "harness-wss/1" || ready.MethodsDigest != expected.MethodsDigest || ready.Limits.MaxPending < 1 || ready.Limits.MaxPending > 32 {
+	if e = api.Decode(b, &ready); e != nil || ready.Type != "ready" || ready.LogicalServiceID != expected.LogicalServiceID || ready.Profile != api.Profile || ready.TransportProfile != "harness-wss/1" || ready.MethodsDigest != expected.MethodsDigest || ready.Limits != expected.Limits || ready.Limits.MaxPending != 32 || ready.Limits.MaxDomainBytes != api.MaxJSONBytes || ready.Limits.MaxFrameBytes != 1<<20 || conn.Subprotocol() != "harness-wss.v1" {
 		conn.CloseNow()
 		return nil, api.E("unsupported", "ready_mismatch")
 	}
 	readCtx, cancel := context.WithCancel(context.Background())
-	t := &WSTransport{conn: conn, ready: ready, pending: map[uint64]chan wsResult{}, cancel: cancel}
+	t := &WSTransport{conn: conn, ready: ready, pending: map[uint64]wsPending{}, controls: map[string]bool{}, cancel: cancel}
+	for _, method := range expected.Methods {
+		t.controls[method.Name] = api.IsControlMethod(method.Name)
+	}
 	go t.readLoop(readCtx)
 	return t, nil
 }
@@ -348,9 +371,10 @@ func (t *WSTransport) fail(err error) {
 	}
 	t.closed = true
 	for seq, ch := range t.pending {
-		ch <- wsResult{err: err}
+		ch.result <- wsResult{err: err}
 		delete(t.pending, seq)
 	}
+	t.normal = 0
 }
 func (t *WSTransport) readLoop(ctx context.Context) {
 	defer t.conn.CloseNow()
@@ -392,38 +416,68 @@ func (t *WSTransport) readLoop(ctx context.Context) {
 			continue
 		}
 		var response WSResponse
-		if e = api.Decode(b, &response); e != nil || response.Type != "response" {
+		if e = api.DecodeLimit(b, &response, 1<<20); e != nil || response.Type != "response" || response.RequestSeq == 0 || response.RequestSeq > api.MaxSafeInteger || (response.ResultKind != "error" && response.ResultKind != "receipt" && response.ResultKind != "query_result") {
 			t.fail(api.E("invalid_request", "invalid_response_frame"))
 			return
 		}
 		t.mu.Lock()
+		if response.RequestSeq > t.seq {
+			t.mu.Unlock()
+			t.fail(api.E("invalid_request", "unsent_response_sequence"))
+			return
+		}
 		ch, ok := t.pending[response.RequestSeq]
 		if ok {
-			delete(t.pending, response.RequestSeq)
+			t.removePending(response.RequestSeq)
 		}
 		t.mu.Unlock()
 		if !ok {
 			continue
 		}
+		if response.ResultKind != "error" && ((ch.kind == "query" && response.ResultKind != "query_result") || (ch.kind != "query" && response.ResultKind != "receipt")) {
+			ch.result <- wsResult{err: api.E("invalid_request", "response_kind_mismatch")}
+			t.fail(api.E("invalid_request", "response_kind_mismatch"))
+			return
+		}
 		if response.ResultKind == "error" {
 			var problem api.Error
 			if e = api.Decode(response.Payload, &problem); e != nil {
-				ch <- wsResult{err: e}
+				ch.result <- wsResult{err: e}
 			} else {
-				ch <- wsResult{err: &problem}
+				ch.result <- wsResult{err: &problem}
 			}
 		} else {
-			ch <- wsResult{body: response.Payload}
+			ch.result <- wsResult{body: response.Payload}
 		}
+	}
+}
+func (t *WSTransport) removePending(seq uint64) {
+	entry, ok := t.pending[seq]
+	if ok {
+		if !entry.control {
+			t.normal--
+		}
+		delete(t.pending, seq)
 	}
 }
 func (t *WSTransport) Call(ctx context.Context, kind string, payload json.RawMessage) (json.RawMessage, error) {
 	if _, e := api.ParseJSON(payload); e != nil {
 		return nil, e
 	}
+	control := kind == "receipt_lookup"
+	if kind == "command" {
+		var command api.Command
+		if err := api.Decode(payload, &command); err != nil {
+			return nil, err
+		}
+		control = t.controls[command.Method]
+	}
+	if kind != "command" && kind != "query" && kind != "receipt_lookup" {
+		return nil, api.E("unsupported", "frame_kind_not_supported")
+	}
 	t.write.Lock()
 	t.mu.Lock()
-	if t.closed || len(t.pending) >= int(t.ready.Limits.MaxPending) || t.seq >= api.MaxSafeInteger {
+	if t.closed || len(t.pending) >= int(t.ready.Limits.MaxPending) || (!control && t.normal >= int(t.ready.Limits.MaxPending)-4) || t.seq >= api.MaxSafeInteger {
 		t.mu.Unlock()
 		t.write.Unlock()
 		return nil, api.E("overloaded", "connection_limit")
@@ -431,13 +485,16 @@ func (t *WSTransport) Call(ctx context.Context, kind string, payload json.RawMes
 	t.seq++
 	seq := t.seq
 	ch := make(chan wsResult, 1)
-	t.pending[seq] = ch
+	t.pending[seq] = wsPending{result: ch, control: control, kind: kind}
+	if !control {
+		t.normal++
+	}
 	t.mu.Unlock()
 	e := t.conn.Write(ctx, websocket.MessageText, api.Raw(WSRequest{"request", seq, kind, payload}))
 	t.write.Unlock()
 	if e != nil {
 		t.mu.Lock()
-		delete(t.pending, seq)
+		t.removePending(seq)
 		t.mu.Unlock()
 		return nil, e
 	}
@@ -446,7 +503,7 @@ func (t *WSTransport) Call(ctx context.Context, kind string, payload json.RawMes
 		return r.body, r.err
 	case <-ctx.Done():
 		t.mu.Lock()
-		delete(t.pending, seq)
+		t.removePending(seq)
 		t.mu.Unlock()
 		return nil, ctx.Err()
 	}

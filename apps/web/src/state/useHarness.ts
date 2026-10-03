@@ -13,7 +13,7 @@ export function useHarness() {
   const load = useCallback(async () => {
     const original = ++generation.current;
     unsubscribe.current?.();
-    current.current && void current.current.close();
+    if (current.current) void current.current.close().catch(() => undefined);
     current.current = undefined;
     setClient(undefined);
     setConnection("connecting");
@@ -34,7 +34,7 @@ export function useHarness() {
       setAuth("authenticated");
     } catch (failure) {
       if (generation.current !== original) return;
-      if (next) void next.close();
+      if (next) void next.close().catch(() => undefined);
       setAuth("required");
       setConnection("disconnected");
       if (!(failure instanceof RequestError && failure.error.code === "forbidden"))
@@ -46,7 +46,7 @@ export function useHarness() {
     return () => {
       generation.current++;
       unsubscribe.current?.();
-      if (current.current) void current.current.close();
+      if (current.current) void current.current.close().catch(() => undefined);
     };
   }, [load]);
   const login = useCallback(
@@ -73,7 +73,13 @@ export function useHarness() {
     setClient(undefined);
     setAuth("required");
     setConnection("closed");
-    if (previous) await previous.close();
+    if (previous) {
+      try {
+        await previous.close();
+      } catch (failure) {
+        setError(failure instanceof Error ? failure.message : "浏览器账本关闭未确认");
+      }
+    }
   }, []);
   const logout = useCallback(async () => {
     await disconnect();

@@ -30,6 +30,9 @@ func progress(ctx context.Context, tx runtime.Tx, namespace, key string, work ru
 	}
 	if p.WorkRevision != work.Claim.ObservedWorkRevision {
 		p.WorkRevision = work.Claim.ObservedWorkRevision
+		p.LastID = ""
+		p.Unresolved = false
+		p.IncompleteCleanup = false
 	}
 	return p, nil
 }
@@ -55,29 +58,29 @@ type Projection struct {
 }
 
 func (s *Service) indexJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
-	return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+	return finishWork(s, ctx, store, scope, work, func(tx runtime.Tx) (runtime.Disposition, error) {
 		head, err := loadHead(ctx, tx)
 		if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		var state ProjectionState
 		_, err = tx.Get(ctx, "memory.index_heads", scope.OwnerID, &state)
 		if api.IsCode(err, "not_found") {
 			state = ProjectionState{Revision: 1, IndexGeneration: 1, StrategyRef: LexicalProfile(), State: "building"}
 			if err = tx.Create(ctx, "memory.index_heads", scope.OwnerID, "", state); err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
 		} else if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		rows, err := tx.List(ctx, "memory.changes", "", fmt.Sprintf("%016d", state.ContiguousWatermark), 200)
 		if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		for _, row := range rows {
 			var change MemoryChange
 			if err = row.Decode(&change); err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
 			if change.ChangeSeq != state.ContiguousWatermark+1 {
 				state.State = "invalid"
@@ -85,12 +88,12 @@ func (s *Service) indexJob(ctx context.Context, store runtime.Store, scope runti
 			}
 			var record MemoryRecord
 			if err = tx.GetVersion(ctx, "memory.records", change.MemoryID, change.Revision, &record); err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
 			projection := Projection{SourceRef: scope.Ref(change.MemoryID, change.Revision), StrategyRef: LexicalProfile(), IndexGeneration: state.IndexGeneration, Purpose: "memory.query", State: record.State}
 			id := semanticID("projection", change.MemoryID+":"+fmt.Sprint(change.Revision)+":"+LexicalProfile().Digest)
 			if err = tx.Create(ctx, "memory.projections", id, change.MemoryID, projection); err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
 			state.ContiguousWatermark = change.ChangeSeq
 		}
@@ -100,70 +103,75 @@ func (s *Service) indexJob(ctx context.Context, store runtime.Store, scope runti
 		old := state.Revision
 		state.Revision++
 		if err = tx.Put(ctx, "memory.index_heads", scope.OwnerID, old, state); err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		if state.ContiguousWatermark < head.ChangeHead && state.State != "invalid" {
 			now, err := tx.Now(ctx)
 			if err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
-			_, err = tx.Raise(ctx, "memory.index", work.Job.ResponsibilityKey, work.Job.SourceRef, now)
-			return err
+			return runtime.Ready(now), nil
 		}
-		return nil
+		return runtime.Done(), nil
 	})
 }
 
 func (s *Service) impactJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
-	return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+	return finishWork(s, ctx, store, scope, work, func(tx runtime.Tx) (runtime.Disposition, error) {
 		if _, err := loadHead(ctx, tx); err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		key := work.Job.ResponsibilityKey
 		p, err := progress(ctx, tx, "memory.impact_progress", work.Job.Kind+":"+key, work)
 		if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		rows, err := tx.List(ctx, "memory.source_edges", key, p.LastID, 20)
 		if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		for _, row := range rows {
 			p.LastID = row.ID
 			var edge MemorySourceEdge
 			if err = row.Decode(&edge); err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
 			var record MemoryRecord
 			rev, err := tx.Get(ctx, "memory.records", edge.MemoryRef.ObjectID, &record)
 			if err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
-			if record.State == "deleted" || record.Revision != edge.MemoryRef.Revision {
+			if record.State == "deleted" || !recordReferences(record, edge.SourceRef) {
 				continue
 			}
-			if record.State == "active" {
+			if work.Job.Kind == "memory.restrict_impact" && record.MemoryID == work.Job.SourceRef.ObjectID {
+				continue // 原 Memory 的准确收窄已由命令共同提交，只推进其派生。
+			}
+			reason := work.Job.Kind + "/" + work.Job.JobID + "/" + fmt.Sprint(work.Job.WorkRevision)
+			if record.State == "active" && record.ReviewReason != reason {
 				if work.Job.Kind != "memory.restrict_impact" {
 					record.State = "needs_review"
 				}
-				record.ReviewReason = work.Job.Kind
+				record.ReviewReason = reason
 				record.Revision = rev + 1
 				if err = tx.Put(ctx, "memory.records", record.MemoryID, rev, record); err != nil {
-					return err
+					return runtime.Disposition{}, err
 				}
 				head, err := loadHead(ctx, tx)
 				if err != nil {
-					return err
+					return runtime.Disposition{}, err
 				}
 				if _, err = appendChange(ctx, tx, head, record, "restrict", true); err != nil {
-					return err
+					return runtime.Disposition{}, err
 				}
 				now, err := tx.Now(ctx)
 				if err != nil {
-					return err
+					return runtime.Disposition{}, err
 				}
-				if _, err = tx.Raise(ctx, "memory.cleanup", record.MemoryID, scope.Ref(record.MemoryID, record.Revision), now); err != nil {
-					return err
+				if record.State != "active" {
+					if _, err = tx.Raise(ctx, "memory.cleanup", record.MemoryID, scope.Ref(record.MemoryID, record.Revision), now); err != nil {
+						return runtime.Disposition{}, err
+					}
 				}
 			}
 		}
@@ -171,68 +179,72 @@ func (s *Service) impactJob(ctx context.Context, store runtime.Store, scope runt
 			p.LastID = ""
 		}
 		if err = saveProgress(ctx, tx, "memory.impact_progress", work.Job.Kind+":"+key, p); err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		now, err := tx.Now(ctx)
 		if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		if len(rows) == 20 {
-			_, err = tx.Raise(ctx, work.Job.Kind, key, work.Job.SourceRef, now)
-			return err
+			return runtime.Ready(now), nil
 		}
 		// Content DAG 的有界独立责任确保未列入证据引用的 processed 来源也受影响。
 		_, err = tx.Raise(ctx, "content.source_impact", work.Job.Kind+":"+key, work.Job.SourceRef, now)
-		return err
+		return runtime.Done(), err
 	})
 }
 
 func (s *Service) contentImpactJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
-	return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+	return finishWork(s, ctx, store, scope, work, func(tx runtime.Tx) (runtime.Disposition, error) {
 		head, err := loadHead(ctx, tx)
 		if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
-		sourceKey := work.Job.SourceRef.ObjectID + ":" + fmt.Sprint(work.Job.SourceRef.Revision)
+		parts := strings.Split(work.Job.ResponsibilityKey, ":")
+		if len(parts) < 2 {
+			return runtime.Disposition{}, api.E("invalid_state", "invalid_source_responsibility")
+		}
+		sourceKey := strings.Join(parts[len(parts)-2:], ":")
 		p, err := progress(ctx, tx, "content.impact_progress", work.Job.ResponsibilityKey, work)
 		if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		rows, err := tx.List(ctx, "content.source_edges", sourceKey, p.LastID, 20)
 		if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		now, err := tx.Now(ctx)
 		if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		closed := false
 		var source ContentVersion
 		_, sourceErr := tx.Get(ctx, "content.versions", sourceKey, &source)
 		if sourceErr != nil {
-			return sourceErr
+			return runtime.Disposition{}, sourceErr
 		}
-		closed = source.State != "published"
+		closed = source.State != "published" && source.ClosureKind != "retention"
 		for _, row := range rows {
 			p.LastID = row.ID
 			var edge SourceEdge
 			if err = row.Decode(&edge); err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
 			var derived ContentVersion
 			rev, err := tx.Get(ctx, "content.versions", contentKey(edge.DerivedRef), &derived)
 			if err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
 			if closed && derived.State == "published" {
 				derived.State = "closed"
-				derived.ControlRevision = rev + 1
+				derived.ClosureKind = "active_close"
+				derived.ControlRevision++
 				if err = tx.Put(ctx, "content.versions", contentKey(edge.DerivedRef), rev, derived); err != nil {
-					return err
+					return runtime.Disposition{}, err
 				}
 				head.VisibilityRevision++
-				if _, err = tx.Raise(ctx, "content.cleanup", contentKey(edge.DerivedRef), scope.Ref(edge.DerivedRef.ContentID, edge.DerivedRef.Version), now); err != nil {
-					return err
+				if _, err = tx.Raise(ctx, "content.cleanup", contentKey(edge.DerivedRef), work.Job.SourceRef, now); err != nil {
+					return runtime.Disposition{}, err
 				}
 			}
 			kind := "memory.correction_impact"
@@ -242,81 +254,80 @@ func (s *Service) contentImpactJob(ctx context.Context, store runtime.Store, sco
 			if closed {
 				kind = "memory.source_impact"
 			}
-			if _, err = tx.Raise(ctx, kind, contentKey(edge.DerivedRef), scope.Ref(edge.DerivedRef.ContentID, edge.DerivedRef.Version), now); err != nil {
-				return err
+			if _, err = tx.Raise(ctx, kind, contentKey(edge.DerivedRef), work.Job.SourceRef, now); err != nil {
+				return runtime.Disposition{}, err
 			}
 		}
 		if err = saveHead(ctx, tx, head); err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		if len(rows) < 20 {
 			p.LastID = ""
 		}
 		if err = saveProgress(ctx, tx, "content.impact_progress", work.Job.ResponsibilityKey, p); err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		if len(rows) == 20 {
-			_, err = tx.Raise(ctx, "content.source_impact", work.Job.ResponsibilityKey, work.Job.SourceRef, now)
-			return err
+			return runtime.Ready(now), nil
 		}
-		return nil
+		return runtime.Done(), nil
 	})
 }
 
 func (s *Service) memoryCleanupJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
-	return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+	return finishWork(s, ctx, store, scope, work, func(tx runtime.Tx) (runtime.Disposition, error) {
 		if _, err := loadHead(ctx, tx); err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		id := work.Job.SourceRef.ObjectID
 		var record MemoryRecord
 		rev, err := tx.Get(ctx, "memory.records", id, &record)
 		if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		p, err := progress(ctx, tx, "memory.cleanup_progress", id, work)
 		if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		rows, err := tx.List(ctx, "memory.holder_edges", id, p.LastID, 20)
 		if err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		for _, row := range rows {
 			p.LastID = row.ID
 			var edge MemorySourceEdge
 			if err = row.Decode(&edge); err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
-			if edge.MemoryRef.Revision == record.Revision && record.State == "active" {
+			if record.State == "active" && recordReferences(record, edge.SourceRef) {
 				continue
 			}
 			var holder CopyHolder
 			holderRev, err := tx.Get(ctx, "content.holders", edge.CopyID, &holder)
 			if err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
 			if holder.Kind != "metadata_reference" {
-				return api.E("invalid_state", "unowned_copy_cleanup")
+				return runtime.Disposition{}, api.E("invalid_state", "unowned_copy_cleanup")
 			}
 			holder.UseState = "use_stopped"
 			holder.CleanupState = "complete"
 			holder.Revision = holderRev + 1
 			if err = tx.Put(ctx, "content.holders", holder.CopyID, holderRev, holder); err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
 			var content ContentVersion
 			_, err = tx.Get(ctx, "content.versions", contentKey(holder.ContentRef), &content)
 			if err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
 			if content.State != "published" {
 				now, err := tx.Now(ctx)
 				if err != nil {
-					return err
+					return runtime.Disposition{}, err
 				}
-				if _, err = tx.Raise(ctx, "content.cleanup", contentKey(holder.ContentRef), scope.Ref(holder.ContentRef.ContentID, holder.ContentRef.Version), now); err != nil {
-					return err
+				if _, err = tx.Raise(ctx, "content.cleanup", contentKey(holder.ContentRef), scope.Ref(holder.CopyID, holder.Revision), now); err != nil {
+					return runtime.Disposition{}, err
 				}
 			}
 		}
@@ -324,31 +335,39 @@ func (s *Service) memoryCleanupJob(ctx context.Context, store runtime.Store, sco
 			p.LastID = ""
 		}
 		if err = saveProgress(ctx, tx, "memory.cleanup_progress", id, p); err != nil {
-			return err
+			return runtime.Disposition{}, err
 		}
 		if len(rows) == 20 {
 			now, err := tx.Now(ctx)
 			if err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
-			_, err = tx.Raise(ctx, "memory.cleanup", id, scope.Ref(id, record.Revision), now)
-			return err
+			return runtime.Ready(now), nil
 		}
 		if record.State == "deleted" && record.CleanupState != "complete" {
 			record.CleanupState = "complete"
 			record.Revision = rev + 1
 			if err = tx.Put(ctx, "memory.records", id, rev, record); err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
 			head, err := loadHead(ctx, tx)
 			if err != nil {
-				return err
+				return runtime.Disposition{}, err
 			}
 			_, err = appendChange(ctx, tx, head, record, "delete", false)
-			return err
+			return runtime.Done(), err
 		}
-		return nil
+		return runtime.Done(), nil
 	})
+}
+
+func recordReferences(record MemoryRecord, ref api.ContentRef) bool {
+	for _, current := range append([]api.ContentRef{record.Values.ContentRef, record.Values.ScopeRef}, sourceRefs(record.Values.Sources)...) {
+		if api.Equal(current, ref) {
+			return true
+		}
+	}
+	return false
 }
 
 func (s *Service) contentCleanupJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
@@ -357,10 +376,7 @@ func (s *Service) contentCleanupJob(ctx context.Context, store runtime.Store, sc
 	unresolved := false
 	more := false
 	var due time.Time
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
-		if err := tx.Guard(ctx, work.Claim); err != nil {
-			return err
-		}
+	err := s.claimWithin(ctx, scope, work.Claim, func(tx runtime.Tx) error {
 		_, err := tx.Get(ctx, "content.versions", work.Job.ResponsibilityKey, &content)
 		if err != nil {
 			return err
@@ -472,10 +488,7 @@ func (s *Service) transferCleanupJob(ctx context.Context, store runtime.Store, s
 	var transfer Transfer
 	done := false
 	var waitUntil time.Time
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
-		if err := tx.Guard(ctx, work.Claim); err != nil {
-			return err
-		}
+	err := s.claimWithin(ctx, scope, work.Claim, func(tx runtime.Tx) error {
 		rev, err := tx.Get(ctx, "content.transfers", work.Job.SourceRef.ObjectID, &transfer)
 		if err != nil {
 			return err
@@ -538,11 +551,11 @@ func finishWork(s *Service, ctx context.Context, store runtime.Store, scope runt
 		if _, err := loadHead(ctx, tx); err != nil {
 			return err
 		}
-		if err := tx.Guard(ctx, work.Claim); err != nil {
-			return err
-		}
 		disposition, err := fn(tx)
 		if err != nil {
+			return err
+		}
+		if err := tx.Guard(ctx, work.Claim); err != nil {
 			return err
 		}
 		return tx.Finish(ctx, work.Claim, disposition)

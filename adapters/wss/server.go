@@ -347,12 +347,7 @@ func isControl(kind string, raw json.RawMessage) bool {
 	if api.Decode(raw, &c) != nil {
 		return false
 	}
-	for _, suffix := range []string{".cancel", ".pause", ".revoke", ".close", ".stop", ".takeover", ".deactivate", ".billing_reconcile"} {
-		if strings.HasSuffix(c.Method, suffix) {
-			return true
-		}
-	}
-	return false
+	return api.IsControlMethod(c.Method)
 }
 func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 	a, e := s.authenticate(r)

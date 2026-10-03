@@ -42,11 +42,39 @@ func (s *Service) expireJob(ctx context.Context, store runtime.Store, scope runt
 				return runtime.Disposition{}, err
 			}
 		}
-		if _, err = tx.Raise(ctx, "content.cleanup", work.Job.ResponsibilityKey, work.Job.SourceRef, now); err != nil {
+		notice, err := contentControlNotice(ctx, tx, content)
+		if err != nil {
+			return runtime.Disposition{}, err
+		}
+		if _, err = tx.Raise(ctx, "content.cleanup", work.Job.ResponsibilityKey, notice, now); err != nil {
 			return runtime.Disposition{}, err
 		}
 		return runtime.Done(), nil
 	})
+}
+
+type controlNotice struct {
+	ContentRef      api.ContentRef `json:"content_ref"`
+	ControlRevision uint64         `json:"control_revision"`
+	ClosureKind     string         `json:"closure_kind"`
+}
+
+// contentControlNotice 指向已共同保存的控制变化；不能用相同准确版本冒充新 Job 触发。
+func contentControlNotice(ctx context.Context, tx runtime.Tx, version ContentVersion) (api.ObjectRef, error) {
+	value := controlNotice{version.ContentRef, version.ControlRevision, version.ClosureKind}
+	digest, err := api.Digest(value)
+	if err != nil {
+		return api.ObjectRef{}, err
+	}
+	id := semanticID("cnotice", digest)
+	var old controlNotice
+	_, err = tx.Get(ctx, "content.control_notices", id, &old)
+	if api.IsCode(err, "not_found") {
+		err = tx.Create(ctx, "content.control_notices", id, contentKey(version.ContentRef), value)
+	} else if err == nil && !api.Equal(value, old) {
+		err = api.E("idempotency_conflict", "control_notice_changed")
+	}
+	return tx.Scope().Ref(id, 1), err
 }
 
 // copyExpireJob 只关闭该副本的使用门禁；持有者未报告停止前不伪报物理清理。

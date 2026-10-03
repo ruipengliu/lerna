@@ -32,14 +32,35 @@ func TestIndependentDerivedRetentionSurvivesExpiryButExplicitCloseStillRevokes(t
 		t.Fatal(err)
 	}
 	f.policy = policy
-	expires := time.Now().Add(2 * time.Second)
+	expires := time.Now().Add(5 * time.Minute)
 	source := f.uploadUntil(t, "可按独立许可保存派生的输入", expires, expires)
 	derived := f.uploadUntil(t, "保留十分钟的独立派生", time.Now().Add(10*time.Minute), time.Now().Add(time.Minute), source)
-	if delay := time.Until(expires); delay > 0 {
-		timer := time.NewTimer(delay + 10*time.Millisecond)
-		defer timer.Stop()
-		<-timer.C
+	// 只替换已批准的可信时间端口，并显式投递到期唤醒；数据库和介质仍真实执行。
+	store := f.service.Store
+	now := expires.Add(time.Second)
+	f.service.Store = clockStore{Store: store, now: &now}
+	wake := func(kind string) {
+		t.Helper()
+		status, err := store.Within(f.ctx, f.scope, memory.Participants, func(tx runtime.Tx) error {
+			due, err := tx.Now(f.ctx)
+			if err != nil {
+				return err
+			}
+			job, err := tx.Raise(f.ctx, kind, source.ContentID+":1", f.scope.Ref(source.ContentID, 1), due)
+			if err != nil {
+				return err
+			}
+			return tx.Hint(f.ctx, job.JobID, due)
+		})
+		if err != nil || status != runtime.Committed {
+			t.Fatalf("timer fixture wake: %v %v", status, err)
+		}
 	}
+	wake("content.expire")
+	if err = runtime.Drain(f.ctx, f.service.Store, f.scope, f.dispatcher.Registry, 50); err != nil {
+		t.Fatal(err)
+	}
+	wake("content.cleanup")
 	if err = runtime.Drain(f.ctx, f.service.Store, f.scope, f.dispatcher.Registry, 50); err != nil {
 		t.Fatal(err)
 	}
