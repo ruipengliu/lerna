@@ -237,6 +237,20 @@ func TestRealPairedRunSealsOriginalStatisticsAndLateFailureInvalidatesQualificat
 		t.Fatalf("run: %+v", r)
 	}
 	drain(t, f, "governance.evaluation")
+	if left := time.Until(cutoff) + 30*time.Millisecond; left > 0 {
+		time.Sleep(left)
+	}
+	_, r = command(t, f, "evaluation.seal", runID, governance.IDInput{ID: runID}, nil)
+	if r.Stage != "applied" {
+		t.Fatalf("seal: %+v", r)
+	}
+	var report governance.EvaluationReport
+	if err := api.Decode(r.Output, &report); err != nil {
+		t.Fatal(err)
+	}
+	if report.FullDenominator != 12 || report.CandidateSuccess != 12 || report.BaselineSuccess != 0 || report.TargetAttainment != "pass" || report.StatisticalGate != "pass" || report.ImprovementGate != "pass" || report.CandidateCost[0].Value != "1.2" {
+		t.Fatalf("independent paired report: %+v", report)
+	}
 	samples := query[api.Page[governance.SampleRun]](t, f, "evaluation.samples", governance.SamplePageRequest{RunID: runID, Limit: 100})
 	if len(samples.Items) != 24 {
 		t.Fatalf("sample-arm denominator: %+v", samples)
@@ -254,20 +268,6 @@ func TestRealPairedRunSealsOriginalStatisticsAndLateFailureInvalidatesQualificat
 		} else if sample.Outcome != "fail" {
 			t.Fatalf("baseline: %+v", sample)
 		}
-	}
-	if left := time.Until(cutoff) + 30*time.Millisecond; left > 0 {
-		time.Sleep(left)
-	}
-	_, r = command(t, f, "evaluation.seal", runID, governance.IDInput{ID: runID}, nil)
-	if r.Stage != "applied" {
-		t.Fatalf("seal: %+v", r)
-	}
-	var report governance.EvaluationReport
-	if err := api.Decode(r.Output, &report); err != nil {
-		t.Fatal(err)
-	}
-	if report.FullDenominator != 12 || report.CandidateSuccess != 12 || report.BaselineSuccess != 0 || report.TargetAttainment != "pass" || report.StatisticalGate != "pass" || report.ImprovementGate != "pass" || report.CandidateCost[0].Value != "1.2" {
-		t.Fatalf("independent paired report: %+v", report)
 	}
 	_, opened := command(t, f, "evaluation.feedback_open", report.ReportID, governance.FeedbackOpen{ReportRef: f.scope.Ref(report.ReportID, 1), ExposureID: api.NewID("exposure")}, nil)
 	if opened.Stage != "applied" {

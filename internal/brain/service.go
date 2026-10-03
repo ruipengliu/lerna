@@ -164,8 +164,26 @@ func (s *Service) Usage(ctx context.Context, store runtime.Store, scope runtime.
 	if _, e := store.Read(ctx, scope, records, ref.ObjectID, 0, &d); e != nil {
 		return api.UsageSnapshot{}, e
 	}
-	u := api.UsageSnapshot{SourceRef: scope.Ref(ref.ObjectID, d.Record.Revision), UsageRevision: d.Record.Revision, Cumulative: d.Record.Usage, SpendingClosed: d.Record.Status == "completed" || d.Record.Status == "cancelled" || d.Record.Status == "failed", UsageFinal: d.Record.UsageFinal, ProofRefs: []api.ContentRef{}}
-	u.UsageDigest, _ = api.Digest(u.Cumulative)
+	u := api.UsageSnapshot{SourceRef: scope.Ref(ref.ObjectID, d.Record.Revision), UsageRevision: d.Record.Revision, Cumulative: append([]api.Amount{}, d.Record.Usage...), SpendingClosed: d.Record.Status == "completed" || d.Record.Status == "cancelled" || d.Record.Status == "failed", UsageFinal: d.Record.UsageFinal, ProofRefs: []api.ContentRef{}}
+	if len(u.Cumulative) == 0 {
+		for _, unit := range d.Input.Limits {
+			u.Cumulative = append(u.Cumulative, api.Amount{Unit: unit.Unit, Value: "0"})
+		}
+	}
+	proofBody := api.Raw(struct {
+		Snapshot         api.UsageSnapshot `json:"snapshot"`
+		CallID           string            `json:"call_id"`
+		PhysicalRequests uint64            `json:"physical_requests"`
+		SendStarted      bool              `json:"send_started"`
+		Phase            string            `json:"phase"`
+	}{u, d.CallID, d.Record.PhysicalRequestCount, d.Record.SendStarted, d.Phase})
+	proofID := "content_" + api.Hash([]byte(d.Input.DecisionID + "/usage/" + fmt.Sprint(d.Record.Revision)))[7:39]
+	proof, err := s.config.Content.Publish(ctx, scope, d.Principal, Publication{ContentID: proofID, MediaType: "application/vnd.harness.usage-proof+json", ProcessedSources: []api.ContentRef{d.Input.SnapshotRef}, DisclosedSources: []api.ContentRef{}}, proofBody)
+	if err != nil {
+		return api.UsageSnapshot{}, err
+	}
+	u.ProofRefs = []api.ContentRef{proof}
+	u.UsageDigest, _ = api.Digest(u)
 	return u, nil
 }
 func (s *Service) finish(ctx context.Context, store runtime.Store, scope runtime.Scope, w runtime.Work, disp runtime.Disposition, fn func(runtime.Tx) error) error {

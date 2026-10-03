@@ -27,6 +27,39 @@ type EvaluationNotice struct {
 	RecordedAt string        `json:"recorded_at"`
 }
 
+// 报告和逐样本结果查询也是实际反馈出口，必须先持久登记曝光再披露。
+// 稳定主体/会话代次/资源键保留第一次出口事实，重查不会伪造较晚曝光。
+func (s *Service) exposeRead(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, plan EvaluationPlan, resource, kind string, report *api.ObjectRef) (ExposureGate, error) {
+	var gate ExposureGate
+	id := digestID("read_exposure", []any{a.SubjectID, a.CredentialGeneration, resource, kind})
+	status, err := store.Within(ctx, scope, s.participants(), func(tx runtime.Tx) error {
+		var e error
+		gate, e = s.exposureGate(ctx, tx, plan.SourceGroup)
+		if e != nil {
+			return e
+		}
+		var old Exposure
+		if _, e = tx.Get(ctx, ns("exposures"), id, &old); e == nil {
+			return nil
+		} else if !errMissing(e) {
+			return e
+		}
+		now, e := tx.Now(ctx)
+		if e != nil {
+			return e
+		}
+		if _, e = s.saveExposure(ctx, tx, a, ExposureRegister{ExposureID: id, SourceGroup: plan.SourceGroup, Kind: kind, OccurredAt: api.Time(now), ReportRef: report}); e != nil {
+			return e
+		}
+		gate, e = s.exposureGate(ctx, tx, plan.SourceGroup)
+		return e
+	})
+	if status == runtime.CommitUnknown {
+		return gate, runtime.ErrCommitUnknown
+	}
+	return gate, err
+}
+
 func (s *Service) registerExposure(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in ExposureRegister) (runtime.Outcome, error) {
 	if err := requireRole(a, "evaluation_authority"); err != nil {
 		return runtime.Outcome{}, err

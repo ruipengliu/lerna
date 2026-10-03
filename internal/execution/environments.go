@@ -47,6 +47,7 @@ type Environment struct {
 	StopResiduals        []string         `json:"stop_residuals"`
 	ActuallyExited       bool             `json:"actually_exited"`
 	HostCallIDs          []string         `json:"hostcall_ids"`
+	HostCallParents      []string         `json:"hostcall_parents"`
 	Principal            rt.Auth          `json:"principal"`
 	PreparationCommandID string           `json:"preparation_command_id"`
 }
@@ -163,8 +164,11 @@ func (s *Service) environmentCreate(ctx context.Context, tx rt.Tx, a rt.Auth, c 
 	if err != nil || !expires.After(now) {
 		return Environment{}, api.E("expired", "environment_expired")
 	}
-	env := Environment{EnvironmentID: p.EnvironmentID, Revision: 1, ConfigRef: p.ConfigRef, IsolationDigest: p.ConfigRef.Digest, InstallLockRef: p.InstallLockRef, InstanceID: api.NewID("instance"), Generation: 1, Phase: "preparing", RuntimeKind: "trusted_passive_data", Limits: p.Limits, ExpiresAt: p.ExpiresAt, ProcessedSources: p.SourceRefs, ActiveOperationIDs: []string{}, StopResiduals: []string{}, HostCallIDs: []string{}, Principal: a, PreparationCommandID: c.CommandID, ActuallyExited: true}
+	env := Environment{EnvironmentID: p.EnvironmentID, Revision: 1, ConfigRef: p.ConfigRef, IsolationDigest: p.ConfigRef.Digest, InstallLockRef: p.InstallLockRef, InstanceID: api.NewID("instance"), Generation: 1, Phase: "preparing", RuntimeKind: "trusted_passive_data", Limits: p.Limits, ExpiresAt: p.ExpiresAt, ProcessedSources: p.SourceRefs, ActiveOperationIDs: []string{}, StopResiduals: []string{}, HostCallIDs: []string{}, HostCallParents: []string{}, Principal: a, PreparationCommandID: c.CommandID, ActuallyExited: true}
 	if err = tx.Create(ctx, Namespace+".environments", p.EnvironmentID, "", env); err != nil {
+		return env, err
+	}
+	if err = bumpCollection(ctx, tx, "environments", true); err != nil {
 		return env, err
 	}
 	_, err = tx.Raise(ctx, EnvironmentPrepareJob, p.EnvironmentID, tx.Scope().Ref(p.EnvironmentID, 1), now)
@@ -204,7 +208,7 @@ func (s *Service) environmentStop(ctx context.Context, tx rt.Tx, a rt.Auth, c ap
 		env.ReadyForCell = false
 		env.Revision = rev + 1
 		env.StopResiduals = append([]string{}, env.HostCallIDs...)
-		if err = tx.Put(ctx, Namespace+".environments", env.EnvironmentID, rev, env); err != nil {
+		if err = putEnvironment(ctx, tx, env.EnvironmentID, rev, env); err != nil {
 			return env, err
 		}
 	}
@@ -258,7 +262,7 @@ func (s *Service) environmentDestroy(ctx context.Context, tx rt.Tx, a rt.Auth, c
 	env.Phase = "destroying"
 	env.Revision = rev + 1
 	env.ReadyForCell = false
-	if err = tx.Put(ctx, Namespace+".environments", env.EnvironmentID, rev, env); err != nil {
+	if err = putEnvironment(ctx, tx, env.EnvironmentID, rev, env); err != nil {
 		return env, err
 	}
 	now, err := tx.Now(ctx)
@@ -312,7 +316,7 @@ func (s *Service) environmentRestore(ctx context.Context, tx rt.Tx, a rt.Auth, c
 	env.NamespaceRevision = cp.NamespaceRevision
 	env.ProcessedSources = cp.ProcessedSources
 	env.PreparationCommandID = ""
-	if err = tx.Put(ctx, Namespace+".environments", env.EnvironmentID, rev, env); err != nil {
+	if err = putEnvironment(ctx, tx, env.EnvironmentID, rev, env); err != nil {
 		return env, err
 	}
 	now, err := tx.Now(ctx)
@@ -337,19 +341,12 @@ func (s *Service) environmentGet(ctx context.Context, st rt.Store, sc rt.Scope, 
 	return env, nil
 }
 func (s *Service) environmentList(ctx context.Context, st rt.Store, sc rt.Scope, a rt.Auth, q api.Query, p api.ListInput) (api.Page[Environment], error) {
-	page := api.Page[Environment]{Items: []Environment{}, CollectionRevision: 1, Gaps: []string{}}
-	if p.Limit < 1 || p.Limit > 100 {
-		return page, api.E("invalid_request", "invalid_page_limit")
-	}
-	records, err := st.List(ctx, sc, Namespace+".environments", "", p.Cursor, int(p.Limit)+1)
+	records, revision, next, exhausted, err := pageRecords(ctx, st, sc, a, "environments", p)
+	page := api.Page[Environment]{Items: []Environment{}, CollectionRevision: revision, NextCursor: next, Exhausted: exhausted, Gaps: []string{}}
 	if err != nil {
 		return page, err
 	}
-	for i, r := range records {
-		if i == int(p.Limit) {
-			page.NextCursor = records[i-1].ID
-			break
-		}
+	for _, r := range records {
 		var env Environment
 		if err = r.Decode(&env); err != nil {
 			return page, err
@@ -358,9 +355,7 @@ func (s *Service) environmentList(ctx context.Context, st rt.Store, sc rt.Scope,
 			return page, api.E("forbidden", "environment_not_disclosed")
 		}
 		page.Items = append(page.Items, env)
-		page.CollectionRevision += env.Revision
 	}
-	page.Exhausted = len(records) <= int(p.Limit)
 	return page, nil
 }
 func (s *Service) environmentPrepareWork(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work) error {
@@ -407,7 +402,19 @@ func (s *Service) environmentPrepareWork(ctx context.Context, st rt.Store, sc rt
 			return err
 		}
 		if err = minDeadline(now, current.ExpiresAt); err != nil {
-			return err
+			// 被动命名空间还未创建运行实例；过期准备必须固定拒绝并关闭，不能永远重领。
+			current.Revision = rev + 1
+			current.Generation++
+			current.Phase = "closed"
+			current.ReadyForCell = false
+			current.ActuallyExited = true
+			if writeErr := putEnvironment(ctx, tx, current.EnvironmentID, rev, current); writeErr != nil {
+				return writeErr
+			}
+			if current.PreparationCommandID != "" {
+				return rt.Decide(ctx, tx, current.PreparationCommandID, nil, api.E("expired", "environment_expired"))
+			}
+			return nil
 		}
 		current.Revision = rev + 1
 		current.Phase = "active"
@@ -417,7 +424,7 @@ func (s *Service) environmentPrepareWork(ctx context.Context, st rt.Store, sc rt
 		if current.NamespaceRevision == 0 {
 			current.NamespaceRevision = 1
 		}
-		if err = tx.Put(ctx, Namespace+".environments", current.EnvironmentID, rev, current); err != nil {
+		if err = putEnvironment(ctx, tx, current.EnvironmentID, rev, current); err != nil {
 			return err
 		}
 		if current.PreparationCommandID != "" {
@@ -479,7 +486,7 @@ func (s *Service) environmentCleanupWork(ctx context.Context, st rt.Store, sc rt
 				current.Phase = "closed"
 			}
 		}
-		return tx.Put(ctx, Namespace+".environments", current.EnvironmentID, rev, current)
+		return putEnvironment(ctx, tx, current.EnvironmentID, rev, current)
 	})
 }
 
@@ -498,7 +505,7 @@ func (s *Service) failEnvironmentPreparation(ctx context.Context, st rt.Store, s
 		current.Phase = "closing"
 		current.ReadyForCell = false
 		current.StopResiduals = []string{}
-		if err = tx.Put(ctx, Namespace+".environments", current.EnvironmentID, rev, current); err != nil {
+		if err = putEnvironment(ctx, tx, current.EnvironmentID, rev, current); err != nil {
 			return err
 		}
 		now, err := tx.Now(ctx)

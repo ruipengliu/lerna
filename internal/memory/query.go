@@ -107,7 +107,7 @@ func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth run
 	var expires time.Time
 	partial := false
 	gaps := []string{}
-	err = s.within(ctx, scope, func(tx runtime.Tx) error {
+	err = s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}
@@ -189,7 +189,7 @@ func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth run
 	if len(terms) > 100 {
 		return api.Page[Match]{}, api.E("invalid_request", "query_text_terms_exceeded")
 	}
-	err = s.within(ctx, scope, func(tx runtime.Tx) error {
+	err = s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		currentToken, err := s.visibility(ctx, tx, auth)
 		if err != nil {
 			return err
@@ -312,7 +312,7 @@ func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth run
 		return matches[i].MemoryRef.ObjectID < matches[j].MemoryRef.ObjectID
 	})
 	view := QueryView{QueryID: queryID, Revision: 1, PrincipalID: auth.SubjectID, Digest: digest, VisibilityToken: token, ExpiresAt: api.Time(expires), ChangeHead: head.ChangeHead, Matches: matches, Partial: partial, Gaps: unique(gaps), RemainingPermissionChecks: ctx.Value(permissionBudgetKey{}).(*permissionBudget).remaining}
-	err = s.within(ctx, scope, func(tx runtime.Tx) error {
+	err = s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		current, err := s.visibility(ctx, tx, auth)
 		if err != nil {
 			return err
@@ -352,7 +352,7 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 		return api.Page[Match]{}, err
 	}
 	var out api.Page[Match]
-	err = s.within(ctx, scope, func(tx runtime.Tx) error {
+	err = s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}
@@ -463,7 +463,7 @@ func (s *Service) listMemory(ctx context.Context, scope runtime.Scope, auth runt
 		return api.Page[MemoryRecord]{}, api.E("invalid_request", "invalid_list_limits")
 	}
 	var out api.Page[MemoryRecord]
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}

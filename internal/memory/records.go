@@ -478,7 +478,7 @@ func (s *Service) delete(ctx context.Context, tx runtime.Tx, auth runtime.Auth, 
 
 func (s *Service) ReadMemory(ctx context.Context, scope runtime.Scope, auth runtime.Auth, in ReadMemoryInput) (MemoryRecord, error) {
 	var out MemoryRecord
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}
@@ -501,7 +501,7 @@ func (s *Service) ReadMemory(ctx context.Context, scope runtime.Scope, auth runt
 
 func (s *Service) InspectMemory(ctx context.Context, scope runtime.Scope, auth runtime.Auth, id string) (MemoryRecord, error) {
 	var out MemoryRecord
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}

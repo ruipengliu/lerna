@@ -33,9 +33,10 @@ type FileReadResult struct {
 	ObservedAt string `json:"observed_at"`
 }
 type fileEncoded struct {
-	Path            string `json:"path"`
-	ExpectedVersion string `json:"expected_version,omitempty"`
-	DataBase64      string `json:"data_base64,omitempty"`
+	ProcessedSources []api.ContentRef `json:"processed_sources"`
+	Path             string           `json:"path"`
+	ExpectedVersion  string           `json:"expected_version,omitempty"`
+	DataBase64       string           `json:"data_base64,omitempty"`
 }
 type FileDriver struct {
 	Files    *ManagedFiles
@@ -77,6 +78,26 @@ func (d *FileDriver) Prepare(ctx context.Context, sc rt.Scope, a rt.Auth, p doma
 			return domain.PreparedRequest{}, err
 		}
 		encoded.Path = clean
+		sources, err := d.Files.ManagedSources(ctx, clean)
+		if err != nil {
+			return domain.PreparedRequest{}, err
+		}
+		for _, ref := range sources {
+			found := false
+			for _, allowed := range i.ProcessedSourceRefs {
+				found = found || api.Equal(ref, allowed)
+			}
+			if !found {
+				return domain.PreparedRequest{}, api.E("forbidden", "file_source_not_in_intent")
+			}
+			if d.Content == nil {
+				return domain.PreparedRequest{}, api.E("dependency_unavailable", "content_not_configured")
+			}
+			if _, err = d.Content.ReadBytes(ctx, sc, a, ref, "managed_file_read", d.Location); err != nil {
+				return domain.PreparedRequest{}, err
+			}
+		}
+		encoded.ProcessedSources = sources
 	} else {
 		var q FileWriteArguments
 		if err := api.Decode(args, &q); err != nil {
@@ -103,7 +124,7 @@ func (d *FileDriver) Prepare(ctx context.Context, sc rt.Scope, a rt.Auth, p doma
 		if len(b) > 128<<10 {
 			return domain.PreparedRequest{}, api.E("overloaded", "file_payload_too_large")
 		}
-		encoded = fileEncoded{Path: clean, ExpectedVersion: q.ExpectedVersion, DataBase64: base64.StdEncoding.EncodeToString(b)}
+		encoded = fileEncoded{Path: clean, ExpectedVersion: q.ExpectedVersion, DataBase64: base64.StdEncoding.EncodeToString(b), ProcessedSources: i.ProcessedSourceRefs}
 	}
 	raw := api.Raw(encoded)
 	return domain.PreparedRequest{Encoded: raw, Digest: api.Hash(raw)}, nil
@@ -120,6 +141,9 @@ func (d *FileDriver) Start(ctx context.Context, q domain.AttemptRequest, barrier
 	}
 	if d.ReadOnly {
 		observed, err := d.Files.Read(ctx, encoded.Path)
+		if err == nil && (observed.SourceChanged || !api.Equal(observed.ProcessedSources, encoded.ProcessedSources)) {
+			err = api.E("revision_conflict", "file_source_changed")
+		}
 		if err == nil && len(observed.Data) > 128<<10 {
 			err = api.E("overloaded", "file_read_limit")
 		}
@@ -139,7 +163,7 @@ func (d *FileDriver) Start(ctx context.Context, q domain.AttemptRequest, barrier
 	if err != nil {
 		return domain.Fact{}, err
 	}
-	r, err := d.Files.Write(ctx, FileWrite{OperationID: q.Invoke.OperationID, AttemptID: q.Attempt.AttemptID, Path: encoded.Path, ExpectedVersion: encoded.ExpectedVersion, Data: data})
+	r, err := d.Files.Write(ctx, FileWrite{OperationID: q.Invoke.OperationID, AttemptID: q.Attempt.AttemptID, Path: encoded.Path, ExpectedVersion: encoded.ExpectedVersion, Data: data, ProcessedSources: encoded.ProcessedSources})
 	if err != nil {
 		return domain.Fact{}, err
 	}

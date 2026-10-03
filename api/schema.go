@@ -155,7 +155,9 @@ func (v *Validator) Validate(raw []byte) error {
 		return err
 	}
 	if err = v.schema.Validate(x); err != nil {
-		return E("invalid_request", "schema_violation")
+		problem := E("invalid_request", "schema_violation")
+		problem.Cause = err
+		return problem
 	}
 	return nil
 }
