@@ -660,6 +660,10 @@ func (s *Service) childPrepareJob(ctx context.Context, store runtime.Store, scop
 	if h.ChildSessionRef != nil || h.State == "open" {
 		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
 	}
+	var original childCommand
+	if _, err := store.Read(ctx, scope, childCommands, h.ChildID, 1, &original); err != nil {
+		return err
+	}
 	if s.ports.Collaboration == nil {
 		return s.wait(ctx, store, scope, work)
 	}
@@ -671,6 +675,16 @@ func (s *Service) childPrepareJob(ctx context.Context, store runtime.Store, scop
 		var rejected *OriginalCommandRejection
 		if errors.As(err, &rejected) && rejected.Receipt.Stage == "rejected" && rejected.Receipt.CommandID == h.SessionCommandRef.ObjectID && rejected.Receipt.Error != nil {
 			return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+				if _, err := tx.LoadCommand(ctx, original.CommandID); err != nil {
+					return err
+				}
+				commandID, err := workCommandID(ctx, tx, h.ChildID)
+				if err != nil {
+					return err
+				}
+				if commandID != original.CommandID {
+					return api.E("idempotency_conflict", "original_child_command_changed")
+				}
 				var current ChildHandle
 				rev, err := tx.Get(ctx, children, h.ChildID, &current)
 				if err != nil {
@@ -684,7 +698,7 @@ func (s *Service) childPrepareJob(ctx context.Context, store runtime.Store, scop
 				if err = tx.Put(ctx, children, h.ChildID, rev, current); err != nil {
 					return err
 				}
-				return runtime.Decide(ctx, tx, workCommandID(ctx, tx, h.ChildID), nil, rejected.Receipt.Error)
+				return runtime.Decide(ctx, tx, original.CommandID, nil, rejected.Receipt.Error)
 			})
 		}
 		if deferred(err) {
@@ -696,6 +710,16 @@ func (s *Service) childPrepareJob(ctx context.Context, store runtime.Store, scop
 		return api.E("forbidden", "child_session_scope_mismatch")
 	}
 	return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, e := tx.LoadCommand(ctx, original.CommandID); e != nil {
+			return e
+		}
+		commandID, e := workCommandID(ctx, tx, h.ChildID)
+		if e != nil {
+			return e
+		}
+		if commandID != original.CommandID {
+			return api.E("idempotency_conflict", "original_child_command_changed")
+		}
 		var current ChildHandle
 		rev, e := tx.Get(ctx, children, h.ChildID, &current)
 		if e != nil {
@@ -715,18 +739,18 @@ func (s *Service) childPrepareJob(ctx context.Context, store runtime.Store, scop
 		if e = tx.Put(ctx, children, current.ChildID, rev, current); e != nil {
 			return e
 		}
-		return runtime.Decide(ctx, tx, workCommandID(ctx, tx, current.ChildID), ChildOutput{ChildRef: scope.Ref(current.ChildID, current.Revision), ChildSessionRef: &ref}, nil)
+		return runtime.Decide(ctx, tx, original.CommandID, ChildOutput{ChildRef: scope.Ref(current.ChildID, current.Revision), ChildSessionRef: &ref}, nil)
 	})
 }
 
 // 原 child.create 的调用方命令与远端 session.create 命令分别保留。
-func workCommandID(ctx context.Context, tx runtime.Tx, childID string) string {
+func workCommandID(ctx context.Context, tx runtime.Tx, childID string) (string, error) {
 	var p childCommand
 	_, err := tx.Get(ctx, childCommands, childID, &p)
 	if err != nil {
-		return ""
+		return "", err
 	}
-	return p.CommandID
+	return p.CommandID, nil
 }
 
 const childCommands = "task.child_commands"

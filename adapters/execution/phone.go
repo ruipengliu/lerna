@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -30,10 +31,14 @@ type SimulatedPhones struct {
 	Fault     func(string, string) error
 }
 type PhoneState struct {
-	Screen  string `json:"screen"`
-	Note    string `json:"note"`
-	WiFi    bool   `json:"wifi"`
-	Version uint64 `json:"version"`
+	Screen         string   `json:"screen"`
+	Note           string   `json:"note"`
+	WiFi           bool     `json:"wifi"`
+	Version        uint64   `json:"version"`
+	FocusedControl string   `json:"focused_control,omitempty"`
+	ScrollOffset   uint64   `json:"scroll_offset,omitempty"`
+	BackStack      []string `json:"back_stack,omitempty"`
+	UI             *PhoneUI `json:"ui,omitempty"`
 }
 type PhoneActionArguments struct {
 	ResourceID    string `json:"resource_id"`
@@ -199,6 +204,9 @@ func (s *SimulatedPhones) readPhone(id string) (*simulatedPhone, error) {
 	if p.ResourceID != id || p.State.Version == 0 || p.Attempts == nil || len(p.Attempts) > 10000 {
 		return nil, api.E("invalid_request", "invalid_device_journal")
 	}
+	if p.State.UI != nil || len(p.State.Note) > 4096 || len(p.State.BackStack) > 8 || p.State.ScrollOffset > 4096 || (p.State.FocusedControl != "" && (p.State.FocusedControl != "note_editor" || p.State.Screen != "notes")) {
+		return nil, api.E("invalid_request", "invalid_device_ui_journal")
+	}
 	seen := make(map[string]bool, len(p.Attempts))
 	for _, a := range p.Attempts {
 		version, err := strconv.ParseUint(a.Result.TargetVersion, 10, 64)
@@ -361,7 +369,9 @@ func (s *SimulatedPhones) Observe(ctx context.Context, sc rt.Scope, lease domain
 		return domain.Observation{}, api.E("revision_conflict", "resource_epoch_changed")
 	}
 	now := time.Now().UTC()
-	return domain.Observation{ObservationID: id, ResourceRef: sc.Ref(p.ResourceID, lease.Revision), InstanceID: p.InstanceID, ControlEpoch: p.ControlEpoch, ContentRefs: []api.ContentRef{}, TargetVersion: strconv.FormatUint(p.State.Version, 10), ObservedAt: api.Time(now), ActionBefore: api.Time(now.Add(30 * time.Second)), Data: api.Raw(p.State)}, nil
+	view := p.State
+	view.UI = phoneUI(p.State)
+	return domain.Observation{ObservationID: id, ResourceRef: sc.Ref(p.ResourceID, lease.Revision), InstanceID: p.InstanceID, ControlEpoch: p.ControlEpoch, ContentRefs: []api.ContentRef{}, TargetVersion: strconv.FormatUint(p.State.Version, 10), ObservedAt: api.Time(now), ActionBefore: api.Time(now.Add(30 * time.Second)), Data: api.Raw(view)}, nil
 }
 func (s *SimulatedPhones) Prepare(ctx context.Context, sc rt.Scope, a rt.Auth, invoke domain.InvokeInput, i domain.ExecutionIntent, b []byte) (domain.PreparedRequest, error) {
 	var p PhoneActionArguments
@@ -380,15 +390,46 @@ func (s *SimulatedPhones) Prepare(ctx context.Context, sc rt.Scope, a rt.Auth, i
 		return domain.PreparedRequest{}, api.E("invalid_request", "invalid_observation_window")
 	}
 	raw := api.Raw(p)
-	return domain.PreparedRequest{Encoded: raw, Digest: api.Hash(raw), ResourceID: p.ResourceID, ResourceEpoch: p.ControlEpoch, ObservationID: p.ObservationID, ObservationBefore: p.ActionBefore}, nil
+	return domain.PreparedRequest{Encoded: raw, Digest: api.Hash(raw), ResourceID: p.ResourceID, ResourceEpoch: p.ControlEpoch, ObservationID: p.ObservationID, ObservationBefore: p.ActionBefore, ObservationTargetVersion: p.TargetVersion}, nil
 }
 func (s *SimulatedPhones) Start(ctx context.Context, q domain.AttemptRequest, barrier func(context.Context) error) (domain.Fact, error) {
-	if err := ctx.Err(); err != nil {
-		return domain.Fact{}, err
-	}
 	var a PhoneActionArguments
 	if err := api.Decode(q.Attempt.Prepared.Encoded, &a); err != nil {
 		return domain.Fact{}, err
+	}
+	return s.startAction(ctx, q, a, barrier, func(state *PhoneState) error {
+		switch a.Action {
+		case "set_note":
+			if len(a.Value) > 4096 {
+				return api.E("invalid_request", "gui_text_limit")
+			}
+			state.Screen = "notes"
+			state.Note = a.Value
+		case "open_notes":
+			state.Screen = "notes"
+		case "press_home":
+			state.Screen = "home"
+			state.FocusedControl = ""
+			state.ScrollOffset = 0
+			state.BackStack = nil
+		case "set_wifi":
+			if a.Value != "true" && a.Value != "false" {
+				return api.E("invalid_request", "wifi_requires_boolean")
+			}
+			state.WiFi = a.Value == "true"
+		default:
+			return api.E("unsupported", "device_action_not_supported")
+		}
+		return nil
+	})
+}
+
+func (s *SimulatedPhones) startAction(ctx context.Context, q domain.AttemptRequest, a PhoneActionArguments, barrier func(context.Context) error, mutate func(*PhoneState) error) (domain.Fact, error) {
+	if err := ctx.Err(); err != nil {
+		return domain.Fact{}, err
+	}
+	if !api.ValidID(q.Invoke.OperationID) || !api.ValidID(q.Attempt.AttemptID) || api.Hash(q.Attempt.Prepared.Encoded) != q.Attempt.Prepared.Digest {
+		return domain.Fact{}, api.E("invalid_request", "invalid_device_attempt")
 	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -417,21 +458,14 @@ func (s *SimulatedPhones) Start(ctx context.Context, q domain.AttemptRequest, ba
 	if len(p.Attempts) >= 10000 {
 		return domain.Fact{}, api.E("overloaded", "device_retention_capacity")
 	}
+	if p.State.Version == math.MaxUint64 {
+		return domain.Fact{}, api.E("overloaded", "device_version_capacity")
+	}
 	next := *p
 	next.Attempts = append([]phoneAttempt{}, p.Attempts...)
-	switch a.Action {
-	case "set_note":
-		next.State.Screen = "notes"
-		next.State.Note = a.Value
-	case "open_notes":
-		next.State.Screen = "notes"
-	case "press_home":
-		next.State.Screen = "home"
-	case "set_wifi":
-		if a.Value != "true" && a.Value != "false" {
-			return domain.Fact{}, api.E("invalid_request", "wifi_requires_boolean")
-		}
-		next.State.WiFi = a.Value == "true"
+	next.State.BackStack = append([]string(nil), p.State.BackStack...)
+	if err = mutate(&next.State); err != nil {
+		return domain.Fact{}, err
 	}
 	next.State.Version++
 	result := PhoneActionResult{ResourceID: p.ResourceID, OriginalAttemptID: q.Attempt.AttemptID, TargetVersion: strconv.FormatUint(next.State.Version, 10), Applied: true, Atomic: true}
@@ -461,16 +495,20 @@ func phoneFact(r PhoneActionResult, prior uint64) domain.Fact {
 	return domain.Fact{Revision: n, Effect: "applied", MayApplyLater: false, Output: api.Raw(r), MediaType: "application/json", Evidence: []api.ContentRef{}, Usage: []api.Amount{}, UsageFinal: true}
 }
 func (s *SimulatedPhones) Reconcile(ctx context.Context, q domain.AttemptRequest) (domain.Fact, error) {
-	if err := ctx.Err(); err != nil {
-		return domain.Fact{}, err
-	}
 	var args PhoneActionArguments
 	if err := api.Decode(q.Attempt.Prepared.Encoded, &args); err != nil {
 		return domain.Fact{}, err
 	}
+	return s.reconcileAttempt(ctx, q, args.ResourceID)
+}
+
+func (s *SimulatedPhones) reconcileAttempt(ctx context.Context, q domain.AttemptRequest, resourceID string) (domain.Fact, error) {
+	if err := ctx.Err(); err != nil {
+		return domain.Fact{}, err
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	p, err := s.refreshPhone(q.Scope, args.ResourceID)
+	p, err := s.refreshPhone(q.Scope, resourceID)
 	if err != nil {
 		return domain.Fact{}, err
 	}
@@ -506,7 +544,13 @@ func (s *SimulatedPhones) HumanChange(ctx context.Context, resourceID, screen st
 		return err
 	}
 	*p = *current
+	if p.State.Version == math.MaxUint64 {
+		return api.E("overloaded", "device_version_capacity")
+	}
 	p.State.Screen = screen
+	p.State.FocusedControl = ""
+	p.State.ScrollOffset = 0
+	p.State.BackStack = nil
 	p.State.Version++
 	return s.save(p)
 }
