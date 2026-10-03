@@ -9,14 +9,32 @@ import { Runtime, manifest } from "./runtime";
 import { serve } from "./transport";
 import { readConfig, privateFile, principalSchema } from "./config";
 import { signed, hash } from "./authority";
+import { NativeHost } from "./foreign";
+import type { ForeignReference } from "./types";
 
 const mode = process.argv[2],
   configFile = argument("--config");
-if (!["migrate", "admin", "serve"].includes(mode ?? ""))
+if (
+  ![
+    "migrate",
+    "admin",
+    "serve",
+    "prepare-foreign-use",
+    "control-foreign-copy",
+    "stop-foreign-copy",
+    "inspect-foreign-copy",
+    "inspect-owner",
+  ].includes(mode ?? "")
+)
   throw new Error("mode must be migrate, serve or admin");
 const config = readConfig(configFile),
-  store = new Store(config, mode === "migrate", mode === "admin");
+  store = new Store(config, mode === "migrate", mode !== "serve");
 if (mode === "migrate") {
+  store.close();
+} else if (mode === "inspect-owner") {
+  process.stdout.write(
+    `${canonical({ system: config.system, tenant_id: config.tenant_id, owner_id: config.owner_id, database_id: store.id })}\n`,
+  );
   store.close();
 } else if (mode === "admin") {
   const namespace = argument("--namespace"),
@@ -96,6 +114,27 @@ if (mode === "migrate") {
   });
   store.close();
   process.stdout.write(`${canonical({ updated: true, namespace })}\n`);
+} else if (mode?.endsWith("foreign-copy") || mode === "prepare-foreign-use") {
+  if (config.system !== "memory") reject("unsupported", "foreign_host_only_for_memory");
+  const host = new NativeHost(store),
+    principal = store.credential(argument("--subject"));
+  try {
+    let result: unknown;
+    if (mode === "prepare-foreign-use") {
+      const reference = parseStrict(privateFile(argument("--record")));
+      validateSchema(manifest.schemas.foreign_reference, reference);
+      result = await host.prepareForeignUse(principal, reference as unknown as ForeignReference);
+    } else if (mode === "control-foreign-copy")
+      result = await host.controlForeignCopy(principal, argument("--copy-id"));
+    else if (mode === "stop-foreign-copy") {
+      await host.stopForeignCopy(principal, argument("--copy-id"));
+      result = host.foreign.inspect(principal, argument("--copy-id"));
+    } else result = host.foreign.inspect(principal, argument("--copy-id"));
+    process.stdout.write(`${canonical(result)}\n`);
+  } finally {
+    await host.foreign.close();
+    store.close();
+  }
 } else if (mode === "serve") {
   const handler =
     config.system === "memory"

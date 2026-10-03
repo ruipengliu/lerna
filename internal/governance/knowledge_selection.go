@@ -69,8 +69,15 @@ func validateKnowledgeRequest(scope runtime.Scope, in KnowledgeRequest) error {
 	if err := validateComponentSet(in.SkillRefs, 8); err != nil {
 		return err
 	}
-	if err := validateComponentSet(in.CapabilityRefs, 32); err != nil {
-		return err
+	// 父快照按索引保留 capability/binding 配对；同一能力可以绑定多个目标。
+	// AgentConfig 的能力集合仍要求唯一，候选列表不得丢弃或重排原配对。
+	if len(in.CapabilityRefs) > 32 {
+		return api.E("invalid_request", "knowledge_component_limit")
+	}
+	for _, ref := range in.CapabilityRefs {
+		if err := api.ValidateRecord("ComponentRef", ref); err != nil {
+			return err
+		}
 	}
 	if in.AgentConfigRef != nil {
 		if err := api.ValidateRecord("ComponentRef", *in.AgentConfigRef); err != nil {

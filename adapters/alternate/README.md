@@ -28,7 +28,7 @@ node adapters/alternate/ts/dist/main.mjs migrate --config /absolute/private/owne
 node adapters/alternate/ts/dist/main.mjs serve --config /absolute/private/owner-config.json
 ```
 
-迁移必须显式执行。`serve` 只监听 loopback HTTPS，原生 WSS 子协议为 `harness-wss.v1`；HTTP `/api/call` 和有限正文通道同样认证。配置和管理记录必须是当前 OS 用户的私有普通文件，数据库目录和 Executor 根目录必须为该用户私有目录。凭据提供准确 token hash、subject、generation、roles、expiry、active；跨组件 bearer 通过私有 `token_file` 引用，CA 通过固定文件引用，不写入日志。
+迁移必须显式执行，只在迁移事务中生成并保存原随机 `database_id`；旧格式缺该字段也必须显式迁移，启动不会补身份。宿主 `inspect-owner --config ...` 只读输出原 system/tenant/owner/database，供明确的 Scope 配对；重开仍是原数据库。配对后可配置 `expected_database_id`，它只校验原身份，不能指定新身份；该原文件缺失时，即使 migrate 也拒绝用新空库代替。`serve` 只监听 loopback HTTPS，原生 WSS 子协议为 `harness-wss.v1`；HTTP `/api/call` 和有限正文通道同样认证。配置和管理记录必须是当前 OS 用户的私有普通文件，数据库目录和 Executor 根目录必须为该用户私有目录。凭据提供准确 token hash、subject、generation、roles、expiry、active；跨组件 bearer 通过私有 `token_file` 引用，CA 通过固定文件引用，不写入日志。
 
 配置的闭合 Schema 见 [config.ts](ts/src/config.ts)。Brain 配置引用生成资产里的准确 `brain_profile` 和 `answer_schema`；Executor 引用准确 `read_capability`、固定 Binding/InstallLock、私有 managed root；两者都配置独立 Content owner 的固定 HTTPS origin、CA、policy 和位置。每个 owner 有独立 SQLite 文件，三个系统不可共用同一文件或篡改原 `owner_id`。
 
@@ -44,7 +44,7 @@ node adapters/alternate/ts/dist/main.mjs admin --config /absolute/private/owner-
 ## 原责任与故障恢复
 
 - SDK 首发前持久化原命令；服务端同库短事务同时提交业务事实、回执和新增工作。外部 Content RPC 和真实文件读取均在事务外执行。提交未知只查原身份；不以未知提交开始外部工作。
-- 新实例先提交独立 instance epoch，旧实例随后不能再提交。裁决时间取本机时钟与已保存裁决时间的最大值。构造对象、恢复反序列化和管理入口均不发送业务请求。
+- 新实例先提交独立 instance epoch，旧实例随后不能再提交。裁决时间取本机时钟与已保存裁决时间的最大值。构造对象、恢复反序列化、普通管理和身份检查均不发送业务请求；显式外来副本宿主入口按下文执行原交接。
 - 原 Content 出站命令、准确 bytes、owner、输入摘要、方法/core Schema 和 deadline 先入本方 outbox；失答复先查原回执，只有原 `not_found` 才重传准确原命令。原 deadline、retention 和默认值不刷新。出版恢复至多 8 次交接尝试，每次都沿同一原命令；它不会增加模型或文件 Attempt。
 - Executor 在实际读取前持久化 Attempt/start barrier。若进程在 barrier 后消失且没有独立 observation，保留 `effect=unknown`，不重新读取后来改变的目标，不换身份，不接受客户端宣称效果。PID、启动时刻和 Linux boot ID 只用于观察原进程是否已退出；`actually_stopped` 与未知效果分别报告。
 - Memory 保留原准确 ContentRef/hash/version/来源闭包。来源关闭或到期立即禁止读取，持久到期工作恢复后关闭本地 holder。Memory 的本地 holder 清理与 Content 全部物理副本擦除不同；SQLite 页、WAL 和外部副本未证明擦除时，Content 始终报告 `cleanup_state=residual`。
@@ -57,7 +57,13 @@ node adapters/alternate/ts/dist/main.mjs admin --config /absolute/private/owner-
 
 Go SDK 通过真实 TLS/WSS 调用三个 Node owner；Brain、Executor 通过固定 HTTPS 与另一个独立 Content owner 交接准确 Snapshot、意图、控制证明、正文和出版回执，输出引用继续属于那个 Content owner。Brain 的模板编码为准确原 goal bytes 的 base64 加 Snapshot 的 JCS 编码；使用该模型 profile 的宿主必须按该准确编码构造 Snapshot，不能把默认 Go 模型的编码重命名后交给本组件。
 
-当前 Native Memory 写族只接纳自己所属 Content owner 的原引用；外来 ContentRef 返回 `dependency_unavailable/foreign_content_registration_required`。向默认 Go Memory 注册外来副本需要工单 23 的原 owner reference intent、当前 held gate、用途/位置/期限与 known-deny 合同；没有这份实际登记前不能绕过 owner gate。这里的跨语言系统端口验证不宣称默认 Go Orchestrator 的整个 report pipeline 已切换为本组件。
+Native Memory 可消费显式配对 Source 的原 ContentRef；准确 owner/hash/version 不改写。受信宿主先调用 [NativeHost.prepareForeignUse](ts/src/foreign.ts) 或 `prepare-foreign-use --subject ... --record ...`：本方原 reference intent、consumer database、原 source register/release IDs 和 Job 先提交，然后才在 Tx 外原登记、有限分片读取、完整 hash 校验和新当前 proof。它不复用 `content.register_copy` 改变源 CopyHolder 的负责方或 applied 语义，也不新增可由任意网页调用的业务方法。
+
+`foreign_sources` 最多 4 个，固定原 source owner/真实数据库、HTTPS origin/CA/peer 凭据代次、注册验证键、用途和 local 镜像位置。四方法合同直接来自 `providers.ForeignSourceContracts()` 的单一生成源；Source 的实际 discovery/Schema、签名整个 ForeignProof（保留空 proof 字段）、原 CopyHolder/subject/intent、policy、source DB、时间窗和 mode 都复核。每次业务使用都读取新的在线许可；control 不授予正文，旧 proof 不作为断线许可。Memory 的 query_spec 必须先获准读取准确正文、校验闭合 Schema，再在 Tx 外取得其准确 text_ref 的新 proof。
+
+Stop 先关闭本地门禁，原当前 control 不读正文，实际删除原 BLOB，再用原 release ID 报告。写责任早于物理写；写后 current 失败、进程丢失或原期限到期都保留 pending/unknown 清理，空 location 或 lease 到期不能证明清理完成。实际逻辑删除仍报告 SQLite 页/WAL 未擦除的 residual。持久 Job 恢复不会重新读取已关闭的源，known-deny 不因较新的许可变回 allowed。`control-foreign-copy`、`stop-foreign-copy` 和 `inspect-foreign-copy` 是受信 OS 宿主入口，维护原 copy 的独立事实。
+
+真实验收把独立 Go Source façade 和 Native owner 配对，source authority 明确配置原 peer/holder 与当前凭据许可；准确方法和签名不是 mock。默认 Go App 的 ForeignSources/Grant 装配仍由所属工单继续，尚未在此切片宣称已开放。这里的跨语言系统端口验证也不宣称默认 Go Orchestrator 的整个 report pipeline 已切换为本组件。
 
 真实供应商模型、远程写工具、任意重试、完整设备/多租户部署、异地复制、规模和灾备仍未开放。独立本地 TLS 进程证明异构系统交接；它不代表公网生产部署已验证。
 
@@ -74,6 +80,6 @@ pnpm build
 pnpm generate:check
 ```
 
-`conformance/alternate` 使用真实独立子进程、临时私有数据库、实际 ES256/JWS、原生 Go WSS 与真实磁盘文件。它验证准确正常正文、Memory 更正/撤回/cleanup/View、原回执丢失和 SIGKILL 恢复、当前 Use purpose/撤权、原签名暂停、伪签名拒绝、target start barrier 后不再次读取、坏 cursor/未知方法、credential 撤销持久性、cookie logout 和原到期工作。每轮日志记录实际 owner/scope、原引用、core/method digest、Node/SQLite 版本；夹具 authority 只签原合同，没有替代任何业务 Service 或目标真值。
+`conformance/alternate` 使用真实独立子进程、临时私有数据库、实际 ES256/JWS、原生 Go WSS 与真实磁盘文件。它验证准确正常正文、Memory 更正/撤回/cleanup/View、原回执丢失和 SIGKILL 恢复、当前 Use purpose/撤权、原签名暂停、伪签名拒绝、target start barrier 后不再次读取、坏 cursor/未知方法、credential 撤销持久性、cookie logout 和原到期工作。外来 Memory 另外验证真实 HTTPS Source 的多片准确字节、原失注册答复、写后 current 失败、实际 SIGKILL、原 Claim/Job 自动恢复、错 DB/key/holder/owner/control、当前撤权和原期限、query/list/纠正/View 及缺口。每轮日志记录实际 owner/scope、原引用、core/method digest、Node/SQLite 版本；夹具 authority 只声明原配对和当前许可，没有替代任何业务 Service 或目标真值。
 
 准确运行版本、制品摘要、保留的失败和前提见 [VALIDATION.md](VALIDATION.md)。
