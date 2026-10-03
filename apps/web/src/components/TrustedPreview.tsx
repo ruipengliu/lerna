@@ -30,6 +30,8 @@ export function TrustedPreview({
   const referenceKey = canonical(refs);
   const previewKey = `${generation}:${referenceKey}`;
   const key = `${previewKey}:${inlineBodies ? canonical(inlineBodies) : "content"}`;
+  const currentKey = useRef(key);
+  currentKey.current = key;
   useEffect(() => {
     const controller = new AbortController();
     callback.current?.(undefined);
@@ -127,9 +129,11 @@ export function TrustedPreview({
                 src={body.image}
                 alt="准确版本的完整正文图像"
                 onLoad={() => {
+                  if (currentKey.current !== key) return;
                   if (body.image) setImages((previous) => new Set(previous).add(body.image ?? ""));
                 }}
                 onError={() => {
+                  if (currentKey.current !== key) return;
                   callback.current?.(undefined);
                   setState({
                     key,
