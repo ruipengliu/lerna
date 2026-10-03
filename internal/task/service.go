@@ -361,6 +361,9 @@ func (s *Service) CheckCurrent(ctx context.Context, tx runtime.Tx, t taskState, 
 			return api.E("invalid_state", "allocation_closed")
 		}
 	}
+	if gate, ok := s.ports.Gate.(CurrentTaskGate); ok {
+		return gate.CheckTaskCurrentTx(ctx, tx, t.Task, requireRunning)
+	}
 	return nil
 }
 func submitterAuth(scope runtime.Scope, t taskState) runtime.Auth {
