@@ -233,6 +233,9 @@ func (s *Service) continuePlan(ctx context.Context, store runtime.Store, scope r
 		}
 	}
 	return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, err := tx.LoadCommand(ctx, pending.CommandID); err != nil {
+			return err
+		}
 		var current PlanPending
 		rev, err := tx.Get(ctx, ns("plan_pending"), pending.ID, &current)
 		if err != nil {

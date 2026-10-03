@@ -199,6 +199,9 @@ func (s *Service) continuePrepare(ctx context.Context, store runtime.Store, scop
 		evidence, ioErr = s.Ports.Lifecycle.Prepare(ctx, prepared.Installation)
 	}
 	return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, err := tx.LoadCommand(ctx, prepared.CommandID); err != nil {
+			return err
+		}
 		var current PreparedInstall
 		rev, err := tx.Get(ctx, ns("preparations"), prepared.ID, &current)
 		if err != nil {
@@ -435,6 +438,9 @@ func (s *Service) continueActivate(ctx context.Context, store runtime.Store, sco
 		evidence, ioErr = s.Ports.Lifecycle.Initialize(ctx, request)
 	}
 	err := finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, err := tx.LoadCommand(ctx, activation.CommandID); err != nil {
+			return err
+		}
 		var current PendingActivation
 		prev, err := tx.Get(ctx, ns("activation_pending"), pending.ID, &current)
 		if err != nil {
@@ -489,10 +495,11 @@ func (s *Service) continueActivate(ctx context.Context, store runtime.Store, sco
 			if err = tx.Create(ctx, ns("instance_stops"), stop.ID, activation.ActivationID, stop); err != nil {
 				return err
 			}
-			if _, err = tx.Raise(ctx, "governance.stop", stop.ID, scope.Ref(stop.ID, 1), now); err != nil {
+			if err = runtime.Decide(ctx, tx, activation.CommandID, nil, api.E("revision_conflict", reason)); err != nil {
 				return err
 			}
-			return runtime.Decide(ctx, tx, activation.CommandID, nil, api.E("revision_conflict", reason))
+			_, err = tx.Raise(ctx, "governance.stop", stop.ID, scope.Ref(stop.ID, 1), now)
+			return err
 		}
 		ready := InstanceReadiness{InstanceID: evidence.InstanceID, Revision: 1, TargetID: activation.TargetID, ActivationID: activation.ActivationID, Generation: activation.Generation, ConfigDigest: evidence.ConfigDigest, ArtifactDigest: evidence.ArtifactDigest, SelfTestRef: evidence.SelfTestRef, ApprovalRef: activation.ApprovalRef, IssuedAt: api.Time(now), ExpiresAt: minTime(evidence.ExpiresAt, activation.PrepareDeadline), State: "ready"}
 		if err = tx.Create(ctx, ns("readiness"), ready.InstanceID, activation.ActivationID, ready); err != nil {
@@ -524,6 +531,7 @@ func (s *Service) continueActivate(ctx context.Context, store runtime.Store, sco
 		if err = tx.Create(ctx, ns("bindings"), bindingID, head.TargetID, binding); err != nil {
 			return err
 		}
+		var stopAfterCommit *InstanceStop
 		if head.ReadinessRef != nil && !activation.Reopen {
 			oldStop := InstanceStop{ID: head.ReadinessRef.ObjectID, Revision: 1, InstanceID: head.ReadinessRef.ObjectID, Generation: head.Generation, State: "pending"}
 			if head.CurrentActivationRef != nil {
@@ -534,9 +542,7 @@ func (s *Service) continueActivate(ctx context.Context, store runtime.Store, sco
 				if err = tx.Create(ctx, ns("instance_stops"), oldStop.ID, oldStop.ActivationID, oldStop); err != nil {
 					return err
 				}
-				if _, err = tx.Raise(ctx, "governance.stop", oldStop.ID, scope.Ref(oldStop.ID, 1), now); err != nil {
-					return err
-				}
+				stopAfterCommit = &oldStop
 			} else if e != nil {
 				return e
 			}
@@ -557,7 +563,13 @@ func (s *Service) continueActivate(ctx context.Context, store runtime.Store, sco
 		if err = tx.Put(ctx, ns("activation_pending"), current.ID, prev, current); err != nil {
 			return err
 		}
-		return runtime.Decide(ctx, tx, activation.CommandID, StateOutput{Ref: scope.Ref(activation.ActivationID, activation.Revision), State: "active"}, nil)
+		if err = runtime.Decide(ctx, tx, activation.CommandID, StateOutput{Ref: scope.Ref(activation.ActivationID, activation.Revision), State: "active"}, nil); err != nil {
+			return err
+		}
+		if stopAfterCommit != nil {
+			_, err = tx.Raise(ctx, "governance.stop", stopAfterCommit.ID, scope.Ref(stopAfterCommit.ID, 1), now)
+		}
+		return err
 	})
 	return err
 }

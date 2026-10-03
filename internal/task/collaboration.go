@@ -14,7 +14,7 @@ func (s *Service) Delegate(ctx context.Context, store runtime.Store, scope runti
 	err := s.transaction(ctx, store, scope, func(tx runtime.Tx) error { var e error; out, e = s.DelegateTx(ctx, tx, auth, c, in); return e })
 	return out, err
 }
-func (s *Service) DelegateTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in DelegateInput) (DelegateOutput, error) {
+func (s *Service) delegateTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in DelegateInput) (DelegateOutput, error) {
 	if !api.ValidID(in.DelegationID) || !api.ValidID(in.ReceiverID) || c.TargetID != in.DelegationID {
 		return DelegateOutput{}, invalid("invalid_delegation_identity")
 	}
@@ -156,7 +156,7 @@ func (s *Service) DelegateTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 	if e = s.saveTask(ctx, tx, &t); e != nil {
 		return DelegateOutput{}, e
 	}
-	if _, e = raise(ctx, tx, JobDelegation, "delegation/"+d.DelegationID, tx.Scope().Ref(d.DelegationID, 1)); e != nil {
+	if e = queueJob(ctx, tx, JobDelegation, "delegation/"+d.DelegationID, tx.Scope().Ref(d.DelegationID, 1)); e != nil {
 		return DelegateOutput{}, e
 	}
 	return DelegateOutput{DelegationRef: tx.Scope().Ref(d.DelegationID, 1), AllocationRef: d.AllocationRef, ChildTaskRef: d.ChildTaskRef}, nil
@@ -198,7 +198,7 @@ func (s *Service) subtreeCount(ctx context.Context, tx runtime.Tx, root string) 
 func (s *Service) MergeDelegation(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, fact DelegationFact) error {
 	return s.transaction(ctx, store, scope, func(tx runtime.Tx) error { return s.MergeDelegationTx(ctx, tx, auth, fact) })
 }
-func (s *Service) MergeDelegationTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, f DelegationFact) error {
+func (s *Service) mergeDelegationTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, f DelegationFact) error {
 	t, d, e := delegationForTaskTx(ctx, tx, f.DelegationID)
 	if e != nil {
 		return e
@@ -279,7 +279,7 @@ func (s *Service) MergeDelegationTx(ctx context.Context, tx runtime.Tx, auth run
 	if e = s.saveTask(ctx, tx, &t); e != nil {
 		return e
 	}
-	if _, e = raise(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
+	if e = queueJob(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
 		return e
 	}
 	return nil
@@ -292,7 +292,7 @@ func (s *Service) DelegationRead(ctx context.Context, store runtime.Store, scope
 	_, e := s.readState(ctx, store, scope, auth, d.ParentTaskRef.ObjectID, 0)
 	return d, e
 }
-func (s *Service) ChildCreateTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ChildCreateInput) (ChildOutput, error) {
+func (s *Service) childCreateTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ChildCreateInput) (ChildOutput, error) {
 	if c.TargetID != in.ChildID || !api.ValidID(in.ChildID) || !api.ValidID(in.SessionOwnerID) {
 		return ChildOutput{}, invalid("invalid_child_identity")
 	}
@@ -324,12 +324,12 @@ func (s *Service) ChildCreateTx(ctx context.Context, tx runtime.Tx, auth runtime
 	if e = tx.Create(ctx, childCommands, in.ChildID, auth.SubjectID, childCommand{CommandID: c.CommandID}); e != nil {
 		return ChildOutput{}, e
 	}
-	if _, e = raise(ctx, tx, JobChildPrepare, "child/"+in.ChildID, tx.Scope().Ref(in.ChildID, 1)); e != nil {
+	if e = queueJob(ctx, tx, JobChildPrepare, "child/"+in.ChildID, tx.Scope().Ref(in.ChildID, 1)); e != nil {
 		return ChildOutput{}, e
 	}
 	return ChildOutput{ChildRef: tx.Scope().Ref(in.ChildID, 1)}, nil
 }
-func (s *Service) ChildSendTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ChildSendInput) (ChildOutput, error) {
+func (s *Service) childSendTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ChildSendInput) (ChildOutput, error) {
 	if e := target(c, in.ChildID); e != nil {
 		return ChildOutput{}, e
 	}
@@ -446,7 +446,7 @@ func (s *Service) ChildSendTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		if e := tx.Create(ctx, transfers, tr.TransferID, h.ChildID, tr); e != nil {
 			return out, e
 		}
-		if _, e := raise(ctx, tx, JobChildTransfer, "transfer/"+tr.TransferID, tx.Scope().Ref(tr.TransferID, 1)); e != nil {
+		if e := queueJob(ctx, tx, JobChildTransfer, "transfer/"+tr.TransferID, tx.Scope().Ref(tr.TransferID, 1)); e != nil {
 			return out, e
 		}
 		out.DelegationRef = in.DelegationRef
@@ -505,7 +505,7 @@ func (s *Service) CheckTransferTx(ctx context.Context, tx runtime.Tx, auth runti
 	}
 	return nil
 }
-func (s *Service) ChildCloseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ChildCloseInput) (ChildCloseOutput, error) {
+func (s *Service) childCloseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ChildCloseInput) (ChildCloseOutput, error) {
 	if e := target(c, in.ChildID); e != nil {
 		return ChildCloseOutput{}, e
 	}
@@ -539,7 +539,7 @@ func (s *Service) ChildCloseTx(ctx context.Context, tx runtime.Tx, auth runtime.
 			if e := tx.Put(ctx, delegations, d.DelegationID, d.Revision-1, d); e != nil {
 				return out, e
 			}
-			if _, e := raise(ctx, tx, JobDelegation, "delegation/"+d.DelegationID, tx.Scope().Ref(d.DelegationID, d.Revision)); e != nil {
+			if e := queueJob(ctx, tx, JobDelegation, "delegation/"+d.DelegationID, tx.Scope().Ref(d.DelegationID, d.Revision)); e != nil {
 				return out, e
 			}
 			state = "cancel_requested"
