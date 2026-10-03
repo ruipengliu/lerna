@@ -35,6 +35,9 @@ func (s *Service) PrepareDecisionTx(ctx context.Context, tx runtime.Tx, auth run
 	if e = s.CheckCurrent(ctx, tx, t, true); e != nil {
 		return api.DecisionDispatchIntent{}, e
 	}
+	if t.PendingCompletionID != "" {
+		return api.DecisionDispatchIntent{}, api.E("invalid_state", "completion_checks_pending")
+	}
 	snap := in.Snapshot
 	if snap.TaskRef.TenantID != tx.Scope().TenantID || snap.TaskRef.OwnerID != tx.Scope().OwnerID || snap.TaskRef.Revision != t.Task.Revision || snap.GoalRevision != t.Task.GoalRevision || snap.ControlRevision != t.Task.ControlRevision || !api.Equal(snap.GoalRef, t.Task.GoalRef) || snap.RequirementsDigest != t.Task.RequirementsDigest || !api.Equal(snap.Requirements, t.Task.Requirements) || !api.Equal(snap.PolicyRef, t.Task.PolicyRef) {
 		return api.DecisionDispatchIntent{}, api.E("revision_conflict", "stale_snapshot")
@@ -150,7 +153,7 @@ func (s *Service) ConsumeProposalTx(ctx context.Context, tx runtime.Tx, auth run
 		}
 		return out, nil
 	}
-	if terminal(t) || t.Task.Control != "running" || d.Snapshot.GoalRevision != t.Task.GoalRevision || d.Snapshot.ControlRevision != t.Task.ControlRevision || t.PendingGoalCommand != "" {
+	if terminal(t) || t.Task.Control != "running" || d.Snapshot.GoalRevision != t.Task.GoalRevision || d.Snapshot.ControlRevision != t.Task.ControlRevision || t.PendingGoalCommand != "" || t.PendingCompletionID != "" {
 		out.Outcome = "stale"
 		out.ReasonCodes = append(out.ReasonCodes, "stale_snapshot")
 		return finish()
@@ -200,9 +203,13 @@ func (s *Service) ConsumeProposalTx(ctx context.Context, tx runtime.Tx, auth run
 			out.ReasonCodes = []string{businessErr.Error()}
 		}
 	case "complete":
-		_, businessErr := s.CompleteTx(ctx, tx, auth, CompleteInput{TaskID: t.Task.TaskID, ExpectedGoalRevision: t.Task.GoalRevision, ArtifactRefs: p.ArtifactRefs, Limitations: p.Limitations})
+		businessErr := tx.Savepoint(ctx, func(inner runtime.Tx) error {
+			var err error
+			out.Outcome, err = s.consumeCompletionTx(ctx, inner, auth, t, p)
+			return err
+		})
 		if businessErr != nil {
-			if !api.IsCode(businessErr, "invalid_state") && !api.IsCode(businessErr, "effect_unknown") && !api.IsCode(businessErr, "revision_conflict") {
+			if _, ok := businessErr.(*api.Error); !ok || api.IsCode(businessErr, "dependency_unavailable") || api.IsCode(businessErr, "accounting_unknown") {
 				return out, businessErr
 			}
 			out.Outcome = "rejected"

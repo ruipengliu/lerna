@@ -188,6 +188,8 @@ func (s *Service) CompleteTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 	t.Task.Status = "succeeded"
 	t.Task.ControlRevision++
 	t.Task.ResultRef = &ref
+	t.PendingCompletionID = ""
+	t.Task.WaitReasons = []api.WaitReason{}
 	if e = s.saveTask(ctx, tx, &t); e != nil {
 		return api.Result{}, e
 	}
