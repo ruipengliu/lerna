@@ -116,7 +116,11 @@ func New(config Config, ports Ports) (*Service, error) {
 		return nil, fmt.Errorf("cursor key requires at least 32 bytes")
 	}
 	config.CursorKey = append([]byte(nil), config.CursorKey...)
-	s := &Service{config: config, ports: ports, bindings: map[string]EventBinding{}}
+	bindings, err := validateBindings(config.EventBindings)
+	if err != nil {
+		return nil, err
+	}
+	s := &Service{config: config, ports: ports, bindings: bindings}
 	return s, nil
 }
 
@@ -224,6 +228,8 @@ type EventRule struct {
 	Method           string          `json:"method"`
 	TargetID         string          `json:"target_id"`
 	AcceptForSeconds uint64          `json:"accept_for_seconds"`
+	ExpectedRevision *uint64         `json:"expected_revision,omitempty"`
+	RequiresRendered bool            `json:"requires_rendered"`
 }
 type EventBinding struct {
 	BindingRef api.ObjectRef `json:"binding_ref"`

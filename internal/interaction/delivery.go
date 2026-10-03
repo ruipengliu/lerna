@@ -52,16 +52,12 @@ func (s *Service) Dispatch(ctx context.Context, store runtime.Store, scope runti
 	var now time.Time
 	ready := false
 	status, err := store.Within(ctx, scope, s.config.Participants, func(tx runtime.Tx) error {
-		var r submissionRecord
-		if _, e := tx.Get(ctx, submissions, work.Job.SourceRef.ObjectID, &r); e != nil {
+		r, branch, e := lockSubmission(ctx, tx, work.Job.SourceRef.ObjectID)
+		if e != nil {
 			return e
 		}
 		if r.Submission.State != "queued" && r.Submission.State != "sending" {
 			return tx.Guard(ctx, work.Claim)
-		}
-		branch, e := getBranch(ctx, tx, r.Submission.SessionRef.ObjectID, r.Submission.BranchID)
-		if e != nil {
-			return e
 		}
 		now, e = tx.Now(ctx)
 		if e != nil {
@@ -200,16 +196,12 @@ func (s *Service) Dispatch(ctx context.Context, store runtime.Store, scope runti
 		})
 	}
 	return runtime.Finish(ctx, store, scope, s.config.Participants, work, runtime.Done(), func(tx runtime.Tx) error {
-		var r submissionRecord
-		if _, e := tx.Get(ctx, submissions, work.Job.SourceRef.ObjectID, &r); e != nil {
+		r, branch, e := lockSubmission(ctx, tx, work.Job.SourceRef.ObjectID)
+		if e != nil {
 			return e
 		}
 		if r.Submission.State != "sending" {
 			return nil
-		}
-		branch, e := getBranch(ctx, tx, r.Submission.SessionRef.ObjectID, r.Submission.BranchID)
-		if e != nil {
-			return e
 		}
 		r.Receipt = &receipt
 		r.Submission.State = receipt.Stage

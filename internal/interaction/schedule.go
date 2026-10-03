@@ -1,0 +1,424 @@
+package interaction
+
+import (
+	"context"
+	"time"
+
+	"github.com/ruipengliu/lerna/api"
+	"github.com/ruipengliu/lerna/runtime"
+)
+
+type ScheduleInput struct {
+	Spec               ScheduleSpec     `json:"spec"`
+	Timezone           string           `json:"timezone"`
+	TZDBVersion        string           `json:"tzdb_version"`
+	TemplateRef        api.ContentRef   `json:"template_ref"`
+	PolicyRef          api.ComponentRef `json:"policy_ref"`
+	InstallLockRef     api.ComponentRef `json:"install_lock_ref"`
+	TaskTimeoutSeconds uint64           `json:"task_timeout_seconds"`
+	Budget             []api.Amount     `json:"budget"`
+}
+type Schedule struct {
+	ScheduleInput
+	ScheduleID         string  `json:"schedule_id"`
+	TenantID           string  `json:"tenant_id"`
+	OwnerID            string  `json:"owner_id"`
+	Revision           uint64  `json:"revision"`
+	RuleRevision       uint64  `json:"rule_revision"`
+	State              string  `json:"state"`
+	CreatedAt          string  `json:"created_at"`
+	EffectiveAfter     string  `json:"effective_after"`
+	NextDueAt          *string `json:"next_due_at,omitempty"`
+	Exhausted          bool    `json:"exhausted"`
+	ActiveOccurrenceID string  `json:"active_occurrence_id,omitempty"`
+	ResumeAfter        *string `json:"resume_after,omitempty"`
+}
+type scheduleRecord struct {
+	Schedule
+	Auth runtime.Auth `json:"auth"`
+}
+type ScheduleOutput struct {
+	ScheduleRef         api.ObjectRef         `json:"schedule_ref"`
+	RuleRevision        uint64                `json:"rule_revision"`
+	State               string                `json:"state"`
+	NextDueAt           *string               `json:"next_due_at,omitempty"`
+	Exhausted           bool                  `json:"exhausted"`
+	AffectedOccurrences api.CollectionSummary `json:"affected_occurrences"`
+}
+type ScheduleControlInput struct {
+	Reason string `json:"reason"`
+}
+type Occurrence struct {
+	OccurrenceID   string          `json:"occurrence_id"`
+	Revision       uint64          `json:"revision"`
+	ScheduleRef    api.ObjectRef   `json:"schedule_ref"`
+	RuleRevision   uint64          `json:"rule_revision"`
+	PlannedAt      string          `json:"planned_at"`
+	TaskDeadline   string          `json:"task_deadline"`
+	AcceptBefore   string          `json:"accept_before"`
+	Phase          string          `json:"phase"`
+	Frozen         ScheduleInput   `json:"frozen"`
+	Command        *api.Command    `json:"command,omitempty"`
+	Receipt        *api.Receipt    `json:"receipt,omitempty"`
+	TaskRef        *api.ObjectRef  `json:"task_ref,omitempty"`
+	SlotClosed     bool            `json:"slot_closed"`
+	ClosureRef     *api.ContentRef `json:"closure_ref,omitempty"`
+	ClosureTaskRef *api.ObjectRef  `json:"closure_task_ref,omitempty"`
+	SkipReason     string          `json:"skip_reason,omitempty"`
+}
+type occurrenceRecord struct {
+	Occurrence
+	Auth runtime.Auth `json:"auth"`
+}
+type SkipRange struct {
+	SkipID         string        `json:"skip_id"`
+	ScheduleRef    api.ObjectRef `json:"schedule_ref"`
+	RuleRevision   uint64        `json:"rule_revision"`
+	FirstPlannedAt string        `json:"first_planned_at"`
+	LastPlannedAt  string        `json:"last_planned_at"`
+	Count          uint64        `json:"count"`
+	Reason         string        `json:"reason"`
+}
+
+func (s *Service) validateSchedule(ctx context.Context, tx runtime.Tx, a runtime.Auth, in ScheduleInput) error {
+	if s.ports.ScheduleGate == nil || s.ports.Calendar == nil || s.ports.Delivery == nil || s.ports.Closure == nil || !api.ValidID(s.config.DiscoveryOwnerID) {
+		return api.E("unsupported", "schedule_unconfigured")
+	}
+	if err := validateSpec(in.Spec); err != nil {
+		return err
+	}
+	if in.TaskTimeoutSeconds == 0 || in.TaskTimeoutSeconds > 30*24*3600 {
+		return invalid("invalid_task_timeout")
+	}
+	if _, err := s.ports.Calendar.Load(in.Timezone, in.TZDBVersion); err != nil {
+		return err
+	}
+	if err := api.ValidateRecord("ComponentRef", in.PolicyRef); err != nil {
+		return err
+	}
+	if err := api.ValidateRecord("ComponentRef", in.InstallLockRef); err != nil {
+		return err
+	}
+	if err := api.ValidateAmounts(in.Budget); err != nil {
+		return err
+	}
+	if len(in.Budget) == 0 || len(in.Budget) > 20 {
+		return invalid("budget_required")
+	}
+	if err := s.ports.ScheduleGate.CheckTx(ctx, tx, a, in.PolicyRef, in.InstallLockRef, in.Budget); err != nil {
+		return err
+	}
+	return s.content(ctx, tx, a, in.TemplateRef, "task.goal")
+}
+func (s *Service) CreateScheduleTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in ScheduleInput) (ScheduleOutput, error) {
+	if err := s.validateSchedule(ctx, tx, a, in); err != nil {
+		return ScheduleOutput{}, err
+	}
+	now, err := tx.Now(ctx)
+	if err != nil {
+		return ScheduleOutput{}, err
+	}
+	next, err := s.NextDue(in.Spec, in.Timezone, in.TZDBVersion, now)
+	if err != nil {
+		return ScheduleOutput{}, err
+	}
+	if in.Spec.Type == "once_at" && next == nil {
+		return ScheduleOutput{}, api.E("expired", "schedule_time_elapsed")
+	}
+	r := scheduleRecord{Schedule: Schedule{ScheduleInput: in, ScheduleID: c.TargetID, TenantID: tx.Scope().TenantID, OwnerID: tx.Scope().OwnerID, Revision: 1, RuleRevision: 1, State: "enabled", CreatedAt: api.Time(now), EffectiveAfter: api.Time(now), Exhausted: next == nil}, Auth: a}
+	if next != nil {
+		value := api.Time(*next)
+		r.NextDueAt = &value
+	}
+	if err = tx.Create(ctx, schedules, c.TargetID, a.SubjectID, r); err != nil {
+		return ScheduleOutput{}, err
+	}
+	if next != nil {
+		if _, err = tx.Raise(ctx, JobTrigger, c.TargetID, tx.Scope().Ref(c.TargetID, 1), *next); err != nil {
+			return ScheduleOutput{}, err
+		}
+	}
+	return scheduleOutput(tx.Scope(), r), nil
+}
+func getSchedule(ctx context.Context, tx runtime.Tx, a runtime.Auth, id string) (scheduleRecord, error) {
+	var r scheduleRecord
+	_, err := tx.Get(ctx, schedules, id, &r)
+	if err == nil {
+		err = access(a, r.Auth.SubjectID)
+	}
+	return r, err
+}
+func saveSchedule(ctx context.Context, tx runtime.Tx, r *scheduleRecord) error {
+	old := r.Revision
+	r.Revision++
+	return tx.Put(ctx, schedules, r.ScheduleID, old, *r)
+}
+func scheduleOutput(scope runtime.Scope, r scheduleRecord) ScheduleOutput {
+	count := uint64(0)
+	if r.ActiveOccurrenceID != "" {
+		count = 1
+	}
+	return ScheduleOutput{ScheduleRef: scope.Ref(r.ScheduleID, r.Revision), RuleRevision: r.RuleRevision, State: r.State, NextDueAt: r.NextDueAt, Exhausted: r.Exhausted, AffectedOccurrences: api.CollectionSummary{CollectionRevision: r.Revision, TotalCount: count, UnresolvedCount: count, Complete: true}}
+}
+func (s *Service) UpdateScheduleTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in ScheduleInput) (ScheduleOutput, error) {
+	r, err := getSchedule(ctx, tx, a, c.TargetID)
+	if err != nil {
+		return ScheduleOutput{}, err
+	}
+	if c.ExpectedRevision == nil || *c.ExpectedRevision != r.Revision {
+		return ScheduleOutput{}, api.E("revision_conflict", "rule_changed")
+	}
+	if r.State == "deleted" {
+		return ScheduleOutput{}, api.E("gone", "schedule_deleted")
+	}
+	if err = s.validateSchedule(ctx, tx, a, in); err != nil {
+		return ScheduleOutput{}, err
+	}
+	now, err := tx.Now(ctx)
+	if err != nil {
+		return ScheduleOutput{}, err
+	}
+	next, err := s.NextDue(in.Spec, in.Timezone, in.TZDBVersion, now)
+	if err != nil {
+		return ScheduleOutput{}, err
+	}
+	if in.Spec.Type == "once_at" && next == nil {
+		return ScheduleOutput{}, api.E("expired", "schedule_time_elapsed")
+	}
+	r.ScheduleInput = in
+	r.RuleRevision++
+	r.EffectiveAfter = api.Time(now)
+	r.NextDueAt = nil
+	r.ResumeAfter = nil
+	r.Exhausted = next == nil
+	if next != nil {
+		value := api.Time(*next)
+		r.NextDueAt = &value
+	}
+	if err = saveSchedule(ctx, tx, &r); err != nil {
+		return ScheduleOutput{}, err
+	}
+	if next != nil && r.State == "enabled" {
+		if _, err = tx.Raise(ctx, JobTrigger, c.TargetID, tx.Scope().Ref(c.TargetID, r.Revision), *next); err != nil {
+			return ScheduleOutput{}, err
+		}
+	}
+	return scheduleOutput(tx.Scope(), r), nil
+}
+func (s *Service) ControlScheduleTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in ScheduleControlInput) (ScheduleOutput, error) {
+	r, err := getSchedule(ctx, tx, a, c.TargetID)
+	if err != nil {
+		return ScheduleOutput{}, err
+	}
+	if c.ExpectedRevision == nil || *c.ExpectedRevision != r.Revision {
+		return ScheduleOutput{}, api.E("revision_conflict", "rule_changed")
+	}
+	if r.State == "deleted" {
+		return ScheduleOutput{}, api.E("gone", "schedule_deleted")
+	}
+	now, err := tx.Now(ctx)
+	if err != nil {
+		return ScheduleOutput{}, err
+	}
+	switch c.Method {
+	case "schedule.pause":
+		r.State = "paused"
+	case "schedule.delete":
+		r.State = "deleted"
+	case "schedule.resume":
+		if r.State != "paused" {
+			return ScheduleOutput{}, api.E("invalid_state", "schedule_not_paused")
+		}
+		r.State = "enabled"
+		cutoff := api.Time(now)
+		r.ResumeAfter = &cutoff
+	default:
+		return ScheduleOutput{}, invalid("unknown_schedule_control")
+	}
+	if err = saveSchedule(ctx, tx, &r); err != nil {
+		return ScheduleOutput{}, err
+	}
+	if r.NextDueAt != nil {
+		due, _ := api.ParseTime(*r.NextDueAt)
+		if c.Method == "schedule.resume" {
+			due = now
+		}
+		if _, err = tx.Raise(ctx, JobTrigger, r.ScheduleID, tx.Scope().Ref(r.ScheduleID, r.Revision), due); err != nil {
+			return ScheduleOutput{}, err
+		}
+	}
+	if r.ActiveOccurrenceID != "" {
+		var occ occurrenceRecord
+		if _, err = tx.Get(ctx, occurrences, r.ActiveOccurrenceID, &occ); err != nil {
+			return ScheduleOutput{}, err
+		}
+		if _, err = tx.Raise(ctx, JobOccurrence, occ.OccurrenceID, tx.Scope().Ref(occ.OccurrenceID, occ.Revision), now); err != nil {
+			return ScheduleOutput{}, err
+		}
+	}
+	return scheduleOutput(tx.Scope(), r), nil
+}
+func (s *Service) ReadSchedule(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, id string) (Schedule, error) {
+	var r scheduleRecord
+	if _, err := store.Read(ctx, scope, schedules, id, 0, &r); err != nil {
+		return Schedule{}, err
+	}
+	if err := access(a, r.Auth.SubjectID); err != nil {
+		return Schedule{}, err
+	}
+	return r.Schedule, nil
+}
+func (s *Service) ReadOccurrence(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, id string) (Occurrence, error) {
+	var r occurrenceRecord
+	if _, err := store.Read(ctx, scope, occurrences, id, 0, &r); err != nil {
+		return Occurrence{}, err
+	}
+	if err := access(a, r.Auth.SubjectID); err != nil {
+		return Occurrence{}, api.E("forbidden", "occurrence_redacted")
+	}
+	return r.Occurrence, nil
+}
+func (s *Service) workTx(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work, fn func(runtime.Tx) (runtime.Disposition, error)) error {
+	status, err := store.Within(ctx, scope, s.config.Participants, func(tx runtime.Tx) error {
+		disposition, e := fn(tx)
+		if e != nil {
+			return e
+		}
+		if e = tx.Guard(ctx, work.Claim); e != nil {
+			return e
+		}
+		return tx.Finish(ctx, work.Claim, disposition)
+	})
+	if status == runtime.CommitUnknown {
+		return runtime.ErrCommitUnknown
+	}
+	return err
+}
+func (s *Service) Trigger(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
+	return s.workTx(ctx, store, scope, work, func(tx runtime.Tx) (runtime.Disposition, error) {
+		var r scheduleRecord
+		if _, err := tx.Get(ctx, schedules, work.Job.SourceRef.ObjectID, &r); err != nil {
+			return runtime.Disposition{}, err
+		}
+		if r.State != "enabled" || r.NextDueAt == nil {
+			return runtime.Done(), nil
+		}
+		now, err := tx.Now(ctx)
+		if err != nil {
+			return runtime.Disposition{}, err
+		}
+		due, err := api.ParseTime(*r.NextDueAt)
+		if err != nil {
+			return runtime.Disposition{}, err
+		}
+		var pauseCutoff time.Time
+		if r.ResumeAfter != nil {
+			pauseCutoff, _ = api.ParseTime(*r.ResumeAfter)
+		}
+		var skipped *SkipRange
+		start := time.Now()
+		count := 0
+		for r.NextDueAt != nil && count < 100 && time.Since(start) < 10*time.Millisecond {
+			due, _ = api.ParseTime(*r.NextDueAt)
+			reason := ""
+			if !pauseCutoff.IsZero() && !due.After(pauseCutoff) {
+				reason = "paused"
+			} else if !now.Before(due.Add(60*time.Second)) || !now.Before(due.Add(time.Duration(r.TaskTimeoutSeconds)*time.Second)) {
+				reason = "missed"
+			}
+			if reason == "" {
+				break
+			}
+			if skipped != nil && skipped.Reason != reason {
+				break
+			}
+			if skipped == nil {
+				skipped = &SkipRange{SkipID: api.NewID("skip"), ScheduleRef: scope.Ref(r.ScheduleID, r.Revision), RuleRevision: r.RuleRevision, FirstPlannedAt: api.Time(due), Reason: reason}
+			}
+			skipped.Count++
+			skipped.LastPlannedAt = api.Time(due)
+			count++
+			if err = advanceSchedule(s, &r, due); err != nil {
+				return runtime.Disposition{}, err
+			}
+		}
+		if skipped != nil {
+			if err = tx.Create(ctx, skips, skipped.SkipID, r.ScheduleID, *skipped); err != nil {
+				return runtime.Disposition{}, err
+			}
+		}
+		if r.NextDueAt != nil {
+			due, _ = api.ParseTime(*r.NextDueAt)
+			if !pauseCutoff.IsZero() && due.After(pauseCutoff) {
+				r.ResumeAfter = nil
+			}
+			if !due.After(now) && count < 100 && time.Since(start) < 10*time.Millisecond && r.ResumeAfter == nil {
+				id := api.NewID("occurrence")
+				deadline := due.Add(time.Duration(r.TaskTimeoutSeconds) * time.Second)
+				accept := due.Add(60 * time.Second)
+				if deadline.Before(accept) {
+					accept = deadline
+				}
+				o := occurrenceRecord{Occurrence: Occurrence{OccurrenceID: id, Revision: 1, ScheduleRef: scope.Ref(r.ScheduleID, r.Revision), RuleRevision: r.RuleRevision, PlannedAt: api.Time(due), TaskDeadline: api.Time(deadline), AcceptBefore: api.Time(accept), Phase: "recorded", Frozen: r.ScheduleInput}, Auth: r.Auth}
+				if r.ActiveOccurrenceID != "" {
+					o.Phase = "skipped"
+					o.SkipReason = "overlap"
+					o.SlotClosed = true
+				} else {
+					r.ActiveOccurrenceID = id
+				}
+				if err = tx.Create(ctx, occurrences, id, r.ScheduleID, o); err != nil {
+					return runtime.Disposition{}, err
+				}
+				if o.Phase == "recorded" {
+					if _, err = tx.Raise(ctx, JobOccurrence, id, scope.Ref(id, 1), now); err != nil {
+						return runtime.Disposition{}, err
+					}
+				}
+				if err = advanceSchedule(s, &r, due); err != nil {
+					return runtime.Disposition{}, err
+				}
+			}
+		}
+		if r.NextDueAt == nil {
+			r.ResumeAfter = nil
+		}
+		if err = saveSchedule(ctx, tx, &r); err != nil {
+			return runtime.Disposition{}, err
+		}
+		if r.NextDueAt == nil {
+			return runtime.Done(), nil
+		}
+		next, _ := api.ParseTime(*r.NextDueAt)
+		if !next.After(now) {
+			return runtime.Ready(now), nil
+		}
+		return runtime.Waiting(next), nil
+	})
+}
+func advanceSchedule(s *Service, r *scheduleRecord, after time.Time) error {
+	next, err := s.NextDue(r.Spec, r.Timezone, r.TZDBVersion, after)
+	if err != nil {
+		return err
+	}
+	r.NextDueAt = nil
+	r.Exhausted = next == nil
+	if next != nil {
+		value := api.Time(*next)
+		r.NextDueAt = &value
+	}
+	return nil
+}
+func saveOccurrence(ctx context.Context, tx runtime.Tx, r *occurrenceRecord) error {
+	old := r.Revision
+	r.Revision++
+	return tx.Put(ctx, occurrences, r.OccurrenceID, old, *r)
+}
+func closeSlot(ctx context.Context, tx runtime.Tx, schedule *scheduleRecord, occ *occurrenceRecord) error {
+	occ.SlotClosed = true
+	if schedule.ActiveOccurrenceID == occ.OccurrenceID {
+		schedule.ActiveOccurrenceID = ""
+		return saveSchedule(ctx, tx, schedule)
+	}
+	return nil
+}

@@ -59,5 +59,61 @@ func (s *Service) Register(r *runtime.Registry) error {
 			return err
 		}
 	}
+	if s.ports.ScheduleGate != nil && s.ports.Calendar != nil && s.ports.Delivery != nil && s.ports.Closure != nil && s.ports.Content != nil && api.ValidID(s.config.DiscoveryOwnerID) {
+		for _, m := range []runtime.Method{
+			command[ScheduleInput, ScheduleOutput](s, "schedule.create", false, s.CreateScheduleTx),
+			command[ScheduleInput, ScheduleOutput](s, "schedule.update", true, s.UpdateScheduleTx),
+			query[ReadInput, Schedule]("schedule.read", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in ReadInput) (Schedule, error) {
+				return s.ReadSchedule(ctx, store, scope, a, q.TargetID)
+			}),
+			query[ReadInput, Occurrence]("occurrence.read", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in ReadInput) (Occurrence, error) {
+				return s.ReadOccurrence(ctx, store, scope, a, q.TargetID)
+			}),
+		} {
+			if err := r.Register(m); err != nil {
+				return err
+			}
+		}
+		for _, name := range []string{"schedule.pause", "schedule.resume", "schedule.delete"} {
+			if err := r.Register(command[ScheduleControlInput, ScheduleOutput](s, name, true, s.ControlScheduleTx)); err != nil {
+				return err
+			}
+		}
+		if err := r.RegisterJob(JobTrigger, s.Trigger); err != nil {
+			return err
+		}
+		if err := r.RegisterJob(JobOccurrence, s.Occur); err != nil {
+			return err
+		}
+	}
+	if len(s.bindings) > 0 && s.ports.Content != nil {
+		for _, m := range []runtime.Method{
+			command[SurfaceInput, Surface](s, "surface.create", false, s.CreateSurfaceTx), command[SurfaceInput, Surface](s, "surface.update", true, s.UpdateSurfaceTx), command[SurfaceControlInput, Surface](s, "surface.close", true, s.CloseSurfaceTx),
+			query[ReadInput, Surface]("surface.read", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in ReadInput) (Surface, error) {
+				return s.ReadSurface(ctx, store, scope, a, q.TargetID)
+			}),
+			command[OpenPresentationInput, Presentation](s, "presentation.open", false, s.OpenPresentationTx), command[OpenPresentationInput, Presentation](s, "presentation.switch", true, s.SwitchPresentationTx), command[BeginPresentationInput, Presentation](s, "presentation.begin", true, s.BeginPresentationTx), command[ClosePresentationInput, Presentation](s, "presentation.close", true, s.ClosePresentationTx), command[RenderAckInput, Presentation](s, "presentation.rendered", false, s.RenderedTx),
+			query[RenderReadInput, RenderView]("presentation.read", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in RenderReadInput) (RenderView, error) {
+				return s.ReadPresentation(ctx, store, scope, a, q.TargetID, in)
+			}),
+		} {
+			if err := r.Register(m); err != nil {
+				return err
+			}
+		}
+		if s.ports.Delivery != nil {
+			if err := r.Register(command[ApplicationEventInput, ApplicationEventOutput](s, "application_event", false, s.ApplicationEventTx)); err != nil {
+				return err
+			}
+			if err := r.Register(query[ReadInput, ApplicationEvent]("application_event.read", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in ReadInput) (ApplicationEvent, error) {
+				return s.ReadApplicationEvent(ctx, store, scope, a, q.TargetID)
+			})); err != nil {
+				return err
+			}
+			if err := r.RegisterJob(JobApplicationEvent, s.DeliverApplicationEvent); err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
