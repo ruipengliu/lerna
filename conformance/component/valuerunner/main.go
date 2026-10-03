@@ -17,6 +17,13 @@ func roundtrip[T contract.Value](data []byte) ([]byte, error) {
 	return contract.Encode(value)
 }
 func main() {
+	if len(os.Args) == 2 && os.Args[1] == "--batch" {
+		if err := batch(); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		return
+	}
 	if len(os.Args) != 2 {
 		fmt.Fprintln(os.Stderr, "usage: valuerunner SCHEMA < JSON")
 		os.Exit(2)
@@ -26,11 +33,7 @@ func main() {
 		data, err = run(os.Args[1], data)
 	}
 	if err != nil {
-		var refusal *contract.ContractError
-		if !errors.As(err, &refusal) {
-			refusal = &contract.ContractError{PublicError: contract.PublicError{Code: "schema_invalid"}, Cause: err}
-		}
-		encoded, encodeErr := contract.Encode(refusal.PublicError)
+		encoded, encodeErr := contract.Encode(publicError(err))
 		if encodeErr != nil {
 			fmt.Fprintln(os.Stderr, encodeErr)
 			os.Exit(1)
@@ -42,4 +45,12 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+}
+
+func publicError(err error) contract.PublicError {
+	var refusal *contract.ContractError
+	if errors.As(err, &refusal) {
+		return refusal.PublicError
+	}
+	return contract.PublicError{Code: "schema_invalid"}
 }
