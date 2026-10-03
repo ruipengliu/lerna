@@ -75,7 +75,7 @@ func (w *Worker) Run(ctx context.Context) error {
 			go func() {
 				defer active.Done()
 				defer func() { <-slots }()
-				if err := h(ctx, w.Store, scope, work); err != nil && !errors.Is(err, context.Canceled) {
+				if err := w.runOwned(ctx, scope, work, h); err != nil && !errors.Is(err, context.Canceled) {
 					logger.Warn("job remains recoverable", "kind", work.Job.Kind, "claim_lost", errors.Is(err, ErrClaimLost))
 				}
 			}()

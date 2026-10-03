@@ -32,6 +32,11 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 	for _, op := range facts.Operations {
 		processed = append(processed, op.Intent.ProcessedSourceRefs...)
 	}
+	processed = append(processed, facts.Artifacts...)
+	for _, check := range facts.Checks {
+		processed = append(processed, check.ArtifactRef, check.ScopeRef)
+		processed = append(processed, check.EvidenceRefs...)
+	}
 	processed = uniqueSources(processed)
 	for _, r := range processed {
 		if _, e = c.a.Memory.Read(ctx, scope, auth, r, "task.context"); e != nil {

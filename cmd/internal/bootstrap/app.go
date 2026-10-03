@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"context"
 	"crypto/rand"
+	"errors"
 	"fmt"
 	execadapter "github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/adapters/objectstore"
@@ -45,6 +46,8 @@ type App struct {
 	Profile                                                          brain.Profile
 	ArtifactRule, SavedRule, CoverageRule, AnswerSchema, InstallLock api.ComponentRef
 	ReadBinding, WriteBinding                                        api.ObjectRef
+	ApplicationBinding                                               api.ObjectRef
+	ApplicationEventSchema                                           api.Schema
 	GrantID                                                          string
 }
 
@@ -84,7 +87,7 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 			return nil, e
 		}
 	}
-	a.Keys, e = platform.OpenDevelopmentKey(c.KeyFile, c.TenantID, c.OwnerID, []string{"control", "closure", "grant_use", "delivery", "rpc_sender"})
+	a.Keys, e = platform.OpenDevelopmentKey(c.KeyFile, c.TenantID, c.OwnerID, []string{"control", "closure", "grant_use", "delivery", "rpc_sender", "evidence_changes", "grant_lease", "allocation_closure"})
 	if e != nil {
 		return nil, e
 	}
@@ -98,7 +101,7 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 		return nil, e
 	}
 	a.Memory.Authorization = contentAuthority{a}
-	purposes := []string{"read", "preview", "content.read", "content.write", "task.goal", "task.context", "task.result", "task.submit", "task.snapshot", "task.dispatch", "task.complete", "task.evidence", "task.input", "task.accept_result", "task.revise", "task.steer", "task.action", "task.attach_evidence", "task.adjust_budget", "task.need_context", "task.delegate", "child.create", "child.new_goal", "child.continue", "billing.adjustment", "brain.input", "brain.output", "result", "memory.save", "memory.read", "memory.query", "memory.extract", "memory.sync", "memory.view", "managed_file_write", "managed_file_read", "execution.intent", "execution.arguments", "execution.output", "execution.control", "interaction.input", "interaction.history", "interaction.surface", "schedule.template", "confirmation.preview", "evaluation.manifest"}
+	purposes := []string{"read", "preview", "content.read", "content.write", "task.goal", "task.context", "task.result", "task.submit", "task.snapshot", "task.dispatch", "task.complete", "task.evidence", "task.input", "task.accept_result", "task.revise", "task.steer", "task.action", "task.attach_evidence", "task.adjust_budget", "task.need_context", "task.delegate", "child.create", "child.new_goal", "child.continue", "billing.adjustment", "brain.input", "brain.output", "result", "memory.save", "memory.read", "memory.query", "memory.extract", "memory.sync", "memory.view", "managed_file_write", "managed_file_read", "execution.intent", "execution.arguments", "execution.output", "execution.control", "execution_intent", "execution_arguments", "execution_result", "execution_usage_proof", "environment_namespace", "environment_input", "environment_compute_spec", "environment_restore", "interaction.input", "interaction.history", "interaction.surface", "schedule.template", "confirmation.preview", "evaluation.manifest"}
 	pv := memory.PolicyValues{Subjects: []string{c.SubjectID, c.OwnerID}, Purposes: purposes, Locations: []string{"cloud", "device"}, RetainUntil: c.PolicyExpiresAt, Continuous: true, IndependentDerived: false}
 	policyRef := component("content-policy")
 	policyRef.Digest, _ = api.Digest(pv)
@@ -111,6 +114,8 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 	a.InstallLock = component("builtin-install-lock")
 	a.ReadBinding = a.Scope.Ref(platform.StableDevelopmentID("binding", "file-read"), 1)
 	a.WriteBinding = a.Scope.Ref(platform.StableDevelopmentID("binding", "file-write"), 1)
+	a.ApplicationBinding = a.Scope.Ref(platform.StableDevelopmentID("binding", "development-application"), 1)
+	a.ApplicationEventSchema = api.Object(map[string]any{"reason": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "reason")
 	a.GrantID = platform.StableDevelopmentID("grant", "development-file-goal")
 	a.Profile = brain.Profile{Ref: component("rule-bytes-profile"), ContextLimit: 262144, MaxInputTokens: 250000, MaxOutputTokens: 8192, SafetyMargin: 100, MaxInputBytes: 262144, RequestTimeout: 5 * time.Second}
 	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, Participants: []string{"content", "memory", "platform", "task"}})
@@ -169,7 +174,8 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 	if e != nil {
 		return nil, e
 	}
-	a.Interaction, e = interaction.New(interaction.Config{DiscoveryOwnerID: c.OwnerID, Participants: []string{"interaction", "content", "memory", "task", "platform"}, CursorKey: []byte(strings.TrimSpace(string(token)))}, interaction.Ports{Content: interactionContent{a}, Delivery: localDelivery{a}, Closure: localClosure{a}, Requests: requestBridge{a}, Calendar: calendar, ScheduleGate: scheduleGate{a}})
+	one := uint64(1)
+	a.Interaction, e = interaction.New(interaction.Config{DiscoveryOwnerID: c.OwnerID, Participants: []string{"interaction", "content", "memory", "task", "platform"}, CursorKey: []byte(strings.TrimSpace(string(token))), EventBindings: []interaction.EventBinding{{BindingRef: a.ApplicationBinding, Events: []interaction.EventRule{{Name: "archive_demo_session", Schema: api.Raw(a.ApplicationEventSchema), OwnerID: c.OwnerID, Method: "session.archive", TargetID: platform.StableDevelopmentID("session", "development-surface"), AcceptForSeconds: 60, ExpectedRevision: &one, RequiresRendered: true}}}}}, interaction.Ports{Content: interactionContent{a}, Delivery: localDelivery{a}, Closure: localClosure{a}, Requests: requestBridge{a}, Calendar: calendar, ScheduleGate: scheduleGate{a}})
 	if e != nil {
 		return nil, fmt.Errorf("construct Interaction: %w", e)
 	}
@@ -219,17 +225,27 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 	if e != nil {
 		return fmt.Errorf("install development governance: %w", e)
 	}
+	// Management reuses the original demo creation; restarting never resets it.
+	c := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.Scope.OwnerID, CommandID: platform.StableDevelopmentID("command", "development-surface-session"), Method: "session.create", TargetID: a.Scope.OwnerID, ExpiresAt: a.Config.PolicyExpiresAt, Payload: api.Raw(interaction.CreateSessionInput{SessionID: platform.StableDevelopmentID("session", "development-surface"), DefaultBranchID: platform.StableDevelopmentID("branch", "development-surface"), ConfigRef: component("development-surface-session")})}
+	r, e := a.Dispatcher.Command(ctx, a.UserAuth, api.Raw(c))
+	if e != nil {
+		return e
+	}
+	if r.Error != nil {
+		return r.Error
+	}
 	return nil
 }
 func (a *App) Close() error {
+	var err error
 	if a.Files != nil {
-		a.Files.Close()
+		err = a.Files.Close()
 	}
 	if a.Store != nil {
-		return a.Store.Close()
+		err = errors.Join(err, a.Store.Close())
 	}
-	return nil
+	return err
 }
 func (a *App) Gateway() (*wss.Server, error) {
-	return wss.New(wss.Config{OwnerID: a.Config.OwnerID, Store: a.Store, Registry: a.Registry, Identity: a.Identity, Processor: wss.LocalProcessor{Dispatcher: a.Dispatcher}, Content: a.Memory, Uploader: a.Memory, Development: &wss.DevelopmentConfiguration{TenantID: a.Config.TenantID, ContentPolicyRef: a.ContentPolicy.PolicyRef, TaskPolicyRef: a.TaskPolicy.PolicyRef, Budget: []api.Amount{{Unit: "USD", Value: "20"}}, GoalSchema: brain.GoalSchema(), RetentionSeconds: 86400, TaskDeadlineSeconds: 1800}, Origins: a.Config.Origins, AllowInsecureLoopback: a.Config.Development, StaticDir: a.Config.StaticDir, Location: "cloud", MaxConnections: 128, MaxQueuedBytes: 64 << 20})
+	return wss.New(wss.Config{OwnerID: a.Config.OwnerID, Store: a.Store, Registry: a.Registry, Identity: a.Identity, Processor: wss.LocalProcessor{Dispatcher: a.Dispatcher}, Content: a.Memory, Uploader: a.Memory, Development: &wss.DevelopmentConfiguration{TenantID: a.Config.TenantID, ContentPolicyRef: a.ContentPolicy.PolicyRef, TaskPolicyRef: a.TaskPolicy.PolicyRef, Budget: []api.Amount{{Unit: "USD", Value: "20"}}, GoalSchema: brain.GoalSchema(), RetentionSeconds: 86400, TaskDeadlineSeconds: 1800, ApplicationBindingRef: &a.ApplicationBinding, ApplicationEvents: []wss.DevelopmentEvent{{Name: "archive_demo_session", Schema: a.ApplicationEventSchema, RequiresRendered: true}}}, Origins: a.Config.Origins, AllowInsecureLoopback: a.Config.Development, StaticDir: a.Config.StaticDir, Location: "cloud", MaxConnections: 128, MaxQueuedBytes: 64 << 20})
 }
