@@ -77,6 +77,9 @@ func (s *Service) CheckDecisionTx(ctx context.Context, tx runtime.Tx, auth runti
 	if err = s.CheckCurrent(ctx, tx, t, true); err != nil {
 		return err
 	}
+	if t.PendingCompletionID != "" {
+		return api.E("invalid_state", "completion_checks_pending")
+	}
 	if d.Intent.TaskRef.TenantID != tx.Scope().TenantID || d.Intent.TaskRef.OwnerID != tx.Scope().OwnerID || d.Snapshot.GoalRevision != t.Task.GoalRevision || d.Snapshot.ControlRevision != t.Task.ControlRevision || !api.Equal(d.Snapshot.GoalRef, t.Task.GoalRef) || d.Snapshot.RequirementsDigest != t.Task.RequirementsDigest || !api.Equal(d.Snapshot.PolicyRef, t.Task.PolicyRef) {
 		return api.E("revision_conflict", "decision_control_stale")
 	}

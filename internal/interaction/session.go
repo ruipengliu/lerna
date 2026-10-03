@@ -9,7 +9,16 @@ import (
 )
 
 func invalid(reason string) error { return api.E("invalid_request", reason) }
-func access(auth runtime.Auth, subject string) error {
+func identity(auth runtime.Auth, scope runtime.Scope) error {
+	if auth.TenantID != scope.TenantID || !api.ValidID(auth.SubjectID) || auth.CredentialGeneration == 0 {
+		return api.E("forbidden", "invalid_interaction_identity")
+	}
+	return nil
+}
+func access(auth runtime.Auth, scope runtime.Scope, subject string) error {
+	if err := identity(auth, scope); err != nil {
+		return err
+	}
 	if auth.SubjectID != subject && !auth.HasRole("interaction_admin") {
 		return api.E("forbidden", "interaction_access_denied")
 	}
@@ -28,7 +37,7 @@ func getSession(ctx context.Context, tx runtime.Tx, auth runtime.Auth, id string
 	var r sessionRecord
 	_, err := tx.Get(ctx, sessions, id, &r)
 	if err == nil {
-		err = access(auth, r.SubjectID)
+		err = access(auth, tx.Scope(), r.SubjectID)
 	}
 	return r, err
 }

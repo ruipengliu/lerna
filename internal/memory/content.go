@@ -603,10 +603,14 @@ func (s *Service) close(ctx context.Context, tx runtime.Tx, auth runtime.Auth, e
 	if err != nil {
 		return CloseOutput{}, err
 	}
-	if _, err = tx.Raise(ctx, "content.cleanup", contentKey(in.ContentRef), tx.Scope().Ref(in.ContentRef.ContentID, in.ContentRef.Version), now); err != nil {
+	notice, err := contentControlNotice(ctx, tx, v)
+	if err != nil {
 		return CloseOutput{}, err
 	}
-	if _, err = tx.Raise(ctx, "memory.source_impact", contentKey(in.ContentRef), tx.Scope().Ref(in.ContentRef.ContentID, in.ContentRef.Version), now); err != nil {
+	if _, err = tx.Raise(ctx, "content.cleanup", contentKey(in.ContentRef), notice, now); err != nil {
+		return CloseOutput{}, err
+	}
+	if _, err = tx.Raise(ctx, "memory.source_impact", contentKey(in.ContentRef), notice, now); err != nil {
 		return CloseOutput{}, err
 	}
 	return CloseOutput{v.ControlRevision, v.State, "pending"}, nil
@@ -679,7 +683,7 @@ func (s *Service) releaseCopy(ctx context.Context, tx runtime.Tx, auth runtime.A
 		if err != nil {
 			return CopyOutput{}, err
 		}
-		if _, err = tx.Raise(ctx, "content.cleanup", contentKey(in.ContentRef), tx.Scope().Ref(in.ContentRef.ContentID, in.ContentRef.Version), now); err != nil {
+		if _, err = tx.Raise(ctx, "content.cleanup", contentKey(in.ContentRef), tx.Scope().Ref(h.CopyID, h.Revision), now); err != nil {
 			return CopyOutput{}, err
 		}
 	}

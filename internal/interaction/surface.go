@@ -324,7 +324,7 @@ func getSurface(ctx context.Context, tx runtime.Tx, a runtime.Auth, id string) (
 	var r surfaceRecord
 	_, err := tx.Get(ctx, surfaces, id, &r)
 	if err == nil {
-		err = access(a, r.SubjectID)
+		err = access(a, tx.Scope(), r.SubjectID)
 	}
 	return r, err
 }
@@ -389,7 +389,7 @@ func getPresentation(ctx context.Context, tx runtime.Tx, a runtime.Auth, id stri
 	var r presentationRecord
 	_, err := tx.Get(ctx, presentations, id, &r)
 	if err == nil {
-		err = access(a, r.SubjectID)
+		err = access(a, tx.Scope(), r.SubjectID)
 	}
 	return r, err
 }
@@ -507,6 +507,9 @@ func (s *Service) renderGate(ctx context.Context, tx runtime.Tx, a runtime.Auth,
 		}
 		request, err := s.ports.Requests.CheckTx(ctx, tx, a, ref)
 		if err != nil {
+			return view, err
+		}
+		if err = currentRequest(ctx, tx, ref, request); err != nil {
 			return view, err
 		}
 		if err = restrictedSchemaRaw(request.AnswerSchema); err != nil {

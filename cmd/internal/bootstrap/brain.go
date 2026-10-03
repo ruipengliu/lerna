@@ -66,6 +66,12 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 		return original, e
 	}
 	original = task.Proposal{DecisionID: i.DecisionID, Kind: p.Kind, ReasonRef: p.ReasonRef, RequirementDelta: p.RequirementDelta, ArtifactRefs: p.ArtifactRefs, Limitations: []string{}}
+	for _, suggestion := range p.CheckSuggestions {
+		if len(suggestion.EvidenceRefs) == 0 {
+			return original, api.E("invalid_request", "check_artifact_required")
+		}
+		original.CheckRequests = append(original.CheckRequests, task.AttachInput{TaskID: snap.TaskRef.ObjectID, GoalRevision: snap.GoalRevision, RequirementRef: suggestion.RequirementRef, ArtifactRef: suggestion.EvidenceRefs[0], EvidenceRefs: suggestion.EvidenceRefs})
+	}
 	if p.Kind == "act" {
 		for _, candidate := range p.Actions {
 			if !api.Equal(candidate.BindingRef, b.a.ReadBinding) && !api.Equal(candidate.BindingRef, b.a.WriteBinding) {

@@ -2,6 +2,7 @@ package interaction_test
 
 import (
 	"context"
+	"crypto/rand"
 	"github.com/ruipengliu/lerna/adapters/platform"
 	"github.com/ruipengliu/lerna/adapters/postgres"
 	"os"
@@ -13,6 +14,7 @@ import (
 	"github.com/ruipengliu/lerna/adapters/objectstore"
 	"github.com/ruipengliu/lerna/adapters/sqlite"
 	"github.com/ruipengliu/lerna/api"
+	"github.com/ruipengliu/lerna/internal/brain"
 	"github.com/ruipengliu/lerna/internal/interaction"
 	"github.com/ruipengliu/lerna/internal/memory"
 	"github.com/ruipengliu/lerna/internal/task"
@@ -80,25 +82,29 @@ func (b requestBridge) CheckTx(ctx context.Context, tx runtime.Tx, a runtime.Aut
 }
 
 type applicationFixture struct {
-	ctx             context.Context
-	store           runtime.Store
-	scope           runtime.Scope
-	auth            runtime.Auth
-	m               *memory.Service
-	cp              memory.Policy
-	task            *task.Service
-	s               *interaction.Service
-	d               *runtime.Dispatcher
-	registry        *runtime.Registry
-	delivery        *deliveryBridge
-	config          api.ComponentRef
-	policy          api.ComponentRef
-	binding         api.ObjectRef
-	proof           *signedProofBridge
-	answerSchema    api.ComponentRef
-	content         *contentBridge
-	commitFault     *atomic.Bool
-	session, branch string
+	ctx              context.Context
+	store            runtime.Store
+	scope            runtime.Scope
+	auth             runtime.Auth
+	m                *memory.Service
+	cp               memory.Policy
+	task             *task.Service
+	s                *interaction.Service
+	d                *runtime.Dispatcher
+	registry         *runtime.Registry
+	delivery         *deliveryBridge
+	config           api.ComponentRef
+	policy           api.ComponentRef
+	binding          api.ObjectRef
+	proof            *signedProofBridge
+	answerSchema     api.ComponentRef
+	goalAnswerSchema api.ComponentRef
+	content          *contentBridge
+	commitFault      *atomic.Bool
+	openStore        func(string) (runtime.Store, error)
+	appConfig        interaction.Config
+	appPorts         interaction.Ports
+	session, branch  string
 }
 
 func newApplication(t *testing.T) *applicationFixture {
@@ -107,21 +113,28 @@ func newApplication(t *testing.T) *applicationFixture {
 	var store runtime.Store
 	var e error
 	commitFault := &atomic.Bool{}
+	var openStore func(string) (runtime.Store, error)
 	if os.Getenv("HARNESS_INTERACTION_STORE") == "postgres" {
-		store, e = postgres.Open(ctx, os.Getenv("HARNESS_TEST_POSTGRES_DSN"), postgres.WithMaxConnections(8), postgres.WithCommitFault(func(phase postgres.CommitPhase) error {
-			if phase == postgres.AfterCommit && commitFault.Swap(false) {
-				return runtime.ErrCommitUnknown
-			}
-			return nil
-		}))
+		openStore = func(expected string) (runtime.Store, error) {
+			return postgres.Open(ctx, os.Getenv("HARNESS_TEST_POSTGRES_DSN"), postgres.WithExpectedDatabaseID(expected), postgres.WithMaxConnections(8), postgres.WithCommitFault(func(phase postgres.CommitPhase) error {
+				if phase == postgres.AfterCommit && commitFault.Swap(false) {
+					return runtime.ErrCommitUnknown
+				}
+				return nil
+			}))
+		}
 	} else {
-		store, e = sqlite.Open(filepath.Join(t.TempDir(), "application.sqlite"), sqlite.WithCommitFault(func(phase sqlite.CommitPhase) error {
-			if phase == sqlite.AfterCommit && commitFault.Swap(false) {
-				return runtime.ErrCommitUnknown
-			}
-			return nil
-		}))
+		path := filepath.Join(t.TempDir(), "application.sqlite")
+		openStore = func(expected string) (runtime.Store, error) {
+			return sqlite.Open(path, sqlite.WithExpectedDatabaseID(expected), sqlite.WithCommitFault(func(phase sqlite.CommitPhase) error {
+				if phase == sqlite.AfterCommit && commitFault.Swap(false) {
+					return runtime.ErrCommitUnknown
+				}
+				return nil
+			}))
+		}
 	}
+	store, e = openStore("")
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -154,7 +167,10 @@ func newApplication(t *testing.T) *applicationFixture {
 	schema := api.Object(map[string]any{"path": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "path")
 	schemaDigest, _ := api.Digest(schema)
 	schemaRef := api.ComponentRef{ComponentID: api.NewID("schema"), Version: "1", Digest: schemaDigest}
-	ts, e := task.New(task.Config{Policies: []task.TaskPolicy{{PolicyRef: policy, ContinuationLimit: 100, RepairLimit: 3, NoProgressLimit: 5, ContextRoundLimit: 3, SafeAttemptLimit: 2, MaxRequirements: 100, MaxDelegations: 128, MaxDepth: 4, CostMode: "strict", BudgetLimits: []api.Amount{{Unit: "USD", Value: "100"}}, MaxEvidenceStalenessSeconds: 300, MaxDurationSeconds: 3600}}, Participants: []string{"task", "content", "memory", "interaction"}, AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: schemaRef, Schema: schema}}}, task.Ports{ClosureProof: proof, ControlProof: proof, Content: taskPublicationBridge{m, a, cp}})
+	goalSchema := brain.GoalSchema()
+	goalDigest, _ := api.Digest(goalSchema)
+	goalSchemaRef := api.ComponentRef{ComponentID: api.NewID("schema"), Version: "1", Digest: goalDigest}
+	ts, e := task.New(task.Config{Policies: []task.TaskPolicy{{PolicyRef: policy, ContinuationLimit: 100, RepairLimit: 3, NoProgressLimit: 5, ContextRoundLimit: 3, SafeAttemptLimit: 2, MaxRequirements: 100, MaxDelegations: 128, MaxDepth: 4, CostMode: "strict", BudgetLimits: []api.Amount{{Unit: "USD", Value: "100"}}, MaxEvidenceStalenessSeconds: 300, MaxDurationSeconds: 3600}}, Participants: []string{"task", "content", "memory", "interaction"}, AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: schemaRef, Schema: schema}, {Ref: goalSchemaRef, Schema: goalSchema}}}, task.Ports{ClosureProof: proof, ControlProof: proof, Content: taskPublicationBridge{m, a, cp}})
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -177,16 +193,49 @@ func newApplication(t *testing.T) *applicationFixture {
 	binding := scope.Ref(api.NewID("binding"), 1)
 	one := uint64(1)
 	content := &contentBridge{m: m}
-	s, e := interaction.New(interaction.Config{DiscoveryOwnerID: scope.OwnerID, Participants: []string{"interaction", "content", "memory", "task"}, EventBindings: []interaction.EventBinding{{BindingRef: binding, Events: []interaction.EventRule{{Name: "archive", Schema: api.Raw(api.Object(map[string]any{"reason": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "reason")), OwnerID: scope.OwnerID, Method: "session.archive", TargetID: sessionID, AcceptForSeconds: 60, ExpectedRevision: &one, RequiresRendered: true}}}}}, interaction.Ports{Content: content, Delivery: delivery, Closure: closureBridge{ts, store, proof}, Requests: requestBridge{ts}, Calendar: calendar, ScheduleGate: scheduleGateBridge{policy, policy}})
+	cursorKey := make([]byte, 32)
+	if _, e = rand.Read(cursorKey); e != nil {
+		t.Fatal(e)
+	}
+	appConfig := interaction.Config{DiscoveryOwnerID: scope.OwnerID, Participants: []string{"interaction", "content", "memory", "task"}, CursorKey: cursorKey, EventBindings: []interaction.EventBinding{{BindingRef: binding, Events: []interaction.EventRule{{Name: "archive", Schema: api.Raw(api.Object(map[string]any{"reason": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "reason")), OwnerID: scope.OwnerID, Method: "session.archive", TargetID: sessionID, AcceptForSeconds: 60, ExpectedRevision: &one, RequiresRendered: true}}}}}
+	appPorts := interaction.Ports{Content: content, Delivery: delivery, Closure: closureBridge{ts, store, proof}, Requests: requestBridge{ts}, Calendar: calendar, ScheduleGate: scheduleGateBridge{policy, policy}}
+	s, e := interaction.New(appConfig, appPorts)
 	if e != nil {
 		t.Fatal(e)
 	}
 	if e = s.Register(registry); e != nil {
 		t.Fatal(e)
 	}
-	f := &applicationFixture{ctx: ctx, store: store, scope: scope, auth: a, m: m, cp: cp, task: ts, s: s, d: d, registry: registry, delivery: delivery, policy: policy, config: policy, binding: binding, proof: proof, answerSchema: schemaRef, content: content, commitFault: commitFault, session: sessionID, branch: branchID}
+	f := &applicationFixture{ctx: ctx, store: store, scope: scope, auth: a, m: m, cp: cp, task: ts, s: s, d: d, registry: registry, delivery: delivery, policy: policy, config: policy, binding: binding, proof: proof, answerSchema: schemaRef, goalAnswerSchema: goalSchemaRef, content: content, commitFault: commitFault, openStore: openStore, appConfig: appConfig, appPorts: appPorts, session: sessionID, branch: branchID}
 	f.command(t, "session.create", scope.OwnerID, nil, interaction.CreateSessionInput{SessionID: f.session, DefaultBranchID: f.branch, ConfigRef: policy})
 	return f
+}
+
+func (f *applicationFixture) reopen(t *testing.T) {
+	t.Helper()
+	if e := f.store.Close(); e != nil {
+		t.Fatal(e)
+	}
+	store, e := f.openStore(f.scope.DatabaseID)
+	if e != nil {
+		t.Fatal(e)
+	}
+	t.Cleanup(func() { _ = store.Close() })
+	f.store, f.m.Store, f.d.Store = store, store, store
+	f.appPorts.Closure = closureBridge{f.task, store, f.proof}
+	f.s, e = interaction.New(f.appConfig, f.appPorts)
+	if e != nil {
+		t.Fatal(e)
+	}
+	f.registry = runtime.NewRegistry()
+	if e = f.task.Register(f.registry); e != nil {
+		t.Fatal(e)
+	}
+	f.m.Register(f.registry)
+	if e = f.s.Register(f.registry); e != nil {
+		t.Fatal(e)
+	}
+	f.d.Registry = f.registry
 }
 func (f *applicationFixture) command(t *testing.T, method, target string, revision *uint64, in any) api.Receipt {
 	t.Helper()
@@ -238,6 +287,7 @@ func TestSavedGoalSurvivesBusinessReplyLossWithoutCreatingSecondTask(t *testing.
 	if out.State != "queued" || f.delivery.sends != 0 {
 		t.Fatal("saved input promised business consumption")
 	}
+	f.reopen(t)
 	f.delivery.drop = true
 	f.step(t)
 	v, e := f.s.ReadSubmission(f.ctx, f.store, f.scope, f.auth, out.SubmissionRef.ObjectID)

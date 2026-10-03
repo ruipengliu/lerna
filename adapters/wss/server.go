@@ -347,12 +347,7 @@ func isControl(kind string, raw json.RawMessage) bool {
 	if api.Decode(raw, &c) != nil {
 		return false
 	}
-	for _, suffix := range []string{".cancel", ".pause", ".revoke", ".close", ".stop", ".takeover", ".deactivate", ".billing_reconcile"} {
-		if strings.HasSuffix(c.Method, suffix) {
-			return true
-		}
-	}
-	return false
+	return api.IsControlMethod(c.Method)
 }
 func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 	a, e := s.authenticate(r)
@@ -392,7 +387,7 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
 	d := s.manifest(a)
-	ready := harness.WSReady{Type: "ready", ConnectionID: connectionID, LogicalServiceID: s.config.OwnerID, Profile: api.Profile, TransportProfile: "harness-wss/1", MethodsDigest: d.MethodsDigest, Limits: d.Limits}
+	ready := harness.WSReady{Type: "ready", ConnectionID: connectionID, LogicalServiceID: s.config.OwnerID, Profile: api.Profile, TransportProfile: "harness-wss/1", MethodsDigest: d.MethodsDigest, Limits: d.Limits, IdentityScope: d.IdentityScope, IdentityRevision: d.IdentityRevision}
 	if e = conn.Write(ctx, websocket.MessageText, api.Raw(ready)); e != nil {
 		return
 	}

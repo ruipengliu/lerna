@@ -343,6 +343,7 @@ func (s *Service) AttachTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if e = s.authorize(ctx, tx, auth, "task.attach_evidence", append([]api.ContentRef{in.ArtifactRef}, in.EvidenceRefs...), nil); e != nil {
 		return AttachOutput{}, e
 	}
+	in.EvidenceRefs = append([]api.ContentRef{}, in.EvidenceRefs...)
 	sort.Slice(in.EvidenceRefs, func(i, j int) bool {
 		a, _ := api.Digest(in.EvidenceRefs[i])
 		b, _ := api.Digest(in.EvidenceRefs[j])

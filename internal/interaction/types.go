@@ -113,6 +113,7 @@ func New(config Config, ports Ports) (*Service, error) {
 	if len(config.Participants) == 0 {
 		config.Participants = []string{"interaction", "content"}
 	}
+	config.Participants = append([]string(nil), config.Participants...)
 	if len(config.CursorKey) == 0 {
 		config.CursorKey = make([]byte, 32)
 		if _, err := rand.Read(config.CursorKey); err != nil {

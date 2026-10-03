@@ -116,8 +116,8 @@ func (s *Service) Dispatch(ctx context.Context, store runtime.Store, scope runti
 				if e != nil {
 					rejection = e
 				} else {
-					expiry, _ := api.ParseTime(view.Request.ExpiresAt)
-					if view.Request.Revision != r.Input.RequestRef.Revision || view.Request.State != "pending" || !now.Before(expiry) || !api.Equal(view.Request.PreviewRefs, r.Input.PreviewRefs) {
+					rejection = currentRequest(ctx, tx, r.Input.RequestRef, view)
+					if rejection == nil && !api.Equal(view.Request.PreviewRefs, r.Input.PreviewRefs) {
 						rejection = api.E("invalid_state", "request_target_mismatch")
 					}
 				}
