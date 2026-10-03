@@ -10,6 +10,7 @@ const flow = process.env.HARNESS_BROWSER_FLOW ?? "full";
 assert(["full", "surface", "control"].includes(flow), "unsupported HARNESS_BROWSER_FLOW");
 const expectedEvent = process.env.HARNESS_EXPECT_EVENT ?? "applied";
 assert(["applied", "rejected"].includes(expectedEvent), "unsupported HARNESS_EXPECT_EVENT");
+const runID = crypto.randomUUID().slice(0, 8);
 const existingControlTask = process.env.HARNESS_CONTROL_TASK;
 if (existingControlTask) {
   assert.equal(flow, "control", "HARNESS_CONTROL_TASK only applies to the control slice");
@@ -33,6 +34,7 @@ const replies = [];
 const connections = [];
 const pageErrors = [];
 const controlDecisions = [];
+const publishedResults = [];
 let dropNextSubmit = false;
 let dropped;
 let corruptNextRender = false;
@@ -255,7 +257,23 @@ async function awaitResult(id) {
     90000,
     1000,
   );
-  assert.match(await page.locator(".inspector").innerText(), /succeeded/);
+  const view = JSON.parse(await page.locator(".inspector details pre").textContent());
+  assert.equal(view.task.task_id, id);
+  assert.equal(view.task.status, "succeeded");
+  assert.equal(view.publication, "published");
+  assert(view.task.result_ref && view.content_ref && view.result);
+  assert.equal(view.result.task_id, id);
+  assert.equal(view.result.result_id, view.task.result_ref.object_id);
+  assert.equal(view.result.goal_revision, view.task.goal_revision);
+  publishedResults.push({
+    task_id: id,
+    task_revision: view.task.revision,
+    accounting_open: view.task.accounting_open,
+    result_ref: view.task.result_ref,
+    publication: view.publication,
+    content_ref: view.content_ref,
+    result: view.result,
+  });
 }
 try {
   const navigation = await page.goto(baseURL);
@@ -272,13 +290,14 @@ try {
     async () => await page.getByRole("button", { name: "保存并提交", exact: true }).isEnabled(),
     "trusted development publication config",
   );
-  const runID = crypto.randomUUID().slice(0, 8);
   const taskIDs = [];
   let waitingID;
   let cancellationID;
   let currentPresentation;
   let eventView;
   let archivedSession;
+  let goalDocument;
+  let inputAdmission;
   const checks = ["complete authenticated manifest and connection identity binding"];
   const config = await page.evaluate(async () => (await fetch("/api/development/config")).json());
   const discovery = await page.evaluate(async () => (await fetch("/api/discovery")).json());
@@ -422,6 +441,10 @@ try {
         "actual task.input admission",
       );
       assert.notEqual(answerReceipt.response.payload.stage, "rejected");
+      inputAdmission = {
+        command: answerReceipt.request.payload,
+        receipt: answerReceipt.response.payload,
+      };
       await awaitResult(waitingID);
       const clarifiedTask = JSON.parse(
         await page.locator(".inspector details pre").textContent(),
@@ -429,6 +452,13 @@ try {
       assert(clarifiedTask.goal_revision >= inputView.request.goal_revision + 1);
       assert.equal(clarifiedTask.status, "succeeded");
       await page.locator(".inspector").getByRole("button", { name: "预览当前准确正文" }).click();
+      await until(
+        async () =>
+          (await page.locator(".exact-body").allTextContents()).includes(
+            `# 澄清报告 ${runID}\n\n保留初始目标与准确补充，随后实际写入及独立读回。\n`,
+          ),
+        "clarified report publishes the exact consumed answer artifact",
+      );
       const document = await until(async () => {
         for (const body of await page.locator(".exact-body").allTextContents()) {
           try {
@@ -448,6 +478,7 @@ try {
       );
       assert.deepEqual(document.initial_goal_ref, initial.payload.goal_ref);
       assert.deepEqual(document.amendment_refs, [answer.payload.answer_ref]);
+      goalDocument = document;
       cancellationID = await freeGoal(`${runID}-cancel`, config, discovery);
       taskIDs.push(cancellationID);
       checks.push(
@@ -676,6 +707,7 @@ try {
   );
   const reportData = {
     implementation,
+    run_id: runID,
     declared_backend_commit: process.env.HARNESS_BACKEND_COMMIT ?? null,
     base_url: baseURL,
     flow,
@@ -696,10 +728,22 @@ try {
     content_security_policy: contentSecurityPolicy,
     profile: discovery.profile,
     task_ids: taskIDs,
+    published_results: publishedResults,
+    report_artifact_paths:
+      flow === "full"
+        ? [
+            `reports/browser-${runID}.md`,
+            `reports/recovery-${runID}.md`,
+            `reports/clarification-${runID}.md`,
+          ]
+        : [],
+    input_admission: inputAdmission,
+    goal_document: goalDocument,
     control_decisions: controlDecisions,
     presentation_id: currentPresentation?.presentation_id,
     application_event_id: eventView?.event_id,
     application_event_stage: eventView?.receipt.stage,
+    original_fixed_event: eventView,
     original_fixed_session: archivedSession,
     checks,
     page_errors: pageErrors,
@@ -712,7 +756,7 @@ try {
     .catch(() => {});
   await writeFile(
     resolve(artifacts, "failure-trace.json"),
-    `${JSON.stringify({ implementation, declared_backend_commit: process.env.HARNESS_BACKEND_COMMIT ?? null, base_url: baseURL, flow, connections, commands, replies, control_decisions: controlDecisions, page_errors: pageErrors }, null, 2).replaceAll(token, "[redacted credential]")}\n`,
+    `${JSON.stringify({ implementation, declared_backend_commit: process.env.HARNESS_BACKEND_COMMIT ?? null, base_url: baseURL, flow, run_id: runID, connections, commands, replies, published_results: publishedResults, control_decisions: controlDecisions, page_errors: pageErrors }, null, 2).replaceAll(token, "[redacted credential]")}\n`,
   );
   process.stderr.write(`${String(failure).replaceAll(token, "[redacted credential]")}\n`);
   process.exitCode = 1;

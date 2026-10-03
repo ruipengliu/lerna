@@ -58,14 +58,25 @@ type GoalResolver interface {
 }
 type ruleEncoding struct {
 	Snapshot api.Snapshot    `json:"snapshot"`
-	Goal     json.RawMessage `json:"goal"`
+	Goal     json.RawMessage `json:"goal,omitempty"`
+	// 私有 base64 字段保留非 JSON 原文；RawMessage 区分缺字段与显式 null。
+	GoalBytes json.RawMessage `json:"goal_bytes,omitempty"`
 }
 
 func (*RuleEngine) Physical() bool { return false }
 func (e *RuleEngine) Encode(_ context.Context, s api.Snapshot, goal []byte, p Profile) (Encoding, error) {
 	s.EncodedDigest = ""
 	s.InputTokens = 0
-	raw := api.Raw(ruleEncoding{s, append([]byte(nil), goal...)})
+	input := ruleEncoding{Snapshot: s}
+	if json.Valid(goal) {
+		input.Goal = append([]byte(nil), goal...)
+	} else {
+		input.GoalBytes, _ = json.Marshal(append([]byte{}, goal...))
+	}
+	raw, err := json.Marshal(input)
+	if err != nil {
+		return Encoding{}, err
+	}
 	return Encoding{Body: raw, Digest: api.Hash(raw), Receiver: "builtin-rule-engine", Location: "cloud", InputTokens: uint64(len(raw)), CountMode: "upper_bound", ProcessedSources: append([]api.ContentRef{}, s.ProcessedSources...)}, nil
 }
 func (e *RuleEngine) Lookup(context.Context, string, Encoding) (Generated, error) {
@@ -78,6 +89,16 @@ func (e *RuleEngine) Request(ctx context.Context, _ string, enc Encoding) (Gener
 	var input ruleEncoding
 	if er := api.Decode(enc.Body, &input); er != nil {
 		return Generated{}, er
+	}
+	if (len(input.Goal) == 0) == (len(input.GoalBytes) == 0) {
+		return Generated{}, api.E("invalid_request", "ambiguous_rule_goal_encoding")
+	}
+	if len(input.GoalBytes) > 0 {
+		var original []byte
+		if err := json.Unmarshal(input.GoalBytes, &original); err != nil || original == nil {
+			return Generated{}, api.E("invalid_request", "invalid_rule_goal_bytes")
+		}
+		input.Goal = original
 	}
 	if e.Goals != nil {
 		goal, er := e.Goals.ResolveGoal(ctx, input.Snapshot, input.Goal)

@@ -32,9 +32,8 @@ func main() {
 		var app *bootstrap.App
 		app, err = bootstrap.OpenApp(ctx, c, *initialize)
 		if err == nil {
-			defer app.Close()
 			fmt.Printf("Harness development: http://%s\nPrivate configuration: %s\n", c.HTTPAddr, *configPath)
-			err = app.Run(ctx, true, true)
+			err = errors.Join(app.Run(ctx, true, true), app.Close())
 		}
 	}
 	if err != nil {

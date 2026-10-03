@@ -163,6 +163,64 @@ func (a *App) goalBytes(ctx context.Context, s runtime.Scope, auth runtime.Auth,
 	return raw, nil
 }
 
+// GoalDocument 只是原 owner 的确定性包装；它不能自报新的本人来源。
+// 按原组件顺序返回 Task 已保存的完整来源依据，绝不从派生引用猜 SubmissionRef。
+func (a *App) goalSourceEvidence(ctx context.Context, scope runtime.Scope, goalRef api.ContentRef, originals []api.SourceEvidence, snapshot *api.Snapshot) ([]api.SourceEvidence, error) {
+	declared := func(ref api.ContentRef) bool {
+		if snapshot == nil {
+			return true
+		}
+		material, processed := false, false
+		for _, r := range snapshot.MaterialRefs {
+			material = material || api.Equal(ref, r)
+		}
+		for _, r := range snapshot.ProcessedSources {
+			processed = processed || api.Equal(ref, r)
+		}
+		return material && processed
+	}
+	if !declared(goalRef) {
+		return nil, api.E("forbidden", "goal_source_not_declared")
+	}
+	raw, err := a.Memory.Read(ctx, scope, a.ServiceAuth, goalRef, "task.context")
+	if err != nil {
+		return nil, err
+	}
+	refs := []api.ContentRef{goalRef}
+	var document api.GoalDocument
+	if api.Decode(raw, &document) == nil && document.FormatVersion == 1 {
+		if err = api.ValidateRecord("GoalDocument", document); err != nil {
+			return nil, err
+		}
+		refs = append([]api.ContentRef{document.InitialGoalRef}, document.AmendmentRefs...)
+	}
+	if len(refs) > 100 {
+		return nil, api.E("invalid_request", "requirement_source_limit")
+	}
+	out := make([]api.SourceEvidence, 0, len(refs))
+	used := map[int]bool{}
+	for _, ref := range refs {
+		if !declared(ref) {
+			return nil, api.E("forbidden", "goal_source_not_declared")
+		}
+		matched := false
+		for i, original := range originals {
+			if !used[i] && api.Equal(ref, original.ContentRef) {
+				if err = api.ValidateRecord("SourceEvidence", original); err != nil {
+					return nil, err
+				}
+				out = append(out, original)
+				used[i], matched = true, true
+				break
+			}
+		}
+		if !matched {
+			return nil, api.E("forbidden", "goal_source_not_original")
+		}
+	}
+	return out, nil
+}
+
 type factSource struct{ a *App }
 
 func (f factSource) ResolveGoal(ctx context.Context, snap api.Snapshot, original json.RawMessage) (json.RawMessage, error) {
@@ -173,16 +231,16 @@ func (f factSource) ResolveGoal(ctx context.Context, snap api.Snapshot, original
 	if api.Decode(original, &doc) != nil || doc.FormatVersion != 1 {
 		return original, nil
 	}
+	facts, err := f.a.Task.ContextFacts(ctx, f.a.Store, f.a.Scope, f.a.ServiceAuth, snap.TaskRef.ObjectID)
+	if err != nil {
+		return nil, err
+	}
+	if _, err = f.a.goalSourceEvidence(ctx, f.a.Scope, snap.GoalRef, facts.SourceRefs, &snap); err != nil {
+		return nil, err
+	}
 	ref := doc.InitialGoalRef
 	if len(doc.AmendmentRefs) > 0 {
 		ref = doc.AmendmentRefs[len(doc.AmendmentRefs)-1]
-	}
-	found := false
-	for _, source := range snap.ProcessedSources {
-		found = found || api.Equal(ref, source)
-	}
-	if !found {
-		return nil, api.E("forbidden", "goal_source_not_declared")
 	}
 	return f.a.Memory.Read(ctx, f.a.Scope, f.a.ServiceAuth, ref, "brain.input")
 }

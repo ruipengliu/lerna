@@ -14,6 +14,10 @@ import (
 	"github.com/ruipengliu/lerna/runtime"
 )
 
+// 三段公开 Report/澄清流程在 race 下可超过90s；仅测试外层等候，
+// 不改变 Task5min、原命令1min、Control5s 或浏览器补充后90s验收。
+const reportFixtureTimeout = 3 * time.Minute
+
 // The goal traverses real SQLite, immutable content, Brain, authorization, executor
 // journal and independent read-back. No proposal or effect is inserted by the test.
 func TestReportGoalCompletesOnlyAfterIndependentFileReadback(t *testing.T) {
@@ -29,7 +33,7 @@ func TestReportGoalCompletesOnlyAfterIndependentFileReadback(t *testing.T) {
 
 func runReportGoal(t *testing.T, driver string) {
 	t.Helper()
-	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), reportFixtureTimeout)
 	defer cancel()
 	root := t.TempDir()
 	cfg, err := InitializeConfig(ctx, filepath.Join(root, "config.json"), root, driver)

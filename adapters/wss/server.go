@@ -68,14 +68,20 @@ type Config struct {
 	MaxQueuedBytes        int
 }
 type Server struct {
-	config        Config
-	mux           *http.ServeMux
-	connections   chan struct{}
-	bytesMu       sync.Mutex
-	queuedBytes   int
-	logger        *slog.Logger
-	methods       []api.MethodContract
-	methodsDigest string
+	config         Config
+	mux            *http.ServeMux
+	connections    chan struct{}
+	bytesMu        sync.Mutex
+	queuedBytes    int
+	logger         *slog.Logger
+	methods        []api.MethodContract
+	methodsDigest  string
+	lifecycleMu    sync.Mutex
+	closing        bool
+	handlers       sync.WaitGroup
+	handlerContext context.Context
+	stopHandlers   context.CancelFunc
+	closeOnce      sync.Once
 }
 
 func New(config Config) (*Server, error) {
@@ -83,6 +89,7 @@ func New(config Config) (*Server, error) {
 		return nil, api.E("invalid_request", "invalid_gateway_configuration")
 	}
 	s := &Server{config: config, mux: http.NewServeMux(), connections: make(chan struct{}, config.MaxConnections), logger: slog.Default()}
+	s.handlerContext, s.stopHandlers = context.WithCancel(context.Background())
 	s.methods = config.Registry.Contracts()
 	var err error
 	s.methodsDigest, err = api.DigestLimit(s.methods, 1<<20)
@@ -116,12 +123,38 @@ func (s *Server) Handler() http.Handler {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Cache-Control", "no-store")
 		w.Header().Set("Content-Security-Policy", "default-src 'self'; img-src 'self' data:; connect-src 'self'; style-src 'self'; frame-ancestors 'none'; base-uri 'none'")
+		s.lifecycleMu.Lock()
+		if s.closing {
+			s.lifecycleMu.Unlock()
+			problem(w, api.E("dependency_unavailable", "gateway_shutdown"))
+			return
+		}
+		s.handlers.Add(1)
+		s.lifecycleMu.Unlock()
+		defer s.handlers.Done()
+		ctx, cancel := context.WithCancel(r.Context())
+		stopCancellation := context.AfterFunc(s.handlerContext, cancel)
+		defer func() { stopCancellation(); cancel() }()
+		r = r.WithContext(ctx)
 		if !s.config.AllowInsecureLoopback && r.TLS == nil {
 			problem(w, api.E("forbidden", "tls_required"))
 			return
 		}
 		s.mux.ServeHTTP(w, r)
 	})
+}
+
+// Close 停止接纳并等待 HTTP、升级连接及其实际调用退出；取消不代替回收。
+// 宿主必须在关闭数据库前调用，且不得从本 Server 的 handler 内调用。
+func (s *Server) Close() error {
+	s.closeOnce.Do(func() {
+		s.lifecycleMu.Lock()
+		s.closing = true
+		s.lifecycleMu.Unlock()
+		s.stopHandlers()
+		s.handlers.Wait()
+	})
+	return nil
 }
 func write(w http.ResponseWriter, status int, v any) {
 	w.Header().Set("Content-Type", "application/json")
@@ -361,6 +394,18 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 		problem(w, e)
 		return
 	}
+	// 固定原 cookie/bearer，而非只保留主体；连接存活不延续原会话期限或撤销状态。
+	credentials := r.Clone(context.Background())
+	checkSession := func(ctx context.Context) error {
+		current, err := s.config.Identity.Authenticate(ctx, credentials)
+		if err != nil {
+			return err
+		}
+		if !api.Equal(current, a) {
+			return api.E("forbidden", "connection_identity_changed")
+		}
+		return nil
+	}
 	if !s.allowedOrigin(r) {
 		problem(w, api.E("forbidden", "origin_mismatch"))
 		return
@@ -392,6 +437,9 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 	conn.SetReadLimit(1 << 20)
 	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
+	if e = checkSession(ctx); e != nil {
+		return
+	}
 	d := s.manifest(a)
 	ready := harness.WSReady{Type: "ready", ConnectionID: connectionID, LogicalServiceID: s.config.OwnerID, Profile: api.Profile, TransportProfile: "harness-wss/1", MethodsDigest: d.MethodsDigest, Limits: d.Limits, IdentityScope: d.IdentityScope, IdentityRevision: d.IdentityRevision}
 	if e = conn.Write(ctx, websocket.MessageText, api.Raw(ready)); e != nil {
@@ -461,7 +509,7 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 				case item = <-control:
 				case item = <-normal:
 				case <-heartbeat.C:
-					if e := s.config.Identity.CheckCurrent(ctx, a); e != nil {
+					if e := checkSession(ctx); e != nil {
 						cancel()
 						return
 					}
@@ -480,6 +528,13 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 			writeCtx, stop := context.WithTimeout(ctx, 5*time.Second)
+			// 迟到/排队回复在实际披露前重新核对原会话；已接纳工作仍由业务 owner 收尾。
+			if e := checkSession(writeCtx); e != nil {
+				stop()
+				release(item)
+				cancel()
+				return
+			}
 			e := conn.Write(writeCtx, websocket.MessageText, item.bytes)
 			stop()
 			release(item)
@@ -515,7 +570,7 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 			conn.Close(websocket.StatusUnsupportedData, "text frames required")
 			return
 		}
-		if e = s.config.Identity.CheckCurrent(ctx, a); e != nil {
+		if e = checkSession(ctx); e != nil {
 			return
 		}
 		if e = s.config.Identity.RefreshConnection(ctx, a, s.config.OwnerID, connectionID); e != nil {

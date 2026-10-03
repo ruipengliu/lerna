@@ -112,6 +112,10 @@ type ListInput struct {
 // IsControlMethod reserves transport capacity; business authority is still
 // checked by the registered method in its original owner's transaction.
 func IsControlMethod(method string) bool {
+	switch method {
+	case "task.resume", "schedule.resume", "schedule.delete", "execution.control", "resource.release":
+		return true
+	}
 	for _, suffix := range []string{".cancel", ".pause", ".revoke", ".close", ".stop", ".takeover", ".deactivate", ".billing_reconcile"} {
 		if strings.HasSuffix(method, suffix) {
 			return true

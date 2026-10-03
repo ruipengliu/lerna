@@ -34,3 +34,5 @@ pnpm test:browser
 `HARNESS_BROWSER_FLOW=surface` 或 `control` 可单独验证相应链路；完整流程的失败记录仍保留。控制遇到真实版本冲突时，脚本重新读取原 Task，显式点击产生不同 ID 的新意图，最多四次；SDK 不修改已保存命令的 CAS。`HARNESS_CONTROL_TASK` 可在 control 分段中恢复并最终取消原未结测试 Task，不另建目标。固定示例会话首次归档要求 applied；后续重复运行必须显式设置 `HARNESS_EXPECT_EVENT=rejected`，核验旧 CAS 被拒以及原会话仍已归档，不能重置历史。
 
 `HARNESS_ORIGINAL_TASK` 指定实际已发布 Task 后，`node apps/web/tests/read-original.mjs` 只读原 Task、原 Result 与准确全文，不提交新业务命令。探针跨两个真实服务端心跳后继续查询，并核每次刷新使用新 query_id。`HARNESS_EXPECTED_ARTIFACT_FILE` 可指定原报告文件核对全文；`HARNESS_PROXY_OBSERVE=1` 对比透明 WebSocket 转发边界。其余地址、凭据及产物环境变量与完整脚本一致。
+
+同一已发布 Task 也可用 `node apps/web/tests/session-guard.mjs` 验证原 Cookie 会话注销后的连接守卫。脚本保留原生 WebSocket，直接注销自身浏览器会话，再发只读查询；服务端必须关闭旧连接且不返回该查询的领域响应。随后通过新 Cookie 重新认证，核对原 Task、Result 与准确 ContentRef 相同，全过程不提交业务命令。修复前后的运行应分别保存产物目录，并为每轮填写已核实的 `HARNESS_BACKEND_COMMIT`；失败轨迹不可覆盖。

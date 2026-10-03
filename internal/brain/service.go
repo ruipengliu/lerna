@@ -55,7 +55,7 @@ func (s *Service) Register(r *runtime.Registry) error {
 				return runtime.Outcome{}, api.E("invalid_request", "target_mismatch")
 			}
 			var d decision
-			rev, e := tx.Get(ctx, records, in.DecisionID, &d)
+			rev, e := getDecisionTx(ctx, tx, in.DecisionID, &d)
 			if e != nil {
 				return runtime.Outcome{}, e
 			}
@@ -70,7 +70,7 @@ func (s *Service) Register(r *runtime.Registry) error {
 			}
 			d.Revision++
 			d.Record.Revision++
-			if e = tx.Put(ctx, records, in.DecisionID, rev, d); e != nil {
+			if e = putDecision(ctx, tx, in.DecisionID, rev, d); e != nil {
 				return runtime.Outcome{}, e
 			}
 			now, e := tx.Now(ctx)
@@ -154,6 +154,9 @@ func (s *Service) Get(ctx context.Context, store runtime.Store, scope runtime.Sc
 	if !allowed(a, d) {
 		return View{}, api.E("forbidden", "decision_redacted")
 	}
+	if e := hydrateStoredDecision(ctx, store, scope, &d); e != nil {
+		return View{}, e
+	}
 	return View{d.Record, d.Input.TaskRef, d.Input.SnapshotRef, d.Phase, d.CallID, d.CancelRequested}, nil
 }
 func (s *Service) Usage(ctx context.Context, store runtime.Store, scope runtime.Scope, ref api.ObjectRef) (api.UsageSnapshot, error) {
@@ -162,6 +165,9 @@ func (s *Service) Usage(ctx context.Context, store runtime.Store, scope runtime.
 		return api.UsageSnapshot{}, api.E("forbidden", "usage_owner_mismatch")
 	}
 	if _, e := store.Read(ctx, scope, records, ref.ObjectID, 0, &d); e != nil {
+		return api.UsageSnapshot{}, e
+	}
+	if e := hydrateStoredDecision(ctx, store, scope, &d); e != nil {
 		return api.UsageSnapshot{}, e
 	}
 	u := api.UsageSnapshot{SourceRef: scope.Ref(ref.ObjectID, d.Record.Revision), UsageRevision: d.Record.Revision, Cumulative: append([]api.Amount{}, d.Record.Usage...), SpendingClosed: d.Record.Status == "completed" || d.Record.Status == "cancelled" || d.Record.Status == "failed", UsageFinal: d.Record.UsageFinal, ProofRefs: []api.ContentRef{}}
@@ -191,7 +197,7 @@ func (s *Service) finish(ctx context.Context, store runtime.Store, scope runtime
 }
 func (s *Service) change(ctx context.Context, tx runtime.Tx, id string, fn func(*decision) error) error {
 	var d decision
-	rev, e := tx.Get(ctx, records, id, &d)
+	rev, e := getDecisionTx(ctx, tx, id, &d)
 	if e != nil {
 		return e
 	}
@@ -200,7 +206,7 @@ func (s *Service) change(ctx context.Context, tx runtime.Tx, id string, fn func(
 	}
 	d.Revision++
 	d.Record.Revision++
-	return tx.Put(ctx, records, id, rev, d)
+	return putDecision(ctx, tx, id, rev, d)
 }
 func (s *Service) wait(ctx context.Context, store runtime.Store, scope runtime.Scope, w runtime.Work) error {
 	return s.finish(ctx, store, scope, w, runtime.Waiting(time.Now().Add(time.Second)), nil)
@@ -209,6 +215,9 @@ func (s *Service) advance(ctx context.Context, store runtime.Store, scope runtim
 	id := w.Job.SourceRef.ObjectID
 	var d decision
 	if _, e := store.Read(ctx, scope, records, id, 0, &d); e != nil {
+		return e
+	}
+	if e := hydrateStoredDecision(ctx, store, scope, &d); e != nil {
 		return e
 	}
 	p := s.profiles[key(d.Input.ModelProfileRef)]
