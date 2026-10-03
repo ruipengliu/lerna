@@ -184,8 +184,8 @@ func TestSQLiteMigrationRecordsExactVersionAndRejectsAlteredChecksum(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-	if status.Version != 1 || status.Checksum != sqlite.MigrationV1Checksum() {
-		t.Fatalf("missing real v1 migration record: %+v", status)
+	if status.Version != 2 || status.Checksum != "sha256:3791b3fc5ca49c18eee04b2afcaa54c2aae9c5afbf3f1e3fd98f5cce8715e01c" {
+		t.Fatalf("missing real v2 migration record: %+v", status)
 	}
 	// Deliberate corruption is a storage fault fixture, not a business observation.
 	cfg, _ := sqliteConfigurations.Load(store)
@@ -599,8 +599,12 @@ func TestSQLiteHistoricalV1FileRestoresOriginalDecisionsAndPendingJob(t *testing
 		t.Fatal(err)
 	}
 	status, err := store.MigrationStatus(contextFor(t))
-	if err != nil || status.Version != 1 || status.Checksum != report.Migration.Checksum {
+	if err != nil || status.Version != 2 || status.Checksum != sqlite.MigrationV2Checksum() {
 		t.Fatalf("restored migration changed: %+v %v", status, err)
+	}
+	versions, err := store.MigrationVersions(contextFor(t))
+	if err != nil || len(versions) != 2 || versions[0] != report.Migration || versions[1] != status {
+		t.Fatalf("actual historical v1/v2 identity: %+v %v", versions, err)
 	}
 	scope := contract.OwnerRef{TenantID: "fixture-tenant", OwnerID: "fixture-owner"}
 	subject := contract.SubjectBinding{TenantID: scope.TenantID, SubjectID: "fixture-writer", DelegationChain: []contract.DelegatedSubject{}}
@@ -648,5 +652,69 @@ func TestSQLiteHistoricalV1FileRestoresOriginalDecisionsAndPendingJob(t *testing
 	after, err := h.Observe(ctx, "v1-input", &subject)
 	if err != nil || after.Job.ID != before.Job.ID || after.Input.Revision != 1 || after.Job.WorkRevision != 1 {
 		t.Fatalf("historical retransmission changed responsibility: %+v %v", after, err)
+	}
+
+	worker := durablework.NewWorker(scope, store, store, store, store)
+	batch, err := worker.Claim(ctx, "historical-v2", 1, time.Minute)
+	if err != nil || len(batch) != 1 || batch[0].Claim.JobID != report.Observation.Job.ID || batch[0].Claim.Epoch != 1 || batch[0].Input.Text != "PG v1 portable input 🌍" {
+		t.Fatalf("historical v2 claim: %+v %v", batch, err)
+	}
+	if err = worker.Complete(ctx, batch[0].Claim, durablework.Project(batch[0])); err != nil {
+		t.Fatal(err)
+	}
+	projected, err := h.Observe(ctx, "v1-input", &subject)
+	if err != nil || projected.Job.ID != report.Observation.Job.ID || projected.Job.CompletedRevision != 1 || projected.Job.State != "done" || projected.Projection == nil || projected.Projection.InputRevision != 1 || projected.Projection.TextDigest != "sha256:eeebf3ebdb81d9e669ca989199225a42df8bfe152a9e247c1b5981052f615bbc" {
+		t.Fatalf("historical v2 projection: %+v %v", projected, err)
+	}
+}
+
+func TestSQLiteWorkBusyAndCanceledQueueRetainNormalResponsibility(t *testing.T) {
+	store := sqliteDatabase(t)
+	ctx := contextFor(t)
+	h := hostFor(store, owner, principal)
+	out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
+	assertReceived(t, out, err)
+	worker := durablework.NewWorker(owner, store, store, store, store)
+	cfg, _ := sqliteConfigurations.Load(store)
+	releaseBusy := holdSQLiteProcessLock(t, cfg.(sqlite.Config).Path)
+	_, err = worker.Claim(ctx, "busy", 1, time.Minute)
+	var lockError sqlite3.Error
+	if !errors.As(err, &lockError) || lockError.Code != sqlite3.ErrBusy {
+		t.Fatalf("claim did not report actual busy: %v", err)
+	}
+	releaseBusy()
+	held, release := make(chan struct{}), make(chan struct{})
+	done := make(chan error, 1)
+	go func() {
+		done <- store.Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
+			close(held)
+			select {
+			case <-release:
+				return nil
+			case <-ctx.Done():
+				return ctx.Err()
+			}
+		})
+	}()
+	awaitStage(t, ctx, held)
+	canceled, cancel := context.WithCancel(ctx)
+	cancel()
+	if _, err = worker.Claim(canceled, "canceled", 1, time.Minute); !errors.Is(err, context.Canceled) {
+		t.Fatalf("queued claim cancellation: %v", err)
+	}
+	close(release)
+	if err = <-done; err != nil {
+		t.Fatal(err)
+	}
+	got, err := h.Observe(ctx, "input", &principal)
+	if err != nil || got.Job.State != "ready" || got.Job.CompletedRevision != 0 {
+		t.Fatalf("busy/cancel lost responsibility: %+v %v", got, err)
+	}
+	batch, err := worker.Claim(ctx, "normal", 1, time.Minute)
+	if err != nil || len(batch) != 1 || batch[0].Claim.Epoch != 1 {
+		t.Fatalf("normal claim: %+v %v", batch, err)
+	}
+	if err = worker.Complete(ctx, batch[0].Claim, durablework.Project(batch[0])); err != nil {
+		t.Fatal(err)
 	}
 }

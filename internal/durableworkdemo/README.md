@@ -19,5 +19,5 @@ increments the input revision.
 See the [Host seam](../../host/durablework/README.md) for accepted commands,
 query authorization and tests, and [storage](../../adapters/postgres/README.md)
 and [SQLite storage](../../adapters/sqlite/README.md) for transaction/SQL behavior.
-The current Worker implementation uses PostgreSQL; SQLite Claim and scheduling
-remain later tickets.
+The same Worker runs against PostgreSQL and SQLite through these ports.
+Scheduling, waiting and quotas remain later tickets.

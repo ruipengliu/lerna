@@ -15,6 +15,14 @@ import (
 //go:embed migrations/host/0001_admission.sql
 var migrationV1 string
 
+//go:embed migrations/host/0002_claims.sql
+var migrationV2 string
+
+func MigrationV2Checksum() string {
+	digest := sha256.Sum256([]byte(migrationV2))
+	return "sha256:" + hex.EncodeToString(digest[:])
+}
+
 func MigrationV1Checksum() string {
 	digest := sha256.Sum256([]byte(migrationV1))
 	return "sha256:" + hex.EncodeToString(digest[:])
@@ -29,22 +37,29 @@ func (s *Store) Migrate(ctx context.Context) error {
 		if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS schema_migrations (version bigint PRIMARY KEY, checksum text NOT NULL)`); err != nil {
 			return err
 		}
-		var checksum string
-		err = tx.QueryRowContext(ctx, `SELECT checksum FROM schema_migrations WHERE version=1`).Scan(&checksum)
-		if err == nil {
-			if checksum != MigrationV1Checksum() {
-				return errors.New("migration checksum mismatch")
+		for index, migration := range []string{migrationV1, migrationV2} {
+			version := index + 1
+			digest := sha256.Sum256([]byte(migration))
+			expected := "sha256:" + hex.EncodeToString(digest[:])
+			var checksum string
+			err = tx.QueryRowContext(ctx, `SELECT checksum FROM schema_migrations WHERE version=$1`, version).Scan(&checksum)
+			if err == nil {
+				if checksum != expected {
+					return errors.New("migration checksum mismatch")
+				}
+				continue
 			}
-			return nil
+			if !errors.Is(err, sql.ErrNoRows) {
+				return err
+			}
+			if _, err = tx.ExecContext(ctx, migration); err != nil {
+				return err
+			}
+			if _, err = tx.ExecContext(ctx, `INSERT INTO schema_migrations(version,checksum)VALUES($1,$2)`, version, expected); err != nil {
+				return err
+			}
 		}
-		if !errors.Is(err, sql.ErrNoRows) {
-			return err
-		}
-		if _, err = tx.ExecContext(ctx, migrationV1); err != nil {
-			return err
-		}
-		_, err = tx.ExecContext(ctx, `INSERT INTO schema_migrations(version,checksum)VALUES(1,$1)`, MigrationV1Checksum())
-		return err
+		return nil
 	})
 }
 
@@ -65,4 +80,30 @@ func (s *Store) MigrationStatus(ctx context.Context) (Migration, error) {
 		return tx.QueryRowContext(ctx, "SELECT version,checksum FROM schema_migrations ORDER BY version DESC LIMIT 1").Scan(&out.Version, &out.Checksum)
 	})
 	return out, err
+}
+
+// MigrationVersions reports every immutable applied artifact, including v1
+// after a forward upgrade. It is an internal Host configuration observation.
+func (s *Store) MigrationVersions(ctx context.Context) ([]Migration, error) {
+	var versions []Migration
+	err := s.Within(ctx, contract.OwnerRef{TenantID: "migration", OwnerID: "host"}, func(ctx context.Context, token runtime.Tx) error {
+		tx, err := s.localToken(ctx, token)
+		if err != nil {
+			return err
+		}
+		rows, err := tx.QueryContext(ctx, `SELECT version,checksum FROM schema_migrations ORDER BY version`)
+		if err != nil {
+			return err
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var version Migration
+			if err = rows.Scan(&version.Version, &version.Checksum); err != nil {
+				return err
+			}
+			versions = append(versions, version)
+		}
+		return rows.Err()
+	})
+	return versions, err
 }
