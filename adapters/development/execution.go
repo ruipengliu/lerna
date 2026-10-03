@@ -2,6 +2,7 @@ package development
 
 import (
 	"context"
+	"fmt"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/execution"
 	"github.com/ruipengliu/lerna/internal/governance"
@@ -85,7 +86,21 @@ func (e executionBridge) PrepareDispatch(ctx context.Context, s runtime.Scope, i
 		if err := e.a.freezeRemoteSubmitter(ctx, s, i); err != nil {
 			return err
 		}
-		return e.prepareRemoteDispatch(ctx, s, i, fixed)
+		if er = e.prepareRemoteDispatch(ctx, s, i, fixed); er != nil {
+			return er
+		}
+		// Task 在原五秒窗口前以 service holder 核 task.dispatch/cloud。
+		// 设备缓存准备的 execution_* 证明不能替代此准确用途；旧 bundle 同样
+		// 在每个新 Job 取得当前证明，原 Task/控制/Claim 事务仍随后完整重核。
+		ctx, er = e.a.prepareForeignSources(ctx, s, e.a.ServiceAuth, i.ProcessedSourceRefs, "task.dispatch", "cloud")
+		if er != nil {
+			return fmt.Errorf("prepare original task.dispatch/cloud sources before control window: %w", er)
+		}
+		flow, ok := ctx.Value(foreignFlowKey{}).(runtime.Flow)
+		if !ok || flow.Kind != "job" || flow.Scope != s || flow.Work == nil || flow.Work.Job.Kind != task.JobDispatchOperation || flow.Work.Job.SourceRef.ObjectID != i.OperationID {
+			return api.E("forbidden", "original_remote_worker_claim_required")
+		}
+		return e.a.Store.CheckClaim(ctx, s, flow.Work.Claim)
 	}
 	return nil
 }

@@ -38,7 +38,7 @@ func TestConfiguredRemoteExecutorTaskReadsOriginalDeviceBytesAndSettlesOnce(t *t
 			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
 				t.Skip("actual PostgreSQL DSN required")
 			}
-			runRemoteExecutorTask(t, driver, false)
+			runRemoteExecutorTask(t, driver, false, false)
 		})
 	}
 }
@@ -49,12 +49,12 @@ func TestConfiguredRemoteExecutorPublishesVerifiedTaskResultAndReopensOriginal(t
 			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
 				t.Skip("actual PostgreSQL DSN required")
 			}
-			runRemoteExecutorTask(t, driver, true)
+			runRemoteExecutorTask(t, driver, true, false)
 		})
 	}
 }
 
-func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
+func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport bool, observers ...remoteReportObserver) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), reportFixtureTimeout)
 	defer cancel()
@@ -109,6 +109,11 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 	deviceOwner, instance := api.NewID("owner"), api.NewID("instance")
 	binding := api.ObjectRef{TenantID: cfg.TenantID, OwnerID: deviceOwner, ObjectID: api.NewID("binding"), Revision: 1}
 	deviceBinding := executor.Binding{CapabilityRef: target.FileReadCapability().Ref, BindingRef: binding, InstallLockRef: component("builtin-install-lock"), Resources: []string{"managed-files"}, Actions: []string{"file.read"}}
+	deviceBindings := []executor.Binding{deviceBinding}
+	writeBinding := api.ObjectRef{TenantID: cfg.TenantID, OwnerID: deviceOwner, ObjectID: api.NewID("binding"), Revision: 1}
+	if saveReport {
+		deviceBindings = append(deviceBindings, executor.Binding{CapabilityRef: target.FileWriteCapability().Ref, BindingRef: writeBinding, InstallLockRef: deviceBinding.InstallLockRef, Resources: []string{"managed-files"}, Actions: []string{"file.write"}})
+	}
 	peerToken := filepath.Join(deviceRoot, "peer-token")
 	if err = os.WriteFile(peerToken, []byte("synthetic-explicit-device-peer-token-for-contract-test"), 0600); err != nil {
 		t.Fatal(err)
@@ -121,7 +126,11 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 	if err = listener.Close(); err != nil {
 		t.Fatal(err)
 	}
-	dc := executor.Config{Development: true, TenantID: cfg.TenantID, OwnerID: deviceOwner, InstanceID: instance, DatabasePath: filepath.Join(deviceRoot, "device.sqlite"), DataRoot: deviceRoot, SigningKeyFile: filepath.Join(deviceRoot, "device-key.pem"), PeerTokenFile: peerToken, Authority: executor.TrustedAuthority{KeyID: "development-es256", OwnerID: cfg.OwnerID, PublicX: authority.X, PublicY: authority.Y}, Bindings: []executor.Binding{deviceBinding}, GRPCAddr: address, TLSCertificateFile: cert, TLSKeyFile: key, OutputSubjectRefs: []api.ObjectRef{{TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.OwnerID, Revision: 1}, {TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.SubjectID, Revision: 1}}, OutputPurposes: []string{"execution_result", "content.read", "content.write", "task.context", "task.snapshot", "task.dispatch", "task.action", "brain.input", "brain.output", "task.evidence", "task.attach_evidence", "task.complete", "task.goal", "task.result", "result", "memory.save", "memory.read", "memory.query"}, OutputLocations: []string{"cloud", "device"}}
+	dc := executor.Config{Development: true, TenantID: cfg.TenantID, OwnerID: deviceOwner, InstanceID: instance, DatabasePath: filepath.Join(deviceRoot, "device.sqlite"), DataRoot: deviceRoot, SigningKeyFile: filepath.Join(deviceRoot, "device-key.pem"), PeerTokenFile: peerToken, Authority: executor.TrustedAuthority{KeyID: "development-es256", OwnerID: cfg.OwnerID, PublicX: authority.X, PublicY: authority.Y}, Bindings: deviceBindings, GRPCAddr: address, TLSCertificateFile: cert, TLSKeyFile: key, OutputSubjectRefs: []api.ObjectRef{{TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.OwnerID, Revision: 1}, {TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.SubjectID, Revision: 1}}, OutputPurposes: []string{"execution_result", "content.read", "content.write", "task.context", "task.snapshot", "task.dispatch", "task.action", "brain.input", "brain.output", "task.evidence", "task.attach_evidence", "task.complete", "task.goal", "task.result", "result", "memory.save", "memory.read", "memory.query"}, OutputLocations: []string{"cloud", "device"}}
+	if saveReport {
+		// 后继参数确实派生自原设备写入事实；宿主读取与设备传送用途分别登记。
+		dc.OutputPurposes = append(dc.OutputPurposes, "managed_file_read", "managed_file_write", "execution_arguments", "execution.arguments", "execution_intent")
+	}
 	device, err := executor.Open(ctx, dc, true)
 	if err != nil {
 		t.Fatal(err)
@@ -142,6 +151,12 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 	wantStatus := "failed"
 	if complete {
 		goalBody, wantStatus = original, "succeeded"
+	}
+	goalSpec := brain.GoalSpec{Kind: "answer", Body: goalBody}
+	expectedPosts, expectedSpent := int32(3), "0.00072"
+	if saveReport {
+		goalSpec = brain.GoalSpec{Kind: "report", Title: "Device report", Body: "The original cloud Task saved this exact report on its paired device.", SavePath: "remote-report.md"}
+		expectedPosts, expectedSpent = 4, "0.00096"
 	}
 	if err = os.WriteFile(filepath.Join(deviceRoot, "files", "remote-original.txt"), []byte(original), 0600); err != nil {
 		t.Fatal(err)
@@ -191,9 +206,14 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 	if err = api.Decode(platform.PublicJWK(device.Keys.Keys["device-es256"].Public), &public); err != nil {
 		t.Fatal(err)
 	}
-	cfg.RemoteExecutors = []RemoteExecutorConfig{{OwnerID: deviceOwner, DatabaseID: device.Scope.DatabaseID, InstanceID: instance, Endpoint: "grpcs://" + address, TLSCAFile: ca, PeerTokenFile: peerToken, PublicKeyID: "device-es256", PublicX: public.X, PublicY: public.Y, Bindings: []executor.Binding{deviceBinding}}}
+	cfg.RemoteExecutors = []RemoteExecutorConfig{{OwnerID: deviceOwner, DatabaseID: device.Scope.DatabaseID, InstanceID: instance, Endpoint: "grpcs://" + address, TLSCAFile: ca, PeerTokenFile: peerToken, PublicKeyID: "device-es256", PublicX: public.X, PublicY: public.Y, Bindings: deviceBindings}}
 	scope := runtime.Scope{TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, DatabaseID: cfg.DatabaseID}
 	cfg.ActionBindings = []ActionBindingConfig{{CapabilityRef: target.FileReadCapability().Ref, BindingRef: binding, InstallLockRef: deviceBinding.InstallLockRef, Grant: api.Grant{GrantID: api.NewID("grant"), OwnerID: cfg.OwnerID, Revision: 1, SubjectRef: scope.Ref(cfg.OwnerID, 1), Resources: []string{"managed-files"}, Actions: []string{"file.read"}, Purposes: []string{"goal_action"}, Recipients: []string{deviceOwner}, Locations: []string{"device"}, Mode: "once", State: "active", NotBefore: api.Time(time.Now().Add(-time.Minute)), ExpiresAt: cfg.PolicyExpiresAt, Limits: []api.Amount{{Unit: "USD", Value: "1"}}}}}
+	if saveReport {
+		grant := cfg.ActionBindings[0].Grant
+		grant.GrantID, grant.Actions = api.NewID("grant"), []string{"file.write"}
+		cfg.ActionBindings = append(cfg.ActionBindings, ActionBindingConfig{CapabilityRef: target.FileWriteCapability().Ref, BindingRef: writeBinding, InstallLockRef: deviceBinding.InstallLockRef, Grant: grant})
+	}
 	var posts atomic.Int32
 	var active atomic.Pointer[App]
 	model := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -215,7 +235,9 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 			return
 		}
 		reply := knowledgeContractReply()
-		if input.Snapshot.Purpose == "interpret_requirements" {
+		if saveReport {
+			reply = remoteReportModelReply(t, active.Load(), input.Snapshot, input.Materials, goalSpec, binding, writeBinding, post)
+		} else if input.Snapshot.Purpose == "interpret_requirements" {
 			reply = knowledgeRefinementReply(active.Load().ArtifactRule)
 			if complete {
 				reply = remoteRefinementReply(active.Load().ArtifactRule, goalBody)
@@ -279,7 +301,12 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 		}
 	}()
 	active.Store(a)
-	goal, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), "application/json", api.Raw(brain.GoalSpec{Kind: "answer", Body: goalBody}), []api.ContentRef{}, []api.ContentRef{})
+	var progressStore *remoteProgressStore
+	if saveReport {
+		progressStore = &remoteProgressStore{Store: a.Store, QueryBindingStore: a.Store.(runtime.QueryBindingStore)}
+		a.Store = progressStore
+	}
+	goal, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), "application/json", api.Raw(goalSpec), []api.ContentRef{}, []api.ContentRef{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -300,12 +327,30 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 			if errors.As(err, &refusal) && refusal.Code == "revision_conflict" && refusal.Reason == "device_usage_source_advanced" {
 				t.Logf("original billing Job remains recoverable after source head advanced: %v", err)
 			} else {
+				if progressStore != nil {
+					recordRemoteProgressRefusal(t, ctx, a, root, taskID, posts.Load(), progressStore, err)
+				}
 				t.Fatal("actual remote public Task progress", err)
+			}
+		}
+		if progressStore != nil {
+			if refusal := progressStore.firstRefusal(); refusal != nil {
+				recordRemoteProgressRefusal(t, ctx, a, root, taskID, posts.Load(), progressStore, nil)
+				t.Fatalf("original remote Task admission refused before independent readback: %s", refusal.Cause)
 			}
 		}
 		got, e := a.Task.Read(ctx, a.Store, a.Scope, a.UserAuth, taskID)
 		if e != nil {
 			t.Fatal(e)
+		}
+		for _, observe := range observers {
+			progress, err := a.Task.ContextFacts(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err = observe(ctx, a, device, progress, posts.Load()); err != nil {
+				t.Fatal("original remote report verification", err)
+			}
 		}
 		if time.Now().After(nextProgress) {
 			t.Logf("public Task progress: status=%s requirements=%s accounting_open=%t posts=%d", got.Status, got.RequirementsState, got.AccountingOpen, posts.Load())
@@ -321,7 +366,7 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 			nextProgress = time.Now().Add(10 * time.Second)
 		}
 		if got.Status == wantStatus && !got.AccountingOpen {
-			if posts.Load() != 3 || got.Budget[0].Spent != "0.00072" || got.Budget[0].Reserved != "0" {
+			if posts.Load() != expectedPosts || got.Budget[0].Spent != expectedSpent || got.Budget[0].Reserved != "0" {
 				t.Fatalf("original known ledger changed: posts=%d %+v", posts.Load(), got)
 			}
 			break
@@ -336,10 +381,31 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 		}
 	}
 	facts, err := a.Task.ContextFacts(ctx, a.Store, a.Scope, a.UserAuth, taskID)
-	if err != nil || len(facts.Operations) != 1 || facts.Operations[0].Intent.ExecutorID != deviceOwner || facts.Operations[0].Fact.Effect != "not_applied" || !facts.Operations[0].Fact.Closed {
+	wantedOperations := 1
+	if saveReport {
+		wantedOperations = 2
+	}
+	if err != nil || len(facts.Operations) != wantedOperations {
 		t.Fatalf("real remote fact missing: %v %+v", err, facts)
 	}
-	op := facts.Operations[0].Intent.OperationID
+	readIndex := -1
+	for n, fact := range facts.Operations {
+		if fact.Intent.ExecutorID != deviceOwner || !fact.Fact.Closed || fact.Fact.MayApplyLater {
+			t.Fatalf("actual device effect did not close: %+v", fact)
+		}
+		if api.Equal(fact.Intent.CapabilityRef, target.FileReadCapability().Ref) {
+			if fact.Fact.Effect != "not_applied" {
+				t.Fatalf("original device read effect changed: %+v", fact)
+			}
+			readIndex = n
+		} else if !saveReport || !api.Equal(fact.Intent.CapabilityRef, target.FileWriteCapability().Ref) || fact.Fact.Effect != "applied" {
+			t.Fatalf("original device write not applied: %+v", fact)
+		}
+	}
+	if readIndex < 0 {
+		t.Fatal("actual independent device read missing")
+	}
+	op := facts.Operations[readIndex].Intent.OperationID
 	client, err := executor.Dial(ctx, executor.RemoteConfig{DatabaseID: device.Scope.DatabaseID, Endpoint: "grpcs://" + address, OwnerID: deviceOwner, InstanceID: instance, AuthorityID: cfg.OwnerID, TenantID: cfg.TenantID, TLSCAFile: ca, PeerTokenFile: peerToken, JournalRoot: filepath.Join(root, "inspect-device-journal")})
 	if err != nil {
 		t.Fatal(err)
@@ -355,8 +421,15 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 	}
 	bytes, err := a.ReadContent(ctx, a.Scope, a.UserAuth, *view.Operation.ResultRef, "execution_result")
 	var read target.FileReadResult
-	if err != nil || api.Decode(bytes, &read) != nil || read.DataBase64 != base64.StdEncoding.EncodeToString([]byte(original)) {
+	wantedBytes := []byte(original)
+	if saveReport {
+		wantedBytes = []byte(originalRemoteReport)
+	}
+	if err != nil || api.Decode(bytes, &read) != nil || read.DataBase64 != base64.StdEncoding.EncodeToString(wantedBytes) {
 		t.Fatalf("original foreign result bytes unavailable: %v %+v", err, read)
+	}
+	if saveReport {
+		verifyRemoteReportTarget(t, ctx, a, device, client, facts, goalSpec, read)
 	}
 	if view.Operation.ResultRef.OwnerID != deviceOwner || view.Operation.TaskRef.TenantID != cfg.TenantID {
 		t.Fatal("device original ownership was rewritten")
@@ -400,8 +473,13 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 			case <-time.After(20 * time.Millisecond):
 			}
 		}
-		if result.ContentRef == nil || result.Result.CompletionBasis != "verified" || len(result.Result.ConditionResults) != 1 || result.Result.ConditionResults[0].Verdict != "pass" {
+		if result.ContentRef == nil || result.Result.CompletionBasis != "verified" || len(result.Result.ConditionResults) != wantedOperations {
 			t.Fatalf("device fact replaced verified Task Result: %+v", result)
+		}
+		for _, check := range result.Result.ConditionResults {
+			if check.Verdict != "pass" || check.Basis != "verified" {
+				t.Fatalf("original independent check not verified: %+v", check)
+			}
 		}
 		published, e := a.ReadContent(ctx, a.Scope, a.UserAuth, *result.ContentRef, "task.result")
 		var exported api.Result
@@ -426,7 +504,7 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 			t.Fatal(err)
 		}
 		after, e := a.Task.Result(ctx, a.Store, a.Scope, a.UserAuth, taskID, task.ResultInput{})
-		if e != nil || !api.Equal(after, result) || posts.Load() != 3 {
+		if e != nil || !api.Equal(after, result) || posts.Load() != expectedPosts {
 			t.Fatalf("reopen replaced original Result or model call: %v %+v", e, after)
 		}
 		deviceCancel()
@@ -468,6 +546,9 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete bool) {
 		afterOp, e := client.Get(ctx, op)
 		if e != nil || len(afterOp.Attempts.Items) != 1 || !api.Equal(afterOp.Operation.ResultRef, view.Operation.ResultRef) {
 			t.Fatalf("reopen changed original device Attempt: %v", e)
+		}
+		if saveReport {
+			verifyRemoteReportTarget(t, ctx, a, device, client, facts, goalSpec, read)
 		}
 	}
 }

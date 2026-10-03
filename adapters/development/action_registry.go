@@ -404,7 +404,7 @@ func (a *App) prepareAction(ctx context.Context, s runtime.Scope, i api.Decision
 	if !declared {
 		return task.PreparedAction{}, actionAdmission{}, api.E("forbidden", "action_pair_not_declared")
 	}
-	args, err := a.Memory.Read(ctx, s, a.ServiceAuth, candidate.ArgumentsRef, "execution.arguments")
+	args, err := a.ReadContent(ctx, s, a.ServiceAuth, candidate.ArgumentsRef, "execution.arguments")
 	if err != nil {
 		return task.PreparedAction{}, actionAdmission{}, err
 	}
