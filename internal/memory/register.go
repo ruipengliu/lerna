@@ -49,6 +49,12 @@ type TransferStatus struct {
 
 // Register 只登记实际实现的方法；未登记的方法由 Runtime 返回 unsupported。
 func (s *Service) Register(registry *runtime.Registry) {
+	query(s, registry, "memory.index.inspect", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in struct{}) (IndexStatus, error) {
+		if q.TargetID != scope.OwnerID {
+			return IndexStatus{}, api.E("invalid_request", "target_mismatch")
+		}
+		return s.IndexStatus(ctx, scope, auth)
+	})
 	s.registerMemory(registry)
 	s.registerQueries(registry)
 	s.registerExtraction(registry)
@@ -70,7 +76,7 @@ func (s *Service) Register(registry *runtime.Registry) {
 		return PutOutput{ref}, err
 	})
 	command(s, registry, "content.register_copy", "content", false, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in RegisterCopyInput) (CopyOutput, error) {
-		if c.TargetID != in.ContentRef.ContentID || in.HolderRef.ObjectID != auth.SubjectID {
+		if c.TargetID != in.ContentRef.ContentID || in.HolderRef.ObjectID != auth.SubjectID || in.HolderRef.Revision != auth.CredentialGeneration {
 			return CopyOutput{}, api.E("forbidden", "copy_holder_mismatch")
 		}
 		return s.RegisterCopyTx(ctx, tx, auth, in)

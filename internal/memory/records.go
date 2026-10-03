@@ -116,6 +116,10 @@ func (s *Service) validateValues(ctx context.Context, tx runtime.Tx, auth runtim
 }
 
 func (s *Service) memoryAllowed(ctx context.Context, tx runtime.Tx, auth runtime.Auth, record MemoryRecord, purpose string, continuous bool) error {
+	return s.memoryAllowedAt(ctx, tx, auth, record, purpose, s.Location, continuous)
+}
+
+func (s *Service) memoryAllowedAt(ctx context.Context, tx runtime.Tx, auth runtime.Auth, record MemoryRecord, purpose, location string, continuous bool) error {
 	if record.State == "deleted" {
 		return api.E("gone", "memory_deleted")
 	}
@@ -125,17 +129,12 @@ func (s *Service) memoryAllowed(ctx context.Context, tx runtime.Tx, auth runtime
 	if purpose == "" {
 		purpose = "memory.read"
 	}
-	if _, err := s.allowed(ctx, tx, auth, record.Values.PolicyRef, purpose, s.Location, continuous); err != nil {
+	if _, err := s.allowed(ctx, tx, auth, record.Values.PolicyRef, purpose, location, continuous); err != nil {
 		return err
 	}
 	for _, ref := range []api.ContentRef{record.Values.ContentRef, record.Values.ScopeRef} {
-		if _, err := s.CheckContentTx(ctx, tx, auth, ref, purpose, s.Location, continuous); err != nil {
+		if _, err := s.CheckContentTx(ctx, tx, auth, ref, purpose, location, continuous); err != nil {
 			return err
-		}
-		if ref != record.Values.ContentRef && ref != record.Values.ScopeRef {
-			if err := s.checkSourceGate(ctx, tx, auth, ref, purpose, s.Location, continuous); err != nil {
-				return err
-			}
 		}
 	}
 	policy, err := s.policy(ctx, tx, record.Values.PolicyRef)
@@ -143,7 +142,7 @@ func (s *Service) memoryAllowed(ctx context.Context, tx runtime.Tx, auth runtime
 		return err
 	}
 	for _, ref := range sourceRefs(record.Values.Sources) {
-		if _, err = s.checkContent(ctx, tx, auth, ref, purpose, s.Location, continuous, map[string]bool{}, 1, policy.Values.IndependentDerived); err != nil {
+		if _, err = s.checkContent(ctx, tx, auth, ref, purpose, location, continuous, map[string]bool{}, 1, policy.Values.IndependentDerived); err != nil {
 			return err
 		}
 	}

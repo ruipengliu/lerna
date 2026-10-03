@@ -59,7 +59,7 @@ func viewPosition(view View, cursor string) (string, uint64, error) {
 }
 
 func (s *Service) openView(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in OpenViewInput) (ViewOutput, error) {
-	if c.TargetID != in.ViewID || !api.ValidID(in.ViewID) || in.MaxCandidates == 0 || in.MaxCandidates > 200 || len(in.Purposes) == 0 || len(in.Purposes) > 10 || in.HolderRef.ObjectID != auth.SubjectID {
+	if c.TargetID != in.ViewID || !api.ValidID(in.ViewID) || in.MaxCandidates == 0 || in.MaxCandidates > 200 || len(in.Purposes) == 0 || len(in.Purposes) > 10 || in.HolderRef.ObjectID != auth.SubjectID || in.HolderRef.Revision != auth.CredentialGeneration {
 		return ViewOutput{}, api.E("invalid_request", "invalid_view_scope")
 	}
 	if err := runtime.CheckRef(tx.Scope(), in.HolderRef); err != nil {
@@ -67,6 +67,11 @@ func (s *Service) openView(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	}
 	if _, err := s.CheckContentTx(ctx, tx, auth, in.ScopeRef, "memory.sync", in.Location, true); err != nil {
 		return ViewOutput{}, err
+	}
+	if in.Location != s.Location {
+		if _, err := s.CheckContentTx(ctx, tx, auth, in.ScopeRef, "memory.sync", s.Location, true); err != nil {
+			return ViewOutput{}, err
+		}
 	}
 	head, err := loadHead(ctx, tx)
 	if err != nil {
@@ -97,7 +102,7 @@ func (s *Service) openView(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 		}
 		allowed := true
 		for _, purpose := range append([]string{"memory.sync"}, in.Purposes...) {
-			if err = s.memoryAllowed(ctx, tx, auth, record, purpose, true); err != nil {
+			if err = s.viewAllowed(ctx, tx, auth, view, record, purpose); err != nil {
 				allowed = false
 				if isUnavailable(err) {
 					view.Partial = true
@@ -113,18 +118,7 @@ func (s *Service) openView(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 			continue
 		}
 		view.Snapshot = append(view.Snapshot, tx.Scope().Ref(record.MemoryID, record.Revision))
-		copyID := semanticID("copy", view.ViewID+":"+record.MemoryID+":"+fmt.Sprint(record.Revision))
-		var content ContentVersion
-		_, err = tx.Get(ctx, "content.versions", contentKey(record.Values.ContentRef), &content)
-		if err != nil {
-			return ViewOutput{}, err
-		}
-		retention, _ := api.ParseTime(content.RetentionUntil)
-		until := now.Add(5 * time.Minute)
-		if until.After(retention) {
-			until = retention
-		}
-		if _, err = s.RegisterCopyTx(ctx, tx, auth, RegisterCopyInput{CopyID: copyID, ContentRef: record.Values.ContentRef, HolderRef: view.HolderRef, Purpose: "memory.sync", Location: view.Location, RetainUntil: api.Time(until), ReferenceIntentRef: tx.Scope().Ref(view.ViewID, 1)}); err != nil {
+		if err = s.registerViewCopy(ctx, tx, auth, view, record); err != nil {
 			return ViewOutput{}, err
 		}
 	}
@@ -133,6 +127,31 @@ func (s *Service) openView(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 		return ViewOutput{}, err
 	}
 	return ViewOutput{ViewRef: tx.Scope().Ref(in.ViewID, 1), SnapshotHead: view.SnapshotHead, Cursor: view.PullCursor, ExpiresAt: view.ExpiresAt, Partial: view.Partial, Gaps: view.Gaps}, nil
+}
+
+func (s *Service) viewAllowed(ctx context.Context, tx runtime.Tx, auth runtime.Auth, view View, record MemoryRecord, purpose string) error {
+	if err := s.memoryAllowed(ctx, tx, auth, record, purpose, true); err != nil {
+		return err
+	}
+	if view.Location != s.Location {
+		return s.memoryAllowedAt(ctx, tx, auth, record, purpose, view.Location, true)
+	}
+	return nil
+}
+
+func (s *Service) registerViewCopy(ctx context.Context, tx runtime.Tx, auth runtime.Auth, view View, record MemoryRecord) error {
+	var content ContentVersion
+	if _, err := tx.Get(ctx, "content.versions", contentKey(record.Values.ContentRef), &content); err != nil {
+		return err
+	}
+	retention, _ := api.ParseTime(content.RetentionUntil)
+	until, _ := api.ParseTime(view.ExpiresAt)
+	if until.After(retention) {
+		until = retention
+	}
+	copyID := semanticID("copy", view.ViewID+":"+record.MemoryID+":"+fmt.Sprint(record.Revision))
+	_, err := s.RegisterCopyTx(ctx, tx, auth, RegisterCopyInput{CopyID: copyID, ContentRef: record.Values.ContentRef, HolderRef: view.HolderRef, Purpose: "memory.sync", Location: view.Location, RetainUntil: api.Time(until), ReferenceIntentRef: tx.Scope().Ref(view.ViewID, 1)})
+	return err
 }
 
 func (s *Service) PullView(ctx context.Context, scope runtime.Scope, auth runtime.Auth, in PullViewInput) (ViewPage, error) {
@@ -168,6 +187,11 @@ func (s *Service) PullView(ctx context.Context, scope runtime.Scope, auth runtim
 		if _, err = s.CheckContentTx(ctx, tx, auth, view.ScopeRef, "memory.sync", view.Location, true); err != nil {
 			return err
 		}
+		if view.Location != s.Location {
+			if _, err = s.CheckContentTx(ctx, tx, auth, view.ScopeRef, "memory.sync", s.Location, true); err != nil {
+				return err
+			}
+		}
 		requested := in.Cursor
 		if requested == "" {
 			requested = viewCursor(view, "s", 0)
@@ -175,8 +199,17 @@ func (s *Service) PullView(ctx context.Context, scope runtime.Scope, auth runtim
 		if view.IssuedPage != nil && requested == view.IssuedFromCursor {
 			// 已发页仍逐项核当前权限，失联不借缓存披露正文或无权ID。
 			for _, record := range view.IssuedPage.Records {
-				if err = s.memoryAllowed(ctx, tx, auth, record, "memory.sync", true); err != nil {
+				var current MemoryRecord
+				if _, err = tx.Get(ctx, "memory.records", record.MemoryID, &current); err != nil {
 					return err
+				}
+				if current.Revision != record.Revision {
+					return api.E("snapshot_required", "view_revision_changed")
+				}
+				for _, purpose := range append([]string{"memory.sync"}, view.Purposes...) {
+					if err = s.viewAllowed(ctx, tx, auth, view, current, purpose); err != nil {
+						return err
+					}
 				}
 			}
 			out = *view.IssuedPage
@@ -208,7 +241,7 @@ func (s *Service) PullView(ctx context.Context, scope runtime.Scope, auth runtim
 					return api.E("snapshot_required", "view_revision_changed")
 				}
 				for _, purpose := range append([]string{"memory.sync"}, view.Purposes...) {
-					if err = s.memoryAllowed(ctx, tx, auth, record, purpose, true); err != nil {
+					if err = s.viewAllowed(ctx, tx, auth, view, record, purpose); err != nil {
 						return err
 					}
 				}
@@ -249,7 +282,7 @@ func (s *Service) PullView(ctx context.Context, scope runtime.Scope, auth runtim
 				}
 				allowed := true
 				for _, purpose := range append([]string{"memory.sync"}, view.Purposes...) {
-					if err = s.memoryAllowed(ctx, tx, auth, record, purpose, true); err != nil {
+					if err = s.viewAllowed(ctx, tx, auth, view, record, purpose); err != nil {
 						allowed = false
 						if isUnavailable(err) {
 							out.Partial = true
@@ -262,6 +295,16 @@ func (s *Service) PullView(ctx context.Context, scope runtime.Scope, auth runtim
 					}
 				}
 				if allowed {
+					var current MemoryRecord
+					if _, err = tx.Get(ctx, "memory.records", record.MemoryID, &current); err != nil {
+						return err
+					}
+					if current.Revision != record.Revision {
+						return api.E("snapshot_required", "view_revision_changed")
+					}
+					if err = s.registerViewCopy(ctx, tx, auth, view, record); err != nil {
+						return err
+					}
 					out.Changes = append(out.Changes, change)
 					out.Records = append(out.Records, record)
 				}

@@ -415,6 +415,12 @@ func (s *Service) ReadBytes(ctx context.Context, scope runtime.Scope, auth runti
 	err := s.within(ctx, scope, func(tx runtime.Tx) error {
 		var err error
 		v, err = s.CheckContentTx(ctx, tx, auth, ref, purpose, location, false)
+		if err != nil {
+			return err
+		}
+		if location != s.Location {
+			_, err = s.CheckContentTx(ctx, tx, auth, ref, purpose, s.Location, false)
+		}
 		return err
 	})
 	if err != nil {
@@ -431,6 +437,12 @@ func (s *Service) ReadBytes(ctx context.Context, scope runtime.Scope, auth runti
 		}
 		if current.ControlRevision != v.ControlRevision {
 			return api.E("forbidden", "source_closed")
+		}
+		if location != s.Location {
+			_, err = s.CheckContentTx(ctx, tx, auth, ref, purpose, s.Location, false)
+			if err != nil {
+				return err
+			}
 		}
 		return nil
 	})
@@ -603,6 +615,13 @@ func (s *Service) releaseCopy(ctx context.Context, tx runtime.Tx, auth runtime.A
 	for _, evidence := range in.EvidenceRefs {
 		if err = checkContentRef(tx.Scope(), evidence); err != nil {
 			return CopyOutput{}, err
+		}
+		var receipt ContentVersion
+		if _, err = tx.Get(ctx, "content.versions", contentKey(evidence), &receipt); err != nil {
+			return CopyOutput{}, err
+		}
+		if !api.Equal(receipt.ContentRef, evidence) {
+			return CopyOutput{}, api.E("idempotency_conflict", "cleanup_evidence_changed")
 		}
 	}
 	h.ControlRevision = v.ControlRevision

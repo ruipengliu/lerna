@@ -305,6 +305,9 @@ func (s *Service) extractionJob(ctx context.Context, store runtime.Store, scope 
 
 func (s *Service) failExtraction(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work, extraction Extraction, cause error) error {
 	return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, err := loadHead(ctx, tx); err != nil {
+			return err
+		}
 		var current Extraction
 		rev, err := tx.Get(ctx, "memory.extractions", extraction.ExtractionID, &current)
 		if err != nil {

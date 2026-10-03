@@ -163,8 +163,12 @@ func (s *Service) InstallPolicyTx(ctx context.Context, tx runtime.Tx, auth runti
 	if err := policyValid(policy); err != nil {
 		return err
 	}
+	head, err := loadHead(ctx, tx)
+	if err != nil {
+		return err
+	}
 	var old Policy
-	_, err := tx.Get(ctx, "content.policies", policyKey(policy.PolicyRef), &old)
+	_, err = tx.Get(ctx, "content.policies", policyKey(policy.PolicyRef), &old)
 	if err == nil {
 		if !api.Equal(old.PolicyRef, policy.PolicyRef) || !api.Equal(old.Values, policy.Values) {
 			return api.E("idempotency_conflict", "policy_changed")
@@ -175,10 +179,6 @@ func (s *Service) InstallPolicyTx(ctx context.Context, tx runtime.Tx, auth runti
 		return err
 	}
 	if err = tx.Create(ctx, "content.policies", policyKey(policy.PolicyRef), "", policy); err != nil {
-		return err
-	}
-	head, err := loadHead(ctx, tx)
-	if err != nil {
 		return err
 	}
 	head.RegistryVersion++

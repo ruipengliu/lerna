@@ -66,6 +66,9 @@ func lexicalTerms(text string) []string {
 }
 
 func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth runtime.Auth, queryID string, in QueryInput) (api.Page[Match], error) {
+	if err := checkAuth(scope, auth); err != nil {
+		return api.Page[Match]{}, err
+	}
 	if len(in.Purposes) == 0 || len(in.Purposes) > 10 || in.Limits.MaxCandidates < 1 || in.Limits.MaxCandidates > 200 || in.Limits.MaxReadBytes < 1 || in.Limits.MaxReadBytes > MaxContentBytes || in.Limits.MaxPermissionChecks < 1 || in.Limits.MaxPermissionChecks > 100000 || in.Limit > 20 {
 		return api.Page[Match]{}, api.E("invalid_request", "invalid_query_limits")
 	}
@@ -138,6 +141,9 @@ func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth run
 	deadline, _ := api.ParseTime(in.Limits.Deadline)
 	bounded, cancel := context.WithDeadline(ctx, deadline)
 	defer cancel()
+	if in.QueryRef.ByteLength > in.Limits.MaxReadBytes {
+		return api.Page[Match]{}, api.E("invalid_request", "query_text_budget_exceeded")
+	}
 	specBytes, err := s.Read(bounded, scope, auth, in.QueryRef, "memory.query")
 	if err != nil {
 		return api.Page[Match]{}, err
@@ -168,6 +174,9 @@ func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth run
 			return api.Page[Match]{}, api.E("invalid_request", "invalid_valid_at")
 		}
 	}
+	if spec.TextRef.ByteLength == 0 || spec.TextRef.ByteLength > 4096-uint64(len("literal:")) || uint64(len(specBytes)) > in.Limits.MaxReadBytes || spec.TextRef.ByteLength > in.Limits.MaxReadBytes-uint64(len(specBytes)) {
+		return api.Page[Match]{}, api.E("invalid_request", "query_text_budget_exceeded")
+	}
 	text, err := s.Read(bounded, scope, auth, spec.TextRef, "memory.query")
 	if err != nil {
 		return api.Page[Match]{}, err
@@ -176,6 +185,10 @@ func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth run
 		return api.Page[Match]{}, api.E("invalid_request", "query_text_budget_exceeded")
 	}
 	remaining := in.Limits.MaxReadBytes - uint64(len(text)+len(specBytes))
+	terms := lexicalTerms(string(text))
+	if len(terms) > 100 {
+		return api.Page[Match]{}, api.E("invalid_request", "query_text_terms_exceeded")
+	}
 	err = s.within(ctx, scope, func(tx runtime.Tx) error {
 		currentToken, err := s.visibility(ctx, tx, auth)
 		if err != nil {
@@ -253,7 +266,6 @@ func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth run
 	if err != nil {
 		return api.Page[Match]{}, err
 	}
-	terms := lexicalTerms(string(text))
 	matches := []Match{}
 	for _, record := range frozen {
 		if record.Values.ContentRef.ByteLength > remaining {
