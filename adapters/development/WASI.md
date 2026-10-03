@@ -47,8 +47,12 @@ CPU 预留覆盖 Linux CPU 软限加一秒的硬限余量，软限仅允许 1–
 
 完整报告测试的 Task 期限固定为五分钟；六分钟仅是覆盖原期限及费用收尾的测试观察。验收还直接核对 `Result.CompletedAt` 早于原 Task deadline。观察超时、已知费用关闭或 namespace 提交都不能代替该结果；失败日志和原 Scope／Attempt 继续保留，未知效果不会重写为已知读回。
 
+测试默认使用标准临时目录。需要保留准确原配置、对象介质和 native 日志时，预先创建私有绝对目录，并显式设置 `HARNESS_TEST_WASI_EVIDENCE_ROOT`；每个实际 Worker 夹具在其中创建独立 0700 子目录，成功与失败均保留。该目录和原 token／私钥不得提交；复核只能沿原 Scope 和配置，不重新初始化或制造同义模型请求。
+
 2026-10-03 的真实 PostgreSQL 完整 Worker 验收运行 287.11 秒，实际进程 exit 0。原 Result 在五分钟期限前 26.957 秒完成，两项独立条件检查通过；原正文出版和费用结清后才取消并 join Worker，然后实际关闭、重开原库。6 个模型 POST 共 USD 0.00144，原 Cell 只启动一次，实测 CPU 0.004321 秒；4 个 Operation 各保持原唯一 Attempt，完整 namespace 和 18 字节文件独立读回摘要一致。固定源码为 `e148d3a`／集成祖先 `61e8abd`，实现文件摘要 `96c1dc04…`、测试文件摘要 `cd29b13b…`；完整 source manifest、实际 exit、日志、同次 CPU profile 与 test binary 保存于执行环境 `wasi15-worker-wait-publication-20261003T165143249902Z-myw7_32d`。
 
-此前观察超时、Task 超期和正文仍待出版的失败各保留其原 Scope 与记录。本次通过不翻写这些历史事实；准确代码来源撤回后的公共 Worker 负例及受影响 race 尚待独立验证，驱动层的恶意程序／取消测试不代替该公共 Task 交接。
+准确代码来源撤回的两个公共 Worker 用例在 SQLite／PostgreSQL 四个子例均通过，普通验证 wall 105.896 秒、actual exit 0。原第二次模型请求发出后、Cell 准入前关闭 CodeRef：当前读取拒绝，0 Operation／0 native Attempt，once 未消费，原 2 个 POST 的 USD 0.00048 结清且 CPU／预留为零。原 Cell applied 后第三次模型请求中关闭 CodeRef：代码及派生 namespace 当前读取拒绝，原唯一 Attempt／native spawn1／generation1／namespace2 和 once 消费保持；原 3 个 POST 的 USD 0.00072、实测 CPU 及预留各结清。两条路径实际 cancel/join Worker，原库重开并运行 Worker 后没有新 POST 或 Cell。显式证据目录 `wasi15-sourcewithdraw-worker-20261003T174144680664Z-2ojze3r6` 保存固定源码、日志、四份准确账务证明及成功原现场；受影响 race 尚未运行。
+
+此前观察超时、Task 超期、来源撤回后费用未结清和正文仍待出版的失败各保留其原 Scope 与记录。本次通过不翻写这些历史事实；驱动层的恶意程序、崩溃未知和取消测试保留其范围，不冒充所有公共 Task 故障组合均已验收。
 
 其他 OS／架构、任意原生程序、自定义 guest hostcall、跨 owner／独立设备权威和生产容灾需分别验收。当前容器 PID1 的孤儿进程收养能力不属于 driver 的原进程 Wait 证据；部署资格须同时确认宿主能回收孤儿进程。CI 中的探针定义与本地通过不表示托管 CI 已执行。

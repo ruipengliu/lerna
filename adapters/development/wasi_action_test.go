@@ -140,6 +140,12 @@ func TestConfiguredWASITaskRejectsChangedOriginalCellCASBeforeNativeEntry(t *tes
 	}
 }
 
+func TestConfiguredWASITaskCodeWithdrawalBeforeEntryPreservesOriginalOnceAndKnownFees(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) { runConfiguredWASITask(t, driver, "withdraw_before_entry") })
+	}
+}
+
 func TestConfiguredWASITaskCodeWithdrawalPreservesOriginalAppliedEffectAndKnownFees(t *testing.T) {
 	for _, driver := range []string{"sqlite", "postgres"} {
 		t.Run(driver, func(t *testing.T) { runConfiguredWASITask(t, driver, "withdraw") })
@@ -148,6 +154,8 @@ func TestConfiguredWASITaskCodeWithdrawalPreservesOriginalAppliedEffectAndKnownF
 
 func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 	report := scenario == "report"
+	withdrawal := scenario == "withdraw" || scenario == "withdraw_before_entry"
+	actualWorker := report || withdrawal
 	t.Helper()
 	if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
 		t.Skip("actual PostgreSQL DSN required")
@@ -162,7 +170,7 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 	ctx, cancel := context.WithTimeout(context.Background(), observeFor)
 	defer cancel()
 	root := ""
-	if report && driver == "postgres" {
+	if actualWorker {
 		root = configuredWASITestDataRoot(t)
 	} else {
 		root = t.TempDir()
@@ -217,7 +225,7 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 			t.Error("actual frozen request could not be read")
 			return
 		}
-		if report {
+		if actualWorker {
 			t.Logf("original HTTP post=%d purpose=%s task_ref=%s materials=%d", posts.Load(), request.Snapshot.Purpose, api.Raw(request.Snapshot.TaskRef), len(request.Materials))
 		}
 		found, binarySource := false, false
@@ -260,6 +268,18 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 			}
 			return
 		}
+		withdrawCode := func() bool {
+			one := uint64(1)
+			a := active.Load()
+			close := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.Scope.OwnerID, CommandID: api.NewID("command"), TargetID: code.ContentID, Method: "content.close", ExpectedRevision: &one, ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(memory.CloseInput{ContentRef: code, Reason: "Withdraw this exact executable Source while preserving original effects and fees."})}
+			receipt, err := a.Dispatcher.Command(r.Context(), a.UserAuth, api.Raw(close))
+			if err != nil || receipt.Error != nil || receipt.Stage != "applied" {
+				t.Errorf("original public Code withdrawal failed: %v %+v", err, receipt)
+				return false
+			}
+			sourceClosed.Store(true)
+			return true
+		}
 		if posts.Load() == 2 {
 			actionCall.Store(r.Header.Get("X-Harness-Call-ID"))
 			var arguments *execution.ComputeArguments
@@ -289,20 +309,16 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 			if scenario == "arguments" {
 				arguments.ExpectedNamespaceRevision++
 			}
+			// 原 HTTP 输入／准确 Snapshot 已发出，尚未消费此 act 或进入 Cell。
+			if scenario == "withdraw_before_entry" && !withdrawCode() {
+				return
+			}
 			generated := brain.Generated{Contents: []brain.GeneratedContent{{LocalID: "reason", MediaType: "text/plain", Body: "Run exactly the declared finite Cell without asserting its effect.", DisclosedSources: []api.ContentRef{}}, {LocalID: "arguments", MediaType: "application/json", Body: string(api.Raw(arguments)), DisclosedSources: []api.ContentRef{}}}, Draft: brain.Draft{Kind: "act", ReasonLocalID: "reason", Actions: []brain.DraftAction{{LocalKey: "original_cell", CapabilityRef: execution.WASIRunCellCapability().Ref, BindingRef: binding, ArgumentsLocalID: "arguments"}}}}
 			_, _ = w.Write(wasiContractReply(generated))
 			return
 		}
-		if scenario == "withdraw" && posts.Load() == 3 {
-			one := uint64(1)
-			a := active.Load()
-			close := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.Scope.OwnerID, CommandID: api.NewID("command"), TargetID: code.ContentID, Method: "content.close", ExpectedRevision: &one, ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(memory.CloseInput{ContentRef: code, Reason: "Withdraw original executable source after its actual Cell effect; this never erases the original fees."})}
-			receipt, err := a.Dispatcher.Command(r.Context(), a.UserAuth, api.Raw(close))
-			if err != nil || receipt.Error != nil || receipt.Stage != "applied" {
-				t.Errorf("original public Code withdrawal failed: %v %+v", err, receipt)
-				return
-			}
-			sourceClosed.Store(true)
+		if scenario == "withdraw" && posts.Load() == 3 && !withdrawCode() {
+			return
 		}
 		if report {
 			actualNamespace := false
@@ -328,7 +344,7 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 	if err = SaveConfig(filepath.Join(root, "config.json"), cfg); err != nil {
 		t.Fatal(err)
 	}
-	if report && driver == "postgres" {
+	if actualWorker {
 		// 只保留原测试模型使用过的准确私有引用和值，不向日志输出凭据。
 		if err = privateFile(filepath.Join(root, "model-fixture.env"), []byte(cfg.Model.CredentialEnv+"="+os.Getenv(cfg.Model.CredentialEnv)+"\n")); err != nil {
 			t.Fatal(err)
@@ -399,7 +415,7 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 	stopWorker := func() {}
 	workerJoined := false
 	var workerDone <-chan error
-	if report {
+	if actualWorker {
 		// 实际 App worker 沿原 Claim 续租；不把 Drain 的一次 30 秒领取
 		// 当作完整报告的生产 worker，也不延长 Task 或开始窗口。
 		workerCtx, cancelWorker := context.WithCancel(ctx)
@@ -430,7 +446,7 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 	}
 	cancelledWithdrawal := false
 	for {
-		if report {
+		if actualWorker {
 			select {
 			case runErr := <-workerDone:
 				debugWASITask(t, a, taskID, driver, scenario, posts.Load())
@@ -438,16 +454,8 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 			default:
 			}
 		}
-		workLimit := 300
-		if scenario == "withdraw" {
-			workLimit = 1
-		}
-		if !report {
-			err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, workLimit)
-		}
-		var stepLimit *api.Error
-		if scenario == "withdraw" && errors.As(err, &stepLimit) && stepLimit.Code == "overloaded" && stepLimit.Reason == "drain_limit_reached" {
-			err = nil // 一次真实 Job 后回到公开观察；不把完整流程宣告已 drain。
+		if !actualWorker {
+			err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 300)
 		}
 		if err != nil {
 			if scenario == "arguments" {
@@ -459,24 +467,42 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 				assertRejectedWASITask(t, ctx, a, cfg, taskID, id, root, grant.GrantID, cpuBudget, 2, "0.00048", &posts)
 				return
 			}
-			if report || scenario == "withdraw" {
+			if actualWorker {
 				debugWASITask(t, a, taskID, driver, scenario, posts.Load())
 			}
 			t.Fatal(err)
 		}
 		current, err := a.Task.Read(ctx, a.Store, a.Scope, a.UserAuth, taskID)
 		if err != nil {
-			if report {
+			if actualWorker {
 				debugWASITask(t, a, taskID, driver, scenario, posts.Load())
 			}
 			t.Fatal(err)
 		}
-		if scenario == "withdraw" && sourceClosed.Load() && !cancelledWithdrawal {
-			knowledgePublicCommand(t, ctx, a, "task.cancel", taskID, task.ControlInput{TaskID: taskID, Reason: "Join the original Task after explicit Code withdrawal without losing the applied Cell or known model fees."}, &current.Revision)
-			cancelledWithdrawal = true
-			continue
+		if withdrawal && sourceClosed.Load() && !cancelledWithdrawal {
+			wantUSD := "0.00072"
+			if scenario == "withdraw_before_entry" {
+				wantUSD = "0.00048"
+			}
+			knownFeesClosed := false
+			for _, balance := range current.Budget {
+				knownFeesClosed = knownFeesClosed || balance.Unit == "USD" && balance.Spent == wantUSD && balance.Reserved == "0"
+			}
+			if knownFeesClosed {
+				// 先观察原已发请求的最终账单与真实当前来源拒绝，再提交控制；
+				// 不能靠取消尚未完成的请求制造零 Cell 结论。
+				assertWASISourceClosed(t, ctx, a, code, "environment_code")
+				cancelCommand := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.Scope.OwnerID, CommandID: api.NewID("command"), TargetID: taskID, ExpectedRevision: &current.Revision, Method: "task.cancel", ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(task.ControlInput{TaskID: taskID, Reason: "Join original Task after exact Code withdrawal while preserving every effect and known fee."})}
+				cancelReceipt, cancelErr := a.Dispatcher.Command(ctx, a.UserAuth, api.Raw(cancelCommand))
+				if cancelErr != nil || cancelReceipt.Error != nil && cancelReceipt.Error.Code != "revision_conflict" {
+					t.Fatalf("original Source withdrawal cancellation: %v %+v", cancelErr, cancelReceipt)
+				}
+				if cancelReceipt.Error == nil {
+					cancelledWithdrawal = true
+				}
+			}
 		}
-		if (current.Status == "failed" || current.Status == "succeeded" || scenario == "withdraw" && current.Status == "cancelled") && !current.AccountingOpen {
+		if (current.Status == "failed" || current.Status == "succeeded" || withdrawal && current.Status == "cancelled") && !current.AccountingOpen {
 			if scenario == "arguments" {
 				t.Fatalf("unconfirmed refusal bypassed the original admission check: %+v", current)
 			}
@@ -509,7 +535,7 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 		}
 		select {
 		case <-ctx.Done():
-			if scenario == "withdraw" {
+			if withdrawal {
 				debugWASITask(t, a, taskID, driver, scenario, posts.Load())
 			}
 			t.Fatalf("original Task did not settle: %+v", current)
@@ -517,8 +543,12 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 		}
 	}
 	stopWorker()
-	if report && !workerJoined {
-		t.Fatal("verified original Result cannot bypass actual App worker join")
+	if actualWorker && !workerJoined {
+		t.Fatal("original Task/fee closure cannot bypass actual App worker join")
+	}
+	if scenario == "withdraw_before_entry" {
+		assertPreEntryWithdrawnWASITask(t, ctx, a, cfg, taskID, id, root, grant.GrantID, code, env, &posts)
+		return
 	}
 	wantOperations, wantPosts, wantUSD := 1, int32(3), "0.00072"
 	if report {
@@ -549,7 +579,7 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 		t.Fatalf("original namespace CAS failed: %v %+v", err, after)
 	}
 	if scenario == "withdraw" {
-		assertWithdrawnWASITask(t, ctx, a, cfg, facts.Task, operation, after, grant.GrantID, &posts)
+		assertWithdrawnWASITask(t, ctx, a, cfg, facts.Task, operation, after, grant.GrantID, code, root, &posts)
 		return
 	}
 	bytes, err := a.Memory.Read(ctx, a.Scope, a.UserAuth, *after.NamespaceRef, "environment_namespace")
@@ -658,10 +688,10 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 		DatabaseReopened  bool                  `json:"database_reopened"`
 		ActualAppWorker   bool                  `json:"actual_app_worker"`
 		AppWorkerJoined   bool                  `json:"app_worker_joined"`
-	}{scenario, driver, a.Scope.Ref(taskID, facts.Task.Revision), facts.Task.Status, facts.Task.Deadline, originalResult.Result.CompletedAt, facts.Task.AccountingOpen, intent.OperationID, operation.Attempts.Items[0].AttemptID, meter.SpawnCount, meter.Usage, balances["USD"].Spent, posts.Load(), after.NamespaceRef, lock, originalFileHash, facts.Task.ResultRef, facts.Checks, true, report, workerJoined}))
+	}{scenario, driver, a.Scope.Ref(taskID, facts.Task.Revision), facts.Task.Status, facts.Task.Deadline, originalResult.Result.CompletedAt, facts.Task.AccountingOpen, intent.OperationID, operation.Attempts.Items[0].AttemptID, meter.SpawnCount, meter.Usage, balances["USD"].Spent, posts.Load(), after.NamespaceRef, lock, originalFileHash, facts.Task.ResultRef, facts.Checks, true, actualWorker, workerJoined}))
 }
 
-func assertWithdrawnWASITask(t *testing.T, ctx context.Context, a *App, cfg Config, current api.Task, operation execution.OperationView, env execution.Environment, grantID string, posts *atomic.Int32) {
+func assertWithdrawnWASITask(t *testing.T, ctx context.Context, a *App, cfg Config, current api.Task, operation execution.OperationView, env execution.Environment, grantID string, code api.ContentRef, root string, posts *atomic.Int32) {
 	t.Helper()
 	if current.Status != "cancelled" || current.AccountingOpen || current.ResultRef != nil || posts.Load() != 3 {
 		t.Fatalf("Source withdrawal claimed success or dropped original calls: %+v posts=%d", current, posts.Load())
@@ -673,14 +703,12 @@ func assertWithdrawnWASITask(t *testing.T, ctx context.Context, a *App, cfg Conf
 	if len(operation.Operation.Usage) != 1 || balances["USD"].Spent != "0.00072" || balances["USD"].Reserved != "0" || balances["cpu_seconds"].Spent != operation.Operation.Usage[0].Value || balances["cpu_seconds"].Reserved != "0" {
 		t.Fatalf("Source withdrawal lost known original fees: %+v %+v", balances, operation.Operation)
 	}
-	_, readErr := a.Memory.Read(ctx, a.Scope, a.UserAuth, *env.NamespaceRef, "environment_namespace")
-	var refusal *api.Error
-	if !errors.As(readErr, &refusal) || refusal.Code != "forbidden" || refusal.Reason != "source_closed" {
-		t.Fatalf("withdrawn original namespace requires the current Source refusal, got %v", readErr)
-	}
+	assertWASISourceClosed(t, ctx, a, code, "environment_code")
+	assertWASISourceClosed(t, ctx, a, *env.NamespaceRef, "environment_namespace")
+	journalHash := assertOriginalWASIJournal(t, root, operation)
 	raw, err := a.query(ctx, "grant.read", grantID, governance.IDInput{ID: grantID})
 	var grant governance.GrantRecord
-	if err != nil || api.Decode(raw, &grant) != nil || !grant.OnceConsumed || !api.Equal(grant.Spent, operation.Operation.Usage) {
+	if err != nil || api.Decode(raw, &grant) != nil || !grant.OnceConsumed || !api.Equal(grant.Spent, operation.Operation.Usage) || len(grant.Reserved) != 1 || grant.Reserved[0].Value != "0" {
 		t.Fatalf("withdrawal revived the once Grant or erased original CPU: %v %+v", err, grant)
 	}
 	if err = a.Close(); err != nil {
@@ -691,9 +719,7 @@ func assertWithdrawnWASITask(t *testing.T, ctx context.Context, a *App, cfg Conf
 		t.Fatal(err)
 	}
 	defer reopened.Close()
-	if err = runtime.Drain(ctx, reopened.Store, reopened.Scope, reopened.Registry, 100); err != nil {
-		t.Fatal(err)
-	}
+	exerciseReopenedWASIWorker(t, ctx, reopened)
 	after, err := reopened.Task.Read(ctx, reopened.Store, reopened.Scope, reopened.UserAuth, current.TaskID)
 	if err != nil || after.Status != "cancelled" || after.AccountingOpen || !api.Equal(after.Budget, current.Budget) || posts.Load() != 3 {
 		t.Fatalf("reopen lost original withdrawn Source fees: %v %+v", err, after)
@@ -703,6 +729,180 @@ func assertWithdrawnWASITask(t *testing.T, ctx context.Context, a *App, cfg Conf
 	if err != nil || api.Decode(raw, &original) != nil || original.Operation.Effect != "applied" || !api.Equal(original.Operation.ResultRef, operation.Operation.ResultRef) || !api.Equal(original.Operation.Usage, operation.Operation.Usage) || !original.Operation.UsageFinal || len(original.Attempts.Items) != 1 || original.Attempts.Items[0].AttemptID != operation.Attempts.Items[0].AttemptID || original.Attempts.Items[0].StartedAt != operation.Attempts.Items[0].StartedAt || !original.ActuallyStopped {
 		t.Fatalf("reopen replayed or erased original withdrawn Cell: %v %+v", err, original)
 	}
+	raw, err = reopened.query(ctx, "environment.get", env.EnvironmentID, execution.EnvironmentIDInput{EnvironmentID: env.EnvironmentID})
+	var afterEnv execution.Environment
+	if err != nil || api.Decode(raw, &afterEnv) != nil || afterEnv.Generation != env.Generation || afterEnv.NamespaceRevision != 2 || !api.Equal(afterEnv.NamespaceRef, env.NamespaceRef) || !afterEnv.ActuallyExited || !afterEnv.ReadyForCell || len(afterEnv.ActiveOperationIDs) != 0 {
+		t.Fatalf("withdrawal/reopen replaced the original committed namespace: %v %+v", err, afterEnv)
+	}
+	assertWASISourceClosed(t, ctx, reopened, code, "environment_code")
+	assertWASISourceClosed(t, ctx, reopened, *afterEnv.NamespaceRef, "environment_namespace")
+	if afterHash := assertOriginalWASIJournal(t, root, original); afterHash != journalHash {
+		t.Fatalf("reopen changed the original native Attempt journal: %s => %s", journalHash, afterHash)
+	}
+	logWithdrawnWASITask(t, reopened, after, afterEnv, code, "applied", original.Operation.OperationID, original.Attempts.Items[0].AttemptID, journalHash, 1, posts.Load())
+}
+
+func assertPreEntryWithdrawnWASITask(t *testing.T, ctx context.Context, a *App, cfg Config, taskID, envID, root, grantID string, code api.ContentRef, before execution.Environment, posts *atomic.Int32) {
+	t.Helper()
+	facts, err := a.Task.ContextFacts(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+	if err != nil || facts.Task.Status != "cancelled" || facts.Task.AccountingOpen || facts.Task.ResultRef != nil || len(facts.Operations) != 0 || posts.Load() != 2 {
+		t.Fatalf("pre-entry Source withdrawal created an effect or lost original calls: %v %+v posts=%d", err, facts, posts.Load())
+	}
+	balances := map[string]api.BudgetBalance{}
+	for _, value := range facts.Task.Budget {
+		balances[value.Unit] = value
+	}
+	if balances["USD"].Spent != "0.00048" || balances["USD"].Reserved != "0" || balances["cpu_seconds"].Limit != "6" || balances["cpu_seconds"].Spent != "0" || balances["cpu_seconds"].Reserved != "0" {
+		t.Fatalf("pre-entry Source refusal erased known fees or reserved Cell CPU: %+v", balances)
+	}
+	check := func(host *App) execution.Environment {
+		assertWASISourceClosed(t, ctx, host, code, "environment_code")
+		raw, err := host.query(ctx, "environment.get", envID, execution.EnvironmentIDInput{EnvironmentID: envID})
+		var env execution.Environment
+		if err != nil || api.Decode(raw, &env) != nil || env.Generation != before.Generation || env.NamespaceRevision != 1 || !api.Equal(env.NamespaceRef, before.NamespaceRef) || !env.ReadyForCell || !env.ActuallyExited || len(env.ActiveOperationIDs) != 0 {
+			t.Fatalf("pre-entry withdrawal entered or replaced the original Environment: %v %+v", err, env)
+		}
+		raw, err = host.query(ctx, "grant.read", grantID, governance.IDInput{ID: grantID})
+		var grant governance.GrantRecord
+		if err != nil || api.Decode(raw, &grant) != nil || grant.OnceConsumed || len(grant.Spent) != 0 || len(grant.Reserved) != 0 {
+			t.Fatalf("pre-entry withdrawal consumed/reserved original once Grant: %v %+v", err, grant)
+		}
+		entries, err := os.ReadDir(filepath.Join(root, "wasi"))
+		if err != nil || len(entries) > 10 {
+			t.Fatalf("read bounded original native journals: %v", err)
+		}
+		for _, entry := range entries {
+			if strings.HasPrefix(entry.Name(), "attempt_") {
+				t.Fatalf("withdrawn code created a native Attempt: %s", entry.Name())
+			}
+		}
+		return env
+	}
+	check(a)
+	if err := a.Close(); err != nil {
+		t.Fatal(err)
+	}
+	reopened, err := OpenApp(ctx, cfg, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer reopened.Close()
+	exerciseReopenedWASIWorker(t, ctx, reopened)
+	after, err := reopened.Task.ContextFacts(ctx, reopened.Store, reopened.Scope, reopened.UserAuth, taskID)
+	if err != nil || after.Task.Status != "cancelled" || after.Task.AccountingOpen || after.Task.ResultRef != nil || !api.Equal(after.Task.Budget, facts.Task.Budget) || len(after.Operations) != 0 || posts.Load() != 2 {
+		t.Fatalf("pre-entry withdrawal/reopen made another effect or lost fees: %v %+v posts=%d", err, after, posts.Load())
+	}
+	logWithdrawnWASITask(t, reopened, after.Task, check(reopened), code, "before_entry", "", "", "", 0, posts.Load())
+}
+
+func assertWASISourceClosed(t *testing.T, ctx context.Context, a *App, ref api.ContentRef, purpose string) {
+	t.Helper()
+	_, err := a.Memory.Read(ctx, a.Scope, a.UserAuth, ref, purpose)
+	var refusal *api.Error
+	if !errors.As(err, &refusal) || refusal.Code != "forbidden" || refusal.Reason != "source_closed" {
+		t.Fatalf("exact original Content requires current Source refusal: %v", err)
+	}
+}
+
+// 独立 native 日志是真实目标真值；来源撤回后不绕 Content 门禁读回正文。
+func assertOriginalWASIJournal(t *testing.T, root string, operation execution.OperationView) string {
+	t.Helper()
+	entries, err := os.ReadDir(filepath.Join(root, "wasi"))
+	if err != nil || len(entries) > 10 {
+		t.Fatalf("read bounded native Attempt journals: %v", err)
+	}
+	wantFile := operation.Attempts.Items[0].AttemptID + ".json"
+	nativeAttempts := 0
+	for _, entry := range entries {
+		if strings.HasPrefix(entry.Name(), "attempt_") {
+			nativeAttempts++
+			if entry.Name() != wantFile {
+				t.Fatalf("withdrawn Source created another native Attempt: %s", entry.Name())
+			}
+		}
+	}
+	if nativeAttempts != 1 {
+		t.Fatalf("original applied Cell must retain one native Attempt, got %d", nativeAttempts)
+	}
+	path := filepath.Join(root, "wasi", operation.Attempts.Items[0].AttemptID+".json")
+	f, err := os.Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	bytes, readErr := io.ReadAll(io.LimitReader(f, api.MaxJSONBytes+1))
+	closeErr := f.Close()
+	var journal struct {
+		AttemptID       string       `json:"attempt_id"`
+		Phase           string       `json:"phase"`
+		SpawnCount      uint64       `json:"spawn_count"`
+		SpawnCountKnown bool         `json:"spawn_count_known"`
+		Usage           []api.Amount `json:"usage"`
+		UsageFinal      bool         `json:"usage_final"`
+		Result          struct {
+			Success bool   `json:"success"`
+			Output  []byte `json:"output"`
+		} `json:"result"`
+	}
+	if readErr != nil || closeErr != nil || len(bytes) > api.MaxJSONBytes || json.Unmarshal(bytes, &journal) != nil || journal.AttemptID != operation.Attempts.Items[0].AttemptID || journal.Phase != "finished" || journal.SpawnCount != 1 || !journal.SpawnCountKnown || !journal.Result.Success || !journal.UsageFinal || !api.Equal(journal.Usage, operation.Operation.Usage) {
+		t.Fatalf("original native journal lost its one actual execution/fee: %v %v", readErr, closeErr)
+	}
+	if len(journal.Usage) != 1 || journal.Usage[0].Unit != "cpu_seconds" {
+		t.Fatalf("original native CPU invoice missing: %+v", journal.Usage)
+	}
+	positive, err := api.CompareDecimal(journal.Usage[0].Value, "0")
+	if err != nil || positive <= 0 {
+		t.Fatalf("original native CPU must be measured positive usage: %+v", journal.Usage)
+	}
+	var ns execution.PassiveNamespace
+	if api.Decode(journal.Result.Output, &ns) != nil || len(ns.Bindings) != 1 || ns.Bindings[0].Name != "answer" || ns.Bindings[0].Kind != "decimal" || ns.Bindings[0].Decimal != "42" {
+		t.Fatal("original native truth lost the complete committed namespace")
+	}
+	return api.Hash(bytes)
+}
+
+func exerciseReopenedWASIWorker(t *testing.T, ctx context.Context, a *App) {
+	t.Helper()
+	workerCtx, cancel := context.WithCancel(ctx)
+	done := make(chan error, 1)
+	go func() { done <- a.Run(workerCtx, false, true) }()
+	select {
+	case err := <-done:
+		cancel()
+		t.Fatalf("reopened original App worker exited before explicit join: %v", err)
+	case <-ctx.Done():
+	case <-time.After(time.Second):
+	}
+	cancel()
+	select {
+	case err := <-done:
+		if err != nil {
+			t.Fatalf("reopened original App worker failed to join: %v", err)
+		}
+	case <-time.After(30 * time.Second):
+		t.Fatal("reopened original App worker did not actually join")
+	}
+}
+
+func logWithdrawnWASITask(t *testing.T, a *App, current api.Task, env execution.Environment, code api.ContentRef, stage, op, attempt, journalHash string, spawns uint64, posts int32) {
+	t.Helper()
+	t.Logf("original WASI Source withdrawal verification=%s", api.Raw(struct {
+		Stage             string              `json:"stage"`
+		TaskRef           api.ObjectRef       `json:"task_ref"`
+		Status            string              `json:"status"`
+		AccountingOpen    bool                `json:"accounting_open"`
+		Budget            []api.BudgetBalance `json:"budget"`
+		CodeRef           api.ContentRef      `json:"code_ref"`
+		NamespaceRef      *api.ContentRef     `json:"namespace_ref"`
+		Generation        uint64              `json:"generation"`
+		NamespaceRevision uint64              `json:"namespace_revision"`
+		CellOperationID   string              `json:"cell_operation_id,omitempty"`
+		CellAttemptID     string              `json:"cell_attempt_id,omitempty"`
+		NativeJournalHash string              `json:"native_journal_hash,omitempty"`
+		NativeSpawnCount  uint64              `json:"native_spawn_count"`
+		ActualPosts       int32               `json:"actual_posts"`
+		WorkerJoined      bool                `json:"worker_joined"`
+		DatabaseReopened  bool                `json:"database_reopened"`
+	}{stage, a.Scope.Ref(current.TaskID, current.Revision), current.Status, current.AccountingOpen, current.Budget, code, env.NamespaceRef, env.Generation, env.NamespaceRevision, op, attempt, journalHash, spawns, posts, true, true}))
 }
 
 // 重读并幂等消费生产桥已保存的原提案，只核对真实拒绝依据，不制造另一行动。
