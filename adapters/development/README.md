@@ -4,7 +4,7 @@
 
 `Config.action_bindings` 是闭合的显式配置数组，上限 14 项，加原 File 两项总上限 16。每项只有 `capability_ref`、`binding_ref`、`install_lock_ref`、完整 `grant`。Capability 必须与已登记驱动的版本、摘要、闭合输入及输出 Schema 完全对应；全部 Schema 合计最多 96 KiB，持久装配记录仍受 Runtime 256 KiB 上限。配置不是模型提案，不能由模型创建或更换。
 
-GUI v2 和明确配置的 Source Search／Body 当前可从真实 App → HTTP 模型 → Task／Governance → Execution 使用。Source 的配置、原披露与数据许可见 [信息源装配](INFORMATION.md)。Source 参考问答条件与最终成功 Result、WASI 和独立 Executor 的 Task 装配仍待后续切片；Agent 与 EndpointChannel 拓扑也须显式配置完成。
+GUI v2 和明确配置的 Source Search／Body 当前可从真实 App → HTTP 模型 → Task／Governance → Execution 使用。Source 的配置、原披露与数据许可见 [信息源装配](INFORMATION.md)。准确配置的 WASI Task 行动、完整 namespace、CPU 预算与报告闭环见 [WASI 装配](WASI.md)。Source 参考问答条件与最终成功 Result、独立 Executor 的 Task 装配及 Agent／EndpointChannel 拓扑沿各自切片记录验证范围。
 
 显式外来 Memory 消费方可通过 [Native Source 装配](NATIVE_SOURCE.md)配置准确消费者 scope/database、入站 peer 与 holder/current generation、有限用途/位置及 HTTPS。无配置关闭，不改原 ContentRef/owner 或旧数据政策。
 
