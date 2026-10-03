@@ -21,9 +21,6 @@ func (g taskGate) Authorize(ctx context.Context, tx runtime.Tx, auth runtime.Aut
 	if e := currentCredentialTx(ctx, tx, auth); e != nil {
 		return e
 	}
-	if purpose == "child.create" || purpose == "child.new_goal" || purpose == "child.continue" || purpose == "task.delegate" {
-		return api.E("unsupported", "collaboration_adapter_not_configured")
-	}
 	for _, r := range contents {
 		if _, e := g.a.Memory.CheckContentTx(ctx, tx, auth, r, purpose, "cloud", true); e != nil {
 			return e

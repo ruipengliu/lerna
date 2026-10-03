@@ -320,6 +320,7 @@ func (d *Dispatcher) Query(ctx context.Context, auth Auth, raw []byte) (json.Raw
 	if err != nil {
 		return nil, err
 	}
+	ctx = WithQueryBinding(ctx, binding)
 	v, err := m.Query(ctx, d.Store, d.Scope(auth), auth, q)
 	if err != nil {
 		return nil, err

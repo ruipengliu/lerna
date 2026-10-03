@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
+	"github.com/ruipengliu/lerna/adapters/collaboration"
 	execadapter "github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/adapters/objectstore"
 	"github.com/ruipengliu/lerna/adapters/platform"
@@ -186,9 +187,16 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		}
 		rules = append(rules, rule)
 	}
-	a.Task, e = task.New(task.Config{Policies: []task.TaskPolicy{a.TaskPolicy}, Rules: rules, ControlWindow: 5 * time.Second, Participants: []string{"task", "content", "memory", "governance", "platform"}, AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: a.AnswerSchema, Schema: brain.GoalSchema()}}}, task.Ports{Content: taskContent{a}, Context: contextCompiler{a}, Gate: taskGate{a}, Evidence: evidenceBridge{a}, ControlProof: controlProof{a}, ClosureProof: closureProof{a}, ActionAuthorization: actionAuthorization{a}, Brain: brainBridge{a}, Execution: executionBridge{a}})
+	cooperation, e := collaboration.New(collaboration.Config{Store: st, Registry: a.Registry, OwnerID: c.OwnerID, Auth: a.ServiceAuth, SubjectGate: taskGate{a}, Participants: []string{"collaboration", "task", "platform"}})
+	if e != nil {
+		return nil, e
+	}
+	a.Task, e = task.New(task.Config{Policies: []task.TaskPolicy{a.TaskPolicy}, Rules: rules, ControlWindow: 5 * time.Second, Participants: []string{"task", "content", "memory", "governance", "platform"}, AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: a.AnswerSchema, Schema: brain.GoalSchema()}}}, task.Ports{Content: taskContent{a}, Context: contextCompiler{a}, Gate: taskGate{a}, Evidence: evidenceBridge{a}, ControlProof: controlProof{a}, ClosureProof: closureProof{a}, ActionAuthorization: actionAuthorization{a}, Brain: brainBridge{a}, Execution: executionBridge{a}, Collaboration: cooperation})
 	if e != nil {
 		return nil, fmt.Errorf("construct Task: %w", e)
+	}
+	if e = cooperation.BindTask(a.Task); e != nil {
+		return nil, e
 	}
 	calendar, e := interaction.OpenTZDB(c.TZDBRoot, c.TZDBVersion, []string{"UTC", "Asia/Shanghai", "America/New_York", "Europe/London"})
 	if e != nil {
