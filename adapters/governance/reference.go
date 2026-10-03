@@ -23,8 +23,8 @@ const ReferenceReportV1 = "reference-report-v1"
 const ReferenceReportBodyV0 = "reference-report-body-v0"
 
 type ReferenceImplementation struct {
-	Ref      api.ComponentRef
-	Strategy string
+	Ref      api.ComponentRef `json:"ref"`
+	Strategy string           `json:"strategy"`
 }
 type ReferenceRunnerConfig struct {
 	Root            string
@@ -37,13 +37,13 @@ type ReferenceRunnerConfig struct {
 	AfterTargetWrite func(context.Context, domain.RunnerAttempt) error
 }
 type ReferenceRunner struct {
-	w               *workspace
-	keys            *platform.Keyring
-	implementations map[string]ReferenceImplementation
-	afterWrite      func(context.Context, domain.RunnerAttempt) error
-	mu              sync.Mutex
-	active          map[string]*activeRun
-	closing         bool
+	w          *workspace
+	keys       *platform.Keyring
+	registry   *ReferenceRegistry
+	afterWrite func(context.Context, domain.RunnerAttempt) error
+	mu         sync.Mutex
+	active     map[string]*activeRun
+	closing    bool
 }
 type activeRun struct {
 	cancel context.CancelFunc
@@ -69,19 +69,9 @@ func NewReferenceRunner(c ReferenceRunnerConfig) (*ReferenceRunner, error) {
 	if c.Keys == nil || len(c.Keys.Keys) == 0 || len(c.Implementations) == 0 || len(c.Implementations) > 128 {
 		return nil, api.E("unsupported", "registered_reference_code_and_entry_keys_required")
 	}
-	implementations := map[string]ReferenceImplementation{}
-	for _, in := range c.Implementations {
-		if e := api.ValidateRecord("ComponentRef", in.Ref); e != nil {
-			return nil, e
-		}
-		if in.Strategy != ReferenceReportV1 && in.Strategy != ReferenceReportBodyV0 {
-			return nil, api.E("unsupported", "external_or_natural_language_evaluation_not_configured")
-		}
-		key := directory(in.Ref)
-		if _, exists := implementations[key]; exists {
-			return nil, api.E("invalid_request", "duplicate_reference_implementation")
-		}
-		implementations[key] = in
+	registry, e := NewReferenceRegistry(c.Implementations)
+	if e != nil {
+		return nil, e
 	}
 	// 密钥由受信配置登记；入口从不接受消息携带的公钥、URL 或身份。
 	keys := &platform.Keyring{Keys: map[string]platform.RegisteredKey{}}
@@ -94,17 +84,16 @@ func NewReferenceRunner(c ReferenceRunnerConfig) (*ReferenceRunner, error) {
 	if e != nil {
 		return nil, e
 	}
-	return &ReferenceRunner{w: w, keys: keys, implementations: implementations, afterWrite: c.AfterTargetWrite, active: map[string]*activeRun{}}, nil
+	return &ReferenceRunner{w: w, keys: keys, registry: registry, afterWrite: c.AfterTargetWrite, active: map[string]*activeRun{}}, nil
 }
 func pairPath(runID, sampleID string) string                { return "pairs/" + directory([]string{runID, sampleID}) }
 func attemptPath(attemptID string) string                   { return "attempts/" + directory(attemptID) + ".json" }
 func pairIdentity(pair domain.RunnerPair) domain.RunnerPair { pair.Permit = ""; return pair }
 func (r *ReferenceRunner) implementation(ref api.ComponentRef) (ReferenceImplementation, error) {
-	in, ok := r.implementations[directory(ref)]
-	if !ok || !api.Equal(in.Ref, ref) {
-		return in, api.E("unsupported", "implementation_not_registered_for_reference_file_rules")
-	}
-	return in, nil
+	return r.registry.implementation(ref)
+}
+func (r *ReferenceRunner) CheckEvaluationPlan(plan domain.EvaluationPlan) error {
+	return r.registry.CheckEvaluationPlan(plan)
 }
 func (r *ReferenceRunner) checkPair(pair domain.RunnerPair) error {
 	if !api.ValidID(pair.RunID) || !api.ValidID(pair.Plan.PlanID) || !api.ValidID(pair.Sample.SampleID) || !pair.Plan.Frozen || pair.Sample.Class != ReferenceClass || pair.Plan.FullDenominator > 10000 || pair.StartBefore != pair.Plan.ObservationCutoff {
@@ -113,16 +102,8 @@ func (r *ReferenceRunner) checkPair(pair domain.RunnerPair) error {
 	if pair.CandidateEnvironmentKey != pair.RunID+"/"+pair.Sample.SampleID+"/candidate" || pair.BaselineEnvironmentKey != pair.RunID+"/"+pair.Sample.SampleID+"/baseline" {
 		return api.E("forbidden", "original_environment_key_changed")
 	}
-	for _, ref := range []api.ComponentRef{pair.Plan.CandidateRef, pair.Plan.BaselineRef} {
-		if _, e := r.implementation(ref); e != nil {
-			return e
-		}
-	}
-	if e := api.ValidateAmounts(pair.Plan.Budget); e != nil {
+	if e := r.CheckEvaluationPlan(pair.Plan); e != nil {
 		return e
-	}
-	if len(pair.Plan.Budget) != 1 || pair.Plan.Budget[0].Unit != "USD" {
-		return api.E("unsupported", "reference_runner_has_only_zero_billed_usd_usage")
 	}
 	if pair.Sample.InputRef.TenantID != r.w.scope.TenantID || pair.Sample.TruthRef.TenantID != r.w.scope.TenantID {
 		return api.E("forbidden", "reference_sample_scope_changed")

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/ruipengliu/lerna/api"
@@ -43,39 +44,115 @@ func closedAnswerSchema(schema api.Schema) error {
 	return inspect(schema)
 }
 func (s *Service) RequestViewTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ObjectRef) (InputRequestView, error) {
-	if err := runtime.CheckRef(tx.Scope(), ref); err != nil {
+	views, err := s.RequestViewsTx(ctx, tx, auth, []api.ObjectRef{ref})
+	if err != nil {
 		return InputRequestView{}, err
 	}
-	if ref.OwnerID != tx.Scope().OwnerID {
-		return InputRequestView{}, api.E("forbidden", "request_owner_mismatch")
+	return views[0], nil
+}
+
+// RequestViewsTx仅供同库受信消费方使用；所有Task先于所有InputRequest锁定。
+// 不可变birth与准确历史Task负责路由，不能由调用方自报锁集合。
+func (s *Service) RequestViewsTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, refs []api.ObjectRef) ([]InputRequestView, error) {
+	if len(refs) < 1 || len(refs) > 20 {
+		return nil, invalid("request_batch_limit")
 	}
-	var req api.InputRequest
-	var birth api.InputRequest
-	if err := tx.GetVersion(ctx, inputs, ref.ObjectID, 1, &birth); err != nil {
-		return InputRequestView{}, err
+	seen := map[string]bool{}
+	births := make([]api.InputRequest, len(refs))
+	paths := map[string][]string{}
+	order := make([]int, len(refs))
+	for i, ref := range refs {
+		if err := runtime.CheckRef(tx.Scope(), ref); err != nil {
+			return nil, err
+		}
+		if ref.OwnerID != tx.Scope().OwnerID {
+			return nil, api.E("forbidden", "request_owner_mismatch")
+		}
+		if seen[ref.ObjectID] {
+			return nil, invalid("duplicate_request")
+		}
+		seen[ref.ObjectID] = true
+		if err := tx.GetVersion(ctx, inputs, ref.ObjectID, 1, &births[i]); err != nil {
+			return nil, err
+		}
+		birth := births[i]
+		if err := runtime.CheckRef(tx.Scope(), birth.TargetRef); err != nil {
+			return nil, err
+		}
+		if birth.TargetRef.OwnerID != tx.Scope().OwnerID {
+			return nil, api.E("forbidden", "input_target_owner_mismatch")
+		}
+		var routing taskState
+		if err := tx.GetVersion(ctx, tasks, birth.TargetRef.ObjectID, birth.TargetRef.Revision, &routing); err != nil {
+			return nil, err
+		}
+		if uint64(len(routing.Ancestors)) >= routing.Policy.MaxDepth || routing.Task.TaskID != birth.TargetRef.ObjectID {
+			return nil, api.E("invalid_state", "input_task_lineage_incomplete")
+		}
+		path := append(append([]string{}, routing.Ancestors...), routing.Task.TaskID)
+		pathIDs := map[string]bool{}
+		for depth, id := range path {
+			if pathIDs[id] {
+				return nil, api.E("invalid_state", "input_task_lineage_cycle")
+			}
+			pathIDs[id] = true
+			prefix := path[:depth+1]
+			if existing, ok := paths[id]; ok && !api.Equal(existing, prefix) {
+				return nil, api.E("invalid_state", "input_task_lineage_conflict")
+			}
+			paths[id] = prefix
+		}
+		order[i] = i
 	}
-	t, e := getTask(ctx, tx, birth.TargetRef.ObjectID)
-	if e != nil {
-		return InputRequestView{}, e
+	ids := make([]string, 0, len(paths))
+	for id := range paths {
+		ids = append(ids, id)
 	}
-	if e = principal(auth, t); e != nil {
-		return InputRequestView{}, e
+	sort.Slice(ids, func(i, j int) bool {
+		if len(paths[ids[i]]) == len(paths[ids[j]]) {
+			return ids[i] < ids[j]
+		}
+		return len(paths[ids[i]]) < len(paths[ids[j]])
+	})
+	current := map[string]taskState{}
+	for _, id := range ids {
+		t, err := getTask(ctx, tx, id)
+		if err != nil {
+			return nil, err
+		}
+		path := paths[id]
+		if !api.Equal(t.Ancestors, path[:len(path)-1]) {
+			return nil, api.E("revision_conflict", "input_task_lineage_changed")
+		}
+		current[id] = t
 	}
-	rev, e := tx.Get(ctx, inputs, ref.ObjectID, &req)
-	if e != nil {
-		return InputRequestView{}, e
+	for _, birth := range births {
+		if err := principal(auth, current[birth.TargetRef.ObjectID]); err != nil {
+			return nil, err
+		}
 	}
-	if ref.Revision != rev {
-		return InputRequestView{}, api.E("revision_conflict", "wrong_request_version")
+	sort.Slice(order, func(i, j int) bool { return refs[order[i]].ObjectID < refs[order[j]].ObjectID })
+	out := make([]InputRequestView, len(refs))
+	for _, i := range order {
+		ref := refs[i]
+		var req api.InputRequest
+		revision, err := tx.Get(ctx, inputs, ref.ObjectID, &req)
+		if err != nil {
+			return nil, err
+		}
+		if ref.Revision != revision {
+			return nil, api.E("revision_conflict", "wrong_request_version")
+		}
+		if !api.Equal(req.TargetRef, births[i].TargetRef) || req.RequestID != ref.ObjectID || req.Revision != revision {
+			return nil, api.E("invalid_state", "input_target_changed")
+		}
+		schema, ok := s.answerSchemas[componentKey(req.AnswerSchemaRef)]
+		if !ok {
+			return nil, api.E("unsupported", "answer_schema_not_registered")
+		}
+		out[i] = InputRequestView{RequestRef: tx.Scope().Ref(req.RequestID, req.Revision), Request: req, AnswerSchema: api.Raw(schema)}
 	}
-	if req.TargetRef.ObjectID != birth.TargetRef.ObjectID {
-		return InputRequestView{}, api.E("invalid_state", "input_target_changed")
-	}
-	schema, ok := s.answerSchemas[componentKey(req.AnswerSchemaRef)]
-	if !ok {
-		return InputRequestView{}, api.E("unsupported", "answer_schema_not_registered")
-	}
-	return InputRequestView{RequestRef: tx.Scope().Ref(req.RequestID, req.Revision), Request: req, AnswerSchema: api.Raw(schema)}, nil
+	return out, nil
 }
 func (s *Service) InputRequestRead(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, id string, revision uint64) (InputRequestView, error) {
 	var req api.InputRequest

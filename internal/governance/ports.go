@@ -52,6 +52,17 @@ type LifecyclePort interface {
 	Dispose(context.Context, Installation) (DisposalEvidence, error)
 }
 
+// InstallationAdmission 只核宿主静态 allowlist，不得 IO 或从业务输入升级信任。
+// 宿主实现此口时，准入在创建准备对象和 Job 之前完成。
+type InstallationAdmission interface {
+	CheckInstallation(Installation) error
+}
+
+// EvaluationPlanAdmission 只核已配置的准确实现与预算单位；不授予正式资格。
+type EvaluationPlanAdmission interface {
+	CheckEvaluationPlan(EvaluationPlan) error
+}
+
 // EvaluationRunner 的两臂独立环境和目标真值不受 candidate 写权控制。
 // 一个完整样本先预检两臂，再按原环境键运行；重复原键必须查原事实。
 // 未配备该端口不会产生虚假的 pass，只保留明确 blocked/not_run。
