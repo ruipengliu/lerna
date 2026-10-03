@@ -69,6 +69,8 @@ Task 测试使用持久 SQLite、真实 PostgreSQL、实际 Memory/ObjectStore�
 
 完成来源准备的 SQLite 正反例 race 实际 exit 0（18.906s），覆盖本次依据、准备期间取消、暂停 fencing 和无可选端口的原行为。它证明 Task 端口与原完成事务的交接，不能替代独立设备宿主的完整成果链验收。
 
+原决策派发准备的公开 SQLite 回归先保留实际 `remote_parent_scope_required` 拒绝（0.632s），再验证原 Decision/Command 派发、准备期间独立公开取消、终态和旧控制零准备，以及无可选端口的原行为；选定 race 实际 exit 0（13.969s）。准备仍使用原提交者代次和角色，不能增加预算责任。此 Task 小端口夹具只证明原库与最终门禁交接，实际 HTTPS、独立 owner 和父范围签名由协作装配另行验收。源码、日志与原身份索引位于 `/workspace/harness-dev-environment/task-decision-preparation-verification/`。
+
 Source 撤回后的原模型最低账务依据由 Brain 原账本与宿主的受限 accounting Content 端口提供，保持原 CallID、Decision、UseRef、累计金额和回执，不读取或携带已撤回的正文。开发宿主四条路径的最终双库 race 实际 exit 0（375.051s）：已知费用结清、旧 applied 依据重用、丢回复仍未知，以及停用当前模型配置后归并原 Use。原 USD0.00024 及未知预留分别保留；31min 后只能重用原 applied 出版回执，不能刷新原上传责任。固定源码、八个原 Scope/Call/Use 与日志摘要见 `/workspace/harness-dev-environment/model-minimum-invoice-final-1a47477-verification.json`。这不能由 Task 差额算法夹具代替，也不能替代 WASI 整链撤源验收。
 
 工单 14 的四种 resolver/当前材料正反例两库 race 实际通过（SQLite 107.919s、PostgreSQL 108.683s）；有限普通偏好三报告最终 SQLite race 实际通过 623.820s。原偏好、更正、撤回分别影响真实文件的 bullet/plain/default 格式，九项真实操作、六项独立 verified 检查、三次原查询、原 Result/submit 回执重开均完整；退出后的只读原账务核对为 spent/reserved=0、accounting_open=false。原 Task CompletedAt 均早于各自五分钟 deadline。准确源码 477 文件摘要与原引用索引在 `/workspace/harness-dev-environment/context14-preference-final-1a47477-sqlite-race/context14-final-verification-v2.json`；此前 PostgreSQL normal 432.301s 与两次 SQLite 观察失败按各自实现记录，原失败不复活。本轮只增加测试观察者的有限等待，没有放宽 Task、命令、控制窗口或 Lookup 期限。

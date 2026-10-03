@@ -92,8 +92,93 @@ func TestDecisionJobPreparesOriginalCurrentScopeBeforeDispatch(t *testing.T) {
 	if gate.preparations != 1 || len(brain.dispatched) != 1 || !api.Equal(brain.dispatched[0], intent) {
 		t.Fatalf("fresh original scope did not dispatch the original intent: preparations=%d dispatched=%+v", gate.preparations, brain.dispatched)
 	}
+	t.Logf("original tenant=%s owner=%s task=%s decision=%s command=%s goal_revision=%d control_revision=%d", h.scope.TenantID, h.scope.OwnerID, original.TaskID, intent.DecisionID, intent.CommandID, original.GoalRevision, original.ControlRevision)
 	budget, err := h.service.BudgetRead(context.Background(), h.store, h.scope, h.auth, original.TaskID)
 	if err != nil || len(budget.Reservations) != 1 {
 		t.Fatalf("preparation changed original budget responsibilities: %+v %v", budget, err)
+	}
+}
+
+func TestDecisionPreparationCancellationCannotDispatchOrReviveOriginalTask(t *testing.T) {
+	gate := &decisionPreparationBoundary{}
+	brain := &decisionDispatchBoundary{}
+	h := newHarness(t, task.Ports{Gate: gate, Brain: brain})
+	gate.h = h
+	original := h.submit(t)
+	intent, err := h.service.PrepareDecision(context.Background(), h.store, h.scope, h.trusted(), h.prepared(original, "0"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	gate.original, gate.required = intent, true
+	gate.beforeReturn = func(ctx context.Context, actual api.Task) error {
+		// 独立公开命令在准备返回前真实提交，证明准备没有持原业务Tx。
+		receipt, err := h.dispatch.Command(ctx, h.auth, api.Raw(h.command("task.cancel", actual.TaskID, &actual.Revision, task.ControlInput{TaskID: actual.TaskID, Reason: "cancel during current parent preparation"})))
+		if err != nil {
+			return err
+		}
+		if receipt.Stage != "applied" {
+			t.Fatalf("actual cancellation: %+v", receipt)
+		}
+		return nil
+	}
+	if err = callOriginalDecision(t, h); err != nil {
+		t.Fatal(err)
+	}
+	current, err := h.service.Read(context.Background(), h.store, h.scope, h.auth, original.TaskID)
+	if err != nil || current.Status != "cancelled" || current.GoalRef != original.GoalRef || current.GoalRevision != original.GoalRevision || gate.preparations != 1 || len(brain.dispatched) != 0 {
+		t.Fatalf("late parent proof bypassed original cancellation: task=%+v preparations=%d dispatches=%d err=%v", current, gate.preparations, len(brain.dispatched), err)
+	}
+}
+
+func TestDecisionJobSkipsNewPreparationForTerminalOrOldControl(t *testing.T) {
+	for _, change := range []string{"terminal", "old_control"} {
+		t.Run(change, func(t *testing.T) {
+			gate := &decisionPreparationBoundary{}
+			brain := &decisionDispatchBoundary{}
+			h := newHarness(t, task.Ports{Gate: gate, Brain: brain})
+			gate.h = h
+			original := h.submit(t)
+			intent, err := h.service.PrepareDecision(context.Background(), h.store, h.scope, h.trusted(), h.prepared(original, "0"))
+			if err != nil {
+				t.Fatal(err)
+			}
+			gate.original, gate.required = intent, true
+			methods := []string{"task.cancel"}
+			if change == "old_control" {
+				methods = []string{"task.pause", "task.resume"}
+			}
+			for _, method := range methods {
+				actual, err := h.service.Read(context.Background(), h.store, h.scope, h.auth, original.TaskID)
+				if err != nil {
+					t.Fatal(err)
+				}
+				receipt, err := h.dispatch.Command(context.Background(), h.auth, api.Raw(h.command(method, actual.TaskID, &actual.Revision, task.ControlInput{TaskID: actual.TaskID, Reason: "close original decision admission"})))
+				if err != nil || receipt.Stage != "applied" {
+					t.Fatalf("actual %s: %+v %v", method, receipt, err)
+				}
+			}
+			if err = callOriginalDecision(t, h); err != nil {
+				t.Fatal(err)
+			}
+			if gate.preparations != 0 || len(brain.dispatched) != 0 {
+				t.Fatalf("closed original decision acquired new parent proof or dispatched: preparations=%d dispatches=%d", gate.preparations, len(brain.dispatched))
+			}
+		})
+	}
+}
+
+func TestDecisionJobWithoutOptionalPreparationKeepsOriginalLegacyDispatch(t *testing.T) {
+	brain := &decisionDispatchBoundary{}
+	h := newHarness(t, task.Ports{Brain: brain})
+	original := h.submit(t)
+	intent, err := h.service.PrepareDecision(context.Background(), h.store, h.scope, h.trusted(), h.prepared(original, "0"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = callOriginalDecision(t, h); err != nil {
+		t.Fatal(err)
+	}
+	if len(brain.dispatched) != 1 || !api.Equal(brain.dispatched[0], intent) {
+		t.Fatalf("legacy profile changed the original dispatch: %+v", brain.dispatched)
 	}
 }
