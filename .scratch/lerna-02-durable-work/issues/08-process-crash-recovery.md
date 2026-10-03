@@ -46,3 +46,5 @@ DSN只由程序从600保护文件读到显式LERNA_TEST_POSTGRES_DSN环境，chi
 **整合与证明范围。** 当前08依赖仍仅04，完成的是准确04/09基线的真实进程/确认边界；05授权决策后来要求处理成功入口显式permissions/policy/Start，05合入时root/05需将本harness真实旧消息来源与正常对照适配为Start后的准确输入，并走严格Finish/Complete，不能用缺Start的拒绝冒充旧Claim隔离。本票不新增05依赖，也不提前宣称05行为已验证。准确feature tip远端CI及全片审查由root后续执行。
 
 可宣称两库真实进程提交边界恢复、PG真实wire确认丢失、SQLite真实提交后的存储端口确认丢失及应用原身份恢复、跨进程原Job/Claim epoch隔离。明确未验证SQLite native Commit异常分支、SQLite VFS/I/O/掉电、磁盘丢失、异地/3AZ耐久、生产RPO0或任何外部副作用恰好一次；本票SIGKILL不替代这些结论，不隐藏整片最终关闭依赖。
+
+2026-10-03 root将本票合入d89e789并核实push CI37151050492 success：真实两库集成9.718s/race26.419s均-count=1、十项v1hash不变。准确CI记录见[进程故障检查点](../ci-verification.md#双库进程故障检查点)。仍由05整合后复验实际Start门禁，不以本票代替整片退出。
