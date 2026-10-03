@@ -206,10 +206,22 @@ func (s *Store) Claim(ctx context.Context, scope runtime.Scope, holder string, a
 }
 
 func (tx *transaction) guarded(ctx context.Context, claim api.Claim) (storedJob, error) {
+	return tx.checkGuard(ctx, claim, true)
+}
+func (tx *transaction) checkGuard(ctx context.Context, claim api.Claim, lock bool) (storedJob, error) {
 	if err := durable.Claim(tx.scope, claim); err != nil {
 		return storedJob{}, err
 	}
-	job, err := tx.job(ctx, claim.JobID)
+	var job storedJob
+	var err error
+	if lock {
+		job, err = tx.job(ctx, claim.JobID)
+	} else {
+		if err = tx.check(); err != nil {
+			return storedJob{}, err
+		}
+		job, err = scanJob(tx.db.QueryRowContext(ctx, "SELECT "+jobColumns+" FROM runtime_jobs WHERE tenant_id=? AND owner_id=? AND job_id=?", tx.scope.TenantID, tx.scope.OwnerID, claim.JobID), tx.scope)
+	}
 	if errors.Is(err, runtime.ErrNotFound) {
 		return job, runtime.ErrClaimLost
 	}
@@ -234,7 +246,7 @@ func (tx *transaction) guarded(ctx context.Context, claim api.Claim) (storedJob,
 	return job, nil
 }
 func (tx *transaction) Guard(ctx context.Context, claim api.Claim) error {
-	_, err := tx.guarded(ctx, claim)
+	_, err := tx.checkGuard(ctx, claim, false)
 	return err
 }
 func (tx *transaction) Finish(ctx context.Context, claim api.Claim, disposition runtime.Disposition) error {
@@ -258,6 +270,12 @@ func (tx *transaction) Finish(ctx context.Context, claim api.Claim, disposition 
 		}
 	}
 	_, err = tx.db.ExecContext(ctx, "UPDATE runtime_jobs SET state=?,due_at=?,holder_id='',lease_until=0,observed_work_revision=0 WHERE tenant_id=? AND owner_id=? AND job_id=?", state, due, tx.scope.TenantID, tx.scope.OwnerID, claim.JobID)
+	if err == nil {
+		if tx.finished == nil {
+			tx.finished = make(map[string]bool)
+		}
+		tx.finished[claim.JobID] = true
+	}
 	return err
 }
 func (s *Store) Renew(ctx context.Context, scope runtime.Scope, claim api.Claim, lease time.Duration) (api.Claim, runtime.CommitStatus, error) {
