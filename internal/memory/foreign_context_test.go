@@ -80,3 +80,61 @@ func TestForeignUseProviderCarriesFreshProofWithoutReplacingPureCurrentGate(t *t
 		t.Fatal("old positive flow defeated currently known source close")
 	}
 }
+
+func TestForeignUseProviderSelectsExactCurrentHolderForEachActualSubject(t *testing.T) {
+	source, local := newForeignFixture(t), newForeignFixture(t)
+	local.scope.TenantID, local.auth = source.scope.TenantID, source.auth
+	second := local.auth
+	second.SubjectID = api.NewID("subject")
+	values := source.policy.Values
+	values.Subjects = []string{source.auth.SubjectID, second.SubjectID}
+	digest, _ := api.Digest(values)
+	policy, err := memory.NewPolicy(api.ComponentRef{ComponentID: api.NewID("policy"), Version: "1", Digest: digest}, values)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = source.service.InstallPolicy(source.ctx, source.scope, source.auth, policy); err != nil {
+		t.Fatal(err)
+	}
+	source.policy = policy
+	keys, err := platform.NewDevelopmentKey(source.scope.TenantID, source.scope.OwnerID, []string{"executor_content"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	port := &foreignAuthority{source: source, consumer: local.scope, keys: keys}
+	local.service.Foreign = port
+	ref := source.upload(t, "same original bytes, two exactly authorized holders")
+	uses := []memory.ForeignUse{}
+	for _, actor := range []runtime.Auth{local.auth, second} {
+		in := memory.ForeignReference{ContentRef: ref, CopyID: api.NewID("copy"), RegisterCommandID: api.NewID("command"), ReleaseCommandID: api.NewID("command"), ReferenceIntentRef: local.scope.Ref(api.NewID("intent"), 1), HolderRef: actor.Ref(local.scope.OwnerID), Purpose: "task.goal", Location: "local", RetainUntil: api.Time(time.Now().Add(10 * time.Minute))}
+		use, err := local.service.PrepareForeignUse(local.ctx, local.scope, actor, in)
+		if err != nil {
+			t.Fatal(err)
+		}
+		uses = append(uses, use)
+	}
+	ctx := memory.WithForeignUseProvider(context.Background(), &currentFlowUses{uses: uses})
+	check := func(actor runtime.Auth) error {
+		_, err := local.service.Store.Within(ctx, local.scope, []string{"content", "memory"}, func(tx runtime.Tx) error {
+			_, err := local.service.CheckContentTx(ctx, tx, actor, ref, "task.goal", "local", false)
+			return err
+		})
+		return err
+	}
+	if err = check(second); err != nil {
+		t.Fatalf("second actual signed holder misselected: %v", err)
+	}
+	if err = check(local.auth); err != nil {
+		t.Fatalf("first actual signed holder rejected: %v", err)
+	}
+	wrong := second
+	wrong.CredentialGeneration++
+	if err = check(wrong); err == nil {
+		t.Fatal("old holder authorized newer generation")
+	}
+	wrong = second
+	wrong.SubjectID = api.NewID("subject")
+	if err = check(wrong); err == nil {
+		t.Fatal("another actor borrowed another subject's copy")
+	}
+}

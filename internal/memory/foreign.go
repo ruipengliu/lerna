@@ -585,7 +585,7 @@ func (s *Service) checkForeignContent(ctx context.Context, tx runtime.Tx, auth r
 		return ContentVersion{}, err
 	}
 	for _, use := range uses {
-		if use.Reference.ContentRef != ref || use.Reference.Purpose != purpose || use.Reference.Location != location {
+		if use.Reference.ContentRef != ref || use.Reference.Purpose != purpose || use.Reference.Location != location || use.Reference.HolderRef != auth.Ref(tx.Scope().OwnerID) {
 			continue
 		}
 		var held ForeignHeldCopy
