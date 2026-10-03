@@ -146,6 +146,15 @@ func (e executionBridge) prepareRemoteDispatch(ctx context.Context, s runtime.Sc
 	}
 	return route.Client.Prepare(ctx, bundle, func(ctx context.Context, p executor.ContentPermission) ([]byte, error) {
 		purpose := p.Purposes[0]
+		// 设备缺失的原缓存需要在云端读取准确字节。Memory 同时核本方读取位置
+		// 和出站位置；即使 bundle 已存在，新 Job 也须取得这两个当前证明。
+		for _, location := range []string{"cloud", "device"} {
+			prepared, err := e.a.prepareForeignSources(ctx, s, e.a.ServiceAuth, []api.ContentRef{p.ContentRef}, purpose, location)
+			if err != nil {
+				return nil, fmt.Errorf("original device cache source %s@%d purpose=%s location=%s: %w", p.ContentRef.ContentID, p.ContentRef.Version, purpose, location, err)
+			}
+			ctx = prepared
+		}
 		return e.a.Memory.ReadBytes(ctx, s, e.a.ServiceAuth, p.ContentRef, purpose, "device")
 	})
 }

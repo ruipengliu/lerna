@@ -92,6 +92,10 @@ SDK journal 保存原命令、准确 payload/TTL；恢复先取原回执，不�
 交集和当前许可，并在提交前重核 Claim；旧 bundle 不重建、不增加用途。证明准备后的
 撤权、控制变更或 Claim 失效仍由强门禁拒绝，提交未知不进入设备 Prepare／Dispatch。
 
+设备原缓存缺少的输入只沿原 permission 的准确用途读取；云端先为本方 `cloud` 读取
+及 `device` 出站分别取得当前来源证明，再调用 Memory 的两位置强门禁。已存在的
+签名 bundle 也遵循此流程，不借上一 Job 的证明，不重封 bundle 或增加用途。
+
 云端 `executionBridge.Usage` 只归并一份设备签名 LeaseReport。准确 Operation Usage
 来自该报告的原证据，因此 Task 和 Grant 不会分别查询不同进度再双扣。
 原 Cloud lease 只调用 `ApplyLeaseReportTx`；普通本方 Use 仍沿自己的原结算方法。
