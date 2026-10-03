@@ -164,6 +164,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 	if _, err = tx.ExecContext(ctx, "INSERT INTO harness_migrations(migration_id,artifact_digest,state,checkpoint) VALUES(1,?,'applied','schema_ready') ON CONFLICT(migration_id) DO NOTHING", digest); err != nil {
 		return err
 	}
+	if err = migrateQueryBindings(ctx, tx); err != nil {
+		return err
+	}
 	var id string
 	if err = tx.QueryRowContext(ctx, "SELECT database_id FROM harness_store_metadata WHERE singleton=1").Scan(&id); err != nil {
 		return err
@@ -181,13 +184,14 @@ func (s *Store) Migrate(ctx context.Context) error {
 }
 
 type transaction struct {
-	db           *sql.Tx
-	queries      *sqlitedb.Queries
-	scope        runtime.Scope
-	participants map[string]bool
-	active       bool
-	savepoint    uint64
-	guards       map[string]api.Claim
+	db            *sql.Tx
+	queries       *sqlitedb.Queries
+	scope         runtime.Scope
+	participants  map[string]bool
+	active        bool
+	savepoint     uint64
+	guards        map[string]api.Claim
+	queryExpiries []time.Time
 }
 
 func (tx *transaction) Scope() runtime.Scope { return tx.scope }
@@ -237,7 +241,7 @@ func (s *Store) Within(ctx context.Context, scope runtime.Scope, participants []
 		}
 	}
 	// Guard/Finish 之后进程仍可能暂停；真正提交前再核原确认截止。
-	if len(tx.guards) != 0 {
+	if len(tx.guards) != 0 || len(tx.queryExpiries) != 0 {
 		now, clockErr := tx.Now(ctx)
 		if clockErr != nil {
 			return runtime.RolledBack, clockErr
@@ -246,6 +250,11 @@ func (s *Store) Within(ctx context.Context, scope runtime.Scope, participants []
 			until, _ := api.ParseTime(claim.LeaseUntil)
 			if !now.Before(until) {
 				return runtime.RolledBack, runtime.ErrClaimLost
+			}
+		}
+		for _, expiry := range tx.queryExpiries {
+			if !now.Before(expiry) {
+				return runtime.RolledBack, api.E("cursor_expired", "query_binding_expired")
 			}
 		}
 	}

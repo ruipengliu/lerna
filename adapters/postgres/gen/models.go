@@ -4,6 +4,11 @@
 
 package postgresdb
 
+import (
+	"database/sql"
+	"time"
+)
+
 type HarnessMigration struct {
 	MigrationID    int64  `json:"migration_id"`
 	ArtifactDigest string `json:"artifact_digest"`
@@ -45,6 +50,19 @@ type RuntimeJob struct {
 	HolderID             string `json:"holder_id"`
 	LeaseUntil           int64  `json:"lease_until"`
 	ObservedWorkRevision int64  `json:"observed_work_revision"`
+}
+
+type RuntimeQueryBinding struct {
+	TenantID             string         `json:"tenant_id"`
+	OwnerID              string         `json:"owner_id"`
+	QueryID              string         `json:"query_id"`
+	BindingID            string         `json:"binding_id"`
+	PrincipalID          string         `json:"principal_id"`
+	CredentialGeneration int64          `json:"credential_generation"`
+	RolesDigest          string         `json:"roles_digest"`
+	QueryDigest          string         `json:"query_digest"`
+	ResultDigest         sql.NullString `json:"result_digest"`
+	ExpiresAt            time.Time      `json:"expires_at"`
 }
 
 type RuntimeRecord struct {
