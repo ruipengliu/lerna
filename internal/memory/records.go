@@ -561,4 +561,11 @@ func (s *Service) registerMemory(registry *runtime.Registry) {
 		}
 		return s.InspectMemory(ctx, scope, auth, in.MemoryID)
 	})
+	query(s, registry, "memory.cleanup.get", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ReadMemoryInput) (MemoryRecord, error) {
+		if q.TargetID != in.MemoryID {
+			return MemoryRecord{}, api.E("invalid_request", "target_mismatch")
+		}
+		// 同管理视图只恢复当前清理元数据；不会读已撤正文或触发新的清理。
+		return s.InspectMemory(ctx, scope, auth, in.MemoryID)
+	})
 }
