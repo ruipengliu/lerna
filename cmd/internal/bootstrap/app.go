@@ -49,17 +49,25 @@ type App struct {
 	ApplicationBinding                                               api.ObjectRef
 	ApplicationEventSchema                                           api.Schema
 	GrantID                                                          string
+	OwnsTargets                                                      bool
 }
 
 func component(name string) api.ComponentRef {
 	return api.ComponentRef{ComponentID: platform.StableDevelopmentID("component", name), Version: "1.0.0", Digest: api.Hash([]byte("harness-builtin/" + name + "/1"))}
 }
 func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
+	return OpenAppForRole(ctx, c, initialize, "dev")
+}
+
+func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string) (*App, error) {
+	if role != "dev" && role != "worker" && role != "gateway" && role != "application" && role != "management" {
+		return nil, api.E("unsupported", "process_role_not_configured")
+	}
 	st, e := OpenStore(ctx, c, false)
 	if e != nil {
 		return nil, e
 	}
-	a := &App{Config: c, Store: st, Registry: runtime.NewRegistry()}
+	a := &App{Config: c, Store: st, Registry: runtime.NewRegistry(), OwnsTargets: role == "dev" || role == "worker"}
 	ok := false
 	defer func() {
 		if !ok {
@@ -127,20 +135,32 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 			return nil, e
 		}
 	}
-	a.Files, e = execadapter.NewManagedFiles(filepath.Join(c.DataRoot, "files"))
-	if e != nil {
-		return nil, e
+	if a.OwnsTargets {
+		a.Files, e = execadapter.NewManagedFiles(filepath.Join(c.DataRoot, "files"))
+		if e != nil {
+			return nil, e
+		}
 	}
 	phoneIDs := []string{platform.StableDevelopmentID("resource", "phone-one"), platform.StableDevelopmentID("resource", "phone-two"), platform.StableDevelopmentID("resource", "phone-three")}
 	if e = os.MkdirAll(filepath.Join(c.DataRoot, "phones"), 0700); e != nil {
 		return nil, e
 	}
-	a.Phones, e = execadapter.NewSimulatedPhones(filepath.Join(c.DataRoot, "phones"), phoneIDs)
-	if e != nil {
-		return nil, e
+	if a.OwnsTargets {
+		a.Phones, e = execadapter.NewSimulatedPhones(filepath.Join(c.DataRoot, "phones"), phoneIDs)
+		if e != nil {
+			return nil, e
+		}
 	}
 	execContent := executionContent{a}
-	a.Execution, e = execution.New(execution.Config{OwnerID: c.OwnerID, Content: execContent, Authority: executionAuthority{a}, AuthorityParticipants: []string{"task", "governance", "content", "memory", "platform"}, Drivers: []execution.Driver{&execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud"}, &execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud", ReadOnly: true}, a.Phones, &execution.TrustedComputeDriver{Content: execContent, Store: st, Location: "cloud"}}, ResourceDriver: a.Phones, Location: "cloud"})
+	drivers := []execution.Driver{&execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud"}, &execadapter.FileDriver{Files: a.Files, Content: execContent, Location: "cloud", ReadOnly: true}, a.Phones, &execution.TrustedComputeDriver{Content: execContent, Store: st, Location: "cloud"}}
+	var resources execution.ResourceDriver = a.Phones
+	if !a.OwnsTargets {
+		for i, driver := range drivers {
+			drivers[i] = contractOnlyDriver{capability: driver.Capability()}
+		}
+		resources = contractOnlyResources{}
+	}
+	a.Execution, e = execution.New(execution.Config{OwnerID: c.OwnerID, Content: execContent, Authority: executionAuthority{a}, AuthorityParticipants: []string{"task", "governance", "content", "memory", "platform"}, Drivers: drivers, ResourceDriver: resources, Location: "cloud"})
 	if e != nil {
 		return nil, fmt.Errorf("construct Execution: %w", e)
 	}
@@ -207,11 +227,12 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 				return fmt.Errorf("register development rule: %w", e)
 			}
 		}
-		var existing api.Grant
-		if _, e := tx.Get(ctx, "governance.grants", a.GrantID, &existing); e == nil {
-			return nil
-		} else if !api.IsCode(e, "not_found") {
+		exists, e := a.Governance.GrantExistsTx(ctx, tx, a.ServiceAuth, a.GrantID)
+		if e != nil {
 			return e
+		}
+		if exists {
+			return nil
 		}
 		now, e := tx.Now(ctx)
 		if e != nil {

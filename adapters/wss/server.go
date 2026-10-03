@@ -68,12 +68,14 @@ type Config struct {
 	MaxQueuedBytes        int
 }
 type Server struct {
-	config      Config
-	mux         *http.ServeMux
-	connections chan struct{}
-	bytesMu     sync.Mutex
-	queuedBytes int
-	logger      *slog.Logger
+	config        Config
+	mux           *http.ServeMux
+	connections   chan struct{}
+	bytesMu       sync.Mutex
+	queuedBytes   int
+	logger        *slog.Logger
+	methods       []api.MethodContract
+	methodsDigest string
 }
 
 func New(config Config) (*Server, error) {
@@ -81,6 +83,12 @@ func New(config Config) (*Server, error) {
 		return nil, api.E("invalid_request", "invalid_gateway_configuration")
 	}
 	s := &Server{config: config, mux: http.NewServeMux(), connections: make(chan struct{}, config.MaxConnections), logger: slog.Default()}
+	s.methods = config.Registry.Contracts()
+	var err error
+	s.methodsDigest, err = api.DigestLimit(s.methods, 1<<20)
+	if err != nil {
+		return nil, api.E("unsupported", "methods_manifest_too_large")
+	}
 	s.mux.HandleFunc("GET /.well-known/harness", s.wellKnown)
 	s.mux.HandleFunc("GET /api/schema/core", s.schema)
 	s.mux.HandleFunc("GET /api/discovery", s.discovery)
@@ -160,10 +168,8 @@ func (s *Server) authenticate(r *http.Request) (runtime.Auth, error) {
 	return s.config.Identity.Authenticate(r.Context(), r)
 }
 func (s *Server) manifest(a runtime.Auth) harness.Discovery {
-	methods := s.config.Registry.Contracts()
-	digest, _ := api.Digest(methods)
 	identity, _ := api.Digest([]string{a.TenantID, a.SubjectID})
-	return harness.Discovery{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: s.config.OwnerID, SchemaDigest: api.CoreDigest(), CoreSchemaPath: "/api/schema/core", Methods: methods, MethodsDigest: digest, Limits: harness.Limits{MaxDomainBytes: api.MaxJSONBytes, MaxFrameBytes: 1 << 20, MaxPending: 32}, IdentityScope: identity, IdentityRevision: a.CredentialGeneration}
+	return harness.Discovery{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: s.config.OwnerID, SchemaDigest: api.CoreDigest(), CoreSchemaPath: "/api/schema/core", Methods: s.methods, MethodsDigest: s.methodsDigest, Limits: harness.Limits{MaxDomainBytes: api.MaxJSONBytes, MaxFrameBytes: 1 << 20, MaxPending: 32}, IdentityScope: identity, IdentityRevision: a.CredentialGeneration}
 }
 func (s *Server) discovery(w http.ResponseWriter, r *http.Request) {
 	a, e := s.authenticate(r)
@@ -533,7 +539,7 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 		default:
 		}
 		if !reserved {
-			if !enqueue(harness.WSResponse{"response", frame.RequestSeq, "error", api.Raw(api.E("overloaded", "pending_request_limit"))}, true) {
+			if !enqueue(harness.WSResponse{Type: "response", RequestSeq: frame.RequestSeq, Kind: "error", Payload: api.Raw(api.E("overloaded", "pending_request_limit"))}, true) {
 				return
 			}
 			continue
@@ -549,7 +555,7 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 				kind = "error"
 				body = api.Raw(publicError(e))
 			}
-			if !enqueue(harness.WSResponse{"response", frame.RequestSeq, kind, body}, priority) {
+			if !enqueue(harness.WSResponse{Type: "response", RequestSeq: frame.RequestSeq, Kind: kind, Payload: body}, priority) {
 				cancel()
 				conn.CloseNow()
 			}
