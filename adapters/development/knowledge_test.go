@@ -3,6 +3,7 @@ package development
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -56,12 +57,34 @@ func TestConfiguredKnowledgeUsesActualTaskSnapshotAndOrdinaryModelMaterial(t *te
 			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
 				t.Skip("actual PostgreSQL DSN required")
 			}
-			runConfiguredKnowledge(t, driver)
+			runConfiguredKnowledge(t, driver, "")
 		})
 	}
 }
 
-func runConfiguredKnowledge(t *testing.T, driver string) {
+func TestConfiguredKnowledgeInputLimitPreventsAnyPhysicalModelRequest(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) {
+			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
+				t.Skip("actual PostgreSQL DSN required")
+			}
+			runConfiguredKnowledge(t, driver, "input")
+		})
+	}
+}
+
+func TestConfiguredKnowledgeCallCostLimitPreventsAnyPhysicalModelRequest(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) {
+			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
+				t.Skip("actual PostgreSQL DSN required")
+			}
+			runConfiguredKnowledge(t, driver, "cost")
+		})
+	}
+}
+
+func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 	defer cancel()
@@ -94,6 +117,11 @@ func runConfiguredKnowledge(t *testing.T, driver string) {
 	defer a.Close()
 	skill, skillBody := registerPublishedKnowledgeSkill(t, ctx, a)
 	agentLimits := governance.KnowledgeControls{MaxInputBytes: 65536, MaxOutputTokens: 128, MaxActionsPerDecision: 1, MaxDelegationsPerDecision: 0, MaxDepth: 0, MaxActionDurationSeconds: 2, MaxCallCostBound: []api.Amount{{Unit: "USD", Value: "0.2"}}}
+	if blockedControl == "input" {
+		agentLimits.MaxInputBytes = 1
+	} else if blockedControl == "cost" {
+		agentLimits.MaxCallCostBound = []api.Amount{{Unit: "USD", Value: "0"}}
+	}
 	limits, err := a.Publish(ctx, a.Scope, a.UserAuth, api.NewID("content"), "application/json", api.Raw(agentLimits), []api.ContentRef{}, []api.ContentRef{})
 	if err != nil {
 		t.Fatal(err)
@@ -121,6 +149,23 @@ func runConfiguredKnowledge(t *testing.T, driver string) {
 	}
 	taskID := api.NewID("task")
 	knowledgePublicCommand(t, ctx, a, "task.submit", taskID, task.SubmitInput{OrchestratorID: a.Scope.OwnerID, GoalRef: goal, PolicyRef: a.TaskPolicy.PolicyRef, Deadline: api.Time(time.Now().Add(5 * time.Minute)), Budget: []api.Amount{{Unit: "USD", Value: "1"}}, RequirementCandidates: []api.RequirementCandidate{}}, nil)
+	if blockedControl != "" {
+		err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 300)
+		var refusal *api.Error
+		if !errors.As(err, &refusal) || refusal.Code != "forbidden" || refusal.Reason != "knowledge_model_control_exceeded" {
+			t.Fatalf("actual encoding must exceed the selected %s bound: %v sends=%d", blockedControl, err, sends.Load())
+		}
+		got, err := a.Task.Read(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+		if err != nil || got.ResultRef != nil || got.Status == "succeeded" || len(got.Budget) != 1 || got.Budget[0].Spent != "0" || got.Budget[0].Reserved != "0" || sends.Load() != 0 {
+			t.Fatalf("input bound admitted a physical request, fee or success: %v sends=%d %+v", err, sends.Load(), got)
+		}
+		budgetRaw, err := a.query(ctx, "budget.read", taskID, task.BudgetReadInput{TaskID: taskID})
+		var budget task.BudgetReadResponse
+		if err != nil || api.Decode(budgetRaw, &budget) != nil || budget.Task == nil || len(budget.Task.Reservations) != 0 {
+			t.Fatalf("blocked model encoding created a Decision reservation: %v %+v", err, budget)
+		}
+		return
+	}
 	for {
 		if err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 300); err != nil {
 			t.Fatal(err)
