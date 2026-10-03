@@ -19,6 +19,10 @@ func TestForeignSourceContractsExposeActualBoundedWire(t *testing.T) {
 			t.Fatal("duplicate source contract")
 		}
 		byName[c.Name] = c
+		digest, err := api.Digest([]any{c.InputSchema, c.OutputSchema})
+		if err != nil || digest != c.SchemaDigest {
+			t.Fatalf("source discovery digest %s: %v", c.Name, err)
+		}
 		if _, err := api.Digest(c); err != nil {
 			t.Fatal(err)
 		}
