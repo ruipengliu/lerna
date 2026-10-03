@@ -54,7 +54,7 @@ func TestConfiguredRemoteExecutorPublishesVerifiedTaskResultAndReopensOriginal(t
 	}
 }
 
-func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport bool) {
+func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport bool, observers ...remoteReportObserver) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), reportFixtureTimeout)
 	defer cancel()
@@ -342,6 +342,15 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport boo
 		got, e := a.Task.Read(ctx, a.Store, a.Scope, a.UserAuth, taskID)
 		if e != nil {
 			t.Fatal(e)
+		}
+		for _, observe := range observers {
+			progress, err := a.Task.ContextFacts(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err = observe(ctx, a, device, progress, posts.Load()); err != nil {
+				t.Fatal("original remote report verification", err)
+			}
 		}
 		if time.Now().After(nextProgress) {
 			t.Logf("public Task progress: status=%s requirements=%s accounting_open=%t posts=%d", got.Status, got.RequirementsState, got.AccountingOpen, posts.Load())
