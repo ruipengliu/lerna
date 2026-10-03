@@ -1,7 +1,9 @@
 package execution
 
 import (
+	"bytes"
 	"context"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,6 +11,7 @@ import (
 	"io/fs"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -65,6 +68,8 @@ type simulatedPhone struct {
 	Attempts     []phoneAttempt `json:"attempts"`
 }
 
+const phoneJournalLimit = 8 << 20
+
 func NewSimulatedPhones(root string, ids []string) (*SimulatedPhones, error) {
 	r, err := os.OpenRoot(root)
 	if err != nil {
@@ -95,20 +100,13 @@ func NewSimulatedPhones(root string, ids []string) (*SimulatedPhones, error) {
 			return nil, api.E("overloaded", "device_limit")
 		}
 		p := &simulatedPhone{ResourceID: id, State: PhoneState{Screen: "home", Version: 1}, Attempts: []phoneAttempt{}}
-		f, err := r.OpenFile(id+".json", os.O_RDONLY|syscall.O_NOFOLLOW, 0)
-		if err == nil {
-			if _, err = fileIdentity(f); err == nil {
-				var b []byte
-				b, err = io.ReadAll(io.LimitReader(f, 8<<20))
-				if err == nil {
-					err = api.Decode(b, p)
-				}
-			}
-			f.Close()
-		}
+		loaded, err := s.readPhone(id)
 		if err != nil && !errors.Is(err, fs.ErrNotExist) {
 			s.Close()
 			return nil, err
+		}
+		if err == nil {
+			p = loaded
 		}
 		s.phones[id] = p
 		if err = s.save(p); err != nil {
@@ -129,7 +127,7 @@ func (s *SimulatedPhones) Close() error {
 	return errors.Join(err, s.root.Close())
 }
 func (s *SimulatedPhones) save(p *simulatedPhone) error {
-	b, err := json.Marshal(p)
+	b, err := phoneBytes(p)
 	if err != nil {
 		return err
 	}
@@ -154,12 +152,157 @@ func (s *SimulatedPhones) save(p *simulatedPhone) error {
 	if err = s.root.Rename(name+".next", name); err != nil {
 		return err
 	}
+	// 故障边界发生在真实目标已 rename 后，用于核验原 Attempt 的未知恢复。
+	if s.Fault != nil {
+		if err = s.Fault(p.ResourceID, "after_rename_before_directory_sync"); err != nil {
+			return err
+		}
+	}
 	dir, err := s.root.Open(".")
 	if err != nil {
 		return err
 	}
-	defer dir.Close()
-	return dir.Sync()
+	return errors.Join(dir.Sync(), dir.Close())
+}
+
+func phoneBytes(p *simulatedPhone) ([]byte, error) {
+	b, err := json.Marshal(p)
+	if err != nil {
+		return nil, err
+	}
+	if len(b) > phoneJournalLimit {
+		return nil, api.E("overloaded", "device_journal_capacity")
+	}
+	return b, nil
+}
+
+// 原生目标日志使用独立、明确的八 MiB 上限，不沿用公开域消息的 256 KiB 上限。
+func (s *SimulatedPhones) readPhone(id string) (*simulatedPhone, error) {
+	f, err := s.root.OpenFile(id+".json", os.O_RDONLY|syscall.O_NOFOLLOW, 0)
+	if err != nil {
+		return nil, err
+	}
+	var body []byte
+	if _, err = fileIdentity(f); err == nil {
+		body, err = io.ReadAll(io.LimitReader(f, phoneJournalLimit+1))
+	}
+	if err = errors.Join(err, f.Close()); err != nil {
+		return nil, err
+	}
+	if len(body) > phoneJournalLimit {
+		return nil, api.E("overloaded", "device_journal_capacity")
+	}
+	var p simulatedPhone
+	if err = decodePhoneJournal(body, &p); err != nil {
+		return nil, err
+	}
+	if p.ResourceID != id || p.State.Version == 0 || p.Attempts == nil || len(p.Attempts) > 10000 {
+		return nil, api.E("invalid_request", "invalid_device_journal")
+	}
+	seen := make(map[string]bool, len(p.Attempts))
+	for _, a := range p.Attempts {
+		version, err := strconv.ParseUint(a.Result.TargetVersion, 10, 64)
+		digest, digestErr := hex.DecodeString(strings.TrimPrefix(a.InputDigest, "sha256:"))
+		if err != nil || version == 0 || version > p.State.Version || digestErr != nil || len(digest) != 32 || !strings.HasPrefix(a.InputDigest, "sha256:") || !api.ValidID(a.AttemptID) || !api.ValidID(a.OperationID) || seen[a.AttemptID] || a.Result.ResourceID != id || a.Result.OriginalAttemptID != a.AttemptID || !a.Result.Applied || !a.Result.Atomic {
+			return nil, api.E("invalid_request", "invalid_device_attempt_journal")
+		}
+		seen[a.AttemptID] = true
+	}
+	return &p, nil
+}
+
+// 逐条严格解码私有日志：外层八 MiB/一万条，每个字段与 Attempt 仍受公开解析器的小消息上限保护。
+// 不扩大 api.ParseJSONLimit 的一 MiB 信封上限，也不接受重复或额外的日志字段。
+func decodePhoneJournal(body []byte, p *simulatedPhone) error {
+	d := json.NewDecoder(bytes.NewReader(body))
+	start, err := d.Token()
+	if err != nil || start != json.Delim('{') {
+		return api.E("invalid_request", "invalid_device_journal")
+	}
+	seen := map[string]bool{}
+	for d.More() {
+		key, err := d.Token()
+		name, ok := key.(string)
+		if err != nil || !ok || seen[name] {
+			return api.E("invalid_request", "invalid_device_journal")
+		}
+		seen[name] = true
+		if name == "attempts" {
+			start, err = d.Token()
+			if err != nil || start != json.Delim('[') {
+				return api.E("invalid_request", "invalid_device_journal")
+			}
+			p.Attempts = []phoneAttempt{}
+			for d.More() {
+				if len(p.Attempts) >= 10000 {
+					return api.E("overloaded", "device_retention_capacity")
+				}
+				var raw json.RawMessage
+				if err = d.Decode(&raw); err != nil {
+					return err
+				}
+				var attempt phoneAttempt
+				if err = api.Decode(raw, &attempt); err != nil {
+					return err
+				}
+				p.Attempts = append(p.Attempts, attempt)
+			}
+			if _, err = d.Token(); err != nil {
+				return err
+			}
+			continue
+		}
+		var target any
+		switch name {
+		case "resource_id":
+			target = &p.ResourceID
+		case "tenant_id":
+			target = &p.TenantID
+		case "instance_id":
+			target = &p.InstanceID
+		case "control_epoch":
+			target = &p.ControlEpoch
+		case "automatic":
+			target = &p.Automatic
+		case "state":
+			target = &p.State
+		default:
+			return api.E("invalid_request", "invalid_device_journal")
+		}
+		var raw json.RawMessage
+		if err = d.Decode(&raw); err != nil {
+			return err
+		}
+		if err = api.Decode(raw, target); err != nil {
+			return err
+		}
+	}
+	if _, err = d.Token(); err != nil {
+		return err
+	}
+	if err = d.Decode(new(json.RawMessage)); err != io.EOF {
+		return api.E("invalid_request", "invalid_device_journal")
+	}
+	if !seen["resource_id"] || !seen["control_epoch"] || !seen["automatic"] || !seen["state"] || !seen["attempts"] {
+		return api.E("invalid_request", "invalid_device_journal")
+	}
+	return nil
+}
+
+func (s *SimulatedPhones) refreshPhone(sc rt.Scope, id string) (*simulatedPhone, error) {
+	p, err := s.phone(sc, id)
+	if err != nil {
+		return nil, err
+	}
+	current, err := s.readPhone(id)
+	if err != nil {
+		return nil, err
+	}
+	if current.TenantID != "" && current.TenantID != sc.TenantID {
+		return nil, api.E("forbidden", "device_tenant_mismatch")
+	}
+	*p = *current
+	return p, nil
 }
 func (s *SimulatedPhones) phone(sc rt.Scope, id string) (*simulatedPhone, error) {
 	p := s.phones[id]
@@ -185,7 +328,7 @@ func (s *SimulatedPhones) Fence(ctx context.Context, sc rt.Scope, lease domain.R
 	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	p, err := s.phone(sc, lease.ResourceID)
+	p, err := s.refreshPhone(sc, lease.ResourceID)
 	if err != nil {
 		return domain.StopFact{}, err
 	}
@@ -210,7 +353,7 @@ func (s *SimulatedPhones) Observe(ctx context.Context, sc rt.Scope, lease domain
 	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	p, err := s.phone(sc, lease.ResourceID)
+	p, err := s.refreshPhone(sc, lease.ResourceID)
 	if err != nil {
 		return domain.Observation{}, err
 	}
@@ -249,7 +392,7 @@ func (s *SimulatedPhones) Start(ctx context.Context, q domain.AttemptRequest, ba
 	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	p, err := s.phone(q.Scope, a.ResourceID)
+	p, err := s.refreshPhone(q.Scope, a.ResourceID)
 	if err != nil {
 		return domain.Fact{}, err
 	}
@@ -274,9 +417,6 @@ func (s *SimulatedPhones) Start(ctx context.Context, q domain.AttemptRequest, ba
 	if len(p.Attempts) >= 10000 {
 		return domain.Fact{}, api.E("overloaded", "device_retention_capacity")
 	}
-	if err = barrier(ctx); err != nil {
-		return domain.Fact{}, err
-	}
 	next := *p
 	next.Attempts = append([]phoneAttempt{}, p.Attempts...)
 	switch a.Action {
@@ -296,6 +436,12 @@ func (s *SimulatedPhones) Start(ctx context.Context, q domain.AttemptRequest, ba
 	next.State.Version++
 	result := PhoneActionResult{ResourceID: p.ResourceID, OriginalAttemptID: q.Attempt.AttemptID, TargetVersion: strconv.FormatUint(next.State.Version, 10), Applied: true, Atomic: true}
 	next.Attempts = append(next.Attempts, phoneAttempt{AttemptID: q.Attempt.AttemptID, OperationID: q.Invoke.OperationID, InputDigest: q.Attempt.Prepared.Digest, Result: result})
+	if _, err = phoneBytes(&next); err != nil {
+		return domain.Fact{}, err
+	}
+	if err = barrier(ctx); err != nil {
+		return domain.Fact{}, err
+	}
 	if err = s.save(&next); err != nil {
 		return domain.Fact{}, err
 	}
@@ -315,19 +461,22 @@ func phoneFact(r PhoneActionResult, prior uint64) domain.Fact {
 	return domain.Fact{Revision: n, Effect: "applied", MayApplyLater: false, Output: api.Raw(r), MediaType: "application/json", Evidence: []api.ContentRef{}, Usage: []api.Amount{}, UsageFinal: true}
 }
 func (s *SimulatedPhones) Reconcile(ctx context.Context, q domain.AttemptRequest) (domain.Fact, error) {
+	if err := ctx.Err(); err != nil {
+		return domain.Fact{}, err
+	}
 	var args PhoneActionArguments
 	if err := api.Decode(q.Attempt.Prepared.Encoded, &args); err != nil {
 		return domain.Fact{}, err
 	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	p, err := s.phone(q.Scope, args.ResourceID)
+	p, err := s.refreshPhone(q.Scope, args.ResourceID)
 	if err != nil {
 		return domain.Fact{}, err
 	}
 	for _, a := range p.Attempts {
 		if a.AttemptID == q.Attempt.AttemptID {
-			if a.OperationID != q.Invoke.OperationID {
+			if a.OperationID != q.Invoke.OperationID || a.InputDigest != q.Attempt.Prepared.Digest {
 				return domain.Fact{}, api.E("idempotency_conflict", "device_attempt_changed")
 			}
 			return phoneFact(a.Result, q.Attempt.FactRevision), nil
@@ -352,6 +501,11 @@ func (s *SimulatedPhones) HumanChange(ctx context.Context, resourceID, screen st
 	if p == nil {
 		return fmt.Errorf("unknown device")
 	}
+	current, err := s.readPhone(resourceID)
+	if err != nil {
+		return err
+	}
+	*p = *current
 	p.State.Screen = screen
 	p.State.Version++
 	return s.save(p)

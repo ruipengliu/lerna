@@ -67,7 +67,7 @@ func OpenApp(ctx context.Context, c Config, initialize bool) (*App, error) {
 	return OpenAppForRole(ctx, c, initialize, "dev")
 }
 
-func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string) (*App, error) {
+func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string) (app *App, err error) {
 	if role != "dev" && role != "worker" && role != "gateway" && role != "application" && role != "management" {
 		return nil, api.E("unsupported", "process_role_not_configured")
 	}
@@ -79,7 +79,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	ok := false
 	defer func() {
 		if !ok {
-			a.Close()
+			err = errors.Join(err, a.Close())
 		}
 	}()
 	a.Scope = runtime.Scope{TenantID: c.TenantID, OwnerID: c.OwnerID, DatabaseID: st.ID()}
