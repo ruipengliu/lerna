@@ -1,0 +1,154 @@
+// Package postgres implements internal Host storage ports with explicit SQL.
+package postgres
+
+import (
+	"context"
+	"database/sql"
+	"errors"
+	"fmt"
+	"regexp"
+	"sync/atomic"
+	"time"
+
+	"github.com/jackc/pgx/v5"
+	_ "github.com/jackc/pgx/v5/stdlib"
+	"github.com/ruipengliu/lerna/contract"
+	"github.com/ruipengliu/lerna/runtime"
+)
+
+type Config struct {
+	DSN, Schema                                       string
+	TransactionTimeout, StatementTimeout, LockTimeout time.Duration
+}
+type Store struct {
+	db      *sql.DB
+	config  Config
+	created atomic.Bool
+}
+
+var identifier = regexp.MustCompile(`^[a-z][a-z0-9_]{0,62}$`)
+
+func Open(ctx context.Context, cfg Config) (*Store, error) {
+	if ctx == nil || cfg.DSN == "" || !identifier.MatchString(cfg.Schema) || cfg.TransactionTimeout <= 0 || cfg.StatementTimeout < time.Millisecond || cfg.LockTimeout < time.Millisecond || cfg.StatementTimeout > cfg.TransactionTimeout || cfg.LockTimeout > cfg.StatementTimeout {
+		return nil, errors.New("invalid PostgreSQL configuration")
+	}
+	bounded, cancel := context.WithTimeout(ctx, cfg.TransactionTimeout)
+	defer cancel()
+	db, err := sql.Open("pgx", cfg.DSN)
+	if err != nil {
+		return nil, errors.New("PostgreSQL connection configuration rejected")
+	}
+	db.SetMaxOpenConns(16)
+	db.SetMaxIdleConns(4)
+	if err = db.PingContext(bounded); err != nil {
+		db.Close()
+		return nil, errors.New("PostgreSQL connection unavailable")
+	}
+	return &Store{db: db, config: cfg}, nil
+}
+func (s *Store) Close() error             { return s.db.Close() }
+func (s *Store) table(name string) string { return `"` + s.config.Schema + `"."` + name + `"` }
+func (s *Store) CreateSchema(ctx context.Context) error {
+	ctx, cancel := context.WithTimeout(ctx, s.config.TransactionTimeout)
+	defer cancel()
+	_, err := s.db.ExecContext(ctx, `CREATE SCHEMA "`+s.config.Schema+`"`)
+	if err == nil {
+		s.created.Store(true)
+	}
+	return err
+}
+
+// DropTestSchema only removes a test namespace created by this Store instance.
+func (s *Store) DropTestSchema(ctx context.Context) error {
+	if !s.created.Load() || !regexp.MustCompile(`^lerna_test_[a-f0-9]{24}$`).MatchString(s.config.Schema) {
+		return errors.New("test schema cleanup ownership denied")
+	}
+	_, err := s.db.ExecContext(ctx, `DROP SCHEMA "`+s.config.Schema+`" CASCADE`)
+	if err == nil {
+		s.created.Store(false)
+	}
+	return err
+}
+
+type transaction struct {
+	store  *Store
+	sql    *sql.Tx
+	owner  contract.OwnerRef
+	active atomic.Bool
+}
+
+func (t *transaction) Owner() contract.OwnerRef { return t.owner }
+func (s *Store) token(ctx context.Context, tx runtime.Tx, owner contract.OwnerRef) (*sql.Tx, error) {
+	t, ok := tx.(*transaction)
+	if !ok || t == nil || t.store != s || t.owner != owner || !t.active.Load() {
+		return nil, runtime.ErrScope
+	}
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return t.sql, nil
+}
+func (s *Store) Within(ctx context.Context, owner contract.OwnerRef, fn func(context.Context, runtime.Tx) error) error {
+	if ctx == nil || fn == nil {
+		return errors.New("finite transaction context and callback required")
+	}
+	if _, err := contract.Encode(owner); err != nil {
+		return runtime.ErrScope
+	}
+	ctx, cancel := context.WithTimeout(ctx, s.config.TransactionTimeout)
+	defer cancel()
+	tx, err := s.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelReadCommitted})
+	if err != nil {
+		return err
+	}
+	token := &transaction{store: s, sql: tx, owner: owner}
+	token.active.Store(true)
+	defer func() { token.active.Store(false); _ = tx.Rollback() }()
+	if _, err = tx.ExecContext(ctx, `SELECT set_config('synchronous_commit','on',true), set_config('statement_timeout',$1,true), set_config('lock_timeout',$2,true)`, fmt.Sprintf("%dms", s.config.StatementTimeout.Milliseconds()), fmt.Sprintf("%dms", s.config.LockTimeout.Milliseconds())); err != nil {
+		return err
+	}
+	if err = fn(ctx, token); err != nil {
+		return err
+	}
+	if err = ctx.Err(); err != nil {
+		return err
+	}
+	token.active.Store(false)
+	if err = tx.Commit(); err != nil {
+		if errors.Is(err, pgx.ErrTxCommitRollback) {
+			return err
+		}
+		return fmt.Errorf("%w: %w", runtime.ErrCommitUnknown, err)
+	}
+	return nil
+}
+func (s *Store) Now(ctx context.Context, token runtime.Tx) (time.Time, error) {
+	tx, err := s.localToken(ctx, token)
+	if err != nil {
+		return time.Time{}, err
+	}
+	var now time.Time
+	err = tx.QueryRowContext(ctx, `SELECT clock_timestamp()`).Scan(&now)
+	return now, err
+}
+
+// Settings is an observation of effective settings on this transaction's connection.
+type Settings struct{ Isolation, SynchronousCommit, StatementTimeout, LockTimeout, ServerVersion string }
+
+func (s *Store) Settings(ctx context.Context, token runtime.Tx) (Settings, error) {
+	var out Settings
+	tx, err := s.localToken(ctx, token)
+	if err != nil {
+		return out, err
+	}
+	err = tx.QueryRowContext(ctx, `SELECT current_setting('transaction_isolation'),current_setting('synchronous_commit'),current_setting('statement_timeout'),current_setting('lock_timeout'),current_setting('server_version')`).Scan(&out.Isolation, &out.SynchronousCommit, &out.StatementTimeout, &out.LockTimeout, &out.ServerVersion)
+	return out, err
+}
+
+func (s *Store) localToken(ctx context.Context, token runtime.Tx) (*sql.Tx, error) {
+	t, ok := token.(*transaction)
+	if !ok || t == nil {
+		return nil, runtime.ErrScope
+	}
+	return s.token(ctx, token, t.owner)
+}
