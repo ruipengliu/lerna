@@ -392,16 +392,30 @@ func (f *flow) delivery(ctx context.Context, d grpcwire.Delivery) error {
 		return nil
 	}
 	old, exists := c.deliveries[d.DeliveryID]
-	if exists && !api.Equal(old.original, d) {
+	if exists && old.original != nil && !api.Equal(*old.original, d) {
 		c.mu.Unlock()
 		return api.E("idempotency_conflict", "original_delivery_changed")
+	}
+	if exists && old.original == nil {
+		if old.reply == nil {
+			c.mu.Unlock()
+			return api.E("invalid_state", "original_reply_recovery_missing")
+		}
+		if err := grpcwire.ValidateReply(d, *old.reply); err != nil {
+			c.mu.Unlock()
+			return err
+		}
+		copy := d
+		old.original = &copy
+		c.deliveries[d.DeliveryID] = old
 	}
 	if !exists {
 		if len(c.deliveries) >= 32 {
 			c.mu.Unlock()
 			return api.E("overloaded", "endpoint_delivery_pending_limit")
 		}
-		c.deliveries[d.DeliveryID] = delivery{original: d}
+		copy := d
+		c.deliveries[d.DeliveryID] = delivery{original: &copy}
 	}
 	c.mu.Unlock()
 	if exists && old.reply != nil {
