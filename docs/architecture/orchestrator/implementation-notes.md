@@ -25,6 +25,8 @@
 
 完成提案中的准确检查建议同事务变成去重的 CheckRequest 和 Job，并固定原成果、目标及控制版本的 completion intent。实际检查未完成时保留等待，不消费无进展额度或开启新 Decision；RecordCheck 唤醒原完成责任，只有当前完整门禁通过才保存 Result。建议本身不能替代观察。坏建议整批回滚后有限拒绝，目标或控制改变则废止旧完成意图。
 
+连续无进展达到固定上限时，advance 在 Context 编译和 Content 出版之前于短事务保存准确等待原因并完成原 Job，不能靠计时重试持续生成 Decision。实际有效新输入、可用成果或原 unknown 核清可恢复推进；迟到费用、相同已知效果的 revision 更新不能清零连续计数。新 Decision 和新计划步骤分别消费累计续行额度，整批准入不足则原子拒绝；重派原身份不重复计数。累计额度耗尽后保留最后已准入 Decision 或 completion 的原消费责任，核清后结束目标，效果与账务仍沿原身份核对。
+
 同 owner 的 [collaboration adapter](../../../adapters/collaboration/README.md) 已接实际 Session 和内部 Task 转交。它冻结原主体与 Command，在未配置跨 owner 接收方时于准入前关闭入口。原转交只有消费方实际 applied 才记录完成；准确 rejected 保留原回执，不能以暂时读取失败伪造拒绝。
 
 控制窗口最多五秒，正控制还截于 Task deadline。原 invoke 答复丢失时重发固定的原窗口、证明、时间及输入；新的窗口通过单独原控制窗口责任取得。负控制在 deadline 之后可以签发有限传播窗口，仍不授予行动入口。关闭视图包含完整有界本方子树、准确关系摘要和依据引用；超出已配置完整性界时明确保留缺口，不截断后宣称关闭。额度关闭先到时保留永久门禁，迟到创建不得重开。
@@ -34,6 +36,8 @@
 Task 测试使用持久 SQLite、真实 PostgreSQL、实际 Memory/ObjectStore、同库 Governance 和真实 ES256；报告、文本语义等非本切片负责的事实由准确、明确预批准夹具提供。它们证明 Task 的消费和原子性，不证明文本质量或供应商行为。
 
 已覆盖原命令去重、完整目标冻结、语义 upsert 保留硬条件、空条件拒绝、旧控制提案拒绝、重复 Decision 原预留、最多四行动及整批回滚、历史终态不隐藏活动容量、答案 Schema 和消费、原 Session 丢回执恢复、旧 Delegation wait、额度关闭先到、原额度真实签名关闭与父预算迟到差额、控制来源签名及 deadline 后负控制、Result 先于出版、出版答复丢失沿原 Content 恢复、旧 Claim 不能写外部字节、真实治理缺陷附注，以及提交答复丢失后重开原库恢复相同回执。
+
+护栏回归通过实际 Memory/ObjectStore 出版边界统计新增内容，验证达到无进展上限后多次 drain 不产生新 Decision、新文件或待计时重领 Job；真实 InputRequest 与答案消费能恢复连续计数，而累计续行上限仍保留。纯迟到费用测试使用字面原 Operation 夹具，只证明归并算法不能将账务变化误算为目标进展。
 
 运行入口：`go test ./internal/task -count=1`、`go vet ./internal/task`、`go test -race ./internal/task -count=1`。PostgreSQL 测试只在 `HARNESS_TEST_POSTGRES_DSN` 配置时运行；未配置时明确 skip，不计为 PostgreSQL 通过。密码从运行环境取得，不进仓库或输出。
 
