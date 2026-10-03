@@ -88,7 +88,8 @@ func (s *Service) prepareInputEntry(kind string, handler runtime.JobHandler) run
 				if _, err = tx.Get(ctx, steers, commandID, &pending); err != nil {
 					return err
 				}
-				if pending.CommandID != commandID || pending.SubjectID != original.PrincipalID || pending.SubjectID != birthSteer.SubjectID || pending.UploadID != birthSteer.UploadID || !api.Equal(pending.Input, birthSteer.Input) {
+				// Runtime principal可能是认证peer；领域出生主体是原已映射receiver用户。
+				if pending.CommandID != commandID || pending.SubjectID != birthSteer.SubjectID || pending.UploadID != birthSteer.UploadID || !api.Equal(pending.Input, birthSteer.Input) {
 					return api.E("idempotency_conflict", "original_steer_changed")
 				}
 				needsPreparation = pending.State == "pending"
@@ -97,7 +98,7 @@ func (s *Service) prepareInputEntry(kind string, handler runtime.JobHandler) run
 				if _, err = tx.Get(ctx, pendingInputs, commandID, &pending); err != nil {
 					return err
 				}
-				if pending.CommandID != commandID || pending.Auth.SubjectID != original.PrincipalID || pending.UploadID != birthInput.UploadID || !api.Equal(pending.Input, birthInput.Input) || !api.Equal(pending.Auth, birthInput.Auth) {
+				if pending.CommandID != commandID || pending.UploadID != birthInput.UploadID || !api.Equal(pending.Input, birthInput.Input) || !api.Equal(pending.Auth, birthInput.Auth) {
 					return api.E("idempotency_conflict", "original_input_preparation_changed")
 				}
 				needsPreparation = pending.State == "pending"
