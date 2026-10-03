@@ -29,7 +29,9 @@ function validUnicode(value: string): void {
 
 export function parseStrict(input: string | Uint8Array, maxBytes = MAX_DOMAIN_BYTES): JSONValue {
   const text =
-    typeof input === "string" ? input : new TextDecoder("utf-8", { fatal: true }).decode(input);
+    typeof input === "string"
+      ? input
+      : new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(input);
   validUnicode(text);
   if (!text.length || encoder.encode(text).byteLength > maxBytes)
     throw new ProtocolError("invalid_json_bytes");

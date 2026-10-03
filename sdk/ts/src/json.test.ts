@@ -38,3 +38,8 @@ it("原键别名、重复键、孤立 Unicode 与不安全数字不能进入 Sch
   expect(() => parseStrict(new Uint8Array([34, 255, 34]))).toThrow();
   expect(canonical(parseStrict('{"__proto__":{"safe":true}}'))).toBe('{"__proto__":{"safe":true}}');
 });
+it("UTF-8 原字节不能静默丢弃 BOM；与 Go 一致拒绝 JSON 文件前缀", () => {
+  const bytes = new Uint8Array([0xef, 0xbb, 0xbf, 0x7b, 0x7d]);
+  expect(() => parseStrict(bytes)).toThrow(/invalid_json/);
+  expect(parseStrict(new TextEncoder().encode('"\ufeff正文"'))).toBe("\ufeff正文");
+});
