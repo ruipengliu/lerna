@@ -30,7 +30,7 @@ func (s *Store) SaveInput(ctx context.Context, token runtime.Tx, owner contract.
 	if err != nil {
 		return err
 	}
-	_, err = tx.ExecContext(ctx, `INSERT INTO durable_inputs (tenant_id,owner_id,object_id,revision,text_value,created_at,updated_at) VALUES($1,$2,$3,$4,$5,$6,$7) ON CONFLICT(tenant_id,owner_id,object_id) DO UPDATE SET revision=EXCLUDED.revision,text_value=EXCLUDED.text_value,updated_at=EXCLUDED.updated_at`, owner.TenantID, owner.OwnerID, input.ID, input.Revision, []byte(input.Text), input.CreatedAt.UTC().Format("2006-01-02T15:04:05.000000000Z"), input.UpdatedAt.UTC().Format("2006-01-02T15:04:05.000000000Z"))
+	_, err = tx.ExecContext(ctx, `INSERT INTO durable_inputs (tenant_id,owner_id,object_id,revision,text_value,created_at,updated_at) VALUES($1,$2,$3,$4,$5,$6,$7) ON CONFLICT(tenant_id,owner_id,object_id) DO UPDATE SET revision=EXCLUDED.revision,text_value=EXCLUDED.text_value,updated_at=EXCLUDED.updated_at`, owner.TenantID, owner.OwnerID, input.ID, input.Revision, []byte(input.Text), sqlTime(input.CreatedAt), sqlTime(input.UpdatedAt))
 	return err
 }
 func (s *Store) Trigger(ctx context.Context, token runtime.Tx, object contract.ObjectRef, phase string, revision int64, due time.Time) (runtime.Job, error) {
@@ -40,6 +40,9 @@ func (s *Store) Trigger(ctx context.Context, token runtime.Tx, object contract.O
 	if err != nil {
 		return job, err
 	}
+	if revision <= 0 {
+		return job, runtime.ErrWorkBounds
+	}
 	var nonce [16]byte
 	if _, err = rand.Read(nonce[:]); err != nil {
 		return job, err
@@ -47,7 +50,10 @@ func (s *Store) Trigger(ctx context.Context, token runtime.Tx, object contract.O
 	job.Object = object
 	job.Object.Revision = nil
 	job.Phase = phase
-	err = tx.QueryRowContext(ctx, `INSERT INTO jobs(tenant_id,owner_id,job_id,object_kind,object_id,phase,work_revision,state,due_at) VALUES($1,$2,$3,$4,$5,$6,$7,'ready',$8) ON CONFLICT(tenant_id,owner_id,object_kind,object_id,phase) DO UPDATE SET work_revision=EXCLUDED.work_revision,due_at=EXCLUDED.due_at RETURNING job_id,work_revision,completed_revision,state,due_at`, owner.TenantID, owner.OwnerID, "job-"+hex.EncodeToString(nonce[:]), object.Kind, object.ID, phase, revision, due.UTC().Format("2006-01-02T15:04:05.000000000Z")).Scan(&job.ID, &job.WorkRevision, &job.CompletedRevision, &job.State, &job.DueAt)
+	err = tx.QueryRowContext(ctx, `INSERT INTO jobs(tenant_id,owner_id,job_id,object_kind,object_id,phase,work_revision,state,due_at) VALUES($1,$2,$3,$4,$5,$6,$7,'ready',$8) ON CONFLICT(tenant_id,owner_id,object_kind,object_id,phase) DO UPDATE SET work_revision=EXCLUDED.work_revision,due_at=EXCLUDED.due_at,state=CASE WHEN jobs.state='leased' THEN 'leased' ELSE 'ready' END WHERE EXCLUDED.work_revision>jobs.work_revision RETURNING job_id,work_revision,completed_revision,state,due_at`, owner.TenantID, owner.OwnerID, "job-"+hex.EncodeToString(nonce[:]), object.Kind, object.ID, phase, revision, sqlTime(due)).Scan(&job.ID, &job.WorkRevision, &job.CompletedRevision, &job.State, &job.DueAt)
+	if errors.Is(err, sql.ErrNoRows) {
+		return job, runtime.ErrWorkBounds
+	}
 	return job, err
 }
 func (s *Store) ObserveInput(ctx context.Context, owner contract.OwnerRef, id contract.ID) (demo.Observation, error) {
@@ -59,8 +65,14 @@ func (s *Store) ObserveInput(ctx context.Context, owner contract.OwnerRef, id co
 		if err != nil {
 			return err
 		}
-		// One statement yields a consistent input/Job observation.
-		return tx.QueryRowContext(ctx, `SELECT i.revision,i.text_value,i.created_at,i.updated_at,j.job_id,j.phase,j.work_revision,j.completed_revision,j.state,j.due_at FROM durable_inputs i JOIN jobs j ON j.tenant_id=i.tenant_id AND j.owner_id=i.owner_id AND j.object_id=i.object_id AND j.object_kind='durable_work' AND j.phase='project' WHERE i.tenant_id=$1 AND i.owner_id=$2 AND i.object_id=$3`, owner.TenantID, owner.OwnerID, id).Scan(&result.Input.Revision, &result.Input.Text, &result.Input.CreatedAt, &result.Input.UpdatedAt, &result.Job.ID, &result.Job.Phase, &result.Job.WorkRevision, &result.Job.CompletedRevision, &result.Job.State, &result.Job.DueAt)
+		var projected sql.NullInt64
+		var digest sql.NullString
+		// One statement yields a consistent input/Job observation in the owner transaction.
+		err = tx.QueryRowContext(ctx, `SELECT i.revision,i.text_value,i.created_at,i.updated_at,j.job_id,j.phase,j.work_revision,j.completed_revision,j.state,j.due_at,i.projected_revision,i.text_digest FROM durable_inputs i JOIN jobs j ON j.tenant_id=i.tenant_id AND j.owner_id=i.owner_id AND j.object_id=i.object_id AND j.object_kind='durable_work' AND j.phase='project' WHERE i.tenant_id=$1 AND i.owner_id=$2 AND i.object_id=$3`, owner.TenantID, owner.OwnerID, id).Scan(&result.Input.Revision, &result.Input.Text, &result.Input.CreatedAt, &result.Input.UpdatedAt, &result.Job.ID, &result.Job.Phase, &result.Job.WorkRevision, &result.Job.CompletedRevision, &result.Job.State, &result.Job.DueAt, &projected, &digest)
+		if projected.Valid {
+			result.Projection = &demo.Projection{InputRevision: projected.Int64, TextDigest: digest.String}
+		}
+		return err
 	})
 	return result, err
 }

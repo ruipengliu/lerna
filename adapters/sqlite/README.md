@@ -1,9 +1,10 @@
-# SQLite admission storage
+# SQLite durable work storage
 
 This adapter implements the same internal Host admission ports as PostgreSQL:
 Tx, Clock, CommandStore, JobStore.Trigger and the demonstration consumer's
-Repository. It creates pending project responsibility; Claim and scheduling
-remain later tickets. The public 1.0.0 contract is unchanged.
+Repository, plus the separate ClaimStore and project WorkRepository. It
+claims exact stage input, renews bound leases and commits projection progress.
+Scheduling, waiting and quotas remain later tickets. The public 1.0.0 contract is unchanged.
 
 The root module locks `github.com/mattn/go-sqlite3 v1.14.52`. Build with Go 1.27.1,
 `CGO_ENABLED=1` and a C compiler using the driver's bundled SQLite amalgamation.
@@ -20,9 +21,10 @@ SQL values use parameters. Input text is BLOB, preserving valid zero Unicode
 scalars. INTEGER revisions retain all positive int64 values. Persisted UTC
 created_at, updated_at and due_at use fixed **nine-digit fractional seconds**
 (`2006-01-02T15:04:05.000000000Z`), preserving nanosecond instants and permitting
-accurate chronological ordering of this uniformly encoded text. Later time
-comparisons must bind the same encoding; passing driver-default time.Time text
-would use a different representation and requires separate validation.
+accurate chronological ordering of this uniformly encoded text. All scan, Claim, renew and completion comparisons bind this same encoding,
+including exact lease token equality. Driver-default time.Time values are never
+bound as SQL time operands. No floating point date conversion is used. The
+worker retains the common UTC microsecond Claim precision.
 
 A context-aware single-writer coordinator serializes whole transactions. It
 holds no unique work responsibility: input, immutable receipt and Job commit in
@@ -54,7 +56,11 @@ unbounded cleanup goroutine or separate lease responsibility is created.
 
 The immutable first migration is `migrations/host/0001_admission.sql`, with its
 SHA-256 recorded and checked in schema_migrations. V1 contains no lease/Claim
-columns. MigrationStatus exposes only the recorded migration identity. COMMIT
+columns. The real v2 migration rebuilds the ready-only Job table with bound
+Claim columns, lease eligibility scan index, progress constraints and projection
+columns. Its checksum is verified along with v1 on every migration run; both
+apply atomically in a finite transaction. MigrationStatus reports the latest
+version and MigrationVersions preserves all applied identities. COMMIT
 errors conservatively return ErrCommitUnknown, preserving original identity;
 pre-COMMIT cancellation and busy errors roll back without a receipt.
 
@@ -63,7 +69,11 @@ Run `make test-integration` with a dedicated PostgreSQL 18.6 DSN injected as
 temporary files, with finite subprocess/cleanup deadlines. Missing PG config,
 services, Linux/CGO support or a C compiler fails instead of skipping. Base
 `make check` needs no external service. Shared admission assertions cover both
-adapters; SQLite-specific tests cover effective connection settings, independent
+adapters. The same work suite covers exact snapshots, both concurrent commit
+orders, bounded batches, all Claim bindings, expiry with no replacement, epoch
+replacement, close/reopen and the original fixed receipt. Exact due/lease
+boundaries use explicit zero/fractional seconds and microsecond values.
+SQLite-specific tests cover effective connection settings, independent
 process exclusion/reopen, real SQL busy locks, cancellation, migration identity
 and close/drain boundaries. These tests do not prove power-loss durability,
 SIGKILL recovery, external effects or production failover.
@@ -72,4 +82,6 @@ SIGKILL recovery, external effects or production failover.
 archives that exact Git source into an independent temporary directory, builds
 its actual Host writer and retains the closed complete SQLite database, command
 corpus, migration, Host observation and exact checksums. It needs no SQLite CLI.
-The retained v1 input is for the later real v2 Claim migration.
+The retained v1 file is copied into a fresh owned file and upgraded through the
+actual v2 migration, preserving its original receipt/input/Job and completing
+its project Claim. Full migration failure/reopen recovery remains ticket07.

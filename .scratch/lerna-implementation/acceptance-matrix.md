@@ -90,3 +90,12 @@ F01/F02仅完成本票的原回执/原责任/同键冲突与重开范围；SIGKI
 - **F03：PG受控数据库路径已验证。** 领取一致输入快照；新工作先提交与旧完成先提交两种真实并发顺序都只推进 claimed_revision，保留原 Job 的新修订及原固定回执；新 worker 正常完成。SQLite同套路径仍待票04。
 - **F04：PG Claim受控数据库写入已验证。** 续租/完成核验原 Job、对象、worker、revision、epoch和有效租约；过期尚未被替代也拒绝，接替保留身份并递增epoch；并发/锁等待到期与准确整数上界有正常对照。无外部动作，不证明外部旧进程或效果隔离。
 - **遗漏通知恢复：PG基础领取已验证。** 持久有界索引扫描不依赖通知，锁竞争可少领且责任保留。持久等待/退避、公平/配额、真实旧 writer 完整迁移恢复和SIGKILL仍留给后票，不关闭G2或切片02整体。
+
+
+## 切片02票04的两库工作证据（切片仍在进行）
+
+2026-10-03，准确受测代码 `ff22936`，SQLite实际v2与13个共同Host工作故事在PG/SQLite通过同一断言。完整 mandatory integration11.269s和affected integration-race22.544s，基础check/race、immutable v1 artifacts校验通过；准确版本、TDD、命令和失败轮清理限制见[票04 Comments](../lerna-02-durable-work/issues/04-sqlite-claim-conformance.md#comments)。
+
+- **F03：两库受控数据库路径已验证。** 原Job旧快照完成仅推进领取修订，新工作先提交/旧完成先提交两种顺序均保留最新工作；固定原receipt和输入身份不变。
+- **F04：两库Claim受控数据库写入已验证。** 全绑定、未替换但已过期拒绝、原Job epoch接替、关闭重开、准确微秒截止和新worker正常完成成立；不证明外部进程/效果已隔离。
+- SQLite真实历史v1 writer file可应用真实v2并Claim/完成；完整迁移失败恢复、持久等待、容量/配额、墓碑和SIGKILL继续由后票承担，不关闭G2或切片02。
