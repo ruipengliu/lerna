@@ -2,6 +2,8 @@ package interaction_test
 
 import (
 	"context"
+	"github.com/ruipengliu/lerna/adapters/postgres"
+	"os"
 	"path/filepath"
 	"testing"
 	"time"
@@ -78,18 +80,25 @@ type applicationFixture struct {
 	delivery        *deliveryBridge
 	config          api.ComponentRef
 	policy          api.ComponentRef
+	binding         api.ObjectRef
 	session, branch string
 }
 
 func newApplication(t *testing.T) *applicationFixture {
 	t.Helper()
 	ctx := context.Background()
-	store, e := sqlite.Open(filepath.Join(t.TempDir(), "application.sqlite"))
+	var store runtime.Store
+	var e error
+	if os.Getenv("HARNESS_INTERACTION_STORE") == "postgres" {
+		store, e = postgres.Open(ctx, os.Getenv("HARNESS_TEST_POSTGRES_DSN"), postgres.WithMaxConnections(8))
+	} else {
+		store, e = sqlite.Open(filepath.Join(t.TempDir(), "application.sqlite"))
+	}
 	if e != nil {
 		t.Fatal(e)
 	}
 	t.Cleanup(func() { _ = store.Close() })
-	if e = store.Migrate(ctx); e != nil {
+	if e = store.(interface{ Migrate(context.Context) error }).Migrate(ctx); e != nil {
 		t.Fatal(e)
 	}
 	scope := runtime.Scope{TenantID: api.NewID("tenant"), OwnerID: api.NewID("owner"), DatabaseID: store.ID()}
@@ -120,14 +129,25 @@ func newApplication(t *testing.T) *applicationFixture {
 	m.Register(registry)
 	d := &runtime.Dispatcher{Store: store, OwnerID: scope.OwnerID, Registry: registry}
 	delivery := &deliveryBridge{d: d}
-	s, e := interaction.New(interaction.Config{DiscoveryOwnerID: scope.OwnerID, Participants: []string{"interaction", "content", "task"}}, interaction.Ports{Content: contentBridge{m}, Delivery: delivery, Closure: closureBridge{ts, store}, Requests: requestBridge{ts}})
+	zone, e := os.ReadFile("/usr/share/zoneinfo/Etc/UTC")
+	if e != nil {
+		t.Fatal(e)
+	}
+	calendar, e := interaction.NewTZDB("2026b", map[string][]byte{"Etc/UTC": zone})
+	if e != nil {
+		t.Fatal(e)
+	}
+	sessionID, branchID := api.NewID("session"), api.NewID("branch")
+	binding := scope.Ref(api.NewID("binding"), 1)
+	one := uint64(1)
+	s, e := interaction.New(interaction.Config{DiscoveryOwnerID: scope.OwnerID, Participants: []string{"interaction", "content", "task"}, EventBindings: []interaction.EventBinding{{BindingRef: binding, Events: []interaction.EventRule{{Name: "archive", Schema: api.Raw(api.Object(map[string]any{"reason": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "reason")), OwnerID: scope.OwnerID, Method: "session.archive", TargetID: sessionID, AcceptForSeconds: 60, ExpectedRevision: &one}}}}}, interaction.Ports{Content: contentBridge{m}, Delivery: delivery, Closure: closureBridge{ts, store}, Requests: requestBridge{ts}, Calendar: calendar, ScheduleGate: scheduleGateBridge{policy, policy}})
 	if e != nil {
 		t.Fatal(e)
 	}
 	if e = s.Register(registry); e != nil {
 		t.Fatal(e)
 	}
-	f := &applicationFixture{ctx: ctx, store: store, scope: scope, auth: a, m: m, cp: cp, task: ts, s: s, d: d, registry: registry, delivery: delivery, policy: policy, config: policy, session: api.NewID("session"), branch: api.NewID("branch")}
+	f := &applicationFixture{ctx: ctx, store: store, scope: scope, auth: a, m: m, cp: cp, task: ts, s: s, d: d, registry: registry, delivery: delivery, policy: policy, config: policy, binding: binding, session: sessionID, branch: branchID}
 	f.command(t, "session.create", scope.OwnerID, nil, interaction.CreateSessionInput{SessionID: f.session, DefaultBranchID: f.branch, ConfigRef: policy})
 	return f
 }

@@ -274,6 +274,27 @@ func saveSubmission(ctx context.Context, tx runtime.Tx, r *submissionRecord) err
 	r.Submission.Revision++
 	return tx.Put(ctx, submissions, r.Submission.SubmissionID, old, *r)
 }
+
+// 原生版本行不可变，可用于确定父锁；当前分支/保序门禁先于可变 Submission。
+func lockSubmission(ctx context.Context, tx runtime.Tx, id string) (submissionRecord, branchRecord, error) {
+	var birth submissionRecord
+	if err := tx.GetVersion(ctx, submissions, id, 1, &birth); err != nil {
+		return submissionRecord{}, branchRecord{}, err
+	}
+	branch, err := getBranch(ctx, tx, birth.Submission.SessionRef.ObjectID, birth.Submission.BranchID)
+	if err != nil {
+		return submissionRecord{}, branchRecord{}, err
+	}
+	if birth.OrderKey != "" {
+		var order orderRecord
+		if _, err = tx.Get(ctx, queues, birth.OrderKey, &order); err != nil {
+			return submissionRecord{}, branchRecord{}, err
+		}
+	}
+	var current submissionRecord
+	_, err = tx.Get(ctx, submissions, id, &current)
+	return current, branch, err
+}
 func removeID(ids []string, id string) []string {
 	out := make([]string, 0, len(ids))
 	for _, v := range ids {
@@ -349,18 +370,13 @@ func (s *Service) wakeSubmission(ctx context.Context, tx runtime.Tx, id string) 
 	return err
 }
 func (s *Service) WithdrawTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in WithdrawInput) (SubmissionOutput, error) {
-	var peek submissionRecord
-	if _, err := tx.Get(ctx, submissions, c.TargetID, &peek); err != nil {
-		return SubmissionOutput{}, err
-	}
-	if err := access(a, peek.Auth.SubjectID); err != nil {
-		return SubmissionOutput{}, err
-	}
-	branch, err := getBranch(ctx, tx, peek.Submission.SessionRef.ObjectID, peek.Submission.BranchID)
+	r, branch, err := lockSubmission(ctx, tx, c.TargetID)
 	if err != nil {
 		return SubmissionOutput{}, err
 	}
-	r := peek
+	if err := access(a, r.Auth.SubjectID); err != nil {
+		return SubmissionOutput{}, err
+	}
 	if c.ExpectedRevision == nil || *c.ExpectedRevision != r.Submission.Revision {
 		return SubmissionOutput{}, api.E("revision_conflict", "submission_changed")
 	}
