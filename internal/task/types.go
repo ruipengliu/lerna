@@ -27,6 +27,7 @@ const (
 	JobAllocation         = "task.allocation"
 	JobChildPrepare       = "task.child_prepare"
 	JobChildTransfer      = "task.child_transfer"
+	JobContextLookup      = "task.context_lookup"
 )
 
 // TaskPolicy 是宿主登记的不可变准确配置；不存在生产默认预算。
@@ -61,6 +62,55 @@ type Config struct {
 	MaxRelations       uint64
 	ControlWindow      time.Duration
 	Participants       []string
+	ContextLimits      ContextLimits
+}
+
+// 只读已有材料的累计保守上界，首次准入后冻结于原 Task，不随重开、等待或修订重置。
+type ContextLimits struct {
+	MaxCalls       uint64 `json:"max_calls"`
+	MaxBytes       uint64 `json:"max_bytes"`
+	MaxTokens      uint64 `json:"max_tokens"`
+	PerLookupBytes uint64 `json:"per_lookup_bytes"`
+}
+type ContextMaterial struct {
+	ContentRef api.ContentRef  `json:"content_ref"`
+	Kind       string          `json:"kind"`
+	LookupRef  api.ObjectRef   `json:"lookup_ref"`
+	MemoryRef  *api.ObjectRef  `json:"memory_ref,omitempty"`
+	QueryRef   *api.ContentRef `json:"query_ref,omitempty"`
+}
+type ContextBudget struct {
+	Limits     ContextLimits `json:"limits"`
+	Calls      uint64        `json:"calls"`
+	BytesBound uint64        `json:"bytes_bound"`
+	TokenBound uint64        `json:"token_bound"`
+}
+
+// 仅查已有获准材料；查询不是行动，也不能扩大本人目标来源。
+type ContextLookup struct {
+	Kind      string         `json:"kind"`
+	TargetRef api.ObjectRef  `json:"target_ref"`
+	QueryRef  api.ContentRef `json:"query_ref"`
+}
+type ContextLookupRequest struct {
+	LookupID        string         `json:"lookup_id"`
+	DecisionID      string         `json:"decision_id"`
+	TaskRef         api.ObjectRef  `json:"task_ref"`
+	SnapshotRef     api.ContentRef `json:"snapshot_ref"`
+	GoalRevision    uint64         `json:"goal_revision"`
+	ControlRevision uint64         `json:"control_revision"`
+	Lookup          ContextLookup  `json:"lookup"`
+	MaxBytes        uint64         `json:"max_bytes"`
+	MaxTokens       uint64         `json:"max_tokens"`
+	ExpiresAt       string         `json:"expires_at"`
+}
+type ContextLookupResult struct {
+	Materials           []ContextMaterial `json:"materials"`
+	ReadBytesUpperBound uint64            `json:"read_bytes_upper_bound"`
+	TokensBound         uint64            `json:"tokens_bound"`
+}
+type ContextLookupPort interface {
+	Resolve(context.Context, runtime.Scope, runtime.Auth, ContextLookupRequest) (ContextLookupResult, error)
 }
 
 type ContentPort interface {
@@ -88,6 +138,12 @@ type EvidenceRegistration interface {
 
 type ContextPort interface {
 	Prepare(context.Context, runtime.Scope, runtime.Auth, api.Task) (PreparedDecision, error)
+}
+
+// 可选纯本库提交钩子，在原 Decision/Reservation 和最终 Job 意图之间登记 holder。
+// 普通材料不因此成为系统指令；不得在该短 Tx 出站或追加任务预算。
+type ContextCommitter interface {
+	CommitTx(context.Context, runtime.Tx, runtime.Auth, PreparedDecision) error
 }
 type BrainPort interface {
 	Dispatch(context.Context, runtime.Scope, api.DecisionDispatchIntent, Snapshot) error
@@ -171,6 +227,7 @@ type Ports struct {
 	ClosureProof        ClosureProofPort
 	ActionAuthorization ActionAuthorization
 	Context             ContextPort
+	ContextLookup       ContextLookupPort
 	Content             ContentPort
 	Gate                LocalGate
 	Brain               BrainPort
@@ -357,6 +414,7 @@ type Proposal struct {
 	FailureReason    string                `json:"failure_reason,omitempty"`
 	InputRequest     *api.InputRequest     `json:"input_request,omitempty"`
 	ContextRefs      []api.ContentRef      `json:"context_refs,omitempty"`
+	Lookups          []ContextLookup       `json:"lookups,omitempty"`
 }
 
 // ValidationReport 固定可重放语义键；自由文本标准须以准确参数内容引用参与键。
@@ -651,6 +709,7 @@ type taskState struct {
 	Amendments           []api.ContentRef     `json:"amendments"`
 	PendingGoalCommand   string               `json:"pending_goal_command,omitempty"`
 	PendingCompletionID  string               `json:"pending_completion_id,omitempty"`
+	PendingContextID     string               `json:"pending_context_id,omitempty"`
 	ParentTaskID         string               `json:"parent_task_id,omitempty"`
 	IncomingAllocationID string               `json:"incoming_allocation_id,omitempty"`
 	Ancestors            []string             `json:"ancestors"`
@@ -659,6 +718,8 @@ type taskState struct {
 	NoProgress           uint64               `json:"no_progress"`
 	DelegationsCreated   uint64               `json:"delegations_created"`
 	ContextRounds        uint64               `json:"context_rounds"`
+	ContextBudget        ContextBudget        `json:"context_budget"`
+	ContextMaterials     []ContextMaterial    `json:"context_materials"`
 	SemanticKeys         []string             `json:"semantic_keys"`
 	CurrentArtifactRefs  []api.ContentRef     `json:"current_artifact_refs"`
 	RelationRevision     uint64               `json:"relation_revision"`

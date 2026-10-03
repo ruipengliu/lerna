@@ -38,6 +38,9 @@ func (s *Service) prepareDecisionTx(ctx context.Context, tx runtime.Tx, auth run
 	if t.PendingCompletionID != "" {
 		return api.DecisionDispatchIntent{}, api.E("invalid_state", "completion_checks_pending")
 	}
+	if t.PendingContextID != "" {
+		return api.DecisionDispatchIntent{}, api.E("invalid_state", "context_lookup_pending")
+	}
 	snap := in.Snapshot
 	if snap.TaskRef.TenantID != tx.Scope().TenantID || snap.TaskRef.OwnerID != tx.Scope().OwnerID || snap.TaskRef.Revision != t.Task.Revision || snap.GoalRevision != t.Task.GoalRevision || snap.ControlRevision != t.Task.ControlRevision || !api.Equal(snap.GoalRef, t.Task.GoalRef) || snap.RequirementsDigest != t.Task.RequirementsDigest || !api.Equal(snap.Requirements, t.Task.Requirements) || !api.Equal(snap.PolicyRef, t.Task.PolicyRef) {
 		return api.DecisionDispatchIntent{}, api.E("revision_conflict", "stale_snapshot")
@@ -90,6 +93,11 @@ func (s *Service) prepareDecisionTx(ctx context.Context, tx runtime.Tx, auth run
 	t.Continuations++
 	if e = s.saveTask(ctx, tx, &t); e != nil {
 		return intent, e
+	}
+	if committer, ok := s.ports.Context.(ContextCommitter); ok {
+		if e = committer.CommitTx(ctx, tx, submitterAuth(tx.Scope(), t), in); e != nil {
+			return intent, e
+		}
 	}
 	if e = queueJob(ctx, tx, JobDispatchDecision, "decision/"+in.DecisionID, tx.Scope().Ref(in.DecisionID, 1)); e != nil {
 		return intent, e
@@ -249,8 +257,39 @@ func (s *Service) consumeProposalTx(ctx context.Context, tx runtime.Tx, auth run
 			out.Outcome = "rejected"
 			out.ReasonCodes = []string{"context_round_limit"}
 		} else {
+			if len(p.Lookups) != 0 {
+				if len(p.ContextRefs) != 0 {
+					return out, invalid("ambiguous_context_lookup")
+				}
+				if e = s.beginContextLookupsTx(ctx, tx, &t, d, p.Lookups); e != nil {
+					return out, e
+				}
+				return finish()
+			}
+			if len(p.ContextRefs) == 0 || len(p.ContextRefs) > 3 {
+				return out, invalid("context_lookup_required")
+			}
 			if e = s.authorize(ctx, tx, auth, "task.need_context", p.ContextRefs, nil); e != nil {
 				return out, e
+			}
+			if t.ContextBudget.Limits.MaxCalls == 0 {
+				t.ContextBudget.Limits = s.config.ContextLimits // 旧记录只在首次新增责任时固定此配置。
+			}
+			budget := t.ContextBudget
+			for _, ref := range p.ContextRefs {
+				budget.Calls++
+				if budget.BytesBound > budget.Limits.MaxBytes || ref.ByteLength > budget.Limits.MaxBytes-budget.BytesBound || budget.TokenBound > budget.Limits.MaxTokens || ref.ByteLength > budget.Limits.MaxTokens-budget.TokenBound || budget.Calls > budget.Limits.MaxCalls {
+					return out, api.E("overloaded", "context_lookup_budget_exhausted")
+				}
+				budget.BytesBound += ref.ByteLength
+				budget.TokenBound += ref.ByteLength
+			}
+			if len(t.ContextMaterials)+len(p.ContextRefs) > 64 {
+				return out, api.E("overloaded", "context_material_capacity")
+			}
+			t.ContextBudget = budget
+			for _, ref := range p.ContextRefs {
+				t.ContextMaterials = append(t.ContextMaterials, ContextMaterial{ContentRef: ref, Kind: "existing_content", LookupRef: tx.Scope().Ref(p.DecisionID, 1)})
 			}
 			t.ContextRounds++
 			if e = s.saveTask(ctx, tx, &t); e != nil {
