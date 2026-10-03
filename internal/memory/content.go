@@ -441,6 +441,43 @@ func (s *Service) Upload(ctx context.Context, scope runtime.Scope, auth runtime.
 	return request.ContentRef, nil
 }
 
+// RecoverUpload 只出版原已 ready 的上传，不接收替代字节、不续期、不创建另一票据。
+func (s *Service) RecoverUpload(ctx context.Context, scope runtime.Scope, auth runtime.Auth, request PublicationRequest) (api.ContentRef, error) {
+	reserve := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: scope.OwnerID, CommandID: request.ReserveCommandID, Method: "content.upload_reserve", TargetID: request.ContentRef.ContentID, ExpiresAt: request.TransferDeadline, Payload: api.Raw(ReserveInput{request.TransferID, request.ContentRef, request.PolicyRef, request.ProcessedSources, request.RetentionUntil, request.TransferDeadline})}
+	original, err := s.Store.LookupCommand(ctx, scope, request.ReserveCommandID)
+	if err != nil {
+		return api.ContentRef{}, err
+	}
+	if original.PrincipalID != auth.SubjectID || !api.Equal(original.Command, reserve) {
+		return api.ContentRef{}, api.E("idempotency_conflict", "upload_recovery_identity_changed")
+	}
+	if original.Receipt.Error != nil {
+		return api.ContentRef{}, original.Receipt.Error
+	}
+	t, err := s.LookupTransfer(ctx, scope, auth, request.TransferID)
+	if err != nil {
+		return api.ContentRef{}, err
+	}
+	if t.ContentRef != request.ContentRef || t.ExpiresAt != request.TransferDeadline {
+		return api.ContentRef{}, api.E("idempotency_conflict", "upload_recovery_identity_changed")
+	}
+	if t.Phase != "ready" && t.Phase != "published" {
+		return api.ContentRef{}, api.E("dependency_unavailable", "original_upload_bytes_unavailable")
+	}
+	put := reserve
+	put.CommandID, put.Method = request.PutCommandID, "content.put"
+	put.Payload = api.Raw(PutInput{request.ContentRef, request.TransferID, request.PolicyRef, request.ProcessedSources, request.DisclosedSources, request.RetentionUntil})
+	d := runtime.Dispatcher{Store: s.Store, OwnerID: scope.OwnerID, Registry: s.commands()}
+	r, err := d.Command(ctx, auth, api.Raw(put))
+	if err != nil {
+		return api.ContentRef{}, err
+	}
+	if r.Error != nil {
+		return api.ContentRef{}, r.Error
+	}
+	return request.ContentRef, nil
+}
+
 func (s *Service) Read(ctx context.Context, scope runtime.Scope, auth runtime.Auth, ref api.ContentRef, purpose string) ([]byte, error) {
 	return s.ReadBytes(ctx, scope, auth, ref, purpose, s.Location)
 }
