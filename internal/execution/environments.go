@@ -216,6 +216,7 @@ func (s *Service) environmentStop(ctx context.Context, tx rt.Tx, a rt.Auth, c ap
 	if err != nil {
 		return env, err
 	}
+	stopRefs := make([]api.ObjectRef, 0, len(env.ActiveOperationIDs))
 	for _, id := range env.ActiveOperationIDs {
 		var op operationRecord
 		or, err := tx.Get(ctx, Namespace+".operations", id, &op)
@@ -227,10 +228,9 @@ func (s *Service) environmentStop(ctx context.Context, tx rt.Tx, a rt.Auth, c ap
 		if err = putOperation(ctx, tx, &op, or); err != nil {
 			return env, err
 		}
-		if _, err = tx.Raise(ctx, StopJob, id, tx.Scope().Ref(id, op.Revision), now); err != nil {
-			return env, err
-		}
+		stopRefs = append(stopRefs, tx.Scope().Ref(id, op.Revision))
 	}
+	callRefs := make([]api.ObjectRef, 0, len(env.HostCallIDs))
 	for _, id := range env.HostCallIDs {
 		var call HostCall
 		callRevision, e := tx.Get(ctx, Namespace+".hostcalls", id, &call)
@@ -241,7 +241,15 @@ func (s *Service) environmentStop(ctx context.Context, tx rt.Tx, a rt.Auth, c ap
 		if e = tx.Put(ctx, Namespace+".hostcalls", id, callRevision, call); e != nil {
 			return env, e
 		}
-		if _, err = tx.Raise(ctx, HostCallJob, id, tx.Scope().Ref(id, call.Revision), now); err != nil {
+		callRefs = append(callRefs, tx.Scope().Ref(id, call.Revision))
+	}
+	for _, ref := range stopRefs {
+		if _, err = tx.Raise(ctx, StopJob, ref.ObjectID, ref, now); err != nil {
+			return env, err
+		}
+	}
+	for _, ref := range callRefs {
+		if _, err = tx.Raise(ctx, HostCallJob, ref.ObjectID, ref, now); err != nil {
 			return env, err
 		}
 	}
@@ -389,6 +397,11 @@ func (s *Service) environmentPrepareWork(ctx context.Context, st rt.Store, sc rt
 		return err
 	}
 	return s.finish(ctx, st, sc, w, rt.Done(), func(tx rt.Tx) error {
+		if env.PreparationCommandID != "" {
+			if _, err := tx.LoadCommand(ctx, env.PreparationCommandID); err != nil {
+				return err
+			}
+		}
 		var current Environment
 		rev, err := tx.Get(ctx, Namespace+".environments", env.EnvironmentID, &current)
 		if err != nil {
@@ -396,6 +409,9 @@ func (s *Service) environmentPrepareWork(ctx context.Context, st rt.Store, sc rt
 		}
 		if current.Generation != env.Generation || current.Phase != "preparing" {
 			return nil
+		}
+		if current.PreparationCommandID != env.PreparationCommandID {
+			return api.E("idempotency_conflict", "environment_preparation_command_changed")
 		}
 		now, err := tx.Now(ctx)
 		if err != nil {
@@ -492,6 +508,11 @@ func (s *Service) environmentCleanupWork(ctx context.Context, st rt.Store, sc rt
 
 func (s *Service) failEnvironmentPreparation(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work, env Environment, cause error) error {
 	return s.finish(ctx, st, sc, w, rt.Done(), func(tx rt.Tx) error {
+		if env.PreparationCommandID != "" {
+			if _, err := tx.LoadCommand(ctx, env.PreparationCommandID); err != nil {
+				return err
+			}
+		}
 		var current Environment
 		rev, err := tx.Get(ctx, Namespace+".environments", env.EnvironmentID, &current)
 		if err != nil {
@@ -499,6 +520,9 @@ func (s *Service) failEnvironmentPreparation(ctx context.Context, st rt.Store, s
 		}
 		if current.Generation != env.Generation || current.Phase != "preparing" {
 			return nil
+		}
+		if current.PreparationCommandID != env.PreparationCommandID {
+			return api.E("idempotency_conflict", "environment_preparation_command_changed")
 		}
 		current.Revision = rev + 1
 		current.Generation++
@@ -512,9 +536,6 @@ func (s *Service) failEnvironmentPreparation(ctx context.Context, st rt.Store, s
 		if err != nil {
 			return err
 		}
-		if _, err = tx.Raise(ctx, EnvironmentCleanupJob, current.EnvironmentID, sc.Ref(current.EnvironmentID, current.Revision), now); err != nil {
-			return err
-		}
 		if current.PreparationCommandID != "" {
 			var rejection *api.Error
 			if e, ok := cause.(*api.Error); ok {
@@ -522,8 +543,11 @@ func (s *Service) failEnvironmentPreparation(ctx context.Context, st rt.Store, s
 			} else {
 				rejection = api.E("invalid_state", "runtime_not_ready")
 			}
-			return rt.Decide(ctx, tx, current.PreparationCommandID, nil, rejection)
+			if err = rt.Decide(ctx, tx, current.PreparationCommandID, nil, rejection); err != nil {
+				return err
+			}
 		}
+		_, err = tx.Raise(ctx, EnvironmentCleanupJob, current.EnvironmentID, sc.Ref(current.EnvironmentID, current.Revision), now)
 		return nil
 	})
 }

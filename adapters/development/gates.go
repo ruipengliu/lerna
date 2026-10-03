@@ -92,10 +92,10 @@ func (g brainGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if !auth.HasRole("service") {
 		return api.E("forbidden", "trusted_orchestrator_required")
 	}
-	if e := currentCredentialTx(ctx, tx, auth); e != nil {
+	if e := g.a.Task.CheckDecisionTx(ctx, tx, auth, in.DecisionID); e != nil {
 		return e
 	}
-	if e := g.a.Task.CheckDecisionTx(ctx, tx, auth, in.DecisionID); e != nil {
+	if e := currentCredentialTx(ctx, tx, auth); e != nil {
 		return e
 	}
 	if e := g.a.authorizeModelTx(ctx, tx, auth, in, encoding); e != nil {
