@@ -83,6 +83,12 @@ type Disposition struct {
 	DueAt time.Time
 }
 
+// TxSnapshotReader 只在加领域上游锁前读取当前头以确定准确锁路由。
+// Peek 不锁定行，也不授予读取或接纳资格；调用方随后必须用 Get 锁定当前头并核对原 revision。
+type TxSnapshotReader interface {
+	Peek(context.Context, string, string, any) (uint64, error)
+}
+
 func Done() Disposition                { return Disposition{State: "done"} }
 func Waiting(at time.Time) Disposition { return Disposition{State: "waiting", DueAt: at} }
 func Ready(at time.Time) Disposition   { return Disposition{State: "ready", DueAt: at} }

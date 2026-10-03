@@ -95,6 +95,9 @@ func (g brainGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if e := g.a.Task.CheckDecisionTx(ctx, tx, auth, in.DecisionID); e != nil {
 		return e
 	}
+	if e := g.a.authorizeModelTx(ctx, tx, auth, in, encoding); e != nil {
+		return e
+	}
 	if _, e := g.a.Memory.CheckContentTx(ctx, tx, auth, in.SnapshotRef, "brain.input", "cloud", true); e != nil {
 		return e
 	}
@@ -104,7 +107,7 @@ func (g brainGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 				return e
 			}
 		}
-		if encoding.Receiver != "builtin-rule-engine" || encoding.Location != "cloud" {
+		if g.a.Model == nil && (encoding.Receiver != "builtin-rule-engine" || encoding.Location != "cloud") {
 			return api.E("forbidden", "model_recipient_not_configured")
 		}
 	}

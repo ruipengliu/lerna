@@ -48,6 +48,14 @@ func (s *Service) createRun(ctx context.Context, tx runtime.Tx, a runtime.Auth, 
 	if !errMissing(err) {
 		return runtime.Outcome{}, err
 	}
+	if s.Ports.Runner == nil {
+		return runtime.Outcome{}, api.E("unsupported", "evaluation_runner_unavailable")
+	}
+	if admission, ok := s.Ports.Runner.(EvaluationPlanAdmission); ok {
+		if err := admission.CheckEvaluationPlan(plan); err != nil {
+			return runtime.Outcome{}, err
+		}
+	}
 	now, err := tx.Now(ctx)
 	if err != nil {
 		return runtime.Outcome{}, err

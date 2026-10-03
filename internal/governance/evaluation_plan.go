@@ -100,6 +100,11 @@ func (s *Service) createPlan(ctx context.Context, tx runtime.Tx, a runtime.Auth,
 	if p.Purpose == "formal" && s.Ports.FormalPlanGate == nil {
 		return runtime.Outcome{}, api.E("unsupported", "registered_formal_lineage_partition_unavailable")
 	}
+	if admission, ok := s.Ports.Runner.(EvaluationPlanAdmission); ok {
+		if err := admission.CheckEvaluationPlan(p); err != nil {
+			return runtime.Outcome{}, err
+		}
+	}
 	if err := ownerRef(tx.Scope(), p.PartitionRef); err != nil {
 		return runtime.Outcome{}, api.E("unsupported", "cross_owner_partition_not_supported")
 	}
@@ -217,7 +222,7 @@ func (s *Service) continuePlan(ctx context.Context, store runtime.Store, scope r
 		return err
 	}
 	auth := runtime.Auth{TenantID: scope.TenantID, SubjectID: pending.SubjectID, CredentialGeneration: pending.CredentialGeneration, Roles: pending.Roles}
-	b, readErr := s.Ports.Content.Read(ctx, scope, auth, pending.Plan.ManifestRef, "evaluation_manifest")
+	b, readErr := s.Ports.Content.Read(ctx, scope, auth, pending.Plan.ManifestRef, "evaluation.manifest")
 	var samples []EvaluationSample
 	var decodeErr error
 	if readErr == nil {

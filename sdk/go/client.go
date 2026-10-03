@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -185,7 +187,21 @@ func (c *Client) Send(ctx context.Context, command api.Command) (api.Receipt, er
 	if e != nil {
 		return api.Receipt{}, e
 	}
-	entry := Entry{IdentityScope: c.Discovery.IdentityScope, SchemaDigest: c.Discovery.SchemaDigest, Command: command, Digest: digest}
+	original, e := c.Journal.Read(ctx, command.CommandID)
+	if e == nil {
+		if original.Digest != digest {
+			return api.Receipt{}, api.E("idempotency_conflict", "journal_command_changed")
+		}
+		if e = c.checkOriginal(original); e != nil {
+			return api.Receipt{}, e
+		}
+		if original.Receipt != nil && original.Receipt.Stage != "accepted" {
+			return c.Receipt(ctx, command.CommandID)
+		}
+	} else if !errors.Is(e, os.ErrNotExist) && !api.IsCode(e, "not_found") {
+		return api.Receipt{}, e
+	}
+	entry := Entry{IdentityScope: c.Discovery.IdentityScope, SchemaDigest: c.Discovery.SchemaDigest, MethodSchemaDigest: c.methodSchemaDigest(command.Method), Command: command, Digest: digest}
 	if e = c.Journal.Save(ctx, entry); e != nil {
 		return api.Receipt{}, e
 	}
@@ -235,8 +251,8 @@ func (c *Client) Recover(ctx context.Context) ([]api.Receipt, bool, error) {
 	}
 	results := []api.Receipt{}
 	for _, entry := range entries {
-		if entry.IdentityScope != c.Discovery.IdentityScope || entry.Command.LogicalServiceID != c.Discovery.LogicalServiceID {
-			return nil, partial, api.E("forbidden", "recovery_scope_mismatch")
+		if e = c.checkOriginal(entry); e != nil {
+			return results, partial, e
 		}
 		raw, e := c.Transport.Call(ctx, "receipt_lookup", api.Raw(api.ReceiptLookup{LogicalServiceID: entry.Command.LogicalServiceID, CommandID: entry.Command.CommandID}))
 		var r api.Receipt
