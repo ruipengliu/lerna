@@ -16,6 +16,14 @@ type evidenceBridge struct{ a *App }
 
 func (e evidenceBridge) ValidateRequirements(ctx context.Context, s runtime.Scope, t api.Task, d api.RequirementDelta) (task.ValidationReport, error) {
 	out := task.ValidationReport{Valid: true, SemanticKeys: []string{}, ReasonCodes: []string{}}
+	facts, er := e.a.Task.ContextFacts(ctx, e.a.Store, s, e.a.ServiceAuth, t.TaskID)
+	if er != nil {
+		return out, er
+	}
+	goalSources, er := e.a.goalSourceEvidence(ctx, s, t.GoalRef, facts.SourceRefs, nil)
+	if er != nil {
+		return out, er
+	}
 	raw, er := e.a.goalBytes(ctx, s, e.a.ServiceAuth, t.GoalRef)
 	if er != nil {
 		return out, er
@@ -49,9 +57,13 @@ func (e evidenceBridge) ValidateRequirements(ctx context.Context, s runtime.Scop
 				out.ReasonCodes = append(out.ReasonCodes, "requirement_changes_original_goal")
 			}
 		}
-		sourceMatched := false
+		sourceMatched := len(candidate.SourceRefs) > 0
 		for _, source := range candidate.SourceRefs {
-			sourceMatched = sourceMatched || api.Equal(source.ContentRef, t.GoalRef)
+			originalMatched := false
+			for _, original := range goalSources {
+				originalMatched = originalMatched || api.Equal(source, original)
+			}
+			sourceMatched = sourceMatched && originalMatched
 		}
 		if !sourceMatched {
 			out.Valid = false

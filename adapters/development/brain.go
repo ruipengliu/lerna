@@ -74,6 +74,36 @@ func (b brainBridge) ReadProposal(ctx context.Context, s runtime.Scope, i api.De
 		return original, e
 	}
 	original = task.Proposal{DecisionID: i.DecisionID, Kind: p.Kind, ReasonRef: p.ReasonRef, RequirementDelta: p.RequirementDelta, ArtifactRefs: p.ArtifactRefs, Limitations: []string{}}
+	if original.RequirementDelta != nil {
+		facts, err := b.a.Task.ContextFacts(ctx, b.a.Store, s, b.a.ServiceAuth, snap.TaskRef.ObjectID)
+		if err != nil {
+			return original, err
+		}
+		sources, err := b.a.goalSourceEvidence(ctx, s, snap.GoalRef, facts.SourceRefs, &snap)
+		if err != nil {
+			return original, err
+		}
+		for n := range original.RequirementDelta.Candidates {
+			candidate := &original.RequirementDelta.Candidates[n]
+			mapped := []api.SourceEvidence{}
+			for _, source := range candidate.SourceRefs {
+				// Brain materialize 的包装别名不是本人证明；只展开无自报依据的准确 GoalRef。
+				if api.Equal(source.ContentRef, snap.GoalRef) && source.SourceKind == "user_input" && source.SubmissionRef == nil && source.Locator == "" {
+					mapped = append(mapped, sources...)
+					continue
+				}
+				matched := false
+				for _, original := range sources {
+					matched = matched || api.Equal(source, original)
+				}
+				if !matched {
+					return original, api.E("forbidden", "requirement_source_not_original")
+				}
+				mapped = append(mapped, source)
+			}
+			candidate.SourceRefs = mapped
+		}
+	}
 	for _, suggestion := range p.CheckSuggestions {
 		if len(suggestion.EvidenceRefs) == 0 {
 			return original, api.E("invalid_request", "check_artifact_required")

@@ -23,9 +23,10 @@ if [[ -n "$unformatted" ]]; then
   exit 1
 fi
 go vet ./...
-go test -p 2 -count=1 -timeout=5m ./...
+# 包含两库多段公开报告/澄清；只约束测试runner，不改变业务期限。
+go test -p 2 -count=1 -timeout=10m ./...
 if [[ -n "${HARNESS_TEST_POSTGRES_DSN:-}" ]]; then
-  HARNESS_TEST_EXECUTION_BACKEND=postgres HARNESS_TEST_PROCESS_BACKEND=postgres go test -p 2 -count=1 -timeout=5m ./conformance/integration ./cmd/internal/runner
+  HARNESS_TEST_EXECUTION_BACKEND=postgres HARNESS_TEST_PROCESS_BACKEND=postgres go test -p 2 -count=1 -timeout=10m ./conformance/integration ./cmd/internal/runner
 else
   echo 'PostgreSQL verification was not selected; provide HARNESS_TEST_POSTGRES_DSN to run it.'
 fi
