@@ -11,8 +11,8 @@ try {
     ['build', '-o', executable, './conformance/component/valuerunner'],
     { stdio: 'inherit' },
   );
-  const fixtures = JSON.parse(
-    readFileSync('conformance/fixtures/1.0.0/values.json', 'utf8'),
+  const fixtures = ['values', 'commands'].flatMap((name) =>
+    JSON.parse(readFileSync(`conformance/fixtures/1.0.0/${name}.json`, 'utf8')),
   );
   const run = (lang, name, wire) =>
     spawnSync(
@@ -22,10 +22,20 @@ try {
     );
   for (const fixture of fixtures) {
     for (const lang of ['go', 'ts']) {
-      const first = run(lang, fixture.schema, fixture.wire);
+      const first = run(
+        lang,
+        fixture.schema,
+        ' '.repeat(fixture.leading_spaces ?? 0) + fixture.wire,
+      );
       assert.ifError(first.error);
       if (!fixture.valid) {
         assert.notEqual(first.status, 0, `${lang}: ${fixture.name}`);
+        if (fixture.code)
+          assert.deepEqual(
+            JSON.parse(first.stderr),
+            { code: fixture.code },
+            `${lang} classified refusal: ${fixture.name}`,
+          );
         continue;
       }
       assert.equal(

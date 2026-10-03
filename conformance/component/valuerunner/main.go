@@ -2,6 +2,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/ruipengliu/lerna/contract"
 	"io"
@@ -15,34 +16,6 @@ func roundtrip[T contract.Value](data []byte) ([]byte, error) {
 	}
 	return contract.Encode(value)
 }
-func run(name string, data []byte) ([]byte, error) {
-	switch name {
-	case "ID":
-		return roundtrip[contract.ID](data)
-	case "Revision":
-		return roundtrip[contract.Revision](data)
-	case "Time":
-		return roundtrip[contract.Time](data)
-	case "Kind":
-		return roundtrip[contract.Kind](data)
-	case "OwnerRef":
-		return roundtrip[contract.OwnerRef](data)
-	case "ObjectRef":
-		return roundtrip[contract.ObjectRef](data)
-	case "ContentRef":
-		return roundtrip[contract.ContentRef](data)
-	case "Amount":
-		return roundtrip[contract.Amount](data)
-	case "Gap":
-		return roundtrip[contract.Gap](data)
-	case "ReadScope":
-		return roundtrip[contract.ReadScope](data)
-	case "CollectionView":
-		return roundtrip[contract.CollectionView](data)
-	default:
-		return nil, fmt.Errorf("unknown value schema %q", name)
-	}
-}
 func main() {
 	if len(os.Args) != 2 {
 		fmt.Fprintln(os.Stderr, "usage: valuerunner SCHEMA < JSON")
@@ -53,7 +26,16 @@ func main() {
 		data, err = run(os.Args[1], data)
 	}
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		var refusal *contract.ContractError
+		if !errors.As(err, &refusal) {
+			refusal = &contract.ContractError{PublicError: contract.PublicError{Code: "schema_invalid"}, Cause: err}
+		}
+		encoded, encodeErr := contract.Encode(refusal.PublicError)
+		if encodeErr != nil {
+			fmt.Fprintln(os.Stderr, encodeErr)
+			os.Exit(1)
+		}
+		fmt.Fprintln(os.Stderr, string(encoded))
 		os.Exit(1)
 	}
 	if _, err := os.Stdout.Write(data); err != nil {

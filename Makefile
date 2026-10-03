@@ -17,6 +17,7 @@ lint:
 	go vet ./...
 	pnpm lint
 test:
+	node scripts/test-generator.mjs
 	go test ./...
 	pnpm test
 test-race:
