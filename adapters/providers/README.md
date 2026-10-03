@@ -49,6 +49,11 @@ token 事实共同持久保存，原字节按最多 4 个 64KiB base64 片段与
 故不发补偿 POST、身份变更查询或另一次模型请求。
 
 HTTP/1 transport 禁止连接复用、可重放 Body、HTTP/2 自动重试与重定向跟随。
+构造仅接受非 nil 的 `*http.Transport` 默认基座并复制；其他 RoundTripper、
+nil 或 typed nil 返回 `unsupported/model_transport_contract_unconfigured`，
+不以任意包装器推断单次出口保证，也不回退到另一套 transport。公开构造器
+回归保留原类型断言 panic 的实际失败；配置拒绝与合格基座零网络 I/O 的
+选定 race 实际通过（1.185s）。
 请求头传递原 X-Harness-Call-ID；凭据仅在原请求 Authorization 中。并发、等待、
 请求超时、编码和回复字节都有固定上限。生产只接收 HTTPS；HTTP 仅可明确
 允许数值 loopback 地址用于合同测试。平台 HTTPS 配置不由此适配器隐式创建。
