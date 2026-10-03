@@ -1,4 +1,24 @@
+# macOS metadata
+.DS_Store
+._*
+
+# Editor temporary files
+*.swp
+*.swo
+*~
+
+# Dependencies and Python cache
 node_modules/
+__pycache__/
+*.pyc
+*.pyo
+
+# Generated documentation
+/docs/architecture/html/
+
+# Local reference checkouts; .scratch/ contains versioned issues and specs
+/.reference/
+
 dist/
 bin/
 coverage/
