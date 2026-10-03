@@ -95,6 +95,9 @@ SDK journal 保存原命令、准确 payload/TTL；恢复先取原回执，不�
 设备原缓存缺少的输入只沿原 permission 的准确用途读取；云端先为本方 `cloud` 读取
 及 `device` 出站分别取得当前来源证明，再调用 Memory 的两位置强门禁。已存在的
 签名 bundle 也遵循此流程，不借上一 Job 的证明，不重封 bundle 或增加用途。
+设备缓存确认后，原 Task 仍以 `task.dispatch`／`cloud` 核完整 processed 来源；
+宿主在签发控制窗口前为原 Service holder 取得此用途的当次证明并重核原 Claim。
+该证明不替代 Task 随后的当前主体、控制和共同提交门禁。
 
 云端 `executionBridge.Usage` 只归并一份设备签名 LeaseReport。准确 Operation Usage
 来自该报告的原证据，因此 Task 和 Grant 不会分别查询不同进度再双扣。
