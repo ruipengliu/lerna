@@ -22,12 +22,37 @@ type Service struct {
 	Authorization       Authorization
 	Location            string
 	SavingAuthorization SavingAuthorization
-	registryOnce        sync.Once
-	registry            *runtime.Registry
+	ExperienceAuthority ExperienceAuthority
+	// Participants 由受信宿主在使用前配置；实例之间不共享可变 slice。
+	Participants []string
+	registryOnce sync.Once
+	registry     *runtime.Registry
 }
 
 func New(store runtime.Store, objects ObjectStore) *Service {
-	return &Service{Store: store, Objects: objects, Location: "local"}
+	return &Service{Store: store, Objects: objects, Location: "local", Participants: []string{"content", "memory"}}
+}
+
+func (s *Service) participants() []string {
+	parts := unique(append([]string{"content", "memory"}, s.Participants...))
+	sort.Strings(parts)
+	return parts
+}
+
+// ConfigureParticipants 必须在 Register/commands/worker 启动之前调用。
+func (s *Service) ConfigureParticipants(extra ...string) error {
+	for _, part := range extra {
+		if part == "" || strings.ContainsAny(part, "./") || len(part) > 160 {
+			return api.E("invalid_request", "invalid_participant_root")
+		}
+		for i, r := range part {
+			if !(r >= 'a' && r <= 'z' || i > 0 && (r >= '0' && r <= '9' || r == '_')) {
+				return api.E("invalid_request", "invalid_participant_root")
+			}
+		}
+	}
+	s.Participants = unique(append([]string{"content", "memory"}, extra...))
+	return nil
 }
 
 func (s *Service) commands() *runtime.Registry {
@@ -91,7 +116,12 @@ func (s *Service) within(ctx context.Context, scope runtime.Scope, fn func(runti
 	if s.Store == nil || s.Objects == nil || scope.DatabaseID != s.Store.ID() || !api.ValidID(scope.TenantID) || !api.ValidID(scope.OwnerID) {
 		return api.E("dependency_unavailable", "memory_not_configured")
 	}
-	status, err := s.Store.Within(ctx, scope, Participants, fn)
+	status, err := s.Store.Within(ctx, scope, s.participants(), func(tx runtime.Tx) error {
+		if _, err := loadHead(ctx, tx); err != nil {
+			return err
+		}
+		return fn(tx)
+	})
 	if status == runtime.CommitUnknown {
 		return runtime.ErrCommitUnknown
 	}
@@ -133,8 +163,12 @@ func (s *Service) InstallPolicyTx(ctx context.Context, tx runtime.Tx, auth runti
 	if err := policyValid(policy); err != nil {
 		return err
 	}
+	head, err := loadHead(ctx, tx)
+	if err != nil {
+		return err
+	}
 	var old Policy
-	_, err := tx.Get(ctx, "content.policies", policyKey(policy.PolicyRef), &old)
+	_, err = tx.Get(ctx, "content.policies", policyKey(policy.PolicyRef), &old)
 	if err == nil {
 		if !api.Equal(old.PolicyRef, policy.PolicyRef) || !api.Equal(old.Values, policy.Values) {
 			return api.E("idempotency_conflict", "policy_changed")
@@ -145,10 +179,6 @@ func (s *Service) InstallPolicyTx(ctx context.Context, tx runtime.Tx, auth runti
 		return err
 	}
 	if err = tx.Create(ctx, "content.policies", policyKey(policy.PolicyRef), "", policy); err != nil {
-		return err
-	}
-	head, err := loadHead(ctx, tx)
-	if err != nil {
 		return err
 	}
 	head.RegistryVersion++
@@ -217,6 +247,12 @@ func narrower(next, previous PolicyValues) bool {
 }
 
 func (s *Service) allowed(ctx context.Context, tx runtime.Tx, auth runtime.Auth, policyRef api.ComponentRef, purpose, location string, continuous bool) (Policy, error) {
+	if budget, ok := ctx.Value(permissionBudgetKey{}).(*permissionBudget); ok {
+		if budget.remaining == 0 {
+			return Policy{}, api.E("overloaded", "query_permission_budget")
+		}
+		budget.remaining--
+	}
 	if err := checkAuth(tx.Scope(), auth); err != nil {
 		return Policy{}, err
 	}
@@ -256,6 +292,26 @@ func (s *Service) visibility(ctx context.Context, tx runtime.Tx, auth runtime.Au
 		}
 	}
 	return api.Digest([]any{head.RegistryVersion, head.VisibilityRevision, auth.SubjectID, auth.CredentialGeneration, grant})
+}
+
+func (s *Service) allowedHistorical(ctx context.Context, tx runtime.Tx, auth runtime.Auth, p Policy, purpose, location string, continuous bool) error {
+	if err := checkAuth(tx.Scope(), auth); err != nil {
+		return err
+	}
+	if budget, ok := ctx.Value(permissionBudgetKey{}).(*permissionBudget); ok {
+		if budget.remaining == 0 {
+			return api.E("overloaded", "query_permission_budget")
+		}
+		budget.remaining--
+	}
+	if !contains(p.Values.Subjects, auth.SubjectID) || !contains(p.Values.Purposes, purpose) || !contains(p.Values.Locations, location) || continuous && !p.Values.Continuous {
+		return api.E("forbidden", "source_forbidden")
+	}
+	if s.Authorization != nil {
+		_, err := s.Authorization.Check(ctx, tx, auth, p.PolicyRef, purpose, location, continuous)
+		return err
+	}
+	return nil
 }
 
 func future(ctx context.Context, tx runtime.Tx, value string) (time.Time, error) {

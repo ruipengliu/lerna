@@ -37,6 +37,8 @@ export function resolveSchema(value: unknown, depth = 0): Schema {
 }
 export function initialPayload(schema: unknown, depth = 0): JSONValue {
   const spec = resolveSchema(schema, depth);
+  if (Array.isArray(spec.oneOf) && spec.oneOf.length > 0 && spec.oneOf.length <= 8)
+    return initialPayload(spec.oneOf[0], depth + 1);
   if (spec.const !== undefined) return spec.const;
   if (Array.isArray(spec.enum) && spec.enum.length) return spec.enum[0] ?? "";
   if (spec.type === "object") {
@@ -122,6 +124,18 @@ export function RestrictedForm({
   } catch (error) {
     return <p className="notice">{error instanceof Error ? error.message : "不支持此表单"}</p>;
   }
+  if (Array.isArray(spec.oneOf)) {
+    if (!spec.oneOf.length || spec.oneOf.length > 8)
+      return <p className="notice">此表单的格式分支超过受信界面的上限。</p>;
+    return (
+      <UnionForm
+        schema={spec}
+        value={value}
+        onChange={onChange}
+        {...(onValidity ? { onValidity } : {})}
+      />
+    );
+  }
   if (
     spec.type !== "object" ||
     spec.additionalProperties !== false ||
@@ -192,7 +206,12 @@ export function RestrictedForm({
                   id={title}
                   aria-label={label}
                   value={String(fieldValue)}
-                  onChange={(event) => update(event.target.value)}
+                  onChange={(event) => {
+                    const selected = Array.isArray(field.enum)
+                      ? field.enum.find((option) => String(option) === event.target.value)
+                      : undefined;
+                    if (selected !== undefined) update(selected);
+                  }}
                 >
                   {field.enum.map((option) => (
                     <option key={String(option)} value={String(option)}>
@@ -256,5 +275,77 @@ export function RestrictedForm({
         );
       })}
     </div>
+  );
+}
+function UnionForm({
+  schema,
+  value,
+  onChange,
+  onValidity,
+}: {
+  schema: Schema;
+  value: JSONValue;
+  onChange: (value: JSONValue) => void;
+  onValidity?: (valid: boolean) => void;
+}) {
+  const [selected, setSelected] = useState(0);
+  const id = useId();
+  const branches = Array.isArray(schema.oneOf) ? schema.oneOf : [];
+  let formats: Array<{ spec: Schema; kind: JSONValue | undefined; label: string }>;
+  try {
+    formats = branches.map((branch, index) => {
+      const spec = resolveSchema(branch);
+      const kind =
+        isObject(spec.properties) && isObject(spec.properties.kind)
+          ? spec.properties.kind.const
+          : undefined;
+      return { spec, kind, label: typeof kind === "string" ? kind : `格式 ${index + 1}` };
+    });
+  } catch {
+    return <p className="notice">此格式包含尚未支持的本地 Schema 引用，依赖提交保持关闭。</p>;
+  }
+  const bound = isObject(value)
+    ? formats.findIndex((format) => format.kind !== undefined && format.kind === value.kind)
+    : -1;
+  const index = bound >= 0 ? bound : selected;
+  const current = formats[index];
+  if (
+    !current ||
+    formats.some(
+      (format) => format.spec.type !== "object" || format.spec.additionalProperties !== false,
+    )
+  )
+    return <p className="notice">此格式分支未提供闭合受限对象。</p>;
+  return (
+    <>
+      <div className="field">
+        <label htmlFor={id}>回答格式</label>
+        <select
+          id={id}
+          value={index}
+          onChange={(event) => {
+            const next = Number(event.target.value);
+            const format = formats[next];
+            if (!format) return;
+            setSelected(next);
+            onChange(initialPayload(format.spec));
+            onValidity?.(true);
+          }}
+        >
+          {formats.map((format, position) => (
+            <option key={format.label} value={position}>
+              {format.label}
+            </option>
+          ))}
+        </select>
+      </div>
+      <RestrictedForm
+        key={index}
+        schema={current.spec}
+        value={value}
+        onChange={onChange}
+        {...(onValidity ? { onValidity } : {})}
+      />
+    </>
   );
 }

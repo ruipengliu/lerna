@@ -32,6 +32,12 @@ func newFixture(t *testing.T) fixture {
 	if err = store.Migrate(ctx); err != nil {
 		t.Fatal(err)
 	}
+	return newFixtureWithStore(t, store)
+}
+
+func newFixtureWithStore(t *testing.T, store runtime.Store) fixture {
+	t.Helper()
+	ctx := context.Background()
 	objects, err := objectstore.OpenLocal(t.TempDir(), memory.MaxContentBytes)
 	if err != nil {
 		t.Fatal(err)

@@ -26,7 +26,7 @@ func deferred(err error) bool {
 	return api.IsCode(err, "dependency_unavailable") || api.IsCode(err, "not_found") || api.IsCode(err, "effect_unknown") || api.IsCode(err, "accounting_unknown") || api.IsCode(err, "overloaded")
 }
 func (s *Service) registerJobs(r *runtime.Registry) error {
-	handlers := map[string]runtime.JobHandler{JobInput: s.inputJob, JobAdvance: s.advanceJob, JobDispatchDecision: s.decisionJob, JobDispatchOperation: s.operationJob, JobReconcileOperation: s.reconcileOperationJob, JobCoverage: s.coverageJob, JobCheck: s.checkJob, JobControl: s.controlJob, JobBilling: s.billingJob, JobPublishResult: s.publishResultJob, JobSteer: s.steerJob, JobDelegation: s.delegationJob, JobAllocation: s.allocationJob, JobChildPrepare: s.childPrepareJob, JobChildTransfer: s.transferJob}
+	handlers := map[string]runtime.JobHandler{JobAdjustment: s.adjustmentJob, JobInput: s.inputJob, JobAdvance: s.advanceJob, JobDispatchDecision: s.decisionJob, JobDispatchOperation: s.operationJob, JobReconcileOperation: s.reconcileOperationJob, JobCoverage: s.coverageJob, JobCheck: s.checkJob, JobControl: s.controlJob, JobBilling: s.billingJob, JobPublishResult: s.publishResultJob, JobSteer: s.steerJob, JobDelegation: s.delegationJob, JobAllocation: s.allocationJob, JobChildPrepare: s.childPrepareJob, JobChildTransfer: s.transferJob}
 	for kind, h := range handlers {
 		if e := r.RegisterJob(kind, h); e != nil {
 			return e
@@ -913,6 +913,32 @@ func (s *Service) allocationJob(ctx context.Context, store runtime.Store, scope 
 			return s.refreshIncomingTx(ctx, tx, t)
 		})
 	}
-	// correction outbox 保留原责任，宿主传输沿原 allocation 修订重投。
-	return s.wait(ctx, store, scope, work)
+	if parts[0] == "correction" {
+		var a IncomingAllocation
+		if _, e := store.Read(ctx, scope, incoming, parts[1], 0, &a); e != nil {
+			return e
+		}
+		if a.ClosureRef == nil {
+			return s.wait(ctx, store, scope, work)
+		}
+		reporter, ok := s.ports.Collaboration.(AllocationReporter)
+		if !ok {
+			return s.wait(ctx, store, scope, work)
+		}
+		var closure api.AllocationClosure
+		if _, e := store.Read(ctx, scope, closures, a.ClosureRef.ObjectID, a.ClosureRef.Revision, &closure); e != nil {
+			return e
+		}
+		if e := s.preIO(ctx, store, scope, work); e != nil {
+			return e
+		}
+		if e := reporter.ReportClosure(ctx, scope, a.ParentOwner, *a.ClosureRef, closure); e != nil {
+			if deferred(e) {
+				return s.wait(ctx, store, scope, work)
+			}
+			return e
+		}
+		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+	}
+	return invalid("allocation_job_kind")
 }

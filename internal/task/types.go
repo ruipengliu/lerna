@@ -112,14 +112,35 @@ type CollaborationPort interface {
 	ReadClosure(context.Context, runtime.Scope, api.ObjectRef) (api.AllocationClosure, error)
 	Transfer(context.Context, runtime.Scope, Transfer) error
 }
+type AllocationReporter interface {
+	ReportClosure(context.Context, runtime.Scope, string, api.ObjectRef, api.AllocationClosure) error
+}
+type AdjustmentVerifier interface {
+	VerifyAdjustment(context.Context, runtime.Scope, BillingAdjustment) (bool, error)
+}
+
+// 以下 seal/准入端口仅执行本地签名及同库记录，不得读取 Content 或出站。
+type ControlProofPort interface {
+	SealControl(context.Context, runtime.Tx, api.ControlSnapshot) (api.ContentRef, error)
+}
+type ClosureProofPort interface {
+	SealClosureTx(context.Context, runtime.Tx, ClosureView) (api.ContentRef, error)
+}
+type ActionAuthorization interface {
+	AuthorizeAction(context.Context, runtime.Tx, runtime.Auth, OperationIntent) error
+}
 type Ports struct {
-	Context       ContextPort
-	Content       ContentPort
-	Gate          LocalGate
-	Brain         BrainPort
-	Execution     ExecutionPort
-	Evidence      EvidencePort
-	Collaboration CollaborationPort
+	AdjustmentVerifier  AdjustmentVerifier
+	ControlProof        ControlProofPort
+	ClosureProof        ClosureProofPort
+	ActionAuthorization ActionAuthorization
+	Context             ContextPort
+	Content             ContentPort
+	Gate                LocalGate
+	Brain               BrainPort
+	Execution           ExecutionPort
+	Evidence            EvidencePort
+	Collaboration       CollaborationPort
 }
 
 type SubmitInput struct {
@@ -632,15 +653,19 @@ type InputRequestListInput struct {
 	Cursor string `json:"cursor,omitempty"`
 }
 type ClosureView struct {
-	TaskRef        api.ObjectRef
-	GoalWorkClosed bool
-	EffectsClosed  bool
-	AccountingOpen bool
-	ProofRef       api.ContentRef
+	TaskRef        api.ObjectRef   `json:"task_ref"`
+	GoalWorkClosed bool            `json:"goal_work_closed"`
+	EffectsClosed  bool            `json:"effects_closed"`
+	AccountingOpen bool            `json:"accounting_open"`
+	IssuedAt       string          `json:"issued_at"`
+	SnapshotDigest string          `json:"snapshot_digest"`
+	EvidenceRefs   []api.ObjectRef `json:"evidence_refs"`
+	ProofRef       api.ContentRef  `json:"proof_ref"`
 }
 type pendingInput struct {
 	Revision  uint64       `json:"revision"`
 	CommandID string       `json:"command_id"`
+	UploadID  string       `json:"upload_id"`
 	Input     InputAnswer  `json:"input"`
 	Auth      runtime.Auth `json:"auth"`
 	State     string       `json:"state"`

@@ -1,6 +1,8 @@
 package memory_test
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 	"time"
 
@@ -36,5 +38,19 @@ func TestFrozenLexicalQueryExplainsChineseAndEnglishAndRejectsPermissionChange(t
 	in.Cursor = page.NextCursor
 	if _, err = f.service.QueryMemory(f.ctx, f.scope, f.auth, api.NewID("query"), in); !api.IsCode(err, "snapshot_required") {
 		t.Fatalf("old query revived after visibility change: %v", err)
+	}
+}
+
+func TestLexicalQueryRejectsUnboundedExplanationTerms(t *testing.T) {
+	f := newFixture(t)
+	words := make([]string, 101)
+	for i := range words {
+		words[i] = fmt.Sprintf("word%03d", i)
+	}
+	text := f.upload(t, strings.Join(words, " "))
+	spec := f.upload(t, string(api.Raw(memory.MemoryQuerySpec{TextRef: text, TypeFilter: []string{}, RankingProfileRef: memory.LexicalProfile()})))
+	in := memory.QueryInput{QueryRef: spec, ScopeRef: f.upload(t, "有限查询用途"), Purposes: []string{"memory.query"}, Limits: memory.QueryLimits{MaxCandidates: 200, MaxReadBytes: 1 << 20, MaxPermissionChecks: 1000, Deadline: api.Time(time.Now().Add(time.Minute))}}
+	if _, err := f.service.QueryMemory(f.ctx, f.scope, f.auth, api.NewID("query"), in); !api.IsCode(err, "invalid_request") {
+		t.Fatalf("more explanation terms than the closed output permits accepted: %v", err)
 	}
 }

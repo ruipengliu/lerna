@@ -18,7 +18,17 @@ export function recordID(value: JSONValue): string {
     "id",
   ])
     if (typeof value[name] === "string") return value[name];
-  for (const name of ["ref", "task_ref", "record", "task", "memory", "session", "submission"])
+  for (const name of [
+    "ref",
+    "task_ref",
+    "request_ref",
+    "request",
+    "record",
+    "task",
+    "memory",
+    "session",
+    "submission",
+  ])
     if (value[name]) {
       const nested = recordID(value[name]);
       if (nested) return nested;
@@ -31,12 +41,16 @@ export function CollectionView({
   title,
   onSelect,
   refreshKey = 0,
+  targetID,
+  input,
 }: {
   client: HarnessClient;
   methodName: string;
   title: string;
   onSelect?: (value: JSONValue) => void;
   refreshKey?: number;
+  targetID?: string;
+  input?: JSONValue;
 }) {
   const method = client.registry.discovery.methods.find(
     (entry) => entry.name === methodName && entry.kind === "query",
@@ -52,18 +66,22 @@ export function CollectionView({
   }>();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const identity = `${client.registry.discovery.identity_scope}:${client.registry.discovery.identity_revision}:${methodName}`;
+  const identity = `${client.registry.discovery.identity_scope}:${client.registry.discovery.identity_revision}:${methodName}:${targetID ?? ""}:${canonical(input ?? {})}`;
   const load = useCallback(
     async (cursor?: string) => {
       if (!method) return;
       setLoading(true);
       setError("");
       try {
-        const payload = initialPayload(method.input_schema);
+        const payload = input ? structuredClone(input) : initialPayload(method.input_schema);
         if (!isObject(payload)) throw new Error("列表合同不是闭合对象");
         if (cursor) payload.cursor = cursor;
         const response = await client.query(
-          client.makeQuery(method.name, client.registry.discovery.logical_service_id, payload),
+          client.makeQuery(
+            method.name,
+            targetID ?? client.registry.discovery.logical_service_id,
+            payload,
+          ),
         );
         if (
           !isObject(response) ||
@@ -90,7 +108,7 @@ export function CollectionView({
         setLoading(false);
       }
     },
-    [client, method, identity],
+    [client, method, identity, input, targetID],
   );
   useEffect(() => {
     if (refreshKey >= 0) void load();

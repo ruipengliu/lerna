@@ -56,6 +56,8 @@ type ruleEncoding struct {
 
 func (*RuleEngine) Physical() bool { return false }
 func (e *RuleEngine) Encode(_ context.Context, s api.Snapshot, goal []byte, p Profile) (Encoding, error) {
+	s.EncodedDigest = ""
+	s.InputTokens = 0
 	raw := api.Raw(ruleEncoding{s, append([]byte(nil), goal...)})
 	return Encoding{Body: raw, Digest: api.Hash(raw), Receiver: "builtin-rule-engine", Location: "cloud", InputTokens: uint64(len(raw)), CountMode: "upper_bound", ProcessedSources: append([]api.ContentRef{}, s.ProcessedSources...)}, nil
 }

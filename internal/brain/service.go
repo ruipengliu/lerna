@@ -389,7 +389,15 @@ func (s *Service) publish(ctx context.Context, store runtime.Store, scope runtim
 		if e != nil {
 			return e
 		}
-		ref, e := s.config.Content.Publish(ctx, scope, d.Principal, Publication{ContentID: c.ContentID, MediaType: c.MediaType, ProcessedSources: d.Encoding.ProcessedSources, DisclosedSources: c.DisclosedSources}, body)
+		sources := append([]api.ContentRef{}, d.Encoding.ProcessedSources...)
+		if c.ContentLocalID != "" {
+			for _, dependency := range d.Publications {
+				if dependency.LocalID == c.ContentLocalID && dependency.Ref != nil {
+					sources = append(sources, *dependency.Ref)
+				}
+			}
+		}
+		ref, e := s.config.Content.Publish(ctx, scope, d.Principal, Publication{ContentID: c.ContentID, MediaType: c.MediaType, ProcessedSources: sources, DisclosedSources: c.DisclosedSources}, body)
 		if e != nil {
 			return s.wait(ctx, store, scope, w)
 		}

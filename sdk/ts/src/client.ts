@@ -359,7 +359,25 @@ export class HarnessClient {
     if (socket && socket.readyState !== WebSocket.CLOSED) socket.close();
   }
   async command(value: Command): Promise<Receipt> {
-    const command = this.registry.command(parseStrict(canonical(value)));
+    const raw = canonical(value);
+    const previous = await this.store.get(value.logical_service_id, value.command_id);
+    if (previous) {
+      if (previous.command_json !== raw) throw new ProtocolError("idempotency_conflict");
+      await this.verifyStored(previous);
+      await this.connect();
+      try {
+        return (await this.request(
+          "receipt_lookup",
+          { logical_service_id: previous.logical_service_id, command_id: previous.command_id },
+          (frame) => this.decodeReceipt(frame, previous),
+          true,
+        )) as Receipt;
+      } catch (error) {
+        if (!(error instanceof RequestError) || error.error.code !== "not_found") throw error;
+        return this.transmit(previous);
+      }
+    }
+    const command = this.registry.command(parseStrict(raw));
     const requestDigest = await digest(command);
     const stored = await this.store.save({
       version: 1,
@@ -542,6 +560,7 @@ export async function getJSON(
   if (!response.ok) {
     const body = parseStrict(await readBounded(response, Math.min(maximum, 16384)));
     if (isObject(body) && body.error) throw new RequestError(apiError(body.error));
+    if (isObject(body) && typeof body.code === "string") throw new RequestError(apiError(body));
     throw new ProtocolError(`http_${response.status}`);
   }
   return parseStrict(await readBounded(response, maximum), maximum);

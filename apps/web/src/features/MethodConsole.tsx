@@ -43,8 +43,14 @@ export function MethodConsole({
   }, [method, preset, client]);
   if (!method)
     return <div className="notice">当前认证发现未开放此能力。不会发送近似请求或分配业务对象。</div>;
+  const requiresTrustedView = [
+    "confirmation.decide",
+    "task.input",
+    "task.accept_result",
+    "interaction.input",
+  ].includes(method.name);
   const invoke = async () => {
-    if (!valid) return;
+    if (!valid || requiresTrustedView) return;
     const originalBinding = binding;
     setRunning(originalBinding);
     setError("");
@@ -138,7 +144,7 @@ export function MethodConsole({
       <button
         className="button primary"
         type="button"
-        disabled={!valid || running === binding}
+        disabled={!valid || requiresTrustedView || running === binding}
         onClick={() => void invoke()}
       >
         {running === binding
@@ -147,6 +153,12 @@ export function MethodConsole({
             ? "查询原服务"
             : "耐久保存并提交"}
       </button>
+      {requiresTrustedView && (
+        <p className="notice">
+          此方法需要完整原请求及必需正文。请先查询 confirmation.read 或 input_request.read，
+          在受信请求视图中核验准确版本后提交。
+        </p>
+      )}
       {error && (
         <p className="notice error" role="alert">
           {error}

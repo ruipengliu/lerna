@@ -152,6 +152,20 @@ func (s *Service) WriteTransfer(ctx context.Context, scope runtime.Scope, auth r
 	if t.Phase == "published" || t.Phase == "ready" {
 		return nil
 	}
+	if t.ContentRef.MediaType == ExperienceMediaType {
+		body, readErr := io.ReadAll(io.LimitReader(src, int64(t.ContentRef.ByteLength)+1))
+		if readErr != nil {
+			return readErr
+		}
+		if uint64(len(body)) != t.ContentRef.ByteLength || api.Hash(body) != t.ContentRef.Hash {
+			return api.E("invalid_request", "content_hash_or_length_mismatch")
+		}
+		t.ExperienceOutcome, t.ExperienceProofRef, err = s.validateExperience(ctx, scope, auth, t, body)
+		if err != nil {
+			return err
+		}
+		src = bytes.NewReader(body)
+	}
 	loc, err := s.Objects.Write(ctx, t.ContentRef, src)
 	if err != nil {
 		return err
@@ -179,6 +193,8 @@ func (s *Service) WriteTransfer(ctx context.Context, scope runtime.Scope, auth r
 		}
 		current.Phase = "ready"
 		current.ObjectLocation = loc
+		current.ExperienceOutcome = t.ExperienceOutcome
+		current.ExperienceProofRef = t.ExperienceProofRef
 		current.Revision = rev + 1
 		return tx.Put(ctx, "content.transfers", transferID, rev, current)
 	})
@@ -186,6 +202,9 @@ func (s *Service) WriteTransfer(ctx context.Context, scope runtime.Scope, auth r
 
 // PublishInTx 只发布已经 ready 的原准确版本，不读取或写入对象介质。
 func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, in PutInput) (api.ContentRef, error) {
+	if _, err := loadHead(ctx, tx); err != nil {
+		return api.ContentRef{}, err
+	}
 	if err := checkContentRef(tx.Scope(), in.ContentRef); err != nil {
 		return api.ContentRef{}, err
 	}
@@ -215,6 +234,9 @@ func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		if old.State != "published" {
 			return api.ContentRef{}, api.E("invalid_state", "source_closed")
 		}
+		if _, err = s.CheckContentTx(ctx, tx, auth, old.ContentRef, "content.write", s.Location, false); err != nil {
+			return api.ContentRef{}, err
+		}
 		return old.ContentRef, nil
 	}
 	if !api.IsCode(err, "not_found") {
@@ -240,6 +262,9 @@ func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		return api.ContentRef{}, err
 	}
 	for _, source := range in.ProcessedSources {
+		if err = s.checkSourceGate(ctx, tx, auth, source, "content.write", s.Location, false); err != nil {
+			return api.ContentRef{}, err
+		}
 		if source.ContentID == in.ContentRef.ContentID && source.Version == in.ContentRef.Version {
 			return api.ContentRef{}, api.E("invalid_request", "source_cycle")
 		}
@@ -255,7 +280,7 @@ func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 			return api.ContentRef{}, api.E("forbidden", "source_scope_expansion")
 		}
 		expires, _ := api.ParseTime(v.RetentionUntil)
-		if retention.After(expires) && !p.Values.IndependentDerived {
+		if retention.After(expires) && (!p.Values.IndependentDerived || !sp.Values.IndependentDerived) {
 			return api.ContentRef{}, api.E("forbidden", "retention_scope_expansion")
 		}
 	}
@@ -264,7 +289,12 @@ func (s *Service) PublishInTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		return api.ContentRef{}, err
 	}
 	v := ContentVersion{ContentRef: in.ContentRef, ObjectLocation: t.ObjectLocation, State: "published", ControlRevision: 1, PolicyRef: in.PolicyRef, RetentionUntil: in.RetentionUntil, PublishedAt: api.Time(now), ProcessedSources: in.ProcessedSources, DisclosedSources: in.DisclosedSources, PublisherID: auth.SubjectID}
+	v.ExperienceOutcome = t.ExperienceOutcome
+	v.ExperienceProofRef = t.ExperienceProofRef
 	if err = tx.Create(ctx, "content.versions", contentKey(in.ContentRef), in.ContentRef.ContentID, v); err != nil {
+		return api.ContentRef{}, err
+	}
+	if _, err = tx.Raise(ctx, "content.expire", contentKey(in.ContentRef), tx.Scope().Ref(in.ContentRef.ContentID, in.ContentRef.Version), retention); err != nil {
 		return api.ContentRef{}, err
 	}
 	for _, source := range in.ProcessedSources {
@@ -289,14 +319,22 @@ type SourceEdge struct {
 
 // CheckContentTx 用于显式共同 Tx 的引用门禁；跨 owner 不作临时网络查询。
 func (s *Service) CheckContentTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous bool) (ContentVersion, error) {
-	return s.checkContent(ctx, tx, auth, ref, purpose, location, continuous, map[string]bool{}, 0)
+	if _, err := loadHead(ctx, tx); err != nil {
+		return ContentVersion{}, err
+	}
+	return s.checkContent(ctx, tx, auth, ref, purpose, location, continuous, map[string]bool{}, 0, false)
 }
-func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous bool, seen map[string]bool, depth int) (ContentVersion, error) {
+func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref api.ContentRef, purpose, location string, continuous bool, seen map[string]bool, depth int, independent bool) (ContentVersion, error) {
 	if err := checkContentRef(tx.Scope(), ref); err != nil {
 		return ContentVersion{}, err
 	}
 	if depth > 32 || len(seen) >= 200 {
 		return ContentVersion{}, api.E("dependency_unavailable", "source_closure_limit")
+	}
+	if depth > 0 {
+		if err := s.checkSourceGate(ctx, tx, auth, ref, purpose, location, continuous); err != nil {
+			return ContentVersion{}, err
+		}
 	}
 	key := contentKey(ref)
 	var v ContentVersion
@@ -307,13 +345,22 @@ func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.
 	if !api.Equal(ref, v.ContentRef) {
 		return v, api.E("idempotency_conflict", "content_reference_changed")
 	}
-	if v.State != "published" {
-		return v, api.E("forbidden", "source_closed")
-	}
-	if _, err = future(ctx, tx, v.RetentionUntil); err != nil {
+	p, err := s.policy(ctx, tx, v.PolicyRef)
+	if err != nil {
 		return v, err
 	}
-	if _, err = s.allowed(ctx, tx, auth, v.PolicyRef, purpose, location, continuous); err != nil {
+	historical := independent && depth > 0 && p.Values.IndependentDerived && (v.State == "published" || v.ClosureKind == "retention")
+	if v.State != "published" && !historical {
+		return v, api.E("forbidden", "source_closed")
+	}
+	if _, err = future(ctx, tx, v.RetentionUntil); err != nil && !historical {
+		return v, err
+	}
+	if historical {
+		if err = s.allowedHistorical(ctx, tx, auth, p, purpose, location, continuous); err != nil {
+			return v, err
+		}
+	} else if _, err = s.allowed(ctx, tx, auth, v.PolicyRef, purpose, location, continuous); err != nil {
 		return v, err
 	}
 	if seen[key] {
@@ -321,7 +368,7 @@ func (s *Service) checkContent(ctx context.Context, tx runtime.Tx, auth runtime.
 	}
 	seen[key] = true
 	for _, source := range v.ProcessedSources {
-		if _, err = s.checkContent(ctx, tx, auth, source, purpose, location, continuous, seen, depth+1); err != nil {
+		if _, err = s.checkContent(ctx, tx, auth, source, purpose, location, continuous, seen, depth+1, p.Values.IndependentDerived); err != nil {
 			return v, err
 		}
 	}
@@ -368,6 +415,12 @@ func (s *Service) ReadBytes(ctx context.Context, scope runtime.Scope, auth runti
 	err := s.within(ctx, scope, func(tx runtime.Tx) error {
 		var err error
 		v, err = s.CheckContentTx(ctx, tx, auth, ref, purpose, location, false)
+		if err != nil {
+			return err
+		}
+		if location != s.Location {
+			_, err = s.CheckContentTx(ctx, tx, auth, ref, purpose, s.Location, false)
+		}
 		return err
 	})
 	if err != nil {
@@ -384,6 +437,12 @@ func (s *Service) ReadBytes(ctx context.Context, scope runtime.Scope, auth runti
 		}
 		if current.ControlRevision != v.ControlRevision {
 			return api.E("forbidden", "source_closed")
+		}
+		if location != s.Location {
+			_, err = s.CheckContentTx(ctx, tx, auth, ref, purpose, s.Location, false)
+			if err != nil {
+				return err
+			}
 		}
 		return nil
 	})
@@ -492,6 +551,7 @@ func (s *Service) close(ctx context.Context, tx runtime.Tx, auth runtime.Auth, e
 		return CloseOutput{v.ControlRevision, v.State, "pending"}, nil
 	}
 	v.State = "closed"
+	v.ClosureKind = "active_close"
 	v.ControlRevision = rev + 1
 	if err = tx.Put(ctx, "content.versions", contentKey(in.ContentRef), rev, v); err != nil {
 		return CloseOutput{}, err
@@ -555,6 +615,13 @@ func (s *Service) releaseCopy(ctx context.Context, tx runtime.Tx, auth runtime.A
 	for _, evidence := range in.EvidenceRefs {
 		if err = checkContentRef(tx.Scope(), evidence); err != nil {
 			return CopyOutput{}, err
+		}
+		var receipt ContentVersion
+		if _, err = tx.Get(ctx, "content.versions", contentKey(evidence), &receipt); err != nil {
+			return CopyOutput{}, err
+		}
+		if !api.Equal(receipt.ContentRef, evidence) {
+			return CopyOutput{}, api.E("idempotency_conflict", "cleanup_evidence_changed")
 		}
 	}
 	h.ControlRevision = v.ControlRevision
