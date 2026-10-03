@@ -147,20 +147,39 @@ func (f *ownedFixture) Replace(t *testing.T) waitStore {
 	return store
 }
 func (f *ownedFixture) Cleanup() error {
+	ctx, cancel := context.WithTimeout(context.Background(), 11*time.Second)
+	defer cancel()
+	return f.cleanup(ctx)
+}
+
+// cleanup accepts an independent lifecycle join context. Normal cleanup owns
+// its finite context; failure tests can expire this actual join boundary early.
+func (f *ownedFixture) cleanup(holderContext context.Context) error {
 	f.closing = true
+	confirmed, holderErr := f.joinPGHolders(holderContext)
+	var errs []error
+	if holderErr != nil {
+		errs = append(errs, holderErr)
+	}
+	// A transaction's failure is a diagnostic, not proof that it is still
+	// active. Only an unconfirmed exit prevents safe writer/scope cleanup.
+	if !confirmed {
+		return errors.Join(errs...)
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if err := f.joinPGHolders(); err != nil {
-		return err
-	}
 	if f.child != nil {
 		if err := f.child.stop(ctx); err != nil {
-			return err
+			errs = append(errs, err)
+			if !f.child.waited {
+				return errors.Join(errs...)
+			}
 		}
 	}
-	var errs []error
+	handlesClosed := true
 	if err := f.CloseWriter(); err != nil {
 		errs = append(errs, err)
+		handlesClosed = false
 	}
 	for i, peer := range f.peers {
 		if peer == nil {
@@ -168,12 +187,13 @@ func (f *ownedFixture) Cleanup() error {
 		}
 		if err := peer.Close(); err != nil {
 			errs = append(errs, err)
+			handlesClosed = false
 		} else {
 			f.peers[i] = nil
 		}
 	}
-	if err := errors.Join(errs...); err != nil {
-		return err
+	if !handlesClosed {
+		return errors.Join(errs...)
 	}
 	if f.owns {
 		var err error
@@ -183,17 +203,17 @@ func (f *ownedFixture) Cleanup() error {
 			err = os.RemoveAll(f.directory)
 		}
 		if err != nil {
-			return fmt.Errorf("fixture %s cleanup: %w", f.backend, err)
+			return errors.Join(append(errs, fmt.Errorf("fixture %s cleanup: %w", f.backend, err))...)
 		}
 		f.owns = false
 	}
 	if f.admin != nil {
 		if err := f.admin.Close(); err != nil {
-			return err
+			return errors.Join(append(errs, err)...)
 		}
 		f.admin = nil
 	}
-	return nil
+	return errors.Join(errs...)
 }
 
 func registerOwnedScope(backend, scope string) error {

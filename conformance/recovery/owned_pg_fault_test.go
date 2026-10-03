@@ -18,6 +18,7 @@ import (
 // joins it before closing its writer or dropping its scope. The lock callback
 // remains in the storage mechanism story; this is not a resource registry.
 type pgTransactionHold struct {
+	acquired    chan struct{}
 	release     chan struct{}
 	done        chan error
 	once        sync.Once
@@ -32,8 +33,23 @@ func (f *ownedFixture) holdPGTransaction(t *testing.T, store *postgres.Store, lo
 		t.Fatal("fixture is closing")
 	}
 	ctx := contextFor(t)
-	acquired := make(chan struct{})
-	hold := &pgTransactionHold{release: make(chan struct{}), done: make(chan error, 1)}
+	hold := f.startPGTransaction(ctx, store, lock)
+	select {
+	case <-hold.acquired:
+	case err := <-hold.done:
+		hold.joined = true
+		hold.result = err
+		t.Fatalf("real lock acquisition: %v", err)
+	case <-ctx.Done():
+		t.Fatal("real lock acquisition deadline", ctx.Err())
+	}
+	return hold
+}
+
+// startPGTransaction exposes the actual asynchronous transaction boundary,
+// including failed acquisition; normal lock stories wait for acquisition.
+func (f *ownedFixture) startPGTransaction(ctx context.Context, store *postgres.Store, lock func(context.Context, runtime.Tx) error) *pgTransactionHold {
+	hold := &pgTransactionHold{acquired: make(chan struct{}), release: make(chan struct{}), done: make(chan error, 1)}
 	f.holders = append(f.holders, hold)
 	go func() {
 		defer close(hold.done)
@@ -42,7 +58,7 @@ func (f *ownedFixture) holdPGTransaction(t *testing.T, store *postgres.Store, lo
 				return err
 			}
 			hold.heldContext = ctx
-			close(acquired)
+			close(hold.acquired)
 			select {
 			case <-hold.release:
 				return nil
@@ -51,15 +67,6 @@ func (f *ownedFixture) holdPGTransaction(t *testing.T, store *postgres.Store, lo
 			}
 		})
 	}()
-	select {
-	case <-acquired:
-	case err := <-hold.done:
-		hold.joined = true
-		hold.result = err
-		t.Fatalf("real lock acquisition: %v", err)
-	case <-ctx.Done():
-		t.Fatal("real lock acquisition deadline", ctx.Err())
-	}
 	return hold
 }
 func (h *pgTransactionHold) Check(t *testing.T) {
@@ -76,11 +83,14 @@ func (h *pgTransactionHold) Check(t *testing.T) {
 	}
 }
 func (h *pgTransactionHold) ReleaseAndJoin() error {
+	return h.releaseAndJoin(context.Background())
+}
+func (h *pgTransactionHold) releaseAndJoin(parent context.Context) error {
 	h.once.Do(func() { close(h.release) })
 	if h.joined {
 		return h.result
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 11*time.Second)
+	ctx, cancel := context.WithTimeout(parent, 11*time.Second)
 	defer cancel()
 	select {
 	case err := <-h.done:
@@ -91,12 +101,16 @@ func (h *pgTransactionHold) ReleaseAndJoin() error {
 		return fmt.Errorf("real PG fault-holder exit unconfirmed: %w", ctx.Err())
 	}
 }
-func (f *ownedFixture) joinPGHolders() error {
+func (f *ownedFixture) joinPGHolders(ctx context.Context) (bool, error) {
+	confirmed := true
 	var errs []error
 	for _, holder := range f.holders {
-		if err := holder.ReleaseAndJoin(); err != nil {
+		if err := holder.releaseAndJoin(ctx); err != nil {
 			errs = append(errs, err)
 		}
+		if !holder.joined {
+			confirmed = false
+		}
 	}
-	return errors.Join(errs...)
+	return confirmed, errors.Join(errs...)
 }
