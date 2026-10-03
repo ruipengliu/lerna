@@ -18,6 +18,14 @@ Profile.Ref 的 component_id/version 必须是准确身份；空 digest 由冻�
 计数、计算摘要，并在发送前重新核对。非零 ReservedOutputTokens 直接成为
 HTTP max_completion_tokens；零只供编译阶段使用配置最大值。
 
+可选 `MaterialResolver.ReadMaterial(ctx, ref)` 由宿主绑定原 scope、主体与
+`brain.input` 用途。Encode 先核全部 MaterialRefs 为 ProcessedSources 的准确
+子集、无重复且总声明字节有界，再在 Tx 外读取，逐项核原 hash/length/UTF8，
+将 ref 与原 body_utf8 放入同一冻结请求。引用不会自动扩展；未配置 reader
+时不处理含材料的输入，二进制材料当前不开放。Request/Lookup 只核原冻结
+材料，不再次访问 reader。InputTokens 与 EncodedDigest 是派生元数据，编码
+前清空，避免 Context 保存这些值后 Brain 再编码改变原请求字节。
+
 `UTF8UpperBound` 是显式可选的保守计数合同：模型每个 token 必须消耗至少一个
 UTF-8 字节，两条消息的额外 framing 必须不超过 64 token。它按完整编码字节
 加 64 计数，声明 `upper_bound`，不宣称精确 tokenizer 或适用任意供应商。
@@ -58,3 +66,7 @@ complete、request_input、fail。只包含本地内容与准确候选引用，�
 提交回复丢失、重定向、配置漂移、严格解析和费用上界。它们是协议和恢复证据，
 没有真实供应商账户、自然语言质量、生产额度或地域保证的验证结论。
 Search/Body 供应商、原调用远程查询、账单结清和跨位置能力当前均未开放。
+
+设置 `HARNESS_TEST_POSTGRES_DSN` 后可运行 `go test ./conformance/providers
+-run TestPostgres`：单连接真实 PG 下，HTTP 期间通过公开 Call 端口读取已提交
+的发送标记，核验连接在出站前释放与原回复恢复。未提供 DSN 时明确 skip。

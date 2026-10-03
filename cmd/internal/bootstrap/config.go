@@ -19,25 +19,28 @@ import (
 )
 
 type Config struct {
-	Development        bool     `json:"development"`
-	TenantID           string   `json:"tenant_id"`
-	OwnerID            string   `json:"owner_id"`
-	SubjectID          string   `json:"subject_id"`
-	Driver             string   `json:"driver"`
-	DatabaseID         string   `json:"database_id"`
-	DatabasePath       string   `json:"database_path,omitempty"`
-	DSNEnv             string   `json:"dsn_env,omitempty"`
-	DevDatabaseEnvFile string   `json:"dev_database_env_file,omitempty"`
-	DataRoot           string   `json:"data_root"`
-	TokenFile          string   `json:"token_file"`
-	KeyFile            string   `json:"key_file"`
-	PolicyExpiresAt    string   `json:"policy_expires_at"`
-	HTTPAddr           string   `json:"http_addr"`
-	GRPCAddr           string   `json:"grpc_addr"`
-	Origins            []string `json:"origins"`
-	StaticDir          string   `json:"static_dir,omitempty"`
-	TZDBRoot           string   `json:"tzdb_root"`
-	TZDBVersion        string   `json:"tzdb_version"`
+	Development        bool                     `json:"development"`
+	TenantID           string                   `json:"tenant_id"`
+	OwnerID            string                   `json:"owner_id"`
+	SubjectID          string                   `json:"subject_id"`
+	UserRoles          []string                 `json:"user_roles,omitempty"`
+	Driver             string                   `json:"driver"`
+	DatabaseID         string                   `json:"database_id"`
+	DatabasePath       string                   `json:"database_path,omitempty"`
+	DSNEnv             string                   `json:"dsn_env,omitempty"`
+	DevDatabaseEnvFile string                   `json:"dev_database_env_file,omitempty"`
+	DataRoot           string                   `json:"data_root"`
+	TokenFile          string                   `json:"token_file"`
+	KeyFile            string                   `json:"key_file"`
+	PolicyExpiresAt    string                   `json:"policy_expires_at"`
+	HTTPAddr           string                   `json:"http_addr"`
+	GRPCAddr           string                   `json:"grpc_addr"`
+	Origins            []string                 `json:"origins"`
+	StaticDir          string                   `json:"static_dir,omitempty"`
+	TZDBRoot           string                   `json:"tzdb_root"`
+	TZDBVersion        string                   `json:"tzdb_version"`
+	Model              *ModelConfig             `json:"model,omitempty"`
+	Governance         *BuiltinGovernanceConfig `json:"governance,omitempty"`
 }
 
 func LoadConfig(path string) (Config, error) {
@@ -100,7 +103,11 @@ func privateFile(path string, b []byte) error {
 	return e
 }
 func DevelopmentConfig(root, driver string) Config {
-	return Config{Development: true, TenantID: platform.StableDevelopmentID("tenant", "tenant"), OwnerID: platform.StableDevelopmentID("owner", "service"), SubjectID: platform.StableDevelopmentID("subject", "user"), Driver: driver, DatabasePath: filepath.Join(root, "device.sqlite"), DSNEnv: "HARNESS_DATABASE_DSN", DevDatabaseEnvFile: "/workspace/harness-dev-environment/.postgres.env", DataRoot: root, TokenFile: filepath.Join(root, ".identity-token"), KeyFile: filepath.Join(root, ".owner-key.pem"), PolicyExpiresAt: api.Time(time.Now().Add(365 * 24 * time.Hour)), HTTPAddr: "127.0.0.1:8080", GRPCAddr: "127.0.0.1:8081", Origins: []string{"http://127.0.0.1:5173", "http://localhost:5173"}, StaticDir: "/workspace/lerna/apps/web/dist", TZDBRoot: "/usr/share/zoneinfo", TZDBVersion: "2026b"}
+	tzdbRoot := os.Getenv("HARNESS_TEST_TZDB_ROOT")
+	if tzdbRoot == "" {
+		tzdbRoot = "/usr/share/zoneinfo"
+	}
+	return Config{Development: true, UserRoles: []string{"trusted_renderer", "grant_authority", "content_admin", "memory_admin", "maintainer", "evidence_consumer", "evaluation_authority", "release_approver", "rollout_observer"}, TenantID: platform.StableDevelopmentID("tenant", "tenant"), OwnerID: platform.StableDevelopmentID("owner", "service"), SubjectID: platform.StableDevelopmentID("subject", "user"), Driver: driver, DatabasePath: filepath.Join(root, "device.sqlite"), DSNEnv: "HARNESS_DATABASE_DSN", DevDatabaseEnvFile: "/workspace/harness-dev-environment/.postgres.env", DataRoot: root, TokenFile: filepath.Join(root, ".identity-token"), KeyFile: filepath.Join(root, ".owner-key.pem"), PolicyExpiresAt: api.Time(time.Now().Add(365 * 24 * time.Hour)), HTTPAddr: "127.0.0.1:8080", GRPCAddr: "127.0.0.1:8081", Origins: []string{"http://127.0.0.1:5173", "http://localhost:5173"}, StaticDir: "/workspace/lerna/apps/web/dist", TZDBRoot: tzdbRoot, TZDBVersion: "2026b"}
 }
 func DSN(c Config) (string, error) {
 	if value := os.Getenv(c.DSNEnv); value != "" {

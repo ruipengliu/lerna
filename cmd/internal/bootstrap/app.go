@@ -7,8 +7,10 @@ import (
 	"fmt"
 	"github.com/ruipengliu/lerna/adapters/collaboration"
 	execadapter "github.com/ruipengliu/lerna/adapters/execution"
+	rpcadapter "github.com/ruipengliu/lerna/adapters/grpc"
 	"github.com/ruipengliu/lerna/adapters/objectstore"
 	"github.com/ruipengliu/lerna/adapters/platform"
+	"github.com/ruipengliu/lerna/adapters/providers"
 	"github.com/ruipengliu/lerna/adapters/wss"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
@@ -45,12 +47,17 @@ type App struct {
 	ContentPolicy                                                    memory.Policy
 	TaskPolicy                                                       task.TaskPolicy
 	Profile                                                          brain.Profile
+	Engine                                                           brain.Engine
+	Model                                                            *providers.OpenAI
+	TokenizerRef                                                     api.ComponentRef
 	ArtifactRule, SavedRule, CoverageRule, AnswerSchema, InstallLock api.ComponentRef
 	ReadBinding, WriteBinding                                        api.ObjectRef
 	ApplicationBinding                                               api.ObjectRef
 	ApplicationEventSchema                                           api.Schema
 	GrantID                                                          string
 	OwnsTargets                                                      bool
+	Role                                                             string
+	closeGovernance                                                  func() error
 }
 
 func component(name string) api.ComponentRef {
@@ -68,7 +75,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e != nil {
 		return nil, e
 	}
-	a := &App{Config: c, Store: st, Registry: runtime.NewRegistry(), OwnsTargets: role == "dev" || role == "worker"}
+	a := &App{Config: c, Store: st, Registry: runtime.NewRegistry(), OwnsTargets: role == "dev" || role == "worker", Role: role}
 	ok := false
 	defer func() {
 		if !ok {
@@ -76,7 +83,12 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		}
 	}()
 	a.Scope = runtime.Scope{TenantID: c.TenantID, OwnerID: c.OwnerID, DatabaseID: st.ID()}
-	a.UserAuth = runtime.Auth{TenantID: c.TenantID, SubjectID: c.SubjectID, CredentialGeneration: 1, Roles: []string{"trusted_renderer", "grant_authority", "content_admin", "memory_admin", "maintainer", "evidence_consumer", "evaluation_admin", "release_authority"}}
+	userRoles := c.UserRoles
+	if userRoles == nil {
+		// 旧配置保留原凭据的角色集合，初始化不能静默扩大权限。
+		userRoles = []string{"trusted_renderer", "grant_authority", "content_admin", "memory_admin", "maintainer", "evidence_consumer", "evaluation_admin", "release_authority"}
+	}
+	a.UserAuth = runtime.Auth{TenantID: c.TenantID, SubjectID: c.SubjectID, CredentialGeneration: 1, Roles: append([]string{}, userRoles...)}
 	a.ServiceAuth = runtime.Auth{TenantID: c.TenantID, SubjectID: c.OwnerID, CredentialGeneration: 1, Roles: []string{"service", "orchestrator", "task_admin", "evidence", "grant_authority", "content_admin", "memory_admin", "usage_reporter", "maintainer", "evidence_consumer"}}
 	serviceSecret := make([]byte, 32)
 	if _, e = rand.Read(serviceSecret); e != nil {
@@ -96,7 +108,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 			return nil, e
 		}
 	}
-	a.Keys, e = platform.OpenDevelopmentKey(c.KeyFile, c.TenantID, c.OwnerID, []string{"control", "closure", "grant_use", "delivery", "rpc_sender", "evidence_changes", "grant_lease", "allocation_closure"})
+	a.Keys, e = platform.OpenDevelopmentKey(c.KeyFile, c.TenantID, c.OwnerID, []string{"control", "closure", "grant_use", "delivery", "rpc_sender", "evidence_changes", "grant_lease", "allocation_closure", "evaluation_prepare", "evaluation_start"})
 	if e != nil {
 		return nil, e
 	}
@@ -111,6 +123,11 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	}
 	a.Memory.Authorization = contentAuthority{a}
 	purposes := []string{"read", "preview", "content.read", "content.write", "task.goal", "task.context", "task.result", "task.submit", "task.snapshot", "task.dispatch", "task.complete", "task.evidence", "task.input", "task.accept_result", "task.revise", "task.steer", "task.action", "task.attach_evidence", "task.adjust_budget", "task.need_context", "task.delegate", "child.create", "child.new_goal", "child.continue", "billing.adjustment", "brain.input", "brain.output", "result", "memory.save", "memory.read", "memory.query", "memory.extract", "memory.sync", "memory.view", "managed_file_write", "managed_file_read", "execution.intent", "execution.arguments", "execution.output", "execution.control", "execution_intent", "execution_arguments", "execution_result", "execution_usage_proof", "environment_namespace", "environment_input", "environment_compute_spec", "environment_restore", "interaction.input", "interaction.history", "interaction.surface", "schedule.template", "confirmation.preview", "evaluation.manifest"}
+	for _, purpose := range append([]string{"interaction.snapshot", "interaction.preview"}, RequiredContentPurposes()...) {
+		if !containsString(purposes, purpose) {
+			purposes = append(purposes, purpose)
+		}
+	}
 	pv := memory.PolicyValues{Subjects: []string{c.SubjectID, c.OwnerID}, Purposes: purposes, Locations: []string{"cloud", "device"}, RetainUntil: c.PolicyExpiresAt, Continuous: true, IndependentDerived: false}
 	policyRef := component("content-policy")
 	policyRef.Digest, _ = api.Digest(pv)
@@ -127,7 +144,12 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	a.ApplicationEventSchema = api.Object(map[string]any{"reason": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "reason")
 	a.GrantID = platform.StableDevelopmentID("grant", "development-file-goal")
 	a.Profile = brain.Profile{Ref: component("rule-bytes-profile"), ContextLimit: 262144, MaxInputTokens: 250000, MaxOutputTokens: 8192, SafetyMargin: 100, MaxInputBytes: 262144, RequestTimeout: 5 * time.Second}
-	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, Participants: []string{"content", "memory", "platform", "task"}})
+	lifecycle, evaluation, closeGovernance, err := configureBuiltinGovernance(a, c.Governance)
+	if err != nil {
+		return nil, err
+	}
+	a.closeGovernance = closeGovernance
+	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, ResultNotices: resultNoticeBridge{a}, Lifecycle: lifecycle, Runner: evaluation, Participants: []string{"content", "memory", "platform", "task"}})
 	if e = os.MkdirAll(filepath.Join(c.DataRoot, "files"), 0700); e != nil {
 		return nil, e
 	}
@@ -165,8 +187,12 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e != nil {
 		return nil, fmt.Errorf("construct Execution: %w", e)
 	}
-	engine := &brain.RuleEngine{Facts: factSource{a}, Goals: factSource{a}, ArtifactRule: a.ArtifactRule, SavedRule: a.SavedRule, AnswerSchema: a.AnswerSchema, ReadCapability: execadapter.FileReadCapability().Ref, WriteCapability: execadapter.FileWriteCapability().Ref, ReadBinding: a.ReadBinding, WriteBinding: a.WriteBinding}
-	a.Brain, e = brain.New(brain.Config{Profiles: []brain.Profile{a.Profile}, Content: brainContent{a}, Engine: engine, Gate: brainGate{a}, Participants: []string{"content", "memory", "task", "platform"}})
+	a.Engine = &brain.RuleEngine{Facts: factSource{a}, Goals: factSource{a}, ArtifactRule: a.ArtifactRule, SavedRule: a.SavedRule, AnswerSchema: a.AnswerSchema, ReadCapability: execadapter.FileReadCapability().Ref, WriteCapability: execadapter.FileWriteCapability().Ref, ReadBinding: a.ReadBinding, WriteBinding: a.WriteBinding}
+	a.TokenizerRef = component("rule-byte-count")
+	if e = a.configureModel(); e != nil {
+		return nil, e
+	}
+	a.Brain, e = brain.New(brain.Config{Profiles: []brain.Profile{a.Profile}, Content: brainContent{a}, Engine: a.Engine, Gate: brainGate{a}, Participants: []string{"content", "memory", "task", "platform", "governance"}})
 	if e != nil {
 		return nil, fmt.Errorf("construct Brain: %w", e)
 	}
@@ -240,7 +266,7 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 			return e
 		}
 		if exists {
-			return nil
+			return a.provisionModelGrantTx(ctx, tx)
 		}
 		now, e := tx.Now(ctx)
 		if e != nil {
@@ -249,7 +275,7 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 		if e = a.Governance.ProvisionGrantTx(ctx, tx, a.ServiceAuth, api.Grant{GrantID: a.GrantID, OwnerID: a.Scope.OwnerID, Revision: 1, SubjectRef: a.ServiceAuth.Ref(a.Scope.OwnerID), Resources: []string{"managed-files"}, Actions: []string{"file.read", "file.write"}, Purposes: []string{"goal_action", "requirement_check"}, Recipients: []string{a.Scope.OwnerID}, Locations: []string{"cloud"}, Mode: "continuous", State: "active", NotBefore: api.Time(now), ExpiresAt: a.Config.PolicyExpiresAt, Limits: []api.Amount{{Unit: "USD", Value: "100"}}}); e != nil {
 			return fmt.Errorf("provision development grant: %w", e)
 		}
-		return nil
+		return a.provisionModelGrantTx(ctx, tx)
 	})
 	if status == runtime.CommitUnknown {
 		return runtime.ErrCommitUnknown
@@ -270,8 +296,18 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 }
 func (a *App) Close() error {
 	var err error
+	if a.closeGovernance != nil {
+		if err = a.closeGovernance(); err != nil {
+			return err
+		}
+		a.closeGovernance = nil
+	}
+	if a.Model != nil {
+		err = a.Model.Close()
+		a.Model = nil
+	}
 	if a.Files != nil {
-		err = a.Files.Close()
+		err = errors.Join(err, a.Files.Close())
 		a.Files = nil
 	}
 	if a.Phones != nil {
@@ -284,6 +320,23 @@ func (a *App) Close() error {
 	}
 	return err
 }
+
+func containsString(values []string, expected string) bool {
+	for _, value := range values {
+		if value == expected {
+			return true
+		}
+	}
+	return false
+}
 func (a *App) Gateway() (*wss.Server, error) {
-	return wss.New(wss.Config{OwnerID: a.Config.OwnerID, Store: a.Store, Registry: a.Registry, Identity: a.Identity, Processor: wss.LocalProcessor{Dispatcher: a.Dispatcher}, Content: a.Memory, Uploader: a.Memory, Development: &wss.DevelopmentConfiguration{TenantID: a.Config.TenantID, ContentPolicyRef: a.ContentPolicy.PolicyRef, TaskPolicyRef: a.TaskPolicy.PolicyRef, Budget: []api.Amount{{Unit: "USD", Value: "20"}}, GoalSchema: brain.GoalSchema(), RetentionSeconds: 86400, TaskDeadlineSeconds: 1800, ApplicationBindingRef: &a.ApplicationBinding, ApplicationEvents: []wss.DevelopmentEvent{{Name: "archive_demo_session", Schema: a.ApplicationEventSchema, RequiresRendered: true}}}, Origins: a.Config.Origins, AllowInsecureLoopback: a.Config.Development, StaticDir: a.Config.StaticDir, Location: "cloud", MaxConnections: 128, MaxQueuedBytes: 64 << 20})
+	var processor wss.Processor = wss.LocalProcessor{Dispatcher: a.Dispatcher}
+	if a.Role == "gateway" {
+		forward, err := rpcadapter.NewForwardProcessor("grpc://"+a.Config.GRPCAddr, a.Config.OwnerID, a.Registry.Contracts(), a.forwardCredential, a.Config.Development)
+		if err != nil {
+			return nil, err
+		}
+		processor = forward
+	}
+	return wss.New(wss.Config{OwnerID: a.Config.OwnerID, Store: a.Store, Registry: a.Registry, Identity: a.Identity, Processor: processor, Content: a.Memory, Uploader: a.Memory, Development: &wss.DevelopmentConfiguration{TenantID: a.Config.TenantID, ContentPolicyRef: a.ContentPolicy.PolicyRef, TaskPolicyRef: a.TaskPolicy.PolicyRef, Budget: []api.Amount{{Unit: "USD", Value: "20"}}, GoalSchema: brain.GoalSchema(), RetentionSeconds: 86400, TaskDeadlineSeconds: 1800, ApplicationBindingRef: &a.ApplicationBinding, ApplicationEvents: []wss.DevelopmentEvent{{Name: "archive_demo_session", Schema: a.ApplicationEventSchema, RequiresRendered: true}}}, Origins: a.Config.Origins, AllowInsecureLoopback: a.Config.Development, StaticDir: a.Config.StaticDir, Location: "cloud", MaxConnections: 128, MaxQueuedBytes: 64 << 20})
 }

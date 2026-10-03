@@ -10,7 +10,9 @@
 
 16 类工作为 advance、dispatch_decision、dispatch_operation、reconcile_operation、check、coverage、control、billing、publish_result、steer、delegation、allocation、child_prepare、child_transfer、input、adjustment，均以 `task.` 为前缀。外部读取、出版和发送在事务外；Claim 先于出站重核，资格和最终归并在有 Guard 的短事务中重新核验。
 
-受信内部用例 `AdoptRequirements`、`StoreCoverage`、`RecordCheck`、`Complete`、`PrepareDecision`、`ConsumeProposal`、`ContextFacts`、`CheckDecisionTx`、`OperationIntentTx`、`Closure`、`RequestViewTx`、`RecordResultNoticeTx` 等供宿主装配。它们不构成新公开线方法，也不允许 Brain 自报已消费 Grant、原 Operation 身份或已发生效果。
+Context 编译完成后若原 Task 已变化，仅在准入闭包明确 `stale_snapshot` 且事务确认回滚时重调度原 advance Job；没有新的 Decision 或执行意图准入。外部编译错误、失去领取及 CommitUnknown 不进入该路径，未知提交沿原身份核查，不能伪报已回滚或另造决策责任。
+
+受信内部用例 `AdoptRequirements`、`StoreCoverage`、`RecordCheck`、`Complete`、`PrepareDecision`、`ConsumeProposal`、`ContextFacts`、`CheckDecisionTx`、`DecisionSnapshotTx`、`DecisionCostBoundTx`、`OperationIntentTx`、`Closure`、`RequestViewTx`、`RecordResultNoticeTx` 等供宿主装配。它们不构成新公开线方法，也不允许 Brain 自报已消费 Grant、原 Operation 身份或已发生效果。决策读取从原准入 birth 返回冻结 Snapshot 和原 Reservation 的准确上界；当前账务已结或变化不能重新定价或降低该原上界，当前发送资格仍须单独调用 `CheckDecisionTx`。
 
 同库 `RequestViewsTx` 一次核验至多 20 个准确请求，拒绝重复、跨租户、跨 owner、错误主体与旧请求版本。不可变请求 birth 和准确历史 Task 负责完整根路径路由；全部 Task 按根到叶、同层 ID 锁定之后，再按 ID 锁全部当前请求，输出保留原输入顺序。单个 `RequestViewTx` 复用这条路径，供 Interaction 的共同事务先核请求再写 Surface。
 

@@ -4,7 +4,9 @@
 
 `NewBuiltinHost(BuiltinHostConfig)` 需要独占用途的 Linux 私有目录、固定 tenant/owner、绑定真实主体的 `Content`、受信时钟、完整安装清单 allowlist 和有限 readiness TTL。准备核验准确制品字节，并进行真实私有文件写入、fsync、回读和删除。初始化先保存原 instance/generation 意图，再启动原实例并由它执行自检；就绪前没有模型或目标请求。Fence 等待实际句柄退出，进程丢失通过 `/proc` 原 PID/starttime 核对；同 ID 不创建替身。Dispose 先关准入，活实例保留 residual，最小终态 journal 保留以防复活。
 
-`Content.Read/Publish` 都在数据库事务外调用；实现必须核验当前来源用途，并按准确 ID 幂等出版。证明只含摘要和绑定，`ProcessedSources` 保留实际引用，`DisclosedSources` 为空。目录需 mode 0700、当前进程 UID 所有。真实记录采用 Linux flock、文件 fsync、原子 rename 和父目录 fsync；`os.Root` 限定所有本地路径。关闭宿主前须调用 `Close` 收束原实例。
+`InstanceLimit` 为 1–128，省略时固定为 128。活动实例只在实际 `done` 后释放容量，调用方取消不释放原实例。终态原 handle 和 journal 保留供准确 Fence；原实例 journal 最多 20000 个，达到上限拒绝新身份，保证处置扫描始终有界。
+
+`Content.Read/Publish` 都在数据库事务外调用；实现必须核验当前来源用途，并按准确 ID 幂等出版。证明只含摘要和绑定，`ProcessedSources` 保留实际引用，`DisclosedSources` 为空。目录需 mode 0700、当前进程 UID 所有。真实记录采用 Linux flock、文件 fsync、原子 rename 和父目录 fsync；`os.Root` 限定所有本地路径。关闭宿主前须调用 `Close` 收束原实例：关闭先拒绝新启动，再在原启动的同一锁域核对全部句柄并逐一 Fence；五秒内不能确认退出时返回错误并保留原责任。
 
 验证：`go test -race ./adapters/governance` 使用真实文件内容、实例句柄和 SIGKILL 子进程；测试核验准确 allowlist、拒绝错误代次、实际退出、活实例残留、崩溃后原 ID 不复活及死进程 fence。这只证明本机受信内置宿主范围。真实外部组件、跨主机进程接管和高影响校准没有配置时继续拒绝。
 
@@ -17,3 +19,11 @@ prepare 及实际写入前均核验原 ES256 有限许可：固定注册 key/ten
 原 arm 一次绑定原 Attempt，原 journal 先于目标效果 fsync。回答丢失从 `Lookup` 取原观察；未留下观察的已启动记录保留未知，不重新生成尝试或改写目标。Seal 先持久关闭入口，再取消本宿主原运行并等待实际退出，取得同一进程间锁后才删除两臂和 judge 目录。超时保留具体未收束责任。已封环境、原尝试最小记录和原未知事实不复活；过期许可仍可查原结果。所有目标 IO 都是本机受信同步文件操作，不使用外部 API；跨宿主在途接管和不可信组件没有本端口支持。
 
 真实平台测试额外验证两臂独立文件和冻结字面真值、旧模板失败、丢答复/重复查询、准确签名与时间反例、当前来源失效、原在途取消与等待，以及目标写后 SIGKILL 重启仍未知且不重写。只报告这一 `reference-rule-file` 范围，不将它称为开放自然语言质量、通用模型改善或千次供应商 API 的验收。正式 holdout 谱系及高影响校准仍需独立登记端口；未配置时业务层拒绝正式保证。
+
+`go test -race ./internal/governance -run TestActualReferenceAdapter` 经公开 Registry 创建并冻结计划，使用本运行器执行两臂、记录原观察并封存报告；同例支持测试环境的 PostgreSQL DSN。字面真值来自冻结样本，候选实际产物通过，旧正文模板实际失败。单样本的改善门禁通过而统计门禁失败，报告保持 `FormalEligible=false`，不能凭一次文件成功宣称正式质量保证。
+
+## 进程装配
+
+[configureBuiltinGovernance](../../cmd/internal/bootstrap/governance.go) 接受完整准确 `Installations`、已登记 `Implementations` 和明确 1–600 秒的 readiness TTL。nil 配置保留未配置能力。非目标 owner 只登记相同 allowlist 和闭合领域方法，不创建本地目录或运行组件。worker 在 `DataRoot/governance` 的私有目录取得真实生命周期所有权锁后创建两个宿主，退出前实际收束成功才释放所有权；第二个 worker 不能共享该物理根。
+
+`RequiredContentPurposes()` 返回当前用途依赖，须与原 policy 去重合并。Content 固定使用 App 的 scope 和真实 ServiceAuth，读取通过 Memory；每次 publication，包括原幂等回答，均先核当前 credential 和准确来源，再在 Tx 外调用原 Publish。不会创建隐式制品、注册正式 holdout 或安装默认 Grant。纯 `BuiltinRegistry`／`ReferenceRegistry` 提供同版 allowlist 准入，治理在创建准备／运行责任之前检查；未登记的完整安装或参考实现不能凭模型自述创建工作。

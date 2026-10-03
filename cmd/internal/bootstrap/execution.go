@@ -102,6 +102,17 @@ func (e executionBridge) Control(ctx context.Context, s runtime.Scope, owner str
 	return nil
 }
 func (e executionBridge) Usage(ctx context.Context, s runtime.Scope, ref api.ObjectRef) (api.UsageSnapshot, error) {
+	u, err := e.rawUsage(ctx, s, ref)
+	if err != nil {
+		return u, err
+	}
+	intent, err := e.a.Task.ReadOperationIntent(ctx, e.a.Store, s, e.a.ServiceAuth, ref.ObjectID)
+	if err != nil {
+		return u, err
+	}
+	return u, e.a.settleUses(ctx, s, intent.UseIntentRefs, u)
+}
+func (e executionBridge) rawUsage(ctx context.Context, s runtime.Scope, ref api.ObjectRef) (api.UsageSnapshot, error) {
 	raw, er := e.a.query(ctx, "execution.usage.get", ref.ObjectID, execution.OperationIDInput{OperationID: ref.ObjectID})
 	if er != nil {
 		return api.UsageSnapshot{}, er

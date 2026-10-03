@@ -65,3 +65,22 @@ func TestPostgresContentMemoryAndContinuousCommittedIndex(t *testing.T) {
 		t.Fatalf("inspect delete: %+v %v", record, err)
 	}
 }
+
+func TestPostgresFrozenQueryPageChecksCurrentSourceRetention(t *testing.T) {
+	dsn := os.Getenv("HARNESS_TEST_POSTGRES_DSN")
+	if dsn == "" {
+		t.Skip("HARNESS_TEST_POSTGRES_DSN is required for PostgreSQL evidence")
+	}
+	ctx := context.Background()
+	store, err := postgres.Open(ctx, dsn, postgres.WithMaxConnections(8))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = store.Close() })
+	if err = store.Migrate(ctx); err != nil {
+		t.Fatal(err)
+	}
+	testFrozenQueryPageSourceRetention(t, func(t *testing.T) fixture {
+		return newFixtureWithStore(t, store)
+	})
+}
