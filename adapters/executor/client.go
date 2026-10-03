@@ -89,6 +89,15 @@ func Dial(ctx context.Context, c RemoteConfig) (client *Client, err error) {
 	if err != nil {
 		return nil, errors.Join(err, transport.Close(), j.Close())
 	}
+	historical, err := retainedContracts()
+	if err != nil {
+		return nil, errors.Join(err, transport.Close(), j.Close())
+	}
+	for _, contract := range historical {
+		if err = sdk.RetainDecoder(contract); err != nil {
+			return nil, errors.Join(err, transport.Close(), j.Close())
+		}
+	}
 	return &Client{Config: c, SDK: sdk, transport: transport, journal: j}, nil
 }
 func (c *Client) Close() error {
