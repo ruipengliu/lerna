@@ -1,8 +1,8 @@
 # Lerna 实现切片与依赖索引
 
-本轮将现有技术方案细化为 **22 份实现规格**，覆盖 A–F。每份规格均已发布到本仓库的本地 Markdown issue tracker，标记 `Status: ready-for-agent`，包含用户故事、实现决定、公开测试边界、验收条件及非目标。**这些是待实现规格，不是已实现能力或已取得的验证证据。**
+本轮将现有技术方案细化为 **22 份实现规格**，覆盖 A–F。每份规格均已发布到本仓库的本地 Markdown issue tracker，初始标记 `Status: ready-for-agent`，包含用户故事、实现决定、公开测试边界、验收条件及非目标。**规格发布不表示能力已经实现或验收通过；实际状态和证据见[实现进度](progress.md)及各规格。**
 
-依据为 [架构入口](../../docs/architecture/README.md)、[实施与验证](../../docs/architecture/validation.md)、根 [CONTEXT](../../CONTEXT.md) 与 [ADR](../../docs/adr/README.md)。规格沿用既有架构选择；代码仍未建立，后续实现不得将占位协议示例当成已发布机器契约。
+依据为 [架构入口](../../docs/architecture/README.md)、[实施与验证](../../docs/architecture/validation.md)、根 [CONTEXT](../../CONTEXT.md) 与 [ADR](../../docs/adr/README.md)。规格沿用既有架构选择；切片 01 的公共值合同和测试入口已建立，后续实现不得将占位协议示例当成已发布机器契约。
 
 ## 已确认的拆分决定
 

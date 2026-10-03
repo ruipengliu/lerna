@@ -2,7 +2,7 @@
 
 Status: ready-for-agent
 Phase: A
-Implementation: not-started
+Implementation: in-progress
 Depends on: 无
 
 ## Problem Statement
@@ -36,7 +36,7 @@ Depends on: 无
 
 ## Testing Decisions
 
-边界为 Application / Component 的编解码与公开合同验证入口。仓库没有产品测试；本切片建立后续复用的夹具与运行器，暂不声称持久去重已实现。
+边界为 Application / Component 的编解码与公开合同验证入口。实施前仓库没有产品测试；本切片建立后续复用的夹具与运行器，暂不声称持久去重已实现。
 
 测试只断言公开行为、持久恢复结果和独立目标状态；不依赖私有表布局或内部调用次数。每个故障或拒绝案例必须配允许正常完成的对照。
 
