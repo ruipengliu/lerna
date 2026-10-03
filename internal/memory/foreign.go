@@ -69,6 +69,8 @@ type ForeignHeldCopy struct {
 	UseState       string            `json:"use_state"`
 	CleanupState   string            `json:"cleanup_state"`
 	StopReport     *ReleaseCopyInput `json:"stop_report,omitempty"`
+	// writing 不是 lease：只有原同步 Write 已实际返回才变为 finished。
+	WriteState string `json:"write_state,omitempty"`
 }
 
 type foreignSourceState struct {
@@ -280,7 +282,13 @@ func (s *Service) observeForeignProof(ctx context.Context, scope runtime.Scope, 
 		held.Proof = proof
 		if location != nil {
 			held.ObjectLocation = *location
-			held.Phase = "held"
+			held.WriteState = "finished"
+			held.CleanupState = "pending"
+			if !held.KnownDeny && held.UseState == "allowed" {
+				held.Phase = "held"
+			} else {
+				held.Phase = "closing"
+			}
 		}
 		held.Revision = rev + 1
 		if err = tx.Put(ctx, "content.held_copies", in.CopyID, rev, held); err != nil {
@@ -320,7 +328,7 @@ func (s *Service) PrepareForeignUse(ctx context.Context, scope runtime.Scope, au
 		if _, err = future(ctx, tx, in.RetainUntil); err != nil {
 			return err
 		}
-		held = ForeignHeldCopy{Revision: 1, Reference: in, Principal: auth, Phase: "reference_intent", UseState: "allowed", CleanupState: "pending"}
+		held = ForeignHeldCopy{Revision: 1, Reference: in, Principal: auth, Phase: "reference_intent", UseState: "allowed", CleanupState: "pending", WriteState: "not_started"}
 		if err = tx.Create(ctx, "content.reference_intents", in.CopyID, sourceKey(scope, in.ContentRef), in); err != nil {
 			return err
 		}
@@ -336,6 +344,12 @@ func (s *Service) PrepareForeignUse(ctx context.Context, scope runtime.Scope, au
 	})
 	if err != nil {
 		return ForeignUse{}, err
+	}
+	if held.KnownDeny || held.UseState != "allowed" {
+		return ForeignUse{}, api.E("forbidden", "source_closed")
+	}
+	if mirrorWriteUnobserved(held) {
+		return ForeignUse{}, api.E("effect_unknown", "original_mirror_write_unobserved")
 	}
 	var proof ForeignProof
 	if err = s.checkForeignIO(ctx, scope); err != nil {
@@ -381,9 +395,41 @@ func (s *Service) PrepareForeignUse(ctx context.Context, scope runtime.Scope, au
 		if err = s.checkForeignIO(ctx, scope); err != nil {
 			return ForeignUse{}, err
 		}
-		location, err := s.Objects.Write(ctx, in.ContentRef, bytes.NewReader(body))
+		// 原写入责任和关闭门禁共同 CAS；Stop 不会把旧空位置当作 writer 已退出。
+		err = s.foreignWithin(ctx, scope, auth, func(tx runtime.Tx) error {
+			var current ForeignHeldCopy
+			rev, e := tx.Get(ctx, "content.held_copies", in.CopyID, &current)
+			if e != nil {
+				return e
+			}
+			if !api.Equal(current.Reference, in) {
+				return api.E("idempotency_conflict", "foreign_reference_changed")
+			}
+			if current.KnownDeny || current.UseState != "allowed" {
+				return api.E("forbidden", "source_closed")
+			}
+			if current.WriteState == "writing" {
+				return api.E("effect_unknown", "original_mirror_write_unobserved")
+			}
+			current.WriteState = "writing"
+			current.CleanupState = "pending"
+			current.Revision = rev + 1
+			return tx.Put(ctx, "content.held_copies", in.CopyID, rev, current)
+		})
 		if err != nil {
 			return ForeignUse{}, err
+		}
+		location, writeErr := s.Objects.Write(ctx, in.ContentRef, bytes.NewReader(body))
+		// 真实 IO 返回后的原事实不依赖新的 source proof，也不因原 claimant 失效丢失。
+		// 仅本方有限短 Tx 保存事实；当前使用门禁仍在下面核对，绝不据此重新授权。
+		observedCtx, stopObservation := context.WithTimeout(context.WithoutCancel(ctx), 5*time.Second)
+		held, err = s.observeMirrorWrite(observedCtx, scope, auth, in, location)
+		stopObservation()
+		if writeErr != nil || err != nil {
+			return ForeignUse{}, errors.Join(writeErr, err)
+		}
+		if held.KnownDeny || held.UseState != "allowed" {
+			return ForeignUse{}, api.E("forbidden", "source_closed")
 		}
 		// 不将网络/对象 IO 放入本方事务；最后有限源检查后存在设计明确的跨库窗口。
 		if err = s.checkForeignIO(ctx, scope); err != nil {
@@ -393,7 +439,7 @@ func (s *Service) PrepareForeignUse(ctx context.Context, scope runtime.Scope, au
 		if err != nil {
 			return ForeignUse{}, err
 		}
-		held, err = s.observeForeignProof(ctx, scope, auth, in, proof, &location)
+		held, err = s.observeForeignProof(ctx, scope, auth, in, proof, nil)
 		if err != nil {
 			return ForeignUse{}, err
 		}
@@ -403,6 +449,49 @@ func (s *Service) PrepareForeignUse(ctx context.Context, scope runtime.Scope, au
 		use.Proof = proof
 	}
 	return use, nil
+}
+
+func mirrorWriteUnobserved(held ForeignHeldCopy) bool {
+	// 旧版本已保存准确位置意味着同步 Write 已返回；只有登记后空位置仍有旧窗口。
+	return held.WriteState == "writing" || held.WriteState == "" && held.ObjectLocation.Key == "" && held.Proof.SourceDatabaseID != ""
+}
+
+// 即使取消/凭据撤回，原同步写入已返回的准确事实仍须归并；没有新使用权。
+func (s *Service) observeMirrorWrite(ctx context.Context, scope runtime.Scope, auth runtime.Auth, in ForeignReference, location ObjectLocation) (ForeignHeldCopy, error) {
+	var held ForeignHeldCopy
+	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+		rev, err := tx.Get(ctx, "content.held_copies", in.CopyID, &held)
+		if err != nil {
+			return err
+		}
+		if !api.Equal(held.Reference, in) || !api.Equal(held.Principal.Ref(scope.OwnerID), auth.Ref(scope.OwnerID)) {
+			return api.E("idempotency_conflict", "foreign_reference_changed")
+		}
+		if held.WriteState != "writing" {
+			return api.E("idempotency_conflict", "original_mirror_write_changed")
+		}
+		held.WriteState = "finished"
+		held.CleanupState = "pending"
+		if location.Key != "" {
+			held.ObjectLocation = location
+		}
+		if !held.KnownDeny && held.UseState == "allowed" && location.Key != "" {
+			held.Phase = "held"
+		} else {
+			held.Phase = "closing"
+		}
+		held.Revision = rev + 1
+		if err = tx.Put(ctx, "content.held_copies", in.CopyID, rev, held); err != nil {
+			return err
+		}
+		now, err := tx.Now(ctx)
+		if err != nil {
+			return err
+		}
+		_, err = tx.Raise(ctx, "content.foreign_reconcile", in.CopyID, in.ReferenceIntentRef, now)
+		return err
+	})
+	return held, err
 }
 
 func (s *Service) foreignUseAllowed(ctx context.Context, tx runtime.Tx, auth runtime.Auth, held ForeignHeldCopy, proof ForeignProof, purpose, location string, continuous, historical bool) error {
@@ -790,8 +879,12 @@ func (s *Service) StopForeignCopy(ctx context.Context, scope runtime.Scope, auth
 		if !cleanupHolder(scope, auth, held.Reference.HolderRef) {
 			return api.E("forbidden", "copy_holder_mismatch")
 		}
-		if held.UseState == "use_stopped" && held.Phase == "released" {
+		if held.UseState == "use_stopped" && held.Phase == "released" && !mirrorWriteUnobserved(held) {
 			return nil
+		}
+		if mirrorWriteUnobserved(held) {
+			held.CleanupState = "pending"
+			held.Phase = "closing"
 		}
 		held.UseState = "use_stopped"
 		held.KnownDeny = true
@@ -809,7 +902,7 @@ func (s *Service) StopForeignCopy(ctx context.Context, scope runtime.Scope, auth
 	if err != nil {
 		return err
 	}
-	if held.Phase == "released" {
+	if held.Phase == "released" && !mirrorWriteUnobserved(held) {
 		return nil
 	}
 	return s.stopForeignCopy(ctx, scope, auth, held, nil)
@@ -841,6 +934,35 @@ func (s *Service) stopForeignCopy(ctx context.Context, scope runtime.Scope, auth
 	if err != nil {
 		return err
 	}
+	if mirrorWriteUnobserved(held) {
+		// 可定位/删除原镜像，但未观察 writer 实际退出前仍不报告完成或 release。
+		if err = s.foreignClaim(ctx, scope, claim); err != nil {
+			return err
+		}
+		location, locateErr := s.Objects.Locate(ctx, held.Reference.ContentRef)
+		if locateErr == nil {
+			if err = s.foreignClaim(ctx, scope, claim); err != nil {
+				return err
+			}
+			if err = s.Objects.Delete(ctx, location); err != nil {
+				return err
+			}
+		} else if !api.IsCode(locateErr, "gone") {
+			return locateErr
+		}
+		return api.E("effect_unknown", "original_mirror_write_unobserved")
+	}
+	if held.ObjectLocation.Key == "" && held.WriteState == "finished" {
+		if err = s.foreignClaim(ctx, scope, claim); err != nil {
+			return err
+		}
+		location, locateErr := s.Objects.Locate(ctx, held.Reference.ContentRef)
+		if locateErr == nil {
+			held.ObjectLocation = location
+		} else if !api.IsCode(locateErr, "gone") {
+			return locateErr
+		}
+	}
 	if held.ObjectLocation.Key != "" && held.CleanupState != "complete" {
 		if err = s.foreignClaim(ctx, scope, claim); err != nil {
 			return err
@@ -857,6 +979,9 @@ func (s *Service) stopForeignCopy(ctx context.Context, scope runtime.Scope, auth
 		}
 		if current.UseState != "use_stopped" {
 			return api.E("invalid_state", "foreign_copy_still_in_use")
+		}
+		if mirrorWriteUnobserved(current) {
+			return api.E("effect_unknown", "original_mirror_write_unobserved")
 		}
 		current.CleanupState = "complete"
 		current.Revision = rev + 1
