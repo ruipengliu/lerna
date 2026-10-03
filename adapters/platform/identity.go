@@ -106,7 +106,10 @@ func (i *DevIdentity) CheckCurrent(ctx context.Context, a runtime.Auth) error {
 	var c credential
 	_, e := i.Store.Read(ctx, i.scope(a), "platform.credentials", a.SubjectID, 0, &c)
 	if e != nil {
-		return api.E("forbidden", "credential_unavailable")
+		if api.IsCode(e, "not_found") {
+			return api.E("forbidden", "credential_unavailable")
+		}
+		return e
 	}
 	if c.State != "active" || c.Generation != a.CredentialGeneration || !api.Equal(c.Roles, a.Roles) {
 		return api.E("forbidden", "credential_revoked")
@@ -129,7 +132,7 @@ func (i *DevIdentity) Authenticate(ctx context.Context, r *http.Request) (runtim
 			continue
 		}
 		if e != nil {
-			return runtime.Auth{}, api.E("dependency_unavailable", "session_unavailable")
+			return runtime.Auth{}, e
 		}
 		expiry, e := api.ParseTime(session.ExpiresAt)
 		if e != nil || !time.Now().Before(expiry) || session.State == "closed" {
