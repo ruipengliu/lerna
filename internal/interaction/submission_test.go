@@ -1,6 +1,8 @@
 package interaction_test
 
 import (
+	"errors"
+	"github.com/ruipengliu/lerna/runtime"
 	"testing"
 	"time"
 
@@ -56,6 +58,39 @@ func TestQueuedWithdrawalAndSendingWithdrawalHaveDifferentBusinessEffects(t *tes
 				t.Fatalf("withdrawn goal sent %d", f.delivery.sends)
 			}
 		})
+	}
+}
+
+func TestUnknownSendingCommitDoesNotSendUntilOriginalDurableStateIsRechecked(t *testing.T) {
+	f := newApplication(t)
+	r := f.command(t, "session.submit_goal", f.session, nil, interaction.GoalInput{SessionRef: f.scope.Ref(f.session, 1), BranchRef: f.scope.Ref(f.branch, 1), ExpectedBranchRevision: 1, ContentRef: f.upload(t, "发送准备未知"), AttachmentRefs: []api.ContentRef{}, PolicyRef: f.policy, Budget: []api.Amount{{Unit: "USD", Value: "20"}}, TaskDeadline: api.Time(time.Now().Add(20 * time.Minute))})
+	var output interaction.SubmissionOutput
+	if e := api.Decode(r.Output, &output); e != nil {
+		t.Fatal(e)
+	}
+	works, status, e := f.store.Claim(f.ctx, f.scope, api.NewID("boot"), []string{interaction.JobDispatch}, 1, 30*time.Second)
+	if e != nil || status != runtime.Committed || len(works) != 1 {
+		t.Fatalf("claim %s %v", status, e)
+	}
+	h, _ := f.registry.Job(interaction.JobDispatch)
+	f.commitFault.Store(true)
+	if e = h(f.ctx, f.store, f.scope, works[0]); !errors.Is(e, runtime.ErrCommitUnknown) {
+		t.Fatalf("unknown prepare status lost %v", e)
+	}
+	if f.delivery.sends != 0 {
+		t.Fatal("unknown prepare sent business command")
+	}
+	saved, e := f.s.ReadSubmission(f.ctx, f.store, f.scope, f.auth, output.SubmissionRef.ObjectID)
+	if e != nil || saved.Submission.State != "sending" || saved.Command == nil {
+		t.Fatalf("durable unknown intent missing %+v %v", saved, e)
+	}
+	command := *saved.Command
+	if e = h(f.ctx, f.store, f.scope, works[0]); e != nil {
+		t.Fatal(e)
+	}
+	after, e := f.s.ReadSubmission(f.ctx, f.store, f.scope, f.auth, output.SubmissionRef.ObjectID)
+	if e != nil || after.Submission.State != "applied" || f.delivery.sends != 1 || !api.Equal(after.Command, &command) {
+		t.Fatalf("original prepare did not recover %+v %v", after, e)
 	}
 }
 

@@ -30,7 +30,7 @@ func (s *Service) Dispatch(ctx context.Context, store runtime.Store, scope runti
 		if uint64(len(body)) != snapshot.Input.AnswerRef.ByteLength || api.Hash(body) != snapshot.Input.AnswerRef.Hash {
 			answerErr = api.E("invalid_request", "answer_bytes_mismatch")
 		} else {
-			answerErr = validateAnswer(snapshot.InputView.AnswerSchema, body)
+			answerErr = validateAnswer(snapshot.InputView.AnswerSchema, body, snapshot.Input.AnswerRef.MediaType)
 		}
 	}
 	if snapshot.Submission.State == "queued" && snapshot.Submission.PredecessorTaskRef != nil {
@@ -184,8 +184,8 @@ func (s *Service) Dispatch(ctx context.Context, store runtime.Store, scope runti
 	}
 	if receipt.Stage == "accepted" {
 		return runtime.Finish(ctx, store, scope, s.config.Participants, work, runtime.Waiting(now.Add(time.Second)), func(tx runtime.Tx) error {
-			var r submissionRecord
-			if _, e := tx.Get(ctx, submissions, work.Job.SourceRef.ObjectID, &r); e != nil {
+			r, _, e := lockSubmission(ctx, tx, work.Job.SourceRef.ObjectID)
+			if e != nil {
 				return e
 			}
 			if r.Submission.State == "sending" {
