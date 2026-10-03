@@ -5,13 +5,9 @@ package recovery_test
 import (
 	"bytes"
 	"context"
-	"crypto/rand"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"github.com/jackc/pgx/v5"
-	"github.com/ruipengliu/lerna/adapters/postgres"
-	"github.com/ruipengliu/lerna/adapters/sqlite"
 	"github.com/ruipengliu/lerna/contract"
 	"github.com/ruipengliu/lerna/host/durablework"
 	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
@@ -31,33 +27,26 @@ type waitStore interface {
 }
 
 func TestPGPersistentWaitBehaviors(t *testing.T) {
-	runWaitBehaviors(t, func(t *testing.T) waitStore {
-		setup := database(t)
-		value, _ := configurations.Load(setup)
-		cfg := value.(postgres.Config)
-		cfg.MaxOpenConnections = 1
-		store, err := postgres.Open(contextFor(t), cfg)
+	runWaitBehaviors(t, func(t *testing.T) *ownedFixture {
+		f := newOwnedFixture(t, "postgres", false)
+		f.pg.MaxOpenConnections = 1
+		store, err := f.Open(contextFor(t))
 		if err != nil {
 			t.Fatal(err)
 		}
-		t.Cleanup(func() { store.Close() })
-		admissionReopeners.Store(store, func(t *testing.T) admissionStore {
-			replacement, err := postgres.Open(contextFor(t), cfg)
-			if err != nil {
-				t.Fatal(err)
-			}
-			t.Cleanup(func() { replacement.Close() })
-			return replacement
-		})
-		return store
+		if err = store.(interface{ Migrate(context.Context) error }).Migrate(contextFor(t)); err != nil {
+			t.Fatal(err)
+		}
+		return f
 	})
 }
 func TestSQLitePersistentWaitBehaviors(t *testing.T) {
-	runWaitBehaviors(t, func(t *testing.T) waitStore { return sqliteDatabase(t) })
+	runWaitBehaviors(t, func(t *testing.T) *ownedFixture { return sqliteDatabase(t) })
 }
-func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
+func runWaitBehaviors(t *testing.T, factory func(*testing.T) *ownedFixture) {
 	t.Run("ProcessCancellationReturnsClaimWithoutBusinessStop", func(t *testing.T) {
-		store := factory(t)
+		fixture := factory(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := hostFor(store, owner, principal)
 		clock := &workClock{now: time.Date(2026, 10, 3, 20, 0, 0, 0, time.UTC)}
@@ -85,7 +74,8 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 		requireHello(t, h, "input", 1)
 	})
 	t.Run("OldPermanentClosureKeepsNewWorkAndPreviousSuccessfulProjection", func(t *testing.T) {
-		store := factory(t)
+		fixture := factory(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := hostFor(store, owner, principal)
 		clock := &workClock{now: time.Date(2026, 10, 3, 20, 0, 0, 0, time.UTC)}
@@ -130,7 +120,8 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 		requireHello(t, h, "input", 3)
 	})
 	t.Run("StartedWorkCannotPersistSuccessAtExecutionDeadline", func(t *testing.T) {
-		store := factory(t)
+		fixture := factory(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := hostFor(store, owner, principal)
 		clock := &workClock{now: time.Date(2026, 10, 3, 20, 0, 0, 0, time.UTC)}
@@ -169,7 +160,8 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 		}
 	})
 	t.Run("MissingStartOrPermissionsCannotPersistSuccess", func(t *testing.T) {
-		store := factory(t)
+		fixture := factory(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := hostFor(store, owner, principal)
 		clock := &workClock{now: time.Date(2026, 10, 3, 20, 0, 0, 0, time.UTC)}
@@ -199,7 +191,8 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 		requireHello(t, h, "input", 1)
 	})
 	t.Run("ClaimedPolicySnapshotAndWaitingSurviveReopen", func(t *testing.T) {
-		store := factory(t)
+		fixture := factory(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := hostFor(store, owner, principal)
 		h.ScheduleControl = true
@@ -240,7 +233,7 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 		if err != nil || before.State.Policy.Identity != "old-v1" || before.State.Outcome != "waiting" {
 			t.Fatalf("bound snapshot: %+v %v", before, err)
 		}
-		next := reopenAdmissionStore(t, store).(waitStore)
+		next := fixture.Replace(t)
 		h = hostFor(next, owner, principal)
 		h.ScheduleControl = true
 		h.Clock = clock
@@ -268,7 +261,8 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 		requireHello(t, h, "input", 1)
 	})
 	t.Run("CommittedStartPersistsAndRepeatedConfirmationIsIdempotent", func(t *testing.T) {
-		store := factory(t)
+		fixture := factory(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := hostFor(store, owner, principal)
 		clock := &workClock{now: time.Date(2026, 10, 3, 20, 0, 0, 0, time.UTC)}
@@ -301,7 +295,7 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 		if err != nil || !started || state.Attempts != 1 {
 			t.Fatalf("repeated confirmation: %+v %v %v", state, started, err)
 		}
-		next := reopenAdmissionStore(t, store).(waitStore)
+		next := fixture.Replace(t)
 		h = hostFor(next, owner, principal)
 		h.Clock = clock
 		worker = scheduledWorker(t, next, clock)
@@ -319,7 +313,8 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 		}
 	})
 	t.Run("CurrentWorkerEligibilityIsCheckedBeforeActualStart", func(t *testing.T) {
-		store := factory(t)
+		fixture := factory(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := hostFor(store, owner, principal)
 		clock := &workClock{now: time.Date(2026, 10, 3, 20, 0, 0, 0, time.UTC)}
@@ -357,7 +352,8 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 			count     int64
 		}{{"retry-success", 2, "", 4, time.Minute, "success", 3}, {"attempt-limit", 9, "", 2, time.Minute, "permanent", 2}, {"permanent", 0, "schema_invalid", 3, time.Minute, "permanent", 1}, {"deadline", 9, "", 4, time.Second, "expired", 1}} {
 			t.Run(test.name, func(t *testing.T) {
-				store := factory(t)
+				fixture := factory(t)
+				store := fixture.Store()
 				ctx := contextFor(t)
 				h := hostFor(store, owner, principal)
 				h.ScheduleControl = true
@@ -390,7 +386,7 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 					t.Fatalf("first backoff: %+v", before)
 				}
 				// Use a fresh real connection/Host (SQLite closes its exclusive writer).
-				next := reopenAdmissionStore(t, store).(waitStore)
+				next := fixture.Replace(t)
 				h = hostFor(next, owner, principal)
 				h.Clock = clock
 				worker = scheduledWorker(t, next, clock)
@@ -434,7 +430,8 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 		}
 	})
 	t.Run("RunnerParksAtFutureTimerAndCancels", func(t *testing.T) {
-		store := factory(t)
+		fixture := factory(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := hostFor(store, owner, principal)
 		h.ScheduleControl = true
@@ -488,7 +485,8 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 		}
 	})
 	t.Run("StopOldRevisionPreservesNewWorkAndSuccess", func(t *testing.T) {
-		store := factory(t)
+		fixture := factory(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := hostFor(store, owner, principal)
 		h.ScheduleControl = true
@@ -540,7 +538,8 @@ func runWaitBehaviors(t *testing.T, factory func(*testing.T) waitStore) {
 		}
 	})
 	t.Run("GateWaitReleasesResourcesAndDroppedNotificationsRecover", func(t *testing.T) {
-		store := factory(t)
+		fixture := factory(t)
+		store := fixture.Store()
 		ctx := contextFor(t)
 		h := hostFor(store, owner, principal)
 		h.ScheduleControl = true
@@ -696,29 +695,9 @@ func TestLegacyFirstAdoptionUsesCurrentTrustedTime(t *testing.T) {
 }
 func restoreWaitLegacy(t *testing.T, backend string) waitStore {
 	t.Helper()
+	scope := newOwnedFixture(t, backend, false)
 	if backend == "postgres" {
-		cfg := postgres.Config{DSN: os.Getenv("LERNA_TEST_POSTGRES_DSN"), TransactionTimeout: 3 * time.Second, StatementTimeout: 2 * time.Second, LockTimeout: time.Second}
-		var nonce [12]byte
-		if _, err := rand.Read(nonce[:]); err != nil {
-			t.Fatal(err)
-		}
-		cfg.Schema = "lerna_test_" + hex.EncodeToString(nonce[:])
-		store, err := postgres.Open(contextFor(t), cfg)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if err = store.CreateSchema(contextFor(t)); err != nil {
-			store.Close()
-			t.Fatal(err)
-		}
-		t.Cleanup(func() {
-			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-			defer cancel()
-			if err := store.DropTestSchema(ctx); err != nil {
-				t.Error(err)
-			}
-			store.Close()
-		})
+		cfg := scope.pg
 		data, err := os.ReadFile(filepath.Join("..", "fixtures", "durable-work", "pg-v1", "database.sql"))
 		if err != nil {
 			t.Fatal(err)
@@ -728,7 +707,11 @@ func restoreWaitLegacy(t *testing.T, backend string) waitStore {
 		if err = restoreWaitPGDump(contextFor(t), cfg.DSN, data); err != nil {
 			t.Fatal("historical fixture restore failed", err)
 		}
-		if err = store.Migrate(contextFor(t)); err != nil {
+		store, err := scope.Open(contextFor(t))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err = scope.PG().Migrate(contextFor(t)); err != nil {
 			t.Fatal(err)
 		}
 		return store
@@ -737,16 +720,14 @@ func restoreWaitLegacy(t *testing.T, backend string) waitStore {
 	if err != nil {
 		t.Fatal(err)
 	}
-	cfg := sqlite.Config{Path: filepath.Join(t.TempDir(), "legacy.sqlite"), TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond}
-	if err = os.WriteFile(cfg.Path, data, 0600); err != nil {
+	if err = os.WriteFile(scope.sq.Path, data, 0600); err != nil {
 		t.Fatal(err)
 	}
-	store, err := sqlite.Open(contextFor(t), cfg)
+	store, err := scope.Open(contextFor(t))
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() { store.Close() })
-	if err = store.Migrate(contextFor(t)); err != nil {
+	if err = scope.SQLite().Migrate(contextFor(t)); err != nil {
 		t.Fatal(err)
 	}
 	return store
@@ -756,35 +737,9 @@ func TestLegacyV2ClaimWaitsForOriginalLeaseBeforeAdopting(t *testing.T) {
 	for _, backend := range []string{"postgres", "sqlite"} {
 		t.Run(backend, func(t *testing.T) {
 			ctx := contextFor(t)
-			var store waitStore
-			var cfg postgres.Config
-			var path string
-			if backend == "postgres" {
-				var nonce [12]byte
-				if _, err := rand.Read(nonce[:]); err != nil {
-					t.Fatal(err)
-				}
-				cfg = postgres.Config{DSN: os.Getenv("LERNA_TEST_POSTGRES_DSN"), Schema: "lerna_test_" + hex.EncodeToString(nonce[:]), TransactionTimeout: 3 * time.Second, StatementTimeout: 2 * time.Second, LockTimeout: time.Second}
-				pg, err := postgres.Open(ctx, cfg)
-				if err != nil {
-					t.Fatal(err)
-				}
-				if err = pg.CreateSchema(ctx); err != nil {
-					pg.Close()
-					t.Fatal(err)
-				}
-				store = pg
-				t.Cleanup(func() {
-					clean, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-					defer cancel()
-					if err := pg.DropTestSchema(clean); err != nil {
-						t.Error(err)
-					}
-					pg.Close()
-				})
-			} else {
-				path = filepath.Join(t.TempDir(), "v2.sqlite")
-			}
+			scope := newOwnedFixture(t, backend, false)
+			cfg := scope.pg
+			path := scope.sq.Path
 			fixture := filepath.Join("..", "fixtures", "durable-work", map[string]string{"postgres": "pg-v2", "sqlite": "sqlite-v2"}[backend])
 			reportData, err := os.ReadFile(filepath.Join(fixture, "writer-observation.json"))
 			if err != nil {
@@ -817,12 +772,10 @@ func TestLegacyV2ClaimWaitsForOriginalLeaseBeforeAdopting(t *testing.T) {
 				if err = os.WriteFile(path, data, 0600); err != nil {
 					t.Fatal(err)
 				}
-				sq, err := sqlite.Open(ctx, sqlite.Config{Path: path, TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond})
-				if err != nil {
-					t.Fatal(err)
-				}
-				store = sq
-				t.Cleanup(func() { sq.Close() })
+			}
+			store, err := scope.Open(ctx)
+			if err != nil {
+				t.Fatal(err)
 			}
 			if migrator, ok := store.(interface{ Migrate(context.Context) error }); !ok {
 				t.Fatal("missing migration")

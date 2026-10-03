@@ -26,43 +26,13 @@ import (
 	"github.com/ruipengliu/lerna/adapters/sqlite"
 )
 
-var sqliteConfigurations sync.Map
-
-func sqliteDatabase(t *testing.T) *sqlite.Store {
-	t.Helper()
-	cfg := sqlite.Config{Path: filepath.Join(t.TempDir(), "ledger.sqlite"), TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond}
-	store, err := sqlite.Open(contextFor(t), cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	sqliteConfigurations.Store(store, cfg)
-	admissionReopeners.Store(store, func(t *testing.T) admissionStore {
-		t.Helper()
-		if err := store.Close(); err != nil {
-			t.Fatal(err)
-		}
-		replacement, err := sqlite.Open(contextFor(t), cfg)
-		if err != nil {
-			t.Fatal(err)
-		}
-		t.Cleanup(func() { replacement.Close() })
-		return replacement
-	})
-	t.Cleanup(func() {
-		if err := store.Close(); err != nil {
-			t.Error(err)
-		}
-	})
-	if err = store.Migrate(contextFor(t)); err != nil {
-		t.Fatal(err)
-	}
-	return store
-}
+func sqliteDatabase(t *testing.T) *ownedFixture { return newOwnedFixture(t, "sqlite", true) }
 func TestSQLiteSharedAdmissionBehaviors(t *testing.T) {
-	runAdmissionBehaviors(t, func(t *testing.T) admissionStore { return sqliteDatabase(t) })
+	runAdmissionBehaviors(t, func(t *testing.T) *ownedFixture { return sqliteDatabase(t) })
 }
 func TestSQLiteEveryTransactionChecksEffectiveDurability(t *testing.T) {
-	store := sqliteDatabase(t)
+	fixture := sqliteDatabase(t)
+	store := fixture.SQLite()
 	ctx := contextFor(t)
 	if err := store.Migrate(ctx); err != nil {
 		t.Fatal(err)
@@ -85,18 +55,9 @@ func TestSQLiteEveryTransactionChecksEffectiveDurability(t *testing.T) {
 		}); err != nil {
 			t.Fatal(err)
 		}
-		// Close/open forces a fresh product connection with the same actual file.
-		cfg, _ := sqliteConfigurations.Load(store)
-		if err := store.Close(); err != nil {
-			t.Fatal(err)
-		}
-		next, err := sqlite.Open(ctx, cfg.(sqlite.Config))
-		if err != nil {
-			t.Fatal(err)
-		}
-		sqliteConfigurations.Store(next, cfg)
-		t.Cleanup(func() { next.Close() })
-		store = next
+		// Replace forces a fresh actual product connection to the same owned file.
+		fixture.Replace(t)
+		store = fixture.SQLite()
 	}
 	if _, err := store.Settings(ctx, nil); !errors.Is(err, runtime.ErrScope) {
 		t.Fatalf("nil transaction accepted: %v", err)
@@ -139,24 +100,15 @@ func sqliteProcess(t *testing.T, path, action string, command []byte) {
 	}
 }
 func TestSQLiteWriterExclusionAndNormalProcessReopen(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "ledger.sqlite")
-	cfg := sqlite.Config{Path: path, TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond}
-	store, err := sqlite.Open(contextFor(t), cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { store.Close() })
+	fixture := sqliteDatabase(t)
+	path := fixture.sq.Path
 	original := command("process-original", "process-input", "written by independent process", nil, future())
 	sqliteProcess(t, path, "excluded", original)
-	if err = store.Close(); err != nil {
+	if err := fixture.CloseWriter(); err != nil {
 		t.Fatal(err)
 	}
 	sqliteProcess(t, path, "write", original)
-	replacement, err := sqlite.Open(contextFor(t), cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { replacement.Close() })
+	replacement := fixture.Replace(t)
 	h := hostFor(replacement, owner, principal)
 	before, err := h.Observe(contextFor(t), "process-input", &principal)
 	if err != nil {
@@ -179,7 +131,8 @@ func TestSQLiteWriterExclusionAndNormalProcessReopen(t *testing.T) {
 }
 
 func TestSQLiteMigrationRecordsExactVersionAndRejectsAlteredChecksum(t *testing.T) {
-	store := sqliteDatabase(t)
+	fixture := sqliteDatabase(t)
+	store := fixture.SQLite()
 	status, err := store.MigrationStatus(contextFor(t))
 	if err != nil {
 		t.Fatal(err)
@@ -188,8 +141,8 @@ func TestSQLiteMigrationRecordsExactVersionAndRejectsAlteredChecksum(t *testing.
 		t.Fatalf("missing current migration record: %+v", status)
 	}
 	// Deliberate corruption is a storage fault fixture, not a business observation.
-	cfg, _ := sqliteConfigurations.Load(store)
-	db, err := sql.Open("sqlite3", cfg.(sqlite.Config).Path)
+	cfg := fixture.sq
+	db, err := sql.Open("sqlite3", cfg.Path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -287,10 +240,11 @@ func holdSQLiteProcessLock(t *testing.T, path string) func() {
 	return release
 }
 func TestSQLiteBusyDeadlineRollsBackAndNormalControlStillCommits(t *testing.T) {
-	store := sqliteDatabase(t)
-	cfg, _ := sqliteConfigurations.Load(store)
+	fixture := sqliteDatabase(t)
+	store := fixture.SQLite()
+	cfg := fixture.sq
 	h := hostFor(store, owner, principal)
-	release := holdSQLiteProcessLock(t, cfg.(sqlite.Config).Path)
+	release := holdSQLiteProcessLock(t, cfg.Path)
 	original := command("busy-original", "busy-input", "normal after real lock", nil, future())
 	start := time.Now()
 	_, err := h.Record(contextFor(t), original, &principal)
@@ -321,7 +275,8 @@ func TestSQLiteBusyDeadlineRollsBackAndNormalControlStillCommits(t *testing.T) {
 	}
 }
 func TestSQLiteQueuedCancellationAndActiveTransactionRollback(t *testing.T) {
-	store := sqliteDatabase(t)
+	fixture := sqliteDatabase(t)
+	store := fixture.SQLite()
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
 	held := make(chan struct{})
@@ -402,8 +357,9 @@ func TestSQLiteQueuedCancellationAndActiveTransactionRollback(t *testing.T) {
 }
 
 func TestSQLiteCloseCancelsAndWaitsForEntireOwnerTransaction(t *testing.T) {
-	store := sqliteDatabase(t)
-	cfg, _ := sqliteConfigurations.Load(store)
+	fixture := sqliteDatabase(t)
+	store := fixture.SQLite()
+	cfg := fixture.sq
 	ctx := contextFor(t)
 	staged := make(chan struct{})
 	unwinding := make(chan struct{})
@@ -456,7 +412,7 @@ func TestSQLiteCloseCancelsAndWaitsForEntireOwnerTransaction(t *testing.T) {
 		release()
 		t.Fatal("Close failed to cancel active owner transaction")
 	}
-	second, err := sqlite.Open(ctx, cfg.(sqlite.Config))
+	second, err := sqlite.Open(ctx, cfg)
 	if second != nil {
 		second.Close()
 	}
@@ -476,11 +432,7 @@ func TestSQLiteCloseCancelsAndWaitsForEntireOwnerTransaction(t *testing.T) {
 	case <-ctx.Done():
 		t.Fatal("Close did not finish after Tx exited")
 	}
-	replacement, err := sqlite.Open(ctx, cfg.(sqlite.Config))
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { replacement.Close() })
+	replacement := fixture.Replace(t)
 	h := hostFor(replacement, owner, principal)
 	if _, err = h.Observe(ctx, "closing-input", &principal); err == nil {
 		t.Fatal("closing transaction committed partial facts")
@@ -490,12 +442,15 @@ func TestSQLiteCloseCancelsAndWaitsForEntireOwnerTransaction(t *testing.T) {
 }
 
 func TestSQLiteCloseDeadlineRetainsOwnershipUntilCallbackExits(t *testing.T) {
-	cfg := sqlite.Config{Path: filepath.Join(t.TempDir(), "ledger.sqlite"), TransactionTimeout: 100 * time.Millisecond, BusyTimeout: 20 * time.Millisecond}
-	store, err := sqlite.Open(contextFor(t), cfg)
-	if err != nil {
+	fixture := newOwnedFixture(t, "sqlite", false)
+	fixture.sq.TransactionTimeout = 100 * time.Millisecond
+	fixture.sq.BusyTimeout = 20 * time.Millisecond
+	cfg := fixture.sq
+	if _, err := fixture.Open(contextFor(t)); err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() { store.Close() })
+	store := fixture.SQLite()
+	var err error
 	entered := make(chan struct{})
 	permit := make(chan struct{})
 	finished := make(chan error, 1)
@@ -515,7 +470,7 @@ func TestSQLiteCloseDeadlineRetainsOwnershipUntilCallbackExits(t *testing.T) {
 		t.Fatal("close deadline fixture failed")
 	}
 	start := time.Now()
-	if err = store.Close(); !errors.Is(err, sqlite.ErrCloseTimeout) {
+	if err = fixture.CloseWriter(); !errors.Is(err, sqlite.ErrCloseTimeout) {
 		release()
 		t.Fatalf("bad callback was not bounded: %v", err)
 	}
@@ -538,17 +493,14 @@ func TestSQLiteCloseDeadlineRetainsOwnershipUntilCallbackExits(t *testing.T) {
 	if err = store.Close(); err != nil {
 		t.Fatal(err)
 	}
-	replacement, err := sqlite.Open(contextFor(t), cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { replacement.Close() })
-	if err = replacement.Migrate(contextFor(t)); err != nil {
+	fixture.Replace(t)
+	if err = fixture.SQLite().Migrate(contextFor(t)); err != nil {
 		t.Fatal(err)
 	}
 }
 func TestSQLiteDeviceClockPreservesUTCNanosecondInstants(t *testing.T) {
-	store := sqliteDatabase(t)
+	fixture := sqliteDatabase(t)
+	store := fixture.SQLite()
 	clock := &controlledClock{admissionStore: store, instant: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
 	h := durablework.New(owner, store, store, store, clock, durablework.NewPermissions([]durablework.Permission{{Subject: principal, Owner: owner, Record: true, Read: true}}))
 	fixturePool(h)
@@ -575,7 +527,8 @@ func TestSQLiteHistoricalV1FileRestoresOriginalDecisionsAndPendingJob(t *testing
 	if err != nil {
 		t.Fatal(err)
 	}
-	path := filepath.Join(t.TempDir(), "restored.sqlite")
+	scopeFixture := newOwnedFixture(t, "sqlite", false)
+	path := scopeFixture.sq.Path
 	if err = os.WriteFile(path, data, 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -591,11 +544,10 @@ func TestSQLiteHistoricalV1FileRestoresOriginalDecisionsAndPendingJob(t *testing
 	if err = json.Unmarshal(reportData, &report); err != nil {
 		t.Fatal(err)
 	}
-	store, err := sqlite.Open(contextFor(t), sqlite.Config{Path: path, TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond})
-	if err != nil {
+	if _, err = scopeFixture.Open(contextFor(t)); err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() { store.Close() })
+	store := scopeFixture.SQLite()
 	if err = store.Migrate(contextFor(t)); err != nil {
 		t.Fatal(err)
 	}
@@ -671,14 +623,15 @@ func TestSQLiteHistoricalV1FileRestoresOriginalDecisionsAndPendingJob(t *testing
 }
 
 func TestSQLiteWorkBusyAndCanceledQueueRetainNormalResponsibility(t *testing.T) {
-	store := sqliteDatabase(t)
+	fixture := sqliteDatabase(t)
+	store := fixture.SQLite()
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
 	assertReceived(t, out, err)
 	worker := conformanceWorker(t, owner, store, store, store, store)
-	cfg, _ := sqliteConfigurations.Load(store)
-	releaseBusy := holdSQLiteProcessLock(t, cfg.(sqlite.Config).Path)
+	cfg := fixture.sq
+	releaseBusy := holdSQLiteProcessLock(t, cfg.Path)
 	_, err = worker.Claim(ctx, "busy", 1, time.Minute)
 	var lockError sqlite3.Error
 	if !errors.As(err, &lockError) || lockError.Code != sqlite3.ErrBusy {

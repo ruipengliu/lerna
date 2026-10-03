@@ -25,7 +25,8 @@ func forOwner(data []byte, o contract.OwnerRef) []byte {
 }
 
 func TestPGLockDeadlineRollsBackAndNormalControlStillCommits(t *testing.T) {
-	store := database(t)
+	fixture := database(t)
+	store := fixture.PG()
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	locked := make(chan struct{})
@@ -78,7 +79,8 @@ func TestPGLockDeadlineRollsBackAndNormalControlStillCommits(t *testing.T) {
 }
 
 func TestPGOtherTenantAndOwnerProgressWhileOriginalKeyIsLocked(t *testing.T) {
-	store := database(t)
+	fixture := database(t)
+	store := fixture.PG()
 	ctx := contextFor(t)
 	locked := make(chan struct{})
 	release := make(chan struct{})

@@ -4,26 +4,20 @@ package recovery_test
 
 import (
 	"context"
-	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
-	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
-	"os"
-	"strings"
-	"sync"
-	"testing"
-	"time"
-
-	"github.com/ruipengliu/lerna/adapters/postgres"
 	"github.com/ruipengliu/lerna/contract"
 	"github.com/ruipengliu/lerna/host/durablework"
+	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
 	"github.com/ruipengliu/lerna/runtime"
+	"strings"
+	"testing"
+	"time"
 )
 
-var configurations sync.Map
 var owner = contract.OwnerRef{TenantID: "tenant-one", OwnerID: "owner-one"}
 var principal = contract.SubjectBinding{TenantID: "tenant-one", SubjectID: "alice", DelegationChain: []contract.DelegatedSubject{}}
 
@@ -33,39 +27,7 @@ func contextFor(t *testing.T) context.Context {
 	t.Cleanup(cancel)
 	return ctx
 }
-func database(t *testing.T) *postgres.Store {
-	t.Helper()
-	dsn := os.Getenv("LERNA_TEST_POSTGRES_DSN")
-	if dsn == "" {
-		t.Fatal("LERNA_TEST_POSTGRES_DSN is required (dedicated test database)")
-	}
-	var nonce [12]byte
-	if _, err := rand.Read(nonce[:]); err != nil {
-		t.Fatal(err)
-	}
-	cfg := postgres.Config{DSN: dsn, Schema: "lerna_test_" + hex.EncodeToString(nonce[:]), TransactionTimeout: 3 * time.Second, StatementTimeout: 2 * time.Second, LockTimeout: time.Second}
-	store, err := postgres.Open(contextFor(t), cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err = store.CreateSchema(contextFor(t)); err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-		if err := store.DropTestSchema(ctx); err != nil {
-			t.Error(err)
-		}
-		store.Close()
-	})
-	configurations.Store(store, cfg)
-	admissionReopeners.Store(store, func(t *testing.T) admissionStore { return reopen(t, store) })
-	if err = store.Migrate(contextFor(t)); err != nil {
-		t.Fatal(err)
-	}
-	return store
-}
+func database(t *testing.T) *ownedFixture { return newOwnedFixture(t, "postgres", true) }
 func rawHostFor(store admissionStore, o contract.OwnerRef, subject contract.SubjectBinding) *durablework.Host {
 	return durablework.New(o, store, store, store, store, durablework.NewPermissions([]durablework.Permission{{Subject: subject, Owner: o, Record: true, Read: true}}))
 }
@@ -151,18 +113,9 @@ func assertReceiptSame(t *testing.T, left, right contract.CommandReceipt) {
 	}
 }
 
-func reopen(t *testing.T, original *postgres.Store) *postgres.Store {
-	t.Helper()
-	cfg, _ := configurations.Load(original)
-	store, err := postgres.Open(contextFor(t), cfg.(postgres.Config))
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { store.Close() })
-	return store
-}
 func TestPGEffectiveDurabilitySettingsAndIdempotentMigration(t *testing.T) {
-	store := database(t)
+	fixture := database(t)
+	store := fixture.PG()
 	ctx := contextFor(t)
 	if err := store.Migrate(ctx); err != nil {
 		t.Fatal(err)
@@ -184,7 +137,8 @@ func TestPGEffectiveDurabilitySettingsAndIdempotentMigration(t *testing.T) {
 }
 
 func TestPGNilTransactionIsRejectedWithoutPanic(t *testing.T) {
-	store := database(t)
+	fixture := database(t)
+	store := fixture.PG()
 	ctx := contextFor(t)
 	if _, err := store.Now(ctx, nil); !errors.Is(err, runtime.ErrScope) {
 		t.Fatalf("nil clock Tx accepted: %v", err)

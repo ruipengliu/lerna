@@ -24,12 +24,12 @@ type workStore interface {
 }
 
 func TestPGSharedWorkBehaviors(t *testing.T) {
-	runWorkBehaviors(t, func(t *testing.T) workStore { return database(t) })
+	runWorkBehaviors(t, func(t *testing.T) *ownedFixture { return database(t) })
 }
 func TestSQLiteSharedWorkBehaviors(t *testing.T) {
-	runWorkBehaviors(t, func(t *testing.T) workStore { return sqliteDatabase(t) })
+	runWorkBehaviors(t, func(t *testing.T) *ownedFixture { return sqliteDatabase(t) })
 }
-func runWorkBehaviors(t *testing.T, newStore func(*testing.T) workStore) {
+func runWorkBehaviors(t *testing.T, newStore func(*testing.T) *ownedFixture) {
 	t.Run("ScanClaimsSnapshotAndProjectsOutsideTransaction", func(t *testing.T) { behaviorScanClaimsSnapshotAndProjectsOutsideTransaction(t, newStore) })
 	t.Run("OldCompletionPreservesNewRevisionAndExactSnapshot", func(t *testing.T) { behaviorOldCompletionPreservesNewRevisionAndExactSnapshot(t, newStore) })
 
@@ -45,8 +45,9 @@ func runWorkBehaviors(t *testing.T, newStore func(*testing.T) workStore) {
 	t.Run("ClaimStorageScopeAndBounds", func(t *testing.T) { behaviorClaimStorageScopeAndBounds(t, newStore) })
 	t.Run("BoundedBatchRetainsEveryOriginalResponsibility", func(t *testing.T) { behaviorBoundedBatchRetainsEveryOriginalResponsibility(t, newStore) })
 }
-func behaviorScanClaimsSnapshotAndProjectsOutsideTransaction(t *testing.T, newStore func(*testing.T) workStore) {
-	store := newStore(t)
+func behaviorScanClaimsSnapshotAndProjectsOutsideTransaction(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
 	out, err := h.Record(ctx, command("claim-source", "input", "hello", nil, future()), &principal)
@@ -78,8 +79,9 @@ func behaviorScanClaimsSnapshotAndProjectsOutsideTransaction(t *testing.T, newSt
 	}
 }
 
-func behaviorOldCompletionPreservesNewRevisionAndExactSnapshot(t *testing.T, newStore func(*testing.T) workStore) {
-	store := newStore(t)
+func behaviorOldCompletionPreservesNewRevisionAndExactSnapshot(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	h := hostFor(store, owner, principal)
 	worker := conformanceWorker(t, owner, store, store, store, store)
 	ctx := contextFor(t)
@@ -180,8 +182,9 @@ func awaitStage(t *testing.T, ctx context.Context, stage <-chan struct{}) {
 		t.Fatal("finite synchronization deadline", ctx.Err())
 	}
 }
-func behaviorRenewBindsClaimAndExpiresWithoutReplacement(t *testing.T, newStore func(*testing.T) workStore) {
-	store := newStore(t)
+func behaviorRenewBindsClaimAndExpiresWithoutReplacement(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
 	clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
@@ -262,8 +265,9 @@ func behaviorRenewBindsClaimAndExpiresWithoutReplacement(t *testing.T, newStore 
 		t.Fatalf("replacement result: %+v %v", got, err)
 	}
 }
-func behaviorTriggerRejectsRegressingAndOutOfRangeRevisions(t *testing.T, newStore func(*testing.T) workStore) {
-	store := newStore(t)
+func behaviorTriggerRejectsRegressingAndOutOfRangeRevisions(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
 	out, err := h.Record(ctx, command("first", "input", "one", nil, future()), &principal)
@@ -309,14 +313,15 @@ func behaviorTriggerRejectsRegressingAndOutOfRangeRevisions(t *testing.T, newSto
 		t.Fatal(err)
 	}
 }
-func behaviorConcurrentNewWorkAndCompletionBothCommitOrders(t *testing.T, newStore func(*testing.T) workStore) {
+func behaviorConcurrentNewWorkAndCompletionBothCommitOrders(t *testing.T, newStore func(*testing.T) *ownedFixture) {
 	for _, newFirst := range []bool{true, false} {
 		name := "completion-first"
 		if newFirst {
 			name = "new-work-first"
 		}
 		t.Run(name, func(t *testing.T) {
-			store := newStore(t)
+			fixture := newStore(t)
+			store := fixture.Store()
 			h := hostFor(store, owner, principal)
 			ctx := contextFor(t)
 			out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
@@ -394,8 +399,9 @@ func behaviorConcurrentNewWorkAndCompletionBothCommitOrders(t *testing.T, newSto
 		})
 	}
 }
-func behaviorClaimRequestBoundsAndFailedProjectionRollBackCompletion(t *testing.T, newStore func(*testing.T) workStore) {
-	store := newStore(t)
+func behaviorClaimRequestBoundsAndFailedProjectionRollBackCompletion(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
 	out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
@@ -435,8 +441,9 @@ func behaviorClaimRequestBoundsAndFailedProjectionRollBackCompletion(t *testing.
 		t.Fatal(err)
 	}
 }
-func behaviorMaximumRevisionClaimsAndCompletesWithoutOverflow(t *testing.T, newStore func(*testing.T) workStore) {
-	store := newStore(t)
+func behaviorMaximumRevisionClaimsAndCompletesWithoutOverflow(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
 	err := store.Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
@@ -478,8 +485,9 @@ func behaviorMaximumRevisionClaimsAndCompletesWithoutOverflow(t *testing.T, newS
 		t.Fatalf("maximum progress regressed: %+v %v", got, err)
 	}
 }
-func behaviorLeaseExpiryIsCheckedAfterWaitingForObjectLock(t *testing.T, newStore func(*testing.T) workStore) {
-	store := newStore(t)
+func behaviorLeaseExpiryIsCheckedAfterWaitingForObjectLock(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
 	clock := &workClock{now: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
@@ -540,8 +548,9 @@ func behaviorLeaseExpiryIsCheckedAfterWaitingForObjectLock(t *testing.T, newStor
 	}
 }
 
-func behaviorConcurrentWorkersClaimOneOriginalJobAndCompleteNormally(t *testing.T, newStore func(*testing.T) workStore) {
-	store := newStore(t)
+func behaviorConcurrentWorkersClaimOneOriginalJobAndCompleteNormally(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
 	out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
@@ -554,9 +563,7 @@ func behaviorConcurrentWorkersClaimOneOriginalJobAndCompleteNormally(t *testing.
 	answers := make(chan answer, 12)
 	for i := 0; i < 12; i++ {
 		adapter := store
-		if pg, ok := store.(*postgres.Store); ok {
-			adapter = reopen(t, pg)
-		}
+		adapter = fixture.ConcurrentWriter(t)
 		name := fmt.Sprintf("worker-%02d", i)
 		go func() {
 			select {
@@ -602,15 +609,9 @@ func behaviorConcurrentWorkersClaimOneOriginalJobAndCompleteNormally(t *testing.
 	assertReceiptSame(t, original, found.Receipt)
 }
 
-func behaviorCloseReopenRetainsClaimAndOriginalReceipt(t *testing.T, newStore func(*testing.T) workStore) {
-	setup := newStore(t)
-	store := setup
-	// Keep the schema-creating PG connection alive solely for registered cleanup.
-	// SQLite instead excludes a second writable Host until the first closes.
-	if pg, ok := setup.(*postgres.Store); ok {
-		store = reopen(t, pg)
-		admissionReopeners.Store(store, func(t *testing.T) admissionStore { return reopen(t, pg) })
-	}
+func behaviorCloseReopenRetainsClaimAndOriginalReceipt(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	wire := command("original", "input", "hello", nil, future())
@@ -625,10 +626,10 @@ func behaviorCloseReopenRetainsClaimAndOriginalReceipt(t *testing.T, newStore fu
 	}
 	startWork(t, worker, batch[0])
 	old := batch[0]
-	if err = store.Close(); err != nil {
+	if err = fixture.CloseWriter(); err != nil {
 		t.Fatal(err)
 	}
-	replacement := reopenAdmissionStore(t, store).(workStore)
+	replacement := fixture.Replace(t)
 	h = hostFor(replacement, owner, principal)
 	h.Clock = clock
 	worker = conformanceWorker(t, owner, replacement, replacement, replacement, clock)
@@ -670,7 +671,7 @@ func behaviorCloseReopenRetainsClaimAndOriginalReceipt(t *testing.T, newStore fu
 	assertReceiptSame(t, original, found.Receipt)
 }
 
-func behaviorExactOwnerTimeBoundaries(t *testing.T, newStore func(*testing.T) workStore) {
+func behaviorExactOwnerTimeBoundaries(t *testing.T, newStore func(*testing.T) *ownedFixture) {
 	// Explicit nanosecond values express independent expected boundaries. Both
 	// zero and fractional seconds expose SQLite's default variable time encoding.
 	for _, fraction := range []int{0, 123456000} {
@@ -683,7 +684,8 @@ func behaviorExactOwnerTimeBoundaries(t *testing.T, newStore func(*testing.T) wo
 				{"before", 999 * time.Microsecond, true}, {"equal", time.Millisecond, false}, {"after", 1001 * time.Microsecond, false},
 			} {
 				t.Run(fmt.Sprintf("%d/%s/%s", fraction, operation, boundary.name), func(t *testing.T) {
-					store := newStore(t)
+					fixture := newStore(t)
+					store := fixture.Store()
 					ctx := contextFor(t)
 					start := time.Date(2026, 10, 3, 0, 0, 0, fraction, time.UTC)
 					clock := &workClock{now: start}
@@ -736,8 +738,9 @@ func behaviorExactOwnerTimeBoundaries(t *testing.T, newStore func(*testing.T) wo
 	}
 }
 
-func behaviorClaimStorageScopeAndBounds(t *testing.T, newStore func(*testing.T) workStore) {
-	store, other := newStore(t), newStore(t)
+func behaviorClaimStorageScopeAndBounds(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture, otherFixture := newStore(t), newStore(t)
+	store, other := fixture.Store(), otherFixture.Store()
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
@@ -802,8 +805,9 @@ func behaviorClaimStorageScopeAndBounds(t *testing.T, newStore func(*testing.T) 
 	}
 }
 
-func behaviorBoundedBatchRetainsEveryOriginalResponsibility(t *testing.T, newStore func(*testing.T) workStore) {
-	store := newStore(t)
+func behaviorBoundedBatchRetainsEveryOriginalResponsibility(t *testing.T, newStore func(*testing.T) *ownedFixture) {
+	fixture := newStore(t)
+	store := fixture.Store()
 	ctx := contextFor(t)
 	h := hostFor(store, owner, principal)
 	for i := 0; i < 5; i++ {

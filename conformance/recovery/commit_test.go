@@ -3,30 +3,24 @@
 package recovery_test
 
 import (
-	"testing"
-	"time"
-
-	"github.com/ruipengliu/lerna/adapters/postgres"
 	"github.com/ruipengliu/lerna/conformance/internal/testkit"
 	"github.com/ruipengliu/lerna/contract"
+	"testing"
+	"time"
 )
 
 func TestPGCommitConfirmationLossPreservesUnknownAndOriginalIdentity(t *testing.T) {
-	observer := database(t)
+	fixture := database(t)
+	observer := fixture.PG()
 	ctx := contextFor(t)
-	configuration, _ := configurations.Load(observer)
-	cfg := configuration.(postgres.Config)
+	cfg := fixture.pg
 	proxy, err := testkit.NewCommitProxy(ctx, cfg.DSN)
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(proxy.Close)
 	cfg.DSN = proxy.DSN()
-	writer, err := postgres.Open(ctx, cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { writer.Close() })
+	writer := fixture.openPGPeer(t, cfg)
 	h := hostFor(writer, owner, principal)
 	original := command("commit-unknown", "input", "confirmed server commit", nil, future())
 	proxy.Arm()

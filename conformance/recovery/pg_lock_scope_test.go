@@ -4,7 +4,6 @@ package recovery_test
 
 import (
 	"context"
-	"sync"
 	"testing"
 	"time"
 
@@ -16,58 +15,25 @@ import (
 
 // The signal follows successful acquisition through the actual storage port.
 // Cleanup releases and joins the bounded transaction before schema cleanup.
-func holdPGScopeLock(t *testing.T, store *postgres.Store, lock func(context.Context, runtime.Tx) error) (func(), <-chan error) {
+func holdPGScopeLock(t *testing.T, fixture *ownedFixture, store *postgres.Store, lock func(context.Context, runtime.Tx) error) (func(), <-chan error) {
 	t.Helper()
-	ctx := contextFor(t)
-	acquired := make(chan struct{})
-	release := make(chan struct{})
-	done := make(chan error, 1)
-	go func() {
-		defer close(done)
-		done <- store.Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
-			if err := lock(ctx, tx); err != nil {
-				return err
-			}
-			close(acquired)
-			select {
-			case <-release:
-				return nil
-			case <-ctx.Done():
-				return ctx.Err()
-			}
-		})
-	}()
-	var once sync.Once
+	hold := fixture.holdPGTransaction(t, store, lock)
 	unlock := func() {
-		once.Do(func() {
-			close(release)
-			select {
-			case err := <-done:
-				if err != nil {
-					t.Errorf("held transaction: %v", err)
-				}
-			case <-ctx.Done():
-				t.Error("held transaction did not exit by deadline", ctx.Err())
-			}
-		})
+		if err := hold.ReleaseAndJoin(); err != nil {
+			t.Error("held transaction:", err)
+		}
 	}
 	t.Cleanup(unlock)
-	select {
-	case <-acquired:
-	case err := <-done:
-		t.Fatalf("lock acquisition failed: %v", err)
-	case <-ctx.Done():
-		t.Fatal("lock acquisition deadline", ctx.Err())
-	}
-	return unlock, done
+	return unlock, hold.done
 }
 
 func TestPGDifferentSchemasRecordWhileCommandLocked(t *testing.T) {
-	a, b := database(t), database(t)
+	fa, fb := database(t), database(t)
+	a, b := fa.PG(), fb.PG()
 	ctx := contextFor(t)
-	observer := hostFor(reopen(t, b), owner, principal)
+	observer := hostFor(fb.PGPeer(t, 0, 0), owner, principal)
 	ref := contract.CommandRef{Owner: owner, CommandID: "same-command"}
-	_, held := holdPGScopeLock(t, a, func(ctx context.Context, tx runtime.Tx) error {
+	_, held := holdPGScopeLock(t, fa, a, func(ctx context.Context, tx runtime.Tx) error {
 		_, err := a.LockCommand(ctx, tx, ref)
 		return err
 	})
@@ -109,8 +75,9 @@ func TestPGDifferentSchemasRecordWhileCommandLocked(t *testing.T) {
 }
 
 func TestPGSameSchemaStoresPreserveInputMutualExclusion(t *testing.T) {
-	a := database(t)
-	b := reopen(t, a)
+	fixture := database(t)
+	a := fixture.PG()
+	b := fixture.PGPeer(t, 0, 0)
 	ctx := contextFor(t)
 	h := hostFor(a, owner, principal)
 	out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
@@ -119,7 +86,7 @@ func TestPGSameSchemaStoresPreserveInputMutualExclusion(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	unlock, held := holdPGScopeLock(t, a, func(ctx context.Context, tx runtime.Tx) error {
+	unlock, held := holdPGScopeLock(t, fixture, a, func(ctx context.Context, tx runtime.Tx) error {
 		_, err := a.LockInput(ctx, tx, owner, "input")
 		return err
 	})
@@ -145,11 +112,12 @@ func TestPGSameSchemaStoresPreserveInputMutualExclusion(t *testing.T) {
 }
 
 func TestPGSameSchemaStoresPreserveCommandMutualExclusion(t *testing.T) {
-	a := database(t)
-	b := reopen(t, a)
+	fixture := database(t)
+	a := fixture.PG()
+	b := fixture.PGPeer(t, 0, 0)
 	ctx := contextFor(t)
 	ref := contract.CommandRef{Owner: owner, CommandID: "same-command"}
-	unlock, held := holdPGScopeLock(t, a, func(ctx context.Context, tx runtime.Tx) error {
+	unlock, held := holdPGScopeLock(t, fixture, a, func(ctx context.Context, tx runtime.Tx) error {
 		_, err := a.LockCommand(ctx, tx, ref)
 		return err
 	})
@@ -186,10 +154,11 @@ func assertPGScopeLockHeld(t *testing.T, done <-chan error) {
 }
 
 func TestPGDifferentSchemasClaimAndCompleteWhileInputLocked(t *testing.T) {
-	a, b := database(t), database(t)
+	fa, fb := database(t), database(t)
+	a, b := fa.PG(), fb.PG()
 	ctx := contextFor(t)
 	ha, hb := hostFor(a, owner, principal), hostFor(b, owner, principal)
-	observer := hostFor(reopen(t, b), owner, principal)
+	observer := hostFor(fb.PGPeer(t, 0, 0), owner, principal)
 	out, err := ha.Record(ctx, command("same-command", "input", "first schema", nil, future()), &principal)
 	assertReceived(t, out, err)
 	out, err = hb.Record(ctx, command("same-command", "input", "hello", nil, future()), &principal)
@@ -198,7 +167,7 @@ func TestPGDifferentSchemasClaimAndCompleteWhileInputLocked(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, held := holdPGScopeLock(t, a, func(ctx context.Context, tx runtime.Tx) error {
+	_, held := holdPGScopeLock(t, fa, a, func(ctx context.Context, tx runtime.Tx) error {
 		_, err := a.LockInput(ctx, tx, owner, "input")
 		return err
 	})

@@ -15,7 +15,8 @@ import (
 )
 
 func TestPGBoundedScanSkipsHeldObjectAndRetainsAllResponsibility(t *testing.T) {
-	store := database(t)
+	fixture := database(t)
+	store := fixture.PG()
 	h := hostFor(store, owner, principal)
 	ctx := contextFor(t)
 	for i := 0; i < 5; i++ {
@@ -84,7 +85,8 @@ func TestPGBoundedScanSkipsHeldObjectAndRetainsAllResponsibility(t *testing.T) {
 }
 
 func TestPGClaimV2MigrationPreservesV1AndReportsExactArtifacts(t *testing.T) {
-	store := database(t)
+	fixture := database(t)
+	store := fixture.PG()
 	ctx := contextFor(t)
 	if err := store.Migrate(ctx); err != nil {
 		t.Fatal(err)
@@ -97,7 +99,7 @@ func TestPGClaimV2MigrationPreservesV1AndReportsExactArtifacts(t *testing.T) {
 	h := hostFor(store, owner, principal)
 	out, err := h.Record(ctx, command("source", "input", "hello", nil, future()), &principal)
 	assertReceived(t, out, err)
-	adapter := reopen(t, store)
+	adapter := fixture.PGPeer(t, 0, 0)
 	worker := conformanceWorker(t, owner, adapter, adapter, adapter, adapter)
 	batch, err := worker.Claim(ctx, "v2", 1, time.Minute)
 	if err != nil || len(batch) != 1 {

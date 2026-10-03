@@ -5,7 +5,6 @@ package recovery_test
 import (
 	"bufio"
 	"context"
-	"crypto/rand"
 	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
@@ -45,7 +44,7 @@ type historicalFixture struct {
 	Commands []json.RawMessage
 	Migrate  func(context.Context) error
 	Versions func(context.Context) ([]historicalVersion, error)
-	Reopen   func(*testing.T) workStore
+	Scope    *ownedFixture
 	Fault    func(*testing.T, bool)
 	IsFault  func(error) bool
 	Expected []historicalVersion
@@ -159,7 +158,7 @@ func exerciseHistoricalUpgrade(t *testing.T, f *historicalFixture, fail bool) {
 		t.Fatalf("upgrade changed original pending responsibility: %+v %v", got, err)
 	}
 	// Close the actual product connection and continue on a freshly opened Host.
-	f.Store = f.Reopen(t)
+	f.Store = f.Scope.Replace(t)
 	h = historicalHost(f.Store)
 	assertHistoricalQueries(t, h, f)
 	assertHistoricalReplay(t, h, f)
@@ -186,7 +185,7 @@ func exerciseHistoricalUpgrade(t *testing.T, f *historicalFixture, fail bool) {
 	if err != nil || cleaned != demo.Cleaned {
 		t.Fatalf("upgraded original cleanup: %s %v", cleaned, err)
 	}
-	f.Store = f.Reopen(t)
+	f.Store = f.Scope.Replace(t)
 	h = historicalHost(f.Store)
 	got, err = h.Observe(contextFor(t), "v1-input", &historicalSubject)
 	if err != nil || !got.Input.BodyGone || got.Input.Text != "" || got.Input.StoredTextBytes != 0 || got.Input.Revision != 1 || got.Job.ID != f.Report.Observation.Job.ID || got.Job.State != "done" || got.Projection == nil || *got.Projection != projected {
@@ -269,41 +268,25 @@ func loadHistoricalFixture(t *testing.T, adapter, writer string) (string, map[st
 func restoreHistoricalSQLite(t *testing.T) *historicalFixture {
 	t.Helper()
 	_, files, f := loadHistoricalFixture(t, "sqlite", "f4fb0576bc0a1e3371fb88ab43f729beb9ddf118")
-	path := filepath.Join(t.TempDir(), "original-v1.sqlite")
+	scope := newOwnedFixture(t, "sqlite", false)
+	f.Scope = scope
+	path := scope.sq.Path
 	if err := os.WriteFile(path, files["database.sqlite"], 0600); err != nil {
 		t.Fatal(err)
 	}
-	// t.TempDir honors the root-controlled TMPDIR overlay; the checked-in file is never opened writable.
-	cfg := sqlite.Config{Path: path, TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond}
-	current, err := sqlite.Open(contextFor(t), cfg)
-	if err != nil {
+	if _, err := scope.Open(contextFor(t)); err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() {
-		if err := current.Close(); err != nil {
-			t.Error(err)
-		}
-	})
+	current := scope.SQLite()
 	f.Store = current
-	f.Migrate = func(ctx context.Context) error { return current.Migrate(ctx) }
+	f.Migrate = func(ctx context.Context) error { return scope.SQLite().Migrate(ctx) }
 	f.Versions = func(ctx context.Context) ([]historicalVersion, error) {
-		vs, err := current.MigrationVersions(ctx)
+		vs, err := scope.SQLite().MigrationVersions(ctx)
 		out := make([]historicalVersion, len(vs))
 		for i, v := range vs {
 			out[i] = historicalVersion{v.Version, v.Checksum}
 		}
 		return out, err
-	}
-	f.Reopen = func(t *testing.T) workStore {
-		if err := current.Close(); err != nil {
-			t.Fatal(err)
-		}
-		var err error
-		current, err = sqlite.Open(contextFor(t), cfg)
-		if err != nil {
-			t.Fatal(err)
-		}
-		return current
 	}
 	f.Fault = func(t *testing.T, install bool) {
 		// SQL is a declared test-only database boundary fault, never a business assertion.
@@ -351,35 +334,10 @@ func restoreHistoricalPG(t *testing.T) *historicalFixture {
 		t.Fatal("psql version check failed")
 	}
 	t.Logf("actual historical dump restore client: %s", strings.TrimSpace(string(version)))
-	dsn := os.Getenv("LERNA_TEST_POSTGRES_DSN")
-	if dsn == "" {
-		t.Fatal("LERNA_TEST_POSTGRES_DSN is required")
-	}
-	var nonce [12]byte
-	if _, err := rand.Read(nonce[:]); err != nil {
-		t.Fatal(err)
-	}
-	cfg := postgres.Config{DSN: dsn, Schema: "lerna_test_" + hex.EncodeToString(nonce[:]), TransactionTimeout: 3 * time.Second, StatementTimeout: 2 * time.Second, LockTimeout: time.Second}
-	scope, err := postgres.Open(contextFor(t), cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err = scope.CreateSchema(contextFor(t)); err != nil {
-		scope.Close()
-		t.Fatal(err)
-	}
-	// Only this successful CREATE registers schema ownership. Keep its administrative
-	// connection separately so closing/reopening product connections does not lose cleanup ownership.
-	t.Cleanup(func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-		if err := scope.DropTestSchema(ctx); err != nil {
-			t.Error(err)
-		}
-		if err := scope.Close(); err != nil {
-			t.Error(err)
-		}
-	})
+	scope := newOwnedFixture(t, "postgres", false)
+	f.Scope = scope
+	cfg := scope.pg
+	dsn := cfg.DSN
 	const fixed = "lerna_test_000000000000000000000001"
 	if f.Report.Schema != fixed {
 		t.Fatal("unexpected immutable dump schema")
@@ -412,35 +370,19 @@ func restoreHistoricalPG(t *testing.T) *historicalFixture {
 		}
 	}
 	t.Logf("complete historical dump restored with original psql metacommands; %v", copied)
-	current, err := postgres.Open(contextFor(t), cfg)
-	if err != nil {
+	if _, err := scope.Open(contextFor(t)); err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() {
-		if err := current.Close(); err != nil {
-			t.Error(err)
-		}
-	})
+	current := scope.PG()
 	f.Store = current
-	f.Migrate = func(ctx context.Context) error { return current.Migrate(ctx) }
+	f.Migrate = func(ctx context.Context) error { return scope.PG().Migrate(ctx) }
 	f.Versions = func(ctx context.Context) ([]historicalVersion, error) {
-		vs, err := current.MigrationVersions(ctx)
+		vs, err := scope.PG().MigrationVersions(ctx)
 		out := make([]historicalVersion, len(vs))
 		for i, v := range vs {
 			out[i] = historicalVersion{v.Version, v.Checksum}
 		}
 		return out, err
-	}
-	f.Reopen = func(t *testing.T) workStore {
-		if err := current.Close(); err != nil {
-			t.Fatal(err)
-		}
-		var err error
-		current, err = postgres.Open(contextFor(t), cfg)
-		if err != nil {
-			t.Fatal(err)
-		}
-		return current
 	}
 	f.Fault = func(t *testing.T, install bool) {
 		db, err := sql.Open("pgx", dsn)
