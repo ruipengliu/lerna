@@ -24,6 +24,9 @@ const labels: Record<string, string> = {
   confirmation_id: "原确认 ID",
   decision: "本人决定",
   prepare_deadline: "准备完成截止（UTC）",
+  title: "报告标题",
+  body: "报告正文",
+  save_path: "输出文件",
 };
 export function resolveSchema(value: unknown, depth = 0): Schema {
   if (depth > 8 || !isObject(value)) throw new Error("不支持此表单 Schema");

@@ -1,5 +1,5 @@
-import { Ajv2020, type ValidateFunction } from "ajv/dist/2020";
-import addFormats from "ajv-formats";
+import { Validator } from "@cfworker/json-schema";
+import type { Schema as ValidationSchema } from "@cfworker/json-schema";
 import { CORE_SCHEMA, CORE_SCHEMA_DIGEST } from "./contracts.gen";
 import { canonical, digest, jsonBytes, parseStrict, ProtocolError, sha256 } from "./json";
 import type {
@@ -156,17 +156,14 @@ const responseSchema = object({
   result_kind: { enum: ["receipt", "query_result", "error"] },
   payload: {},
 });
-function compiler(): Ajv2020 {
-  const ajv = new Ajv2020({
-    strict: false,
-    allErrors: false,
-    useDefaults: false,
-    coerceTypes: false,
-    removeAdditional: false,
-    validateFormats: true,
-  });
-  addFormats(ajv);
-  return ajv;
+type ValidateFunction = (value: unknown) => boolean;
+function compiler(): { compile: (schema: unknown) => ValidateFunction } {
+  return {
+    compile: (schema) => {
+      const validator = new Validator(structuredClone(schema) as ValidationSchema, "2020-12", true);
+      return (value) => validator.validate(value).valid;
+    },
+  };
 }
 const envelope = compiler();
 const validateError = envelope.compile(errorSchema);

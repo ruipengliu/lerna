@@ -9,6 +9,7 @@ import {
   publishOriginal,
   validateRecord,
   validateSchema,
+  newID,
 } from "@harness/sdk";
 import type {
   Amount,
@@ -166,7 +167,7 @@ export function usePublications(
         await publish(input as unknown as JSONValue, (ref) =>
           client.makeCommand(
             "task.submit",
-            client.registry.discovery.logical_service_id,
+            newID("task"),
             {
               orchestrator_id: client.registry.discovery.logical_service_id,
               goal_ref: ref as unknown as JSONValue,

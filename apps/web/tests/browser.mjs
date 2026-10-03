@@ -168,6 +168,9 @@ try {
   await page.getByRole("button", { name: "工作台", exact: true }).click();
   await page.locator(".advanced summary").click();
   await page.getByLabel("公开方法", { exact: true }).selectOption("task.submit");
+  await page
+    .getByLabel("固定目标 ID", { exact: true })
+    .fill(`task_${crypto.randomUUID().replaceAll("-", "")}`);
   await page.getByLabel("orchestrator_id", { exact: true }).fill(discovery.logical_service_id);
   await page.getByLabel("准确目标正文引用", { exact: true }).fill(JSON.stringify(goalRef));
   await page
