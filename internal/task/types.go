@@ -47,7 +47,12 @@ type TaskPolicy struct {
 	InputPolicyRef              api.ComponentRef `json:"input_policy_ref"`
 	RuleRegistryRef             api.ComponentRef `json:"rule_registry_ref"`
 }
+type AnswerSchemaDefinition struct {
+	Ref    api.ComponentRef
+	Schema api.Schema
+}
 type Config struct {
+	AnswerSchemas      []AnswerSchemaDefinition
 	Policies           []TaskPolicy
 	Rules              []api.RuleDefinition
 	MaxTasksPerSubject uint64
@@ -69,6 +74,15 @@ type LocalGate interface {
 	Authorize(context.Context, runtime.Tx, runtime.Auth, string, []api.ContentRef, []api.ObjectRef) error
 	Evidence(context.Context, runtime.Tx, api.Task, []api.ObjectRef, []api.ComponentRef) error
 }
+
+// EvidenceRegistration 供显式同库宿主从完整报告登记治理准确副本。
+// 这些入口只在调用方完成外部取证后运行，不读取网络或Content字节。
+type EvidenceRegistration interface {
+	RegisterCoverage(context.Context, runtime.Tx, api.Task, api.GoalCoverage) error
+	RegisterCheck(context.Context, runtime.Tx, api.Task, api.ConditionResult) error
+	BindResult(context.Context, runtime.Tx, api.Task, api.Result, []api.ObjectRef) error
+}
+
 type ContextPort interface {
 	Prepare(context.Context, runtime.Scope, runtime.Auth, api.Task) (PreparedDecision, error)
 }
@@ -152,8 +166,10 @@ type InputAnswer struct {
 	AnswerRef    api.ContentRef `json:"answer_ref"`
 }
 type InputOutput struct {
-	TaskRef            api.ObjectRef `json:"task_ref"`
-	ConsumedRequestRef api.ObjectRef `json:"consumed_request_ref"`
+	TaskRef            api.ObjectRef  `json:"task_ref"`
+	RequestRef         api.ObjectRef  `json:"request_ref"`
+	ConsumedRequestRef *api.ObjectRef `json:"consumed_request_ref,omitempty"`
+	State              string         `json:"state"`
 }
 type AcceptInput struct {
 	TaskID         string         `json:"task_id"`
@@ -602,4 +618,30 @@ type candidatePending struct {
 }
 type internalDocument struct {
 	Data json.RawMessage `json:"data"`
+}
+
+// RequestView/Closure 是消费方内部类型化接口，查询不改变原请求或Goal。
+type InputRequestView struct {
+	RequestRef   api.ObjectRef    `json:"request_ref"`
+	Request      api.InputRequest `json:"request"`
+	AnswerSchema json.RawMessage  `json:"answer_schema"`
+}
+type InputRequestListInput struct {
+	TaskID string `json:"task_id"`
+	Limit  uint64 `json:"limit"`
+	Cursor string `json:"cursor,omitempty"`
+}
+type ClosureView struct {
+	TaskRef        api.ObjectRef
+	GoalWorkClosed bool
+	EffectsClosed  bool
+	AccountingOpen bool
+	ProofRef       api.ContentRef
+}
+type pendingInput struct {
+	Revision  uint64       `json:"revision"`
+	CommandID string       `json:"command_id"`
+	Input     InputAnswer  `json:"input"`
+	Auth      runtime.Auth `json:"auth"`
+	State     string       `json:"state"`
 }

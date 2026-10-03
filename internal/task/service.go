@@ -43,10 +43,11 @@ const (
 )
 
 type Service struct {
-	config   Config
-	ports    Ports
-	policies map[string]TaskPolicy
-	rules    map[string]api.RuleDefinition
+	config        Config
+	ports         Ports
+	policies      map[string]TaskPolicy
+	rules         map[string]api.RuleDefinition
+	answerSchemas map[string]api.Schema
 }
 
 func New(config Config, ports Ports) (*Service, error) {
@@ -86,7 +87,7 @@ func New(config Config, ports Ports) (*Service, error) {
 	if !found {
 		config.Participants = append(config.Participants, Namespace)
 	}
-	s := &Service{config: config, ports: ports, policies: map[string]TaskPolicy{}, rules: map[string]api.RuleDefinition{}}
+	s := &Service{config: config, ports: ports, policies: map[string]TaskPolicy{}, rules: map[string]api.RuleDefinition{}, answerSchemas: map[string]api.Schema{}}
 	for _, p := range config.Policies {
 		if err := api.ValidateRecord("ComponentRef", p.PolicyRef); err != nil {
 			return nil, err
@@ -108,6 +109,25 @@ func New(config Config, ports Ports) (*Service, error) {
 			return nil, err
 		}
 		s.rules[componentKey(rule.RuleRef)] = rule
+	}
+	for _, definition := range config.AnswerSchemas {
+		if err := api.ValidateRecord("ComponentRef", definition.Ref); err != nil {
+			return nil, err
+		}
+		if err := closedAnswerSchema(definition.Schema); err != nil {
+			return nil, err
+		}
+		if _, err := api.NewValidator(definition.Schema); err != nil {
+			return nil, err
+		}
+		digest, err := api.Digest(definition.Schema)
+		if err != nil {
+			return nil, err
+		}
+		if digest != definition.Ref.Digest {
+			return nil, fmt.Errorf("answer schema digest mismatch")
+		}
+		s.answerSchemas[componentKey(definition.Ref)] = definition.Schema
 	}
 	return s, nil
 }

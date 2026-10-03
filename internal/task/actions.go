@@ -405,7 +405,10 @@ func (s *Service) MergeOperationTx(ctx context.Context, tx runtime.Tx, auth runt
 	}
 	mayApply, ok := operation.MayApplyLater.(bool)
 	if !ok {
-		return invalid("effect_lateness_unknown")
+		if text, valid := operation.MayApplyLater.(string); !valid || text != "unknown" {
+			return invalid("invalid_effect_lateness")
+		}
+		mayApply = true
 	}
 	r.SourceRevision = operation.Revision
 	r.SourceDigest = digest
@@ -423,11 +426,11 @@ func (s *Service) MergeOperationTx(ctx context.Context, tx runtime.Tx, auth runt
 	if r.Closed && r.Effect != "unknown" && !r.MayApplyLater {
 		t.NoProgress = 0
 	}
-	if e = s.saveTask(ctx, tx, &t); e != nil {
-		return e
-	}
 	if operation.ResultRef != nil {
 		t.CurrentArtifactRefs = appendUniqueContent(t.CurrentArtifactRefs, *operation.ResultRef)
+	}
+	if e = s.saveTask(ctx, tx, &t); e != nil {
+		return e
 	}
 	if _, e = raise(ctx, tx, JobReconcileOperation, "reconcile/"+operation.OperationID, tx.Scope().Ref(operation.OperationID, operation.Revision)); e != nil {
 		return e

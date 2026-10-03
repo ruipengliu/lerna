@@ -206,6 +206,9 @@ func (s *Service) ReconcileUsageTx(ctx context.Context, tx runtime.Tx, auth runt
 	if !auth.HasRole("service") && auth.SubjectID != u.SourceRef.OwnerID {
 		return Reservation{}, api.E("forbidden", "billing_owner_required")
 	}
+	if e := runtime.CheckRef(tx.Scope(), u.SourceRef); e != nil {
+		return Reservation{}, e
+	}
 	if e := api.ValidateRecord("UsageSnapshot", u); e != nil {
 		return Reservation{}, e
 	}
@@ -239,6 +242,9 @@ func (s *Service) ReconcileUsageTx(ctx context.Context, tx runtime.Tx, auth runt
 			return r, api.E("idempotency_conflict", "digest_conflict")
 		}
 		return r, nil
+	}
+	if r.State == "settled" && (!u.SpendingClosed || !u.UsageFinal) {
+		return r, api.E("invalid_state", "closed_spending_reopened")
 	}
 	cumulative := amountMap(u.Cumulative)
 	if len(cumulative) != len(r.Units) {

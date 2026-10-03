@@ -311,6 +311,9 @@ func (s *Service) CreateInputTx(ctx context.Context, tx runtime.Tx, auth runtime
 	if req.TargetRef.ObjectID != taskID || req.TargetRef.OwnerID != tx.Scope().OwnerID || req.GoalRevision == nil || *req.GoalRevision != t.Task.GoalRevision || req.State != "pending" {
 		return api.ObjectRef{}, invalid("invalid_input_request")
 	}
+	if _, ok := s.answerSchemas[componentKey(req.AnswerSchemaRef)]; !ok {
+		return api.ObjectRef{}, api.E("unsupported", "answer_schema_not_registered")
+	}
 	req.State = "pending"
 	req.Revision = 1
 	req.OwnerID = tx.Scope().OwnerID
@@ -330,7 +333,7 @@ func (s *Service) CreateInputTx(ctx context.Context, tx runtime.Tx, auth runtime
 	}
 	return tx.Scope().Ref(req.RequestID, 1), nil
 }
-func (s *Service) InputTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in InputAnswer) (InputOutput, error) {
+func (s *Service) ConsumeInputTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in InputAnswer) (InputOutput, error) {
 	if e := target(c, in.TaskID); e != nil {
 		return InputOutput{}, e
 	}
@@ -395,7 +398,7 @@ func (s *Service) InputTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 	if _, e = raise(ctx, tx, JobAdvance, "advance/"+in.TaskID, taskRef(tx, t)); e != nil {
 		return InputOutput{}, e
 	}
-	return InputOutput{TaskRef: taskRef(tx, t), ConsumedRequestRef: tx.Scope().Ref(req.RequestID, req.Revision)}, nil
+	return InputOutput{TaskRef: taskRef(tx, t), RequestRef: in.RequestRef, ConsumedRequestRef: func() *api.ObjectRef { r := tx.Scope().Ref(req.RequestID, req.Revision); return &r }(), State: "consumed"}, nil
 }
 func (s *Service) ControlWindowTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ControlWindowInput) (api.ControlSnapshot, error) {
 	if e := target(c, in.TaskID); e != nil {

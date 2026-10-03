@@ -71,7 +71,7 @@ type harness struct {
 	dispatch *runtime.Dispatcher
 }
 
-func newHarness(t *testing.T, ports task.Ports) *harness {
+func newHarness(t *testing.T, ports task.Ports, rules ...api.RuleDefinition) *harness {
 	t.Helper()
 	store, err := sqlite.Open(filepath.Join(t.TempDir(), "task.sqlite"))
 	if err != nil {
@@ -86,7 +86,7 @@ func newHarness(t *testing.T, ports task.Ports) *harness {
 		}
 	})
 	policy := fixturePolicy()
-	s, err := task.New(task.Config{Policies: []task.TaskPolicy{policy}}, ports)
+	s, err := task.New(task.Config{Policies: []task.TaskPolicy{policy}, Rules: rules, Participants: []string{"task", "governance"}}, ports)
 	if err != nil {
 		t.Fatal(err)
 	}
