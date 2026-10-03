@@ -15,6 +15,7 @@ import (
 
 	"github.com/coder/websocket"
 	"github.com/ruipengliu/lerna/api"
+	"github.com/ruipengliu/lerna/sdk/go/grpcwire"
 )
 
 type Limits struct {
@@ -337,6 +338,8 @@ type WSTransport struct {
 	controls map[string]bool
 	closed   bool
 	cancel   context.CancelFunc
+	endpoint *wsEndpoint
+	readDone chan struct{}
 }
 
 func DialWebSocket(ctx context.Context, address, token string, expected Discovery, allowDev bool) (*WSTransport, error) {
@@ -346,6 +349,9 @@ func DialWebSocket(ctx context.Context, address, token string, expected Discover
 // DialWebSocketWithHTTP uses an explicit TLS trust configuration without allowing
 // redirects or retries to move a command away from its fixed logical owner.
 func DialWebSocketWithHTTP(ctx context.Context, address, token string, expected Discovery, allowDev bool, httpClient *http.Client) (*WSTransport, error) {
+	return dialWebSocketWithEndpoint(ctx, address, token, expected, allowDev, httpClient, nil)
+}
+func dialWebSocketWithEndpoint(ctx context.Context, address, token string, expected Discovery, allowDev bool, httpClient *http.Client, endpoint *wsEndpoint) (*WSTransport, error) {
 	u, e := url.Parse(address)
 	if e != nil || u.User != nil || u.RawQuery != "" || u.Fragment != "" || u.Scheme != "wss" && !(allowDev && u.Scheme == "ws" && loopback(u)) {
 		return nil, api.E("forbidden", "tls_required")
@@ -373,9 +379,15 @@ func DialWebSocketWithHTTP(ctx context.Context, address, token string, expected 
 		return nil, api.E("unsupported", "ready_mismatch")
 	}
 	readCtx, cancel := context.WithCancel(context.Background())
-	t := &WSTransport{conn: conn, ready: ready, pending: map[uint64]wsPending{}, controls: map[string]bool{}, cancel: cancel}
+	t := &WSTransport{conn: conn, ready: ready, pending: map[uint64]wsPending{}, controls: map[string]bool{}, cancel: cancel, endpoint: endpoint, readDone: make(chan struct{})}
 	for _, method := range expected.Methods {
 		t.controls[method.Name] = api.IsControlMethod(method.Name)
+	}
+	if endpoint != nil {
+		if err := endpoint.start(readCtx, t); err != nil {
+			go t.readLoop(readCtx)
+			return nil, errors.Join(err, t.Close())
+		}
 	}
 	go t.readLoop(readCtx)
 	return t, nil
@@ -384,6 +396,10 @@ func (t *WSTransport) Close() error {
 	t.cancel()
 	e := t.conn.Close(websocket.StatusNormalClosure, "closed")
 	t.fail(api.E("dependency_unavailable", "connection_closed"))
+	<-t.readDone
+	if t.endpoint != nil {
+		e = errors.Join(e, t.endpoint.join())
+	}
 	return e
 }
 func (t *WSTransport) fail(err error) {
@@ -393,6 +409,7 @@ func (t *WSTransport) fail(err error) {
 		return
 	}
 	t.closed = true
+	t.cancel()
 	for seq, ch := range t.pending {
 		ch.result <- wsResult{err: err}
 		delete(t.pending, seq)
@@ -400,6 +417,7 @@ func (t *WSTransport) fail(err error) {
 	t.normal = 0
 }
 func (t *WSTransport) readLoop(ctx context.Context) {
+	defer close(t.readDone)
 	defer t.conn.CloseNow()
 	for {
 		kind, b, e := t.conn.Read(ctx)
@@ -434,6 +452,28 @@ func (t *WSTransport) readLoop(ctx context.Context) {
 			t.write.Unlock()
 			if e != nil {
 				t.fail(e)
+				return
+			}
+			continue
+		}
+		if tag.Type == "delivery" || tag.Type == "reply_ack" {
+			if t.endpoint == nil {
+				t.fail(api.E("unsupported", "endpoint_receiver_not_configured"))
+				return
+			}
+			frame, err := grpcwire.DecodeFrame(b)
+			if err == nil {
+				switch typed := frame.(type) {
+				case *grpcwire.Delivery:
+					err = t.endpoint.accept(*typed)
+				case *grpcwire.ReplyAck:
+					ackCtx, stop := context.WithTimeout(ctx, 5*time.Second)
+					err = t.endpoint.ack(ackCtx, *typed)
+					stop()
+				}
+			}
+			if err != nil {
+				t.fail(err)
 				return
 			}
 			continue

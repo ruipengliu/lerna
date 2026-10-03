@@ -16,14 +16,15 @@ import (
 const maxReplyJournalRecords = 128
 
 type ReplyEntry struct {
-	IdentityScope string             `json:"identity_scope"`
-	EndpointID    string             `json:"endpoint_id"`
-	InstanceID    string             `json:"instance_id"`
-	Generation    uint64             `json:"generation"`
-	Delivery      grpcwire.Delivery  `json:"delivery"`
-	Reply         grpcwire.Reply     `json:"reply"`
-	ReplyDigest   string             `json:"reply_digest"`
-	Ack           *grpcwire.ReplyAck `json:"ack,omitempty"`
+	IdentityScope string              `json:"identity_scope"`
+	EndpointID    string              `json:"endpoint_id"`
+	InstanceID    string              `json:"instance_id"`
+	Generation    uint64              `json:"generation"`
+	Delivery      grpcwire.Delivery   `json:"delivery"`
+	Reply         grpcwire.Reply      `json:"reply"`
+	ReplyDigest   string              `json:"reply_digest"`
+	Ack           *grpcwire.ReplyAck  `json:"ack,omitempty"`
+	Invocation    *EndpointInvocation `json:"invocation,omitempty"`
 }
 type ReplyJournal struct {
 	root                      *os.Root
@@ -68,6 +69,21 @@ func (j *ReplyJournal) read(id string) (ReplyEntry, error) {
 	}
 	if _, e = grpcwire.DecodeFrame(api.Raw(entry.Delivery)); e != nil {
 		return entry, e
+	}
+	if entry.Invocation != nil {
+		inv := entry.Invocation
+		if inv.Sequence == 0 || inv.Sequence > api.MaxSafeInteger || inv.Phase != "prepared" && inv.Phase != "started" || !api.ValidID(inv.IssuerServiceID) || !api.ValidID(inv.RecipientServiceID) || inv.IssuerServiceID != entry.Delivery.SenderServiceID || inv.Protocol != api.Protocol || inv.Profile == "" || len(inv.SchemaDigest) != 71 || len(inv.MethodSchemaDigest) != 71 || inv.IdentityRevision == 0 {
+			return entry, api.E("invalid_request", "invalid_endpoint_invocation")
+		}
+		if entry.ReplyDigest == "" {
+			if !api.Equal(entry.Reply, grpcwire.Reply{}) || entry.Ack != nil {
+				return entry, api.E("invalid_request", "unfinished_endpoint_invocation_has_reply")
+			}
+			return entry, nil
+		}
+		if inv.Phase != "started" {
+			return entry, api.E("invalid_request", "endpoint_reply_without_started_invocation")
+		}
 	}
 	if _, e = grpcwire.DecodeFrame(api.Raw(entry.Reply)); e != nil {
 		return entry, e
@@ -169,6 +185,13 @@ func (j *ReplyJournal) Save(ctx context.Context, d grpcwire.Delivery, reply grpc
 	defer j.mu.Unlock()
 	old, e := j.read(d.DeliveryID)
 	if e == nil {
+		if old.Invocation != nil && old.ReplyDigest == "" {
+			if old.Invocation.Phase != "started" || !api.Equal(old.Delivery, d) {
+				return api.E("invalid_state", "endpoint_invocation_not_started")
+			}
+			old.Reply, old.ReplyDigest = reply, digest
+			return j.write(old)
+		}
 		if old.ReplyDigest != digest || !api.Equal(old.Delivery, d) {
 			return api.E("idempotency_conflict", "original_reply_changed")
 		}
@@ -235,6 +258,9 @@ func (j *ReplyJournal) Pending(ctx context.Context, limit int) ([]ReplyEntry, bo
 			return nil, false, e
 		}
 		if entry.Ack != nil {
+			continue
+		}
+		if entry.ReplyDigest == "" {
 			continue
 		}
 		if len(out) >= limit {
