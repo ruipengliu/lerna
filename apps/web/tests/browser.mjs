@@ -10,6 +10,11 @@ const flow = process.env.HARNESS_BROWSER_FLOW ?? "full";
 assert(["full", "surface", "control"].includes(flow), "unsupported HARNESS_BROWSER_FLOW");
 const expectedEvent = process.env.HARNESS_EXPECT_EVENT ?? "applied";
 assert(["applied", "rejected"].includes(expectedEvent), "unsupported HARNESS_EXPECT_EVENT");
+const existingControlTask = process.env.HARNESS_CONTROL_TASK;
+if (existingControlTask) {
+  assert.equal(flow, "control", "HARNESS_CONTROL_TASK only applies to the control slice");
+  assert.match(existingControlTask, /^task_[0-9a-f]{32}$/);
+}
 const implementation = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 const artifacts = resolve(process.env.HARNESS_BROWSER_ARTIFACTS ?? "/tmp/harness-web-browser");
 const token = (
@@ -27,6 +32,7 @@ const sent = [];
 const replies = [];
 const connections = [];
 const pageErrors = [];
+const controlDecisions = [];
 let dropNextSubmit = false;
 let dropped;
 let corruptNextRender = false;
@@ -153,23 +159,36 @@ function lastReceipt(method, offset = 0) {
     );
 }
 async function control(id, label, method, gate) {
-  await selectTask(id);
-  await page.locator(".inspector").getByRole("button", { name: label, exact: true }).click();
-  const offset = replies.length;
-  await page
-    .locator(".method-console")
-    .getByRole("button", { name: "耐久保存并提交", exact: true })
-    .click();
-  const decided = await until(() => lastReceipt(method, offset), method);
-  assert.equal(
-    decided.response.payload.stage,
-    "applied",
-    `${method} must have a real business decision`,
-  );
-  await until(
-    async () => (await page.locator(".inspector").innerText()).includes(gate),
-    `${method} original authority state`,
-  );
+  for (let attempt = 0; attempt < 4; attempt++) {
+    // Each click is a fresh user intent after an authoritative read. The SDK never changes CAS.
+    await selectTask(id);
+    await page.locator(".inspector").getByRole("button", { name: label, exact: true }).click();
+    const offset = replies.length;
+    await page
+      .locator(".method-console")
+      .getByRole("button", { name: "耐久保存并提交", exact: true })
+      .click();
+    const decided = await until(() => lastReceipt(method, offset), method);
+    const command = decided.request.payload;
+    const receipt = decided.response.payload;
+    assert(!controlDecisions.some((decision) => decision.command_id === command.command_id));
+    controlDecisions.push({
+      command_id: command.command_id,
+      method,
+      target_id: id,
+      expected_revision: command.expected_revision,
+      stage: receipt.stage,
+      ...(receipt.error ? { error: receipt.error } : {}),
+    });
+    if (receipt.stage === "rejected" && receipt.error.code === "revision_conflict") continue;
+    assert.equal(receipt.stage, "applied", `${method} must have a real business decision`);
+    await until(
+      async () => (await page.locator(".inspector").innerText()).includes(gate),
+      `${method} original authority state`,
+    );
+    return;
+  }
+  throw new Error(`${method}: four explicit fresh control intents met concurrent revisions`);
 }
 async function publishText(value, media = "text/plain") {
   await page.getByRole("button", { name: "内容与记忆", exact: true }).click();
@@ -335,8 +354,16 @@ try {
 
   // A free goal stays incomplete until an exact registered answer is consumed.
   if (flow !== "surface") {
-    waitingID = await freeGoal(runID, config, discovery);
+    waitingID = existingControlTask ?? (await freeGoal(runID, config, discovery));
     taskIDs.push(waitingID);
+    if (existingControlTask) {
+      await selectTask(waitingID);
+      const existing = JSON.parse(await page.locator(".inspector details pre").textContent());
+      const controlState = (existing.task ?? existing).control;
+      if (controlState === "paused") await control(waitingID, "恢复", "task.resume", "running");
+      else assert.equal(controlState, "running", "existing control responsibility must be open");
+      checks.push("original paused control Task resumed with a new explicit CAS intent");
+    }
     await control(waitingID, "暂停", "task.pause", "paused");
     await control(waitingID, "恢复", "task.resume", "running");
     if (flow === "full") {
@@ -635,6 +662,7 @@ try {
     content_security_policy: contentSecurityPolicy,
     profile: discovery.profile,
     task_ids: taskIDs,
+    control_decisions: controlDecisions,
     presentation_id: currentPresentation?.presentation_id,
     application_event_id: eventView?.event_id,
     application_event_stage: eventView?.receipt.stage,
