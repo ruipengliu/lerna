@@ -82,3 +82,9 @@ SQLite票02合并最新 `6ccdb6d` 后的本地准确检查：make check/test-rac
 固定psql18.6工具生命周期race `1.560s`，完整PG/SQLite必需集成 `21.011s`、race `46.969s`，均-count=1/timeout120且实际重跑；原27来源manifest全部OK。包括all-members/current+claimed唤醒、真实Run重试窗口、零quota维护、PG取消/超时/driver cause与既有完整恢复行为。测试专用fault-holder有限10s，业务worker仍3s。两轴修复前失败及证据范围见[修复记录](code-review-fix-evidence.md)，未用新CI追溯抹去失败。
 
 独立Standards/Spec复核同准确6783307均新增0项，原3/1项分别关闭。整片02仍待最终架构候选选择/实施及退出汇总；此CI是修复整合检查点，不宣称尚未实现的fixture架构优化已通过。
+
+## fixture架构实施检查点（cleanup审查待修复）
+
+2026-10-03，准确提交 `c52e68b46c619df0c8e5df1b27a0b5dded3ef65f` 的 push run [37160694293](https://github.com/ruipengliu/lerna/actions/runs/37160694293) 为 completed/success。实际 contracts job111313333681、durable-admission job111313333571均success。
+
+日志确认固定psql18.6客户端，工具生命周期race2.430s；完整PG/SQLite mandatory count1集成19.986s、race45.207s，全部27项来源manifest OK。本检查点包含票10真实writer接替及原全部业务恢复路径，不代表随后审查发现的已确认失败holder清理缺口已关闭。两轴各1项P2由原单一review fixer处理；修复后仍需准确新CI及独立复核，whole02未退出。初版red新增两个未知PG scope名称，与旧04未知schema及07无CID限制分别保留；成功CI不追溯清理未知资源。
