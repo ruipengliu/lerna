@@ -359,6 +359,7 @@ func (s *Server) ready(w http.ResponseWriter, r *http.Request) {
 type queued struct {
 	bytes   []byte
 	control bool
+	valid   func(context.Context) (func(), error)
 }
 
 func (s *Server) reserveBytes(n int, control bool) bool {
@@ -442,9 +443,6 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 	}
 	d := s.manifest(a)
 	ready := harness.WSReady{Type: "ready", ConnectionID: connectionID, LogicalServiceID: s.config.OwnerID, Profile: api.Profile, TransportProfile: "harness-wss/1", MethodsDigest: d.MethodsDigest, Limits: d.Limits, IdentityScope: d.IdentityScope, IdentityRevision: d.IdentityRevision}
-	if e = conn.Write(ctx, websocket.MessageText, api.Raw(ready)); e != nil {
-		return
-	}
 	normal := make(chan queued, 28)
 	control := make(chan queued, 4)
 	ordinarySlots := make(chan struct{}, 28)
@@ -453,7 +451,7 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 	var writers sync.WaitGroup
 	var connMu sync.Mutex
 	connBytes := 0
-	enqueue := func(value any, priority bool) bool {
+	enqueueChecked := func(value any, priority bool, valid func(context.Context) (func(), error)) bool {
 		b := api.Raw(value)
 		n := len(b)
 		connMu.Lock()
@@ -471,7 +469,7 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 		}
 		connBytes += n
 		connMu.Unlock()
-		item := queued{b, priority}
+		item := queued{bytes: b, control: priority, valid: valid}
 		queue := normal
 		if priority {
 			queue = control
@@ -487,11 +485,64 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 			return false
 		}
 	}
+	enqueue := func(value any, priority bool) bool { return enqueueChecked(value, priority, nil) }
 	release := func(item queued) {
 		connMu.Lock()
 		connBytes -= len(item.bytes)
 		connMu.Unlock()
 		s.releaseBytes(len(item.bytes))
+	}
+	defer func() {
+		cancel()
+		conn.CloseNow()
+		pending.Wait()
+		writers.Wait()
+		for {
+			select {
+			case item := <-normal:
+				release(item)
+			case item := <-control:
+				release(item)
+			default:
+				return
+			}
+		}
+	}()
+	processor := s.config.Processor
+	if factory, ok := processor.(ConnectionProcessor); ok {
+		bound, err := factory.Open(ctx, a, ConnectionInfo{ConnectionID: connectionID, OwnerID: s.config.OwnerID, MethodsDigest: d.MethodsDigest, Emit: func(raw json.RawMessage, control bool) error {
+			if _, err := api.ParseJSONLimit(raw, 1<<20); err != nil {
+				return err
+			}
+			if !enqueue(raw, control) {
+				cancel()
+				conn.CloseNow()
+				return api.E("overloaded", "connection_control_or_output_queue_full")
+			}
+			return nil
+		}, EmitChecked: func(raw json.RawMessage, control bool, valid func(context.Context) (func(), error)) error {
+			if _, err := api.ParseJSONLimit(raw, 1<<20); err != nil {
+				return err
+			}
+			if !enqueueChecked(raw, control, valid) {
+				cancel()
+				conn.CloseNow()
+				return api.E("overloaded", "connection_control_or_output_queue_full")
+			}
+			return nil
+		}, Stop: func() { cancel(); conn.CloseNow() }})
+		if err != nil {
+			return
+		}
+		processor = bound
+		defer func() {
+			if err := bound.Close(); err != nil {
+				s.logger.Warn("connection processor close failed")
+			}
+		}()
+	}
+	if e = conn.Write(ctx, websocket.MessageText, api.Raw(ready)); e != nil {
+		return
 	}
 	writers.Add(1)
 	go func() {
@@ -535,27 +586,24 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 				cancel()
 				return
 			}
+			var releaseDisclosure func()
+			if item.valid != nil {
+				var err error
+				releaseDisclosure, err = item.valid(writeCtx)
+				if err != nil {
+					stop()
+					release(item)
+					continue
+				}
+			}
 			e := conn.Write(writeCtx, websocket.MessageText, item.bytes)
+			if releaseDisclosure != nil {
+				releaseDisclosure()
+			}
 			stop()
 			release(item)
 			if e != nil {
 				cancel()
-				return
-			}
-		}
-	}()
-	defer func() {
-		cancel()
-		conn.CloseNow()
-		pending.Wait()
-		writers.Wait()
-		for {
-			select {
-			case item := <-normal:
-				release(item)
-			case item := <-control:
-				release(item)
-			default:
 				return
 			}
 		}
@@ -593,6 +641,20 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 			}
 			continue
 		}
+		if object["type"] == "reply" {
+			incoming, ok := processor.(InboundConnection)
+			if !ok {
+				conn.Close(websocket.StatusPolicyViolation, "reply endpoint not configured")
+				return
+			}
+			replyCtx, stop := context.WithTimeout(ctx, 5*time.Second)
+			err := incoming.Receive(replyCtx, b)
+			stop()
+			if err != nil {
+				return
+			}
+			continue
+		}
 		var frame harness.WSRequest
 		if e = api.DecodeLimit(b, &frame, 1<<20); e != nil || frame.Type != "request" || frame.RequestSeq <= last || frame.RequestSeq > api.MaxSafeInteger {
 			conn.Close(websocket.StatusPolicyViolation, "invalid frame or sequence")
@@ -617,17 +679,33 @@ func (s *Server) connect(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 		pending.Add(1)
+		callCtx, stop := context.WithTimeout(ctx, 5*time.Second)
+		var original PendingResponse
+		var dispatchErr error
+		if ordered, ok := processor.(SequentialConnection); ok {
+			original, dispatchErr = ordered.Begin(callCtx, a, frame.RequestSeq, frame.Kind, frame.Payload)
+		}
 		go func(frame harness.WSRequest, priority bool, slots chan struct{}) {
 			defer pending.Done()
 			defer func() { <-slots }()
-			callCtx, stop := context.WithTimeout(ctx, 5*time.Second)
 			defer stop()
-			kind, body, e := s.config.Processor.Call(callCtx, a, frame.Kind, frame.Payload)
+			var kind string
+			var body json.RawMessage
+			e := dispatchErr
+			if e == nil && original != nil {
+				kind, body, e = original.Wait(callCtx)
+			} else if e == nil {
+				kind, body, e = processor.Call(callCtx, a, frame.Kind, frame.Payload)
+			}
 			if e != nil {
 				kind = "error"
 				body = api.Raw(publicError(e))
 			}
-			if !enqueue(harness.WSResponse{Type: "response", RequestSeq: frame.RequestSeq, ResultKind: kind, Payload: body}, priority) {
+			var valid func(context.Context) (func(), error)
+			if gate, ok := original.(DisclosureGate); ok {
+				valid = gate.BeginDisclosure
+			}
+			if !enqueueChecked(harness.WSResponse{Type: "response", RequestSeq: frame.RequestSeq, ResultKind: kind, Payload: body}, priority, valid) {
 				cancel()
 				conn.CloseNow()
 			}
