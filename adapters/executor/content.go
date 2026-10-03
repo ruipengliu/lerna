@@ -135,6 +135,7 @@ func (c deviceContent) Publish(ctx context.Context, s runtime.Scope, a runtime.A
 		} else if !api.IsCode(err, "not_found") {
 			return err
 		}
+		bases := []contentRecord{}
 		for _, source := range uniqueRefs(append(append([]api.ContentRef{}, permission.ProcessedSources...), permission.DisclosedSources...)) {
 			var basis contentRecord
 			if _, err := tx.Get(ctx, Namespace+".contents", contentKey(source), &basis); err != nil {
@@ -144,8 +145,13 @@ func (c deviceContent) Publish(ctx context.Context, s runtime.Scope, a runtime.A
 				return api.E("forbidden", "original_publication_source_mismatch")
 			}
 			permission.RetainUntil = earliest(permission.RetainUntil, basis.Permission.RetainUntil)
+			bases = append(bases, basis)
 		}
-		return tx.Create(ctx, Namespace+".contents", key, a.SubjectID, contentRecord{Permission: permission, Principal: PrincipalOf(a), Revision: 1, ChunkCount: chunkCount(ref.ByteLength), Complete: true, Published: true, ObjectKey: loc.Key})
+		policy, readers, err := c.h.outputPolicy(a, permission, bases)
+		if err != nil {
+			return err
+		}
+		return tx.Create(ctx, Namespace+".contents", key, a.SubjectID, contentRecord{Permission: permission, Principal: PrincipalOf(a), Revision: 1, ChunkCount: chunkCount(ref.ByteLength), Complete: true, Published: true, ObjectKey: loc.Key, SourcePolicy: policy, SourceReaders: readers, SourceState: "published", ControlRevision: 1})
 	})
 	if status == runtime.CommitUnknown {
 		return ref, runtime.ErrCommitUnknown
@@ -170,7 +176,32 @@ func (h *Host) contentGet(ctx context.Context, st runtime.Store, s runtime.Scope
 		return ContentChunk{}, err
 	}
 	var rec contentRecord
-	if _, err := st.Read(ctx, s, Namespace+".contents", contentKey(in.ContentRef), 0, &rec); err != nil {
+	status, err := st.Within(ctx, s, []string{Namespace}, func(tx runtime.Tx) error {
+		var e error
+		rec, e = h.sourceContentTx(ctx, tx, in.ContentRef)
+		if e != nil {
+			return e
+		}
+		if in.Reference != nil {
+			if !api.Equal(in.Reference.ContentRef, in.ContentRef) {
+				return api.E("forbidden", "source_copy_content_mismatch")
+			}
+			_, e = h.sourceProofTx(ctx, tx, a, *in.Reference, false)
+			return e
+		}
+		// 无 copy 的字节查询只保留原执行账务证据；普通产物必须登记当前门禁。
+		if !has(rec.Permission.Purposes, "execution_usage_proof") && !has(rec.Permission.Purposes, "executor_lease_usage_proof") {
+			return api.E("forbidden", "original_registered_copy_required")
+		}
+		if rec.SourceState != "published" {
+			return api.E("forbidden", "source_closed")
+		}
+		return nil
+	})
+	if status == runtime.CommitUnknown {
+		return ContentChunk{}, runtime.ErrCommitUnknown
+	}
+	if err != nil {
 		return ContentChunk{}, err
 	}
 	if !rec.Complete || !rec.Published || !api.Equal(in.ContentRef, rec.Permission.ContentRef) || in.ChunkIndex >= chunkCount(in.ContentRef.ByteLength) {

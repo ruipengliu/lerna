@@ -97,12 +97,34 @@ func validateBundle(b AdmissionBundle) error {
 	}
 	seen := map[string]bool{}
 	hasIntent, hasArgs := false, false
+	totalBytes := uint64(0)
 	for _, c := range b.Contents {
 		key := contentKey(c.ContentRef)
 		if seen[key] || c.ContentRef.TenantID != i.TaskRef.TenantID || c.ContentRef.ByteLength > MaxContentBytes || api.ValidateRecord("ContentRef", c.ContentRef) != nil || len(c.Purposes) == 0 || len(c.Purposes) > 32 {
 			return api.E("forbidden", "admission_content_permission_invalid")
 		}
 		seen[key] = true
+		totalBytes += c.ContentRef.ByteLength
+		if totalBytes > 32<<20 {
+			return api.E("invalid_request", "admission_total_content_bytes")
+		}
+		if c.SourcePolicy != nil {
+			p := c.SourcePolicy
+			policyDigest, err := api.Digest(p.Values)
+			if err != nil || policyDigest != p.PolicyRef.Digest || api.ValidateRecord("ComponentRef", p.PolicyRef) != nil || p.Revision == 0 || p.State != "active" || len(c.SubjectRefs) == 0 || len(c.SubjectRefs) > 32 || len(p.Values.Subjects) > 32 || len(p.Values.Purposes) > 100 || len(p.Values.Locations) > 4 {
+				return api.E("forbidden", "original_source_policy_invalid")
+			}
+			for _, subject := range c.SubjectRefs {
+				if api.ValidateRecord("ObjectRef", subject) != nil || subject.TenantID != b.Principal.TenantID || subject.OwnerID != b.AuthorityID || !has(p.Values.Subjects, subject.ObjectID) {
+					return api.E("forbidden", "original_source_subject_invalid")
+				}
+			}
+			if earliest(c.RetainUntil, p.Values.RetainUntil) != c.RetainUntil {
+				return api.E("forbidden", "source_policy_retention_expansion")
+			}
+		} else if len(c.SubjectRefs) != 0 {
+			return api.E("forbidden", "original_source_policy_missing")
+		}
 		t, e := api.ParseTime(c.RetainUntil)
 		if e != nil || before.After(t) {
 			return api.E("forbidden", "content_retention_window_expansion")

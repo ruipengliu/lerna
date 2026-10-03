@@ -12,3 +12,5 @@ go build -o /tmp/harness-executor ./cmd/executor
 `setup` 明确创建/迁移设备库、保存真实 database_id、初始化本机有限 peer 与目标根目录。重启 `serve` 必须使用原库、原签名密钥及原 instance；它不迁移数据库或恢复已撤权的凭据。TLS 最低 1.3，设备入口不提供明文开发例外。SIGTERM 先停止接纳并等待本机 worker/RPC 实际退出，再关闭 SQLite 和目标锁。配置及私钥/token 文件不进入仓库；凭据只通过文件路径引用，不使用命令行 token。
 
 配置合同是 [executor.Config](../../adapters/executor/host.go)，边界及准确方法见 [独立设备 adapter](../../adapters/executor/README.md)。当前文件驱动作为首个精确静态能力；多设备 GUI 与完整云端 ActionRegistry 的实际接入按工单 16 后续证据登记，不能由本入口编译通过推断。
+
+普通输出的可选 `output_subject_refs/output_purposes/output_locations` 是候选上限：每项仍与原签名输入策略和准确主体代次交集。不要把用户 ID 猜成 gen1；需要用户读取的云端准入先用原当前主体取得准确 `SourcePolicySnapshot`。配置省略时只开放原 Authority、每项原用途和 cloud；旧缓存没有来源策略快照时仅保留原 Attempt/账务，普通外部副本登记拒绝。

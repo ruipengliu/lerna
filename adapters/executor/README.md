@@ -10,6 +10,14 @@
 
 输出、证据和 UsageProof 保留设备的原 ContentRef 与准确来源。云端按原设备 owner 查询和补传，Task 与 Grant 只归并自己的账本。缺失来源正文必须返回明确缺口，不能生成同名替代 Content 或把 GoalRef 当作计费证明。真实双进程及故障验收结果将在工单 16 的完成依据中记录；本文的实现结构不代表外部真机、三 AZ 或生产资格。
 
+普通输出使用原 `content.register_copy/get/release_copy` 合同。消费方先冻结本方 `reference_intent`、原 copy/command 身份与 holder/代次，再取得 `executor.content.current` 的原设备签名；`SourceClient` 实现 Memory 的 `ForeignContentPort`。该证明固定原 ContentRef、PolicyRef/完整值、来源边、source database、copy/holder/intent、用途、地点、当前控制及有限期限。`mode=control` 只保留原副本停止/清理事实，不能作为新读取许可；只读镜像失联也不能打开新使用。`VerifyTx` 只验固定登记公钥和准确有限证明，不出站；Memory 继续核自己的 held_copy_gate 和当前主体。
+
+`ContentPermission.SourcePolicy/SubjectRefs` 是原云端 Authority 对准确输入来源的当前策略和主体代次快照，由原 AdmissionBundle 整体签名。`SourcePolicySnapshot` 必须来自原 Memory 当前读取用例；不能由适配器猜测其他主体代次。输出许可取全部 processed/disclosed 来源的主体、用途、地点及保留期交集，再受显式 `OutputSubjectRefs/OutputPurposes/OutputLocations` 配置收窄。省略配置只选择原 Authority 主体、该结果原用途和 cloud。旧 bundle 缺策略快照仍能恢复原缓存、Attempt 和账务；它不能新登记普通外部副本。每个输入至多 16 MiB，原 bundle 输入总量至多 32 MiB。
+
+`executor.content.get` 的普通正文必须附准确已登记 `ForeignReference`，每个块重新核源 gate，最后独立核全量 hash/size。没有副本登记的查询仅允许原执行账务证据的窄用途。设备源 owner 的 `ClosePublishedContent` 管理端口先原子保存关闭与有界 holder 影响 Job；有限传输 peer 无此管理权。数据过期、停止及物理清理分别记账：实际 cleanup 未有源端可核的准确证据时报告 pending/unknown/residual，不能标 complete。收尾第一次实际报告先由 SDK journal 保存有限十分钟命令，重放保留原 TTL，与正文 retention 独立。
+
+主体撤权的 `Revocation.ObjectRef.Revision` 明确表示实际被撤销的 credential generation 上界。旧代和旧签名准入继续拒绝；更高代必须重新取得完整 Authority 签名准入、原 lease 和配置上限。Grant/Task/lease 撤回继续封原责任。当前同主体较新代只可收尾原 holder，其签名仍固定原 holder 代次；它不能用旧副本许可取得正文。
+
 `executor.lease.usage.get` 先取得同一本机 Execution 的实际累计用量，按原 use/source/revision 归并本机 lease，再发布独立 LeaseUsageProof 和原闭合引用。报告签名包含原设备 database_id、endpoint/instance、Cloud LeaseRef 和完整 UsageSnapshot 摘要。云端只调用原 `ApplyLeaseReportTx` 归并这一分配；同一个原 Cloud lease use 不再调用普通 `ApplySettlementTx`。Task 预算仍单独消费原 Operation Usage，不能把 lease 的源身份替代 Operation。
 
-[独立进程入口](../../cmd/executor/README.md) 与 `Dial/Client` 使用真实 TLS、固定设备 owner/instance/database、有限 peer 文件凭据及 GoSDK fsync journal。已验证实际 CLI 子进程 SIGTERM 退出、丢回复后原回执恢复，以及 PostgreSQL Authority 的原一次 USD 1 预留与 SQLite 设备零费用闭合补传、不重复扣费。该 PG 用例预置了受信批准的 Grant 和准入 Task 引用；完整公开 Task/Brain 装配及普通 foreign Content 的来源登记由工单 16／23 后续共同验证，尚未据此宣称完成。
+[独立进程入口](../../cmd/executor/README.md) 与 `Dial/Client` 使用真实 TLS、固定设备 owner/instance/database、有限 peer 文件凭据及 GoSDK fsync journal。已验证实际 CLI 子进程 SIGTERM 退出、丢回复后原回执恢复，以及 PostgreSQL Authority 的原一次 USD 1 预留与 SQLite 设备零费用闭合补传、不重复扣费。该 PG 用例预置了受信批准的 Grant 和准入 Task 引用；设备来源登记另有真实 TLS/两个 SQLite owner 的正反例，完整公开 Task/Brain 与云端 Memory 的来源门禁由工单 16／23 后续共同验证，尚未据此宣称完成。
