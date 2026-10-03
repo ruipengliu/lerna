@@ -1,6 +1,14 @@
 package governance
 
-import "github.com/ruipengliu/lerna/api"
+import (
+	"github.com/ruipengliu/lerna/api"
+	"github.com/ruipengliu/lerna/runtime"
+)
+
+// EvaluationSampleRunRef 供真实入口核验 prepare 许可的原逻辑样本身份。
+func EvaluationSampleRunRef(scope runtime.Scope, planID, sampleID, arm string) api.ObjectRef {
+	return scope.Ref(digestID("sample", []string{planID, sampleID, arm}), 1)
+}
 
 type ImprovementPolicy struct {
 	ID                 string           `json:"id"`
