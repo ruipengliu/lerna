@@ -70,15 +70,16 @@ type CellPreparation struct {
 	Sources                   []api.ContentRef `json:"sources"`
 }
 type PreparedRequest struct {
-	Encoded           json.RawMessage  `json:"encoded"`
-	Cell              *CellPreparation `json:"cell,omitempty"`
-	Digest            string           `json:"digest"`
-	TargetRequestKey  string           `json:"target_request_key,omitempty"`
-	IdempotencyUntil  string           `json:"idempotency_until,omitempty"`
-	ResourceID        string           `json:"resource_id,omitempty"`
-	ResourceEpoch     uint64           `json:"resource_epoch,omitempty"`
-	ObservationID     string           `json:"observation_id,omitempty"`
-	ObservationBefore string           `json:"observation_before,omitempty"`
+	Encoded                  json.RawMessage  `json:"encoded"`
+	Cell                     *CellPreparation `json:"cell,omitempty"`
+	Digest                   string           `json:"digest"`
+	TargetRequestKey         string           `json:"target_request_key,omitempty"`
+	IdempotencyUntil         string           `json:"idempotency_until,omitempty"`
+	ResourceID               string           `json:"resource_id,omitempty"`
+	ResourceEpoch            uint64           `json:"resource_epoch,omitempty"`
+	ObservationID            string           `json:"observation_id,omitempty"`
+	ObservationBefore        string           `json:"observation_before,omitempty"`
+	ObservationTargetVersion string           `json:"observation_target_version,omitempty"`
 }
 type AttemptRequest struct {
 	Scope   rt.Scope

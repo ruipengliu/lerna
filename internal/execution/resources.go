@@ -397,7 +397,7 @@ func (s *Service) resourceBarrier(ctx context.Context, tx rt.Tx, op operationRec
 	if _, err = tx.Get(ctx, Namespace+".observations", a.Prepared.ObservationID, &obs); err != nil {
 		return err
 	}
-	if obs.Result == nil || obs.Result.ControlEpoch != lease.ControlEpoch || obs.Result.InstanceID != lease.InstanceID || obs.Result.ActionBefore != a.Prepared.ObservationBefore {
+	if obs.Result == nil || obs.Input.ResourceID != lease.ResourceID || obs.Result.ResourceRef.TenantID != tx.Scope().TenantID || obs.Result.ResourceRef.OwnerID != tx.Scope().OwnerID || obs.Result.ResourceRef.ObjectID != lease.ResourceID || obs.Result.ControlEpoch != lease.ControlEpoch || obs.Result.InstanceID != lease.InstanceID || obs.Result.ActionBefore != a.Prepared.ObservationBefore || a.Prepared.ObservationTargetVersion == "" || obs.Result.TargetVersion != a.Prepared.ObservationTargetVersion {
 		return api.E("revision_conflict", "observation_stale")
 	}
 	matched := false
