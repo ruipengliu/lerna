@@ -102,21 +102,29 @@ type ResultNoticeSink interface {
 	RecordNoticeTx(context.Context, runtime.Tx, ResultNotice) error
 }
 
+// GrantMetadataGate checks current credentials and metadata visibility in the
+// caller's database transaction. Its digest covers the current authority state;
+// it must not perform network or Content I/O.
+type GrantMetadataGate interface {
+	VisibilityTx(context.Context, runtime.Tx, runtime.Auth) (string, error)
+}
+
 type Options struct {
-	KnowledgeGate   KnowledgeGate
-	ResultNotices   ResultNoticeSink
-	PreviewGate     PreviewGate
-	Participants    []string
-	OfflineGate     OfflineGate
-	CalibrationGate CalibrationGate
-	FormalPlanGate  FormalPlanGate
-	EndpointID      string
-	InstanceID      string
-	Content         ContentPort
-	UsageVerifier   UsageVerifier
-	Proof           ProofPort
-	Lifecycle       LifecyclePort
-	Runner          EvaluationRunner
+	GrantMetadataGate GrantMetadataGate
+	KnowledgeGate     KnowledgeGate
+	ResultNotices     ResultNoticeSink
+	PreviewGate       PreviewGate
+	Participants      []string
+	OfflineGate       OfflineGate
+	CalibrationGate   CalibrationGate
+	FormalPlanGate    FormalPlanGate
+	EndpointID        string
+	InstanceID        string
+	Content           ContentPort
+	UsageVerifier     UsageVerifier
+	Proof             ProofPort
+	Lifecycle         LifecyclePort
+	Runner            EvaluationRunner
 }
 
 type Service struct {

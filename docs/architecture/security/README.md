@@ -121,3 +121,11 @@ RLS、代码级资源核验、凭据范围和进程隔离叠加使用。后台 w
 授权不可达阻止依赖它的新使用；不相关租户不必全局停机。当前控制无法耐久提交时不能回复“取消成功”。原动作已经可能发送，则保留效果、用量和停止核对，不能因授权后来消失而伪造未发生。
 
 凭据、许可和账本从旧备份恢复前，必须补齐后续撤权和关闭事实；缺历史时只开放安全诊断。可信时间证据失效时不延长 use/lease，也不先回收旧槽再期待旧实例停止。具体时间证明和灾备门槛见[生产运行](../production/README.md)。
+
+## 9 Grant 元数据列表的有界参考合同
+
+`grant.list` 接受共同 `ListInput`（limit 1–100、可选 cursor），返回 `Page<GrantRecord>`；target 是原 owner。每页先在同库 Tx 核验当前主体、凭据代次和角色。普通主体只见与自己的完整 SubjectRef 相同的 Grant，当前 `grant_authority` 可见本 tenant/owner 的全部 Grant；maintainer 本身不扩大该范围。记录中的撤回、起始/到期时间及 once/用量均保持原事实，列表不授予使用权，也不读取 Content 正文或查询远端来源。
+
+此参考配置每个 tenant/owner 最多扫描 999 个 Grant 及其原 GrantUsage，完整元数据上限 256 KiB。两轮有界同库扫描须得到同一完整集合摘要；改变时要求重新取快照，不把部分结果当全集。集合 revision 为 1 加全部 Grant 与 GrantUsage 的记录 revision 之和，溢出安全整数范围时拒绝。列表不新增 Grant 集合全局锁，不改变授权使用的锁序。
+
+每个 tenant/owner 有 100 个耐久的原首查询槽，仅首次 QueryBinding 期限过后可复用。槽固定原 query_id、查询摘要、scope、主体代次、角色和当前身份门禁摘要、完整集合摘要及私有 HMAC key。游标签名绑定槽生命周期、已授权 afterID、limit 和准确期限；首次期限不超过原 QueryBinding 及集合最早的未来 not_before/expires_at，后页还取自身原查询期限的交集，绝不续期。重复查询和重开沿原槽恢复相同游标。issue、revoke、usage、当前凭据/角色或时间边界变化后，旧页分别返回 snapshot_required、forbidden 或 cursor_expired；旧 owner/tenant 的游标不能用于新 scope。槽已满返回 overloaded，不清除尚未到期的原责任。

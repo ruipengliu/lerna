@@ -8,6 +8,12 @@
 
 ## 权限与可信确认
 
+`grant.list` 使用共同 `ListInput` 和 `Page<GrantRecord>`，target 是原 owner，limit 为 1–100。宿主必须装配纯同库 `Options.GrantMetadataGate.VisibilityTx` 并声明实际凭据 participant；缺门禁时 fail closed。每页核当前凭据代次/角色，普通主体只见完整本人 SubjectRef 的记录，当前 grant_authority 可见本 tenant/owner 全集。maintainer 不扩大范围；列表包含撤回/到期、原 once 和当前数额事实，不代替 grant.check，也不读取 Content 正文或调用 Source。
+
+参考界为最多 999 个 Grant、原 Usage 及 256 KiB 完整元数据。两轮有界非锁扫描核完整集合摘要，不增加全局 HeadLock，不改变 Use 的 Grant/Usage 锁序。collection_revision 是 1 加全部 Grant/Usage 记录 revision 的安全整数和；满界或溢出明确 overloaded。
+
+100 个耐久原首查询槽保存 scope、query_id/摘要、当前身份门禁及完整集合摘要、准确首次 QueryBinding 期限和私有 HMAC key。游标签名 afterID/limit/槽生命周期/期限，后页只收窄原期限，重复查询和数据库重开恢复原游标。只有原 QueryBinding 到期可复用槽。issue、已确认 revoke、usage、凭据/角色或时间边界变化拒旧页；等待本人确认的 revoke 不冒充已撤回事实。完整合同见[安全 §9](../../docs/architecture/security/README.md#9-grant-元数据列表的有界参考合同)。
+
 `grant.issue`、`grant.revoke`、`policy.acceptance.create`、`release.approval.create` 先接纳原命令，再由准确本人会话确认。`confirmation.read` 返回原完整闭合命令及其 JCS 摘要，Renderer 必须准确展示完整输入和全部预览字节。批准回执只记录决定；原业务消费确认、当前预览披露门禁与业务写入共同提交后，原命令才 applied。`PreviewGate` 只证明当前允许披露，不声称本人已阅读。
 
 撤回先沿不可变出生版本定位，核准确预览的当前来源门禁，再锁当前 Grant 并校验原 CAS；首次 pending 也拒绝旧 GrantRef。预览门禁的数据库、context、依赖或效果未知错误保留原原因与 accepted 责任，恢复仍消费原确认、原命令和原 Job；确定撤回的预览继续拒绝。公共 Dispatcher 与真实 SQLite/PG 观察门禁覆盖该锁序和恢复，不把锁观察夹具称为已测死锁。
@@ -41,5 +47,7 @@ Runner 必须在候选不能写的真值边界中预检两臂、按原环境键�
 ## 验证范围
 
 `go test ./internal/governance` 使用真实 SQLite 文件。设置 `HARNESS_GOVERNANCE_POSTGRES_DSN` 后同套件改用真实 PostgreSQL；未配置不会声称 PG 通过。`go test -race ./internal/governance` 验并发门禁和过期回调。
+
+授权列表专项为 `go test -race ./internal/governance -run '^TestGrantList' -count=1`，使用实际 platform 凭据源和受信 ProvisionGrantTx 初始集合；issue/revoke/Use 沿公开 Dispatcher。固定源码 `30478f5` 在真实 SQLite/PG17 的专项 race 分别通过 182.721/189.910 秒，覆盖 205 项分页、当前角色/代次/撤销、篡改与跨 scope、集合改变、自然时间边界、100 槽、容量界、原 query/cursor 重开及并发 Use。`TestGrantListPublicTLSDiscoveryAndGoSDKUseCurrentMetadataGate` 经真实 App 管理角色、HTTPS、认证发现和 Go SDK 在双库通过 39.14 秒。TS/Native 同源生成漂移和 vet 通过；该专项不代表全包 race、生产 SSO 或全项目 CI 已通过。原查询 refs/退出码/日志摘要保存在外部 `grant-list-verification.json` 制品。
 
 夹具明确预置当前用户/会话、准确预览来源、正式数据绑定和计费/实例外部边界；不以 mock 数据库证明事务。真实文件夹具验证 A/B 回调竞争、完整当前批次、独立批准回退、原设备租约及 ES256 篡改拒绝；12 个固定字节样本在两个独立实际目录运行并以独立真值读回，验证原统计及迟到失败。1001 个样本取消验证 2002 个 sample-arm 分母及分页恢复。它们不证明自然语言质量、1000 目标 API、生产数据治理、真实供应商计价、跨 AZ 或任意扩展隔离。
