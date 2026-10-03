@@ -57,6 +57,8 @@ Depends on: [01](../lerna-01-command-contracts/spec.md)
 
 ## Further Notes
 
+2026-10-03，票02 SQLite 接纳已完成；实际 v1 writer `f4fb057`、两库共同接纳套件、真实文件/进程排除/busy/取消/关闭生命周期及 v1 恢复来源见 [票02证据](issues/02-sqlite-durable-admission.md#comments)。本片仍 in-progress，未把部分接纳出口当全部领取、调度或崩溃恢复完成。
+
 进程崩溃测试不等于断电或可用区耐久证明。首次生产的同步提交、故障域和旧主隔离在 17 验收。
 
 依赖项表示实现先决条件；`ready-for-agent` 表示规格已明确，不表示依赖已完成或能力已开放。全部验收通过并附准确版本、环境、命令、结果和限制后，才可将本切片记为完成。共同执行与证据规则见[切片索引](../lerna-implementation/README.md)。

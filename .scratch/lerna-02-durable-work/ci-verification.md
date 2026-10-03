@@ -20,3 +20,9 @@
 2026-10-03，通过实际 Actions API/job 日志核实提交 `e8e3384e4cce1f63187ff84f281283a023e07ab1`：push run [37146622433](https://github.com/ruipengliu/lerna/actions/runs/37146622433) 为 `completed / success`。`contracts` job `111271789953`、`postgres-admission` job `111271790111` 均 success。
 
 真实29项PG套件集成 `2.534s`、race `4.866s`，未显示 cached；原五项 v1 artifact 校验和仍全部 OK。票03的代码 `18b80ce` 已整合并在此远端提交验证。范围包括一致领取快照、修订竞争、续租、到期／接替及受控数据库写入隔离；SQLite、调度、完整历史数据升级、SIGKILL与切片02整体仍未退出。
+
+## SQLite 接纳本地检查点
+
+票02 writer源码 `f4fb057` 已锁定；两库共享接纳套件、SQLite文件/配置/进程排除/Busy/取消/Close与真实v1恢复已本地通过。必需make集成及CI集成race已使用-count=1，并同时执行PG与SQLite；新版远端tip仍由root后续核实，不能引用上面的PG-only历史run当两库成功。详细本地命令/运行时/来源见[票02 Comments](issues/02-sqlite-durable-admission.md#comments)。
+
+SQLite票02合并最新 `6ccdb6d` 后的本地准确检查：make check/test-race成功；两库make test-integration顺序执行成功（7.501s），随后两库integration-race成功（15.058s），均-count=1。一次同时运行普通/race遇到现有PG跨schema advisory锁域耦合的合法skip导致测试失败，已如实记入票02 Comments并交独立决策；随机schema仅证明数据及清理隔离，未声称锁域完全隔离。新两库远端CI仍待root实际核实。

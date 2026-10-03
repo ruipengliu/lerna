@@ -19,7 +19,7 @@ jobs:
       - run: npm install --global pnpm@12.8.1
       - run: make bootstrap
       - run: make check
-  postgres-admission:
+  durable-admission:
     runs-on: ubuntu-24.04
     services:
       postgres:
@@ -42,6 +42,6 @@ jobs:
       - run: make test-integration
         env:
           LERNA_TEST_POSTGRES_DSN: postgres://lerna_test:fixture-only-password@127.0.0.1:5432/lerna_integration?sslmode=disable
-      - run: go test -race -tags=integration -timeout=120s ./conformance/recovery/...
+      - run: go test -count=1 -race -tags=integration -timeout=120s ./conformance/recovery/...
         env:
           LERNA_TEST_POSTGRES_DSN: postgres://lerna_test:fixture-only-password@127.0.0.1:5432/lerna_integration?sslmode=disable

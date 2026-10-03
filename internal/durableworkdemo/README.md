@@ -5,8 +5,8 @@ This package is the A-stage, same-version Host demonstration consumer. It owns
 revision preconditions and the minimal input/observation Repository interface.
 It is not a public SDK, Task domain or general business framework.
 
-The current consumers are `host/durablework` and the fixture/real-PG harness.
-PostgreSQL implements the consumer-owned Repository alongside runtime ports;
+The current consumers are `host/durablework` and the fixture/real-database harness.
+PostgreSQL and SQLite implement the consumer-owned Repository alongside runtime ports;
 the host explicitly injects the same owner/database transaction bundle. This
 package imports neither host/cmd nor a concrete adapter. It preserves exact
 text and creates pending project responsibility. `Worker` consumes its separate
@@ -18,4 +18,6 @@ increments the input revision.
 
 See the [Host seam](../../host/durablework/README.md) for accepted commands,
 query authorization and tests, and [storage](../../adapters/postgres/README.md)
-for transaction/SQL behavior. SQLite Claim and scheduling remain later tickets.
+and [SQLite storage](../../adapters/sqlite/README.md) for transaction/SQL behavior.
+The current Worker implementation uses PostgreSQL; SQLite Claim and scheduling
+remain later tickets.

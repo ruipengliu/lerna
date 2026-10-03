@@ -16,7 +16,7 @@ Inject finite contexts and short transaction configuration. A transaction token
 belongs to an exact adapter/database binding and owner, and expires after its
 callback. Repositories reuse it; callbacks may not wait on external I/O or users.
 The default PG clock reads database `clock_timestamp()` after original-key locking.
-Tests may replace only the clock boundary with a deterministic shared clock.
+SQLite uses the trusted device UTC wall clock. Tests may replace only the clock boundary with a deterministic shared clock.
 
 `NewWorker` assembles a separate Claim consumer; admission-only adapters need
 not implement it. It uses one trusted owner clock shared by all workers, with
@@ -38,7 +38,10 @@ original command reference and `query_or_retransmit_original`; pre-COMMIT errors
 roll back, while unproven COMMIT errors remain unknown.
 
 Run `make test-integration` with explicitly supplied `LERNA_TEST_POSTGRES_DSN` for
-a dedicated PostgreSQL 18.6 test database. Each test owns a random schema and only
-cleans that schema. Missing configuration or services fail. `make check` requires
-no database. See [PG storage](../../adapters/postgres/README.md) and
+a dedicated PostgreSQL 18.6 test database. Both PostgreSQL and real file SQLite
+run the shared admission suite. PG tests own random schemas; SQLite tests own
+temporary files. Cleanup is restricted to those ranges. Missing configuration,
+services or Linux/CGO support fails. `make check` requires no external database.
+See [PG storage](../../adapters/postgres/README.md),
+[SQLite storage](../../adapters/sqlite/README.md) and
 [v1 upgrade input](../../conformance/fixtures/durable-work/pg-v1/README.md).

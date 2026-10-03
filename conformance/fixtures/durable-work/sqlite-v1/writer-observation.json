@@ -1,0 +1,97 @@
+{
+  "Migration": {
+    "Version": 1,
+    "Checksum": "sha256:324dd9c72a00438095596b59c80bf21e66a02eb53d7182ddba67e4784e2c0203"
+  },
+  "Settings": {
+    "JournalMode": "wal",
+    "SQLiteVersion": "3.53.4",
+    "Synchronous": 2,
+    "ForeignKeys": 1,
+    "BusyTimeout": 100
+  },
+  "Outcomes": [
+    {
+      "status": "received",
+      "receipt": {
+        "state": "applied",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "fixture-tenant",
+            "owner_id": "fixture-owner"
+          },
+          "command_id": "applied-original"
+        },
+        "object_ref": {
+          "tenant_id": "fixture-tenant",
+          "owner_id": "fixture-owner",
+          "kind": "durable_work",
+          "id": "v1-input",
+          "revision": "1"
+        },
+        "revision": "1",
+        "next_action": "query_original"
+      }
+    },
+    {
+      "status": "received",
+      "receipt": {
+        "state": "rejected",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "fixture-tenant",
+            "owner_id": "fixture-owner"
+          },
+          "command_id": "expired-original"
+        },
+        "reason": "expired",
+        "next_action": "resolve_rejection"
+      }
+    },
+    {
+      "status": "received",
+      "receipt": {
+        "state": "applied",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "fixture-tenant",
+            "owner_id": "fixture-owner"
+          },
+          "command_id": "applied-original"
+        },
+        "object_ref": {
+          "tenant_id": "fixture-tenant",
+          "owner_id": "fixture-owner",
+          "kind": "durable_work",
+          "id": "v1-input",
+          "revision": "1"
+        },
+        "revision": "1",
+        "next_action": "query_original"
+      }
+    }
+  ],
+  "Observation": {
+    "Input": {
+      "ID": "v1-input",
+      "Revision": 1,
+      "Text": "PG v1 portable input 🌍",
+      "CreatedAt": "2026-10-03T19:04:56.904420328Z",
+      "UpdatedAt": "2026-10-03T19:04:56.904420328Z"
+    },
+    "Job": {
+      "ID": "job-98f9d7df24606abca55c3f893fccead0",
+      "Object": {
+        "tenant_id": "fixture-tenant",
+        "owner_id": "fixture-owner",
+        "kind": "durable_work",
+        "id": "v1-input"
+      },
+      "Phase": "project",
+      "WorkRevision": 1,
+      "CompletedRevision": 0,
+      "State": "ready",
+      "DueAt": "2026-10-03T19:04:56.904420328Z"
+    }
+  }
+}
