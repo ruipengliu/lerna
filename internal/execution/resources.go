@@ -448,7 +448,7 @@ func (s *Service) observationContract(name, kind string, accepted bool) api.Meth
 	}
 	properties := c.OutputSchema["properties"].(map[string]any)
 	observation := properties["observation"].(map[string]any)
-	data := api.Object(map[string]any{})
+	data := api.Schema{"type": "object", "properties": map[string]any{}, "required": []string{}, "additionalProperties": false}
 	if d, ok := s.cfg.ResourceDriver.(ObservationSchemaDriver); ok {
 		data = d.ObservationSchema()
 	}
