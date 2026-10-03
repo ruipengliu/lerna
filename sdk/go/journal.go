@@ -9,16 +9,18 @@ import (
 	"path/filepath"
 	"sort"
 	"sync"
+	"syscall"
 
 	"github.com/ruipengliu/lerna/api"
 )
 
 type Entry struct {
-	IdentityScope string       `json:"identity_scope"`
-	SchemaDigest  string       `json:"schema_digest"`
-	Command       api.Command  `json:"command"`
-	Digest        string       `json:"digest"`
-	Receipt       *api.Receipt `json:"receipt,omitempty"`
+	IdentityScope      string       `json:"identity_scope"`
+	SchemaDigest       string       `json:"schema_digest"`
+	MethodSchemaDigest string       `json:"method_schema_digest,omitempty"`
+	Command            api.Command  `json:"command"`
+	Digest             string       `json:"digest"`
+	Receipt            *api.Receipt `json:"receipt,omitempty"`
 }
 type Journal interface {
 	Save(context.Context, Entry) error
@@ -27,6 +29,7 @@ type Journal interface {
 }
 type FileJournal struct {
 	root  *os.Root
+	lock  *os.File
 	mu    sync.Mutex
 	scope string
 }
@@ -42,9 +45,28 @@ func OpenJournal(path, identityScope string) (*FileJournal, error) {
 	if e != nil {
 		return nil, e
 	}
-	return &FileJournal{root: r, scope: identityScope}, nil
+	lock, e := r.OpenFile(".journal.lock", os.O_CREATE|os.O_RDWR|syscall.O_NOFOLLOW, 0600)
+	if e != nil {
+		r.Close()
+		return nil, e
+	}
+	return &FileJournal{root: r, lock: lock, scope: identityScope}, nil
 }
-func (j *FileJournal) Close() error { return j.root.Close() }
+func (j *FileJournal) Close() error {
+	j.mu.Lock()
+	defer j.mu.Unlock()
+	return errors.Join(j.lock.Close(), j.root.Close())
+}
+func (j *FileJournal) acquire(ctx context.Context) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	if err := syscall.Flock(int(j.lock.Fd()), syscall.LOCK_EX|syscall.LOCK_NB); err != nil {
+		return api.E("overloaded", "journal_in_use")
+	}
+	return nil
+}
+func (j *FileJournal) release() { _ = syscall.Flock(int(j.lock.Fd()), syscall.LOCK_UN) }
 func (j *FileJournal) read(id string) (Entry, error) {
 	if !api.ValidID(id) {
 		return Entry{}, api.E("invalid_request", "invalid_command_id")
@@ -54,12 +76,12 @@ func (j *FileJournal) read(id string) (Entry, error) {
 		return Entry{}, e
 	}
 	defer f.Close()
-	b, e := io.ReadAll(io.LimitReader(f, api.MaxJSONBytes+1))
+	b, e := io.ReadAll(io.LimitReader(f, 1<<20+1))
 	if e != nil {
 		return Entry{}, e
 	}
 	var entry Entry
-	if e = api.Decode(b, &entry); e != nil {
+	if e = api.DecodeLimit(b, &entry, 1<<20); e != nil {
 		return Entry{}, e
 	}
 	if entry.IdentityScope != j.scope {
@@ -84,9 +106,13 @@ func (j *FileJournal) Save(ctx context.Context, entry Entry) error {
 	}
 	j.mu.Lock()
 	defer j.mu.Unlock()
+	if e = j.acquire(ctx); e != nil {
+		return e
+	}
+	defer j.release()
 	old, e := j.read(entry.Command.CommandID)
 	if e == nil {
-		if old.Digest != entry.Digest || old.SchemaDigest != entry.SchemaDigest {
+		if old.Digest != entry.Digest || old.SchemaDigest != entry.SchemaDigest || old.MethodSchemaDigest != entry.MethodSchemaDigest {
 			return api.E("idempotency_conflict", "journal_command_changed")
 		}
 		if old.Receipt != nil && old.Receipt.Stage != "accepted" && !api.Equal(old.Receipt, entry.Receipt) {
@@ -102,7 +128,7 @@ func (j *FileJournal) Save(ctx context.Context, entry Entry) error {
 		return e
 	}
 	b := api.Raw(entry)
-	if len(b) > api.MaxJSONBytes {
+	if len(b) > 1<<20 {
 		f.Close()
 		j.root.Remove(tmp)
 		return api.E("invalid_request", "journal_entry_too_large")
@@ -139,6 +165,10 @@ func (j *FileJournal) Read(ctx context.Context, id string) (Entry, error) {
 	}
 	j.mu.Lock()
 	defer j.mu.Unlock()
+	if e := j.acquire(ctx); e != nil {
+		return Entry{}, e
+	}
+	defer j.release()
 	return j.read(id)
 }
 func (j *FileJournal) Pending(ctx context.Context, max int) ([]Entry, bool, error) {
@@ -147,6 +177,10 @@ func (j *FileJournal) Pending(ctx context.Context, max int) ([]Entry, bool, erro
 	}
 	j.mu.Lock()
 	defer j.mu.Unlock()
+	if e := j.acquire(ctx); e != nil {
+		return nil, false, e
+	}
+	defer j.release()
 	dir, e := j.root.Open(".")
 	if e != nil {
 		return nil, false, e

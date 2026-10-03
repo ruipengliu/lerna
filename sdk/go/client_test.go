@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"path/filepath"
+	"sync"
 	"testing"
 	"time"
 
@@ -93,6 +94,102 @@ func TestRestartQueriesOriginalCommittedCommand(t *testing.T) {
 	changed.ExpiresAt = api.Time(time.Now().Add(time.Hour))
 	if _, e = client.Send(ctx, changed); !api.IsCode(e, "idempotency_conflict") {
 		t.Fatalf("original deadline changed: %v", e)
+	}
+}
+
+func TestOriginalMethodDecoderChangeStopsRecoveryBeforeResend(t *testing.T) {
+	ctx := context.Background()
+	owner := api.NewID("srv")
+	d := fixtureDiscovery(owner)
+	j, err := harness.OpenJournal(filepath.Join(t.TempDir(), "journal"), d.IdentityScope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer j.Close()
+	transport := &lostReply{}
+	client, err := harness.NewClient(transport, j, d)
+	if err != nil {
+		t.Fatal(err)
+	}
+	original := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: owner, CommandID: api.NewID("command"), Method: "fixture.save", TargetID: owner, ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(fixtureInput{"original"})}
+	if _, err = client.Send(ctx, original); err == nil {
+		t.Fatal("expected lost response")
+	}
+	d.Methods[0].OutputSchema = api.Object(map[string]any{"changed": api.String()}, "changed")
+	d.Methods[0].SchemaDigest, _ = api.Digest([]any{d.Methods[0].InputSchema, d.Methods[0].OutputSchema})
+	client, err = harness.NewClient(transport, j, d)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err = client.Recover(ctx); !api.IsCode(err, "unsupported") {
+		t.Fatalf("changed decoder recovery: %v", err)
+	}
+	if _, err = client.Receipt(ctx, original.CommandID); !api.IsCode(err, "unsupported") {
+		t.Fatalf("changed decoder receipt: %v", err)
+	}
+	if transport.calls != 1 {
+		t.Fatal("changed decoder created another physical command send")
+	}
+}
+
+func TestTwoJournalHandlesCannotReplaceTheSameOriginalCommand(t *testing.T) {
+	ctx := context.Background()
+	owner := api.NewID("service")
+	d := fixtureDiscovery(owner)
+	path := filepath.Join(t.TempDir(), "shared-original")
+	first, err := harness.OpenJournal(path, d.IdentityScope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer first.Close()
+	second, err := harness.OpenJournal(path, d.IdentityScope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer second.Close()
+	for round := 0; round < 12; round++ {
+		original := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: owner, CommandID: api.NewID("command"), Method: "fixture.save", TargetID: owner, ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(fixtureInput{"first original"})}
+		entries := [2]harness.Entry{}
+		for i, text := range []string{"first original", "other original"} {
+			c := original
+			c.Payload = api.Raw(fixtureInput{text})
+			digest, _ := api.Digest(c)
+			entries[i] = harness.Entry{IdentityScope: d.IdentityScope, SchemaDigest: d.SchemaDigest, MethodSchemaDigest: d.Methods[0].SchemaDigest, Command: c, Digest: digest}
+		}
+		begin := make(chan struct{})
+		errors := [2]error{}
+		var wait sync.WaitGroup
+		for i, journal := range []*harness.FileJournal{first, second} {
+			wait.Add(1)
+			go func(index int, j *harness.FileJournal) {
+				defer wait.Done()
+				<-begin
+				errors[index] = j.Save(ctx, entries[index])
+			}(i, journal)
+		}
+		close(begin)
+		wait.Wait()
+		winner := -1
+		for i, err := range errors {
+			if err == nil {
+				if winner != -1 {
+					t.Fatal("two different originals both replaced the durable key")
+				}
+				winner = i
+			} else if !api.IsCode(err, "overloaded") && !api.IsCode(err, "idempotency_conflict") {
+				t.Fatal(err)
+			}
+		}
+		if winner == -1 {
+			t.Fatal("neither bounded journal save acquired the original key")
+		}
+		stored, err := first.Read(ctx, original.CommandID)
+		if err != nil || !api.Equal(stored.Command, entries[winner].Command) {
+			t.Fatalf("durable winner was replaced: %v", err)
+		}
+		if err = second.Save(ctx, entries[1-winner]); !api.IsCode(err, "idempotency_conflict") {
+			t.Fatalf("later conflicting original changed the key: %v", err)
+		}
 	}
 }
 
