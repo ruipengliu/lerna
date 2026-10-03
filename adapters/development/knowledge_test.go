@@ -145,7 +145,13 @@ func TestConfiguredKnowledgeWithdrawalClosesOriginalDecisionAndPreservesActualFe
 
 func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 	t.Helper()
-	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
+	observationTimeout := 90 * time.Second
+	if blockedControl == "withdraw" {
+		// 撤回及关闭配置后有第二次真实宿主重开，沿既有集成观察上限。
+		// Task/Grant/Content 业务期限均保持原值。
+		observationTimeout = reportFixtureTimeout
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), observationTimeout)
 	defer cancel()
 	var sends atomic.Int32
 	var active atomic.Pointer[App]
