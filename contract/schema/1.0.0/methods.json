@@ -1,0 +1,8 @@
+{
+  "methods": [
+    {
+      "input_schema": "CommandGetRequest",
+      "output_schema": "CommandGetResponse"
+    }
+  ]
+}

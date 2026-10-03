@@ -1,0 +1,91 @@
+[
+  {
+    "name": "exact pair",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"command\", \"method\": \"command.get\", \"input_schema_digest\": \"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": true
+  },
+  {
+    "name": "contract_version 2.0.0",
+    "wire": "{\"contract_version\": \"2.0.0\", \"profile\": \"command\", \"method\": \"command.get\", \"input_schema_digest\": \"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": false,
+    "code": "version_unsupported"
+  },
+  {
+    "name": "contract_version v2-design-1",
+    "wire": "{\"contract_version\": \"v2-design-1\", \"profile\": \"command\", \"method\": \"command.get\", \"input_schema_digest\": \"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": false,
+    "code": "version_unsupported"
+  },
+  {
+    "name": "profile core",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"core\", \"method\": \"command.get\", \"input_schema_digest\": \"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": false,
+    "code": "unsupported"
+  },
+  {
+    "name": "profile schedule",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"schedule\", \"method\": \"command.get\", \"input_schema_digest\": \"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": false,
+    "code": "unsupported"
+  },
+  {
+    "name": "method task.submit",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"command\", \"method\": \"task.submit\", \"input_schema_digest\": \"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": false,
+    "code": "unsupported"
+  },
+  {
+    "name": "method memory.query",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"command\", \"method\": \"memory.query\", \"input_schema_digest\": \"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": false,
+    "code": "unsupported"
+  },
+  {
+    "name": "method delegation.create",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"command\", \"method\": \"delegation.create\", \"input_schema_digest\": \"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": false,
+    "code": "unsupported"
+  },
+  {
+    "name": "method environment.install",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"command\", \"method\": \"environment.install\", \"input_schema_digest\": \"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": false,
+    "code": "unsupported"
+  },
+  {
+    "name": "input_schema_digest sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"command\", \"method\": \"command.get\", \"input_schema_digest\": \"sha256:0000000000000000000000000000000000000000000000000000000000000000\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": false,
+    "code": "version_unsupported"
+  },
+  {
+    "name": "output_schema_digest sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"command\", \"method\": \"command.get\", \"input_schema_digest\": \"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\", \"output_schema_digest\": \"sha256:0000000000000000000000000000000000000000000000000000000000000000\"}",
+    "valid": false,
+    "code": "version_unsupported"
+  },
+  {
+    "name": "input_schema_digest INVALID",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"command\", \"method\": \"command.get\", \"input_schema_digest\": \"INVALID\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "added optional field",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"command\", \"method\": \"command.get\", \"input_schema_digest\": \"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\", \"optional_new\": false}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "missing digest",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"command\", \"method\": \"command.get\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  },
+  {
+    "name": "duplicate version",
+    "wire": "{\"contract_version\": \"1.0.0\", \"profile\": \"command\", \"method\": \"command.get\", \"input_schema_digest\": \"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\", \"output_schema_digest\": \"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\",\"contract_version\":\"1.0.0\"}",
+    "valid": false,
+    "code": "schema_invalid"
+  }
+]

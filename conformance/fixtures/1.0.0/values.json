@@ -32,7 +32,7 @@
   {
     "name": "ID unicode forbidden",
     "schema": "ID",
-    "wire": "\"租户\"",
+    "wire": "\"\u79df\u6237\"",
     "valid": false
   },
   {
@@ -194,7 +194,7 @@
   {
     "name": "partial Unicode cursor",
     "schema": "CollectionView",
-    "wire": "{\"items\":[],\"cursor\":\"👩‍💻汉字\",\"exhausted\":false,\"partial\":true,\"gaps\":[{\"reason\":\"authorization_changed\"}],\"read_scope\":{\"owner\":{\"tenant_id\":\"t1\",\"owner_id\":\"o1\"},\"object_type\":\"task\"},\"watermark\":\"9223372036854775807\"}",
+    "wire": "{\"items\":[],\"cursor\":\"\ud83d\udc69\u200d\ud83d\udcbb\u6c49\u5b57\",\"exhausted\":false,\"partial\":true,\"gaps\":[{\"reason\":\"authorization_changed\"}],\"read_scope\":{\"owner\":{\"tenant_id\":\"t1\",\"owner_id\":\"o1\"},\"object_type\":\"task\"},\"watermark\":\"9223372036854775807\"}",
     "valid": true
   },
   {
@@ -243,6 +243,36 @@
     "name": "gap enum unknown",
     "schema": "CollectionView",
     "wire": "{\"items\":[],\"cursor\":\"next\",\"exhausted\":false,\"partial\":true,\"gaps\":[{\"reason\":\"invented\"}],\"read_scope\":{\"owner\":{\"tenant_id\":\"t1\",\"owner_id\":\"o1\"},\"object_type\":\"task\"},\"watermark\":\"9223372036854775807\"}",
+    "valid": false
+  },
+  {
+    "name": "exact schema digest",
+    "schema": "SchemaDigest",
+    "wire": "\"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\"",
+    "valid": true
+  },
+  {
+    "name": "input output method support",
+    "schema": "MethodSupport",
+    "wire": "{\"contract_version\":\"1.0.0\",\"profile\":\"command\",\"method\":\"command.get\",\"input_schema\":\"CommandGetRequest\",\"output_schema\":\"CommandGetResponse\",\"input_schema_digest\":\"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\",\"output_schema_digest\":\"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": true
+  },
+  {
+    "name": "exact negotiation request",
+    "schema": "NegotiationRequest",
+    "wire": "{\"contract_version\":\"1.0.0\",\"profile\":\"command\",\"method\":\"command.get\",\"input_schema_digest\":\"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\",\"output_schema_digest\":\"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\"}",
+    "valid": true
+  },
+  {
+    "name": "schema digest uppercase rejected",
+    "schema": "SchemaDigest",
+    "wire": "\"SHA256:BD37D7BB6F69006352BC74C27D04E13FAAAC912812D28F91C36794D6DBB8278B\"",
+    "valid": false
+  },
+  {
+    "name": "method support unknown field",
+    "schema": "MethodSupport",
+    "wire": "{\"contract_version\":\"1.0.0\",\"profile\":\"command\",\"method\":\"command.get\",\"input_schema\":\"CommandGetRequest\",\"output_schema\":\"CommandGetResponse\",\"input_schema_digest\":\"sha256:bd37d7bb6f69006352bc74c27d04e13faaac912812d28f91c36794d6dbb8278b\",\"output_schema_digest\":\"sha256:dca0e4e5482a33cff3124ae9a0e714c6172dade8e841fb070e167d750459e161\",\"extra\":true}",
     "valid": false
   }
 ]
