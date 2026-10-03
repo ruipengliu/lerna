@@ -2,7 +2,6 @@ package development
 
 import (
 	"context"
-	filedriver "github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/execution"
 	"github.com/ruipengliu/lerna/internal/governance"
@@ -195,7 +194,10 @@ func (e executionBridge) rawUsage(ctx context.Context, s runtime.Scope, ref api.
 	return u, er
 }
 func (a *App) query(ctx context.Context, method, target string, payload any) ([]byte, error) {
-	return a.Dispatcher.Query(ctx, a.ServiceAuth, api.Raw(api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.Scope.OwnerID, QueryID: api.NewID("query"), TargetID: target, Method: method, Payload: api.Raw(payload)}))
+	return a.queryAs(ctx, a.ServiceAuth, method, target, payload)
+}
+func (a *App) queryAs(ctx context.Context, auth runtime.Auth, method, target string, payload any) ([]byte, error) {
+	return a.Dispatcher.Query(ctx, auth, api.Raw(api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.Scope.OwnerID, QueryID: api.NewID("query"), TargetID: target, Method: method, Payload: api.Raw(payload)}))
 }
 
 type executionAuthority struct{ a *App }
@@ -226,19 +228,22 @@ func (e executionAuthority) PrepareStart(ctx context.Context, s runtime.Scope, r
 	return execution.PreparedStart{OperationID: r.Invoke.OperationID, IntentHash: r.Invoke.IntentHash, Recipient: s.OwnerID, UseRefs: r.Invoke.UseRefs, ApprovalRefs: []api.ObjectRef{}, AuthorityRevision: 1, StartBefore: r.ControlWindow.StartBefore, ProofRef: proofs[0]}, nil
 }
 func (e executionAuthority) VerifyStart(ctx context.Context, tx runtime.Tx, r execution.StartRequest, p execution.PreparedStart) (execution.StartPermit, error) {
-	if er := currentCredentialTx(ctx, tx, r.Auth); er != nil {
-		return execution.StartPermit{}, er
-	}
 	original, er := e.a.Task.OperationIntentTx(ctx, tx, r.Invoke.OperationID)
 	if er != nil {
+		return execution.StartPermit{}, er
+	}
+	if er := currentCredentialTx(ctx, tx, r.Auth); er != nil {
 		return execution.StartPermit{}, er
 	}
 	var fixed encodedIntent
 	if _, er = tx.Get(ctx, "platform.execution_intents", r.Invoke.OperationID, &fixed); er != nil {
 		return execution.StartPermit{}, er
 	}
-	if fixed.AdmissionHash != original.IntentHash || fixed.Hash != r.Invoke.IntentHash || !api.Equal(fixed.Domain, r.Intent) || !api.Equal(original.UseIntentRefs, r.Invoke.UseRefs) || !api.Equal(original.CapabilityRef, r.Invoke.CapabilityRef) || !api.Equal(original.BindingRef, r.Invoke.BindingRef) || !api.Equal(original.InstallLockRef, e.a.InstallLock) {
+	if fixed.AdmissionHash != original.IntentHash || fixed.Hash != r.Invoke.IntentHash || !api.Equal(fixed.Domain, r.Intent) || !api.Equal(original.UseIntentRefs, r.Invoke.UseRefs) || !api.Equal(original.CapabilityRef, r.Invoke.CapabilityRef) || !api.Equal(original.BindingRef, r.Invoke.BindingRef) {
 		return execution.StartPermit{}, api.E("forbidden", "original_admission_mismatch")
+	}
+	if _, er = e.a.readActionAdmissionTx(ctx, tx, original); er != nil {
+		return execution.StartPermit{}, er
 	}
 	if er = e.VerifyControl(ctx, tx, r.Auth, r.ControlWindow); er != nil {
 		return execution.StartPermit{}, er
@@ -264,19 +269,14 @@ func (a actionAuthorization) AuthorizeAction(ctx context.Context, tx runtime.Tx,
 	if len(i.UseIntentRefs) != 1 || i.ExecutorID != tx.Scope().OwnerID {
 		return api.E("forbidden", "operation_authority_missing")
 	}
-	action := "file.read"
-	if api.Equal(i.CapabilityRef, filedriver.FileWriteCapability().Ref) {
-		action = "file.write"
-	} else if !api.Equal(i.CapabilityRef, filedriver.FileReadCapability().Ref) {
-		return api.E("unsupported", "capability_not_configured")
-	}
-	if action == "file.read" && !api.Equal(i.BindingRef, a.a.ReadBinding) || action == "file.write" && !api.Equal(i.BindingRef, a.a.WriteBinding) || !api.Equal(i.InstallLockRef, a.a.InstallLock) {
-		return api.E("forbidden", "binding_not_registered")
+	admission, er := a.a.readActionAdmissionTx(ctx, tx, i)
+	if er != nil {
+		return er
 	}
 	if er := currentCredentialTx(ctx, tx, auth); er != nil {
 		return er
 	}
-	use, er := a.a.Governance.UseTx(ctx, tx, auth, governance.UseRequest{UseID: i.UseIntentRefs[0].ObjectID, SubjectRef: auth.Ref(tx.Scope().OwnerID), TargetRef: tx.Scope().Ref(i.OperationID, 1), TargetKind: "operation", IntentHash: i.IntentHash, GrantRefs: []api.ObjectRef{tx.Scope().Ref(a.a.GrantID, 1)}, RequestedUnits: i.CostBound, Resources: []string{"managed-files"}, Actions: []string{action}, Recipient: i.ExecutorID, Location: "cloud", Purposes: []string{i.AdmissionPurpose}, StartBefore: i.Deadline})
+	use, er := a.a.Governance.UseTx(ctx, tx, auth, governance.UseRequest{UseID: i.UseIntentRefs[0].ObjectID, SubjectRef: auth.Ref(tx.Scope().OwnerID), TargetRef: tx.Scope().Ref(i.OperationID, 1), TargetKind: "operation", IntentHash: i.IntentHash, GrantRefs: []api.ObjectRef{admission.Descriptor.GrantRef}, RequestedUnits: i.CostBound, Resources: admission.Resources, Actions: admission.Actions, Recipient: admission.Descriptor.Recipient, Location: admission.Descriptor.Location, Purposes: []string{i.AdmissionPurpose}, StartBefore: i.Deadline})
 	if er != nil {
 		return er
 	}

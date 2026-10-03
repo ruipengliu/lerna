@@ -15,7 +15,12 @@ func serviceAuth(scope runtime.Scope) runtime.Auth {
 	return runtime.Auth{TenantID: scope.TenantID, SubjectID: scope.OwnerID, CredentialGeneration: 1, Roles: []string{"service", "task_admin", "evidence"}}
 }
 func (s *Service) finish(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work, d runtime.Disposition, fn func(runtime.Tx) error) error {
-	return runtime.Finish(ctx, store, scope, s.config.Participants, work, d, fn)
+	return runtime.Finish(ctx, store, scope, s.config.Participants, work, d, func(tx runtime.Tx) error {
+		if fn == nil {
+			return nil
+		}
+		return withTaskJobs(ctx, tx, fn)
+	})
 }
 func (s *Service) wait(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
 	return s.finish(ctx, store, scope, work, runtime.Waiting(time.Now().Add(time.Second)), nil)
@@ -60,6 +65,9 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 			return e
 		}
 		if !expired && current.PendingCompletionID != "" {
+			if e = s.lockTaskTree(ctx, tx, current.Task.TaskID); e != nil {
+				return e
+			}
 			completionHandled, e = s.resumeCompletionTx(ctx, tx, &current)
 			if e != nil {
 				return e
@@ -112,7 +120,7 @@ func (s *Service) advanceJob(ctx context.Context, store runtime.Store, scope run
 	}
 	if t.Task.RequirementsState == "validating" {
 		return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
-			_, e := raise(ctx, tx, JobCoverage, "coverage/"+t.Task.TaskID, scope.Ref(t.Task.TaskID, t.Task.Revision))
+			e := queueJob(ctx, tx, JobCoverage, "coverage/"+t.Task.TaskID, scope.Ref(t.Task.TaskID, t.Task.Revision))
 			return e
 		})
 	}
@@ -162,6 +170,7 @@ func (s *Service) decisionJob(ctx context.Context, store runtime.Store, scope ru
 		return s.wait(ctx, store, scope, work)
 	}
 	send := false
+	sent := d.Sent
 	err := s.transaction(ctx, store, scope, func(tx runtime.Tx) error {
 		if e := tx.Guard(ctx, work.Claim); e != nil {
 			return e
@@ -170,10 +179,14 @@ func (s *Service) decisionJob(ctx context.Context, store runtime.Store, scope ru
 		if e != nil {
 			return e
 		}
+		sent = current.Sent
 		if terminal(t) || t.Task.Control != "running" || t.Task.GoalRevision != d.Snapshot.GoalRevision || t.Task.ControlRevision != d.Snapshot.ControlRevision {
 			return nil
 		}
 		if e = s.CheckCurrent(ctx, tx, t, true); e != nil {
+			if api.IsCode(e, "invalid_state") || api.IsCode(e, "forbidden") || api.IsCode(e, "expired") {
+				return nil
+			}
 			return e
 		}
 		send = true
@@ -198,8 +211,22 @@ func (s *Service) decisionJob(ctx context.Context, store runtime.Store, scope ru
 			return e
 		}
 	}
-	if !send && !d.Sent {
-		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+	if !send {
+		if !sent {
+			return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+		}
+		if cancellation, ok := s.ports.Brain.(BrainCancellation); ok {
+			if e := s.preIO(ctx, store, scope, work); e != nil {
+				return e
+			}
+			if e := cancellation.CancelDecision(ctx, scope, d.Intent); e != nil {
+				if deferred(e) {
+					return s.wait(ctx, store, scope, work)
+				}
+				return e
+			}
+			return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+		}
 	}
 	if e := s.preIO(ctx, store, scope, work); e != nil {
 		return e
@@ -243,7 +270,7 @@ func (s *Service) decisionJob(ctx context.Context, store runtime.Store, scope ru
 				return e
 			}
 			if !terminal(t) && t.Task.RequirementsState != "awaiting_input" {
-				if _, e = raise(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
+				if e = queueJob(ctx, tx, JobAdvance, "advance/"+t.Task.TaskID, taskRef(tx, t)); e != nil {
 					return e
 				}
 			}
@@ -362,7 +389,7 @@ func (s *Service) operationJob(ctx context.Context, store runtime.Store, scope r
 				}
 			}
 		}
-		_, e := raise(ctx, tx, JobReconcileOperation, "reconcile/"+intent.OperationID, scope.Ref(intent.OperationID, 1))
+		e := queueJob(ctx, tx, JobReconcileOperation, "reconcile/"+intent.OperationID, scope.Ref(intent.OperationID, 1))
 		return e
 	})
 }
@@ -607,9 +634,23 @@ func (s *Service) steerJob(ctx context.Context, store runtime.Store, scope runti
 	}
 	if terminal(t) || t.PendingGoalCommand != pending.CommandID {
 		return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
-			pending.State = "closed"
-			pending.Revision++
-			if e := tx.Put(ctx, steers, pending.CommandID, pending.Revision-1, pending); e != nil {
+			if _, e := tx.LoadCommand(ctx, pending.CommandID); e != nil {
+				return e
+			}
+			if _, e := getTask(ctx, tx, pending.Input.TaskID); e != nil {
+				return e
+			}
+			var current pendingSteer
+			rev, e := tx.Get(ctx, steers, pending.CommandID, &current)
+			if e != nil {
+				return e
+			}
+			if current.CommandID != pending.CommandID || !api.Equal(current.Input, pending.Input) {
+				return api.E("idempotency_conflict", "original_steer_changed")
+			}
+			current.State = "closed"
+			current.Revision++
+			if e := tx.Put(ctx, steers, pending.CommandID, rev, current); e != nil {
 				return e
 			}
 			return runtime.Decide(ctx, tx, pending.CommandID, nil, api.E("invalid_state", "target_terminal"))
@@ -630,12 +671,26 @@ func (s *Service) steerJob(ctx context.Context, store runtime.Store, scope runti
 		return err
 	}
 	return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, e := tx.LoadCommand(ctx, pending.CommandID); e != nil {
+			return e
+		}
+		if e := s.lockTaskTree(ctx, tx, pending.Input.TaskID); e != nil {
+			return e
+		}
 		current, e := getTask(ctx, tx, pending.Input.TaskID)
 		if e != nil {
 			return e
 		}
 		if terminal(current) || current.PendingGoalCommand != pending.CommandID || current.Task.GoalRevision != pending.Input.BaseGoalRevision {
 			return api.E("revision_conflict", "goal_changed")
+		}
+		var lockedPending pendingSteer
+		rev, e := tx.Get(ctx, steers, pending.CommandID, &lockedPending)
+		if e != nil {
+			return e
+		}
+		if lockedPending.CommandID != pending.CommandID || !api.Equal(lockedPending.Input, pending.Input) || lockedPending.State != "pending" {
+			return api.E("revision_conflict", "original_steer_changed")
 		}
 		current.Task.GoalRef = ref
 		current.Amendments = document.AmendmentRefs
@@ -644,9 +699,9 @@ func (s *Service) steerJob(ctx context.Context, store runtime.Store, scope runti
 		if e = s.reviseGoal(ctx, tx, &current, pending.Input.SourceSubmissionRef); e != nil {
 			return e
 		}
-		pending.State = "applied"
-		pending.Revision++
-		if e = tx.Put(ctx, steers, pending.CommandID, pending.Revision-1, pending); e != nil {
+		lockedPending.State = "applied"
+		lockedPending.Revision++
+		if e = tx.Put(ctx, steers, pending.CommandID, rev, lockedPending); e != nil {
 			return e
 		}
 		return runtime.Decide(ctx, tx, pending.CommandID, output(tx, current), nil)
@@ -660,6 +715,10 @@ func (s *Service) childPrepareJob(ctx context.Context, store runtime.Store, scop
 	if h.ChildSessionRef != nil || h.State == "open" {
 		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
 	}
+	var original childCommand
+	if _, err := store.Read(ctx, scope, childCommands, h.ChildID, 1, &original); err != nil {
+		return err
+	}
 	if s.ports.Collaboration == nil {
 		return s.wait(ctx, store, scope, work)
 	}
@@ -671,6 +730,16 @@ func (s *Service) childPrepareJob(ctx context.Context, store runtime.Store, scop
 		var rejected *OriginalCommandRejection
 		if errors.As(err, &rejected) && rejected.Receipt.Stage == "rejected" && rejected.Receipt.CommandID == h.SessionCommandRef.ObjectID && rejected.Receipt.Error != nil {
 			return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+				if _, err := tx.LoadCommand(ctx, original.CommandID); err != nil {
+					return err
+				}
+				commandID, err := workCommandID(ctx, tx, h.ChildID)
+				if err != nil {
+					return err
+				}
+				if commandID != original.CommandID {
+					return api.E("idempotency_conflict", "original_child_command_changed")
+				}
 				var current ChildHandle
 				rev, err := tx.Get(ctx, children, h.ChildID, &current)
 				if err != nil {
@@ -684,7 +753,7 @@ func (s *Service) childPrepareJob(ctx context.Context, store runtime.Store, scop
 				if err = tx.Put(ctx, children, h.ChildID, rev, current); err != nil {
 					return err
 				}
-				return runtime.Decide(ctx, tx, workCommandID(ctx, tx, h.ChildID), nil, rejected.Receipt.Error)
+				return runtime.Decide(ctx, tx, original.CommandID, nil, rejected.Receipt.Error)
 			})
 		}
 		if deferred(err) {
@@ -696,6 +765,16 @@ func (s *Service) childPrepareJob(ctx context.Context, store runtime.Store, scop
 		return api.E("forbidden", "child_session_scope_mismatch")
 	}
 	return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, e := tx.LoadCommand(ctx, original.CommandID); e != nil {
+			return e
+		}
+		commandID, e := workCommandID(ctx, tx, h.ChildID)
+		if e != nil {
+			return e
+		}
+		if commandID != original.CommandID {
+			return api.E("idempotency_conflict", "original_child_command_changed")
+		}
 		var current ChildHandle
 		rev, e := tx.Get(ctx, children, h.ChildID, &current)
 		if e != nil {
@@ -715,18 +794,18 @@ func (s *Service) childPrepareJob(ctx context.Context, store runtime.Store, scop
 		if e = tx.Put(ctx, children, current.ChildID, rev, current); e != nil {
 			return e
 		}
-		return runtime.Decide(ctx, tx, workCommandID(ctx, tx, current.ChildID), ChildOutput{ChildRef: scope.Ref(current.ChildID, current.Revision), ChildSessionRef: &ref}, nil)
+		return runtime.Decide(ctx, tx, original.CommandID, ChildOutput{ChildRef: scope.Ref(current.ChildID, current.Revision), ChildSessionRef: &ref}, nil)
 	})
 }
 
 // 原 child.create 的调用方命令与远端 session.create 命令分别保留。
-func workCommandID(ctx context.Context, tx runtime.Tx, childID string) string {
+func workCommandID(ctx context.Context, tx runtime.Tx, childID string) (string, error) {
 	var p childCommand
 	_, err := tx.Get(ctx, childCommands, childID, &p)
 	if err != nil {
-		return ""
+		return "", err
 	}
-	return p.CommandID
+	return p.CommandID, nil
 }
 
 const childCommands = "task.child_commands"

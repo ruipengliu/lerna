@@ -53,7 +53,10 @@ type currentCredential struct {
 func currentCredentialTx(ctx context.Context, tx runtime.Tx, a runtime.Auth) error {
 	var c currentCredential
 	if _, e := tx.Get(ctx, "platform.credentials", a.SubjectID, &c); e != nil {
-		return api.E("forbidden", "identity_authority_unavailable")
+		if api.IsCode(e, "not_found") {
+			return api.E("forbidden", "identity_authority_unavailable")
+		}
+		return e
 	}
 	if c.State != "active" || c.Generation != a.CredentialGeneration {
 		return api.E("forbidden", "credential_revoked")
@@ -89,10 +92,10 @@ func (g brainGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if !auth.HasRole("service") {
 		return api.E("forbidden", "trusted_orchestrator_required")
 	}
-	if e := currentCredentialTx(ctx, tx, auth); e != nil {
+	if e := g.a.Task.CheckDecisionTx(ctx, tx, auth, in.DecisionID); e != nil {
 		return e
 	}
-	if e := g.a.Task.CheckDecisionTx(ctx, tx, auth, in.DecisionID); e != nil {
+	if e := currentCredentialTx(ctx, tx, auth); e != nil {
 		return e
 	}
 	if e := g.a.authorizeModelTx(ctx, tx, auth, in, encoding); e != nil {

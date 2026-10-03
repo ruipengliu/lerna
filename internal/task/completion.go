@@ -14,7 +14,7 @@ func (s *Service) Complete(ctx context.Context, store runtime.Store, scope runti
 	err := s.transaction(ctx, store, scope, func(tx runtime.Tx) error { var e error; out, e = s.CompleteTx(ctx, tx, auth, in); return e })
 	return out, err
 }
-func (s *Service) CompleteTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, in CompleteInput) (api.Result, error) {
+func (s *Service) completeTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, in CompleteInput) (api.Result, error) {
 	t, e := getTask(ctx, tx, in.TaskID)
 	if e != nil {
 		return api.Result{}, e
@@ -29,6 +29,9 @@ func (s *Service) CompleteTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 		var result api.Result
 		_, e = tx.Get(ctx, results, t.Task.ResultRef.ObjectID, &result)
 		return result, e
+	}
+	if e = s.lockTaskTree(ctx, tx, t.Task.TaskID); e != nil {
+		return api.Result{}, e
 	}
 	if e = s.CheckCurrent(ctx, tx, t, false); e != nil {
 		return api.Result{}, e
@@ -196,7 +199,7 @@ func (s *Service) CompleteTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 	if e = s.controlJobs(ctx, tx, t); e != nil {
 		return api.Result{}, e
 	}
-	if _, e = raise(ctx, tx, JobPublishResult, "result/"+result.ResultID, ref); e != nil {
+	if e = queueJob(ctx, tx, JobPublishResult, "result/"+result.ResultID, ref); e != nil {
 		return api.Result{}, e
 	}
 	return result, nil
@@ -342,7 +345,7 @@ func (s *Service) CreateAcceptanceRequestTx(ctx context.Context, tx runtime.Tx, 
 	e = tx.Create(ctx, acceptanceRequests, req.RequestID, taskID, acceptanceRequest{RequirementRef: requirement, Revision: 1})
 	return ref, e
 }
-func (s *Service) AcceptTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in AcceptInput) (AcceptOutput, error) {
+func (s *Service) acceptTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in AcceptInput) (AcceptOutput, error) {
 	if e := target(c, in.TaskID); e != nil {
 		return AcceptOutput{}, e
 	}

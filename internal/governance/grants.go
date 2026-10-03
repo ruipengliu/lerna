@@ -721,30 +721,51 @@ func (s *Service) checkGrantQuery(ctx context.Context, store runtime.Store, scop
 	}
 	return out, err
 }
-func (s *Service) CheckUseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref, target api.ObjectRef, intentHash string, now time.Time) error {
+
+// CheckUseHeadsTx 只核原 Use 和当前完整 Grant 链，供宿主另核有限数据保留期。
+// 它不授予新出口，不消费 once，不延长原 StartBefore；开始仍须 CheckUseTx。
+func (s *Service) CheckUseHeadsTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref, target api.ObjectRef, intentHash string) (UseReceipt, error) {
+	if auth.TenantID != tx.Scope().TenantID {
+		return UseReceipt{}, api.E("forbidden", "tenant_mismatch")
+	}
 	if err := ownerRef(tx.Scope(), ref); err != nil {
-		return err
+		return UseReceipt{}, err
+	}
+	if err := runtime.CheckRef(tx.Scope(), target); err != nil {
+		return UseReceipt{}, err
 	}
 	var use UseReceipt
 	if _, err := tx.Get(ctx, ns("uses"), ref.ObjectID, &use); err != nil {
+		return UseReceipt{}, err
+	}
+	if ref.Revision != 1 || use.Decision != "allowed" || use.SubjectRef.TenantID != auth.TenantID || use.SubjectRef.OwnerID != tx.Scope().OwnerID || use.SubjectRef.ObjectID != auth.SubjectID || use.SubjectRef.Revision != auth.CredentialGeneration || !api.Equal(use.TargetRef, target) || use.IntentHash != intentHash {
+		return UseReceipt{}, api.E("forbidden", "use_binding_mismatch")
+	}
+	now, err := tx.Now(ctx)
+	if err != nil {
+		return UseReceipt{}, err
+	}
+	for _, ref := range use.GrantRefs {
+		if err = ownerRef(tx.Scope(), ref); err != nil {
+			return UseReceipt{}, err
+		}
+		var grant api.Grant
+		if _, err = tx.Get(ctx, ns("grants"), ref.ObjectID, &grant); err != nil {
+			return UseReceipt{}, err
+		}
+		start, e := api.ParseTime(grant.NotBefore)
+		if e != nil || now.Before(start) || grant.State != "active" || grant.Revision != ref.Revision || before(now, grant.ExpiresAt) != nil {
+			return UseReceipt{}, api.E("forbidden", "authorization_changed")
+		}
+	}
+	return use, nil
+}
+func (s *Service) CheckUseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref, target api.ObjectRef, intentHash string, now time.Time) error {
+	use, err := s.CheckUseHeadsTx(ctx, tx, auth, ref, target, intentHash)
+	if err != nil {
 		return err
 	}
-	if ref.Revision != 1 || use.Decision != "allowed" || use.SubjectRef.ObjectID != auth.SubjectID || use.SubjectRef.Revision != auth.CredentialGeneration || !api.Equal(use.TargetRef, target) || use.IntentHash != intentHash {
-		return api.E("forbidden", "use_binding_mismatch")
-	}
-	if err := before(now, use.StartBefore); err != nil {
-		return err
-	}
-	for _, gr := range use.GrantRefs {
-		var g api.Grant
-		if _, err := tx.Get(ctx, ns("grants"), gr.ObjectID, &g); err != nil {
-			return err
-		}
-		if g.State != "active" || g.Revision != gr.Revision || before(now, g.ExpiresAt) != nil {
-			return api.E("forbidden", "authorization_changed")
-		}
-	}
-	return nil
+	return before(now, use.StartBefore)
 }
 
 func (s *Service) requestSettlement(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in SettleRequest) (runtime.Outcome, error) {
@@ -874,17 +895,33 @@ func (s *Service) continueSettlement(ctx context.Context, store runtime.Store, s
 		return err
 	}
 	if err := s.Ports.UsageVerifier.Verify(ctx, scope, use.TargetRef, pending.Request.Usage); err != nil {
+		if !usageVerificationRejected(err) {
+			// 原来源尚不可核验，保留同一 accepted 命令和待结算责任。
+			return err
+		}
 		return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+			if _, err := tx.LoadCommand(ctx, pending.CommandID); err != nil {
+				return err
+			}
 			return runtime.Decide(ctx, tx, pending.CommandID, nil, api.E("forbidden", "settlement_unverified"))
 		})
 	}
 	return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, err := tx.LoadCommand(ctx, pending.CommandID); err != nil {
+			return err
+		}
 		out, err := s.ApplySettlementTx(ctx, tx, pending.Request)
 		if err != nil {
 			return err
 		}
 		return runtime.Decide(ctx, tx, pending.CommandID, out, nil)
 	})
+}
+
+// 只有核验器明确确认原冻结证明非法，才裁决终态拒绝。
+// 依赖、效果、context 和持久化异常不证明用量为假。
+func usageVerificationRejected(err error) bool {
+	return api.IsCode(err, "forbidden") || api.IsCode(err, "invalid_request")
 }
 func (s *Service) readSettlement(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, q api.Query, in IDInput) (UseSettlement, error) {
 	var use UseReceipt
@@ -1014,15 +1051,27 @@ func (s *Service) CheckAcceptanceTx(ctx context.Context, tx runtime.Tx, in Accep
 	return nil
 }
 
-func (s *Service) allocateLease(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in LeaseAllocate) (runtime.Outcome, error) {
+// AllocateLeaseTx 供宿主在已显式声明的同库准入事务中预留原有限 lease。
+// 签名计算纯本地；调用者不能另做 UseTx 来重复消费 once 或重复预留。
+func (s *Service) AllocateLeaseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, in LeaseAllocate) (GrantLease, error) {
+	if auth.TenantID != tx.Scope().TenantID {
+		return GrantLease{}, api.E("forbidden", "tenant_mismatch")
+	}
+	validator, err := api.NewValidator(api.SchemaFor[LeaseAllocate]())
+	if err != nil {
+		return GrantLease{}, err
+	}
+	if err = validator.Validate(api.Raw(in)); err != nil {
+		return GrantLease{}, err
+	}
 	if err := requireRole(auth, "grant_authority"); err != nil {
-		return runtime.Outcome{}, err
+		return GrantLease{}, err
 	}
 	if in.CostMode != "strict" {
-		return runtime.Outcome{}, api.E("unsupported", "offline_estimate_not_supported")
+		return GrantLease{}, api.E("unsupported", "offline_estimate_not_supported")
 	}
-	if !api.ValidID(in.EndpointID) || !api.ValidID(in.InstanceID) || in.LeaseID != c.TargetID {
-		return runtime.Outcome{}, api.E("invalid_request", "lease_endpoint_invalid")
+	if !api.ValidID(in.EndpointID) || !api.ValidID(in.InstanceID) || !api.ValidID(in.LeaseID) {
+		return GrantLease{}, api.E("invalid_request", "lease_endpoint_invalid")
 	}
 	request := in.Scope
 	request.UseID = in.LeaseID
@@ -1030,10 +1079,10 @@ func (s *Service) allocateLease(ctx context.Context, tx runtime.Tx, auth runtime
 	request.StartBefore = in.ExpiresAt
 	use, err := s.UseTx(ctx, tx, auth, request)
 	if err != nil {
-		return runtime.Outcome{}, err
+		return GrantLease{}, err
 	}
 	if use.Decision != "allowed" {
-		return runtime.Outcome{}, api.E("forbidden", use.Reason)
+		return GrantLease{}, api.E("forbidden", use.Reason)
 	}
 	request.GrantRefs = use.GrantRefs
 	out := GrantLease{LeaseID: in.LeaseID, Revision: 1, EndpointID: in.EndpointID, InstanceID: in.InstanceID, GrantRefs: request.GrantRefs, Scope: request, Limits: in.Limits, ExpiresAt: use.StartBefore, State: "open", Cumulative: []api.Amount{}, Reserved: in.Limits}
@@ -1042,7 +1091,7 @@ func (s *Service) allocateLease(ctx context.Context, tx runtime.Tx, auth runtime
 	for _, gr := range request.GrantRefs {
 		var grant api.Grant
 		if _, err = tx.Get(ctx, ns("grants"), gr.ObjectID, &grant); err != nil {
-			return runtime.Outcome{}, err
+			return GrantLease{}, err
 		}
 		if grant.Mode == "once" {
 			out.Mode = "once"
@@ -1050,18 +1099,25 @@ func (s *Service) allocateLease(ctx context.Context, tx runtime.Tx, auth runtime
 	}
 	out.AllocationDigest, err = api.Digest(out)
 	if err != nil {
-		return runtime.Outcome{}, err
+		return GrantLease{}, err
 	}
 	if s.Ports.Proof != nil {
 		out.Proof, err = s.Ports.Proof.SignLocal(ProofStatement{TenantID: tx.Scope().TenantID, IssuerID: tx.Scope().OwnerID, AudienceID: in.EndpointID, Purpose: "grant_lease", ObjectRef: tx.Scope().Ref(in.LeaseID, 1), Digest: out.AllocationDigest, IssuedAt: out.IssuedAt, StartBefore: out.ExpiresAt})
 		if err != nil {
-			return runtime.Outcome{}, err
+			return GrantLease{}, err
 		}
 	}
 	if err = tx.Create(ctx, ns("leases"), in.LeaseID, in.EndpointID, out); err != nil {
-		return runtime.Outcome{}, err
+		return GrantLease{}, err
 	}
-	return runtime.Applied(out), nil
+	return out, nil
+}
+func (s *Service) allocateLease(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in LeaseAllocate) (runtime.Outcome, error) {
+	if in.LeaseID != c.TargetID {
+		return runtime.Outcome{}, api.E("invalid_request", "lease_endpoint_invalid")
+	}
+	out, err := s.AllocateLeaseTx(ctx, tx, auth, in)
+	return runtime.Applied(out), err
 }
 func (s *Service) closeLease(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in RefInput) (runtime.Outcome, error) {
 	if err := requireRole(auth, "grant_authority"); err != nil {

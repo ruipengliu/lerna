@@ -51,6 +51,10 @@ func runReportGoal(t *testing.T, driver string) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	// 真实三 Operation/独立读回闭环同时检查装配 Gate 的上游锁顺序。
+	// 这不修改状态、时钟、原命令、窗口或驱动；仅观察实际事务。
+	app.Store = upstreamTaskStore{Store: app.Store, QueryBindingStore: app.Store.(runtime.QueryBindingStore), report: func(err error) { t.Error(err) }}
+	app.Dispatcher.Store = app.Store
 	id := api.NewID("task")
 	original := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: app.Scope.OwnerID, CommandID: api.NewID("command"), TargetID: id, Method: "task.submit", ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(task.SubmitInput{OrchestratorID: app.Scope.OwnerID, GoalRef: ref, PolicyRef: app.TaskPolicy.PolicyRef, Deadline: api.Time(time.Now().Add(5 * time.Minute)), Budget: []api.Amount{{Unit: "USD", Value: "20"}}, RequirementCandidates: []api.RequirementCandidate{}})}
 	receipt, err := app.Dispatcher.Command(ctx, app.UserAuth, api.Raw(original))

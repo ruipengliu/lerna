@@ -163,6 +163,12 @@ func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w
 		}
 		called = true
 		status, err := st.Within(callCtx, sc, s.participants(), func(tx rt.Tx) error {
+			// 外部准备已固定原输入；同库 Authority 先取得上游 Task/预算锁。
+			// 随后锁执行门禁并重验这些准确字段，不能沿旧快照绕过当前门禁。
+			permit, err := s.cfg.Authority.VerifyStart(callCtx, tx, StartRequest{ControlWindow: attempt.ControlWindow, Invoke: op.Invoke, Intent: *op.Intent, AttemptID: attempt.AttemptID, Auth: op.Principal}, attempt.PreparedAuthority)
+			if err != nil {
+				return err
+			}
 			if err := lockAttemptGates(callCtx, tx, op.Invoke, attempt, true); err != nil {
 				return err
 			}
@@ -179,6 +185,9 @@ func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w
 			if a.Phase != "prepared" || current.NewAttemptsClosed {
 				return api.E("invalid_state", "operation_permanently_closed")
 			}
+			if current.Operation.OperationID != op.Operation.OperationID || !api.Equal(current.Invoke, op.Invoke) || !api.Equal(current.Principal, op.Principal) || !api.Equal(current.Intent, op.Intent) || !api.Equal(a, attempt) {
+				return api.E("revision_conflict", "prepared_start_changed")
+			}
 			var gate TaskGate
 			if _, err = tx.Get(callCtx, Namespace+".gates", gateID(op.Invoke.TaskRef.OwnerID, op.Invoke.TaskRef.ObjectID), &gate); err != nil {
 				return err
@@ -194,10 +203,6 @@ func (s *Service) startPrepared(ctx context.Context, st rt.Store, sc rt.Scope, w
 				return api.E("forbidden", "control_window_binding_mismatch")
 			}
 			now, err := tx.Now(callCtx)
-			if err != nil {
-				return err
-			}
-			permit, err := s.cfg.Authority.VerifyStart(callCtx, tx, StartRequest{ControlWindow: a.ControlWindow, Invoke: op.Invoke, Intent: *op.Intent, AttemptID: a.AttemptID, Auth: op.Principal}, a.PreparedAuthority)
 			if err != nil {
 				return err
 			}
@@ -354,7 +359,11 @@ func (s *Service) saveFact(ctx context.Context, st rt.Store, sc rt.Scope, w rt.W
 	var namespaceRef *api.ContentRef
 	if a.Prepared.Cell != nil && !a.CellCommitted && f.Effect == "applied" {
 		cell := a.Prepared.Cell
-		ref, err := s.cfg.Content.Publish(ctx, sc, op.Principal, Publication{ContentID: stableID("content", a.AttemptID+":namespace"), MediaType: "application/json", Purpose: "environment_namespace", Location: s.cfg.Location, ProcessedSources: cell.Sources, DisclosedSources: []api.ContentRef{}}, api.Raw(cell.Namespace))
+		namespace, err := cellNamespace(cell, f)
+		if err != nil {
+			return err
+		}
+		ref, err := s.cfg.Content.Publish(ctx, sc, op.Principal, Publication{ContentID: stableID("content", a.AttemptID+":namespace"), MediaType: "application/json", Purpose: "environment_namespace", Location: s.cfg.Location, ProcessedSources: cell.Sources, DisclosedSources: []api.ContentRef{}}, api.Raw(namespace))
 		if err != nil {
 			return err
 		}
