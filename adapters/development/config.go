@@ -19,29 +19,30 @@ import (
 )
 
 type Config struct {
-	Development        bool                     `json:"development"`
-	TenantID           string                   `json:"tenant_id"`
-	OwnerID            string                   `json:"owner_id"`
-	SubjectID          string                   `json:"subject_id"`
-	UserRoles          []string                 `json:"user_roles,omitempty"`
-	Driver             string                   `json:"driver"`
-	DatabaseID         string                   `json:"database_id"`
-	DatabasePath       string                   `json:"database_path,omitempty"`
-	DSNEnv             string                   `json:"dsn_env,omitempty"`
-	DevDatabaseEnvFile string                   `json:"dev_database_env_file,omitempty"`
-	DataRoot           string                   `json:"data_root"`
-	TokenFile          string                   `json:"token_file"`
-	KeyFile            string                   `json:"key_file"`
-	PolicyExpiresAt    string                   `json:"policy_expires_at"`
-	HTTPAddr           string                   `json:"http_addr"`
-	GRPCAddr           string                   `json:"grpc_addr"`
-	Origins            []string                 `json:"origins"`
-	StaticDir          string                   `json:"static_dir,omitempty"`
-	TZDBRoot           string                   `json:"tzdb_root"`
-	TZDBVersion        string                   `json:"tzdb_version"`
-	Model              *ModelConfig             `json:"model,omitempty"`
-	Governance         *BuiltinGovernanceConfig `json:"governance,omitempty"`
-	ActionBindings     []ActionBindingConfig    `json:"action_bindings,omitempty"`
+	Development        bool                      `json:"development"`
+	TenantID           string                    `json:"tenant_id"`
+	OwnerID            string                    `json:"owner_id"`
+	SubjectID          string                    `json:"subject_id"`
+	UserRoles          []string                  `json:"user_roles,omitempty"`
+	Driver             string                    `json:"driver"`
+	DatabaseID         string                    `json:"database_id"`
+	DatabasePath       string                    `json:"database_path,omitempty"`
+	DSNEnv             string                    `json:"dsn_env,omitempty"`
+	DevDatabaseEnvFile string                    `json:"dev_database_env_file,omitempty"`
+	DataRoot           string                    `json:"data_root"`
+	TokenFile          string                    `json:"token_file"`
+	KeyFile            string                    `json:"key_file"`
+	PolicyExpiresAt    string                    `json:"policy_expires_at"`
+	HTTPAddr           string                    `json:"http_addr"`
+	GRPCAddr           string                    `json:"grpc_addr"`
+	Origins            []string                  `json:"origins"`
+	StaticDir          string                    `json:"static_dir,omitempty"`
+	TZDBRoot           string                    `json:"tzdb_root"`
+	TZDBVersion        string                    `json:"tzdb_version"`
+	Model              *ModelConfig              `json:"model,omitempty"`
+	Governance         *BuiltinGovernanceConfig  `json:"governance,omitempty"`
+	ActionBindings     []ActionBindingConfig     `json:"action_bindings,omitempty"`
+	Information        []InformationSourceConfig `json:"information,omitempty"`
 }
 
 func LoadConfig(path string) (Config, error) {

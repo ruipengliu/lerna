@@ -4,7 +4,7 @@
 
 `Config.action_bindings` 是闭合的显式配置数组，上限 14 项，加原 File 两项总上限 16。每项只有 `capability_ref`、`binding_ref`、`install_lock_ref`、完整 `grant`。Capability 必须与已登记驱动的版本、摘要、闭合输入及输出 Schema 完全对应；全部 Schema 合计最多 96 KiB，持久装配记录仍受 Runtime 256 KiB 上限。配置不是模型提案，不能由模型创建或更换。
 
-GUI v2 当前可从真实 App → HTTP 模型 → Task／Governance → Execution → 本机手机目标使用。新 Source Search／Body 和 WASI 的宿主挂点尚待对应驱动完整验证及后续装配提交；本版不会仅凭其类型存在开放 Task 能力。独立 Executor、Agent 和 EndpointChannel 的拓扑也须显式配置完成。
+GUI v2 和明确配置的 Source Search／Body 当前可从真实 App → HTTP 模型 → Task／Governance → Execution 使用。Source 的配置、原披露与数据许可见 [信息源装配](INFORMATION.md)。Source 参考问答条件与最终成功 Result、WASI 和独立 Executor 的 Task 装配仍待后续切片；Agent 与 EndpointChannel 拓扑也须显式配置完成。
 
 ## GUI 配置与前提
 
@@ -56,4 +56,4 @@ Task 授权强读该原投影并比对完整 PreparedAction，再以固定 Grant
 
 `action_registry_test.go` 通过公开开发 Config、真实 HTTP、Task／Governance／Execution 方法以及实际 SQLite／PostgreSQL 验证 GUI 原许可、准确目标动作及数据库重开；独立手机原日志证明一次 click。另验证跨 capability／binding、click 许可不准 input、Context 不消费 once，以及原 Snapshot 生成后经公开确认流程撤回 Grant 阻止目标动作。配置增加另一个 binding、改变总装配 lock 后，重开的原已准入 Operation 保持完整原意图和叶 lock，目标仍只执行一次；ServiceAuth 的公开设备查询继续拒绝。
 
-带真实 PostgreSQL 测试 DSN 的 `go test -mod=mod -race ./adapters/development -run '^TestConfiguredGUI' -count=1` 七个子例通过，运行 290.484 秒。配置变更恢复独立执行 `-run '^TestPreparedGUIActionKeepsOriginalLeafLockAfterAssemblyChanges$'`，两库 race 通过，运行 138.953 秒。原完整 File Report 与 GUI 正例的两库普通回归通过，运行 151.697 秒。精确制品保存在执行环境的 `action-assembly-verification.json`；供应商质量、远端设备、Source／WASI 装配不由这些测试代替。
+带真实 PostgreSQL 测试 DSN 的 `go test -mod=mod -race ./adapters/development -run '^TestConfiguredGUI' -count=1` 七个子例通过，运行 290.484 秒。配置变更恢复独立执行 `-run '^TestPreparedGUIActionKeepsOriginalLeafLockAfterAssemblyChanges$'`，两库 race 通过，运行 138.953 秒。原完整 File Report 与 GUI 正例的两库普通回归通过，运行 151.697 秒。精确制品保存在执行环境的 `action-assembly-verification.json`；供应商质量、远端设备、Source／WASI 装配不由这些 GUI 测试代替。
