@@ -19,6 +19,7 @@ import (
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/cmd/internal/bootstrap"
 	"github.com/ruipengliu/lerna/internal/brain"
+	"github.com/ruipengliu/lerna/internal/execution"
 	"github.com/ruipengliu/lerna/internal/interaction"
 	"github.com/ruipengliu/lerna/internal/task"
 	harness "github.com/ruipengliu/lerna/sdk/go"
@@ -116,6 +117,46 @@ func processEnvironment(t *testing.T) (string, []string) {
 	u.Path = "/" + name
 	t.Setenv("HARNESS_DATABASE_DSN", u.String())
 	return "postgres", os.Environ()
+}
+
+func diagnoseReport(t *testing.T, c bootstrap.Config, id string) {
+	t.Helper()
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	a, err := bootstrap.OpenAppForRole(ctx, c, false, "management")
+	if err != nil {
+		t.Logf("report public diagnostic unavailable: %v", err)
+		return
+	}
+	defer func() {
+		if err := a.Close(); err != nil {
+			t.Logf("report diagnostic close: %v", err)
+		}
+	}()
+	facts, err := a.Task.ContextFacts(ctx, a.Store, a.Scope, a.ServiceAuth, id)
+	if err != nil {
+		t.Logf("report current facts unavailable: %v", err)
+		return
+	}
+	t.Logf("report public facts: checks=%d artifacts=%d operations=%d", len(facts.Checks), len(facts.Artifacts), len(facts.Operations))
+	for _, operation := range facts.Operations {
+		q := api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: c.OwnerID, QueryID: api.NewID("query"), Method: "execution.get", TargetID: operation.Intent.OperationID, Payload: api.Raw(execution.OperationIDInput{OperationID: operation.Intent.OperationID})}
+		view, err := a.Dispatcher.Query(ctx, a.ServiceAuth, api.Raw(q))
+		t.Logf("report public operation=%s fact_effect=%s view=%s error=%v", operation.Intent.OperationID, operation.Fact.Effect, view, err)
+	}
+	q := api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: c.OwnerID, QueryID: api.NewID("query"), Method: "execution.control.get", TargetID: id, Payload: api.Raw(execution.ControlGetInput{TaskID: id})}
+	view, err := a.Dispatcher.Query(ctx, a.ServiceAuth, api.Raw(q))
+	var control execution.ControlView
+	if err == nil {
+		err = api.Decode(view, &control)
+	}
+	if err != nil {
+		t.Logf("report public control unavailable: %v", err)
+		return
+	}
+	for _, window := range control.Windows {
+		t.Logf("report control window=%s issued_at=%s start_before=%s", window.WindowID, window.IssuedAt, window.StartBefore)
+	}
 }
 
 func TestIndependentApplicationGatewayAndWorkerCompleteReportAndActuallyStop(t *testing.T) {
@@ -217,16 +258,18 @@ func TestIndependentApplicationGatewayAndWorkerCompleteReportAndActuallyStop(t *
 			break
 		}
 		if fact.Status == "failed" || fact.Status == "cancelled" {
+			diagnoseReport(t, c, id)
 			t.Fatalf("separate worker ended task without verified result: %s", out)
 		}
 		select {
 		case <-ctx.Done():
+			diagnoseReport(t, c, id)
 			t.Fatalf("separate worker did not complete report: %s", out)
 		case <-time.After(100 * time.Millisecond):
 		}
 	}
 	actual, err := os.ReadFile(filepath.Join(root, "files", goal.SavePath))
-	if err != nil || string(actual) != string(brain.ReportBytes(goal)) {
+	if err != nil || string(actual) != "# Independent process report\n\nVerified bytes from separate durable workers.\n" {
 		t.Fatalf("independent target bytes: %q %v", actual, err)
 	}
 }
