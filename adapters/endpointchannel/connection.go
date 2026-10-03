@@ -39,6 +39,7 @@ func (p *pending) BeginDisclosure(ctx context.Context) (func(), error) {
 	c := p.flow.connection
 	c.mu.Lock()
 	if p.completedBy != nil && c.active != p.completedBy {
+		c.discarded++
 		c.mu.Unlock()
 		return nil, api.E("revision_conflict", "old_binding_output_discarded")
 	}
@@ -56,7 +57,7 @@ func (p *pending) Wait(ctx context.Context) (string, json.RawMessage, error) {
 }
 
 type delivery struct {
-	original grpcwire.Delivery
+	original *grpcwire.Delivery
 	reply    *grpcwire.Reply
 }
 type Connection struct {
@@ -287,12 +288,19 @@ func (c *Connection) Receive(ctx context.Context, raw json.RawMessage) error {
 	saved, ok := c.deliveries[reply.DeliveryID]
 	f := c.active
 	if !ok {
-		c.mu.Unlock()
-		return api.E("forbidden", "original_delivery_required")
+		if len(c.deliveries) >= 32 {
+			c.mu.Unlock()
+			return api.E("overloaded", "endpoint_delivery_pending_limit")
+		}
+		// 重连或外Ack丢失时，gateway没有原Reply真值。只保存准确待交回字节，
+		// 当前application必须在原durable ledger核配对/delivery/摘要/输出后才能Ack。
+		saved = delivery{}
 	}
-	if err = grpcwire.ValidateReply(saved.original, *reply); err != nil {
-		c.mu.Unlock()
-		return err
+	if saved.original != nil {
+		if err = grpcwire.ValidateReply(*saved.original, *reply); err != nil {
+			c.mu.Unlock()
+			return err
+		}
 	}
 	if saved.reply != nil && !api.Equal(*saved.reply, *reply) {
 		c.mu.Unlock()

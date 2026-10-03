@@ -57,10 +57,14 @@ func realChannelApplications(t *testing.T, f *unaryFixture, authority transport.
 	}
 	return addresses, stops
 }
-func realChannelGateway(t *testing.T, f *unaryFixture, router *endpointchannel.Router) (harness.Discovery, string, *http.Client) {
+func realChannelGateway(t *testing.T, f *unaryFixture, router *endpointchannel.Router, processors ...wss.Processor) (harness.Discovery, string, *http.Client) {
 	t.Helper()
 	registry := f.processor.(wss.LocalProcessor).Dispatcher.Registry
-	s, err := wss.New(wss.Config{OwnerID: f.owner, Store: f.store, Registry: registry, Identity: f.identity, Processor: router, MaxConnections: 16, MaxQueuedBytes: 64 << 20})
+	var processor wss.Processor = router
+	if len(processors) == 1 {
+		processor = processors[0]
+	}
+	s, err := wss.New(wss.Config{OwnerID: f.owner, Store: f.store, Registry: registry, Identity: f.identity, Processor: processor, MaxConnections: 16, MaxQueuedBytes: 64 << 20})
 	if err != nil {
 		t.Fatal(err)
 	}
