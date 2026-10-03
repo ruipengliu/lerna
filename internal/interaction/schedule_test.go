@@ -23,8 +23,8 @@ func (b scheduleGateBridge) CheckTx(ctx context.Context, tx runtime.Tx, a runtim
 func TestScheduleKeepsUnknownSlotAcrossPauseAndClosesOnlyFromTask(t *testing.T) {
 	f := newApplication(t)
 	id := api.NewID("schedule")
-	planned := time.Now().Add(2 * time.Second).Truncate(time.Second)
 	template := f.upload(t, "原定时目标")
+	planned := time.Now().Add(15 * time.Second).Truncate(time.Second)
 	r := f.command(t, "schedule.create", id, nil, interaction.ScheduleInput{Spec: interaction.ScheduleSpec{Type: "once_at", At: api.Time(planned)}, Timezone: "Etc/UTC", TZDBVersion: "2026b", TemplateRef: template, PolicyRef: f.policy, InstallLockRef: f.config, TaskTimeoutSeconds: 120, Budget: []api.Amount{{Unit: "USD", Value: "20"}}})
 	var out interaction.ScheduleOutput
 	if e := api.Decode(r.Output, &out); e != nil {

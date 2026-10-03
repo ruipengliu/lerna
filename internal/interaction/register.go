@@ -7,7 +7,11 @@ import (
 )
 
 func command[I, O any](s *Service, name string, cas bool, handler func(context.Context, runtime.Tx, runtime.Auth, api.Command, I) (O, error)) runtime.Method {
-	return runtime.Method{Contract: api.Contract[I, O](name, "interaction", "command", cas, false), Participants: s.config.Participants, Apply: func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command) (runtime.Outcome, error) {
+	contract := api.Contract[I, O](name, "interaction", "command", cas, false)
+	if name == "schedule.create" || name == "schedule.update" {
+		contract.InputSchema["properties"].(map[string]any)["spec"] = api.Ref("ScheduleSpec")
+	}
+	return runtime.Method{Contract: contract, Participants: s.config.Participants, Apply: func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command) (runtime.Outcome, error) {
 		var in I
 		if err := api.Decode(c.Payload, &in); err != nil {
 			return runtime.Outcome{}, err
@@ -34,6 +38,16 @@ func (s *Service) Register(r *runtime.Registry) error {
 			return s.ReadSession(ctx, store, scope, a, q.TargetID, in)
 		}),
 	}
+	methods = append(methods, query[api.ListInput, api.Page[api.Session]]("session.list", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in api.ListInput) (api.Page[api.Session], error) {
+		if q.TargetID != scope.OwnerID {
+			return api.Page[api.Session]{}, invalid("target_mismatch")
+		}
+		return s.ListSessions(ctx, store, scope, a, in)
+	}), query[api.ListInput, api.Page[api.Branch]]("session.branches.list", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in api.ListInput) (api.Page[api.Branch], error) {
+		return s.ListBranches(ctx, store, scope, a, q.TargetID, in)
+	}), query[api.ListInput, api.Page[api.Message]]("session.messages.list", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in api.ListInput) (api.Page[api.Message], error) {
+		return s.ListMessages(ctx, store, scope, a, q.TargetID, in)
+	}))
 	for _, name := range []string{"session.archive", "session.reopen", "session.delete"} {
 		methods = append(methods, command[SessionControlInput, SessionOutput](s, name, true, s.ControlSessionTx))
 	}
@@ -53,6 +67,16 @@ func (s *Service) Register(r *runtime.Registry) error {
 		if err := r.RegisterJob(JobDispatch, s.Dispatch); err != nil {
 			return err
 		}
+		methods = append(methods, query[api.ListInput, api.Page[SubmissionView]]("submission.list", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in api.ListInput) (api.Page[SubmissionView], error) {
+			return s.ListSubmissions(ctx, store, scope, a, q.TargetID, in)
+		}))
+		methods = append(methods, query[ReadInput, HistoryView]("submission.history", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in ReadInput) (HistoryView, error) {
+			revision := in.Revision
+			if revision == 0 {
+				revision = 1
+			}
+			return s.History(ctx, store, scope, a, scope.Ref(q.TargetID, revision))
+		}))
 	}
 	for _, m := range methods {
 		if err := r.Register(m); err != nil {
@@ -84,6 +108,20 @@ func (s *Service) Register(r *runtime.Registry) error {
 		}
 		if err := r.RegisterJob(JobOccurrence, s.Occur); err != nil {
 			return err
+		}
+		for _, m := range []runtime.Method{query[api.ListInput, api.Page[Schedule]]("schedule.list", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in api.ListInput) (api.Page[Schedule], error) {
+			if q.TargetID != scope.OwnerID {
+				return api.Page[Schedule]{}, invalid("target_mismatch")
+			}
+			return s.ListSchedules(ctx, store, scope, a, in)
+		}), query[api.ListInput, api.Page[Occurrence]]("occurrence.list", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in api.ListInput) (api.Page[Occurrence], error) {
+			return s.ListOccurrences(ctx, store, scope, a, q.TargetID, in)
+		}), query[SkipListInput, api.Page[SkipRange]]("schedule.skips.list", func(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, q api.Query, in SkipListInput) (api.Page[SkipRange], error) {
+			return s.ListSkips(ctx, store, scope, a, q.TargetID, in)
+		})} {
+			if err := r.Register(m); err != nil {
+				return err
+			}
 		}
 	}
 	if len(s.bindings) > 0 && s.ports.Content != nil {

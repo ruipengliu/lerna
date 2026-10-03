@@ -133,6 +133,9 @@ func (s *Service) CreateScheduleTx(ctx context.Context, tx runtime.Tx, a runtime
 	if err = tx.Create(ctx, schedules, c.TargetID, a.SubjectID, r); err != nil {
 		return ScheduleOutput{}, err
 	}
+	if err = bumpCollection(ctx, tx, "schedules", a.SubjectID); err != nil {
+		return ScheduleOutput{}, err
+	}
 	if next != nil {
 		if _, err = tx.Raise(ctx, JobTrigger, c.TargetID, tx.Scope().Ref(c.TargetID, 1), *next); err != nil {
 			return ScheduleOutput{}, err
@@ -151,7 +154,10 @@ func getSchedule(ctx context.Context, tx runtime.Tx, a runtime.Auth, id string) 
 func saveSchedule(ctx context.Context, tx runtime.Tx, r *scheduleRecord) error {
 	old := r.Revision
 	r.Revision++
-	return tx.Put(ctx, schedules, r.ScheduleID, old, *r)
+	if err := tx.Put(ctx, schedules, r.ScheduleID, old, *r); err != nil {
+		return err
+	}
+	return bumpCollection(ctx, tx, "schedules", r.Auth.SubjectID)
 }
 func scheduleOutput(scope runtime.Scope, r scheduleRecord) ScheduleOutput {
 	count := uint64(0)
@@ -346,6 +352,9 @@ func (s *Service) Trigger(ctx context.Context, store runtime.Store, scope runtim
 			if err = tx.Create(ctx, skips, skipped.SkipID, r.ScheduleID, *skipped); err != nil {
 				return runtime.Disposition{}, err
 			}
+			if err = bumpCollection(ctx, tx, "skips", r.ScheduleID); err != nil {
+				return runtime.Disposition{}, err
+			}
 		}
 		if r.NextDueAt != nil {
 			due, _ = api.ParseTime(*r.NextDueAt)
@@ -368,6 +377,9 @@ func (s *Service) Trigger(ctx context.Context, store runtime.Store, scope runtim
 					r.ActiveOccurrenceID = id
 				}
 				if err = tx.Create(ctx, occurrences, id, r.ScheduleID, o); err != nil {
+					return runtime.Disposition{}, err
+				}
+				if err = bumpCollection(ctx, tx, "occurrences", r.ScheduleID); err != nil {
 					return runtime.Disposition{}, err
 				}
 				if o.Phase == "recorded" {
@@ -412,7 +424,10 @@ func advanceSchedule(s *Service, r *scheduleRecord, after time.Time) error {
 func saveOccurrence(ctx context.Context, tx runtime.Tx, r *occurrenceRecord) error {
 	old := r.Revision
 	r.Revision++
-	return tx.Put(ctx, occurrences, r.OccurrenceID, old, *r)
+	if err := tx.Put(ctx, occurrences, r.OccurrenceID, old, *r); err != nil {
+		return err
+	}
+	return bumpCollection(ctx, tx, "occurrences", r.ScheduleRef.ObjectID)
 }
 func closeSlot(ctx context.Context, tx runtime.Tx, schedule *scheduleRecord, occ *occurrenceRecord) error {
 	occ.SlotClosed = true
