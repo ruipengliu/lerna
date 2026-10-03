@@ -148,6 +148,15 @@ func (s *Service) authWithin(ctx context.Context, scope runtime.Scope, auth runt
 	})
 }
 
+func (s *Service) claimWithin(ctx context.Context, scope runtime.Scope, claim api.Claim, fn func(runtime.Tx) error) error {
+	return s.within(ctx, scope, func(tx runtime.Tx) error {
+		if err := fn(tx); err != nil {
+			return err
+		}
+		return tx.Guard(ctx, claim)
+	})
+}
+
 func checkAuth(scope runtime.Scope, auth runtime.Auth) error {
 	if auth.TenantID != scope.TenantID || !api.ValidID(auth.SubjectID) || auth.CredentialGeneration == 0 {
 		return api.E("forbidden", "invalid_identity")
