@@ -28,4 +28,6 @@ Implementer: storage_impl
 
 2026-10-03 Source参考问答中间片：显式information_reference_answer登记闭合JSON字符串事实问题，原Goal.Body的sources/claims/时效固定；不接受模型自报Observation/pass。Context只从本Task原closed Operation/Attempt读准确journal/current Content，真实BodyRef/字节进入Snapshot材料。原要求参数与问题准确一致，独立ReferenceEvaluator读取原源JSONPointer、当前许可、获取／观察时效及完整引用后形成ConditionResult，Task走正常coverage/check/complete/Result；默认File规则不变。真实SQLite首次完整链PASS17.431s（原3模型POST/1GET、verified Result/DB重开原回执无新HTTP），错答公开fail check、禁止Result与取消后原费用结清PASS13.443s。一次测试wire漏goal_utf8导致的180s失败保留，修正fixture后重跑通过，不记失败为PASS；PostgreSQL/race、旧来源时间、当前撤回及冲突／缺口反例正在下一片验证。
 
-整体15保持partial：参考问答其余数据库／故障矩阵、WASI及独立Executor公共Task装配仍待本地后续切片；原driver功能证据不代替完整链，尚未完成项不归因为外部凭据缺口。
+2026-10-03 Source参考问答两库矩阵：`go test -mod=readonly -race ./adapters/development -run '^TestInformationReference' -count=1 -timeout=30m -v` 实际 SQLite／PostgreSQL 四组八子例全部 PASS626.122s（编译／编排636.487s）。成功路径独立条件与不可变 verified Result、原回执／DB重开无新HTTP；错答公开fail且无Result；原观察时间两小时前而获取时间为现在仍为stale；原1GET/applied后公开撤回Source Grant在答案模型出站前阻断，保持2个原POST／无Result，取消后原USD0.00048结清。没有延长原业务期限或把工具中断当成功，执行环境 action-information-reference-matrix 保存完整日志、exit0、测试文件摘要与前提。运行基线3ea375c，SourceQA生产实现07a7a08；新测试仅增加真实时效和撤权分支，旧失败仍保留。
+
+整体15保持partial：WASI及独立Executor公共Task装配仍待本地后续切片；原driver功能证据不代替完整链，尚未完成项不归因为外部凭据缺口。参考问答本轮范围为固定公开HTTP JSON字符串事实与明确合同模型，通用自然语言质量／供应商资格另行验收；多源冲突及缺口仍按所属ReferenceEvaluator合同拒绝，不将provider检查冒称全部App场景已测。

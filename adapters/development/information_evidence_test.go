@@ -14,6 +14,7 @@ import (
 	"github.com/ruipengliu/lerna/adapters/providers"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/brain"
+	"github.com/ruipengliu/lerna/internal/execution"
 	"github.com/ruipengliu/lerna/internal/task"
 	"github.com/ruipengliu/lerna/runtime"
 )
@@ -41,12 +42,37 @@ func TestInformationReferenceRejectsWrongAnswerBeforeCompletion(t *testing.T) {
 	}
 }
 
+func TestInformationReferenceKeepsOriginalObservedTimeWhenDownloadedNow(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) {
+			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
+				t.Skip("actual PostgreSQL DSN required")
+			}
+			runInformationReferenceTask(t, driver, "stale-source")
+		})
+	}
+}
+
+func TestInformationReferenceCurrentGrantRevokeStopsAnswerModelAndKeepsOriginalFees(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver, func(t *testing.T) {
+			if driver == "postgres" && os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
+				t.Skip("actual PostgreSQL DSN required")
+			}
+			runInformationReferenceTask(t, driver, "revoke-before-answer")
+		})
+	}
+}
+
 func runInformationReferenceTask(t *testing.T, driver, scenario string) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), reportFixtureTimeout)
 	defer cancel()
 	var fetches, posts atomic.Int32
 	observed := api.Time(time.Now().Add(-time.Second))
+	if scenario == "stale-source" {
+		observed = api.Time(time.Now().Add(-2 * time.Hour))
+	}
 	body := api.Raw(map[string]any{"version": "7", "observed_at": observed})
 	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fetches.Add(1)
@@ -183,6 +209,7 @@ func runInformationReferenceTask(t *testing.T, driver, scenario string) {
 	if err != nil || receipt.Error != nil {
 		t.Fatalf("reference Task submit: %v %+v", err, receipt)
 	}
+	revoked := false
 	for {
 		limit := 500
 		if scenario != "valid" {
@@ -192,14 +219,70 @@ func runInformationReferenceTask(t *testing.T, driver, scenario string) {
 		if limit == 1 && api.IsCode(err, "overloaded") {
 			err = nil
 		}
+		if scenario == "revoke-before-answer" && revoked && api.IsCode(err, "forbidden") {
+			if fetches.Load() != 1 || posts.Load() != 2 {
+				t.Fatalf("revoked original source disclosed to answer model: GET=%d POST=%d", fetches.Load(), posts.Load())
+			}
+			current, readErr := a.Task.Read(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+			if readErr != nil || current.Status == "succeeded" {
+				t.Fatalf("revoked source completed: %+v %v", current, readErr)
+			}
+			if _, readErr := a.Task.Result(ctx, a.Store, a.Scope, a.UserAuth, taskID, task.ResultInput{}); readErr == nil {
+				t.Fatal("revoked source created an answer Result")
+			}
+			cancel := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.Scope.OwnerID, CommandID: api.NewID("command"), TargetID: taskID, Method: "task.cancel", ExpectedRevision: &current.Revision, ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(task.ControlInput{TaskID: taskID, Reason: "original source permission revoked before answer disclosure"})}
+			r, cancelErr := a.Dispatcher.Command(ctx, a.UserAuth, api.Raw(cancel))
+			if cancelErr != nil || r.Error != nil {
+				t.Fatalf("revoked answer cancellation: %v %+v", cancelErr, r)
+			}
+			if err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 500); err != nil {
+				t.Fatal(err)
+			}
+			closed, readErr := a.Task.Read(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+			for readErr == nil && closed.Status == "cancelled" && closed.AccountingOpen {
+				select {
+				case <-ctx.Done():
+					t.Fatalf("original revoked answer accounting remains open: %+v %v", closed, ctx.Err())
+				case <-time.After(20 * time.Millisecond):
+				}
+				if err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 500); err != nil {
+					t.Fatal(err)
+				}
+				closed, readErr = a.Task.Read(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+			}
+			if readErr != nil || closed.Status != "cancelled" || closed.AccountingOpen || fetches.Load() != 1 || posts.Load() != 2 || len(closed.Budget) != 1 || closed.Budget[0].Spent != "0.00048" {
+				t.Fatalf("revoked answer lost original two-call known fees: %+v %v", closed, readErr)
+			}
+			return
+		}
 		if err != nil {
 			t.Fatal(err)
+		}
+		if scenario == "revoke-before-answer" && !revoked && fetches.Load() == 1 {
+			facts, readErr := a.Task.ContextFacts(ctx, a.Store, a.Scope, a.UserAuth, taskID)
+			if readErr != nil {
+				t.Fatal(readErr)
+			}
+			if len(facts.Operations) == 1 {
+				raw, readErr := a.query(ctx, "execution.get", facts.Operations[0].Intent.OperationID, execution.OperationIDInput{OperationID: facts.Operations[0].Intent.OperationID})
+				var view execution.OperationView
+				if readErr != nil || api.Decode(raw, &view) != nil {
+					t.Fatalf("original source effect unavailable: %v", readErr)
+				}
+				if view.Operation.Effect == "applied" && view.Operation.UsageFinal {
+					revokeActionGrant(t, ctx, a, cfg.ActionBindings[0].Grant.GrantID, goal)
+					revoked = true
+					if posts.Load() != 2 {
+						t.Fatal("revocation observation came after answer disclosure")
+					}
+				}
+			}
 		}
 		current, err := a.Task.Read(ctx, a.Store, a.Scope, a.UserAuth, taskID)
 		if err != nil {
 			t.Fatal(err)
 		}
-		if scenario == "wrong-answer" {
+		if scenario == "wrong-answer" || scenario == "stale-source" {
 			facts, readErr := a.Task.ContextFacts(ctx, a.Store, a.Scope, a.UserAuth, taskID)
 			if readErr != nil {
 				t.Fatal(readErr)
@@ -210,6 +293,15 @@ func runInformationReferenceTask(t *testing.T, driver, scenario string) {
 				}
 				if _, err := a.Task.Result(ctx, a.Store, a.Scope, a.UserAuth, taskID, task.ResultInput{}); err == nil {
 					t.Fatal("wrong answer created a Result")
+				}
+				if scenario == "stale-source" {
+					report, err := a.Memory.Read(ctx, a.Scope, a.UserAuth, facts.Checks[0].ScopeRef, "task.context")
+					var checked struct {
+						Assessment providers.ReferenceAssessment `json:"assessment"`
+					}
+					if err != nil || json.Unmarshal(report, &checked) != nil || checked.Assessment.Status != "stale" || len(checked.Assessment.Answers) != 0 {
+						t.Fatalf("new acquisition concealed original stale source: %+v %v", checked, err)
+					}
 				}
 				cancel := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.Scope.OwnerID, CommandID: api.NewID("command"), TargetID: taskID, Method: "task.cancel", ExpectedRevision: &current.Revision, ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(task.ControlInput{TaskID: taskID, Reason: "original answer disagrees with independently read fact"})}
 				r, err := a.Dispatcher.Command(ctx, a.UserAuth, api.Raw(cancel))
