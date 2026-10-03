@@ -16,6 +16,8 @@ Context 编译完成后若原 Task 已变化，仅在准入闭包明确 `stale_s
 
 同库 `RequestViewsTx` 一次核验至多 20 个准确请求，拒绝重复、跨租户、跨 owner、错误主体与旧请求版本。不可变请求 birth 和准确历史 Task 负责完整根路径路由；全部 Task 按根到叶、同层 ID 锁定之后，再按 ID 锁全部当前请求，输出保留原输入顺序。单个 `RequestViewTx` 复用这条路径，供 Interaction 的共同事务先核请求再写 Surface。
 
+内部子 Task 的创建事务在原 version2 固定祖先根路径；之后读取当前 Task 先由这个不可变版本路由并锁根到叶。Decision、Reservation、Delegation、Allocation 和已绑定子 Task 的 incoming quota，同样由原 birth 路由 Task 之后再锁当前源行。修订仅改变原事实和控制，不改变源所属 Task；路由不完整或变化时拒绝使用。
+
 宿主必须显式声明共享数据库与 Tx participants，并提供：
 
 - Content 字节读取及固定出版；Context 编译；Brain、Execution、外部取证及协作端口。
@@ -46,6 +48,8 @@ Task 测试使用持久 SQLite、真实 PostgreSQL、实际 Memory/ObjectStore�
 护栏回归通过实际 Memory/ObjectStore 出版边界统计新增内容，验证达到无进展上限后多次 drain 不产生新 Decision、新文件或待计时重领 Job；真实 InputRequest 与答案消费能恢复连续计数，而累计续行上限仍保留。纯迟到费用测试使用字面原 Operation 夹具，只证明归并算法不能将账务变化误算为目标进展。
 
 批量请求回归使用真实 PostgreSQL 两个并发事务反序读取两个 Task 的请求：逐个调用的旧实现实际触发 SQLSTATE 40P01；统一完整锁集合后两者均提交，准确原输入顺序和答案 Schema 保留。测试只以有界延迟放大实际行锁交错，未用包装 Tx 替代数据库。
+
+原费用归并与新决策准入的真实 PostgreSQL 竞争也复现并消除 SQLSTATE 40P01；账务准确提交一次，过期的决策快照按原版本门禁拒绝。预批准观察夹具以 SQLite 权威时钟的毫秒精度向下声明时间，避免纳秒墙钟落在同毫秒权威时间之后；未放宽规则或 Task 的有限陈旧期限。
 
 运行入口：`go test ./internal/task -count=1`、`go vet ./internal/task`、`go test -race ./internal/task -count=1`。PostgreSQL 测试只在 `HARNESS_TEST_POSTGRES_DSN` 配置时运行；未配置时明确 skip，不计为 PostgreSQL 通过。密码从运行环境取得，不进仓库或输出。
 

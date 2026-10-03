@@ -1,4 +1,4 @@
-package bootstrap
+package development
 
 import (
 	"context"
@@ -38,3 +38,17 @@ func (r requestBridge) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.
 	v, e := r.a.Task.RequestViewTx(ctx, tx, auth, ref)
 	return interaction.RequestView{Request: v.Request, AnswerSchema: v.AnswerSchema, Method: "task.input"}, e
 }
+
+func (r requestBridge) CheckBatchTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, refs []api.ObjectRef) ([]interaction.RequestView, error) {
+	views, err := r.a.Task.RequestViewsTx(ctx, tx, auth, refs)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]interaction.RequestView, len(views))
+	for i, view := range views {
+		out[i] = interaction.RequestView{Request: view.Request, AnswerSchema: view.AnswerSchema, Method: "task.input"}
+	}
+	return out, nil
+}
+
+var _ interaction.RequestBatchPort = requestBridge{}

@@ -1,4 +1,4 @@
-package bootstrap
+package development
 
 import (
 	"context"
@@ -15,11 +15,13 @@ type encodedIntent struct {
 	Domain        execution.ExecutionIntent `json:"domain"`
 	Ref           api.ContentRef            `json:"ref"`
 	Hash          string                    `json:"hash"`
-	Command       api.Command               `json:"command"`
+	Command       *api.Command              `json:"command,omitempty"`
+	UseProofRefs  []api.ContentRef          `json:"use_proof_refs,omitempty"`
 }
 type executionBridge struct{ a *App }
 
-func (e executionBridge) Dispatch(ctx context.Context, s runtime.Scope, i task.OperationIntent, window api.ControlSnapshot) error {
+// PrepareDispatch 出版原惰性输入和原Use证明，尚不准入执行或签发控制窗口。
+func (e executionBridge) PrepareDispatch(ctx context.Context, s runtime.Scope, i task.OperationIntent) error {
 	var fixed encodedIntent
 	_, er := e.a.Store.Read(ctx, s, "platform.execution_intents", i.OperationID, 0, &fixed)
 	if er != nil && !api.IsCode(er, "not_found") {
@@ -44,9 +46,11 @@ func (e executionBridge) Dispatch(ctx context.Context, s runtime.Scope, i task.O
 		if er != nil {
 			return er
 		}
-		input := execution.InvokeInput{OperationID: i.OperationID, TaskRef: i.TaskRef, GoalRevision: i.GoalRevision, ControlRevision: i.ControlRevision, CapabilityRef: i.CapabilityRef, BindingRef: i.BindingRef, IntentRef: ref, IntentHash: hash, UseRefs: i.UseIntentRefs, Deadline: i.Deadline, ControlSnapshot: window, ReservationRef: i.ReservationRef}
-		command := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: i.ExecutorID, CommandID: i.CommandID, TargetID: i.OperationID, Method: "execution.invoke", ExpiresAt: i.Deadline, Payload: api.Raw(input)}
-		fixed = encodedIntent{AdmissionHash: i.IntentHash, Domain: domain, Ref: ref, Hash: hash, Command: command}
+		proofs, er := e.prepareUseProofs(ctx, s, i.UseIntentRefs, i.IntentHash)
+		if er != nil {
+			return er
+		}
+		fixed = encodedIntent{AdmissionHash: i.IntentHash, Domain: domain, Ref: ref, Hash: hash, UseProofRefs: proofs}
 		status, er := e.a.Store.Within(ctx, s, []string{"platform"}, func(tx runtime.Tx) error {
 			var old encodedIntent
 			if _, er := tx.Get(ctx, "platform.execution_intents", i.OperationID, &old); er == nil {
@@ -70,9 +74,78 @@ func (e executionBridge) Dispatch(ctx context.Context, s runtime.Scope, i task.O
 	if fixed.AdmissionHash != i.IntentHash {
 		return api.E("idempotency_conflict", "admission_changed")
 	}
-	receipt, er := e.a.Dispatcher.Command(ctx, e.a.ServiceAuth, api.Raw(fixed.Command))
-	if er != nil {
-		return er
+	return nil
+}
+
+func (e executionBridge) prepareUseProofs(ctx context.Context, s runtime.Scope, uses []api.ObjectRef, hash string) ([]api.ContentRef, error) {
+	proofs := make([]api.ContentRef, 0, len(uses))
+	for _, ref := range uses {
+		raw, err := e.a.query(ctx, "grant.use.get", ref.ObjectID, governance.IDInput{ID: ref.ObjectID})
+		if err != nil {
+			return nil, err
+		}
+		var use governance.UseReceipt
+		if err = api.Decode(raw, &use); err != nil {
+			return nil, err
+		}
+		if use.Decision != "allowed" || use.IntentHash != hash {
+			return nil, api.E("forbidden", "use_binding_mismatch")
+		}
+		proof, err := e.a.Publish(ctx, s, e.a.ServiceAuth, stableID("content", "use-proof/"+ref.ObjectID), "application/jose", []byte(use.Proof), []api.ContentRef{}, []api.ContentRef{})
+		if err != nil {
+			return nil, err
+		}
+		proofs = append(proofs, proof)
+	}
+	return proofs, nil
+}
+
+func (e executionBridge) Dispatch(ctx context.Context, s runtime.Scope, i task.OperationIntent, window api.ControlSnapshot) error {
+	// 旧宿主可缺少准备接口；新装配在短窗口签发前已完成该步骤。
+	if err := e.PrepareDispatch(ctx, s, i); err != nil {
+		return err
+	}
+	var fixed encodedIntent
+	if _, err := e.a.Store.Read(ctx, s, "platform.execution_intents", i.OperationID, 0, &fixed); err != nil {
+		return err
+	}
+	if fixed.AdmissionHash != i.IntentHash {
+		return api.E("idempotency_conflict", "admission_changed")
+	}
+	if fixed.Command == nil {
+		input := execution.InvokeInput{OperationID: i.OperationID, TaskRef: i.TaskRef, GoalRevision: i.GoalRevision, ControlRevision: i.ControlRevision, CapabilityRef: i.CapabilityRef, BindingRef: i.BindingRef, IntentRef: fixed.Ref, IntentHash: fixed.Hash, UseRefs: i.UseIntentRefs, Deadline: i.Deadline, ControlSnapshot: window, ReservationRef: i.ReservationRef}
+		command := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: i.ExecutorID, CommandID: i.CommandID, TargetID: i.OperationID, Method: "execution.invoke", ExpiresAt: i.Deadline, Payload: api.Raw(input)}
+		status, err := e.a.Store.Within(ctx, s, []string{"platform"}, func(tx runtime.Tx) error {
+			var old encodedIntent
+			revision, err := tx.Get(ctx, "platform.execution_intents", i.OperationID, &old)
+			if err != nil {
+				return err
+			}
+			if old.AdmissionHash != i.IntentHash {
+				return api.E("idempotency_conflict", "admission_changed")
+			}
+			if old.Command != nil {
+				fixed = old
+				return nil
+			}
+			old.Command = &command
+			if err = tx.Put(ctx, "platform.execution_intents", i.OperationID, revision, old); err != nil {
+				return err
+			}
+			fixed = old
+			return nil
+		})
+		if status == runtime.CommitUnknown {
+			return runtime.ErrCommitUnknown
+		}
+		if err != nil {
+			return err
+		}
+	}
+	// 不论新的调用携带什么窗口，都只投递首次耐久冻结的原命令。
+	receipt, err := e.a.Dispatcher.Command(ctx, e.a.ServiceAuth, api.Raw(*fixed.Command))
+	if err != nil {
+		return err
 	}
 	if receipt.Error != nil {
 		return receipt.Error
@@ -138,25 +211,19 @@ func (e executionAuthority) PrepareStart(ctx context.Context, s runtime.Scope, r
 	if fixed.Hash != r.Invoke.IntentHash || !api.Equal(fixed.Domain, r.Intent) {
 		return execution.PreparedStart{}, api.E("forbidden", "intent_encoding_changed")
 	}
-	var proofRef api.ContentRef
-	for _, u := range r.Invoke.UseRefs {
-		raw, er := e.a.query(ctx, "grant.use.get", u.ObjectID, governance.IDInput{ID: u.ObjectID})
-		if er != nil {
-			return execution.PreparedStart{}, er
-		}
-		var receipt governance.UseReceipt
-		if er = api.Decode(raw, &receipt); er != nil {
-			return execution.PreparedStart{}, er
-		}
-		if receipt.Decision != "allowed" || receipt.IntentHash != fixed.AdmissionHash {
-			return execution.PreparedStart{}, api.E("forbidden", "use_binding_mismatch")
-		}
-		proofRef, er = e.a.Publish(ctx, s, e.a.ServiceAuth, stableID("content", "use-proof/"+u.ObjectID), "application/jose", []byte(receipt.Proof), []api.ContentRef{}, []api.ContentRef{})
+	proofs := fixed.UseProofRefs
+	if len(proofs) == 0 {
+		// 原内联记录在旧版中未保存准备证明；仍沿原Use/原Content身份恢复。
+		var er error
+		proofs, er = (executionBridge{e.a}).prepareUseProofs(ctx, s, r.Invoke.UseRefs, fixed.AdmissionHash)
 		if er != nil {
 			return execution.PreparedStart{}, er
 		}
 	}
-	return execution.PreparedStart{OperationID: r.Invoke.OperationID, IntentHash: r.Invoke.IntentHash, Recipient: s.OwnerID, UseRefs: r.Invoke.UseRefs, ApprovalRefs: []api.ObjectRef{}, AuthorityRevision: 1, StartBefore: r.ControlWindow.StartBefore, ProofRef: proofRef}, nil
+	if len(proofs) != 1 {
+		return execution.PreparedStart{}, api.E("unsupported", "exact_single_use_proof_required")
+	}
+	return execution.PreparedStart{OperationID: r.Invoke.OperationID, IntentHash: r.Invoke.IntentHash, Recipient: s.OwnerID, UseRefs: r.Invoke.UseRefs, ApprovalRefs: []api.ObjectRef{}, AuthorityRevision: 1, StartBefore: r.ControlWindow.StartBefore, ProofRef: proofs[0]}, nil
 }
 func (e executionAuthority) VerifyStart(ctx context.Context, tx runtime.Tx, r execution.StartRequest, p execution.PreparedStart) (execution.StartPermit, error) {
 	if er := currentCredentialTx(ctx, tx, r.Auth); er != nil {
