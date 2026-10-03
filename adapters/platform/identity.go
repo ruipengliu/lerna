@@ -26,7 +26,9 @@ type browserSession struct {
 	Revision  uint64       `json:"revision"`
 	Auth      runtime.Auth `json:"auth"`
 	CSRFHash  string       `json:"csrf_hash"`
+	CSRFToken string       `json:"csrf_token"`
 	ExpiresAt string       `json:"expires_at"`
+	State     string       `json:"state"`
 }
 type connectionHolder struct {
 	ID        string `json:"id"`
@@ -130,7 +132,7 @@ func (i *DevIdentity) Authenticate(ctx context.Context, r *http.Request) (runtim
 			return runtime.Auth{}, api.E("dependency_unavailable", "session_unavailable")
 		}
 		expiry, e := api.ParseTime(session.ExpiresAt)
-		if e != nil || !time.Now().Before(expiry) {
+		if e != nil || !time.Now().Before(expiry) || session.State == "closed" {
 			return runtime.Auth{}, api.E("expired", "session_expired")
 		}
 		if e = i.CheckCurrent(ctx, session.Auth); e != nil {
@@ -151,7 +153,7 @@ func (i *DevIdentity) Login(ctx context.Context, token string) (runtime.Auth, st
 		if e != nil {
 			return e
 		}
-		return tx.Create(ctx, "platform.sessions", id, a.SubjectID, browserSession{1, a, api.Hash([]byte(csrf)), api.Time(now.Add(i.SessionTTL))})
+		return tx.Create(ctx, "platform.sessions", id, a.SubjectID, browserSession{Revision: 1, Auth: a, CSRFHash: api.Hash([]byte(csrf)), CSRFToken: csrf, ExpiresAt: api.Time(now.Add(i.SessionTTL)), State: "open"})
 	})
 	if status == runtime.CommitUnknown {
 		return a, "", "", runtime.ErrCommitUnknown
@@ -170,10 +172,57 @@ func (i *DevIdentity) CheckCSRF(ctx context.Context, r *http.Request, a runtime.
 	if _, e = i.Store.Read(ctx, i.scope(a), "platform.sessions", c.Value, 0, &s); e != nil {
 		return e
 	}
+	if s.State == "closed" || !api.Equal(s.Auth, a) {
+		return api.E("forbidden", "session_closed")
+	}
 	if subtle.ConstantTimeCompare([]byte(s.CSRFHash), []byte(api.Hash([]byte(r.Header.Get("X-CSRF-Token"))))) != 1 {
 		return api.E("forbidden", "csrf_mismatch")
 	}
 	return nil
+}
+
+// CurrentSession 只返回已认证 HttpOnly 会话的 CSRF nonce，刷新不会换业务身份。
+func (i *DevIdentity) CurrentSession(ctx context.Context, r *http.Request, a runtime.Auth) (string, error) {
+	c, e := r.Cookie("harness_session")
+	if e != nil {
+		return "", api.E("forbidden", "browser_session_required")
+	}
+	var s browserSession
+	if _, e = i.Store.Read(ctx, i.scope(a), "platform.sessions", c.Value, 0, &s); e != nil {
+		return "", e
+	}
+	if !api.Equal(a, s.Auth) || s.State == "closed" || s.CSRFToken == "" {
+		return "", api.E("forbidden", "session_unavailable")
+	}
+	return s.CSRFToken, nil
+}
+
+// Logout 保留原会话墓碑；它不改变 Task 控制或服务器工作责任。
+func (i *DevIdentity) Logout(ctx context.Context, r *http.Request, a runtime.Auth) error {
+	c, e := r.Cookie("harness_session")
+	if e != nil {
+		return api.E("forbidden", "browser_session_required")
+	}
+	status, e := i.Store.Within(ctx, i.scope(a), []string{"platform"}, func(tx runtime.Tx) error {
+		var s browserSession
+		rev, e := tx.Get(ctx, "platform.sessions", c.Value, &s)
+		if e != nil {
+			return e
+		}
+		if !api.Equal(a, s.Auth) {
+			return api.E("forbidden", "session_identity_mismatch")
+		}
+		if s.State == "closed" {
+			return nil
+		}
+		s.State = "closed"
+		s.Revision++
+		return tx.Put(ctx, "platform.sessions", c.Value, rev, s)
+	})
+	if status == runtime.CommitUnknown {
+		return runtime.ErrCommitUnknown
+	}
+	return e
 }
 func (i *DevIdentity) Revoke(ctx context.Context, a runtime.Auth) error {
 	status, e := i.Store.Within(ctx, i.scope(a), []string{"platform"}, func(tx runtime.Tx) error {

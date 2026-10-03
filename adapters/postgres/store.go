@@ -37,6 +37,9 @@ type Option func(*Store)
 
 func WithCommitFault(f CommitFault) Option { return func(s *Store) { s.fault = f } }
 
+// WithExpectedDatabaseID 从受信部署目录校验原库；恢复不得把空库当作原权威。
+func WithExpectedDatabaseID(id string) Option { return func(s *Store) { s.expectedID = id } }
+
 // WithMaxConnections 为此 Store 实例设置独立有界连接池。
 // 控制及收尾由宿主分别 Open 独立池，所有实例仍读取同一个数据库身份。
 func WithMaxConnections(limit int) Option { return func(s *Store) { s.maxConnections = limit } }
@@ -49,6 +52,7 @@ type Store struct {
 	fault          CommitFault
 	closed         atomic.Bool
 	maxConnections int
+	expectedID     string
 }
 
 var _ runtime.Store = (*Store)(nil)
@@ -84,6 +88,10 @@ func Open(ctx context.Context, dsn string, options ...Option) (*Store, error) {
 	err = db.QueryRowContext(ctx, "SELECT database_id FROM harness_store_metadata WHERE singleton=1").Scan(&s.id)
 	var pgErr *pgconn.PgError
 	if err != nil && !errors.Is(err, sql.ErrNoRows) && !(errors.As(err, &pgErr) && pgErr.Code == "42P01") {
+		db.Close()
+		return nil, err
+	}
+	if err = durable.DatabaseIdentity(s.id, s.expectedID); err != nil {
 		db.Close()
 		return nil, err
 	}
@@ -141,6 +149,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 	if err = tx.QueryRowContext(ctx, "SELECT database_id FROM harness_store_metadata WHERE singleton=1").Scan(&id); err != nil {
 		return err
 	}
+	if err = durable.DatabaseIdentity(id, s.expectedID); err != nil {
+		return err
+	}
 	if err = tx.Commit(); err != nil {
 		return fmt.Errorf("migration commit: %w", err)
 	}
@@ -157,6 +168,7 @@ type transaction struct {
 	participants map[string]bool
 	active       bool
 	savepoint    uint64
+	guards       map[string]api.Claim
 }
 
 func (tx *transaction) Scope() runtime.Scope { return tx.scope }
@@ -203,6 +215,19 @@ func (s *Store) Within(ctx context.Context, scope runtime.Scope, participants []
 	if s.fault != nil {
 		if err = s.fault(BeforeCommit); err != nil {
 			return runtime.RolledBack, err
+		}
+	}
+	// Guard/Finish 之后进程仍可能暂停；真正提交前再核原确认截止。
+	if len(tx.guards) != 0 {
+		now, clockErr := tx.Now(ctx)
+		if clockErr != nil {
+			return runtime.RolledBack, clockErr
+		}
+		for _, claim := range tx.guards {
+			until, _ := api.ParseTime(claim.LeaseUntil)
+			if !now.Before(until) {
+				return runtime.RolledBack, runtime.ErrClaimLost
+			}
 		}
 	}
 	if err = dbtx.Commit(); err != nil {
