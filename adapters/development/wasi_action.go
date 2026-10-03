@@ -135,6 +135,44 @@ func (a *App) wasiContext(ctx context.Context, scope runtime.Scope, facts task.C
 			return nil, nil, err
 		}
 		binary = append(binary, args.CodeRef)
+		if !op.Fact.Closed || op.Fact.MayApplyLater || op.Fact.Effect != "applied" {
+			continue
+		}
+		operation, err := (executionBridge{a}).Read(ctx, scope, op.Fact.Ref)
+		if err != nil {
+			return nil, nil, err
+		}
+		later, known := operation.MayApplyLater.(bool)
+		if operation.ExecutionState != "closed" || operation.Effect != "applied" || !known || later || operation.ResultRef == nil {
+			return nil, nil, api.E("dependency_unavailable", "original_wasi_result_not_closed")
+		}
+		resultBytes, err := a.Memory.Read(ctx, scope, a.ServiceAuth, *operation.ResultRef, "execution_result")
+		if err != nil {
+			return nil, nil, err
+		}
+		var result execution.CellResult
+		if err = api.Decode(resultBytes, &result); err != nil {
+			return nil, nil, err
+		}
+		if runtime.CheckRef(scope, result.OperationRef) != nil || result.OperationRef.ObjectID != op.Intent.OperationID || result.Generation != args.ExpectedGeneration || result.NamespaceRevision != args.ExpectedNamespaceRevision+1 || api.ValidateRecord("ContentRef", result.NamespaceRef) != nil || result.NamespaceRef.TenantID != scope.TenantID || result.NamespaceRef.OwnerID != scope.OwnerID || result.NamespaceRef.MediaType != "application/json" || result.NamespaceRef.ByteLength > 65536 {
+			return nil, nil, api.E("forbidden", "original_wasi_namespace_result_mismatch")
+		}
+		namespaceBytes, err := a.Memory.Read(ctx, scope, a.ServiceAuth, result.NamespaceRef, "environment_namespace")
+		if err != nil {
+			return nil, nil, err
+		}
+		var namespace execution.PassiveNamespace
+		if uint64(len(namespaceBytes)) != result.NamespaceRef.ByteLength || api.Hash(namespaceBytes) != result.NamespaceRef.Hash {
+			return nil, nil, api.E("forbidden", "original_wasi_namespace_bytes_changed")
+		}
+		if err = api.Decode(namespaceBytes, &namespace); err != nil {
+			return nil, nil, err
+		}
+		if err = execution.ValidateNamespace(namespace); err != nil {
+			return nil, nil, err
+		}
+		// 只装载原 CellResult 指定的完整已提交输出，不读取新的 Environment 头。
+		processed = append(processed, result.NamespaceRef)
 	}
 	processed = uniqueSources(processed)
 	materials := []api.ContentRef{}
