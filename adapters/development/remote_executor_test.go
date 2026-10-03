@@ -128,7 +128,8 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport boo
 	}
 	dc := executor.Config{Development: true, TenantID: cfg.TenantID, OwnerID: deviceOwner, InstanceID: instance, DatabasePath: filepath.Join(deviceRoot, "device.sqlite"), DataRoot: deviceRoot, SigningKeyFile: filepath.Join(deviceRoot, "device-key.pem"), PeerTokenFile: peerToken, Authority: executor.TrustedAuthority{KeyID: "development-es256", OwnerID: cfg.OwnerID, PublicX: authority.X, PublicY: authority.Y}, Bindings: deviceBindings, GRPCAddr: address, TLSCertificateFile: cert, TLSKeyFile: key, OutputSubjectRefs: []api.ObjectRef{{TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.OwnerID, Revision: 1}, {TenantID: cfg.TenantID, OwnerID: cfg.OwnerID, ObjectID: cfg.SubjectID, Revision: 1}}, OutputPurposes: []string{"execution_result", "content.read", "content.write", "task.context", "task.snapshot", "task.dispatch", "task.action", "brain.input", "brain.output", "task.evidence", "task.attach_evidence", "task.complete", "task.goal", "task.result", "result", "memory.save", "memory.read", "memory.query"}, OutputLocations: []string{"cloud", "device"}}
 	if saveReport {
-		dc.OutputPurposes = append(dc.OutputPurposes, "managed_file_read", "managed_file_write", "execution_arguments")
+		// 后继参数确实派生自原设备写入事实；宿主读取与设备传送用途分别登记。
+		dc.OutputPurposes = append(dc.OutputPurposes, "managed_file_read", "managed_file_write", "execution_arguments", "execution.arguments")
 	}
 	device, err := executor.Open(ctx, dc, true)
 	if err != nil {
@@ -326,20 +327,16 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport boo
 			if errors.As(err, &refusal) && refusal.Code == "revision_conflict" && refusal.Reason == "device_usage_source_advanced" {
 				t.Logf("original billing Job remains recoverable after source head advanced: %v", err)
 			} else {
+				if progressStore != nil {
+					recordRemoteProgressRefusal(t, ctx, a, root, taskID, posts.Load(), progressStore, err)
+				}
 				t.Fatal("actual remote public Task progress", err)
 			}
 		}
 		if progressStore != nil {
 			if refusal := progressStore.firstRefusal(); refusal != nil {
-				facts, factsErr := a.Task.ContextFacts(ctx, a.Store, a.Scope, a.UserAuth, taskID)
-				if saveErr := privateFile(filepath.Join(root, "original-progress-refusal.json"), api.Raw(struct {
-					Refusal remoteProgressRefusal `json:"refusal"`
-					Facts   task.ContextFacts     `json:"facts"`
-					Posts   int32                 `json:"posts"`
-				}{*refusal, facts, posts.Load()})); saveErr != nil {
-					t.Error(saveErr)
-				}
-				t.Fatalf("original remote Task admission refused before independent readback: %s; work=%s facts_error=%v posts=%d operations=%d", api.Raw(refusal), refusal.Work.Job.SourceRef.ObjectID, factsErr, posts.Load(), len(facts.Operations))
+				recordRemoteProgressRefusal(t, ctx, a, root, taskID, posts.Load(), progressStore, nil)
+				t.Fatalf("original remote Task admission refused before independent readback: %s", refusal.Cause)
 			}
 		}
 		got, e := a.Task.Read(ctx, a.Store, a.Scope, a.UserAuth, taskID)
