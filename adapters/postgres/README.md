@@ -75,3 +75,43 @@ fair-quota guarantee is implied.
 
 MaxOpenConnections may explicitly bound the pool to 1–64 (0 selects 16). The wait
 suite uses one actual connection to prove waiting releases database resources.
+
+The real retention migration adds independently retained command body tombstones
+and input body state without rewriting published v1/v2 migrations. Cleanup writes
+zero-length bytea and checks the successfully projected current input and done Job in
+the same short transaction. The database enforces gone ⇒ stored length zero;
+Host observations additionally validate the bytes actually read. command.get
+reads receipt and its command-specific marker consistently; preserved v1 receipts
+remain queryable after a migration failure before the new column exists.
+
+The integration entry requires actual psql for the full PG historical dump,
+checks both immutable v1 artifact manifests and records client/server versions.
+Historical upgrade/failure/retry/reopen and cleanup have a common two-adapter
+behavior suite; no database is dropped and checked-in fixtures are never opened
+writable. Local SQLite TMPDIR should be a caller-owned local durable filesystem;
+CI uses its explicit runner temporary directory.
+
+
+Native restoration requires executable psql, the dedicated PostgreSQL URI DSN
+and the existing Linux/CGO SQLite toolchain; it does not require Docker. The
+configured native client is bounded by a 30-second context, its own process
+group and a one-second pipe wait limit. A real SQL connection followed by
+cancellation verifies the client exits and is reaped.
+
+CI separately runs the explicit `integration,containerpsql` lifecycle suite;
+Docker absence is a hard failure for that tool suite. Its fixed-image launcher
+uses Docker's owned cidfile: CREATE must return a complete exact ID before
+psql is started. Host create/start commands are limited to 15 seconds plus a
+2-second kill grace; the container's psql runs under a total 10-second timeout
+plus 2-second kill grace, including the original dump's SET timeout=0 commands.
+The original dump is not rewritten to pretend those SETs retain PGOPTIONS
+limits. libpq connection setup is limited to 5 seconds. The Go caller separately
+cleans that exact registered container ID and confirms its absence within a
+10-second cleanup context, including after cancellation. No image/name/time
+scan is used to guess ownership.
+
+This is a bounded known-container guarantee. If CREATE's reply is unknown and
+a complete CID was never recorded, psql is not started, but an unstarted
+container can remain without confirmed ownership. That actual empty-cidfile
+failure window is retained as a limitation; it is not guessed or deleted and
+is not described as proving every cancelled CREATE leaves no container.

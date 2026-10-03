@@ -25,3 +25,23 @@ Validated per-revision fixture policies, durable gates, finite retry/closure and
 Start/Finish consumer rules live here. runtime handles Claim scheduling mechanics;
 the host only assembles them. Quotas/fairness remain ticket06. Success projection
 and completed responsibility are separate observations; no Task is created.
+
+
+Cleanup is a separate trusted internal capability, default denied by the exact
+SubjectBinding/OwnerRef permission table. `Host.Cleanup(ctx, originalCommandRef,
+expectedInputRevision, trustedSubject)` accepts only the original applied record
+and its current successfully projected revision. It locks command → input → Job,
+requires done with no Claim or newer work, and atomically clears actual text
+bytes and marks that input plus that individual command gone. It preserves the
+original digest, metadata, fixed receipt, Job ID/revisions and projection. Empty
+present input and gone input differ by `Input.BodyGone`; `StoredTextBytes` is
+computed from the bytes actually read and a real database constraint rejects
+gone with nonzero stored bytes.
+
+Public command.get returns gone for that exact command. Original raw Record
+retransmission still returns its fixed receipt; a changed digest still conflicts.
+A new command with the exact current expected revision stores a new present
+body and adds work to the original Job. Old command tombstones stay gone and
+repeated old Cleanup cannot touch the new body. No tombstone collection, history
+body table or generic TTL is provided. This clears live records, not forensic
+copies in WAL, MVCC pages, backups, replicas or caller memory.

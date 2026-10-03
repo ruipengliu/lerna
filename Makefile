@@ -26,6 +26,8 @@ test-race:
 test-integration:
 	@test "$$(go env CGO_ENABLED)" = 1 && test "$$(go env GOOS)" = linux || { echo "SQLite integration requires Linux, CGO_ENABLED=1 and a C compiler" >&2; exit 1; }
 	@test -n "$$LERNA_TEST_POSTGRES_DSN" || { echo "LERNA_TEST_POSTGRES_DSN is required (dedicated PostgreSQL test database)" >&2; exit 1; }
+	@command -v psql >/dev/null || { echo "psql is required for the complete historical PG dump restore" >&2; exit 1; }
+	psql --version
 	cd conformance/fixtures/durable-work/pg-v1 && sha256sum -c SHA256SUMS
 	cd conformance/fixtures/durable-work/sqlite-v1 && sha256sum -c SHA256SUMS
 	cd conformance/fixtures/durable-work/pg-v2 && sha256sum -c SHA256SUMS

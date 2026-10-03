@@ -7,9 +7,9 @@ import (
 )
 
 type Permission struct {
-	Subject      contract.SubjectBinding
-	Owner        contract.OwnerRef
-	Record, Read bool
+	Subject               contract.SubjectBinding
+	Owner                 contract.OwnerRef
+	Record, Read, Cleanup bool
 }
 
 // Permissions is an immutable exact trusted allow table, not payload policy.
@@ -23,7 +23,7 @@ func NewPermissions(entries []Permission) *Permissions {
 			continue
 		}
 		// Only retain encoded immutable identity; no caller-owned delegation slice.
-		table.entries[key] = Permission{Record: entry.Record, Read: entry.Read}
+		table.entries[key] = Permission{Record: entry.Record, Read: entry.Read, Cleanup: entry.Cleanup}
 	}
 	return table
 }
@@ -52,6 +52,8 @@ func (p *Permissions) Allows(subject contract.SubjectBinding, owner contract.Own
 		return entry.Record
 	case "read":
 		return entry.Read
+	case "cleanup":
+		return entry.Cleanup
 	default:
 		return false
 	}

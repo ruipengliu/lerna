@@ -16,4 +16,8 @@ no SQLite CLI or separately installed SQLite headers are required. The output
 directory must not already exist. Never open the checked-in file for writing:
 copy it into an owned temporary file before applying migrations or admission.
 `make test-integration` verifies checksums and restores that copy through actual
-Host/public GetCommand seams. SQLite v2 Claim/upgrade acceptance remains later.
+Host/public GetCommand seams. Claim handling uses the real v2 migration.
+`migration_test.go` applies v2 and the current retention migration, rejects the
+v2 version INSERT with a test-only trigger, verifies rollback and retries the
+same copied file. It then claims/completes the original Job, cleans its accurate
+input revision and reopens it without recreating the original responsibility.

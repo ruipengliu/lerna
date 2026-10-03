@@ -843,7 +843,7 @@ func behaviorBoundedBatchRetainsEveryOriginalResponsibility(t *testing.T, newSto
 // conformanceWorker explicitly trusts only this finite suite worker set.
 func conformanceWorker(t *testing.T, owner contract.OwnerRef, runner runtime.TxRunner, claims runtime.ClaimStore, repository demo.WorkRepository, clock runtime.Clock) *durablework.Worker {
 	t.Helper()
-	permissions, err := demo.NewWorkerPermissions([]string{"at-due", "before-due", "bounded", "busy", "first", "historical-v2", "independent-schema", "maximum", "normal", "old", "replacement", "same-schema", "second", "too-early", "v2", "worker-00", "worker-01", "worker-02", "worker-03", "worker-04", "worker-05", "worker-06", "worker-07", "worker-08", "worker-09", "worker-10", "worker-11", "worker-a", "worker-b"})
+	permissions, err := demo.NewWorkerPermissions([]string{"at-due", "before-due", "bounded", "busy", "first", "historical-v2", "historical-successor", "no-duplicate", "independent-schema", "maximum", "normal", "old", "replacement", "same-schema", "second", "too-early", "v2", "worker", "worker-00", "worker-01", "worker-02", "worker-03", "worker-04", "worker-05", "worker-06", "worker-07", "worker-08", "worker-09", "worker-10", "worker-11", "worker-a", "worker-b"})
 	if err != nil {
 		t.Fatal(err)
 	}

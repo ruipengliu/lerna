@@ -1,6 +1,6 @@
 -- Extend the v2 state constraint while preserving every live Claim binding.
 -- Input and command tables retain their original identities and bytes.
-CREATE TABLE jobs_v3 (
+CREATE TABLE jobs_v4 (
  tenant_id TEXT NOT NULL, owner_id TEXT NOT NULL, job_id TEXT NOT NULL,
  object_kind TEXT NOT NULL, object_id TEXT NOT NULL, phase TEXT NOT NULL,
  work_revision INTEGER NOT NULL CHECK (work_revision > 0),
@@ -16,10 +16,10 @@ CREATE TABLE jobs_v3 (
  OR (state<>'leased' AND claimed_revision IS NULL AND worker_id IS NULL AND lease_until IS NULL)),
  CHECK ((state='done' AND completed_revision=work_revision) OR (state<>'done' AND completed_revision<work_revision))
 );
-INSERT INTO jobs_v3 (tenant_id,owner_id,job_id,object_kind,object_id,phase,work_revision,completed_revision,state,due_at,lease_epoch,claimed_revision,worker_id,lease_until)
+INSERT INTO jobs_v4 (tenant_id,owner_id,job_id,object_kind,object_id,phase,work_revision,completed_revision,state,due_at,lease_epoch,claimed_revision,worker_id,lease_until)
  SELECT tenant_id,owner_id,job_id,object_kind,object_id,phase,work_revision,completed_revision,state,due_at,lease_epoch,claimed_revision,worker_id,lease_until FROM jobs;
 DROP TABLE jobs;
-ALTER TABLE jobs_v3 RENAME TO jobs;
+ALTER TABLE jobs_v4 RENAME TO jobs;
 CREATE INDEX jobs_scan ON jobs (tenant_id,owner_id,scan_at,job_id) WHERE state<>'done' AND lease_epoch<9223372036854775807;
 CREATE TABLE durable_schedules (
  tenant_id TEXT NOT NULL, owner_id TEXT NOT NULL, object_id TEXT NOT NULL,

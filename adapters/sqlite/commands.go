@@ -66,13 +66,26 @@ func (s *Store) ReadCommand(ctx context.Context, ref contract.CommandRef) (contr
 			return err
 		}
 		var data []byte
-		err = tx.QueryRowContext(ctx, `SELECT receipt FROM command_receipts WHERE tenant_id=$1 AND owner_id=$2 AND command_id=$3`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.CommandID).Scan(&data)
+		var gone bool
+		var retention bool
+		if err = tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM schema_migrations WHERE version=3)`).Scan(&retention); err != nil {
+			return err
+		}
+		goneExpression := "false"
+		if retention {
+			goneExpression = "body_gone"
+		}
+		err = tx.QueryRowContext(ctx, `SELECT receipt,`+goneExpression+` FROM command_receipts WHERE tenant_id=$1 AND owner_id=$2 AND command_id=$3`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.CommandID).Scan(&data, &gone)
 		if errors.Is(err, sql.ErrNoRows) {
 			result = contract.NewCommandGetResponseNotFound(contract.CommandGetResponseNotFound{CommandRef: ref})
 			return nil
 		}
 		if err != nil {
 			return err
+		}
+		if gone {
+			result = contract.NewCommandGetResponseGone(contract.CommandGetResponseGone{CommandRef: ref})
+			return nil
 		}
 		receipt, err := contract.Decode[contract.CommandReceipt](data)
 		if err != nil {
