@@ -19,6 +19,7 @@ import {
 } from "./types";
 
 interface Held {
+  consumer_database_id: string;
   reference: ForeignReference;
   principal: Principal;
   phase: "reference_intent" | "writing" | "held" | "stopping" | "released";
@@ -224,6 +225,7 @@ export class ForeignCopies {
           reject("idempotency_conflict", "foreign_outbound_identity_reused");
       }
       const held: Held = {
+        consumer_database_id: this.store.id,
         reference,
         principal: p,
         phase: "reference_intent",
@@ -247,6 +249,8 @@ export class ForeignCopies {
       () => {
         this.verify(p, ref, proof, control);
         const held = this.store.require<Held>("foreign_held", ref.copy_id);
+        if (held.consumer_database_id !== this.store.id)
+          reject("forbidden", "original_foreign_consumer_database_changed");
         if (!same(held.reference, ref))
           reject("idempotency_conflict", "original_foreign_reference_changed");
         if (held.proof && integer(proof.control_revision) < integer(held.proof.control_revision))
@@ -329,6 +333,8 @@ export class ForeignCopies {
           h.reference.holder_ref.revision === p.generation,
       );
     if (!held) reject("dependency_unavailable", "foreign_reference_not_registered");
+    if (held.consumer_database_id !== this.store.id)
+      reject("forbidden", "original_foreign_consumer_database_changed");
     return held;
   }
   async context(p: Principal, uses: { ref: unknown; purpose: string }[]): Promise<ForeignContext> {
@@ -504,6 +510,8 @@ export class ForeignCopies {
     const token = this.claim(copyID);
     try {
       let held = this.store.require<Held>("foreign_held", copyID);
+      if (held.consumer_database_id !== this.store.id)
+        reject("forbidden", "original_foreign_consumer_database_changed");
       this.reference(p, held.reference, true);
       if (held.phase === "released") return;
       if (

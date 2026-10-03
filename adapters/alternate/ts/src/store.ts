@@ -2,7 +2,7 @@ import { DatabaseSync } from "node:sqlite";
 import { chmodSync, existsSync, lstatSync } from "node:fs";
 import { dirname } from "node:path";
 import { createHash, randomUUID } from "node:crypto";
-import { canonical, parseStrict } from "@harness/sdk";
+import { canonical, newID, parseStrict } from "@harness/sdk";
 import { reject } from "./error";
 import { object, type Document, type Config, type Principal } from "./types";
 import manifest from "./contracts.gen.json";
@@ -10,6 +10,7 @@ import manifest from "./contracts.gen.json";
 // 每实例只持有一个连接；所有业务裁决使用不含 await 的短事务。
 export class Store {
   readonly db: DatabaseSync;
+  readonly id: string;
   private epoch: string = randomUUID();
   private priority = false;
   constructor(
@@ -25,6 +26,8 @@ export class Store {
       directory.mode & 0o077
     )
       reject("forbidden", "private_database_directory_required");
+    if (config.expected_database_id && !existsSync(config.database))
+      reject("forbidden", "original_database_missing");
     if (existsSync(config.database)) {
       const file = lstatSync(config.database);
       if (
@@ -72,6 +75,7 @@ export class Store {
           reject("idempotency_conflict", "owner_configuration_changed");
         this.meta("configuration", frozen);
         this.meta("format", "alternate-ts-local/1");
+        if (!this.meta("database_id")) this.meta("database_id", newID("database"));
         for (const p of config.credentials) {
           if (!this.get("credentials", p.subject_id)) this.put("credentials", p.subject_id, p);
         }
@@ -90,6 +94,11 @@ export class Store {
       reject("invalid_state", "explicit_migration_required");
     if (this.meta("configuration") !== frozen)
       reject("idempotency_conflict", "owner_configuration_changed");
+    this.id = this.meta("database_id");
+    if (!/^database_[0-9a-f]{32}$/.test(this.id))
+      reject("invalid_state", "explicit_database_identity_migration_required");
+    if (config.expected_database_id && config.expected_database_id !== this.id)
+      reject("forbidden", "original_database_identity_mismatch");
     if (!migrate) {
       if (maintenance) this.epoch = this.meta("instance_epoch");
       else this.tx(() => this.meta("instance_epoch", this.epoch), false);

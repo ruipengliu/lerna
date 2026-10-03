@@ -47,6 +47,7 @@ export interface Config {
   tenant_id: string;
   owner_id: string;
   database: string;
+  expected_database_id?: string;
   port: number;
   tls_cert_file: string;
   tls_key_file: string;

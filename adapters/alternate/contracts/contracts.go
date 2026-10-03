@@ -2,7 +2,6 @@
 package contracts
 
 import (
-	"context"
 	"sort"
 
 	file "github.com/ruipengliu/lerna/adapters/execution"
@@ -35,23 +34,8 @@ func Build() (Manifest, error) {
 	m.Schemas["goal"] = brain.GoalSchema()
 	m.Schemas["use_receipt"] = api.SchemaFor[governance.UseReceipt]()
 	m.Schemas["proof_claims"] = api.SchemaFor[platform.ProofClaims]()
-	sourceRegistry := rt.NewRegistry()
-	for _, contract := range providers.ForeignSourceContracts() {
-		method := rt.Method{Contract: contract}
-		if contract.Kind == "command" {
-			method.Apply = func(_ context.Context, _ rt.Tx, _ rt.Auth, _ api.Command) (rt.Outcome, error) {
-				return rt.Outcome{}, api.E("unsupported", "schema_generator_has_no_runtime")
-			}
-		} else {
-			method.Query = func(_ context.Context, _ rt.Store, _ rt.Scope, _ rt.Auth, _ api.Query) (any, error) {
-				return nil, api.E("unsupported", "schema_generator_has_no_runtime")
-			}
-		}
-		if err := sourceRegistry.Register(method); err != nil {
-			return Manifest{}, err
-		}
-	}
-	m.SourceMethods = sourceRegistry.Contracts()
+	m.SourceMethods = providers.ForeignSourceContracts()
+	sort.Slice(m.SourceMethods, func(i, j int) bool { return m.SourceMethods[i].Name < m.SourceMethods[j].Name })
 	for _, method := range m.SourceMethods {
 		if method.Name == "content.foreign.register" {
 			m.Schemas["foreign_reference"] = method.InputSchema

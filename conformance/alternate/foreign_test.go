@@ -232,6 +232,11 @@ func newNativeSource(t *testing.T) *nativeSource {
 	if err != nil {
 		t.Fatal(err)
 	}
+	digest, err = api.DigestLimit(discovery.Methods, 1<<20)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("actual original source evidence: %s", api.Raw(map[string]any{"tenant_id": s.scope.TenantID, "owner_id": s.scope.OwnerID, "database_id": s.scope.DatabaseID, "subject_id": s.auth.SubjectID, "peer_subject_id": s.peer.SubjectID, "identity_scope": discovery.IdentityScope, "identity_revision": discovery.IdentityRevision, "schema_digest": discovery.SchemaDigest, "methods_digest": digest, "foreign_methods": providers.ForeignSourceContracts(), "transport": "real HTTPS harness-wss/1 HTTP call envelope", "preconditions": "explicit fixed peer/holder pair and current credential-backed authority; original bodies/copyholders/current proofs/receipts are actual Go Memory/Source facts"}))
 	journal, err := harness.OpenJournal(filepath.Join(s.dir, "original-source-journal"), discovery.IdentityScope)
 	if err != nil {
 		t.Fatal(err)
@@ -354,6 +359,69 @@ func (f *fixture) inspectForeign(t *testing.T, copyID string) foreignCopyView {
 }
 
 func pauseForeignJobs(f *fixture, c map[string]any) { c["fault"] = map[string]any{"pause_jobs": true} }
+
+func (f *fixture) ownerScope(t *testing.T) runtime.Scope {
+	t.Helper()
+	out, err := exec.Command("node", filepath.Join(f.repo, "adapters/alternate/ts/dist/main.mjs"), "inspect-owner", "--config", f.configFile).CombinedOutput()
+	if err != nil {
+		t.Fatalf("OS host read-only original database scope %v %s", err, out)
+	}
+	var record struct {
+		System     string `json:"system"`
+		TenantID   string `json:"tenant_id"`
+		OwnerID    string `json:"owner_id"`
+		DatabaseID string `json:"database_id"`
+	}
+	if err := api.Decode(out, &record); err != nil || record.TenantID != f.tenant || record.OwnerID != f.owner || !strings.HasPrefix(record.DatabaseID, "database_") {
+		t.Fatalf("actual original database inspection changed scope %v %s", err, out)
+	}
+	return runtime.Scope{TenantID: record.TenantID, OwnerID: record.OwnerID, DatabaseID: record.DatabaseID}
+}
+
+func TestIndependentOriginalDatabaseScopeSurvivesSIGKILL(t *testing.T) {
+	f := newFixture(t, "memory")
+	scope := f.ownerScope(t)
+	if another := f.ownerScope(t); another != scope {
+		t.Fatal("read-only host inspection changed original database identity")
+	}
+	policy := f.policy(t)
+	ref := f.upload(t, policy, []byte("原数据库和原准确Content跨真正SIGKILL恢复"), "text/plain")
+	config := map[string]any{}
+	b, err := os.ReadFile(f.configFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = json.Unmarshal(b, &config); err != nil {
+		t.Fatal(err)
+	}
+	config["expected_database_id"] = scope.DatabaseID
+	writeJSON(t, f.configFile, config)
+	f.restart(t, true, false)
+	if after := f.ownerScope(t); after != scope {
+		t.Fatalf("restart replaced original database scope %+v %+v", scope, after)
+	}
+	var body memory.GetContentOutput
+	if err := f.query(t, "content.get", ref.ContentID, memory.GetContentInput{ContentRef: ref, Mode: "bytes", Purpose: "read", Location: "local"}, &body); err != nil || body.ContentRef != ref {
+		t.Fatalf("actual original database responsibility disappeared %v %+v", err, body)
+	}
+	bad := map[string]any{}
+	for key, value := range config {
+		bad[key] = value
+	}
+	bad["expected_database_id"] = api.NewID("database")
+	badFile := filepath.Join(f.dir, "wrong-original-database.json")
+	writeJSON(t, badFile, bad)
+	if out, err := exec.Command("node", filepath.Join(f.repo, "adapters/alternate/ts/dist/main.mjs"), "inspect-owner", "--config", badFile).CombinedOutput(); err == nil || !strings.Contains(string(out), "original_database_identity_mismatch") {
+		t.Fatalf("another configured database was accepted as the original: %v %s", err, out)
+	}
+	bad["expected_database_id"] = scope.DatabaseID
+	bad["database"] = filepath.Join(f.dir, "lost-original.sqlite")
+	writeJSON(t, badFile, bad)
+	if out, err := exec.Command("node", filepath.Join(f.repo, "adapters/alternate/ts/dist/main.mjs"), "migrate", "--config", badFile).CombinedOutput(); err == nil || !strings.Contains(string(out), "original_database_missing") {
+		t.Fatalf("fresh empty database replaced a pinned original during migrate: %v %s", err, out)
+	}
+	t.Logf("original native database facts: %s", api.Raw(scope))
+}
 
 func TestIndependentMemoryForeignLostRegistrationAndWrittenPendingCleanup(t *testing.T) {
 	source := newNativeSource(t)
@@ -484,6 +552,58 @@ func TestIndependentMemoryForeignCurrentGrantRevocationPersistsKnownDeny(t *test
 	}
 }
 
+func TestIndependentMemoryForeignOriginalWorkerResumesCrashedWriteWithoutBodyReplay(t *testing.T) {
+	source := newNativeSource(t)
+	f := newFixture(t, "memory", source.configure(t), pauseForeignJobs)
+	originalScope := f.ownerScope(t)
+	f.stop(t)
+	config := map[string]any{}
+	b, err := os.ReadFile(f.configFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = json.Unmarshal(b, &config); err != nil {
+		t.Fatal(err)
+	}
+	config["fault"] = map[string]any{"pause_jobs": true, "crash_after_foreign_write": true}
+	writeJSON(t, f.configFile, config)
+	ref := source.publish(t, []byte("原持久Job接管真实已写副本；关源后worker只能继续原控制和release。"))
+	reference := foreignReference(f, ref, "memory.read")
+	out, err := f.foreignCLI(t, "prepare-foreign-use", reference, "")
+	var exit *exec.ExitError
+	if !errors.As(err, &exit) || exit.ProcessState.Sys().(syscall.WaitStatus).Signal() != syscall.SIGKILL {
+		t.Fatalf("worker fixture did not actually SIGKILL after physical write: %v %s", err, out)
+	}
+	originalReceipt := source.originalReceipt(t, reference.RegisterCommandID)
+	one := uint64(1)
+	source.command(t, "content.close", ref.ContentID, &one, memory.CloseInput{ContentRef: ref, Reason: "原writer消失后真实源关闭"})
+	before := source.gets.Load()
+	config["fault"] = map[string]any{}
+	writeJSON(t, f.configFile, config)
+	f.start(t)
+	f.connect(t)
+	// 这里只检查原Job，不调用prepare/stop为恢复另造一次业务动作。
+	deadline := time.Now().Add(15 * time.Second)
+	var view foreignCopyView
+	for time.Now().Before(deadline) {
+		view = f.inspectForeign(t, reference.CopyID)
+		if view.Phase == "released" {
+			break
+		}
+		time.Sleep(250 * time.Millisecond)
+	}
+	if view.Phase != "released" || !view.KnownDeny || view.CleanupState != "residual" || view.Reference != reference || source.gets.Load() != before || f.ownerScope(t) != originalScope {
+		t.Fatalf("original durable worker lost scope, reread withdrawn body or fabricated cleanup: %+v", view)
+	}
+	if receipt := source.originalReceipt(t, reference.RegisterCommandID); !api.Equal(receipt, originalReceipt) {
+		t.Fatal("durable worker changed original registration identity/defaults/receipt")
+	}
+	if receipt := source.originalReceipt(t, reference.ReleaseCommandID); receipt.Stage != "applied" {
+		t.Fatalf("durable worker did not recover original release ID %+v", receipt)
+	}
+	t.Logf("original foreign worker facts: %s", api.Raw(map[string]any{"consumer_scope": originalScope, "reference": reference, "source_register_receipt": originalReceipt, "phase": view.Phase, "cleanup_state": view.CleanupState, "source_body_gets_at_stop": before, "source_body_gets_after_stop": source.gets.Load()}))
+}
+
 func TestIndependentMemoryForeignExactSourceBindingsRejectBeforeBody(t *testing.T) {
 	source := newNativeSource(t)
 	ref := source.publish(t, []byte("原 source owner、真实数据库、已登记键、holder 与 use mode 不能替换。"))
@@ -593,6 +713,9 @@ func TestIndependentMemoryForeignQueryViewsAndCurrentWithdrawal(t *testing.T) {
 	var records api.Page[memory.MemoryRecord]
 	if err := f.query(t, "memory.list", f.owner, memory.ListMemoryInput{Purpose: "memory.read", Limit: 20}, &records); err != nil || len(records.Items) != 1 || records.Items[0].Values.ContentRef != first || records.Partial {
 		t.Fatalf("foreign list truthful current snapshot %+v %v", records, err)
+	}
+	if err := f.query(t, "memory.list", f.owner, memory.ListMemoryInput{Purpose: "memory.query", Limit: 20}, &records); err != nil || len(records.Items) != 1 || records.Items[0].Values.ContentRef != first || records.Partial {
+		t.Fatalf("foreign list prepared another purpose instead of the original one %+v %v", records, err)
 	}
 	query := memory.QueryInput{QueryRef: queryRef, ScopeRef: scope, Purposes: []string{"memory.query"}, Limits: memory.QueryLimits{MaxCandidates: 20, MaxReadBytes: 65536, MaxPermissionChecks: 100, Deadline: api.Time(time.Now().Add(time.Minute))}, Limit: 20}
 	var matches api.Page[memory.Match]

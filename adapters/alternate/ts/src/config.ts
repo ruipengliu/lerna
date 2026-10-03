@@ -43,6 +43,7 @@ const schema = closed(
     tenant_id: id,
     owner_id: id,
     database: string,
+    expected_database_id: id,
     port: { type: "integer", minimum: 0, maximum: 65535 },
     tls_cert_file: string,
     tls_key_file: string,

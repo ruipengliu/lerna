@@ -23,12 +23,18 @@ if (
     "control-foreign-copy",
     "stop-foreign-copy",
     "inspect-foreign-copy",
+    "inspect-owner",
   ].includes(mode ?? "")
 )
   throw new Error("mode must be migrate, serve or admin");
 const config = readConfig(configFile),
   store = new Store(config, mode === "migrate", mode !== "serve");
 if (mode === "migrate") {
+  store.close();
+} else if (mode === "inspect-owner") {
+  process.stdout.write(
+    `${canonical({ system: config.system, tenant_id: config.tenant_id, owner_id: config.owner_id, database_id: store.id })}\n`,
+  );
   store.close();
 } else if (mode === "admin") {
   const namespace = argument("--namespace"),
