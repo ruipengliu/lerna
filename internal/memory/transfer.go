@@ -11,7 +11,7 @@ import (
 // LookupTransfer 只返回原主体可恢复的阶段，不披露对象存储定位。
 func (s *Service) LookupTransfer(ctx context.Context, scope runtime.Scope, auth runtime.Auth, transferID string) (TransferStatus, error) {
 	var out TransferStatus
-	err := s.within(ctx, scope, func(tx runtime.Tx) error {
+	err := s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error {
 		if err := checkAuth(scope, auth); err != nil {
 			return err
 		}
@@ -60,6 +60,15 @@ func (s *Service) completeMirror(ctx context.Context, tx runtime.Tx, auth runtim
 	if c.TargetID != t.ContentRef.ContentID || t.PublisherID != auth.SubjectID || t.Kind != "mirror" {
 		return CopyOutput{}, api.E("forbidden", "mirror_scope_mismatch")
 	}
+	if t.Purpose != in.Purpose || t.TargetLocation != in.Location {
+		return CopyOutput{}, api.E("idempotency_conflict", "mirror_intent_changed")
+	}
+	if t.CompletionCopyID != "" && t.CompletionCopyID != in.CopyID {
+		return CopyOutput{}, api.E("idempotency_conflict", "mirror_copy_identity_changed")
+	}
+	if err = s.checkTransfer(ctx, tx, auth, t); err != nil {
+		return CopyOutput{}, err
+	}
 	if t.Phase != "ready" && t.Phase != "published" {
 		return CopyOutput{}, api.E("dependency_unavailable", "transfer_not_ready")
 	}
@@ -72,6 +81,7 @@ func (s *Service) completeMirror(ctx context.Context, tx runtime.Tx, auth runtim
 	}
 	if t.Phase != "published" {
 		t.Phase = "published"
+		t.CompletionCopyID = in.CopyID
 		t.Revision = rev + 1
 		if err = tx.Put(ctx, "content.transfers", t.TransferID, rev, t); err != nil {
 			return CopyOutput{}, err
