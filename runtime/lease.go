@@ -46,6 +46,14 @@ type ownedTx struct {
 	owner *ownedStore
 }
 
+func (t ownedTx) Peek(ctx context.Context, namespace, id string, value any) (uint64, error) {
+	reader, ok := t.Tx.(TxSnapshotReader)
+	if !ok {
+		return 0, api.E("unsupported", "route_snapshot_unconfigured")
+	}
+	return reader.Peek(ctx, namespace, id, value)
+}
+
 func (t ownedTx) Guard(ctx context.Context, c api.Claim) error {
 	return t.Tx.Guard(ctx, t.owner.claim(c))
 }

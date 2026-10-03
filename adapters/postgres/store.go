@@ -8,6 +8,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"maps"
+	"sort"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -148,6 +150,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 	if err = migrateQueryBindings(ctx, tx); err != nil {
 		return err
 	}
+	if err = migrateCommandEnvelopes(ctx, tx); err != nil {
+		return err
+	}
 	var id string
 	if err = tx.QueryRowContext(ctx, "SELECT database_id FROM harness_store_metadata WHERE singleton=1").Scan(&id); err != nil {
 		return err
@@ -172,6 +177,7 @@ type transaction struct {
 	active        bool
 	savepoint     uint64
 	guards        map[string]api.Claim
+	finished      map[string]bool
 	queryExpiries []time.Time
 }
 
@@ -215,6 +221,19 @@ func (s *Store) Within(ctx context.Context, scope runtime.Scope, participants []
 	}
 	if err = ctx.Err(); err != nil {
 		return runtime.RolledBack, err
+	}
+	// Guard 只预检，不提前拿 Job 锁。领域闭包完成后按固定序强核原领取。
+	ids := make([]string, 0, len(tx.guards))
+	for id := range tx.guards {
+		ids = append(ids, id)
+	}
+	sort.Strings(ids)
+	for _, id := range ids {
+		if !tx.finished[id] {
+			if _, err = tx.guarded(ctx, tx.guards[id]); err != nil {
+				return runtime.RolledBack, err
+			}
+		}
 	}
 	if s.fault != nil {
 		if err = s.fault(BeforeCommit); err != nil {
@@ -312,6 +331,12 @@ func (tx *transaction) Get(ctx context.Context, ns, id string, value any) (uint6
 		return 0, recordError(err)
 	}
 	return uint64(row.Revision), json.Unmarshal(row.Data, value)
+}
+func (tx *transaction) Peek(ctx context.Context, ns, id string, value any) (uint64, error) {
+	if err := tx.namespace(ns); err != nil {
+		return 0, err
+	}
+	return read(ctx, tx.queries, tx.scope, ns, id, 0, value)
 }
 func (tx *transaction) GetVersion(ctx context.Context, ns, id string, rev uint64, value any) error {
 	if err := tx.namespace(ns); err != nil {
@@ -455,11 +480,15 @@ func (tx *transaction) Savepoint(ctx context.Context, fn func(runtime.Tx) error)
 	if _, err := tx.db.ExecContext(ctx, "SAVEPOINT "+name); err != nil {
 		return err
 	}
+	guards, finished := maps.Clone(tx.guards), maps.Clone(tx.finished)
+	queryExpiryCount := len(tx.queryExpiries)
 	err := fn(tx)
 	if err != nil {
 		if _, rollbackErr := tx.db.ExecContext(ctx, "ROLLBACK TO SAVEPOINT "+name); rollbackErr != nil {
 			return errors.Join(err, rollbackErr)
 		}
+		tx.guards, tx.finished = guards, finished
+		tx.queryExpiries = tx.queryExpiries[:queryExpiryCount]
 		if _, releaseErr := tx.db.ExecContext(ctx, "RELEASE SAVEPOINT "+name); releaseErr != nil {
 			return errors.Join(err, releaseErr)
 		}
@@ -505,9 +534,7 @@ func loadCommand(ctx context.Context, db commandReader, scope runtime.Scope, id 
 	if err != nil {
 		return runtime.StoredCommand{}, recordError(err)
 	}
-	var result runtime.StoredCommand
-	err = json.Unmarshal(b, &result)
-	return result, err
+	return durable.DecodeCommandRecord(b)
 }
 func (s *Store) LookupCommand(ctx context.Context, scope runtime.Scope, id string) (runtime.StoredCommand, error) {
 	if err := durable.Scope(scope, s.ID()); err != nil {
@@ -529,7 +556,7 @@ func (tx *transaction) SaveCommand(ctx context.Context, next runtime.StoredComma
 	if err = durable.Command(tx.scope, previous, next); err != nil {
 		return err
 	}
-	b, err := durable.Record(next)
+	b, err := durable.CommandRecord(next)
 	if err != nil {
 		return err
 	}

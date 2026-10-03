@@ -1,0 +1,28 @@
+{
+  "version": "2026b",
+  "source": "installed Debian tzdata package",
+  "source_package": "2026b-0+deb13u1",
+  "upstream": "https://www.iana.org/time-zones",
+  "scope": "four configured timezone names plus Etc/UTC alias; immutable original TZif bytes",
+  "files": {
+    "tzdata.zi": {
+      "sha256": "d5c5a95d9af0dadb52a22bd3dab806462f7b5f95dc5924694256da6fe5366c5c"
+    },
+    "America/New_York": {
+      "sha256": "e9ed07d7bee0c76a9d442d091ef1f01668fee7c4f26014c0a868b19fe6c18a95"
+    },
+    "Asia/Shanghai": {
+      "sha256": "64ffc2e43a94435a043c040d1d3af7e92d031adc78e7737af1861baa4eeef3e6"
+    },
+    "Europe/London": {
+      "sha256": "c85495070dca42687df6a1c3ee780a27cbcb82f1844750ea6f642833a44d29b4"
+    },
+    "Etc/UTC": {
+      "sha256": "8b85846791ab2c8a5463c83a5be3c043e2570d7448434d41398969ed47e3e6f2"
+    },
+    "UTC": {
+      "sha256": "8b85846791ab2c8a5463c83a5be3c043e2570d7448434d41398969ed47e3e6f2",
+      "link": "Etc/UTC"
+    }
+  }
+}

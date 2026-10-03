@@ -194,17 +194,18 @@ type Match struct {
 }
 
 type QueryView struct {
-	QueryID                   string   `json:"query_id"`
-	Revision                  uint64   `json:"revision"`
-	PrincipalID               string   `json:"principal_id"`
-	Digest                    string   `json:"digest"`
-	VisibilityToken           string   `json:"visibility_token"`
-	ExpiresAt                 string   `json:"expires_at"`
-	ChangeHead                uint64   `json:"change_head"`
-	Matches                   []Match  `json:"matches"`
-	Partial                   bool     `json:"partial"`
-	Gaps                      []string `json:"gaps"`
-	RemainingPermissionChecks uint64   `json:"remaining_permission_checks"`
+	QueryID                   string           `json:"query_id"`
+	Revision                  uint64           `json:"revision"`
+	PrincipalID               string           `json:"principal_id"`
+	Digest                    string           `json:"digest"`
+	VisibilityToken           string           `json:"visibility_token"`
+	SourceRefs                []api.ContentRef `json:"source_refs"`
+	ExpiresAt                 string           `json:"expires_at"`
+	ChangeHead                uint64           `json:"change_head"`
+	Matches                   []Match          `json:"matches"`
+	Partial                   bool             `json:"partial"`
+	Gaps                      []string         `json:"gaps"`
+	RemainingPermissionChecks uint64           `json:"remaining_permission_checks"`
 }
 
 type View struct {

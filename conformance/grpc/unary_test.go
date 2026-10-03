@@ -13,6 +13,7 @@ import (
 	"net"
 	"net/url"
 	"path/filepath"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -48,7 +49,7 @@ type unaryFixture struct {
 	serverTLS, clientTLS *tls.Config
 }
 
-func newUnaryFixture(t *testing.T) *unaryFixture {
+func newUnaryFixture(t *testing.T, maximumMessage ...int) *unaryFixture {
 	t.Helper()
 	st, err := sqlite.Open(filepath.Join(t.TempDir(), "grpc.sqlite"))
 	if err != nil {
@@ -64,7 +65,14 @@ func newUnaryFixture(t *testing.T) *unaryFixture {
 		t.Fatal(err)
 	}
 	r := rt.NewRegistry()
-	r.MustRegister(rt.Method{Contract: api.Contract[echoInput, echoOutput]("testing.persist", "grpctest", "command", false, false), Participants: []string{"grpctest"}, Apply: func(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command) (rt.Outcome, error) {
+	persist := api.Contract[echoInput, echoOutput]("testing.persist", "grpctest", "command", false, false)
+	read := api.Contract[struct{}, echoOutput]("testing.get", "grpctest", "query", false, false)
+	if len(maximumMessage) > 0 {
+		for _, schema := range []api.Schema{persist.InputSchema, persist.OutputSchema, read.OutputSchema} {
+			schema["properties"].(map[string]any)["message"].(api.Schema)["maxLength"] = maximumMessage[0]
+		}
+	}
+	r.MustRegister(rt.Method{Contract: persist, Participants: []string{"grpctest"}, Apply: func(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Command) (rt.Outcome, error) {
 		var in echoInput
 		if e := api.Decode(c.Payload, &in); e != nil {
 			return rt.Outcome{}, e
@@ -75,7 +83,7 @@ func newUnaryFixture(t *testing.T) *unaryFixture {
 		}
 		return rt.Applied(out), nil
 	}})
-	r.MustRegister(rt.Method{Contract: api.Contract[struct{}, echoOutput]("testing.get", "grpctest", "query", false, false), Query: func(ctx context.Context, st rt.Store, sc rt.Scope, a rt.Auth, q api.Query) (any, error) {
+	r.MustRegister(rt.Method{Contract: read, Query: func(ctx context.Context, st rt.Store, sc rt.Scope, a rt.Auth, q api.Query) (any, error) {
 		var out echoOutput
 		_, e := st.Read(ctx, sc, "grpctest.messages", q.TargetID, 0, &out)
 		return out, e
@@ -180,8 +188,14 @@ func TestGRPCUnaryTLSAuthenticationAndOriginalSDKRecovery(t *testing.T) {
 	}
 	c := commandFor(f)
 	digest, _ := api.Digest(c)
+	methodSchemaDigest := ""
+	for _, method := range f.discovery.Methods {
+		if method.Name == c.Method {
+			methodSchemaDigest = method.SchemaDigest
+		}
+	}
 	// 模拟进程在发出后、SDK记录回执前失效，真实服务已经保存原决定。
-	if e = j.Save(ctx, harness.Entry{IdentityScope: f.discovery.IdentityScope, SchemaDigest: f.discovery.SchemaDigest, Command: c, Digest: digest}); e != nil {
+	if e = j.Save(ctx, harness.Entry{IdentityScope: f.discovery.IdentityScope, SchemaDigest: f.discovery.SchemaDigest, MethodSchemaDigest: methodSchemaDigest, Command: c, Digest: digest}); e != nil {
 		t.Fatal(e)
 	}
 	raw, e := g.Call(ctx, "command", api.Raw(c))
@@ -263,6 +277,44 @@ func TestGRPCUnaryRejectsBadAuthOwnerAndUnverifiedTLS(t *testing.T) {
 	duplicate := metadata.AppendToOutgoingContext(authctx, "authorization", "Bearer "+f.token)
 	if _, e = rpc.Call(duplicate, &rpcv1.CallRequest{LogicalServiceId: f.owner, Request: &rpcv1.CallRequest_CommandJson{CommandJson: api.Raw(commandFor(f))}}); e == nil {
 		t.Fatal("duplicate credentials accepted")
+	}
+}
+
+func TestGRPCValidLargeOriginalAndReceiptRemainDurableAcrossClientRestart(t *testing.T) {
+	f := newUnaryFixture(t, 150<<10)
+	ctx := context.Background()
+	g, err := harness.DialGRPC(ctx, f.serve(t, false), f.token, f.discovery, f.clientTLS, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer g.Close()
+	path := filepath.Join(t.TempDir(), "large-journal")
+	j, err := harness.OpenJournal(path, f.discovery.IdentityScope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = j.Close() })
+	client, err := harness.NewClient(g, j, f.discovery)
+	if err != nil {
+		t.Fatal(err)
+	}
+	original := commandFor(f)
+	original.Payload = api.Raw(echoInput{Message: strings.Repeat("v", 130<<10)})
+	receipt, err := client.Send(ctx, original)
+	if err != nil || receipt.Stage != "applied" {
+		t.Fatalf("valid large receipt was not durable: %v", err)
+	}
+	if err = j.Close(); err != nil {
+		t.Fatal(err)
+	}
+	j, err = harness.OpenJournal(path, f.discovery.IdentityScope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer j.Close()
+	entry, err := j.Read(ctx, original.CommandID)
+	if err != nil || !api.Equal(entry.Command, original) || !api.Equal(entry.Receipt, receipt) {
+		t.Fatalf("restart lost valid original or receipt: %v", err)
 	}
 }
 func TestGRPCDevelopmentCleartextRequiresExplicitLoopback(t *testing.T) {
