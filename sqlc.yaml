@@ -1,5 +1,14 @@
 version: "2"
 sql:
+  - engine: "postgresql"
+    schema: "adapters/postgres/migrations"
+    queries: "adapters/postgres/queries"
+    gen:
+      go:
+        package: "postgresdb"
+        out: "adapters/postgres/gen"
+        emit_empty_slices: true
+        emit_json_tags: true
   - engine: "sqlite"
     schema: "adapters/sqlite/migrations"
     queries: "adapters/sqlite/queries"
