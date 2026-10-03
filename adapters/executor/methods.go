@@ -69,6 +69,9 @@ func registerQuery[I, O any](r *runtime.Registry, name string, fn func(context.C
 	if strings.HasPrefix(name, "content.") {
 		contract.Owner = "content"
 	}
+	if name == "executor.content.get" {
+		contract.OutputSchema["properties"].(map[string]any)["data_base64"] = api.Schema{"type": "string", "maxLength": 4 * ((ChunkBytes + 2) / 3)}
+	}
 	return r.Register(runtime.Method{Contract: contract, Query: func(ctx context.Context, st runtime.Store, s runtime.Scope, a runtime.Auth, q api.Query) (any, error) {
 		var in I
 		if err := api.Decode(q.Payload, &in); err != nil {
