@@ -25,4 +25,6 @@ HARNESS_BROWSER_ARTIFACTS=/tmp/harness-web-browser \
 pnpm test:browser
 ```
 
-可通过 `HARNESS_CHROMIUM` 指定 Chromium。脚本不打印凭据；截图和报告写到仓库外。它验证报告准确正文、实际文件写入/独立读回后的 Result、全文预览、真实已应用回执丢失后的 reload/原命令查询、单一 Task 创建、真实暂停/恢复/取消、窄屏导航与注销。仅在 WebSocket 边界丢弃一个真实回执，服务端继续使用真实数据库和业务组件。
+可通过 `HARNESS_CHROMIUM` 指定 Chromium。脚本不打印凭据；截图和报告写到仓库外。它验证报告准确正文、实际文件写入/独立读回后的 Result、全文预览、真实已应用回执丢失后的 reload/原命令查询、单一 Task 创建、真实暂停/恢复/取消、准确输入消费、Surface 呈现、固定应用事件、窄屏导航与注销。边界故障只丢弃一个真实回执或破坏一次准确正文响应；服务端继续使用真实数据库和业务组件。
+
+由 Gateway 提供生产构建时可设置 `HARNESS_REQUIRE_CSP=1`，要求页面使用禁止内联脚本及动态求值的同源 CSP。`HARNESS_REQUIRE_LARGE_MANIFEST=1` 要求实际方法清单超过 256 KiB 且不超过 1 MiB。报告记录真实方法数量、字节数、摘要和连接身份绑定。

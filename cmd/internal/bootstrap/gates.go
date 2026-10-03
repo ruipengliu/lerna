@@ -21,9 +21,6 @@ func (g taskGate) Authorize(ctx context.Context, tx runtime.Tx, auth runtime.Aut
 	if e := currentCredentialTx(ctx, tx, auth); e != nil {
 		return e
 	}
-	if purpose == "child.create" || purpose == "child.new_goal" || purpose == "child.continue" || purpose == "task.delegate" {
-		return api.E("unsupported", "collaboration_adapter_not_configured")
-	}
 	for _, r := range contents {
 		if _, e := g.a.Memory.CheckContentTx(ctx, tx, auth, r, purpose, "cloud", true); e != nil {
 			return e
@@ -181,6 +178,12 @@ func (g scheduleGate) CheckTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 var _ task.EvidenceRegistration = taskGate{}
 
 type usageVerifier struct{ a *App }
+
+type resultNoticeBridge struct{ a *App }
+
+func (b resultNoticeBridge) RecordNoticeTx(ctx context.Context, tx runtime.Tx, notice governance.ResultNotice) error {
+	return b.a.Task.RecordResultNoticeTx(ctx, tx, b.a.ServiceAuth, task.ResultNotice{NoticeRef: tx.Scope().Ref(notice.NoticeID, 1), ConsumerTaskRef: notice.ConsumerTaskRef, ResultRef: notice.ResultRef, HolderRef: notice.HolderRef, DefectRef: notice.DefectRef, Reason: notice.Reason, RegisteredAt: notice.RegisteredAt})
+}
 
 func (v usageVerifier) Verify(ctx context.Context, s runtime.Scope, ref api.ObjectRef, u api.UsageSnapshot) error {
 	var actual api.UsageSnapshot

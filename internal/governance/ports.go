@@ -85,7 +85,14 @@ type FormalPlanGate interface {
 	CheckTx(context.Context, runtime.Tx, EvaluationPlan) error
 }
 
+// ResultNoticeSink 由宿主显式声明同库参与者，机械转交已核准的原通知。
+// 只能同 Tx 保存原事实，不得 RPC、修改最终 Result 或吞掉失败。
+type ResultNoticeSink interface {
+	RecordNoticeTx(context.Context, runtime.Tx, ResultNotice) error
+}
+
 type Options struct {
+	ResultNotices   ResultNoticeSink
 	PreviewGate     PreviewGate
 	Participants    []string
 	OfflineGate     OfflineGate

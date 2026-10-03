@@ -757,6 +757,18 @@ func (s *Service) continueDefect(ctx context.Context, store runtime.Store, scope
 					}
 				} else if e != nil {
 					return e
+				} else {
+					// ACK 等后续 holder 修订不能重写已经创建的原通知依据。
+					notice.HolderRef.Revision = old.HolderRef.Revision
+					if old.HolderRef.Revision == 0 || old.HolderRef.Revision > holder.Revision || !api.Equal(old, notice) {
+						return api.E("idempotency_conflict", "original_result_notice_changed")
+					}
+					notice = old
+				}
+				if s.Ports.ResultNotices != nil {
+					if err = s.Ports.ResultNotices.RecordNoticeTx(ctx, tx, notice); err != nil {
+						return err
+					}
 				}
 			}
 		}

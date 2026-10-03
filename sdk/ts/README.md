@@ -4,6 +4,8 @@
 
 浏览器通过同源 HttpOnly Cookie 认证；凭据不进入 SDK 账本。`HarnessClient.fromServer()` 获取认证发现、下载原始 core Schema 字节并核对 SHA-256，再编译闭合方法合同。只接受当前发现登记的方法。
 
+完整发现清单及方法集 JCS 摘要允许最多 1 MiB；业务请求、响应与默认 `digest()` 仍限 256 KiB。两者使用相同的重复键、UTF-8、Unicode、安全数值和规范化规则，容量例外不适用于业务正文。
+
 ```ts
 import { HarnessClient } from "@harness/sdk";
 

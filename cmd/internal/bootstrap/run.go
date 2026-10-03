@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	rpcadapter "github.com/ruipengliu/lerna/adapters/grpc"
+	"github.com/ruipengliu/lerna/adapters/wss"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/runtime"
 )
@@ -15,6 +17,9 @@ import (
 func (a *App) Run(ctx context.Context, serve, work bool) error {
 	if !serve && !work {
 		return api.E("invalid_request", "process_role_required")
+	}
+	if work && !a.OwnsTargets {
+		return api.E("unsupported", "worker_target_ownership_required")
 	}
 	runCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -72,4 +77,18 @@ func (a *App) Run(ctx context.Context, serve, work bool) error {
 		}
 	}
 	return first
+}
+
+// RunRPC exposes the same current authenticated contracts to the application
+// process. EndpointChannel remains closed until a real endpoint authority exists.
+func (a *App) RunRPC(ctx context.Context) error {
+	server, err := rpcadapter.New(rpcadapter.Config{OwnerID: a.Config.OwnerID, Identity: a.Identity, Processor: wss.LocalProcessor{Dispatcher: a.Dispatcher}, AllowInsecureLoopback: a.Config.Development})
+	if err != nil {
+		return err
+	}
+	listener, err := net.Listen("tcp", a.Config.GRPCAddr)
+	if err != nil {
+		return err
+	}
+	return server.Serve(ctx, listener, nil)
 }

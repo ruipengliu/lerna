@@ -313,3 +313,48 @@ func TestRealTLSWebSocketRejectsBadFramesAndCurrentRevocation(t *testing.T) {
 		t.Fatalf("revoked command changed target: %v", err)
 	}
 }
+
+func TestRealTLSApplicationHeartbeatPreservesRequestSequence(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	f := newWireFixture(t)
+	server := f.server(t, nil)
+	conn, _, err := websocket.Dial(ctx, "wss"+strings.TrimPrefix(server.URL, "https")+"/connect", &websocket.DialOptions{HTTPClient: server.Client(), HTTPHeader: http.Header{"Authorization": []string{"Bearer " + f.token}}, Subprotocols: []string{"harness-wss.v1"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer conn.CloseNow()
+	if _, _, err = conn.Read(ctx); err != nil {
+		t.Fatal(err)
+	}
+	for _, nonce := range []string{"first-browser-heartbeat", "second-browser-heartbeat"} {
+		ping := struct{ Type, Nonce string }{Type: "ping", Nonce: nonce}
+		body := api.Raw(map[string]string{"type": ping.Type, "nonce": ping.Nonce})
+		if err = conn.Write(ctx, websocket.MessageText, body); err != nil {
+			t.Fatal(err)
+		}
+		_, pong, err := conn.Read(ctx)
+		var heartbeat struct {
+			Type  string `json:"type"`
+			Nonce string `json:"nonce"`
+		}
+		if err != nil || api.Decode(pong, &heartbeat) != nil || heartbeat.Type != "pong" || heartbeat.Nonce != nonce {
+			t.Fatalf("native browser application heartbeat closed: %v", err)
+		}
+	}
+	command := f.command()
+	if err = conn.Write(ctx, websocket.MessageText, api.Raw(harness.WSRequest{Type: "request", RequestSeq: 1, Kind: "command", Payload: api.Raw(command)})); err != nil {
+		t.Fatal(err)
+	}
+	_, body, err := conn.Read(ctx)
+	var response harness.WSResponse
+	if err != nil || api.DecodeLimit(body, &response, 1<<20) != nil || response.RequestSeq != 1 || response.ResultKind != "receipt" {
+		t.Fatalf("heartbeat consumed business sequence: %v", err)
+	}
+	if err = conn.Write(ctx, websocket.MessageText, []byte(`{"type":"ping","nonce":"bounded","extra":true}`)); err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err = conn.Read(ctx); err == nil {
+		t.Fatal("open heartbeat frame accepted")
+	}
+}

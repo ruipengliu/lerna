@@ -151,6 +151,15 @@ func (s *Service) ConsumeProposalTx(ctx context.Context, tx runtime.Tx, auth run
 		if e = tx.Put(ctx, decisions, p.DecisionID, d.Revision-1, d); e != nil {
 			return out, e
 		}
+		if out.Outcome == "rejected" {
+			current, err := getTask(ctx, tx, out.TaskID)
+			if err != nil {
+				return out, err
+			}
+			if _, err = raise(ctx, tx, JobAdvance, "advance/"+out.TaskID, taskRef(tx, current)); err != nil {
+				return out, err
+			}
+		}
 		return out, nil
 	}
 	if terminal(t) || t.Task.Control != "running" || d.Snapshot.GoalRevision != t.Task.GoalRevision || d.Snapshot.ControlRevision != t.Task.ControlRevision || t.PendingGoalCommand != "" || t.PendingCompletionID != "" {
@@ -247,7 +256,7 @@ func (s *Service) ConsumeProposalTx(ctx context.Context, tx runtime.Tx, auth run
 		} else {
 			t.Task.Status = "failed"
 			t.Task.ControlRevision++
-			t.Task.WaitReasons = []api.WaitReason{{Kind: "failure", ResumeCondition: p.FailureReason}}
+			t.Task.WaitReasons = []api.WaitReason{{Kind: "dependency", ResumeCondition: p.FailureReason}}
 			if e = s.closeUnsent(ctx, tx, &t); e != nil {
 				return out, e
 			}
@@ -280,6 +289,9 @@ func (s *Service) ConsumeProposalTx(ctx context.Context, tx runtime.Tx, auth run
 func (s *Service) admitBatchTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, t *taskState, d decisionState, actions []PreparedAction) ([]string, error) {
 	if len(actions) < 1 || len(actions) > 4 {
 		return nil, invalid("action_batch_limit")
+	}
+	if t.Continuations >= t.Policy.ContinuationLimit || uint64(len(actions)) > t.Policy.ContinuationLimit-t.Continuations {
+		return nil, api.E("invalid_state", "continuation_limit")
 	}
 	if s.ports.ActionAuthorization == nil {
 		return nil, api.E("unsupported", "action_authorization_not_configured")
@@ -379,6 +391,7 @@ func (s *Service) admitBatchTx(ctx context.Context, tx runtime.Tx, auth runtime.
 		}
 		ids = append(ids, a.OperationID)
 	}
+	t.Continuations += uint64(len(actions))
 	if e = s.updateSummary(ctx, tx, t); e != nil {
 		return nil, e
 	}
@@ -424,6 +437,7 @@ func (s *Service) MergeOperationTx(ctx context.Context, tx runtime.Tx, auth runt
 		}
 		return nil
 	}
+	wasClosed, previousEffect, previouslyMayApply := r.Closed, r.Effect, r.MayApplyLater
 	mayApply, ok := operation.MayApplyLater.(bool)
 	if !ok {
 		if text, valid := operation.MayApplyLater.(string); !valid || text != "unknown" {
@@ -444,10 +458,17 @@ func (s *Service) MergeOperationTx(ctx context.Context, tx runtime.Tx, auth runt
 	if e = s.updateSummary(ctx, tx, &t); e != nil {
 		return e
 	}
-	if r.Closed && r.Effect != "unknown" && !r.MayApplyLater {
+	if r.Closed && r.Effect != "unknown" && !r.MayApplyLater && (!wasClosed || previousEffect == "unknown" || previouslyMayApply) {
 		t.NoProgress = 0
 	}
 	if operation.ResultRef != nil {
+		newResult := true
+		for _, artifact := range t.CurrentArtifactRefs {
+			newResult = newResult && !api.Equal(artifact, *operation.ResultRef)
+		}
+		if newResult && operation.Effect != "unknown" && !r.MayApplyLater {
+			t.NoProgress = 0
+		}
 		t.CurrentArtifactRefs = appendUniqueContent(t.CurrentArtifactRefs, *operation.ResultRef)
 	}
 	if e = s.saveTask(ctx, tx, &t); e != nil {
