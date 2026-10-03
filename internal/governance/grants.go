@@ -721,30 +721,51 @@ func (s *Service) checkGrantQuery(ctx context.Context, store runtime.Store, scop
 	}
 	return out, err
 }
-func (s *Service) CheckUseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref, target api.ObjectRef, intentHash string, now time.Time) error {
+
+// CheckUseHeadsTx 只核原 Use 和当前完整 Grant 链，供宿主另核有限数据保留期。
+// 它不授予新出口，不消费 once，不延长原 StartBefore；开始仍须 CheckUseTx。
+func (s *Service) CheckUseHeadsTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref, target api.ObjectRef, intentHash string) (UseReceipt, error) {
+	if auth.TenantID != tx.Scope().TenantID {
+		return UseReceipt{}, api.E("forbidden", "tenant_mismatch")
+	}
 	if err := ownerRef(tx.Scope(), ref); err != nil {
-		return err
+		return UseReceipt{}, err
+	}
+	if err := runtime.CheckRef(tx.Scope(), target); err != nil {
+		return UseReceipt{}, err
 	}
 	var use UseReceipt
 	if _, err := tx.Get(ctx, ns("uses"), ref.ObjectID, &use); err != nil {
+		return UseReceipt{}, err
+	}
+	if ref.Revision != 1 || use.Decision != "allowed" || use.SubjectRef.TenantID != auth.TenantID || use.SubjectRef.OwnerID != tx.Scope().OwnerID || use.SubjectRef.ObjectID != auth.SubjectID || use.SubjectRef.Revision != auth.CredentialGeneration || !api.Equal(use.TargetRef, target) || use.IntentHash != intentHash {
+		return UseReceipt{}, api.E("forbidden", "use_binding_mismatch")
+	}
+	now, err := tx.Now(ctx)
+	if err != nil {
+		return UseReceipt{}, err
+	}
+	for _, ref := range use.GrantRefs {
+		if err = ownerRef(tx.Scope(), ref); err != nil {
+			return UseReceipt{}, err
+		}
+		var grant api.Grant
+		if _, err = tx.Get(ctx, ns("grants"), ref.ObjectID, &grant); err != nil {
+			return UseReceipt{}, err
+		}
+		start, e := api.ParseTime(grant.NotBefore)
+		if e != nil || now.Before(start) || grant.State != "active" || grant.Revision != ref.Revision || before(now, grant.ExpiresAt) != nil {
+			return UseReceipt{}, api.E("forbidden", "authorization_changed")
+		}
+	}
+	return use, nil
+}
+func (s *Service) CheckUseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, ref, target api.ObjectRef, intentHash string, now time.Time) error {
+	use, err := s.CheckUseHeadsTx(ctx, tx, auth, ref, target, intentHash)
+	if err != nil {
 		return err
 	}
-	if ref.Revision != 1 || use.Decision != "allowed" || use.SubjectRef.ObjectID != auth.SubjectID || use.SubjectRef.Revision != auth.CredentialGeneration || !api.Equal(use.TargetRef, target) || use.IntentHash != intentHash {
-		return api.E("forbidden", "use_binding_mismatch")
-	}
-	if err := before(now, use.StartBefore); err != nil {
-		return err
-	}
-	for _, gr := range use.GrantRefs {
-		var g api.Grant
-		if _, err := tx.Get(ctx, ns("grants"), gr.ObjectID, &g); err != nil {
-			return err
-		}
-		if g.State != "active" || g.Revision != gr.Revision || before(now, g.ExpiresAt) != nil {
-			return api.E("forbidden", "authorization_changed")
-		}
-	}
-	return nil
+	return before(now, use.StartBefore)
 }
 
 func (s *Service) requestSettlement(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in SettleRequest) (runtime.Outcome, error) {
