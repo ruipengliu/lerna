@@ -26,6 +26,7 @@ import (
 
 	"github.com/coder/websocket"
 	"github.com/ruipengliu/lerna/adapters/development"
+	device "github.com/ruipengliu/lerna/adapters/executor"
 	rpc "github.com/ruipengliu/lerna/adapters/grpc"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/interaction"
@@ -49,7 +50,11 @@ func startChannelRole(t *testing.T, ctx context.Context, role, path string) *cha
 	if err != nil {
 		t.Fatal(err)
 	}
-	p := &channelRoleProcess{cmd: exec.Command(binary(t, role), "--config", path), done: make(chan error, 1), log: log}
+	args := []string{"--config", path}
+	if role == "executor" {
+		args = append([]string{"serve"}, args...)
+	}
+	p := &channelRoleProcess{cmd: exec.Command(binary(t, role), args...), done: make(chan error, 1), log: log}
 	p.cmd.Stdout, p.cmd.Stderr = log, log
 	if err = p.cmd.Start(); err != nil {
 		t.Fatal(err)
@@ -162,10 +167,19 @@ func originalBinding(t *testing.T, ctx context.Context, store runtime.Store, sco
 }
 
 func TestPublicGatewayChannelRebindsTwoApplicationProcessesOnOriginalConnection(t *testing.T) {
+	testPublicGatewayChannelProcesses(t, false)
+}
+
+func TestPublicChannelTwoClassifiedWorkersAndIndependentExecutor(t *testing.T) {
+	testPublicGatewayChannelProcesses(t, true)
+}
+
+func testPublicGatewayChannelProcesses(t *testing.T, classifiedExecutor bool) {
+	t.Helper()
 	if os.Getenv("HARNESS_TEST_POSTGRES_DSN") == "" {
 		t.Skip("actual PostgreSQL configuration required")
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 6*time.Minute)
 	defer cancel()
 	root := t.TempDir()
 	c, err := development.InitializeConfig(ctx, filepath.Join(root, "original.json"), root, "postgres")
@@ -256,6 +270,17 @@ func TestPublicGatewayChannelRebindsTwoApplicationProcessesOnOriginalConnection(
 	defer store.Close()
 	scope := runtime.Scope{TenantID: c.TenantID, OwnerID: c.OwnerID, DatabaseID: c.DatabaseID}
 	before := originalBinding(t, ctx, store, scope, ready.ConnectionID)
+	var executorClient *device.Client
+	var executorProcess, indexProcess, impactProcess *channelRoleProcess
+	if classifiedExecutor {
+		indexProcess, impactProcess = startClassifiedChannelWorkers(t, ctx, root, c, store, scope)
+		executorClient, executorProcess = startIndependentChannelExecutor(t, ctx, root, c, store, scope, serverTLS)
+		defer func() {
+			if err := executorClient.Close(); err != nil {
+				t.Error(err)
+			}
+		}()
+	}
 	firstProcess.stop(t, true)
 	var after map[string]any
 	for deadline := time.Now().Add(8 * time.Second); time.Now().Before(deadline); {
@@ -300,4 +325,9 @@ func TestPublicGatewayChannelRebindsTwoApplicationProcessesOnOriginalConnection(
 	}
 	gatewayProcess.stop(t, false)
 	secondProcess.stop(t, false)
+	if classifiedExecutor {
+		executorProcess.stop(t, false)
+		indexProcess.stop(t, false)
+		impactProcess.stop(t, false)
+	}
 }

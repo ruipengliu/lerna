@@ -14,6 +14,6 @@ Go `OpenReplyJournal` 在私有 Root 目录以 file fsync、rename 和 directory
 
 `conformance/grpc` 通过真实 TCP/TLS/mTLS、SQLite、平台 credential ledger、固定注册 ES256 key 与实际文件 journal 验证正反例。包含严格外壳、源 JSON/JCS、原命令 SDK 重连回执、坏凭据/撤权/证书/配对、明文开发例外、普通32槽饱和时控制回执、绑定换代和丢 owner 确认后原 Reply 恢复。`go test -race` 与 `go vet` 通过。
 
-静态 WSS gateway→Channel、两个应用实例／独立应用参考进程、SQLite／PG、SIGKILL 后原 receipt 恢复、外连接／序号固定、旧输出实际写 gate 丢弃与 signed Delivery／Reply/Ack 故障证据见 `adapters/endpointchannel/README.md`。Go SDK 可选接收端合同见 `sdk/go/ENDPOINT.md`。这些应用参考进程运行实际 adapter／Dispatcher，公开 `cmd/application` 配置装配仍单独验收。
+静态 WSS gateway→Channel、两个应用实例／独立应用参考进程、SQLite／PG、SIGKILL 后原 receipt 恢复、外连接／序号固定、旧输出实际写 gate 丢弃与 signed Delivery／Reply/Ack 故障证据见 `adapters/endpointchannel/README.md`。Go SDK 可选接收端合同见 `sdk/go/ENDPOINT.md`。公开 `cmd/application` 的静态 mTLS 配置现沿 `development/ENDPOINT_CHANNELS.md` 装配；真实 PG 公开 Gateway／两 Application／两分类 worker／独立 SQLite Executor 的原连接、回执与实际退出验证另有记录。公开 App 的 Delivery 仍需原业务 receiver/proof，未配置时关闭。
 
 以下不据参考测试声明支持：生产接线资格、完整订阅/Change、动态发现 watch、真实证书发放、跨 AZ 与生产容量。默认未配置内容传输 Processor，不开放 `content_transfer_json` 字节业务。
