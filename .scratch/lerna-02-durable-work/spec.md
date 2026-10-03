@@ -2,7 +2,7 @@
 
 Status: ready-for-agent
 Phase: A
-Implementation: not-started
+Implementation: in-progress
 Depends on: [01](../lerna-01-command-contracts/spec.md)
 
 ## Problem Statement
@@ -62,3 +62,7 @@ Depends on: [01](../lerna-01-command-contracts/spec.md)
 依赖项表示实现先决条件；`ready-for-agent` 表示规格已明确，不表示依赖已完成或能力已开放。全部验收通过并附准确版本、环境、命令、结果和限制后，才可将本切片记为完成。共同执行与证据规则见[切片索引](../lerna-implementation/README.md)。
 
 依据：[runtime](../../docs/architecture/runtime.md#两个公共模板)、[runtime](../../docs/architecture/runtime.md#命令接纳算法)、[runtime](../../docs/architecture/runtime.md#领取与完成竞争)、[runtime](../../docs/architecture/runtime.md#调度与资源隔离)、[data-model](../../docs/architecture/data-model.md#事务与数据库装配)、[ADR-0003](../../docs/adr/0003-stable-owner-distributed-deployment.md)、[ADR-0004](../../docs/adr/0004-transactional-durable-work.md)。
+
+## 实施启动记录
+
+2026-10-03，前置01已完整退出，准确受测代码 `23bac17` 与远端CI success，退出记录在前置spec。按用户持续授权和决策代理批准的粒度发布八张票据，详见 [ticket-review](ticket-review.md)、[decisions](decisions.md)、[admission-decisions](admission-decisions.md)。首票PG原子接纳开始；本片所有验收仍待真实产品实现和数据库证据，不把环境smoke作为退出证据。
