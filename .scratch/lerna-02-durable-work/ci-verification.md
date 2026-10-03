@@ -46,3 +46,11 @@ SQLite票02合并最新 `6ccdb6d` 后的本地准确检查：make check/test-rac
 2026-10-03，准确提交 `b1674b2d0252da73f3dfd753857484597dc0a080` 的 push run [37149178541](https://github.com/ruipengliu/lerna/actions/runs/37149178541) 已 `completed / success`。实际 `contracts` job `111279225885`、`durable-admission` job `111279226000` 均 success。
 
 两库必需集成 `8.417s`、race `15.292s`，均 `-count=1` 重新执行，十项 v1 artifact 校验和全部 OK。包含04 SQLite Claim、PG/SQLite共享13项工作行为与09锁范围修复；05调度、07完整升级/清理及08进程故障仍由后续准确提交验证。04失败轮留下的无法确认归属scope限制保留，成功CI不追溯证明该轮已清理。整片02仍未退出。
+
+## 双库进程故障检查点
+
+2026-10-03，准确提交 `d89e78900f1a46b4b3ba6cfdc1bc5795feb20839` 的 push run [37151050492](https://github.com/ruipengliu/lerna/actions/runs/37151050492) 已 `completed / success`。实际 `contracts` job `111284851414`、`durable-admission` job `111284851550` 均 success。
+
+必需真实两库集成 `9.718s`、race `26.419s`，均-count=1，十项v1校验和全部OK。包含08真实提交前/Host答复前SIGKILL、正常对照、跨进程原Claim接替及SQLite存储端口确认丢失；不声称SQLite原生Commit异常、断电或生产故障域。05严格Start/统一Clock整合和07当前新恢复工具仍待其各自准确远端提交验证。
+
+之前纯文档 `e0f3894` 的 push run [37150721321](https://github.com/ruipengliu/lerna/actions/runs/37150721321) 也实际success，未将该文档检查点当成08代码测试。

@@ -74,3 +74,9 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 04双库领取检查点 `b1674b2` 的准确远端 [CI 37149178541](https://github.com/ruipengliu/lerna/actions/runs/37149178541) 已 success：必需真实集成8.417s/race15.292s均-count=1，原十项v1校验和不变。
 
 05补充采用[legacy策略](../lerna-02-durable-work/legacy-scheduling-decisions.md)及[实际处理门禁](../lerna-02-durable-work/processing-gate-decisions.md)：新接纳及首次接管legacy均绑定5分钟/最多3次启动，重开不刷新；实际Host成功提交必须经过真实Start/权限/期限，旧Complete不得绕过。纯hash及可信runtime存储机制保持各自职责，04/07/08在05整合时更新实际调用与同owner Clock，依赖图不变。07/08本票完成不关闭05或整片02。
+
+08已resolved并经merger合入d89e789；准确push [CI37151050492](https://github.com/ruipengliu/lerna/actions/runs/37151050492) actual success，两库-count=1集成9.718s/race26.419s。SIGKILL提交前/Host回复前、原Claim跨进程接替、SQLite存储端口确认丢失均有正常对照；SQLite原生Commit未知分支与断电不在此证据。
+
+07已resolved，feature4a0871a、工具生命周期修正75a5ac3及最新root整合0ec6386经merger合入0f27475。两库真实v1→v2→0003retention的原回执/原Job继续、版本保存故障回滚/重试、正文清理与独立command gone已通过；mandatory整合24.840s、race49.665s，固定psql18.6工具/历史升级选择race62.746s。CID登记后的真实取消精确清理/absence已验证；未知CREATE无完整ID不启动psql且可能遗留未启动容器，实际失败轮限制保留，不猜删除。详细证据见07Comments。准确新远端CI仍待核验。
+
+原八票现01/02/03/04/07/08完成，额外09完成；05仍实施并承担整合07/08真实Start/统一Clock，06仍等05。06提前采用[容量交接](../lerna-02-durable-work/capacity-handoff.md)：同库同schema/file≤64明确OwnerRef、统一command→pool→input→Job锁序、所有实际消费入口有限耐久pool门禁，历史鉴权查询/原键优先保留，未配置不产生新责任或无限处理；尚不表示06实现。整片仍待05/06、两轴审查、架构优化及真实CI退出。
