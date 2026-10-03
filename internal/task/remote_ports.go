@@ -21,6 +21,29 @@ type DelegationScope struct {
 	ParentSources []api.SourceEvidence `json:"parent_sources"`
 }
 
+// ReadIncomingSourceTx 只投影已登记的原allocation负责方，不授开始权。
+func (s *Service) ReadIncomingSourceTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, taskID string) (api.ObjectRef, bool, error) {
+	t, err := getTask(ctx, tx, taskID)
+	if err != nil {
+		return api.ObjectRef{}, false, err
+	}
+	if err = principal(auth, t); err != nil {
+		return api.ObjectRef{}, false, err
+	}
+	if t.IncomingAllocationID == "" {
+		return api.ObjectRef{}, false, nil
+	}
+	var original IncomingAllocation
+	if _, err = tx.Get(ctx, incoming, t.IncomingAllocationID, &original); err != nil {
+		return api.ObjectRef{}, false, err
+	}
+	ref := api.ObjectRef{TenantID: tx.Scope().TenantID, OwnerID: original.ParentOwner, ObjectID: original.AllocationID, Revision: 1}
+	if api.ValidateRecord("ObjectRef", ref) != nil || original.ReceiverID != tx.Scope().OwnerID || original.TaskRef == nil || original.TaskRef.ObjectID != taskID || original.TaskRef.OwnerID != tx.Scope().OwnerID || original.ParentTaskRef.OwnerID != original.ParentOwner {
+		return api.ObjectRef{}, false, api.E("idempotency_conflict", "original_incoming_scope_changed")
+	}
+	return ref, true, nil
+}
+
 // CheckTaskCurrentTx 保持原根、预算、主体与 Incoming 门禁；不读取字节或外部证明。
 func (s *Service) CheckTaskCurrentTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, id string, requireRunning bool) error {
 	t, err := getTask(ctx, tx, id)
