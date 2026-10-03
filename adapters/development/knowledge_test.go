@@ -281,12 +281,13 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 			}
 		}
 		var refusal *api.Error
-		reason := "knowledge_action_count_exceeded"
+		code, reason, decisionStatus := "forbidden", "knowledge_action_count_exceeded", "completed"
 		keys := []string{"read1", "read2"}
 		if blockedControl == "capability" {
-			reason, keys = "knowledge_action_control_exceeded", []string{"write1"}
+			// 实际供应商 decoder 已按冻结 Snapshot 拒绝未声明的 cap/binding。
+			code, reason, decisionStatus, keys = "invalid_request", "model_output_invalid", "failed", []string{"write1"}
 		}
-		if !errors.As(err, &refusal) || refusal.Code != "forbidden" || refusal.Reason != reason {
+		if !errors.As(err, &refusal) || refusal.Code != code || refusal.Reason != reason {
 			t.Fatalf("actual original proposal exceeded the selected %s control: %v sends=%d", blockedControl, err, sends.Load())
 		}
 		budgetRaw, err := a.query(ctx, "budget.read", taskID, task.BudgetReadInput{TaskID: taskID})
@@ -296,7 +297,7 @@ func runConfiguredKnowledge(t *testing.T, driver, blockedControl string) {
 		}
 		decisionID := budget.Task.Reservations[0].SourceRef.ObjectID
 		decision, err := a.Brain.Get(ctx, a.Store, a.Scope, a.ServiceAuth, decisionID)
-		if err != nil || decision.Decision.Status != "completed" || !decision.Decision.UsageFinal || decision.Decision.PhysicalRequestCount != 1 || !api.Equal(decision.Decision.Usage, []api.Amount{{Unit: "USD", Value: "0.00024"}}) || sends.Load() != 1 {
+		if err != nil || decision.Decision.Status != decisionStatus || blockedControl == "capability" && decision.Decision.ProposalRef != nil || !decision.Decision.UsageFinal || decision.Decision.PhysicalRequestCount != 1 || !api.Equal(decision.Decision.Usage, []api.Amount{{Unit: "USD", Value: "0.00024"}}) || sends.Load() != 1 {
 			t.Fatalf("known original model fee/request was lost: %v %+v sends=%d", err, decision, sends.Load())
 		}
 		for _, key := range keys {
