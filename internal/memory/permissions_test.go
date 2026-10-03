@@ -239,3 +239,19 @@ func TestCopyReportsRequireCurrentHolderAndExistingAccurateEvidence(t *testing.T
 		t.Fatalf("accurate cleanup receipt rejected: %+v", r)
 	}
 }
+
+func TestManagementAndControlQueriesFailClosedWhenCredentialAuthorityIsUnavailable(t *testing.T) {
+	f := newFixture(t)
+	ref := f.upload(t, "当前凭据权威必须可核验")
+	a := &authority{}
+	a.unavailable.Store(true)
+	f.service.Authorization = a
+	one := uint64(1)
+	c := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: f.scope.OwnerID, CommandID: api.NewID("command"), Method: "content.close", TargetID: ref.ContentID, ExpectedRevision: &one, ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(memory.CloseInput{ContentRef: ref, Reason: "失联时不得把旧凭据当作管理权"})}
+	if r, err := f.dispatcher.Command(f.ctx, f.auth, api.Raw(c)); !api.IsCode(err, "dependency_unavailable") {
+		t.Fatalf("management bypassed current credential authority: %+v %v", r, err)
+	}
+	if _, err := f.service.IndexStatus(f.ctx, f.scope, f.auth); !api.IsCode(err, "dependency_unavailable") {
+		t.Fatalf("control metadata bypassed current credential authority: %v", err)
+	}
+}

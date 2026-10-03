@@ -128,6 +128,26 @@ func (s *Service) within(ctx context.Context, scope runtime.Scope, fn func(runti
 	return err
 }
 
+func (s *Service) currentAuth(ctx context.Context, tx runtime.Tx, auth runtime.Auth) error {
+	if err := checkAuth(tx.Scope(), auth); err != nil {
+		return err
+	}
+	if s.Authorization != nil {
+		_, err := s.Authorization.Visibility(ctx, tx, auth)
+		return err
+	}
+	return nil
+}
+
+func (s *Service) authWithin(ctx context.Context, scope runtime.Scope, auth runtime.Auth, fn func(runtime.Tx) error) error {
+	return s.within(ctx, scope, func(tx runtime.Tx) error {
+		if err := s.currentAuth(ctx, tx, auth); err != nil {
+			return err
+		}
+		return fn(tx)
+	})
+}
+
 func checkAuth(scope runtime.Scope, auth runtime.Auth) error {
 	if auth.TenantID != scope.TenantID || !api.ValidID(auth.SubjectID) || auth.CredentialGeneration == 0 {
 		return api.E("forbidden", "invalid_identity")
@@ -149,7 +169,7 @@ func checkContentRef(scope runtime.Scope, ref api.ContentRef) error {
 }
 
 func (s *Service) InstallPolicy(ctx context.Context, scope runtime.Scope, auth runtime.Auth, policy Policy) error {
-	return s.within(ctx, scope, func(tx runtime.Tx) error { return s.InstallPolicyTx(ctx, tx, auth, policy) })
+	return s.authWithin(ctx, scope, auth, func(tx runtime.Tx) error { return s.InstallPolicyTx(ctx, tx, auth, policy) })
 }
 
 // InstallPolicyTx 是显式管理入口，不在构造函数或恢复过程中安装默认许可。
@@ -165,6 +185,9 @@ func (s *Service) InstallPolicyTx(ctx context.Context, tx runtime.Tx, auth runti
 	}
 	head, err := loadHead(ctx, tx)
 	if err != nil {
+		return err
+	}
+	if err = s.currentAuth(ctx, tx, auth); err != nil {
 		return err
 	}
 	var old Policy
