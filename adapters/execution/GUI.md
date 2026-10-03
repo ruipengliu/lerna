@@ -29,6 +29,24 @@ target_version、action_before。一次动作只允许下列一种形状；其�
 同步失败保留原 Operation/Attempt，`execution.reconcile` 独立读取目标日志，恢复只
 查询原 Attempt，不重发 click/swipe/input/back。
 
+旧 Attempt 的确定退出只归其原 epoch。本人接管的新 epoch 必须有对应的真实 Fence
+事实才可报告停止；原效果归并与资源占用修订不会推翻同一实例、epoch 和入口状态的
+已证 Fence。当前 Fence 已确认且原未知写者独立核清后，资源才转为 released。
+
+实际介质路径不可读时，核对错误不改写原 unknown。旧工作者失败后仍持有的 Claim
+必须等原截止；关闭并重开数据库及目标宿主不会刷新 Claim、观察窗口或原动作期限。
+恢复旧动作只沿原 operation/attempt 查询，允许在原观察窗口已过期后核清既有事实。
+
 公开验收使用原 `execution.invoke`、资源及查询方法，经真实 SQLite/PostgreSQL
 Dispatcher 推进三台独立目标。真实设备通常只能声明 best_effort，不能继承本模拟
 驱动的原子校验保证。生产设备、屏幕截图介质和真实触控平台需要独立适配和验收。
+
+专项测试位于 `conformance/integration/phone_gui*_test.go`，通过
+`HARNESS_TEST_EXECUTION_BACKEND=postgres` 与私有 `HARNESS_TEST_POSTGRES_DSN` 切换
+实际 PG；默认实际 SQLite。夹具主体预置为受信 orchestrator/admin，远端不可变 Content
+和 authority 使用已授权边界替身；资源、Operation、Attempt、原回执与 Claim 均由真实
+公开 Dispatcher/SQL 裁决，三个目标均为独立真实文件。权限反例包括无设备控制角色、
+原入口授权撤销及伪造旧观察。测试日志 `GUI_EVIDENCE` 保存准确原身份、前后观察与
+独立目标事实，临时数据库/目标随后清理。该层不证明 Task/Brain 装配已经提供 GUI；
+Task 必须另注册准确 capability/binding/InstallLock 和逐动作、逐设备 Grant，不能继承
+fixture 的预置权限。
