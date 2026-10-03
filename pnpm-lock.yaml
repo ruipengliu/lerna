@@ -33,6 +33,19 @@ importers:
         specifier: 8.19.0
         version: 8.19.0
 
+  adapters/alternate/ts:
+    dependencies:
+      '@harness/sdk':
+        specifier: workspace:*
+        version: link:../../../sdk/ts
+      ws:
+        specifier: 8.19.0
+        version: 8.19.0
+    devDependencies:
+      vite:
+        specifier: 8.3.2
+        version: 8.3.2(@types/node@24.12.0)
+
   apps/web:
     dependencies:
       '@harness/sdk':
