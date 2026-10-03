@@ -2,6 +2,7 @@ package development
 
 import (
 	"context"
+	"fmt"
 	"sort"
 
 	"github.com/ruipengliu/lerna/adapters/executor"
@@ -67,6 +68,10 @@ func (e executionBridge) prepareRemoteDispatch(ctx context.Context, s runtime.Sc
 		if err != nil {
 			return err
 		}
+		ctx, err = e.prepareRemoteAdmissionSources(ctx, s, i, fixed, filePermissions)
+		if err != nil {
+			return err
+		}
 		parts := []string{"task", "content", "memory", "governance", "platform", executor.Namespace}
 		if e.a.RemoteAgent != nil {
 			parts = append(parts, "collaboration")
@@ -114,7 +119,14 @@ func (e executionBridge) prepareRemoteDispatch(ctx context.Context, s runtime.Sc
 			if err != nil {
 				return err
 			}
-			return tx.Create(ctx, "platform.remote_bundles", i.OperationID, i.TaskRef.ObjectID, bundle)
+			if err = tx.Create(ctx, "platform.remote_bundles", i.OperationID, i.TaskRef.ObjectID, bundle); err != nil {
+				return err
+			}
+			flow, ok := ctx.Value(foreignFlowKey{}).(runtime.Flow)
+			if !ok || flow.Scope != s || flow.Kind != "job" || flow.Work == nil {
+				return api.E("forbidden", "original_remote_worker_claim_required")
+			}
+			return tx.Guard(ctx, flow.Work.Claim)
 		})
 		if status == runtime.CommitUnknown {
 			return runtime.ErrCommitUnknown
@@ -194,11 +206,7 @@ func (a *App) freezeRemoteSubmitter(ctx context.Context, s runtime.Scope, i task
 }
 
 func (a *App) remoteInputPermissionsTx(ctx context.Context, tx runtime.Tx, i task.OperationIntent, fixed encodedIntent, user runtime.Auth, filePermissions []remoteSourcePermission) ([]executor.ContentPermission, error) {
-	queue := []remoteSourcePermission{{fixed.Ref, "execution_intent"}, {i.ArgumentsRef, "execution_arguments"}}
-	for _, ref := range uniqueSources(append(append([]api.ContentRef{}, i.ProcessedSourceRefs...), i.DisclosedSourceRefs...)) {
-		queue = append(queue, remoteSourcePermission{ref, "execution_arguments"})
-	}
-	queue = append(queue, filePermissions...)
+	queue := remotePermissionRoots(i, fixed, filePermissions)
 	result := []executor.ContentPermission{}
 	seen := map[api.ContentRef]int{}
 	var bytes uint64
@@ -214,11 +222,11 @@ func (a *App) remoteInputPermissionsTx(ctx context.Context, tx runtime.Tx, i tas
 		}
 		service, err := a.Memory.SourcePolicySnapshotTx(ctx, tx, a.ServiceAuth, next.ref, next.purpose, "device")
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("original remote source ref=%s/%s@%d purpose=%s location=device subject=%s: %w", next.ref.OwnerID, next.ref.ContentID, next.ref.Version, next.purpose, a.ServiceAuth.SubjectID, err)
 		}
 		principal, err := a.Memory.SourcePolicySnapshotTx(ctx, tx, user, next.ref, next.purpose, "device")
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("original remote source ref=%s/%s@%d purpose=%s location=device subject=%s: %w", next.ref.OwnerID, next.ref.ContentID, next.ref.Version, next.purpose, user.SubjectID, err)
 		}
 		if !api.Equal(service.Policy, principal.Policy) || service.RetainUntil != principal.RetainUntil || service.ControlRevision != principal.ControlRevision {
 			return nil, api.E("revision_conflict", "original_source_policy_changed")

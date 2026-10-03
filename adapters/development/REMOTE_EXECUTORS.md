@@ -87,6 +87,11 @@ Task 准入先保存原 Operation、预留和有限 lease。窗口前准备固�
 Task、原主体、原源策略、原 Grant head、原控制和当前 Claim。提交未知时当次不出站。
 SDK journal 保存原命令、准确 payload/TTL；恢复先取原回执，不造同义新操作。
 
+首次冻结 bundle 前，宿主先核原 Task／Operation／主体／Use／Claim，再在事务外为
+原 Service 与原提交者按准确输入用途取得本次来源证明。随后的同库事务仍核完整策略
+交集和当前许可，并在提交前重核 Claim；旧 bundle 不重建、不增加用途。证明准备后的
+撤权、控制变更或 Claim 失效仍由强门禁拒绝，提交未知不进入设备 Prepare／Dispatch。
+
 云端 `executionBridge.Usage` 只归并一份设备签名 LeaseReport。准确 Operation Usage
 来自该报告的原证据，因此 Task 和 Grant 不会分别查询不同进度再双扣。
 原 Cloud lease 只调用 `ApplyLeaseReportTx`；普通本方 Use 仍沿自己的原结算方法。
