@@ -186,5 +186,9 @@ export async function sha256(bytes: Uint8Array): Promise<string> {
   return `sha256:${Array.from(new Uint8Array(hash), (x) => x.toString(16).padStart(2, "0")).join("")}`;
 }
 export async function digest(value: unknown): Promise<string> {
-  return sha256(jsonBytes(value));
+  return digestLimit(value, MAX_DOMAIN_BYTES);
+}
+/** 只有清单等明确规定更大容量的契约可使用此入口；业务摘要保持默认域上限。 */
+export async function digestLimit(value: unknown, maxBytes: number): Promise<string> {
+  return sha256(jsonBytes(value, maxBytes));
 }
