@@ -57,6 +57,7 @@ type App struct {
 	GrantID                                                          string
 	OwnsTargets                                                      bool
 	Role                                                             string
+	closeGovernance                                                  func() error
 }
 
 func component(name string) api.ComponentRef {
@@ -82,7 +83,12 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 		}
 	}()
 	a.Scope = runtime.Scope{TenantID: c.TenantID, OwnerID: c.OwnerID, DatabaseID: st.ID()}
-	a.UserAuth = runtime.Auth{TenantID: c.TenantID, SubjectID: c.SubjectID, CredentialGeneration: 1, Roles: []string{"trusted_renderer", "grant_authority", "content_admin", "memory_admin", "maintainer", "evidence_consumer", "evaluation_admin", "release_authority"}}
+	userRoles := c.UserRoles
+	if userRoles == nil {
+		// 旧配置保留原凭据的角色集合，初始化不能静默扩大权限。
+		userRoles = []string{"trusted_renderer", "grant_authority", "content_admin", "memory_admin", "maintainer", "evidence_consumer", "evaluation_admin", "release_authority"}
+	}
+	a.UserAuth = runtime.Auth{TenantID: c.TenantID, SubjectID: c.SubjectID, CredentialGeneration: 1, Roles: append([]string{}, userRoles...)}
 	a.ServiceAuth = runtime.Auth{TenantID: c.TenantID, SubjectID: c.OwnerID, CredentialGeneration: 1, Roles: []string{"service", "orchestrator", "task_admin", "evidence", "grant_authority", "content_admin", "memory_admin", "usage_reporter", "maintainer", "evidence_consumer"}}
 	serviceSecret := make([]byte, 32)
 	if _, e = rand.Read(serviceSecret); e != nil {
@@ -102,7 +108,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 			return nil, e
 		}
 	}
-	a.Keys, e = platform.OpenDevelopmentKey(c.KeyFile, c.TenantID, c.OwnerID, []string{"control", "closure", "grant_use", "delivery", "rpc_sender", "evidence_changes", "grant_lease", "allocation_closure"})
+	a.Keys, e = platform.OpenDevelopmentKey(c.KeyFile, c.TenantID, c.OwnerID, []string{"control", "closure", "grant_use", "delivery", "rpc_sender", "evidence_changes", "grant_lease", "allocation_closure", "evaluation_prepare", "evaluation_start"})
 	if e != nil {
 		return nil, e
 	}
@@ -117,6 +123,11 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	}
 	a.Memory.Authorization = contentAuthority{a}
 	purposes := []string{"read", "preview", "content.read", "content.write", "task.goal", "task.context", "task.result", "task.submit", "task.snapshot", "task.dispatch", "task.complete", "task.evidence", "task.input", "task.accept_result", "task.revise", "task.steer", "task.action", "task.attach_evidence", "task.adjust_budget", "task.need_context", "task.delegate", "child.create", "child.new_goal", "child.continue", "billing.adjustment", "brain.input", "brain.output", "result", "memory.save", "memory.read", "memory.query", "memory.extract", "memory.sync", "memory.view", "managed_file_write", "managed_file_read", "execution.intent", "execution.arguments", "execution.output", "execution.control", "execution_intent", "execution_arguments", "execution_result", "execution_usage_proof", "environment_namespace", "environment_input", "environment_compute_spec", "environment_restore", "interaction.input", "interaction.history", "interaction.surface", "schedule.template", "confirmation.preview", "evaluation.manifest"}
+	for _, purpose := range append([]string{"interaction.snapshot", "interaction.preview"}, RequiredContentPurposes()...) {
+		if !containsString(purposes, purpose) {
+			purposes = append(purposes, purpose)
+		}
+	}
 	pv := memory.PolicyValues{Subjects: []string{c.SubjectID, c.OwnerID}, Purposes: purposes, Locations: []string{"cloud", "device"}, RetainUntil: c.PolicyExpiresAt, Continuous: true, IndependentDerived: false}
 	policyRef := component("content-policy")
 	policyRef.Digest, _ = api.Digest(pv)
@@ -133,7 +144,12 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	a.ApplicationEventSchema = api.Object(map[string]any{"reason": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "reason")
 	a.GrantID = platform.StableDevelopmentID("grant", "development-file-goal")
 	a.Profile = brain.Profile{Ref: component("rule-bytes-profile"), ContextLimit: 262144, MaxInputTokens: 250000, MaxOutputTokens: 8192, SafetyMargin: 100, MaxInputBytes: 262144, RequestTimeout: 5 * time.Second}
-	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, ResultNotices: resultNoticeBridge{a}, Participants: []string{"content", "memory", "platform", "task"}})
+	lifecycle, evaluation, closeGovernance, err := configureBuiltinGovernance(a, c.Governance)
+	if err != nil {
+		return nil, err
+	}
+	a.closeGovernance = closeGovernance
+	a.Governance = governance.New(st, governance.Options{Content: governanceContent{a}, Proof: proofBridge{a}, UsageVerifier: usageVerifier{a}, PreviewGate: previewGate{a}, ResultNotices: resultNoticeBridge{a}, Lifecycle: lifecycle, Runner: evaluation, Participants: []string{"content", "memory", "platform", "task"}})
 	if e = os.MkdirAll(filepath.Join(c.DataRoot, "files"), 0700); e != nil {
 		return nil, e
 	}
@@ -280,6 +296,12 @@ func (a *App) initialize(ctx context.Context, rules []api.RuleDefinition) error 
 }
 func (a *App) Close() error {
 	var err error
+	if a.closeGovernance != nil {
+		if err = a.closeGovernance(); err != nil {
+			return err
+		}
+		a.closeGovernance = nil
+	}
 	if a.Model != nil {
 		err = a.Model.Close()
 		a.Model = nil
@@ -297,6 +319,15 @@ func (a *App) Close() error {
 		a.Store = nil
 	}
 	return err
+}
+
+func containsString(values []string, expected string) bool {
+	for _, value := range values {
+		if value == expected {
+			return true
+		}
+	}
+	return false
 }
 func (a *App) Gateway() (*wss.Server, error) {
 	var processor wss.Processor = wss.LocalProcessor{Dispatcher: a.Dispatcher}
