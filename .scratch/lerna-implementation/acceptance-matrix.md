@@ -107,3 +107,5 @@ F01/F02仅完成本票的原回执/原责任/同键冲突与重开范围；SIGKI
 08代码73310e2的整合d89e789及[准确远端CI](https://github.com/ruipengliu/lerna/actions/runs/37151050492)通过：F01的提交前/提交确认后Host答复前真实SIGKILL、原回执/原责任重开，以及F03/F04原Job跨进程更高epoch接替、旧完成拒绝和正常对照有双库证据。SQLite确认丢失仅为真实已提交的storage-port装饰故障，未覆盖nativeCommit异常；不宣称断电或外部效果隔离。
 
 05/06仍未退出，最终必须在其真实Start及pool门禁下重跑这些旧业务路径，再进行两轴审查/架构优化和准确CI；这些检查点不关闭G2或切片02。04未知schema及07未知CREATE未启动容器的清理限制保持，不依据猜测删除。
+
+2026-10-03票05检查点：原Job在全部通知丢失后通过bounded scan恢复；future due与事务外finite Timer、waiting释放Claim/业务单连接/Tx、重开保留条件/有限attempt/deadline、旧失败/停止保留新work及旧成功Projection，均有PG/SQLite共同Host观察与public receipt正常对照。04/07/08现统一真实Start/资格/policy门禁与ownerClock，真实v2原r1 Claim/work r2升级保留且到期后首次adoption，详见[05完整证据](../lerna-02-durable-work/issues/05-persistent-wait-and-scan.md#comments)。准确受测8a1df46，本地count1 wholeintegration26.132s/race57.172s通过；06pool/公平/配额仍待实施，远端最终CI及整片两轴审查/优化待后续，不关闭G2或切片02。原04/07清理限制保持。

@@ -4,14 +4,14 @@
 
 **Blocked by:** 04 — 双适配器工作接替
 
-**Status:** claimed
+**Status:** resolved
 
-- [ ] 丢弃全部唤醒通知后，真实 PG／SQLite 的有界扫描仍恢复已接纳工作，健康正常对照也完成。
-- [ ] 未来 due_at 不被立即领取或忙轮询；持久可检查等待条件／再检查时点，释放 Claim、worker 槽位、连接与事务。
-- [ ] 重开后仍保留原 Job 等待／退避阶段，沿保存的条件继续，不从任意函数入口重放或创建同义工作。
-- [ ] 有限执行期限、最大退避与尝试边界生效；明确完成、等待、有限重试和永久失败，Schema／权限／前态错误不无限重试。
-- [ ] 等待及失败只记录演示事实，不裁决不存在的 Task 终态，也不推断外部效果未发生；固定接纳决定保持不变。
-- [ ] 可控可信时钟及同步点验证到期、事件变化、取消与恢复，不用长 sleep 或私有函数次数冒充无忙轮询保证。
+- [x] 丢弃全部唤醒通知后，真实 PG／SQLite 的有界扫描仍恢复已接纳工作，健康正常对照也完成。
+- [x] 未来 due_at 不被立即领取或忙轮询；持久可检查等待条件／再检查时点，释放 Claim、worker 槽位、连接与事务。
+- [x] 重开后仍保留原 Job 等待／退避阶段，沿保存的条件继续，不从任意函数入口重放或创建同义工作。
+- [x] 有限执行期限、最大退避与尝试边界生效；明确完成、等待、有限重试和永久失败，Schema／权限／前态错误不无限重试。
+- [x] 等待及失败只记录演示事实，不裁决不存在的 Task 终态，也不推断外部效果未发生；固定接纳决定保持不变。
+- [x] 可控可信时钟及同步点验证到期、事件变化、取消与恢复，不用长 sleep 或私有函数次数冒充无忙轮询保证。
 
 ## Comments
 
@@ -30,3 +30,9 @@
 **工具与限制。** Go1.27.1、Node24.19.0、pnpm12.8.1、pgx/v5 5.11.0、go-sqlite3 1.14.52、GCC14.2；PG18.6/READ COMMITTED/synchronous_commit on，Tx3s/statement2s/lock1s；SQLite3.53.4各连接WAL/FULL/foreign_keys on/busy100ms，Host Tx3s，suite120s。Clock/Timer可控，context与cleanup仍有限真实时间。DSN仅程序读600保护文件进入明确env，未打印/提交；各轮新登记TMPDIR在/workspace overlay，SQLite用自己文件，PG只创建/清理已登记own randomschema，不drop caller DB/smoke/未知scope。04历史一个丢nonce scope限制保留，不猜名清理。生成器也只清理自己登记schema/本轮源目录。不声称本票证明断电、native SQLite COMMIT答复未知、外部效果隔离、生产故障域耐久或远端CI成功。
 
 **先行检查，最终整合结果待追加。** bootstrap、fmt、check（158双向合同fixtures/build）、test-race、mod verify、diff check通过。08整合前mandatory双库count1 integration15.738s，08严格Start整合后Process/StoragePort选择回归8.981s，真实冻结v2升级选择回归0.213s；这些不代替07合入后的最终whole integration/race。
+
+**最终整合与验收。** 已merge root07产品0f27475及最后doc418415f；真实受测产品代码8a1df46，包含07正文清理/完整历史恢复、08进程harness的同Clock/显式Start整合。保留root已发布0003_retention与原0001/0002逐字不变，仅把本票尚未发布的wait迁移从0003改0004并更新loader、四版metadata/current身份；PG0004 checksum sha256:5cdc0cb11fa3aec15a496c8f19419a83929299db513d98d954f8b0281a7428d5，SQLite0004 checksum sha256:9b92318b12fe176c0d22508bf5763a760c17146675e20d9858c0d93731e1ff08。原两版checksum仍用独立既知literal核验，已发布第三版与新第四版也核验准确identity。对root的0001/0002/0003及v1夹具diff为空，v1/v2四套SHA256SUMS全OK。
+
+最终实际通过 make fmt、make check（158共享fixtures正反序均Go→TS/TS→Go真实往返及build）、make test-race、go mod verify、git diff --check；mandatory make test-integration（-count=1，真实PG/SQLite whole recovery26.132s），以及 go test -race -count=1 -tags=integration -timeout=120s ./conformance/recovery/... ./internal/durableworkdemo/...（57.172s/1.658s）。07整合后首次whole integration编译red暴露自动合并产生的重复postgres import，修复后上述whole integration/race才green，未把失败轮记成通过。psql17.11版本工具前提仍由mandatory入口实际检查，原v1完整恢复路径保留；05新v2native loader不改变这一整体要求。最终各轮自己登记scope与overlay TMPDIR有限正常清理，04未知scope与07未知CREATE未启动容器限制仍保留。
+
+六项AC已满足，06frontier现在打开；切片02整体未退出，06实际配额/公平门禁、两轴审查/架构优化及准确最终远端CI仍由后续承担。本票只commit自己的branch，未push、未rootmerge、未PR、未cleanup worktree。
