@@ -163,20 +163,7 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 	defer cancel()
 	root := ""
 	if report && driver == "postgres" {
-		retained, err := os.MkdirTemp("/workspace/harness-dev-environment", "wasi15-report-postgres-private-")
-		if err != nil {
-			t.Fatal(err)
-		}
-		root = retained // MkdirTemp 创建私有 0700 目录。
-		t.Cleanup(func() {
-			if t.Failed() {
-				t.Logf("original private fixture retained for terminal/fee observation: %s; config=%s; original local contract HTTP has stopped, do not issue new requests", retained, filepath.Join(retained, "config.json"))
-				return
-			}
-			if err := os.RemoveAll(retained); err != nil {
-				t.Errorf("remove successful private WASI fixture: %v", err)
-			}
-		})
+		root = configuredWASITestDataRoot(t)
 	} else {
 		root = t.TempDir()
 	}
@@ -854,6 +841,14 @@ func debugWASITask(t *testing.T, a *App, taskID, driver, scenario string, posts 
 			views = append(views, view)
 		}
 	}
+	evidenceRoot, err := configuredWASITestEvidenceRoot()
+	if err != nil {
+		t.Logf("skip optional original diagnostic artifact: %v", err)
+		return
+	}
+	if evidenceRoot == "" {
+		return
+	}
 	artifact, err := json.Marshal(struct {
 		TaskFacts task.ContextFacts       `json:"task_facts"`
 		Budget    task.BudgetReadResponse `json:"budget"`
@@ -861,7 +856,7 @@ func debugWASITask(t *testing.T, a *App, taskID, driver, scenario string, posts 
 		Posts     int32                   `json:"actual_posts"`
 	}{facts, budget, views, posts})
 	if err == nil {
-		path := filepath.Join("/workspace/harness-dev-environment", "wasi15-"+scenario+"-"+driver+"-"+taskID+"-public-failure.json")
+		path := filepath.Join(evidenceRoot, "wasi15-"+scenario+"-"+driver+"-"+taskID+"-public-failure.json")
 		file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
 		if err != nil {
 			t.Logf("preserve original diagnostic artifact, create failed: %v", err)
