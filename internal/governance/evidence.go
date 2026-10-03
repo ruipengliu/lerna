@@ -20,7 +20,7 @@ type DefectImpact struct {
 func (s *Service) registerEvidence(r *runtime.Registry) error {
 	for _, fn := range []func() error{
 		func() error {
-			return registerCommand[RuleDefinition, StateOutput](r, "evidence.rule.register", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in RuleDefinition) (runtime.Outcome, error) {
+			return registerCommand[RuleDefinition, StateOutput](s, r, "evidence.rule.register", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in RuleDefinition) (runtime.Outcome, error) {
 				if err := requireRole(a, "maintainer"); err != nil {
 					return runtime.Outcome{}, err
 				}
@@ -29,7 +29,7 @@ func (s *Service) registerEvidence(r *runtime.Registry) error {
 			})
 		},
 		func() error {
-			return registerCommand[ConditionCheck, StateOutput](r, "evidence.check.register", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in ConditionCheck) (runtime.Outcome, error) {
+			return registerCommand[ConditionCheck, StateOutput](s, r, "evidence.check.register", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in ConditionCheck) (runtime.Outcome, error) {
 				if err := requireRole(a, "evidence_reporter"); err != nil {
 					return runtime.Outcome{}, err
 				}
@@ -38,10 +38,10 @@ func (s *Service) registerEvidence(r *runtime.Registry) error {
 			})
 		},
 		func() error {
-			return registerCommand[DefectRegister, DefectOutput](r, "evidence.defect.register", false, false, s.registerDefect)
+			return registerCommand[DefectRegister, DefectOutput](s, r, "evidence.defect.register", false, false, s.registerDefect)
 		},
 		func() error {
-			return registerCommand[EligibilityRequest, EligibilityReceipt](r, "evidence.eligibility.check", false, false, s.eligibility)
+			return registerCommand[EligibilityRequest, EligibilityReceipt](s, r, "evidence.eligibility.check", false, false, s.eligibility)
 		},
 		func() error {
 			return registerQuery[IDInput, ConditionCheck](r, "evidence.check.read", queryByID[ConditionCheck]("checks", nil))
@@ -56,7 +56,7 @@ func (s *Service) registerEvidence(r *runtime.Registry) error {
 			return registerQuery[ChangesRequest, ChangesOutput](r, "evidence.defect.changes", s.changes)
 		},
 		func() error {
-			return registerCommand[HolderAck, StateOutput](r, "evidence.holder.ack", false, false, s.ackHolder)
+			return registerCommand[HolderAck, StateOutput](s, r, "evidence.holder.ack", false, false, s.ackHolder)
 		},
 		func() error {
 			return registerQuery[api.ListInput, api.Page[ResultNotice]](r, "evidence.notice.list", queryPage[ResultNotice]("notices", "evidence_consumer"))
@@ -552,7 +552,7 @@ func (s *Service) changes(ctx context.Context, store runtime.Store, scope runtim
 		return ChangesOutput{}, err
 	}
 	var out ChangesOutput
-	status, err := store.Within(ctx, scope, []string{Namespace}, func(tx runtime.Tx) error {
+	status, err := store.Within(ctx, scope, s.participants(), func(tx runtime.Tx) error {
 		if err := ownerRef(scope, in.HolderRef); err != nil {
 			return err
 		}
@@ -614,7 +614,7 @@ func (s *Service) ackHolder(ctx context.Context, tx runtime.Tx, auth runtime.Aut
 }
 
 func (s *Service) continueDefect(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
-	return runtime.Finish(ctx, store, scope, []string{Namespace}, work, runtime.Done(), func(tx runtime.Tx) error {
+	return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
 		var impact DefectImpact
 		rev, err := tx.Get(ctx, ns("defect_impacts"), work.Job.ResponsibilityKey, &impact)
 		if err != nil {

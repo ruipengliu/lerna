@@ -41,6 +41,7 @@ type ConfirmationView struct {
 	ConsumedAt            string           `json:"consumed_at,omitempty"`
 	DecidedBy             string           `json:"decided_by,omitempty"`
 	DecidedAt             string           `json:"decided_at,omitempty"`
+	OriginalCommand       api.Command      `json:"original_command"`
 }
 type GrantIssue struct {
 	Grant                 api.Grant        `json:"grant"`

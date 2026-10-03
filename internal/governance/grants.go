@@ -13,20 +13,18 @@ import (
 func (s *Service) registerGrants(r *runtime.Registry) error {
 	registrations := []func() error{
 		func() error {
-			return registerCommand[GrantIssue, ConfirmedOutput](r, "grant.issue", false, true, s.issueGrant)
+			return registerCommand[GrantIssue, ConfirmedOutput](s, r, "grant.issue", false, true, s.issueGrant)
 		},
 		func() error {
-			return registerCommand[GrantRevoke, ConfirmedOutput](r, "grant.revoke", true, true, s.revokeGrant)
+			return registerCommand[GrantRevoke, ConfirmedOutput](s, r, "grant.revoke", true, true, s.revokeGrant)
 		},
 		func() error {
-			return registerCommand[ConfirmationDecision, StateOutput](r, "confirmation.decide", false, false, s.decideConfirmation)
+			return registerCommand[ConfirmationDecision, StateOutput](s, r, "confirmation.decide", false, false, s.decideConfirmation)
 		},
-		func() error {
-			return registerQuery[IDInput, ConfirmationView](r, "confirmation.read", s.readConfirmation)
-		},
+		func() error { return s.registerConfirmationRead(r) },
 		func() error { return registerQuery[IDInput, GrantRecord](r, "grant.read", s.readGrant) },
 		func() error {
-			return registerCommand[UseRequest, UseReceipt](r, "grant.use", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in UseRequest) (runtime.Outcome, error) {
+			return registerCommand[UseRequest, UseReceipt](s, r, "grant.use", false, false, func(ctx context.Context, tx runtime.Tx, a runtime.Auth, c api.Command, in UseRequest) (runtime.Outcome, error) {
 				out, err := s.UseTx(ctx, tx, a, in)
 				return runtime.Applied(out), err
 			})
@@ -41,16 +39,16 @@ func (s *Service) registerGrants(r *runtime.Registry) error {
 			}))
 		},
 		func() error {
-			return registerCommand[SettleRequest, UseSettlement](r, "grant.use.settle", false, true, s.requestSettlement)
+			return registerCommand[SettleRequest, UseSettlement](s, r, "grant.use.settle", false, true, s.requestSettlement)
 		},
 		func() error {
 			return registerQuery[IDInput, UseSettlement](r, "grant.settlement.read", s.readSettlement)
 		},
 		func() error {
-			return registerCommand[AcceptanceCreate, ConfirmedOutput](r, "policy.acceptance.create", false, true, s.createAcceptance)
+			return registerCommand[AcceptanceCreate, ConfirmedOutput](s, r, "policy.acceptance.create", false, true, s.createAcceptance)
 		},
 		func() error {
-			return registerCommand[RefInput, StateOutput](r, "policy.acceptance.revoke", true, false, s.revokeAcceptance)
+			return registerCommand[RefInput, StateOutput](s, r, "policy.acceptance.revoke", true, false, s.revokeAcceptance)
 		},
 		func() error {
 			return registerQuery[IDInput, PolicyAcceptance](r, "policy.acceptance.read", queryByID[PolicyAcceptance]("acceptances", func(a runtime.Auth, p PolicyAcceptance) error {
@@ -61,10 +59,10 @@ func (s *Service) registerGrants(r *runtime.Registry) error {
 			}))
 		},
 		func() error {
-			return registerCommand[LeaseAllocate, GrantLease](r, "grant.lease.allocate", false, false, s.allocateLease)
+			return registerCommand[LeaseAllocate, GrantLease](s, r, "grant.lease.allocate", false, false, s.allocateLease)
 		},
 		func() error {
-			return registerCommand[RefInput, StateOutput](r, "grant.lease.close", true, false, s.closeLease)
+			return registerCommand[RefInput, StateOutput](s, r, "grant.lease.close", true, false, s.closeLease)
 		},
 		func() error {
 			return registerQuery[IDInput, GrantLease](r, "grant.lease.read", queryByID[GrantLease]("leases", func(a runtime.Auth, l GrantLease) error {
@@ -189,7 +187,7 @@ func (s *Service) beginConfirmed(ctx context.Context, tx runtime.Tx, auth runtim
 	}
 }
 
-func (s *Service) consumeConfirmation(ctx context.Context, tx runtime.Tx, confirm *api.Confirmation, commandID string) error {
+func (s *Service) consumeConfirmation(ctx context.Context, tx runtime.Tx, auth runtime.Auth, confirm *api.Confirmation, commandID string) error {
 	var current ConfirmationRecord
 	rev, err := tx.Get(ctx, ns("confirmations"), confirm.RequestID, &current)
 	if err != nil {
@@ -204,6 +202,12 @@ func (s *Service) consumeConfirmation(ctx context.Context, tx runtime.Tx, confir
 	}
 	if err = before(now, current.Confirmation.ExpiresAt); err != nil {
 		return api.E("forbidden", "confirmation_expired")
+	}
+	if s.Ports.PreviewGate == nil {
+		return api.E("unsupported", "confirmation_preview_gate_unavailable")
+	}
+	if err = s.Ports.PreviewGate.CheckTx(ctx, tx, auth, current.Confirmation.PreviewRefs); err != nil {
+		return api.E("forbidden", "confirmation_stale")
 	}
 	current.Confirmation.Revision = rev + 1
 	current.Confirmation.State = "consumed"
@@ -245,7 +249,7 @@ func (s *Service) issueGrant(ctx context.Context, tx runtime.Tx, auth runtime.Au
 			return runtime.Outcome{}, api.E("forbidden", "scope_exceeded")
 		}
 	}
-	if err = s.consumeConfirmation(ctx, tx, confirm, c.CommandID); err != nil {
+	if err = s.consumeConfirmation(ctx, tx, auth, confirm, c.CommandID); err != nil {
 		return runtime.Outcome{}, err
 	}
 	if err = s.ProvisionGrantTx(ctx, tx, auth, in.Grant); err != nil {
@@ -276,7 +280,7 @@ func (s *Service) revokeGrant(ctx context.Context, tx runtime.Tx, auth runtime.A
 	if g.Revision != in.GrantRef.Revision {
 		return runtime.Outcome{}, api.E("revision_conflict", "revision_changed")
 	}
-	if err = s.consumeConfirmation(ctx, tx, confirm, c.CommandID); err != nil {
+	if err = s.consumeConfirmation(ctx, tx, auth, confirm, c.CommandID); err != nil {
 		return runtime.Outcome{}, err
 	}
 	g.Revision = rev + 1
@@ -338,7 +342,41 @@ func (s *Service) readConfirmation(ctx context.Context, store runtime.Store, sco
 		return ConfirmationView{}, api.E("forbidden", "confirmation_redacted")
 	}
 	c := record.Confirmation
-	return ConfirmationView{RequestID: c.RequestID, Revision: c.Revision, OriginalCommandID: c.OriginalCommandID, IntentHash: c.IntentHash, PreviewRefs: c.PreviewRefs, ExpiresAt: c.ExpiresAt, State: c.State, Challenge: c.Challenge, TrustedUserSessionRef: c.TrustedUserSessionRef, ConsumedBy: c.ConsumedBy, ConsumedAt: c.ConsumedAt, DecidedBy: c.DecidedBy, DecidedAt: c.DecidedAt}, nil
+	var pending PendingConfirmation
+	if _, err = store.Read(ctx, scope, ns("pending_confirmation"), c.OriginalCommandID, 0, &pending); err != nil {
+		return ConfirmationView{}, err
+	}
+	digest, err := api.Digest(pending.Command)
+	if err != nil {
+		return ConfirmationView{}, err
+	}
+	if digest != c.IntentHash || pending.SubjectID != auth.SubjectID || pending.CredentialGeneration != auth.CredentialGeneration {
+		return ConfirmationView{}, api.E("forbidden", "original_confirmation_input_unavailable")
+	}
+	return ConfirmationView{RequestID: c.RequestID, Revision: c.Revision, OriginalCommandID: c.OriginalCommandID, IntentHash: c.IntentHash, PreviewRefs: c.PreviewRefs, ExpiresAt: c.ExpiresAt, State: c.State, Challenge: c.Challenge, TrustedUserSessionRef: c.TrustedUserSessionRef, ConsumedBy: c.ConsumedBy, ConsumedAt: c.ConsumedAt, DecidedBy: c.DecidedBy, DecidedAt: c.DecidedAt, OriginalCommand: pending.Command}, nil
+}
+
+func (s *Service) registerConfirmationRead(r *runtime.Registry) error {
+	contract := api.Contract[IDInput, ConfirmationView]("confirmation.read", Namespace, "query", false, false)
+	branches := []any{}
+	for _, entry := range []struct {
+		name   string
+		schema api.Schema
+	}{{"grant.issue", api.SchemaFor[GrantIssue]()}, {"grant.revoke", api.SchemaFor[GrantRevoke]()}, {"policy.acceptance.create", api.SchemaFor[AcceptanceCreate]()}, {"release.approval.create", api.SchemaFor[ApprovalCreate]()}} {
+		commandSchema := api.SchemaFor[api.Command]()
+		properties := commandSchema["properties"].(map[string]any)
+		properties["method"] = api.Schema{"const": entry.name}
+		properties["payload"] = entry.schema
+		branches = append(branches, commandSchema)
+	}
+	contract.OutputSchema["properties"].(map[string]any)["original_command"] = api.Schema{"oneOf": branches}
+	return r.Register(runtime.Method{Contract: contract, Query: func(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, q api.Query) (any, error) {
+		var in IDInput
+		if err := api.Decode(q.Payload, &in); err != nil {
+			return nil, err
+		}
+		return s.readConfirmation(ctx, store, scope, auth, q, in)
+	}})
 }
 func (s *Service) continueConfirmation(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work) error {
 	var pending PendingConfirmation
@@ -349,7 +387,7 @@ func (s *Service) continueConfirmation(ctx context.Context, store runtime.Store,
 	if !ok {
 		return api.E("unsupported", "method_not_supported")
 	}
-	return runtime.Finish(ctx, store, scope, []string{Namespace}, work, runtime.Done(), func(tx runtime.Tx) error {
+	return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
 		auth := runtime.Auth{TenantID: scope.TenantID, SubjectID: pending.SubjectID, CredentialGeneration: pending.CredentialGeneration, Roles: pending.Roles}
 		old, err := tx.LoadCommand(ctx, pending.Command.CommandID)
 		if err != nil {
@@ -550,7 +588,7 @@ func (s *Service) UseTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, i
 }
 func (s *Service) checkGrantQuery(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, q api.Query, in UseRequest) (UseReceipt, error) {
 	var out UseReceipt
-	status, err := store.Within(ctx, scope, []string{Namespace}, func(tx runtime.Tx) error { var err error; out, err = s.checkUse(ctx, tx, auth, in, false); return err })
+	status, err := store.Within(ctx, scope, s.participants(), func(tx runtime.Tx) error { var err error; out, err = s.checkUse(ctx, tx, auth, in, false); return err })
 	if status == runtime.CommitUnknown {
 		return UseReceipt{}, runtime.ErrCommitUnknown
 	}
@@ -703,11 +741,11 @@ func (s *Service) continueSettlement(ctx context.Context, store runtime.Store, s
 		return err
 	}
 	if err := s.Ports.UsageVerifier.Verify(ctx, scope, use.TargetRef, pending.Request.Usage); err != nil {
-		return runtime.Finish(ctx, store, scope, []string{Namespace}, work, runtime.Done(), func(tx runtime.Tx) error {
+		return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
 			return runtime.Decide(ctx, tx, pending.CommandID, nil, api.E("forbidden", "settlement_unverified"))
 		})
 	}
-	return runtime.Finish(ctx, store, scope, []string{Namespace}, work, runtime.Done(), func(tx runtime.Tx) error {
+	return finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
 		out, err := s.ApplySettlementTx(ctx, tx, pending.Request)
 		if err != nil {
 			return err
@@ -742,7 +780,7 @@ func (s *Service) createAcceptance(ctx context.Context, tx runtime.Tx, auth runt
 	if err != nil || confirm == nil {
 		return pending, err
 	}
-	if err = s.consumeConfirmation(ctx, tx, confirm, c.CommandID); err != nil {
+	if err = s.consumeConfirmation(ctx, tx, auth, confirm, c.CommandID); err != nil {
 		return runtime.Outcome{}, err
 	}
 	out := PolicyAcceptance{AcceptanceID: in.AcceptanceID, Revision: 1, SubjectRef: auth.Ref(tx.Scope().OwnerID), PolicyRef: in.PolicyRef, ScopeRef: in.ScopeRef, Scope: in.Scope, ExplanationRef: in.ExplanationRef, ConfirmationRef: tx.Scope().Ref(confirm.RequestID, confirm.Revision+1), ExpiresAt: in.ExpiresAt, State: "active"}

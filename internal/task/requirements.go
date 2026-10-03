@@ -270,6 +270,11 @@ func (s *Service) StoreCoverageTx(ctx context.Context, tx runtime.Tx, auth runti
 	if s.ports.Gate == nil {
 		return api.ObjectRef{}, api.E("dependency_unavailable", "evidence_gate_unavailable")
 	}
+	if gate, ok := s.ports.Gate.(EvidenceRegistration); ok {
+		if e = gate.RegisterCoverage(ctx, tx, t.Task, c); e != nil {
+			return api.ObjectRef{}, e
+		}
+	}
 	ref := tx.Scope().Ref(c.CoverageID, c.Revision)
 	if e = s.ports.Gate.Evidence(ctx, tx, t.Task, []api.ObjectRef{ref}, []api.ComponentRef{c.RuleRef, c.EvaluatorRef}); e != nil {
 		return api.ObjectRef{}, e
@@ -421,6 +426,11 @@ func (s *Service) RecordCheckTx(ctx context.Context, tx runtime.Tx, auth runtime
 	}
 	if s.ports.Gate == nil {
 		return api.ObjectRef{}, api.E("dependency_unavailable", "evidence_gate_unavailable")
+	}
+	if gate, ok := s.ports.Gate.(EvidenceRegistration); ok {
+		if e = gate.RegisterCheck(ctx, tx, t.Task, c); e != nil {
+			return api.ObjectRef{}, e
+		}
 	}
 	ref := tx.Scope().Ref(c.CheckID, 1)
 	if e = s.ports.Gate.Evidence(ctx, tx, t.Task, []api.ObjectRef{ref}, []api.ComponentRef{c.RuleRef, c.EvaluatorRef}); e != nil {
