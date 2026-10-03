@@ -15,7 +15,7 @@ func configuredWASITestEvidenceRoot() (string, error) {
 	return root, nil
 }
 
-// 默认沿标准测试临时目录清理；只有显式证据目录才保留失败原现场。
+// 默认沿标准测试临时目录清理；显式证据目录保留成功和失败的完整现场。
 // 不创建用户指定的base，也不读取或初始化任何旧Scope。
 func configuredWASITestDataRoot(t *testing.T) string {
 	t.Helper()
@@ -33,10 +33,6 @@ func configuredWASITestDataRoot(t *testing.T) string {
 	t.Cleanup(func() {
 		if t.Failed() {
 			t.Logf("original private fixture retained for terminal/fee observation: %s; config=%s; original local contract HTTP has stopped, do not issue new requests", root, filepath.Join(root, "config.json"))
-			return
-		}
-		if err := os.RemoveAll(root); err != nil {
-			t.Errorf("remove successful private WASI fixture: %v", err)
 		}
 	})
 	return root
