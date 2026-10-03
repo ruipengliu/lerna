@@ -4,7 +4,7 @@
 
 **Blocked by:** 02 — SQLite 同版接纳；03 — PG 修订领取
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 在真实单写 SQLite 上实现相同领取／续租／条件提交语义，不降低修订或 epoch 绑定；两 adapter 经相同 Host 套件观察独立事实。
 - [ ] 新增工作与旧完成两种同步顺序均保留较新工作；过期 Claim、旧 worker 和篡改 claimed_revision 被拒，新 worker 正常推进。
