@@ -17,11 +17,11 @@ type MemorySourceGate struct {
 }
 
 func sourceGate(ctx context.Context, tx runtime.Tx, record MemoryRecord, source api.ContentRef, state string, policy api.ComponentRef) error {
-	id := semanticID("mgate", record.MemoryID+":"+contentKey(source))
+	id := semanticID("mgate", record.MemoryID+":"+sourceKey(tx.Scope(), source))
 	var gate MemorySourceGate
 	rev, err := tx.Get(ctx, "memory.source_gates", id, &gate)
 	if api.IsCode(err, "not_found") {
-		return tx.Create(ctx, "memory.source_gates", id, contentKey(source), MemorySourceGate{Revision: 1, MemoryRef: tx.Scope().Ref(record.MemoryID, record.Revision), SourceRef: source, State: state, PolicyRef: policy})
+		return tx.Create(ctx, "memory.source_gates", id, sourceKey(tx.Scope(), source), MemorySourceGate{Revision: 1, MemoryRef: tx.Scope().Ref(record.MemoryID, record.Revision), SourceRef: source, State: state, PolicyRef: policy})
 	}
 	if err != nil {
 		return err
@@ -34,7 +34,7 @@ func sourceGate(ctx context.Context, tx runtime.Tx, record MemoryRecord, source 
 }
 
 func (s *Service) checkSourceGate(ctx context.Context, tx runtime.Tx, auth runtime.Auth, source api.ContentRef, purpose, location string, continuous bool) error {
-	rows, err := tx.List(ctx, "memory.source_gates", contentKey(source), "", 101)
+	rows, err := tx.List(ctx, "memory.source_gates", sourceKey(tx.Scope(), source), "", 101)
 	if err != nil {
 		return err
 	}

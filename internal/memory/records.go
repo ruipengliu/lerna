@@ -104,7 +104,7 @@ func (s *Service) validateValues(ctx context.Context, tx runtime.Tx, auth runtim
 				return err
 			}
 		}
-		sp, err := s.policy(ctx, tx, v.PolicyRef)
+		sp, err := s.sourcePolicy(ctx, tx, v)
 		if err != nil {
 			return err
 		}
@@ -186,18 +186,23 @@ func (s *Service) registerMemoryRefs(ctx context.Context, tx runtime.Tx, auth ru
 	refs := append([]api.ContentRef{record.Values.ContentRef, record.Values.ScopeRef}, sourceRefs(record.Values.Sources)...)
 	seen := map[string]bool{}
 	for _, ref := range refs {
-		key := contentKey(ref)
+		key := sourceKey(tx.Scope(), ref)
 		if seen[key] {
 			continue
 		}
 		seen[key] = true
 		var v ContentVersion
-		_, err := tx.Get(ctx, "content.versions", key, &v)
+		v, err := s.CheckContentTx(ctx, tx, auth, ref, "memory.save", s.Location, false)
 		if err != nil {
 			return err
 		}
 		copyID := semanticID("copy", record.MemoryID+":"+fmt.Sprint(record.Revision)+":"+key)
-		_, err = s.RegisterCopyTx(ctx, tx, auth, RegisterCopyInput{CopyID: copyID, ContentRef: ref, HolderRef: tx.Scope().Ref(record.MemoryID, record.Revision), Purpose: "memory.save", Location: s.Location, RetainUntil: v.RetentionUntil, ReferenceIntentRef: tx.Scope().Ref(record.MemoryID, record.Revision)})
+		in := RegisterCopyInput{CopyID: copyID, ContentRef: ref, HolderRef: tx.Scope().Ref(record.MemoryID, record.Revision), Purpose: "memory.save", Location: s.Location, RetainUntil: v.RetentionUntil, ReferenceIntentRef: tx.Scope().Ref(record.MemoryID, record.Revision)}
+		if ref.OwnerID != tx.Scope().OwnerID {
+			_, err = s.registerForeignMetadataRef(ctx, tx, auth, in)
+		} else {
+			_, err = s.RegisterCopyTx(ctx, tx, auth, in)
+		}
 		if err != nil {
 			return err
 		}
@@ -207,7 +212,9 @@ func (s *Service) registerMemoryRefs(ctx context.Context, tx runtime.Tx, auth ru
 		if err != nil {
 			return err
 		}
-		holder.Kind = "metadata_reference"
+		if ref.OwnerID == tx.Scope().OwnerID {
+			holder.Kind = "metadata_reference"
+		}
 		holder.Revision = holderRevision + 1
 		if err = tx.Put(ctx, "content.holders", copyID, holderRevision, holder); err != nil {
 			return err
@@ -364,7 +371,7 @@ func (s *Service) replace(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 	if err != nil {
 		return MemoryOutput{}, err
 	}
-	if _, err = tx.Raise(ctx, "memory.correction_impact", contentKey(oldContent), tx.Scope().Ref(record.MemoryID, record.Revision), now); err != nil {
+	if _, err = tx.Raise(ctx, "memory.correction_impact", sourceKey(tx.Scope(), oldContent), tx.Scope().Ref(record.MemoryID, record.Revision), now); err != nil {
 		return MemoryOutput{}, err
 	}
 	if _, err = tx.Raise(ctx, "memory.cleanup", in.MemoryID, tx.Scope().Ref(in.MemoryID, record.Revision), now); err != nil {
@@ -422,7 +429,7 @@ func (s *Service) restrict(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if err != nil {
 		return MemoryOutput{}, err
 	}
-	if _, err = tx.Raise(ctx, "memory.restrict_impact", contentKey(record.Values.ContentRef), tx.Scope().Ref(record.MemoryID, record.Revision), now); err != nil {
+	if _, err = tx.Raise(ctx, "memory.restrict_impact", sourceKey(tx.Scope(), record.Values.ContentRef), tx.Scope().Ref(record.MemoryID, record.Revision), now); err != nil {
 		return MemoryOutput{}, err
 	}
 	return MemoryOutput{tx.Scope().Ref(in.MemoryID, record.Revision), record.State, seq}, nil
@@ -470,7 +477,7 @@ func (s *Service) delete(ctx context.Context, tx runtime.Tx, auth runtime.Auth, 
 	if _, err = tx.Raise(ctx, "memory.cleanup", in.MemoryID, tx.Scope().Ref(in.MemoryID, record.Revision), now); err != nil {
 		return MemoryOutput{}, err
 	}
-	if _, err = tx.Raise(ctx, "memory.source_impact", contentKey(record.Values.ContentRef), tx.Scope().Ref(record.MemoryID, record.Revision), now); err != nil {
+	if _, err = tx.Raise(ctx, "memory.source_impact", sourceKey(tx.Scope(), record.Values.ContentRef), tx.Scope().Ref(record.MemoryID, record.Revision), now); err != nil {
 		return MemoryOutput{}, err
 	}
 	return MemoryOutput{tx.Scope().Ref(in.MemoryID, record.Revision), "deleted", seq}, nil
@@ -552,6 +559,13 @@ func (s *Service) registerMemory(registry *runtime.Registry) {
 		if q.TargetID != in.MemoryID {
 			return MemoryRecord{}, api.E("invalid_request", "target_mismatch")
 		}
+		return s.InspectMemory(ctx, scope, auth, in.MemoryID)
+	})
+	query(s, registry, "memory.cleanup.get", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ReadMemoryInput) (MemoryRecord, error) {
+		if q.TargetID != in.MemoryID {
+			return MemoryRecord{}, api.E("invalid_request", "target_mismatch")
+		}
+		// 同管理视图只恢复当前清理元数据；不会读已撤正文或触发新的清理。
 		return s.InspectMemory(ctx, scope, auth, in.MemoryID)
 	})
 }

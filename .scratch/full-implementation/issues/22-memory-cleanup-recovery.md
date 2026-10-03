@@ -1,6 +1,6 @@
 # 22 memory-cleanup-recovery
 
-Status: claimed
+Status: resolved
 Blocked by: 01, 02, 05
 Implementer: task_impl
 
@@ -11,6 +11,10 @@ Implementer: task_impl
 ## 完成依据
 
 作为最后复核确认的最低恢复接口，由同一修复 implementer 完成。登记、发现、Schema、实际行为和边界同版发布后记录准确提交与制品。
+
+已登记默认 Go `memory.cleanup.get`，使用闭合 `ReadMemoryInput → MemoryRecord`，与 `memory.inspect` / 第二 Native TypeScript getter 同版。目标必须等于 `memory_id`；管理视图总返回当前元数据（沿既有 inspect 忽略可选 `revision`），每次核当前主体、管理权限及 `memory_admin`。不读取正文，不触发新的 cleanup，不授予普通记忆读取权。
+
+真实公开 Dispatcher / SQLite、PostgreSQL 原对象：删除后准确 `pending`（revision 2）→原 cleanup Job `complete`（revision 3）；无管理角色、跨租户拒绝；数据库关闭重开后原元数据完全相等。原已发布 Content 的独立副本仍可读，明确不把 Memory 引用清理当作所有副本擦除。缺登记 RED 2.704s；`go test -race ./internal/memory -run '^TestPublicMemoryCleanupGetterRecoversOriginalMetadataOnlyResponsibility$' -count=1 -timeout=90s` 两库实际 exit 0，21.931s。当前受信管理视图之外的真实跨公司身份依赖仍按平台配置单列，不由该 getter 承诺。
 
 ## Comments
 
