@@ -676,8 +676,18 @@ try {
   );
   const reportData = {
     implementation,
+    declared_backend_commit: process.env.HARNESS_BACKEND_COMMIT ?? null,
     base_url: baseURL,
     flow,
+    identity_scope: discovery.identity_scope,
+    identity_revision: discovery.identity_revision,
+    logical_service_id: discovery.logical_service_id,
+    tenant_id: config.tenant_id,
+    content_policy_ref: config.content_policy_ref,
+    task_policy_ref: config.task_policy_ref,
+    application_binding_ref: config.application_binding_ref,
+    node_version: process.version,
+    chromium_version: browser.version(),
     schema_digest: discovery.schema_digest,
     methods_digest: discovery.methods_digest,
     methods_count: discovery.methods.length,
@@ -702,7 +712,7 @@ try {
     .catch(() => {});
   await writeFile(
     resolve(artifacts, "failure-trace.json"),
-    `${JSON.stringify({ implementation, base_url: baseURL, connections, commands, replies, page_errors: pageErrors }, null, 2).replaceAll(token, "[redacted credential]")}\n`,
+    `${JSON.stringify({ implementation, declared_backend_commit: process.env.HARNESS_BACKEND_COMMIT ?? null, base_url: baseURL, flow, connections, commands, replies, control_decisions: controlDecisions, page_errors: pageErrors }, null, 2).replaceAll(token, "[redacted credential]")}\n`,
   );
   process.stderr.write(`${String(failure).replaceAll(token, "[redacted credential]")}\n`);
   process.exitCode = 1;
