@@ -17,8 +17,9 @@ type Input struct {
 	CreatedAt, UpdatedAt time.Time
 }
 type Observation struct {
-	Input Input
-	Job   runtime.Job
+	Input      Input
+	Job        runtime.Job
+	Projection *Projection
 }
 
 // Repository belongs to this demo consumer. It shares the supplied opaque Tx;
