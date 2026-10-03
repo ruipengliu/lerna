@@ -33,6 +33,15 @@ func (r *Remote) validateStateUsage(packet RemoteCreateInput, out RemoteState) e
 	if out.Fact.Revision == 0 {
 		return api.E("forbidden", "remote_child_state_revision_invalid")
 	}
+	if err := validateStateUsageBindings(packet, out); err != nil {
+		return err
+	}
+	return validateDelegationClosure(packet, out)
+}
+
+// 原生产者在完整事实与 Closure 纳入语义摘要后才分配事实代次。
+// 这里只校验实际 Task/额度/账单绑定，不替生产者预造消费方 epoch。
+func validateStateUsageBindings(packet RemoteCreateInput, out RemoteState) error {
 	if out.Task != nil {
 		if out.Task.TenantID != packet.SubjectRef.TenantID || out.Task.OrchestratorID != packet.Input.ReceiverID || out.Task.TaskID != packet.ChildTaskID || out.Fact.ChildTaskRef == nil || out.Task.ResultRef != nil && (out.ResultRef == nil || *out.Task.ResultRef != *out.ResultRef) {
 			return api.E("forbidden", "remote_child_task_truth_changed")
@@ -95,15 +104,24 @@ func (r *Remote) observeStateUsage(ctx context.Context, d task.Delegation, out R
 		return err
 	}
 	return r.within(ctx, func(tx runtime.Tx) error {
-		// 费用是原接收方的事实；父取消或新开始权收回不能把它抹掉。
-		actual, err := s.ReadAllocationTx(ctx, tx, r.cfg.Auth, d.AllocationRef.ObjectID)
-		if err != nil {
-			return err
-		}
-		if actual.ReceiverID != saved.Packet.Input.ReceiverID || actual.ParentTaskRef.ObjectID != saved.Packet.Input.ParentTaskRef.ObjectID || actual.AllocationID != saved.Packet.AllocationRef.ObjectID {
-			return api.E("forbidden", "remote_original_usage_allocation_changed")
-		}
-		return r.projectDelegationUsageTx(ctx, tx, saved.Packet, usage, &out, nil)
+		return task.WithJobIntents(ctx, tx, func(tx runtime.Tx) error {
+			// 费用是原接收方的事实；父取消或新开始权收回不能把它抹掉。
+			actual, err := s.ReadAllocationTx(ctx, tx, r.cfg.Auth, d.AllocationRef.ObjectID)
+			if err != nil {
+				return err
+			}
+			if actual.ReceiverID != saved.Packet.Input.ReceiverID || actual.ParentTaskRef.ObjectID != saved.Packet.Input.ParentTaskRef.ObjectID || actual.AllocationID != saved.Packet.AllocationRef.ObjectID {
+				return api.E("forbidden", "remote_original_usage_allocation_changed")
+			}
+			// 本次已验签的最终原账单与额度结算共同提交。迟到的原 report
+			// 仍沿同一 Closure 幂等，不等待新的取消或另一个交付才能结清。
+			if out.AllocationClosure != nil && (actual.State != "settled" || !api.Equal(actual.ClosureRef, out.AllocationClosureRef)) {
+				if err := s.ReconcileClosureTx(ctx, tx, r.cfg.Auth, actual.AllocationID, *out.AllocationClosure, *out.AllocationClosureRef); err != nil {
+					return err
+				}
+			}
+			return r.projectDelegationUsageTx(ctx, tx, saved.Packet, usage, &out, nil)
+		})
 	})
 }
 
@@ -187,11 +205,7 @@ func (r *Remote) projectDelegationUsageTx(ctx context.Context, tx runtime.Tx, pa
 	}
 	exists := err == nil
 	if exists {
-		validator, schemaErr := api.NewValidator(api.SchemaFor[remoteDelegatedUsageHead]())
-		if schemaErr != nil {
-			return schemaErr
-		}
-		if err = validator.Validate(api.Raw(head)); err != nil {
+		if err = r.validateStoredUsageHeadTx(ctx, tx, packet, head); err != nil {
 			return err
 		}
 		for _, saved := range []api.UsageSnapshot{head.Usage, head.OriginalUsage} {

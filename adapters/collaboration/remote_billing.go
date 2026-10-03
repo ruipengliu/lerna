@@ -2,6 +2,7 @@ package collaboration
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/ruipengliu/lerna/adapters/platform"
@@ -272,7 +273,12 @@ func (r *Remote) ReportClosure(ctx context.Context, scope runtime.Scope, parent 
 		return err
 	}
 	receipt, err := sendOriginal(ctx, peer, command, nil)
-	return knownReceipt(receipt, err)
+	err = knownReceipt(receipt, err)
+	var rejected *task.OriginalCommandRejection
+	if errors.As(err, &rejected) {
+		return r.acknowledgeReportedClosure(ctx, scope, command, rejected.Receipt, inc, ref)
+	}
+	return err
 }
 
 func (r *Remote) ReadClosure(ctx context.Context, scope runtime.Scope, ref api.ObjectRef) (api.AllocationClosure, error) {

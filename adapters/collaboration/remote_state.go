@@ -22,6 +22,9 @@ type RemoteState struct {
 	ResultRef            *api.ObjectRef           `json:"result_ref,omitempty"`
 	AllocationClosure    *api.AllocationClosure   `json:"allocation_closure,omitempty"`
 	AllocationClosureRef *api.ObjectRef           `json:"allocation_closure_ref,omitempty"`
+	DelegationClosure    *task.DelegationClosure  `json:"delegation_closure,omitempty"`
+	DelegationClosureRef *api.ObjectRef           `json:"delegation_closure_ref,omitempty"`
+	TaskClosure          *task.ClosureView        `json:"task_closure,omitempty"`
 	Incoming             *task.IncomingAllocation `json:"incoming,omitempty"`
 	SourceDatabaseID     string                   `json:"source_database_id"`
 	IssuedAt             string                   `json:"issued_at"`
@@ -162,6 +165,9 @@ func (r *Remote) state(ctx context.Context, peer runtime.Auth, q api.Query, in R
 			out.Fact.GoalWorkClosed = false
 			out.Fact.Gaps = append(out.Fact.Gaps, "input_or_control_pending")
 		}
+		if err := r.sealDelegationClosureTx(ctx, tx, id, saved.Packet, closure, &out); err != nil {
+			return err
+		}
 		semantic, err := api.Digest(out)
 		if err != nil {
 			return err
@@ -178,6 +184,9 @@ func (r *Remote) state(ctx context.Context, peer runtime.Auth, q api.Query, in R
 			}
 		}
 		out.Fact.Revision = current.FactRevision
+		if err := r.validateStateUsage(saved.Packet, out); err != nil {
+			return err
+		}
 		now, err := tx.Now(ctx)
 		if err != nil {
 			return err

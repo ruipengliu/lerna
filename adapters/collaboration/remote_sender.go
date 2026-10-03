@@ -215,40 +215,49 @@ func (r *Remote) ReadAllocation(ctx context.Context, scope runtime.Scope, ref ap
 		}
 		return s.AllocationRead(ctx, r.cfg.Store, scope, r.cfg.Auth, ref.ObjectID)
 	}
+	out, err := r.readRemoteAllocation(ctx, scope, ref)
+	return out.Allocation, err
+}
+
+// 保留完整原签名，可供费用报告恢复持久核验接收事实；没有新的开始权。
+func (r *Remote) readRemoteAllocation(ctx context.Context, scope runtime.Scope, ref api.ObjectRef) (RemoteAllocationReadOutput, error) {
+	var out RemoteAllocationReadOutput
+	if err := r.checkScope(scope); err != nil {
+		return out, err
+	}
 	peer, ok := r.peers[ref.OwnerID]
 	if !ok {
-		return task.Allocation{}, api.E("unsupported", "allocation_source_unconfigured")
+		return out, api.E("unsupported", "allocation_source_unconfigured")
 	}
 	raw, err := peer.Client.Query(ctx, api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: ref.OwnerID, QueryID: api.NewID("query"), Method: "collaboration.allocation.get", TargetID: ref.ObjectID, Payload: api.Raw(RemoteAllocationReadInput{ref})})
 	if err != nil {
-		return task.Allocation{}, err
+		return out, err
 	}
-	var out RemoteAllocationReadOutput
 	if err = api.Decode(raw, &out); err != nil {
-		return task.Allocation{}, err
+		return out, err
 	}
 	digest, err := allocationReadDigest(out)
 	if err != nil {
-		return task.Allocation{}, err
+		return out, err
 	}
 	if out.SourceDatabaseID != peer.Scope.DatabaseID || out.Allocation.AllocationID != ref.ObjectID || out.Allocation.Revision < ref.Revision || out.Allocation.ParentTaskRef.OwnerID != ref.OwnerID || out.Allocation.ParentTaskRef.TenantID != scope.TenantID || out.Allocation.ReceiverID != scope.OwnerID {
-		return task.Allocation{}, api.E("forbidden", "original_allocation_scope_changed")
+		return out, api.E("forbidden", "original_allocation_scope_changed")
 	}
 	if _, err = peer.Keys.Verify(out.Proof, allocationReadClaims(peer.Scope, out, digest), time.Now()); err != nil {
-		return task.Allocation{}, err
+		return out, err
 	}
 	issued, err := api.ParseTime(out.IssuedAt)
 	if err != nil {
-		return task.Allocation{}, err
+		return out, err
 	}
 	until, err := api.ParseTime(out.StartBefore)
 	if err != nil {
-		return task.Allocation{}, err
+		return out, err
 	}
 	if !issued.Before(until) || until.Sub(issued) > 30*time.Second {
-		return task.Allocation{}, api.E("forbidden", "allocation_window_exceeded")
+		return out, api.E("forbidden", "allocation_window_exceeded")
 	}
-	return out.Allocation, nil
+	return out, nil
 }
 func (r *Remote) Transfer(ctx context.Context, scope runtime.Scope, tr task.Transfer) error {
 	return r.transferRemoteChild(ctx, scope, tr)

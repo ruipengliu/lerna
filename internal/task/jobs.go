@@ -573,6 +573,9 @@ func (s *Service) billingJob(ctx context.Context, store runtime.Store, scope run
 	if _, e := store.Read(ctx, scope, reservations, work.Job.SourceRef.ObjectID, 0, &reservation); e != nil {
 		return e
 	}
+	if reservation.State == "settled" {
+		return s.finish(ctx, store, scope, work, runtime.Done(), nil)
+	}
 	var usage api.UsageSnapshot
 	var err error
 	if e := s.preIO(ctx, store, scope, work); e != nil {
@@ -590,7 +593,7 @@ func (s *Service) billingJob(ctx context.Context, store runtime.Store, scope run
 		}
 		usage, err = s.ports.Execution.Usage(ctx, scope, reservation.SourceRef)
 	case "budget_allocation":
-		return s.wait(ctx, store, scope, work)
+		return s.allocationBillingJob(ctx, store, scope, work, reservation)
 	default:
 		return s.wait(ctx, store, scope, work)
 	}
@@ -939,7 +942,18 @@ func (s *Service) delegationJob(ctx context.Context, store runtime.Store, scope 
 	if _, e := store.Read(ctx, scope, allocations, d.AllocationRef.ObjectID, 0, &a); e != nil {
 		return e
 	}
-	if d.CloseRequested {
+	if d.CloseRequested || d.GoalWorkClosed && d.EffectsClosed && d.ClosureRef == nil {
+		err := s.transaction(ctx, store, scope, func(tx runtime.Tx) error {
+			if e := tx.Guard(ctx, work.Claim); e != nil {
+				return e
+			}
+			var e error
+			d, a, e = s.prepareDelegationBudgetCloseTx(ctx, tx, d.DelegationID)
+			return e
+		})
+		if err != nil {
+			return err
+		}
 		if e := s.preIO(ctx, store, scope, work); e != nil {
 			return e
 		}
@@ -950,11 +964,14 @@ func (s *Service) delegationJob(ctx context.Context, store runtime.Store, scope 
 			return e
 		}
 		if !d.Sent {
-			return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
+			return s.finish(ctx, store, scope, work, runtime.Waiting(time.Now().Add(time.Second)), func(tx runtime.Tx) error {
+				if d.GoalWorkClosed && d.EffectsClosed {
+					return nil
+				}
 				return s.MergeDelegationTx(ctx, tx, serviceAuth(scope), DelegationFact{DelegationID: d.DelegationID, Revision: d.SourceRevision + 1, GoalWorkClosed: true, EffectsClosed: true, TransfersClosed: true, Gaps: []string{"allocation_closure_pending"}})
 			})
 		}
-		if d.ChildTaskRef != nil {
+		if d.CloseRequested && !d.GoalWorkClosed && d.ChildTaskRef != nil {
 			if e := s.ports.Collaboration.Control(ctx, scope, d, "cancel"); e != nil {
 				if deferred(e) {
 					return s.wait(ctx, store, scope, work)
@@ -1007,10 +1024,19 @@ func (s *Service) delegationJob(ctx context.Context, store runtime.Store, scope 
 		return err
 	}
 	disposition := runtime.Waiting(time.Now().Add(time.Second))
-	if fact.GoalWorkClosed && fact.EffectsClosed {
+	if fact.GoalWorkClosed && fact.EffectsClosed && fact.TransfersClosed && fact.UsageFinal && fact.ClosureRef != nil && a.State == "settled" {
 		disposition = runtime.Done()
 	}
-	return s.finish(ctx, store, scope, work, disposition, func(tx runtime.Tx) error { return s.MergeDelegationTx(ctx, tx, serviceAuth(scope), fact) })
+	return s.finish(ctx, store, scope, work, disposition, func(tx runtime.Tx) error {
+		if e := s.MergeDelegationTx(ctx, tx, serviceAuth(scope), fact); e != nil {
+			return e
+		}
+		if fact.GoalWorkClosed && fact.EffectsClosed && fact.ClosureRef == nil {
+			_, _, e := s.prepareDelegationBudgetCloseTx(ctx, tx, d.DelegationID)
+			return e
+		}
+		return nil
+	})
 }
 func (s *Service) internalDelegationJob(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work, d Delegation) error {
 	if d.ChildTaskRef == nil {
