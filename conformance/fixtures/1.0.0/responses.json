@@ -1,0 +1,266 @@
+[
+  {
+    "name": "applied fixed revision",
+    "schema": "CommandReceipt",
+    "wire": "{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"}",
+    "valid": true
+  },
+  {
+    "name": "accepted only nested revision",
+    "schema": "CommandReceipt",
+    "wire": "{\"state\":\"accepted\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"}}",
+    "valid": true
+  },
+  {
+    "name": "rejected revision_changed",
+    "schema": "CommandReceipt",
+    "wire": "{\"state\":\"rejected\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"reason\":\"revision_changed\",\"next_action\":\"resolve_rejection\"}",
+    "valid": true
+  },
+  {
+    "name": "rejected idempotency_conflict",
+    "schema": "CommandReceipt",
+    "wire": "{\"state\":\"rejected\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"reason\":\"idempotency_conflict\",\"next_action\":\"resolve_rejection\"}",
+    "valid": true
+  },
+  {
+    "name": "rejected forbidden",
+    "schema": "CommandReceipt",
+    "wire": "{\"state\":\"rejected\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"reason\":\"forbidden\",\"next_action\":\"resolve_rejection\"}",
+    "valid": true
+  },
+  {
+    "name": "rejected view hides identity",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"rejected\",\"reason\":\"forbidden\"}",
+    "valid": true
+  },
+  {
+    "name": "read not_found",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"not_found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"}}",
+    "valid": true
+  },
+  {
+    "name": "read gone",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"gone\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"}}",
+    "valid": true
+  },
+  {
+    "name": "read unavailable",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"unavailable\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"reason\":\"dependency_unavailable\"}",
+    "valid": true
+  },
+  {
+    "name": "fixed receipt progress active",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"active\"}}",
+    "valid": true
+  },
+  {
+    "name": "fixed receipt progress waiting",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"waiting\"}}",
+    "valid": true
+  },
+  {
+    "name": "fixed receipt progress paused",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"paused\"}}",
+    "valid": true
+  },
+  {
+    "name": "fixed receipt progress succeeded",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"succeeded\"}}",
+    "valid": true
+  },
+  {
+    "name": "fixed receipt progress failed",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"failed\"}}",
+    "valid": true
+  },
+  {
+    "name": "fixed receipt progress cancelled",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"cancelled\"}}",
+    "valid": true
+  },
+  {
+    "name": "found progress none",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"none\"}}",
+    "valid": true
+  },
+  {
+    "name": "found progress unavailable",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"unavailable\",\"reason\":\"dependency_unavailable\"}}",
+    "valid": true
+  },
+  {
+    "name": "baseline 5 current 5",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\",\"status\":\"active\"}}",
+    "valid": true
+  },
+  {
+    "name": "baseline 5 current 6",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"active\"}}",
+    "valid": true
+  },
+  {
+    "name": "baseline 5 current 4",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"4\"},\"revision\":\"4\",\"status\":\"active\"}}",
+    "valid": false
+  },
+  {
+    "name": "exact monotonic 9007199254740992 9007199254740993",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"9007199254740992\"},\"revision\":\"9007199254740992\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"9007199254740993\"},\"revision\":\"9007199254740993\",\"status\":\"active\"}}",
+    "valid": true
+  },
+  {
+    "name": "exact monotonic 9007199254740993 9007199254740992",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"9007199254740993\"},\"revision\":\"9007199254740993\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"9007199254740992\"},\"revision\":\"9007199254740992\",\"status\":\"active\"}}",
+    "valid": false
+  },
+  {
+    "name": "nested versions absent",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\"},\"revision\":\"6\",\"status\":\"active\"}}",
+    "valid": true
+  },
+  {
+    "name": "accepted nested baseline current 6",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"accepted\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"}},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"active\"}}",
+    "valid": true
+  },
+  {
+    "name": "accepted no invented baseline",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"accepted\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\"}},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"1\"},\"revision\":\"1\",\"status\":\"active\"}}",
+    "valid": true
+  },
+  {
+    "name": "receipt conflicting nested revision",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"7\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"active\"}}",
+    "valid": false
+  },
+  {
+    "name": "progress conflicting nested revision",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"7\"},\"revision\":\"6\",\"status\":\"active\"}}",
+    "valid": false
+  },
+  {
+    "name": "wrong object tenant_id",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"different\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"active\"}}",
+    "valid": false
+  },
+  {
+    "name": "wrong object owner_id",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"different\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"active\"}}",
+    "valid": false
+  },
+  {
+    "name": "wrong object kind",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"different\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"active\"}}",
+    "valid": false
+  },
+  {
+    "name": "wrong object id",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"different\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"active\"}}",
+    "valid": false
+  },
+  {
+    "name": "wrong outer command binding",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"other\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"active\"}}",
+    "valid": false
+  },
+  {
+    "name": "wrong receipt command binding",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"other\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"active\"}}",
+    "valid": false
+  },
+  {
+    "name": "commit_unknown receipt",
+    "schema": "CommandReceipt",
+    "wire": "{\"state\":\"commit_unknown\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"}",
+    "valid": false
+  },
+  {
+    "name": "conflict fourth state",
+    "schema": "CommandReceipt",
+    "wire": "{\"state\":\"conflict\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"}",
+    "valid": false
+  },
+  {
+    "name": "applied missing object",
+    "schema": "CommandReceipt",
+    "wire": "{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"revision\":\"5\"}",
+    "valid": false
+  },
+  {
+    "name": "illegal next_action",
+    "schema": "CommandReceipt",
+    "wire": "{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\",\"next_action\":\"no_action\"}",
+    "valid": false
+  },
+  {
+    "name": "rejected cannot carry object",
+    "schema": "CommandReceipt",
+    "wire": "{\"state\":\"rejected\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"reason\":\"revision_changed\",\"revision\":\"5\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"}}",
+    "valid": false
+  },
+  {
+    "name": "accepted revision existence",
+    "schema": "CommandReceipt",
+    "wire": "{\"state\":\"accepted\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"}}",
+    "valid": true
+  },
+  {
+    "name": "applied revision existence",
+    "schema": "CommandReceipt",
+    "wire": "{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"}}",
+    "valid": false
+  },
+  {
+    "name": "transport received",
+    "schema": "TransportOutcome",
+    "wire": "{\"status\":\"received\",\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"}}",
+    "valid": true
+  },
+  {
+    "name": "transport original uncertain",
+    "schema": "TransportOutcome",
+    "wire": "{\"status\":\"commit_unknown\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"next_action\":\"query_or_retransmit_original\"}",
+    "valid": true
+  },
+  {
+    "name": "transport unknown no fixed receipt",
+    "schema": "TransportOutcome",
+    "wire": "{\"status\":\"commit_unknown\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"next_action\":\"query_or_retransmit_original\",\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"}}",
+    "valid": false
+  },
+  {
+    "name": "invalid future task status",
+    "schema": "CommandGetResponse",
+    "wire": "{\"status\":\"found\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"receipt\":{\"state\":\"applied\",\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"c\"},\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"5\"},\"revision\":\"5\"},\"progress\":{\"kind\":\"task\",\"object_ref\":{\"tenant_id\":\"t\",\"owner_id\":\"tasks\",\"kind\":\"task\",\"id\":\"x\",\"revision\":\"6\"},\"revision\":\"6\",\"status\":\"done\"}}",
+    "valid": false
+  }
+]

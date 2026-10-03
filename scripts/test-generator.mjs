@@ -16,6 +16,27 @@ const original = JSON.parse(
 );
 const probes = [
   [
+    'union without unique discriminant',
+    (schema) => {
+      schema.$defs.CommandReceiptApplied.properties.state.const = 'accepted';
+      schema.$defs.CommandReceiptRejected.properties.state.const = 'accepted';
+    },
+    /unique required string discriminant/,
+  ],
+  [
+    'union inline structural escape',
+    (schema) => {
+      schema.$defs.CommandReceipt.oneOf[0] = {
+        type: 'object',
+        properties: {},
+        required: [],
+        additionalProperties: false,
+      };
+    },
+    /named local refs/,
+  ],
+
+  [
     'unknown semantic keyword',
     (schema) => {
       schema.$defs.ID.unevaluatedProperties = false;

@@ -61,6 +61,44 @@ func run(name string, data []byte) ([]byte, error) {
 		return roundtrip[contract.CommandGetRequest](data)
 	case "CommandTarget":
 		return roundtrip[contract.CommandTarget](data)
+	case "NextAction":
+		return roundtrip[contract.NextAction](data)
+	case "CommandReceiptAccepted":
+		return roundtrip[contract.CommandReceiptAccepted](data)
+	case "CommandReceiptApplied":
+		return roundtrip[contract.CommandReceiptApplied](data)
+	case "CommandReceiptRejected":
+		return roundtrip[contract.CommandReceiptRejected](data)
+	case "CommandReceipt":
+		return roundtrip[contract.CommandReceipt](data)
+	case "TaskObjectRef":
+		return roundtrip[contract.TaskObjectRef](data)
+	case "CommandProgressNone":
+		return roundtrip[contract.CommandProgressNone](data)
+	case "CommandProgressUnavailable":
+		return roundtrip[contract.CommandProgressUnavailable](data)
+	case "CommandProgressTask":
+		return roundtrip[contract.CommandProgressTask](data)
+	case "CommandProgress":
+		return roundtrip[contract.CommandProgress](data)
+	case "CommandGetResponseFound":
+		return roundtrip[contract.CommandGetResponseFound](data)
+	case "CommandGetResponseNotFound":
+		return roundtrip[contract.CommandGetResponseNotFound](data)
+	case "CommandGetResponseGone":
+		return roundtrip[contract.CommandGetResponseGone](data)
+	case "CommandGetResponseUnavailable":
+		return roundtrip[contract.CommandGetResponseUnavailable](data)
+	case "CommandGetResponseRejected":
+		return roundtrip[contract.CommandGetResponseRejected](data)
+	case "CommandGetResponse":
+		return roundtrip[contract.CommandGetResponse](data)
+	case "TransportOutcomeReceived":
+		return roundtrip[contract.TransportOutcomeReceived](data)
+	case "TransportOutcomeCommitUnknown":
+		return roundtrip[contract.TransportOutcomeCommitUnknown](data)
+	case "TransportOutcome":
+		return roundtrip[contract.TransportOutcome](data)
 	default:
 		return nil, fmt.Errorf("unknown value schema %q", name)
 	}

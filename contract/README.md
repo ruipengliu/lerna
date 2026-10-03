@@ -21,7 +21,7 @@ CollectionView 首版闭合 items 为 ObjectRef[]，最多 1000 项；exhausted 
 
 Go `ParseJSON` 和 TS `parseJSON` 接受最多 1 MiB UTF-8 正文、最多 64 层容器；拒绝重复解码后键名、非法 UTF-8、孤立 surrogate、BOM、尾随值和 JSON 数字 token。首版数值全部使用字符串。Go `Decode` / `Encode` 和 TS `decode` / `encode` 先执行同一闭合 Schema 语义；编码也验证原值和原始边界，不默认补值或替换非法文本。`Validate` / `validate` 用于已经解析的数据，不能替代外部原始字节入口。
 
-验证器为 Go jsonschema **v6.0.2** 和 TS Ajv 2020 **8.17.1**，启用 format 断言并关闭类型强制、默认补值和未知字段清理。小生成器仅支持当前结构及条件关键词；碰到未知影响语义的 Schema 关键词硬失败。生成类型负责结构，完整 Schema 是验证依据；本任务提供 `command.get` 请求合同与验证入口，尚未提供回执、事实读取或网络 profile。
+验证器为 Go jsonschema **v6.0.2** 和 TS Ajv 2020 **8.17.1**，启用 format 断言并关闭类型强制、默认补值和未知字段清理。小生成器仅支持当前结构及条件关键词；碰到未知影响语义的 Schema 关键词硬失败。生成类型负责结构，完整 Schema 是验证依据；本任务提供 `command.get` 请求合同与验证入口，另提供固定回执、查询结果和注入事实源的低层读取原语，尚无生产认证或网络 profile。
 
 共同夹具在 [`conformance/fixtures/1.0.0/values.json`](../conformance/fixtures/1.0.0/values.json)。`make test` 验证各语言公开入口；`make test-contract` 驱动双向真实编解码；`make generate` 重建生成物，`make check` 校验零差异。
 
@@ -38,3 +38,15 @@ trace_context 首版为可选闭合对象 `{trace_id:ID}`，不授予权限，�
 Go 错误可使用 `errors.As(err, &contractError)` 后判断 `Code`；TS 使用 `error instanceof ContractError` 和 `error.code`。公共错误只有 `{code}`，代码取值由 `ErrorCode` Schema 冻结。Go 发送 `contractError.PublicError`，TS 发送 `error.toPublicError()`；cause / Error 元数据仅用于本地诊断。此入口不实现身份认证、期限接纳、预算、持久去重或业务状态迁移。
 
 命令正反例在 [`conformance/fixtures/1.0.0/commands.json`](../conformance/fixtures/1.0.0/commands.json)，与值夹具共享 Go / TS 实际编解码运行器。`make test` 同时运行公开生成命令的失败探针，防止未知 Schema 关键词、动态对象范围扩大、重复登记或开放方法 payload 静默发布。
+
+## 固定回执与查询观察
+
+`CommandReceipt` 是 accepted / applied / rejected 的闭合联合；Go 使用 `NewCommandReceiptAccepted` 等构造函数及 `AsAccepted` 等访问器，TypeScript 按 `state` 缩窄到准确分支。accepted 必须有关联 object_ref，applied 另有 revision，rejected 只有原 command_ref 和 reason，不能携带 object_ref / revision。revision 可省略时保持省略，不自动补值。可选 next_action 是固定提示：accepted / applied 仅 query_original，rejected 仅 resolve_rejection；省略不证明责任已经关闭。
+
+`CommandGetResponse` 单独返回原 receipt 和当前 progress，后者是 task / none / unavailable 联合。Task 只提供既有六状态观察，不开放 task 方法。固定 receipt 在 Task active、succeeded 或 failed 时保持同一决定。commit_unknown 只属于 `TransportOutcome`，保留原 command_ref 并提示 query_or_retransmit_original，不是第四种接纳状态。
+
+Go `DecodeCommandResponse` / `EncodeCommandResponse` 与 TS `decodeCommandResponse` / `encodeCommandResponse` 同时验证本次查询指向的原 CommandRef。查询信封的 command_id 可以不同。found 外层、receipt 与原引用必须完全相同；对象比较 tenant_id / owner_id / kind / id 四元身份，原 receipt 修订 5 与当前 progress 修订 6 合法。各自内外修订存在时必须匹配，当前修订不得低于同一对象的原已知基线，比较精确十进制整数。原 command owner 可以与关联 object owner 不同。违反规则返回 schema_invalid，不修补事实。
+
+Go `ReadCommandFacts` 是供已授权装配调用的低层事实原语；TS 同类 primitive 留在 `readfacts.ts`，没有作为 SDK 业务入口导出。它注入只有读取方法的事实源、context / AbortSignal 与可控时钟，验证原身份和完整结果；后端故障或无可信一致观察返回原引用的 unavailable / dependency_unavailable，不泄漏后端字符串。not_found 仅表示当前原 owner 未找到；gone 保留最小原身份；两者都不授权新建同义工作。read accept_before 只约束这次读取开始，不用于判断原写入记录是否仍能查询。
+
+受信租户、读取授权与准确 owner 的目录解析由 ticket05 在事实读取前提供。此处共同 forbidden 夹具只证明拒绝视图不携带原决定或对象内容，不宣称生产权限已实现。低层读取测试比较公开事实快照前后不变，没有以内部调用次数证明只读。共同 `responses.json` 驱动真正 Go→TS / TS→Go 编解码；这些是合同和注入事实源证据，不是持久命令账本、接纳事务或网络恢复证据。

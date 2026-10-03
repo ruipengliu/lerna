@@ -11,7 +11,7 @@ try {
     ['build', '-o', executable, './conformance/component/valuerunner'],
     { stdio: 'inherit' },
   );
-  const fixtures = ['values', 'commands'].flatMap((name) =>
+  const fixtures = ['values', 'commands', 'responses'].flatMap((name) =>
     JSON.parse(readFileSync(`conformance/fixtures/1.0.0/${name}.json`, 'utf8')),
   );
   const run = (lang, name, wire) =>

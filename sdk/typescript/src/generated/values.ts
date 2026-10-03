@@ -96,6 +96,102 @@ export type CommandTarget = {
   kind: 'command';
   id: ID;
 };
+export type NextAction = 'query_original' | 'resolve_rejection';
+export type CommandReceiptAccepted = {
+  state: 'accepted';
+  command_ref: CommandRef;
+  object_ref: ObjectRef;
+  revision?: Revision;
+  next_action?: 'query_original';
+};
+export type CommandReceiptApplied = {
+  state: 'applied';
+  command_ref: CommandRef;
+  object_ref: ObjectRef;
+  revision: Revision;
+  next_action?: 'query_original';
+};
+export type CommandReceiptRejected = {
+  state: 'rejected';
+  command_ref: CommandRef;
+  reason: ErrorCode;
+  next_action?: 'resolve_rejection';
+};
+export type CommandReceipt =
+  | CommandReceiptAccepted
+  | CommandReceiptApplied
+  | CommandReceiptRejected;
+export type TaskObjectRef = {
+  tenant_id: ID;
+  owner_id: ID;
+  kind: 'task';
+  id: ID;
+  revision?: Revision;
+};
+export type CommandProgressNone = {
+  kind: 'none';
+};
+export type CommandProgressUnavailable = {
+  kind: 'unavailable';
+  reason: 'dependency_unavailable';
+};
+export type CommandProgressTask = {
+  kind: 'task';
+  object_ref: TaskObjectRef;
+  revision: Revision;
+  status:
+    | 'active'
+    | 'waiting'
+    | 'paused'
+    | 'succeeded'
+    | 'failed'
+    | 'cancelled';
+};
+export type CommandProgress =
+  | CommandProgressNone
+  | CommandProgressUnavailable
+  | CommandProgressTask;
+export type CommandGetResponseFound = {
+  status: 'found';
+  command_ref: CommandRef;
+  receipt: CommandReceipt;
+  progress: CommandProgress;
+};
+export type CommandGetResponseNotFound = {
+  status: 'not_found';
+  command_ref: CommandRef;
+};
+export type CommandGetResponseGone = {
+  status: 'gone';
+  command_ref: CommandRef;
+};
+export type CommandGetResponseUnavailable = {
+  status: 'unavailable';
+  command_ref: CommandRef;
+  reason: 'dependency_unavailable';
+};
+export type CommandGetResponseRejected = {
+  status: 'rejected';
+  reason: ErrorCode;
+};
+export type CommandGetResponse =
+  | CommandGetResponseFound
+  | CommandGetResponseNotFound
+  | CommandGetResponseGone
+  | CommandGetResponseUnavailable
+  | CommandGetResponseRejected;
+export type TransportOutcomeReceived = {
+  status: 'received';
+  receipt: CommandReceipt;
+};
+export type TransportOutcomeCommitUnknown = {
+  status: 'commit_unknown';
+  command_ref: CommandRef;
+  next_action: 'query_or_retransmit_original';
+};
+export type TransportOutcome =
+  | TransportOutcomeReceived
+  | TransportOutcomeCommitUnknown;
 export const inputSchemas = [
   {
     version: '1.0.0',
@@ -128,6 +224,25 @@ export interface Values {
   CommandGetPayload: CommandGetPayload;
   CommandGetRequest: CommandGetRequest;
   CommandTarget: CommandTarget;
+  NextAction: NextAction;
+  CommandReceiptAccepted: CommandReceiptAccepted;
+  CommandReceiptApplied: CommandReceiptApplied;
+  CommandReceiptRejected: CommandReceiptRejected;
+  CommandReceipt: CommandReceipt;
+  TaskObjectRef: TaskObjectRef;
+  CommandProgressNone: CommandProgressNone;
+  CommandProgressUnavailable: CommandProgressUnavailable;
+  CommandProgressTask: CommandProgressTask;
+  CommandProgress: CommandProgress;
+  CommandGetResponseFound: CommandGetResponseFound;
+  CommandGetResponseNotFound: CommandGetResponseNotFound;
+  CommandGetResponseGone: CommandGetResponseGone;
+  CommandGetResponseUnavailable: CommandGetResponseUnavailable;
+  CommandGetResponseRejected: CommandGetResponseRejected;
+  CommandGetResponse: CommandGetResponse;
+  TransportOutcomeReceived: TransportOutcomeReceived;
+  TransportOutcomeCommitUnknown: TransportOutcomeCommitUnknown;
+  TransportOutcome: TransportOutcome;
 }
 export const schema = {
   $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -533,6 +648,323 @@ export const schema = {
       },
       required: ['tenant_id', 'owner_id', 'kind', 'id'],
       additionalProperties: false,
+    },
+    NextAction: {
+      type: 'string',
+      enum: ['query_original', 'resolve_rejection'],
+    },
+    CommandReceiptAccepted: {
+      type: 'object',
+      properties: {
+        state: {
+          type: 'string',
+          const: 'accepted',
+        },
+        command_ref: {
+          $ref: '#/$defs/CommandRef',
+        },
+        object_ref: {
+          $ref: '#/$defs/ObjectRef',
+        },
+        revision: {
+          $ref: '#/$defs/Revision',
+        },
+        next_action: {
+          type: 'string',
+          const: 'query_original',
+        },
+      },
+      required: ['state', 'command_ref', 'object_ref'],
+      additionalProperties: false,
+    },
+    CommandReceiptApplied: {
+      type: 'object',
+      properties: {
+        state: {
+          type: 'string',
+          const: 'applied',
+        },
+        command_ref: {
+          $ref: '#/$defs/CommandRef',
+        },
+        object_ref: {
+          $ref: '#/$defs/ObjectRef',
+        },
+        revision: {
+          $ref: '#/$defs/Revision',
+        },
+        next_action: {
+          type: 'string',
+          const: 'query_original',
+        },
+      },
+      required: ['state', 'command_ref', 'object_ref', 'revision'],
+      additionalProperties: false,
+    },
+    CommandReceiptRejected: {
+      type: 'object',
+      properties: {
+        state: {
+          type: 'string',
+          const: 'rejected',
+        },
+        command_ref: {
+          $ref: '#/$defs/CommandRef',
+        },
+        reason: {
+          $ref: '#/$defs/ErrorCode',
+        },
+        next_action: {
+          type: 'string',
+          const: 'resolve_rejection',
+        },
+      },
+      required: ['state', 'command_ref', 'reason'],
+      additionalProperties: false,
+    },
+    CommandReceipt: {
+      oneOf: [
+        {
+          $ref: '#/$defs/CommandReceiptAccepted',
+        },
+        {
+          $ref: '#/$defs/CommandReceiptApplied',
+        },
+        {
+          $ref: '#/$defs/CommandReceiptRejected',
+        },
+      ],
+    },
+    TaskObjectRef: {
+      type: 'object',
+      properties: {
+        tenant_id: {
+          $ref: '#/$defs/ID',
+        },
+        owner_id: {
+          $ref: '#/$defs/ID',
+        },
+        kind: {
+          type: 'string',
+          const: 'task',
+        },
+        id: {
+          $ref: '#/$defs/ID',
+        },
+        revision: {
+          $ref: '#/$defs/Revision',
+        },
+      },
+      required: ['tenant_id', 'owner_id', 'kind', 'id'],
+      additionalProperties: false,
+    },
+    CommandProgressNone: {
+      type: 'object',
+      properties: {
+        kind: {
+          type: 'string',
+          const: 'none',
+        },
+      },
+      required: ['kind'],
+      additionalProperties: false,
+    },
+    CommandProgressUnavailable: {
+      type: 'object',
+      properties: {
+        kind: {
+          type: 'string',
+          const: 'unavailable',
+        },
+        reason: {
+          type: 'string',
+          const: 'dependency_unavailable',
+        },
+      },
+      required: ['kind', 'reason'],
+      additionalProperties: false,
+    },
+    CommandProgressTask: {
+      type: 'object',
+      properties: {
+        kind: {
+          type: 'string',
+          const: 'task',
+        },
+        object_ref: {
+          $ref: '#/$defs/TaskObjectRef',
+        },
+        revision: {
+          $ref: '#/$defs/Revision',
+        },
+        status: {
+          type: 'string',
+          enum: [
+            'active',
+            'waiting',
+            'paused',
+            'succeeded',
+            'failed',
+            'cancelled',
+          ],
+        },
+      },
+      required: ['kind', 'object_ref', 'revision', 'status'],
+      additionalProperties: false,
+    },
+    CommandProgress: {
+      oneOf: [
+        {
+          $ref: '#/$defs/CommandProgressNone',
+        },
+        {
+          $ref: '#/$defs/CommandProgressUnavailable',
+        },
+        {
+          $ref: '#/$defs/CommandProgressTask',
+        },
+      ],
+    },
+    CommandGetResponseFound: {
+      type: 'object',
+      properties: {
+        status: {
+          type: 'string',
+          const: 'found',
+        },
+        command_ref: {
+          $ref: '#/$defs/CommandRef',
+        },
+        receipt: {
+          $ref: '#/$defs/CommandReceipt',
+        },
+        progress: {
+          $ref: '#/$defs/CommandProgress',
+        },
+      },
+      required: ['status', 'command_ref', 'receipt', 'progress'],
+      additionalProperties: false,
+    },
+    CommandGetResponseNotFound: {
+      type: 'object',
+      properties: {
+        status: {
+          type: 'string',
+          const: 'not_found',
+        },
+        command_ref: {
+          $ref: '#/$defs/CommandRef',
+        },
+      },
+      required: ['status', 'command_ref'],
+      additionalProperties: false,
+    },
+    CommandGetResponseGone: {
+      type: 'object',
+      properties: {
+        status: {
+          type: 'string',
+          const: 'gone',
+        },
+        command_ref: {
+          $ref: '#/$defs/CommandRef',
+        },
+      },
+      required: ['status', 'command_ref'],
+      additionalProperties: false,
+    },
+    CommandGetResponseUnavailable: {
+      type: 'object',
+      properties: {
+        status: {
+          type: 'string',
+          const: 'unavailable',
+        },
+        command_ref: {
+          $ref: '#/$defs/CommandRef',
+        },
+        reason: {
+          type: 'string',
+          const: 'dependency_unavailable',
+        },
+      },
+      required: ['status', 'command_ref', 'reason'],
+      additionalProperties: false,
+    },
+    CommandGetResponseRejected: {
+      type: 'object',
+      properties: {
+        status: {
+          type: 'string',
+          const: 'rejected',
+        },
+        reason: {
+          $ref: '#/$defs/ErrorCode',
+        },
+      },
+      required: ['status', 'reason'],
+      additionalProperties: false,
+    },
+    CommandGetResponse: {
+      oneOf: [
+        {
+          $ref: '#/$defs/CommandGetResponseFound',
+        },
+        {
+          $ref: '#/$defs/CommandGetResponseNotFound',
+        },
+        {
+          $ref: '#/$defs/CommandGetResponseGone',
+        },
+        {
+          $ref: '#/$defs/CommandGetResponseUnavailable',
+        },
+        {
+          $ref: '#/$defs/CommandGetResponseRejected',
+        },
+      ],
+    },
+    TransportOutcomeReceived: {
+      type: 'object',
+      properties: {
+        status: {
+          type: 'string',
+          const: 'received',
+        },
+        receipt: {
+          $ref: '#/$defs/CommandReceipt',
+        },
+      },
+      required: ['status', 'receipt'],
+      additionalProperties: false,
+    },
+    TransportOutcomeCommitUnknown: {
+      type: 'object',
+      properties: {
+        status: {
+          type: 'string',
+          const: 'commit_unknown',
+        },
+        command_ref: {
+          $ref: '#/$defs/CommandRef',
+        },
+        next_action: {
+          type: 'string',
+          const: 'query_or_retransmit_original',
+        },
+      },
+      required: ['status', 'command_ref', 'next_action'],
+      additionalProperties: false,
+    },
+    TransportOutcome: {
+      oneOf: [
+        {
+          $ref: '#/$defs/TransportOutcomeReceived',
+        },
+        {
+          $ref: '#/$defs/TransportOutcomeCommitUnknown',
+        },
+      ],
     },
   },
 } as const;

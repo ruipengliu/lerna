@@ -1,24 +1,12 @@
 import { decode, version } from './codec.ts';
 import {
-  type ErrorCode,
   inputSchemas,
   type CommandGetRequest,
   type CommandEnvelope,
-  type PublicError,
 } from './generated/values.ts';
 
-// Only the closed PublicError value crosses the boundary; cause remains local.
-export class ContractError extends Error implements PublicError {
-  readonly code: ErrorCode;
-  toPublicError(): PublicError {
-    return { code: this.code };
-  }
-  constructor(code: ErrorCode, cause?: unknown) {
-    super(code, { cause });
-    this.name = 'ContractError';
-    this.code = code;
-  }
-}
+import { ContractError } from './errors.ts';
+export { ContractError } from './errors.ts';
 
 export function parseCommand(wire: string | Uint8Array): CommandEnvelope {
   try {

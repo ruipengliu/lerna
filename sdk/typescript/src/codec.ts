@@ -1,3 +1,5 @@
+import { ContractError } from './errors.ts';
+import { responseSemantics } from './response-semantics.ts';
 import { parseJSON, maxDepth } from './json.ts';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import { schema, type Values } from './generated/values.ts';
@@ -91,21 +93,24 @@ export function validate<K extends keyof Values>(
   if (!isWireValue(value)) return false;
   const validator = ajv.getSchema(`${schema.$id}#/$defs/${name}`);
   if (!validator) throw new Error(`unsupported value type ${name}`);
-  return validator(value) === true;
+  return validator(value) === true && responseSemantics(name, value);
+}
+function schemaError(name: string): Error {
+  return new ContractError('schema_invalid', new Error(name));
 }
 export function decode<K extends keyof Values>(
   name: K,
   wire: string | Uint8Array,
 ): Values[K] {
   const value: unknown = parseJSON(wire);
-  if (!validate(name, value)) throw new Error(`schema_invalid: ${name}`);
+  if (!validate(name, value)) throw schemaError(name);
   return value;
 }
 export function encode<K extends keyof Values>(
   name: K,
   value: Values[K],
 ): string {
-  if (!validate(name, value)) throw new Error(`schema_invalid: ${name}`);
+  if (!validate(name, value)) throw schemaError(name);
   const wire = JSON.stringify(value);
   decode(name, wire);
   return wire;
