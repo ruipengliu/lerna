@@ -209,7 +209,7 @@ type AllocationClosure struct {
 	AllocationID   string     `json:"allocation_id"`
 	ParentOwnerID  string     `json:"parent_owner_id"`
 	ReceiverID     string     `json:"receiver_id"`
-	SpendingClosed uint64     `json:"spending_closed"`
+	SpendingClosed bool       `json:"spending_closed"`
 	ClosedAt       string     `json:"closed_at"`
 	UsageRevision  uint64     `json:"usage_revision"`
 	FinalUsage     []Amount   `json:"final_usage"`
