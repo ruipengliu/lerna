@@ -481,6 +481,17 @@ func (s *Service) queryPage(ctx context.Context, scope runtime.Scope, auth runti
 					break
 				}
 				out.Items = candidate.Items
+				// 后续候选可能新增两个有限 gap 并推进游标；这些尾部字段也须装得下。
+				// 当前页已满时立即停在已发位置，不用后续许可失败挤坏合法回复。
+				tail := candidate
+				tail.Partial = false
+				tail.Exhausted = false
+				tail.NextCursor = cursorFor(id, view.Digest, matchCount)
+				tail.Gaps = unique(append(append([]string{}, candidate.Gaps...), "permission_budget", "permission_authority_unavailable"))
+				if len(api.Raw(tail)) > api.MaxJSONBytes {
+					end++
+					break
+				}
 			}
 			end++
 		}
