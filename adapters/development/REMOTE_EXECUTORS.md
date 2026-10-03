@@ -128,6 +128,11 @@ SQLite 独立 race 重跑实际通过 99.826 秒。它不证明任意错误都�
 0600 的准确 Cloud/Device 配置、原 Task 身份、目标、介质及 SDK journals；默认测试仍
 使用临时目录。日志只记录公开身份，不输出凭据。
 
-工单 16 保持 partial：成功 Result 的 PostgreSQL／race、必要拒绝故障矩阵和最终统一
+同一已提交宿主片的 PostgreSQL 成功切片实际通过 65.044 秒，准确 Result、三次 POST、
+原费用和云端／设备原库重开同样核验。设备账单 head 推进引起一次明确回滚冲突后，
+原 Job／Claim 恢复并结清；没有新 Use／Attempt。这轮与另一 minimum-invoice race
+有短暂并行，不能称为独占验证，外部制品保留此事实。
+
+工单 16 保持 partial：成功 Result 的 race、必要拒绝故障矩阵和最终统一
 检查／审查仍待后续；完整 Task 写入链也尚未据此取证，不能把这些本地未完成路径归因于
 外部凭据。
