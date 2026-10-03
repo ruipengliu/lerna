@@ -1,3 +1,167 @@
+# Lerna 开发指南
+
+本文件规定仓库目录、开发边界和交付检查，适用于本仓库全部代码与文档。下级 `AGENTS.md` 可补充局部规则，不得静默放宽领域约束。
+
+## 开始工作
+
+1. 先读根 [CONTEXT.md](CONTEXT.md)，再读相关 [ADR](docs/adr/README.md) 和 [架构章节](docs/architecture/README.md)。领域名称沿用词汇表，尤其区分 Task / Session、owner / worker、Operation / Attempt 和 Effect / Result。
+2. 实现前读取对应 `.scratch/lerna-<NN>-<slug>/spec.md`，按[切片索引](.scratch/lerna-implementation/README.md)核对依赖及实际退出证据。`ready-for-agent` 只表示规格明确，不表示实现完成或依赖已满足。
+3. 检查当前分支和工作区，保留已有改动。围绕当前切片交付可验证行为；发现设计、ADR 与规格冲突时，必须明确冲突和处理依据，不得自行隐去约束。
+4. 改变领域决定时同步 `CONTEXT.md`、详细设计与相关规格；新增 ADR 并关联被替代记录。一般目录细化、内部重构或工具配置无需重复建立 ADR。
+
+## 项目目录骨架
+
+以下是目标结构，沿用[架构文档的代码组织](docs/architecture/architecture.md#代码依赖与运行调用)。当前仓库尚无产品代码；目录与入口在对应切片需要时创建，不批量增加空包、占位实现或 `.gitkeep`。`docs/agents/domain.md` 中的 `src/` 是通用示例，本仓库使用下列顶层 Go 包布局。
+
+```text
+.
+├── AGENTS.md                     # 开发规则入口
+├── CONTEXT.md                    # 单一领域上下文
+├── go.mod / go.sum               # 根目录唯一 Go module 及依赖校验
+├── package.json                  # TypeScript 工作区命令与包管理器版本
+├── pnpm-workspace.yaml           # sdk/typescript、apps 中的实际 JS/TS 包
+├── pnpm-lock.yaml                # 同仓唯一 pnpm 锁文件
+├── Makefile                      # 构建、生成、检查与验收入口
+├── cmd/
+│   └── <binary>/main.go          # 云端、设备等可执行入口，仅启动与退出
+├── contract/
+│   ├── schema/<version>/         # 严格 JSON Schema、方法及 profile 清单
+│   ├── proto/<version>/          # gRPC 传输信封，不另设领域语义
+│   ├── gen/go/                   # 生成的 Go 类型与传输代码
+│   └── ...                       # 公共引用、错误、编解码与合同验证
+├── domain/
+│   ├── task/                     # Orchestrator：目标、条件、准入、控制、Result
+│   ├── authorization/            # Grant、GrantUse 与授权裁决
+│   ├── accounting/               # 预算预留、用量、结算和根额度约束
+│   ├── interaction/              # Session、原始输入、持久投递与输入请求
+│   └── content/                  # 准确内容版本、来源与发布规则
+├── components/
+│   ├── decision_engine/          # 默认决策策略与模型调用端口
+│   ├── memory/                   # 默认记忆、检索与可重建投影
+│   ├── execution/                # Operation、Attempt、Effect 与执行恢复
+│   └── evaluation/               # 逐条件核验，输出 ConditionResult
+├── runtime/                      # Command 接纳、Tx、Job、Claim、Clock
+├── adapters/
+│   ├── postgres/                 # PG 存储实现，按事实 owner 分包
+│   │   └── migrations/<owner>/   # 云端各 owner 的版本化 SQL 迁移
+│   ├── sqlite/                   # 设备账本实现与单写协调
+│   │   └── migrations/<owner>/   # 设备各 owner 的版本化 SQL 迁移
+│   ├── objectstore/              # 内容字节介质实现
+│   ├── transport/                # WSS、gRPC、HTTPS 边界与编解码
+│   ├── providers/                # 模型、搜索等外部服务适配
+│   ├── protocols/                # MCP、A2A 协议适配
+│   └── platform/                 # 身份、密钥、遥测、隔离等平台接入
+├── host/                         # 依赖注入、配置、发现、健康、排空与生命周期
+├── sdk/
+│   ├── go/                       # Go Application / Component SDK，仍属根 module
+│   └── typescript/
+│       └── src/generated/        # 同版生成类型；手写 SDK 在 src/ 其余位置
+├── apps/
+│   └── research-report/          # 研究报告示例及受信呈现器
+├── conformance/
+│   ├── fixtures/<version>/       # Go / TS 共用合同正反例
+│   ├── application/              # Application 公开行为验收
+│   ├── component/                # Component 同版与第二实现验收
+│   ├── recovery/                 # 真实存储、进程接替、未知效果故障验收
+│   └── internal/testkit/         # 时钟、故障计划、独立模拟目标等测试设施
+├── deploy/
+│   ├── local/                    # 本地服务编排及不含密钥的配置示例
+│   └── production/               # 经实际验证的生产配置与运行说明
+├── scripts/                      # 可重复构建、代码生成与检查脚本
+├── docs/                         # architecture、adr、agents、research
+├── .scratch/                     # 纳入版本控制的实现规格、issues 与证据索引
+└── .github/workflows/            # 与本地相同入口的 CI 检查
+```
+
+- 小范围单元测试与代码同目录：Go 使用 `*_test.go`，TypeScript 使用 `*.test.ts`；局部夹具放所属包 `testdata/`。跨实现复用的合同夹具放 `conformance/fixtures/`。
+- ContextCompiler 随 `domain/task/` 组织，不建立第二套目标权威。委派、激活管理、评测发布等按对应切片扩展职责所属目录，不预建通用框架。
+- 每个可独立运行的宿主、应用或合同包建立就近 README，说明入口、配置、公开边界和验证方式；根 `CONTEXT.md` 继续作为唯一领域上下文。
+- 包私有实现可放所属目录下的 `internal/`。不得因 Go 能导入一个目录，就将其认定为稳定公开 API；公开承诺以 Application / Component 合同和 SDK 为准。
+
+## 模块依赖与职责
+
+| 目录 | 允许承担的职责与依赖 | 不得引入的依赖或行为 |
+| --- | --- | --- |
+| `contract` | 公开值类型、版本、Schema 验证与协议编解码 | 领域实现、数据库驱动、宿主或供应商实现 |
+| `runtime` | 依赖共同合同，提供持久工作机制及存储、时钟端口 | 判断 Task 成功、解释模型提案、自行重发外部动作 |
+| `domain` | 依赖合同与必要运行端口，声明所需的小接口 | 导入默认组件、具体存储／传输适配器或宿主 |
+| `components` | 实现能力合同，复用必要授权、计费规则与运行端口 | 访问 `domain/task` 内部状态或其他组件私有存储，直接裁决 Task 终态 |
+| `adapters` | 实现消费方声明的接口，封装具体平台依赖 | 反向调用宿主，绕过领域入口修改其他 owner 事实 |
+| `host` / `cmd` | 组合领域、默认组件和适配器；管理进程生命周期 | 承担领域状态迁移；`cmd` 不堆积装配以外的业务代码 |
+| `sdk` / `apps` | SDK 依赖公开合同；应用经 SDK 接入 | 导入内核实现、读取私有表或直接操作 Job |
+| `conformance` | 经 Application / Component 驱动被测系统；A 阶段可用 Host 测试实际存储 | 通过私有表、私有函数或实现调用次数冒充业务验收 |
+
+接口由消费方按实际需求声明；宿主注入实现。新增接口必须服务当前调用或替换场景，不为每个结构体机械增加接口。默认实现不得成为合同包的隐式依赖，Go 包依赖必须无环。
+
+业务责任、代码目录和部署进程分别划分：同机或同库不等于同一事务，独立进程也不要求新增 Go module。未来增加共享包时必须写清稳定概念及使用者，不建立无职责边界的 `utils`、`common` 或 `manager` 杂物包。
+
+## 开发规范
+
+### Go、TypeScript 与依赖
+
+- Go 初期使用根目录一个 module，SDK 与示例 Go 代码不得另建嵌套 module。使用 `gofmt`，包名与导出符号沿用领域词汇；目录和协议命名空间保留 `decision_engine`。
+- Go 的请求、I/O 和后台工作必须显式传递 `context.Context`，设置有限期限并正确取消。goroutine 必须有明确归属和退出条件；不得用进程内队列替代已承诺的持久工作。
+- 错误必须保留可判断的原因，在边界映射为合同错误；不得吞掉错误、用字符串匹配控制业务，或用 `panic` 处理预期拒绝。关闭连接或取消 context 不等于外部效果未发生。
+- TypeScript 开启 `strict`，用判别联合表达回执、效果与结果差异；外部输入先按合同验证，不用 `any` 或强制断言绕过边界。线协议中的修订与金额保留十进制字符串；内部使用 `bigint` 时必须显式转换，不经 `number` 中转。
+- JS/TS 统一用 pnpm 工作区，固定 `packageManager` 版本并提交锁文件。Go 提交 `go.mod`、`go.sum`；工具与生成器版本也必须记录在仓库配置中。CI 使用锁定依赖，不运行无版本的 `@latest` 安装。
+- 添加依赖前检查标准库与已有能力，说明用途；数据库、传输和供应商 SDK 留在适配边界。不得仅为目录完整而增加依赖、服务或框架。
+- 当前机器的工具链安装结果不自动成为项目版本基线。首次实现时验证并锁定版本，使新环境能按仓库说明重建；不得让构建依赖 `/workspace/.lerna-env` 等个人绝对路径。
+
+### 合同与代码生成
+
+- 公开方法变更必须一起更新闭合 Schema、状态前提、错误、准确版本、支持方法清单、Go / TS 类型和正反例。未完整支持的 profile 不得广告为可用。
+- JSON Schema 是 JSON 负载的机器契约来源；Protobuf 承载约定的传输信封，不建立另一套相冲突的字段或状态规则。严格 JSON 解析必须拒绝重复键、未知字段与枚举，并执行大小和范围限制。
+- 生成器必须固定版本，输入和输出路径必须由生成脚本明确记录。生成代码标明来源，不得手工修改；公开类型和传输生成物纳入版本控制，重新生成后不得产生未提交差异。
+- Go / TS 共用合同夹具验证准确整数、规范化摘要、错误和版本协商。修改业务参数、主体或期限不得复用原命令身份；trace 和连接变化不得改变业务含义。
+
+### 持久化、并发与外部效果
+
+- 使用显式 SQL 和参数绑定。业务事实、固定接纳回执与必要 Job 必须在声明的同一数据库短事务中提交；事务内不得等待模型、网络、对象上传或用户输入。
+- 存储按事实 owner 隔离；跨 owner 通过公开合同交接并持久保存责任，不直接更新对方表。租户和主体来自受信认证上下文，payload 不得覆盖。
+- 数据库迁移按 owner 编号并提交，已发布迁移不得改写。变更必须验证空库初始化与受影响旧版本升级；涉及在途工作时说明兼容和恢复方案，不将删库重建用作生产升级策略。
+- PostgreSQL 与 SQLite 分别验证其事务、锁和耐久行为；SQLite 使用单写协调、WAL 与明确的耐久配置。内存替身不能替代真实数据库恢复证据。
+- 写入前检查 revision、Claim 代次和资格；内部隔离不能证明外部动作已停止。结果未知时查询原 Operation，不盲目新建动作或更换 owner。
+- 准入与实际执行入口都必须校验授权、预算和期限。保留 `unknown` 与 `may_apply_later`，费用未知不按零结算；取消不抹去核对、结算和清理责任。
+
+### 配置、安全与可观测性
+
+- 配置在宿主启动时解析和校验，经显式对象注入；领域规则不得散落读取环境变量。示例配置只使用假值，密钥与本地 `.env` 不提交。
+- 日志使用结构化字段关联原 Command、Task、Operation、owner 和 trace；不得记录令牌、凭据或默认输出完整用户内容。遥测不能替代权威账本、Effect 或审计证据。
+- 本地端口默认仅绑定回环地址；对外开放、供应商接入和生产部署按对应规格配置身份与隔离。模拟服务和测试凭据不得进入生产装配。
+
+## 测试与交付检查
+
+测试以可观察行为和恢复保证为目标。业务验收经 Application，组件替换经 Component；基础存储机制可以经 Host 验证。单元测试验证有实质逻辑的规则，不为低影响文档编辑、简单转发或实现细节机械补测试。
+
+| 变更范围 | 必须提供的验证 |
+| --- | --- |
+| 文档、目录规范 | 链接与锚点有效，术语、目录和相关设计一致；区分目标结构与现有实现 |
+| Go 逻辑 | 格式、`go vet ./...`、相关测试与 `go test ./...`；并发／领取逻辑增加受影响路径的 `-race` 检查 |
+| TypeScript / SDK | 锁定安装、格式与静态检查、类型检查、相关行为测试；公开合同变更同时跑 Go / TS 夹具 |
+| 合同或生成代码 | 同版正反例、兼容或明确拒绝、重复生成无差异 |
+| 存储与迁移 | 真实 PG / SQLite 的受影响路径、迁移、回滚／提交未知及重启恢复 |
+| 执行、控制与恢复 | 正常对照加对应故障：丢回执、重复／乱序、迟到效果、旧 worker、取消与恢复等 |
+| 外部接入、生产或容量 | 对应真实目标、故障域与规模证据；模拟或本机结果只证明自身范围 |
+
+故障测试必须有正常对照、有限截止和独立目标事实。使用可控时钟、同步点与固定种子复现故障，不用任意长 `sleep` 掩盖竞争；测试失败必须报告可重演输入和实际观察。
+
+首次引入可运行代码时建立以下统一入口；**当前尚未实现，不得宣称已可执行或已通过**。入口缺依赖或失败时必须明确报错，不能跳过必需套件后返回成功。
+
+| 约定入口 | 职责 |
+| --- | --- |
+| `make bootstrap` | 校验工具版本，安装锁定依赖；不隐式升级系统或项目依赖 |
+| `make generate` | 从锁定机器契约生成 Go / TS 类型与传输代码 |
+| `make fmt` / `make lint` | 格式化；以只读方式检查格式、Go vet 与 TS 静态规则 |
+| `make test` / `make test-race` | 无外部凭据的本地逻辑测试；受影响 Go 并发路径检查 |
+| `make test-contract` | Go / TS 共同合同及已实现 Component 套件 |
+| `make test-integration` | 真实数据库、迁移和故障恢复；明确服务配置与数据清理范围 |
+| `make build` | 构建当前已实现的宿主、SDK 和示例应用 |
+| `make check` | CI 基础门槛：lint、生成一致性、test、test-contract 与 build |
+
+CI 必须复用这些入口；涉及存储、恢复或并发的变更另运行集成与竞态检查。尚未引入某语言或能力时，在入口和 CI 文档中准确声明适用范围，不建立假通过的空目标。
+
+交付前核对 diff 和相关测试结果。切片只有在依赖退出、验收条件满足并附证据后才可标记完成；在规格 `Further Notes` 中记录准确代码／合同版本、环境、命令、结果、限制及未关闭事项，并同步[验收矩阵](.scratch/lerna-implementation/acceptance-matrix.md)。真实接入、质量、生产与灾备结论分别记录，不用一个测试通过替代全部证据。
+
 ## 让输出易于理解和使用
 
 以 ISO 24495-1:2023 的简明语言原则为指导，让目标读者获得所需信息、快速找到信息、准确理解信息，并能据此行动。中文可借鉴 ASD-STE100 的清晰写作方法，不机械套用其英文词典和语法规则。
