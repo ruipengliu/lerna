@@ -134,7 +134,9 @@ func validateAgentConfig(scope runtime.Scope, in AgentConfigDefinition) error {
 	}
 	return nil
 }
-func validateKnowledgeControls(in KnowledgeControls) error {
+
+// ValidateKnowledgeControls 核闭合且有限的配置；不授予这些额度。
+func ValidateKnowledgeControls(in KnowledgeControls) error {
 	if in.MaxInputBytes == 0 || in.MaxInputBytes > 2<<20 || in.MaxOutputTokens == 0 || in.MaxOutputTokens > 65536 || in.MaxActionsPerDecision > 16 || in.MaxDelegationsPerDecision > 4 || in.MaxDepth > 8 || in.MaxActionDurationSeconds == 0 || in.MaxActionDurationSeconds > 3600 || len(in.MaxCallCostBound) > 8 {
 		return api.E("invalid_request", "knowledge_control_bounds_invalid")
 	}
@@ -217,7 +219,7 @@ func (s *Service) validateAgentConfig(ctx context.Context, store runtime.Store, 
 			ioErr = api.Decode(bytes, &controls)
 		}
 		if ioErr == nil {
-			ioErr = validateKnowledgeControls(controls)
+			ioErr = ValidateKnowledgeControls(controls)
 		}
 	}
 	if ioErr != nil && knowledgeRejection(ioErr) == nil {

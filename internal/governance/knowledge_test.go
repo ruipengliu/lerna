@@ -163,6 +163,24 @@ func TestSnapshotKnowledgeAdmissionKeepsOriginalHoldersAndBlocksWithdrawnSkill(t
 	snap := api.Snapshot{SnapshotID: req.SnapshotID, Revision: 1, TaskRef: req.TaskRef, GoalRevision: 1, ControlRevision: 1, GoalRef: goal, Requirements: []api.Requirement{}, RequirementsDigest: api.Hash([]byte("requirements")), RequirementsState: "ready", Purpose: "continue_task", FactRefs: []api.ObjectRef{}, UnresolvedCollections: []api.CollectionSummary{}, PolicyRef: profile, InstallLockRef: bundle.Selection.InstallLockRef, ModelProfileRef: profile, CapabilityRefs: []api.ComponentRef{}, BindingRefs: []api.ObjectRef{}, MaterialRefs: sources, SelectionReportRef: goal, ProcessedSources: sources, InputTokens: 100, ReservedOutputTokens: 100, SafetyMarginTokens: 10, CountMode: "upper_bound", TokenizerRef: profile, EncodedDigest: api.Hash([]byte("encoded"))}
 	snapshotRef := knowledgeBytes(t, f, root, api.Raw(snap), "application/vnd.harness.snapshot+json")
 	admission := governance.KnowledgeAdmission{Selection: bundle.Selection, Snapshot: snap, SnapshotRef: snapshotRef, PacketRef: packet, DecisionID: api.NewID("decision")}
+	status, err := f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error {
+		if _, found, err := f.svc.FindSelectionTx(f.ctx, tx, f.auth, snapshotRef, admission.DecisionID); err != nil || found {
+			t.Fatalf("uncommitted candidate became dispatch authority: found=%t err=%v", found, err)
+		}
+		if _, found, err := f.svc.FindDecisionSelectionTx(f.ctx, tx, f.auth, admission.DecisionID); err != nil || found {
+			t.Fatalf("uncommitted candidate became action authority: found=%t err=%v", found, err)
+		}
+		canceled, cancel := context.WithCancel(f.ctx)
+		cancel()
+		_, _, err := f.svc.FindSelectionTx(canceled, tx, f.auth, snapshotRef, admission.DecisionID)
+		if !errors.Is(err, context.Canceled) {
+			t.Fatalf("actual canceled lookup must preserve its cause: %v", err)
+		}
+		return nil
+	})
+	if status != runtime.Committed || err != nil {
+		t.Fatalf("candidate lookup %s %v", status, err)
+	}
 	stage := func() (governance.KnowledgeCommit, runtime.CommitStatus, error) {
 		var result governance.KnowledgeCommit
 		status, err := f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error {
@@ -173,7 +191,7 @@ func TestSnapshotKnowledgeAdmissionKeepsOriginalHoldersAndBlocksWithdrawnSkill(t
 		return result, status, err
 	}
 	rollback := errors.New("host business admission failed after staging knowledge")
-	status, err := f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error {
+	status, err = f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error {
 		if _, err := f.svc.StageSelectionTx(f.ctx, tx, f.auth, admission); err != nil {
 			return err
 		}
@@ -194,6 +212,25 @@ func TestSnapshotKnowledgeAdmissionKeepsOriginalHoldersAndBlocksWithdrawnSkill(t
 	if !api.Equal(public, original) {
 		t.Fatalf("published original exact closure %+v", public)
 	}
+	status, err = f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error {
+		for _, get := range []func() (governance.KnowledgeCommit, bool, error){
+			func() (governance.KnowledgeCommit, bool, error) {
+				return f.svc.FindSelectionTx(f.ctx, tx, f.auth, snapshotRef, admission.DecisionID)
+			},
+			func() (governance.KnowledgeCommit, bool, error) {
+				return f.svc.FindDecisionSelectionTx(f.ctx, tx, f.auth, admission.DecisionID)
+			},
+		} {
+			got, found, err := get()
+			if err != nil || !found || !api.Equal(got, original) {
+				t.Fatalf("original selection route changed: found=%t err=%v", found, err)
+			}
+		}
+		return nil
+	})
+	if status != runtime.Committed || err != nil {
+		t.Fatalf("original selection lookup %s %v", status, err)
+	}
 	state := query[governance.SkillRecord](t, f, "skill.get", governance.SkillReference{SkillRef: skill.SkillRef})
 	command(t, f, "skill.withdraw", state.ID, governance.KnowledgeChange{Ref: f.scope.Ref(state.ID, state.Revision), Reason: "withdraw before the next physical decision"}, &state.Revision)
 	status, err = f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error {
@@ -202,5 +239,15 @@ func TestSnapshotKnowledgeAdmissionKeepsOriginalHoldersAndBlocksWithdrawnSkill(t
 	})
 	if status != runtime.RolledBack || !api.IsCode(err, "invalid_state") {
 		t.Fatalf("withdrawn knowledge still dispatched %s %v", status, err)
+	}
+	status, err = f.store.Within(f.ctx, f.scope, []string{governance.Namespace}, func(tx runtime.Tx) error {
+		_, found, err := f.svc.FindDecisionSelectionTx(f.ctx, tx, f.auth, admission.DecisionID)
+		if !found {
+			t.Fatal("withdrawn original selection was treated as absent")
+		}
+		return err
+	})
+	if status != runtime.RolledBack || !api.IsCode(err, "invalid_state") {
+		t.Fatalf("withdrawn knowledge still admitted actions %s %v", status, err)
 	}
 }

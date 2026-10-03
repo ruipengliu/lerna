@@ -80,7 +80,7 @@ func validateKnowledgeRequest(scope runtime.Scope, in KnowledgeRequest) error {
 	if _, err := api.ParseTime(in.ExpiresAt); err != nil {
 		return api.E("invalid_request", "knowledge_expiry_invalid")
 	}
-	return validateKnowledgeControls(in.ControlLimits)
+	return ValidateKnowledgeControls(in.ControlLimits)
 }
 
 // LoadKnowledge 在 Tx 外读准确正文，纯 Tx 当前来源检查始终先于领域强锁。
