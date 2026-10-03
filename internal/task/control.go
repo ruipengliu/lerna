@@ -103,18 +103,18 @@ func (s *Service) controlDescendants(ctx context.Context, tx runtime.Tx, root *t
 				continue
 			}
 			seen[r.Ref.ObjectID] = true
-			count++
-			if count > s.config.MaxActiveSubtree {
-				return api.E("dependency_unavailable", "subtree_index_capacity")
-			}
 			child, e := getTask(ctx, tx, r.Ref.ObjectID)
 			if e != nil {
 				return e
 			}
-			queue = append(queue, child.Task.TaskID)
 			if terminal(child) {
 				continue
 			}
+			count++
+			if count > s.config.MaxActiveSubtree {
+				return api.E("dependency_unavailable", "subtree_index_capacity")
+			}
+			queue = append(queue, child.Task.TaskID)
 			if cancel {
 				child.Task.Status = "cancelled"
 			}
@@ -280,6 +280,9 @@ func (s *Service) SteerTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 	if e = tx.Create(ctx, steers, c.CommandID, in.TaskID, pending); e != nil {
 		return TaskOutput{}, e
 	}
+	if len(t.Amendments) >= 100 {
+		return TaskOutput{}, invalid("goal_amendment_limit")
+	}
 	t.PendingGoalCommand = c.CommandID
 	t.Task.RequirementsState = "collecting"
 	t.Task.ControlRevision++
@@ -327,13 +330,13 @@ func (s *Service) CreateInputTx(ctx context.Context, tx runtime.Tx, auth runtime
 	if req.Purpose == "clarify_goal" {
 		t.Task.RequirementsState = "awaiting_input"
 	}
-	t.Task.WaitReasons = append(t.Task.WaitReasons, api.WaitReason{Kind: "input", ObjectRef: &req.TargetRef, ResumeCondition: "exact request answered"})
+	t.Task.WaitReasons = append(t.Task.WaitReasons, api.WaitReason{Kind: "input", ObjectRef: func() *api.ObjectRef { r := tx.Scope().Ref(req.RequestID, req.Revision); return &r }(), ResumeCondition: "exact request answered"})
 	if e = s.saveTask(ctx, tx, &t); e != nil {
 		return api.ObjectRef{}, e
 	}
 	return tx.Scope().Ref(req.RequestID, 1), nil
 }
-func (s *Service) ConsumeInputTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in InputAnswer) (InputOutput, error) {
+func (s *Service) ConsumeInputTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in InputAnswer, completeGoal *api.ContentRef) (InputOutput, error) {
 	if e := target(c, in.TaskID); e != nil {
 		return InputOutput{}, e
 	}
@@ -386,18 +389,31 @@ func (s *Service) ConsumeInputTx(ctx context.Context, tx runtime.Tx, auth runtim
 	t.Amendments = append(t.Amendments, in.AnswerRef)
 	t.SourceRefs = append(t.SourceRefs, api.SourceEvidence{ContentRef: in.AnswerRef, SourceKind: "user_input", SubmissionRef: &in.RequestRef})
 	t.Task.WaitReasons = []api.WaitReason{}
-	t.Task.RequirementsState = "collecting"
-	t.Task.ControlRevision++
-	t.NoProgress = 0
-	if e = s.closeUnsent(ctx, tx, &t); e != nil {
-		return InputOutput{}, e
+	if req.Purpose == "clarify_goal" {
+		if completeGoal == nil {
+			return InputOutput{}, api.E("dependency_unavailable", "complete_goal_pending")
+		}
+		if e = contentScope(tx.Scope(), *completeGoal); e != nil {
+			return InputOutput{}, e
+		}
+		t.Task.GoalRef = *completeGoal
+		if e = s.reviseGoal(ctx, tx, &t, in.RequestRef); e != nil {
+			return InputOutput{}, e
+		}
+	} else {
+		t.Task.ControlRevision++
+		t.NoProgress = 0
+		if e = s.closeUnsent(ctx, tx, &t); e != nil {
+			return InputOutput{}, e
+		}
+		if e = s.saveTask(ctx, tx, &t); e != nil {
+			return InputOutput{}, e
+		}
+		if _, e = raise(ctx, tx, JobAdvance, "advance/"+in.TaskID, taskRef(tx, t)); e != nil {
+			return InputOutput{}, e
+		}
 	}
-	if e = s.saveTask(ctx, tx, &t); e != nil {
-		return InputOutput{}, e
-	}
-	if _, e = raise(ctx, tx, JobAdvance, "advance/"+in.TaskID, taskRef(tx, t)); e != nil {
-		return InputOutput{}, e
-	}
+
 	return InputOutput{TaskRef: taskRef(tx, t), RequestRef: in.RequestRef, ConsumedRequestRef: func() *api.ObjectRef { r := tx.Scope().Ref(req.RequestID, req.Revision); return &r }(), State: "consumed"}, nil
 }
 func (s *Service) ControlWindowTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ControlWindowInput) (api.ControlSnapshot, error) {
@@ -419,6 +435,33 @@ func (s *Service) ControlWindowTx(ctx context.Context, tx runtime.Tx, auth runti
 	}
 	if e = s.CheckCurrent(ctx, tx, t, true); e != nil {
 		return api.ControlSnapshot{}, e
+	}
+	if e = runtime.CheckRef(tx.Scope(), in.OperationRef); e != nil {
+		return api.ControlSnapshot{}, e
+	}
+	if in.OperationRef.OwnerID != in.ReceiverID {
+		return api.ControlSnapshot{}, api.E("forbidden", "operation_receiver_mismatch")
+	}
+	var intent OperationIntent
+	if _, e = tx.Get(ctx, intents, in.OperationRef.ObjectID, &intent); e != nil {
+		return api.ControlSnapshot{}, e
+	}
+	if intent.TaskRef.ObjectID != in.TaskID || intent.ExecutorID != in.ReceiverID || intent.GoalRevision != t.Task.GoalRevision || intent.ControlRevision != t.Task.ControlRevision {
+		return api.ControlSnapshot{}, api.E("revision_conflict", "operation_control_stale")
+	}
+	var dispatch operationDispatch
+	if _, e = tx.Get(ctx, dispatches, intent.OperationID, &dispatch); e != nil {
+		return api.ControlSnapshot{}, e
+	}
+	if dispatch.PermanentlyClosed {
+		return api.ControlSnapshot{}, api.E("invalid_state", "operation_entry_closed")
+	}
+	var relation relation
+	if _, e = tx.Get(ctx, relations, relationID(in.TaskID, "operation", in.ReceiverID, intent.OperationID), &relation); e != nil {
+		return api.ControlSnapshot{}, e
+	}
+	if relation.Closed {
+		return api.ControlSnapshot{}, api.E("invalid_state", "operation_entry_closed")
 	}
 	found := false
 	for _, owner := range t.ControlTargets {
@@ -443,6 +486,9 @@ func (s *Service) ControlWindowTx(ctx context.Context, tx runtime.Tx, auth runti
 	return window, nil
 }
 func (s *Service) controlSnapshot(ctx context.Context, tx runtime.Tx, t taskState, now time.Time) (api.ControlSnapshot, error) {
+	if s.ports.ControlProof == nil {
+		return api.ControlSnapshot{}, api.E("unsupported", "control_proof_not_configured")
+	}
 	control, status := t.Task.Control, t.Task.Status
 	for _, id := range t.Ancestors {
 		a, e := getTask(ctx, tx, id)
@@ -461,11 +507,35 @@ func (s *Service) controlSnapshot(ctx context.Context, tx runtime.Tx, t taskStat
 	if e != nil {
 		return api.ControlSnapshot{}, e
 	}
-	if deadline.Before(before) {
+	// 负控制只传播停止事实，不授予行动入口；目标截止后仍可签有限停止窗口。
+	if status == "active" && control == "running" && deadline.Before(before) {
 		before = deadline
 	}
-	proof := t.Task.GoalRef
-	return api.ControlSnapshot{OrchestratorID: tx.Scope().OwnerID, TaskID: t.Task.TaskID, GoalRevision: t.Task.GoalRevision, ControlRevision: t.Task.ControlRevision, Status: status, Control: control, IssuedAt: api.Time(now), StartBefore: api.Time(before), ProofRef: proof, WindowID: api.NewID("window")}, nil
+	if !now.Before(before) {
+		return api.ControlSnapshot{}, api.E("expired", "control_window_expired")
+	}
+	window := api.ControlSnapshot{OrchestratorID: tx.Scope().OwnerID, TaskID: t.Task.TaskID, GoalRevision: t.Task.GoalRevision, ControlRevision: t.Task.ControlRevision, Status: status, Control: control, IssuedAt: api.Time(now), StartBefore: api.Time(before), WindowID: api.NewID("window")}
+	window.ProofRef, e = s.ports.ControlProof.SealControl(ctx, tx, window)
+	if e != nil {
+		return api.ControlSnapshot{}, e
+	}
+	if e = s.checkSourceProof(tx.Scope(), window.ProofRef); e != nil {
+		return api.ControlSnapshot{}, e
+	}
+	if e = api.ValidateRecord("ControlSnapshot", window); e != nil {
+		return api.ControlSnapshot{}, e
+	}
+	return window, nil
+}
+
+func (s *Service) checkSourceProof(scope runtime.Scope, ref api.ContentRef) error {
+	if err := api.ValidateRecord("ContentRef", ref); err != nil {
+		return err
+	}
+	if ref.TenantID != scope.TenantID || ref.OwnerID != scope.OwnerID {
+		return api.E("forbidden", "source_proof_owner_mismatch")
+	}
+	return nil
 }
 func (s *Service) expireTx(ctx context.Context, tx runtime.Tx, t *taskState) (bool, error) {
 	if terminal(*t) {

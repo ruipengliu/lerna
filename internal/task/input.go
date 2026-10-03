@@ -18,8 +18,10 @@ func closedAnswerSchema(schema api.Schema) error {
 	inspect = func(v any) error {
 		switch value := v.(type) {
 		case map[string]any:
-			if _, ok := value["$ref"]; ok {
-				return fmt.Errorf("answer schemas must be self-contained")
+			for _, keyword := range []string{"$ref", "$dynamicRef", "$recursiveRef", "$id"} {
+				if _, ok := value[keyword]; ok {
+					return fmt.Errorf("answer schemas must be self-contained")
+				}
 			}
 			if value["type"] == "object" && value["additionalProperties"] != false {
 				return fmt.Errorf("answer object schema must be closed")
@@ -155,23 +157,37 @@ func (s *Service) PrepareInputTx(ctx context.Context, tx runtime.Tx, auth runtim
 		return InputOutput{}, e
 	}
 	key := refKey(in.RequestRef) + fmt.Sprintf("/%020d", in.RequestRef.Revision)
-	if _, e = tx.LookupKey(ctx, pendingInputs, key); e == nil {
-		return InputOutput{}, api.E("invalid_state", "input_prepare_pending")
-	}
-	if !confirmedNotFound(e) {
+	var head inputHead
+	headRev, e := tx.Get(ctx, inputHeads, key, &head)
+	if e == nil {
+		var previous pendingInput
+		if _, e = tx.Get(ctx, pendingInputs, head.CommandID, &previous); e != nil {
+			return InputOutput{}, e
+		}
+		if previous.State == "pending" {
+			return InputOutput{}, api.E("invalid_state", "input_prepare_pending")
+		}
+		if previous.State == "consumed" {
+			return InputOutput{}, api.E("invalid_state", "already_consumed")
+		}
+		head.CommandID = c.CommandID
+		head.Revision++
+		if e = tx.Put(ctx, inputHeads, key, headRev, head); e != nil {
+			return InputOutput{}, e
+		}
+	} else if confirmedNotFound(e) {
+		if e = tx.Create(ctx, inputHeads, key, in.TaskID, inputHead{Revision: 1, CommandID: c.CommandID}); e != nil {
+			return InputOutput{}, e
+		}
+	} else {
 		return InputOutput{}, e
 	}
-	pending := pendingInput{Revision: 1, CommandID: c.CommandID, Input: in, Auth: auth, State: "pending"}
+
+	pending := pendingInput{Revision: 1, CommandID: c.CommandID, UploadID: api.NewID("upload"), Input: in, Auth: auth, State: "pending"}
 	if e = tx.Create(ctx, pendingInputs, c.CommandID, in.TaskID, pending); e != nil {
 		return InputOutput{}, e
 	}
-	digest, e := api.Digest(in)
-	if e != nil {
-		return InputOutput{}, e
-	}
-	if e = tx.Bind(ctx, pendingInputs, key, c.CommandID, digest); e != nil {
-		return InputOutput{}, e
-	}
+
 	if _, e = raise(ctx, tx, JobInput, "input/"+c.CommandID, tx.Scope().Ref(c.CommandID, 1)); e != nil {
 		return InputOutput{}, e
 	}
@@ -223,6 +239,28 @@ func (s *Service) inputJob(ctx context.Context, store runtime.Store, scope runti
 			}
 		}
 	}
+	var completeGoal *api.ContentRef
+	if validationErr == nil && view.Request.Purpose == "clarify_goal" {
+		var current taskState
+		if _, err = store.Read(ctx, scope, tasks, pending.Input.TaskID, 0, &current); err != nil {
+			return err
+		}
+		if len(current.Amendments) >= 100 {
+			return api.E("invalid_request", "goal_amendment_limit")
+		}
+		document := api.GoalDocument{FormatVersion: 1, InitialGoalRef: current.InitialGoalRef, AmendmentRefs: append(append([]api.ContentRef{}, current.Amendments...), pending.Input.AnswerRef)}
+		if e := s.preIO(ctx, store, scope, work); e != nil {
+			return e
+		}
+		ref, e := s.ports.Content.Publish(ctx, scope, pending.UploadID, "application/json", api.Raw(document))
+		if e != nil {
+			if deferred(e) {
+				return s.wait(ctx, store, scope, work)
+			}
+			return e
+		}
+		completeGoal = &ref
+	}
 	return s.finish(ctx, store, scope, work, runtime.Done(), func(tx runtime.Tx) error {
 		var current pendingInput
 		rev, e := tx.Get(ctx, pendingInputs, pending.CommandID, &current)
@@ -237,7 +275,7 @@ func (s *Service) inputJob(ctx context.Context, store runtime.Store, scope runti
 		if decisionErr == nil {
 			decisionErr = tx.Savepoint(ctx, func(inner runtime.Tx) error {
 				var e error
-				out, e = s.ConsumeInputTx(ctx, inner, pending.Auth, api.Command{TargetID: pending.Input.TaskID, CommandID: pending.CommandID}, pending.Input)
+				out, e = s.ConsumeInputTx(ctx, inner, pending.Auth, api.Command{TargetID: pending.Input.TaskID, CommandID: pending.CommandID}, pending.Input, completeGoal)
 				return e
 			})
 		}
@@ -279,11 +317,15 @@ func (s *Service) Closure(ctx context.Context, store runtime.Store, scope runtim
 		if e = principal(auth, t); e != nil {
 			return e
 		}
-		rows, e := s.fullRelations(ctx, tx, t.Task.TaskID)
+		if s.ports.ClosureProof == nil {
+			return api.E("unsupported", "closure_proof_not_configured")
+		}
+		rows, e := s.closureRelationsTx(ctx, tx, t.Task.TaskID)
 		if e != nil {
 			return e
 		}
 		effects := true
+		children := []api.Task{}
 		for _, r := range rows {
 			if r.Kind == "operation" && (!r.Closed || r.MayApplyLater || r.Effect == "unknown") {
 				effects = false
@@ -299,10 +341,70 @@ func (s *Service) Closure(ctx context.Context, store runtime.Store, scope runtim
 				if !terminal(child) {
 					effects = false
 				}
+				children = append(children, child.Task)
 			}
 		}
-		out = ClosureView{TaskRef: taskRef(tx, t), GoalWorkClosed: terminal(t), EffectsClosed: effects, AccountingOpen: t.Task.AccountingOpen, ProofRef: t.Task.GoalRef}
-		return nil
+		now, e := tx.Now(ctx)
+		if e != nil {
+			return e
+		}
+		digest, e := api.Digest(struct {
+			Task      api.Task   `json:"task"`
+			Relations []relation `json:"relations"`
+			Children  []api.Task `json:"children"`
+		}{t.Task, rows, children})
+		if e != nil {
+			return e
+		}
+		refs := []api.ObjectRef{taskRef(tx, t)}
+		for _, r := range rows {
+			refs = append(refs, r.Ref)
+		}
+		for _, child := range children {
+			refs = append(refs, tx.Scope().Ref(child.TaskID, child.Revision))
+		}
+		out = ClosureView{TaskRef: taskRef(tx, t), GoalWorkClosed: terminal(t), EffectsClosed: effects, AccountingOpen: t.Task.AccountingOpen, IssuedAt: api.Time(now), SnapshotDigest: digest, EvidenceRefs: refs}
+		out.ProofRef, e = s.ports.ClosureProof.SealClosureTx(ctx, tx, out)
+		if e != nil {
+			return e
+		}
+		return s.checkSourceProof(tx.Scope(), out.ProofRef)
 	})
 	return out, err
+}
+
+// 关闭判断必须含已终态孩子的真实未结效果；每一关系集和子树总量均有界。
+func (s *Service) closureRelationsTx(ctx context.Context, tx runtime.Tx, taskID string) ([]relation, error) {
+	queue := []string{taskID}
+	seen := map[string]bool{}
+	result := []relation{}
+	for len(queue) > 0 {
+		id := queue[0]
+		queue = queue[1:]
+		if seen[id] {
+			return nil, api.E("invalid_state", "task_relation_cycle")
+		}
+		seen[id] = true
+		if uint64(len(seen)) > s.config.MaxActiveSubtree+1 {
+			return nil, api.E("overloaded", "closure_subtree_incomplete")
+		}
+		rows, err := s.fullRelations(ctx, tx, id)
+		if err != nil {
+			return nil, err
+		}
+		for _, r := range rows {
+			result = append(result, r)
+			if r.Kind == "child" {
+				queue = append(queue, r.Ref.ObjectID)
+			}
+		}
+	}
+	return result, nil
+}
+
+const inputHeads = "task.input_preparation_heads"
+
+type inputHead struct {
+	Revision  uint64 `json:"revision"`
+	CommandID string `json:"command_id"`
 }
