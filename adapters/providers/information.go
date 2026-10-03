@@ -332,9 +332,11 @@ func (d *informationDriver) Prepare(ctx context.Context, s runtime.Scope, a runt
 		wire.Limit = in.Limit
 		wire.Body = api.Raw(SearchRequest{Protocol: informationProtocol, RequestID: intent.OperationID, Query: string(query), Limit: in.Limit, Cursor: in.Cursor})
 	}
-	encoded := api.Raw(wire)
-	digest, err := api.Digest(encoded)
-	return execution.PreparedRequest{Encoded: encoded, Digest: digest, TargetRequestKey: intent.OperationID}, err
+	encoded, err := api.Canonical(api.Raw(wire))
+	if err != nil {
+		return execution.PreparedRequest{}, err
+	}
+	return execution.PreparedRequest{Encoded: encoded, Digest: api.Hash(encoded), TargetRequestKey: intent.OperationID}, nil
 }
 func (d *informationDriver) request(r execution.AttemptRequest) (informationWire, string, error) {
 	h := d.source
