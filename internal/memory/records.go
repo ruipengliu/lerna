@@ -104,7 +104,7 @@ func (s *Service) validateValues(ctx context.Context, tx runtime.Tx, auth runtim
 				return err
 			}
 		}
-		sp, err := s.policy(ctx, tx, v.PolicyRef)
+		sp, err := s.sourcePolicy(ctx, tx, v)
 		if err != nil {
 			return err
 		}
