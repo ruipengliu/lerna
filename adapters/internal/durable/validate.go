@@ -90,6 +90,37 @@ func Record(value any) ([]byte, error) {
 	return api.Canonical(b)
 }
 
+const maxCommandEnvelopeBytes = 1 << 20
+
+// CommandRecord 的聚合上限容纳各自合法的原命令与回执；不扩大单份领域边界。
+func CommandRecord(value runtime.StoredCommand) ([]byte, error) {
+	if _, err := Record(value.Command); err != nil {
+		return nil, err
+	}
+	if _, err := Record(value.Receipt); err != nil {
+		return nil, err
+	}
+	b, err := json.Marshal(value)
+	if err != nil {
+		return nil, err
+	}
+	return api.CanonicalLimit(b, maxCommandEnvelopeBytes)
+}
+
+func DecodeCommandRecord(raw []byte) (runtime.StoredCommand, error) {
+	var value runtime.StoredCommand
+	if err := api.DecodeLimit(raw, &value, maxCommandEnvelopeBytes); err != nil {
+		return value, err
+	}
+	if _, err := Record(value.Command); err != nil {
+		return value, err
+	}
+	if _, err := Record(value.Receipt); err != nil {
+		return value, err
+	}
+	return value, nil
+}
+
 func Limits(limit int) error {
 	if limit < 1 || limit > 1000 {
 		return api.E("invalid_request", "invalid_storage_scan_limit")
