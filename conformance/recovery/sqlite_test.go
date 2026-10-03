@@ -184,7 +184,7 @@ func TestSQLiteMigrationRecordsExactVersionAndRejectsAlteredChecksum(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-	if status.Version != 4 || status.Checksum != sqlite.MigrationV4Checksum() {
+	if status.Version != 5 || status.Checksum != sqlite.MigrationV5Checksum() {
 		t.Fatalf("missing current migration record: %+v", status)
 	}
 	// Deliberate corruption is a storage fault fixture, not a business observation.
@@ -289,8 +289,8 @@ func holdSQLiteProcessLock(t *testing.T, path string) func() {
 func TestSQLiteBusyDeadlineRollsBackAndNormalControlStillCommits(t *testing.T) {
 	store := sqliteDatabase(t)
 	cfg, _ := sqliteConfigurations.Load(store)
-	release := holdSQLiteProcessLock(t, cfg.(sqlite.Config).Path)
 	h := hostFor(store, owner, principal)
+	release := holdSQLiteProcessLock(t, cfg.(sqlite.Config).Path)
 	original := command("busy-original", "busy-input", "normal after real lock", nil, future())
 	start := time.Now()
 	_, err := h.Record(contextFor(t), original, &principal)
@@ -551,6 +551,7 @@ func TestSQLiteDeviceClockPreservesUTCNanosecondInstants(t *testing.T) {
 	store := sqliteDatabase(t)
 	clock := &controlledClock{admissionStore: store, instant: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
 	h := durablework.New(owner, store, store, store, clock, durablework.NewPermissions([]durablework.Permission{{Subject: principal, Owner: owner, Record: true, Read: true}}))
+	fixturePool(h)
 	ctx := contextFor(t)
 	out, err := h.Record(ctx, command("time-zero", "time-input", "zero fraction", nil, "2026-10-03T00:00:00.000001Z"), &principal)
 	assertReceived(t, out, err)
@@ -599,11 +600,11 @@ func TestSQLiteHistoricalV1FileRestoresOriginalDecisionsAndPendingJob(t *testing
 		t.Fatal(err)
 	}
 	status, err := store.MigrationStatus(contextFor(t))
-	if err != nil || status.Version != 4 || status.Checksum != sqlite.MigrationV4Checksum() {
+	if err != nil || status.Version != 5 || status.Checksum != sqlite.MigrationV5Checksum() {
 		t.Fatalf("restored migration changed: %+v %v", status, err)
 	}
 	versions, err := store.MigrationVersions(contextFor(t))
-	if err != nil || len(versions) != 4 || versions[0] != report.Migration || versions[1].Version != 2 || versions[1].Checksum != "sha256:3791b3fc5ca49c18eee04b2afcaa54c2aae9c5afbf3f1e3fd98f5cce8715e01c" || versions[2].Version != 3 || versions[2].Checksum != sqlite.MigrationV3Checksum() || versions[3] != status {
+	if err != nil || len(versions) != 5 || versions[0] != report.Migration || versions[1].Version != 2 || versions[1].Checksum != "sha256:3791b3fc5ca49c18eee04b2afcaa54c2aae9c5afbf3f1e3fd98f5cce8715e01c" || versions[2].Version != 3 || versions[2].Checksum != sqlite.MigrationV3Checksum() || versions[3].Version != 4 || versions[3].Checksum != sqlite.MigrationV4Checksum() || versions[4] != status {
 		t.Fatalf("actual historical v1/v2 identity: %+v %v", versions, err)
 	}
 	scope := contract.OwnerRef{TenantID: "fixture-tenant", OwnerID: "fixture-owner"}

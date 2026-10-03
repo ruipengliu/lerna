@@ -13,6 +13,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/ruipengliu/lerna/contract"
+	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
 	"github.com/ruipengliu/lerna/runtime"
 )
 
@@ -79,10 +80,12 @@ func (s *Store) DropTestSchema(ctx context.Context) error {
 }
 
 type transaction struct {
-	store  *Store
-	sql    *sql.Tx
-	owner  contract.OwnerRef
-	active atomic.Bool
+	pool       *demo.PoolState
+	poolLocked bool
+	store      *Store
+	sql        *sql.Tx
+	owner      contract.OwnerRef
+	active     atomic.Bool
 }
 
 func (t *transaction) Owner() contract.OwnerRef { return t.owner }

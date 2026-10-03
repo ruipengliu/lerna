@@ -90,7 +90,7 @@ func TestPGClaimV2MigrationPreservesV1AndReportsExactArtifacts(t *testing.T) {
 		t.Fatal(err)
 	}
 	versions, err := store.MigrationVersions(ctx)
-	if err != nil || len(versions) != 4 || versions[0].Version != 1 || versions[0].Checksum != "sha256:f8d04d373b039a425b4f6d0a7b7dd4410971c00faf91cdba3f68a9204579127e" || versions[1].Version != 2 || versions[1].Checksum != "sha256:cdb7dea9f55ee8ac9201a943cecf8096108b48bc208409e1372bbf17295b2297" || versions[2].Version != 3 || versions[2].Checksum != postgres.MigrationV3Checksum() || versions[3].Version != 4 || versions[3].Checksum != postgres.MigrationV4Checksum() {
+	if err != nil || len(versions) != 5 || versions[0].Version != 1 || versions[0].Checksum != "sha256:f8d04d373b039a425b4f6d0a7b7dd4410971c00faf91cdba3f68a9204579127e" || versions[1].Version != 2 || versions[1].Checksum != "sha256:cdb7dea9f55ee8ac9201a943cecf8096108b48bc208409e1372bbf17295b2297" || versions[2].Version != 3 || versions[2].Checksum != postgres.MigrationV3Checksum() || versions[3].Version != 4 || versions[3].Checksum != postgres.MigrationV4Checksum() || versions[4].Version != 5 || versions[4].Checksum != postgres.MigrationV5Checksum() {
 		t.Fatalf("v1/v2 metadata: %+v %v", versions, err)
 	}
 	t.Logf("applied migrations: %+v", versions)

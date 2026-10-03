@@ -45,6 +45,9 @@ func workContext(ctx context.Context) error {
 }
 
 func (w *Worker) Claim(ctx context.Context, worker string, limit int, lease time.Duration) ([]Work, error) {
+	return w.claimLanes(ctx, worker, limit, lease, []string{"ordinary", "control", "reconciliation"}, nil)
+}
+func (w *Worker) claimLanes(ctx context.Context, worker string, limit int, lease time.Duration, lanes []string, binding *PoolBinding) ([]Work, error) {
 	if err := workContext(ctx); err != nil {
 		return nil, err
 	}
@@ -56,55 +59,140 @@ func (w *Worker) Claim(ctx context.Context, worker string, limit int, lease time
 	}
 	var batch []Work
 	err := w.Runner.Within(ctx, w.Owner, func(ctx context.Context, tx runtime.Tx) error {
+		repo, pool, err := poolLock(ctx, tx, w.Repository)
+		if err != nil {
+			return err
+		}
+		if binding != nil {
+			scope, err := repo.PoolScope(ctx, tx)
+			if err != nil {
+				return err
+			}
+			if scope != binding.Scope || pool.Config.ID != binding.ID {
+				return runtime.ErrScope
+			}
+		}
 		now, err := w.Clock.Now(ctx, tx)
 		if err != nil {
 			return err
 		}
 		now = now.UTC().Truncate(time.Microsecond)
-		candidates, err := w.Claims.Scan(ctx, tx, now, limit)
-		if err != nil {
-			return err
-		}
-		for _, job := range candidates {
-			if job.Phase != "project" || job.Object.Kind != "durable_work" {
-				continue
-			}
-			input, err := w.Repository.TryLockInput(ctx, tx, w.Owner, job.Object.ID)
+		tenants := pool.Config.Tenants()
+		budget := limit
+		for _, lane := range lanes {
+			limits, err := pool.Config.Limit(lane)
 			if err != nil {
 				return err
 			}
-			if input == nil {
-				continue
-			}
-			// Read trusted time after the object lock, including time spent waiting.
-			now, err = w.Clock.Now(ctx, tx)
-			if err != nil {
-				return err
-			}
-			now = now.UTC().Truncate(time.Microsecond)
-			claim, err := w.Claims.Claim(ctx, tx, job, worker, now, now.Add(lease))
-			if err != nil {
-				return err
-			}
-			if claim == nil {
-				continue
-			}
-			if input.Revision != claim.ClaimedRevision {
-				return runtime.ErrClaim
-			}
-			if repo, ok := w.Repository.(ScheduleRepository); ok {
-				state, err := repo.LoadSchedule(ctx, tx, w.Owner, input.ID, claim.ClaimedRevision)
+			checked := 0
+			wrapped := false
+			for len(batch) < limit && budget > 0 && checked < len(tenants) {
+				active, _, _, err := repo.PoolCounts(ctx, tx, pool, lane, w.Owner.TenantID, now)
 				if err != nil {
 					return err
 				}
-				if state == nil {
-					policy := LegacyPolicy()
-					if err = repo.BindSchedule(ctx, tx, w.Owner, input.ID, claim.ClaimedRevision, ScheduleState{Source: "legacy-adoption", Policy: policy, AdoptedAt: now, Deadline: now.Add(policy.ExecutionLimit), Due: now}); err != nil {
+				if active >= limits.Concurrent {
+					break
+				}
+				cursor, err := refreshPoolCursor(ctx, tx, repo, pool, lane, now)
+				if err != nil {
+					return err
+				}
+				if len(cursor.Order) == 0 {
+					if err = repo.SavePoolCursor(ctx, tx, pool, lane, cursor); err != nil {
 						return err
 					}
+					break
+				}
+				tenant := cursor.Order[0]
+				hadProgress := cursor.After != ""
+				candidates, through, err := repo.PoolPage(ctx, tx, pool, lane, tenant, cursor.After, cursor.Through, now)
+				if err != nil {
+					return err
+				}
+				cursor.Through = through
+				claimed := false
+				otherOwner := false
+				for _, job := range candidates {
+					if budget == 0 {
+						break
+					}
+					budget--
+					candidateOwner := contract.OwnerRef{TenantID: job.Object.TenantID, OwnerID: job.Object.OwnerID}
+					if candidateOwner != w.Owner {
+						otherOwner = true
+						break
+					}
+					cursor.After = job.DueAt.UTC().Format(time.RFC3339Nano) + "|" + string(job.ID)
+					if job.Phase != "project" || job.Object.Kind != "durable_work" {
+						continue
+					}
+					input, err := w.Repository.TryLockInput(ctx, tx, w.Owner, job.Object.ID)
+					if err != nil {
+						return err
+					}
+					if input == nil {
+						continue
+					}
+					now, err = w.Clock.Now(ctx, tx)
+					if err != nil {
+						return err
+					}
+					now = now.UTC().Truncate(time.Microsecond)
+					claim, err := w.Claims.Claim(ctx, tx, job, worker, now, now.Add(lease))
+					if err != nil {
+						return err
+					}
+					if claim == nil {
+						continue
+					}
+					if input.Revision != claim.ClaimedRevision {
+						return runtime.ErrClaim
+					}
+					schedules, ok := w.Repository.(ScheduleRepository)
+					if !ok {
+						return ErrPolicy
+					}
+					state, err := schedules.LoadSchedule(ctx, tx, w.Owner, input.ID, claim.ClaimedRevision)
+					if err != nil {
+						return err
+					}
+					if state == nil {
+						policy := LegacyPolicy()
+						policy.Lane = lane
+						if err = schedules.BindSchedule(ctx, tx, w.Owner, input.ID, claim.ClaimedRevision, ScheduleState{Source: "legacy-adoption", Policy: policy, AdoptedAt: now, Deadline: now.Add(policy.ExecutionLimit), Due: now}); err != nil {
+							return err
+						}
+					}
+					if err = repo.RegisterPoolClaim(ctx, tx, pool, *claim); err != nil {
+						return err
+					}
+					batch = append(batch, Work{Claim: *claim, Input: *input})
+					claimed = true
+					break
+				}
+				if claimed || (!otherOwner && len(candidates) < 64 && budget > 0) {
+					if err = rotatePoolCursor(&cursor, claimed); err != nil {
+						return err
+					}
+					if claimed {
+						checked = 0
+					} else {
+						if len(cursor.Order) == 1 && len(candidates) == 0 && hadProgress && !wrapped {
+							wrapped = true
+							checked = 0
+						} else {
+							checked++
+						}
+					}
+				}
+				if err = repo.SavePoolCursor(ctx, tx, pool, lane, cursor); err != nil {
+					return err
+				}
+				if otherOwner || (!claimed && len(candidates) == 64) {
+					break
 				}
 			}
-			batch = append(batch, Work{Claim: *claim, Input: *input})
 		}
 		return nil
 	})
@@ -141,6 +229,10 @@ func (w *Worker) Renew(ctx context.Context, claim runtime.Claim, lease time.Dura
 	}
 	var renewed runtime.Claim
 	err := w.Runner.Within(ctx, w.Owner, func(ctx context.Context, tx runtime.Tx) error {
+		poolRepo, pool, err := poolLock(ctx, tx, w.Repository)
+		if err != nil {
+			return err
+		}
 		input, err := w.Repository.LockInput(ctx, tx, w.Owner, claim.Object.ID)
 		if err != nil {
 			return err
@@ -153,6 +245,9 @@ func (w *Worker) Renew(ctx context.Context, claim runtime.Claim, lease time.Dura
 			return err
 		}
 		now = now.UTC().Truncate(time.Microsecond)
+		if err = poolRepo.ValidatePoolClaim(ctx, tx, pool, claim, now); err != nil {
+			return err
+		}
 		repo, ok := w.Repository.(ScheduleRepository)
 		if !ok {
 			return ErrPolicy

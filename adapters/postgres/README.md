@@ -67,11 +67,10 @@ Legacy policy binds only at first eligible Claim in the same short transaction;
 new admission binds policy with input/Job/receipt. Defer/retry/stop release the
 original Claim without closing newer work or inventing successful projection.
 NextWake observes the earliest relevant future due/lease/deadline and finite
-fallback. All mutating consumer paths preserve input -> Job lock order and use
-one trusted owner Clock. Deploy by draining/isolating the old binary; mixed
+fallback. Mutating consumers take coordination before input -> Job, and use one trusted
+pool Clock. Deploy by draining/isolating the old binary; mixed
 old/new processing is unsupported. Both real adapters run one shared wait suite,
-including frozen actual V1/V2 writer upgrades. No production/external-effect or
-fair-quota guarantee is implied.
+including frozen actual V1/V2 writer upgrades. No production throughput or external-effect guarantee is implied.
 
 MaxOpenConnections may explicitly bound the pool to 1–64 (0 selects 16). The wait
 suite uses one actual connection to prove waiting releases database resources.
@@ -115,3 +114,18 @@ a complete CID was never recorded, psql is not started, but an unstarted
 container can remain without confirmed ownership. That actual empty-cidfile
 failure window is retained as a limitation; it is not guessed or deleted and
 is not described as proving every cancelled CREATE leaves no container.
+
+
+Version 5 adds finite pool membership, fixed Job lane, exact Claim reservation
+source, durable per-lane tenant FIFO/page cursors and a scope generation nonce.
+It preserves published versions 1–4 and actual historical fixtures. Capacity
+counts derive from real unfinished Jobs and live lease bindings inside the
+coordinated transaction; no process semaphore/counter replaces database facts.
+Current Host assembly explicitly installs a validated finite pool before new
+Record/Claim/Start/Finish/Renew; original authorized receipt replay/query survives
+missing registration. Pool transactions take coordination before input/Job.
+First trusted member registration counts/adopts existing finite-lease legacy
+Claims; later reconfiguration cannot bless unregistered raw Claims. Expiry and
+exact stop maintenance needs no execution Claim and preserves other revisions.
+See [consumer pool contract](../../internal/durableworkdemo/README.md) for limits,
+conditional fairness, trusted assembly, restoration and scope-binding limits.
