@@ -1,6 +1,6 @@
 import { ContractError } from './errors.ts';
 import { responseSemantics } from './response-semantics.ts';
-import { parseJSON, maxDepth } from './json.ts';
+import { parseJSON, maxDepth, assertUnicode } from './json.ts';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import { schema, type Values } from './generated/values.ts';
 export const version = '1.0.0';
@@ -58,15 +58,12 @@ ajv.addSchema(schema);
 function isWireValue(value: unknown, depth = 0): boolean {
   if (value === null || typeof value === 'boolean') return true;
   if (typeof value === 'string') {
-    // A Unicode scalar cannot contain an unmatched UTF-16 surrogate.
-    for (let i = 0; i < value.length; i++) {
-      const code = value.charCodeAt(i);
-      if (code >= 0xd800 && code <= 0xdbff) {
-        const next = value.charCodeAt(++i);
-        if (!(next >= 0xdc00 && next <= 0xdfff)) return false;
-      } else if (code >= 0xdc00 && code <= 0xdfff) return false;
+    try {
+      assertUnicode(value);
+      return true;
+    } catch {
+      return false;
     }
-    return true;
   }
   if (typeof value !== 'object' || depth >= maxDepth) return false;
   if (Array.isArray(value))

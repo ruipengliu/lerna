@@ -15,8 +15,14 @@ const MaxDepth = 64
 // ParseJSON is the strict raw-wire boundary. Version 1 has no JSON number values;
 // exact quantities are strings. It preserves every valid Unicode scalar.
 func ParseJSON(data []byte) (any, error) {
-	if len(data) > MaxBodyBytes {
-		return nil, fmt.Errorf("body exceeds %d bytes", MaxBodyBytes)
+	return parseJSON(data, MaxBodyBytes)
+}
+
+// The private budget permits bounded encoding/json escape expansion during
+// typed encoding; every public raw-wire entry keeps the 1 MiB limit.
+func parseJSON(data []byte, maxBytes int) (any, error) {
+	if len(data) > maxBytes {
+		return nil, fmt.Errorf("body exceeds %d bytes", maxBytes)
 	}
 	if !utf8.Valid(data) {
 		return nil, fmt.Errorf("invalid UTF-8")

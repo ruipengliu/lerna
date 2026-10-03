@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"regexp"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 	"unicode/utf8"
@@ -105,10 +106,23 @@ func Encode[T Value](value T) ([]byte, error) {
 	if err != nil {
 		return nil, valueError[T](err)
 	}
-	if _, err := Decode[T](encoded); err != nil {
+	// Marshal's HTML and Unicode separator escapes can occupy six bytes per
+	// original byte. This local representation is not the final wire body.
+	raw, err := parseJSON(encoded, 6*MaxBodyBytes)
+	if err != nil {
 		return nil, valueError[T](err)
 	}
-	return encoded, nil
+	if err := Validate(reflect.TypeFor[T]().Name(), raw); err != nil {
+		return nil, valueError[T](err)
+	}
+	var compact strings.Builder
+	if err := writeCanonical(&compact, raw); err != nil {
+		return nil, valueError[T](err)
+	}
+	if compact.Len() > MaxBodyBytes {
+		return nil, valueError[T](fmt.Errorf("body exceeds %d bytes", MaxBodyBytes))
+	}
+	return []byte(compact.String()), nil
 }
 
 // Generated values contain only strings, booleans, arrays and finite structs.

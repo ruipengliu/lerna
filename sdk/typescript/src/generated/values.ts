@@ -299,7 +299,15 @@ export interface Values {
   MethodSupport: MethodSupport;
   NegotiationRequest: NegotiationRequest;
 }
-export const schema = {
+// Freeze the public source before any validator can compile it.
+function deepFreeze<T>(value: T): T {
+  if (value !== null && typeof value === 'object') {
+    Object.values(value).forEach(deepFreeze);
+    Object.freeze(value);
+  }
+  return value;
+}
+export const schema = deepFreeze({
   $schema: 'https://json-schema.org/draft/2020-12/schema',
   $id: 'https://lerna.dev/contract/1.0.0/values.json',
   $defs: {
@@ -1123,4 +1131,4 @@ export const schema = {
       additionalProperties: false,
     },
   },
-} as const;
+} as const);
