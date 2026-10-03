@@ -1,0 +1,5 @@
+packages:
+  - sdk/ts
+  - apps/web
+onlyBuiltDependencies:
+  - esbuild
