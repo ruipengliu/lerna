@@ -67,6 +67,16 @@ func (s *Service) validateValues(ctx context.Context, tx runtime.Tx, auth runtim
 	if err != nil {
 		return err
 	}
+	if values.Type == "experience" {
+		var content ContentVersion
+		_, err = tx.Get(ctx, "content.versions", contentKey(values.ContentRef), &content)
+		if err != nil {
+			return err
+		}
+		if values.ContentRef.MediaType != ExperienceMediaType || content.ExperienceOutcome == "" || content.ExperienceOutcome != "unknown" && content.ExperienceProofRef == nil {
+			return api.E("invalid_request", "experience_requires_actual_outcome")
+		}
+	}
 	refs := []api.ContentRef{values.ContentRef, values.ScopeRef}
 	seen := map[string]bool{}
 	for _, source := range values.Sources {
@@ -88,6 +98,11 @@ func (s *Service) validateValues(ctx context.Context, tx runtime.Tx, auth runtim
 		v, err := s.CheckContentTx(ctx, tx, auth, ref, "memory.save", s.Location, false)
 		if err != nil {
 			return err
+		}
+		if ref != values.ContentRef && ref != values.ScopeRef {
+			if err = s.checkSourceGate(ctx, tx, auth, ref, "memory.save", s.Location, false); err != nil {
+				return err
+			}
 		}
 		sp, err := s.policy(ctx, tx, v.PolicyRef)
 		if err != nil {
@@ -113,8 +128,22 @@ func (s *Service) memoryAllowed(ctx context.Context, tx runtime.Tx, auth runtime
 	if _, err := s.allowed(ctx, tx, auth, record.Values.PolicyRef, purpose, s.Location, continuous); err != nil {
 		return err
 	}
-	for _, ref := range append([]api.ContentRef{record.Values.ContentRef, record.Values.ScopeRef}, sourceRefs(record.Values.Sources)...) {
+	for _, ref := range []api.ContentRef{record.Values.ContentRef, record.Values.ScopeRef} {
 		if _, err := s.CheckContentTx(ctx, tx, auth, ref, purpose, s.Location, continuous); err != nil {
+			return err
+		}
+		if ref != record.Values.ContentRef && ref != record.Values.ScopeRef {
+			if err := s.checkSourceGate(ctx, tx, auth, ref, purpose, s.Location, continuous); err != nil {
+				return err
+			}
+		}
+	}
+	policy, err := s.policy(ctx, tx, record.Values.PolicyRef)
+	if err != nil {
+		return err
+	}
+	for _, ref := range sourceRefs(record.Values.Sources) {
+		if _, err = s.checkContent(ctx, tx, auth, ref, purpose, s.Location, continuous, map[string]bool{}, 1, policy.Values.IndependentDerived); err != nil {
 			return err
 		}
 	}
@@ -326,6 +355,9 @@ func (s *Service) replace(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 	if err = tx.Put(ctx, "memory.records", in.MemoryID, rev, record); err != nil {
 		return MemoryOutput{}, err
 	}
+	if err = sourceGate(ctx, tx, record, oldContent, "corrected", record.Values.PolicyRef); err != nil {
+		return MemoryOutput{}, err
+	}
 	if err = s.registerMemoryRefs(ctx, tx, auth, record); err != nil {
 		return MemoryOutput{}, err
 	}
@@ -380,6 +412,9 @@ func (s *Service) restrict(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if err = tx.Put(ctx, "memory.records", in.MemoryID, rev, record); err != nil {
 		return MemoryOutput{}, err
 	}
+	if err = sourceGate(ctx, tx, record, record.Values.ContentRef, "restricted", in.RestrictedPolicyRef); err != nil {
+		return MemoryOutput{}, err
+	}
 	seq, err := appendChange(ctx, tx, head, record, "restrict", true)
 	if err != nil {
 		return MemoryOutput{}, err
@@ -420,6 +455,9 @@ func (s *Service) delete(ctx context.Context, tx runtime.Tx, auth runtime.Auth, 
 	record.Revision = rev + 1
 	record.CleanupState = "pending"
 	if err = tx.Put(ctx, "memory.records", in.MemoryID, rev, record); err != nil {
+		return MemoryOutput{}, err
+	}
+	if err = sourceGate(ctx, tx, record, record.Values.ContentRef, "deleted", record.Values.PolicyRef); err != nil {
 		return MemoryOutput{}, err
 	}
 	seq, err := appendChange(ctx, tx, head, record, "delete", true)
@@ -481,37 +519,37 @@ func (s *Service) InspectMemory(ctx context.Context, scope runtime.Scope, auth r
 }
 
 func (s *Service) registerMemory(registry *runtime.Registry) {
-	command(registry, "memory.create", "memory", false, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in CreateInput) (MemoryOutput, error) {
+	command(s, registry, "memory.create", "memory", false, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in CreateInput) (MemoryOutput, error) {
 		if c.TargetID != in.MemoryID {
 			return MemoryOutput{}, api.E("invalid_request", "target_mismatch")
 		}
 		return s.CreateTx(ctx, tx, auth, in)
 	})
-	command(registry, "memory.replace", "memory", true, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ReplaceInput) (MemoryOutput, error) {
+	command(s, registry, "memory.replace", "memory", true, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in ReplaceInput) (MemoryOutput, error) {
 		if c.TargetID != in.MemoryID {
 			return MemoryOutput{}, api.E("invalid_request", "target_mismatch")
 		}
 		return s.replace(ctx, tx, auth, c.ExpectedRevision, in)
 	})
-	command(registry, "memory.restrict", "memory", true, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in RestrictInput) (MemoryOutput, error) {
+	command(s, registry, "memory.restrict", "memory", true, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in RestrictInput) (MemoryOutput, error) {
 		if c.TargetID != in.MemoryID {
 			return MemoryOutput{}, api.E("invalid_request", "target_mismatch")
 		}
 		return s.restrict(ctx, tx, auth, c.ExpectedRevision, in)
 	})
-	command(registry, "memory.delete", "memory", true, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in DeleteInput) (MemoryOutput, error) {
+	command(s, registry, "memory.delete", "memory", true, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in DeleteInput) (MemoryOutput, error) {
 		if c.TargetID != in.MemoryID {
 			return MemoryOutput{}, api.E("invalid_request", "target_mismatch")
 		}
 		return s.delete(ctx, tx, auth, c.ExpectedRevision, in)
 	})
-	query(registry, "memory.read", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ReadMemoryInput) (MemoryRecord, error) {
+	query(s, registry, "memory.read", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ReadMemoryInput) (MemoryRecord, error) {
 		if q.TargetID != in.MemoryID {
 			return MemoryRecord{}, api.E("invalid_request", "target_mismatch")
 		}
 		return s.ReadMemory(ctx, scope, auth, in)
 	})
-	query(registry, "memory.inspect", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ReadMemoryInput) (MemoryRecord, error) {
+	query(s, registry, "memory.inspect", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ReadMemoryInput) (MemoryRecord, error) {
 		if q.TargetID != in.MemoryID {
 			return MemoryRecord{}, api.E("invalid_request", "target_mismatch")
 		}

@@ -82,6 +82,12 @@ func (s *Local) Write(ctx context.Context, ref api.ContentRef, src io.Reader) (m
 		if _, err = s.Read(ctx, loc, ref, s.max); err != nil {
 			return memory.ObjectLocation{}, api.E("idempotency_conflict", "immutable_bytes_changed")
 		}
+		if err = syncFile(path); err != nil {
+			return memory.ObjectLocation{}, err
+		}
+		if err = syncDirectory(s.root); err != nil {
+			return memory.ObjectLocation{}, err
+		}
 		return loc, nil
 	} else if !errors.Is(err, os.ErrNotExist) {
 		return memory.ObjectLocation{}, err
@@ -177,6 +183,18 @@ func (s *Local) Delete(ctx context.Context, loc memory.ObjectLocation) error {
 		return err
 	}
 	return syncDirectory(s.root)
+}
+
+func syncFile(path string) error {
+	f, err := os.OpenFile(path, os.O_RDONLY, 0)
+	if err != nil {
+		return err
+	}
+	if err = f.Sync(); err != nil {
+		_ = f.Close()
+		return err
+	}
+	return f.Close()
 }
 
 func syncDirectory(path string) error {

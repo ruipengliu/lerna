@@ -184,7 +184,7 @@ func (s *Service) extract(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 			return ExtractionOutput{}, err
 		}
 	}
-	x := Extraction{ExtractionID: in.ExtractionID, Revision: 1, InputRefs: in.InputRefs, ExtractorRef: in.ExtractorRef, Limits: in.Limits, Deadline: in.Deadline, SavingMode: in.SavingMode, SavingGrantRef: in.SavingGrantRef, State: "active", PrincipalID: auth.SubjectID}
+	x := Extraction{ExtractionID: in.ExtractionID, Revision: 1, InputRefs: in.InputRefs, ExtractorRef: in.ExtractorRef, Limits: in.Limits, Deadline: in.Deadline, SavingMode: in.SavingMode, SavingGrantRef: in.SavingGrantRef, State: "active", PrincipalID: auth.SubjectID, PrincipalGeneration: auth.CredentialGeneration}
 	if err := tx.Create(ctx, "memory.extractions", in.ExtractionID, auth.SubjectID, x); err != nil {
 		return ExtractionOutput{}, err
 	}
@@ -205,12 +205,12 @@ func (s *Service) extractionJob(ctx context.Context, store runtime.Store, scope 
 		return err
 	}
 	if extraction.State != "active" {
-		return runtime.Finish(ctx, store, scope, Participants, work, runtime.Done(), nil)
+		return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), nil)
 	}
 	if err = store.CheckClaim(ctx, scope, work.Claim); err != nil {
 		return err
 	}
-	auth := runtime.Auth{TenantID: scope.TenantID, SubjectID: extraction.PrincipalID, CredentialGeneration: 1}
+	auth := runtime.Auth{TenantID: scope.TenantID, SubjectID: extraction.PrincipalID, CredentialGeneration: extraction.PrincipalGeneration}
 	statements := []ExtractionStatement{}
 	var checkpoint *api.ContentRef
 	for _, ref := range extraction.InputRefs {
@@ -237,7 +237,10 @@ func (s *Service) extractionJob(ctx context.Context, store runtime.Store, scope 
 			checkpoint = doc.CheckpointRef
 		}
 	}
-	return runtime.Finish(ctx, store, scope, Participants, work, runtime.Done(), func(tx runtime.Tx) error {
+	return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
+		if _, err := loadHead(ctx, tx); err != nil {
+			return err
+		}
 		var current Extraction
 		rev, err := tx.Get(ctx, "memory.extractions", extraction.ExtractionID, &current)
 		if err != nil {
@@ -301,27 +304,28 @@ func (s *Service) extractionJob(ctx context.Context, store runtime.Store, scope 
 }
 
 func (s *Service) failExtraction(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work, extraction Extraction, cause error) error {
-	return runtime.Finish(ctx, store, scope, Participants, work, runtime.Done(), func(tx runtime.Tx) error {
+	return runtime.Finish(ctx, store, scope, s.participants(), work, runtime.Done(), func(tx runtime.Tx) error {
 		var current Extraction
 		rev, err := tx.Get(ctx, "memory.extractions", extraction.ExtractionID, &current)
 		if err != nil {
 			return err
 		}
 		current.State = "cancelled"
+		current.FailureReason = cause.Error()
 		current.Revision = rev + 1
 		return tx.Put(ctx, "memory.extractions", current.ExtractionID, rev, current)
 	})
 }
 
 func (s *Service) registerExtraction(registry *runtime.Registry) {
-	query(registry, "memory.candidate.list", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ListCandidatesInput) (api.Page[ExtractionCandidate], error) {
+	query(s, registry, "memory.candidate.list", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ListCandidatesInput) (api.Page[ExtractionCandidate], error) {
 		if q.TargetID != in.ExtractionID {
 			return api.Page[ExtractionCandidate]{}, api.E("invalid_request", "target_mismatch")
 		}
 		return s.ListCandidates(ctx, scope, auth, in)
 	})
-	command(registry, "memory.extract", "memory", false, s.extract)
-	command(registry, "memory.extract.cancel", "memory", true, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in CancelExtractionInput) (ExtractionOutput, error) {
+	command(s, registry, "memory.extract", "memory", false, s.extract)
+	command(s, registry, "memory.extract.cancel", "memory", true, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in CancelExtractionInput) (ExtractionOutput, error) {
 		var x Extraction
 		rev, err := tx.Get(ctx, "memory.extractions", in.ExtractionID, &x)
 		if err != nil {
@@ -342,7 +346,7 @@ func (s *Service) registerExtraction(registry *runtime.Registry) {
 		}
 		return ExtractionOutput{tx.Scope().Ref(in.ExtractionID, x.Revision), x.State}, nil
 	})
-	query(registry, "memory.extract.read", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ReadExtractionInput) (Extraction, error) {
+	query(s, registry, "memory.extract.read", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ReadExtractionInput) (Extraction, error) {
 		var out Extraction
 		err := s.within(ctx, scope, func(tx runtime.Tx) error {
 			_, err := tx.Get(ctx, "memory.extractions", in.ExtractionID, &out)
@@ -356,7 +360,7 @@ func (s *Service) registerExtraction(registry *runtime.Registry) {
 		})
 		return out, err
 	})
-	query(registry, "memory.candidate.read", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ReadCandidateInput) (ExtractionCandidate, error) {
+	query(s, registry, "memory.candidate.read", "memory", func(ctx context.Context, scope runtime.Scope, auth runtime.Auth, q api.Query, in ReadCandidateInput) (ExtractionCandidate, error) {
 		var out ExtractionCandidate
 		err := s.within(ctx, scope, func(tx runtime.Tx) error {
 			_, err := tx.Get(ctx, "memory.candidates", in.CandidateID, &out)
@@ -378,7 +382,7 @@ func (s *Service) registerExtraction(registry *runtime.Registry) {
 		})
 		return out, err
 	})
-	command(registry, "memory.candidate.replace", "memory", true, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in CandidateReplaceInput) (CandidateOutput, error) {
+	command(s, registry, "memory.candidate.replace", "memory", true, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in CandidateReplaceInput) (CandidateOutput, error) {
 		var candidate ExtractionCandidate
 		rev, err := tx.Get(ctx, "memory.candidates", in.CandidateID, &candidate)
 		if err != nil {
@@ -412,7 +416,7 @@ func (s *Service) registerExtraction(registry *runtime.Registry) {
 		}
 		return CandidateOutput{tx.Scope().Ref(in.CandidateID, candidate.Revision), candidate.State}, nil
 	})
-	command(registry, "memory.candidate.reject", "memory", true, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in CandidateRejectInput) (CandidateOutput, error) {
+	command(s, registry, "memory.candidate.reject", "memory", true, func(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.Command, in CandidateRejectInput) (CandidateOutput, error) {
 		var candidate ExtractionCandidate
 		rev, err := tx.Get(ctx, "memory.candidates", in.CandidateID, &candidate)
 		if err != nil {
