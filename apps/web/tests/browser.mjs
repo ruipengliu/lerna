@@ -361,7 +361,7 @@ try {
   );
   assert.notEqual(answerReceipt.response.payload.stage, "rejected");
   await awaitResult(waitingID);
-  const clarifiedTask = JSON.parse(await page.locator(".inspector details pre").innerText()).task;
+  const clarifiedTask = JSON.parse(await page.locator(".inspector details pre").textContent()).task;
   assert.equal(clarifiedTask.goal_revision, 2);
   assert.equal(clarifiedTask.status, "succeeded");
   const cancellationID = await freeGoal(`${runID}-cancel`, config, discovery);
