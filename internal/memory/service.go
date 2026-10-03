@@ -23,6 +23,7 @@ type Service struct {
 	Location            string
 	SavingAuthorization SavingAuthorization
 	ExperienceAuthority ExperienceAuthority
+	Foreign             ForeignContentPort
 	// Participants 由受信宿主在使用前配置；实例之间不共享可变 slice。
 	Participants []string
 	registryOnce sync.Once
@@ -371,14 +372,20 @@ func compareExpected(expected *uint64, actual uint64) error {
 	return nil
 }
 
-func validateSources(scope runtime.Scope, sources []api.ContentRef) error {
+func (s *Service) validateSources(scope runtime.Scope, sources []api.ContentRef) error {
 	if len(sources) > 100 {
 		return api.E("invalid_request", "source_limit_exceeded")
 	}
 	seen := map[string]bool{}
 	for _, ref := range sources {
-		if err := checkContentRef(scope, ref); err != nil {
+		if err := api.ValidateRecord("ContentRef", ref); err != nil {
 			return err
+		}
+		if ref.TenantID != scope.TenantID {
+			return api.E("forbidden", "reference_scope_mismatch")
+		}
+		if ref.OwnerID != scope.OwnerID && s.Foreign == nil {
+			return api.E("dependency_unavailable", "source_authority_unavailable")
 		}
 		key := ref.OwnerID + ":" + contentKey(ref)
 		if seen[key] {
