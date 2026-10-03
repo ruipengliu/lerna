@@ -15,7 +15,6 @@
 - [x] 首次迁移版本化且具 checksum；保留准确 v1 迁移及其真实 Host writer 生成的可重建升级输入、命令、版本和输入摘要。v1 输入至少保留已接纳且 Job 待处理、固定过期拒绝及原键重传事实；领取新增字段留给票据 03 的真实 v2 功能迁移，不预填后伪造空升级。
 - [x] 锁定必要驱动与迁移来源；新增真实集成入口及 CI 配置，缺服务必须失败；测试数据隔离、有限清理，不依赖个人绝对路径或提交密钥。
 
-
 ## Comments
 
 2026-10-03，票01完成。切片02仍为 in-progress；Claim、SQLite、调度及进程故障票据未提前实现。
@@ -35,3 +34,5 @@
 **命令与结果。** `go mod verify`、`make fmt`、`make check`、`make test-race`、`LERNA_TEST_POSTGRES_DSN=<显式专用测试库> make test-integration`、`go test -race -tags=integration -timeout=120s ./conformance/recovery/... ./internal/durableworkdemo/...` 全部通过。真实 PG 套件18个测试均通过；基础 make check 不访问外部服务。`env -u LERNA_TEST_POSTGRES_DSN make test-integration` 按预期硬失败；指向不可用回环端口的明确测试 DSN 也硬失败而非 skip。缺配置/连接错误输出不含连接串或凭据。首次 CI 添加实际 PG 服务及同入口/race 任务；feature 工作树本地未自行 push，远端准确 tip CI 由整合任务后续执行，不能将已配置 CI 说成已远端通过。
 
 **隔离与限制。** 全套使用新专用测试数据库，每例登记随机本轮 schema，只清理自己实际创建的范围；writer 固定专用 schema 也仅在创建成功后有限清理，不 DROP 调用者数据库、不接触历史 smoke。Make fmt/lint 覆盖新增实际 Go 源码；集成入口校验真实 v1 artifact 校验和。生成脚本仅依赖已声明的 Go/Git/Bash/pg_dump 18.6 及标准 Unix 工具，没有个人路径或未声明 rg 依赖。尚未验证 SQLite、Claim/执行完成、调度、SIGKILL、断电/故障域、生产凭据/授权服务或生产耐久；本票不关闭切片02整体。
+
+**远端实际核验补记。** 整合后准确提交 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的 push CI [37145113569](https://github.com/ruipengliu/lerna/actions/runs/37145113569) 已真实 success，基础合同与 PG 服务集成／race 两个 job 全部通过；五项 v1 校验和 OK，真实集成 1.778s、race 3.551s，均未显示 cached。详见[CI记录](../ci-verification.md)。上文“后续执行”为 feature 工作树完成时的历史状态，整片02仍未退出。
