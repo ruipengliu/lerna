@@ -7,7 +7,8 @@ Harness 保存用户目标，依据当前授权推进决策与行动，独立核
 核验当前条件 → 发布 Result。默认规则引擎只解释闭合模板。可选 HTTP 模型出口具有冻结输入、
 真实调用账本与单次物理请求合同，尚无真实供应商账户或通用自然语言质量验收。
 完整完成状态见[实施覆盖与证据](docs/architecture/engineering/implementation-coverage.md)；
-部分能力和外部前提仍待验收。
+Search/Body 适配器、完整模拟手机手势与不可信 WASI 仍有本地实现缺口，
+真实账户、公司身份、设备与生产规模另待验收。
 
 ## 工具与安装
 
@@ -16,6 +17,8 @@ Harness 保存用户目标，依据当前授权推进决策与行动，独立核
 sqlc 1.31.1、protoc 36.2、protoc-gen-go 1.36.12、protoc-gen-go-grpc 1.6.2。
 SQLite 驱动使用 CGO，需要 C 编译器。浏览器测试另需 Chromium。
 真实数据库证据来自 PostgreSQL 17.11 和持久 SQLite WAL/FULL/foreign_keys 文件。
+以下命令以锁定版本的 Go、Node、pnpm 已在 PATH 为前提；
+`install_generators.py` 安装并验证 sqlc/protoc，不安装运行时、数据库或浏览器。
 
 ```sh
 python3 scripts/install_generators.py --destination "$PWD/.local/tools"
@@ -209,7 +212,9 @@ pnpm test:browser
 `HARNESS_CHROMIUM` 可指定浏览器。当前环境证据位于
 `/workspace/harness-dev-environment/*.json` 与 `/workspace/harness-web-qa/`；
 每份记录保留对应实现 commit 和实际测试前提。
-完整 Web 回归当前仍 pending，不用已通过的原生 WebSocket/报告测试替代。
+固定提交 `877730f` 的完整 Web 流程已通过，覆盖原提交丢回执/reload、澄清、准确 Result、
+控制、Surface、Memory、窄屏和登出；Result 首读的费用未结状态保留。
+后续审查修复与最终统一检查仍按各自准确提交记录，整体项目保持 partial。
 
 开发规范见 [AGENTS.md](AGENTS.md)，术语见 [CONTEXT.md](CONTEXT.md)，
 设计入口见[架构](docs/architecture/README.md)，模块范围见各 `internal/*` 与 adapter README。
