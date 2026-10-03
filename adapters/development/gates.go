@@ -145,6 +145,9 @@ func (g contentAuthority) Check(ctx context.Context, tx runtime.Tx, auth runtime
 	if e := g.a.checkModelAccountingTx(ctx, tx, auth, policyRef); e != nil {
 		return 0, e
 	}
+	if e := g.a.checkWASIAccountingTx(ctx, tx, auth, policyRef); e != nil {
+		return 0, e
+	}
 	var c currentCredential
 	_, e := tx.Get(ctx, "platform.credentials", auth.SubjectID, &c)
 	return c.Revision, e

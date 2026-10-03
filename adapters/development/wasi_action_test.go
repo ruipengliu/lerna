@@ -152,7 +152,7 @@ func TestConfiguredWASITaskCodeWithdrawalPreservesOriginalAppliedEffectAndKnownF
 	}
 }
 
-func runConfiguredWASITask(t *testing.T, driver, scenario string) {
+func runConfiguredWASITask(t *testing.T, driver, scenario string, observers ...wasiWithdrawalObserver) {
 	report := scenario == "report"
 	withdrawal := scenario == "withdraw" || scenario == "withdraw_before_entry"
 	actualWorker := report || withdrawal
@@ -445,6 +445,7 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 		defer stopWorker()
 	}
 	cancelledWithdrawal := false
+	observedWithdrawal := false
 	for {
 		if actualWorker {
 			select {
@@ -489,6 +490,12 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 				knownFeesClosed = knownFeesClosed || balance.Unit == "USD" && balance.Spent == wantUSD && balance.Reserved == "0"
 			}
 			if knownFeesClosed {
+				if !observedWithdrawal && len(observers) == 1 && observers[0].BeforeCancellation != nil {
+					if err := observers[0].BeforeCancellation(ctx, a, taskID, code); err != nil {
+						t.Fatalf("observe original closed Code before cancellation: %v", err)
+					}
+					observedWithdrawal = true
+				}
 				// 先观察原已发请求的最终账单与真实当前来源拒绝，再提交控制；
 				// 不能靠取消尚未完成的请求制造零 Cell 结论。
 				assertWASISourceClosed(t, ctx, a, code, "environment_code")
@@ -499,6 +506,11 @@ func runConfiguredWASITask(t *testing.T, driver, scenario string) {
 				}
 				if cancelReceipt.Error == nil {
 					cancelledWithdrawal = true
+					if len(observers) == 1 && observers[0].AfterCancellation != nil {
+						if err := observers[0].AfterCancellation(ctx, a, taskID, code); err != nil {
+							t.Fatalf("recover original known CPU invoice after cancellation: %v", err)
+						}
+					}
 				}
 			}
 		}

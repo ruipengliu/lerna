@@ -151,6 +151,9 @@ func (c executionContent) ReadBytes(ctx context.Context, s runtime.Scope, a runt
 }
 func (c executionContent) Publish(ctx context.Context, s runtime.Scope, a runtime.Auth, p execution.Publication, b []byte) (api.ContentRef, error) {
 	if p.Purpose == "execution_usage_proof" {
+		if ref, handled, err := c.a.publishWASIAccounting(ctx, s, a, p, b); handled || err != nil {
+			return ref, err
+		}
 		if ref, handled, err := c.a.publishInformationAccounting(ctx, s, a, p, b); handled || err != nil {
 			return ref, err
 		}
