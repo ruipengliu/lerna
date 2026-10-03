@@ -13,6 +13,19 @@ import (
 
 var namespacePattern = regexp.MustCompile(`^[a-z][a-z0-9_]*(?:[./][a-z][a-z0-9_]*)*$`)
 
+func DatabaseIdentity(actual, expected string) error {
+	if expected != "" && !api.ValidID(expected) {
+		return api.E("invalid_request", "invalid_expected_database_identity")
+	}
+	if actual != "" && !api.ValidID(actual) {
+		return api.E("invalid_state", "invalid_stored_database_identity")
+	}
+	if expected != "" && actual != expected {
+		return api.E("invalid_state", "original_database_missing_or_replaced")
+	}
+	return nil
+}
+
 func Scope(scope runtime.Scope, databaseID string) error {
 	if databaseID == "" || scope.DatabaseID != databaseID || !api.ValidID(scope.TenantID) || !api.ValidID(scope.OwnerID) {
 		return api.E("forbidden", "transaction_scope_mismatch")

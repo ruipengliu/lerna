@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ruipengliu/lerna/adapters/postgres"
+	"github.com/ruipengliu/lerna/adapters/sqlite"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/runtime"
 )
@@ -19,6 +20,41 @@ func TestPostgresOpenRequiresBoundedNonzeroConnectionPool(t *testing.T) {
 		if !api.IsCode(err, "invalid_request") {
 			t.Fatalf("invalid pool %d reached connection instead of configuration rejection: %v", limit, err)
 		}
+	}
+}
+
+func TestOpenVerifiesOriginalDatabaseIdentityBeforeAcceptingRecovery(t *testing.T) {
+	for _, backend := range []string{"sqlite", "postgres"} {
+		t.Run(backend, func(t *testing.T) {
+			f := fixture(t, backend, nil)
+			var expected runtime.Store
+			var err error
+			if backend == "postgres" {
+				expected, err = postgres.Open(context.Background(), f.location, postgres.WithExpectedDatabaseID(f.scope.DatabaseID))
+			} else {
+				expected, err = sqlite.Open(f.location, sqlite.WithExpectedDatabaseID(f.scope.DatabaseID))
+			}
+			if err != nil {
+				t.Fatalf("original database rejected: %v", err)
+			}
+			if err = expected.Close(); err != nil {
+				t.Fatal(err)
+			}
+			if backend == "postgres" {
+				_, err = postgres.Open(context.Background(), f.location, postgres.WithExpectedDatabaseID(api.NewID("database")))
+			} else {
+				_, err = sqlite.Open(f.location, sqlite.WithExpectedDatabaseID(api.NewID("database")))
+			}
+			if !api.IsCode(err, "invalid_state") {
+				t.Fatalf("different database accepted as original: %v", err)
+			}
+			if backend == "sqlite" {
+				_, err = sqlite.Open(f.location+".empty", sqlite.WithExpectedDatabaseID(f.scope.DatabaseID))
+				if !api.IsCode(err, "invalid_state") {
+					t.Fatalf("new empty database accepted as recovered original: %v", err)
+				}
+			}
+		})
 	}
 }
 
@@ -205,6 +241,47 @@ func TestPermanentCommandTombstoneCannotReopenAfterRestart(t *testing.T) {
 			status, err := f.store.Within(ctx, f.scope, nil, func(tx runtime.Tx) error { return tx.SaveCommand(ctx, original) })
 			if status != runtime.RolledBack || !api.IsCode(err, "gone") {
 				t.Fatalf("tombstone reused: %s %v", status, err)
+			}
+		})
+	}
+}
+
+func TestWorkerLeaseIsRecheckedAfterPauseBeforeCommit(t *testing.T) {
+	for _, backend := range []string{"sqlite", "postgres"} {
+		t.Run(backend, func(t *testing.T) {
+			var pause atomic.Bool
+			f := fixture(t, backend, func(phase string) error {
+				if phase == "before_commit" && pause.Load() {
+					time.Sleep(30 * time.Millisecond)
+				}
+				return nil
+			})
+			ctx := context.Background()
+			id := api.NewID("task")
+			commit(t, f, func(tx runtime.Tx) error {
+				if err := tx.Create(ctx, "task.tasks", id, "", testRecord{Value: "original"}); err != nil {
+					return err
+				}
+				now, err := tx.Now(ctx)
+				if err != nil {
+					return err
+				}
+				_, err = tx.Raise(ctx, "task.progress", id, tx.Scope().Ref(id, 1), now)
+				return err
+			})
+			works, _, err := f.store.Claim(ctx, f.scope, api.NewID("boot"), []string{"task.progress"}, 1, 20*time.Millisecond)
+			if err != nil || len(works) != 1 {
+				t.Fatal(err)
+			}
+			pause.Store(true)
+			err = runtime.Finish(ctx, f.store, f.scope, []string{"task"}, works[0], runtime.Done(), func(tx runtime.Tx) error { return tx.Put(ctx, "task.tasks", id, 1, testRecord{Value: "stale"}) })
+			pause.Store(false)
+			if !errors.Is(err, runtime.ErrClaimLost) {
+				t.Fatalf("lease decision survived a pause past confirmed expiry: %v", err)
+			}
+			var value testRecord
+			if rev, err := f.store.Read(ctx, f.scope, "task.tasks", id, 0, &value); err != nil || rev != 1 || value.Value != "original" {
+				t.Fatalf("expired transaction committed business: %d %+v %v", rev, value, err)
 			}
 		})
 	}
