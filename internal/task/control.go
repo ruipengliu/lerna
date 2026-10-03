@@ -303,6 +303,9 @@ func (s *Service) SteerTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 	return output(tx, t), nil
 }
 func (s *Service) CreateInputTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, taskID string, req api.InputRequest) (api.ObjectRef, error) {
+	if err := runtime.CheckRef(tx.Scope(), req.TargetRef); err != nil {
+		return api.ObjectRef{}, err
+	}
 	t, e := getTask(ctx, tx, taskID)
 	if e != nil {
 		return api.ObjectRef{}, e
@@ -320,6 +323,8 @@ func (s *Service) CreateInputTx(ctx context.Context, tx runtime.Tx, auth runtime
 		return api.ObjectRef{}, api.E("unsupported", "answer_schema_not_registered")
 	}
 	req.State = "pending"
+	// 本owner固定准确创建时版本，其中包含已经提交的内部子Task根路径。
+	req.TargetRef = taskRef(tx, t)
 	req.Revision = 1
 	req.OwnerID = tx.Scope().OwnerID
 	req.TenantID = tx.Scope().TenantID
