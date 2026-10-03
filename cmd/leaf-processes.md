@@ -24,6 +24,8 @@ bin/harness-gateway --config /private/harness/config.json
 
 application 暴露严格 Unary，gateway 暴露认证 HTTP/WSS。worker 拥有持久 Job 池、实际受管文件和三台独立持久模拟手机，其他角色只注册同版执行合同并拒绝物理出口。SIGINT/SIGTERM 触发停止，并等待实际进程退出；`starting` 输出不是就绪证据，应使用公开当前认证发现/健康响应。
 
+gateway 将业务命令、查询与原回执查询通过严格 gRPC 转交固定 application，保留原用户凭据和准确域字节。application 不可达时返回 `dependency_unavailable`，没有本地领域决定；CLI journal 保留原命令，在 application 恢复后沿原身份查询及恢复。开发 HTTP 内容 raw upload 当前仍由同库本地 Content owner 接收，不声明已实现独立对象上传服务或完整生产路由。
+
 当前只有一个 worker 能持有同一文件目标根的独占锁，不声明双执行 worker 或多机目标接管已通过。SQLite 可用于显式本机整体验证，但该装配不是设备默认云端 Task 权威。没有 `cmd/executor`；独立 SQLite 设备的远程 Authority、签名有限 GrantLease 和端云恢复配置缺失时，不用 PostgreSQL App 冒充设备宿主。
 
 不可信 WASI、真 Android/iOS、公司平台、跨 AZ 容灾与生产容量均不在这些参考入口的支持声明中。模拟手机和受信纯计算能力的范围见 `internal/execution/README.md`。EndpointChannel 的配对 authority 未装配时保持关闭。

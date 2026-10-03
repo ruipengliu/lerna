@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net"
+	"net/http"
 	"net/url"
 	"os"
 	"os/exec"
@@ -18,6 +19,7 @@ import (
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/cmd/internal/bootstrap"
 	"github.com/ruipengliu/lerna/internal/brain"
+	"github.com/ruipengliu/lerna/internal/interaction"
 	"github.com/ruipengliu/lerna/internal/task"
 	harness "github.com/ruipengliu/lerna/sdk/go"
 )
@@ -137,16 +139,17 @@ func TestIndependentApplicationGatewayAndWorkerCompleteReportAndActuallyStop(t *
 	if err = bootstrap.SaveConfig(configPath, c); err != nil {
 		t.Fatal(err)
 	}
-	start(t, binary(t, "worker"), env, "--config", configPath)
-	start(t, binary(t, "application"), env, "--config", configPath)
-	start(t, binary(t, "gateway"), env, "--config", configPath)
+	worker, application, gateway, cliExecutable := binary(t, "worker"), binary(t, "application"), binary(t, "gateway"), binary(t, "cli")
+	start(t, worker, env, "--config", configPath)
+	start(t, application, env, "--config", configPath)
+	start(t, gateway, env, "--config", configPath)
 	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 	defer cancel()
 	token, err := os.ReadFile(c.TokenFile)
 	if err != nil {
 		t.Fatal(err)
 	}
-	httpTransport := &harness.HTTPTransport{BaseURL: "http://" + c.HTTPAddr, Token: strings.TrimSpace(string(token)), AllowInsecureLoopback: true}
+	httpTransport := &harness.HTTPTransport{BaseURL: "http://" + c.HTTPAddr, Token: strings.TrimSpace(string(token)), AllowInsecureLoopback: true, HTTP: &http.Client{Timeout: 30 * time.Second}}
 	var discovery harness.Discovery
 	for {
 		discovery, err = httpTransport.Discover(ctx)
@@ -179,7 +182,7 @@ func TestIndependentApplicationGatewayAndWorkerCompleteReportAndActuallyStop(t *
 	if err = os.WriteFile(request, api.Raw(original), 0600); err != nil {
 		t.Fatal(err)
 	}
-	cli := exec.CommandContext(ctx, binary(t, "cli"), "--endpoint", "grpc://"+c.GRPCAddr, "--discovery", "http://"+c.HTTPAddr, "--development-loopback", "--token-envref", "HARNESS_CLI_CREDENTIAL", "--journal", filepath.Join(root, "cli-journal"), "--request", request, "command")
+	cli := exec.CommandContext(ctx, cliExecutable, "--endpoint", "grpc://"+c.GRPCAddr, "--discovery", "http://"+c.HTTPAddr, "--development-loopback", "--token-envref", "HARNESS_CLI_CREDENTIAL", "--timeout", "30s", "--journal", filepath.Join(root, "cli-journal"), "--request", request, "command")
 	cli.Env = append(env, "HARNESS_CLI_CREDENTIAL="+strings.TrimSpace(string(token)))
 	out, err := cli.CombinedOutput()
 	if err != nil {
@@ -243,5 +246,146 @@ func TestServiceRolesRefuseInitializationAndMissingConfiguration(t *testing.T) {
 	}
 	if _, err := os.Stat(path); !os.IsNotExist(err) {
 		t.Fatal("a service created configuration")
+	}
+}
+
+func TestGatewayUnavailableApplicationCreatesNoDomainFactAndRecoversOriginalPrincipal(t *testing.T) {
+	driver, env := processEnvironment(t)
+	migrate, gateway, application, cli := binary(t, "migrate"), binary(t, "gateway"), binary(t, "application"), binary(t, "cli")
+	root := t.TempDir()
+	configPath := filepath.Join(root, "config.json")
+	initialize := exec.Command(migrate, "--config", configPath, "--development-init", "--data", root, "--driver", driver)
+	initialize.Env = env
+	if out, err := initialize.CombinedOutput(); err != nil {
+		t.Fatalf("management setup failed: %v %s", err, out)
+	}
+	c, err := bootstrap.LoadConfig(configPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c.HTTPAddr, c.GRPCAddr, c.StaticDir = freeAddress(t), freeAddress(t), ""
+	if err = bootstrap.SaveConfig(configPath, c); err != nil {
+		t.Fatal(err)
+	}
+	start(t, gateway, env, "--config", configPath)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	token, err := os.ReadFile(c.TokenFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	transport := &harness.HTTPTransport{BaseURL: "http://" + c.HTTPAddr, Token: strings.TrimSpace(string(token)), AllowInsecureLoopback: true, HTTP: &http.Client{Timeout: 30 * time.Second}}
+	var discovery harness.Discovery
+	for {
+		discovery, err = transport.Discover(ctx)
+		if err == nil {
+			break
+		}
+		select {
+		case <-ctx.Done():
+			t.Fatal("gateway discovery did not become ready")
+		case <-time.After(100 * time.Millisecond):
+		}
+	}
+	session, branch := api.NewID("session"), api.NewID("branch")
+	query := api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: c.OwnerID, QueryID: api.NewID("query"), Method: "session.read", TargetID: session, Payload: api.Raw(interaction.ReadInput{})}
+	if _, err = transport.Call(ctx, "query", api.Raw(query)); !api.IsCode(err, "dependency_unavailable") {
+		t.Fatalf("gateway served domain query without application: %v", err)
+	}
+	original := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: c.OwnerID, CommandID: api.NewID("command"), Method: "session.create", TargetID: c.OwnerID, ExpiresAt: api.Time(time.Now().Add(2 * time.Minute)), Payload: api.Raw(interaction.CreateSessionInput{SessionID: session, DefaultBranchID: branch, ConfigRef: api.ComponentRef{ComponentID: api.NewID("component"), Version: "1.0.0", Digest: api.Hash([]byte("original gateway session configuration"))}})}
+	request := filepath.Join(root, "original.json")
+	if err = os.WriteFile(request, api.Raw(original), 0600); err != nil {
+		t.Fatal(err)
+	}
+	journalPath := filepath.Join(root, "original-journal")
+	cliEnv := append(env, "HARNESS_CLI_CREDENTIAL="+strings.TrimSpace(string(token)))
+	flags := []string{"--endpoint", "http://" + c.HTTPAddr, "--development-loopback", "--token-envref", "HARNESS_CLI_CREDENTIAL", "--timeout", "30s", "--journal", journalPath}
+	runCLI := func(args ...string) ([]byte, error) {
+		cmd := exec.CommandContext(ctx, cli, append(append([]string{}, flags...), args...)...)
+		cmd.Env = cliEnv
+		return cmd.CombinedOutput()
+	}
+	if out, err := runCLI("--request", request, "command"); err == nil || !strings.Contains(string(out), "dependency_unavailable") {
+		t.Fatalf("gateway applied original command without application: %v %s", err, out)
+	}
+	journal, err := harness.OpenJournal(journalPath, discovery.IdentityScope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	pending, err := journal.Read(ctx, original.CommandID)
+	closeErr := journal.Close()
+	if err != nil || closeErr != nil || pending.Receipt != nil || !api.Equal(pending.Command, original) {
+		t.Fatalf("unavailable original was not durably retained: %v %v", err, closeErr)
+	}
+	// 查询负责方公开入口，确认gateway没有写Session或原命令决定。
+	a, err := bootstrap.OpenAppForRole(ctx, c, false, "management")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if err := a.Close(); err != nil {
+			t.Error(err)
+		}
+	})
+	if _, err = a.Dispatcher.Lookup(ctx, a.UserAuth, original.CommandID); !api.IsCode(err, "not_found") {
+		t.Fatalf("gateway stored a domain command decision while application was absent: %v", err)
+	}
+	query.QueryID = api.NewID("query")
+	if _, err = a.Dispatcher.Query(ctx, a.UserAuth, api.Raw(query)); !api.IsCode(err, "not_found") {
+		t.Fatalf("gateway created a Session while application was absent: %v", err)
+	}
+	start(t, application, env, "--config", configPath)
+	// 等待真正应用可读取原owner；新query_id只表示新的读取，不改变原命令。
+	for {
+		query.QueryID = api.NewID("query")
+		_, err = transport.Call(ctx, "query", api.Raw(query))
+		if api.IsCode(err, "not_found") {
+			break
+		}
+		if !api.IsCode(err, "dependency_unavailable") {
+			t.Fatalf("application did not restore original route: %v", err)
+		}
+		select {
+		case <-ctx.Done():
+			t.Fatal("application did not become ready")
+		case <-time.After(100 * time.Millisecond):
+		}
+	}
+	out, err := runCLI("recover")
+	if err != nil {
+		t.Fatalf("original command recovery failed: %v %s", err, out)
+	}
+	var recovered struct {
+		Receipts []api.Receipt `json:"receipts"`
+		Partial  bool          `json:"partial"`
+	}
+	if err = api.Decode(out, &recovered); err != nil || recovered.Partial || len(recovered.Receipts) != 1 || recovered.Receipts[0].CommandID != original.CommandID || recovered.Receipts[0].Stage != "applied" {
+		t.Fatalf("recovery changed original decision: %v %s", err, out)
+	}
+	receipt, err := a.Dispatcher.Lookup(ctx, a.UserAuth, original.CommandID)
+	if err != nil || !api.Equal(receipt, recovered.Receipts[0]) {
+		t.Fatalf("application did not preserve user's original receipt: %v", err)
+	}
+	if _, err = a.Dispatcher.Lookup(ctx, a.ServiceAuth, original.CommandID); !api.IsCode(err, "forbidden") {
+		t.Fatalf("application attributed user command to service principal: %v", err)
+	}
+	query.QueryID = api.NewID("query")
+	out, err = transport.Call(ctx, "query", api.Raw(query))
+	var view interaction.SessionView
+	if err != nil || api.Decode(out, &view) != nil || view.Session.SessionID != session || view.Session.Revision != 1 || len(view.Branches) != 1 || view.Branches[0].BranchID != branch {
+		t.Fatalf("original Session was not created exactly once: %v %s", err, out)
+	}
+	query.QueryID = api.NewID("query")
+	if _, err = a.Dispatcher.Query(ctx, a.ServiceAuth, api.Raw(query)); !api.IsCode(err, "forbidden") {
+		t.Fatalf("application Session belongs to service principal: %v", err)
+	}
+	journal, err = harness.OpenJournal(journalPath, discovery.IdentityScope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer journal.Close()
+	stored, err := journal.Read(ctx, original.CommandID)
+	if err != nil || !api.Equal(stored.Command, original) || stored.Receipt == nil || !api.Equal(*stored.Receipt, receipt) {
+		t.Fatalf("recovery refreshed original identity/deadline/body: %v", err)
 	}
 }
