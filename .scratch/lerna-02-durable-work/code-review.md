@@ -105,3 +105,10 @@ Baseline `8e7438e071727e25aa69e17fb81b2e53c416b78e` → pin `c52e68b46c619df0c8e
 原Pool Run P2关闭仍有效；未发现新增scope creep或其它原58 AC回归。仅已登记321 PG/319目录的清理可确证；首次prototype两未知PG名、较早04未知schema及07无完整CID限制保留，不宣称资源全零。whole02仍待本项修复、architecture benefit复核及准确最终CI。
 
 Standards：新增1项，轴内最严重P2；Spec：新增1项，轴内最严重P2。分别保留原结论，全部交原单一review fixer；whole02未退出。
+
+
+## 新增holder cleanup P2实施检查点（待独立复核）
+
+两轴同一P2已由原单一fixer在代码`f56d93095304f0956c23b5641d9b7b1e222c40c1`处理：真实确认Within退出与历史事务错误分开；已退出错误可Is/As聚合报告但不阻断safe Close/Drop/admin，未确认callback仍保留scope并可确认后重试。实际PgError42P01 red0.328s→green0.302s、取消聚合、实际50ms join两次保留scope/原public receipt、之后确认退出/重复cleanup及邻scope正常事实通过。补测遗漏显式Migrate的失败和修正如实保留，没有变更产品/公开1.0/0001–0005/27来源或放宽3s/10s/11s/120s。
+
+最终顺序完整normal50.431s/race93.834s、基础check/race及27来源/modverify通过；独立exact registry观察仅本轮285PG/265SQLite全absent，不包含历史未知资源。详见[修复证据](fixture-cleanup-fix-evidence.md)与[票10](issues/10-owned-fixture-lifetime.md)。原两个axis报告保留，当前为实现候选检查点，不冒充独立复审、新CI或whole02退出。
