@@ -74,22 +74,43 @@ type Publisher interface {
 	Publish(context.Context, string, []byte, []v.ContentRef, Permission) (v.ContentRef, error)
 	ReadPublished(context.Context, v.ContentRef, Permission) ([]byte, error)
 }
+type Prepared struct {
+	StartSequence int64          `json:"start_sequence"`
+	InputDigest   string         `json:"input_digest"`
+	ArtifactKey   string         `json:"artifact_key"`
+	ArtifactRef   v.ContentRef   `json:"artifact_ref"`
+	ArtifactBytes []byte         `json:"artifact_bytes"`
+	ProposalKey   string         `json:"proposal_key"`
+	ProposalRef   v.ContentRef   `json:"proposal_ref"`
+	Proposal      v.Proposal     `json:"proposal"`
+	ProposalBytes []byte         `json:"proposal_bytes"`
+	Sources       []v.ContentRef `json:"sources"`
+	Digest        string         `json:"digest"`
+}
 type Record struct {
-	Ref          v.DecisionRef            `json:"decision_ref"`
-	Input        *v.DecisionDecidePayload `json:"input,omitempty"`
-	Subject      v.SubjectBinding         `json:"subject"`
-	InputDigest  string                   `json:"input_digest"`
-	Revision     int64                    `json:"revision"`
-	Status       string                   `json:"status"`
-	Proposal     *v.Proposal              `json:"proposal,omitempty"`
-	ProposalRef  *v.ContentRef            `json:"proposal_ref,omitempty"`
-	ArtifactRefs []v.ContentRef           `json:"artifact_refs"`
-	Usage        v.DecisionUsage          `json:"usage"`
-	Failure      *v.DecisionFailure       `json:"failure,omitempty"`
-	ControlBasis *v.ControlBasis          `json:"control_basis,omitempty"`
-	Reason       string                   `json:"reason,omitempty"`
-	CloseTaskRef *v.TaskObjectRef         `json:"close_task_ref,omitempty"`
-	StartedEpoch int64                    `json:"started_epoch"`
+	Ref                    v.DecisionRef            `json:"decision_ref"`
+	Input                  *v.DecisionDecidePayload `json:"input,omitempty"`
+	Subject                v.SubjectBinding         `json:"subject"`
+	InputDigest            string                   `json:"input_digest"`
+	Revision               int64                    `json:"revision"`
+	Status                 string                   `json:"status"`
+	Proposal               *v.Proposal              `json:"proposal,omitempty"`
+	ProposalRef            *v.ContentRef            `json:"proposal_ref,omitempty"`
+	ArtifactRefs           []v.ContentRef           `json:"artifact_refs"`
+	Usage                  v.DecisionUsage          `json:"usage"`
+	Failure                *v.DecisionFailure       `json:"failure,omitempty"`
+	ControlBasis           *v.ControlBasis          `json:"control_basis,omitempty"`
+	Reason                 string                   `json:"reason,omitempty"`
+	CloseTaskRef           *v.TaskObjectRef         `json:"close_task_ref,omitempty"`
+	StartedEpoch           int64                    `json:"started_epoch"`
+	StartSequence          int64                    `json:"start_sequence"`
+	MeasurementPending     bool                     `json:"measurement_pending"`
+	MeasurementUnknown     bool                     `json:"measurement_unknown"`
+	Prepared               *Prepared                `json:"prepared,omitempty"`
+	OriginalPermission     *Permission              `json:"original_permission,omitempty"`
+	PublicationAttempts    int                      `json:"publication_attempts"`
+	WakeAt                 v.Time                   `json:"wake_at,omitempty"`
+	LegacyUnaccountedStart bool                     `json:"legacy_unaccounted_start,omitempty"`
 }
 type CommandRecord struct {
 	Digest  string                  `json:"digest"`

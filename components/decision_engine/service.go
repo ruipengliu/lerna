@@ -62,7 +62,7 @@ func fixedTime(value v.Time) (time.Time, error) {
 	return time.Parse("2006-01-02T15:04:05.000000Z", string(value))
 }
 func zeroUsage(unit string) v.DecisionUsage {
-	return v.DecisionUsage{InputBytes: "0", OutputBytes: "0", RuleSteps: "0", ModelRequests: "0", Cost: v.Amount{Unit: unit, IntegerValue: "0"}}
+	return v.DecisionUsage{InputBytes: "0", OutputBytes: "0", RuleSteps: "0", ModelRequests: "0", RuleStarts: "0", MeasurementsComplete: true, Cost: v.Amount{Unit: unit, IntegerValue: "0"}}
 }
 func refusal(code v.ErrorCode, cause error) error {
 	return &v.ContractError{PublicError: v.PublicError{Code: code}, Cause: cause}
@@ -186,6 +186,8 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 		}
 		if !now.Before(cutoff) {
 			receipt = rejected(command, "expired")
+		} else if permission.ChargeBasis != "durable_rule_start" || permission.RuleVersion != "fixture-rule/2" {
+			receipt = rejected(command, "unsupported")
 		} else if original != nil {
 			if original.InputDigest != inputDigest {
 				receipt = rejected(command, "decision_mismatch")
@@ -198,7 +200,7 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 			if _, _, err = s.config.Store.PoolQueue(ctx, tx, state, oldObject(request.Target), "decide", "ordinary"); err != nil {
 				return err
 			}
-			record := Record{Ref: request.Target, Input: &request.Payload, Subject: permission.Subject, InputDigest: inputDigest, Revision: 1, Status: "accepted", ArtifactRefs: []v.ContentRef{}, Usage: zeroUsage(request.Payload.Limits.MaxCost.Unit)}
+			record := Record{Ref: request.Target, Input: &request.Payload, Subject: permission.Subject, InputDigest: inputDigest, Revision: 1, Status: "accepted", ArtifactRefs: []v.ContentRef{}, Usage: zeroUsage(request.Payload.Limits.MaxCost.Unit), OriginalPermission: &permission}
 			if err = s.config.Store.SaveDecision(ctx, tx, record); err != nil {
 				return err
 			}
@@ -241,6 +243,8 @@ func (r Record) Public() (v.Decision, error) {
 	switch r.Status {
 	case "accepted":
 		return v.NewDecisionAccepted(v.DecisionAccepted{DecisionRef: r.Ref, Revision: revision, InputDigest: digest, Input: *r.Input, Usage: r.Usage}), nil
+	case "waiting":
+		return v.NewDecisionWaiting(v.DecisionWaiting{DecisionRef: r.Ref, Revision: revision, InputDigest: digest, Input: *r.Input, Usage: r.Usage, WakeAt: r.WakeAt, Reason: r.Reason}), nil
 	case "running":
 		return v.NewDecisionRunning(v.DecisionRunning{DecisionRef: r.Ref, Revision: revision, InputDigest: digest, Input: *r.Input, Usage: r.Usage}), nil
 	case "completed":
