@@ -1,6 +1,6 @@
 # 07 sdk-web
 
-Status: ready-for-agent
+Status: partial
 Blocked by: 01
 
 依据 [实施规格](../spec.md) 与根 AGENTS.md，保留准确身份、负责方、事务、门禁和恢复。实际编译、公开接口行为、正反例及所需平台证据均通过后才关闭。
@@ -40,4 +40,8 @@ React/TypeScript/Vite 工作台提供准确内容出版、报告提交、输入/
 
 60ad341 的通过仅覆盖本守卫专项，不能替代 877 的全流程证据，也不代表后来提交已完成整体验证。旧 731 澄清目标 source 闭包失败与早期 90 秒超时证据继续保留；原失败终态、Task/Result、示例会话及业务责任未重置。后续同范围全流程必须设置 `HARNESS_EXPECT_EVENT=rejected`，核验旧 CAS 被拒和原会话仍为 archived，不能再把重复归档写成首个 applied。
 
-新增 Search/Body、GUI、WASI 路径及最终锁序集成仍 pending；最后实际二进制的受影响全流程回归另行记录。该记录不改变总规格的 partial 判定、C3/V2 缺口或生产平台资格要求。
+Search/Body、完整模拟GUI、受限WASI及其有限装配已有各自后继证据，见实施覆盖报告。上述浏览器仍只绑定877/60ad原binary；最终合成提交的SDK/前端检查与受影响全流程回归尚未完成，因此此广泛工单保持partial。生产身份/真机/开放质量和容量不从历史浏览器通过推断。
+
+现代默认brain.GoalSchema的有限Goal Form已实现，原Schema及digest不改：准确ContentRef／固定hash pattern、正整数version、有限enum与unique choice数组由Go呈现门禁及TS原组件支持；非登记复杂schema仍明确拒绝。原真实renderer_schema_unsupported RED2.575433s、首次SQL cwd fixtureFAIL0.121690s保留；同source901修runner cwd后Go SQL／PG normal2.645041s／2.888794s、SDK／Web三个文件六测试1.086276s、22个unsafe拒例通过。7路径3647d7e已合Rootd67，Rootd67两库focused race11.691060s／11.304801s actualPASS／noSkip／noDataRace／源码binary稳定，索引 /workspace/harness-dev-environment/modern-default-form-root-d67-race-20261004T0512/owner-readonly-qualified-index.json（SHA8d33f732…）。这是原现代公开InputRequest与表单数据合同的有限实现资格，不能把组件SSR／SDK通过代作最后浏览器生命周期、任意JSON Schema或整个参考部署的通过。
+
+统一阶段说明：当前CODE 58c9898af58babce7170cb37cbbdfc63d693af9e；本文实际通过只按所列原source／binary／selector及数据库制品限定。最新Saved十项、NoChild／Pause／现代Form／Closure后继资格已取得；最后完整检查／浏览器／全图审查尚未结束，旧失败／未跑记录不回填。

@@ -1,25 +1,24 @@
 # 18 skill-agent-configuration
 
 Status: partial
-Blocked by: 01, 05, 06, 08
-Implementer: governance_impl
+Implementer: governance_impl, remote_knowledge_impl
 
-依据：C6、Extensions 的 Skill／AgentConfig 精确记录，以及 Brain 第 5 节的渐进发现。
-
-实现准确版本、正文、来源、前提、反例、依赖、冲突和退出规则的 Skill 登记及有界加载；AgentConfig 固定 Brain、能力和控制上限。当前权限先于读取，普通内容不能成为受信系统指令，配置不能扩大 Grant；注册、加载、撤回、重开和 Task Snapshot 的实际使用均须验证。
+准确Skill/AgentConfig小目录、当前来源/依赖/退出规则、正文和固定Brain/Capability/control已经实现；普通知识不能成为system、Grant或Task成功。合同见[KNOWLEDGE](../../../internal/governance/KNOWLEDGE.md)。
 
 ## 完成依据
 
-实现、公开行为、真实负责方和必要故障正反例通过后记录准确提交与制品。外部资格单列；尚未完成的本地路径不得归因于缺凭据。未达成的目标保持 partial。
+Skill≤8、候选≤32、准确正文64KiB、普通Packet128KiB；公开注册/原validation Job/加载/撤回/版本绑定与重开，当前Memory Source门禁先于Body。Task原Snapshot/Decision同Tx登记实际holder；Brain输入/返回/缓存提案/工具准入复核当前原selection，原controls/caps与父Grant交集。输入/Cost超限0POST、outputreserve收紧、行动数/未选cap拒绝不Consume工具Use；真实File与原leaflock/最紧duration保持。
 
-## Comments
+纯领域SQLite/PG race26.972/29.741s；公开模型/工具两库normal与withdraw race174.234s、prepared-byte后继知识/GUI/旧leafnormal226.585s通过。原focused745.229s撤回observer用尽仍FAIL，不由后继通过覆盖，原Task/Grant/数据TTL不变。knowledge18-verification.json与相邻日志保其执行source。
 
-2026-10-03 catalog宿主首片：准确Knowledge Content纯Tx门禁与普通材料用途接入Development；公开Skill注册→实际原validation Job→加载准确body/usage可运行。固定Gov公开tracer通过Go overlay在当前App真实执行：旧版RED5.873s current_knowledge_gate_unavailable，门禁接线后真实SQLite/PG GREEN14.426s。未启用Task知识选择、未改变默认File提案、未授Grant；Config/Context/Brain当前选择及物理控制边界仍待后续装配。旧publication nil policy只沿准确原reserve恢复，不随新增用途换policy。
+ParentKnowledge跨owner真实消费已经验收，不再列为待接线：父selectedSkill/AgentConfig准确Decision/Snapshot/Packet/InstallLock/SelectionDigest、capability/binding/resource/原最紧control和onceUSD2Grant共同进入签名admission，实际child native只读行动/原cfg数据库重开SQLite43.901s及PGparent+SQLitechild52.076493s通过。parentreject12、child动作数/排除cap/配置模型cost0的6子例、inputR2两子例、Skill撤回/Source close/parentpause current6子例各在两driver准确pins通过。
 
-2026-10-03 有界领域与真实消费已接入：Skill/AgentConfig 准确 Content、闭合合同、原 validation Job、永久版本绑定和撤回/重开；Config.Knowledge 的普通 Packet、完整来源、固定 Brain、有效 Capability/Binding 和数据锁进入实际 Task Snapshot。原 Task/预算/Decision 同 Tx 建 holder，Brain 出站及返回、缓存提案和行动准入核当前 selection。输入/原模型 cost bound 超限时 0 POST；输出 reserve 收紧至 128；两行动超过一行动上限时没有工具 Use；未选 Write 在原闭合模型合同处拒绝；实际 File 读回保持可执行 leaf lock，最紧 30 秒由 Task 冻结。Agent 能力集合仍唯一，同一能力的两候选绑定按原索引保留，未增加角色或 Grant。准确接口及范围见 internal/governance/KNOWLEDGE.md。
+唯一test leafb281d460d0ef6fa1a4991ab301d4aa9f16712483已合root079e060；历史完整运行依赖root17d+Task410+private27 manifest80a5d94c…，索引remote-knowledge18-handoff-20261003/index.json（15bbfd31…）。旧PGskip和inputDrain R1整体FAIL保留。inputR2只说明当前model-control拒/实际0POST，未持久原Encoding/CostQuote，不声称唯一input因果。集成新root compile不替代历史运行资格。
 
-2026-10-03 验证事实：纯域原 holder/来源/CAS SQLite race 26.972s、PostgreSQL race 29.741s；公开配置正例、输入、费用、行动数、能力、真实读回/时长、两绑定及撤回均有两库 normal 证据。准备字节恢复的正式修复 d67e7a9 后，仅受影响 GUI、旧 leaf 和知识读回两库 normal PASS226.585s。知识 focused race 原745.229s 为失败：前八子例通过，撤回两子例最后重开查询超出90秒测试观察 context；保留完整日志，不记成功。仅撤回 observer 改为既有三分钟集成上限，原 Task/Grant/Content 期限不变；专项两库 race PASS174.234s。撤回保持原唯一 POST、无提案、原已知0.00024 USD费用与 cfg=nil 重开原账单。执行环境 knowledge18-verification.json、knowledge18-focused-race.log、knowledge18-withdraw-race.log 和 knowledge18-prepared-byte-regression.log 绑定证据；旧扩包20分钟 timeout及GUI失败也保留，不由后续绿覆盖。
+大目录渐进检索是未开放优化，R4允许小目录，不作为本地缺口。准确父selection控制／能力／Grant与当前source交集的独立两库矩阵通过；Remote17正常双库报告和Session／NoChild后继组合也已有有限资格。此广泛工单暂partial只保最终新根全套／双轴审查和生产／开放质量范围，不再写跨owner准入或正常费用尚未实现；不得跳过原Snapshot／selection／Grant强核。
 
-本轮已实现 R4 规定的准确小目录直接装载（Skill≤8、候选≤32、正文64KiB、普通Packet128KiB）及本地同库消费；大目录渐进检索只列为未开放优化，不作为本票未完成理由。当前 partial 待工单17的内部/外部委派实际消费原父 selection 的 Agent 能力/控制与父 Grant 交集，以及最终双轴审查。准确纯Tx端口已交该负责方；未经实际委派验证不以控制元数据宣称接线完成。跨 owner 知识 holder 交接与生产规模/质量另列资格。普通知识与数据锁不提供系统信任、程序 readiness、授权或 Task 成功裁决。
+Remote17旧r5的limited17.070813s与当时Ack0／残余Job不回填为完整恢复。后继同原Scope17.535538s＋RO847ea998核26Published＋1failed／101DONE及原cfg重开，fresh正常SQL103.121656／PG109.541635s另独立通过；本Knowledge资格仍绑定原确切source，普通历史材料不升为本人Goal或授权。
 
-2026-10-03：全项目范围复核后补入原实施任务图，未改变用户授权或领域裁决。
+历史限定更正继续保留：limited17.070813s当时费用／Result／join重开通过，但原delegation WAITING、correction LEASED、Ack0与proof残余未结束。fresh双库与后继17.535538s正确原Scope恢复分别取得真正必要Job／proof资格，不能改写前轮退出；当前根集成元数据不代替新全套运行。
+
+统一阶段说明：当前CODE 58c9898af58babce7170cb37cbbdfc63d693af9e；本文实际通过只按所列原source／binary／selector及数据库制品限定。最新Saved十项、NoChild／Pause／现代Form／Closure后继资格已取得；最后完整检查／浏览器／全图审查尚未结束，旧失败／未跑记录不回填。

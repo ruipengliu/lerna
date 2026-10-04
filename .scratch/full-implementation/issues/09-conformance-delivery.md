@@ -1,26 +1,40 @@
 # 09 conformance-delivery
 
 Status: partial
-Blocked by: 08 的未开放能力、完整生产与外部验收
+Implementer: root
 
-依据 [实施规格](../spec.md) 与根 AGENTS.md，运行证据必须来自真实负责方和验收边界。
+统一检查、冻结生成、分层测试、真实目标和双轴审查已建立；完整交付仍需最终固定提交和未收尾路径的实际证据。
 
-## Comments
+## 完成依据
 
-2026-10-03：已建立统一 `scripts/check`、锁定生成器、CI 定义与分层合同/存储/集成/
-故障/浏览器测试。PG/SQLite 独立取证，未配置数据库的 skip 不算该数据库通过。
-实际原命令去重与丢回执、进程丢失与重开、旧 Claim、撤权/跨租户、原文件与模拟设备
-真值、TLS WSS/gRPC 和独立 Gateway/Application/Worker 的证据见
-[实施覆盖报告](../../../docs/architecture/engineering/implementation-coverage.md)。
+`scripts/check`无参数，检查toolchain/原TZDB、确定生成、文档/Go格式/vet/行为和pnpm格式/lint/type/test/build；CI定义与实际托管执行分别记录。真实PG仅在准确DSN存在时执行，未配置skip不算PG成功。`pnpm test:browser`独立运行实际后端/Chromium/严格CSP。
 
-完整 PG 浏览器 `877730f` 已验证三份 Result 的准确引用和正文、原投递恢复、澄清、
-控制、首次 Surface 事件、内容拒绝、Memory、窄屏及退出；同一首 Task 的原生两次
-35 秒心跳读取保持准确 Result/文件，未新建业务命令。较早失败制品保留。
+历史真实PG/SQLite存储/原命令/旧Claim/提交未知/SIGKILL、目标文件与模拟手机、WSS/gRPC和独立角色、撤权/跨租户、源数据及真实HTTP单次出口均有制品。Search/Body有限联网问答、完整模拟GUI、受限WASI/Source撤回、Context偏好、Grant列表、Native三系统、独立设备与静态Channel已有代码及各自实际资格，不作为未实现列表。
 
-最终双轴审查分别检查开发规范与设计符合度，确认问题由一个实现者修复；锁序源码
-违反不写成已复现死锁。统一检查、后续修复回归和实际实现 commit 在覆盖报告中逐项
-记录，不把定义了 CI 或本地检查通过写成托管 CI 已执行。
+877730f完整浏览器验证三份准确Result、原回执恢复、澄清、控制、Surface、Memory、390px与登出；原首Task native心跳和60ad341关闭后无旧queryreply/新cookie原Ref有独立证据。结果首次AccountingOpen=true原事实保留，不能推费用即时结清。后继任何合成SHA必须另跑受影响浏览器和全检查。
 
-未完成：F01–F25 完整矩阵、1000 API/生产规模与性能、三 AZ RPO/RTO、真实供应商及
-自然语言质量、真实设备和不可信组件资格验收。Search/Body、完整 GUI 手势、远端
-权威等本地未实现项也保持 partial，不能全归为外部凭据 blocked。
+当前限定本地实现已完成逐项定点验收：远端Agent／独立设备的正常报告、current actor与父控制、无子Task永久拒绝的三层Closure／原once与费用责任、现代默认Goal Form、原关闭证明复用及Saved五秒证明消费门禁均有准确证据。Saved最新同一911路径源／race binary的五场景×SQL／PG十项actualPASS，正式7路径叶17662e564d121732b0fbac8ddbed938a7a7baabb已合当前CODE 58c9898af58babce7170cb37cbbdfc63d693af9e. 17按已开放有限静态profile记resolved；09仍partial等待最终固定版本完整检查、原cfg浏览器重开／全生命周期、两份独立全图审查与发布步骤，07保留浏览器验收待项。新prepared共享false测试分支的观察边界仍由最终整套检查取得资格。代码集成和各旧source行为资格分开，不能声明当前根全套已通过。真实账户／公司身份／开放自然语言质量／物理设备／其他OS／规模与多AZ为另外明确的未验收范围；旧FAIL／SKIP／NOTRUN及原业务身份、权限和期限保留。
+
+外部资格仍缺：F01–F25全部生产刺激、1000不同API/目标质量/500Task/s/20万WSS、多AZ/RPO/RTO/最近撤权备份、公司身份、真机、live供应商账单与开放自然语言质量。本机受信模板、结构化参考问答与模拟设备不替代这些资格，目标数值没有达标制品。
+
+Root713a664设备/Session部分依赖集成已实际5包compile/vet/docs/diff0，制品/workspace/harness-dev-environment/source-integration-device-session-crhp459o/verification.json；功能资格继续引用各原source。Remote原r5费用恢复128.773s wholeFAIL和短typed schema_violation保留，不以新root编译改写失败。
+
+新增原r5费用恢复17.070813s PASS与先前恢复/typed FAIL均按独立准确source/binary/完整过程记录。Session Request53.024s有限SQLite公开PASS、history53.707s wholeFAIL分列，不以Snapshot部分材料或不同source组合汇总一次全绿。
+
+精确集成与行为分开：Root881的Session13prod、Root54f86的13tests、Rootbb175的Remote8tests以及Root57980ff双地点正式2path均compile／vet通过；不把新根编译回填868正常报告或871故障结果。
+
+unused证明失败收尾的公开两库正例17.224983s通过：原reserve过期终态rejected且put／transfer／native不存在，保留Published=false、原Job真实DONE、Task不变与原库重开。后续旧whole race469.422861s整体FAIL保留，其中10条unknown／native／Claim／CommitUnknown／accepted-reserve guards与2条过期失败正例实际PASS；仅2条原PUT已applied且Published=true的fixture随后读取未声明task.closure用途而失败。只修该fixture为准确content.read后，两库原PUT focused race70.652624s通过，生产字节不变，不把不同source的通过拼为旧whole绿色。完整索引 /workspace/harness-dev-environment/proof-publication-terminal-verification/final-exact-leaf-20261004T014127823091Z/verification.json（SHA6e3bd143…），旧whole /workspace/harness-dev-environment/proof-publication-terminal-verification/guards-race-ready-20261004T011920684672Z/process-result.json（SHAca737c21…）与focused /workspace/harness-dev-environment/proof-publication-terminal-verification/guards-original-put-focused-purpose-ready-20261004T013656470428Z/process-result.json（SHA6f4d8607…）分别保存。5文件正式叶已精确合Root373，集成编译与上述有限运行分开；后继原r5同Scope正确恢复已17.535538s通过，独立RO847ea998确认真实证明、失败事实和必要Job；其旧128.633s整体FAIL／原CID／TTL／Published=false仍保留，不虚称失败证明已出版。
+
+Saved公共拒例的历史结果保留：原root454整轮4PASS／read_before_write SQL FAIL；c6d五反例×两库normal10PASS299.396453s，随后race首SQL76.168772s／whole76.355284s proof expired而余9NOTRUN。rx源SQL120.814652s PASS／PG123.744358s FAIL，原read在五秒窗口只余14ms时永久not_started；hmp PG130.623157s FAIL发生在第四Brain Decision已cancel／send0时，设备两action已有StartedAt／Result。该历史泛化取消的原typed gate原因未持久，不推断为同一个expiry原因。最新9fqx受测Root02cb＋精确7生产路径／source911 manifest1d2f7bd7…／race binary3a75278a…保原公开测试、主体、Source／Grant、断言和5秒窗口；在Tx外按原Task／实际祖先元数据准备准确当前材料，原提供证明后以空consumer provider取得同CopyID最新Current，避免旧explicit证明遮蔽。五场景scope_artifact_source、credential_revoked、read_before_write、different_device、wrong_native_bytes各SQL／PG共十项实际PASS，逐项noSKIP／noDataRace／原源与binary、driver及环境摘要稳定；SQL／PG耗时分别120.314535／143.009623、117.387776／139.664585、125.831579／145.363275、132.189945／152.084879、118.056649／143.076346s。最后八项08:15:14.441075 UTC整体EXIT0／1075.865s。Root独立十项索引 /workspace/harness-dev-environment/saved-consumer-remaining-eight-race-20261004T0757Z/root-independent-all10-qualified.json（SHA07239f97…）；正式叶17662e5仅metadata commit、全部911原字节不变，事实 /workspace/harness-dev-environment/saved-consumer-leaf-truth-qq_kn9_g/index.json（SHAbbe3b521…）。当前CODE 58c9898af58babce7170cb37cbbdfc63d693af9e精确集成与这批受测Root02cb＋叶17662e5资格分开；不覆旧FAIL，不延TTL，不把它当作最终全项目测试／浏览器已运行。
+
+原r5同Scope的corrected recovery已实际PASS17.535538s：Root579／895源与binary、原cfg／keys／token／数据库前后稳定，不新Task／Goal／Grant Use或续TTL。真实三层Closure／immutable Ack、父Task／原Grant reserve0、once保持、原双方Result不变；重开前后准确26份Published证明核原bytes／hash，额外旧unused18fce保Published=false／失败不可读，原expired reserve拒绝及无PUT／transfer／native事实不改。101项原必要Job实际DONE（parent44／child57），原publisher f162／f801与delegation／allocation／billing按原责任结束；四个实际handler join在两个Store.Close之前，LoadConfig原凭据重开再核全部断言。过程 /workspace/harness-dev-environment/normal-delegation-accounting-verification/original-r5-proof-set-corrected-ready-20261004T030949030145Z/process-result.json（SHA542916f1…），独立只读资格 /workspace/harness-dev-environment/normal-delegation-accounting-verification/original-r5-proof-terminal-independent-qualified-20261004T032244349699Z/index.json（SHA847ea998…）及 /workspace/harness-dev-environment/normal-delegation-accounting-verification/original-r5-proof-terminal-independent-qualified-20261004T032244349699Z/verification-result.json（SHA9c647396…）。原300.218s／128.773s／typed8.852s／严格128.633s与首次proof-set观察失败均保留，旧report终态rejected不改。只限定此原SQLite双owner恢复，不替代fresh SQL／PG正常报告或完整故障矩阵；原r5阶段观察到Task.Closure新IssuedAt产生另一proof／Job的历史保留；后继Gov三路径限定完整关闭Snapshot复用原首次proof，并有72.632s两库race证据，不扩为所有当前State查询幂等。
+
+历史prepared第一次race240.307176s未取得pause资格：原Rooted0／source897 c01ed55c／binary8574b49e实际EXIT1。日志remote_create只是receiver Job标签，handler内部HTTP POST超时，不确定具体方法；真实create已accepted／Incoming preparing，无子Task／Op／pauseProbe。原normal153.070004s通过保留，后继真实暂停race146.115743／163.071059s见最新资格，不回填原FAIL。原30s证明与Saved5s证明分开，未持久的历史typed cause不猜测。
+
+无子Task的准确收尾已经实现与验收：原late create的永久拒绝保原CID／Allocation／Delegation／once责任，不制造TaskClosure或伪Task。正式六路径6b471710a7e882eef1f5a1186cb4254a871d96c2已合Root02cb907；原业务create拒绝、无子Task／Op、准确Allocation与Delegation及no-child三层Closure、三份原签名证明实际出版bytes／hash、onceConsumed／reserved0／spent0、所有原必要Job真正DONE、handler／App join先于StoreClose及原cfg-token数据库重开均强断言。完整normal SQL41.293212s／PG41.409049s与后继显式fixture3m＋原observer2m的两库race179.611155s／178.459507s分别实际PASS，业务TTL不变。旧872 SQL120.087144s FAIL／PGNOTRUN、120.200707s零Reservation未闭、9.043083s原Scope恢复FAIL、32.968832s包装器被App重开替换而未观察到原Job的FAIL／PGNOTRUN、旧wholefixture2m race121.446508s在NoChild send之前到期／PGNOTRUN均保留。原unsent Decision零额账务修复三路径145856已在Root7c65，bound0／3及sentunknown两库race18.581903s通过；同原Scope仅ledger恢复22.880616s另记，不能替代完整三证明资格。准确normal／race／旧失败与six-file语义见 /workspace/harness-dev-environment/no-child-confirmed-closure-verification/formal-qualified-no-child-leaf-20261004T070003766699Z/truth.json（SHAa7dd5857…），Root02cb集成索引SHAef6c6e64…仅metadata。
+
+原关闭Task证明复用的独立修复已完成：初始真实公共RED9.255281s确认同事实query按新IssuedAt产生不同Proof／Job。Gov精确三路径c3bf647已合Root699，仅真正完整关闭且同原Snapshot／当前披露资格时复用首次持久封存证明，仍强核当前主体／完整关系／来源；变化或未闭snapshot继续原流程。首GREEN46.761691s整体FAIL仅为新fixture随后用未声明task.closure用途读证明；两处测试改为原准确content.read、生产不变后，真实两库race72.632443s通过：三次同Closure／ProofRef／IssuedAt／bytes、一个原publication Job、实际Content全文hash／长度、join／原cfg数据库重开及零新证明Job。索引 /workspace/harness-dev-environment/task-closure-query-verification/final-qualified-leaf-7ocl3b52/ready-leaf-index.json（SHA0f9129f7…），集成SHA67a6f5c6…仅metadata。原r5恢复17.535538s／101必要Job／26Published＋1failed仍只绑定其原snapshot；本轮未迁移或重跑该旧Scope，也不把有限终态缓存扩为当前State签名的通用幂等声明。
+
+当前根58c9898af58babce7170cb37cbbdfc63d693af9e的whole Go BUILD已实际通过：go build -p 2 ./...，2026-10-04 08:24:10.539295→08:24:22.127860 UTC，EXIT0／11.691s，clean911路径／源码摘要f8053bfc66e06e132d4457d0f90f2e8e05f2c0b9e6c7853b146787800cd01962前后稳定。索引 /workspace/harness-dev-environment/full-go-build-58c9898af58b-20261004T082410Z.json（SHA0f696c89…）。Root精确Saved七路径集成 compile／vet／fmt／diff均通过，904受保护路径保持，索引 /workspace/harness-dev-environment/source-integration-saved-consumer-awaiting-all10-w6xdiyqa/verification.json（SHA4dbb2181…）。编译与静态检查不代表当前根whole行为Suite；scripts/check、完整NORMAL／RACE、浏览器、两份新独立全图review及push尚未执行。
+
+统一阶段说明：当前CODE 58c9898af58babce7170cb37cbbdfc63d693af9e；本文实际通过只按所列原source／binary／selector及数据库制品限定。最新Saved十项、NoChild／Pause／现代Form／Closure后继资格已取得；最后完整检查／浏览器／全图审查尚未结束，旧失败／未跑记录不回填。

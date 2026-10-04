@@ -1,7 +1,7 @@
 # 03 task-accounting-collaboration
 
 Status: partial
-Blocked by: 工单 11–24 新增本地切片的剩余集成验收，跨 owner 权威与交接、外部 Agent、独立设备及生产部署资格
+Blocked by: 工单 11–24 新增本地切片的剩余集成验收，跨 owner控制／当前来源故障、复用Session及生产部署资格；普通远程和独立设备完整报告已有准确双库证据
 
 依据 [实施规格](../spec.md) 与根 AGENTS.md，保留准确身份、负责方、事务、门禁和恢复。实际编译、公开接口行为、正反例及所需平台证据均通过后才关闭。
 
@@ -40,3 +40,19 @@ Search/Body、扩展模拟 GUI、隔离 WASI、独立设备、远端 Agent、Ski
 跨 owner Delegation/Allocation、远端 Evidence/Grant authority、外部 Agent、独立设备有限授权和断网端云闭环按各自工单继续取证；当前本地方与远端小端口不能作为对端部署或生产资格证明。未配置对端仍在新增责任之前关闭入口。云端 Task 权威没有移交设备缓存，本机同 owner/同库与三角色 PG 进程的通过不能证明跨主机或独立设备部署。
 
 真实公司身份/密钥基础设施、任意目标的语义条件与检查质量、真实供应商迟到账单/退款、三 AZ、时间异常、生产容量/历史增长及灾备目标继续按实施覆盖保留 blocked/partial。完整浏览器故障矩阵由集成工单继续记录，原 Result/全文单项通过不关闭其全部范围。本工单没有将完整架构标记 resolved。
+
+原Remote r5恢复已真实关闭child Incoming和三层typed Closure，但父仍closing/reservedUSD2、原closure-report终态rejected。原Scope128.773s观察FAIL及随后准确schema_violation单列，正常成功的完整Task/Grant账务仍待正式修复；不得把child关闭或原Result存在当父费结清。
+
+后继同原r5费用恢复17.070813s实际PASS，三层真实Closure、父Task/Grant reserve0、original once不重耗、原Results/actualjoin/LoadConfig-token重开验证通过（/workspace/harness-dev-environment/normal-delegation-accounting-verification/original-r5-legacy-ack-green-ready-20261003T234552825980Z/process-result.json）。旧128.773s/8.852s FAIL和旧report终态rejected仍保留；恢复不替代fresh双owner SQLite/PG完整报告，广泛工单仍partial。
+
+历史限定更正：原r5的17.070813s只核费用／Result／join原cfg-token重开，当时Ack0与部分Job／proof仍在；后继128.633s恢复虽Ack／业务Job已闭，仍因额外unused proof过期而整体FAIL。fresh完整双库103.121656s／109.541635s后来独立通过，不能回填旧轮，后继终态proof正式叶后的原r5同Scope正确恢复17.535538s已实际通过，必要Job／proof和原cfg重开核验见下段；不改旧轮结论。
+
+2026-10-04：正常委派费用正式叶c29b0fd9后，fresh完整SQLite父库／真实PG父库与独立SQLitechild分别103.121656s／109.541635s通过。双方自行3Ops／2verified checks／published Result，真实三层Closure、Task／原Grant reserve0、必要proof字节、相关原Jobs实际DONE及join／原cfg-token-Result重开均通过。准确索引 /workspace/harness-dev-environment/remote-agent-17-fresh-fee-jobs-20261004T001215543877Z/qualified-normal-report-index.json；保留r5旧失败和原unused过期出版拒绝。控制与当前来源故障、Session剩余路径及生产资格仍单列。
+
+历史矩阵原8719PASS／1SQLprepared真实FAIL、8758PASS／1actorSQLFAIL／1actorPGNOTRUN与872 no-child FAIL保留。后继actor两库race、当前parentPause八谓词两库race、NoChild完整Closure／费用／必要Job两库race及Saved最新十项均已有准确资格，限定本地17实现resolved；最终新根完整检查／浏览器／全图审查仍待，不把各source拼成已经执行的新根整套。
+
+原r5同Scope的corrected recovery已实际PASS17.535538s：Root579／895源与binary、原cfg／keys／token／数据库前后稳定，不新Task／Goal／Grant Use或续TTL。真实三层Closure／immutable Ack、父Task／原Grant reserve0、once保持、原双方Result不变；重开前后准确26份Published证明核原bytes／hash，额外旧unused18fce保Published=false／失败不可读，原expired reserve拒绝及无PUT／transfer／native事实不改。101项原必要Job实际DONE（parent44／child57），原publisher f162／f801与delegation／allocation／billing按原责任结束；四个实际handler join在两个Store.Close之前，LoadConfig原凭据重开再核全部断言。过程 /workspace/harness-dev-environment/normal-delegation-accounting-verification/original-r5-proof-set-corrected-ready-20261004T030949030145Z/process-result.json（SHA542916f1…），独立只读资格 /workspace/harness-dev-environment/normal-delegation-accounting-verification/original-r5-proof-terminal-independent-qualified-20261004T032244349699Z/index.json（SHA847ea998…）及 /workspace/harness-dev-environment/normal-delegation-accounting-verification/original-r5-proof-terminal-independent-qualified-20261004T032244349699Z/verification-result.json（SHA9c647396…）。原300.218s／128.773s／typed8.852s／严格128.633s与首次proof-set观察失败均保留，旧report终态rejected不改。只限定此原SQLite双owner恢复，不替代fresh SQL／PG正常报告或完整故障矩阵；原r5阶段观察到Task.Closure新IssuedAt产生另一proof／Job的历史保留；后继Gov三路径限定完整关闭Snapshot复用原首次proof，并有72.632s两库race证据，不扩为所有当前State查询幂等。
+
+无子Task的准确收尾已经实现与验收：原late create的永久拒绝保原CID／Allocation／Delegation／once责任，不制造TaskClosure或伪Task。正式六路径6b471710a7e882eef1f5a1186cb4254a871d96c2已合Root02cb907；原业务create拒绝、无子Task／Op、准确Allocation与Delegation及no-child三层Closure、三份原签名证明实际出版bytes／hash、onceConsumed／reserved0／spent0、所有原必要Job真正DONE、handler／App join先于StoreClose及原cfg-token数据库重开均强断言。完整normal SQL41.293212s／PG41.409049s与后继显式fixture3m＋原observer2m的两库race179.611155s／178.459507s分别实际PASS，业务TTL不变。旧872 SQL120.087144s FAIL／PGNOTRUN、120.200707s零Reservation未闭、9.043083s原Scope恢复FAIL、32.968832s包装器被App重开替换而未观察到原Job的FAIL／PGNOTRUN、旧wholefixture2m race121.446508s在NoChild send之前到期／PGNOTRUN均保留。原unsent Decision零额账务修复三路径145856已在Root7c65，bound0／3及sentunknown两库race18.581903s通过；同原Scope仅ledger恢复22.880616s另记，不能替代完整三证明资格。准确normal／race／旧失败与six-file语义见 /workspace/harness-dev-environment/no-child-confirmed-closure-verification/formal-qualified-no-child-leaf-20261004T070003766699Z/truth.json（SHAa7dd5857…），Root02cb集成索引SHAef6c6e64…仅metadata。
+
+统一阶段说明：当前CODE 58c9898af58babce7170cb37cbbdfc63d693af9e；本文实际通过只按所列原source／binary／selector及数据库制品限定。最新Saved十项、NoChild／Pause／现代Form／Closure后继资格已取得；最后完整检查／浏览器／全图审查尚未结束，旧失败／未跑记录不回填。

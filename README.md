@@ -3,12 +3,7 @@
 Harness 保存用户目标，依据当前授权推进决策与行动，独立核验目标效果并发布准确 Result。
 仓库包含 Go 参考内核、真实 PostgreSQL/SQLite 适配、Go/TypeScript 恢复 SDK，以及 React/Vite 管理界面。
 
-当前可运行闭环是受信报告模板：保存原目标 → 形成条件 → 实际写文件 → 独立读回 →
-核验当前条件 → 发布 Result。默认规则引擎只解释闭合模板。可选 HTTP 模型出口具有冻结输入、
-真实调用账本与单次物理请求合同，尚无真实供应商账户或通用自然语言质量验收。
-完整完成状态见[实施覆盖与证据](docs/architecture/engineering/implementation-coverage.md)；
-Search/Body 适配器、完整模拟手机手势与不可信 WASI 仍有本地实现缺口，
-真实账户、公司身份、设备与生产规模另待验收。
+当前可运行闭环保留受信报告模板、真实HTTP Search/Body、完整持久模拟GUI、Linux受限WASI、独立Node与静态Channel；默认规则引擎解释闭合模板，可选HTTP模型保存冻结输入和单次物理请求账本。完整状态见[实施覆盖与证据](docs/architecture/engineering/implementation-coverage.md)。远程Agent双方完整正常报告、当前父暂停／actor撤权、无子Task永久拒绝的真实三层Closure与费用／Job收尾、最后Saved五秒来源证明消费门禁均有准确SQL／PG资格。17有限本地实现已resolved；现代默认Goal Form也已有Go两库／SDK-web有限专项。最终新根完整检查、同原cfg浏览器恢复、两份独立全图审查和发布步骤尚未执行。真实账户／开放质量／真机／生产规模另列，不能由这些参考profile推全部生产目标通过。
 
 ## 工具与安装
 
@@ -47,6 +42,8 @@ go build -o bin/harness-application ./cmd/application
 go build -o bin/harness-worker ./cmd/worker
 go build -o bin/harness-cli ./cmd/cli
 go build -o bin/harness-dev ./cmd/harness-dev
+go build -o bin/harness-executor ./cmd/executor
+go build -o bin/harness-wasi-worker ./cmd/wasi-worker
 export HARNESS_DEV_ROOT="$PWD/.local/harness-dev"
 ```
 
@@ -150,8 +147,10 @@ bin/harness-worker --config /absolute/config.json
 
 Gateway 保持浏览器连接并向 Application 转交原命令；Worker 推进持久 Job。
 一个 Worker 独占本参考装配的 native 文件和三台持久模拟手机目录。
-当前同库云端 Worker 的目标宿主不等同于独立设备 Executor；
-设备 SQLite、有限 GrantLease 与远端 Authority 的完整部署还未开放。
+当前同库云端 Worker 的目标宿主与独立设备 Executor 分别装配。
+`cmd/executor` 使用独立SQLite/native目标、有限签名GrantLease与原journal；
+公开角色有实际进程证据，完整云端Task写报告已有两库真实Task/文件/Result/费用/join重开证据；适用新反例与最终集成资格另行记录。多pool只领取明确JobKinds，
+不取得File/Phone目标锁，配置说明见[静态Channel/分类Worker](adapters/development/ENDPOINT_CHANNELS.md)。
 
 CLI 的全局选项放在操作前。鉴权使用 `--token-file` 或 `--token-envref`；
 完整命令/查询 JSON 由调用者准备，沿原 command_id、profile、Schema 和 TTL 保存与恢复。
@@ -170,6 +169,21 @@ bin/harness-cli --endpoint https://gateway.example \
 TLS 可通过 `--ca-file` 指定信任根；WSS/gRPC 还需 `--discovery` 的 HTTPS 发现入口。
 本机明文仅在显式 `--development-loopback` 且数值 loopback 地址时允许。
 CLI 不替调用者重写旧 TTL、创建同义新命令或跳过当前权限。
+
+## 可选行动与组件
+
+可选能力只由私有配置显式启用；省略配置保持关闭。初始化示例不自动给外部组件或数据授权。
+
+| 配置与入口 | 适用范围 |
+| --- | --- |
+| [information / action_bindings](adapters/development/INFORMATION.md) | 固定SourceRef/URL/IP/receiver/location/Grant、Search准确query_ref双声明、Body准确参数显式披露；实际单次HTTP与原Attempt/Content恢复。结构化参考问答独立核引用/时效/不足/冲突 |
+| [GUI action_bindings](adapters/execution/GUI.md) | 三台持久模拟手机的完整手势、先观察/动作/再观察与实际磁盘真值；不声明真机 |
+| [wasi](adapters/wasi/README.md) | Linux amd64、准确worker/解释器/bwrap/prlimit/hash和实际probe；Guest无网络/宿主文件/凭据/子进程，原cell不重放；不声明任意原生程序支持 |
+| [remote_executors](adapters/executor/README.md) | 独立SQLite设备、固定Authority/GrantLease/ContentPolicy交集与签名Source；原foreign引用不改owner/hash。完整写报告在SQLite/PG云端已通过，正式生产叶已精确集成；适用guards与最新Saved同源十项race已取得资格，最后统一根完整Suite／浏览器／review待跑 |
+| [remote_agent](adapters/collaboration/REMOTE.md) | 两独立owner／DB／App.Run HTTPS，父Snapshot／Knowledge／Grant原Use及foreign引用保持；双方own3Ops／2checks／Result、费用／必要Job与重开，两库Pause8／actor／NoChild三层Closure／Saved最新十项race实际通过。17限定本地resolved；最终当前根全套／浏览器／独立审查待跑 |
+| [knowledge](internal/governance/KNOWLEDGE.md) | 小目录Skill/AgentConfig普通材料、准确Packet/Selection/InstallLock/holder/currentSource；控制与能力只交集收窄，不能变system/Grant |
+| [foreign_consumers / foreign_source_tls](adapters/development/NATIVE_SOURCE.md) | 显式消费owner/DB/holder/gen/用途/地点配对，原registercopy/有限current/字节/cleanup责任；实际HTTPS Source与独立Native Memory互操作 |
+| [Native CLI与系统](adapters/alternate/README.md) | 独立Node24/SQLite Brain/Content-Memory/Executor选定方法族，真实TLS/WSS/进程/原责任恢复；未开放的fullact/report保持关闭 |
 
 ## 检查与证据
 
@@ -218,3 +232,7 @@ pnpm test:browser
 
 开发规范见 [AGENTS.md](AGENTS.md)，术语见 [CONTEXT.md](CONTEXT.md)，
 设计入口见[架构](docs/architecture/README.md)，模块范围见各 `internal/*` 与 adapter README。
+
+当前根58c9898af58babce7170cb37cbbdfc63d693af9e的whole Go BUILD已实际通过：go build -p 2 ./...，2026-10-04 08:24:10.539295→08:24:22.127860 UTC，EXIT0／11.691s，clean911路径／源码摘要f8053bfc66e06e132d4457d0f90f2e8e05f2c0b9e6c7853b146787800cd01962前后稳定。索引 /workspace/harness-dev-environment/full-go-build-58c9898af58b-20261004T082410Z.json（SHA0f696c89…）。Root精确Saved七路径集成 compile／vet／fmt／diff均通过，904受保护路径保持，索引 /workspace/harness-dev-environment/source-integration-saved-consumer-awaiting-all10-w6xdiyqa/verification.json（SHA4dbb2181…）。编译与静态检查不代表当前根whole行为Suite；scripts/check、完整NORMAL／RACE、浏览器、两份新独立全图review及push尚未执行。
+
+统一阶段说明：当前CODE 58c9898af58babce7170cb37cbbdfc63d693af9e；本文实际通过只按所列原source／binary／selector及数据库制品限定。最新Saved十项、NoChild／Pause／现代Form／Closure后继资格已取得；最后完整检查／浏览器／全图审查尚未结束，旧失败／未跑记录不回填。

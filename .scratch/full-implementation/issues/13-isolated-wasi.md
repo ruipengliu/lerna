@@ -1,6 +1,6 @@
 # 13 isolated-wasi
 
-Status: ready
+Status: resolved
 Blocked by: 01, 02, 04
 Implementer: governance_impl
 
@@ -20,4 +20,6 @@ Implementer: governance_impl
 
 具体前提：Linux amd64、静态准确 worker/bwrap/prlimit/hash、user namespace 与硬限制 probe 均须实际通过；worker 独占原私有 root。默认 nil 配置不开放，非worker只登记原 manifest 合同，真实 Task/模型行动接线归工单15。其他平台/原生程序、自定义 guest hostcall、跨设备/跨 owner 权威、生产 AZ/断电/规模资格仍未由本片验证，不以该 profile 宣称整个工程或完整 Execution profile 已完成。
 
-两轴审查固定 6c2d3df…f594b82：确认的 journal 写入未知后容量漏计与关闭环境清理 Job 错误吞没，统一由 Task implementer 在 8dd41ca 修复并已吸收。实际 native rename 后 EIO 保留最后额度与原 Attempt/重开；实际 SQLite INSERT trigger 故障使环境、原拒绝回执和清理 Job 同事务回滚。该两项 SQLite race 17.124s，PG 原 quota/CPU 丢回复重开 race 20.439s；SQL trigger 故障仅在 SQLite 验证。此 ready 状态指上述选定受限 profile，不扩大为未验证的平台、外部权威或生产资格。
+两轴审查固定 6c2d3df…f594b82：确认的 journal 写入未知后容量漏计与关闭环境清理 Job 错误吞没，统一由 Task implementer 在 8dd41ca 修复并已吸收。实际 native rename 后 EIO 保留最后额度与原 Attempt/重开；实际 SQLite INSERT trigger 故障使环境、原拒绝回执和清理 Job 同事务回滚。该两项 SQLite race 17.124s，PG 原 quota/CPU 丢回复重开 race 20.439s；SQL trigger 故障仅在 SQLite 验证。此 resolved 状态只指上述选定受限 profile，不扩大为未验证的平台、外部权威或生产资格。
+
+后继实际Task/Worker PG完整Cell与File报告actual287.388s/原5min deadline前完成、独立条件与Result出版/CPU及USD结清、真实Worker join和原库重开见工单15。CPU minimum-invoice旧新guards组合整体FAIL独立保留；后继focused247.741s两库racePASS和Code withdrawal两top181.32/206.85s按 /workspace/harness-dev-environment/wasi-cpu-minimum-invoice-verification/cpu-final-verification-focused-complete-20261003T225400Z.json准确pins分别取证，不由Environment driver资格推所有后继组合通过。

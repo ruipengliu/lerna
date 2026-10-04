@@ -51,19 +51,23 @@
 
 | 实施切片与负责模块 | 已定义的语义与数据入口 | 当前机器合同覆盖 | 待交付内容与开放依据 |
 | --- | --- | --- | --- |
-| 接纳与恢复：Runtime、Orchestrator | [命令与 Job](../runtime/README.md)、[同库事务与锁序](../data/storage.md#3-同一数据库事务具体包含哪些记录) | Command、Job、Claim 等记录已有 Schema；回执、查询和完整方法登记待补 | 去重与领取处理器、PG/SQLite 各自适配及恢复 SDK；取得 F01–F04 的重复、提交未知和旧 worker 竞争证据 |
-| 输入与目标：Interaction、Orchestrator | [输入与任务](../interaction/README.md)、[条件形成](../data/requirement-lifecycle.md) | Session、Message、Submission、InputRequest、GoalRevision、候选与覆盖已有记录 Schema；task.submit/cancel 有请求载荷 | 应用输入、目标采纳和控制方法的完整请求/响应/错误及客户端；F05、F16、F25 证明原文可追溯、旧输入不误消费、空条件不能完成 |
-| 决策与行动：Brain、Execution、Security | [固定决策](../brain/README.md)、[真实执行入口](../execution/README.md)、[授权消费](../security/README.md) | DecisionRecord、Operation、Grant 等记录及 execution.invoke/cancel 载荷已定义；brain、resource、grant 方法族未完整形式化 | 模型与工具适配、真实出站计量、许可门禁；F03、F08、F14 及供应商探针验证单次请求、未知效果和资源隔离 |
-| 核验与交付：Orchestrator、Evaluation、Memory | [完成事务](../orchestrator/README.md#8-完成事务)、[证据资格](../evaluation/README.md)、[内容发布](../memory/README.md#2-发布准确内容) | ConditionResult、Result、ContentRef 等记录已有 Schema；核验、证据导入与内容发布方法待补 | 独立验证器、完整关系索引、当前资格与结果导出恢复；F05–F07、F11 证明完成门禁及导出失败后继续责任 |
-| 收尾与使用：Accounting、Security、Memory、Interaction | [账务](../accounting/README.md)、[清理与使用](../memory/README.md)、[准确输入](../interaction/README.md) | UsageSnapshot、BudgetBalance、Confirmation、AllocationClosure 及 task.billing_reconcile 载荷已定义；各方法的回执/查询与错误待补 | 账单差额、一次确认、清理和界面恢复；F08–F13、F16、F18 证明不返还已消费授权、未知费用持续占用、撤权后不披露 |
-| 可选能力：Schedule、Environment、Collaboration、Extensions、Evaluation | [模块内部字段](../data/module-records.md)、本文第 3 节及对应模块方法表 | ScheduleSpec 只定义时间规则；环境、子会话、发布、正式评测等完整机器合同待冻结 | 每次选定一项开放范围，补齐方法/状态、Schema、SDK 和平台前提；执行对应 F07、F10、F15、F17、F19–F20 后才声明支持 |
-| 传输与生产：Protocol、Production | [端云和 gRPC](../protocol/README.md)、[部署与恢复](../production/README.md) | harness.proto 提供外壳；领域响应、发现、传输帧及方法登记尚未形成完整发布包 | WSS/gRPC、发现/认证、背压、迁移和观测适配；F21–F24 取得通道恢复、跨区、容量和灾备证据 |
+| 接纳与恢复：Runtime、Orchestrator | [命令与 Job](../runtime/README.md)、[同库事务与锁序](../data/storage.md#3-同一数据库事务具体包含哪些记录) | Command/Receipt/QueryBinding/Job/Claim及typed方法登记、原决定/查询、Go/TS journal和发现已编码；公开方法由实际Registry与配置冻结 | 去重与领取处理器、PG/SQLite 各自适配及恢复 SDK；取得 F01–F04 的重复、提交未知和旧 worker 竞争证据 |
+| 输入与目标：Interaction、Orchestrator | [输入与任务](../interaction/README.md)、[条件形成](../data/requirement-lifecycle.md) | Session/Message/Submission/InputRequest/GoalRevision/SourceEvidence/Condition/Coverage及task/input/branch/control闭合输入输出与恢复已登记；可选Transfer按准确配置开放 | 原文／Input／SourceEvidence可追溯、输入终态窗口不误消费、Session cutoff与actor撤回两库有据；现代默认有限Goal Form已登记实现及两库race／SDK-Web6／unsafe22通过，最后实际浏览器仍待 |
+| 决策与行动：Brain、Execution、Security | [固定决策](../brain/README.md)、[真实执行入口](../execution/README.md)、[授权消费](../security/README.md) | Snapshot/Decision/Proposal/Operation/Attempt/Effect/Grant/Use/Resource及Brain/Execution方法族已闭合；行动batch≤4、显式disclosure、在线delegation与离线Lease分别限制 | CurrentStart先原Task根／预算再完整当前parent强门；normal四项和truePause8两库race通过。Saved最新同源十項证明实际consumer当前许可；原5s窗口／30sparentProof／身份／来源／Claim门不减，最后新根共享false fixture分支与整套仍待 |
+| 核验与交付：Orchestrator、Evaluation、Memory | [完成事务](../orchestrator/README.md#8-完成事务)、[证据资格](../evaluation/README.md)、[内容发布](../memory/README.md#2-发布准确内容) | ConditionResult/Check/EvidenceGate/Result/Content及独立check/import/准确upload-reserve/ready/put/holder方法已登记；原Result与后续导出责任分离 | 独立验证器、完整关系索引、当前资格与结果导出恢复；F05–F07、F11 证明完成门禁及导出失败后继续责任 |
+| 收尾与使用：Accounting、Security、Memory、Interaction | [账务](../accounting/README.md)、[清理与使用](../memory/README.md)、[准确输入](../interaction/README.md) | Usage/预算预留/确认/AllocationClosure/Content与Memory cleanup/query/view/getter及Grant settlement/list方法已编码；远程fresh双库完整正常报告已验证三层Closure、原Task／Grant费用、必要proof和原Job／join／重开；原871／875失败保留，后继preparednormal4PASS／actor两库race与原r5正确恢复分别记录 | normalRemote必要Job／proof／三层Closure、NoChild永久拒绝三层真证明／once原账和原r5正确恢复均有准确双库／原Scope证据；Gov完整关闭Snapshot重复query复用原Proof两库race通过，变化／未闭／当前权限继续原强门。最后合成版本资格另验收 |
+| 可选能力：Schedule、Environment、Collaboration、Extensions、Evaluation | [模块内部字段](../data/module-records.md)、本文第 3 节及对应模块方法表 | Schedule/Environment/ChildHandle/Extension/Evaluation/Knowledge/Foreign原引用的typed合同已登记或配置开放；WASI/GUI/Source/Native范围有准确profile，Agent完整正常报告已在SQLite／PG父库通过，Session／history cutoff有准确双库有限资格，原Sessionquery撤权真实FAIL后继两库race已过；NoChild三层Closure、现代默认有限Goal Form及当前parent Pause8两库race均有后继资格；旧no-child FAIL／rendererunsupported RED及prepared240.307176s未到pauseProbe的FAIL独立保留 | 各开启能力只按同版有限profile开放；GUI／WASI／Source／Native／Device／Remote／Knowledge的准确原refs、controls和Grant交集已有定点证据，最后NoChild／Pause／Saved本地门禁已补完。未开放profile和生产/全图/浏览器资格另外记录，不能归为同一全绿声明 |
+| 传输与生产：Protocol、Production | [端云和 gRPC](../protocol/README.md)、[部署与恢复](../production/README.md) | 同版gRPC JSON外壳、HTTPS/WSS帧/认证发现/回执、EndpointChannel原connection-binding/Reply-Ack与SDK已实现；静态公开进程/分类worker有限配置已验收 | WSS/gRPC、发现/认证、背压、迁移和观测适配；F21–F24 取得通道恢复、跨区、容量和灾备证据 |
+
+机器合同与历史运行证据不等于最终合成版本已验证。完整方法资产以受信Registry/API生成器为唯一源；
+未登记方法或未配置profile仍明确unsupported。实际剩余本地链和外部生产资格见实施覆盖报告，
+不能从本表的已编码记录推断所有可选组件或部署组合通过。
 
 F 编号的完整刺激和判断依据统一见[故障矩阵](../validation/README.md#2-关键故障矩阵)。表内列出开发关注点；能力还须满足其依赖的授权、来源、费用和故障要求，不能只通过表内几个编号就宣布全部支持。
 
 ### 线协议怎样补齐
 
-core.schema.json只形式化了部分记录与五条命令。模块方法表已经规定其业务字段、回执和错误；正式开放前，开发者必须将选定方法转为同版闭合Schema、方法登记、Go/TS类型和SDK恢复代码。不得因为文档列有方法名就宣告支持完整profile。
+core.schema.json维护共同公开记录和五条共同命令，实际领域与可选方法由受信Registry各自登记同版闭合输入/输出Schema，并通过唯一生成器形成Go/TS/Native方法资产和恢复decoder。上述方法族已有实现，设计方法表本身仍不能证明任一完整profile已开放。新增或变更方法必须同步合同、登记、生成物和实际SDK恢复正反例。
 
 五条命令及其准确范围见[协议覆盖](../protocol/README.md#schema-coverage)。每个拟开放方法都须登记：负责方、所属 profile、请求/响应/错误 Schema、回执阶段、原命令查询方式、版本与权限前提、SDK 恢复行为和正反例。字段或语义出现缺口时先在所属模块补合同，再更新登记；新增业务取舍需进入明确的设计评审。
 
@@ -86,3 +90,15 @@ TaskPolicy的预算、期限、风险类别、具体业务阈值及开放能力�
 开发者应选择一条具体请求，逐步指出每个事务的输入、原身份、写入记录、失败返回和下一项Job。再执行重复、乱序、超时、取消、恢复及跨租户反例。无法指出原记录或唯一负责方时，必须暂停该能力开放并补合同。
 
 设计阶段取得了独立设计复核与设计资产检查。实现阶段另有真实 PG/SQLite、文件、模拟设备、测试 HTTP 出口和浏览器证据，准确版本及边界见[实施覆盖报告](implementation-coverage.md)。真实目标读者使用、供应商质量与对账、跨区故障和生产容量仍须独立验收。本文借鉴简明语言原则组织，不构成ISO标准符合性声明。
+
+历史阶段精确集成：Session13prod Root881、13tests Root54f86、Remote8tests Rootbb175与双地点正式叶Root57980ff均有compile／vet元数据。有限行为仍只绑定各原source／binary；正常双库报告103.121656s／109.541635s不代替上述真实缺口、未运行项或最终同图验证。
+
+当前限定本地实现已完成逐项定点验收：远端Agent／独立设备的正常报告、current actor与父控制、无子Task永久拒绝的三层Closure／原once与费用责任、现代默认Goal Form、原关闭证明复用及Saved五秒证明消费门禁均有准确证据。Saved最新同一911路径源／race binary的五场景×SQL／PG十项actualPASS，正式7路径叶17662e564d121732b0fbac8ddbed938a7a7baabb已合当前CODE 58c9898af58babce7170cb37cbbdfc63d693af9e. 17按已开放有限静态profile记resolved；09仍partial等待最终固定版本完整检查、原cfg浏览器重开／全生命周期、两份独立全图审查与发布步骤，07保留浏览器验收待项。新prepared共享false测试分支的观察边界仍由最终整套检查取得资格。代码集成和各旧source行为资格分开，不能声明当前根全套已通过。真实账户／公司身份／开放自然语言质量／物理设备／其他OS／规模与多AZ为另外明确的未验收范围；旧FAIL／SKIP／NOTRUN及原业务身份、权限和期限保留。
+
+历史prepared第一次race240.307176s未取得pause资格：原Rooted0／source897 c01ed55c／binary8574b49e实际EXIT1。日志remote_create只是receiver Job标签，handler内部HTTP POST超时，不确定具体方法；真实create已accepted／Incoming preparing，无子Task／Op／pauseProbe。原normal153.070004s通过保留，后继真实暂停race146.115743／163.071059s见最新资格，不回填原FAIL。原30s证明与Saved5s证明分开，未持久的历史typed cause不猜测。
+
+现代默认brain.GoalSchema的有限Goal Form已实现，原Schema及digest不改：准确ContentRef／固定hash pattern、正整数version、有限enum与unique choice数组由Go呈现门禁及TS原组件支持；非登记复杂schema仍明确拒绝。原真实renderer_schema_unsupported RED2.575433s、首次SQL cwd fixtureFAIL0.121690s保留；同source901修runner cwd后Go SQL／PG normal2.645041s／2.888794s、SDK／Web三个文件六测试1.086276s、22个unsafe拒例通过。7路径3647d7e已合Rootd67，Rootd67两库focused race11.691060s／11.304801s actualPASS／noSkip／noDataRace／源码binary稳定，索引 /workspace/harness-dev-environment/modern-default-form-root-d67-race-20261004T0512/owner-readonly-qualified-index.json（SHA8d33f732…）。这是原现代公开InputRequest与表单数据合同的有限实现资格，不能把组件SSR／SDK通过代作最后浏览器生命周期、任意JSON Schema或整个参考部署的通过。
+
+当前根58c9898af58babce7170cb37cbbdfc63d693af9e的whole Go BUILD已实际通过：go build -p 2 ./...，2026-10-04 08:24:10.539295→08:24:22.127860 UTC，EXIT0／11.691s，clean911路径／源码摘要f8053bfc66e06e132d4457d0f90f2e8e05f2c0b9e6c7853b146787800cd01962前后稳定。索引 /workspace/harness-dev-environment/full-go-build-58c9898af58b-20261004T082410Z.json（SHA0f696c89…）。Root精确Saved七路径集成 compile／vet／fmt／diff均通过，904受保护路径保持，索引 /workspace/harness-dev-environment/source-integration-saved-consumer-awaiting-all10-w6xdiyqa/verification.json（SHA4dbb2181…）。编译与静态检查不代表当前根whole行为Suite；scripts/check、完整NORMAL／RACE、浏览器、两份新独立全图review及push尚未执行。
+
+统一阶段说明：当前CODE 58c9898af58babce7170cb37cbbdfc63d693af9e；本文实际通过只按所列原source／binary／selector及数据库制品限定。最新Saved十项、NoChild／Pause／现代Form／Closure后继资格已取得；最后完整检查／浏览器／全图审查尚未结束，旧失败／未跑记录不回填。

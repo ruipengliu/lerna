@@ -1,48 +1,20 @@
 # 06 authorization-governance
 
 Status: partial
-Blocked by:
+Implementer: governance_impl
 
-依据 [实施规格](../spec.md) 与根 AGENTS.md，保留准确身份、负责方、事务、门禁和恢复。实际编译、公开接口行为、正反例及所需平台证据均通过后才关闭。
+授权、证据治理、扩展生命周期和冻结评测已有有界参考实现。领域合同见[治理说明](../../../internal/governance/README.md)，受信宿主见[adapter](../../../adapters/governance/README.md)。
 
-## Comments
+## 完成依据
 
-2026-10-03：有界参考实现已集成，工单保持 partial；完整目标未验收。
-领域与端口范围见 [治理实现说明](../../../internal/governance/README.md)，
-实际宿主见 [受信参考宿主](../../../adapters/governance/README.md)。
+闭合 Grant issue/revoke/check/use/settle、完整父链/当前主体、原 IntentHash/Target/预算/once，可信原业务确认一次消费、EstimateAcceptance与有限离线GrantLease；在线delegation实际消费原once和有限USD上界，离线delegation在消费之前明确拒绝。late已知.5→.75/repeat按原签名源和原Use结算，unknown保留原预留，once不退款。
 
-已实现闭合公开合同及持久原身份：Grant issue/revoke/check/use/settle、父链交集、
-once 永不复活、可信原业务确认一次消费、estimate acceptance 和 strict 离线租约合同；
-完整 Evidence 依赖门禁、持续缺陷/holder/changes/ack/epoch 缺口和同库 Result notice；
-BindingHead 当前 CAS、准备/激活/关闭/重开/处置与独立旧批准回退；
-冻结 EvaluationPlan、sample-arm 唯一、formal/holdout 占用、曝光门禁、取消分页、
-原分母封存和迟到资格失效。统计门槛与实际改善分别裁决，模型自述不构成权限或成功依据。
+完整Evidence依赖/holder/current gate、持续Defect/change/ack、同库Result notice、101-holder分两页与失败回滚；BindingHead准确CAS、prepare/initialize/activate/close/reopen/dispose和独立旧批准回退；Evaluation固定plan/sample-arm/曝光/原分母/封存/取消及迟到资格失效。真实SQLite/PG合同与受信reference-rule-file两臂runner、独立目录/字面目标真值、实际Linux进程/SIGKILL原journal恢复均有证据。1001样本分页不代表1000次真实外部API。
 
-Linux 宿主仅执行明确 allowlist 的受信静态内置组件，核准确安装/制品/config/profile，
-使用独占私有目录、持久原 instance/generation、真实文件自检和 cancel/wait/fence。
-活动实例最多 128 个，只在实际退出后回收容量。
-`reference-rule-file` runner 在两臂独立真实目录执行冻结的精确报告模板，
-原 journal 先于写入，以臂外独立真值读回；丢回答查原 Attempt，未知不重写。
-参考单样本改善通过而统计门槛失败时仍不授予正式资格。
-[开发装配](../../../adapters/development/governance.go)使用真实 Memory 当前用途门禁，
-只有目标 owner 的 worker 创建宿主；nil 配置保留能力关闭。
+Skill/AgentConfig完整小目录与真实Task选择已实现，普通Packet当前Source/holder/Caps/control和父Grant保持交集，不能授系统信任或成功。父选定Knowledge跨owner真实委派正反矩阵见[18](18-skill-agent-configuration.md)。受限WASI普通程序的Linux资格由工单13/15独立取证，不将其冒称任意治理扩展合格。静态EndpointChannel、设备有限Lease及Native Source已有独立运行证据。
 
-已实际验证真实 SQLite 和本机 PostgreSQL 的公开治理合同、原事务和同库接收故障回滚，
-两库的真实参考 runner 冻结/执行/封存以及开发宿主当前 Content/独占所有权装配。
-Linux 文件、原进程与 SIGKILL 测试覆盖实际退出、原实例不复活和未知写入不重放。
-治理与 adapter race 检查通过；101 holder 通知验证第二页及同库接收故障回滚，
-1001 样本取消保留 2002 个 sample-arm 分母，这只是取消分页证据。
-可复现入口为 `go test -race ./internal/governance ./adapters/governance`；
-治理 PG 套件需设置 `HARNESS_GOVERNANCE_POSTGRES_DSN`，开发装配 PG 用
-`HARNESS_TEST_POSTGRES_DSN`。未配置或跳过的运行不记作通过。
+广泛工单仍partial：远程正常完成的fee9正式叶已合454baaa；fresh SQLite父库／真实PG父库完整双方报告、三层Closure、原Task／Grant费用、必要proof字节、相关Job DONE及join／原cfg-token重开已通过。当前来源／holder和控制／close-before-latechild矩阵、复用Session其余资格仍待验证；最终固定版本审查与全检查待完成。公司身份/密钥发放轮换、真实跨治理Authority/高影响校准、live供应商最终账单/退款、开放自然语言/holdout质量、任意不可信扩展接管、自动发布、生产多AZ/容量与遥测另需资格验收。缺该资格时拒绝正式批准或保留原unknown；已消费once与费用收尾不能因新开始权撤回而抹掉。
 
-仍未实现或缺外部前提：
+真实治理PG测试读取HARNESS_GOVERNANCE_POSTGRES_DSN，宿主PG读取HARNESS_TEST_POSTGRES_DSN；skip不记通过。`go test -race ./internal/governance ./adapters/governance`是公开复现入口，准确已执行pin/命令/制品见实施覆盖报告，不能据此宣称当前新root已重跑。
 
-- 任意不可信 native/WASI 扩展隔离、完整自定义 Skill/外部 Agent、跨宿主接管。
-- 真实跨 owner Authority/连续传输、公司本人身份与密钥发放/轮换、独立设备离线租约部署。
-- 真实 holdout 数据谱系与独立高影响校准，开放自然语言任务质量、通用模型改善和 live API 评测。
-- 生产 autoUpdate/自动发布、完整遥测与供应商最终对账、三 AZ 耐久/容灾及目标容量验收。
-
-缺正式数据或校准端口时拒绝正式资格；缺生命周期/runner/隔离前提时返回具体
-`unsupported`、`blocked/not_run` 或保留原未知责任。参考模板、同库证明和本机平台测试
-不能代表上述完整能力 resolved。总体边界见 [实施覆盖报告](../../../docs/architecture/engineering/implementation-coverage.md)。
+统一阶段说明：当前CODE 58c9898af58babce7170cb37cbbdfc63d693af9e；本文实际通过只按所列原source／binary／selector及数据库制品限定。最新Saved十项、NoChild／Pause／现代Form／Closure后继资格已取得；最后完整检查／浏览器／全图审查尚未结束，旧失败／未跑记录不回填。

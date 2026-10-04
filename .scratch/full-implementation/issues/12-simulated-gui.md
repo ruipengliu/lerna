@@ -1,17 +1,14 @@
 # 12 simulated-gui
 
-Status: claimed
-Blocked by: 01, 02, 04
+Status: resolved
 Implementer: execution_impl
 
-依据：V2 与 Execution 观察／原子模拟动作／再观察、资源 epoch、未知隔离和本人接管。
-
-实现多台持久模拟设备的点击、滑动、输入、返回；真实公开入口覆盖旧观察、权限、中断、接管、结果未知及原 Attempt 重开。必须独立读目标真值，保留旧动作合同与记录，不声明真机支持。
+范围是三台独立持久模拟手机的完整点击、滑动、输入、返回及原观察/Attempt/epoch恢复，不声明真机。
 
 ## 完成依据
 
-实现、公开行为、真实负责方和必要故障正反例通过后记录准确提交与制品。外部资格单列；尚未完成的本地路径不得归因于缺凭据。未达成的目标保持 partial。
+选定GUI capability使用原有限观察→动作→再观察/独立磁盘真值，保留旧set_note/open_notes/press_home/set_wifi记录。driver`5818d056`的真实SQLite/PG公开Execution矩阵含三台设备18手势、伪造旧观察/当前许可/StartBarrier、中断/unknown/实际介质缺失、原库重开不重发、取消/本人接管/并发fence；每轴准确refs/事实存于`/workspace/harness-dev-environment/gui-verification.json`，全部实际exit0。
 
-## Comments
+后继公开Task→Gov→Execution装配`9ba68da`两库真实GUI race290.484s、原Operation冻结leaflock后改配置重开138.953s、GUI+默认File报告151.697s，见`action-assembly-verification.json`。显式Grant/capability/binding/resource、Context不消费once、原Snapshot之后撤权阻效果与跨binding拒绝有证据。原prepared编码耐久后继fix`d67e7a9`与独立Knowledge/GUI业务回归226.585s另记录，旧失败不改通过。
 
-2026-10-03：全项目范围复核后补入原实施任务图，未改变用户授权或领域裁决。
+闭合方法、准确refs与公开范围见 adapters/execution/GUI.md。SQLite/PG持久模拟器不是物理Android/iOS、任意App、所有端云部署或生产容量；这些资格独立验收。
