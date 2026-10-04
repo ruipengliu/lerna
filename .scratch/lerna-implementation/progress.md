@@ -231,3 +231,9 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 ## 切片04上下文未派发观察差量
 
 2026-10-04 19:53 UTC，采用[窄oracle决定](../lerna-04-content-snapshots/ticket-03-no-dispatch-oracle/README.md)：冻结1.1 Decision.Get没有not_found，仅把其result_unavailable作辅助，以当前授权原Command not_found、可信fixture准确无binding/dispatch和真实Decide入口有限观察共同证明。原handoff字节不改、七AC不减。03部分9bb61d4真实完整上下文三owner重开/规则全文回显normal1.561，echo reserve拒绝与正常对照1.902通过；入口完整观察及其余容量/恢复/竞态尚未完成，不标resolved。05部分8986829正文封闭normal/race通过，实际删除和剩余holder/并发/孤儿出口仍在实施。当前15/41AC，所有22切片授权继续。
+
+## 切片04选择依据与实际holder绑定检查点
+
+2026-10-04 20:11 UTC，采用[确定性选择决定](../lerna-04-content-snapshots/ticket-03-selection-strategy/README.md)：单独版本固定选择材料正文语法，实际计算并核对可信Selected；include/omit均保留compiler实际处理及完整来源。原rule/2、字节策略和五动作权限不变，撤权分别验证。该决定无执行声明。
+
+03部分45eb007已在独立WT固定反序集合完整投影修复，真实反序与原normal3.979通过；未完成全部容量/恢复/来源出口。05部分70d746e固定原发布介质FD身份至准确version、seal与清理责任，错误root不能代原holder ACK；exactnormal0.382通过，相关race Component2.758/Local1.116两个测试命令通过。该组合末尾错误迁移文件名导致原native exit1并永久保留，单独正确哈希命令exit0；不把组合改称exit0。首次Seal错root、真实第二holder、跨进程、孤儿竞争及旧版本升级尚待验证。双方部分提交尚未合入主集成；15/41AC与完整profile不广告状态不变。
