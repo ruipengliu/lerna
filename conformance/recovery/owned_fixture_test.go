@@ -32,7 +32,11 @@ type ownedFixture struct {
 	sqlitePeers []*sqlite.Store
 	holders     []*pgTransactionHold
 	closing     bool
-	child       *hostProcess
+	children    []*hostProcess
+}
+
+func (f *ownedFixture) registerChild(child *hostProcess) {
+	f.children = append(f.children, child)
 }
 
 func newOwnedFixture(t *testing.T, backend string, migrate bool) *ownedFixture {
@@ -110,8 +114,10 @@ func (f *ownedFixture) Open(ctx context.Context) (waitStore, error) {
 	if f.current != nil {
 		return nil, errors.New("fixture writer already open")
 	}
-	if f.child != nil && !f.child.waited {
-		return nil, errors.New("fixture child exit unconfirmed")
+	for _, child := range f.children {
+		if !child.waited {
+			return nil, errors.New("fixture child exit unconfirmed")
+		}
 	}
 	var store waitStore
 	var err error
@@ -179,13 +185,19 @@ func (f *ownedFixture) cleanup(holderContext context.Context) error {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if f.child != nil {
-		if err := f.child.stop(ctx); err != nil {
-			errs = append(errs, err)
-			if !f.child.waited {
-				return errors.Join(errs...)
+	childrenClosed := true
+	for _, child := range f.children {
+		err := child.stop(ctx)
+		errs = append(errs, err)
+		if !child.waited {
+			childrenClosed = false
+			if err == nil {
+				errs = append(errs, errors.New("fixture child/pipes cleanup unconfirmed"))
 			}
 		}
+	}
+	if !childrenClosed {
+		return errors.Join(errs...)
 	}
 	handlesClosed := true
 	if err := f.CloseWriter(); err != nil {
@@ -311,8 +323,15 @@ func (f *ownedFixture) prepareChild() error {
 	if f.closing {
 		return errors.New("fixture is closing")
 	}
-	if f.child != nil && !f.child.waited {
-		return errors.New("fixture child exit unconfirmed")
+	// Reject before allocating any new pipe/child holder. Every admitted prior
+	// generation remains registered through confirmed physical cleanup.
+	if len(f.children) >= 16 {
+		return errors.New("fixture child generation limit")
+	}
+	for _, child := range f.children {
+		if !child.waited {
+			return errors.New("fixture child exit unconfirmed")
+		}
 	}
 	return f.CloseWriter()
 }

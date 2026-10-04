@@ -9,6 +9,7 @@ import (
 	"github.com/ruipengliu/lerna/adapters/postgres"
 	decisionpg "github.com/ruipengliu/lerna/adapters/postgres/decision_engine"
 	decision "github.com/ruipengliu/lerna/components/decision_engine"
+	process "github.com/ruipengliu/lerna/conformance/internal/testkit/process"
 	"github.com/ruipengliu/lerna/contract"
 	v "github.com/ruipengliu/lerna/contract/v1_1"
 	"github.com/ruipengliu/lerna/runtime/workpool"
@@ -23,6 +24,7 @@ type World struct {
 	peers         []*decisionpg.Store
 	decisionOwned bool
 	workerExits   []<-chan struct{}
+	children      []*process.Child
 }
 
 // BorrowWorkerExit registers an actual Component goroutine before it starts.
@@ -37,6 +39,8 @@ func (w *World) BorrowWorkerExit(done <-chan struct{}) error {
 	return nil
 }
 func waitWorkerExits(ctx context.Context, exits []<-chan struct{}) error {
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
 	for _, done := range exits {
 		select {
 		case <-done:
@@ -135,6 +139,9 @@ func (w *World) Reopen(ctx context.Context) {
 	if err := waitWorkerExits(ctx, w.workerExits); err != nil {
 		w.t.Fatal(err)
 	}
+	if err := joinChildren(ctx, w.children); err != nil {
+		w.t.Fatal(err)
+	}
 	if err := w.store.Close(); err != nil {
 		w.t.Fatal(err)
 	}
@@ -160,22 +167,27 @@ func (w *World) Cleanup() error {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if err := waitWorkerExits(ctx, w.workerExits); err != nil {
-		return err
+	joined, childErr := stopChildren(w.children)
+	if !joined {
+		return childErr
 	}
+	if err := waitWorkerExits(ctx, w.workerExits); err != nil {
+		return errors.Join(childErr, err)
+	}
+	var errs []error
+	errs = append(errs, childErr)
 	for len(w.peers) > 0 {
 		if err := w.peers[0].Close(); err != nil {
-			return err
+			return errors.Join(errors.Join(errs...), err)
 		}
 		w.peers = w.peers[1:]
 	}
 	if w.store != nil {
 		if err := w.store.Close(); err != nil {
-			return err
+			return errors.Join(errors.Join(errs...), err)
 		}
 		w.store = nil
 	}
-	var errs []error
 	if w.decisionOwned {
 		if err := w.admin.DropTestSchema(ctx); err != nil {
 			errs = append(errs, err)
