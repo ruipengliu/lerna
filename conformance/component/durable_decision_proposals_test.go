@@ -6,6 +6,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"strconv"
 	"testing"
 	"time"
 
@@ -46,9 +47,22 @@ func proposalScenario(t *testing.T, ctx context.Context, world *fixture.World, v
 	ruleBytes := []byte(`{"kind":"exact_match","expected":"alpha"}`)
 	ruleRef := source.Ref("proposal-condition-rule", "application/json", ruleBytes)
 	snapshot.MaterialRefs = append(snapshot.MaterialRefs, ruleRef)
+	materials := []fixture.Material{{Ref: scene.MaterialRef, Bytes: material}, {Ref: ruleRef, Bytes: ruleBytes}}
+	purposes := []string{"decide", "get", "command.get", "start", "material", "rule.input", "fixture.lock", "publish", "proposal.publish", "artifact.publish", "rule.condition"}
+	if rule == "actions_four" {
+		for i := 1; i <= 4; i++ {
+			id := v.ID("slot-" + strconv.Itoa(i))
+			body := []byte(`{"target":"` + string(id) + `","operation":"read"}`)
+			ref := source.Ref(v.ID("arguments-"+string(id)), "application/json", body)
+			materials = append(materials, fixture.Material{Ref: ref, Bytes: body})
+			snapshot.MaterialRefs = append(snapshot.MaterialRefs, ref)
+			snapshot.CapabilityBindings = append(snapshot.CapabilityBindings, decision.CapabilityBinding{CapabilityRef: v.CapabilityRef{TenantID: snapshot.Ref.TenantID, OwnerID: snapshot.Ref.OwnerID, Kind: "capability", ID: "fixture-read", Revision: "1"}, BindingRef: v.BindingRef{TenantID: snapshot.Ref.TenantID, OwnerID: snapshot.Ref.OwnerID, Kind: "binding", ID: id, Revision: "1"}, ArgumentsRef: ref, Purpose: "fixture.read"})
+		}
+		purposes = append(purposes, "fixture.read")
+	}
 	permission.ComponentRef = snapshot.ComponentRef
 	permission.RuleVersion = version
-	scene.ManifestRef, err = source.Seed(ctx, fixture.Bundle{DecisionRef: scene.DecisionRef, Permission: permission, Snapshot: snapshot, Materials: []fixture.Material{{Ref: scene.MaterialRef, Bytes: material}, {Ref: ruleRef, Bytes: ruleBytes}}, Purposes: []string{"decide", "get", "command.get", "start", "material", "rule.input", "fixture.lock", "publish", "proposal.publish", "artifact.publish", "rule.condition"}, RuleVersion: version, ChargeBasis: permission.ChargeBasis, RuleStartCharge: permission.RuleStartCharge})
+	scene.ManifestRef, err = source.Seed(ctx, fixture.Bundle{DecisionRef: scene.DecisionRef, Permission: permission, Snapshot: snapshot, Materials: materials, Purposes: purposes, RuleVersion: version, ChargeBasis: permission.ChargeBasis, RuleStartCharge: permission.RuleStartCharge})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -142,5 +156,68 @@ func TestDurableProposalDeltaOnlyHasNoInventedArtifact(t *testing.T) {
 	}
 	if len(decoded.ProcessedSourceRefs) != 3 {
 		t.Fatal("published proposal lost its manifest or actually read material")
+	}
+}
+
+func TestDurableProposalFourIndependentActions(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	world := fixture.NewWorld(t, ctx)
+	scene, snapshot := proposalScenario(t, ctx, world, "fixture-rule/3", "actions_four")
+	service := proposalService(t, world, scene)
+	raw, err := v.Encode(scene.Request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	outcome, err := service.Decide(ctx, raw, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	received, ok := outcome.AsReceived()
+	if !ok {
+		t.Fatal("actions input not received")
+	}
+	if _, ok := received.Receipt.AsAccepted(); !ok {
+		t.Fatal("actions input not accepted")
+	}
+	if _, err := service.Step(ctx); err != nil {
+		t.Fatal(err)
+	}
+	world.Reopen(ctx)
+	service = proposalService(t, world, scene)
+	view, err := service.Get(ctx, scene.GetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found, ok := view.AsFound()
+	if !ok {
+		t.Fatal("original actions Decision unavailable after reopen")
+	}
+	completed, ok := found.Decision.AsCompleted()
+	if !ok {
+		t.Fatal("four independent actions did not complete")
+	}
+	advance, ok := completed.Proposal.Advance.AsActions()
+	if !ok || len(advance.Actions) != 4 || len(completed.ArtifactRefs) != 0 || len(completed.Proposal.ProcessedSourceRefs) != 7 {
+		t.Fatal("actions output lost its bounded branch or complete processed sources")
+	}
+	seen := map[v.ID]bool{}
+	for i, action := range advance.Actions {
+		binding := snapshot.CapabilityBindings[i]
+		if seen[action.LocalKey] || action.CapabilityRef != binding.CapabilityRef || action.BindingRef != binding.BindingRef || action.ArgumentsRef != binding.ArgumentsRef || action.Purpose != "fixture.read" {
+			t.Fatal("action identity, binding, arguments or purpose was not accurate and independent")
+		}
+		seen[action.LocalKey] = true
+	}
+	permission, err := world.Source().Authorize(ctx, scene.Subject, scene.DecisionRef, "get", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	body, err := world.Source().ReadMaterial(ctx, advance.Actions[0].ArgumentsRef, "fixture.read", permission, v.MaxBodyBytes)
+	if err != nil || string(body) != `{"target":"slot-1","operation":"read"}` {
+		t.Fatal("action did not retain readable pre-existing arguments", err)
+	}
+	if completed.Usage.RuleStarts != "1" || completed.Usage.ModelRequests != "0" {
+		t.Fatal("one fixture evaluation became repeated execution or a physical model request")
 	}
 }

@@ -14,7 +14,7 @@ import (
 // A rule/3 case is one bounded fixture evaluation. It proposes changes only;
 // the current Task revisions and original durable-start fee are preserved.
 func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, inputBytes int) completion {
-	if snapshot.Rule != "delta_only" || len(snapshot.MaterialRefs) < 2 {
+	if (snapshot.Rule != "delta_only" && snapshot.Rule != "actions_four") || len(snapshot.MaterialRefs) < 2 {
 		return failedCompletion("proposal_invalid", inputBytes, 0, 1)
 	}
 	replacement := snapshot.RequirementRefs[0]
@@ -24,6 +24,17 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 		ProcessedSourceRefs: processed,
 		RequirementDelta:    []v.RequirementDelta{{LocalKey: "condition-replacement", StatementRef: snapshot.MaterialRefs[0], RuleRef: snapshot.MaterialRefs[1], SourceRefs: slices.Clone(processed), Kind: "output", Required: true, ReplacesRef: &replacement}},
 		Advance:             v.NewProposalAdvanceNone(v.ProposalAdvanceNone{}),
+	}
+	if snapshot.Rule == "actions_four" {
+		if len(snapshot.CapabilityBindings) != 4 {
+			return failedCompletion("proposal_invalid", inputBytes, 0, 1)
+		}
+		proposal.RequirementDelta = []v.RequirementDelta{}
+		actions := make([]v.ProposalAction, 0, 4)
+		for i, binding := range snapshot.CapabilityBindings {
+			actions = append(actions, v.ProposalAction{LocalKey: v.ID("action-" + strconv.Itoa(i+1)), CapabilityRef: binding.CapabilityRef, BindingRef: binding.BindingRef, ArgumentsRef: binding.ArgumentsRef, Purpose: binding.Purpose, SourceRefs: slices.Clone(processed)})
+		}
+		proposal.Advance = v.NewProposalAdvanceActions(v.ProposalAdvanceActions{Actions: actions})
 	}
 	// Raw decoding is the same closed public codec used by callers. Source and
 	// purpose inclusion follows here, rather than in a codec with database access.
@@ -110,7 +121,34 @@ func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Sn
 			}
 		}
 	}
-	if _, ok := proposal.Advance.AsNone(); !ok || len(proposal.RequirementDelta) == 0 {
+	if _, ok := proposal.Advance.AsNone(); ok {
+		if len(proposal.RequirementDelta) == 0 {
+			return ErrForbidden
+		}
+	} else if advance, ok := proposal.Advance.AsActions(); ok {
+		if !withinLimit(len(advance.Actions), work.Record.Input.Limits.MaxActions) {
+			return ErrForbidden
+		}
+		for _, action := range advance.Actions {
+			binding := CapabilityBinding{CapabilityRef: action.CapabilityRef, BindingRef: action.BindingRef, ArgumentsRef: action.ArgumentsRef, Purpose: action.Purpose}
+			if !slices.Contains(snapshot.CapabilityBindings, binding) || !slices.Contains(snapshot.MaterialRefs, action.ArgumentsRef) {
+				return ErrForbidden
+			}
+			for _, ref := range action.SourceRefs {
+				if !slices.Contains(processed, ref) {
+					return ErrForbidden
+				}
+			}
+			body, err := s.config.Source.ReadMaterial(ctx, action.ArgumentsRef, action.Purpose, work.Permission, cap-int64(*inputBytes))
+			*inputBytes += len(body)
+			if err != nil {
+				return err
+			}
+			if hash(body) != action.ArgumentsRef.Hash || strconv.Itoa(len(body)) != string(action.ArgumentsRef.ByteLength) {
+				return ErrForbidden
+			}
+		}
+	} else {
 		return ErrForbidden
 	}
 	return ctx.Err()
