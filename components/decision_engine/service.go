@@ -14,15 +14,16 @@ import (
 )
 
 type Config struct {
-	Owner       v.OwnerRef
-	Store       Store
-	Authority   Authority
-	Source      Source
-	Publisher   Publisher
-	Component   v.ComponentRef
-	Worker      string
-	Lease       time.Duration
-	PoolControl bool
+	Owner            v.OwnerRef
+	Store            Store
+	Authority        Authority
+	ControlAuthority ControlAuthority
+	Source           Source
+	Publisher        Publisher
+	Component        v.ComponentRef
+	Worker           string
+	Lease            time.Duration
+	PoolControl      bool
 }
 type Service struct{ config Config }
 

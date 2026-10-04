@@ -102,7 +102,7 @@ func (w *World) Service() *decision.Service {
 }
 func (w *World) buildService() (*decision.Service, error) {
 	scene := w.scenario
-	return decision.New(decision.Config{Owner: v.OwnerRef{TenantID: scene.DecisionRef.TenantID, OwnerID: scene.DecisionRef.OwnerID}, Store: w.store, Authority: w.source, Source: w.source, Publisher: w.source, Component: scene.Request.Payload.ComponentRef, Worker: "fixture-worker", Lease: 5 * time.Second, PoolControl: true})
+	return decision.New(decision.Config{Owner: v.OwnerRef{TenantID: scene.DecisionRef.TenantID, OwnerID: scene.DecisionRef.OwnerID}, Store: w.store, Authority: w.source, ControlAuthority: w.source, Source: w.source, Publisher: w.source, Component: scene.Request.Payload.ComponentRef, Worker: "fixture-worker", Lease: 5 * time.Second, PoolControl: true})
 }
 func (w *World) Reopen(ctx context.Context) {
 	w.t.Helper()
