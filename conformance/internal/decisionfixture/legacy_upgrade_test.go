@@ -657,14 +657,24 @@ func restoreFrozenWriter(t *testing.T) string {
 	if err = json.Unmarshal(body, &provenance); err != nil || provenance.Format != "lerna-legacy-decision-closure-1" || provenance.SourceCommit != "970fd90260b5c4936cdb5c2b7a8589623126a5c2" || len(provenance.Files) != 69 || provenance.ProductionFileCount != 68 || provenance.ProductionBytes != 422534 || provenance.PayloadBytes != 430396 {
 		t.Fatal("frozen historical provenance mismatch")
 	}
-	dir, err := os.MkdirTemp("/workspace", "lerna-03-legacy-upgrade-")
-	if err != nil {
-		t.Fatal(err)
-	}
 	registry := os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY")
 	if !filepath.IsAbs(registry) {
 		t.Fatal("absolute root owned registry required")
 	}
+	dir, err := os.MkdirTemp("", "lerna-03-legacy-upgrade-")
+	if err != nil {
+		t.Fatal(err)
+	}
+	// No child exists yet. Protect this exact successful creation before any
+	// subsequent registration, fsync or archive restore operation can fail.
+	success := false
+	defer func() {
+		if !success {
+			if err := os.RemoveAll(dir); err != nil {
+				t.Error("exact historical restore cleanup:", err)
+			}
+		}
+	}()
 	ledger, err := os.OpenFile(registry, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
 	if err != nil {
 		t.Fatal(err)
@@ -682,15 +692,6 @@ func restoreFrozenWriter(t *testing.T) string {
 	if err != nil {
 		t.Fatal(err)
 	}
-	// Before any child exists failures may safely release the precise directory.
-	success := false
-	defer func() {
-		if !success {
-			if err := os.RemoveAll(dir); err != nil {
-				t.Error("exact historical restore cleanup:", err)
-			}
-		}
-	}()
 	total := 0
 	production := 0
 	productionBytes := 0

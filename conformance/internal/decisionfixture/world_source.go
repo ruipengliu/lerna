@@ -130,11 +130,13 @@ func (w *SourceWorld) Reopen(ctx context.Context) {
 		w.t.Fatal(err)
 	}
 	w.source = nil
-	source, err := Open(ctx, w.cfg, w.owner)
+	var err error
+	// Open may return a nonnil holder together with an unconfirmed Close error.
+	// Retain it before a fatal test return so Cleanup cannot drop its schema.
+	w.source, err = Open(ctx, w.cfg, w.owner)
 	if err != nil {
 		w.t.Fatal(err)
 	}
-	w.source = source
 }
 func (w *SourceWorld) Cleanup() error {
 	w.closing = true
