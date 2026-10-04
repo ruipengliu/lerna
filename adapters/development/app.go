@@ -171,51 +171,15 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if len(c.RemoteExecutors) > 0 {
 		a.Memory.Foreign = deviceSources{a}
 	}
-	purposes := []string{"read", "preview", "content.read", "content.write", "task.goal", "task.context", "task.result", "task.submit", "task.snapshot", "task.dispatch", "task.complete", "task.evidence", "task.input", "task.accept_result", "task.revise", "task.steer", "task.action", "task.attach_evidence", "task.adjust_budget", "task.need_context", "task.delegate", "child.create", "child.new_goal", "child.continue", "billing.adjustment", "brain.input", "brain.output", "result", "memory.save", "memory.read", "memory.query", "memory.extract", "memory.sync", "memory.view", "managed_file_write", "managed_file_read", "execution.intent", "execution.arguments", "execution.output", "execution.control", "execution_intent", "execution_arguments", "execution_result", "execution_usage_proof", "environment_namespace", "environment_input", "environment_compute_spec", "environment_restore", "interaction.input", "interaction.history", "interaction.surface", "schedule.template", "confirmation.preview", "evaluation.manifest"}
-	for _, purpose := range append([]string{"interaction.snapshot", "interaction.preview"}, RequiredContentPurposes()...) {
-		if !containsString(purposes, purpose) {
-			purposes = append(purposes, purpose)
+	a.ContentPolicy, e = configuredContentPolicy(c, true)
+	if e != nil {
+		return nil, e
+	}
+	if !initialize {
+		if e = a.selectRegisteredContentPolicy(ctx); e != nil {
+			return nil, e
 		}
 	}
-	if len(c.Information) > 0 {
-		purposes = append(purposes, providers.InformationPurpose, providers.InformationSearch, providers.InformationBody)
-	}
-	purposes = append(purposes, RequiredKnowledgeContentPurposes()...)
-	if c.WASI != nil && c.WASI.CPUSecondsBudgetLimit != "" {
-		for _, purpose := range RequiredWASIContentPurposes() {
-			if !containsString(purposes, purpose) {
-				purposes = append(purposes, purpose)
-			}
-		}
-	}
-	pv := memory.PolicyValues{Subjects: []string{c.SubjectID, c.OwnerID}, Purposes: purposes, Locations: []string{"cloud", "device"}, RetainUntil: c.PolicyExpiresAt, Continuous: true, IndependentDerived: false}
-	if c.RemoteAgent != nil {
-		for _, subject := range c.RemoteAgent.SourceSubjectRefs {
-			if !containsString(pv.Subjects, subject.ObjectID) {
-				pv.Subjects = append(pv.Subjects, subject.ObjectID)
-			}
-		}
-	}
-	for _, consumer := range c.ForeignConsumers {
-		for _, holder := range consumer.Holders {
-			if !containsString(pv.Subjects, holder.SubjectRef.ObjectID) {
-				pv.Subjects = append(pv.Subjects, holder.SubjectRef.ObjectID)
-			}
-		}
-		for _, purpose := range consumer.Purposes {
-			if !containsString(pv.Purposes, purpose) {
-				pv.Purposes = append(pv.Purposes, purpose)
-			}
-		}
-		for _, location := range consumer.Locations {
-			if !containsString(pv.Locations, location) {
-				pv.Locations = append(pv.Locations, location)
-			}
-		}
-	}
-	policyRef := component("content-policy")
-	policyRef.Digest, _ = api.Digest(pv)
-	a.ContentPolicy = memory.Policy{PolicyRef: policyRef, Values: pv, Revision: 1, State: "active"}
 	a.CoverageRule = component("goal-template-coverage")
 	a.ArtifactRule = component("artifact-exact")
 	a.SavedRule = component("file-saved-readback")

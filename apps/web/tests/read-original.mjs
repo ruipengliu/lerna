@@ -4,7 +4,14 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { chromium } from "playwright";
 
-// Reads a pre-existing real Task and keeps its native connection across two server heartbeats.
+// 读取原 Task 的发布历史及当前正文状态，并保留原连接跨越两次心跳。
+const contentState = process.env.HARNESS_EXPECT_ORIGINAL_CONTENT_DELETED;
+assert(
+  contentState === undefined || ["0", "1"].includes(contentState),
+  "invalid original content state",
+);
+const expectDeleted = contentState === "1";
+let originalContentRead;
 const taskID = process.env.HARNESS_ORIGINAL_TASK;
 assert(taskID && /^task_[0-9a-f]{32}$/.test(taskID), "HARNESS_ORIGINAL_TASK is required");
 const baseURL = process.env.HARNESS_BROWSER_URL ?? "http://127.0.0.1:8080";
@@ -62,14 +69,44 @@ try {
   assert.equal(value.task.status, "succeeded");
   assert.equal(value.task.accounting_open, false);
   assert.equal(value.publication, "published");
+  if (expectDeleted) assert(value.content_ref, "historical published ContentRef absent");
+  const deletedRead = expectDeleted
+    ? page.waitForResponse((response) => {
+        const url = new URL(response.url());
+        if (url.pathname !== "/api/content") return false;
+        const encoded = url.searchParams.get("ref");
+        if (!encoded) return false;
+        const ref = JSON.parse(Buffer.from(encoded, "base64url").toString("utf8"));
+        return [
+          "tenant_id",
+          "owner_id",
+          "content_id",
+          "version",
+          "hash",
+          "byte_length",
+          "media_type",
+        ].every((key) => ref[key] === value.content_ref[key]);
+      })
+    : undefined;
   await page.locator(".inspector").getByRole("button", { name: "预览当前准确正文" }).click();
-  await page.locator(".preview-panel .exact-body").first().waitFor();
-  if (process.env.HARNESS_EXPECTED_ARTIFACT_FILE) {
-    const expected = await readFile(process.env.HARNESS_EXPECTED_ARTIFACT_FILE, "utf8");
-    const end = Date.now() + 15000;
-    while (!(await page.locator(".exact-body").allTextContents()).includes(expected)) {
-      assert(Date.now() < end, "original published artifact is not exactly rendered");
-      await page.waitForTimeout(250);
+  if (expectDeleted) {
+    const response = await deletedRead;
+    const error = await response.json();
+    assert.equal(response.status(), 403);
+    assert.equal(error.code, "forbidden");
+    assert.equal(error.reason, "source_closed");
+    await page.locator(".preview-panel .notice.error").waitFor();
+    assert.equal(await page.locator(".preview-panel .exact-body").count(), 0);
+    originalContentRead = { content_ref: value.content_ref, status: response.status(), error };
+  } else {
+    await page.locator(".preview-panel .exact-body").first().waitFor();
+    if (process.env.HARNESS_EXPECTED_ARTIFACT_FILE) {
+      const expected = await readFile(process.env.HARNESS_EXPECTED_ARTIFACT_FILE, "utf8");
+      const end = Date.now() + 15000;
+      while (!(await page.locator(".exact-body").allTextContents()).includes(expected)) {
+        assert(Date.now() < end, "original published artifact is not exactly rendered");
+        await page.waitForTimeout(250);
+      }
     }
   }
   assert.equal(
@@ -77,7 +114,9 @@ try {
     false,
   );
   process.stdout.write(
-    "Original Task Result is published; exact full artifact rendered without a new command.\n",
+    expectDeleted
+      ? "Original Task Result remains published; current exact content is closed after retention, with no new command.\n"
+      : "Original Task Result is published; exact full artifact rendered without a new command.\n",
   );
   await page.evaluate(() => scrollTo(0, 0));
   await page.screenshot({ path: resolve(artifacts, "original-result.png"), fullPage: true });
@@ -98,7 +137,7 @@ try {
   assert.deepEqual(errors, []);
   await writeFile(
     resolve(artifacts, "original-result.json"),
-    `${JSON.stringify({ implementation, base_url: baseURL, proxy: process.env.HARNESS_PROXY_OBSERVE === "1", task_id: taskID, task_revision: value.task.revision, result_ref: value.task.result_ref, publication: value.publication, content_ref: value.content_ref, observed_heartbeats: 2, query_count: queries.length, commands: 0, page_errors: errors }, null, 2)}\n`,
+    `${JSON.stringify({ implementation, base_url: baseURL, proxy: process.env.HARNESS_PROXY_OBSERVE === "1", task_id: taskID, task_revision: value.task.revision, result_ref: value.task.result_ref, publication: value.publication, expected_content_state: expectDeleted ? "retention_deleted" : "live", current_content_availability: expectDeleted ? "unavailable" : "exact_body_verified", original_content_read: originalContentRead, content_ref: value.content_ref, observed_heartbeats: 2, query_count: queries.length, commands: 0, page_errors: errors }, null, 2)}\n`,
   );
 } catch (failure) {
   await page
@@ -106,7 +145,7 @@ try {
     .catch(() => {});
   await writeFile(
     resolve(artifacts, "failure-trace.json"),
-    `${JSON.stringify({ implementation, requests, responses, errors, closes }, null, 2).replaceAll(token, "[redacted credential]")}\n`,
+    `${JSON.stringify({ implementation, requests, responses, errors, closes, original_content_read: originalContentRead }, null, 2).replaceAll(token, "[redacted credential]")}\n`,
   );
   process.stderr.write(`${String(failure).replaceAll(token, "[redacted credential]")}\n`);
   process.exitCode = 1;
