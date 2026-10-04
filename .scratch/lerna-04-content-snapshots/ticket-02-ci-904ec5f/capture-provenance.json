@@ -1,0 +1,22 @@
+{
+  "run_id": 37227467190,
+  "head_sha": "904ec5fdf03d2e60fe2e9c85f34ba889d0110958",
+  "qualification": "sanitized connector captures; keyword-matching whole lines omitted, original raw log identity not claimed",
+  "files": [
+    {
+      "path": "contracts.log",
+      "bytes": 43803,
+      "sha256": "d12982fb811e179309270010616519f03c507c9ff32e6a976445ee59faeca6f5"
+    },
+    {
+      "path": "durable-admission.log",
+      "bytes": 49492,
+      "sha256": "18e820ca51b671d28a4c1f9c4592b0b60e0d2b747a4878e0f9cb465fb5c71cf6"
+    },
+    {
+      "path": "metadata.json",
+      "bytes": 4697,
+      "sha256": "8b95cae62a04c7ce295e106d6367273792729b9dc6cf06039637197e7f40a0ee"
+    }
+  ]
+}

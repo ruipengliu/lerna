@@ -9,7 +9,7 @@
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
 - 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
 - 切片 03：**completed**。六票42/42AC及原六项验收完成；受测882e97b/6bf5750、交付1aa21fc、整合391b4d8，完整profile/共享104项race及两轴/架构闭合。准确47ebce1 CI37194868564 success；10worktrees清理/分支保留。完整[退出](../lerna-03-deterministic-harness/exit-evidence.md)保留失败和未知资源。A阶段01–03完整退出，下一frontier04。
-- 切片 04：**in-progress**。03完整退出5fbb1a0后实际API复核相等，采用具体Content-backed mandatory-context映射，发布六票41AC；首票01已resolved，8/41AC完成，受测14ead、交付1a7、正式合并eba167d；完整1.2 profile仍不广告，其余五票依图推进。
+- 切片 04：**in-progress**。03完整退出5fbb1a0后实际API复核相等，采用具体Content-backed mandatory-context映射，发布六票41AC；01/02已resolved，15/41AC完成；02交付651036/正式合并6f88740/验收904ec5f已push，准确CI37227467190已success。03/05已claimed并在独立WT实施；完整1.2 profile仍不广告，其余票依图推进。
 - 切片 05–22：**not-started**。仅条件准备，依赖未满足，不代表实现或验收。
 
 ## 切片 01 过程检查点（历史记录）
@@ -225,3 +225,5 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 ## 切片04来源政策票接受并整合
 
 2026-10-04，票02七AC resolved，交付651036/产品4c621/工具5c024，正式merge6f88740双parents及完整tree等于worker；[逐AC证据](../lerna-04-content-snapshots/ticket-02-exit-evidence.md)保留所有实际测试/审查与unknown范围。完整170 normal/race每模式一次，fixture/Decision/base race/locked check/module verify通过；最终双轴0hard/1可选P3 KEEP、Spec a0b0c0、架构0necessary。5 schemas/8 roots、旧Z与空selector per-Close unknown保留，未cleanup。当前15/41，whole04 in-progress、完整1.2广告OFF；03/05直接前置已满足。新准确push CI待核，旧首票7c CI不替代新源。
+
+2026-10-04，02接受push904ec5f的准确CI37227467190两job/全部steps success；root读取37Node/44TS/158+89+101两序、完整170 normal/race五组、Recovery25.988/61.392及fixture各包，见[CI](../lerna-04-content-snapshots/ci-verification.md#票02准确904ec5f的ci)。早期pending保留历史，03/05已独立claimed，LOCAL按自然TDD边界串行交接；旧unknown不动，whole04仍15/41。
