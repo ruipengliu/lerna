@@ -219,7 +219,8 @@ func TestFrozenFinal01ControlWriter(t *testing.T) {
 	select {
 	case err := <-released:
 		if err != nil {
-			t.Fatal(err)
+			fmt.Fprintln(os.Stderr, "historical RELEASE unconfirmed; retain acknowledged scopes")
+			os.Exit(2)
 		}
 	case <-ctx.Done():
 		_ = os.Stdin.Close()
@@ -227,7 +228,8 @@ func TestFrozenFinal01ControlWriter(t *testing.T) {
 		case <-released:
 		case <-time.After(time.Second):
 		}
-		t.Fatal("legacy parent release deadline")
+		fmt.Fprintln(os.Stderr, "historical RELEASE deadline; retain acknowledged scopes")
+		os.Exit(2)
 	}
 	// NewWorld's owned t.Cleanup executes now, including the retained admins.
 }
