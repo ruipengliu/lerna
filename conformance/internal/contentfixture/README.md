@@ -16,3 +16,9 @@ Business assertions stay at public Content/Command entries and independent bytes
 Tagged migration tests cover fresh initialization, checksum repeat/refusal and
 native reopen. `make test-integration` and `make test-integration-race` include
 this fixture and the tagged local lifetime package.
+
+Policy/version/Command/reader lock controls each retain their original locker and
+observer until actual close. Ledger and parent-directory registration files are
+owned immediately; any registration error, including Sync or first Close, seals
+cleanup even if later handles close normally. Mechanical first-close tests use
+independent real Close observations; they do not claim native close failures.

@@ -99,3 +99,19 @@ unchanged and never publish; matching existing bytes may be adopted.
 
 Actual command results, red/green distinctions and resource proof are recorded in
 [ticket-01-evidence.md](ticket-01-evidence.md). No box is checked before root accepts.
+
+## Current gates after independent intermediate review
+
+Original Put replay rechecks its original reader after Command lock and retains
+historical receipt priority even past original admission/content retention. A new
+association applies current target-save and exact direct-source read/process/save,
+monotonically intersects the old current/effective cap, and allocates no new Job
+or staging body. A valid historical failed version remains associable.
+
+Get checks the durable direct Sources with current caller/purpose read/disclose,
+exact published metadata and current caps before native I/O and again before
+body disclosure. Process/save/sync remain independent. Both observations preserve
+the earlier bound; all initial blocking reads end in fresh trusted admission time.
+AcceptBefore admits the read rather than imposing an I/O completion cutoff.
+GetCommand rechecks reader/time after blocking facts, preserving history semantics.
+These gates do not implement the later inherited closure or physical cleanup.

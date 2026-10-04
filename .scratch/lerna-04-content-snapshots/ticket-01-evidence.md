@@ -150,3 +150,108 @@ be followed by a current read/disclose gate, and Get/GetCommand must recheck thi
 read's AcceptBefore after all blocking locks. The adopted decision is source review,
 not injected failure evidence; the sole implementer will run public red→green with
 normal controls and fresh affected checks before a final delivery pin.
+
+## Independent intermediate findings: actual correction evidence
+
+The clean intermediate pin remains `92d27992f37f0a425621bc75c6d5b4a073fa06a6`;
+initial Spec/Standards reports are preserved separately without rewriting their
+fixed pin or findings. Root adopted the two current read gates, direct-source
+matrix, association/replay rules and the narrow tooling ownership extraction.
+
+New public target read/disclose revocation during real whole-object Read produced
+runnable business red (0.848s, exit1/group absent), then green (0.878s, exit0/group
+absent). The finite pause is a mechanical ordering seam after actual native Read,
+not a native storage fault. A normal control crosses the admitted AcceptBefore
+while context and current policy still permit final disclosure.
+
+Real PG policy/version/reader row locks crossed the initial read cutoff for
+not_found/preparing/failed/published/metadata-mismatch and Command found/absent;
+reader expiry was independently exercised. Actual runnable red was5.788s/exit1;
+the combined corrected target gates/clock suite was6.832s/exit0, tool session91923.
+The group was actually absent after each run.
+
+Two actual published sources and a derived target supplied independent byte normals.
+Source read/disclose revoked before or during Get and current source retention expiry
+produced runnable red in tool session62056 (1.845s/exit1), then green in7934
+(2.103s/exit0), groups absent. Source process/save=false while read/disclose remain
+permitted is a separate positive control. One preceding helper function-type error
+was compile1, not business red. A1.525s intermediate run still returned forbidden
+instead of expired for known authorized retention expiry; CheckPolicy now retains
+that scoped action policy's cap for the Service's precise expiry decision. Policy
+validity/subject/action remain fail closed.
+
+New-command source process/save denials, legal association tightening followed by
+actual reopen/policy widening/expiry, and original Command advisory-lock wait past
+reader expiry produced runnable red20724 (2.119s/exit1) then green83706
+(2.207s/exit0), group absent. Original fixed receipt is unchanged, historical Job
+progress is preserved, and independent native object count changes by zero.
+Additional normals verify a preparing alias at the full6-byte staging limit and
+an eligible failed-version alias after its original publication deadline, without
+new responsibility or bytes. The last of two real source-version locks also crossed
+Get admission, followed by a successful fresh normal read.
+
+Local Open with a real absent absolute path lost os.ErrNotExist despite a normal
+open/close control: actual public red0.016s/exit1 then green0.012s/exit0, groups
+absent. Lstat/EvalSymlinks now preserve native causes with ErrUnavailable. Fixture
+setup owns ledger/parent FDs immediately; every registration/Sync/Close error seals
+destructive cleanup. Mechanical ledger/parent first-close controls independently
+observed actual Close, verified repeated World.Cleanup retained the exact root and
+original diagnostic, then the fixture removed only its independently closed root.
+
+The ownership module's original9 mechanical interface tests passed native0, then
+10 passed with the registry environment absent (including its real default ledger).
+An intermediate absent-env run failed a test's external removed-ACK assumption;
+it was an expectation/control error, not a native fault or new business red. The
+corrected test explicitly owns a second acknowledged external-ledger fixture.
+Normal primary-failure cleanup, action+Close causes, write/Sync/parentSync ACK
+unknown, original entity missing observation, exact identity mismatch, initialization
+failure, remove failure and removed-ACK truth are checked through the interface.
+Makefile includes this suite. Five actual consumer entrypoints await the final
+locked-check result below; historical entry greens are not substituted.
+
+The first broad affected normal run74708 exited1/group absent: Component23.950s
+had only the older source.Read=false Get-failed expectation, now superseded by the
+adopted current-read gate. It was corrected to public Get forbidden plus public
+Command historical failed; process/save-only denials still permit failed observation.
+Fixture0.134s and local0.074s passed. This is recorded as an expectation correction,
+not a new implementation business red.
+
+The final affected race run95320 completed exit0/group absent: Component40.887s,
+codec1.678s, local1.153s, fixture1.218s. The domain package compiled under race in
+1.049s but the selected test pattern had no domain tests; this is not advertised as
+an additional domain test. Its existing identity tests run in the full locked check.
+Actual output is owned-root `review-fix-race.log`, distinct from earlier tool-only
+read-gate/clock observations, for which no nonexistent log path is claimed.
+
+The final modified-source locked `make check GOFLAGS='-mod=readonly -p=1'` completed
+actual native0/group absent, tool session33660. Output is owned-root
+`review-fix-check.log`. It includes formatting/vet/typechecks, generated equality,
+35 Node tooling tests, both generator real success/refusal/frozen-output scenarios,
+all Go units,44 TS tests,158 old1.0+89 old1.1+101 new1.2 fixtures in both actual
+Go↔TS orders, and the final Go/TS build. This supersedes neither the earlier
+interrupted exit2 history nor the initial findings; it establishes the corrected
+five consumers' actual complete entry coverage. No protected schema, old golden,
+published SQL or archived fixture object differs from integration64c6872.
+
+The product/tool/test source was fixed in a separate commit
+`46d6ca2` after these checks. Remaining documentation is separated so the reviewed
+source tree and tested source qualification can be checked without claiming a
+fresh test run for doc-only changes. Latest integration is still64c6872, verified
+clean and already an ancestor of this own branch.
+
+Fresh audit after those native exits registered279 exact groups,230 own schemas,
+58 exact blocker PIDs and407 exact object/contract/generator roots. Every recorded
+schema/PID/root was absent; every group except the actual running auditor was
+absent. Auditor2103477 then completed native0/group absent. Native DB and registry
+Close succeeded. Original overlay ACK remains dev27/inode431292. Valid standalone
+machine evidence is [ticket-01-resource-audit.json](ticket-01-resource-audit.json):
+leading raw JSON was parsed, null empty lists normalized to[], and wrapper native
+metadata recorded separately. The earlier raw *.json files with native suffixes
+remain historical local artifacts and are not copied as invalid machine JSON.
+Own overlay/logs and this worktree remain; original02/03 protected unknown scopes
+were not deleted or guessed. No native process remains held by this worker.
+
+Ticket status remains claimed and its8 boxes remain unchecked pending root's
+actual independent final Spec/Standards acceptance. Source and executed proof are
+ready for that review; this record does not claim full slice04 advertisement,
+root merge/push/CI, later closure/cleanup/fence/holder/SIGKILL, or power-loss/S3 proof.
