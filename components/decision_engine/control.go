@@ -196,6 +196,13 @@ var errControlInputAppeared = errors.New("control needs immutable input floor")
 
 // Cancel adopts trusted stop control for this owner only. Source proof I/O is
 // outside owner locks, and an in-flight independent publication may still end.
+func controlFailure(err error) error {
+	if errors.Is(err, ErrForbidden) {
+		return refusal("forbidden", err)
+	}
+	return refusal("dependency_unavailable", err)
+}
+
 func (s *Service) Cancel(ctx context.Context, data []byte, trusted *v.SubjectBinding) (v.TransportOutcome, error) {
 	request, err := v.DecodeCancel(data)
 	if err != nil {
@@ -207,7 +214,7 @@ func (s *Service) Cancel(ctx context.Context, data []byte, trusted *v.SubjectBin
 	}
 	access, err := s.controlAccess(ctx, trusted, request.Target, "cancel")
 	if err != nil {
-		return v.TransportOutcome{}, refusal("forbidden", err)
+		return v.TransportOutcome{}, controlFailure(err)
 	}
 	principal, err := v.Encode(access.Subject)
 	if err != nil {
@@ -273,7 +280,7 @@ func (s *Service) Cancel(ctx context.Context, data []byte, trusted *v.SubjectBin
 	for attempt := 0; attempt < 3; attempt++ {
 		floor, err := s.verifyControl(ctx, access.Subject, request.Payload, input)
 		if err != nil {
-			return v.TransportOutcome{}, refusal("forbidden", err)
+			return v.TransportOutcome{}, controlFailure(err)
 		}
 		err = s.config.Store.Within(ctx, oldOwner(s.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
 			prior, err := s.config.Store.LockCommand(ctx, tx, command)
