@@ -25,6 +25,7 @@ type RemoteState struct {
 	DelegationClosure    *task.DelegationClosure  `json:"delegation_closure,omitempty"`
 	DelegationClosureRef *api.ObjectRef           `json:"delegation_closure_ref,omitempty"`
 	TaskClosure          *task.ClosureView        `json:"task_closure,omitempty"`
+	RejectedCreation     *RemoteRejectedCreation  `json:"rejected_creation,omitempty"`
 	Incoming             *task.IncomingAllocation `json:"incoming,omitempty"`
 	SourceDatabaseID     string                   `json:"source_database_id"`
 	IssuedAt             string                   `json:"issued_at"`
@@ -110,95 +111,122 @@ func (r *Remote) state(ctx context.Context, peer runtime.Auth, q api.Query, in R
 		out.Fact.UsageFinal = true
 	}
 	err = r.within(ctx, func(tx runtime.Tx) error {
-		if child != nil {
-			actual, err := s.ReadTaskTx(ctx, tx, r.cfg.Auth, child.TaskID)
-			if err != nil {
-				return err
-			}
-			if actual.Revision != child.Revision {
-				return api.E("snapshot_required", "child_state_changed")
-			}
-		}
-		if out.Incoming != nil {
-			actual, err := s.ReadIncomingAllocationTx(ctx, tx, r.cfg.Auth, saved.Packet.AllocationRef)
-			if err != nil {
-				return err
-			}
-			if !api.Equal(actual, *out.Incoming) {
-				return api.E("snapshot_required", "original_incoming_usage_changed")
-			}
-		}
-		if err := r.cfg.Authority.CheckPeerTx(ctx, tx, peer, in.ParentOwnerID); err != nil {
-			return err
-		}
-		var current remoteReceived
-		rev, err := tx.Get(ctx, remoteIncoming, id, &current)
-		if err != nil {
-			return err
-		}
-		if current.Revision != saved.Revision {
-			return api.E("snapshot_required", "original_child_mapping_changed")
-		}
-		// 回答/恢复控制在实际原命令决定且本方责任收束前不能被称作 closed。
-		// 所有登记沿同一 Task→domain 锁序，完整原集合最多各128条。
-		for _, ns := range []string{remoteInputReceived, remotePendingControls} {
-			rows, err := tx.List(ctx, ns, id, "", 129)
-			if err != nil {
-				return err
-			}
-			if len(rows) > 128 {
-				return api.E("overloaded", "remote_transfer_responsibility_capacity")
-			}
-			for _, row := range rows {
-				var transfer struct {
-					Phase string `json:"phase"`
-				}
-				if err := row.Decode(&transfer); err != nil {
+		return task.WithJobIntents(ctx, tx, func(tx runtime.Tx) error {
+			var rejected *task.RejectedIncomingClosure
+			if child != nil {
+				actual, err := s.ReadTaskTx(ctx, tx, r.cfg.Auth, child.TaskID)
+				if err != nil {
 					return err
 				}
-				if transfer.Phase != "consumed" && transfer.Phase != "rejected" && transfer.Phase != "applied" {
-					out.Fact.TransfersClosed = false
+				if actual.Revision != child.Revision {
+					return api.E("snapshot_required", "child_state_changed")
 				}
 			}
-		}
-		if !out.Fact.TransfersClosed {
-			out.Fact.GoalWorkClosed = false
-			out.Fact.Gaps = append(out.Fact.Gaps, "input_or_control_pending")
-		}
-		if err := r.sealDelegationClosureTx(ctx, tx, id, saved.Packet, closure, &out); err != nil {
-			return err
-		}
-		semantic, err := api.Digest(out)
-		if err != nil {
-			return err
-		}
-		if current.FactRevision == 0 {
-			current.FactRevision = 1
-		}
-		if current.FactDigest != semantic {
-			current.FactDigest = semantic
-			current.FactRevision++
-			current.Revision++
-			if err = tx.Put(ctx, remoteIncoming, id, rev, current); err != nil {
+			if child == nil && saved.Phase == "rejected" && inc.Gate == "closed" {
+				actual, err := s.SealRejectedIncomingTx(ctx, tx, saved.PeerAuth, saved.Packet.AllocationRef, saved.Packet.CreateCommandID)
+				if err != nil {
+					return err
+				}
+				rejected = &actual
+				out.Incoming = &actual.Incoming
+				out.AllocationClosure = &actual.Closure
+				out.AllocationClosureRef = &actual.ClosureRef
+				usage := api.UsageSnapshot{SourceRef: r.cfg.Scope.Ref(actual.Closure.AllocationID, actual.Closure.UsageRevision), UsageRevision: actual.Closure.UsageRevision, Cumulative: actual.Closure.FinalUsage, SpendingClosed: true, UsageFinal: true, ProofRefs: []api.ContentRef{actual.Closure.ProofRef}}
+				usage.UsageDigest, err = task.UsageDigest(usage)
+				if err != nil {
+					return err
+				}
+				out.Fact.Usage, out.Fact.UsageFinal = &usage, true
+			} else if out.Incoming != nil {
+				actual, err := s.ReadIncomingAllocationTx(ctx, tx, r.cfg.Auth, saved.Packet.AllocationRef)
+				if err != nil {
+					return err
+				}
+				if !api.Equal(actual, *out.Incoming) {
+					return api.E("snapshot_required", "original_incoming_usage_changed")
+				}
+			}
+			if err := r.cfg.Authority.CheckPeerTx(ctx, tx, peer, in.ParentOwnerID); err != nil {
 				return err
 			}
-		}
-		out.Fact.Revision = current.FactRevision
-		if err := r.validateStateUsage(saved.Packet, out); err != nil {
+			var current remoteReceived
+			rev, err := tx.Get(ctx, remoteIncoming, id, &current)
+			if err != nil {
+				return err
+			}
+			if current.Revision != saved.Revision {
+				return api.E("snapshot_required", "original_child_mapping_changed")
+			}
+			if rejected != nil && (current.Phase != "rejected" || current.ChildTaskRef != nil || !api.Equal(current.Packet, saved.Packet) || !api.Equal(current.PeerAuth, saved.PeerAuth)) {
+				return api.E("snapshot_required", "original_no_child_mapping_changed")
+			}
+			// 回答/恢复控制在实际原命令决定且本方责任收束前不能被称作 closed。
+			// 所有登记沿同一 Task→domain 锁序，完整原集合最多各128条。
+			for _, ns := range []string{remoteInputReceived, remotePendingControls} {
+				rows, err := tx.List(ctx, ns, id, "", 129)
+				if err != nil {
+					return err
+				}
+				if len(rows) > 128 {
+					return api.E("overloaded", "remote_transfer_responsibility_capacity")
+				}
+				for _, row := range rows {
+					var transfer struct {
+						Phase string `json:"phase"`
+					}
+					if err := row.Decode(&transfer); err != nil {
+						return err
+					}
+					if transfer.Phase != "consumed" && transfer.Phase != "rejected" && transfer.Phase != "applied" {
+						out.Fact.TransfersClosed = false
+					}
+				}
+			}
+			if !out.Fact.TransfersClosed {
+				out.Fact.GoalWorkClosed = false
+				out.Fact.Gaps = append(out.Fact.Gaps, "input_or_control_pending")
+			}
+			if rejected != nil {
+				if err := r.sealRejectedDelegationTx(ctx, tx, id, saved.Packet, *rejected, &out); err != nil {
+					return err
+				}
+			} else {
+				if err := r.sealDelegationClosureTx(ctx, tx, id, saved.Packet, closure, &out); err != nil {
+					return err
+				}
+			}
+			semantic, err := api.Digest(out)
+			if err != nil {
+				return err
+			}
+			if current.FactRevision == 0 {
+				current.FactRevision = 1
+			}
+			if current.FactDigest != semantic {
+				current.FactDigest = semantic
+				current.FactRevision++
+				current.Revision++
+				if err = tx.Put(ctx, remoteIncoming, id, rev, current); err != nil {
+					return err
+				}
+			}
+			out.Fact.Revision = current.FactRevision
+			if err := r.validateStateUsage(saved.Packet, out); err != nil {
+				return err
+			}
+			now, err := tx.Now(ctx)
+			if err != nil {
+				return err
+			}
+			out.IssuedAt = api.Time(now)
+			out.StartBefore = api.Time(now.Add(30 * time.Second))
+			digest, err := remoteStateDigest(out)
+			if err != nil {
+				return err
+			}
+			out.Proof, err = r.cfg.Keys.Sign(r.cfg.SigningKeyID, remoteStateClaims(r.cfg.Scope, out, digest))
 			return err
-		}
-		now, err := tx.Now(ctx)
-		if err != nil {
-			return err
-		}
-		out.IssuedAt = api.Time(now)
-		out.StartBefore = api.Time(now.Add(30 * time.Second))
-		digest, err := remoteStateDigest(out)
-		if err != nil {
-			return err
-		}
-		out.Proof, err = r.cfg.Keys.Sign(r.cfg.SigningKeyID, remoteStateClaims(r.cfg.Scope, out, digest))
-		return err
+		})
 	})
 	return out, err
 }

@@ -11,8 +11,9 @@ import (
 const remoteDelegationClosures = "collaboration.remote_delegation_closures"
 
 type remoteDelegationClosure struct {
-	Closure     task.DelegationClosure `json:"closure"`
-	TaskClosure task.ClosureView       `json:"task_closure"`
+	Closure          task.DelegationClosure  `json:"closure"`
+	TaskClosure      *task.ClosureView       `json:"task_closure,omitempty"`
+	RejectedCreation *RemoteRejectedCreation `json:"rejected_creation,omitempty"`
 }
 
 // 原 child、Incoming 及交接集合已经在本次 Task→domain 事务强核。
@@ -43,7 +44,7 @@ func (r *Remote) sealDelegationClosureTx(ctx context.Context, tx runtime.Tx, han
 		if clockErr != nil {
 			return clockErr
 		}
-		actual = remoteDelegationClosure{Closure: task.DelegationClosure{DelegationID: packet.CreationKey, Revision: 1, GoalWorkClosed: true, EffectsClosed: true, AllocationClosureRef: *out.AllocationClosureRef, TransfersClosed: true, ProofRefs: []api.ContentRef{child.ProofRef, c.ProofRef}, ClosedAt: api.Time(now)}, TaskClosure: child}
+		actual = remoteDelegationClosure{Closure: task.DelegationClosure{DelegationID: packet.CreationKey, Revision: 1, GoalWorkClosed: true, EffectsClosed: true, AllocationClosureRef: *out.AllocationClosureRef, TransfersClosed: true, ProofRefs: []api.ContentRef{child.ProofRef, c.ProofRef}, ClosedAt: api.Time(now)}, TaskClosure: &child}
 		if err = tx.Create(ctx, remoteDelegationClosures, id, handoffID, actual); err != nil {
 			return err
 		}
@@ -52,15 +53,15 @@ func (r *Remote) sealDelegationClosureTx(ctx context.Context, tx runtime.Tx, han
 	} else {
 		// 每次 Closure 查询可以签发新证明；固定原组合不重封。当前
 		// Task 与完整关系摘要必须仍是原闭合快照，不能复用别的 goal。
-		if actual.TaskClosure.TaskRef != child.TaskRef || actual.TaskClosure.SnapshotDigest != child.SnapshotDigest {
+		if actual.TaskClosure == nil || actual.RejectedCreation != nil || actual.TaskClosure.TaskRef != child.TaskRef || actual.TaskClosure.SnapshotDigest != child.SnapshotDigest {
 			return api.E("snapshot_required", "original_closed_task_snapshot_changed")
 		}
-		if err = validateClosedTaskSnapshot(packet, *out, actual.TaskClosure); err != nil {
+		if err = validateClosedTaskSnapshot(packet, *out, *actual.TaskClosure); err != nil {
 			return err
 		}
 	}
 	ref := tx.Scope().Ref(id, 1)
-	out.TaskClosure = &actual.TaskClosure
+	out.TaskClosure = actual.TaskClosure
 	out.DelegationClosure = &actual.Closure
 	out.DelegationClosureRef = &ref
 	out.Fact.ClosureRef = &ref
@@ -87,18 +88,31 @@ func validateClosedTaskSnapshot(packet RemoteCreateInput, out RemoteState, closu
 
 func validateDelegationClosure(packet RemoteCreateInput, out RemoteState) error {
 	if out.DelegationClosure == nil {
-		if out.DelegationClosureRef != nil || out.Fact.ClosureRef != nil || out.TaskClosure != nil {
+		if out.DelegationClosureRef != nil || out.Fact.ClosureRef != nil || out.TaskClosure != nil || out.RejectedCreation != nil {
 			return api.E("forbidden", "remote_delegation_closure_unverified")
 		}
 		return nil
 	}
 	c := out.DelegationClosure
 	ref := out.DelegationClosureRef
-	if ref == nil || api.ValidateRecord("ObjectRef", *ref) != nil || ref.TenantID != packet.SubjectRef.TenantID || ref.OwnerID != packet.Input.ReceiverID || ref.Revision != 1 || out.Fact.ClosureRef == nil || *out.Fact.ClosureRef != *ref || out.AllocationClosure == nil || out.AllocationClosureRef == nil || out.TaskClosure == nil || !out.Fact.GoalWorkClosed || !out.Fact.EffectsClosed || !out.Fact.TransfersClosed || !out.Fact.UsageFinal || c.DelegationID != packet.CreationKey || c.Revision != 1 || !c.GoalWorkClosed || !c.EffectsClosed || !c.TransfersClosed || c.AllocationClosureRef != *out.AllocationClosureRef || !api.Equal(c.ProofRefs, []api.ContentRef{out.TaskClosure.ProofRef, out.AllocationClosure.ProofRef}) {
+	if ref == nil || api.ValidateRecord("ObjectRef", *ref) != nil || ref.TenantID != packet.SubjectRef.TenantID || ref.OwnerID != packet.Input.ReceiverID || ref.Revision != 1 || out.Fact.ClosureRef == nil || *out.Fact.ClosureRef != *ref || out.AllocationClosure == nil || out.AllocationClosureRef == nil || (out.TaskClosure == nil) == (out.RejectedCreation == nil) || !out.Fact.GoalWorkClosed || !out.Fact.EffectsClosed || !out.Fact.TransfersClosed || !out.Fact.UsageFinal || c.DelegationID != packet.CreationKey || c.Revision != 1 || !c.GoalWorkClosed || !c.EffectsClosed || !c.TransfersClosed || c.AllocationClosureRef != *out.AllocationClosureRef {
 		return api.E("forbidden", "remote_original_delegation_closure_changed")
 	}
-	if err := validateClosedTaskSnapshot(packet, out, *out.TaskClosure); err != nil {
-		return err
+	var checked string
+	var goalProof api.ContentRef
+	if out.TaskClosure != nil {
+		if err := validateClosedTaskSnapshot(packet, out, *out.TaskClosure); err != nil {
+			return err
+		}
+		checked, goalProof = out.TaskClosure.IssuedAt, out.TaskClosure.ProofRef
+	} else {
+		if err := validateRejectedCreation(packet, out, *out.RejectedCreation); err != nil {
+			return err
+		}
+		checked, goalProof = out.RejectedCreation.CheckedAt, out.RejectedCreation.ProofRef
+	}
+	if !api.Equal(c.ProofRefs, []api.ContentRef{goalProof, out.AllocationClosure.ProofRef}) {
+		return api.E("forbidden", "remote_original_delegation_proofs_changed")
 	}
 	closed, err := api.ParseTime(c.ClosedAt)
 	if err != nil {
@@ -108,7 +122,7 @@ func validateDelegationClosure(packet RemoteCreateInput, out RemoteState) error 
 	if err != nil {
 		return err
 	}
-	taskChecked, err := api.ParseTime(out.TaskClosure.IssuedAt)
+	taskChecked, err := api.ParseTime(checked)
 	if err != nil {
 		return err
 	}

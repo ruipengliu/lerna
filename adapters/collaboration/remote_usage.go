@@ -81,13 +81,23 @@ func validateStateUsageBindings(packet RemoteCreateInput, out RemoteState) error
 }
 
 func (r *Remote) observeStateUsage(ctx context.Context, d task.Delegation, out RemoteState) error {
-	if out.Incoming == nil || out.Incoming.TaskRef == nil {
+	if out.Incoming == nil || out.Incoming.TaskRef == nil && out.RejectedCreation == nil {
 		// 尚无Child时不从空费用拼出最终零账单；永久关闭由原Closure协议收束。
 		return nil
 	}
 	var saved remoteSent
 	if _, err := r.cfg.Store.Read(ctx, r.cfg.Scope, remoteOutgoing, remoteID("handoff", r.cfg.Scope.TenantID, r.cfg.Scope.OwnerID, d.CreationKey), 0, &saved); err != nil {
 		return err
+	}
+	if out.Incoming.TaskRef == nil {
+		// 仅原永久拒绝和已核真正 Closure 可以结清未创建责任。
+		// 普通尚未接纳、未知或只关闭墓碑仍不能拼出零账单。
+		if err := r.validateStateUsage(saved.Packet, out); err != nil {
+			return err
+		}
+		if out.DelegationClosure == nil || out.AllocationClosure == nil || !out.Fact.UsageFinal {
+			return api.E("forbidden", "remote_original_no_child_closure_missing")
+		}
 	}
 	usage := api.UsageSnapshot{SourceRef: api.ObjectRef{TenantID: r.cfg.Scope.TenantID, OwnerID: d.ReceiverID, ObjectID: d.AllocationRef.ObjectID, Revision: out.Incoming.UsageRevision}, UsageRevision: out.Incoming.UsageRevision, Cumulative: append([]api.Amount{}, out.Incoming.Cumulative...), SpendingClosed: false, UsageFinal: false, ProofRefs: []api.ContentRef{}}
 	if out.Fact.Usage != nil {
