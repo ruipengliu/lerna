@@ -8,7 +8,7 @@
 
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
 - 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
-- 切片 03：**in-progress**。六票42AC中01/04/05/06的27AC已resolved；规则首票整合5307702，进程恢复整合58f8f0f，完整tree均与对应worker相同。02候选与03取消/限额仍在各自独立工作树实施和验证。新1.1 Decision profile仍未完整广告；整片审查、架构、最终CI与退出待全部六票完成。
+- 切片 03：**in-progress**。01/02/04/05/06 五票的 34/42 项 AC 已 resolved；规则首票整合5307702、进程恢复整合58f8f0f、有界候选整合cad6905，完整 tree 均与各自 worker 相同。取消/限额票在独立工作树验证，尚未正式整合；新1.1 Decision profile仍未完整广告，整片审查、架构、最终CI与退出待全部六票完成。
 - 切片 04–22：**not-started**。04–22仅在`/tmp`准备条件决定和票据草案；真实前置整片退出后再按最终API复核、发布和实施，草案不代表实现或验收证据。
 
 ## 切片 01 过程检查点（历史记录）
@@ -163,3 +163,19 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 审查原前代holder丢失及同gate正常对照问题经原implementer修正；Standards复核0hard／0smell，Spec a0／b0／c0，固定15commits／24paths。修后makecheck和完整base-race实际exit0，模块校验及当前六manifest共27＋71＋3逐项通过。184外部target目录、44recovery目录、118PG与另列六local-only目录全absent；工具cache首次非空guard失败保留，准确工具退出／登记后仅清理自己的已检查cache与空overlay。旧未知PG／CID／其他票未确认构建责任不动，不声称全环境zero或断电／生产耐久。
 
 当前27/42AC完成，02／03仍claimed并独立实现，整片03未退出。全部工作树保留至whole03，完整profile仍未广告。新push的准确CI待核验；04–22只有条件草案，后续仍按真实整片依赖继续。
+
+
+## 切片03有界候选正式整合
+
+票02交付5b11dc32c9d4a458b5f28b2be74d390d97128d73，受测/最终两轴源8f94f26；
+merger正式合入cad6905ed64bde26883ef226455ebe1e221e97c2，parents949c392＋5b11dc3，
+完整tree66fe8067b1c395281ef99cfa4e15cac399746aa8与worker相同。七AC均resolved，
+详细实际检查、失败历史、1628PG／64targetFS／244recoveryFS／15archive／27确认组
+及owned root准确absence见[逐AC证据](../lerna-03-deterministic-harness/ticket-02-exit-evidence.md)。
+真实更严格旧writer检查normal13.311s/race15.403s，两轴最终无遗留；最后5b11只变十份文档，
+未扩大此前native故障证据或广告完整profile。当前34/42，取消／资源与整片仍in-progress。
+
+06准确949c392的[远端CI](../lerna-03-deterministic-harness/ci-verification.md)已实际核验success；
+候选本检查点push的新CI仍待核验，不能用949替代新代码。取消工作树的新真实并发、
+两个实际旧writer升级及两阶段进程恢复结果尚属于该工作树，最终双prepared合流、
+完整profile、整片两轴／架构／CI由root在实际组合后确认。04–22仍仅条件准备。
