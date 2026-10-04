@@ -794,7 +794,7 @@ func (s *Service) deferPrepared(ctx context.Context, work Work) error {
 		}
 		due := now.Add(100 * time.Millisecond)
 		record.Status = "waiting"
-		record.Reason = "publication_unavailable"
+		record.Reason = "dependency_unavailable"
 		record.WakeAt = v.Time(due.UTC().Format("2006-01-02T15:04:05.000000Z"))
 		if err = s.config.Store.SaveDecision(ctx, tx, *record); err != nil {
 			return err

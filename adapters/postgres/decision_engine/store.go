@@ -193,6 +193,9 @@ func (s *Store) SaveCommand(ctx context.Context, token runtime.Tx, ref v.Command
 //go:embed migrations/0001_decisions.sql
 var migration string
 
+//go:embed migrations/0002_rule_start_accounting.sql
+var accountingMigration string
+
 func MigrationChecksum() string {
 	digest := sha256.Sum256([]byte(migration))
 	return "sha256:" + hex.EncodeToString(digest[:])
@@ -218,22 +221,29 @@ func (s *Store) Migrate(ctx context.Context) error {
 		if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS decision_schema_migrations(version bigint PRIMARY KEY,checksum text NOT NULL)`); err != nil {
 			return err
 		}
-		var checksum string
-		err = tx.QueryRowContext(ctx, `SELECT checksum FROM decision_schema_migrations WHERE version=1`).Scan(&checksum)
-		if err == nil {
-			if checksum != MigrationChecksum() {
-				return errors.New("Decision migration checksum mismatch")
+		for index, sqlText := range []string{migration, accountingMigration} {
+			version := index + 1
+			digest := sha256.Sum256([]byte(sqlText))
+			expected := "sha256:" + hex.EncodeToString(digest[:])
+			var checksum string
+			err = tx.QueryRowContext(ctx, `SELECT checksum FROM decision_schema_migrations WHERE version=$1`, version).Scan(&checksum)
+			if err == nil {
+				if checksum != expected {
+					return errors.New("Decision migration checksum mismatch")
+				}
+				continue
 			}
-			return nil
+			if !errors.Is(err, sql.ErrNoRows) {
+				return err
+			}
+			if _, err = tx.ExecContext(ctx, sqlText); err != nil {
+				return err
+			}
+			if _, err = tx.ExecContext(ctx, `INSERT INTO decision_schema_migrations(version,checksum)VALUES($1,$2)`, version, expected); err != nil {
+				return err
+			}
 		}
-		if !errors.Is(err, sql.ErrNoRows) {
-			return err
-		}
-		if _, err = tx.ExecContext(ctx, migration); err != nil {
-			return err
-		}
-		_, err = tx.ExecContext(ctx, `INSERT INTO decision_schema_migrations(version,checksum)VALUES(1,$1)`, MigrationChecksum())
-		return err
+		return nil
 	})
 }
 func (s *Store) MigrationVersions(ctx context.Context) ([]MigrationVersion, error) {
@@ -243,12 +253,23 @@ func (s *Store) MigrationVersions(ctx context.Context) ([]MigrationVersion, erro
 		if err != nil {
 			return err
 		}
-		var version MigrationVersion
-		err = tx.QueryRowContext(ctx, `SELECT version,checksum FROM `+s.table("decision_schema_migrations")+` WHERE version=1`).Scan(&version.Version, &version.Checksum)
-		if err == nil {
+		rows, err := tx.QueryContext(ctx, `SELECT version,checksum FROM `+s.table("decision_schema_migrations")+` ORDER BY version`)
+		if err != nil {
+			return err
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var version MigrationVersion
+			if err = rows.Scan(&version.Version, &version.Checksum); err != nil {
+				return err
+			}
 			out = append(out, version)
 		}
-		return err
+		return rows.Err()
 	})
 	return out, err
+}
+func AccountingMigrationChecksum() string {
+	digest := sha256.Sum256([]byte(accountingMigration))
+	return "sha256:" + hex.EncodeToString(digest[:])
 }
