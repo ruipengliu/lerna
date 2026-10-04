@@ -169,7 +169,7 @@ func TestDurableDecisionRollbackAndTokenIsolation(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	record := decision.Record{Ref: scene.DecisionRef, Input: &scene.Request.Payload, Subject: scene.Subject, InputDigest: digest, Revision: 1, Status: "accepted", ArtifactRefs: []v.ContentRef{}, Usage: v.DecisionUsage{InputBytes: "0", OutputBytes: "0", RuleSteps: "0", ModelRequests: "0", Cost: v.Amount{Unit: "fixture", IntegerValue: "0"}}}
+	record := decision.Record{Ref: scene.DecisionRef, Input: &scene.Request.Payload, Subject: scene.Subject, InputDigest: digest, Revision: 1, Status: "accepted", ArtifactRefs: []v.ContentRef{}, Usage: v.DecisionUsage{InputBytes: "0", OutputBytes: "0", RuleSteps: "0", ModelRequests: "0", RuleStarts: "0", MeasurementsComplete: true, Cost: v.Amount{Unit: "fixture", IntegerValue: "0"}}}
 	aborted := errors.New("business transaction deliberately aborted")
 	var expired runtime.Tx
 	err = world.Store().Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
