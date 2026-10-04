@@ -33,6 +33,20 @@ type Permission struct {
 type Authority interface {
 	Authorize(context.Context, v.SubjectBinding, v.DecisionRef, string, *v.DecisionDecidePayload) (Permission, error)
 }
+
+// ControlAccess grants current control/read access, never execution or content
+// publication. A nil DecisionRef is an explicit owner command-read scope.
+type ControlAccess struct {
+	Subject       v.SubjectBinding `json:"subject"`
+	DecisionOwner v.OwnerRef       `json:"decision_owner"`
+	DecisionRef   *v.DecisionRef   `json:"decision_ref,omitempty"`
+	Purposes      []string         `json:"purposes"`
+	ValidUntil    time.Time        `json:"valid_until"`
+}
+type ControlAuthority interface {
+	AuthorizeControl(context.Context, v.SubjectBinding, v.DecisionRef, string) (ControlAccess, error)
+	VerifyControl(context.Context, v.SubjectBinding, v.DecisionCancelPayload, *v.DecisionDecidePayload) (*v.Revision, error)
+}
 type CapabilityBinding struct {
 	CapabilityRef v.CapabilityRef `json:"capability_ref"`
 	BindingRef    v.BindingRef    `json:"binding_ref"`
