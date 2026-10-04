@@ -25,8 +25,14 @@ func (g brainGate) PrepareGate(ctx context.Context, scope runtime.Scope, auth ru
 	if g.a.RemoteAgent != nil {
 		participants = append(participants, "collaboration")
 	}
+	var materialGroups []remoteCurrentGroup
 	status, err := g.a.Store.Within(ctx, scope, participants, func(tx runtime.Tx) error {
 		if err := g.a.Task.CheckDecisionTx(ctx, tx, auth, in.DecisionID); err != nil {
+			return err
+		}
+		var err error
+		materialGroups, _, err = g.a.remoteTaskMaterialGroupsTx(ctx, tx, in.TaskRef.ObjectID)
+		if err != nil {
 			return err
 		}
 		return currentCredentialTx(ctx, tx, auth)
@@ -41,7 +47,15 @@ func (g brainGate) PrepareGate(ctx context.Context, scope runtime.Scope, auth ru
 	if encoding != nil {
 		refs = uniqueSources(append(refs, encoding.ProcessedSources...))
 	}
-	return g.a.prepareForeignSources(ctx, scope, auth, refs, "brain.input", "cloud")
+	ctx, err = g.a.prepareForeignSources(ctx, scope, auth, refs, "brain.input", "cloud")
+	if err != nil {
+		return ctx, err
+	}
+	// 原 holder 和字节准备完成后，返回不含旧显式证明的消费载体。
+	// 后续实际 Snapshot/编码读取取得的同 CopyID Current 仍进入该载体；
+	// 最终原 Brain 纯门禁核验实际最新证明，不借准备阶段的旧窗口。
+	consumers := append([]remoteCurrentGroup{{auth, refs, "brain.input", "cloud"}}, materialGroups...)
+	return g.a.refreshRemoteConsumerSources(ctx, scope, consumers)
 }
 
 var _ brain.GatePreparer = brainGate{}

@@ -68,7 +68,8 @@ func (e executionBridge) prepareRemoteDispatch(ctx context.Context, s runtime.Sc
 		if err != nil {
 			return err
 		}
-		ctx, err = e.prepareRemoteAdmissionSources(ctx, s, i, fixed, filePermissions)
+		var materialPlan []task.CurrentMaterialPreparation
+		ctx, materialPlan, err = e.prepareRemoteAdmissionSources(ctx, s, i, fixed, filePermissions)
 		if err != nil {
 			return err
 		}
@@ -83,6 +84,9 @@ func (e executionBridge) prepareRemoteDispatch(ctx context.Context, s runtime.Sc
 			}
 			if !api.Equal(original, i) {
 				return api.E("idempotency_conflict", "original_remote_intent_changed")
+			}
+			if err = e.a.checkRemoteMaterialPlanTx(ctx, tx, i.TaskRef.ObjectID, materialPlan); err != nil {
+				return err
 			}
 			if err = e.a.Task.CheckTaskCurrentTx(ctx, tx, e.a.ServiceAuth, i.TaskRef.ObjectID, true); err != nil {
 				return err
@@ -154,6 +158,14 @@ func (e executionBridge) prepareRemoteDispatch(ctx context.Context, s runtime.Sc
 				return nil, fmt.Errorf("original device cache source %s@%d purpose=%s location=%s: %w", p.ContentRef.ContentID, p.ContentRef.Version, purpose, location, err)
 			}
 			ctx = prepared
+		}
+		// 两个 holder 位置均已准备；清空准备阶段的显式证明。
+		ctx, err := e.a.refreshRemoteConsumerSources(ctx, s, []remoteCurrentGroup{
+			{e.a.ServiceAuth, []api.ContentRef{p.ContentRef}, purpose, "cloud"},
+			{e.a.ServiceAuth, []api.ContentRef{p.ContentRef}, purpose, "device"},
+		})
+		if err != nil {
+			return nil, err
 		}
 		return e.a.Memory.ReadBytes(ctx, s, e.a.ServiceAuth, p.ContentRef, purpose, "device")
 	})
@@ -331,19 +343,25 @@ func (e executionBridge) checkRemoteDispatch(ctx context.Context, s runtime.Scop
 		return ctx, err
 	}
 	var user runtime.Auth
+	var materialGroups []remoteCurrentGroup
+	var materialPlan []task.CurrentMaterialPreparation
 	// Task 当前材料门禁也对空集合取得 Memory head；所有当前门禁所需参与者显式声明。
 	parts := []string{"task", "content", "memory", "governance", "platform"}
 	if e.a.RemoteAgent != nil {
 		parts = append(parts, "collaboration")
 	}
 	metadata, err := e.a.Store.Within(ctx, s, parts, func(tx runtime.Tx) error {
+		var err error
 		if err := e.a.Task.CheckTaskCurrentTx(ctx, tx, e.a.ServiceAuth, i.TaskRef.ObjectID, true); err != nil {
+			return err
+		}
+		materialGroups, materialPlan, err = e.a.remoteTaskMaterialGroupsTx(ctx, tx, i.TaskRef.ObjectID)
+		if err != nil {
 			return err
 		}
 		if err := currentCredentialTx(ctx, tx, e.a.ServiceAuth); err != nil {
 			return err
 		}
-		var err error
 		user, err = e.a.remoteOriginalSubmitterTx(ctx, tx, i.TaskRef)
 		return err
 	})
@@ -377,12 +395,17 @@ func (e executionBridge) checkRemoteDispatch(ctx context.Context, s runtime.Scop
 		keys = append(keys, key)
 	}
 	sort.Strings(keys)
+	// prepareRemoteDispatch 已在原控制窗口签发前完成 holder 登记与设备缓存。
+	// 最终派发只刷新这些原 holder 的 Current，不重复字节/登记准备消耗窗口。
+	consumers := make([]remoteCurrentGroup, 0, len(keys))
 	for _, key := range keys {
 		group := groups[key]
-		ctx, err = e.a.prepareForeignSources(ctx, s, group.auth, uniqueSources(group.refs), group.purpose, "device")
-		if err != nil {
-			return ctx, err
-		}
+		consumers = append(consumers, remoteCurrentGroup{group.auth, uniqueSources(group.refs), group.purpose, "device"})
+	}
+	consumers = append(consumers, materialGroups...)
+	ctx, err = e.a.refreshRemoteConsumerSources(ctx, s, consumers)
+	if err != nil {
+		return ctx, err
 	}
 	status, err := e.a.Store.Within(ctx, s, parts, func(tx runtime.Tx) error {
 		original, err := e.a.Task.OperationIntentTx(ctx, tx, i.OperationID)
@@ -391,6 +414,9 @@ func (e executionBridge) checkRemoteDispatch(ctx context.Context, s runtime.Scop
 		}
 		if !api.Equal(original, i) || bundle.AdmissionHash != i.IntentHash || bundle.ExecutionHash != fixed.Hash || !api.Equal(bundle.Intent, fixed.Domain) || !api.Equal(bundle.UseRefs, i.UseIntentRefs) {
 			return api.E("forbidden", "original_remote_dispatch_changed")
+		}
+		if err = e.a.checkRemoteMaterialPlanTx(ctx, tx, i.TaskRef.ObjectID, materialPlan); err != nil {
+			return err
 		}
 		if err = e.a.Task.CheckTaskCurrentTx(ctx, tx, e.a.ServiceAuth, i.TaskRef.ObjectID, true); err != nil {
 			return err
