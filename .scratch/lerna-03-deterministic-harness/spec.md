@@ -2,7 +2,7 @@
 
 Status: ready-for-agent
 Phase: A
-Implementation: in-progress
+Implementation: completed
 Depends on: [01](../lerna-01-command-contracts/spec.md)、[02](../lerna-02-durable-work/spec.md)
 
 ## Problem Statement
@@ -81,3 +81,8 @@ A 阶段在 01–03 完成后退出：共同身份、两种数据库耐久工作
 
 
 2026-10-04，完整profile/共享有限race入口已按受测6bf5750、交付1aa21fc正式整合391b4d8；完整两轴[审查](code-review.md)固定164commits/360paths各最终0，[架构](architecture-review.md)0必要新增重构，本地全部104Component与Recovery/Source shared入口真实exit0。完整[本地证据](whole-exit-evidence.md)及两个literal audits保留失败与资源限制。准确新push CI及整片退出尚待核验，Implementation仍in-progress。
+
+
+## 切片退出证据（2026-10-04）
+
+六票42/42AC与原六项验收、完整profile/真实shared入口/固定两轴及架构/准确47ebce1 CI37194868564 success均核实；10worktrees清理且分支保留。准确代码/合同、环境、命令、失败与未知资源限制见[退出记录](exit-evidence.md)。A阶段01–03完整退出，不开放真实业务副作用；下一frontier04按实际API复核。

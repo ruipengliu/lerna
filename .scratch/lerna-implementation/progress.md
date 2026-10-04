@@ -8,7 +8,7 @@
 
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
 - 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
-- 切片 03：**in-progress**。全部六票、42/42 项 AC 已 resolved并正式整合；取消/限额源882e97b、交付8385b9b、整合4b94cb6，完整 tree 与 worker相同。完整check、基础race、真实PG／原双库恢复及102项Component有限分组race通过，整包120秒超时保留为历史失败。本地完整1.1 profile及共享分组CI入口已整合391b4d8（交付1aa21fc、受测6bf5750）；完整164commits/360paths两轴最终0，架构必要新增重构0。新共享race入口全部104项及Recovery/Source已通过，准确新push CI与整片退出仍待核验。
+- 切片 03：**completed**。六票42/42AC及原六项验收完成；受测882e97b/6bf5750、交付1aa21fc、整合391b4d8，完整profile/共享104项race及两轴/架构闭合。准确47ebce1 CI37194868564 success；10worktrees清理/分支保留。完整[退出](../lerna-03-deterministic-harness/exit-evidence.md)保留失败和未知资源。A阶段01–03完整退出，下一frontier04。
 - 切片 04–22：**not-started**。04–22仅在`/tmp`准备条件决定和票据草案；真实前置整片退出后再按最终API复核、发布和实施，草案不代表实现或验收证据。
 
 ## 切片 01 过程检查点（历史记录）
@@ -195,3 +195,8 @@ merger正式合入cad6905ed64bde26883ef226455ebe1e221e97c2，parents949c392＋5b
 2026-10-04，正式整合391b4d8的whole tree与交付1aa21fc一致，准确parents3845110+1aa21fc。三项广告flag实际生成后，1.1 command.get与三个Decision方法准确协商开放；原1.0和158旧fixtures冻结、89新版原payload未变。本地新shared入口实际串行Recoveryrace79.934s、动态全部104Component=60项102.204s+44项11.633s、Source28.271s，nativefinalexit0，期限仍120s。完整两轴[报告](../lerna-03-deterministic-harness/code-review.md)最终0，历史绝对链接P2已闭合；[架构](../lerna-03-deterministic-harness/architecture-review.md)0必要新重构。
 
 [本地证据](../lerna-03-deterministic-harness/whole-exit-evidence.md)严格区分6bf受测与五项空白/文档followup、589ACK中的414uniquePG及122SQLite/32Target/3archive/6groups全absent、自身overlay/cache197保留和历史未知资源保护。原整包Component120.073失败继续保留。此处不引用旧5bcCI证明新源码；本次准确push CI待核，Implementation继续in-progress。
+
+
+## 切片03完整退出
+
+2026-10-04，准确47ebce1 CI37194868564两job/全部steps/实际日志success，104动态分组/Recovery/Source范围已核，[完整退出](../lerna-03-deterministic-harness/exit-evidence.md)保存各证据。414PG/122SQLite/32Target/3archive/6groups全absent；197确切缓存/3空目录清理、自身overlayabsent、10worktrees正常移除/分支保留；旧3540/失名PG/CID保留。历史pending和失败不改写，03正式completed，04按最终API复核再发布。

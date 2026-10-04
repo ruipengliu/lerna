@@ -1,0 +1,77 @@
+{
+  "verified_ci_head": "47ebce1237a34e7b535423c31b7a7d59e39e0caf",
+  "removed_count": 10,
+  "worktrees": [
+    {
+      "worktree": "/tmp/lerna-worktrees/deterministic-harness-01",
+      "removed": true,
+      "branch": "refs/heads/codex/deterministic-harness-ticket-01",
+      "branch_retained_at": "d806a92eb443b8e0c989cde4e4d7c20c7d61f49c",
+      "force": false
+    },
+    {
+      "worktree": "/tmp/lerna-worktrees/deterministic-harness-01-contract",
+      "removed": true,
+      "branch": "refs/heads/codex/deterministic-harness-01-contract",
+      "branch_retained_at": "1d69359e548920c063aca4e62174548528082617",
+      "force": false
+    },
+    {
+      "worktree": "/tmp/lerna-worktrees/deterministic-harness-01-fixture",
+      "removed": true,
+      "branch": "refs/heads/codex/deterministic-harness-01-fixture",
+      "branch_retained_at": "1c8152952e5638707cfdb7a386a09af1961701e9",
+      "force": false
+    },
+    {
+      "worktree": "/tmp/lerna-worktrees/deterministic-harness-01-mechanics",
+      "removed": true,
+      "branch": "refs/heads/codex/deterministic-harness-01-mechanics",
+      "branch_retained_at": "1ffcc36e2390028935e2c01541775254926dc8f3",
+      "force": false
+    },
+    {
+      "worktree": "/tmp/lerna-worktrees/deterministic-harness-02",
+      "removed": true,
+      "branch": "refs/heads/codex/deterministic-harness-ticket-02",
+      "branch_retained_at": "5b11dc32c9d4a458b5f28b2be74d390d97128d73",
+      "force": false
+    },
+    {
+      "worktree": "/tmp/lerna-worktrees/deterministic-harness-03",
+      "removed": true,
+      "branch": "refs/heads/codex/deterministic-harness-ticket-03",
+      "branch_retained_at": "8385b9b1aed0832b7ef9cfd75312eff6f84ae4ec",
+      "force": false
+    },
+    {
+      "worktree": "/tmp/lerna-worktrees/deterministic-harness-04",
+      "removed": true,
+      "branch": "refs/heads/codex/deterministic-harness-ticket-04",
+      "branch_retained_at": "792ee859424800a67501ea6c8b2291cde9c696cc",
+      "force": false
+    },
+    {
+      "worktree": "/tmp/lerna-worktrees/deterministic-harness-05",
+      "removed": true,
+      "branch": "refs/heads/codex/deterministic-harness-ticket-05",
+      "branch_retained_at": "e3c34267d41aacd2bc8dda226d85c95da91bea2b",
+      "force": false
+    },
+    {
+      "worktree": "/tmp/lerna-worktrees/deterministic-harness-06",
+      "removed": true,
+      "branch": "refs/heads/codex/deterministic-harness-ticket-06",
+      "branch_retained_at": "6904b2d1b1fd177207342203bc6f9e4ef5a9e2f6",
+      "force": false
+    },
+    {
+      "worktree": "/tmp/lerna-worktrees/deterministic-harness-whole",
+      "removed": true,
+      "branch": "refs/heads/codex/deterministic-harness-whole",
+      "branch_retained_at": "1aa21fcf47352c4460877bb51fc04dc302cdbae9",
+      "force": false
+    }
+  ],
+  "unknown_non_worktree_resources_untouched": true
+}

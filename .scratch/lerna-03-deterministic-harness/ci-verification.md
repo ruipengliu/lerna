@@ -71,3 +71,20 @@ Root已读取准确head5bcdea8669adb49c341342e5b05deadffa0b8661的[run3718979734
 实际psql18.6、工具race1.508；原PG／SQLite及06真实进程恢复正常25.852／race61.665；Component29.248／53.541；Source及970／两个FINAL01严格旧writer消费者10.519／14.128；原27 SHA逐项OK。DB命令count1／timeout120，新增PG包p1顺序执行。
 
 这是02正式整合后的34/42子AC检查点；尚无后来03控制／Source0002／Decision0003／双prepared Stop合流／89夹具／完整profile。Source正常错误测试不等于native Wait或进程组故障注入；不宣称生产、断电或provider保证。本记录在下一产品整合后保存，不另以文档检查点重复触发旧CI；882及whole03准确最终CI待后续。
+
+
+## 完整03准确提交的最终CI（2026-10-04）
+
+实际push提交 `47ebce1237a34e7b535423c31b7a7d59e39e0caf`，包含正式整合391b4d8及仅六份审查/进度文档增量；整合完整tree与固定交付1aa21fc相同，受测profile/共享入口源码6bf5750。root实际读取[run37194868564](https://github.com/ruipengliu/lerna/actions/runs/37194868564)的准确head_sha、push event、completed/success，以及两job全部steps和实际日志，不能用旧5bc结果替代。
+
+| 作业/实际范围 | 观察 |
+| --- | --- |
+| contracts111414531408 | 全部steps success；锁定bootstrap、lint/vet/生成一致性/严格类型/Go及TS build；25JS工具与40TS行为测试全pass；89新版+158旧版fixtures正反序均完成真正Go→TS/TS→Gotyped exchanges。反序中未变的几个纯Go辅助suite cached，未说成全部新执行。 |
+| 原不可变psql客户端生命周期111414531470 | 固定PG18.6工具，真实container客户端race1.622s，step success。 |
+| make test-integration | 原PG/SQLite+当前native恢复normal30.182s；全部Component49.124s、完整Source16.517s，count1/integration/timeout120，全部success。 |
+| 新make test-integration-race | 真实同一共享入口：Recovery66.903s → actualgo-list104=60Durable+44Other → 60race80.165s → 44race10.196s → Source21.851s，原120秒、p1/count1/integration/race及串行保持，全部success。新增publicGo协商case实际自动进Other。 |
+| 原durable-work checksum入口 | 四份原清单27项在normal与race各一次全部OK（实际54条OK行），原byte不改。970/FINAL01及真实目标archive的完整保护与consumer验证按源码及对应真实restore tests；不把27入口伪称单独逐打印172项。 |
+
+两job含post/cache/stop containers均success。根实际查看contract日志40902B、durable日志47355B，只将无凭据的范围/时间/状态记录在这里；未输出私有DSN/token/env。Target完整普通suite在contracts为1.498s；本workflow未单独跑整个Target race，原本地53.914基础race包含Target17.241与其全部恢复/计划，scope不混淆。
+
+该CI证明当前本机/CI测试服务的合同、真实DB和进程故障恢复，不证明断电、真实provider幂等/费用、Task/Grant/Executor、生产故障域、质量或容量。原Component整包120.073失败继续保留；新完整动态正向分组是后续真实验证，未扩大期限或省略cases。资源未知及清理边界仍以各literal audits为准。

@@ -166,3 +166,8 @@ Source成功关闭后的真正读取失败不是native Close或COMMIT故障；�
 ## 切片03取消与限额正式整合（整片尚未退出）
 
 2026-10-04，六票42/42子AC resolved，03受测882e97b／交付8385b9b／整合4b94cb6。真实受信控制、nilInput关闭、两种并发提交顺序、原资源与期限、每项双prepared发布门禁、全部来源及旧writer重开均有[八AC退出证据](../lerna-03-deterministic-harness/ticket-03-exit-evidence.md)。完整真实PG正常、Source race、102项互斥Component有限race及原双库／native恢复正常37.201／race87.979通过。原Component整包120.073超时及旧未知目录仍保留，不扩大成native故障或全环境清理证明。完整profile／分组CI／整片审查与架构／最终CI尚待完成；G2整体、G3及生产指标不因此关闭。
+
+
+## 切片03完整退出
+
+2026-10-04，六票42AC及原六项、完整1.1四方法/共同黄金、真实DB与104动态race、两轴最终0、架构0必要新重构、准确47ebce1 CI37194868564通过。[证据](../lerna-03-deterministic-harness/exit-evidence.md)映射原身份/候选拒绝/独立效果/窗口不足/重启计划/有限正常对照。A阶段01–03退出；G2仅此本地DB/规则/测试目标范围，G3第二业务实现、Task/Grant/Provider及生产质量容量待后续。120.073超时和未知资源保持，10worktrees清理不代表全环境零。

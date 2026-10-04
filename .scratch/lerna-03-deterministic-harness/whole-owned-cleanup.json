@@ -1,0 +1,27 @@
+{
+  "time_utc": "2026-10-04T10:28:24.651366+00:00",
+  "root": "/workspace/lerna-03-whole-dbtmp-l8rawcn4",
+  "root_device": 27,
+  "root_inode": 431270,
+  "original_inventory_files": 197,
+  "observed_files": 197,
+  "new_files_registered": 0,
+  "files_unlinked": 197,
+  "empty_directories_removed": 3,
+  "owned_root_remaining": false,
+  "errors": [],
+  "native_observation": {
+    "same_uid_live_processes_scanned": 6,
+    "ownroot_borrowers": [],
+    "same_uid_live_unobservable": [],
+    "other_uid_processes_outside_own_holder_scope": 15,
+    "zombies_with_kernel_closed_handles_excluded": 324,
+    "acknowledged_process_groups_absent": 6
+  },
+  "method": "exact file inode/hash verification then unlink; exact observed empty directories rmdir; workspace fsync; no force/recursive removal",
+  "root_ack_retained": "/workspace/lerna-03-whole-root-ack.json",
+  "owned_scope_ledger_retained": "/workspace/lerna-03-whole-owned-scopes",
+  "original_tool_inventory_retained": "/workspace/lerna-03-whole-tool-cache-inventory.json",
+  "final_preflight_retained": "/workspace/lerna-03-whole-final-cleanup-preflight.json",
+  "other_scopes_worktrees_and_repository_untouched": true
+}
