@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-04 23:10 UTC，05真实跨页资格partial `1af6593ae290266357e28aab390b71747943565c`：PageSize2的原政策责任partial后重开，完整5条责任保持；4个原保存主体版本清理、另一保存主体的独立字节不误删。实际secondary关闭／nilport下，3个holder的2＋1页保留准确副本责任；两个World重开恢复后才全ACK。正常0.962s及该case＋原offline两项race3.607s通过，原水位／期限／copy绑定不变。03三次原数量溢出资格partial `6f6d97d`，修正过严测试诊断断言后2.039s通过：原三轮均消耗次数、读取预约仍0、第四轮精确次数拒绝及重开未派发。仍待真实原期限／并发／Prepared／旧源及清理attempt／升级／时钟CAS边界和最终审查，两票均未接受或正式合入。
+
 2026-10-04 22:53 UTC，原cap清理partial `d849b7a1`：非法持久时间拒绝unit0.010s、真实清理链2.469s、cap／当前撤save／恢复save／自然phase四项race6.864s通过；原seal key／责任Deadline、独立物理缺失、重开ACK、新version与固定回执均核准，旧0001／0002校验和保持。03完整材料投影修复partial `d427c49`，正常2.609s及投影＋include／omit相关race14.541s通过。原三次早期数量溢出计数资格首次1.853s因额外要求诊断维度而失败，真实正常对照已完成、原返回准确context_overflow；仅收紧测试断言后复验，未宣称三轮已通过。采用[旧holder绑定升级决定](../lerna-04-content-snapshots/ticket-05-legacy-holder-binding/README.md)，只支持可完整核准的原scope，真实旧writer／停止／原介质／完整attempts及CAS仍待实施；不操作任何历史unknown scope。两票依然claimed、whole04仍15/41。
 
 2026-10-04 22:44 UTC，采用[原接受保留期限清理决定](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/README.md)：严格解析并重新核对原持久cap到期，完整保存主体／用途／准确ref和结构闭包不变，原清理执行期限不续期，复用原seal及全holder ACK；最小修复正在静态实施。03独立正常Completed对照1.63s后，真实出版的坏shell／manifest／lock一致遗漏原Selected A，Source却接受，实际2.580s业务失败已保留；将共享核对M＋全部原selected材料的完整投影，后续Lock／重开尚未执行。两项均不构成新票退出或整片完成。
