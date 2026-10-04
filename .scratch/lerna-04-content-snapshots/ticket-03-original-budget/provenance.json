@@ -1,0 +1,11 @@
+{
+  "source": "/tmp/lerna-04-ticket-03-original-budget-decision.md",
+  "bytes": 13594,
+  "sha256": "17eb78341dc712651bbeccafa5744e7063dc27e74595f4346764adb325040be3",
+  "agent": "/root/results_08_decisions",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "high",
+  "source_partial": "1148a1fa7c13c006715c8f77fb964df0c3fb42c3",
+  "integration_before_adoption": "495f7f32ca88bcd57a62dfb8178f68fff12c5e3b",
+  "scope": "Static original Snapshot durable compile/read budget decision. Root separately read actual round first-red 1.974s native1 group_absent; no budget implementation qualification."
+}
