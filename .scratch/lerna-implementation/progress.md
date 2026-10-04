@@ -130,3 +130,5 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 04受测cac8e92／clean tip792ee85经merger整合f11135b，6AC resolved。新owner真实SQLite3.53.4/WAL/FULL/FK及0001迁移、普通write/read/query与独立Observer、原键冲突/不续期/准确到期/无query边界通过；final normal0.356s/race1.483s各10项、makecheck/module verify及旧27hash全部通过。Standards两P2及清理followups经原reviewer复核关闭，Spec/Architecture无发现；101个精确登记scope全部absent。证据见[04](../lerna-03-deterministic-harness/issues/04-durable-test-target.md)。不声称供应商、nativeCommit未知、SIGKILL或断电验证，准确新远端CI仍待核验。
 
 05直接前置已满足并claimed，从最新integration新工作树实施耐久fault plan/迟到原效果/seed与cursor；01继续完成自身9AC，02/03等待01，06等待01+05。整个03尚未完成，不提前广告完整decision_engine profile。
+
+04整合检查点270ae4ae8abe2c5245328da2e5c4cdfe514ecf40的准确远端[CI37164714040](https://github.com/ruipengliu/lerna/actions/runs/37164714040)已实际success，两个job所有step通过。基础检查包含新target测试0.087s和旧158共同夹具双向/正反序；既有真实双库恢复count1 normal24.421s/race51.850s、psql18.6工具生命周期race1.550s及27源hash通过。远端race范围为既有recovery，不能当作新target race证据（新target本地race1.483s见04）；未合入的Decision与05fault plan均不在此CI范围。此前“新远端CI待核验”为历史检查点。
