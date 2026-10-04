@@ -4,14 +4,14 @@
 
 **Blocked by:** 01 原 Decision 的耐久规则提案；05 迟到效果与耐久故障计划
 
-**Status:** claimed
+**Status:** resolved
 
-- [ ] 复用02实际子进程／同步设施，在正常Decision输出发布与本地completed提交边界受控SIGKILL；独立连接公开get恢复原Proposal、产物、身份与固定回执。
-- [ ] 跨owner发布已完成但Decision引用尚未提交的退出，用原发布key和摘要恢复，原引用读回一致，不造第二产物或假称跨owner原子提交。
-- [ ] 独立目标在COMMIT前及提交后／响应前受控终止，普通query／read加observer区分无效果与已写响应未知；真实存储与子进程正常控制均运行。
-- [ ] 故障协调者和目标重启保持scenario／event／cursor，同一持久scenario不重复已完成步骤；另一个隔离scenario同seed有限重演的定义明确。
-- [ ] 所有子进程、管道、连接和临时数据有限清理；同步点来自真实阶段，不用sleep猜测，记录准确代码／DB／计划版本、输入和结果。
-- [ ] 本票只验证正常Decision及target的进程恢复，不隐含依赖所有候选／取消或承担整片关闭；仅证明进程SIGKILL，不证明断电、供应商幂等、生产容量或可用区耐久。
+- [x] 复用02实际子进程／同步设施，在正常Decision输出发布与本地completed提交边界受控SIGKILL；独立连接公开get恢复原Proposal、产物、身份与固定回执。
+- [x] 跨owner发布已完成但Decision引用尚未提交的退出，用原发布key和摘要恢复，原引用读回一致，不造第二产物或假称跨owner原子提交。
+- [x] 独立目标在COMMIT前及提交后／响应前受控终止，普通query／read加observer区分无效果与已写响应未知；真实存储与子进程正常控制均运行。
+- [x] 故障协调者和目标重启保持scenario／event／cursor，同一持久scenario不重复已完成步骤；另一个隔离scenario同seed有限重演的定义明确。
+- [x] 所有子进程、管道、连接和临时数据有限清理；同步点来自真实阶段，不用sleep猜测，记录准确代码／DB／计划版本、输入和结果。
+- [x] 本票只验证正常Decision及target的进程恢复，不隐含依赖所有候选／取消或承担整片关闭；仅证明进程SIGKILL，不证明断电、供应商幂等、生产容量或可用区耐久。
 
 ## 最终接法注记（whole02已退出）
 
@@ -36,3 +36,7 @@
 2026-10-04，fdc76b9首轮target／共享process／新Decision／受影响旧demo正常和race、bootstrap与makecheck均真实通过；两个独立轴仍指出旧demo换代丢前代FDunknown责任、preCOMMIT同gate正常对照资格及三Rule kill序列重复。原implementer唯一修复，首轮通过不代表已覆盖发现；当前补测候选未运行、四项基础最终检查待完成，六AC继续未关闭。
 
 2026-10-04，原implementer已完成独立审查全部实现修正并复验：机械前代unknown red0.010→green0.011/race1.043（无物理scope／nativeFD fault）；真实preCOMMIT同gate正常＋SIGKILL pair0.082/race3.174；Decision四故事共享窄物理安全序列5.366/race17.028；旧三故事＋真实ClaimTakeover两DB5.322/race18.233，均实际exit后串行下一组。120 target FS、44 recovery FS、118精确PG及旧六local-only全absent，所有session／child／native责任确认后release。尚待独立复核和修后最终基础检查，六AC仍未最终关闭；见[实际映射](../ticket-06-api-handoff.md)。
+
+2026-10-04，06六AC已在本票范围真实完成并resolved。最终实际代码为 `a5005ab0d583f9a1906809cfd94c27daf89f5666`；独立Standards复核0hard／0smell，Spec复核a0／b0／c0，固定15commits／24paths，原P2／P3与判断项均已闭合。修后makecheck session90585实际exit0，base Go race session51409实际exit0（target16.526s）；模块verify及实际已存在六SHA256SUMS清单27＋71＋3逐项exit0，触及文档链接与生成一致性通过。准确指令、首次失败历史、source／doc pin分层与局限见[最终交接](../ticket-06-api-handoff.md)。
+
+最后exact审计184条外部target FS、44条recovery FS、118条PG（22＋96）均absent，六条旧local-only target另列absent。首空目录guard因工具Node cache非空失败，保存历史；所有Node／pnpm／build命令实际exit0后，对已检查七个确切非symlink工具cache文件先登记／fsync，再逐unlink与empty-rmdir，自己的 `/workspace/lerna-03-ticket-06-tmp-h87uvehg` 已准确rmdir／父目录fsync。所有child Wait／管道／native writer／observer确认关闭，无剩余exec／test／DB／child sessions。保留旧未知PGscope／CID和其他票未知构建责任；不称全环境zero。所有worktree／branch保留，root负责正式整合／push与whole03最终架构复核／关闭；本票不隐含等待02／03或新完整profile。

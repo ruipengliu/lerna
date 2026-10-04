@@ -1,6 +1,6 @@
-# 06 实际实现与验收映射（最终检查前）
+# 06 实际实现与验收映射（本票已退出）
 
-本票仍 claimed。独立分支从正式 root `e29675d75f5135995614e4eb2faadf6c2ac1581d` 开始；直接前置只有已 resolved 的01与05。当前六条行为均有实际运行证据，最终受影响回归、基础检查及独立评审待完成，不能据此关闭本票或整片。
+本票六AC已完成并 resolved。独立分支从正式 root `e29675d75f5135995614e4eb2faadf6c2ac1581d` 开始；直接前置只有已 resolved 的01与05。最终代码／双轴复核固定在 `a5005ab0d583f9a1906809cfd94c27daf89f5666`，其后的退出文档单独提交。整片03架构及关闭仍由root负责，不能由本票退出替代。以下进展记录保留各阶段实际限制，最后一节给出最终检查。
 
 ## 六条 AC 的实际出口
 
@@ -48,3 +48,25 @@ Spec P2：ownedFixture 保留每代具体 hostProcess；所有代 Stop／FD确�
 Standards judgement：三处仅共用私有具体 `killRuleChild` 的 SIGKILL／独立 Reply EOF／确认 Stop 序列，业务 Proposal／receipt／usage断言仍留各故事。Decision四故事 normal5.366／race17.028均exit0。
 
 全部严格确认前 shellsession exit后才启动下一组；实时 raw日志 `/tmp/lerna-03-ticket-06-final-review-{mechanical-red,mechanical-green,mechanical-race,pregate-normal,pregate-race,decision-normal,decision-race,legacy-normal,legacy-race}.log`。最终exact审计120 target FS、44 recovery FS、118 PG均absent，旧六local-only另列absent；所有child／FD／writer／observer关闭确认后释放slot。实现及复验已完成，独立复核和修复后的makecheck／base-race／modverify／27＋71＋3 hash尚待，继续claimed。
+
+## 最终检查与本票退出
+
+实际代码 `a5005ab0d583f9a1906809cfd94c27daf89f5666`，Standards固定复核0hard／0smell，Spec固定复核a0／b0／c0，完整15commits／24paths；原失败报告保留，两个followup分别为 `/tmp/lerna-03-ticket-06-standards-followup.md` 和 `/tmp/lerna-03-ticket-06-spec-followup.md`。root明确最终整片03架构会在实际合并树另做，当前预览并非本票架构通过证据，不引入本票新的wholeclose依赖。
+
+最终实际严格串行命令：
+
+```sh
+make check GOFLAGS='-mod=readonly -p=1'
+go test -race -p=1 -count=1 -timeout=120s ./...
+go mod verify
+```
+
+每条前一个shellsession实际exit后才开始。makecheck session90585 exit0，含gofmt／prettier／vet、生成一致性、Go／TS、81＋158共同合同正反序与真实双向roundtrip、build；base-race session51409 exit0，其中目标完整race16.526s。锁定bootstrap已在首轮真实exit0，工具／依赖未改，因此未再次无端安装。Go1.27.1、Node24.19.0、pnpm12.8.1、TypeScript7.0.2实际校验；PG18.6、SQLite3.53.4及各实际阶段／计划／迁移原始输出由运行中的raw日志保存。
+
+当前分支六个实际 `SHA256SUMS` 均执行 `sha256sum -c SHA256SUMS` 退出0：durable pg-v1 5、pg-v2 9、sqlite-v1 5、sqlite-v2 8，共27；legacy-970fd90 71；deterministic-target/v1 3。没有声称未合入的新02／03 FINAL01 archive已在本树验证。未改冻结04源码、0001／已发布0002 SQL或任何公开profile。文档相对文件链接存在，git diff检查通过；代码不变后未重复无关integration／wholePG套件。
+
+现场raw日志：`/tmp/lerna-03-ticket-06-final-postfix-check.log`、`/tmp/lerna-03-ticket-06-final-postfix-base-race.log`、`/tmp/lerna-03-ticket-06-final-modverify.log`、`/tmp/lerna-03-ticket-06-final-hashes.log`。首轮fdc日志未覆盖；早期pending两份是明确标注的后录tool transcript，不称现场tee。完整逐vertical红绿／错误／code pin／命令／session记录 `/tmp/lerna-03-ticket-06-evidence.md`。
+
+最后审计 `/tmp/lerna-03-ticket-06-final-audit.json` exit0：184个外部登记target目录、44个recovery目录、118个确切PGschema均absent；六个早期本地ack／fsync而漏外部账本的路径另列absent，未补造登记。先确认所有children实际Wait／全部FD／writer／observer nativeClose，再核对自己的目录。首次空目录guard因仅Node24.19工具compile cache非空而exit1，没有删除；所有工具命令实际exit0后，检查准确七文件及目录、无symlink，先inventory登记／fsync，再逐文件unlink、逐空目录rmdir并fsync父目录。确切owned overlay已absent；保留账本作证据。工具生成的cache在发现后登记，未假称它也由fixture即时Mkdir登记。只删除自己的精确路径，未猜删任何旧未知PG／CID／其他票未知scope。
+
+六条AC已由原作者实现、真实验证、独立双轴复核并resolved。所有exec／build／test／DB／child sessions已退出。root负责正式merge／push、后续CI、实际合并树架构审查与whole03关闭；本票worktree／branch保留。证据只支持正常Decision／target的进程SIGKILL及所测正常控制，不支持断电、provider幂等、生产容量、可用区耐久、Executor Effect或whole03完成。
