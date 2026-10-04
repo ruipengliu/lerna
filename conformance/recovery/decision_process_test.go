@@ -410,7 +410,9 @@ func startRuleChild(t *testing.T, w *fixture.World, ctx context.Context, gate st
 	if err = child.Event(childCtx, &ready); err != nil {
 		t.Fatal(err)
 	}
-	if ready.Scenario != cfg.Scenario || ready.Generation != generation || ready.Stage != "configured" || len(ready.Versions) != 2 || ready.Settings == "" {
+	// The current writer includes append-only Decision0003. Frozen old writer
+	// migration ledgers remain verified against their original source versions.
+	if ready.Scenario != cfg.Scenario || ready.Generation != generation || ready.Stage != "configured" || len(ready.Versions) != 3 || ready.Settings == "" {
 		t.Fatal("wrong actual Rule2 child configuration/settings")
 	}
 	t.Logf("Decision child generation=%d scenario=%s source=%s decision=%s actual=%s migrations=%v", generation, cfg.Scenario, cfg.Source.Schema, cfg.DecisionSchema, ready.Settings, ready.Versions)
