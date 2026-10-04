@@ -12,6 +12,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"math"
 	"net/url"
 	"path/filepath"
 	"sync"
@@ -87,6 +88,8 @@ type Observer struct {
 //go:embed migrations/0001_target.sql
 var migration string
 
+// Open returns a cleanup handle with an error if initialization cannot confirm
+// Close. Callers must retain that handle and physical scope until Close succeeds.
 func Open(ctx context.Context, cfg Config) (*Target, error) {
 	if ctx == nil || !filepath.IsAbs(cfg.Path) || cfg.Path == ":memory:" || len(cfg.Identity) == 0 || len(cfg.Identity) > 128 || cfg.Window <= 0 || cfg.Window > 24*time.Hour || (cfg.QueryMode != QueryEnabled && cfg.QueryMode != QueryDisabled) || cfg.IOTimeout <= 0 || cfg.IOTimeout > 30*time.Second || cfg.BusyTimeout < time.Millisecond || cfg.BusyTimeout > cfg.IOTimeout || cfg.Now == nil {
 		return nil, errors.New("invalid finite test target configuration")
@@ -105,7 +108,11 @@ func Open(ctx context.Context, cfg Config) (*Target, error) {
 	db.SetMaxIdleConns(1)
 	t := &Target{db: db, cfg: cfg, gate: make(chan struct{}, 1), release: release}
 	if err = t.initialize(bounded); err != nil {
-		return nil, errors.Join(err, t.Close())
+		closeErr := t.Close()
+		if closeErr != nil {
+			return t, errors.Join(err, closeErr)
+		}
+		return nil, err
 	}
 	return t, nil
 }
@@ -228,6 +235,10 @@ func (t *Target) Write(ctx context.Context, r Request) (Receipt, error) {
 	}
 	defer tx.Rollback()
 	now := t.cfg.Now().UTC()
+	deadline := now.Add(t.cfg.Window)
+	if now.Before(time.Unix(0, math.MinInt64)) || deadline.After(time.Unix(0, math.MaxInt64)) {
+		return Receipt{}, errors.New("test clock window cannot be represented as durable nanoseconds")
+	}
 	var length [4]byte
 	binary.BigEndian.PutUint32(length[:], uint32(len(r.Resource)))
 	meaning := append(append(append([]byte{}, length[:]...), []byte(r.Resource)...), r.Data...)
@@ -258,7 +269,7 @@ func (t *Target) Write(ctx context.Context, r Request) (Receipt, error) {
 	if !errors.Is(lookupErr, sql.ErrNoRows) {
 		return Receipt{}, lookupErr
 	}
-	out = Receipt{Key: r.Key, Digest: digest, Start: now, Deadline: now.Add(t.cfg.Window), Value: Value{Resource: r.Resource, Version: 1, Data: append([]byte{}, r.Data...)}}
+	out = Receipt{Key: r.Key, Digest: digest, Start: now, Deadline: deadline, Value: Value{Resource: r.Resource, Version: 1, Data: append([]byte{}, r.Data...)}}
 	var previous int64
 	err = tx.QueryRowContext(ctx, `SELECT version FROM target_values WHERE resource=?`, r.Resource).Scan(&previous)
 	if err == nil {
@@ -296,6 +307,10 @@ func (t *Target) Read(ctx context.Context, resource string) (Value, error) {
 	}
 	return out, err
 }
+
+// OpenObserver opens an explicitly privileged read-only connection. If failed
+// initialization also fails Close, the returned handle remains the caller's
+// cleanup responsibility despite the error. Do not delete its physical scope.
 func OpenObserver(ctx context.Context, cfg ObserverConfig) (*Observer, error) {
 	if ctx == nil || !filepath.IsAbs(cfg.Path) || cfg.Identity == "" || cfg.IOTimeout <= 0 || cfg.IOTimeout > 30*time.Second {
 		return nil, errors.New("invalid finite observer configuration")
@@ -308,16 +323,22 @@ func OpenObserver(ctx context.Context, cfg ObserverConfig) (*Observer, error) {
 	}
 	db.SetMaxOpenConns(1)
 	db.SetMaxIdleConns(1)
+	observer := &Observer{db: db, cfg: cfg}
+	fail := func(cause error) (*Observer, error) {
+		closeErr := observer.Close()
+		if closeErr != nil {
+			return observer, errors.Join(cause, closeErr)
+		}
+		return nil, cause
+	}
 	var identity string
 	if err = db.QueryRowContext(bounded, `SELECT identity FROM target_identity WHERE singleton=1`).Scan(&identity); err != nil {
-		db.Close()
-		return nil, err
+		return fail(err)
 	}
 	if identity != cfg.Identity {
-		db.Close()
-		return nil, errors.New("observer durable identity mismatch")
+		return fail(errors.New("observer durable identity mismatch"))
 	}
-	return &Observer{db: db, cfg: cfg}, nil
+	return observer, nil
 }
 func (o *Observer) Close() error { return o.db.Close() }
 func (o *Observer) Observe(ctx context.Context, key string) (Fact, error) {

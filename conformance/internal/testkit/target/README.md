@@ -2,7 +2,7 @@
 
 这是 `conformance` 可见的测试设施，不是 production adapter、Executor Effect 账本或供应商 API。它不使用业务凭据、模型调用或真实费用；请求中的材料、幂等窗口与能力只代表当前测试配置。
 
-`Open(ctx, Config)` 使用显式绝对文件路径、测试 identity、固定 Window、闭合 QueryMode、有限 IOTimeout/BusyTimeout 和测试时钟 Now。最多 128 字节的原键及资源名、1 MiB 内容，窗口最多 24 小时，I/O 最多 30 秒。SQLite 驱动沿根 module 固定版本；Linux、CGO、C 编译器缺失时实际测试失败，不 skip。Now 在取得目标写事务后读取，由测试环境控制，不能由普通请求延长窗口。
+`Open(ctx, Config)` 使用显式绝对文件路径、测试 identity、固定 Window、闭合 QueryMode、有限 IOTimeout/BusyTimeout 和测试时钟 Now。最多 128 字节的原键及资源名、1 MiB 内容，窗口最多 24 小时，I/O 最多 30 秒。SQLite 驱动沿根 module 固定版本；Linux、CGO、C 编译器缺失时实际测试失败，不 skip。Now 在取得目标写事务后读取，由测试环境控制，不能由普通请求延长窗口；起止必须可准确表示为 UnixNano，超范围时拒绝写入。
 
 普通消费者仅使用三个方法：
 
@@ -16,6 +16,6 @@
 
 物理文件持有内核 flock，单进程单连接串行写事务；同文件第二 writer 被拒绝（包括硬链接路径）。目标有自己的 SQLite application_id、随机耐久 DatabaseID、配置身份及 `migrations/0001_target.sql` 校验账本。拒绝外来已有库和未知版本；这是全新测试 owner 的首次迁移，没有虚构旧目标业务数据升级。`Settings` 实际读取 writer 连接的 SQLite 版本、WAL、FULL、FK、busy timeout 和迁移记录，是测试配置证据。
 
-操作错误保留 SQLite/context 原因。Commit 错误报告“提交结果未知”，没有声称原生 Commit 已被故障测到；原键 Query/observer 用于后续核对。当前真实故障覆盖另一连接的 SQLite writer 锁导致 native `SQLITE_BUSY`、解除后正常提交，以及取消 context。进程 SIGKILL 属后续恢复票，不证明断电耐久。
+操作错误保留 SQLite/context 原因。Open/OpenObserver 初始化失败且 Close 未确认时，返回非 nil 清理 handle 和 error；调用方必须保留 handle 与 scope，待再次 Close 确认后才删除。Commit 错误报告“提交结果未知”，没有声称原生 Commit 已被故障测到；原键 Query/observer 用于后续核对。当前真实故障覆盖另一连接的 SQLite writer 锁导致 native `SQLITE_BUSY`、解除后正常提交，以及取消 context。进程 SIGKILL 属后续恢复票，不证明断电耐久。
 
 验证入口：`go test -count=1 ./conformance/internal/testkit/target` 和随后 `go test -race -count=1 ./conformance/internal/testkit/target`。耐久证据必须将 TMPDIR 指向真实磁盘文件系统；本环境 `/tmp` 是 tmpfs，使用独立 `/workspace` scope。测试即时 fsync 精确创建路径登记；只有已确认 observer、writer 和外部锁连接关闭后才删除该 scope。失败的未确认关闭保留 scope，不按前缀或时间猜删。

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/mattn/go-sqlite3"
+	"math"
 	"os"
 	"path/filepath"
 	"testing"
@@ -124,6 +125,7 @@ func newFixture(t *testing.T) *fixture {
 func (f *fixture) open() *target.Target {
 	f.t.Helper()
 	writer, err := target.Open(f.ctx, f.cfg)
+	f.writer = writer
 	if err != nil {
 		f.t.Fatal(err)
 	}
@@ -436,7 +438,7 @@ func TestOriginalKeyBindsResourceAsWellAsExactBytes(t *testing.T) {
 
 func (f *fixture) observer() (*target.Observer, error) {
 	o, err := target.OpenObserver(f.ctx, target.ObserverConfig{Path: f.cfg.Path, Identity: f.cfg.Identity, IOTimeout: time.Second})
-	if err == nil {
+	if o != nil {
 		f.closers = append(f.closers, o.Close)
 	}
 	return o, err
@@ -483,5 +485,31 @@ func TestConcurrentOriginalKeyReceivesOnlyCommitOneVersion(t *testing.T) {
 	}
 	if applied != 1 {
 		t.Fatalf("target recorded %d original commits", applied)
+	}
+}
+
+func TestInvalidTestClockCannotCommitWrappedTime(t *testing.T) {
+	f := newFixture(t)
+	writer := f.open()
+	valid := f.now
+	for _, invalid := range []time.Time{time.Time{}, time.Date(2500, 1, 1, 0, 0, 0, 0, time.UTC), time.Unix(0, math.MaxInt64)} {
+		f.now = invalid
+		_, err := writer.Write(f.ctx, target.Request{Key: "original-1", Resource: "fake-document", Data: []byte("normal")})
+		if err == nil {
+			t.Fatalf("unrepresentable durable window accepted: %s", invalid)
+		}
+		_, err = writer.Query(f.ctx, "original-1")
+		if !errors.Is(err, target.ErrNotFound) {
+			t.Fatalf("invalid clock committed original: %v", err)
+		}
+	}
+	f.now = valid
+	receipt, err := writer.Write(f.ctx, target.Request{Key: "original-1", Resource: "fake-document", Data: []byte("normal")})
+	if err != nil {
+		t.Fatal(err)
+	}
+	saved, err := writer.Query(f.ctx, "original-1")
+	if err != nil || !saved.Start.Equal(receipt.Start) || !saved.Deadline.Equal(receipt.Deadline) {
+		t.Fatalf("valid exact clock window: %+v %v", saved, err)
 	}
 }
