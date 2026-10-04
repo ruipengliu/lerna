@@ -1,0 +1,8 @@
+{
+  "source": "/tmp/lerna-04-ticket-05-policy-seal-ack-decision.md",
+  "bytes": 9356,
+  "sha256": "c443e8e57318ba9d8ea8a49d2c225673f3a5bceae08b452f7270f3b8e164dae5",
+  "decision_source_head": "c2716c0486f2304827ce8073189587c58064a6a1",
+  "adoption_parent": "7b11055b95159ffa8b211b44e431961464602b60",
+  "qualification": "Original decision is static review only. Root separately qualified first genuine policy-seal business red (.406 s). Shared-seal/ACK implementation and subsequent qualification remain pending."
+}
