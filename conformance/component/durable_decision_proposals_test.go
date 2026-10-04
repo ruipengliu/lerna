@@ -51,28 +51,40 @@ func proposalScenario(t *testing.T, ctx context.Context, world *fixture.World, v
 	snapshot.MaterialRefs = append(snapshot.MaterialRefs, ruleRef)
 	materials := []fixture.Material{{Ref: scene.MaterialRef, Bytes: material}, {Ref: ruleRef, Bytes: ruleBytes}}
 	purposes := []string{"decide", "get", "command.get", "start", "material", "rule.input", "fixture.lock", "publish", "proposal.publish", "artifact.publish", "rule.condition"}
-	if rule == "actions_four" || rule == "invalid_actions_depends_on" || rule == "invalid_actions_binding_pair" || rule == "invalid_actions_denied_purpose" {
+	switch rule {
+	case "actions_four", "invalid_actions_depends_on", "invalid_actions_binding_pair", "invalid_actions_denied_purpose", "invalid_actions_capability_pair", "invalid_actions_future_result", "invalid_actions_duplicate_keys", "invalid_actions_fifth", "invalid_advance_combined":
 		for i := 1; i <= 4; i++ {
 			id := v.ID("slot-" + strconv.Itoa(i))
 			body := []byte(`{"target":"` + string(id) + `","operation":"read"}`)
 			ref := source.Ref(v.ID("arguments-"+string(id)), "application/json", body)
 			materials = append(materials, fixture.Material{Ref: ref, Bytes: body})
 			snapshot.MaterialRefs = append(snapshot.MaterialRefs, ref)
-			snapshot.CapabilityBindings = append(snapshot.CapabilityBindings, decision.CapabilityBinding{CapabilityRef: v.CapabilityRef{TenantID: snapshot.Ref.TenantID, OwnerID: snapshot.Ref.OwnerID, Kind: "capability", ID: "fixture-read", Revision: "1"}, BindingRef: v.BindingRef{TenantID: snapshot.Ref.TenantID, OwnerID: snapshot.Ref.OwnerID, Kind: "binding", ID: id, Revision: "1"}, ArgumentsRef: ref, Purpose: "fixture.read"})
+			capabilityID := v.ID("fixture-read")
+			if rule == "invalid_actions_capability_pair" {
+				capabilityID += "-" + id
+			}
+			snapshot.CapabilityBindings = append(snapshot.CapabilityBindings, decision.CapabilityBinding{CapabilityRef: v.CapabilityRef{TenantID: snapshot.Ref.TenantID, OwnerID: snapshot.Ref.OwnerID, Kind: "capability", ID: capabilityID, Revision: "1"}, BindingRef: v.BindingRef{TenantID: snapshot.Ref.TenantID, OwnerID: snapshot.Ref.OwnerID, Kind: "binding", ID: id, Revision: "1"}, ArgumentsRef: ref, Purpose: "fixture.read"})
 		}
 		if rule != "invalid_actions_denied_purpose" {
 			purposes = append(purposes, "fixture.read")
 		}
 	}
-	if rule == "input_request" {
+	switch rule {
+	case "input_request", "invalid_input_confirmation", "invalid_input_schema":
 		question := []byte("Which source should the report compare?")
 		questionRef := source.Ref("proposal-question", "text/plain", question)
 		schema := []byte(`{"type":"string","maxLength":256}`)
+		if rule == "invalid_input_schema" {
+			schema = []byte(`{"$ref":"https://example.invalid/schema"}`)
+		}
 		schemaRef := source.Ref("proposal-answer-schema", "application/schema+json", schema)
 		materials = append(materials, fixture.Material{Ref: questionRef, Bytes: question}, fixture.Material{Ref: schemaRef, Bytes: schema})
 		snapshot.MaterialRefs = append(snapshot.MaterialRefs, questionRef)
 		snapshot.AnswerSchemaRefs = []v.ContentRef{schemaRef}
 		purposes = append(purposes, "rule.question", "rule.answer_schema", "rule.preview")
+	}
+	if rule == "candidate_source_evidence" {
+		purposes = append(purposes, "rule.evidence")
 	}
 	permission.ComponentRef = snapshot.ComponentRef
 	permission.RuleVersion = version
@@ -97,8 +109,12 @@ func proposalScenario(t *testing.T, ctx context.Context, world *fixture.World, v
 }
 
 func proposalService(t *testing.T, world *fixture.World, scene fixture.Scenario) *decision.Service {
+	return proposalServiceWithPublisher(t, world, scene, world.Source())
+}
+
+func proposalServiceWithPublisher(t *testing.T, world *fixture.World, scene fixture.Scenario, publisher decision.Publisher) *decision.Service {
 	t.Helper()
-	service, err := decision.New(decision.Config{Owner: v.OwnerRef{TenantID: scene.DecisionRef.TenantID, OwnerID: scene.DecisionRef.OwnerID}, Store: world.Store(), Authority: world.Source(), Source: world.Source(), Publisher: world.Source(), Component: scene.Request.Payload.ComponentRef, Worker: "proposal-worker", Lease: 5 * time.Second, PoolControl: true})
+	service, err := decision.New(decision.Config{Owner: v.OwnerRef{TenantID: scene.DecisionRef.TenantID, OwnerID: scene.DecisionRef.OwnerID}, Store: world.Store(), Authority: world.Source(), Source: world.Source(), Publisher: publisher, Component: scene.Request.Payload.ComponentRef, Worker: "proposal-worker", Lease: 5 * time.Second, PoolControl: true})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -433,26 +449,53 @@ func TestDurableProposalReplacementMustUseCurrentConditionRevision(t *testing.T)
 	assertFixedProposalFailure(t, "invalid_delta_stale_condition")
 }
 
+func TestDurableProposalBoundedInvalidOutputMatrix(t *testing.T) {
+	for _, rule := range []string{
+		"invalid_delta_duplicate_replace",
+		"invalid_processed_omission",
+		"invalid_disclosed_foreign_ref",
+		"invalid_actions_capability_pair",
+		"invalid_actions_future_result",
+		"invalid_actions_duplicate_keys",
+		"invalid_actions_fifth",
+		"invalid_advance_combined",
+		"invalid_raw_duplicate_field",
+		"invalid_raw_unknown_field",
+		"invalid_empty_delta_none",
+		"invalid_candidate_evidence_requirement",
+		"invalid_candidate_evidence_purpose",
+		"invalid_input_confirmation",
+		"invalid_input_schema",
+	} {
+		t.Run(rule, func(t *testing.T) { assertFixedProposalFailure(t, rule) })
+	}
+}
+
 func assertFixedProposalFailure(t *testing.T, rule string) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	world := fixture.NewWorld(t, ctx)
 	scene, snapshot := proposalScenario(t, ctx, world, "fixture-rule/3", rule)
-	if rule == "invalid_actions_denied_purpose" {
+	if rule == "invalid_actions_denied_purpose" || rule == "invalid_candidate_evidence_purpose" {
 		permission, err := world.Source().Authorize(ctx, scene.Subject, scene.DecisionRef, "start", &scene.Request.Payload)
 		if err != nil {
 			t.Fatal(err)
 		}
-		binding := snapshot.CapabilityBindings[0]
-		if body, err := world.Source().ReadMaterial(ctx, binding.ArgumentsRef, "rule.input", permission, v.MaxBodyBytes); err != nil || len(body) == 0 {
+		ref, purpose := snapshot.MaterialRefs[0], "rule.evidence"
+		if rule == "invalid_actions_denied_purpose" {
+			binding := snapshot.CapabilityBindings[0]
+			ref, purpose = binding.ArgumentsRef, binding.Purpose
+		}
+		if body, err := world.Source().ReadMaterial(ctx, ref, "rule.input", permission, v.MaxBodyBytes); err != nil || len(body) == 0 {
 			t.Fatal("the argument is not a real readable fixed source", err)
 		}
-		if _, err := world.Source().ReadMaterial(ctx, binding.ArgumentsRef, binding.Purpose, permission, v.MaxBodyBytes); !errors.Is(err, decision.ErrForbidden) {
+		if _, err := world.Source().ReadMaterial(ctx, ref, purpose, permission, v.MaxBodyBytes); !errors.Is(err, decision.ErrForbidden) {
 			t.Fatal("the exact Source permission unexpectedly allows the action purpose", err)
 		}
 	}
-	service := proposalService(t, world, scene)
+	observer := &proposalPublisherObserver{Publisher: world.Source()}
+	service := proposalServiceWithPublisher(t, world, scene, observer)
 	receipt := acceptAccounting(t, ctx, service, scene)
 	if step, err := service.Step(ctx); err != nil || step.Processed != 1 {
 		t.Fatal("fixed erroneous output did not finish its original job", err)
@@ -470,6 +513,15 @@ func assertFixedProposalFailure(t *testing.T, rule string) {
 	failed, ok := found.Decision.AsFailed()
 	if !ok || failed.Failure != "proposal_invalid" {
 		t.Fatal("fixed invalid output entered a consumable completed Proposal")
+	}
+	permission, err := world.Source().Authorize(ctx, scene.Subject, scene.DecisionRef, "get", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, output := range observer.planned {
+		if _, err := world.Source().ReadPublished(ctx, output.ref, permission); !errors.Is(err, decision.ErrForbidden) {
+			t.Fatal("invalid output became an independently readable publication", err)
+		}
 	}
 	outputBytes, err := strconv.ParseInt(string(failed.Usage.OutputBytes), 10, 64)
 	if err != nil || outputBytes <= 0 {

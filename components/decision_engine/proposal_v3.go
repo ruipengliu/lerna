@@ -18,20 +18,13 @@ import (
 // the current Task revisions and original durable-start fee are preserved.
 func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, first []byte, inputBytes int) completion {
 	artifactOutput := 0
-	switch snapshot.Rule {
-	case "delta_only", "actions_four", "input_request", "delta_candidate_result", "cannot_continue", "invalid_actions_depends_on", "invalid_actions_binding_pair", "invalid_actions_denied_purpose", "invalid_delta_stale_condition":
-	default:
-		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
-	}
-	if len(snapshot.MaterialRefs) < 2 {
+	branch := fixtureProposalBranch(snapshot.Rule)
+	if branch == "" || len(snapshot.MaterialRefs) < 2 {
 		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 	}
 	replacement := snapshot.RequirementRefs[0]
 	if snapshot.Rule == "invalid_delta_stale_condition" {
-		replacement.Revision = "2"
-		if replacement.Revision == snapshot.RequirementRefs[0].Revision {
-			replacement.Revision = "1"
-		}
+		replacement = differentRequirementRevision(replacement)
 	}
 	proposal := v.Proposal{
 		DecisionRef: work.Record.Ref, SnapshotRef: snapshot.Ref,
@@ -40,7 +33,7 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 		RequirementDelta:    []v.RequirementDelta{{LocalKey: "condition-replacement", StatementRef: snapshot.MaterialRefs[0], RuleRef: snapshot.MaterialRefs[1], SourceRefs: slices.Clone(processed), Kind: "output", Required: true, ReplacesRef: &replacement}},
 		Advance:             v.NewProposalAdvanceNone(v.ProposalAdvanceNone{}),
 	}
-	if snapshot.Rule == "actions_four" || snapshot.Rule == "invalid_actions_depends_on" || snapshot.Rule == "invalid_actions_binding_pair" || snapshot.Rule == "invalid_actions_denied_purpose" {
+	if branch == "actions" {
 		if len(snapshot.CapabilityBindings) != 4 {
 			return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 		}
@@ -49,25 +42,40 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 		for i, binding := range snapshot.CapabilityBindings {
 			actions = append(actions, v.ProposalAction{LocalKey: v.ID("action-" + strconv.Itoa(i+1)), CapabilityRef: binding.CapabilityRef, BindingRef: binding.BindingRef, ArgumentsRef: binding.ArgumentsRef, Purpose: binding.Purpose, SourceRefs: slices.Clone(processed)})
 		}
-		if snapshot.Rule == "invalid_actions_binding_pair" {
+		switch snapshot.Rule {
+		case "invalid_actions_binding_pair":
 			// Each ref exists in the fixed Snapshot, but this tuple never did.
 			actions[0].BindingRef = snapshot.CapabilityBindings[1].BindingRef
+		case "invalid_actions_capability_pair":
+			actions[0].CapabilityRef = snapshot.CapabilityBindings[1].CapabilityRef
+		case "invalid_actions_future_result":
+			actions[0].ArgumentsRef.ContentID = "unproduced-action-result"
+		case "invalid_actions_duplicate_keys":
+			actions[1].LocalKey = actions[0].LocalKey
+		case "invalid_actions_fifth":
+			extra := actions[0]
+			extra.LocalKey = "action-5"
+			actions = append(actions, extra)
 		}
 		proposal.Advance = v.NewProposalAdvanceActions(v.ProposalAdvanceActions{Actions: actions})
 	}
-	if snapshot.Rule == "input_request" {
+	if branch == "input_request" {
 		if len(snapshot.MaterialRefs) < 3 || len(snapshot.AnswerSchemaRefs) != 1 {
 			return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 		}
 		proposal.RequirementDelta = []v.RequirementDelta{}
-		proposal.Advance = v.NewProposalAdvanceInputRequest(v.ProposalAdvanceInputRequest{QuestionRef: snapshot.MaterialRefs[2], AnswerSchemaRef: snapshot.AnswerSchemaRefs[0], Purpose: "clarification", PreviewRefs: []v.ContentRef{snapshot.MaterialRefs[0]}})
+		purpose := "clarification"
+		if snapshot.Rule == "invalid_input_confirmation" {
+			purpose = "authorization_confirmation"
+		}
+		proposal.Advance = v.NewProposalAdvanceInputRequest(v.ProposalAdvanceInputRequest{QuestionRef: snapshot.MaterialRefs[2], AnswerSchemaRef: snapshot.AnswerSchemaRefs[0], Purpose: purpose, PreviewRefs: []v.ContentRef{snapshot.MaterialRefs[0]}})
 	}
-	if snapshot.Rule == "cannot_continue" {
+	if branch == "cannot_continue" {
 		proposal.RequirementDelta = []v.RequirementDelta{}
 		proposal.Advance = v.NewProposalAdvanceCannotContinue(v.ProposalAdvanceCannotContinue{Reason: "fixture has no further applicable action", MissingRequirements: []v.RequirementRef{snapshot.RequirementRefs[0]}})
 	}
 	artifacts := []PreparedArtifact{}
-	if snapshot.Rule == "delta_candidate_result" {
+	if branch == "candidate_result" {
 		body := append([]byte("fixture result: "), first...)
 		key := publicationPrefix(work.Record) + "/artifact/0"
 		ref, err := s.config.Publisher.PlanPublication(ctx, key, body, processed, work.Permission)
@@ -78,9 +86,33 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 		artifactOutput = len(body)
 		evidence := make([]v.ProposalEvidence, 0, len(snapshot.RequirementRefs))
 		for _, requirement := range snapshot.RequirementRefs {
-			evidence = append(evidence, v.ProposalEvidence{RequirementRef: requirement, EvidenceRefs: []v.ContentRef{ref}})
+			evidenceRef := ref
+			if snapshot.Rule == "candidate_source_evidence" || snapshot.Rule == "invalid_candidate_evidence_purpose" {
+				evidenceRef = snapshot.MaterialRefs[0]
+			}
+			if snapshot.Rule == "invalid_candidate_evidence_requirement" {
+				requirement = differentRequirementRevision(requirement)
+			}
+			evidence = append(evidence, v.ProposalEvidence{RequirementRef: requirement, EvidenceRefs: []v.ContentRef{evidenceRef}})
 		}
 		proposal.Advance = v.NewProposalAdvanceCandidateResult(v.ProposalAdvanceCandidateResult{ArtifactRefs: []v.ContentRef{ref}, Evidence: evidence, Limitations: []string{}})
+	}
+	switch snapshot.Rule {
+	case "invalid_delta_duplicate_replace":
+		extra := proposal.RequirementDelta[0]
+		extra.LocalKey = "second-replacement"
+		proposal.RequirementDelta = append(proposal.RequirementDelta, extra)
+	case "invalid_empty_delta_none":
+		proposal.RequirementDelta = []v.RequirementDelta{}
+	case "invalid_processed_omission":
+		proposal.ProcessedSourceRefs = slices.Clone(processed[:len(processed)-1])
+		disclosed := slices.Clone(processed)
+		proposal.DisclosedSourceRefs = &disclosed
+	case "invalid_disclosed_foreign_ref":
+		foreign := processed[0]
+		foreign.ContentID = "unprocessed-source"
+		disclosed := []v.ContentRef{foreign}
+		proposal.DisclosedSourceRefs = &disclosed
 	}
 	// Raw decoding is the same closed public codec used by callers. Source and
 	// purpose inclusion follows here, rather than in a codec with database access.
@@ -88,10 +120,17 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 	if err != nil {
 		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 	}
-	if snapshot.Rule == "invalid_actions_depends_on" {
+	switch snapshot.Rule {
+	case "invalid_actions_depends_on":
 		// The immutable case deliberately emits a dependent action. This raw
 		// field goes through the caller's closed decoder, never a canned failure.
 		raw = bytes.Replace(raw, []byte(`"local_key":"action-2"`), []byte(`"local_key":"action-2","depends_on":["action-1"]`), 1)
+	case "invalid_advance_combined":
+		raw = bytes.Replace(raw, []byte(`"kind":"actions"`), []byte(`"kind":"actions","artifact_refs":[],"evidence":[],"limitations":[]`), 1)
+	case "invalid_raw_duplicate_field":
+		raw = append([]byte(`{"goal_revision":"1",`), raw[1:]...)
+	case "invalid_raw_unknown_field":
+		raw = append([]byte(`{"adopt_task":true,`), raw[1:]...)
 	}
 	decoded, err := v.Decode[v.Proposal](raw)
 	if err != nil {
@@ -135,6 +174,35 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 		return failedCompletion("output_over_limit", inputBytes, artifactOutput+len(raw), 1)
 	}
 	return completion{preparedV2: &prepared, inputBytes: inputBytes, outputBytes: artifactOutput + len(raw), ruleSteps: 1}
+}
+
+// This is the complete finite rule/3 configuration vocabulary, rather than a
+// prefix match, dynamic provider or arbitrary rule interpreter. Unknown labels
+// retain their bounded proposal_invalid semantics.
+func fixtureProposalBranch(rule string) string {
+	switch rule {
+	case "delta_only", "invalid_delta_stale_condition", "invalid_delta_duplicate_replace", "invalid_processed_omission", "invalid_disclosed_foreign_ref", "invalid_raw_duplicate_field", "invalid_raw_unknown_field", "invalid_empty_delta_none":
+		return "none"
+	case "actions_four", "invalid_actions_depends_on", "invalid_actions_binding_pair", "invalid_actions_denied_purpose", "invalid_actions_capability_pair", "invalid_actions_future_result", "invalid_actions_duplicate_keys", "invalid_actions_fifth", "invalid_advance_combined":
+		return "actions"
+	case "input_request", "invalid_input_confirmation", "invalid_input_schema":
+		return "input_request"
+	case "delta_candidate_result", "candidate_source_evidence", "invalid_candidate_evidence_requirement", "invalid_candidate_evidence_purpose":
+		return "candidate_result"
+	case "cannot_continue":
+		return "cannot_continue"
+	default:
+		return ""
+	}
+}
+
+func differentRequirementRevision(ref v.RequirementRef) v.RequirementRef {
+	if ref.Revision == "2" {
+		ref.Revision = "1"
+	} else {
+		ref.Revision = "2"
+	}
+	return ref
 }
 
 func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, proposal v.Proposal, artifacts []PreparedArtifact, inputBytes *int) error {

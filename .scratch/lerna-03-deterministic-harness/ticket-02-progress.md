@@ -22,16 +22,25 @@ Proposal; the candidate also reads its actual artifact. No Task revision changes
 | Fixed raw `depends_on` | .521 s, output bytes zero because case had not generated output | .795 s with independent four-action control | `015cdb4` |
 | Fixed wrong binding/argument tuple | .551 s, output bytes zero because case had not generated output | .999 s with four-action and affected fixed raw controls | `dff4fa1` |
 | Actual argument purpose denied by Source | .646 s, output bytes zero because case had not generated output | 1.176 s with legal-purpose four-action and wrong-pair controls | `6f76995` |
-| Condition replacement with wrong revision | .465 s, output bytes zero because case had not generated output | .719 s with current-revision delta control | Condition-revision change accompanying this record |
+| Condition replacement with wrong revision | .465 s, output bytes zero because case had not generated output | .719 s with current-revision delta control | `6535a7a` |
+| 15 fixed invalid-output cases through the same public validation | 3.374 s, each fixed case failed to generate output for validation | 5.507 s with five normal branches; same selection race 12.664 s | Matrix change accompanying this record |
 
 Red child processes exited 1; listed green child processes exited 0. Each run
 used `-p=1 -tags=integration -count=1 -timeout=120s` and finished before the
-next run. The latest audit after `6f76995` found all 80 unique successful PG
+next run. The latest audit after the matrix found all 196 unique successful PG
 schema acknowledgements absent, with no live test session, child or DB holder.
 The exact external registry remains available to the coordinating root. The
 purpose test independently confirms the exact argument is readable as
 `rule.input` and forbidden for its real binding purpose. Its typed Proposal
 retains the full correct tuple; actual Source consumption causes the failure.
+The 15-case matrix covers duplicate replacement, omitted processed sources with
+full disclosure, foreign disclosure, capability pairing, a future action result,
+duplicate action keys, a fifth action, combined advance fields, duplicate and
+unknown raw fields, empty-delta `none`, stale candidate evidence, actual Source
+evidence purpose denial, authorization confirmation and an actually readable
+but forbidden answer schema. A transparent Publisher observer saves only the
+real Plan outputs; any planned invalid artifact is independently unreadable
+after reopen. No error case is implemented by directly returning its failure.
 
 Two failed green attempts are retained as failures: initial no-artifact bytes
 were not canonical (.438 s), corrected by using the same public decoder and

@@ -76,6 +76,14 @@ case using the same finite action construction.
 different well-formed revision. Current exact RequirementRef inclusion rejects
 the replacement; a normal `delta_only` case preserves the current revision.
 
+The finite invalid-output matrix also generates duplicate replacements, omitted
+processed sources with full disclosure, foreign disclosure, wrong capability
+pairings and future action arguments, duplicate or excessive actions, combined
+advance fields, duplicate or unknown raw fields, empty-delta `none`, stale or
+purpose-forbidden evidence, confirmation requests and forbidden schema metadata.
+Typed and raw faults all enter the same public decoder and semantic consumer;
+actual planned artifacts of failed candidates remain unreadable in Source.
+
 Each `/3` evaluation records one confirmed rule step, retains the original
 durable-start fee and makes zero model requests. It reads all declared material,
 binding argument and answer schema refs without clipping the processed sources.
