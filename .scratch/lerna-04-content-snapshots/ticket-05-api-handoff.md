@@ -91,6 +91,12 @@ ENOTEMPTY，实际原copy inode/字节保留，原责任不ACK；恢复同own准
 两个World真实重开同原预算擦除。原Binding/CopyID/effectDeadline跨页独立
 断言亦补真实运行。ACKloss/迟到copy竞争仍待各自资格控制。
 
+权威staging+primary真实ACK同Tx置BodyGone并清当前ObjectHolder；原政策
+责任历史union/原attempt/pubhistory不清，secondary pending仍不global ACK。
+独立normal/race验证真实擦除后新policy责任ObjectHolder=false，旧责任true/
+erased保持及metadata gone。已gone旧flag修复位置有条件保护，lateFinish
+还可能重新置true的独立guard及资格待下一tracer，不冒已完成声明。
+
 实际Linux跨进程两序已分别qualification：temp真实Sync返回后SIGSTOP，
 另一进程Erase有限等待flock；CONT之后actualPut/Close，再擦除。反序实际
 Fence完成后SIGSTOP，另一latePut进程拒绝；原eraser SIGKILL后独立重开

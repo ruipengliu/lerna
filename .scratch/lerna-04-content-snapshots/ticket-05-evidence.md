@@ -387,3 +387,29 @@ Lifecycle处理staging+primary并独立观察，全ACK后原责任erased/残留�
 World重开原seal/期限保持。此firstkey范围不证明其他trigger/ancestor/
 expiredcap/锁等待/CAS竞争/责任全页/secondary政策ACK。ObjectHolder独立
 修正以及后续自然phase普通写是否维持erased结论仍待独立tracer。
+
+## 权威真实ACK之后当前primary holder事实（独立vertical）
+
+`TestContentAuthoritativeErasureStopsNewPrimaryHolderClaimsAndKeepsOldHistory`
+先真实published alpha及原政策责任ObjectHolder=true，沿已绿policy协议
+完成实际staging/primary/ALLACK，再独立文件缺失/PGstaging无正文、当前
+metadata gone、实际World.Reopen。新Rev3 policy责任仍声称ObjectHolder=true
+使line88业务red；不借私表镜像断言，不用policy过期或文件not_found冒ACK。
+
+最小修复仅真实AuthoritativeBodyErased确认后，条件
+`!BodyGone || ObjectHolder`同Tx BodyGone=true/ObjectHolder=false。false反映
+当前primary已独立擦除，不改旧责任holder union、secondary或published历史。
+该条件包含已gone但旧flag=true的修复位置；本normalcase并未独立执行该
+旧状态子分支，后续lateFinish/source资格另查。
+
+| 日志 | 实际结果 |
+| --- | --- |
+| `holder-fact-authority-first-red.log` | actual0.335s/case0.32s，PID/PGID2844392/start11859473/nativeexit1/groupAbsent=true。 |
+| `holder-fact-authority-first-green.log` | exact actual0.365s，PID/PGID2845040/start11861917/nativeexit0/groupAbsent=true。 |
+| `holder-fact-authority-race-controls.log` | authority/currentpolicy/actualstagingprimary/secondaryoffline四已存在exact actual3.649s，PID/PGID2846168/start11866248/nativeexit0/groupAbsent=true。 |
+
+均原caller20s/test30s/wrapper120s，无timeout；session78596/87064/85850实际
+完成并明确release LOCAL/no pending。新责任ObjectHolder=false，旧原责任
+ObjectHolder=true且BodyCleanup=erased，Command published/fullref历史不改，
+save恢复后metadata仍gone均实际执行。lateFinish guard未改/未launch，不
+把此第一bool修复当迟到callback已验证，原CloseUNKNOWN根继续保留。

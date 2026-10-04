@@ -497,8 +497,9 @@ func (l *Lifecycle) Step(ctx context.Context, subject *v.SubjectBinding) (bool, 
 		if err != nil {
 			return err
 		}
-		if authoritative && !record.BodyGone {
+		if authoritative && (!record.BodyGone || record.ObjectHolder) {
 			record.BodyGone = true
+			record.ObjectHolder = false
 			record.Revision++
 			if err = l.store.SaveVersion(ctx, tx, *record); err != nil {
 				return err
