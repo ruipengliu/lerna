@@ -39,8 +39,60 @@ type ruleProcessFrame struct {
 	Versions                 []decisionpg.MigrationVersion `json:",omitempty"`
 }
 
-func newRuleProcessService(store *decisionpg.Store, source *fixture.Store, publisher decision.Publisher, scene fixture.Scenario, worker string) (*decision.Service, error) {
+func newRuleProcessService(store decision.Store, source *fixture.Store, publisher decision.Publisher, scene fixture.Scenario, worker string) (*decision.Service, error) {
 	return decision.New(decision.Config{Owner: v.OwnerRef{TenantID: scene.DecisionRef.TenantID, OwnerID: scene.DecisionRef.OwnerID}, Store: store, Authority: source, Source: source, Publisher: publisher, Component: scene.Request.Payload.ComponentRef, Worker: worker, Lease: time.Second, PoolControl: true})
+}
+
+type completionMarkerKey struct{}
+type completionMarker struct{ stage *ruleProcessFrame }
+
+// This wrapper observes the actual consumer transaction callback. It does not
+// replace Commit or manufacture a completed record: the real callback must
+// finish SaveDecision and Complete successfully before the pre-COMMIT hold.
+type heldRuleStore struct {
+	*decisionpg.Store
+	cfg   ruleProcessConfig
+	pipes *process.Inherited
+}
+
+func (s *heldRuleStore) Within(ctx context.Context, owner contract.OwnerRef, fn func(context.Context, runtime.Tx) error) error {
+	marker := &completionMarker{}
+	return s.Store.Within(ctx, owner, func(txctx context.Context, tx runtime.Tx) error {
+		txctx = context.WithValue(txctx, completionMarkerKey{}, marker)
+		if err := fn(txctx, tx); err != nil {
+			return err
+		}
+		if marker.stage == nil {
+			return nil
+		}
+		if err := s.pipes.Emit(txctx, *marker.stage); err != nil {
+			return err
+		}
+		var release ruleProcessFrame
+		if err := s.pipes.Receive(txctx, &release); err != nil {
+			return err
+		}
+		if release.Stage != "release" || release.Scenario != s.cfg.Scenario || release.Generation != s.cfg.Generation {
+			return errors.New("wrong original completion gate release")
+		}
+		return nil
+	})
+}
+
+func (s *heldRuleStore) SaveDecision(ctx context.Context, tx runtime.Tx, record decision.Record) error {
+	if err := s.Store.SaveDecision(ctx, tx, record); err != nil {
+		return err
+	}
+	if record.Status != "completed" || record.Ref != s.cfg.Scene.DecisionRef {
+		return nil
+	}
+	marker, ok := ctx.Value(completionMarkerKey{}).(*completionMarker)
+	if !ok || record.ProposalRef == nil || len(record.ArtifactRefs) != 1 {
+		return errors.New("original completed callback identity missing")
+	}
+	proposal, artifact := *record.ProposalRef, record.ArtifactRefs[0]
+	marker.stage = &ruleProcessFrame{Scenario: s.cfg.Scenario, Generation: s.cfg.Generation, Stage: "completed_staged_before_commit", ProposalRef: &proposal, ArtifactRef: &artifact}
+	return nil
 }
 
 // This private concrete publisher delegates the actual independent Source
@@ -100,7 +152,7 @@ func TestDecisionRuleProcess(t *testing.T) {
 	if err = pipes.Receive(ctx, &cfg); err != nil {
 		t.Fatal(err)
 	}
-	if cfg.Scenario == "" || cfg.Generation < 1 || (cfg.Gate != "" && cfg.Gate != "published_before_finish") {
+	if cfg.Scenario == "" || cfg.Generation < 1 || (cfg.Gate != "" && cfg.Gate != "published_before_finish" && cfg.Gate != "completed_staged_before_commit") {
 		t.Fatal("invalid normal rule process configuration")
 	}
 	connection := postgres.Config{DSN: os.Getenv("LERNA_TEST_POSTGRES_DSN"), Schema: cfg.Source.Schema, MaxOpenConnections: 4, TransactionTimeout: 3 * time.Second, StatementTimeout: 2 * time.Second, LockTimeout: time.Second}
@@ -131,7 +183,11 @@ func TestDecisionRuleProcess(t *testing.T) {
 	if cfg.Gate == "published_before_finish" {
 		publisher = &heldRulePublisher{Publisher: source, cfg: cfg, pipes: pipes}
 	}
-	service, err := newRuleProcessService(store, source, publisher, cfg.Scene, fmt.Sprintf("rule-process-%d", cfg.Generation))
+	var consumerStore decision.Store = store
+	if cfg.Gate == "completed_staged_before_commit" {
+		consumerStore = &heldRuleStore{Store: store, cfg: cfg, pipes: pipes}
+	}
+	service, err := newRuleProcessService(consumerStore, source, publisher, cfg.Scene, fmt.Sprintf("rule-process-%d", cfg.Generation))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -177,6 +233,145 @@ func TestDecisionRuleProcess(t *testing.T) {
 	}
 	if err = pipes.Respond(ctx, frame("decision_reply")); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestDecisionSIGKILLBeforeCompletionCommitRestoresOriginalProposal(t *testing.T) {
+	for _, kill := range []bool{false, true} {
+		name := "normal_release"
+		if kill {
+			name = "SIGKILL_before_completed_commit"
+		}
+		t.Run(name, func(t *testing.T) {
+			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+			defer cancel()
+			w := fixture.NewWorld(t, ctx)
+			scene := w.Scenario()
+			service := w.Service()
+			raw, err := v.Encode(scene.Request)
+			if err != nil {
+				t.Fatal(err)
+			}
+			out, err := service.Decide(ctx, raw, &scene.Subject)
+			if err != nil {
+				t.Fatal(err)
+			}
+			received, ok := out.AsReceived()
+			if !ok {
+				t.Fatal("original fixed receipt missing")
+			}
+			if _, ok = received.Receipt.AsAccepted(); !ok {
+				t.Fatal("original Decision rejected")
+			}
+			child, claimed := startRuleChild(t, w, ctx, "completed_staged_before_commit", 1)
+			var stage ruleProcessFrame
+			if err = child.Event(ctx, &stage); err != nil {
+				t.Fatal("actual completed SQL/pre-COMMIT gate missing:", err)
+			}
+			if stage.Stage != "completed_staged_before_commit" || stage.Scenario != "original-rule-decision" || stage.Generation != 1 || stage.ProposalRef == nil || stage.ArtifactRef == nil {
+				t.Fatal("wrong original staged completion identity")
+			}
+			proposalBytes, err := w.ReadArtifact(ctx, *stage.ProposalRef)
+			if err != nil {
+				t.Fatal("independent original Proposal publication absent", err)
+			}
+			artifact, err := w.ReadArtifact(ctx, *stage.ArtifactRef)
+			if err != nil || string(artifact) != "fixture result: alpha\n" {
+				t.Fatal("independent original artifact absent", err)
+			}
+			view, err := service.Get(ctx, scene.GetJSON, &scene.Subject)
+			if err != nil {
+				t.Fatal(err)
+			}
+			found, ok := view.AsFound()
+			if !ok {
+				t.Fatal("original staged Decision absent")
+			}
+			running, ok := found.Decision.AsRunning()
+			if !ok {
+				t.Fatal("staged completed became visible before held actual COMMIT")
+			}
+			if kill {
+				killCtx, killCancel := context.WithTimeout(ctx, 2*time.Second)
+				defer killCancel()
+				if err = child.KillWait(killCtx); err != nil {
+					t.Fatal(err)
+				}
+				var reply ruleProcessFrame
+				if err = child.Reply(killCtx, &reply); err != io.EOF {
+					t.Fatal("killed staged Decision returned reply", err)
+				}
+				confirmed, closeErr := child.Stop(killCtx)
+				if !confirmed || closeErr != nil {
+					t.Fatal("staged Decision exit/pipe cleanup unconfirmed", closeErr)
+				}
+			} else {
+				if err = child.Send(ctx, ruleProcessFrame{Stage: "release", Scenario: stage.Scenario, Generation: 1}); err != nil {
+					t.Fatal(err)
+				}
+				finishRuleChild(t, ctx, child, 1)
+			}
+			w.Reopen(ctx)
+			service = w.Service()
+			if kill {
+				view, err = service.Get(ctx, scene.GetJSON, &scene.Subject)
+				if err != nil {
+					t.Fatal(err)
+				}
+				found, ok = view.AsFound()
+				if !ok {
+					t.Fatal("original Decision absent after pre-COMMIT SIGKILL")
+				}
+				if _, ok = found.Decision.AsRunning(); !ok {
+					t.Fatal("uncommitted completed survived actual process kill")
+				}
+				if delay := time.Until(claimed.LeaseUntil.Add(time.Millisecond)); delay > 0 {
+					if err = (runtime.WallTimer{}).Wait(ctx, delay); err != nil {
+						t.Fatal(err)
+					}
+				}
+				step, stepErr := service.Step(ctx)
+				if stepErr != nil || step.Processed != 1 {
+					t.Fatal("original prepared Proposal did not resume", stepErr)
+				}
+			}
+			view, err = service.Get(ctx, scene.GetJSON, &scene.Subject)
+			if err != nil {
+				t.Fatal(err)
+			}
+			found, ok = view.AsFound()
+			if !ok {
+				t.Fatal("original completed Decision absent")
+			}
+			completed, ok := found.Decision.AsCompleted()
+			if !ok || completed.ProposalRef != *stage.ProposalRef || completed.Proposal.DecisionRef != scene.DecisionRef || completed.Usage != running.Usage || completed.Usage.RuleStarts != "1" || completed.Usage.Cost.IntegerValue != "1" {
+				t.Fatal("pre-COMMIT recovery changed original Proposal or confirmed usage")
+			}
+			candidate, ok := completed.Proposal.Advance.AsCandidateResult()
+			if !ok || len(candidate.ArtifactRefs) != 1 || candidate.ArtifactRefs[0] != *stage.ArtifactRef {
+				t.Fatal("pre-COMMIT recovery produced another artifact identity")
+			}
+			proposalAfter, err := w.ReadArtifact(ctx, completed.ProposalRef)
+			if err != nil || !sameRuleJSON(proposalBytes, proposalAfter) {
+				t.Fatal("original published Proposal changed", err)
+			}
+			query, err := service.GetCommand(ctx, scene.CommandGetJSON, &scene.Subject)
+			if err != nil {
+				t.Fatal(err)
+			}
+			fixed, ok := query.AsFound()
+			if !ok {
+				t.Fatal("original accepted receipt unavailable")
+			}
+			a, err := v.Encode(received.Receipt)
+			if err != nil {
+				t.Fatal(err)
+			}
+			b, err := v.Encode(fixed.Receipt)
+			if err != nil || !sameRuleJSON(a, b) {
+				t.Fatal("pre-COMMIT recovery changed fixed receipt", err)
+			}
+		})
 	}
 }
 
