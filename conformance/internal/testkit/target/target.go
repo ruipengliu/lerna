@@ -83,8 +83,10 @@ type ObserverConfig struct {
 	IOTimeout      time.Duration
 }
 type Observer struct {
-	db  *sql.DB
-	cfg ObserverConfig
+	db        *sql.DB
+	cfg       ObserverConfig
+	closeOnce sync.Once
+	closeErr  error
 }
 
 //go:embed migrations/0001_target.sql
@@ -223,25 +225,29 @@ func (t *Target) Close() error {
 		return ctx.Err()
 	}
 	t.mu.Lock()
-	defer t.mu.Unlock()
 	if t.closeAttempted {
-		return t.closeErr
+		err := t.closeErr
+		t.mu.Unlock()
+		return err
 	}
 	t.closeAttempted = true
+	t.mu.Unlock()
+	var result error
 	if t.db != nil {
 		if err := t.db.Close(); err != nil {
-			t.closeErr = lifetimeCause("target native close unknown", err)
-			return t.closeErr
+			result = lifetimeCause("target native close unknown", err)
 		}
 	}
-	if t.release != nil {
+	if result == nil && t.release != nil {
 		if err := t.release(); err != nil {
-			t.closeErr = lifetimeCause("target writer release unknown", err)
-			return t.closeErr
+			result = lifetimeCause("target writer release unknown", err)
 		}
 	}
-	t.closed = true
-	return nil
+	t.mu.Lock()
+	t.closeErr = result
+	t.closed = result == nil
+	t.mu.Unlock()
+	return result
 }
 
 type lifetimeError struct {
@@ -331,7 +337,14 @@ func OpenObserver(ctx context.Context, cfg ObserverConfig) (*Observer, error) {
 	}
 	return observer, nil
 }
-func (o *Observer) Close() error { return o.db.Close() }
+func (o *Observer) Close() error {
+	o.closeOnce.Do(func() {
+		if o.db != nil {
+			o.closeErr = lifetimeCause("observer native close unknown", o.db.Close())
+		}
+	})
+	return o.closeErr
+}
 func (o *Observer) Observe(ctx context.Context, key string) (Fact, error) {
 	if ctx == nil {
 		return Fact{}, errors.New("context required")
