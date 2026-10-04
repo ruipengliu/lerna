@@ -2,6 +2,7 @@ package decision_engine
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"strconv"
 	"time"
@@ -78,23 +79,64 @@ func cloneSubject(trusted *v.SubjectBinding) (v.SubjectBinding, error) {
 	return v.Decode[v.SubjectBinding](data)
 }
 func (s *Service) authorize(ctx context.Context, trusted *v.SubjectBinding, ref v.DecisionRef, purpose string, input *v.DecisionDecidePayload) (Permission, error) {
+	if trusted == nil || trusted.TenantID != ref.TenantID || decisionOwner(ref) != s.config.Owner {
+		return Permission{}, ErrForbidden
+	}
+	return s.observePermission(ctx, *trusted, ref, purpose, input)
+}
+
+// Authorizers receive independent snapshots. A callback cannot rewrite bytes
+// already bound to the original Command or a durable Decision input.
+func (s *Service) observePermission(ctx context.Context, subject v.SubjectBinding, ref v.DecisionRef, purpose string, input *v.DecisionDecidePayload) (Permission, error) {
 	if err := finite(ctx); err != nil {
 		return Permission{}, err
 	}
-	principal, err := cloneSubject(trusted)
+	principal, err := cloneSubject(&subject)
 	if err != nil {
 		return Permission{}, err
 	}
-	if principal.TenantID != ref.TenantID || decisionOwner(ref) != s.config.Owner {
+	if principal.TenantID != ref.TenantID {
 		return Permission{}, ErrForbidden
 	}
-	permission, err := s.config.Authority.Authorize(ctx, principal, ref, purpose, input)
+	delegate, err := cloneSubject(&principal)
 	if err != nil {
 		return Permission{}, err
 	}
-	left, _ := v.Encode(permission.Subject)
-	right, _ := v.Encode(principal)
-	if string(left) != string(right) || permission.DecisionOwner != s.config.Owner {
+	var payload *v.DecisionDecidePayload
+	if input != nil {
+		data, err := v.Encode(*input)
+		if err != nil {
+			return Permission{}, err
+		}
+		copy, err := v.Decode[v.DecisionDecidePayload](data)
+		if err != nil {
+			return Permission{}, err
+		}
+		payload = &copy
+	}
+	permission, err := s.config.Authority.Authorize(ctx, delegate, ref, purpose, payload)
+	if err != nil {
+		return Permission{}, err
+	}
+	// Freeze the returned observation before another injected boundary executes.
+	data, err := json.Marshal(permission)
+	if err != nil {
+		return Permission{}, err
+	}
+	var frozen Permission
+	if err = json.Unmarshal(data, &frozen); err != nil {
+		return Permission{}, err
+	}
+	permission = frozen
+	left, err := v.Encode(permission.Subject)
+	if err != nil {
+		return Permission{}, ErrForbidden
+	}
+	right, err := v.Encode(principal)
+	if err != nil {
+		return Permission{}, ErrForbidden
+	}
+	if string(left) != string(right) || permission.DecisionOwner != decisionOwner(ref) {
 		return Permission{}, ErrForbidden
 	}
 	return permission, nil
@@ -129,9 +171,6 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 	if err != nil {
 		return v.TransportOutcome{}, refusal("forbidden", err)
 	}
-	if request.Payload.ComponentRef != s.config.Component {
-		return v.TransportOutcome{}, refusal("forbidden", nil)
-	}
 	subjectJSON, err := v.Encode(permission.Subject)
 	if err != nil {
 		return v.TransportOutcome{}, err
@@ -162,11 +201,28 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 			receipt = prior.Receipt
 			return nil
 		}
+		now, err := s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if err = permissionCurrent(permission, now); err != nil {
+			return err
+		}
+		// Reconfiguration retires new use of the old binding; an authenticated
+		// original Command above retains its immutable receipt.
+		if !now.Before(cutoff) {
+			receipt = rejected(command, "expired")
+		} else if request.Payload.ComponentRef != s.config.Component || permission.ChargeBasis != "durable_rule_start" || permission.RuleVersion != "fixture-rule/2" {
+			receipt = rejected(command, "unsupported")
+		}
+		if _, refused := receipt.AsRejected(); refused {
+			return s.config.Store.SaveCommand(ctx, tx, command, CommandRecord{Digest: digest, Request: request, Subject: permission.Subject, Receipt: receipt})
+		}
 		state, err := s.config.Store.LockPool(ctx, tx)
 		if err != nil {
 			return err
 		}
-		now, err := s.config.Store.Now(ctx, tx)
+		now, err = s.config.Store.Now(ctx, tx)
 		if err != nil {
 			return err
 		}

@@ -117,7 +117,7 @@ func (s *Store) PoolNextWake(ctx context.Context, token runtime.Tx, state workpo
 	}
 	return fallback, nil
 }
-func (s *Store) ExpiredCandidates(ctx context.Context, token runtime.Tx, now time.Time, limit int) ([]runtime.Job, error) {
+func (s *Store) MaintenanceCandidates(ctx context.Context, token runtime.Tx, now time.Time, limit int) ([]runtime.Job, error) {
 	tx, err := s.core.LocalSQL(ctx, token)
 	if err != nil {
 		return nil, err
@@ -125,7 +125,7 @@ func (s *Store) ExpiredCandidates(ctx context.Context, token runtime.Tx, now tim
 	if limit < 1 || limit > 64 {
 		return nil, runtime.ErrWorkBounds
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT j.job_id,j.object_kind,j.object_id,j.phase,j.work_revision,j.completed_revision,j.state,j.due_at FROM `+s.table("jobs")+` j JOIN `+s.table("decisions")+` d ON d.tenant_id=j.tenant_id AND d.owner_id=j.owner_id AND d.decision_id=j.object_id WHERE j.tenant_id=$1 AND j.owner_id=$2 AND j.state<>'done' AND d.status IN('accepted','running','waiting') AND d.deadline<=$3 ORDER BY d.deadline,j.job_id LIMIT $4`, token.Owner().TenantID, token.Owner().OwnerID, now, limit)
+	rows, err := tx.QueryContext(ctx, `SELECT j.job_id,j.object_kind,j.object_id,j.phase,j.work_revision,j.completed_revision,j.state,j.due_at FROM `+s.table("jobs")+` j JOIN `+s.table("decisions")+` d ON d.tenant_id=j.tenant_id AND d.owner_id=j.owner_id AND d.decision_id=j.object_id WHERE j.tenant_id=$1 AND j.owner_id=$2 AND j.state<>'done' AND d.status IN('accepted','running','waiting') AND (d.deadline<=$3 OR convert_from(d.body,'UTF8')::jsonb->>'legacy_billing_retired'='true') ORDER BY d.deadline,j.job_id LIMIT $4`, token.Owner().TenantID, token.Owner().OwnerID, now, limit)
 	if err != nil {
 		return nil, err
 	}

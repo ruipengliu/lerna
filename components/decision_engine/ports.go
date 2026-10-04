@@ -111,6 +111,7 @@ type Record struct {
 	PublicationAttempts    int                      `json:"publication_attempts"`
 	WakeAt                 v.Time                   `json:"wake_at,omitempty"`
 	LegacyUnaccountedStart bool                     `json:"legacy_unaccounted_start,omitempty"`
+	LegacyBillingRetired   bool                     `json:"legacy_billing_retired,omitempty"`
 }
 type CommandRecord struct {
 	Digest  string                  `json:"digest"`
@@ -124,7 +125,7 @@ type Repository interface {
 	LockDecision(context.Context, runtime.Tx, v.DecisionRef) (*Record, error)
 	SaveDecision(context.Context, runtime.Tx, Record) error
 	ReadDecision(context.Context, runtime.Tx, v.DecisionRef) (*Record, error)
-	ExpiredCandidates(context.Context, runtime.Tx, time.Time, int) ([]runtime.Job, error)
+	MaintenanceCandidates(context.Context, runtime.Tx, time.Time, int) ([]runtime.Job, error)
 	ReadCommandRecord(context.Context, runtime.Tx, v.CommandRef) (*CommandRecord, error)
 }
 

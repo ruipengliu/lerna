@@ -75,7 +75,7 @@ func (s *Service) Maintain(ctx context.Context) (int, error) {
 			if err != nil {
 				return err
 			}
-			jobs, err := s.config.Store.ExpiredCandidates(ctx, tx, now, 64)
+			jobs, err := s.config.Store.MaintenanceCandidates(ctx, tx, now, 64)
 			if err != nil {
 				return err
 			}
@@ -95,10 +95,17 @@ func (s *Service) Maintain(ctx context.Context) (int, error) {
 				if err != nil {
 					return err
 				}
-				if now.Before(deadline) {
+				if !record.LegacyBillingRetired && now.Before(deadline) {
 					continue
 				}
-				failRecord(record, "deadline_elapsed")
+				reason := v.DecisionFailure("deadline_elapsed")
+				if record.LegacyBillingRetired {
+					reason = "billing_basis_unsupported"
+					if record.LegacyUnaccountedStart || record.Status != "accepted" {
+						reason = "usage_unavailable"
+					}
+				}
+				failRecord(record, reason)
 				if err = s.config.Store.SaveDecision(ctx, tx, *record); err != nil {
 					return err
 				}
@@ -185,7 +192,7 @@ func (s *Service) Claim(ctx context.Context) (*Work, error) {
 	if observation == nil || observation.Input == nil || terminal(observation.Status) {
 		return nil, nil
 	}
-	permission, err := s.config.Authority.Authorize(ctx, observation.Subject, ref, "start", observation.Input)
+	permission, err := s.observePermission(ctx, observation.Subject, ref, "start", observation.Input)
 	if err != nil {
 		return nil, err
 	}
@@ -304,7 +311,7 @@ func (s *Service) Start(ctx context.Context, claim runtime.Claim) (*Work, error)
 	if observation == nil || observation.Input == nil || terminal(observation.Status) {
 		return nil, runtime.ErrClaim
 	}
-	permission, err := s.config.Authority.Authorize(ctx, observation.Subject, ref, "start", observation.Input)
+	permission, err := s.observePermission(ctx, observation.Subject, ref, "start", observation.Input)
 	if err != nil {
 		return nil, err
 	}
