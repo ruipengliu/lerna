@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-04 21:18 UTC，采用[政策清理资格决定](../lerna-04-content-snapshots/ticket-05-policy-cleanup-qualification/README.md)：原责任完整比较和当前save／cap资格允许无物理效果的 `not_required` 核对，普通pending规则、历史期限与其他holder责任不变；全页版本／policy资格先于责任锁，最后采新鲜DB时间。真实首red0.246s已复现消费stub缺失，green与ObjectHolder相邻修正分别待验证。03部分真实metadata主因2.160、Proposal主因2.217、UTF8必要约束2.131、62直接材料完整Lock64链路11.540、完整当前Found回复1.474均通过；1MiB边界有独立red→green，不声称真实装配能达到所有单独上限。B正文要求omit但原A仍selected的真实0.904s失败已保留，正文选材最小修复正在实施。两票尚未正式接受或整合，全部22切片授权继续。
+
 2026-10-04，采用[票03内部溢出诊断决定](../lerna-04-content-snapshots/ticket-03-overflow-diagnostic/README.md)：实际拒绝维度与可选完整测量沿原错误链返回，保留独立 Content 限制及缺测量，不新增公共合同、数据库或成功 Bundle。真实 metadata／Proposal 主因测试仍待实施。03部分单Content边界已真实unit red→green，合法原Decision限额的真实链路2.314s通过：20万字目标完整回显，262144字目标加完整metadata由Content层拒绝且无派发。第一次非法2MiB限额被schema挡住的失败保留，不算业务red。05跨进程第一顺序0.050s实际通过，写者关闭有独立ACK；反序与第一对照0.081s通过，真实fence后第二进程迟到Put拒绝，原eraser SIGKILL／Wait后重开确认正文缺失。被杀holder无逻辑Close ACK，其准确root4116685529（dev33/inode326495）保持unknown并保留，kernel退出及后续观察不推逻辑关闭。其余AC仍待验证，两票尚未正式合入或接受，全部22切片继续按依赖实施。
 
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
