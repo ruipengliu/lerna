@@ -419,7 +419,7 @@ func (s *Service) calculate(ctx context.Context, work Work) completion {
 	}
 	// Fixture charge is one recorded rule step, with zero physical model calls.
 	charge := new(big.Int)
-	if _, ok := charge.SetString(input.Limits.MaxCost.IntegerValue, 10); !ok || charge.Sign() < 1 {
+	if _, ok := charge.SetString(string(input.Limits.MaxCost.IntegerValue), 10); !ok || charge.Sign() < 1 {
 		return failedCompletion("budget_exhausted", usage)
 	}
 	usage.RuleSteps = "1"

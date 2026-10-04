@@ -100,10 +100,10 @@ func validateSnapshot(s decision.Snapshot) error {
 	if _, err := v.Encode(s.ComponentRef); err != nil {
 		return err
 	}
-	if err := v.Validate("Revision", s.GoalRevision); err != nil {
+	if err := v.Validate("Revision", string(s.GoalRevision)); err != nil {
 		return err
 	}
-	if err := v.Validate("Revision", s.ControlRevision); err != nil {
+	if err := v.Validate("Revision", string(s.ControlRevision)); err != nil {
 		return err
 	}
 	if s.Rule == "" || len(s.MaterialRefs) > 64 || len(s.RequirementRefs) > 64 || len(s.CapabilityBindings) > 64 || len(s.AnswerSchemaRefs) > 16 || len(s.UseRefs) == 0 || len(s.UseRefs) > 64 {
