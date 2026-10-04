@@ -9,7 +9,7 @@ bootstrap:
 generate:
 	pnpm generate
 fmt:
-	gofmt -w contract conformance runtime host internal adapters cmd
+	gofmt -w contract conformance runtime host internal adapters components cmd
 	pnpm exec prettier --write $(FORMATTED)
 lint:
 	node scripts/check-go-format.mjs
@@ -33,6 +33,8 @@ test-integration:
 	cd conformance/fixtures/durable-work/pg-v2 && sha256sum -c SHA256SUMS
 	cd conformance/fixtures/durable-work/sqlite-v2 && sha256sum -c SHA256SUMS
 	go test -count=1 -tags=integration -timeout=120s ./conformance/recovery/...
+	@test -n "$$LERNA_TEST_OWNED_SCOPE_REGISTRY" || { echo "LERNA_TEST_OWNED_SCOPE_REGISTRY is required (absolute durable ownership ledger)" >&2; exit 1; }
+	go test -p=1 -count=1 -tags=integration -timeout=120s ./conformance/component ./conformance/internal/decisionfixture
 test-contract:
 	node scripts/test-contract.mjs
 	node scripts/test-contract.mjs --reverse
