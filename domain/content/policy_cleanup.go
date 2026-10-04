@@ -2,6 +2,9 @@ package content
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/runtime"
 	"time"
@@ -27,7 +30,13 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 			expected CleanupResponsibility
 			bound    time.Time
 		}
+		type sealing struct {
+			expected CleanupResponsibility
+			record   *Record
+			request  SealRequest
+		}
 		qualified := []qualification{}
+		seals := []sealing{}
 		// All version/policy acquisition precedes every responsibility row lock.
 		for _, original := range candidates.Responsibilities {
 			if original.ChangeKey != changeKey || original.Ref.Owner != l.config.Owner {
@@ -56,6 +65,10 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 			if err != nil {
 				return err
 			}
+			actualPolicy, err := l.store.CurrentSavingPolicy(ctx, tx, original.Subject, original.Ref, original.Purpose)
+			if err != nil {
+				return err
+			}
 			record, err := l.store.LockVersion(ctx, tx, original.Ref)
 			if err != nil {
 				return err
@@ -79,11 +92,10 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 			if !now.Before(cutoff(record.CurrentRetainUntil)) {
 				continue
 			}
-			if policy == nil || policy.Ref != record.Ref {
-				continue
-			}
 			service := Service{config: Config{Owner: l.config.Owner, Store: l.store}}
-			sources, err := service.registeredClosure(ctx, tx, record.Ref, record.Sources, record.Subject, record.Purpose, []string{"save"})
+			// Structural membership is qualified even when save itself is
+			// withdrawn. Missing/incorrect source facts never authorize deletion.
+			structure, err := service.registeredClosure(ctx, tx, record.Ref, record.Sources, record.Subject, record.Purpose, nil)
 			if err != nil {
 				if _, denied := qualificationCode(err); denied {
 					continue
@@ -91,11 +103,45 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 				return err
 			}
 			found := record.Ref == change.Policy.Ref
-			for _, ref := range sources.refs {
+			for _, ref := range structure.refs {
 				found = found || ref == change.Policy.Ref
 			}
 			if !found {
 				continue
+			}
+			knownFalse := actualPolicy != nil && !actualPolicy.Save
+			known := actualPolicy != nil
+			for _, source := range structure.records {
+				current, err := l.store.CurrentSavingPolicy(ctx, tx, record.Subject, source.Ref, record.Purpose)
+				if err != nil {
+					return err
+				}
+				known = known && current != nil
+				knownFalse = knownFalse || current != nil && !current.Save
+			}
+			if known && knownFalse {
+				if err = l.manager.current(ctx, tx); err != nil {
+					return err
+				}
+				now, err = l.store.Now(ctx, tx)
+				if err != nil {
+					return err
+				}
+				if !now.Before(original.Deadline) || original.Deadline.After(now.Add(l.config.WorkBudget)) || original.Deadline.After(l.config.TrustedUntil) {
+					continue
+				}
+				seals = append(seals, sealing{original, record, SealRequest{Ref: record.Ref, Purpose: record.Purpose, SealID: policySealID(changeKey, record.Ref), Deadline: original.Deadline}})
+				continue
+			}
+			if policy == nil || policy.Ref != record.Ref {
+				continue
+			}
+			sources, err := service.registeredClosure(ctx, tx, record.Ref, record.Sources, record.Subject, record.Purpose, []string{"save"})
+			if err != nil {
+				if _, denied := qualificationCode(err); denied {
+					continue
+				}
+				return err
 			}
 			bound := earlier(earlier(policy.ValidUntil, policy.RetainUntil), cutoff(record.CurrentRetainUntil))
 			if len(sources.refs) > 0 {
@@ -113,8 +159,20 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 			}
 			qualified = append(qualified, qualification{original, bound})
 		}
+		// Shared sealing may lock holder/job facts, but never acquires another
+		// version or policy after this page's complete qualification phase.
+		for _, current := range seals {
+			if _, err := l.sealLocked(ctx, tx, current.record, current.request, changeKey); err != nil {
+				return err
+			}
+		}
 		for _, current := range qualified {
 			if err := l.store.QualifyPolicyCleanupNotRequired(ctx, tx, current.expected); err != nil {
+				return err
+			}
+		}
+		for _, current := range seals {
+			if err := l.store.BindPolicyCleanupSeal(ctx, tx, current.expected, *current.record.BodySeal); err != nil {
 				return err
 			}
 		}
@@ -130,6 +188,11 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 				return refusal("expired")
 			}
 		}
+		for _, current := range seals {
+			if !now.Before(current.request.Deadline) {
+				return refusal("expired")
+			}
+		}
 		return nil
 	})
 	if err != nil {
@@ -139,3 +202,12 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 }
 
 func changeKeyForCleanup(change PolicyChange) string { return changeKey(change.Policy) }
+
+func policySealID(key string, ref v.ContentRef) string {
+	raw, _ := json.Marshal(struct {
+		ChangeKey string
+		Ref       v.ContentRef
+	}{key, ref})
+	sum := sha256.Sum256(raw)
+	return "policy-seal-" + hex.EncodeToString(sum[:])
+}

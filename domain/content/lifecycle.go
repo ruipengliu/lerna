@@ -32,6 +32,7 @@ type StagingObservation struct {
 }
 
 type BodySeal struct {
+	PolicyChangeKey      string           `json:"policy_change_key,omitempty"`
 	PrimaryHolderBinding string           `json:"primary_holder_binding"`
 	PrimaryHolderID      string           `json:"primary_holder_id"`
 	ID                   string           `json:"id"`
@@ -58,6 +59,9 @@ type BodyHolder struct {
 type LifecycleRepository interface {
 	ManagementRepository
 	QualifyPolicyCleanupNotRequired(context.Context, runtime.Tx, CleanupResponsibility) error
+	CurrentSavingPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string) (*FixturePolicy, error)
+	BindPolicyCleanupSeal(context.Context, runtime.Tx, CleanupResponsibility, BodySeal) error
+	AcknowledgePolicyCleanupErased(context.Context, runtime.Tx, BodySeal) error
 	LockSecondaryCopy(context.Context, runtime.Tx, v.ContentRef, string) (*SecondaryCopy, error)
 	SaveSecondaryCopy(context.Context, runtime.Tx, SecondaryCopy) error
 	SecondaryCopies(context.Context, runtime.Tx, v.ContentRef, string, int) ([]SecondaryCopy, string, error)
@@ -151,79 +155,84 @@ func (l *Lifecycle) seal(ctx context.Context, subject *v.SubjectBinding, request
 				return runtime.ErrScope
 			}
 		}
-		if record.PrimaryHolderBinding == "" || record.PrimaryHolderBinding != l.config.Objects.Binding() {
-			return ErrHolderBinding
-		}
-		if record.BodySeal != nil {
-			seal := record.BodySeal
-			if seal.ID != request.SealID || seal.Ref != request.Ref || seal.Purpose != request.Purpose || seal.PrimaryHolderID != l.config.PrimaryHolderID || !seal.Deadline.Equal(request.Deadline) {
-				return &ManagementConflict{}
-			}
-			observed, err = l.observeRecord(ctx, tx, *record, "")
-			return err
-		}
-		now, err := l.store.Now(ctx, tx)
-		if err != nil {
-			return err
-		}
-		if !request.Deadline.After(now) || request.Deadline.After(now.Add(l.config.WorkBudget)) || request.Deadline.After(l.config.TrustedUntil) {
-			return refusal("expired")
-		}
-		record.BodySeal = &BodySeal{PrimaryHolderBinding: record.PrimaryHolderBinding, ID: request.SealID, Ref: record.Ref, Subject: record.Subject, Purpose: record.Purpose, PrimaryHolderID: l.config.PrimaryHolderID, StartedAt: now, Deadline: request.Deadline}
-		record.CleanupPending = true
-		record.Revision++
-		if err = l.store.SaveVersion(ctx, tx, *record); err != nil {
-			return err
-		}
-		for _, holder := range []struct{ kind, id string }{{"pg-staging", "postgres-staging"}, {"primary", l.config.PrimaryHolderID}} {
-			identity := ErasureIdentity{Ref: record.Ref, ObjectKey: record.ObjectKey, HolderID: holder.id, SealID: request.SealID}
-			if holder.kind == "primary" {
-				identity.Binding = record.PrimaryHolderBinding
-			}
-			if err = l.store.SaveBodyHolder(ctx, tx, BodyHolder{Kind: holder.kind, Identity: identity, Deadline: request.Deadline, State: "pending", Responsible: holder.id, Reason: "holder_unconfirmed"}); err != nil {
-				return err
-			}
-		}
-		cursor := ""
-		for {
-			copies, next, err := l.store.SecondaryCopies(ctx, tx, record.Ref, cursor, l.config.PageSize)
-			if err != nil {
-				return err
-			}
-			for _, copy := range copies {
-				if copy.Observation.Ref != record.Ref || copy.ObjectKey != record.ObjectKey || copy.Purpose != record.Purpose || !sameSavingSubject(copy.Subject, record.Subject) {
-					return runtime.ErrScope
-				}
-				identity := ErasureIdentity{Ref: record.Ref, ObjectKey: record.ObjectKey, HolderID: copy.Observation.HolderID, SealID: request.SealID, Binding: copy.Observation.Binding}
-				if err = l.store.SaveBodyHolder(ctx, tx, BodyHolder{Kind: "secondary", Identity: identity, Deadline: request.Deadline, State: "pending", Responsible: copy.Observation.HolderID, Reason: "holder_unconfirmed", CopyID: copy.ID, EffectDeadline: copy.Observation.Deadline, AttemptKeys: []string{copy.AttemptKey}}); err != nil {
-					return err
-				}
-			}
-			if next == "" {
-				break
-			}
-			cursor = next
-			if err = l.manager.current(ctx, tx); err != nil {
-				return err
-			}
-		}
-		if _, err = l.store.Trigger(ctx, tx, contract.ObjectRef{TenantID: contract.ID(record.Ref.Owner.TenantID), OwnerID: contract.ID(record.Ref.Owner.OwnerID), Kind: "content", ID: contract.ID(record.ObjectID)}, "body_cleanup", record.Revision, now); err != nil {
-			return err
-		}
-		if err = l.manager.current(ctx, tx); err != nil {
-			return err
-		}
-		now, err = l.store.Now(ctx, tx)
-		if err != nil {
-			return err
-		}
-		if !now.Before(request.Deadline) {
-			return refusal("expired")
-		}
-		observed, err = l.observeRecord(ctx, tx, *record, "")
+		observed, err = l.sealLocked(ctx, tx, record, request, "")
 		return err
 	})
 	return observed, err
+}
+
+// sealLocked is shared by the voluntary, orphan and policy consumers. The
+// caller already owns the original version lock and its own cause/authority.
+func (l *Lifecycle) sealLocked(ctx context.Context, tx runtime.Tx, record *Record, request SealRequest, policyKey string) (BodyCleanupObservation, error) {
+	if record.PrimaryHolderBinding == "" || record.PrimaryHolderBinding != l.config.Objects.Binding() {
+		return BodyCleanupObservation{}, ErrHolderBinding
+	}
+	if record.BodySeal != nil {
+		seal := record.BodySeal
+		if seal.ID != request.SealID || seal.Ref != request.Ref || seal.Purpose != request.Purpose || seal.PrimaryHolderID != l.config.PrimaryHolderID || seal.PolicyChangeKey != policyKey || !seal.Deadline.Equal(request.Deadline) {
+			return BodyCleanupObservation{}, &ManagementConflict{}
+		}
+		return l.observeRecord(ctx, tx, *record, "")
+	}
+	now, err := l.store.Now(ctx, tx)
+	if err != nil {
+		return BodyCleanupObservation{}, err
+	}
+	if !request.Deadline.After(now) || request.Deadline.After(now.Add(l.config.WorkBudget)) || request.Deadline.After(l.config.TrustedUntil) {
+		return BodyCleanupObservation{}, refusal("expired")
+	}
+	record.BodySeal = &BodySeal{PolicyChangeKey: policyKey, PrimaryHolderBinding: record.PrimaryHolderBinding, ID: request.SealID, Ref: record.Ref, Subject: record.Subject, Purpose: record.Purpose, PrimaryHolderID: l.config.PrimaryHolderID, StartedAt: now, Deadline: request.Deadline}
+	record.CleanupPending = true
+	record.Revision++
+	if err = l.store.SaveVersion(ctx, tx, *record); err != nil {
+		return BodyCleanupObservation{}, err
+	}
+	for _, holder := range []struct{ kind, id string }{{"pg-staging", "postgres-staging"}, {"primary", l.config.PrimaryHolderID}} {
+		identity := ErasureIdentity{Ref: record.Ref, ObjectKey: record.ObjectKey, HolderID: holder.id, SealID: request.SealID}
+		if holder.kind == "primary" {
+			identity.Binding = record.PrimaryHolderBinding
+		}
+		if err = l.store.SaveBodyHolder(ctx, tx, BodyHolder{Kind: holder.kind, Identity: identity, Deadline: request.Deadline, State: "pending", Responsible: holder.id, Reason: "holder_unconfirmed"}); err != nil {
+			return BodyCleanupObservation{}, err
+		}
+	}
+	cursor := ""
+	for {
+		copies, next, err := l.store.SecondaryCopies(ctx, tx, record.Ref, cursor, l.config.PageSize)
+		if err != nil {
+			return BodyCleanupObservation{}, err
+		}
+		for _, copy := range copies {
+			if copy.Observation.Ref != record.Ref || copy.ObjectKey != record.ObjectKey || copy.Purpose != record.Purpose || !sameSavingSubject(copy.Subject, record.Subject) {
+				return BodyCleanupObservation{}, runtime.ErrScope
+			}
+			identity := ErasureIdentity{Ref: record.Ref, ObjectKey: record.ObjectKey, HolderID: copy.Observation.HolderID, SealID: request.SealID, Binding: copy.Observation.Binding}
+			if err = l.store.SaveBodyHolder(ctx, tx, BodyHolder{Kind: "secondary", Identity: identity, Deadline: request.Deadline, State: "pending", Responsible: copy.Observation.HolderID, Reason: "holder_unconfirmed", CopyID: copy.ID, EffectDeadline: copy.Observation.Deadline, AttemptKeys: []string{copy.AttemptKey}}); err != nil {
+				return BodyCleanupObservation{}, err
+			}
+		}
+		if next == "" {
+			break
+		}
+		cursor = next
+		if err = l.manager.current(ctx, tx); err != nil {
+			return BodyCleanupObservation{}, err
+		}
+	}
+	if _, err = l.store.Trigger(ctx, tx, contract.ObjectRef{TenantID: contract.ID(record.Ref.Owner.TenantID), OwnerID: contract.ID(record.Ref.Owner.OwnerID), Kind: "content", ID: contract.ID(record.ObjectID)}, "body_cleanup", record.Revision, now); err != nil {
+		return BodyCleanupObservation{}, err
+	}
+	if err = l.manager.current(ctx, tx); err != nil {
+		return BodyCleanupObservation{}, err
+	}
+	now, err = l.store.Now(ctx, tx)
+	if err != nil {
+		return BodyCleanupObservation{}, err
+	}
+	if !now.Before(request.Deadline) {
+		return BodyCleanupObservation{}, refusal("expired")
+	}
+	return l.observeRecord(ctx, tx, *record, "")
 }
 
 func (l *Lifecycle) Observe(ctx context.Context, subject *v.SubjectBinding, ref v.ContentRef, cursor string) (BodyCleanupObservation, error) {
@@ -375,7 +384,7 @@ func (l *Lifecycle) Step(ctx context.Context, subject *v.SubjectBinding) (bool, 
 				if !complete {
 					return runtime.ErrScope
 				}
-				return l.store.Complete(ctx, tx, *claim, now)
+				return l.completeCleanup(ctx, tx, *record, *claim)
 			}
 			if holder.Kind == "pg-staging" {
 				record.Bytes = nil
@@ -510,7 +519,7 @@ func (l *Lifecycle) Step(ctx context.Context, subject *v.SubjectBinding) (bool, 
 			return refusal("expired")
 		}
 		if complete {
-			return l.store.Complete(ctx, tx, *claim, now)
+			return l.completeCleanup(ctx, tx, *record, *claim)
 		}
 		// DeferClaim requires a strictly later due time. One microsecond is
 		// finite continuation of the same original responsibility, never a
@@ -522,6 +531,37 @@ func (l *Lifecycle) Step(ctx context.Context, subject *v.SubjectBinding) (bool, 
 		return l.store.DeferClaim(ctx, tx, *claim, now, due)
 	})
 	return true, errors.Join(err, effectErr)
+}
+
+func (l *Lifecycle) completeCleanup(ctx context.Context, tx runtime.Tx, record Record, claim runtime.Claim) error {
+	validate := func() (time.Time, error) {
+		if err := l.manager.current(ctx, tx); err != nil {
+			return time.Time{}, err
+		}
+		now, err := l.store.Now(ctx, tx)
+		if err != nil {
+			return now, err
+		}
+		if record.BodySeal == nil || !now.Before(record.BodySeal.Deadline) {
+			return now, refusal("expired")
+		}
+		return now, l.store.ValidateClaim(ctx, tx, claim, now)
+	}
+	if _, err := validate(); err != nil {
+		return err
+	}
+	if record.BodySeal.PolicyChangeKey != "" {
+		if err := l.store.AcknowledgePolicyCleanupErased(ctx, tx, *record.BodySeal); err != nil {
+			return err
+		}
+	}
+	// The original responsibility row lock/CAS can wait. Its ACK and this
+	// completion commit together only after current clock/claim qualification.
+	now, err := validate()
+	if err != nil {
+		return err
+	}
+	return l.store.Complete(ctx, tx, claim, now)
 }
 
 func (l *Lifecycle) ObserveStaging(ctx context.Context, subject *v.SubjectBinding, ref v.ContentRef) (StagingObservation, error) {

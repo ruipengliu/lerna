@@ -15,16 +15,29 @@ Lifecycle.Step独立确认才能置对应holder erased。
 已经sealed/过期cap不会取消或重新计时。普通query和所有CleanupPending
 不隐式触发Seal；read/process/disclose-only变化不授权删除正文。
 
-`Lifecycle.ConsumePolicyCleanup(ctx, subject, changeKey, cursor)`当前只消费
-已确认临时save撤销后当前原保存basis完全恢复的有限责任页。候选Observe
+`Lifecycle.ConsumePolicyCleanup(ctx, subject, changeKey, cursor)`消费原政策
+有限责任页。已确认临时save撤销后当前原保存basis完全恢复可not_required。
+当前确切published原保存policy仍Save=false可同Tx启动原Deadline封闭。
+候选Observe
 短Tx先结束，新Tx整页policy/Version与全部祖先save资格完成后，再锁责任
 完整CAS，最后fresh时间门；输出重新Observe。原保存basis是Record.Subject
 完整delegation/Purpose，历史change窗口不充当前授权。原cap过期/已seal/
 unknown等保持pending；原维护deadline过期也不续旧Job或改原deadline。
 独立QualifyPolicyCleanupNotRequired只改已存在原责任的not_required/residual，
 保留Actions/Reason/Deadline/holders/attempt/publication，不粗清Record pending。
-normal及race/实际两次重开已通过；自动genuine policy封闭与拒绝竞争窗口
-尚未完成，不能将此入口存在视为所有policy cleanup已实现。
+恢复分支normal/race及实际两次重开已通过；当前savefalse正常封闭→真实
+Lifecycle全ACK→原责任erased也通过。拒绝竞争/其他触发/过期cap窗口仍待
+独立资格，不将此入口存在视为所有policy cleanup已实现。
+
+原policy seal增加immutable PolicyChangeKey（voluntary/旧缺字段为空），与
+完整ref/Subject/Purpose/原责任Deadline/稳定sealID核准firstkey关联。PG
+CurrentSavingPolicy真实原行FOR SHARE返回完整flags，不把CheckPolicy=nil
+当savefalse；无权/错完整声明/unknown不强删。共享sealLocked接现三个入口，
+整页资格先于责任锁，建立原全部holders/Job后责任全字段精确比较；任一
+失配同Tx全部rollback。Step两个完成出口在所有原holder独立ACK后准确
+原责任CAS为erased，再fresh时钟/Claim/原Deadline后Complete，同Tx提交。
+新责任与别既有seal不自动挂接，secondary pending不global ACK；其他原
+触发需后续独立tracer，不改普通保守SaveResponsibility语义或历史union。
 
 Record.BodySeal是所有正文路径的同一个门。原Command当前reader获准时
 固定receipt照旧，sealed版本的新association不能创建publish或复制责任。

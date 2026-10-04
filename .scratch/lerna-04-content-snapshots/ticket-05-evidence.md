@@ -338,3 +338,52 @@ reason/deadline/holders/attempt/publication/history原样。Record.CleanupPendin
 无seal/无bodycleanup工作/独立原alpha字节/public Get/第二World重开保持
 均执行通过。当前窗口、祖先拒绝、cap过期、责任CAS竞争、授权跨等待、
 genuine policy→seal以及ObjectHolder独立必要修正均待后续单tracer。
+
+## 当前save仍撤销：真实policy consumer之后缺seal的首业务red
+
+`TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer`真实
+publish/Get正常，然后Save=false，Service.Step实际推进policy_propagation，
+Manager.ObserveChange得到准确原pending责任，正文此时仍可读。actual
+World.Reopen之后Consume返回旧pending；Lifecycle.Observe在line136返回
+ErrUnavailable/noSeal，这是当前未实现条件封闭的真实业务red。
+
+`/tmp/lerna-04-ticket05-execution/policy-cleanup-current-first-red.log`包actual
+0.406s/case0.36s；PID/PGID2817085/start11740188/nativeexit1/groupAbsent=true，
+无timeout，session60824实际结束。原caller20s/test30s/wrapper120s及failclosed
+shell/gofmt。后续正文门、真正两介质清理、metadata gone、receipt/history、
+原seal/change准确物理ACK与重开尚未执行，不claim。明确release LOCAL，
+无pending。绿色等待root/Astra窄决定，当前没有新增Seal/Change关联代码。
+
+随后完整读取采用
+`/tmp/lerna-04-ticket-05-policy-seal-ack-decision.md`。BodySeal.PolicyChangeKey
+准确绑定first原政策触发（voluntary为空），与完整ref/保存主体用途/原责任
+Deadline及稳定sealID共同形成同Tx关联；不可覆盖既有seal或借同objectID
+清其他主体/用途/其他change。CurrentSavingPolicy只读完整原policy FOR SHARE，
+确切fulltuple/真实Save=false才是已知因果；CheckPolicy=nil不推撤save。
+
+同mutation Tx整页先policy/Version与结构来源资格，再共享sealLocked（现
+voluntary/orphan/policy三路径同实现）登记原staging/primary、全部既有copy、
+原Job；最后原责任全字段锁后比较，失配整体rollback。Policy期限用原
+责任Deadline，不能借Change转natural phase后的ExpiryDeadline。所有写后
+fresh管理资格/DBclock与原执行界限。当前首case未扩为expiredcap/未知归属。
+
+Step两个Complete出口共用completeCleanup：已独立确认所有原holders之后，
+先最新Claim/原sealDeadline/current资格，再原政策责任准确锁/tuple/实际CAS
+置erased，最后锁等待后freshNow/Claim/Deadline再Complete，同Tx提交。
+primary+PGstaging gone不替secondary ALLACK；空policyKey不找相似责任。
+原holder union/actions/reason/attempt/publication/deadline始终保历史。
+
+| 原日志 | 实际结果 |
+| --- | --- |
+| `policy-cleanup-current-first-green.log` | actual0.249s，PID/PGID2830612/start11799792/nativeexit1/groupAbsent=true；Consume scope失败，不是green。原受信policy JSON带纳秒，而PG timestamptz只能承载微秒，新列一致检查过严。 |
+| `policy-cleanup-current-time-precision-repair.log` | 按实际微秒表示核ValidUntil列（不改policy/window/deadline）后，exact actual0.465s，PID/PGID2833084/start11810190/nativeexit0/groupAbsent=true。 |
+| `policy-cleanup-current-race-controls.log` | 五个已存在exact（current/restored-safe/voluntarySeal/orphan-wins/actualstaging+primary）actual3.659s，PID/PGID2834055/start11814181/nativeexit0/groupAbsent=true；两个frozen SHA准确。 |
+
+原caller20s/test30s/wrapper120s保持，无timeout。session64905/57014/89427均
+actual结束，明确release LOCAL/no pending。正常链实际执行：seal提交时原
+alpha仍独立存在，正文Get关闭；Service.Step不冒cleanup owner；真实重开
+Lifecycle处理staging+primary并独立观察，全ACK后原责任erased/残留为空，
+全部历史字段仍原样；metadata gone、Encode原receipt/published历史、再
+World重开原seal/期限保持。此firstkey范围不证明其他trigger/ancestor/
+expiredcap/锁等待/CAS竞争/责任全页/secondary政策ACK。ObjectHolder独立
+修正以及后续自然phase普通写是否维持erased结论仍待独立tracer。
