@@ -19,6 +19,10 @@ exclusive test slots and final independent reviews. All integration commands use
 | `384d36ca8fc2dfa0c42d84defb140d10bb3d7ad9` | Admission cutoff, execution deadline and single-call resource context have separate actual outcomes; replacement retains original cumulative allowance and unknown prior observation. Normal4.990 / race7.202. |
 | `238fc15129abafa1a1ae7a8f7c29b0f142ad4f2b` | quota0/full pool/actual Start-before-compute cancellation fences old Claims and releases capacity. Real65 non-anchor responsibilities expire across two bounded maintenance pages at quota0. Original normal5.576; explicit locked Claim/Start Stop checks then normal6.270 / race12.671. |
 
+
+| `bba7edcf94ce0ac674e6c02ffe75d4b1e0e3553f` | Actual Stop/Record/Job rollback and successful COMMIT with lost reply, both-owner reopen and both directions of original Command method/binding priority. Normal1.236 / race5.583, first behavior already correct. |
+| `eb119152b520e9be3af3cf3b1426dff419115dde` | Shared nilInput cancellation precision: exact zero observations and true completeness in machine1.1 and both typed codecs. Go actual red0.039 / green0.037; TS actual red0.550 / green0.436. All87 real bidirectional fixtures forward3.162 / reverse2.409; affected Component race12.404, generated check0.916 and TS typecheck1.268, all exit0. |
+
 No failed run is converted into a behavioral red when it failed compilation,
 setup, test input validation or cleanup. Local evidence and complete outputs are
 in `/tmp/lerna-03-ticket-03-evidence.md` and the corresponding exact-selector logs.
@@ -34,7 +38,7 @@ payload bytes remain frozen. First repaired upgrade cleanup hit the old10-ACK
 bound with actual12 ACKs; the shared mechanical fix
 `22abf0669e30d47cea152599c124a16d319d3f62` changes only that finite bound.
 
-Current known cleanup observation:201 exact acknowledged PG schemas are absent.
+Current known cleanup observation:217 exact acknowledged PG schemas were absent at the last actual DB audit; the later codec-only batch allocated no PG scopes.
 All current test sessions, registered workers and child holders exited. The
 original build-failure directory
 `/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-3540254111`
@@ -42,10 +46,38 @@ remains **unknown and retained**, as does its parent overlay. No PID/group was
 recorded for that historical window; no prefix, timestamp or process-name guess
 is used to remove it. Three later exact compiler groups have confirmed absence.
 
-Remaining gates: actual Stop transaction rollback/COMMIT reply-loss and two-way
-original Command identity matrix; final candidate-format/action-budget overlap
-after ticket02 formally exits and root merges it; full affected codec/Go/TS,
-frozen-source hashes, historical970 and current PG/old dual-store normal/race;
-latest integration merge, independent standards/spec and architecture reviews.
+Static mechanical followups `8e24c82b2445d46ea8ff3caf572deb0a4af1c64c`
+and `283ca961c5c042cd17a99d4e51f4d998fe8d5337` preserve real native holder
+ownership, ACK actual PID/PGID before Wait, avoid numeric group signals and
+retain failed ACK scopes. The first followup alone lacked the compiler failed-ACK
+retain condition; the second closes that static finding. No failure was
+fabricated to label these as native fault evidence.
+
+Restoration-only `7941b9d8c1b0273f1a30b9c700184e5fe651d824` verifies every
+original970 payload/provenance hash, then patches only its own added_driver's
+two post-READY failure exits to retain acknowledged scopes and native exit2.
+Original added-driver SHA256 is
+`266f74ee54198afde427b64dc0468bde8a123ec11a03ddef58c33594c38d42bc`;
+its guarded own-scope form is8003bytes with SHA256
+`94d250151940df0838fd89f54948c2d64b5fa2423e2ceb3e61613f7debc2daa0`.
+The original archive and production payloads are unchanged. Separate own
+FINAL01 control driver followup `846011a230e88addf0427a59e6f017ba3031c7ff`
+has the same two finite supervision exits; its normal public business oracle
+is unchanged. These adopted static changes await new-source actual upgrade
+normal/race and are not substituted for the earlier successful evidence.
+
+Latest root949 was clean-merged as
+`72989c7dc902b753599d43ee0c66b2f51d56d425`: actual BorrowChild and
+BorrowWorkerExit both remain at both owners; each must confirm bounded join
+before Close/Drop. Current recovery child migration count is adapted by
+`0eb3577a283e5357f7091b34a9b969ed67abaf8c` to actual append-only Decision0003,
+with no old SQL/archive rewrite. Both merge and count adaptation await affected
+actual verification; root949's previous two-migration CI is not this evidence.
+
+Remaining gates: final candidate-format/action-budget overlap after ticket02
+formally exits and root merges it; new-source historical970/FINAL01 upgrade,
+current PG child stories and all affected current PG/old dual-store normal/race;
+final checks and frozen-source hashes; latest integration merge, independent
+standards/spec and architecture reviews.
 Whole decision_engine profile advertisement remains false. Ticket03 does not
 move any hidden cancellation/recovery requirement to ticket06.
