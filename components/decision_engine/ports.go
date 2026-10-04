@@ -30,8 +30,8 @@ type Authority interface {
  Authorize(context.Context,v.SubjectBinding,v.DecisionRef,string,*v.DecisionDecidePayload)(Permission,error)
 }
 type CapabilityBinding struct {
- CapabilityRef v.ObjectRef `json:"capability_ref"`
- BindingRef v.ObjectRef `json:"binding_ref"`
+ CapabilityRef v.CapabilityRef `json:"capability_ref"`
+ BindingRef v.BindingRef `json:"binding_ref"`
  ArgumentsRef v.ContentRef `json:"arguments_ref"`
  Purpose string `json:"purpose"`
 }
@@ -43,7 +43,7 @@ type Snapshot struct {
  ControlRevision v.Revision `json:"control_revision"`
  ComponentRef v.ComponentRef `json:"component_ref"`
  MaterialRefs []v.ContentRef `json:"material_refs"`
- RequirementRefs []v.ObjectRef `json:"requirement_refs"`
+ RequirementRefs []v.RequirementRef `json:"requirement_refs"`
  CapabilityBindings []CapabilityBinding `json:"capability_bindings"`
  AnswerSchemaRefs []v.ContentRef `json:"answer_schema_refs"`
  UseRefs []v.UseRef `json:"use_refs"`
@@ -52,7 +52,7 @@ type Snapshot struct {
 type Source interface {
  ReadSnapshot(context.Context,v.SnapshotRef,Permission)(Snapshot,error)
  ReadMaterial(context.Context,v.ContentRef,string,Permission)([]byte,error)
- ReadFixtureLock(context.Context,v.ObjectRef,Permission)([]byte,error)
+ ReadFixtureLock(context.Context,v.InstallLockRef,Permission)([]byte,error)
 }
 type Publisher interface {
  Publish(context.Context,string,[]byte,[]v.ContentRef,Permission)(v.ContentRef,error)
