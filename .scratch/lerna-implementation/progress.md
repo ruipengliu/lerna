@@ -148,3 +148,9 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 产品机制f96的完整新PG normal25.137/8.208s、race42.337/11.485s，原PG/SQLite恢复normal27.357s/race60.405s均count1/timeout120顺序通过；b43窄历史pipe修复后的真实五状态旧writer升级5.760/9.080s、696测试登记修复后真实pipe0.010/1.058s通过，前41cb makecheck覆盖未变81新+158旧共同字节及JS/生成。两个独立最终轴各0open/0new，46commits/187paths；1074成功ack中的818PG/256FS全部absent，exact空overlayroot rmdir0，所有sessions已退出。历史失败与未知旧scope/CID限制保留，不猜删，也不冒称native driver故障。
 
 本检查点新push/准确远端CI尚待核验，旧05 CI不能替代新Decision。01/04/05合计21/42AC完成不等于whole03；候选全族、取消/资源完整矩阵、SIGKILL仍分别归02/03/06，所有六票完成后root再完成支持清单、架构及整片退出。
+
+## 切片03后续三票实施
+
+准确c9de1ba的[CI37174778053](../lerna-03-deterministic-harness/ci-verification.md)已success：新真实PG Component normal21.061s/race33.892s、Source与真实旧writer升级7.243s/9.385s、原双库recovery23.166s/50.347s及81新/158旧共同双向字节全部通过。前述CI待核验记录为历史。
+
+02/03/06直接依赖已全部resolved，root已正式claimed三个独立票，采用实际首票API及规则兼容、控制、生命周期决定；分别在新worktree/branch按TDD实施。当前已完成仍为01/04/05的21/42AC，不广告完整profile，不关闭whole03。构建与数据库槽独占；新票特殊恢复归自身，全部42AC后root负责整片审查、架构、支持清单、最终CI与安全工作树清理。

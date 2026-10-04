@@ -186,3 +186,14 @@ SQLite 保留 native Close 之前的 drain timeout 可重试语义；native Clos
 机械 sql.OpenDB 测试无物理资源，不冒充 pgx/sqlite3 native 故障；实际双库、
 Decision/Source 与旧 writer 升级恢复分别验证。此为已有未知责任边界的
 实施修正，不扩合同、迁移或生产能力声明。
+
+## 11. 首票发布后的真实后票接法（2026-10-04）
+
+01九AC已resolved；准确源码696ac49、交付d806a92、整合5307702及push检查点c9de1ba。Root全文读实际API及授权Astra后续分析后采用[候选兼容决定](proposal-decisions.md)、[控制决定](control-decisions.md)、[进程票生命周期交接](process-lifecycle-handoff.md)。这些是已批准范围内的技术细化，不代表后票实现或whole03退出；准确新CI37174778053已success，见[CI记录](ci-verification.md)。
+
+- 02新增有限case使用准确fixture-rule/3，保留/2原语义与旧prepared字段/bytes/key/digest；新私有prepared-v2真实0–16artifact双读，有实际DDL需要才追加迁移。合法和故意错误候选走同一公开codec与完整Snapshot/用途/来源检查，无artifact分支不捏空成果。
+- 03保留终态SaveDecision全冻结，新增本Decision owner单调stop记录；proof首次采用期限与当前控制访问资格分开，当前auth后原Command重放优先。命令metadata闭合decide/cancel双分支且精确读旧格式。尚未完整发布的1.1 Decision get新增独立current_control，闭合Schema/Go/TS/夹具/digest同步，固定Decision/Proposal/原receipt不改。
+- 03新增真实表预计Decision owner0003/Source owner0002，02没有DDL则不占空编号；已发布0001/0002、Host0001–0005及归档均不改。部署排空旧writer后接替，不假称混滚兼容；每票真实旧最终01数据恢复是自己的出口，不移交06。
+- 06的直接依赖仍只01+05，其AC5内修正实际target初始化/首次native Close/release/Observer及全部真实借用者，保留pre-native gate排空可重试；机械driver故障无物理scope，真实target/升级/race和SIGKILL另证。只补实际第二consumer需要的强类型Source描述和双owner child借用/Wait门禁，不造万能registry或fake child API。
+
+共享worker/ports/Source/schema入口的并行修改通过各自worktree、最新integration合入和实际冲突解决协调；所有build/真实DB/全套检查仍由root分配独占槽。每票只关闭自身AC，root承担全部六票/42AC的最终支持清单、两轴与架构审查和准确CI。

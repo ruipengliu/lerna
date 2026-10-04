@@ -4,7 +4,7 @@
 
 **Blocked by:** 01 原 Decision 的耐久规则提案；05 迟到效果与耐久故障计划
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 复用02实际子进程／同步设施，在正常Decision输出发布与本地completed提交边界受控SIGKILL；独立连接公开get恢复原Proposal、产物、身份与固定回执。
 - [ ] 跨owner发布已完成但Decision引用尚未提交的退出，用原发布key和摘要恢复，原引用读回一致，不造第二产物或假称跨owner原子提交。
@@ -21,3 +21,6 @@
 ## Comments
 
 2026-10-03，root依据授权Astra批准的粒度/真实edges及最终df2dbe5前置退出发布；本票验收尚未实现。等待上述直接前置resolved，不能以spec ready替代实现依赖。
+
+2026-10-04，root正式claim本票。直接前置01已resolved并merge5307702（最终源696ac49、交付d806a92）；05已resolved并merge077f616。准确push c9de1ba的CI37174778053全部success，见[CI记录](../ci-verification.md)。按用户已授权的全部实现任务及已采用技术决定，在新的独立worktree/branch实施；原01工作树保留，不能修改归档或用候选pin冒充前置。验收seams已在整片授权固定为公开Component／真实fixture Source与target普通接口及独立observer，物理生命周期仅使用明确标注的机械driver观察。所有build/DB/全套测试须先获root独占槽；本票仅关闭自己的AC，不承担whole03或后续依赖。
+本票实际接法见[正式采用记录](../process-lifecycle-handoff.md)与[ticket01 API](../ticket-01-api-handoff.md)。
