@@ -77,7 +77,8 @@ actual verification; root949's previous two-migration CI is not this evidence.
 Remaining gates: final candidate-format/action-budget overlap after ticket02
 formally exits and root merges it; new-source historical970/FINAL01 upgrade,
 current PG child stories and all affected current PG/old dual-store normal/race;
-final checks and frozen-source hashes; latest integration merge, independent
-standards/spec and architecture reviews.
+final checks and frozen-source hashes; latest integration merge and independent
+standards/spec reviews. Whole03 architecture review remains root-owned on the
+actual final combined tree; it is not an extra ticket03 acceptance gate.
 Whole decision_engine profile advertisement remains false. Ticket03 does not
 move any hidden cancellation/recovery requirement to ticket06.
