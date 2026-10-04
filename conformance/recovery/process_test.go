@@ -4,8 +4,6 @@ package recovery_test
 
 import (
 	"context"
-	"errors"
-	"os/exec"
 	"testing"
 	"time"
 
@@ -40,7 +38,7 @@ func runProcessAdmission(t *testing.T, backend, gate string, crash bool) {
 	} else {
 		child.send(t, "release", nil, nil)
 		var reply processFrame
-		if err := readProcessFrame(child.ctx, child.reply, &reply); err != nil {
+		if err := child.physical.Reply(child.ctx, &reply); err != nil {
 			t.Fatal(err)
 		}
 		if reply.Scenario != cfg.Scenario || reply.Stage != "host_reply" || reply.Generation != cfg.Generation || !reply.Now.Equal(cfg.Now) || reply.Outcome == nil {
@@ -371,18 +369,11 @@ func TestProcessHarnessStopsBlockedPipeAtTransactionDeadline(t *testing.T) {
 	child.event(t, cfg.Gate)
 	physical, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	select {
-	case err := <-child.done:
-		if e := child.confirmExit(err); e != nil {
-			t.Fatal(e)
-		}
-		var exit *exec.ExitError
-		if !errors.As(err, &exit) || exit.ExitCode() != 1 {
-			t.Fatalf("blocked child did not fail at transaction deadline: %v %s", err, child.output.String())
-		}
-	case <-physical.Done():
-		t.Fatal("child pipe ignored finite transaction context")
+	if err := child.physical.WaitFailure(physical); err != nil {
+		t.Fatalf("blocked child did not fail at transaction deadline: %v", err)
 	}
+	child.waited = true
+
 	_, h, _ := processObserver(t, cfg)
 	result, err := contract.GetCommand(contextFor(t), readWire(contract.CommandRef{Owner: owner, CommandID: "bounded-original"}), &principal, h.Permissions, h, time.Now)
 	if err != nil {

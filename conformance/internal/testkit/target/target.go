@@ -68,20 +68,27 @@ type Fact struct {
 	Receives []Receive
 }
 type Target struct {
-	db      *sql.DB
-	cfg     Config
-	gate    chan struct{}
-	release func() error
-	mu      sync.Mutex
-	closed  bool
+	db             *sql.DB
+	cfg            Config
+	gate           chan struct{}
+	release        func() error
+	mu             sync.Mutex
+	closed         bool
+	closing        bool
+	closeAttempted bool
+	closeErr       error
+	// Private conformance synchronization at actual transaction boundaries.
+	checkpoint func(context.Context, string, Event) error
 }
 type ObserverConfig struct {
 	Path, Identity string
 	IOTimeout      time.Duration
 }
 type Observer struct {
-	db  *sql.DB
-	cfg ObserverConfig
+	db        *sql.DB
+	cfg       ObserverConfig
+	closeOnce sync.Once
+	closeErr  error
 }
 
 //go:embed migrations/0001_target.sql
@@ -93,28 +100,39 @@ var planMigration string
 // Open returns a cleanup handle with an error if initialization cannot confirm
 // Close. Callers must retain that handle and physical scope until Close succeeds.
 func Open(ctx context.Context, cfg Config) (*Target, error) {
+	return openTarget(ctx, cfg, acquireWriter, sql.Open)
+}
+
+// Only mechanical lifetime tests substitute these two physical acquisition
+// boundaries. Ordinary callers always use the fixed SQLite implementation.
+func openTarget(ctx context.Context, cfg Config, acquire func(context.Context, string) (func() error, error), openDB func(string, string) (*sql.DB, error)) (*Target, error) {
 	if ctx == nil || !filepath.IsAbs(cfg.Path) || cfg.Path == ":memory:" || len(cfg.Identity) == 0 || len(cfg.Identity) > 128 || cfg.Window <= 0 || cfg.Window > 24*time.Hour || (cfg.QueryMode != QueryEnabled && cfg.QueryMode != QueryDisabled) || cfg.IOTimeout <= 0 || cfg.IOTimeout > 30*time.Second || cfg.BusyTimeout < time.Millisecond || cfg.BusyTimeout > cfg.IOTimeout || cfg.Now == nil {
 		return nil, errors.New("invalid finite test target configuration")
 	}
 	bounded, cancel := context.WithTimeout(ctx, cfg.IOTimeout)
 	defer cancel()
-	release, err := acquireWriter(bounded, cfg.Path)
-	if err != nil {
-		return nil, err
+	release, err := acquire(bounded, cfg.Path)
+	t := &Target{cfg: cfg, gate: make(chan struct{}, 1), release: release}
+	fail := func(cause error) (*Target, error) {
+		closeErr := t.Close()
+		if closeErr != nil {
+			return t, lifetimeCause("target startup cleanup unknown", errors.Join(cause, closeErr))
+		}
+		return nil, lifetimeCause("target startup failed", cause)
 	}
-	db, err := sql.Open("sqlite3", dsn(cfg.Path, url.Values{"_journal_mode": {"WAL"}, "_synchronous": {"FULL"}, "_foreign_keys": {"on"}, "_busy_timeout": {fmt.Sprint(cfg.BusyTimeout.Milliseconds())}, "_txlock": {"immediate"}}))
 	if err != nil {
-		return nil, errors.Join(err, release())
+		// A failed acquire with a cleanup closure did not grant writer permission.
+		return fail(err)
+	}
+	db, err := openDB("sqlite3", dsn(cfg.Path, url.Values{"_journal_mode": {"WAL"}, "_synchronous": {"FULL"}, "_foreign_keys": {"on"}, "_busy_timeout": {fmt.Sprint(cfg.BusyTimeout.Milliseconds())}, "_txlock": {"immediate"}}))
+	t.db = db
+	if err != nil {
+		return fail(err)
 	}
 	db.SetMaxOpenConns(1)
 	db.SetMaxIdleConns(1)
-	t := &Target{db: db, cfg: cfg, gate: make(chan struct{}, 1), release: release}
 	if err = t.initialize(bounded); err != nil {
-		closeErr := t.Close()
-		if closeErr != nil {
-			return t, errors.Join(err, closeErr)
-		}
-		return nil, err
+		return fail(err)
 	}
 	return t, nil
 }
@@ -198,7 +216,7 @@ func (t *Target) enter(ctx context.Context) (context.Context, func(), error) {
 		return nil, nil, bounded.Err()
 	}
 	t.mu.Lock()
-	closed := t.closed
+	closed := t.closed || t.closing
 	t.mu.Unlock()
 	if closed {
 		<-t.gate
@@ -208,6 +226,9 @@ func (t *Target) enter(ctx context.Context) (context.Context, func(), error) {
 	return bounded, func() { <-t.gate; cancel() }, nil
 }
 func (t *Target) Close() error {
+	t.mu.Lock()
+	t.closing = true
+	t.mu.Unlock()
 	ctx, cancel := context.WithTimeout(context.Background(), t.cfg.IOTimeout)
 	defer cancel()
 	select {
@@ -217,18 +238,43 @@ func (t *Target) Close() error {
 		return ctx.Err()
 	}
 	t.mu.Lock()
-	defer t.mu.Unlock()
-	if t.closed {
+	if t.closeAttempted {
+		err := t.closeErr
+		t.mu.Unlock()
+		return err
+	}
+	t.closeAttempted = true
+	t.mu.Unlock()
+	var result error
+	if t.db != nil {
+		if err := t.db.Close(); err != nil {
+			result = lifetimeCause("target native close unknown", err)
+		}
+	}
+	if result == nil && t.release != nil {
+		if err := t.release(); err != nil {
+			result = lifetimeCause("target writer release unknown", err)
+		}
+	}
+	t.mu.Lock()
+	t.closeErr = result
+	t.closed = result == nil
+	t.mu.Unlock()
+	return result
+}
+
+type lifetimeError struct {
+	stage string
+	cause error
+}
+
+func (e *lifetimeError) Error() string { return e.stage }
+func (e *lifetimeError) Unwrap() error { return e.cause }
+func lifetimeCause(stage string, cause error) error {
+	if cause == nil {
 		return nil
 	}
-	if err := t.db.Close(); err != nil {
-		return err
-	}
-	if err := t.release(); err != nil {
-		return err
-	}
-	t.closed = true
-	return nil
+	return &lifetimeError{stage: stage, cause: cause}
 }
 
 func (t *Target) Write(ctx context.Context, r Request) (Receipt, error) {
@@ -304,7 +350,14 @@ func OpenObserver(ctx context.Context, cfg ObserverConfig) (*Observer, error) {
 	}
 	return observer, nil
 }
-func (o *Observer) Close() error { return o.db.Close() }
+func (o *Observer) Close() error {
+	o.closeOnce.Do(func() {
+		if o.db != nil {
+			o.closeErr = lifetimeCause("observer native close unknown", o.db.Close())
+		}
+	})
+	return o.closeErr
+}
 func (o *Observer) Observe(ctx context.Context, key string) (Fact, error) {
 	if ctx == nil {
 		return Fact{}, errors.New("context required")

@@ -9,9 +9,11 @@ import (
 	"math"
 	"os"
 	"path/filepath"
+	"sync"
 	"testing"
 	"time"
 
+	process "github.com/ruipengliu/lerna/conformance/internal/testkit/process"
 	"github.com/ruipengliu/lerna/conformance/internal/testkit/target"
 )
 
@@ -50,6 +52,7 @@ func TestWriteReadAndIndependentObserverSurviveReopen(t *testing.T) {
 }
 
 type fixture struct {
+	children  []*process.Child
 	closers   []func() error
 	t         *testing.T
 	ctx       context.Context
@@ -65,41 +68,26 @@ func newFixture(t *testing.T) *fixture {
 	if err != nil {
 		t.Fatal(err)
 	}
-	// Acknowledge this exact scope before opening any database.
-	record, err := os.OpenFile(filepath.Join(directory, "owned-scope"), os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
-	if err == nil {
-		_, err = fmt.Fprintln(record, directory)
-		err = errors.Join(err, record.Sync(), record.Close())
-	}
-	if registry := os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY"); registry != "" && err == nil {
-		file, e := os.OpenFile(registry, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
-		if e == nil {
-			_, e = fmt.Fprintln(file, "sqlite-target", directory)
-			e = errors.Join(e, file.Sync(), file.Close())
-		}
-		err = e
-	}
-	if err == nil {
-		dir, e := os.Open(directory)
-		if e == nil {
-			e = errors.Join(dir.Sync(), dir.Close())
-		}
-		err = e
-		parent, e := os.Open(filepath.Dir(directory))
-		if e == nil {
-			e = errors.Join(parent.Sync(), parent.Close())
-		}
-		err = errors.Join(err, e)
-	}
-	if err != nil {
-		t.Fatalf("retain owned scope %s: %v", directory, err)
-	}
 	ctx, cancel := context.WithTimeout(context.Background(), 40*time.Second)
 	f := &fixture{t: t, ctx: ctx, directory: directory, now: time.Date(2026, 10, 3, 12, 0, 0, 0, time.UTC)}
 	f.cfg = target.Config{Path: filepath.Join(directory, "target.sqlite"), Identity: "test-target-04", Window: time.Minute, QueryMode: target.QueryEnabled, IOTimeout: time.Second, BusyTimeout: 10 * time.Millisecond, Now: func() time.Time { return f.now }}
 	t.Logf("owned SQLite target: %s", directory)
 	t.Cleanup(func() {
 		cancel()
+		childCtx, childCancel := context.WithTimeout(context.Background(), 2*time.Second)
+		defer childCancel()
+		childrenClosed := true
+		for _, child := range f.children {
+			confirmed, err := child.Stop(childCtx)
+			if err != nil {
+				t.Error("target child cleanup:", err)
+			}
+			childrenClosed = childrenClosed && confirmed
+		}
+		if !childrenClosed {
+			t.Errorf("retain %s: child/pipes cleanup unconfirmed", directory)
+			return
+		}
 		closed := true
 		for i := len(f.closers) - 1; i >= 0; i-- {
 			if err := f.closers[i](); err != nil {
@@ -120,6 +108,39 @@ func newFixture(t *testing.T) *fixture {
 			t.Error(err)
 		}
 	})
+	// Acknowledge this exact scope before opening any database.
+	record, err := os.OpenFile(filepath.Join(directory, "owned-scope"), os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
+	if err == nil {
+		closeRecord := f.trackNativeClose(record.Close)
+		_, err = fmt.Fprintln(record, directory)
+		err = errors.Join(err, record.Sync(), closeRecord())
+	}
+	if registry := os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY"); registry != "" && err == nil {
+		file, e := os.OpenFile(registry, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
+		if e == nil {
+			closeFile := f.trackNativeClose(file.Close)
+			_, e = fmt.Fprintln(file, "sqlite-target", directory)
+			e = errors.Join(e, file.Sync(), closeFile())
+		}
+		err = e
+	}
+	if err == nil {
+		dir, e := os.Open(directory)
+		if e == nil {
+			closeDirectory := f.trackNativeClose(dir.Close)
+			e = errors.Join(dir.Sync(), closeDirectory())
+		}
+		err = e
+		parent, e := os.Open(filepath.Dir(directory))
+		if e == nil {
+			closeParent := f.trackNativeClose(parent.Close)
+			e = errors.Join(parent.Sync(), closeParent())
+		}
+		err = errors.Join(err, e)
+	}
+	if err != nil {
+		t.Fatalf("retain owned scope %s: %v", directory, err)
+	}
 	return f
 }
 func (f *fixture) open() *target.Target {
@@ -321,13 +342,13 @@ func TestBoundedNativeSQLiteContentionHasNormalCompletionControl(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	f.closers = append(f.closers, external.Close)
+	f.trackNativeClose(external.Close)
 	external.SetMaxOpenConns(1)
 	lock, err := external.Conn(f.ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-	f.closers = append(f.closers, lock.Close)
+	f.trackNativeClose(lock.Close)
 	if _, err = lock.ExecContext(f.ctx, "BEGIN IMMEDIATE"); err != nil {
 		t.Fatal(err)
 	}
@@ -375,12 +396,12 @@ func TestRejectsForeignDatabaseAndUnboundedConfiguration(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	f.closers = append(f.closers, foreign.Close)
+	closeForeign := f.trackNativeClose(foreign.Close)
 	_, err = foreign.ExecContext(f.ctx, "CREATE TABLE unrelated_owner(value TEXT)")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err = foreign.Close(); err != nil {
+	if err = closeForeign(); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := f.trackedOpen(f.cfg); err == nil {
@@ -516,4 +537,14 @@ func TestInvalidTestClockCannotCommitWrappedTime(t *testing.T) {
 	if err != nil || !saved.Start.Equal(receipt.Start) || !saved.Deadline.Equal(receipt.Deadline) {
 		t.Fatalf("valid exact clock window: %+v %v", saved, err)
 	}
+}
+
+// Only actual native FD/database/sql closers are cached here. Target.Close is
+// deliberately not wrapped: its pre-native drain timeout remains retryable.
+func (f *fixture) trackNativeClose(closeNative func() error) func() error {
+	var once sync.Once
+	var result error
+	close := func() error { once.Do(func() { result = closeNative() }); return result }
+	f.closers = append(f.closers, close)
+	return close
 }

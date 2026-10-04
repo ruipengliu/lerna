@@ -16,7 +16,7 @@
 
 物理文件持有内核 flock，单进程单连接串行写事务；同文件第二 writer 被拒绝（包括硬链接路径）。目标有自己的 SQLite application_id、随机耐久 DatabaseID、配置身份及 `migrations/0001_target.sql` 校验账本。拒绝外来已有库和未知版本；0001 是全新测试 owner 的首次迁移；新增 0002 为当前实际 pending/plan 事实，冻结 0001。真实已发布 04 writer 创建原记录后升级到 0002，保留原 DatabaseID、窗口、字节、版本、接收观察及第一版迁移校验。`Settings` 实际读取 writer 连接的 SQLite 版本、WAL、FULL、FK、busy timeout 和迁移记录，是测试配置证据。
 
-操作错误保留 SQLite/context 原因。Open/OpenObserver 初始化失败且 Close 未确认时，返回非 nil 清理 handle 和 error；调用方必须保留 handle 与 scope，待再次 Close 确认后才删除。Commit 错误报告“提交结果未知”，没有声称原生 Commit 已被故障测到；原键 Query/observer 用于后续核对。当前真实故障覆盖另一连接的 SQLite writer 锁导致 native `SQLITE_BUSY`、解除后正常提交，以及取消 context。进程 SIGKILL 属后续恢复票，不证明断电耐久。
+操作错误以有限阶段文字包装并保留 SQLite/context 原因。Open/OpenObserver 初始化失败且 Close 未确认时，返回非 nil 清理 handle 和 error；调用方必须保留 handle 与 scope。Target 的 Close 在原生关闭前有限等待活动操作退出，此阶段超时后可重试；首次实际 native Close 或 writer/file/parent-directory release 失败则缓存原结果，后续 Close 不能用 database/sql 的已关闭 nil 擦除未知。Observer 同样保留首次原生结果。原生 Close 没有可取消 context，不能启动未 join 的关闭 goroutine 再删除 scope；仅真实监督进程整体退出才可重新评估它持有的资源，父进程自己的未知 handle 仍独立保留。Commit 错误报告“提交结果未知”，没有声称原生 Commit 已被故障测到；原键 Query/observer 用于后续核对。真实故障还覆盖另一连接的 SQLite writer 锁导致 native `SQLITE_BUSY`、解除后正常提交，以及取消 context。
 
 验证入口：`go test -count=1 ./conformance/internal/testkit/target` 和随后 `go test -race -count=1 ./conformance/internal/testkit/target`。耐久证据必须将 TMPDIR 指向真实磁盘文件系统；本环境 `/tmp` 是 tmpfs，使用独立 `/workspace` scope。测试即时 fsync 精确创建路径登记；只有已确认 observer、writer 和外部锁连接关闭后才删除该 scope。失败的未确认关闭保留 scope，不按前缀或时间猜删。
 
@@ -35,7 +35,9 @@
 - DisconnectBeforeCommit：实际准备目标 SQL 后主动 Rollback，目标没有此次部分接收/值。确认回滚后，用另一短事务保存 rolled_back failure event/cursor，再返回 ErrDisconnected。回滚和失败记录是两次事务；中间进程故障可重做这个回滚步骤，不能声称它们全局原子。
 - DropResponse：目标事实和 event/cursor 实际同事务 Commit，随后返回 ErrResponseLost；重复该 event 恢复同一失败，不重发写入。普通 Query/独立 Observer 证明实际提交，错误回执不能证明没有执行。
 
-`Observer.Plan(ctx, id)` 在独立只读事务提供准确配置、cursor 和已保存 event/phase/outcome。它与 Observer.Observe 一样是 privileged 测试事实；普通 provider 不获得此查询能力。已知 conflict/expiry/pending/not_found 拒绝保存有限事件结果，重复 event 返回同一错误；未能提交的 SQLite/context 错误保留原因与未知范围，不假装已消费 cursor。进程 SIGKILL 和提交边界同步归恢复票；这里没有预建任意 hook 或生产 workflow。
+`Observer.Plan(ctx, id)` 在独立只读事务提供准确配置、cursor 和已保存 event/phase/outcome。它与 Observer.Observe 一样是 privileged 测试事实；普通 provider 不获得此查询能力。已知 conflict/expiry/pending/not_found 拒绝保存有限事件结果，重复 event 返回同一错误；未能提交的 SQLite/context 错误保留原因与未知范围，不假装已消费 cursor。
+
+当前进程恢复测试在实际事件及 cursor SQL 保存后、真实 `tx.Commit` 前，以及该 Commit 返回 nil 后、RunEvent 回复前同步。设置入口只在测试二进制中，普通 Config/Request 没有故障参数。父进程在 Start 前登记具体子进程 holder，使用有限三条管道、唯一 Wait 和经实际 WaitStatus 验证的 SIGKILL；真实 Close/Open 后通过普通 Query/Read 和独立 Observer 验证回滚无处理事实或已提交但回复未知。正常释放使用同一个同步点和独立回复通道。新协调者重开原 scenario，依据保存的 event/cursor 读取固定结果，不重发已完成步骤。这只验证进程 SIGKILL，不证明断电、供应商或可用区耐久。
 
 历史升级验证由 `conformance/fixtures/deterministic-target/v1` 的冻结原 writer 源完成：仅机械改包名与内嵌原 SQL，在根唯一 module 下编译并正常运行，确认 child exit 后由当前目标升级同一 overlay 文件。它不等于 SIGKILL 或断电证据。
 

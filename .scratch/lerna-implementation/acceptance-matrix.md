@@ -140,3 +140,10 @@ F01/F02仅完成本票的原回执/原责任/同键冲突与重开范围；SIGKI
 - **原身份与确定性规则：首票范围通过。** 当前鉴权后固定accepted、双摘要去重/冲突、原bytes/refs/用量与Proposal恢复、独立来源及发布读回成立；不裁决Task终态。
 - **G2及03验收尚未整体关闭。** 全部候选/依赖反例、取消/限额、真实SIGKILL分别仍由02/03/06完成；目标普通事实/plan迟到不冒称Executor Effect或供应商保证。
 - **生命周期证据有分层限制。** sql.OpenDB无物理scope的机械故障与实际正常数据库恢复分列；818PG/256FS登记项全absent不代表旧未知范围全清。断电、生产AZ、真实provider和15第二业务实现均未由此证明。
+
+
+## 切片03进程恢复票检查点（整片尚未退出）
+
+2026-10-04，06六AC resolved，源a5005ab、交付6904b2d、整合58f8f0f；01／04／05／06合计27/42AC。实际Source发布成功后的原键恢复、Decision真实事务COMMIT前后和独立target COMMIT前后的进程SIGKILL均与正常对照分开核验。pending迟到责任、原scenario／event／cursor以及另一个隔离scenario同seed有限重演有独立target普通Query／Read与Observer事实；不是Executor Effect、供应商查询或断电证据。
+
+原两轴发现已关闭，修后check／base-race／模块／27＋71＋3冻结校验均通过；完整证据与历史边界见[06最终交接](../lerna-03-deterministic-harness/ticket-06-api-handoff.md#最终检查与本票退出)。184外部target FS、44recovery FS、118PG均absent，六local-only另列；旧未知范围保留。02候选特殊恢复、03取消／资源及整个profile／架构／最终CI仍待实际验收，不关闭G2、G3或whole03。

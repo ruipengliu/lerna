@@ -248,8 +248,18 @@ func (t *Target) RunEvent(ctx context.Context, id, eventID string) (Event, error
 	if err = ctx.Err(); err != nil {
 		return Event{}, err
 	}
+	if t.checkpoint != nil {
+		if err = t.checkpoint(ctx, "before_commit", event); err != nil {
+			return Event{}, err
+		}
+	}
 	if err = tx.Commit(); err != nil {
 		return Event{}, fmt.Errorf("test event commit outcome unknown: %w", err)
+	}
+	if t.checkpoint != nil {
+		if err = t.checkpoint(ctx, "committed_before_reply", event); err != nil {
+			return Event{}, err
+		}
 	}
 	return event, eventError(event)
 }
