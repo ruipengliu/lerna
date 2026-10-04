@@ -68,12 +68,15 @@ type Fact struct {
 	Receives []Receive
 }
 type Target struct {
-	db      *sql.DB
-	cfg     Config
-	gate    chan struct{}
-	release func() error
-	mu      sync.Mutex
-	closed  bool
+	db             *sql.DB
+	cfg            Config
+	gate           chan struct{}
+	release        func() error
+	mu             sync.Mutex
+	closed         bool
+	closing        bool
+	closeAttempted bool
+	closeErr       error
 }
 type ObserverConfig struct {
 	Path, Identity string
@@ -198,7 +201,7 @@ func (t *Target) enter(ctx context.Context) (context.Context, func(), error) {
 		return nil, nil, bounded.Err()
 	}
 	t.mu.Lock()
-	closed := t.closed
+	closed := t.closed || t.closing
 	t.mu.Unlock()
 	if closed {
 		<-t.gate
@@ -208,6 +211,9 @@ func (t *Target) enter(ctx context.Context) (context.Context, func(), error) {
 	return bounded, func() { <-t.gate; cancel() }, nil
 }
 func (t *Target) Close() error {
+	t.mu.Lock()
+	t.closing = true
+	t.mu.Unlock()
 	ctx, cancel := context.WithTimeout(context.Background(), t.cfg.IOTimeout)
 	defer cancel()
 	select {
@@ -218,17 +224,38 @@ func (t *Target) Close() error {
 	}
 	t.mu.Lock()
 	defer t.mu.Unlock()
-	if t.closed {
-		return nil
+	if t.closeAttempted {
+		return t.closeErr
 	}
-	if err := t.db.Close(); err != nil {
-		return err
+	t.closeAttempted = true
+	if t.db != nil {
+		if err := t.db.Close(); err != nil {
+			t.closeErr = lifetimeCause("target native close unknown", err)
+			return t.closeErr
+		}
 	}
-	if err := t.release(); err != nil {
-		return err
+	if t.release != nil {
+		if err := t.release(); err != nil {
+			t.closeErr = lifetimeCause("target writer release unknown", err)
+			return t.closeErr
+		}
 	}
 	t.closed = true
 	return nil
+}
+
+type lifetimeError struct {
+	stage string
+	cause error
+}
+
+func (e *lifetimeError) Error() string { return e.stage }
+func (e *lifetimeError) Unwrap() error { return e.cause }
+func lifetimeCause(stage string, cause error) error {
+	if cause == nil {
+		return nil
+	}
+	return &lifetimeError{stage: stage, cause: cause}
 }
 
 func (t *Target) Write(ctx context.Context, r Request) (Receipt, error) {
