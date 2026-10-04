@@ -5,6 +5,7 @@ package component_test
 import (
 	"context"
 	"errors"
+	"strings"
 	"testing"
 	"time"
 
@@ -117,5 +118,135 @@ func TestDurableControlExpiredProofReplayRequiresCurrentAccess(t *testing.T) {
 	_, err = w.Service().Cancel(ctx, raw, &scene.Subject)
 	if !errors.As(err, &contractErr) || contractErr.Code != "forbidden" {
 		t.Fatal("revoked current access disclosed original receipt", err)
+	}
+}
+
+func TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	w := fixture.NewWorld(t, ctx)
+	scene := w.Scenario()
+	base := sceneControl(t, ctx, w, scene, "2", "valid-proof-counterpart")
+	until, err := time.Parse("2006-01-02T15:04:05.000000Z", string(base.AcceptBefore))
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"subject", "delegation", "decision", "task", "digest", "issuer", "proof_owner", "proof_hash", "proof_length", "revision", "proof_expiry"} {
+		t.Run(name, func(t *testing.T) {
+			encoded, err := v.Encode(base)
+			if err != nil {
+				t.Fatal(err)
+			}
+			altered, err := v.Decode[v.DecisionCancelRequest](encoded)
+			if err != nil {
+				t.Fatal(err)
+			}
+			principal := scene.Subject
+			principal.DelegationChain = append([]v.DelegatedSubject{}, principal.DelegationChain...)
+			altered.CommandID = v.ID("invalid-proof-" + name)
+			switch name {
+			case "subject":
+				principal.SubjectID = "different-trusted-principal"
+			case "delegation":
+				principal.DelegationChain = append(principal.DelegationChain, v.DelegatedSubject{TenantID: principal.TenantID, SubjectID: "other-delegator"})
+			case "decision":
+				altered.Target.ID = "other-proof-target"
+				altered.Payload.DecisionRef = altered.Target
+			case "task":
+				altered.Payload.TaskRef.ID = "other-task"
+			case "digest":
+				altered.Payload.DecisionInputDigest = "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+			case "issuer":
+				altered.Payload.ControlBasis.IssuerOwner.OwnerID = "other-issuer"
+			case "proof_owner":
+				altered.Payload.ControlBasis.ProofRef.Owner.OwnerID = "other-proof-owner"
+			case "proof_hash":
+				altered.Payload.ControlBasis.ProofRef.Hash = "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+			case "proof_length":
+				altered.Payload.ControlBasis.ProofRef.ByteLength = "0"
+			case "revision":
+				altered.Payload.ControlBasis.ControlRevision = "3"
+			case "proof_expiry":
+				altered.Payload.ControlBasis.ValidUntil = v.Time(until.Add(-time.Second).Format("2006-01-02T15:04:05.000000Z"))
+			}
+			ref := altered.Target
+			if err := w.Source().SeedControlAccess(ctx, decision.ControlAccess{Subject: principal, DecisionOwner: v.OwnerRef{TenantID: ref.TenantID, OwnerID: ref.OwnerID}, DecisionRef: &ref, Purposes: []string{"cancel", "get"}, ValidUntil: until}); err != nil {
+				t.Fatal(err)
+			}
+			// Current trusted principal/scope is independently valid. Only the issued
+			// immutable proof fails to bind this exact new request.
+			if _, err := w.Source().AuthorizeControl(ctx, principal, ref, "cancel"); err != nil {
+				t.Fatal(err)
+			}
+			raw, err := v.Encode(altered)
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, err = w.Service().Cancel(ctx, raw, &principal)
+			var failure *v.ContractError
+			if !errors.As(err, &failure) || (failure.Code != "forbidden" && failure.Code != "dependency_unavailable") {
+				t.Fatal("altered proof authorized a new stop", err)
+			}
+			get, err := v.DecodeGet(scene.GetJSON)
+			if err != nil {
+				t.Fatal(err)
+			}
+			get.Target = ref
+			get.Payload.DecisionRef = ref
+			getRaw, err := v.Encode(get)
+			if err != nil {
+				t.Fatal(err)
+			}
+			view, err := w.Service().Get(ctx, getRaw, &principal)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, ok := view.AsResultUnavailable(); !ok {
+				t.Fatal("invalid proof wrote a closed binding")
+			}
+		})
+	}
+	receipt := controlReceipt(t, ctx, w.Service(), base, scene.Subject)
+	if _, ok := receipt.AsApplied(); !ok {
+		t.Fatal("valid exact proof counterpart could not stop original identity")
+	}
+}
+
+func TestDurableControlReadsRealSnapshotFloorAndForbidsExpectedRevision(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	w := fixture.NewWorld(t, ctx)
+	scene := w.Scenario()
+	s := w.Service()
+	acceptAccounting(t, ctx, s, scene)
+	equal := sceneControl(t, ctx, w, scene, "1", "equal-snapshot-control")
+	receipt := controlReceipt(t, ctx, s, equal, scene.Subject)
+	rejected, ok := receipt.AsRejected()
+	if !ok || rejected.Reason != "revision_changed" {
+		t.Fatal("actual Snapshot control floor was bypassed")
+	}
+	before := controlView(t, ctx, s, scene)
+	if _, ok := before.Decision.AsAccepted(); !ok || before.CurrentControl != nil {
+		t.Fatal("rejected Snapshot-equal control closed original work")
+	}
+	high := sceneControl(t, ctx, w, scene, "2", "higher-snapshot-control")
+	raw, err := v.Encode(high)
+	if err != nil {
+		t.Fatal(err)
+	}
+	invalid := []byte(strings.Replace(string(raw), "\"payload\":", "\"expected_revision\":\"1\",\"payload\":", 1))
+	_, err = s.Cancel(ctx, invalid, &scene.Subject)
+	var failure *v.ContractError
+	if !errors.As(err, &failure) || failure.Code != "schema_invalid" {
+		t.Fatal("cancel accepted forbidden generic expected_revision", err)
+	}
+	receipt = controlReceipt(t, ctx, s, high, scene.Subject)
+	if _, ok := receipt.AsApplied(); !ok {
+		t.Fatal("higher issuer control did not stop original Snapshot responsibility")
+	}
+	w.Reopen(ctx)
+	view := controlView(t, ctx, w.Service(), scene)
+	if _, ok := view.Decision.AsCancelled(); !ok || view.CurrentControl == nil {
+		t.Fatal("reopened Snapshot-floor stop lost its fixed facts")
 	}
 }
