@@ -94,6 +94,7 @@ func buildFrozenWriter(t *testing.T, dir string) *upgradeOutput {
 	command.Stderr = diagnostics
 	exited, confirmed, succeeded := false, false, false
 	groupKnown := false
+	var registrationErr error
 	var waited chan error
 	t.Cleanup(func() {
 		if succeeded {
@@ -124,8 +125,8 @@ func buildFrozenWriter(t *testing.T, dir string) *upgradeOutput {
 		if command.Process == nil {
 			confirmed = true
 		}
-		if !confirmed {
-			t.Error("frozen build exit unconfirmed; retain exact directory:", dir)
+		if !confirmed || registrationErr != nil {
+			t.Error("frozen build exit or acknowledgement unconfirmed; retain exact directory:", dir, upgradeCause("frozen build process registration", registrationErr))
 			return
 		}
 		if err := os.RemoveAll(dir); err != nil {
@@ -139,7 +140,6 @@ func buildFrozenWriter(t *testing.T, dir string) *upgradeOutput {
 	// real kernel by Start; this query records its actual group, never a guess.
 	pgid, groupErr := syscall.Getpgid(command.Process.Pid)
 	groupKnown = groupErr == nil && pgid == command.Process.Pid
-	var registrationErr error
 	if groupKnown {
 		registrationErr = registerUpgradeProcessGroup(command.Process.Pid, pgid, dir)
 	}
