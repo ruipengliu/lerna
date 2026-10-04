@@ -245,7 +245,7 @@ func (s *Service) decisionJob(ctx context.Context, store runtime.Store, scope ru
 	}
 	if !send {
 		if !sent {
-			return s.finishClosedDecision(ctx, store, scope, work, d.Intent.TaskRef.ObjectID)
+			return s.finishClosedUnsentDecision(ctx, store, scope, work, d.Intent.DecisionID)
 		}
 		if cancellation, ok := s.ports.Brain.(BrainCancellation); ok {
 			if e := s.preIO(ctx, store, scope, work); e != nil {
@@ -583,6 +583,10 @@ func (s *Service) billingJob(ctx context.Context, store runtime.Store, scope run
 	}
 	switch reservation.SourceKind {
 	case "brain_decision":
+		closed, e := s.finishClosedUnsentBilling(ctx, store, scope, work, reservation)
+		if e != nil || closed {
+			return e
+		}
 		if s.ports.Brain == nil {
 			return s.wait(ctx, store, scope, work)
 		}
