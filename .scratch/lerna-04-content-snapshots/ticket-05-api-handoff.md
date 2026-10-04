@@ -1,12 +1,13 @@
 # 04票05进行中的内部API（未交付）
 
-仅当前两vertical产品边界；整票七AC未完成，1.2合同冻结且不增加delete方法。
+仅当前前三vertical产品边界；整票七AC未完成，1.2合同冻结且不增加delete方法。
 
 `Lifecycle.Seal`目前是有限受信管理配置授权的原完整保存主体自愿封闭：
 准确ref、原purpose、固定SealID、原有限Deadline。同Tx保存单调seal、两
 holder责任和原Job。重传必须完全匹配原seal/deadline，观察不创Job。
 `Lifecycle.Observe`只读有限holder页，CleanupComplete来自全部原holder
-状态，不由首个空页推断。当前holder未取得物理ACK，仍pending。
+状态，不由首个空页推断。seal本身没有物理ACK，仍pending；之后真实
+Lifecycle.Step独立确认才能置对应holder erased。
 
 这与消费旧policy cleanup责任不同。旧change启动实际封闭之前，必须按
 02原完整保存主体/用途在同Tx重新检查当前准确basis与单调cap；短暂save
@@ -16,8 +17,17 @@ holder责任和原Job。重传必须完全匹配原seal/deadline，观察不创J
 
 Record.BodySeal是所有正文路径的同一个门。原Command当前reader获准时
 固定receipt照旧，sealed版本的新association不能创建publish或复制责任。
-Service.Step只处理原publish/policy_propagation，不消费body_cleanup；该
-cleanupphase的真实消费者将在下一vertical实现，不能凭phase存在称完成。
+Service.Step只处理原publish/policy_propagation，不消费body_cleanup。
+Lifecycle.Step是实际消费者：原Claim/Seal/Deadline约束，PG staging短Tx
+清除后独立事务ObserveStaging确认；primary文件删除后另一次受锁独立
+ObserveErasure确认，再同owner新Tx匹配原身份保存ACK及完成/有限Defer。
+deadline不会重启，真实失败保留residual及原负责方。
+
+BodyGone仅代表staging+primary的权威正文已物理独立确认不可回读，全holder
+cleanupComplete另算。MetadataPolicy是独立准确ref/完整subject/具体purpose/
+revision/ValidUntil的受信fixture许可，只披露ref/evidence_available，不是
+第六正文动作或Grant。Get锁后核实际fullRef及新鲜时间，再核完整祖先当前
+metadata许可；查询不创建工作。未gone的metadata-only视图不返回正文。
 
 `ErasingObjects`承担Tx外实际对象效果；固定ErasureIdentity绑定完整ref、
 原ObjectKey、具体HolderID及SealID。FenceAndErase仅删准确finalkey及
@@ -25,3 +35,7 @@ cleanupphase的真实消费者将在下一vertical实现，不能凭phase存在�
 flock inode永久保留，sealed/pending marker不含正文；nativebodyClose未知
 保留lockFD和holder责任。当前本机Linux协议不防未升级的旧二进制writer；
 必须真实停旧writer后升级，再允许新协议writer。
+
+未闭合机制：当前holderID仅经可信配置映射到root，尚未持久核原真实root
+身份，错root不能作为有效eraseACK。下一tracer补此绑定；两root副本、
+跨进程晚写、孤儿竞争与全部拒绝/恢复尚无完成声明。

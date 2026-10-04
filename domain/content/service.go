@@ -401,6 +401,121 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 	return v.NewTransportOutcomeReceived(v.TransportOutcomeReceived{Receipt: fixed}), nil
 }
 func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding) (v.ContentGetResponse, error) {
+	body, err := s.getBody(ctx, raw, subject)
+	if err != nil {
+		return body, err
+	}
+	denied, rejected := body.AsRejected()
+	if !rejected || (denied.Reason != "forbidden" && denied.Reason != "expired") {
+		return body, nil
+	}
+	request, err := v.DecodeGet(raw)
+	if err != nil {
+		return v.ContentGetResponse{}, err
+	}
+	principal, ok := trustedSubject(subject, s.config.Owner)
+	if !ok || request.Payload.ContentRef.Owner != s.config.Owner || !finite(ctx) {
+		return body, nil
+	}
+	metadata, qualified, err := s.getMetadata(ctx, request, principal)
+	if err != nil {
+		return v.NewContentGetResponseUnavailable(v.ContentGetResponseUnavailable{ContentRef: request.Payload.ContentRef, Reason: "dependency_unavailable"}), nil
+	}
+	if !qualified {
+		return body, nil
+	}
+	return metadata, nil
+}
+
+func (s *Service) getMetadata(ctx context.Context, request v.ContentGetRequest, subject v.SubjectBinding) (v.ContentGetResponse, bool, error) {
+	var result v.ContentGetResponse
+	qualified := false
+	ref := request.Payload.ContentRef
+	deny := func(reason v.ErrorCode) {
+		result = v.NewContentGetResponseRejected(v.ContentGetResponseRejected{Reason: reason})
+	}
+	err := s.config.Store.Within(ctx, owner(s.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
+		now, err := s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		policy, err := s.config.Store.CheckMetadataPolicy(ctx, tx, subject, ref, string(request.Payload.Purpose), now)
+		if err != nil {
+			return err
+		}
+		if policy == nil {
+			return nil
+		}
+		qualified = true
+		record, err := s.config.Store.LockVersion(ctx, tx, ref)
+		if err != nil {
+			return err
+		}
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if !now.Before(cutoff(request.AcceptBefore)) || !now.Before(policy.ValidUntil) {
+			deny("expired")
+			return nil
+		}
+		actual := ref
+		if record != nil {
+			actual = record.Ref
+		}
+		// Minimal metadata has its own exact current qualification. Even a
+		// gone/not_found distinction cannot precede this actual declaration gate.
+		if policy.Ref != actual {
+			deny("forbidden")
+			return nil
+		}
+		if record == nil {
+			result = v.NewContentGetResponseNotFound(v.ContentGetResponseNotFound{ContentRef: ref})
+			return nil
+		}
+		if record.Ref != ref {
+			deny("integrity")
+			return nil
+		}
+		before := policy.ValidUntil
+		sources, err := s.registeredClosure(ctx, tx, record.Ref, record.Sources, subject, string(request.Payload.Purpose), nil)
+		if err != nil {
+			if _, ok := qualificationCode(err); ok {
+				deny("forbidden")
+				return nil
+			}
+			return err
+		}
+		for _, source := range sources.refs {
+			metadata, err := s.config.Store.CheckMetadataPolicy(ctx, tx, subject, source, string(request.Payload.Purpose), now)
+			if err != nil {
+				return err
+			}
+			if metadata == nil || metadata.Ref != source {
+				deny("forbidden")
+				return nil
+			}
+			before = earlier(before, metadata.ValidUntil)
+		}
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if !now.Before(cutoff(request.AcceptBefore)) || !now.Before(before) {
+			deny("expired")
+			return nil
+		}
+		if record.BodySeal == nil || !record.BodyGone {
+			deny("forbidden")
+			return nil
+		}
+		result = v.NewContentGetResponseGone(v.ContentGetResponseGone{ContentRef: ref, EvidenceAvailable: false})
+		return nil
+	})
+	return result, qualified, err
+}
+
+func (s *Service) getBody(ctx context.Context, raw []byte, subject *v.SubjectBinding) (v.ContentGetResponse, error) {
 	request, err := v.DecodeGet(raw)
 	if err != nil {
 		return v.ContentGetResponse{}, err

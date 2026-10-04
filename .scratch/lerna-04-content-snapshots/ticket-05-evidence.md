@@ -73,3 +73,36 @@ cap尚有效的未sealed版本可not_required并保留历史责任/reason；已s
 
 该轮所有native已实际completion，并明确release LOCAL。没有完整migration
 旧writer、policy封闭、physicalerase、metadata-only或七AC接受的声明。
+
+## 第三vertical：真实staging/primary删除及独立metadata-only视图
+
+`TestContentActualStagingAndPrimaryErasureAllowsOnlyAuthorizedGone`使用真实
+preparing与published两个正常前态。先经受信独立连接的staging观察，再
+显式Seal及原Lifecycle.Step，重开后核staging NULL/精确final key缺失和
+两个holder ACK；无metadata资格拒绝，独立明确metadata资格才返回准确gone。
+
+| 原日志 | 实际结果 |
+| --- | --- |
+| `body-erasure-first-red.log` | PID/PGID2675689，start11138870；两正常前态后的合法ObserveStaging scaffold失败，exit1、groupAbsent=true。 |
+| `body-erasure-first-green.log` | PID/PGID2688356，start11192152；Step真实拒绝违反原DeferClaim due>now的continuation，exit1、groupAbsent=true；不是green。 |
+| `body-erasure-green-defer-repair.log` | PID/PGID2690102，start11199063；同原deadline内1µs后续due满足既有bounds，actual normal0.493s、exit0、groupAbsent=true。 |
+| `body-erasure-race-seal-control.log` | PID/PGID2690794，start11201508；第三exact+第二sealed控制actual race2.573s、exit0、groupAbsent=true；0001/2真实hash仍等原冻结值。 |
+
+每个native都有原120秒completion ACK，无timeout。ClearStaging是真正
+SaveVersion Bytes=nil、独立PG事务核staging IS NULL，不把空bytea视不存在。
+primary按登记attempt分页执行受锁durable FenceAndErase，再独立另一次
+ObserveErasure；新Tx核原Claim/Seal/期限后才holder ACK。只有staging+primary
+均独立ACK才单调BodyGone；全holder完成仍是另一个查询，不代表离线副本。
+
+BodyGone与seal均有SQL单调保护。Get body拒绝后才尝试独立metadata资格，
+后者不消费body cap或五动作，仍核当前fullRef/完整subject/purpose/revision、
+锁后真实clock/expiry、适用全部来源的明确metadata资格。该test只覆盖零源
+正常metadata与无许可拒绝，祖先metadata、过期、错fullRef等另待tracer。
+
+scope限制：当前正确配置的一primary root正常删除已经通过；holderID尚
+不足以证明重开仍为原物理root。静态发现错配到空root可能假ACK，下一
+tracer必须持久固定原真实root身份并拒绝错root。没有为其claim现能力。
+真实secondary、跨进程迟到效果、孤儿竞争、policy自动封闭及全页/失效恢复
+仍待实际实施/证据，不用当前三vertical替七AC。
+
+本轮已明确release LOCAL/no pending native；没有任何旧资源cleanup。

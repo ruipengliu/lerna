@@ -2,6 +2,7 @@ package content
 
 import (
 	"context"
+	"errors"
 	"github.com/ruipengliu/lerna/contract"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/runtime"
@@ -15,6 +16,21 @@ type SealRequest struct {
 	Deadline time.Time
 }
 
+// MetadataPolicy grants only the exact ref/evidence_available view. It does
+// not grant any of the five body actions or reveal the source list.
+type MetadataPolicy struct {
+	Ref        v.ContentRef     `json:"content_ref"`
+	Subject    v.SubjectBinding `json:"subject"`
+	Purpose    string           `json:"purpose"`
+	Revision   int64            `json:"revision"`
+	ValidUntil time.Time        `json:"valid_until"`
+}
+
+type StagingObservation struct {
+	Ref     v.ContentRef `json:"content_ref"`
+	Present bool         `json:"present"`
+}
+
 type BodySeal struct {
 	PrimaryHolderID string           `json:"primary_holder_id"`
 	ID              string           `json:"id"`
@@ -26,12 +42,13 @@ type BodySeal struct {
 }
 
 type BodyHolder struct {
-	Kind        string          `json:"kind"`
-	Identity    ErasureIdentity `json:"identity"`
-	Deadline    time.Time       `json:"deadline"`
-	State       string          `json:"state"`
-	Responsible string          `json:"responsible"`
-	Reason      string          `json:"reason,omitempty"`
+	AttemptCursor string          `json:"attempt_cursor,omitempty"`
+	Kind          string          `json:"kind"`
+	Identity      ErasureIdentity `json:"identity"`
+	Deadline      time.Time       `json:"deadline"`
+	State         string          `json:"state"`
+	Responsible   string          `json:"responsible"`
+	Reason        string          `json:"reason,omitempty"`
 }
 
 type LifecycleRepository interface {
@@ -39,6 +56,11 @@ type LifecycleRepository interface {
 	SaveBodyHolder(context.Context, runtime.Tx, BodyHolder) error
 	BodyHolders(context.Context, runtime.Tx, v.ContentRef, string, int) ([]BodyHolder, string, error)
 	AllBodyHoldersErased(context.Context, runtime.Tx, v.ContentRef, string, string) (bool, error)
+	AuthoritativeBodyErased(context.Context, runtime.Tx, v.ContentRef, string, string) (bool, error)
+	PublicationAttempts(context.Context, runtime.Tx, v.ContentRef, string, int) ([]string, string, error)
+	ObserveStaging(context.Context, v.ContentRef) (StagingObservation, error)
+	LockMetadataPolicy(context.Context, runtime.Tx, MetadataPolicy) (*MetadataPolicy, error)
+	SaveMetadataPolicy(context.Context, runtime.Tx, MetadataPolicy) error
 }
 
 type BodyCleanupObservation struct {
@@ -201,4 +223,300 @@ func sameSavingSubject(a, b v.SubjectBinding) bool {
 	}
 	right, err := v.Encode(b)
 	return err == nil && string(left) == string(right)
+}
+
+func (l *Lifecycle) Step(ctx context.Context, subject *v.SubjectBinding) (bool, error) {
+	if err := l.manager.authorize(ctx, subject); err != nil {
+		return false, err
+	}
+	var selected *Record
+	var holder BodyHolder
+	var claim *runtime.Claim
+	var attempts []string
+	var nextAttempt string
+	err := l.store.Within(ctx, owner(l.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
+		if err := l.manager.current(ctx, tx); err != nil {
+			return err
+		}
+		now, err := l.store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		jobs, err := l.store.Scan(ctx, tx, now, 64)
+		if err != nil {
+			return err
+		}
+		for _, job := range jobs {
+			if job.Phase != "body_cleanup" {
+				continue
+			}
+			record, err := l.store.LockObject(ctx, tx, string(job.Object.ID))
+			if err != nil {
+				return err
+			}
+			if record == nil || record.ValidateIdentity() != nil || record.BodySeal == nil || record.BodySeal.PrimaryHolderID != l.config.PrimaryHolderID || !sameSavingSubject(record.Subject, l.config.TrustedSubject) {
+				return runtime.ErrScope
+			}
+			if err = l.manager.current(ctx, tx); err != nil {
+				return err
+			}
+			now, err = l.store.Now(ctx, tx)
+			if err != nil {
+				return err
+			}
+			if !now.Before(record.BodySeal.Deadline) {
+				continue
+			}
+			found := false
+			cursor := ""
+			for {
+				holders, next, err := l.store.BodyHolders(ctx, tx, record.Ref, cursor, l.config.PageSize)
+				if err != nil {
+					return err
+				}
+				for _, candidate := range holders {
+					if candidate.Identity.SealID != record.BodySeal.ID {
+						return runtime.ErrScope
+					}
+					if candidate.State == "erased" {
+						continue
+					}
+					holder = candidate
+					found = true
+					break
+				}
+				if found || next == "" {
+					break
+				}
+				cursor = next
+				if err = l.manager.current(ctx, tx); err != nil {
+					return err
+				}
+			}
+			now, err = l.store.Now(ctx, tx)
+			if err != nil {
+				return err
+			}
+			if !now.Before(record.BodySeal.Deadline) {
+				continue
+			}
+			until := earlier(earlier(now.Add(time.Minute), record.BodySeal.Deadline), l.config.TrustedUntil)
+			claim, err = l.store.Claim(ctx, tx, job, l.config.Worker, now, until)
+			if err != nil {
+				return err
+			}
+			if claim == nil {
+				continue
+			}
+			if !found {
+				complete, err := l.store.AllBodyHoldersErased(ctx, tx, record.Ref, record.BodySeal.ID, record.BodySeal.PrimaryHolderID)
+				if err != nil {
+					return err
+				}
+				if !complete {
+					return runtime.ErrScope
+				}
+				return l.store.Complete(ctx, tx, *claim, now)
+			}
+			if holder.Kind == "pg-staging" {
+				record.Bytes = nil
+				record.StagingHolder = false
+				record.Revision++
+				if err = l.store.SaveVersion(ctx, tx, *record); err != nil {
+					return err
+				}
+			} else if holder.Kind == "primary" {
+				attempts, nextAttempt, err = l.store.PublicationAttempts(ctx, tx, record.Ref, holder.AttemptCursor, l.config.PageSize)
+				if err != nil {
+					return err
+				}
+			} else {
+				return runtime.ErrScope
+			}
+			if err = l.manager.current(ctx, tx); err != nil {
+				return err
+			}
+			now, err = l.store.Now(ctx, tx)
+			if err != nil {
+				return err
+			}
+			if !now.Before(record.BodySeal.Deadline) {
+				return refusal("expired")
+			}
+			if err = l.store.ValidateClaim(ctx, tx, *claim, now); err != nil {
+				return err
+			}
+			selected = record
+			return nil
+		}
+		return nil
+	})
+	if err != nil || claim == nil || selected == nil {
+		return claim != nil, err
+	}
+	bounded, cancel := context.WithDeadline(ctx, earlier(claim.LeaseUntil, selected.BodySeal.Deadline))
+	var observed ErasureObservation
+	var effectErr error
+	if holder.Kind == "pg-staging" {
+		var staging StagingObservation
+		staging, effectErr = l.store.ObserveStaging(bounded, selected.Ref)
+		observed = ErasureObservation{Identity: holder.Identity, Fenced: true, Erased: effectErr == nil && staging.Ref == selected.Ref && !staging.Present}
+	} else {
+		observed, effectErr = l.config.Objects.FenceAndErase(bounded, holder.Identity, attempts)
+		if effectErr == nil {
+			// A separately acquired holder observation, not the erase return
+			// itself, qualifies the final physical absence ACK.
+			observed, effectErr = l.config.Objects.ObserveErasure(bounded, holder.Identity, "", l.config.PageSize)
+		}
+	}
+	if effectErr == nil {
+		effectErr = bounded.Err()
+	}
+	cancel()
+	err = l.store.Within(ctx, owner(l.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
+		if err := l.manager.current(ctx, tx); err != nil {
+			return err
+		}
+		record, err := l.store.LockVersion(ctx, tx, selected.Ref)
+		if err != nil {
+			return err
+		}
+		if record == nil || record.Ref != selected.Ref || record.BodySeal == nil || record.BodySeal.ID != selected.BodySeal.ID {
+			return runtime.ErrScope
+		}
+		if err = l.manager.current(ctx, tx); err != nil {
+			return err
+		}
+		now, err := l.store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if !now.Before(record.BodySeal.Deadline) {
+			return refusal("expired")
+		}
+		if err = l.store.ValidateClaim(ctx, tx, *claim, now); err != nil {
+			return err
+		}
+		if effectErr == nil && observed.Identity == holder.Identity && observed.Fenced && observed.Erased && observed.NextCursor == "" && nextAttempt == "" {
+			holder.State = "erased"
+			holder.Reason = ""
+		} else if effectErr == nil && nextAttempt != "" {
+			holder.AttemptCursor = nextAttempt
+			holder.State = "pending"
+			holder.Reason = "attempt_page_pending"
+		} else {
+			holder.State = "residual"
+			holder.Reason = "holder_unconfirmed"
+		}
+		if err = l.store.SaveBodyHolder(ctx, tx, holder); err != nil {
+			return err
+		}
+		authoritative, err := l.store.AuthoritativeBodyErased(ctx, tx, record.Ref, record.BodySeal.ID, record.BodySeal.PrimaryHolderID)
+		if err != nil {
+			return err
+		}
+		if authoritative && !record.BodyGone {
+			record.BodyGone = true
+			record.Revision++
+			if err = l.store.SaveVersion(ctx, tx, *record); err != nil {
+				return err
+			}
+		}
+		complete, err := l.store.AllBodyHoldersErased(ctx, tx, record.Ref, record.BodySeal.ID, record.BodySeal.PrimaryHolderID)
+		if err != nil {
+			return err
+		}
+		if err = l.manager.current(ctx, tx); err != nil {
+			return err
+		}
+		now, err = l.store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if !now.Before(record.BodySeal.Deadline) {
+			return refusal("expired")
+		}
+		if complete {
+			return l.store.Complete(ctx, tx, *claim, now)
+		}
+		// DeferClaim requires a strictly later due time. One microsecond is
+		// finite continuation of the same original responsibility, never a
+		// refreshed cleanup budget; ordinary DB round trips make it eligible.
+		due := earlier(now.Add(time.Microsecond), record.BodySeal.Deadline)
+		if holder.State == "residual" {
+			due = earlier(now.Add(100*time.Millisecond), record.BodySeal.Deadline)
+		}
+		return l.store.DeferClaim(ctx, tx, *claim, now, due)
+	})
+	return true, errors.Join(err, effectErr)
+}
+
+func (l *Lifecycle) ObserveStaging(ctx context.Context, subject *v.SubjectBinding, ref v.ContentRef) (StagingObservation, error) {
+	if err := l.manager.authorize(ctx, subject); err != nil {
+		return StagingObservation{}, err
+	}
+	if ref.Owner != l.config.Owner {
+		return StagingObservation{}, refusal("forbidden")
+	}
+	qualify := func(ctx context.Context, tx runtime.Tx) error {
+		if err := l.manager.current(ctx, tx); err != nil {
+			return err
+		}
+		record, err := l.store.LockVersion(ctx, tx, ref)
+		if err != nil {
+			return err
+		}
+		if err = l.manager.current(ctx, tx); err != nil {
+			return err
+		}
+		if record == nil || record.Ref != ref || !sameSavingSubject(record.Subject, l.config.TrustedSubject) {
+			return refusal("forbidden")
+		}
+		return nil
+	}
+	if err := l.store.Within(ctx, owner(l.config.Owner), qualify); err != nil {
+		return StagingObservation{}, err
+	}
+	observed, err := l.store.ObserveStaging(ctx, ref)
+	if err != nil {
+		return StagingObservation{}, err
+	}
+	if err = l.store.Within(ctx, owner(l.config.Owner), qualify); err != nil {
+		return StagingObservation{}, err
+	}
+	return observed, nil
+}
+
+func (l *Lifecycle) InstallMetadataPolicy(ctx context.Context, subject *v.SubjectBinding, policy MetadataPolicy, expectedRevision int64) error {
+	if err := l.manager.authorize(ctx, subject); err != nil {
+		return err
+	}
+	if policy.Ref.Owner != l.config.Owner || policy.Subject.TenantID != l.config.Owner.TenantID || policy.Purpose == "" || len(policy.Purpose) > 128 || policy.Revision < 1 || expectedRevision < 0 || policy.Revision != expectedRevision+1 || policy.ValidUntil.IsZero() {
+		return refusal("forbidden")
+	}
+	if _, err := v.Encode(policy.Ref); err != nil {
+		return err
+	}
+	if _, err := v.Encode(policy.Subject); err != nil {
+		return err
+	}
+	return l.store.Within(ctx, owner(l.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
+		if err := l.manager.current(ctx, tx); err != nil {
+			return err
+		}
+		previous, err := l.store.LockMetadataPolicy(ctx, tx, policy)
+		if err != nil {
+			return err
+		}
+		if previous != nil && previous.Revision == policy.Revision && previous.Ref == policy.Ref && previous.Purpose == policy.Purpose && sameSavingSubject(previous.Subject, policy.Subject) && previous.ValidUntil.Equal(policy.ValidUntil) {
+			return l.manager.current(ctx, tx)
+		}
+		if previous == nil && expectedRevision != 0 || previous != nil && previous.Revision != expectedRevision {
+			return &ManagementConflict{}
+		}
+		if err = l.store.SaveMetadataPolicy(ctx, tx, policy); err != nil {
+			return err
+		}
+		return l.manager.current(ctx, tx)
+	})
 }

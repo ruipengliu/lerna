@@ -60,6 +60,7 @@ type Record struct {
 	ObjectHolder           bool             `json:"object_holder"`
 	CleanupPending         bool             `json:"cleanup_pending"`
 	BodySeal               *BodySeal        `json:"body_seal,omitempty"`
+	BodyGone               bool             `json:"body_gone,omitempty"`
 	Bytes                  []byte           `json:"-"`
 }
 type CommandRecord struct {
@@ -86,6 +87,7 @@ type Repository interface {
 	ScheduleRetention(context.Context, runtime.Tx, *FixturePolicy, Record, []Record, time.Duration) error
 	AdvancePolicyJob(context.Context, runtime.Tx, runtime.Job, Record, string, time.Duration, time.Duration) (bool, error)
 	CheckPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, []string, time.Time) (*FixturePolicy, error)
+	CheckMetadataPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, time.Time) (*MetadataPolicy, error)
 	CheckCommandReader(context.Context, runtime.Tx, v.SubjectBinding, time.Time) (bool, error)
 	CheckCapacity(context.Context, runtime.Tx, Limits, int64) (bool, error)
 	runtime.JobStore

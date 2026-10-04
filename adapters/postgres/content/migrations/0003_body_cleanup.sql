@@ -1,5 +1,7 @@
 -- Additive Content owner protocol. Old non-fencing writers must be stopped.
 ALTER TABLE content_versions ADD COLUMN body_seal bytea;
+ALTER TABLE content_versions ADD COLUMN body_gone boolean NOT NULL DEFAULT false;
+ALTER TABLE content_versions ADD CONSTRAINT content_body_gone_check CHECK(NOT body_gone OR (body_seal IS NOT NULL AND staging IS NULL));
 ALTER TABLE jobs DROP CONSTRAINT jobs_phase_check;
 ALTER TABLE jobs ADD CONSTRAINT jobs_phase_check CHECK(phase IN('publish','policy_propagation','body_cleanup'));
 CREATE TABLE content_body_holders (
@@ -16,4 +18,11 @@ CREATE TABLE content_publication_attempts (
  attempt_key text NOT NULL, body bytea NOT NULL,
  PRIMARY KEY(tenant_id,owner_id,object_id,attempt_key),
  FOREIGN KEY(tenant_id,owner_id,object_id) REFERENCES content_versions(tenant_id,owner_id,object_id)
+);
+CREATE TABLE content_metadata_policies (
+ tenant_id text NOT NULL, owner_id text NOT NULL, subject_key text NOT NULL,
+ content_id text NOT NULL, version text NOT NULL, purpose text NOT NULL,
+ revision bigint NOT NULL CHECK(revision>0), valid_until timestamptz NOT NULL,
+ body bytea NOT NULL,
+ PRIMARY KEY(tenant_id,owner_id,subject_key,content_id,version,purpose)
 );
