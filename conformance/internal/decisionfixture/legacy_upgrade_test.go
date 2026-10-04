@@ -185,7 +185,7 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 			t.Error("historical producer did not complete normal release:", errors.Join(releaseErr, stdinErr, waitErr))
 		}
 		if err := cleanupUpgradeScopes(registry); err != nil {
-			t.Error("exact historical scope cleanup failed; retain owned directory")
+			t.Error("exact historical scope cleanup failed; retain owned directory:", err)
 			return
 		}
 		if err := os.RemoveAll(dir); err != nil {
@@ -212,7 +212,7 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	}
 	created, err := readUpgradeBounded(registry, 4096)
 	if err != nil {
-		t.Fatal("historical CREATE registry unavailable")
+		t.Fatal("historical CREATE registry unavailable:", err)
 	}
 	acknowledged := map[string]bool{}
 	for _, line := range strings.Split(strings.TrimSpace(string(created)), "\n") {
