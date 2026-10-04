@@ -341,3 +341,102 @@ func TestTargetSIGKILLAfterCommitRetainsOriginalFactAndReplayCursor(t *testing.T
 		})
 	}
 }
+
+func TestTargetPendingOriginalSurvivesProcessRestartAndLateApply(t *testing.T) {
+	for _, kill := range []bool{false, true} {
+		name := "normal_release"
+		if kill {
+			name = "SIGKILL_after_durable_receive"
+		}
+		t.Run(name, func(t *testing.T) {
+			f := newFixture(t)
+			writer := f.open()
+			input := target.Request{Key: "pending-original-key", Resource: "fake-pending-document", Data: []byte{0, 255, 10}}
+			plan := target.Plan{ID: "process-pending", Seed: 73, Deadline: f.now.Add(3 * time.Minute), Steps: []target.Step{{ID: "receive-original", Kind: target.ReceiveOnly, Input: input}, {ID: "apply-original", Kind: target.ApplyReceived, Input: input}}}
+			if _, err := writer.InstallPlan(f.ctx, plan); err != nil {
+				t.Fatal(err)
+			}
+			if err := writer.Close(); err != nil {
+				t.Fatal(err)
+			}
+			f.writer = nil
+			child := startTargetChild(t, f, plan.ID, "receive-original", "committed_before_reply", 1)
+			var gate targetProcessFrame
+			if err := child.Event(f.ctx, &gate); err != nil {
+				t.Fatal(err)
+			}
+			if gate.Stage != "committed_before_reply" || gate.Scenario != plan.ID || gate.Event != "receive-original" || gate.Generation != 1 {
+				t.Fatal("wrong original received commit identity")
+			}
+			observer, err := f.observer()
+			if err != nil {
+				t.Fatal(err)
+			}
+			pending, err := observer.Observe(f.ctx, input.Key)
+			if err != nil || !pending.Pending || pending.Value.Version != 0 || pending.Key != input.Key || len(pending.Receives) != 1 || pending.Receives[0].Outcome != "received" {
+				t.Fatal("actual durable received responsibility absent", err)
+			}
+			if kill {
+				killTargetChild(t, f, child)
+			} else {
+				if err = child.Send(f.ctx, targetProcessFrame{Stage: "release", Scenario: plan.ID, Event: "receive-original", Generation: 1}); err != nil {
+					t.Fatal(err)
+				}
+				event := finishTargetChild(t, f, child, plan.ID, "receive-original", 1)
+				if event.Phase != "durably_received" {
+					t.Fatal("normal receive falsely reported applied")
+				}
+			}
+			writer = f.open()
+			afterRestart, err := observer.Observe(f.ctx, input.Key)
+			if err != nil || !reflect.DeepEqual(pending, afterRestart) {
+				t.Fatal("process restart changed original pending/window/receive/identity", err)
+			}
+			state, err := observer.Plan(f.ctx, plan.ID)
+			if err != nil || state.Cursor != 1 || len(state.Events) != 1 || !reflect.DeepEqual(state.Plan, plan) {
+				t.Fatal("restart lost original finite plan/event/cursor", err)
+			}
+			// Query's current absence does not erase this received responsibility.
+			if _, err = writer.Query(f.ctx, input.Key); !errors.Is(err, target.ErrNotFound) {
+				t.Fatal("pending request falsely became a submitted effect", err)
+			}
+			if _, err = writer.Read(f.ctx, input.Resource); !errors.Is(err, target.ErrNotFound) {
+				t.Fatal("pending request falsely became a resource value", err)
+			}
+			f.now = pending.Deadline
+			if _, err = writer.Write(f.ctx, input); !errors.Is(err, target.ErrGuaranteeExpired) {
+				t.Fatal("expired retransmission renewed or cancelled original", err)
+			}
+			if _, err = writer.Query(f.ctx, input.Key); !errors.Is(err, target.ErrNotFound) {
+				t.Fatal("expired retransmission applied pending original", err)
+			}
+			if err = writer.Close(); err != nil {
+				t.Fatal(err)
+			}
+			f.writer = nil
+			// A new coordinator chooses the original next event from saved cursor.
+			apply := startTargetChild(t, f, state.Plan.ID, state.Plan.Steps[state.Cursor].ID, "", 2)
+			event := finishTargetChild(t, f, apply, plan.ID, "apply-original", 2)
+			if event.Phase != "committed" || event.Kind != target.ApplyReceived || event.Outcome != "applied" {
+				t.Fatal("late original was not actually applied", event)
+			}
+			writer = f.open()
+			fact, err := observer.Observe(f.ctx, input.Key)
+			if err != nil || fact.Pending || fact.DatabaseID != pending.DatabaseID || fact.Value.Version != 1 || string(fact.Value.Data) != string(input.Data) || fact.Start != pending.Start || fact.Deadline != pending.Deadline || len(fact.Receives) != 2 || fact.Receives[0] != pending.Receives[0] || fact.Receives[1].Outcome != "guarantee_expired" {
+				t.Fatal("late apply changed original identity/window/arrival facts", err)
+			}
+			query, err := writer.Query(f.ctx, input.Key)
+			if err != nil || query.Value.Version != 1 || string(query.Value.Data) != string(input.Data) || query.Start != pending.Start || query.Deadline != pending.Deadline {
+				t.Fatal("ordinary current original processing fact absent", err)
+			}
+			value, err := writer.Read(f.ctx, input.Resource)
+			if err != nil || value.Version != 1 || string(value.Data) != string(input.Data) {
+				t.Fatal("ordinary late applied value absent", err)
+			}
+			state, err = observer.Plan(f.ctx, plan.ID)
+			if err != nil || state.Cursor != 2 || len(state.Events) != 2 || state.Events[0].ID != "receive-original" || state.Events[1].ID != "apply-original" {
+				t.Fatal("late apply did not retain original finite history", err)
+			}
+		})
+	}
+}
