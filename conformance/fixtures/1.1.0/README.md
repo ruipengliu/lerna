@@ -16,6 +16,11 @@ acceptance does not prove those references exist or their use is authorized.
 Cancellation state fixtures verify the contract shape only; cancellation and
 other specialized Component behaviors are delivered by their own tickets.
 
+Proposal fixtures include raw duplicate and unknown fields alongside the closed
+advance combinations, independent action bounds and condition replacement
+shape. Snapshot membership, current condition revision and actual Source purpose
+consumption belong to the Component tests; the codec does not query owners.
+
 Usage fixtures distinguish exact durable start charges from confirmed physical
 measurements. Both `rule_starts` and `measurements_complete` are mandatory;
 complete and incomplete observations retain their precise boolean/string wire

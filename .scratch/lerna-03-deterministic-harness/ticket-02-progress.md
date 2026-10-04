@@ -87,8 +87,8 @@ used the original `/2` Component/permissions and public inputs. The two original
 prepared states completed without another evaluation/start/fee; actual public
 Plan/readback verified the original key, reference, bytes and source sequence.
 The started-but-unmeasured state conservatively retained its original start and
-charged the second bounded start; its unknown measurement gap remains false
-precision. Terminals retain their original facts, while public command query
+charged the second bounded start; its unknown measurement gap retains
+`measurements_complete=false`. Terminals retain their original facts, while public command query
 and Decide replay retain the original accepted receipt. A second new-owner
 reopen preserves every terminal and leaves no runnable job.
 
@@ -109,3 +109,21 @@ Remaining work includes validating the extra three prepared-recovery branches,
 the two appended shared raw Proposal codec fixtures, root integration,
 independent review and any adopted shared mechanical supervision correction.
 These completed focused results do not yet close the seven acceptance checks.
+
+Before final integration, the ready code expands the same actual reply-loss
+recovery loop to all five branches, adds three actual immutable Source reseed
+rejections with the original normal completion, and appends two raw Proposal
+fixtures without changing the original 81. These changes have not yet run.
+The original producer driver is now 9053 bytes: after ready, EOF or its release
+deadline exits without running old schema-drop cleanup; only literal RELEASE
+allows normal administrative cleanup. This failure-path retention is currently
+static, not claimed as an injected native failure result. Two previously ignored
+public Decision encoding errors are also checked explicitly.
+
+Shared mechanical followups `ed57adbb094abffc2da5d62f71d083c35ccd79b2`
+(original `8e24c82`) and `ce3e861e81ee2cc5dbfc3e5b316b9db1409ddcb3`
+(original `283ca961`) record actual producer/compiler groups before Wait, use
+native process holders for cancellation and retain unconfirmed acknowledgments
+or scanner exit. They have been adopted by source review; this ticket's final
+actual upgrade check against them remains pending. No frozen payload or SQL
+migration has been changed.

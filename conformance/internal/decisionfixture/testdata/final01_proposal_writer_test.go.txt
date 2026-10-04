@@ -244,9 +244,13 @@ func TestFrozenFinal01ProposalWriter(t *testing.T) {
 	select {
 	case request := <-line:
 		if request != "RELEASE" {
-			t.Fatal("original administrator release missing")
+			// Ready transferred responsibility to the current consumer. Missing
+			// release cannot authorize the original worlds' schema-drop cleanup.
+			fmt.Fprintln(os.Stderr, "original administrator release missing; retain acknowledged scopes")
+			os.Exit(2)
 		}
 	case <-ctx.Done():
-		t.Fatal("original administrator release deadline")
+		fmt.Fprintln(os.Stderr, "original administrator release deadline; retain acknowledged scopes")
+		os.Exit(2)
 	}
 }

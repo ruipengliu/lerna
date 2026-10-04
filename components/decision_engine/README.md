@@ -45,7 +45,7 @@ the original keys, bytes, digests, sources and permissions. Finish commits only
 after both independent publications read back exactly. The accepted receipt
 never changes with progress.
 
-`fixture-rule/3` adds five finite fixture cases. Its artifact digest binds the
+`fixture-rule/3` adds five finite Proposal branches and a source-evidence variant. Its artifact digest binds the
 exact version string and its config digest binds the exact case string; each
 case uses a separate immutable Snapshot, lock, manifest and single-binding
 fixture scope. An undefined case fails as `proposal_invalid` after admission,
@@ -57,6 +57,7 @@ without falling back to `/2` or changing an old case's meaning.
 | `actions_four` | Four independent actions from exact Snapshot bindings |
 | `input_request` | Clarification question, answer schema and preview |
 | `delta_candidate_result` | Condition replacement plus one actual candidate artifact |
+| `candidate_source_evidence` | Candidate artifact plus independently readable Source evidence |
 | `cannot_continue` | Precise reason and current missing condition, with no artifact |
 
 `invalid_actions_depends_on` is a distinct fixed private configuration. It

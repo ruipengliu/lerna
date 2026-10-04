@@ -247,8 +247,14 @@ func verifyFinal01ProposalUpgrade(t *testing.T, ctx context.Context, old final01
 			t.Fatal("upgrade reset original conservative allowance/fee", completed.Usage)
 		}
 		var originalFields, completedFields map[string]json.RawMessage
-		originalBytes, _ := v.Encode(before)
-		completedBytes, _ := v.Encode(after)
+		originalBytes, err := v.Encode(before)
+		if err != nil {
+			t.Fatal("original public Decision encoding", err)
+		}
+		completedBytes, err := v.Encode(after)
+		if err != nil {
+			t.Fatal("completed public Decision encoding", err)
+		}
 		if err := json.Unmarshal(originalBytes, &originalFields); err != nil {
 			t.Fatal(err)
 		}

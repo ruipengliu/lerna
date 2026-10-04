@@ -5,10 +5,13 @@ package component_test
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"reflect"
 	"slices"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -17,6 +20,96 @@ import (
 	v "github.com/ruipengliu/lerna/contract/v1_1"
 	"github.com/ruipengliu/lerna/runtime"
 )
+
+func TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	world := fixture.NewWorld(t, ctx)
+	scene, _ := proposalScenario(t, ctx, world, "fixture-rule/3", "delta_only")
+	service := proposalService(t, world, scene)
+	receipt := acceptAccounting(t, ctx, service, scene)
+	permission, err := world.Source().Authorize(ctx, scene.Subject, scene.DecisionRef, "start", &scene.Request.Payload)
+	if err != nil {
+		t.Fatal(err)
+	}
+	snapshot, err := world.Source().ReadSnapshot(ctx, scene.Request.Payload.SnapshotRef, permission, v.MaxBodyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+	lock, err := world.Source().ReadFixtureLock(ctx, scene.Request.Payload.ComponentRef.InstallLockRef, permission, v.MaxBodyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+	materials := []fixture.Material{}
+	for _, ref := range snapshot.MaterialRefs {
+		body, err := world.Source().ReadMaterial(ctx, ref, "rule.input", permission, v.MaxBodyBytes)
+		if err != nil {
+			t.Fatal(err)
+		}
+		materials = append(materials, fixture.Material{Ref: ref, Bytes: body})
+	}
+	for _, mutation := range []string{"same_snapshot_new_case", "wrong_rule_version", "wrong_config_digest"} {
+		t.Run(mutation, func(t *testing.T) {
+			changed := snapshot
+			changed.Raw = nil
+			permit := permission
+			version := "fixture-rule/3"
+			switch mutation {
+			case "same_snapshot_new_case":
+				changed.Rule = "actions_four"
+				sum := sha256.Sum256([]byte(changed.Rule))
+				changed.ComponentRef.ConfigDigest = v.SchemaDigest("sha256:" + hex.EncodeToString(sum[:]))
+				permit.ComponentRef = changed.ComponentRef
+			case "wrong_rule_version":
+				version, permit.RuleVersion = "fixture-rule/2", "fixture-rule/2"
+			case "wrong_config_digest":
+				changed.ComponentRef.ConfigDigest = v.SchemaDigest("sha256:" + strings.Repeat("0", 64))
+				permit.ComponentRef = changed.ComponentRef
+			}
+			if _, err := world.Source().Seed(ctx, fixture.Bundle{DecisionRef: scene.DecisionRef, Permission: permit, Snapshot: changed, Materials: materials, Purposes: []string{"decide", "get", "command.get", "start", "material", "rule.input", "fixture.lock", "publish", "proposal.publish", "artifact.publish", "rule.condition"}, RuleVersion: version, ChargeBasis: permission.ChargeBasis, RuleStartCharge: permission.RuleStartCharge}); err == nil {
+				t.Fatal("fixed original binding was changed")
+			} else if mutation == "same_snapshot_new_case" && !errors.Is(err, decision.ErrPublicationConflict) {
+				t.Fatal("new valid case did not reach actual immutable identity rejection", err)
+			}
+			preserved, err := world.Source().ReadSnapshot(ctx, snapshot.Ref, permission, v.MaxBodyBytes)
+			if err != nil || !reflect.DeepEqual(preserved, snapshot) {
+				t.Fatal("rejected reseed changed original immutable Snapshot", err)
+			}
+			preservedLock, err := world.Source().ReadFixtureLock(ctx, scene.Request.Payload.ComponentRef.InstallLockRef, permission, v.MaxBodyBytes)
+			if err != nil || !reflect.DeepEqual(preservedLock, lock) {
+				t.Fatal("rejected reseed changed original manifest or lock", err)
+			}
+		})
+	}
+	if step, err := service.Step(ctx); err != nil || step.Processed != 1 {
+		t.Fatal("original rule responsibility lost after rejected reseed", err)
+	}
+	world.Reopen(ctx)
+	service = proposalService(t, world, scene)
+	view, err := service.Get(ctx, scene.GetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found, ok := view.AsFound()
+	if !ok {
+		t.Fatal("original fixed Decision missing")
+	}
+	completed, ok := found.Decision.AsCompleted()
+	if !ok || completed.Input.ComponentRef != scene.Request.Payload.ComponentRef || completed.Usage.RuleStarts != "1" || completed.Usage.Cost.IntegerValue != "1" || len(completed.ArtifactRefs) != 0 {
+		t.Fatal("original case changed meaning or allowance")
+	}
+	if _, ok := completed.Proposal.Advance.AsNone(); !ok {
+		t.Fatal("original delta-only became another case")
+	}
+	command, err := service.GetCommand(ctx, scene.CommandGetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fixed, ok := command.AsFound()
+	if !ok || !reflect.DeepEqual(fixed.Receipt, receipt) {
+		t.Fatal("reseed changed original accepted receipt")
+	}
+}
 
 type observedProposalPublication struct {
 	key     string
@@ -148,7 +241,7 @@ func TestDurableProposalOriginalLimitsMatrix(t *testing.T) {
 }
 
 func TestDurableProposalPreparedV2RecoversActualReplyLoss(t *testing.T) {
-	for _, rule := range []string{"delta_only", "delta_candidate_result"} {
+	for _, rule := range []string{"delta_only", "actions_four", "input_request", "delta_candidate_result", "cannot_continue"} {
 		t.Run(rule, func(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 			defer cancel()
@@ -207,7 +300,11 @@ func TestDurableProposalPreparedV2RecoversActualReplyLoss(t *testing.T) {
 			if !ok || completed.Usage != waiting.Usage || completed.InputDigest != waiting.InputDigest {
 				t.Fatal("recovery recalculated, reset observations or charged a second start")
 			}
-			if rule == "delta_only" && len(completed.ArtifactRefs) != 0 || rule == "delta_candidate_result" && len(completed.ArtifactRefs) != 1 {
+			wantArtifacts := 0
+			if rule == "delta_candidate_result" {
+				wantArtifacts = 1
+			}
+			if len(completed.ArtifactRefs) != wantArtifacts {
 				t.Fatal("recovery invented or lost an actual artifact")
 			}
 			permission, err = world.Source().Authorize(ctx, scene.Subject, scene.DecisionRef, "get", nil)
