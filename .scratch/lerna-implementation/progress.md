@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-04 23:35 UTC，03原Prepared资格partial `d41785c`：普通2.335s／race7.011s通过。原三轮18次真实编译读取27840字节耗尽后，真实Content.put已accepted，再触发20ms响应等待截止；三个owner重开按原WakeAt恢复两份原Prepared，无再编译、再规划或再读取Source，原artifact raw／回执、完整M、refs／sources／绝对界、规则start1／cost1和原预算全保持。该故障不声称物理Put未提交。05真实冻结1a7构建成功；首轮辅助类型比较compileFAIL保留，修正后0.401s真正business red发生在最后受信绑定stub。此前旧V1／V2真实正常发布、未停止拒绝、所有旧逻辑Close ACK及actualWait／group absence、当前unbound读取／seal拒绝、原字节／回执／published历史均已执行。正按既定决定静态实施窄CAS回填与可复现冻结构建，尚无green或本票退出；当前15/41与完整1.2不广告状态不变。
+
 2026-10-04 23:29 UTC，03原预算真实锁等待及并发资格partial `554fe04`：三个准确测试普通4.503s／race8.818s通过。真实PG等待跨过原deadline后拒绝，原轮数与读取预约仍0；两客户端竞争原最后一轮仅一方取得第三轮；两客户端竞争原6字节仅一方进入真实读取，Reserved／Confirmed6、实际读取1次。每轮五个实际peer均有原native CloseACK，进程退出与group absence已核。原65536／三轮／绝对deadline不变。Prepared原命令恢复正在独立资格验证；真实旧0003上下文升级及旧0001正文holder升级已静态准备，尚未宣称通过。两票仍claimed、未正式合入，whole04仍15/41、完整1.2不广告；全部22切片授权继续，所有旧unknown scope保留。
 
 2026-10-04 23:10 UTC，05真实跨页资格partial `1af6593ae290266357e28aab390b71747943565c`：PageSize2的原政策责任partial后重开，完整5条责任保持；4个原保存主体版本清理、另一保存主体的独立字节不误删。实际secondary关闭／nilport下，3个holder的2＋1页保留准确副本责任；两个World重开恢复后才全ACK。正常0.962s及该case＋原offline两项race3.607s通过，原水位／期限／copy绑定不变。03三次原数量溢出资格partial `6f6d97d`，修正过严测试诊断断言后2.039s通过：原三轮均消耗次数、读取预约仍0、第四轮精确次数拒绝及重开未派发。仍待真实原期限／并发／Prepared／旧源及清理attempt／升级／时钟CAS边界和最终审查，两票均未接受或正式合入。
