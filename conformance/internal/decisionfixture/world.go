@@ -156,18 +156,18 @@ func (w *World) AdditionalScenario(ctx context.Context, ownerID, id v.ID, deadli
 	if err != nil {
 		w.t.Fatal(err)
 	}
-	snapshot, err := w.source.ReadSnapshot(ctx, scene.Request.Payload.SnapshotRef, permission)
+	snapshot, err := w.source.ReadSnapshot(ctx, scene.Request.Payload.SnapshotRef, permission, v.MaxBodyBytes)
 	if err != nil {
 		w.t.Fatal(err)
 	}
-	material, err := w.source.ReadMaterial(ctx, scene.MaterialRef, "rule.input", permission)
+	material, err := w.source.ReadMaterial(ctx, scene.MaterialRef, "rule.input", permission, v.MaxBodyBytes)
 	if err != nil {
 		w.t.Fatal(err)
 	}
 	scene.DecisionRef.OwnerID = ownerID
 	scene.DecisionRef.ID = id
 	permission.DecisionOwner.OwnerID = ownerID
-	if _, err = w.source.Seed(ctx, Bundle{DecisionRef: scene.DecisionRef, Permission: permission, Snapshot: snapshot, Materials: []Material{{Ref: scene.MaterialRef, Bytes: material}}, Purposes: []string{"decide", "get", "command.get", "start", "material", "rule.input", "fixture.lock", "publish", "proposal.publish", "artifact.publish"}, RuleVersion: "fixture-rule/1"}); err != nil {
+	if _, err = w.source.Seed(ctx, Bundle{DecisionRef: scene.DecisionRef, Permission: permission, Snapshot: snapshot, Materials: []Material{{Ref: scene.MaterialRef, Bytes: material}}, Purposes: []string{"decide", "get", "command.get", "start", "material", "rule.input", "fixture.lock", "publish", "proposal.publish", "artifact.publish"}, RuleVersion: permission.RuleVersion, ChargeBasis: permission.ChargeBasis, RuleStartCharge: permission.RuleStartCharge}); err != nil {
 		w.t.Fatal(err)
 	}
 	scene.Request.CommandID = v.ID("command-" + string(id))

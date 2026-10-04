@@ -22,7 +22,7 @@ func TestFixtureSourceAndPublicationSurviveReopen(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	original, err := scope.Source().ReadMaterial(ctx, scenario.MaterialRef, "material", permission)
+	original, err := scope.Source().ReadMaterial(ctx, scenario.MaterialRef, "material", permission, v.MaxBodyBytes)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -10,6 +10,7 @@ import (
 	"io"
 	"reflect"
 	"slices"
+	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -23,23 +24,29 @@ type Material struct {
 	Bytes []byte
 }
 type Bundle struct {
-	DecisionRef v.DecisionRef
-	Permission  decision.Permission
-	Snapshot    decision.Snapshot
-	Materials   []Material
-	Purposes    []string
-	RuleVersion string
+	DecisionRef     v.DecisionRef
+	Permission      decision.Permission
+	Snapshot        decision.Snapshot
+	Materials       []Material
+	Purposes        []string
+	RuleVersion     string
+	ChargeBasis     string
+	RuleStartCharge v.Amount
 }
 type Manifest struct {
-	Kind        string            `json:"kind"`
-	Snapshot    decision.Snapshot `json:"snapshot"`
-	RuleVersion string            `json:"rule_version"`
+	Kind            string            `json:"kind"`
+	Snapshot        decision.Snapshot `json:"snapshot"`
+	RuleVersion     string            `json:"rule_version"`
+	ChargeBasis     string            `json:"charge_basis,omitempty"`
+	RuleStartCharge v.Amount          `json:"rule_start_charge,omitzero"`
 }
 type ComponentFixtureLock struct {
-	Kind         string         `json:"kind"`
-	ComponentRef v.ComponentRef `json:"component_ref"`
-	ManifestRef  v.ContentRef   `json:"manifest_ref"`
-	RuleVersion  string         `json:"rule_version"`
+	Kind            string         `json:"kind"`
+	ComponentRef    v.ComponentRef `json:"component_ref"`
+	ManifestRef     v.ContentRef   `json:"manifest_ref"`
+	RuleVersion     string         `json:"rule_version"`
+	ChargeBasis     string         `json:"charge_basis,omitempty"`
+	RuleStartCharge v.Amount       `json:"rule_start_charge,omitzero"`
 }
 type grant struct {
 	Permission  decision.Permission `json:"permission"`
@@ -149,6 +156,9 @@ func (s *Store) Seed(ctx context.Context, b Bundle) (v.ContentRef, error) {
 	if err := validateSnapshot(b.Snapshot); err != nil {
 		return manifestRef, err
 	}
+	if err := billingBasis(b.RuleVersion, b.ChargeBasis, b.RuleStartCharge, b.Permission); err != nil {
+		return manifestRef, err
+	}
 	if string(b.Snapshot.ComponentRef.ArtifactDigest) != digest([]byte(b.RuleVersion)) || string(b.Snapshot.ComponentRef.ConfigDigest) != digest([]byte(b.Snapshot.Rule)) {
 		return manifestRef, errors.New("fixture component artifact or configuration digest mismatch")
 	}
@@ -178,12 +188,12 @@ func (s *Store) Seed(ctx context.Context, b Bundle) (v.ContentRef, error) {
 			return manifestRef, decision.ErrForbidden
 		}
 	}
-	manifest, err := jsonBytes(Manifest{Kind: "durable_fixture_manifest", Snapshot: b.Snapshot, RuleVersion: b.RuleVersion})
+	manifest, err := jsonBytes(Manifest{Kind: "durable_fixture_manifest", Snapshot: b.Snapshot, RuleVersion: b.RuleVersion, ChargeBasis: b.ChargeBasis, RuleStartCharge: b.RuleStartCharge})
 	if err != nil {
 		return manifestRef, err
 	}
 	manifestRef = s.Ref(v.ID("manifest-"+strings.TrimPrefix(digest(manifest), "sha256:")[:40]), "application/json", manifest)
-	lock, err := jsonBytes(ComponentFixtureLock{Kind: "component_fixture_lock", ComponentRef: b.Snapshot.ComponentRef, ManifestRef: manifestRef, RuleVersion: b.RuleVersion})
+	lock, err := jsonBytes(ComponentFixtureLock{Kind: "component_fixture_lock", ComponentRef: b.Snapshot.ComponentRef, ManifestRef: manifestRef, RuleVersion: b.RuleVersion, ChargeBasis: b.ChargeBasis, RuleStartCharge: b.RuleStartCharge})
 	if err != nil {
 		return manifestRef, err
 	}
@@ -369,20 +379,33 @@ func (s *Store) current(ctx context.Context, tx *sql.Tx, p decision.Permission, 
 	return g, nil
 }
 func (s *Store) object(ctx context.Context, tx *sql.Tx, ref any, kind string) ([]byte, error) {
+	return s.limitedObject(ctx, tx, ref, kind, v.MaxBodyBytes)
+}
+
+// limitedObject checks the actual stored length in SQL. An oversized bytea is
+// returned as NULL, so the driver never transfers its body into the process.
+func (s *Store) limitedObject(ctx context.Context, tx *sql.Tx, ref any, kind string, maxbytes int64) ([]byte, error) {
+	if maxbytes < 0 || maxbytes > v.MaxBodyBytes {
+		return nil, decision.ErrInputLimit
+	}
 	identity, err := key(ref)
 	if err != nil {
 		return nil, err
 	}
 	var body []byte
-	if err = tx.QueryRowContext(ctx, `SELECT body FROM `+s.table("fixture_objects")+` WHERE object_key=$1 AND kind=$2`, identity, kind).Scan(&body); err != nil {
+	var length int64
+	if err = tx.QueryRowContext(ctx, `SELECT octet_length(body),CASE WHEN octet_length(body)<=$3 THEN body ELSE NULL END FROM `+s.table("fixture_objects")+` WHERE object_key=$1 AND kind=$2`, identity, kind, maxbytes).Scan(&length, &body); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, decision.ErrUnavailable
 		}
 		return nil, err
 	}
+	if length > maxbytes {
+		return nil, decision.ErrInputLimit
+	}
 	return body, nil
 }
-func (s *Store) ReadSnapshot(ctx context.Context, ref v.SnapshotRef, p decision.Permission) (decision.Snapshot, error) {
+func (s *Store) ReadSnapshot(ctx context.Context, ref v.SnapshotRef, p decision.Permission, maxbytes int64) (decision.Snapshot, error) {
 	var out decision.Snapshot
 	err := s.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
 		g, err := s.current(ctx, tx, p, "material")
@@ -392,7 +415,7 @@ func (s *Store) ReadSnapshot(ctx context.Context, ref v.SnapshotRef, p decision.
 		if g.SnapshotRef != ref {
 			return decision.ErrForbidden
 		}
-		body, err := s.object(ctx, tx, ref, "snapshot")
+		body, err := s.limitedObject(ctx, tx, ref, "snapshot", maxbytes)
 		if err != nil {
 			return err
 		}
@@ -407,7 +430,7 @@ func (s *Store) ReadSnapshot(ctx context.Context, ref v.SnapshotRef, p decision.
 	})
 	return out, err
 }
-func (s *Store) ReadMaterial(ctx context.Context, ref v.ContentRef, purpose string, p decision.Permission) ([]byte, error) {
+func (s *Store) ReadMaterial(ctx context.Context, ref v.ContentRef, purpose string, p decision.Permission, maxbytes int64) ([]byte, error) {
 	var out []byte
 	err := s.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
 		g, err := s.current(ctx, tx, p, purpose)
@@ -417,7 +440,10 @@ func (s *Store) ReadMaterial(ctx context.Context, ref v.ContentRef, purpose stri
 		if !slices.Contains(g.ContentRefs, ref) {
 			return decision.ErrForbidden
 		}
-		out, err = s.object(ctx, tx, ref, "material")
+		if err = contentBudget(ref, maxbytes); err != nil {
+			return err
+		}
+		out, err = s.limitedObject(ctx, tx, ref, "material", maxbytes)
 		if err != nil {
 			return err
 		}
@@ -425,7 +451,7 @@ func (s *Store) ReadMaterial(ctx context.Context, ref v.ContentRef, purpose stri
 	})
 	return out, err
 }
-func (s *Store) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p decision.Permission) (decision.FixtureLock, error) {
+func (s *Store) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p decision.Permission, maxbytes int64) (decision.FixtureLock, error) {
 	var out decision.FixtureLock
 	err := s.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
 		g, err := s.current(ctx, tx, p, "fixture.lock")
@@ -435,7 +461,7 @@ func (s *Store) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p dec
 		if g.LockRef != ref {
 			return decision.ErrForbidden
 		}
-		out.Raw, err = s.object(ctx, tx, ref, "lock")
+		out.Raw, err = s.limitedObject(ctx, tx, ref, "lock", maxbytes)
 		if err != nil {
 			return err
 		}
@@ -446,7 +472,14 @@ func (s *Store) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p dec
 		if lock.ComponentRef != p.ComponentRef || lock.ManifestRef != g.ManifestRef || lock.Kind != "component_fixture_lock" {
 			return decision.ErrUnavailable
 		}
-		manifest, err := s.object(ctx, tx, lock.ManifestRef, "material")
+		if err = billingBasis(lock.RuleVersion, lock.ChargeBasis, lock.RuleStartCharge, p); err != nil {
+			return decision.ErrUnavailable
+		}
+		remaining := maxbytes - int64(len(out.Raw))
+		if err = contentBudget(lock.ManifestRef, remaining); err != nil {
+			return err
+		}
+		manifest, err := s.limitedObject(ctx, tx, lock.ManifestRef, "material", remaining)
 		if err != nil {
 			return err
 		}
@@ -460,11 +493,43 @@ func (s *Store) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p dec
 		if fixed.Kind != "durable_fixture_manifest" || fixed.RuleVersion != lock.RuleVersion || fixed.Snapshot.ComponentRef != lock.ComponentRef || string(lock.ComponentRef.ArtifactDigest) != digest([]byte(lock.RuleVersion)) || string(lock.ComponentRef.ConfigDigest) != digest([]byte(fixed.Snapshot.Rule)) {
 			return decision.ErrUnavailable
 		}
+		if fixed.ChargeBasis != lock.ChargeBasis || fixed.RuleStartCharge != lock.RuleStartCharge {
+			return decision.ErrUnavailable
+		}
 		out.ManifestRef = lock.ManifestRef
 		out.ManifestRaw = slices.Clone(manifest)
 		out.ComponentRef = lock.ComponentRef
 		out.RuleVersion = lock.RuleVersion
+		out.ChargeBasis = lock.ChargeBasis
+		out.RuleStartCharge = lock.RuleStartCharge
 		return validateSnapshot(fixed.Snapshot)
 	})
 	return out, err
+}
+
+func contentBudget(ref v.ContentRef, maxbytes int64) error {
+	if maxbytes < 0 || maxbytes > v.MaxBodyBytes {
+		return decision.ErrInputLimit
+	}
+	if _, err := v.Encode(ref); err != nil {
+		return err
+	}
+	length, err := strconv.ParseInt(string(ref.ByteLength), 10, 64)
+	if err != nil {
+		return err
+	}
+	if length > maxbytes {
+		return decision.ErrInputLimit
+	}
+	return nil
+}
+
+func billingBasis(version, basis string, charge v.Amount, p decision.Permission) error {
+	if version == "fixture-rule/1" && basis == "" && charge == (v.Amount{}) && p.ChargeBasis == "" && p.RuleStartCharge == (v.Amount{}) && p.RuleVersion == "" {
+		return nil
+	}
+	if version != "fixture-rule/2" || basis != "durable_rule_start" || charge != (v.Amount{Unit: "fixture", IntegerValue: "1"}) || p.RuleVersion != version || p.ChargeBasis != basis || p.RuleStartCharge != charge {
+		return errors.New("fixture exact rule start billing basis mismatch")
+	}
+	return nil
 }

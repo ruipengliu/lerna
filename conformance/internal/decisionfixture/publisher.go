@@ -14,6 +14,23 @@ import (
 )
 
 func (s *Store) Publish(ctx context.Context, publicationKey string, body []byte, sources []v.ContentRef, p decision.Permission) (v.ContentRef, error) {
+	return s.publication(ctx, publicationKey, body, sources, p, true)
+}
+
+// PlanPublication returns this publisher's exact eventual reference. It saves
+// neither readable content nor a publication receipt and confers no later right.
+func (s *Store) PlanPublication(ctx context.Context, publicationKey string, body []byte, sources []v.ContentRef, p decision.Permission) (v.ContentRef, error) {
+	return s.publication(ctx, publicationKey, body, sources, p, false)
+}
+func (s *Store) publicationRef(permissionID, publicationKey string, body []byte) v.ContentRef {
+	identity := strings.TrimPrefix(digest([]byte(permissionID+"/"+publicationKey)), "sha256:")
+	media := "text/plain"
+	if _, err := v.ParseJSON(body); err == nil {
+		media = "application/json"
+	}
+	return s.Ref(v.ID("publication-"+identity[:40]), media, body)
+}
+func (s *Store) publication(ctx context.Context, publicationKey string, body []byte, sources []v.ContentRef, p decision.Permission, publish bool) (v.ContentRef, error) {
 	var out v.ContentRef
 	if publicationKey == "" || len(publicationKey) > 1024 || len(body) > v.MaxBodyBytes || len(sources) > 64 {
 		return out, errors.New("fixture publication finite bound exceeded")
@@ -37,6 +54,7 @@ func (s *Store) Publish(ctx context.Context, publicationKey string, body []byte,
 		if err != nil {
 			return err
 		}
+		planned := s.publicationRef(permissionID, publicationKey, body)
 		for _, source := range sources {
 			if !slices.Contains(g.ContentRefs, source) {
 				return decision.ErrForbidden
@@ -59,6 +77,9 @@ func (s *Store) Publish(ctx context.Context, publicationKey string, body []byte,
 			if err = closedJSON(priorRef, &out); err != nil {
 				return decision.ErrUnavailable
 			}
+			if out != planned {
+				return decision.ErrPublicationConflict
+			}
 			stored, err := s.object(ctx, tx, out, "published")
 			if err != nil {
 				return err
@@ -71,14 +92,15 @@ func (s *Store) Publish(ctx context.Context, publicationKey string, body []byte,
 		if !errors.Is(err, sql.ErrNoRows) {
 			return err
 		}
-		// The content identity is derived from the original grant and key, never a
-		// new random retry identity or from the body's digest.
-		identity := strings.TrimPrefix(digest([]byte(permissionID+"/"+publicationKey)), "sha256:")
-		media := "text/plain"
-		if _, err := v.ParseJSON(body); err == nil {
-			media = "application/json"
+		out = planned
+		// Source checking and planning can consume time. Actual publication gets
+		// its own current authorization check at the write boundary.
+		if _, err = s.current(ctx, tx, p, "publish"); err != nil {
+			return err
 		}
-		out = s.Ref(v.ID("publication-"+identity[:40]), media, body)
+		if !publish {
+			return nil
+		}
 		refBytes, err := v.Encode(out)
 		if err != nil {
 			return err

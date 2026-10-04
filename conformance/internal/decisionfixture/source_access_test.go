@@ -50,7 +50,7 @@ func TestFixtureReadsRequireExactCurrentPrincipalPurposeAndReference(t *testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-	normal, err := source.ReadMaterial(ctx, scene.MaterialRef, "rule.input", permission)
+	normal, err := source.ReadMaterial(ctx, scene.MaterialRef, "rule.input", permission, v.MaxBodyBytes)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -64,20 +64,20 @@ func TestFixtureReadsRequireExactCurrentPrincipalPurposeAndReference(t *testing.
 	}
 	forged := permission
 	forged.Subject = wrongSubject
-	if _, err = source.ReadMaterial(ctx, scene.MaterialRef, "rule.input", forged); !errors.Is(err, decision.ErrForbidden) {
+	if _, err = source.ReadMaterial(ctx, scene.MaterialRef, "rule.input", forged, v.MaxBodyBytes); !errors.Is(err, decision.ErrForbidden) {
 		t.Fatalf("forged current principal: %v", err)
 	}
-	if _, err = source.ReadMaterial(ctx, scene.MaterialRef, "ungranted.disclosure", permission); !errors.Is(err, decision.ErrForbidden) {
+	if _, err = source.ReadMaterial(ctx, scene.MaterialRef, "ungranted.disclosure", permission, v.MaxBodyBytes); !errors.Is(err, decision.ErrForbidden) {
 		t.Fatalf("ungranted purpose: %v", err)
 	}
 	wrongRef := scene.MaterialRef
 	wrongRef.Hash = "sha256:" + strings.Repeat("0", 64)
-	if _, err = source.ReadMaterial(ctx, wrongRef, "rule.input", permission); !errors.Is(err, decision.ErrForbidden) {
+	if _, err = source.ReadMaterial(ctx, wrongRef, "rule.input", permission, v.MaxBodyBytes); !errors.Is(err, decision.ErrForbidden) {
 		t.Fatalf("changed exact hash: %v", err)
 	}
 	wrongRef = scene.MaterialRef
 	wrongRef.Version = "2"
-	if _, err = source.ReadMaterial(ctx, wrongRef, "rule.input", permission); !errors.Is(err, decision.ErrForbidden) {
+	if _, err = source.ReadMaterial(ctx, wrongRef, "rule.input", permission, v.MaxBodyBytes); !errors.Is(err, decision.ErrForbidden) {
 		t.Fatalf("changed exact version: %v", err)
 	}
 	wrongOwner := scene.DecisionRef
@@ -102,7 +102,7 @@ func TestFixturePermissionExpiryClosesReadsAndOriginalPublicationRetries(t *test
 	if err != nil {
 		t.Fatal(err)
 	}
-	snapshot, err := source.ReadSnapshot(ctx, scene.Request.Payload.SnapshotRef, originalPermission)
+	snapshot, err := source.ReadSnapshot(ctx, scene.Request.Payload.SnapshotRef, originalPermission, v.MaxBodyBytes)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -116,7 +116,7 @@ func TestFixturePermissionExpiryClosesReadsAndOriginalPublicationRetries(t *test
 	permit.ComponentRef = snapshot.ComponentRef
 	permit.UseRefs = snapshot.UseRefs
 	permit.ValidUntil = until
-	_, err = source.Seed(ctx, fixture.Bundle{DecisionRef: ref, Permission: permit, Snapshot: snapshot, Materials: []fixture.Material{{Ref: scene.MaterialRef, Bytes: []byte("alpha\n")}}, Purposes: []string{"start", "material", "rule.input", "fixture.lock", "publish"}, RuleVersion: "fixture-rule/1"})
+	_, err = source.Seed(ctx, fixture.Bundle{DecisionRef: ref, Permission: permit, Snapshot: snapshot, Materials: []fixture.Material{{Ref: scene.MaterialRef, Bytes: []byte("alpha\n")}}, Purposes: []string{"start", "material", "rule.input", "fixture.lock", "publish"}, RuleVersion: permit.RuleVersion, ChargeBasis: permit.ChargeBasis, RuleStartCharge: permit.RuleStartCharge})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -124,7 +124,7 @@ func TestFixturePermissionExpiryClosesReadsAndOriginalPublicationRetries(t *test
 	if err != nil {
 		t.Fatal(err)
 	}
-	normal, err := source.ReadMaterial(ctx, scene.MaterialRef, "rule.input", permit)
+	normal, err := source.ReadMaterial(ctx, scene.MaterialRef, "rule.input", permit, v.MaxBodyBytes)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -143,7 +143,7 @@ func TestFixturePermissionExpiryClosesReadsAndOriginalPublicationRetries(t *test
 		t.Fatal(ctx.Err())
 	case <-timer.C:
 	}
-	if _, err = source.ReadMaterial(ctx, scene.MaterialRef, "rule.input", permit); !errors.Is(err, decision.ErrForbidden) {
+	if _, err = source.ReadMaterial(ctx, scene.MaterialRef, "rule.input", permit, v.MaxBodyBytes); !errors.Is(err, decision.ErrForbidden) {
 		t.Fatalf("expired current read: %v", err)
 	}
 	if _, err = source.Publish(ctx, "expiry-key", []byte("finite permission output\n"), []v.ContentRef{scene.MaterialRef}, permit); !errors.Is(err, decision.ErrForbidden) {
