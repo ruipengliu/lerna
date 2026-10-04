@@ -26,9 +26,9 @@ type Permission struct {
 	ComponentRef    v.ComponentRef
 	UseRefs         []v.UseRef
 	ValidUntil      time.Time
-	ChargeBasis     string
-	RuleStartCharge v.Amount
-	RuleVersion     string
+	ChargeBasis     string   `json:"ChargeBasis,omitempty"`
+	RuleStartCharge v.Amount `json:"RuleStartCharge,omitzero"`
+	RuleVersion     string   `json:"RuleVersion,omitempty"`
 }
 type Authority interface {
 	Authorize(context.Context, v.SubjectBinding, v.DecisionRef, string, *v.DecisionDecidePayload) (Permission, error)
@@ -60,9 +60,9 @@ type FixtureLock struct {
 	ManifestRef     v.ContentRef
 	ManifestRaw     []byte
 	ComponentRef    v.ComponentRef
-	RuleVersion     string
-	ChargeBasis     string
-	RuleStartCharge v.Amount
+	RuleVersion     string   `json:"RuleVersion,omitempty"`
+	ChargeBasis     string   `json:"ChargeBasis,omitempty"`
+	RuleStartCharge v.Amount `json:"RuleStartCharge,omitzero"`
 }
 type Source interface {
 	ReadSnapshot(context.Context, v.SnapshotRef, Permission, int64) (Snapshot, error)
