@@ -77,6 +77,8 @@ type Target struct {
 	closing        bool
 	closeAttempted bool
 	closeErr       error
+	// Private conformance synchronization at actual transaction boundaries.
+	checkpoint func(context.Context, string, Event) error
 }
 type ObserverConfig struct {
 	Path, Identity string

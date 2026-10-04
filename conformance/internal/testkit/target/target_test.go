@@ -12,6 +12,7 @@ import (
 	"testing"
 	"time"
 
+	process "github.com/ruipengliu/lerna/conformance/internal/testkit/process"
 	"github.com/ruipengliu/lerna/conformance/internal/testkit/target"
 )
 
@@ -50,6 +51,7 @@ func TestWriteReadAndIndependentObserverSurviveReopen(t *testing.T) {
 }
 
 type fixture struct {
+	children  []*process.Child
 	closers   []func() error
 	t         *testing.T
 	ctx       context.Context
@@ -100,6 +102,20 @@ func newFixture(t *testing.T) *fixture {
 	t.Logf("owned SQLite target: %s", directory)
 	t.Cleanup(func() {
 		cancel()
+		childCtx, childCancel := context.WithTimeout(context.Background(), 2*time.Second)
+		defer childCancel()
+		childrenClosed := true
+		for _, child := range f.children {
+			confirmed, err := child.Stop(childCtx)
+			if err != nil {
+				t.Error("target child cleanup:", err)
+			}
+			childrenClosed = childrenClosed && confirmed
+		}
+		if !childrenClosed {
+			t.Errorf("retain %s: child/pipes cleanup unconfirmed", directory)
+			return
+		}
 		closed := true
 		for i := len(f.closers) - 1; i >= 0; i-- {
 			if err := f.closers[i](); err != nil {

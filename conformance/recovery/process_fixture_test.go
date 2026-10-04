@@ -3,9 +3,7 @@
 package recovery_test
 
 import (
-	"bytes"
 	"context"
-	"encoding/binary"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -20,13 +18,13 @@ import (
 
 	"github.com/ruipengliu/lerna/adapters/postgres"
 	"github.com/ruipengliu/lerna/adapters/sqlite"
+	process "github.com/ruipengliu/lerna/conformance/internal/testkit/process"
 	"github.com/ruipengliu/lerna/contract"
 	"github.com/ruipengliu/lerna/host/durablework"
 	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
 	"github.com/ruipengliu/lerna/runtime"
 )
 
-const processFrameLimit = 64 * 1024
 const processDeadline = 12 * time.Second
 
 // This trusted configuration travels on a dedicated parent-owned pipe. The
@@ -50,72 +48,13 @@ type processFrame struct {
 	Observation     *demo.Observation          `json:",omitempty"`
 }
 
-// A physical context owns every blocking pipe operation. Cancellation closes
-// that pipe; its AfterFunc is joined when active, so no reader is abandoned.
-func processIO(ctx context.Context, file *os.File, operation func() error) error {
-	done := make(chan struct{})
-	stop := context.AfterFunc(ctx, func() { _ = file.Close(); close(done) })
-	defer func() {
-		if !stop() {
-			<-done
-		}
-	}()
-	err := operation()
-	if ctx.Err() != nil {
-		return ctx.Err()
-	}
-	return err
-}
+// Business frames remain demo-specific; physical framing/cancellation is shared
+// with the actual Decision and target child consumers.
 func writeProcessFrame(ctx context.Context, file *os.File, value any) error {
-	data, err := json.Marshal(value)
-	if err != nil {
-		return err
-	}
-	if len(data) == 0 || len(data) > processFrameLimit {
-		return errors.New("process frame exceeds limit")
-	}
-	var header [4]byte
-	binary.BigEndian.PutUint32(header[:], uint32(len(data)))
-	return processIO(ctx, file, func() error {
-		for _, part := range [][]byte{header[:], data} {
-			for len(part) > 0 {
-				n, err := file.Write(part)
-				if err != nil {
-					return err
-				}
-				if n == 0 {
-					return io.ErrShortWrite
-				}
-				part = part[n:]
-			}
-		}
-		return nil
-	})
+	return process.WriteFrame(ctx, file, value)
 }
 func readProcessFrame(ctx context.Context, file *os.File, value any) error {
-	return processIO(ctx, file, func() error {
-		var header [4]byte
-		if _, err := io.ReadFull(file, header[:]); err != nil {
-			return err
-		}
-		length := binary.BigEndian.Uint32(header[:])
-		if length == 0 || length > processFrameLimit {
-			return errors.New("process frame exceeds limit")
-		}
-		data := make([]byte, int(length))
-		if _, err := io.ReadFull(file, data); err != nil {
-			return err
-		}
-		decoder := json.NewDecoder(bytes.NewReader(data))
-		decoder.DisallowUnknownFields()
-		if err := decoder.Decode(value); err != nil {
-			return err
-		}
-		if err := decoder.Decode(new(any)); err != io.EOF {
-			return errors.New("process frame has trailing JSON")
-		}
-		return nil
-	})
+	return process.ReadFrame(ctx, file, value)
 }
 
 type processOutput struct {
