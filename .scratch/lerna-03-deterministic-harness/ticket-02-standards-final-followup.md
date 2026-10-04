@@ -1,0 +1,13 @@
+Standards: `949c39237fda562e8bda994a8e1454a27232dc72...8f94f26d0656e21d225eb32d52f1e046a8d530ed`.
+
+Reviewed all 31 commits / 90 paths. Manifests: `/tmp/lerna-03-ticket-02-standards-final-{commits,paths}.txt`. Git-object comparison carries forward 84 unchanged previously reviewed blobs; three modified and three new paths were reviewed completely. Product Go source remains exactly 3d. Standards sources remain unchanged: AGENTS, CONTEXT, issue-tracker, code-review/codebase-design and TDD skills. Requested development/codebase-design documents are absent under docs/agents; actual skill guidance was used. No builds/tests/DB operations were run.
+
+Original Source-I/O hard violation and Duplicated Code judgement remain CLOSED: unchanged `proposal_v3.go:139–149,344–353` preserves native causes and consolidates bounded reads. The 252 positive-remaining timer guard remains unchanged and CLOSED.
+
+Known Wait-cause defect CLOSED in source: `legacy_upgrade_test.go:112–117` receives and reports cleanup `waitErr`; lines 175–182 preserve bounded diagnostics and `errors.Join(waitErr, groupErr)` before a group failure. This satisfies AGENTS.md:105, “错误必须保留可判断的原因”. Actual Wait completion and independent group confirmation still determine retention; a historical error does not itself authorize deletion.
+
+Known 970 qualification defect CLOSED in source: `legacy_upgrade_test.go:998–1027` verifies the original complete driver hash, separates Claim errors from missing Claim and requires `errors.Is(err, runtime.ErrClaim)` while rejecting multiple joined causes and excessive unwrap depth. The original lease/publication/receipt observations remain necessary; ErrClaim alone is not advertised as proving expiry. Six unique restoration-only fragments yield exactly 8572 bytes / SHA256 `aa7097a937c0defb5ee7e356b4e2ee71b7c069d7f96b514a2bdc07c07db05945`. Both frozen archives remain unchanged; FINAL01's own context.Canceled oracle remains distinct. The adopted helper changes match their originating shared patches; Ticket02's existing two-migration oracle remains its own.
+
+New mechanical tests inspect conversion and safe joined-stage causes. They do not establish native Wait/group failure. Documentation explicitly distinguishes earlier 252 results from the adopted helper's pending mechanical and actual upgraded-consumer checks; earlier upgrades cannot retrospectively prove strict ErrClaim qualification. Implementation closure here does not claim execution or ticket exit.
+
+All 12 Fowler smells reconsidered with repository overrides and tool-enforced exclusions. Current: 0 hard violations, 0 smells; worst within Standards: none identified. New actual validation remains pending.

@@ -1,8 +1,8 @@
 # 02 bounded Proposal evidence
 
-Ticket02 remains claimed while its newly adopted shared old-writer helper is
-awaiting related execution and review. The seven implementation checks have
-passed the complete product verification below; this is not whole03 exit.
+Ticket02's seven acceptance checks are complete and resolved. The complete
+product verification and final shared-helper consumer verification are recorded
+below. This is not whole03 exit.
 Root owns integration, push, remote CI and the actual whole-slice architecture
 review. No later ticket's business implementation is an added prerequisite.
 
@@ -12,10 +12,12 @@ The corrected mechanical recovery test and complete check pin is
 `949c39237fda562e8bda994a8e1454a27232dc72`. The separate shared compiler cause
 correction is now `0f6d23a98f099d7b2ba2750389be10a8c5acfcda` (original
 `d90962c`). Strict restored-970 qualification and its mechanical checks are
-`6b98eb0b59606d990bc6c563e053315bd2527c47` (original `4cb3717`); their related
-final execution is pending. Subsequent document changes
+`6b98eb0b59606d990bc6c563e053315bd2527c47` (original `4cb3717`). Final related
+normal/race execution and independent full review use clean
+`8f94f26d0656e21d225eb32d52f1e046a8d530ed`. Subsequent document changes
 do not change the tested product. See [adopted Proposal decisions](proposal-decisions.md),
-[progress and failure history](ticket-02-progress.md) and [ticket](issues/02-bounded-proposals.md).
+[progress and failure history](ticket-02-progress.md),
+[API handoff](ticket-02-api-handoff.md) and [ticket](issues/02-bounded-proposals.md).
 
 ## Seven acceptance checks
 
@@ -60,6 +62,7 @@ recorded and fsynced. Credentials stayed in private environment variables.
 | `25287d5`, complete `./conformance/component ./conformance/internal/decisionfixture` | normal38.554/13.715 and race74.493/19.398 s, exit0 |
 | `25287d5`, complete `./conformance/recovery/...` | normal38.009 / race80.735 s, exit0; original PG/SQLite and already integrated 06 public SIGKILL stories |
 | `25287d5`, modules / seven actual SHA256SUMS | exit0; 27 durable-work + 71 original970 + 71 FINAL01 + 3 target entries |
+| `8f94f26`, two independent old upgrades and bounded conversion/joined-stage checks | normal13.311 / race15.403 s, both actual exit0; strict ErrClaim qualification and unchanged FINAL01 context.Canceled oracle |
 
 Raw capture is in `/tmp/lerna-03-ticket-02-final-*.log`; the progress document
 retains earlier vertical red/green and failed attempts. The first codec attempt
@@ -96,18 +99,33 @@ SHA256 `aa7097a937c0defb5ee7e356b4e2ee71b7c069d7f96b514a2bdc07c07db05945`.
 It distinguishes missing Claim, actual Claim error, wrapped ErrClaim and
 additional joined causes with a finite 32-layer bound. Mechanical source
 conversion and safe joined-stage checks do not reproduce native Wait/group
-failure. Related actual upgraded-consumer verification remains pending.
+failure. Both actual upgrade consumers and limited mechanical checks passed
+normal13.311 / race15.403 s at 8f94f26. This ticket independently ran its own
+consumer; the separate 03 result is not a substitute. The stricter old-970
+RunClaim check now runs before the original controlled lease/publication facts
+and current original-receipt/retirement oracle. No native Wait/group/EOF fault
+was injected or claimed.
 
 Checkpoint exact audit at `25287d5` found all **1580 unique PG schemas**, **64
 target directories**, **244 recovery SQLite directories**, **11 archive
 directories** and **19 acknowledged process groups** absent. Duplicate transfer
 acknowledgments are not counted as distinct scopes. Every child/holder/scanner
 and test/build session exited before the slot was released. The acknowledged
-owned overlay root retains only Node's compile cache for the pending related
-check. Other tickets' unknown historical scopes were neither inferred nor
-removed. These facts support this declared scope, not all-environment cleanup.
+owned overlay root retained only Node's compile cache at that checkpoint.
 
-## Independent review and remaining closure
+After the final related commands, the independent exact audit found **1628
+unique PG schemas**, **64 target directories**, **244 recovery SQLite
+directories**, **15 archive directories** and **27 acknowledged process groups**
+absent. All actual sessions, child Wait/FD, native writer holders and scanners
+were closed before cleanup. Seven regular Node cache files were inventoried
+with exact path/inode/hash after all tool commands exited, then the inventory
+was fsynced. These late tool-cache acknowledgments are distinguished from
+fixture-time Mkdir acknowledgments. Exact files were unlinked, empty owned
+directories removed and the workspace parent fsynced; the owned overlay root
+is now absent. Other tickets' unknown historical scopes were neither inferred
+nor removed. These facts support this declared scope, not all-environment cleanup.
+
+## Independent review and root responsibilities
 
 Separate fixed reviews covered baseline949 to head3d, all 25 commits / 87 paths.
 Standards initially found one hard error-classification defect and one duplicated
@@ -116,10 +134,19 @@ The full followup reports 0 hard / 0 smells. Spec separately reports a0/b0/c0.
 Both axes rechecked the 252 timer/test-history increment with no new finding.
 They ran no tests and do not substitute for the execution rows above.
 
-The later shared compiler Wait-cause correction and strict old-driver
-qualification still need their related actual consumer verification and final
-independent followup. Ticket02 remains claimed until those necessary changes
-are covered. Whole03 support advertisement, cancellation/resource work, actual
-merged-tree architecture and remote CI remain root's separate responsibilities;
-this evidence does not prove production capacity, power-loss durability,
-provider idempotency, Executor Effect or a second business implementation.
+Final independent [Standards followup](ticket-02-standards-final-followup.md)
+and [Spec followup](ticket-02-spec-final-followup.md) cover baseline949 to head8f,
+all **31 commits / 90 paths**, carrying forward 84 unchanged Git objects and
+reviewing six modified/new objects. Standards0hard/0smells; Speca0/b0/c0.
+Source cause, duplicate read, timer, shared Wait-cause and strict old-driver
+findings are closed. Both final reports explicitly marked the then-pending
+related execution; the later actual normal/race row closes that execution gate.
+The [initial Standards report](ticket-02-standards-review.md) and
+[initial Spec report](ticket-02-spec-review.md) retain the original findings.
+No further product source changed after these fixed reviews and tests.
+
+Root FULL-read and adopted both separate axes. Root owns final merge/push,
+remote CI and actual combined-tree architecture; no such future result is
+claimed here. Whole03 support advertisement and cancellation/resource work
+remain separate. This evidence does not prove production capacity, power-loss
+durability, provider idempotency, Executor Effect or a second business implementation.

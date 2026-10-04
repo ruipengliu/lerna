@@ -213,3 +213,26 @@ The new mechanical checks cover exact bounded source conversion and safe
 joined-stage error inspection; they do not reproduce native Wait/group failure.
 This ticket has not yet run them or the two related actual upgrade consumers.
 No 03 control-driver or moving business implementation was picked.
+
+
+Final related checks at `8f94f26` passed normal13.311 s and race15.403 s,
+each actual session exiting 0 before the next operation. They run this ticket's
+own FINAL01 six-state consumer and strict old-970 consumer plus the exact
+bounded conversion/safe joined-stage checks. Earlier permissive-oracle results
+are not reclassified. Mechanical stage inspection is not native Wait/group
+failure evidence, and retention guards remain static qualification.
+Final audit found 1628 unique PG schemas, 64 target directories, 244 recovery
+SQLite directories, 15 archive directories and 27 acknowledged groups absent.
+After all commands/children/native holders/FD/scanners had exited, seven Node
+tool-cache files were inventoried with exact inode/hash and fsynced, then only
+those files and empty owned directories were removed. The owned root is absent.
+Late cache inventory is not represented as fixture-time immediate registration.
+The test slot was formally released; no other unknown scope or WT was removed.
+
+Both independent final axes were root FULL-read/adopted at baseline949/head8f,
+31 commits/90paths, Standards0hard/0smells and Speca0/b0/c0. The reports are now
+committed verbatim; tested product/source remains unchanged. Seven own AC are
+resolved with [exit evidence](ticket-02-exit-evidence.md) and
+[API handoff](ticket-02-api-handoff.md); root's whole03/CI/actual merged-tree
+architecture responsibilities remain open. This final documentation does not
+claim a new remote execution or modify any other ticket's status.
