@@ -20,13 +20,14 @@ func raiseProofJob(ctx context.Context, tx runtime.Tx, id string, at time.Time) 
 }
 
 type sealedProof struct {
-	Ref        api.ContentRef         `json:"ref"`
-	Compact    string                 `json:"compact"`
-	Control    *api.ControlSnapshot   `json:"control,omitempty"`
-	Closure    *task.ClosureView      `json:"closure,omitempty"`
-	Allocation *api.AllocationClosure `json:"allocation,omitempty"`
-	Published  bool                   `json:"published"`
-	Revision   uint64                 `json:"revision"`
+	Ref                api.ContentRef           `json:"ref"`
+	Compact            string                   `json:"compact"`
+	Control            *api.ControlSnapshot     `json:"control,omitempty"`
+	Closure            *task.ClosureView        `json:"closure,omitempty"`
+	Allocation         *api.AllocationClosure   `json:"allocation,omitempty"`
+	Published          bool                     `json:"published"`
+	Revision           uint64                   `json:"revision"`
+	PublicationFailure *proofPublicationFailure `json:"publication_failure,omitempty"`
 }
 type controlProof struct{ a *App }
 
@@ -68,6 +69,9 @@ func (p closureProof) SealAllocationClosureTx(ctx context.Context, tx runtime.Tx
 		if old.Allocation == nil || !api.Equal(*old.Allocation, c) {
 			return api.ContentRef{}, api.E("idempotency_conflict", "allocation_closure_changed")
 		}
+		if old.PublicationFailure != nil {
+			return api.ContentRef{}, api.E("invalid_state", "proof_publication_failed")
+		}
 		return old.Ref, nil
 	} else if !api.IsCode(err, "not_found") {
 		return api.ContentRef{}, err
@@ -97,6 +101,9 @@ func (p closureProof) SealClosureTx(ctx context.Context, tx runtime.Tx, c task.C
 	id := stableID("content", "closure-proof/"+digest)
 	var old sealedProof
 	if _, e = tx.Get(ctx, "platform.proofs", id, &old); e == nil {
+		if old.PublicationFailure != nil {
+			return api.ContentRef{}, api.E("invalid_state", "proof_publication_failed")
+		}
 		return old.Ref, nil
 	} else if !api.IsCode(e, "not_found") {
 		return api.ContentRef{}, e
@@ -130,6 +137,9 @@ func (a *App) verifyControlTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 	if saved.Control == nil || !api.Equal(saved.Ref, c.ProofRef) || api.Hash([]byte(saved.Compact)) != c.ProofRef.Hash {
 		return api.E("forbidden", "control_proof_binding_mismatch")
 	}
+	if saved.PublicationFailure != nil {
+		return api.E("forbidden", "control_proof_publication_failed")
+	}
 	unsigned := c
 	unsigned.ProofRef = api.ContentRef{}
 	if !api.Equal(*saved.Control, unsigned) {
@@ -147,10 +157,13 @@ func (a *App) publishProof(ctx context.Context, store runtime.Store, s runtime.S
 	if _, e := store.Read(ctx, s, "platform.proofs", w.Job.SourceRef.ObjectID, 0, &p); e != nil {
 		return e
 	}
+	if p.PublicationFailure != nil {
+		return finishFailedProofReplay(ctx, store, s, w, p)
+	}
 	if !p.Published {
 		ref, e := a.Publish(ctx, s, a.ServiceAuth, p.Ref.ContentID, p.Ref.MediaType, []byte(p.Compact), []api.ContentRef{}, []api.ContentRef{})
 		if e != nil {
-			return e
+			return a.finishRejectedProof(ctx, store, s, w, p, e)
 		}
 		if !api.Equal(ref, p.Ref) {
 			return api.E("idempotency_conflict", "proof_publication_changed")
