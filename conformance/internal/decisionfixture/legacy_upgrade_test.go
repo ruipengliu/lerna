@@ -71,13 +71,28 @@ type upgradeReady struct {
 }
 
 // The old producer is frozen production code, not a simulation of old tables.
-func TestFrozenLegacyWriterUpgrade(t *testing.T) {
+type frozenWriterSession struct {
+	Frame         []byte
+	Registry      string
+	CurrentClosed bool
+}
+
+// startFrozenWriter owns only finite build, pipes, process group and exact
+// acknowledged cleanup. Each consumer decodes its own business protocol and
+// must register new writer closure before reporting any open/migration error.
+func startFrozenWriter(t *testing.T, dir, producer string) *frozenWriterSession {
 	t.Helper()
 	if os.Getenv("LERNA_TEST_POSTGRES_DSN") == "" || os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY") == "" {
 		t.Fatal("upgrade requires configured PostgreSQL and exact owned-scope registry")
 	}
-	dir := restoreFrozenWriter(t)
+	switch producer {
+	case "TestFrozenLegacyWriter", "TestFrozenFinal01ControlWriter", "TestFrozenFinal01ProposalWriter":
+	default:
+		t.Fatal("unsupported finite frozen producer")
+	}
+	session := &frozenWriterSession{CurrentClosed: true}
 	registry := filepath.Join(dir, "created-scopes.registry")
+	session.Registry = registry
 	buildCtx, buildCancel := context.WithTimeout(context.Background(), 40*time.Second)
 	build := exec.CommandContext(buildCtx, "go", "test", "-c", "-o", filepath.Join(dir, "legacy.test"), "./conformance/internal/decisionfixture")
 	build.Dir = dir
@@ -92,7 +107,7 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	}
 	buildCancel()
 	childCtx, childCancel := context.WithTimeout(context.Background(), 65*time.Second)
-	child := exec.CommandContext(childCtx, filepath.Join(dir, "legacy.test"), "-test.run=^TestFrozenLegacyWriter$", "-test.timeout=60s")
+	child := exec.CommandContext(childCtx, filepath.Join(dir, "legacy.test"), "-test.run=^"+producer+"$", "-test.timeout=60s")
 	child.Dir = dir
 	setUpgradeProcessBounds(child)
 	child.Env = append(os.Environ(), "LERNA_TEST_OWNED_SCOPE_REGISTRY="+registry)
@@ -146,10 +161,9 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	}()
 	waited := make(chan error, 1)
 	go func() { waited <- child.Wait() }()
-	currentClosed := true
 	// Registered before opening new writers: subsequent cleanup closes them first.
 	t.Cleanup(func() {
-		if !currentClosed {
+		if !session.CurrentClosed {
 			childCancel()
 			select {
 			case waitErr := <-waited:
@@ -219,6 +233,14 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	if len(frame) == 0 || len(frame) > 128*1024 {
 		t.Fatal("historical bounded ready frame missing")
 	}
+	session.Frame = frame
+	return session
+}
+
+func TestFrozenLegacyWriterUpgrade(t *testing.T) {
+	t.Helper()
+	session := startFrozenWriter(t, restoreFrozenWriter(t), "TestFrozenLegacyWriter")
+	frame, registry := session.Frame, session.Registry
 	var ready upgradeReady
 	decoder := json.NewDecoder(bytes.NewReader(frame))
 	decoder.DisallowUnknownFields()
@@ -256,7 +278,7 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 			t.Fatal("untrusted historical case identity/drain")
 		}
 		seen[old.Name] = true
-		verifyUpgradeCase(t, ctx, old, &currentClosed)
+		verifyUpgradeCase(t, ctx, old, &session.CurrentClosed)
 	}
 	fresh := NewWorld(t, ctx)
 	scene := fresh.Scenario()
