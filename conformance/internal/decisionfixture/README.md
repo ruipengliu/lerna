@@ -12,6 +12,9 @@ accurate material references and bytes, a durable manifest, a
 original stored JSON bytes in `Raw`. The lock names its exact manifest ContentRef;
 the manifest can be read with `ReadMaterial` and purpose `fixture.lock`.
 Every content read checks the exact reference, SHA-256 and decimal byte length.
+The fixture artifact digest hashes the exact rule-version bytes; the fixture
+configuration digest hashes the exact Snapshot rule bytes. Seed and lock readback
+both verify these bindings against the stored manifest.
 
 Every entry checks the durable full principal binding, exact owner, permitted
 purpose and database time. `decide`, `get` and `start` require the original

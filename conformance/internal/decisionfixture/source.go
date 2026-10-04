@@ -148,6 +148,9 @@ func (s *Store) Seed(ctx context.Context, b Bundle) (v.ContentRef, error) {
 	if err := validateSnapshot(b.Snapshot); err != nil {
 		return manifestRef, err
 	}
+	if string(b.Snapshot.ComponentRef.ArtifactDigest) != digest([]byte(b.RuleVersion)) || string(b.Snapshot.ComponentRef.ConfigDigest) != digest([]byte(b.Snapshot.Rule)) {
+		return manifestRef, errors.New("fixture component artifact or configuration digest mismatch")
+	}
 	if _, err := v.Encode(b.DecisionRef); err != nil {
 		return manifestRef, err
 	}
@@ -435,7 +438,17 @@ func (s *Store) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p dec
 		if err != nil {
 			return err
 		}
-		return checkContent(lock.ManifestRef, manifest)
+		if err = checkContent(lock.ManifestRef, manifest); err != nil {
+			return err
+		}
+		var fixed Manifest
+		if err = closedJSON(manifest, &fixed); err != nil {
+			return decision.ErrUnavailable
+		}
+		if fixed.Kind != "durable_fixture_manifest" || fixed.RuleVersion != lock.RuleVersion || fixed.Snapshot.ComponentRef != lock.ComponentRef || string(lock.ComponentRef.ArtifactDigest) != digest([]byte(lock.RuleVersion)) || string(lock.ComponentRef.ConfigDigest) != digest([]byte(fixed.Snapshot.Rule)) {
+			return decision.ErrUnavailable
+		}
+		return validateSnapshot(fixed.Snapshot)
 	})
 	return out, err
 }
