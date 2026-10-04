@@ -413,3 +413,26 @@ metadata gone、实际World.Reopen。新Rev3 policy责任仍声称ObjectHolder=t
 ObjectHolder=true且BodyCleanup=erased，Command published/fullref历史不改，
 save恢复后metadata仍gone均实际执行。lateFinish guard未改/未launch，不
 把此第一bool修复当迟到callback已验证，原CloseUNKNOWN根继续保留。
+
+## 成功nativePut的迟到Finish不得复活当前holder（独立vertical）
+
+`TestContentLateSuccessfulPutCannotRestoreErasedPrimaryHolderFact`真实Put返回
+成功、独立alpha存在后，managed gate停在PG Finish前。SealOrphan/实际
+staging+primary/ALLACK以及独立absence均完成，再释放gate并收到实际done
+与finished（原join3s），actual World.Reopen。新政策公开责任ObjectHolder
+仍true造成line196业务red；不是native错误注入/取消caller假join。
+
+仅失败Finish赋值改为`ioErr == nil && !record.BodyGone`，保留现seal/current
+claim/ref门。物理隔离仍靠flock/tombstone，bool不替代物理确认。历史已
+failed符合孤儿选择胜出，原Encode receipt保持，原seal/期限/实际ALLACK不变。
+
+| 日志 | 实际结果 |
+| --- | --- |
+| `holder-fact-late-finish-first-red.log` | actual0.283s/case0.27s，PID/PGID2852499/start11892827/nativeexit1/groupAbsent=true。 |
+| `holder-fact-late-finish-first-green.log` | exact actual0.282s，PID/PGID2853328/start11895930/nativeexit0/groupAbsent=true。 |
+| `holder-fact-late-finish-race-controls.log` | lateFinish/authority/orphan-wins/published-wins四已存在exact actual2.990s，PID/PGID2853907/start11897902/nativeexit0/groupAbsent=true。 |
+
+原caller20/publish5/join3/test30/wrapper120保持，均无timeout，session39931/
+82375/14233真实完成，明确release LOCAL/no pending。新责任false、原receipt
+字节固定/failed progress/fullref、旧seal及deadline、独立原文件不重建均
+实际执行。此资格与前published authority history独立，不覆盖自然phase。

@@ -956,7 +956,7 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 			record.Publication = "failed"
 			record.Failure = failure
 			record.CleanupPending = true
-			record.ObjectHolder = ioErr == nil
+			record.ObjectHolder = ioErr == nil && !record.BodyGone
 		} else {
 			record.Publication = "published"
 			record.ObjectHolder = true

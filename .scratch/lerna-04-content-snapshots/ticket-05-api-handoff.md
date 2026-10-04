@@ -94,8 +94,11 @@ ENOTEMPTY，实际原copy inode/字节保留，原责任不ACK；恢复同own准
 权威staging+primary真实ACK同Tx置BodyGone并清当前ObjectHolder；原政策
 责任历史union/原attempt/pubhistory不清，secondary pending仍不global ACK。
 独立normal/race验证真实擦除后新policy责任ObjectHolder=false，旧责任true/
-erased保持及metadata gone。已gone旧flag修复位置有条件保护，lateFinish
-还可能重新置true的独立guard及资格待下一tracer，不冒已完成声明。
+erased保持及metadata gone。迟到成功nativePut后的失败Finish另有独立真实
+gate/allACK/reopen tracer：`ioErr==nil && !BodyGone`不再重建当前holdertrue，
+新责任false、原receipt/failed progress/旧seal期限与独立absence保持。
+原caller20/publish5/join3/test30/wrapper120 normal/race通过；自然phase的
+原erased/历史union维持待独立tracer，不用本bool修正声称其已正确。
 
 实际Linux跨进程两序已分别qualification：temp真实Sync返回后SIGSTOP，
 另一进程Erase有限等待flock；CONT之后actualPut/Close，再擦除。反序实际
