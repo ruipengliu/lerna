@@ -82,6 +82,17 @@ run_group() {
 }
 
 run_group closure "${closure[@]}"
-run_group content "${content[@]}"
+# Alternate the exact discovered Content list across two finite groups. This
+# includes future cases once; no empty union may silently execute all tests.
+declare -a content_a=() content_b=()
+for ((index = 0; index < ${#content[@]}; index++)); do
+  if ((index % 2 == 0)); then
+    content_a+=("${content[index]}")
+  else
+    content_b+=("${content[index]}")
+  fi
+done
+run_group content_a "${content_a[@]}"
+run_group content_b "${content_b[@]}"
 run_group durable "${durable[@]}"
 run_group other "${other[@]}"

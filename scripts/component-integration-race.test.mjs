@@ -175,3 +175,15 @@ test('normal entry uses the same complete positive partition without race', asyn
   }
   assert.deepEqual(selected.sort(), names.sort());
 });
+
+test('Content partitions remain finite and include every discovered case once', async () => {
+  const names = ['TestContentAlpha', 'TestContentBeta', 'TestContentGamma'];
+  const result = await run(names.join('\n'));
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.selections.length, 2);
+  const selected = result.selections.flatMap((args) => {
+    const selector = args[args.indexOf('-run') + 1];
+    return names.filter((name) => new RegExp(selector).test(name));
+  });
+  assert.deepEqual(selected.sort(), names.sort());
+});
