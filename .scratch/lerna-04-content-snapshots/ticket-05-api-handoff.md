@@ -150,3 +150,12 @@ target-only/direct-source-only许可拒绝，传递全部祖先当前许可才�
 root许可真实700ms到期后拒绝；两ancestor原正文保留，查询无新清理work。
 完整delegation/purpose错误与错声明permit拒绝，已准确授权后wrongquery
 遵既有integrity顺序，不把该顺序改成forbidden；真实锁等待/CAS等仍另查。
+
+原policy/holder有限页已另有PageSize2真实qualification：root+3后代与
+另一完整delegated保存主体后代共5责任，原partial cursor实际重开继续，
+全部原责任页消费；实际独立secondary先Close/nilport，3holders两页2+1
+typed完整责任与primarygone/globalpending分开，两个World重开同原预算
+最终allACK。另一主体撤回后/封闭前当前合法；来源BodySeal后其新read
+正确forbidden，但其原独立body不被别保存主体误删/not_required保持，
+独立V2仍normal。原watermark/cleanup deadlines/copyID/binding/effectDeadline
+不刷新；此资格不替all publication attempts页或legacy升级。

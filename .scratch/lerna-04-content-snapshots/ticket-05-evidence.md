@@ -572,3 +572,39 @@ actual结束并明确release LOCAL/no pending。green真实执行首red未到部
 缺失/全部holder ACK、V2beta正常，以及严格Encode原回执逐字相同。当前
 target自身cap因果与pure malformed解析已执行；祖先/AdmissionTarget、
 缺政策组合、原执行窗已过、真实锁等待/CAS与整页仍待各自必要资格。
+
+## 原政策与holder的完整有限页（独立qualification）
+
+`TestContentOriginalPolicyAndHolderPagesResumeWithoutErasingOtherSavingBasis`
+原PageSize2，真实root及三后代A全部published/read；完整delegated保存主体B
+在同root有独立current Save/read/sync=true且其独立派生body normal；同
+ContentID独立V2beta normal。A一后代已真实复制到不同inode/root，copyID/
+binding/effectDeadline原值固定并独立alpha回读，然后实际secondary.Close，
+活动port为nil。原A root Save撤回后按公开原changeKey观察有限Manager.Step
+实际partial Cursor，首2条加后页实际责任>2，原watermark/deadline保持，
+actualWorld.Reopen完成剩余页。全部5原责任（root+3后代A+后代B）逐页
+核准，无重复/漏页/续Deadline；B原责任not_required。
+
+消费所有原责任页，四个A原ref各同原changeKey/deadline seal。A仅boolean
+撤回而未BodySeal之前，B完整basis仍normal；source BodySeal后所有新
+来源正文动作门正确使B派生Get forbidden，但B独立已保存alpha字节不被
+A清理，B责任not_required保持。此区别不能误写成postSeal B公开仍可读；
+V2无该source且始终normal。
+
+真实Lifecycle处理到nilport离线失败，copied后代的首holder页2条必须按
+typedKind/fullIdentity为pg-staging+primary erased；末页为同原copy/ref/key/
+seal/binding/CopyID/effectDeadline/原cleanupDeadline的secondary residual/
+负责方secondary，global不complete。独立primary缺失但secondaryalpha仍
+存在。两个World实际重开、原确认Defer100ms后120ms观察恢复，剩余全部
+holder清理/allACK以及全部原A政策责任erased、原Deadline保持；独立每个
+原准确primarykey及原copykey缺失，V2beta和B独立alpha保留均执行。
+
+| 日志（位于 `/tmp/lerna-04-ticket05-execution/`） | 实际结果 |
+| --- | --- |
+| `cleanup-pages-first-run.log` | exact actual0.962s，PID/PGID2942494/start12280800/nativeexit0/groupAbsent=true；已有协议直接真实qualification，没有新业务red或产品变化。 |
+| `cleanup-pages-race-controls.log` | 该case及原secondaryoffline两个授权exact actual3.607s，PID/PGID2944656/start12290008/nativeexit0/groupAbsent=true；两个frozen迁移SHA准确。 |
+
+原caller20/test30/wrapper120、PageSize2及各原时间/水位/CopyID/binding保持，
+无timeout。session8008/82350 actual完成并明确release LOCAL/no pending。
+此为真实policy责任页/holder页，不把它当all publication attempts页、
+跨锁时钟/CAS竞争或legacy升级已执行证据；后续必要独立义务继续。
