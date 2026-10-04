@@ -503,3 +503,32 @@ deadline重试独立确认，才完成ALLACK和原policy责任erased、授权met
 原Claim释放与due机制由实际Step提交后恢复及source核对共同资格，不声称
 测试读取了私有Claim epoch/Lease字段。此case不覆盖PG commit_unknown、
 原执行scope过期后重建预算、未确认Defer或其他holder晚callback。
+
+## 派生gone的完整当前metadata范围（独立vertical）
+
+`TestContentDerivedGoneRequiresCurrentExactMetadataForReaderAndEveryAncestor`
+真实root→middle→derived全部发布/read；仅derived voluntary seal并真实
+staging+primary全ACK，独立缺失、actualWorld.Reopen后两个ancestor原正文
+仍normal。distinct完整delegated reader仅target许可时forbidden，追加直接
+middle许可仍forbidden，追加root许可才返回可编码/解码的最小gone且
+EvidenceAvailable=false。无正文read许可也不会借metadata访问正文。
+
+同reader不同delegation/purpose拒绝；已有实际准确ref许可后wrongHash
+query精确integrity，保持既有F1p资格先于实际声明核准的顺序。另distinct
+reader真实登记错误hash的MetadataPolicy再查真实derived ref，精确forbidden；
+无许可missing ref也forbidden，不披露not_found。实际root许可Rev2期限为
+当前+700ms，有限等待原期限+20ms后完整derived视图forbidden，target与
+middle许可仍wide且未改。查询后原seal/deadline/ALLACK保持，真实Lifecycle
+Step没有新work，两个ancestor仍正常。未写SQL时间或Job due，未新增产品
+变化、没有为已实现协议捏造新red。
+
+| 日志（位于 `/tmp/lerna-04-ticket05-execution/`） | 实际结果 |
+| --- | --- |
+| `metadata-derived-first-run.log` | exact actual1.229s，PID/PGID2899973/start12098619/nativeexit0/groupAbsent=true。 |
+| `metadata-derived-race-controls.log` | 该case/currentpolicy/实际staging+primarygone三个已有exact actual4.035s，PID/PGID2900359/start12100014/nativeexit0/groupAbsent=true，两个frozen迁移SHA正确。 |
+
+原caller20/test30/wrapper120及700ms许可到期+20ms保持，无timeout；session
+56194/19363 actual完成并明确release LOCAL/no pending。上述证明现行full
+subject/delegation/purpose/ref和传递两级祖先许可，不宣称真实PG锁等待后
+expiry/CAS竞争、已sealed祖先的独立metadata子场景或retentioncap consumer
+路径已执行；后续必要义务仍沿真实单tracer。

@@ -135,4 +135,8 @@ deadline与最终恢复，不声明直接观测私有Claim epoch。
 MetadataPolicy接受合法纳秒ValidUntil；CheckMetadataPolicy仅以截到微秒的
 值核PG列编码一致性，当前许可到期仍严格核原JSON纳秒deadline。原纳秒
 输入已真实normal/race验证；中间fixture truncate的日志保留且不称原输入
-资格。派生正文metadata全祖先/完整scope/真实到期仍待下个独立tracer。
+资格。派生正文metadata完整scope已有三层真实独立normal/race：
+target-only/direct-source-only许可拒绝，传递全部祖先当前许可才最小gone，
+root许可真实700ms到期后拒绝；两ancestor原正文保留，查询无新清理work。
+完整delegation/purpose错误与错声明permit拒绝，已准确授权后wrongquery
+遵既有integrity顺序，不把该顺序改成forbidden；真实锁等待/CAS等仍另查。
