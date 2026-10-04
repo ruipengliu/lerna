@@ -55,6 +55,10 @@ func TestConfiguredRemoteExecutorPublishesVerifiedTaskResultAndReopensOriginal(t
 }
 
 func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport bool, observers ...remoteReportObserver) {
+	runRemoteSavedRuleFixture(t, driver, complete, saveReport, nil, observers...)
+}
+
+func runRemoteSavedRuleFixture(t *testing.T, driver string, complete, saveReport bool, probe *remoteSavedRuleProbe, observers ...remoteReportObserver) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), reportFixtureTimeout)
 	defer cancel()
@@ -214,6 +218,11 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport boo
 		grant.GrantID, grant.Actions = api.NewID("grant"), []string{"file.write"}
 		cfg.ActionBindings = append(cfg.ActionBindings, ActionBindingConfig{CapabilityRef: target.FileWriteCapability().Ref, BindingRef: writeBinding, InstallLockRef: deviceBinding.InstallLockRef, Grant: grant})
 	}
+	if probe != nil {
+		if err = probe.configure(t, ctx, &cfg, dc, &binding, deviceRoot); err != nil {
+			t.Fatal("real SavedRule counterexample configuration", err)
+		}
+	}
 	var posts atomic.Int32
 	var active atomic.Pointer[App]
 	model := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -235,7 +244,16 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport boo
 			return
 		}
 		reply := knowledgeContractReply()
-		if saveReport {
+		if saveReport && probe != nil {
+			reply, err := probe.modelReply(ctx, t, active.Load(), device, input.Snapshot, input.Materials, goalSpec, binding, writeBinding, post)
+			if err != nil {
+				probe.finish(err)
+				reply = remoteReportKnownFailure("The real SavedRule fixture could not establish its exact counterexample.")
+			}
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write(reply)
+			return
+		} else if saveReport {
 			reply = remoteReportModelReply(t, active.Load(), input.Snapshot, input.Materials, goalSpec, binding, writeBinding, post)
 		} else if input.Snapshot.Purpose == "interpret_requirements" {
 			reply = knowledgeRefinementReply(active.Load().ArtifactRule)
@@ -320,7 +338,17 @@ func runRemoteExecutorTask(t *testing.T, driver string, complete, saveReport boo
 	}
 	nextProgress := time.Now().Add(10 * time.Second)
 	for {
-		if err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 300); err != nil {
+		err = runtime.Drain(ctx, a.Store, a.Scope, a.Registry, 300)
+		if probe != nil && probe.finished.Load() {
+			if checkErr := probe.result(); checkErr != nil {
+				t.Fatal("public SavedRule counterexample", checkErr)
+			}
+			if err != nil {
+				t.Logf("post-probe original Job cause remains visible: %v", err)
+			}
+			return
+		}
+		if err != nil {
 			var refusal *api.Error
 			// 原账单查询在短事务重新核源 head；实际 worker 会让同 Job
 			// 沿原 Claim 到期恢复，不把这次已回滚冲突当成新行动或零费用。
