@@ -160,3 +160,11 @@ post-ready EOF/deadline only after verifying every original archive hash. Frozen
 production and archived added-driver bytes remain unchanged. Failure-path
 retention is static adoption; final actual normal upgrades and race checks
 against the updated restoration helper remain pending.
+
+At `3d60b6a`, all Proposal cases passed normal 13.646 s. The corresponding
+race run failed after 28.553 s: real owner reopen had already passed the durable
+NextWake in two recovery cases, so their mechanical timer received a negative
+duration and rejected it with `ErrWorkBounds`. No failed component recovery was
+observed in those cases. The test now waits only while that actual NextWake is
+still in the future; the original deadline, allowance and business oracle are
+unchanged. A new normal/race run is required before claiming this correction.

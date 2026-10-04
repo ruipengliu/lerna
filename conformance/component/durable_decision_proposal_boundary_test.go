@@ -364,8 +364,10 @@ func TestDurableProposalPreparedV2RecoversActualReplyLoss(t *testing.T) {
 			}
 			world.Reopen(ctx)
 			service = proposalService(t, world, scene)
-			if err := (runtime.WallTimer{}).Wait(ctx, time.Until(step.NextWake)+time.Millisecond); err != nil {
-				t.Fatal(err)
+			if remaining := time.Until(step.NextWake); remaining > 0 {
+				if err := (runtime.WallTimer{}).Wait(ctx, remaining+time.Millisecond); err != nil {
+					t.Fatal(err)
+				}
 			}
 			if step, err := service.Step(ctx); err != nil || step.Processed != 1 {
 				t.Fatal("replacement did not resume actual prepared output", err)
