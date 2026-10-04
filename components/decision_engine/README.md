@@ -64,6 +64,10 @@ constructs the same four actions and deliberately emits `depends_on` in raw
 Proposal bytes. Those bytes pass to the same public decoder and produce the
 original Decision's `proposal_invalid`; the accepted receipt and actual
 generation measurements remain durable, with no automatic repair job.
+`invalid_actions_binding_pair` instead creates a structurally valid Proposal
+using an existing binding with another binding's arguments. Exact Snapshot
+tuple inclusion rejects it after decoding; individually valid refs confer no
+new combination of authority.
 
 Each `/3` evaluation records one confirmed rule step, retains the original
 durable-start fee and makes zero model requests. It reads all declared material,

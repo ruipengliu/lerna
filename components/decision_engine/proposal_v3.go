@@ -18,7 +18,12 @@ import (
 // the current Task revisions and original durable-start fee are preserved.
 func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, first []byte, inputBytes int) completion {
 	artifactOutput := 0
-	if (snapshot.Rule != "delta_only" && snapshot.Rule != "actions_four" && snapshot.Rule != "input_request" && snapshot.Rule != "delta_candidate_result" && snapshot.Rule != "cannot_continue" && snapshot.Rule != "invalid_actions_depends_on") || len(snapshot.MaterialRefs) < 2 {
+	switch snapshot.Rule {
+	case "delta_only", "actions_four", "input_request", "delta_candidate_result", "cannot_continue", "invalid_actions_depends_on", "invalid_actions_binding_pair":
+	default:
+		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
+	}
+	if len(snapshot.MaterialRefs) < 2 {
 		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 	}
 	replacement := snapshot.RequirementRefs[0]
@@ -29,7 +34,7 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 		RequirementDelta:    []v.RequirementDelta{{LocalKey: "condition-replacement", StatementRef: snapshot.MaterialRefs[0], RuleRef: snapshot.MaterialRefs[1], SourceRefs: slices.Clone(processed), Kind: "output", Required: true, ReplacesRef: &replacement}},
 		Advance:             v.NewProposalAdvanceNone(v.ProposalAdvanceNone{}),
 	}
-	if snapshot.Rule == "actions_four" || snapshot.Rule == "invalid_actions_depends_on" {
+	if snapshot.Rule == "actions_four" || snapshot.Rule == "invalid_actions_depends_on" || snapshot.Rule == "invalid_actions_binding_pair" {
 		if len(snapshot.CapabilityBindings) != 4 {
 			return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 		}
@@ -37,6 +42,10 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 		actions := make([]v.ProposalAction, 0, 4)
 		for i, binding := range snapshot.CapabilityBindings {
 			actions = append(actions, v.ProposalAction{LocalKey: v.ID("action-" + strconv.Itoa(i+1)), CapabilityRef: binding.CapabilityRef, BindingRef: binding.BindingRef, ArgumentsRef: binding.ArgumentsRef, Purpose: binding.Purpose, SourceRefs: slices.Clone(processed)})
+		}
+		if snapshot.Rule == "invalid_actions_binding_pair" {
+			// Each ref exists in the fixed Snapshot, but this tuple never did.
+			actions[0].BindingRef = snapshot.CapabilityBindings[1].BindingRef
 		}
 		proposal.Advance = v.NewProposalAdvanceActions(v.ProposalAdvanceActions{Actions: actions})
 	}

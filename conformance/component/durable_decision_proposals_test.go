@@ -50,7 +50,7 @@ func proposalScenario(t *testing.T, ctx context.Context, world *fixture.World, v
 	snapshot.MaterialRefs = append(snapshot.MaterialRefs, ruleRef)
 	materials := []fixture.Material{{Ref: scene.MaterialRef, Bytes: material}, {Ref: ruleRef, Bytes: ruleBytes}}
 	purposes := []string{"decide", "get", "command.get", "start", "material", "rule.input", "fixture.lock", "publish", "proposal.publish", "artifact.publish", "rule.condition"}
-	if rule == "actions_four" || rule == "invalid_actions_depends_on" {
+	if rule == "actions_four" || rule == "invalid_actions_depends_on" || rule == "invalid_actions_binding_pair" {
 		for i := 1; i <= 4; i++ {
 			id := v.ID("slot-" + strconv.Itoa(i))
 			body := []byte(`{"target":"` + string(id) + `","operation":"read"}`)
@@ -415,10 +415,19 @@ func TestDurableProposalCannotContinueCompletesWithoutTaskVerdict(t *testing.T) 
 }
 
 func TestDurableProposalFixedDependsOnOutputFailsThroughPublicCodec(t *testing.T) {
+	assertFixedProposalFailure(t, "invalid_actions_depends_on")
+}
+
+func TestDurableProposalRejectsValidBindingRefsInWrongArgumentPair(t *testing.T) {
+	assertFixedProposalFailure(t, "invalid_actions_binding_pair")
+}
+
+func assertFixedProposalFailure(t *testing.T, rule string) {
+	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	world := fixture.NewWorld(t, ctx)
-	scene, _ := proposalScenario(t, ctx, world, "fixture-rule/3", "invalid_actions_depends_on")
+	scene, _ := proposalScenario(t, ctx, world, "fixture-rule/3", rule)
 	service := proposalService(t, world, scene)
 	receipt := acceptAccounting(t, ctx, service, scene)
 	if step, err := service.Step(ctx); err != nil || step.Processed != 1 {
@@ -436,7 +445,7 @@ func TestDurableProposalFixedDependsOnOutputFailsThroughPublicCodec(t *testing.T
 	}
 	failed, ok := found.Decision.AsFailed()
 	if !ok || failed.Failure != "proposal_invalid" {
-		t.Fatal("depends_on entered a consumable completed Proposal")
+		t.Fatal("fixed invalid output entered a consumable completed Proposal")
 	}
 	outputBytes, err := strconv.ParseInt(string(failed.Usage.OutputBytes), 10, 64)
 	if err != nil || outputBytes <= 0 {
