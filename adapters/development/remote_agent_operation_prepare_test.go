@@ -18,18 +18,22 @@ import (
 // 真实原Decision接纳的首次动作经过独立Job；它不能继承该Decision的父证明。
 // 这里仅验证首个inspect_file，不把一个动作当作完整子/父报告的通过证据。
 func TestConfiguredRemoteFirstOriginalOperationUsesFreshParentScope(t *testing.T) {
-	runConfiguredRemoteFirstOriginalOperation(t, false)
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver+"_parent_sqlite_child", func(t *testing.T) { runConfiguredRemoteFirstOriginalOperation(t, false, driver) })
+	}
 }
 
 func TestConfiguredRemoteOriginalPreparedAttemptCannotStartAfterParentPause(t *testing.T) {
-	runConfiguredRemoteFirstOriginalOperation(t, true)
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver+"_parent_sqlite_child", func(t *testing.T) { runConfiguredRemoteFirstOriginalOperation(t, true, driver) })
+	}
 }
 
-func runConfiguredRemoteFirstOriginalOperation(t *testing.T, pausePrepared bool) {
+func runConfiguredRemoteFirstOriginalOperation(t *testing.T, pausePrepared bool, driver string) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
-	a, b, profile := configuredAgentPair(t)
+	a, b, profile := configuredAgentPairWithParentDriver(t, driver)
 	permission := approveRemoteDelegationGrant(ctx, t, a, b.app.Scope.OwnerID)
 	profile = configureRemoteFileScope(ctx, t, a, b, profile, permission)
 	goal, parent := configuredAgentOriginalParent(ctx, t, a)
@@ -230,7 +234,7 @@ func assertRemotePreparedAttemptStoppedByCurrentParent(ctx context.Context, t *t
 	}
 	restored := read()
 	if len(restored.Attempts.Items) != 1 || restored.Attempts.Items[0].AttemptID != original.Attempts.Items[0].AttemptID || restored.Attempts.Items[0].StartedAt != "" || restored.Operation.ResultRef != nil || restored.Operation.Effect != "not_started" || !restored.NewAttemptsClosed || !restored.ActuallyStopped || restored.Operation.ExecutionState != "closed" {
-		t.Fatal("prepared restore replaced the original Attempt or crossed the physical barrier after parent pause")
+		t.Fatalf("prepared restore crossed the physical barrier or changed the original responsibility after parent pause: original_attempt=%s actual_attempts=%+v effect=%s result_ref=%+v new_attempts_closed=%t actually_stopped=%t execution_state=%s", original.Attempts.Items[0].AttemptID, restored.Attempts.Items, restored.Operation.Effect, restored.Operation.ResultRef, restored.NewAttemptsClosed, restored.ActuallyStopped, restored.Operation.ExecutionState)
 	}
 	t.Logf("original prepared operation=%s attempt=%s reopened_same_attempt=true current_parent_queried=true no_start=true original_unstarted_closed=true", operationID, original.Attempts.Items[0].AttemptID)
 }

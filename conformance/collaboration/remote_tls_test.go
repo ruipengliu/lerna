@@ -7,7 +7,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"path/filepath"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -16,7 +15,6 @@ import (
 	"github.com/ruipengliu/lerna/adapters/objectstore"
 	"github.com/ruipengliu/lerna/adapters/platform"
 	"github.com/ruipengliu/lerna/adapters/providers"
-	"github.com/ruipengliu/lerna/adapters/sqlite"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/governance"
 	"github.com/ruipengliu/lerna/internal/memory"
@@ -111,21 +109,13 @@ func (a sourceAgentAuthority) ResolveSourceSubjectTx(_ context.Context, _ runtim
 	return a.user, nil
 }
 func newAgentBase(t *testing.T, tenant string, user runtime.Auth) *agentFixture {
+	return newAgentBaseWithDriver(t, tenant, user, "sqlite")
+}
+func newAgentBaseWithDriver(t *testing.T, tenant string, user runtime.Auth, driver string) *agentFixture {
 	t.Helper()
 	ctx := context.Background()
-	st, err := sqlite.Open(filepath.Join(t.TempDir(), "agent.sqlite"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err = st.Migrate(ctx); err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() {
-		if err := st.Close(); err != nil {
-			t.Error(err)
-		}
-	})
-	scope := runtime.Scope{TenantID: tenant, OwnerID: api.NewID("owner"), DatabaseID: st.ID()}
+	st, databaseID := openAgentContractStore(t, ctx, driver)
+	scope := runtime.Scope{TenantID: tenant, OwnerID: api.NewID("owner"), DatabaseID: databaseID}
 	service := runtime.Auth{TenantID: tenant, SubjectID: api.NewID("service"), CredentialGeneration: 1, Roles: []string{"service", "content_admin"}}
 	peer := runtime.Auth{TenantID: tenant, SubjectID: scope.OwnerID, CredentialGeneration: 1, Roles: []string{"paired_agent"}}
 	objects, err := objectstore.OpenLocal(t.TempDir(), memory.MaxContentBytes)
@@ -307,11 +297,18 @@ func agentPublicKeys(f *agentFixture) *platform.Keyring {
 	return &platform.Keyring{Keys: map[string]platform.RegisteredKey{"development-es256": k}}
 }
 func pairedAgents(t *testing.T) (*agentFixture, *agentFixture, collaboration.RemoteAgentProfile) {
+	return pairedAgentsWithParentDriver(t, "sqlite")
+}
+func pairedAgentsWithParentDriver(t *testing.T, parentDriver string) (*agentFixture, *agentFixture, collaboration.RemoteAgentProfile) {
 	t.Helper()
 	tenant := api.NewID("tenant")
 	user := runtime.Auth{TenantID: tenant, SubjectID: api.NewID("subject"), CredentialGeneration: 1, Roles: []string{"content_admin"}}
-	parent := newAgentBase(t, tenant, user)
+	parent := newAgentBaseWithDriver(t, tenant, user, parentDriver)
 	child := newAgentBase(t, tenant, user)
+	if parent.scope.OwnerID == child.scope.OwnerID || parent.scope.DatabaseID == child.scope.DatabaseID {
+		t.Fatal("remote pair must preserve two original owners and databases")
+	}
+	t.Logf("actual parent driver=%s owner=%s database=%s child driver=sqlite owner=%s database=%s", parentDriver, parent.scope.OwnerID, parent.scope.DatabaseID, child.scope.OwnerID, child.scope.DatabaseID)
 	p, err := collaboration.NewRemoteAgentProfile(api.NewID("agent"), "1.0.0", collaboration.RemoteAgentValues{ParentOwnerID: parent.scope.OwnerID, ReceiverID: child.scope.OwnerID, AgentBindingRef: parent.scope.Ref(api.NewID("binding"), 1), PolicyRef: child.taskPolicy.PolicyRef, InstallLockRef: remoteComponent("lock"), SubjectRefs: []api.ObjectRef{user.Ref(parent.scope.OwnerID)}, PermissionRefs: []api.ObjectRef{}, CapabilityRefs: []api.ComponentRef{}, BindingRefs: []api.ObjectRef{}, ResourceRefs: []api.ComponentRef{}, BudgetLimits: []api.Amount{{Unit: "USD", Value: "4"}}, MaxDepth: 4, MaxInputs: 16, Location: "cloud", MaterialPurposes: []string{"task.goal", "content.write"}})
 	if err != nil {
 		t.Fatal(err)

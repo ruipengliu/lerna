@@ -11,7 +11,13 @@ import (
 )
 
 func TestRemoteInputCloseAfterActualReadCannotConsumeOriginalRequest(t *testing.T) {
-	parent, child, profile := pairedAgents(t)
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver+"_parent_sqlite_child", func(t *testing.T) { runRemoteInputCloseAfterActualRead(t, driver) })
+	}
+}
+func runRemoteInputCloseAfterActualRead(t *testing.T, driver string) {
+	t.Helper()
+	parent, child, profile := pairedAgentsWithParentDriver(t, driver)
 	installAgentFlow(parent)
 	installAgentFlow(child)
 	_, d, a, actual := startRemoteChild(t, parent, child, profile)

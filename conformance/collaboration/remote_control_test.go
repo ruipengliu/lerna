@@ -72,7 +72,13 @@ func checkRemoteChild(t *testing.T, child *agentFixture, id string) error {
 	return err
 }
 func TestRemoteTLSParentPausePreservesChildPauseAndCancelClosesBudget(t *testing.T) {
-	parent, child, profile := pairedAgents(t)
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver+"_parent_sqlite_child", func(t *testing.T) { runRemoteParentPauseAndCancel(t, driver) })
+	}
+}
+func runRemoteParentPauseAndCancel(t *testing.T, driver string) {
+	t.Helper()
+	parent, child, profile := pairedAgentsWithParentDriver(t, driver)
 	root, d, a, actual := startRemoteChild(t, parent, child, profile)
 	var err error
 	child.ctx, err = child.remote.PrepareChildContext(child.ctx, actual.TaskID)

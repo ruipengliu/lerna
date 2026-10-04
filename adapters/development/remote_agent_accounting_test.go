@@ -101,9 +101,15 @@ func configuredAgentPublishOriginalClosureProof(ctx context.Context, t *testing.
 // 真实双HTTPS/SQL原账务和完整child签名：父终态不抹账，once不退款。
 // 不运行Decision/Operation，避免把模型质量或报告成功当成费用证据。
 func TestConfiguredRemoteOriginalGrantSettlesSignedLateClosureAfterParentTerminal(t *testing.T) {
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver+"_parent_sqlite_child", func(t *testing.T) { runConfiguredRemoteSignedLateClosure(t, driver) })
+	}
+}
+func runConfiguredRemoteSignedLateClosure(t *testing.T, driver string) {
+	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
-	a, b, profile := configuredAgentPair(t)
+	a, b, profile := configuredAgentPairWithParentDriver(t, driver)
 	permission := approveRemoteDelegationGrant(ctx, t, a, b.app.Scope.OwnerID)
 	profile = configureRemoteFileScope(ctx, t, a, b, profile, permission)
 	goal, parent := configuredAgentOriginalParent(ctx, t, a)

@@ -11,7 +11,13 @@ import (
 )
 
 func TestRemoteSteerCloseAfterActualPublicationCannotChangeOriginalGoal(t *testing.T) {
-	parent, child, profile := pairedAgents(t)
+	for _, driver := range []string{"sqlite", "postgres"} {
+		t.Run(driver+"_parent_sqlite_child", func(t *testing.T) { runRemoteSteerCloseAfterActualPublication(t, driver) })
+	}
+}
+func runRemoteSteerCloseAfterActualPublication(t *testing.T, driver string) {
+	t.Helper()
+	parent, child, profile := pairedAgentsWithParentDriver(t, driver)
 	installAgentFlow(parent)
 	installAgentFlow(child)
 	_, d, a, actual := startRemoteChild(t, parent, child, profile)
