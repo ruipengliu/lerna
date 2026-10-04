@@ -1972,6 +1972,9 @@
         },
         "decision": {
           "$ref": "#/$defs/Decision"
+        },
+        "current_control": {
+          "$ref": "#/$defs/DecisionCurrentControl"
         }
       },
       "required": ["status", "decision_ref", "decision"],
@@ -2065,6 +2068,32 @@
         }
       },
       "required": ["kind", "object_ref", "revision", "status"],
+      "additionalProperties": false
+    },
+    "DecisionCurrentControl": {
+      "type": "object",
+      "description": "This owner has stopped new local Decision work. Independent in-flight publication may leave unadopted bytes; no physical cleanup completion is asserted.",
+      "properties": {
+        "task_ref": {
+          "$ref": "#/$defs/TaskObjectRef"
+        },
+        "decision_input_digest": {
+          "$ref": "#/$defs/SchemaDigest"
+        },
+        "control_basis": {
+          "$ref": "#/$defs/ControlBasis"
+        },
+        "scope": {
+          "type": "string",
+          "const": "local_decision_work"
+        }
+      },
+      "required": [
+        "task_ref",
+        "decision_input_digest",
+        "control_basis",
+        "scope"
+      ],
       "additionalProperties": false
     }
   }

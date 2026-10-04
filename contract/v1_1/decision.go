@@ -236,6 +236,16 @@ func decisionSemantics(name string, value any) error {
 			if !sameIdentity(object(v["decision_ref"]), object(decision["decision_ref"])) {
 				return invalid()
 			}
+			if current, ok := v["current_control"]; ok {
+				control := object(current)
+				task := decision["task_ref"]
+				if input, ok := decision["input"]; ok {
+					task = object(input)["task_ref"]
+				}
+				if control["decision_input_digest"] != decision["input_digest"] || !sameExact(object(control["task_ref"]), object(task)) {
+					return invalid()
+				}
+			}
 			return decisionSemantics("Decision", decision)
 		}
 	}

@@ -128,10 +128,22 @@ type Record struct {
 	LegacyBillingRetired   bool                     `json:"legacy_billing_retired,omitempty"`
 }
 type CommandRecord struct {
-	Digest  string                  `json:"digest"`
-	Request v.DecisionDecideRequest `json:"request"`
-	Subject v.SubjectBinding        `json:"subject"`
-	Receipt v.CommandReceipt        `json:"receipt"`
+	MetadataVersion string                   `json:"metadata_version,omitempty"`
+	Method          string                   `json:"method,omitempty"`
+	Digest          string                   `json:"digest"`
+	Request         *v.DecisionDecideRequest `json:"request,omitempty"`
+	CancelRequest   *v.DecisionCancelRequest `json:"cancel_request,omitempty"`
+	Subject         v.SubjectBinding         `json:"subject"`
+	Receipt         v.CommandReceipt         `json:"receipt"`
+}
+type DecisionStop struct {
+	Ref           v.DecisionRef    `json:"decision_ref"`
+	TaskRef       v.TaskObjectRef  `json:"task_ref"`
+	InputDigest   v.SchemaDigest   `json:"input_digest"`
+	ControlBasis  v.ControlBasis   `json:"control_basis"`
+	BindingDigest string           `json:"binding_digest"`
+	Subject       v.SubjectBinding `json:"subject"`
+	CommandRef    v.CommandRef     `json:"command_ref"`
 }
 type Repository interface {
 	LockCommand(context.Context, runtime.Tx, v.CommandRef) (*CommandRecord, error)
@@ -141,6 +153,9 @@ type Repository interface {
 	ReadDecision(context.Context, runtime.Tx, v.DecisionRef) (*Record, error)
 	MaintenanceCandidates(context.Context, runtime.Tx, time.Time, int) ([]runtime.Job, error)
 	ReadCommandRecord(context.Context, runtime.Tx, v.CommandRef) (*CommandRecord, error)
+	ReadStop(context.Context, runtime.Tx, v.DecisionRef) (*DecisionStop, error)
+	SaveStop(context.Context, runtime.Tx, DecisionStop) error
+	LockDecisionJob(context.Context, runtime.Tx, v.DecisionRef) (*runtime.Job, error)
 }
 
 // Pool ports remain owned by this consumer. Only the shared finite values and

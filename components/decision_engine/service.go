@@ -195,6 +195,13 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 		if err != nil {
 			return err
 		}
+		now, err := s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if err = permissionCurrent(permission, now); err != nil {
+			return err
+		}
 		if prior != nil {
 			if prior.Digest != digest {
 				return refusal("idempotency_conflict", nil)
@@ -202,7 +209,7 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 			receipt = prior.Receipt
 			return nil
 		}
-		now, err := s.config.Store.Now(ctx, tx)
+		now, err = s.config.Store.Now(ctx, tx)
 		if err != nil {
 			return err
 		}
@@ -213,11 +220,9 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 		// original Command above retains its immutable receipt.
 		if !now.Before(cutoff) {
 			receipt = rejected(command, "expired")
-		} else if request.Payload.ComponentRef != s.config.Component || permission.ChargeBasis != "durable_rule_start" || permission.RuleVersion != "fixture-rule/2" {
-			receipt = rejected(command, "unsupported")
 		}
 		if _, refused := receipt.AsRejected(); refused {
-			return s.config.Store.SaveCommand(ctx, tx, command, CommandRecord{Digest: digest, Request: request, Subject: permission.Subject, Receipt: receipt})
+			return s.config.Store.SaveCommand(ctx, tx, command, CommandRecord{MetadataVersion: "2", Method: "decide", Digest: digest, Request: &request, Subject: permission.Subject, Receipt: receipt})
 		}
 		state, err := s.config.Store.LockPool(ctx, tx)
 		if err != nil {
@@ -243,16 +248,16 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 		}
 		if !now.Before(cutoff) {
 			receipt = rejected(command, "expired")
-		} else if permission.ChargeBasis != "durable_rule_start" || permission.RuleVersion != "fixture-rule/2" {
-			receipt = rejected(command, "unsupported")
 		} else if original != nil {
-			if original.InputDigest != inputDigest {
+			if original.InputDigest != inputDigest || readTask(original) != request.Payload.TaskRef {
 				receipt = rejected(command, "decision_mismatch")
 			} else if original.Status == "cancelled" {
 				receipt = rejected(command, "decision_cancelled")
 			} else {
 				receipt = accepted(command, request.Target)
 			}
+		} else if request.Payload.ComponentRef != s.config.Component || permission.ChargeBasis != "durable_rule_start" || permission.RuleVersion != "fixture-rule/2" {
+			receipt = rejected(command, "unsupported")
 		} else {
 			if _, _, err = s.config.Store.PoolQueue(ctx, tx, state, oldObject(request.Target), "decide", "ordinary"); err != nil {
 				return err
@@ -266,7 +271,7 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 			}
 			receipt = accepted(command, request.Target)
 		}
-		return s.config.Store.SaveCommand(ctx, tx, command, CommandRecord{Digest: digest, Request: request, Subject: permission.Subject, Receipt: receipt})
+		return s.config.Store.SaveCommand(ctx, tx, command, CommandRecord{MetadataVersion: "2", Method: "decide", Digest: digest, Request: &request, Subject: permission.Subject, Receipt: receipt})
 	})
 	if errors.Is(err, runtime.ErrCommitUnknown) {
 		return v.NewTransportOutcomeCommitUnknown(v.TransportOutcomeCommitUnknown{CommandRef: command, NextAction: "query_or_retransmit_original"}), nil
@@ -329,7 +334,7 @@ func (s *Service) Get(ctx context.Context, data []byte, trusted *v.SubjectBindin
 	unavailable := func() v.DecisionGetResponse {
 		return v.NewDecisionGetResponseUnavailable(v.DecisionGetResponseUnavailable{DecisionRef: request.Target, Reason: "dependency_unavailable"})
 	}
-	permission, err := s.authorize(ctx, trusted, request.Target, "get", nil)
+	readUntil, err := s.readAccess(ctx, trusted, request.Target, "get")
 	if err != nil {
 		if errors.Is(err, ErrForbidden) {
 			return rejectedView("forbidden"), nil
@@ -350,13 +355,25 @@ func (s *Service) Get(ctx context.Context, data []byte, trusted *v.SubjectBindin
 			result = rejectedView("expired")
 			return nil
 		}
-		if err = permissionCurrent(permission, now); err != nil {
+		if !now.Before(readUntil) {
 			result = rejectedView("forbidden")
 			return nil
 		}
-		record, err := s.config.Store.ReadDecision(ctx, tx, request.Target)
+		record, err := s.config.Store.LockDecision(ctx, tx, request.Target)
 		if err != nil {
 			return err
+		}
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if !now.Before(readUntil) {
+			result = rejectedView("forbidden")
+			return nil
+		}
+		if !now.Before(cutoff) {
+			result = rejectedView("expired")
+			return nil
 		}
 		if record == nil {
 			result = v.NewDecisionGetResponseResultUnavailable(v.DecisionGetResponseResultUnavailable{DecisionRef: request.Target})
@@ -366,7 +383,16 @@ func (s *Service) Get(ctx context.Context, data []byte, trusted *v.SubjectBindin
 		if err != nil {
 			return err
 		}
-		result = v.NewDecisionGetResponseFound(v.DecisionGetResponseFound{DecisionRef: request.Target, Decision: public})
+		stop, err := s.config.Store.ReadStop(ctx, tx, request.Target)
+		if err != nil {
+			return err
+		}
+		found := v.DecisionGetResponseFound{DecisionRef: request.Target, Decision: public}
+		if stop != nil {
+			current := stop.Current()
+			found.CurrentControl = &current
+		}
+		result = v.NewDecisionGetResponseFound(found)
 		return nil
 	})
 	if err != nil {

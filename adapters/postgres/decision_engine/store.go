@@ -154,24 +154,18 @@ func (s *Store) ReadCommandRecord(ctx context.Context, token runtime.Tx, ref v.C
 	if err != nil {
 		return nil, err
 	}
-	var record decision.CommandRecord
-	if err = json.Unmarshal(metadata, &record); err != nil {
-		return nil, err
-	}
-	record.Digest = digest
-	record.Receipt, err = v.Decode[v.CommandReceipt](data)
+	receipt, err := v.Decode[v.CommandReceipt](data)
 	if err != nil {
 		return nil, err
 	}
-	response := v.NewCommandGetResponseFound(v.CommandGetResponseFound{CommandRef: ref, Receipt: record.Receipt, Progress: v.NewCommandProgressNone(v.CommandProgressNone{})})
-	if _, err = v.EncodeCommandResponse(response, ref); err != nil {
-		return nil, err
-	}
-	return &record, nil
+	return decision.DecodeCommandRecord(metadata, ref, digest, receipt)
 }
 func (s *Store) SaveCommand(ctx context.Context, token runtime.Tx, ref v.CommandRef, record decision.CommandRecord) error {
 	tx, err := s.core.SQL(ctx, token, commandOwner(ref))
 	if err != nil {
+		return err
+	}
+	if err = record.Validate(ref); err != nil {
 		return err
 	}
 	data, err := v.Encode(record.Receipt)
@@ -195,6 +189,9 @@ var migration string
 
 //go:embed migrations/0002_rule_start_accounting.sql
 var accountingMigration string
+
+//go:embed migrations/0003_decision_stops.sql
+var stopMigration string
 
 func MigrationChecksum() string {
 	digest := sha256.Sum256([]byte(migration))
@@ -221,7 +218,7 @@ func (s *Store) Migrate(ctx context.Context) error {
 		if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS decision_schema_migrations(version bigint PRIMARY KEY,checksum text NOT NULL)`); err != nil {
 			return err
 		}
-		for index, sqlText := range []string{migration, accountingMigration} {
+		for index, sqlText := range []string{migration, accountingMigration, stopMigration} {
 			version := index + 1
 			digest := sha256.Sum256([]byte(sqlText))
 			expected := "sha256:" + hex.EncodeToString(digest[:])

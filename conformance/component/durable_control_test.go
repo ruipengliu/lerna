@@ -77,6 +77,20 @@ func TestDurableCancelBeforeDecideSurvivesBothOwnersReopen(t *testing.T) {
 	if closed.Input != nil || closed.InputDigest != v.SchemaDigest(digest) || closed.TaskRef != request.Payload.TaskRef || closed.Usage.RuleStarts != "0" {
 		t.Fatal("pre-admission close invented input or execution")
 	}
+	if found.CurrentControl == nil || found.CurrentControl.Scope != "local_decision_work" || found.CurrentControl.TaskRef != request.Payload.TaskRef || found.CurrentControl.DecisionInputDigest != v.SchemaDigest(digest) {
+		t.Fatal("reopened public get lost original stopping scope")
+	}
+	wantBasis, err := v.Encode(basis)
+	if err != nil {
+		t.Fatal(err)
+	}
+	actualBasis, err := v.Encode(found.CurrentControl.ControlBasis)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(wantBasis) != string(actualBasis) {
+		t.Fatal("reopened public control changed adopted proof")
+	}
 	late := world.AdditionalScenario(ctx, request.Target.OwnerID, request.Target.ID, until)
 	late.Request.CommandID = "late-decide"
 	lateJSON, err := v.Encode(late.Request)

@@ -28,12 +28,12 @@ func (r commandReader) ReadCommand(ctx context.Context, ref v.CommandRef) (v.Com
 	return result, err
 }
 func (s *Service) AuthorizeCommandRead(ctx context.Context, subject v.SubjectBinding, ref v.CommandRef) (bool, error) {
-	permission, err := s.authorize(ctx, &subject, v.DecisionRef{TenantID: ref.Owner.TenantID, OwnerID: ref.Owner.OwnerID, Kind: "decision", ID: ref.CommandID}, "command.get", nil)
+	readUntil, err := s.readAccess(ctx, &subject, v.DecisionRef{TenantID: ref.Owner.TenantID, OwnerID: ref.Owner.OwnerID, Kind: "decision", ID: ref.CommandID}, "command.get")
 	if err != nil {
 		return false, err
 	}
-	if err = permissionCurrent(permission, time.Now().UTC()); err != nil {
-		return false, err
+	if !time.Now().UTC().Before(readUntil) {
+		return false, ErrForbidden
 	}
 	return true, nil
 }

@@ -198,6 +198,15 @@ export function decisionSemantics(name: string, value: unknown): boolean {
       return (
         v.status !== 'found' ||
         (identity(v.decision_ref, object(v.decision).decision_ref) &&
+          (v.current_control === undefined ||
+            (object(v.current_control).decision_input_digest ===
+              object(v.decision).input_digest &&
+              canonical(object(v.current_control).task_ref) ===
+                canonical(
+                  object(v.decision).input === undefined
+                    ? object(v.decision).task_ref
+                    : object(object(v.decision).input).task_ref,
+                ))) &&
           decisionSemantics('Decision', v.decision))
       );
   }

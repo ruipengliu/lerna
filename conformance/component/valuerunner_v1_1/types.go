@@ -212,6 +212,8 @@ func run(name string, data []byte) ([]byte, error) {
 		return roundtrip[contract.DecisionGetResponse](data)
 	case "CommandProgressDecision":
 		return roundtrip[contract.CommandProgressDecision](data)
+	case "DecisionCurrentControl":
+		return roundtrip[contract.DecisionCurrentControl](data)
 	default:
 		return nil, fmt.Errorf("unknown value schema %q", name)
 	}

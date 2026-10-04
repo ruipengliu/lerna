@@ -488,6 +488,7 @@ export type DecisionGetResponseFound = {
   status: 'found';
   decision_ref: DecisionRef;
   decision: Decision;
+  current_control?: DecisionCurrentControl;
 };
 export type DecisionGetResponseResultUnavailable = {
   status: 'result_unavailable';
@@ -518,6 +519,12 @@ export type CommandProgressDecision = {
     | 'completed'
     | 'failed'
     | 'cancelled';
+};
+export type DecisionCurrentControl = {
+  task_ref: TaskObjectRef;
+  decision_input_digest: SchemaDigest;
+  control_basis: ControlBasis;
+  scope: 'local_decision_work';
 };
 export const declaredMethods = Object.freeze(
   [
@@ -552,7 +559,7 @@ export const declaredMethods = Object.freeze(
       input_schema_digest:
         'sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d',
       output_schema_digest:
-        'sha256:c492721f8f2c0261e9dfb40160289f6bd44bc4f7a782feb8368a589fb7142440',
+        'sha256:08e3acf68d2ea073c8a0771c0584d8e75e5c6f2e51de4797ad84aed85ba3ac63',
     },
     {
       contract_version: '1.1.0',
@@ -619,7 +626,7 @@ export const inputSchemas = Object.freeze(
         inputDigest:
           'sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d',
         outputDigest:
-          'sha256:c492721f8f2c0261e9dfb40160289f6bd44bc4f7a782feb8368a589fb7142440',
+          'sha256:08e3acf68d2ea073c8a0771c0584d8e75e5c6f2e51de4797ad84aed85ba3ac63',
       },
       {
         version: '1.1.0',
@@ -725,6 +732,7 @@ export interface Values {
   DecisionGetResponseRejected: DecisionGetResponseRejected;
   DecisionGetResponse: DecisionGetResponse;
   CommandProgressDecision: CommandProgressDecision;
+  DecisionCurrentControl: DecisionCurrentControl;
 }
 // Freeze the public source before any validator can compile it.
 function deepFreeze<T>(value: T): T {
@@ -2722,6 +2730,9 @@ export const schema = deepFreeze({
         decision: {
           $ref: '#/$defs/Decision',
         },
+        current_control: {
+          $ref: '#/$defs/DecisionCurrentControl',
+        },
       },
       required: ['status', 'decision_ref', 'decision'],
       additionalProperties: false,
@@ -2814,6 +2825,28 @@ export const schema = deepFreeze({
         },
       },
       required: ['kind', 'object_ref', 'revision', 'status'],
+      additionalProperties: false,
+    },
+    DecisionCurrentControl: {
+      type: 'object',
+      description:
+        'This owner has stopped new local Decision work. Independent in-flight publication may leave unadopted bytes; no physical cleanup completion is asserted.',
+      properties: {
+        task_ref: {
+          $ref: '#/$defs/TaskObjectRef',
+        },
+        decision_input_digest: {
+          $ref: '#/$defs/SchemaDigest',
+        },
+        control_basis: {
+          $ref: '#/$defs/ControlBasis',
+        },
+        scope: {
+          type: 'string',
+          const: 'local_decision_work',
+        },
+      },
+      required: ['task_ref', 'decision_input_digest', 'control_basis', 'scope'],
       additionalProperties: false,
     },
   },
